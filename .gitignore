@@ -40,3 +40,8 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# other
+old/
+.classpath
+.settings/

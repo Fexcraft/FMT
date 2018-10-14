@@ -1,0 +1,26 @@
+{
+  "format": 1,
+  "texture_size_x": 256,
+  "texture_size_y": 256,
+  "creators": [
+    "//TODO"
+  ],
+  "type": "jtmt",
+  "model": {
+    "group0": [
+      {
+        "texture_x": 0,
+        "texture_y": 0,
+        "type": "cylinder",
+        "pos_y": -2.0,
+        "visible": true,
+        "radius": 2.0,
+        "length": 2.0,
+        "segments": 20,
+        "direction": 4,
+        "basescale": 1.0,
+        "topscale": 1.0
+      }
+    ]
+  }
+}

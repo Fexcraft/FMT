@@ -1,0 +1,31 @@
+{
+  "format": 1,
+  "texture_size_x": 512,
+  "texture_size_y": 512,
+  "creators": [
+    "Ferdinand (FEX___96)"
+  ],
+  "type": "jtmt",
+  "model": {
+    "windows": [
+      {
+        "texture_x": 0,
+        "texture_y": 0,
+        "type": "shapebox",
+        "off_x": 0,
+        "off_y": 0,
+        "off_z": 0,
+        "width": 1,
+        "height": 17,
+        "depth": 40,
+        "x4": -3,
+        "x5": 3,
+        "x6": 3,
+        "x7": -3,
+        "pos_x": 54.3,
+        "pos_y": -39,
+        "pos_z": -20
+      }
+    ]
+  }
+}

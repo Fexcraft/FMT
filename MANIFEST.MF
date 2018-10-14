@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Created-By: Ferdinand Calo' (FEX___96)
+Class-Path: . ibs/jars/gson-2.2.4.jar libs/jars/lwjgl.jar libs/jars/lw
+ jgl_util.jar libs/jars/slick-util.jar
+Main-Class: net.fexcraft.app.fmt.FMTB
+
