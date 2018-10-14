@@ -15,7 +15,6 @@ import org.lwjgl.util.glu.GLU;
 
 import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.ui.UserInterface;
-import net.fexcraft.app.fmt.utils.Camera;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.RGB;
 import net.fexcraft.app.fmt.utils.SaveLoad;
@@ -37,7 +36,6 @@ public class FMTB {
 	//
 	private static String title;
 	private boolean close;
-	public Camera camera;
 	public static GGR ggr;
 	//public int width, height;
 	private static FMTB INSTANCE;
