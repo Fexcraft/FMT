@@ -3,6 +3,7 @@ package net.fexcraft.app.fmt.ui.generic;
 import org.lwjgl.input.Mouse;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.ModelTree;
 import net.fexcraft.app.fmt.ui.editor.Editor;
@@ -77,16 +78,14 @@ public class Toolbar extends Element {
 									this.elements.put("export", new Button(this, "export", 100, 26, 2, 114, subhover){
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
-											//TODO
-											return true;
+											PorterManager.handleExport(); return true;
 										}
 									}.setText("Export >>", false));
 									//
 									this.elements.put("import", new Button(this, "import", 100, 26, 2, 142, subhover){
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
-											//TODO
-											return true;
+											PorterManager.handleImport(); return true;
 										}
 									}.setText("Import <<", false));
 									this.elements.put("exit", new Button(this, "exit", 100, 26, 2, 170, subhover){

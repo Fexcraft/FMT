@@ -92,12 +92,6 @@ public class JsonUtil{
 		}
 	}
 	
-	public static JsonObject getJsonForPacket(String target){
-		JsonObject obj = new JsonObject();
-		obj.addProperty("target_listener", target);
-		return obj;
-	}
-	
 	/**
 	 * @param file the file to be parsed into json
 	 * @param b notify in logs about error in parsing, or file missing

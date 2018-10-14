@@ -3,6 +3,7 @@ package net.fexcraft.app.fmt;
 import java.io.File;
 import java.io.IOException;
 
+import javax.script.ScriptException;
 import javax.swing.JOptionPane;
 
 import org.lwjgl.LWJGLException;
@@ -14,6 +15,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 
 import net.fexcraft.app.fmt.demo.ModelT1P;
+import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.RGB;
@@ -68,11 +70,12 @@ public class FMTB {
 		Settings.setFullScreen(full); title = String.format(deftitle, string);
 	}
 	
-	public void run() throws LWJGLException, InterruptedException, IOException {
+	public void run() throws LWJGLException, InterruptedException, IOException, NoSuchMethodException, ScriptException {
 		setupDisplay(); initOpenGL(); ggr = new GGR(0, 4, 4); ggr.rotation.xCoord = 45;
 		TextureManager.loadTextures();
 		Display.setResizable(true);
 		UI = new UserInterface(this);
+		PorterManager.load();
 		//
 		while(!close){
 			loop(); render(); UI.render();

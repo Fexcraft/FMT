@@ -14,6 +14,8 @@ import com.google.gson.JsonPrimitive;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.JsonToTMT;
+import net.fexcraft.app.fmt.porters.PorterManager;
+import net.fexcraft.app.fmt.porters.PorterManager.Porter;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
@@ -35,22 +37,7 @@ public class SaveLoad {
 		}
 		int errorcount = 0;
 		try{
-			JsonObject obj = JsonUtil.read(modelfile, false).getAsJsonObject();
-			GroupCompound compound = new GroupCompound();
-			compound.textureX = JsonUtil.getIfExists(obj, "texture_x", 256).intValue();
-			compound.textureY = JsonUtil.getIfExists(obj, "texture_y", 256).intValue();
-			compound.creators = JsonUtil.jsonArrayToStringArray(JsonUtil.getIfExists(obj, "creators", new JsonArray()).getAsJsonArray());
-			JsonObject model = obj.get("model").getAsJsonObject();
-			for(Entry<String, JsonElement> entry : model.entrySet()){
-				try{
-					TurboList list = new TurboList(entry.getKey()); JsonArray array = entry.getValue().getAsJsonArray();
-					for(JsonElement elm : array){ list.add(JsonToTMT.parseWrapper(compound, elm.getAsJsonObject())); }
-					compound.getCompound().put(entry.getKey(), list);
-				}
-				catch(Exception e){
-					e.printStackTrace(); errorcount++;
-				}
-			} FMTB.MODEL = compound;
+			errorcount = loadModel(JsonUtil.read(modelfile, false).getAsJsonObject());
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -59,6 +46,25 @@ public class SaveLoad {
 		if(errorcount > 0){
 			JOptionPane.showMessageDialog(null, errorcount + " errors occured while parsing save file,\ncheck console for details.", "Error", JOptionPane.INFORMATION_MESSAGE);
 		}
+	}
+	
+	public static int loadModel(JsonObject obj){
+		GroupCompound compound = new GroupCompound(); int errorcount = 0; compound.getCompound().clear();
+		compound.textureX = JsonUtil.getIfExists(obj, "texture_x", 256).intValue();
+		compound.textureY = JsonUtil.getIfExists(obj, "texture_y", 256).intValue();
+		compound.creators = JsonUtil.jsonArrayToStringArray(JsonUtil.getIfExists(obj, "creators", new JsonArray()).getAsJsonArray());
+		JsonObject model = obj.get("model").getAsJsonObject();
+		for(Entry<String, JsonElement> entry : model.entrySet()){
+			try{
+				TurboList list = new TurboList(entry.getKey()); JsonArray array = entry.getValue().getAsJsonArray();
+				for(JsonElement elm : array){ list.add(JsonToTMT.parseWrapper(compound, elm.getAsJsonObject())); }
+				compound.getCompound().put(entry.getKey(), list);
+			}
+			catch(Exception e){
+				e.printStackTrace(); errorcount++;
+			}
+		} FMTB.MODEL = compound;
+		return errorcount;
 	}
 	
 	public static void checkIfShouldSave(){
@@ -73,24 +79,34 @@ public class SaveLoad {
 			}
 		}
 	}
-
+	
 	public static File getFile(String title){
+		return getFile(title, null, true);
+	}
+
+	public static File getFile(String title, File otherroot, boolean load){
 		JFileChooser chooser = new JFileChooser();
 		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		chooser.setCurrentDirectory(root);
+		if(otherroot != null && !otherroot.exists()) otherroot.mkdirs();
+		chooser.setCurrentDirectory(otherroot == null ? root : otherroot);
 		chooser.setDialogTitle(title);
-		chooser.addChoosableFileFilter(new FileFilter(){
-			@Override
-			public boolean accept(File arg0){
-				//TODO add more filters
-				return true;
-			}
+		for(Porter porter : PorterManager.getPorters(!load)){
+			chooser.addChoosableFileFilter(new FileFilter(){
+				@Override
+				public boolean accept(File arg0){
+					if(arg0.isDirectory()) return true;
+					for(String ext : porter.extensions){
+						if(arg0.getName().endsWith(ext)) return true;
+					} return false;
+				}
 
-			@Override
-			public String getDescription(){
-				return "FMT Supported File";
-			}
-		});
+				@Override
+				public String getDescription(){
+					return porter.name + (load ? " [I]" : "[E]");
+				}
+			});
+		}
+		chooser.setAcceptAllFileFilterUsed(false);
 		chooser.showOpenDialog(null);
 		return chooser.getSelectedFile();
 	}
@@ -108,6 +124,13 @@ public class SaveLoad {
 			JOptionPane.showMessageDialog(null, "Model save file is 'null'!\nModel will not be saved.", "Information.", JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}
+		JsonUtil.write(FMTB.MODEL.file, saveModel());
+	}
+
+	/**
+	 * @return JTMT save form of the Model/GroupCompound
+	 */
+	public static JsonObject saveModel(){
 		GroupCompound compound = FMTB.MODEL;
 		JsonObject obj = new JsonObject();
 		obj.addProperty("format", 1);
@@ -131,7 +154,7 @@ public class SaveLoad {
 			model.add(entry.getKey(), array);
 		}
 		obj.add("model", model);
-		JsonUtil.write(compound.file, obj);
+		return obj;
 	}
 	
 }
