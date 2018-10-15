@@ -38,7 +38,7 @@ public class GroupCompound {
 		recompile(); this.updateFields();
 	}
 
-	private void recompile(){
+	public void recompile(){
 		compound.values().forEach(turbo -> turbo.forEach(elm -> elm.recompile()));
 	}
 
@@ -115,7 +115,7 @@ public class GroupCompound {
 		try{
 			if(compound.isEmpty()) compound.put("group0", new TurboList("group0"));
 			TurboList list = (compound.containsKey("body") ? compound.get("body") : (TurboList)compound.values().toArray()[0]);
-			selection.clear(); selection.add(new Selection(list.id, list.size())); list.add(shape);
+			selection.clear(); selection.add(new Selection(list.id, list.size())); list.add(shape); shape.recompile();
 		}
 		catch(Exception e){
 			e.printStackTrace();

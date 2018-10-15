@@ -1,0 +1,67 @@
+{
+  "format": 1,
+  "texture_size_x": 256,
+  "texture_size_y": 256,
+  "creators": [
+    "//TODO"
+  ],
+  "type": "jtmt",
+  "model": {
+    "body": [
+      {
+        "texture_x": 0,
+        "texture_y": 0,
+        "type": "shapebox",
+        "pos_y": -16.0,
+        "visible": true,
+        "width": 8.0,
+        "height": 6.0,
+        "depth": 6.0,
+        "x0": -1.0,
+        "z0": -0.25,
+        "y1": -1.0,
+        "z1": -0.25,
+        "y3": -0.25,
+        "z3": 0.25,
+        "y4": -0.25,
+        "z4": -0.75,
+        "z5": -0.5
+      },
+      {
+        "texture_x": 0,
+        "texture_y": 0,
+        "type": "cylinder",
+        "pos_y": -38.0,
+        "visible": true,
+        "radius": 11.0,
+        "length": 8.0,
+        "segments": 16,
+        "direction": 4,
+        "basescale": 1.0,
+        "topscale": 1.0
+      }
+    ],
+    "group1": [
+      {
+        "texture_x": 0,
+        "texture_y": 0,
+        "type": "box",
+        "pos_y": -46.0,
+        "visible": true,
+        "width": 1.0,
+        "height": 1.0,
+        "depth": 1.0
+      },
+      {
+        "texture_x": 0,
+        "texture_y": 0,
+        "type": "box",
+        "pos_y": -4.0,
+        "visible": true,
+        "width": 10.0,
+        "height": 4.0,
+        "depth": 13.0
+      }
+    ]
+  }
+}

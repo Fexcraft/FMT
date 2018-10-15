@@ -63,7 +63,7 @@ public class SaveLoad {
 			catch(Exception e){
 				e.printStackTrace(); errorcount++;
 			}
-		} FMTB.MODEL = compound;
+		} FMTB.MODEL = compound; FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
 		return errorcount;
 	}
 	
