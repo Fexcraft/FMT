@@ -34,7 +34,7 @@ public class ShapeboxEditor extends Editor {
 				}.setText(" > ", true).setTexture("ui/background").setLevel(-1));
 			}
 		}
-		this.adddMultiplicator(430);
+		this.addMultiplicator(430);
 	}
 	
 	@Override

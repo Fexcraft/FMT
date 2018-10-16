@@ -46,13 +46,17 @@ public class Editor extends Element {
 		if(vis) hideAll(); else show(string);
 	}
 	
-	protected void adddMultiplicator(int y){
+	protected void addMultiplicator(int y){
 		this.elements.put("multiplicator-", new Button(this, "multiplicator-", 12, 26, 4, y){
 			@Override protected boolean processButtonClick(int x, int y, boolean left){
 				((TextField)parent.getElement("multiplicator")).applyChange(FMTB.MODEL.multiply(0.5f)); return true;
 			}
 		}.setText(" < ", true).setTexture("ui/background").setLevel(-1));
-		this.elements.put("multiplicator", new TextField(this, "multiplicator", 140, 16, y).setAsNumberfield(0.0001f, 1000, true).setLevel(-1));
+		this.elements.put("multiplicator", new TextField(this, "multiplicator", 140, 16, y){
+			@Override protected boolean processScrollWheel(int wheel){
+				applyChange(FMTB.MODEL.multiply(wheel > 0 ? 2.0f : 0.5f)); return true;
+			}
+		}.setAsNumberfield(0.0001f, 1000, true).setLevel(-1));
 		this.elements.put("multiplicator+", new Button(this, "multiplicator+", 12, 26, 152, y){
 			@Override protected boolean processButtonClick(int x, int y, boolean left){
 				((TextField)parent.getElement("multiplicator")).applyChange(FMTB.MODEL.multiply(2.0f)); return true;

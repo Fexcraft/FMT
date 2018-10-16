@@ -40,6 +40,7 @@ public class UserInterface {
 	public void render(){
 		width = root.displaymode.getWidth(); height = root.displaymode.getHeight();
 		{
+			GL11.glPushMatrix();
 	        GL11.glMatrixMode(GL11.GL_PROJECTION);
 	        GL11.glPushMatrix();
 	        GL11.glLoadIdentity();
@@ -60,6 +61,7 @@ public class UserInterface {
 	        GL11.glDepthFunc(GL11.GL_LEQUAL);
 	        GL11.glClearColor(0.5f, 0.5f, 0.5f, 0.2f);
 	        GL11.glClearDepth(1.0);
+	        GL11.glPopMatrix();
 		}
 	}
 

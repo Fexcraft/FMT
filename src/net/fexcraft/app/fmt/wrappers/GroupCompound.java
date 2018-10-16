@@ -78,6 +78,7 @@ public class GroupCompound {
 				case "size":{
 					if(shape.getType().isCuboid()){
 						bool = shape.setFloat(id, x, y, z, value);
+						FMTB.print(id, value, FMTB.MODEL.rate);
 					} break;
 				}
 				case "pos": case "off": {
@@ -313,7 +314,7 @@ public class GroupCompound {
 	}
 
 	public float multiply(float flea){
-		rate *= flea; return rate = rate < 0.01f ? 0.01f : rate > 1000 ? 1000 : rate;
+		return rate = (rate *= flea) < 0.01f ? 0.01f : rate > 1000 ? 1000 : rate;
 	}
 
 	public void changeGroupIndex(int i){

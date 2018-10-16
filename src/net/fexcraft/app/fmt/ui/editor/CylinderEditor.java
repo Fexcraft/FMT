@@ -46,7 +46,7 @@ public class CylinderEditor extends Editor {
 				}.setText(" > ", true).setTexture("ui/background").setLevel(-1));
 			}
 		}
-		this.adddMultiplicator(180);
+		this.addMultiplicator(180);
 	}
 	
 	@Override

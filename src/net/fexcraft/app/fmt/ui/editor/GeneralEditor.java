@@ -66,7 +66,7 @@ public class GeneralEditor extends Editor {
 			}
 		}.setText(" > ", true).setTexture("ui/background").setLevel(-1));
 		//
-		this.adddMultiplicator(330);
+		this.addMultiplicator(330);
 	}
 	
 	@Override
