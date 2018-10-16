@@ -116,6 +116,7 @@ public class GroupCompound {
 			if(compound.isEmpty()) compound.put("group0", new TurboList("group0"));
 			TurboList list = (compound.containsKey("body") ? compound.get("body") : (TurboList)compound.values().toArray()[0]);
 			selection.clear(); selection.add(new Selection(list.id, list.size())); list.add(shape); shape.recompile();
+			this.updateFields();
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -197,6 +198,8 @@ public class GroupCompound {
 				//
 				editor.getField("group").setText(selection.get(0).group, true);
 			}
+			editor.getField("multiplicator").applyChange(rate);
+			//
 			editor = (Editor)FMTB.get().UI.getElement("shapebox_editor");
 			if(poly == null || !poly.getType().isShapebox()){
 				editor.getField("cor0x").applyChange(0);
@@ -264,6 +267,8 @@ public class GroupCompound {
 				editor.getField("cor7y").applyChange(poly.getFloat("cor7", false, true, false));
 				editor.getField("cor7z").applyChange(poly.getFloat("cor7", false, false, true));
 			}
+			editor.getField("multiplicator").applyChange(rate);
+			//
 			editor = (Editor)FMTB.get().UI.getElement("cylinder_editor");
 			if(poly == null || !poly.getType().isCylinder()){
 				editor.getField("cyl0x").applyChange(0); editor.getField("cyl0y").applyChange(0);
@@ -278,6 +283,7 @@ public class GroupCompound {
 				editor.getField("cyl2x").applyChange(poly.getFloat("cyl2", true, false, false));
 				editor.getField("cyl2y").applyChange(poly.getFloat("cyl2", false, true, false));
 			}
+			editor.getField("multiplicator").applyChange(rate);
 		}
 		catch(Exception e){
 			e.printStackTrace();
