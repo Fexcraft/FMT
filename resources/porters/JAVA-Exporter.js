@@ -41,7 +41,7 @@ function convertBox(partObject) {
 
 	// I went mad with multicursor. (Not)
 
-	for (var i=0; i<8; i++) {
+	for (var i = 0; i < 8; i++) {
 		partObject = fillVal(partObject, "x" + i, 0)
 		partObject = fillVal(partObject, "y" + i, 0)
 		partObject = fillVal(partObject, "z" + i, 0)
@@ -66,8 +66,9 @@ function exportModel(jtmt, file) {
 
 	for (var i = 0; i < partGroups.length; i++) {
 		for (var j=0; j < partGroups[i].parts.length; j++) {
-			// print(partGroups[i][j])
+			print(JSON.stringify(partGroups[i].parts[j]))
 			partGroups[i].parts[j] = convertBox(partGroups[i].parts[j])
+			print(JSON.stringify(partGroups[i].parts[j]))
 		}
 	}
 
@@ -76,17 +77,19 @@ function exportModel(jtmt, file) {
 		print(currentGroupName)
 		var currentGroupParts = partGroups[i].parts
 		print(currentGroupParts)
-		dynamicText += "\n\t\t{0} = new ModelRendererTurbo[{1}];".replace("{0}",currentGroupName).replace(
+		dynamicText += "\n§{0} = new ModelRendererTurbo[{1}];".replace("{0}",currentGroupName).replace(
 			"{1}", currentGroupParts.length
 		)
 		for (var j = 0; j < currentGroupParts.length; j++) {
 			var currentPart = currentGroupParts[j]
-			dynamicText += "\n\t\t${currentGroupName}[{0}] = new ModelRendererTurbo[this, {1}, {2}, textureX, textureY];".replace(
-				"{0}", j
+			dynamicText += "\n§{0}[{1}] = new ModelRendererTurbo(this, {2}, {3}, textureX, textureY);".replace(
+				"{0}", currentGroupName
 				).replace(
-				"{1}", currentPart.texture_x
+				"{1}", j
 				).replace(
-				"{2}", currentPart.texture_y
+				"{2}", currentPart.texture_x
+				).replace(
+				"{3}", currentPart.texture_y
 			)
 			var offsets = "{0}F, {1}F, {2}F".replace(
 				"{0}", currentPart.off_x
@@ -104,10 +107,10 @@ function exportModel(jtmt, file) {
 			)
 
 			var corners = ""
-			for (var i=0; i<8; i++) {
-				corners += ", {0}F, {1}F, {2}F".replace("{0}", currentPart["x"+i]).replace("{1}", currentPart["y"+i]).replace("{2}"), currentPart["z"+i]
+			for (var i = 0; i < 8; i++) {
+				corners += ", {0}F, {1}F, {2}F".replace("{0}", currentPart["x"+i]).replace("{1}", currentPart["y"+i]).replace("{2}", currentPart["z"+i])
 			}
-			dynamicText += "\n\t\t{0}[{1}].addShapeBox({2}, {3}, 0F{4});".replace(
+			dynamicText += "\n§{0}[{1}].addShapeBox({2}, {3}, 0F{4});".replace(
 				"{0}", currentGroupName
 			).replace(
 				"{1}", j
@@ -126,7 +129,7 @@ function exportModel(jtmt, file) {
 				"{2}", currentPart.pos_z
 			)
 
-			dynamicText += "\n\t\t{0}[{1}].setRotationPoint({2});".replace(
+			dynamicText += "\n§{0}[{1}].setRotationPoint({2});".replace(
 				"{0}", currentGroupName
 			).replace(
 				"{1}", j
@@ -135,7 +138,7 @@ function exportModel(jtmt, file) {
 			)
 
 			if (currentPart.rot_x != undefined) {
-				dynamicText += "\n\t\t{0}[{1}].rotateAngleX = {2}}F;".replace(
+				dynamicText += "\n§{0}[{1}].rotateAngleX = {2}F;".replace(
 					"{0}", currentGroupName
 				).replace(
 					"{1}", j
@@ -144,7 +147,7 @@ function exportModel(jtmt, file) {
 				)
 			}
 			if (currentPart.rot_y != undefined) {
-				dynamicText += "\n\t\t{0}[{1}].rotateAngleY = {2}}F;".replace(
+				dynamicText += "\n§{0}[{1}].rotateAngleY = {2}F;".replace(
 					"{0}", currentGroupName
 				).replace(
 					"{1}", j
@@ -153,7 +156,7 @@ function exportModel(jtmt, file) {
 				)
 			}
 			if (currentPart.rot_z != undefined) {
-				dynamicText += "\n\t\t{0}[{1}].rotateAngleZ = {2}}F;".replace(
+				dynamicText += "\n§{0}[{1}].rotateAngleZ = {2}F;".replace(
 					"{0}", currentGroupName
 				).replace(
 					"{1}", j
@@ -167,27 +170,31 @@ function exportModel(jtmt, file) {
 	var outputText = ""
 	if (modelType == "vehicle") {
 		outputText += MultiString(function() {/**
-		package com.flansmod.client.model.INSERTYOURPACKAGENAMEHERE;
+package com.flansmod.client.model.INSERTYOURPACKAGENAMEHERE;
 
-		import com.flansmod.client.model.ModelVehicle;
-		import com.flansmod.client.tmt.ModelRendererTurbo;
-		import com.flansmod.client.tmt.Coord2D;
-		import com.flansmod.client.tmt.Shape2D;
+import com.flansmod.client.model.ModelVehicle;
+import com.flansmod.client.tmt.ModelRendererTurbo;
+import com.flansmod.client.tmt.Coord2D;
+import com.flansmod.client.tmt.Shape2D;
 
-		public class YOURMODELNAMEHERE extends ModelVehicle
-		{
-			§int textureX = ${model.texture_size_x};
-			§int textureY = ${model.texture_size_y};
+public class YOURMODELNAMEHERE extends ModelVehicle
+{
+	int textureX = ${model.texture_size_x};
+	int textureY = ${model.texture_size_y};
 
-			§public YOURMODELNAMEHERE()
-			§{
-				§§±
-				§§translateAll(0F, 0F, 0F);
-				§§flipAll();
-			§}
-		}
-		**/}).replace("§", "\t").replace("§", "\t")
+	public YOURMODELNAMEHERE()
+	{
+±
+		translateAll(0F, 0F, 0F);
+		flipAll();
+	}
+}
+		**/})
+
 		outputText = outputText.replace('±', dynamicText)
+		while (outputText.indexOf("§") > -1) {
+			outputText = outputText.replace("§", "\t\t")
+		}
 	}
 
 	var FileWriter = Java.type("java.io.FileWriter");
