@@ -179,8 +179,8 @@ import com.flansmod.client.tmt.Shape2D;
 
 public class YOURMODELNAMEHERE extends ModelVehicle
 {
-	int textureX = ${model.texture_size_x};
-	int textureY = ${model.texture_size_y};
+	int textureX = {E4};
+	int textureY = {E5};
 
 	public YOURMODELNAMEHERE()
 	{
@@ -191,7 +191,7 @@ public class YOURMODELNAMEHERE extends ModelVehicle
 }
 		**/})
 
-		outputText = outputText.replace('±', dynamicText)
+		outputText = outputText.replace('±', dynamicText).replace('{E4}', model.texture_size_x).replace('{E5}', model.texture_size_y)
 		while (outputText.indexOf("§") > -1) {
 			outputText = outputText.replace("§", "\t\t")
 		}
