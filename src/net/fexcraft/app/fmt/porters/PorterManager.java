@@ -65,8 +65,14 @@ public class PorterManager {
 				JOptionPane.showMessageDialog(null, "No valid file choosen.\nImport is cancelled.", "Notice.", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
-			Invocable inv = (Invocable)getPorterFor(file, false).eval();
-			String result = (String)inv.invokeFunction("importModel", new File("./saves/").listFiles()[0]);
+			//attempt to load via hardcoded methods first.
+			if(HardcodedPorters.redirect(file)){
+				JOptionPane.showMessageDialog(null, "Import complete.", "Status", JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}
+			//if it didn't, continue via the normal scripted porters
+			Invocable inv = (Invocable) getPorterFor(file, false).eval();
+			String result = (String) inv.invokeFunction("importModel", new File("./saves/").listFiles()[0]);
 			SaveLoad.loadModel(JsonUtil.getObjectFromString(result));
 			JOptionPane.showMessageDialog(null, "Import complete.", "Status", JOptionPane.INFORMATION_MESSAGE);
 		}

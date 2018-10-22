@@ -13,6 +13,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.porters.HardcodedPorters;
 import net.fexcraft.app.fmt.porters.JsonToTMT;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.porters.PorterManager.Porter;
@@ -95,6 +96,9 @@ public class SaveLoad {
 				@Override
 				public boolean accept(File arg0){
 					if(arg0.isDirectory()) return true;
+					for(String s: HardcodedPorters.extensions()) {
+						if (arg0.getName().contains(s)) return true;
+					}
 					for(String ext : porter.extensions){
 						if(arg0.getName().endsWith(ext)) return true;
 					} return false;

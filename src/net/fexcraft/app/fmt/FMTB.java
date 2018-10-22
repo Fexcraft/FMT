@@ -9,6 +9,7 @@ import javax.swing.JOptionPane;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
@@ -29,7 +30,7 @@ import net.fexcraft.lib.fmr.polygons.Cuboid;
 /**
  * @author Ferdinand Calo' (FEX___96)
  * 
- * All rights reserved © 2018 fexcraft.net
+ * All rights reserved ï¿½ 2018 fexcraft.net
  * */
 public class FMTB {
 	
@@ -63,7 +64,7 @@ public class FMTB {
 			System.exit(1);
 		}
 	}
-	
+
 	public static final FMTB get(){ return INSTANCE; }
 
 	private void setDefaults(boolean full, String string){
@@ -104,7 +105,43 @@ public class FMTB {
             try{ Thread.sleep(100); }
             catch(Exception e){ e.printStackTrace(); }
         }
+
+        //mouse based camera controls
+        if(eternalMode) {
+			if (Mouse.isButtonDown(1)) {
+				Mouse.setGrabbed(true);
+				grabbed = true;
+			} else if (grabbed) {
+				Mouse.setGrabbed(false);
+				grabbed = false;
+			}
+
+
+			if (Mouse.isButtonDown(2)) {//todo not smooth at all
+				if(oldMouseX==-1){
+					oldMouseX=Mouse.getX();
+					oldMouseY=Mouse.getY();
+				}
+				if(updateTick>2) {//offset it because if we do it every frame it gets really janky, but every few frames is fine.
+					ggr.pos.xCoord += (Mouse.getX() - oldMouseX) * 0.01;
+					ggr.pos.yCoord += (Mouse.getY() - oldMouseY) * 0.01;
+
+					Mouse.setCursorPosition(oldMouseX, oldMouseY);
+					updateTick=0;
+				} else {
+					updateTick++;
+				}
+				panning = true;
+			} else if (panning) {
+				oldMouseX=-1;
+				updateTick=0;
+				panning = false;
+			}
+
+		}
 	}
+	int oldMouseX=-1,oldMouseY=-1, updateTick=0;
+	boolean eternalMode = true, grabbed = false, panning=false;
 	
 	private void render(){
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
