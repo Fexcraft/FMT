@@ -7,15 +7,20 @@ import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.ShapeType;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
+import javax.swing.*;
 import java.io.*;
 import java.nio.file.Files;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 public class HardcodedPorters {
 
 
     public static String[] extensions(){
-        return new String[]{".txt"};
+        return new String[]{".mtb"};
     }
 
     public static boolean redirect(File f){
@@ -30,11 +35,31 @@ public class HardcodedPorters {
         return Float.parseFloat(s.replace(",",".").trim());
     }
 
+    static String convertStreamToString(java.io.InputStream inputStream) {
+        return new BufferedReader(new InputStreamReader(inputStream))
+                .lines().collect(Collectors.joining("\n"));
+    }
 
     public static void importMTB(File f){
         try {
             GroupCompound compound = new GroupCompound();
-            List<String> file = Files.readAllLines(f.toPath());
+            ZipFile zip = new ZipFile(f);
+            Enumeration<? extends ZipEntry> entries = zip.entries();
+            InputStream stream=null;
+            while(entries.hasMoreElements()){
+                ZipEntry entry = entries.nextElement();
+                if(entry.getName().equals("Model.txt")){
+                    stream=zip.getInputStream(entry);
+                    break;
+                }
+            }
+            if(stream==null){
+                JOptionPane.showMessageDialog(null, "Import Failed, MTB appears corrupt.", "Status", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+
+
+            String[] file = convertStreamToString(stream).split("\n"); //Files.readAllLines(stream.toPath());
             for(String s:file){
                 String[] parts = s.split("\\u007C");
                 parts[0]=parts[0].trim();
@@ -86,7 +111,7 @@ public class HardcodedPorters {
 
 
             }
-
+            stream.close();
 
             FMTB.MODEL=compound;
 
