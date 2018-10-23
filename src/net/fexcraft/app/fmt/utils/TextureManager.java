@@ -99,9 +99,8 @@ public class TextureManager {
 		
 		private ByteBuffer getBuffer(){
 			buffer = BufferUtils.createByteBuffer(4 * image.getWidth() * image.getHeight());
-			if(!buffer.hasRemaining() || buffer.position() > 0) buffer.clear();
-			for(int x = 0; x < image.getWidth(); x++){
-				for(int y = 0; y < image.getHeight(); y++){
+			for(int y = 0; y < image.getHeight(); y++){
+				for(int x = 0; x < image.getWidth(); x++){
 					Color color = new Color(image.getRGB(x, y), true);
 					buffer.put((byte)color.getRed());
 					buffer.put((byte)color.getGreen());
