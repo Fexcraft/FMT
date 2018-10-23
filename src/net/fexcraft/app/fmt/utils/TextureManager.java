@@ -121,9 +121,7 @@ public class TextureManager {
 		public boolean rebind(){ return rebind = true; }
 		
 		public void bind(){
-			if(glTextureId == null){
-				glTextureId = glTextureId == null ? GL11.glGenTextures() : glTextureId; rebind();
-			}
+			if(glTextureId == null){ glTextureId = GL11.glGenTextures(); rebind(); }
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, glTextureId);
 			if(rebind){
 				GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
