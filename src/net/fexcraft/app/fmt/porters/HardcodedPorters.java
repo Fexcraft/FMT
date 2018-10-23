@@ -40,6 +40,17 @@ public class HardcodedPorters {
                 .lines().collect(Collectors.joining("\n"));
     }
 
+    public static int getSideFromName(String MrMysterious){
+        switch (MrMysterious){
+            case "MR_BOTTOM":{return ModelRendererTurbo.MR_BOTTOM;}
+            case "MR_LEFT":{return ModelRendererTurbo.MR_LEFT;}
+            case "MR_RIGHT":{return ModelRendererTurbo.MR_RIGHT;}
+            case "MR_FRONT":{return ModelRendererTurbo.MR_FRONT;}
+            case "MR_BACK":{return ModelRendererTurbo.MR_BACK;}
+            case "MR_TOP": default:{return ModelRendererTurbo.MR_TOP;}
+        }
+    }
+
     public static void importMTB(File f){
         try {
             GroupCompound compound = new GroupCompound();
@@ -112,6 +123,31 @@ public class HardcodedPorters {
                                             );
                                     break;
                                 }
+                                case "Trapezoid":{
+                                    turbo.addTrapezoid(getFloatFromString(parts[15]), getFloatFromString(parts[16]), getFloatFromString(parts[17]),
+                                            getFloatFromString(parts[9]), getFloatFromString(parts[10]), getFloatFromString(parts[11]),
+                                            0,getFloatFromString(parts[45]),getSideFromName(parts[44]));
+                                    break;
+                                }
+                                case "FlexTrapezoid":{
+                                    turbo.addFlexTrapezoid(getFloatFromString(parts[15]), getFloatFromString(parts[16]), getFloatFromString(parts[17]),
+                                            getFloatFromString(parts[9]), getFloatFromString(parts[10]), getFloatFromString(parts[11]),
+                                            0F,getFloatFromString(parts[52]),
+                                            getFloatFromString(parts[53]),getFloatFromString(parts[54]),getFloatFromString(parts[55]),
+                                            getFloatFromString(parts[55]), getFloatFromString(parts[55]),
+                                            getSideFromName(parts[44]));
+                                    break;
+                                }
+                                case "FlexBox":{
+                                    turbo.addFlexBox(getFloatFromString(parts[15]), getFloatFromString(parts[16]), getFloatFromString(parts[17]),
+                                            getFloatFromString(parts[9]), getFloatFromString(parts[10]), getFloatFromString(parts[11]),
+                                            0F,
+                                            getFloatFromString(parts[47]),getFloatFromString(parts[48]),
+                                            getFloatFromString(parts[49]), getFloatFromString(parts[50]),
+                                            getSideFromName(parts[44])
+                                            );
+                                    break;
+                                }
                             }
                         }
 
@@ -121,12 +157,8 @@ public class HardcodedPorters {
                                 case "Box": {
                                     return ShapeType.BOX;
                                 }
-                                case "ShapeBox": {
-                                    return ShapeType.SHAPEBOX;
-                                }
-
                                 default:{
-                                    return ShapeType.BOX;
+                                    return ShapeType.SHAPEBOX;
                                 }
                             }
                         }
@@ -148,6 +180,13 @@ public class HardcodedPorters {
         } catch (IOException e){
             //literally not even possible.
         }
+
+    }
+
+
+
+
+    public void saveMTB(){
 
     }
 }
