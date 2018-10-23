@@ -75,7 +75,7 @@ public class GeneralEditor extends Editor {
 		font.drawString(4,  40, "Measurements", Color.black);
 		font.drawString(4,  90, "Position (x/y/z)", Color.black);
 		font.drawString(4, 140, "Offset (x/y/z)", Color.black);
-		font.drawString(4, 190, "Rotation (radians)", Color.black);
+		font.drawString(4, 190, "Rotation (degrees)", Color.black);
 		font.drawString(4, 240, "Texture (x/y)", Color.black);
 		font.drawString(4, 290, "Group", Color.black);
 		font.drawString(4, 340, "Multiplicator/Rate", Color.black);
