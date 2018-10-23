@@ -102,16 +102,12 @@ public class TextureManager {
 			if(!buffer.hasRemaining() || buffer.position() > 0) buffer.clear();
 			for(int x = 0; x < image.getWidth(); x++){
 				for(int y = 0; y < image.getHeight(); y++){
-					Color color = new Color(image.getRGB(x, y));
+					Color color = new Color(image.getRGB(x, y), true);
 					buffer.put((byte)color.getRed());
 					buffer.put((byte)color.getGreen());
 					buffer.put((byte)color.getBlue());
 					buffer.put((byte)color.getAlpha());
-					/*int i = image.getRGB(x, y);
-					buffer.put(FMTB.print((byte)(i >>> 16)));
-					buffer.put(FMTB.print((byte)(i >>> 8)));
-					buffer.put(FMTB.print((byte)i));
-					buffer.put(FMTB.print((byte)(i >>> 24)));*/
+					/*int i = image.getRGB(x, y); buffer.put(FMTB.print((byte)(i >>> 16))); buffer.put(FMTB.print((byte)(i >>> 8))); buffer.put(FMTB.print((byte)i)); buffer.put(FMTB.print((byte)(i >>> 24)));*/
 				}
 			} buffer.flip(); rebind = false; return buffer;
 		}
