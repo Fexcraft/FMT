@@ -21,56 +21,6 @@ import org.newdawn.slick.opengl.TextureImpl;
  */
 public class TextureManager {
 	
-	/*private static final Map<String, Texture> textures = new HashMap<String, Texture>();
-
-	public static final void loadTextures(){
-		textures.clear(); String name;
-		File folder = new File("./resources/textures/");
-		for(File file : folder.listFiles()){
-			if(file.isDirectory()) continue;
-			if((name = file.getName()).endsWith(".png") || name.endsWith(".PNG")){
-				loadResourcePNG(name = name.replace(".png", ""));
-			} else continue;
-		}
-	}
-	
-	public static final Texture getTexture(String name){
-		return textures.containsKey(name) ? textures.get(name) : textures.get("null");
-	}
-	
-	public static final Map<String, Texture> getTextures(){
-		return textures;
-	}
-	
-	public static final Texture loadTexture(String id, String path, String type){
-		try{ //FMTB.print(id, path, type);
-			Texture texture = TextureLoader.getTexture(type, ResourceLoader.getResourceAsStream(path));
-			textures.put(id, texture); return texture;
-		}
-		catch(IOException e){ e.printStackTrace();  return null; }
-	}
-	
-	public static final Texture loadPNG(String id, String string){
-		return loadTexture(id, string, "PNG");
-	}
-	
-	public static final Texture loadResourcePNG(String string){
-		return loadPNG(string, "./resources/textures/" + string + ".png");
-	}
-	
-	private static String last;
-
-	public static void bindTexture(String string){
-		if(string.equals(last)) return; last = string;
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, getTexture(string).getTextureID());
-	}
-
-	public static void unbind(){
-		TextureImpl.bindNone(); last = "";
-	}*/
-	
 	private static final Map<String, Texture> TEXTURES = new HashMap<>();
 	private static Texture texture, nulltex;
 	
@@ -113,7 +63,7 @@ public class TextureManager {
 	
 	public static class Texture {
 		
-		private ByteBuffer buffer;
+		private static ByteBuffer buffer;
 		private BufferedImage image;
 		private Integer glTextureId;
 		private int width, height;
@@ -121,17 +71,17 @@ public class TextureManager {
 		public final String name;//was required for debug
 		
 		public Texture(String name, InputStream file) throws IOException {
-			this.name = name; image = ImageIO.read(file); width = image.getWidth(); height = image.getHeight(); buffer = newBuffer();
+			this.name = name; image = ImageIO.read(file); width = image.getWidth(); height = image.getHeight();
 		}
 		
 		public Texture(String name, int width, int height){
 			image = new BufferedImage(this.width = width, this.height = height, BufferedImage.TYPE_INT_ARGB);
 			for(int x = 0; x < width; x++) for(int y = 0; y < height; y++) image.setRGB(x, y, Color.WHITE.getRGB());
-			buffer = newBuffer(); this.name = name;
+			this.name = name;
 		}
 		
 		public Texture(String name, BufferedImage image){
-			this.name = name; this.image = image; this.width = image.getWidth(); this.height = image.getHeight(); this.buffer = newBuffer();
+			this.name = name; this.image = image; this.width = image.getWidth(); this.height = image.getHeight();
 		}
 		
 		public void resize(int width, int height){
@@ -144,16 +94,11 @@ public class TextureManager {
 					else newimg.setRGB(x, y, image.getRGB(x, y));
 				}
 			}
-			this.image = newimg; this.width = image.getWidth(); this.height = image.getHeight();
-			this.buffer = newBuffer(); this.rebind = true;
-		}
-		
-		private ByteBuffer newBuffer(){
-			return BufferUtils.createByteBuffer(4 * image.getWidth() * image.getHeight());
+			this.image = newimg; this.width = image.getWidth(); this.height = image.getHeight(); rebind();
 		}
 		
 		private ByteBuffer getBuffer(){
-			if(!rebind) return buffer; rebind = false;
+			buffer = BufferUtils.createByteBuffer(4 * image.getWidth() * image.getHeight());
 			if(!buffer.hasRemaining() || buffer.position() > 0) buffer.clear();
 			for(int x = 0; x < image.getWidth(); x++){
 				for(int y = 0; y < image.getHeight(); y++){
@@ -168,7 +113,7 @@ public class TextureManager {
 					buffer.put(FMTB.print((byte)i));
 					buffer.put(FMTB.print((byte)(i >>> 24)));*/
 				}
-			} buffer.flip(); return buffer;
+			} buffer.flip(); rebind = false; return buffer;
 		}
 		
 		public BufferedImage getImage(){ return image; }
@@ -176,16 +121,19 @@ public class TextureManager {
 		public boolean rebind(){ return rebind = true; }
 		
 		public void bind(){
-			if(glTextureId == null || rebind){
-				glTextureId = glTextureId == null ? GL11.glGenTextures() : glTextureId;
+			if(glTextureId == null){
+				glTextureId = glTextureId == null ? GL11.glGenTextures() : glTextureId; rebind();
+			}
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, glTextureId);
+			if(rebind){
 				GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
 		        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
 		        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 		        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, getBuffer());
+		        buffer.clear();
 			}
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, glTextureId);
 		}
-		
+
 		public int getWidth(){ return width; }
 		
 		public int getHeight(){ return height; }
