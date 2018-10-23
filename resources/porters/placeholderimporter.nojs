@@ -17,6 +17,6 @@ var importModel = function(file){
 	return "{}";
 }
 
-var importModel = function(jtmt, file){
+var exportModel = function(jtmt, file){
 	return "Nothing was done, this is a placeholder.";
 }

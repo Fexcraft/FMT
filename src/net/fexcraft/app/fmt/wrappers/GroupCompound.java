@@ -78,7 +78,6 @@ public class GroupCompound {
 				case "size":{
 					if(shape.getType().isCuboid()){
 						bool = shape.setFloat(id, x, y, z, value);
-						FMTB.print(id, value, FMTB.MODEL.rate);
 					} break;
 				}
 				case "pos": case "off": {

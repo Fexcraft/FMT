@@ -83,7 +83,7 @@ public class PorterManager {
 				return;
 			}
 			Invocable inv = (Invocable)getPorterFor(file, true).eval();
-			String result = (String)inv.invokeFunction("exportModel", SaveLoad.saveModel().toString(), file);
+			String result = (String)inv.invokeFunction("exportModel", SaveLoad.modelToJTMT(true).toString(), file);
 			JOptionPane.showMessageDialog(null, "Export complete.\n" + result, "Status", JOptionPane.INFORMATION_MESSAGE);
 			Desktop.getDesktop().open(file.getParentFile());
 		}

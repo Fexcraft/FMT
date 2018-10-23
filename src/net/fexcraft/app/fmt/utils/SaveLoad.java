@@ -124,13 +124,13 @@ public class SaveLoad {
 			JOptionPane.showMessageDialog(null, "Model save file is 'null'!\nModel will not be saved.", "Information.", JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}
-		JsonUtil.write(FMTB.MODEL.file, saveModel());
+		JsonUtil.write(FMTB.MODEL.file, modelToJTMT(false));
 	}
 
 	/**
 	 * @return JTMT save form of the Model/GroupCompound
 	 */
-	public static JsonObject saveModel(){
+	public static JsonObject modelToJTMT(boolean export){
 		GroupCompound compound = FMTB.MODEL;
 		JsonObject obj = new JsonObject();
 		obj.addProperty("format", 1);
@@ -149,7 +149,7 @@ public class SaveLoad {
 		for(Entry<String, TurboList> entry : compound.getCompound().entrySet()){
 			JsonArray array = new JsonArray(); TurboList list = entry.getValue();
 			for(PolygonWrapper wrapper : list){
-				array.add(wrapper.toJson(false));
+				array.add(wrapper.toJson(export));
 			}
 			model.add(entry.getKey(), array);
 		}
