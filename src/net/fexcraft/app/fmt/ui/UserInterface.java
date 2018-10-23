@@ -19,12 +19,12 @@ public class UserInterface {
 
 	public UserInterface(FMTB main){
 		this.root = main;
-		TextureManager.loadResourcePNG("ui/background");
-		TextureManager.loadResourcePNG("ui/button_bg");
-		TextureManager.loadResourcePNG("icons/group_delete");
-		TextureManager.loadResourcePNG("icons/group_visible");
-		TextureManager.loadResourcePNG("icons/group_edit");
-		TextureManager.loadResourcePNG("icons/group_minimize");
+		TextureManager.loadTexture("ui/background");
+		TextureManager.loadTexture("ui/button_bg");
+		TextureManager.loadTexture("icons/group_delete");
+		TextureManager.loadTexture("icons/group_visible");
+		TextureManager.loadTexture("icons/group_edit");
+		TextureManager.loadTexture("icons/group_minimize");
 		elements.put("crossbar", new Crossbar());
 		elements.put("toolbar", new Toolbar());
 		elements.put("general_editor", new GeneralEditor());

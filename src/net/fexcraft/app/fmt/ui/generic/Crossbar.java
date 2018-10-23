@@ -7,7 +7,7 @@ public class Crossbar extends Element {
 	
 	public Crossbar(){
 		super(null, "crossbar"); this.z = 100;
-		TextureManager.loadResourcePNG("ui/center_marker");
+		TextureManager.loadTexture("ui/center_marker");
 	}
 
 	@Override

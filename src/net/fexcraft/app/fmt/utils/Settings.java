@@ -41,5 +41,9 @@ public class Settings {
 	public static boolean togglePolygoMarker(){
 		return polygon_marker = !polygon_marker;
 	}
+	
+	public static boolean toggleDemo(){
+		return demo = !demo;
+	}
 
 }
