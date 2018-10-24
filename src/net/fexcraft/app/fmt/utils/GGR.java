@@ -56,13 +56,7 @@ public class GGR {
         	if(Mouse.isButtonDown(1) && !clickedR) FMTB.get().UI.onButtonPress(1); clickedR = Mouse.isButtonDown(1);
         	if((wheel = Mouse.getDWheel()) != 0){
         		if(FMTB.get().UI.onScrollWheel(wheel)); else {
-<<<<<<< HEAD
-        			//TODO "zoom in/out
-
-
-=======
         			//
->>>>>>> master
         		}
         	}
         }
