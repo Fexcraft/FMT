@@ -2,9 +2,10 @@ package net.fexcraft.app.fmt.porters;
 
 import com.google.gson.JsonObject;
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.wrappers.GroupCompound;
-import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
-import net.fexcraft.app.fmt.wrappers.ShapeType;
+import net.fexcraft.app.fmt.utils.Vec3f;
+import net.fexcraft.app.fmt.wrappers.*;
+import net.fexcraft.lib.fmr.PolygonShape;
+import net.fexcraft.lib.fmr.polygons.Cuboid;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 import javax.swing.*;
@@ -81,49 +82,43 @@ public class HardcodedPorters {
                 }if(parts[0].equals("ModelAuthor") && parts.length>1) {
                     compound.creators.add(parts[1]);
                 }  else if(parts[0].equals("Element")){
-                    PolygonWrapper polygon = new PolygonWrapper(compound) {
-                        @Override
-                        public void recompile() {
-                            name = parts[3];
-                            turbo = new ModelRendererTurbo(null, parts[3]);
-                            turbo.texoffx = Integer.parseInt(parts[18]);
-                            turbo.texoffy = Integer.parseInt(parts[19]);
-                            turbo.setRotationPoint(getFloatFromString(parts[6]), getFloatFromString(parts[7]), getFloatFromString(parts[8]));
-                            turbo.rotateAngleX = getFloatFromString(parts[12]);
-                            if (turbo.rotateAngleX != 0) {
-                                turbo.rotateAngleX *= 0.01745329259;
-                            }
-                            turbo.rotateAngleY = getFloatFromString(parts[13]);
-                            if (turbo.rotateAngleY != 0) {
-                                turbo.rotateAngleY *= 0.01745329259;
-                            }
-                            turbo.rotateAngleZ = getFloatFromString(parts[14]);
-                            if (turbo.rotateAngleZ != 0) {
-                                turbo.rotateAngleZ *= -0.01745329259;
-                            }
+                    BoxWrapper polygon = new BoxWrapper(compound);
+                    polygon.name = parts[3];
+                    polygon.size = new Vec3f(getFloatFromString(parts[9]), getFloatFromString(parts[10]), getFloatFromString(parts[11]));
+                    polygon.pos = new Vec3f(getFloatFromString(parts[15]), getFloatFromString(parts[16]), getFloatFromString(parts[17]));
+                    polygon.rot = new Vec3f(getFloatFromString(parts[6]), getFloatFromString(parts[7]), getFloatFromString(parts[8]));
+                    polygon.textureX = Integer.parseInt(parts[18]);
+                    polygon.textureX = Integer.parseInt(parts[19]);
+                    if (polygon.rot.xCoord != 0) {
+                        polygon.rot.xCoord *= 0.01745329259;
+                    }
+                    if (polygon.rot.yCoord != 0) {
+                        polygon.rot.yCoord *= 0.01745329259;
+                    }
+                    if (polygon.rot.zCoord != 0) {
+                        polygon.rot.zCoord *= -0.01745329259;
+                    }
 
-
-                            switch (parts[5]){
-                                case "Box":{
-                                    turbo.addBox(getFloatFromString(parts[15]), getFloatFromString(parts[16]), getFloatFromString(parts[17]),
-                                            getFloatFromString(parts[9]), getFloatFromString(parts[10]), getFloatFromString(parts[11]));
-                                    break;}
-                                case "Shapebox":{
-                                    turbo.addShapeBox(getFloatFromString(parts[15]), getFloatFromString(parts[16]), getFloatFromString(parts[17]),
-                                            getFloatFromString(parts[9]), getFloatFromString(parts[10]), getFloatFromString(parts[11]),
-                                            0,
-                                            getFloatFromString(parts[20]),getFloatFromString(parts[28]),getFloatFromString(parts[36]),
-                                            getFloatFromString(parts[21]),getFloatFromString(parts[29]),getFloatFromString(parts[37]),
-                                            getFloatFromString(parts[22]),getFloatFromString(parts[30]),getFloatFromString(parts[38]),
-                                            getFloatFromString(parts[23]),getFloatFromString(parts[31]),getFloatFromString(parts[39]),
-                                            getFloatFromString(parts[24]),getFloatFromString(parts[32]),getFloatFromString(parts[40]),
-                                            getFloatFromString(parts[25]),getFloatFromString(parts[33]),getFloatFromString(parts[41]),
-                                            getFloatFromString(parts[26]),getFloatFromString(parts[34]),getFloatFromString(parts[42]),
-                                            getFloatFromString(parts[27]),getFloatFromString(parts[35]),getFloatFromString(parts[43])
-                                            );
-                                    break;
-                                }
-                                case "Trapezoid":{
+                    switch (parts[5]){
+                        case "Box":{
+                            compound.add(polygon);
+                            break;
+                        }
+                        case "Shapebox":{
+                            compound.add(((ShapeboxWrapper)polygon).setCoords(
+                                    new Vec3f(getFloatFromString(parts[20]),getFloatFromString(parts[28]),getFloatFromString(parts[36])),
+                                    new Vec3f(getFloatFromString(parts[21]),getFloatFromString(parts[29]),getFloatFromString(parts[37])),
+                                    new Vec3f(getFloatFromString(parts[22]),getFloatFromString(parts[30]),getFloatFromString(parts[38])),
+                                    new Vec3f(getFloatFromString(parts[23]),getFloatFromString(parts[31]),getFloatFromString(parts[39])),
+                                    new Vec3f(getFloatFromString(parts[24]),getFloatFromString(parts[32]),getFloatFromString(parts[40])),
+                                    new Vec3f(getFloatFromString(parts[25]),getFloatFromString(parts[33]),getFloatFromString(parts[41])),
+                                    new Vec3f(getFloatFromString(parts[26]),getFloatFromString(parts[34]),getFloatFromString(parts[42])),
+                                    new Vec3f(getFloatFromString(parts[27]),getFloatFromString(parts[35]),getFloatFromString(parts[43]))
+                            ));
+                            break;
+                        }
+                        /*
+                        case "Trapezoid":{
                                     turbo.addTrapezoid(getFloatFromString(parts[15]), getFloatFromString(parts[16]), getFloatFromString(parts[17]),
                                             getFloatFromString(parts[9]), getFloatFromString(parts[10]), getFloatFromString(parts[11]),
                                             0,getFloatFromString(parts[45]),getSideFromName(parts[44]));
@@ -148,28 +143,13 @@ public class HardcodedPorters {
                                             );
                                     break;
                                 }
-                            }
-                        }
-
-                        @Override
-                        public ShapeType getType() {
-                            switch (parts[5]) {
-                                case "Box": {
-                                    return ShapeType.BOX;
+                                case "Shape":{
+                                    turbo.addShape3D();
+                                    break;
                                 }
-                                default:{
-                                    return ShapeType.SHAPEBOX;
-                                }
-                            }
-                        }
+                        */
 
-                        @Override
-                        protected JsonObject populateJson(JsonObject obj, boolean export) {
-                            return null;
-                        }
-                    };
-
-                    compound.add(polygon);
+                    }
                 }
             }
             stream.close();
@@ -186,7 +166,10 @@ public class HardcodedPorters {
 
 
 
-    public void saveMTB(){
+    public void exportMTB(){
+
+        StringBuilder output = new StringBuilder();
+
 
     }
 }

@@ -1,18 +1,16 @@
 package net.fexcraft.app.fmt.wrappers;
 
-import org.lwjgl.opengl.GL11;
-
 import com.google.gson.JsonObject;
-
 import net.fexcraft.app.fmt.utils.Vec3f;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
+import org.lwjgl.opengl.GL11;
 
-public class ShapeboxWrapper extends BoxWrapper {
-	
-	public Vec3f cor0 = new Vec3f(), cor1 = new Vec3f(), cor2 = new Vec3f(), cor3 = new Vec3f(),
-				 cor4 = new Vec3f(), cor5 = new Vec3f(), cor6 = new Vec3f(), cor7 = new Vec3f();
-	
-	public ShapeboxWrapper(GroupCompound compound){
+public class FlexboxWrapper extends BoxWrapper {
+
+	public float[] scales;
+	public int mr_side=0;
+
+	public FlexboxWrapper(GroupCompound compound){
 		super(compound);
 	}
 	
@@ -20,15 +18,8 @@ public class ShapeboxWrapper extends BoxWrapper {
 	public void recompile(){
 		if(turbo != null && turbo.displaylist() != null){ GL11.glDeleteLists(turbo.displaylist(), 1); turbo = null; }
 		turbo = new ModelRendererTurbo(null, textureX, textureY, compound.textureX, compound.textureY);
-		turbo.addShapeBox(off.xCoord, off.yCoord, off.zCoord, size.xCoord, size.yCoord, size.zCoord, 0,
-			cor0.xCoord, cor0.yCoord, cor0.zCoord,
-			cor1.xCoord, cor1.yCoord, cor1.zCoord,
-			cor2.xCoord, cor2.yCoord, cor2.zCoord,
-			cor3.xCoord, cor3.yCoord, cor3.zCoord,
-			cor4.xCoord, cor4.yCoord, cor4.zCoord,
-			cor5.xCoord, cor5.yCoord, cor5.zCoord,
-			cor6.xCoord, cor6.yCoord, cor6.zCoord,
-			cor7.xCoord, cor7.yCoord, cor7.zCoord);
+		turbo.addFlexBox(off.xCoord, off.yCoord, off.zCoord, size.xCoord, size.yCoord, size.zCoord, 1f,
+			scales[0],scales[1],scales[2],scales[3], mr_side);
 		turbo.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord);
 		turbo.rotateAngleX = rot.xCoord; turbo.rotateAngleY = rot.yCoord; turbo.rotateAngleZ = rot.zCoord;
 		//
@@ -155,7 +146,7 @@ public class ShapeboxWrapper extends BoxWrapper {
 	}
 
 
-	public ShapeboxWrapper setCoords(Vec3f xyz0, Vec3f xyz1, Vec3f xyz2, Vec3f xyz3, Vec3f xyz4, Vec3f xyz5, Vec3f xyz6, Vec3f xyz7){
+	public FlexboxWrapper setCoords(Vec3f xyz0, Vec3f xyz1, Vec3f xyz2, Vec3f xyz3, Vec3f xyz4, Vec3f xyz5, Vec3f xyz6, Vec3f xyz7){
 		cor0=xyz0;cor1=xyz1;cor2=xyz2;cor3=xyz3;cor4=xyz4;cor5=xyz5;cor6=xyz6;cor7=xyz7;
 		return this;
 	}
