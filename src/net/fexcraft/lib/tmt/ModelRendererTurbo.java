@@ -319,104 +319,42 @@ public class ModelRendererTurbo {
 	 * @param bScale4 the "scale" of the bottom - Right
 	 * @param dir     the side the scaling is applied to
 	 */
-	public void addFlexBox(float x, float y, float z, float w, float h, float d, float scale, float bScale1, float bScale2, float bScale3, float bScale4, int dir)
-	{
-		float f4 = x + w;
-		float f5 = y + h;
-		float f6 = z + d;
-		x -= scale;
-		y -= scale;
-		z -= scale;
-		f4 += scale;
-		f5 += scale;
-		f6 += scale;
-
-		int m = (mirror ? -1 : 1);
-		if(mirror)
-		{
-			float f7 = f4;
-			f4 = x;
-			x = f7;
+	public void addFlexBox(float x, float y, float z, float w, float h, float d, float scale, float bScale1, float bScale2, float bScale3, float bScale4, int dir){
+		float f4 = x + w, f5 = y + h, f6 = z + d;
+		x -= scale; y -= scale; z -= scale; f4 += scale; f5 += scale; f6 += scale;
+		int m = (mirror ? -1 : 1); if(mirror){ float f7 = f4; f4 = x; x = f7; }
+		float[] v0 = {x, y, z}, v1 = {f4, y, z}, v2 = {f4, f5, z}, v3 = {x, f5, z};
+		float[] v4 = {x, y, f6}, v5 = {f4, y, f6}, v6 = {f4, f5, f6}, v7 = {x, f5, f6};
+		//
+		switch(dir){
+			case MR_RIGHT:{
+				v0[1] -= bScale1; v0[2] -= bScale3; v3[1] += bScale2; v3[2] -= bScale3;
+				v4[1] -= bScale1; v4[2] += bScale4; v7[1] += bScale2; v7[2] += bScale4; break;
+			}
+			case MR_LEFT:{
+				v1[1] -= bScale1; v1[2] -= bScale3; v2[1] += bScale2; v2[2] -= bScale3;
+				v5[1] -= bScale1; v5[2] += bScale4; v6[1] += bScale2; v6[2] += bScale4; break;
+			}
+			case MR_FRONT:{
+				v0[0] -= m * bScale4; v0[1] -= bScale1; v1[0] += m * bScale3; v1[1] -= bScale1;
+				v2[0] += m * bScale3; v2[1] += bScale2; v3[0] -= m * bScale4; v3[1] += bScale2; break;
+			}
+			case MR_BACK:{
+				v4[0] -= m * bScale4; v4[1] -= bScale1; v5[0] += m * bScale3; v5[1] -= bScale1;
+				v6[0] += m * bScale3; v6[1] += bScale2; v7[0] -= m * bScale4; v7[1] += bScale2; break;
+			}
+			case MR_TOP:{
+				v0[0] -= m * bScale1; v0[2] -= bScale3; v1[0] += m * bScale2; v1[2] -= bScale3;
+				v4[0] -= m * bScale1; v4[2] += bScale4; v5[0] += m * bScale2; v5[2] += bScale4; break;
+			}
+			case MR_BOTTOM:{
+				v2[0] += m * bScale2; v2[2] -= bScale3; v3[0] -= m * bScale1; v3[2] -= bScale3;
+				v6[0] += m * bScale2; v6[2] += bScale4; v7[0] -= m * bScale1; v7[2] += bScale4; break;
+			}
 		}
-
-		float[] v = {x, y, z};
-		float[] v1 = {f4, y, z};
-		float[] v2 = {f4, f5, z};
-		float[] v3 = {x, f5, z};
-		float[] v4 = {x, y, f6};
-		float[] v5 = {f4, y, f6};
-		float[] v6 = {f4, f5, f6};
-		float[] v7 = {x, f5, f6};
-
-		switch(dir)
-		{
-			case MR_RIGHT:
-				v[1] -= bScale1;
-				v[2] -= bScale3;
-				v3[1] += bScale2;
-				v3[2] -= bScale3;
-				v4[1] -= bScale1;
-				v4[2] += bScale4;
-				v7[1] += bScale2;
-				v7[2] += bScale4;
-				break;
-			case MR_LEFT:
-				v1[1] -= bScale1;
-				v1[2] -= bScale3;
-				v2[1] += bScale2;
-				v2[2] -= bScale3;
-				v5[1] -= bScale1;
-				v5[2] += bScale4;
-				v6[1] += bScale2;
-				v6[2] += bScale4;
-				break;
-			case MR_FRONT:
-				v[0] -= m * bScale4;
-				v[1] -= bScale1;
-				v1[0] += m * bScale3;
-				v1[1] -= bScale1;
-				v2[0] += m * bScale3;
-				v2[1] += bScale2;
-				v3[0] -= m * bScale4;
-				v3[1] += bScale2;
-				break;
-			case MR_BACK:
-				v4[0] -= m * bScale4;
-				v4[1] -= bScale1;
-				v5[0] += m * bScale3;
-				v5[1] -= bScale1;
-				v6[0] += m * bScale3;
-				v6[1] += bScale2;
-				v7[0] -= m * bScale4;
-				v7[1] += bScale2;
-				break;
-			case MR_TOP:
-				v[0] -= m * bScale1;
-				v[2] -= bScale3;
-				v1[0] += m * bScale2;
-				v1[2] -= bScale3;
-				v4[0] -= m * bScale1;
-				v4[2] += bScale4;
-				v5[0] += m * bScale2;
-				v5[2] += bScale4;
-				break;
-			case MR_BOTTOM:
-				v2[0] += m * bScale2;
-				v2[2] -= bScale3;
-				v3[0] -= m * bScale1;
-				v3[2] -= bScale3;
-				v6[0] += m * bScale2;
-				v6[2] += bScale4;
-				v7[0] -= m * bScale1;
-				v7[2] += bScale4;
-				break;
-		}
-
-		addRectShape(v, v1, v2, v3, v4, v5, v6, v7, w, h, d);
+		//
+		addRectShape(v0, v1, v2, v3, v4, v5, v6, v7, w, h, d);
 	}
-
-
-
 
     /**
      * Adds a trapezoid-like shape. It's achieved by expanding the shape on one side.
@@ -434,94 +372,39 @@ public class ModelRendererTurbo {
      * @param dir the side the scaling is applied to
      */
     public void addTrapezoid(float x, float y, float z, float w, float h, float d, float scale, float bottomScale, int dir){
-        float f4 = x + w;
-        float f5 = y + h;
-        float f6 = z + d;
-        x -= scale;
-        y -= scale;
-        z -= scale;
-        f4 += scale;
-        f5 += scale;
-        f6 += scale;
-                
-        int m = (mirror ? -1 : 1);
-        if(mirror){
-            float f7 = f4;
-            f4 = x;
-            x = f7;
-        }
-        float[] v = {x, y, z};
-        float[] v1 = {f4, y, z};
-        float[] v2 = {f4, f5, z};
-        float[] v3 = {x, f5, z};
-        float[] v4 = {x, y, f6};
-        float[] v5 = {f4, y, f6};
-        float[] v6 = {f4, f5, f6};
-        float[] v7 = {x, f5, f6};
-        
+        float f4 = x + w, f5 = y + h, f6 = z + d; x -= scale; y -= scale; z -= scale; f4 += scale; f5 += scale; f6 += scale;
+        int m = (mirror ? -1 : 1); if(mirror){ float f7 = f4;  f4 = x; x = f7; }
+        float[] v0 = {x, y, z}, v1 = {f4, y, z}, v2 = {f4, f5, z}, v3 = {x, f5, z};
+        float[] v4 = {x, y, f6}, v5 = {f4, y, f6}, v6 = {f4, f5, f6}, v7 = {x, f5, f6};
+        //
         switch(dir){
-	        case MR_RIGHT:
-	        	v[1] -= bottomScale;
-	        	v[2] -= bottomScale;
-	        	v3[1] += bottomScale;
-	        	v3[2] -= bottomScale;
-	        	v4[1] -= bottomScale;
-	        	v4[2] += bottomScale;
-	        	v7[1] += bottomScale;
-	        	v7[2] += bottomScale;
-	        	break;
-	        case MR_LEFT:
-	        	v1[1] -= bottomScale;
-	        	v1[2] -= bottomScale;
-	        	v2[1] += bottomScale;
-	        	v2[2] -= bottomScale;
-	        	v5[1] -= bottomScale;
-	        	v5[2] += bottomScale;
-	        	v6[1] += bottomScale;
-	        	v6[2] += bottomScale;
-	        	break;
-	        case MR_FRONT:
-	        	v[0] -= m * bottomScale;
-	        	v[1] -= bottomScale;
-	        	v1[0] += m * bottomScale;
-	        	v1[1] -= bottomScale;
-	        	v2[0] += m * bottomScale;
-	        	v2[1] += bottomScale;
-	        	v3[0] -= m * bottomScale;
-	        	v3[1] += bottomScale;
-	        	break;
-	        case MR_BACK:
-	        	v4[0] -= m * bottomScale;
-	        	v4[1] -= bottomScale;
-	        	v5[0] += m * bottomScale;
-	        	v5[1] -= bottomScale;
-	        	v6[0] += m * bottomScale;
-	        	v6[1] += bottomScale;
-	        	v7[0] -= m * bottomScale;
-	        	v7[1] += bottomScale;
-	        	break;
-	        case MR_TOP:
-	        	v[0] -= m * bottomScale;
-	        	v[2] -= bottomScale;
-	        	v1[0] += m * bottomScale;
-	        	v1[2] -= bottomScale;
-	        	v4[0] -= m * bottomScale;
-	        	v4[2] += bottomScale;
-	        	v5[0] += m * bottomScale;
-	        	v5[2] += bottomScale;
-	        	break;
-	        case MR_BOTTOM:
-	        	v2[0] += m * bottomScale;
-	        	v2[2] -= bottomScale;
-	        	v3[0] -= m * bottomScale;
-	        	v3[2] -= bottomScale;
-	        	v6[0] += m * bottomScale;
-	        	v6[2] += bottomScale;
-	        	v7[0] -= m * bottomScale;
-	        	v7[2] += bottomScale;
-	        	break;
+	        case MR_RIGHT:{
+	        	v0[1] -= bottomScale; v0[2] -= bottomScale; v3[1] += bottomScale; v3[2] -= bottomScale;
+	        	v4[1] -= bottomScale; v4[2] += bottomScale; v7[1] += bottomScale; v7[2] += bottomScale; break;
+	        }
+	        case MR_LEFT:{
+	        	v1[1] -= bottomScale; v1[2] -= bottomScale; v2[1] += bottomScale; v2[2] -= bottomScale;
+	        	v5[1] -= bottomScale; v5[2] += bottomScale; v6[1] += bottomScale; v6[2] += bottomScale; break;
+	        }
+	        case MR_FRONT:{
+	        	v0[0] -= m * bottomScale; v0[1] -= bottomScale; v1[0] += m * bottomScale; v1[1] -= bottomScale;
+	        	v2[0] += m * bottomScale; v2[1] += bottomScale; v3[0] -= m * bottomScale; v3[1] += bottomScale; break;
+	        }
+	        case MR_BACK:{
+	        	v4[0] -= m * bottomScale; v4[1] -= bottomScale; v5[0] += m * bottomScale; v5[1] -= bottomScale;
+	        	v6[0] += m * bottomScale; v6[1] += bottomScale; v7[0] -= m * bottomScale; v7[1] += bottomScale; break;
+	        }
+	        case MR_TOP:{
+	        	v0[0] -= m * bottomScale; v0[2] -= bottomScale; v1[0] += m * bottomScale; v1[2] -= bottomScale;
+	        	v4[0] -= m * bottomScale; v4[2] += bottomScale; v5[0] += m * bottomScale; v5[2] += bottomScale; break;
+	        }
+	        case MR_BOTTOM:{
+	        	v2[0] += m * bottomScale; v2[2] -= bottomScale; v3[0] -= m * bottomScale; v3[2] -= bottomScale;
+	        	v6[0] += m * bottomScale; v6[2] += bottomScale; v7[0] -= m * bottomScale; v7[2] += bottomScale; break;
+	        }
         }
-        addRectShape(v, v1, v2, v3, v4, v5, v6, v7, w, h, d);
+        //
+        addRectShape(v0, v1, v2, v3, v4, v5, v6, v7, w, h, d);
     }
 
 	/**
@@ -544,27 +427,11 @@ public class ModelRendererTurbo {
 	 * @param fScale2 the "scale" of the top - Right
 	 * @param dir the side the scaling is applied to
 	 */
-	public void addFlexTrapezoid(float x, float y, float z, float w, float h, float d, float scale, float bScale1, float bScale2, float bScale3, float bScale4, float fScale1, float fScale2, int dir)
-	{
-		float f4 = x + w;
-		float f5 = y + h;
-		float f6 = z + d;
-		x -= scale;
-		y -= scale;
-		z -= scale;
-		f4 += scale;
-		f5 += scale;
-		f6 += scale;
+	public void addFlexTrapezoid(float x, float y, float z, float w, float h, float d, float scale, float bScale1, float bScale2, float bScale3, float bScale4, float fScale1, float fScale2, int dir){
+		float f4 = x + w, f5 = y + h, f6 = z + d; x -= scale; y -= scale; z -= scale; f4 += scale; f5 += scale; f6 += scale;
+		int m = (mirror ? -1 : 1); if(mirror){ float f7 = f4; f4 = x; x = f7; }
 
-		int m = (mirror ? -1 : 1);
-		if(mirror)
-		{
-			float f7 = f4;
-			f4 = x;
-			x = f7;
-		}
-
-		float[] v = {x, y, z};
+		float[] v0 = {x, y, z};
 		float[] v1 = {f4, y, z};
 		float[] v2 = {f4, f5, z};
 		float[] v3 = {x, f5, z};
@@ -572,105 +439,54 @@ public class ModelRendererTurbo {
 		float[] v5 = {f4, y, f6};
 		float[] v6 = {f4, f5, f6};
 		float[] v7 = {x, f5, f6};
-
-
-		switch(dir)
-		{
-			case MR_RIGHT:
-				v[2] -= fScale1;
-				v1[2] -= fScale1;
-				v4[2] += fScale2;
-				v5[2] += fScale2;
-
-				v[1] -= bScale1;
-				v[2] -= bScale3;
-				v3[1] += bScale2;
-				v3[2] -= bScale3;
-				v4[1] -= bScale1;
-				v4[2] += bScale4;
-				v7[1] += bScale2;
-				v7[2] += bScale4;
+		//
+		switch(dir){
+			case MR_RIGHT:{
+				v0[2] -= fScale1; v1[2] -= fScale1; v4[2] += fScale2; v5[2] += fScale2;
+				//
+				v0[1] -= bScale1; v0[2] -= bScale3; v3[1] += bScale2; v3[2] -= bScale3;
+				v4[1] -= bScale1; v4[2] += bScale4; v7[1] += bScale2; v7[2] += bScale4;
 				break;
-			case MR_LEFT:
-				v[2] -= fScale1;
-				v1[2] -= fScale1;
-				v4[2] += fScale2;
-				v5[2] += fScale2;
-
-				v1[1] -= bScale1;
-				v1[2] -= bScale3;
-				v2[1] += bScale2;
-				v2[2] -= bScale3;
-				v5[1] -= bScale1;
-				v5[2] += bScale4;
-				v6[1] += bScale2;
-				v6[2] += bScale4;
+			}
+			case MR_LEFT:{
+				v0[2] -= fScale1; v1[2] -= fScale1; v4[2] += fScale2; v5[2] += fScale2;
+				//
+				v1[1] -= bScale1; v1[2] -= bScale3; v2[1] += bScale2; v2[2] -= bScale3;
+				v5[1] -= bScale1; v5[2] += bScale4; v6[1] += bScale2; v6[2] += bScale4;
 				break;
-			case MR_FRONT:
-				v1[1] -= fScale1;
-				v5[1] -= fScale1;
-				v2[1] += fScale2;
-				v6[1] += fScale2;
-
-				v[0] -= m * bScale4;
-				v[1] -= bScale1;
-				v1[0] += m * bScale3;
-				v1[1] -= bScale1;
-				v2[0] += m * bScale3;
-				v2[1] += bScale2;
-				v3[0] -= m * bScale4;
-				v3[1] += bScale2;
+			}
+			case MR_FRONT:{
+				v1[1] -= fScale1; v5[1] -= fScale1; v2[1] += fScale2; v6[1] += fScale2;
+				//
+				v0[0] -= m * bScale4; v0[1] -= bScale1; v1[0] += m * bScale3; v1[1] -= bScale1;
+				v2[0] += m * bScale3; v2[1] += bScale2; v3[0] -= m * bScale4; v3[1] += bScale2;
 				break;
-			case MR_BACK:
-				v1[1] -= fScale1;
-				v5[1] -= fScale1;
-				v2[1] += fScale2;
-				v6[1] += fScale2;
-
-				v4[0] -= m * bScale4;
-				v4[1] -= bScale1;
-				v5[0] += m * bScale3;
-				v5[1] -= bScale1;
-				v6[0] += m * bScale3;
-				v6[1] += bScale2;
-				v7[0] -= m * bScale4;
-				v7[1] += bScale2;
+			}
+			case MR_BACK:{
+				v1[1] -= fScale1; v5[1] -= fScale1; v2[1] += fScale2; v6[1] += fScale2;
+				//
+				v4[0] -= m * bScale4; v4[1] -= bScale1; v5[0] += m * bScale3; v5[1] -= bScale1;
+				v6[0] += m * bScale3; v6[1] += bScale2; v7[0] -= m * bScale4; v7[1] += bScale2;
 				break;
-			case MR_TOP:
-				v1[2] -= fScale1;
-				v2[2] -= fScale1;
-				v5[2] += fScale2;
-				v6[2] += fScale2;
-
-				v[0] -= m * bScale1;
-				v[2] -= bScale3;
-				v1[0] += m * bScale2;
-				v1[2] -= bScale3;
-				v4[0] -= m * bScale1;
-				v4[2] += bScale4;
-				v5[0] += m * bScale2;
-				v5[2] += bScale4;
+			}
+			case MR_TOP:{
+				v1[2] -= fScale1; v2[2] -= fScale1; v5[2] += fScale2; v6[2] += fScale2;
+				//
+				v0[0] -= m * bScale1; v0[2] -= bScale3; v1[0] += m * bScale2; v1[2] -= bScale3;
+				v4[0] -= m * bScale1; v4[2] += bScale4; v5[0] += m * bScale2; v5[2] += bScale4;
 				break;
-			case MR_BOTTOM:
-				v1[2] -= fScale1;
-				v2[2] -= fScale1;
-				v5[2] += fScale2;
-				v6[2] += fScale2;
-
-				v2[0] += m * bScale2;
-				v2[2] -= bScale3;
-				v3[0] -= m * bScale1;
-				v3[2] -= bScale3;
-				v6[0] += m * bScale2;
-				v6[2] += bScale4;
-				v7[0] -= m * bScale1;
-				v7[2] += bScale4;
+			}
+			case MR_BOTTOM:{
+				v1[2] -= fScale1; v2[2] -= fScale1; v5[2] += fScale2; v6[2] += fScale2;
+				//
+				v2[0] += m * bScale2; v2[2] -= bScale3; v3[0] -= m * bScale1; v3[2] -= bScale3;
+				v6[0] += m * bScale2; v6[2] += bScale4; v7[0] -= m * bScale1; v7[2] += bScale4;
 				break;
+			}
 		}
-
-		addRectShape(v, v1, v2, v3, v4, v5, v6, v7, w, h, d);
+		//
+		addRectShape(v0, v1, v2, v3, v4, v5, v6, v7, w, h, d);
 	}
-
 
 	/**
      * Creates a shape from a 2D vector shape.
@@ -777,27 +593,14 @@ public class ModelRendererTurbo {
      * the texture width of each face on the side manually.
      */
     public void addShape3D(float x, float y, float z, Shape2D shape, float depth, int shapeTextureWidth, int shapeTextureHeight, int sideTextureWidth, int sideTextureHeight, int direction, float[] faceLengths){
-    	float rotX = 0;
-    	float rotY = 0;
-    	float rotZ = 0;
+    	float rotX = 0, rotY = 0, rotZ = 0;
     	switch(direction){
-	    	case MR_LEFT:
-	    		rotY = FexcraftModelRenderer.PI / 2;
-	    		break;
-	    	case MR_RIGHT:
-	    		rotY = -FexcraftModelRenderer.PI / 2;
-	    		break;
-	    	case MR_TOP:
-	    		rotX = FexcraftModelRenderer.PI / 2;
-	    		break;
-	    	case MR_BOTTOM:
-	    		rotX = -FexcraftModelRenderer.PI / 2;
-	    		break;
-	    	case MR_FRONT:
-	    		rotY = FexcraftModelRenderer.PI;
-	    		break;
-	    	case MR_BACK:
-	    		break;
+	    	case MR_LEFT: rotY = FexcraftModelRenderer.PI / 2; break;
+	    	case MR_RIGHT: rotY = -FexcraftModelRenderer.PI / 2; break;
+	    	case MR_TOP: rotX = FexcraftModelRenderer.PI / 2; break;
+	    	case MR_BOTTOM: rotX = -FexcraftModelRenderer.PI / 2; break;
+	    	case MR_FRONT: rotY = FexcraftModelRenderer.PI; break;
+	    	case MR_BACK: default: break;
     	}
     	addShape3D(x, y, z, shape, depth, shapeTextureWidth, shapeTextureHeight, sideTextureWidth, sideTextureHeight, rotX, rotY, rotZ, faceLengths);
     }
@@ -830,11 +633,7 @@ public class ModelRendererTurbo {
      */
     public void addShape3D(float x, float y, float z, Shape2D shape, float depth, int shapeTextureWidth, int shapeTextureHeight, int sideTextureWidth, int sideTextureHeight, float rotX, float rotY, float rotZ, float[] faceLengths){
     	Shape3D shape3D = shape.extrude(-x, y, -z, rotX, rotY, rotZ, depth, texoffx, texoffy, textureWidth, textureHeight, shapeTextureWidth, shapeTextureHeight, sideTextureWidth, sideTextureHeight, faceLengths);
-    	if(flip){
-    		for(int idx = 0; idx < shape3D.faces.length; idx++){
-    			shape3D.faces[idx].flipFace();
-    		}
-    	}
+    	if(flip){ for(int idx = 0; idx < shape3D.faces.length; idx++){ shape3D.faces[idx].flipFace(); } }
     	copyTo(shape3D.vertices, shape3D.faces);
     	isShape3D = true;
     }

@@ -156,8 +156,7 @@ public class ShapeboxWrapper extends BoxWrapper {
 
 
 	public ShapeboxWrapper setCoords(Vec3f xyz0, Vec3f xyz1, Vec3f xyz2, Vec3f xyz3, Vec3f xyz4, Vec3f xyz5, Vec3f xyz6, Vec3f xyz7){
-		cor0=xyz0;cor1=xyz1;cor2=xyz2;cor3=xyz3;cor4=xyz4;cor5=xyz5;cor6=xyz6;cor7=xyz7;
-		return this;
+		cor0 = xyz0; cor1 = xyz1; cor2 = xyz2; cor3 = xyz3; cor4 = xyz4; cor5 = xyz5; cor6 = xyz6; cor7 = xyz7; return this;
 	}
 	
 }
