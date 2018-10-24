@@ -151,7 +151,10 @@ public class MTBImporter extends InternalPorter {
                         polygon.rot.zCoord *= -0.01745329259;
                     }
                     //
-                    compound.add(polygon);
+                    if(!compound.getCompound().containsKey("group" + parts[4])){
+                    	compound.getCompound().put("group" + parts[4], new TurboList("group" + parts[4]));
+                    }
+                    compound.getCompound().get("group" + parts[4]).add(polygon);
                 }
             }
             stream.close(); zip.close(); return compound;
