@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
-import net.fexcraft.lib.tmt.ModelRendererTurbo;
 import org.lwjgl.input.Keyboard;
 
 import net.fexcraft.app.fmt.FMTB;
@@ -20,7 +19,7 @@ public class GroupCompound {
 	private TreeMap<String, TurboList> compound = new TreeMap<>();
 	private ArrayList<Selection> selection = new ArrayList<>();
 	public ArrayList<String> creators = new ArrayList<>();
-	public File file;
+	public File file; public String name = "unnamed model";
 	
 	public GroupCompound(){
 		compound.put("body", new TurboList("body"));
@@ -154,7 +153,7 @@ public class GroupCompound {
 	
 	public void updateFields(){
 		try{
-			if(FMTB.get() == null || FMTB.get().UI == null || !FMTB.get().UI.hasElement("general_editor")) return;
+			if(FMTB.get() == null || FMTB.get().UI == null || !FMTB.get().UI.hasElement("general_editor")) return; FMTB.get().setTitle(this.name);
 			Editor editor = (Editor)FMTB.get().UI.getElement("general_editor"); PolygonWrapper poly = getSelectedPolygon(0);
 			if(poly == null){
 				editor.getField("sizex").applyChange(0);
