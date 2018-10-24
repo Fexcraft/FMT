@@ -28,7 +28,7 @@ public abstract class Element {
 	public Element(Element parent, String id){
 		this.parent = parent; this.id = id;
 	}
-	
+
 	/** @param parent may be null **/
 	public void render(int root_width, int root_height){
 		if(!Mouse.isGrabbed()) this.hovered(Mouse.getX(), root_height - Mouse.getY());
@@ -81,7 +81,7 @@ public abstract class Element {
 				if(bool = elm.onButtonClick(x, y, left, elm.hovered)) break;
 			}
 		}
-		return bool ? true : hovered ? processButtonClick(x, y, left) : false;
+		return (bool || hovered) && processButtonClick(x, y, left);
 	}
 
 	protected abstract boolean processButtonClick(int x, int y, boolean left);
@@ -99,7 +99,7 @@ public abstract class Element {
 				if(bool = elm.onScrollWheel(wheel)) break;
 			}
 		}
-		return bool ? true : hovered ? processScrollWheel(wheel) : false;
+		return bool || (hovered && processScrollWheel(wheel));
 	}
 
 	protected boolean processScrollWheel(int wheel){ return false; }

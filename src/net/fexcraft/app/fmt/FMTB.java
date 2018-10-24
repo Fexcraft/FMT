@@ -9,6 +9,7 @@ import javax.swing.JOptionPane;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
@@ -29,7 +30,7 @@ import net.fexcraft.lib.fmr.polygons.Cuboid;
 /**
  * @author Ferdinand Calo' (FEX___96)
  * 
- * All rights reserved © 2018 fexcraft.net
+ * All rights reserved ï¿½ 2018 fexcraft.net
  * */
 public class FMTB {
 	
@@ -63,7 +64,7 @@ public class FMTB {
 			System.exit(1);
 		}
 	}
-	
+
 	public static final FMTB get(){ return INSTANCE; }
 
 	private void setDefaults(boolean full, String string){
