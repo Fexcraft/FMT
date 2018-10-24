@@ -184,6 +184,10 @@ public class FMTB {
 		}
 		System.out.print("]\n");
 	}
+	
+	public static final <T> T print(T obj){
+		System.out.print(String.format("[ %s ]\n", obj)); return obj;
+	}
 
 	public void close(){
 		SaveLoad.checkIfShouldSave(); close = true;

@@ -1,6 +1,7 @@
 package net.fexcraft.app.fmt.wrappers;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
@@ -79,7 +80,6 @@ public class GroupCompound {
 				case "size":{
 					if(shape.getType().isCuboid()){
 						bool = shape.setFloat(id, x, y, z, value);
-						FMTB.print(id, value, FMTB.MODEL.rate);
 					} break;
 				}
 				case "pos": case "off": {
@@ -191,9 +191,9 @@ public class GroupCompound {
 				editor.getField("offy").applyChange(poly.getFloat("off", false, true, false));
 				editor.getField("offz").applyChange(poly.getFloat("off", false, false, true));
 				//
-				editor.getField("rotx").applyChange(poly.getFloat("rot", true, false, false));
-				editor.getField("roty").applyChange(poly.getFloat("rot", false, true, false));
-				editor.getField("rotz").applyChange(poly.getFloat("rot", false, false, true));
+				editor.getField("rotx").applyChange(round(Math.toDegrees(poly.getFloat("rot", true, false, false))));
+				editor.getField("roty").applyChange(round(Math.toDegrees(poly.getFloat("rot", false, true, false))));
+				editor.getField("rotz").applyChange(round(Math.toDegrees(poly.getFloat("rot", false, false, true))));
 				//
 				editor.getField("texx").applyChange(poly.getFloat("tex", true, false, false));
 				editor.getField("texy").applyChange(poly.getFloat("tex", false, true, false));
@@ -290,6 +290,12 @@ public class GroupCompound {
 		catch(Exception e){
 			e.printStackTrace();
 		}
+	}
+	
+	private float round(double df){
+        BigDecimal deci = new BigDecimal(Float.toString((float)df));
+        deci = deci.setScale(3, BigDecimal.ROUND_HALF_UP);
+        return deci.floatValue();
 	}
 
 	private PolygonWrapper getSelectedPolygon(int i){
