@@ -117,32 +117,29 @@ public class HardcodedPorters {
                             ));
                             break;
                         }
-                        /*
+                        case "FlexBox":{
+                            compound.add(((FlexboxWrapper)polygon).setCoords(
+                                    getFloatFromString(parts[47]),getFloatFromString(parts[48]),
+                                    getFloatFromString(parts[49]), getFloatFromString(parts[50]),
+                                    parts[44]
+                            ));
+                            break;
+                        }
                         case "Trapezoid":{
-                                    turbo.addTrapezoid(getFloatFromString(parts[15]), getFloatFromString(parts[16]), getFloatFromString(parts[17]),
-                                            getFloatFromString(parts[9]), getFloatFromString(parts[10]), getFloatFromString(parts[11]),
-                                            0,getFloatFromString(parts[45]),getSideFromName(parts[44]));
-                                    break;
-                                }
-                                case "FlexTrapezoid":{
-                                    turbo.addFlexTrapezoid(getFloatFromString(parts[15]), getFloatFromString(parts[16]), getFloatFromString(parts[17]),
-                                            getFloatFromString(parts[9]), getFloatFromString(parts[10]), getFloatFromString(parts[11]),
-                                            0F,getFloatFromString(parts[52]),
-                                            getFloatFromString(parts[53]),getFloatFromString(parts[54]),getFloatFromString(parts[55]),
-                                            getFloatFromString(parts[55]), getFloatFromString(parts[55]),
-                                            getSideFromName(parts[44]));
-                                    break;
-                                }
-                                case "FlexBox":{
-                                    turbo.addFlexBox(getFloatFromString(parts[15]), getFloatFromString(parts[16]), getFloatFromString(parts[17]),
-                                            getFloatFromString(parts[9]), getFloatFromString(parts[10]), getFloatFromString(parts[11]),
-                                            0F,
-                                            getFloatFromString(parts[47]),getFloatFromString(parts[48]),
-                                            getFloatFromString(parts[49]), getFloatFromString(parts[50]),
-                                            getSideFromName(parts[44])
-                                            );
-                                    break;
-                                }
+                            compound.add(((TrapezoidWrapper)polygon).setCoords(getFloatFromString(parts[45]),parts[44]));
+                            break;
+                        }
+                        case "FlexTrapezoid":{
+                            compound.add(((FlexTrapezoidWrapper)polygon).setCoords(
+                                    getFloatFromString(parts[52]), getFloatFromString(parts[53]),getFloatFromString(parts[54]),
+                                    getFloatFromString(parts[55]), getFloatFromString(parts[55]), getFloatFromString(parts[55]),
+                                    parts[44]
+                                    ));
+                            break;
+                        }
+
+
+                        /*
                                 case "Shape":{
                                     turbo.addShape3D();
                                     break;

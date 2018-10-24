@@ -40,8 +40,8 @@ public class GGR {
         acceptInputMove(delta);
     }
     
-    private boolean clickedL, clickedR;
-    private int wheel;
+    private boolean clickedL, clickedR, panning;
+    private int wheel, updateTick, oldMouseX=-1,oldMouseY=-1;
 
     public  void acceptInputRotate(float delta){
         if(Mouse.isGrabbed()){
@@ -57,18 +57,51 @@ public class GGR {
         	if(Mouse.isButtonDown(1) && !clickedR) FMTB.get().UI.onButtonPress(1); clickedR = Mouse.isButtonDown(1);
         	if((wheel = Mouse.getDWheel()) != 0){
         		if(FMTB.get().UI.onScrollWheel(wheel)); else {
-        			//TODO "zoom in/out"
+        			//TODO "zoom in/out
+
+
         		}
         	}
         }
     }
 
     public  void acceptInputGrab(){
-        if(Mouse.isInsideWindow() && Keyboard.isKeyDown(Keyboard.KEY_E)) Mouse.setGrabbed(true);
-        if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) Mouse.setGrabbed(false);
+        if(Mouse.isInsideWindow() && (Keyboard.isKeyDown(Keyboard.KEY_E) || (Mouse.isButtonDown(1) && !clickedR))){
+            Mouse.setGrabbed(true);
+        }
+        if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)|| (!Mouse.isButtonDown(1) && clickedR)){
+            Mouse.setGrabbed(false);
+        }
     }
 
     public  void acceptInputMove(float delta){
+        int diffX=0, diffY=0;
+        if (Mouse.isButtonDown(2)) {
+            if(oldMouseX==-1){
+                oldMouseX=Mouse.getX();
+                oldMouseY=Mouse.getY();
+            }
+            if(updateTick>2) {
+                //offset it because if we do it every frame it doesn't always work, but every few frames is fine.
+                diffX=Mouse.getX() - oldMouseX;
+                diffY=Mouse.getY() - oldMouseY;
+                pos.xCoord += diffX * 0.01;
+                pos.yCoord += diffY * 0.01;
+                updateTick=0;
+            } else {
+                updateTick++;
+            }
+            panning = true;
+        } else if (panning) {
+            oldMouseX=-1;
+            updateTick=0;
+            panning = false;
+        }
+        if(oldMouseX!=-1){
+
+            Mouse.setCursorPosition(oldMouseX+diffX==0?0:(diffX/3), oldMouseY+ diffY==0?0:(diffY/3));
+        }
+
     	if(!Mouse.isGrabbed()) return;
         boolean front = Keyboard.isKeyDown(Keyboard.KEY_W);
         boolean back = Keyboard.isKeyDown(Keyboard.KEY_S);
