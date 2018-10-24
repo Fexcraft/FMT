@@ -13,10 +13,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.porters.HardcodedPorters;
 import net.fexcraft.app.fmt.porters.JsonToTMT;
 import net.fexcraft.app.fmt.porters.PorterManager;
-import net.fexcraft.app.fmt.porters.PorterManager.Porter;
+import net.fexcraft.app.fmt.porters.PorterManager.ExInPorter;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
@@ -82,31 +81,43 @@ public class SaveLoad {
 	}
 	
 	public static File getFile(String title){
-		return getFile(title, null, true);
+		return getFile(title, null, true, true);
 	}
 
-	public static File getFile(String title, File otherroot, boolean load){
+	public static File getFile(String title, File otherroot, boolean load, boolean nofilter){
 		JFileChooser chooser = new JFileChooser();
 		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		if(otherroot != null && !otherroot.exists()) otherroot.mkdirs();
 		chooser.setCurrentDirectory(otherroot == null ? root : otherroot);
 		chooser.setDialogTitle(title);
-		for(Porter porter : PorterManager.getPorters(!load)){
+		if(!nofilter){
+			for(ExInPorter porter : PorterManager.getPorters(!load)){
+				chooser.addChoosableFileFilter(new FileFilter(){
+					@Override
+					public boolean accept(File arg0){
+						if(arg0.isDirectory()) return true;
+						for(String ext : porter.getExtensions()){
+							if(arg0.getName().endsWith(ext)) return true;
+						} return false;
+					}
+					//
+					@Override
+					public String getDescription(){
+						return porter.getName() + (load ? " [I]" : "[E]");
+					}
+				});
+			}
+		}
+		else{
 			chooser.addChoosableFileFilter(new FileFilter(){
 				@Override
 				public boolean accept(File arg0){
-					if(arg0.isDirectory()) return true;
-					for(String s: HardcodedPorters.extensions()) {
-						if (arg0.getName().contains(s)) return true;
-					}
-					for(String ext : porter.extensions){
-						if(arg0.getName().endsWith(ext)) return true;
-					} return false;
+					return arg0.getName().endsWith(".jtmt");
 				}
-
+				//
 				@Override
 				public String getDescription(){
-					return porter.name + (load ? " [I]" : "[E]");
+					return "JTMT Save File";
 				}
 			});
 		}

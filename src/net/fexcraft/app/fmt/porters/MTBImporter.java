@@ -1,35 +1,35 @@
 package net.fexcraft.app.fmt.porters;
 
-import com.google.gson.JsonObject;
-import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.porters.PorterManager.InternalPorter;
 import net.fexcraft.app.fmt.utils.Vec3f;
 import net.fexcraft.app.fmt.wrappers.*;
-import net.fexcraft.lib.fmr.PolygonShape;
-import net.fexcraft.lib.fmr.polygons.Cuboid;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 import javax.swing.*;
 import java.io.*;
-import java.nio.file.Files;
 import java.util.Enumeration;
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-public class HardcodedPorters {
+/**
+ * @author EternalBlueFlame, FEX___96
+ *
+ */
+public class MTBImporter extends InternalPorter {
+	
+	private static String[] extensions = new String[]{ ".mtb" };
 
-
-    public static String[] extensions(){
-        return new String[]{".mtb"};
+    public String[] getExtensions(){
+        return extensions;
     }
-
-    public static boolean redirect(File f){
-        if(f.getName().contains(extensions()[0])){
-            importMTB(f);
-            return true;
-        }
-        return false;
+    
+    public String getId(){
+    	return "internal_mtb_importer";
+    }
+    
+    public String getName(){
+    	return "Internal MTB Importer";
     }
 
     public static float getFloatFromString(String s){
@@ -51,8 +51,9 @@ public class HardcodedPorters {
             case "MR_TOP": default:{return ModelRendererTurbo.MR_TOP;}
         }
     }
-
-    public static void importMTB(File f){
+    
+	@Override
+	public GroupCompound importModel(File f){
         try {
             GroupCompound compound = new GroupCompound();
             ZipFile zip = new ZipFile(f);
@@ -61,27 +62,28 @@ public class HardcodedPorters {
             while(entries.hasMoreElements()){
                 ZipEntry entry = entries.nextElement();
                 if(entry.getName().equals("Model.txt")){
-                    stream=zip.getInputStream(entry);
-                    break;
+                    stream = zip.getInputStream(entry); break;
                 }
             }
-            if(stream==null){
+            if(stream == null){
                 JOptionPane.showMessageDialog(null, "Import Failed, MTB appears corrupt.", "Status", JOptionPane.INFORMATION_MESSAGE);
-                return;
+                zip.close(); return compound;
             }
-
-
             String[] file = convertStreamToString(stream).split("\n"); //Files.readAllLines(stream.toPath());
             for(String s:file){
                 String[] parts = s.split("\\u007C");
                 parts[0]=parts[0].trim();
                 if(parts[0].equals("TexSizeX")) {
                     compound.textureX=Integer.parseInt(parts[1].trim());
-                } else if(parts[0].equals("TexSizeY")) {
+                }
+                else if(parts[0].equals("TexSizeY")) {
                     compound.textureY=Integer.parseInt(parts[1]);
-                }if(parts[0].equals("ModelAuthor") && parts.length>1) {
+                }
+                //
+                if(parts[0].equals("ModelAuthor") && parts.length>1){
                     compound.creators.add(parts[1]);
-                }  else if(parts[0].equals("Element")){
+                }
+                else if(parts[0].equals("Element")){
                     BoxWrapper polygon = new BoxWrapper(compound);
                     polygon.name = parts[3];
                     polygon.size = new Vec3f(getFloatFromString(parts[9]), getFloatFromString(parts[10]), getFloatFromString(parts[11]));
@@ -89,20 +91,19 @@ public class HardcodedPorters {
                     polygon.rot = new Vec3f(getFloatFromString(parts[6]), getFloatFromString(parts[7]), getFloatFromString(parts[8]));
                     polygon.textureX = Integer.parseInt(parts[18]);
                     polygon.textureX = Integer.parseInt(parts[19]);
-                    if (polygon.rot.xCoord != 0) {
+                    if(polygon.rot.xCoord != 0){
                         polygon.rot.xCoord *= 0.01745329259;
                     }
-                    if (polygon.rot.yCoord != 0) {
+                    if(polygon.rot.yCoord != 0){
                         polygon.rot.yCoord *= 0.01745329259;
                     }
-                    if (polygon.rot.zCoord != 0) {
+                    if(polygon.rot.zCoord != 0){
                         polygon.rot.zCoord *= -0.01745329259;
                     }
-
-                    switch (parts[5]){
+                    //
+                    switch(parts[5]){
                         case "Box":{
-                            compound.add(polygon);
-                            break;
+                            compound.add(polygon); break;
                         }
                         case "Shapebox":{
                             compound.add(((ShapeboxWrapper)polygon).setCoords(
@@ -137,36 +138,36 @@ public class HardcodedPorters {
                                     ));
                             break;
                         }
-
-
                         /*
-                                case "Shape":{
-                                    turbo.addShape3D();
-                                    break;
-                                }
+                            case "Shape":{
+                                turbo.addShape3D();
+                                break;
+                            }
                         */
-
                     }
                 }
             }
-            stream.close();
-
-            FMTB.MODEL=compound;
-
-
-        } catch (IOException e){
-            //literally not even possible.
+            stream.close(); zip.close(); return compound;
         }
-
-    }
-
-
-
-
-    public void exportMTB(){
-
-        StringBuilder output = new StringBuilder();
-
-
-    }
+        catch(IOException e){
+        	//literally not even possible.
+        	return new GroupCompound();
+        }
+	}
+	
+	@Override
+	public String exportModel(GroupCompound compound, File file){
+		return "This isn't an exporter as of now.";
+	}
+	
+	@Override
+	public boolean isImporter(){
+		return true;
+	}
+	
+	@Override
+	public boolean isExporter(){
+		return false;
+	}
+    
 }
