@@ -71,7 +71,7 @@ public class FMTB {
 	}
 	
 	public void setTitle(String string){
-		title = String.format(deftitle, string);
+		title = String.format(deftitle, string); Display.setTitle(title);
 	}
 	
 	public void run() throws LWJGLException, InterruptedException, IOException, NoSuchMethodException, ScriptException {

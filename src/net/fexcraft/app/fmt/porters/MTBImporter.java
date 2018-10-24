@@ -74,14 +74,17 @@ public class MTBImporter extends InternalPorter {
                 String[] parts = s.split("\\u007C");
                 parts[0]=parts[0].trim();
                 if(parts[0].equals("TexSizeX")) {
-                    compound.textureX=Integer.parseInt(parts[1].trim());
+                    compound.textureX = Integer.parseInt(parts[1].trim());
                 }
                 else if(parts[0].equals("TexSizeY")) {
-                    compound.textureY=Integer.parseInt(parts[1]);
+                    compound.textureY = Integer.parseInt(parts[1]);
                 }
                 //
-                if(parts[0].equals("ModelAuthor") && parts.length>1){
+                if(parts[0].equals("ModelAuthor") && parts.length > 1){
                     compound.creators.add(parts[1]);
+                }
+                else if(parts[0].equals("ModelName") && parts.length > 1){
+                	compound.name = parts[1];
                 }
                 else if(parts[0].equals("Element")){
                     BoxWrapper polygon = null;

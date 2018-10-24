@@ -152,9 +152,8 @@ public class GroupCompound {
 	}
 	
 	public void updateFields(){
-		FMTB.get().setTitle(this.name);
 		try{
-			if(FMTB.get() == null || FMTB.get().UI == null || !FMTB.get().UI.hasElement("general_editor")) return;
+			if(FMTB.get() == null || FMTB.get().UI == null || !FMTB.get().UI.hasElement("general_editor")) return; FMTB.get().setTitle(this.name);
 			Editor editor = (Editor)FMTB.get().UI.getElement("general_editor"); PolygonWrapper poly = getSelectedPolygon(0);
 			if(poly == null){
 				editor.getField("sizex").applyChange(0);
