@@ -70,7 +70,7 @@ public class MTBImporter extends InternalPorter {
                 zip.close(); return compound;
             }
             String[] file = convertStreamToString(stream).split("\n"); //Files.readAllLines(stream.toPath());
-            for(String s:file){
+            for(String s : file){
                 String[] parts = s.split("\\u007C");
                 parts[0]=parts[0].trim();
                 if(parts[0].equals("TexSizeX")) {
@@ -84,11 +84,58 @@ public class MTBImporter extends InternalPorter {
                     compound.creators.add(parts[1]);
                 }
                 else if(parts[0].equals("Element")){
-                    BoxWrapper polygon = new BoxWrapper(compound);
+                    BoxWrapper polygon = null;
+                    switch(parts[5]){
+                        case "Box":{
+                            polygon = new BoxWrapper(compound); break;
+                        }
+                        case "Shapebox":{
+                            polygon = new ShapeboxWrapper(compound).setCoords(
+                                new Vec3f(getFloatFromString(parts[20]),getFloatFromString(parts[28]),getFloatFromString(parts[36])),
+                                new Vec3f(getFloatFromString(parts[21]),getFloatFromString(parts[29]),getFloatFromString(parts[37])),
+                                new Vec3f(getFloatFromString(parts[22]),getFloatFromString(parts[30]),getFloatFromString(parts[38])),
+                                new Vec3f(getFloatFromString(parts[23]),getFloatFromString(parts[31]),getFloatFromString(parts[39])),
+                                new Vec3f(getFloatFromString(parts[24]),getFloatFromString(parts[32]),getFloatFromString(parts[40])),
+                                new Vec3f(getFloatFromString(parts[25]),getFloatFromString(parts[33]),getFloatFromString(parts[41])),
+                                new Vec3f(getFloatFromString(parts[26]),getFloatFromString(parts[34]),getFloatFromString(parts[42])),
+                                new Vec3f(getFloatFromString(parts[27]),getFloatFromString(parts[35]),getFloatFromString(parts[43]))
+                            );
+                            break;
+                        }
+                        case "FlexBox":{
+                            polygon = new FlexboxWrapper(compound).setCoords(
+                                getFloatFromString(parts[47]),getFloatFromString(parts[48]),
+                                getFloatFromString(parts[49]), getFloatFromString(parts[50]),
+                                parts[44]
+                            );
+                            break;
+                        }
+                        case "Trapezoid":{
+                            polygon = new TrapezoidWrapper(compound).setCoords(getFloatFromString(parts[45]),parts[44]);
+                            break;
+                        }
+                        case "FlexTrapezoid":{
+                            polygon = new FlexTrapezoidWrapper(compound).setCoords(
+                                getFloatFromString(parts[52]), getFloatFromString(parts[53]),getFloatFromString(parts[54]),
+                                getFloatFromString(parts[55]), getFloatFromString(parts[55]), getFloatFromString(parts[55]),
+                                parts[44]
+                            );
+                            break;
+                        }
+                        /*
+                        case "Shape":{
+                            turbo.addShape3D();
+                            break;
+                        }
+                        */
+                    }
+                    if(polygon == null) continue;
+                    //
                     polygon.name = parts[3];
                     polygon.size = new Vec3f(getFloatFromString(parts[9]), getFloatFromString(parts[10]), getFloatFromString(parts[11]));
-                    polygon.pos = new Vec3f(getFloatFromString(parts[15]), getFloatFromString(parts[16]), getFloatFromString(parts[17]));
-                    polygon.rot = new Vec3f(getFloatFromString(parts[6]), getFloatFromString(parts[7]), getFloatFromString(parts[8]));
+                    polygon.off = new Vec3f(getFloatFromString(parts[15]), getFloatFromString(parts[16]), getFloatFromString(parts[17]));
+                    polygon.pos = new Vec3f(getFloatFromString(parts[6]), getFloatFromString(parts[7]), getFloatFromString(parts[8]));
+                    polygon.rot = new Vec3f(getFloatFromString(parts[12]), getFloatFromString(parts[13]), getFloatFromString(parts[14]));
                     polygon.textureX = Integer.parseInt(parts[18]);
                     polygon.textureX = Integer.parseInt(parts[19]);
                     if(polygon.rot.xCoord != 0){
@@ -101,50 +148,7 @@ public class MTBImporter extends InternalPorter {
                         polygon.rot.zCoord *= -0.01745329259;
                     }
                     //
-                    switch(parts[5]){
-                        case "Box":{
-                            compound.add(polygon); break;
-                        }
-                        case "Shapebox":{
-                            compound.add(((ShapeboxWrapper)polygon).setCoords(
-                                    new Vec3f(getFloatFromString(parts[20]),getFloatFromString(parts[28]),getFloatFromString(parts[36])),
-                                    new Vec3f(getFloatFromString(parts[21]),getFloatFromString(parts[29]),getFloatFromString(parts[37])),
-                                    new Vec3f(getFloatFromString(parts[22]),getFloatFromString(parts[30]),getFloatFromString(parts[38])),
-                                    new Vec3f(getFloatFromString(parts[23]),getFloatFromString(parts[31]),getFloatFromString(parts[39])),
-                                    new Vec3f(getFloatFromString(parts[24]),getFloatFromString(parts[32]),getFloatFromString(parts[40])),
-                                    new Vec3f(getFloatFromString(parts[25]),getFloatFromString(parts[33]),getFloatFromString(parts[41])),
-                                    new Vec3f(getFloatFromString(parts[26]),getFloatFromString(parts[34]),getFloatFromString(parts[42])),
-                                    new Vec3f(getFloatFromString(parts[27]),getFloatFromString(parts[35]),getFloatFromString(parts[43]))
-                            ));
-                            break;
-                        }
-                        case "FlexBox":{
-                            compound.add(((FlexboxWrapper)polygon).setCoords(
-                                    getFloatFromString(parts[47]),getFloatFromString(parts[48]),
-                                    getFloatFromString(parts[49]), getFloatFromString(parts[50]),
-                                    parts[44]
-                            ));
-                            break;
-                        }
-                        case "Trapezoid":{
-                            compound.add(((TrapezoidWrapper)polygon).setCoords(getFloatFromString(parts[45]),parts[44]));
-                            break;
-                        }
-                        case "FlexTrapezoid":{
-                            compound.add(((FlexTrapezoidWrapper)polygon).setCoords(
-                                    getFloatFromString(parts[52]), getFloatFromString(parts[53]),getFloatFromString(parts[54]),
-                                    getFloatFromString(parts[55]), getFloatFromString(parts[55]), getFloatFromString(parts[55]),
-                                    parts[44]
-                                    ));
-                            break;
-                        }
-                        /*
-                            case "Shape":{
-                                turbo.addShape3D();
-                                break;
-                            }
-                        */
-                    }
+                    compound.add(polygon);
                 }
             }
             stream.close(); zip.close(); return compound;
