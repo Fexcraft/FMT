@@ -2,8 +2,12 @@ package net.fexcraft.app.fmt.utils;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import net.fexcraft.app.fmt.FMTB;
+
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 
 /** CCR */
 public class GGR {
@@ -40,14 +44,15 @@ public class GGR {
     }
     
     private boolean clickedL, clickedR, panning;
-    private int wheel, updateTick, oldMouseX=-1,oldMouseY=-1;
+    private int wheel, oldMouseX=-1,oldMouseY=-1;
 
     public  void acceptInputRotate(float delta){
+        if(clickedR && ! Mouse.isButtonDown(1)){
+            Mouse.setGrabbed(false);//fix mouse grab sticking
+        }
         if(Mouse.isGrabbed()){
-            float mouseDX = Mouse.getDX();
-            float mouseDY = -Mouse.getDY();
-            rotation.yCoord += mouseDX * sensivity * delta;
-            rotation.xCoord += mouseDY * sensivity * delta;
+            rotation.yCoord += Mouse.getDX() * sensivity * delta;
+            rotation.xCoord += -Mouse.getDY() * sensivity * delta;
             rotation.xCoord = Math.max(-maxlookrange, Math.min(maxlookrange, rotation.xCoord));
         }
         else{
@@ -56,47 +61,50 @@ public class GGR {
         	if(Mouse.isButtonDown(1) && !clickedR) FMTB.get().UI.onButtonPress(1); clickedR = Mouse.isButtonDown(1);
         	if((wheel = Mouse.getDWheel()) != 0){
         		if(FMTB.get().UI.onScrollWheel(wheel)); else {
-        			//
+                    double[] zoom = rotatePoint(wheel*0.005f, rotation.xCoord, rotation.yCoord-90);
+
+                    pos.xCoord+=zoom[0];
+                    pos.yCoord+=zoom[1];
+                    pos.zCoord+=zoom[2];
         		}
         	}
         }
     }
 
+    public static double[] rotatePoint(double f, float pitch, float yaw) {
+        double[] xyz = new double[]{f,0,0};
+            pitch *= 0.01745329251;
+            xyz[1] = -(f * Math.sin(pitch));
+
+            yaw *= 0.01745329251;
+            xyz[0] = (f * Math.cos(yaw));
+            xyz[2] = (f * Math.sin(yaw));
+
+        return xyz;
+    }
+
     public  void acceptInputGrab(){
-        if(Mouse.isInsideWindow() && (Keyboard.isKeyDown(Keyboard.KEY_E) || (Mouse.isButtonDown(1) && !clickedR))){
+        if((Mouse.isInsideWindow() && Keyboard.isKeyDown(Keyboard.KEY_E) || Mouse.isButtonDown(1))){
             Mouse.setGrabbed(true);
         }
-        if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)|| (!Mouse.isButtonDown(1) && clickedR)){
+        if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
             Mouse.setGrabbed(false);
         }
     }
 
     public  void acceptInputMove(float delta){
-        int diffX=0, diffY=0;
         if (Mouse.isButtonDown(2)) {
             if(oldMouseX==-1){
                 oldMouseX=Mouse.getX();
                 oldMouseY=Mouse.getY();
             }
-            if(updateTick>2) {
-                //offset it because if we do it every frame it doesn't always work, but every few frames is fine.
-                diffX=Mouse.getX() - oldMouseX;
-                diffY=Mouse.getY() - oldMouseY;
-                pos.xCoord += diffX * 0.01;
-                pos.yCoord += diffY * 0.01;
-                updateTick=0;
-            } else {
-                updateTick++;
-            }
+            //offset it because if we do it every frame it doesn't always work, but every few frames is fine.
+            pos.xCoord += (Mouse.getX() - oldMouseX) * 0.001;
+            pos.yCoord += (Mouse.getY() - oldMouseY) * 0.001;
             panning = true;
         } else if (panning) {
             oldMouseX=-1;
-            updateTick=0;
             panning = false;
-        }
-        if(oldMouseX!=-1){
-
-            Mouse.setCursorPosition(oldMouseX+diffX==0?0:(diffX/3), oldMouseY+ diffY==0?0:(diffY/3));
         }
 
     	if(!Mouse.isGrabbed()) return;
