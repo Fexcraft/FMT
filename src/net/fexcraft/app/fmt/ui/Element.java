@@ -34,7 +34,9 @@ public abstract class Element {
 		if(!Mouse.isGrabbed()) this.hovered(Mouse.getX(), root_height - Mouse.getY());
 		if(this.visible){
 			if(z != 0) GL11.glTranslatef(0, 0,  z);
+			GL11.glDepthFunc(GL11.GL_ALWAYS);
 			this.renderSelf(root_width, root_height);
+			GL11.glDepthFunc(GL11.GL_LESS);
 			if(z != 0) GL11.glTranslatef(0, 0, -z);
 		}
 		if(this.visible && !elements.isEmpty()) elements.values().forEach(elm -> elm.render(root_width, root_height));
