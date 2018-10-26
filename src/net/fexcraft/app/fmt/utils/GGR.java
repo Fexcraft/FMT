@@ -2,12 +2,8 @@ package net.fexcraft.app.fmt.utils;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import net.fexcraft.app.fmt.FMTB;
-
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 
 /** CCR */
 public class GGR {
