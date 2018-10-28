@@ -20,6 +20,7 @@ public class GroupCompound {
 	private ArrayList<Selection> selection = new ArrayList<>();
 	public ArrayList<String> creators = new ArrayList<>();
 	public File file; public String name = "unnamed model";
+	public boolean textured = false;
 	
 	public GroupCompound(){
 		compound.put("body", new TurboList("body"));

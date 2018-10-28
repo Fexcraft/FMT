@@ -4,6 +4,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.lib.common.math.Vec3f;
 
 /** CCR */
 public class GGR {

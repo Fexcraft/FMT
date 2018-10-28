@@ -18,13 +18,12 @@ import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.utils.GGR;
-import net.fexcraft.app.fmt.utils.RGB;
 import net.fexcraft.app.fmt.utils.SaveLoad;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
-import net.fexcraft.lib.fmr.ModelCompound;
-import net.fexcraft.lib.fmr.polygons.Cuboid;
+import net.fexcraft.lib.common.math.RGB;
+import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -137,24 +136,19 @@ public class FMTB {
         }
         //
         if(Settings.cube()){
-            TextureManager.bindTexture("demo");
-            compound0.render();
+            TextureManager.bindTexture("demo"); compound0.render();
         }
         TextureManager.bindTexture("blank"); MODEL.render();
         if(Settings.demo()){
-            TextureManager.bindTexture("t1p");
-            ModelT1P.INSTANCE.render();
+            TextureManager.bindTexture("t1p"); ModelT1P.INSTANCE.render();
         }
         //
         //GL11.glDisable(GL11.GL_BLEND);
         GL11.glPopMatrix();
 	}
 	
-	private static final ModelCompound compound0 = new ModelCompound();
-	static {
-		compound0.textureSizeX = compound0.textureSizeY = 16;
-		compound0.insert(new Cuboid().setSize(16, 16, 16).setPosition(-8, 0, -8));
-	}
+	private static final ModelRendererTurbo compound0 = new ModelRendererTurbo(null, 0, 0);
+	static { compound0.textureHeight = compound0.textureWidth = 16; compound0.addBox(-8, 0, -8, 16, 16, 16); }
 
 	private void initOpenGL(){
 		GL11.glEnable(GL11.GL_TEXTURE_2D);

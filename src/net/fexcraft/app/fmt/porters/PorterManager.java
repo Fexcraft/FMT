@@ -19,9 +19,9 @@ import javax.swing.JOptionPane;
 
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.utils.JsonUtil;
 import net.fexcraft.app.fmt.utils.SaveLoad;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
+import net.fexcraft.lib.common.json.JsonUtil;
 
 /**
  * @author Ferdinand Calo' (FEX___96)

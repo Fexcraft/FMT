@@ -3,13 +3,13 @@ package net.fexcraft.app.fmt.porters;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import net.fexcraft.app.fmt.utils.JsonUtil;
-import net.fexcraft.app.fmt.utils.Vec3f;
 import net.fexcraft.app.fmt.wrappers.BoxWrapper;
 import net.fexcraft.app.fmt.wrappers.CylinderWrapper;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.ShapeboxWrapper;
+import net.fexcraft.lib.common.json.JsonUtil;
+import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 /**

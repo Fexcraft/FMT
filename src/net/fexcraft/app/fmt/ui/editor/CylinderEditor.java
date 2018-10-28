@@ -5,9 +5,9 @@ import org.newdawn.slick.Color;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.generic.Button;
 import net.fexcraft.app.fmt.ui.generic.TextField;
-import net.fexcraft.app.fmt.utils.RGB;
 import net.fexcraft.app.fmt.utils.TextureManager;
-import net.fexcraft.lib.fmr.ModelCompound;
+import net.fexcraft.lib.common.math.RGB;
+import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public class CylinderEditor extends Editor {
 
@@ -33,7 +33,7 @@ public class CylinderEditor extends Editor {
 				}
 				if(ii == 1){
 					if(r == 0){ field.setAsNumberfield(0.01f, Integer.MAX_VALUE, true); field.applyChange(1); }
-					if(r == 1){ field.setAsNumberfield(0, 5, true); field.applyChange(ModelCompound.DIR_FRONT); }
+					if(r == 1){ field.setAsNumberfield(0, 5, true); field.applyChange(ModelRendererTurbo.MR_FRONT); }
 					if(r == 2){ field.setAsNumberfield(1f, Integer.MAX_VALUE, true); field.applyChange(1); }
 				}
 				if(ii == 2) field.enabled = false;

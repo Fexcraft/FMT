@@ -3,8 +3,8 @@ package net.fexcraft.app.fmt.ui.generic;
 import org.newdawn.slick.Color;
 
 import net.fexcraft.app.fmt.ui.Element;
-import net.fexcraft.app.fmt.utils.RGB;
 import net.fexcraft.app.fmt.utils.TextureManager;
+import net.fexcraft.lib.common.math.RGB;
 
 public abstract class Button extends Element {
 	

@@ -1,7 +1,7 @@
 package net.fexcraft.app.fmt.ui.generic;
 
 import net.fexcraft.app.fmt.ui.Element;
-import net.fexcraft.app.fmt.utils.RGB;
+import net.fexcraft.lib.common.math.RGB;
 
 public abstract class IconButton extends Element {
 	

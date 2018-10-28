@@ -1,8 +1,8 @@
 package net.fexcraft.app.fmt.porters;
 
 import net.fexcraft.app.fmt.porters.PorterManager.InternalPorter;
-import net.fexcraft.app.fmt.utils.Vec3f;
 import net.fexcraft.app.fmt.wrappers.*;
+import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 import javax.swing.*;

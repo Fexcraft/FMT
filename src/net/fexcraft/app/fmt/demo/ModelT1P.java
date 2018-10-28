@@ -1,6 +1,6 @@
 package net.fexcraft.app.fmt.demo;
 
-import net.fexcraft.app.fmt.utils.RGB;
+import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.tmt.ModelBase;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 

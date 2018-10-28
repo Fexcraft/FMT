@@ -8,13 +8,13 @@ import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.ModelTree;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.utils.GGR;
-import net.fexcraft.app.fmt.utils.RGB;
 import net.fexcraft.app.fmt.utils.SaveLoad;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.wrappers.BoxWrapper;
 import net.fexcraft.app.fmt.wrappers.CylinderWrapper;
 import net.fexcraft.app.fmt.wrappers.ShapeboxWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
+import net.fexcraft.lib.common.math.RGB;
 
 public class Toolbar extends Element {
 	
