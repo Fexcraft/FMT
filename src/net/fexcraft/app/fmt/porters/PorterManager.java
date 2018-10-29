@@ -4,6 +4,7 @@
 package net.fexcraft.app.fmt.porters;
 
 import java.awt.Desktop;
+import java.awt.EventQueue;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -64,27 +65,32 @@ public class PorterManager {
 	}
 
 	public static void handleImport(){
-		try{
-			File file = SaveLoad.getFile("Select file to import.", new File("./models"), true, false);
-			if(file == null){
-				Settings.showDialog("No valid file choosen.\nImport is cancelled.", "Notice.", JOptionPane.INFORMATION_MESSAGE);
-				return;
+		EventQueue.invokeLater(new Runnable(){
+			@Override
+			public void run(){
+				try{
+					File file = SaveLoad.getFile("Select file to import.", new File("./models"), true, false);
+					if(file == null){
+						Settings.showDialog("No valid file choosen.\nImport is cancelled.", "Notice.", JOptionPane.INFORMATION_MESSAGE);
+						return;
+					}
+					ExInPorter porter = getPorterFor(file, false);
+					if(porter.isInternal()){
+						FMTB.MODEL = ((InternalPorter)porter).importModel(file);
+						FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
+					}
+					else{
+						Invocable inv = (Invocable)((ExternalPorter)porter).eval();
+						String result = (String) inv.invokeFunction("importModel", new File("./saves/").listFiles()[0]);
+						SaveLoad.loadModel(JsonUtil.getObjectFromString(result));
+					}
+					Settings.showDialog("Import complete.", "Status", JOptionPane.INFORMATION_MESSAGE);
+				}
+				catch(Exception e){
+					e.printStackTrace(); Settings.showDialog(e, "Errors while importing Model.", JOptionPane.WARNING_MESSAGE);
+				}
 			}
-			ExInPorter porter = getPorterFor(file, false);
-			if(porter.isInternal()){
-				FMTB.MODEL = ((InternalPorter)porter).importModel(file);
-				FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
-			}
-			else{
-				Invocable inv = (Invocable)((ExternalPorter)porter).eval();
-				String result = (String) inv.invokeFunction("importModel", new File("./saves/").listFiles()[0]);
-				SaveLoad.loadModel(JsonUtil.getObjectFromString(result));
-			}
-			Settings.showDialog("Import complete.", "Status", JOptionPane.INFORMATION_MESSAGE);
-		}
-		catch(Exception e){
-			e.printStackTrace(); Settings.showDialog(e, "Errors while importing Model.", JOptionPane.WARNING_MESSAGE);
-		}
+		});
 	}
 
 	public static void handleExport(){

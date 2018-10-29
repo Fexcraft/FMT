@@ -1,5 +1,6 @@
 package net.fexcraft.app.fmt.utils;
 
+import java.awt.EventQueue;
 import java.io.File;
 import java.util.Map.Entry;
 
@@ -30,42 +31,51 @@ public class SaveLoad {
 	}
 
 	public static void openModel(){
-		checkIfShouldSave();
-		File modelfile = getFile("Select file to open.");
-		if(modelfile == null || !modelfile.exists()){
-			Settings.showDialog("Invalid Model File (does it even exists?).", "Error", JOptionPane.INFORMATION_MESSAGE);
-			return;
-		}
-		int errorcount = 0;
-		try{
-			errorcount = loadModel(JsonUtil.read(modelfile, false).getAsJsonObject());
-		}
-		catch(Exception e){
-			e.printStackTrace();
-			Settings.showDialog(e, "Error", JOptionPane.ERROR_MESSAGE);
-		}
-		if(errorcount > 0){
-			Settings.showDialog(errorcount + " errors occured while parsing save file,\ncheck console for details.", "Error", JOptionPane.INFORMATION_MESSAGE);
-		}
+		EventQueue.invokeLater(new Runnable(){
+			@Override
+			public void run(){
+				checkIfShouldSave();
+				File modelfile = getFile("Select file to open.");
+				if(modelfile == null || !modelfile.exists()){
+					Settings.showDialog("Invalid Model File (does it even exists?).", "Error", JOptionPane.INFORMATION_MESSAGE);
+					return;
+				}
+				int errorcount = 0;
+				try{
+					/*errorcount =*/ loadModel(JsonUtil.read(modelfile, false).getAsJsonObject());
+				}
+				catch(Exception e){
+					e.printStackTrace(); errorcount++;
+					Settings.showDialog(e, "Error", JOptionPane.ERROR_MESSAGE);
+				}
+				if(errorcount > 0){
+					Settings.showDialog(errorcount + " errors occured while parsing save file,\ncheck console for details.", "Error", JOptionPane.INFORMATION_MESSAGE);
+				}
+			}
+		});
 	}
 	
-	public static int loadModel(JsonObject obj){
-		GroupCompound compound = new GroupCompound(); int errorcount = 0; compound.getCompound().clear();
-		compound.textureX = JsonUtil.getIfExists(obj, "texture_x", 256).intValue();
-		compound.textureY = JsonUtil.getIfExists(obj, "texture_y", 256).intValue();
-		compound.creators = JsonUtil.jsonArrayToStringArray(JsonUtil.getIfExists(obj, "creators", new JsonArray()).getAsJsonArray());
-		JsonObject model = obj.get("model").getAsJsonObject();
-		for(Entry<String, JsonElement> entry : model.entrySet()){
-			try{
-				TurboList list = new TurboList(entry.getKey()); JsonArray array = entry.getValue().getAsJsonArray();
-				for(JsonElement elm : array){ list.add(JsonToTMT.parseWrapper(compound, elm.getAsJsonObject())); }
-				compound.getCompound().put(entry.getKey(), list);
+	public static void loadModel(JsonObject obj){
+		EventQueue.invokeLater(new Runnable(){
+			@Override
+			public void run(){
+				GroupCompound compound = new GroupCompound(); compound.getCompound().clear();
+				compound.textureX = JsonUtil.getIfExists(obj, "texture_x", 256).intValue();
+				compound.textureY = JsonUtil.getIfExists(obj, "texture_y", 256).intValue();
+				compound.creators = JsonUtil.jsonArrayToStringArray(JsonUtil.getIfExists(obj, "creators", new JsonArray()).getAsJsonArray());
+				JsonObject model = obj.get("model").getAsJsonObject();
+				for(Entry<String, JsonElement> entry : model.entrySet()){
+					try{
+						TurboList list = new TurboList(entry.getKey()); JsonArray array = entry.getValue().getAsJsonArray();
+						for(JsonElement elm : array){ list.add(JsonToTMT.parseWrapper(compound, elm.getAsJsonObject())); }
+						compound.getCompound().put(entry.getKey(), list);
+					}
+					catch(Exception e){
+						e.printStackTrace();
+					}
+				} FMTB.MODEL = compound; FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
 			}
-			catch(Exception e){
-				e.printStackTrace(); errorcount++;
-			}
-		} FMTB.MODEL = compound; FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
-		return errorcount;
+		});
 	}
 	
 	public static void checkIfShouldSave(){
@@ -152,14 +162,19 @@ public class SaveLoad {
 	}
 
 	public static void saveModel(boolean bool){
-		if(bool || FMTB.MODEL.file == null){
-			FMTB.MODEL.file = getFile("Select save location.");
-		}
-		if(FMTB.MODEL.file == null){
-			Settings.showDialog("Model save file is 'null'!\nModel will not be saved.", "Information.", JOptionPane.INFORMATION_MESSAGE);
-			return;
-		}
-		JsonUtil.write(FMTB.MODEL.file, modelToJTMT(false));
+		EventQueue.invokeLater(new Runnable(){
+			@Override
+			public void run(){
+				if(bool || FMTB.MODEL.file == null){
+					FMTB.MODEL.file = getFile("Select save location.");
+				}
+				if(FMTB.MODEL.file == null){
+					Settings.showDialog("Model save file is 'null'!\nModel will not be saved.", "Information.", JOptionPane.INFORMATION_MESSAGE);
+					return;
+				}
+				JsonUtil.write(FMTB.MODEL.file, modelToJTMT(false));
+			}
+		});
 	}
 
 	/**
