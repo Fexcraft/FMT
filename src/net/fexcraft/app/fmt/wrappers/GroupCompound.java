@@ -341,5 +341,9 @@ public class GroupCompound {
 			}
 		} array.clear(); this.updateFields();
 	}
+	
+	public int countTotalMRTs(){
+		int i = 0; for(TurboList list : compound.values()) i += list.size(); return i;
+	}
 
 }

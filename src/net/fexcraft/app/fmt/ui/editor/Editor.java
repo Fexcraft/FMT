@@ -1,6 +1,7 @@
 package net.fexcraft.app.fmt.ui.editor;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.Element;
@@ -41,9 +42,11 @@ public class Editor extends Element {
 		editors.forEach(elm -> elm.visible = false);
 	}
 
-	public static void toggle(String string){
-		boolean vis = editors.stream().filter(pre -> pre.id.equals(string)).findFirst().get().visible;
-		if(vis) hideAll(); else show(string);
+	public static void toggle(String string){ toggle(string, true); }
+
+	public static void toggle(String string, boolean close){
+		Optional<Editor> opt = editors.stream().filter(pre -> pre.id.equals(string)).findFirst();
+		if(close && opt.isPresent() && opt.get().visible) hideAll(); else show(string);
 	}
 	
 	protected void addMultiplicator(int y){

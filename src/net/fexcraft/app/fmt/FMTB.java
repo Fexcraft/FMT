@@ -2,6 +2,12 @@ package net.fexcraft.app.fmt;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
+import java.util.Date;
+import java.util.Timer;
 
 import javax.script.ScriptException;
 import javax.swing.JOptionPane;
@@ -17,12 +23,14 @@ import org.lwjgl.util.glu.GLU;
 import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.ui.UserInterface;
+import net.fexcraft.app.fmt.utils.Backups;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.SaveLoad;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.lib.common.math.RGB;
+import net.fexcraft.lib.common.math.Time;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 /**
@@ -44,6 +52,7 @@ public class FMTB {
 	public UserInterface UI;
 	private static File lwjgl_natives;
 	public static GroupCompound MODEL = new GroupCompound();
+	public static Timer BACKUP_TIMER;
 	
 	public static void main(String... args) throws Exception {
 	    switch(LWJGLUtil.getPlatform()){
@@ -58,7 +67,7 @@ public class FMTB {
 		try{ INSTANCE.run(); }
 		catch(LWJGLException | InterruptedException | IOException e){
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null, "Seems the app crashed!\n" + e.getMessage() + "\nCheck console for more info.", "FMT Runtime Error", JOptionPane.INFORMATION_MESSAGE);
+			Settings.showDialog("Seems the app crashed!\n" + e.getMessage() + "\nCheck console for more info.", "FMT Runtime Error", JOptionPane.INFORMATION_MESSAGE);
 			System.exit(1);
 		}
 	}
@@ -79,6 +88,10 @@ public class FMTB {
 		Display.setResizable(true);
 		UI = new UserInterface(this);
 		PorterManager.load();
+		//
+		LocalDateTime midnight = LocalDateTime.of(LocalDate.now(ZoneOffset.systemDefault()), LocalTime.MIDNIGHT);
+		long mid = midnight.toInstant(ZoneOffset.UTC).toEpochMilli(); long date = Time.getDate(); while((mid += Time.MIN_MS * 5) < date);
+		if(BACKUP_TIMER == null){ (BACKUP_TIMER = new Timer()).schedule(new Backups(), new Date(mid), Time.MIN_MS * 5); }
 		//
 		while(!close){
 			loop(); render(); UI.render();

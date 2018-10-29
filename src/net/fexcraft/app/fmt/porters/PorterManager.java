@@ -20,6 +20,7 @@ import javax.swing.JOptionPane;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.utils.SaveLoad;
+import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.lib.common.json.JsonUtil;
 
@@ -66,7 +67,7 @@ public class PorterManager {
 		try{
 			File file = SaveLoad.getFile("Select file to import.", new File("./models"), true, false);
 			if(file == null){
-				JOptionPane.showMessageDialog(null, "No valid file choosen.\nImport is cancelled.", "Notice.", JOptionPane.INFORMATION_MESSAGE);
+				Settings.showDialog("No valid file choosen.\nImport is cancelled.", "Notice.", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
 			ExInPorter porter = getPorterFor(file, false);
@@ -79,10 +80,10 @@ public class PorterManager {
 				String result = (String) inv.invokeFunction("importModel", new File("./saves/").listFiles()[0]);
 				SaveLoad.loadModel(JsonUtil.getObjectFromString(result));
 			}
-			JOptionPane.showMessageDialog(null, "Import complete.", "Status", JOptionPane.INFORMATION_MESSAGE);
+			Settings.showDialog("Import complete.", "Status", JOptionPane.INFORMATION_MESSAGE);
 		}
 		catch(Exception e){
-			e.printStackTrace(); JOptionPane.showMessageDialog(null, e, "Errors while importing Model.", JOptionPane.WARNING_MESSAGE);
+			e.printStackTrace(); Settings.showDialog(e, "Errors while importing Model.", JOptionPane.WARNING_MESSAGE);
 		}
 	}
 
@@ -90,7 +91,7 @@ public class PorterManager {
 		try{
 			File file = SaveLoad.getFile("Select file to export.", new File("./models"), false, false);
 			if(file == null){
-				JOptionPane.showMessageDialog(null, "No valid file choosen.\nExport is cancelled.", "Notice.", JOptionPane.INFORMATION_MESSAGE);
+				Settings.showDialog("No valid file choosen.\nExport is cancelled.", "Notice.", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
 			ExInPorter porter = getPorterFor(file, true); String result;
@@ -101,11 +102,11 @@ public class PorterManager {
 				Invocable inv = (Invocable)((ExternalPorter)porter).eval();
 				result = (String)inv.invokeFunction("exportModel", SaveLoad.modelToJTMT(true).toString(), file);
 			}
-			JOptionPane.showMessageDialog(null, "Export complete.\n" + result, "Status", JOptionPane.INFORMATION_MESSAGE);
+			Settings.showDialog("Export complete.\n" + result, "Status", JOptionPane.INFORMATION_MESSAGE);
 			Desktop.getDesktop().open(file.getParentFile());
 		}
 		catch(Exception e){
-			e.printStackTrace(); JOptionPane.showMessageDialog(null, e, "Errors while exporting Model.", JOptionPane.WARNING_MESSAGE);
+			e.printStackTrace(); Settings.showDialog(e, "Errors while exporting Model.", JOptionPane.WARNING_MESSAGE);
 		}
 	}
 

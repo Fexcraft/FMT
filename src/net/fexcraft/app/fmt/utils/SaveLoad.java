@@ -33,7 +33,7 @@ public class SaveLoad {
 		checkIfShouldSave();
 		File modelfile = getFile("Select file to open.");
 		if(modelfile == null || !modelfile.exists()){
-			JOptionPane.showMessageDialog(null, "Invalid Model File (does it even exists?).", "Error", JOptionPane.INFORMATION_MESSAGE);
+			Settings.showDialog("Invalid Model File (does it even exists?).", "Error", JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}
 		int errorcount = 0;
@@ -42,10 +42,10 @@ public class SaveLoad {
 		}
 		catch(Exception e){
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
+			Settings.showDialog(e, "Error", JOptionPane.ERROR_MESSAGE);
 		}
 		if(errorcount > 0){
-			JOptionPane.showMessageDialog(null, errorcount + " errors occured while parsing save file,\ncheck console for details.", "Error", JOptionPane.INFORMATION_MESSAGE);
+			Settings.showDialog(errorcount + " errors occured while parsing save file,\ncheck console for details.", "Error", JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
 	
@@ -93,7 +93,7 @@ public class SaveLoad {
 		chooser.setDialogTitle(title);
 		if(!nofilter){
 			for(ExInPorter porter : PorterManager.getPorters(!load)){
-				chooser.addChoosableFileFilter(new FileFilter(){
+				chooser.addChoosableFileFilter(new JFileFilter(){
 					@Override
 					public boolean accept(File arg0){
 						if(arg0.isDirectory()) return true;
@@ -106,25 +106,44 @@ public class SaveLoad {
 					public String getDescription(){
 						return porter.getName() + (load ? " [I]" : "[E]");
 					}
+					//
+					@Override
+					public String getFileEnding(){
+						return porter.getExtensions().length == 0 ? ".no-ext" : porter.getExtensions()[0];
+					}
 				});
 			}
 		}
 		else{
-			chooser.addChoosableFileFilter(new FileFilter(){
+			chooser.addChoosableFileFilter(new JFileFilter(){
 				@Override
 				public boolean accept(File arg0){
-					return arg0.getName().endsWith(".jtmt");
+					return arg0.isDirectory() || arg0.getName().endsWith(".jtmt");
 				}
 				//
 				@Override
 				public String getDescription(){
 					return "JTMT Save File";
 				}
+				//
+				@Override
+				public String getFileEnding(){
+					return ".jtmt";
+				}
 			});
 		}
 		chooser.setAcceptAllFileFilterUsed(false);
 		chooser.showOpenDialog(null);
-		return chooser.getSelectedFile();
+		File file = chooser.getSelectedFile();
+		if(file != null && !chooser.getFileFilter().accept(file)){
+			file = new File(file.getParentFile(), file.getName() + ((JFileFilter)chooser.getFileFilter()).getFileEnding());
+		} return file;
+	}
+	
+	private static abstract class JFileFilter extends FileFilter {
+
+		public abstract String getFileEnding();
+		
 	}
 
 	public static void openNewModel(){
@@ -137,7 +156,7 @@ public class SaveLoad {
 			FMTB.MODEL.file = getFile("Select save location.");
 		}
 		if(FMTB.MODEL.file == null){
-			JOptionPane.showMessageDialog(null, "Model save file is 'null'!\nModel will not be saved.", "Information.", JOptionPane.INFORMATION_MESSAGE);
+			Settings.showDialog("Model save file is 'null'!\nModel will not be saved.", "Information.", JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}
 		JsonUtil.write(FMTB.MODEL.file, modelToJTMT(false));

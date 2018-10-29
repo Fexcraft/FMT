@@ -1,5 +1,9 @@
 package net.fexcraft.app.fmt.utils;
 
+import java.awt.EventQueue;
+
+import javax.swing.JOptionPane;
+
 public class Settings {
 	
 	private static boolean fullscreen, floor = true, demo, lines = true, cube = true, polygon_marker = true;
@@ -44,6 +48,15 @@ public class Settings {
 	
 	public static boolean toggleDemo(){
 		return demo = !demo;
+	}
+	
+	public static final void showDialog(Object message, String title, int type){
+		EventQueue.invokeLater(new Runnable(){
+			@Override
+			public void run(){
+				JOptionPane.showMessageDialog(null, message, title, type);
+			}
+		});
 	}
 
 }

@@ -1,6 +1,7 @@
 package net.fexcraft.app.fmt.porters;
 
 import net.fexcraft.app.fmt.porters.PorterManager.InternalPorter;
+import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.wrappers.*;
 import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
@@ -66,7 +67,7 @@ public class MTBImporter extends InternalPorter {
                 }
             }
             if(stream == null){
-                JOptionPane.showMessageDialog(null, "Import Failed, MTB appears corrupt.", "Status", JOptionPane.INFORMATION_MESSAGE);
+            	Settings.showDialog("Import Failed, MTB appears corrupt.", "Status", JOptionPane.INFORMATION_MESSAGE);
                 zip.close(); return compound;
             }
             String[] file = convertStreamToString(stream).split("\n"); //Files.readAllLines(stream.toPath());
