@@ -14,7 +14,10 @@ import net.fexcraft.app.fmt.ui.generic.Toolbar;
 import net.fexcraft.app.fmt.utils.TextureManager;
 
 public class UserInterface {
-	
+
+	public static DialogBox DIALOGBOX;
+	public static Element FILECHOOSER;
+	//
 	private HashMap<String, Element> elements = new HashMap<>();
 	private FMTB root;
 
@@ -32,7 +35,8 @@ public class UserInterface {
 		elements.put("shapebox_editor", new ShapeboxEditor());
 		elements.put("modeltree", new ModelTree());
 		elements.put("cylinder_editor", new CylinderEditor());
-		elements.put("dialogbox", new DialogBox());
+		elements.put("dialogbox", DIALOGBOX = new DialogBox());
+		FILECHOOSER = DIALOGBOX;//temporary
 		//
 		FMTB.MODEL.updateFields();
 	}

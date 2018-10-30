@@ -96,7 +96,7 @@ public class FMTB {
 		while(!close){
 			loop(); render(); UI.render();
 			Display.update(); Display.sync(60);
-			/*Thread.sleep(33);*/
+			Thread.sleep(50);
 		}
 		Display.destroy(); System.exit(0);
 	}

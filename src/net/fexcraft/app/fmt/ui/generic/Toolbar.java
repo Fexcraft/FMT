@@ -330,7 +330,7 @@ public class Toolbar extends Element {
 							break;
 						}
 						case "exit":{
-							this.elements.put("menu", new Menulist(this, "menu", 154, 200, (j * 102), 28){
+							/*this.elements.put("menu", new Menulist(this, "menu", 154, 200, (j * 102), 28){
 								@Override
 								public void addButtons(){
 									this.elements.put("surr", new Button(this, "surr", 150, 26, 2, 2, subhover){
@@ -340,7 +340,7 @@ public class Toolbar extends Element {
 										}
 									}.setText("Are you sure? (Y/N)", false));
 								}
-							});
+							});*/
 							break;
 						}
 					}
