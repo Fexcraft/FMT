@@ -32,7 +32,7 @@ public class UserInterface {
 		elements.put("shapebox_editor", new ShapeboxEditor());
 		elements.put("modeltree", new ModelTree());
 		elements.put("cylinder_editor", new CylinderEditor());
-		elements.put("dialoxbox", new DialogBox());
+		elements.put("dialogbox", new DialogBox());
 		//
 		FMTB.MODEL.updateFields();
 	}

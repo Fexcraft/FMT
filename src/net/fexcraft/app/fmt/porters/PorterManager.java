@@ -15,12 +15,10 @@ import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import javax.swing.JOptionPane;
-
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.generic.DialogBox;
 import net.fexcraft.app.fmt.utils.SaveLoad;
-import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.lib.common.json.JsonUtil;
 
@@ -67,7 +65,7 @@ public class PorterManager {
 		try{
 			File file = SaveLoad.getFile("Select file to import.", new File("./models"), true, false);
 			if(file == null){
-				Settings.showDialog("No valid file choosen.\nImport is cancelled.", "Notice.", JOptionPane.INFORMATION_MESSAGE);
+				FMTB.showDialogbox("No valid file choosen.", "Import is cancelled.", "ok..", null, DialogBox.NOTHING, null);
 				return;
 			}
 			ExInPorter porter = getPorterFor(file, false);
@@ -80,10 +78,11 @@ public class PorterManager {
 				String result = (String) inv.invokeFunction("importModel", new File("./saves/").listFiles()[0]);
 				SaveLoad.loadModel(JsonUtil.getObjectFromString(result));
 			}
-			Settings.showDialog("Import complete.", "Status", JOptionPane.INFORMATION_MESSAGE);
+			FMTB.showDialogbox("Import complete.", null, "OK!", null, DialogBox.NOTHING, null);
 		}
 		catch(Exception e){
-			e.printStackTrace(); Settings.showDialog(e, "Errors while importing Model.", JOptionPane.WARNING_MESSAGE);
+			FMTB.showDialogbox("Errors while importing Model.", e.getLocalizedMessage(), "ok.", null, DialogBox.NOTHING, null);//TODO add "open console" as 2nd button
+			e.printStackTrace();
 		}
 	}
 
@@ -91,7 +90,7 @@ public class PorterManager {
 		try{
 			File file = SaveLoad.getFile("Select file to export.", new File("./models"), false, false);
 			if(file == null){
-				Settings.showDialog("No valid file choosen.\nExport is cancelled.", "Notice.", JOptionPane.INFORMATION_MESSAGE);
+				FMTB.showDialogbox("No valid file choosen.", "Export is cancelled.", "ok..", null, DialogBox.NOTHING, null);
 				return;
 			}
 			ExInPorter porter = getPorterFor(file, true); String result;
@@ -102,11 +101,12 @@ public class PorterManager {
 				Invocable inv = (Invocable)((ExternalPorter)porter).eval();
 				result = (String)inv.invokeFunction("exportModel", SaveLoad.modelToJTMT(true).toString(), file);
 			}
-			Settings.showDialog("Export complete.\n" + result, "Status", JOptionPane.INFORMATION_MESSAGE);
+			FMTB.showDialogbox("Export complete.", result, "OK!", null, DialogBox.NOTHING, null);
 			Desktop.getDesktop().open(file.getParentFile());
 		}
 		catch(Exception e){
-			e.printStackTrace(); Settings.showDialog(e, "Errors while exporting Model.", JOptionPane.WARNING_MESSAGE);
+			FMTB.showDialogbox("Errors while exporting Model.", e.getLocalizedMessage(), "ok.", null, DialogBox.NOTHING, null);//TODO add "open console" as 2nd button
+			e.printStackTrace();
 		}
 	}
 

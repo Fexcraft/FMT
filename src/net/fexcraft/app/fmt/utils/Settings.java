@@ -50,6 +50,7 @@ public class Settings {
 		return demo = !demo;
 	}
 	
+	@Deprecated
 	public static final void showDialog(Object message, String title, int type){
 		EventQueue.invokeLater(new Runnable(){
 			@Override

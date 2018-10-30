@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.Map.Entry;
 
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
 import com.google.gson.JsonArray;
@@ -16,6 +15,7 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.JsonToTMT;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.porters.PorterManager.ExInPorter;
+import net.fexcraft.app.fmt.ui.generic.DialogBox;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
@@ -30,10 +30,10 @@ public class SaveLoad {
 	}
 
 	public static void openModel(){
-		checkIfShouldSave();
+		checkIfShouldSave(false);
 		File modelfile = getFile("Select file to open.");
 		if(modelfile == null || !modelfile.exists()){
-			Settings.showDialog("Invalid Model File (does it even exists?).", "Error", JOptionPane.INFORMATION_MESSAGE);
+			FMTB.showDialogbox("Invalid Model File!", "(does it even exists?)", "ok.", null, DialogBox.NOTHING, null);
 			return;
 		}
 		int errorcount = 0;
@@ -41,11 +41,10 @@ public class SaveLoad {
 			errorcount = loadModel(JsonUtil.read(modelfile, false).getAsJsonObject());
 		}
 		catch(Exception e){
-			e.printStackTrace();
-			Settings.showDialog(e, "Error", JOptionPane.ERROR_MESSAGE);
+			FMTB.showDialogbox("Error", e.getLocalizedMessage(), "ok.", null, DialogBox.NOTHING, null); e.printStackTrace();
 		}
 		if(errorcount > 0){
-			Settings.showDialog(errorcount + " errors occured while parsing save file,\ncheck console for details.", "Error", JOptionPane.INFORMATION_MESSAGE);
+			FMTB.showDialogbox(errorcount + " errors occured", "while parsing save file", "ok", null, DialogBox.NOTHING, null);//TODO 2nd button as "open console"
 		}
 	}
 	
@@ -67,16 +66,35 @@ public class SaveLoad {
 		} FMTB.MODEL = compound; FMTB.MODEL.updateFields(); FMTB.MODEL.recompile(); return errs;
 	}
 	
-	public static void checkIfShouldSave(){
+	public static void checkIfShouldSave(boolean shouldclose){
 		if(FMTB.MODEL.getCompound().size() > 0){
-			if(JOptionPane.showConfirmDialog(null, "Do you want to save the current model first?", "Save current Model?", JOptionPane.YES_NO_OPTION) == 0){
-				if(FMTB.MODEL.file == null){
-					FMTB.MODEL.file = getFile("Select save location.");
-				} saveModel(false);
-			}
-			else{
-				FMTB.print("selected > no saving of current");
-			}
+			FMTB.showDialogbox("Do you want to save the", "current model first?", "Yes", "No", new Runnable(){
+				@Override
+				public void run(){
+					if(FMTB.MODEL.file == null){
+						FMTB.MODEL.file = getFile("Select save location.");
+					}
+					//saveModel(false)
+					if(FMTB.MODEL.file == null){
+						FMTB.showDialogbox("Model save file is 'null'!", "Model will not be saved.", "OK", "Save", new Runnable(){
+							@Override public void run(){ if(shouldclose){ FMTB.get().close(true); } }
+						}, new Runnable(){
+							@Override public void run(){ checkIfShouldSave(shouldclose); }
+						});
+						//TODO add cancel;
+					}
+					else{
+						JsonUtil.write(FMTB.MODEL.file, modelToJTMT(false));
+						if(shouldclose){ FMTB.get().close(true); }
+					}
+				}
+			}, new Runnable(){
+				@Override
+				public void run(){
+					FMTB.print("selected > no saving of current");
+					if(shouldclose){ FMTB.get().close(true); }
+				}
+			});
 		}
 	}
 	
@@ -146,7 +164,7 @@ public class SaveLoad {
 	}
 
 	public static void openNewModel(){
-		checkIfShouldSave();
+		checkIfShouldSave(false);
 		FMTB.MODEL = new GroupCompound();
 	}
 
@@ -155,7 +173,7 @@ public class SaveLoad {
 			FMTB.MODEL.file = getFile("Select save location.");
 		}
 		if(FMTB.MODEL.file == null){
-			Settings.showDialog("Model save file is 'null'!\nModel will not be saved.", "Information.", JOptionPane.INFORMATION_MESSAGE);
+			FMTB.showDialogbox("Model save file is 'null'!", "Model will not be saved.", "OK", null, DialogBox.NOTHING, null);
 			return;
 		}
 		JsonUtil.write(FMTB.MODEL.file, modelToJTMT(false));

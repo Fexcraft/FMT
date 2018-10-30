@@ -1,5 +1,6 @@
 package net.fexcraft.app.fmt;
 
+import java.awt.EventQueue;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -10,8 +11,6 @@ import java.util.Date;
 import java.util.Timer;
 
 import javax.script.ScriptException;
-import javax.swing.JOptionPane;
-
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
 import org.lwjgl.input.Keyboard;
@@ -23,6 +22,7 @@ import org.lwjgl.util.glu.GLU;
 import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.ui.UserInterface;
+import net.fexcraft.app.fmt.ui.generic.DialogBox;
 import net.fexcraft.app.fmt.utils.Backups;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.SaveLoad;
@@ -67,7 +67,7 @@ public class FMTB {
 		try{ INSTANCE.run(); }
 		catch(LWJGLException | InterruptedException | IOException e){
 			e.printStackTrace();
-			Settings.showDialog("Seems the app crashed!\n" + e.getMessage() + "\nCheck console for more info.", "FMT Runtime Error", JOptionPane.INFORMATION_MESSAGE);
+			//Settings.showDialog("Seems the app crashed!\n" + e.getMessage() + "\nCheck console for more info.", "FMT Runtime Error", JOptionPane.INFORMATION_MESSAGE);
 			System.exit(1);
 		}
 	}
@@ -104,7 +104,7 @@ public class FMTB {
 	private void loop(){
 		ggr.acceptInput(0.05F); ggr.apply();
 		//
-		if(Display.isCloseRequested()) close = true;
+		if(Display.isCloseRequested()){ SaveLoad.checkIfShouldSave(true); }
 		if(Keyboard.isKeyDown(Keyboard.KEY_F11)){
 			try{ Display.setFullscreen(Settings.toogleFullscreen()); }
 			catch(Exception ex){ ex.printStackTrace(); }
@@ -200,7 +200,24 @@ public class FMTB {
 	}
 
 	public void close(){
-		SaveLoad.checkIfShouldSave(); close = true;
+		SaveLoad.checkIfShouldSave(true);
+	}
+	
+	public void close(boolean bool){
+		close = bool;
+	}
+	
+	public static DialogBox getDialogBox(){
+		return ((DialogBox)INSTANCE.UI.getElement("dialogbox"));
+	}
+	
+	public static void showDialogbox(String title, String desc, String button0, String button1, Runnable run0, Runnable run1){
+		EventQueue.invokeLater(new Runnable(){
+			@Override
+			public void run(){
+				getDialogBox().show(new String[]{ title == null ? "" : title, desc == null ? "" : desc, button0, button1 }, run0, run1);
+			}
+		});
 	}
 
 }

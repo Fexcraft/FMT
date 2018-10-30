@@ -86,7 +86,7 @@ public class GGR {
             Mouse.setGrabbed(true);
         }
         if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
-            Mouse.setGrabbed(false);
+            Mouse.setGrabbed(false); FMTB.getDialogBox().reset();
         }
         //
         if(isKeyDown(Keyboard.KEY_F1, 200)){ /*//TODO help UI*/ }
