@@ -9,6 +9,7 @@ import net.fexcraft.app.fmt.ui.editor.CylinderEditor;
 import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
 import net.fexcraft.app.fmt.ui.editor.ShapeboxEditor;
 import net.fexcraft.app.fmt.ui.generic.Crossbar;
+import net.fexcraft.app.fmt.ui.generic.DialogBox;
 import net.fexcraft.app.fmt.ui.generic.Toolbar;
 import net.fexcraft.app.fmt.utils.TextureManager;
 
@@ -31,6 +32,7 @@ public class UserInterface {
 		elements.put("shapebox_editor", new ShapeboxEditor());
 		elements.put("modeltree", new ModelTree());
 		elements.put("cylinder_editor", new CylinderEditor());
+		elements.put("dialoxbox", new DialogBox());
 		//
 		FMTB.MODEL.updateFields();
 	}
