@@ -3,13 +3,13 @@ package net.fexcraft.app.fmt.porters;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import net.fexcraft.app.fmt.utils.JsonUtil;
-import net.fexcraft.app.fmt.utils.Vec3f;
 import net.fexcraft.app.fmt.wrappers.BoxWrapper;
 import net.fexcraft.app.fmt.wrappers.CylinderWrapper;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.ShapeboxWrapper;
+import net.fexcraft.lib.common.json.JsonUtil;
+import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 /**
@@ -190,6 +190,9 @@ public class JsonToTMT {
 		polygon.rot.xCoord = get(rotx, obj, def);
 		polygon.rot.yCoord = get(roty, obj, def);
 		polygon.rot.zCoord = get(rotz, obj, def);
+		polygon.off.xCoord = get(offx, obj, def);
+		polygon.off.yCoord = get(offy, obj, def);
+		polygon.off.zCoord = get(offz, obj, def);
 		polygon.pos.xCoord = get(posx, obj, def);
 		polygon.pos.yCoord = get(posy, obj, def);
 		polygon.pos.zCoord = get(posz, obj, def);

@@ -4,7 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.google.gson.JsonObject;
 
-import net.fexcraft.app.fmt.utils.Vec3f;
+import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public class ShapeboxWrapper extends BoxWrapper {
@@ -31,6 +31,7 @@ public class ShapeboxWrapper extends BoxWrapper {
 			cor7.xCoord, cor7.yCoord, cor7.zCoord);
 		turbo.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord);
 		turbo.rotateAngleX = rot.xCoord; turbo.rotateAngleY = rot.yCoord; turbo.rotateAngleZ = rot.zCoord;
+		turbo.textured = compound.textured;
 		//
 		if(lines != null && lines.displaylist() != null){ GL11.glDeleteLists(lines.displaylist(), 0); lines = null; }
 		lines = new ModelRendererTurbo(null, textureX, textureY, compound.textureX, compound.textureY);
@@ -45,6 +46,7 @@ public class ShapeboxWrapper extends BoxWrapper {
 			cor7.xCoord, cor7.yCoord, cor7.zCoord); lines.lines = true;
 		lines.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord);
 		lines.rotateAngleX = rot.xCoord; lines.rotateAngleY = rot.yCoord; lines.rotateAngleZ = rot.zCoord;
+		lines.textured = compound.textured;
 	}
 
 	@Override
@@ -152,6 +154,11 @@ public class ShapeboxWrapper extends BoxWrapper {
 		if(cor7.yCoord != 0) obj.addProperty("y7", cor7.yCoord);
 		if(cor7.zCoord != 0) obj.addProperty("z7", cor7.zCoord);
 		return obj;
+	}
+
+
+	public ShapeboxWrapper setCoords(Vec3f xyz0, Vec3f xyz1, Vec3f xyz2, Vec3f xyz3, Vec3f xyz4, Vec3f xyz5, Vec3f xyz6, Vec3f xyz7){
+		cor0 = xyz0; cor1 = xyz1; cor2 = xyz2; cor3 = xyz3; cor4 = xyz4; cor5 = xyz5; cor6 = xyz6; cor7 = xyz7; return this;
 	}
 	
 }

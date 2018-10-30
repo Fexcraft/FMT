@@ -5,8 +5,8 @@ import org.newdawn.slick.Color;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.generic.Button;
 import net.fexcraft.app.fmt.ui.generic.TextField;
-import net.fexcraft.app.fmt.utils.RGB;
 import net.fexcraft.app.fmt.utils.TextureManager;
+import net.fexcraft.lib.common.math.RGB;
 
 public class ShapeboxEditor extends Editor {
 
@@ -34,7 +34,7 @@ public class ShapeboxEditor extends Editor {
 				}.setText(" > ", true).setTexture("ui/background").setLevel(-1));
 			}
 		}
-		this.adddMultiplicator(430);
+		this.addMultiplicator(430);
 	}
 	
 	@Override

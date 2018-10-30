@@ -6,8 +6,8 @@ import org.newdawn.slick.Color;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.Element;
-import net.fexcraft.app.fmt.utils.RGB;
 import net.fexcraft.app.fmt.utils.TextureManager;
+import net.fexcraft.lib.common.math.RGB;
 
 public class TextField extends Element {
 	

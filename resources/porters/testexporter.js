@@ -1,8 +1,8 @@
-var getId = function(file){
+var getId = function(){
 	return "testexporter"
 }
 
-var getName = function(file){
+var getName = function(){
 	return "Test JTMT Exporter"
 }
 

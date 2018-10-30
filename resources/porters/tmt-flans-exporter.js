@@ -1,6 +1,6 @@
 // Defines the module
-function getId(file) { return "javaexporter"; }
-function getName(file) { return "TMT-JAVA-EXPORTER"; }
+function getId(file) { return "flans_exporter"; }
+function getName(file) { return "TMT-FLANS-EXPORTER"; }
 function getExtensions() { return [".java"]; }
 function isExporter() { return true; }
 function isImporter() { return false; }
@@ -202,5 +202,5 @@ public class YOURMODELNAMEHERE extends ModelVehicle
 	writer.write(outputText);
 	writer.flush();
 	writer.close();
-	return "YEEEEEEE";
+	return "gold.print(\"YEEEEEEE\");";
 }

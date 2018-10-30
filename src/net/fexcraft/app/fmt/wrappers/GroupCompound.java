@@ -1,6 +1,7 @@
 package net.fexcraft.app.fmt.wrappers;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
@@ -18,7 +19,8 @@ public class GroupCompound {
 	private TreeMap<String, TurboList> compound = new TreeMap<>();
 	private ArrayList<Selection> selection = new ArrayList<>();
 	public ArrayList<String> creators = new ArrayList<>();
-	public File file;
+	public File file; public String name = "unnamed model";
+	public boolean textured = false;
 	
 	public GroupCompound(){
 		compound.put("body", new TurboList("body"));
@@ -116,6 +118,7 @@ public class GroupCompound {
 			if(compound.isEmpty()) compound.put("group0", new TurboList("group0"));
 			TurboList list = (compound.containsKey("body") ? compound.get("body") : (TurboList)compound.values().toArray()[0]);
 			selection.clear(); selection.add(new Selection(list.id, list.size())); list.add(shape); shape.recompile();
+			this.updateFields();
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -151,7 +154,7 @@ public class GroupCompound {
 	
 	public void updateFields(){
 		try{
-			if(FMTB.get() == null || FMTB.get().UI == null || !FMTB.get().UI.hasElement("general_editor")) return;
+			if(FMTB.get() == null || FMTB.get().UI == null || !FMTB.get().UI.hasElement("general_editor")) return; FMTB.get().setTitle(this.name);
 			Editor editor = (Editor)FMTB.get().UI.getElement("general_editor"); PolygonWrapper poly = getSelectedPolygon(0);
 			if(poly == null){
 				editor.getField("sizex").applyChange(0);
@@ -188,15 +191,17 @@ public class GroupCompound {
 				editor.getField("offy").applyChange(poly.getFloat("off", false, true, false));
 				editor.getField("offz").applyChange(poly.getFloat("off", false, false, true));
 				//
-				editor.getField("rotx").applyChange(poly.getFloat("rot", true, false, false));
-				editor.getField("roty").applyChange(poly.getFloat("rot", false, true, false));
-				editor.getField("rotz").applyChange(poly.getFloat("rot", false, false, true));
+				editor.getField("rotx").applyChange(round(Math.toDegrees(poly.getFloat("rot", true, false, false))));
+				editor.getField("roty").applyChange(round(Math.toDegrees(poly.getFloat("rot", false, true, false))));
+				editor.getField("rotz").applyChange(round(Math.toDegrees(poly.getFloat("rot", false, false, true))));
 				//
 				editor.getField("texx").applyChange(poly.getFloat("tex", true, false, false));
 				editor.getField("texy").applyChange(poly.getFloat("tex", false, true, false));
 				//
 				editor.getField("group").setText(selection.get(0).group, true);
 			}
+			editor.getField("multiplicator").applyChange(rate);
+			//
 			editor = (Editor)FMTB.get().UI.getElement("shapebox_editor");
 			if(poly == null || !poly.getType().isShapebox()){
 				editor.getField("cor0x").applyChange(0);
@@ -264,6 +269,8 @@ public class GroupCompound {
 				editor.getField("cor7y").applyChange(poly.getFloat("cor7", false, true, false));
 				editor.getField("cor7z").applyChange(poly.getFloat("cor7", false, false, true));
 			}
+			editor.getField("multiplicator").applyChange(rate);
+			//
 			editor = (Editor)FMTB.get().UI.getElement("cylinder_editor");
 			if(poly == null || !poly.getType().isCylinder()){
 				editor.getField("cyl0x").applyChange(0); editor.getField("cyl0y").applyChange(0);
@@ -278,10 +285,17 @@ public class GroupCompound {
 				editor.getField("cyl2x").applyChange(poly.getFloat("cyl2", true, false, false));
 				editor.getField("cyl2y").applyChange(poly.getFloat("cyl2", false, true, false));
 			}
+			editor.getField("multiplicator").applyChange(rate);
 		}
 		catch(Exception e){
 			e.printStackTrace();
 		}
+	}
+	
+	private float round(double df){
+        BigDecimal deci = new BigDecimal(Float.toString((float)df));
+        deci = deci.setScale(3, BigDecimal.ROUND_HALF_UP);
+        return deci.floatValue();
 	}
 
 	private PolygonWrapper getSelectedPolygon(int i){
@@ -307,7 +321,7 @@ public class GroupCompound {
 	}
 
 	public float multiply(float flea){
-		rate *= flea; return rate = rate < 0.01f ? 0.01f : rate > 1000 ? 1000 : rate;
+		return rate = (rate *= flea) < 0.01f ? 0.01f : rate > 1000 ? 1000 : rate;
 	}
 
 	public void changeGroupIndex(int i){
@@ -326,6 +340,10 @@ public class GroupCompound {
 				compound.get(current).add(wrapper);
 			}
 		} array.clear(); this.updateFields();
+	}
+	
+	public int countTotalMRTs(){
+		int i = 0; for(TurboList list : compound.values()) i += list.size(); return i;
 	}
 
 }

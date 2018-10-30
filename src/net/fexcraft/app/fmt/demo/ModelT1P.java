@@ -1,6 +1,6 @@
 package net.fexcraft.app.fmt.demo;
 
-import net.fexcraft.app.fmt.utils.RGB;
+import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.tmt.ModelBase;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
@@ -1209,6 +1209,11 @@ public class ModelT1P extends ModelBase {
         body_colored_primary[62].setRotationPoint(22F, -19F, 22F);
 
         translateAll(0F, 0F, 0F);
+        //
+        for(ModelRendererTurbo turbo : body) turbo.textured = true;
+        for(ModelRendererTurbo turbo : body_door_close_colored_primary) turbo.textured = true;
+        for(ModelRendererTurbo turbo : body_colored_primary) turbo.textured = true;
+        for(ModelRendererTurbo turbo : body_colored_secondary) turbo.textured = true;
     }
     
     //private ModelCompound bodyLines;

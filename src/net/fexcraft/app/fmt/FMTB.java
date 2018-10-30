@@ -2,6 +2,12 @@ package net.fexcraft.app.fmt;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
+import java.util.Date;
+import java.util.Timer;
 
 import javax.script.ScriptException;
 import javax.swing.JOptionPane;
@@ -17,19 +23,20 @@ import org.lwjgl.util.glu.GLU;
 import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.ui.UserInterface;
+import net.fexcraft.app.fmt.utils.Backups;
 import net.fexcraft.app.fmt.utils.GGR;
-import net.fexcraft.app.fmt.utils.RGB;
 import net.fexcraft.app.fmt.utils.SaveLoad;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
-import net.fexcraft.lib.fmr.ModelCompound;
-import net.fexcraft.lib.fmr.polygons.Cuboid;
+import net.fexcraft.lib.common.math.RGB;
+import net.fexcraft.lib.common.math.Time;
+import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
  * 
- * All rights reserved © 2018 fexcraft.net
+ * All rights reserved &copy; 2018 fexcraft.net
  * */
 public class FMTB {
 	
@@ -45,6 +52,7 @@ public class FMTB {
 	public UserInterface UI;
 	private static File lwjgl_natives;
 	public static GroupCompound MODEL = new GroupCompound();
+	public static Timer BACKUP_TIMER;
 	
 	public static void main(String... args) throws Exception {
 	    switch(LWJGLUtil.getPlatform()){
@@ -59,15 +67,19 @@ public class FMTB {
 		try{ INSTANCE.run(); }
 		catch(LWJGLException | InterruptedException | IOException e){
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null, "Seems the app crashed!\n" + e.getMessage() + "\nCheck console for more info.", "FMT Runtime Error", JOptionPane.INFORMATION_MESSAGE);
+			Settings.showDialog("Seems the app crashed!\n" + e.getMessage() + "\nCheck console for more info.", "FMT Runtime Error", JOptionPane.INFORMATION_MESSAGE);
 			System.exit(1);
 		}
 	}
-	
+
 	public static final FMTB get(){ return INSTANCE; }
 
 	private void setDefaults(boolean full, String string){
-		Settings.setFullScreen(full); title = String.format(deftitle, string);
+		Settings.setFullScreen(full); setTitle(string);
+	}
+	
+	public void setTitle(String string){
+		title = String.format(deftitle, string); Display.setTitle(title);
 	}
 	
 	public void run() throws LWJGLException, InterruptedException, IOException, NoSuchMethodException, ScriptException {
@@ -76,6 +88,10 @@ public class FMTB {
 		Display.setResizable(true);
 		UI = new UserInterface(this);
 		PorterManager.load();
+		//
+		LocalDateTime midnight = LocalDateTime.of(LocalDate.now(ZoneOffset.systemDefault()), LocalTime.MIDNIGHT);
+		long mid = midnight.toInstant(ZoneOffset.UTC).toEpochMilli(); long date = Time.getDate(); while((mid += Time.MIN_MS * 5) < date);
+		if(BACKUP_TIMER == null){ (BACKUP_TIMER = new Timer()).schedule(new Backups(), new Date(mid), Time.MIN_MS * 5); }
 		//
 		while(!close){
 			loop(); render(); UI.render();
@@ -133,24 +149,19 @@ public class FMTB {
         }
         //
         if(Settings.cube()){
-            TextureManager.bindTexture("demo");
-            compound0.render();
+            TextureManager.bindTexture("demo"); compound0.render();
         }
         TextureManager.bindTexture("blank"); MODEL.render();
         if(Settings.demo()){
-            TextureManager.bindTexture("t1p");
-            ModelT1P.INSTANCE.render();
+            TextureManager.bindTexture("t1p"); ModelT1P.INSTANCE.render();
         }
         //
         //GL11.glDisable(GL11.GL_BLEND);
         GL11.glPopMatrix();
 	}
 	
-	private static final ModelCompound compound0 = new ModelCompound();
-	static {
-		compound0.textureSizeX = compound0.textureSizeY = 16;
-		compound0.insert(new Cuboid().setSize(16, 16, 16).setPosition(-8, 0, -8));
-	}
+	private static final ModelRendererTurbo compound0 = new ModelRendererTurbo(null, 0, 0);
+	static { compound0.textureHeight = compound0.textureWidth = 16; compound0.addBox(-8, 0, -8, 16, 16, 16); }
 
 	private void initOpenGL(){
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -182,6 +193,10 @@ public class FMTB {
 			System.out.print(obj == null ? "null " : obj.toString() + " ");
 		}
 		System.out.print("]\n");
+	}
+	
+	public static final <T> T print(T obj){
+		System.out.print(String.format("[ %s ]\n", obj)); return obj;
 	}
 
 	public void close(){

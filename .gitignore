@@ -46,3 +46,6 @@ $RECYCLE.BIN/
 old/
 .classpath
 .settings/
+models/
+saves/
+backups/

@@ -1,5 +1,6 @@
 package net.fexcraft.app.fmt.utils;
 
+import java.awt.EventQueue;
 import java.io.File;
 import java.util.Map.Entry;
 
@@ -15,10 +16,11 @@ import com.google.gson.JsonPrimitive;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.JsonToTMT;
 import net.fexcraft.app.fmt.porters.PorterManager;
-import net.fexcraft.app.fmt.porters.PorterManager.Porter;
+import net.fexcraft.app.fmt.porters.PorterManager.ExInPorter;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
+import net.fexcraft.lib.common.json.JsonUtil;
 
 public class SaveLoad {
 	
@@ -29,42 +31,51 @@ public class SaveLoad {
 	}
 
 	public static void openModel(){
-		checkIfShouldSave();
-		File modelfile = getFile("Select file to open.");
-		if(modelfile == null || !modelfile.exists()){
-			JOptionPane.showMessageDialog(null, "Invalid Model File (does it even exists?).", "Error", JOptionPane.INFORMATION_MESSAGE);
-			return;
-		}
-		int errorcount = 0;
-		try{
-			errorcount = loadModel(JsonUtil.read(modelfile, false).getAsJsonObject());
-		}
-		catch(Exception e){
-			e.printStackTrace();
-			JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
-		}
-		if(errorcount > 0){
-			JOptionPane.showMessageDialog(null, errorcount + " errors occured while parsing save file,\ncheck console for details.", "Error", JOptionPane.INFORMATION_MESSAGE);
-		}
+		EventQueue.invokeLater(new Runnable(){
+			@Override
+			public void run(){
+				checkIfShouldSave();
+				File modelfile = getFile("Select file to open.");
+				if(modelfile == null || !modelfile.exists()){
+					Settings.showDialog("Invalid Model File (does it even exists?).", "Error", JOptionPane.INFORMATION_MESSAGE);
+					return;
+				}
+				int errorcount = 0;
+				try{
+					/*errorcount =*/ loadModel(JsonUtil.read(modelfile, false).getAsJsonObject());
+				}
+				catch(Exception e){
+					e.printStackTrace(); errorcount++;
+					Settings.showDialog(e, "Error", JOptionPane.ERROR_MESSAGE);
+				}
+				if(errorcount > 0){
+					Settings.showDialog(errorcount + " errors occured while parsing save file,\ncheck console for details.", "Error", JOptionPane.INFORMATION_MESSAGE);
+				}
+			}
+		});
 	}
 	
-	public static int loadModel(JsonObject obj){
-		GroupCompound compound = new GroupCompound(); int errorcount = 0; compound.getCompound().clear();
-		compound.textureX = JsonUtil.getIfExists(obj, "texture_x", 256).intValue();
-		compound.textureY = JsonUtil.getIfExists(obj, "texture_y", 256).intValue();
-		compound.creators = JsonUtil.jsonArrayToStringArray(JsonUtil.getIfExists(obj, "creators", new JsonArray()).getAsJsonArray());
-		JsonObject model = obj.get("model").getAsJsonObject();
-		for(Entry<String, JsonElement> entry : model.entrySet()){
-			try{
-				TurboList list = new TurboList(entry.getKey()); JsonArray array = entry.getValue().getAsJsonArray();
-				for(JsonElement elm : array){ list.add(JsonToTMT.parseWrapper(compound, elm.getAsJsonObject())); }
-				compound.getCompound().put(entry.getKey(), list);
+	public static void loadModel(JsonObject obj){
+		EventQueue.invokeLater(new Runnable(){
+			@Override
+			public void run(){
+				GroupCompound compound = new GroupCompound(); compound.getCompound().clear();
+				compound.textureX = JsonUtil.getIfExists(obj, "texture_x", 256).intValue();
+				compound.textureY = JsonUtil.getIfExists(obj, "texture_y", 256).intValue();
+				compound.creators = JsonUtil.jsonArrayToStringArray(JsonUtil.getIfExists(obj, "creators", new JsonArray()).getAsJsonArray());
+				JsonObject model = obj.get("model").getAsJsonObject();
+				for(Entry<String, JsonElement> entry : model.entrySet()){
+					try{
+						TurboList list = new TurboList(entry.getKey()); JsonArray array = entry.getValue().getAsJsonArray();
+						for(JsonElement elm : array){ list.add(JsonToTMT.parseWrapper(compound, elm.getAsJsonObject())); }
+						compound.getCompound().put(entry.getKey(), list);
+					}
+					catch(Exception e){
+						e.printStackTrace();
+					}
+				} FMTB.MODEL = compound; FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
 			}
-			catch(Exception e){
-				e.printStackTrace(); errorcount++;
-			}
-		} FMTB.MODEL = compound; FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
-		return errorcount;
+		});
 	}
 	
 	public static void checkIfShouldSave(){
@@ -81,34 +92,68 @@ public class SaveLoad {
 	}
 	
 	public static File getFile(String title){
-		return getFile(title, null, true);
+		return getFile(title, null, true, true);
 	}
 
-	public static File getFile(String title, File otherroot, boolean load){
+	public static File getFile(String title, File otherroot, boolean load, boolean nofilter){
 		JFileChooser chooser = new JFileChooser();
 		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		if(otherroot != null && !otherroot.exists()) otherroot.mkdirs();
 		chooser.setCurrentDirectory(otherroot == null ? root : otherroot);
 		chooser.setDialogTitle(title);
-		for(Porter porter : PorterManager.getPorters(!load)){
-			chooser.addChoosableFileFilter(new FileFilter(){
+		if(!nofilter){
+			for(ExInPorter porter : PorterManager.getPorters(!load)){
+				chooser.addChoosableFileFilter(new JFileFilter(){
+					@Override
+					public boolean accept(File arg0){
+						if(arg0.isDirectory()) return true;
+						for(String ext : porter.getExtensions()){
+							if(arg0.getName().endsWith(ext)) return true;
+						} return false;
+					}
+					//
+					@Override
+					public String getDescription(){
+						return porter.getName() + (load ? " [I]" : "[E]");
+					}
+					//
+					@Override
+					public String getFileEnding(){
+						return porter.getExtensions().length == 0 ? ".no-ext" : porter.getExtensions()[0];
+					}
+				});
+			}
+		}
+		else{
+			chooser.addChoosableFileFilter(new JFileFilter(){
 				@Override
 				public boolean accept(File arg0){
-					if(arg0.isDirectory()) return true;
-					for(String ext : porter.extensions){
-						if(arg0.getName().endsWith(ext)) return true;
-					} return false;
+					return arg0.isDirectory() || arg0.getName().endsWith(".jtmt");
 				}
-
+				//
 				@Override
 				public String getDescription(){
-					return porter.name + (load ? " [I]" : "[E]");
+					return "JTMT Save File";
+				}
+				//
+				@Override
+				public String getFileEnding(){
+					return ".jtmt";
 				}
 			});
 		}
 		chooser.setAcceptAllFileFilterUsed(false);
 		chooser.showOpenDialog(null);
-		return chooser.getSelectedFile();
+		File file = chooser.getSelectedFile();
+		if(file != null && !chooser.getFileFilter().accept(file)){
+			file = new File(file.getParentFile(), file.getName() + ((JFileFilter)chooser.getFileFilter()).getFileEnding());
+		} return file;
+	}
+	
+	private static abstract class JFileFilter extends FileFilter {
+
+		public abstract String getFileEnding();
+		
 	}
 
 	public static void openNewModel(){
@@ -117,20 +162,25 @@ public class SaveLoad {
 	}
 
 	public static void saveModel(boolean bool){
-		if(bool || FMTB.MODEL.file == null){
-			FMTB.MODEL.file = getFile("Select save location.");
-		}
-		if(FMTB.MODEL.file == null){
-			JOptionPane.showMessageDialog(null, "Model save file is 'null'!\nModel will not be saved.", "Information.", JOptionPane.INFORMATION_MESSAGE);
-			return;
-		}
-		JsonUtil.write(FMTB.MODEL.file, saveModel());
+		EventQueue.invokeLater(new Runnable(){
+			@Override
+			public void run(){
+				if(bool || FMTB.MODEL.file == null){
+					FMTB.MODEL.file = getFile("Select save location.");
+				}
+				if(FMTB.MODEL.file == null){
+					Settings.showDialog("Model save file is 'null'!\nModel will not be saved.", "Information.", JOptionPane.INFORMATION_MESSAGE);
+					return;
+				}
+				JsonUtil.write(FMTB.MODEL.file, modelToJTMT(false));
+			}
+		});
 	}
 
 	/**
 	 * @return JTMT save form of the Model/GroupCompound
 	 */
-	public static JsonObject saveModel(){
+	public static JsonObject modelToJTMT(boolean export){
 		GroupCompound compound = FMTB.MODEL;
 		JsonObject obj = new JsonObject();
 		obj.addProperty("format", 1);
@@ -149,7 +199,7 @@ public class SaveLoad {
 		for(Entry<String, TurboList> entry : compound.getCompound().entrySet()){
 			JsonArray array = new JsonArray(); TurboList list = entry.getValue();
 			for(PolygonWrapper wrapper : list){
-				array.add(wrapper.toJson(false));
+				array.add(wrapper.toJson(export));
 			}
 			model.add(entry.getKey(), array);
 		}

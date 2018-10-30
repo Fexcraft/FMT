@@ -8,13 +8,13 @@ import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.ModelTree;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.utils.GGR;
-import net.fexcraft.app.fmt.utils.RGB;
 import net.fexcraft.app.fmt.utils.SaveLoad;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.wrappers.BoxWrapper;
 import net.fexcraft.app.fmt.wrappers.CylinderWrapper;
 import net.fexcraft.app.fmt.wrappers.ShapeboxWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
+import net.fexcraft.lib.common.math.RGB;
 
 public class Toolbar extends Element {
 	
@@ -152,7 +152,12 @@ public class Toolbar extends Element {
 										@Override public void setupSubmenu(){ return; }
 										@Override protected boolean processButtonClick(int x, int y, boolean left){ Settings.toggleCube(); return true; }
 									}.setText("Center Cube", false));
-									this.elements.put("reset", new Button(this, "reset", 100, 26, 2, 86, subhover){
+									//
+									this.elements.put("demo", new Button(this, "demo", 100, 26, 2, 86, subhover){
+										@Override public void setupSubmenu(){ return; }
+										@Override protected boolean processButtonClick(int x, int y, boolean left){ Settings.toggleDemo(); return true; }
+									}.setText("Demo Model", false));
+									this.elements.put("reset", new Button(this, "reset", 100, 26, 2, 114, subhover){
 										@Override public void setupSubmenu(){ return; }
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){

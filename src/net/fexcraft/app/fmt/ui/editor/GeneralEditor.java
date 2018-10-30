@@ -5,8 +5,8 @@ import org.newdawn.slick.Color;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.generic.Button;
 import net.fexcraft.app.fmt.ui.generic.TextField;
-import net.fexcraft.app.fmt.utils.RGB;
 import net.fexcraft.app.fmt.utils.TextureManager;
+import net.fexcraft.lib.common.math.RGB;
 
 public class GeneralEditor extends Editor {
 
@@ -66,7 +66,7 @@ public class GeneralEditor extends Editor {
 			}
 		}.setText(" > ", true).setTexture("ui/background").setLevel(-1));
 		//
-		this.adddMultiplicator(330);
+		this.addMultiplicator(330);
 	}
 	
 	@Override
@@ -75,7 +75,7 @@ public class GeneralEditor extends Editor {
 		font.drawString(4,  40, "Measurements", Color.black);
 		font.drawString(4,  90, "Position (x/y/z)", Color.black);
 		font.drawString(4, 140, "Offset (x/y/z)", Color.black);
-		font.drawString(4, 190, "Rotation (radians)", Color.black);
+		font.drawString(4, 190, "Rotation (degrees)", Color.black);
 		font.drawString(4, 240, "Texture (x/y)", Color.black);
 		font.drawString(4, 290, "Group", Color.black);
 		font.drawString(4, 340, "Multiplicator/Rate", Color.black);

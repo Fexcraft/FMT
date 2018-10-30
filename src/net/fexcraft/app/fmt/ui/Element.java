@@ -28,13 +28,15 @@ public abstract class Element {
 	public Element(Element parent, String id){
 		this.parent = parent; this.id = id;
 	}
-	
+
 	/** @param parent may be null **/
 	public void render(int root_width, int root_height){
 		if(!Mouse.isGrabbed()) this.hovered(Mouse.getX(), root_height - Mouse.getY());
 		if(this.visible){
 			if(z != 0) GL11.glTranslatef(0, 0,  z);
+			GL11.glDepthFunc(GL11.GL_ALWAYS);
 			this.renderSelf(root_width, root_height);
+			GL11.glDepthFunc(GL11.GL_LESS);
 			if(z != 0) GL11.glTranslatef(0, 0, -z);
 		}
 		if(this.visible && !elements.isEmpty()) elements.values().forEach(elm -> elm.render(root_width, root_height));
@@ -81,7 +83,7 @@ public abstract class Element {
 				if(bool = elm.onButtonClick(x, y, left, elm.hovered)) break;
 			}
 		}
-		return bool ? true : hovered ? processButtonClick(x, y, left) : false;
+		return (bool || hovered) && processButtonClick(x, y, left);
 	}
 
 	protected abstract boolean processButtonClick(int x, int y, boolean left);
@@ -99,7 +101,7 @@ public abstract class Element {
 				if(bool = elm.onScrollWheel(wheel)) break;
 			}
 		}
-		return bool ? true : hovered ? processScrollWheel(wheel) : false;
+		return bool || (hovered && processScrollWheel(wheel));
 	}
 
 	protected boolean processScrollWheel(int wheel){ return false; }
