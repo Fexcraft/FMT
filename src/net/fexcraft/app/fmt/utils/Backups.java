@@ -31,5 +31,8 @@ public class Backups extends TimerTask {
 	}
 	
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy HH.mm.ss");
+	private static final SimpleDateFormat ssdf = new SimpleDateFormat("dd-MMM-yyyy HH.mm.ss.SSSS");
+
+	public static final SimpleDateFormat getSimpleDateFormat(boolean milli){ return milli ? ssdf : sdf; }
 
 }

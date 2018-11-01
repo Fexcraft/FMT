@@ -9,13 +9,16 @@ import java.util.stream.Collectors;
 
 import org.newdawn.slick.Color;
 
+import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.porters.PorterManager.ExInPorter;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.UserInterface;
+import net.fexcraft.app.fmt.utils.Backups;
 import net.fexcraft.app.fmt.utils.SaveLoad;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.lib.common.math.RGB;
+import net.fexcraft.lib.common.math.Time;
 import net.fexcraft.lib.common.utils.Print;
 
 /**
@@ -43,11 +46,20 @@ public class FileChooser extends Element {
 		this.elements.put("button0", button0 = new Button(this, "button0", 150, 28, 18, 470, new RGB(255, 255, 0)){
 			@Override protected boolean processButtonClick(int x, int y, boolean left){
 				if(selected < 0) return true; UserInterface.FILECHOOSER.visible = false;
-				onfile.file = getFilteredList()[selected]; onfile.run(); return true;
+				onfile.file = getFilteredList()[selected]; onfile.porter = PorterManager.getPorters(export).get(eximscroll);
+				//FMTB.showDialogbox(export ? "Exporting..." : "Importing...", "Please wait.", "ok!", null, DialogBox.NOTHING, null);
+				onfile.run(); return true;
 			}
 		});
 		this.elements.put("button1", button1 = new Button(this, "button1", 150, 28, 182, 470, new RGB(255, 255, 0)){
-			@Override protected boolean processButtonClick(int x, int y, boolean left){ return true; }
+			@Override protected boolean processButtonClick(int x, int y, boolean left){
+				onfile.porter = PorterManager.getPorters(export).get(eximscroll);
+				String str = Backups.getSimpleDateFormat(true).format(Time.getDate()); UserInterface.FILECHOOSER.visible = false;
+				String ext = onfile.porter.getExtensions()[0].startsWith(".") ? onfile.porter.getExtensions()[0] : "." + onfile.porter.getExtensions()[0];
+				onfile.file = new File(currdir, (FMTB.MODEL.name == null ? "unnamed" : FMTB.MODEL.name) + "-(" + str + ")" + ext);
+				//FMTB.showDialogbox(export ? "Exporting..." : "Importing...", "Please wait.", "ok!", null, DialogBox.NOTHING, null);
+				onfile.run(); return true;
+			}
 		});
 		this.elements.put("button2", button2 = new Button(this, "button2", 150, 28, 346, 470, new RGB(255, 255, 0)){
 			@Override protected boolean processButtonClick(int x, int y, boolean left){ UserInterface.FILECHOOSER.reset(); return true; }
@@ -99,7 +111,7 @@ public class FileChooser extends Element {
 			@Override protected boolean processButtonClick(int x, int y, boolean left){ eximscroll--; if(eximscroll < 0) eximscroll = PorterManager.getPorters(export).size() - 1; ressel(); return true; }
 		}.setTexture("icons/file_chooser_7"));
 		//
-		this.show(new String[]{ "test title", "OK"}, null, NOTHING, false);
+		//this.show(new String[]{ "test title", "OK"}, null, NOTHING, false);
 	}
 	
 	private void ressel(){
@@ -161,10 +173,10 @@ public class FileChooser extends Element {
 	}
 	
 	public void reset(){
-		this.onfile = null; this.currdir = SaveLoad.getRoot();
+		this.onfile = null; this.currdir = SaveLoad.getRoot(); ressel(); eximscroll = 0;
 		button0.setText(null, false); button1.setText(null, false); button2.setText(null, false); visible = false;
 	}
 	
-	public static abstract class AfterTask implements Runnable { public File file; }
+	public static abstract class AfterTask implements Runnable { public File file; public ExInPorter porter; }
 
 }

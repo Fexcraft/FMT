@@ -17,7 +17,9 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.generic.DialogBox;
+import net.fexcraft.app.fmt.ui.generic.FileChooser.AfterTask;
 import net.fexcraft.app.fmt.utils.SaveLoad;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.lib.common.json.JsonUtil;
@@ -62,58 +64,65 @@ public class PorterManager {
 	}
 
 	public static void handleImport(){
-		try{
-			File file = SaveLoad.getFile("Select file to import.", new File("./models"), true, false);
-			if(file == null){
-				FMTB.showDialogbox("No valid file choosen.", "Import is cancelled.", "ok..", null, DialogBox.NOTHING, null);
-				return;
+		UserInterface.FILECHOOSER.show(new String[]{ "Select file/model to import.", "Open" }, new File("./models"), new AfterTask(){
+			@Override
+			public void run(){
+				try{
+					if(file == null){
+						FMTB.showDialogbox("No valid file choosen.", "Import is cancelled.", "ok..", null, DialogBox.NOTHING, null);
+						return;
+					}
+					if(porter.isInternal()){
+						FMTB.MODEL = ((InternalPorter)porter).importModel(file);
+						FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
+					}
+					else{
+						Invocable inv = (Invocable)((ExternalPorter)porter).eval();
+						String result = (String) inv.invokeFunction("importModel", new File("./saves/").listFiles()[0]);
+						SaveLoad.loadModel(JsonUtil.getObjectFromString(result));
+					}
+				}
+				catch(Exception e){
+					FMTB.showDialogbox("Errors while importing Model.", e.getLocalizedMessage(), "ok.", null, DialogBox.NOTHING, null);//TODO add "open console" as 2nd button
+					e.printStackTrace();
+				}
+				FMTB.showDialogbox("Import complete.", null, "OK!", null, DialogBox.NOTHING, null);
 			}
-			ExInPorter porter = getPorterFor(file, false);
-			if(porter.isInternal()){
-				FMTB.MODEL = ((InternalPorter)porter).importModel(file);
-				FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
-			}
-			else{
-				Invocable inv = (Invocable)((ExternalPorter)porter).eval();
-				String result = (String) inv.invokeFunction("importModel", new File("./saves/").listFiles()[0]);
-				SaveLoad.loadModel(JsonUtil.getObjectFromString(result));
-			}
-			FMTB.showDialogbox("Import complete.", null, "OK!", null, DialogBox.NOTHING, null);
-		}
-		catch(Exception e){
-			FMTB.showDialogbox("Errors while importing Model.", e.getLocalizedMessage(), "ok.", null, DialogBox.NOTHING, null);//TODO add "open console" as 2nd button
-			e.printStackTrace();
-		}
+		}, false);
 	}
 
 	public static void handleExport(){
-		try{
-			File file = SaveLoad.getFile("Select file to export.", new File("./models"), false, false);
-			if(file == null){
-				FMTB.showDialogbox("No valid file choosen.", "Export is cancelled.", "ok..", null, DialogBox.NOTHING, null);
-				return;
+		UserInterface.FILECHOOSER.show(new String[]{ "Select Export Location", "Select" }, new File("./models"), new AfterTask(){
+			@Override
+			public void run(){
+				try{
+					if(file == null){
+						FMTB.showDialogbox("No valid file choosen.", "Export is cancelled.", "ok..", null, DialogBox.NOTHING, null);
+						return;
+					} String result;
+					if(porter.isInternal()){
+						result = ((InternalPorter)porter).exportModel(FMTB.MODEL, file);
+					}
+					else{
+						Invocable inv = (Invocable)((ExternalPorter)porter).eval();
+						result = (String)inv.invokeFunction("exportModel", SaveLoad.modelToJTMT(true).toString(), file);
+					}
+					FMTB.showDialogbox("Export complete.", result, "OK!", null, DialogBox.NOTHING, null);
+					Desktop.getDesktop().open(file.getParentFile());
+				}
+				catch(Exception e){
+					FMTB.showDialogbox("Errors while exporting Model.", e.getLocalizedMessage(), "ok.", null, DialogBox.NOTHING, null);//TODO add "open console" as 2nd button
+					e.printStackTrace();
+				}
 			}
-			ExInPorter porter = getPorterFor(file, true); String result;
-			if(porter.isInternal()){
-				result = ((InternalPorter)porter).exportModel(FMTB.MODEL, file);
-			}
-			else{
-				Invocable inv = (Invocable)((ExternalPorter)porter).eval();
-				result = (String)inv.invokeFunction("exportModel", SaveLoad.modelToJTMT(true).toString(), file);
-			}
-			FMTB.showDialogbox("Export complete.", result, "OK!", null, DialogBox.NOTHING, null);
-			Desktop.getDesktop().open(file.getParentFile());
-		}
-		catch(Exception e){
-			FMTB.showDialogbox("Errors while exporting Model.", e.getLocalizedMessage(), "ok.", null, DialogBox.NOTHING, null);//TODO add "open console" as 2nd button
-			e.printStackTrace();
-		}
+		}, true);
 	}
 
 	/**
 	 * @param file
 	 * @return porter compatible with this file extension
 	 */
+	@SuppressWarnings("unused")
 	private static ExInPorter getPorterFor(File file, boolean export){
 		for(ExInPorter porter : porters.values()){
 			if((export && porter.isExporter()) || (!export && porter.isImporter())){
