@@ -22,7 +22,6 @@ import org.lwjgl.util.glu.GLU;
 import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.ui.UserInterface;
-import net.fexcraft.app.fmt.ui.generic.DialogBox;
 import net.fexcraft.app.fmt.utils.Backups;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.SaveLoad;
@@ -187,7 +186,7 @@ public class FMTB {
 		Display.create();
 	}
 	
-	public static final void print(Object... objs){
+	/*public static final void print(Object... objs){
 		System.out.print("[ ");
 		for(Object obj : objs){
 			System.out.print(obj == null ? "null " : obj.toString() + " ");
@@ -197,7 +196,7 @@ public class FMTB {
 	
 	public static final <T> T print(T obj){
 		System.out.print(String.format("[ %s ]\n", obj)); return obj;
-	}
+	}*/
 
 	public void close(){
 		SaveLoad.checkIfShouldSave(true);
@@ -207,15 +206,11 @@ public class FMTB {
 		close = bool;
 	}
 	
-	public static DialogBox getDialogBox(){
-		return ((DialogBox)INSTANCE.UI.getElement("dialogbox"));
-	}
-	
 	public static void showDialogbox(String title, String desc, String button0, String button1, Runnable run0, Runnable run1){
 		EventQueue.invokeLater(new Runnable(){
 			@Override
 			public void run(){
-				getDialogBox().show(new String[]{ title == null ? "" : title, desc == null ? "" : desc, button0, button1 }, run0, run1);
+				UserInterface.DIALOGBOX.show(new String[]{ title == null ? "" : title, desc == null ? "" : desc, button0, button1 }, run0, run1);
 			}
 		});
 	}

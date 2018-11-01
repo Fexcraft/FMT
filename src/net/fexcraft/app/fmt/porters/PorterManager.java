@@ -177,6 +177,13 @@ public class PorterManager {
 		
 		public abstract boolean isInternal();
 		
+		public boolean isValidFile(File pre){
+			if(pre.isDirectory()) return true;
+			for(String str : this.getExtensions())
+				if(pre.getName().endsWith(str)) return true;
+			return false;
+		}
+		
 	}
 	
 	public static abstract class InternalPorter extends ExInPorter {

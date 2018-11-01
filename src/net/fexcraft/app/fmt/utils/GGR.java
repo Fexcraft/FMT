@@ -7,6 +7,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.lib.common.math.Vec3f;
 
@@ -86,7 +87,7 @@ public class GGR {
             Mouse.setGrabbed(true);
         }
         if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
-            Mouse.setGrabbed(false); FMTB.getDialogBox().reset();
+            Mouse.setGrabbed(false); UserInterface.DIALOGBOX.reset(); UserInterface.FILECHOOSER.reset();
         }
         //
         if(isKeyDown(Keyboard.KEY_F1, 200)){ /*//TODO help UI*/ }

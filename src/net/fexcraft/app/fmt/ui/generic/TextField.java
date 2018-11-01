@@ -13,10 +13,11 @@ public class TextField extends Element {
 	
 	private static final ArrayList<TextField> fields = new ArrayList<>();
 	private RGB hovercolor = new RGB(112, 255, 127), inactivecol = new RGB(235, 201, 201);
-	private boolean centered, selected, number;
-	private String text;
-	private int width, x, y;
+	private boolean centered, selected, number, background = true;
+	private Color color = Color.white;
 	private float min, max, value;
+	private String text;
+	private int width;
 
 	public TextField(Element parent, String id, int width, int x, int y){
 		super(parent, id); fields.add(this);
@@ -31,11 +32,19 @@ public class TextField extends Element {
 	public TextField setAsNumberfield(float min, float max, boolean centered){
 		this.number = true; this.min = min; this.max = max; this.centered = centered; value = 0; return this;
 	}
+	
+	public TextField setRenderBackground(boolean bool){
+		this.background = bool; return this;
+	}
+	
+	public TextField setColor(Color newcol){
+		this.color = newcol; return this;
+	}
 
 	@Override
 	public void renderSelf(int rw, int rh){
 		if(enabled) (selected ? hovercolor : hovered ? RGB.BLACK : inactivecol).glColorApply();
-		this.renderQuad(x, y, width, height, "ui/background");
+		if(background) this.renderQuad(x, y, width, height, "ui/background");
 		if(enabled) RGB.glColorReset();
 		if(!number && text == null) return;
 		String text = number ? value + "" : this.text;
@@ -43,10 +52,10 @@ public class TextField extends Element {
 		if(centered){
 			int x = width / 2 - (font.getWidth(text) / 2);
 			int y = height / 2 - (font.getHeight(text) / 2);
-			font.drawString(this.x + x, this.y + y, text, Color.white);
+			font.drawString(this.x + x, this.y + y, text, color);
 		}
 		else{
-			font.drawString(x + 2, y + 2, text, Color.white);
+			font.drawString(x + 2, y + 2, text, color);
 		}
 		RGB.glColorReset();
 	}

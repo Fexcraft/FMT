@@ -11,6 +11,7 @@ public abstract class Button extends Element {
 	private String text, texture = "ui/button_bg";
 	private boolean centered;
 	private RGB hovercolor = RGB.GREEN;
+	private RGB discolor = RGB.RED;
 	
 	public Button(Element toolbar, String id, int width, int height, int x, int y){
 		super(toolbar, id);
@@ -19,8 +20,12 @@ public abstract class Button extends Element {
 		this.setupSubmenu();
 	}
 	
-	public Button(Element elm, String id, int w, int h, int x, int y, RGB rgb){
-		this(elm, id, w, h, x, y); hovercolor = rgb;
+	public Button(Element elm, String id, int w, int h, int x, int y, RGB hover){
+		this(elm, id, w, h, x, y); hovercolor = hover;
+	}
+	
+	public Button(Element elm, String id, int w, int h, int x, int y, RGB hover, RGB dis){
+		this(elm, id, w, h, x, y, hover); discolor = dis;
 	}
 
 	public void setupSubmenu(){}
@@ -35,7 +40,7 @@ public abstract class Button extends Element {
 
 	@Override
 	public void renderSelf(int rw, int rh){
-		if(hovered) (enabled ? hovercolor : RGB.RED).glColorApply();
+		if(hovered) (enabled ? hovercolor : discolor).glColorApply();
 		this.renderQuad(x, y, width, height, texture);
 		if(hovered) RGB.glColorReset();
 		if(text != null){

@@ -10,13 +10,14 @@ import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
 import net.fexcraft.app.fmt.ui.editor.ShapeboxEditor;
 import net.fexcraft.app.fmt.ui.generic.Crossbar;
 import net.fexcraft.app.fmt.ui.generic.DialogBox;
+import net.fexcraft.app.fmt.ui.generic.FileChooser;
 import net.fexcraft.app.fmt.ui.generic.Toolbar;
 import net.fexcraft.app.fmt.utils.TextureManager;
 
 public class UserInterface {
 
 	public static DialogBox DIALOGBOX;
-	public static Element FILECHOOSER;
+	public static FileChooser FILECHOOSER;
 	//
 	private HashMap<String, Element> elements = new HashMap<>();
 	private FMTB root;
@@ -36,7 +37,7 @@ public class UserInterface {
 		elements.put("modeltree", new ModelTree());
 		elements.put("cylinder_editor", new CylinderEditor());
 		elements.put("dialogbox", DIALOGBOX = new DialogBox());
-		FILECHOOSER = DIALOGBOX;//temporary
+		elements.put("filechooser", FILECHOOSER = new FileChooser());
 		//
 		FMTB.MODEL.updateFields();
 	}

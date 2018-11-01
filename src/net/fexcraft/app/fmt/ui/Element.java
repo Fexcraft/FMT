@@ -94,7 +94,7 @@ public abstract class Element {
 		return this.elements.get(id);
 	}
 
-	public boolean onScrollWheel(int wheel) {
+	public boolean onScrollWheel(int wheel){
 		boolean bool = false;
 		for(Element elm : elements.values()){
 			if(elm.visible && elm.enabled){

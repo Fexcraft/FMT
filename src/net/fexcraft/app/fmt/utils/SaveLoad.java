@@ -20,6 +20,7 @@ import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.json.JsonUtil;
+import net.fexcraft.lib.common.utils.Print;
 
 public class SaveLoad {
 	
@@ -27,6 +28,10 @@ public class SaveLoad {
 	static {
 		root = new File("./saves");
 		if(!root.exists()) root.mkdirs();
+	}
+	
+	public static final File getRoot(){
+		return root;
 	}
 
 	public static void openModel(){
@@ -91,17 +96,19 @@ public class SaveLoad {
 			}, new Runnable(){
 				@Override
 				public void run(){
-					FMTB.print("selected > no saving of current");
+					Print.console("selected > no saving of current");
 					if(shouldclose){ FMTB.get().close(true); }
 				}
 			});
 		}
 	}
 	
+	@Deprecated
 	public static File getFile(String title){
 		return getFile(title, null, true, true);
 	}
 
+	@Deprecated
 	public static File getFile(String title, File otherroot, boolean load, boolean nofilter){
 		JFileChooser chooser = new JFileChooser();
 		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
