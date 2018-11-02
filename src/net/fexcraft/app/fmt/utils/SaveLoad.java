@@ -72,7 +72,7 @@ public class SaveLoad {
 	}
 	
 	public static void checkIfShouldSave(boolean shouldclose){
-		if(FMTB.MODEL.getCompound().size() > 0){
+		if(FMTB.MODEL.countTotalMRTs() > 0){
 			FMTB.showDialogbox("Do you want to save the", "current model first?", "Yes", "No", new Runnable(){
 				@Override
 				public void run(){
