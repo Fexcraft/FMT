@@ -78,7 +78,7 @@ public class FileChooser extends Element {
 						currdir = fls[selected]; ressel();
 					} return true;
 				}
-				@Override public boolean onScrollWheel(int wheel){ scroll += wheel < 0 ? 1 : -1; if(scroll < 0) scroll = 0; return true; }
+				@Override public boolean onScrollWheel(int wheel){ scroll += wheel < 0 ? 8 : -8; if(scroll < 0) scroll = 0; return true; }
 			});
 		}
 		//

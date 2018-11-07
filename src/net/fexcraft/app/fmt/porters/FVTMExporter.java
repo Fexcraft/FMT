@@ -46,7 +46,7 @@ public class FVTMExporter extends InternalPorter {
 		buffer.append("import net.fexcraft.lib.mc.api.registry.fModel;\n" + 
 			"import net.fexcraft.lib.tmt.ModelRendererTurbo;\n" + 
 			"import net.fexcraft.mod.fvtm.model.TurboList;\n" + 
-			"import net.fexcraft.mod.fvtm.model.part.PartModel;//TODO replace this one if needed\n");
+			"import net.fexcraft.mod.fvtm.model.part.PartModel;//TODO replace this one if needed\n\n");
 		buffer.append("/** This file was exported via the FVTM Exporter V1 of\n");
 		buffer.append(" *  FMT (Fex's Modelling Toolbox) v." + FMTB.version + " &copy; " + Year.now().getValue() + " - Fexcraft.net\n");
 		buffer.append(" *  All rights reserved. For this Model's License contact the Author/Creator.\n */\n");
@@ -125,10 +125,11 @@ public class FVTMExporter extends InternalPorter {
 			}
 			if(++a == 1 && !this.extended) buffer.append(tab2 + name + ".addProgram(\"fvtm:example_program\");//TODO do not forget these exists!\n");
 			buffer.append(tab2 + "this.groups.add(" + name + ");\n");
-			if(a < compound.getCompound().size() - 1) buffer.append(tab2 + "//\n");
+			/*if(a < compound.getCompound().size() - 1)*/ buffer.append(tab2 + "//\n");
 		}
 		//
-		buffer.append(tab + "}\n" + tab + "fixRotations();\n}\n");
+		buffer.append(tab2 + "fixRotations();\n");
+		buffer.append(tab + "}\n\n}\n");
 		//
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
