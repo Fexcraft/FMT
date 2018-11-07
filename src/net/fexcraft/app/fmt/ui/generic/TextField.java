@@ -129,11 +129,13 @@ public class TextField extends Element {
 		else{
 			if(key.equals("-") && GGR.isShiftDown()) key = "_";
 			if(tempval == null) tempval = text;
+			if(tempval.length() == 0 && key.equals(" ")) return;
 			tempval += key; return;
 		}
 	}
 
 	private boolean isNumber(int id, boolean first, String key){
+		if(key.equals(" ")) return false;
 		if(first && key.equals("-")) return true;
 		if(!first && key.equals(".")) return true;
 		return id < 12;

@@ -74,6 +74,9 @@ public class GGR {
     	        		if(key == Keyboard.KEY_PERIOD){
     	        			field.onInput(key, ".");
     	        		}
+    	        		if(key == Keyboard.KEY_SPACE){
+    	        			field.onInput(key, " ");
+    	        		}
     	        	}
     	        }
     	        else{
