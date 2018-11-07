@@ -66,6 +66,17 @@ public class GroupCompound {
 		return alright;
 	}
 	
+	public boolean updateValue(TextField field){
+		if(selection.isEmpty()) return false;
+		boolean x = field.id.endsWith("x"), y = field.id.endsWith("y"), z = field.id.endsWith("z");
+		String id = field.id.substring(0, field.id.length() - 1);
+		for(int i = 0; i < selection.size(); i++){
+			if(i == 0){ selection.get(i).apply(id, field.getValue(), x, y, z); continue; }
+			selection.get(i).apply(id, field.getValue(), x, y, z);
+		}
+		return true;
+	}
+	
 	public static class Selection {
 		
 		public Selection(String string, int i){

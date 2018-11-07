@@ -17,7 +17,7 @@ public class TextField extends Element {
 	private boolean centered, selected, number, background = true;
 	private Color color = Color.white;
 	private float min, max, value;
-	private String text, tempval = "";
+	private String text, tempval;
 	private int width;
 
 	public TextField(Element parent, String id, int width, int x, int y){
@@ -48,7 +48,7 @@ public class TextField extends Element {
 		if(background) this.renderQuad(x, y, width, height, "ui/background");
 		if(enabled) RGB.glColorReset();
 		if(!number && text == null) return;
-		String text = number ? (tempval.length() == 0 ? value : "*" + tempval) + "" : tempval.length() == 0 ? this.text : tempval;
+		String text = number ? (tempval == null ? value : "*" + tempval) + "" : tempval == null ? this.text : tempval;
 		TextureManager.unbind();
 		if(centered){
 			int x = width / 2 - (font.getWidth(text) / 2);
@@ -111,14 +111,15 @@ public class TextField extends Element {
 	}
 
 	public void onInput(int id, String key){
-		if(number && !isNumber(id, tempval.length() == 0, key)){ return; }
+		if(number && !isNumber(id, tempval == null || tempval.length() == 0, key)){ return; }
 		if(number){
-			if(tempval.length() == 0){
-				if(key.equals("-")){
-					tempval = key + value; return;
-				}
-				tempval = value + "";
+			if(tempval == null){
+				tempval = key.equals("-") && !(value + "").contains("-") ? key : value + "";
 			}
+			if(key.equals("-")){
+				if(tempval.length() == 0) tempval = key + value; return;
+			}
+			if(key.equals(".") && tempval.indexOf(".") >= 0) return;
 			float fl = Float.parseFloat(tempval + key);
 			if(fl < min){ tempval = min + ""; return; }
 			if(fl > max){ tempval = max + ""; return; }
@@ -139,18 +140,22 @@ public class TextField extends Element {
 	}
 
 	public void onBackSpace(){
-		if(tempval.length() <= 1) tempval = "";
+		if(tempval == null || tempval.length() <= 1) tempval = "";
 		else tempval = tempval.substring(0, tempval.length() - 1);
 	}
 
 	public void onReturn(){
 		if(number){
-			if(tempval.length() > 0) value = Float.parseFloat(tempval);
+			if(tempval != null && tempval.length() > 0) value = Float.parseFloat(tempval);
 		}
 		else{
-			if(tempval.length() > 0) text = tempval;
+			if(tempval != null && tempval.length() > 0) text = tempval;
 		}
-		tempval = ""; return;
+		tempval = null; FMTB.MODEL.updateValue(this); return;
+	}
+
+	public float getValue(){
+		return value;
 	}
 
 }
