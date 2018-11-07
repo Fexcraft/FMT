@@ -48,7 +48,7 @@ public class FileChooser extends Element {
 				if(selected < 0) return true; UserInterface.FILECHOOSER.visible = false;
 				onfile.file = getFilteredList()[selected]; onfile.porter = PorterManager.getPorters(export).get(eximscroll);
 				//FMTB.showDialogbox(export ? "Exporting..." : "Importing...", "Please wait.", "ok!", null, DialogBox.NOTHING, null);
-				onfile.run(); return true;
+				onfile.run(); UserInterface.FILECHOOSER.reset(); return true;
 			}
 		});
 		this.elements.put("button1", button1 = new Button(this, "button1", 150, 28, 182, 470, new RGB(255, 255, 0)){
@@ -58,7 +58,7 @@ public class FileChooser extends Element {
 				String ext = onfile.porter.getExtensions()[0].startsWith(".") ? onfile.porter.getExtensions()[0] : "." + onfile.porter.getExtensions()[0];
 				onfile.file = new File(currdir, (FMTB.MODEL.name == null ? "unnamed" : FMTB.MODEL.name) + "-(" + str + ")" + ext);
 				//FMTB.showDialogbox(export ? "Exporting..." : "Importing...", "Please wait.", "ok!", null, DialogBox.NOTHING, null);
-				onfile.run(); return true;
+				onfile.run(); UserInterface.FILECHOOSER.reset(); return true;
 			}
 		});
 		this.elements.put("button2", button2 = new Button(this, "button2", 150, 28, 346, 470, new RGB(255, 255, 0)){

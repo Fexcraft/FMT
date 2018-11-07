@@ -7,6 +7,7 @@ import org.newdawn.slick.Color;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.Element;
+import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.lib.common.math.RGB;
 
@@ -16,7 +17,7 @@ import net.fexcraft.lib.common.math.RGB;
  */
 public class DialogBox extends Element {
 
-	public static final Runnable NOTHING = new Runnable(){ @Override public void run(){ return; }};
+	public static final Runnable NOTHING = new Runnable(){ @Override public void run(){ UserInterface.DIALOGBOX.reset(); return; }};
 	private Button button0, button1;
 	private Runnable positive, negative;
 	private String[] text;

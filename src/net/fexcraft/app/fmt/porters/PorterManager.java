@@ -30,7 +30,7 @@ import net.fexcraft.lib.common.json.JsonUtil;
  */
 public class PorterManager {
 	
-	private static final TreeMap<String, ExInPorter> porters = new TreeMap<String, ExInPorter>();
+	private static final PorterMap porters = new PorterMap();
 	
 	public static final void load() throws NoSuchMethodException, FileNotFoundException, ScriptException {
 		File root = new File("./resources/porters"); porters.clear();
@@ -56,7 +56,11 @@ public class PorterManager {
 			}
 		}
 		//
-		porters.put("internal_mtb_importer", new MTBImporter());
+		porters.add(new MTBImporter());
+		porters.add(new FVTMExporter(false, false));
+		porters.add(new FVTMExporter(true, false));
+		porters.add(new FVTMExporter(false, true));
+		porters.add(new FVTMExporter(true, true));
 	}
 
 	private static ScriptEngine newEngine(){
@@ -213,6 +217,16 @@ public class PorterManager {
 	 */
 	public static List<ExInPorter> getPorters(boolean export){
 		return porters.values().stream().filter(pre -> export ? pre.isExporter() : pre.isImporter()).collect(Collectors.<ExInPorter>toList());
+	}
+	
+	private static class PorterMap extends TreeMap<String, ExInPorter> {
+		
+		private static final long serialVersionUID = 1L;
+
+		public void add(ExInPorter porter){
+			this.put(porter.getId(), porter);
+		}
+		
 	}
 
 }
