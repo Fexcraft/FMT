@@ -1,14 +1,12 @@
 package net.fexcraft.app.fmt.utils;
 
-import java.time.Instant;
-import java.util.TreeMap;
-
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.editor.Editor;
+import net.fexcraft.app.fmt.ui.generic.TextField;
 import net.fexcraft.lib.common.math.Vec3f;
 
 /** CCR */
@@ -18,7 +16,6 @@ public class GGR {
     public float maxlookrange = 85;
     public float sensivity = 1.0f;//= 0.05f;
     public Vec3f pos, rotation;
-    private TreeMap<Integer, Long> keycooldown = new TreeMap<Integer, Long>();
     
     public GGR(int x, int y, int z){
         pos = new Vec3f(x, y, z);
@@ -40,16 +37,73 @@ public class GGR {
         GL11.glTranslatef(-pos.xCoord, -pos.yCoord, -pos.zCoord);
     }
 
-    public void acceptInput(float delta){
-        acceptInputRotate(delta);
-        acceptInputGrab();
-        acceptInputMove(delta);
+    public void pollInput(float delta){
+        acceptMouseInput(delta);
+        if(!TextField.anySelected()) acceptInputMove(delta);
+        acceptInputKeyboard();
     }
     
-    private boolean clickedL, clickedR, panning;
+    private void acceptInputKeyboard(){
+    	while(Keyboard.next()){
+    		int key = Keyboard.getEventKey();
+    		if(Keyboard.getEventKeyState()){//"pressed"
+    	        if(TextField.anySelected()){
+    	        	TextField field = TextField.getSelected();
+    	        	if(field != null){
+    	        		for(int i = 2; i < 12; i++){
+    	        			if(key == i) field.onInput(key, getKeyName(i));
+    	        		}
+    	        		for(int i = 16; i < 26; i++){
+    	        			if(key == i) field.onInput(key, getKeyName(i));
+    	        		}
+    	        		for(int i = 30; i < 39; i++){
+    	        			if(key == i) field.onInput(key, getKeyName(i));
+    	        		}
+    	        		for(int i = 44; i < 51; i++){
+    	        			if(key == i) field.onInput(key, getKeyName(i));
+    	        		}
+    	        		if(key == Keyboard.KEY_BACK){
+    	        			field.onBackSpace();
+    	        		}
+    	        		if(key == Keyboard.KEY_RETURN){
+    	        			field.onReturn();
+    	        		}
+    	        		if(key == Keyboard.KEY_MINUS){
+    	        			field.onInput(key, "-");
+    	        		}
+    	        		if(key == Keyboard.KEY_PERIOD){
+    	        			field.onInput(key, ".");
+    	        		}
+    	        	}
+    	        }
+    	        else{
+    	            if(key == Keyboard.KEY_F1){ /*//TODO help UI*/ }
+    	            if(key == Keyboard.KEY_F2){ Settings.toggleFloor(); }
+    	            if(key == Keyboard.KEY_F3){ Settings.toggleLines(); }
+    	            if(key == Keyboard.KEY_F4){ Settings.toggleCube(); }
+    	            if(key == Keyboard.KEY_F5){ Settings.toggleDemo(); }
+    	            if(key == Keyboard.KEY_F6){ Settings.togglePolygoMarker(); }
+    	            //
+    	            if(key == Keyboard.KEY_1){ Editor.toggle("general_editor", false); }
+    	            if(key == Keyboard.KEY_2){ Editor.toggle("shapebox_editor", false); }
+    	            if(key == Keyboard.KEY_3){ Editor.toggle("cylinder_editor", false); }
+    	            if(key == Keyboard.KEY_4){ Editor.toggle("group_editor", false); }
+    	        }
+    		}
+    		else{//"released"
+    			
+    		}
+    	}
+	}
+
+	private String getKeyName(int i){
+		return GGR.isShiftDown() ? Keyboard.getKeyName(i) : Keyboard.getKeyName(i).toLowerCase();
+	}
+
+	private boolean clickedL, clickedR, panning;
     private int wheel, oldMouseX=-1,oldMouseY=-1;
 
-    public void acceptInputRotate(float delta){
+    public void acceptMouseInput(float delta){
         if(clickedR && ! Mouse.isButtonDown(1)){
             Mouse.setGrabbed(false);//fix mouse grab sticking
         }
@@ -69,6 +123,13 @@ public class GGR {
         		}
         	}
         }
+        //
+        if((Mouse.isInsideWindow() && Keyboard.isKeyDown(Keyboard.KEY_E) || Mouse.isButtonDown(1))){
+            Mouse.setGrabbed(true);
+        }
+        if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
+            Mouse.setGrabbed(false); UserInterface.DIALOGBOX.reset(); UserInterface.FILECHOOSER.reset();
+        }
     }
 
     public static double[] rotatePoint(double f, float pitch, float yaw) {
@@ -80,41 +141,6 @@ public class GGR {
             xyz[0] = (f * Math.cos(yaw));
             xyz[2] = (f * Math.sin(yaw));
         return xyz;
-    }
-
-    public void acceptInputGrab(){
-        if((Mouse.isInsideWindow() && Keyboard.isKeyDown(Keyboard.KEY_E) || Mouse.isButtonDown(1))){
-            Mouse.setGrabbed(true);
-        }
-        if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
-            Mouse.setGrabbed(false); UserInterface.DIALOGBOX.reset(); UserInterface.FILECHOOSER.reset();
-        }
-        //
-        if(isKeyDown(Keyboard.KEY_F1, 200)){ /*//TODO help UI*/ }
-        if(isKeyDown(Keyboard.KEY_F2, 200)){ Settings.toggleFloor(); }
-        if(isKeyDown(Keyboard.KEY_F3, 200)){ Settings.toggleLines(); }
-        if(isKeyDown(Keyboard.KEY_F4, 200)){ Settings.toggleCube(); }
-        if(isKeyDown(Keyboard.KEY_F5, 200)){ Settings.toggleDemo(); }
-        if(isKeyDown(Keyboard.KEY_F6, 200)){ Settings.togglePolygoMarker(); }
-        //
-        if(isKeyDown(Keyboard.KEY_1)){ Editor.toggle("general_editor", false); }
-        if(isKeyDown(Keyboard.KEY_2)){ Editor.toggle("shapebox_editor", false); }
-        if(isKeyDown(Keyboard.KEY_3)){ Editor.toggle("cylinder_editor", false); }
-        if(isKeyDown(Keyboard.KEY_4)){ Editor.toggle("group_editor", false); }
-        //TODO other editors
-    }
-    
-	private boolean isKeyDown(int key){
-		return isKeyDown(key, 100);
-	}
-
-	public boolean isKeyDown(int key, int am){
-    	long i = keycooldown.containsKey(key) ? keycooldown.get(key) : 0;
-    	if(i - Instant.now().toEpochMilli() >= 0) return false;
-    	else{
-    		keycooldown.put(key, Instant.now().toEpochMilli() + am);
-    		return Keyboard.isKeyDown(key);
-    	}
     }
 
     public void acceptInputMove(float delta){
@@ -165,5 +191,9 @@ public class GGR {
             pos.zCoord -= Math.cos(Math.toRadians(rotation.yCoord + 90)) * nspeed;
         }
     }
+
+	public static boolean isShiftDown(){
+		return Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
+	}
     
 }

@@ -1,11 +1,12 @@
 package net.fexcraft.app.fmt.ui.generic;
 
 import java.util.ArrayList;
-
+import java.util.Optional;
 import org.newdawn.slick.Color;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.Element;
+import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.lib.common.math.RGB;
 
@@ -16,7 +17,7 @@ public class TextField extends Element {
 	private boolean centered, selected, number, background = true;
 	private Color color = Color.white;
 	private float min, max, value;
-	private String text;
+	private String text, tempval = "";
 	private int width;
 
 	public TextField(Element parent, String id, int width, int x, int y){
@@ -47,7 +48,7 @@ public class TextField extends Element {
 		if(background) this.renderQuad(x, y, width, height, "ui/background");
 		if(enabled) RGB.glColorReset();
 		if(!number && text == null) return;
-		String text = number ? value + "" : this.text;
+		String text = number ? (tempval.length() == 0 ? value : "*" + tempval) + "" : tempval.length() == 0 ? this.text : tempval;
 		TextureManager.unbind();
 		if(centered){
 			int x = width / 2 - (font.getWidth(text) / 2);
@@ -62,8 +63,13 @@ public class TextField extends Element {
 
 	@Override
 	protected boolean processButtonClick(int x, int y, boolean left){
-		if(this.selected){ this.selected = false; return true; }
-		fields.forEach(elm -> elm.selected = false);
+		if(this.selected){
+			this.onReturn(); this.selected = false; return true;
+		}
+		fields.forEach(elm -> {
+			if(elm.selected){ elm.onReturn(); }
+			elm.selected = false;
+		});
 		return this.selected = true;
 	}
 	
@@ -93,6 +99,58 @@ public class TextField extends Element {
 	
 	public void applyChange(float f){
 		this.value = f;
+	}
+
+	public static boolean anySelected(){
+		return fields.stream().filter(pre -> pre.selected).findFirst().isPresent();
+	}
+
+	public static TextField getSelected(){
+		Optional<TextField> sel = fields.stream().filter(pre -> pre.selected).findFirst();
+		return sel.isPresent() ? sel.get() : null;
+	}
+
+	public void onInput(int id, String key){
+		if(number && !isNumber(id, tempval.length() == 0, key)){ return; }
+		if(number){
+			if(tempval.length() == 0){
+				if(key.equals("-")){
+					tempval = key + value; return;
+				}
+				tempval = value + "";
+			}
+			float fl = Float.parseFloat(tempval + key);
+			if(fl < min){ tempval = min + ""; return; }
+			if(fl > max){ tempval = max + ""; return; }
+			tempval = fl % 1.0f != 0 ? fl + "" : tempval + key;
+			return;
+		}
+		else{
+			if(key.equals("-") && GGR.isShiftDown()) key = "_";
+			if(tempval.length() == 0) tempval = text;
+			tempval += key; return;
+		}
+	}
+
+	private boolean isNumber(int id, boolean first, String key){
+		if(first && key.equals("-")) return true;
+		if(!first && key.equals(".")) return true;
+		return id < 12;
+	}
+
+	public void onBackSpace(){
+		if(tempval.length() <= 1) tempval = "";
+		else tempval = tempval.substring(0, tempval.length() - 1);
+	}
+
+	public void onReturn(){
+		if(number){
+			if(tempval.length() > 0) value = Float.parseFloat(tempval);
+		}
+		else{
+			if(tempval.length() > 0) text = tempval;
+		}
+		tempval = ""; return;
 	}
 
 }

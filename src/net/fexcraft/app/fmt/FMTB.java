@@ -101,7 +101,7 @@ public class FMTB {
 	}
 
 	private void loop(){
-		ggr.acceptInput(0.05F); ggr.apply();
+		ggr.pollInput(0.05f); ggr.apply();
 		//
 		if(Display.isCloseRequested()){ SaveLoad.checkIfShouldSave(true); }
 		if(Keyboard.isKeyDown(Keyboard.KEY_F11)){
