@@ -65,12 +65,12 @@ public class TextField extends Element {
 	protected boolean processButtonClick(int x, int y, boolean left){
 		if(this.selected){
 			this.onReturn(); this.selected = false; return true;
-		}
-		fields.forEach(elm -> {
-			if(elm.selected){ elm.onReturn(); }
-			elm.selected = false;
-		});
+		} deselectAll();
 		return this.selected = true;
+	}
+
+	public static void deselectAll(){
+		fields.forEach(elm -> { if(elm.selected) elm.onReturn(); elm.selected = false; });
 	}
 	
 	@Override
@@ -128,7 +128,7 @@ public class TextField extends Element {
 		}
 		else{
 			if(key.equals("-") && GGR.isShiftDown()) key = "_";
-			if(tempval.length() == 0) tempval = text;
+			if(tempval == null) tempval = text;
 			tempval += key; return;
 		}
 	}
@@ -151,11 +151,17 @@ public class TextField extends Element {
 		else{
 			if(tempval != null && tempval.length() > 0) text = tempval;
 		}
-		tempval = null; FMTB.MODEL.updateValue(this); return;
+		tempval = null; if(number) FMTB.MODEL.updateValue(this); else updateTextField(); return;
 	}
 
-	public float getValue(){
+	protected void updateTextField(){}
+
+	public float getFloatValue(){
 		return value;
+	}
+	
+	public String getTextValue(){
+		return text;
 	}
 
 }

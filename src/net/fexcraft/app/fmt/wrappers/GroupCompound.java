@@ -71,8 +71,8 @@ public class GroupCompound {
 		boolean x = field.id.endsWith("x"), y = field.id.endsWith("y"), z = field.id.endsWith("z");
 		String id = field.id.substring(0, field.id.length() - 1);
 		for(int i = 0; i < selection.size(); i++){
-			if(i == 0){ selection.get(i).apply(id, field.getValue(), x, y, z); continue; }
-			selection.get(i).apply(id, field.getValue(), x, y, z);
+			if(i == 0){ selection.get(i).apply(id, field.getFloatValue(), x, y, z); continue; }
+			selection.get(i).apply(id, field.getFloatValue(), x, y, z);
 		}
 		return true;
 	}
@@ -188,6 +188,7 @@ public class GroupCompound {
 				editor.getField("texy").applyChange(0);
 				//
 				editor.getField("group").setText("none", true);
+				editor.getField("boxname").setText("no polygon selected", true);
 			}
 			else{
 				editor.getField("sizex").applyChange(poly.getFloat("size", true, false, false));
@@ -210,6 +211,7 @@ public class GroupCompound {
 				editor.getField("texy").applyChange(poly.getFloat("tex", false, true, false));
 				//
 				editor.getField("group").setText(selection.get(0).group, true);
+				editor.getField("boxname").setText(poly.name == null ? "unnamed" : poly.name, true);
 			}
 			editor.getField("multiplicator").applyChange(rate);
 			//
@@ -309,7 +311,7 @@ public class GroupCompound {
         return deci.floatValue();
 	}
 
-	private PolygonWrapper getSelectedPolygon(int i){
+	public PolygonWrapper getSelectedPolygon(int i){
 		if(selection.isEmpty()) return null;
 		if(i >= selection.size()) return null;
 		if(compound.containsKey(selection.get(i).group)){

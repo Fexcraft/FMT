@@ -128,7 +128,7 @@ public class GGR {
             Mouse.setGrabbed(true);
         }
         if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
-            Mouse.setGrabbed(false); UserInterface.DIALOGBOX.reset(); UserInterface.FILECHOOSER.reset();
+            Mouse.setGrabbed(false); UserInterface.DIALOGBOX.reset(); UserInterface.FILECHOOSER.reset(); TextField.deselectAll();
         }
     }
 

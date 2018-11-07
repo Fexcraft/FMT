@@ -106,4 +106,8 @@ public abstract class Element {
 
 	protected boolean processScrollWheel(int wheel){ return false; }
 
+	public Element setEnabled(boolean bool){
+		this.enabled = bool; return this;
+	}
+
 }

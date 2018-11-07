@@ -6,6 +6,7 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.generic.Button;
 import net.fexcraft.app.fmt.ui.generic.TextField;
 import net.fexcraft.app.fmt.utils.TextureManager;
+import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.lib.common.math.RGB;
 
 public class GeneralEditor extends Editor {
@@ -51,22 +52,43 @@ public class GeneralEditor extends Editor {
 			}
 		}
 		//
-		this.elements.put("group-", new Button(this, "group-", 12, 26, 4, 280, rgb){
+		this.elements.put("group-", new Button(this, "group-", 12, 26, 4, 330, rgb){
 			@Override
 			protected boolean processButtonClick(int x, int y, boolean left){
 				FMTB.MODEL.changeGroupIndex(-1); return true;
 			}
 		}.setText(" < ", true).setTexture("ui/background").setLevel(-1));
 		//
-		this.elements.put("group", new TextField(this, "group", 270, 16, 280).setText("null", true).setLevel(-1));
-		this.elements.put("group+", new Button(this, "group+", 12, 26, 282, 280, rgb){
+		this.elements.put("group", new TextField(this, "group", 270, 16, 330).setText("null", true).setLevel(-1).setEnabled(false));
+		this.elements.put("group+", new Button(this, "group+", 12, 26, 282, 330, rgb){
 			@Override
 			protected boolean processButtonClick(int x, int y, boolean left){
 				FMTB.MODEL.changeGroupIndex(+1); return true;
 			}
 		}.setText(" > ", true).setTexture("ui/background").setLevel(-1));
 		//
-		this.addMultiplicator(330);
+		this.elements.put("boxname", new TextField(this, "boxname", 294, 4, 280) {
+			@Override
+			public void updateTextField(){
+				if(FMTB.MODEL.getSelected().isEmpty()) return;
+				PolygonWrapper wrapper;
+				if(FMTB.MODEL.getSelected().size() == 1){
+					wrapper = FMTB.MODEL.getSelectedPolygon(0);
+					if(wrapper != null) wrapper.name = this.getTextValue();
+				}
+				else{
+					for(int i = 0; i < FMTB.MODEL.getSelected().size(); i++){
+						wrapper = FMTB.MODEL.getSelectedPolygon(i);
+						if(wrapper != null){
+							String str = this.getText().contains("_") ? "_" + i : this.getText().contains("-") ? "-" + i : this.getText().contains(" ") ? " " + i : i + "";
+							wrapper.name = this.getTextValue() + str;
+						}
+					}
+				}
+			}
+		}.setText("null", true).setLevel(-1));
+		//
+		this.addMultiplicator(380);
 	}
 	
 	@Override
@@ -77,8 +99,9 @@ public class GeneralEditor extends Editor {
 		font.drawString(4, 140, "Offset (x/y/z)", Color.black);
 		font.drawString(4, 190, "Rotation (degrees)", Color.black);
 		font.drawString(4, 240, "Texture (x/y)", Color.black);
-		font.drawString(4, 290, "Group", Color.black);
-		font.drawString(4, 340, "Multiplicator/Rate", Color.black);
+		font.drawString(4, 290, "Polygon Name", Color.black);
+		font.drawString(4, 340, "Group", Color.black);
+		font.drawString(4, 390, "Multiplicator/Rate", Color.black);
 		RGB.glColorReset();
 	}
 
