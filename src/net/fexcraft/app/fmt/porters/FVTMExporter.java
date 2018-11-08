@@ -125,10 +125,10 @@ public class FVTMExporter extends InternalPorter {
 			}
 			if(++a == 1 && !this.extended) buffer.append(tab2 + name + ".addProgram(\"fvtm:example_program\");//TODO do not forget these exists!\n");
 			buffer.append(tab2 + "this.groups.add(" + name + ");\n");
-			/*if(a < compound.getCompound().size() - 1)*/ buffer.append(tab2 + "//\n");
+			if(a < compound.getCompound().size() - 1) buffer.append(tab2 + "//\n");
 		}
 		//
-		buffer.append(tab2 + "fixRotations();\n");
+		//buffer.append(tab2 + "fixRotations();\n");
 		buffer.append(tab + "}\n\n}\n");
 		//
 		try {
