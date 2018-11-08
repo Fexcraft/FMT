@@ -153,7 +153,11 @@ public class TextField extends Element {
 		else{
 			if(tempval != null && tempval.length() > 0) text = tempval;
 		}
-		tempval = null; if(number) FMTB.MODEL.updateValue(this); else updateTextField(); return;
+		tempval = null; if(number) updateNumberField(); else updateTextField(); return;
+	}
+
+	protected void updateNumberField(){
+		FMTB.MODEL.updateValue(this);
 	}
 
 	protected void updateTextField(){}
@@ -164,6 +168,10 @@ public class TextField extends Element {
 	
 	public String getTextValue(){
 		return text;
+	}
+
+	public int getIntegerValue(){
+		return (int)value;
 	}
 
 }

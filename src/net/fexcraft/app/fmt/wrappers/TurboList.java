@@ -8,8 +8,7 @@ public class TurboList extends ArrayList<PolygonWrapper> {
 	
 	private static final long serialVersionUID = -6386049255131269547L;
 	
-	public String id;
-	private RGB color;
+	public String id; public RGB color;
 	private boolean rotXb, rotYb, rotZb;
 	//private float rotX, rotY, rotZ, posX, posY, posZ;//FMR stuff
 	public boolean visible = true, minimized;

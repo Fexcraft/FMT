@@ -10,6 +10,7 @@ import org.lwjgl.input.Keyboard;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.generic.TextField;
+import net.fexcraft.lib.common.math.RGB;
 
 public class GroupCompound {
 	
@@ -23,20 +24,7 @@ public class GroupCompound {
 	public boolean textured = false;
 	
 	public GroupCompound(){
-		compound.put("body", new TurboList("body"));
-		/*compound.get("body").add(new ShapeboxWrapper(this));//BoxWrapper
-		((BoxWrapper)compound.get("body").get(0)).size.xCoord += 15;
-		((BoxWrapper)compound.get("body").get(0)).size.yCoord += 15;
-		((BoxWrapper)compound.get("body").get(0)).size.zCoord += 15;
-		compound.get("body").get(0).pos = new Vec3f(-8, -16, -8);
-		compound.get("body").get(0).recompile();
-		//
-		compound.get("body").add(new CylinderWrapper(this));
-		((CylinderWrapper)compound.get("body").get(1)).radius = 8;
-		((CylinderWrapper)compound.get("body").get(1)).length = 16;
-		((CylinderWrapper)compound.get("body").get(1)).direction = 1;
-		((CylinderWrapper)compound.get("body").get(1)).segments = 16;
-		compound.get("body").get(1).recompile();*/
+		//compound.put("body", new TurboList("body"));
 		recompile(); this.updateFields();
 	}
 
@@ -299,6 +287,22 @@ public class GroupCompound {
 				editor.getField("cyl2y").applyChange(poly.getFloat("cyl2", false, true, false));
 			}
 			editor.getField("multiplicator").applyChange(rate);
+			//
+			editor = (Editor)FMTB.get().UI.getElement("group_editor"); TurboList list = this.getSelectedGroup(0);
+			if(list == null){
+				editor.getField("rgb0").applyChange(0);
+				editor.getField("rgb1").applyChange(0);
+				editor.getField("rgb2").applyChange(0);
+				editor.getField("groupname").setText("no polygon selected", true);
+			}
+			else{
+				byte[] arr = list.color == null ? RGB.WHITE.toByteArray() : list.color.toByteArray();
+				editor.getField("rgb0").applyChange(arr[0] + 128);
+				editor.getField("rgb1").applyChange(arr[1] + 128);
+				editor.getField("rgb2").applyChange(arr[2] + 128);
+				editor.getField("groupname").setText(list.id, true);
+			}
+			editor.getField("multiplicator").applyChange(rate);
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -357,6 +361,17 @@ public class GroupCompound {
 	
 	public int countTotalMRTs(){
 		int i = 0; for(TurboList list : compound.values()) i += list.size(); return i;
+	}
+	
+	public TurboList getSelectedGroup(int i){
+		if(i >= selection.size() || i < 0) return null;
+		return compound.get(selection.get(i).group);
+	}
+
+	public int getSelectedGroups(){
+		ArrayList<String> list = new ArrayList<>();
+		for(Selection sel : selection){ if(!list.contains(sel.group)){ list.add(sel.group); } }
+		return list.size();
 	}
 
 }

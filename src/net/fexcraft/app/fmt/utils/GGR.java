@@ -85,7 +85,7 @@ public class GGR {
     	            if(key == Keyboard.KEY_F3){ Settings.toggleLines(); }
     	            if(key == Keyboard.KEY_F4){ Settings.toggleCube(); }
     	            if(key == Keyboard.KEY_F5){ Settings.toggleDemo(); }
-    	            if(key == Keyboard.KEY_F6){ Settings.togglePolygoMarker(); }
+    	            if(key == Keyboard.KEY_F6){ Settings.togglePolygonMarker(); }
     	            //
     	            if(key == Keyboard.KEY_1){ Editor.toggle("general_editor", false); }
     	            if(key == Keyboard.KEY_2){ Editor.toggle("shapebox_editor", false); }

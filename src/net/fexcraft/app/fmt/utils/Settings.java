@@ -42,7 +42,7 @@ public class Settings {
 		return cube = !cube;
 	}
 
-	public static boolean togglePolygoMarker(){
+	public static boolean togglePolygonMarker(){
 		return polygon_marker = !polygon_marker;
 	}
 	

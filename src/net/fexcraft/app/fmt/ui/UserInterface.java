@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL11;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.editor.CylinderEditor;
 import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
+import net.fexcraft.app.fmt.ui.editor.GroupEditor;
 import net.fexcraft.app.fmt.ui.editor.ShapeboxEditor;
 import net.fexcraft.app.fmt.ui.generic.Crossbar;
 import net.fexcraft.app.fmt.ui.generic.DialogBox;
@@ -38,6 +39,7 @@ public class UserInterface {
 		elements.put("cylinder_editor", new CylinderEditor());
 		elements.put("dialogbox", DIALOGBOX = new DialogBox());
 		elements.put("filechooser", FILECHOOSER = new FileChooser());
+		elements.put("group_editor", new GroupEditor());
 		//
 		FMTB.MODEL.updateFields();
 	}
