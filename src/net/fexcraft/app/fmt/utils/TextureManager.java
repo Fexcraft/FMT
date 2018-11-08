@@ -51,6 +51,20 @@ public class TextureManager {
 		}
 		catch(IOException e){ e.printStackTrace(); }
 	}
+
+	public static void loadTextureFromZip(InputStream stream, String string, boolean save){
+		try{
+			TEXTURES.put(string, new Texture(string, ImageIO.read(stream)));
+			System.out.println(String.format("Loaded Texture (%-32s) [%s]", string, "<FROM IMPORTED MTB/ZIP>"));
+			if(save){
+				File file = new File(String.format("./resources/textures/%s.png", string)); if(!file.exists()) file.getParentFile().mkdirs();
+				ImageIO.write(TEXTURES.get(string).image, "PNG", file);
+			}
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
 	
 	public static void bindTexture(String string){
 		if(string.equals(texture.name)) return; 

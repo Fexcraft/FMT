@@ -10,6 +10,7 @@ import org.lwjgl.input.Keyboard;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.generic.TextField;
+import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.lib.common.math.RGB;
 
 public class GroupCompound {
@@ -21,7 +22,7 @@ public class GroupCompound {
 	private ArrayList<Selection> selection = new ArrayList<>();
 	public ArrayList<String> creators = new ArrayList<>();
 	public File file; public String name = "unnamed model";
-	public boolean textured = false;
+	public String texture;
 	
 	public GroupCompound(){
 		//compound.put("body", new TurboList("body"));
@@ -33,6 +34,7 @@ public class GroupCompound {
 	}
 
 	public void render(){
+		if(texture != null) TextureManager.bindTexture(texture);
 		compound.values().forEach(elm -> elm.render());
 	}
 	
@@ -372,6 +374,10 @@ public class GroupCompound {
 		ArrayList<String> list = new ArrayList<>();
 		for(Selection sel : selection){ if(!list.contains(sel.group)){ list.add(sel.group); } }
 		return list.size();
+	}
+
+	public void setTexture(String string){
+		this.texture = string; this.compound.values().forEach(turbo -> turbo.forEach(poly -> poly.recompile()));
 	}
 
 }

@@ -22,14 +22,14 @@ public class CylinderWrapper extends PolygonWrapper {
 		turbo.addCylinder(off.xCoord, off.yCoord, off.zCoord, radius, length, segments, base, top, direction);
 		turbo.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord);
 		turbo.rotateAngleX = rot.xCoord; turbo.rotateAngleY = rot.yCoord; turbo.rotateAngleZ = rot.zCoord;
-		turbo.textured = compound.textured;
+		turbo.textured = compound.texture != null;
 		//
 		if(lines != null && lines.displaylist() != null){  GL11.glDeleteLists(lines.displaylist(), 1); lines = null; }
 		lines = new ModelRendererTurbo(null, textureX, textureY, compound.textureX, compound.textureY); lines.lines = true;
 		lines.addCylinder(off.xCoord, off.yCoord, off.zCoord, radius, length, segments, base, top, direction);
 		lines.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord);
 		lines.rotateAngleX = rot.xCoord; lines.rotateAngleY = rot.yCoord; lines.rotateAngleZ = rot.zCoord;
-		lines.textured = compound.textured;
+		lines.textured = compound.texture != null;
 	}
 
 	@Override

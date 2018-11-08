@@ -3,8 +3,10 @@ package net.fexcraft.app.fmt.porters;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager.InternalPorter;
 import net.fexcraft.app.fmt.ui.generic.DialogBox;
+import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.wrappers.*;
 import net.fexcraft.lib.common.math.Vec3f;
+import net.fexcraft.lib.common.utils.ZipUtil;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 import java.io.*;
@@ -57,9 +59,10 @@ public class MTBImporter extends InternalPorter {
 	public GroupCompound importModel(File f){
         try {
             GroupCompound compound = new GroupCompound();
+            boolean loadtex = ZipUtil.contains(f, "Model.png");
             ZipFile zip = new ZipFile(f);
             Enumeration<? extends ZipEntry> entries = zip.entries();
-            InputStream stream=null;
+            InputStream stream = null;
             while(entries.hasMoreElements()){
                 ZipEntry entry = entries.nextElement();
                 if(entry.getName().equals("Model.txt")){
@@ -73,15 +76,15 @@ public class MTBImporter extends InternalPorter {
             String[] file = convertStreamToString(stream).split("\n"); //Files.readAllLines(stream.toPath());
             for(String s : file){
                 String[] parts = s.split("\\u007C");
-                parts[0]=parts[0].trim();
-                if(parts[0].equals("TexSizeX")) {
+                parts[0] = parts[0].trim();
+                if(parts[0].equals("TexSizeX")){
                     compound.textureX = Integer.parseInt(parts[1].trim());
                 }
-                else if(parts[0].equals("TexSizeY")) {
+                else if(parts[0].equals("TexSizeY")){
                     compound.textureY = Integer.parseInt(parts[1]);
                 }
                 //
-                if(parts[0].equals("ModelAuthor") && parts.length > 1){
+                else if(parts[0].equals("ModelAuthor") && parts.length > 1){
                     compound.creators.add(parts[1]);
                 }
                 else if(parts[0].equals("ModelName") && parts.length > 1){
@@ -141,7 +144,7 @@ public class MTBImporter extends InternalPorter {
                     polygon.pos = new Vec3f(getFloatFromString(parts[6]), getFloatFromString(parts[7]), getFloatFromString(parts[8]));
                     polygon.rot = new Vec3f(getFloatFromString(parts[12]), getFloatFromString(parts[13]), getFloatFromString(parts[14]));
                     polygon.textureX = Integer.parseInt(parts[18]);
-                    polygon.textureX = Integer.parseInt(parts[19]);
+                    polygon.textureY = Integer.parseInt(parts[19]);
                     if(polygon.rot.xCoord != 0){
                         polygon.rot.xCoord *= 0.01745329259;
                     }
@@ -158,7 +161,11 @@ public class MTBImporter extends InternalPorter {
                     compound.getCompound().get("group" + parts[4]).add(polygon);
                 }
             }
-            stream.close(); zip.close(); return compound;
+            stream.close();
+            if(loadtex){ compound.setTexture("temp/" + compound.name);
+            	TextureManager.loadTextureFromZip(zip.getInputStream(zip.getEntry("Model.png")), "temp/" + compound.name, true);
+            }
+            zip.close(); return compound;
         }
         catch(IOException e){
         	//literally not even possible.

@@ -115,8 +115,8 @@ public class FVTMExporter extends InternalPorter {
 					shape.append("\n" + tab3 + ".setMirrored(" + wrapper.mirror + ").setFlipped(" + wrapper.flip + ")");
 					extended = true;
 				}
-				if(this.extended && (!compound.textured || !wrapper.visible)){
-					shape.append("\n" + tab3 + ".setTextured(" + compound.textured + ").setLines(" + wrapper.visible + ")");
+				if(this.extended && (compound.texture != null || !wrapper.visible)){
+					shape.append("\n" + tab3 + ".setTextured(" + (compound.texture != null) + ").setLines(" + wrapper.visible + ")");
 					extended = true;
 				}
 				if(wrapper.name != null){ shape.append(".setName(\"" + wrapper.name + "\")"); }
