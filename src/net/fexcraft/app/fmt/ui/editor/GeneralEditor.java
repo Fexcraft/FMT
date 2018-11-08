@@ -80,7 +80,8 @@ public class GeneralEditor extends Editor {
 					for(int i = 0; i < FMTB.MODEL.getSelected().size(); i++){
 						wrapper = FMTB.MODEL.getSelectedPolygon(i);
 						if(wrapper != null){
-							String str = this.getText().contains("_") ? "_" + i : this.getText().contains("-") ? "-" + i : this.getText().contains(" ") ? " " + i : i + "";
+							String str = this.getText().contains("_") ? "_" + i : this.getText().contains("-") ? "-" + i :
+								this.getText().contains(" ") ? " " + i : this.getText().contains(".") ? "." + i : i + "";
 							wrapper.name = this.getTextValue() + str;
 						}
 					}

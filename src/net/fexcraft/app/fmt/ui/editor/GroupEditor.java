@@ -41,7 +41,7 @@ public class GroupEditor extends Editor {
 					list = FMTB.MODEL.getSelectedGroup(0);
 					if(list == null) return; 
 					FMTB.MODEL.getCompound().remove(list.id);
-					list.id = this.getTextValue();
+					list.id = this.getTextValue().replace(" ", "_").replace("-", "_").replace(".", "");
 					while(FMTB.MODEL.getCompound().containsKey(list.id)){ list.id += "_"; }
 					FMTB.MODEL.getCompound().put(list.id, list);
 				}
@@ -53,8 +53,8 @@ public class GroupEditor extends Editor {
 					//
 					for(int i = 0; i < arrlist.size(); i++){
 						list = FMTB.MODEL.getCompound().remove(arrlist.get(i)); if(list == null) continue;
-						list.id = this.getTextValue().replace(" ", "_");
-						list.id += list.id.contains("_") ? "_" + i : list.id.contains("-") ? "-" + i : i + "";
+						list.id = this.getTextValue().replace(" ", "_").replace("-", "_").replace(".", "");
+						list.id += list.id.contains("_") ? "_" + i : i + "";
 						while(FMTB.MODEL.getCompound().containsKey(list.id)){ list.id += "_"; }
 						FMTB.MODEL.getCompound().put(list.id, list);
 					}
