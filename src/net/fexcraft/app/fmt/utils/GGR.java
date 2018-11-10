@@ -132,7 +132,7 @@ public class GGR {
         	}
         }
         //
-        if((Mouse.isInsideWindow() && Keyboard.isKeyDown(Keyboard.KEY_E) || Mouse.isButtonDown(1))){
+        if((Mouse.isInsideWindow() && /*Keyboard.isKeyDown(Keyboard.KEY_E) ||*/ Mouse.isButtonDown(1))){
             Mouse.setGrabbed(true);
         }
         if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
@@ -166,7 +166,7 @@ public class GGR {
             oldMouseX =- 1; panning = false;
         }
         //
-    	if(!Mouse.isGrabbed()) return;
+    	//if(!Mouse.isGrabbed()) return;
         boolean front = Keyboard.isKeyDown(Keyboard.KEY_W);
         boolean back = Keyboard.isKeyDown(Keyboard.KEY_S);
         boolean right = Keyboard.isKeyDown(Keyboard.KEY_D);
