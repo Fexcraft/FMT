@@ -2,6 +2,7 @@ package net.fexcraft.app.fmt.utils;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.UserInterface;
@@ -91,6 +92,10 @@ public class GGR {
     	            if(key == Keyboard.KEY_2){ Editor.toggle("shapebox_editor", false); }
     	            if(key == Keyboard.KEY_3){ Editor.toggle("cylinder_editor", false); }
     	            if(key == Keyboard.KEY_4){ Editor.toggle("group_editor", false); }
+    	            if(key == Keyboard.KEY_F11){
+    	            	try{ Display.setFullscreen(Settings.toogleFullscreen()); }
+    	    			catch(Exception ex){ ex.printStackTrace(); }
+    	            }
     	        }
     		}
     		else{//"released"

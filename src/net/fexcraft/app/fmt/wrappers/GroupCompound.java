@@ -34,7 +34,7 @@ public class GroupCompound {
 	}
 
 	public void render(){
-		if(texture != null) TextureManager.bindTexture(texture);
+		TextureManager.bindTexture(texture == null ? "blank" : texture);
 		compound.values().forEach(elm -> elm.render());
 	}
 	

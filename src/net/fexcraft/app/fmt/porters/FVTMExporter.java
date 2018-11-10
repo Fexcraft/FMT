@@ -149,7 +149,7 @@ public class FVTMExporter extends InternalPorter {
 	}
 
 	private String validateName(String name){
-		if(name == null || name.length() == 0) return "Unnamed";
+		if(name == null || name.length() == 0) return "Unnamed"; name.replace(" ", "");
 		return name.substring(0, 1).toUpperCase() + name.substring(1, name.length());
 		//Making sure it starts uppercase.
 	}

@@ -1,8 +1,12 @@
 package net.fexcraft.app.fmt;
 
 import java.awt.EventQueue;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -13,7 +17,6 @@ import java.util.Timer;
 import javax.script.ScriptException;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
@@ -21,7 +24,16 @@ import org.lwjgl.util.glu.GLU;
 
 import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.porters.PorterManager;
+import net.fexcraft.app.fmt.ui.ModelTree;
 import net.fexcraft.app.fmt.ui.UserInterface;
+import net.fexcraft.app.fmt.ui.editor.CylinderEditor;
+import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
+import net.fexcraft.app.fmt.ui.editor.GroupEditor;
+import net.fexcraft.app.fmt.ui.editor.ShapeboxEditor;
+import net.fexcraft.app.fmt.ui.generic.Crossbar;
+import net.fexcraft.app.fmt.ui.generic.DialogBox;
+import net.fexcraft.app.fmt.ui.generic.FileChooser;
+import net.fexcraft.app.fmt.ui.generic.Toolbar;
 import net.fexcraft.app.fmt.utils.Backups;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.SaveLoad;
@@ -30,6 +42,7 @@ import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Time;
+import net.fexcraft.lib.common.utils.Print;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 /**
@@ -37,7 +50,7 @@ import net.fexcraft.lib.tmt.ModelRendererTurbo;
  * 
  * All rights reserved &copy; 2018 fexcraft.net
  * */
-public class FMTB {
+public class FMTB implements FMTGLProcess {
 	
 	public static final String deftitle = "Fexcraft Modelling Toolbox - %s";
 	public static final String version = "1.0.0-test";
@@ -47,11 +60,13 @@ public class FMTB {
 	public static GGR ggr;
 	//public int width, height;
 	private static FMTB INSTANCE;
-	public DisplayMode displaymode;
+	private DisplayMode displaymode;
 	public UserInterface UI;
 	private static File lwjgl_natives;
 	public static GroupCompound MODEL = new GroupCompound();
 	public static Timer BACKUP_TIMER;
+	//public static Process editorprocess;
+	public static Receiver receiver;
 	
 	public static void main(String... args) throws Exception {
 	    switch(LWJGLUtil.getPlatform()){
@@ -61,15 +76,56 @@ public class FMTB {
 	    }
 	    System.setProperty("org.lwjgl.librarypath", lwjgl_natives.getAbsolutePath());
 	    //
-		FMTB.INSTANCE = new FMTB();
+		FMTB.INSTANCE = new FMTB(); //editorprocess = startProcess(TextureEditor.class);
 		INSTANCE.setDefaults(false, "Unnamed Model");
 		try{ INSTANCE.run(); }
 		catch(LWJGLException | InterruptedException | IOException e){
-			e.printStackTrace();
-			//Settings.showDialog("Seems the app crashed!\n" + e.getMessage() + "\nCheck console for more info.", "FMT Runtime Error", JOptionPane.INFORMATION_MESSAGE);
-			System.exit(1);
+			e.printStackTrace(); System.exit(1);
 		}
 	}
+	
+	public static Process startProcess(Class<?> clazz) throws Exception {
+	    String sp = System.getProperty("file.separator"), path = System.getProperty("java.home") + sp + "bin" + sp + "java";
+	    return new ProcessBuilder(path, "-cp", System.getProperty("java.class.path"), clazz.getName()).start();
+	}
+	
+	public static int getResult(String[] text, int buttons) throws Exception {
+	    String sp = System.getProperty("file.separator"), path = System.getProperty("java.home") + sp + "bin" + sp + "java";
+	    return new ProcessBuilder(path, "-cp", System.getProperty("java.class.path"), Object.class.getName()).start().waitFor();
+	    //TODO make new "dialogbox class" for this.
+	}
+	
+    public static class Receiver extends Thread {
+    	
+        private static String input;
+        
+        @Override
+        public void run(){
+            Print.console("Starting local receiver on port 6992!");
+            try{
+                ServerSocket socket = new ServerSocket(6992);
+                while(!FMTB.INSTANCE.close){
+                    try{
+                        Socket client = socket.accept();
+                        BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+                        //
+                        StringBuffer response = new StringBuffer();
+                        while((input = in.readLine()) != null){ response.append(input); } in.close(); client.close();
+                        //TODO process response;
+                    }
+                    catch(Exception e){
+                        e.printStackTrace();
+                    }
+                }
+                socket.close();
+            }
+            catch(IOException e){
+                e.printStackTrace();
+            }
+            Print.console("Stopping local receiver on port 6992!");
+        }
+        
+    }
 
 	public static final FMTB get(){ return INSTANCE; }
 
@@ -82,11 +138,16 @@ public class FMTB {
 	}
 	
 	public void run() throws LWJGLException, InterruptedException, IOException, NoSuchMethodException, ScriptException {
+		TextureManager.loadTextures(null);
+		Display.setIcon(new java.nio.ByteBuffer[]{
+			TextureManager.getTexture("icon", false).getBuffer(),
+			TextureManager.getTexture("icon", false).getBuffer()
+		});
 		setupDisplay(); initOpenGL(); ggr = new GGR(0, 4, 4); ggr.rotation.xCoord = 45;
-		TextureManager.loadTextures();
 		Display.setResizable(true);
 		UI = new UserInterface(this);
 		PorterManager.load();
+		(receiver = new Receiver()).start();
 		//
 		LocalDateTime midnight = LocalDateTime.of(LocalDate.now(ZoneOffset.systemDefault()), LocalTime.MIDNIGHT);
 		long mid = midnight.toInstant(ZoneOffset.UTC).toEpochMilli(); long date = Time.getDate(); while((mid += Time.MIN_MS * 5) < date);
@@ -104,10 +165,6 @@ public class FMTB {
 		ggr.pollInput(0.05f); ggr.apply();
 		//
 		if(Display.isCloseRequested()){ SaveLoad.checkIfShouldSave(true); }
-		if(Keyboard.isKeyDown(Keyboard.KEY_F11)){
-			try{ Display.setFullscreen(Settings.toogleFullscreen()); }
-			catch(Exception ex){ ex.printStackTrace(); }
-		}
 		//
 		if(Display.wasResized()){
 			displaymode = new DisplayMode(Display.getWidth(), Display.getHeight());
@@ -150,7 +207,7 @@ public class FMTB {
         if(Settings.cube()){
             TextureManager.bindTexture("demo"); compound0.render();
         }
-        TextureManager.bindTexture("blank"); MODEL.render();
+        MODEL.render();
         if(Settings.demo()){
             TextureManager.bindTexture("t1p"); ModelT1P.INSTANCE.render();
         }
@@ -213,6 +270,31 @@ public class FMTB {
 				UserInterface.DIALOGBOX.show(new String[]{ title == null ? "" : title, desc == null ? "" : desc, button0, button1 }, run0, run1);
 			}
 		});
+	}
+
+	@Override
+	public DisplayMode getDisplayMode(){
+		return displaymode;
+	}
+
+	@Override
+	public void setupUI(UserInterface ui){
+		TextureManager.loadTexture("ui/background");
+		TextureManager.loadTexture("ui/button_bg");
+		TextureManager.loadTexture("icons/group_delete");
+		TextureManager.loadTexture("icons/group_visible");
+		TextureManager.loadTexture("icons/group_edit");
+		TextureManager.loadTexture("icons/group_minimize");
+		ui.getElements().put("crossbar", new Crossbar());
+		ui.getElements().put("toolbar", new Toolbar());
+		ui.getElements().put("general_editor", new GeneralEditor());
+		ui.getElements().put("shapebox_editor", new ShapeboxEditor());
+		ui.getElements().put("modeltree", new ModelTree());
+		ui.getElements().put("cylinder_editor", new CylinderEditor());
+		ui.getElements().put("dialogbox", UserInterface.DIALOGBOX = new DialogBox());
+		ui.getElements().put("filechooser", UserInterface.FILECHOOSER = new FileChooser());
+		ui.getElements().put("group_editor", new GroupEditor());
+		FMTB.MODEL.updateFields();
 	}
 
 }

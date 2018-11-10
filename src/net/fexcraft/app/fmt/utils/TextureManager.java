@@ -24,12 +24,13 @@ public class TextureManager {
 	private static final Map<String, Texture> TEXTURES = new HashMap<>();
 	private static Texture texture, nulltex;
 	
-	public static void loadTextures(){
-		TEXTURES.clear(); String name; File folder = new File("./resources/textures/");
+	public static void loadTextures(String root){
+		TEXTURES.clear(); String name; File folder = new File("./resources/textures/" + (root == null ? "" : root));
 		for(File file : folder.listFiles()){
 			if(file.isDirectory()) continue;
 			if((name = file.getName()).endsWith(".png") || name.endsWith(".PNG")){
 				try{
+					name = (root == null ? "" : root + "/") + name;
 					TEXTURES.put(name = name.replace(".png", ""), new Texture(name, new FileInputStream(file)));
 					System.out.println(String.format("Loaded Texture (%-32s) [%s]", name, file));
 				}
@@ -111,7 +112,7 @@ public class TextureManager {
 			this.image = newimg; this.width = image.getWidth(); this.height = image.getHeight(); rebind();
 		}
 		
-		private ByteBuffer getBuffer(){
+		public ByteBuffer getBuffer(){
 			buffer = BufferUtils.createByteBuffer(4 * image.getWidth() * image.getHeight());
 			for(int y = 0; y < image.getHeight(); y++){
 				for(int x = 0; x < image.getWidth(); x++){
