@@ -61,6 +61,7 @@ public class PorterManager {
 		porters.add(new FVTMExporter(true, false));
 		porters.add(new FVTMExporter(false, true));
 		porters.add(new FVTMExporter(true, true));
+		porters.add(new OBJPreviewImporter());
 	}
 
 	private static ScriptEngine newEngine(){
