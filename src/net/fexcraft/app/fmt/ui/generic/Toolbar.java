@@ -277,7 +277,8 @@ public class Toolbar extends Element {
 												if(System.getProperty("os.name").toLowerCase().contains("windows")) {
 													String cmd = "rundll32 url.dll,FileProtocolHandler " + texture.getFile().getCanonicalPath();
 													Runtime.getRuntime().exec(cmd);
-												} else{ Desktop.getDesktop().edit(texture.getFile()); }
+												}
+												else{ Desktop.getDesktop().edit(texture.getFile()); }
 											}
 											catch(Exception e){
 												e.printStackTrace();

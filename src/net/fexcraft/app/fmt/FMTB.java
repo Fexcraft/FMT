@@ -39,6 +39,7 @@ import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.SaveLoad;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.TextureManager;
+import net.fexcraft.app.fmt.utils.TextureUpdate;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Time;
@@ -64,9 +65,7 @@ public class FMTB implements FMTGLProcess {
 	public UserInterface UI;
 	private static File lwjgl_natives;
 	public static GroupCompound MODEL = new GroupCompound();
-	public static Timer BACKUP_TIMER;
-	//public static Process editorprocess;
-	public static Receiver receiver;
+	public static Timer BACKUP_TIMER, TEX_UPDATE_TIMER;
 	
 	public static void main(String... args) throws Exception {
 	    switch(LWJGLUtil.getPlatform()){
@@ -76,7 +75,7 @@ public class FMTB implements FMTGLProcess {
 	    }
 	    System.setProperty("org.lwjgl.librarypath", lwjgl_natives.getAbsolutePath());
 	    //
-		FMTB.INSTANCE = new FMTB(); //editorprocess = startProcess(TextureEditor.class);
+		FMTB.INSTANCE = new FMTB();
 		INSTANCE.setDefaults(false, "Unnamed Model");
 		try{ INSTANCE.run(); }
 		catch(LWJGLException | InterruptedException | IOException e){
@@ -144,14 +143,13 @@ public class FMTB implements FMTGLProcess {
 			TextureManager.getTexture("icon", false).getBuffer()
 		});
 		setupDisplay(); initOpenGL(); ggr = new GGR(0, 4, 4); ggr.rotation.xCoord = 45;
-		Display.setResizable(true);
-		UI = new UserInterface(this);
-		PorterManager.load();
-		(receiver = new Receiver()).start();
+		Display.setResizable(true); UI = new UserInterface(this); PorterManager.load();
+		//(receiver = new Receiver()).start();
 		//
 		LocalDateTime midnight = LocalDateTime.of(LocalDate.now(ZoneOffset.systemDefault()), LocalTime.MIDNIGHT);
 		long mid = midnight.toInstant(ZoneOffset.UTC).toEpochMilli(); long date = Time.getDate(); while((mid += Time.MIN_MS * 5) < date);
 		if(BACKUP_TIMER == null){ (BACKUP_TIMER = new Timer()).schedule(new Backups(), new Date(mid), Time.MIN_MS * 5); }
+		if(TEX_UPDATE_TIMER == null){ (TEX_UPDATE_TIMER = new Timer()).schedule(new TextureUpdate(), Time.SEC_MS, Time.SEC_MS / 2); }
 		//
 		while(!close){
 			loop(); render(); UI.render();

@@ -26,6 +26,7 @@ import net.fexcraft.lib.common.utils.Print;
  * 
  * All rights reserved &copy; 2018 fexcraft.net
  * */
+@Deprecated
 public class TextureEditor implements FMTGLProcess {
 
 	private boolean close;

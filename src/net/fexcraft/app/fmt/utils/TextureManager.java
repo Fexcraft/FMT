@@ -134,7 +134,7 @@ public class TextureManager {
 		
 		public boolean rebind(){ return rebind = true; }
 		
-		public boolean reload(){ return reload = true; }
+		public boolean reload(){ rebind(); return reload = true; }
 		
 		public void bind(){
 			if(glTextureId == null){ glTextureId = GL11.glGenTextures(); rebind(); }
