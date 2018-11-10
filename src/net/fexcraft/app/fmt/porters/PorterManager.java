@@ -92,7 +92,7 @@ public class PorterManager {
 				}
 				FMTB.showDialogbox("Import complete.", null, "OK!", null, DialogBox.NOTHING, null);
 			}
-		}, false);
+		}, false, false);
 	}
 
 	public static void handleExport(){
@@ -119,7 +119,7 @@ public class PorterManager {
 					e.printStackTrace();
 				}
 			}
-		}, true);
+		}, true, false);
 	}
 
 	/**

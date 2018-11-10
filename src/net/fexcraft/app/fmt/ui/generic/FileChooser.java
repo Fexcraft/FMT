@@ -6,6 +6,7 @@ package net.fexcraft.app.fmt.ui.generic;
 import java.io.File;
 import java.util.Arrays;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.newdawn.slick.Color;
 
@@ -36,7 +37,7 @@ public class FileChooser extends Element {
 	private String title = "No Title.";
 	private AfterTask onfile = NOTHING;
 	private TextField eximporter;
-	private boolean export;
+	private boolean export, png;
 	
 	public FileChooser(){
 		super(null, "ui/filechooser"); TextureManager.loadTexture("ui/filechooser"); TextureManager.loadTexture("icons/file_chooser_0"); TextureManager.loadTexture("icons/file_chooser_1");
@@ -105,10 +106,10 @@ public class FileChooser extends Element {
 			@Override protected boolean processButtonClick(int x, int y, boolean left){ scroll++; return true; }
 		}.setTexture("icons/file_chooser_5"));
 		this.elements.put("exim-", eximm = new Button(this, "exim-", 18, 28, 464, 436, new RGB(120, 120, 120)){
-			@Override protected boolean processButtonClick(int x, int y, boolean left){ eximscroll++; if(eximscroll >= PorterManager.getPorters(export).size()) eximscroll = 0; ressel(); return true; }
+			@Override protected boolean processButtonClick(int x, int y, boolean left){ if(png) return true; eximscroll++; if(eximscroll >= PorterManager.getPorters(export).size()) eximscroll = 0; ressel(); return true; }
 		}.setTexture("icons/file_chooser_6"));
 		this.elements.put("exim+", eximp = new Button(this, "exim+", 18, 28, 482, 436, new RGB(120, 120, 120)){
-			@Override protected boolean processButtonClick(int x, int y, boolean left){ eximscroll--; if(eximscroll < 0) eximscroll = PorterManager.getPorters(export).size() - 1; ressel(); return true; }
+			@Override protected boolean processButtonClick(int x, int y, boolean left){ if(png) return true; eximscroll--; if(eximscroll < 0) eximscroll = PorterManager.getPorters(export).size() - 1; ressel(); return true; }
 		}.setTexture("icons/file_chooser_7"));
 		//
 		//this.show(new String[]{ "test title", "OK"}, null, NOTHING, false);
@@ -118,14 +119,24 @@ public class FileChooser extends Element {
 		this.selected = -1; this.scroll = 0;
 	}
 	
+	private static final File NONE = new File("no files in directory"), ERROR = new File("error.jvm (see console)");
+	private static Stream<File> stream;
+	
 	private File[] getFilteredList(){
 		try{
-			ExInPorter porter = PorterManager.getPorters(export).get(eximscroll);
-			return Arrays.asList(currdir.listFiles()).stream().filter(pre -> porter.isValidFile(pre)).collect(Collectors.<File>toList()).toArray(new File[0]);
+			if(currdir.listFiles() == null) return new File[]{ NONE };
+			if(png){
+				stream = Arrays.asList(currdir.listFiles()).stream().filter(pre -> pre.getName().toLowerCase().endsWith(".png"));
+			}
+			else{
+				ExInPorter porter = PorterManager.getPorters(export).get(eximscroll);
+				stream = Arrays.asList(currdir.listFiles()).stream().filter(pre -> porter.isValidFile(pre));
+			}
+			return stream.collect(Collectors.<File>toList()).toArray(new File[0]);
 		}
 		catch(Exception e){
 			e.printStackTrace();
-			return new File[]{ new File(currdir, "/error.jvm (see console)")};
+			return new File[]{ ERROR };
 		}
 	}
 	
@@ -133,7 +144,7 @@ public class FileChooser extends Element {
 	public void renderSelf(int rw, int rh) {
 		this.renderQuad(x = (rw / 2) - (width / 2), y = (rh / 2) - (height / 2), width, height, "ui/filechooser");
 		button0.x = x +  18; button0.y = y + 470; button1.x = x + 182; button1.y = y + 470; button2.x = x + 346; button2.y = y + 470;
-		eximporter.x = x + 16; eximporter.y = y + 438; eximporter.setText((export ? "Exporter: " : "Importer: ") + PorterManager.getPorters(export).get(eximscroll).getName(), false);
+		eximporter.x = x + 16; eximporter.y = y + 438; eximporter.setText(png ? "Portable Network Graphics (PNG)" : (export ? "Exporter: " : "Importer: ") + PorterManager.getPorters(export).get(eximscroll).getName(), false);
 		root.x = x + 29; root.y = y + 57; root.setText(currdir.getPath(), false); File[] fls = getFilteredList();
 		for(int i = 0; i < files.length; i++){
 			files[i].x = x + 29; files[i].y = y + 85 + (i * 28); files[i].enabled = selected < 0 || selected != scroll + i;
@@ -159,9 +170,10 @@ public class FileChooser extends Element {
 	
 	/** 
 	 * 
+	 * @param png 
 	 * @param text 0 - title, 1 - button0, 2 - button1, 3 - button2
 	 * */
-	public void show(String[] ntext, File otherroot, AfterTask after, boolean export){
+	public void show(String[] ntext, File otherroot, AfterTask after, boolean export, boolean png){
 		this.reset(); this.currdir = (otherroot == null ? SaveLoad.getRoot() : otherroot).getAbsoluteFile();
 		//
 		this.title = ntext[0]; this.visible = true; this.export = export;
@@ -169,7 +181,7 @@ public class FileChooser extends Element {
 		button0.setText(ntext.length < 2 || ntext[1] == null ? "OK" : ntext[1], true);
 		button1.setText(ntext.length < 3 || ntext[2] == null ? "Suggested" : ntext[2], true);
 		button2.setText(ntext.length < 4 || ntext[3] == null ? "Cancel" : ntext[3], true);
-		button1.enabled = export; this.onfile = after;
+		button1.enabled = export; this.onfile = after; this.png = png;
 	}
 	
 	public void reset(){

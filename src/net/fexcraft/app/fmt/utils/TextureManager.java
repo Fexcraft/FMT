@@ -67,6 +67,15 @@ public class TextureManager {
 		}
 	}
 	
+	public static void loadTextureFromFile(String id, File file){
+		try{
+			String name = id == null ? file.getPath() : id;
+			TEXTURES.put(name, new Texture(name, new FileInputStream(file), file));
+			System.out.println(String.format("Loaded Texture (%-32s) [%s]", name, file));
+		}
+		catch(IOException e){ e.printStackTrace(); }
+	}
+	
 	public static void bindTexture(String string){
 		if(string.equals(texture.name)) return; 
 		(texture = TEXTURES.containsKey(string) ? TEXTURES.get(string) : nulltex).bind();
@@ -159,6 +168,10 @@ public class TextureManager {
 			return String.format("Texture[ %s (%s, %s) ]", name, width, height);
 		}
 		
+	}
+
+	public static Texture removeTexture(String texture){
+		return TEXTURES.remove(texture);
 	}
 	
 }

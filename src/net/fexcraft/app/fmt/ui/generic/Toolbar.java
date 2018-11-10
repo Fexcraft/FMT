@@ -1,6 +1,7 @@
 package net.fexcraft.app.fmt.ui.generic;
 
 import java.awt.Desktop;
+import java.io.File;
 
 import org.lwjgl.input.Mouse;
 
@@ -8,7 +9,9 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.ModelTree;
+import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.editor.Editor;
+import net.fexcraft.app.fmt.ui.generic.FileChooser.AfterTask;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.SaveLoad;
 import net.fexcraft.app.fmt.utils.Settings;
@@ -262,10 +265,15 @@ public class Toolbar extends Element {
 									this.elements.put("select", new Button(this, "select", 100, 26, 2, 2, subhover){
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
-											//TODO
+											UserInterface.FILECHOOSER.show(new String[]{ "Select a texture file." }, new File(SaveLoad.getRoot(), "../textures"), new AfterTask(){
+												@Override
+												public void run(){
+													String name = file.getPath(); TextureManager.loadTextureFromFile(name, file); FMTB.MODEL.setTexture(name);
+												}
+											}, false, true);
 											return true;
 										}
-									}.setText("Select Tex.", false));
+									}.setText("Select", false));
 									//
 									this.elements.put("edit", new Button(this, "edit", 100, 26, 2, 30, subhover){
 										@Override
@@ -285,9 +293,19 @@ public class Toolbar extends Element {
 											}
 											return true;
 										}
-									}.setText("Edit Tex.", false));
+									}.setText("Edit (extern)", false));
 									//
-									this.elements.put("generate", new Button(this, "generate", 100, 26, 2, 58, subhover){
+									this.elements.put("remove", new Button(this, "remove", 100, 26, 2, 58, subhover){
+										@Override
+										protected boolean processButtonClick(int x, int y, boolean left){
+											if(FMTB.MODEL.texture != null && TextureManager.getTexture(FMTB.MODEL.texture, true) != null){
+												TextureManager.removeTexture(FMTB.MODEL.texture);
+											}
+											return true;
+										}
+									}.setText("Remove", false));
+									//
+									this.elements.put("generate", new Button(this, "generate", 100, 26, 2, 86, subhover){
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
 											//TODO
@@ -295,7 +313,7 @@ public class Toolbar extends Element {
 										}
 									}.setText("Generate", false));
 									//
-									this.elements.put("autopos", new Button(this, "autopos", 100, 26, 2, 86, subhover){
+									this.elements.put("autopos", new Button(this, "autopos", 100, 26, 2, 114, subhover){
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
 											//TODO

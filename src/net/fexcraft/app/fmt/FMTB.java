@@ -83,15 +83,15 @@ public class FMTB implements FMTGLProcess {
 		}
 	}
 	
-	public static Process startProcess(Class<?> clazz) throws Exception {
+	public static final Process startProcess(Class<?> clazz) throws Exception {
 	    String sp = System.getProperty("file.separator"), path = System.getProperty("java.home") + sp + "bin" + sp + "java";
 	    return new ProcessBuilder(path, "-cp", System.getProperty("java.class.path"), clazz.getName()).start();
 	}
 	
-	public static int getResult(String[] text, int buttons) throws Exception {
+	public static final int getResult(String[] text, int buttons) throws Exception {
 	    String sp = System.getProperty("file.separator"), path = System.getProperty("java.home") + sp + "bin" + sp + "java";
 	    return new ProcessBuilder(path, "-cp", System.getProperty("java.class.path"), Object.class.getName()).start().waitFor();
-	    //TODO make new "dialogbox class" for this.
+	    //TODO make new "dialogbox class" using this?
 	}
 	
     public static class Receiver extends Thread {
