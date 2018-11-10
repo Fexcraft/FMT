@@ -126,7 +126,7 @@ public class FileChooser extends Element {
 		try{
 			if(currdir.listFiles() == null) return new File[]{ NONE };
 			if(png){
-				stream = Arrays.asList(currdir.listFiles()).stream().filter(pre -> pre.getName().toLowerCase().endsWith(".png"));
+				stream = Arrays.asList(currdir.listFiles()).stream().filter(pre -> pre.isDirectory() || pre.getName().toLowerCase().endsWith(".png"));
 			}
 			else{
 				ExImPorter porter = PorterManager.getPorters(export).get(eximscroll);

@@ -36,6 +36,7 @@ public class GroupCompound {
 	public void render(){
 		TextureManager.bindTexture(texture == null ? "blank" : texture);
 		compound.values().forEach(elm -> elm.render());
+		compound.values().forEach(elm -> elm.renderLines());
 	}
 	
 	public ArrayList<Selection> getSelected(){ return selection; }

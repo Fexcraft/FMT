@@ -22,14 +22,13 @@ public class TurboList extends ArrayList<PolygonWrapper> {
 		if(!visible) return;
 		if(color != null) color.glColorApply();
 		this.forEach(elm -> elm.render(rotXb, rotYb, rotZb));
-		//for(int i = 0; i < size(); i++){ get(i).render(isSelected(i), rotXb, rotYb, rotZb); }
 		if(color != null) RGB.glColorReset();
 	}
-	
-	/*private boolean isSelected(int elm){
-		for(Selection sel : FMTB.MODEL.getSelected()){ if(sel.group.equals(id) && sel.element == elm) return true; }
-		return false;
-	}*/
+
+	public void renderLines(){
+		if(!visible) return;
+		this.forEach(elm -> elm.renderLines(rotXb, rotYb, rotZb));
+	}
 
 	@Override
 	public PolygonWrapper get(int id){

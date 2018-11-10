@@ -32,7 +32,6 @@ public abstract class PolygonWrapper {
 
 	public void render(boolean rotX, boolean rotY, boolean rotZ){
 		if(visible && turbo != null) turbo.render();
-		if(lines != null && Settings.lines()) lines.render();
 		/*if(selected && turbo != null){
 			GL11.glPushMatrix();
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -42,6 +41,10 @@ public abstract class PolygonWrapper {
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			GL11.glPopMatrix();
 		}*/
+	}
+	
+	public void renderLines(boolean rotXb, boolean rotYb, boolean rotZb){
+		if(lines != null && Settings.lines()) lines.render();
 	}
 	
 	public abstract ShapeType getType();
