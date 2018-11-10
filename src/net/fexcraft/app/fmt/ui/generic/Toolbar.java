@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.ui.generic;
 
+import java.awt.Desktop;
+
 import org.lwjgl.input.Mouse;
 
 import net.fexcraft.app.fmt.FMTB;
@@ -10,6 +12,8 @@ import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.SaveLoad;
 import net.fexcraft.app.fmt.utils.Settings;
+import net.fexcraft.app.fmt.utils.TextureManager;
+import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.app.fmt.wrappers.BoxWrapper;
 import net.fexcraft.app.fmt.wrappers.CylinderWrapper;
 import net.fexcraft.app.fmt.wrappers.ShapeboxWrapper;
@@ -266,7 +270,18 @@ public class Toolbar extends Element {
 									this.elements.put("edit", new Button(this, "edit", 100, 26, 2, 30, subhover){
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
-											//TODO
+											if(FMTB.MODEL.texture == null) return true;
+											Texture texture = TextureManager.getTexture(FMTB.MODEL.texture, true);
+											if(texture == null) return true;
+											try{
+												if(System.getProperty("os.name").toLowerCase().contains("windows")) {
+													String cmd = "rundll32 url.dll,FileProtocolHandler " + texture.getFile().getCanonicalPath();
+													Runtime.getRuntime().exec(cmd);
+												} else{ Desktop.getDesktop().edit(texture.getFile()); }
+											}
+											catch(Exception e){
+												e.printStackTrace();
+											}
 											return true;
 										}
 									}.setText("Edit Tex.", false));

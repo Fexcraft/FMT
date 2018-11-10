@@ -31,7 +31,7 @@ public class TextureManager {
 			if((name = file.getName()).endsWith(".png") || name.endsWith(".PNG")){
 				try{
 					name = (root == null ? "" : root + "/") + name;
-					TEXTURES.put(name = name.replace(".png", ""), new Texture(name, new FileInputStream(file)));
+					TEXTURES.put(name = name.replace(".png", ""), new Texture(name, new FileInputStream(file), file));
 					System.out.println(String.format("Loaded Texture (%-32s) [%s]", name, file));
 				}
 				catch(IOException e){ e.printStackTrace(); }
@@ -47,7 +47,7 @@ public class TextureManager {
 	public static void loadTexture(String string){
 		try{
 			File file = new File(String.format("./resources/textures/%s.png", string));
-			TEXTURES.put(string, new Texture(string, new FileInputStream(file)));
+			TEXTURES.put(string, new Texture(string, new FileInputStream(file), file));
 			System.out.println(String.format("Loaded Texture (%-32s) [%s]", string, file));
 		}
 		catch(IOException e){ e.printStackTrace(); }
@@ -59,7 +59,7 @@ public class TextureManager {
 			System.out.println(String.format("Loaded Texture (%-32s) [%s]", string, "<FROM IMPORTED MTB/ZIP>"));
 			if(save){
 				File file = new File(String.format("./resources/textures/%s.png", string)); if(!file.exists()) file.getParentFile().mkdirs();
-				ImageIO.write(TEXTURES.get(string).image, "PNG", file);
+				ImageIO.write(TEXTURES.get(string).image, "PNG", file); TEXTURES.get(string).file = file;
 			}
 		}
 		catch(Exception e){
@@ -82,11 +82,12 @@ public class TextureManager {
 		private BufferedImage image;
 		private Integer glTextureId;
 		private int width, height;
-		private boolean rebind = true;
+		private boolean rebind = true, reload;
 		public final String name;//was required for debug
+		private File file;
 		
-		public Texture(String name, InputStream file) throws IOException {
-			this.name = name; image = ImageIO.read(file); width = image.getWidth(); height = image.getHeight();
+		public Texture(String name, InputStream file, File loc) throws IOException {
+			this.name = name; image = ImageIO.read(file); width = image.getWidth(); height = image.getHeight(); this.file = loc;
 		}
 		
 		public Texture(String name, int width, int height){
@@ -113,6 +114,9 @@ public class TextureManager {
 		}
 		
 		public ByteBuffer getBuffer(){
+			if(reload && image != null){
+				try{ image = ImageIO.read(file); } catch(IOException e){ e.printStackTrace(); }
+			}
 			buffer = BufferUtils.createByteBuffer(4 * image.getWidth() * image.getHeight());
 			for(int y = 0; y < image.getHeight(); y++){
 				for(int x = 0; x < image.getWidth(); x++){
@@ -130,6 +134,8 @@ public class TextureManager {
 		
 		public boolean rebind(){ return rebind = true; }
 		
+		public boolean reload(){ return reload = true; }
+		
 		public void bind(){
 			if(glTextureId == null){ glTextureId = GL11.glGenTextures(); rebind(); }
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, glTextureId);
@@ -145,6 +151,8 @@ public class TextureManager {
 		public int getWidth(){ return width; }
 		
 		public int getHeight(){ return height; }
+
+		public File getFile(){ return file; }
 		
 		@Override
 		public String toString(){
