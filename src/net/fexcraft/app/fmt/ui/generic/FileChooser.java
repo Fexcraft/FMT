@@ -12,7 +12,7 @@ import org.newdawn.slick.Color;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager;
-import net.fexcraft.app.fmt.porters.PorterManager.ExInPorter;
+import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.utils.Backups;
@@ -129,7 +129,7 @@ public class FileChooser extends Element {
 				stream = Arrays.asList(currdir.listFiles()).stream().filter(pre -> pre.getName().toLowerCase().endsWith(".png"));
 			}
 			else{
-				ExInPorter porter = PorterManager.getPorters(export).get(eximscroll);
+				ExImPorter porter = PorterManager.getPorters(export).get(eximscroll);
 				stream = Arrays.asList(currdir.listFiles()).stream().filter(pre -> porter.isValidFile(pre));
 			}
 			return stream.collect(Collectors.<File>toList()).toArray(new File[0]);
@@ -189,6 +189,6 @@ public class FileChooser extends Element {
 		button0.setText(null, false); button1.setText(null, false); button2.setText(null, false); visible = false;
 	}
 	
-	public static abstract class AfterTask implements Runnable { public File file; public ExInPorter porter; }
+	public static abstract class AfterTask implements Runnable { public File file; public ExImPorter porter; }
 
 }

@@ -36,6 +36,7 @@ import net.fexcraft.app.fmt.ui.generic.FileChooser;
 import net.fexcraft.app.fmt.ui.generic.Toolbar;
 import net.fexcraft.app.fmt.utils.Backups;
 import net.fexcraft.app.fmt.utils.GGR;
+import net.fexcraft.app.fmt.utils.HelperCollector;
 import net.fexcraft.app.fmt.utils.SaveLoad;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.TextureManager;
@@ -143,7 +144,7 @@ public class FMTB implements FMTGLProcess {
 			TextureManager.getTexture("icon", false).getBuffer()
 		});
 		setupDisplay(); initOpenGL(); ggr = new GGR(0, 4, 4); ggr.rotation.xCoord = 45;
-		Display.setResizable(true); UI = new UserInterface(this); PorterManager.load();
+		PorterManager.load(); HelperCollector.reload(); Display.setResizable(true); UI = new UserInterface(this);
 		//(receiver = new Receiver()).start();
 		//
 		LocalDateTime midnight = LocalDateTime.of(LocalDate.now(ZoneOffset.systemDefault()), LocalTime.MIDNIGHT);
@@ -206,6 +207,9 @@ public class FMTB implements FMTGLProcess {
             TextureManager.bindTexture("demo"); compound0.render();
         }
         MODEL.render();
+        if(HelperCollector.LOADED.size() > 0){
+        	for(GroupCompound model : HelperCollector.LOADED) model.render();
+        }
         if(Settings.demo()){
             TextureManager.bindTexture("t1p"); ModelT1P.INSTANCE.render();
         }

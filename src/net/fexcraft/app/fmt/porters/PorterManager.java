@@ -83,7 +83,7 @@ public class PorterManager {
 					}
 					else{
 						Invocable inv = (Invocable)((ExternalPorter)porter).eval();
-						String result = (String) inv.invokeFunction("importModel", new File("./saves/").listFiles()[0]);
+						String result = (String) inv.invokeFunction("importModel", file);
 						SaveLoad.loadModel(JsonUtil.getObjectFromString(result));
 					}
 				}
@@ -127,9 +127,8 @@ public class PorterManager {
 	 * @param file
 	 * @return porter compatible with this file extension
 	 */
-	@SuppressWarnings("unused")
-	private static ExInPorter getPorterFor(File file, boolean export){
-		for(ExInPorter porter : porters.values()){
+	public static ExImPorter getPorterFor(File file, boolean export){
+		for(ExImPorter porter : porters.values()){
 			if((export && porter.isExporter()) || (!export && porter.isImporter())){
 				for(String ext : porter.getExtensions()){
 					if(file.getName().endsWith(ext)) return porter;
@@ -139,7 +138,7 @@ public class PorterManager {
 		return null;
 	}
 	
-	public static class ExternalPorter extends ExInPorter {
+	public static class ExternalPorter extends ExImPorter {
 
 		private File file;
 		public String id, name;
@@ -177,7 +176,7 @@ public class PorterManager {
 		
 	}
 	
-	public static abstract class ExInPorter {
+	public static abstract class ExImPorter {
 		
 		public abstract String getId();
 		
@@ -200,7 +199,7 @@ public class PorterManager {
 		
 	}
 	
-	public static abstract class InternalPorter extends ExInPorter {
+	public static abstract class InternalPorter extends ExImPorter {
 		
 		/** @return new groupcompound based on data in the file */
 		public abstract GroupCompound importModel(File file);
@@ -216,15 +215,15 @@ public class PorterManager {
 	/**
 	 * @return
 	 */
-	public static List<ExInPorter> getPorters(boolean export){
-		return porters.values().stream().filter(pre -> export ? pre.isExporter() : pre.isImporter()).collect(Collectors.<ExInPorter>toList());
+	public static List<ExImPorter> getPorters(boolean export){
+		return porters.values().stream().filter(pre -> export ? pre.isExporter() : pre.isImporter()).collect(Collectors.<ExImPorter>toList());
 	}
 	
-	private static class PorterMap extends TreeMap<String, ExInPorter> {
+	private static class PorterMap extends TreeMap<String, ExImPorter> {
 		
 		private static final long serialVersionUID = 1L;
 
-		public void add(ExInPorter porter){
+		public void add(ExImPorter porter){
 			this.put(porter.getId(), porter);
 		}
 		

@@ -13,6 +13,7 @@ import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.generic.FileChooser.AfterTask;
 import net.fexcraft.app.fmt.utils.GGR;
+import net.fexcraft.app.fmt.utils.HelperCollector;
 import net.fexcraft.app.fmt.utils.SaveLoad;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.TextureManager;
@@ -265,7 +266,7 @@ public class Toolbar extends Element {
 									this.elements.put("select", new Button(this, "select", 100, 26, 2, 2, subhover){
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
-											UserInterface.FILECHOOSER.show(new String[]{ "Select a texture file." }, new File(SaveLoad.getRoot(), "../textures"), new AfterTask(){
+											UserInterface.FILECHOOSER.show(new String[]{ "Select a texture file." }, new File("./textures"), new AfterTask(){
 												@Override
 												public void run(){
 													String name = file.getPath(); TextureManager.loadTextureFromFile(name, file); FMTB.MODEL.setTexture(name);
@@ -320,6 +321,46 @@ public class Toolbar extends Element {
 											return true;
 										}
 									}.setText("AutoPosition", false));
+								}
+							});
+							break;
+						}
+						case "helpers":{
+							this.elements.put("menu", new Menulist(this, "menu", 134, 200, (j * 102), 28){
+								@Override
+								public void addButtons(){
+									this.elements.put("reload", new Button(this, "reload", 130, 26, 2, 2, subhover){
+										@Override protected boolean processButtonClick(int x, int y, boolean left){ HelperCollector.reload(); return true; }
+									}.setText("Reload List", false));
+									//
+									this.elements.put("open", new Button(this, "open", 130, 26, 2, 30, subhover){
+										@Override
+										protected boolean processButtonClick(int x, int y, boolean left){
+											UserInterface.FILECHOOSER.show(new String[]{ "Select a Preview/Helper file." }, new File("./helpers"), new AfterTask(){
+												@Override public void run(){ HelperCollector.load(file, porter); }
+											}, false, false);
+											return true;
+										}
+									}.setText("Open New", false));
+									//
+									this.elements.put("clear", new Button(this, "clear", 130, 26, 2, 58, subhover){
+										@Override
+										protected boolean processButtonClick(int x, int y, boolean left){
+											HelperCollector.LOADED.clear(); return true;
+										}
+									}.setText("Clear All", false));
+									//
+									for(int i = 0; i < 10; i++){
+										if(i >= HelperCollector.getMap().size()) break; int j = i;
+										String name = HelperCollector.getMap().keySet().toArray()[j].toString();
+										this.elements.put("helper" + i, new Button(this, "helper" + i, 130, 26, 2, 86 + (i * 28), subhover){
+											@Override
+											protected boolean processButtonClick(int x, int y, boolean left){
+												HelperCollector.load(name);
+												return true;
+											}
+										}.setText(name.length() > 16 ? name.substring(0, 12) + "..." : name, false));
+									}
 								}
 							});
 							break;

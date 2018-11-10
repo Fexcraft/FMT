@@ -14,7 +14,7 @@ import com.google.gson.JsonPrimitive;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.JsonToTMT;
 import net.fexcraft.app.fmt.porters.PorterManager;
-import net.fexcraft.app.fmt.porters.PorterManager.ExInPorter;
+import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.generic.DialogBox;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
@@ -71,6 +71,25 @@ public class SaveLoad {
 		} FMTB.MODEL = compound; FMTB.MODEL.updateFields(); FMTB.MODEL.recompile(); return errs;
 	}
 	
+	public static GroupCompound getModel(JsonObject obj){
+		GroupCompound compound = new GroupCompound(); compound.getCompound().clear();
+		compound.textureX = JsonUtil.getIfExists(obj, "texture_x", 256).intValue();
+		compound.textureY = JsonUtil.getIfExists(obj, "texture_y", 256).intValue();
+		compound.creators = JsonUtil.jsonArrayToStringArray(JsonUtil.getIfExists(obj, "creators", new JsonArray()).getAsJsonArray());
+		JsonObject model = obj.get("model").getAsJsonObject();
+		for(Entry<String, JsonElement> entry : model.entrySet()){
+			try{
+				TurboList list = new TurboList(entry.getKey()); JsonArray array = entry.getValue().getAsJsonArray();
+				for(JsonElement elm : array){ list.add(JsonToTMT.parseWrapper(compound, elm.getAsJsonObject())); }
+				compound.getCompound().put(entry.getKey(), list);
+			}
+			catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		return compound;
+	}
+	
 	public static void checkIfShouldSave(boolean shouldclose){
 		if(FMTB.MODEL.countTotalMRTs() > 0){
 			FMTB.showDialogbox("Do you want to save the", "current model first?", "Yes", "No", new Runnable(){
@@ -116,7 +135,7 @@ public class SaveLoad {
 		chooser.setCurrentDirectory(otherroot == null ? root : otherroot);
 		chooser.setDialogTitle(title);
 		if(!nofilter){
-			for(ExInPorter porter : PorterManager.getPorters(!load)){
+			for(ExImPorter porter : PorterManager.getPorters(!load)){
 				chooser.addChoosableFileFilter(new JFileFilter(){
 					@Override
 					public boolean accept(File arg0){
