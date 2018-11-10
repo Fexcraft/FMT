@@ -32,7 +32,7 @@ public class Toolbar extends Element {
 		super(null, "toolbar");
 		this.height = 30;
 		//
-		String[] buttons = new String[]{ "Files", "Edit", "Camera", "Shapeditor", "Shapelist", "Textures", "Editor", "Helpers", "Settings", "Exit"};
+		String[] buttons = new String[]{ "Files", "Edit", "Editor", "Shapeditor", "Shapelist", "Textures", "Helpers", "Settings", "Account", "Exit"};
 		for(int i = 0; i < buttons.length; i++){
 			final int j = i;
 			this.elements.put(buttons[i].toLowerCase(), new Button(this, buttons[i].toLowerCase(), 100, 26, 2 + (j * 102), 2){
@@ -369,6 +369,37 @@ public class Toolbar extends Element {
 							this.elements.put("menu", new Menulist(this, "menu", 104, 200, (j * 102), 28){
 								@Override
 								public void addButtons(){
+									this.elements.put("controls", new Button(this, "controls", 100, 26, 2, 2, subhover){
+										@Override
+										protected boolean processButtonClick(int x, int y, boolean left){
+											//TODO
+											return true;
+										}
+									}.setText("Controls", false));
+									//
+									this.elements.put("console", new Button(this, "console", 100, 26, 2, 30, subhover){
+										@Override
+										protected boolean processButtonClick(int x, int y, boolean left){
+											//TODO
+											return true;
+										}
+									}.setText("Console", false));
+									//
+									this.elements.put("Help", new Button(this, "Help", 100, 26, 2, 58, subhover){
+										@Override
+										protected boolean processButtonClick(int x, int y, boolean left){
+											//TODO
+											return true;
+										}
+									}.setText("Help", false));
+								}
+							});
+							break;
+						}
+						case "account":{
+							this.elements.put("menu", new Menulist(this, "menu", 104, 200, (j * 102), 28){
+								@Override
+								public void addButtons(){
 									this.elements.put("license", new Button(this, "license", 100, 26, 2, 2, subhover){
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
@@ -377,29 +408,21 @@ public class Toolbar extends Element {
 										}
 									}.setText("License", false));
 									//
-									this.elements.put("controls", new Button(this, "controls", 100, 26, 2, 30, subhover){
+									this.elements.put("session", new Button(this, "session", 100, 26, 2, 30, subhover){
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
 											//TODO
 											return true;
 										}
-									}.setText("Controls", false));
+									}.setText("Log In/Out", false));
 									//
-									this.elements.put("console", new Button(this, "console", 100, 26, 2, 58, subhover){
+									this.elements.put("register", new Button(this, "register", 100, 26, 2, 58, subhover){
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
 											//TODO
 											return true;
 										}
-									}.setText("Console", false));
-									//
-									this.elements.put("Help", new Button(this, "Help", 100, 26, 2, 86, subhover){
-										@Override
-										protected boolean processButtonClick(int x, int y, boolean left){
-											//TODO
-											return true;
-										}
-									}.setText("Help", false));
+									}.setText("Register", false));
 								}
 							});
 							break;
