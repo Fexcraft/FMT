@@ -5,19 +5,19 @@ import org.newdawn.slick.Color;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.editor.Editor;
+import net.fexcraft.app.fmt.utils.HelperCollector;
 import net.fexcraft.app.fmt.utils.TextureManager;
-import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.math.RGB;
-import net.fexcraft.app.fmt.wrappers.GroupCompound.Selection;
+import net.fexcraft.app.fmt.wrappers.GroupCompound;
 
-public class ModelTree extends RightTree {
+public class HelperTree extends RightTree {
 	
-	private TurboList[] trlist;
-	private PolygonWrapper poly;
+	private GroupCompound[] trlist;
+	private TurboList poly;
 	private int trheight;
 
-	public ModelTree(){ super("modeltree"); }
+	public HelperTree(){ super("helpertree"); }
 
 	@Override
 	public void renderSelf(int rw, int rh){
@@ -25,29 +25,27 @@ public class ModelTree extends RightTree {
 		this.renderQuad(x, y, width, height = (rh - y + 2), "ui/button_bg");
 		this.renderQuad(x - 2, y, 2, height = (rh - y + 4), "ui/background");
 		//
-		trlist = (TurboList[])FMTB.MODEL.getCompound().values().toArray(new TurboList[]{});
+		trlist = HelperCollector.LOADED.toArray(new GroupCompound[0]);
 		FMTB.MODEL.getCompound().values().forEach(turbo -> trheight += turbo.tempheight = 26 + (turbo.size() * 26));
 		GL11.glTranslatef(0, 0,  10); int pass = 0;
 		for(int i = 0; i < trlist.length; i++){
-			TurboList list = trlist[i];
-			color(list.visible, isSelected(list)).glColorApply();
+			GroupCompound model = trlist[i];
+			color(model.visible, false).glColorApply();
 			this.renderQuad(x + 4, y + 4 + -scroll + (pass), width - 8, 24, "ui/background"); TextureManager.unbind();
-			font.drawString(x + 8, y + 6 + -scroll + (pass), list.id, Color.white); RGB.glColorReset();
+			font.drawString(x + 8, y + 6 + -scroll + (pass), model.name, Color.white); RGB.glColorReset();
 			GL11.glTranslatef(0, 0,  1);
 			this.renderIcon(x + width - 92, y + 6 + -scroll + (pass), "icons/group_minimize");
 			this.renderIcon(x + width - 70, y + 6 + -scroll + (pass), "icons/group_edit");
 			this.renderIcon(x + width - 48, y + 6 + -scroll + (pass), "icons/group_visible");
 			this.renderIcon(x + width - 26, y + 6 + -scroll + (pass), "icons/group_delete");
 			GL11.glTranslatef(0, 0, -1); pass += 26;
-			if(!list.minimized){
-				for(int j = 0; j < list.size(); j++){
-					poly = list.get(j); color(poly.visible, isSelected(list, j)).glColorApply();
+			if(!model.minimized){
+				for(int j = 0; j < model.getCompound().size(); j++){
+					poly = (TurboList)model.getCompound().values().toArray()[j]; color(poly.visible, false).glColorApply();
 					this.renderQuad(x + 8, y + 4 + -scroll + (pass), width - 16, 24, "ui/background"); TextureManager.unbind();
-					font.drawString(x + 10, y + 6 + -scroll + (pass), j + " | " + poly.name(), Color.white); RGB.glColorReset();
+					font.drawString(x + 10, y + 6 + -scroll + (pass), j + " | " + poly.id, Color.white); RGB.glColorReset();
 					GL11.glTranslatef(0, 0,  1);
-					this.renderIcon(x + width - 74, y + 6 + -scroll + (pass), "icons/group_edit");
-					this.renderIcon(x + width - 52, y + 6 + -scroll + (pass), "icons/group_visible");
-					this.renderIcon(x + width - 30, y + 6 + -scroll + (pass), "icons/group_delete");
+					this.renderIcon(x + width - 30, y + 6 + -scroll + (pass), "icons/group_visible");
 					GL11.glTranslatef(0, 0, -1); pass += 26;
 				}
 			}
@@ -70,63 +68,30 @@ public class ModelTree extends RightTree {
 					trlist[j].minimized = !trlist[j].minimized; return true;
 				}
 				else if(mx >= x + width - 70 && mx < x + width - 50){
-					Editor.show("group_editor"); return true;
+					Editor.show("helper_editor"); return true;
 				}
 				else if(mx >= x + width - 48 && mx < x + width - 28){
 					trlist[j].visible = !trlist[j].visible; return true;
 				}
 				else if(mx >= x + width - 26 && mx < x + width -  6){
-					FMTB.MODEL.getCompound().remove(trlist[j].id); return true;
+					HelperCollector.LOADED.remove(j); return true;
 				}
 				else{
-					if(isSelected(trlist[j])){
-						FMTB.MODEL.deselectGroup(trlist[j].id);
-					}
-					else{
-						FMTB.MODEL.selectGroup(trlist[j].id);
-					}
+					//
 				}
 				return false;
 			}
 			if(!trlist[j].minimized){
-				for(int l = 0; l < trlist[j].size(); l++){
+				for(int l = 0; l < trlist[j].getCompound().size(); l++){
 					k++; if(k == i){
-						if(mx >= x + width - 74 && mx < x + width - 54){
-							Editor.show("general_editor"); return true;
-						}
-						else if(mx >= x + width - 52 && mx < x + width - 32){
-							trlist[j].get(l).visible = !trlist[j].get(l).visible; return true;
-						}
-						else if(mx >= x + width - 30 && mx < x + width - 10){
-							trlist[j].remove(l); return true;
-						}
-						else{
-							if(isSelected(trlist[j], l)){
-								FMTB.MODEL.deselect(trlist[j].id, l);
-							}
-							else{
-								FMTB.MODEL.select(trlist[j].id, l);
-							}
-						}
-						return false;
+						if(mx >= x + width - 30 && mx < x + width - 10){
+							trlist[j].getCompound().values().toArray(new TurboList[0])[l].visible = !trlist[j].getCompound().values().toArray(new TurboList[0])[l].visible;
+							return true;
+						} else return false;
 					}
 				}
 			} k++;
 		} return false;
-	}
-
-	private boolean isSelected(TurboList list){
-		for(Selection sel : FMTB.MODEL.getSelected()){
-			if(sel.group.equals(list.id)) return true;
-		}
-		return false;
-	}
-	
-	private boolean isSelected(TurboList list, int poly){
-		for(Selection sel : FMTB.MODEL.getSelected()){
-			if(sel.group.equals(list.id) && sel.element == poly) return true;
-		}
-		return false;
 	}
 
 	protected boolean processScrollWheel(int wheel){

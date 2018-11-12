@@ -8,7 +8,7 @@ import org.lwjgl.input.Mouse;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.ui.Element;
-import net.fexcraft.app.fmt.ui.ModelTree;
+import net.fexcraft.app.fmt.ui.RightTree;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.generic.FileChooser.AfterTask;
@@ -42,8 +42,9 @@ public class Toolbar extends Element {
 						switch(this.id){
 							case "exit":{ FMTB.get().close(); return true; }
 							case "camera":{ Mouse.setGrabbed(true); return true; }
-							case "shapelist":{ ((ModelTree)FMTB.get().UI.getElement("modeltree")).toggleVisibility(); return true; }
+							case "shapelist":{ RightTree.toggle("modeltree", true); return true; }
 							case "shapeditor":{ Editor.show("general_editor"); return true; }
+							case "helpers":{ RightTree.toggle("helpertree", true); return true; }
 						}
 					}
 					return false;
@@ -251,7 +252,7 @@ public class Toolbar extends Element {
 											else{
 												FMTB.MODEL.getCompound().put(string, new TurboList(string));
 											}
-											((ModelTree)FMTB.get().UI.getElement("modeltree")).setVisible();
+											RightTree.show("modeltree");
 											this.parent.visible = false; return true;
 										}
 									}.setText("Add Group", false));
@@ -329,9 +330,12 @@ public class Toolbar extends Element {
 							this.elements.put("menu", new Menulist(this, "menu", 134, 200, (j * 102), 28){
 								@Override
 								public void addButtons(){
-									this.elements.put("reload", new Button(this, "reload", 130, 26, 2, 2, subhover){
+									/*this.elements.put("reload", new Button(this, "reload", 130, 26, 2, 2, subhover){
 										@Override protected boolean processButtonClick(int x, int y, boolean left){ HelperCollector.reload(); return true; }
-									}.setText("Reload List", false));
+									}.setText("Reload List", false));*/
+									this.elements.put("view", new Button(this, "view", 130, 26, 2, 2, subhover){
+										@Override protected boolean processButtonClick(int x, int y, boolean left){ RightTree.show("helpertree"); return true; }
+									}.setText("View Loaded", false));
 									//
 									this.elements.put("open", new Button(this, "open", 130, 26, 2, 30, subhover){
 										@Override
@@ -350,7 +354,7 @@ public class Toolbar extends Element {
 										}
 									}.setText("Clear All", false));
 									//
-									for(int i = 0; i < 10; i++){
+									/*for(int i = 0; i < 10; i++){
 										if(i >= HelperCollector.getMap().size()) break; int j = i;
 										String name = HelperCollector.getMap().keySet().toArray()[j].toString();
 										this.elements.put("helper" + i, new Button(this, "helper" + i, 130, 26, 2, 86 + (i * 28), subhover){
@@ -360,7 +364,7 @@ public class Toolbar extends Element {
 												return true;
 											}
 										}.setText(name.length() > 16 ? name.substring(0, 12) + "..." : name, false));
-									}
+									}*/
 								}
 							});
 							break;

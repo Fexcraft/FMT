@@ -23,6 +23,8 @@ public class GroupCompound {
 	public ArrayList<String> creators = new ArrayList<>();
 	public File file; public String name = "unnamed model";
 	public String texture;
+	//
+	public boolean visible = true, minimized;
 	
 	public GroupCompound(){
 		//compound.put("body", new TurboList("body"));
@@ -34,6 +36,7 @@ public class GroupCompound {
 	}
 
 	public void render(){
+		if(!visible) return; RGB.glColorReset();
 		TextureManager.bindTexture(texture == null ? "blank" : texture);
 		compound.values().forEach(elm -> elm.render());
 		compound.values().forEach(elm -> elm.renderLines());

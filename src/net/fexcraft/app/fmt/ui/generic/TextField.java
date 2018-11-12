@@ -13,7 +13,7 @@ import net.fexcraft.lib.common.math.RGB;
 public class TextField extends Element {
 	
 	private static final ArrayList<TextField> fields = new ArrayList<>();
-	private RGB hovercolor = new RGB(112, 255, 127), inactivecol = new RGB(235, 201, 201);
+	private RGB hovercolor = new RGB(112, 255, 127), inactivecol = new RGB(235, 201, 201), hoversel = new RGB(255, 127, 0);
 	private boolean centered, selected, number, background = true;
 	private Color color = Color.white;
 	private float min, max, value;
@@ -44,7 +44,7 @@ public class TextField extends Element {
 
 	@Override
 	public void renderSelf(int rw, int rh){
-		if(enabled) (selected ? hovercolor : hovered ? RGB.BLACK : inactivecol).glColorApply();
+		if(enabled) (selected ? hovered ? hoversel : hovercolor : hovered ? RGB.BLACK : inactivecol).glColorApply();
 		if(background) this.renderQuad(x, y, width, height, "ui/background");
 		if(enabled) RGB.glColorReset();
 		if(!number && text == null) return;
@@ -63,10 +63,8 @@ public class TextField extends Element {
 
 	@Override
 	protected boolean processButtonClick(int x, int y, boolean left){
-		if(this.selected){
-			this.onReturn(); this.selected = false; return true;
-		} deselectAll();
-		return this.selected = true;
+		if(this.selected){ this.onReturn(); this.selected = false; return true; }
+		deselectAll(); return this.selected = true;
 	}
 
 	public static void deselectAll(){

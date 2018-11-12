@@ -24,6 +24,7 @@ import org.lwjgl.util.glu.GLU;
 
 import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.porters.PorterManager;
+import net.fexcraft.app.fmt.ui.HelperTree;
 import net.fexcraft.app.fmt.ui.ModelTree;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.editor.CylinderEditor;
@@ -296,6 +297,7 @@ public class FMTB implements FMTGLProcess {
 		ui.getElements().put("dialogbox", UserInterface.DIALOGBOX = new DialogBox());
 		ui.getElements().put("filechooser", UserInterface.FILECHOOSER = new FileChooser());
 		ui.getElements().put("group_editor", new GroupEditor());
+		ui.getElements().put("helpertree", new HelperTree());
 		FMTB.MODEL.updateFields();
 	}
 
