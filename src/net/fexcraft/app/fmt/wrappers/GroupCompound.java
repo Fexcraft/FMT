@@ -6,12 +6,14 @@ import java.util.ArrayList;
 import java.util.TreeMap;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.generic.TextField;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.lib.common.math.RGB;
+import net.fexcraft.lib.common.math.Vec3f;
 
 public class GroupCompound {
 	
@@ -25,6 +27,7 @@ public class GroupCompound {
 	public String texture;
 	//
 	public boolean visible = true, minimized;
+	public Vec3f pos, rot;
 	
 	public GroupCompound(){
 		//compound.put("body", new TurboList("body"));
@@ -37,9 +40,27 @@ public class GroupCompound {
 
 	public void render(){
 		if(!visible) return; RGB.glColorReset();
+		if(pos != null){
+			GL11.glTranslatef(pos.xCoord, pos.yCoord, pos.zCoord);
+		}
+		if(rot != null){
+			GL11.glPushMatrix();
+			GL11.glRotatef(rot.xCoord, 1, 0, 0);
+			GL11.glRotatef(rot.yCoord, 0, 1, 0);
+			GL11.glRotatef(rot.zCoord, 0, 0, 1);
+		}
 		TextureManager.bindTexture(texture == null ? "blank" : texture);
 		compound.values().forEach(elm -> elm.render());
 		compound.values().forEach(elm -> elm.renderLines());
+		if(pos != null){
+			GL11.glTranslatef(-pos.xCoord, -pos.yCoord, -pos.zCoord);
+		}
+		if(rot != null){
+			GL11.glRotatef(-rot.zCoord, 0, 0, 1);
+			GL11.glRotatef(-rot.yCoord, 0, 1, 0);
+			GL11.glRotatef(-rot.xCoord, 1, 0, 0);
+			GL11.glPopMatrix();
+		}
 	}
 	
 	public ArrayList<Selection> getSelected(){ return selection; }

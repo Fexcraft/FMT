@@ -30,6 +30,7 @@ import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.editor.CylinderEditor;
 import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
 import net.fexcraft.app.fmt.ui.editor.GroupEditor;
+import net.fexcraft.app.fmt.ui.editor.PreviewEditor;
 import net.fexcraft.app.fmt.ui.editor.ShapeboxEditor;
 import net.fexcraft.app.fmt.ui.generic.Crossbar;
 import net.fexcraft.app.fmt.ui.generic.DialogBox;
@@ -298,6 +299,7 @@ public class FMTB implements FMTGLProcess {
 		ui.getElements().put("filechooser", UserInterface.FILECHOOSER = new FileChooser());
 		ui.getElements().put("group_editor", new GroupEditor());
 		ui.getElements().put("helpertree", new HelperTree());
+		ui.getElements().put("preview_editor", new PreviewEditor());
 		FMTB.MODEL.updateFields();
 	}
 

@@ -13,7 +13,9 @@ import net.fexcraft.app.fmt.wrappers.GroupCompound;
 
 public class HelperTree extends RightTree {
 	
-	private GroupCompound[] trlist;
+	public static GroupCompound[] trlist;
+	public static int SEL = -1;
+	//
 	private TurboList poly;
 	private int trheight;
 
@@ -25,12 +27,12 @@ public class HelperTree extends RightTree {
 		this.renderQuad(x, y, width, height = (rh - y + 2), "ui/button_bg");
 		this.renderQuad(x - 2, y, 2, height = (rh - y + 4), "ui/background");
 		//
-		trlist = HelperCollector.LOADED.toArray(new GroupCompound[0]);
+		trlist = HelperCollector.LOADED.toArray(new GroupCompound[0]); if(trlist.length == 0) SEL = -1;
 		FMTB.MODEL.getCompound().values().forEach(turbo -> trheight += turbo.tempheight = 26 + (turbo.size() * 26));
 		GL11.glTranslatef(0, 0,  10); int pass = 0;
 		for(int i = 0; i < trlist.length; i++){
 			GroupCompound model = trlist[i];
-			color(model.visible, false).glColorApply();
+			color(model.visible, i == SEL).glColorApply();
 			this.renderQuad(x + 4, y + 4 + -scroll + (pass), width - 8, 24, "ui/background"); TextureManager.unbind();
 			font.drawString(x + 8, y + 6 + -scroll + (pass), model.name, Color.white); RGB.glColorReset();
 			GL11.glTranslatef(0, 0,  1);
@@ -68,7 +70,7 @@ public class HelperTree extends RightTree {
 					trlist[j].minimized = !trlist[j].minimized; return true;
 				}
 				else if(mx >= x + width - 70 && mx < x + width - 50){
-					Editor.show("helper_editor"); return true;
+					Editor.show("preview_editor"); return true;
 				}
 				else if(mx >= x + width - 48 && mx < x + width - 28){
 					trlist[j].visible = !trlist[j].visible; return true;
@@ -77,7 +79,25 @@ public class HelperTree extends RightTree {
 					HelperCollector.LOADED.remove(j); return true;
 				}
 				else{
-					//
+					SEL = j; Editor editor = (Editor)FMTB.get().UI.getElement("preview_editor");
+					GroupCompound model = getSelected();
+					if(model == null){
+						editor.getField("posx").applyChange(0);
+						editor.getField("posy").applyChange(0);
+						editor.getField("posz").applyChange(0);
+						editor.getField("rotx").applyChange(0);
+						editor.getField("roty").applyChange(0);
+						editor.getField("rotz").applyChange(0);
+					}
+					else{
+						editor.getField("posx").applyChange(model.pos == null ? 0 : model.pos.xCoord * 16);
+						editor.getField("posy").applyChange(model.pos == null ? 0 : model.pos.yCoord * 16);
+						editor.getField("posz").applyChange(model.pos == null ? 0 : model.pos.zCoord * 16);
+						editor.getField("rotx").applyChange(model.rot == null ? 0 : model.rot.xCoord);
+						editor.getField("roty").applyChange(model.rot == null ? 0 : model.rot.yCoord);
+						editor.getField("rotz").applyChange(model.rot == null ? 0 : model.rot.zCoord);
+					}
+					editor.getField("multiplicator").applyChange(FMTB.MODEL.rate);
 				}
 				return false;
 			}
@@ -97,6 +117,10 @@ public class HelperTree extends RightTree {
 	protected boolean processScrollWheel(int wheel){
 		scroll += -wheel / 10; //if(scroll < 0) scroll = 0; if(scroll > trheight) scroll = trheight - 100;
 		return true;
+	}
+
+	public static GroupCompound getSelected(){
+		return SEL >= trlist.length || SEL < 0 ? null : trlist[SEL];
 	}
 	
 }
