@@ -10,4 +10,8 @@ public interface FMTGLProcess {
 
 	public void setupUI(UserInterface ui);
 
+	public UserInterface getUserInterface();
+
+	public void reset();
+
 }

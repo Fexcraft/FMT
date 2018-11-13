@@ -1,6 +1,5 @@
 package net.fexcraft.app.fmt;
 
-import java.awt.EventQueue;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -35,6 +34,7 @@ import net.fexcraft.app.fmt.ui.editor.ShapeboxEditor;
 import net.fexcraft.app.fmt.ui.generic.Crossbar;
 import net.fexcraft.app.fmt.ui.generic.DialogBox;
 import net.fexcraft.app.fmt.ui.generic.FileChooser;
+import net.fexcraft.app.fmt.ui.generic.TextField;
 import net.fexcraft.app.fmt.ui.generic.Toolbar;
 import net.fexcraft.app.fmt.utils.Backups;
 import net.fexcraft.app.fmt.utils.GGR;
@@ -145,7 +145,7 @@ public class FMTB implements FMTGLProcess {
 			TextureManager.getTexture("icon", false).getBuffer(),
 			TextureManager.getTexture("icon", false).getBuffer()
 		});
-		setupDisplay(); initOpenGL(); ggr = new GGR(0, 4, 4); ggr.rotation.xCoord = 45;
+		setupDisplay(); initOpenGL(); ggr = new GGR(this, 0, 4, 4); ggr.rotation.xCoord = 45;
 		PorterManager.load(); HelperCollector.reload(); Display.setResizable(true); UI = new UserInterface(this);
 		//(receiver = new Receiver()).start();
 		//
@@ -268,12 +268,7 @@ public class FMTB implements FMTGLProcess {
 	}
 	
 	public static void showDialogbox(String title, String desc, String button0, String button1, Runnable run0, Runnable run1){
-		EventQueue.invokeLater(new Runnable(){
-			@Override
-			public void run(){
-				UserInterface.DIALOGBOX.show(new String[]{ title == null ? "" : title, desc == null ? "" : desc, button0, button1 }, run0, run1);
-			}
-		});
+		UserInterface.DIALOGBOX.show(new String[]{ title == null ? "" : title, desc == null ? "" : desc, button0, button1 }, run0, run1);
 	}
 
 	@Override
@@ -301,6 +296,16 @@ public class FMTB implements FMTGLProcess {
 		ui.getElements().put("helpertree", new HelperTree());
 		ui.getElements().put("preview_editor", new PreviewEditor());
 		FMTB.MODEL.updateFields();
+	}
+
+	@Override
+	public UserInterface getUserInterface(){
+		return UI;
+	}
+
+	@Override
+	public void reset(){
+		UserInterface.DIALOGBOX.reset(); UserInterface.FILECHOOSER.reset(); TextField.deselectAll();
 	}
 
 }

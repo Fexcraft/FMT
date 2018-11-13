@@ -4,8 +4,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
-import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.UserInterface;
+import net.fexcraft.app.fmt.FMTGLProcess;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.generic.TextField;
 import net.fexcraft.lib.common.math.Vec3f;
@@ -17,14 +16,15 @@ public class GGR {
     public float maxlookrange = 85;
     public float sensivity = 1.0f;//= 0.05f;
     public Vec3f pos, rotation;
+    private final FMTGLProcess root;
     
-    public GGR(int x, int y, int z){
-        pos = new Vec3f(x, y, z);
+    public GGR(FMTGLProcess root, int x, int y, int z){
+        pos = new Vec3f(x, y, z); this.root = root;
         rotation = new Vec3f(0, 0, 0);
     }
     
-    public GGR(float x, float y, float z){
-        pos = new Vec3f(x, y, z);
+    public GGR(FMTGLProcess root, float x, float y, float z){
+        pos = new Vec3f(x, y, z); this.root = root;
         rotation = new Vec3f(0, 0, 0);
     }
 
@@ -96,6 +96,11 @@ public class GGR {
     	            	try{ Display.setFullscreen(Settings.toogleFullscreen()); }
     	    			catch(Exception ex){ ex.printStackTrace(); }
     	            }
+    	            //
+    	            if(key == Keyboard.KEY_LEFT){ this.rotation.yCoord += 15; }
+    	            if(key == Keyboard.KEY_RIGHT){ this.rotation.yCoord -= 15; }
+    	            if(key == Keyboard.KEY_UP){ this.rotation.xCoord += 15; }
+    	            if(key == Keyboard.KEY_DOWN){ this.rotation.xCoord -= 15; }
     	        }
     		}
     		else{//"released"
@@ -122,10 +127,10 @@ public class GGR {
         }
         else{
         	if(!Mouse.isInsideWindow()) return;
-        	if(Mouse.isButtonDown(0) && !clickedL) FMTB.get().UI.onButtonPress(0); clickedL = Mouse.isButtonDown(0);
-        	if(Mouse.isButtonDown(1) && !clickedR) FMTB.get().UI.onButtonPress(1); clickedR = Mouse.isButtonDown(1);
+        	if(Mouse.isButtonDown(0) && !clickedL) root.getUserInterface().onButtonPress(0); clickedL = Mouse.isButtonDown(0);
+        	if(Mouse.isButtonDown(1) && !clickedR) root.getUserInterface().onButtonPress(1); clickedR = Mouse.isButtonDown(1);
         	if((wheel = Mouse.getDWheel()) != 0){
-        		if(!FMTB.get().UI.onScrollWheel(wheel)){
+        		if(!root.getUserInterface().onScrollWheel(wheel)){
                     double[] zoom = rotatePoint(wheel * 0.005f, rotation.xCoord, rotation.yCoord - 90);
                     pos.xCoord += zoom[0]; pos.yCoord += zoom[1]; pos.zCoord += zoom[2];
         		}
@@ -136,7 +141,7 @@ public class GGR {
             Mouse.setGrabbed(true);
         }
         if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
-            Mouse.setGrabbed(false); UserInterface.DIALOGBOX.reset(); UserInterface.FILECHOOSER.reset(); TextField.deselectAll();
+            root.reset(); Mouse.setGrabbed(false);
         }
     }
 

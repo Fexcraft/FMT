@@ -16,6 +16,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 
 import net.fexcraft.app.fmt.ui.UserInterface;
+import net.fexcraft.app.fmt.ui.generic.TextField;
 import net.fexcraft.app.fmt.ui.generic.Toolbar;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.TextureManager;
@@ -134,5 +135,15 @@ public class TextureEditor implements FMTGLProcess {
         }
         
     }
+
+	@Override
+	public UserInterface getUserInterface(){
+		return UI;
+	}
+
+	@Override
+	public void reset(){
+		UserInterface.DIALOGBOX.reset(); UserInterface.FILECHOOSER.reset(); TextField.deselectAll();
+	}
 
 }

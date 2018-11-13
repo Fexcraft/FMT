@@ -23,7 +23,8 @@ public class TextField extends Element {
 	public TextField(Element parent, String id, int width, int x, int y){
 		super(parent, id); fields.add(this);
 		this.width = width; this.height = 26;
-		this.x = parent.x + x; this.y = parent.y + y;
+		if(parent == null){ this.x = x; this.y = y; }
+		else{ this.x = parent.x + x; this.y = parent.y + y; }
 	}
 	
 	public TextField setText(String string, boolean centered){
@@ -44,7 +45,7 @@ public class TextField extends Element {
 
 	@Override
 	public void renderSelf(int rw, int rh){
-		if(enabled) (selected ? hovered ? hoversel : hovercolor : hovered ? RGB.BLACK : inactivecol).glColorApply();
+		if(enabled) (isSelected() ? hovered ? hoversel : hovercolor : hovered ? RGB.BLACK : inactivecol).glColorApply();
 		if(background) this.renderQuad(x, y, width, height, "ui/background");
 		if(enabled) RGB.glColorReset();
 		if(!number && text == null) return;
@@ -63,12 +64,12 @@ public class TextField extends Element {
 
 	@Override
 	protected boolean processButtonClick(int x, int y, boolean left){
-		if(this.selected){ this.onReturn(); this.selected = false; return true; }
+		if(this.isSelected()){ this.onReturn(); this.selected = false; return true; }
 		deselectAll(); return this.selected = true;
 	}
 
 	public static void deselectAll(){
-		fields.forEach(elm -> { if(elm.selected) elm.onReturn(); elm.selected = false; });
+		fields.forEach(elm -> { if(elm.isSelected()) elm.onReturn(); elm.selected = false; });
 	}
 	
 	@Override
@@ -100,11 +101,11 @@ public class TextField extends Element {
 	}
 
 	public static boolean anySelected(){
-		return fields.stream().filter(pre -> pre.selected).findFirst().isPresent();
+		return fields.stream().filter(pre -> pre.isSelected()).findFirst().isPresent();
 	}
 
 	public static TextField getSelected(){
-		Optional<TextField> sel = fields.stream().filter(pre -> pre.selected).findFirst();
+		Optional<TextField> sel = fields.stream().filter(pre -> pre.isSelected()).findFirst();
 		return sel.isPresent() ? sel.get() : null;
 	}
 
@@ -172,4 +173,7 @@ public class TextField extends Element {
 		return (int)value;
 	}
 
+	public boolean isSelected(){
+		return selected;
+	}
 }

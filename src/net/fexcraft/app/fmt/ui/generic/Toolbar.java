@@ -170,7 +170,7 @@ public class Toolbar extends Element {
 										@Override public void setupSubmenu(){ return; }
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
-											FMTB.ggr = new GGR(0, 4, 4); FMTB.ggr.rotation.xCoord = 45;
+											FMTB.ggr = new GGR(FMTB.get(), 0, 4, 4); FMTB.ggr.rotation.xCoord = 45;
 											return true;
 										}
 									}.setText("Reset Cam.", false));
