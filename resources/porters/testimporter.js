@@ -3,7 +3,7 @@ var getId = function(){
 }
 
 var getName = function(){
-	return "Test JTMT Importer"
+	return "JTMT Importer"
 }
 
 var getExtensions = function(){

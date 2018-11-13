@@ -271,6 +271,10 @@ public class Toolbar extends Element {
 												@Override
 												public void run(){
 													String name = file.getPath(); TextureManager.loadTextureFromFile(name, file); FMTB.MODEL.setTexture(name);
+													//
+													/*Texture tex = TextureManager.getTexture(name, true); if(tex == null) return;
+													if(tex.getWidth() > FMTB.MODEL.textureX) FMTB.MODEL.textureX = tex.getWidth();
+													if(tex.getHeight() > FMTB.MODEL.textureY) FMTB.MODEL.textureY = tex.getHeight();*/
 												}
 											}, false, true);
 											return true;
