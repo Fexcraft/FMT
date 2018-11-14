@@ -1,8 +1,11 @@
 package net.fexcraft.app.fmt.utils;
 
+import net.fexcraft.lib.common.math.RGB;
+
 public class Settings {
 	
 	private static boolean fullscreen, floor = true, demo, lines = true, cube = true, polygon_marker = true;
+	public static RGB selectedColor = new RGB(255, 255, 0);
 	
 	public static boolean fullscreen(){ return fullscreen; }
 

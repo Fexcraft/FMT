@@ -2,32 +2,18 @@ package net.fexcraft.app.fmt.wrappers;
 
 import com.google.gson.JsonObject;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
-import org.lwjgl.opengl.GL11;
 
 public class TrapezoidWrapper extends BoxWrapper {
 
 	public float scale;
-	public int mr_side=0;
+	public int mr_side = 0;
 
 	public TrapezoidWrapper(GroupCompound compound){
 		super(compound);
 	}
 	
-	@Override
-	public void recompile(){
-		if(turbo != null && turbo.displaylist() != null){ GL11.glDeleteLists(turbo.displaylist(), 1); turbo = null; }
-		turbo = new ModelRendererTurbo(null, textureX, textureY, compound.textureX, compound.textureY);
-		turbo.addTrapezoid(off.xCoord, off.yCoord, off.zCoord, size.xCoord, size.yCoord, size.zCoord, 1f, scale, mr_side);
-		turbo.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord);
-		turbo.rotateAngleX = rot.xCoord; turbo.rotateAngleY = rot.yCoord; turbo.rotateAngleZ = rot.zCoord;
-		turbo.textured = compound.texture != null;
-		//
-		if(lines != null && lines.displaylist() != null){ GL11.glDeleteLists(lines.displaylist(), 0); lines = null; }
-		lines = new ModelRendererTurbo(null, textureX, textureY, compound.textureX, compound.textureY);
-		lines.addTrapezoid(off.xCoord, off.yCoord, off.zCoord, size.xCoord, size.yCoord, size.zCoord, 0, scale, mr_side); lines.lines = true;
-		lines.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord);
-		lines.rotateAngleX = rot.xCoord; lines.rotateAngleY = rot.yCoord; lines.rotateAngleZ = rot.zCoord;
-		lines.textured = compound.texture != null;
+	protected ModelRendererTurbo newMRT(){
+		return super.newMRT().clear().addTrapezoid(off.xCoord, off.yCoord, off.zCoord, size.xCoord, size.yCoord, size.zCoord, 0, scale, mr_side);
 	}
 
 	@Override

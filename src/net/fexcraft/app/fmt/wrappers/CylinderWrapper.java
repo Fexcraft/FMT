@@ -1,7 +1,5 @@
 package net.fexcraft.app.fmt.wrappers;
 
-import org.lwjgl.opengl.GL11;
-
 import com.google.gson.JsonObject;
 
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
@@ -14,22 +12,12 @@ public class CylinderWrapper extends PolygonWrapper {
 	public CylinderWrapper(GroupCompound compound){
 		super(compound);
 	}
-
-	@Override
-	public void recompile(){
-		if(turbo != null && turbo.displaylist() != null){ GL11.glDeleteLists(turbo.displaylist(), 1); turbo = null; }
-		turbo = new ModelRendererTurbo(null, textureX, textureY, compound.textureX, compound.textureY);
-		turbo.addCylinder(off.xCoord, off.yCoord, off.zCoord, radius, length, segments, base, top, direction);
-		turbo.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord);
-		turbo.rotateAngleX = rot.xCoord; turbo.rotateAngleY = rot.yCoord; turbo.rotateAngleZ = rot.zCoord;
-		turbo.textured = compound.texture != null;
-		//
-		if(lines != null && lines.displaylist() != null){  GL11.glDeleteLists(lines.displaylist(), 1); lines = null; }
-		lines = new ModelRendererTurbo(null, textureX, textureY, compound.textureX, compound.textureY); lines.lines = true;
-		lines.addCylinder(off.xCoord, off.yCoord, off.zCoord, radius, length, segments, base, top, direction);
-		lines.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord);
-		lines.rotateAngleX = rot.xCoord; lines.rotateAngleY = rot.yCoord; lines.rotateAngleZ = rot.zCoord;
-		lines.textured = compound.texture != null;
+	
+	protected ModelRendererTurbo newMRT(){
+		return new ModelRendererTurbo(null, textureX, textureY, compound.textureX, compound.textureY)
+			.addCylinder(off.xCoord, off.yCoord, off.zCoord, radius, length, segments, base, top, direction)
+			.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
+			.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
 	}
 
 	@Override

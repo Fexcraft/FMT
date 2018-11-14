@@ -1,7 +1,5 @@
 package net.fexcraft.app.fmt.wrappers;
 
-import org.lwjgl.opengl.GL11;
-
 import com.google.gson.JsonObject;
 
 import net.fexcraft.lib.common.math.Vec3f;
@@ -16,37 +14,19 @@ public class ShapeboxWrapper extends BoxWrapper {
 		super(compound);
 	}
 	
-	@Override
-	public void recompile(){
-		if(turbo != null && turbo.displaylist() != null){ GL11.glDeleteLists(turbo.displaylist(), 1); turbo = null; }
-		turbo = new ModelRendererTurbo(null, textureX, textureY, compound.textureX, compound.textureY);
-		turbo.addShapeBox(off.xCoord, off.yCoord, off.zCoord, size.xCoord, size.yCoord, size.zCoord, 0,
-			cor0.xCoord, cor0.yCoord, cor0.zCoord,
-			cor1.xCoord, cor1.yCoord, cor1.zCoord,
-			cor2.xCoord, cor2.yCoord, cor2.zCoord,
-			cor3.xCoord, cor3.yCoord, cor3.zCoord,
-			cor4.xCoord, cor4.yCoord, cor4.zCoord,
-			cor5.xCoord, cor5.yCoord, cor5.zCoord,
-			cor6.xCoord, cor6.yCoord, cor6.zCoord,
-			cor7.xCoord, cor7.yCoord, cor7.zCoord);
-		turbo.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord);
-		turbo.rotateAngleX = rot.xCoord; turbo.rotateAngleY = rot.yCoord; turbo.rotateAngleZ = rot.zCoord;
-		turbo.textured = compound.texture != null;
-		//
-		if(lines != null && lines.displaylist() != null){ GL11.glDeleteLists(lines.displaylist(), 0); lines = null; }
-		lines = new ModelRendererTurbo(null, textureX, textureY, compound.textureX, compound.textureY);
-		lines.addShapeBox(off.xCoord, off.yCoord, off.zCoord, size.xCoord, size.yCoord, size.zCoord, 0,
-			cor0.xCoord, cor0.yCoord, cor0.zCoord,
-			cor1.xCoord, cor1.yCoord, cor1.zCoord,
-			cor2.xCoord, cor2.yCoord, cor2.zCoord,
-			cor3.xCoord, cor3.yCoord, cor3.zCoord,
-			cor4.xCoord, cor4.yCoord, cor4.zCoord,
-			cor5.xCoord, cor5.yCoord, cor5.zCoord,
-			cor6.xCoord, cor6.yCoord, cor6.zCoord,
-			cor7.xCoord, cor7.yCoord, cor7.zCoord); lines.lines = true;
-		lines.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord);
-		lines.rotateAngleX = rot.xCoord; lines.rotateAngleY = rot.yCoord; lines.rotateAngleZ = rot.zCoord;
-		lines.textured = compound.texture != null;
+	protected ModelRendererTurbo newMRT(){
+		return new ModelRendererTurbo(null, textureX, textureY, compound.textureX, compound.textureY)
+			.addShapeBox(off.xCoord, off.yCoord, off.zCoord, size.xCoord, size.yCoord, size.zCoord, 0,
+				cor0.xCoord, cor0.yCoord, cor0.zCoord,
+				cor1.xCoord, cor1.yCoord, cor1.zCoord,
+				cor2.xCoord, cor2.yCoord, cor2.zCoord,
+				cor3.xCoord, cor3.yCoord, cor3.zCoord,
+				cor4.xCoord, cor4.yCoord, cor4.zCoord,
+				cor5.xCoord, cor5.yCoord, cor5.zCoord,
+				cor6.xCoord, cor6.yCoord, cor6.zCoord,
+				cor7.xCoord, cor7.yCoord, cor7.zCoord)
+			.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
+			.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
 	}
 
 	@Override

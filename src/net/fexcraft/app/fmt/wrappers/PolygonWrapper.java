@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.wrappers;
 
+import org.lwjgl.opengl.GL11;
+
 import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.utils.Settings;
@@ -18,9 +20,9 @@ public abstract class PolygonWrapper {
 	//
 	public Vec3f pos = new Vec3f(), off = new Vec3f(), rot = new Vec3f();
 	public int textureX, textureY;
-	protected ModelRendererTurbo turbo, lines;
+	protected ModelRendererTurbo turbo, lines, sellines;
 	protected final GroupCompound compound;
-	public boolean visible = true;
+	public boolean visible = true, selected;
 	public boolean mirror, flip;
 	public String name;
 	
@@ -28,7 +30,9 @@ public abstract class PolygonWrapper {
 		this.compound = compound;
 	}
 	
-	public abstract void recompile();
+	public void recompile(){
+		this.clearMRT(turbo, lines, sellines); this.setupMRT();
+	}
 
 	public void render(boolean rotX, boolean rotY, boolean rotZ){
 		if(visible && turbo != null) turbo.render();
@@ -44,7 +48,7 @@ public abstract class PolygonWrapper {
 	}
 	
 	public void renderLines(boolean rotXb, boolean rotYb, boolean rotZb){
-		if(lines != null && Settings.lines()) lines.render();
+		if(Settings.lines()) (selected ? sellines : lines).render();
 	}
 	
 	public abstract ShapeType getType();
@@ -116,5 +120,22 @@ public abstract class PolygonWrapper {
 	}
 
 	protected abstract JsonObject populateJson(JsonObject obj, boolean export);
+	
+	protected void clearMRT(ModelRendererTurbo... mrts){
+		if(mrts == null) mrts = new ModelRendererTurbo[]{ turbo, lines, sellines };
+		for(ModelRendererTurbo mrt : mrts){
+			if(mrt != null && mrt.displaylist() != null){
+				GL11.glDeleteLists(mrt.displaylist(), 1); mrt = null;
+			}
+		}
+	}
+	
+	protected void setupMRT(){
+		turbo = newMRT().setTextured(compound.texture != null);
+		lines = newMRT().setLines(true);
+		sellines = newMRT().setLines(Settings.selectedColor);
+	}
+	
+	protected abstract ModelRendererTurbo newMRT();
 	
 }
