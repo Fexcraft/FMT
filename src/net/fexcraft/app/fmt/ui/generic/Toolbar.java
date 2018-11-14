@@ -47,7 +47,7 @@ public class Toolbar extends Element {
 							case "helpers":{ RightTree.toggle("helpertree", true); return true; }
 						}
 					}
-					return false;
+					return true;
 				}
 				@Override
 				public void setupSubmenu(){

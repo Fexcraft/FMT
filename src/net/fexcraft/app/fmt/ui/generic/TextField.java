@@ -87,7 +87,7 @@ public class TextField extends Element {
 	
 	@Override
 	protected boolean processScrollWheel(int wheel){
-		return FMTB.MODEL.updateValue(this, this.id + (wheel > 0 ? "+" : "-"));
+		return FMTB.MODEL.updateValue(this, this.id + (wheel > 0 ? "+" : "-")) || true;
 	}
 
 	public float tryChange(boolean positive, float rate){

@@ -1,15 +1,17 @@
 package net.fexcraft.app.fmt.ui.generic;
 
+import java.util.ArrayList;
+
 import net.fexcraft.app.fmt.ui.Element;
 
 public abstract class Menulist extends Element {
+	
+	public static final ArrayList<Menulist> arrlist = new ArrayList<>();
 
 	public Menulist(Element parent, String id, int width, int height, int x, int y){
-		super(parent, id);
-		this.width = width; this.height = height;
-		this.x = x; this.y = y;
-		this.visible = false;
-		this.addButtons();
+		super(parent, id); this.width = width; this.height = height;
+		this.x = x; this.y = y; this.visible = false; this.addButtons();
+		Menulist.arrlist.add(this);
 	}
 
 	public abstract void addButtons();
@@ -27,6 +29,10 @@ public abstract class Menulist extends Element {
 	@Override
 	protected boolean processButtonClick(int x, int y, boolean left){
 		return false;
+	}
+	
+	public static boolean anyMenuHovered(){
+		return arrlist.stream().filter(pre -> pre.isHovered()).findFirst().isPresent();
 	}
 
 }

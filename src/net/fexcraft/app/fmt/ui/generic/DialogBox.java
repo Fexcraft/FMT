@@ -17,7 +17,7 @@ import net.fexcraft.lib.common.math.RGB;
  */
 public class DialogBox extends Element {
 
-	public static final Runnable NOTHING = new Runnable(){ @Override public void run(){ UserInterface.DIALOGBOX.reset(); return; }};
+	public static final Runnable NOTHING = () -> UserInterface.DIALOGBOX.reset();
 	private Button button0, button1;
 	private Runnable positive, negative;
 	private String[] text;
@@ -32,9 +32,7 @@ public class DialogBox extends Element {
 		this.elements.put("negative", button1 = new Button(this, "negative", 100, 30, 0, 0, new RGB(214, 79, 79)){
 			@Override protected boolean processButtonClick(int x, int y, boolean left){ return onClick(false); }
 		});
-		this.show(new String[]{ "Welcome to FMT!", "<version:" + FMTB.version + ">", "ok", "exit" }, NOTHING, new Runnable(){
-			@Override public void run(){ FMTB.get().close(); }
-		});
+		this.show(new String[]{ "Welcome to FMT!", "<version:" + FMTB.version + ">", "ok", "exit" }, NOTHING, () -> FMTB.get().close());
 	}
 	
 	@Override
@@ -75,7 +73,7 @@ public class DialogBox extends Element {
 	}
 
 	private boolean onClick(boolean positive){
-		this.visible = false; (positive ? this.positive : this.negative).run(); return visible;
+		this.visible = false; (positive ? this.positive : this.negative).run(); this.reset(); return visible;
 	}
 	
 	public void reset(){

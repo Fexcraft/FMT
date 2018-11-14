@@ -284,8 +284,8 @@ public class FMTB implements FMTGLProcess {
 		TextureManager.loadTexture("icons/group_visible");
 		TextureManager.loadTexture("icons/group_edit");
 		TextureManager.loadTexture("icons/group_minimize");
-		ui.getElements().put("crossbar", new Crossbar());
-		ui.getElements().put("toolbar", new Toolbar());
+		//ui.getElements().put("crossbar", new Crossbar());
+		//ui.getElements().put("toolbar", new Toolbar());
 		ui.getElements().put("general_editor", new GeneralEditor());
 		ui.getElements().put("shapebox_editor", new ShapeboxEditor());
 		ui.getElements().put("modeltree", new ModelTree());
@@ -295,6 +295,10 @@ public class FMTB implements FMTGLProcess {
 		ui.getElements().put("group_editor", new GroupEditor());
 		ui.getElements().put("helpertree", new HelperTree());
 		ui.getElements().put("preview_editor", new PreviewEditor());
+		//
+		ui.getElements().put("z_crossbar", new Crossbar());
+		ui.getElements().put("z_toolbar", new Toolbar());
+		//keep them last cause of render order
 		FMTB.MODEL.updateFields();
 	}
 

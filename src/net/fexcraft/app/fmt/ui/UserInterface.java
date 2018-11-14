@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL11;
 import net.fexcraft.app.fmt.FMTGLProcess;
 import net.fexcraft.app.fmt.ui.generic.DialogBox;
 import net.fexcraft.app.fmt.ui.generic.FileChooser;
+import net.fexcraft.app.fmt.ui.generic.Menulist;
 
 public class UserInterface {
 
@@ -56,10 +57,17 @@ public class UserInterface {
 	}
 
 	public void onButtonPress(int i){
-		for(Element elm : elements.values()){
-			if(elm.visible && elm.enabled /*&& elm.hovered*/){
-				if(elm.onButtonClick(Mouse.getX(), root.getDisplayMode().getHeight() - Mouse.getY(), i == 0, elm.hovered)){
-					return;
+		if(Menulist.anyMenuHovered()){
+			for(Menulist list : Menulist.arrlist){
+				if(list.hovered && list.onButtonClick(Mouse.getX(), root.getDisplayMode().getHeight() - Mouse.getY(), i == 0, true)) return;
+			}
+		}
+		else{
+			for(Element elm : elements.values()){
+				if(elm.visible && elm.enabled /*&& elm.hovered*/){
+					if(elm.onButtonClick(Mouse.getX(), root.getDisplayMode().getHeight() - Mouse.getY(), i == 0, elm.hovered)){
+						return;
+					}
 				}
 			}
 		}

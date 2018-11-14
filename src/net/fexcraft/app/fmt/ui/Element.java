@@ -110,4 +110,8 @@ public abstract class Element {
 		this.enabled = bool; return this;
 	}
 
+	public boolean isHovered(){
+		return hovered;
+	}
+
 }
