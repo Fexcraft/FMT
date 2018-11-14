@@ -5,6 +5,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import net.fexcraft.app.fmt.FMTGLProcess;
+import net.fexcraft.app.fmt.ui.RightTree;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.generic.TextField;
 import net.fexcraft.lib.common.math.Vec3f;
@@ -117,7 +118,7 @@ public class GGR {
     private int wheel, oldMouseX=-1,oldMouseY=-1;
 
     public void acceptMouseInput(float delta){
-        if(clickedR && ! Mouse.isButtonDown(1)){
+        if(clickedR && !Mouse.isButtonDown(1)){
             Mouse.setGrabbed(false);//fix mouse grab sticking
         }
         if(Mouse.isGrabbed()){
@@ -137,7 +138,7 @@ public class GGR {
         	}
         }
         //
-        if((Mouse.isInsideWindow() && /*Keyboard.isKeyDown(Keyboard.KEY_E) ||*/ Mouse.isButtonDown(1))){
+        if((Mouse.isInsideWindow() && /*Keyboard.isKeyDown(Keyboard.KEY_E) ||*/ Mouse.isButtonDown(1) && !RightTree.anyTreeHovered())){
             Mouse.setGrabbed(true);
         }
         if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){

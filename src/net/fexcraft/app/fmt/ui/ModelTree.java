@@ -1,5 +1,6 @@
 package net.fexcraft.app.fmt.ui;
 
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 
@@ -130,7 +131,7 @@ public class ModelTree extends RightTree {
 	}
 
 	protected boolean processScrollWheel(int wheel){
-		scroll += -wheel / 10; //if(scroll < 0) scroll = 0; if(scroll > trheight) scroll = trheight - 100;
+		scroll += -wheel / (Mouse.isButtonDown(1) ? 1 : 10); //if(scroll < 0) scroll = 0; if(scroll > trheight) scroll = trheight - 100;
 		return true;
 	}
 	
