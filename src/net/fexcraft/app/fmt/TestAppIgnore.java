@@ -33,6 +33,7 @@ import net.fexcraft.lib.common.utils.Print;
  * 
  * All rights reserved &copy; 2018 fexcraft.net
  * */
+@FMTGLProcess.Experimental
 public class TestAppIgnore implements FMTGLProcess {
 	
 	public static final String version = "1.0.0-test";

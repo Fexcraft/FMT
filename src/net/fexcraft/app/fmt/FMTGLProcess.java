@@ -13,5 +13,7 @@ public interface FMTGLProcess {
 	public UserInterface getUserInterface();
 
 	public void reset();
+	
+	public static @interface Experimental {}
 
 }
