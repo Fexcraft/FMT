@@ -32,7 +32,7 @@ public abstract class Menulist extends Element {
 	}
 	
 	public static boolean anyMenuHovered(){
-		return arrlist.stream().filter(pre -> pre.isHovered()).findFirst().isPresent();
+		return arrlist.stream().filter(pre -> pre.isHovered() && pre.visible).findFirst().isPresent();
 	}
 
 }

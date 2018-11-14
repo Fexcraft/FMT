@@ -173,6 +173,7 @@ public class GGR {
         }
         //
     	//if(!Mouse.isGrabbed()) return;
+        if(RightTree.anyTreeHovered()) return;
         boolean front = Keyboard.isKeyDown(Keyboard.KEY_W);
         boolean back = Keyboard.isKeyDown(Keyboard.KEY_S);
         boolean right = Keyboard.isKeyDown(Keyboard.KEY_D);
