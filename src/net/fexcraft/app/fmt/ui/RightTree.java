@@ -52,5 +52,9 @@ public class RightTree extends Element {
 	protected RGB color(boolean visible, boolean selected){
 		return visible ? selected ? vis : RGB.GREEN : selected ? novis : RGB.WHITE;
 	}
+
+	public static boolean anyTreeHovered(){
+		return  trees.stream().filter(pre -> pre.isHovered()).findFirst().isPresent();
+	}
 	
 }
