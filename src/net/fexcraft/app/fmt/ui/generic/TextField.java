@@ -96,6 +96,12 @@ public class TextField extends Element {
 		return f >= min && f <= max ? value = f : value;
 	}
 	
+	public float tryChange(float otherval, boolean positive, float rate){
+		if(!number) return 0; float f = otherval;
+		f = positive ? f + rate : f - rate;
+		return f >= min && f <= max ? otherval = f : otherval;
+	}
+	
 	public void applyChange(float f){
 		this.value = f;
 	}
@@ -116,10 +122,10 @@ public class TextField extends Element {
 				tempval = key.equals("-") && !(value + "").contains("-") ? key : value + "";
 			}
 			if(key.equals("-")){
-				if(tempval.length() == 0) tempval = key + value; return;
+				if(tempval.length() == 0) tempval = (value + "").contains("-") ? key : key + value; return;
 			}
 			if(key.equals(".") && tempval.indexOf(".") >= 0) return;
-			float fl = Float.parseFloat(tempval + key);
+			float fl = parseFloat(value, tempval + key);
 			if(fl < min){ tempval = min + ""; return; }
 			if(fl > max){ tempval = max + ""; return; }
 			tempval = fl % 1.0f != 0 ? fl + "" : tempval + key;
@@ -130,6 +136,16 @@ public class TextField extends Element {
 			if(tempval == null) tempval = text;
 			if(tempval.length() == 0 && key.equals(" ")) return;
 			tempval += key; return;
+		}
+	}
+
+	private float parseFloat(float def, String string){
+		try{
+			return Float.parseFloat(string);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+			return def;
 		}
 	}
 
@@ -147,7 +163,7 @@ public class TextField extends Element {
 
 	public void onReturn(){
 		if(number){
-			if(tempval != null && tempval.length() > 0) value = Float.parseFloat(tempval);
+			if(tempval != null && tempval.length() > 0) value = parseFloat(value, tempval);
 		}
 		else{
 			if(tempval != null && tempval.length() > 0) text = tempval;

@@ -83,18 +83,21 @@ public class GroupCompound {
 	public boolean updateValue(TextField field, String id){
 		ArrayList<PolygonWrapper> polis = this.getSelected();
 		if(polis.isEmpty()) return false;
-		boolean positive = id.endsWith("+"), alright = false;
-		id = id.replace("-", "").replace("+", "");
-		float f = field.tryChange(positive, rate);
+		boolean positive = id.endsWith("+"); id = id.replace("-", "").replace("+", "");
 		boolean x = id.endsWith("x"), y = id.endsWith("y"), z = id.endsWith("z");
 		id = id.substring(0, id.length() - 1);
-		//FMTB.print(field, id, positive, x, y, z, f);
 		for(int i = 0; i < polis.size(); i++){
-			if(i == 0){ alright = polis.get(i).apply(id, f, x, y, z); continue; }
-			polis.get(i).apply(id, f, x, y, z);
+			float f = field.tryChange(polis.get(i).getFloat(id, x, y, z), positive, rate);
+			if(i == 0){
+				if(polis.get(i).apply(id, f, x, y, z)){
+					field.applyChange(f);
+				}
+			}
+			else{
+				polis.get(i).apply(id, f, x, y, z);
+			}
 		}
-		if(alright) field.applyChange(f);
-		return alright;
+		return true;
 	}
 	
 	public boolean updateValue(TextField field){
@@ -102,9 +105,16 @@ public class GroupCompound {
 		if(polis.isEmpty()) return false;
 		boolean x = field.id.endsWith("x"), y = field.id.endsWith("y"), z = field.id.endsWith("z");
 		String id = field.id.substring(0, field.id.length() - 1);
+		//
+		float diffo = polis.get(0).getFloat(id, x, y, z);
 		for(int i = 0; i < polis.size(); i++){
-			if(i == 0){ polis.get(i).apply(id, field.getFloatValue(), x, y, z); continue; }
-			polis.get(i).apply(id, field.getFloatValue(), x, y, z);
+			if(i == 0){
+				polis.get(i).apply(id, field.getFloatValue(), x, y, z);
+			}
+			else{
+				float diff = polis.get(i).getFloat(id, x, y, z) - diffo;
+				polis.get(i).apply(id, field.getFloatValue() + diff, x, y, z);
+			}
 		}
 		return true;
 	}
