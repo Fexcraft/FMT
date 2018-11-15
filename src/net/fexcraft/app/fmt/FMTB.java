@@ -39,6 +39,7 @@ import net.fexcraft.app.fmt.ui.generic.Toolbar;
 import net.fexcraft.app.fmt.utils.Backups;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.HelperCollector;
+import net.fexcraft.app.fmt.utils.ImageHelper;
 import net.fexcraft.app.fmt.utils.SaveLoad;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.TextureManager;
@@ -155,7 +156,11 @@ public class FMTB implements FMTGLProcess {
 		if(TEX_UPDATE_TIMER == null){ (TEX_UPDATE_TIMER = new Timer()).schedule(new TextureUpdate(), Time.SEC_MS, Time.SEC_MS / 2); }
 		//
 		while(!close){
-			loop(); render(); UI.render();
+			loop(); render();
+			if(ImageHelper.HASTASK){
+				UI.render(true); ImageHelper.doTask();
+			}
+			else UI.render(false);
 			Display.update(); Display.sync(60);
 			//Thread.sleep(50);
 		}

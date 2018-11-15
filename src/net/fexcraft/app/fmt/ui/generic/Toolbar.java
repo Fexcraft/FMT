@@ -14,6 +14,7 @@ import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.generic.FileChooser.AfterTask;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.HelperCollector;
+import net.fexcraft.app.fmt.utils.ImageHelper;
 import net.fexcraft.app.fmt.utils.SaveLoad;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.TextureManager;
@@ -32,7 +33,7 @@ public class Toolbar extends Element {
 		super(null, "toolbar");
 		this.height = 30;
 		//
-		String[] buttons = new String[]{ "Files", "Edit", "Editor", "Shapeditor", "Shapelist", "Textures", "Helpers", "Settings", "Account", "Exit"};
+		String[] buttons = new String[]{ "Files", "Utils", "Editor", "Shapeditor", "Shapelist", "Textures", "Helpers", "Settings", "Account", "Exit"};
 		for(int i = 0; i < buttons.length; i++){
 			final int j = i;
 			this.elements.put(buttons[i].toLowerCase(), new Button(this, buttons[i].toLowerCase(), 100, 26, 2 + (j * 102), 2){
@@ -104,7 +105,7 @@ public class Toolbar extends Element {
 							});
 							break;
 						}
-						case "edit":{
+						case "utils":{
 							this.elements.put("menu", new Menulist(this, "menu", 104, 200, (j * 102), 28){
 								@Override
 								public void addButtons(){
@@ -124,7 +125,7 @@ public class Toolbar extends Element {
 										}
 									}.setText("Redo", false));
 									//
-									this.elements.put("movesel", new Button(this, "movesel", 100, 26, 2, 58, subhover){
+									/*this.elements.put("movesel", new Button(this, "movesel", 100, 26, 2, 58, subhover){
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
 											//TODO
@@ -138,7 +139,23 @@ public class Toolbar extends Element {
 											//TODO
 											return true;
 										}
-									}.setText("Delete Sel.", false));
+									}.setText("Delete Sel.", false));*/
+									//
+									this.elements.put("create_gif", new Button(this, "create_gif", 100, 26, 2, 58, subhover){
+										@Override
+										protected boolean processButtonClick(int x, int y, boolean left){
+											//TODO
+											return true;
+										}
+									}.setText("Create Gif", false));
+									//
+									this.elements.put("screenshot", new Button(this, "screenshot", 100, 26, 2, 86, subhover){
+										@Override
+										protected boolean processButtonClick(int x, int y, boolean left){
+											//TODO delay this so it takes the screenshot after the menu has closed.
+											ImageHelper.takeScreenshot(true); return true;
+										}
+									}.setText("Screenshot", false));
 								}
 							});
 							break;

@@ -88,7 +88,7 @@ public class TestAppIgnore implements FMTGLProcess {
 		}
 		//
 		while(!close){
-			loop(); render(); UI.render();
+			loop(); render(); UI.render(false);
 			Display.update(); Display.sync(60);
 			//Thread.sleep(50);
 		}

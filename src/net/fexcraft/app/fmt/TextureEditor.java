@@ -73,7 +73,7 @@ public class TextureEditor implements FMTGLProcess {
 		//
 		while(!close){
 			loop(); GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-	        UI.render(); Display.update(); Display.sync(60); Thread.sleep(50);
+	        UI.render(false); Display.update(); Display.sync(60); Thread.sleep(50);
 		}
 		Display.destroy(); System.exit(0);
 	}

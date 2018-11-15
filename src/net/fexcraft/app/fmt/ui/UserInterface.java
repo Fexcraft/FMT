@@ -8,6 +8,8 @@ import net.fexcraft.app.fmt.FMTGLProcess;
 import net.fexcraft.app.fmt.ui.generic.DialogBox;
 import net.fexcraft.app.fmt.ui.generic.FileChooser;
 import net.fexcraft.app.fmt.ui.generic.Menulist;
+import net.fexcraft.app.fmt.ui.generic.TextField;
+import net.fexcraft.lib.common.math.Time;
 
 public class UserInterface {
 
@@ -18,13 +20,12 @@ public class UserInterface {
 	private FMTGLProcess root;
 
 	public UserInterface(FMTGLProcess main){
-		this.root = main;
-		root.setupUI(this);
+		this.root = main; root.setupUI(this);
 	}
 	
 	private int width, height;
 
-	public void render(){
+	public void render(boolean bool){
 		width = root.getDisplayMode().getWidth(); height = root.getDisplayMode().getHeight();
 		{
 			GL11.glPushMatrix();
@@ -38,7 +39,10 @@ public class UserInterface {
 		}
 		//
 		GL11.glLoadIdentity();
-		elements.values().forEach(elm -> elm.render(width, height));
+		if(bool){ tmelm.render(width, height); }
+		else{
+			elements.values().forEach(elm -> elm.render(width, height));
+		}
 		//
 		{
 	        GL11.glMatrixMode(GL11.GL_PROJECTION);
@@ -51,6 +55,15 @@ public class UserInterface {
 	        GL11.glPopMatrix();
 		}
 	}
+	
+	private Element tmelm = new TextField(null, "text", 4, 4, 500){
+		@Override
+		public void renderSelf(int rw, int rh){
+			this.y = rh - root.getDisplayMode().getHeight() + 4;
+			this.setText(Time.getDay() % 2 == 0 ? "FMT - Fexcraft Modelling Toolbox" : "FMT - Fex's Modelling Toolbox", false);
+			super.renderSelf(rw, rh);
+		}
+	};
 
 	public boolean isAnyHovered(){
 		return elements.values().stream().filter(pre -> pre.anyHovered()).count() > 0;

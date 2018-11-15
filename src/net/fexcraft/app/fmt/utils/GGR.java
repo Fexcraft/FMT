@@ -1,12 +1,19 @@
 package net.fexcraft.app.fmt.utils;
 
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
+
+import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.FMTGLProcess;
 import net.fexcraft.app.fmt.ui.RightTree;
 import net.fexcraft.app.fmt.ui.editor.Editor;
+import net.fexcraft.app.fmt.ui.generic.DialogBox;
 import net.fexcraft.app.fmt.ui.generic.TextField;
 import net.fexcraft.lib.common.math.Vec3f;
 
@@ -102,6 +109,14 @@ public class GGR {
     	            if(key == Keyboard.KEY_RIGHT){ this.rotation.yCoord -= 15; }
     	            if(key == Keyboard.KEY_UP){ this.rotation.xCoord += 15; }
     	            if(key == Keyboard.KEY_DOWN){ this.rotation.xCoord -= 15; }
+    	            //
+    	            if(key == Keyboard.KEY_SYSRQ || key == Keyboard.KEY_F12){
+    	            	ImageHelper.takeScreenshot(false);
+    	            	FMTB.showDialogbox("Screenshot taken.", "", "OK", "Open", DialogBox.NOTHING, () -> {
+    	            		try{ Desktop.getDesktop().open(new File("./screenshots/")); }
+    	            		catch(IOException e){ e.printStackTrace(); }
+    	            	});
+    	            }
     	        }
     		}
     		else{//"released"
