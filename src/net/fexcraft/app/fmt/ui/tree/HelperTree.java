@@ -1,4 +1,4 @@
-package net.fexcraft.app.fmt.ui;
+package net.fexcraft.app.fmt.ui.tree;
 
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;

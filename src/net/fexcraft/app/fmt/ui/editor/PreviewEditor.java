@@ -3,9 +3,9 @@ package net.fexcraft.app.fmt.ui.editor;
 import org.newdawn.slick.Color;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.HelperTree;
 import net.fexcraft.app.fmt.ui.generic.Button;
 import net.fexcraft.app.fmt.ui.generic.TextField;
+import net.fexcraft.app.fmt.ui.tree.HelperTree;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.lib.common.math.RGB;

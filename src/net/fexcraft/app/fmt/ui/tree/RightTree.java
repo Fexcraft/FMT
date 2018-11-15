@@ -1,4 +1,4 @@
-package net.fexcraft.app.fmt.ui;
+package net.fexcraft.app.fmt.ui.tree;
 
 import java.util.ArrayList;
 import java.util.Optional;

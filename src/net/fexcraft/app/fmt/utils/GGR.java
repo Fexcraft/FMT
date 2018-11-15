@@ -11,10 +11,10 @@ import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.FMTGLProcess;
-import net.fexcraft.app.fmt.ui.RightTree;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.generic.DialogBox;
 import net.fexcraft.app.fmt.ui.generic.TextField;
+import net.fexcraft.app.fmt.ui.tree.RightTree;
 import net.fexcraft.lib.common.math.Vec3f;
 
 /** CCR */

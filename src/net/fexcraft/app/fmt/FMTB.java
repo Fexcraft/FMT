@@ -23,8 +23,6 @@ import org.lwjgl.util.glu.GLU;
 
 import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.porters.PorterManager;
-import net.fexcraft.app.fmt.ui.HelperTree;
-import net.fexcraft.app.fmt.ui.ModelTree;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.editor.CylinderEditor;
 import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
@@ -36,6 +34,8 @@ import net.fexcraft.app.fmt.ui.generic.DialogBox;
 import net.fexcraft.app.fmt.ui.generic.FileChooser;
 import net.fexcraft.app.fmt.ui.generic.TextField;
 import net.fexcraft.app.fmt.ui.generic.Toolbar;
+import net.fexcraft.app.fmt.ui.tree.HelperTree;
+import net.fexcraft.app.fmt.ui.tree.ModelTree;
 import net.fexcraft.app.fmt.utils.Backups;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.HelperCollector;
