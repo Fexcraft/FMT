@@ -10,20 +10,15 @@ import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public abstract class PolygonWrapper {
 	
-	/*private static final ModelRendererTurbo sphere = new ModelRendererTurbo(null, 256, 256);
-	static {
-		//sphere.insert(new Sphere().setRadius(1).setRings(4).setSegments(4));
-		//sphere.insert(new Cuboid().setSize(1, 1, 1).setPosition(-0.5f, -0.5f, -0.5f).setTexture(0, 0));
-		sphere.addBox(-0.5f, -0.5f, -0.5f, 1, 1, 1); sphere.textured = true;
-	}
-	private static final RGB yellow = new RGB(255, 255, 0);*/
-	//
 	public Vec3f pos = new Vec3f(), off = new Vec3f(), rot = new Vec3f();
 	public int textureX, textureY;
 	protected ModelRendererTurbo turbo, lines, sellines;
 	protected final GroupCompound compound;
-	public boolean visible = true, selected;
+	private static boolean widelines;
+	public boolean visible = true;
+	private TurboList turbolist;
 	public boolean mirror, flip;
+	public boolean selected;
 	public String name;
 	
 	public PolygonWrapper(GroupCompound compound){
@@ -48,7 +43,19 @@ public abstract class PolygonWrapper {
 	}
 	
 	public void renderLines(boolean rotXb, boolean rotYb, boolean rotZb){
-		if(Settings.lines()) (selected ? sellines : lines).render();
+		//if(Settings.lines()) (selected ? sellines : lines).render();
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		if(Settings.lines()){
+			if(selected || turbolist.selected){
+				if(!widelines){ GL11.glLineWidth(4f); widelines = true; }
+				sellines.render();
+			}
+			else{
+				if(widelines){ GL11.glLineWidth(1f); widelines = false; }
+				lines.render();
+			}
+		}
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}
 	
 	public abstract ShapeType getType();
@@ -137,5 +144,42 @@ public abstract class PolygonWrapper {
 	}
 	
 	protected abstract ModelRendererTurbo newMRT();
+
+	public boolean apply(String id, float value, boolean x, boolean y, boolean z){
+		boolean bool = false;
+		switch(id){
+			case "size":{
+				if(this.getType().isCuboid()){
+					bool = this.setFloat(id, x, y, z, value);
+				} break;
+			}
+			case "pos": case "off": {
+				bool = this.setFloat(id, x, y, z, value); break;
+			}
+			case "rot":{
+				bool = this.setFloat(id, x, y, z, (float)Math.toRadians(value)); break;
+			}
+			case "cor0": case "cor1": case "cor2": case "cor3": case "cor4": case "cor5": case "cor6": case "cor7":{
+				if(this.getType().isShapebox()){
+					bool = this.setFloat(id, x, y, z, value);
+				} break;
+			}
+			case "cyl0": case "cyl1": case "cyl2":{
+				if(this.getType().isCylinder()){
+					bool = this.setFloat(id, x, y, z, value);
+				} break;
+			}
+		}
+		this.recompile();
+		return bool;
+	}
+
+	public PolygonWrapper setList(TurboList trlist){
+		this.turbolist = trlist; return this;
+	}
+
+	public TurboList getList(){
+		return turbolist;
+	}
 	
 }

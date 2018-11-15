@@ -8,7 +8,6 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.generic.Button;
 import net.fexcraft.app.fmt.ui.generic.TextField;
 import net.fexcraft.app.fmt.utils.TextureManager;
-import net.fexcraft.app.fmt.wrappers.GroupCompound.Selection;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.math.RGB;
 
@@ -37,22 +36,18 @@ public class GroupEditor extends Editor {
 			public void updateTextField(){
 				if(FMTB.MODEL.getSelected().isEmpty()) return;
 				TurboList list = null;
-				if(FMTB.MODEL.getSelectedGroups() == 1){
-					list = FMTB.MODEL.getSelectedGroup(0);
-					if(list == null) return; 
+				if(FMTB.MODEL.getDirectlySelectedGroupsAmount() == 1){
+					if(FMTB.MODEL.getCompound().isEmpty()) return;
+					list = FMTB.MODEL.getCompound().values().toArray(new TurboList[0])[0];
 					FMTB.MODEL.getCompound().remove(list.id);
 					list.id = this.getTextValue().replace(" ", "_").replace("-", "_").replace(".", "");
 					while(FMTB.MODEL.getCompound().containsKey(list.id)){ list.id += "_"; }
 					FMTB.MODEL.getCompound().put(list.id, list);
 				}
 				else{
-					ArrayList<String> arrlist = new ArrayList<>();
-					for(Selection sel : FMTB.MODEL.getSelected()){
-						if(!arrlist.contains(sel.group)) arrlist.add(sel.group);
-					}
-					//
+					ArrayList<TurboList> arrlist = FMTB.MODEL.getDirectlySelectedGroups();
 					for(int i = 0; i < arrlist.size(); i++){
-						list = FMTB.MODEL.getCompound().remove(arrlist.get(i)); if(list == null) continue;
+						list = FMTB.MODEL.getCompound().remove(arrlist.get(i).id); if(list == null) continue;
 						list.id = this.getTextValue().replace(" ", "_").replace("-", "_").replace(".", "");
 						list.id += list.id.contains("_") ? "_" + i : i + "";
 						while(FMTB.MODEL.getCompound().containsKey(list.id)){ list.id += "_"; }
@@ -69,7 +64,7 @@ public class GroupEditor extends Editor {
 	protected boolean updateRGB(Boolean apply, int j){
 		TextField field = (TextField)getElement("rgb" + j);
 		if(apply != null) field.applyChange(field.tryChange(apply, FMTB.MODEL.rate));
-		TurboList sel = FMTB.MODEL.getSelectedGroup(0);
+		TurboList sel = FMTB.MODEL.getFirstSelectedGroup();
 		if(sel != null){
 			if(sel.color == null) sel.color = new RGB(RGB.WHITE);
 			byte[] arr = sel.color.toByteArray();

@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
@@ -21,7 +20,6 @@ public class GroupCompound {
 	public float rate = 1;
 	//
 	private TreeMap<String, TurboList> compound = new TreeMap<>();
-	private ArrayList<Selection> selection = new ArrayList<>();
 	public ArrayList<String> creators = new ArrayList<>();
 	public File file; public String name = "unnamed model";
 	public String texture;
@@ -63,87 +61,59 @@ public class GroupCompound {
 		}
 	}
 	
-	public ArrayList<Selection> getSelected(){ return selection; }
+	public ArrayList<PolygonWrapper> getSelected(){
+		ArrayList<PolygonWrapper> polis = new ArrayList<>();
+		for(TurboList list : compound.values()){
+			if(list.selected){ polis.addAll(list); }
+			else{
+				for(PolygonWrapper poly : list){
+					if(poly.selected) polis.add(poly);
+				}
+			}
+		}
+		return polis;
+	}
+
+	public final void clearSelection(){
+		for(TurboList list : compound.values()){
+			list.selected = false; for(PolygonWrapper poly : list) poly.selected = false;
+		}
+	}
 
 	public boolean updateValue(TextField field, String id){
-		if(selection.isEmpty()) return false;
+		ArrayList<PolygonWrapper> polis = this.getSelected();
+		if(polis.isEmpty()) return false;
 		boolean positive = id.endsWith("+"), alright = false;
 		id = id.replace("-", "").replace("+", "");
 		float f = field.tryChange(positive, rate);
 		boolean x = id.endsWith("x"), y = id.endsWith("y"), z = id.endsWith("z");
 		id = id.substring(0, id.length() - 1);
 		//FMTB.print(field, id, positive, x, y, z, f);
-		for(int i = 0; i < selection.size(); i++){
-			if(i == 0){ alright = selection.get(i).apply(id, f, x, y, z); continue; }
-			selection.get(i).apply(id, f, x, y, z);
+		for(int i = 0; i < polis.size(); i++){
+			if(i == 0){ alright = polis.get(i).apply(id, f, x, y, z); continue; }
+			polis.get(i).apply(id, f, x, y, z);
 		}
 		if(alright) field.applyChange(f);
 		return alright;
 	}
 	
 	public boolean updateValue(TextField field){
-		if(selection.isEmpty()) return false;
+		ArrayList<PolygonWrapper> polis = this.getSelected();
+		if(polis.isEmpty()) return false;
 		boolean x = field.id.endsWith("x"), y = field.id.endsWith("y"), z = field.id.endsWith("z");
 		String id = field.id.substring(0, field.id.length() - 1);
-		for(int i = 0; i < selection.size(); i++){
-			if(i == 0){ selection.get(i).apply(id, field.getFloatValue(), x, y, z); continue; }
-			selection.get(i).apply(id, field.getFloatValue(), x, y, z);
+		for(int i = 0; i < polis.size(); i++){
+			if(i == 0){ polis.get(i).apply(id, field.getFloatValue(), x, y, z); continue; }
+			polis.get(i).apply(id, field.getFloatValue(), x, y, z);
 		}
 		return true;
-	}
-	
-	public static class Selection {
-		
-		public Selection(String string, int i){
-			this.group = string; this.element = i;
-		}
-
-		public boolean apply(String id, float value, boolean x, boolean y, boolean z){
-			PolygonWrapper shape = FMTB.MODEL.compound.containsKey(group) ? FMTB.MODEL.compound.get(group).get(element) : null;
-			if(shape == null) return false;
-			boolean bool = false;
-			switch(id){
-				case "size":{
-					if(shape.getType().isCuboid()){
-						bool = shape.setFloat(id, x, y, z, value);
-					} break;
-				}
-				case "pos": case "off": {
-					bool = shape.setFloat(id, x, y, z, value); break;
-				}
-				case "rot":{
-					bool = shape.setFloat(id, x, y, z, (float)Math.toRadians(value)); break;
-				}
-				case "cor0": case "cor1": case "cor2": case "cor3": case "cor4": case "cor5": case "cor6": case "cor7":{
-					if(shape.getType().isShapebox()){
-						bool = shape.setFloat(id, x, y, z, value);
-					} break;
-				}
-				case "cyl0": case "cyl1": case "cyl2":{
-					if(shape.getType().isCylinder()){
-						bool = shape.setFloat(id, x, y, z, value);
-					} break;
-				}
-			}
-			shape.recompile();
-			return bool;
-		}
-
-		public String group;
-		public int element;
-		
-		@Override
-		public boolean equals(Object o){
-			return o instanceof Selection ? ((Selection)o).group.equals(group) && ((Selection)o).element == element : false; 
-		}
-		
 	}
 
 	public void add(PolygonWrapper shape){
 		try{
 			if(compound.isEmpty()) compound.put("group0", new TurboList("group0"));
 			TurboList list = (compound.containsKey("body") ? compound.get("body") : (TurboList)compound.values().toArray()[0]);
-			selection.clear(); selection.add(new Selection(list.id, list.size())); list.add(shape); shape.recompile();
+			clearSelection(); shape.selected = true; list.add(shape); shape.setList(list); shape.recompile();
 			this.updateFields();
 		}
 		catch(Exception e){
@@ -154,34 +124,48 @@ public class GroupCompound {
 	public TreeMap<String, TurboList> getCompound(){
 		return compound;
 	}
-
-	public void deselectGroup(String id){
-		selection.removeIf(pre -> pre.group.equals(id)); this.updateFields();
-	}
-
-	public void selectGroup(String id){
-		TurboList list = compound.get(id); if(list == null) return;
-		Selection temp = null;
-		for(int i = 0; i < list.size(); i++){
-			if(!selection.contains(temp = new Selection(list.id, i))){
-				selection.add(temp);
+	
+	public PolygonWrapper getFirstSelection(){
+		for(TurboList list : compound.values()){
+			if(list.selected){ list.get(0); }
+			else{
+				for(PolygonWrapper poly : list){
+					if(poly.selected) return poly;
+				}
 			}
-		} this.updateFields();
+		}
+		return null;
 	}
-
-	public void deselect(String id, int poly){
-		selection.removeIf(pre -> pre.group.equals(id) && pre.element == poly); this.updateFields();
+	
+	public String getFirstSelectedGroupName(){
+		for(TurboList list : compound.values()){
+			if(list.selected){ return list.id; }
+			else{
+				for(PolygonWrapper poly : list){
+					if(poly.selected) return list.id;
+				}
+			}
+		}
+		return "no polygon selected";
 	}
-
-	public void select(String id, int poly){
-		if(!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) selection.clear();
-		Selection temp = new Selection(id, poly); if(!selection.contains(temp)) selection.add(temp); this.updateFields();
+	
+	public TurboList getFirstSelectedGroup(){
+		for(TurboList list : compound.values()){
+			if(list.selected){ return list; }
+			else{
+				for(PolygonWrapper poly : list){
+					if(poly.selected) return list;
+				}
+			}
+		}
+		return null;
 	}
 	
 	public void updateFields(){
 		try{
 			if(FMTB.get() == null || FMTB.get().UI == null || !FMTB.get().UI.hasElement("general_editor")) return; FMTB.get().setTitle(this.name);
-			Editor editor = (Editor)FMTB.get().UI.getElement("general_editor"); PolygonWrapper poly = getSelectedPolygon(0);
+			Editor editor = (Editor)FMTB.get().UI.getElement("general_editor"); PolygonWrapper poly = getFirstSelection();
+			//ouch, I forgot not keeping a secondary "selection" list doesn't also save which was selected first...
 			if(poly == null){
 				editor.getField("sizex").applyChange(0);
 				editor.getField("sizey").applyChange(0);
@@ -225,7 +209,7 @@ public class GroupCompound {
 				editor.getField("texx").applyChange(poly.getFloat("tex", true, false, false));
 				editor.getField("texy").applyChange(poly.getFloat("tex", false, true, false));
 				//
-				editor.getField("group").setText(selection.get(0).group, true);
+				editor.getField("group").setText(this.getFirstSelectedGroupName(), true);
 				editor.getField("boxname").setText(poly.name == null ? "unnamed" : poly.name, true);
 			}
 			editor.getField("multiplicator").applyChange(rate);
@@ -315,7 +299,7 @@ public class GroupCompound {
 			}
 			editor.getField("multiplicator").applyChange(rate);
 			//
-			editor = (Editor)FMTB.get().UI.getElement("group_editor"); TurboList list = this.getSelectedGroup(0);
+			editor = (Editor)FMTB.get().UI.getElement("group_editor"); TurboList list = this.getFirstSelectedGroup();
 			if(list == null){
 				editor.getField("rgb0").applyChange(0);
 				editor.getField("rgb1").applyChange(0);
@@ -335,74 +319,55 @@ public class GroupCompound {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private float round(double df){
         BigDecimal deci = new BigDecimal(Float.toString((float)df));
         deci = deci.setScale(3, BigDecimal.ROUND_HALF_UP);
         return deci.floatValue();
 	}
 
-	public PolygonWrapper getSelectedPolygon(int i){
-		if(selection.isEmpty()) return null;
-		if(i >= selection.size()) return null;
-		if(compound.containsKey(selection.get(i).group)){
-			if(selection.get(i).element >= compound.get(selection.get(i).group).size()){
-				selection.remove(i); return null;
-			} else return compound.get(selection.get(i).group).get(selection.get(i).element);
-		}
-		else return null;
-	}
-
-	private PolygonWrapper removeSelectedPolygon(int s){
-		if(selection.isEmpty()) return null;
-		if(s >= selection.size()) return null;
-		if(compound.containsKey(selection.get(s).group)){
-			if(selection.get(s).element >= compound.get(selection.get(s).group).size()){
-				selection.remove(s); return null;
-			} else return compound.get(selection.get(s).group).remove(selection.get(s).element);
-		}
-		else return null;
-	}
-
 	public float multiply(float flea){
 		return rate = (rate *= flea) < 0.01f ? 0.01f : rate > 1000 ? 1000 : rate;
 	}
 
-	public void changeGroupIndex(int i){
-		if(selection.isEmpty()) return;
-		String current = selection.get(0).group; int index = i;
+	public void changeGroupOfSelected(ArrayList<PolygonWrapper> polis2, String id){
+		ArrayList<PolygonWrapper> polis = polis2 == null ? this.getSelected() : polis2;
+		if(polis.isEmpty()) return;
+		TurboList list = compound.get(id); if(list == null) return;
+		polis.forEach(poly -> {
+			if(poly.getList() != null) poly.getList().remove(poly);
+		});
+		polis.forEach(poly -> {
+			list.add(poly); poly.setList(list);
+		});
+		this.updateFields();
+	}
+
+	public void changeGroupOfSelected(int offset){
+		ArrayList<PolygonWrapper> polis = this.getSelected();
+		if(polis.isEmpty()) return;
+		String current = polis.get(0).getList().id; int index = offset;
 		for(String key : compound.keySet()){ if(key.equals(current)) break; else index++; }
 		if(index >= compound.size()) index -= compound.size(); if(index < 0) index = 0;
-		current = compound.keySet().toArray(new String[0])[index];
-		ArrayList<PolygonWrapper> array = new ArrayList<>();
-		for(int s = 0; s < selection.size(); s++){ array.add(getSelectedPolygon(s)); }
-		for(int s = 0; s < selection.size(); s++){ removeSelectedPolygon(s); }
-		selection.clear();
-		for(PolygonWrapper wrapper : array){
-			if(wrapper != null){
-				selection.add(new Selection(current, compound.get(current).size()));
-				compound.get(current).add(wrapper);
-			}
-		} array.clear(); this.updateFields();
+		changeGroupOfSelected(polis, compound.keySet().toArray(new String[0])[index]);
 	}
 	
 	public int countTotalMRTs(){
 		int i = 0; for(TurboList list : compound.values()) i += list.size(); return i;
 	}
-	
-	public TurboList getSelectedGroup(int i){
-		if(i >= selection.size() || i < 0) return null;
-		return compound.get(selection.get(i).group);
-	}
-
-	public int getSelectedGroups(){
-		ArrayList<String> list = new ArrayList<>();
-		for(Selection sel : selection){ if(!list.contains(sel.group)){ list.add(sel.group); } }
-		return list.size();
-	}
 
 	public void setTexture(String string){
 		this.texture = string; this.compound.values().forEach(turbo -> turbo.forEach(poly -> poly.recompile()));
+	}
+
+	public int getDirectlySelectedGroupsAmount(){
+		int i = 0; for(TurboList list : compound.values()) if(list.selected) i++; return i;
+	}
+
+	public ArrayList<TurboList> getDirectlySelectedGroups(){
+		ArrayList<TurboList> array = new ArrayList<>();
+		for(TurboList list : compound.values()) if(list.selected) array.add(list);
+		return array;
 	}
 
 }

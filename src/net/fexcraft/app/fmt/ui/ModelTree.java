@@ -6,11 +6,11 @@ import org.newdawn.slick.Color;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.editor.Editor;
+import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.math.RGB;
-import net.fexcraft.app.fmt.wrappers.GroupCompound.Selection;
 
 public class ModelTree extends RightTree {
 	
@@ -31,7 +31,7 @@ public class ModelTree extends RightTree {
 		GL11.glTranslatef(0, 0,  10); int pass = 0;
 		for(int i = 0; i < trlist.length; i++){
 			TurboList list = trlist[i];
-			color(list.visible, isSelected(list)).glColorApply();
+			color(list.visible, list.selected).glColorApply();
 			this.renderQuad(x + 4, y + 4 + -scroll + (pass), width - 8, 24, "ui/background"); TextureManager.unbind();
 			font.drawString(x + 8, y + 6 + -scroll + (pass), list.id, Color.white); RGB.glColorReset();
 			GL11.glTranslatef(0, 0,  1);
@@ -42,7 +42,7 @@ public class ModelTree extends RightTree {
 			GL11.glTranslatef(0, 0, -1); pass += 26;
 			if(!list.minimized){
 				for(int j = 0; j < list.size(); j++){
-					poly = list.get(j); color(poly.visible, isSelected(list, j)).glColorApply();
+					poly = list.get(j); color(poly.visible, poly.selected || list.selected).glColorApply();
 					this.renderQuad(x + 8, y + 4 + -scroll + (pass), width - 16, 24, "ui/background"); TextureManager.unbind();
 					font.drawString(x + 10, y + 6 + -scroll + (pass), j + " | " + poly.name(), Color.white); RGB.glColorReset();
 					GL11.glTranslatef(0, 0,  1);
@@ -63,7 +63,7 @@ public class ModelTree extends RightTree {
 
 	@Override
 	protected boolean processButtonClick(int mx, int my, boolean left){
-		if(!(mx >= x + 8 && mx < x + width - 8 && my >= y + 4 && my < y + height - 8)) return false;
+		if(!left || !(mx >= x + 8 && mx < x + width - 8 && my >= y + 4 && my < y + height - 8)) return false;
 		int myy = my - (y + 4 + -scroll); int i = myy / 26; int k = 0;
 		for(int j = 0; j < trlist.length; j++){
 			if(k == i){
@@ -80,12 +80,10 @@ public class ModelTree extends RightTree {
 					FMTB.MODEL.getCompound().remove(trlist[j].id); return true;
 				}
 				else{
-					if(isSelected(trlist[j])){
-						FMTB.MODEL.deselectGroup(trlist[j].id);
-					}
-					else{
-						FMTB.MODEL.selectGroup(trlist[j].id);
-					}
+					boolean bool = trlist[j].selected;
+					if(!GGR.isShiftDown()){ FMTB.MODEL.clearSelection(); }
+					trlist[j].selected = !bool;
+					FMTB.MODEL.updateFields();
 				}
 				return false;
 			}
@@ -102,32 +100,16 @@ public class ModelTree extends RightTree {
 							trlist[j].remove(l); return true;
 						}
 						else{
-							if(isSelected(trlist[j], l)){
-								FMTB.MODEL.deselect(trlist[j].id, l);
-							}
-							else{
-								FMTB.MODEL.select(trlist[j].id, l);
-							}
+							boolean bool = trlist[j].get(l).selected;
+							if(!GGR.isShiftDown()){ FMTB.MODEL.clearSelection(); }
+							trlist[j].get(l).selected = !bool;
+							FMTB.MODEL.updateFields();
 						}
 						return false;
 					}
 				}
 			} k++;
 		} return false;
-	}
-
-	private boolean isSelected(TurboList list){
-		for(Selection sel : FMTB.MODEL.getSelected()){
-			if(sel.group.equals(list.id)) return true;
-		}
-		return false;
-	}
-	
-	private boolean isSelected(TurboList list, int poly){
-		for(Selection sel : FMTB.MODEL.getSelected()){
-			if(sel.group.equals(list.id) && sel.element == poly) return true;
-		}
-		return false;
 	}
 
 	protected boolean processScrollWheel(int wheel){

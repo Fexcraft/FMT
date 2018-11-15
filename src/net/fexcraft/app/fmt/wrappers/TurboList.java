@@ -11,7 +11,7 @@ public class TurboList extends ArrayList<PolygonWrapper> {
 	public String id; public RGB color;
 	private boolean rotXb, rotYb, rotZb;
 	//private float rotX, rotY, rotZ, posX, posY, posZ;//FMR stuff
-	public boolean visible = true, minimized;
+	public boolean visible = true, minimized, selected;
 	public int tempheight;
 	
 	public TurboList(String id){
@@ -33,6 +33,11 @@ public class TurboList extends ArrayList<PolygonWrapper> {
 	@Override
 	public PolygonWrapper get(int id){
 		return id >= size() || id < 0 ? null : super.get(id);
+	}
+	
+	@Override
+	public boolean add(PolygonWrapper poly){
+		poly.setList(this); return super.add(poly);
 	}
 
 }

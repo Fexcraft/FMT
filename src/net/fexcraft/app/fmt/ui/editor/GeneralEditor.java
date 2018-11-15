@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.ui.editor;
 
+import java.util.ArrayList;
+
 import org.newdawn.slick.Color;
 
 import net.fexcraft.app.fmt.FMTB;
@@ -55,7 +57,7 @@ public class GeneralEditor extends Editor {
 		this.elements.put("group-", new Button(this, "group-", 12, 26, 4, 330, rgb){
 			@Override
 			protected boolean processButtonClick(int x, int y, boolean left){
-				FMTB.MODEL.changeGroupIndex(-1); return true;
+				FMTB.MODEL.changeGroupOfSelected(-1); return true;
 			}
 		}.setText(" < ", true).setTexture("ui/background").setLevel(-1));
 		//
@@ -63,7 +65,7 @@ public class GeneralEditor extends Editor {
 		this.elements.put("group+", new Button(this, "group+", 12, 26, 282, 330, rgb){
 			@Override
 			protected boolean processButtonClick(int x, int y, boolean left){
-				FMTB.MODEL.changeGroupIndex(+1); return true;
+				FMTB.MODEL.changeGroupOfSelected(+1); return true;
 			}
 		}.setText(" > ", true).setTexture("ui/background").setLevel(-1));
 		//
@@ -73,12 +75,13 @@ public class GeneralEditor extends Editor {
 				if(FMTB.MODEL.getSelected().isEmpty()) return;
 				PolygonWrapper wrapper;
 				if(FMTB.MODEL.getSelected().size() == 1){
-					wrapper = FMTB.MODEL.getSelectedPolygon(0);
+					wrapper = FMTB.MODEL.getFirstSelection();
 					if(wrapper != null) wrapper.name = this.getTextValue();
 				}
 				else{
-					for(int i = 0; i < FMTB.MODEL.getSelected().size(); i++){
-						wrapper = FMTB.MODEL.getSelectedPolygon(i);
+					ArrayList<PolygonWrapper> polis = FMTB.MODEL.getSelected();
+					for(int i = 0; i < polis.size(); i++){
+						wrapper = polis.get(i);
 						if(wrapper != null){
 							String str = this.getText().contains("_") ? "_" + i : this.getText().contains("-") ? "-" + i :
 								this.getText().contains(" ") ? " " + i : this.getText().contains(".") ? "." + i : i + "";
