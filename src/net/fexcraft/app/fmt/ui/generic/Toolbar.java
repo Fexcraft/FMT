@@ -144,15 +144,13 @@ public class Toolbar extends Element {
 									this.elements.put("create_gif", new Button(this, "create_gif", 100, 26, 2, 58, subhover){
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
-											//TODO
-											return true;
+											ImageHelper.createGif(false); return true;
 										}
 									}.setText("Create Gif", false));
 									//
 									this.elements.put("screenshot", new Button(this, "screenshot", 100, 26, 2, 86, subhover){
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
-											//TODO delay this so it takes the screenshot after the menu has closed.
 											ImageHelper.takeScreenshot(true); return true;
 										}
 									}.setText("Screenshot", false));

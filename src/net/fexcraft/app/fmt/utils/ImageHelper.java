@@ -5,13 +5,23 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Iterator;
 
+import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageTypeSpecifier;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.metadata.IIOMetadata;
+import javax.imageio.metadata.IIOMetadataNode;
+import javax.imageio.stream.FileImageOutputStream;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
+import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.generic.DialogBox;
 import net.fexcraft.lib.common.math.Time;
 import net.fexcraft.lib.common.utils.Print;
 
@@ -23,11 +33,115 @@ public class ImageHelper {
 	public static boolean HASTASK;
 	private static int tasktype = -1;
 	private static int stage;
+	//
+	//partially based on https://stackoverflow.com/questions/16649620
+	private static ImageWriter gifwriter;
+	private static ImageWriteParam param;
+	private static IIOMetadata meta;
+	private static ImageTypeSpecifier imgtypespec = ImageTypeSpecifier.createFromBufferedImageType(BufferedImage.TYPE_INT_ARGB);
+	private static FileImageOutputStream currgifout;
+	private static File currgif;
+	private static final int ms = 100;
+	static {
+		Iterator<ImageWriter> iterator = ImageIO.getImageWritersBySuffix("gif");
+		if(iterator.hasNext()){ gifwriter = iterator.next(); }
+		if(gifwriter != null) param = gifwriter.getDefaultWriteParam();
+	}
+	
+	public static final void takeScreenshot(boolean open){
+		if(tasktype <= -1){ tasktype = open ? 1 : 0; HASTASK = true; return; }
+		if(stage < 20){ stage++; return; }
+		//
+		BufferedImage image = displayToImage();
+		tasktype = -1; HASTASK = false; stage = 0;
+		try{
+			File file = new File("./screenshots/" + Backups.getSimpleDateFormat(true).format(Time.getDate()) + ".png");
+			if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
+			ImageIO.write(image, "png", file);
+			if(open){
+				try{ Desktop.getDesktop().open(file); } catch(IOException e){ Desktop.getDesktop().open(file.getParentFile()); }
+			}
+		}
+		catch(IOException e){ e.printStackTrace(); }
+	}
+	
+	public static final void createGif(boolean loopgif){
+		if(tasktype <= -1){ tasktype = 2; HASTASK = true; return; }
+		if(meta == null){
+			try{
+				meta = gifwriter.getDefaultImageMetadata(imgtypespec, param);
+				String name = meta.getNativeMetadataFormatName();
+				IIOMetadataNode root = (IIOMetadataNode)meta.getAsTree(name);
+				IIOMetadataNode graphicsControlExtensionNode = getNode(root, "GraphicControlExtension");
+				graphicsControlExtensionNode.setAttribute("disposalMethod", "none");
+				graphicsControlExtensionNode.setAttribute("userInputFlag", "FALSE");
+				graphicsControlExtensionNode.setAttribute("transparentColorFlag", "FALSE");
+				graphicsControlExtensionNode.setAttribute("delayTime", Integer.toString(ms / 10));
+				graphicsControlExtensionNode.setAttribute("transparentColorIndex", "0");
+				IIOMetadataNode comment = getNode(root, "CommentExtensions");
+				comment.setAttribute("CommentExtension", "Created via FMT \u00a9 2018 Fexcraft.net");//TODO add current year automatically
+				IIOMetadataNode extension = getNode(root, "ApplicationExtensions");
+				IIOMetadataNode child = new IIOMetadataNode("ApplicationExtension");
+				child.setAttribute("applicationID", "NETSCAPE"); child.setAttribute("authenticationCode", "2.0");
+				int loop = loopgif ? 0 : 1; child.setUserObject(new byte[] { 0x1, (byte)(loop & 0xFF), (byte)((loop >> 8) & 0xFF) });
+				extension.appendChild(child); meta.setFromTree(name, root);
+				if(currgif == null){
+					currgif = new File("./screenshots/" + Backups.getSimpleDateFormat(true).format(Time.getDate()) + ".gif");
+				}
+				gifwriter.setOutput(currgifout = new FileImageOutputStream(currgif));
+				gifwriter.prepareWriteSequence(null);
+			}
+			catch(Exception e){
+				e.printStackTrace();
+				Print.console("Failed to setup GIF creation, aborting operation.");
+				meta = null; currgif = null; tasktype = -1; HASTASK = false;
+			}
+		}
+		if(stage < 20){ stage++; return; } //let's make sure all UI rendering is cleared;
+		if(stage >= 20 && stage < 56){ stage++;
+			try{ gifwriter.writeToSequence(new IIOImage(displayToImage(), null, meta), param); }
+			catch(IOException e){
+				Print.console("Failed to write next GIF sequence, aborting operation.");
+				meta = null; currgif = null; tasktype = -1; HASTASK = false;
+				e.printStackTrace();
+			}
+		}
+		else{
+			try{
+				gifwriter.endWriteSequence(); currgifout.close();
+				
+			} catch(IOException e){ e.printStackTrace(); }
+        	FMTB.showDialogbox("Gif Created.", "", "OK", "Open Fl.", DialogBox.NOTHING, () -> {
+        		try{ Desktop.getDesktop().open(new File("./screenshots")); } catch(IOException e){
+        			e.printStackTrace();
+        		}
+        	});
+			meta = null; currgif = null; tasktype = -1; HASTASK = false;
+		}
+	}
+	
+	private static IIOMetadataNode getNode(IIOMetadataNode root, String name){
+		for(int i = 0; i < root.getLength(); i++) {
+			if(root.item(i).getNodeName().equalsIgnoreCase(name)){
+				return ((IIOMetadataNode)root.item(i));
+			}
+		}
+		return (IIOMetadataNode)root.appendChild(new IIOMetadataNode(name));
+	}
+
+	public static void doTask(){
+		if(tasktype == 0 || tasktype == 1){
+			takeScreenshot(tasktype == 1);
+		}
+		else if(tasktype == 2){ createGif(true); }
+		else{
+			HASTASK = false;
+			return;//TODO gifs
+		}
+	}
 	
 	/** see http://wiki.lwjgl.org/wiki/Taking_Screen_Shots.html */
-	public static final void takeScreenshot(boolean open){
-		if(tasktype <= -1){ Print.console("setup"); tasktype = open ? 1 : 0; HASTASK = true; return; }
-		if(stage < 20){ stage++; return;}
+	private static BufferedImage displayToImage(){
 		GL11.glReadBuffer(GL11.GL_FRONT);
 		int width = Display.getDisplayMode().getWidth(), height = Display.getDisplayMode().getHeight();
 		int bpp = 4; // Assuming a 32-bit display with a byte each for red, green, blue, and alpha.
@@ -42,30 +156,11 @@ public class ImageHelper {
 		        image.setRGB(x, height - (y + 1), (0xFF << 24) | (r << 16) | (g << 8) | b);
 		    }
 		}
-		//
-		tasktype = -1; HASTASK = false; stage = 0;
-		try{
-			File file = new File("./screenshots/" + Backups.getSimpleDateFormat(true).format(Time.getDate()) + ".png");
-			if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
-			ImageIO.write(image, "png", file);
-			if(open){
-				try{ Desktop.getDesktop().open(file); } catch(IOException e){ Desktop.getDesktop().open(file.getParentFile()); }
-			}
-		}
-		catch(IOException e){ e.printStackTrace(); }
+		return image;
 	}
 
-	public static void doTask(){
-		Print.console("pre " + tasktype + " " + HASTASK);
-		if(tasktype == 0 || tasktype == 1){
-			Print.console("passpass");
-			takeScreenshot(tasktype == 1);
-		}
-		else{
-			Print.console("nonpass");
-			HASTASK = false;
-			return;//TODO gifs
-		}
-	}
+	public static int getTaskId(){ return tasktype; }
+
+	public static int getStage(){ return stage; }
 
 }

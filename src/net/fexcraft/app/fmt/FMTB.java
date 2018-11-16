@@ -195,6 +195,9 @@ public class FMTB implements FMTGLProcess {
         GL11.glPushMatrix();
         //GL11.glEnable(GL11.GL_BLEND); GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         RGB.WHITE.glColorApply();
+        if(ImageHelper.HASTASK && ImageHelper.getTaskId() == 2){
+        	GL11.glRotatef((ImageHelper.getStage() - 20) * 10, 0, 1, 0);
+        }
         if(Settings.floor()){
             TextureManager.bindTexture("floor");
             GL11.glRotatef(-90, 0, 1, 0);
