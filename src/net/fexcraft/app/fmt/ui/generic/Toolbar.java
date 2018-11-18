@@ -42,7 +42,7 @@ public class Toolbar extends Element {
 				protected boolean processButtonClick(int x, int y, boolean left){
 					if(left){
 						switch(this.id){
-							case "exit":{ FMTB.get().close(); return true; }
+							case "exit":{ SaveLoad.checkIfShouldSave(true); return true; }
 							case "camera":{ Mouse.setGrabbed(true); return true; }
 							case "shapelist":{ RightTree.toggle("modeltree", true); return true; }
 							case "shapeditor":{ Editor.show("general_editor"); return true; }
@@ -100,7 +100,7 @@ public class Toolbar extends Element {
 										}
 									}.setText("Import <<", false));
 									this.elements.put("exit", new Button(this, "exit", 100, 26, 2, 170, subhover){
-										@Override protected boolean processButtonClick(int x, int y, boolean left){ FMTB.get().close(); return true; }
+										@Override protected boolean processButtonClick(int x, int y, boolean left){ SaveLoad.checkIfShouldSave(true); return true; }
 									}.setText("Exit", false));
 								}
 							});

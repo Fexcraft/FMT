@@ -40,8 +40,8 @@ public class SessionHandler {
 		JsonUtil.write(new File("./auth.net"), obj);
 	}
 	
-	public static void checkIfLoggedIn(boolean retry){
-		Print.console("Checking login status.");
+	public static void checkIfLoggedIn(boolean retry, boolean first){
+		Print.console("Checking login status."); if(first) load();
 		JsonObject obj = HttpUtil.request("http://fexcraft.net/session/api.jsp", "r=status&nossl", getCookieArr());
 		if(obj != null && obj.has("success")){
 			//Print.console(obj.toString());
@@ -55,8 +55,8 @@ public class SessionHandler {
 			Print.console("Username updated to: " + username);
 		}
 		else if(retry){
-			load(); Print.console("Trying to re-login...");
-			if(tryLogin(false)){ checkIfLoggedIn(false); }
+			if(!first) load(); Print.console("Trying to re-login...");
+			if(tryLogin(false)){ checkIfLoggedIn(false, false); }
 			if(!loggedin){
 				Print.console("Relogin seems to have failed.");
 				userid = -1; username = "Guest";
@@ -81,7 +81,7 @@ public class SessionHandler {
 			if(show){
 				FMTB.showDialogbox(loggedin ? "Logged in!" : obj.has("status") ? obj.get("status").getAsString() : "No Status MSG.",
 					"api:success=" + loggedin, "ok!", "retry", DialogBox.NOTHING, () -> {
-						SessionHandler.checkIfLoggedIn(true);
+						SessionHandler.checkIfLoggedIn(true, false);
 					}
 				);
 			}

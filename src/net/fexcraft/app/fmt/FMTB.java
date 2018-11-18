@@ -1,11 +1,14 @@
 package net.fexcraft.app.fmt;
 
+import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -20,6 +23,8 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
+
+import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.porters.PorterManager;
@@ -48,6 +53,7 @@ import net.fexcraft.app.fmt.utils.TextureUpdate;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Time;
+import net.fexcraft.lib.common.utils.HttpUtil;
 import net.fexcraft.lib.common.utils.Print;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
@@ -59,7 +65,7 @@ import net.fexcraft.lib.tmt.ModelRendererTurbo;
 public class FMTB implements FMTGLProcess {
 	
 	public static final String deftitle = "Fexcraft Modelling Toolbox - %s";
-	public static final String version = "1.0.0-test";
+	public static String version = "1.0.0-test";
 	//
 	private static String title;
 	private boolean close;
@@ -150,7 +156,7 @@ public class FMTB implements FMTGLProcess {
 		setupDisplay(); initOpenGL(); ggr = new GGR(this, 0, 4, 4); ggr.rotation.xCoord = 45;
 		PorterManager.load(); HelperCollector.reload(); Display.setResizable(true); UI = new UserInterface(this);
 		//(receiver = new Receiver()).start();
-		Settings.load(); SessionHandler.checkIfLoggedIn(true);
+		Settings.load(); SessionHandler.checkIfLoggedIn(true, true); checkForUpdates();
 		//
 		LocalDateTime midnight = LocalDateTime.of(LocalDate.now(ZoneOffset.systemDefault()), LocalTime.MIDNIGHT);
 		long mid = midnight.toInstant(ZoneOffset.UTC).toEpochMilli(); long date = Time.getDate(); while((mid += Time.MIN_MS * 5) < date);
@@ -268,11 +274,8 @@ public class FMTB implements FMTGLProcess {
 	public static final <T> T print(T obj){
 		System.out.print(String.format("[ %s ]\n", obj)); return obj;
 	}*/
-
-	public void close(){
-		SaveLoad.checkIfShouldSave(true);
-	}
 	
+	/** use SaveLoad.checkIfShouldSave(true) first! */
 	public void close(boolean bool){
 		close = bool;
 	}
@@ -320,6 +323,30 @@ public class FMTB implements FMTGLProcess {
 	@Override
 	public void reset(){
 		UserInterface.DIALOGBOX.reset(); UserInterface.FILECHOOSER.reset(); TextField.deselectAll();
+	}
+
+	private void checkForUpdates(){
+		new Thread(){
+			@Override
+			public void run(){
+				JsonObject obj = HttpUtil.request("http://fexcraft.net/minecraft/fcl/request", "mode=requestdata&modid=fmt");
+				if(obj == null || !obj.has("latest_version")){
+					Print.console("Couldn't fetch latest version.");
+					Print.console(obj == null ? ">> no version response received" : obj.toString());
+					return;
+				}
+				String newver = obj.get("latest_version").getAsString(); boolean bool = version.equals(newver);
+				UserInterface.DIALOGBOX.show(new String[]{ bool ? "Welcome to FMT!" : "New version available!", bool ? "<version:" + version + ">" : newver + " >> " + version, "ok", bool ? "exit" : "update" }, DialogBox.NOTHING, () -> {
+					if(bool){
+						SaveLoad.checkIfShouldSave(true);
+					}
+					else{
+						try{ Desktop.getDesktop().browse(new URL("http://fexcraft.net/app/fmt").toURI()); }
+						catch(IOException | URISyntaxException e){ e.printStackTrace(); }
+					}
+				});
+			}
+		}.start();
 	}
 
 }

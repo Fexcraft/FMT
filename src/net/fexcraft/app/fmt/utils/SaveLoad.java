@@ -126,6 +126,9 @@ public class SaveLoad {
 				}
 			});
 		}
+		else if(shouldclose){
+			FMTB.get().close(true);
+		}
 	}
 	
 	@Deprecated

@@ -5,7 +5,6 @@ package net.fexcraft.app.fmt.ui.generic;
 
 import org.newdawn.slick.Color;
 
-import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.utils.TextureManager;
@@ -32,7 +31,6 @@ public class DialogBox extends Element {
 		this.elements.put("negative", button1 = new Button(this, "negative", 100, 30, 0, 0, new RGB(214, 79, 79)){
 			@Override protected boolean processButtonClick(int x, int y, boolean left){ return onClick(false); }
 		});
-		this.show(new String[]{ "Welcome to FMT!", "<version:" + FMTB.version + ">", "ok", "exit" }, NOTHING, () -> FMTB.get().close());
 	}
 	
 	@Override
@@ -73,7 +71,8 @@ public class DialogBox extends Element {
 	}
 
 	private boolean onClick(boolean positive){
-		this.visible = false; (positive ? this.positive : this.negative).run(); this.reset(); return visible;
+		Runnable run = positive ? this.positive : this.negative;
+		this.reset(); run.run(); return visible;
 	}
 	
 	public void reset(){
