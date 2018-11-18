@@ -16,6 +16,7 @@ import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.HelperCollector;
 import net.fexcraft.app.fmt.utils.ImageHelper;
 import net.fexcraft.app.fmt.utils.SaveLoad;
+import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
@@ -434,8 +435,7 @@ public class Toolbar extends Element {
 									this.elements.put("session", new Button(this, "session", 100, 26, 2, 30, subhover){
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
-											//TODO
-											return true;
+											SessionHandler.tryLogin(true); return true;
 										}
 									}.setText("Log In/Out", false));
 									//

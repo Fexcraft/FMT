@@ -41,6 +41,7 @@ import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.HelperCollector;
 import net.fexcraft.app.fmt.utils.ImageHelper;
 import net.fexcraft.app.fmt.utils.SaveLoad;
+import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureUpdate;
@@ -149,7 +150,7 @@ public class FMTB implements FMTGLProcess {
 		setupDisplay(); initOpenGL(); ggr = new GGR(this, 0, 4, 4); ggr.rotation.xCoord = 45;
 		PorterManager.load(); HelperCollector.reload(); Display.setResizable(true); UI = new UserInterface(this);
 		//(receiver = new Receiver()).start();
-		Settings.load();
+		Settings.load(); SessionHandler.checkIfLoggedIn(true);
 		//
 		LocalDateTime midnight = LocalDateTime.of(LocalDate.now(ZoneOffset.systemDefault()), LocalTime.MIDNIGHT);
 		long mid = midnight.toInstant(ZoneOffset.UTC).toEpochMilli(); long date = Time.getDate(); while((mid += Time.MIN_MS * 5) < date);
@@ -165,7 +166,7 @@ public class FMTB implements FMTGLProcess {
 			Display.update(); Display.sync(60);
 			//Thread.sleep(50);
 		}
-		Display.destroy(); Settings.save(); System.exit(0);
+		Display.destroy(); Settings.save(); SessionHandler.save(); System.exit(0);
 	}
 
 	private void loop(){

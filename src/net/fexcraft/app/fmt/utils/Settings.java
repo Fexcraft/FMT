@@ -91,7 +91,7 @@ public class Settings {
 		if(values.size() > 0) values.clear();
 		JsonObject obj = JsonUtil.get(new File("./settings.json"));
 		if(obj.has("settings")){
-			obj.entrySet().forEach((entry) -> {
+			obj.get("settings").getAsJsonObject().entrySet().forEach((entry) -> {
 				JsonElement elm = entry.getValue();
 				if(elm.isJsonObject()){
 					values.put(entry.getKey(), elm.getAsJsonObject());
