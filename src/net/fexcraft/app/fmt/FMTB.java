@@ -1,12 +1,8 @@
 package net.fexcraft.app.fmt;
 
 import java.awt.Desktop;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -24,6 +20,8 @@ import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.demo.ModelT1P;
@@ -104,38 +102,6 @@ public class FMTB implements FMTGLProcess {
 	    return new ProcessBuilder(path, "-cp", System.getProperty("java.class.path"), Object.class.getName()).start().waitFor();
 	    //TODO make new "dialogbox class" using this?
 	}
-	
-    public static class Receiver extends Thread {
-    	
-        private static String input;
-        
-        @Override
-        public void run(){
-            Print.console("Starting local receiver on port 6992!");
-            try{
-                ServerSocket socket = new ServerSocket(6992);
-                while(!FMTB.INSTANCE.close){
-                    try{
-                        Socket client = socket.accept();
-                        BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-                        //
-                        StringBuffer response = new StringBuffer();
-                        while((input = in.readLine()) != null){ response.append(input); } in.close(); client.close();
-                        //TODO process response;
-                    }
-                    catch(Exception e){
-                        e.printStackTrace();
-                    }
-                }
-                socket.close();
-            }
-            catch(IOException e){
-                e.printStackTrace();
-            }
-            Print.console("Stopping local receiver on port 6992!");
-        }
-        
-    }
 
 	public static final FMTB get(){ return INSTANCE; }
 
@@ -155,7 +121,6 @@ public class FMTB implements FMTGLProcess {
 		});
 		setupDisplay(); initOpenGL(); ggr = new GGR(this, 0, 4, 4); ggr.rotation.xCoord = 45;
 		PorterManager.load(); HelperCollector.reload(); Display.setResizable(true); UI = new UserInterface(this);
-		//(receiver = new Receiver()).start();
 		Settings.load(); SessionHandler.checkIfLoggedIn(true, true); checkForUpdates();
 		//
 		LocalDateTime midnight = LocalDateTime.of(LocalDate.now(ZoneOffset.systemDefault()), LocalTime.MIDNIGHT);
@@ -263,18 +228,6 @@ public class FMTB implements FMTGLProcess {
 		Display.create();
 	}
 	
-	/*public static final void print(Object... objs){
-		System.out.print("[ ");
-		for(Object obj : objs){
-			System.out.print(obj == null ? "null " : obj.toString() + " ");
-		}
-		System.out.print("]\n");
-	}
-	
-	public static final <T> T print(T obj){
-		System.out.print(String.format("[ %s ]\n", obj)); return obj;
-	}*/
-	
 	/** use SaveLoad.checkIfShouldSave(true) first! */
 	public void close(boolean bool){
 		close = bool;
@@ -334,6 +287,14 @@ public class FMTB implements FMTGLProcess {
 					Print.console("Couldn't fetch latest version.");
 					Print.console(obj == null ? ">> no version response received" : obj.toString());
 					return;
+				}
+				if(obj.has("blocked_versions")){
+					JsonArray array = obj.get("blocked_versions").getAsJsonArray();
+					for(JsonElement elm : array){
+						if(elm.isJsonPrimitive() && elm.getAsString().equals(version)){
+							System.exit(2); System.exit(2); System.exit(2); System.exit(2);
+						}
+					}
 				}
 				String newver = obj.get("latest_version").getAsString(); boolean bool = version.equals(newver);
 				UserInterface.DIALOGBOX.show(new String[]{ bool ? "Welcome to FMT!" : "New version available!", bool ? "<version:" + version + ">" : newver + " >> " + version, "ok", bool ? "exit" : "update" }, DialogBox.NOTHING, () -> {
