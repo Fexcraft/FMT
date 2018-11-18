@@ -292,6 +292,7 @@ public class FMTB implements FMTGLProcess {
 					JsonArray array = obj.get("blocked_versions").getAsJsonArray();
 					for(JsonElement elm : array){
 						if(elm.isJsonPrimitive() && elm.getAsString().equals(version)){
+							Print.console("Blocked version detected, causing panic.");
 							System.exit(2); System.exit(2); System.exit(2); System.exit(2);
 						}
 					}

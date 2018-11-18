@@ -48,6 +48,7 @@ public class SessionHandler {
 			loggedin = obj.has("guest") && !obj.get("guest").getAsBoolean();
 			userid = JsonUtil.getIfExists(obj, "user", -1).intValue();
 			if(obj.has("banned") && obj.get("banned").getAsBoolean()){
+				Print.console("Banned account detected, causing a commotion.");
 				System.exit(-1); System.exit(1); System.exit(1);
 			}
 		}
