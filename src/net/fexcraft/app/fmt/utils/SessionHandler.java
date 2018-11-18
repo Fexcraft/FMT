@@ -44,7 +44,7 @@ public class SessionHandler {
 		Print.console("Checking login status.");
 		JsonObject obj = HttpUtil.request("http://fexcraft.net/session/api.jsp", "r=status&nossl", getCookieArr());
 		if(obj != null && obj.has("success")){
-			Print.console(obj.toString());
+			//Print.console(obj.toString());
 			loggedin = obj.has("guest") && !obj.get("guest").getAsBoolean();
 			userid = JsonUtil.getIfExists(obj, "user", -1).intValue();
 		}
@@ -54,7 +54,7 @@ public class SessionHandler {
 			if(obj.has("name")) username = obj.get("name").getAsString();
 			Print.console("Username updated to: " + username);
 		}
-		if(retry){
+		else if(retry){
 			load(); Print.console("Trying to re-login...");
 			if(tryLogin(false)){ checkIfLoggedIn(false); }
 			if(!loggedin){
@@ -85,9 +85,7 @@ public class SessionHandler {
 					}
 				);
 			}
-			else{
-				Print.console(obj.toString());
-			}
+			//else{ Print.console(obj.toString()); }
 			return true;
 		}
 		catch(Exception e){
