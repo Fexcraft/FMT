@@ -42,9 +42,38 @@ public class PreviewEditor extends Editor {
 			this.elements.put("rot" + xyz[i] + "+", new Button(this, "rot" + xyz[i] + "+", 12, 26, 86 + (98 * i), 80, rgb){
 				@Override protected boolean processButtonClick(int x, int y, boolean left){ return updateRot(j, true); }
 			}.setText(" > ", true).setTexture("ui/background").setLevel(-1));
+			//
+			this.elements.put("scale" + xyz[i] + "-", new Button(this, "scale" + xyz[i] + "-", 12, 26, 4 + (98 * i), 130, rgb){
+				@Override protected boolean processButtonClick(int x, int y, boolean left){ return updateScale(j, false); }
+			}.setText(" < ", true).setTexture("ui/background").setLevel(-1));
+			this.elements.put("scale" + xyz[i], new TextField(this, "scale" + xyz[i], 70, 16 + (98 * i), 130){
+				@Override public void updateNumberField(){ updateRot(this, j, null); }
+				@Override protected boolean processScrollWheel(int wheel){ return updateScale(j, wheel > 0); }
+			}.setAsNumberfield(0, 255, true).setLevel(-1));
+			this.elements.put("scale" + xyz[i] + "+", new Button(this, "scale" + xyz[i] + "+", 12, 26, 86 + (98 * i), 130, rgb){
+				@Override protected boolean processButtonClick(int x, int y, boolean left){ return updateScale(j, true); }
+			}.setText(" > ", true).setTexture("ui/background").setLevel(-1));
 		}
 		//
-		this.addMultiplicator(130);
+		this.addMultiplicator(180);
+	}
+	
+	protected boolean updateScale(int axis, Boolean positive){
+		return updateScale(null, axis, positive);
+	}
+	
+	protected boolean updateScale(TextField field, int axis, Boolean positive){
+		GroupCompound compound = HelperTree.getSelected(); if(compound == null) return true;
+		if(field == null) field = this.getField("scale" + xyz[axis]);
+		if(compound.scale == null) compound.scale = new Vec3f(1, 1, 1);
+		float am = positive == null ? field.getFloatValue() : positive ? FMTB.MODEL.rate : -FMTB.MODEL.rate;
+		if(am == 0f) return true;
+		switch(axis){
+			case 0:{ compound.scale.xCoord += am / 16; field.applyChange(compound.scale.xCoord * 16); break; }
+			case 1:{ compound.scale.yCoord += am / 16; field.applyChange(compound.scale.yCoord * 16); break; }
+			case 2:{ compound.scale.zCoord += am / 16; field.applyChange(compound.scale.zCoord * 16); break; }
+		}
+		return true;
 	}
 	
 	protected boolean updatePos(int axis, Boolean positive){
@@ -58,9 +87,9 @@ public class PreviewEditor extends Editor {
 		float am = positive == null ? field.getFloatValue() : positive ? FMTB.MODEL.rate : -FMTB.MODEL.rate;
 		if(am == 0f) return true;
 		switch(axis){
-			case 0:{ compound.pos.xCoord += am / 16; field.applyChange(compound.pos.xCoord * 16); break; }
-			case 1:{ compound.pos.yCoord += am / 16; field.applyChange(compound.pos.yCoord * 16); break; }
-			case 2:{ compound.pos.zCoord += am / 16; field.applyChange(compound.pos.zCoord * 16); break; }
+			case 0:{ compound.pos.xCoord += am; field.applyChange(compound.pos.xCoord); break; }
+			case 1:{ compound.pos.yCoord += am; field.applyChange(compound.pos.yCoord); break; }
+			case 2:{ compound.pos.zCoord += am; field.applyChange(compound.pos.zCoord); break; }
 		}
 		return true;
 	}
@@ -105,7 +134,8 @@ public class PreviewEditor extends Editor {
 		super.renderSelf(rw, rh); TextureManager.unbind();
 		font.drawString(4, 40, "Position Offset", Color.black);
 		font.drawString(4, 90, "Rotation Offset", Color.black);
-		font.drawString(4, 140, "Multiplicator/Rate", Color.black);
+		font.drawString(4, 140, "Scale", Color.black);
+		font.drawString(4, 190, "Multiplicator/Rate", Color.black);
 		RGB.glColorReset();
 	}
 

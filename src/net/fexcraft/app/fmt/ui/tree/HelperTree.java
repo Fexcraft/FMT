@@ -88,6 +88,9 @@ public class HelperTree extends RightTree {
 						editor.getField("rotx").applyChange(0);
 						editor.getField("roty").applyChange(0);
 						editor.getField("rotz").applyChange(0);
+						editor.getField("scalex").applyChange(0);
+						editor.getField("scaley").applyChange(0);
+						editor.getField("scalez").applyChange(0);
 					}
 					else{
 						editor.getField("posx").applyChange(model.pos == null ? 0 : model.pos.xCoord * 16);
@@ -96,6 +99,9 @@ public class HelperTree extends RightTree {
 						editor.getField("rotx").applyChange(model.rot == null ? 0 : model.rot.xCoord);
 						editor.getField("roty").applyChange(model.rot == null ? 0 : model.rot.yCoord);
 						editor.getField("rotz").applyChange(model.rot == null ? 0 : model.rot.zCoord);
+						editor.getField("scalex").applyChange(model.scale == null ? 1 : model.scale.xCoord);
+						editor.getField("scaley").applyChange(model.scale == null ? 1 : model.scale.yCoord);
+						editor.getField("scalez").applyChange(model.scale == null ? 1 : model.scale.zCoord);
 					}
 					editor.getField("multiplicator").applyChange(FMTB.MODEL.rate);
 				}

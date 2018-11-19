@@ -25,7 +25,7 @@ public class GroupCompound {
 	public String texture;
 	//
 	public boolean visible = true, minimized;
-	public Vec3f pos, rot;
+	public Vec3f pos, rot, scale;
 	
 	public GroupCompound(){
 		//compound.put("body", new TurboList("body"));
@@ -47,17 +47,24 @@ public class GroupCompound {
 			GL11.glRotatef(rot.yCoord, 0, 1, 0);
 			GL11.glRotatef(rot.zCoord, 0, 0, 1);
 		}
+		if(scale != null){
+			GL11.glPushMatrix();
+			GL11.glScalef(scale.xCoord, scale.yCoord, scale.zCoord);
+		}
 		TextureManager.bindTexture(texture == null ? "blank" : texture);
 		compound.values().forEach(elm -> elm.render());
 		compound.values().forEach(elm -> elm.renderLines());
-		if(pos != null){
-			GL11.glTranslatef(-pos.xCoord, -pos.yCoord, -pos.zCoord);
+		if(scale != null){
+			GL11.glPopMatrix();
 		}
 		if(rot != null){
 			GL11.glRotatef(-rot.zCoord, 0, 0, 1);
 			GL11.glRotatef(-rot.yCoord, 0, 1, 0);
 			GL11.glRotatef(-rot.xCoord, 1, 0, 0);
 			GL11.glPopMatrix();
+		}
+		if(pos != null){
+			GL11.glTranslatef(-pos.xCoord, -pos.yCoord, -pos.zCoord);
 		}
 	}
 	
