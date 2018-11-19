@@ -20,8 +20,6 @@ import javax.swing.filechooser.FileFilter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.JsonToTMT;
 import net.fexcraft.app.fmt.porters.PorterManager;
@@ -255,10 +253,13 @@ public class SaveLoad {
 		obj.addProperty("texture_size_y", compound.textureY);
 		JsonArray creators = new JsonArray();
 		if(compound.creators.isEmpty()){
-			creators.add(new JsonPrimitive("//TODO"));//TODO
+			creators.add(SessionHandler.isLoggedIn() ? SessionHandler.getUserName() : "OfflineUser");
 		}
 		else{
-			for(String str : compound.creators) creators.add(new JsonPrimitive(str));
+			for(String str : compound.creators) creators.add(str);
+			if(SessionHandler.isLoggedIn() && !compound.creators.contains(SessionHandler.getUserName())){
+				creators.add(SessionHandler.getUserName());
+			}
 		}
 		obj.add("creators", creators);
 		obj.addProperty("type", "jtmt");
