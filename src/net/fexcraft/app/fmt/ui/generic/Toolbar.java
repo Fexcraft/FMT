@@ -225,6 +225,13 @@ public class Toolbar extends Element {
 											Editor.toggle("group_editor"); return true;
 										}
 									}.setText("Group", false));
+									//
+									this.elements.put("model", new Button(this, "model", 100, 26, 2, 114, subhover){
+										@Override
+										protected boolean processButtonClick(int x, int y, boolean left){
+											Editor.toggle("model_editor"); return true;
+										}
+									}.setText("Model", false));
 								}
 							});
 							break;

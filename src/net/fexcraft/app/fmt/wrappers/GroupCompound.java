@@ -330,6 +330,13 @@ public class GroupCompound {
 				editor.getField("groupname").setText(list.id, true);
 			}
 			editor.getField("multiplicator").applyChange(rate);
+			//
+			editor = (Editor)FMTB.get().UI.getElement("model_editor");
+			editor.getField("posx").applyChange(pos == null ? 0 : pos.xCoord);
+			editor.getField("posy").applyChange(pos == null ? 0 : pos.yCoord);
+			editor.getField("posz").applyChange(pos == null ? 0 : pos.zCoord);
+			editor.getField("modelname").setText(this.name, true);
+			editor.getField("multiplicator").applyChange(rate);
 		}
 		catch(Exception e){
 			e.printStackTrace();

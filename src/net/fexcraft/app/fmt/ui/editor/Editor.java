@@ -12,6 +12,7 @@ import net.fexcraft.app.fmt.ui.generic.TextField;
 public class Editor extends Element {
 	
 	private static final ArrayList<Editor> editors = new ArrayList<Editor>();
+	public static final String[] xyz = new String[]{ "x", "y", "z" };
 
 	public Editor(String id){
 		super(null, id); this.width = 308; z = -1;
