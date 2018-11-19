@@ -114,9 +114,9 @@ public abstract class PolygonWrapper {
 		if(off.yCoord != 0) obj.addProperty("off_y", off.yCoord);
 		if(off.zCoord != 0) obj.addProperty("off_z", off.zCoord);
 		//
-		if(rot.xCoord != 0) obj.addProperty("rot_x", rot.xCoord);
-		if(rot.yCoord != 0) obj.addProperty("rot_y", rot.yCoord);
-		if(rot.zCoord != 0) obj.addProperty("rot_z", rot.zCoord);
+		if(rot.xCoord != 0) obj.addProperty("rot_x", export ? Math.toRadians(rot.xCoord) : rot.xCoord);
+		if(rot.yCoord != 0) obj.addProperty("rot_y", export ? Math.toRadians(rot.yCoord) : rot.yCoord);
+		if(rot.zCoord != 0) obj.addProperty("rot_z", export ? Math.toRadians(rot.zCoord) : rot.zCoord);
 		if(mirror != false) obj.addProperty("mirror", true);
 		if(flip != false) obj.addProperty("flip", true);
 		//temporary data
@@ -157,7 +157,7 @@ public abstract class PolygonWrapper {
 				bool = this.setFloat(id, x, y, z, value); break;
 			}
 			case "rot":{
-				bool = this.setFloat(id, x, y, z, (float)Math.toRadians(value)); break;
+				bool = this.setFloat(id, x, y, z, value);break; //(float)Math.toRadians(value)); break;
 			}
 			case "cor0": case "cor1": case "cor2": case "cor3": case "cor4": case "cor5": case "cor6": case "cor7":{
 				if(this.getType().isShapebox()){
