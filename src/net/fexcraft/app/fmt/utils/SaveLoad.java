@@ -113,7 +113,7 @@ public class SaveLoad {
 						//TODO add cancel;
 					}
 					else{
-						saveModel(false); if(shouldclose){ FMTB.get().close(true); }
+						saveModel(false, shouldclose); if(shouldclose){ FMTB.get().close(true); }
 					}
 				}
 			}, new Runnable(){
@@ -201,7 +201,7 @@ public class SaveLoad {
 		FMTB.MODEL = new GroupCompound();
 	}
 
-	public static void saveModel(boolean bool){
+	public static void saveModel(boolean bool, boolean openfile){
 		if(bool || FMTB.MODEL.file == null){
 			FMTB.MODEL.file = getFile("Select save location.");
 		}
@@ -233,7 +233,7 @@ public class SaveLoad {
 	        }
 	        zipout.close(); fileout.close();
 	        Print.console("Saved model as FMTB Archive" + (arr.length > 1 ? " with texture." : "."));
-	        if(FMTB.MODEL.file.getParentFile() != null){
+	        if(openfile && FMTB.MODEL.file.getParentFile() != null){
 		        Desktop.getDesktop().open(FMTB.MODEL.file.getParentFile());
 	        }
 		}

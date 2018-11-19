@@ -75,14 +75,14 @@ public class Toolbar extends Element {
 									this.elements.put("save", new Button(this, "save", 100, 26, 2, 58, subhover){
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
-											SaveLoad.saveModel(false); return true;
+											SaveLoad.saveModel(false, false); return true;
 										}
 									}.setText("Save", false));
 									//
 									this.elements.put("save_as", new Button(this, "save_as", 100, 26, 2, 86, subhover){
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
-											SaveLoad.saveModel(true); return true;
+											SaveLoad.saveModel(true, false); return true;
 										}
 									}.setText("Save As..", false));
 									//

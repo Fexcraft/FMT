@@ -108,7 +108,7 @@ public class FVTMExporter extends InternalPorter {
 				if(wrapper.pos.xCoord != 0f || wrapper.pos.yCoord != 0f || wrapper.pos.zCoord != 0f ||
 					wrapper.rot.xCoord != 0f || wrapper.rot.yCoord != 0f || wrapper.rot.zCoord != 0f){
 					shape.append("\n" + tab3 + format(".setRotationPoint(%s, %s, %s)", wrapper.pos.xCoord, wrapper.pos.yCoord, wrapper.pos.zCoord));
-					shape.append(format(".setRotationAngle(%s, %s, %s)", wrapper.rot.xCoord, wrapper.rot.yCoord, wrapper.rot.zCoord));
+					shape.append(format(".setRotationAngle(%s, %s, %s)", Math.toRadians(wrapper.rot.xCoord), Math.toRadians(wrapper.rot.yCoord), Math.toRadians(wrapper.rot.zCoord)));
 					extended = true;
 				}
 				if(wrapper.mirror || wrapper.flip){
@@ -140,6 +140,10 @@ public class FVTMExporter extends InternalPorter {
 			return "Error:" + e.getMessage();
 		}
 		return "Success!";
+	}
+
+	private String format(String string, double r0, double r1, double r2){
+		return format(string, new float[]{ (float)r0, (float)r1, (float)r2});
 	}
 
 	private String format(String string, float... arr){
