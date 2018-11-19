@@ -6,14 +6,19 @@ import net.fexcraft.app.fmt.ui.generic.DialogBox;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.wrappers.*;
 import net.fexcraft.lib.common.math.Vec3f;
+import net.fexcraft.lib.common.utils.Print;
 import net.fexcraft.lib.common.utils.ZipUtil;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
+import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.Enumeration;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+
+import javax.imageio.ImageIO;
 
 /**
  * @author EternalBlueFlame, FEX___96
@@ -162,8 +167,26 @@ public class MTBImporter extends InternalPorter {
                 }
             }
             stream.close();
-            if(loadtex){ compound.setTexture("temp/" + compound.name);
-            	TextureManager.loadTextureFromZip(zip.getInputStream(zip.getEntry("Model.png")), "temp/" + compound.name, true);
+            if(loadtex){
+            	try{
+            		BufferedImage image = ImageIO.read(zip.getInputStream(zip.getEntry("Model.png")));
+            		boolean transparent = true; Color color = null;
+            		for(int x = 0; x < image.getWidth(); x++){
+            			for(int y = 0; y < image.getHeight(); y++){
+            				color = new Color(image.getRGB(x, y));
+            				if(color.getAlpha() > 0 && color.getRed() > 0 && color.getBlue() > 0 && color.getGreen() > 0){
+            					transparent = false; break;
+            				}
+            			}
+            		}
+            		if(!transparent){
+                    	compound.setTexture("temp/" + compound.name);
+                    	TextureManager.loadTextureFromZip(image, "temp/" + compound.name, true);
+            		}
+            	}
+            	catch(Exception e){
+            		e.printStackTrace(); Print.console("Could not load texture from MTB.");
+            	}
             }
             zip.close(); return compound;
         }
