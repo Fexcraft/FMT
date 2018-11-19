@@ -6,6 +6,7 @@ import org.newdawn.slick.Color;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.editor.Editor;
+import net.fexcraft.app.fmt.ui.generic.DialogBox;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
@@ -77,13 +78,16 @@ public class ModelTree extends RightTree {
 					trlist[j].visible = !trlist[j].visible; return true;
 				}
 				else if(mx >= x + width - 26 && mx < x + width -  6){
-					FMTB.MODEL.getCompound().remove(trlist[j].id); return true;
+					String id = trlist[j].id;
+					FMTB.showDialogbox("Remove this group?", id, "Yes", "No!", () -> {
+						FMTB.MODEL.getCompound().remove(id);
+					}, DialogBox.NOTHING);
+					return true;
 				}
 				else{
 					boolean bool = trlist[j].selected;
 					if(!GGR.isShiftDown()){ FMTB.MODEL.clearSelection(); }
-					trlist[j].selected = !bool;
-					FMTB.MODEL.updateFields();
+					trlist[j].selected = !bool; FMTB.MODEL.updateFields();
 				}
 				return false;
 			}
@@ -97,13 +101,16 @@ public class ModelTree extends RightTree {
 							trlist[j].get(l).visible = !trlist[j].get(l).visible; return true;
 						}
 						else if(mx >= x + width - 30 && mx < x + width - 10){
-							trlist[j].remove(l); return true;
+							String id = trlist[j].id; PolygonWrapper poly = trlist[j].get(l);
+							FMTB.showDialogbox("Remove this polygon?", id + ":" + poly.name(), "Yes", "No!", () -> {
+								FMTB.MODEL.getCompound().get(id).remove(poly);
+							}, DialogBox.NOTHING);
+							return true;
 						}
 						else{
 							boolean bool = trlist[j].get(l).selected;
 							if(!GGR.isShiftDown()){ FMTB.MODEL.clearSelection(); }
-							trlist[j].get(l).selected = !bool;
-							FMTB.MODEL.updateFields();
+							trlist[j].get(l).selected = !bool; FMTB.MODEL.updateFields();
 						}
 						return false;
 					}

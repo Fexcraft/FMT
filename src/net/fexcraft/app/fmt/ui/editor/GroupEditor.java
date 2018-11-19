@@ -38,8 +38,8 @@ public class GroupEditor extends Editor {
 				TurboList list = null;
 				if(FMTB.MODEL.getDirectlySelectedGroupsAmount() == 1){
 					if(FMTB.MODEL.getCompound().isEmpty()) return;
-					list = FMTB.MODEL.getCompound().values().toArray(new TurboList[0])[0];
-					FMTB.MODEL.getCompound().remove(list.id);
+					list = FMTB.MODEL.getFirstSelectedGroup();
+					list = FMTB.MODEL.getCompound().remove(list.id);
 					list.id = this.getTextValue().replace(" ", "_").replace("-", "_").replace(".", "");
 					while(FMTB.MODEL.getCompound().containsKey(list.id)){ list.id += "_"; }
 					FMTB.MODEL.getCompound().put(list.id, list);
