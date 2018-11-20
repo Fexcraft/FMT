@@ -47,8 +47,8 @@ public class FVTMExporter extends InternalPorter {
 			"import net.fexcraft.lib.tmt.ModelRendererTurbo;\n" + 
 			"import net.fexcraft.mod.fvtm.model.TurboList;\n" + 
 			"import net.fexcraft.mod.fvtm.model.part.PartModel;//TODO replace this one if needed\n\n");
-		buffer.append("/** This file was exported via the FVTM Exporter V1 of\n");
-		buffer.append(" *  FMT (Fex's Modelling Toolbox) v." + FMTB.version + " &copy; " + Year.now().getValue() + " - Fexcraft.net\n");
+		buffer.append("/** This file was exported via the FVTM Exporter V1 of<br>\n");
+		buffer.append(" *  FMT (Fex's Modelling Toolbox) v." + FMTB.version + " &copy; " + Year.now().getValue() + " - Fexcraft.net<br>\n");
 		buffer.append(" *  All rights reserved. For this Model's License contact the Author/Creator.\n */\n");
 		buffer.append("@fModel(registryname = \"youraddonid:models/part/"+ (compound.name == null ? "unnamed" : compound.name.toLowerCase()) + "\") //TODO adjust as needed\n");
 		buffer.append("public class " + validateName(compound.name) + "Model extends PartModel { //TODO replace into correct super class if needed\n\n");
