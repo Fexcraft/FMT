@@ -17,7 +17,6 @@ import javax.imageio.metadata.IIOMetadataNode;
 import javax.imageio.stream.FileImageOutputStream;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
@@ -143,7 +142,7 @@ public class ImageHelper {
 	/** see http://wiki.lwjgl.org/wiki/Taking_Screen_Shots.html */
 	private static BufferedImage displayToImage(){
 		GL11.glReadBuffer(GL11.GL_FRONT);
-		int width = Display.getDisplayMode().getWidth(), height = Display.getDisplayMode().getHeight();
+		int width = FMTB.get().getDisplayMode().getWidth(), height = FMTB.get().getDisplayMode().getHeight();
 		int bpp = 4; // Assuming a 32-bit display with a byte each for red, green, blue, and alpha.
 		ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * bpp);
 		GL11.glReadPixels(0, 0, width, height, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
