@@ -44,7 +44,7 @@ public class SaveLoad {
 	}
 
 	public static void openModel(){
-		checkIfShouldSave(false);
+		//TODO find a way to add this back -->> checkIfShouldSave(false);
 		File modelfile = getFile("Select file to open.");
 		if(modelfile == null || !modelfile.exists()){
 			FMTB.showDialogbox("Invalid Model File!", "(does it even exists?)", "ok.", null, DialogBox.NOTHING, null);
@@ -78,6 +78,7 @@ public class SaveLoad {
 	
 	public static GroupCompound getModel(JsonObject obj){
 		GroupCompound compound = new GroupCompound(); compound.getCompound().clear();
+		compound.name = JsonUtil.getIfExists(obj, "name", "unnamed model");
 		compound.textureX = JsonUtil.getIfExists(obj, "texture_size_y", 256).intValue();
 		compound.textureY = JsonUtil.getIfExists(obj, "texture_size_y", 256).intValue();
 		compound.creators = JsonUtil.jsonArrayToStringArray(JsonUtil.getIfExists(obj, "creators", new JsonArray()).getAsJsonArray());
@@ -249,6 +250,7 @@ public class SaveLoad {
 		GroupCompound compound = FMTB.MODEL;
 		JsonObject obj = new JsonObject();
 		obj.addProperty("format", 1);
+		obj.addProperty("name", compound.name);
 		obj.addProperty("texture_size_x", compound.textureX);
 		obj.addProperty("texture_size_y", compound.textureY);
 		JsonArray creators = new JsonArray();
