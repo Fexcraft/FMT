@@ -22,9 +22,11 @@ import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.app.fmt.wrappers.BoxWrapper;
 import net.fexcraft.app.fmt.wrappers.CylinderWrapper;
+import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.ShapeboxWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.math.RGB;
+import net.fexcraft.lib.common.utils.Print;
 
 public class Toolbar extends Element {
 	
@@ -408,13 +410,21 @@ public class Toolbar extends Element {
 										}
 									}.setText("Controls", false));
 									//
-									this.elements.put("console", new Button(this, "console", 100, 26, 2, 30, subhover){
+									this.elements.put("random", new Button(this, "random", 100, 26, 2, 30, subhover){
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
-											//TODO
+											long l = 0, ll = 0;
+											for(TurboList list : FMTB.MODEL.getCompound().values()){
+												for(PolygonWrapper wrapper : list){
+													l += jdk.nashorn.internal.ir.debug.ObjectSizeCalculator.getObjectSize(wrapper.getTurboObject(0));
+												}
+											}
+											ll = jdk.nashorn.internal.ir.debug.ObjectSizeCalculator.getObjectSize(FMTB.MODEL);
+											Print.console(Settings.byteCountToString(jdk.nashorn.internal.ir.debug.ObjectSizeCalculator.getObjectSize(FMTB.get()), true));
+											FMTB.showDialogbox("Size (MC / Editor): ", Settings.byteCountToString(l, true) + " // " + Settings.byteCountToString(ll, true), "ok", null, DialogBox.NOTHING, null);
 											return true;
 										}
-									}.setText("Console", false));
+									}.setText("Calc Size.", false));
 									//
 									this.elements.put("Help", new Button(this, "Help", 100, 26, 2, 58, subhover){
 										@Override

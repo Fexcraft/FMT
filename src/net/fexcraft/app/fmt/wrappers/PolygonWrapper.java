@@ -182,4 +182,8 @@ public abstract class PolygonWrapper {
 		return turbolist;
 	}
 	
+	public ModelRendererTurbo getTurboObject(int i){
+		if(i < 0 || i > 2) i = 0; return i == 0 ? turbo : i == 1 ? lines : sellines;
+	}
+	
 }

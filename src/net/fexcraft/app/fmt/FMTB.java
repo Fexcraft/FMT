@@ -148,7 +148,7 @@ public class FMTB implements FMTGLProcess {
 		//
 		if(Display.wasResized()){
 			displaymode = new DisplayMode(Display.getWidth(), Display.getHeight());
-	        GLU.gluPerspective(45.0f, displaymode.getWidth() / displaymode.getHeight(), 0.1f, 100.0f);
+	        GLU.gluPerspective(45.0f, displaymode.getWidth() / displaymode.getHeight(), 0.1f, 4096f / 2);
 			GL11.glViewport(0, 0, displaymode.getWidth(), displaymode.getHeight());
 			this.initOpenGL();
 		}
@@ -214,7 +214,7 @@ public class FMTB implements FMTGLProcess {
         GL11.glDepthFunc(GL11.GL_LEQUAL);
         GL11.glMatrixMode(GL11.GL_PROJECTION);
         GL11.glLoadIdentity();
-        GLU.gluPerspective(45.0f, (float)displaymode.getWidth() / (float)displaymode.getHeight(), 0.1f, 100.0f);
+        GLU.gluPerspective(45.0f, (float)displaymode.getWidth() / (float)displaymode.getHeight(), 0.1f, 4096f / 2);
         GL11.glMatrixMode(GL11.GL_MODELVIEW);
         GL11.glHint(GL11.GL_PERSPECTIVE_CORRECTION_HINT, GL11.GL_NICEST);
         //
