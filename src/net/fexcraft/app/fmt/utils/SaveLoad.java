@@ -29,6 +29,7 @@ import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.json.JsonUtil;
+import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.utils.Print;
 
 public class SaveLoad {
@@ -74,26 +75,6 @@ public class SaveLoad {
 	
 	public static void loadModel(JsonObject obj){
 		FMTB.MODEL = getModel(obj); FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
-	}
-	
-	public static GroupCompound getModel(JsonObject obj){
-		GroupCompound compound = new GroupCompound(); compound.getCompound().clear();
-		compound.name = JsonUtil.getIfExists(obj, "name", "unnamed model");
-		compound.textureX = JsonUtil.getIfExists(obj, "texture_size_y", 256).intValue();
-		compound.textureY = JsonUtil.getIfExists(obj, "texture_size_y", 256).intValue();
-		compound.creators = JsonUtil.jsonArrayToStringArray(JsonUtil.getIfExists(obj, "creators", new JsonArray()).getAsJsonArray());
-		JsonObject model = obj.get("model").getAsJsonObject();
-		for(Entry<String, JsonElement> entry : model.entrySet()){
-			try{
-				TurboList list = new TurboList(entry.getKey()); JsonArray array = entry.getValue().getAsJsonArray();
-				for(JsonElement elm : array){ list.add(JsonToTMT.parseWrapper(compound, elm.getAsJsonObject())); }
-				compound.getCompound().put(entry.getKey(), list);
-			}
-			catch(Exception e){
-				e.printStackTrace();
-			}
-		}
-		return compound;
 	}
 	
 	public static void checkIfShouldSave(boolean shouldclose){
@@ -249,7 +230,7 @@ public class SaveLoad {
 	public static JsonObject modelToJTMT(boolean export){
 		GroupCompound compound = FMTB.MODEL;
 		JsonObject obj = new JsonObject();
-		obj.addProperty("format", 1);
+		obj.addProperty("format", 2);
 		obj.addProperty("name", compound.name);
 		obj.addProperty("texture_size_x", compound.textureX);
 		obj.addProperty("texture_size_y", compound.textureY);
@@ -267,14 +248,70 @@ public class SaveLoad {
 		obj.addProperty("type", "jtmt");
 		JsonObject model = new JsonObject();
 		for(Entry<String, TurboList> entry : compound.getCompound().entrySet()){
-			JsonArray array = new JsonArray(); TurboList list = entry.getValue();
+			JsonObject group = new JsonObject(); JsonArray array = new JsonArray();
+			TurboList list = entry.getValue();
+			if(!export){
+				group.addProperty("visible", list.visible);
+				if(list.color != null){
+					byte[] colarr = list.color.toByteArray();
+					JsonArray colar = new JsonArray();
+					colar.add(colarr[0]); colar.add(colarr[1]); colar.add(colarr[2]);
+					group.add("color", colar);
+				}
+				group.addProperty("minimized", list.minimized);
+				group.addProperty("selected", list.selected);
+			}
+			group.addProperty("name", list.id);
 			for(PolygonWrapper wrapper : list){
 				array.add(wrapper.toJson(export));
 			}
-			model.add(entry.getKey(), array);
+			group.add("polygons", array);
+			model.add(entry.getKey(), group);
 		}
-		obj.add("model", model);
+		obj.add("groups", model);
 		return obj;
+	}
+	
+	public static GroupCompound getModel(JsonObject obj){
+		GroupCompound compound = new GroupCompound(); compound.getCompound().clear();
+		compound.name = JsonUtil.getIfExists(obj, "name", "unnamed model");
+		compound.textureX = JsonUtil.getIfExists(obj, "texture_size_y", 256).intValue();
+		compound.textureY = JsonUtil.getIfExists(obj, "texture_size_y", 256).intValue();
+		compound.creators = JsonUtil.jsonArrayToStringArray(JsonUtil.getIfExists(obj, "creators", new JsonArray()).getAsJsonArray());
+		if(JsonUtil.getIfExists(obj, "format", 2).intValue() == 1){
+			JsonObject model = obj.get("model").getAsJsonObject();
+			for(Entry<String, JsonElement> entry : model.entrySet()){
+				try{
+					TurboList list = new TurboList(entry.getKey()); JsonArray array = entry.getValue().getAsJsonArray();
+					for(JsonElement elm : array){ list.add(JsonToTMT.parseWrapper(compound, elm.getAsJsonObject())); }
+					compound.getCompound().put(entry.getKey(), list);
+				}
+				catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+			return compound;
+		}
+		JsonObject groups = obj.get("groups").getAsJsonObject();
+		for(Entry<String, JsonElement> entry : groups.entrySet()){
+			try{
+				TurboList list = new TurboList(entry.getKey()); JsonObject group = entry.getValue().getAsJsonObject();
+				list.minimized = JsonUtil.getIfExists(group, "minimized", false);
+				list.selected = JsonUtil.getIfExists(group, "selected", false);
+				list.visible = JsonUtil.getIfExists(group, "visible", true);
+				if(group.has("color")){
+					JsonArray colorarr = group.get("color").getAsJsonArray();
+					list.color = new RGB(colorarr.get(0).getAsByte(), colorarr.get(1).getAsByte(), colorarr.get(2).getAsByte());
+				}
+				JsonArray polygons = group.get("polygons").getAsJsonArray();
+				for(JsonElement elm : polygons){ list.add(JsonToTMT.parseWrapper(compound, elm.getAsJsonObject())); }
+				compound.getCompound().put(entry.getKey(), list);
+			}
+			catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		return compound;
 	}
 	
 }
