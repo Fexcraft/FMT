@@ -275,7 +275,7 @@ public class SaveLoad {
 	public static GroupCompound getModel(JsonObject obj){
 		GroupCompound compound = new GroupCompound(); compound.getCompound().clear();
 		compound.name = JsonUtil.getIfExists(obj, "name", "unnamed model");
-		compound.textureX = JsonUtil.getIfExists(obj, "texture_size_y", 256).intValue();
+		compound.textureX = JsonUtil.getIfExists(obj, "texture_size_x", 256).intValue();
 		compound.textureY = JsonUtil.getIfExists(obj, "texture_size_y", 256).intValue();
 		compound.creators = JsonUtil.jsonArrayToStringArray(JsonUtil.getIfExists(obj, "creators", new JsonArray()).getAsJsonArray());
 		if(JsonUtil.getIfExists(obj, "format", 2).intValue() == 1){
