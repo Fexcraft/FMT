@@ -2,12 +2,14 @@ package net.fexcraft.app.fmt.wrappers;
 
 import com.google.gson.JsonObject;
 
+import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public class CylinderWrapper extends PolygonWrapper {
 	
 	public float radius = 2, length = 2, base = 1, top = 1;
 	public int segments = 8, direction = ModelRendererTurbo.MR_TOP;
+	public Vec3f topoff = new Vec3f(0, 0, 0);
 	
 	public CylinderWrapper(GroupCompound compound){
 		super(compound);
@@ -15,9 +17,13 @@ public class CylinderWrapper extends PolygonWrapper {
 	
 	protected ModelRendererTurbo newMRT(){
 		return new ModelRendererTurbo(null, textureX, textureY, compound.textureX, compound.textureY)
-			.addCylinder(off.xCoord, off.yCoord, off.zCoord, radius, length, segments, base, top, direction)
+			.addCylinder(off.xCoord, off.yCoord, off.zCoord, radius, length, segments, base, top, direction, getTopOff())
 			.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
 			.setRotationAngle((float)Math.toRadians(rot.xCoord), (float)Math.toRadians(rot.yCoord), (float)Math.toRadians(rot.zCoord));
+	}
+
+	private Vec3f getTopOff(){
+		return topoff.xCoord == 0f && topoff.yCoord == 0f && topoff.zCoord == 0f ? null : topoff;
 	}
 
 	@Override
@@ -31,6 +37,7 @@ public class CylinderWrapper extends PolygonWrapper {
 			case "cyl0": return x ? radius : y ? length : 0;
 			case "cyl1": return x ? segments : y ? direction : 0;
 			case "cyl2": return x ? base : y ? top : 0;
+			case "cyl3": return x ? topoff.xCoord : y ? topoff.yCoord : z ? topoff.zCoord : 0;
 			default: return super.getFloat(id, x, y, z);
 		}
 	}
@@ -54,6 +61,11 @@ public class CylinderWrapper extends PolygonWrapper {
 				if(y){ top = value; return true; }
 				if(z){ return false; }
 			}
+			case "cyl3":{
+				if(x){ topoff.xCoord = value; return true; }
+				if(y){ topoff.yCoord = value; return true; }
+				if(z){ topoff.zCoord = value; return true; }
+			}
 			default: return false;
 		}
 	}
@@ -66,6 +78,9 @@ public class CylinderWrapper extends PolygonWrapper {
 		obj.addProperty("direction", direction);
 		obj.addProperty("basescale", base);
 		obj.addProperty("topscale", top);
+		if(topoff.xCoord != 0f) obj.addProperty("top_offset_x", topoff.xCoord);
+		if(topoff.yCoord != 0f) obj.addProperty("top_offset_y", topoff.yCoord);
+		if(topoff.zCoord != 0f) obj.addProperty("top_offset_z", topoff.zCoord);
 		return obj;
 	}
 	

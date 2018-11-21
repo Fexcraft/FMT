@@ -51,6 +51,9 @@ public class JsonToTMT {
 	public static final String[] basescale = new String[]{"base_scale", "basescale", "bs"};
 	public static final String[] topscale = new String[]{"top_scale", "topscale", "ts"};
 	public static final String[] direction = new String[]{"direction", "dir", "facing"};
+	public static final String[] topoffx = new String[]{"top_offset_x", "topoff_x", "topoffx"};
+	public static final String[] topoffy = new String[]{"top_offset_y", "topoff_y", "topoffy"};
+	public static final String[] topoffz = new String[]{"top_offset_z", "topoff_z", "topoffz"};
 	
 	public final static ModelRendererTurbo parse(JsonObject obj, int tx, int ty){
 		ModelRendererTurbo model = new ModelRendererTurbo(null, get(texturex, obj, idef), get(texturey, obj, idef), tx, ty);
@@ -180,6 +183,9 @@ public class JsonToTMT {
 				cylinder.direction = get(direction, obj, 4);
 				cylinder.base = get(basescale, obj, 1f);
 				cylinder.top = get(topscale, obj, 1f);
+				cylinder.topoff.xCoord = get(topoffx, obj, 0f);
+				cylinder.topoff.yCoord = get(topoffy, obj, 0f);
+				cylinder.topoff.zCoord = get(topoffz, obj, 0f);
 				polygon = cylinder; break;
 			}
 		}

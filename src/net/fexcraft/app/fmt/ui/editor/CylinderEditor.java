@@ -15,7 +15,7 @@ public class CylinderEditor extends Editor {
 		super("cylinder_editor");
 		final RGB rgb = new RGB(127, 127, 255);
 		//
-		String[] vals = new String[]{ "cyl0", "cyl1", "cyl2"}, xyz = new String[]{ "x", "y", "z" };
+		String[] vals = new String[]{ "cyl0", "cyl1", "cyl2", "cyl3" }, xyz = new String[]{ "x", "y", "z" };
 		for(int r = 0; r < vals.length; r++){
 			for(int i = 0; i < 3; i++){
 				int k = 70, j = k + 12 + 12 + 4; final int rr = r, ii = i;
@@ -29,14 +29,19 @@ public class CylinderEditor extends Editor {
 				if(ii == 0){
 					if(r == 0){ field.setAsNumberfield(0.01f, Integer.MAX_VALUE, true); field.applyChange(1f); }
 					if(r == 1){ field.setAsNumberfield(4, Integer.MAX_VALUE, true); field.applyChange(8); }
-					if(r == 3){ field.setAsNumberfield(1f, Integer.MAX_VALUE, true); field.applyChange(1); }
+					if(r == 2){ field.setAsNumberfield(1f, Integer.MAX_VALUE, true); field.applyChange(1); }
+					if(r == 3){ field.setAsNumberfield(Integer.MIN_VALUE, Integer.MAX_VALUE, true); field.applyChange(0); }
 				}
 				if(ii == 1){
 					if(r == 0){ field.setAsNumberfield(0.01f, Integer.MAX_VALUE, true); field.applyChange(1); }
 					if(r == 1){ field.setAsNumberfield(0, 5, true); field.applyChange(ModelRendererTurbo.MR_FRONT); }
 					if(r == 2){ field.setAsNumberfield(1f, Integer.MAX_VALUE, true); field.applyChange(1); }
+					if(r == 3){ field.setAsNumberfield(Integer.MIN_VALUE, Integer.MAX_VALUE, true); field.applyChange(0); }
 				}
-				if(ii == 2) field.enabled = false;
+				if(ii == 2){
+					if(r != 3){ field.enabled = false; }
+					else{ field.setAsNumberfield(Integer.MIN_VALUE, Integer.MAX_VALUE, true); field.applyChange(0); }
+				}
 				this.elements.put(vals[r] + xyz[i], field.setLevel(-1));
 				this.elements.put(vals[r] + xyz[i] + "+", new Button(this, vals[r] + xyz[i] + "+", 12, 26, k + 16 + (j * i), 30 + (r * 50), rgb){
 					@Override
@@ -46,7 +51,7 @@ public class CylinderEditor extends Editor {
 				}.setText(" > ", true).setTexture("ui/background").setLevel(-1));
 			}
 		}
-		this.addMultiplicator(180);
+		this.addMultiplicator(230);
 	}
 	
 	@Override
@@ -55,7 +60,8 @@ public class CylinderEditor extends Editor {
 		font.drawString(4,  40, "Radius / Length", Color.black);
 		font.drawString(4,  90, "Segments / Direction", Color.black);
 		font.drawString(4, 140, "Base Scale / Top Scale", Color.black);
-		font.drawString(4, 190, "Multiplicator/Rate", Color.black);
+		font.drawString(4, 190, "Top Offset (x/y/z)", Color.black);
+		font.drawString(4, 240, "Multiplicator/Rate", Color.black);
 		RGB.glColorReset();
 	}
 

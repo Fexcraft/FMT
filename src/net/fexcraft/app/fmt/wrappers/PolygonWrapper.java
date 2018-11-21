@@ -157,14 +157,14 @@ public abstract class PolygonWrapper {
 				bool = this.setFloat(id, x, y, z, value); break;
 			}
 			case "rot":{
-				bool = this.setFloat(id, x, y, z, value);break; //(float)Math.toRadians(value)); break;
+				bool = this.setFloat(id, x, y, z, value); break; //(float)Math.toRadians(value)); break;
 			}
 			case "cor0": case "cor1": case "cor2": case "cor3": case "cor4": case "cor5": case "cor6": case "cor7":{
 				if(this.getType().isShapebox()){
 					bool = this.setFloat(id, x, y, z, value);
 				} break;
 			}
-			case "cyl0": case "cyl1": case "cyl2":{
+			case "cyl0": case "cyl1": case "cyl2": case "cyl3":{
 				if(this.getType().isCylinder()){
 					bool = this.setFloat(id, x, y, z, value);
 				} break;
