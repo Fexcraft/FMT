@@ -23,7 +23,7 @@ public class Backups extends TimerTask {
 	@Override
 	public void run(){
 		if(FMTB.MODEL.countTotalMRTs() <= 0) return;
-		JsonObject obj = SaveLoad.modelToJTMT(false);
+		JsonObject obj = SaveLoad.modelToJTMT(null, false);
 		String str = sdf.format(Time.getDate()); Print.console("Saving backup... [" + str + "];");
 		File file = new File("./backups/(" + str + ") " + FMTB.MODEL.name + ".jtmt");
 		if(!file.getParentFile().exists()) file.getParentFile().mkdirs();

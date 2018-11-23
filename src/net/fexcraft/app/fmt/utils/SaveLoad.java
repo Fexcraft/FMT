@@ -197,7 +197,7 @@ public class SaveLoad {
 	        ZipOutputStream zipout = new ZipOutputStream(fileout);
 	        zipout.putNextEntry(new ZipEntry("marker.fmt")); zipout.write(new byte[]{ Byte.MIN_VALUE }); zipout.closeEntry();
 	        InputStream[] arr = new InputStream[FMTB.MODEL.texture == null ? 1 : 2];
-	        arr[0] = new ByteArrayInputStream(modelToJTMT(false).toString().getBytes(StandardCharsets.UTF_8));
+	        arr[0] = new ByteArrayInputStream(modelToJTMT(null, false).toString().getBytes(StandardCharsets.UTF_8));
 	        if(arr.length > 1){
 	        	try{
 	        		ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -225,10 +225,11 @@ public class SaveLoad {
 	}
 
 	/**
+	 * @param root 
 	 * @return JTMT save form of the Model/GroupCompound
 	 */
-	public static JsonObject modelToJTMT(boolean export){
-		GroupCompound compound = FMTB.MODEL;
+	public static JsonObject modelToJTMT(GroupCompound root, boolean export){
+		GroupCompound compound = root == null ? FMTB.MODEL : root;
 		JsonObject obj = new JsonObject();
 		obj.addProperty("format", 2);
 		obj.addProperty("name", compound.name);

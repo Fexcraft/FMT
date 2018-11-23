@@ -62,6 +62,8 @@ public class PorterManager {
 		porters.add(new FVTMExporter(false, true));
 		porters.add(new FVTMExporter(true, true));
 		porters.add(new OBJPreviewImporter());
+		porters.add(new JTMTPorter(false));
+		porters.add(new JTMTPorter(true));
 	}
 
 	private static ScriptEngine newEngine(){
@@ -110,7 +112,7 @@ public class PorterManager {
 					}
 					else{
 						Invocable inv = (Invocable)((ExternalPorter)porter).eval();
-						result = (String)inv.invokeFunction("exportModel", SaveLoad.modelToJTMT(true).toString(), file);
+						result = (String)inv.invokeFunction("exportModel", SaveLoad.modelToJTMT(null, true).toString(), file);
 					}
 					FMTB.showDialogbox("Export complete.", result, "OK!", null, DialogBox.NOTHING, null);
 					Desktop.getDesktop().open(file.getParentFile());
