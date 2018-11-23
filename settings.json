@@ -8,6 +8,7 @@
   "fullscreen": false,
   "floor": true,
   "lines": true,
-  "cube": true,
-  "demo": false
+  "cube": false,
+  "demo": false,
+  "raypick": true
 }

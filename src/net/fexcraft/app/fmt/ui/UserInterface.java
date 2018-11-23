@@ -121,7 +121,7 @@ public class UserInterface {
 					}
 				}
 			}
-			if(i == 0) RayCoastAway.doTest();
+			if(i == 0) RayCoastAway.doTest(true);
 		}
 	}
 

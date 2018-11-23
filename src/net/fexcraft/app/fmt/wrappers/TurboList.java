@@ -30,6 +30,11 @@ public class TurboList extends ArrayList<PolygonWrapper> {
 		this.forEach(elm -> elm.renderLines(rotXb, rotYb, rotZb));
 	}
 
+	public void renderPicking(){
+		if(!visible) return;
+		this.forEach(elm -> elm.renderPicking(rotXb, rotYb, rotZb));
+	}
+
 	@Override
 	public PolygonWrapper get(int id){
 		return id >= size() || id < 0 ? null : super.get(id);

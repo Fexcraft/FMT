@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL11;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.generic.TextField;
+import net.fexcraft.app.fmt.utils.RayCoastAway;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
@@ -51,8 +52,15 @@ public class GroupCompound {
 			GL11.glScalef(scale.xCoord, scale.yCoord, scale.zCoord);
 		}
 		TextureManager.bindTexture(texture == null ? "blank" : texture);
-		compound.values().forEach(elm -> elm.render());
-		compound.values().forEach(elm -> elm.renderLines());
+		if(RayCoastAway.PICKING){
+			compound.values().forEach(elm -> elm.renderPicking());
+			//compound.values().forEach(elm -> elm.renderLines());
+			RayCoastAway.doTest(false);
+		}
+		else{
+			compound.values().forEach(elm -> elm.render());
+			compound.values().forEach(elm -> elm.renderLines());
+		}
 		if(scale != null){
 			GL11.glPopMatrix();
 		}

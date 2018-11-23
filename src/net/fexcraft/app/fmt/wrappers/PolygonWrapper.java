@@ -5,20 +5,23 @@ import org.lwjgl.opengl.GL11;
 import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.utils.Settings;
+import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
+import net.fexcraft.lib.common.utils.Print;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public abstract class PolygonWrapper {
 	
 	public Vec3f pos = new Vec3f(), off = new Vec3f(), rot = new Vec3f();
 	public int textureX, textureY;
-	protected ModelRendererTurbo turbo, lines, sellines;
+	protected ModelRendererTurbo turbo, lines, sellines, picker;
 	protected final GroupCompound compound;
 	private static boolean widelines;
 	public boolean visible = true;
 	private TurboList turbolist;
 	public boolean mirror, flip;
 	public boolean selected;
+	public Integer color;
 	public String name;
 	
 	public PolygonWrapper(GroupCompound compound){
@@ -26,7 +29,7 @@ public abstract class PolygonWrapper {
 	}
 	
 	public void recompile(){
-		this.clearMRT(turbo, lines, sellines); this.setupMRT();
+		this.clearMRT(turbo, lines, sellines, picker); this.setupMRT();
 	}
 
 	public void render(boolean rotX, boolean rotY, boolean rotZ){
@@ -56,6 +59,12 @@ public abstract class PolygonWrapper {
 			}
 		}
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
+	}
+
+	public void renderPicking(boolean rotXb, boolean rotYb, boolean rotZb){
+		if(visible && picker != null){
+			GL11.glDisable(GL11.GL_TEXTURE_2D); picker.render(); GL11.glEnable(GL11.GL_TEXTURE_2D);
+		}
 	}
 	
 	public abstract ShapeType getType();
@@ -129,7 +138,7 @@ public abstract class PolygonWrapper {
 	protected abstract JsonObject populateJson(JsonObject obj, boolean export);
 	
 	protected void clearMRT(ModelRendererTurbo... mrts){
-		if(mrts == null) mrts = new ModelRendererTurbo[]{ turbo, lines, sellines };
+		if(mrts == null) mrts = new ModelRendererTurbo[]{ turbo, lines, sellines, picker };
 		for(ModelRendererTurbo mrt : mrts){
 			if(mrt != null && mrt.displaylist() != null){
 				GL11.glDeleteLists(mrt.displaylist(), 1); mrt = null;
@@ -141,8 +150,23 @@ public abstract class PolygonWrapper {
 		turbo = newMRT().setTextured(compound.texture != null);
 		lines = newMRT().setLines(true);
 		sellines = newMRT().setLines(Settings.selectedColor);
+		picker = newMRT().setTextured(false).setColor(genColor());
 	}
 	
+	//private static int maxcol = 16777215;
+	private static int lastint = 0;
+	
+	private RGB genColor(){
+		if(color == null){
+			color = lastint += 16;
+			if(color == 2048383){
+				color = lastint += 16;
+			}
+		}
+		Print.console(color + " ");
+		RGB rgb = new RGB(); rgb.packed = color; return rgb;
+	}
+
 	protected abstract ModelRendererTurbo newMRT();
 
 	public boolean apply(String id, float value, boolean x, boolean y, boolean z){

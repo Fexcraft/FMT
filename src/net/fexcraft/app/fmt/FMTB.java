@@ -123,7 +123,7 @@ public class FMTB implements FMTGLProcess {
 		});
 		setupDisplay(); initOpenGL(); ggr = new GGR(this, 0, 4, 4); ggr.rotation.xCoord = 45;
 		PorterManager.load(); HelperCollector.reload(); Display.setResizable(true); UI = new UserInterface(this);
-		Settings.load(); SessionHandler.checkIfLoggedIn(true, true); checkForUpdates();
+		Settings.load(); SessionHandler.checkIfLoggedIn(true, true); checkForUpdates(); RayCoastAway.setup();
 		//
 		LocalDateTime midnight = LocalDateTime.of(LocalDate.now(ZoneOffset.systemDefault()), LocalTime.MIDNIGHT);
 		long mid = midnight.toInstant(ZoneOffset.UTC).toEpochMilli(); long date = Time.getDate(); while((mid += Time.MIN_MS * 5) < date);
@@ -132,10 +132,12 @@ public class FMTB implements FMTGLProcess {
 		//
 		while(!close){
 			loop(); render();
-			if(ImageHelper.HASTASK){
-				UI.render(true); ImageHelper.doTask();
+			if(!RayCoastAway.PICKING){
+				if(ImageHelper.HASTASK){
+					UI.render(true); ImageHelper.doTask();
+				}
+				else UI.render(false);
 			}
-			else UI.render(false);
 			Display.update(); Display.sync(60);
 			//Thread.sleep(50);
 		}
@@ -173,30 +175,35 @@ public class FMTB implements FMTGLProcess {
         if(ImageHelper.HASTASK && ImageHelper.getTaskId() == 2){
         	GL11.glRotatef((ImageHelper.getStage() - 20) * 10, 0, 1, 0);
         }
-        if(Settings.floor()){
-            TextureManager.bindTexture("floor");
-            GL11.glRotatef(-90, 0, 1, 0);
-            GL11.glPushMatrix();
-            //GL11.glCullFace(GL11.GL_BACK); GL11.glEnable(GL11.GL_CULL_FACE);
-            GL11.glBegin(GL11.GL_QUADS); float cs = 16;
-    		GL11.glTexCoord2f(0, 1); GL11.glVertex3f( cs, 1f / 16 * 10,  cs);
-            GL11.glTexCoord2f(1, 1); GL11.glVertex3f(-cs, 1f / 16 * 10,  cs);
-            GL11.glTexCoord2f(1, 0); GL11.glVertex3f(-cs, 1f / 16 * 10, -cs);
-            GL11.glTexCoord2f(0, 0); GL11.glVertex3f( cs, 1f / 16 * 10, -cs);
-            //GL11.glCullFace(GL11.GL_FRONT_AND_BACK); GL11.glDisable(GL11.GL_CULL_FACE); //apparently the front renderer doesn't like this.
-            GL11.glEnd(); GL11.glPopMatrix();
-            GL11.glRotatef( 90, 0, 1, 0);
-        }
         //
-        if(Settings.cube()){
-            TextureManager.bindTexture("demo"); compound0.render();
+        if(RayCoastAway.PICKING){ 
+            MODEL.render();
         }
-        RayCoastAway.render(); MODEL.render();
-        if(HelperCollector.LOADED.size() > 0){
-        	for(GroupCompound model : HelperCollector.LOADED) model.render();
-        }
-        if(Settings.demo()){
-            TextureManager.bindTexture("t1p"); ModelT1P.INSTANCE.render();
+        else{
+	        if(Settings.floor()){
+	            TextureManager.bindTexture("floor");
+	            GL11.glRotatef(-90, 0, 1, 0);
+	            GL11.glPushMatrix();
+	            //GL11.glCullFace(GL11.GL_BACK); GL11.glEnable(GL11.GL_CULL_FACE);
+	            GL11.glBegin(GL11.GL_QUADS); float cs = 16;
+	    		GL11.glTexCoord2f(0, 1); GL11.glVertex3f( cs, 1f / 16 * 10,  cs);
+	            GL11.glTexCoord2f(1, 1); GL11.glVertex3f(-cs, 1f / 16 * 10,  cs);
+	            GL11.glTexCoord2f(1, 0); GL11.glVertex3f(-cs, 1f / 16 * 10, -cs);
+	            GL11.glTexCoord2f(0, 0); GL11.glVertex3f( cs, 1f / 16 * 10, -cs);
+	            //GL11.glCullFace(GL11.GL_FRONT_AND_BACK); GL11.glDisable(GL11.GL_CULL_FACE); //apparently the front renderer doesn't like this.
+	            GL11.glEnd(); GL11.glPopMatrix();
+	            GL11.glRotatef( 90, 0, 1, 0);
+	        }
+            if(Settings.cube()){
+                TextureManager.bindTexture("demo"); compound0.render();
+            }
+            MODEL.render();
+            if(HelperCollector.LOADED.size() > 0){
+            	for(GroupCompound model : HelperCollector.LOADED) model.render();
+            }
+            if(Settings.demo()){
+                TextureManager.bindTexture("t1p"); ModelT1P.INSTANCE.render();
+            }
         }
         //
         //GL11.glDisable(GL11.GL_BLEND);
