@@ -503,7 +503,7 @@ public class Toolbar extends Element {
 
 	@Override
 	protected boolean processButtonClick(int x, int y, boolean left){
-		return false;
+		return true;
 	}
 
 }

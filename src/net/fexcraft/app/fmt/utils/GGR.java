@@ -143,7 +143,7 @@ public class GGR {
             rotation.xCoord += -Mouse.getDY() * sensivity * delta;
             rotation.xCoord = Math.max(-maxlookrange, Math.min(maxlookrange, rotation.xCoord));
             //
-        	if(Mouse.isButtonDown(0) && !clickedL) RayCoastAway.doTest(true); clickedL = Mouse.isButtonDown(0);
+        	//if(Mouse.isButtonDown(0) && !clickedL) RayCoastAway.doTest(true, false); clickedL = Mouse.isButtonDown(0);
         }
         else{
         	if(!Mouse.isInsideWindow()) return;

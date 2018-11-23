@@ -114,14 +114,17 @@ public class UserInterface {
 			}
 		}
 		else{
+			Element eelm = null;
 			for(Element elm : elements.values()){
 				if(elm.visible && elm.enabled /*&& elm.hovered*/){
 					if(elm.onButtonClick(Mouse.getX(), root.getDisplayMode().getHeight() - Mouse.getY(), i == 0, elm.hovered)){
 						return;
-					}
+					} else eelm = elm;
 				}
 			}
-			if(i == 0) RayCoastAway.doTest(true);
+			if(i == 0 && (eelm == null ? true : eelm.id.equals("toolbar"))){//TODO mostly obsolete check, but /shrug
+				RayCoastAway.doTest(true, true);
+			}
 		}
 	}
 

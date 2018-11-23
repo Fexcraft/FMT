@@ -123,7 +123,7 @@ public class FMTB implements FMTGLProcess {
 		});
 		setupDisplay(); initOpenGL(); ggr = new GGR(this, 0, 4, 4); ggr.rotation.xCoord = 45;
 		PorterManager.load(); HelperCollector.reload(); Display.setResizable(true); UI = new UserInterface(this);
-		Settings.load(); SessionHandler.checkIfLoggedIn(true, true); checkForUpdates(); RayCoastAway.setup();
+		Settings.load(); SessionHandler.checkIfLoggedIn(true, true); checkForUpdates();
 		//
 		LocalDateTime midnight = LocalDateTime.of(LocalDate.now(ZoneOffset.systemDefault()), LocalTime.MIDNIGHT);
 		long mid = midnight.toInstant(ZoneOffset.UTC).toEpochMilli(); long date = Time.getDate(); while((mid += Time.MIN_MS * 5) < date);
@@ -162,7 +162,7 @@ public class FMTB implements FMTGLProcess {
 	}
 	
 	private void render(){
-        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+        if(!RayCoastAway.PICKING) GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
         GL11.glLoadIdentity(); //GL11.glLoadIdentity();		
         GL11.glRotatef(ggr.rotation.xCoord, 1, 0, 0);
         GL11.glRotatef(ggr.rotation.yCoord, 0, 1, 0);
