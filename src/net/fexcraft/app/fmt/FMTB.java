@@ -44,6 +44,7 @@ import net.fexcraft.app.fmt.utils.Backups;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.HelperCollector;
 import net.fexcraft.app.fmt.utils.ImageHelper;
+import net.fexcraft.app.fmt.utils.RayCoastAway;
 import net.fexcraft.app.fmt.utils.SaveLoad;
 import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.app.fmt.utils.Settings;
@@ -190,7 +191,7 @@ public class FMTB implements FMTGLProcess {
         if(Settings.cube()){
             TextureManager.bindTexture("demo"); compound0.render();
         }
-        MODEL.render();
+        RayCoastAway.render(); MODEL.render();
         if(HelperCollector.LOADED.size() > 0){
         	for(GroupCompound model : HelperCollector.LOADED) model.render();
         }

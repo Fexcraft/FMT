@@ -118,6 +118,7 @@ public class GGR {
     	            		catch(IOException e){ e.printStackTrace(); }
     	            	});
     	            }
+    	            if(key == Keyboard.KEY_T){ RayCoastAway.doTest(); } /* for debugging, or such */
     	        }
     		}
     		else{//"released"
@@ -141,6 +142,8 @@ public class GGR {
             rotation.yCoord += Mouse.getDX() * sensivity * delta;
             rotation.xCoord += -Mouse.getDY() * sensivity * delta;
             rotation.xCoord = Math.max(-maxlookrange, Math.min(maxlookrange, rotation.xCoord));
+            //
+        	if(Mouse.isButtonDown(0) && !clickedL) RayCoastAway.doTest(); clickedL = Mouse.isButtonDown(0);
         }
         else{
         	if(!Mouse.isInsideWindow()) return;

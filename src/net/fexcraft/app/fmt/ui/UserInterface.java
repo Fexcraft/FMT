@@ -11,6 +11,7 @@ import net.fexcraft.app.fmt.ui.generic.DialogBox;
 import net.fexcraft.app.fmt.ui.generic.FileChooser;
 import net.fexcraft.app.fmt.ui.generic.Menulist;
 import net.fexcraft.app.fmt.ui.generic.TextField;
+import net.fexcraft.app.fmt.utils.RayCoastAway;
 import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.Time;
@@ -120,6 +121,7 @@ public class UserInterface {
 					}
 				}
 			}
+			if(i == 0) RayCoastAway.doTest();
 		}
 	}
 

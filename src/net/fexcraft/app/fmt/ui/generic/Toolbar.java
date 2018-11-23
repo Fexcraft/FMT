@@ -420,8 +420,11 @@ public class Toolbar extends Element {
 												}
 											}
 											ll = jdk.nashorn.internal.ir.debug.ObjectSizeCalculator.getObjectSize(FMTB.MODEL);
-											Print.console(Settings.byteCountToString(jdk.nashorn.internal.ir.debug.ObjectSizeCalculator.getObjectSize(FMTB.get()), true));
+											Print.console("MainClass: " + Settings.byteCountToString(jdk.nashorn.internal.ir.debug.ObjectSizeCalculator.getObjectSize(FMTB.get()), true));
 											FMTB.showDialogbox("Size (MC / Editor): ", Settings.byteCountToString(l, true) + " // " + Settings.byteCountToString(ll, true), "ok", null, DialogBox.NOTHING, null);
+											//
+											long uis = jdk.nashorn.internal.ir.debug.ObjectSizeCalculator.getObjectSize(FMTB.get().UI);
+											Print.console("UI: " + Settings.byteCountToString(uis, true));
 											return true;
 										}
 									}.setText("Calc Size.", false));
