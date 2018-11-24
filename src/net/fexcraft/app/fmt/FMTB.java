@@ -137,6 +137,7 @@ public class FMTB implements FMTGLProcess {
 					UI.render(true); ImageHelper.doTask();
 				}
 				else UI.render(false);
+				//
 			}
 			Display.update(); Display.sync(60);
 			//Thread.sleep(50);
@@ -162,7 +163,7 @@ public class FMTB implements FMTGLProcess {
 	}
 	
 	private void render(){
-        if(!RayCoastAway.PICKING) GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
         GL11.glLoadIdentity(); //GL11.glLoadIdentity();		
         GL11.glRotatef(ggr.rotation.xCoord, 1, 0, 0);
         GL11.glRotatef(ggr.rotation.yCoord, 0, 1, 0);
@@ -177,7 +178,7 @@ public class FMTB implements FMTGLProcess {
         }
         //
         if(RayCoastAway.PICKING){ 
-            MODEL.render();
+            MODEL.render(); GL11.glPopMatrix(); render();
         }
         else{
 	        if(Settings.floor()){
@@ -204,10 +205,11 @@ public class FMTB implements FMTGLProcess {
             if(Settings.demo()){
                 TextureManager.bindTexture("t1p"); ModelT1P.INSTANCE.render();
             }
+            GL11.glPopMatrix();
         }
         //
         //GL11.glDisable(GL11.GL_BLEND);
-        GL11.glPopMatrix();
+        //GL11.glPopMatrix();
 	}
 	
 	private static final ModelRendererTurbo compound0 = new ModelRendererTurbo(null, 0, 0);
