@@ -29,4 +29,8 @@ public class TextureUpdate extends TimerTask {
         }
 	}
 
+	public static void updateSizes(){
+		//TODO
+	}
+
 }

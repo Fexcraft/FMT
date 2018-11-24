@@ -24,7 +24,7 @@ public class GeneralEditor extends Editor {
 				this.elements.put(vals[r] + xyz[i] + "-", new Button(this, vals[r] + xyz[i] + "-", 12, 26, 4 + (j * i), 30 + (r * 50), rgb){
 					@Override
 					protected boolean processButtonClick(int x, int y, boolean left){
-						return FMTB.MODEL.updateValue((TextField)this.parent.getElement(vals[rr] + xyz[ii]), this.id);
+						FMTB.MODEL.updateValue((TextField)this.parent.getElement(vals[rr] + xyz[ii]), this.id); return true;
 					}
 				}.setText(" < ", true).setTexture("ui/background").setLevel(-1));
 				TextField field = new TextField(this, vals[r] + xyz[i], k, 16 + (j * i), 30 + (r * 50));
@@ -48,7 +48,7 @@ public class GeneralEditor extends Editor {
 				this.elements.put(vals[r] + xyz[i] + "+", new Button(this, vals[r] + xyz[i] + "+", 12, 26, k + 16 + (j * i), 30 + (r * 50), rgb){
 					@Override
 					protected boolean processButtonClick(int x, int y, boolean left){
-						return FMTB.MODEL.updateValue((TextField)this.parent.getElement(vals[rr] + xyz[ii]), this.id);
+						FMTB.MODEL.updateValue((TextField)this.parent.getElement(vals[rr] + xyz[ii]), this.id); return true;
 					}
 				}.setText(" > ", true).setTexture("ui/background").setLevel(-1));
 			}

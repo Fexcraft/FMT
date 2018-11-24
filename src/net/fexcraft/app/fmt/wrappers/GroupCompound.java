@@ -343,6 +343,8 @@ public class GroupCompound {
 			editor.getField("posx").applyChange(pos == null ? 0 : pos.xCoord);
 			editor.getField("posy").applyChange(pos == null ? 0 : pos.yCoord);
 			editor.getField("posz").applyChange(pos == null ? 0 : pos.zCoord);
+			editor.getField("texx").applyChange(this.textureX);
+			editor.getField("texy").applyChange(this.textureY);
 			editor.getField("modelname").setText(this.name, true);
 			editor.getField("multiplicator").applyChange(rate);
 		}

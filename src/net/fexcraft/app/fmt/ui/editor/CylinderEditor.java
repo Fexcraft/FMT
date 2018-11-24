@@ -22,9 +22,9 @@ public class CylinderEditor extends Editor {
 				this.elements.put(vals[r] + xyz[i] + "-", new Button(this, vals[r] + xyz[i] + "-", 12, 26, 4 + (j * i), 30 + (r * 50), rgb){
 					@Override
 					protected boolean processButtonClick(int x, int y, boolean left){
-						return ii == 2 ? false : FMTB.MODEL.updateValue((TextField)this.parent.getElement(vals[rr] + xyz[ii]), this.id);
+						FMTB.MODEL.updateValue((TextField)this.parent.getElement(vals[rr] + xyz[ii]), this.id); return true;
 					}
-				}.setText(" < ", true).setTexture("ui/background").setLevel(-1));
+				}.setText(" < ", true).setTexture("ui/background").setLevel(-1).setEnabled(r == 3 ? true : ii != 2));
 				TextField field = new TextField(this, vals[r] + xyz[i], k, 16 + (j * i), 30 + (r * 50)).setAsNumberfield(Integer.MIN_VALUE, Integer.MAX_VALUE, true);
 				if(ii == 0){
 					if(r == 0){ field.setAsNumberfield(0.01f, Integer.MAX_VALUE, true); field.applyChange(1f); }
@@ -35,7 +35,7 @@ public class CylinderEditor extends Editor {
 				if(ii == 1){
 					if(r == 0){ field.setAsNumberfield(0.01f, Integer.MAX_VALUE, true); field.applyChange(1); }
 					if(r == 1){ field.setAsNumberfield(0, 5, true); field.applyChange(ModelRendererTurbo.MR_FRONT); }
-					if(r == 2){ field.setAsNumberfield(1f, Integer.MAX_VALUE, true); field.applyChange(1); }
+					if(r == 2){ field.setAsNumberfield(0f, Integer.MAX_VALUE, true); field.applyChange(1); }
 					if(r == 3){ field.setAsNumberfield(Integer.MIN_VALUE, Integer.MAX_VALUE, true); field.applyChange(0); }
 				}
 				if(ii == 2){
@@ -46,9 +46,9 @@ public class CylinderEditor extends Editor {
 				this.elements.put(vals[r] + xyz[i] + "+", new Button(this, vals[r] + xyz[i] + "+", 12, 26, k + 16 + (j * i), 30 + (r * 50), rgb){
 					@Override
 					protected boolean processButtonClick(int x, int y, boolean left){
-						return ii == 2 ? false : FMTB.MODEL.updateValue((TextField)this.parent.getElement(vals[rr] + xyz[ii]), this.id);
+						FMTB.MODEL.updateValue((TextField)this.parent.getElement(vals[rr] + xyz[ii]), this.id); return true;
 					}
-				}.setText(" > ", true).setTexture("ui/background").setLevel(-1));
+				}.setText(" > ", true).setTexture("ui/background").setLevel(-1).setEnabled(r == 3 ? true : ii != 2));
 			}
 		}
 		this.addMultiplicator(230);
