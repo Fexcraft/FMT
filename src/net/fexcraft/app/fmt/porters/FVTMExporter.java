@@ -54,8 +54,9 @@ public class FVTMExporter extends InternalPorter {
 		buffer.append("public class " + validateName(compound.name) + "Model extends PartModel { //TODO replace into correct super class if needed\n\n");
 		if(this.extended){
 			buffer.append("\n");
-			for(String str : compound.getCompound().keySet()){
-				buffer.append(tab + "public TurboList " + str + ";\n");
+			for(TurboList list : compound.getCompound().values()){
+				if((onlyvisible && !list.visible) || list.isEmpty()) continue;
+				buffer.append(tab + "public TurboList " + list.id + ";\n");
 			}
 			buffer.append("\n");
 		}
@@ -116,7 +117,7 @@ public class FVTMExporter extends InternalPorter {
 					extended = true;
 				}
 				if(this.extended && (compound.texture != null || !wrapper.visible)){
-					shape.append("\n" + tab3 + ".setTextured(" + (compound.texture != null) + ").setLines(" + wrapper.visible + ")");
+					shape.append("\n" + tab3 + ".setTextured(" + (compound.texture != null) + ").setLines(" + !wrapper.visible + ")");
 					extended = true;
 				}
 				if(wrapper.name != null){ shape.append(".setName(\"" + wrapper.name + "\")"); }
