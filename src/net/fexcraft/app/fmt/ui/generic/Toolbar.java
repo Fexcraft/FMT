@@ -188,7 +188,11 @@ public class Toolbar extends Element {
 										@Override public void setupSubmenu(){ return; }
 										@Override protected boolean processButtonClick(int x, int y, boolean left){ Settings.toggleRaypick(); return true; }
 									}.setText("RayPick (Al.)", false));
-									this.elements.put("reset", new Button(this, "reset", 100, 26, 2, 142, subhover){
+									this.elements.put("rotmarker", new Button(this, "rotmarker", 100, 26, 2, 142, subhover){
+										@Override public void setupSubmenu(){ return; }
+										@Override protected boolean processButtonClick(int x, int y, boolean left){ Settings.togglePolygonMarker(); return true; }
+									}.setText("Poly. Marker", false));
+									this.elements.put("reset", new Button(this, "reset", 100, 26, 2, 170, subhover){
 										@Override public void setupSubmenu(){ return; }
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){

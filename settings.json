@@ -10,5 +10,6 @@
   "lines": true,
   "cube": false,
   "demo": false,
-  "raypick": true
+  "raypick": true,
+  "polygon_marker": false
 }

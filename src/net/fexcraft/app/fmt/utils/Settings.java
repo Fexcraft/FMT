@@ -127,7 +127,7 @@ public class Settings {
 		fullscreen = JsonUtil.getIfExists(obj, "fullscreen", fullscreen);
 		floor = JsonUtil.getIfExists(obj, "floor", floor); lines = JsonUtil.getIfExists(obj, "lines", lines);
 		cube = JsonUtil.getIfExists(obj, "cube", cube); demo = JsonUtil.getIfExists(obj, "demo", demo);
-		raypick = JsonUtil.getIfExists(obj, "raypick", raypick);
+		raypick = JsonUtil.getIfExists(obj, "raypick", raypick); polygon_marker = JsonUtil.getIfExists(obj, "polygon_marker", polygon_marker);
 	}
 
 	public static void save(){
@@ -167,6 +167,7 @@ public class Settings {
 		obj.addProperty("floor", floor); obj.addProperty("lines", lines);
 		obj.addProperty("cube", cube); obj.addProperty("demo", demo);
 		obj.addProperty("raypick", raypick);
+		obj.addProperty("polygon_marker", polygon_marker);
 		JsonUtil.write(new File("./settings.json"), obj);
 	}
 	

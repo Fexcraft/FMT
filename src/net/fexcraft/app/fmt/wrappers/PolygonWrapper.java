@@ -7,11 +7,12 @@ import com.google.gson.JsonObject;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
-import net.fexcraft.lib.common.utils.Print;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public abstract class PolygonWrapper {
 	
+	private static final ModelRendererTurbo rotmarker = new ModelRendererTurbo(null, 0, 0, 16, 16).addSphere(0, 0, 0, 0.5f, 8, 8, 0, 0).setTextured(false).setColor(Settings.selectedColor);
+	//
 	public Vec3f pos = new Vec3f(), off = new Vec3f(), rot = new Vec3f();
 	public int textureX, textureY;
 	protected ModelRendererTurbo turbo, lines, sellines, picker;
@@ -48,6 +49,10 @@ public abstract class PolygonWrapper {
 	public void renderLines(boolean rotXb, boolean rotYb, boolean rotZb){
 		//if(Settings.lines()) (selected ? sellines : lines).render();
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		if((selected || turbolist.selected) && Settings.polygonMarker()){
+			rotmarker.setRotationPoint(lines.rotationPointX, lines.rotationPointY, lines.rotationPointZ);
+			rotmarker.render();
+		}
 		if(Settings.lines()){
 			if(selected || turbolist.selected){
 				if(!widelines){ GL11.glLineWidth(4f); widelines = true; }
@@ -163,7 +168,7 @@ public abstract class PolygonWrapper {
 				color = lastint += 16;
 			}
 		}
-		Print.console(color + " ");
+		//Print.console(color + " ");
 		RGB rgb = new RGB(); rgb.packed = color; return rgb;
 	}
 
