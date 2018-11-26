@@ -83,5 +83,26 @@ public class CylinderWrapper extends PolygonWrapper {
 		if(topoff.zCoord != 0f) obj.addProperty("top_offset_z", topoff.zCoord);
 		return obj;
 	}
+
+	@Override
+	protected float[][][] newTexturePosition(){
+		float tx = textureX, ty = textureY, qrad = radius / 2, rad = radius * 2, rad2 = rad + rad;
+		float[][][] vecs = new float[10][][];
+		vecs[0] = new float[][]{
+			new float[]{ tx, ty },
+			new float[]{ tx + rad, ty + rad }
+		};
+		vecs[1] = new float[][]{
+			new float[]{ tx + rad, ty},
+			new float[]{ tx + rad2, ty + rad }
+		};
+		for(int i = 0; i < 8; i++){
+			vecs[2 + i] = new float[][]{
+				new float[]{ tx + (qrad * i), ty + rad },
+				new float[]{ tx + (qrad * (i + 1)), ty + rad + length }
+			};
+		}
+		return vecs;
+	}
 	
 }

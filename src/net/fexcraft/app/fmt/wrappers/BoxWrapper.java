@@ -53,5 +53,36 @@ public class BoxWrapper extends PolygonWrapper {
 		obj.addProperty("depth", size.zCoord);
 		return obj;
 	}
+
+	@Override
+	protected float[][][] newTexturePosition(){
+		float tx = textureX, ty = textureY, w = size.xCoord, h = size.yCoord, d = size.zCoord;
+		float[][][] vecs = new float[6][][];
+		vecs[0] = new float[][]{
+			new float[]{ tx + d + w, ty + d },
+			new float[]{ tx + d + w + d, ty + d + h }
+		};
+		vecs[1] = new float[][]{
+			new float[]{ tx, ty + d },
+			new float[]{ tx + d, ty + d + h }
+		};
+		vecs[2] = new float[][]{
+			new float[]{ tx + d, ty },
+			new float[]{ tx + d + w, ty + d }
+		};
+		vecs[3] = new float[][]{
+			new float[]{ tx + d + w, ty + 0 },
+			new float[]{ tx + d + w + w, ty + d }
+		};
+		vecs[4] = new float[][]{
+			new float[]{ tx + d, ty + d },
+			new float[]{ tx + d + w, ty + d + h }
+		};
+		vecs[5] = new float[][]{
+			new float[]{ tx + d + w + d, ty + d },
+			new float[]{ tx + d + w + d + w, ty + d + h }
+		};
+		return vecs;
+	}
 	
 }

@@ -28,6 +28,7 @@ public class Backups extends TimerTask {
 		File file = new File("./backups/(" + str + ") " + FMTB.MODEL.name + ".jtmt");
 		if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
 		JsonUtil.write(file, obj);
+		//TODO update to save in fmtb form
 	}
 	
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy HH.mm.ss");

@@ -275,10 +275,12 @@ public class FMTB implements FMTGLProcess {
 		ui.getElements().put("model_editor", new ModelEditor());
 		//
 		ui.getElements().put("z_crossbar", new Crossbar());
-		ui.getElements().put("z_toolbar", new Toolbar());
+		ui.getElements().put(TOOLBARID, new Toolbar());
 		//keep them last cause of render order
 		FMTB.MODEL.updateFields();
 	}
+	
+	public static final String TOOLBARID = "z_toolbar";
 
 	@Override
 	public UserInterface getUserInterface(){

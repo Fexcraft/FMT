@@ -6,8 +6,10 @@ import org.newdawn.slick.Color;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.generic.Button;
+import net.fexcraft.app.fmt.ui.generic.DialogBox;
 import net.fexcraft.app.fmt.ui.generic.TextField;
 import net.fexcraft.app.fmt.utils.TextureManager;
+import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.lib.common.math.RGB;
 
@@ -69,7 +71,7 @@ public class GeneralEditor extends Editor {
 			}
 		}.setText(" > ", true).setTexture("ui/background").setLevel(-1));
 		//
-		this.elements.put("boxname", new TextField(this, "boxname", 294, 4, 280) {
+		this.elements.put("boxname", new TextField(this, "boxname", 294, 4, 280){
 			@Override
 			public void updateTextField(){
 				if(FMTB.MODEL.getSelected().isEmpty()) return;
@@ -92,7 +94,35 @@ public class GeneralEditor extends Editor {
 			}
 		}.setText("null", true).setLevel(-1));
 		//
-		this.addMultiplicator(380);
+		this.elements.put("burntotex", new Button(this, "burntotex", 294, 28, 4, 380){
+			@Override
+			protected boolean processButtonClick(int x, int y, boolean left){
+				if(!left) return true;
+				if(FMTB.MODEL.texture == null){
+					FMTB.showDialogbox("There is not texture loaded.", "", "ok", "load", DialogBox.NOTHING, () -> {
+						try{
+							FMTB.get().UI.getElement(FMTB.TOOLBARID).getElement("textures").getElement("menu").getElement("select").onButtonClick(x, y, left, true);
+						}
+						catch(Exception e){
+							e.printStackTrace();
+						}
+					});
+				}
+				else{
+					Texture tex = TextureManager.getTexture(FMTB.MODEL.texture, true);
+					if(tex == null){
+						FMTB.showDialogbox("Texture not found in Memory.", "This rather bad.", "ok", null, DialogBox.NOTHING, null);
+					}
+					FMTB.MODEL.getCompound().values().forEach(list -> list.forEach(poly -> {
+						poly.burnToTexture(tex); //poly.recompile();
+					})); tex.rebind(); //TextureManager.saveTexture(FMTB.MODEL.texture);
+					//FMTB.showDialogbox("Done!", "", "ok", null, DialogBox.NOTHING, null);
+				}
+				return false;
+			}
+		}.setText("Burn to Texture", true).setTexture("ui/background"));
+		//
+		this.addMultiplicator(430);
 	}
 	
 	@Override
@@ -105,7 +135,8 @@ public class GeneralEditor extends Editor {
 		font.drawString(4, 240, "Texture (x/y)", Color.black);
 		font.drawString(4, 290, "Polygon Name", Color.black);
 		font.drawString(4, 340, "Group", Color.black);
-		font.drawString(4, 390, "Multiplicator/Rate", Color.black);
+		font.drawString(4, 390, "Texture Util", Color.black);
+		font.drawString(4, 440, "Multiplicator/Rate", Color.black);
 		RGB.glColorReset();
 	}
 

@@ -69,7 +69,7 @@ public class JTMTPorter extends InternalPorter {
 
 	@Override
 	public boolean isImporter(){
-		return true;
+		return !visibleonly;
 	}
 
 	@Override

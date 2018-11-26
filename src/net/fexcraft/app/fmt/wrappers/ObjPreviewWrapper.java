@@ -37,5 +37,10 @@ public class ObjPreviewWrapper extends PolygonWrapper {
 	public ShapeType getType(){
 		return ShapeType.OBJ;
 	}
+
+	@Override
+	protected float[][][] newTexturePosition(){
+		return new float[0][][];
+	}
 	
 }

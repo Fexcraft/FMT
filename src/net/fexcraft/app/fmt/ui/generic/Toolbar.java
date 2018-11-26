@@ -2,6 +2,9 @@ package net.fexcraft.app.fmt.ui.generic;
 
 import java.awt.Desktop;
 import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 import org.lwjgl.input.Mouse;
 
@@ -300,7 +303,7 @@ public class Toolbar extends Element {
 									this.elements.put("select", new Button(this, "select", 100, 26, 2, 2, subhover){
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
-											UserInterface.FILECHOOSER.show(new String[]{ "Select a texture file." }, new File("./textures"), new AfterTask(){
+											UserInterface.FILECHOOSER.show(new String[]{ "Select a texture file." }, new File("./resources/textures"), new AfterTask(){
 												@Override
 												public void run(){
 													String name = file.getPath(); TextureManager.loadTextureFromFile(name, file); FMTB.MODEL.setTexture(name);
@@ -338,7 +341,7 @@ public class Toolbar extends Element {
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
 											if(FMTB.MODEL.texture != null && TextureManager.getTexture(FMTB.MODEL.texture, true) != null){
-												TextureManager.removeTexture(FMTB.MODEL.texture);
+												FMTB.MODEL.setTexture(null); TextureManager.removeTexture(FMTB.MODEL.texture);
 											}
 											return true;
 										}
@@ -347,7 +350,12 @@ public class Toolbar extends Element {
 									this.elements.put("generate", new Button(this, "generate", 100, 26, 2, 86, subhover){
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
-											//TODO
+											String texname = "temp/" + FMTB.MODEL.name;
+											FMTB.MODEL.setTexture(texname);
+					                    	TextureManager.newBlankTexture(texname);
+					                    	Texture tex = TextureManager.getTexture(texname, true);
+					                    	FMTB.MODEL.getCompound().values().forEach(elm -> elm.forEach(poly -> poly.burnToTexture(tex)));
+					                    	TextureManager.saveTexture(texname); tex.reload(); FMTB.MODEL.recompile();
 											return true;
 										}
 									}.setText("Generate", false));
@@ -355,7 +363,10 @@ public class Toolbar extends Element {
 									this.elements.put("autopos", new Button(this, "autopos", 100, 26, 2, 114, subhover){
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
-											//TODO
+											FMTB.showDialogbox("Feature not avilable yet!", "\"sorry\"", "ok then.", "nay!", DialogBox.NOTHING, () -> {
+												try{ Desktop.getDesktop().browse(new URL("https://discord.gg/AkMAzaA").toURI()); }
+												catch(IOException | URISyntaxException e){ e.printStackTrace(); }
+											});
 											return true;
 										}
 									}.setText("AutoPosition", false));

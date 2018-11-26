@@ -1,19 +1,26 @@
 package net.fexcraft.app.fmt.wrappers;
 
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+
 import org.lwjgl.opengl.GL11;
 
 import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.utils.Settings;
+import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
+import net.fexcraft.lib.common.utils.Print;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public abstract class PolygonWrapper {
 	
 	private static final ModelRendererTurbo rotmarker = new ModelRendererTurbo(null, 0, 0, 16, 16).addSphere(0, 0, 0, 0.5f, 8, 8, 0, 0).setTextured(false).setColor(Settings.selectedColor);
+	private static final ModelRendererTurbo something = new ModelRendererTurbo(null, 0, 0, 16, 16).setTextured(false);
 	//
 	public Vec3f pos = new Vec3f(), off = new Vec3f(), rot = new Vec3f();
+	public float[][][] texpos = new float[0][][];
 	public int textureX, textureY;
 	protected ModelRendererTurbo turbo, lines, sellines, picker;
 	protected final GroupCompound compound;
@@ -31,19 +38,11 @@ public abstract class PolygonWrapper {
 	
 	public void recompile(){
 		this.clearMRT(turbo, lines, sellines, picker); this.setupMRT();
+		this.texpos = this.newTexturePosition();
 	}
 
 	public void render(boolean rotX, boolean rotY, boolean rotZ){
 		if(visible && turbo != null) turbo.render();
-		/*if(selected && turbo != null){
-			GL11.glPushMatrix();
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
-			GL11.glTranslatef( turbo.rotationPointX * 0.0625F,  turbo.rotationPointY * 0.0625F,  turbo.rotationPointZ * 0.0625F);
-			TextureManager.bindTexture("white"); yellow.glColorApply(); sphere.render(); RGB.glColorReset();
-			GL11.glTranslatef(-turbo.rotationPointX * 0.0625F, -turbo.rotationPointY * 0.0625F, -turbo.rotationPointZ * 0.0625F);
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
-			GL11.glPopMatrix();
-		}*/
 	}
 	
 	public void renderLines(boolean rotXb, boolean rotYb, boolean rotZb){
@@ -173,6 +172,8 @@ public abstract class PolygonWrapper {
 	}
 
 	protected abstract ModelRendererTurbo newMRT();
+	
+	protected abstract float[][][] newTexturePosition();
 
 	public boolean apply(String id, float value, boolean x, boolean y, boolean z){
 		boolean bool = false;
@@ -213,6 +214,26 @@ public abstract class PolygonWrapper {
 	
 	public ModelRendererTurbo getTurboObject(int i){
 		if(i < 0 || i > 2) i = 0; return i == 0 ? turbo : i == 1 ? lines : sellines;
+	}
+	
+	public boolean burnToTexture(Texture tex){
+		if(this.texpos == null || this.texpos.length == 0){
+			Print.console("Polygon '" + turbolist.id + ":" + this.name() + "' has no texture data, skipping.");
+			return false;
+		}
+		BufferedImage buff = tex.getImage(); int color = 0;
+		for(int i = 0; i < texpos.length; i++){
+			float[][] ends = texpos[i]; if(ends == null || ends.length == 0) continue; color = new Color(something.getColor(i).packed).darker().darker().getRGB();
+			for(float x = ends[0][0]; x < ends[1][0]; x += 0.5f){//double accuracy!
+				for(float y = ends[0][1]; y < ends[1][1]; y += 0.5f){//double accuracy!
+					if(x >= 0 && x <= buff.getWidth() && y >= 0 && y <= buff.getHeight()){
+						buff.setRGB((int)x, (int)y, color);
+					}
+					else continue;
+				}
+			}
+		}
+		return true;
 	}
 	
 }
