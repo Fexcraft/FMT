@@ -32,8 +32,8 @@ public class GeneralEditor extends Editor {
 				TextField field = new TextField(this, vals[r] + xyz[i], k, 16 + (j * i), 30 + (r * 50));
 				if(vals[r].equals("tex")){
 					switch(i){
-						case 0: field.setAsNumberfield(-FMTB.MODEL.textureX, FMTB.MODEL.textureX, true); break;
-						case 1: field.setAsNumberfield(-FMTB.MODEL.textureY, FMTB.MODEL.textureY, true); break;
+						case 0: field.setAsNumberfield(0, 8192, true); break;
+						case 1: field.setAsNumberfield(0, 8192, true); break;
 						case 2: field.setText(" - - - ", true); field.enabled = false; break;
 					}
 				}

@@ -183,6 +183,9 @@ public abstract class PolygonWrapper {
 					bool = this.setFloat(id, x, y, z, value);
 				} break;
 			}
+			case "tex":{
+				bool = this.setFloat(id, x, y, z, value); break;
+			}
 			case "pos": case "off": {
 				bool = this.setFloat(id, x, y, z, value); break;
 			}

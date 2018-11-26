@@ -312,6 +312,7 @@ public class GroupCompound {
 				editor.getField("cyl0x").applyChange(0); editor.getField("cyl0y").applyChange(0);
 				editor.getField("cyl1x").applyChange(0); editor.getField("cyl1y").applyChange(0);
 				editor.getField("cyl2x").applyChange(0); editor.getField("cyl2y").applyChange(0);
+				editor.getField("cyl3x").applyChange(0); editor.getField("cyl3y").applyChange(0); editor.getField("cyl3z").applyChange(0);
 			}
 			else{
 				editor.getField("cyl0x").applyChange(poly.getFloat("cyl0", true, false, false));
@@ -320,6 +321,10 @@ public class GroupCompound {
 				editor.getField("cyl1y").applyChange(poly.getFloat("cyl1", false, true, false));
 				editor.getField("cyl2x").applyChange(poly.getFloat("cyl2", true, false, false));
 				editor.getField("cyl2y").applyChange(poly.getFloat("cyl2", false, true, false));
+				//
+				editor.getField("cyl3x").applyChange(poly.getFloat("cyl3", true, false, false));
+				editor.getField("cyl3y").applyChange(poly.getFloat("cyl3", false, true, false));
+				editor.getField("cyl3z").applyChange(poly.getFloat("cyl3", false, false, true));
 			}
 			editor.getField("multiplicator").applyChange(rate);
 			//
