@@ -78,4 +78,12 @@ public class Editor extends Element {
 		return (TextField)elements.get(string);
 	}
 
+	public Button getButton(String string){
+		return (Button)elements.get(string);
+	}
+
+	public static Editor get(String string){
+		for(Editor edit : editors) if(edit.id.equals(string)) return edit; return null;
+	}
+
 }

@@ -9,6 +9,9 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.editor.TextureEditor;
+import net.fexcraft.app.fmt.ui.generic.DialogBox;
+import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 
@@ -33,20 +36,40 @@ public class RayCoastAway {
 		int id = new Color(((int) byteArray[0]) & 0xFF, ((int) byteArray[1]) & 0xFF, ((int) byteArray[2]) & 0xFF).getRGB() + 16777216;
 		//Print.console(id + "-ID");
 		buffer.clear(); PICKING = false; MOUSEOFF = false;
+		PolygonWrapper wrapper = getSelected(id);
+		if(wrapper == null) return;
+		if(!TextureEditor.BUCKETMODE){
+			boolean control = Keyboard.isKeyDown(Keyboard.KEY_LCONTROL);
+			boolean state = control ? wrapper.getList().selected : wrapper.selected;
+			if(!Keyboard.isKeyDown(Keyboard.KEY_LMENU)) FMTB.MODEL.clearSelection();
+			if(control){ wrapper.getList().selected = !state; }
+			else{ wrapper.selected = !state; }
+			FMTB.MODEL.updateFields();
+		}
+		else{
+			Texture tex;
+			if(FMTB.MODEL.texture == null || (tex = TextureManager.getTexture(FMTB.MODEL.texture, true)) == null){
+				FMTB.showDialogbox("No Texture loaded.", "Cannot use Paint Bucket.", "ok", "toggle off", DialogBox.NOTHING, () -> { TextureEditor.toggleBucketMode(); });
+				return;
+			}
+			if(wrapper.burnToTexture(tex, getSelectedFace(wrapper, id))){
+				tex.rebind(); TextureManager.saveTexture(FMTB.MODEL.texture);
+			}
+		}
+	}
+
+	private static int getSelectedFace(PolygonWrapper wrapper, int id){
+		for(int i = 0; i < wrapper.color.length; i++) if(wrapper.color[i] == id) return i; return -1;
+	}
+
+	private static PolygonWrapper getSelected(int id){
 		for(TurboList list : FMTB.MODEL.getCompound().values()){
 			for(PolygonWrapper wrapper : list){
 				for(int col : wrapper.color){
-					if(col == id){
-						boolean control = Keyboard.isKeyDown(Keyboard.KEY_LCONTROL);
-						boolean state = control ? wrapper.getList().selected : wrapper.selected;
-						if(!Keyboard.isKeyDown(Keyboard.KEY_LMENU)) FMTB.MODEL.clearSelection();
-						if(control){ wrapper.getList().selected = !state; }
-						else{ wrapper.selected = !state; }
-						FMTB.MODEL.updateFields();
-					}
+					if(col == id) return wrapper;
 				}
 			}
-		}
+		} return null;
 	}
 
 }

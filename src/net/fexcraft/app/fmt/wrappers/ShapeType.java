@@ -5,7 +5,7 @@ public enum ShapeType {
 	BOX, SHAPEBOX, FLEXBOX, TRAPEZOID, FLEXTRAPEZOID, CYLINDER, SPHERE, OBJ;
 
 	public boolean isCuboid(){
-		return this == BOX || this == SHAPEBOX || this== FLEXBOX || this==TRAPEZOID || this==FLEXTRAPEZOID;
+		return this == BOX || this == SHAPEBOX || this == FLEXBOX || this == TRAPEZOID || this == FLEXTRAPEZOID;
 	}
 
 	public boolean isShapebox(){

@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.google.gson.JsonObject;
 
+import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.lib.common.math.RGB;
@@ -234,20 +235,52 @@ public abstract class PolygonWrapper {
 			Print.console("Polygon '" + turbolist.id + ":" + this.name() + "' has no texture data, skipping.");
 			return false;
 		}
-		BufferedImage buff = tex.getImage(); int color = 0;
-		for(int i = 0; i < texpos.length; i++){
-			if(face != null && i != face) continue;
-			float[][] ends = texpos[i]; if(ends == null || ends.length == 0) continue; color = new Color(something.getColor(i).packed).darker().darker().getRGB();
-			for(float x = ends[0][0]; x < ends[1][0]; x += 0.5f){//double accuracy!
-				for(float y = ends[0][1]; y < ends[1][1]; y += 0.5f){//double accuracy!
-					if(x >= 0 && x <= buff.getWidth() && y >= 0 && y <= buff.getHeight()){
-						buff.setRGB((int)x, (int)y, color);
-					}
-					else continue;
+		BufferedImage buff = tex.getImage();
+		if(face == null){
+			for(int i = 0; i < texpos.length; i++){
+				float[][] ends = texpos[i]; if(ends == null || ends.length == 0) continue;
+				burn(buff, ends, new Color(something.getColor(i).packed).darker().darker().getRGB());
+			}
+		}
+		else{
+			if(this.getType().isCylinder()){
+				int segs = (int)this.getFloat("cyl1", true, false, false);//segments
+				float[][] ends = null;
+				if(face < segs){
+					ends = texpos[0];
 				}
+				else if(face < (segs * 2)){
+					float per = (face - segs) * 100f / segs;
+					//Print.console(false, new Object[]{ segs, face - segs, per });
+					int i = 0; while((per -= 12.5f) > 0f) i++;
+					//Print.console(false, new Object[]{ segs, face - segs, per, i });
+					ends = i < 0 || i >= 8 ? null : texpos[i + 2];
+				}
+				else if(face < (segs * 3)){
+					ends = texpos[1];
+				} else return false;
+				if(ends == null || ends.length == 0) return false;
+				burn(buff, ends, new Color(TextureEditor.CURRENTCOLOR.packed).getRGB());
+			}
+			else if(this.getType().isCuboid()){
+				float[][] ends = texpos[face]; if(ends == null || ends.length == 0) return false;
+				burn(buff, ends, new Color(TextureEditor.CURRENTCOLOR.packed).getRGB());
+			}
+			else{
+				Print.console("There is no known way of how to handle texture burning of '" + this.getType().name() + "'!");
 			}
 		}
 		return true;
+	}
+	
+	private void burn(BufferedImage img, float[][] ends, int color){
+		for(float x = ends[0][0]; x < ends[1][0]; x += 0.5f){
+			for(float y = ends[0][1]; y < ends[1][1]; y += 0.5f){
+				if(x >= 0 && x <= img.getWidth() && y >= 0 && y <= img.getHeight()){
+					img.setRGB((int)x, (int)y, color);
+				} else continue;
+			}
+		}
 	}
 	
 }

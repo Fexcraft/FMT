@@ -245,6 +245,13 @@ public class Toolbar extends Element {
 											Editor.toggle("model_editor"); return true;
 										}
 									}.setText("Model", false));
+									//
+									this.elements.put("texture", new Button(this, "texture", 100, 26, 2, 142, subhover){
+										@Override
+										protected boolean processButtonClick(int x, int y, boolean left){
+											Editor.toggle("texture_editor"); return true;
+										}
+									}.setText("Texture (Plain)", false));
 								}
 							});
 							break;

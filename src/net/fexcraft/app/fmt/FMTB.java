@@ -273,6 +273,7 @@ public class FMTB implements FMTGLProcess {
 		ui.getElements().put("helpertree", new HelperTree());
 		ui.getElements().put("preview_editor", new PreviewEditor());
 		ui.getElements().put("model_editor", new ModelEditor());
+		ui.getElements().put("texture_editor", new net.fexcraft.app.fmt.ui.editor.TextureEditor());
 		//
 		ui.getElements().put("z_crossbar", new Crossbar());
 		ui.getElements().put(TOOLBARID, new Toolbar());
