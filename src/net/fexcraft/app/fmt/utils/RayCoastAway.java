@@ -65,6 +65,7 @@ public class RayCoastAway {
 	private static PolygonWrapper getSelected(int id){
 		for(TurboList list : FMTB.MODEL.getCompound().values()){
 			for(PolygonWrapper wrapper : list){
+				if(wrapper.color == null) continue;
 				for(int col : wrapper.color){
 					if(col == id) return wrapper;
 				}

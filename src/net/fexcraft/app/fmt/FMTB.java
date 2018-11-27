@@ -65,7 +65,7 @@ import net.fexcraft.lib.tmt.ModelRendererTurbo;
 public class FMTB implements FMTGLProcess {
 	
 	public static final String deftitle = "Fexcraft Modelling Toolbox - %s";
-	public static String version = "1.0.2-test";
+	public static String version = "1.0.3-test";
 	//
 	private static String title;
 	private boolean close;
