@@ -60,6 +60,7 @@ public class GroupCompound {
 		else{
 			compound.values().forEach(elm -> elm.render());
 			compound.values().forEach(elm -> elm.renderLines());
+			//compound.values().forEach(elm -> elm.renderPicking());//uncomment for debugging the ray-/color-picker
 		}
 		if(scale != null){
 			GL11.glPopMatrix();

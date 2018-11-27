@@ -29,7 +29,7 @@ public abstract class PolygonWrapper {
 	private TurboList turbolist;
 	public boolean mirror, flip;
 	public boolean selected;
-	public Integer color;
+	public int[] color;
 	public String name;
 	
 	public PolygonWrapper(GroupCompound compound){
@@ -154,21 +154,31 @@ public abstract class PolygonWrapper {
 		turbo = newMRT().setTextured(compound.texture != null);
 		lines = newMRT().setLines(true);
 		sellines = newMRT().setLines(Settings.selectedColor);
-		picker = newMRT().setTextured(false).setColor(genColor());
+		//
+		picker = new ModelRendererTurbo(null, 0, 0, 16, 16){
+			@Override
+			public RGB getColor(int i){
+				return new RGB(genColor(this, i));
+			}
+		};
+		picker.copyTo(sellines.getVertices(), sellines.getFaces());
+		picker.setRotationPoint(sellines.rotationPointX, sellines.rotationPointY, sellines.rotationPointZ);
+		picker.setRotationAngle(sellines.rotateAngleX, sellines.rotateAngleY, sellines.rotateAngleZ);
+		picker.setTextured(false).setLines(false);
 	}
 	
 	//private static int maxcol = 16777215;
 	private static int lastint = 0;
 	
-	private RGB genColor(){
+	private RGB genColor(ModelRendererTurbo turbo, int face){
 		if(color == null){
-			color = lastint += 16;
-			if(color == 2048383){
-				color = lastint += 16;
+			color = new int[turbo.getFaces().length];
+			for(int i = 0; i < color.length; i++){
+				color[i] = lastint += 1;
+				if(color[i] == 2048383){ color[i] = lastint += 1; }
 			}
 		}
-		//Print.console(color + " ");
-		RGB rgb = new RGB(); rgb.packed = color; return rgb;
+		RGB rgb = new RGB(); rgb.packed = color[face]; return rgb;
 	}
 
 	protected abstract ModelRendererTurbo newMRT();
@@ -219,13 +229,14 @@ public abstract class PolygonWrapper {
 		if(i < 0 || i > 2) i = 0; return i == 0 ? turbo : i == 1 ? lines : sellines;
 	}
 	
-	public boolean burnToTexture(Texture tex){
+	public boolean burnToTexture(Texture tex, Integer face){
 		if(this.texpos == null || this.texpos.length == 0){
 			Print.console("Polygon '" + turbolist.id + ":" + this.name() + "' has no texture data, skipping.");
 			return false;
 		}
 		BufferedImage buff = tex.getImage(); int color = 0;
 		for(int i = 0; i < texpos.length; i++){
+			if(face != null && i != face) continue;
 			float[][] ends = texpos[i]; if(ends == null || ends.length == 0) continue; color = new Color(something.getColor(i).packed).darker().darker().getRGB();
 			for(float x = ends[0][0]; x < ends[1][0]; x += 0.5f){//double accuracy!
 				for(float y = ends[0][1]; y < ends[1][1]; y += 0.5f){//double accuracy!

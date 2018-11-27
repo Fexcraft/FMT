@@ -35,13 +35,15 @@ public class RayCoastAway {
 		buffer.clear(); PICKING = false; MOUSEOFF = false;
 		for(TurboList list : FMTB.MODEL.getCompound().values()){
 			for(PolygonWrapper wrapper : list){
-				if(wrapper.color == id){
-					boolean control = Keyboard.isKeyDown(Keyboard.KEY_LCONTROL);
-					boolean state = control ? wrapper.getList().selected : wrapper.selected;
-					if(!Keyboard.isKeyDown(Keyboard.KEY_LMENU)) FMTB.MODEL.clearSelection();
-					if(control){ wrapper.getList().selected = !state; }
-					else{ wrapper.selected = !state; }
-					FMTB.MODEL.updateFields();
+				for(int col : wrapper.color){
+					if(col == id){
+						boolean control = Keyboard.isKeyDown(Keyboard.KEY_LCONTROL);
+						boolean state = control ? wrapper.getList().selected : wrapper.selected;
+						if(!Keyboard.isKeyDown(Keyboard.KEY_LMENU)) FMTB.MODEL.clearSelection();
+						if(control){ wrapper.getList().selected = !state; }
+						else{ wrapper.selected = !state; }
+						FMTB.MODEL.updateFields();
+					}
 				}
 			}
 		}
