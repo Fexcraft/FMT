@@ -93,7 +93,7 @@ public class ImageHelper {
 			catch(Exception e){
 				e.printStackTrace();
 				Print.console("Failed to setup GIF creation, aborting operation.");
-				meta = null; currgif = null; tasktype = -1; HASTASK = false;
+				reset();
 			}
 		}
 		if(stage < 20){ stage++; return; } //let's make sure all UI rendering is cleared;
@@ -101,8 +101,7 @@ public class ImageHelper {
 			try{ gifwriter.writeToSequence(new IIOImage(displayToImage(), null, meta), param); }
 			catch(IOException e){
 				Print.console("Failed to write next GIF sequence, aborting operation.");
-				meta = null; currgif = null; tasktype = -1; HASTASK = false;
-				e.printStackTrace();
+				reset(); e.printStackTrace();
 			}
 		}
 		else{
@@ -115,7 +114,7 @@ public class ImageHelper {
         			e.printStackTrace();
         		}
         	});
-			meta = null; currgif = null; tasktype = -1; HASTASK = false;
+			reset();
 		}
 	}
 	
@@ -133,12 +132,13 @@ public class ImageHelper {
 			takeScreenshot(tasktype == 1);
 		}
 		else if(tasktype == 2){ createGif(true); }
-		else{
-			HASTASK = false;
-			return;//TODO gifs
-		}
+		else{ reset(); return; }
 	}
 	
+	private static void reset(){
+		meta = null; currgif = null; tasktype = -1; HASTASK = false; stage = 0;
+	}
+
 	/** see http://wiki.lwjgl.org/wiki/Taking_Screen_Shots.html */
 	private static BufferedImage displayToImage(){
 		GL11.glReadBuffer(GL11.GL_FRONT);
