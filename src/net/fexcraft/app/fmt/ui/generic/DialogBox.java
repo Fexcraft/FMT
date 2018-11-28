@@ -9,6 +9,7 @@ import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.lib.common.math.RGB;
+import net.fexcraft.lib.common.math.Time;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -19,6 +20,8 @@ public class DialogBox extends Element {
 	public static final Runnable NOTHING = () -> UserInterface.DIALOGBOX.reset();
 	private Button button0, button1;
 	private Runnable positive, negative;
+	public RGB progresscolor;
+	public int progress = -1;
 	private String[] text;
 	
 	public DialogBox(){
@@ -36,12 +39,21 @@ public class DialogBox extends Element {
 	@Override
 	public void renderSelf(int rw, int rh) {
 		this.renderQuad(x = (rw / 2) - (width / 2), y = (rh / 2) - (height / 2), width, height, "ui/dialogbox");
-		button0.x = x +  20; button0.y = y + 80; button1.x = x + 136; button1.y = y + 80;
+		button0.x = x + 20; button0.y = y + 80; button1.x = x + 136; button1.y = y + 80;
 		{
 			TextureManager.unbind();
 			font.drawString(this.x +  20, this.y + 20, text[0], Color.black);
 			font.drawString(this.x +  20, this.y + 40, text[1], Color.black);
 			RGB.glColorReset();
+		}
+		progress = Time.getSecond();
+		if(progress >= 0){
+			this.renderQuad(x + 20, y + 64, 216, 12, "white");
+			if(progress > 0){
+				(progresscolor == null ? RGB.GREEN : progresscolor).glColorApply();
+				this.renderQuad(x + 20, y + 64, (int)(progress * 2.16f), 12, "white");
+				RGB.glColorReset();
+			}
 		}
 	}
 	
@@ -78,6 +90,7 @@ public class DialogBox extends Element {
 	public void reset(){
 		this.positive = this.negative = null; this.text = null;
 		button0.setText(null, false); button1.setText(null, false); visible = false;
+		progress = -1; progresscolor = null;
 	}
 
 }

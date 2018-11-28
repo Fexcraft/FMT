@@ -247,6 +247,11 @@ public class FMTB implements FMTGLProcess {
 	public static void showDialogbox(String title, String desc, String button0, String button1, Runnable run0, Runnable run1){
 		UserInterface.DIALOGBOX.show(new String[]{ title == null ? "" : title, desc == null ? "" : desc, button0, button1 }, run0, run1);
 	}
+	
+	public static void showDialogbox(String title, String desc, String button0, String button1, Runnable run0, Runnable run1, int progress, RGB color){
+		UserInterface.DIALOGBOX.show(new String[]{ title == null ? "" : title, desc == null ? "" : desc, button0, button1 }, run0, run1);
+		UserInterface.DIALOGBOX.progress = progress; UserInterface.DIALOGBOX.progresscolor = color;
+	}
 
 	@Override
 	public DisplayMode getDisplayMode(){
