@@ -49,11 +49,22 @@ public class RayCoastAway {
 		else{
 			Texture tex;
 			if(FMTB.MODEL.texture == null || (tex = TextureManager.getTexture(FMTB.MODEL.texture, true)) == null){
-				FMTB.showDialogbox("No Texture loaded.", "Cannot use Paint Bucket.", "ok", "toggle off", DialogBox.NOTHING, () -> { TextureEditor.toggleBucketMode(false); });
+				FMTB.showDialogbox("No Texture loaded.", "Cannot use Paint Bucket.", "ok", "toggle off", DialogBox.NOTHING, () -> { TextureEditor.toggleBucketMode(null); });
 				return;
 			}
-			if(wrapper.burnToTexture(tex.getImage(), TextureEditor.WHOLE ? -1 : getSelectedFace(wrapper, id))){
-				tex.rebind(); TextureManager.saveTexture(FMTB.MODEL.texture);
+			if(TextureEditor.PMODE == TextureEditor.PaintMode.GROUP){
+				boolean rebind = false; TurboList list = wrapper.getList();
+				for(PolygonWrapper poly : list){
+					if(poly.burnToTexture(tex.getImage(), -1)){ rebind = true; }
+				}
+				if(rebind){
+					tex.rebind(); TextureManager.saveTexture(FMTB.MODEL.texture);
+				}
+			}
+			else{
+				if(wrapper.burnToTexture(tex.getImage(), TextureEditor.PMODE == TextureEditor.PaintMode.POLYGON ? -1 : getSelectedFace(wrapper, id))){
+					tex.rebind(); TextureManager.saveTexture(FMTB.MODEL.texture);
+				}
 			}
 		}
 	}
