@@ -203,6 +203,12 @@ public class Toolbar extends Element {
 											return DialogBox.notAvailableYet();
 										}
 									}.setText("Mirror (Z)", false));
+									for(int i = 0; i < 3; i++){
+										String str = i == 0 ? "x" : i == 1 ? "y" : "z"; int j = i; String[] arr = new String[]{ "[L/R]", "[U/D]", "[F/B]"};
+										this.elements.put("flip_" + str, new Button(this, "flip_" + str, 104, 26, 2, 114 + (i * 28), subhover){
+											@Override protected boolean processButtonClick(int x, int y, boolean left){ FMTB.MODEL.flipShapeboxes(j); return true; }
+										}.setText("Flip (" + str.toUpperCase() + ") " + arr[j], false));
+									}
 								}
 							});
 							break;
@@ -251,7 +257,7 @@ public class Toolbar extends Element {
 										protected boolean processButtonClick(int x, int y, boolean left){
 											Editor.toggle("texture_editor"); return true;
 										}
-									}.setText("Texture (Plain)", false));
+									}.setText("Texture", false));
 								}
 							});
 							break;
