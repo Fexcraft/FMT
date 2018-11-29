@@ -14,8 +14,8 @@ public class TextureEditor extends Editor {
 	private static final int rows = 9, colls = 32;
 	private static RGB[] pallete = new RGB[rows * rows];
 	private static RGB[] hopall = new RGB[36];
-	public static boolean BUCKETMODE;
-	private static RGB buttonhover;
+	public static boolean BUCKETMODE, WHOLE;
+	private static RGB button0hover;
 
 	public TextureEditor(){
 		super("texture_editor");
@@ -38,18 +38,26 @@ public class TextureEditor extends Editor {
 		//
 		this.elements.put("large_color_palette", new LargePallette(this, 4, 80));
 		this.elements.put("horizontal_color_palette", new HorizontalPallette(this, 4, 410));
-		this.elements.put("button", new Button(this, "button", 294, 28, 4, 460, buttonhover = new RGB(CURRENTCOLOR)){
+		this.elements.put("button0", new Button(this, "button0", 294, 28, 4, 460, button0hover = new RGB(CURRENTCOLOR)){
 			@Override
 			protected boolean processButtonClick(int x, int y, boolean left){
-				toggleBucketMode(); return true;
+				toggleBucketMode(false); return true;
 			}
-		}.setText("Paint Bucket [OFF]", true).setTexture("ui/pbwhite"));
+		}.setText("(Face) Paint Bucket [OFF]", true).setTexture("ui/pbwhite"));
+		this.elements.put("button1", new Button(this, "button1", 294, 28, 4, 490, button0hover = new RGB(CURRENTCOLOR)){
+			@Override
+			protected boolean processButtonClick(int x, int y, boolean left){
+				toggleBucketMode(true); return true;
+			}
+		}.setText("(Polygon) Paint Bucket [OFF]", true).setTexture("ui/pbwhite"));
 		//
 		this.updateFields();
 	}
 
-	public static void toggleBucketMode(){
-		BUCKETMODE = !BUCKETMODE; Editor.get("texture_editor").getButton("button").setText("Paint Bucket [" + (BUCKETMODE ? "ON" : "OFF") + "]", true);
+	public static void toggleBucketMode(boolean whole){
+		BUCKETMODE = !BUCKETMODE; WHOLE = whole;
+		Editor.get("texture_editor").getButton("button0").setText("(Face) Paint Bucket [" + (BUCKETMODE && !WHOLE ? "ON" : "OFF") + "]", true);
+		Editor.get("texture_editor").getButton("button1").setText("(Polygon) Paint Bucket [" + (BUCKETMODE && WHOLE ? "ON" : "OFF") + "]", true);
 	}
 	
 	private void updateFields(){
@@ -69,7 +77,7 @@ public class TextureEditor extends Editor {
 			}
 		}
 		//
-		buttonhover.packed = CURRENTCOLOR.packed;
+		button0hover.packed = CURRENTCOLOR.packed;
 	}
 	
 	protected boolean updateRGB(Boolean apply, int j){

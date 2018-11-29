@@ -240,6 +240,12 @@ public abstract class PolygonWrapper {
 				burn(image, ends, new Color(something.getColor(i).packed).darker().darker().getRGB());
 			}
 		}
+		else if(face == -1){
+			for(int i = 0; i < texpos.length; i++){
+				float[][] ends = texpos[i]; if(ends == null || ends.length == 0) continue;
+				burn(image, ends, new Color(TextureEditor.CURRENTCOLOR.packed).getRGB());
+			}
+		}
 		else{
 			if(this.getType().isCylinder()){
 				int segs = (int)this.getFloat("cyl1", true, false, false);//segments
