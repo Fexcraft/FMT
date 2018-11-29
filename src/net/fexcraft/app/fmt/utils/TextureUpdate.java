@@ -3,6 +3,7 @@ package net.fexcraft.app.fmt.utils;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.TimerTask;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.generic.DialogBox;
@@ -18,8 +19,8 @@ import net.fexcraft.lib.common.utils.Print;
 public class TextureUpdate extends TimerTask {
 	
 	private Texture texture; private static long lastedit;
+	public static boolean HALT = true, ALL, SAVESPACE;
 	private static ArrayList<PolygonWrapper> list;
-	public static boolean HALT = true, ALL;
 	private static BufferedImage image;
 	private static int last, per;
 
@@ -59,7 +60,15 @@ public class TextureUpdate extends TimerTask {
 
 	public static void tryAutoPos(Boolean bool){
 		if(bool == null){
-			FMTB.showDialogbox("Only process polygons with", "0, 0 texture pos?", "Yes", "No (All)", () -> { HALT = false; ALL = false; }, () -> { HALT = false; ALL = true; });
+			FMTB.showDialogbox("This process may mark", "FMT as not responding.", "ok", "cancel", () -> {
+				Runnable ZERO = () -> { HALT = false; ALL = false; };
+				Runnable AALL = () -> { HALT = false; ALL = true;  };
+				FMTB.showDialogbox("Use save-space mode?", "May reduce readability.", "Yes", "No", () -> {
+					SAVESPACE = true; FMTB.showDialogbox("Only process polygons with", "0, 0 texture pos?", "Yes", "No (All)", ZERO, AALL);
+				}, () -> {
+					SAVESPACE = false; FMTB.showDialogbox("Only process polygons with", "0, 0 texture pos?", "Yes", "No (All)", ZERO, AALL);
+				});
+			}, DialogBox.NOTHING);
 			return;
 		} HALT = false; ALL = bool;
 		//
@@ -78,13 +87,16 @@ public class TextureUpdate extends TimerTask {
 			}
 			PolygonWrapper wrapper = list.get(last); last++;
 			FMTB.showDialogbox("Processing: " + (per = getPercent(last, list.size())) + "%", wrapper.getTurboList().id + ":" + wrapper.name(), null, null, null, null, per, null);
-			if(wrapper.textureX != 0 && wrapper.textureY!= 0 && !bool){ Print.console("skipping0 " + wrapper.name()); return; }
-			if(wrapper.texpos == null || wrapper.texpos.length == 0){ Print.console("skipping1 " + wrapper.name()); return; }
+			if(wrapper.texpos == null || wrapper.texpos.length == 0){ Print.console("skipping1 [" + wrapper.getTurboList().id + ":" + wrapper.name() + "]"); return; }
+			if(wrapper.textureX != 0 && wrapper.textureY!= 0 && !bool){
+				Print.console("skipping0 [" + wrapper.getTurboList().id + ":" + wrapper.name() + "]");
+				wrapper.burnToTexture(image, null); Thread.sleep(10); return;
+			}
 			//
 			for(int yar = 0; yar < FMTB.MODEL.textureY; yar++){
 				for(int xar = 0; xar < FMTB.MODEL.textureX; xar++){
 					if(check(wrapper.texpos, xar, yar)){
-						Print.console(false, new Object[]{ wrapper.name(), xar, yar });
+						Print.console("[" + wrapper.getTurboList().id + ":" + wrapper.name() + "] >> " + xar + "x, " + yar + "y;");
 						wrapper.textureX = xar; wrapper.textureY = yar; wrapper.recompile(); wrapper.burnToTexture(image, null); Thread.sleep(10);
 						return;
 					}
@@ -97,15 +109,25 @@ public class TextureUpdate extends TimerTask {
 	}
 	
 	private static boolean check(float[][][] texpos, int xx, int yy){
-		float[][] ends = null; 
+		float[][] ends = null;
 		for(int i = 0; i < texpos.length; i++){ ends = texpos[i];
+			if(!SAVESPACE){
+				float[][] newend = new float[ends.length][];
+				for(int k = 0; k < newend.length; k++){
+					if(newend[k] == null){ newend[k] = new float[ends[k].length]; }
+					for(int l = 0; l < newend[k].length; l++){ newend[k][l] = ends[k][l]; }
+				} ends = newend;
+				//
+				ends[0][0] -= 1; ends[1][0] += 1;//x
+				ends[0][1] -= 1; ends[1][1] += 1;//y
+			}
 			for(float y = ends[0][1]; y < ends[1][1]; y += 0.5f){
 				for(float x = ends[0][0]; x < ends[1][0]; x += 0.5f){
 					int xr = (int)(xx + x), yr = (int)(yy + y);
 					if(xr < 0  || yr < 0 ) continue;
 					if(xr >= image.getWidth()|| yr >= image.getHeight()) return false;
 					//
-					if(image.getRGB(xr, yr) != Color.WHITE.getRGB()){ return false; } else continue;
+					if(image.getRGB(xr, yr) != Color.WHITE.getRGB()){ /*Print.console(xr + " " + yr + " || " + x + " " + y);*/ return false; } else continue;
 				}
 			}
 		} return true;
@@ -121,10 +143,9 @@ public class TextureUpdate extends TimerTask {
 				int x1 = (int)(righ.getType().isCylinder() ? righ.getFloat("cyl0", true, false, false) * 4 : righ.getFloat("size", true, false, false));
 				int y0 = (int)(left.getType().isCylinder() ? (left.getFloat("cyl0", true, false, false) * 2) + left.getFloat("cyl0", true, false, false) : left.getFloat("size", false, true, false));
 				int y1 = (int)(righ.getType().isCylinder() ? (righ.getFloat("cyl0", true, false, false) * 2) + righ.getFloat("cyl0", true, false, false) : righ.getFloat("size", false, true, false));
-				if(Integer.compare(x0, x1) > 1){ return 1; } return Integer.compare(y0, y1);
+				if(Integer.compare(x0, x1) > 1){ return Integer.compare(y0, y1); } return Integer.compare(x0, x1);
 			}
-		});
-		return arrlist;
+		}); Collections.reverse(arrlist); return arrlist;
 	}
 	
 	private static int getPercent(int i, int all){ return (i * 100) / all; }
