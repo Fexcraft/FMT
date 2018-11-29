@@ -267,27 +267,24 @@ public class FMTB implements FMTGLProcess {
 		TextureManager.loadTexture("icons/group_visible");
 		TextureManager.loadTexture("icons/group_edit");
 		TextureManager.loadTexture("icons/group_minimize");
-		//ui.getElements().put("crossbar", new Crossbar());
-		//ui.getElements().put("toolbar", new Toolbar());
-		ui.getElements().put("general_editor", new GeneralEditor());
-		ui.getElements().put("shapebox_editor", new ShapeboxEditor());
-		ui.getElements().put("modeltree", new ModelTree());
-		ui.getElements().put("cylinder_editor", new CylinderEditor());
-		ui.getElements().put("dialogbox", UserInterface.DIALOGBOX = new DialogBox());
-		ui.getElements().put("filechooser", UserInterface.FILECHOOSER = new FileChooser());
-		ui.getElements().put("group_editor", new GroupEditor());
-		ui.getElements().put("helpertree", new HelperTree());
-		ui.getElements().put("preview_editor", new PreviewEditor());
-		ui.getElements().put("model_editor", new ModelEditor());
-		ui.getElements().put("texture_editor", new net.fexcraft.app.fmt.ui.editor.TextureEditor());
-		//
-		ui.getElements().put("z_crossbar", new Crossbar());
-		ui.getElements().put(TOOLBARID, new Toolbar());
-		//keep them last cause of render order
+		//ui.getElements().add(new Crossbar());
+		//ui.getElements().add(new Toolbar());
+		ui.getElements().add(new GeneralEditor());
+		ui.getElements().add(new ShapeboxEditor());
+		ui.getElements().add(new ModelTree());
+		ui.getElements().add(new CylinderEditor());
+		ui.getElements().add(UserInterface.DIALOGBOX = new DialogBox());
+		ui.getElements().add(UserInterface.FILECHOOSER = new FileChooser());
+		ui.getElements().add(new GroupEditor());
+		ui.getElements().add(new HelperTree());
+		ui.getElements().add(new PreviewEditor());
+		ui.getElements().add(new ModelEditor());
+		ui.getElements().add(new net.fexcraft.app.fmt.ui.editor.TextureEditor());
+		//render last
+		ui.getElements().add(new Crossbar());
+		ui.getElements().add(new Toolbar());
 		FMTB.MODEL.updateFields();
 	}
-	
-	public static final String TOOLBARID = "z_toolbar";
 
 	@Override
 	public UserInterface getUserInterface(){

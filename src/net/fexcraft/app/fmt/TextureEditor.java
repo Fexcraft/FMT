@@ -101,7 +101,7 @@ public class TextureEditor implements FMTGLProcess {
 	public void setupUI(UserInterface ui){
 		TextureManager.loadTexture("ui/background");
 		TextureManager.loadTexture("ui/button_bg");
-		ui.getElements().put("toolbar", new Toolbar());
+		ui.getElements().add(new Toolbar());
 	}
 	
     public static class Receiver extends Thread {

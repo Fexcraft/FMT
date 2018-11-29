@@ -297,7 +297,7 @@ public class TestAppIgnore implements FMTGLProcess {
 		TextureManager.loadTexture("ui/background"); TextureManager.loadTexture("ui/button_bg");
 		//ui.getElements().put("dialogbox", UserInterface.DIALOGBOX = new DialogBox());
 		//ui.getElements().put("filechooser", UserInterface.FILECHOOSER = new FileChooser());
-		ui.getElements().put("text", new TextField(null, "text", 0, 0, 500){
+		ui.getElements().add(new TextField(null, "text", 0, 0, 500){
 			@Override
 			public void renderSelf(int rw, int rh){
 				this.y = rh - displaymode.getHeight() + 30;
@@ -306,7 +306,7 @@ public class TestAppIgnore implements FMTGLProcess {
 				super.renderSelf(rw, rh);
 			}
 		});
-		ui.getElements().put("toobar", new Toolbar());
+		ui.getElements().add(new Toolbar());
 	}
 
 	@Override

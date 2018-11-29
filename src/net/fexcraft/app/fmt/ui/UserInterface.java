@@ -1,7 +1,6 @@
 package net.fexcraft.app.fmt.ui;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
@@ -21,7 +20,7 @@ public class UserInterface {
 	public static DialogBox DIALOGBOX;
 	public static FileChooser FILECHOOSER;
 	//
-	private HashMap<String, Element> elements = new HashMap<>();
+	private ArrayList<Element> elements = new ArrayList<>();
 	private FMTGLProcess root;
 
 	public UserInterface(FMTGLProcess main){
@@ -48,7 +47,7 @@ public class UserInterface {
 			tmelm.render(width, height); logintxt.render(width, height);
 		}
 		else{
-			elements.values().forEach(elm -> elm.render(width, height));
+			for(Element elm : elements) elm.render(width, height);
 		}
 		//
 		{
@@ -104,7 +103,7 @@ public class UserInterface {
 	};
 
 	public boolean isAnyHovered(){
-		return elements.values().stream().filter(pre -> pre.anyHovered()).count() > 0;
+		return elements.stream().filter(pre -> pre.anyHovered()).count() > 0;
 	}
 
 	public void onButtonPress(int i){
@@ -115,7 +114,7 @@ public class UserInterface {
 		}
 		else{
 			Element eelm = null;
-			for(Element elm : elements.values()){
+			for(Element elm : elements){
 				if(elm.visible && elm.enabled /*&& elm.hovered*/){
 					if(elm.onButtonClick(Mouse.getX(), root.getDisplayMode().getHeight() - Mouse.getY(), i == 0, elm.hovered)){
 						return;
@@ -129,7 +128,7 @@ public class UserInterface {
 	}
 
 	public boolean onScrollWheel(int wheel){
-		for(Element elm : elements.values()){
+		for(Element elm : elements){
 			if(elm.visible && elm.enabled){
 				if(elm.onScrollWheel(wheel)) return true;
 			}
@@ -137,15 +136,13 @@ public class UserInterface {
 	}
 
 	public Element getElement(String string){
-		return elements.get(string);
+		for(Element elm : elements) if(elm.id.equals(string)) return elm; return null;
 	}
 
 	public boolean hasElement(String string){
-		return elements.containsKey(string);
+		return getElement(string) != null;
 	}
 	
-	public Map<String, Element> getElements(){
-		return this.elements;
-	}
+	public ArrayList<Element> getElements(){ return elements; }
 	
 }
