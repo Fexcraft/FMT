@@ -160,6 +160,7 @@ public class FMTB implements FMTGLProcess {
             try{ Thread.sleep(100); }
             catch(Exception e){ e.printStackTrace(); }
         }
+        if(!TextureUpdate.HALT){ TextureUpdate.tryAutoPos(TextureUpdate.ALL); }
 	}
 	
 	private void render(){

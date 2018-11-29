@@ -2,10 +2,6 @@ package net.fexcraft.app.fmt.ui.generic;
 
 import java.awt.Desktop;
 import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
-
 import org.lwjgl.input.Mouse;
 
 import net.fexcraft.app.fmt.FMTB;
@@ -23,6 +19,7 @@ import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
+import net.fexcraft.app.fmt.utils.TextureUpdate;
 import net.fexcraft.app.fmt.wrappers.BoxWrapper;
 import net.fexcraft.app.fmt.wrappers.CylinderWrapper;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
@@ -361,7 +358,7 @@ public class Toolbar extends Element {
 											FMTB.MODEL.setTexture(texname);
 					                    	TextureManager.newBlankTexture(texname);
 					                    	Texture tex = TextureManager.getTexture(texname, true);
-					                    	FMTB.MODEL.getCompound().values().forEach(elm -> elm.forEach(poly -> poly.burnToTexture(tex, null)));
+					                    	FMTB.MODEL.getCompound().values().forEach(elm -> elm.forEach(poly -> poly.burnToTexture(tex.getImage(), null)));
 					                    	TextureManager.saveTexture(texname); tex.reload(); FMTB.MODEL.recompile();
 											return true;
 										}
@@ -370,11 +367,7 @@ public class Toolbar extends Element {
 									this.elements.put("autopos", new Button(this, "autopos", 100, 26, 2, 114, subhover){
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
-											FMTB.showDialogbox("Feature not avilable yet!", "\"sorry\"", "ok then.", "nay!", DialogBox.NOTHING, () -> {
-												try{ Desktop.getDesktop().browse(new URL("https://discord.gg/AkMAzaA").toURI()); }
-												catch(IOException | URISyntaxException e){ e.printStackTrace(); }
-											});
-											return true;
+											TextureUpdate.tryAutoPos(null); return true;
 										}
 									}.setText("AutoPosition", false));
 								}

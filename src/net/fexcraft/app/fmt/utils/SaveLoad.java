@@ -78,6 +78,7 @@ public class SaveLoad {
 	}
 	
 	public static void checkIfShouldSave(boolean shouldclose){
+		TextureUpdate.HALT = true;
 		if(FMTB.MODEL.countTotalMRTs() > 0){
 			FMTB.showDialogbox("Do you want to save the", "current model first?", "Yes", "No", new Runnable(){
 				@Override

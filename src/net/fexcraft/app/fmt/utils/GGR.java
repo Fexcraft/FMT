@@ -112,7 +112,7 @@ public class GGR {
     	            if(key == Keyboard.KEY_UP){ this.rotation.xCoord += 15; }
     	            if(key == Keyboard.KEY_DOWN){ this.rotation.xCoord -= 15; }
     	            //
-    	            if(key == Keyboard.KEY_SYSRQ || key == Keyboard.KEY_F12){
+    	            if(/*key == Keyboard.KEY_SYSRQ ||*/ key == Keyboard.KEY_F12){
     	            	ImageHelper.takeScreenshot(false);
     	            	FMTB.showDialogbox("Screenshot taken.", "", "OK", "Open", DialogBox.NOTHING, () -> {
     	            		try{ Desktop.getDesktop().open(new File("./screenshots/")); }

@@ -56,7 +56,7 @@ public class BoxWrapper extends PolygonWrapper {
 
 	@Override
 	protected float[][][] newTexturePosition(){
-		float tx = textureX, ty = textureY, w = size.xCoord, h = size.yCoord, d = size.zCoord;
+		float tx = 0 /*textureX*/, ty = 0 /*textureY*/, w = size.xCoord, h = size.yCoord, d = size.zCoord;
 		float[][][] vecs = new float[6][][];
 		vecs[0] = new float[][]{
 			new float[]{ tx + d + w, ty + d },

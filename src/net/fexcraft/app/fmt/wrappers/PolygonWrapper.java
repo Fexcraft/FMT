@@ -9,7 +9,6 @@ import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.utils.Settings;
-import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.common.utils.Print;
@@ -230,16 +229,15 @@ public abstract class PolygonWrapper {
 		if(i < 0 || i > 2) i = 0; return i == 0 ? turbo : i == 1 ? lines : sellines;
 	}
 	
-	public boolean burnToTexture(Texture tex, Integer face){
+	public boolean burnToTexture(BufferedImage image, Integer face){
 		if(this.texpos == null || this.texpos.length == 0){
 			Print.console("Polygon '" + turbolist.id + ":" + this.name() + "' has no texture data, skipping.");
 			return false;
 		}
-		BufferedImage buff = tex.getImage();
 		if(face == null){
 			for(int i = 0; i < texpos.length; i++){
 				float[][] ends = texpos[i]; if(ends == null || ends.length == 0) continue;
-				burn(buff, ends, new Color(something.getColor(i).packed).darker().darker().getRGB());
+				burn(image, ends, new Color(something.getColor(i).packed).darker().darker().getRGB());
 			}
 		}
 		else{
@@ -260,11 +258,11 @@ public abstract class PolygonWrapper {
 					ends = texpos[1];
 				} else return false;
 				if(ends == null || ends.length == 0) return false;
-				burn(buff, ends, new Color(TextureEditor.CURRENTCOLOR.packed).getRGB());
+				burn(image, ends, new Color(TextureEditor.CURRENTCOLOR.packed).getRGB());
 			}
 			else if(this.getType().isCuboid()){
 				float[][] ends = texpos[face]; if(ends == null || ends.length == 0) return false;
-				burn(buff, ends, new Color(TextureEditor.CURRENTCOLOR.packed).getRGB());
+				burn(image, ends, new Color(TextureEditor.CURRENTCOLOR.packed).getRGB());
 			}
 			else{
 				Print.console("There is no known way of how to handle texture burning of '" + this.getType().name() + "'!");
@@ -276,11 +274,14 @@ public abstract class PolygonWrapper {
 	private void burn(BufferedImage img, float[][] ends, int color){
 		for(float x = ends[0][0]; x < ends[1][0]; x += 0.5f){
 			for(float y = ends[0][1]; y < ends[1][1]; y += 0.5f){
-				if(x >= 0 && x <= img.getWidth() && y >= 0 && y <= img.getHeight()){
-					img.setRGB((int)x, (int)y, color);
+				int xa = (int)(x + textureX), ya = (int)(y + textureY);
+				if(xa >= 0 && xa < img.getWidth() && ya >= 0 && ya < img.getHeight()){
+					img.setRGB(xa, ya, color);
 				} else continue;
 			}
 		}
 	}
+	
+	public TurboList getTurboList(){ return turbolist; }
 	
 }

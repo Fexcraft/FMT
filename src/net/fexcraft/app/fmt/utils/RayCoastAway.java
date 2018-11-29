@@ -52,7 +52,7 @@ public class RayCoastAway {
 				FMTB.showDialogbox("No Texture loaded.", "Cannot use Paint Bucket.", "ok", "toggle off", DialogBox.NOTHING, () -> { TextureEditor.toggleBucketMode(); });
 				return;
 			}
-			if(wrapper.burnToTexture(tex, getSelectedFace(wrapper, id))){
+			if(wrapper.burnToTexture(tex.getImage(), getSelectedFace(wrapper, id))){
 				tex.rebind(); TextureManager.saveTexture(FMTB.MODEL.texture);
 			}
 		}

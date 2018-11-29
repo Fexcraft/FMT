@@ -9,7 +9,6 @@ import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.lib.common.math.RGB;
-import net.fexcraft.lib.common.math.Time;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -46,7 +45,6 @@ public class DialogBox extends Element {
 			font.drawString(this.x +  20, this.y + 40, text[1], Color.black);
 			RGB.glColorReset();
 		}
-		progress = Time.getSecond();
 		if(progress >= 0){
 			this.renderQuad(x + 20, y + 64, 216, 12, "white");
 			if(progress > 0){

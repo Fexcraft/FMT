@@ -114,7 +114,7 @@ public class GeneralEditor extends Editor {
 						FMTB.showDialogbox("Texture not found in Memory.", "This rather bad.", "ok", null, DialogBox.NOTHING, null);
 					}
 					FMTB.MODEL.getCompound().values().forEach(list -> list.forEach(poly -> {
-						poly.burnToTexture(tex, null); //poly.recompile();
+						poly.burnToTexture(tex.getImage(), null); //poly.recompile();
 					})); tex.rebind(); //TextureManager.saveTexture(FMTB.MODEL.texture);
 					//FMTB.showDialogbox("Done!", "", "ok", null, DialogBox.NOTHING, null);
 				}
