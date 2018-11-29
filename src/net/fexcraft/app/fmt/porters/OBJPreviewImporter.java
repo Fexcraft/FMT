@@ -12,7 +12,7 @@ public class OBJPreviewImporter extends InternalPorter {
 	@Override
 	public GroupCompound importModel(File file){
 		GroupCompound compound = new GroupCompound();
-		compound.add(new ObjPreviewWrapper(compound, file));
+		compound.add(new ObjPreviewWrapper(compound, file), null, true);
 		return compound;
 	}
 

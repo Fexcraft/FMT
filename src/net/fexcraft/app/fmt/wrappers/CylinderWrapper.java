@@ -14,6 +14,16 @@ public class CylinderWrapper extends PolygonWrapper {
 	public CylinderWrapper(GroupCompound compound){
 		super(compound);
 	}
+
+	@Override
+	protected PolygonWrapper createClone(GroupCompound compound){
+		CylinderWrapper wrapper = new CylinderWrapper(compound);
+		wrapper.radius = radius; wrapper.length = length;
+		wrapper.base = base; wrapper.top = top;
+		wrapper.segments = segments;
+		wrapper.direction = direction;
+		wrapper.topoff = new Vec3f(topoff); return wrapper;
+	}
 	
 	protected ModelRendererTurbo newMRT(){
 		return new ModelRendererTurbo(null, textureX, textureY, compound.textureX, compound.textureY)

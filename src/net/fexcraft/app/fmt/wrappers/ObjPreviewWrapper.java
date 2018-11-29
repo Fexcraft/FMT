@@ -12,6 +12,11 @@ public class ObjPreviewWrapper extends PolygonWrapper {
 	public ObjPreviewWrapper(GroupCompound compound, File file){
 		super(compound); this.source = file;
 	}
+
+	@Override
+	protected PolygonWrapper createClone(GroupCompound compound){
+		return new ObjPreviewWrapper(compound, source);
+	}
 	
 	protected ModelRendererTurbo newMRT(){
 		try{

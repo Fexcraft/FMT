@@ -13,6 +13,14 @@ public class ShapeboxWrapper extends BoxWrapper {
 	public ShapeboxWrapper(GroupCompound compound){
 		super(compound);
 	}
+
+	@Override
+	protected PolygonWrapper createClone(GroupCompound compound){
+		ShapeboxWrapper wrapper = new ShapeboxWrapper(compound);
+		wrapper.cor0 = new Vec3f(cor0); wrapper.cor1 = new Vec3f(cor1); wrapper.cor2 = new Vec3f(cor2); wrapper.cor3 = new Vec3f(cor3);
+		wrapper.cor4 = new Vec3f(cor4); wrapper.cor5 = new Vec3f(cor5); wrapper.cor6 = new Vec3f(cor6); wrapper.cor7 = new Vec3f(cor7);
+		wrapper.size = new Vec3f(size); return wrapper;
+	}
 	
 	protected ModelRendererTurbo newMRT(){
 		return new ModelRendererTurbo(null, textureX, textureY, compound.textureX, compound.textureY)

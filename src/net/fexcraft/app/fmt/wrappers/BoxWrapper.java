@@ -84,5 +84,11 @@ public class BoxWrapper extends PolygonWrapper {
 		};
 		return vecs;
 	}
+
+	@Override
+	protected PolygonWrapper createClone(GroupCompound compound){
+		BoxWrapper wrapper = new BoxWrapper(compound);
+		wrapper.size = new Vec3f(size); return wrapper;
+	}
 	
 }

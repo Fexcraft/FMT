@@ -134,12 +134,12 @@ public class GroupCompound {
 		return true;
 	}
 
-	public void add(PolygonWrapper shape){
+	public void add(PolygonWrapper shape, String group, boolean clear){
 		try{
 			if(compound.isEmpty()) compound.put("group0", new TurboList("group0"));
-			TurboList list = (compound.containsKey("body") ? compound.get("body") : (TurboList)compound.values().toArray()[0]);
-			clearSelection(); shape.selected = true; list.add(shape); shape.setList(list); shape.recompile();
-			this.updateFields();
+			if(group != null && !compound.containsKey(group)) compound.put(group, new TurboList(group));
+			TurboList list = (group == null ? compound.containsKey("body") ? compound.get("body") : (TurboList)compound.values().toArray()[0] : compound.get(group));
+			if(clear){ clearSelection(); } shape.selected = true; list.add(shape); shape.setList(list); shape.recompile(); this.updateFields();
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -407,6 +407,12 @@ public class GroupCompound {
 		ArrayList<TurboList> array = new ArrayList<>();
 		for(TurboList list : compound.values()) if(list.selected) array.add(list);
 		return array;
+	}
+
+	public void copyAndSelect(){
+		ArrayList<PolygonWrapper> list = this.getSelected(), newlist = new ArrayList<>();
+		for(PolygonWrapper wrapper : list){ newlist.add(wrapper.clone()); } this.clearSelection();
+		for(PolygonWrapper wrapper : newlist){ this.add(wrapper, "clipboard", false); } return;
 	}
 
 }

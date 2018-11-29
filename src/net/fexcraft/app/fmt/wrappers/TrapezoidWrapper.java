@@ -1,6 +1,8 @@
 package net.fexcraft.app.fmt.wrappers;
 
 import com.google.gson.JsonObject;
+
+import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public class TrapezoidWrapper extends BoxWrapper {
@@ -10,6 +12,13 @@ public class TrapezoidWrapper extends BoxWrapper {
 
 	public TrapezoidWrapper(GroupCompound compound){
 		super(compound);
+	}
+
+	@Override
+	protected PolygonWrapper createClone(GroupCompound compound){
+		TrapezoidWrapper wrapper = new TrapezoidWrapper(compound);
+		wrapper.size = new Vec3f(size); wrapper.scale = scale; wrapper.mr_side = mr_side;
+		return wrapper;
 	}
 	
 	protected ModelRendererTurbo newMRT(){

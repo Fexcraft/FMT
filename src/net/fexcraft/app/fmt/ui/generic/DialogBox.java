@@ -3,8 +3,12 @@
  */
 package net.fexcraft.app.fmt.ui.generic;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+
 import org.newdawn.slick.Color;
 
+import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.utils.TextureManager;
@@ -89,6 +93,13 @@ public class DialogBox extends Element {
 		this.positive = this.negative = null; this.text = null;
 		button0.setText(null, false); button1.setText(null, false); visible = false;
 		progress = -1; progresscolor = null;
+	}
+
+	public static boolean notAvailableYet(){
+		FMTB.showDialogbox("Feature not available yet.", "", "ok", "discord", NOTHING, () -> {
+			try { java.awt.Desktop.getDesktop().browse(new java.net.URL("https://discord.gg/AkMAzaA").toURI()); }
+			catch(IOException | URISyntaxException e){ e.printStackTrace(); }
+		}); return true;
 	}
 
 }

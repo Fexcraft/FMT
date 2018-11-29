@@ -128,22 +128,6 @@ public class Toolbar extends Element {
 										}
 									}.setText("Redo", false));
 									//
-									/*this.elements.put("movesel", new Button(this, "movesel", 100, 26, 2, 58, subhover){
-										@Override
-										protected boolean processButtonClick(int x, int y, boolean left){
-											//TODO
-											return true;
-										}
-									}.setText("Move Sel.", false));
-									//
-									this.elements.put("delsel", new Button(this, "delsel", 100, 26, 2, 86, subhover){
-										@Override
-										protected boolean processButtonClick(int x, int y, boolean left){
-											//TODO
-											return true;
-										}
-									}.setText("Delete Sel.", false));*/
-									//
 									this.elements.put("create_gif", new Button(this, "create_gif", 100, 26, 2, 58, subhover){
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
@@ -157,6 +141,33 @@ public class Toolbar extends Element {
 											ImageHelper.takeScreenshot(true); return true;
 										}
 									}.setText("Screenshot", false));
+									this.elements.put("reset", new Button(this, "reset", 100, 26, 2, 114, subhover){
+										@Override public void setupSubmenu(){ return; }
+										@Override
+										protected boolean processButtonClick(int x, int y, boolean left){
+											FMTB.ggr = new GGR(FMTB.get(), 0, 4, 4); FMTB.ggr.rotation.xCoord = 45;
+											return true;
+										}
+									}.setText("Reset Cam.", false));
+									//
+									this.elements.put("random", new Button(this, "random", 100, 26, 2, 142, subhover){
+										@Override
+										protected boolean processButtonClick(int x, int y, boolean left){
+											long l = 0, ll = 0;
+											for(TurboList list : FMTB.MODEL.getCompound().values()){
+												for(PolygonWrapper wrapper : list){
+													l += jdk.nashorn.internal.ir.debug.ObjectSizeCalculator.getObjectSize(wrapper.getTurboObject(0));
+												}
+											}
+											ll = jdk.nashorn.internal.ir.debug.ObjectSizeCalculator.getObjectSize(FMTB.MODEL);
+											Print.console("MainClass: " + Settings.byteCountToString(jdk.nashorn.internal.ir.debug.ObjectSizeCalculator.getObjectSize(FMTB.get()), true));
+											FMTB.showDialogbox("Size (MC / Editor): ", Settings.byteCountToString(l, true) + " // " + Settings.byteCountToString(ll, true), "ok", null, DialogBox.NOTHING, null);
+											//
+											long uis = jdk.nashorn.internal.ir.debug.ObjectSizeCalculator.getObjectSize(FMTB.get().UI);
+											Print.console("UI: " + Settings.byteCountToString(uis, true));
+											return true;
+										}
+									}.setText("Calc Size.", false));
 								}
 							});
 							break;
@@ -165,41 +176,33 @@ public class Toolbar extends Element {
 							this.elements.put("menu", new Menulist(this, "menu", 104, 200, (j * 102), 28){
 								@Override
 								public void addButtons(){
-									this.elements.put("floor", new Button(this, "floor", 100, 26, 2, 2, subhover){
-										@Override public void setupSubmenu(){ return; }
-										@Override protected boolean processButtonClick(int x, int y, boolean left){ Settings.toggleFloor(); return true; }
-									}.setText("Toggle Floor", false));
-									//
-									this.elements.put("lines", new Button(this, "lines", 100, 26, 2, 30, subhover){
-										@Override public void setupSubmenu(){ return; }
-										@Override protected boolean processButtonClick(int x, int y, boolean left){ Settings.toggleLines(); return true; }
-									}.setText("Line/Border", false));
-									//
-									this.elements.put("cube", new Button(this, "cube", 100, 26, 2, 58, subhover){
-										@Override public void setupSubmenu(){ return; }
-										@Override protected boolean processButtonClick(int x, int y, boolean left){ Settings.toggleCube(); return true; }
-									}.setText("Center Cube", false));
-									//
-									this.elements.put("demo", new Button(this, "demo", 100, 26, 2, 86, subhover){
-										@Override public void setupSubmenu(){ return; }
-										@Override protected boolean processButtonClick(int x, int y, boolean left){ Settings.toggleDemo(); return true; }
-									}.setText("Demo Model", false));
-									this.elements.put("raypick", new Button(this, "raypick", 100, 26, 2, 114, subhover){
-										@Override public void setupSubmenu(){ return; }
-										@Override protected boolean processButtonClick(int x, int y, boolean left){ Settings.toggleRaypick(); return true; }
-									}.setText("RayPick (Al.)", false));
-									this.elements.put("rotmarker", new Button(this, "rotmarker", 100, 26, 2, 142, subhover){
-										@Override public void setupSubmenu(){ return; }
-										@Override protected boolean processButtonClick(int x, int y, boolean left){ Settings.togglePolygonMarker(); return true; }
-									}.setText("Poly. Marker", false));
-									this.elements.put("reset", new Button(this, "reset", 100, 26, 2, 170, subhover){
-										@Override public void setupSubmenu(){ return; }
+									this.elements.put("copy", new Button(this, "copy", 100, 26, 2, 2, subhover){
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
-											FMTB.ggr = new GGR(FMTB.get(), 0, 4, 4); FMTB.ggr.rotation.xCoord = 45;
-											return true;
+											FMTB.MODEL.copyAndSelect(); return true;
 										}
-									}.setText("Reset Cam.", false));
+									}.setText("Copy Sel", false));
+									//
+									this.elements.put("mirror_x", new Button(this, "mirror_x", 100, 26, 2, 30, subhover){
+										@Override
+										protected boolean processButtonClick(int x, int y, boolean left){
+											return DialogBox.notAvailableYet();
+										}
+									}.setText("Mirror (X)", false));
+									//
+									this.elements.put("mirror_y", new Button(this, "mirror_y", 100, 26, 2, 58, subhover){
+										@Override
+										protected boolean processButtonClick(int x, int y, boolean left){
+											return DialogBox.notAvailableYet();
+										}
+									}.setText("Mirror (Y)", false));
+									//
+									this.elements.put("mirror_z", new Button(this, "mirror_z", 100, 26, 2, 86, subhover){
+										@Override
+										protected boolean processButtonClick(int x, int y, boolean left){
+											return DialogBox.notAvailableYet();
+										}
+									}.setText("Mirror (Z)", false));
 								}
 							});
 							break;
@@ -260,7 +263,7 @@ public class Toolbar extends Element {
 									this.elements.put("add_box", new Button(this, "add_box", 120, 26, 2, 2, subhover){
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
-											FMTB.MODEL.add(new BoxWrapper(FMTB.MODEL));
+											FMTB.MODEL.add(new BoxWrapper(FMTB.MODEL), null, true);
 											this.parent.visible = false; return true;
 										}
 									}.setText("Add Box/Cube", false));
@@ -268,7 +271,7 @@ public class Toolbar extends Element {
 									this.elements.put("add_shapebox", new Button(this, "add_shapebox", 120, 26, 2, 30, subhover){
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
-											FMTB.MODEL.add(new ShapeboxWrapper(FMTB.MODEL));
+											FMTB.MODEL.add(new ShapeboxWrapper(FMTB.MODEL), null, true);
 											this.parent.visible = false; return true;
 										}
 									}.setText("Add Shapebox", false));
@@ -276,7 +279,7 @@ public class Toolbar extends Element {
 									this.elements.put("add_cylinder", new Button(this, "add_cylinder", 120, 26, 2, 58, subhover){
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
-											FMTB.MODEL.add(new CylinderWrapper(FMTB.MODEL));
+											FMTB.MODEL.add(new CylinderWrapper(FMTB.MODEL), null, true);
 											this.parent.visible = false; return true;
 										}
 									}.setText("Add Cylinder", false));
@@ -421,7 +424,35 @@ public class Toolbar extends Element {
 							this.elements.put("menu", new Menulist(this, "menu", 104, 200, (j * 102), 28){
 								@Override
 								public void addButtons(){
-									this.elements.put("controls", new Button(this, "controls", 100, 26, 2, 2, subhover){
+									this.elements.put("floor", new Button(this, "floor", 100, 26, 2, 2, subhover){
+										@Override public void setupSubmenu(){ return; }
+										@Override protected boolean processButtonClick(int x, int y, boolean left){ Settings.toggleFloor(); return true; }
+									}.setText("Toggle Floor", false));
+									//
+									this.elements.put("lines", new Button(this, "lines", 100, 26, 2, 30, subhover){
+										@Override public void setupSubmenu(){ return; }
+										@Override protected boolean processButtonClick(int x, int y, boolean left){ Settings.toggleLines(); return true; }
+									}.setText("Line/Border", false));
+									//
+									this.elements.put("cube", new Button(this, "cube", 100, 26, 2, 58, subhover){
+										@Override public void setupSubmenu(){ return; }
+										@Override protected boolean processButtonClick(int x, int y, boolean left){ Settings.toggleCube(); return true; }
+									}.setText("Center Cube", false));
+									//
+									this.elements.put("demo", new Button(this, "demo", 100, 26, 2, 86, subhover){
+										@Override public void setupSubmenu(){ return; }
+										@Override protected boolean processButtonClick(int x, int y, boolean left){ Settings.toggleDemo(); return true; }
+									}.setText("Demo Model", false));
+									this.elements.put("raypick", new Button(this, "raypick", 100, 26, 2, 114, subhover){
+										@Override public void setupSubmenu(){ return; }
+										@Override protected boolean processButtonClick(int x, int y, boolean left){ Settings.toggleRaypick(); return true; }
+									}.setText("RayPick (Al.)", false));
+									this.elements.put("rotmarker", new Button(this, "rotmarker", 100, 26, 2, 142, subhover){
+										@Override public void setupSubmenu(){ return; }
+										@Override protected boolean processButtonClick(int x, int y, boolean left){ Settings.togglePolygonMarker(); return true; }
+									}.setText("Poly. Marker", false));
+									//
+									this.elements.put("controls", new Button(this, "controls", 100, 26, 2, 170, subhover){
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
 											//TODO
@@ -429,26 +460,7 @@ public class Toolbar extends Element {
 										}
 									}.setText("Controls", false));
 									//
-									this.elements.put("random", new Button(this, "random", 100, 26, 2, 30, subhover){
-										@Override
-										protected boolean processButtonClick(int x, int y, boolean left){
-											long l = 0, ll = 0;
-											for(TurboList list : FMTB.MODEL.getCompound().values()){
-												for(PolygonWrapper wrapper : list){
-													l += jdk.nashorn.internal.ir.debug.ObjectSizeCalculator.getObjectSize(wrapper.getTurboObject(0));
-												}
-											}
-											ll = jdk.nashorn.internal.ir.debug.ObjectSizeCalculator.getObjectSize(FMTB.MODEL);
-											Print.console("MainClass: " + Settings.byteCountToString(jdk.nashorn.internal.ir.debug.ObjectSizeCalculator.getObjectSize(FMTB.get()), true));
-											FMTB.showDialogbox("Size (MC / Editor): ", Settings.byteCountToString(l, true) + " // " + Settings.byteCountToString(ll, true), "ok", null, DialogBox.NOTHING, null);
-											//
-											long uis = jdk.nashorn.internal.ir.debug.ObjectSizeCalculator.getObjectSize(FMTB.get().UI);
-											Print.console("UI: " + Settings.byteCountToString(uis, true));
-											return true;
-										}
-									}.setText("Calc Size.", false));
-									//
-									this.elements.put("Help", new Button(this, "Help", 100, 26, 2, 58, subhover){
+									this.elements.put("Help", new Button(this, "Help", 100, 26, 2, 198, subhover){
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
 											//TODO
