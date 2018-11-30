@@ -39,24 +39,31 @@ public class TextureEditor extends Editor {
 		//
 		this.elements.put("large_color_palette", new LargePallette(this, 4, 80));
 		this.elements.put("horizontal_color_palette", new HorizontalPallette(this, 4, 410));
+		//
 		this.elements.put("button0", new Button(this, "button0", 294, 28, 4, 460, buttonhover = new RGB(CURRENTCOLOR)){
 			@Override
 			protected boolean processButtonClick(int x, int y, boolean left){
 				toggleBucketMode(PaintMode.FACE); return true;
 			}
 		}.setText("(Face) Paint Bucket [OFF]", true).setTexture("ui/pbwhite"));
-		this.elements.put("button1", new Button(this, "button1", 294, 28, 4, 490, buttonhover = new RGB(CURRENTCOLOR)){
+		this.elements.put("button1", new Button(this, "button1", 294, 28, 4, 490, buttonhover){
 			@Override
 			protected boolean processButtonClick(int x, int y, boolean left){
 				toggleBucketMode(PaintMode.POLYGON); return true;
 			}
 		}.setText("(Polygon) Paint Bucket [OFF]", true).setTexture("ui/pbwhite"));
-		this.elements.put("button2", new Button(this, "button2", 294, 28, 4, 520, buttonhover = new RGB(CURRENTCOLOR)){
+		this.elements.put("button2", new Button(this, "button2", 294, 28, 4, 520, buttonhover){
 			@Override
 			protected boolean processButtonClick(int x, int y, boolean left){
 				toggleBucketMode(PaintMode.GROUP); return true;
 			}
 		}.setText("(Group) Paint Bucket [OFF]", true).setTexture("ui/pbwhite"));
+		this.elements.put("button3", new Button(this, "button3", 294, 28, 4, 560, buttonhover){
+			@Override
+			protected boolean processButtonClick(int x, int y, boolean left){
+				toggleBucketMode(PaintMode.PIXEL); return true;
+			}
+		}.setText("(Pixel) Paint Pencil [OFF]", true).setTexture("ui/pbwhite"));
 		//
 		this.updateFields();
 	}
@@ -66,6 +73,7 @@ public class TextureEditor extends Editor {
 		Editor.get("texture_editor").getButton("button0").setText("(Face) Paint Bucket [" + (BUCKETMODE && PMODE == PaintMode.FACE ? "ON" : "OFF") + "]", true);
 		Editor.get("texture_editor").getButton("button1").setText("(Polygon) Paint Bucket [" + (BUCKETMODE && PMODE == PaintMode.POLYGON ? "ON" : "OFF") + "]", true);
 		Editor.get("texture_editor").getButton("button2").setText("(Group) Paint Bucket [" + (BUCKETMODE && PMODE == PaintMode.GROUP ? "ON" : "OFF") + "]", true);
+		Editor.get("texture_editor").getButton("button3").setText("(Pixel) Paint Pencil [" + (BUCKETMODE && PMODE == PaintMode.PIXEL ? "ON" : "OFF") + "]", true);
 	}
 	
 	private void updateFields(){
@@ -204,7 +212,23 @@ public class TextureEditor extends Editor {
 	}
 	
 	public static enum PaintMode {
-		FACE, POLYGON, GROUP;
+		PIXEL, FACE, POLYGON, GROUP;
+	}
+
+	public static boolean pixelMode(){
+		return PMODE == null ? false : PMODE == PaintMode.PIXEL;
+	}
+
+	public static boolean faceMode(){
+		return PMODE == null ? false : PMODE == PaintMode.FACE;
+	}
+
+	public static boolean polygonMode(){
+		return PMODE == null ? false : PMODE == PaintMode.POLYGON;
+	}
+
+	public static boolean groupMode(){
+		return PMODE == null ? false : PMODE == PaintMode.GROUP;
 	}
 
 }

@@ -1,6 +1,7 @@
 package net.fexcraft.app.fmt.utils;
 
 import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -12,8 +13,10 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.generic.DialogBox;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
+import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
+import net.fexcraft.lib.common.utils.Print;
 
 public class RayCoastAway {
 	
@@ -26,7 +29,7 @@ public class RayCoastAway {
 	}
 	
 	public static void doTest(boolean bool, boolean mouseoff){
-		if(!Settings.rayPicking()) return; if(bool && !PICKING){ PICKING = true; MOUSEOFF = mouseoff; return; }
+		/*if(!Settings.rayPicking()) return;*/ if(bool && !PICKING){ PICKING = true; MOUSEOFF = mouseoff; return; }
 		//
 		int width = FMTB.get().getDisplayMode().getWidth(), height = FMTB.get().getDisplayMode().getHeight();
 		if(mouseoff){ width = Mouse.getX() * 2; height = Mouse.getY() * 2; }
@@ -36,6 +39,29 @@ public class RayCoastAway {
 		int id = new Color(((int) byteArray[0]) & 0xFF, ((int) byteArray[1]) & 0xFF, ((int) byteArray[2]) & 0xFF).getRGB() + 16777216;
 		//Print.console(id + "-ID");
 		buffer.clear(); PICKING = false; MOUSEOFF = false;
+		if(TextureEditor.pixelMode()){
+			Texture tex;
+			if(FMTB.MODEL.texture == null || (tex = TextureManager.getTexture(FMTB.MODEL.texture, true)) == null){
+				FMTB.showDialogbox("No Texture loaded.", "Cannot use Paint Pencil.", "ok", "toggle off", DialogBox.NOTHING, () -> { TextureEditor.toggleBucketMode(null); });
+				return;
+			}
+			Texture calctex = TextureManager.getTexture(GroupCompound.temptexid, true);
+			if(calctex == null){
+				Print.console("Calculation texture not found or is not loaded or is not initialized, painting aborted."); return;
+			} BufferedImage image = calctex.getImage();
+			//Print.console(id);
+			for(int x = 0; x < image.getWidth(); x++){
+				for(int y = 0; y < image.getHeight(); y++){
+					if(new Color(image.getRGB(x, y)).getRGB() + 16777216 == id){
+						//Print.console(x + " " + y + " colpos");
+						//Print.console((image.getRGB(x, y) + 16777216) + " " + id);
+						tex.getImage().setRGB(x, y, new Color(TextureEditor.CURRENTCOLOR.packed).getRGB()); tex.rebind();
+						TextureManager.saveTexture(FMTB.MODEL.texture); return;
+					} else continue;
+				}
+			}
+			return;
+		}
 		PolygonWrapper wrapper = getSelected(id);
 		if(wrapper == null) return;
 		if(!TextureEditor.BUCKETMODE){
@@ -52,7 +78,7 @@ public class RayCoastAway {
 				FMTB.showDialogbox("No Texture loaded.", "Cannot use Paint Bucket.", "ok", "toggle off", DialogBox.NOTHING, () -> { TextureEditor.toggleBucketMode(null); });
 				return;
 			}
-			if(TextureEditor.PMODE == TextureEditor.PaintMode.GROUP){
+			if(TextureEditor.groupMode()){
 				boolean rebind = false; TurboList list = wrapper.getList();
 				for(PolygonWrapper poly : list){
 					if(poly.burnToTexture(tex.getImage(), -1)){ rebind = true; }

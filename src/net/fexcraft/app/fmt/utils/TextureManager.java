@@ -152,7 +152,7 @@ public class TextureManager {
 		}
 		
 		public ByteBuffer getBuffer(){
-			if(reload && image != null){
+			if(reload && image != null && file != null){
 				try{ image = ImageIO.read(file); } catch(IOException e){ e.printStackTrace(); }
 			}
 			buffer = BufferUtils.createByteBuffer(4 * image.getWidth() * image.getHeight());

@@ -13,7 +13,7 @@ import net.fexcraft.lib.common.math.RGB;
 
 public class Settings {
 	
-	private static boolean fullscreen, floor = true, demo, lines = true, cube = true, polygon_marker = true, raypick = false;
+	private static boolean fullscreen, floor = true, demo, lines = true, cube = true, polygon_marker = true;//, raypick = false;
 	public static RGB selectedColor = new RGB(255, 255, 0);
 	
 	public static boolean fullscreen(){ return fullscreen; }
@@ -28,7 +28,7 @@ public class Settings {
 	
 	public static boolean polygonMarker(){ return polygon_marker; }
 
-	public static boolean rayPicking(){ return raypick; }
+	//public static boolean rayPicking(){ return raypick; }
 	
 	//
 	
@@ -60,9 +60,9 @@ public class Settings {
 		return demo = !demo;
 	}
 	
-	public static boolean toggleRaypick(){
+	/*public static boolean toggleRaypick(){
 		return raypick = !raypick;
-	}
+	}*/
 	
 	//
 	
@@ -127,7 +127,8 @@ public class Settings {
 		fullscreen = JsonUtil.getIfExists(obj, "fullscreen", fullscreen);
 		floor = JsonUtil.getIfExists(obj, "floor", floor); lines = JsonUtil.getIfExists(obj, "lines", lines);
 		cube = JsonUtil.getIfExists(obj, "cube", cube); demo = JsonUtil.getIfExists(obj, "demo", demo);
-		raypick = JsonUtil.getIfExists(obj, "raypick", raypick); polygon_marker = JsonUtil.getIfExists(obj, "polygon_marker", polygon_marker);
+		//raypick = JsonUtil.getIfExists(obj, "raypick", raypick);
+		polygon_marker = JsonUtil.getIfExists(obj, "polygon_marker", polygon_marker);
 	}
 
 	public static void save(){
@@ -166,7 +167,7 @@ public class Settings {
 		obj.addProperty("fullscreen", fullscreen);
 		obj.addProperty("floor", floor); obj.addProperty("lines", lines);
 		obj.addProperty("cube", cube); obj.addProperty("demo", demo);
-		obj.addProperty("raypick", raypick);
+		//obj.addProperty("raypick", raypick);
 		obj.addProperty("polygon_marker", polygon_marker);
 		JsonUtil.write(new File("./settings.json"), obj);
 	}

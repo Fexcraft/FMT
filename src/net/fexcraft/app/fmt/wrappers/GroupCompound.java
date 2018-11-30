@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.wrappers;
 
+import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,9 +12,11 @@ import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.editor.Editor;
+import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.generic.TextField;
 import net.fexcraft.app.fmt.utils.RayCoastAway;
 import net.fexcraft.app.fmt.utils.TextureManager;
+import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
 
@@ -53,14 +57,20 @@ public class GroupCompound {
 			GL11.glPushMatrix();
 			GL11.glScalef(scale.xCoord, scale.yCoord, scale.zCoord);
 		}
-		TextureManager.bindTexture(texture == null ? "blank" : texture);
 		if(RayCoastAway.PICKING){
-			compound.values().forEach(elm -> elm.renderPicking());
+			if(TextureEditor.pixelMode()){
+				TextureManager.bindTexture(getTempTex());
+				compound.values().forEach(elm -> elm.render(false));
+			}
+			else{
+				compound.values().forEach(elm -> elm.renderPicking());
+			}
 			//compound.values().forEach(elm -> elm.renderLines());
 			RayCoastAway.doTest(false);
 		}
 		else{
-			compound.values().forEach(elm -> elm.render());
+			TextureManager.bindTexture(texture == null ? "blank" : texture);
+			compound.values().forEach(elm -> elm.render(true));
 			compound.values().forEach(elm -> elm.renderLines());
 			//compound.values().forEach(elm -> elm.renderPicking());//uncomment for debugging the ray-/color-picker
 		}
@@ -78,6 +88,37 @@ public class GroupCompound {
 		}
 	}
 	
+	public static final String temptexid = "temp/calculation_texture";
+	
+	private String getTempTex(){
+		Texture tex = TextureManager.getTexture(temptexid, true);
+		if(tex == null || (tex.getImage().getWidth() != this.textureX || tex.getImage().getHeight() != textureY)){
+			if(textureX >= 8192 || textureY >= 8192){ /*//TODO*/ }
+			else{
+				BufferedImage image = null;//new BufferedImage(textureX, textureY, BufferedImage.TYPE_INT_ARGB);
+				if(tex == null){
+					image = new BufferedImage(textureX, textureY, BufferedImage.TYPE_INT_ARGB);
+				}
+				else{
+					tex.resize(textureX, textureY, null); image = tex.getImage();
+				}
+				int lastint = 0;
+				for(int x = 0; x < textureX; x++){
+					for(int y = 0; y < textureY; y++){
+						image.setRGB(x, y, new Color(lastint).getRGB()); lastint++;
+					}
+				}
+				if(tex == null){
+					TextureManager.loadTextureFromZip(image, temptexid, true);
+				}
+				else{
+					tex.rebind(); TextureManager.saveTexture(temptexid);
+				}
+			}
+		}
+		return temptexid;
+	}
+
 	public ArrayList<PolygonWrapper> getSelected(){
 		ArrayList<PolygonWrapper> polis = new ArrayList<>();
 		for(TurboList list : compound.values()){

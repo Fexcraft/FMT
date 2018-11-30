@@ -18,11 +18,11 @@ public class TurboList extends ArrayList<PolygonWrapper> {
 		this.id = id;
 	}
 
-	public void render(){
+	public void render(boolean aplcol){
 		if(!visible) return;
-		if(color != null) color.glColorApply();
+		if(color != null && aplcol) color.glColorApply();
 		this.forEach(elm -> elm.render(rotXb, rotYb, rotZb));
-		if(color != null) RGB.glColorReset();
+		if(color != null && aplcol) RGB.glColorReset();
 	}
 
 	public void renderLines(){

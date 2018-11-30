@@ -451,8 +451,8 @@ public class Toolbar extends Element {
 									}.setText("Demo Model", false));
 									this.elements.put("raypick", new Button(this, "raypick", 100, 26, 2, 114, subhover){
 										@Override public void setupSubmenu(){ return; }
-										@Override protected boolean processButtonClick(int x, int y, boolean left){ Settings.toggleRaypick(); return true; }
-									}.setText("RayPick (Al.)", false));
+										@Override protected boolean processButtonClick(int x, int y, boolean left){ /*Settings.toggleRaypick();*/ return true; }
+									}.setText("rem_setting", false));
 									this.elements.put("rotmarker", new Button(this, "rotmarker", 100, 26, 2, 142, subhover){
 										@Override public void setupSubmenu(){ return; }
 										@Override protected boolean processButtonClick(int x, int y, boolean left){ Settings.togglePolygonMarker(); return true; }
@@ -461,8 +461,7 @@ public class Toolbar extends Element {
 									this.elements.put("controls", new Button(this, "controls", 100, 26, 2, 170, subhover){
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
-											//TODO
-											return true;
+											return DialogBox.notAvailableYet();
 										}
 									}.setText("Controls", false));
 									//
