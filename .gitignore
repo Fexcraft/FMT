@@ -49,6 +49,7 @@ old/
 models/
 saves/
 backups/
+backups_/
 bin/
 resources/textures/temp/
 helpers/

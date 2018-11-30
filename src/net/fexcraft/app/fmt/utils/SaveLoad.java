@@ -191,18 +191,20 @@ public class SaveLoad {
 		if(FMTB.MODEL.file == null){
 			FMTB.showDialogbox("Model save file is 'null'!", "Model will not be saved.", "OK", null, DialogBox.NOTHING, null);
 			return;
-		}
-		//
+		} toFile(FMTB.MODEL, null, openfile); return;
+	}
+	
+	public static void toFile(GroupCompound compound, File file, boolean openfile){
 		try{
-	        FileOutputStream fileout = new FileOutputStream(FMTB.MODEL.file);
+	        FileOutputStream fileout = new FileOutputStream(file == null ? compound.file : file);
 	        ZipOutputStream zipout = new ZipOutputStream(fileout);
 	        zipout.putNextEntry(new ZipEntry("marker.fmt")); zipout.write(new byte[]{ Byte.MIN_VALUE }); zipout.closeEntry();
-	        InputStream[] arr = new InputStream[FMTB.MODEL.texture == null ? 1 : 2];
+	        InputStream[] arr = new InputStream[compound.texture == null ? 1 : 2];
 	        arr[0] = new ByteArrayInputStream(modelToJTMT(null, false).toString().getBytes(StandardCharsets.UTF_8));
 	        if(arr.length > 1){
 	        	try{
 	        		ByteArrayOutputStream os = new ByteArrayOutputStream();
-	        		ImageIO.write(TextureManager.getTexture(FMTB.MODEL.texture, false).getImage(), "png", os);
+	        		ImageIO.write(TextureManager.getTexture(compound.texture, false).getImage(), "png", os);
 	        		arr[1] = new ByteArrayInputStream(os.toByteArray());
 	        	} catch(Exception e){ e.printStackTrace(); }
 	        }
@@ -215,9 +217,12 @@ public class SaveLoad {
 	            } zipout.closeEntry(); arr[i].close();
 	        }
 	        zipout.close(); fileout.close();
-	        Print.console("Saved model as FMTB Archive" + (arr.length > 1 ? " with texture." : "."));
-	        if(openfile && FMTB.MODEL.file.getParentFile() != null){
-		        Desktop.getDesktop().open(FMTB.MODEL.file.getParentFile());
+	        if(file == null){
+	        	Print.console("Saved model as FMTB Archive" + (arr.length > 1 ? " with texture." : "."));
+	        }
+	        file = file == null ? compound.file : file;
+	        if(openfile && file.getParentFile() != null){
+		        Desktop.getDesktop().open(file.getParentFile());
 	        }
 		}
 		catch(IOException e){
