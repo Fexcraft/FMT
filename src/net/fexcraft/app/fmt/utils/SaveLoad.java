@@ -14,17 +14,15 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 import javax.imageio.ImageIO;
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileFilter;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.JsonToTMT;
-import net.fexcraft.app.fmt.porters.PorterManager;
-import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
+import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.generic.DialogBox;
+import net.fexcraft.app.fmt.ui.generic.FileChooser.AfterTask;
+import net.fexcraft.app.fmt.ui.generic.FileChooser.ChooserMode;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
@@ -45,32 +43,35 @@ public class SaveLoad {
 	}
 
 	public static void openModel(){
-		//TODO find a way to add this back -->> checkIfShouldSave(false);
-		File modelfile = getFile("Select file to open.");
-		if(modelfile == null || !modelfile.exists()){
-			FMTB.showDialogbox("Invalid Model File!", "(does it even exists?)", "ok.", null, DialogBox.NOTHING, null);
-			return;
-		}
-		try{
-			ZipFile file = new ZipFile(modelfile);
-			file.stream().forEach(elm -> {
-				if(elm.getName().equals("model.jtmt")){
-					try{
-						loadModel(JsonUtil.getObjectFromInputStream(file.getInputStream(elm)));
-					} catch(IOException e){ e.printStackTrace(); }
+		UserInterface.FILECHOOSER.show(new String[]{ "Select file to open.", "Open" }, root, new AfterTask(){
+			@Override
+			public void run(){
+				if(file == null || !file.exists()){
+					FMTB.showDialogbox("Invalid Model File!", "(does it even exists?)", "ok.", null, DialogBox.NOTHING, null);
+					return;
 				}
-				else if(elm.getName().equals("texture.png")){
-					FMTB.MODEL.setTexture("temp/" + FMTB.MODEL.name);
-	            	try{ //in theory this should be always 2nd in the stream, so it is expected the model loaded already
-						TextureManager.loadTextureFromZip(file.getInputStream(elm), "temp/" + FMTB.MODEL.name, true);
-					} catch(IOException e){ e.printStackTrace(); }
+				try{
+					ZipFile zip = new ZipFile(file);
+					zip.stream().forEach(elm -> {
+						if(elm.getName().equals("model.jtmt")){
+							try{
+								loadModel(JsonUtil.getObjectFromInputStream(zip.getInputStream(elm)));
+							} catch(IOException e){ e.printStackTrace(); }
+						}
+						else if(elm.getName().equals("texture.png")){
+							FMTB.MODEL.setTexture("temp/" + FMTB.MODEL.name);
+			            	try{ //in theory this should be always 2nd in the stream, so it is expected the model loaded already
+								TextureManager.loadTextureFromZip(zip.getInputStream(elm), "temp/" + FMTB.MODEL.name, true);
+							} catch(IOException e){ e.printStackTrace(); }
+						}
+					}); zip.close();
 				}
-			}); file.close();
-		}
-		catch(Exception e){
-			e.printStackTrace();
-			FMTB.showDialogbox("Errors occured", "while parsing save file", "ok", null, DialogBox.NOTHING, null);
-		}
+				catch(Exception e){
+					e.printStackTrace();
+					FMTB.showDialogbox("Errors occured", "while parsing save file", "ok", null, DialogBox.NOTHING, null);
+				}
+			}
+		}, ChooserMode.SAVEFILE_LOAD);
 	}
 	
 	public static void loadModel(JsonObject obj){
@@ -84,16 +85,22 @@ public class SaveLoad {
 				@Override
 				public void run(){
 					if(FMTB.MODEL.file == null){
-						FMTB.MODEL.file = getFile("Select save location.");
-					}
-					//saveModel(false)
-					if(FMTB.MODEL.file == null){
-						FMTB.showDialogbox("Model save file is 'null'!", "Model will not be saved.", "OK", "Save", new Runnable(){
-							@Override public void run(){ if(shouldclose){ FMTB.get().close(true); } }
-						}, new Runnable(){
-							@Override public void run(){ checkIfShouldSave(shouldclose); }
-						});
-						//TODO add cancel;
+						UserInterface.FILECHOOSER.show(new String[]{ "Select save location.", "Select"}, root, new AfterTask(){
+							@Override
+							public void run(){
+								if(file == null){
+									FMTB.showDialogbox("Model save file is 'null'!", "Model will not be saved.", "OK", "Save", new Runnable(){
+										@Override public void run(){ if(shouldclose){ FMTB.get().close(true); } }
+									}, new Runnable(){
+										@Override public void run(){ checkIfShouldSave(shouldclose); }
+									});
+								}
+								else{
+									FMTB.MODEL.file = file;
+									saveModel(false, shouldclose); if(shouldclose){ FMTB.get().close(true); }
+								}
+							}
+						}, ChooserMode.SAVEFILE_SAVE);
 					}
 					else{
 						saveModel(false, shouldclose); if(shouldclose){ FMTB.get().close(true); }
@@ -111,73 +118,6 @@ public class SaveLoad {
 			FMTB.get().close(true);
 		}
 	}
-	
-	@Deprecated
-	public static File getFile(String title){
-		return getFile(title, null, true, true);
-	}
-
-	@Deprecated
-	public static File getFile(String title, File otherroot, boolean load, boolean nofilter){
-		JFileChooser chooser = new JFileChooser();
-		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		if(otherroot != null && !otherroot.exists()) otherroot.mkdirs();
-		chooser.setCurrentDirectory(otherroot == null ? root : otherroot);
-		chooser.setDialogTitle(title);
-		if(!nofilter){
-			for(ExImPorter porter : PorterManager.getPorters(!load)){
-				chooser.addChoosableFileFilter(new JFileFilter(){
-					@Override
-					public boolean accept(File arg0){
-						if(arg0.isDirectory()) return true;
-						for(String ext : porter.getExtensions()){
-							if(arg0.getName().endsWith(ext)) return true;
-						} return false;
-					}
-					//
-					@Override
-					public String getDescription(){
-						return porter.getName() + (load ? " [I]" : "[E]");
-					}
-					//
-					@Override
-					public String getFileEnding(){
-						return porter.getExtensions().length == 0 ? ".no-ext" : porter.getExtensions()[0];
-					}
-				});
-			}
-		}
-		else{
-			chooser.addChoosableFileFilter(new JFileFilter(){
-				@Override
-				public boolean accept(File arg0){
-					return arg0.isDirectory() || arg0.getName().endsWith(".fmtb");
-				}
-				//
-				@Override
-				public String getDescription(){
-					return "FMTB Save File";
-				}
-				//
-				@Override
-				public String getFileEnding(){
-					return ".fmtb";
-				}
-			});
-		}
-		chooser.setAcceptAllFileFilterUsed(false);
-		chooser.showOpenDialog(null);
-		File file = chooser.getSelectedFile();
-		if(file != null && !chooser.getFileFilter().accept(file)){
-			file = new File(file.getParentFile(), file.getName() + ((JFileFilter)chooser.getFileFilter()).getFileEnding());
-		} return file;
-	}
-	
-	private static abstract class JFileFilter extends FileFilter {
-
-		public abstract String getFileEnding();
-		
-	}
 
 	public static void openNewModel(){
 		checkIfShouldSave(false);
@@ -186,12 +126,17 @@ public class SaveLoad {
 
 	public static void saveModel(boolean bool, boolean openfile){
 		if(bool || FMTB.MODEL.file == null){
-			FMTB.MODEL.file = getFile("Select save location.");
+			UserInterface.FILECHOOSER.show(new String[]{ "Select save location.", "Select" }, root, new AfterTask(){
+				@Override
+				public void run(){
+					if(file == null){ FMTB.showDialogbox("Model save file is 'null'!", "Model will not be saved.", "OK", null, DialogBox.NOTHING, null); return; }
+					FMTB.MODEL.file = file; toFile(FMTB.MODEL, null, openfile); FMTB.showDialogbox("Model Saved!", "", "ok!", null, DialogBox.NOTHING, null); return;
+				}
+			}, ChooserMode.SAVEFILE_SAVE);
 		}
-		if(FMTB.MODEL.file == null){
-			FMTB.showDialogbox("Model save file is 'null'!", "Model will not be saved.", "OK", null, DialogBox.NOTHING, null);
-			return;
-		} toFile(FMTB.MODEL, null, openfile); return;
+		else{
+			toFile(FMTB.MODEL, null, openfile); return;
+		} 
 	}
 	
 	public static void toFile(GroupCompound compound, File file, boolean openfile){

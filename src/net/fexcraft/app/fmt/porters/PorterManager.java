@@ -20,6 +20,7 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.generic.DialogBox;
 import net.fexcraft.app.fmt.ui.generic.FileChooser.AfterTask;
+import net.fexcraft.app.fmt.ui.generic.FileChooser.ChooserMode;
 import net.fexcraft.app.fmt.utils.SaveLoad;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.lib.common.json.JsonUtil;
@@ -95,7 +96,7 @@ public class PorterManager {
 				}
 				FMTB.showDialogbox("Import complete.", null, "OK!", null, DialogBox.NOTHING, null);
 			}
-		}, false, false);
+		}, ChooserMode.IMPORT);
 	}
 
 	public static void handleExport(){
@@ -122,7 +123,7 @@ public class PorterManager {
 					e.printStackTrace();
 				}
 			}
-		}, true, false);
+		}, ChooserMode.EXPORT);
 	}
 
 	/**

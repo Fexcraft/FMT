@@ -36,36 +36,52 @@ public class FileChooser extends Element {
 	private Button[] files = new Button[12];
 	private String title = "No Title.";
 	private AfterTask onfile = NOTHING;
-	private TextField eximporter;
-	private boolean export, png;
+	private TextField eximporter, cfn;
+	private ChooserMode mode;
 	
 	public FileChooser(){
 		super(null, "ui/filechooser"); TextureManager.loadTexture("ui/filechooser"); TextureManager.loadTexture("icons/file_chooser_0"); TextureManager.loadTexture("icons/file_chooser_1");
 		TextureManager.loadTexture("icons/file_chooser_2"); TextureManager.loadTexture("icons/file_chooser_3"); TextureManager.loadTexture("icons/file_chooser_4");
 		TextureManager.loadTexture("icons/file_chooser_5"); TextureManager.loadTexture("icons/file_chooser_6"); TextureManager.loadTexture("icons/file_chooser_7");
-		this.visible = false; this.z = 80; this.height = this.width = 512;
-		this.elements.put("button0", button0 = new Button(this, "button0", 150, 28, 18, 470, new RGB(255, 255, 0)){
+		this.visible = false; this.z = 80; this.height = 546; this.width = 512;
+		this.elements.put("button0", button0 = new Button(this, "button0", 150, 28, 18, 504/*470*/, new RGB(255, 255, 0)){
 			@Override protected boolean processButtonClick(int x, int y, boolean left){
-				if(selected < 0) return true; UserInterface.FILECHOOSER.visible = false;
-				onfile.file = getFilteredList()[selected]; onfile.porter = PorterManager.getPorters(export).get(eximscroll);
-				//FMTB.showDialogbox(export ? "Exporting..." : "Importing...", "Please wait.", "ok!", null, DialogBox.NOTHING, null);
-				onfile.run(); UserInterface.FILECHOOSER.reset(); return true;
+				if(cfn.enabled && isValidInput(cfn.getText())){
+					onfile.file = new File(currdir, cfn.getText() + (cfn.getText().endsWith(getCurrentSelectedFileExtension()) ? "" : getCurrentSelectedFileExtension())); onfile.porter = null;
+				}
+				else{
+					if(selected < 0) return true; onfile.file = getFilteredList()[selected]; onfile.porter = PorterManager.getPorters(mode.exports()).get(eximscroll);
+				}
+				if(onfile.file != null){
+					UserInterface.FILECHOOSER.visible = false;
+					if((mode.exports() || mode.savefile_save()) && onfile.file.exists()){
+						FMTB.showDialogbox("Override existing File?", onfile.file.getName(), "yes", "no!", onfile, DialogBox.NOTHING);
+						UserInterface.FILECHOOSER.reset(); return true;
+					}
+					else{
+						onfile.run(); UserInterface.FILECHOOSER.reset(); return true;
+					}
+				}
+				return true;
+			}
+			@Override
+			public void hovered(int mx, int my){
+				super.hovered(mx, my); if(hovered) cfn.onReturn();
 			}
 		});
-		this.elements.put("button1", button1 = new Button(this, "button1", 150, 28, 182, 470, new RGB(255, 255, 0)){
+		this.elements.put("button1", button1 = new Button(this, "button1", 150, 28, 182, 504/*470*/, new RGB(255, 255, 0)){
 			@Override protected boolean processButtonClick(int x, int y, boolean left){
-				onfile.porter = PorterManager.getPorters(export).get(eximscroll);
+				onfile.porter = PorterManager.getPorters(mode.exports()).get(eximscroll);
 				String str = Backups.getSimpleDateFormat(true).format(Time.getDate()); UserInterface.FILECHOOSER.visible = false;
-				String ext = onfile.porter.getExtensions()[0].startsWith(".") ? onfile.porter.getExtensions()[0] : "." + onfile.porter.getExtensions()[0];
+				String ext = getCurrentSelectedFileExtension();
 				onfile.file = new File(currdir, (FMTB.MODEL.name == null ? "unnamed" : FMTB.MODEL.name) + "-(" + str + ")" + ext);
-				//FMTB.showDialogbox(export ? "Exporting..." : "Importing...", "Please wait.", "ok!", null, DialogBox.NOTHING, null);
 				onfile.run(); UserInterface.FILECHOOSER.reset(); return true;
 			}
 		});
-		this.elements.put("button2", button2 = new Button(this, "button2", 150, 28, 346, 470, new RGB(255, 255, 0)){
+		this.elements.put("button2", button2 = new Button(this, "button2", 150, 28, 346, 504/*470*/, new RGB(255, 255, 0)){
 			@Override protected boolean processButtonClick(int x, int y, boolean left){ UserInterface.FILECHOOSER.reset(); return true; }
 		});
-		this.elements.put("eximporter", eximporter = new TextField(this, "eximporter", 18, 440, 442).setRenderBackground(false).setColor(Color.black));
+		this.elements.put("eximporter", (eximporter = new TextField(this, "eximporter", 442, 18, 440).setRenderBackground(false).setColor(Color.black)).setEnabled(false));
 		this.elements.put("fileroot", root = new Button(this, "fileroot", 436, 28, 29, 57, new RGB(200, 200, 200)){
 			@Override protected boolean processButtonClick(int x, int y, boolean left){
 				if(currdir.getParentFile() != null) currdir = currdir.getParentFile().getAbsoluteFile(); ressel(); return true;
@@ -106,13 +122,54 @@ public class FileChooser extends Element {
 			@Override protected boolean processButtonClick(int x, int y, boolean left){ scroll++; return true; }
 		}.setTexture("icons/file_chooser_5"));
 		this.elements.put("exim-", eximm = new Button(this, "exim-", 18, 28, 464, 436, new RGB(120, 120, 120)){
-			@Override protected boolean processButtonClick(int x, int y, boolean left){ if(png) return true; eximscroll++; if(eximscroll >= PorterManager.getPorters(export).size()) eximscroll = 0; ressel(); return true; }
+			@Override
+			protected boolean processButtonClick(int x, int y, boolean left){
+				switch(mode){
+					case EXPORT: case IMPORT:{
+						eximscroll++;if(eximscroll >= PorterManager.getPorters(mode.exports()).size()) eximscroll = 0;
+						ressel(); return true;
+					}
+					case PNG: case SAVEFILE_SAVE: case SAVEFILE_LOAD: default: return true;
+				}
+			}
 		}.setTexture("icons/file_chooser_6"));
 		this.elements.put("exim+", eximp = new Button(this, "exim+", 18, 28, 482, 436, new RGB(120, 120, 120)){
-			@Override protected boolean processButtonClick(int x, int y, boolean left){ if(png) return true; eximscroll--; if(eximscroll < 0) eximscroll = PorterManager.getPorters(export).size() - 1; ressel(); return true; }
+			@Override
+			protected boolean processButtonClick(int x, int y, boolean left){
+				switch(mode){
+					case EXPORT: case IMPORT:{
+						eximscroll--; if(eximscroll < 0) eximscroll = PorterManager.getPorters(mode.exports()).size() - 1;
+						ressel(); return true;
+					}
+					case PNG: case SAVEFILE_SAVE: case SAVEFILE_LOAD: default: return true;
+				}
+			}
 		}.setTexture("icons/file_chooser_7"));
+		this.elements.put("customfilename", cfn = new TextField(this, "customfilename", 442, 18, 472).setRenderBackground(false).setColor(Color.black));
 		//
 		//this.show(new String[]{ "test title", "OK"}, null, NOTHING, false);
+	}
+
+	protected boolean isValidInput(String text){
+		if(text == null || text.length() == 0) return false;
+		else if(cfn.getText().contains(DCFNFC[0]) || cfn.getText().contains(DCFNFC[1])
+			|| cfn.getText().contains(DCFNFC[2]) || cfn.getText().contains(DCFNFC[3])) return false;
+		return true;
+	}
+
+	private String getCurrentSelectedFileExtension(){
+		switch(mode){
+			case EXPORT: case IMPORT:{
+				return onfile.porter.getExtensions()[0].startsWith(".") ? onfile.porter.getExtensions()[0] : "." + onfile.porter.getExtensions()[0];
+			}
+			case PNG:{
+				return ".png";
+				}
+			case SAVEFILE_LOAD: case SAVEFILE_SAVE:{
+				return ".fmtb";
+			}
+			default: return ".error";
+		}
 	}
 	
 	private void ressel(){
@@ -125,12 +182,24 @@ public class FileChooser extends Element {
 	private File[] getFilteredList(){
 		try{
 			if(currdir.listFiles() == null) return new File[]{ NONE };
-			if(png){
-				stream = Arrays.asList(currdir.listFiles()).stream().filter(pre -> pre.isDirectory() || pre.getName().toLowerCase().endsWith(".png"));
-			}
-			else{
-				ExImPorter porter = PorterManager.getPorters(export).get(eximscroll);
-				stream = Arrays.asList(currdir.listFiles()).stream().filter(pre -> porter.isValidFile(pre));
+			switch(mode){
+				case EXPORT: case IMPORT:{
+					ExImPorter porter = PorterManager.getPorters(mode.exports()).get(eximscroll);
+					stream = Arrays.asList(currdir.listFiles()).stream().filter(pre -> porter.isValidFile(pre));
+					break;
+				}
+				case PNG:{
+					stream = Arrays.asList(currdir.listFiles()).stream().filter(pre -> pre.isDirectory() || pre.getName().toLowerCase().endsWith(".png"));
+					break;
+				}
+				case SAVEFILE_SAVE: case SAVEFILE_LOAD:{
+					stream = Arrays.asList(currdir.listFiles()).stream().filter(pre -> pre.isDirectory() || pre.getName().toLowerCase().endsWith(".fmtb"));
+					break;
+				}
+				default:{
+					stream = Arrays.asList(currdir.listFiles()).stream().filter(pre -> pre.isDirectory());
+					break;
+				}
 			}
 			return stream.collect(Collectors.<File>toList()).toArray(new File[0]);
 		}
@@ -143,9 +212,27 @@ public class FileChooser extends Element {
 	@Override
 	public void renderSelf(int rw, int rh) {
 		this.renderQuad(x = (rw / 2) - (width / 2), y = (rh / 2) - (height / 2), width, height, "ui/filechooser");
-		button0.x = x +  18; button0.y = y + 470; button1.x = x + 182; button1.y = y + 470; button2.x = x + 346; button2.y = y + 470;
-		eximporter.x = x + 16; eximporter.y = y + 438; eximporter.setText(png ? "Portable Network Graphics (PNG)" : (export ? "Exporter: " : "Importer: ") + PorterManager.getPorters(export).get(eximscroll).getName(), false);
+		button0.x = x +  18; button0.y = y + 504/*470*/; button1.x = x + 182; button1.y = y + 504/*470*/; button2.x = x + 346; button2.y = y + 504/*470*/;
+		eximporter.x = x + 16; eximporter.y = y + 438; cfn.x = x + 16; cfn.y = y + 472;
+			switch(mode){
+			case EXPORT:
+				eximporter.setText("Exporter: "+ PorterManager.getPorters(true).get(eximscroll).getName(), false);
+				break;
+			case IMPORT:
+				eximporter.setText("Importer: " + PorterManager.getPorters(false).get(eximscroll).getName(), false);
+				break;
+			case PNG:
+				eximporter.setText("Portable Network Graphics (PNG)", false);
+				break;
+			case SAVEFILE_SAVE: case SAVEFILE_LOAD:
+				eximporter.setText("FMT Save File (FMTB)", false);
+				break;
+			default:
+				eximporter.setText("Error, No Type Specified.", false);
+				break;
+		}
 		root.x = x + 29; root.y = y + 57; root.setText(currdir.getPath(), false); File[] fls = getFilteredList();
+		while(scroll + 12 > fls.length && scroll - 1 >= 0) scroll--;
 		for(int i = 0; i < files.length; i++){
 			files[i].x = x + 29; files[i].y = y + 85 + (i * 28); files[i].enabled = selected < 0 || selected != scroll + i;
 			files[i].setTexture(files[i].enabled ? "ui/button_bg" : "ui/background");
@@ -153,8 +240,8 @@ public class FileChooser extends Element {
 			else{
 				files[i].visible = true; files[i].setText(fls[scroll + i].getName() + (fls[scroll + i].isDirectory() ? "/" : ""), false);
 			}
-		} if(scroll + 12 > fls.length && scroll - 1 >= 0) scroll--;
-		button0.enabled = selected > -1 && selected < fls.length && !fls[selected].isDirectory();
+		}
+		button0.enabled = (selected > -1 && selected < fls.length && !fls[selected].isDirectory()) || (cfn.enabled && this.isValidInput(cfn.getText()));
 		broot.x = 475 + x; broot.y = y + 57; reset.x = 475 + x; reset.y = y + 75;
 		parent.x = 475 + x; parent.y = y + 93; desktop.x = 475 + x; desktop.y = y + 111;
 		up.x = 475 + x; up.y = y + 387; down.x = 475 + x; down.y = y + 405;
@@ -171,24 +258,41 @@ public class FileChooser extends Element {
 	/** 
 	 * 
 	 * @param png 
+	 * @param b 
 	 * @param text 0 - title, 1 - button0, 2 - button1, 3 - button2
 	 * */
-	public void show(String[] ntext, File otherroot, AfterTask after, boolean export, boolean png){
+	public void show(String[] ntext, File otherroot, AfterTask after, ChooserMode mode){
 		this.reset(); this.currdir = (otherroot == null ? SaveLoad.getRoot() : otherroot).getAbsoluteFile();
 		//
-		this.title = ntext[0]; this.visible = true; this.export = export;
+		this.title = ntext[0]; this.visible = true; this.mode = mode;
 		this.elements.values().forEach(elm -> elm.visible = elm.enabled = after != null);
 		button0.setText(ntext.length < 2 || ntext[1] == null ? "OK" : ntext[1], true);
 		button1.setText(ntext.length < 3 || ntext[2] == null ? "Suggested" : ntext[2], true);
 		button2.setText(ntext.length < 4 || ntext[3] == null ? "Cancel" : ntext[3], true);
-		button1.enabled = export; this.onfile = after; this.png = png;
+		button1.enabled = cfn.enabled = mode.exports() || mode.savefile_save(); this.onfile = after;
+		if(cfn.enabled) cfn.setText(DCFNFC[0] + " " + DCFNFC[1] + " " +  DCFNFC[2] + " " + DCFNFC[3], false);
+		else cfn.setText("Please choose an existing file to proceed.", false);
 	}
 	
+	//DEFAULT_CUSTOM_FILE_NAME_FIELD_CONTENT 
+	private static final String[] DCFNFC = new String[]{ "Choose a file", "to override or", "write a custom", "name here!" };
+	
 	public void reset(){
-		this.onfile = null; this.currdir = SaveLoad.getRoot(); ressel(); eximscroll = 0;
+		this.onfile = null; this.currdir = SaveLoad.getRoot(); ressel(); eximscroll = 0; mode = ChooserMode.NONE;
 		button0.setText(null, false); button1.setText(null, false); button2.setText(null, false); visible = false;
 	}
 	
 	public static abstract class AfterTask implements Runnable { public File file; public ExImPorter porter; }
+	
+	public static enum ChooserMode {
+		EXPORT, IMPORT, PNG, SAVEFILE_SAVE, SAVEFILE_LOAD, NONE;
+		public boolean exports(){ return EXPORT == this; }
+		public boolean imports(){ return IMPORT == this; }//"import" is a reserved keyword...
+		public boolean pmgimg(){ return PNG == this; }
+		//public boolean eximporter(){ return EXPORT == this || IMPORT == this; }
+		//public boolean savefile(){ return SAVEFILE == this; }
+		public boolean savefile_load(){ return SAVEFILE_LOAD == this; }
+		public boolean savefile_save(){ return SAVEFILE_SAVE == this; }
+	}
 
 }

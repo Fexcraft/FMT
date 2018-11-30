@@ -10,6 +10,7 @@ import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.generic.FileChooser.AfterTask;
+import net.fexcraft.app.fmt.ui.generic.FileChooser.ChooserMode;
 import net.fexcraft.app.fmt.ui.tree.RightTree;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.HelperCollector;
@@ -325,7 +326,7 @@ public class Toolbar extends Element {
 													if(tex.getWidth() > FMTB.MODEL.textureX) FMTB.MODEL.textureX = tex.getWidth();
 													if(tex.getHeight() > FMTB.MODEL.textureY) FMTB.MODEL.textureY = tex.getHeight();*/
 												}
-											}, false, true);
+											}, ChooserMode.PNG);
 											return true;
 										}
 									}.setText("Select", false));
@@ -399,7 +400,7 @@ public class Toolbar extends Element {
 										protected boolean processButtonClick(int x, int y, boolean left){
 											UserInterface.FILECHOOSER.show(new String[]{ "Select a Preview/Helper file." }, new File("./helpers"), new AfterTask(){
 												@Override public void run(){ HelperCollector.load(file, porter); }
-											}, false, false);
+											}, ChooserMode.IMPORT);
 											return true;
 										}
 									}.setText("Open New", false));
