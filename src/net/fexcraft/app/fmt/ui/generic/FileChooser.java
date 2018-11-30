@@ -151,9 +151,9 @@ public class FileChooser extends Element {
 			files[i].setTexture(files[i].enabled ? "ui/button_bg" : "ui/background");
 			if(scroll + i >= fls.length){ files[i].visible = false; }
 			else{
-				files[i].visible = true; files[i].setText(fls[scroll + i].getName(), false);
+				files[i].visible = true; files[i].setText(fls[scroll + i].getName() + (fls[scroll + i].isDirectory() ? "/" : ""), false);
 			}
-		}
+		} if(scroll + 12 > fls.length && scroll - 1 >= 0) scroll--;
 		button0.enabled = selected > -1 && selected < fls.length && !fls[selected].isDirectory();
 		broot.x = 475 + x; broot.y = y + 57; reset.x = 475 + x; reset.y = y + 75;
 		parent.x = 475 + x; parent.y = y + 93; desktop.x = 475 + x; desktop.y = y + 111;
