@@ -64,7 +64,7 @@ public class SaveLoad {
 								TextureManager.loadTextureFromZip(zip.getInputStream(elm), "temp/" + FMTB.MODEL.name, true);
 							} catch(IOException e){ e.printStackTrace(); }
 						}
-					}); zip.close();
+					}); zip.close(); FMTB.MODEL.file = file;
 				}
 				catch(Exception e){
 					e.printStackTrace();
