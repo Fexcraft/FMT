@@ -10,6 +10,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.generic.DialogBox;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
@@ -53,10 +54,14 @@ public class RayCoastAway {
 			for(int x = 0; x < image.getWidth(); x++){
 				for(int y = 0; y < image.getHeight(); y++){
 					if(new Color(image.getRGB(x, y)).getRGB() + 16777216 == id){
-						//Print.console(x + " " + y + " colpos");
-						//Print.console((image.getRGB(x, y) + 16777216) + " " + id);
-						tex.getImage().setRGB(x, y, new Color(TextureEditor.CURRENTCOLOR.packed).getRGB()); tex.rebind();
-						TextureManager.saveTexture(FMTB.MODEL.texture); return;
+						if(TextureEditor.colorPicker()){
+							TextureEditor.CURRENTCOLOR.packed = tex.getImage().getRGB(x, y);
+							((TextureEditor)Editor.get("texture_editor")).updateFields();
+						}
+						else{
+							tex.getImage().setRGB(x, y, new Color(TextureEditor.CURRENTCOLOR.packed).getRGB()); tex.rebind();
+							TextureManager.saveTexture(FMTB.MODEL.texture); return;
+						}
 					} else continue;
 				}
 			}

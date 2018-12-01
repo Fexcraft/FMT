@@ -64,6 +64,12 @@ public class TextureEditor extends Editor {
 				toggleBucketMode(PaintMode.PIXEL); return true;
 			}
 		}.setText("(Pixel) Paint Pencil [OFF]", true).setTexture("ui/pbwhite"));
+		this.elements.put("button4", new Button(this, "button4", 294, 28, 4, 600, buttonhover){
+			@Override
+			protected boolean processButtonClick(int x, int y, boolean left){
+				toggleBucketMode(PaintMode.COLORPICKER); return true;
+			}
+		}.setText("Color Picker [OFF]", true).setTexture("ui/pbwhite"));
 		//
 		this.updateFields();
 	}
@@ -74,9 +80,10 @@ public class TextureEditor extends Editor {
 		Editor.get("texture_editor").getButton("button1").setText("(Polygon) Paint Bucket [" + (BUCKETMODE && PMODE == PaintMode.POLYGON ? "ON" : "OFF") + "]", true);
 		Editor.get("texture_editor").getButton("button2").setText("(Group) Paint Bucket [" + (BUCKETMODE && PMODE == PaintMode.GROUP ? "ON" : "OFF") + "]", true);
 		Editor.get("texture_editor").getButton("button3").setText("(Pixel) Paint Pencil [" + (BUCKETMODE && PMODE == PaintMode.PIXEL ? "ON" : "OFF") + "]", true);
+		Editor.get("texture_editor").getButton("button4").setText("Color Picker [" + (BUCKETMODE && PMODE == PaintMode.COLORPICKER ? "ON" : "OFF") + "]", true);
 	}
 	
-	private void updateFields(){
+	public void updateFields(){
 		byte[] arr = CURRENTCOLOR.toByteArray();
 		this.getField("rgb0").applyChange(arr[0] + 128);
 		this.getField("rgb1").applyChange(arr[1] + 128);
@@ -212,11 +219,11 @@ public class TextureEditor extends Editor {
 	}
 	
 	public static enum PaintMode {
-		PIXEL, FACE, POLYGON, GROUP;
+		PIXEL, FACE, POLYGON, GROUP, COLORPICKER;
 	}
 
 	public static boolean pixelMode(){
-		return PMODE == null ? false : PMODE == PaintMode.PIXEL;
+		return PMODE == null ? false : PMODE == PaintMode.PIXEL || PMODE == PaintMode.COLORPICKER;
 	}
 
 	public static boolean faceMode(){
@@ -229,6 +236,10 @@ public class TextureEditor extends Editor {
 
 	public static boolean groupMode(){
 		return PMODE == null ? false : PMODE == PaintMode.GROUP;
+	}
+	
+	public static boolean colorPicker(){
+		return PMODE == null ? false : PMODE == PaintMode.COLORPICKER;
 	}
 
 }
