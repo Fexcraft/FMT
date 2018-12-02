@@ -146,6 +146,7 @@ public class TextureUpdate extends TimerTask {
 				if(Integer.compare(x0, x1) > 1){ return Integer.compare(y0, y1); } return Integer.compare(x0, x1);
 			}
 		});
+		if(!all){
 			arrlist.sort(new java.util.Comparator<PolygonWrapper>(){
 				@Override
 				public int compare(PolygonWrapper o1, PolygonWrapper o2){
