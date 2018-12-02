@@ -73,7 +73,7 @@ public class TextureUpdate extends TimerTask {
 		} HALT = false; ALL = bool;
 		//
 		if(list == null){
-			list = getSortedList(); last = 0; image = new BufferedImage(FMTB.MODEL.textureX, FMTB.MODEL.textureY, BufferedImage.TYPE_INT_ARGB);
+			list = getSortedList(ALL); last = 0; image = new BufferedImage(FMTB.MODEL.textureX, FMTB.MODEL.textureY, BufferedImage.TYPE_INT_ARGB);
 			for(int i = 0; i < image.getWidth(); i++){
 				for(int j = 0; j < image.getHeight(); j++){
 					image.setRGB(i, j, Color.WHITE.getRGB());
@@ -133,7 +133,7 @@ public class TextureUpdate extends TimerTask {
 		} return true;
 	}
 	
-	private static ArrayList<PolygonWrapper> getSortedList(){
+	private static ArrayList<PolygonWrapper> getSortedList(boolean all){
 		ArrayList<PolygonWrapper> arrlist = new ArrayList<>();
 		for(TurboList list : FMTB.MODEL.getCompound().values()){ arrlist.addAll(list); }
 		arrlist.sort(new java.util.Comparator<PolygonWrapper>(){
@@ -145,7 +145,18 @@ public class TextureUpdate extends TimerTask {
 				int y1 = (int)(righ.getType().isCylinder() ? (righ.getFloat("cyl0", true, false, false) * 2) + righ.getFloat("cyl0", true, false, false) : righ.getFloat("size", false, true, false));
 				if(Integer.compare(x0, x1) > 1){ return Integer.compare(y0, y1); } return Integer.compare(x0, x1);
 			}
-		}); Collections.reverse(arrlist); return arrlist;
+		});
+			arrlist.sort(new java.util.Comparator<PolygonWrapper>(){
+				@Override
+				public int compare(PolygonWrapper o1, PolygonWrapper o2){
+					if(o1.textureX > 0 || o1.textureY > 0){
+						return o2.textureX > 0 || o2.textureY > 0 ? 0 : 1;
+					}
+					return o2.textureX > 0 || o2.textureY > 0 ? 1 : -1;
+				}
+			});
+		}
+		Collections.reverse(arrlist); return arrlist;
 	}
 	
 	private static int getPercent(int i, int all){ return (i * 100) / all; }
