@@ -46,11 +46,12 @@ public class FileChooser extends Element {
 		this.visible = false; this.z = 80; this.height = 546; this.width = 512;
 		this.elements.put("button0", button0 = new Button(this, "button0", 150, 28, 18, 504/*470*/, new RGB(255, 255, 0)){
 			@Override protected boolean processButtonClick(int x, int y, boolean left){
+				onfile.porter = PorterManager.getPorters(mode.exports()).get(eximscroll);
 				if(cfn.enabled && isValidInput(cfn.getText())){
-					onfile.file = new File(currdir, cfn.getText() + (cfn.getText().endsWith(getCurrentSelectedFileExtension()) ? "" : getCurrentSelectedFileExtension())); onfile.porter = null;
+					onfile.file = new File(currdir, cfn.getText() + (cfn.getText().endsWith(getCurrentSelectedFileExtension(onfile.porter)) ? "" : getCurrentSelectedFileExtension(onfile.porter)));
 				}
 				else{
-					if(selected < 0) return true; onfile.file = getFilteredList()[selected]; onfile.porter = PorterManager.getPorters(mode.exports()).get(eximscroll);
+					if(selected < 0) return true; onfile.file = getFilteredList()[selected];
 				}
 				if(onfile.file != null){
 					UserInterface.FILECHOOSER.visible = false;
@@ -73,7 +74,7 @@ public class FileChooser extends Element {
 			@Override protected boolean processButtonClick(int x, int y, boolean left){
 				onfile.porter = PorterManager.getPorters(mode.exports()).get(eximscroll);
 				String str = Backups.getSimpleDateFormat(true).format(Time.getDate()); UserInterface.FILECHOOSER.visible = false;
-				String ext = getCurrentSelectedFileExtension();
+				String ext = getCurrentSelectedFileExtension(onfile.porter);
 				onfile.file = new File(currdir, (FMTB.MODEL.name == null ? "unnamed" : FMTB.MODEL.name) + "-(" + str + ")" + ext);
 				onfile.run(); UserInterface.FILECHOOSER.reset(); return true;
 			}
@@ -157,17 +158,13 @@ public class FileChooser extends Element {
 		return true;
 	}
 
-	private String getCurrentSelectedFileExtension(){
+	private String getCurrentSelectedFileExtension(ExImPorter porter){
 		switch(mode){
 			case EXPORT: case IMPORT:{
-				return onfile.porter.getExtensions()[0].startsWith(".") ? onfile.porter.getExtensions()[0] : "." + onfile.porter.getExtensions()[0];
+				return porter.getExtensions()[0].startsWith(".") ? porter.getExtensions()[0] : "." + porter.getExtensions()[0];
 			}
-			case PNG:{
-				return ".png";
-				}
-			case SAVEFILE_LOAD: case SAVEFILE_SAVE:{
-				return ".fmtb";
-			}
+			case PNG:{ return ".png"; }
+			case SAVEFILE_LOAD: case SAVEFILE_SAVE:{ return ".fmtb"; }
 			default: return ".error";
 		}
 	}
