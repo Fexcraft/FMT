@@ -89,7 +89,7 @@ public class ModelTree extends RightTree {
 					if(!GGR.isShiftDown()){ FMTB.MODEL.clearSelection(); }
 					trlist[j].selected = !bool; FMTB.MODEL.updateFields();
 				}
-				return false;
+				return true;
 			}
 			if(!trlist[j].minimized){
 				for(int l = 0; l < trlist[j].size(); l++){
@@ -112,11 +112,11 @@ public class ModelTree extends RightTree {
 							if(!GGR.isShiftDown()){ FMTB.MODEL.clearSelection(); }
 							trlist[j].get(l).selected = !bool; FMTB.MODEL.updateFields();
 						}
-						return false;
+						return true;
 					}
 				}
 			} k++;
-		} return false;
+		} return true;
 	}
 
 	protected boolean processScrollWheel(int wheel){

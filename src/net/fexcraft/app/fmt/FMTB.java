@@ -328,5 +328,9 @@ public class FMTB implements FMTGLProcess {
 			}
 		}.start();
 	}
+	
+	public static boolean linux(){
+		return LWJGLUtil.getPlatform() == LWJGLUtil.PLATFORM_LINUX;
+	}
 
 }

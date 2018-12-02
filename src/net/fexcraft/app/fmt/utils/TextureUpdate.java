@@ -88,7 +88,7 @@ public class TextureUpdate extends TimerTask {
 			PolygonWrapper wrapper = list.get(last); last++;
 			FMTB.showDialogbox("Processing: " + (per = getPercent(last, list.size())) + "%", wrapper.getTurboList().id + ":" + wrapper.name(), null, null, null, null, per, null);
 			if(wrapper.texpos == null || wrapper.texpos.length == 0){ Print.console("skipping1 [" + wrapper.getTurboList().id + ":" + wrapper.name() + "]"); return; }
-			if(wrapper.textureX != 0 && wrapper.textureY!= 0 && !bool){
+			if(wrapper.textureX != 0 && wrapper.textureY != 0 && !bool){
 				Print.console("skipping0 [" + wrapper.getTurboList().id + ":" + wrapper.name() + "]");
 				wrapper.burnToTexture(image, null); Thread.sleep(10); return;
 			}

@@ -28,7 +28,7 @@ public class Editor extends Element {
 
 	@Override
 	protected boolean processButtonClick(int x, int y, boolean left){
-		return false;
+		return true;
 	}
 	
 	public void show(){
@@ -85,5 +85,7 @@ public class Editor extends Element {
 	public static Editor get(String string){
 		for(Editor edit : editors) if(edit.id.equals(string)) return edit; return null;
 	}
+	
+	protected boolean processScrollWheel(int wheel){ return true; }
 
 }

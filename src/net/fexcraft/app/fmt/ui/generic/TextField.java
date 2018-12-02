@@ -6,6 +6,7 @@ import org.newdawn.slick.Color;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.Element;
+import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.lib.common.math.RGB;
@@ -69,7 +70,7 @@ public class TextField extends Element {
 	}
 
 	public static void deselectAll(){
-		fields.forEach(elm -> { if(elm.isSelected()) elm.onReturn(); elm.selected = false; });
+		fields.forEach(elm -> { if(elm.isSelected()) elm.onReturn(); elm.selected = false; }); TextureEditor.PMODE = null;
 	}
 	
 	@Override

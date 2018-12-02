@@ -12,6 +12,7 @@ import org.lwjgl.opengl.GL11;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.FMTGLProcess;
 import net.fexcraft.app.fmt.ui.editor.Editor;
+import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.generic.DialogBox;
 import net.fexcraft.app.fmt.ui.generic.TextField;
 import net.fexcraft.app.fmt.ui.tree.RightTree;
@@ -162,7 +163,7 @@ public class GGR {
             Mouse.setGrabbed(true);
         }
         if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
-            root.reset(); Mouse.setGrabbed(false);
+            root.reset(); Mouse.setGrabbed(false); TextureEditor.PMODE = null;
         }
     }
 

@@ -105,7 +105,7 @@ public class HelperTree extends RightTree {
 					}
 					editor.getField("multiplicator").applyChange(FMTB.MODEL.rate);
 				}
-				return false;
+				return true;
 			}
 			if(!trlist[j].minimized){
 				for(int l = 0; l < trlist[j].getCompound().size(); l++){
@@ -113,11 +113,11 @@ public class HelperTree extends RightTree {
 						if(mx >= x + width - 30 && mx < x + width - 10){
 							trlist[j].getCompound().values().toArray(new TurboList[0])[l].visible = !trlist[j].getCompound().values().toArray(new TurboList[0])[l].visible;
 							return true;
-						} else return false;
+						} else return true;
 					}
 				}
 			} k++;
-		} return false;
+		} return true;
 	}
 
 	protected boolean processScrollWheel(int wheel){
