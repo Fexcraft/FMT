@@ -5,6 +5,8 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.TimerTask;
+import java.util.stream.Collectors;
+
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.generic.DialogBox;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
@@ -146,18 +148,12 @@ public class TextureUpdate extends TimerTask {
 				if(Integer.compare(x0, x1) > 1){ return Integer.compare(y0, y1); } return Integer.compare(x0, x1);
 			}
 		});
+		Collections.reverse(arrlist);
 		if(!all){
-			arrlist.sort(new java.util.Comparator<PolygonWrapper>(){
-				@Override
-				public int compare(PolygonWrapper o1, PolygonWrapper o2){
-					if(o1.textureX > 0 || o1.textureY > 0){
-						return o2.textureX > 0 || o2.textureY > 0 ? 0 : 1;
-					}
-					return o2.textureX > 0 || o2.textureY > 0 ? 1 : -1;
-				}
-			});
-		}
-		Collections.reverse(arrlist); return arrlist;
+			ArrayList<PolygonWrapper> pri = (ArrayList<PolygonWrapper>)arrlist.stream().filter(pre -> pre.textureX > 0 || pre.textureY > 0).collect(Collectors.toList());
+			ArrayList<PolygonWrapper> sec = (ArrayList<PolygonWrapper>)arrlist.stream().filter(pre -> pre.textureX <= 0 || pre.textureY <= 0).collect(Collectors.toList());
+			arrlist.clear(); arrlist.addAll(pri); arrlist.addAll(sec);
+		} return arrlist;
 	}
 	
 	private static int getPercent(int i, int all){ return (i * 100) / all; }
