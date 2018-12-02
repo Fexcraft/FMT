@@ -65,6 +65,8 @@ public class PorterManager {
 		porters.add(new OBJPreviewImporter());
 		porters.add(new JTMTPorter(false));
 		porters.add(new JTMTPorter(true));
+		porters.add(new PNGExporter(true));
+		porters.add(new PNGExporter(false));
 	}
 
 	private static ScriptEngine newEngine(){
