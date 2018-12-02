@@ -57,4 +57,4 @@ screenshots/
 auth.net
 *.zip
 saves/
-*.json
+settings.json
