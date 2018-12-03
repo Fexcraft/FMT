@@ -88,10 +88,7 @@ public class FMTB implements FMTGLProcess {
 	    //
 		FMTB.INSTANCE = new FMTB();
 		INSTANCE.setDefaults(false, "Unnamed Model");
-		try{ INSTANCE.run(); }
-		catch(LWJGLException | InterruptedException | IOException e){
-			e.printStackTrace(); System.exit(1);
-		}
+		try{ INSTANCE.run(); } catch(Throwable thr){ thr.printStackTrace(); System.exit(1); }
 	}
 	
 	public static final Process startProcess(Class<?> clazz) throws Exception {
