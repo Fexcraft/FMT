@@ -293,7 +293,7 @@ public abstract class PolygonWrapper {
 	public PolygonWrapper clone(){
 		PolygonWrapper wrapper = this.createClone(compound);
 		wrapper.pos = new Vec3f(pos); wrapper.off = new Vec3f(off); wrapper.rot = new Vec3f(rot);
-		wrapper.textureX = textureX; wrapper.textureY = wrapper.textureY;
+		wrapper.textureX = textureX; wrapper.textureY = textureY;
 		wrapper.visible = true; //visible;
 		wrapper.name = name == null ? null : name.endsWith("cp") ? name : name + "cp";
 		wrapper.mirror = mirror; wrapper.flip = flip;

@@ -93,7 +93,7 @@ public class RayCoastAway {
 				}
 			}
 			else{
-				if(wrapper.burnToTexture(tex.getImage(), TextureEditor.PMODE == TextureEditor.PaintMode.POLYGON ? -1 : getSelectedFace(wrapper, id))){
+				if(wrapper.burnToTexture(tex.getImage(), TextureEditor.polygonMode() ? -1 : getSelectedFace(wrapper, id))){
 					tex.rebind(); TextureManager.saveTexture(FMTB.MODEL.texture);
 				}
 			}

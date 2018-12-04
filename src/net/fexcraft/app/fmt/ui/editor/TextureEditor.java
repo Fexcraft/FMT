@@ -16,7 +16,7 @@ public class TextureEditor extends Editor {
 	private static RGB[] hopall = new RGB[36];
 	public static boolean BUCKETMODE;
 	private static RGB buttonhover;
-	public static PaintMode PMODE;
+	private static PaintMode PMODE;
 
 	public TextureEditor(){
 		super("texture_editor");
@@ -240,6 +240,12 @@ public class TextureEditor extends Editor {
 	
 	public static boolean colorPicker(){
 		return PMODE == null ? false : PMODE == PaintMode.COLORPICKER;
+	}
+	
+	public static PaintMode paintMode(){ return PMODE; }
+
+	public static void reset(){
+		toggleBucketMode(null);
 	}
 
 }

@@ -163,7 +163,7 @@ public class GGR {
             Mouse.setGrabbed(true);
         }
         if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
-            root.reset(); Mouse.setGrabbed(false); TextureEditor.PMODE = null;
+            root.reset(); Mouse.setGrabbed(false); TextureEditor.reset();
         }
     }
 

@@ -70,7 +70,7 @@ public class TextField extends Element {
 	}
 
 	public static void deselectAll(){
-		fields.forEach(elm -> { if(elm.isSelected()) elm.onReturn(); elm.selected = false; }); TextureEditor.PMODE = null;
+		fields.forEach(elm -> { if(elm.isSelected()) elm.onReturn(); elm.selected = false; }); TextureEditor.reset();
 	}
 	
 	@Override
