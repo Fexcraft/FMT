@@ -96,7 +96,7 @@ public class CylinderWrapper extends PolygonWrapper {
 
 	@Override
 	protected float[][][] newTexturePosition(){
-		float tx = 0/*textureX*/, ty = 8/*textureY*/, qrad = radius / 2, rad = radius * 2, rad2 = rad + rad;
+		float tx = 0/*textureX*/, ty = 0/*textureY*/, qrad = radius / 2, rad = radius * 2, rad2 = rad + rad;
 		float[][][] vecs = new float[10][][];
 		vecs[0] = new float[][]{
 			new float[]{ tx, ty },
