@@ -85,16 +85,16 @@ public class JsonToTMT {
 		switch(obj.get("type").getAsString()){
 			case "box": case "cube": case "b":{
 				BoxWrapper cuboid = new BoxWrapper(compound);
-				cuboid.size.xCoord = get(width, obj, idef);
-				cuboid.size.yCoord = get(height, obj, idef);
-				cuboid.size.zCoord= get(depth, obj, idef);
+				cuboid.size.xCoord = get(width, obj, def);
+				cuboid.size.yCoord = get(height, obj, def);
+				cuboid.size.zCoord= get(depth, obj, def);
 				polygon = cuboid; break;
 			}
 			case "shapebox": case "sbox": case "sb": {
 				ShapeboxWrapper shapebox = new ShapeboxWrapper(compound);
-				shapebox.size.xCoord = get(width, obj, idef);
-				shapebox.size.yCoord = get(height, obj, idef);
-				shapebox.size.zCoord= get(depth, obj, idef);
+				shapebox.size.xCoord = get(width, obj, def);
+				shapebox.size.yCoord = get(height, obj, def);
+				shapebox.size.zCoord= get(depth, obj, def);
 				//
 				shapebox.cor0 = new Vec3f(get("x0", obj, def), get("y0", obj, def), get("z0", obj, def));
 				shapebox.cor1 = new Vec3f(get("x1", obj, def), get("y1", obj, def), get("z1", obj, def));

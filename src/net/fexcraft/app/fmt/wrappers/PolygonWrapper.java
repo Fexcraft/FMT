@@ -119,17 +119,17 @@ public abstract class PolygonWrapper {
 		obj.addProperty("texture_y", textureY);
 		obj.addProperty("type", this.getType().name().toLowerCase());
 		if(name != null) obj.addProperty("name", name);
-		if(pos.xCoord != 0) obj.addProperty("pos_x", pos.xCoord);
-		if(pos.yCoord != 0) obj.addProperty("pos_y", pos.yCoord);
-		if(pos.zCoord != 0) obj.addProperty("pos_z", pos.zCoord);
+		if(pos.xCoord != 0f) obj.addProperty("pos_x", pos.xCoord);
+		if(pos.yCoord != 0f) obj.addProperty("pos_y", pos.yCoord);
+		if(pos.zCoord != 0f) obj.addProperty("pos_z", pos.zCoord);
 		//
-		if(off.xCoord != 0) obj.addProperty("off_x", off.xCoord);
-		if(off.yCoord != 0) obj.addProperty("off_y", off.yCoord);
-		if(off.zCoord != 0) obj.addProperty("off_z", off.zCoord);
+		if(off.xCoord != 0f) obj.addProperty("off_x", off.xCoord);
+		if(off.yCoord != 0f) obj.addProperty("off_y", off.yCoord);
+		if(off.zCoord != 0f) obj.addProperty("off_z", off.zCoord);
 		//
-		if(rot.xCoord != 0) obj.addProperty("rot_x", export ? Math.toRadians(rot.xCoord) : rot.xCoord);
-		if(rot.yCoord != 0) obj.addProperty("rot_y", export ? Math.toRadians(rot.yCoord) : rot.yCoord);
-		if(rot.zCoord != 0) obj.addProperty("rot_z", export ? Math.toRadians(rot.zCoord) : rot.zCoord);
+		if(rot.xCoord != 0f) obj.addProperty("rot_x", export ? Math.toRadians(rot.xCoord) : rot.xCoord);
+		if(rot.yCoord != 0f) obj.addProperty("rot_y", export ? Math.toRadians(rot.yCoord) : rot.yCoord);
+		if(rot.zCoord != 0f) obj.addProperty("rot_z", export ? Math.toRadians(rot.zCoord) : rot.zCoord);
 		if(mirror != false) obj.addProperty("mirror", true);
 		if(flip != false) obj.addProperty("flip", true);
 		//temporary data

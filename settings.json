@@ -6,9 +6,9 @@
     0
   ],
   "fullscreen": false,
-  "floor": false,
+  "floor": true,
   "lines": true,
-  "cube": false,
+  "cube": true,
   "demo": false,
   "polygon_marker": false
 }
