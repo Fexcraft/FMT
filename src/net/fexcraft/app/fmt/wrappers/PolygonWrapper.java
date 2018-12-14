@@ -55,11 +55,11 @@ public abstract class PolygonWrapper {
 		if(Settings.lines()){
 			if(selected || turbolist.selected){
 				if(!widelines){ GL11.glLineWidth(4f); widelines = true; }
-				sellines.render();
+				if(sellines != null) sellines.render();
 			}
 			else{
 				if(widelines){ GL11.glLineWidth(1f); widelines = false; }
-				lines.render();
+				if(lines != null) lines.render();
 			}
 		}
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -127,9 +127,9 @@ public abstract class PolygonWrapper {
 		if(off.yCoord != 0f) obj.addProperty("off_y", off.yCoord);
 		if(off.zCoord != 0f) obj.addProperty("off_z", off.zCoord);
 		//
-		if(rot.xCoord != 0f) obj.addProperty("rot_x", export ? Math.toRadians(rot.xCoord) : rot.xCoord);
-		if(rot.yCoord != 0f) obj.addProperty("rot_y", export ? Math.toRadians(rot.yCoord) : rot.yCoord);
-		if(rot.zCoord != 0f) obj.addProperty("rot_z", export ? Math.toRadians(rot.zCoord) : rot.zCoord);
+		if(rot.xCoord != 0f) obj.addProperty("rot_x", rot.xCoord);
+		if(rot.yCoord != 0f) obj.addProperty("rot_y", rot.yCoord);
+		if(rot.zCoord != 0f) obj.addProperty("rot_z", rot.zCoord);
 		if(mirror != false) obj.addProperty("mirror", true);
 		if(flip != false) obj.addProperty("flip", true);
 		//temporary data
@@ -163,7 +163,7 @@ public abstract class PolygonWrapper {
 		};
 		picker.copyTo(sellines.getVertices(), sellines.getFaces());
 		picker.setRotationPoint(sellines.rotationPointX, sellines.rotationPointY, sellines.rotationPointZ);
-		picker.setRotationAngle(sellines.rotateAngleX, sellines.rotateAngleY, sellines.rotateAngleZ);
+		picker.setRotationAngle(sellines.rotationAngleX, sellines.rotationAngleY, sellines.rotationAngleZ);
 		picker.setTextured(false).setLines(false);
 	}
 	

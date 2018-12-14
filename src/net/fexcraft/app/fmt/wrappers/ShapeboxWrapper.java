@@ -34,7 +34,7 @@ public class ShapeboxWrapper extends BoxWrapper {
 				cor6.xCoord, cor6.yCoord, cor6.zCoord,
 				cor7.xCoord, cor7.yCoord, cor7.zCoord)
 			.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
-			.setRotationAngle((float)Math.toRadians(rot.xCoord), (float)Math.toRadians(rot.yCoord), (float)Math.toRadians(rot.zCoord));
+			.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
 	}
 
 	@Override

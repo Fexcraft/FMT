@@ -147,9 +147,10 @@ public class MTBImporter extends InternalPorter {
                     polygon.size = new Vec3f(getFloatFromString(parts[9]), getFloatFromString(parts[10]), getFloatFromString(parts[11]));
                     polygon.off = new Vec3f(getFloatFromString(parts[15]), getFloatFromString(parts[16]), getFloatFromString(parts[17]));
                     polygon.pos = new Vec3f(getFloatFromString(parts[6]), getFloatFromString(parts[7]), getFloatFromString(parts[8]));
-                    polygon.rot = new Vec3f(Math.toDegrees(getFloatFromString(parts[12])), Math.toDegrees(getFloatFromString(parts[13])), Math.toDegrees(getFloatFromString(parts[14])));
                     polygon.textureX = Integer.parseInt(parts[18]);
                     polygon.textureY = Integer.parseInt(parts[19]);
+                    //
+                    /*polygon.rot = new Vec3f(Math.toDegrees(getFloatFromString(parts[12])), Math.toDegrees(getFloatFromString(parts[13])), Math.toDegrees(getFloatFromString(parts[14])));
                     if(polygon.rot.xCoord != 0){
                         polygon.rot.xCoord *= 0.01745329259;
                     }
@@ -158,7 +159,8 @@ public class MTBImporter extends InternalPorter {
                     }
                     if(polygon.rot.zCoord != 0){
                         polygon.rot.zCoord *= -0.01745329259;
-                    }
+                    }*/
+                    polygon.rot = new Vec3f(getFloatFromString(parts[12]), getFloatFromString(parts[13]), getFloatFromString(parts[14]));
                     //
                     if(!compound.getCompound().containsKey("group" + parts[4])){
                     	compound.getCompound().put("group" + parts[4], new TurboList("group" + parts[4]));

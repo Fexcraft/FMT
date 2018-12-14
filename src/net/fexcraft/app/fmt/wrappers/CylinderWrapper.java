@@ -29,7 +29,7 @@ public class CylinderWrapper extends PolygonWrapper {
 		return new ModelRendererTurbo(null, textureX, textureY, compound.textureX, compound.textureY)
 			.addCylinder(off.xCoord, off.yCoord, off.zCoord, radius, length, segments, base, top, direction, getTopOff())
 			.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
-			.setRotationAngle((float)Math.toRadians(rot.xCoord), (float)Math.toRadians(rot.yCoord), (float)Math.toRadians(rot.zCoord));
+			.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
 	}
 
 	private Vec3f getTopOff(){
