@@ -10,5 +10,5 @@
   "lines": true,
   "cube": true,
   "demo": false,
-  "polygon_marker": false
+  "polygon_marker": true
 }

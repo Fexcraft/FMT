@@ -161,6 +161,7 @@ public class MTBImporter extends InternalPorter {
                         polygon.rot.zCoord *= -0.01745329259;
                     }*/
                     polygon.rot = new Vec3f(getFloatFromString(parts[12]), getFloatFromString(parts[13]), getFloatFromString(parts[14]));
+                    polygon.rot.zCoord = -polygon.rot.zCoord;
                     //
                     if(!compound.getCompound().containsKey("group" + parts[4])){
                     	compound.getCompound().put("group" + parts[4], new TurboList("group" + parts[4]));
