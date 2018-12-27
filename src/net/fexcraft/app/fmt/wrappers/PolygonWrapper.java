@@ -171,7 +171,7 @@ public abstract class PolygonWrapper {
 	private static int lastint = 0;
 	
 	private RGB genColor(ModelRendererTurbo turbo, int face){
-		if(color == null){
+		if(color == null || face >= color.length){
 			color = new int[turbo.getFaces().length];
 			for(int i = 0; i < color.length; i++){
 				color[i] = lastint += 1;
