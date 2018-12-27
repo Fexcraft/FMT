@@ -395,7 +395,17 @@ public class Toolbar extends Element {
 										@Override protected boolean processButtonClick(int x, int y, boolean left){ RightTree.show("helpertree"); return true; }
 									}.setText("View Loaded", false));
 									//
-									this.elements.put("open", new Button(this, "open", 130, 26, 2, 30, subhover){
+									this.elements.put("fmtb", new Button(this, "fmtb", 130, 26, 2, 30, subhover){
+										@Override
+										protected boolean processButtonClick(int x, int y, boolean left){
+											UserInterface.FILECHOOSER.show(new String[]{ "Select a Preview/Helper file." }, new File("./helpers"), new AfterTask(){
+												@Override public void run(){ HelperCollector.loadFMTB(file); }
+											}, ChooserMode.SAVEFILE_LOAD);
+											return true;
+										}
+									}.setText("Load FMTB", false));
+									//
+									this.elements.put("open", new Button(this, "open", 130, 26, 2, 58, subhover){
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
 											UserInterface.FILECHOOSER.show(new String[]{ "Select a Preview/Helper file." }, new File("./helpers"), new AfterTask(){
@@ -403,9 +413,9 @@ public class Toolbar extends Element {
 											}, ChooserMode.IMPORT);
 											return true;
 										}
-									}.setText("Open New", false));
+									}.setText("Load Imported", false));
 									//
-									this.elements.put("clear", new Button(this, "clear", 130, 26, 2, 58, subhover){
+									this.elements.put("clear", new Button(this, "clear", 130, 26, 2, 86, subhover){
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
 											HelperCollector.LOADED.clear(); return true;
