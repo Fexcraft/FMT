@@ -25,6 +25,7 @@ import net.fexcraft.app.fmt.wrappers.BoxWrapper;
 import net.fexcraft.app.fmt.wrappers.CylinderWrapper;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.ShapeboxWrapper;
+import net.fexcraft.app.fmt.wrappers.TexrectWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.utils.Print;
@@ -239,21 +240,28 @@ public class Toolbar extends Element {
 										}
 									}.setText("Cylinder", false));
 									//
-									this.elements.put("group", new Button(this, "group", 100, 26, 2, 86, subhover){
+									this.elements.put("texrect", new Button(this, "texrect", 100, 26, 2, 86, subhover){
+										@Override
+										protected boolean processButtonClick(int x, int y, boolean left){
+											Editor.toggle("texrect_editor"); return true;
+										}
+									}.setText("TexRect", false));
+									//
+									this.elements.put("group", new Button(this, "group", 100, 26, 2, 114, subhover){
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
 											Editor.toggle("group_editor"); return true;
 										}
 									}.setText("Group", false));
 									//
-									this.elements.put("model", new Button(this, "model", 100, 26, 2, 114, subhover){
+									this.elements.put("model", new Button(this, "model", 100, 26, 2, 142, subhover){
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
 											Editor.toggle("model_editor"); return true;
 										}
 									}.setText("Model", false));
 									//
-									this.elements.put("texture", new Button(this, "texture", 100, 26, 2, 142, subhover){
+									this.elements.put("texture", new Button(this, "texture", 100, 26, 2, 170, subhover){
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
 											Editor.toggle("texture_editor"); return true;
@@ -283,7 +291,15 @@ public class Toolbar extends Element {
 										}
 									}.setText("Add Shapebox", false));
 									//
-									this.elements.put("add_cylinder", new Button(this, "add_cylinder", 120, 26, 2, 58, subhover){
+									this.elements.put("add_texrect", new Button(this, "add_texrect", 120, 26, 2, 58, subhover){
+										@Override
+										protected boolean processButtonClick(int x, int y, boolean left){
+											FMTB.MODEL.add(new TexrectWrapper(FMTB.MODEL), null, true);
+											this.parent.visible = false; return true;
+										}
+									}.setText("Add TexRect", false));
+									//
+									this.elements.put("add_cylinder", new Button(this, "add_cylinder", 120, 26, 2, 86, subhover){
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
 											FMTB.MODEL.add(new CylinderWrapper(FMTB.MODEL), null, true);
@@ -291,7 +307,7 @@ public class Toolbar extends Element {
 										}
 									}.setText("Add Cylinder", false));
 									//
-									this.elements.put("add_group", new Button(this, "add_group", 120, 26, 2, 86, subhover){
+									this.elements.put("add_group", new Button(this, "add_group", 120, 26, 2, 114, subhover){
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
 											String string = "group" + FMTB.MODEL.getCompound().size();

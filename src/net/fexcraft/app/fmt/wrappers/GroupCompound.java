@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.generic.TextField;
@@ -369,6 +370,20 @@ public class GroupCompound {
 				editor.getField("cyl3x").applyChange(poly.getFloat("cyl3", true, false, false));
 				editor.getField("cyl3y").applyChange(poly.getFloat("cyl3", false, true, false));
 				editor.getField("cyl3z").applyChange(poly.getFloat("cyl3", false, false, true));
+			}
+			editor.getField("multiplicator").applyChange(rate);
+			//
+			editor = (Editor)FMTB.get().UI.getElement("texrect_editor");
+			if(poly == null || !poly.getType().isCustomTexturedRectangle()){
+				for(Element field : editor.getFields()){ ((TextField)field).applyChange(0f); }
+			}
+			else{
+				for(int i = 0; i < 6; i++){
+					editor.getField("texpos" + i + "sx").applyChange(poly.getFloat("texpos" + i + "s", true, false, false));
+					editor.getField("texpos" + i + "sy").applyChange(poly.getFloat("texpos" + i + "s", false, true, false));
+					editor.getField("texpos" + i + "ex").applyChange(poly.getFloat("texpos" + i + "e", true, false, false));
+					editor.getField("texpos" + i + "ey").applyChange(poly.getFloat("texpos" + i + "e", false, true, false));
+				}
 			}
 			editor.getField("multiplicator").applyChange(rate);
 			//

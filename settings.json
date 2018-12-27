@@ -8,7 +8,7 @@
   "fullscreen": false,
   "floor": false,
   "lines": true,
-  "cube": true,
+  "cube": false,
   "demo": false,
   "polygon_marker": true
 }

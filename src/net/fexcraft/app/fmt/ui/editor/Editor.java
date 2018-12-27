@@ -1,7 +1,9 @@
 package net.fexcraft.app.fmt.ui.editor;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.Element;
@@ -87,5 +89,9 @@ public class Editor extends Element {
 	}
 	
 	protected boolean processScrollWheel(int wheel){ return true; }
+
+	public List<Element> getFields(){
+		return elements.values().stream().filter(pre -> pre instanceof TextField).collect(Collectors.toList());
+	}
 
 }
