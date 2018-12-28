@@ -373,7 +373,7 @@ public class GroupCompound {
 			}
 			editor.getField("multiplicator").applyChange(rate);
 			//
-			editor = (Editor)FMTB.get().UI.getElement("texrect_editor");
+			editor = (Editor)FMTB.get().UI.getElement("texrectb_editor");
 			if(poly == null || !poly.getType().isCustomTexturedRectangle()){
 				for(Element field : editor.getFields()){ ((TextField)field).applyChange(0f); }
 			}

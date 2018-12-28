@@ -6,7 +6,7 @@
     0
   ],
   "fullscreen": false,
-  "floor": false,
+  "floor": true,
   "lines": true,
   "cube": false,
   "demo": false,

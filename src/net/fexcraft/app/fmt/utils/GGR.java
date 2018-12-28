@@ -102,8 +102,9 @@ public class GGR {
     	            if(key == Keyboard.KEY_3){ Editor.toggle("cylinder_editor", false); }
     	            if(key == Keyboard.KEY_4){ Editor.toggle("group_editor", false); }
     	            if(key == Keyboard.KEY_5){ Editor.toggle("model_editor", false); }
-    	            if(key == Keyboard.KEY_6){ Editor.toggle("texrect_editor", false); }
-    	            if(key == Keyboard.KEY_7){ Editor.toggle("texture_editor", false); }
+    	            if(key == Keyboard.KEY_6){ Editor.toggle("texrectb_editor", false); }
+    	            if(key == Keyboard.KEY_7){ Editor.toggle("texrecta_editor", false); }
+    	            if(key == Keyboard.KEY_8){ Editor.toggle("texture_editor", false); }
     	            if(key == Keyboard.KEY_F11){
     	            	try{ Display.setFullscreen(Settings.toogleFullscreen()); }
     	    			catch(Exception ex){ ex.printStackTrace(); }

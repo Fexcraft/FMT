@@ -8,7 +8,8 @@ import net.fexcraft.app.fmt.wrappers.CylinderWrapper;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.ShapeboxWrapper;
-import net.fexcraft.app.fmt.wrappers.TexrectWrapper;
+import net.fexcraft.app.fmt.wrappers.TexrectWrapperA;
+import net.fexcraft.app.fmt.wrappers.TexrectWrapperB;
 import net.fexcraft.lib.common.json.JsonUtil;
 import net.fexcraft.lib.common.math.Vec3f;
 
@@ -121,8 +122,28 @@ public class JsonToTMT {
 				cylinder.topoff.zCoord = get(topoffz, obj, 0f);
 				polygon = cylinder; break;
 			}
-			case "texrect":{
-				TexrectWrapper texrect = new TexrectWrapper(compound);
+			case "texrect": case "texrect_a": case "texrect_b": {
+				TexrectWrapperB texrect = null;
+				if(obj.has("texpos")){
+					JsonArray array = obj.get("texpos").getAsJsonArray();
+					for(int i = 0; i < 6; i++){
+						JsonArray arr = array.get(i).getAsJsonArray();
+						if(texrect == null){
+							texrect = arr.size() > 4 ? new TexrectWrapperA(compound) : new TexrectWrapperB(compound);
+						}
+						texrect.texcor[i][0] = arr.get(0).getAsFloat();
+						texrect.texcor[i][1] = arr.get(1).getAsFloat();
+						texrect.texcor[i][2] = arr.get(2).getAsFloat();
+						texrect.texcor[i][3] = arr.get(3).getAsFloat();
+						if(arr.size() > 4){
+							texrect.texcor[i][0] = arr.get(0).getAsFloat();
+							texrect.texcor[i][1] = arr.get(1).getAsFloat();
+							texrect.texcor[i][2] = arr.get(2).getAsFloat();
+							texrect.texcor[i][3] = arr.get(3).getAsFloat();
+						}
+					}
+				}
+				if(texrect == null){ texrect = new TexrectWrapperA(compound); }
 				texrect.size.xCoord = get(width, obj, def); texrect.size.yCoord = get(height, obj, def); texrect.size.zCoord= get(depth, obj, def);
 				//
 				texrect.cor0 = new Vec3f(get("x0", obj, def), get("y0", obj, def), get("z0", obj, def));
@@ -133,17 +154,6 @@ public class JsonToTMT {
 				texrect.cor5 = new Vec3f(get("x5", obj, def), get("y5", obj, def), get("z5", obj, def));
 				texrect.cor6 = new Vec3f(get("x6", obj, def), get("y6", obj, def), get("z6", obj, def));
 				texrect.cor7 = new Vec3f(get("x7", obj, def), get("y7", obj, def), get("z7", obj, def));
-				//
-				if(obj.has("texpos")){
-					JsonArray array = obj.get("texpos").getAsJsonArray();
-					for(int i = 0; i < 6; i++){
-						JsonArray arr = array.get(i).getAsJsonArray();
-						texrect.texcor[i][0] = arr.get(0).getAsFloat();
-						texrect.texcor[i][1] = arr.get(1).getAsFloat();
-						texrect.texcor[i][2] = arr.get(2).getAsFloat();
-						texrect.texcor[i][3] = arr.get(3).getAsFloat();
-					}
-				}
 				polygon = texrect; break;
 			}
 		}

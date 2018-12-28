@@ -8,10 +8,10 @@ import net.fexcraft.app.fmt.ui.generic.TextField;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.lib.common.math.RGB;
 
-public class TexrectEditor extends Editor {
+public class TexrectBEditor extends Editor {
 
-	public TexrectEditor(){
-		super("texrect_editor");
+	public TexrectBEditor(){
+		super("texrectb_editor");
 		final RGB rgb = new RGB(127, 127, 255);
 		//
 		String[] vals = new String[]{
@@ -41,7 +41,7 @@ public class TexrectEditor extends Editor {
 		this.addMultiplicator(630);
 	}
 	
-	private static final String[] faces = new String[]{ "Front", "Back", "Left", "Right", "Top", "Bottom" };//To be adjusted yet.
+	private static final String[] faces = new String[]{ "Front", "Back", "Up", "Down", "Right", "Left" };//To be adjusted yet.
 	
 	@Override
 	public void renderSelf(int rw, int rh){
