@@ -67,6 +67,7 @@ public class PorterManager {
 		porters.add(new JTMTPorter(true));
 		porters.add(new PNGExporter(true));
 		porters.add(new PNGExporter(false));
+		porters.add(new OBJPrototypeExporter());
 	}
 
 	private static ScriptEngine newEngine(){
