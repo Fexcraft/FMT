@@ -374,7 +374,7 @@ public class GroupCompound {
 			editor.getField("multiplicator").applyChange(rate);
 			//
 			editor = (Editor)FMTB.get().UI.getElement("texrectb_editor");
-			if(poly == null || !poly.getType().isCustomTexturedRectangle()){
+			if(poly == null || !poly.getType().isTexRectB()){
 				for(Element field : editor.getFields()){ ((TextField)field).applyChange(0f); }
 			}
 			else{
@@ -383,6 +383,25 @@ public class GroupCompound {
 					editor.getField("texpos" + i + "sy").applyChange(poly.getFloat("texpos" + i + "s", false, true, false));
 					editor.getField("texpos" + i + "ex").applyChange(poly.getFloat("texpos" + i + "e", true, false, false));
 					editor.getField("texpos" + i + "ey").applyChange(poly.getFloat("texpos" + i + "e", false, true, false));
+				}
+			}
+			editor.getField("multiplicator").applyChange(rate);
+			//
+			editor = (Editor)FMTB.get().UI.getElement("texrecta_editor");
+			if(poly == null || !poly.getType().isTexRectA()){
+				for(Element field : editor.getFields()){ ((TextField)field).applyChange(0f); }
+			}
+			else{
+				//for(Element field : editor.getFields()){ Print.console(field.id); }
+				for(int i = 0; i < 6; i++){
+					for(int j = 0; j < 8; j++){
+						if(j % 2 == 0){
+							editor.getField("texpos" + i + ":" + j + "x").applyChange(poly.getFloat("texpos" + i + ":" + j, true, false, false));
+						}
+						else{
+							editor.getField("texpos" + i + ":" + j + "y").applyChange(poly.getFloat("texpos" + i + ":" + j, false, true, false));
+						}
+					}
 				}
 			}
 			editor.getField("multiplicator").applyChange(rate);

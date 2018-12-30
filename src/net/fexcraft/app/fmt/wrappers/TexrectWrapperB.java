@@ -4,7 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import net.fexcraft.lib.common.math.Vec3f;
-import net.fexcraft.lib.common.utils.Print;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public class TexrectWrapperB extends ShapeboxWrapper {
@@ -79,7 +78,6 @@ public class TexrectWrapperB extends ShapeboxWrapper {
 	protected JsonObject populateJson(JsonObject obj, boolean export){
 		obj = super.populateJson(obj, export);
 		obj.addProperty("type", export ? "texrect" : getType().name().toLowerCase());
-		Print.console(obj);
 		JsonArray texpos = new JsonArray(), array = null;
 		for(int i = 0; i < 6; i++){
 			array = new JsonArray();
@@ -95,13 +93,14 @@ public class TexrectWrapperB extends ShapeboxWrapper {
 	@Override
 	protected float[][][] newTexturePosition(){
 		//float tx = 0, ty = 0, w = size.xCoord, h = size.yCoord, d = size.zCoord;
-		float[][][] vecs = new float[6][][];
+		/*float[][][] vecs = new float[6][][];
 		for(int i = 0; i < 6; i++){
 			vecs[i] = new float[][]{
 				new float[]{ texcor[i][0], texcor[i][1] },
 				new float[]{ texcor[i][2], texcor[i][3] }
 			};
-		} return vecs;
+		} return vecs;*/
+		return new float[0][][];
 	}
 	
 }

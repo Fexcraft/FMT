@@ -136,14 +136,14 @@ public class JsonToTMT {
 						texrect.texcor[i][2] = arr.get(2).getAsFloat();
 						texrect.texcor[i][3] = arr.get(3).getAsFloat();
 						if(arr.size() > 4){
-							texrect.texcor[i][0] = arr.get(0).getAsFloat();
-							texrect.texcor[i][1] = arr.get(1).getAsFloat();
-							texrect.texcor[i][2] = arr.get(2).getAsFloat();
-							texrect.texcor[i][3] = arr.get(3).getAsFloat();
+							texrect.texcor[i][4] = arr.get(4).getAsFloat();
+							texrect.texcor[i][5] = arr.get(5).getAsFloat();
+							texrect.texcor[i][6] = arr.get(6).getAsFloat();
+							texrect.texcor[i][7] = arr.get(7).getAsFloat();
 						}
 					}
 				}
-				if(texrect == null){ texrect = new TexrectWrapperA(compound); }
+				if(texrect == null){ texrect = new TexrectWrapperB(compound); }
 				texrect.size.xCoord = get(width, obj, def); texrect.size.yCoord = get(height, obj, def); texrect.size.zCoord= get(depth, obj, def);
 				//
 				texrect.cor0 = new Vec3f(get("x0", obj, def), get("y0", obj, def), get("z0", obj, def));
