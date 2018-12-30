@@ -220,10 +220,6 @@ public abstract class PolygonWrapper {
 	public PolygonWrapper setList(TurboList trlist){
 		this.turbolist = trlist; return this;
 	}
-
-	public TurboList getList(){
-		return turbolist;
-	}
 	
 	public ModelRendererTurbo getTurboObject(int i){
 		if(i < 0 || i > 2) i = 0; return i == 0 ? turbo : i == 1 ? lines : sellines;

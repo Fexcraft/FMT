@@ -14,6 +14,7 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
+import net.fexcraft.app.fmt.ui.generic.DialogBox;
 import net.fexcraft.app.fmt.ui.generic.TextField;
 import net.fexcraft.app.fmt.utils.RayCoastAway;
 import net.fexcraft.app.fmt.utils.TextureManager;
@@ -451,7 +452,7 @@ public class GroupCompound {
 		if(polis.isEmpty()) return;
 		TurboList list = compound.get(id); if(list == null) return;
 		polis.forEach(poly -> {
-			if(poly.getList() != null) poly.getList().remove(poly);
+			if(poly.getTurboList() != null) poly.getTurboList().remove(poly);
 		});
 		polis.forEach(poly -> {
 			list.add(poly); poly.setList(list);
@@ -462,7 +463,7 @@ public class GroupCompound {
 	public void changeGroupOfSelected(int offset){
 		ArrayList<PolygonWrapper> polis = this.getSelected();
 		if(polis.isEmpty()) return;
-		String current = polis.get(0).getList().id; int index = offset;
+		String current = polis.get(0).getTurboList().id; int index = offset;
 		for(String key : compound.keySet()){ if(key.equals(current)) break; else index++; }
 		if(index >= compound.size()) index -= compound.size(); if(index < 0) index = 0;
 		changeGroupOfSelected(polis, compound.keySet().toArray(new String[0])[index]);
@@ -517,6 +518,15 @@ public class GroupCompound {
 				}
 			} shapebox.recompile(); continue;
 		} this.updateFields(); return;
+	}
+
+	public void deleteSelected(){
+		FMTB.showDialogbox("Are you sure to", "delete all Selected?", "Yes!", "Cancel!", () -> {
+			ArrayList<PolygonWrapper> wrapp = this.getSelected();
+			for(PolygonWrapper wrapper : wrapp){
+				wrapper.getTurboList().remove(wrapper);
+			}
+		}, DialogBox.NOTHING);
 	}
 
 }

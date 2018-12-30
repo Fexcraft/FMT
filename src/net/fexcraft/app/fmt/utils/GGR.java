@@ -122,6 +122,7 @@ public class GGR {
     	            		catch(IOException e){ e.printStackTrace(); }
     	            	});
     	            }
+    	            if(key == Keyboard.KEY_DELETE){ FMTB.MODEL.deleteSelected(); }
     	            if(key == Keyboard.KEY_T){ RayCoastAway.doTest(true); } /* for debugging, or such */
     	        }
     		}

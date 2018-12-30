@@ -71,9 +71,9 @@ public class RayCoastAway {
 		if(wrapper == null) return;
 		if(!TextureEditor.BUCKETMODE){
 			boolean control = Keyboard.isKeyDown(Keyboard.KEY_LCONTROL);
-			boolean state = control ? wrapper.getList().selected : wrapper.selected;
+			boolean state = control ? wrapper.getTurboList().selected : wrapper.selected;
 			if(!Keyboard.isKeyDown(Keyboard.KEY_LMENU)) FMTB.MODEL.clearSelection();
-			if(control){ wrapper.getList().selected = !state; }
+			if(control){ wrapper.getTurboList().selected = !state; }
 			else{ wrapper.selected = !state; }
 			FMTB.MODEL.updateFields();
 		}
@@ -84,7 +84,7 @@ public class RayCoastAway {
 				return;
 			}
 			if(TextureEditor.groupMode()){
-				boolean rebind = false; TurboList list = wrapper.getList();
+				boolean rebind = false; TurboList list = wrapper.getTurboList();
 				for(PolygonWrapper poly : list){
 					if(poly.burnToTexture(tex.getImage(), -1)){ rebind = true; }
 				}
