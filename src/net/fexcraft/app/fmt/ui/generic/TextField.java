@@ -193,4 +193,12 @@ public class TextField extends Element {
 	public boolean isSelected(){
 		return selected;
 	}
+
+	public Element setColor(String string, RGB rgb){
+		switch(string){
+			case "hover": this.hovercolor = rgb; break;
+			case "hover_sel": case "hover_selected": this.hoversel = rgb; break;
+			case "inactive": this.inactivecol = rgb; break;
+		} return this;
+	}
 }
