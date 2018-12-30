@@ -213,7 +213,7 @@ public abstract class PolygonWrapper {
 				} break;
 			}
 		}
-		if(id.startsWith("texpos") && this.getType().isCustomTexturedRectangle()){ bool = this.setFloat(id, x, y, z, value); }
+		if(id.startsWith("texpos") && this.getType().isTexRect()){ bool = this.setFloat(id, x, y, z, value); }
 		this.recompile(); return bool;
 	}
 
@@ -266,7 +266,7 @@ public abstract class PolygonWrapper {
 				if(ends == null || ends.length == 0) return false;
 				burn(image, ends, new Color(TextureEditor.CURRENTCOLOR.packed).getRGB());
 			}
-			else if(this.getType().isCuboid() && !this.getType().isCustomTexturedRectangle()){
+			else if(this.getType().isCuboid() && !this.getType().isTexRect()){
 				float[][] ends = texpos[face]; if(ends == null || ends.length == 0) return false;
 				burn(image, ends, new Color(TextureEditor.CURRENTCOLOR.packed).getRGB());
 			}

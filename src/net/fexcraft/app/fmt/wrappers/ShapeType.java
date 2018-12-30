@@ -16,8 +16,16 @@ public enum ShapeType {
 		return this == CYLINDER;
 	}
 
-	public boolean isCustomTexturedRectangle(){
+	public boolean isTexRect(){
 		return this == TEXRECT_B || this == TEXRECT_A;
+	}
+
+	public boolean isTexRectB(){
+		return this == TEXRECT_B;
+	}
+
+	public boolean isTexRectA(){
+		return this == TEXRECT_A;
 	}
 
 }
