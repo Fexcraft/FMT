@@ -36,15 +36,16 @@ public class OBJPrototypeExporter extends InternalPorter {
 		buffer.append("# FMT-Marker OBJ-1\n#\n");
 		buffer.append("# Model exported via the Internal FMT OBJ Exporter\n");
 		buffer.append("# FMT (Fex's Modelling Toolbox) v." + FMTB.version + " &copy; " + Year.now().getValue() + " - Fexcraft.net\n");
-		buffer.append("# All rights reserved. For this Model's License contact the Author/Creator.\n\n");
-		buffer.append("# Model Name\no " + validateName(compound.name) + "\n\n");
+		buffer.append("# All rights reserved. For this Model's License contact the Author/Creator.\n#\n");
 		if(compound.creators.size() > 0){
-			buffer.append("# Creators/Editors:\n");
 			for(String str : compound.creators){
-				buffer.append("# - " + str + "\n");
+				buffer.append("# Creator: " + str + "\n");
 			}
 			buffer.append("\n");
-		} int faceid = 1;
+		} else { buffer.append("# Creator: Empty/FMT\n"); } int faceid = 1;
+		buffer.append("# Model Name\no " + validateName(compound.name) + "\n\n");
+		buffer.append("# TextureSizeX: " + compound.textureX + "\n");
+		buffer.append("# TextureSizeY: " + compound.textureY + "\n\n");
 		//
 		for(TurboList list : compound.getCompound().values()){
 			buffer.append("# Group Name\n");
@@ -70,9 +71,9 @@ public class OBJPrototypeExporter extends InternalPorter {
 						buffer.append(" " + (faceid + i) + "/" + (faceid + i));
 					} buffer.append("\n"); faceid += poly.getVertices().length;
 				}
-			}
-			buffer.append("\n# FMT-Marker OBJ-END\n");
+			} buffer.append("\n");
 		}
+		buffer.append("# FMT-Marker OBJ-END\n");
 		//
 		try{
 			BufferedWriter writer = new BufferedWriter(new FileWriter(file));

@@ -29,7 +29,7 @@ public class ObjPreviewWrapper extends PolygonWrapper {
 			return new ModelRendererTurbo(null, textureX, textureY, compound.textureX, compound.textureY)
 				.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
 				.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord)
-				.addObj(this.source.toString(), new FileInputStream(source));
+				.addObj(new FileInputStream(source), null);//this.source.toString()
 		}
 		catch(Exception e){
 			e.printStackTrace();
