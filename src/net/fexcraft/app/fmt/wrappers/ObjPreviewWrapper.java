@@ -1,6 +1,8 @@
 package net.fexcraft.app.fmt.wrappers;
 
 import java.io.File;
+import java.io.FileInputStream;
+
 import com.google.gson.JsonObject;
 
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
@@ -12,6 +14,10 @@ public class ObjPreviewWrapper extends PolygonWrapper {
 	public ObjPreviewWrapper(GroupCompound compound, File file){
 		super(compound); this.source = file;
 	}
+	
+	public void render(boolean rotX, boolean rotY, boolean rotZ){
+		if(visible && turbo != null) turbo.render(); this.selected = false;
+	}
 
 	@Override
 	protected PolygonWrapper createClone(GroupCompound compound){
@@ -22,7 +28,8 @@ public class ObjPreviewWrapper extends PolygonWrapper {
 		try{
 			return new ModelRendererTurbo(null, textureX, textureY, compound.textureX, compound.textureY)
 				.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
-				.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
+				.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord)
+				.addObj(this.source.toString(), new FileInputStream(source));
 		}
 		catch(Exception e){
 			e.printStackTrace();
