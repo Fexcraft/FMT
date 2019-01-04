@@ -45,7 +45,8 @@ public class OBJPrototypeExporter extends InternalPorter {
 		} else { buffer.append("# Creator: Empty/FMT\n"); } int faceid = 1;
 		buffer.append("# Model Name\no " + validateName(compound.name) + "\n\n");
 		buffer.append("# TextureSizeX: " + compound.textureX + "\n");
-		buffer.append("# TextureSizeY: " + compound.textureY + "\n\n");
+		buffer.append("# TextureSizeY: " + compound.textureY + "\n");
+		buffer.append("# FlipAxes: true\n\n");
 		//
 		for(TurboList list : compound.getCompound().values()){
 			buffer.append("# Group Name\n");
