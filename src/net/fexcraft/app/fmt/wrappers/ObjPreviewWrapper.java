@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 
 import com.google.gson.JsonObject;
 
+import net.fexcraft.lib.common.utils.WavefrontObjUtil;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public class ObjPreviewWrapper extends PolygonWrapper {
@@ -26,10 +27,12 @@ public class ObjPreviewWrapper extends PolygonWrapper {
 	
 	protected ModelRendererTurbo newMRT(){
 		try{
+			String str[][] = WavefrontObjUtil.findValues(new FileInputStream(source), "# FlipAxes:");
+			boolean bool = str.length == 0 ? false : Boolean.parseBoolean(str[0][0]);
 			return new ModelRendererTurbo(null, textureX, textureY, compound.textureX, compound.textureY)
 				.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
 				.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord)
-				.addObj(new FileInputStream(source), null);//this.source.toString()
+				.addObj(new FileInputStream(source), null, bool);//this.source.toString()
 		}
 		catch(Exception e){
 			e.printStackTrace();
