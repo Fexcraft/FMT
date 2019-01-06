@@ -1,7 +1,11 @@
 package net.fexcraft.app.fmt.wrappers;
 
+import org.lwjgl.opengl.GL11;
+
 import com.google.gson.JsonObject;
 
+import net.fexcraft.app.fmt.utils.Settings;
+import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
@@ -42,6 +46,56 @@ public class ShapeboxWrapper extends BoxWrapper {
 		return ShapeType.SHAPEBOX;
 	}
 	
+	private static ModelRendererTurbo[] cornermarkers = new ModelRendererTurbo[8];
+	private static RGB[] cornercolors = new RGB[]{
+		new RGB(255, 255, 0), new RGB(255, 0, 0), new RGB(0, 0, 255), new RGB(0, 255, 0),
+		new RGB(255, 0, 127), new RGB(0, 127, 255), new RGB(0, 127, 0), new RGB(127, 0, 255)
+	};
+	public static RGB[] cornercolors2 = new RGB[]{
+		new RGB(255, 255, 0), new RGB(255, 0, 0), new RGB(0, 127, 255), new RGB(255, 0, 127),
+		new RGB(0, 255, 0), new RGB(0, 0, 255), new RGB(0, 127, 0), new RGB(127, 0, 255)
+	};
+	static{
+		for(int i = 0; i < 8; i++){
+			cornermarkers[i] = new ModelRendererTurbo(null, 0, 0, 16, 16).addSphere(0, 0, 0, 0.5f, 8, 8, 0, 0).setTextured(false).setColor(cornercolors[i]);
+		}
+	}
+	
+	@Override
+	public void renderLines(boolean rotXb, boolean rotYb, boolean rotZb){
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		if((selected || this.getTurboList().selected) && Settings.polygonMarker()){
+			if(this.compound.getFirstSelection() != this){
+				rotmarker.setRotationPoint(lines.rotationPointX, lines.rotationPointY, lines.rotationPointZ);
+				rotmarker.render();
+			}
+			else{
+				GL11.glPushMatrix();
+				if(rot.xCoord != 0f) GL11.glRotatef(rot.xCoord, 1, 0, 0);
+				if(rot.yCoord != 0f) GL11.glRotatef(rot.yCoord, 0, 1, 0);
+				if(rot.zCoord != 0f) GL11.glRotatef(rot.zCoord, 0, 0, 1);
+				Vec3f vector = null;
+				for(int i = 0; i < cornermarkers.length; i++){
+					vector = turbo.getVertices()[i].vector;
+					cornermarkers[i].setPosition(vector.xCoord + pos.xCoord, vector.yCoord + pos.yCoord, vector.zCoord + pos.zCoord);
+					cornermarkers[i].render();
+				}
+				GL11.glPopMatrix();
+			}
+		}
+		if(Settings.lines()){
+			if(selected || this.getTurboList().selected){
+				if(!widelines){ GL11.glLineWidth(4f); widelines = true; }
+				if(sellines != null) sellines.render();
+			}
+			else{
+				if(widelines){ GL11.glLineWidth(1f); widelines = false; }
+				if(lines != null) lines.render();
+			}
+		}
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+	}
+
 	@Override
 	public float getFloat(String id, boolean x, boolean y, boolean z){
 		switch(id){

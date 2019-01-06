@@ -1,11 +1,13 @@
 package net.fexcraft.app.fmt.ui.editor;
 
+import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.generic.Button;
 import net.fexcraft.app.fmt.ui.generic.TextField;
 import net.fexcraft.app.fmt.utils.TextureManager;
+import net.fexcraft.app.fmt.wrappers.ShapeboxWrapper;
 import net.fexcraft.lib.common.math.RGB;
 
 public class ShapeboxEditor extends Editor {
@@ -41,10 +43,16 @@ public class ShapeboxEditor extends Editor {
 	public void renderSelf(int rw, int rh){
 		super.renderSelf(rw, rh); TextureManager.unbind();
 		for(int i = 0; i < 8; i++){
-			font.drawString(4, 40 + (i * 50), "Corner " + (i + 1) + " [" + i + "]", Color.black);
+			font.drawString(4, 40 + (i * 50), "     Corner " + (i + 1) + " [" + i + "]", Color.black);
 		}
 		font.drawString(4, 440, "Multiplicator/Rate", Color.black);
 		RGB.glColorReset();
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		for(int i = 0; i < 8; i++){
+			ShapeboxWrapper.cornercolors2[i].glColorApply();
+			this.renderQuad(4, 40 + (i * 50), 16, 16, "blank");
+		}
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}
 
 }

@@ -16,7 +16,7 @@ import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public abstract class PolygonWrapper {
 	
-	private static final ModelRendererTurbo rotmarker = new ModelRendererTurbo(null, 0, 0, 16, 16).addSphere(0, 0, 0, 0.5f, 8, 8, 0, 0).setTextured(false).setColor(Settings.selectedColor);
+	protected static final ModelRendererTurbo rotmarker = new ModelRendererTurbo(null, 0, 0, 16, 16).addSphere(0, 0, 0, 0.5f, 8, 8, 0, 0).setTextured(false).setColor(Settings.selectedColor);
 	private static final ModelRendererTurbo something = new ModelRendererTurbo(null, 0, 0, 16, 16).setTextured(false);
 	//
 	public Vec3f pos = new Vec3f(), off = new Vec3f(), rot = new Vec3f();
@@ -24,7 +24,7 @@ public abstract class PolygonWrapper {
 	public int textureX, textureY;
 	protected ModelRendererTurbo turbo, lines, sellines, picker;
 	protected final GroupCompound compound;
-	private static boolean widelines;
+	protected static boolean widelines;
 	public boolean visible = true;
 	private TurboList turbolist;
 	public boolean mirror, flip;
