@@ -88,6 +88,7 @@ public class ModelTree extends RightTree {
 					boolean bool = trlist[j].selected;
 					if(!GGR.isShiftDown()){ FMTB.MODEL.clearSelection(); }
 					trlist[j].selected = !bool; FMTB.MODEL.updateFields();
+					FMTB.MODEL.lastselected = null;
 				}
 				return true;
 			}
@@ -111,6 +112,7 @@ public class ModelTree extends RightTree {
 							boolean bool = trlist[j].get(l).selected;
 							if(!GGR.isShiftDown()){ FMTB.MODEL.clearSelection(); }
 							trlist[j].get(l).selected = !bool; FMTB.MODEL.updateFields();
+							FMTB.MODEL.lastselected = trlist[j].get(l);
 						}
 						return true;
 					}

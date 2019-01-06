@@ -30,6 +30,7 @@ public class GroupCompound {
 	private TreeMap<String, TurboList> compound = new TreeMap<>();
 	public ArrayList<String> creators = new ArrayList<>();
 	public File file; public String name = "unnamed model";
+	public PolygonWrapper lastselected;
 	public String texture;
 	//
 	public boolean visible = true, minimized;
@@ -527,6 +528,10 @@ public class GroupCompound {
 				wrapper.getTurboList().remove(wrapper);
 			}
 		}, DialogBox.NOTHING);
+	}
+
+	public PolygonWrapper getLastSelected(){
+		return lastselected;
 	}
 
 }

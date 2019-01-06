@@ -75,6 +75,7 @@ public class RayCoastAway {
 			if(!Keyboard.isKeyDown(Keyboard.KEY_LMENU)) FMTB.MODEL.clearSelection();
 			if(control){ wrapper.getTurboList().selected = !state; }
 			else{ wrapper.selected = !state; }
+			FMTB.MODEL.lastselected = control ? null : wrapper;
 			FMTB.MODEL.updateFields();
 		}
 		else{
