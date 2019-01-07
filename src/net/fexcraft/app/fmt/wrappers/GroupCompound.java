@@ -470,8 +470,8 @@ public class GroupCompound {
 		changeGroupOfSelected(polis, compound.keySet().toArray(new String[0])[index]);
 	}
 	
-	public int countTotalMRTs(){
-		int i = 0; for(TurboList list : compound.values()) i += list.size(); return i;
+	public long countTotalMRTs(){
+		long i = 0; for(TurboList list : compound.values()) i += list.size(); return i;
 	}
 
 	public void setTexture(String string){

@@ -8,6 +8,7 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.generic.DialogBox;
 import net.fexcraft.app.fmt.utils.GGR;
+import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
@@ -18,6 +19,7 @@ public class ModelTree extends RightTree {
 	private TurboList[] trlist;
 	private PolygonWrapper poly;
 	private int trheight;
+	private long count;
 
 	public ModelTree(){ super("modeltree"); }
 
@@ -30,11 +32,15 @@ public class ModelTree extends RightTree {
 		trlist = (TurboList[])FMTB.MODEL.getCompound().values().toArray(new TurboList[]{});
 		FMTB.MODEL.getCompound().values().forEach(turbo -> trheight += turbo.tempheight = 26 + (turbo.size() * 26));
 		GL11.glTranslatef(0, 0,  10); int pass = 0;
+		if(Settings.polygonCount()){
+			this.renderQuad(x + 4, y + 4 + -scroll + (pass), width - 8, 24, "ui/background"); TextureManager.unbind();
+			font.drawString(x + 8, y + 6 + -scroll + (pass), "Polygons: " + count, Color.white); RGB.glColorReset(); pass += 26; count = 0;
+		}
 		for(int i = 0; i < trlist.length; i++){
-			TurboList list = trlist[i];
+			TurboList list = trlist[i]; count += list.size();
 			color(list.visible, list.selected).glColorApply();
 			this.renderQuad(x + 4, y + 4 + -scroll + (pass), width - 8, 24, "ui/background"); TextureManager.unbind();
-			font.drawString(x + 8, y + 6 + -scroll + (pass), list.id, Color.white); RGB.glColorReset();
+			font.drawString(x + 8, y + 6 + -scroll + (pass), (Settings.polygonCount() ? "[" + list.size() + "] " : "") + list.id, Color.white); RGB.glColorReset();
 			GL11.glTranslatef(0, 0,  1);
 			this.renderIcon(x + width - 92, y + 6 + -scroll + (pass), "icons/group_minimize");
 			this.renderIcon(x + width - 70, y + 6 + -scroll + (pass), "icons/group_edit");
@@ -65,7 +71,7 @@ public class ModelTree extends RightTree {
 	@Override
 	protected boolean processButtonClick(int mx, int my, boolean left){
 		if(!left || !(mx >= x + 8 && mx < x + width - 8 && my >= y + 4 && my < y + height - 8)) return false;
-		int myy = my - (y + 4 + -scroll); int i = myy / 26; int k = 0;
+		int myy = my - (y + 4 + -scroll); int i = myy / 26; int k = 0; if(Settings.polygonCount()) i -= 1;
 		for(int j = 0; j < trlist.length; j++){
 			if(k == i){
 				if(mx >= x + width - 92 && mx < x + width - 72){
