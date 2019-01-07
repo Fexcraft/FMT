@@ -437,7 +437,17 @@ public class Toolbar extends Element {
 										}
 									}.setText("Load FMTB", false));
 									//
-									this.elements.put("open", new Button(this, "open", 130, 26, 2, 58, subhover){
+									this.elements.put("frame", new Button(this, "frame", 130, 26, 2, 58, subhover){
+										@Override
+										protected boolean processButtonClick(int x, int y, boolean left){
+											UserInterface.FILECHOOSER.show(new String[]{ "Select an Image file." }, new File("./helpers"), new AfterTask(){
+												@Override public void run(){ HelperCollector.loadFrame(file); }
+											}, ChooserMode.HELPFRAMEIMG);
+											return true;
+										}
+									}.setText("Load Frame", false));
+									//
+									this.elements.put("open", new Button(this, "open", 130, 26, 2, 86, subhover){
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
 											UserInterface.FILECHOOSER.show(new String[]{ "Select a Preview/Helper file." }, new File("./helpers"), new AfterTask(){
@@ -447,24 +457,12 @@ public class Toolbar extends Element {
 										}
 									}.setText("Load Imported", false));
 									//
-									this.elements.put("clear", new Button(this, "clear", 130, 26, 2, 86, subhover){
+									this.elements.put("clear", new Button(this, "clear", 130, 26, 2, 114, subhover){
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
 											HelperCollector.LOADED.clear(); return true;
 										}
 									}.setText("Clear All", false));
-									//
-									/*for(int i = 0; i < 10; i++){
-										if(i >= HelperCollector.getMap().size()) break; int j = i;
-										String name = HelperCollector.getMap().keySet().toArray()[j].toString();
-										this.elements.put("helper" + i, new Button(this, "helper" + i, 130, 26, 2, 86 + (i * 28), subhover){
-											@Override
-											protected boolean processButtonClick(int x, int y, boolean left){
-												HelperCollector.load(name);
-												return true;
-											}
-										}.setText(name.length() > 16 ? name.substring(0, 12) + "..." : name, false));
-									}*/
 								}
 							});
 							break;

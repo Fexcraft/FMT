@@ -130,7 +130,7 @@ public class FileChooser extends Element {
 						eximscroll++;if(eximscroll >= PorterManager.getPorters(mode.exports()).size()) eximscroll = 0;
 						ressel(); return true;
 					}
-					case PNG: case SAVEFILE_SAVE: case SAVEFILE_LOAD: default: return true;
+					case PNG: case HELPFRAMEIMG: case SAVEFILE_SAVE: case SAVEFILE_LOAD: default: return true;
 				}
 			}
 		}.setTexture("icons/file_chooser_6"));
@@ -142,7 +142,7 @@ public class FileChooser extends Element {
 						eximscroll--; if(eximscroll < 0) eximscroll = PorterManager.getPorters(mode.exports()).size() - 1;
 						ressel(); return true;
 					}
-					case PNG: case SAVEFILE_SAVE: case SAVEFILE_LOAD: default: return true;
+					case PNG: case HELPFRAMEIMG: case SAVEFILE_SAVE: case SAVEFILE_LOAD: default: return true;
 				}
 			}
 		}.setTexture("icons/file_chooser_7"));
@@ -193,6 +193,10 @@ public class FileChooser extends Element {
 					stream = Arrays.asList(currdir.listFiles()).stream().filter(pre -> pre.isDirectory() || pre.getName().toLowerCase().endsWith(".fmtb"));
 					break;
 				}
+				case HELPFRAMEIMG:{
+					stream = Arrays.asList(currdir.listFiles()).stream().filter(pre -> pre.isDirectory() || pre.getName().toLowerCase().endsWith(".png") || pre.getName().toLowerCase().endsWith(".jpg") || pre.getName().toLowerCase().endsWith(".jpeg"));
+					break;
+				}
 				default:{
 					stream = Arrays.asList(currdir.listFiles()).stream().filter(pre -> pre.isDirectory());
 					break;
@@ -223,6 +227,9 @@ public class FileChooser extends Element {
 				break;
 			case SAVEFILE_SAVE: case SAVEFILE_LOAD:
 				eximporter.setText("FMT Save File (FMTB)", false);
+				break;
+			case HELPFRAMEIMG:
+				eximporter.setText("Image File [PNG/JPG/JPEG]", false);
 				break;
 			default:
 				eximporter.setText("Error, No Type Specified.", false);
@@ -282,10 +289,11 @@ public class FileChooser extends Element {
 	public static abstract class AfterTask implements Runnable { public File file; public ExImPorter porter; }
 	
 	public static enum ChooserMode {
-		EXPORT, IMPORT, PNG, SAVEFILE_SAVE, SAVEFILE_LOAD, NONE;
+		EXPORT, IMPORT, PNG, HELPFRAMEIMG, SAVEFILE_SAVE, SAVEFILE_LOAD, NONE;
 		public boolean exports(){ return EXPORT == this; }
 		public boolean imports(){ return IMPORT == this; }//"import" is a reserved keyword...
 		public boolean pmgimg(){ return PNG == this; }
+		public boolean helpframimg(){ return HELPFRAMEIMG == this; }
 		//public boolean eximporter(){ return EXPORT == this || IMPORT == this; }
 		//public boolean savefile(){ return SAVEFILE == this; }
 		public boolean savefile_load(){ return SAVEFILE_LOAD == this; }

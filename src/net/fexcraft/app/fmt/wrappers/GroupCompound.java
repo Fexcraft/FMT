@@ -182,7 +182,7 @@ public class GroupCompound {
 
 	public void add(PolygonWrapper shape, String group, boolean clear){
 		try{
-			if(compound.isEmpty()) compound.put("group0", new TurboList("group0"));
+			if(compound.isEmpty() && group == null) compound.put("group0", new TurboList("group0"));
 			if(group != null && !compound.containsKey(group)) compound.put(group, new TurboList(group));
 			TurboList list = (group == null ? compound.containsKey("body") ? compound.get("body") : (TurboList)compound.values().toArray()[0] : compound.get(group));
 			if(clear){ clearSelection(); } shape.selected = true; list.add(shape); shape.setList(list); shape.recompile(); this.updateFields();
