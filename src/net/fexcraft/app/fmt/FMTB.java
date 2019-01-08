@@ -122,7 +122,12 @@ public class FMTB implements FMTGLProcess {
 		});
 		setupDisplay(); initOpenGL(); ggr = new GGR(this, 0, 4, 4); ggr.rotation.xCoord = 45;
 		PorterManager.load(); HelperCollector.reload(); Display.setResizable(true); UI = new UserInterface(this);
-		Settings.load(); SessionHandler.checkIfLoggedIn(true, true); checkForUpdates();
+		try{ Settings.load(); }
+		catch(Throwable e){
+			System.out.println("SETTINGS FAILED TO LOAD"); System.out.println("Please check the (json) file for errors.");
+			e.printStackTrace();
+		}
+		SessionHandler.checkIfLoggedIn(true, true); checkForUpdates();
 		//
 		LocalDateTime midnight = LocalDateTime.of(LocalDate.now(ZoneOffset.systemDefault()), LocalTime.MIDNIGHT);
 		long mid = midnight.toInstant(ZoneOffset.UTC).toEpochMilli(); long date = Time.getDate(); while((mid += Time.MIN_MS * 5) < date);
@@ -195,6 +200,7 @@ public class FMTB implements FMTGLProcess {
 	            GL11.glEnd(); GL11.glPopMatrix();
 	            GL11.glRotatef( 90, 0, 1, 0);
 	        }
+			if(Settings.lighting()) GL11.glEnable(GL11.GL_LIGHTING);
             if(Settings.cube()){
                 TextureManager.bindTexture("demo"); compound0.render();
             }
@@ -205,6 +211,7 @@ public class FMTB implements FMTGLProcess {
             if(Settings.demo()){
                 TextureManager.bindTexture("t1p"); ModelT1P.INSTANCE.render();
             }
+			if(Settings.lighting()) GL11.glDisable(GL11.GL_LIGHTING);
             GL11.glPopMatrix();
         }
         //
@@ -216,6 +223,14 @@ public class FMTB implements FMTGLProcess {
 	static { compound0.textureHeight = compound0.textureWidth = 16; compound0.addBox(-8, 0, -8, 16, 16, 16); }
 
 	private void initOpenGL(){
+        //GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glEnable(GL11.GL_LIGHTING);
+        GL11.glEnable(GL11.GL_LIGHT0);
+        GL11.glLightModeli(GL11.GL_LIGHT_MODEL_TWO_SIDE,GL11.GL_TRUE);
+        GL11.glEnable(GL11.GL_COLOR_MATERIAL);
+        GL11.glColorMaterial(GL11.GL_FRONT_AND_BACK,GL11.GL_AMBIENT_AND_DIFFUSE);
+        this.setLightPos(Settings.light0_position);
+        //
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
     	GL11.glShadeModel(GL11.GL_SMOOTH);
         GL11.glClearColor(0.5f, 0.5f, 0.5f, 0.2f);
@@ -229,6 +244,11 @@ public class FMTB implements FMTGLProcess {
         GL11.glHint(GL11.GL_PERSPECTIVE_CORRECTION_HINT, GL11.GL_NICEST);
         //
         GL11.glEnable(GL11.GL_BLEND); GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+	}
+
+	private void setLightPos(float[] position){
+		java.nio.FloatBuffer fb = org.lwjgl.BufferUtils.createFloatBuffer(4); fb.put(position); fb.flip();
+        GL11.glLight(GL11.GL_LIGHT0, GL11.GL_POSITION, fb);
 	}
 
 	private void setupDisplay() throws LWJGLException {

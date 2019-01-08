@@ -97,6 +97,7 @@ public class GGR {
     	            if(key == Keyboard.KEY_F5){ Settings.toggleDemo(); }
     	            if(key == Keyboard.KEY_F6){ Settings.togglePolygonMarker(); }
     	            if(key == Keyboard.KEY_F7){ Settings.togglePolygonCount(); }
+    	            if(key == Keyboard.KEY_F8){ Settings.toggleLighting(); }
     	            //
     	            if(key == Keyboard.KEY_1){ Editor.toggle("general_editor", true); }
     	            if(key == Keyboard.KEY_2){ Editor.toggle("shapebox_editor", false); }

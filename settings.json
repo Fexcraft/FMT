@@ -6,10 +6,17 @@
     0
   ],
   "fullscreen": false,
-  "floor": true,
+  "floor": false,
   "lines": true,
   "cube": false,
   "demo": false,
   "polygon_marker": true,
-  "polygon_count": true
+  "polygon_count": true,
+  "lighting": true,
+  "light0_position": [
+    0.0,
+    1.0,
+    0.0,
+    0.0
+  ]
 }

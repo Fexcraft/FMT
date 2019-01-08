@@ -13,8 +13,9 @@ import net.fexcraft.lib.common.math.RGB;
 
 public class Settings {
 	
-	private static boolean fullscreen, floor = true, demo, lines = true, cube = true, polygon_marker = true, polygon_count = true;//, raypick = false;
+	private static boolean fullscreen, floor = true, demo, lines = true, cube = true, polygon_marker = true, polygon_count = true, lighting = false;//, raypick = false;
 	public static RGB selectedColor = new RGB(255, 255, 0);
+	public static float[] light0_position = new float[]{ 0, 1, 0, 0 };
 	
 	public static boolean fullscreen(){ return fullscreen; }
 
@@ -31,6 +32,8 @@ public class Settings {
 	public static boolean polygonCount(){ return polygon_count; }
 
 	//public static boolean rayPicking(){ return raypick; }
+
+	public static boolean lighting(){ return lighting; }
 	
 	//
 	
@@ -64,6 +67,10 @@ public class Settings {
 
 	public static boolean togglePolygonCount(){
 		return polygon_count = !polygon_count;
+	}
+
+	public static boolean toggleLighting(){
+		return lighting = !lighting;
 	}
 	
 	/*public static boolean toggleRaypick(){
@@ -99,7 +106,7 @@ public class Settings {
 		temp = values.put(str, value); save(); return temp;
 	}
 
-	public static void load(){
+	public static void load() throws Throwable {
 		if(values.size() > 0) values.clear();
 		JsonObject obj = JsonUtil.get(new File("./settings.json"));
 		if(obj.has("settings")){
@@ -124,10 +131,8 @@ public class Settings {
 		}
 		//
 		if(obj.has("selection_color")){
-			JsonArray array = obj.get("selection_color").getAsJsonArray();
-			if(array.size() >= 3){
-				selectedColor = new RGB(array.get(0).getAsInt(), array.get(1).getAsInt(), array.get(2).getAsInt());
-			}
+			int[] arr = JsonUtil.getIntegerArray(obj.get("selection_color").getAsJsonArray());
+			selectedColor = new RGB(arr[0], arr[1], arr[2]);
 		}
 		//
 		fullscreen = JsonUtil.getIfExists(obj, "fullscreen", fullscreen);
@@ -136,6 +141,8 @@ public class Settings {
 		//raypick = JsonUtil.getIfExists(obj, "raypick", raypick);
 		polygon_marker = JsonUtil.getIfExists(obj, "polygon_marker", polygon_marker);
 		polygon_count = JsonUtil.getIfExists(obj, "polygon_count", polygon_count);
+		lighting = JsonUtil.getIfExists(obj, "lighting", lighting);
+		light0_position = obj.has("light0_position") ? JsonUtil.getFloatArray(obj.get("light0_position").getAsJsonArray()) : light0_position;
 	}
 
 	public static void save(){
@@ -177,6 +184,8 @@ public class Settings {
 		//obj.addProperty("raypick", raypick);
 		obj.addProperty("polygon_marker", polygon_marker);
 		obj.addProperty("polygon_count", polygon_count);
+		obj.addProperty("lighting", lighting);
+		obj.add("light0_position", JsonUtil.toJsonArray(light0_position));
 		JsonUtil.write(new File("./settings.json"), obj);
 	}
 	
