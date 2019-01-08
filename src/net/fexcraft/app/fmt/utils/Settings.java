@@ -15,6 +15,8 @@ public class Settings {
 	
 	private static boolean fullscreen, floor = true, demo, lines = true, cube = true, polygon_marker = true, polygon_count = true, lighting = false;//, raypick = false;
 	public static RGB selectedColor = new RGB(255, 255, 0);
+	public static RGB background_color = new RGB(127, 127, 127);
+	static{ background_color.alpha = 0.2f; }
 	public static float[] light0_position = new float[]{ 0, 1, 0, 0 };
 	
 	public static boolean fullscreen(){ return fullscreen; }
@@ -134,6 +136,11 @@ public class Settings {
 			int[] arr = JsonUtil.getIntegerArray(obj.get("selection_color").getAsJsonArray());
 			selectedColor = new RGB(arr[0], arr[1], arr[2]);
 		}
+		if(obj.has("background_color")){
+			int[] arr = JsonUtil.getIntegerArray(obj.get("background_color").getAsJsonArray());
+			background_color = new RGB(arr[0], arr[1], arr[2]);
+			background_color.alpha = arr[3] / 255f;
+		}
 		//
 		fullscreen = JsonUtil.getIfExists(obj, "fullscreen", fullscreen);
 		floor = JsonUtil.getIfExists(obj, "floor", floor); lines = JsonUtil.getIfExists(obj, "lines", lines);
@@ -162,12 +169,8 @@ public class Settings {
 				sub.addProperty(key, (String)elm);
 			}
 			else{
-				try{
-					sub.addProperty(key, elm.toString());
-				}
-				catch(Exception e){
-					e.printStackTrace();
-				}
+				try{ sub.addProperty(key, elm.toString()); }
+				catch(Exception e){ e.printStackTrace(); }
 			}
 		});
 		obj.add("settings", sub);
@@ -177,6 +180,11 @@ public class Settings {
 			colarr.add(new JsonPrimitive(bit + 128));
 		}
 		obj.add("selection_color", colarr);
+		colarr = new JsonArray();
+		for(byte bit : background_color.toByteArray()){
+			colarr.add(new JsonPrimitive(bit + 128));
+		} colarr.add(background_color.alpha * 255f);
+		obj.add("background_color", colarr);
 		//
 		obj.addProperty("fullscreen", fullscreen);
 		obj.addProperty("floor", floor); obj.addProperty("lines", lines);

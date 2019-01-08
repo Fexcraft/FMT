@@ -12,6 +12,7 @@ import net.fexcraft.app.fmt.ui.generic.Menulist;
 import net.fexcraft.app.fmt.ui.generic.TextField;
 import net.fexcraft.app.fmt.utils.RayCoastAway;
 import net.fexcraft.app.fmt.utils.SessionHandler;
+import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.Time;
 
@@ -28,6 +29,7 @@ public class UserInterface {
 	}
 	
 	private int width, height;
+	private float[] clearcolor;
 
 	public void render(boolean bool){
 		width = root.getDisplayMode().getWidth(); height = root.getDisplayMode().getHeight();
@@ -56,7 +58,9 @@ public class UserInterface {
 	        GL11.glMatrixMode(GL11.GL_MODELVIEW);
 	        GL11.glPopMatrix();
 	        GL11.glDepthFunc(GL11.GL_LEQUAL);
-	        GL11.glClearColor(0.5f, 0.5f, 0.5f, 0.2f);
+	        //GL11.glClearColor(0.5f, 0.5f, 0.5f, 0.2f);
+	    	if(clearcolor == null){ clearcolor = Settings.background_color.toFloatArray(); }
+	    	GL11.glClearColor(clearcolor[0], clearcolor[1], clearcolor[2], Settings.background_color.alpha);
 	        GL11.glClearDepth(1.0);
 	        GL11.glPopMatrix();
 		}

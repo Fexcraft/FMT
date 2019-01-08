@@ -5,9 +5,15 @@
     255,
     0
   ],
+  "background_color": [
+    12,
+    145,
+    239,
+    51.0
+  ],
   "fullscreen": false,
   "floor": false,
-  "lines": true,
+  "lines": false,
   "cube": false,
   "demo": false,
   "polygon_marker": true,

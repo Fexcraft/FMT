@@ -120,13 +120,11 @@ public class FMTB implements FMTGLProcess {
 			TextureManager.getTexture("icon", false).getBuffer(),
 			TextureManager.getTexture("icon", false).getBuffer()
 		});
+		try{ Settings.load(); } catch(Throwable e){
+			System.out.println("SETTINGS FAILED TO LOAD"); System.out.println("Please check the (json) file for errors."); e.printStackTrace();
+		}
 		setupDisplay(); initOpenGL(); ggr = new GGR(this, 0, 4, 4); ggr.rotation.xCoord = 45;
 		PorterManager.load(); HelperCollector.reload(); Display.setResizable(true); UI = new UserInterface(this);
-		try{ Settings.load(); }
-		catch(Throwable e){
-			System.out.println("SETTINGS FAILED TO LOAD"); System.out.println("Please check the (json) file for errors.");
-			e.printStackTrace();
-		}
 		SessionHandler.checkIfLoggedIn(true, true); checkForUpdates();
 		//
 		LocalDateTime midnight = LocalDateTime.of(LocalDate.now(ZoneOffset.systemDefault()), LocalTime.MIDNIGHT);
@@ -176,7 +174,6 @@ public class FMTB implements FMTGLProcess {
         GL11.glTranslatef(-ggr.pos.xCoord, -ggr.pos.yCoord, -ggr.pos.zCoord);
         GL11.glRotatef(180, 1, 0, 0);
         GL11.glPushMatrix();
-        //GL11.glEnable(GL11.GL_BLEND); GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         RGB.WHITE.glColorApply();
         if(ImageHelper.HASTASK && ImageHelper.getTaskId() == 2){
         	GL11.glRotatef((ImageHelper.getStage() - 20) * 10, 0, 1, 0);
@@ -214,16 +211,12 @@ public class FMTB implements FMTGLProcess {
 			if(Settings.lighting()) GL11.glDisable(GL11.GL_LIGHTING);
             GL11.glPopMatrix();
         }
-        //
-        //GL11.glDisable(GL11.GL_BLEND);
-        //GL11.glPopMatrix();
 	}
 	
 	private static final ModelRendererTurbo compound0 = new ModelRendererTurbo(null, 0, 0);
 	static { compound0.textureHeight = compound0.textureWidth = 16; compound0.addBox(-8, 0, -8, 16, 16, 16); }
 
 	private void initOpenGL(){
-        //GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glEnable(GL11.GL_LIGHT0);
         GL11.glLightModeli(GL11.GL_LIGHT_MODEL_TWO_SIDE,GL11.GL_TRUE);
@@ -234,6 +227,8 @@ public class FMTB implements FMTGLProcess {
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
     	GL11.glShadeModel(GL11.GL_SMOOTH);
         GL11.glClearColor(0.5f, 0.5f, 0.5f, 0.2f);
+    	//float[] clearcolor = Settings.background_color.toFloatArray(); //applied in UserInterface.class
+    	//GL11.glClearColor(clearcolor[0], clearcolor[1], clearcolor[2], Settings.background_color.alpha);
         GL11.glClearDepth(1.0);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glDepthFunc(GL11.GL_LEQUAL);
