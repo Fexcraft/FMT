@@ -6,19 +6,19 @@
     0
   ],
   "background_color": [
-    12,
-    145,
-    239,
+    127,
+    127,
+    127,
     51.0
   ],
   "fullscreen": false,
-  "floor": false,
-  "lines": false,
+  "floor": true,
+  "lines": true,
   "cube": false,
   "demo": false,
-  "polygon_marker": true,
+  "polygon_marker": false,
   "polygon_count": true,
-  "lighting": true,
+  "lighting": false,
   "light0_position": [
     0.0,
     1.0,
