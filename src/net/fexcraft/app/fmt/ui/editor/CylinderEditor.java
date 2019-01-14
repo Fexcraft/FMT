@@ -65,4 +65,9 @@ public class CylinderEditor extends Editor {
 		RGB.glColorReset();
 	}
 
+	@Override
+	protected String[] getExpectedQuickButtons(){
+		return new String[]{ "general_editor", "cylinder_editor", "group_editor", "model_editor", "texture_editor" };
+	}
+
 }

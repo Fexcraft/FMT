@@ -248,4 +248,7 @@ public class TextureEditor extends Editor {
 		toggleBucketMode(null);
 	}
 
+	@Override
+	protected String[] getExpectedQuickButtons(){ return null; }
+
 }

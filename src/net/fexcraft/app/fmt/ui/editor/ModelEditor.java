@@ -147,4 +147,7 @@ public class ModelEditor extends Editor {
 		RGB.glColorReset();
 	}
 
+	@Override
+	protected String[] getExpectedQuickButtons(){ return null; }
+
 }

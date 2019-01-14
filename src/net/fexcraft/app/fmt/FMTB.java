@@ -28,6 +28,7 @@ import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.editor.CylinderEditor;
+import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
 import net.fexcraft.app.fmt.ui.editor.GroupEditor;
 import net.fexcraft.app.fmt.ui.editor.ModelEditor;
@@ -67,7 +68,7 @@ import net.fexcraft.lib.tmt.ModelRendererTurbo;
 public class FMTB implements FMTGLProcess {
 	
 	public static final String deftitle = "Fexcraft Modelling Toolbox - %s";
-	public static String version = "1.0.6-test";
+	public static String version = "1.0.7-test";
 	//
 	private static String title;
 	private boolean close;
@@ -297,6 +298,7 @@ public class FMTB implements FMTGLProcess {
 		ui.getElements().add(new net.fexcraft.app.fmt.ui.editor.TextureEditor());
 		ui.getElements().add(new TexrectBEditor());
 		ui.getElements().add(new TexrectAEditor());
+		Editor.addQuickButtons();
 		//render last
 		ui.getElements().add(new Crossbar());
 		ui.getElements().add(new Toolbar());

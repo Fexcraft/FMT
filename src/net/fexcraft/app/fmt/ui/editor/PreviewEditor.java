@@ -137,4 +137,7 @@ public class PreviewEditor extends Editor {
 		RGB.glColorReset();
 	}
 
+	@Override
+	protected String[] getExpectedQuickButtons(){ return null; }
+
 }

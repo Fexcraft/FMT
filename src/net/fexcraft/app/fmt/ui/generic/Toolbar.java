@@ -502,15 +502,19 @@ public class Toolbar extends Element {
 										@Override public void setupSubmenu(){ return; }
 										@Override protected boolean processButtonClick(int x, int y, boolean left){ Settings.togglePolygonCount(); return true; }
 									}.setText("Poly. Count", false));
+									this.elements.put("editorquickbuttons", new Button(this, "editorquickbuttons", 100, 26, 2, 198, subhover){
+										@Override public void setupSubmenu(){ return; }
+										@Override protected boolean processButtonClick(int x, int y, boolean left){ Editor.toggleQuickButtons(); return true; }
+									}.setText("Ed. Shortcuts", false));
 									//
-									this.elements.put("controls", new Button(this, "controls", 100, 26, 2, 198, subhover){
+									this.elements.put("controls", new Button(this, "controls", 100, 26, 2, 226, subhover){
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
 											return DialogBox.notAvailableYet();
 										}
 									}.setText("Controls", false));
 									//
-									this.elements.put("Help", new Button(this, "Help", 100, 26, 2, 226, subhover){
+									this.elements.put("Help", new Button(this, "Help", 100, 26, 2, 254, subhover){
 										@Override
 										protected boolean processButtonClick(int x, int y, boolean left){
 											//TODO

@@ -33,4 +33,9 @@ public class TexrectAEditor extends Editor {
 		RGB.glColorReset();
 	}
 
+	@Override
+	protected String[] getExpectedQuickButtons(){
+		return new String[]{ "general_editor", "shapebox_editor", "texrecta_editor", "group_editor", "model_editor", "texture_editor" };
+	}
+
 }

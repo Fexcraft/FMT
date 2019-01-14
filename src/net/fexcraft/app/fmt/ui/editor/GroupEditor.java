@@ -88,4 +88,7 @@ public class GroupEditor extends Editor {
 		RGB.glColorReset();
 	}
 
+	@Override
+	protected String[] getExpectedQuickButtons(){ return null; }
+
 }

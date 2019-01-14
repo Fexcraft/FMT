@@ -55,4 +55,9 @@ public class ShapeboxEditor extends Editor {
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}
 
+	@Override
+	protected String[] getExpectedQuickButtons(){
+		return new String[]{ "general_editor", "shapebox_editor", "texrectb_editor", "texrecta_editor", "group_editor", "model_editor", "texture_editor" };
+	}
+
 }

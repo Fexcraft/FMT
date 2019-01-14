@@ -14,7 +14,7 @@
   "fullscreen": false,
   "floor": true,
   "lines": true,
-  "cube": false,
+  "cube": true,
   "demo": false,
   "polygon_marker": false,
   "polygon_count": true,
@@ -24,5 +24,6 @@
     1.0,
     0.0,
     0.0
-  ]
+  ],
+  "editor_shortcuts": false
 }

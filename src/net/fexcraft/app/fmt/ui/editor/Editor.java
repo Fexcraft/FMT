@@ -10,8 +10,10 @@ import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.generic.Button;
 import net.fexcraft.app.fmt.ui.generic.IconButton;
 import net.fexcraft.app.fmt.ui.generic.TextField;
+import net.fexcraft.app.fmt.utils.Settings;
+import net.fexcraft.app.fmt.utils.TextureManager;
 
-public class Editor extends Element {
+public abstract class Editor extends Element {
 	
 	private static final ArrayList<Editor> editors = new ArrayList<Editor>();
 	public static final String[] xyz = new String[]{ "x", "y", "z" };
@@ -92,6 +94,44 @@ public class Editor extends Element {
 
 	public List<Element> getFields(){
 		return elements.values().stream().filter(pre -> pre instanceof TextField).collect(Collectors.toList());
+	}
+
+	/** Run after all editors are initialized. */
+	public static void addQuickButtons(){;
+		String[] all = getAllEditorNames();
+		for(String str : all){
+			TextureManager.loadTexture("icons/editors/" + str);
+		}
+		for(Editor editor : editors){
+			String[] getwanted = editor.getExpectedQuickButtons();
+			if(getwanted == null) getwanted = all;
+			for(int i = 0; i < getwanted.length; i++){ final String wanted = getwanted[i];
+				editor.elements.put("open_" + wanted, new IconButton(editor, "open_" + wanted, "icons/editors/" + wanted, editor.x + editor.width - (i * 24) - 24, editor.y + 2){
+					@Override protected boolean processButtonClick(int x, int y, boolean left){ Editor.show(wanted); return true; }
+				});
+				editor.elements.get("open_" + wanted).visible = Settings.editorShortcuts();
+			}
+		}
+	}
+
+	private static String[] getAllEditorNames(){
+		String[] arr = new String[editors.size()];
+		for(int i = 0; i < arr.length; i++){
+			arr[i] = editors.get(i).id;
+		} return arr;
+	}
+
+	protected abstract String[] getExpectedQuickButtons();
+
+	public static void toggleQuickButtons(){
+		Settings.toggleEditorShortcuts();
+		for(Editor editor : editors){
+			for(Element elm : editor.elements.values()){
+				if(elm instanceof IconButton && elm.id.startsWith("open_")){
+					elm.visible = Settings.editorShortcuts();
+				}
+			}
+		}
 	}
 
 }

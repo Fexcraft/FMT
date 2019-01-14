@@ -13,7 +13,7 @@ import net.fexcraft.lib.common.math.RGB;
 
 public class Settings {
 	
-	private static boolean fullscreen, floor = true, demo, lines = true, cube = true, polygon_marker = true, polygon_count = true, lighting = false;//, raypick = false;
+	private static boolean fullscreen, floor = true, demo, lines = true, cube = true, polygon_marker = true, polygon_count = true, lighting = false, editor_shortcuts = false;//, raypick = false;
 	public static RGB selectedColor = new RGB(255, 255, 0);
 	public static RGB background_color = new RGB(127, 127, 127);
 	static{ background_color.alpha = 0.2f; }
@@ -36,6 +36,8 @@ public class Settings {
 	//public static boolean rayPicking(){ return raypick; }
 
 	public static boolean lighting(){ return lighting; }
+
+	public static boolean editorShortcuts(){ return editor_shortcuts; }
 	
 	//
 	
@@ -73,6 +75,10 @@ public class Settings {
 
 	public static boolean toggleLighting(){
 		return lighting = !lighting;
+	}
+
+	public static boolean toggleEditorShortcuts(){
+		return editor_shortcuts = !editor_shortcuts;
 	}
 	
 	/*public static boolean toggleRaypick(){
@@ -150,6 +156,7 @@ public class Settings {
 		polygon_count = JsonUtil.getIfExists(obj, "polygon_count", polygon_count);
 		lighting = JsonUtil.getIfExists(obj, "lighting", lighting);
 		light0_position = obj.has("light0_position") ? JsonUtil.getFloatArray(obj.get("light0_position").getAsJsonArray()) : light0_position;
+		editor_shortcuts = JsonUtil.getIfExists(obj, "editor_shortcuts", editor_shortcuts);
 	}
 
 	public static void save(){
@@ -194,6 +201,7 @@ public class Settings {
 		obj.addProperty("polygon_count", polygon_count);
 		obj.addProperty("lighting", lighting);
 		obj.add("light0_position", JsonUtil.toJsonArray(light0_position));
+		obj.addProperty("editor_shortcuts", editor_shortcuts);
 		JsonUtil.write(new File("./settings.json"), obj);
 	}
 	
