@@ -1,21 +1,14 @@
 package net.fexcraft.app.fmt.utils;
 
-import java.awt.Desktop;
-import java.io.File;
-import java.io.IOException;
-
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
-import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.FMTGLProcess;
-import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
-import net.fexcraft.app.fmt.ui.generic.DialogBox;
 import net.fexcraft.app.fmt.ui.generic.TextField;
 import net.fexcraft.app.fmt.ui.tree.RightTree;
+import net.fexcraft.app.fmt.utils.KeyCompound.KeyFunction;
 import net.fexcraft.lib.common.math.Vec3f;
 
 /** CCR */
@@ -90,46 +83,15 @@ public class GGR {
     	        	}
     	        }
     	        else{
-    	            if(key == Keyboard.KEY_F1){ /*//TODO help UI*/ }
-    	            if(key == Keyboard.KEY_F2){ Settings.toggleFloor(); }
-    	            if(key == Keyboard.KEY_F3){ Settings.toggleLines(); }
-    	            if(key == Keyboard.KEY_F4){ Settings.toggleCube(); }
-    	            if(key == Keyboard.KEY_F5){ Settings.toggleDemo(); }
-    	            if(key == Keyboard.KEY_F6){ Settings.togglePolygonMarker(); }
-    	            if(key == Keyboard.KEY_F7){ Settings.togglePolygonCount(); }
-    	            if(key == Keyboard.KEY_F8){ Settings.toggleLighting(); }
-    	            //
-    	            if(key == Keyboard.KEY_1){ Editor.toggle("general_editor", true); }
-    	            if(key == Keyboard.KEY_2){ Editor.toggle("shapebox_editor", false); }
-    	            if(key == Keyboard.KEY_3){ Editor.toggle("cylinder_editor", false); }
-    	            if(key == Keyboard.KEY_4){ Editor.toggle("group_editor", false); }
-    	            if(key == Keyboard.KEY_5){ Editor.toggle("model_editor", false); }
-    	            if(key == Keyboard.KEY_6){ Editor.toggle("texrectb_editor", false); }
-    	            if(key == Keyboard.KEY_7){ Editor.toggle("texrecta_editor", false); }
-    	            if(key == Keyboard.KEY_8){ Editor.toggle("texture_editor", false); }
-    	            if(key == Keyboard.KEY_F11){
-    	            	try{ Display.setFullscreen(Settings.toogleFullscreen()); }
-    	    			catch(Exception ex){ ex.printStackTrace(); }
-    	            }
-    	            //
-    	            if(key == Keyboard.KEY_LEFT){ this.rotation.yCoord += 15; }
-    	            if(key == Keyboard.KEY_RIGHT){ this.rotation.yCoord -= 15; }
-    	            if(key == Keyboard.KEY_UP){ this.rotation.xCoord += 15; }
-    	            if(key == Keyboard.KEY_DOWN){ this.rotation.xCoord -= 15; }
-    	            //
-    	            if(/*key == Keyboard.KEY_SYSRQ ||*/ key == Keyboard.KEY_F12){
-    	            	ImageHelper.takeScreenshot(false);
-    	            	FMTB.showDialogbox("Screenshot taken.", "", "OK", "Open", DialogBox.NOTHING, () -> {
-    	            		try{ Desktop.getDesktop().open(new File("./screenshots/")); }
-    	            		catch(IOException e){ e.printStackTrace(); }
-    	            	});
-    	            }
-    	            if(key == Keyboard.KEY_DELETE){ FMTB.MODEL.deleteSelected(); }
-    	            if(key == Keyboard.KEY_T){ RayCoastAway.doTest(true); } /* for debugging, or such */
+    	        	for(KeyFunction keyf : KeyCompound.keys){
+    	        		if(keyf.ID() != key) continue; if(keyf.process()) break;
+    	        	}
     	        }
     		}
     		else{//"released"
-    			
+	        	for(KeyFunction keyf : KeyCompound.released_keys){
+	        		if(keyf.ID() != key) continue; if(keyf.process()) break;
+	        	}
     		}
     	}
 	}
@@ -200,14 +162,14 @@ public class GGR {
         //
     	//if(!Mouse.isGrabbed()) return;
         if(RightTree.anyTreeHovered()) return;
-        boolean front = Keyboard.isKeyDown(Keyboard.KEY_W);
-        boolean back = Keyboard.isKeyDown(Keyboard.KEY_S);
-        boolean right = Keyboard.isKeyDown(Keyboard.KEY_D);
-        boolean left = Keyboard.isKeyDown(Keyboard.KEY_A);
-        boolean speedp = Keyboard.isKeyDown(Keyboard.KEY_R);
-        boolean speedm = Keyboard.isKeyDown(Keyboard.KEY_F);
-        boolean up = Keyboard.isKeyDown(Keyboard.KEY_SPACE);
-        boolean down = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
+        boolean front = Keyboard.isKeyDown(KeyCompound.KEY_W.ID());
+        boolean back  = Keyboard.isKeyDown(KeyCompound.KEY_S.ID());
+        boolean right = Keyboard.isKeyDown(KeyCompound.KEY_D.ID());
+        boolean left  = Keyboard.isKeyDown(KeyCompound.KEY_A.ID());
+        boolean speedp = Keyboard.isKeyDown(KeyCompound.KEY_SPP.ID());
+        boolean speedm = Keyboard.isKeyDown(KeyCompound.KEY_SPN.ID());
+        boolean up   = Keyboard.isKeyDown(KeyCompound.KEY_DU.ID());
+        boolean down = Keyboard.isKeyDown(KeyCompound.KEY_DD.ID());
         float nspeed;
         if(speedp) nspeed = movespeed * 5;
         else if(speedm) nspeed = movespeed / 2;
