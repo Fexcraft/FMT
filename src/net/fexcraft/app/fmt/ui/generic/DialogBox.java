@@ -9,6 +9,7 @@ import java.net.URISyntaxException;
 import org.newdawn.slick.Color;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.utils.TextureManager;
@@ -18,7 +19,7 @@ import net.fexcraft.lib.common.math.RGB;
  * @author Ferdinand Calo' (FEX___96)
  *
  */
-public class DialogBox extends Element {
+public class DialogBox extends Element implements Dialog{
 
 	public static final Runnable NOTHING = () -> UserInterface.DIALOGBOX.reset();
 	private Button button0, button1;
@@ -29,7 +30,7 @@ public class DialogBox extends Element {
 	
 	public DialogBox(){
 		super(null, "dialogbox");
-		this.visible = false; this.z = 90;
+		this.visible = false; this.z = 90; Dialog.dialogs.add(this);
 		TextureManager.loadTexture("ui/dialogbox");
 		this.elements.put("positive", button0 = new Button(this, "positive", 100, 30, 0, 0, new RGB(255, 255, 0)){
 			@Override protected boolean processButtonClick(int x, int y, boolean left){ return onClick(true); }
@@ -100,6 +101,11 @@ public class DialogBox extends Element {
 			try { java.awt.Desktop.getDesktop().browse(new java.net.URL("https://discord.gg/AkMAzaA").toURI()); }
 			catch(IOException | URISyntaxException e){ e.printStackTrace(); }
 		}); return true;
+	}
+
+	@Override
+	public boolean visible(){
+		return visible;
 	}
 
 }

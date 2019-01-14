@@ -13,6 +13,7 @@ import org.newdawn.slick.Color;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
+import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.utils.Backups;
@@ -26,7 +27,7 @@ import net.fexcraft.lib.common.utils.Print;
  * @author Ferdinand Calo' (FEX___96)
  *
  */
-public class FileChooser extends Element {
+public class FileChooser extends Element implements Dialog {
 
 	public static final AfterTask NOTHING = new AfterTask(){ @Override public void run(){ Print.console(file); return; }};
 	private Button up, down, desktop, parent, reset, broot, eximp, eximm;
@@ -43,7 +44,7 @@ public class FileChooser extends Element {
 		super(null, "ui/filechooser"); TextureManager.loadTexture("ui/filechooser"); TextureManager.loadTexture("icons/file_chooser_0"); TextureManager.loadTexture("icons/file_chooser_1");
 		TextureManager.loadTexture("icons/file_chooser_2"); TextureManager.loadTexture("icons/file_chooser_3"); TextureManager.loadTexture("icons/file_chooser_4");
 		TextureManager.loadTexture("icons/file_chooser_5"); TextureManager.loadTexture("icons/file_chooser_6"); TextureManager.loadTexture("icons/file_chooser_7");
-		this.visible = false; this.z = 80; this.height = 546; this.width = 512;
+		this.visible = false; this.z = 80; this.height = 546; this.width = 512; Dialog.dialogs.add(this);
 		this.elements.put("button0", button0 = new Button(this, "button0", 150, 28, 18, 504/*470*/, new RGB(255, 255, 0)){
 			@Override protected boolean processButtonClick(int x, int y, boolean left){
 				onfile.porter = PorterManager.getPorters(mode.exports()).get(eximscroll);
@@ -298,6 +299,11 @@ public class FileChooser extends Element {
 		//public boolean savefile(){ return SAVEFILE == this; }
 		public boolean savefile_load(){ return SAVEFILE_LOAD == this; }
 		public boolean savefile_save(){ return SAVEFILE_SAVE == this; }
+	}
+
+	@Override
+	public boolean visible(){
+		return visible;
 	}
 
 }

@@ -36,6 +36,7 @@ import net.fexcraft.app.fmt.ui.editor.PreviewEditor;
 import net.fexcraft.app.fmt.ui.editor.ShapeboxEditor;
 import net.fexcraft.app.fmt.ui.editor.TexrectAEditor;
 import net.fexcraft.app.fmt.ui.editor.TexrectBEditor;
+import net.fexcraft.app.fmt.ui.generic.ControlsAdjuster;
 import net.fexcraft.app.fmt.ui.generic.Crossbar;
 import net.fexcraft.app.fmt.ui.generic.DialogBox;
 import net.fexcraft.app.fmt.ui.generic.FileChooser;
@@ -292,6 +293,7 @@ public class FMTB implements FMTGLProcess {
 		ui.getElements().add(new CylinderEditor());
 		ui.getElements().add(UserInterface.DIALOGBOX = new DialogBox());
 		ui.getElements().add(UserInterface.FILECHOOSER = new FileChooser());
+		ui.getElements().add(UserInterface.CONTROLS = new ControlsAdjuster());
 		ui.getElements().add(new GroupEditor());
 		ui.getElements().add(new HelperTree());
 		ui.getElements().add(new PreviewEditor());
@@ -313,7 +315,7 @@ public class FMTB implements FMTGLProcess {
 
 	@Override
 	public void reset(){
-		UserInterface.DIALOGBOX.reset(); UserInterface.FILECHOOSER.reset(); TextField.deselectAll();
+		UserInterface.DIALOGBOX.reset(); UserInterface.FILECHOOSER.reset(); UserInterface.CONTROLS.reset(); TextField.deselectAll();
 	}
 
 	private void checkForUpdates(){

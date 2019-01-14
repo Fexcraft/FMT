@@ -5,7 +5,9 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTGLProcess;
+import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
+import net.fexcraft.app.fmt.ui.generic.ControlsAdjuster;
 import net.fexcraft.app.fmt.ui.generic.TextField;
 import net.fexcraft.app.fmt.ui.tree.RightTree;
 import net.fexcraft.app.fmt.utils.KeyCompound.KeyFunction;
@@ -89,6 +91,7 @@ public class GGR {
     	        }
     		}
     		else{//"released"
+    			if(ControlsAdjuster.CATCHING){ UserInterface.CONTROLS.catchKey(key); }
 	        	for(KeyFunction keyf : KeyCompound.released_keys){
 	        		if(keyf.ID() != key) continue; if(keyf.process()) break;
 	        	}
@@ -129,7 +132,7 @@ public class GGR {
         if((Mouse.isInsideWindow() && /*Keyboard.isKeyDown(Keyboard.KEY_E) ||*/ Mouse.isButtonDown(1) && !RightTree.anyTreeHovered())){
             Mouse.setGrabbed(true);
         }
-        if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
+        if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE) && !ControlsAdjuster.CATCHING){
             root.reset(); Mouse.setGrabbed(false); TextureEditor.reset();
         }
     }

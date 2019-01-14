@@ -165,6 +165,8 @@ public class KeyCompound {
 		public abstract boolean process();
 		
 		public String name(){ return name; }
+
+		public void setID(Integer key){ this.id = key == null || key < 0 ? def : key; }
 		
 	}
 	

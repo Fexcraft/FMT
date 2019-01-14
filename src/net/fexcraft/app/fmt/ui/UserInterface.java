@@ -6,6 +6,7 @@ import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.FMTGLProcess;
+import net.fexcraft.app.fmt.ui.generic.ControlsAdjuster;
 import net.fexcraft.app.fmt.ui.generic.DialogBox;
 import net.fexcraft.app.fmt.ui.generic.FileChooser;
 import net.fexcraft.app.fmt.ui.generic.Menulist;
@@ -20,6 +21,7 @@ public class UserInterface {
 
 	public static DialogBox DIALOGBOX;
 	public static FileChooser FILECHOOSER;
+	public static ControlsAdjuster CONTROLS;
 	//
 	private ArrayList<Element> elements = new ArrayList<>();
 	private FMTGLProcess root;

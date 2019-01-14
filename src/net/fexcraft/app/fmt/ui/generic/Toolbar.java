@@ -508,10 +508,7 @@ public class Toolbar extends Element {
 									}.setText("Ed. Shortcuts", false));
 									//
 									this.elements.put("controls", new Button(this, "controls", 100, 26, 2, 226, subhover){
-										@Override
-										protected boolean processButtonClick(int x, int y, boolean left){
-											return DialogBox.notAvailableYet();
-										}
+										@Override protected boolean processButtonClick(int x, int y, boolean left){ return UserInterface.CONTROLS.show(); }
 									}.setText("Controls", false));
 									//
 									this.elements.put("Help", new Button(this, "Help", 100, 26, 2, 254, subhover){
