@@ -120,17 +120,17 @@ public class TextField extends Element {
 		if(number && !isNumber(id, tempval == null || tempval.length() == 0, key)){ return; }
 		if(number){
 			if(tempval == null){
-				tempval = key.equals("-") && !(value + "").contains("-") ? key : value + "";
+				tempval = key.equals("-") && !(value + "").contains("-") ? key + value : value + "";
 			}
 			if(key.equals("-")){
 				if(tempval.length() == 0) tempval = (value + "").contains("-") ? key : key + value; return;
 			}
 			if(key.equals(".") && tempval.indexOf(".") >= 0) return;
-			float fl = parseFloat(value, tempval + key);
+			/*float fl = parseFloat(value, tempval + key);
 			if(fl < min){ tempval = min + ""; return; }
 			if(fl > max){ tempval = max + ""; return; }
-			tempval = fl % 1.0f != 0 ? fl + "" : tempval + key;
-			return;
+			tempval = fl % 1.0f != 0 ? fl + "" : tempval + key;*///check this onReturn instead
+			tempval = tempval + key; return;
 		}
 		else{
 			if(key.equals("-") && GGR.isShiftDown()) key = "_";
@@ -165,6 +165,7 @@ public class TextField extends Element {
 	public void onReturn(){
 		if(number){
 			if(tempval != null && tempval.length() > 0) value = parseFloat(value, tempval);
+			if(value < min) value = min; if(value > max) value = max;
 		}
 		else{
 			if(tempval != null && tempval.length() > 0) text = tempval;
