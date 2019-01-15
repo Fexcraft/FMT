@@ -16,7 +16,7 @@
   "lines": true,
   "cube": true,
   "demo": false,
-  "polygon_marker": false,
+  "polygon_marker": true,
   "polygon_count": true,
   "lighting": false,
   "light0_position": [
@@ -25,5 +25,5 @@
     0.0,
     0.0
   ],
-  "editor_shortcuts": false
+  "editor_shortcuts": true
 }

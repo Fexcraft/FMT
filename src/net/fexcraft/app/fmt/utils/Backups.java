@@ -26,8 +26,8 @@ public class Backups extends TimerTask {
 		SaveLoad.toFile(FMTB.MODEL, file, false);
 	}
 	
-	private static final SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy HH.mm.ss");
-	private static final SimpleDateFormat ssdf = new SimpleDateFormat("dd-MMM-yyyy HH.mm.ss.SSSS");
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH.mm.ss");
+	private static final SimpleDateFormat ssdf = new SimpleDateFormat("yyyy-MM-dd HH.mm.ss.SSSS");
 
 	public static final SimpleDateFormat getSimpleDateFormat(boolean milli){ return milli ? ssdf : sdf; }
 
