@@ -75,7 +75,7 @@ public class PorterManager {
 	}
 
 	public static void handleImport(){
-		UserInterface.FILECHOOSER.show(new String[]{ "Select file/model to import.", "Open" }, new File("./models"), new AfterTask(){
+		UserInterface.FILECHOOSER.show(new String[]{ "Select file/model to import.", "Import" }, new File("./models"), new AfterTask(){
 			@Override
 			public void run(){
 				try{
@@ -103,7 +103,7 @@ public class PorterManager {
 	}
 
 	public static void handleExport(){
-		UserInterface.FILECHOOSER.show(new String[]{ "Select Export Location", "Select" }, new File("./models"), new AfterTask(){
+		UserInterface.FILECHOOSER.show(new String[]{ "Select Export Location", "Export" }, new File("./models"), new AfterTask(){
 			@Override
 			public void run(){
 				try{
