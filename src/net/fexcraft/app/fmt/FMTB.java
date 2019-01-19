@@ -36,6 +36,7 @@ import net.fexcraft.app.fmt.ui.editor.PreviewEditor;
 import net.fexcraft.app.fmt.ui.editor.ShapeboxEditor;
 import net.fexcraft.app.fmt.ui.editor.TexrectAEditor;
 import net.fexcraft.app.fmt.ui.editor.TexrectBEditor;
+import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.generic.ControlsAdjuster;
 import net.fexcraft.app.fmt.ui.generic.Crossbar;
 import net.fexcraft.app.fmt.ui.generic.DialogBox;
@@ -298,7 +299,7 @@ public class FMTB implements FMTGLProcess {
 		ui.getElements().add(new HelperTree());
 		ui.getElements().add(new PreviewEditor());
 		ui.getElements().add(new ModelEditor());
-		ui.getElements().add(new net.fexcraft.app.fmt.ui.editor.TextureEditor());
+		ui.getElements().add(new TextureEditor());
 		ui.getElements().add(new TexrectBEditor());
 		ui.getElements().add(new TexrectAEditor());
 		Editor.addQuickButtons();
