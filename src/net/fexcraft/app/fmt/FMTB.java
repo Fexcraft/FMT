@@ -15,6 +15,7 @@ import java.util.Timer;
 import javax.script.ScriptException;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
+import org.lwjgl.Sys;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
@@ -70,8 +71,8 @@ import net.fexcraft.lib.tmt.ModelRendererTurbo;
  * */
 public class FMTB implements FMTGLProcess {
 	
-	public static final String deftitle = "Fexcraft Modelling Toolbox - %s";
-	public static String version = "1.0.7-test";
+	public static final String deftitle = "[FPS:%s] Fexcraft Modelling Toolbox - %s";
+	public static final String version = "1.0.7-test";
 	//
 	private static String title;
 	private boolean close;
@@ -83,6 +84,7 @@ public class FMTB implements FMTGLProcess {
 	private static File lwjgl_natives;
 	public static GroupCompound MODEL = new GroupCompound();
 	public static Timer BACKUP_TIMER, TEX_UPDATE_TIMER;
+	private long lf, lfps, fps;
 	
 	public static void main(String... args) throws Exception {
 	    switch(LWJGLUtil.getPlatform()){
@@ -114,9 +116,7 @@ public class FMTB implements FMTGLProcess {
 		Settings.setFullScreen(full); setTitle(string);
 	}
 	
-	public void setTitle(String string){
-		title = String.format(deftitle, string); Display.setTitle(title);
-	}
+	public void setTitle(String string){ title = string; }
 	
 	public void run() throws LWJGLException, InterruptedException, IOException, NoSuchMethodException, ScriptException {
 		TextureManager.loadTextures(null);
@@ -136,8 +136,9 @@ public class FMTB implements FMTGLProcess {
 		if(BACKUP_TIMER == null){ (BACKUP_TIMER = new Timer()).schedule(new Backups(), new Date(mid), Time.MIN_MS * 5); }
 		if(TEX_UPDATE_TIMER == null){ (TEX_UPDATE_TIMER = new Timer()).schedule(new TextureUpdate(), Time.SEC_MS, Time.SEC_MS / 2); }
 		//
+		this.getDelta(); lfps = this.getTime();
 		while(!close){
-			loop(); render();
+			loop(this.getDelta()); render();
 			if(!RayCoastAway.PICKING){
 				if(ImageHelper.HASTASK){
 					UI.render(true); ImageHelper.doTask();
@@ -151,8 +152,8 @@ public class FMTB implements FMTGLProcess {
 		Display.destroy(); Settings.save(); KeyCompound.save(); SessionHandler.save(); System.exit(0);
 	}
 
-	private void loop(){
-		ggr.pollInput(0.05f); ggr.apply();
+	private void loop(long delta){
+		ggr.pollInput(0.1f); ggr.apply();
 		//
 		if(Display.isCloseRequested()){ SaveLoad.checkIfShouldSave(true); }
 		//
@@ -167,7 +168,23 @@ public class FMTB implements FMTGLProcess {
             catch(Exception e){ e.printStackTrace(); }
         }
         if(!TextureUpdate.HALT){ TextureUpdate.tryAutoPos(TextureUpdate.ALL); }
+        //
+        this.updateFPS();
 	}
+	
+	public long getTime(){
+	    return (Sys.getTime() * 1000) / Sys.getTimerResolution();
+	}
+	
+	public long getDelta(){
+	    long time = getTime();
+	    long delta = time - lf;
+	    lf = time; return delta;
+	}
+	
+    public void updateFPS() {
+        if(getTime() - lfps > 1000){ Display.setTitle(String.format(deftitle, fps, title)); fps = 0; lfps += 1000; } fps++;
+    }
 	
 	private void render(){
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
