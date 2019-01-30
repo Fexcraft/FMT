@@ -2,6 +2,7 @@ package net.fexcraft.app.fmt.ui.editor;
 
 import org.newdawn.slick.Color;
 
+import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.generic.Button;
 import net.fexcraft.app.fmt.ui.generic.TextField;
@@ -75,7 +76,7 @@ public class TextureEditor extends Editor {
 	}
 
 	public static void toggleBucketMode(PaintMode mode){
-		if(mode == null){ BUCKETMODE = false; } else{ BUCKETMODE = PMODE == mode ? !BUCKETMODE : true; PMODE = mode; }
+		if(FMTB.get() == null) return; if(mode == null){ BUCKETMODE = false; } else{ BUCKETMODE = PMODE == mode ? !BUCKETMODE : true; PMODE = mode; }
 		Editor.get("texture_editor").getButton("button0").setText("(Face) Paint Bucket [" + (BUCKETMODE && PMODE == PaintMode.FACE ? "ON" : "OFF") + "]", true);
 		Editor.get("texture_editor").getButton("button1").setText("(Polygon) Paint Bucket [" + (BUCKETMODE && PMODE == PaintMode.POLYGON ? "ON" : "OFF") + "]", true);
 		Editor.get("texture_editor").getButton("button2").setText("(Group) Paint Bucket [" + (BUCKETMODE && PMODE == PaintMode.GROUP ? "ON" : "OFF") + "]", true);

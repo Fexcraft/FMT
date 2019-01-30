@@ -10,6 +10,7 @@ import com.google.gson.JsonPrimitive;
 
 import net.fexcraft.lib.common.json.JsonUtil;
 import net.fexcraft.lib.common.math.RGB;
+import net.fexcraft.lib.common.utils.Print;
 
 public class Settings {
 	
@@ -74,6 +75,7 @@ public class Settings {
 	}
 
 	public static boolean toggleLighting(){
+		Print.console("Toggling lighting: " + !lighting);
 		return lighting = !lighting;
 	}
 
