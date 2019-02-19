@@ -47,8 +47,10 @@ public class JsonToTMT {
 	public static final String[] flip = new String[]{"flip", "fl", "usd"};
 	//cyl
 	public static final String[] radius = new String[]{"radius", "rad", "r"};
+	public static final String[] radius2 = new String[]{"radius2", "rad2", "r2"};
 	public static final String[] length = new String[]{"length", "len", "l"};
 	public static final String[] segments = new String[]{"segments", "seg", "sg"};
+	public static final String[] seglimit = new String[]{"segment_limit", "segments_limit", "seglimit", "seg_limit", "sgl"};
 	public static final String[] basescale = new String[]{"base_scale", "basescale", "bs"};
 	public static final String[] topscale = new String[]{"top_scale", "topscale", "ts"};
 	public static final String[] direction = new String[]{"direction", "dir", "facing"};
@@ -112,8 +114,10 @@ public class JsonToTMT {
 			case "cylinder": case "cyl": case "c": case "cone": case "cn": {
 				CylinderWrapper cylinder = new CylinderWrapper(compound);
 				cylinder.radius = get(radius, obj, 1f);
+				cylinder.radius2 = get(radius2, obj, 0f);
 				cylinder.length = get(length, obj, 1f);
 				cylinder.segments = get(segments, obj, 16);
+				cylinder.seglimit = get(seglimit, obj, cylinder.segments);
 				cylinder.direction = get(direction, obj, 4);
 				cylinder.base = get(basescale, obj, 1f);
 				cylinder.top = get(topscale, obj, 1f);

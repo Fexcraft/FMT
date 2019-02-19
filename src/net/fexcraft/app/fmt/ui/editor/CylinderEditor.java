@@ -39,8 +39,10 @@ public class CylinderEditor extends Editor {
 					if(r == 3){ field.setAsNumberfield(Integer.MIN_VALUE, Integer.MAX_VALUE, true); field.applyChange(0); }
 				}
 				if(ii == 2){
-					if(r != 3){ field.enabled = false; }
-					else{ field.setAsNumberfield(Integer.MIN_VALUE, Integer.MAX_VALUE, true); field.applyChange(0); }
+					if(r == 0){ field.setAsNumberfield(0.01f, Integer.MAX_VALUE, true); field.applyChange(0f); }
+					if(r == 1){ field.setAsNumberfield(0, Integer.MAX_VALUE, true); field.applyChange(0); }
+					if(r == 2){ field.enabled = false; }
+					if(r == 3){ field.setAsNumberfield(Integer.MIN_VALUE, Integer.MAX_VALUE, true); field.applyChange(0); }
 				}
 				this.elements.put(vals[r] + xyz[i], field.setLevel(-1));
 				this.elements.put(vals[r] + xyz[i] + "+", new Button(this, vals[r] + xyz[i] + "+", 12, 26, k + 16 + (j * i), 30 + (r * 50), rgb){
@@ -57,8 +59,8 @@ public class CylinderEditor extends Editor {
 	@Override
 	public void renderSelf(int rw, int rh){
 		super.renderSelf(rw, rh); TextureManager.unbind();
-		font.drawString(4,  40, "Radius / Length", Color.black);
-		font.drawString(4,  90, "Segments / Direction", Color.black);
+		font.drawString(4,  40, "Radius / Length / R2", Color.black);
+		font.drawString(4,  90, "Segments / Direction / SL", Color.black);
 		font.drawString(4, 140, "Base Scale / Top Scale", Color.black);
 		font.drawString(4, 190, "Top Offset (x/y/z)", Color.black);
 		font.drawString(4, 240, "Multiplicator/Rate", Color.black);

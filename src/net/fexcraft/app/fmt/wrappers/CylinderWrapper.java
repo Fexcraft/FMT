@@ -7,8 +7,8 @@ import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public class CylinderWrapper extends PolygonWrapper {
 	
-	public float radius = 2, length = 2, base = 1, top = 1;
-	public int segments = 8, direction = ModelRendererTurbo.MR_TOP;
+	public float radius = 2, radius2, length = 2, base = 1, top = 1;
+	public int segments = 8, seglimit, direction = ModelRendererTurbo.MR_TOP;
 	public Vec3f topoff = new Vec3f(0, 0, 0);
 	
 	public CylinderWrapper(GroupCompound compound){
@@ -18,18 +18,22 @@ public class CylinderWrapper extends PolygonWrapper {
 	@Override
 	protected PolygonWrapper createClone(GroupCompound compound){
 		CylinderWrapper wrapper = new CylinderWrapper(compound);
-		wrapper.radius = radius; wrapper.length = length;
-		wrapper.base = base; wrapper.top = top;
-		wrapper.segments = segments;
-		wrapper.direction = direction;
-		wrapper.topoff = new Vec3f(topoff); return wrapper;
+		wrapper.radius = radius; wrapper.radius2 = wrapper.radius2;
+		wrapper.length = length; wrapper.base = base; wrapper.top = top;
+		wrapper.segments = segments; wrapper.direction = direction;
+		wrapper.seglimit = seglimit; wrapper.topoff = new Vec3f(topoff);
+		return wrapper;
 	}
 	
 	protected ModelRendererTurbo newMRT(){
-		return new ModelRendererTurbo(null, textureX, textureY, compound.textureX, compound.textureY)
-			.addCylinder(off.xCoord, off.yCoord, off.zCoord, radius, length, segments, base, top, direction, getTopOff())
-			.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
-			.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
+		ModelRendererTurbo turbo = new ModelRendererTurbo(null, textureX, textureY, compound.textureX, compound.textureY);
+		if(radius2 != 0){
+			turbo.addHollowCylinder(off.xCoord, off.yCoord, off.zCoord, radius, radius2, length, segments, seglimit, base, top, direction, getTopOff());
+		}
+		else{
+			turbo.addCylinder(off.xCoord, off.yCoord, off.zCoord, radius, length, segments, base, top, direction, getTopOff());
+		}
+		return turbo.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord).setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
 	}
 
 	private Vec3f getTopOff(){
@@ -44,8 +48,8 @@ public class CylinderWrapper extends PolygonWrapper {
 	@Override
 	public float getFloat(String id, boolean x, boolean y, boolean z){
 		switch(id){
-			case "cyl0": return x ? radius : y ? length : 0;
-			case "cyl1": return x ? segments : y ? direction : 0;
+			case "cyl0": return x ? radius : y ? length : z ? radius2 : 0;
+			case "cyl1": return x ? segments : y ? direction : z ? seglimit : 0;
 			case "cyl2": return x ? base : y ? top : 0;
 			case "cyl3": return x ? topoff.xCoord : y ? topoff.yCoord : z ? topoff.zCoord : 0;
 			default: return super.getFloat(id, x, y, z);
@@ -59,12 +63,12 @@ public class CylinderWrapper extends PolygonWrapper {
 			case "cyl0":{
 				if(x){ radius = value; return true; }
 				if(y){ length = value; return true; }
-				if(z){ return false; }
+				if(z){ radius2 = value; return true; }
 			}
 			case "cyl1":{
 				if(x){ segments = (int)value; return true; }
 				if(y){ direction = (int)value; return true; }
-				if(z){ return false; }
+				if(z){ seglimit = (int)value; return true; }
 			}
 			case "cyl2":{
 				if(x){ base = value; return true; }
@@ -83,8 +87,14 @@ public class CylinderWrapper extends PolygonWrapper {
 	@Override
 	protected JsonObject populateJson(JsonObject obj, boolean export){
 		obj.addProperty("radius", radius);
+		if(radius2 != 0f){
+			obj.addProperty("radius2", radius2);
+		}
 		obj.addProperty("length", length);
 		obj.addProperty("segments", segments);
+		if(seglimit != 0){
+			obj.addProperty("seglimit", seglimit);
+		}
 		obj.addProperty("direction", direction);
 		obj.addProperty("basescale", base);
 		obj.addProperty("topscale", top);

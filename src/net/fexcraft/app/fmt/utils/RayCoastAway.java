@@ -30,7 +30,7 @@ public class RayCoastAway {
 	}
 	
 	public static void doTest(boolean bool, boolean mouseoff){
-		/*if(!Settings.rayPicking()) return;*/ if(bool && !PICKING){ PICKING = true; MOUSEOFF = mouseoff; return; }
+		/*if(!Settings.rayPicking()) return;*/ if(bool && !PICKING){ PICKING = true; MOUSEOFF = mouseoff; return; } if(FMTB.get() == null) return;
 		//
 		int width = FMTB.get().getDisplayMode().getWidth(), height = FMTB.get().getDisplayMode().getHeight();
 		if(mouseoff){ width = Mouse.getX() * 2; height = Mouse.getY() * 2; }

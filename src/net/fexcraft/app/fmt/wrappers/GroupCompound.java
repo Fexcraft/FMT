@@ -38,7 +38,22 @@ public class GroupCompound {
 	
 	public GroupCompound(){
 		//compound.put("body", new TurboList("body"));
+		/*for(int i = 0; i < 20; i++){
+			TurboList list = new TurboList("list" + i);
+			for(int j = 0; j < 1000; j++){
+				BoxWrapper box = new BoxWrapper(this);
+				box.size = new Vec3f(1, 1, 1);
+				box.pos = new Vec3f((j * 2) - 500, i * 2, 0);
+				box.name = "box" + j;
+				list.add(box);
+			}
+			compound.put(list.id, list);
+		};*/
 		recompile(); this.updateFields();
+		CylinderWrapper cyl = new CylinderWrapper(this);
+		cyl.radius = 8; cyl.length = 24; cyl.radius2 = 4;
+		cyl.direction = 5; cyl.segments = 12; cyl.seglimit = 8;
+		this.add(cyl, "group0", false);
 	}
 
 	public void recompile(){
