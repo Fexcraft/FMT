@@ -51,8 +51,8 @@ public class GroupCompound {
 		};*/
 		recompile(); this.updateFields();
 		CylinderWrapper cyl = new CylinderWrapper(this);
-		cyl.radius = 8; cyl.length = 24; cyl.radius2 = 4;
-		cyl.direction = 5; cyl.segments = 12; cyl.seglimit = 8;
+		cyl.radius = 8; cyl.length = 24; cyl.radius2 = 2;
+		cyl.direction = 5; cyl.segments = 12; //cyl.seglimit = 8;
 		this.add(cyl, "group0", false);
 	}
 
