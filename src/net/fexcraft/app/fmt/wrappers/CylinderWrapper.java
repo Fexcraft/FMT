@@ -18,7 +18,7 @@ public class CylinderWrapper extends PolygonWrapper {
 	@Override
 	protected PolygonWrapper createClone(GroupCompound compound){
 		CylinderWrapper wrapper = new CylinderWrapper(compound);
-		wrapper.radius = radius; wrapper.radius2 = wrapper.radius2;
+		wrapper.radius = radius; wrapper.radius2 = radius2;
 		wrapper.length = length; wrapper.base = base; wrapper.top = top;
 		wrapper.segments = segments; wrapper.direction = direction;
 		wrapper.seglimit = seglimit; wrapper.topoff = new Vec3f(topoff);

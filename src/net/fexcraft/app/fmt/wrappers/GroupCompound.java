@@ -50,10 +50,6 @@ public class GroupCompound {
 			compound.put(list.id, list);
 		};*/
 		recompile(); this.updateFields();
-		CylinderWrapper cyl = new CylinderWrapper(this);
-		cyl.radius = 8; cyl.length = 24; cyl.radius2 = 2;
-		cyl.direction = 5; cyl.segments = 12; //cyl.seglimit = 8;
-		this.add(cyl, "group0", false);
 	}
 
 	public void recompile(){
