@@ -68,7 +68,7 @@ public class CylinderWrapper extends PolygonWrapper {
 			case "cyl1":{
 				if(x){ segments = (int)value; return true; }
 				if(y){ direction = (int)value; return true; }
-				if(z){ seglimit = (int)value; return true; }
+				if(z){ seglimit = (int)value; if(seglimit > segments) seglimit = segments; return true; }
 			}
 			case "cyl2":{
 				if(x){ base = value; return true; }
@@ -107,7 +107,7 @@ public class CylinderWrapper extends PolygonWrapper {
 	@Override
 	protected float[][][] newTexturePosition(){
 		float tx = 0/*textureX*/, ty = 0/*textureY*/, qrad = radius / 2, rad = radius * 2, rad2 = rad + rad;
-		float[][][] vecs = new float[radius2 != 0f ? 18 : 10][][];
+		float[][][] vecs = new float[radius2 != 0f ? seglimit > 0 ? 20 : 18 : 10][][];
 		vecs[0] = new float[][]{
 			new float[]{ tx, ty },
 			new float[]{ tx + rad, ty + rad }
@@ -127,6 +127,16 @@ public class CylinderWrapper extends PolygonWrapper {
 				vecs[10 + i] = new float[][]{
 					new float[]{ tx + (qrad * i), ty + rad + length },
 					new float[]{ tx + (qrad * (i + 1)), ty + rad + length + length }
+				};
+			}
+			if(seglimit > 0){
+				vecs[18] = new float[][]{
+					new float[]{ tx + rad2, ty + rad },
+					new float[]{ tx + rad2 + (radius - radius2), ty + rad2 }
+				};
+				vecs[19] = new float[][]{
+					new float[]{ tx + rad2, ty + rad2 },
+					new float[]{ tx + rad2 + (radius - radius2), ty + rad2 + rad }
 				};
 			}
 		}

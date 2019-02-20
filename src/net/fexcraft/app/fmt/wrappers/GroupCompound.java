@@ -367,19 +367,21 @@ public class GroupCompound {
 			//
 			editor = (Editor)FMTB.get().UI.getElement("cylinder_editor");
 			if(poly == null || !poly.getType().isCylinder()){
-				editor.getField("cyl0x").applyChange(0); editor.getField("cyl0y").applyChange(0);
-				editor.getField("cyl1x").applyChange(0); editor.getField("cyl1y").applyChange(0);
-				editor.getField("cyl2x").applyChange(0); editor.getField("cyl2y").applyChange(0);
+				editor.getField("cyl0x").applyChange(0); editor.getField("cyl0y").applyChange(0); editor.getField("cyl0z").applyChange(0);
+				editor.getField("cyl1x").applyChange(0); editor.getField("cyl1y").applyChange(0); editor.getField("cyl1z").applyChange(0);
+				editor.getField("cyl2x").applyChange(0); editor.getField("cyl2y").applyChange(0); editor.getField("cyl2z").applyChange(0);
 				editor.getField("cyl3x").applyChange(0); editor.getField("cyl3y").applyChange(0); editor.getField("cyl3z").applyChange(0);
 			}
 			else{
 				editor.getField("cyl0x").applyChange(poly.getFloat("cyl0", true, false, false));
 				editor.getField("cyl0y").applyChange(poly.getFloat("cyl0", false, true, false));
+				editor.getField("cyl0z").applyChange(poly.getFloat("cyl0", false, false, true));
 				editor.getField("cyl1x").applyChange(poly.getFloat("cyl1", true, false, false));
 				editor.getField("cyl1y").applyChange(poly.getFloat("cyl1", false, true, false));
+				editor.getField("cyl1z").applyChange(poly.getFloat("cyl1", false, false, true));
 				editor.getField("cyl2x").applyChange(poly.getFloat("cyl2", true, false, false));
 				editor.getField("cyl2y").applyChange(poly.getFloat("cyl2", false, true, false));
-				//
+				editor.getField("cyl2z").applyChange(poly.getFloat("cyl2", false, false, true));
 				editor.getField("cyl3x").applyChange(poly.getFloat("cyl3", true, false, false));
 				editor.getField("cyl3y").applyChange(poly.getFloat("cyl3", false, true, false));
 				editor.getField("cyl3z").applyChange(poly.getFloat("cyl3", false, false, true));
