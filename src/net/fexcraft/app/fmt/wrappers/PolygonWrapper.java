@@ -196,13 +196,13 @@ public abstract class PolygonWrapper {
 			case "tex":{
 				bool = this.setFloat(id, x, y, z, value); break;
 			}
-			case "pos": case "off": {
+			case "pos": case "off":{
 				bool = this.setFloat(id, x, y, z, value); break;
 			}
 			case "rot":{
 				bool = this.setFloat(id, x, y, z, value); break; //(float)Math.toRadians(value)); break;
 			}
-			case "cor0": case "cor1": case "cor2": case "cor3": case "cor4": case "cor5": case "cor6": case "cor7":{
+			case "cor0": case "cor1": case "cor2": case "cor3": case "cor4": case "cor5": case "cor6": case "cor7": case "face0": case "face1":{
 				if(this.getType().isShapebox()){
 					bool = this.setFloat(id, x, y, z, value);
 				} break;

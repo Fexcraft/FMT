@@ -132,11 +132,11 @@ public class CylinderWrapper extends PolygonWrapper {
 			if(seglimit > 0){
 				vecs[18] = new float[][]{
 					new float[]{ tx + rad2, ty + rad },
-					new float[]{ tx + rad2 + (radius - radius2), ty + rad2 }
+					new float[]{ tx + rad2 + (radius - radius2), ty + rad + length }
 				};
 				vecs[19] = new float[][]{
-					new float[]{ tx + rad2, ty + rad2 },
-					new float[]{ tx + rad2 + (radius - radius2), ty + rad2 + rad }
+					new float[]{ tx + rad2, ty + rad + length },
+					new float[]{ tx + rad2 + (radius - radius2), ty + rad + length + length }
 				};
 			}
 		}
