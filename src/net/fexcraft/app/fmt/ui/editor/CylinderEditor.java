@@ -28,8 +28,8 @@ public class CylinderEditor extends Editor {
 				TextField field = new TextField(this, vals[r] + xyz[i], k, 16 + (j * i), 30 + (r * 50)).setAsNumberfield(Integer.MIN_VALUE, Integer.MAX_VALUE, true);
 				if(ii == 0){
 					if(r == 0){ field.setAsNumberfield(0.01f, Integer.MAX_VALUE, true); field.applyChange(1f); }
-					if(r == 1){ field.setAsNumberfield(4, Integer.MAX_VALUE, true); field.applyChange(8); }
-					if(r == 2){ field.setAsNumberfield(1f, Integer.MAX_VALUE, true); field.applyChange(1); }
+					if(r == 1){ field.setAsNumberfield(3, Integer.MAX_VALUE, true); field.applyChange(8); }
+					if(r == 2){ field.setAsNumberfield(0f, Integer.MAX_VALUE, true); field.applyChange(1); }
 					if(r == 3){ field.setAsNumberfield(Integer.MIN_VALUE, Integer.MAX_VALUE, true); field.applyChange(0); }
 				}
 				if(ii == 1){

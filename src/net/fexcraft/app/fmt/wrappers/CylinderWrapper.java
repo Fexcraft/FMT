@@ -107,7 +107,7 @@ public class CylinderWrapper extends PolygonWrapper {
 	@Override
 	protected float[][][] newTexturePosition(){
 		float tx = 0/*textureX*/, ty = 0/*textureY*/, qrad = radius / 2, rad = radius * 2, rad2 = rad + rad;
-		float[][][] vecs = new float[radius2 != 0f ? seglimit > 0 ? 20 : 18 : 10][][];
+		float[][][] vecs = new float[radius2 != 0f ? seglimit > 0 && seglimit < segments ? 20 : 18 : 10][][];
 		vecs[0] = new float[][]{
 			new float[]{ tx, ty },
 			new float[]{ tx + rad, ty + rad }
@@ -129,7 +129,7 @@ public class CylinderWrapper extends PolygonWrapper {
 					new float[]{ tx + (qrad * (i + 1)), ty + rad + length + length }
 				};
 			}
-			if(seglimit > 0){
+			if(seglimit > 0 && seglimit < segments){
 				vecs[18] = new float[][]{
 					new float[]{ tx + rad2, ty + rad },
 					new float[]{ tx + rad2 + (radius - radius2), ty + rad + length }
