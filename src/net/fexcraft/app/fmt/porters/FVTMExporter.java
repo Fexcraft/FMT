@@ -37,7 +37,7 @@ public class FVTMExporter extends InternalPorter {
 		return null;
 	}
 
-	/** The in-string "TODO" makers are for those who implement the model into the game. */
+	/** The in-string "TODO" markers are for those who implement the model into the game. */
 	@Override
 	public String exportModel(GroupCompound compound, File file){
 		StringBuffer buffer = new StringBuffer(), shape; int a = 0;
@@ -75,7 +75,7 @@ public class FVTMExporter extends InternalPorter {
 				switch(wrapper.getType()){
 					case BOX:{
 						BoxWrapper box = (BoxWrapper)wrapper;
-						shape.append(format(".addBox(%s, %s, %s, %s, %s, %s)",
+						shape.append(format(".addBox(%s, %s, %s, %s, %s, %s)", null,
 							wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord,
 							box.size.xCoord, box.size.yCoord, box.size.zCoord));
 						break;
@@ -83,7 +83,7 @@ public class FVTMExporter extends InternalPorter {
 					case SHAPEBOX:{
 						ShapeboxWrapper box = (ShapeboxWrapper)wrapper;
 						shape.append(format("\n" + tab3 + ".addShapeBox(%s, %s, %s, %s, %s, %s, 0, "
-							+ "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+							+ "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", null,
 							wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord, box.size.xCoord, box.size.yCoord, box.size.zCoord,
 							box.cor0.xCoord, box.cor0.yCoord, box.cor0.zCoord, box.cor1.xCoord, box.cor1.yCoord, box.cor1.zCoord,
 							box.cor2.xCoord, box.cor2.yCoord, box.cor2.zCoord, box.cor3.xCoord, box.cor3.yCoord, box.cor3.zCoord,
@@ -94,9 +94,18 @@ public class FVTMExporter extends InternalPorter {
 					}
 					case CYLINDER:{
 						CylinderWrapper cyl = (CylinderWrapper)wrapper;
-						shape.append(format(".addCylinder(%s, %s, %s, %s, %s, %s, %s, %s, %s)", 
-							wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord,
-							cyl.radius, cyl.length, cyl.segments, cyl.base, cyl.top, cyl.direction));
+						String topoff = cyl.topoff.xCoord != 0f || cyl.topoff.yCoord != 0f || cyl.topoff.zCoord != 0 ?
+							String.format("new net.fexcraft.lib.common.math.Vec3f(%s, %s, %s)", cyl.topoff.xCoord, cyl.topoff.yCoord, cyl.topoff.zCoord) : "null";
+						if(cyl.radius2 != 0f){
+							shape.append(format(".addHollowCylinder(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", topoff, 
+								wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord,
+								cyl.radius, cyl.radius2, cyl.length, cyl.segments, cyl.seglimit, cyl.base, cyl.top, cyl.direction));
+						}
+						else{
+							shape.append(format(".addCylinder(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", topoff, 
+								wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord,
+								cyl.radius, cyl.length, cyl.segments, cyl.base, cyl.top, cyl.direction));
+						}
 						break;
 					}
 					case SPHERE:{}
@@ -108,8 +117,8 @@ public class FVTMExporter extends InternalPorter {
 				}
 				if(wrapper.pos.xCoord != 0f || wrapper.pos.yCoord != 0f || wrapper.pos.zCoord != 0f ||
 					wrapper.rot.xCoord != 0f || wrapper.rot.yCoord != 0f || wrapper.rot.zCoord != 0f){
-					shape.append("\n" + tab3 + format(".setRotationPoint(%s, %s, %s)", wrapper.pos.xCoord, wrapper.pos.yCoord, wrapper.pos.zCoord));
-					shape.append(format(".setRotationAngle(%s, %s, %s)", wrapper.rot.xCoord, wrapper.rot.yCoord, wrapper.rot.zCoord));
+					shape.append("\n" + tab3 + format(".setRotationPoint(%s, %s, %s)", null, wrapper.pos.xCoord, wrapper.pos.yCoord, wrapper.pos.zCoord));
+					shape.append(format(".setRotationAngle(%s, %s, %s)", null, wrapper.rot.xCoord, wrapper.rot.yCoord, wrapper.rot.zCoord));
 					extended = true;
 				}
 				if(wrapper.mirror || wrapper.flip){
@@ -143,14 +152,14 @@ public class FVTMExporter extends InternalPorter {
 		return "Success!";
 	}
 
-	private String format(String string, double r0, double r1, double r2){
-		return format(string, new float[]{ (float)r0, (float)r1, (float)r2});
+	private String format(String string, String add, double r0, double r1, double r2){
+		return format(string, add, new float[]{ (float)r0, (float)r1, (float)r2});
 	}
 
-	private String format(String string, float... arr){
-		Object[] strs = new Object[arr.length];
-		for(int i = 0; i < strs.length; i++){ strs[i] = arr[i] % 1.0f != 0 ? String.format("%s", arr[i]) + "f" : String.format("%.0f", arr[i]); }
-		return String.format(string, strs);
+	private String format(String string, String add, float... arr){
+		Object[] strs = new Object[arr.length + (add == null ? 0 : 1)];
+		for(int i = 0; i < arr.length; i++){ strs[i] = arr[i] % 1.0f != 0 ? String.format("%s", arr[i]) + "f" : String.format("%.0f", arr[i]); }
+		if(add != null) strs[arr.length] = add; return String.format(string, strs);
 	}
 
 	private String validateName(String name){
