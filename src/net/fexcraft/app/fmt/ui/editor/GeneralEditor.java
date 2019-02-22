@@ -12,6 +12,7 @@ import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.lib.common.math.RGB;
+import net.fexcraft.lib.common.utils.Print;
 
 public class GeneralEditor extends Editor {
 
@@ -112,11 +113,15 @@ public class GeneralEditor extends Editor {
 					Texture tex = TextureManager.getTexture(FMTB.MODEL.texture, true);
 					if(tex == null){
 						FMTB.showDialogbox("Texture not found in Memory.", "This rather bad.", "ok", null, DialogBox.NOTHING, null);
+						return true;
 					}
 					FMTB.MODEL.getCompound().values().forEach(list -> list.forEach(poly -> {
 						poly.burnToTexture(tex.getImage(), null); //poly.recompile();
 					})); tex.rebind(); //TextureManager.saveTexture(FMTB.MODEL.texture);
 					//FMTB.showDialogbox("Done!", "", "ok", null, DialogBox.NOTHING, null);
+					Print.console("done");
+					//TODO find out why this didn't work last time
+					return true;
 				}
 				return false;
 			}

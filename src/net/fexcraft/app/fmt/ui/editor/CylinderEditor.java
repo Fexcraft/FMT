@@ -39,7 +39,7 @@ public class CylinderEditor extends Editor {
 					if(r == 3){ field.setAsNumberfield(Integer.MIN_VALUE, Integer.MAX_VALUE, true); field.applyChange(0); }
 				}
 				if(ii == 2){
-					if(r == 0){ field.setAsNumberfield(0.01f, Integer.MAX_VALUE, true); field.applyChange(0f); }
+					if(r == 0){ field.setAsNumberfield(0, Integer.MAX_VALUE, true); field.applyChange(0f); }
 					if(r == 1){ field.setAsNumberfield(0, Integer.MAX_VALUE, true); field.applyChange(0); }
 					if(r == 2){ field.enabled = false; }
 					if(r == 3){ field.setAsNumberfield(Integer.MIN_VALUE, Integer.MAX_VALUE, true); field.applyChange(0); }
