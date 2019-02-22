@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.wrappers;
 
+import org.lwjgl.opengl.GL11;
+
 import com.google.gson.JsonObject;
 
 import net.fexcraft.lib.common.math.RGB;
@@ -23,7 +25,9 @@ public class MarkerWrapper extends PolygonWrapper {
 	
 	@Override
 	public void render(boolean rotX, boolean rotY, boolean rotZ){
-		if(visible && turbo != null) turbo.render();
+		if(visible && turbo != null){
+			GL11.glDisable(GL11.GL_TEXTURE_2D); turbo.render(); GL11.glEnable(GL11.GL_TEXTURE_2D);
+		}
 	}
 	
 	@Override
