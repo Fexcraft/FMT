@@ -1,6 +1,5 @@
 *.class
-src/
-!src/net/fexcraft/app/fmt
+src/net/fexcraft/app/other/
 
 # BlueJ files
 *.ctxt

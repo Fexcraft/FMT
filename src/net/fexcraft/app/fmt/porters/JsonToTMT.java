@@ -6,11 +6,13 @@ import com.google.gson.JsonObject;
 import net.fexcraft.app.fmt.wrappers.BoxWrapper;
 import net.fexcraft.app.fmt.wrappers.CylinderWrapper;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
+import net.fexcraft.app.fmt.wrappers.MarkerWrapper;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.ShapeboxWrapper;
 import net.fexcraft.app.fmt.wrappers.TexrectWrapperA;
 import net.fexcraft.app.fmt.wrappers.TexrectWrapperB;
 import net.fexcraft.lib.common.json.JsonUtil;
+import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
 
 /**
@@ -163,6 +165,11 @@ public class JsonToTMT {
 				texrect.cor6 = new Vec3f(get("x6", obj, def), get("y6", obj, def), get("z6", obj, def));
 				texrect.cor7 = new Vec3f(get("x7", obj, def), get("y7", obj, def), get("z7", obj, def));
 				polygon = texrect; break;
+			}
+			case "marker":{
+				MarkerWrapper marker = new MarkerWrapper(compound);
+				marker.color = obj.has("color") ? obj.get("color").getAsInt() : RGB.GREEN.packed;
+				polygon = marker; break;
 			}
 		}
 		polygon.textureX = get(texturex, obj, idef);

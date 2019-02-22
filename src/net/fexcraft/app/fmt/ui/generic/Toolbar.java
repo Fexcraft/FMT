@@ -23,6 +23,7 @@ import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.app.fmt.utils.TextureUpdate;
 import net.fexcraft.app.fmt.wrappers.BoxWrapper;
 import net.fexcraft.app.fmt.wrappers.CylinderWrapper;
+import net.fexcraft.app.fmt.wrappers.MarkerWrapper;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.ShapeboxWrapper;
 import net.fexcraft.app.fmt.wrappers.TexrectWrapperA;
@@ -338,6 +339,14 @@ public class Toolbar extends Element {
 											this.parent.visible = false; return true;
 										}
 									}.setText("Add Group", false));
+									//
+									this.elements.put("add_marker", new Button(this, "add_marker", 120, 26, 2, 170, subhover){
+										@Override
+										protected boolean processButtonClick(int x, int y, boolean left){
+											FMTB.MODEL.add(new MarkerWrapper(FMTB.MODEL), "markers", true);
+											this.parent.visible = false; return true;
+										}
+									}.setText("Add Marker", false));
 								}
 							});
 							break;
