@@ -28,7 +28,7 @@ public class JTMTPorter extends InternalPorter {
 
 	@Override
 	public GroupCompound importModel(File file){
-		return SaveLoad.getModel(JsonUtil.get(file));
+		return SaveLoad.getModel(JsonUtil.get(file), false);
 	}
 
 	@Override @SuppressWarnings("unchecked")
