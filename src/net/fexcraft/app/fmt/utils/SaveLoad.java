@@ -75,7 +75,7 @@ public class SaveLoad {
 	}
 	
 	public static void loadModel(JsonObject obj){
-		FMTB.MODEL = getModel(obj); FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
+		FMTB.MODEL = getModel(obj, true); FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
 	}
 	
 	public static void checkIfShouldSave(boolean shouldclose){
@@ -221,10 +221,22 @@ public class SaveLoad {
 			model.add(entry.getKey(), group);
 		}
 		obj.add("groups", model);
+		if(!export){
+			JsonArray array = new JsonArray();
+			array.add(FMTB.ggr.pos.xCoord);
+			array.add(FMTB.ggr.pos.yCoord);
+			array.add(FMTB.ggr.pos.zCoord);
+			obj.add("camera_pos", array);
+			array = new JsonArray();
+			array.add(FMTB.ggr.rotation.xCoord);
+			array.add(FMTB.ggr.rotation.yCoord);
+			array.add(FMTB.ggr.rotation.zCoord);
+			obj.add("camera_rot", array);
+		}
 		return obj;
 	}
 	
-	public static GroupCompound getModel(JsonObject obj){
+	public static GroupCompound getModel(JsonObject obj, boolean ggr){
 		GroupCompound compound = new GroupCompound(); compound.getCompound().clear();
 		compound.name = JsonUtil.getIfExists(obj, "name", "unnamed model");
 		compound.textureX = JsonUtil.getIfExists(obj, "texture_size_x", 256).intValue();
@@ -262,6 +274,18 @@ public class SaveLoad {
 			catch(Exception e){
 				e.printStackTrace();
 			}
+		}
+		if(obj.has("camera_pos") && ggr){
+			JsonArray pos = obj.getAsJsonArray("camera_pos");
+			FMTB.ggr.pos.xCoord = pos.get(0).getAsFloat();
+			FMTB.ggr.pos.yCoord = pos.get(1).getAsFloat();
+			FMTB.ggr.pos.zCoord = pos.get(2).getAsFloat();
+		}
+		if(obj.has("camera_rot") && ggr){
+			JsonArray rot = obj.getAsJsonArray("camera_rot");
+			FMTB.ggr.rotation.xCoord = rot.get(0).getAsFloat();
+			FMTB.ggr.rotation.yCoord = rot.get(1).getAsFloat();
+			FMTB.ggr.rotation.zCoord = rot.get(2).getAsFloat();
 		}
 		return compound;
 	}

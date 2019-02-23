@@ -39,7 +39,7 @@ public class HelperCollector {
 			try{
 				Invocable inv = (Invocable)((ExternalPorter)exim).eval();
 				String result = (String)inv.invokeFunction("importModel", file);
-				LOADED.add(SaveLoad.getModel(JsonUtil.getObjectFromString(result)));
+				LOADED.add(SaveLoad.getModel(JsonUtil.getObjectFromString(result), false));
 			}
 			catch(FileNotFoundException | ScriptException | NoSuchMethodException e){
 				e.printStackTrace();
@@ -58,7 +58,7 @@ public class HelperCollector {
 			boolean conM = ZipUtil.contains(file, "model.jtmt"), conT = ZipUtil.contains(file, "texture.png");
 			ZipFile zip = new ZipFile(file);
 			if(conM){
-				compound = SaveLoad.getModel(JsonUtil.getObjectFromInputStream(zip.getInputStream(zip.getEntry("model.jtmt"))));
+				compound = SaveLoad.getModel(JsonUtil.getObjectFromInputStream(zip.getInputStream(zip.getEntry("model.jtmt"))), false);
 			}
 			else{
 				FMTB.showDialogbox("Invalid Model File", "model.jtmt missing.", "ok.", null, DialogBox.NOTHING, null);
