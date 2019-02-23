@@ -111,10 +111,10 @@ public class JsonToTMT {
 				shapebox.cor5 = new Vec3f(get("x5", obj, def), get("y5", obj, def), get("z5", obj, def));
 				shapebox.cor6 = new Vec3f(get("x6", obj, def), get("y6", obj, def), get("z6", obj, def));
 				shapebox.cor7 = new Vec3f(get("x7", obj, def), get("y7", obj, def), get("z7", obj, def));
-				if(obj.has("face_triangle_flip")){
+				/*if(obj.has("face_triangle_flip")){
 					JsonArray array = obj.getAsJsonArray("face_triangle_flip");
 					for(int i = 0; i < 6; i++) shapebox.bool[i] = array.get(i).getAsBoolean();
-				}
+				}*/
 				polygon = shapebox; break;
 			}
 			case "cylinder": case "cyl": case "c": case "cone": case "cn": {

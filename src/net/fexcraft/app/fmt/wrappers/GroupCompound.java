@@ -330,12 +330,12 @@ public class GroupCompound {
 				editor.getField("cor7y").applyChange(0);
 				editor.getField("cor7z").applyChange(0);
 				//
-				editor.getField("face0x").applyChange(0);
+				/*editor.getField("face0x").applyChange(0);
 				editor.getField("face0y").applyChange(0);
 				editor.getField("face0z").applyChange(0);
 				editor.getField("face1x").applyChange(0);
 				editor.getField("face1y").applyChange(0);
-				editor.getField("face1z").applyChange(0);
+				editor.getField("face1z").applyChange(0);*/
 			}
 			else{
 				editor.getField("cor0x").applyChange(poly.getFloat("cor0", true, false, false));
@@ -370,12 +370,12 @@ public class GroupCompound {
 				editor.getField("cor7y").applyChange(poly.getFloat("cor7", false, true, false));
 				editor.getField("cor7z").applyChange(poly.getFloat("cor7", false, false, true));
 				//
-				editor.getField("face0x").applyChange(poly.getFloat("face0", true, false, false));
+				/*editor.getField("face0x").applyChange(poly.getFloat("face0", true, false, false));
 				editor.getField("face0y").applyChange(poly.getFloat("face0", false, true, false));
 				editor.getField("face0z").applyChange(poly.getFloat("face0", false, false, true));
 				editor.getField("face1x").applyChange(poly.getFloat("face1", true, false, false));
 				editor.getField("face1y").applyChange(poly.getFloat("face1", false, true, false));
-				editor.getField("face1z").applyChange(poly.getFloat("face1", false, false, true));
+				editor.getField("face1z").applyChange(poly.getFloat("face1", false, false, true));*/
 			}
 			editor.getField("multiplicator").applyChange(rate);
 			//

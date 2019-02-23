@@ -16,7 +16,7 @@ public class ShapeboxEditor extends Editor {
 		super("shapebox_editor");
 		final RGB rgb = new RGB(127, 127, 255);
 		//
-		String[] vals = new String[]{ "cor0", "cor1", "cor2", "cor3", "cor4", "cor5", "cor6", "cor7", "face0", "face1" }, xyz = new String[]{ "x", "y", "z" };
+		String[] vals = new String[]{ "cor0", "cor1", "cor2", "cor3", "cor4", "cor5", "cor6", "cor7"/*, "face0", "face1"*/ }, xyz = new String[]{ "x", "y", "z" };
 		for(int r = 0; r < vals.length; r++){
 			for(int i = 0; i < 3; i++){
 				int k = 70, j = k + 12 + 12 + 4; final int rr = r, ii = i;
@@ -37,13 +37,13 @@ public class ShapeboxEditor extends Editor {
 					}.setText(" > ", true).setTexture("ui/background").setLevel(-1));
 				}
 				else{
-					TextField field = new TextField(this, vals[r] + xyz[i], k, 16 + (j * i), 30 + (r * 50))
+					/*TextField field = new TextField(this, vals[r] + xyz[i], k, 16 + (j * i), 30 + (r * 50))
 						.setAsNumberfield(0, 1, true);
-					this.elements.put(vals[r] + xyz[i], field.setLevel(-1));
+					this.elements.put(vals[r] + xyz[i], field.setLevel(-1));*/
 				}
 			}
 		}
-		this.addMultiplicator(530);
+		this.addMultiplicator(430);
 	}
 	
 	@Override
@@ -52,9 +52,9 @@ public class ShapeboxEditor extends Editor {
 		for(int i = 0; i < 8; i++){
 			font.drawString(4, 40 + (i * 50), "     Corner " + (i + 1) + " [" + i + "]", Color.black);
 		}
-		font.drawString(4, 440, "Face 0/1/2 (TRI/REV)", Color.black);
-		font.drawString(4, 490, "Face 3/4/5 (TRI/REV)", Color.black);
-		font.drawString(4, 540, "Multiplicator/Rate", Color.black);
+		//font.drawString(4, 440, "Face 0/1/2 (TRI/REV)", Color.black);
+		//font.drawString(4, 490, "Face 3/4/5 (TRI/REV)", Color.black);
+		font.drawString(4, 440, "Multiplicator/Rate", Color.black);
 		RGB.glColorReset();
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		for(int i = 0; i < 8; i++){

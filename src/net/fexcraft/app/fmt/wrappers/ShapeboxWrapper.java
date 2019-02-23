@@ -2,7 +2,6 @@ package net.fexcraft.app.fmt.wrappers;
 
 import org.lwjgl.opengl.GL11;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.utils.Settings;
@@ -14,7 +13,7 @@ public class ShapeboxWrapper extends BoxWrapper {
 	
 	public Vec3f cor0 = new Vec3f(), cor1 = new Vec3f(), cor2 = new Vec3f(), cor3 = new Vec3f(),
 				 cor4 = new Vec3f(), cor5 = new Vec3f(), cor6 = new Vec3f(), cor7 = new Vec3f();
-	public boolean bool[] = new boolean[]{ false, false, false, false, false, false };
+	//public boolean bool[] = new boolean[]{ false, false, false, false, false, false };
 	
 	public ShapeboxWrapper(GroupCompound compound){
 		super(compound);
@@ -25,12 +24,12 @@ public class ShapeboxWrapper extends BoxWrapper {
 		ShapeboxWrapper wrapper = new ShapeboxWrapper(compound);
 		wrapper.cor0 = new Vec3f(cor0); wrapper.cor1 = new Vec3f(cor1); wrapper.cor2 = new Vec3f(cor2); wrapper.cor3 = new Vec3f(cor3);
 		wrapper.cor4 = new Vec3f(cor4); wrapper.cor5 = new Vec3f(cor5); wrapper.cor6 = new Vec3f(cor6); wrapper.cor7 = new Vec3f(cor7);
-		wrapper.size = new Vec3f(size); wrapper.bool = new boolean[]{ bool[0], bool[1], bool[2], bool[3], bool[4], bool[5] };
+		wrapper.size = new Vec3f(size); //wrapper.bool = new boolean[]{ bool[0], bool[1], bool[2], bool[3], bool[4], bool[5] };
 		return wrapper;
 	}
 	
 	protected ModelRendererTurbo newMRT(){
-		ModelRendererTurbo turbo = new ModelRendererTurbo(null, textureX, textureY, compound.textureX, compound.textureY)
+		return new ModelRendererTurbo(null, textureX, textureY, compound.textureX, compound.textureY)
 			.addShapeBox(off.xCoord, off.yCoord, off.zCoord, size.xCoord, size.yCoord, size.zCoord, 0,
 				cor0.xCoord, cor0.yCoord, cor0.zCoord,
 				cor1.xCoord, cor1.yCoord, cor1.zCoord,
@@ -42,8 +41,8 @@ public class ShapeboxWrapper extends BoxWrapper {
 				cor7.xCoord, cor7.yCoord, cor7.zCoord)
 			.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
 			.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
-		for(int i = 0; i < bool.length; i++){ turbo.getFaces()[i].setOppositeTriangles(bool[i]); }
-		turbo.triline = true; return turbo;
+		//for(int i = 0; i < bool.length; i++){ turbo.getFaces()[i].setOppositeTriangles(bool[i]); }
+		//turbo.triline = true; return turbo;
 	}
 
 	@Override
@@ -112,8 +111,8 @@ public class ShapeboxWrapper extends BoxWrapper {
 			case "cor5": return x ? cor5.xCoord : y ? cor5.yCoord : z ? cor5.zCoord : 0;
 			case "cor6": return x ? cor6.xCoord : y ? cor6.yCoord : z ? cor6.zCoord : 0;
 			case "cor7": return x ? cor7.xCoord : y ? cor7.yCoord : z ? cor7.zCoord : 0;
-			case "face0": return x ? bool[0] ? 1 : 0 : y ? bool[1] ? 1 : 0 : z ? bool[2] ? 1 : 0 : 0;
-			case "face1": return x ? bool[3] ? 1 : 0 : y ? bool[4] ? 1 : 0 : z ? bool[5] ? 1 : 0 : 0;
+			//case "face0": return x ? bool[0] ? 1 : 0 : y ? bool[1] ? 1 : 0 : z ? bool[2] ? 1 : 0 : 0;
+			//case "face1": return x ? bool[3] ? 1 : 0 : y ? bool[4] ? 1 : 0 : z ? bool[5] ? 1 : 0 : 0;
 			default: return super.getFloat(id, x, y, z);
 		}
 	}
@@ -164,7 +163,7 @@ public class ShapeboxWrapper extends BoxWrapper {
 				if(y){ cor7.yCoord = value; return true; }
 				if(z){ cor7.zCoord = value; return true; }
 			}
-			case "face0":{
+			/*case "face0":{
 				if(x){ bool[0] = (int)value == 1; return true; }
 				if(y){ bool[1] = (int)value == 1; return true; }
 				if(z){ bool[2] = (int)value == 1; return true; }
@@ -173,7 +172,7 @@ public class ShapeboxWrapper extends BoxWrapper {
 				if(x){ bool[3] = (int)value == 1; return true; }
 				if(y){ bool[4] = (int)value == 1; return true; }
 				if(z){ bool[5] = (int)value == 1; return true; }
-			}
+			}*/
 			default: return false;
 		}
 	}
@@ -213,11 +212,11 @@ public class ShapeboxWrapper extends BoxWrapper {
 		if(cor7.yCoord != 0) obj.addProperty("y7", cor7.yCoord);
 		if(cor7.zCoord != 0) obj.addProperty("z7", cor7.zCoord);
 		//
-		if(!export){
+		/*if(!export){
 			JsonArray array = new JsonArray();
 			for(boolean bool : bool) array.add(bool);
 			obj.add("face_triangle_flip", array);
-		}
+		}*/
 		return obj;
 	}
 
