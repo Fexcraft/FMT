@@ -27,6 +27,9 @@ import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.porters.PorterManager;
+import net.fexcraft.app.fmt.ui.Element;
+import net.fexcraft.app.fmt.ui.FontRenderer;
+import net.fexcraft.app.fmt.ui.FontRenderer.SIGN;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.editor.CylinderEditor;
 import net.fexcraft.app.fmt.ui.editor.Editor;
@@ -130,6 +133,7 @@ public class FMTB implements FMTGLProcess {
 		setupDisplay(); initOpenGL(); ggr = new GGR(this, 0, 4, 4); ggr.rotation.xCoord = 45;
 		PorterManager.load(); HelperCollector.reload(); Display.setResizable(true); UI = new UserInterface(this);
 		SessionHandler.checkIfLoggedIn(true, true); checkForUpdates(); KeyCompound.init(); KeyCompound.load();
+		FontRenderer.init();
 		//
 		LocalDateTime midnight = LocalDateTime.of(LocalDate.now(ZoneOffset.systemDefault()), LocalTime.MIDNIGHT);
 		long mid = midnight.toInstant(ZoneOffset.UTC).toEpochMilli(); long date = Time.getDate(); while((mid += Time.MIN_MS * 5) < date);
@@ -326,6 +330,20 @@ public class FMTB implements FMTGLProcess {
 		ui.getElements().add(new Crossbar());
 		ui.getElements().add(new Toolbar());
 		FMTB.MODEL.updateFields();
+		
+		ui.getElements().add(new Element(null, "fontest"){
+			private SIGN[] array;
+			@Override
+			public void renderSelf(int rw, int rh){
+				this.renderQuad(x = (rw / 2) - (400 / 2), y = (rh / 2) - (200 / 2), 400, 200, "ui/dialogbox");
+				if(array == null) array = new SIGN[]{ SIGN.UP, SIGN.DW, SIGN.DOLLAR, SIGN.SEMICOLON, SIGN.SPACE, SIGN.UNKNOWN };
+				FontRenderer.render(x + 30, y + 30, array);
+			}
+			@Override
+			protected boolean processButtonClick(int x, int y, boolean left){
+				return false;
+			}
+		});
 	}
 
 	@Override
