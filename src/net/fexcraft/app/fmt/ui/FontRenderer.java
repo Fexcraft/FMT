@@ -6,6 +6,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.utils.TextureManager;
+import net.fexcraft.lib.common.math.RGB;
 
 public class FontRenderer {
 	
@@ -151,7 +152,49 @@ public class FontRenderer {
 		
 	}
 	
-	public static SIGN[] parse(String s, boolean unknown){
+	public static class Text {
+		
+		private String string;
+		private SIGN[] array;
+		private int length;
+		private RGB color;
+		
+		public Text(String string){
+			this(string, RGB.BLACK);
+		}
+
+		public Text(String string, RGB color){
+			this(string, color, false);
+		}
+
+		public Text(String string, RGB color, boolean parse){
+			this.setTextAndUpdate(string, parse); this.color = color; 
+		}
+		
+		private void setTextAndUpdate(String string, boolean parse){
+			this.string = string; this.array = parse(string, parse);
+			length = 0; for(SIGN sign : array) length += sign.unit_width + 1;
+		}
+
+		public String get(){
+			return string;
+		}
+		
+		public void update(String string, boolean parse){
+			this.string = string; this.array = parse(string, parse);
+		}
+		
+		public int length(){
+			return length;
+		}
+
+		public RGB getColor(){
+			return color;
+		}
+		
+	}
+	
+	private static SIGN[] parse(String s, boolean unknown){
 		String[] str = s.split(""); ArrayList<SIGN> signs = new ArrayList<SIGN>();
 		for(String string : str){
 			SIGN sign = get(string);
@@ -163,18 +206,14 @@ public class FontRenderer {
 		for(SIGN sign : SIGN.values()) if(sign.character.equals(string)) return sign; return SIGN.UNKNOWN;
 	}
 	
-	public static final void render(float x, float y, SIGN[] sings){
-		int len = 0; for(int i = 0; i < sings.length; i++){
-			render(x + len, y, sings[i]); len += sings[i].unit_width + 1;
+	public static final void render(float x, float y, Text text){
+		int len = 0; for(int i = 0; i < text.array.length; i++){
+			render(x + len, y, text.getColor(), text.array[i]); len += text.array[i].unit_width + 1;
 		}
 	}
 	
-	public static final int length(SIGN[] signs){
-		int len = 0; for(SIGN sign : signs) len += sign.unit_width + 1; return len;
-	}
-	
-	public static final void render(float x, float y, SIGN sign){
-		fonttex.bind(); GL11.glBegin(GL11.GL_QUADS);
+	public static final void render(float x, float y, RGB color, SIGN sign){
+		fonttex.bind(); color.glColorApply(); GL11.glBegin(GL11.GL_QUADS);
 		GL11.glTexCoord2f(sign.tx, sign.ty);
 			GL11.glVertex2f(x, y);
 		GL11.glTexCoord2f(sign.tx + sign.width, sign.ty);
@@ -183,7 +222,7 @@ public class FontRenderer {
 			GL11.glVertex2f(x + sign.unit_width, y + 16);
 		GL11.glTexCoord2f(sign.tx, sign.ty + SIGN.HEIGHT);
 			GL11.glVertex2f(x, y + 16);
-        GL11.glEnd();
+        GL11.glEnd(); RGB.glColorReset();
 	}
 
 }

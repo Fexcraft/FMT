@@ -27,9 +27,7 @@ import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.porters.PorterManager;
-import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.FontRenderer;
-import net.fexcraft.app.fmt.ui.FontRenderer.SIGN;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.editor.CylinderEditor;
 import net.fexcraft.app.fmt.ui.editor.Editor;
@@ -331,7 +329,7 @@ public class FMTB implements FMTGLProcess {
 		ui.getElements().add(new Toolbar());
 		FMTB.MODEL.updateFields();
 		
-		ui.getElements().add(new Element(null, "fontest"){
+		/*ui.getElements().add(new Element(null, "fontest"){
 			private SIGN[] array;
 			@Override
 			public void renderSelf(int rw, int rh){
@@ -343,7 +341,7 @@ public class FMTB implements FMTGLProcess {
 			protected boolean processButtonClick(int x, int y, boolean left){
 				return false;
 			}
-		});
+		});*/
 	}
 
 	@Override
