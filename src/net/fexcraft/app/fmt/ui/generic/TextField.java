@@ -2,8 +2,6 @@ package net.fexcraft.app.fmt.ui.generic;
 
 import java.util.ArrayList;
 import java.util.Optional;
-import org.newdawn.slick.Color;
-
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.utils.GGR;
@@ -15,7 +13,7 @@ public class TextField extends Element {
 	private static final ArrayList<TextField> fields = new ArrayList<>();
 	private RGB hovercolor = new RGB(112, 255, 127), inactivecol = new RGB(235, 201, 201), hoversel = new RGB(255, 127, 0);
 	private boolean centered, selected, number, background = true;
-	private Color color = Color.white;
+	private RGB color = RGB.BLACK;
 	private float min, max, value;
 	private String text, tempval;
 	private int width;
@@ -39,7 +37,7 @@ public class TextField extends Element {
 		this.background = bool; return this;
 	}
 	
-	public TextField setColor(Color newcol){
+	public TextField setColor(RGB newcol){
 		this.color = newcol; return this;
 	}
 
@@ -51,14 +49,14 @@ public class TextField extends Element {
 		if(!number && text == null) return;
 		String text = number ? (tempval == null ? value : "*" + tempval) + "" : tempval == null ? this.text : tempval;
 		TextureManager.unbind();
-		if(centered){
+		/*if(centered){
 			int x = width / 2 - (font.getWidth(text) / 2);
 			int y = height / 2 - (font.getHeight(text) / 2);
 			font.drawString(this.x + x, this.y + y, text, color);
 		}
 		else{
 			font.drawString(x + 2, y + 2, text, color);
-		}
+		}*///TODO
 		RGB.glColorReset();
 	}
 

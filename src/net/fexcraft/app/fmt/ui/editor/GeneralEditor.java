@@ -2,8 +2,6 @@ package net.fexcraft.app.fmt.ui.editor;
 
 import java.util.ArrayList;
 
-import org.newdawn.slick.Color;
-
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.generic.Button;
 import net.fexcraft.app.fmt.ui.generic.DialogBox;
@@ -133,7 +131,7 @@ public class GeneralEditor extends Editor {
 	@Override
 	public void renderSelf(int rw, int rh){
 		super.renderSelf(rw, rh); TextureManager.unbind();
-		font.drawString(4,  40, "Measurements", Color.black);
+		/*font.drawString(4,  40, "Measurements", Color.black);
 		font.drawString(4,  90, "Position (x/y/z)", Color.black);
 		font.drawString(4, 140, "Offset (x/y/z)", Color.black);
 		font.drawString(4, 190, "Rotation (degrees)", Color.black);
@@ -141,7 +139,7 @@ public class GeneralEditor extends Editor {
 		font.drawString(4, 290, "Polygon Name", Color.black);
 		font.drawString(4, 340, "Group", Color.black);
 		font.drawString(4, 390, "Texture Util", Color.black);
-		font.drawString(4, 440, "Multiplicator/Rate", Color.black);
+		font.drawString(4, 440, "Multiplicator/Rate", Color.black);*///TODO
 		RGB.glColorReset();
 	}
 

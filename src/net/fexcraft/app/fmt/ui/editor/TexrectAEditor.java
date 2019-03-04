@@ -1,9 +1,6 @@
 package net.fexcraft.app.fmt.ui.editor;
 
-import org.newdawn.slick.Color;
-
 import net.fexcraft.app.fmt.ui.generic.TextField;
-import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.lib.common.math.RGB;
 
 public class TexrectAEditor extends Editor {
@@ -25,12 +22,12 @@ public class TexrectAEditor extends Editor {
 	
 	@Override
 	public void renderSelf(int rw, int rh){
-		super.renderSelf(rw, rh); TextureManager.unbind();
+		super.renderSelf(rw, rh); /*TextureManager.unbind();
 		for(int i = 0; i < 12; i++){
 			font.drawString(4, 40 + (i * 50), faces[i / 2] + " [" + (i % 2 == 0 ? "x-pos" : "y-pos") + " | TR, TL, BL, BR]", Color.black);
 		}
 		font.drawString(4, 640, "Multiplicator/Rate", Color.black);
-		RGB.glColorReset();
+		RGB.glColorReset();*///TODO
 	}
 
 	@Override

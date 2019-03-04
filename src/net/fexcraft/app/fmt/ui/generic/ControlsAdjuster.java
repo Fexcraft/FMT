@@ -3,10 +3,7 @@
  */
 package net.fexcraft.app.fmt.ui.generic;
 
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
-import org.newdawn.slick.Color;
-
 import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.utils.KeyCompound;
@@ -50,14 +47,14 @@ public class ControlsAdjuster extends Element implements Dialog {
 		try{
 			TextureManager.unbind();
 			{
-				font.drawString(this.x + 18, this.y + 19, "FMT Controls Settings", Color.black);
+				/*font.drawString(this.x + 18, this.y + 19, "FMT Controls Settings", Color.black);
 				font.drawString(this.x + 446, this.y + 19, "Pg." + scroll, Color.black);
 				for(int i = 0; i < 8; i++){
 					int j = i + (scroll * 8); if(j >= KeyCompound.keys.size()) continue; //break;
 					font.drawString(this.x + 21, this.y + 51 + (i * 32), (tempkey = KeyCompound.keys.get(j)).name(), Color.black);
 					String name = Keyboard.getKeyName(tempkey.ID());
 					font.drawString(this.x + 360, this.y + 51 + (i * 32), catched == i ? "[" + name + "]" : name, Color.black);
-				}
+				}*///TODO
 			}
 			RGB.glColorReset();
 		}

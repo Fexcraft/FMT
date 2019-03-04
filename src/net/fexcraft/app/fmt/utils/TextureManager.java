@@ -13,8 +13,6 @@ import javax.imageio.ImageIO;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
-import org.newdawn.slick.opengl.TextureImpl;
-
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.lib.common.math.Time;
 import net.fexcraft.lib.common.utils.Print;
@@ -107,7 +105,7 @@ public class TextureManager {
 	}
 	
 	public static void unbind(){
-		TextureImpl.bindNone(); texture = nulltex;//TODO fonttex
+		/*TextureImpl.bindNone();*/ texture = nulltex;//TODO fonttex
 	}
 	
 	public static class Texture {

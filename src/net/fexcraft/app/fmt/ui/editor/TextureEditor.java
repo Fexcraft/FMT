@@ -1,7 +1,5 @@
 package net.fexcraft.app.fmt.ui.editor;
 
-import org.newdawn.slick.Color;
-
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.generic.Button;
 import net.fexcraft.app.fmt.ui.generic.TextField;
@@ -118,11 +116,11 @@ public class TextureEditor extends Editor {
 	
 	@Override
 	public void renderSelf(int rw, int rh){
-		super.renderSelf(rw, rh); TextureManager.unbind();
+		super.renderSelf(rw, rh); /*TextureManager.unbind();
 		font.drawString(4,  40, "Manual RGB Input", Color.black);
 		font.drawString(4,  90, "Large Palette", Color.black);
 		font.drawString(4, 418, "Horizontal Palette", Color.black);
-		RGB.glColorReset();
+		RGB.glColorReset();*///TODO
 	}
 	
 	public static class LargePallette extends Element {

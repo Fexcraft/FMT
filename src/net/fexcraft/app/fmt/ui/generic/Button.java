@@ -1,7 +1,5 @@
 package net.fexcraft.app.fmt.ui.generic;
 
-import org.newdawn.slick.Color;
-
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.lib.common.math.RGB;
@@ -45,14 +43,14 @@ public abstract class Button extends Element {
 		if(hovered) RGB.glColorReset();
 		if(text != null){
 			TextureManager.unbind();
-			if(centered){
+			/*if(centered){
 				int x = width / 2 - (font.getWidth(text) / 2);
 				int y = height / 2 - (font.getHeight(text) / 2);
 				font.drawString(this.x + x, this.y + y, text, Color.black);
 			}
 			else{
 				font.drawString(x + 2, y + 2, text, Color.black);
-			}
+			}*///TODO
 			RGB.glColorReset();
 		}
 	}

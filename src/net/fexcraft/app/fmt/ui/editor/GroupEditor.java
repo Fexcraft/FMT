@@ -2,8 +2,6 @@ package net.fexcraft.app.fmt.ui.editor;
 
 import java.util.ArrayList;
 
-import org.newdawn.slick.Color;
-
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.generic.Button;
 import net.fexcraft.app.fmt.ui.generic.TextField;
@@ -82,9 +80,9 @@ public class GroupEditor extends Editor {
 	@Override
 	public void renderSelf(int rw, int rh){
 		super.renderSelf(rw, rh); TextureManager.unbind();
-		font.drawString(4, 40, "Group Color", Color.black);
+		/*font.drawString(4, 40, "Group Color", Color.black);
 		font.drawString(4, 90, "Group Name", Color.black);
-		font.drawString(4, 140, "Multiplicator/Rate", Color.black);
+		font.drawString(4, 140, "Multiplicator/Rate", Color.black);*///TODO
 		RGB.glColorReset();
 	}
 

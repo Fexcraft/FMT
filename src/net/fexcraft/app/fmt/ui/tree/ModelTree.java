@@ -2,8 +2,6 @@ package net.fexcraft.app.fmt.ui.tree;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
-import org.newdawn.slick.Color;
-
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.generic.DialogBox;
@@ -34,13 +32,13 @@ public class ModelTree extends RightTree {
 		GL11.glTranslatef(0, 0,  10); int pass = 0;
 		if(Settings.polygonCount()){
 			this.renderQuad(x + 4, y + 4 + -scroll + (pass), width - 8, 24, "ui/background"); TextureManager.unbind();
-			font.drawString(x + 8, y + 6 + -scroll + (pass), "Polygons: " + count, Color.white); RGB.glColorReset(); pass += 26; count = 0;
+			/*//TODOfont.drawString(x + 8, y + 6 + -scroll + (pass), "Polygons: " + count, Color.white);*/ RGB.glColorReset(); pass += 26; count = 0;
 		}
 		for(int i = 0; i < trlist.length; i++){
 			TurboList list = trlist[i]; count += list.size();
 			color(list.visible, list.selected).glColorApply();
 			this.renderQuad(x + 4, y + 4 + -scroll + (pass), width - 8, 24, "ui/background"); TextureManager.unbind();
-			font.drawString(x + 8, y + 6 + -scroll + (pass), (Settings.polygonCount() ? "[" + list.size() + "] " : "") + list.id, Color.white); RGB.glColorReset();
+			/*//TODOfont.drawString(x + 8, y + 6 + -scroll + (pass), (Settings.polygonCount() ? "[" + list.size() + "] " : "") + list.id, Color.white);*/ RGB.glColorReset();
 			GL11.glTranslatef(0, 0,  1);
 			this.renderIcon(x + width - 92, y + 6 + -scroll + (pass), "icons/group_minimize");
 			this.renderIcon(x + width - 70, y + 6 + -scroll + (pass), "icons/group_edit");
@@ -51,7 +49,7 @@ public class ModelTree extends RightTree {
 				for(int j = 0; j < list.size(); j++){
 					poly = list.get(j); color(poly.visible, poly.selected || list.selected).glColorApply();
 					this.renderQuad(x + 8, y + 4 + -scroll + (pass), width - 16, 24, "ui/background"); TextureManager.unbind();
-					font.drawString(x + 10, y + 6 + -scroll + (pass), j + " | " + poly.name(), Color.white); RGB.glColorReset();
+					/*//TODOfont.drawString(x + 10, y + 6 + -scroll + (pass), j + " | " + poly.name(), Color.white);*/ RGB.glColorReset();
 					GL11.glTranslatef(0, 0,  1);
 					this.renderIcon(x + width - 74, y + 6 + -scroll + (pass), "icons/group_edit");
 					this.renderIcon(x + width - 52, y + 6 + -scroll + (pass), "icons/group_visible");

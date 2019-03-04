@@ -1,13 +1,9 @@
 package net.fexcraft.app.fmt.ui;
 
-import java.awt.Font;
 import java.util.TreeMap;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
-import org.newdawn.slick.TrueTypeFont;
-
-import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.utils.TextureManager;
 
 /**
@@ -15,11 +11,7 @@ import net.fexcraft.app.fmt.utils.TextureManager;
  *
  */
 public abstract class Element {
-
-	protected static TrueTypeFont font = new TrueTypeFont(new Font("Cambria", FMTB.linux() ? Font.PLAIN : Font.BOLD, 16), true);
-	protected static TrueTypeFont mono = new TrueTypeFont(new Font("Courier", Font.BOLD, 16), true);
-	/*static{ try{ InputStream inputStream	= ResourceLoader.getResourceAsStream("./resources/font/custom.ttf"); Font awt = Font.createFont(Font.TRUETYPE_FONT, inputStream).deriveFont(20f); font = new TrueTypeFont(awt, false); } catch(Exception e){ e.printStackTrace(); }}*/
-	//
+	
 	protected TreeMap<String, Element> elements = new TreeMap<>();
 	protected Element parent;
 	public int width, height, x, y, z = 0;

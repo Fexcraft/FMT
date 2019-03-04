@@ -6,8 +6,6 @@ package net.fexcraft.app.fmt.ui.generic;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import org.newdawn.slick.Color;
-
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.Element;
@@ -46,8 +44,8 @@ public class DialogBox extends Element implements Dialog{
 		button0.x = x + 20; button0.y = y + 80; button1.x = x + 136; button1.y = y + 80;
 		{
 			TextureManager.unbind();
-			font.drawString(this.x +  20, this.y + 20, text[0], Color.black);
-			font.drawString(this.x +  20, this.y + 40, text[1], Color.black);
+			/*font.drawString(this.x +  20, this.y + 20, text[0], Color.black);
+			font.drawString(this.x +  20, this.y + 40, text[1], Color.black);*///TODO
 			RGB.glColorReset();
 		}
 		if(progress >= 0){

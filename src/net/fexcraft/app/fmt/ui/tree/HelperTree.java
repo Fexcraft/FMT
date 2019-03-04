@@ -1,14 +1,11 @@
 package net.fexcraft.app.fmt.ui.tree;
 
 import org.lwjgl.opengl.GL11;
-import org.newdawn.slick.Color;
-
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.utils.HelperCollector;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.wrappers.TurboList;
-import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 
 public class HelperTree extends RightTree {
@@ -34,7 +31,7 @@ public class HelperTree extends RightTree {
 			GroupCompound model = trlist[i];
 			color(model.visible, i == SEL).glColorApply();
 			this.renderQuad(x + 4, y + 4 + -scroll + (pass), width - 8, 24, "ui/background"); TextureManager.unbind();
-			font.drawString(x + 8, y + 6 + -scroll + (pass), model.name, Color.white); RGB.glColorReset();
+			//TODO font.drawString(x + 8, y + 6 + -scroll + (pass), model.name, Color.white); RGB.glColorReset();
 			GL11.glTranslatef(0, 0,  1);
 			this.renderIcon(x + width - 92, y + 6 + -scroll + (pass), "icons/group_minimize");
 			this.renderIcon(x + width - 70, y + 6 + -scroll + (pass), "icons/group_edit");
@@ -45,7 +42,7 @@ public class HelperTree extends RightTree {
 				for(int j = 0; j < model.getCompound().size(); j++){
 					poly = (TurboList)model.getCompound().values().toArray()[j]; color(poly.visible, false).glColorApply();
 					this.renderQuad(x + 8, y + 4 + -scroll + (pass), width - 16, 24, "ui/background"); TextureManager.unbind();
-					font.drawString(x + 10, y + 6 + -scroll + (pass), j + " | " + poly.id, Color.white); RGB.glColorReset();
+					//TODO font.drawString(x + 10, y + 6 + -scroll + (pass), j + " | " + poly.id, Color.white); RGB.glColorReset();
 					GL11.glTranslatef(0, 0,  1);
 					this.renderIcon(x + width - 30, y + 6 + -scroll + (pass), "icons/group_visible");
 					GL11.glTranslatef(0, 0, -1); pass += 26;

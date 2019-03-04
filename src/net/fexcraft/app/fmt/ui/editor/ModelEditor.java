@@ -1,7 +1,5 @@
 package net.fexcraft.app.fmt.ui.editor;
 
-import org.newdawn.slick.Color;
-
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.generic.Button;
 import net.fexcraft.app.fmt.ui.generic.TextField;
@@ -139,11 +137,11 @@ public class ModelEditor extends Editor {
 	@Override
 	public void renderSelf(int rw, int rh){
 		super.renderSelf(rw, rh); TextureManager.unbind();
-		font.drawString(4, 40, "Position Offset", Color.black);
+		/*font.drawString(4, 40, "Position Offset", Color.black);
 		font.drawString(4, 90, "Rotation Offset", Color.black);
 		font.drawString(4, 140, "Texture Size", Color.black);
 		font.drawString(4, 190, "Model Name", Color.black);
-		font.drawString(4, 240, "Multiplicator/Rate", Color.black);
+		font.drawString(4, 240, "Multiplicator/Rate", Color.black);*///TODO
 		RGB.glColorReset();
 	}
 

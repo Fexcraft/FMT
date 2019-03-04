@@ -8,8 +8,6 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.newdawn.slick.Color;
-
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
@@ -83,7 +81,7 @@ public class FileChooser extends Element implements Dialog {
 		this.elements.put("button2", button2 = new Button(this, "button2", 150, 28, 346, 504/*470*/, new RGB(255, 255, 0)){
 			@Override protected boolean processButtonClick(int x, int y, boolean left){ UserInterface.FILECHOOSER.reset(); return true; }
 		});
-		this.elements.put("eximporter", (eximporter = new TextField(this, "eximporter", 442, 18, 440).setRenderBackground(false).setColor(Color.black)).setEnabled(false));
+		this.elements.put("eximporter", (eximporter = new TextField(this, "eximporter", 442, 18, 440).setRenderBackground(false).setColor(RGB.BLACK)).setEnabled(false));
 		this.elements.put("fileroot", root = new Button(this, "fileroot", 436, 28, 29, 57, new RGB(200, 200, 200)){
 			@Override protected boolean processButtonClick(int x, int y, boolean left){
 				if(currdir.getParentFile() != null) currdir = currdir.getParentFile().getAbsoluteFile(); ressel(); return true;
@@ -147,7 +145,7 @@ public class FileChooser extends Element implements Dialog {
 				}
 			}
 		}.setTexture("icons/file_chooser_7"));
-		this.elements.put("customfilename", cfn = new TextField(this, "customfilename", 442, 18, 472).setRenderBackground(false).setColor(Color.black));
+		this.elements.put("customfilename", cfn = new TextField(this, "customfilename", 442, 18, 472).setRenderBackground(false).setColor(RGB.BLACK));
 		//
 		//this.show(new String[]{ "test title", "OK"}, null, NOTHING, false);
 	}
@@ -251,7 +249,7 @@ public class FileChooser extends Element implements Dialog {
 		parent.x = 475 + x; parent.y = y + 93; desktop.x = 475 + x; desktop.y = y + 111;
 		up.x = 475 + x; up.y = y + 387; down.x = 475 + x; down.y = y + 405;
 		eximm.x = x + 464; eximm.y = y + 436; eximp.x = x + 482; eximp.y = y + 436;
-		TextureManager.unbind(); font.drawString(this.x + 18, this.y + 19, title, Color.black); RGB.glColorReset();
+		//TODO TextureManager.unbind(); font.drawString(this.x + 18, this.y + 19, title, Color.black); RGB.glColorReset();
 	}
 	
 	@Override

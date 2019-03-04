@@ -1,12 +1,9 @@
 package net.fexcraft.app.fmt.ui.editor;
 
-import org.newdawn.slick.Color;
-
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.generic.Button;
 import net.fexcraft.app.fmt.ui.generic.TextField;
 import net.fexcraft.app.fmt.ui.tree.HelperTree;
-import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
@@ -129,12 +126,12 @@ public class PreviewEditor extends Editor {
 
 	@Override
 	public void renderSelf(int rw, int rh){
-		super.renderSelf(rw, rh); TextureManager.unbind();
+		super.renderSelf(rw, rh); /*TextureManager.unbind();
 		font.drawString(4, 40, "Position Offset", Color.black);
 		font.drawString(4, 90, "Rotation Offset", Color.black);
 		font.drawString(4, 140, "Scale", Color.black);
 		font.drawString(4, 190, "Multiplicator/Rate", Color.black);
-		RGB.glColorReset();
+		RGB.glColorReset();*///TODO
 	}
 
 	@Override
