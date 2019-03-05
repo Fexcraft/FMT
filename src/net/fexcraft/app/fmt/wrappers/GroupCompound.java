@@ -1,15 +1,26 @@
 package net.fexcraft.app.fmt.wrappers;
 
+import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.io.File;
-import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
-import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.editor.Editor;
+import net.fexcraft.app.fmt.ui.editor.TextureEditor;
+import net.fexcraft.app.fmt.ui.generic.DialogBox;
 import net.fexcraft.app.fmt.ui.generic.TextField;
+import net.fexcraft.app.fmt.utils.RayCoastAway;
+import net.fexcraft.app.fmt.utils.TextureManager;
+import net.fexcraft.app.fmt.utils.TextureManager.Texture;
+import net.fexcraft.lib.common.math.RGB;
+import net.fexcraft.lib.common.math.Vec3f;
 
 public class GroupCompound {
 	
@@ -17,26 +28,27 @@ public class GroupCompound {
 	public float rate = 1;
 	//
 	private TreeMap<String, TurboList> compound = new TreeMap<>();
-	private ArrayList<Selection> selection = new ArrayList<>();
 	public ArrayList<String> creators = new ArrayList<>();
 	public File file; public String name = "unnamed model";
-	public boolean textured = false;
+	public PolygonWrapper lastselected;
+	public String texture;
+	//
+	public boolean visible = true, minimized;
+	public Vec3f pos, rot, scale;
 	
 	public GroupCompound(){
-		compound.put("body", new TurboList("body"));
-		/*compound.get("body").add(new ShapeboxWrapper(this));//BoxWrapper
-		((BoxWrapper)compound.get("body").get(0)).size.xCoord += 15;
-		((BoxWrapper)compound.get("body").get(0)).size.yCoord += 15;
-		((BoxWrapper)compound.get("body").get(0)).size.zCoord += 15;
-		compound.get("body").get(0).pos = new Vec3f(-8, -16, -8);
-		compound.get("body").get(0).recompile();
-		//
-		compound.get("body").add(new CylinderWrapper(this));
-		((CylinderWrapper)compound.get("body").get(1)).radius = 8;
-		((CylinderWrapper)compound.get("body").get(1)).length = 16;
-		((CylinderWrapper)compound.get("body").get(1)).direction = 1;
-		((CylinderWrapper)compound.get("body").get(1)).segments = 16;
-		compound.get("body").get(1).recompile();*/
+		//compound.put("body", new TurboList("body"));
+		/*for(int i = 0; i < 20; i++){
+			TurboList list = new TurboList("list" + i);
+			for(int j = 0; j < 1000; j++){
+				BoxWrapper box = new BoxWrapper(this);
+				box.size = new Vec3f(1, 1, 1);
+				box.pos = new Vec3f((j * 2) - 500, i * 2, 0);
+				box.name = "box" + j;
+				list.add(box);
+			}
+			compound.put(list.id, list);
+		};*/
 		recompile(); this.updateFields();
 	}
 
@@ -45,80 +57,146 @@ public class GroupCompound {
 	}
 
 	public void render(){
-		compound.values().forEach(elm -> elm.render());
+		if(!visible) return; RGB.glColorReset();
+		if(pos != null){
+			GL11.glTranslatef(pos.xCoord, pos.yCoord, pos.zCoord);
+		}
+		if(rot != null){
+			GL11.glPushMatrix();
+			GL11.glRotatef(rot.xCoord, 1, 0, 0);
+			GL11.glRotatef(rot.yCoord, 0, 1, 0);
+			GL11.glRotatef(rot.zCoord, 0, 0, 1);
+		}
+		if(scale != null){
+			GL11.glPushMatrix();
+			GL11.glScalef(scale.xCoord, scale.yCoord, scale.zCoord);
+		}
+		if(RayCoastAway.PICKING){
+			if(TextureEditor.pixelMode()){
+				TextureManager.bindTexture(getTempTex());
+				compound.values().forEach(elm -> elm.render(false));
+			}
+			else{
+				compound.values().forEach(elm -> elm.renderPicking());
+			}
+			//compound.values().forEach(elm -> elm.renderLines());
+			RayCoastAway.doTest(false);
+		}
+		else{
+			TextureManager.bindTexture(texture == null ? "blank" : texture);
+			compound.values().forEach(elm -> elm.render(true));
+			compound.values().forEach(elm -> elm.renderLines());
+			//compound.values().forEach(elm -> elm.renderPicking());//uncomment for debugging the ray-/color-picker
+		}
+		if(scale != null){
+			GL11.glPopMatrix();
+		}
+		if(rot != null){
+			GL11.glRotatef(-rot.zCoord, 0, 0, 1);
+			GL11.glRotatef(-rot.yCoord, 0, 1, 0);
+			GL11.glRotatef(-rot.xCoord, 1, 0, 0);
+			GL11.glPopMatrix();
+		}
+		if(pos != null){
+			GL11.glTranslatef(-pos.xCoord, -pos.yCoord, -pos.zCoord);
+		}
 	}
 	
-	public ArrayList<Selection> getSelected(){ return selection; }
-
-	public boolean updateValue(TextField field, String id){
-		if(selection.isEmpty()) return false;
-		boolean positive = id.endsWith("+"), alright = false;
-		id = id.replace("-", "").replace("+", "");
-		float f = field.tryChange(positive, rate);
-		boolean x = id.endsWith("x"), y = id.endsWith("y"), z = id.endsWith("z");
-		id = id.substring(0, id.length() - 1);
-		//FMTB.print(field, id, positive, x, y, z, f);
-		for(int i = 0; i < selection.size(); i++){
-			if(i == 0){ alright = selection.get(i).apply(id, f, x, y, z); continue; }
-			selection.get(i).apply(id, f, x, y, z);
-		}
-		if(alright) field.applyChange(f);
-		return alright;
-	}
+	public static final String temptexid = "temp/calculation_texture";
 	
-	public static class Selection {
-		
-		public Selection(String string, int i){
-			this.group = string; this.element = i;
-		}
-
-		public boolean apply(String id, float value, boolean x, boolean y, boolean z){
-			PolygonWrapper shape = FMTB.MODEL.compound.containsKey(group) ? FMTB.MODEL.compound.get(group).get(element) : null;
-			if(shape == null) return false;
-			boolean bool = false;
-			switch(id){
-				case "size":{
-					if(shape.getType().isCuboid()){
-						bool = shape.setFloat(id, x, y, z, value);
-					} break;
+	private String getTempTex(){
+		Texture tex = TextureManager.getTexture(temptexid, true);
+		if(tex == null || (tex.getImage().getWidth() != this.textureX || tex.getImage().getHeight() != textureY)){
+			if(textureX >= 8192 || textureY >= 8192){ /*//TODO*/ }
+			else{
+				BufferedImage image = null;//new BufferedImage(textureX, textureY, BufferedImage.TYPE_INT_ARGB);
+				if(tex == null){
+					image = new BufferedImage(textureX, textureY, BufferedImage.TYPE_INT_ARGB);
 				}
-				case "pos": case "off": {
-					bool = shape.setFloat(id, x, y, z, value); break;
+				else{
+					tex.resize(textureX, textureY, null); image = tex.getImage();
 				}
-				case "rot":{
-					bool = shape.setFloat(id, x, y, z, (float)Math.toRadians(value)); break;
+				int lastint = 0;
+				for(int x = 0; x < textureX; x++){
+					for(int y = 0; y < textureY; y++){
+						image.setRGB(x, y, new Color(lastint).getRGB()); lastint++;
+					}
 				}
-				case "cor0": case "cor1": case "cor2": case "cor3": case "cor4": case "cor5": case "cor6": case "cor7":{
-					if(shape.getType().isShapebox()){
-						bool = shape.setFloat(id, x, y, z, value);
-					} break;
+				if(tex == null){
+					TextureManager.loadTextureFromZip(image, temptexid, true);
 				}
-				case "cyl0": case "cyl1": case "cyl2":{
-					if(shape.getType().isCylinder()){
-						bool = shape.setFloat(id, x, y, z, value);
-					} break;
+				else{
+					tex.rebind(); TextureManager.saveTexture(temptexid);
 				}
 			}
-			shape.recompile();
-			return bool;
 		}
-
-		public String group;
-		public int element;
-		
-		@Override
-		public boolean equals(Object o){
-			return o instanceof Selection ? ((Selection)o).group.equals(group) && ((Selection)o).element == element : false; 
-		}
-		
+		return temptexid;
 	}
 
-	public void add(PolygonWrapper shape){
+	public ArrayList<PolygonWrapper> getSelected(){
+		ArrayList<PolygonWrapper> polis = new ArrayList<>();
+		for(TurboList list : compound.values()){
+			if(list.selected){ polis.addAll(list); }
+			else{
+				for(PolygonWrapper poly : list){
+					if(poly.selected) polis.add(poly);
+				}
+			}
+		}
+		return polis;
+	}
+
+	public final void clearSelection(){
+		for(TurboList list : compound.values()){
+			list.selected = false; for(PolygonWrapper poly : list) poly.selected = false;
+		}
+	}
+
+	public boolean updateValue(TextField field, String id){
+		ArrayList<PolygonWrapper> polis = this.getSelected();
+		if(polis.isEmpty()) return false;
+		boolean positive = id.endsWith("+"); id = id.replace("-", "").replace("+", "");
+		boolean x = id.endsWith("x"), y = id.endsWith("y"), z = id.endsWith("z");
+		id = id.substring(0, id.length() - 1);
+		for(int i = 0; i < polis.size(); i++){
+			float f = field.tryChange(polis.get(i).getFloat(id, x, y, z), positive, rate);
+			if(i == 0){
+				if(polis.get(i).apply(id, f, x, y, z)){
+					field.applyChange(f);
+				}
+			}
+			else{
+				polis.get(i).apply(id, f, x, y, z);
+			}
+		}
+		return true;
+	}
+	
+	public boolean updateValue(TextField field){
+		ArrayList<PolygonWrapper> polis = this.getSelected();
+		if(polis.isEmpty()) return false;
+		boolean x = field.id.endsWith("x"), y = field.id.endsWith("y"), z = field.id.endsWith("z");
+		String id = field.id.substring(0, field.id.length() - 1);
+		//
+		float diffo = polis.get(0).getFloat(id, x, y, z);
+		for(int i = 0; i < polis.size(); i++){
+			if(i == 0){
+				polis.get(i).apply(id, field.getFloatValue(), x, y, z);
+			}
+			else{
+				float diff = polis.get(i).getFloat(id, x, y, z) - diffo;
+				polis.get(i).apply(id, field.getFloatValue() + diff, x, y, z);
+			}
+		}
+		return true;
+	}
+
+	public void add(PolygonWrapper shape, String group, boolean clear){
 		try{
-			if(compound.isEmpty()) compound.put("group0", new TurboList("group0"));
-			TurboList list = (compound.containsKey("body") ? compound.get("body") : (TurboList)compound.values().toArray()[0]);
-			selection.clear(); selection.add(new Selection(list.id, list.size())); list.add(shape); shape.recompile();
-			this.updateFields();
+			if(compound.isEmpty() && group == null) compound.put("group0", new TurboList("group0"));
+			if(group != null && !compound.containsKey(group)) compound.put(group, new TurboList(group));
+			TurboList list = (group == null ? compound.containsKey("body") ? compound.get("body") : (TurboList)compound.values().toArray()[0] : compound.get(group));
+			if(clear){ clearSelection(); } shape.selected = true; list.add(shape); shape.setList(list); shape.recompile(); this.updateFields();
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -128,34 +206,48 @@ public class GroupCompound {
 	public TreeMap<String, TurboList> getCompound(){
 		return compound;
 	}
-
-	public void deselectGroup(String id){
-		selection.removeIf(pre -> pre.group.equals(id)); this.updateFields();
-	}
-
-	public void selectGroup(String id){
-		TurboList list = compound.get(id); if(list == null) return;
-		Selection temp = null;
-		for(int i = 0; i < list.size(); i++){
-			if(!selection.contains(temp = new Selection(list.id, i))){
-				selection.add(temp);
+	
+	public PolygonWrapper getFirstSelection(){
+		for(TurboList list : compound.values()){
+			if(list.selected){ list.get(0); }
+			else{
+				for(PolygonWrapper poly : list){
+					if(poly.selected) return poly;
+				}
 			}
-		} this.updateFields();
+		}
+		return null;
 	}
-
-	public void deselect(String id, int poly){
-		selection.removeIf(pre -> pre.group.equals(id) && pre.element == poly); this.updateFields();
+	
+	public String getFirstSelectedGroupName(){
+		for(TurboList list : compound.values()){
+			if(list.selected){ return list.id; }
+			else{
+				for(PolygonWrapper poly : list){
+					if(poly.selected) return list.id;
+				}
+			}
+		}
+		return "no polygon selected";
 	}
-
-	public void select(String id, int poly){
-		if(!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) selection.clear();
-		Selection temp = new Selection(id, poly); if(!selection.contains(temp)) selection.add(temp); this.updateFields();
+	
+	public TurboList getFirstSelectedGroup(){
+		for(TurboList list : compound.values()){
+			if(list.selected){ return list; }
+			else{
+				for(PolygonWrapper poly : list){
+					if(poly.selected) return list;
+				}
+			}
+		}
+		return null;
 	}
 	
 	public void updateFields(){
 		try{
 			if(FMTB.get() == null || FMTB.get().UI == null || !FMTB.get().UI.hasElement("general_editor")) return; FMTB.get().setTitle(this.name);
-			Editor editor = (Editor)FMTB.get().UI.getElement("general_editor"); PolygonWrapper poly = getSelectedPolygon(0);
+			Editor editor = (Editor)FMTB.get().UI.getElement("general_editor"); PolygonWrapper poly = getFirstSelection();
+			//ouch, I forgot not keeping a secondary "selection" list doesn't also save which was selected first...
 			if(poly == null){
 				editor.getField("sizex").applyChange(0);
 				editor.getField("sizey").applyChange(0);
@@ -177,6 +269,7 @@ public class GroupCompound {
 				editor.getField("texy").applyChange(0);
 				//
 				editor.getField("group").setText("none", true);
+				editor.getField("boxname").setText("no polygon selected", true);
 			}
 			else{
 				editor.getField("sizex").applyChange(poly.getFloat("size", true, false, false));
@@ -191,14 +284,15 @@ public class GroupCompound {
 				editor.getField("offy").applyChange(poly.getFloat("off", false, true, false));
 				editor.getField("offz").applyChange(poly.getFloat("off", false, false, true));
 				//
-				editor.getField("rotx").applyChange(round(Math.toDegrees(poly.getFloat("rot", true, false, false))));
-				editor.getField("roty").applyChange(round(Math.toDegrees(poly.getFloat("rot", false, true, false))));
-				editor.getField("rotz").applyChange(round(Math.toDegrees(poly.getFloat("rot", false, false, true))));
+				editor.getField("rotx").applyChange(poly.getFloat("rot", true, false, false));
+				editor.getField("roty").applyChange(poly.getFloat("rot", false, true, false));
+				editor.getField("rotz").applyChange(poly.getFloat("rot", false, false, true));
 				//
 				editor.getField("texx").applyChange(poly.getFloat("tex", true, false, false));
 				editor.getField("texy").applyChange(poly.getFloat("tex", false, true, false));
 				//
-				editor.getField("group").setText(selection.get(0).group, true);
+				editor.getField("group").setText(this.getFirstSelectedGroupName(), true);
+				editor.getField("boxname").setText(poly.name == null ? "unnamed" : poly.name, true);
 			}
 			editor.getField("multiplicator").applyChange(rate);
 			//
@@ -235,6 +329,13 @@ public class GroupCompound {
 				editor.getField("cor7x").applyChange(0);
 				editor.getField("cor7y").applyChange(0);
 				editor.getField("cor7z").applyChange(0);
+				//
+				/*editor.getField("face0x").applyChange(0);
+				editor.getField("face0y").applyChange(0);
+				editor.getField("face0z").applyChange(0);
+				editor.getField("face1x").applyChange(0);
+				editor.getField("face1y").applyChange(0);
+				editor.getField("face1z").applyChange(0);*/
 			}
 			else{
 				editor.getField("cor0x").applyChange(poly.getFloat("cor0", true, false, false));
@@ -268,82 +369,196 @@ public class GroupCompound {
 				editor.getField("cor7x").applyChange(poly.getFloat("cor7", true, false, false));
 				editor.getField("cor7y").applyChange(poly.getFloat("cor7", false, true, false));
 				editor.getField("cor7z").applyChange(poly.getFloat("cor7", false, false, true));
+				//
+				/*editor.getField("face0x").applyChange(poly.getFloat("face0", true, false, false));
+				editor.getField("face0y").applyChange(poly.getFloat("face0", false, true, false));
+				editor.getField("face0z").applyChange(poly.getFloat("face0", false, false, true));
+				editor.getField("face1x").applyChange(poly.getFloat("face1", true, false, false));
+				editor.getField("face1y").applyChange(poly.getFloat("face1", false, true, false));
+				editor.getField("face1z").applyChange(poly.getFloat("face1", false, false, true));*/
 			}
 			editor.getField("multiplicator").applyChange(rate);
 			//
 			editor = (Editor)FMTB.get().UI.getElement("cylinder_editor");
 			if(poly == null || !poly.getType().isCylinder()){
-				editor.getField("cyl0x").applyChange(0); editor.getField("cyl0y").applyChange(0);
-				editor.getField("cyl1x").applyChange(0); editor.getField("cyl1y").applyChange(0);
-				editor.getField("cyl2x").applyChange(0); editor.getField("cyl2y").applyChange(0);
+				editor.getField("cyl0x").applyChange(0); editor.getField("cyl0y").applyChange(0); editor.getField("cyl0z").applyChange(0);
+				editor.getField("cyl1x").applyChange(0); editor.getField("cyl1y").applyChange(0); editor.getField("cyl1z").applyChange(0);
+				editor.getField("cyl2x").applyChange(0); editor.getField("cyl2y").applyChange(0); editor.getField("cyl2z").applyChange(0);
+				editor.getField("cyl3x").applyChange(0); editor.getField("cyl3y").applyChange(0); editor.getField("cyl3z").applyChange(0);
 			}
 			else{
 				editor.getField("cyl0x").applyChange(poly.getFloat("cyl0", true, false, false));
 				editor.getField("cyl0y").applyChange(poly.getFloat("cyl0", false, true, false));
+				editor.getField("cyl0z").applyChange(poly.getFloat("cyl0", false, false, true));
 				editor.getField("cyl1x").applyChange(poly.getFloat("cyl1", true, false, false));
 				editor.getField("cyl1y").applyChange(poly.getFloat("cyl1", false, true, false));
+				editor.getField("cyl1z").applyChange(poly.getFloat("cyl1", false, false, true));
 				editor.getField("cyl2x").applyChange(poly.getFloat("cyl2", true, false, false));
 				editor.getField("cyl2y").applyChange(poly.getFloat("cyl2", false, true, false));
+				editor.getField("cyl2z").applyChange(poly.getFloat("cyl2", false, false, true));
+				editor.getField("cyl3x").applyChange(poly.getFloat("cyl3", true, false, false));
+				editor.getField("cyl3y").applyChange(poly.getFloat("cyl3", false, true, false));
+				editor.getField("cyl3z").applyChange(poly.getFloat("cyl3", false, false, true));
 			}
+			editor.getField("multiplicator").applyChange(rate);
+			//
+			editor = (Editor)FMTB.get().UI.getElement("texrectb_editor");
+			if(poly == null || !poly.getType().isTexRectB()){
+				for(Element field : editor.getFields()){ ((TextField)field).applyChange(0f); }
+			}
+			else{
+				for(int i = 0; i < 6; i++){
+					editor.getField("texpos" + i + "sx").applyChange(poly.getFloat("texpos" + i + "s", true, false, false));
+					editor.getField("texpos" + i + "sy").applyChange(poly.getFloat("texpos" + i + "s", false, true, false));
+					editor.getField("texpos" + i + "ex").applyChange(poly.getFloat("texpos" + i + "e", true, false, false));
+					editor.getField("texpos" + i + "ey").applyChange(poly.getFloat("texpos" + i + "e", false, true, false));
+				}
+			}
+			editor.getField("multiplicator").applyChange(rate);
+			//
+			editor = (Editor)FMTB.get().UI.getElement("texrecta_editor");
+			if(poly == null || !poly.getType().isTexRectA()){
+				for(Element field : editor.getFields()){ ((TextField)field).applyChange(0f); }
+			}
+			else{
+				//for(Element field : editor.getFields()){ Print.console(field.id); }
+				for(int i = 0; i < 6; i++){
+					for(int j = 0; j < 8; j++){
+						if(j % 2 == 0){
+							editor.getField("texpos" + i + ":" + j + "x").applyChange(poly.getFloat("texpos" + i + ":" + j, true, false, false));
+						}
+						else{
+							editor.getField("texpos" + i + ":" + j + "y").applyChange(poly.getFloat("texpos" + i + ":" + j, false, true, false));
+						}
+					}
+				}
+			}
+			editor.getField("multiplicator").applyChange(rate);
+			//
+			editor = (Editor)FMTB.get().UI.getElement("group_editor"); TurboList list = this.getFirstSelectedGroup();
+			if(list == null){
+				editor.getField("rgb0").applyChange(0);
+				editor.getField("rgb1").applyChange(0);
+				editor.getField("rgb2").applyChange(0);
+				editor.getField("groupname").setText("no polygon selected", true);
+			}
+			else{
+				byte[] arr = list.color == null ? RGB.WHITE.toByteArray() : list.color.toByteArray();
+				editor.getField("rgb0").applyChange(arr[0] + 128);
+				editor.getField("rgb1").applyChange(arr[1] + 128);
+				editor.getField("rgb2").applyChange(arr[2] + 128);
+				editor.getField("groupname").setText(list.id, true);
+			}
+			editor.getField("multiplicator").applyChange(rate);
+			//
+			editor = (Editor)FMTB.get().UI.getElement("model_editor");
+			editor.getField("posx").applyChange(pos == null ? 0 : pos.xCoord);
+			editor.getField("posy").applyChange(pos == null ? 0 : pos.yCoord);
+			editor.getField("posz").applyChange(pos == null ? 0 : pos.zCoord);
+			editor.getField("texx").applyChange(this.textureX);
+			editor.getField("texy").applyChange(this.textureY);
+			editor.getField("modelname").setText(this.name, true);
 			editor.getField("multiplicator").applyChange(rate);
 		}
 		catch(Exception e){
 			e.printStackTrace();
 		}
 	}
-	
-	private float round(double df){
+
+	/*private float round(double df){
         BigDecimal deci = new BigDecimal(Float.toString((float)df));
         deci = deci.setScale(3, BigDecimal.ROUND_HALF_UP);
         return deci.floatValue();
-	}
-
-	private PolygonWrapper getSelectedPolygon(int i){
-		if(selection.isEmpty()) return null;
-		if(i >= selection.size()) return null;
-		if(compound.containsKey(selection.get(i).group)){
-			if(selection.get(i).element >= compound.get(selection.get(i).group).size()){
-				selection.remove(i); return null;
-			} else return compound.get(selection.get(i).group).get(selection.get(i).element);
-		}
-		else return null;
-	}
-
-	private PolygonWrapper removeSelectedPolygon(int s){
-		if(selection.isEmpty()) return null;
-		if(s >= selection.size()) return null;
-		if(compound.containsKey(selection.get(s).group)){
-			if(selection.get(s).element >= compound.get(selection.get(s).group).size()){
-				selection.remove(s); return null;
-			} else return compound.get(selection.get(s).group).remove(selection.get(s).element);
-		}
-		else return null;
-	}
+	}*/
 
 	public float multiply(float flea){
 		return rate = (rate *= flea) < 0.01f ? 0.01f : rate > 1000 ? 1000 : rate;
 	}
 
-	public void changeGroupIndex(int i){
-		if(selection.isEmpty()) return;
-		String current = selection.get(0).group; int index = i;
+	public void changeGroupOfSelected(ArrayList<PolygonWrapper> polis2, String id){
+		ArrayList<PolygonWrapper> polis = polis2 == null ? this.getSelected() : polis2;
+		if(polis.isEmpty()) return;
+		TurboList list = compound.get(id); if(list == null) return;
+		polis.forEach(poly -> {
+			if(poly.getTurboList() != null) poly.getTurboList().remove(poly);
+		});
+		polis.forEach(poly -> {
+			list.add(poly); poly.setList(list);
+		});
+		this.updateFields();
+	}
+
+	public void changeGroupOfSelected(int offset){
+		ArrayList<PolygonWrapper> polis = this.getSelected();
+		if(polis.isEmpty()) return;
+		String current = polis.get(0).getTurboList().id; int index = offset;
 		for(String key : compound.keySet()){ if(key.equals(current)) break; else index++; }
 		if(index >= compound.size()) index -= compound.size(); if(index < 0) index = 0;
-		current = compound.keySet().toArray(new String[0])[index];
-		ArrayList<PolygonWrapper> array = new ArrayList<>();
-		for(int s = 0; s < selection.size(); s++){ array.add(getSelectedPolygon(s)); }
-		for(int s = 0; s < selection.size(); s++){ removeSelectedPolygon(s); }
-		selection.clear();
-		for(PolygonWrapper wrapper : array){
-			if(wrapper != null){
-				selection.add(new Selection(current, compound.get(current).size()));
-				compound.get(current).add(wrapper);
-			}
-		} array.clear(); this.updateFields();
+		changeGroupOfSelected(polis, compound.keySet().toArray(new String[0])[index]);
 	}
 	
-	public int countTotalMRTs(){
-		int i = 0; for(TurboList list : compound.values()) i += list.size(); return i;
+	public long countTotalMRTs(){
+		long i = 0; for(TurboList list : compound.values()) i += list.size(); return i;
+	}
+
+	public void setTexture(String string){
+		this.texture = string; this.compound.values().forEach(turbo -> turbo.forEach(poly -> poly.recompile()));
+	}
+
+	public int getDirectlySelectedGroupsAmount(){
+		int i = 0; for(TurboList list : compound.values()) if(list.selected) i++; return i;
+	}
+
+	public ArrayList<TurboList> getDirectlySelectedGroups(){
+		ArrayList<TurboList> array = new ArrayList<>();
+		for(TurboList list : compound.values()) if(list.selected) array.add(list);
+		return array;
+	}
+
+	public void copyAndSelect(){
+		ArrayList<PolygonWrapper> list = this.getSelected(), newlist = new ArrayList<>();
+		for(PolygonWrapper wrapper : list){ newlist.add(wrapper.clone()); } this.clearSelection();
+		for(PolygonWrapper wrapper : newlist){ this.add(wrapper, "clipboard", false); } return;
+	}
+
+	public void flipShapeboxes(int axis){
+		List<PolygonWrapper> wrappers = this.getSelected().stream().filter(pre -> pre.getType().isShapebox()).collect(Collectors.toList());
+		ShapeboxWrapper shapebox = null;
+		for(PolygonWrapper wrapper : wrappers){
+			Vec3f[] copy = new Vec3f[8]; shapebox = (ShapeboxWrapper)wrapper;
+			copy[0] = shapebox.cor0; copy[1] = shapebox.cor1; copy[2] = shapebox.cor2; copy[3] = shapebox.cor3;
+			copy[4] = shapebox.cor4; copy[5] = shapebox.cor5; copy[6] = shapebox.cor6; copy[7] = shapebox.cor7;
+			switch(axis){//corner data from golddolphinskb
+				case 0:{
+					shapebox.cor0 = copy[3]; shapebox.cor1 = copy[2]; shapebox.cor2 = copy[1]; shapebox.cor3 = copy[0];
+					shapebox.cor4 = copy[7]; shapebox.cor5 = copy[6]; shapebox.cor6 = copy[5]; shapebox.cor7 = copy[4];
+					break;
+				}
+				case 1:{
+					shapebox.cor0 = copy[4]; shapebox.cor1 = copy[5]; shapebox.cor2 = copy[6]; shapebox.cor3 = copy[7];
+					shapebox.cor4 = copy[0]; shapebox.cor5 = copy[1]; shapebox.cor6 = copy[2]; shapebox.cor7 = copy[3];
+					break;
+				}
+				case 2:{
+					shapebox.cor0 = copy[1]; shapebox.cor1 = copy[0]; shapebox.cor2 = copy[3]; shapebox.cor3 = copy[2];
+					shapebox.cor4 = copy[5]; shapebox.cor5 = copy[4]; shapebox.cor6 = copy[7]; shapebox.cor7 = copy[6];
+					break;
+				}
+			} shapebox.recompile(); continue;
+		} this.updateFields(); return;
+	}
+
+	public void deleteSelected(){
+		FMTB.showDialogbox("Are you sure to", "delete all Selected?", "Yes!", "Cancel!", () -> {
+			ArrayList<PolygonWrapper> wrapp = this.getSelected();
+			for(PolygonWrapper wrapper : wrapp){
+				wrapper.getTurboList().remove(wrapper);
+			}
+		}, DialogBox.NOTHING);
+	}
+
+	public PolygonWrapper getLastSelected(){
+		return lastselected;
 	}
 
 }

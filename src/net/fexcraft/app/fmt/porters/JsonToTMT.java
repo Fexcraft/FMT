@@ -6,11 +6,14 @@ import com.google.gson.JsonObject;
 import net.fexcraft.app.fmt.wrappers.BoxWrapper;
 import net.fexcraft.app.fmt.wrappers.CylinderWrapper;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
+import net.fexcraft.app.fmt.wrappers.MarkerWrapper;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.ShapeboxWrapper;
+import net.fexcraft.app.fmt.wrappers.TexrectWrapperA;
+import net.fexcraft.app.fmt.wrappers.TexrectWrapperB;
 import net.fexcraft.lib.common.json.JsonUtil;
+import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
-import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 /**
 * Tool to parse `ModelRendererTurbo` objects from JSON.
@@ -46,78 +49,16 @@ public class JsonToTMT {
 	public static final String[] flip = new String[]{"flip", "fl", "usd"};
 	//cyl
 	public static final String[] radius = new String[]{"radius", "rad", "r"};
+	public static final String[] radius2 = new String[]{"radius2", "rad2", "r2"};
 	public static final String[] length = new String[]{"length", "len", "l"};
 	public static final String[] segments = new String[]{"segments", "seg", "sg"};
+	public static final String[] seglimit = new String[]{"segment_limit", "segments_limit", "seglimit", "seg_limit", "sgl"};
 	public static final String[] basescale = new String[]{"base_scale", "basescale", "bs"};
 	public static final String[] topscale = new String[]{"top_scale", "topscale", "ts"};
 	public static final String[] direction = new String[]{"direction", "dir", "facing"};
-	
-	public final static ModelRendererTurbo parse(JsonObject obj, int tx, int ty){
-		ModelRendererTurbo model = new ModelRendererTurbo(null, get(texturex, obj, idef), get(texturey, obj, idef), tx, ty);
-		//
-		float x = get(offx, obj, def);
-		float y = get(offy, obj, def);
-		float z = get(offz, obj, def);
-		int w = get(width, obj, idef);
-		int h = get(height, obj, idef);
-		int d = get(depth, obj, idef);
-		//
-		switch(obj.get("type").getAsString()){
-			case "box": case "cube": case "b": {
-				model.addBox(x, y, z, w, h, d, get(expansion, obj, def));
-				break;
-			}
-			case "shapebox": case "sbox": case "sb": {
-				model.addShapeBox(x, y, z, w, h, d, get(scale, obj, def),
-						get("x0", obj, def), get("y0", obj, def), get("z0", obj, def),
-						get("x1", obj, def), get("y1", obj, def), get("z1", obj, def),
-						get("x2", obj, def), get("y2", obj, def), get("z2", obj, def),
-						get("x3", obj, def), get("y3", obj, def), get("z3", obj, def),
-						get("x4", obj, def), get("y4", obj, def), get("z4", obj, def),
-						get("x5", obj, def), get("y5", obj, def), get("z5", obj, def),
-						get("x6", obj, def), get("y6", obj, def), get("z6", obj, def),
-						get("x7", obj, def), get("y7", obj, def), get("z7", obj, def)
-					);
-				break;
-			}
-			case "cylinder": case "cyl": case "c": {
-				model.addCylinder(x, y, z, get(radius, obj, 1f), get(length, obj, 1f), get(segments, obj, 16), get(basescale, obj, 1f), get(topscale, obj, 1f), get(direction, obj, 4));
-				break;
-			}
-			case "cone": case "cn": {
-				model.addCone(x, y, z, get(radius, obj, 1f), get(length, obj, 1f), get(segments, obj, 12), get(basescale, obj, 1f), get(direction, obj, 4));
-				break;
-			}
-		}
-		model.mirror = JsonUtil.getIfExists(obj, mirror, false);
-		model.flip = JsonUtil.getIfExists(obj, flip, false);
-		//
-		model.rotateAngleX = get(rotx, obj, def);
-		model.rotateAngleY = get(roty, obj, def);
-		model.rotateAngleZ = get(rotz, obj, def);
-		//
-		model.boxName = obj.has("name") ? obj.get("name").getAsString() : null;
-		model.setRotationPoint(get(posx, obj, def), get(posy, obj, def), get(posz, obj, def));
-		return model;
-	}
-
-	public final static ModelRendererTurbo[] parse(JsonArray array, int tx, int ty){
-		if(array != null){
-			ModelRendererTurbo[] model = new ModelRendererTurbo[array.size()];
-			for(int i = 0; i < array.size(); i++){
-				model[i] = parse(array.get(i).getAsJsonObject(), tx, ty);
-			}
-			return model;
-		}
-		return new ModelRendererTurbo[0];
-	}
-
-	public final static ModelRendererTurbo[] parse(String string, JsonObject object, int tx, int ty){
-		if(object.has(string) && object.get(string).isJsonArray()){
-			return parse(object.get(string).getAsJsonArray(), tx, ty);
-		}
-		return new ModelRendererTurbo[0];
-	}
+	public static final String[] topoffx = new String[]{"top_offset_x", "topoff_x", "topoffx"};
+	public static final String[] topoffy = new String[]{"top_offset_y", "topoff_y", "topoffy"};
+	public static final String[] topoffz = new String[]{"top_offset_z", "topoff_z", "topoffz"};
 	
 	public static final float get(String s, JsonObject obj, float def){
 		if(obj.has(s)){
@@ -151,16 +92,16 @@ public class JsonToTMT {
 		switch(obj.get("type").getAsString()){
 			case "box": case "cube": case "b":{
 				BoxWrapper cuboid = new BoxWrapper(compound);
-				cuboid.size.xCoord = get(width, obj, idef);
-				cuboid.size.yCoord = get(height, obj, idef);
-				cuboid.size.zCoord= get(depth, obj, idef);
+				cuboid.size.xCoord = get(width, obj, def);
+				cuboid.size.yCoord = get(height, obj, def);
+				cuboid.size.zCoord= get(depth, obj, def);
 				polygon = cuboid; break;
 			}
 			case "shapebox": case "sbox": case "sb": {
 				ShapeboxWrapper shapebox = new ShapeboxWrapper(compound);
-				shapebox.size.xCoord = get(width, obj, idef);
-				shapebox.size.yCoord = get(height, obj, idef);
-				shapebox.size.zCoord= get(depth, obj, idef);
+				shapebox.size.xCoord = get(width, obj, def);
+				shapebox.size.yCoord = get(height, obj, def);
+				shapebox.size.zCoord= get(depth, obj, def);
 				//
 				shapebox.cor0 = new Vec3f(get("x0", obj, def), get("y0", obj, def), get("z0", obj, def));
 				shapebox.cor1 = new Vec3f(get("x1", obj, def), get("y1", obj, def), get("z1", obj, def));
@@ -170,17 +111,65 @@ public class JsonToTMT {
 				shapebox.cor5 = new Vec3f(get("x5", obj, def), get("y5", obj, def), get("z5", obj, def));
 				shapebox.cor6 = new Vec3f(get("x6", obj, def), get("y6", obj, def), get("z6", obj, def));
 				shapebox.cor7 = new Vec3f(get("x7", obj, def), get("y7", obj, def), get("z7", obj, def));
+				/*if(obj.has("face_triangle_flip")){
+					JsonArray array = obj.getAsJsonArray("face_triangle_flip");
+					for(int i = 0; i < 6; i++) shapebox.bool[i] = array.get(i).getAsBoolean();
+				}*/
 				polygon = shapebox; break;
 			}
 			case "cylinder": case "cyl": case "c": case "cone": case "cn": {
 				CylinderWrapper cylinder = new CylinderWrapper(compound);
 				cylinder.radius = get(radius, obj, 1f);
+				cylinder.radius2 = get(radius2, obj, 0f);
 				cylinder.length = get(length, obj, 1f);
 				cylinder.segments = get(segments, obj, 16);
+				cylinder.seglimit = get(seglimit, obj, cylinder.segments);
 				cylinder.direction = get(direction, obj, 4);
 				cylinder.base = get(basescale, obj, 1f);
 				cylinder.top = get(topscale, obj, 1f);
+				cylinder.topoff.xCoord = get(topoffx, obj, 0f);
+				cylinder.topoff.yCoord = get(topoffy, obj, 0f);
+				cylinder.topoff.zCoord = get(topoffz, obj, 0f);
 				polygon = cylinder; break;
+			}
+			case "texrect": case "texrect_a": case "texrect_b": {
+				TexrectWrapperB texrect = null;
+				if(obj.has("texpos")){
+					JsonArray array = obj.get("texpos").getAsJsonArray();
+					for(int i = 0; i < 6; i++){
+						JsonArray arr = array.get(i).getAsJsonArray();
+						if(texrect == null){
+							texrect = arr.size() > 4 ? new TexrectWrapperA(compound) : new TexrectWrapperB(compound);
+						}
+						texrect.texcor[i][0] = arr.get(0).getAsFloat();
+						texrect.texcor[i][1] = arr.get(1).getAsFloat();
+						texrect.texcor[i][2] = arr.get(2).getAsFloat();
+						texrect.texcor[i][3] = arr.get(3).getAsFloat();
+						if(arr.size() > 4){
+							texrect.texcor[i][4] = arr.get(4).getAsFloat();
+							texrect.texcor[i][5] = arr.get(5).getAsFloat();
+							texrect.texcor[i][6] = arr.get(6).getAsFloat();
+							texrect.texcor[i][7] = arr.get(7).getAsFloat();
+						}
+					}
+				}
+				if(texrect == null){ texrect = new TexrectWrapperB(compound); }
+				texrect.size.xCoord = get(width, obj, def); texrect.size.yCoord = get(height, obj, def); texrect.size.zCoord= get(depth, obj, def);
+				//
+				texrect.cor0 = new Vec3f(get("x0", obj, def), get("y0", obj, def), get("z0", obj, def));
+				texrect.cor1 = new Vec3f(get("x1", obj, def), get("y1", obj, def), get("z1", obj, def));
+				texrect.cor2 = new Vec3f(get("x2", obj, def), get("y2", obj, def), get("z2", obj, def));
+				texrect.cor3 = new Vec3f(get("x3", obj, def), get("y3", obj, def), get("z3", obj, def));
+				texrect.cor4 = new Vec3f(get("x4", obj, def), get("y4", obj, def), get("z4", obj, def));
+				texrect.cor5 = new Vec3f(get("x5", obj, def), get("y5", obj, def), get("z5", obj, def));
+				texrect.cor6 = new Vec3f(get("x6", obj, def), get("y6", obj, def), get("z6", obj, def));
+				texrect.cor7 = new Vec3f(get("x7", obj, def), get("y7", obj, def), get("z7", obj, def));
+				polygon = texrect; break;
+			}
+			case "marker":{
+				MarkerWrapper marker = new MarkerWrapper(compound);
+				marker.color = obj.has("color") ? obj.get("color").getAsInt() : RGB.GREEN.packed;
+				polygon = marker; break;
 			}
 		}
 		polygon.textureX = get(texturex, obj, idef);

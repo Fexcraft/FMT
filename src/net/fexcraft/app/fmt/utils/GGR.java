@@ -1,13 +1,16 @@
 package net.fexcraft.app.fmt.utils;
 
-import java.time.Instant;
-import java.util.TreeMap;
-
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
-import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.editor.Editor;
+
+import net.fexcraft.app.fmt.FMTGLProcess;
+import net.fexcraft.app.fmt.ui.UserInterface;
+import net.fexcraft.app.fmt.ui.editor.TextureEditor;
+import net.fexcraft.app.fmt.ui.generic.ControlsAdjuster;
+import net.fexcraft.app.fmt.ui.generic.TextField;
+import net.fexcraft.app.fmt.ui.tree.RightTree;
+import net.fexcraft.app.fmt.utils.KeyCompound.KeyFunction;
 import net.fexcraft.lib.common.math.Vec3f;
 
 /** CCR */
@@ -17,15 +20,15 @@ public class GGR {
     public float maxlookrange = 85;
     public float sensivity = 1.0f;//= 0.05f;
     public Vec3f pos, rotation;
-    private TreeMap<Integer, Long> keycooldown = new TreeMap<Integer, Long>();
+    private final FMTGLProcess root;
     
-    public GGR(int x, int y, int z){
-        pos = new Vec3f(x, y, z);
+    public GGR(FMTGLProcess root, int x, int y, int z){
+        pos = new Vec3f(x, y, z); this.root = root;
         rotation = new Vec3f(0, 0, 0);
     }
     
-    public GGR(float x, float y, float z){
-        pos = new Vec3f(x, y, z);
+    public GGR(FMTGLProcess root, float x, float y, float z){
+        pos = new Vec3f(x, y, z); this.root = root;
         rotation = new Vec3f(0, 0, 0);
     }
 
@@ -39,34 +42,98 @@ public class GGR {
         GL11.glTranslatef(-pos.xCoord, -pos.yCoord, -pos.zCoord);
     }
 
-    public void acceptInput(float delta){
-        acceptInputRotate(delta);
-        acceptInputGrab();
-        acceptInputMove(delta);
+    public void pollInput(float delta){
+        acceptMouseInput(delta);
+        if(!TextField.anySelected()) acceptInputMove(delta);
+        acceptInputKeyboard();
     }
     
-    private boolean clickedL, clickedR, panning;
+    private void acceptInputKeyboard(){
+    	while(Keyboard.next()){
+    		int key = Keyboard.getEventKey();
+    		if(Keyboard.getEventKeyState()){//"pressed"
+    	        if(TextField.anySelected()){
+    	        	TextField field = TextField.getSelected();
+    	        	if(field != null){
+    	        		for(int i = 2; i < 12; i++){
+    	        			if(key == i) field.onInput(key, getKeyName(i));
+    	        		}
+    	        		for(int i = 16; i < 26; i++){
+    	        			if(key == i) field.onInput(key, getKeyName(i));
+    	        		}
+    	        		for(int i = 30; i < 39; i++){
+    	        			if(key == i) field.onInput(key, getKeyName(i));
+    	        		}
+    	        		for(int i = 44; i < 51; i++){
+    	        			if(key == i) field.onInput(key, getKeyName(i));
+    	        		}
+    	        		if(key == Keyboard.KEY_BACK){
+    	        			field.onBackSpace();
+    	        		}
+    	        		if(key == Keyboard.KEY_RETURN){
+    	        			field.onReturn();
+    	        		}
+    	        		if(key == Keyboard.KEY_MINUS){
+    	        			field.onInput(key, "-");
+    	        		}
+    	        		if(key == Keyboard.KEY_PERIOD){
+    	        			field.onInput(key, ".");
+    	        		}
+    	        		if(key == Keyboard.KEY_SPACE){
+    	        			field.onInput(key, " ");
+    	        		}
+    	        	}
+    	        }
+    	        else{
+    	        	for(KeyFunction keyf : KeyCompound.keys){
+    	        		if(keyf.ID() != key) continue; if(keyf.process()) break;
+    	        	}
+    	        }
+    		}
+    		else{//"released"
+    			if(ControlsAdjuster.CATCHING){ UserInterface.CONTROLS.catchKey(key); }
+	        	for(KeyFunction keyf : KeyCompound.released_keys){
+	        		if(keyf.ID() != key) continue; if(keyf.process()) break;
+	        	}
+    		}
+    	}
+	}
+
+	private String getKeyName(int i){
+		return GGR.isShiftDown() ? Keyboard.getKeyName(i) : Keyboard.getKeyName(i).toLowerCase();
+	}
+
+	private boolean clickedL, clickedR, panning;
     private int wheel, oldMouseX=-1,oldMouseY=-1;
 
-    public void acceptInputRotate(float delta){
-        if(clickedR && ! Mouse.isButtonDown(1)){
+    public void acceptMouseInput(float delta){
+        if(clickedR && !Mouse.isButtonDown(1)){
             Mouse.setGrabbed(false);//fix mouse grab sticking
         }
         if(Mouse.isGrabbed()){
             rotation.yCoord += Mouse.getDX() * sensivity * delta;
             rotation.xCoord += -Mouse.getDY() * sensivity * delta;
             rotation.xCoord = Math.max(-maxlookrange, Math.min(maxlookrange, rotation.xCoord));
+            //
+        	//if(Mouse.isButtonDown(0) && !clickedL) RayCoastAway.doTest(true, false); clickedL = Mouse.isButtonDown(0);
         }
         else{
         	if(!Mouse.isInsideWindow()) return;
-        	if(Mouse.isButtonDown(0) && !clickedL) FMTB.get().UI.onButtonPress(0); clickedL = Mouse.isButtonDown(0);
-        	if(Mouse.isButtonDown(1) && !clickedR) FMTB.get().UI.onButtonPress(1); clickedR = Mouse.isButtonDown(1);
+        	if(Mouse.isButtonDown(0) && !clickedL) root.getUserInterface().onButtonPress(0); clickedL = Mouse.isButtonDown(0);
+        	if(Mouse.isButtonDown(1) && !clickedR) root.getUserInterface().onButtonPress(1); clickedR = Mouse.isButtonDown(1);
         	if((wheel = Mouse.getDWheel()) != 0){
-        		if(!FMTB.get().UI.onScrollWheel(wheel)){
+        		if(!root.getUserInterface().onScrollWheel(wheel)){
                     double[] zoom = rotatePoint(wheel * 0.005f, rotation.xCoord, rotation.yCoord - 90);
                     pos.xCoord += zoom[0]; pos.yCoord += zoom[1]; pos.zCoord += zoom[2];
         		}
         	}
+        }
+        //
+        if((Mouse.isInsideWindow() && /*Keyboard.isKeyDown(Keyboard.KEY_E) ||*/ Mouse.isButtonDown(1) && !RightTree.anyTreeHovered())){
+            Mouse.setGrabbed(true);
+        }
+        if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE) && !ControlsAdjuster.CATCHING){
+            root.reset(); Mouse.setGrabbed(false); TextureEditor.reset();
         }
     }
 
@@ -79,41 +146,6 @@ public class GGR {
             xyz[0] = (f * Math.cos(yaw));
             xyz[2] = (f * Math.sin(yaw));
         return xyz;
-    }
-
-    public void acceptInputGrab(){
-        if((Mouse.isInsideWindow() && Keyboard.isKeyDown(Keyboard.KEY_E) || Mouse.isButtonDown(1))){
-            Mouse.setGrabbed(true);
-        }
-        if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
-            Mouse.setGrabbed(false);
-        }
-        //
-        if(isKeyDown(Keyboard.KEY_F1, 200)){ /*//TODO help UI*/ }
-        if(isKeyDown(Keyboard.KEY_F2, 200)){ Settings.toggleFloor(); }
-        if(isKeyDown(Keyboard.KEY_F3, 200)){ Settings.toggleLines(); }
-        if(isKeyDown(Keyboard.KEY_F4, 200)){ Settings.toggleCube(); }
-        if(isKeyDown(Keyboard.KEY_F5, 200)){ Settings.toggleDemo(); }
-        if(isKeyDown(Keyboard.KEY_F6, 200)){ Settings.togglePolygoMarker(); }
-        //
-        if(isKeyDown(Keyboard.KEY_1)){ Editor.toggle("general_editor", false); }
-        if(isKeyDown(Keyboard.KEY_2)){ Editor.toggle("shapebox_editor", false); }
-        if(isKeyDown(Keyboard.KEY_3)){ Editor.toggle("cylinder_editor", false); }
-        if(isKeyDown(Keyboard.KEY_4)){ Editor.toggle("group_editor", false); }
-        //TODO other editors
-    }
-    
-	private boolean isKeyDown(int key){
-		return isKeyDown(key, 100);
-	}
-
-	public boolean isKeyDown(int key, int am){
-    	long i = keycooldown.containsKey(key) ? keycooldown.get(key) : 0;
-    	if(i - Instant.now().toEpochMilli() >= 0) return false;
-    	else{
-    		keycooldown.put(key, Instant.now().toEpochMilli() + am);
-    		return Keyboard.isKeyDown(key);
-    	}
     }
 
     public void acceptInputMove(float delta){
@@ -131,15 +163,16 @@ public class GGR {
             oldMouseX =- 1; panning = false;
         }
         //
-    	if(!Mouse.isGrabbed()) return;
-        boolean front = Keyboard.isKeyDown(Keyboard.KEY_W);
-        boolean back = Keyboard.isKeyDown(Keyboard.KEY_S);
-        boolean right = Keyboard.isKeyDown(Keyboard.KEY_D);
-        boolean left = Keyboard.isKeyDown(Keyboard.KEY_A);
-        boolean speedp = Keyboard.isKeyDown(Keyboard.KEY_R);
-        boolean speedm = Keyboard.isKeyDown(Keyboard.KEY_F);
-        boolean up = Keyboard.isKeyDown(Keyboard.KEY_SPACE);
-        boolean down = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
+    	//if(!Mouse.isGrabbed()) return;
+        if(RightTree.anyTreeHovered()) return;
+        boolean front = Keyboard.isKeyDown(KeyCompound.KEY_W.ID());
+        boolean back  = Keyboard.isKeyDown(KeyCompound.KEY_S.ID());
+        boolean right = Keyboard.isKeyDown(KeyCompound.KEY_D.ID());
+        boolean left  = Keyboard.isKeyDown(KeyCompound.KEY_A.ID());
+        boolean speedp = Keyboard.isKeyDown(KeyCompound.KEY_SPP.ID());
+        boolean speedm = Keyboard.isKeyDown(KeyCompound.KEY_SPN.ID());
+        boolean up   = Keyboard.isKeyDown(KeyCompound.KEY_DU.ID());
+        boolean down = Keyboard.isKeyDown(KeyCompound.KEY_DD.ID());
         float nspeed;
         if(speedp) nspeed = movespeed * 5;
         else if(speedm) nspeed = movespeed / 2;
@@ -164,5 +197,9 @@ public class GGR {
             pos.zCoord -= Math.cos(Math.toRadians(rotation.yCoord + 90)) * nspeed;
         }
     }
+
+	public static boolean isShiftDown(){
+		return Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
+	}
     
 }

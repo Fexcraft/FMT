@@ -1,7 +1,5 @@
 package net.fexcraft.app.fmt.wrappers;
 
-import org.lwjgl.opengl.GL11;
-
 import com.google.gson.JsonObject;
 
 import net.fexcraft.lib.common.math.Vec3f;
@@ -14,22 +12,12 @@ public class BoxWrapper extends PolygonWrapper {
 	public BoxWrapper(GroupCompound compound){
 		super(compound);
 	}
-
-	@Override
-	public void recompile(){
-		if(turbo != null && turbo.displaylist() != null){ GL11.glDeleteLists(turbo.displaylist(), 1); turbo = null; }
-		turbo = new ModelRendererTurbo(null, textureX, textureY, compound.textureX, compound.textureY);
-		turbo.addBox(off.xCoord, off.yCoord, off.zCoord, size.xCoord, size.yCoord, size.zCoord);
-		turbo.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord);
-		turbo.rotateAngleX = rot.xCoord; turbo.rotateAngleY = rot.yCoord; turbo.rotateAngleZ = rot.zCoord;
-		turbo.textured = compound.textured;
-		//
-		if(lines != null && lines.displaylist() != null){  GL11.glDeleteLists(lines.displaylist(), 1); lines = null; }
-		lines = new ModelRendererTurbo(null, textureX, textureY, compound.textureX, compound.textureY); lines.lines = true;
-		lines.addBox(off.xCoord, off.yCoord, off.zCoord, size.xCoord, size.yCoord, size.zCoord);
-		lines.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord);
-		lines.rotateAngleX = rot.xCoord; lines.rotateAngleY = rot.yCoord; lines.rotateAngleZ = rot.zCoord;
-		lines.textured = compound.textured;
+	
+	protected ModelRendererTurbo newMRT(){
+		return new ModelRendererTurbo(null, textureX, textureY, compound.textureX, compound.textureY)
+			.addBox(off.xCoord, off.yCoord, off.zCoord, size.xCoord, size.yCoord, size.zCoord)
+			.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
+			.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
 	}
 
 	@Override
@@ -64,6 +52,43 @@ public class BoxWrapper extends PolygonWrapper {
 		obj.addProperty("height", size.yCoord);
 		obj.addProperty("depth", size.zCoord);
 		return obj;
+	}
+
+	@Override
+	protected float[][][] newTexturePosition(){
+		float tx = 0 /*textureX*/, ty = 0 /*textureY*/, w = size.xCoord, h = size.yCoord, d = size.zCoord;
+		float[][][] vecs = new float[6][][];
+		vecs[0] = new float[][]{
+			new float[]{ tx + d + w, ty + d },
+			new float[]{ tx + d + w + d, ty + d + h }
+		};
+		vecs[1] = new float[][]{
+			new float[]{ tx, ty + d },
+			new float[]{ tx + d, ty + d + h }
+		};
+		vecs[2] = new float[][]{
+			new float[]{ tx + d, ty },
+			new float[]{ tx + d + w, ty + d }
+		};
+		vecs[3] = new float[][]{
+			new float[]{ tx + d + w, ty + 0 },
+			new float[]{ tx + d + w + w, ty + d }
+		};
+		vecs[4] = new float[][]{
+			new float[]{ tx + d, ty + d },
+			new float[]{ tx + d + w, ty + d + h }
+		};
+		vecs[5] = new float[][]{
+			new float[]{ tx + d + w + d, ty + d },
+			new float[]{ tx + d + w + d + w, ty + d + h }
+		};
+		return vecs;
+	}
+
+	@Override
+	protected PolygonWrapper createClone(GroupCompound compound){
+		BoxWrapper wrapper = new BoxWrapper(compound);
+		wrapper.size = new Vec3f(size); return wrapper;
 	}
 	
 }

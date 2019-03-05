@@ -1,7 +1,5 @@
 package net.fexcraft.app.fmt.ui.generic;
 
-import org.newdawn.slick.Color;
-
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.lib.common.math.RGB;
@@ -11,6 +9,7 @@ public abstract class Button extends Element {
 	private String text, texture = "ui/button_bg";
 	private boolean centered;
 	private RGB hovercolor = RGB.GREEN;
+	private RGB discolor = RGB.RED;
 	
 	public Button(Element toolbar, String id, int width, int height, int x, int y){
 		super(toolbar, id);
@@ -19,8 +18,12 @@ public abstract class Button extends Element {
 		this.setupSubmenu();
 	}
 	
-	public Button(Element elm, String id, int w, int h, int x, int y, RGB rgb){
-		this(elm, id, w, h, x, y); hovercolor = rgb;
+	public Button(Element elm, String id, int w, int h, int x, int y, RGB hover){
+		this(elm, id, w, h, x, y); hovercolor = hover;
+	}
+	
+	public Button(Element elm, String id, int w, int h, int x, int y, RGB hover, RGB dis){
+		this(elm, id, w, h, x, y, hover); discolor = dis;
 	}
 
 	public void setupSubmenu(){}
@@ -35,19 +38,19 @@ public abstract class Button extends Element {
 
 	@Override
 	public void renderSelf(int rw, int rh){
-		if(hovered) (enabled ? hovercolor : RGB.RED).glColorApply();
+		if(hovered) (enabled ? hovercolor : discolor).glColorApply();
 		this.renderQuad(x, y, width, height, texture);
 		if(hovered) RGB.glColorReset();
 		if(text != null){
 			TextureManager.unbind();
-			if(centered){
+			/*if(centered){
 				int x = width / 2 - (font.getWidth(text) / 2);
 				int y = height / 2 - (font.getHeight(text) / 2);
 				font.drawString(this.x + x, this.y + y, text, Color.black);
 			}
 			else{
 				font.drawString(x + 2, y + 2, text, Color.black);
-			}
+			}*///TODO
 			RGB.glColorReset();
 		}
 	}

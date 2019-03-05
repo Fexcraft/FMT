@@ -1,4 +1,5 @@
 *.class
+src/net/fexcraft/app/other/
 
 # BlueJ files
 *.ctxt
@@ -49,3 +50,12 @@ old/
 models/
 saves/
 backups/
+backups_/
+bin/
+resources/textures/temp/
+helpers/
+screenshots/
+auth.net
+*.zip
+saves/
+settings.json

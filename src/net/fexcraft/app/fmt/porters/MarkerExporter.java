@@ -1,0 +1,85 @@
+package net.fexcraft.app.fmt.porters;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.porters.PorterManager.InternalPorter;
+import net.fexcraft.app.fmt.wrappers.GroupCompound;
+import net.fexcraft.app.fmt.wrappers.MarkerWrapper;
+import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
+import net.fexcraft.app.fmt.wrappers.TurboList;
+
+/**
+ * 
+ * @author Ferdinand Calo' (FEX___96)
+ *
+ */
+public class MarkerExporter extends InternalPorter {
+	
+	private static final String[] extensions = new String[]{ ".txt" };
+	
+	public MarkerExporter(){}
+
+	@Override
+	public GroupCompound importModel(File file){
+		return null;
+	}
+
+	@Override
+	public String exportModel(GroupCompound compound, File file){
+		StringBuffer buffer = new StringBuffer();
+		buffer.append("# FMT Marker List // FMT version: " + FMTB.version + "\n");
+		buffer.append("# Model: " + (compound.name == null ? "unnamed" : compound.name.toLowerCase()) + "\n\n");
+		for(TurboList list : compound.getCompound().values()){
+			List<PolygonWrapper> coll = list.stream().filter(pre -> pre instanceof MarkerWrapper).collect(Collectors.toList());
+			if(!coll.isEmpty()){
+				buffer.append("# Group: " + list.id + "\n");
+				for(PolygonWrapper wrapper : list){
+					if(!(wrapper instanceof MarkerWrapper)) continue;
+					buffer.append(wrapper.name() + ": " + wrapper.pos.xCoord + ", " + wrapper.pos.yCoord + ", " + wrapper.pos.zCoord + ";\n");
+				}
+			}
+		}
+		//
+		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+			writer.append(buffer); writer.flush(); writer.close();
+		}
+		catch(IOException e){
+			e.printStackTrace();
+			return "Error:" + e.getMessage();
+		}
+		return "Success!";
+	}
+
+	@Override
+	public String getId(){
+		return "marker_exporter";
+	}
+
+	@Override
+	public String getName(){
+		return "Marker List Exporter";
+	}
+
+	@Override
+	public String[] getExtensions(){
+		return extensions;
+	}
+
+	@Override
+	public boolean isImporter(){
+		return false;
+	}
+
+	@Override
+	public boolean isExporter(){
+		return true;
+	}
+
+}

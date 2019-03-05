@@ -1,17 +1,22 @@
 package net.fexcraft.app.fmt.ui.editor;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.generic.Button;
 import net.fexcraft.app.fmt.ui.generic.IconButton;
 import net.fexcraft.app.fmt.ui.generic.TextField;
+import net.fexcraft.app.fmt.utils.Settings;
+import net.fexcraft.app.fmt.utils.TextureManager;
 
-public class Editor extends Element {
+public abstract class Editor extends Element {
 	
 	private static final ArrayList<Editor> editors = new ArrayList<Editor>();
+	public static final String[] xyz = new String[]{ "x", "y", "z" };
 
 	public Editor(String id){
 		super(null, id); this.width = 308; z = -1;
@@ -27,7 +32,7 @@ public class Editor extends Element {
 
 	@Override
 	protected boolean processButtonClick(int x, int y, boolean left){
-		return false;
+		return true;
 	}
 	
 	public void show(){
@@ -75,6 +80,58 @@ public class Editor extends Element {
 
 	public TextField getField(String string){
 		return (TextField)elements.get(string);
+	}
+
+	public Button getButton(String string){
+		return (Button)elements.get(string);
+	}
+
+	public static Editor get(String string){
+		for(Editor edit : editors) if(edit.id.equals(string)) return edit; return null;
+	}
+	
+	protected boolean processScrollWheel(int wheel){ return true; }
+
+	public List<Element> getFields(){
+		return elements.values().stream().filter(pre -> pre instanceof TextField).collect(Collectors.toList());
+	}
+
+	/** Run after all editors are initialized. */
+	public static void addQuickButtons(){;
+		String[] all = getAllEditorNames();
+		for(String str : all){
+			TextureManager.loadTexture("icons/editors/" + str);
+		}
+		for(Editor editor : editors){
+			String[] getwanted = editor.getExpectedQuickButtons();
+			if(getwanted == null) getwanted = all;
+			for(int i = 0; i < getwanted.length; i++){ final String wanted = getwanted[i];
+				editor.elements.put("open_" + wanted, new IconButton(editor, "open_" + wanted, "icons/editors/" + wanted, editor.x + editor.width - (i * 24) - 24, editor.y + 2){
+					@Override protected boolean processButtonClick(int x, int y, boolean left){ Editor.show(wanted); return true; }
+				});
+				editor.elements.get("open_" + wanted).visible = Settings.editorShortcuts();
+			}
+		}
+	}
+
+	private static String[] getAllEditorNames(){
+		String[] arr = new String[editors.size()];
+		for(int i = 0; i < arr.length; i++){
+			arr[i] = editors.get(i).id;
+		} return arr;
+	}
+
+	protected abstract String[] getExpectedQuickButtons();
+
+	public static void toggleQuickButtons(){
+		Settings.toggleEditorShortcuts();
+		for(Editor editor : editors){
+			for(Element elm : editor.elements.values()){
+				if(elm instanceof IconButton && elm.id.startsWith("open_")){
+					elm.visible = Settings.editorShortcuts();
+				}
+			}
+		}
 	}
 
 }

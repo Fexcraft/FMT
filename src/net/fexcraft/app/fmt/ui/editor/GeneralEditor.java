@@ -1,12 +1,16 @@
 package net.fexcraft.app.fmt.ui.editor;
 
-import org.newdawn.slick.Color;
+import java.util.ArrayList;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.generic.Button;
+import net.fexcraft.app.fmt.ui.generic.DialogBox;
 import net.fexcraft.app.fmt.ui.generic.TextField;
 import net.fexcraft.app.fmt.utils.TextureManager;
+import net.fexcraft.app.fmt.utils.TextureManager.Texture;
+import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.lib.common.math.RGB;
+import net.fexcraft.lib.common.utils.Print;
 
 public class GeneralEditor extends Editor {
 
@@ -21,14 +25,14 @@ public class GeneralEditor extends Editor {
 				this.elements.put(vals[r] + xyz[i] + "-", new Button(this, vals[r] + xyz[i] + "-", 12, 26, 4 + (j * i), 30 + (r * 50), rgb){
 					@Override
 					protected boolean processButtonClick(int x, int y, boolean left){
-						return FMTB.MODEL.updateValue((TextField)this.parent.getElement(vals[rr] + xyz[ii]), this.id);
+						FMTB.MODEL.updateValue((TextField)this.parent.getElement(vals[rr] + xyz[ii]), this.id); return true;
 					}
 				}.setText(" < ", true).setTexture("ui/background").setLevel(-1));
 				TextField field = new TextField(this, vals[r] + xyz[i], k, 16 + (j * i), 30 + (r * 50));
 				if(vals[r].equals("tex")){
 					switch(i){
-						case 0: field.setAsNumberfield(-FMTB.MODEL.textureX, FMTB.MODEL.textureX, true); break;
-						case 1: field.setAsNumberfield(-FMTB.MODEL.textureY, FMTB.MODEL.textureY, true); break;
+						case 0: field.setAsNumberfield(0, 8192, true); break;
+						case 1: field.setAsNumberfield(0, 8192, true); break;
 						case 2: field.setText(" - - - ", true); field.enabled = false; break;
 					}
 				}
@@ -45,41 +49,101 @@ public class GeneralEditor extends Editor {
 				this.elements.put(vals[r] + xyz[i] + "+", new Button(this, vals[r] + xyz[i] + "+", 12, 26, k + 16 + (j * i), 30 + (r * 50), rgb){
 					@Override
 					protected boolean processButtonClick(int x, int y, boolean left){
-						return FMTB.MODEL.updateValue((TextField)this.parent.getElement(vals[rr] + xyz[ii]), this.id);
+						FMTB.MODEL.updateValue((TextField)this.parent.getElement(vals[rr] + xyz[ii]), this.id); return true;
 					}
 				}.setText(" > ", true).setTexture("ui/background").setLevel(-1));
 			}
 		}
 		//
-		this.elements.put("group-", new Button(this, "group-", 12, 26, 4, 280, rgb){
+		this.elements.put("group-", new Button(this, "group-", 12, 26, 4, 330, rgb){
 			@Override
 			protected boolean processButtonClick(int x, int y, boolean left){
-				FMTB.MODEL.changeGroupIndex(-1); return true;
+				FMTB.MODEL.changeGroupOfSelected(-1); return true;
 			}
 		}.setText(" < ", true).setTexture("ui/background").setLevel(-1));
 		//
-		this.elements.put("group", new TextField(this, "group", 270, 16, 280).setText("null", true).setLevel(-1));
-		this.elements.put("group+", new Button(this, "group+", 12, 26, 282, 280, rgb){
+		this.elements.put("group", new TextField(this, "group", 270, 16, 330).setText("null", true).setLevel(-1).setEnabled(false));
+		this.elements.put("group+", new Button(this, "group+", 12, 26, 282, 330, rgb){
 			@Override
 			protected boolean processButtonClick(int x, int y, boolean left){
-				FMTB.MODEL.changeGroupIndex(+1); return true;
+				FMTB.MODEL.changeGroupOfSelected(+1); return true;
 			}
 		}.setText(" > ", true).setTexture("ui/background").setLevel(-1));
 		//
-		this.addMultiplicator(330);
+		this.elements.put("boxname", new TextField(this, "boxname", 294, 4, 280){
+			@Override
+			public void updateTextField(){
+				if(FMTB.MODEL.getSelected().isEmpty()) return;
+				PolygonWrapper wrapper;
+				if(FMTB.MODEL.getSelected().size() == 1){
+					wrapper = FMTB.MODEL.getFirstSelection();
+					if(wrapper != null) wrapper.name = this.getTextValue();
+				}
+				else{
+					ArrayList<PolygonWrapper> polis = FMTB.MODEL.getSelected();
+					for(int i = 0; i < polis.size(); i++){
+						wrapper = polis.get(i);
+						if(wrapper != null){
+							String str = this.getText().contains("_") ? "_" + i : this.getText().contains("-") ? "-" + i :
+								this.getText().contains(" ") ? " " + i : this.getText().contains(".") ? "." + i : i + "";
+							wrapper.name = this.getTextValue() + str;
+						}
+					}
+				}
+			}
+		}.setText("null", true).setLevel(-1));
+		//
+		this.elements.put("burntotex", new Button(this, "burntotex", 294, 28, 4, 380){
+			@Override
+			protected boolean processButtonClick(int x, int y, boolean left){
+				if(!left) return true;
+				if(FMTB.MODEL.texture == null){
+					FMTB.showDialogbox("There is not texture loaded.", "", "ok", "load", DialogBox.NOTHING, () -> {
+						try{
+							FMTB.get().UI.getElement("toolbar").getElement("textures").getElement("menu").getElement("select").onButtonClick(x, y, left, true);
+						}
+						catch(Exception e){
+							e.printStackTrace();
+						}
+					});
+				}
+				else{
+					Texture tex = TextureManager.getTexture(FMTB.MODEL.texture, true);
+					if(tex == null){
+						FMTB.showDialogbox("Texture not found in Memory.", "This rather bad.", "ok", null, DialogBox.NOTHING, null);
+						return true;
+					}
+					FMTB.MODEL.getCompound().values().forEach(list -> list.forEach(poly -> {
+						poly.burnToTexture(tex.getImage(), null); //poly.recompile();
+					})); tex.rebind(); //TextureManager.saveTexture(FMTB.MODEL.texture);
+					//FMTB.showDialogbox("Done!", "", "ok", null, DialogBox.NOTHING, null);
+					Print.console("done");
+					//TODO find out why this didn't work last time
+					return true;
+				}
+				return false;
+			}
+		}.setText("Burn to Texture", true).setTexture("ui/background"));
+		//
+		this.addMultiplicator(430);
 	}
 	
 	@Override
 	public void renderSelf(int rw, int rh){
 		super.renderSelf(rw, rh); TextureManager.unbind();
-		font.drawString(4,  40, "Measurements", Color.black);
+		/*font.drawString(4,  40, "Measurements", Color.black);
 		font.drawString(4,  90, "Position (x/y/z)", Color.black);
 		font.drawString(4, 140, "Offset (x/y/z)", Color.black);
 		font.drawString(4, 190, "Rotation (degrees)", Color.black);
 		font.drawString(4, 240, "Texture (x/y)", Color.black);
-		font.drawString(4, 290, "Group", Color.black);
-		font.drawString(4, 340, "Multiplicator/Rate", Color.black);
+		font.drawString(4, 290, "Polygon Name", Color.black);
+		font.drawString(4, 340, "Group", Color.black);
+		font.drawString(4, 390, "Texture Util", Color.black);
+		font.drawString(4, 440, "Multiplicator/Rate", Color.black);*///TODO
 		RGB.glColorReset();
 	}
+
+	@Override
+	protected String[] getExpectedQuickButtons(){ return null; }
 
 }

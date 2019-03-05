@@ -1,33 +1,33 @@
 package net.fexcraft.app.fmt.wrappers;
 
 import com.google.gson.JsonObject;
+
+import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
-import org.lwjgl.opengl.GL11;
 
 public class FlexboxWrapper extends BoxWrapper {
 
 	public float[] scales;
-	public int mr_side=0;
+	public int mr_side = 0;
 
 	public FlexboxWrapper(GroupCompound compound){
 		super(compound);
 	}
+
+	@Override
+	protected PolygonWrapper createClone(GroupCompound compound){
+		FlexboxWrapper wrapper = new FlexboxWrapper(compound);
+		wrapper.size = new Vec3f(size);
+		wrapper.scales = new float[scales.length];
+		for(int i = 0; i < wrapper.scales.length; i++){
+			wrapper.scales[i] = scales[i];
+		} wrapper.mr_side = mr_side;
+		return wrapper;
+	}
 	
 	@Override
-	public void recompile(){
-		if(turbo != null && turbo.displaylist() != null){ GL11.glDeleteLists(turbo.displaylist(), 1); turbo = null; }
-		turbo = new ModelRendererTurbo(null, textureX, textureY, compound.textureX, compound.textureY);
-		turbo.addFlexBox(off.xCoord, off.yCoord, off.zCoord, size.xCoord, size.yCoord, size.zCoord, 1f, scales[0],scales[1],scales[2],scales[3], mr_side);
-		turbo.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord);
-		turbo.rotateAngleX = rot.xCoord; turbo.rotateAngleY = rot.yCoord; turbo.rotateAngleZ = rot.zCoord;
-		turbo.textured = compound.textured;
-		//
-		if(lines != null && lines.displaylist() != null){ GL11.glDeleteLists(lines.displaylist(), 0); lines = null; }
-		lines = new ModelRendererTurbo(null, textureX, textureY, compound.textureX, compound.textureY);
-		lines.addFlexBox(off.xCoord, off.yCoord, off.zCoord, size.xCoord, size.yCoord, size.zCoord, 0, scales[0], scales[1], scales[2], scales[3], mr_side); lines.lines = true;
-		lines.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord);
-		lines.rotateAngleX = rot.xCoord; lines.rotateAngleY = rot.yCoord; lines.rotateAngleZ = rot.zCoord;
-		lines.textured = compound.textured;
+	protected ModelRendererTurbo newMRT(){
+		return super.newMRT().clear().addFlexBox(off.xCoord, off.yCoord, off.zCoord, size.xCoord, size.yCoord, size.zCoord, 1f, scales[0],scales[1],scales[2],scales[3], mr_side);
 	}
 
 	@Override

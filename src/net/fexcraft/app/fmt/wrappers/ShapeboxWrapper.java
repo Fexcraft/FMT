@@ -4,6 +4,8 @@ import org.lwjgl.opengl.GL11;
 
 import com.google.gson.JsonObject;
 
+import net.fexcraft.app.fmt.utils.Settings;
+import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
@@ -11,42 +13,36 @@ public class ShapeboxWrapper extends BoxWrapper {
 	
 	public Vec3f cor0 = new Vec3f(), cor1 = new Vec3f(), cor2 = new Vec3f(), cor3 = new Vec3f(),
 				 cor4 = new Vec3f(), cor5 = new Vec3f(), cor6 = new Vec3f(), cor7 = new Vec3f();
+	//public boolean bool[] = new boolean[]{ false, false, false, false, false, false };
 	
 	public ShapeboxWrapper(GroupCompound compound){
 		super(compound);
 	}
-	
+
 	@Override
-	public void recompile(){
-		if(turbo != null && turbo.displaylist() != null){ GL11.glDeleteLists(turbo.displaylist(), 1); turbo = null; }
-		turbo = new ModelRendererTurbo(null, textureX, textureY, compound.textureX, compound.textureY);
-		turbo.addShapeBox(off.xCoord, off.yCoord, off.zCoord, size.xCoord, size.yCoord, size.zCoord, 0,
-			cor0.xCoord, cor0.yCoord, cor0.zCoord,
-			cor1.xCoord, cor1.yCoord, cor1.zCoord,
-			cor2.xCoord, cor2.yCoord, cor2.zCoord,
-			cor3.xCoord, cor3.yCoord, cor3.zCoord,
-			cor4.xCoord, cor4.yCoord, cor4.zCoord,
-			cor5.xCoord, cor5.yCoord, cor5.zCoord,
-			cor6.xCoord, cor6.yCoord, cor6.zCoord,
-			cor7.xCoord, cor7.yCoord, cor7.zCoord);
-		turbo.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord);
-		turbo.rotateAngleX = rot.xCoord; turbo.rotateAngleY = rot.yCoord; turbo.rotateAngleZ = rot.zCoord;
-		turbo.textured = compound.textured;
-		//
-		if(lines != null && lines.displaylist() != null){ GL11.glDeleteLists(lines.displaylist(), 0); lines = null; }
-		lines = new ModelRendererTurbo(null, textureX, textureY, compound.textureX, compound.textureY);
-		lines.addShapeBox(off.xCoord, off.yCoord, off.zCoord, size.xCoord, size.yCoord, size.zCoord, 0,
-			cor0.xCoord, cor0.yCoord, cor0.zCoord,
-			cor1.xCoord, cor1.yCoord, cor1.zCoord,
-			cor2.xCoord, cor2.yCoord, cor2.zCoord,
-			cor3.xCoord, cor3.yCoord, cor3.zCoord,
-			cor4.xCoord, cor4.yCoord, cor4.zCoord,
-			cor5.xCoord, cor5.yCoord, cor5.zCoord,
-			cor6.xCoord, cor6.yCoord, cor6.zCoord,
-			cor7.xCoord, cor7.yCoord, cor7.zCoord); lines.lines = true;
-		lines.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord);
-		lines.rotateAngleX = rot.xCoord; lines.rotateAngleY = rot.yCoord; lines.rotateAngleZ = rot.zCoord;
-		lines.textured = compound.textured;
+	protected PolygonWrapper createClone(GroupCompound compound){
+		ShapeboxWrapper wrapper = new ShapeboxWrapper(compound);
+		wrapper.cor0 = new Vec3f(cor0); wrapper.cor1 = new Vec3f(cor1); wrapper.cor2 = new Vec3f(cor2); wrapper.cor3 = new Vec3f(cor3);
+		wrapper.cor4 = new Vec3f(cor4); wrapper.cor5 = new Vec3f(cor5); wrapper.cor6 = new Vec3f(cor6); wrapper.cor7 = new Vec3f(cor7);
+		wrapper.size = new Vec3f(size); //wrapper.bool = new boolean[]{ bool[0], bool[1], bool[2], bool[3], bool[4], bool[5] };
+		return wrapper;
+	}
+	
+	protected ModelRendererTurbo newMRT(){
+		return new ModelRendererTurbo(null, textureX, textureY, compound.textureX, compound.textureY)
+			.addShapeBox(off.xCoord, off.yCoord, off.zCoord, size.xCoord, size.yCoord, size.zCoord, 0,
+				cor0.xCoord, cor0.yCoord, cor0.zCoord,
+				cor1.xCoord, cor1.yCoord, cor1.zCoord,
+				cor2.xCoord, cor2.yCoord, cor2.zCoord,
+				cor3.xCoord, cor3.yCoord, cor3.zCoord,
+				cor4.xCoord, cor4.yCoord, cor4.zCoord,
+				cor5.xCoord, cor5.yCoord, cor5.zCoord,
+				cor6.xCoord, cor6.yCoord, cor6.zCoord,
+				cor7.xCoord, cor7.yCoord, cor7.zCoord)
+			.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
+			.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
+		//for(int i = 0; i < bool.length; i++){ turbo.getFaces()[i].setOppositeTriangles(bool[i]); }
+		//turbo.triline = true; return turbo;
 	}
 
 	@Override
@@ -54,6 +50,56 @@ public class ShapeboxWrapper extends BoxWrapper {
 		return ShapeType.SHAPEBOX;
 	}
 	
+	private static ModelRendererTurbo[] cornermarkers = new ModelRendererTurbo[8];
+	private static RGB[] cornercolors = new RGB[]{
+		new RGB(255, 255, 0), new RGB(255, 0, 0), new RGB(0, 0, 255), new RGB(0, 255, 0),
+		new RGB(255, 0, 127), new RGB(0, 127, 255), new RGB(0, 127, 0), new RGB(127, 0, 255)
+	};
+	public static RGB[] cornercolors2 = new RGB[]{
+		new RGB(255, 255, 0), new RGB(255, 0, 0), new RGB(0, 127, 255), new RGB(255, 0, 127),
+		new RGB(0, 255, 0), new RGB(0, 0, 255), new RGB(0, 127, 0), new RGB(127, 0, 255)
+	};
+	static{
+		for(int i = 0; i < 8; i++){
+			cornermarkers[i] = new ModelRendererTurbo(null, 0, 0, 16, 16).addSphere(0, 0, 0, 0.5f, 8, 8, 0, 0).setTextured(false).setColor(cornercolors[i]);
+		}
+	}
+	
+	@Override
+	public void renderLines(boolean rotXb, boolean rotYb, boolean rotZb){
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		if((selected || this.getTurboList().selected) && Settings.polygonMarker()){
+			if(this.compound.getLastSelected() != this){
+				rotmarker.setRotationPoint(lines.rotationPointX, lines.rotationPointY, lines.rotationPointZ);
+				rotmarker.render();
+			}
+			else{
+				GL11.glPushMatrix();
+				if(rot.xCoord != 0f) GL11.glRotatef(rot.xCoord, 1, 0, 0);
+				if(rot.yCoord != 0f) GL11.glRotatef(rot.yCoord, 0, 1, 0);
+				if(rot.zCoord != 0f) GL11.glRotatef(rot.zCoord, 0, 0, 1);
+				Vec3f vector = null;
+				for(int i = 0; i < cornermarkers.length; i++){
+					vector = turbo.getVertices()[i].vector;
+					cornermarkers[i].setPosition(vector.xCoord + pos.xCoord, vector.yCoord + pos.yCoord, vector.zCoord + pos.zCoord);
+					cornermarkers[i].render();
+				}
+				GL11.glPopMatrix();
+			}
+		}
+		if(Settings.lines()){
+			if(selected || this.getTurboList().selected){
+				if(!widelines){ GL11.glLineWidth(4f); widelines = true; }
+				if(sellines != null) sellines.render();
+			}
+			else{
+				if(widelines){ GL11.glLineWidth(1f); widelines = false; }
+				if(lines != null) lines.render();
+			}
+		}
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+	}
+
 	@Override
 	public float getFloat(String id, boolean x, boolean y, boolean z){
 		switch(id){
@@ -65,6 +111,8 @@ public class ShapeboxWrapper extends BoxWrapper {
 			case "cor5": return x ? cor5.xCoord : y ? cor5.yCoord : z ? cor5.zCoord : 0;
 			case "cor6": return x ? cor6.xCoord : y ? cor6.yCoord : z ? cor6.zCoord : 0;
 			case "cor7": return x ? cor7.xCoord : y ? cor7.yCoord : z ? cor7.zCoord : 0;
+			//case "face0": return x ? bool[0] ? 1 : 0 : y ? bool[1] ? 1 : 0 : z ? bool[2] ? 1 : 0 : 0;
+			//case "face1": return x ? bool[3] ? 1 : 0 : y ? bool[4] ? 1 : 0 : z ? bool[5] ? 1 : 0 : 0;
 			default: return super.getFloat(id, x, y, z);
 		}
 	}
@@ -115,6 +163,16 @@ public class ShapeboxWrapper extends BoxWrapper {
 				if(y){ cor7.yCoord = value; return true; }
 				if(z){ cor7.zCoord = value; return true; }
 			}
+			/*case "face0":{
+				if(x){ bool[0] = (int)value == 1; return true; }
+				if(y){ bool[1] = (int)value == 1; return true; }
+				if(z){ bool[2] = (int)value == 1; return true; }
+			}
+			case "face1":{
+				if(x){ bool[3] = (int)value == 1; return true; }
+				if(y){ bool[4] = (int)value == 1; return true; }
+				if(z){ bool[5] = (int)value == 1; return true; }
+			}*/
 			default: return false;
 		}
 	}
@@ -153,6 +211,12 @@ public class ShapeboxWrapper extends BoxWrapper {
 		if(cor7.xCoord != 0) obj.addProperty("x7", cor7.xCoord);
 		if(cor7.yCoord != 0) obj.addProperty("y7", cor7.yCoord);
 		if(cor7.zCoord != 0) obj.addProperty("z7", cor7.zCoord);
+		//
+		/*if(!export){
+			JsonArray array = new JsonArray();
+			for(boolean bool : bool) array.add(bool);
+			obj.add("face_triangle_flip", array);
+		}*/
 		return obj;
 	}
 

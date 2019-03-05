@@ -4,7 +4,6 @@
 package net.fexcraft.app.fmt.porters;
 
 import java.awt.Desktop;
-import java.awt.EventQueue;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -16,12 +15,13 @@ import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import javax.swing.JOptionPane;
-
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.UserInterface;
+import net.fexcraft.app.fmt.ui.generic.DialogBox;
+import net.fexcraft.app.fmt.ui.generic.FileChooser.AfterTask;
+import net.fexcraft.app.fmt.ui.generic.FileChooser.ChooserMode;
 import net.fexcraft.app.fmt.utils.SaveLoad;
-import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.lib.common.json.JsonUtil;
 
@@ -31,7 +31,7 @@ import net.fexcraft.lib.common.json.JsonUtil;
  */
 public class PorterManager {
 	
-	private static final TreeMap<String, ExInPorter> porters = new TreeMap<String, ExInPorter>();
+	private static final PorterMap porters = new PorterMap();
 	
 	public static final void load() throws NoSuchMethodException, FileNotFoundException, ScriptException {
 		File root = new File("./resources/porters"); porters.clear();
@@ -57,7 +57,18 @@ public class PorterManager {
 			}
 		}
 		//
-		porters.put("internal_mtb_importer", new MTBImporter());
+		porters.add(new MTBImporter());
+		porters.add(new FVTMExporter(false, false));
+		porters.add(new FVTMExporter(true, false));
+		porters.add(new FVTMExporter(false, true));
+		porters.add(new FVTMExporter(true, true));
+		porters.add(new OBJPreviewImporter());
+		porters.add(new JTMTPorter(false));
+		porters.add(new JTMTPorter(true));
+		porters.add(new PNGExporter(true));
+		porters.add(new PNGExporter(false));
+		porters.add(new OBJPrototypeExporter());
+		porters.add(new MarkerExporter());
 	}
 
 	private static ScriptEngine newEngine(){
@@ -65,63 +76,66 @@ public class PorterManager {
 	}
 
 	public static void handleImport(){
-		EventQueue.invokeLater(new Runnable(){
+		UserInterface.FILECHOOSER.show(new String[]{ "Select file/model to import.", "Import" }, new File("./models"), new AfterTask(){
 			@Override
 			public void run(){
 				try{
-					File file = SaveLoad.getFile("Select file to import.", new File("./models"), true, false);
 					if(file == null){
-						Settings.showDialog("No valid file choosen.\nImport is cancelled.", "Notice.", JOptionPane.INFORMATION_MESSAGE);
+						FMTB.showDialogbox("No valid file choosen.", "Import is cancelled.", "ok..", null, DialogBox.NOTHING, null);
 						return;
 					}
-					ExInPorter porter = getPorterFor(file, false);
 					if(porter.isInternal()){
 						FMTB.MODEL = ((InternalPorter)porter).importModel(file);
 						FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
 					}
 					else{
 						Invocable inv = (Invocable)((ExternalPorter)porter).eval();
-						String result = (String) inv.invokeFunction("importModel", new File("./saves/").listFiles()[0]);
+						String result = (String) inv.invokeFunction("importModel", file);
 						SaveLoad.loadModel(JsonUtil.getObjectFromString(result));
 					}
-					Settings.showDialog("Import complete.", "Status", JOptionPane.INFORMATION_MESSAGE);
 				}
 				catch(Exception e){
-					e.printStackTrace(); Settings.showDialog(e, "Errors while importing Model.", JOptionPane.WARNING_MESSAGE);
+					FMTB.showDialogbox("Errors while importing Model.", e.getLocalizedMessage(), "ok.", null, DialogBox.NOTHING, null);//TODO add "open console" as 2nd button
+					e.printStackTrace();
 				}
+				FMTB.showDialogbox("Import complete.", null, "OK!", null, DialogBox.NOTHING, null);
 			}
-		});
+		}, ChooserMode.IMPORT);
 	}
 
 	public static void handleExport(){
-		try{
-			File file = SaveLoad.getFile("Select file to export.", new File("./models"), false, false);
-			if(file == null){
-				Settings.showDialog("No valid file choosen.\nExport is cancelled.", "Notice.", JOptionPane.INFORMATION_MESSAGE);
-				return;
+		UserInterface.FILECHOOSER.show(new String[]{ "Select Export Location", "Export" }, new File("./models"), new AfterTask(){
+			@Override
+			public void run(){
+				try{
+					if(file == null){
+						FMTB.showDialogbox("No valid file choosen.", "Export is cancelled.", "ok..", null, DialogBox.NOTHING, null);
+						return;
+					} String result;
+					if(porter.isInternal()){
+						result = ((InternalPorter)porter).exportModel(FMTB.MODEL, file);
+					}
+					else{
+						Invocable inv = (Invocable)((ExternalPorter)porter).eval();
+						result = (String)inv.invokeFunction("exportModel", SaveLoad.modelToJTMT(null, true).toString(), file);
+					}
+					FMTB.showDialogbox("Export complete.", result, "OK!", null, DialogBox.NOTHING, null);
+					Desktop.getDesktop().open(file.getParentFile());
+				}
+				catch(Exception e){
+					FMTB.showDialogbox("Errors while exporting Model.", e.getLocalizedMessage(), "ok.", null, DialogBox.NOTHING, null);//TODO add "open console" as 2nd button
+					e.printStackTrace();
+				}
 			}
-			ExInPorter porter = getPorterFor(file, true); String result;
-			if(porter.isInternal()){
-				result = ((InternalPorter)porter).exportModel(FMTB.MODEL, file);
-			}
-			else{
-				Invocable inv = (Invocable)((ExternalPorter)porter).eval();
-				result = (String)inv.invokeFunction("exportModel", SaveLoad.modelToJTMT(true).toString(), file);
-			}
-			Settings.showDialog("Export complete.\n" + result, "Status", JOptionPane.INFORMATION_MESSAGE);
-			Desktop.getDesktop().open(file.getParentFile());
-		}
-		catch(Exception e){
-			e.printStackTrace(); Settings.showDialog(e, "Errors while exporting Model.", JOptionPane.WARNING_MESSAGE);
-		}
+		}, ChooserMode.EXPORT);
 	}
 
 	/**
 	 * @param file
 	 * @return porter compatible with this file extension
 	 */
-	private static ExInPorter getPorterFor(File file, boolean export){
-		for(ExInPorter porter : porters.values()){
+	public static ExImPorter getPorterFor(File file, boolean export){
+		for(ExImPorter porter : porters.values()){
 			if((export && porter.isExporter()) || (!export && porter.isImporter())){
 				for(String ext : porter.getExtensions()){
 					if(file.getName().endsWith(ext)) return porter;
@@ -131,7 +145,7 @@ public class PorterManager {
 		return null;
 	}
 	
-	public static class ExternalPorter extends ExInPorter {
+	public static class ExternalPorter extends ExImPorter {
 
 		private File file;
 		public String id, name;
@@ -169,7 +183,7 @@ public class PorterManager {
 		
 	}
 	
-	public static abstract class ExInPorter {
+	public static abstract class ExImPorter {
 		
 		public abstract String getId();
 		
@@ -183,9 +197,16 @@ public class PorterManager {
 		
 		public abstract boolean isInternal();
 		
+		public boolean isValidFile(File pre){
+			if(pre.isDirectory()) return true;
+			for(String str : this.getExtensions())
+				if(pre.getName().endsWith(str)) return true;
+			return false;
+		}
+		
 	}
 	
-	public static abstract class InternalPorter extends ExInPorter {
+	public static abstract class InternalPorter extends ExImPorter {
 		
 		/** @return new groupcompound based on data in the file */
 		public abstract GroupCompound importModel(File file);
@@ -201,8 +222,18 @@ public class PorterManager {
 	/**
 	 * @return
 	 */
-	public static List<ExInPorter> getPorters(boolean export){
-		return porters.values().stream().filter(pre -> export ? pre.isExporter() : pre.isImporter()).collect(Collectors.<ExInPorter>toList());
+	public static List<ExImPorter> getPorters(boolean export){
+		return porters.values().stream().filter(pre -> export ? pre.isExporter() : pre.isImporter()).collect(Collectors.<ExImPorter>toList());
+	}
+	
+	private static class PorterMap extends TreeMap<String, ExImPorter> {
+		
+		private static final long serialVersionUID = 1L;
+
+		public void add(ExImPorter porter){
+			this.put(porter.getId(), porter);
+		}
+		
 	}
 
 }
