@@ -19,6 +19,7 @@ public class Settings {
 	public static RGB background_color = new RGB(127, 127, 127);
 	static{ background_color.alpha = 0.2f; }
 	public static float[] light0_position = new float[]{ 0, 1, 0, 0 };
+	private static String language = "default";
 	
 	public static boolean fullscreen(){ return fullscreen; }
 
@@ -159,6 +160,7 @@ public class Settings {
 		lighting = JsonUtil.getIfExists(obj, "lighting", lighting);
 		light0_position = obj.has("light0_position") ? JsonUtil.getFloatArray(obj.get("light0_position").getAsJsonArray()) : light0_position;
 		editor_shortcuts = JsonUtil.getIfExists(obj, "editor_shortcuts", editor_shortcuts);
+		language = JsonUtil.getIfExists(obj, "language_code", "default").toLowerCase();//"en_us");
 	}
 
 	public static void save(){
@@ -204,6 +206,7 @@ public class Settings {
 		obj.addProperty("lighting", lighting);
 		obj.add("light0_position", JsonUtil.toJsonArray(light0_position));
 		obj.addProperty("editor_shortcuts", editor_shortcuts);
+		obj.addProperty("language", language);
 		JsonUtil.write(new File("./settings.json"), obj);
 	}
 	
@@ -214,6 +217,10 @@ public class Settings {
 	    int exp = (int) (Math.log(bytes) / Math.log(unit));
 	    String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (si ? "" : "i");
 	    return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
+	}
+
+	public static String getLanguage(){
+		return language;
 	}
 
 }

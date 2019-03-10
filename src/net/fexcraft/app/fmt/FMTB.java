@@ -59,6 +59,7 @@ import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureUpdate;
+import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Time;
@@ -130,7 +131,7 @@ public class FMTB implements FMTGLProcess {
 			System.out.println("SETTINGS FAILED TO LOAD"); System.out.println("Please check the (json) file for errors."); e.printStackTrace();
 		}
 		setupDisplay(); initOpenGL(); ggr = new GGR(this, 0, 4, 4); ggr.rotation.xCoord = 45; FontRenderer.init();
-		PorterManager.load(); HelperCollector.reload(); Display.setResizable(true); UI = new UserInterface(this);
+		PorterManager.load(); HelperCollector.reload(); Display.setResizable(true); Translator.init(); UI = new UserInterface(this);
 		SessionHandler.checkIfLoggedIn(true, true); checkForUpdates(); KeyCompound.init(); KeyCompound.load();
 		//
 		LocalDateTime midnight = LocalDateTime.of(LocalDate.now(ZoneOffset.systemDefault()), LocalTime.MIDNIGHT);
@@ -353,6 +354,7 @@ public class FMTB implements FMTGLProcess {
 				FontRenderer.drawText("test sting test string test 5tr1n6 !@#$%&*()", x, y - 20, 0);
 				FontRenderer.drawText("test sting test string test 5tr1n6 !@#$%&*()", x, y - 40, 1);
 				FontRenderer.drawText("test sting test string test 5tr1n6 !@#$%&*()", x, y - 60, 2);
+				FontRenderer.drawText(Translator.translate("test.string.thing"), x, y, 2);
 			}
 		}.setTexPosSize("icon", 0, 0, 16, 16).setSize(200, 200).setLevel(-50));
 	}

@@ -65,14 +65,14 @@ public class FontRenderer {
             }
         }
         g.dispose();
-        File file = new File("./resources/textures/ui/font" + type + ".png");
-        if(!file.exists()){
+        File file = new File("./resources/textures/font/ascii" + type + ".png");
+        if(!file.exists()){ file.getParentFile().mkdirs();
         	Print.console("Font Type " + type + " Image not found, saving a new one.");
             try{ ImageIO.write(image, "png", file); }
             catch(IOException e){ e.printStackTrace(); }
         }
         TYPE_WIDTH[type] = image.getWidth();
-        TextureManager.loadTextureFromFile("ui/font" + type, file);
+        TextureManager.loadTextureFromFile("font/ascii" + type, file);
 	}
 
 	private static BufferedImage createCharImage(Font font, char c, boolean b){
@@ -166,7 +166,7 @@ public class FontRenderer {
         if(textHeight > FONT_HEIGHT[type]){
             drawY += textHeight - FONT_HEIGHT[type];
         }
-        TextureManager.bindTexture("ui/font" + type);
+        TextureManager.bindTexture("font/ascii" + type);
         for(int i = 0; i < text.length(); i++) {
             char cher = text.charAt(i);
             if(cher == '\n'){ drawY -= FONT_HEIGHT[type]; drawX = x; continue; }
