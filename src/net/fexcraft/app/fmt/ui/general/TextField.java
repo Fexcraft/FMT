@@ -1,15 +1,15 @@
-package net.fexcraft.app.fmt.ui.generic;
+package net.fexcraft.app.fmt.ui.general;
 
 import java.util.ArrayList;
 import java.util.Optional;
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.FontRenderer;
-import net.fexcraft.app.fmt.ui.OldElement;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.lib.common.math.RGB;
 
-public class TextField extends OldElement {
+public class TextField extends Element {
 	
 	private static final ArrayList<TextField> fields = new ArrayList<>();
 	private RGB hovercolor = new RGB(112, 255, 127), inactivecol = new RGB(235, 201, 201), hoversel = new RGB(255, 127, 0);
@@ -19,7 +19,7 @@ public class TextField extends OldElement {
 	private RGB textcolor = new RGB(212, 212, 212);
 	private int width;
 
-	public TextField(OldElement parent, String id, int width, int x, int y){
+	public TextField(Element parent, String id, int width, int x, int y){
 		super(parent, id); fields.add(this);
 		this.width = width; this.height = 26;
 		if(parent == null){ this.x = x; this.y = y; }
@@ -192,7 +192,7 @@ public class TextField extends OldElement {
 		return selected;
 	}
 
-	public OldElement setColor(String string, RGB rgb){
+	public Element setColor(String string, RGB rgb){
 		switch(string){
 			case "hover": this.hovercolor = rgb; break;
 			case "hover_sel": case "hover_selected": this.hoversel = rgb; break;

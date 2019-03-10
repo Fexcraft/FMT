@@ -1,6 +1,6 @@
 package net.fexcraft.app.fmt.ui.editor;
 
-import net.fexcraft.app.fmt.ui.generic.TextField;
+import net.fexcraft.app.fmt.ui.generic.OldTextField;
 import net.fexcraft.lib.common.math.RGB;
 
 public class TexrectAEditor extends Editor {
@@ -12,7 +12,7 @@ public class TexrectAEditor extends Editor {
 			for(int i = 0; i < 4; i++){
 				int k = 70, j = 75; String id = vals[r] + ":" + ((i * 2) + (r % 2 == 1 ? 1 : 0)) + (r % 2 == 0 ? "x" : "y");
 				RGB rgb = r == 2 || r == 3 || r == 6 || r == 7 || r == 10 || r == 11 ? new RGB(204, 97, 91) : new RGB(102, 102, 173);
-				this.elements.put(id, new TextField(this, id, k, 4 + (j * i), 30 + (r * 50)).setAsNumberfield(0, Integer.MAX_VALUE, true).setColor("inactive", rgb).setLevel(-1));
+				this.elements.put(id, new OldTextField(this, id, k, 4 + (j * i), 30 + (r * 50)).setAsNumberfield(0, Integer.MAX_VALUE, true).setColor("inactive", rgb).setLevel(-1));
 			}
 		}
 		this.addMultiplicator(630);

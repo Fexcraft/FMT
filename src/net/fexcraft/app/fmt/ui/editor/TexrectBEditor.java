@@ -1,6 +1,6 @@
 package net.fexcraft.app.fmt.ui.editor;
 
-import net.fexcraft.app.fmt.ui.generic.TextField;
+import net.fexcraft.app.fmt.ui.generic.OldTextField;
 
 public class TexrectBEditor extends Editor {
 
@@ -11,7 +11,7 @@ public class TexrectBEditor extends Editor {
 		for(int r = 0; r < vals.length; r++){
 			for(int i = 0; i < 4; i++){
 				int k = 70, j = 75; String id = vals[r] + (i < 2 ? "s" : "e") + (i % 2 == 0 ? "x" : "y"); 
-				this.elements.put(id, new TextField(this, id, k, 4 + (j * i), 30 + (r * 50)).setAsNumberfield(0, Integer.MAX_VALUE, true).setLevel(-1));
+				this.elements.put(id, new OldTextField(this, id, k, 4 + (j * i), 30 + (r * 50)).setAsNumberfield(0, Integer.MAX_VALUE, true).setLevel(-1));
 			}
 		}
 		this.addMultiplicator(330);

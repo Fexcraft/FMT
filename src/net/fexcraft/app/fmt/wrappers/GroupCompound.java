@@ -14,8 +14,9 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.OldElement;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
-import net.fexcraft.app.fmt.ui.generic.DialogBox;
-import net.fexcraft.app.fmt.ui.generic.TextField;
+import net.fexcraft.app.fmt.ui.general.DialogBox;
+import net.fexcraft.app.fmt.ui.general.TextField;
+import net.fexcraft.app.fmt.ui.generic.OldTextField;
 import net.fexcraft.app.fmt.utils.RayCoastAway;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
@@ -246,7 +247,7 @@ public class GroupCompound {
 	public void updateFields(){
 		try{
 			if(FMTB.get() == null || FMTB.get().UI == null || !FMTB.get().UI.hasElement("general_editor")) return; FMTB.get().setTitle(this.name);
-			Editor editor = (Editor)FMTB.get().UI.getElement("general_editor"); PolygonWrapper poly = getFirstSelection();
+			Editor editor = (Editor)FMTB.get().UI.getOldElement("general_editor"); PolygonWrapper poly = getFirstSelection();
 			//ouch, I forgot not keeping a secondary "selection" list doesn't also save which was selected first...
 			if(poly == null){
 				editor.getField("sizex").applyChange(0);
@@ -296,7 +297,7 @@ public class GroupCompound {
 			}
 			editor.getField("multiplicator").applyChange(rate);
 			//
-			editor = (Editor)FMTB.get().UI.getElement("shapebox_editor");
+			editor = (Editor)FMTB.get().UI.getOldElement("shapebox_editor");
 			if(poly == null || !poly.getType().isShapebox()){
 				editor.getField("cor0x").applyChange(0);
 				editor.getField("cor0y").applyChange(0);
@@ -379,7 +380,7 @@ public class GroupCompound {
 			}
 			editor.getField("multiplicator").applyChange(rate);
 			//
-			editor = (Editor)FMTB.get().UI.getElement("cylinder_editor");
+			editor = (Editor)FMTB.get().UI.getOldElement("cylinder_editor");
 			if(poly == null || !poly.getType().isCylinder()){
 				editor.getField("cyl0x").applyChange(0); editor.getField("cyl0y").applyChange(0); editor.getField("cyl0z").applyChange(0);
 				editor.getField("cyl1x").applyChange(0); editor.getField("cyl1y").applyChange(0); editor.getField("cyl1z").applyChange(0);
@@ -402,9 +403,9 @@ public class GroupCompound {
 			}
 			editor.getField("multiplicator").applyChange(rate);
 			//
-			editor = (Editor)FMTB.get().UI.getElement("texrectb_editor");
+			editor = (Editor)FMTB.get().UI.getOldElement("texrectb_editor");
 			if(poly == null || !poly.getType().isTexRectB()){
-				for(OldElement field : editor.getFields()){ ((TextField)field).applyChange(0f); }
+				for(OldElement field : editor.getFields()){ ((OldTextField)field).applyChange(0f); }
 			}
 			else{
 				for(int i = 0; i < 6; i++){
@@ -416,9 +417,9 @@ public class GroupCompound {
 			}
 			editor.getField("multiplicator").applyChange(rate);
 			//
-			editor = (Editor)FMTB.get().UI.getElement("texrecta_editor");
+			editor = (Editor)FMTB.get().UI.getOldElement("texrecta_editor");
 			if(poly == null || !poly.getType().isTexRectA()){
-				for(OldElement field : editor.getFields()){ ((TextField)field).applyChange(0f); }
+				for(OldElement field : editor.getFields()){ ((OldTextField)field).applyChange(0f); }
 			}
 			else{
 				//for(Element field : editor.getFields()){ Print.console(field.id); }
@@ -435,7 +436,7 @@ public class GroupCompound {
 			}
 			editor.getField("multiplicator").applyChange(rate);
 			//
-			editor = (Editor)FMTB.get().UI.getElement("group_editor"); TurboList list = this.getFirstSelectedGroup();
+			editor = (Editor)FMTB.get().UI.getOldElement("group_editor"); TurboList list = this.getFirstSelectedGroup();
 			if(list == null){
 				editor.getField("rgb0").applyChange(0);
 				editor.getField("rgb1").applyChange(0);
@@ -451,7 +452,7 @@ public class GroupCompound {
 			}
 			editor.getField("multiplicator").applyChange(rate);
 			//
-			editor = (Editor)FMTB.get().UI.getElement("model_editor");
+			editor = (Editor)FMTB.get().UI.getOldElement("model_editor");
 			editor.getField("posx").applyChange(pos == null ? 0 : pos.xCoord);
 			editor.getField("posy").applyChange(pos == null ? 0 : pos.yCoord);
 			editor.getField("posz").applyChange(pos == null ? 0 : pos.zCoord);

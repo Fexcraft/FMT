@@ -39,13 +39,13 @@ import net.fexcraft.app.fmt.ui.editor.ShapeboxEditor;
 import net.fexcraft.app.fmt.ui.editor.TexrectAEditor;
 import net.fexcraft.app.fmt.ui.editor.TexrectBEditor;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
+import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
+import net.fexcraft.app.fmt.ui.general.Crossbar;
+import net.fexcraft.app.fmt.ui.general.DialogBox;
+import net.fexcraft.app.fmt.ui.general.FileChooser;
 import net.fexcraft.app.fmt.ui.general.Toolbar;
-import net.fexcraft.app.fmt.ui.generic.ControlsAdjuster;
-import net.fexcraft.app.fmt.ui.generic.Crossbar;
-import net.fexcraft.app.fmt.ui.generic.DialogBox;
-import net.fexcraft.app.fmt.ui.generic.FileChooser;
-import net.fexcraft.app.fmt.ui.generic.TextField;
 import net.fexcraft.app.fmt.ui.generic.OldToolbar;
+import net.fexcraft.app.fmt.ui.generic.OldTextField;
 import net.fexcraft.app.fmt.ui.tree.HelperTree;
 import net.fexcraft.app.fmt.ui.tree.ModelTree;
 import net.fexcraft.app.fmt.utils.Backups;
@@ -75,7 +75,7 @@ import net.fexcraft.lib.tmt.ModelRendererTurbo;
 public class FMTB implements FMTGLProcess {
 	
 	public static final String deftitle = "[FPS:%s] Fexcraft Modelling Toolbox - %s";
-	public static final String version = "1.0.7-test";
+	public static final String version = "1.1.7";
 	//
 	private static String title;
 	private boolean close;
@@ -287,11 +287,11 @@ public class FMTB implements FMTGLProcess {
 	}
 	
 	public static void showDialogbox(String title, String desc, String button0, String button1, Runnable run0, Runnable run1){
-		UserInterface.DIALOGBOX.show(new String[]{ title == null ? "" : title, desc == null ? "" : desc, button0, button1 }, run0, run1);
+		UserInterface.DIALOGBOX.show(title, button0, button1, run0, run1);
 	}
 	
 	public static void showDialogbox(String title, String desc, String button0, String button1, Runnable run0, Runnable run1, int progress, RGB color){
-		UserInterface.DIALOGBOX.show(new String[]{ title == null ? "" : title, desc == null ? "" : desc, button0, button1 }, run0, run1);
+		UserInterface.DIALOGBOX.show(title, button0, button1, run0, run1);
 		UserInterface.DIALOGBOX.progress = progress; UserInterface.DIALOGBOX.progresscolor = color;
 	}
 
@@ -314,9 +314,6 @@ public class FMTB implements FMTGLProcess {
 		ui.getOldElements().add(new ShapeboxEditor());
 		ui.getOldElements().add(new ModelTree());
 		ui.getOldElements().add(new CylinderEditor());
-		ui.getOldElements().add(UserInterface.DIALOGBOX = new DialogBox());
-		ui.getOldElements().add(UserInterface.FILECHOOSER = new FileChooser());
-		ui.getOldElements().add(UserInterface.CONTROLS = new ControlsAdjuster());
 		ui.getOldElements().add(new GroupEditor());
 		ui.getOldElements().add(new HelperTree());
 		ui.getOldElements().add(new PreviewEditor());
@@ -326,7 +323,6 @@ public class FMTB implements FMTGLProcess {
 		ui.getOldElements().add(new TexrectAEditor());
 		Editor.addQuickButtons();
 		//render last
-		ui.getOldElements().add(new Crossbar());
 		ui.getOldElements().add(new OldToolbar());
 		FMTB.MODEL.updateFields();
 		/*ui.getElements().add(new Element(null, "test"){
@@ -344,7 +340,15 @@ public class FMTB implements FMTGLProcess {
 		}.setTexPosSize("icon", 0, 0, 16, 16).setSize(200, 200).setLevel(-50));*/
 		TextureManager.loadTexture("ui/background_dark");
 		TextureManager.loadTexture("ui/background_light");
+		//
+		ui.getElements().add(UserInterface.DIALOGBOX = new DialogBox());
+		ui.getElements().add(UserInterface.FILECHOOSER = new FileChooser());
+		ui.getElements().add(UserInterface.CONTROLS = new ControlsAdjuster());
+		
+		
+		//render last
 		ui.getElements().add(new Toolbar());
+		ui.getElements().add(new Crossbar());
 	}
 
 	@Override
@@ -354,7 +358,7 @@ public class FMTB implements FMTGLProcess {
 
 	@Override
 	public void reset(){
-		UserInterface.DIALOGBOX.reset(); UserInterface.FILECHOOSER.reset(); UserInterface.CONTROLS.reset(); TextField.deselectAll();
+		UserInterface.DIALOGBOX.reset(); UserInterface.FILECHOOSER.reset(); UserInterface.CONTROLS.reset(); OldTextField.deselectAll();
 	}
 
 	private void checkForUpdates(){
@@ -377,7 +381,7 @@ public class FMTB implements FMTGLProcess {
 					}
 				}
 				String newver = obj.get("latest_version").getAsString(); boolean bool = version.equals(newver);
-				UserInterface.DIALOGBOX.show(new String[]{ bool ? "Welcome to FMT!" : "New version available!", bool ? "<version:" + version + ">" : newver + " >> " + version, "ok", bool ? "exit" : "update" }, DialogBox.NOTHING, () -> {
+				UserInterface.DIALOGBOX.show(bool ? "Welcome to FMT!\n<version:" + version + ">" : "New version available!\n" + newver + " >> " + version, "ok", bool ? "exit" : "update", DialogBox.NOTHING, () -> {
 					if(bool){
 						SaveLoad.checkIfShouldSave(true);
 					}

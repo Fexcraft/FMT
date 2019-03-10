@@ -6,17 +6,22 @@ import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.FMTGLProcess;
-import net.fexcraft.app.fmt.ui.generic.ControlsAdjuster;
-import net.fexcraft.app.fmt.ui.generic.DialogBox;
-import net.fexcraft.app.fmt.ui.generic.FileChooser;
-import net.fexcraft.app.fmt.ui.generic.OldMenulist;
-import net.fexcraft.app.fmt.ui.generic.TextField;
+import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
+import net.fexcraft.app.fmt.ui.general.DialogBox;
+import net.fexcraft.app.fmt.ui.general.FileChooser;
+import net.fexcraft.app.fmt.ui.general.HoverMenu;
+import net.fexcraft.app.fmt.ui.generic.OldTextField;
 import net.fexcraft.app.fmt.utils.RayCoastAway;
 import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.Time;
+import net.fexcraft.lib.common.utils.Print;
 
+/**
+ * @author Ferdinand Calo' (FEX___96)
+ *
+ */
 public class UserInterface {
 
 	public static final float XSCALE = 1f, YSCALE = 1f;
@@ -74,7 +79,7 @@ public class UserInterface {
 		}
 	}
 	
-	private OldElement tmelm = new TextField(null, "text", 4, 4, 500){
+	private OldElement tmelm = new OldTextField(null, "text", 4, 4, 500){
 		@Override
 		public void renderSelf(int rw, int rh){
 			this.y = rh - root.getDisplayMode().getHeight() + 4;
@@ -82,7 +87,7 @@ public class UserInterface {
 			super.renderSelf(rw, rh);
 		}
 	};
-	private OldElement logintxt = new TextField(null, "text", 4, 4, 500){
+	private OldElement logintxt = new OldTextField(null, "text", 4, 4, 500){
 		@Override
 		public void renderSelf(int rw, int rh){
 			this.y = rh - root.getDisplayMode().getHeight() + 32;
@@ -115,39 +120,45 @@ public class UserInterface {
 	};
 
 	public boolean isAnyHovered(){
-		return oldelements.stream().filter(pre -> pre.anyHovered()).count() > 0;
+		boolean bool = false;
+		for(Element elm : elements){ if(elm.anyHovered()){ bool = true; break; } }
+		return bool;
 	}
 
 	public void onButtonPress(int i){
-		if(OldMenulist.anyMenuHovered()){
-			for(OldMenulist list : OldMenulist.arrlist){
+		if(HoverMenu.anyMenuHovered()){
+			for(HoverMenu list : HoverMenu.arrlist){
 				if(list.hovered && list.onButtonClick(Mouse.getX(), root.getDisplayMode().getHeight() - Mouse.getY(), i == 0, true)) return;
 			}
 		}
 		else{
-			OldElement eelm = null;
-			for(OldElement elm : oldelements){
-				if(elm.visible && elm.enabled /*&& elm.hovered*/){
+			Element element = null;
+			for(Element elm : elements){
+				if(elm.visible && elm.enabled){
 					if(elm.onButtonClick(Mouse.getX(), root.getDisplayMode().getHeight() - Mouse.getY(), i == 0, elm.hovered)){
 						return;
-					} else eelm = elm;
+					} else element = elm;
 				}
 			}
-			if(i == 0 && (eelm == null ? true : eelm.id.equals("toolbar"))){//TODO mostly obsolete check, but /shrug
+			if(i == 0 && (element == null ? true : element.id.equals("toolbar"))){//TODO mostly obsolete check, but /shrug
 				RayCoastAway.doTest(true, true);
 			}
 		}
 	}
 
 	public boolean onScrollWheel(int wheel){
-		for(OldElement elm : oldelements){
+		for(Element elm : elements){
 			if(elm.visible && elm.enabled){
 				if(elm.onScrollWheel(wheel)) return true;
 			}
 		} return false;
 	}
 
-	public OldElement getElement(String string){
+	public Element getElement(String string){
+		for(Element elm : elements) if(elm.id.equals(string)) return elm; return null;
+	}
+
+	public OldElement getOldElement(String string){
 		for(OldElement elm : oldelements) if(elm.id.equals(string)) return elm; return null;
 	}
 

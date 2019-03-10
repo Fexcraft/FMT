@@ -19,22 +19,29 @@ import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.utils.Print;
 
+/**
+ * 
+ * @author Ferdinand Calo' (FEX___96)
+ *
+ */
 public class FontRenderer {
 	
-	private static int[] FONT_HEIGHT = new int[]{ 0, 0, 0 };
+	private static int[] FONT_HEIGHT = new int[]{ 0, 0, 0, 0 };
 	private static boolean antialiens = true;
 	private static Map<Character, Glyph> italic_glyphs = new HashMap<>();
 	private static Map<Character, Glyph> plain_glyphs = new HashMap<>();
 	private static Map<Character, Glyph> bold_glyphs = new HashMap<>();
-	public static int[] TYPE_WIDTH = new int[]{ 0, 0, 0 };
+	private static Map<Character, Glyph> mono_glyphs = new HashMap<>();
+	public static int[] TYPE_WIDTH = new int[]{ 0, 0, 0, 0 };
 	
 	/** https://github.com/SilverTiger/lwjgl3-tutorial/wiki/Fonts */
 	public static void init(){
-		initGlyphs(0); initGlyphs(1); initGlyphs(2);
+		initGlyphs(0); initGlyphs(1); initGlyphs(2); initGlyphs(3);
 	}
 
 	private static void initGlyphs(int type){
-		Font font = new Font(Font.SANS_SERIF, type == 0 ? Font.PLAIN : type == 1 ? Font.BOLD : Font.ITALIC, 16);
+		Font font = new Font(type == 3 ? Font.MONOSPACED : Font.SANS_SERIF,
+			type == 0 || type == 3 ? Font.PLAIN : type == 1 ? Font.BOLD : Font.ITALIC, 16);
 		//
 		int imageWidth = 0, imageHeight = 0;
 		for(int i = 32; i < 256; i++){
@@ -62,6 +69,7 @@ public class FontRenderer {
             	case 0: plain_glyphs.put(c, ch); break;
             	case 1: bold_glyphs.put(c, ch); break;
             	case 2: italic_glyphs.put(c, ch); break;
+            	case 3: mono_glyphs.put(c, ch); break;
             }
         }
         g.dispose();
@@ -108,6 +116,7 @@ public class FontRenderer {
 
 	public static Glyph getGlyph(int type, char c){
 		switch(type){
+			case 3: return mono_glyphs.get(c);
 			case 2: return italic_glyphs.get(c);
 			case 1: return bold_glyphs.get(c);
 			case 0: return plain_glyphs.get(c);

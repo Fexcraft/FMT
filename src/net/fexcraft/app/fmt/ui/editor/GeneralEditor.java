@@ -3,9 +3,9 @@ package net.fexcraft.app.fmt.ui.editor;
 import java.util.ArrayList;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.ui.generic.Button;
-import net.fexcraft.app.fmt.ui.generic.DialogBox;
-import net.fexcraft.app.fmt.ui.generic.TextField;
+import net.fexcraft.app.fmt.ui.generic.OldTextField;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
@@ -25,10 +25,10 @@ public class GeneralEditor extends Editor {
 				this.elements.put(vals[r] + xyz[i] + "-", new Button(this, vals[r] + xyz[i] + "-", 12, 26, 4 + (j * i), 30 + (r * 50), rgb){
 					@Override
 					protected boolean processButtonClick(int x, int y, boolean left){
-						FMTB.MODEL.updateValue((TextField)this.parent.getElement(vals[rr] + xyz[ii]), this.id); return true;
+						FMTB.MODEL.updateValue((OldTextField)this.parent.getElement(vals[rr] + xyz[ii]), this.id); return true;
 					}
 				}.setText(" < ", true).setTexture("ui/background").setLevel(-1));
-				TextField field = new TextField(this, vals[r] + xyz[i], k, 16 + (j * i), 30 + (r * 50));
+				OldTextField field = new OldTextField(this, vals[r] + xyz[i], k, 16 + (j * i), 30 + (r * 50));
 				if(vals[r].equals("tex")){
 					switch(i){
 						case 0: field.setAsNumberfield(0, 8192, true); break;
@@ -49,7 +49,7 @@ public class GeneralEditor extends Editor {
 				this.elements.put(vals[r] + xyz[i] + "+", new Button(this, vals[r] + xyz[i] + "+", 12, 26, k + 16 + (j * i), 30 + (r * 50), rgb){
 					@Override
 					protected boolean processButtonClick(int x, int y, boolean left){
-						FMTB.MODEL.updateValue((TextField)this.parent.getElement(vals[rr] + xyz[ii]), this.id); return true;
+						FMTB.MODEL.updateValue((OldTextField)this.parent.getElement(vals[rr] + xyz[ii]), this.id); return true;
 					}
 				}.setText(" > ", true).setTexture("ui/background").setLevel(-1));
 			}
@@ -62,7 +62,7 @@ public class GeneralEditor extends Editor {
 			}
 		}.setText(" < ", true).setTexture("ui/background").setLevel(-1));
 		//
-		this.elements.put("group", new TextField(this, "group", 270, 16, 330).setText("null", true).setLevel(-1).setEnabled(false));
+		this.elements.put("group", new OldTextField(this, "group", 270, 16, 330).setText("null", true).setLevel(-1).setEnabled(false));
 		this.elements.put("group+", new Button(this, "group+", 12, 26, 282, 330, rgb){
 			@Override
 			protected boolean processButtonClick(int x, int y, boolean left){
@@ -70,7 +70,7 @@ public class GeneralEditor extends Editor {
 			}
 		}.setText(" > ", true).setTexture("ui/background").setLevel(-1));
 		//
-		this.elements.put("boxname", new TextField(this, "boxname", 294, 4, 280){
+		this.elements.put("boxname", new OldTextField(this, "boxname", 294, 4, 280){
 			@Override
 			public void updateTextField(){
 				if(FMTB.MODEL.getSelected().isEmpty()) return;

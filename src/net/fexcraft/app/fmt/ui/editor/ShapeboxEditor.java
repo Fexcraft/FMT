@@ -3,7 +3,7 @@ package net.fexcraft.app.fmt.ui.editor;
 import org.lwjgl.opengl.GL11;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.generic.Button;
-import net.fexcraft.app.fmt.ui.generic.TextField;
+import net.fexcraft.app.fmt.ui.generic.OldTextField;
 import net.fexcraft.app.fmt.wrappers.ShapeboxWrapper;
 import net.fexcraft.lib.common.math.RGB;
 
@@ -21,15 +21,15 @@ public class ShapeboxEditor extends Editor {
 					this.elements.put(vals[r] + xyz[i] + "-", new Button(this, vals[r] + xyz[i] + "-", 12, 26, 4 + (j * i), 30 + (r * 50), rgb){
 						@Override
 						protected boolean processButtonClick(int x, int y, boolean left){
-							FMTB.MODEL.updateValue((TextField)this.parent.getElement(vals[rr] + xyz[ii]), this.id); return true;
+							FMTB.MODEL.updateValue((OldTextField)this.parent.getElement(vals[rr] + xyz[ii]), this.id); return true;
 						}
 					}.setText(" < ", true).setTexture("ui/background").setLevel(-1));
-					TextField field = new TextField(this, vals[r] + xyz[i], k, 16 + (j * i), 30 + (r * 50)).setAsNumberfield(Integer.MIN_VALUE, Integer.MAX_VALUE, true);
+					OldTextField field = new OldTextField(this, vals[r] + xyz[i], k, 16 + (j * i), 30 + (r * 50)).setAsNumberfield(Integer.MIN_VALUE, Integer.MAX_VALUE, true);
 					this.elements.put(vals[r] + xyz[i], field.setLevel(-1));
 					this.elements.put(vals[r] + xyz[i] + "+", new Button(this, vals[r] + xyz[i] + "+", 12, 26, k + 16 + (j * i), 30 + (r * 50), rgb){
 						@Override
 						protected boolean processButtonClick(int x, int y, boolean left){
-							FMTB.MODEL.updateValue((TextField)this.parent.getElement(vals[rr] + xyz[ii]), this.id); return true;
+							FMTB.MODEL.updateValue((OldTextField)this.parent.getElement(vals[rr] + xyz[ii]), this.id); return true;
 						}
 					}.setText(" > ", true).setTexture("ui/background").setLevel(-1));
 				}

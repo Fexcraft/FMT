@@ -20,13 +20,16 @@ public class Element {
 	public Texture teximg;
 	
 	public Element(Element root, String id){
-		this.root = root; this.visible = true; teximg = TextureManager.getNullTex();
+		this.root = root; this.id = id; this.visible = true; this.enabled = true; teximg = TextureManager.getNullTex();
 	}
 	
 	public Element setPosition(int x, int y){
-		this.x = x; this.y = y; return this;
+		this.x = x; this.y = y; for(int i = 0; i < elements.size(); i++) elements.get(i).realignToRoot(i); return this;
 	}
 	
+	/** To be overridden. **/
+	protected void realignToRoot(int index){}
+
 	public Element setLevel(int z){
 		this.z = z; return this;
 	}
@@ -44,9 +47,17 @@ public class Element {
 	public Element setVisible(boolean bool){
 		this.visible = bool; return this;
 	}
+
+	public boolean isVisible(){
+		return visible;
+	}
 	
 	public Element setEnabled(boolean bool){
 		this.enabled = bool; return this;
+	}
+
+	public boolean isEnabled(){
+		return enabled;
 	}
 	
 	public boolean isSelected(){
@@ -61,11 +72,15 @@ public class Element {
 		return hovered;
 	}
 	
-	/** Set Texture, Position and Size. */
+	/** Set Texture, Position and Size. **/
 	public Element setTexPosSize(String texture, int tx, int ty, int tw, int th){
 		this.texture = texture; this.teximg = TextureManager.getTexture(texture, false);
 		this.tsx = 1f / teximg.getWidth(); this.tsy = 1f / teximg.getHeight();
 		this.tx = tx; this.ty = ty; this.tex_width = tw; this.tex_height = th; return this;
+	}
+
+	public void setTexOnly(String texture){
+		this.texture = texture; this.teximg = TextureManager.getTexture(texture, false);
 	}
 	
 	public List<Element> getElements(){
@@ -90,6 +105,16 @@ public class Element {
 			GL11.glVertex2f(x + w, y + h);
 		GL11.glTexCoord2f(tx, ty + (tex_height * tsy));
 			GL11.glVertex2f(x, y + h);
+        GL11.glEnd();
+	}
+	
+	protected void renderQuad(int x, int y, int width, int height, String texture){
+		TextureManager.bindTexture(texture);
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(0, 0); GL11.glVertex2f(x, y);
+		GL11.glTexCoord2f(1, 0); GL11.glVertex2f(x + width, y);
+		GL11.glTexCoord2f(1, 1); GL11.glVertex2f(x + width, y + height);
+		GL11.glTexCoord2f(0, 1); GL11.glVertex2f(x, y + height);
         GL11.glEnd();
 	}
 	
@@ -121,5 +146,38 @@ public class Element {
 	public void renderSelf(int rw, int rh){
 		this.renderSelfQuad();
 	}
+
+	public boolean onButtonClick(int x, int y, boolean left, boolean hovered){
+		boolean bool = false;
+		for(Element elm : elements){
+			if(elm.visible && elm.enabled){
+				if(bool = elm.onButtonClick(x, y, left, elm.hovered)) break;
+			}
+		}
+		return bool || hovered ? processButtonClick(x, y, left) : false;
+	}
+	
+	/** To be overridden. **/
+	protected boolean processButtonClick(int x, int y, boolean left){
+		return false;
+	}
+
+	public boolean anyHovered(){
+		if(this.isHovered()) return true; boolean bool = false;
+		for(Element elm : elements){ if(elm.anyHovered()){ bool = true; break; } } return bool;
+	}
+
+	public boolean onScrollWheel(int wheel){
+		boolean bool = false;
+		for(Element elm : elements){
+			if(elm.visible && elm.enabled){
+				if(bool = elm.onScrollWheel(wheel)) break;
+			}
+		}
+		return bool || (hovered && processScrollWheel(wheel));
+	}
+	
+	/** To be overridden. **/
+	protected boolean processScrollWheel(int wheel){ return false; }
 
 }

@@ -2,7 +2,7 @@ package net.fexcraft.app.fmt.ui.editor;
 
 import net.fexcraft.app.fmt.ui.OldElement;
 import net.fexcraft.app.fmt.ui.generic.Button;
-import net.fexcraft.app.fmt.ui.generic.TextField;
+import net.fexcraft.app.fmt.ui.generic.OldTextField;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.lib.common.math.RGB;
 
@@ -26,7 +26,7 @@ public class TextureEditor extends Editor {
 			this.elements.put("rgb" + i + "-", new Button(this, "rgb" + i + "-", 12, 26, 4 + (98 * i), 30, rgb){
 				@Override protected boolean processButtonClick(int x, int y, boolean left){ return updateRGB(false, j); }
 			}.setText(" < ", true).setTexture("ui/background").setLevel(-1));
-			this.elements.put("rgb" + i, new TextField(this, "rgb" + i, 70, 16 + (98 * i), 30){
+			this.elements.put("rgb" + i, new OldTextField(this, "rgb" + i, 70, 16 + (98 * i), 30){
 				@Override public void updateNumberField(){ updateRGB(null, j); }
 				@Override protected boolean processScrollWheel(int wheel){ return updateRGB(wheel > 0, j); }
 			}.setAsNumberfield(0, 255, true).setLevel(-1));
@@ -102,7 +102,7 @@ public class TextureEditor extends Editor {
 	}
 	
 	protected boolean updateRGB(Boolean apply, int j){
-		TextField field = (TextField)getElement("rgb" + j);
+		OldTextField field = (OldTextField)getElement("rgb" + j);
 		if(apply != null) field.applyChange(field.tryChange(apply, 8));
 		if(CURRENTCOLOR == null) CURRENTCOLOR = new RGB(RGB.WHITE);
 		byte[] arr = CURRENTCOLOR.toByteArray();

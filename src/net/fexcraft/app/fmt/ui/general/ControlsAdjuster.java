@@ -1,21 +1,22 @@
 /**
  * 
  */
-package net.fexcraft.app.fmt.ui.generic;
+package net.fexcraft.app.fmt.ui.general;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import net.fexcraft.app.fmt.ui.Dialog;
-import net.fexcraft.app.fmt.ui.OldElement;
+import net.fexcraft.app.fmt.ui.Element;
+import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.utils.KeyCompound;
 import net.fexcraft.app.fmt.utils.KeyCompound.KeyFunction;
 import net.fexcraft.app.fmt.utils.TextureManager;
-import net.fexcraft.lib.common.math.RGB;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
  *
  */
-public class ControlsAdjuster extends OldElement implements Dialog {
+public class ControlsAdjuster extends Element implements Dialog {
 
 	public static boolean CATCHING = false;
 	//private Button next, prev;
@@ -45,18 +46,16 @@ public class ControlsAdjuster extends OldElement implements Dialog {
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 		}
 		try{
-			TextureManager.unbind();
 			{
-				/*font.drawString(this.x + 18, this.y + 19, "FMT Controls Settings", Color.black);
-				font.drawString(this.x + 446, this.y + 19, "Pg." + scroll, Color.black);
+				FontRenderer.drawText("FMT Controls Settings", this.x + 18, this.y + 19, 3);
+				FontRenderer.drawText("Pg." + scroll, this.x + 446, this.y + 19, 3);
 				for(int i = 0; i < 8; i++){
 					int j = i + (scroll * 8); if(j >= KeyCompound.keys.size()) continue; //break;
-					font.drawString(this.x + 21, this.y + 51 + (i * 32), (tempkey = KeyCompound.keys.get(j)).name(), Color.black);
+					FontRenderer.drawText((tempkey = KeyCompound.keys.get(j)).name(), this.x + 21, this.y + 51 + (i * 32), 3);
 					String name = Keyboard.getKeyName(tempkey.ID());
-					font.drawString(this.x + 360, this.y + 51 + (i * 32), catched == i ? "[" + name + "]" : name, Color.black);
-				}*///TODO
+					FontRenderer.drawText(catched == i ? "[" + name + "]" : name, this.x + 360, this.y + 51 + (i * 32), 3);
+				}
 			}
-			RGB.glColorReset();
 		}
 		catch(Exception e){
 			e.printStackTrace();

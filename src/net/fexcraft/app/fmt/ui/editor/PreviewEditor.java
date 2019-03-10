@@ -2,7 +2,7 @@ package net.fexcraft.app.fmt.ui.editor;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.generic.Button;
-import net.fexcraft.app.fmt.ui.generic.TextField;
+import net.fexcraft.app.fmt.ui.generic.OldTextField;
 import net.fexcraft.app.fmt.ui.tree.HelperTree;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.lib.common.math.RGB;
@@ -19,7 +19,7 @@ public class PreviewEditor extends Editor {
 			this.elements.put("pos" + xyz[i] + "-", new Button(this, "pos" + xyz[i] + "-", 12, 26, 4 + (98 * i), 30, rgb){
 				@Override protected boolean processButtonClick(int x, int y, boolean left){ return updatePos(j, false); }
 			}.setText(" < ", true).setTexture("ui/background").setLevel(-1));
-			this.elements.put("pos" + xyz[i], new TextField(this, "pos" + xyz[i], 70, 16 + (98 * i), 30){
+			this.elements.put("pos" + xyz[i], new OldTextField(this, "pos" + xyz[i], 70, 16 + (98 * i), 30){
 				@Override public void updateNumberField(){ updatePos(this, j, null); }
 				@Override protected boolean processScrollWheel(int wheel){ return updatePos(j, wheel > 0); }
 			}.setAsNumberfield(0, 255, true).setLevel(-1));
@@ -30,7 +30,7 @@ public class PreviewEditor extends Editor {
 			this.elements.put("rot" + xyz[i] + "-", new Button(this, "rot" + xyz[i] + "-", 12, 26, 4 + (98 * i), 80, rgb){
 				@Override protected boolean processButtonClick(int x, int y, boolean left){ return updateRot(j, false); }
 			}.setText(" < ", true).setTexture("ui/background").setLevel(-1));
-			this.elements.put("rot" + xyz[i], new TextField(this, "rot" + xyz[i], 70, 16 + (98 * i), 80){
+			this.elements.put("rot" + xyz[i], new OldTextField(this, "rot" + xyz[i], 70, 16 + (98 * i), 80){
 				@Override public void updateNumberField(){ updateRot(this, j, null); }
 				@Override protected boolean processScrollWheel(int wheel){ return updateRot(j, wheel > 0); }
 			}.setAsNumberfield(0, 255, true).setLevel(-1));
@@ -41,7 +41,7 @@ public class PreviewEditor extends Editor {
 			this.elements.put("scale" + xyz[i] + "-", new Button(this, "scale" + xyz[i] + "-", 12, 26, 4 + (98 * i), 130, rgb){
 				@Override protected boolean processButtonClick(int x, int y, boolean left){ return updateScale(j, false); }
 			}.setText(" < ", true).setTexture("ui/background").setLevel(-1));
-			this.elements.put("scale" + xyz[i], new TextField(this, "scale" + xyz[i], 70, 16 + (98 * i), 130){
+			this.elements.put("scale" + xyz[i], new OldTextField(this, "scale" + xyz[i], 70, 16 + (98 * i), 130){
 				@Override public void updateNumberField(){ updateRot(this, j, null); }
 				@Override protected boolean processScrollWheel(int wheel){ return updateScale(j, wheel > 0); }
 			}.setAsNumberfield(0, 255, true).setLevel(-1));
@@ -57,7 +57,7 @@ public class PreviewEditor extends Editor {
 		return updateScale(null, axis, positive);
 	}
 	
-	protected boolean updateScale(TextField field, int axis, Boolean positive){
+	protected boolean updateScale(OldTextField field, int axis, Boolean positive){
 		GroupCompound compound = HelperTree.getSelected(); if(compound == null) return true;
 		if(field == null) field = this.getField("scale" + xyz[axis]);
 		if(compound.scale == null) compound.scale = new Vec3f(1, 1, 1);
@@ -75,7 +75,7 @@ public class PreviewEditor extends Editor {
 		return updatePos(null, axis, positive);
 	}
 	
-	protected boolean updatePos(TextField field, int axis, Boolean positive){
+	protected boolean updatePos(OldTextField field, int axis, Boolean positive){
 		GroupCompound compound = HelperTree.getSelected(); if(compound == null) return true;
 		if(field == null) field = this.getField("pos" + xyz[axis]);
 		if(compound.pos == null) compound.pos = new Vec3f();
@@ -93,7 +93,7 @@ public class PreviewEditor extends Editor {
 		return updateRot(null, axis, positive);
 	}
 	
-	protected boolean updateRot(TextField field, int axis, Boolean positive){
+	protected boolean updateRot(OldTextField field, int axis, Boolean positive){
 		GroupCompound compound = HelperTree.getSelected(); if(compound == null) return true;
 		if(field == null) field = this.getField("rot" + xyz[axis]);
 		if(compound.rot == null) compound.rot = new Vec3f();

@@ -3,6 +3,11 @@ package net.fexcraft.app.fmt.ui.general;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.lib.common.math.RGB;
 
+/**
+ * 
+ * @author Ferdinand Calo' (FEX___96)
+ *
+ */
 public class Icon extends Element {
 	
 	protected RGB hovercolor = RGB.GREEN;

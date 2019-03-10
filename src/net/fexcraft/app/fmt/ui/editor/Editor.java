@@ -9,7 +9,7 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.OldElement;
 import net.fexcraft.app.fmt.ui.generic.Button;
 import net.fexcraft.app.fmt.ui.generic.IconButton;
-import net.fexcraft.app.fmt.ui.generic.TextField;
+import net.fexcraft.app.fmt.ui.generic.OldTextField;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.TextureManager;
 
@@ -57,29 +57,29 @@ public abstract class Editor extends OldElement {
 	protected void addMultiplicator(int y){
 		this.elements.put("multiplicator-", new Button(this, "multiplicator-", 12, 26, 4, y){
 			@Override protected boolean processButtonClick(int x, int y, boolean left){
-				((TextField)parent.getElement("multiplicator")).applyChange(FMTB.MODEL.multiply(0.5f)); return true;
+				((OldTextField)parent.getElement("multiplicator")).applyChange(FMTB.MODEL.multiply(0.5f)); return true;
 			}
 		}.setText(" < ", true).setTexture("ui/background").setLevel(-1));
-		this.elements.put("multiplicator", new TextField(this, "multiplicator", 140, 16, y){
+		this.elements.put("multiplicator", new OldTextField(this, "multiplicator", 140, 16, y){
 			@Override protected boolean processScrollWheel(int wheel){
 				applyChange(FMTB.MODEL.multiply(wheel > 0 ? 2.0f : 0.5f)); return true;
 			}
 		}.setAsNumberfield(0.0001f, 1000, true).setLevel(-1));
 		this.elements.put("multiplicator+", new Button(this, "multiplicator+", 12, 26, 152, y){
 			@Override protected boolean processButtonClick(int x, int y, boolean left){
-				((TextField)parent.getElement("multiplicator")).applyChange(FMTB.MODEL.multiply(2.0f)); return true;
+				((OldTextField)parent.getElement("multiplicator")).applyChange(FMTB.MODEL.multiply(2.0f)); return true;
 			}
 		}.setText(" > ", true).setTexture("ui/background").setLevel(-1));
 		this.elements.put("multiplicator_reset", new IconButton(this, "multiplicator_reset", "icons/group_delete", 170, this.y + 3 + y){
 			@Override
 			protected boolean processButtonClick(int x, int y, boolean left){
-				((TextField)parent.getElement("multiplicator")).applyChange(1); FMTB.MODEL.rate = 1f; return true;
+				((OldTextField)parent.getElement("multiplicator")).applyChange(1); FMTB.MODEL.rate = 1f; return true;
 			}
 		});
 	}
 
-	public TextField getField(String string){
-		return (TextField)elements.get(string);
+	public OldTextField getField(String string){
+		return (OldTextField)elements.get(string);
 	}
 
 	public Button getButton(String string){
@@ -93,7 +93,7 @@ public abstract class Editor extends OldElement {
 	protected boolean processScrollWheel(int wheel){ return true; }
 
 	public List<OldElement> getFields(){
-		return elements.values().stream().filter(pre -> pre instanceof TextField).collect(Collectors.toList());
+		return elements.values().stream().filter(pre -> pre instanceof OldTextField).collect(Collectors.toList());
 	}
 
 	/** Run after all editors are initialized. */

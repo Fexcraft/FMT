@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.generic.Button;
-import net.fexcraft.app.fmt.ui.generic.TextField;
+import net.fexcraft.app.fmt.ui.generic.OldTextField;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.math.RGB;
@@ -20,7 +20,7 @@ public class GroupEditor extends Editor {
 			this.elements.put("rgb" + i + "-", new Button(this, "rgb" + i + "-", 12, 26, 4 + (98 * i), 30, rgb){
 				@Override protected boolean processButtonClick(int x, int y, boolean left){ return updateRGB(false, j); }
 			}.setText(" < ", true).setTexture("ui/background").setLevel(-1));
-			this.elements.put("rgb" + i, new TextField(this, "rgb" + i, 70, 16 + (98 * i), 30){
+			this.elements.put("rgb" + i, new OldTextField(this, "rgb" + i, 70, 16 + (98 * i), 30){
 				@Override public void updateNumberField(){ updateRGB(null, j); }
 				@Override protected boolean processScrollWheel(int wheel){ return updateRGB(wheel > 0, j); }
 			}.setAsNumberfield(0, 255, true).setLevel(-1));
@@ -29,7 +29,7 @@ public class GroupEditor extends Editor {
 			}.setText(" > ", true).setTexture("ui/background").setLevel(-1));
 		}
 		//
-		this.elements.put("groupname", new TextField(this, "groupname", 294, 4, 80) {
+		this.elements.put("groupname", new OldTextField(this, "groupname", 294, 4, 80) {
 			@Override
 			public void updateTextField(){
 				if(FMTB.MODEL.getSelected().isEmpty()) return;
@@ -60,7 +60,7 @@ public class GroupEditor extends Editor {
 	}
 	
 	protected boolean updateRGB(Boolean apply, int j){
-		TextField field = (TextField)getElement("rgb" + j);
+		OldTextField field = (OldTextField)getElement("rgb" + j);
 		if(apply != null) field.applyChange(field.tryChange(apply, FMTB.MODEL.rate));
 		TurboList sel = FMTB.MODEL.getFirstSelectedGroup();
 		if(sel != null){

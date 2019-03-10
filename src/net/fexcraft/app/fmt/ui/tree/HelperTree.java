@@ -76,7 +76,7 @@ public class HelperTree extends RightTree {
 					HelperCollector.LOADED.remove(j); return true;
 				}
 				else{
-					SEL = j; Editor editor = (Editor)FMTB.get().UI.getElement("preview_editor");
+					SEL = j; Editor editor = (Editor)FMTB.get().UI.getOldElement("preview_editor");
 					GroupCompound model = getSelected();
 					if(model == null){
 						editor.getField("posx").applyChange(0);

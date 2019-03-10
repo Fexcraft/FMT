@@ -2,7 +2,7 @@ package net.fexcraft.app.fmt.ui.editor;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.generic.Button;
-import net.fexcraft.app.fmt.ui.generic.TextField;
+import net.fexcraft.app.fmt.ui.generic.OldTextField;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureUpdate;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
@@ -22,7 +22,7 @@ public class ModelEditor extends Editor {
 			this.elements.put("pos" + xyz[i] + "-", new Button(this, "pos" + xyz[i] + "-", 12, 26, 4 + (98 * i), 30, rgb){
 				@Override protected boolean processButtonClick(int x, int y, boolean left){ return updatePos(j, false); }
 			}.setText(" < ", true).setTexture("ui/background").setLevel(-1));
-			this.elements.put("pos" + xyz[i], new TextField(this, "pos" + xyz[i], 70, 16 + (98 * i), 30){
+			this.elements.put("pos" + xyz[i], new OldTextField(this, "pos" + xyz[i], 70, 16 + (98 * i), 30){
 				@Override public void updateNumberField(){ updatePos(this, j, null); }
 				@Override protected boolean processScrollWheel(int wheel){ return updatePos(j, wheel > 0); }
 			}.setAsNumberfield(0, 255, true).setLevel(-1));
@@ -33,7 +33,7 @@ public class ModelEditor extends Editor {
 			this.elements.put("rot" + xyz[i] + "-", new Button(this, "rot" + xyz[i] + "-", 12, 26, 4 + (98 * i), 80, rgb){
 				@Override protected boolean processButtonClick(int x, int y, boolean left){ return updateRot(j, false); }
 			}.setText(" < ", true).setTexture("ui/background").setLevel(-1));
-			this.elements.put("rot" + xyz[i], new TextField(this, "rot" + xyz[i], 70, 16 + (98 * i), 80){
+			this.elements.put("rot" + xyz[i], new OldTextField(this, "rot" + xyz[i], 70, 16 + (98 * i), 80){
 				@Override public void updateNumberField(){ updateRot(this, j, null); }
 				@Override protected boolean processScrollWheel(int wheel){ return updateRot(j, wheel > 0); }
 			}.setAsNumberfield(8, 4096, true).setLevel(-1));
@@ -44,7 +44,7 @@ public class ModelEditor extends Editor {
 			this.elements.put("tex" + xyz[i] + "-", new Button(this, "tex" + xyz[i] + "-", 12, 26, 4 + (98 * i), 130, rgb){
 				@Override protected boolean processButtonClick(int x, int y, boolean left){ return updateTexSize(j, false); }
 			}.setText(" < ", true).setTexture("ui/background").setLevel(-1).setEnabled(i != 2));
-			this.elements.put("tex" + xyz[i], new TextField(this, "tex" + xyz[i], 70, 16 + (98 * i), 130){
+			this.elements.put("tex" + xyz[i], new OldTextField(this, "tex" + xyz[i], 70, 16 + (98 * i), 130){
 				@Override public void updateNumberField(){ updateRot(this, j, null); }
 				@Override protected boolean processScrollWheel(int wheel){ return updateTexSize(j, wheel > 0); }
 			}.setAsNumberfield(8, 4096, true).setLevel(-1).setEnabled(i != 2));
@@ -53,7 +53,7 @@ public class ModelEditor extends Editor {
 			}.setText(" > ", true).setTexture("ui/background").setLevel(-1).setEnabled(i != 2));
 		}
 		//
-		this.elements.put("modelname", new TextField(this, "modelname", 294, 4, 180) {
+		this.elements.put("modelname", new OldTextField(this, "modelname", 294, 4, 180) {
 			@Override public void updateTextField(){ if(FMTB.MODEL == null) return; FMTB.get().setTitle(FMTB.MODEL.name = this.getTextValue()); }
 		}.setText("null", true).setLevel(-1));
 		//
@@ -64,7 +64,7 @@ public class ModelEditor extends Editor {
 		return updateTexSize(null, axis, positive);
 	}
 	
-	protected boolean updateTexSize(TextField field, int axis, Boolean positive){
+	protected boolean updateTexSize(OldTextField field, int axis, Boolean positive){
 		if(FMTB.MODEL == null) return true; if(field == null) field = this.getField("tex" + xyz[axis]);
 		int index = getIndex(field.getIntegerValue());
 		if(positive && index < (accepted.length - 1)) field.applyChange(accepted[index + 1]);
@@ -85,7 +85,7 @@ public class ModelEditor extends Editor {
 		return updatePos(null, axis, positive);
 	}
 	
-	protected boolean updatePos(TextField field, int axis, Boolean positive){
+	protected boolean updatePos(OldTextField field, int axis, Boolean positive){
 		if(FMTB.MODEL == null) return true;
 		if(field == null) field = this.getField("pos" + xyz[axis]);
 		if(FMTB.MODEL.pos == null) FMTB.MODEL.pos = new Vec3f();
@@ -103,7 +103,7 @@ public class ModelEditor extends Editor {
 		return updateRot(null, axis, positive);
 	}
 	
-	protected boolean updateRot(TextField field, int axis, Boolean positive){
+	protected boolean updateRot(OldTextField field, int axis, Boolean positive){
 		GroupCompound compound = FMTB.MODEL; if(compound == null) return true;
 		if(field == null) field = this.getField("rot" + xyz[axis]);
 		if(compound.rot == null) compound.rot = new Vec3f();
