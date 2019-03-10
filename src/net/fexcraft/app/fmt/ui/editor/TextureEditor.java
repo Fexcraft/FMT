@@ -1,6 +1,6 @@
 package net.fexcraft.app.fmt.ui.editor;
 
-import net.fexcraft.app.fmt.ui.Element;
+import net.fexcraft.app.fmt.ui.OldElement;
 import net.fexcraft.app.fmt.ui.generic.Button;
 import net.fexcraft.app.fmt.ui.generic.TextField;
 import net.fexcraft.app.fmt.utils.TextureManager;
@@ -123,9 +123,9 @@ public class TextureEditor extends Editor {
 		RGB.glColorReset();*///TODO
 	}
 	
-	public static class LargePallette extends Element {
+	public static class LargePallette extends OldElement {
 
-		public LargePallette(Element parent, int x, int y){
+		public LargePallette(OldElement parent, int x, int y){
 			super(parent, "large_color_palette"); this.height = width = 294;
 			this.x = parent.x + x; this.y = parent.y + y; z = -1;
 		}
@@ -152,9 +152,9 @@ public class TextureEditor extends Editor {
 		
 	}
 	
-	public static class HorizontalPallette extends Element {
+	public static class HorizontalPallette extends OldElement {
 
-		public HorizontalPallette(Element parent, int x, int y){
+		public HorizontalPallette(OldElement parent, int x, int y){
 			super(parent, "horizontal_color_palette"); this.height = 40; this.width = 294;
 			this.x = parent.x + x; this.y = parent.y + y; z = -1;
 		}

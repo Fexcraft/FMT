@@ -3,13 +3,13 @@ package net.fexcraft.app.fmt.ui.tree;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import net.fexcraft.app.fmt.ui.Element;
+import net.fexcraft.app.fmt.ui.OldElement;
 import net.fexcraft.lib.common.math.RGB;
 
-public class RightTree extends Element {
+public class RightTree extends OldElement {
 	
 	private static final ArrayList<RightTree> trees = new ArrayList<RightTree>();
-	protected int scroll;
+	protected int scroll, size;
 
 	public RightTree(String id){
 		super(null, id); this.width = 308; z = -50;

@@ -19,10 +19,13 @@ import net.fexcraft.lib.common.math.Time;
 
 public class UserInterface {
 
+	public static final float XSCALE = 1f, YSCALE = 1f;
+	public static Element SELECTED = null;
 	public static DialogBox DIALOGBOX;
 	public static FileChooser FILECHOOSER;
 	public static ControlsAdjuster CONTROLS;
 	//
+	private ArrayList<OldElement> oldelements = new ArrayList<>();
 	private ArrayList<Element> elements = new ArrayList<>();
 	private FMTGLProcess root;
 
@@ -47,12 +50,15 @@ public class UserInterface {
 		}
 		//
 		GL11.glLoadIdentity();
+		GL11.glDepthFunc(GL11.GL_ALWAYS);
 		if(bool){
 			tmelm.render(width, height); logintxt.render(width, height);
 		}
 		else{
+			for(OldElement elm : oldelements) elm.render(width, height);
 			for(Element elm : elements) elm.render(width, height);
 		}
+		GL11.glDepthFunc(GL11.GL_LESS);
 		//
 		{
 	        GL11.glMatrixMode(GL11.GL_PROJECTION);
@@ -68,7 +74,7 @@ public class UserInterface {
 		}
 	}
 	
-	private Element tmelm = new TextField(null, "text", 4, 4, 500){
+	private OldElement tmelm = new TextField(null, "text", 4, 4, 500){
 		@Override
 		public void renderSelf(int rw, int rh){
 			this.y = rh - root.getDisplayMode().getHeight() + 4;
@@ -76,7 +82,7 @@ public class UserInterface {
 			super.renderSelf(rw, rh);
 		}
 	};
-	private Element logintxt = new TextField(null, "text", 4, 4, 500){
+	private OldElement logintxt = new TextField(null, "text", 4, 4, 500){
 		@Override
 		public void renderSelf(int rw, int rh){
 			this.y = rh - root.getDisplayMode().getHeight() + 32;
@@ -109,7 +115,7 @@ public class UserInterface {
 	};
 
 	public boolean isAnyHovered(){
-		return elements.stream().filter(pre -> pre.anyHovered()).count() > 0;
+		return oldelements.stream().filter(pre -> pre.anyHovered()).count() > 0;
 	}
 
 	public void onButtonPress(int i){
@@ -119,8 +125,8 @@ public class UserInterface {
 			}
 		}
 		else{
-			Element eelm = null;
-			for(Element elm : elements){
+			OldElement eelm = null;
+			for(OldElement elm : oldelements){
 				if(elm.visible && elm.enabled /*&& elm.hovered*/){
 					if(elm.onButtonClick(Mouse.getX(), root.getDisplayMode().getHeight() - Mouse.getY(), i == 0, elm.hovered)){
 						return;
@@ -134,20 +140,22 @@ public class UserInterface {
 	}
 
 	public boolean onScrollWheel(int wheel){
-		for(Element elm : elements){
+		for(OldElement elm : oldelements){
 			if(elm.visible && elm.enabled){
 				if(elm.onScrollWheel(wheel)) return true;
 			}
 		} return false;
 	}
 
-	public Element getElement(String string){
-		for(Element elm : elements) if(elm.id.equals(string)) return elm; return null;
+	public OldElement getElement(String string){
+		for(OldElement elm : oldelements) if(elm.id.equals(string)) return elm; return null;
 	}
 
 	public boolean hasElement(String string){
 		return getElement(string) != null;
 	}
+	
+	public ArrayList<OldElement> getOldElements(){ return oldelements; }
 	
 	public ArrayList<Element> getElements(){ return elements; }
 	

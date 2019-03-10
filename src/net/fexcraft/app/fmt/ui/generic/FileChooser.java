@@ -12,7 +12,7 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.Dialog;
-import net.fexcraft.app.fmt.ui.Element;
+import net.fexcraft.app.fmt.ui.OldElement;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.utils.Backups;
 import net.fexcraft.app.fmt.utils.SaveLoad;
@@ -25,7 +25,7 @@ import net.fexcraft.lib.common.utils.Print;
  * @author Ferdinand Calo' (FEX___96)
  *
  */
-public class FileChooser extends Element implements Dialog {
+public class FileChooser extends OldElement implements Dialog {
 
 	public static final AfterTask NOTHING = new AfterTask(){ @Override public void run(){ Print.console(file); return; }};
 	private Button up, down, desktop, parent, reset, broot, eximp, eximm;

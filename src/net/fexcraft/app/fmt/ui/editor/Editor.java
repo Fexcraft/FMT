@@ -6,14 +6,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.Element;
+import net.fexcraft.app.fmt.ui.OldElement;
 import net.fexcraft.app.fmt.ui.generic.Button;
 import net.fexcraft.app.fmt.ui.generic.IconButton;
 import net.fexcraft.app.fmt.ui.generic.TextField;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.TextureManager;
 
-public abstract class Editor extends Element {
+public abstract class Editor extends OldElement {
 	
 	private static final ArrayList<Editor> editors = new ArrayList<Editor>();
 	public static final String[] xyz = new String[]{ "x", "y", "z" };
@@ -92,7 +92,7 @@ public abstract class Editor extends Element {
 	
 	protected boolean processScrollWheel(int wheel){ return true; }
 
-	public List<Element> getFields(){
+	public List<OldElement> getFields(){
 		return elements.values().stream().filter(pre -> pre instanceof TextField).collect(Collectors.toList());
 	}
 
@@ -126,7 +126,7 @@ public abstract class Editor extends Element {
 	public static void toggleQuickButtons(){
 		Settings.toggleEditorShortcuts();
 		for(Editor editor : editors){
-			for(Element elm : editor.elements.values()){
+			for(OldElement elm : editor.elements.values()){
 				if(elm instanceof IconButton && elm.id.startsWith("open_")){
 					elm.visible = Settings.editorShortcuts();
 				}

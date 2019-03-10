@@ -5,7 +5,7 @@ package net.fexcraft.app.fmt.ui.generic;
 
 import org.lwjgl.opengl.GL11;
 import net.fexcraft.app.fmt.ui.Dialog;
-import net.fexcraft.app.fmt.ui.Element;
+import net.fexcraft.app.fmt.ui.OldElement;
 import net.fexcraft.app.fmt.utils.KeyCompound;
 import net.fexcraft.app.fmt.utils.KeyCompound.KeyFunction;
 import net.fexcraft.app.fmt.utils.TextureManager;
@@ -15,7 +15,7 @@ import net.fexcraft.lib.common.math.RGB;
  * @author Ferdinand Calo' (FEX___96)
  *
  */
-public class ControlsAdjuster extends Element implements Dialog {
+public class ControlsAdjuster extends OldElement implements Dialog {
 
 	public static boolean CATCHING = false;
 	//private Button next, prev;

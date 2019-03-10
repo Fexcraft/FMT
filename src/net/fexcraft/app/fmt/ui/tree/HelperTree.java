@@ -48,7 +48,7 @@ public class HelperTree extends RightTree {
 					GL11.glTranslatef(0, 0, -1); pass += 26;
 				}
 			}
-		}
+		} this.size = pass / 26;
 		GL11.glTranslatef(0, 0, -10);
 	}
 

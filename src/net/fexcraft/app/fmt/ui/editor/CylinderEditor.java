@@ -2,7 +2,6 @@ package net.fexcraft.app.fmt.ui.editor;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.FontRenderer;
-import net.fexcraft.app.fmt.ui.FontRenderer.Text;
 import net.fexcraft.app.fmt.ui.generic.Button;
 import net.fexcraft.app.fmt.ui.generic.TextField;
 import net.fexcraft.app.fmt.utils.TextureManager;
@@ -56,20 +55,14 @@ public class CylinderEditor extends Editor {
 		this.addMultiplicator(230);
 	}
 	
-	private Text RLR2 = new Text("Radius / Length / R2", RGB.GREEN);
-	private Text SDSL = new Text("Segments / Direction / SL", RGB.BLUE);
-	private Text BSTS = new Text("Base Scale / Top Scale", RGB.RED);
-	private Text TOFF = new Text("Top Offset (x/y/z)", RGB.BLACK);
-	private Text MULTI = new Text("Multiplicator/Rate", RGB.BLACK);
-	
 	@Override
 	public void renderSelf(int rw, int rh){
 		super.renderSelf(rw, rh); TextureManager.unbind();
-		FontRenderer.render(4, 40, RLR2);
-		FontRenderer.render(4, 90, SDSL);
-		FontRenderer.render(4, 140, BSTS);
-		FontRenderer.render(4, 190, TOFF);
-		FontRenderer.render(4, 240, MULTI);
+		FontRenderer.drawText("Radius / Length / R2", 4, 40, 1);
+		FontRenderer.drawText("Segments / Direction / SL", 4, 90, 1);
+		FontRenderer.drawText("Base Scale / Top Scale", 4, 140, 1);
+		FontRenderer.drawText("Top Offset (x/y/z)", 4, 190, 1);
+		FontRenderer.drawText("Multiplicator/Rate", 4, 240, 1);
 		RGB.glColorReset();
 	}
 

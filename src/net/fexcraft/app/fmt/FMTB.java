@@ -27,6 +27,7 @@ import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.porters.PorterManager;
+import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.editor.CylinderEditor;
@@ -128,10 +129,9 @@ public class FMTB implements FMTGLProcess {
 		try{ Settings.load(); } catch(Throwable e){
 			System.out.println("SETTINGS FAILED TO LOAD"); System.out.println("Please check the (json) file for errors."); e.printStackTrace();
 		}
-		setupDisplay(); initOpenGL(); ggr = new GGR(this, 0, 4, 4); ggr.rotation.xCoord = 45;
+		setupDisplay(); initOpenGL(); ggr = new GGR(this, 0, 4, 4); ggr.rotation.xCoord = 45; FontRenderer.init();
 		PorterManager.load(); HelperCollector.reload(); Display.setResizable(true); UI = new UserInterface(this);
 		SessionHandler.checkIfLoggedIn(true, true); checkForUpdates(); KeyCompound.init(); KeyCompound.load();
-		FontRenderer.init();
 		//
 		LocalDateTime midnight = LocalDateTime.of(LocalDate.now(ZoneOffset.systemDefault()), LocalTime.MIDNIGHT);
 		long mid = midnight.toInstant(ZoneOffset.UTC).toEpochMilli(); long date = Time.getDate(); while((mid += Time.MIN_MS * 5) < date);
@@ -307,41 +307,54 @@ public class FMTB implements FMTGLProcess {
 		TextureManager.loadTexture("icons/group_visible");
 		TextureManager.loadTexture("icons/group_edit");
 		TextureManager.loadTexture("icons/group_minimize");
-		//ui.getElements().add(new Crossbar());
-		//ui.getElements().add(new Toolbar());
-		ui.getElements().add(new GeneralEditor());
-		ui.getElements().add(new ShapeboxEditor());
-		ui.getElements().add(new ModelTree());
-		ui.getElements().add(new CylinderEditor());
-		ui.getElements().add(UserInterface.DIALOGBOX = new DialogBox());
-		ui.getElements().add(UserInterface.FILECHOOSER = new FileChooser());
-		ui.getElements().add(UserInterface.CONTROLS = new ControlsAdjuster());
-		ui.getElements().add(new GroupEditor());
-		ui.getElements().add(new HelperTree());
-		ui.getElements().add(new PreviewEditor());
-		ui.getElements().add(new ModelEditor());
-		ui.getElements().add(new TextureEditor());
-		ui.getElements().add(new TexrectBEditor());
-		ui.getElements().add(new TexrectAEditor());
+		//ui.getOldElements().add(new Crossbar());
+		//ui.getOldElements().add(new Toolbar());
+		ui.getOldElements().add(new GeneralEditor());
+		ui.getOldElements().add(new ShapeboxEditor());
+		ui.getOldElements().add(new ModelTree());
+		ui.getOldElements().add(new CylinderEditor());
+		ui.getOldElements().add(UserInterface.DIALOGBOX = new DialogBox());
+		ui.getOldElements().add(UserInterface.FILECHOOSER = new FileChooser());
+		ui.getOldElements().add(UserInterface.CONTROLS = new ControlsAdjuster());
+		ui.getOldElements().add(new GroupEditor());
+		ui.getOldElements().add(new HelperTree());
+		ui.getOldElements().add(new PreviewEditor());
+		ui.getOldElements().add(new ModelEditor());
+		ui.getOldElements().add(new TextureEditor());
+		ui.getOldElements().add(new TexrectBEditor());
+		ui.getOldElements().add(new TexrectAEditor());
 		Editor.addQuickButtons();
 		//render last
-		ui.getElements().add(new Crossbar());
-		ui.getElements().add(new Toolbar());
+		ui.getOldElements().add(new Crossbar());
+		ui.getOldElements().add(new Toolbar());
 		FMTB.MODEL.updateFields();
 		
-		/*ui.getElements().add(new Element(null, "fontest"){
-			private SIGN[] array;
+		/*ui.getOldElements().add(new Element(null, "fontest"){
+			private Text text = new Text("Some Test Text !@#$%^", RGB.WHITE);
+			private Text text2 = new Text("ABCDEFGH 0123456789", RGB.BLACK);
 			@Override
 			public void renderSelf(int rw, int rh){
 				this.renderQuad(x = (rw / 2) - (400 / 2), y = (rh / 2) - (200 / 2), 400, 200, "ui/dialogbox");
-				if(array == null) array = new SIGN[]{ SIGN.UP, SIGN.DW, SIGN.DOLLAR, SIGN.SEMICOLON, SIGN.SPACE, SIGN.UNKNOWN };
-				FontRenderer.render(x + 30, y + 30, array);
+				FontRenderer.render(x + 30, y + 30, text);
+				FontRenderer.render(x + 30, y + 60, text2);
 			}
 			@Override
 			protected boolean processButtonClick(int x, int y, boolean left){
 				return false;
 			}
 		});*/
+		ui.getElements().add(new Element(null, "test"){
+			@Override
+			public void renderSelf(int rw, int rh){
+				//if(this.isHovered()) Print.console("hovered");
+				this.setPosition(x = (rw / 2) - (200 / 2), y = (rh / 2) - (200 / 2));
+				//this.setOffset(Time.getSecond(), -Time.getSecond());
+				//this.renderSelfQuad();
+				FontRenderer.drawText("test sting test string test 5tr1n6 !@#$%&*()", x, y - 20, 0);
+				FontRenderer.drawText("test sting test string test 5tr1n6 !@#$%&*()", x, y - 40, 1);
+				FontRenderer.drawText("test sting test string test 5tr1n6 !@#$%&*()", x, y - 60, 2);
+			}
+		}.setTexPosSize("icon", 0, 0, 16, 16).setSize(200, 200).setLevel(-50));
 	}
 
 	@Override

@@ -6,7 +6,7 @@ import org.lwjgl.input.Mouse;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager;
-import net.fexcraft.app.fmt.ui.Element;
+import net.fexcraft.app.fmt.ui.OldElement;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.generic.FileChooser.AfterTask;
@@ -32,7 +32,7 @@ import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.utils.Print;
 
-public class Toolbar extends Element {
+public class Toolbar extends OldElement {
 	
 	private RGB subhover = new RGB(218, 232, 104);
 	

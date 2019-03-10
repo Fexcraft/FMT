@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.Element;
+import net.fexcraft.app.fmt.ui.OldElement;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.generic.DialogBox;
@@ -404,7 +404,7 @@ public class GroupCompound {
 			//
 			editor = (Editor)FMTB.get().UI.getElement("texrectb_editor");
 			if(poly == null || !poly.getType().isTexRectB()){
-				for(Element field : editor.getFields()){ ((TextField)field).applyChange(0f); }
+				for(OldElement field : editor.getFields()){ ((TextField)field).applyChange(0f); }
 			}
 			else{
 				for(int i = 0; i < 6; i++){
@@ -418,7 +418,7 @@ public class GroupCompound {
 			//
 			editor = (Editor)FMTB.get().UI.getElement("texrecta_editor");
 			if(poly == null || !poly.getType().isTexRectA()){
-				for(Element field : editor.getFields()){ ((TextField)field).applyChange(0f); }
+				for(OldElement field : editor.getFields()){ ((TextField)field).applyChange(0f); }
 			}
 			else{
 				//for(Element field : editor.getFields()){ Print.console(field.id); }

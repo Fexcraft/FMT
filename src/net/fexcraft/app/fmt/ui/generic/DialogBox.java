@@ -8,7 +8,8 @@ import java.net.URISyntaxException;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.Dialog;
-import net.fexcraft.app.fmt.ui.Element;
+import net.fexcraft.app.fmt.ui.FontRenderer;
+import net.fexcraft.app.fmt.ui.OldElement;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.lib.common.math.RGB;
@@ -17,7 +18,7 @@ import net.fexcraft.lib.common.math.RGB;
  * @author Ferdinand Calo' (FEX___96)
  *
  */
-public class DialogBox extends Element implements Dialog{
+public class DialogBox extends OldElement implements Dialog{
 
 	public static final Runnable NOTHING = () -> UserInterface.DIALOGBOX.reset();
 	private Button button0, button1;
@@ -42,12 +43,8 @@ public class DialogBox extends Element implements Dialog{
 	public void renderSelf(int rw, int rh) {
 		this.renderQuad(x = (rw / 2) - (width / 2), y = (rh / 2) - (height / 2), width, height, "ui/dialogbox");
 		button0.x = x + 20; button0.y = y + 80; button1.x = x + 136; button1.y = y + 80;
-		{
-			TextureManager.unbind();
-			/*font.drawString(this.x +  20, this.y + 20, text[0], Color.black);
-			font.drawString(this.x +  20, this.y + 40, text[1], Color.black);*///TODO
-			RGB.glColorReset();
-		}
+		FontRenderer.drawText(text[0], this.x +  20, this.y + 23);
+		FontRenderer.drawText(text[1], this.x +  20, this.y + 52);
 		if(progress >= 0){
 			this.renderQuad(x + 20, y + 64, 216, 12, "white");
 			if(progress > 0){

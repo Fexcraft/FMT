@@ -1,10 +1,10 @@
 package net.fexcraft.app.fmt.ui.generic;
 
 import net.fexcraft.app.fmt.ui.Dialog;
-import net.fexcraft.app.fmt.ui.Element;
+import net.fexcraft.app.fmt.ui.OldElement;
 import net.fexcraft.app.fmt.utils.TextureManager;
 
-public class Crossbar extends Element {
+public class Crossbar extends OldElement {
 	
 	public Crossbar(){
 		super(null, "crossbar"); this.z = 100;

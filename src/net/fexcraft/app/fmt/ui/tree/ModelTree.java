@@ -2,15 +2,16 @@ package net.fexcraft.app.fmt.ui.tree;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
+
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.FontRenderer;
+import net.fexcraft.app.fmt.ui.OldElement;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.generic.DialogBox;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.Settings;
-import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
-import net.fexcraft.lib.common.math.RGB;
 
 public class ModelTree extends RightTree {
 	
@@ -18,8 +19,44 @@ public class ModelTree extends RightTree {
 	private PolygonWrapper poly;
 	private int trheight;
 	private long count;
+	//private LetterButton up, dw; private Element scrollbar;
 
-	public ModelTree(){ super("modeltree"); }
+	public ModelTree(){
+		super("modeltree");
+		/*this.elements.put("up_button", up = new LetterButton(parent, "up", "ui/background", SIGN.UP, 0, 0){
+			@Override protected boolean processButtonClick(int x, int y, boolean left){ modifyScroll(-10); return true; }
+		});
+		this.elements.put("dw_button", dw = new LetterButton(parent, "dw", "ui/background", SIGN.DW, 0, 0){
+			@Override protected boolean processButtonClick(int x, int y, boolean left){ modifyScroll(10); return true; }
+		});
+		this.elements.put("scrollbar", scrollbar = new Scrollbar(this));
+		this.elements.values().forEach(val -> val.z = -50);*/
+	}
+	
+	public static class Scrollbar extends OldElement {
+		
+		private ModelTree root;
+
+		public Scrollbar(ModelTree root){
+			super(root, "scrollbar"); this.root = root;
+		}
+		
+		@Override
+		public void renderSelf(int rw, int rh){
+			this.renderQuad(x, y, 20, height, "ui/button_bg");
+			float percent = (root.height * 1f) / root.size; if(percent >= 100) return;
+			float percent2 = (root.scroll * 1f) / root.size; if(percent >= 100) return;
+			//System.out.println(percent + ", " + height * percent);
+			this.renderQuad(x + 1, y + (int)(percent2 * 100), 18, (int)(height * percent), "ui/background");
+		}
+
+		@Override
+		protected boolean processButtonClick(int x, int y, boolean left){
+			//TODO
+			return true;
+		}
+		
+	}
 
 	@Override
 	public void renderSelf(int rw, int rh){
@@ -27,18 +64,22 @@ public class ModelTree extends RightTree {
 		this.renderQuad(x, y, width, height = (rh - y + 2), "ui/button_bg");
 		this.renderQuad(x - 2, y, 2, height = (rh - y + 4), "ui/background");
 		//
+		//up.x = x - 20; dw.x = x - 20; up.y = 30; dw.y = rh - 20;
+		//scrollbar.x = up.x; scrollbar.y = 50; scrollbar.height = height - 44;
+		//
 		trlist = (TurboList[])FMTB.MODEL.getCompound().values().toArray(new TurboList[]{});
 		FMTB.MODEL.getCompound().values().forEach(turbo -> trheight += turbo.tempheight = 26 + (turbo.size() * 26));
 		GL11.glTranslatef(0, 0,  10); int pass = 0;
 		if(Settings.polygonCount()){
-			this.renderQuad(x + 4, y + 4 + -scroll + (pass), width - 8, 24, "ui/background"); TextureManager.unbind();
-			/*//TODOfont.drawString(x + 8, y + 6 + -scroll + (pass), "Polygons: " + count, Color.white);*/ RGB.glColorReset(); pass += 26; count = 0;
+			this.renderQuad(x + 4, y + 4 + -scroll + (pass), width - 8, 24, "ui/background");
+			FontRenderer.drawText("Polygons: " + count, x + 8, y + 8 + -scroll + (pass), 1);
+			pass += 26; count = 0;
 		}
 		for(int i = 0; i < trlist.length; i++){
 			TurboList list = trlist[i]; count += list.size();
 			color(list.visible, list.selected).glColorApply();
-			this.renderQuad(x + 4, y + 4 + -scroll + (pass), width - 8, 24, "ui/background"); TextureManager.unbind();
-			/*//TODOfont.drawString(x + 8, y + 6 + -scroll + (pass), (Settings.polygonCount() ? "[" + list.size() + "] " : "") + list.id, Color.white);*/ RGB.glColorReset();
+			this.renderQuad(x + 4, y + 4 + -scroll + (pass), width - 8, 24, "ui/background");
+			FontRenderer.drawText((Settings.polygonCount() ? "[" + list.size() + "] " : "") + list.id, x + 8, y + 8 + -scroll + (pass), 1);
 			GL11.glTranslatef(0, 0,  1);
 			this.renderIcon(x + width - 92, y + 6 + -scroll + (pass), "icons/group_minimize");
 			this.renderIcon(x + width - 70, y + 6 + -scroll + (pass), "icons/group_edit");
@@ -48,8 +89,8 @@ public class ModelTree extends RightTree {
 			if(!list.minimized){
 				for(int j = 0; j < list.size(); j++){
 					poly = list.get(j); color(poly.visible, poly.selected || list.selected).glColorApply();
-					this.renderQuad(x + 8, y + 4 + -scroll + (pass), width - 16, 24, "ui/background"); TextureManager.unbind();
-					/*//TODOfont.drawString(x + 10, y + 6 + -scroll + (pass), j + " | " + poly.name(), Color.white);*/ RGB.glColorReset();
+					this.renderQuad(x + 8, y + 4 + -scroll + (pass), width - 16, 24, "ui/background");
+					FontRenderer.drawText(j + " | " + poly.name(), x + 10, y + 8 + -scroll + (pass), 1);
 					GL11.glTranslatef(0, 0,  1);
 					this.renderIcon(x + width - 74, y + 6 + -scroll + (pass), "icons/group_edit");
 					this.renderIcon(x + width - 52, y + 6 + -scroll + (pass), "icons/group_visible");
@@ -58,6 +99,7 @@ public class ModelTree extends RightTree {
 				}
 			}
 		}
+		//this.size = pass; scrollbar.visible = up.visible = dw.visible = size > height;
 		GL11.glTranslatef(0, 0, -10);
 	}
 
@@ -126,8 +168,13 @@ public class ModelTree extends RightTree {
 	}
 
 	protected boolean processScrollWheel(int wheel){
-		scroll += -wheel / (Mouse.isButtonDown(1) ? 1 : 10); //if(scroll < 0) scroll = 0; if(scroll > trheight) scroll = trheight - 100;
-		return true;
+		//if(size < height) return true;
+		//scroll += -wheel / (Mouse.isButtonDown(1) ? 1 : 10); //if(scroll < 0) scroll = 0; if(scroll > trheight) scroll = trheight - 100;
+		this.modifyScroll(-wheel / (Mouse.isButtonDown(1) ? 1 : 10)); return true;
+	}
+	
+	public void modifyScroll(int amount){
+		if(size < height) return; scroll += amount; if(scroll < 0) scroll = 0; if(scroll + height >= size) scroll = size - height + 26;
 	}
 	
 }

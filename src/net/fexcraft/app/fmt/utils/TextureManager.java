@@ -104,6 +104,10 @@ public class TextureManager {
 		(texture = TEXTURES.containsKey(string) ? TEXTURES.get(string) : nulltex).bind();
 	}
 	
+	public static void bindTexture(Texture newtex){
+		if(newtex == null || newtex.name.equals(texture.name)) return; (texture = newtex).bind();
+	}
+	
 	public static void unbind(){
 		/*TextureImpl.bindNone();*/ texture = nulltex;//TODO fonttex
 	}
@@ -215,6 +219,10 @@ public class TextureManager {
 			ImageIO.write(tex.image, "PNG", tex.file); TextureUpdate.updateLastEdit(Time.getDate());
 		}
 		catch(IOException e){ e.printStackTrace(); }
+	}
+
+	public static Texture getNullTex(){
+		return nulltex;
 	}
 	
 }

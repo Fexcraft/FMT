@@ -3,22 +3,23 @@ package net.fexcraft.app.fmt.ui.generic;
 import java.util.ArrayList;
 import java.util.Optional;
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.Element;
+import net.fexcraft.app.fmt.ui.FontRenderer;
+import net.fexcraft.app.fmt.ui.OldElement;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.lib.common.math.RGB;
 
-public class TextField extends Element {
+public class TextField extends OldElement {
 	
 	private static final ArrayList<TextField> fields = new ArrayList<>();
 	private RGB hovercolor = new RGB(112, 255, 127), inactivecol = new RGB(235, 201, 201), hoversel = new RGB(255, 127, 0);
 	private boolean centered, selected, number, background = true;
-	private RGB color = RGB.BLACK;
 	private float min, max, value;
 	private String text, tempval;
+	private RGB textcolor = new RGB(212, 212, 212);
 	private int width;
 
-	public TextField(Element parent, String id, int width, int x, int y){
+	public TextField(OldElement parent, String id, int width, int x, int y){
 		super(parent, id); fields.add(this);
 		this.width = width; this.height = 26;
 		if(parent == null){ this.x = x; this.y = y; }
@@ -38,7 +39,7 @@ public class TextField extends Element {
 	}
 	
 	public TextField setColor(RGB newcol){
-		this.color = newcol; return this;
+		textcolor = newcol; return this;
 	}
 
 	@Override
@@ -47,16 +48,15 @@ public class TextField extends Element {
 		if(background) this.renderQuad(x, y, width, height, "ui/background");
 		if(enabled) RGB.glColorReset();
 		if(!number && text == null) return;
-		String text = number ? (tempval == null ? value : "*" + tempval) + "" : tempval == null ? this.text : tempval;
+		String tex = number ? (tempval == null ? value : "*" + tempval) + "" : tempval == null ? this.text : tempval;
 		TextureManager.unbind();
-		/*if(centered){
-			int x = width / 2 - (font.getWidth(text) / 2);
-			int y = height / 2 - (font.getHeight(text) / 2);
-			font.drawString(this.x + x, this.y + y, text, color);
+		if(centered){
+			int x = width / 2 - (FontRenderer.getWidth(tex, 1) / 2), y = height / 2 - 6;
+			FontRenderer.drawText(tex, this.x + x, this.y + y, 1, textcolor);
 		}
 		else{
-			font.drawString(x + 2, y + 2, text, color);
-		}*///TODO
+			FontRenderer.drawText(tex, this.x + 2, this.y + 2, 1, textcolor);
+		}
 		RGB.glColorReset();
 	}
 
@@ -192,7 +192,7 @@ public class TextField extends Element {
 		return selected;
 	}
 
-	public Element setColor(String string, RGB rgb){
+	public OldElement setColor(String string, RGB rgb){
 		switch(string){
 			case "hover": this.hovercolor = rgb; break;
 			case "hover_sel": case "hover_selected": this.hoversel = rgb; break;
