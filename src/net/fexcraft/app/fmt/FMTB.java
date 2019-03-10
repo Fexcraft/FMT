@@ -27,7 +27,6 @@ import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.porters.PorterManager;
-import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.editor.CylinderEditor;
@@ -40,12 +39,13 @@ import net.fexcraft.app.fmt.ui.editor.ShapeboxEditor;
 import net.fexcraft.app.fmt.ui.editor.TexrectAEditor;
 import net.fexcraft.app.fmt.ui.editor.TexrectBEditor;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
+import net.fexcraft.app.fmt.ui.general.Toolbar;
 import net.fexcraft.app.fmt.ui.generic.ControlsAdjuster;
 import net.fexcraft.app.fmt.ui.generic.Crossbar;
 import net.fexcraft.app.fmt.ui.generic.DialogBox;
 import net.fexcraft.app.fmt.ui.generic.FileChooser;
 import net.fexcraft.app.fmt.ui.generic.TextField;
-import net.fexcraft.app.fmt.ui.generic.Toolbar;
+import net.fexcraft.app.fmt.ui.generic.OldToolbar;
 import net.fexcraft.app.fmt.ui.tree.HelperTree;
 import net.fexcraft.app.fmt.ui.tree.ModelTree;
 import net.fexcraft.app.fmt.utils.Backups;
@@ -327,24 +327,9 @@ public class FMTB implements FMTGLProcess {
 		Editor.addQuickButtons();
 		//render last
 		ui.getOldElements().add(new Crossbar());
-		ui.getOldElements().add(new Toolbar());
+		ui.getOldElements().add(new OldToolbar());
 		FMTB.MODEL.updateFields();
-		
-		/*ui.getOldElements().add(new Element(null, "fontest"){
-			private Text text = new Text("Some Test Text !@#$%^", RGB.WHITE);
-			private Text text2 = new Text("ABCDEFGH 0123456789", RGB.BLACK);
-			@Override
-			public void renderSelf(int rw, int rh){
-				this.renderQuad(x = (rw / 2) - (400 / 2), y = (rh / 2) - (200 / 2), 400, 200, "ui/dialogbox");
-				FontRenderer.render(x + 30, y + 30, text);
-				FontRenderer.render(x + 30, y + 60, text2);
-			}
-			@Override
-			protected boolean processButtonClick(int x, int y, boolean left){
-				return false;
-			}
-		});*/
-		ui.getElements().add(new Element(null, "test"){
+		/*ui.getElements().add(new Element(null, "test"){
 			@Override
 			public void renderSelf(int rw, int rh){
 				//if(this.isHovered()) Print.console("hovered");
@@ -356,7 +341,10 @@ public class FMTB implements FMTGLProcess {
 				FontRenderer.drawText("test sting test string test 5tr1n6 !@#$%&*()", x, y - 60, 2);
 				FontRenderer.drawText(Translator.translate("test.string.thing"), x, y, 2);
 			}
-		}.setTexPosSize("icon", 0, 0, 16, 16).setSize(200, 200).setLevel(-50));
+		}.setTexPosSize("icon", 0, 0, 16, 16).setSize(200, 200).setLevel(-50));*/
+		TextureManager.loadTexture("ui/background_dark");
+		TextureManager.loadTexture("ui/background_light");
+		ui.getElements().add(new Toolbar());
 	}
 
 	@Override

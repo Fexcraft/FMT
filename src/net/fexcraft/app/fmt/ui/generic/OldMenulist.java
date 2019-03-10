@@ -4,14 +4,14 @@ import java.util.ArrayList;
 
 import net.fexcraft.app.fmt.ui.OldElement;
 
-public abstract class Menulist extends OldElement {
+public abstract class OldMenulist extends OldElement {
 	
-	public static final ArrayList<Menulist> arrlist = new ArrayList<>();
+	public static final ArrayList<OldMenulist> arrlist = new ArrayList<>();
 
-	public Menulist(OldElement parent, String id, int width, int height, int x, int y){
+	public OldMenulist(OldElement parent, String id, int width, int height, int x, int y){
 		super(parent, id); this.width = width; this.height = height;
 		this.x = x; this.y = y; this.visible = false; this.addButtons();
-		Menulist.arrlist.add(this);
+		OldMenulist.arrlist.add(this);
 	}
 
 	public abstract void addButtons();

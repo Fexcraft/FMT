@@ -11,7 +11,7 @@ import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 
 public class Element {
 	
-	private ArrayList<Element> elements = new ArrayList<>();
+	protected ArrayList<Element> elements = new ArrayList<>();
 	protected Element root;
 	public int x, y, z = -100, width, height, xoff, yoff;
 	public float tx, ty, tsx, tsy, tex_width, tex_height;
@@ -30,6 +30,8 @@ public class Element {
 	public Element setLevel(int z){
 		this.z = z; return this;
 	}
+
+	public int getLevel(){ return z; }
 	
 	public Element setSize(int width, int height){
 		this.width = width; this.height = height; return this;

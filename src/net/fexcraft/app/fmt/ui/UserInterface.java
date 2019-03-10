@@ -9,7 +9,7 @@ import net.fexcraft.app.fmt.FMTGLProcess;
 import net.fexcraft.app.fmt.ui.generic.ControlsAdjuster;
 import net.fexcraft.app.fmt.ui.generic.DialogBox;
 import net.fexcraft.app.fmt.ui.generic.FileChooser;
-import net.fexcraft.app.fmt.ui.generic.Menulist;
+import net.fexcraft.app.fmt.ui.generic.OldMenulist;
 import net.fexcraft.app.fmt.ui.generic.TextField;
 import net.fexcraft.app.fmt.utils.RayCoastAway;
 import net.fexcraft.app.fmt.utils.SessionHandler;
@@ -55,7 +55,7 @@ public class UserInterface {
 			tmelm.render(width, height); logintxt.render(width, height);
 		}
 		else{
-			for(OldElement elm : oldelements) elm.render(width, height);
+			//for(OldElement elm : oldelements) elm.render(width, height);
 			for(Element elm : elements) elm.render(width, height);
 		}
 		GL11.glDepthFunc(GL11.GL_LESS);
@@ -119,8 +119,8 @@ public class UserInterface {
 	}
 
 	public void onButtonPress(int i){
-		if(Menulist.anyMenuHovered()){
-			for(Menulist list : Menulist.arrlist){
+		if(OldMenulist.anyMenuHovered()){
+			for(OldMenulist list : OldMenulist.arrlist){
 				if(list.hovered && list.onButtonClick(Mouse.getX(), root.getDisplayMode().getHeight() - Mouse.getY(), i == 0, true)) return;
 			}
 		}
