@@ -48,7 +48,7 @@ public class FontRenderer {
 		    if(i == 127){ continue; }
 		    char c = (char)i;
 		    BufferedImage ch = createCharImage(font, c, antialiens);
-		    imageWidth += ch.getWidth();
+		    imageWidth += ch.getWidth() + (ch.getWidth() < 4 ? 1 : 0);
 		    imageHeight = Math.max(imageHeight, ch.getHeight());
 		}
 		FONT_HEIGHT[type] = imageHeight;
@@ -60,7 +60,7 @@ public class FontRenderer {
             char c = (char)i;
             BufferedImage charImage = createCharImage(font, c, antialiens);
             if(charImage == null){ continue; }
-            int charWidth = charImage.getWidth();
+            int charWidth = charImage.getWidth() + (charImage.getWidth() < 4 ? 1 : 0);
             int charHeight = charImage.getHeight();
             Glyph ch = new Glyph(charWidth, charHeight, x, image.getHeight() - charHeight, 0f);
             g.drawImage(charImage, x, 0, null);

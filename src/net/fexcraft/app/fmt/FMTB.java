@@ -35,6 +35,8 @@ import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.ui.general.FileChooser;
 import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.ui.general.Toolbar;
+import net.fexcraft.app.fmt.ui.tree.HelperTree;
+import net.fexcraft.app.fmt.ui.tree.ModelTree;
 import net.fexcraft.app.fmt.utils.Backups;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.HelperCollector;
@@ -295,17 +297,19 @@ public class FMTB implements FMTGLProcess {
 		TextureManager.loadTexture("icons/group_minimize");
 		TextureManager.loadTexture("ui/background_dark");
 		TextureManager.loadTexture("ui/background_light");
+		TextureManager.loadTexture("ui/background_white");
+		TextureManager.loadTexture("ui/background_black");
 		//
 		ui.getElements().add(UserInterface.DIALOGBOX = new DialogBox());
 		ui.getElements().add(UserInterface.FILECHOOSER = new FileChooser());
 		ui.getElements().add(UserInterface.CONTROLS = new ControlsAdjuster());
 		//
+		ui.getElements().add(new ModelTree());
+		ui.getElements().add(new HelperTree());
 		/*ui.getOldElements().add(new GeneralEditor());
 		ui.getOldElements().add(new ShapeboxEditor());
-		ui.getOldElements().add(new ModelTree());
 		ui.getOldElements().add(new CylinderEditor());
 		ui.getOldElements().add(new GroupEditor());
-		ui.getOldElements().add(new HelperTree());
 		ui.getOldElements().add(new PreviewEditor());
 		ui.getOldElements().add(new ModelEditor());
 		ui.getOldElements().add(new TextureEditor());
@@ -313,7 +317,7 @@ public class FMTB implements FMTGLProcess {
 		ui.getOldElements().add(new TexrectAEditor());
 		Editor.addQuickButtons();*/
 		//render last
-		ui.getElements().add(new Toolbar());
+		ui.getElements().add(UserInterface.TOOLBAR = new Toolbar());
 		ui.getElements().add(new Crossbar());
 		FMTB.MODEL.updateFields();
 	}

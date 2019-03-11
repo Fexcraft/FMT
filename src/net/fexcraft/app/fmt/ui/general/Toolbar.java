@@ -239,6 +239,10 @@ public class Toolbar extends Element {
 		}.setText("Shapeditor", true));
 		this.elements.add(new Button(this, "shapelist", btsz, bthg, 0, 0){
 			@Override
+			protected boolean processButtonClick(int x, int y, boolean left){
+				RightTree.toggle("modeltree"); return true;
+			}
+			@Override
 			public void setupSubmenu(){
 				HoverMenu menu = new HoverMenu(this, "menu", 100){
 					@Override
@@ -386,6 +390,10 @@ public class Toolbar extends Element {
 		}.setText("Texture", true));
 		this.elements.add(new Button(this, "helpers", btsz, bthg, 0, 0){
 			@Override
+			protected boolean processButtonClick(int x, int y, boolean left){
+				RightTree.toggle("helpertree"); return true;
+			}
+			@Override
 			public void setupSubmenu(){
 				HoverMenu menu = new HoverMenu(this, "menu", 100){
 					@Override
@@ -466,6 +474,11 @@ public class Toolbar extends Element {
 	public void renderSelf(int root_width, int root_height){
 		this.width = root_width; this.renderSelfQuad();
 		if(oldwidth != width){ oldwidth = width; this.reorderElements(); }
+	}
+	
+	@Override
+	protected boolean processButtonClick(int x, int y, boolean left){
+		return true;
 	}
 
 }

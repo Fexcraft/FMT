@@ -2,9 +2,10 @@ package net.fexcraft.app.fmt.ui.tree;
 
 import org.lwjgl.opengl.GL11;
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.FontRenderer;
+import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.utils.HelperCollector;
-import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 
@@ -20,9 +21,10 @@ public class HelperTree extends RightTree {
 
 	@Override
 	public void renderSelf(int rw, int rh){
-		this.x = rw - this.width; this.height = rh - 30; trheight = 0;
-		this.renderQuad(x, y, width, height = (rh - y + 2), "ui/button_bg");
-		this.renderQuad(x - 2, y, 2, height = (rh - y + 4), "ui/background");
+		this.y = UserInterface.TOOLBAR.height;
+		this.x = rw - this.width; this.height = rh - y; trheight = 0;
+		this.renderQuad(x, y, width, height = (rh - y + 2), "ui/background_light");
+		this.renderQuad(x - 2, y, 2, height = (rh - y + 4), "ui/background_dark");
 		//
 		trlist = HelperCollector.LOADED.toArray(new GroupCompound[0]); if(trlist.length == 0) SEL = -1;
 		FMTB.MODEL.getCompound().values().forEach(turbo -> trheight += turbo.tempheight = 26 + (turbo.size() * 26));
@@ -30,8 +32,8 @@ public class HelperTree extends RightTree {
 		for(int i = 0; i < trlist.length; i++){
 			GroupCompound model = trlist[i];
 			color(model.visible, i == SEL).glColorApply();
-			this.renderQuad(x + 4, y + 4 + -scroll + (pass), width - 8, 24, "ui/background"); TextureManager.unbind();
-			//TODO font.drawString(x + 8, y + 6 + -scroll + (pass), model.name, Color.white); RGB.glColorReset();
+			this.renderQuad(x + 4, y + 4 + -scroll + (pass), width - 8, 24, "ui/background_white");
+			FontRenderer.drawText(model.name, x + 8, y + 6 + -scroll + (pass), 1, fontcol);
 			GL11.glTranslatef(0, 0,  1);
 			this.renderIcon(x + width - 92, y + 6 + -scroll + (pass), 20, "icons/group_minimize");
 			this.renderIcon(x + width - 70, y + 6 + -scroll + (pass), 20, "icons/group_edit");
@@ -41,8 +43,8 @@ public class HelperTree extends RightTree {
 			if(!model.minimized){
 				for(int j = 0; j < model.getCompound().size(); j++){
 					poly = (TurboList)model.getCompound().values().toArray()[j]; color(poly.visible, false).glColorApply();
-					this.renderQuad(x + 8, y + 4 + -scroll + (pass), width - 16, 24, "ui/background"); TextureManager.unbind();
-					//TODO font.drawString(x + 10, y + 6 + -scroll + (pass), j + " | " + poly.id, Color.white); RGB.glColorReset();
+					this.renderQuad(x + 8, y + 4 + -scroll + (pass), width - 16, 24, "ui/background_white");
+					FontRenderer.drawText(j + " | " + poly.id, x + 10, y + 6 + -scroll + (pass), 1, fontcol);
 					GL11.glTranslatef(0, 0,  1);
 					this.renderIcon(x + width - 30, y + 6 + -scroll + (pass), 20, "icons/group_visible");
 					GL11.glTranslatef(0, 0, -1); pass += 26;

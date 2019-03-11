@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import net.fexcraft.app.fmt.ui.Element;
+import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.lib.common.math.RGB;
 
 public class RightTree extends Element {
@@ -12,15 +13,16 @@ public class RightTree extends Element {
 	protected int scroll, size;
 
 	public RightTree(String id){
-		super(null, id); this.width = 308; z = -50;
-		this.x = 0; this.y = 30; this.visible = false;
-		trees.add(this);
+		super(null, id);
+		this.setSize(308, 100).setLevel(-50).setPosition(0, 0);
+		this.setVisible(false); trees.add(this);
 	}
 
 	@Override
 	public void renderSelf(int rw, int rh){
-		this.renderQuad(x, y, width, height = (rh - y + 2), "ui/button_bg");
-		this.renderQuad(width - 2, y - 2, 2, height = (rh - y + 4), "ui/background");
+		this.y = UserInterface.TOOLBAR.height;
+		this.renderQuad(x, y, width, height = (rh - y + 2), "ui/background_light");
+		this.renderQuad(width - 2, y - 2, 2, height = (rh - y + 4), "ui/background_dark");
 	}
 
 	@Override
@@ -47,10 +49,15 @@ public class RightTree extends Element {
 		if(close && opt.isPresent() && opt.get().visible){ hideAll(); } else{ show(string); }
 	}
 	
-	private static final RGB novis = new RGB(232, 211, 143), vis = new RGB(255, 194, 0);
+	private static final RGB sel_in = new RGB("#aa7e36");
+	private static final RGB sel_vi = new RGB("#934427");
+	private static final RGB def = new RGB("#0B6623");
+	private static final RGB inv = new RGB("#80a073");
+	//
+	protected static final RGB fontcol = new RGB("#1e1e1e");
 	
 	protected RGB color(boolean visible, boolean selected){
-		return visible ? selected ? vis : RGB.GREEN : selected ? novis : RGB.WHITE;
+		return visible ? selected ? sel_vi : def : selected ? sel_in : inv;
 	}
 
 	public static boolean anyTreeHovered(){

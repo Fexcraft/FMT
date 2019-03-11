@@ -11,6 +11,7 @@ import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.ui.general.FileChooser;
 import net.fexcraft.app.fmt.ui.general.HoverMenu;
 import net.fexcraft.app.fmt.ui.general.TextField;
+import net.fexcraft.app.fmt.ui.general.Toolbar;
 import net.fexcraft.app.fmt.utils.RayCoastAway;
 import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.app.fmt.utils.Settings;
@@ -25,6 +26,7 @@ public class UserInterface {
 
 	public static final float XSCALE = 1f, YSCALE = 1f;
 	public static Element SELECTED = null;
+	public static Toolbar TOOLBAR;
 	public static DialogBox DIALOGBOX;
 	public static FileChooser FILECHOOSER;
 	public static ControlsAdjuster CONTROLS;
@@ -138,7 +140,7 @@ public class UserInterface {
 					} else element = elm;
 				}
 			}
-			if(i == 0 && (element == null ? true : element.id.equals("toolbar"))){//TODO mostly obsolete check, but /shrug
+			if(i == 0 && (element == null ? true : element.id.equals("crossbar"))){
 				RayCoastAway.doTest(true, true);
 			}
 		}
