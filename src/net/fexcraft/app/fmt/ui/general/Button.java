@@ -15,10 +15,12 @@ public class Button extends Element {
 	private RGB discolor = RGB.RED;
 	private boolean centered;
 	private String text;
+	//
+	private static final RGB subhover = new RGB(218, 232, 104);
 	
 	public Button(Element root, String id, int width, int height, int x, int y){
 		super(root, id); this.setPosition(this.x = root.x + x, this.y = root.y + y + (root instanceof HoverMenu ? root.getElements().size() * 28 : 0));
-		this.setSize(width, height).setLevel(root.getLevel() - 1);
+		this.setSize(width, height).setLevel(root.getLevel() + 1);
 		this.setTexPosSize("ui/background_light", 0, 0, 64, 64);
 		this.setEnabled(true); this.setupSubmenu();
 	}
@@ -66,7 +68,7 @@ public class Button extends Element {
 	
 	@Override
 	protected void realignToRoot(int index){
-		if(root instanceof HoverMenu){
+		if(root instanceof HoverMenu){ this.hovercolor = subhover;
 			int height = index > 0 ? root.getElements().get(index - 1).y + root.getElements().get(index - 1).height : root.y;
 			this.setPosition(root.x + 2, height + 2);
 		}
@@ -75,19 +77,6 @@ public class Button extends Element {
 	@Override
 	public void hovered(int mx, int my){
 		super.hovered(mx, my); if(this.hovered){ for(Element elm : elements) elm.setVisible(true); }
-	}
-	
-	public static class Default extends Button {
-
-		public Default(Element toolbar, String id, int width, int height, int x, int y){
-			super(toolbar, id, width, height, x, y);
-		}
-
-		@Override
-		public void setupSubmenu(){
-			//
-		}
-		
 	}
 
 }

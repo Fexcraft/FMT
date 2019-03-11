@@ -178,7 +178,7 @@ public class FontRenderer {
         TextureManager.bindTexture("font/ascii" + type);
         for(int i = 0; i < text.length(); i++) {
             char cher = text.charAt(i);
-            if(cher == '\n'){ drawY -= FONT_HEIGHT[type]; drawX = x; continue; }
+            if(cher == '\n'){ drawY += FONT_HEIGHT[type]; drawX = x; continue; }
             if(cher == '\r'){ continue; }
             Glyph g = getGlyph(type, cher);
             float tw = 1f / TYPE_WIDTH[type], th = 1f / FONT_HEIGHT[type];

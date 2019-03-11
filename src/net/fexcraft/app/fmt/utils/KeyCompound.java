@@ -71,7 +71,7 @@ public class KeyCompound {
 		keys.add(new KeyFunction("take_screenshot", Keyboard.KEY_F12, true){
 			@Override public boolean process(){
 				ImageHelper.takeScreenshot(false);
-            	FMTB.showDialogbox("Screenshot taken.", "", "OK", "Open", DialogBox.NOTHING, () -> {
+            	FMTB.showDialogbox("Screenshot taken.", "OK", "Open", DialogBox.NOTHING, () -> {
             		try{ Desktop.getDesktop().open(new File("./screenshots/")); }
             		catch(IOException e){ e.printStackTrace(); }
             	}); return true;

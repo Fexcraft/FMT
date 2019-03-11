@@ -81,7 +81,7 @@ public class PorterManager {
 			public void run(){
 				try{
 					if(file == null){
-						FMTB.showDialogbox("No valid file choosen.", "Import is cancelled.", "ok..", null, DialogBox.NOTHING, null);
+						FMTB.showDialogbox("No valid file choosen.\nImport is cancelled.", "ok..", null, DialogBox.NOTHING, null);
 						return;
 					}
 					if(porter.isInternal()){
@@ -95,10 +95,10 @@ public class PorterManager {
 					}
 				}
 				catch(Exception e){
-					FMTB.showDialogbox("Errors while importing Model.", e.getLocalizedMessage(), "ok.", null, DialogBox.NOTHING, null);//TODO add "open console" as 2nd button
+					FMTB.showDialogbox("Errors while importing Model.\n" + e.getLocalizedMessage(), "ok.", null, DialogBox.NOTHING, null);//TODO add "open console" as 2nd button
 					e.printStackTrace();
 				}
-				FMTB.showDialogbox("Import complete.", null, "OK!", null, DialogBox.NOTHING, null);
+				FMTB.showDialogbox("Import complete.", "OK!", null, DialogBox.NOTHING, null);
 			}
 		}, ChooserMode.IMPORT);
 	}
@@ -109,7 +109,7 @@ public class PorterManager {
 			public void run(){
 				try{
 					if(file == null){
-						FMTB.showDialogbox("No valid file choosen.", "Export is cancelled.", "ok..", null, DialogBox.NOTHING, null);
+						FMTB.showDialogbox("No valid file choosen.\nExport is cancelled.", "ok..", null, DialogBox.NOTHING, null);
 						return;
 					} String result;
 					if(porter.isInternal()){
@@ -119,11 +119,11 @@ public class PorterManager {
 						Invocable inv = (Invocable)((ExternalPorter)porter).eval();
 						result = (String)inv.invokeFunction("exportModel", SaveLoad.modelToJTMT(null, true).toString(), file);
 					}
-					FMTB.showDialogbox("Export complete.", result, "OK!", null, DialogBox.NOTHING, null);
+					FMTB.showDialogbox("Export complete.\n" + result, "OK!", null, DialogBox.NOTHING, null);
 					Desktop.getDesktop().open(file.getParentFile());
 				}
 				catch(Exception e){
-					FMTB.showDialogbox("Errors while exporting Model.", e.getLocalizedMessage(), "ok.", null, DialogBox.NOTHING, null);//TODO add "open console" as 2nd button
+					FMTB.showDialogbox("Errors while exporting Model.\n" + e.getLocalizedMessage(), "ok.", null, DialogBox.NOTHING, null);//TODO add "open console" as 2nd button
 					e.printStackTrace();
 				}
 			}

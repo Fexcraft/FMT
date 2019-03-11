@@ -158,7 +158,7 @@ public class FMTB implements FMTGLProcess {
 	private void loop(long delta){
 		ggr.pollInput(0.1f); ggr.apply();
 		//
-		if(Display.isCloseRequested()){ SaveLoad.checkIfShouldSave(true); }
+		if(Display.isCloseRequested()){ SaveLoad.checkIfShouldSave(true, false); }
 		//
 		if(Display.wasResized()){
 			displaymode = new DisplayMode(Display.getWidth(), Display.getHeight());
@@ -286,11 +286,11 @@ public class FMTB implements FMTGLProcess {
 		close = bool;
 	}
 	
-	public static void showDialogbox(String title, String desc, String button0, String button1, Runnable run0, Runnable run1){
+	public static void showDialogbox(String title, String button0, String button1, Runnable run0, Runnable run1){
 		UserInterface.DIALOGBOX.show(title, button0, button1, run0, run1);
 	}
 	
-	public static void showDialogbox(String title, String desc, String button0, String button1, Runnable run0, Runnable run1, int progress, RGB color){
+	public static void showDialogbox(String title, String button0, String button1, Runnable run0, Runnable run1, int progress, RGB color){
 		UserInterface.DIALOGBOX.show(title, button0, button1, run0, run1);
 		UserInterface.DIALOGBOX.progress = progress; UserInterface.DIALOGBOX.progresscolor = color;
 	}
@@ -302,8 +302,6 @@ public class FMTB implements FMTGLProcess {
 
 	@Override
 	public void setupUI(UserInterface ui){
-		TextureManager.loadTexture("ui/background");
-		TextureManager.loadTexture("ui/button_bg");
 		TextureManager.loadTexture("icons/group_delete");
 		TextureManager.loadTexture("icons/group_visible");
 		TextureManager.loadTexture("icons/group_edit");
@@ -324,7 +322,7 @@ public class FMTB implements FMTGLProcess {
 		Editor.addQuickButtons();
 		//render last
 		ui.getOldElements().add(new OldToolbar());
-		FMTB.MODEL.updateFields();
+		//FMTB.MODEL.updateFields();
 		/*ui.getElements().add(new Element(null, "test"){
 			@Override
 			public void renderSelf(int rw, int rh){
@@ -349,6 +347,7 @@ public class FMTB implements FMTGLProcess {
 		//render last
 		ui.getElements().add(new Toolbar());
 		ui.getElements().add(new Crossbar());
+		FMTB.MODEL.updateFields();
 	}
 
 	@Override
@@ -383,7 +382,7 @@ public class FMTB implements FMTGLProcess {
 				String newver = obj.get("latest_version").getAsString(); boolean bool = version.equals(newver);
 				UserInterface.DIALOGBOX.show(bool ? "Welcome to FMT!\n<version:" + version + ">" : "New version available!\n" + newver + " >> " + version, "ok", bool ? "exit" : "update", DialogBox.NOTHING, () -> {
 					if(bool){
-						SaveLoad.checkIfShouldSave(true);
+						SaveLoad.checkIfShouldSave(true, false);
 					}
 					else{
 						try{ Desktop.getDesktop().browse(new URL("http://fexcraft.net/app/fmt").toURI()); }

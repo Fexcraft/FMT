@@ -550,7 +550,7 @@ public class GroupCompound {
 	}
 
 	public void deleteSelected(){
-		FMTB.showDialogbox("Are you sure to", "delete all Selected?", "Yes!", "Cancel!", () -> {
+		FMTB.showDialogbox("Are you sure to\ndelete all Selected?", "Yes!", "Cancel!", () -> {
 			ArrayList<PolygonWrapper> wrapp = this.getSelected();
 			for(PolygonWrapper wrapper : wrapp){
 				wrapper.getTurboList().remove(wrapper);

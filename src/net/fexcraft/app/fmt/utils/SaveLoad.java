@@ -47,7 +47,7 @@ public class SaveLoad {
 			@Override
 			public void run(){
 				if(file == null || !file.exists()){
-					FMTB.showDialogbox("Invalid Model File!", "(does it even exists?)", "ok.", null, DialogBox.NOTHING, null);
+					FMTB.showDialogbox("Invalid Model File!\n(does it even exists?)", "ok.", null, DialogBox.NOTHING, null);
 					return;
 				}
 				try{
@@ -68,7 +68,7 @@ public class SaveLoad {
 				}
 				catch(Exception e){
 					e.printStackTrace();
-					FMTB.showDialogbox("Errors occured", "while parsing save file", "ok", null, DialogBox.NOTHING, null);
+					FMTB.showDialogbox("Errors occured\nwhile parsing save file", "ok", null, DialogBox.NOTHING, null);
 				}
 			}
 		}, ChooserMode.SAVEFILE_LOAD);
@@ -78,10 +78,10 @@ public class SaveLoad {
 		FMTB.MODEL = getModel(obj, true); FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
 	}
 	
-	public static void checkIfShouldSave(boolean shouldclose){
+	public static void checkIfShouldSave(boolean shouldclose, boolean shouldclear){
 		TextureUpdate.HALT = true;
 		if(FMTB.MODEL.countTotalMRTs() > 0){
-			FMTB.showDialogbox("Do you want to save the", "current model first?", "Yes", "No", new Runnable(){
+			FMTB.showDialogbox("Do you want to save the\ncurrent model first?", "Yes", "No", new Runnable(){
 				@Override
 				public void run(){
 					if(FMTB.MODEL.file == null){
@@ -89,27 +89,31 @@ public class SaveLoad {
 							@Override
 							public void run(){
 								if(file == null){
-									FMTB.showDialogbox("Model save file is 'null'!", "Model will not be saved.", "OK", "Save", new Runnable(){
+									FMTB.showDialogbox("Model save file is 'null'!\nModel will not be saved.", "OK", "Save", new Runnable(){
 										@Override public void run(){ if(shouldclose){ FMTB.get().close(true); } }
 									}, new Runnable(){
-										@Override public void run(){ checkIfShouldSave(shouldclose); }
+										@Override public void run(){ checkIfShouldSave(shouldclose, shouldclear); }
 									});
 								}
 								else{
-									FMTB.MODEL.file = file;
-									saveModel(false, shouldclose); if(shouldclose){ FMTB.get().close(true); }
+									FMTB.MODEL.file = file; saveModel(false, shouldclose);
+									if(shouldclear){ FMTB.MODEL = new GroupCompound(); }
+									if(shouldclose){ FMTB.get().close(true); }
 								}
 							}
 						}, ChooserMode.SAVEFILE_SAVE);
 					}
 					else{
-						saveModel(false, shouldclose); if(shouldclose){ FMTB.get().close(true); }
+						saveModel(false, false);//shouldclose);
+						if(shouldclear){ FMTB.MODEL = new GroupCompound(); }
+						if(shouldclose){ FMTB.get().close(true); }
 					}
 				}
 			}, new Runnable(){
 				@Override
 				public void run(){
 					Print.console("selected > no saving of current");
+					if(shouldclear){ FMTB.MODEL = new GroupCompound(); }
 					if(shouldclose){ FMTB.get().close(true); }
 				}
 			});
@@ -120,8 +124,8 @@ public class SaveLoad {
 	}
 
 	public static void openNewModel(){
-		checkIfShouldSave(false);
-		FMTB.MODEL = new GroupCompound();
+		checkIfShouldSave(false, true);
+		//FMTB.MODEL = new GroupCompound();
 	}
 
 	public static void saveModel(boolean bool, boolean openfile){
@@ -129,8 +133,8 @@ public class SaveLoad {
 			UserInterface.FILECHOOSER.show(new String[]{ "Select save location.", "Select" }, root, new AfterTask(){
 				@Override
 				public void run(){
-					if(file == null){ FMTB.showDialogbox("Model save file is 'null'!", "Model will not be saved.", "OK", null, DialogBox.NOTHING, null); return; }
-					FMTB.MODEL.file = file; toFile(FMTB.MODEL, null, openfile); FMTB.showDialogbox("Model Saved!", "", "ok!", null, DialogBox.NOTHING, null); return;
+					if(file == null){ FMTB.showDialogbox("Model save file is 'null'!\nModel will not be saved.", "OK", null, DialogBox.NOTHING, null); return; }
+					FMTB.MODEL.file = file; toFile(FMTB.MODEL, null, openfile); FMTB.showDialogbox("Model Saved!", "ok!", null, DialogBox.NOTHING, null); return;
 				}
 			}, ChooserMode.SAVEFILE_SAVE);
 		}

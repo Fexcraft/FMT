@@ -50,7 +50,7 @@ public class HelperCollector {
 	/** For loading FMTBs.*/
 	public static void loadFMTB(File file){
 		if(file == null || !file.exists()){
-			FMTB.showDialogbox("Invalid Model File!", "(does it even exists?)", "ok.", null, DialogBox.NOTHING, null);
+			FMTB.showDialogbox("Invalid Model File!\n(does it even exists?)", "ok.", null, DialogBox.NOTHING, null);
 			return;
 		}
 		GroupCompound compound = null;
@@ -61,7 +61,7 @@ public class HelperCollector {
 				compound = SaveLoad.getModel(JsonUtil.getObjectFromInputStream(zip.getInputStream(zip.getEntry("model.jtmt"))), false);
 			}
 			else{
-				FMTB.showDialogbox("Invalid Model File", "model.jtmt missing.", "ok.", null, DialogBox.NOTHING, null);
+				FMTB.showDialogbox("Invalid Model File\nmodel.jtmt missing.", "ok.", null, DialogBox.NOTHING, null);
 				zip.close(); return;
 			}
 			if(conT){
@@ -71,14 +71,14 @@ public class HelperCollector {
 		}
 		catch(Exception e){
 			e.printStackTrace();
-			FMTB.showDialogbox("Errors occured", "while parsing save file", "ok", null, DialogBox.NOTHING, null);
+			FMTB.showDialogbox("Errors occured\nwhile parsing save file", "ok", null, DialogBox.NOTHING, null);
 		}
 		if(compound != null){ LOADED.add(compound); }
 	}
 
 	public static void loadFrame(File file){
 		if(file == null || !file.exists()){
-			FMTB.showDialogbox("Invalid Image File!", "(does it even exists?)", "ok.", null, DialogBox.NOTHING, null);
+			FMTB.showDialogbox("Invalid Image File!\n(does it even exists?)", "ok.", null, DialogBox.NOTHING, null);
 			return;
 		}
 		GroupCompound compound = null;
@@ -115,7 +115,7 @@ public class HelperCollector {
 		}
 		catch(Exception e){
 			e.printStackTrace();
-			FMTB.showDialogbox("Errors occured", "while creating frame.", "ok", null, DialogBox.NOTHING, null);
+			FMTB.showDialogbox("Errors occured\nwhile creating frame.", "ok", null, DialogBox.NOTHING, null);
 		}
 		if(compound != null){ LOADED.add(compound); }
 	}

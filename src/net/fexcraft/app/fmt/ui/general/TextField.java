@@ -6,7 +6,6 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.utils.GGR;
-import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.lib.common.math.RGB;
 
 public class TextField extends Element {
@@ -19,11 +18,9 @@ public class TextField extends Element {
 	private RGB textcolor = new RGB(212, 212, 212);
 	private int width;
 
-	public TextField(Element parent, String id, int width, int x, int y){
-		super(parent, id); fields.add(this);
-		this.width = width; this.height = 26;
-		if(parent == null){ this.x = x; this.y = y; }
-		else{ this.x = parent.x + x; this.y = parent.y + y; }
+	public TextField(Element root, String id, int width, int x, int y){
+		super(root, id); fields.add(this); this.setSize(width, 26);
+		this.setPosition(root == null ? x : root.x + x, root == null ? y : root.y + y);
 	}
 	
 	public TextField setText(String string, boolean centered){
@@ -49,7 +46,6 @@ public class TextField extends Element {
 		if(enabled) RGB.glColorReset();
 		if(!number && text == null) return;
 		String tex = number ? (tempval == null ? value : "*" + tempval) + "" : tempval == null ? this.text : tempval;
-		TextureManager.unbind();
 		if(centered){
 			int x = width / 2 - (FontRenderer.getWidth(tex, 1) / 2), y = height / 2 - 6;
 			FontRenderer.drawText(tex, this.x + x, this.y + y, 1, textcolor);
@@ -57,7 +53,6 @@ public class TextField extends Element {
 		else{
 			FontRenderer.drawText(tex, this.x + 2, this.y + 2, 1, textcolor);
 		}
-		RGB.glColorReset();
 	}
 
 	@Override

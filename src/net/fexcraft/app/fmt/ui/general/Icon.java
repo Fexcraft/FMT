@@ -15,7 +15,7 @@ public class Icon extends Element {
 	
 	public Icon(Element root, String id, String texture, int width, int height, int x, int y){
 		super(root, id); this.setPosition(this.x = root.x + x, this.y = root.y + y);
-		this.setSize(width, height).setLevel(root.getLevel() - 1);
+		this.setSize(width, height).setLevel(root.getLevel() + 1);
 		this.setTexPosSize(texture, 0, 0, 32, 32); this.setEnabled(true);
 	}
 	

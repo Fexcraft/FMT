@@ -125,7 +125,7 @@ public class ModelTree extends RightTree {
 				}
 				else if(mx >= x + width - 26 && mx < x + width -  6){
 					String id = trlist[j].id;
-					FMTB.showDialogbox("Remove this group?", id, "Yes", "No!", () -> {
+					FMTB.showDialogbox("Remove this group?\n" + id, "Yes", "No!", () -> {
 						FMTB.MODEL.getCompound().remove(id);
 					}, DialogBox.NOTHING);
 					return true;
@@ -149,7 +149,7 @@ public class ModelTree extends RightTree {
 						}
 						else if(mx >= x + width - 30 && mx < x + width - 10){
 							String id = trlist[j].id; PolygonWrapper poly = trlist[j].get(l);
-							FMTB.showDialogbox("Remove this polygon?", id + ":" + poly.name(), "Yes", "No!", () -> {
+							FMTB.showDialogbox("Remove this polygon?\n" + id + ":" + poly.name(), "Yes", "No!", () -> {
 								FMTB.MODEL.getCompound().get(id).remove(poly);
 							}, DialogBox.NOTHING);
 							return true;

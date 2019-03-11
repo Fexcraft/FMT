@@ -56,7 +56,7 @@ public class FileChooser extends Element implements Dialog {
 				if(onfile.file != null){
 					UserInterface.FILECHOOSER.visible = false;
 					if((mode.exports() || mode.savefile_save()) && onfile.file.exists()){
-						FMTB.showDialogbox("Override existing File?", onfile.file.getName(), "yes", "no!", onfile, DialogBox.NOTHING);
+						FMTB.showDialogbox("Override existing File?\n" + onfile.file.getName(), "yes", "no!", onfile, DialogBox.NOTHING);
 						UserInterface.FILECHOOSER.reset(); return true;
 					}
 					else{
@@ -239,7 +239,7 @@ public class FileChooser extends Element implements Dialog {
 		while(scroll + 12 > fls.length && scroll - 1 >= 0) scroll--;
 		for(int i = 0; i < files.length; i++){
 			files[i].x = x + 29; files[i].y = y + 85 + (i * 28); files[i].setEnabled(selected < 0 || selected != scroll + i);
-			files[i].setTexOnly(files[i].isEnabled() ? "ui/button_bg" : "ui/background");
+			files[i].setTexOnly(files[i].isEnabled() ? "ui/background_light" : "ui/background_dark");
 			if(scroll + i >= fls.length){ files[i].setVisible(false); }
 			else{
 				files[i].setVisible(true); files[i].setText(fls[scroll + i].getName() + (fls[scroll + i].isDirectory() ? "/" : ""), false);

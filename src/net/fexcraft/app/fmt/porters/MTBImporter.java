@@ -75,7 +75,7 @@ public class MTBImporter extends InternalPorter {
                 }
             }
             if(stream == null){
-            	FMTB.showDialogbox("Status", "Import Failed, MTB appears corrupt.", "Oh well..", "", DialogBox.NOTHING, null);
+            	FMTB.showDialogbox("Status\nImport Failed, MTB appears corrupt.", "Oh well..", "", DialogBox.NOTHING, null);
                 zip.close(); return compound;
             }
             String[] file = convertStreamToString(stream).split("\n"); //Files.readAllLines(stream.toPath());

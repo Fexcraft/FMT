@@ -43,7 +43,7 @@ public class RayCoastAway {
 		if(TextureEditor.pixelMode()){
 			Texture tex;
 			if(FMTB.MODEL.texture == null || (tex = TextureManager.getTexture(FMTB.MODEL.texture, true)) == null){
-				FMTB.showDialogbox("No Texture loaded.", "Cannot use Paint Pencil.", "ok", "toggle off", DialogBox.NOTHING, () -> { TextureEditor.toggleBucketMode(null); });
+				FMTB.showDialogbox("No Texture loaded.\nCannot use Paint Pencil.", "ok", "toggle off", DialogBox.NOTHING, () -> { TextureEditor.toggleBucketMode(null); });
 				return;
 			}
 			Texture calctex = TextureManager.getTexture(GroupCompound.temptexid, true);
@@ -81,7 +81,7 @@ public class RayCoastAway {
 		else{
 			Texture tex;
 			if(FMTB.MODEL.texture == null || (tex = TextureManager.getTexture(FMTB.MODEL.texture, true)) == null){
-				FMTB.showDialogbox("No Texture loaded.", "Cannot use Paint Bucket.", "ok", "toggle off", DialogBox.NOTHING, () -> { TextureEditor.toggleBucketMode(null); });
+				FMTB.showDialogbox("No Texture loaded.\nCannot use Paint Bucket.", "ok", "toggle off", DialogBox.NOTHING, () -> { TextureEditor.toggleBucketMode(null); });
 				return;
 			}
 			if(TextureEditor.groupMode()){

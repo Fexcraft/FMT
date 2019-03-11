@@ -109,7 +109,7 @@ public class ImageHelper {
 				gifwriter.endWriteSequence(); currgifout.close();
 				
 			} catch(IOException e){ e.printStackTrace(); }
-        	FMTB.showDialogbox("Gif Created.", "", "OK", "Open Fl.", DialogBox.NOTHING, () -> {
+        	FMTB.showDialogbox("Gif Created.", "OK", "Open Fl.", DialogBox.NOTHING, () -> {
         		try{ Desktop.getDesktop().open(new File("./screenshots")); } catch(IOException e){
         			e.printStackTrace();
         		}

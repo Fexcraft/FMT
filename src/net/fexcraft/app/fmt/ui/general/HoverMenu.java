@@ -14,7 +14,7 @@ public abstract class HoverMenu extends Element {
 	public static final ArrayList<HoverMenu> arrlist = new ArrayList<>();
 
 	public HoverMenu(Element root, String id, int width){
-		super(root, id); this.setSize(width, 2).setLevel(root.getLevel());
+		super(root, id); this.setSize(width, 2).setLevel(root.getLevel() + 1);
 		this.setPosition(root.x - 2, root.y + root.height + 2);
 		this.setTexPosSize("ui/background_dark", 0, 0, 64, 64);
 		this.addButtons(); HoverMenu.arrlist.add(this);

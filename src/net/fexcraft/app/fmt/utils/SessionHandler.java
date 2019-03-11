@@ -83,7 +83,7 @@ public class SessionHandler {
 			}
 			loggedin = obj.has("success") && obj.get("success").getAsBoolean();
 			if(show){
-				FMTB.showDialogbox(loggedin ? "Logged in!" : obj.has("status") ? obj.get("status").getAsString() : "No Status MSG.",
+				FMTB.showDialogbox((loggedin ? "Logged in!" : obj.has("status") ? obj.get("status").getAsString() : "No Status MSG.") + 
 					"api:success=" + loggedin, "ok!", "retry", DialogBox.NOTHING, () -> {
 						SessionHandler.checkIfLoggedIn(true, false);
 					}

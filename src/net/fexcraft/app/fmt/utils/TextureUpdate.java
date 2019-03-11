@@ -62,13 +62,13 @@ public class TextureUpdate extends TimerTask {
 
 	public static void tryAutoPos(Boolean bool){
 		if(bool == null){
-			FMTB.showDialogbox("This process may mark", "FMT as not responding.", "ok", "cancel", () -> {
+			FMTB.showDialogbox("This process may mark\nFMT as not responding.", "ok", "cancel", () -> {
 				Runnable ZERO = () -> { HALT = false; ALL = false; };
 				Runnable AALL = () -> { HALT = false; ALL = true;  };
-				FMTB.showDialogbox("Use save-space mode?", "May reduce readability.", "Yes", "No", () -> {
-					SAVESPACE = true; FMTB.showDialogbox("Only process polygons with", "0, 0 texture pos?", "Yes", "No (All)", ZERO, AALL);
+				FMTB.showDialogbox("Use save-space mode?\nMay reduce readability.", "Yes", "No", () -> {
+					SAVESPACE = true; FMTB.showDialogbox("Only process polygons with\n0, 0 texture pos?", "Yes", "No (All)", ZERO, AALL);
 				}, () -> {
-					SAVESPACE = false; FMTB.showDialogbox("Only process polygons with", "0, 0 texture pos?", "Yes", "No (All)", ZERO, AALL);
+					SAVESPACE = false; FMTB.showDialogbox("Only process polygons with\n0, 0 texture pos?", "Yes", "No (All)", ZERO, AALL);
 				});
 			}, DialogBox.NOTHING);
 			return;
@@ -84,11 +84,11 @@ public class TextureUpdate extends TimerTask {
 		}
 		try{
 			if(HALT || last < 0 || last >= list.size()){
-				FMTB.showDialogbox("Auto texture positioning", "Complete!", "Good!", null, DialogBox.NOTHING, null);
+				FMTB.showDialogbox("Auto texture positioning\nComplete!", "Good!", null, DialogBox.NOTHING, null);
 				last = (HALT = (list = null) == null) ? -1 : 0; image = null; return;
 			}
 			PolygonWrapper wrapper = list.get(last); last++;
-			FMTB.showDialogbox("Processing: " + (per = getPercent(last, list.size())) + "%", wrapper.getTurboList().id + ":" + wrapper.name(), null, null, null, null, per, null);
+			FMTB.showDialogbox("Processing: " + (per = getPercent(last, list.size())) + "%\n" + wrapper.getTurboList().id + ":" + wrapper.name(), null, null, null, null, per, null);
 			if(wrapper.texpos == null || wrapper.texpos.length == 0){ Print.console("skipping1 [" + wrapper.getTurboList().id + ":" + wrapper.name() + "]"); return; }
 			if(wrapper.textureX != 0f && wrapper.textureY != 0f && !ALL){
 				Print.console("skipping0 [" + wrapper.getTurboList().id + ":" + wrapper.name() + "]");
