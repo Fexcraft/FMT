@@ -8,7 +8,7 @@ import net.fexcraft.app.fmt.FMTGLProcess;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
-import net.fexcraft.app.fmt.ui.generic.OldTextField;
+import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.ui.tree.RightTree;
 import net.fexcraft.app.fmt.utils.KeyCompound.KeyFunction;
 import net.fexcraft.lib.common.math.Vec3f;
@@ -44,7 +44,7 @@ public class GGR {
 
     public void pollInput(float delta){
         acceptMouseInput(delta);
-        if(!OldTextField.anySelected()) acceptInputMove(delta);
+        if(!TextField.anySelected()) acceptInputMove(delta);
         acceptInputKeyboard();
     }
     
@@ -52,8 +52,8 @@ public class GGR {
     	while(Keyboard.next()){
     		int key = Keyboard.getEventKey();
     		if(Keyboard.getEventKeyState()){//"pressed"
-    	        if(OldTextField.anySelected()){
-    	        	OldTextField field = OldTextField.getSelected();
+    	        if(TextField.anySelected()){
+    	        	TextField field = TextField.getSelected();
     	        	if(field != null){
     	        		for(int i = 2; i < 12; i++){
     	        			if(key == i) field.onInput(key, getKeyName(i));

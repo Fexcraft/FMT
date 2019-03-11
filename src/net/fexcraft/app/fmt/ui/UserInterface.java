@@ -10,7 +10,7 @@ import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.ui.general.FileChooser;
 import net.fexcraft.app.fmt.ui.general.HoverMenu;
-import net.fexcraft.app.fmt.ui.generic.OldTextField;
+import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.utils.RayCoastAway;
 import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.app.fmt.utils.Settings;
@@ -29,7 +29,6 @@ public class UserInterface {
 	public static FileChooser FILECHOOSER;
 	public static ControlsAdjuster CONTROLS;
 	//
-	private ArrayList<OldElement> oldelements = new ArrayList<>();
 	private ArrayList<Element> elements = new ArrayList<>();
 	private FMTGLProcess root;
 
@@ -78,18 +77,18 @@ public class UserInterface {
 		}
 	}
 	
-	private OldElement tmelm = new OldTextField(null, "text", 4, 4, 500){
+	private Element tmelm = new TextField(null, "text", 4, 4, 500){
 		@Override
 		public void renderSelf(int rw, int rh){
-			this.y = rh - root.getDisplayMode().getHeight() + 4;
+			this.y = rh - FMTB.get().getDisplayMode().getHeight() + 4;
 			this.setText((Time.getDay() % 2 == 0 ? "FMT - Fexcraft Modelling Toolbox" : "FMT - Fex's Modelling Toolbox") + (Static.dev() ? " [Developement Version]" : " [Standard Version]"), false);
 			super.renderSelf(rw, rh);
 		}
 	};
-	private OldElement logintxt = new OldTextField(null, "text", 4, 4, 500){
+	private Element logintxt = new TextField(null, "text", 4, 4, 500){
 		@Override
 		public void renderSelf(int rw, int rh){
-			this.y = rh - root.getDisplayMode().getHeight() + 32;
+			this.y = rh - FMTB.get().getDisplayMode().getHeight() + 32;
 			switch(FMTB.MODEL.creators.size()){
 				case 0: {
 					this.setText(FMTB.MODEL.name + " - " + (SessionHandler.isLoggedIn() ? SessionHandler.getUserName() : "Guest User"), false);
@@ -157,15 +156,9 @@ public class UserInterface {
 		for(Element elm : elements) if(elm.id.equals(string)) return elm; return null;
 	}
 
-	public OldElement getOldElement(String string){
-		for(OldElement elm : oldelements) if(elm.id.equals(string)) return elm; return null;
-	}
-
 	public boolean hasElement(String string){
 		return getElement(string) != null;
 	}
-	
-	public ArrayList<OldElement> getOldElements(){ return oldelements; }
 	
 	public ArrayList<Element> getElements(){ return elements; }
 	

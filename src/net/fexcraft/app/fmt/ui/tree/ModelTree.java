@@ -4,8 +4,8 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.FontRenderer;
-import net.fexcraft.app.fmt.ui.OldElement;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.utils.GGR;
@@ -33,7 +33,7 @@ public class ModelTree extends RightTree {
 		this.elements.values().forEach(val -> val.z = -50);*/
 	}
 	
-	public static class Scrollbar extends OldElement {
+	public static class Scrollbar extends Element {
 		
 		private ModelTree root;
 
@@ -81,10 +81,10 @@ public class ModelTree extends RightTree {
 			this.renderQuad(x + 4, y + 4 + -scroll + (pass), width - 8, 24, "ui/background");
 			FontRenderer.drawText((Settings.polygonCount() ? "[" + list.size() + "] " : "") + list.id, x + 8, y + 8 + -scroll + (pass), 1);
 			GL11.glTranslatef(0, 0,  1);
-			this.renderIcon(x + width - 92, y + 6 + -scroll + (pass), "icons/group_minimize");
-			this.renderIcon(x + width - 70, y + 6 + -scroll + (pass), "icons/group_edit");
-			this.renderIcon(x + width - 48, y + 6 + -scroll + (pass), "icons/group_visible");
-			this.renderIcon(x + width - 26, y + 6 + -scroll + (pass), "icons/group_delete");
+			this.renderIcon(x + width - 92, y + 6 + -scroll + (pass), 20, "icons/group_minimize");
+			this.renderIcon(x + width - 70, y + 6 + -scroll + (pass), 20, "icons/group_edit");
+			this.renderIcon(x + width - 48, y + 6 + -scroll + (pass), 20, "icons/group_visible");
+			this.renderIcon(x + width - 26, y + 6 + -scroll + (pass), 20, "icons/group_delete");
 			GL11.glTranslatef(0, 0, -1); pass += 26;
 			if(!list.minimized){
 				for(int j = 0; j < list.size(); j++){
@@ -92,9 +92,9 @@ public class ModelTree extends RightTree {
 					this.renderQuad(x + 8, y + 4 + -scroll + (pass), width - 16, 24, "ui/background");
 					FontRenderer.drawText(j + " | " + poly.name(), x + 10, y + 8 + -scroll + (pass), 1);
 					GL11.glTranslatef(0, 0,  1);
-					this.renderIcon(x + width - 74, y + 6 + -scroll + (pass), "icons/group_edit");
-					this.renderIcon(x + width - 52, y + 6 + -scroll + (pass), "icons/group_visible");
-					this.renderIcon(x + width - 30, y + 6 + -scroll + (pass), "icons/group_delete");
+					this.renderIcon(x + width - 74, y + 6 + -scroll + (pass), 20, "icons/group_edit");
+					this.renderIcon(x + width - 52, y + 6 + -scroll + (pass), 20, "icons/group_visible");
+					this.renderIcon(x + width - 30, y + 6 + -scroll + (pass), 20, "icons/group_delete");
 					GL11.glTranslatef(0, 0, -1); pass += 26;
 				}
 			}

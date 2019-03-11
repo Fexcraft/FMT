@@ -29,25 +29,12 @@ import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.ui.UserInterface;
-import net.fexcraft.app.fmt.ui.editor.CylinderEditor;
-import net.fexcraft.app.fmt.ui.editor.Editor;
-import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
-import net.fexcraft.app.fmt.ui.editor.GroupEditor;
-import net.fexcraft.app.fmt.ui.editor.ModelEditor;
-import net.fexcraft.app.fmt.ui.editor.PreviewEditor;
-import net.fexcraft.app.fmt.ui.editor.ShapeboxEditor;
-import net.fexcraft.app.fmt.ui.editor.TexrectAEditor;
-import net.fexcraft.app.fmt.ui.editor.TexrectBEditor;
-import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
 import net.fexcraft.app.fmt.ui.general.Crossbar;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.ui.general.FileChooser;
+import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.ui.general.Toolbar;
-import net.fexcraft.app.fmt.ui.generic.OldToolbar;
-import net.fexcraft.app.fmt.ui.generic.OldTextField;
-import net.fexcraft.app.fmt.ui.tree.HelperTree;
-import net.fexcraft.app.fmt.ui.tree.ModelTree;
 import net.fexcraft.app.fmt.utils.Backups;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.HelperCollector;
@@ -306,9 +293,14 @@ public class FMTB implements FMTGLProcess {
 		TextureManager.loadTexture("icons/group_visible");
 		TextureManager.loadTexture("icons/group_edit");
 		TextureManager.loadTexture("icons/group_minimize");
-		//ui.getOldElements().add(new Crossbar());
-		//ui.getOldElements().add(new Toolbar());
-		ui.getOldElements().add(new GeneralEditor());
+		TextureManager.loadTexture("ui/background_dark");
+		TextureManager.loadTexture("ui/background_light");
+		//
+		ui.getElements().add(UserInterface.DIALOGBOX = new DialogBox());
+		ui.getElements().add(UserInterface.FILECHOOSER = new FileChooser());
+		ui.getElements().add(UserInterface.CONTROLS = new ControlsAdjuster());
+		//
+		/*ui.getOldElements().add(new GeneralEditor());
 		ui.getOldElements().add(new ShapeboxEditor());
 		ui.getOldElements().add(new ModelTree());
 		ui.getOldElements().add(new CylinderEditor());
@@ -319,31 +311,7 @@ public class FMTB implements FMTGLProcess {
 		ui.getOldElements().add(new TextureEditor());
 		ui.getOldElements().add(new TexrectBEditor());
 		ui.getOldElements().add(new TexrectAEditor());
-		Editor.addQuickButtons();
-		//render last
-		ui.getOldElements().add(new OldToolbar());
-		//FMTB.MODEL.updateFields();
-		/*ui.getElements().add(new Element(null, "test"){
-			@Override
-			public void renderSelf(int rw, int rh){
-				//if(this.isHovered()) Print.console("hovered");
-				this.setPosition(x = (rw / 2) - (200 / 2), y = (rh / 2) - (200 / 2));
-				//this.setOffset(Time.getSecond(), -Time.getSecond());
-				//this.renderSelfQuad();
-				FontRenderer.drawText("test sting test string test 5tr1n6 !@#$%&*()", x, y - 20, 0);
-				FontRenderer.drawText("test sting test string test 5tr1n6 !@#$%&*()", x, y - 40, 1);
-				FontRenderer.drawText("test sting test string test 5tr1n6 !@#$%&*()", x, y - 60, 2);
-				FontRenderer.drawText(Translator.translate("test.string.thing"), x, y, 2);
-			}
-		}.setTexPosSize("icon", 0, 0, 16, 16).setSize(200, 200).setLevel(-50));*/
-		TextureManager.loadTexture("ui/background_dark");
-		TextureManager.loadTexture("ui/background_light");
-		//
-		ui.getElements().add(UserInterface.DIALOGBOX = new DialogBox());
-		ui.getElements().add(UserInterface.FILECHOOSER = new FileChooser());
-		ui.getElements().add(UserInterface.CONTROLS = new ControlsAdjuster());
-		
-		
+		Editor.addQuickButtons();*/
 		//render last
 		ui.getElements().add(new Toolbar());
 		ui.getElements().add(new Crossbar());
@@ -357,7 +325,7 @@ public class FMTB implements FMTGLProcess {
 
 	@Override
 	public void reset(){
-		UserInterface.DIALOGBOX.reset(); UserInterface.FILECHOOSER.reset(); UserInterface.CONTROLS.reset(); OldTextField.deselectAll();
+		UserInterface.DIALOGBOX.reset(); UserInterface.FILECHOOSER.reset(); UserInterface.CONTROLS.reset(); TextField.deselectAll();
 	}
 
 	private void checkForUpdates(){

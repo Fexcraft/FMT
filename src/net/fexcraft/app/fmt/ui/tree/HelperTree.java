@@ -33,10 +33,10 @@ public class HelperTree extends RightTree {
 			this.renderQuad(x + 4, y + 4 + -scroll + (pass), width - 8, 24, "ui/background"); TextureManager.unbind();
 			//TODO font.drawString(x + 8, y + 6 + -scroll + (pass), model.name, Color.white); RGB.glColorReset();
 			GL11.glTranslatef(0, 0,  1);
-			this.renderIcon(x + width - 92, y + 6 + -scroll + (pass), "icons/group_minimize");
-			this.renderIcon(x + width - 70, y + 6 + -scroll + (pass), "icons/group_edit");
-			this.renderIcon(x + width - 48, y + 6 + -scroll + (pass), "icons/group_visible");
-			this.renderIcon(x + width - 26, y + 6 + -scroll + (pass), "icons/group_delete");
+			this.renderIcon(x + width - 92, y + 6 + -scroll + (pass), 20, "icons/group_minimize");
+			this.renderIcon(x + width - 70, y + 6 + -scroll + (pass), 20, "icons/group_edit");
+			this.renderIcon(x + width - 48, y + 6 + -scroll + (pass), 20, "icons/group_visible");
+			this.renderIcon(x + width - 26, y + 6 + -scroll + (pass), 20, "icons/group_delete");
 			GL11.glTranslatef(0, 0, -1); pass += 26;
 			if(!model.minimized){
 				for(int j = 0; j < model.getCompound().size(); j++){
@@ -44,7 +44,7 @@ public class HelperTree extends RightTree {
 					this.renderQuad(x + 8, y + 4 + -scroll + (pass), width - 16, 24, "ui/background"); TextureManager.unbind();
 					//TODO font.drawString(x + 10, y + 6 + -scroll + (pass), j + " | " + poly.id, Color.white); RGB.glColorReset();
 					GL11.glTranslatef(0, 0,  1);
-					this.renderIcon(x + width - 30, y + 6 + -scroll + (pass), "icons/group_visible");
+					this.renderIcon(x + width - 30, y + 6 + -scroll + (pass), 20, "icons/group_visible");
 					GL11.glTranslatef(0, 0, -1); pass += 26;
 				}
 			}
@@ -76,7 +76,7 @@ public class HelperTree extends RightTree {
 					HelperCollector.LOADED.remove(j); return true;
 				}
 				else{
-					SEL = j; Editor editor = (Editor)FMTB.get().UI.getOldElement("preview_editor");
+					SEL = j; Editor editor = (Editor)FMTB.get().UI.getElement("preview_editor");
 					GroupCompound model = getSelected();
 					if(model == null){
 						editor.getField("posx").applyChange(0);

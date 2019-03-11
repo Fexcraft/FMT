@@ -6,14 +6,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.OldElement;
-import net.fexcraft.app.fmt.ui.generic.Button;
-import net.fexcraft.app.fmt.ui.generic.IconButton;
-import net.fexcraft.app.fmt.ui.generic.OldTextField;
+import net.fexcraft.app.fmt.ui.general.Button;
+import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.TextureManager;
 
-public abstract class Editor extends OldElement {
+public abstract class Editor extends Element {
 	
 	private static final ArrayList<Editor> editors = new ArrayList<Editor>();
 	public static final String[] xyz = new String[]{ "x", "y", "z" };
@@ -55,35 +55,35 @@ public abstract class Editor extends OldElement {
 	}
 	
 	protected void addMultiplicator(int y){
-		this.elements.put("multiplicator-", new Button(this, "multiplicator-", 12, 26, 4, y){
+		this.elements.add(new Button(this, "multiplicator-", 12, 26, 4, y){
 			@Override protected boolean processButtonClick(int x, int y, boolean left){
-				((OldTextField)parent.getElement("multiplicator")).applyChange(FMTB.MODEL.multiply(0.5f)); return true;
+				((TextField)root.getElement("multiplicator")).applyChange(FMTB.MODEL.multiply(0.5f)); return true;
 			}
 		}.setText(" < ", true).setTexture("ui/background").setLevel(-1));
-		this.elements.put("multiplicator", new OldTextField(this, "multiplicator", 140, 16, y){
+		this.elements.put("multiplicator", new TextField(this, "multiplicator", 140, 16, y){
 			@Override protected boolean processScrollWheel(int wheel){
 				applyChange(FMTB.MODEL.multiply(wheel > 0 ? 2.0f : 0.5f)); return true;
 			}
 		}.setAsNumberfield(0.0001f, 1000, true).setLevel(-1));
 		this.elements.put("multiplicator+", new Button(this, "multiplicator+", 12, 26, 152, y){
 			@Override protected boolean processButtonClick(int x, int y, boolean left){
-				((OldTextField)parent.getElement("multiplicator")).applyChange(FMTB.MODEL.multiply(2.0f)); return true;
+				((TextField)parent.getElement("multiplicator")).applyChange(FMTB.MODEL.multiply(2.0f)); return true;
 			}
 		}.setText(" > ", true).setTexture("ui/background").setLevel(-1));
 		this.elements.put("multiplicator_reset", new IconButton(this, "multiplicator_reset", "icons/group_delete", 170, this.y + 3 + y){
 			@Override
 			protected boolean processButtonClick(int x, int y, boolean left){
-				((OldTextField)parent.getElement("multiplicator")).applyChange(1); FMTB.MODEL.rate = 1f; return true;
+				((TextField)parent.getElement("multiplicator")).applyChange(1); FMTB.MODEL.rate = 1f; return true;
 			}
 		});
 	}
 
-	public OldTextField getField(String string){
-		return (OldTextField)elements.get(string);
+	public TextField getField(String string){
+		return (TextField)this.getElement(string);
 	}
 
 	public Button getButton(String string){
-		return (Button)elements.get(string);
+		return (Button)this.getElement(string);
 	}
 
 	public static Editor get(String string){
@@ -92,8 +92,10 @@ public abstract class Editor extends OldElement {
 	
 	protected boolean processScrollWheel(int wheel){ return true; }
 
-	public List<OldElement> getFields(){
-		return elements.values().stream().filter(pre -> pre instanceof OldTextField).collect(Collectors.toList());
+	public ArrayList<TextField> getFields(){
+		ArrayList<TextField> fields = new ArrayList<>();
+		for(Element elm : elements) if(elm instanceof TextField) fields.add((TextField)elm);
+		return fields;
 	}
 
 	/** Run after all editors are initialized. */
@@ -106,10 +108,10 @@ public abstract class Editor extends OldElement {
 			String[] getwanted = editor.getExpectedQuickButtons();
 			if(getwanted == null) getwanted = all;
 			for(int i = 0; i < getwanted.length; i++){ final String wanted = getwanted[i];
-				editor.elements.put("open_" + wanted, new IconButton(editor, "open_" + wanted, "icons/editors/" + wanted, editor.x + editor.width - (i * 24) - 24, editor.y + 2){
+				editor.elements.add(new IconButton(editor, "open_" + wanted, "icons/editors/" + wanted, editor.x + editor.width - (i * 24) - 24, editor.y + 2){
 					@Override protected boolean processButtonClick(int x, int y, boolean left){ Editor.show(wanted); return true; }
 				});
-				editor.elements.get("open_" + wanted).visible = Settings.editorShortcuts();
+				editor.getElement("open_" + wanted).setVisible(Settings.editorShortcuts());
 			}
 		}
 	}
@@ -126,7 +128,7 @@ public abstract class Editor extends OldElement {
 	public static void toggleQuickButtons(){
 		Settings.toggleEditorShortcuts();
 		for(Editor editor : editors){
-			for(OldElement elm : editor.elements.values()){
+			for(OldElement elm : editor.elements){
 				if(elm instanceof IconButton && elm.id.startsWith("open_")){
 					elm.visible = Settings.editorShortcuts();
 				}
