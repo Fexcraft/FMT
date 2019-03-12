@@ -13,7 +13,7 @@ public class Element {
 	
 	protected ArrayList<Element> elements = new ArrayList<>();
 	protected Element root;
-	public int x, y, z = -100, width, height, xoff, yoff;
+	public int x, y, z = -100, width, height, xoff, yoff, row, col;
 	public float tx, ty, tsx, tsy, tex_width, tex_height;
 	protected boolean hovered, enabled, visible;
 	public String id, texture = "null";
@@ -40,8 +40,10 @@ public class Element {
 		this.width = width; this.height = height; return this;
 	}
 	
-	public Element setOffset(int xoff, int yoff){
-		this.xoff = xoff; this.yoff = yoff; return this;
+	public Element setOffset(int xoff, int yoff, boolean relupdate){
+		this.xoff = xoff; this.yoff = yoff;
+		for(Element elm : elements) elm.setOffset(xoff, yoff, true);
+		return this;
 	}
 	
 	public Element setVisible(boolean bool){
@@ -70,6 +72,10 @@ public class Element {
 	
 	public boolean isHovered(){
 		return hovered;
+	}
+	
+	public Element setRowCol(int row, int col){
+		this.row = row; this.col = col; return this;
 	}
 	
 	/** Set Texture, Position and Size. **/
@@ -118,7 +124,7 @@ public class Element {
         GL11.glEnd();
 	}
 	
-	protected void renderIcon(int x, int y, int sz, String texture){
+	protected void renderIcon(float x, float y, int sz, String texture){
 		TextureManager.bindTexture(texture);
 		GL11.glBegin(GL11.GL_QUADS);
 		GL11.glTexCoord2f(0, 0); GL11.glVertex2f(x, y);
@@ -154,7 +160,7 @@ public class Element {
 				if(bool = elm.onButtonClick(x, y, left, elm.hovered)) break;
 			}
 		}
-		return bool || hovered ? processButtonClick(x, y, left) : false;
+		return bool ? true : hovered ? processButtonClick(x, y, left) : false;
 	}
 	
 	/** To be overridden. **/

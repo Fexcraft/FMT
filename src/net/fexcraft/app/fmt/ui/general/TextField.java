@@ -16,7 +16,6 @@ public class TextField extends Element {
 	private float min, max, value;
 	private String text, tempval;
 	private RGB textcolor = new RGB(212, 212, 212);
-	private int width;
 
 	public TextField(Element root, String id, int width, int x, int y){
 		super(root, id); fields.add(this); this.setSize(width, 26);
@@ -42,12 +41,12 @@ public class TextField extends Element {
 	@Override
 	public void renderSelf(int rw, int rh){
 		if(enabled) (isSelected() ? hovered ? hoversel : hovercolor : hovered ? RGB.BLACK : inactivecol).glColorApply();
-		if(background) this.renderQuad(x, y, width, height, "ui/background");
+		if(background) this.renderQuad(x, y, width, height, "ui/background_dark");
 		if(enabled) RGB.glColorReset();
 		if(!number && text == null) return;
 		String tex = number ? (tempval == null ? value : "*" + tempval) + "" : tempval == null ? this.text : tempval;
 		if(centered){
-			int x = width / 2 - (FontRenderer.getWidth(tex, 1) / 2), y = height / 2 - 6;
+			int x = width / 2 - (FontRenderer.getWidth(tex, 1) / 2), y = height / 2 - 10;
 			FontRenderer.drawText(tex, this.x + x, this.y + y, 1, textcolor);
 		}
 		else{
@@ -194,4 +193,7 @@ public class TextField extends Element {
 			case "inactive": this.inactivecol = rgb; break;
 		} return this;
 	}
+
+	public static ArrayList<TextField> getAllFields(){ return fields; }
+	
 }

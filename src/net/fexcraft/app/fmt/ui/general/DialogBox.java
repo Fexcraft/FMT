@@ -44,7 +44,7 @@ public class DialogBox extends Element implements Dialog {
 	public void renderSelf(int rw, int rh) {
 		x = (rw / 2) - (width / 2); y = (rh / 2) - (height / 2); this.renderSelfQuad();
 		button0.x = x + 20; button0.y = y + 80; button1.x = x + 136; button1.y = y + 80;
-		FontRenderer.drawText(text, this.x + 20, this.y, 1);
+		FontRenderer.drawText(text, this.x + 20, this.y + 13, 1);
 		if(progress >= 0){
 			this.renderQuad(x + 20, y + 64, 216, 12, "ui/background_light");
 			if(progress > 0){

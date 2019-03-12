@@ -78,30 +78,11 @@ public class KeyCompound {
 			}
 		});
 		//
-		keys.add(new KeyFunction("toggle_general_editor", Keyboard.KEY_1, true){
-			@Override public boolean process(){ Editor.toggle("general_editor", true); return true; }
-		});
-		keys.add(new KeyFunction("toggle_shapebox_editor", Keyboard.KEY_2, true){
-			@Override public boolean process(){ Editor.toggle("shapebox_editor", false); return true; }
-		});
-		keys.add(new KeyFunction("toggle_cylinder_editor", Keyboard.KEY_3, true){
-			@Override public boolean process(){ Editor.toggle("cylinder_editor", false); return true; }
-		});
-		keys.add(new KeyFunction("toggle_group_editor", Keyboard.KEY_4, true){
-			@Override public boolean process(){ Editor.toggle("group_editor", true); return true; }
-		});
-		keys.add(new KeyFunction("toggle_model_editor", Keyboard.KEY_5, true){
-			@Override public boolean process(){ Editor.toggle("model_editor", true); return true; }
-		});
-		keys.add(new KeyFunction("toggle_texrectb_editor", Keyboard.KEY_6, true){
-			@Override public boolean process(){ Editor.toggle("texrectb_editor", false); return true; }
-		});
-		keys.add(new KeyFunction("toggle_texrecta_editor", Keyboard.KEY_7, true){
-			@Override public boolean process(){ Editor.toggle("texrecta_editor", false); return true; }
-		});
-		keys.add(new KeyFunction("toggle_texture_editor", Keyboard.KEY_8, true){
-			@Override public boolean process(){ Editor.toggle("texture_editor", false); return true; }
-		});
+		for(int i = 0; i < 9; i++){ final int j = i;
+			keys.add(new KeyFunction("toggle_editor_" + i, Keyboard.KEY_1 + i, true){
+				@Override public boolean process(){ Editor.toggleContainer(j); return true; }
+			});
+		}
 		//
 		keys.add(new KeyFunction("camera_rotate_left", Keyboard.KEY_LEFT, true){
 			@Override public boolean process(){ FMTB.ggr.rotation.yCoord += 15; return true; }

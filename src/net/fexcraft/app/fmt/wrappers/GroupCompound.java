@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
@@ -246,219 +245,219 @@ public class GroupCompound {
 	public void updateFields(){
 		try{
 			if(FMTB.get() == null || FMTB.get().UI == null || !FMTB.get().UI.hasElement("general_editor")) return; FMTB.get().setTitle(this.name);
-			Editor editor = (Editor)FMTB.get().UI.getElement("general_editor"); PolygonWrapper poly = getFirstSelection();
+			PolygonWrapper poly = getFirstSelection();
 			//ouch, I forgot not keeping a secondary "selection" list doesn't also save which was selected first...
 			if(poly == null){
-				editor.getField("sizex").applyChange(0);
-				editor.getField("sizey").applyChange(0);
-				editor.getField("sizez").applyChange(0);
+				Editor.getGlobalField("sizex").applyChange(0);
+				Editor.getGlobalField("sizey").applyChange(0);
+				Editor.getGlobalField("sizez").applyChange(0);
 				//
-				editor.getField("posx").applyChange(0);
-				editor.getField("posy").applyChange(0);
-				editor.getField("posz").applyChange(0);
+				Editor.getGlobalField("posx").applyChange(0);
+				Editor.getGlobalField("posy").applyChange(0);
+				Editor.getGlobalField("posz").applyChange(0);
 				//
-				editor.getField("offx").applyChange(0);
-				editor.getField("offy").applyChange(0);
-				editor.getField("offz").applyChange(0);
+				Editor.getGlobalField("offx").applyChange(0);
+				Editor.getGlobalField("offy").applyChange(0);
+				Editor.getGlobalField("offz").applyChange(0);
 				//
-				editor.getField("rotx").applyChange(0);
-				editor.getField("roty").applyChange(0);
-				editor.getField("rotz").applyChange(0);
+				Editor.getGlobalField("rotx").applyChange(0);
+				Editor.getGlobalField("roty").applyChange(0);
+				Editor.getGlobalField("rotz").applyChange(0);
 				//
-				editor.getField("texx").applyChange(0);
-				editor.getField("texy").applyChange(0);
+				Editor.getGlobalField("texx").applyChange(0);
+				Editor.getGlobalField("texy").applyChange(0);
 				//
-				editor.getField("group").setText("none", true);
-				editor.getField("boxname").setText("no polygon selected", true);
+				Editor.getGlobalField("group").setText("none", true);
+				Editor.getGlobalField("boxname").setText("no polygon selected", true);
+				Editor.getGlobalField("boxtype").setText("no polygon selected", true);
 			}
 			else{
-				editor.getField("sizex").applyChange(poly.getFloat("size", true, false, false));
-				editor.getField("sizey").applyChange(poly.getFloat("size", false, true, false));
-				editor.getField("sizez").applyChange(poly.getFloat("size", false, false, true));
+				Editor.getGlobalField("sizex").applyChange(poly.getFloat("size", true, false, false));
+				Editor.getGlobalField("sizey").applyChange(poly.getFloat("size", false, true, false));
+				Editor.getGlobalField("sizez").applyChange(poly.getFloat("size", false, false, true));
 				//
-				editor.getField("posx").applyChange(poly.getFloat("pos", true, false, false));
-				editor.getField("posy").applyChange(poly.getFloat("pos", false, true, false));
-				editor.getField("posz").applyChange(poly.getFloat("pos", false, false, true));
+				Editor.getGlobalField("posx").applyChange(poly.getFloat("pos", true, false, false));
+				Editor.getGlobalField("posy").applyChange(poly.getFloat("pos", false, true, false));
+				Editor.getGlobalField("posz").applyChange(poly.getFloat("pos", false, false, true));
 				//
-				editor.getField("offx").applyChange(poly.getFloat("off", true, false, false));
-				editor.getField("offy").applyChange(poly.getFloat("off", false, true, false));
-				editor.getField("offz").applyChange(poly.getFloat("off", false, false, true));
+				Editor.getGlobalField("offx").applyChange(poly.getFloat("off", true, false, false));
+				Editor.getGlobalField("offy").applyChange(poly.getFloat("off", false, true, false));
+				Editor.getGlobalField("offz").applyChange(poly.getFloat("off", false, false, true));
 				//
-				editor.getField("rotx").applyChange(poly.getFloat("rot", true, false, false));
-				editor.getField("roty").applyChange(poly.getFloat("rot", false, true, false));
-				editor.getField("rotz").applyChange(poly.getFloat("rot", false, false, true));
+				Editor.getGlobalField("rotx").applyChange(poly.getFloat("rot", true, false, false));
+				Editor.getGlobalField("roty").applyChange(poly.getFloat("rot", false, true, false));
+				Editor.getGlobalField("rotz").applyChange(poly.getFloat("rot", false, false, true));
 				//
-				editor.getField("texx").applyChange(poly.getFloat("tex", true, false, false));
-				editor.getField("texy").applyChange(poly.getFloat("tex", false, true, false));
+				Editor.getGlobalField("texx").applyChange(poly.getFloat("tex", true, false, false));
+				Editor.getGlobalField("texy").applyChange(poly.getFloat("tex", false, true, false));
 				//
-				editor.getField("group").setText(this.getFirstSelectedGroupName(), true);
-				editor.getField("boxname").setText(poly.name == null ? "unnamed" : poly.name, true);
+				Editor.getGlobalField("group").setText(this.getFirstSelectedGroupName(), true);
+				Editor.getGlobalField("boxname").setText(poly.name == null ? "unnamed" : poly.name, true);
+				Editor.getGlobalField("boxtype").setText(poly.getType().toString().toLowerCase(), true);
 			}
-			editor.getField("multiplicator").applyChange(rate);
-			//
-			editor = (Editor)FMTB.get().UI.getElement("shapebox_editor");
 			if(poly == null || !poly.getType().isShapebox()){
-				editor.getField("cor0x").applyChange(0);
-				editor.getField("cor0y").applyChange(0);
-				editor.getField("cor0z").applyChange(0);
+				Editor.getGlobalField("cor0x").applyChange(0);
+				Editor.getGlobalField("cor0y").applyChange(0);
+				Editor.getGlobalField("cor0z").applyChange(0);
 				//
-				editor.getField("cor1x").applyChange(0);
-				editor.getField("cor1y").applyChange(0);
-				editor.getField("cor1z").applyChange(0);
+				Editor.getGlobalField("cor1x").applyChange(0);
+				Editor.getGlobalField("cor1y").applyChange(0);
+				Editor.getGlobalField("cor1z").applyChange(0);
 				//
-				editor.getField("cor2x").applyChange(0);
-				editor.getField("cor2y").applyChange(0);
-				editor.getField("cor2z").applyChange(0);
+				Editor.getGlobalField("cor2x").applyChange(0);
+				Editor.getGlobalField("cor2y").applyChange(0);
+				Editor.getGlobalField("cor2z").applyChange(0);
 				//
-				editor.getField("cor3x").applyChange(0);
-				editor.getField("cor3y").applyChange(0);
-				editor.getField("cor3z").applyChange(0);
+				Editor.getGlobalField("cor3x").applyChange(0);
+				Editor.getGlobalField("cor3y").applyChange(0);
+				Editor.getGlobalField("cor3z").applyChange(0);
 				//
-				editor.getField("cor4x").applyChange(0);
-				editor.getField("cor4y").applyChange(0);
-				editor.getField("cor4z").applyChange(0);
+				Editor.getGlobalField("cor4x").applyChange(0);
+				Editor.getGlobalField("cor4y").applyChange(0);
+				Editor.getGlobalField("cor4z").applyChange(0);
 				//
-				editor.getField("cor5x").applyChange(0);
-				editor.getField("cor5y").applyChange(0);
-				editor.getField("cor5z").applyChange(0);
+				Editor.getGlobalField("cor5x").applyChange(0);
+				Editor.getGlobalField("cor5y").applyChange(0);
+				Editor.getGlobalField("cor5z").applyChange(0);
 				//
-				editor.getField("cor6x").applyChange(0);
-				editor.getField("cor6y").applyChange(0);
-				editor.getField("cor6z").applyChange(0);
+				Editor.getGlobalField("cor6x").applyChange(0);
+				Editor.getGlobalField("cor6y").applyChange(0);
+				Editor.getGlobalField("cor6z").applyChange(0);
 				//
-				editor.getField("cor7x").applyChange(0);
-				editor.getField("cor7y").applyChange(0);
-				editor.getField("cor7z").applyChange(0);
+				Editor.getGlobalField("cor7x").applyChange(0);
+				Editor.getGlobalField("cor7y").applyChange(0);
+				Editor.getGlobalField("cor7z").applyChange(0);
 				//
-				/*editor.getField("face0x").applyChange(0);
-				editor.getField("face0y").applyChange(0);
-				editor.getField("face0z").applyChange(0);
-				editor.getField("face1x").applyChange(0);
-				editor.getField("face1y").applyChange(0);
-				editor.getField("face1z").applyChange(0);*/
+				/*Editor.getGlobalField("face0x").applyChange(0);
+				Editor.getGlobalField("face0y").applyChange(0);
+				Editor.getGlobalField("face0z").applyChange(0);
+				Editor.getGlobalField("face1x").applyChange(0);
+				Editor.getGlobalField("face1y").applyChange(0);
+				Editor.getGlobalField("face1z").applyChange(0);*/
 			}
 			else{
-				editor.getField("cor0x").applyChange(poly.getFloat("cor0", true, false, false));
-				editor.getField("cor0y").applyChange(poly.getFloat("cor0", false, true, false));
-				editor.getField("cor0z").applyChange(poly.getFloat("cor0", false, false, true));
+				Editor.getGlobalField("cor0x").applyChange(poly.getFloat("cor0", true, false, false));
+				Editor.getGlobalField("cor0y").applyChange(poly.getFloat("cor0", false, true, false));
+				Editor.getGlobalField("cor0z").applyChange(poly.getFloat("cor0", false, false, true));
 				//
-				editor.getField("cor1x").applyChange(poly.getFloat("cor1", true, false, false));
-				editor.getField("cor1y").applyChange(poly.getFloat("cor1", false, true, false));
-				editor.getField("cor1z").applyChange(poly.getFloat("cor1", false, false, true));
+				Editor.getGlobalField("cor1x").applyChange(poly.getFloat("cor1", true, false, false));
+				Editor.getGlobalField("cor1y").applyChange(poly.getFloat("cor1", false, true, false));
+				Editor.getGlobalField("cor1z").applyChange(poly.getFloat("cor1", false, false, true));
 				//
-				editor.getField("cor2x").applyChange(poly.getFloat("cor2", true, false, false));
-				editor.getField("cor2y").applyChange(poly.getFloat("cor2", false, true, false));
-				editor.getField("cor2z").applyChange(poly.getFloat("cor2", false, false, true));
+				Editor.getGlobalField("cor2x").applyChange(poly.getFloat("cor2", true, false, false));
+				Editor.getGlobalField("cor2y").applyChange(poly.getFloat("cor2", false, true, false));
+				Editor.getGlobalField("cor2z").applyChange(poly.getFloat("cor2", false, false, true));
 				//
-				editor.getField("cor3x").applyChange(poly.getFloat("cor3", true, false, false));
-				editor.getField("cor3y").applyChange(poly.getFloat("cor3", false, true, false));
-				editor.getField("cor3z").applyChange(poly.getFloat("cor3", false, false, true));
+				Editor.getGlobalField("cor3x").applyChange(poly.getFloat("cor3", true, false, false));
+				Editor.getGlobalField("cor3y").applyChange(poly.getFloat("cor3", false, true, false));
+				Editor.getGlobalField("cor3z").applyChange(poly.getFloat("cor3", false, false, true));
 				//
-				editor.getField("cor4x").applyChange(poly.getFloat("cor4", true, false, false));
-				editor.getField("cor4y").applyChange(poly.getFloat("cor4", false, true, false));
-				editor.getField("cor4z").applyChange(poly.getFloat("cor4", false, false, true));
+				Editor.getGlobalField("cor4x").applyChange(poly.getFloat("cor4", true, false, false));
+				Editor.getGlobalField("cor4y").applyChange(poly.getFloat("cor4", false, true, false));
+				Editor.getGlobalField("cor4z").applyChange(poly.getFloat("cor4", false, false, true));
 				//
-				editor.getField("cor5x").applyChange(poly.getFloat("cor5", true, false, false));
-				editor.getField("cor5y").applyChange(poly.getFloat("cor5", false, true, false));
-				editor.getField("cor5z").applyChange(poly.getFloat("cor5", false, false, true));
+				Editor.getGlobalField("cor5x").applyChange(poly.getFloat("cor5", true, false, false));
+				Editor.getGlobalField("cor5y").applyChange(poly.getFloat("cor5", false, true, false));
+				Editor.getGlobalField("cor5z").applyChange(poly.getFloat("cor5", false, false, true));
 				//
-				editor.getField("cor6x").applyChange(poly.getFloat("cor6", true, false, false));
-				editor.getField("cor6y").applyChange(poly.getFloat("cor6", false, true, false));
-				editor.getField("cor6z").applyChange(poly.getFloat("cor6", false, false, true));
+				Editor.getGlobalField("cor6x").applyChange(poly.getFloat("cor6", true, false, false));
+				Editor.getGlobalField("cor6y").applyChange(poly.getFloat("cor6", false, true, false));
+				Editor.getGlobalField("cor6z").applyChange(poly.getFloat("cor6", false, false, true));
 				//
-				editor.getField("cor7x").applyChange(poly.getFloat("cor7", true, false, false));
-				editor.getField("cor7y").applyChange(poly.getFloat("cor7", false, true, false));
-				editor.getField("cor7z").applyChange(poly.getFloat("cor7", false, false, true));
+				Editor.getGlobalField("cor7x").applyChange(poly.getFloat("cor7", true, false, false));
+				Editor.getGlobalField("cor7y").applyChange(poly.getFloat("cor7", false, true, false));
+				Editor.getGlobalField("cor7z").applyChange(poly.getFloat("cor7", false, false, true));
 				//
-				/*editor.getField("face0x").applyChange(poly.getFloat("face0", true, false, false));
-				editor.getField("face0y").applyChange(poly.getFloat("face0", false, true, false));
-				editor.getField("face0z").applyChange(poly.getFloat("face0", false, false, true));
-				editor.getField("face1x").applyChange(poly.getFloat("face1", true, false, false));
-				editor.getField("face1y").applyChange(poly.getFloat("face1", false, true, false));
-				editor.getField("face1z").applyChange(poly.getFloat("face1", false, false, true));*/
+				/*Editor.getGlobalField("face0x").applyChange(poly.getFloat("face0", true, false, false));
+				Editor.getGlobalField("face0y").applyChange(poly.getFloat("face0", false, true, false));
+				Editor.getGlobalField("face0z").applyChange(poly.getFloat("face0", false, false, true));
+				Editor.getGlobalField("face1x").applyChange(poly.getFloat("face1", true, false, false));
+				Editor.getGlobalField("face1y").applyChange(poly.getFloat("face1", false, true, false));
+				Editor.getGlobalField("face1z").applyChange(poly.getFloat("face1", false, false, true));*/
 			}
-			editor.getField("multiplicator").applyChange(rate);
-			//
-			editor = (Editor)FMTB.get().UI.getElement("cylinder_editor");
 			if(poly == null || !poly.getType().isCylinder()){
-				editor.getField("cyl0x").applyChange(0); editor.getField("cyl0y").applyChange(0); editor.getField("cyl0z").applyChange(0);
-				editor.getField("cyl1x").applyChange(0); editor.getField("cyl1y").applyChange(0); editor.getField("cyl1z").applyChange(0);
-				editor.getField("cyl2x").applyChange(0); editor.getField("cyl2y").applyChange(0); editor.getField("cyl2z").applyChange(0);
-				editor.getField("cyl3x").applyChange(0); editor.getField("cyl3y").applyChange(0); editor.getField("cyl3z").applyChange(0);
+				Editor.getGlobalField("cyl0x").applyChange(0); Editor.getGlobalField("cyl0y").applyChange(0); Editor.getGlobalField("cyl0z").applyChange(0);
+				Editor.getGlobalField("cyl1x").applyChange(0); Editor.getGlobalField("cyl1y").applyChange(0); Editor.getGlobalField("cyl1z").applyChange(0);
+				Editor.getGlobalField("cyl2x").applyChange(0); Editor.getGlobalField("cyl2y").applyChange(0); Editor.getGlobalField("cyl2z").applyChange(0);
+				Editor.getGlobalField("cyl3x").applyChange(0); Editor.getGlobalField("cyl3y").applyChange(0); Editor.getGlobalField("cyl3z").applyChange(0);
 			}
 			else{
-				editor.getField("cyl0x").applyChange(poly.getFloat("cyl0", true, false, false));
-				editor.getField("cyl0y").applyChange(poly.getFloat("cyl0", false, true, false));
-				editor.getField("cyl0z").applyChange(poly.getFloat("cyl0", false, false, true));
-				editor.getField("cyl1x").applyChange(poly.getFloat("cyl1", true, false, false));
-				editor.getField("cyl1y").applyChange(poly.getFloat("cyl1", false, true, false));
-				editor.getField("cyl1z").applyChange(poly.getFloat("cyl1", false, false, true));
-				editor.getField("cyl2x").applyChange(poly.getFloat("cyl2", true, false, false));
-				editor.getField("cyl2y").applyChange(poly.getFloat("cyl2", false, true, false));
-				editor.getField("cyl2z").applyChange(poly.getFloat("cyl2", false, false, true));
-				editor.getField("cyl3x").applyChange(poly.getFloat("cyl3", true, false, false));
-				editor.getField("cyl3y").applyChange(poly.getFloat("cyl3", false, true, false));
-				editor.getField("cyl3z").applyChange(poly.getFloat("cyl3", false, false, true));
+				Editor.getGlobalField("cyl0x").applyChange(poly.getFloat("cyl0", true, false, false));
+				Editor.getGlobalField("cyl0y").applyChange(poly.getFloat("cyl0", false, true, false));
+				Editor.getGlobalField("cyl0z").applyChange(poly.getFloat("cyl0", false, false, true));
+				Editor.getGlobalField("cyl1x").applyChange(poly.getFloat("cyl1", true, false, false));
+				Editor.getGlobalField("cyl1y").applyChange(poly.getFloat("cyl1", false, true, false));
+				Editor.getGlobalField("cyl1z").applyChange(poly.getFloat("cyl1", false, false, true));
+				Editor.getGlobalField("cyl2x").applyChange(poly.getFloat("cyl2", true, false, false));
+				Editor.getGlobalField("cyl2y").applyChange(poly.getFloat("cyl2", false, true, false));
+				Editor.getGlobalField("cyl2z").applyChange(poly.getFloat("cyl2", false, false, true));
+				Editor.getGlobalField("cyl3x").applyChange(poly.getFloat("cyl3", true, false, false));
+				Editor.getGlobalField("cyl3y").applyChange(poly.getFloat("cyl3", false, true, false));
+				Editor.getGlobalField("cyl3z").applyChange(poly.getFloat("cyl3", false, false, true));
 			}
-			editor.getField("multiplicator").applyChange(rate);
+			Editor.getGlobalField("multiplicator").applyChange(rate);
 			//
-			editor = (Editor)FMTB.get().UI.getElement("texrectb_editor");
 			if(poly == null || !poly.getType().isTexRectB()){
-				for(Element field : editor.getFields()){ ((TextField)field).applyChange(0f); }
+				for(int i = 0; i < 6; i++){
+					Editor.getGlobalField("texpos" + i + "sx").applyChange(0f);
+					Editor.getGlobalField("texpos" + i + "sy").applyChange(0f);
+					Editor.getGlobalField("texpos" + i + "ex").applyChange(0f);
+					Editor.getGlobalField("texpos" + i + "ey").applyChange(0f);
+				}
 			}
 			else{
 				for(int i = 0; i < 6; i++){
-					editor.getField("texpos" + i + "sx").applyChange(poly.getFloat("texpos" + i + "s", true, false, false));
-					editor.getField("texpos" + i + "sy").applyChange(poly.getFloat("texpos" + i + "s", false, true, false));
-					editor.getField("texpos" + i + "ex").applyChange(poly.getFloat("texpos" + i + "e", true, false, false));
-					editor.getField("texpos" + i + "ey").applyChange(poly.getFloat("texpos" + i + "e", false, true, false));
+					Editor.getGlobalField("texpos" + i + "sx").applyChange(poly.getFloat("texpos" + i + "s", true, false, false));
+					Editor.getGlobalField("texpos" + i + "sy").applyChange(poly.getFloat("texpos" + i + "s", false, true, false));
+					Editor.getGlobalField("texpos" + i + "ex").applyChange(poly.getFloat("texpos" + i + "e", true, false, false));
+					Editor.getGlobalField("texpos" + i + "ey").applyChange(poly.getFloat("texpos" + i + "e", false, true, false));
 				}
 			}
-			editor.getField("multiplicator").applyChange(rate);
+			Editor.getGlobalField("multiplicator").applyChange(rate);
 			//
-			editor = (Editor)FMTB.get().UI.getElement("texrecta_editor");
 			if(poly == null || !poly.getType().isTexRectA()){
-				for(Element field : editor.getFields()){ ((TextField)field).applyChange(0f); }
+				for(int i = 0; i < 6; i++){
+					for(int j = 0; j < 8; j++){
+						if(j % 2 == 0){ Editor.getGlobalField("texpos" + i + ":" + j + "x").applyChange(0f); }
+						else{ Editor.getGlobalField("texpos" + i + ":" + j + "y").applyChange(0f); }
+					}
+				}
 			}
 			else{
-				//for(Element field : editor.getFields()){ Print.console(field.id); }
+				//for(Element field : Editor.getGlobalFields()){ Print.console(field.id); }
 				for(int i = 0; i < 6; i++){
 					for(int j = 0; j < 8; j++){
 						if(j % 2 == 0){
-							editor.getField("texpos" + i + ":" + j + "x").applyChange(poly.getFloat("texpos" + i + ":" + j, true, false, false));
+							Editor.getGlobalField("texpos" + i + ":" + j + "x").applyChange(poly.getFloat("texpos" + i + ":" + j, true, false, false));
 						}
 						else{
-							editor.getField("texpos" + i + ":" + j + "y").applyChange(poly.getFloat("texpos" + i + ":" + j, false, true, false));
+							Editor.getGlobalField("texpos" + i + ":" + j + "y").applyChange(poly.getFloat("texpos" + i + ":" + j, false, true, false));
 						}
 					}
 				}
 			}
-			editor.getField("multiplicator").applyChange(rate);
-			//
-			editor = (Editor)FMTB.get().UI.getElement("group_editor"); TurboList list = this.getFirstSelectedGroup();
+			TurboList list = this.getFirstSelectedGroup();
 			if(list == null){
-				editor.getField("rgb0").applyChange(0);
-				editor.getField("rgb1").applyChange(0);
-				editor.getField("rgb2").applyChange(0);
-				editor.getField("groupname").setText("no polygon selected", true);
+				Editor.getGlobalField("rgb0").applyChange(0);
+				Editor.getGlobalField("rgb1").applyChange(0);
+				Editor.getGlobalField("rgb2").applyChange(0);
+				Editor.getGlobalField("groupname").setText("no polygon selected", true);
 			}
 			else{
 				byte[] arr = list.color == null ? RGB.WHITE.toByteArray() : list.color.toByteArray();
-				editor.getField("rgb0").applyChange(arr[0] + 128);
-				editor.getField("rgb1").applyChange(arr[1] + 128);
-				editor.getField("rgb2").applyChange(arr[2] + 128);
-				editor.getField("groupname").setText(list.id, true);
-			}
-			editor.getField("multiplicator").applyChange(rate);
+				Editor.getGlobalField("rgb0").applyChange(arr[0] + 128);
+				Editor.getGlobalField("rgb1").applyChange(arr[1] + 128);
+				Editor.getGlobalField("rgb2").applyChange(arr[2] + 128);
+				Editor.getGlobalField("groupname").setText(list.id, true);
+			};
 			//
-			editor = (Editor)FMTB.get().UI.getElement("model_editor");
-			editor.getField("posx").applyChange(pos == null ? 0 : pos.xCoord);
-			editor.getField("posy").applyChange(pos == null ? 0 : pos.yCoord);
-			editor.getField("posz").applyChange(pos == null ? 0 : pos.zCoord);
-			editor.getField("texx").applyChange(this.textureX);
-			editor.getField("texy").applyChange(this.textureY);
-			editor.getField("modelname").setText(this.name, true);
-			editor.getField("multiplicator").applyChange(rate);
+			Editor.getGlobalField("model_posx").applyChange(pos == null ? 0 : pos.xCoord);
+			Editor.getGlobalField("model_posy").applyChange(pos == null ? 0 : pos.yCoord);
+			Editor.getGlobalField("model_posz").applyChange(pos == null ? 0 : pos.zCoord);
+			Editor.getGlobalField("model_texx").applyChange(this.textureX);
+			Editor.getGlobalField("model_texy").applyChange(this.textureY);
+			Editor.getGlobalField("model_modelname").setText(this.name, true);
+			Editor.getGlobalField("multiplicator").applyChange(rate);
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -495,6 +494,16 @@ public class GroupCompound {
 		for(String key : compound.keySet()){ if(key.equals(current)) break; else index++; }
 		if(index >= compound.size()) index -= compound.size(); if(index < 0) index = 0;
 		changeGroupOfSelected(polis, compound.keySet().toArray(new String[0])[index]);
+	}
+
+	public void changeTypeOfSelected(ArrayList<PolygonWrapper> selected, String textValue){
+		//TODO
+		DialogBox.notAvailableYet();
+	}
+
+	public void changeTypeOfSelected(int offset){
+		//TODO
+		DialogBox.notAvailableYet();
 	}
 	
 	public long countTotalMRTs(){

@@ -12,9 +12,10 @@ import net.fexcraft.lib.common.math.RGB;
 public class Button extends Element {
 	
 	private RGB hovercolor = RGB.GREEN;
-	private RGB discolor = RGB.RED;
-	private boolean centered;
-	private String text;
+	private RGB discolor = RGB.RED, iconcolor = null;
+	private boolean centered, drawbackground = true;
+	private String text, icon;
+	private int iconsize;
 	//
 	private static final RGB subhover = new RGB(218, 232, 104);
 	
@@ -31,6 +32,10 @@ public class Button extends Element {
 	
 	public Button(Element elm, String id, int w, int h, int x, int y, RGB hover, RGB dis){
 		this(elm, id, w, h, x, y, hover); discolor = dis;
+	}
+	
+	public Button setBackgroundless(boolean bool){
+		this.drawbackground = !bool; return this;
 	}
 
 	/** To be overridden. **/
@@ -49,20 +54,36 @@ public class Button extends Element {
 		}
 		return this;
 	}
+	
+	public Button setIcon(String texture, int size){
+		this.icon = texture; this.iconsize = size; return this;
+	}
+	
+	public Button setIcon(String texture, int size, RGB color){
+		this.iconcolor = color; return this.setIcon(texture, size);
+	}
 
 	@Override
 	public void renderSelf(int rw, int rh){
-		if(hovered) (enabled ? hovercolor : discolor).glColorApply();
-		this.renderSelfQuad();
-		if(hovered) RGB.glColorReset();
+		if(drawbackground){
+			if(hovered) (enabled ? hovercolor : discolor).glColorApply();
+			this.renderSelfQuad();
+			if(hovered) RGB.glColorReset();
+		}
 		if(text != null){
 			if(centered){
 				int x = width / 2 - (FontRenderer.getWidth(text, 1) / 2), y = height / 2 - 10;
-				FontRenderer.drawText(text, this.x + x, this.y + y, 1);
+				FontRenderer.drawText(text, this.x + x + (icon == null ? 0 : iconsize + 2), this.y + y, 1);
 			}
 			else{
-				FontRenderer.drawText(text, x + 2, y + 2, 1);
+				FontRenderer.drawText(text, x + 2 + (icon == null ? 0 : iconsize + 2), y + 2, 1);
 			}
+		}
+		if(icon != null){
+			if(iconcolor != null) iconcolor.glColorApply();
+			float y = (height - iconsize) * 0.5f;
+			this.renderIcon(x + 2, this.y + y, iconsize, icon);
+			if(iconcolor != null) RGB.glColorReset();
 		}
 	}
 	

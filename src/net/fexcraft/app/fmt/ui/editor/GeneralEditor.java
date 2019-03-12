@@ -3,147 +3,176 @@ package net.fexcraft.app.fmt.ui.editor;
 import java.util.ArrayList;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.general.Button;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
-import net.fexcraft.app.fmt.ui.generic.Button;
-import net.fexcraft.app.fmt.ui.generic.OldTextField;
-import net.fexcraft.app.fmt.utils.TextureManager;
-import net.fexcraft.app.fmt.utils.TextureManager.Texture;
+import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
+import net.fexcraft.app.fmt.wrappers.ShapeboxWrapper;
+import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.math.RGB;
-import net.fexcraft.lib.common.utils.Print;
 
 public class GeneralEditor extends Editor {
-
-	public GeneralEditor(){
-		super("general_editor");
-		final RGB rgb = new RGB(127, 127, 255);
-		//
-		String[] vals = new String[]{ "size", "pos", "off", "rot", "tex" }, xyz = new String[]{ "x", "y", "z" };
-		for(int r = 0; r < vals.length; r++){
-			for(int i = 0; i < 3; i++){
-				int k = 70, j = k + 12 + 12 + 4; final int rr = r, ii = i;
-				this.elements.put(vals[r] + xyz[i] + "-", new Button(this, vals[r] + xyz[i] + "-", 12, 26, 4 + (j * i), 30 + (r * 50), rgb){
-					@Override
-					protected boolean processButtonClick(int x, int y, boolean left){
-						FMTB.MODEL.updateValue((OldTextField)this.parent.getElement(vals[rr] + xyz[ii]), this.id); return true;
-					}
-				}.setText(" < ", true).setTexture("ui/background").setLevel(-1));
-				OldTextField field = new OldTextField(this, vals[r] + xyz[i], k, 16 + (j * i), 30 + (r * 50));
-				if(vals[r].equals("tex")){
-					switch(i){
-						case 0: field.setAsNumberfield(0, 8192, true); break;
-						case 1: field.setAsNumberfield(0, 8192, true); break;
-						case 2: field.setText(" - - - ", true); field.enabled = false; break;
-					}
-				}
-				else if(vals[r].equals("size")){
-					field.setAsNumberfield(0, Integer.MAX_VALUE, true);
-				}
-				else if(vals[r].equals("rot")){
-					field.setAsNumberfield(-360, 360, true);
-				}
-				else{
-					field.setAsNumberfield(Integer.MIN_VALUE, Integer.MAX_VALUE, true);
-				}
-				this.elements.put(vals[r] + xyz[i], field.setLevel(-1));
-				this.elements.put(vals[r] + xyz[i] + "+", new Button(this, vals[r] + xyz[i] + "+", 12, 26, k + 16 + (j * i), 30 + (r * 50), rgb){
-					@Override
-					protected boolean processButtonClick(int x, int y, boolean left){
-						FMTB.MODEL.updateValue((OldTextField)this.parent.getElement(vals[rr] + xyz[ii]), this.id); return true;
-					}
-				}.setText(" > ", true).setTexture("ui/background").setLevel(-1));
-			}
-		}
-		//
-		this.elements.put("group-", new Button(this, "group-", 12, 26, 4, 330, rgb){
-			@Override
-			protected boolean processButtonClick(int x, int y, boolean left){
-				FMTB.MODEL.changeGroupOfSelected(-1); return true;
-			}
-		}.setText(" < ", true).setTexture("ui/background").setLevel(-1));
-		//
-		this.elements.put("group", new OldTextField(this, "group", 270, 16, 330).setText("null", true).setLevel(-1).setEnabled(false));
-		this.elements.put("group+", new Button(this, "group+", 12, 26, 282, 330, rgb){
-			@Override
-			protected boolean processButtonClick(int x, int y, boolean left){
-				FMTB.MODEL.changeGroupOfSelected(+1); return true;
-			}
-		}.setText(" > ", true).setTexture("ui/background").setLevel(-1));
-		//
-		this.elements.put("boxname", new OldTextField(this, "boxname", 294, 4, 280){
-			@Override
-			public void updateTextField(){
-				if(FMTB.MODEL.getSelected().isEmpty()) return;
-				PolygonWrapper wrapper;
-				if(FMTB.MODEL.getSelected().size() == 1){
-					wrapper = FMTB.MODEL.getFirstSelection();
-					if(wrapper != null) wrapper.name = this.getTextValue();
-				}
-				else{
-					ArrayList<PolygonWrapper> polis = FMTB.MODEL.getSelected();
-					for(int i = 0; i < polis.size(); i++){
-						wrapper = polis.get(i);
-						if(wrapper != null){
-							String str = this.getText().contains("_") ? "_" + i : this.getText().contains("-") ? "-" + i :
-								this.getText().contains(" ") ? " " + i : this.getText().contains(".") ? "." + i : i + "";
-							wrapper.name = this.getTextValue() + str;
-						}
-					}
-				}
-			}
-		}.setText("null", true).setLevel(-1));
-		//
-		this.elements.put("burntotex", new Button(this, "burntotex", 294, 28, 4, 380){
-			@Override
-			protected boolean processButtonClick(int x, int y, boolean left){
-				if(!left) return true;
-				if(FMTB.MODEL.texture == null){
-					FMTB.showDialogbox("There is not texture loaded.", "", "ok", "load", DialogBox.NOTHING, () -> {
-						try{
-							FMTB.get().UI.getElement("toolbar").getElement("textures").getElement("menu").getElement("select").onButtonClick(x, y, left, true);
-						}
-						catch(Exception e){
-							e.printStackTrace();
-						}
-					});
-				}
-				else{
-					Texture tex = TextureManager.getTexture(FMTB.MODEL.texture, true);
-					if(tex == null){
-						FMTB.showDialogbox("Texture not found in Memory.", "This rather bad.", "ok", null, DialogBox.NOTHING, null);
-						return true;
-					}
-					FMTB.MODEL.getCompound().values().forEach(list -> list.forEach(poly -> {
-						poly.burnToTexture(tex.getImage(), null); //poly.recompile();
-					})); tex.rebind(); //TextureManager.saveTexture(FMTB.MODEL.texture);
-					//FMTB.showDialogbox("Done!", "", "ok", null, DialogBox.NOTHING, null);
-					Print.console("done");
-					//TODO find out why this didn't work last time
-					return true;
-				}
-				return false;
-			}
-		}.setText("Burn to Texture", true).setTexture("ui/background"));
-		//
-		this.addMultiplicator(430);
-	}
 	
-	@Override
-	public void renderSelf(int rw, int rh){
-		super.renderSelf(rw, rh); TextureManager.unbind();
-		/*font.drawString(4,  40, "Measurements", Color.black);
-		font.drawString(4,  90, "Position (x/y/z)", Color.black);
-		font.drawString(4, 140, "Offset (x/y/z)", Color.black);
-		font.drawString(4, 190, "Rotation (degrees)", Color.black);
-		font.drawString(4, 240, "Texture (x/y)", Color.black);
-		font.drawString(4, 290, "Polygon Name", Color.black);
-		font.drawString(4, 340, "Group", Color.black);
-		font.drawString(4, 390, "Texture Util", Color.black);
-		font.drawString(4, 440, "Multiplicator/Rate", Color.black);*///TODO
-		RGB.glColorReset();
-	}
+	private ContainerButton general, box, shapebox, cylinder, texrect_a, texrect_b;
+
+	public GeneralEditor(){ super("general_editor"); }
 
 	@Override
-	protected String[] getExpectedQuickButtons(){ return null; }
+	protected ContainerButton[] setupSubElements(){
+		general = new ContainerButton(this, "general", 300, 28, 4, y, new int[]{ 1, 1, 1, 1, 1, 1/*, 1, 1*/ }){
+			@Override
+			public void addSubElements(){
+				this.elements.add(new Button(this, "text0", 290, 20, 0, 0, RGB.WHITE).setBackgroundless(false).setText("Polygon Group", false).setRowCol(0, 0));
+				this.elements.add(new TextField(this, "group", 290, 0, 0){
+					@Override
+					protected boolean processScrollWheel(int wheel){
+						FMTB.MODEL.changeGroupOfSelected(wheel > 0 ? 1 : -1); return true;
+					}
+					@Override
+					public void updateTextField(){
+						String text = this.getTextValue();
+						if(!FMTB.MODEL.getCompound().containsKey(text)){
+							FMTB.showDialogbox("Group does not exists.\nDo you wish to create it?", "yes.", "no.", () -> {
+								FMTB.MODEL.getCompound().put(text, new TurboList(text));
+								FMTB.MODEL.changeGroupOfSelected(FMTB.MODEL.getSelected(), text);
+							}, DialogBox.NOTHING);
+						} else{ FMTB.MODEL.changeGroupOfSelected(FMTB.MODEL.getSelected(), text); }
+					}
+				}.setText("null", true).setRowCol(1, 0));
+				this.elements.add(new Button(this, "text1", 290, 20, 0, 0, RGB.WHITE).setBackgroundless(false).setText("Polygon Name", false).setRowCol(2, 0));
+				this.elements.add(new TextField(this, "boxname", 290, 0, 0){
+					@Override
+					public void updateTextField(){
+						if(FMTB.MODEL.getSelected().isEmpty()) return;
+						PolygonWrapper wrapper;
+						if(FMTB.MODEL.getSelected().size() == 1){
+							wrapper = FMTB.MODEL.getFirstSelection();
+							if(wrapper != null) wrapper.name = this.getTextValue();
+						}
+						else{
+							ArrayList<PolygonWrapper> polis = FMTB.MODEL.getSelected();
+							for(int i = 0; i < polis.size(); i++){
+								wrapper = polis.get(i);
+								if(wrapper != null){
+									String str = this.getText().contains("_") ? "_" + i : this.getText().contains("-") ? "-" + i :
+										this.getText().contains(" ") ? " " + i : this.getText().contains(".") ? "." + i : i + "";
+									wrapper.name = this.getTextValue() + str;
+								}
+							}
+						}
+					}
+				}.setText("null", true).setRowCol(3, 0));
+				this.elements.add(new Button(this, "text2", 290, 20, 0, 0, RGB.WHITE).setBackgroundless(false).setText("Polygon Type", false).setRowCol(4, 0));
+				this.elements.add(new TextField(this, "boxtype", 290, 0, 0){
+					@Override
+					protected boolean processScrollWheel(int wheel){
+						FMTB.MODEL.changeTypeOfSelected(wheel > 0 ? 1 : -1); return true;
+					}
+					@Override
+					public void updateTextField(){
+						FMTB.MODEL.changeTypeOfSelected(FMTB.MODEL.getSelected(), this.getTextValue());
+					}
+				}.setText("null", true).setRowCol(5, 0));
+				/*this.elements.add(new Button(this, "space", 40, 20, 0, 0, RGB.WHITE).setText("------", true).setRowCol(6, 0));
+				this.elements.add(new Button(this, "burntotex", 20, 28, 0, 0){
+					@Override
+					protected boolean processButtonClick(int x, int y, boolean left){
+						if(!left) return true;
+						if(FMTB.MODEL.texture == null){
+							FMTB.showDialogbox("There is not texture loaded.", "ok", "load", DialogBox.NOTHING, () -> {
+								try{
+									FMTB.get().UI.getElement("toolbar").getElement("textures").getElement("menu").getElement("select").onButtonClick(x, y, left, true);
+								}
+								catch(Exception e){
+									e.printStackTrace();
+								}
+							});
+						}
+						else{
+							Texture tex = TextureManager.getTexture(FMTB.MODEL.texture, true);
+							if(tex == null){
+								FMTB.showDialogbox("Texture not found in Memory.\nThis rather bad.", "ok", null, DialogBox.NOTHING, null);
+								return true;
+							}
+							FMTB.MODEL.getCompound().values().forEach(list -> list.forEach(poly -> {
+								poly.burnToTexture(tex.getImage(), null); //poly.recompile();
+							})); tex.rebind(); //TextureManager.saveTexture(FMTB.MODEL.texture);
+							//FMTB.showDialogbox("Done!", "", "ok", null, DialogBox.NOTHING, null);
+							Print.console("done");
+							//TODO find out why this didn't work last time
+							return true;
+						}
+						return false;
+					}
+				}.setText("Burn to Texture", true).setTexPosSize("ui/background_dark", 0, 0, 64, 64).setRowCol(7, 0));*/
+			}
+		};
+		general.setText("Polygon Attributes", false);
+		box = new ContainerButton(this, "box", 300, 28, 4, y, new int[]{ 1, 3, 1, 3, 1, 3, 1, 3, 1, 2 }){
+			@Override
+			public void addSubElements(){
+				this.elements.add(new Button(this, "text0", 290, 20, 0, 0, RGB.WHITE).setBackgroundless(false).setText("Measurements / Size", false).setRowCol(0, 0));
+				for(int i = 0; i < xyz.length; i++){
+					this.elements.add(new TextField(this, "size" + xyz[i], 0, 0, 0).setAsNumberfield(0, Integer.MAX_VALUE, true).setRowCol(1, i));
+				}
+				//
+				this.elements.add(new Button(this, "text1", 290, 20, 0, 0, RGB.WHITE).setBackgroundless(false).setText("Position (x/y/z)", false).setRowCol(2, 0));
+				for(int i = 0; i < xyz.length; i++){
+					this.elements.add(new TextField(this, "pos" + xyz[i], 0, 0, 0).setAsNumberfield(Integer.MIN_VALUE, Integer.MAX_VALUE, true).setRowCol(3, i));
+				}
+				//
+				this.elements.add(new Button(this, "text2", 290, 20, 0, 0, RGB.WHITE).setBackgroundless(false).setText("Offset (x/y/z)", false).setRowCol(4, 0));
+				for(int i = 0; i < xyz.length; i++){
+					this.elements.add(new TextField(this, "off" + xyz[i], 0, 0, 0).setAsNumberfield(Integer.MIN_VALUE, Integer.MAX_VALUE, true).setRowCol(5, i));
+				}
+				//
+				this.elements.add(new Button(this, "text3", 290, 20, 0, 0, RGB.WHITE).setBackgroundless(false).setText("Rotation (x/y/z)", false).setRowCol(6, 0));
+				for(int i = 0; i < xyz.length; i++){
+					this.elements.add(new TextField(this, "rot" + xyz[i], 0, 0, 0).setAsNumberfield(-360, 360, true).setRowCol(7, i));
+				}
+				//
+				this.elements.add(new Button(this, "text4", 290, 20, 0, 0, RGB.WHITE).setBackgroundless(false).setText("Texture (u/v)", false).setRowCol(8, 0));
+				for(int i = 0; i < 2; i++){
+					this.elements.add(new TextField(this, "tex" + xyz[i], 0, 0, 0).setAsNumberfield(0, Integer.MAX_VALUE, true).setRowCol(9, i));
+				}
+			}
+		};
+		box.setText("General Shape", false);
+		shapebox = new ContainerButton(this, "shapebox", 300, 28, 4, y, new int[]{ 1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3 }){
+			@Override
+			public void addSubElements(){
+				for(int i = 0; i < 8; i++){
+					this.elements.add(new Button(this, "text" + i, 290, 20, 0, 0, RGB.WHITE).setIcon("ui/background_white", 16, ShapeboxWrapper.cornercolors2[i])
+						.setBackgroundless(false).setText("Corner " + i + "(x/y/z)", false).setRowCol(i * 2, 0));
+					for(int k = 0; k < xyz.length; k++){
+						this.elements.add(new TextField(this, "cor" + i + xyz[k], 0, 0, 0).setAsNumberfield(Integer.MIN_VALUE, Integer.MAX_VALUE, true).setRowCol(i * 2 + 1, k));
+					}
+				}
+			}
+		};
+		shapebox.setText("Shapebox Corners", false);
+		cylinder = new ContainerButton(this, "general", 300, 28, 4, y, new int[]{}){
+			@Override
+			public void addSubElements(){
+				//
+			}
+		};
+		cylinder.setText("Cylinder Settings", false);
+		texrect_a = new ContainerButton(this, "texrect_a", 300, 28, 4, y, new int[]{}){
+			@Override
+			public void addSubElements(){
+				//
+			}
+		};
+		texrect_a.setText("TexRect [Adv.]", false);
+		texrect_b = new ContainerButton(this, "texrect_b", 300, 28, 4, y, new int[]{}){
+			@Override
+			public void addSubElements(){
+				//
+			}
+		};
+		texrect_b.setText("TexRect [Basic]", false);
+		return new ContainerButton[]{ general, box, shapebox, cylinder, texrect_b, texrect_a };
+	}
 
 }

@@ -7,6 +7,7 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.UserInterface;
+import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.general.FileChooser.AfterTask;
 import net.fexcraft.app.fmt.ui.general.FileChooser.ChooserMode;
 import net.fexcraft.app.fmt.ui.tree.RightTree;
@@ -229,9 +230,28 @@ public class Toolbar extends Element {
 						this.elements.add(new Button(this, "toggle", 20, 26, 0, 0){
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
-								/** //TODO **/return true;
+								Editor.toggleAll(); return true;
 							}
 						}.setText("Toggle Visibility", false));
+						this.elements.add(new Button(this, "hr0", 20, 4, 0, 0).setText("", false));
+						this.elements.add(new Button(this, "general", 20, 26, 0, 0){
+							@Override
+							protected boolean processButtonClick(int x, int y, boolean left){
+								Editor.show("general_editor"); return true;
+							}
+						}.setText("General Editor", false));
+						this.elements.add(new Button(this, "texture", 20, 26, 0, 0){
+							@Override
+							protected boolean processButtonClick(int x, int y, boolean left){
+								Editor.show("texture_editor"); return true;
+							}
+						}.setText("Texture Editor (beta)", false));
+						this.elements.add(new Button(this, "model_group", 20, 26, 0, 0){
+							@Override
+							protected boolean processButtonClick(int x, int y, boolean left){
+								Editor.show("model_group_editor"); return true;
+							}
+						}.setText("Model/Group Editor", false));
 					}
 				};
 				this.elements.add(menu);

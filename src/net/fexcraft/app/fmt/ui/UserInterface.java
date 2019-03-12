@@ -140,6 +140,7 @@ public class UserInterface {
 					} else element = elm;
 				}
 			}
+			if(element instanceof TextField == false) TextField.deselectAll();
 			if(i == 0 && (element == null ? true : element.id.equals("crossbar"))){
 				RayCoastAway.doTest(true, true);
 			}

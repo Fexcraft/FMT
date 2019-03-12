@@ -29,6 +29,7 @@ import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.ui.UserInterface;
+import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
 import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
 import net.fexcraft.app.fmt.ui.general.Crossbar;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
@@ -300,12 +301,24 @@ public class FMTB implements FMTGLProcess {
 		TextureManager.loadTexture("ui/background_white");
 		TextureManager.loadTexture("ui/background_black");
 		//
+		/*TextureManager.loadTexture("icons/editors/general");
+		TextureManager.loadTexture("icons/editors/shapebox");
+		TextureManager.loadTexture("icons/editors/cylinder");
+		TextureManager.loadTexture("icons/editors/texrect_b");
+		TextureManager.loadTexture("icons/editors/texrect_a");
+		TextureManager.loadTexture("icons/editors/texture");
+		TextureManager.loadTexture("icons/editors/model");
+		TextureManager.loadTexture("icons/editors/group");*/
+		TextureManager.loadTexture("icons/editors/minimized");
+		TextureManager.loadTexture("icons/editors/expanded");
+		//
 		ui.getElements().add(UserInterface.DIALOGBOX = new DialogBox());
 		ui.getElements().add(UserInterface.FILECHOOSER = new FileChooser());
 		ui.getElements().add(UserInterface.CONTROLS = new ControlsAdjuster());
 		//
 		ui.getElements().add(new ModelTree());
 		ui.getElements().add(new HelperTree());
+		ui.getElements().add(new GeneralEditor());
 		/*ui.getOldElements().add(new GeneralEditor());
 		ui.getOldElements().add(new ShapeboxEditor());
 		ui.getOldElements().add(new CylinderEditor());
@@ -314,8 +327,7 @@ public class FMTB implements FMTGLProcess {
 		ui.getOldElements().add(new ModelEditor());
 		ui.getOldElements().add(new TextureEditor());
 		ui.getOldElements().add(new TexrectBEditor());
-		ui.getOldElements().add(new TexrectAEditor());
-		Editor.addQuickButtons();*/
+		ui.getOldElements().add(new TexrectAEditor());*/
 		//render last
 		ui.getElements().add(UserInterface.TOOLBAR = new Toolbar());
 		ui.getElements().add(new Crossbar());

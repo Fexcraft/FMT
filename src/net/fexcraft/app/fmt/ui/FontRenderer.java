@@ -170,11 +170,9 @@ public class FontRenderer {
     }
     
     public static void drawText(CharSequence text, float x, float y, int type, RGB color){
-        int textHeight = getHeight(text, type);
+    	if(text.length() == 0) return; //int textHeight = getHeight(text, type);
         float drawX = x, drawY = y; if(color == null) color = RGB.BLACK;
-        if(textHeight > FONT_HEIGHT[type]){
-            drawY += textHeight - FONT_HEIGHT[type];
-        }
+        //if(textHeight > FONT_HEIGHT[type]){ drawY -= textHeight - FONT_HEIGHT[type]; }
         TextureManager.bindTexture("font/ascii" + type);
         for(int i = 0; i < text.length(); i++) {
             char cher = text.charAt(i);
