@@ -378,7 +378,7 @@ public class GroupCompound {
 			if(poly == null || !poly.getType().isCylinder()){
 				Editor.getGlobalField("cyl0x").applyChange(0); Editor.getGlobalField("cyl0y").applyChange(0); Editor.getGlobalField("cyl0z").applyChange(0);
 				Editor.getGlobalField("cyl1x").applyChange(0); Editor.getGlobalField("cyl1y").applyChange(0); Editor.getGlobalField("cyl1z").applyChange(0);
-				Editor.getGlobalField("cyl2x").applyChange(0); Editor.getGlobalField("cyl2y").applyChange(0); Editor.getGlobalField("cyl2z").applyChange(0);
+				Editor.getGlobalField("cyl2x").applyChange(0); Editor.getGlobalField("cyl2y").applyChange(0); //Editor.getGlobalField("cyl2z").applyChange(0);
 				Editor.getGlobalField("cyl3x").applyChange(0); Editor.getGlobalField("cyl3y").applyChange(0); Editor.getGlobalField("cyl3z").applyChange(0);
 			}
 			else{
@@ -395,7 +395,6 @@ public class GroupCompound {
 				Editor.getGlobalField("cyl3y").applyChange(poly.getFloat("cyl3", false, true, false));
 				Editor.getGlobalField("cyl3z").applyChange(poly.getFloat("cyl3", false, false, true));
 			}
-			Editor.getGlobalField("multiplicator").applyChange(rate);
 			//
 			if(poly == null || !poly.getType().isTexRectB()){
 				for(int i = 0; i < 6; i++){
@@ -413,7 +412,6 @@ public class GroupCompound {
 					Editor.getGlobalField("texpos" + i + "ey").applyChange(poly.getFloat("texpos" + i + "e", false, true, false));
 				}
 			}
-			Editor.getGlobalField("multiplicator").applyChange(rate);
 			//
 			if(poly == null || !poly.getType().isTexRectA()){
 				for(int i = 0; i < 6; i++){
@@ -438,16 +436,16 @@ public class GroupCompound {
 			}
 			TurboList list = this.getFirstSelectedGroup();
 			if(list == null){
-				Editor.getGlobalField("rgb0").applyChange(0);
-				Editor.getGlobalField("rgb1").applyChange(0);
-				Editor.getGlobalField("rgb2").applyChange(0);
+				Editor.getGlobalField("group_rgb0").applyChange(0);
+				Editor.getGlobalField("group_rgb1").applyChange(0);
+				Editor.getGlobalField("group_rgb2").applyChange(0);
 				Editor.getGlobalField("groupname").setText("no polygon selected", true);
 			}
 			else{
 				byte[] arr = list.color == null ? RGB.WHITE.toByteArray() : list.color.toByteArray();
-				Editor.getGlobalField("rgb0").applyChange(arr[0] + 128);
-				Editor.getGlobalField("rgb1").applyChange(arr[1] + 128);
-				Editor.getGlobalField("rgb2").applyChange(arr[2] + 128);
+				Editor.getGlobalField("group_rgb0").applyChange(arr[0] + 128);
+				Editor.getGlobalField("group_rgb1").applyChange(arr[1] + 128);
+				Editor.getGlobalField("group_rgb2").applyChange(arr[2] + 128);
 				Editor.getGlobalField("groupname").setText(list.id, true);
 			};
 			//

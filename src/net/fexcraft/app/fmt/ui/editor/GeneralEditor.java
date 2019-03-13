@@ -175,17 +175,33 @@ public class GeneralEditor extends Editor {
 			}
 		};
 		cylinder.setText("Cylinder Settings", false);
-		texrect_a = new ContainerButton(this, "texrect_a", 300, 28, 4, y, new int[]{}){
+		final String[] faces = new String[]{ "Front", "Back", "Up", "Down", "Right", "Left" };
+		int[] tra = new int[24]; for(int i = 0; i < 12; i++){ tra[i * 2] = 1; tra[i * 2 + 1] = 4; }
+		texrect_a = new ContainerButton(this, "texrect_a", 300, 28, 4, y, tra){
 			@Override
 			public void addSubElements(){
-				//
+				for(int r = 0; r < 12; r++){
+					this.elements.add(new Button(this, "text" + r, 290, 20, 0, 0, RGB.WHITE).setBackgroundless(false)
+						.setText(faces[r / 2] + " [" + (r % 2 == 0 ? "x-pos" : "y-pos") + " | TR, TL, BL, BR]", false).setRowCol(r * 2, 0));
+					for(int i = 0; i < 4; i++){
+						String id = "texpos" + (r / 2) + ":" + ((i * 2) + (r % 2 == 1 ? 1 : 0)) + (r % 2 == 0 ? "x" : "y");
+						RGB rgb = r == 2 || r == 3 || r == 6 || r == 7 || r == 10 || r == 11 ? new RGB(204, 97, 91) : new RGB(102, 102, 173);
+						this.elements.add(new TextField(this, id, 0, 0, 0).setAsNumberfield(0, Integer.MAX_VALUE, true).setColor("inactive", rgb).setRowCol(r * 2 + 1, i));
+					}
+				}
 			}
 		};
 		texrect_a.setText("TexRect [Adv.]", false);
-		texrect_b = new ContainerButton(this, "texrect_b", 300, 28, 4, y, new int[]{}){
+		texrect_b = new ContainerButton(this, "texrect_b", 300, 28, 4, y, new int[]{ 1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4 }){
 			@Override
 			public void addSubElements(){
-				//
+				for(int r = 0; r < 6; r++){
+					this.elements.add(new Button(this, "text" + r, 290, 20, 0, 0, RGB.WHITE).setBackgroundless(false).setText(faces[r] + " [start x/y, end x/y]", false).setRowCol(r * 2, 0));
+					for(int i = 0; i < 4; i++){
+						String id = "texpos" + r + (i < 2 ? "s" : "e") + (i % 2 == 0 ? "x" : "y"); 
+						this.elements.add(new TextField(this, id, 0, 0, 0).setAsNumberfield(0, Integer.MAX_VALUE, true).setRowCol(r * 2 + 1, i));
+					}
+				}
 			}
 		};
 		texrect_b.setText("TexRect [Basic]", false);

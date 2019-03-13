@@ -186,7 +186,7 @@ public class TextField extends Element {
 		return selected;
 	}
 
-	public Element setColor(String string, RGB rgb){
+	public TextField setColor(String string, RGB rgb){
 		switch(string){
 			case "hover": this.hovercolor = rgb; break;
 			case "hover_sel": case "hover_selected": this.hoversel = rgb; break;
