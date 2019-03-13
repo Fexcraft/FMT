@@ -31,6 +31,7 @@ import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
 import net.fexcraft.app.fmt.ui.editor.ModelGroupEditor;
+import net.fexcraft.app.fmt.ui.editor.PreviewEditor;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
 import net.fexcraft.app.fmt.ui.general.Crossbar;
@@ -294,24 +295,15 @@ public class FMTB implements FMTGLProcess {
 
 	@Override
 	public void setupUI(UserInterface ui){
+		TextureManager.loadTexture("icons/pencil");
 		TextureManager.loadTexture("icons/group_delete");
 		TextureManager.loadTexture("icons/group_visible");
 		TextureManager.loadTexture("icons/group_edit");
 		TextureManager.loadTexture("icons/group_minimize");
-		TextureManager.loadTexture("icons/pencil");
 		TextureManager.loadTexture("ui/background_dark");
 		TextureManager.loadTexture("ui/background_light");
 		TextureManager.loadTexture("ui/background_white");
 		TextureManager.loadTexture("ui/background_black");
-		//
-		/*TextureManager.loadTexture("icons/editors/general");
-		TextureManager.loadTexture("icons/editors/shapebox");
-		TextureManager.loadTexture("icons/editors/cylinder");
-		TextureManager.loadTexture("icons/editors/texrect_b");
-		TextureManager.loadTexture("icons/editors/texrect_a");
-		TextureManager.loadTexture("icons/editors/texture");
-		TextureManager.loadTexture("icons/editors/model");
-		TextureManager.loadTexture("icons/editors/group");*/
 		TextureManager.loadTexture("icons/editors/minimized");
 		TextureManager.loadTexture("icons/editors/expanded");
 		//
@@ -324,7 +316,7 @@ public class FMTB implements FMTGLProcess {
 		ui.getElements().add(new GeneralEditor());
 		ui.getElements().add(new ModelGroupEditor());
 		ui.getElements().add(new TextureEditor());
-		//ui.getOldElements().add(new PreviewEditor());
+		ui.getElements().add(new PreviewEditor());
 		//render last
 		ui.getElements().add(UserInterface.TOOLBAR = new Toolbar());
 		ui.getElements().add(new Crossbar());

@@ -1,8 +1,8 @@
 package net.fexcraft.app.fmt.ui.editor;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.generic.Button;
-import net.fexcraft.app.fmt.ui.generic.OldTextField;
+import net.fexcraft.app.fmt.ui.general.Button;
+import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.ui.tree.HelperTree;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.lib.common.math.RGB;
@@ -12,54 +12,45 @@ public class PreviewEditor extends Editor {
 
 	public PreviewEditor(){
 		super("preview_editor");
-		final RGB rgb = new RGB(127, 127, 255);
-		//
-		for(int i = 0; i < 3; i++){
-			final int j = i;
-			this.elements.put("pos" + xyz[i] + "-", new Button(this, "pos" + xyz[i] + "-", 12, 26, 4 + (98 * i), 30, rgb){
-				@Override protected boolean processButtonClick(int x, int y, boolean left){ return updatePos(j, false); }
-			}.setText(" < ", true).setTexture("ui/background").setLevel(-1));
-			this.elements.put("pos" + xyz[i], new OldTextField(this, "pos" + xyz[i], 70, 16 + (98 * i), 30){
-				@Override public void updateNumberField(){ updatePos(this, j, null); }
-				@Override protected boolean processScrollWheel(int wheel){ return updatePos(j, wheel > 0); }
-			}.setAsNumberfield(0, 255, true).setLevel(-1));
-			this.elements.put("pos" + xyz[i] + "+", new Button(this, "pos" + xyz[i] + "+", 12, 26, 86 + (98 * i), 30, rgb){
-				@Override protected boolean processButtonClick(int x, int y, boolean left){ return updatePos(j, true); }
-			}.setText(" > ", true).setTexture("ui/background").setLevel(-1));
-			//
-			this.elements.put("rot" + xyz[i] + "-", new Button(this, "rot" + xyz[i] + "-", 12, 26, 4 + (98 * i), 80, rgb){
-				@Override protected boolean processButtonClick(int x, int y, boolean left){ return updateRot(j, false); }
-			}.setText(" < ", true).setTexture("ui/background").setLevel(-1));
-			this.elements.put("rot" + xyz[i], new OldTextField(this, "rot" + xyz[i], 70, 16 + (98 * i), 80){
-				@Override public void updateNumberField(){ updateRot(this, j, null); }
-				@Override protected boolean processScrollWheel(int wheel){ return updateRot(j, wheel > 0); }
-			}.setAsNumberfield(0, 255, true).setLevel(-1));
-			this.elements.put("rot" + xyz[i] + "+", new Button(this, "rot" + xyz[i] + "+", 12, 26, 86 + (98 * i), 80, rgb){
-				@Override protected boolean processButtonClick(int x, int y, boolean left){ return updateRot(j, true); }
-			}.setText(" > ", true).setTexture("ui/background").setLevel(-1));
-			//
-			this.elements.put("scale" + xyz[i] + "-", new Button(this, "scale" + xyz[i] + "-", 12, 26, 4 + (98 * i), 130, rgb){
-				@Override protected boolean processButtonClick(int x, int y, boolean left){ return updateScale(j, false); }
-			}.setText(" < ", true).setTexture("ui/background").setLevel(-1));
-			this.elements.put("scale" + xyz[i], new OldTextField(this, "scale" + xyz[i], 70, 16 + (98 * i), 130){
-				@Override public void updateNumberField(){ updateRot(this, j, null); }
-				@Override protected boolean processScrollWheel(int wheel){ return updateScale(j, wheel > 0); }
-			}.setAsNumberfield(0, 255, true).setLevel(-1));
-			this.elements.put("scale" + xyz[i] + "+", new Button(this, "scale" + xyz[i] + "+", 12, 26, 86 + (98 * i), 130, rgb){
-				@Override protected boolean processButtonClick(int x, int y, boolean left){ return updateScale(j, true); }
-			}.setText(" > ", true).setTexture("ui/background").setLevel(-1));
-		}
-		//
-		this.addMultiplicator(180);
+	}
+
+	@Override
+	protected ContainerButton[] setupSubElements(){
+		ContainerButton container = new ContainerButton(this, "general", 300, 28, 4, y, new int[]{ 1, 3, 1, 3, 1, 3 }){
+			@Override
+			public void addSubElements(){
+				this.elements.add(new Button(this, "text0", 290, 20, 0, 0, RGB.WHITE).setBackgroundless(false).setText("Position (full units)", false).setRowCol(0, 0));
+				this.elements.add(new Button(this, "text1", 290, 20, 0, 0, RGB.WHITE).setBackgroundless(false).setText("Rotation (degrees)", false).setRowCol(2, 0));
+				this.elements.add(new Button(this, "text2", 290, 20, 0, 0, RGB.WHITE).setBackgroundless(false).setText("Scale (OpenGL)", false).setRowCol(4, 0));
+				for(int i = 0; i < 3; i++){
+					final int j = i;
+					this.elements.add(new TextField(this, "helper_pos" + xyz[i], 70, 16 + (98 * i), 30){
+						@Override public void updateNumberField(){ updatePos(this, j, null); }
+						@Override protected boolean processScrollWheel(int wheel){ return updatePos(j, wheel > 0); }
+					}.setAsNumberfield(Integer.MIN_VALUE, Integer.MAX_VALUE, true).setRowCol(1, i));
+					//
+					this.elements.add(new TextField(this, "helper_rot" + xyz[i], 70, 16 + (98 * i), 80){
+						@Override public void updateNumberField(){ updateRot(this, j, null); }
+						@Override protected boolean processScrollWheel(int wheel){ return updateRot(j, wheel > 0); }
+					}.setAsNumberfield(-360, 360, true).setRowCol(3, i));
+					//
+					this.elements.add(new TextField(this, "helper_scale" + xyz[i], 70, 16 + (98 * i), 130){
+						@Override public void updateNumberField(){ updateRot(this, j, null); }
+						@Override protected boolean processScrollWheel(int wheel){ return updateScale(j, wheel > 0); }
+					}.setAsNumberfield(Integer.MIN_VALUE, Integer.MAX_VALUE, true).setRowCol(5, i));
+				}
+			}
+		}; container.setText("General Settings", true); container.setExpanded(true);
+		return new ContainerButton[]{ container };
 	}
 	
 	protected boolean updateScale(int axis, Boolean positive){
 		return updateScale(null, axis, positive);
 	}
 	
-	protected boolean updateScale(OldTextField field, int axis, Boolean positive){
+	protected boolean updateScale(TextField field, int axis, Boolean positive){
 		GroupCompound compound = HelperTree.getSelected(); if(compound == null) return true;
-		if(field == null) field = this.getField("scale" + xyz[axis]);
+		if(field == null) field = TextField.getFieldById("helper_scale" + xyz[axis]);
 		if(compound.scale == null) compound.scale = new Vec3f(1, 1, 1);
 		float am = positive == null ? field.getFloatValue() : positive ? FMTB.MODEL.rate : -FMTB.MODEL.rate;
 		if(am == 0f) return true;
@@ -75,9 +66,9 @@ public class PreviewEditor extends Editor {
 		return updatePos(null, axis, positive);
 	}
 	
-	protected boolean updatePos(OldTextField field, int axis, Boolean positive){
+	protected boolean updatePos(TextField field, int axis, Boolean positive){
 		GroupCompound compound = HelperTree.getSelected(); if(compound == null) return true;
-		if(field == null) field = this.getField("pos" + xyz[axis]);
+		if(field == null) field = TextField.getFieldById("helper_pos" + xyz[axis]);
 		if(compound.pos == null) compound.pos = new Vec3f();
 		float am = positive == null ? field.getFloatValue() : positive ? FMTB.MODEL.rate : -FMTB.MODEL.rate;
 		if(am == 0f) return true;
@@ -93,9 +84,9 @@ public class PreviewEditor extends Editor {
 		return updateRot(null, axis, positive);
 	}
 	
-	protected boolean updateRot(OldTextField field, int axis, Boolean positive){
+	protected boolean updateRot(TextField field, int axis, Boolean positive){
 		GroupCompound compound = HelperTree.getSelected(); if(compound == null) return true;
-		if(field == null) field = this.getField("rot" + xyz[axis]);
+		if(field == null) field = TextField.getFieldById("helper_rot" + xyz[axis]);
 		if(compound.rot == null) compound.rot = new Vec3f();
 		float am = positive == null ? field.getFloatValue() : positive ? FMTB.MODEL.rate : -FMTB.MODEL.rate;
 		switch(axis){
@@ -123,18 +114,5 @@ public class PreviewEditor extends Editor {
 		}
 		return true;
 	}
-
-	@Override
-	public void renderSelf(int rw, int rh){
-		super.renderSelf(rw, rh); /*TextureManager.unbind();
-		font.drawString(4, 40, "Position Offset", Color.black);
-		font.drawString(4, 90, "Rotation Offset", Color.black);
-		font.drawString(4, 140, "Scale", Color.black);
-		font.drawString(4, 190, "Multiplicator/Rate", Color.black);
-		RGB.glColorReset();*///TODO
-	}
-
-	@Override
-	protected String[] getExpectedQuickButtons(){ return null; }
 
 }

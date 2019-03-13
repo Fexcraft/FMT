@@ -5,6 +5,7 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.editor.Editor;
+import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.utils.HelperCollector;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
@@ -78,31 +79,29 @@ public class HelperTree extends RightTree {
 					HelperCollector.LOADED.remove(j); return true;
 				}
 				else{
-					SEL = j; Editor editor = (Editor)FMTB.get().UI.getElement("preview_editor");
-					GroupCompound model = getSelected();
+					SEL = j; GroupCompound model = getSelected();
 					if(model == null){
-						editor.getField("posx").applyChange(0);
-						editor.getField("posy").applyChange(0);
-						editor.getField("posz").applyChange(0);
-						editor.getField("rotx").applyChange(0);
-						editor.getField("roty").applyChange(0);
-						editor.getField("rotz").applyChange(0);
-						editor.getField("scalex").applyChange(0);
-						editor.getField("scaley").applyChange(0);
-						editor.getField("scalez").applyChange(0);
+						TextField.getFieldById("helper_posx").applyChange(0);
+						TextField.getFieldById("helper_posy").applyChange(0);
+						TextField.getFieldById("helper_posz").applyChange(0);
+						TextField.getFieldById("helper_rotx").applyChange(0);
+						TextField.getFieldById("helper_roty").applyChange(0);
+						TextField.getFieldById("helper_rotz").applyChange(0);
+						TextField.getFieldById("helper_scalex").applyChange(0);
+						TextField.getFieldById("helper_scaley").applyChange(0);
+						TextField.getFieldById("helper_scalez").applyChange(0);
 					}
 					else{
-						editor.getField("posx").applyChange(model.pos == null ? 0 : model.pos.xCoord * 16);
-						editor.getField("posy").applyChange(model.pos == null ? 0 : model.pos.yCoord * 16);
-						editor.getField("posz").applyChange(model.pos == null ? 0 : model.pos.zCoord * 16);
-						editor.getField("rotx").applyChange(model.rot == null ? 0 : model.rot.xCoord);
-						editor.getField("roty").applyChange(model.rot == null ? 0 : model.rot.yCoord);
-						editor.getField("rotz").applyChange(model.rot == null ? 0 : model.rot.zCoord);
-						editor.getField("scalex").applyChange(model.scale == null ? 1 : model.scale.xCoord);
-						editor.getField("scaley").applyChange(model.scale == null ? 1 : model.scale.yCoord);
-						editor.getField("scalez").applyChange(model.scale == null ? 1 : model.scale.zCoord);
+						TextField.getFieldById("helper_posx").applyChange(model.pos == null ? 0 : model.pos.xCoord * 16);
+						TextField.getFieldById("helper_posy").applyChange(model.pos == null ? 0 : model.pos.yCoord * 16);
+						TextField.getFieldById("helper_posz").applyChange(model.pos == null ? 0 : model.pos.zCoord * 16);
+						TextField.getFieldById("helper_rotx").applyChange(model.rot == null ? 0 : model.rot.xCoord);
+						TextField.getFieldById("helper_roty").applyChange(model.rot == null ? 0 : model.rot.yCoord);
+						TextField.getFieldById("helper_rotz").applyChange(model.rot == null ? 0 : model.rot.zCoord);
+						TextField.getFieldById("helper_scalex").applyChange(model.scale == null ? 1 : model.scale.xCoord);
+						TextField.getFieldById("helper_scaley").applyChange(model.scale == null ? 1 : model.scale.yCoord);
+						TextField.getFieldById("helper_scalez").applyChange(model.scale == null ? 1 : model.scale.zCoord);
 					}
-					editor.getField("multiplicator").applyChange(FMTB.MODEL.rate);
 				}
 				return true;
 			}

@@ -77,14 +77,6 @@ public abstract class Editor extends Element {
 	public static void toggle(String string, boolean close){
 		Editor edit = get(string); if(close && edit != null && edit.isVisible()) hideAll(); else show(string);
 	}
-
-	public TextField getField(String string){
-		return (TextField)this.getElement(string);
-	}
-
-	public Button getButton(String string){
-		return (Button)this.getElement(string);
-	}
 	
 	protected boolean processScrollWheel(int wheel){ return true; }
 
