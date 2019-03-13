@@ -30,6 +30,7 @@ import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
+import net.fexcraft.app.fmt.ui.editor.ModelGroupEditor;
 import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
 import net.fexcraft.app.fmt.ui.general.Crossbar;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
@@ -319,15 +320,9 @@ public class FMTB implements FMTGLProcess {
 		ui.getElements().add(new ModelTree());
 		ui.getElements().add(new HelperTree());
 		ui.getElements().add(new GeneralEditor());
-		/*ui.getOldElements().add(new GeneralEditor());
-		ui.getOldElements().add(new ShapeboxEditor());
-		ui.getOldElements().add(new CylinderEditor());
-		ui.getOldElements().add(new GroupEditor());
-		ui.getOldElements().add(new PreviewEditor());
-		ui.getOldElements().add(new ModelEditor());
-		ui.getOldElements().add(new TextureEditor());
-		ui.getOldElements().add(new TexrectBEditor());
-		ui.getOldElements().add(new TexrectAEditor());*/
+		ui.getElements().add(new ModelGroupEditor());
+		/*ui.getOldElements().add(new PreviewEditor());
+		ui.getOldElements().add(new TextureEditor());*/
 		//render last
 		ui.getElements().add(UserInterface.TOOLBAR = new Toolbar());
 		ui.getElements().add(new Crossbar());

@@ -452,9 +452,12 @@ public class GroupCompound {
 			Editor.getGlobalField("model_posx").applyChange(pos == null ? 0 : pos.xCoord);
 			Editor.getGlobalField("model_posy").applyChange(pos == null ? 0 : pos.yCoord);
 			Editor.getGlobalField("model_posz").applyChange(pos == null ? 0 : pos.zCoord);
+			Editor.getGlobalField("model_rotx").applyChange(rot == null ? 0 : rot.xCoord);
+			Editor.getGlobalField("model_roty").applyChange(rot == null ? 0 : rot.yCoord);
+			Editor.getGlobalField("model_rotz").applyChange(rot == null ? 0 : rot.zCoord);
 			Editor.getGlobalField("model_texx").applyChange(this.textureX);
 			Editor.getGlobalField("model_texy").applyChange(this.textureY);
-			Editor.getGlobalField("model_modelname").setText(this.name, true);
+			Editor.getGlobalField("model_name").setText(this.name, true);
 			Editor.getGlobalField("multiplicator").applyChange(rate);
 		}
 		catch(Exception e){
