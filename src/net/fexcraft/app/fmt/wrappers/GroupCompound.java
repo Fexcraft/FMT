@@ -24,7 +24,7 @@ import net.fexcraft.lib.common.math.Vec3f;
 public class GroupCompound {
 	
 	public int textureX = 256, textureY = 256;
-	public float rate = 1;
+	public float rate = 1f;
 	//
 	private TreeMap<String, TurboList> compound = new TreeMap<>();
 	public ArrayList<String> creators = new ArrayList<>();

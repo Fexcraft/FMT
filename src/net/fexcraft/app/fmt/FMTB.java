@@ -31,6 +31,7 @@ import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
 import net.fexcraft.app.fmt.ui.editor.ModelGroupEditor;
+import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
 import net.fexcraft.app.fmt.ui.general.Crossbar;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
@@ -297,6 +298,7 @@ public class FMTB implements FMTGLProcess {
 		TextureManager.loadTexture("icons/group_visible");
 		TextureManager.loadTexture("icons/group_edit");
 		TextureManager.loadTexture("icons/group_minimize");
+		TextureManager.loadTexture("icons/pencil");
 		TextureManager.loadTexture("ui/background_dark");
 		TextureManager.loadTexture("ui/background_light");
 		TextureManager.loadTexture("ui/background_white");
@@ -321,8 +323,8 @@ public class FMTB implements FMTGLProcess {
 		ui.getElements().add(new HelperTree());
 		ui.getElements().add(new GeneralEditor());
 		ui.getElements().add(new ModelGroupEditor());
-		/*ui.getOldElements().add(new PreviewEditor());
-		ui.getOldElements().add(new TextureEditor());*/
+		ui.getElements().add(new TextureEditor());
+		//ui.getOldElements().add(new PreviewEditor());
 		//render last
 		ui.getElements().add(UserInterface.TOOLBAR = new Toolbar());
 		ui.getElements().add(new Crossbar());

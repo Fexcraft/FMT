@@ -26,6 +26,8 @@ public class Element {
 	public Element setPosition(int x, int y){
 		this.x = x; this.y = y; for(int i = 0; i < elements.size(); i++) elements.get(i).realignToRoot(i); return this;
 	}
+
+	public Element getRoot(){ return root; }
 	
 	/** To be overridden. **/
 	protected void realignToRoot(int index){}

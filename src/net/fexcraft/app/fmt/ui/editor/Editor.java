@@ -27,7 +27,7 @@ public abstract class Editor extends Element {
 			@Override protected boolean processScrollWheel(int wheel){
 				applyChange(FMTB.MODEL.multiply(wheel > 0 ? 2.0f : 0.5f)); return true;
 			}
-		}.setAsNumberfield(0, 1024, true)).setLevel(5));
+		}.setAsNumberfield(0, 1024, true).applyChange(FMTB.MODEL.rate)).setLevel(5));
 		this.elements.add((icon = new Icon(this, "multiplicator_reset", "", 26, 26, 258, 0){
 			@Override
 			protected boolean processButtonClick(int x, int y, boolean left){

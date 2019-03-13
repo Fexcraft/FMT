@@ -94,8 +94,8 @@ public class TextField extends Element {
 		return f >= min && f <= max ? otherval = f : otherval;
 	}
 	
-	public void applyChange(float f){
-		this.value = f;
+	public TextField applyChange(float f){
+		this.value = f; return this;
 	}
 
 	public static boolean anySelected(){
@@ -195,5 +195,9 @@ public class TextField extends Element {
 	}
 
 	public static ArrayList<TextField> getAllFields(){ return fields; }
+
+	public static TextField getFieldById(String string){
+		for(TextField field : fields) if(field.id.equals(string)) return field; return null;
+	}
 	
 }
