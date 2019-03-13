@@ -151,10 +151,27 @@ public class GeneralEditor extends Editor {
 			}
 		};
 		shapebox.setText("Shapebox Corners", false);
-		cylinder = new ContainerButton(this, "general", 300, 28, 4, y, new int[]{}){
+		cylinder = new ContainerButton(this, "general", 300, 28, 4, y, new int[]{ 1, 3, 1, 3, 1, 2, 1, 3 }){
 			@Override
 			public void addSubElements(){
+				this.elements.add(new Button(this, "text0", 290, 20, 0, 0, RGB.WHITE).setBackgroundless(false).setText("Radius / Length / R2", false).setRowCol(0, 0));
+				this.elements.add(new TextField(this, "cyl0x", 0, 0, 0).setAsNumberfield(0.01f, Integer.MAX_VALUE, true).setRowCol(1, 0));
+				this.elements.add(new TextField(this, "cyl0y", 0, 0, 0).setAsNumberfield(0.01f, Integer.MAX_VALUE, true).setRowCol(1, 1));
+				this.elements.add(new TextField(this, "cyl0z", 0, 0, 0).setAsNumberfield(0, Integer.MAX_VALUE, true).setRowCol(1, 2));
 				//
+				this.elements.add(new Button(this, "text1", 290, 20, 0, 0, RGB.WHITE).setBackgroundless(false).setText("Segments / Direction / SL", false).setRowCol(2, 0));
+				this.elements.add(new TextField(this, "cyl1x", 0, 0, 0).setAsNumberfield(3, Integer.MAX_VALUE, true).setRowCol(3, 0));
+				this.elements.add(new TextField(this, "cyl1y", 0, 0, 0).setAsNumberfield(0, 5, true).setRowCol(3, 1));
+				this.elements.add(new TextField(this, "cyl1z", 0, 0, 0).setAsNumberfield(0, Integer.MAX_VALUE, true).setRowCol(3, 2));
+				//
+				this.elements.add(new Button(this, "text2", 290, 20, 0, 0, RGB.WHITE).setBackgroundless(false).setText("Base Scale / Top Scale", false).setRowCol(4, 0));
+				this.elements.add(new TextField(this, "cyl2x", 0, 0, 0).setAsNumberfield(0, Integer.MAX_VALUE, true).setRowCol(5, 0));
+				this.elements.add(new TextField(this, "cyl2y", 0, 0, 0).setAsNumberfield(0, Integer.MAX_VALUE, true).setRowCol(5, 1));
+				//
+				this.elements.add(new Button(this, "text3", 290, 20, 0, 0, RGB.WHITE).setBackgroundless(false).setText("Top Offset (x/y/z)", false).setRowCol(6, 0));
+				this.elements.add(new TextField(this, "cyl3x", 0, 0, 0).setAsNumberfield(Integer.MIN_VALUE, Integer.MAX_VALUE, true).setRowCol(7, 0));
+				this.elements.add(new TextField(this, "cyl3y", 0, 0, 0).setAsNumberfield(Integer.MIN_VALUE, Integer.MAX_VALUE, true).setRowCol(7, 1));
+				this.elements.add(new TextField(this, "cyl3z", 0, 0, 0).setAsNumberfield(Integer.MIN_VALUE, Integer.MAX_VALUE, true).setRowCol(7, 2));
 			}
 		};
 		cylinder.setText("Cylinder Settings", false);
