@@ -145,7 +145,7 @@ public class TextField extends Element {
 		if(key.equals(" ")) return false;
 		if(first && key.equals("-")) return true;
 		if(!first && key.equals(".")) return true;
-		return id < 12;
+		return id < 12 || id > 70;
 	}
 
 	public void onBackSpace(){

@@ -82,6 +82,17 @@ public class GGR {
     	        		if(key == Keyboard.KEY_SPACE){
     	        			field.onInput(key, " ");
     	        		}
+    	        		//
+    	        		if(key == Keyboard.KEY_NUMPAD0) field.onInput(key, "0");
+    	        		if(key == Keyboard.KEY_NUMPAD1) field.onInput(key, "1");
+    	        		if(key == Keyboard.KEY_NUMPAD2) field.onInput(key, "2");
+    	        		if(key == Keyboard.KEY_NUMPAD3) field.onInput(key, "3");
+    	        		if(key == Keyboard.KEY_NUMPAD4) field.onInput(key, "4");
+    	        		if(key == Keyboard.KEY_NUMPAD5) field.onInput(key, "5");
+    	        		if(key == Keyboard.KEY_NUMPAD6) field.onInput(key, "6");
+    	        		if(key == Keyboard.KEY_NUMPAD7) field.onInput(key, "7");
+    	        		if(key == Keyboard.KEY_NUMPAD8) field.onInput(key, "8");
+    	        		if(key == Keyboard.KEY_NUMPAD9) field.onInput(key, "9");
     	        	}
     	        }
     	        else{
