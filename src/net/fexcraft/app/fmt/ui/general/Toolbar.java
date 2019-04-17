@@ -216,6 +216,18 @@ public class Toolbar extends Element {
 								@Override protected boolean processButtonClick(int x, int y, boolean left){ FMTB.MODEL.flipShapeboxes(j); return true; }
 							}.setText("Flip (" + str.toUpperCase() + ") " + arr[j], false));
 						}
+						this.elements.add(new Button(this, "hr0", 20, 4, 0, 0){
+							@Override
+							protected boolean processButtonClick(int x, int y, boolean left){
+								/** Generic Placeholder Space/<HR> **/return true;
+							}
+						}.setText("", false));
+						this.elements.add(new Button(this, "controls", 20, 26, 0, 0){
+							@Override
+							protected boolean processButtonClick(int x, int y, boolean left){
+								UserInterface.CONTROLS.show(); return true;
+							}
+						}.setText("Controls", false));
 					}
 				};
 				this.elements.add(menu);
