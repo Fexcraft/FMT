@@ -35,7 +35,7 @@ public class PreviewEditor extends Editor {
 					}.setAsNumberfield(-360, 360, true).setRowCol(3, i));
 					//
 					this.elements.add(new TextField(this, "helper_scale" + xyz[i], 70, 16 + (98 * i), 130){
-						@Override public void updateNumberField(){ updateRot(this, j, null); }
+						@Override public void updateNumberField(){ updateScale(this, j, null); }
 						@Override protected boolean processScrollWheel(int wheel){ return updateScale(j, wheel > 0); }
 					}.setAsNumberfield(Integer.MIN_VALUE, Integer.MAX_VALUE, true).setRowCol(5, i));
 				}

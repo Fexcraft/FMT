@@ -7,7 +7,6 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -77,7 +76,7 @@ public class FontRenderer {
         if(!file.exists()){ file.getParentFile().mkdirs();
         	Print.console("Font Type " + type + " Image not found, saving a new one.");
             try{ ImageIO.write(image, "png", file); }
-            catch(IOException e){ e.printStackTrace(); }
+            catch(Exception e){ e.printStackTrace(); }
         }
         TYPE_WIDTH[type] = image.getWidth();
         TextureManager.loadTextureFromFile("font/ascii" + type, file);
@@ -92,7 +91,7 @@ public class FontRenderer {
 		g.dispose();
 		int charWidth = metrics.charWidth(c);
 		int charHeight = metrics.getHeight();
-		image = new BufferedImage(charWidth, charHeight, BufferedImage.TYPE_INT_ARGB);
+		image = new BufferedImage(charWidth <= 0 ? 1 : charWidth, charHeight, BufferedImage.TYPE_INT_ARGB);
 		g = image.createGraphics();
 		if(antialiens){ g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); }
 		g.setFont(font);
