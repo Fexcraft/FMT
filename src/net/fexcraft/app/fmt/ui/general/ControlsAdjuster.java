@@ -53,13 +53,19 @@ public class ControlsAdjuster extends Element implements Dialog {
 					int j = i + (scroll * 8); if(j >= KeyCompound.keys.size()) continue; //break;
 					FontRenderer.drawText((tempkey = KeyCompound.keys.get(j)).name(), this.x + 21, this.y + 51 + (i * 32), 3);
 					String name = Keyboard.getKeyName(tempkey.ID());
-					FontRenderer.drawText(catched == i ? "[" + name + "]" : name, this.x + 360, this.y + 51 + (i * 32), 3);
+					FontRenderer.drawText(this.getName(catched == i, name), this.x + 360, this.y + 51 + (i * 32), 3);
 				}
 			}
 		}
 		catch(Exception e){
 			e.printStackTrace();
 		}
+	}
+	
+	public String getName(boolean bool, String name){
+		if(bool){
+			return CATCHING ? "<{" + name + "}>" : "[" + name + "]";
+		} return name;
 	}
 	
 	@Override
