@@ -62,6 +62,10 @@ public class KeyCompound {
 			@Override public boolean process(){ Settings.toggleLighting(); return true; }
 		});
 		//
+		keys.add(new KeyFunction("toggle_gametest", Keyboard.KEY_F10, true){
+			@Override public boolean process(){ FMTB.GAMETEST = !FMTB.GAMETEST; return true; }
+		});
+		//
 		keys.add(new KeyFunction("toggle_fullscreen", Keyboard.KEY_F11, true){
 			@Override public boolean process(){
             	try{ Display.setFullscreen(Settings.toogleFullscreen()); }

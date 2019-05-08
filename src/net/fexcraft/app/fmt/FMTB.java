@@ -54,6 +54,7 @@ import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureUpdate;
 import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
+import net.fexcraft.app.infl_test.GameHandler;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Time;
 import net.fexcraft.lib.common.utils.HttpUtil;
@@ -80,6 +81,7 @@ public class FMTB implements FMTGLProcess {
 	private static File lwjgl_natives;
 	public static GroupCompound MODEL = new GroupCompound();
 	public static Timer BACKUP_TIMER, TEX_UPDATE_TIMER;
+	public static boolean GAMETEST;
 	private long lf, lfps, fps;
 	
 	public static void main(String... args) throws Exception {
@@ -189,6 +191,7 @@ public class FMTB implements FMTGLProcess {
         GL11.glRotatef(ggr.rotation.yCoord, 0, 1, 0);
         GL11.glRotatef(ggr.rotation.zCoord, 0, 0, 1);
         GL11.glTranslatef(-ggr.pos.xCoord, -ggr.pos.yCoord, -ggr.pos.zCoord);
+        if(GAMETEST){ GameHandler.render(); return; }
         GL11.glRotatef(180, 1, 0, 0);
         GL11.glPushMatrix();
         RGB.WHITE.glColorApply();

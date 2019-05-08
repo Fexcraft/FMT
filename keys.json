@@ -15,6 +15,7 @@
   "toggle_polygon_marker": 64,
   "toggle_polygon_count": 65,
   "toggle_lighting": 66,
+  "toggle_gametest": 68,
   "toggle_fullscreen": 87,
   "take_screenshot": 88,
   "toggle_editor_0": 2,

@@ -53,9 +53,12 @@ backups/
 backups_/
 bin/
 resources/textures/temp/
+resources/textures/test/
 helpers/
 screenshots/
 auth.net
 *.zip
 saves/
 settings.json
+src/net/fexcraft/app/
+!src/net/fexcraft/app/fmt/
