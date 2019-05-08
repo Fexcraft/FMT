@@ -82,7 +82,7 @@ public class Toolbar extends Element {
 		this.elements.add(new Icon(this, "settings", "icons/toolbar/settings", 32, 32, 0, 0){
 			@Override
 			protected boolean processButtonClick(int x, int y, boolean left){
-				DialogBox.notAvailableYet(); return true;
+				UserInterface.SETTINGSBOX.show(); return true;
 			}
 		});
 		this.elements.add(new Button(this, "file", btsz, bthg, 0, 0){

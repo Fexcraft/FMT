@@ -16,7 +16,6 @@ import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.lib.common.math.RGB;
-import net.fexcraft.lib.common.utils.Print;
 
 /**
  * 
@@ -73,11 +72,9 @@ public class FontRenderer {
         }
         g.dispose();
         File file = new File("./resources/textures/font/ascii" + type + ".png");
-        if(!file.exists()){ file.getParentFile().mkdirs();
-        	Print.console("Font Type " + type + " Image not found, saving a new one.");
-            try{ ImageIO.write(image, "png", file); }
-            catch(Exception e){ e.printStackTrace(); }
-        }
+        if(!file.exists()){ file.getParentFile().mkdirs(); } //Print.console("Font Type " + type + " Image not found, saving a new one.");
+        //
+        try{ ImageIO.write(image, "png", file); } catch(Exception e){ e.printStackTrace(); }
         TYPE_WIDTH[type] = image.getWidth();
         TextureManager.loadTextureFromFile("font/ascii" + type, file);
 	}

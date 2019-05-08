@@ -37,6 +37,7 @@ import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
 import net.fexcraft.app.fmt.ui.general.Crossbar;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.ui.general.FileChooser;
+import net.fexcraft.app.fmt.ui.general.SettingsBox;
 import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.ui.general.Toolbar;
 import net.fexcraft.app.fmt.ui.tree.HelperTree;
@@ -69,7 +70,7 @@ import net.fexcraft.lib.tmt.ModelRendererTurbo;
 public class FMTB implements FMTGLProcess {
 	
 	public static final String deftitle = "[FPS:%s] Fexcraft Modelling Toolbox - %s";
-	public static final String version = "1.1.7";
+	public static final String version = "1.1.8";
 	//
 	private static String title;
 	private boolean close;
@@ -92,8 +93,7 @@ public class FMTB implements FMTGLProcess {
 	    }
 	    System.setProperty("org.lwjgl.librarypath", lwjgl_natives.getAbsolutePath());
 	    //
-		FMTB.INSTANCE = new FMTB();
-		INSTANCE.setDefaults(false, "Unnamed Model");
+		FMTB.INSTANCE = new FMTB().setTitle("Unnamed Model");
 		try{ INSTANCE.run(); } catch(Throwable thr){ thr.printStackTrace(); System.exit(1); }
 	}
 	
@@ -109,12 +109,8 @@ public class FMTB implements FMTGLProcess {
 	}
 
 	public static final FMTB get(){ return INSTANCE; }
-
-	private void setDefaults(boolean full, String string){
-		Settings.setFullScreen(full); setTitle(string);
-	}
 	
-	public void setTitle(String string){ title = string; }
+	public FMTB setTitle(String string){ title = string; return this; }
 	
 	public void run() throws LWJGLException, InterruptedException, IOException, NoSuchMethodException, ScriptException {
 		TextureManager.loadTextures(null);
@@ -244,7 +240,7 @@ public class FMTB implements FMTGLProcess {
         GL11.glLightModeli(GL11.GL_LIGHT_MODEL_TWO_SIDE,GL11.GL_TRUE);
         GL11.glEnable(GL11.GL_COLOR_MATERIAL);
         GL11.glColorMaterial(GL11.GL_FRONT_AND_BACK,GL11.GL_AMBIENT_AND_DIFFUSE);
-        this.setLightPos(Settings.light0_position);
+        this.setLightPos(Settings.getLight0Position());
         if(!Settings.lighting()) GL11.glDisable(GL11.GL_LIGHTING);
         //
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -270,8 +266,7 @@ public class FMTB implements FMTGLProcess {
 	}
 
 	private void setupDisplay() throws LWJGLException {
-		Display.setFullscreen(Settings.fullscreen());
-		Display.setResizable(false);
+		Display.setFullscreen(false); Display.setResizable(false);
 		Display.setDisplayMode(displaymode = new DisplayMode(1000, 600));
 		Display.setTitle(title); Display.setVSyncEnabled(true);
 		Display.create();
@@ -311,6 +306,7 @@ public class FMTB implements FMTGLProcess {
 		TextureManager.loadTexture("icons/editors/expanded");
 		//
 		ui.getElements().add(UserInterface.DIALOGBOX = new DialogBox());
+		ui.getElements().add(UserInterface.SETTINGSBOX = new SettingsBox());
 		ui.getElements().add(UserInterface.FILECHOOSER = new FileChooser());
 		ui.getElements().add(UserInterface.CONTROLS = new ControlsAdjuster());
 		//

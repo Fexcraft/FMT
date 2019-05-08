@@ -16,7 +16,7 @@ import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public abstract class PolygonWrapper {
 	
-	protected static final ModelRendererTurbo rotmarker = new ModelRendererTurbo(null, 0, 0, 16, 16).addSphere(0, 0, 0, 0.5f, 8, 8, 0, 0).setTextured(false).setColor(Settings.selectedColor);
+	protected static final ModelRendererTurbo rotmarker = new ModelRendererTurbo(null, 0, 0, 16, 16).addSphere(0, 0, 0, 0.5f, 8, 8, 0, 0).setTextured(false).setColor(Settings.getSelectedColor());
 	private static final ModelRendererTurbo something = new ModelRendererTurbo(null, 0, 0, 16, 16).setTextured(false);
 	//
 	public Vec3f pos = new Vec3f(), off = new Vec3f(), rot = new Vec3f();
@@ -153,7 +153,7 @@ public abstract class PolygonWrapper {
 	protected void setupMRT(){
 		turbo = newMRT().setTextured(compound.texture != null);
 		lines = newMRT().setLines(true);
-		sellines = newMRT().setLines(Settings.selectedColor);
+		sellines = newMRT().setLines(Settings.getSelectedColor());
 		//
 		picker = new ModelRendererTurbo(null, 0, 0, 16, 16){
 			@Override

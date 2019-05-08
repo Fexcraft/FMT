@@ -10,6 +10,7 @@ import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.ui.general.FileChooser;
 import net.fexcraft.app.fmt.ui.general.HoverMenu;
+import net.fexcraft.app.fmt.ui.general.SettingsBox;
 import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.ui.general.Toolbar;
 import net.fexcraft.app.fmt.utils.RayCoastAway;
@@ -30,6 +31,7 @@ public class UserInterface {
 	public static DialogBox DIALOGBOX;
 	public static FileChooser FILECHOOSER;
 	public static ControlsAdjuster CONTROLS;
+	public static SettingsBox SETTINGSBOX;
 	//
 	private ArrayList<Element> elements = new ArrayList<>();
 	private FMTGLProcess root;
@@ -72,8 +74,8 @@ public class UserInterface {
 	        GL11.glPopMatrix();
 	        GL11.glDepthFunc(GL11.GL_LEQUAL);
 	        //GL11.glClearColor(0.5f, 0.5f, 0.5f, 0.2f);
-	    	if(clearcolor == null){ clearcolor = Settings.background_color.toFloatArray(); }
-	    	GL11.glClearColor(clearcolor[0], clearcolor[1], clearcolor[2], Settings.background_color.alpha);
+	    	if(clearcolor == null){ clearcolor = Settings.getBackGroundColor(); }
+	    	GL11.glClearColor(clearcolor[0], clearcolor[1], clearcolor[2], clearcolor[3]);
 	        GL11.glClearDepth(1.0);
 	        GL11.glPopMatrix();
 		}
