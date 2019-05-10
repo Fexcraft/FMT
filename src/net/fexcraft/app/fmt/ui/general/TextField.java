@@ -12,7 +12,7 @@ public class TextField extends Element {
 	
 	private static final ArrayList<TextField> fields = new ArrayList<>();
 	private RGB hovercolor = new RGB(112, 255, 127), inactivecol = new RGB(235, 201, 201), hoversel = new RGB(255, 127, 0);
-	private boolean centered, selected, number, background = true;
+	private boolean centered, selected, number, background = true, withcommas = false;
 	private float min, max, value;
 	private String text, tempval;
 	private RGB textcolor = new RGB(212, 212, 212);
@@ -36,6 +36,10 @@ public class TextField extends Element {
 	
 	public TextField setColor(RGB newcol){
 		textcolor = newcol; return this;
+	}
+	
+	public TextField setWithCommas(boolean bool){
+		this.withcommas = bool; return this;
 	}
 
 	@Override
@@ -145,6 +149,7 @@ public class TextField extends Element {
 		if(key.equals(" ")) return false;
 		if(first && key.equals("-")) return true;
 		if(!first && key.equals(".")) return true;
+		if(!first && key.equals(",") && withcommas) return true;
 		return id < 12 || id > 70;
 	}
 

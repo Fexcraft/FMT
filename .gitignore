@@ -60,5 +60,4 @@ auth.net
 *.zip
 saves/
 settings.json
-src/net/fexcraft/app/
-!src/net/fexcraft/app/fmt/
+src/net/fexcraft/app/infl_test

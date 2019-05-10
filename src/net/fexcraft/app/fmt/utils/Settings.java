@@ -163,6 +163,10 @@ public class Settings {
 		public void add(Setting setting){
 			this.put(setting.getId(), setting);
 		}
+
+		public Setting getAt(int i){
+			return this.values().toArray(new Setting[0])[i];
+		}
 		
 	}
 
@@ -247,7 +251,17 @@ public class Settings {
 					}
 				}
 				case FLOAT_ARRAY:
-					break;
+					try{
+						String[] arr = newval.split(",");
+						float[] all = (float[])value;
+						for(int i = 0; i < arr.length; i++){
+							if(i >= all.length) break;
+							all[i] = Float.parseFloat(arr[i]);
+						} return true;
+					}
+					catch(Exception e){
+						e.printStackTrace(); return false;
+					}
 				case INTEGER:
 					try{
 						value = Integer.parseInt(newval);
@@ -258,7 +272,7 @@ public class Settings {
 					}
 				case RGB:{
 					try{
-						int i = Integer.parseInt(newval, 16);
+						int i = Integer.parseInt(newval.replace("#", ""), 16);
 						((RGB)value).packed = i; return true;
 					}
 					catch(Exception e){
@@ -278,7 +292,7 @@ public class Settings {
 				case FLOAT_ARRAY:{
 					float[] arr = (float[])value; String str = "";
 					for(int i = 0; i < arr.length; i++){
-						str += i; if(i >= arr.length - 1) str += ", ";
+						str += arr[i]; if(i < arr.length - 1) str += ", ";
 					} return str;
 				}
 				case INTEGER: return value + "";
@@ -306,11 +320,21 @@ public class Settings {
 			}
 			return new JsonPrimitive("null");
 		}
+
+		public boolean getBooleanValue(){
+			if(this.getType().isBoolean()) return (boolean)value; return false;
+		}
 		
 	}
 	
 	public static enum Type {
+		
 		STRING, BOOLEAN, INTEGER, FLOAT, RGB, FLOAT_ARRAY;
+
+		public boolean isBoolean(){
+			return this == BOOLEAN;
+		}
+		
 	}
 
 }

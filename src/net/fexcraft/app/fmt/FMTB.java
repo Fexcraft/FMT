@@ -329,7 +329,7 @@ public class FMTB implements FMTGLProcess {
 
 	@Override
 	public void reset(){
-		UserInterface.DIALOGBOX.reset(); UserInterface.FILECHOOSER.reset(); UserInterface.CONTROLS.reset(); TextField.deselectAll();
+		UserInterface.DIALOGBOX.reset(); UserInterface.FILECHOOSER.reset(); UserInterface.CONTROLS.reset(); UserInterface.SETTINGSBOX.reset(); TextField.deselectAll();
 	}
 
 	private void checkForUpdates(){
