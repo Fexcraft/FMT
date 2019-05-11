@@ -142,5 +142,10 @@ public class CylinderWrapper extends PolygonWrapper {
 		}
 		return vecs;
 	}
+
+	@Override
+	public PolygonWrapper convertTo(ShapeType type){
+		return type == ShapeType.CYLINDER ? this.clone() : null;
+	}
 	
 }

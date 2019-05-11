@@ -390,7 +390,7 @@ public class GroupCompound {
 				Editor.getGlobalField("cyl1z").applyChange(poly.getFloat("cyl1", false, false, true));
 				Editor.getGlobalField("cyl2x").applyChange(poly.getFloat("cyl2", true, false, false));
 				Editor.getGlobalField("cyl2y").applyChange(poly.getFloat("cyl2", false, true, false));
-				Editor.getGlobalField("cyl2z").applyChange(poly.getFloat("cyl2", false, false, true));
+				//Editor.getGlobalField("cyl2z").applyChange(poly.getFloat("cyl2", false, false, true));
 				Editor.getGlobalField("cyl3x").applyChange(poly.getFloat("cyl3", true, false, false));
 				Editor.getGlobalField("cyl3y").applyChange(poly.getFloat("cyl3", false, true, false));
 				Editor.getGlobalField("cyl3z").applyChange(poly.getFloat("cyl3", false, false, true));
@@ -497,14 +497,32 @@ public class GroupCompound {
 		changeGroupOfSelected(polis, compound.keySet().toArray(new String[0])[index]);
 	}
 
-	public void changeTypeOfSelected(ArrayList<PolygonWrapper> selected, String textValue){
-		//TODO
-		DialogBox.notAvailableYet();
+	public void changeTypeOfSelected(ArrayList<PolygonWrapper> selected, String text){
+		ShapeType type = ShapeType.get(text);
+		if(type == null){ FMTB.showDialogbox("Type not found!\n[" + text.toLowerCase() + "]", null, "ok", null, DialogBox.NOTHING); return; }
+		int failed = 0; ShapeType lastfail = null;
+		for(PolygonWrapper sel : selected){
+			if(sel.getType().getConversionGroup().equals(type.getConversionGroup())){
+				PolygonWrapper conv = sel.convertTo(type);
+				if(conv != null){
+					sel.getTurboList().remove(sel);
+					sel.getTurboList().add(conv);
+					conv.selected = true;
+				}
+			} else { failed++; lastfail = sel.getType(); }
+		}
+		if(failed > 0){
+			FMTB.showDialogbox(failed + " shape(s) skipped!\n" + type.name().toLowerCase() + " !> " + lastfail.name().toLowerCase(), null, "ok", null, DialogBox.NOTHING);
+		}
+		this.updateFields();
 	}
 
-	public void changeTypeOfSelected(int offset){
-		//TODO
-		DialogBox.notAvailableYet();
+	public void changeTypeOfSelected(ArrayList<PolygonWrapper> selected, int offset){
+		if(selected == null || selected.isEmpty()) return;
+		int i = selected.get(0).getType().ordinal() + offset;
+		if(i >= ShapeType.values().length) i = 0;
+		if(i < 0) i = ShapeType.values().length - 1;
+		this.changeTypeOfSelected(selected, ShapeType.values()[i].name());
 	}
 	
 	public long countTotalMRTs(){

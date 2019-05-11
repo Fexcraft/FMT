@@ -66,7 +66,7 @@ public class GeneralEditor extends Editor {
 				this.elements.add(new TextField(this, "boxtype", 290, 0, 0){
 					@Override
 					protected boolean processScrollWheel(int wheel){
-						FMTB.MODEL.changeTypeOfSelected(wheel > 0 ? 1 : -1); return true;
+						FMTB.MODEL.changeTypeOfSelected(FMTB.MODEL.getSelected(), wheel > 0 ? 1 : -1); return true;
 					}
 					@Override
 					public void updateTextField(){

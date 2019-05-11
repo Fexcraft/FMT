@@ -288,14 +288,20 @@ public abstract class PolygonWrapper {
 
 	public PolygonWrapper clone(){
 		PolygonWrapper wrapper = this.createClone(compound);
+		return copyTo(wrapper, false);
+	}
+	
+	public PolygonWrapper copyTo(PolygonWrapper wrapper, boolean copyvisibility){
 		wrapper.pos = new Vec3f(pos); wrapper.off = new Vec3f(off); wrapper.rot = new Vec3f(rot);
 		wrapper.textureX = textureX; wrapper.textureY = textureY;
-		wrapper.visible = true; //visible;
+		wrapper.visible = copyvisibility ? visible : true;
 		wrapper.name = name == null ? null : name.endsWith("cp") ? name : name + "cp";
 		wrapper.mirror = mirror; wrapper.flip = flip;
 		return wrapper;
 	}
 
 	protected abstract PolygonWrapper createClone(GroupCompound compound);
+
+	public abstract PolygonWrapper convertTo(ShapeType type);
 	
 }

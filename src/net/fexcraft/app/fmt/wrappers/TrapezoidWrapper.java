@@ -61,19 +61,23 @@ public class TrapezoidWrapper extends BoxWrapper {
 
 
 	public TrapezoidWrapper setCoords(float var1, String side){
-		scale=var1; mr_side=getSide(side);
-		return this;
+		scale = var1; mr_side = getSide(side); return this;
 	}
 
 	private static int getSide(String s){
-	    switch (s){
-            case "MR_LEFT":{return ModelRendererTurbo.MR_LEFT;}
-            case "MR_RIGHT":{return ModelRendererTurbo.MR_RIGHT;}
-            case "MR_FRONT":{return ModelRendererTurbo.MR_FRONT;}
-            case "MR_BACK":{return ModelRendererTurbo.MR_BACK;}
-            case "MR_BOTTOM":{return ModelRendererTurbo.MR_BOTTOM;}
-            default:case "MR_TOP":{return ModelRendererTurbo.MR_TOP;}
+	    switch(s){
+            case "MR_LEFT": {return ModelRendererTurbo.MR_LEFT;}
+            case "MR_RIGHT": {return ModelRendererTurbo.MR_RIGHT;}
+            case "MR_FRONT": {return ModelRendererTurbo.MR_FRONT;}
+            case "MR_BACK": {return ModelRendererTurbo.MR_BACK;}
+            case "MR_BOTTOM": {return ModelRendererTurbo.MR_BOTTOM;}
+            default: case "MR_TOP": {return ModelRendererTurbo.MR_TOP;}
         }
     }
+
+	@Override
+	public PolygonWrapper convertTo(ShapeType type){
+		return type == this.getType() ? this.clone() : null;
+	}
 	
 }

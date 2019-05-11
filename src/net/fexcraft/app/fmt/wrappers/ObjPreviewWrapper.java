@@ -57,5 +57,10 @@ public class ObjPreviewWrapper extends PolygonWrapper {
 	protected float[][][] newTexturePosition(){
 		return new float[0][][];
 	}
+
+	@Override
+	public PolygonWrapper convertTo(ShapeType type){
+		return type == this.getType() ? this.clone() : null;
+	}
 	
 }

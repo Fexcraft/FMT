@@ -68,5 +68,10 @@ public class MarkerWrapper extends PolygonWrapper {
 	protected PolygonWrapper createClone(GroupCompound compound){
 		return new MarkerWrapper(compound);
 	}
+
+	@Override
+	public PolygonWrapper convertTo(ShapeType type){
+		return type == this.getType() ? this.clone() : null;
+	}
 	
 }

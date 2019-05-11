@@ -69,8 +69,8 @@ public class DialogBox extends Element implements Dialog {
 		this.reset(); this.positive = positive; this.negative = negative;
 		if(text == null) text = "no title"; this.text = text;
 		//
-		button0.setEnabled(positive != null); button1.setEnabled(positive != null);
-		button0.setVisible(positive != null); button1.setVisible(positive != null);
+		button0.setEnabled(positive != null); button1.setEnabled(negative != null);
+		button0.setVisible(positive != null); button1.setVisible(negative != null);
 		button0.setText(button0.isVisible() ? b0_text : "", true);
 		button1.setText(button1.isVisible() ? b1_text : "", true);
 		//

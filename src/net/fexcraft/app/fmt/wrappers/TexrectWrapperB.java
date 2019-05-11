@@ -102,5 +102,19 @@ public class TexrectWrapperB extends ShapeboxWrapper {
 		} return vecs;*/
 		return new float[0][][];
 	}
+
+	@Override
+	public PolygonWrapper convertTo(ShapeType type){
+		if(!type.getConversionGroup().equals(this.getType().getConversionGroup())) return null;
+		if(type == ShapeType.BOX) return copyTo(new BoxWrapper(compound, new Vec3f(size)), true);
+		ShapeboxWrapper wrapper = null;
+		switch(type){
+			case TEXRECT_A: wrapper = new TexrectWrapperA(compound); break;
+			case SHAPEBOX: wrapper = new ShapeboxWrapper(compound); break;
+			default: return null;
+		}
+		wrapper.size = new Vec3f(size); wrapper.setCoords(cor0, cor1, cor2, cor3, cor4, cor5, cor6, cor7);
+		return copyTo(wrapper, true);
+	}
 	
 }
