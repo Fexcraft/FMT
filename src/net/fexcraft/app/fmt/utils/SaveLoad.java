@@ -59,9 +59,9 @@ public class SaveLoad {
 							} catch(IOException e){ e.printStackTrace(); }
 						}
 						else if(elm.getName().equals("texture.png")){
-							FMTB.MODEL.setTexture("temp/" + FMTB.MODEL.name);
+							FMTB.MODEL.setTexture("./temp/" + FMTB.MODEL.name);
 			            	try{ //in theory this should be always 2nd in the stream, so it is expected the model loaded already
-								TextureManager.loadTextureFromZip(zip.getInputStream(elm), "temp/" + FMTB.MODEL.name, true);
+								TextureManager.loadTextureFromZip(zip.getInputStream(elm), "./temp/" + FMTB.MODEL.name, false, true);
 							} catch(IOException e){ e.printStackTrace(); }
 						}
 					}); zip.close(); FMTB.MODEL.file = file;

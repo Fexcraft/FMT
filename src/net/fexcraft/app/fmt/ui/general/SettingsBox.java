@@ -22,7 +22,7 @@ public class SettingsBox extends Element implements Dialog {
 	public SettingsBox(){
 		super(null, "settingsbox"); this.setSize(258, 128);
 		this.visible = false; this.z = 90; Dialog.dialogs.add(this);
-		TextureManager.loadTexture("ui/settingsbox");
+		TextureManager.loadTexture("ui/settingsbox", null);
 		this.setTexPosSize("ui/settingsbox", 0, 0, 512, 256);
 	}
 	

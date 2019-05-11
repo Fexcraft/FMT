@@ -40,9 +40,11 @@ public class FileChooser extends Element implements Dialog {
 	private ChooserMode mode;
 	
 	public FileChooser(){
-		super(null, "ui/filechooser"); TextureManager.loadTexture("ui/filechooser"); TextureManager.loadTexture("icons/file_chooser_0"); TextureManager.loadTexture("icons/file_chooser_1");
-		TextureManager.loadTexture("icons/file_chooser_2"); TextureManager.loadTexture("icons/file_chooser_3"); TextureManager.loadTexture("icons/file_chooser_4");
-		TextureManager.loadTexture("icons/file_chooser_5"); TextureManager.loadTexture("icons/file_chooser_6"); TextureManager.loadTexture("icons/file_chooser_7");
+		super(null, "ui/filechooser"); TextureManager.loadTexture("ui/filechooser", null);
+		TextureManager.loadTexture("icons/file_chooser_0", null); TextureManager.loadTexture("icons/file_chooser_1", null);
+		TextureManager.loadTexture("icons/file_chooser_2", null); TextureManager.loadTexture("icons/file_chooser_3", null);
+		TextureManager.loadTexture("icons/file_chooser_4", null); TextureManager.loadTexture("icons/file_chooser_5", null);
+		TextureManager.loadTexture("icons/file_chooser_6", null); TextureManager.loadTexture("icons/file_chooser_7", null);
 		this.visible = false; this.z = 80; this.height = 546; this.width = 512; Dialog.dialogs.add(this);
 		this.elements.add(button0 = new Button(this, "button0", 150, 28, 18, 504/*470*/, new RGB(255, 255, 0)){
 			@Override protected boolean processButtonClick(int x, int y, boolean left){

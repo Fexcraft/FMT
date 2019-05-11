@@ -115,14 +115,7 @@ public class FMTB implements FMTGLProcess {
 	public FMTB setTitle(String string){ title = string; return this; }
 	
 	public void run() throws LWJGLException, InterruptedException, IOException, NoSuchMethodException, ScriptException {
-		TextureManager.loadTextures(null);
-		Display.setIcon(new java.nio.ByteBuffer[]{
-			TextureManager.getTexture("icon", false).getBuffer(),
-			TextureManager.getTexture("icon", false).getBuffer()
-		});
-		try{ Settings.load(); } catch(Throwable e){
-			System.out.println("SETTINGS FAILED TO LOAD"); System.out.println("Please check the (json) file for errors."); e.printStackTrace();
-		}
+		TextureManager.init(); this.setIcon(); Settings.load();
 		setupDisplay(); initOpenGL(); ggr = new GGR(this, 0, 4, 4); ggr.rotation.xCoord = 45; FontRenderer.init();
 		PorterManager.load(); HelperCollector.reload(); Display.setResizable(true); Translator.init(); UI = new UserInterface(this);
 		SessionHandler.checkIfLoggedIn(true, true); checkForUpdates(); KeyCompound.init(); KeyCompound.load();
@@ -146,6 +139,10 @@ public class FMTB implements FMTGLProcess {
 			//Thread.sleep(50);
 		}
 		Display.destroy(); Settings.save(); KeyCompound.save(); SessionHandler.save(); System.exit(0);
+	}
+
+	private void setIcon(){
+		Display.setIcon(new java.nio.ByteBuffer[]{ TextureManager.getTexture("icon", false).getBuffer(), TextureManager.getTexture("icon", false).getBuffer() });
 	}
 
 	private void loop(long delta){
@@ -295,17 +292,17 @@ public class FMTB implements FMTGLProcess {
 
 	@Override
 	public void setupUI(UserInterface ui){
-		TextureManager.loadTexture("icons/pencil");
-		TextureManager.loadTexture("icons/group_delete");
-		TextureManager.loadTexture("icons/group_visible");
-		TextureManager.loadTexture("icons/group_edit");
-		TextureManager.loadTexture("icons/group_minimize");
-		TextureManager.loadTexture("ui/background_dark");
-		TextureManager.loadTexture("ui/background_light");
-		TextureManager.loadTexture("ui/background_white");
-		TextureManager.loadTexture("ui/background_black");
-		TextureManager.loadTexture("icons/editors/minimized");
-		TextureManager.loadTexture("icons/editors/expanded");
+		TextureManager.loadTexture("icons/pencil", null);
+		TextureManager.loadTexture("icons/group_delete", null);
+		TextureManager.loadTexture("icons/group_visible", null);
+		TextureManager.loadTexture("icons/group_edit", null);
+		TextureManager.loadTexture("icons/group_minimize", null);
+		TextureManager.loadTexture("ui/background_dark", null);
+		TextureManager.loadTexture("ui/background_light", null);
+		TextureManager.loadTexture("ui/background_white", null);
+		TextureManager.loadTexture("ui/background_black", null);
+		TextureManager.loadTexture("icons/editors/minimized", null);
+		TextureManager.loadTexture("icons/editors/expanded", null);
 		//
 		ui.getElements().add(UserInterface.DIALOGBOX = new DialogBox());
 		ui.getElements().add(UserInterface.SETTINGSBOX = new SettingsBox());
@@ -335,7 +332,7 @@ public class FMTB implements FMTGLProcess {
 			UserInterface.DIALOGBOX.reset(); UserInterface.FILECHOOSER.reset();
 			UserInterface.CONTROLS.reset(); UserInterface.SETTINGSBOX.reset();
 			TextField.deselectAll();
-		} else{ Editor.hideAll(); }
+		} else if(Editor.anyVisible()){ Editor.hideAll(); } else return;//open some kind of main menu / status / login screen.
 	}
 
 	private void checkForUpdates(){

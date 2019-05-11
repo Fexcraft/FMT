@@ -13,7 +13,7 @@ public class Crossbar extends Element {
 	
 	public Crossbar(){
 		super(null, "crossbar"); this.setLevel(0).setSize(16, 16);
-		TextureManager.loadTexture("ui/center_marker");
+		TextureManager.loadTexture("ui/center_marker", null);
 		this.setTexPosSize("ui/center_marker", 0, 0, 16, 16);
 	}
 

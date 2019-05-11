@@ -183,8 +183,8 @@ public class MTBImporter extends InternalPorter {
             			}
             		}
             		if(!transparent){
-                    	compound.setTexture("temp/" + compound.name);
-                    	TextureManager.loadTextureFromZip(image, "temp/" + compound.name, true);
+                    	compound.setTexture("./temp/" + compound.name);
+                    	TextureManager.loadTextureFromZip(image, "./temp/" + compound.name, false, true);
             		}
             	}
             	catch(Exception e){

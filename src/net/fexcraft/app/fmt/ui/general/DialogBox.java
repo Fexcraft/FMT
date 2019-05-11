@@ -30,7 +30,7 @@ public class DialogBox extends Element implements Dialog {
 	public DialogBox(){
 		super(null, "dialogbox"); this.setSize(258, 128);
 		this.visible = false; this.z = 90; Dialog.dialogs.add(this);
-		TextureManager.loadTexture("ui/dialogbox");
+		TextureManager.loadTexture("ui/dialogbox", null);
 		this.setTexPosSize("ui/dialogbox", 0, 0, 256, 128);
 		this.elements.add(button0 = new Button(this, "positive", 100, 30, 0, 0, new RGB(255, 255, 0)){
 			@Override protected boolean processButtonClick(int x, int y, boolean left){ return onClick(true); }

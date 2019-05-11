@@ -40,12 +40,12 @@ public class Toolbar extends Element {
 	
 	public Toolbar(){
 		super(null, "toolbar");
-		TextureManager.loadTexture("icons/toolbar/info");
-		TextureManager.loadTexture("icons/toolbar/new");
-		TextureManager.loadTexture("icons/toolbar/open");
-		TextureManager.loadTexture("icons/toolbar/save");
-		TextureManager.loadTexture("icons/toolbar/profile");
-		TextureManager.loadTexture("icons/toolbar/settings");
+		TextureManager.loadTexture("icons/toolbar/info", null);
+		TextureManager.loadTexture("icons/toolbar/new", null);
+		TextureManager.loadTexture("icons/toolbar/open", null);
+		TextureManager.loadTexture("icons/toolbar/save", null);
+		TextureManager.loadTexture("icons/toolbar/profile", null);
+		TextureManager.loadTexture("icons/toolbar/settings", null);
 		this.setPosition(0, 0).setLevel(-20).setTexPosSize("ui/background_dark", 0, 0, 32, 32).setSize(100, 30);
 		//
 		int btsz = 96, bthg = 28;

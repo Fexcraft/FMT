@@ -65,8 +65,8 @@ public class HelperCollector {
 				zip.close(); return;
 			}
 			if(conT){
-				TextureManager.loadTextureFromZip(zip.getInputStream(zip.getEntry("texture.png")), "temp/" + compound.name, true);
-				compound.setTexture("temp/" + compound.name);
+				TextureManager.loadTextureFromZip(zip.getInputStream(zip.getEntry("texture.png")), "./temp/" + compound.name, false, true);
+				compound.setTexture("./temp/" + compound.name);
 			} zip.close();
 		}
 		catch(Exception e){
@@ -84,10 +84,10 @@ public class HelperCollector {
 		GroupCompound compound = null;
 		try{
 			BufferedImage image = ImageIO.read(file);
-			TextureManager.loadTextureFromZip(image, "temp/frame/" + file.getName(), false);
+			TextureManager.loadTextureFromZip(image, "./temp/frame/" + file.getName(), false, false);
 			compound = new GroupCompound(); compound.getCompound().clear();
 			compound.name = "frame/" + file.getName();
-			compound.texture = "temp/frame/" + file.getName();
+			compound.texture = "./temp/frame/" + file.getName();
 			compound.textureX = image.getWidth(); compound.textureY = image.getHeight();
 			TexrectWrapperA polygon = new TexrectWrapperA(compound);
 			polygon.size.xCoord = image.getWidth(); polygon.size.yCoord = image.getHeight(); polygon.size.zCoord = 0.2f;

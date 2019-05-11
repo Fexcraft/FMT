@@ -26,7 +26,7 @@ public class ControlsAdjuster extends Element implements Dialog {
 	private float tx, ty;
 	
 	public ControlsAdjuster(){
-		super(null, "ui/controls"); TextureManager.loadTexture("ui/controls");;
+		super(null, "ui/controls"); TextureManager.loadTexture("ui/controls", null);
 		this.visible = false; this.z = 80; this.height = 312; this.width = 512; Dialog.dialogs.add(this);
 	}
 	

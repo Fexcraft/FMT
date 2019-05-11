@@ -101,7 +101,7 @@ public class GroupCompound {
 		}
 	}
 	
-	public static final String temptexid = "temp/calculation_texture";
+	public static final String temptexid = "./temp/calculation_texture";
 	
 	private String getTempTex(){
 		Texture tex = TextureManager.getTexture(temptexid, true);
@@ -122,7 +122,7 @@ public class GroupCompound {
 					}
 				}
 				if(tex == null){
-					TextureManager.loadTextureFromZip(image, temptexid, true);
+					TextureManager.loadTextureFromZip(image, temptexid, false, true);
 				}
 				else{
 					tex.rebind(); TextureManager.saveTexture(temptexid);

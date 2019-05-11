@@ -112,4 +112,8 @@ public abstract class Editor extends Element {
 		for(Editor edit : editors) if(edit.isVisible()) return edit; return null;
 	}
 
+	public static boolean anyVisible(){
+		for(Editor edit : editors) if(edit.isVisible()) return true; return false;
+	}
+
 }

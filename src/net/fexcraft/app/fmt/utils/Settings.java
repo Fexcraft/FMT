@@ -87,7 +87,6 @@ public class Settings {
 	static {
 		DEFAULTS.add(new Setting(Type.RGB, "selection_color", new RGB(255, 255, 0)));
 		DEFAULTS.add(new Setting(Type.FLOAT_ARRAY, "background_color", new float[]{ 0.5f, 0.5f, 0.5f, 0.2f }));
-		DEFAULTS.add(new Setting(Type.BOOLEAN, "fullscreen", false));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "floor", true));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "lines", true));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "cube", true));
@@ -99,7 +98,7 @@ public class Settings {
 		DEFAULTS.add(new Setting(Type.STRING, "language_code", "default"));
 	}
 
-	public static void load() throws Throwable {
+	public static void load(){
 		JsonObject obj = JsonUtil.get(new File("./settings.json"));
 		if(!obj.has("format")){ SETTINGS.putAll(DEFAULTS); }//assume it's the old format
 		if(obj.has("settings")){
