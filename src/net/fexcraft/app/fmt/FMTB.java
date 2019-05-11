@@ -27,8 +27,10 @@ import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.porters.PorterManager;
+import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.ui.UserInterface;
+import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
 import net.fexcraft.app.fmt.ui.editor.ModelGroupEditor;
 import net.fexcraft.app.fmt.ui.editor.PreviewEditor;
@@ -329,7 +331,11 @@ public class FMTB implements FMTGLProcess {
 
 	@Override
 	public void reset(){
-		UserInterface.DIALOGBOX.reset(); UserInterface.FILECHOOSER.reset(); UserInterface.CONTROLS.reset(); UserInterface.SETTINGSBOX.reset(); TextField.deselectAll();
+		if(Dialog.anyVisible() || TextField.anySelected()){
+			UserInterface.DIALOGBOX.reset(); UserInterface.FILECHOOSER.reset();
+			UserInterface.CONTROLS.reset(); UserInterface.SETTINGSBOX.reset();
+			TextField.deselectAll();
+		} else{ Editor.hideAll(); }
 	}
 
 	private void checkForUpdates(){

@@ -97,7 +97,13 @@ public abstract class Editor extends Element {
 	}
 
 	public static void toggleContainer(int i){
-		Editor editor = getVisibleEditor(); if(editor == null) return;
+		Editor editor = getVisibleEditor(); if(editor == null){
+			if(i == 0) show("general_editor");
+			if(i == 1) show("model_group_editor");
+			if(i == 2) show("texture_editor");
+			if(i == 3) show("preview_editor");
+			return;
+		}
 		if(i < 0 || i >= editor.containers.length) return;
 		editor.containers[i].setExpanded(!editor.containers[i].isExpanded());
 	}
