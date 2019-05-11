@@ -507,7 +507,7 @@ public class GroupCompound {
 				if(conv != null){
 					sel.getTurboList().remove(sel);
 					sel.getTurboList().add(conv);
-					conv.selected = true;
+					conv.recompile(); conv.selected = true;
 				}
 			} else { failed++; lastfail = sel.getType(); }
 		}

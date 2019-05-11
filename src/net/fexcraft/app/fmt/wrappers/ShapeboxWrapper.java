@@ -228,7 +228,7 @@ public class ShapeboxWrapper extends BoxWrapper {
 	@Override
 	public PolygonWrapper convertTo(ShapeType type){
 		if(!type.getConversionGroup().equals(this.getType().getConversionGroup())) return null;
-		if(type == ShapeType.BOX) return copyTo(new BoxWrapper(compound, new Vec3f(size)), true);
+		if(type == ShapeType.BOX){ BoxWrapper box = new BoxWrapper(compound); box.size = new Vec3f(size); return copyTo(box, true); }
 		if(type == ShapeType.SHAPEBOX) return this.clone();
 		ShapeboxWrapper wrapper = null;
 		switch(type){

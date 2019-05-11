@@ -12,10 +12,6 @@ public class BoxWrapper extends PolygonWrapper {
 	public BoxWrapper(GroupCompound compound){
 		super(compound);
 	}
-	
-	public BoxWrapper(GroupCompound compound, Vec3f size){
-		this(compound); this.size = size;
-	}
 
 	protected ModelRendererTurbo newMRT(){
 		return new ModelRendererTurbo(null, textureX, textureY, compound.textureX, compound.textureY)
@@ -105,7 +101,7 @@ public class BoxWrapper extends PolygonWrapper {
 			case TEXRECT_A: wrapper = new TexrectWrapperA(compound); break;
 			case TEXRECT_B: wrapper = new TexrectWrapperB(compound); break;
 			default: return null;
-		} return copyTo(wrapper, true);
+		} wrapper.size = new Vec3f(size); return copyTo(wrapper, true);
 	}
 	
 }
