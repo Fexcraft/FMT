@@ -46,14 +46,14 @@ public class TextureUpdate extends TimerTask {
 		lastedit = date; return;
 	}
 
-	public static void updateSizes(){
+	public static void updateSizes(TurboList list2){//TODO alternative list mode
 		Texture texture = TextureManager.getTexture(FMTB.MODEL.texture, true);
 		if(texture == null || texture.getImage() == null) return;
 		BufferedImage image = texture.getImage();
-		if(image.getWidth() != FMTB.MODEL.textureX || image.getHeight() != FMTB.MODEL.textureY){
-			if(image.getWidth() > FMTB.MODEL.textureX && image.getWidth() % FMTB.MODEL.textureX == 0
-				&& image.getHeight() > FMTB.MODEL.textureY && image.getHeight() % FMTB.MODEL.textureY == 0) return;
-			texture.resize(FMTB.MODEL.textureX, FMTB.MODEL.textureY, 0x00ffffff);
+		if(image.getWidth() != FMTB.MODEL.texX || image.getHeight() != FMTB.MODEL.texY){
+			if(image.getWidth() > FMTB.MODEL.texX && image.getWidth() % FMTB.MODEL.texX == 0
+				&& image.getHeight() > FMTB.MODEL.texY && image.getHeight() % FMTB.MODEL.texY == 0) return;
+			texture.resize(FMTB.MODEL.texX, FMTB.MODEL.texY, 0x00ffffff);
 			TextureManager.saveTexture(FMTB.MODEL.texture); FMTB.MODEL.recompile();
 			updateLastEdit(Time.getDate());
 		}
@@ -75,7 +75,7 @@ public class TextureUpdate extends TimerTask {
 		} HALT = false; ALL = bool;
 		//
 		if(list == null){
-			list = getSortedList(ALL); last = 0; image = new BufferedImage(FMTB.MODEL.textureX, FMTB.MODEL.textureY, BufferedImage.TYPE_INT_ARGB);
+			list = getSortedList(ALL); last = 0; image = new BufferedImage(FMTB.MODEL.tx(null), FMTB.MODEL.ty(null), BufferedImage.TYPE_INT_ARGB);
 			for(int i = 0; i < image.getWidth(); i++){
 				for(int j = 0; j < image.getHeight(); j++){
 					image.setRGB(i, j, Color.WHITE.getRGB());
@@ -95,8 +95,8 @@ public class TextureUpdate extends TimerTask {
 				wrapper.burnToTexture(image, null); Thread.sleep(10); return;
 			}
 			//
-			for(int yar = 0; yar < FMTB.MODEL.textureY; yar++){
-				for(int xar = 0; xar < FMTB.MODEL.textureX; xar++){
+			for(int yar = 0; yar < FMTB.MODEL.ty(null); yar++){
+				for(int xar = 0; xar < FMTB.MODEL.tx(null); xar++){
 					if(check(wrapper.texpos, xar, yar)){
 						Print.console("[" + wrapper.getTurboList().id + ":" + wrapper.name() + "] >> " + xar + "x, " + yar + "y;");
 						wrapper.textureX = xar; wrapper.textureY = yar; wrapper.recompile(); wrapper.burnToTexture(image, null); Thread.sleep(10);

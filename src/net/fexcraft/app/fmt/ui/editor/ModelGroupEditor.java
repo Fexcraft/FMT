@@ -1,10 +1,15 @@
 package net.fexcraft.app.fmt.ui.editor;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.general.Button;
 import net.fexcraft.app.fmt.ui.general.TextField;
+import net.fexcraft.app.fmt.ui.general.FileChooser.AfterTask;
+import net.fexcraft.app.fmt.ui.general.FileChooser.ChooserMode;
+import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureUpdate;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.TurboList;
@@ -22,7 +27,7 @@ public class ModelGroupEditor extends Editor {
 
 	@Override
 	protected ContainerButton[] setupSubElements(){
-		group = new ContainerButton(this, "group", 300, 28, 4, y, new int[]{ 1, 3, 1, 1 }){
+		group = new ContainerButton(this, "group", 300, 28, 4, y, new int[]{ 1, 3, 1, 1, 1, 2, 1, 1 }){
 			@Override
 			public void addSubElements(){
 				this.elements.add(new Button(this, "text0", 290, 20, 0, 0, RGB.WHITE).setText("Group Preview Color/Overlay", false).setRowCol(0, 0));
@@ -33,7 +38,7 @@ public class ModelGroupEditor extends Editor {
 					}.setAsNumberfield(0, 255, true).setRowCol(1, i));
 				}
 				this.elements.add(new Button(this, "text1", 290, 20, 0, 0, RGB.WHITE).setText("Group Name/ID", false).setRowCol(2, 0));
-				this.elements.add(new TextField(this, "groupname", 0, 0, 0){
+				this.elements.add(new TextField(this, "group_name", 0, 0, 0){
 					@Override
 					public void updateTextField(){
 						if(FMTB.MODEL.getSelected().isEmpty()) return;
@@ -59,16 +64,55 @@ public class ModelGroupEditor extends Editor {
 						FMTB.MODEL.getSelected().clear();
 					}
 				}.setText("null", true).setRowCol(3, 0));
+				//
+				this.elements.add(new Button(this, "text3", 290, 20, 0, 0, RGB.WHITE).setText("Texture Size (U/V)", false).setRowCol(4, 0));
+				this.elements.add(new TextField(this, "group_texx", 0, 0, 0){
+					@Override public void updateNumberField(){ updateGroupTexSize(this, 0, null); }
+					@Override protected boolean processScrollWheel(int wheel){ return updateGroupTexSize(0, wheel > 0); }
+				}.setAsNumberfield(8, 4096, true).setRowCol(5, 0));
+				this.elements.add(new TextField(this, "group_texy", 0, 0, 0){
+					@Override public void updateNumberField(){ updateGroupTexSize(this, 0, null); }
+					@Override protected boolean processScrollWheel(int wheel){ return updateGroupTexSize(0, wheel > 0); }
+				}.setAsNumberfield(8, 4096, true).setRowCol(5, 1));
+				//
+				this.elements.add(new Button(this, "text2", 290, 20, 0, 0, RGB.WHITE).setText("Group Texture", false).setRowCol(6, 0));
+				this.elements.add(new TextField(this, "group_texture", 0, 0, 0){
+					@Override
+					protected boolean processButtonClick(int x, int y, boolean left){
+						if(FMTB.MODEL.getSelected().isEmpty()) return true;
+						if(!left){
+							ArrayList<TurboList> arrlist = FMTB.MODEL.getDirectlySelectedGroups();
+							for(TurboList group : arrlist){
+								if(TextureManager.getTexture(group.getGroupTexture(), true) != null){
+									FMTB.MODEL.setTexture(null); TextureManager.removeTexture(group.getGroupTexture());
+								} group.setTexture(null, 0, 0); group.forEach(mrt -> mrt.recompile());
+							} FMTB.MODEL.updateFields(); return true;
+						}
+						UserInterface.FILECHOOSER.show(new String[]{ "Select a group texture file." }, new File("./resources/textures"), new AfterTask(){
+							@Override
+							public void run(){
+								String name = file.getPath(); TextureManager.loadTextureFromFile(name, file);
+								TextureManager.Texture texture = TextureManager.getTexture(name, false);
+								ArrayList<TurboList> arrlist = FMTB.MODEL.getDirectlySelectedGroups();
+								for(TurboList group : arrlist){
+									group.setTexture(name, texture.getWidth(), texture.getHeight());
+									group.forEach(mrt -> mrt.recompile());
+								} FMTB.MODEL.updateFields(); 
+							}
+						}, ChooserMode.PNG); return true;
+					}
+				}.setText("null", true).setRowCol(7, 0));
 			}
 		};
 		group.setText("Group Settings", false);
-		model = new ContainerButton(this, "model", 300, 28, 4, y, new int[]{ 1, 3, 1, 3, 1, 2, 1, 1 }){
+		model = new ContainerButton(this, "model", 300, 28, 4, y, new int[]{ 1, 3, 1, 3, 1, 2, 1, 1, 1, 1 }){
 			@Override
 			public void addSubElements(){
 				this.elements.add(new Button(this, "text0", 290, 20, 0, 0, RGB.WHITE).setText("Position Offset (full unit)", false).setRowCol(0, 0));
 				this.elements.add(new Button(this, "text1", 290, 20, 0, 0, RGB.WHITE).setText("Rotation Offset (degrees)", false).setRowCol(2, 0));
 				this.elements.add(new Button(this, "text2", 290, 20, 0, 0, RGB.WHITE).setText("Texture Size (U/V)", false).setRowCol(4, 0));
-				this.elements.add(new Button(this, "text3", 290, 20, 0, 0, RGB.WHITE).setText("Model Name", false).setRowCol(6, 0));
+				this.elements.add(new Button(this, "text4", 290, 20, 0, 0, RGB.WHITE).setText("Model Texture", false).setRowCol(6, 0));
+				this.elements.add(new Button(this, "text3", 290, 20, 0, 0, RGB.WHITE).setText("Model Name", false).setRowCol(8, 0));
 				//
 				for(int i = 0; i < 3; i++){
 					final int j = i;
@@ -88,10 +132,27 @@ public class ModelGroupEditor extends Editor {
 						@Override protected boolean processScrollWheel(int wheel){ return updateTexSize(j, wheel > 0); }
 					}.setAsNumberfield(8, 4096, true).setRowCol(5, i));
 				}
+				this.elements.add(new TextField(this, "model_texture", 0, 0, 0){
+					@Override
+					protected boolean processButtonClick(int x, int y, boolean left){
+						if(!left){
+							if(FMTB.MODEL.texture != null && TextureManager.getTexture(FMTB.MODEL.texture, true) != null){
+								FMTB.MODEL.setTexture(null); TextureManager.removeTexture(FMTB.MODEL.texture);
+							} FMTB.MODEL.updateFields(); return true;
+						}
+						UserInterface.FILECHOOSER.show(new String[]{ "Select a group texture file." }, new File("./resources/textures"), new AfterTask(){
+							@Override
+							public void run(){
+								String name = file.getPath(); TextureManager.loadTextureFromFile(name, file);
+								FMTB.MODEL.setTexture(name); FMTB.MODEL.updateFields(); 
+							}
+						}, ChooserMode.PNG);return true;
+					}
+				}.setText("null", true).setRowCol(7, 0));
 				//
 				this.elements.add(new TextField(this, "model_name", 0, 0, 0) {
 					@Override public void updateTextField(){ if(FMTB.MODEL == null) return; FMTB.get().setTitle(FMTB.MODEL.name = this.getTextValue()); }
-				}.setText(FMTB.MODEL.name, true).setRowCol(7, 0));
+				}.setText(FMTB.MODEL.name, true).setRowCol(9, 0));
 			}
 		};
 		model.setText("Model Settings", false);
@@ -126,9 +187,27 @@ public class ModelGroupEditor extends Editor {
 		if(positive && index < (accepted_texsiz.length - 1)) field.applyChange(accepted_texsiz[index + 1]);
 		else if(!positive && index > 0) field.applyChange(accepted_texsiz[index - 1]);
 		//
-		FMTB.MODEL.textureX = ((TextField)model.getElement("model_texx")).getIntegerValue();
-		FMTB.MODEL.textureY = ((TextField)model.getElement("model_texy")).getIntegerValue();
-		TextureUpdate.updateSizes(); return true;
+		FMTB.MODEL.texX = ((TextField)model.getElement("model_texx")).getIntegerValue();
+		FMTB.MODEL.texY = ((TextField)model.getElement("model_texy")).getIntegerValue();
+		TextureUpdate.updateSizes(null); return true;
+	}
+	
+	protected boolean updateGroupTexSize(int axis, Boolean positive){
+		return updateGroupTexSize(null, axis, positive);
+	}
+	
+	protected boolean updateGroupTexSize(TextField field, int axis, Boolean positive){
+		if(FMTB.MODEL == null) return true; if(field == null) field = (TextField)model.getElement("group_tex" + xyz[axis]);
+		if(FMTB.MODEL.getDirectlySelectedGroupsAmount() == 0) return true;
+		int index = getIndex(field.getIntegerValue());
+		if(positive && index < (accepted_texsiz.length - 1)) field.applyChange(accepted_texsiz[index + 1]);
+		else if(!positive && index > 0) field.applyChange(accepted_texsiz[index - 1]);
+		//
+		for(TurboList list : FMTB.MODEL.getDirectlySelectedGroups()){
+			list.textureX = ((TextField)model.getElement("group_texx")).getIntegerValue();
+			list.textureY = ((TextField)model.getElement("group_texy")).getIntegerValue();
+			TextureUpdate.updateSizes(list); list.forEach(mrt -> mrt.recompile());
+		} return true;
 	}
 	
 	private int getIndex(int val){

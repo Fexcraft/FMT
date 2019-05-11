@@ -408,7 +408,7 @@ public class Toolbar extends Element {
 							protected boolean processButtonClick(int x, int y, boolean left){
 								String texname = "temp/" + FMTB.MODEL.name;
 								FMTB.MODEL.setTexture(texname);
-		                    	TextureManager.newBlankTexture(texname);
+		                    	TextureManager.newBlankTexture(texname, null);
 		                    	Texture tex = TextureManager.getTexture(texname, true);
 		                    	FMTB.MODEL.getCompound().values().forEach(elm -> elm.forEach(poly -> poly.burnToTexture(tex.getImage(), null)));
 		                    	TextureManager.saveTexture(texname); tex.reload(); FMTB.MODEL.recompile();

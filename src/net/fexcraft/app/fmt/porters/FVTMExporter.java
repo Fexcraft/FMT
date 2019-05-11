@@ -61,7 +61,7 @@ public class FVTMExporter extends InternalPorter {
 			buffer.append("\n");
 		}
 		buffer.append(tab + "public " + validateName(compound.name) + "Model(){\n");
-		buffer.append(tab2 + "super(); textureX = " + compound.textureX + "; textureY = " + compound.textureY + ";\n");
+		buffer.append(tab2 + "super(); textureX = " + compound.tx(null) + "; textureY = " + compound.ty(null) + ";\n");
 		for(String cr : compound.creators){
 			buffer.append(tab2 + "this.addToCreators(\"" + cr + "\");\n");//TODO add "uuid" of logged in users if available;
 		} buffer.append(tab2 + "//\n");

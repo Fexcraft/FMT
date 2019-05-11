@@ -147,7 +147,7 @@ public class GGR {
             Mouse.setGrabbed(true);
         }
         if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE) && !ControlsAdjuster.CATCHING){
-            root.reset(); Mouse.setGrabbed(false); TextureEditor.reset();
+            root.reset(true); Mouse.setGrabbed(false); TextureEditor.reset();
         }
     }
 

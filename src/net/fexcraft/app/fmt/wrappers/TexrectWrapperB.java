@@ -38,7 +38,7 @@ public class TexrectWrapperB extends ShapeboxWrapper {
 
 	@Override
 	protected ModelRendererTurbo newMRT(){
-		return new ModelRendererTurbo(null, 0, 0, compound.textureX, compound.textureY)
+		return new ModelRendererTurbo(null, textureX, textureY, compound.tx(getTurboList()), compound.ty(getTurboList()))
 			.addTexRect(off.xCoord, off.yCoord, off.zCoord, size.xCoord, size.yCoord, size.zCoord, 0,
 				cor0.xCoord, cor0.yCoord, cor0.zCoord,
 				cor1.xCoord, cor1.yCoord, cor1.zCoord,

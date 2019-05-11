@@ -327,12 +327,12 @@ public class FMTB implements FMTGLProcess {
 	}
 
 	@Override
-	public void reset(){
+	public void reset(boolean esc){
 		if(Dialog.anyVisible() || TextField.anySelected()){
 			UserInterface.DIALOGBOX.reset(); UserInterface.FILECHOOSER.reset();
 			UserInterface.CONTROLS.reset(); UserInterface.SETTINGSBOX.reset();
 			TextField.deselectAll();
-		} else if(Editor.anyVisible()){ Editor.hideAll(); } else return;//open some kind of main menu / status / login screen.
+		} else if(esc && Editor.anyVisible()){ Editor.hideAll(); } else return;//open some kind of main menu / status / login screen.
 	}
 
 	private void checkForUpdates(){

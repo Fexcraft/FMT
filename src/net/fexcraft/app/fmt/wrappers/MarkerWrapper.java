@@ -16,7 +16,7 @@ public class MarkerWrapper extends PolygonWrapper {
 	}
 	
 	protected ModelRendererTurbo newMRT(){
-		return new ModelRendererTurbo(null, textureX, textureY, compound.textureX, compound.textureY)
+		return new ModelRendererTurbo(null, textureX, textureY, compound.tx(getTurboList()), compound.ty(getTurboList()))
 			.addSphere(off.xCoord, off.yCoord, off.zCoord, 0.5f, 8, 8, 0, 0)
 			.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
 			.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord)

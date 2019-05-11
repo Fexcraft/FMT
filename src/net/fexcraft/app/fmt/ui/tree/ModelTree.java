@@ -81,7 +81,7 @@ public class ModelTree extends RightTree {
 					trlist[j].minimized = !trlist[j].minimized; return true;
 				}
 				else if(mx >= x + width - 70 && mx < x + width - 50){
-					Editor.show("group_editor"); return true;
+					Editor.show("model_group_editor"); return true;
 				}
 				else if(mx >= x + width - 48 && mx < x + width - 28){
 					trlist[j].visible = !trlist[j].visible; return true;

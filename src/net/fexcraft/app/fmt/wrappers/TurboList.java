@@ -12,7 +12,8 @@ public class TurboList extends ArrayList<PolygonWrapper> {
 	private boolean rotXb, rotYb, rotZb;
 	//private float rotX, rotY, rotZ, posX, posY, posZ;//FMR stuff
 	public boolean visible = true, minimized, selected;
-	public int tempheight;
+	public int tempheight, textureX, textureY;
+	private String texture;
 	
 	public TurboList(String id){
 		this.id = id;
@@ -43,6 +44,18 @@ public class TurboList extends ArrayList<PolygonWrapper> {
 	@Override
 	public boolean add(PolygonWrapper poly){
 		poly.setList(this); return super.add(poly);
+	}
+	
+	public String getGroupTexture(){
+		return texture;
+	}
+	
+	public void setTexture(String string, int sizex, int sizey){
+		this.texture = string; this.textureX = sizex; this.textureY = sizey;
+	}
+
+	public String getApplicableTexture(GroupCompound compound){
+		return texture == null ? compound.texture == null ? "blank" : compound.texture : texture;
 	}
 
 }

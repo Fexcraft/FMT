@@ -14,6 +14,7 @@ import javax.imageio.ImageIO;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.math.Time;
 import net.fexcraft.lib.common.utils.Print;
 
@@ -87,9 +88,9 @@ public class TextureManager {
 	}
 
 	/** Usually expects in form of "temp/NAME" */
-	public static void newBlankTexture(String name){
-		Texture tex = new Texture(name, FMTB.MODEL.textureX, FMTB.MODEL.textureY, 0x00ffffff); TEXTURES.put(name, tex);
-		tex.file = new File("./resources/textures/" + name + ".png"); TextureManager.saveTexture(name);
+	public static void newBlankTexture(String name, TurboList list){
+		Texture tex = new Texture(name, FMTB.MODEL.tx(list), FMTB.MODEL.ty(list), 0x00ffffff); TEXTURES.put(name, tex);
+		tex.file = new File("./resources/textures/" + name + (list == null ? "" : "_" + list.id) + ".png"); TextureManager.saveTexture(name);
 		System.out.println(String.format("Loaded Texture (%-32s) [%s]", name, tex.file));
 	}
 	

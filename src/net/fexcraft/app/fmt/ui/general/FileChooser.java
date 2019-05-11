@@ -268,7 +268,7 @@ public class FileChooser extends Element implements Dialog {
 	 * @param text 0 - title, 1 - button0, 2 - button1, 3 - button2
 	 * */
 	public void show(String[] ntext, File otherroot, AfterTask after, ChooserMode mode){
-		this.reset(); FMTB.get().reset(); this.currdir = (otherroot == null ? SaveLoad.getRoot() : otherroot).getAbsoluteFile();
+		this.reset(); FMTB.get().reset(false); this.currdir = (otherroot == null ? SaveLoad.getRoot() : otherroot).getAbsoluteFile();
 		//
 		this.title = ntext[0]; this.visible = true; this.mode = mode;
 		this.elements.forEach(elm -> { elm.setVisible(after != null); elm.setEnabled(after != null); });

@@ -23,7 +23,7 @@ import net.fexcraft.lib.common.math.Vec3f;
 
 public class GroupCompound {
 	
-	public int textureX = 256, textureY = 256;
+	public int texX = 256, texY = 256;
 	public float rate = 1f;
 	//
 	private TreeMap<String, TurboList> compound = new TreeMap<>();
@@ -82,8 +82,8 @@ public class GroupCompound {
 			RayCoastAway.doTest(false);
 		}
 		else{
-			TextureManager.bindTexture(texture == null ? "blank" : texture);
-			compound.values().forEach(elm -> elm.render(true));
+			//TextureManager.bindTexture(texture == null ? "blank" : texture);
+			compound.values().forEach(elm -> { TextureManager.bindTexture(elm.getApplicableTexture(this)); elm.render(true); });
 			compound.values().forEach(elm -> elm.renderLines());
 			//compound.values().forEach(elm -> elm.renderPicking());//uncomment for debugging the ray-/color-picker
 		}
@@ -105,19 +105,19 @@ public class GroupCompound {
 	
 	private String getTempTex(){
 		Texture tex = TextureManager.getTexture(temptexid, true);
-		if(tex == null || (tex.getImage().getWidth() != this.textureX || tex.getImage().getHeight() != textureY)){
-			if(textureX >= 8192 || textureY >= 8192){ /*//TODO*/ }
+		if(tex == null || (tex.getImage().getWidth() != this.texX || tex.getImage().getHeight() != texY)){
+			if(texX >= 8192 || texY >= 8192){ /*//TODO*/ }
 			else{
 				BufferedImage image = null;//new BufferedImage(textureX, textureY, BufferedImage.TYPE_INT_ARGB);
 				if(tex == null){
-					image = new BufferedImage(textureX, textureY, BufferedImage.TYPE_INT_ARGB);
+					image = new BufferedImage(texX, texY, BufferedImage.TYPE_INT_ARGB);
 				}
 				else{
-					tex.resize(textureX, textureY, null); image = tex.getImage();
+					tex.resize(texX, texY, null); image = tex.getImage();
 				}
 				int lastint = 0;
-				for(int x = 0; x < textureX; x++){
-					for(int y = 0; y < textureY; y++){
+				for(int x = 0; x < texX; x++){
+					for(int y = 0; y < texY; y++){
 						image.setRGB(x, y, new Color(lastint).getRGB()); lastint++;
 					}
 				}
@@ -439,14 +439,23 @@ public class GroupCompound {
 				Editor.getGlobalField("group_rgb0").applyChange(0);
 				Editor.getGlobalField("group_rgb1").applyChange(0);
 				Editor.getGlobalField("group_rgb2").applyChange(0);
-				Editor.getGlobalField("groupname").setText("no polygon selected", true);
+				Editor.getGlobalField("group_name").setText("no polygon selected", true);
+				Editor.getGlobalField("group_texture").setText("no polygon selected", true);
+				Editor.getGlobalField("group_texx").applyChange(0);
+				Editor.getGlobalField("group_texy").applyChange(0);
 			}
 			else{
 				byte[] arr = list.color == null ? RGB.WHITE.toByteArray() : list.color.toByteArray();
 				Editor.getGlobalField("group_rgb0").applyChange(arr[0] + 128);
 				Editor.getGlobalField("group_rgb1").applyChange(arr[1] + 128);
 				Editor.getGlobalField("group_rgb2").applyChange(arr[2] + 128);
-				Editor.getGlobalField("groupname").setText(list.id, true);
+				Editor.getGlobalField("group_name").setText(list.id, true);
+				Editor.getGlobalField("group_texx").applyChange(list.textureX);
+				Editor.getGlobalField("group_texy").applyChange(list.textureY);
+				//
+				String texname = list.getGroupTexture() + "";
+				if(texname.length() > 32){ texname = texname.substring(texname.length() - 32, texname.length()); }
+				Editor.getGlobalField("group_texture").setText(texname, true);
 			};
 			//
 			Editor.getGlobalField("model_posx").applyChange(pos == null ? 0 : pos.xCoord);
@@ -455,10 +464,14 @@ public class GroupCompound {
 			Editor.getGlobalField("model_rotx").applyChange(rot == null ? 0 : rot.xCoord);
 			Editor.getGlobalField("model_roty").applyChange(rot == null ? 0 : rot.yCoord);
 			Editor.getGlobalField("model_rotz").applyChange(rot == null ? 0 : rot.zCoord);
-			Editor.getGlobalField("model_texx").applyChange(this.textureX);
-			Editor.getGlobalField("model_texy").applyChange(this.textureY);
+			Editor.getGlobalField("model_texx").applyChange(this.texX);
+			Editor.getGlobalField("model_texy").applyChange(this.texY);
 			Editor.getGlobalField("model_name").setText(this.name, true);
 			Editor.getGlobalField("multiplicator").applyChange(rate);
+			//
+			String texname = this.texture + "";
+			if(texname.length() > 32){ texname = texname.substring(texname.length() - 32, texname.length()); }
+			Editor.getGlobalField("model_texture").setText(texname, true);
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -588,5 +601,8 @@ public class GroupCompound {
 	public PolygonWrapper getLastSelected(){
 		return lastselected;
 	}
+	
+	public int tx(TurboList list){ return list == null || list.getGroupTexture() == null ? texX : list.textureX; }
+	public int ty(TurboList list){ return list == null || list.getGroupTexture() == null ? texY : list.textureY; }
 
 }

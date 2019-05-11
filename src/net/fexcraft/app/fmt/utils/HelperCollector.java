@@ -88,7 +88,7 @@ public class HelperCollector {
 			compound = new GroupCompound(); compound.getCompound().clear();
 			compound.name = "frame/" + file.getName();
 			compound.texture = "./temp/frame/" + file.getName();
-			compound.textureX = image.getWidth(); compound.textureY = image.getHeight();
+			compound.texX = image.getWidth(); compound.texY = image.getHeight();
 			TexrectWrapperA polygon = new TexrectWrapperA(compound);
 			polygon.size.xCoord = image.getWidth(); polygon.size.yCoord = image.getHeight(); polygon.size.zCoord = 0.2f;
 			polygon.texcor[4][0] = image.getWidth();

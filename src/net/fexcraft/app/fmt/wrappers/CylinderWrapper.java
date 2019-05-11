@@ -26,7 +26,7 @@ public class CylinderWrapper extends PolygonWrapper {
 	}
 	
 	protected ModelRendererTurbo newMRT(){
-		ModelRendererTurbo turbo = new ModelRendererTurbo(null, textureX, textureY, compound.textureX, compound.textureY);
+		ModelRendererTurbo turbo = new ModelRendererTurbo(null, textureX, textureY, compound.tx(getTurboList()), compound.ty(getTurboList()));
 		if(radius2 != 0){
 			turbo.addHollowCylinder(off.xCoord, off.yCoord, off.zCoord, radius, radius2, length, segments, seglimit, base, top, direction, getTopOff());
 		}

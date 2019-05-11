@@ -14,7 +14,7 @@ public class BoxWrapper extends PolygonWrapper {
 	}
 
 	protected ModelRendererTurbo newMRT(){
-		return new ModelRendererTurbo(null, textureX, textureY, compound.textureX, compound.textureY)
+		return new ModelRendererTurbo(null, textureX, textureY, compound.tx(getTurboList()), compound.ty(getTurboList()))
 			.addBox(off.xCoord, off.yCoord, off.zCoord, size.xCoord, size.yCoord, size.zCoord)
 			.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
 			.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);

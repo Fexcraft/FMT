@@ -188,8 +188,8 @@ public class SaveLoad {
 		JsonObject obj = new JsonObject();
 		obj.addProperty("format", 2);
 		obj.addProperty("name", compound.name);
-		obj.addProperty("texture_size_x", compound.textureX);
-		obj.addProperty("texture_size_y", compound.textureY);
+		obj.addProperty("texture_size_x", compound.tx(null));
+		obj.addProperty("texture_size_y", compound.ty(null));
 		JsonArray creators = new JsonArray();
 		if(compound.creators.isEmpty()){
 			creators.add(SessionHandler.isLoggedIn() ? SessionHandler.getUserName() : "OfflineUser");
@@ -216,6 +216,11 @@ public class SaveLoad {
 				}
 				group.addProperty("minimized", list.minimized);
 				group.addProperty("selected", list.selected);
+				if(list.getGroupTexture() != null){
+					group.addProperty("texture", list.getGroupTexture());
+					group.addProperty("texture_size_x", list.textureX);
+					group.addProperty("texture_size_y", list.textureY);
+				}
 			}
 			group.addProperty("name", list.id);
 			for(PolygonWrapper wrapper : list){
@@ -243,8 +248,8 @@ public class SaveLoad {
 	public static GroupCompound getModel(JsonObject obj, boolean ggr){
 		GroupCompound compound = new GroupCompound(); compound.getCompound().clear();
 		compound.name = JsonUtil.getIfExists(obj, "name", "unnamed model");
-		compound.textureX = JsonUtil.getIfExists(obj, "texture_size_x", 256).intValue();
-		compound.textureY = JsonUtil.getIfExists(obj, "texture_size_y", 256).intValue();
+		compound.texX = JsonUtil.getIfExists(obj, "texture_size_x", 256).intValue();
+		compound.texY = JsonUtil.getIfExists(obj, "texture_size_y", 256).intValue();
 		compound.creators = JsonUtil.jsonArrayToStringArray(JsonUtil.getIfExists(obj, "creators", new JsonArray()).getAsJsonArray());
 		if(JsonUtil.getIfExists(obj, "format", 2).intValue() == 1){
 			JsonObject model = obj.get("model").getAsJsonObject();
@@ -270,6 +275,11 @@ public class SaveLoad {
 				if(group.has("color")){
 					JsonArray colorarr = group.get("color").getAsJsonArray();
 					list.color = new RGB(colorarr.get(0).getAsByte(), colorarr.get(1).getAsByte(), colorarr.get(2).getAsByte());
+				}
+				if(group.has("texture")){
+					int texx = group.get("texture_size_x").getAsInt();
+					int texy = group.get("texture_size_y").getAsInt();
+					list.setTexture(group.get("texture").getAsString(), texx, texy);
 				}
 				JsonArray polygons = group.get("polygons").getAsJsonArray();
 				for(JsonElement elm : polygons){ list.add(JsonToTMT.parseWrapper(compound, elm.getAsJsonObject())); }

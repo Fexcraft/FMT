@@ -36,7 +36,7 @@ public class PNGExporter extends InternalPorter {
 			image = TextureManager.getTexture(compound.texture, true).getImage();
 		}
 		else{
-			image = new BufferedImage(compound.textureX, compound.textureY, BufferedImage.TYPE_INT_ARGB);
+			image = new BufferedImage(compound.tx(null), compound.ty(null), BufferedImage.TYPE_INT_ARGB);
 			compound.getCompound().values().forEach(elm -> elm.forEach(poly -> poly.burnToTexture(image, null)));
 		}
 		try{
