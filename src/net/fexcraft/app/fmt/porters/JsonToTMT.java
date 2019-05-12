@@ -130,6 +130,12 @@ public class JsonToTMT {
 				cylinder.topoff.xCoord = get(topoffx, obj, 0f);
 				cylinder.topoff.yCoord = get(topoffy, obj, 0f);
 				cylinder.topoff.zCoord = get(topoffz, obj, 0f);
+				if(obj.has("faces_off")){
+					JsonArray array = obj.get("faces_off").getAsJsonArray();
+					for(int i = 0; i < cylinder.bools.length; i++){
+						cylinder.bools[i] = i >= array.size() ? false : array.get(i).getAsBoolean();
+					}
+				}
 				polygon = cylinder; break;
 			}
 			case "texrect": case "texrect_a": case "texrect_b": {

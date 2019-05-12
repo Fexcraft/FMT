@@ -49,14 +49,20 @@ public class GroupCompound {
 			compound.put(list.id, list);
 		};*/
 		recompile(); this.updateFields();
+		/*testmodel.addAdvancedCylinder(
+			new Vec3f[]{ new Vec3f(0, 0, 0), new Vec3f(6, 2, 0), new Vec3f(8, 8, 0)},
+			new float[]{ 8, 4, 16, 8, 16, 0, 1f, 1f, 5 },
+			new int[]{ 16, 16, 16 });*/
 	}
 
 	public void recompile(){
 		compound.values().forEach(turbo -> turbo.forEach(elm -> elm.recompile()));
 	}
+	
+	//private ModelRendererTurbo testmodel = new ModelRendererTurbo(null, 0, 0, 16, 16).setRotationPoint(0, -4, 0).setTextured(false);
 
 	public void render(){
-		if(!visible) return; RGB.glColorReset();
+		if(!visible) return; RGB.glColorReset(); //testmodel.render(1f);
 		if(pos != null){
 			GL11.glTranslatef(pos.xCoord, pos.yCoord, pos.zCoord);
 		}
@@ -380,6 +386,8 @@ public class GroupCompound {
 				Editor.getGlobalField("cyl1x").applyChange(0); Editor.getGlobalField("cyl1y").applyChange(0); Editor.getGlobalField("cyl1z").applyChange(0);
 				Editor.getGlobalField("cyl2x").applyChange(0); Editor.getGlobalField("cyl2y").applyChange(0); //Editor.getGlobalField("cyl2z").applyChange(0);
 				Editor.getGlobalField("cyl3x").applyChange(0); Editor.getGlobalField("cyl3y").applyChange(0); Editor.getGlobalField("cyl3z").applyChange(0);
+				Editor.getGlobalField("cyl4x").applyChange(0); Editor.getGlobalField("cyl4y").applyChange(0);
+				Editor.getGlobalField("cyl5x").applyChange(0); Editor.getGlobalField("cyl5y").applyChange(0);
 			}
 			else{
 				Editor.getGlobalField("cyl0x").applyChange(poly.getFloat("cyl0", true, false, false));
@@ -394,6 +402,11 @@ public class GroupCompound {
 				Editor.getGlobalField("cyl3x").applyChange(poly.getFloat("cyl3", true, false, false));
 				Editor.getGlobalField("cyl3y").applyChange(poly.getFloat("cyl3", false, true, false));
 				Editor.getGlobalField("cyl3z").applyChange(poly.getFloat("cyl3", false, false, true));
+				//
+				Editor.getGlobalField("cyl4x").applyChange(poly.getFloat("cyl4", true, false, false));
+				Editor.getGlobalField("cyl4y").applyChange(poly.getFloat("cyl4", false, true, false));
+				Editor.getGlobalField("cyl5x").applyChange(poly.getFloat("cyl5", true, false, false));
+				Editor.getGlobalField("cyl5y").applyChange(poly.getFloat("cyl5", false, true, false));
 			}
 			//
 			if(poly == null || !poly.getType().isTexRectB()){

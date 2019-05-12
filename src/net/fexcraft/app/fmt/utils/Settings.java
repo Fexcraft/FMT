@@ -22,7 +22,7 @@ public class Settings {
 	static{ background_color.alpha = 0.2f; }
 	public static float[] light0_position = new float[]{ 0, 1, 0, 0 };
 	private static String language = "default";*/
-	private static Setting floor, lines, demo, cube, polygon_marker, polygon_count, lighting;
+	private static Setting floor, lines, demo, cube, polygon_marker, polygon_count, lighting, cullface;
 
 	public static boolean floor(){ return floor.getValue(); }
 
@@ -37,6 +37,8 @@ public class Settings {
 	public static boolean polygonCount(){ return polygon_count.getValue(); }
 
 	public static boolean lighting(){ return lighting.getValue(); }
+
+	public static boolean cullface(){ return cullface.getValue(); }
 	
 	//
 
@@ -96,6 +98,7 @@ public class Settings {
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "lighting", false));
 		DEFAULTS.add(new Setting(Type.FLOAT_ARRAY, "light0_position", new float[]{ 0, 1, 0, 0 }));
 		DEFAULTS.add(new Setting(Type.STRING, "language_code", "default"));
+		DEFAULTS.add(new Setting(Type.BOOLEAN, "cullface", true));
 	}
 
 	public static void load(){
@@ -115,6 +118,7 @@ public class Settings {
 				}
 			});
 		}
+		for(String key : DEFAULTS.keySet()){ if(!SETTINGS.containsKey(key)) SETTINGS.put(key, DEFAULTS.get(key)); }
 		floor = SETTINGS.get("floor");
 		lines = SETTINGS.get("lines");
 		demo = SETTINGS.get("demo");
@@ -122,6 +126,7 @@ public class Settings {
 		polygon_marker = SETTINGS.get("polygon_marker");
 		polygon_count = SETTINGS.get("polygon_count");
 		lighting = SETTINGS.get("lighting");
+		cullface = SETTINGS.get("cullface");
 	}
 
 	public static void save(){

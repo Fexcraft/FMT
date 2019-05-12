@@ -151,7 +151,7 @@ public class GeneralEditor extends Editor {
 			}
 		};
 		shapebox.setText("Shapebox Corners", false);
-		cylinder = new ContainerButton(this, "general", 300, 28, 4, y, new int[]{ 1, 3, 1, 3, 1, 2, 1, 3 }){
+		cylinder = new ContainerButton(this, "cylinder", 300, 28, 4, y, new int[]{ 1, 3, 1, 3, 1, 2, 1, 3, 1, 2, 1, 2 }){
 			@Override
 			public void addSubElements(){
 				this.elements.add(new Button(this, "text0", 290, 20, 0, 0, RGB.WHITE).setBackgroundless(false).setText("Radius / Length / R2", false).setRowCol(0, 0));
@@ -172,6 +172,13 @@ public class GeneralEditor extends Editor {
 				this.elements.add(new TextField(this, "cyl3x", 0, 0, 0).setAsNumberfield(Integer.MIN_VALUE, Integer.MAX_VALUE, true).setRowCol(7, 0));
 				this.elements.add(new TextField(this, "cyl3y", 0, 0, 0).setAsNumberfield(Integer.MIN_VALUE, Integer.MAX_VALUE, true).setRowCol(7, 1));
 				this.elements.add(new TextField(this, "cyl3z", 0, 0, 0).setAsNumberfield(Integer.MIN_VALUE, Integer.MAX_VALUE, true).setRowCol(7, 2));
+				//
+				this.elements.add(new Button(this, "text4", 290, 20, 0, 0, RGB.WHITE).setBackgroundless(false).setText("Base/Top (on/off)", false).setRowCol(8, 0));
+				this.elements.add(new TextField.BooleanField(this, "cyl4x", 0, 0, 0).setRowCol(9, 0));
+				this.elements.add(new TextField.BooleanField(this, "cyl4y", 0, 0, 0).setRowCol(9, 1));
+				this.elements.add(new Button(this, "text5", 290, 20, 0, 0, RGB.WHITE).setBackgroundless(false).setText("Outer/Inner (on/off)", false).setRowCol(10, 0));
+				this.elements.add(new TextField.BooleanField(this, "cyl5x", 0, 0, 0).setRowCol(11, 0));
+				this.elements.add(new TextField.BooleanField(this, "cyl5y", 0, 0, 0).setRowCol(11, 1));
 			}
 		};
 		cylinder.setText("Cylinder Settings", false);

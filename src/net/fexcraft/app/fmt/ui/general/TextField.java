@@ -205,4 +205,22 @@ public class TextField extends Element {
 		for(TextField field : fields) if(field.id.equals(string)) return field; return null;
 	}
 	
+	public static class BooleanField extends TextField {
+
+		public BooleanField(Element root, String id, int width, int x, int y){
+			super(root, id, width, x, y);
+		}
+		
+		@Override
+		protected boolean processButtonClick(int x, int y, boolean left){
+			this.applyChange(!(this.getIntegerValue() == 1) ? 1 : 0); this.updateNumberField(); return true;
+		}
+		
+		@Override
+		public TextField applyChange(float f){
+			super.applyChange(f); this.setText((this.getIntegerValue() == 1) + "", true); return this;
+		}
+		
+	}
+	
 }

@@ -1,5 +1,6 @@
 package net.fexcraft.app.fmt.wrappers;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import net.fexcraft.lib.common.math.Vec3f;
@@ -10,6 +11,7 @@ public class CylinderWrapper extends PolygonWrapper {
 	public float radius = 2, radius2, length = 2, base = 1, top = 1;
 	public int segments = 8, seglimit, direction = ModelRendererTurbo.MR_TOP;
 	public Vec3f topoff = new Vec3f(0, 0, 0);
+	public boolean[] bools = new boolean[4];
 	
 	public CylinderWrapper(GroupCompound compound){
 		super(compound);
@@ -22,13 +24,14 @@ public class CylinderWrapper extends PolygonWrapper {
 		wrapper.length = length; wrapper.base = base; wrapper.top = top;
 		wrapper.segments = segments; wrapper.direction = direction;
 		wrapper.seglimit = seglimit; wrapper.topoff = new Vec3f(topoff);
+		wrapper.bools = new boolean[]{ bools[0], bools[1], bools[2], bools[2] };
 		return wrapper;
 	}
 	
 	protected ModelRendererTurbo newMRT(){
 		ModelRendererTurbo turbo = new ModelRendererTurbo(null, textureX, textureY, compound.tx(getTurboList()), compound.ty(getTurboList()));
 		if(radius2 != 0){
-			turbo.addHollowCylinder(off.xCoord, off.yCoord, off.zCoord, radius, radius2, length, segments, seglimit, base, top, direction, getTopOff());
+			turbo.addHollowCylinder(off.xCoord, off.yCoord, off.zCoord, radius, radius2, length, segments, seglimit, base, top, direction, getTopOff(), bools);
 		}
 		else{
 			turbo.addCylinder(off.xCoord, off.yCoord, off.zCoord, radius, length, segments, base, top, direction, getTopOff());
@@ -52,6 +55,8 @@ public class CylinderWrapper extends PolygonWrapper {
 			case "cyl1": return x ? segments : y ? direction : z ? seglimit : 0;
 			case "cyl2": return x ? base : y ? top : 0;
 			case "cyl3": return x ? topoff.xCoord : y ? topoff.yCoord : z ? topoff.zCoord : 0;
+			case "cyl4": return x ? (bools[0] ? 1 : 0) : y ? (bools[1] ? 1 : 0) : 0;
+			case "cyl5": return x ? (bools[2] ? 1 : 0) : y ? (bools[3] ? 1 : 0) : 0;
 			default: return super.getFloat(id, x, y, z);
 		}
 	}
@@ -80,6 +85,16 @@ public class CylinderWrapper extends PolygonWrapper {
 				if(y){ topoff.yCoord = value; return true; }
 				if(z){ topoff.zCoord = value; return true; }
 			}
+			case "cyl4":{
+				if(x){ bools[0] = value == 1; return true; }
+				if(y){ bools[1] = value == 1; return true; }
+				if(z){ return false; }
+			}
+			case "cyl5":{
+				if(x){ bools[2] = value == 1; return true; }
+				if(y){ bools[3] = value == 1; return true; }
+				if(z){ return false; }
+			}
 			default: return false;
 		}
 	}
@@ -101,6 +116,12 @@ public class CylinderWrapper extends PolygonWrapper {
 		if(topoff.xCoord != 0f) obj.addProperty("top_offset_x", topoff.xCoord);
 		if(topoff.yCoord != 0f) obj.addProperty("top_offset_y", topoff.yCoord);
 		if(topoff.zCoord != 0f) obj.addProperty("top_offset_z", topoff.zCoord);
+		boolean bool = false; for(boolean bl : bools) if(bl) bool = true;
+		if(bool){
+			JsonArray array = new JsonArray();
+			for(boolean bl : bools) array.add(bl);
+			obj.add("faces_off", array);
+		}
 		return obj;
 	}
 

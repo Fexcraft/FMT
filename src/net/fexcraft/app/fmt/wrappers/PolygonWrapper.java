@@ -207,7 +207,7 @@ public abstract class PolygonWrapper {
 					bool = this.setFloat(id, x, y, z, value);
 				} break;
 			}
-			case "cyl0": case "cyl1": case "cyl2": case "cyl3":{
+			case "cyl0": case "cyl1": case "cyl2": case "cyl3": case "cyl4": case "cyl5":{
 				if(this.getType().isCylinder()){
 					bool = this.setFloat(id, x, y, z, value);
 				} break;

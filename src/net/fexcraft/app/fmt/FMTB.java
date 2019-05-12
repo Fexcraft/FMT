@@ -216,9 +216,9 @@ public class FMTB implements FMTGLProcess {
             if(Settings.cube()){
                 TextureManager.bindTexture("demo"); compound0.render();
             }
-            GL11.glEnable(GL11.GL_CULL_FACE);
+            if(Settings.cullface()) GL11.glEnable(GL11.GL_CULL_FACE);
             MODEL.render();
-            GL11.glDisable(GL11.GL_CULL_FACE);
+            if(Settings.cullface()) GL11.glDisable(GL11.GL_CULL_FACE);
             if(HelperCollector.LOADED.size() > 0){
             	for(GroupCompound model : HelperCollector.LOADED) model.render();
             }
