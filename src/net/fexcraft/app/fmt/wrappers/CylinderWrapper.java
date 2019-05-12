@@ -8,7 +8,7 @@ import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public class CylinderWrapper extends PolygonWrapper {
 	
-	public float radius = 2, radius2, length = 2, base = 1, top = 1;
+	public float radius = 2, radius2, length = 2, base = 1, top = 1, topangle;
 	public int segments = 8, seglimit, direction = ModelRendererTurbo.MR_TOP;
 	public Vec3f topoff = new Vec3f(0, 0, 0);
 	public boolean[] bools = new boolean[4];
@@ -31,7 +31,7 @@ public class CylinderWrapper extends PolygonWrapper {
 	protected ModelRendererTurbo newMRT(){
 		ModelRendererTurbo turbo = new ModelRendererTurbo(null, textureX, textureY, compound.tx(getTurboList()), compound.ty(getTurboList()));
 		if(radius2 != 0){
-			turbo.addHollowCylinder(off.xCoord, off.yCoord, off.zCoord, radius, radius2, length, segments, seglimit, base, top, direction, getTopOff(), bools);
+			turbo.addHollowCylinder(off.xCoord, off.yCoord, off.zCoord, radius, radius2, length, segments, seglimit, base, top, direction, getTopOff(), topangle, bools);
 		}
 		else{
 			turbo.addCylinder(off.xCoord, off.yCoord, off.zCoord, radius, length, segments, base, top, direction, getTopOff());
@@ -53,7 +53,7 @@ public class CylinderWrapper extends PolygonWrapper {
 		switch(id){
 			case "cyl0": return x ? radius : y ? length : z ? radius2 : 0;
 			case "cyl1": return x ? segments : y ? direction : z ? seglimit : 0;
-			case "cyl2": return x ? base : y ? top : 0;
+			case "cyl2": return x ? base : y ? top : z ? topangle : 0;
 			case "cyl3": return x ? topoff.xCoord : y ? topoff.yCoord : z ? topoff.zCoord : 0;
 			case "cyl4": return x ? (bools[0] ? 1 : 0) : y ? (bools[1] ? 1 : 0) : 0;
 			case "cyl5": return x ? (bools[2] ? 1 : 0) : y ? (bools[3] ? 1 : 0) : 0;
@@ -78,7 +78,7 @@ public class CylinderWrapper extends PolygonWrapper {
 			case "cyl2":{
 				if(x){ base = value; return true; }
 				if(y){ top = value; return true; }
-				if(z){ return false; }
+				if(z){ topangle = value; if(topangle < -360) topangle = -360; if(topangle > 360) topangle = 360; return false; }
 			}
 			case "cyl3":{
 				if(x){ topoff.xCoord = value; return true; }
@@ -122,6 +122,7 @@ public class CylinderWrapper extends PolygonWrapper {
 			for(boolean bl : bools) array.add(bl);
 			obj.add("faces_off", array);
 		}
+		if(topangle != 0f) obj.addProperty("top_angle", topangle);
 		return obj;
 	}
 

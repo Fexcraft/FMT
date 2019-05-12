@@ -97,9 +97,17 @@ public class FVTMExporter extends InternalPorter {
 						String topoff = cyl.topoff.xCoord != 0f || cyl.topoff.yCoord != 0f || cyl.topoff.zCoord != 0 ?
 							String.format("new net.fexcraft.lib.common.math.Vec3f(%s, %s, %s)", cyl.topoff.xCoord, cyl.topoff.yCoord, cyl.topoff.zCoord) : "null";
 						if(cyl.radius2 != 0f){
-							shape.append(format(".addHollowCylinder(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", topoff, 
-								wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord,
-								cyl.radius, cyl.radius2, cyl.length, cyl.segments, cyl.seglimit, cyl.base, cyl.top, cyl.direction));
+							if(areAll(cyl.bools, false) && cyl.topangle == 0f){
+								shape.append(format(".addHollowCylinder(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", topoff, 
+									wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord,
+									cyl.radius, cyl.radius2, cyl.length, cyl.segments, cyl.seglimit, cyl.base, cyl.top, cyl.direction));
+							}
+							else{
+								String str = format(".addHollowCylinder(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,\n" + tab3 + "%s", topoff, 
+									wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord,
+									cyl.radius, cyl.radius2, cyl.length, cyl.segments, cyl.seglimit, cyl.base, cyl.top, cyl.direction);
+								shape.append(str + format(", %s", null, cyl.topangle) + format(", %s)", cyl.bools));
+							}
 						}
 						else{
 							shape.append(format(".addCylinder(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", topoff, 
@@ -151,7 +159,6 @@ public class FVTMExporter extends InternalPorter {
 		}
 		return "Success!";
 	}
-
 	private String format(String string, String add, double r0, double r1, double r2){
 		return format(string, add, new float[]{ (float)r0, (float)r1, (float)r2});
 	}
@@ -162,11 +169,26 @@ public class FVTMExporter extends InternalPorter {
 		if(add != null) strs[arr.length] = add; return String.format(string, strs);
 	}
 
-	private String validateName(String name){
-		if(name == null || name.length() == 0) return "Unnamed"; name.replace(" ", "");
-		return name.substring(0, 1).toUpperCase() + name.substring(1, name.length());
-		//Making sure it starts uppercase.
+	private String format(String string, boolean[] bools){
+		String array = "new boolean[]{ %s }", out = "";
+		for(int i = 0; i < bools.length; i++){
+			out += bools[i]; if(i < bools.length - 1) out += ", ";
+		} return String.format(string, String.format(array, out));
 	}
+
+	private String validateName(String name){
+		if(name == null || name.length() == 0) return "Unnamed"; String[] art = name.split(" ");
+		for(int i = 0; i < art.length; i++){
+			if(art[i].length() == 0) continue; if(art[i].length() < 2) art[i] = art[i].toUpperCase();
+			art[i] = name.substring(0, 1).toUpperCase() + name.substring(1, name.length());
+		} name = ""; for(String str : art) name += str; return name;
+		//Making sure it starts uppercase, eventually CamelCase output.
+	}
+
+	private boolean areAll(boolean[] bools, boolean same){
+		for(boolean bool : bools) if(bool != same) return false; return true;
+	}
+
 
 	@Override
 	public String getId(){

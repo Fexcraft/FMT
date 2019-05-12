@@ -59,6 +59,7 @@ public class JsonToTMT {
 	public static final String[] topoffx = new String[]{"top_offset_x", "topoff_x", "topoffx"};
 	public static final String[] topoffy = new String[]{"top_offset_y", "topoff_y", "topoffy"};
 	public static final String[] topoffz = new String[]{"top_offset_z", "topoff_z", "topoffz"};
+	public static final String[] topangle = new String[]{"top_angle", "topangle", "ta"};
 	
 	public static final float get(String s, JsonObject obj, float def){
 		if(obj.has(s)){
@@ -136,6 +137,7 @@ public class JsonToTMT {
 						cylinder.bools[i] = i >= array.size() ? false : array.get(i).getAsBoolean();
 					}
 				}
+				cylinder.topangle = get(topangle, obj, 0f);
 				polygon = cylinder; break;
 			}
 			case "texrect": case "texrect_a": case "texrect_b": {

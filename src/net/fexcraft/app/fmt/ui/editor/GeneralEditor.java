@@ -151,7 +151,7 @@ public class GeneralEditor extends Editor {
 			}
 		};
 		shapebox.setText("Shapebox Corners", false);
-		cylinder = new ContainerButton(this, "cylinder", 300, 28, 4, y, new int[]{ 1, 3, 1, 3, 1, 2, 1, 3, 1, 2, 1, 2 }){
+		cylinder = new ContainerButton(this, "cylinder", 300, 28, 4, y, new int[]{ 1, 3, 1, 3, 1, 3, 1, 3, 1, 2, 1, 2 }){
 			@Override
 			public void addSubElements(){
 				this.elements.add(new Button(this, "text0", 290, 20, 0, 0, RGB.WHITE).setBackgroundless(false).setText("Radius / Length / R2", false).setRowCol(0, 0));
@@ -164,9 +164,10 @@ public class GeneralEditor extends Editor {
 				this.elements.add(new TextField(this, "cyl1y", 0, 0, 0).setAsNumberfield(0, 5, true).setRowCol(3, 1));
 				this.elements.add(new TextField(this, "cyl1z", 0, 0, 0).setAsNumberfield(0, Integer.MAX_VALUE, true).setRowCol(3, 2));
 				//
-				this.elements.add(new Button(this, "text2", 290, 20, 0, 0, RGB.WHITE).setBackgroundless(false).setText("Base Scale / Top Scale", false).setRowCol(4, 0));
+				this.elements.add(new Button(this, "text2", 290, 20, 0, 0, RGB.WHITE).setBackgroundless(false).setText("Base Scale / Top Scale / Top Angle", false).setRowCol(4, 0));
 				this.elements.add(new TextField(this, "cyl2x", 0, 0, 0).setAsNumberfield(0, Integer.MAX_VALUE, true).setRowCol(5, 0));
 				this.elements.add(new TextField(this, "cyl2y", 0, 0, 0).setAsNumberfield(0, Integer.MAX_VALUE, true).setRowCol(5, 1));
+				this.elements.add(new TextField(this, "cyl2z", 0, 0, 0).setAsNumberfield(-360, 360, true).setRowCol(5, 2));
 				//
 				this.elements.add(new Button(this, "text3", 290, 20, 0, 0, RGB.WHITE).setBackgroundless(false).setText("Top Offset (x/y/z)", false).setRowCol(6, 0));
 				this.elements.add(new TextField(this, "cyl3x", 0, 0, 0).setAsNumberfield(Integer.MIN_VALUE, Integer.MAX_VALUE, true).setRowCol(7, 0));
