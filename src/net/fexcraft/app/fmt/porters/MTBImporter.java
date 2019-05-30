@@ -83,10 +83,10 @@ public class MTBImporter extends InternalPorter {
                 String[] parts = s.split("\\u007C");
                 parts[0] = parts[0].trim();
                 if(parts[0].equals("TexSizeX")){
-                    compound.texX = Integer.parseInt(parts[1].trim());
+                    compound.textureSizeX = Integer.parseInt(parts[1].trim());
                 }
                 else if(parts[0].equals("TexSizeY")){
-                    compound.texY = Integer.parseInt(parts[1]);
+                    compound.textureSizeY = Integer.parseInt(parts[1]);
                 }
                 //
                 else if(parts[0].equals("ModelAuthor") && parts.length > 1){

@@ -105,12 +105,12 @@ public class ModelGroupEditor extends Editor {
 			}
 		};
 		group.setText("Group Settings", false);
-		model = new ContainerButton(this, "model", 300, 28, 4, y, new int[]{ 1, 3, 1, 3, 1, 2, 1, 1, 1, 1 }){
+		model = new ContainerButton(this, "model", 300, 28, 4, y, new int[]{ 1, 3, 1, 3, 1, 3, 1, 1, 1, 1 }){
 			@Override
 			public void addSubElements(){
 				this.elements.add(new Button(this, "text0", 290, 20, 0, 0, RGB.WHITE).setText("Position Offset (full unit)", false).setRowCol(0, 0));
 				this.elements.add(new Button(this, "text1", 290, 20, 0, 0, RGB.WHITE).setText("Rotation Offset (degrees)", false).setRowCol(2, 0));
-				this.elements.add(new Button(this, "text2", 290, 20, 0, 0, RGB.WHITE).setText("Texture Size (U/V)", false).setRowCol(4, 0));
+				this.elements.add(new Button(this, "text2", 290, 20, 0, 0, RGB.WHITE).setText("Texture [U/V/Scale]", false).setRowCol(4, 0));
 				this.elements.add(new Button(this, "text4", 290, 20, 0, 0, RGB.WHITE).setText("Model Texture", false).setRowCol(6, 0));
 				this.elements.add(new Button(this, "text3", 290, 20, 0, 0, RGB.WHITE).setText("Model Name", false).setRowCol(8, 0));
 				//
@@ -126,11 +126,10 @@ public class ModelGroupEditor extends Editor {
 						@Override protected boolean processScrollWheel(int wheel){ return updateRot(j, wheel > 0); }
 					}.setAsNumberfield(8, 4096, true).setRowCol(3, i));
 					//
-					if(i >= 2) continue;
 					this.elements.add(new TextField(this, "model_tex" + xyz[i], 0, 0, 0){
 						@Override public void updateNumberField(){ updateTexSize(this, j, null); }
 						@Override protected boolean processScrollWheel(int wheel){ return updateTexSize(j, wheel > 0); }
-					}.setAsNumberfield(8, 4096, true).setRowCol(5, i));
+					}.setAsNumberfield(i == 2 ? 1 : 8, i == 2 ? 4 : 4096, true).setRowCol(5, i));
 				}
 				this.elements.add(new TextField(this, "model_texture", 0, 0, 0){
 					@Override
@@ -183,13 +182,16 @@ public class ModelGroupEditor extends Editor {
 	
 	protected boolean updateTexSize(TextField field, int axis, Boolean positive){
 		if(FMTB.MODEL == null) return true; if(field == null) field = (TextField)model.getElement("model_tex" + xyz[axis]);
-		int index = getIndex(field.getIntegerValue());
-		if(positive && index < (accepted_texsiz.length - 1)) field.applyChange(accepted_texsiz[index + 1]);
-		else if(!positive && index > 0) field.applyChange(accepted_texsiz[index - 1]);
+		if(axis < 2){
+			int index = getIndex(field.getIntegerValue());
+			if(positive && index < (accepted_texsiz.length - 1)) field.applyChange(accepted_texsiz[index + 1]);
+			else if(!positive && index > 0) field.applyChange(accepted_texsiz[index - 1]);
+		} else{ field.tryChange(positive, 1); }
 		//
-		FMTB.MODEL.texX = ((TextField)model.getElement("model_texx")).getIntegerValue();
-		FMTB.MODEL.texY = ((TextField)model.getElement("model_texy")).getIntegerValue();
-		TextureUpdate.updateSizes(null); return true;
+		FMTB.MODEL.textureSizeX = ((TextField)model.getElement("model_texx")).getIntegerValue();
+		FMTB.MODEL.textureSizeY = ((TextField)model.getElement("model_texy")).getIntegerValue();
+		FMTB.MODEL.textureScale = ((TextField)model.getElement("model_texz")).getIntegerValue();
+		TextureUpdate.updateSize(null); return true;
 	}
 	
 	protected boolean updateGroupTexSize(int axis, Boolean positive){
@@ -206,7 +208,8 @@ public class ModelGroupEditor extends Editor {
 		for(TurboList list : FMTB.MODEL.getDirectlySelectedGroups()){
 			list.textureX = ((TextField)model.getElement("group_texx")).getIntegerValue();
 			list.textureY = ((TextField)model.getElement("group_texy")).getIntegerValue();
-			TextureUpdate.updateSizes(list); list.forEach(mrt -> mrt.recompile());
+			list.textureS = ((TextField)model.getElement("group_texz")).getIntegerValue();
+			TextureUpdate.updateSize(list); list.forEach(mrt -> mrt.recompile());
 		} return true;
 	}
 	

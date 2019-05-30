@@ -190,6 +190,7 @@ public class SaveLoad {
 		obj.addProperty("name", compound.name);
 		obj.addProperty("texture_size_x", compound.tx(null));
 		obj.addProperty("texture_size_y", compound.ty(null));
+		obj.addProperty("texture_scale", compound.textureScale);
 		JsonArray creators = new JsonArray();
 		if(compound.creators.isEmpty()){
 			creators.add(SessionHandler.isLoggedIn() ? SessionHandler.getUserName() : "OfflineUser");
@@ -248,8 +249,9 @@ public class SaveLoad {
 	public static GroupCompound getModel(JsonObject obj, boolean ggr){
 		GroupCompound compound = new GroupCompound(); compound.getCompound().clear();
 		compound.name = JsonUtil.getIfExists(obj, "name", "unnamed model");
-		compound.texX = JsonUtil.getIfExists(obj, "texture_size_x", 256).intValue();
-		compound.texY = JsonUtil.getIfExists(obj, "texture_size_y", 256).intValue();
+		compound.textureSizeX = JsonUtil.getIfExists(obj, "texture_size_x", 256).intValue();
+		compound.textureSizeY = JsonUtil.getIfExists(obj, "texture_size_y", 256).intValue();
+		compound.textureScale = JsonUtil.getIfExists(obj, "texture_scale", 1).intValue();
 		compound.creators = JsonUtil.jsonArrayToStringArray(JsonUtil.getIfExists(obj, "creators", new JsonArray()).getAsJsonArray());
 		if(JsonUtil.getIfExists(obj, "format", 2).intValue() == 1){
 			JsonObject model = obj.get("model").getAsJsonObject();

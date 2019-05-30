@@ -410,6 +410,7 @@ public class Toolbar extends Element {
 								FMTB.MODEL.setTexture(texname);
 		                    	TextureManager.newBlankTexture(texname, null);
 		                    	Texture tex = TextureManager.getTexture(texname, true);
+		                    	FMTB.MODEL.textureScale = 1; FMTB.MODEL.updateFields();
 		                    	FMTB.MODEL.getCompound().values().forEach(elm -> elm.forEach(poly -> poly.burnToTexture(tex.getImage(), null)));
 		                    	TextureManager.saveTexture(texname); tex.reload(); FMTB.MODEL.recompile();
 								return true;

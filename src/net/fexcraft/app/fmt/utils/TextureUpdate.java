@@ -8,6 +8,7 @@ import java.util.TimerTask;
 import java.util.stream.Collectors;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
@@ -46,16 +47,24 @@ public class TextureUpdate extends TimerTask {
 		lastedit = date; return;
 	}
 
-	public static void updateSizes(TurboList list2){//TODO alternative list mode
-		Texture texture = TextureManager.getTexture(FMTB.MODEL.texture, true);
+	public static void updateSize(TurboList list){
+		Texture texture = TextureManager.getTexture(list == null ? FMTB.MODEL.texture : list.getGroupTexture(), true);
 		if(texture == null || texture.getImage() == null) return;
 		BufferedImage image = texture.getImage();
-		if(image.getWidth() != FMTB.MODEL.texX || image.getHeight() != FMTB.MODEL.texY){
-			if(image.getWidth() > FMTB.MODEL.texX && image.getWidth() % FMTB.MODEL.texX == 0
-				&& image.getHeight() > FMTB.MODEL.texY && image.getHeight() % FMTB.MODEL.texY == 0) return;
-			texture.resize(FMTB.MODEL.texX, FMTB.MODEL.texY, 0x00ffffff);
-			TextureManager.saveTexture(FMTB.MODEL.texture); FMTB.MODEL.recompile();
-			updateLastEdit(Time.getDate());
+		int texX = list == null ? FMTB.MODEL.textureSizeX : list.textureX;
+		int texY = list == null ? FMTB.MODEL.textureSizeY : list.textureY;
+		int texS = list == null ? FMTB.MODEL.textureScale : list.textureS;
+		for(int i = 1; i < texS; i++){ Print.console(texX + " * 2"); texX *= 2; texY *= 2; Print.console(" = " + texX);  }
+		if(image.getWidth() != texX || image.getHeight() != texY){
+			String tx = (list == null ? FMTB.MODEL.textureSizeX : list.textureX) + "x," + texX + "xs";
+			String ty = (list == null ? FMTB.MODEL.textureSizeY : list.textureY) + "y," + texY + "ys";
+			if(texX > 4096 || texY > 4096){
+				UserInterface.DIALOGBOX.show(String.format("Exceeding 4096 pixel!\n[%s], [%s]\nTexture Cache NOT updated.", tx, ty), "OK,", null, DialogBox.NOTHING, null);
+				return;
+			}
+			texture.resize(texX, texY, 0x00ffffff); TextureManager.saveTexture(FMTB.MODEL.texture);
+			if(list == null) FMTB.MODEL.recompile(); else list.recompile(); updateLastEdit(Time.getDate());
+			UserInterface.DIALOGBOX.show(String.format("Resized!\n[%s], [%s]", tx, ty), "Good!", null, DialogBox.NOTHING, null);
 		}
 		else return;
 	}

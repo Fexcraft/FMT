@@ -23,7 +23,7 @@ import net.fexcraft.lib.common.math.Vec3f;
 
 public class GroupCompound {
 	
-	public int texX = 256, texY = 256;
+	public int textureSizeX = 256, textureSizeY = 256, textureScale = 1;
 	public float rate = 1f;
 	//
 	private TreeMap<String, TurboList> compound = new TreeMap<>();
@@ -56,7 +56,7 @@ public class GroupCompound {
 	}
 
 	public void recompile(){
-		compound.values().forEach(turbo -> turbo.forEach(elm -> elm.recompile()));
+		for(TurboList list : compound.values()) list.recompile();
 	}
 	
 	//private ModelRendererTurbo testmodel = new ModelRendererTurbo(null, 0, 0, 16, 16).setRotationPoint(0, -4, 0).setTextured(false);
@@ -111,7 +111,8 @@ public class GroupCompound {
 	
 	private String getTempTex(){
 		Texture tex = TextureManager.getTexture(temptexid, true);
-		if(tex == null || (tex.getImage().getWidth() != this.texX || tex.getImage().getHeight() != texY)){
+		int texX = this.textureSizeX * this.textureScale, texY = this.textureSizeY * this.textureScale;
+		if(tex == null || (tex.getImage().getWidth() != texX || tex.getImage().getHeight() != texY)){
 			if(texX >= 8192 || texY >= 8192){ /*//TODO*/ }
 			else{
 				BufferedImage image = null;//new BufferedImage(textureX, textureY, BufferedImage.TYPE_INT_ARGB);
@@ -477,8 +478,9 @@ public class GroupCompound {
 			Editor.getGlobalField("model_rotx").applyChange(rot == null ? 0 : rot.xCoord);
 			Editor.getGlobalField("model_roty").applyChange(rot == null ? 0 : rot.yCoord);
 			Editor.getGlobalField("model_rotz").applyChange(rot == null ? 0 : rot.zCoord);
-			Editor.getGlobalField("model_texx").applyChange(this.texX);
-			Editor.getGlobalField("model_texy").applyChange(this.texY);
+			Editor.getGlobalField("model_texx").applyChange(this.textureSizeX);
+			Editor.getGlobalField("model_texy").applyChange(this.textureSizeY);
+			Editor.getGlobalField("model_texz").applyChange(this.textureScale);
 			Editor.getGlobalField("model_name").setText(this.name, true);
 			Editor.getGlobalField("multiplicator").applyChange(rate);
 			//
@@ -615,7 +617,7 @@ public class GroupCompound {
 		return lastselected;
 	}
 	
-	public int tx(TurboList list){ return list == null || list.getGroupTexture() == null ? texX : list.textureX; }
-	public int ty(TurboList list){ return list == null || list.getGroupTexture() == null ? texY : list.textureY; }
+	public int tx(TurboList list){ return list == null || list.getGroupTexture() == null ? textureSizeX : list.textureX; }
+	public int ty(TurboList list){ return list == null || list.getGroupTexture() == null ? textureSizeY : list.textureY; }
 
 }
