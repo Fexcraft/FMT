@@ -19,6 +19,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.JsonToTMT;
+import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.ui.general.FileChooser.AfterTask;
@@ -28,6 +29,7 @@ import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.json.JsonUtil;
 import net.fexcraft.lib.common.math.RGB;
+import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.common.utils.Print;
 
 public class SaveLoad {
@@ -55,7 +57,7 @@ public class SaveLoad {
 					zip.stream().forEach(elm -> {
 						if(elm.getName().equals("model.jtmt")){
 							try{
-								loadModel(JsonUtil.getObjectFromInputStream(zip.getInputStream(elm)));
+								loadModel(file, JsonUtil.getObjectFromInputStream(zip.getInputStream(elm)));
 							} catch(IOException e){ e.printStackTrace(); }
 						}
 						else if(elm.getName().equals("texture.png")){
@@ -74,8 +76,8 @@ public class SaveLoad {
 		}, ChooserMode.SAVEFILE_LOAD);
 	}
 	
-	public static void loadModel(JsonObject obj){
-		FMTB.MODEL = getModel(obj, true); FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
+	public static void loadModel(File from, JsonObject obj){
+		FMTB.MODEL = getModel(from, obj, true); FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
 	}
 	
 	public static void checkIfShouldSave(boolean shouldclose, boolean shouldclear){
@@ -97,7 +99,7 @@ public class SaveLoad {
 								}
 								else{
 									FMTB.MODEL.file = file; saveModel(false, shouldclose);
-									if(shouldclear){ FMTB.MODEL = new GroupCompound(); }
+									if(shouldclear){ FMTB.MODEL = new GroupCompound(null); }
 									if(shouldclose){ FMTB.get().close(true); }
 								}
 							}
@@ -105,7 +107,7 @@ public class SaveLoad {
 					}
 					else{
 						saveModel(false, false);//shouldclose);
-						if(shouldclear){ FMTB.MODEL = new GroupCompound(); }
+						if(shouldclear){ FMTB.MODEL = new GroupCompound(null); }
 						if(shouldclose){ FMTB.get().close(true); }
 					}
 				}
@@ -113,7 +115,7 @@ public class SaveLoad {
 				@Override
 				public void run(){
 					Print.console("selected > no saving of current");
-					if(shouldclear){ FMTB.MODEL = new GroupCompound(); }
+					if(shouldclear){ FMTB.MODEL = new GroupCompound(null); }
 					if(shouldclose){ FMTB.get().close(true); }
 				}
 			});
@@ -244,11 +246,37 @@ public class SaveLoad {
 			array.add(FMTB.ggr.rotation.zCoord);
 			obj.add("camera_rot", array);
 		}
+		if(!HelperCollector.LOADED.isEmpty() && !export){
+			JsonArray array = new JsonArray();
+			for(GroupCompound group : HelperCollector.LOADED){
+				JsonObject jsn = new JsonObject();
+				jsn.addProperty("name", group.name);
+				jsn.addProperty("texture", group.texture);
+				if(group.rot != null){
+					jsn.addProperty("rot_x", group.rot.xCoord);
+					jsn.addProperty("rot_y", group.rot.yCoord);
+					jsn.addProperty("rot_z", group.rot.zCoord);
+				}
+				if(group.pos != null){
+					jsn.addProperty("pos_x", group.pos.xCoord);
+					jsn.addProperty("pos_y", group.pos.yCoord);
+					jsn.addProperty("pos_z", group.pos.zCoord);
+				}
+				if(group.scale != null){
+					jsn.addProperty("scale_x", group.scale.xCoord);
+					jsn.addProperty("scale_y", group.scale.yCoord);
+					jsn.addProperty("scale_z", group.scale.zCoord);
+				}
+				jsn.addProperty("path", group.origin.toPath().toString());
+				array.add(jsn);
+			}
+			obj.add("helpers", array);
+		}
 		return obj;
 	}
 	
-	public static GroupCompound getModel(JsonObject obj, boolean ggr){
-		GroupCompound compound = new GroupCompound(); compound.getCompound().clear();
+	public static GroupCompound getModel(File from, JsonObject obj, boolean ggr){
+		GroupCompound compound = new GroupCompound(from); compound.getCompound().clear();
 		compound.name = JsonUtil.getIfExists(obj, "name", "unnamed model");
 		compound.textureSizeX = JsonUtil.getIfExists(obj, "texture_size_x", 256).intValue();
 		compound.textureSizeY = JsonUtil.getIfExists(obj, "texture_size_y", 256).intValue();
@@ -304,6 +332,37 @@ public class SaveLoad {
 			FMTB.ggr.rotation.xCoord = rot.get(0).getAsFloat();
 			FMTB.ggr.rotation.yCoord = rot.get(1).getAsFloat();
 			FMTB.ggr.rotation.zCoord = rot.get(2).getAsFloat();
+		}
+		if(obj.has("helpers")){
+			JsonArray arr = obj.get("helpers").getAsJsonArray();
+			for(JsonElement elm : arr){
+				try{
+					JsonObject jsn = elm.getAsJsonObject();
+					File file = new File(jsn.get("path").getAsString());
+					GroupCompound helperpreview = null;
+					if(jsn.get("name").getAsString().startsWith("frame/")){
+						helperpreview = HelperCollector.loadFrame(file);
+					}
+					else if(jsn.get("name").getAsString().startsWith("fmtb/")){
+						helperpreview = HelperCollector.loadFMTB(file);
+					}
+					else{
+						helperpreview = HelperCollector.load(file, PorterManager.getPorterFor(file, false));
+					}
+					if(jsn.has("pos_x")){
+						helperpreview.pos = new Vec3f(jsn.get("pos_x").getAsFloat(), jsn.get("pos_y").getAsFloat(), jsn.get("pos_z").getAsFloat());
+					}
+					if(jsn.has("rot_x")){
+						helperpreview.rot = new Vec3f(jsn.get("rot_x").getAsFloat(), jsn.get("rot_y").getAsFloat(), jsn.get("rot_z").getAsFloat());
+					}
+					if(jsn.has("scale_x")){
+						helperpreview.scale = new Vec3f(jsn.get("scale_x").getAsFloat(), jsn.get("scale_y").getAsFloat(), jsn.get("scale_z").getAsFloat());
+					}
+				}
+				catch(Exception e){
+					e.printStackTrace();
+				}
+			}
 		}
 		return compound;
 	}

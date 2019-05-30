@@ -28,19 +28,20 @@ public class GroupCompound {
 	//
 	private TreeMap<String, TurboList> compound = new TreeMap<>();
 	public ArrayList<String> creators = new ArrayList<>();
-	public File file; public String name = "unnamed model";
+	public File file, origin; public String name = "unnamed model";
 	public PolygonWrapper lastselected;
 	public String texture;
 	//
 	public boolean visible = true, minimized;
 	public Vec3f pos, rot, scale;
 	
-	public GroupCompound(){
+	public GroupCompound(File origin){
+		this.origin = origin;
 		//compound.put("body", new TurboList("body"));
 		/*for(int i = 0; i < 20; i++){
 			TurboList list = new TurboList("list" + i);
 			for(int j = 0; j < 1000; j++){
-				BoxWrapper box = new BoxWrapper(this);
+				BoxWrapper box = new BoxWrapper(this);new GroupCompound(null)
 				box.size = new Vec3f(1, 1, 1);
 				box.pos = new Vec3f((j * 2) - 500, i * 2, 0);
 				box.name = "box" + j;

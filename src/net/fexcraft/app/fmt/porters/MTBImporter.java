@@ -63,7 +63,7 @@ public class MTBImporter extends InternalPorter {
 	@Override
 	public GroupCompound importModel(File f){
         try {
-            GroupCompound compound = new GroupCompound();
+            GroupCompound compound = new GroupCompound(f);
             boolean loadtex = ZipUtil.contains(f, "Model.png");
             ZipFile zip = new ZipFile(f);
             Enumeration<? extends ZipEntry> entries = zip.entries();
@@ -195,7 +195,7 @@ public class MTBImporter extends InternalPorter {
         }
         catch(IOException e){
         	//literally not even possible.
-        	return new GroupCompound();
+        	return new GroupCompound(f);
         }
 	}
 	

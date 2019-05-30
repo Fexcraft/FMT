@@ -91,7 +91,7 @@ public class PorterManager {
 					else{
 						Invocable inv = (Invocable)((ExternalPorter)porter).eval();
 						String result = (String) inv.invokeFunction("importModel", file);
-						SaveLoad.loadModel(JsonUtil.getObjectFromString(result));
+						SaveLoad.loadModel(file, JsonUtil.getObjectFromString(result));
 					}
 				}
 				catch(Exception e){

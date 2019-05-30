@@ -82,7 +82,7 @@ public class FMTB implements FMTGLProcess {
 	private DisplayMode displaymode;
 	public UserInterface UI;
 	private static File lwjgl_natives;
-	public static GroupCompound MODEL = new GroupCompound();
+	public static GroupCompound MODEL = new GroupCompound(null);
 	public static Timer BACKUP_TIMER, TEX_UPDATE_TIMER;
 	public static boolean GAMETEST;
 	private long lf, lfps, fps;
