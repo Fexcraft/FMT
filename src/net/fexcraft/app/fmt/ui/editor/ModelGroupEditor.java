@@ -18,7 +18,7 @@ import net.fexcraft.lib.common.math.Vec3f;
 
 public class ModelGroupEditor extends Editor {
 	
-	private static final int[] accepted_texsiz = new int[]{ 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192 };
+	private static final int[] accepted_texsiz = new int[]{ 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096 };//, 8192 };
 	private ContainerButton group, model;
 
 	public ModelGroupEditor(){
@@ -27,7 +27,7 @@ public class ModelGroupEditor extends Editor {
 
 	@Override
 	protected ContainerButton[] setupSubElements(){
-		group = new ContainerButton(this, "group", 300, 28, 4, y, new int[]{ 1, 3, 1, 1, 1, 2, 1, 1 }){
+		group = new ContainerButton(this, "group", 300, 28, 4, y, new int[]{ 1, 3, 1, 1, 1, 3, 1, 1 }){
 			@Override
 			public void addSubElements(){
 				this.elements.add(new Button(this, "text0", 290, 20, 0, 0, RGB.WHITE).setText("Group Preview Color/Overlay", false).setRowCol(0, 0));
@@ -65,15 +65,19 @@ public class ModelGroupEditor extends Editor {
 					}
 				}.setText("null", true).setRowCol(3, 0));
 				//
-				this.elements.add(new Button(this, "text3", 290, 20, 0, 0, RGB.WHITE).setText("Texture Size (U/V)", false).setRowCol(4, 0));
+				this.elements.add(new Button(this, "text3", 290, 20, 0, 0, RGB.WHITE).setText("Texture [U/V/Scale]", false).setRowCol(4, 0));
 				this.elements.add(new TextField(this, "group_texx", 0, 0, 0){
 					@Override public void updateNumberField(){ updateGroupTexSize(this, 0, null); }
 					@Override protected boolean processScrollWheel(int wheel){ return updateGroupTexSize(0, wheel > 0); }
 				}.setAsNumberfield(8, 4096, true).setRowCol(5, 0));
 				this.elements.add(new TextField(this, "group_texy", 0, 0, 0){
-					@Override public void updateNumberField(){ updateGroupTexSize(this, 0, null); }
-					@Override protected boolean processScrollWheel(int wheel){ return updateGroupTexSize(0, wheel > 0); }
+					@Override public void updateNumberField(){ updateGroupTexSize(this, 1, null); }
+					@Override protected boolean processScrollWheel(int wheel){ return updateGroupTexSize(1, wheel > 0); }
 				}.setAsNumberfield(8, 4096, true).setRowCol(5, 1));
+				this.elements.add(new TextField(this, "group_texz", 0, 0, 0){
+					@Override public void updateNumberField(){ updateGroupTexSize(this, 2, null); }
+					@Override protected boolean processScrollWheel(int wheel){ return updateGroupTexSize(2, wheel > 0); }
+				}.setAsNumberfield(1, 4, true).setRowCol(5, 2));
 				//
 				this.elements.add(new Button(this, "text2", 290, 20, 0, 0, RGB.WHITE).setText("Group Texture", false).setRowCol(6, 0));
 				this.elements.add(new TextField(this, "group_texture", 0, 0, 0){
@@ -214,6 +218,7 @@ public class ModelGroupEditor extends Editor {
 	}
 	
 	private int getIndex(int val){
+		if(val < accepted_texsiz[0]) val = accepted_texsiz[0];
 		for(int i = 0; i < accepted_texsiz.length; i++){ if(val == accepted_texsiz[i]) return i; } return 0;
 	}
 	

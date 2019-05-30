@@ -12,7 +12,7 @@ public class TurboList extends ArrayList<PolygonWrapper> {
 	private boolean rotXb, rotYb, rotZb;
 	//private float rotX, rotY, rotZ, posX, posY, posZ;//FMR stuff
 	public boolean visible = true, minimized, selected;
-	public int tempheight, textureX, textureY, textureS = 1;//TODO tex scale
+	public int tempheight, textureX = 256, textureY = 256, textureS = 1;
 	private String texture;
 	
 	public TurboList(String id){

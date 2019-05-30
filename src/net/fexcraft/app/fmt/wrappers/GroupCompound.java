@@ -457,6 +457,7 @@ public class GroupCompound {
 				Editor.getGlobalField("group_texture").setText("no polygon selected", true);
 				Editor.getGlobalField("group_texx").applyChange(0);
 				Editor.getGlobalField("group_texy").applyChange(0);
+				Editor.getGlobalField("group_texz").applyChange(0);
 			}
 			else{
 				byte[] arr = list.color == null ? RGB.WHITE.toByteArray() : list.color.toByteArray();
@@ -466,6 +467,7 @@ public class GroupCompound {
 				Editor.getGlobalField("group_name").setText(list.id, true);
 				Editor.getGlobalField("group_texx").applyChange(list.textureX);
 				Editor.getGlobalField("group_texy").applyChange(list.textureY);
+				Editor.getGlobalField("group_texz").applyChange(list.textureS);
 				//
 				String texname = list.getGroupTexture() + "";
 				if(texname.length() > 32){ texname = texname.substring(texname.length() - 32, texname.length()); }

@@ -221,6 +221,7 @@ public class SaveLoad {
 					group.addProperty("texture", list.getGroupTexture());
 					group.addProperty("texture_size_x", list.textureX);
 					group.addProperty("texture_size_y", list.textureY);
+					group.addProperty("texture_scale", list.textureS);
 				}
 			}
 			group.addProperty("name", list.id);
@@ -282,6 +283,7 @@ public class SaveLoad {
 					int texx = group.get("texture_size_x").getAsInt();
 					int texy = group.get("texture_size_y").getAsInt();
 					list.setTexture(group.get("texture").getAsString(), texx, texy);
+					list.textureS = JsonUtil.getIfExists(obj, "texture_scale", 1).intValue();
 				}
 				JsonArray polygons = group.get("polygons").getAsJsonArray();
 				for(JsonElement elm : polygons){ list.add(JsonToTMT.parseWrapper(compound, elm.getAsJsonObject())); }
