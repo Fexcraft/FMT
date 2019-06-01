@@ -38,7 +38,7 @@ import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
 import net.fexcraft.app.fmt.ui.general.Crossbar;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
-import net.fexcraft.app.fmt.ui.general.FileChooser;
+import net.fexcraft.app.fmt.ui.general.NFC;
 import net.fexcraft.app.fmt.ui.general.SettingsBox;
 import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.ui.general.Toolbar;
@@ -293,6 +293,8 @@ public class FMTB implements FMTGLProcess {
 	@Override
 	public void setupUI(UserInterface ui){
 		TextureManager.loadTexture("icons/pencil", null);
+		TextureManager.loadTexture("icons/arrow_increase", null);
+		TextureManager.loadTexture("icons/arrow_decrease", null);
 		TextureManager.loadTexture("icons/group_delete", null);
 		TextureManager.loadTexture("icons/group_visible", null);
 		TextureManager.loadTexture("icons/group_edit", null);
@@ -306,7 +308,7 @@ public class FMTB implements FMTGLProcess {
 		//
 		ui.getElements().add(UserInterface.DIALOGBOX = new DialogBox());
 		ui.getElements().add(UserInterface.SETTINGSBOX = new SettingsBox());
-		ui.getElements().add(UserInterface.FILECHOOSER = new FileChooser());
+		ui.getElements().add(UserInterface.FILECHOOSER = new NFC());
 		ui.getElements().add(UserInterface.CONTROLS = new ControlsAdjuster());
 		//
 		ui.getElements().add(new ModelTree());

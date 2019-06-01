@@ -8,8 +8,8 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.FMTGLProcess;
 import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
-import net.fexcraft.app.fmt.ui.general.FileChooser;
 import net.fexcraft.app.fmt.ui.general.HoverMenu;
+import net.fexcraft.app.fmt.ui.general.NFC;
 import net.fexcraft.app.fmt.ui.general.SettingsBox;
 import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.ui.general.Toolbar;
@@ -29,7 +29,7 @@ public class UserInterface {
 	public static Element SELECTED = null;
 	public static Toolbar TOOLBAR;
 	public static DialogBox DIALOGBOX;
-	public static FileChooser FILECHOOSER;
+	public static NFC FILECHOOSER;
 	public static ControlsAdjuster CONTROLS;
 	public static SettingsBox SETTINGSBOX;
 	//

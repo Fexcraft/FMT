@@ -15,7 +15,7 @@ public class TextField extends Element {
 	private boolean centered, selected, number, background = true, withcommas = false;
 	private float min, max, value;
 	private String text, tempval;
-	private RGB textcolor = new RGB(212, 212, 212);
+	private RGB textcolor = new RGB(212, 212, 212), hovertextcolor = null;
 
 	public TextField(Element root, String id, int width, int x, int y){
 		super(root, id); fields.add(this); this.setSize(width, 26);
@@ -51,10 +51,10 @@ public class TextField extends Element {
 		String tex = number ? (tempval == null ? value : "*" + tempval) + "" : tempval == null ? this.text : tempval;
 		if(centered){
 			int x = width / 2 - (FontRenderer.getWidth(tex, 1) / 2), y = height / 2 - 10;
-			FontRenderer.drawText(tex, this.x + x, this.y + y, 1, textcolor);
+			FontRenderer.drawText(tex, this.x + x, this.y + y, 1, hovered && hovertextcolor != null ? hovertextcolor : textcolor);
 		}
 		else{
-			FontRenderer.drawText(tex, this.x + 2, this.y + 2, 1, textcolor);
+			FontRenderer.drawText(tex, this.x + 2, this.y + 2, 1, hovered && hovertextcolor != null ? hovertextcolor : textcolor);
 		}
 	}
 
@@ -221,6 +221,10 @@ public class TextField extends Element {
 			super.applyChange(f); this.setText((this.getIntegerValue() == 1) + "", true); return this;
 		}
 		
+	}
+
+	public TextField setColorOnHover(RGB rgb){
+		hovertextcolor = rgb; return this;
 	}
 	
 }
