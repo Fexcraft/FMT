@@ -2,11 +2,15 @@ package net.fexcraft.app.fmt.porters;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 
 import net.fexcraft.app.fmt.porters.PorterManager.InternalPorter;
 import net.fexcraft.app.fmt.utils.TextureManager;
+import net.fexcraft.app.fmt.utils.Settings.Setting;
+import net.fexcraft.app.fmt.utils.Settings.Type;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 
 /**
@@ -18,18 +22,19 @@ public class PNGExporter extends InternalPorter {
 	
 	private static final String[] extensions = new String[]{ ".png" };
 	private BufferedImage image;
-	private boolean textured;
+	private static final ArrayList<Setting> settings = new ArrayList<>();
+	static{ settings.add(new Setting(Type.BOOLEAN, "textured", false)); }
 	
-	public PNGExporter(boolean textured){ this.textured = textured; }
+	public PNGExporter(){}
 
 	@Override
-	public GroupCompound importModel(File file){
+	public GroupCompound importModel(File file, Map<String, Setting> settings){
 		return null;
 	}
 
 	@Override
-	public String exportModel(GroupCompound compound, File file){ image = null;
-		if(textured){
+	public String exportModel(GroupCompound compound, File file, Map<String, Setting> settings){ image = null;
+		if(settings.get("textured").getBooleanValue()){
 			if(compound.texture == null || TextureManager.getTexture(compound.texture, true) == null){
 				return "No texture loaded!";
 			}
@@ -50,12 +55,12 @@ public class PNGExporter extends InternalPorter {
 
 	@Override
 	public String getId(){
-		return "internal_png_exporter" + (textured ? "_textured" : "_untextured");
+		return "internal_png_exporter";
 	}
 
 	@Override
 	public String getName(){
-		return "Internal PNG Exporter " + (textured ? "[TEXTURED]" : "[TEMPLATE]");
+		return "Internal PNG Exporter";
 	}
 
 	@Override
@@ -71,6 +76,11 @@ public class PNGExporter extends InternalPorter {
 	@Override
 	public boolean isExporter(){
 		return true;
+	}
+
+	@Override
+	public ArrayList<Setting> getSettings(boolean export){
+		return settings;
 	}
 
 }

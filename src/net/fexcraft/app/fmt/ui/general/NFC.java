@@ -4,7 +4,10 @@
 package net.fexcraft.app.fmt.ui.general;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -17,6 +20,8 @@ import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.utils.Backups;
 import net.fexcraft.app.fmt.utils.SaveLoad;
+import net.fexcraft.app.fmt.utils.Settings.Setting;
+import net.fexcraft.app.fmt.utils.Settings.Type;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Time;
@@ -35,6 +40,7 @@ public class NFC extends Element implements Dialog {
 	private int scroll, eximscroll, selected = -1;
 	private File currdir = SaveLoad.getRoot();
 	private Button[] files = new Button[12], sel = new Button[3];
+	private ArrayList<Setting> settings = new ArrayList<>();
 	private String title = "No Title.";
 	private AfterTask onfile = NOTHING;
 	private TextField eximporter, cfn;
@@ -58,12 +64,20 @@ public class NFC extends Element implements Dialog {
 				}
 				if(onfile.file != null){
 					UserInterface.FILECHOOSER.visible = false;
+					settings.addAll(onfile.porter.getSettings(mode.exports())); onfile.settings = settings;
 					if((mode.exports() || mode.savefile_save()) && onfile.file.exists()){
 						FMTB.showDialogbox("Override existing File?\n" + onfile.file.getName(), "yes", "no!", onfile, DialogBox.NOTHING);
 						UserInterface.FILECHOOSER.reset(); return true;
 					}
 					else{
-						onfile.run(); UserInterface.FILECHOOSER.reset(); return true;
+						if(onfile.settings.isEmpty()){
+							onfile.run(); UserInterface.FILECHOOSER.reset();
+						}
+						else{
+							UserInterface.SETTINGSBOX.show("FileChooser Settings", onfile);
+							UserInterface.FILECHOOSER.reset();
+						}
+						return true;
 					}
 				}
 				return true;
@@ -93,7 +107,7 @@ public class NFC extends Element implements Dialog {
 			}
 		}.setBackgroundless(true));
 		for(int i = 0; i < files.length; i++){ int j = i;
-			this.elements.add(files[i] = new Button(this, "files" + i, 472, 28, 20, 82 + (i * 28), new RGB(255, 255, 0), new RGB(128, 128, 255)){
+			this.elements.add(files[i] = new Button(this, "files" + i, 472, 28, 20, 82 + (i * 28), new RGB(255, 255, 0), new RGB("#ff8300")){
 				@Override protected boolean processButtonClick(int x, int y, boolean left){
 					File[] fls = getFilteredList();
 					if(fls[selected = scroll + j].isDirectory()){
@@ -255,6 +269,8 @@ public class NFC extends Element implements Dialog {
 		sel[1].setEnabled(mode.exports() || mode.savefile_save()); cfn.setEnabled(sel[1].isEnabled()); this.onfile = after;
 		if(cfn.isEnabled()) cfn.setText(DCFNFC[0] + " " + DCFNFC[1] + " " +  DCFNFC[2] + " " + DCFNFC[3], false);
 		else cfn.setText("Please choose an existing file to proceed.", false);
+		//
+		Setting[] modesettings = mode.settings(); for(Setting setting : modesettings) this.settings.add(setting);
 	}
 	
 	//DEFAULT_CUSTOM_FILE_NAME_FIELD_CONTENT 
@@ -263,9 +279,15 @@ public class NFC extends Element implements Dialog {
 	public void reset(){
 		this.onfile = null; this.currdir = SaveLoad.getRoot(); ressel(); eximscroll = 0; mode = ChooserMode.NONE;
 		sel[0].setText(null, false); sel[1].setText(null, false); sel[2].setText(null, false); visible = false;
+		this.settings.clear();
 	}
 	
-	public static abstract class AfterTask implements Runnable { public File file; public ExImPorter porter; }
+	public static abstract class AfterTask implements Runnable {
+		public File file;
+		public ExImPorter porter;
+		public List<Setting> settings;
+		public Map<String, Setting> mapped_settings;
+	}
 	
 	public static enum ChooserMode {
 		EXPORT, IMPORT, PNG, HELPFRAMEIMG, SAVEFILE_SAVE, SAVEFILE_LOAD, NONE;
@@ -277,6 +299,26 @@ public class NFC extends Element implements Dialog {
 		//public boolean savefile(){ return SAVEFILE == this; }
 		public boolean savefile_load(){ return SAVEFILE_LOAD == this; }
 		public boolean savefile_save(){ return SAVEFILE_SAVE == this; }
+		public Setting[] settings(){
+			switch(this){
+				case EXPORT:
+					break;
+				case HELPFRAMEIMG:
+					break;
+				case IMPORT: return new Setting[]{ new Setting(Type.BOOLEAN, "integrate", false) };
+				case NONE:
+					break;
+				case PNG:
+					break;
+				case SAVEFILE_LOAD:
+					break;
+				case SAVEFILE_SAVE:
+					break;
+				default:
+					break;
+			}
+			return new Setting[0];
+		}
 	}
 
 	@Override

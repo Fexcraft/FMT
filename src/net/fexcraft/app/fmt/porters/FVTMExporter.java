@@ -5,9 +5,14 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.Year;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager.InternalPorter;
+import net.fexcraft.app.fmt.utils.Settings.Setting;
+import net.fexcraft.app.fmt.utils.Settings.Type;
 import net.fexcraft.app.fmt.wrappers.BoxWrapper;
 import net.fexcraft.app.fmt.wrappers.CylinderWrapper;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
@@ -26,20 +31,25 @@ public class FVTMExporter extends InternalPorter {
 	private static final String tab = "\t";//"    ";
 	private static final String tab2 = tab + tab;
 	private static final String tab3 = tab2 + tab;
-	private final boolean extended, onlyvisible;
-	
-	public FVTMExporter(boolean bool, boolean bool2){
-		this.extended = bool; this.onlyvisible = bool2;
+	private boolean extended, onlyvisible;
+	private static final ArrayList<Setting> settings = new ArrayList<>();
+	static {
+		settings.add(new Setting(Type.BOOLEAN, "extended_fvtm", false));
+		settings.add(new Setting(Type.BOOLEAN, "only_visible", false));
 	}
+	
+	public FVTMExporter(){}
 
 	@Override
-	public GroupCompound importModel(File file){
+	public GroupCompound importModel(File file, Map<String, Setting> settings){
 		return null;
 	}
 
 	/** The in-string "TODO" markers are for those who implement the model into the game. */
 	@Override
-	public String exportModel(GroupCompound compound, File file){
+	public String exportModel(GroupCompound compound, File file, Map<String, Setting> settings){
+		extended = settings.get("extended").getBooleanValue();
+		onlyvisible = settings.get("only_visible").getBooleanValue();
 		StringBuffer buffer = new StringBuffer(), shape; int a = 0;
 		buffer.append("//FMT-Marker FVTM-1\n");
 		buffer.append("package net.fexcraft.mod.addons.YOURADDONID.models.SUBPACKAGENAME;\n\n");
@@ -192,12 +202,12 @@ public class FVTMExporter extends InternalPorter {
 
 	@Override
 	public String getId(){
-		return (extended ? "fvtm_exporter_a"/*v1.1"*/ : "fvtm_exporter_b"/*v1.0"*/) + (onlyvisible ? "_onv" : "_xyz");
+		return "fvtm_exporter";
 	}
 
 	@Override
 	public String getName(){
-		return (extended ? "FVTM v2.9 Extended" : "FVTM v2.9 Scheme") + (onlyvisible ? " [VISIBLE-ONLY]" : " Exporter");
+		return "FVTM v2.9 Scheme";
 	}
 
 	@Override
@@ -213,6 +223,11 @@ public class FVTMExporter extends InternalPorter {
 	@Override
 	public boolean isExporter(){
 		return true;
+	}
+
+	@Override
+	public List<Setting> getSettings(boolean export){
+		return export ? settings : nosettings;
 	}
 
 }

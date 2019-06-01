@@ -463,7 +463,7 @@ public class Toolbar extends Element {
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
 								UserInterface.FILECHOOSER.show(new String[]{ "Select a Preview/Helper file." }, new File("./helpers"), new AfterTask(){
-									@Override public void run(){ HelperCollector.load(file, porter); }
+									@Override public void run(){ HelperCollector.load(file, porter, mapped_settings); }
 								}, ChooserMode.IMPORT); return true;
 							}
 						}.setText("Load Imported", false));

@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.zip.ZipFile;
 
 import javax.imageio.ImageIO;
@@ -15,6 +16,7 @@ import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.porters.PorterManager.ExternalPorter;
 import net.fexcraft.app.fmt.porters.PorterManager.InternalPorter;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
+import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.TexrectWrapperA;
 import net.fexcraft.lib.common.json.JsonUtil;
@@ -29,11 +31,11 @@ public class HelperCollector {
 		LOADED.clear(); File root = new File("./helpers"); if(!root.exists()) root.mkdirs();
 	}
 	
-	public static final GroupCompound load(File file, ExImPorter exim){
+	public static final GroupCompound load(File file, ExImPorter exim, Map<String, Setting> settings){
 		if(file == null || exim == null) return null;
 		Print.console("Loading Preview/Helper model: " + file.getName());
 		if(exim.isInternal()){
-			GroupCompound compound = ((InternalPorter)exim).importModel(file);
+			GroupCompound compound = ((InternalPorter)exim).importModel(file, settings);
 			if(!compound.name.startsWith("import/")){ compound.name = "import/" + compound.name; }
 			LOADED.add(compound); return compound;
 		}

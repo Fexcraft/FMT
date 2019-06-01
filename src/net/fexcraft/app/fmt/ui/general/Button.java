@@ -71,12 +71,13 @@ public class Button extends Element {
 			if(hovered) RGB.glColorReset();
 		}
 		if(text != null){
+			RGB color = !drawbackground ? hovered ? hovercolor : !enabled ? discolor : RGB.BLACK : RGB.BLACK;
 			if(centered){
 				int x = width / 2 - (FontRenderer.getWidth(text, 1) / 2), y = height / 2 - 10;
-				FontRenderer.drawText(text, this.x + x + (icon == null ? 0 : iconsize + 2), this.y + y, 1, hovered && !drawbackground ? hovercolor : RGB.BLACK);
+				FontRenderer.drawText(text, this.x + x + (icon == null ? 0 : iconsize + 2), this.y + y, 1, color);
 			}
 			else{
-				FontRenderer.drawText(text, x + 2 + (icon == null ? 0 : iconsize + 2), y + 2, 1, hovered && !drawbackground ? hovercolor : RGB.BLACK);
+				FontRenderer.drawText(text, x + 2 + (icon == null ? 0 : iconsize + 2), y + 2, 1, color);
 			}
 		}
 		if(icon != null){

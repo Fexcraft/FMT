@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -20,10 +21,12 @@ import com.google.gson.JsonObject;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.JsonToTMT;
 import net.fexcraft.app.fmt.porters.PorterManager;
+import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.ui.general.NFC.AfterTask;
 import net.fexcraft.app.fmt.ui.general.NFC.ChooserMode;
+import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
@@ -347,7 +350,11 @@ public class SaveLoad {
 						helperpreview = HelperCollector.loadFMTB(file);
 					}
 					else{
-						helperpreview = HelperCollector.load(file, PorterManager.getPorterFor(file, false));
+						//TODO save/load the porter settings too, I guess.
+						ExImPorter porter = PorterManager.getPorterFor(file, false);
+						HashMap<String, Setting> map = new HashMap<>();
+						porter.getSettings(false).forEach(setting -> map.put(setting.getId(), setting));
+						helperpreview = HelperCollector.load(file, porter, map);
 					}
 					if(jsn.has("pos_x")){
 						helperpreview.pos = new Vec3f(jsn.get("pos_x").getAsFloat(), jsn.get("pos_y").getAsFloat(), jsn.get("pos_z").getAsFloat());

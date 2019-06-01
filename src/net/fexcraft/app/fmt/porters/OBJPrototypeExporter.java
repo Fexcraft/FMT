@@ -5,9 +5,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.Year;
+import java.util.List;
+import java.util.Map;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager.InternalPorter;
+import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
@@ -26,12 +29,12 @@ public class OBJPrototypeExporter extends InternalPorter {
 	public OBJPrototypeExporter(){}
 
 	@Override
-	public GroupCompound importModel(File file){
+	public GroupCompound importModel(File file, Map<String, Setting> settings){
 		return null;
 	}
 	
 	@Override
-	public String exportModel(GroupCompound compound, File file){
+	public String exportModel(GroupCompound compound, File file, Map<String, Setting> settings){
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("# FMT-Marker OBJ-1\n#\n");
 		buffer.append("# Model exported via the Internal FMT OBJ Exporter\n");
@@ -114,6 +117,11 @@ public class OBJPrototypeExporter extends InternalPorter {
 	@Override
 	public boolean isExporter(){
 		return true;
+	}
+
+	@Override
+	public List<Setting> getSettings(boolean export){
+		return nosettings;
 	}
 
 }

@@ -7,7 +7,10 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
@@ -22,6 +25,7 @@ import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.ui.general.NFC.AfterTask;
 import net.fexcraft.app.fmt.ui.general.NFC.ChooserMode;
 import net.fexcraft.app.fmt.utils.SaveLoad;
+import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.lib.common.json.JsonUtil;
 
@@ -48,6 +52,7 @@ public class PorterManager {
 						porter.extensions = ((ScriptObjectMirror)inv.invokeFunction("getExtensions")).to(String[].class);
 						porter.importer = (boolean)inv.invokeFunction("isImporter");
 						porter.exporter = (boolean)inv.invokeFunction("isExporter");
+						porter.settings = new ArrayList<>();//TODO
 						porters.put(porter.id, porter);
 					}
 					catch(Exception e){
@@ -58,15 +63,10 @@ public class PorterManager {
 		}
 		//
 		porters.add(new MTBImporter());
-		porters.add(new FVTMExporter(false, false));
-		porters.add(new FVTMExporter(true, false));
-		porters.add(new FVTMExporter(false, true));
-		porters.add(new FVTMExporter(true, true));
+		porters.add(new FVTMExporter());
 		porters.add(new OBJPreviewImporter());
-		porters.add(new JTMTPorter(false));
-		porters.add(new JTMTPorter(true));
-		porters.add(new PNGExporter(true));
-		porters.add(new PNGExporter(false));
+		porters.add(new JTMTPorter());
+		porters.add(new PNGExporter());
 		porters.add(new OBJPrototypeExporter());
 		porters.add(new MarkerExporter());
 	}
@@ -85,7 +85,7 @@ public class PorterManager {
 						return;
 					}
 					if(porter.isInternal()){
-						FMTB.MODEL = ((InternalPorter)porter).importModel(file);
+						FMTB.MODEL = ((InternalPorter)porter).importModel(file, mapped_settings);
 						FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
 					}
 					else{
@@ -113,7 +113,7 @@ public class PorterManager {
 						return;
 					} String result;
 					if(porter.isInternal()){
-						result = ((InternalPorter)porter).exportModel(FMTB.MODEL, file);
+						result = ((InternalPorter)porter).exportModel(FMTB.MODEL, file, mapped_settings);
 					}
 					else{
 						Invocable inv = (Invocable)((ExternalPorter)porter).eval();
@@ -151,6 +151,7 @@ public class PorterManager {
 		public String id, name;
 		public String[] extensions;
 		public boolean importer, exporter;
+		private ArrayList<Setting> settings;
 		
 		/**
 		 * @return new ScriptEngine instance with this porter loaded
@@ -180,6 +181,11 @@ public class PorterManager {
 		
 		@Override
 		public boolean isExporter(){ return exporter; }
+
+		@Override
+		public ArrayList<Setting> getSettings(boolean export){
+			return settings;
+		}
 		
 	}
 	
@@ -203,16 +209,20 @@ public class PorterManager {
 				if(pre.getName().endsWith(str)) return true;
 			return false;
 		}
+
+		public abstract List<Setting> getSettings(boolean export);
 		
 	}
 	
 	public static abstract class InternalPorter extends ExImPorter {
 		
+		protected static final List<Setting> nosettings = Collections.unmodifiableList(new ArrayList<>());
+		
 		/** @return new groupcompound based on data in the file */
-		public abstract GroupCompound importModel(File file);
+		public abstract GroupCompound importModel(File file, Map<String, Setting> settings);
 		
 		/** @return result/status text; */
-		public abstract String exportModel(GroupCompound compound, File file);
+		public abstract String exportModel(GroupCompound compound, File file, Map<String, Setting> settings);
 		
 		@Override
 		public boolean isInternal(){ return true; }
