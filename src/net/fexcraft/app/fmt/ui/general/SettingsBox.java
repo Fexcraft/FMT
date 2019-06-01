@@ -4,8 +4,6 @@
 package net.fexcraft.app.fmt.ui.general;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-
 import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.FontRenderer;
@@ -13,7 +11,6 @@ import net.fexcraft.app.fmt.ui.general.NFC.AfterTask;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.lib.common.math.RGB;
-import net.fexcraft.lib.common.utils.Print;
 import net.fexcraft.app.fmt.utils.TextureManager;
 
 /**
@@ -38,8 +35,6 @@ public class SettingsBox extends Element implements Dialog {
 		//
 		this.elements.add(Confirm = new Button(this, "confirm", 120, 20, 0, 0, new RGB(255, 255, 0)){
 			@Override protected boolean processButtonClick(int x, int y, boolean left){
-				task.mapped_settings = new HashMap<>();
-				task.settings.forEach(setting -> task.mapped_settings.put(setting.getId(), setting));
 				task.run(); reset(); return true;
 			}
 		}.setText("Confirm", true));
@@ -141,14 +136,13 @@ public class SettingsBox extends Element implements Dialog {
 			this.alttext = "FMT Settings";
 			this.settings.addAll(Settings.getMap().values());
 		}
-		Print.console(settings);
 		this.height = 256; this.width = 512; this.updateFields(); this.visible = true;
 	}
 
 	@Override
 	public void reset(){
 		this.visible = false; this.elements.removeIf(pre -> !pre.id.equals("confirm"));
-		this.Confirm.setVisible(false); //this.settings.clear();
+		this.Confirm.setVisible(false); this.settings.clear();
 	}
 
 }

@@ -60,7 +60,8 @@ public class SaveLoad {
 					zip.stream().forEach(elm -> {
 						if(elm.getName().equals("model.jtmt")){
 							try{
-								loadModel(file, JsonUtil.getObjectFromInputStream(zip.getInputStream(elm)));
+								GroupCompound compound = parseModel(file, JsonUtil.getObjectFromInputStream(zip.getInputStream(elm)));
+								FMTB.MODEL = compound; FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
 							} catch(IOException e){ e.printStackTrace(); }
 						}
 						else if(elm.getName().equals("texture.png")){
@@ -79,8 +80,8 @@ public class SaveLoad {
 		}, ChooserMode.SAVEFILE_LOAD);
 	}
 	
-	public static void loadModel(File from, JsonObject obj){
-		FMTB.MODEL = getModel(from, obj, true); FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
+	public static GroupCompound parseModel(File from, JsonObject obj){
+		return getModel(from, obj, true); //FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
 	}
 	
 	public static void checkIfShouldSave(boolean shouldclose, boolean shouldclear){

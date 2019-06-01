@@ -6,6 +6,7 @@ package net.fexcraft.app.fmt.ui.general;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -63,8 +64,7 @@ public class NFC extends Element implements Dialog {
 					if(selected < 0) return true; onfile.file = getFilteredList()[selected];
 				}
 				if(onfile.file != null){
-					UserInterface.FILECHOOSER.visible = false;
-					settings.addAll(onfile.porter.getSettings(mode.exports())); onfile.settings = settings;
+					UserInterface.FILECHOOSER.visible = false; applySettingsToAfterTask(onfile);
 					if((mode.exports() || mode.savefile_save()) && onfile.file.exists()){
 						FMTB.showDialogbox("Override existing File?\n" + onfile.file.getName(), "yes", "no!", onfile, DialogBox.NOTHING);
 						UserInterface.FILECHOOSER.reset(); return true;
@@ -93,7 +93,7 @@ public class NFC extends Element implements Dialog {
 				String str = Backups.getSimpleDateFormat(true).format(Time.getDate()); UserInterface.FILECHOOSER.visible = false;
 				String ext = getCurrentSelectedFileExtension(onfile.porter);
 				onfile.file = new File(currdir, (FMTB.MODEL.name == null ? "unnamed" : FMTB.MODEL.name) + "-(" + str + ")" + ext);
-				onfile.run(); UserInterface.FILECHOOSER.reset(); return true;
+				applySettingsToAfterTask(onfile); onfile.run(); UserInterface.FILECHOOSER.reset(); return true;
 			}
 		});
 		this.elements.add(sel[2] = new Button(this, "button2", 140, 28, 352, 504/*470*/, new RGB(255, 255, 0)){
@@ -145,6 +145,12 @@ public class NFC extends Element implements Dialog {
 		this.elements.add(cfn = new TextField(this, "customfilename", 468, 22, 470).setColorOnHover(new RGB(200, 200, 200)).setRenderBackground(false).setColor(RGB.BLACK));
 		//
 		//this.show(new String[]{ "test title", "OK"}, null, NOTHING, false);
+	}
+	
+	private void applySettingsToAfterTask(AfterTask onfile){
+		settings.addAll(onfile.porter.getSettings(mode.exports())); onfile.settings = settings;
+		onfile.mapped_settings = new HashMap<>();
+		onfile.settings.forEach(setting -> onfile.mapped_settings.put(setting.getId(), setting));
 	}
 
 	protected boolean isValidInput(String text){

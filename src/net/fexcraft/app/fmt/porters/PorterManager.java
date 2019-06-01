@@ -27,6 +27,7 @@ import net.fexcraft.app.fmt.ui.general.NFC.ChooserMode;
 import net.fexcraft.app.fmt.utils.SaveLoad;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
+import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.json.JsonUtil;
 
 /**
@@ -84,15 +85,27 @@ public class PorterManager {
 						FMTB.showDialogbox("No valid file choosen.\nImport is cancelled.", "ok..", null, DialogBox.NOTHING, null);
 						return;
 					}
+					GroupCompound compound = null;
 					if(porter.isInternal()){
-						FMTB.MODEL = ((InternalPorter)porter).importModel(file, mapped_settings);
-						FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
+						compound = ((InternalPorter)porter).importModel(file, mapped_settings);
 					}
 					else{
 						Invocable inv = (Invocable)((ExternalPorter)porter).eval();
 						String result = (String) inv.invokeFunction("importModel", file);
-						SaveLoad.loadModel(file, JsonUtil.getObjectFromString(result));
+						compound = SaveLoad.parseModel(file, JsonUtil.getObjectFromString(result));
 					}
+					if(mapped_settings.get("integrate").getBooleanValue()){
+						FMTB.MODEL.creators.addAll(compound.creators);
+						for(TurboList list : compound.getCompound().values()){
+							String name = compound.name + "_" + list.id;
+							while(FMTB.MODEL.getCompound().containsKey(name)){
+								name += "_"; if(name.length() > 64) break;
+							}
+							FMTB.MODEL.getCompound().put(name, list);
+						}
+					}
+					else FMTB.MODEL = compound;
+					FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
 				}
 				catch(Exception e){
 					FMTB.showDialogbox("Errors while importing Model.\n" + e.getLocalizedMessage(), "ok.", null, DialogBox.NOTHING, null);//TODO add "open console" as 2nd button
