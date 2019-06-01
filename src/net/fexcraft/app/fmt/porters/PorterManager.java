@@ -95,7 +95,11 @@ public class PorterManager {
 						compound = SaveLoad.parseModel(file, JsonUtil.getObjectFromString(result));
 					}
 					if(mapped_settings.get("integrate").getBooleanValue()){
-						FMTB.MODEL.creators.addAll(compound.creators);
+						for(String creator : compound.creators){
+							if(!FMTB.MODEL.creators.contains(creator)){
+								FMTB.MODEL.creators.add(creator);
+							}
+						}
 						for(TurboList list : compound.getCompound().values()){
 							String name = compound.name + "_" + list.id;
 							while(FMTB.MODEL.getCompound().containsKey(name)){
