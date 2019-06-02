@@ -299,6 +299,7 @@ public class FMTB implements FMTGLProcess {
 		TextureManager.loadTexture("icons/group_visible", null);
 		TextureManager.loadTexture("icons/group_edit", null);
 		TextureManager.loadTexture("icons/group_minimize", null);
+		TextureManager.loadTexture("icons/group_clone", null);
 		TextureManager.loadTexture("ui/background_dark", null);
 		TextureManager.loadTexture("ui/background_light", null);
 		TextureManager.loadTexture("ui/background_white", null);

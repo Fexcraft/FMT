@@ -1,13 +1,20 @@
 package net.fexcraft.app.fmt.ui.tree;
 
+import java.util.HashMap;
+
 import org.lwjgl.opengl.GL11;
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.porters.PorterManager;
+import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.utils.HelperCollector;
+import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.wrappers.TurboList;
+import net.fexcraft.lib.common.math.Vec3f;
+import net.fexcraft.lib.common.utils.Print;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 
 public class HelperTree extends RightTree {
@@ -36,7 +43,8 @@ public class HelperTree extends RightTree {
 			this.renderQuad(x + 4, y + 4 + -scroll + (pass), width - 8, 24, "ui/background_white");
 			FontRenderer.drawText(model.name, x + 8, y + 6 + -scroll + (pass), 1, fontcol);
 			GL11.glTranslatef(0, 0,  1);
-			this.renderIcon(x + width - 92, y + 6 + -scroll + (pass), 20, "icons/group_minimize");
+			this.renderIcon(x + width - 114, y + 6 + -scroll + (pass), 20, "icons/group_minimize");
+			this.renderIcon(x + width - 92, y + 6 + -scroll + (pass), 20, "icons/group_clone");
 			this.renderIcon(x + width - 70, y + 6 + -scroll + (pass), 20, "icons/group_edit");
 			this.renderIcon(x + width - 48, y + 6 + -scroll + (pass), 20, "icons/group_visible");
 			this.renderIcon(x + width - 26, y + 6 + -scroll + (pass), 20, "icons/group_delete");
@@ -66,8 +74,28 @@ public class HelperTree extends RightTree {
 		int myy = my - (y + 4 + -scroll); int i = myy / 26; int k = 0;
 		for(int j = 0; j < trlist.length; j++){
 			if(k == i){
-				if(mx >= x + width - 92 && mx < x + width - 72){
+				if(mx >= x + width - 114 && mx < x + width - 94){
 					trlist[j].minimized = !trlist[j].minimized; return true;
+				}
+				else if(mx >= x + width - 92 && mx < x + width - 72){
+					GroupCompound compound = null, parent = trlist[j];
+					if(parent.name.startsWith("fmtb/")){
+						compound = HelperCollector.loadFMTB(parent.origin);
+					}
+					else if(parent.name.startsWith("frame/")){
+						compound = HelperCollector.loadFrame(parent.origin);
+					}
+					else{
+						ExImPorter porter = PorterManager.getPorterFor(parent.origin, false);
+						HashMap<String, Setting> map = new HashMap<>();
+						porter.getSettings(false).forEach(setting -> map.put(setting.getId(), setting));
+						compound = HelperCollector.load(parent.file, porter, map);
+					}
+					if(compound == null){ Print.console("Error on creating clone."); return true; }
+					if(parent.pos != null) compound.pos = new Vec3f(parent.pos);
+					if(parent.rot != null) compound.rot = new Vec3f(parent.rot);
+					if(parent.scale != null) compound.scale = new Vec3f(parent.scale);
+					return true;
 				}
 				else if(mx >= x + width - 70 && mx < x + width - 50){
 					Editor.show("preview_editor"); return true;
@@ -92,9 +120,9 @@ public class HelperTree extends RightTree {
 						TextField.getFieldById("helper_scalez").applyChange(0);
 					}
 					else{
-						TextField.getFieldById("helper_posx").applyChange(model.pos == null ? 0 : model.pos.xCoord * 16);
-						TextField.getFieldById("helper_posy").applyChange(model.pos == null ? 0 : model.pos.yCoord * 16);
-						TextField.getFieldById("helper_posz").applyChange(model.pos == null ? 0 : model.pos.zCoord * 16);
+						TextField.getFieldById("helper_posx").applyChange(model.pos == null ? 0 : model.pos.xCoord);
+						TextField.getFieldById("helper_posy").applyChange(model.pos == null ? 0 : model.pos.yCoord);
+						TextField.getFieldById("helper_posz").applyChange(model.pos == null ? 0 : model.pos.zCoord);
 						TextField.getFieldById("helper_rotx").applyChange(model.rot == null ? 0 : model.rot.xCoord);
 						TextField.getFieldById("helper_roty").applyChange(model.rot == null ? 0 : model.rot.yCoord);
 						TextField.getFieldById("helper_rotz").applyChange(model.rot == null ? 0 : model.rot.zCoord);

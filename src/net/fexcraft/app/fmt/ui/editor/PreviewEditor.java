@@ -55,9 +55,9 @@ public class PreviewEditor extends Editor {
 		float am = positive == null ? field.getFloatValue() : positive ? FMTB.MODEL.rate : -FMTB.MODEL.rate;
 		if(am == 0f) return true;
 		switch(axis){
-			case 0:{ compound.scale.xCoord += am / 16; field.applyChange(compound.scale.xCoord * 16); break; }
-			case 1:{ compound.scale.yCoord += am / 16; field.applyChange(compound.scale.yCoord * 16); break; }
-			case 2:{ compound.scale.zCoord += am / 16; field.applyChange(compound.scale.zCoord * 16); break; }
+			case 0:{ compound.scale.xCoord += am; field.applyChange(compound.scale.xCoord); break; }
+			case 1:{ compound.scale.yCoord += am; field.applyChange(compound.scale.yCoord); break; }
+			case 2:{ compound.scale.zCoord += am; field.applyChange(compound.scale.zCoord); break; }
 		}
 		return true;
 	}
