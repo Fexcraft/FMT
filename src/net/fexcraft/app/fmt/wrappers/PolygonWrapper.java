@@ -49,8 +49,10 @@ public abstract class PolygonWrapper {
 		//if(Settings.lines()) (selected ? sellines : lines).render();
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		if((selected || turbolist.selected) && Settings.polygonMarker()){
+            if(Settings.cullface()) GL11.glDisable(GL11.GL_CULL_FACE);
 			rotmarker.setRotationPoint(lines.rotationPointX, lines.rotationPointY, lines.rotationPointZ);
 			rotmarker.render();
+            if(Settings.cullface()) GL11.glEnable(GL11.GL_CULL_FACE);
 		}
 		if(Settings.lines()){
 			if(selected || turbolist.selected){
