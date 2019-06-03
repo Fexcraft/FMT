@@ -15,8 +15,18 @@ public abstract class ContainerButton extends Button {
 		super(root, id, width, height, x, y);
 		this.setIcon("icons/editors/minimized", height - 2);
 		this.setTexPosSize("ui/background_light", 0, 0, 64, 64);
+		if(rowsizes != null){
+			this.initRowData(rowsizes); this.addSubElements(); this.initHeight(); 
+		}
+		this.setExpanded(false); this.setBackgroundless(true);
+	}
+
+	protected void initRowData(int[] rowsizes){
 		this.rowsizes = rowsizes; rowheight = new int[rowsizes.length];
-		int[] rowpass = new int[rowsizes.length]; this.addSubElements();
+	}
+	
+	protected void initHeight(){
+		int[] rowpass = new int[rowsizes.length];
 		elementheight = height + 2;
 		for(Element elm : elements){
 			if(rowpass[elm.row] < elm.height) rowpass[elm.row] = elm.height;
@@ -24,7 +34,6 @@ public abstract class ContainerButton extends Button {
 		for(int i = 0; i < rowheight.length; i++){
 			rowheight[i] = elementheight; elementheight += rowpass[i] + 4;
 		}
-		this.setExpanded(false); this.setBackgroundless(true);
 	}
 	
 	public abstract void addSubElements();

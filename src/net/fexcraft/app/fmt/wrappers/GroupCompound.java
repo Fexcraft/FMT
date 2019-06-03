@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.editor.ContainerButton;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
@@ -459,6 +460,7 @@ public class GroupCompound {
 				Editor.getGlobalField("group_texx").applyChange(0);
 				Editor.getGlobalField("group_texy").applyChange(0);
 				Editor.getGlobalField("group_texz").applyChange(0);
+				Editor.getGlobalField("group_animator").setText("no polygon selected", true);
 			}
 			else{
 				byte[] arr = list.color == null ? RGB.WHITE.toByteArray() : list.color.toByteArray();
@@ -469,11 +471,13 @@ public class GroupCompound {
 				Editor.getGlobalField("group_texx").applyChange(list.textureX);
 				Editor.getGlobalField("group_texy").applyChange(list.textureY);
 				Editor.getGlobalField("group_texz").applyChange(list.textureS);
+				Editor.getGlobalField("group_animator").setText("", true);
 				//
 				String texname = list.getGroupTexture() + "";
 				if(texname.length() > 32){ texname = texname.substring(texname.length() - 32, texname.length()); }
 				Editor.getGlobalField("group_texture").setText(texname, true);
 			};
+			((ContainerButton)Editor.get("model_group_editor").getElement("animations")).addSubElements();
 			//
 			Editor.getGlobalField("model_posx").applyChange(pos == null ? 0 : pos.xCoord);
 			Editor.getGlobalField("model_posy").applyChange(pos == null ? 0 : pos.yCoord);

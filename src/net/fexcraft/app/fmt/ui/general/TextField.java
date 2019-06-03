@@ -190,6 +190,11 @@ public class TextField extends Element {
 	public boolean isSelected(){
 		return selected;
 	}
+	
+	@Override
+	public boolean deselect(){
+		super.deselect(); this.selected = false; return true;
+	}
 
 	public TextField setColor(String string, RGB rgb){
 		switch(string){

@@ -6,9 +6,12 @@ import java.util.ArrayList;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.general.Button;
+import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.ui.general.NFC.AfterTask;
 import net.fexcraft.app.fmt.ui.general.NFC.ChooserMode;
 import net.fexcraft.app.fmt.ui.general.TextField;
+import net.fexcraft.app.fmt.utils.Animator;
+import net.fexcraft.app.fmt.utils.Animator.Animation;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureUpdate;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
@@ -19,7 +22,7 @@ import net.fexcraft.lib.common.math.Vec3f;
 public class ModelGroupEditor extends Editor {
 	
 	private static final int[] accepted_texsiz = new int[]{ 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096 };//, 8192 };
-	private ContainerButton group, model;
+	private ContainerButton group, model, animations;
 
 	public ModelGroupEditor(){
 		super("model_group_editor");
@@ -27,7 +30,7 @@ public class ModelGroupEditor extends Editor {
 
 	@Override
 	protected ContainerButton[] setupSubElements(){
-		group = new ContainerButton(this, "group", 300, 28, 4, y, new int[]{ 1, 3, 1, 1, 1, 3, 1, 1 }){
+		group = new ContainerButton(this, "group", 300, 28, 4, y, new int[]{ 1, 3, 1, 1, 1, 3, 1, 1, 1, 1 }){
 			@Override
 			public void addSubElements(){
 				this.elements.add(new Button(this, "text0", 290, 20, 0, 0, RGB.WHITE).setText("Group Preview Color/Overlay", false).setRowCol(0, 0));
@@ -106,6 +109,39 @@ public class ModelGroupEditor extends Editor {
 						}, ChooserMode.PNG); return true;
 					}
 				}.setText("null", true).setRowCol(7, 0));
+				//
+				this.elements.add(new Button(this, "text3", 290, 20, 0, 0, RGB.WHITE).setText("Add Animator", false).setRowCol(8, 0));
+				this.elements.add(new TextField(this, "group_animator", 0, 0, 0){
+					@Override
+					protected boolean processButtonClick(int x, int y, boolean left){
+						if(FMTB.MODEL.getSelected().isEmpty()) return true;
+						if(!left){
+							FMTB.showDialogbox(this.getText(), "test", null, DialogBox.NOTHING, null);
+							this.setText("", true);
+							return true;
+						}
+						else return super.processButtonClick(x, y, left);
+					}
+					@Override
+					public void updateTextField(){
+						this.deselect(); if(FMTB.MODEL.getSelected().isEmpty()) return;
+						Animation anim = Animator.get(this.getTextValue());
+						if(anim == null){
+							FMTB.showDialogbox("Animation not found!", "ok", null, DialogBox.NOTHING, null);
+							return;
+						} anim.copy();
+						ArrayList<TurboList> lists = FMTB.MODEL.getDirectlySelectedGroups();
+						AfterTask task = new AfterTask(){
+							@Override
+							public void run(){
+								for(TurboList list : lists){
+									list.animations.add(anim.copy());
+								} FMTB.MODEL.updateFields();
+							}
+						}; task.settings = anim.settings;
+						UserInterface.SETTINGSBOX.show("Animator Settings", task);
+					}
+				}.setText("null", true).setRowCol(9, 0));
 			}
 		};
 		group.setText("Group Settings", false);
@@ -159,7 +195,37 @@ public class ModelGroupEditor extends Editor {
 			}
 		};
 		model.setText("Model Settings", false);
-		return new ContainerButton[]{ model, group };
+		animations = new ContainerButton(this, "animations", 300, 28, 4, y, null){
+			@Override
+			public void addSubElements(){
+				this.elements.clear(); TurboList list = FMTB.MODEL.getFirstSelectedGroup();
+				int[] rows = new int[list == null ? 1 : list.animations.size() + 1];
+				for(int i = 0; i < rows.length; i++) rows[i] = 1; this.initRowData(rows);
+				if(list == null){ return; } 
+				for(int i = 0; i < rows.length - 1; i++){ int j = i;
+					this.elements.add(new TextField(this, "group_animation_" + i, 0, 0, 0) {
+						@Override
+						protected boolean processButtonClick(int x, int y, boolean left){
+							if(left){
+								Animation anim = list.animations.get(j); this.deselect();
+								FMTB.MODEL.updateFields(); if(anim == null) return true;
+								AfterTask task = new AfterTask(){
+									@Override public void run(){ FMTB.MODEL.updateFields(); }
+								}; task.settings = anim.settings; UserInterface.SETTINGSBOX.reset();
+								UserInterface.SETTINGSBOX.show("[" + anim.id + "] Settings", task);
+							}
+							else{
+								list.animations.remove(j); this.deselect(); FMTB.MODEL.updateFields();
+							}
+							return true;
+						}
+					}.setText("[" + i + "] " + list.animations.get(i).id, true).setRowCol(i + 1, 0));
+				}
+				this.initHeight(); return;
+			}
+		};
+		animations.setText("Group Animations", false);
+		return new ContainerButton[]{ model, group, animations };
 	}
 	
 	protected boolean updateRGB(Boolean apply, int j){

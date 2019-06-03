@@ -305,5 +305,40 @@ public abstract class PolygonWrapper {
 	protected abstract PolygonWrapper createClone(GroupCompound compound);
 
 	public abstract PolygonWrapper convertTo(ShapeType type);
+
+	public void resetPosRot(){
+		turbo.rotationPointX = lines.rotationPointX = sellines.rotationPointX = picker.rotationPointX = pos.xCoord;
+		turbo.rotationPointY = lines.rotationPointY = sellines.rotationPointY = picker.rotationPointY = pos.yCoord;
+		turbo.rotationPointZ = lines.rotationPointZ = sellines.rotationPointZ = picker.rotationPointZ = pos.zCoord;
+		turbo.rotationAngleX = lines.rotationAngleX = sellines.rotationAngleX = picker.rotationAngleX = rot.xCoord;
+		turbo.rotationAngleY = lines.rotationAngleY = sellines.rotationAngleY = picker.rotationAngleY = rot.yCoord;
+		turbo.rotationAngleZ = lines.rotationAngleZ = sellines.rotationAngleZ = picker.rotationAngleZ = rot.zCoord;
+	}
+	
+	public void addPosRot(boolean pos, float x, float y, float z){
+		if(pos){
+			turbo.rotationPointX = lines.rotationPointX = sellines.rotationPointX = picker.rotationPointX += x;
+			turbo.rotationPointY = lines.rotationPointY = sellines.rotationPointY = picker.rotationPointY += y;
+			turbo.rotationPointZ = lines.rotationPointZ = sellines.rotationPointZ = picker.rotationPointZ += z;
+		}
+		else{
+			turbo.rotationAngleX = lines.rotationAngleX = sellines.rotationAngleX = picker.rotationAngleX += x;
+			turbo.rotationAngleY = lines.rotationAngleY = sellines.rotationAngleY = picker.rotationAngleY += y;
+			turbo.rotationAngleZ = lines.rotationAngleZ = sellines.rotationAngleZ = picker.rotationAngleZ += z;
+		}
+	}
+	
+	public void setPosRot(boolean pos, float x, float y, float z){
+		if(pos){
+			turbo.rotationPointX = lines.rotationPointX = sellines.rotationPointX = picker.rotationPointX = x;
+			turbo.rotationPointY = lines.rotationPointY = sellines.rotationPointY = picker.rotationPointY = y;
+			turbo.rotationPointZ = lines.rotationPointZ = sellines.rotationPointZ = picker.rotationPointZ = z;
+		}
+		else{
+			turbo.rotationAngleX = lines.rotationAngleX = sellines.rotationAngleX = picker.rotationAngleX = x;
+			turbo.rotationAngleY = lines.rotationAngleY = sellines.rotationAngleY = picker.rotationAngleY = y;
+			turbo.rotationAngleZ = lines.rotationAngleZ = sellines.rotationAngleZ = picker.rotationAngleZ = z;
+		}
+	}
 	
 }

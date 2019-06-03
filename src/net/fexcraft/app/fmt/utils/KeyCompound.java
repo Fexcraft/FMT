@@ -59,6 +59,9 @@ public class KeyCompound {
 		keys.add(new KeyFunction("toggle_lighting", Keyboard.KEY_F8, true){
 			@Override public boolean process(){ Settings.toggleLighting(); return true; }
 		});
+		keys.add(new KeyFunction("toggle_animations", Keyboard.KEY_F9, true){
+			@Override public boolean process(){ Settings.toggleAnimations(); return true; }
+		});
 		//
 		keys.add(new KeyFunction("toggle_gametest", Keyboard.KEY_F10, true){
 			@Override public boolean process(){ FMTB.GAMETEST = !FMTB.GAMETEST; return true; }

@@ -72,6 +72,10 @@ public class Element {
 		UserInterface.SELECTED = this; return true;
 	}
 	
+	public boolean deselect(){
+		if(UserInterface.SELECTED == this) UserInterface.SELECTED = null; return true;
+	}
+	
 	public boolean isHovered(){
 		return hovered;
 	}

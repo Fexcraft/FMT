@@ -9,6 +9,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
+import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.json.JsonUtil;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Time;
@@ -22,7 +24,7 @@ public class Settings {
 	static{ background_color.alpha = 0.2f; }
 	public static float[] light0_position = new float[]{ 0, 1, 0, 0 };
 	private static String language = "default";*/
-	private static Setting floor, lines, demo, cube, polygon_marker, polygon_count, lighting, cullface;
+	private static Setting floor, lines, demo, cube, polygon_marker, polygon_count, lighting, cullface, animate;
 
 	public static boolean floor(){ return floor.getValue(); }
 
@@ -39,6 +41,8 @@ public class Settings {
 	public static boolean lighting(){ return lighting.getValue(); }
 
 	public static boolean cullface(){ return cullface.getValue(); }
+	
+	public static boolean animate(){ return animate.getValue(); }
 	
 	//
 
@@ -83,6 +87,15 @@ public class Settings {
 		return SETTINGS.get("light0_position").getValue();
 	}
 	
+	public static boolean toggleAnimations(){
+		boolean bool = animate.toggle();
+		if(!bool){
+			for(TurboList list : FMTB.MODEL.getCompound().values())
+				for(PolygonWrapper wrapper : list) wrapper.resetPosRot();
+		}
+		return bool;
+	}
+	
 	//
 	
 	public static SettingsMap DEFAULTS = new SettingsMap(), SETTINGS = new SettingsMap();
@@ -99,6 +112,7 @@ public class Settings {
 		DEFAULTS.add(new Setting(Type.FLOAT_ARRAY, "light0_position", new float[]{ 0, 1, 0, 0 }));
 		DEFAULTS.add(new Setting(Type.STRING, "language_code", "default"));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "cullface", true));
+		DEFAULTS.add(new Setting(Type.BOOLEAN, "animate", false));
 	}
 
 	public static void load(){
@@ -127,6 +141,7 @@ public class Settings {
 		polygon_count = SETTINGS.get("polygon_count");
 		lighting = SETTINGS.get("lighting");
 		cullface = SETTINGS.get("cullface");
+		animate = SETTINGS.get("animate");
 	}
 
 	public static void save(){
@@ -327,6 +342,10 @@ public class Settings {
 
 		public boolean getBooleanValue(){
 			if(this.getType().isBoolean()) return (boolean)value; return false;
+		}
+
+		public Setting copy(){
+			return new Setting(type, id, value);
 		}
 		
 	}

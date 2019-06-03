@@ -24,7 +24,7 @@ public class SettingsBox extends Element implements Dialog {
 	private String alttext = "FMT Settings";
 	private ArrayList<Setting> settings = new ArrayList<>();
 	//
-	private Button Confirm;
+	private Button Confirm, Cancel;
 	private AfterTask task;
 	
 	public SettingsBox(){
@@ -33,18 +33,22 @@ public class SettingsBox extends Element implements Dialog {
 		TextureManager.loadTexture("ui/settingsbox", null);
 		this.setTexPosSize("ui/settingsbox", 0, 0, 512, 256);
 		//
-		this.elements.add(Confirm = new Button(this, "confirm", 120, 20, 0, 0, new RGB(255, 255, 0)){
-			@Override protected boolean processButtonClick(int x, int y, boolean left){
-				task.run(); reset(); return true;
-			}
+		this.elements.add(Confirm = new Button(this, "confirm", 100, 20, 0, 0, new RGB(255, 255, 0)){
+			@Override protected boolean processButtonClick(int x, int y, boolean left){ task.run(); reset(); return true; }
 		}.setText("Confirm", true));
+		this.elements.add(Cancel = new Button(this, "cancel", 100, 20, 0, 0, new RGB(255, 255, 0)){
+			@Override protected boolean processButtonClick(int x, int y, boolean left){ reset(); return true; }
+		}.setText("Cancel", true));
 	}
 	
 	@Override
 	public void renderSelf(int rw, int rh) {
 		x = (rw / 2) - (width / 2); y = (rh / 2) - (height / 2); this.renderSelfQuad();
 		FontRenderer.drawText(alttext + " [Page: " + (page + 1) + "/" + (settings.size() / perpage + 1) + "]", this.x + 12, this.y + 12, 1);
-		if(Confirm.isVisible()){ Confirm.x = x + width - Confirm.width - 12; Confirm.y = y + 12; }
+		if(Confirm.isVisible()){
+			Confirm.x = x + width - Confirm.width - 12; Confirm.y = y + 12;
+			Cancel.x = x + width - Confirm.width - 14 - Cancel.width; Cancel.y = y + 12;
+		}
 		for(int i = 0; i < perpage; i++){
 			int j = (page * perpage) + i; if(j >= settings.size()) break; Setting setting = settings.get(j);
 			FontRenderer.drawText("[" + j + "] " + setting.getId(), this.x + 12, this.y + 40 + (i * 30), 1);
@@ -59,7 +63,7 @@ public class SettingsBox extends Element implements Dialog {
 	}
 	
 	private void updateFields(){
-		this.elements.removeIf(pre -> !pre.id.equals("confirm"));
+		this.elements.removeIf(pre -> !(pre.id.equals("confirm") || pre.id.equals("cancel")));
 		for(int i = 0; i < perpage; i++){
 			int j = (page * perpage) + i; if(j >= settings.size()) break;
 			Setting setting = settings.get(j);
@@ -129,7 +133,8 @@ public class SettingsBox extends Element implements Dialog {
 	
 	public void show(Object... objects){
 		if(objects != null && objects.length >= 2){
-			this.alttext = (String)objects[0]; this.task = (AfterTask)objects[1]; Confirm.setVisible(true);
+			this.alttext = (String)objects[0]; this.task = (AfterTask)objects[1];
+			Confirm.setVisible(true); Cancel.setVisible(true);
 			this.settings.addAll(task.settings);
 		}
 		else{
@@ -142,7 +147,7 @@ public class SettingsBox extends Element implements Dialog {
 	@Override
 	public void reset(){
 		this.visible = false; this.elements.removeIf(pre -> !pre.id.equals("confirm"));
-		this.Confirm.setVisible(false); this.settings.clear();
+		this.Confirm.setVisible(false); this.Cancel.setVisible(false); this.settings.clear();
 	}
 
 }
