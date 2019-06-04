@@ -26,6 +26,7 @@ import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.ui.general.NFC.AfterTask;
 import net.fexcraft.app.fmt.ui.general.NFC.ChooserMode;
+import net.fexcraft.app.fmt.utils.Animator.Animation;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
@@ -229,6 +230,24 @@ public class SaveLoad {
 					group.addProperty("texture_size_y", list.textureY);
 					group.addProperty("texture_scale", list.textureS);
 				}
+				if(!list.animations.isEmpty()){
+					JsonArray animations = new JsonArray();
+					for(Animation ani : list.animations){
+						JsonObject jsn = new JsonObject();
+						jsn.addProperty("id", ani.id);
+						JsonArray settings = new JsonArray();
+						for(Setting setting : ani.settings){
+							JsonObject sett = new JsonObject();
+							sett.addProperty("id", setting.getId());
+							sett.addProperty("type", setting.getType().name().toLowerCase());
+							sett.add("value", setting.save());
+							settings.add(sett);
+						}
+						jsn.add("settings", settings);
+						animations.add(jsn);
+					}
+					group.add("animations", animations);
+				}
 			}
 			group.addProperty("name", list.id);
 			for(PolygonWrapper wrapper : list){
@@ -320,6 +339,24 @@ public class SaveLoad {
 				JsonArray polygons = group.get("polygons").getAsJsonArray();
 				for(JsonElement elm : polygons){ list.add(JsonToTMT.parseWrapper(compound, elm.getAsJsonObject())); }
 				compound.getCompound().put(entry.getKey(), list);
+				if(group.has("animations")){
+					JsonArray arr = group.get("animations").getAsJsonArray();
+					for(JsonElement elm : arr){
+						JsonObject animjsn = elm.getAsJsonObject();
+						Animation anim = Animator.get(animjsn.get("id").getAsString());
+						JsonArray settin = animjsn.get("settings").getAsJsonArray();
+						for(JsonElement elm0 : settin){
+							JsonObject sett = elm0.getAsJsonObject();
+							Setting setting = new Setting(sett.get("type").getAsString(), sett.get("id").getAsString(), sett.get("value"));
+							for(Setting satt : anim.settings){
+								if(satt.getId().equals(setting.getId()) && satt.getType() == setting.getType()){
+									satt.setValue(setting.getValue());
+								}
+							}
+						}
+						list.animations.add(anim);
+					}
+				}
 			}
 			catch(Exception e){
 				e.printStackTrace();
