@@ -344,6 +344,10 @@ public class Settings {
 			if(this.getType().isBoolean()) return (boolean)value; return false;
 		}
 
+		public float getFloatValue(){
+			if(this.getType().isBoolean()) return (boolean)value ? 1f : 0f; return (float)value;
+		}
+
 		public Setting copy(){
 			return new Setting(type, id, value);
 		}
