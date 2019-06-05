@@ -16,7 +16,7 @@ import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public abstract class PolygonWrapper {
 	
-	protected static final ModelRendererTurbo rotmarker = new ModelRendererTurbo(null, 0, 0, 16, 16).addSphere(0, 0, 0, 0.5f, 8, 8, 0, 0).setTextured(false).setColor(Settings.getSelectedColor());
+	protected static final ModelRendererTurbo rotmarker = new ModelRendererTurbo(null, 0, 0, 16, 16).addBox(-.25f, -.25f, -.25f, .5f, .5f, .5f).setTextured(false).setColor(Settings.getSelectedColor());
 	private static final ModelRendererTurbo something = new ModelRendererTurbo(null, 0, 0, 16, 16).setTextured(false);
 	//
 	public Vec3f pos = new Vec3f(), off = new Vec3f(), rot = new Vec3f();
@@ -49,10 +49,8 @@ public abstract class PolygonWrapper {
 		//if(Settings.lines()) (selected ? sellines : lines).render();
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		if((selected || turbolist.selected) && Settings.polygonMarker()){
-            if(Settings.cullface()) GL11.glDisable(GL11.GL_CULL_FACE);
 			rotmarker.setRotationPoint(lines.rotationPointX, lines.rotationPointY, lines.rotationPointZ);
 			rotmarker.render();
-            if(Settings.cullface()) GL11.glEnable(GL11.GL_CULL_FACE);
 		}
 		if(Settings.lines()){
 			if(selected || turbolist.selected){

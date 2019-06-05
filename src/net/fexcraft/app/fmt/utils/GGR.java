@@ -114,7 +114,17 @@ public class GGR {
 	}
 
 	private String getKeyName(int i){
-		return GGR.isShiftDown() ? Keyboard.getKeyName(i) : Keyboard.getKeyName(i).toLowerCase();
+		return GGR.isShiftDown() ? i < 12 ? getSpecialChar(i) : Keyboard.getKeyName(i) : Keyboard.getKeyName(i).toLowerCase();
+	}
+
+	private String getSpecialChar(int i){
+		switch(i){
+			case 2: return "!"; case 3: return "@";
+			case 4: return "#"; case 5: return "$";
+			case 6: return "%"; case 7: return "^";
+			case 8: return "&"; case 9: return "*";
+			case 10: return "("; case 11: return ")";
+		} return Keyboard.getKeyName(i);
 	}
 
 	private boolean clickedL, clickedR, panning;
@@ -213,7 +223,11 @@ public class GGR {
     }
 
 	public static boolean isShiftDown(){
-		return Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
+		return Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_FUNCTION);
+	}
+
+	public static boolean iControlDown(){
+		return Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL);
 	}
     
 }

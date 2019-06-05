@@ -116,7 +116,7 @@ public class ModelGroupEditor extends Editor {
 					protected boolean processButtonClick(int x, int y, boolean left){
 						if(FMTB.MODEL.getSelected().isEmpty()) return true;
 						if(!left){
-							FMTB.showDialogbox(this.getText(), "test", null, DialogBox.NOTHING, null);
+							FMTB.showDialogbox(this.getText(), "ok", null, DialogBox.NOTHING, null);
 							this.setText("", true);
 							return true;
 						}
@@ -129,16 +129,16 @@ public class ModelGroupEditor extends Editor {
 						if(anim == null){
 							FMTB.showDialogbox("Animation not found!", "ok", null, DialogBox.NOTHING, null);
 							return;
-						} anim.copy();
+						} final Animation ani = anim.copy();
 						ArrayList<TurboList> lists = FMTB.MODEL.getDirectlySelectedGroups();
 						AfterTask task = new AfterTask(){
 							@Override
 							public void run(){
 								for(TurboList list : lists){
-									list.animations.add(anim.copy());
+									list.animations.add(ani);
 								} FMTB.MODEL.updateFields();
 							}
-						}; task.settings = anim.settings;
+						}; task.settings = ani.settings;
 						UserInterface.SETTINGSBOX.show("Animator Settings", task);
 					}
 				}.setText("null", true).setRowCol(9, 0));
@@ -207,11 +207,10 @@ public class ModelGroupEditor extends Editor {
 						@Override
 						protected boolean processButtonClick(int x, int y, boolean left){
 							if(left){
-								Animation anim = list.animations.get(j); this.deselect();
-								FMTB.MODEL.updateFields(); if(anim == null) return true;
+								Animation anim = list.animations.get(j); this.deselect(); if(anim == null) return true;
 								AfterTask task = new AfterTask(){
-									@Override public void run(){ FMTB.MODEL.updateFields(); }
-								}; task.settings = anim.settings; UserInterface.SETTINGSBOX.reset();
+									@Override public void run(){ anim.onSettingsUpdate(); FMTB.MODEL.updateFields(); }
+								}; task.settings = anim.settings; FMTB.MODEL.updateFields();
 								UserInterface.SETTINGSBOX.show("[" + anim.id + "] Settings", task);
 							}
 							else{

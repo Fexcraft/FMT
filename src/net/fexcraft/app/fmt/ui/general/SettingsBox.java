@@ -146,8 +146,8 @@ public class SettingsBox extends Element implements Dialog {
 
 	@Override
 	public void reset(){
-		this.visible = false; this.elements.removeIf(pre -> !pre.id.equals("confirm"));
-		this.Confirm.setVisible(false); this.Cancel.setVisible(false); this.settings.clear();
+		this.visible = false; this.elements.removeIf(pre -> !(pre.id.equals("confirm") || pre.id.equals("cancel")));
+		this.Confirm.setVisible(false); this.Cancel.setVisible(false); this.settings.clear(); this.updateFields();
 	}
 
 }

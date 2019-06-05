@@ -61,7 +61,7 @@ public class ShapeboxWrapper extends BoxWrapper {
 	};
 	static{
 		for(int i = 0; i < 8; i++){
-			cornermarkers[i] = new ModelRendererTurbo(null, 0, 0, 16, 16).addSphere(0, 0, 0, 0.5f, 8, 8, 0, 0).setTextured(false).setColor(cornercolors[i]);
+			cornermarkers[i] = new ModelRendererTurbo(null, 0, 0, 16, 16).addBox(-.25f, -.25f, -.25f, .5f, .5f, .5f).setTextured(false).setColor(cornercolors[i]);
 		}
 	}
 	

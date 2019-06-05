@@ -9,6 +9,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.json.JsonUtil;
@@ -92,6 +93,11 @@ public class Settings {
 		if(!bool){
 			for(TurboList list : FMTB.MODEL.getCompound().values())
 				for(PolygonWrapper wrapper : list) wrapper.resetPosRot();
+			for(GroupCompound compound : HelperCollector.LOADED){
+				for(TurboList list : compound.getCompound().values()){
+					for(PolygonWrapper wrapper : list) wrapper.resetPosRot();
+				}
+			}
 		}
 		return bool;
 	}
@@ -349,7 +355,7 @@ public class Settings {
 		}
 
 		public Setting copy(){
-			return new Setting(type, id, value);
+			return new Setting(type.name(), id, save());
 		}
 		
 	}

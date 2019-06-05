@@ -627,4 +627,8 @@ public class GroupCompound {
 	public int tx(TurboList list){ return list == null || list.getGroupTexture() == null ? textureSizeX : list.textureX; }
 	public int ty(TurboList list){ return list == null || list.getGroupTexture() == null ? textureSizeY : list.textureY; }
 
+	public void deselectAll(){
+		for(TurboList list : compound.values()){ list.selected = false; for(PolygonWrapper wrapper : list) wrapper.selected = false; }
+	}
+
 }

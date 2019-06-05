@@ -344,6 +344,7 @@ public class SaveLoad {
 					for(JsonElement elm : arr){
 						JsonObject animjsn = elm.getAsJsonObject();
 						Animation anim = Animator.get(animjsn.get("id").getAsString());
+						if(anim == null) continue; anim = anim.copy();
 						JsonArray settin = animjsn.get("settings").getAsJsonArray();
 						for(JsonElement elm0 : settin){
 							JsonObject sett = elm0.getAsJsonObject();
