@@ -34,8 +34,11 @@ public class FVTMExporter extends InternalPorter {
 	private boolean extended, onlyvisible;
 	private static final ArrayList<Setting> settings = new ArrayList<>();
 	static {
-		settings.add(new Setting(Type.BOOLEAN, "extended_fvtm", false));
-		settings.add(new Setting(Type.BOOLEAN, "only_visible", false));
+		settings.add(new Setting(Type.BOOLEAN, "extended_form", false));
+		settings.add(new Setting(Type.BOOLEAN, "export_only_visible", false));
+		settings.add(new Setting(Type.STRING, "pack_id", "your-addon-id"));
+		settings.add(new Setting(Type.STRING, "model_id", "null"));
+		settings.add(new Setting(Type.STRING, "model_type", "part"));
 	}
 	
 	public FVTMExporter(){}
@@ -48,20 +51,35 @@ public class FVTMExporter extends InternalPorter {
 	/** The in-string "TODO" markers are for those who implement the model into the game. */
 	@Override
 	public String exportModel(GroupCompound compound, File file, Map<String, Setting> settings){
-		extended = settings.get("extended").getBooleanValue();
-		onlyvisible = settings.get("only_visible").getBooleanValue();
+		extended = settings.get("extended_form").getBooleanValue();
+		onlyvisible = settings.get("export_only_visible").getBooleanValue();
+		String modelclass, modelkind, packid = settings.get("pack_id").getStringValue();
+		switch(settings.get("model_type").getStringValue()){
+			case "part":{
+				modelclass = "PartModel"; modelkind = "part"; break;
+			}
+			case "vehicle":{
+				modelclass = "VehicleModel"; modelkind = "vehicle"; break;
+			}
+			case "container":{
+				modelclass = "ContainerModel"; modelkind = "container"; break;
+			}
+			default:{
+				modelclass = "InvalidExporterInput"; modelkind = "invalid-exporter-input"; break;
+			}
+		}
 		StringBuffer buffer = new StringBuffer(), shape; int a = 0;
 		buffer.append("//FMT-Marker FVTM-1\n");
-		buffer.append("package net.fexcraft.mod.addons.YOURADDONID.models.SUBPACKAGENAME;\n\n");
+		buffer.append("package net.fexcraft.mod.addons." + packid + ".models." + modelkind + ";\n\n");
 		buffer.append("import net.fexcraft.lib.mc.api.registry.fModel;\n" + 
 			"import net.fexcraft.lib.tmt.ModelRendererTurbo;\n" + 
 			"import net.fexcraft.mod.fvtm.model.TurboList;\n" + 
-			"import net.fexcraft.mod.fvtm.model.part.PartModel;//TODO replace this one if needed\n\n");
+			"import net.fexcraft.mod.fvtm.model." + modelclass + ";\n\n");
 		buffer.append("/** This file was exported via the FVTM Exporter V1 of<br>\n");
 		buffer.append(" *  FMT (Fex's Modelling Toolbox) v." + FMTB.version + " &copy; " + Year.now().getValue() + " - Fexcraft.net<br>\n");
 		buffer.append(" *  All rights reserved. For this Model's License contact the Author/Creator.\n */\n");
-		buffer.append("@fModel(registryname = \"youraddonid:models/part/"+ (compound.name == null ? "unnamed" : compound.name.toLowerCase()) + "\") //TODO adjust as needed\n");
-		buffer.append("public class " + validateName(compound.name) + "Model extends PartModel { //TODO replace into correct super class if needed\n\n");
+		buffer.append("@fModel(registryname = \"" + packid + ":models/" + modelkind + "/"+ (compound.name == null ? "unnamed" : compound.name.toLowerCase()) + "\")\n");
+		buffer.append("public class " + validateName(compound.name) + "Model extends " + modelclass + " {\n\n");
 		if(this.extended){
 			buffer.append("\n");
 			for(TurboList list : compound.getCompound().values()){
@@ -151,7 +169,7 @@ public class FVTMExporter extends InternalPorter {
 				if(extended) shape.append("\n" + tab2);
 				buffer.append(tab2 + name + ".add(" + shape.toString() + ");\n");
 			}
-			if(++a == 1 && !this.extended) buffer.append(tab2 + name + ".addProgram(\"fvtm:example_program\");//TODO do not forget these exists!\n");
+			//if(++a == 1 && !this.extended) buffer.append(tab2 + name + ".addProgram(\"fvtm:example_program\");//TODO do not forget these exists!\n");
 			buffer.append(tab2 + "this.groups.add(" + name + ");\n");
 			if(a < compound.getCompound().size() - 1) buffer.append(tab2 + "//\n");
 		}
@@ -187,12 +205,13 @@ public class FVTMExporter extends InternalPorter {
 	}
 
 	private String validateName(String name){
-		if(name == null || name.length() == 0) return "Unnamed"; String[] art = name.split(" ");
+		if(name == null || name.length() == 0) return "Unnamed"; /*String[] art = name.split(" ");
 		for(int i = 0; i < art.length; i++){
 			if(art[i].length() == 0) continue; if(art[i].length() < 2) art[i] = art[i].toUpperCase();
 			art[i] = name.substring(0, 1).toUpperCase() + name.substring(1, name.length());
-		} name = ""; for(String str : art) name += str; return name;
+		} name = ""; for(String str : art) name += str; return name;*/
 		//Making sure it starts uppercase, eventually CamelCase output.
+		return name.trim().replace(" ", "_").replaceAll("[^a-zA-Z0-9 _]", "");
 	}
 
 	private boolean areAll(boolean[] bools, boolean same){
@@ -207,7 +226,7 @@ public class FVTMExporter extends InternalPorter {
 
 	@Override
 	public String getName(){
-		return "FVTM v2.9 Scheme";
+		return "FVTM v3 Scheme";
 	}
 
 	@Override

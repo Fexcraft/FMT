@@ -291,6 +291,7 @@ public class SaveLoad {
 					jsn.addProperty("scale_z", group.scale.zCoord);
 				}
 				jsn.addProperty("path", group.origin.toPath().toString());
+				jsn.addProperty("visible", group.visible);
 				array.add(jsn);
 			}
 			obj.add("helpers", array);
@@ -404,6 +405,7 @@ public class SaveLoad {
 					if(jsn.has("scale_x")){
 						helperpreview.scale = new Vec3f(jsn.get("scale_x").getAsFloat(), jsn.get("scale_y").getAsFloat(), jsn.get("scale_z").getAsFloat());
 					}
+					helperpreview.visible = JsonUtil.getIfExists(jsn, "visible", true);
 				}
 				catch(Exception e){
 					e.printStackTrace();

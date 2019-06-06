@@ -357,6 +357,10 @@ public class Settings {
 		public Setting copy(){
 			return new Setting(type.name(), id, save());
 		}
+
+		public String getStringValue(){
+			return value.toString();
+		}
 		
 	}
 	

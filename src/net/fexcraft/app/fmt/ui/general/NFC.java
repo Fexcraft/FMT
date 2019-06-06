@@ -65,20 +65,25 @@ public class NFC extends Element implements Dialog {
 				}
 				if(onfile.file != null){
 					UserInterface.FILECHOOSER.visible = false; applySettingsToAfterTask(onfile);
-					if((mode.exports() || mode.savefile_save()) && onfile.file.exists()){
-						FMTB.showDialogbox("Override existing File?\n" + onfile.file.getName(), "yes", "no!", onfile, DialogBox.NOTHING);
-						UserInterface.FILECHOOSER.reset(); return true;
+					boolean ovrd = (mode.exports() || mode.savefile_save()) && onfile.file.exists();
+					if(onfile.settings.isEmpty()){
+						if(ovrd){
+							FMTB.showDialogbox("Override existing File?\n" + onfile.file.getName(), "yes", "no!", onfile, DialogBox.NOTHING);
+						} else{ onfile.run(); }
+						UserInterface.FILECHOOSER.reset();
 					}
 					else{
-						if(onfile.settings.isEmpty()){
-							onfile.run(); UserInterface.FILECHOOSER.reset();
+						if(ovrd){
+							FMTB.showDialogbox("Override existing File?\n" + onfile.file.getName(), "yes", "no!", new Runnable(){
+								private AfterTask task = onfile;
+								@Override public void run(){ UserInterface.SETTINGSBOX.show("FileChooser Settings", task); }
+							}, DialogBox.NOTHING);
 						}
-						else{
-							UserInterface.SETTINGSBOX.show("FileChooser Settings", onfile);
-							UserInterface.FILECHOOSER.reset();
-						}
-						return true;
+						else{ UserInterface.SETTINGSBOX.show("FileChooser Settings", onfile); }
+						UserInterface.FILECHOOSER.reset();
 					}
+					return true;
+				
 				}
 				return true;
 			}
@@ -148,8 +153,8 @@ public class NFC extends Element implements Dialog {
 	}
 	
 	private void applySettingsToAfterTask(AfterTask onfile){
-		settings.addAll(onfile.porter.getSettings(mode.exports())); onfile.settings = settings;
-		onfile.mapped_settings = new HashMap<>();
+		settings.addAll(onfile.porter.getSettings(mode.exports()));
+		onfile.settings.addAll(settings); onfile.mapped_settings = new HashMap<>();
 		onfile.settings.forEach(setting -> onfile.mapped_settings.put(setting.getId(), setting));
 	}
 
@@ -291,7 +296,7 @@ public class NFC extends Element implements Dialog {
 	public static abstract class AfterTask implements Runnable {
 		public File file;
 		public ExImPorter porter;
-		public List<Setting> settings;
+		public List<Setting> settings = new ArrayList<>();
 		public Map<String, Setting> mapped_settings;
 	}
 	
