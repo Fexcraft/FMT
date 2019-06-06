@@ -39,6 +39,7 @@ public class FVTMExporter extends InternalPorter {
 		settings.add(new Setting(Type.STRING, "pack_id", "your-addon-id"));
 		settings.add(new Setting(Type.STRING, "model_id", "null"));
 		settings.add(new Setting(Type.STRING, "model_type", "part"));
+		settings.add(new Setting(Type.STRING, "model_name", "default"));
 	}
 	
 	public FVTMExporter(){}
@@ -54,6 +55,8 @@ public class FVTMExporter extends InternalPorter {
 		extended = settings.get("extended_form").getBooleanValue();
 		onlyvisible = settings.get("export_only_visible").getBooleanValue();
 		String modelclass, modelkind, packid = settings.get("pack_id").getStringValue();
+		String modelname = settings.get("model_name").getStringValue();
+		if(modelname.equals("default")) modelname = null;
 		switch(settings.get("model_type").getStringValue()){
 			case "part":{
 				modelclass = "PartModel"; modelkind = "part"; break;
@@ -79,7 +82,7 @@ public class FVTMExporter extends InternalPorter {
 		buffer.append(" *  FMT (Fex's Modelling Toolbox) v." + FMTB.version + " &copy; " + Year.now().getValue() + " - Fexcraft.net<br>\n");
 		buffer.append(" *  All rights reserved. For this Model's License contact the Author/Creator.\n */\n");
 		buffer.append("@fModel(registryname = \"" + packid + ":models/" + modelkind + "/"+ (compound.name == null ? "unnamed" : compound.name.toLowerCase()) + "\")\n");
-		buffer.append("public class " + validateName(compound.name) + "Model extends " + modelclass + " {\n\n");
+		buffer.append("public class " + validateName(modelname == null ? compound.name + "Model" : modelname) + " extends " + modelclass + " {\n\n");
 		if(this.extended){
 			buffer.append("\n");
 			for(TurboList list : compound.getCompound().values()){
