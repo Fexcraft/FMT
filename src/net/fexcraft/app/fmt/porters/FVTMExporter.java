@@ -56,7 +56,10 @@ public class FVTMExporter extends InternalPorter {
 		onlyvisible = settings.get("export_only_visible").getBooleanValue();
 		String modelclass, modelkind, packid = settings.get("pack_id").getStringValue();
 		String modelname = settings.get("model_name").getStringValue();
-		if(modelname.equals("default")) modelname = null;
+		String model_id = settings.get("model_id").getStringValue();
+		if(modelname.equals("default") || modelname.equals("null")) modelname = null;
+		if(model_id.equals("default") || model_id.equals("null")) model_id = null;
+		modelname = validateName(modelname == null ? compound.name + "Model" : modelname);
 		switch(settings.get("model_type").getStringValue()){
 			case "part":{
 				modelclass = "PartModel"; modelkind = "part"; break;
@@ -73,7 +76,7 @@ public class FVTMExporter extends InternalPorter {
 		}
 		StringBuffer buffer = new StringBuffer(), shape; int a = 0;
 		buffer.append("//FMT-Marker FVTM-1.1\n");
-		buffer.append("package net.fexcraft.mod.addons." + packid + ".models." + modelkind + ";\n\n");
+		buffer.append("package net.fexcraft.mod.addon." + packid + ".models." + modelkind + ";\n\n");
 		buffer.append("import net.fexcraft.lib.mc.api.registry.fModel;\n" + 
 			"import net.fexcraft.lib.tmt.ModelRendererTurbo;\n" + 
 			"import net.fexcraft.mod.fvtm.model.TurboList;\n" + 
@@ -81,8 +84,8 @@ public class FVTMExporter extends InternalPorter {
 		buffer.append("/** This file was exported via the FVTM Exporter V1.1 of<br>\n");
 		buffer.append(" *  FMT (Fex's Modelling Toolbox) v." + FMTB.version + " &copy; " + Year.now().getValue() + " - Fexcraft.net<br>\n");
 		buffer.append(" *  All rights reserved. For this Model's License contact the Author/Creator.\n */\n");
-		buffer.append("@fModel(registryname = \"" + packid + ":models/" + modelkind + "/"+ (compound.name == null ? "unnamed" : compound.name.toLowerCase()) + "\")\n");
-		buffer.append("public class " + validateName(modelname == null ? compound.name + "Model" : modelname) + " extends " + modelclass + " {\n\n");
+		buffer.append("@fModel(registryname = \"" + packid + ":models/" + modelkind + "/"+ (model_id == null ? modelname : model_id) + "\")\n");
+		buffer.append("public class " + modelname + " extends " + modelclass + " {\n\n");
 		if(this.extended){
 			buffer.append("\n");
 			for(TurboList list : compound.getCompound().values()){
@@ -91,7 +94,7 @@ public class FVTMExporter extends InternalPorter {
 			}
 			buffer.append("\n");
 		}
-		buffer.append(tab + "public " + validateName(compound.name) + "Model(){\n");
+		buffer.append(tab + "public " + modelname + "(){\n");
 		buffer.append(tab2 + "super(); textureX = " + compound.tx(null) + "; textureY = " + compound.ty(null) + ";\n");
 		for(String cr : compound.creators){
 			buffer.append(tab2 + "this.addToCreators(\"" + cr + "\");\n");//TODO add "uuid" of logged in users if available;
