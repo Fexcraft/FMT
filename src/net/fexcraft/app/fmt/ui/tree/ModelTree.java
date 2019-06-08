@@ -18,7 +18,7 @@ public class ModelTree extends RightTree {
 	private TurboList[] trlist;
 	private PolygonWrapper poly;
 	private int trheight;
-	private long count;
+	public static long count;
 
 	public ModelTree(){
 		super("modeltree");

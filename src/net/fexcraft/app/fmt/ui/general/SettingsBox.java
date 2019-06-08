@@ -139,6 +139,7 @@ public class SettingsBox extends Element implements Dialog {
 		}
 		else{
 			this.alttext = "FMT Settings";
+			Confirm.setVisible(false); Cancel.setVisible(false);
 			this.settings.addAll(Settings.getMap().values());
 		}
 		this.height = 256; this.width = 512; this.updateFields(); this.visible = true;

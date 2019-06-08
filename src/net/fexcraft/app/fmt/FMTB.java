@@ -25,6 +25,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import net.arikia.dev.drpc.DiscordEventHandlers;
+import net.arikia.dev.drpc.DiscordRPC;
 import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.ui.Dialog;
@@ -45,6 +47,7 @@ import net.fexcraft.app.fmt.ui.general.Toolbar;
 import net.fexcraft.app.fmt.ui.tree.HelperTree;
 import net.fexcraft.app.fmt.ui.tree.ModelTree;
 import net.fexcraft.app.fmt.utils.Backups;
+import net.fexcraft.app.fmt.utils.DiscordUtil;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.HelperCollector;
 import net.fexcraft.app.fmt.utils.ImageHelper;
@@ -72,9 +75,10 @@ import net.fexcraft.lib.tmt.ModelRendererTurbo;
 public class FMTB implements FMTGLProcess {
 	
 	public static final String deftitle = "[FPS:%s] Fexcraft Modelling Toolbox - %s";
-	public static final String version = "1.2.8";
+	public static final String version = "1.2.9";
+	public static final String CLID = "587016218196574209";
 	//
-	private static String title;
+	private static String title = "Unnamed Model";
 	private boolean close;
 	public static GGR ggr;
 	//public int width, height;
@@ -86,6 +90,7 @@ public class FMTB implements FMTGLProcess {
 	public static Timer BACKUP_TIMER, TEX_UPDATE_TIMER;
 	public static boolean GAMETEST;
 	private long lf, lfps, fps;
+	private static int disk_update;
 	
 	public static void main(String... args) throws Exception {
 	    switch(LWJGLUtil.getPlatform()){
@@ -95,8 +100,7 @@ public class FMTB implements FMTGLProcess {
 	    }
 	    System.setProperty("org.lwjgl.librarypath", lwjgl_natives.getAbsolutePath());
 	    //
-		FMTB.INSTANCE = new FMTB().setTitle("Unnamed Model");
-		try{ INSTANCE.run(); } catch(Throwable thr){ thr.printStackTrace(); System.exit(1); }
+		FMTB.INSTANCE = new FMTB(); try{ INSTANCE.run(); } catch(Throwable thr){ thr.printStackTrace(); System.exit(1); }
 	}
 	
 	public static final Process startProcess(Class<?> clazz) throws Exception {
@@ -112,7 +116,7 @@ public class FMTB implements FMTGLProcess {
 
 	public static final FMTB get(){ return INSTANCE; }
 	
-	public FMTB setTitle(String string){ title = string; return this; }
+	public FMTB setTitle(String string){ title = string; DiscordUtil.update(false); return this; }
 	
 	public void run() throws LWJGLException, InterruptedException, IOException, NoSuchMethodException, ScriptException {
 		TextureManager.init(); this.setIcon(); Settings.load();
@@ -125,6 +129,18 @@ public class FMTB implements FMTGLProcess {
 		if(BACKUP_TIMER == null){ (BACKUP_TIMER = new Timer()).schedule(new Backups(), new Date(mid), Time.MIN_MS * 5); }
 		if(TEX_UPDATE_TIMER == null){ (TEX_UPDATE_TIMER = new Timer()).schedule(new TextureUpdate(), Time.SEC_MS, Time.SEC_MS / 2); }
 		//
+		if(Settings.discordrpc()){
+			DiscordEventHandlers.Builder handler = new DiscordEventHandlers.Builder();
+			handler.setReadyEventHandler(new DiscordUtil.ReadyEventHandler());
+			handler.setErroredEventHandler(new DiscordUtil.ErroredEventHandler());
+			handler.setDisconnectedEventHandler(new DiscordUtil.DisconectedEventHandler());
+			handler.setJoinGameEventHandler(new DiscordUtil.JoinGameEventHandler());
+			handler.setJoinRequestEventHandler(new DiscordUtil.JoinRequestEventHandler());
+			handler.setSpectateGameEventHandler(new DiscordUtil.SpectateGameEventHandler());
+			DiscordRPC.discordInitialize(CLID, handler.build(), true);
+			DiscordRPC.discordRunCallbacks(); DiscordUtil.update(true);
+		}
+		//
 		this.getDelta(); lfps = this.getTime();
 		while(!close){
 			loop(this.getDelta()); render();
@@ -136,8 +152,9 @@ public class FMTB implements FMTGLProcess {
 				//
 			}
 			Display.update(); Display.sync(60);
+			if(Settings.discordrpc()) if(++disk_update > 60000){ DiscordRPC.discordRunCallbacks(); disk_update = 0; }
 			//Thread.sleep(50);
-		}
+		} DiscordRPC.discordShutdown();
 		Display.destroy(); Settings.save(); KeyCompound.save(); SessionHandler.save(); System.exit(0);
 	}
 
@@ -267,7 +284,7 @@ public class FMTB implements FMTGLProcess {
 	private void setupDisplay() throws LWJGLException {
 		Display.setFullscreen(false); Display.setResizable(false);
 		Display.setDisplayMode(displaymode = new DisplayMode(1000, 600));
-		Display.setTitle(title); Display.setVSyncEnabled(true);
+		Display.setTitle("Fexcraft Modelling Toolbox"); Display.setVSyncEnabled(true);
 		Display.create();
 	}
 	
@@ -373,6 +390,10 @@ public class FMTB implements FMTGLProcess {
 	
 	public static boolean linux(){
 		return LWJGLUtil.getPlatform() == LWJGLUtil.PLATFORM_LINUX;
+	}
+
+	public static String getTitle(){
+		return title;
 	}
 
 }

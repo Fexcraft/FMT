@@ -72,13 +72,13 @@ public class FVTMExporter extends InternalPorter {
 			}
 		}
 		StringBuffer buffer = new StringBuffer(), shape; int a = 0;
-		buffer.append("//FMT-Marker FVTM-1\n");
+		buffer.append("//FMT-Marker FVTM-1.1\n");
 		buffer.append("package net.fexcraft.mod.addons." + packid + ".models." + modelkind + ";\n\n");
 		buffer.append("import net.fexcraft.lib.mc.api.registry.fModel;\n" + 
 			"import net.fexcraft.lib.tmt.ModelRendererTurbo;\n" + 
 			"import net.fexcraft.mod.fvtm.model.TurboList;\n" + 
 			"import net.fexcraft.mod.fvtm.model." + modelclass + ";\n\n");
-		buffer.append("/** This file was exported via the FVTM Exporter V1 of<br>\n");
+		buffer.append("/** This file was exported via the FVTM Exporter V1.1 of<br>\n");
 		buffer.append(" *  FMT (Fex's Modelling Toolbox) v." + FMTB.version + " &copy; " + Year.now().getValue() + " - Fexcraft.net<br>\n");
 		buffer.append(" *  All rights reserved. For this Model's License contact the Author/Creator.\n */\n");
 		buffer.append("@fModel(registryname = \"" + packid + ":models/" + modelkind + "/"+ (compound.name == null ? "unnamed" : compound.name.toLowerCase()) + "\")\n");

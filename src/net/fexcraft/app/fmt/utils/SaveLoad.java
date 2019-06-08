@@ -71,7 +71,7 @@ public class SaveLoad {
 								TextureManager.loadTextureFromZip(zip.getInputStream(elm), "./temp/" + FMTB.MODEL.name, false, true);
 							} catch(IOException e){ e.printStackTrace(); }
 						}
-					}); zip.close(); FMTB.MODEL.file = file;
+					}); zip.close(); FMTB.MODEL.file = file; DiscordUtil.update(Settings.discordrpc_resettimeronnewmodel());
 				}
 				catch(Exception e){
 					e.printStackTrace();
