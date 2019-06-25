@@ -13,7 +13,7 @@ import net.fexcraft.lib.common.math.RGB;
 
 public class GeneralEditor extends Editor {
 	
-	private ContainerButton general, box, shapebox, cylinder, texrect_a, texrect_b;
+	private ContainerButton general, box, shapebox, cylinder, texrect_a, texrect_b, marker;
 
 	public GeneralEditor(){ super("general_editor"); }
 
@@ -213,7 +213,25 @@ public class GeneralEditor extends Editor {
 			}
 		};
 		texrect_b.setText("TexRect [Basic]", false);
-		return new ContainerButton[]{ general, box, shapebox, cylinder, texrect_b, texrect_a };
+		marker = new ContainerButton(this, "marker", 300, 28, 4, y, new int[]{ 1, 1, 1, 3 }){
+			@Override
+			public void addSubElements(){
+				this.elements.add(new Button(this, "text0", 290, 20, 0, 0, RGB.WHITE).setBackgroundless(false).setText("Marker Color [#hex]", false).setRowCol(0, 0));
+				this.elements.add(new TextField(this, "marker_colorx", 290, 0, 0){
+					@Override public void updateTextField(){ FMTB.MODEL.updateValue(this); }
+					@Override
+					public float getFloatValue(){
+						return Integer.parseInt(this.getTextValue().replace("#", "").replace("0x", ""), 16);
+					}
+				}.setText("null", true).setRowCol(1, 0));
+				this.elements.add(new Button(this, "text1", 290, 20, 0, 0, RGB.WHITE).setBackgroundless(false).setText("Biped Display [toggle / rot / scale]", false).setRowCol(2, 0));
+				this.elements.add(new TextField.BooleanField(this, "marker_bipedx", 0, 0, 0).setRowCol(3, 0));
+				this.elements.add(new TextField(this, "marker_anglex", 290, 0, 0).setAsNumberfield(-360, 360, true).setRowCol(3, 1));
+				this.elements.add(new TextField(this, "marker_scalex", 290, 0, 0).setAsNumberfield(0, 1024f, true).setRowCol(3, 2));
+			}
+		};
+		marker.setText("Marker Settings", false);
+		return new ContainerButton[]{ general, box, shapebox, cylinder, texrect_b, texrect_a, marker };
 	}
 
 }

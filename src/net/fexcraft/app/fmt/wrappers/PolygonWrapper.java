@@ -214,6 +214,7 @@ public abstract class PolygonWrapper {
 			}
 		}
 		if(id.startsWith("texpos") && this.getType().isTexRect()){ bool = this.setFloat(id, x, y, z, value); }
+		if(id.startsWith("marker") && this.getType().isMarker()){ bool = this.setFloat(id, x, y, z, value); }
 		this.recompile(); return bool;
 	}
 

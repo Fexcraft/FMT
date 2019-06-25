@@ -177,6 +177,9 @@ public class JsonToTMT {
 			case "marker":{
 				MarkerWrapper marker = new MarkerWrapper(compound);
 				marker.color = obj.has("color") ? obj.get("color").getAsInt() : RGB.GREEN.packed;
+				marker.biped = JsonUtil.getIfExists(obj, "biped", false);
+				marker.angle = JsonUtil.getIfExists(obj, "biped_angle", -90).intValue();
+				marker.scale = JsonUtil.getIfExists(obj, "biped_scale", 1f).floatValue();
 				polygon = marker; break;
 			}
 		}

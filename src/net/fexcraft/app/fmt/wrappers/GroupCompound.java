@@ -450,6 +450,18 @@ public class GroupCompound {
 					}
 				}
 			}
+			if(poly == null || !poly.getType().isMarker()){
+				Editor.getGlobalField("marker_colorx").applyChange(0);
+				Editor.getGlobalField("marker_bipedx").applyChange(0);
+				Editor.getGlobalField("marker_scalex").applyChange(0);
+				Editor.getGlobalField("marker_anglex").applyChange(0);
+			}
+			else{
+				Editor.getGlobalField("marker_colorx").applyChange(Integer.toHexString((int)poly.getFloat("marker_color", true, false, false)));
+				Editor.getGlobalField("marker_bipedx").applyChange(poly.getFloat("marker_biped", true, false, false));
+				Editor.getGlobalField("marker_scalex").applyChange(poly.getFloat("marker_scale", true, false, false));
+				Editor.getGlobalField("marker_anglex").applyChange(poly.getFloat("marker_angle", true, false, false));
+			}
 			TurboList list = this.getFirstSelectedGroup();
 			if(list == null){
 				Editor.getGlobalField("group_rgb0").applyChange(0);

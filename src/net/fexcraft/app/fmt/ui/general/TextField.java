@@ -101,6 +101,10 @@ public class TextField extends Element {
 	public TextField applyChange(float f){
 		this.value = f; return this;
 	}
+	
+	public TextField applyChange(String s){
+		this.text = s; return this;
+	}
 
 	public static boolean anySelected(){
 		return fields.stream().filter(pre -> pre.isSelected()).findFirst().isPresent();
