@@ -26,6 +26,10 @@ public class MarkerWrapper extends PolygonWrapper {
 			.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord).setTextured(false).setColor(new RGB(color));
 	}
 	
+	protected MarkerWrapper setup(int color, boolean biped, int angle, float scale){
+		this.color = color; this.biped = biped; this.angle = angle; this.scale = scale; return this;
+	}
+	
 	@Override
 	public void render(boolean rotX, boolean rotY, boolean rotZ){
 		if(visible && turbo != null){
@@ -100,7 +104,7 @@ public class MarkerWrapper extends PolygonWrapper {
 
 	@Override
 	protected PolygonWrapper createClone(GroupCompound compound){
-		return new MarkerWrapper(compound);
+		return new MarkerWrapper(compound).setup(color, biped, angle, scale);
 	}
 
 	@Override
