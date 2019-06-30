@@ -1,5 +1,13 @@
 package net.fexcraft.app.fmt.utils;
 
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.IOException;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -53,50 +61,64 @@ public class GGR {
     		int key = Keyboard.getEventKey();
     		if(Keyboard.getEventKeyState()){//"pressed"
     	        if(TextField.anySelected()){
-    	        	TextField field = TextField.getSelected();
-    	        	if(field != null){
-    	        		for(int i = 2; i < 12; i++){
-    	        			if(key == i) field.onInput(key, getKeyName(i));
-    	        		}
-    	        		for(int i = 16; i < 26; i++){
-    	        			if(key == i) field.onInput(key, getKeyName(i));
-    	        		}
-    	        		for(int i = 30; i < 39; i++){
-    	        			if(key == i) field.onInput(key, getKeyName(i));
-    	        		}
-    	        		for(int i = 44; i < 51; i++){
-    	        			if(key == i) field.onInput(key, getKeyName(i));
-    	        		}
-    	        		if(key == Keyboard.KEY_BACK){
-    	        			field.onBackSpace();
-    	        		}
-    	        		if(key == Keyboard.KEY_RETURN){
-    	        			field.onReturn();
-    	        		}
-    	        		if(key == Keyboard.KEY_MINUS){
-    	        			field.onInput(key, "-");
-    	        		}
-    	        		if(key == Keyboard.KEY_PERIOD){
-    	        			field.onInput(key, ".");
-    	        		}
-    	        		if(key == Keyboard.KEY_COMMA){
-    	        			field.onInput(key, ",");
-    	        		}
-    	        		if(key == Keyboard.KEY_SPACE){
-    	        			field.onInput(key, " ");
-    	        		}
-    	        		//
-    	        		if(key == Keyboard.KEY_NUMPAD0) field.onInput(key, "0");
-    	        		if(key == Keyboard.KEY_NUMPAD1) field.onInput(key, "1");
-    	        		if(key == Keyboard.KEY_NUMPAD2) field.onInput(key, "2");
-    	        		if(key == Keyboard.KEY_NUMPAD3) field.onInput(key, "3");
-    	        		if(key == Keyboard.KEY_NUMPAD4) field.onInput(key, "4");
-    	        		if(key == Keyboard.KEY_NUMPAD5) field.onInput(key, "5");
-    	        		if(key == Keyboard.KEY_NUMPAD6) field.onInput(key, "6");
-    	        		if(key == Keyboard.KEY_NUMPAD7) field.onInput(key, "7");
-    	        		if(key == Keyboard.KEY_NUMPAD8) field.onInput(key, "8");
-    	        		if(key == Keyboard.KEY_NUMPAD9) field.onInput(key, "9");
-    	        	}
+    	        	TextField field = TextField.getSelected(); if(field == null) return;
+	        		if(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL)){
+        				Clipboard cp = Toolkit.getDefaultToolkit().getSystemClipboard();
+	        			if(key == Keyboard.KEY_V){
+	        				Transferable data = cp.getContents(null);
+	        				if(data.isDataFlavorSupported(DataFlavor.stringFlavor)){
+	        					try{ field.onInput(-1, data.getTransferData(DataFlavor.stringFlavor).toString()); }
+	        					catch(UnsupportedFlavorException | IOException e){ e.printStackTrace(); }
+	        					return;
+	        				}
+	        			}
+	        			if(key == Keyboard.KEY_X || key == Keyboard.KEY_C){
+	        				StringSelection sel = new StringSelection(field.getTextValue()); cp.setContents(sel, sel);
+	        				if(key == Keyboard.KEY_X) field.onBackSpace(true); return;
+	        			}
+	        		}
+	        		//
+    	        	for(int i = 2; i < 12; i++){
+	        			if(key == i) field.onInput(key, getKeyName(i));
+	        		}
+	        		for(int i = 16; i < 26; i++){
+	        			if(key == i) field.onInput(key, getKeyName(i));
+	        		}
+	        		for(int i = 30; i < 39; i++){
+	        			if(key == i) field.onInput(key, getKeyName(i));
+	        		}
+	        		for(int i = 44; i < 51; i++){
+	        			if(key == i) field.onInput(key, getKeyName(i));
+	        		}
+	        		if(key == Keyboard.KEY_BACK){
+	        			field.onBackSpace(false);
+	        		}
+	        		if(key == Keyboard.KEY_RETURN){
+	        			field.onReturn();
+	        		}
+	        		if(key == Keyboard.KEY_MINUS){
+	        			field.onInput(key, "-");
+	        		}
+	        		if(key == Keyboard.KEY_PERIOD){
+	        			field.onInput(key, ".");
+	        		}
+	        		if(key == Keyboard.KEY_COMMA){
+	        			field.onInput(key, ",");
+	        		}
+	        		if(key == Keyboard.KEY_SPACE){
+	        			field.onInput(key, " ");
+	        		}
+	        		//
+	        		if(key == Keyboard.KEY_NUMPAD0) field.onInput(key, "0");
+	        		if(key == Keyboard.KEY_NUMPAD1) field.onInput(key, "1");
+	        		if(key == Keyboard.KEY_NUMPAD2) field.onInput(key, "2");
+	        		if(key == Keyboard.KEY_NUMPAD3) field.onInput(key, "3");
+	        		if(key == Keyboard.KEY_NUMPAD4) field.onInput(key, "4");
+	        		if(key == Keyboard.KEY_NUMPAD5) field.onInput(key, "5");
+	        		if(key == Keyboard.KEY_NUMPAD6) field.onInput(key, "6");
+	        		if(key == Keyboard.KEY_NUMPAD7) field.onInput(key, "7");
+	        		if(key == Keyboard.KEY_NUMPAD8) field.onInput(key, "8");
+	        		if(key == Keyboard.KEY_NUMPAD9) field.onInput(key, "9");
     	        }
     	        else{
     	        	for(KeyFunction keyf : KeyCompound.keys){

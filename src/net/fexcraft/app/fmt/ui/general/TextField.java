@@ -116,6 +116,10 @@ public class TextField extends Element {
 	}
 
 	public void onInput(int id, String key){
+		if(id < 0){
+			if(number && !isFloat(key)){ tempval = "+.0"; }
+			else{ if(tempval == null) tempval = number ? "" : text; tempval += key; } return;
+		}
 		if(number && !isNumber(id, tempval == null || tempval.length() == 0, key)){ return; }
 		if(number){
 			if(tempval == null){
@@ -157,9 +161,14 @@ public class TextField extends Element {
 		return id < 12 || id > 70;
 	}
 
-	public void onBackSpace(){
+	private boolean isFloat(String string){
+		try{ Float.parseFloat(string); return true; }
+		catch(Exception e){ return false; }
+	}
+
+	public void onBackSpace(boolean clear){
 		if(tempval == null || tempval.length() <= 1) tempval = "";
-		else tempval = tempval.substring(0, tempval.length() - 1);
+		else if(clear) tempval = ""; else tempval = tempval.substring(0, tempval.length() - 1);
 	}
 
 	public void onReturn(){
