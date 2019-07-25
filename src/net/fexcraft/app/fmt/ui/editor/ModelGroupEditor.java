@@ -268,16 +268,18 @@ public class ModelGroupEditor extends Editor {
 	}
 	
 	protected boolean updateGroupTexSize(TextField field, int axis, Boolean positive){
-		if(FMTB.MODEL == null) return true; if(field == null) field = (TextField)model.getElement("group_tex" + xyz[axis]);
+		if(FMTB.MODEL == null) return true; if(field == null) field = (TextField)group.getElement("group_tex" + xyz[axis]);
 		if(FMTB.MODEL.getDirectlySelectedGroupsAmount() == 0) return true;
-		int index = getIndex(field.getIntegerValue());
-		if(positive && index < (accepted_texsiz.length - 1)) field.applyChange(accepted_texsiz[index + 1]);
-		else if(!positive && index > 0) field.applyChange(accepted_texsiz[index - 1]);
+		if(axis < 2){
+			int index = getIndex(field.getIntegerValue());
+			if(positive && index < (accepted_texsiz.length - 1)) field.applyChange(accepted_texsiz[index + 1]);
+			else if(!positive && index > 0) field.applyChange(accepted_texsiz[index - 1]);
+		} else{ field.tryChange(positive, 1); }
 		//
 		for(TurboList list : FMTB.MODEL.getDirectlySelectedGroups()){
-			list.textureX = ((TextField)model.getElement("group_texx")).getIntegerValue();
-			list.textureY = ((TextField)model.getElement("group_texy")).getIntegerValue();
-			list.textureS = ((TextField)model.getElement("group_texz")).getIntegerValue();
+			list.textureX = ((TextField)group.getElement("group_texx")).getIntegerValue();
+			list.textureY = ((TextField)group.getElement("group_texy")).getIntegerValue();
+			list.textureS = ((TextField)group.getElement("group_texz")).getIntegerValue();
 			TextureUpdate.updateSize(list); list.forEach(mrt -> mrt.recompile());
 		} return true;
 	}
