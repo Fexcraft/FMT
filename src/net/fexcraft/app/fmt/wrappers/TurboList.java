@@ -56,7 +56,7 @@ public class TurboList extends ArrayList<PolygonWrapper> {
 	}
 	
 	public void setTexture(String string, int sizex, int sizey){
-		this.texture = string; this.textureX = sizex; this.textureY = sizey;
+		this.texture = string; this.textureX = sizex; this.textureY = sizey; this.textureS = 1;
 	}
 
 	public String getApplicableTexture(GroupCompound compound){

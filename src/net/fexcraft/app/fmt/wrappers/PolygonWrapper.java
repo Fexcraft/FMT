@@ -151,7 +151,7 @@ public abstract class PolygonWrapper {
 	}
 	
 	protected void setupMRT(){
-		turbo = newMRT().setTextured(compound.texture != null);
+		turbo = newMRT().setTextured(compound.texture != null || (getTurboList() != null && getTurboList().getGroupTexture() != null));
 		lines = newMRT().setLines(true);
 		sellines = newMRT().setLines(Settings.getSelectedColor());
 		//

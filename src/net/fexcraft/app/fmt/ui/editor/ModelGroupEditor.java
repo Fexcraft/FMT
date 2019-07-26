@@ -103,7 +103,7 @@ public class ModelGroupEditor extends Editor {
 								ArrayList<TurboList> arrlist = FMTB.MODEL.getDirectlySelectedGroups();
 								for(TurboList group : arrlist){
 									group.setTexture(name, texture.getWidth(), texture.getHeight());
-									group.forEach(mrt -> mrt.recompile());
+									group.recompile();
 								} FMTB.MODEL.updateFields(); 
 							}
 						}, ChooserMode.PNG); return true;
