@@ -81,7 +81,7 @@ public class FVTMExporter extends InternalPorter {
 			"import net.fexcraft.lib.tmt.ModelRendererTurbo;\n" + 
 			"import net.fexcraft.mod.fvtm.model.TurboList;\n" + 
 			"import net.fexcraft.mod.fvtm.model." + modelclass + ";\n\n");
-		buffer.append("/** This file was exported via the FVTM Exporter V1.1 of<br>\n");
+		buffer.append("/** This file was exported via the FVTM Exporter V1.2 of<br>\n");
 		buffer.append(" *  FMT (Fex's Modelling Toolbox) v." + FMTB.version + " &copy; " + Year.now().getValue() + " - Fexcraft.net<br>\n");
 		buffer.append(" *  All rights reserved. For this Model's License contact the Author/Creator.\n */\n");
 		buffer.append("@fModel(registryname = \"" + packid + ":models/" + modelkind + "/"+ (model_id == null ? modelname : model_id) + "\")\n");
@@ -131,16 +131,26 @@ public class FVTMExporter extends InternalPorter {
 						String topoff = cyl.topoff.xCoord != 0f || cyl.topoff.yCoord != 0f || cyl.topoff.zCoord != 0 ?
 							String.format("new net.fexcraft.lib.common.math.Vec3f(%s, %s, %s)", cyl.topoff.xCoord, cyl.topoff.yCoord, cyl.topoff.zCoord) : "null";
 						if(cyl.radius2 != 0f){
-							if(areAll(cyl.bools, false) && cyl.topangle == 0f){
-								shape.append(format(".addHollowCylinder(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", topoff, 
+							if(cyl.radial){
+								String str = ".setSidesVisible(" + cyl.bools[0] + ", " + cyl.bools[1] + ", " + cyl.bools[2] + ", " + cyl.bools[3] + ")";
+								shape.append(format(".newCylinderBuilder()\n" + tab3 + ".setPosition(%s, %s, %s).setRadius(%s, %s).setLength(%s).setSegments(%s, %s)" + 
+									".setScale(%s, %s).setDirection(%s)\n" + tab3 + ".setRadialTexture(%s, %s)" + str + ".setTopOffset(%s).build()", topoff, 
 									wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord,
-									cyl.radius, cyl.radius2, cyl.length, cyl.segments, cyl.seglimit, cyl.base, cyl.top, cyl.direction));
+									cyl.radius, cyl.radius2, cyl.length, cyl.segments, cyl.seglimit,
+									cyl.base, cyl.top, cyl.direction, cyl.seg_width, cyl.seg_height));
 							}
 							else{
-								String str = format(".addHollowCylinder(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,\n" + tab3 + "%s", topoff, 
-									wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord,
-									cyl.radius, cyl.radius2, cyl.length, cyl.segments, cyl.seglimit, cyl.base, cyl.top, cyl.direction);
-								shape.append(str + format(", %s", null, cyl.topangle) + format(", %s)", cyl.bools));
+								if(areAll(cyl.bools, false) && cyl.topangle == 0f){
+									shape.append(format(".addHollowCylinder(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", topoff, 
+										wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord,
+										cyl.radius, cyl.radius2, cyl.length, cyl.segments, cyl.seglimit, cyl.base, cyl.top, cyl.direction));
+								}
+								else{
+									String str = format(".addHollowCylinder(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,\n" + tab3 + "%s", topoff, 
+										wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord,
+										cyl.radius, cyl.radius2, cyl.length, cyl.segments, cyl.seglimit, cyl.base, cyl.top, cyl.direction);
+									shape.append(str + format(", %s", null, cyl.topangle) + format(", %s)", cyl.bools));
+								}
 							}
 						}
 						else{
