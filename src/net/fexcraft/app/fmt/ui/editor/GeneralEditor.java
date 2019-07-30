@@ -6,10 +6,13 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.general.Button;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.ui.general.TextField;
+import net.fexcraft.app.fmt.utils.TextureManager;
+import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.ShapeboxWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.math.RGB;
+import net.fexcraft.lib.common.utils.Print;
 
 public class GeneralEditor extends Editor {
 	
@@ -19,7 +22,7 @@ public class GeneralEditor extends Editor {
 
 	@Override
 	protected ContainerButton[] setupSubElements(){
-		general = new ContainerButton(this, "general", 300, 28, 4, y, new int[]{ 1, 1, 1, 1, 1, 1/*, 1, 1*/ }){
+		general = new ContainerButton(this, "general", 300, 28, 4, y, new int[]{ 1, 1, 1, 1, 1, 1, 1, 1 }){
 			@Override
 			public void addSubElements(){
 				this.elements.add(new Button(this, "text0", 290, 20, 0, 0, RGB.WHITE).setBackgroundless(false).setText("Polygon Group", false).setRowCol(0, 0));
@@ -73,7 +76,7 @@ public class GeneralEditor extends Editor {
 						FMTB.MODEL.changeTypeOfSelected(FMTB.MODEL.getSelected(), this.getTextValue());
 					}
 				}.setText("null", true).setRowCol(5, 0));
-				/*this.elements.add(new Button(this, "space", 40, 20, 0, 0, RGB.WHITE).setText("------", true).setRowCol(6, 0));
+				this.elements.add(new Button(this, "text3", 290, 20, 0, 0, RGB.WHITE).setBackgroundless(false).setText("Paint to Texture", false).setRowCol(6, 0));
 				this.elements.add(new Button(this, "burntotex", 20, 28, 0, 0){
 					@Override
 					protected boolean processButtonClick(int x, int y, boolean left){
@@ -89,22 +92,22 @@ public class GeneralEditor extends Editor {
 							});
 						}
 						else{
-							Texture tex = TextureManager.getTexture(FMTB.MODEL.texture, true);
-							if(tex == null){
-								FMTB.showDialogbox("Texture not found in Memory.\nThis rather bad.", "ok", null, DialogBox.NOTHING, null);
-								return true;
+							ArrayList<PolygonWrapper> selection = FMTB.MODEL.getSelected();
+							for(PolygonWrapper poly : selection){
+								String texname = poly.getTurboList().getGroupTexture() == null ? FMTB.MODEL.texture : poly.getTurboList().getGroupTexture();
+								Texture tex = TextureManager.getTexture(texname, true);
+								if(tex == null){//TODO group tex compensation
+									FMTB.showDialogbox("Texture not found in Memory.\nThis rather bad.", "ok", null, DialogBox.NOTHING, null);
+									return true;
+								}
+								poly.burnToTexture(tex.getImage(), null); poly.recompile(); TextureManager.saveTexture(texname); tex.rebind();
+								Print.console("Polygon painted into Texture.");
 							}
-							FMTB.MODEL.getCompound().values().forEach(list -> list.forEach(poly -> {
-								poly.burnToTexture(tex.getImage(), null); //poly.recompile();
-							})); tex.rebind(); //TextureManager.saveTexture(FMTB.MODEL.texture);
-							//FMTB.showDialogbox("Done!", "", "ok", null, DialogBox.NOTHING, null);
-							Print.console("done");
-							//TODO find out why this didn't work last time
 							return true;
 						}
 						return false;
 					}
-				}.setText("Burn to Texture", true).setTexPosSize("ui/background_dark", 0, 0, 64, 64).setRowCol(7, 0));*/
+				}.setText("Burn to Texture", true).setTexPosSize("ui/background_dark", 0, 0, 64, 64).setRowCol(7, 0));
 			}
 		};
 		general.setText("Polygon Attributes", false);
@@ -151,7 +154,7 @@ public class GeneralEditor extends Editor {
 			}
 		};
 		shapebox.setText("Shapebox Corners", false);
-		cylinder = new ContainerButton(this, "cylinder", 300, 28, 4, y, new int[]{ 1, 3, 1, 3, 1, 3, 1, 3, 1, 2, 1, 2 }){
+		cylinder = new ContainerButton(this, "cylinder", 300, 28, 4, y, new int[]{ 1, 3, 1, 3, 1, 3, 1, 3, 1, 2, 1, 2, 1, 3 }){
 			@Override
 			public void addSubElements(){
 				this.elements.add(new Button(this, "text0", 290, 20, 0, 0, RGB.WHITE).setBackgroundless(false).setText("Radius / Length / R2", false).setRowCol(0, 0));
@@ -180,6 +183,11 @@ public class GeneralEditor extends Editor {
 				this.elements.add(new Button(this, "text5", 290, 20, 0, 0, RGB.WHITE).setBackgroundless(false).setText("Outer/Inner (on/off)", false).setRowCol(10, 0));
 				this.elements.add(new TextField.BooleanField(this, "cyl5x", 0, 0, 0).setRowCol(11, 0));
 				this.elements.add(new TextField.BooleanField(this, "cyl5y", 0, 0, 0).setRowCol(11, 1));
+				//
+				this.elements.add(new Button(this, "text3", 290, 20, 0, 0, RGB.WHITE).setBackgroundless(false).setText("Radial Texture (on-off/u/v)", false).setRowCol(12, 0));
+				this.elements.add(new TextField.BooleanField(this, "cyl6x", 0, 0, 0).setRowCol(13, 0));
+				this.elements.add(new TextField(this, "cyl6y", 0, 0, 0).setAsNumberfield(0, Integer.MAX_VALUE, true).setRowCol(13, 1).setEnabled(false));
+				this.elements.add(new TextField(this, "cyl6z", 0, 0, 0).setAsNumberfield(0, Integer.MAX_VALUE, true).setRowCol(13, 2));
 			}
 		};
 		cylinder.setText("Cylinder Settings", false);
