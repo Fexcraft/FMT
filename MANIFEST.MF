@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Created-By: Ferdinand Calo' (FEX___96)
 Class-Path: . libs/jars/gson-2.8.0.jar libs/jars/lwjgl.jar libs/jars/lw
- jgl_util.jar libs/jars/slick-util.jar libs/jars/FCL-1.XII.45.jar libs/
+ jgl_util.jar libs/jars/slick-util.jar libs/jars/FCL-1.XII.47.jar libs/
  jars/discord-rpc.jar
 Main-Class: net.fexcraft.app.fmt.FMTB
 
