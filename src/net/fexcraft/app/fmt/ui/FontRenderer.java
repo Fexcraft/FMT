@@ -111,13 +111,15 @@ public class FontRenderer {
 	}
 
 	public static Glyph getGlyph(int type, char c){
+		Glyph glyph = null;
 		switch(type){
-			case 3: return mono_glyphs.get(c);
-			case 2: return italic_glyphs.get(c);
-			case 1: return bold_glyphs.get(c);
-			case 0: return plain_glyphs.get(c);
-			default: return Glyph.NULL;
+			case 3: glyph = mono_glyphs.get(c); break;
+			case 2: glyph = italic_glyphs.get(c); break;
+			case 1: glyph = bold_glyphs.get(c); break;
+			case 0: glyph = plain_glyphs.get(c); break;
+			default: glyph = Glyph.NULL; break;
 		}
+		return glyph == null ? Glyph.NULL : glyph;
 	}
 	
 	/*public static class Text {
