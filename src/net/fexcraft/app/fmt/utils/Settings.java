@@ -125,7 +125,7 @@ public class Settings {
 		DEFAULTS.add(new Setting(Type.STRING, "language_code", "default"));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "cullface", true));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "animate", false));
-		DEFAULTS.add(new Setting(Type.BOOLEAN, "discord_rpc-enabled", false));
+		DEFAULTS.add(new Setting(Type.BOOLEAN, "discord_rpc-enabled", true));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "discord_rpc-show_model", true));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "discord_rpc-reset_timer_on_new_model", true));
 	}
