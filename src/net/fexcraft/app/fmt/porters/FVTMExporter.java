@@ -71,6 +71,9 @@ public class FVTMExporter extends InternalPorter {
 			case "container":{
 				modelclass = "ContainerModel"; modelkind = "container"; break;
 			}
+			case "roadsign":{
+				modelclass = "RoadSignModel"; modelkind = "roadsign"; break;
+			}
 			default:{
 				modelclass = "InvalidExporterInput"; modelkind = "invalid-exporter-input"; break;
 			}
