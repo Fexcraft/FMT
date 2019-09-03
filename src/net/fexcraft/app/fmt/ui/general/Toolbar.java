@@ -397,6 +397,15 @@ public class Toolbar extends Element {
 								/** Generic Space/<HR> Button **/ return true;
 							}
 						}.setText("", false));
+						this.elements.add(new Button(this, "texreset", 20, 26, 0, 0){
+							@Override
+							protected boolean processButtonClick(int x, int y, boolean left){
+								FMTB.MODEL.getCompound().values().forEach(list -> list.forEach(turbo -> {
+									turbo.textureX = 0; turbo.textureY = 0; turbo.recompile();
+								}));
+								FMTB.showDialogbox("Texture Positions Reset.", "ok",  null, DialogBox.NOTHING, null); return true;
+							}
+						}.setText("Reset TexPos.", false));
 						this.elements.add(new Button(this, "autopos", 20, 26, 0, 0){
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
