@@ -20,6 +20,7 @@ import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureUpdate;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.app.fmt.wrappers.BoxWrapper;
+import net.fexcraft.app.fmt.wrappers.CollisionGridWrapper;
 import net.fexcraft.app.fmt.wrappers.CylinderWrapper;
 import net.fexcraft.app.fmt.wrappers.MarkerWrapper;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
@@ -342,6 +343,13 @@ public class Toolbar extends Element {
 								this.root.setVisible(false); return true;
 							}
 						}.setText("Add Marker", false));
+						this.elements.add(new Button(this, "add_collisiongrid", 20, 26, 0, 0){
+							@Override
+							protected boolean processButtonClick(int x, int y, boolean left){
+								FMTB.MODEL.add(new CollisionGridWrapper(FMTB.MODEL), null, true);
+								this.root.setVisible(false); return true;
+							}
+						}.setText("Add CollisionGrid", false));
 					}
 				};
 				this.elements.add(menu);
