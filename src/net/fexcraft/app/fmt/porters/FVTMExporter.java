@@ -41,6 +41,8 @@ public class FVTMExporter extends InternalPorter {
 		settings.add(new Setting(Type.STRING, "model_id", "null"));
 		settings.add(new Setting(Type.STRING, "model_type", "part"));
 		settings.add(new Setting(Type.STRING, "model_name", "default"));
+		settings.add(new Setting(Type.BOOLEAN, "per_group_init", false));
+		settings.add(new Setting(Type.INTEGER, "max_pg_init_count", 250));
 	}
 	
 	public FVTMExporter(){}
@@ -53,6 +55,7 @@ public class FVTMExporter extends InternalPorter {
 	/** The in-string "TODO" markers are for those who implement the model into the game. */
 	@Override
 	public String exportModel(GroupCompound compound, File file, Map<String, Setting> settings){
+		ArrayList<String> addedgroups = new ArrayList<>();
 		extended = settings.get("extended_form").getBooleanValue();
 		onlyvisible = settings.get("export_only_visible").getBooleanValue();
 		String modelclass, modelkind, packid = settings.get("pack_id").getStringValue();
@@ -81,8 +84,9 @@ public class FVTMExporter extends InternalPorter {
 				modelclass = "InvalidExporterInput"; modelkind = "invalid-exporter-input"; break;
 			}
 		}
-		StringBuffer buffer = new StringBuffer(), shape; int a = 0;
+		StringBuffer buffer = new StringBuffer();
 		buffer.append("//FMT-Marker FVTM-1.1\n");
+		if(settings.get("per_group_init").getBooleanValue()) buffer.append("//Using PER-GROUP-INIT mode with limit '" + settings.get("max_pg_init_count").getValue() + "'!\n");
 		buffer.append("package net.fexcraft.mod.addon." + packid + ".models." + modelkind + ";\n\n");
 		buffer.append("import net.fexcraft.lib.mc.api.registry.fModel;\n" + 
 			"import net.fexcraft.lib.tmt.ModelRendererTurbo;\n" + 
@@ -106,121 +110,46 @@ public class FVTMExporter extends InternalPorter {
 		for(String cr : compound.creators){
 			buffer.append(tab2 + "this.addToCreators(\"" + cr + "\");\n");//TODO add "uuid" of logged in users if available;
 		} buffer.append(tab2 + "//\n");
-		for(TurboList list : compound.getCompound().values()){
-			if((onlyvisible && !list.visible) || list.isEmpty()) continue;
-			String name = list.id;
-			buffer.append(tab2 + (this.extended ? "" : "TurboList ") + name + " = new TurboList(\"" + name + "\");\n");
-			for(PolygonWrapper wrapper : list){
-				shape = new StringBuffer(); boolean extended = false;
-				shape.append("new ModelRendererTurbo(" + name + ", " + wrapper.textureX + ", " + wrapper.textureY + ", textureX, textureY)");
-				switch(wrapper.getType()){
-					case BOX:{
-						BoxWrapper box = (BoxWrapper)wrapper;
-						shape.append(format(".addBox(%s, %s, %s, %s, %s, %s)", null,
-							wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord,
-							box.size.xCoord, box.size.yCoord, box.size.zCoord));
-						break;
-					}
-					case SHAPEBOX:{
-						ShapeboxWrapper box = (ShapeboxWrapper)wrapper;
-						shape.append(format("\n" + tab3 + ".addShapeBox(%s, %s, %s, %s, %s, %s, 0, "
-							+ "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", null,
-							wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord, box.size.xCoord, box.size.yCoord, box.size.zCoord,
-							box.cor0.xCoord, box.cor0.yCoord, box.cor0.zCoord, box.cor1.xCoord, box.cor1.yCoord, box.cor1.zCoord,
-							box.cor2.xCoord, box.cor2.yCoord, box.cor2.zCoord, box.cor3.xCoord, box.cor3.yCoord, box.cor3.zCoord,
-							box.cor4.xCoord, box.cor4.yCoord, box.cor4.zCoord, box.cor5.xCoord, box.cor5.yCoord, box.cor5.zCoord,
-							box.cor6.xCoord, box.cor6.yCoord, box.cor6.zCoord, box.cor7.xCoord, box.cor7.yCoord, box.cor7.zCoord));
-						extended = true;
-						break;
-					}
-					case TEXRECT_A: case TEXRECT_B: {
-						TexrectWrapperB box = (TexrectWrapperB)wrapper;
-						shape.append(format("\n" + tab3 + ".addTexRect(%s, %s, %s, %s, %s, %s, 0, "
-							+ "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,", null,
-							wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord, box.size.xCoord, box.size.yCoord, box.size.zCoord,
-							box.cor0.xCoord, box.cor0.yCoord, box.cor0.zCoord, box.cor1.xCoord, box.cor1.yCoord, box.cor1.zCoord,
-							box.cor2.xCoord, box.cor2.yCoord, box.cor2.zCoord, box.cor3.xCoord, box.cor3.yCoord, box.cor3.zCoord,
-							box.cor4.xCoord, box.cor4.yCoord, box.cor4.zCoord, box.cor5.xCoord, box.cor5.yCoord, box.cor5.zCoord,
-							box.cor6.xCoord, box.cor6.yCoord, box.cor6.zCoord, box.cor7.xCoord, box.cor7.yCoord, box.cor7.zCoord));
-						String floats = "new float[][]{ "; float[][] flot = box.texcor;
-						for(int i = 0; i < flot.length; i++){
-							float[] fl = flot[i];
-							floats += "new float[]{ ";
-							for(int j = 0; j < fl.length; j++){
-								floats += fl[j] + "f" + (j == fl.length - 1 ? " " : ", ");
-							}
-							floats += "}" + (i == flot.length - 1 ? " " : ", ");
-						}
-						shape.append("\n" + tab3 + floats + "})");
-						extended = true;
-						break;
-					}
-					case CYLINDER:{
-						CylinderWrapper cyl = (CylinderWrapper)wrapper;
-						String topoff = cyl.topoff.xCoord != 0f || cyl.topoff.yCoord != 0f || cyl.topoff.zCoord != 0 ?
-							String.format("new net.fexcraft.lib.common.math.Vec3f(%s, %s, %s)", cyl.topoff.xCoord, cyl.topoff.yCoord, cyl.topoff.zCoord) : "null";
-						if(cyl.radius2 != 0f){
-							if(cyl.radial){
-								String str = ".setSidesVisible(" + cyl.bools[0] + ", " + cyl.bools[1] + ", " + cyl.bools[2] + ", " + cyl.bools[3] + ")";
-								shape.append(format(".newCylinderBuilder()\n" + tab3 + ".setPosition(%s, %s, %s).setRadius(%s, %s).setLength(%s).setSegments(%s, %s)" + 
-									".setScale(%s, %s).setDirection(%s)\n" + tab3 + ".setRadialTexture(%s, %s)" + str + ".setTopOffset(%s).build()", topoff, 
-									wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord,
-									cyl.radius, cyl.radius2, cyl.length, cyl.segments, cyl.seglimit,
-									cyl.base, cyl.top, cyl.direction, cyl.seg_width, cyl.seg_height));
-							}
-							else{
-								if(areAll(cyl.bools, false) && cyl.topangle == 0f){
-									shape.append(format(".addHollowCylinder(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", topoff, 
-										wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord,
-										cyl.radius, cyl.radius2, cyl.length, cyl.segments, cyl.seglimit, cyl.base, cyl.top, cyl.direction));
-								}
-								else{
-									String str = format(".addHollowCylinder(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,\n" + tab3 + "%s", topoff, 
-										wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord,
-										cyl.radius, cyl.radius2, cyl.length, cyl.segments, cyl.seglimit, cyl.base, cyl.top, cyl.direction);
-									shape.append(str + format(", %s", null, cyl.topangle) + format(", %s)", cyl.bools));
-								}
-							}
-						}
-						else{
-							shape.append(format(".addCylinder(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", topoff, 
-								wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord,
-								cyl.radius, cyl.length, cyl.segments, cyl.base, cyl.top, cyl.direction));
-						}
-						break;
-					}
-					case SPHERE:{}
-					case OBJ:{}
-					default:{
-						shape.append("/* An exporter for the polygon type " + wrapper.getType().name() + " was not made yet. */");
-						break;
+		if(settings.get("per_group_init").getBooleanValue()){
+			int count = settings.get("max_pg_init_count").getValue();
+			for(TurboList list : compound.getCompound().values()){
+				if(list.size() > count){
+					int subs = list.size() / count; if(list.size() % count > 0) subs++;
+					for(int i = 0; i < subs; i++){
+						buffer.append(tab2 + "initGroup_" + list.id + i + "();\n");
 					}
 				}
-				if(wrapper.pos.xCoord != 0f || wrapper.pos.yCoord != 0f || wrapper.pos.zCoord != 0f ||
-					wrapper.rot.xCoord != 0f || wrapper.rot.yCoord != 0f || wrapper.rot.zCoord != 0f){
-					shape.append("\n" + tab3 + format(".setRotationPoint(%s, %s, %s)", null, wrapper.pos.xCoord, wrapper.pos.yCoord, wrapper.pos.zCoord));
-					shape.append(format(".setRotationAngle(%s, %s, %s)", null, wrapper.rot.xCoord, wrapper.rot.yCoord, wrapper.rot.zCoord));
-					extended = true;
-				}
-				if(wrapper.mirror || wrapper.flip){
-					shape.append("\n" + tab3 + ".setMirrored(" + wrapper.mirror + ").setFlipped(" + wrapper.flip + ")");
-					extended = true;
-				}
-				if(this.extended && (compound.texture != null || !wrapper.visible)){
-					shape.append("\n" + tab3 + ".setTextured(" + (compound.texture != null) + ").setLines(" + !wrapper.visible + ")");
-					extended = true;
-				}
-				if(wrapper.name != null){ shape.append(".setName(\"" + wrapper.name + "\")"); }
-				if(extended) shape.append("\n" + tab2);
-				buffer.append(tab2 + name + ".add(" + shape.toString() + ");\n");
+				else buffer.append(tab2 + "initGroup_" + list.id + "();\n");
 			}
-			//if(++a == 1 && !this.extended) buffer.append(tab2 + name + ".addProgram(\"fvtm:example_program\");//TODO do not forget these exists!\n");
-			buffer.append(tab2 + "this.groups.add(" + name + ");\n");
-			if(a < compound.getCompound().size() - 1) buffer.append(tab2 + "//\n");
+			buffer.append(tab + "}\n\n");
+			//
+			for(TurboList list : compound.getCompound().values()){
+				if(list.size() > count){
+					int subs = list.size() / count; if(list.size() % count != 0) subs++;
+					for(int i = 0; i < subs; i++){
+						buffer.append(tab + "private final void initGroup_" + list.id + i + "(){\n");
+						int j = i * count, k = (i + 1) * count;
+						List<PolygonWrapper> sub = list.subList(j, k >= list.size() ? list.size() - 1 : k);
+						insertList(compound, sub, list.id, buffer, addedgroups, false);
+						buffer.append(tab + "}\n\n");
+					}
+				}
+				else{
+					buffer.append(tab + "private final void initGroup_" + list.id + "(){\n");
+					insertList(compound, list, null, buffer, addedgroups, false);
+					buffer.append(tab + "}\n\n");
+				}
+			}
+			//
+			buffer.append("}\n");
 		}
-		//
+		else{
+			for(TurboList list : compound.getCompound().values()){
+				insertList(compound, list, null, buffer, addedgroups, true);
+			}
+			buffer.append(tab + "}\n\n}\n");
+		}
 		//buffer.append(tab2 + "fixRotations();\n");
-		buffer.append(tab + "}\n\n}\n");
 		//
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
@@ -232,6 +161,128 @@ public class FVTMExporter extends InternalPorter {
 		}
 		return "Success!";
 	}
+	
+	private void insertList(GroupCompound compound, List<PolygonWrapper> list, String id, StringBuffer buffer, ArrayList<String> groups, boolean append){
+		String name = id; StringBuffer shape = new StringBuffer();
+		if(list instanceof TurboList){
+			TurboList turbo = (TurboList)list; name = turbo.id;
+			if((onlyvisible && !turbo.visible) || list.isEmpty()) return;
+		}
+		boolean contains = groups.contains(name); if(!contains) groups.add(name);
+		if(contains){
+			buffer.append(tab2 + "TurboList " + name + " = groups.get(\"" + name + "\");\n");
+		}
+		else{
+			buffer.append(tab2 + (this.extended ? "" : "TurboList ") + name + " = new TurboList(\"" + name + "\");\n");
+		}
+		for(PolygonWrapper wrapper : list){
+			shape = new StringBuffer(); boolean extended = false;
+			shape.append("new ModelRendererTurbo(" + name + ", " + wrapper.textureX + ", " + wrapper.textureY + ", textureX, textureY)");
+			switch(wrapper.getType()){
+				case BOX:{
+					BoxWrapper box = (BoxWrapper)wrapper;
+					shape.append(format(".addBox(%s, %s, %s, %s, %s, %s)", null,
+						wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord,
+						box.size.xCoord, box.size.yCoord, box.size.zCoord));
+					break;
+				}
+				case SHAPEBOX:{
+					ShapeboxWrapper box = (ShapeboxWrapper)wrapper;
+					shape.append(format("\n" + tab3 + ".addShapeBox(%s, %s, %s, %s, %s, %s, 0, "
+						+ "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", null,
+						wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord, box.size.xCoord, box.size.yCoord, box.size.zCoord,
+						box.cor0.xCoord, box.cor0.yCoord, box.cor0.zCoord, box.cor1.xCoord, box.cor1.yCoord, box.cor1.zCoord,
+						box.cor2.xCoord, box.cor2.yCoord, box.cor2.zCoord, box.cor3.xCoord, box.cor3.yCoord, box.cor3.zCoord,
+						box.cor4.xCoord, box.cor4.yCoord, box.cor4.zCoord, box.cor5.xCoord, box.cor5.yCoord, box.cor5.zCoord,
+						box.cor6.xCoord, box.cor6.yCoord, box.cor6.zCoord, box.cor7.xCoord, box.cor7.yCoord, box.cor7.zCoord));
+					extended = true;
+					break;
+				}
+				case TEXRECT_A: case TEXRECT_B: {
+					TexrectWrapperB box = (TexrectWrapperB)wrapper;
+					shape.append(format("\n" + tab3 + ".addTexRect(%s, %s, %s, %s, %s, %s, 0, "
+						+ "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,", null,
+						wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord, box.size.xCoord, box.size.yCoord, box.size.zCoord,
+						box.cor0.xCoord, box.cor0.yCoord, box.cor0.zCoord, box.cor1.xCoord, box.cor1.yCoord, box.cor1.zCoord,
+						box.cor2.xCoord, box.cor2.yCoord, box.cor2.zCoord, box.cor3.xCoord, box.cor3.yCoord, box.cor3.zCoord,
+						box.cor4.xCoord, box.cor4.yCoord, box.cor4.zCoord, box.cor5.xCoord, box.cor5.yCoord, box.cor5.zCoord,
+						box.cor6.xCoord, box.cor6.yCoord, box.cor6.zCoord, box.cor7.xCoord, box.cor7.yCoord, box.cor7.zCoord));
+					String floats = "new float[][]{ "; float[][] flot = box.texcor;
+					for(int i = 0; i < flot.length; i++){
+						float[] fl = flot[i];
+						floats += "new float[]{ ";
+						for(int j = 0; j < fl.length; j++){
+							floats += fl[j] + "f" + (j == fl.length - 1 ? " " : ", ");
+						}
+						floats += "}" + (i == flot.length - 1 ? " " : ", ");
+					}
+					shape.append("\n" + tab3 + floats + "})");
+					extended = true;
+					break;
+				}
+				case CYLINDER:{
+					CylinderWrapper cyl = (CylinderWrapper)wrapper;
+					String topoff = cyl.topoff.xCoord != 0f || cyl.topoff.yCoord != 0f || cyl.topoff.zCoord != 0 ?
+						String.format("new net.fexcraft.lib.common.math.Vec3f(%s, %s, %s)", cyl.topoff.xCoord, cyl.topoff.yCoord, cyl.topoff.zCoord) : "null";
+					if(cyl.radius2 != 0f){
+						if(cyl.radial){
+							String str = ".setSidesVisible(" + cyl.bools[0] + ", " + cyl.bools[1] + ", " + cyl.bools[2] + ", " + cyl.bools[3] + ")";
+							shape.append(format(".newCylinderBuilder()\n" + tab3 + ".setPosition(%s, %s, %s).setRadius(%s, %s).setLength(%s).setSegments(%s, %s)" + 
+								".setScale(%s, %s).setDirection(%s)\n" + tab3 + ".setRadialTexture(%s, %s)" + str + ".setTopOffset(%s).build()", topoff, 
+								wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord,
+								cyl.radius, cyl.radius2, cyl.length, cyl.segments, cyl.seglimit,
+								cyl.base, cyl.top, cyl.direction, cyl.seg_width, cyl.seg_height));
+						}
+						else{
+							if(areAll(cyl.bools, false) && cyl.topangle == 0f){
+								shape.append(format(".addHollowCylinder(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", topoff, 
+									wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord,
+									cyl.radius, cyl.radius2, cyl.length, cyl.segments, cyl.seglimit, cyl.base, cyl.top, cyl.direction));
+							}
+							else{
+								String str = format(".addHollowCylinder(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,\n" + tab3 + "%s", topoff, 
+									wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord,
+									cyl.radius, cyl.radius2, cyl.length, cyl.segments, cyl.seglimit, cyl.base, cyl.top, cyl.direction);
+								shape.append(str + format(", %s", null, cyl.topangle) + format(", %s)", cyl.bools));
+							}
+						}
+					}
+					else{
+						shape.append(format(".addCylinder(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", topoff, 
+							wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord,
+							cyl.radius, cyl.length, cyl.segments, cyl.base, cyl.top, cyl.direction));
+					}
+					break;
+				}
+				case SPHERE:{}
+				case OBJ:{}
+				default:{
+					shape.append("/* An exporter for the polygon type " + wrapper.getType().name() + " was not made yet. */");
+					break;
+				}
+			}
+			if(wrapper.pos.xCoord != 0f || wrapper.pos.yCoord != 0f || wrapper.pos.zCoord != 0f ||
+				wrapper.rot.xCoord != 0f || wrapper.rot.yCoord != 0f || wrapper.rot.zCoord != 0f){
+				shape.append("\n" + tab3 + format(".setRotationPoint(%s, %s, %s)", null, wrapper.pos.xCoord, wrapper.pos.yCoord, wrapper.pos.zCoord));
+				shape.append(format(".setRotationAngle(%s, %s, %s)", null, wrapper.rot.xCoord, wrapper.rot.yCoord, wrapper.rot.zCoord));
+				extended = true;
+			}
+			if(wrapper.mirror || wrapper.flip){
+				shape.append("\n" + tab3 + ".setMirrored(" + wrapper.mirror + ").setFlipped(" + wrapper.flip + ")");
+				extended = true;
+			}
+			if(this.extended && (compound.texture != null || !wrapper.visible)){
+				shape.append("\n" + tab3 + ".setTextured(" + (compound.texture != null) + ").setLines(" + !wrapper.visible + ")");
+				extended = true;
+			}
+			if(wrapper.name != null){ shape.append(".setName(\"" + wrapper.name + "\")"); }
+			if(extended) shape.append("\n" + tab2);
+			buffer.append(tab2 + name + ".add(" + shape.toString() + ");\n");
+		}
+		if(!contains) buffer.append(tab2 + "this.groups.add(" + name + ");\n");
+		if(append) buffer.append(tab2 + "//\n");
+	}
+
 	private String format(String string, String add, double r0, double r1, double r2){
 		return format(string, add, new float[]{ (float)r0, (float)r1, (float)r2});
 	}

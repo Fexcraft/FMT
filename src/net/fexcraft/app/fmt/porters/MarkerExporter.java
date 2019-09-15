@@ -43,7 +43,7 @@ public class MarkerExporter extends InternalPorter {
 
 	@Override
 	public String exportModel(GroupCompound compound, File file, Map<String, Setting> settings){
-		if(!settings.get("textured").getBooleanValue()){
+		if(!settings.get("collbox").getBooleanValue()){
 			StringBuffer buffer = new StringBuffer();
 			buffer.append("# FMT Marker List // FMT version: " + FMTB.version + "\n");
 			buffer.append("# Model: " + (compound.name == null ? "unnamed" : compound.name.toLowerCase()) + "\n\n");
@@ -75,7 +75,7 @@ public class MarkerExporter extends InternalPorter {
 					from.add(wrapper.pos.xCoord); from.add(wrapper.pos.yCoord); from.add(wrapper.pos.zCoord);
 					JsonArray size = new JsonArray(); JsonObject obj = new JsonObject();
 					size.add(coll.size.xCoord); size.add(coll.size.xCoord); size.add(coll.size.zCoord);
-					obj.addProperty("unit", wrapper.rot.xCoord); array.add(obj);
+					obj.addProperty("unit", wrapper.rot.xCoord); obj.add("from", from); obj.add("size", size); array.add(obj);
 				}
 			}));
 			JsonObject obj = new JsonObject();
