@@ -85,14 +85,14 @@ public class FVTMExporter extends InternalPorter {
 			}
 		}
 		StringBuffer buffer = new StringBuffer();
-		buffer.append("//FMT-Marker FVTM-1.1\n");
+		buffer.append("//FMT-Marker FVTM-1.3\n");
 		if(settings.get("per_group_init").getBooleanValue()) buffer.append("//Using PER-GROUP-INIT mode with limit '" + settings.get("max_pg_init_count").getValue() + "'!\n");
 		buffer.append("package net.fexcraft.mod.addon." + packid + ".models." + modelkind + ";\n\n");
 		buffer.append("import net.fexcraft.lib.mc.api.registry.fModel;\n" + 
 			"import net.fexcraft.lib.tmt.ModelRendererTurbo;\n" + 
 			"import net.fexcraft.mod.fvtm.model.TurboList;\n" + 
 			"import net.fexcraft.mod.fvtm.model." + modelclass + ";\n\n");
-		buffer.append("/** This file was exported via the FVTM Exporter V1.2 of<br>\n");
+		buffer.append("/** This file was exported via the FVTM Exporter V1.3 of<br>\n");
 		buffer.append(" *  FMT (Fex's Modelling Toolbox) v." + FMTB.version + " &copy; " + Year.now().getValue() + " - Fexcraft.net<br>\n");
 		buffer.append(" *  All rights reserved. For this Model's License contact the Author/Creator.\n */\n");
 		buffer.append("@fModel(registryname = \"" + packid + ":models/" + modelkind + "/"+ (model_id == null ? modelname : model_id) + "\")\n");
@@ -111,6 +111,7 @@ public class FVTMExporter extends InternalPorter {
 			buffer.append(tab2 + "this.addToCreators(\"" + cr + "\");\n");//TODO add "uuid" of logged in users if available;
 		} buffer.append(tab2 + "//\n");
 		if(settings.get("per_group_init").getBooleanValue()){
+			//TODO texture x/y;
 			int count = settings.get("max_pg_init_count").getValue();
 			for(TurboList list : compound.getCompound().values()){
 				if(list.size() > count){
