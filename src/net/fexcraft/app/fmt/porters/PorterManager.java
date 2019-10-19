@@ -18,6 +18,7 @@ import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.UserInterface;
@@ -70,6 +71,7 @@ public class PorterManager {
 		porters.add(new PNGExporter());
 		porters.add(new OBJPrototypeExporter());
 		porters.add(new MarkerExporter());
+		porters.add(new TiMExporter());
 	}
 
 	private static ScriptEngine newEngine(){
