@@ -39,7 +39,7 @@ public class Icon extends Element {
 	}
 	
 	@Override
-	public void hovered(int mx, int my){
+	public void hovered(float mx, float my){
 		super.hovered(mx, my); if(this.hovered){ for(Element elm : elements) elm.setVisible(true); }
 	}
 

@@ -65,7 +65,7 @@ public class HelperTree extends RightTree {
 	}
 
 	@Override
-	public void hovered(int mx, int my){
+	public void hovered(float mx, float my){
 		super.hovered(mx, my);
 	}
 

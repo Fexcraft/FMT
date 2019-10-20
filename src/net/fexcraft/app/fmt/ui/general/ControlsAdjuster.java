@@ -10,8 +10,8 @@ import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.utils.KeyCompound;
-import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.KeyCompound.KeyFunction;
+import net.fexcraft.app.fmt.utils.TextureManager;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -80,7 +80,7 @@ public class ControlsAdjuster extends Element implements Dialog {
 	}
 	
 	@Override
-	public void hovered(int mx, int my){
+	public void hovered(float mx, float my){
 		super.hovered(mx, my);
 		for(int i = 0; i < 8; i++){ int j = i * 32;
 			if(mx >= (x + 346) && mx < (x + 346 + 150) && my >= (y + 46 + j) && my < (y + 46 + j + 28)){ hovered = i; return; }

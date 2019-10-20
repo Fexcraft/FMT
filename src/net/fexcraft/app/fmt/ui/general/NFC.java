@@ -21,9 +21,9 @@ import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.utils.Backups;
 import net.fexcraft.app.fmt.utils.SaveLoad;
-import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.utils.Settings.Type;
+import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Time;
 import net.fexcraft.lib.common.utils.Print;
@@ -88,7 +88,7 @@ public class NFC extends Element implements Dialog {
 				return true;
 			}
 			@Override
-			public void hovered(int mx, int my){
+			public void hovered(float mx, float my){
 				super.hovered(mx, my); if(hovered) cfn.onReturn();
 			}
 		});

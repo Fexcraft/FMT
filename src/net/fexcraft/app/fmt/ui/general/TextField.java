@@ -70,7 +70,7 @@ public class TextField extends Element {
 	}
 	
 	@Override
-	public void hovered(int mouseX, int mouseY){
+	public void hovered(float mouseX, float mouseY){
 		this.hovered = mouseX >= x && mouseX < x + width && mouseY >= y && mouseY < y + height;
 	}
 

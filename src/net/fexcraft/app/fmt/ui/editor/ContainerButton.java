@@ -68,7 +68,7 @@ public abstract class ContainerButton extends Button {
 	}
 	
 	@Override
-	public void hovered(int mx, int my){
+	public void hovered(float mx, float my){
 		this.hovered = mx >= (x + xoff) && mx < (x + xoff) + width && my >= (y + yoff) && my < (y + yoff) + height;
 	}
 
