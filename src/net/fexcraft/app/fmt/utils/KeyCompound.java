@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import org.lwjgl.input.Keyboard;
+
 import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.FMTB;
@@ -63,9 +64,9 @@ public class KeyCompound {
 			@Override public boolean process(){ Settings.toggleAnimations(); return true; }
 		});
 		//
-		keys.add(new KeyFunction("toggle_gametest", Keyboard.KEY_F10, true){
+		/*keys.add(new KeyFunction("toggle_gametest", Keyboard.KEY_F10, true){
 			@Override public boolean process(){ FMTB.GAMETEST = !FMTB.GAMETEST; return true; }
-		});
+		});*/
 		//
 		/*keys.add(new KeyFunction("toggle_fullscreen", Keyboard.KEY_F11, true){
 			@Override public boolean process(){

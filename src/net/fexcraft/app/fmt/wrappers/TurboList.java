@@ -2,8 +2,8 @@ package net.fexcraft.app.fmt.wrappers;
 
 import java.util.ArrayList;
 
-import net.fexcraft.app.fmt.utils.Animator.Animation;
 import net.fexcraft.app.fmt.utils.Settings;
+import net.fexcraft.app.fmt.utils.Animator.Animation;
 import net.fexcraft.lib.common.math.RGB;
 
 public class TurboList extends ArrayList<PolygonWrapper> {

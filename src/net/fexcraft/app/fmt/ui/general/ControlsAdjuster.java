@@ -5,12 +5,13 @@ package net.fexcraft.app.fmt.ui.general;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
+
 import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.utils.KeyCompound;
-import net.fexcraft.app.fmt.utils.KeyCompound.KeyFunction;
 import net.fexcraft.app.fmt.utils.TextureManager;
+import net.fexcraft.app.fmt.utils.KeyCompound.KeyFunction;
 
 /**
  * @author Ferdinand Calo' (FEX___96)

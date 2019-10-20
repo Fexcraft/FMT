@@ -4,14 +4,15 @@
 package net.fexcraft.app.fmt.ui.general;
 
 import java.util.ArrayList;
+
 import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.ui.general.NFC.AfterTask;
 import net.fexcraft.app.fmt.utils.Settings;
+import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.lib.common.math.RGB;
-import net.fexcraft.app.fmt.utils.TextureManager;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
