@@ -1,15 +1,15 @@
-package net.fexcraft.app.fmt.ui.editor;
+package net.fexcraft.app.fmt.ui_old.editor;
 
 import java.io.File;
 import java.util.ArrayList;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.UserInterface;
-import net.fexcraft.app.fmt.ui.general.Button;
-import net.fexcraft.app.fmt.ui.general.DialogBox;
-import net.fexcraft.app.fmt.ui.general.TextField;
-import net.fexcraft.app.fmt.ui.general.NFC.AfterTask;
-import net.fexcraft.app.fmt.ui.general.NFC.ChooserMode;
+import net.fexcraft.app.fmt.ui_old.UserInterface;
+import net.fexcraft.app.fmt.ui_old.general.Button;
+import net.fexcraft.app.fmt.ui_old.general.DialogBox;
+import net.fexcraft.app.fmt.ui_old.general.TextField;
+import net.fexcraft.app.fmt.ui_old.general.NFC.AfterTask;
+import net.fexcraft.app.fmt.ui_old.general.NFC.ChooserMode;
 import net.fexcraft.app.fmt.utils.Animator;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureUpdate;

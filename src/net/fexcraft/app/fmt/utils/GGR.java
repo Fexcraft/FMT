@@ -13,11 +13,11 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTGLProcess;
-import net.fexcraft.app.fmt.ui.UserInterface;
-import net.fexcraft.app.fmt.ui.editor.TextureEditor;
-import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
-import net.fexcraft.app.fmt.ui.general.TextField;
-import net.fexcraft.app.fmt.ui.tree.RightTree;
+import net.fexcraft.app.fmt.ui_old.UserInterface;
+import net.fexcraft.app.fmt.ui_old.editor.TextureEditor;
+import net.fexcraft.app.fmt.ui_old.general.ControlsAdjuster;
+import net.fexcraft.app.fmt.ui_old.general.TextField;
+import net.fexcraft.app.fmt.ui_old.tree.RightTree;
 import net.fexcraft.app.fmt.utils.KeyCompound.KeyFunction;
 import net.fexcraft.lib.common.math.Vec3f;
 

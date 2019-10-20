@@ -1,7 +1,7 @@
-package net.fexcraft.app.fmt.ui.general;
+package net.fexcraft.app.fmt.ui_old.general;
 
-import net.fexcraft.app.fmt.ui.Element;
-import net.fexcraft.app.fmt.ui.FontRenderer;
+import net.fexcraft.app.fmt.ui_old.Element;
+import net.fexcraft.app.fmt.ui_old.FontRenderer;
 import net.fexcraft.lib.common.math.RGB;
 
 /**

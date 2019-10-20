@@ -1,14 +1,14 @@
-package net.fexcraft.app.fmt.ui.editor;
+package net.fexcraft.app.fmt.ui_old.editor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.Element;
-import net.fexcraft.app.fmt.ui.UserInterface;
-import net.fexcraft.app.fmt.ui.general.Button;
-import net.fexcraft.app.fmt.ui.general.Icon;
-import net.fexcraft.app.fmt.ui.general.TextField;
+import net.fexcraft.app.fmt.ui_old.Element;
+import net.fexcraft.app.fmt.ui_old.UserInterface;
+import net.fexcraft.app.fmt.ui_old.general.Button;
+import net.fexcraft.app.fmt.ui_old.general.Icon;
+import net.fexcraft.app.fmt.ui_old.general.TextField;
 import net.fexcraft.lib.common.math.RGB;
 
 public abstract class Editor extends Element {

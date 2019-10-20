@@ -1,7 +1,7 @@
-package net.fexcraft.app.fmt.ui.editor;
+package net.fexcraft.app.fmt.ui_old.editor;
 
-import net.fexcraft.app.fmt.ui.Element;
-import net.fexcraft.app.fmt.ui.general.Button;
+import net.fexcraft.app.fmt.ui_old.Element;
+import net.fexcraft.app.fmt.ui_old.general.Button;
 import net.fexcraft.lib.common.math.RGB;
 
 public abstract class ContainerButton extends Button {

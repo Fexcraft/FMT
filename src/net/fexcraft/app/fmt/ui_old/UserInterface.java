@@ -1,4 +1,4 @@
-package net.fexcraft.app.fmt.ui;
+package net.fexcraft.app.fmt.ui_old;
 
 import java.util.ArrayList;
 import org.lwjgl.input.Mouse;
@@ -6,13 +6,13 @@ import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.FMTGLProcess;
-import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
-import net.fexcraft.app.fmt.ui.general.DialogBox;
-import net.fexcraft.app.fmt.ui.general.HoverMenu;
-import net.fexcraft.app.fmt.ui.general.NFC;
-import net.fexcraft.app.fmt.ui.general.SettingsBox;
-import net.fexcraft.app.fmt.ui.general.TextField;
-import net.fexcraft.app.fmt.ui.general.Toolbar;
+import net.fexcraft.app.fmt.ui_old.general.ControlsAdjuster;
+import net.fexcraft.app.fmt.ui_old.general.DialogBox;
+import net.fexcraft.app.fmt.ui_old.general.HoverMenu;
+import net.fexcraft.app.fmt.ui_old.general.NFC;
+import net.fexcraft.app.fmt.ui_old.general.SettingsBox;
+import net.fexcraft.app.fmt.ui_old.general.TextField;
+import net.fexcraft.app.fmt.ui_old.general.Toolbar;
 import net.fexcraft.app.fmt.utils.RayCoastAway;
 import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.app.fmt.utils.Settings;

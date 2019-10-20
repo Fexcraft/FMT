@@ -2,7 +2,7 @@ package net.fexcraft.app.fmt;
 
 import org.lwjgl.opengl.DisplayMode;
 
-import net.fexcraft.app.fmt.ui.UserInterface;
+import net.fexcraft.app.fmt.ui_old.UserInterface;
 
 public interface FMTGLProcess {
 

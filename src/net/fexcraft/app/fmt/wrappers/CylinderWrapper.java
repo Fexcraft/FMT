@@ -3,7 +3,7 @@ package net.fexcraft.app.fmt.wrappers;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import net.fexcraft.app.fmt.ui.editor.Editor;
+import net.fexcraft.app.fmt.ui_old.editor.Editor;
 import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 

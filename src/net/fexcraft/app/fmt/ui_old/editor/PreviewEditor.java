@@ -1,9 +1,9 @@
-package net.fexcraft.app.fmt.ui.editor;
+package net.fexcraft.app.fmt.ui_old.editor;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.general.Button;
-import net.fexcraft.app.fmt.ui.general.TextField;
-import net.fexcraft.app.fmt.ui.tree.HelperTree;
+import net.fexcraft.app.fmt.ui_old.general.Button;
+import net.fexcraft.app.fmt.ui_old.general.TextField;
+import net.fexcraft.app.fmt.ui_old.tree.HelperTree;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
