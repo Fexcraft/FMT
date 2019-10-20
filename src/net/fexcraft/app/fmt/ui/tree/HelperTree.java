@@ -1,4 +1,4 @@
-package net.fexcraft.app.fmt.ui_old.tree;
+package net.fexcraft.app.fmt.ui.tree;
 
 import java.util.HashMap;
 
@@ -7,10 +7,10 @@ import org.lwjgl.opengl.GL11;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
-import net.fexcraft.app.fmt.ui_old.FontRenderer;
-import net.fexcraft.app.fmt.ui_old.UserInterface;
-import net.fexcraft.app.fmt.ui_old.editor.Editor;
-import net.fexcraft.app.fmt.ui_old.general.TextField;
+import net.fexcraft.app.fmt.ui.FontRenderer;
+import net.fexcraft.app.fmt.ui.UserInterface;
+import net.fexcraft.app.fmt.ui.editor.Editor;
+import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.utils.HelperCollector;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;

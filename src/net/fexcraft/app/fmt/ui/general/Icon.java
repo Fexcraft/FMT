@@ -1,6 +1,6 @@
-package net.fexcraft.app.fmt.ui_old.general;
+package net.fexcraft.app.fmt.ui.general;
 
-import net.fexcraft.app.fmt.ui_old.Element;
+import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.lib.common.math.RGB;
 
 /**

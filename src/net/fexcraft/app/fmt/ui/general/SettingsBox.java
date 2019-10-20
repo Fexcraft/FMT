@@ -1,14 +1,14 @@
 /**
  * 
  */
-package net.fexcraft.app.fmt.ui_old.general;
+package net.fexcraft.app.fmt.ui.general;
 
 import java.util.ArrayList;
 
-import net.fexcraft.app.fmt.ui_old.Dialog;
-import net.fexcraft.app.fmt.ui_old.Element;
-import net.fexcraft.app.fmt.ui_old.FontRenderer;
-import net.fexcraft.app.fmt.ui_old.general.NFC.AfterTask;
+import net.fexcraft.app.fmt.ui.Dialog;
+import net.fexcraft.app.fmt.ui.Element;
+import net.fexcraft.app.fmt.ui.FontRenderer;
+import net.fexcraft.app.fmt.ui.general.NFC.AfterTask;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.Settings.Setting;

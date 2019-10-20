@@ -5,16 +5,20 @@ import java.util.ArrayList;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
+import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.FMTGLProcess;
-import net.fexcraft.app.fmt.ui_old.general.ControlsAdjuster;
-import net.fexcraft.app.fmt.ui_old.general.DialogBox;
-import net.fexcraft.app.fmt.ui_old.general.HoverMenu;
-import net.fexcraft.app.fmt.ui_old.general.NFC;
-import net.fexcraft.app.fmt.ui_old.general.SettingsBox;
-import net.fexcraft.app.fmt.ui_old.general.TextField;
-import net.fexcraft.app.fmt.ui_old.general.Toolbar;
+import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
+import net.fexcraft.app.fmt.ui.general.DialogBox;
+import net.fexcraft.app.fmt.ui.general.HoverMenu;
+import net.fexcraft.app.fmt.ui.general.NFC;
+import net.fexcraft.app.fmt.ui.general.SettingsBox;
+import net.fexcraft.app.fmt.ui.general.TextField;
+import net.fexcraft.app.fmt.ui.general.Toolbar;
 import net.fexcraft.app.fmt.utils.RayCoastAway;
+import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.app.fmt.utils.Settings;
+import net.fexcraft.lib.common.Static;
+import net.fexcraft.lib.common.math.Time;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -22,7 +26,7 @@ import net.fexcraft.app.fmt.utils.Settings;
  */
 public class UserInterface {
 
-	public static float scale_x, scale_y;
+	public static float scale_x, scale_y;//, scale;
 	public static Element SELECTED = null;
 	public static Toolbar TOOLBAR;
 	public static DialogBox DIALOGBOX;
@@ -32,12 +36,9 @@ public class UserInterface {
 	//
 	private ArrayList<Element> elements = new ArrayList<>();
 	private FMTGLProcess root;
-	private float[] clearcolor;
-	private int width, height;
 
 	public UserInterface(FMTGLProcess main){
-		this.root = main; root.setupUI(this); this.rescale();
-		this.clearcolor = Settings.getBackGroundColor();
+		this.root = main; /*root.setupUI(this);*/ rescale();
 	}
 	
 	public void rescale(){
@@ -47,10 +48,15 @@ public class UserInterface {
         while(facts < uis && scale_x / (facts + 1) >= 320 && scale_y / (facts + 1) >= 240) facts++;
         scale_x = scale_x / facts; scale_y = scale_y / facts;
         scale_x = (float)Math.ceil(scale_x); scale_y = (float)Math.ceil(scale_y);
+        //scale = Math.min(scale_x, scale_y);
 		width = (int)scale_x; height = (int)scale_y;
 	}
+	
+	private int width, height;
+	private float[] clearcolor;
 
-	public void render(boolean screenshot){
+	public void render(boolean bool){
+		//width = root.getDisplayMode().getWidth(); height = root.getDisplayMode().getHeight();
 		{
 			GL11.glPushMatrix();
 	        GL11.glMatrixMode(GL11.GL_PROJECTION);
@@ -64,10 +70,11 @@ public class UserInterface {
 		//
 		GL11.glLoadIdentity();
 		GL11.glDepthFunc(GL11.GL_ALWAYS);
-		if(screenshot){
-			//tmelm.render(width, height); logintxt.render(width, height);
+		if(bool){
+			tmelm.render(width, height); logintxt.render(width, height);
 		}
 		else{
+			//for(OldElement elm : oldelements) elm.render(width, height);
 			for(Element elm : elements) elm.render(width, height);
 		}
 		GL11.glDepthFunc(GL11.GL_LESS);
@@ -78,13 +85,15 @@ public class UserInterface {
 	        GL11.glMatrixMode(GL11.GL_MODELVIEW);
 	        GL11.glPopMatrix();
 	        GL11.glDepthFunc(GL11.GL_LEQUAL);
+	        //GL11.glClearColor(0.5f, 0.5f, 0.5f, 0.2f);
+	    	if(clearcolor == null){ clearcolor = Settings.getBackGroundColor(); }
 	    	GL11.glClearColor(clearcolor[0], clearcolor[1], clearcolor[2], clearcolor[3]);
 	        GL11.glClearDepth(1.0);
 	        GL11.glPopMatrix();
 		}
 	}
 	
-	/*private Element tmelm = new TextField(null, "text", 4, 4, 500){
+	private Element tmelm = new TextField(null, "text", 4, 4, 500){
 		@Override
 		public void renderSelf(int rw, int rh){
 			this.y = rh - FMTB.get().getDisplayMode().getHeight() + 4;
@@ -122,7 +131,7 @@ public class UserInterface {
 			}
 			super.renderSelf(rw, rh);
 		}
-	};*/
+	};
 
 	public boolean isAnyHovered(){
 		boolean bool = false;

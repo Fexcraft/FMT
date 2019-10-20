@@ -21,10 +21,10 @@ import javax.script.ScriptException;
 
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui_old.UserInterface;
-import net.fexcraft.app.fmt.ui_old.general.DialogBox;
-import net.fexcraft.app.fmt.ui_old.general.NFC.AfterTask;
-import net.fexcraft.app.fmt.ui_old.general.NFC.ChooserMode;
+import net.fexcraft.app.fmt.ui.UserInterface;
+import net.fexcraft.app.fmt.ui.general.DialogBox;
+import net.fexcraft.app.fmt.ui.general.NFC.AfterTask;
+import net.fexcraft.app.fmt.ui.general.NFC.ChooserMode;
 import net.fexcraft.app.fmt.utils.SaveLoad;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;

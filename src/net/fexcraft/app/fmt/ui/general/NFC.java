@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.fexcraft.app.fmt.ui_old.general;
+package net.fexcraft.app.fmt.ui.general;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -15,10 +15,10 @@ import java.util.stream.Stream;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
-import net.fexcraft.app.fmt.ui_old.Dialog;
-import net.fexcraft.app.fmt.ui_old.Element;
-import net.fexcraft.app.fmt.ui_old.FontRenderer;
-import net.fexcraft.app.fmt.ui_old.UserInterface;
+import net.fexcraft.app.fmt.ui.Dialog;
+import net.fexcraft.app.fmt.ui.Element;
+import net.fexcraft.app.fmt.ui.FontRenderer;
+import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.utils.Backups;
 import net.fexcraft.app.fmt.utils.SaveLoad;
 import net.fexcraft.app.fmt.utils.TextureManager;

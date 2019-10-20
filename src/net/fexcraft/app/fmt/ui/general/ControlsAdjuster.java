@@ -1,14 +1,14 @@
 /**
  * 
  */
-package net.fexcraft.app.fmt.ui_old.general;
+package net.fexcraft.app.fmt.ui.general;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
-import net.fexcraft.app.fmt.ui_old.Dialog;
-import net.fexcraft.app.fmt.ui_old.Element;
-import net.fexcraft.app.fmt.ui_old.FontRenderer;
+import net.fexcraft.app.fmt.ui.Dialog;
+import net.fexcraft.app.fmt.ui.Element;
+import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.utils.KeyCompound;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.KeyCompound.KeyFunction;

@@ -1,10 +1,10 @@
-package net.fexcraft.app.fmt.ui_old.tree;
+package net.fexcraft.app.fmt.ui.tree;
 
 import java.util.ArrayList;
 import java.util.Optional;
 
-import net.fexcraft.app.fmt.ui_old.Element;
-import net.fexcraft.app.fmt.ui_old.UserInterface;
+import net.fexcraft.app.fmt.ui.Element;
+import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.lib.common.math.RGB;
 
 public class RightTree extends Element {

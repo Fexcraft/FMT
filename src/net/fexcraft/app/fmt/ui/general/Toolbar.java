@@ -1,16 +1,16 @@
-package net.fexcraft.app.fmt.ui_old.general;
+package net.fexcraft.app.fmt.ui.general;
 
 import java.awt.Desktop;
 import java.io.File;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager;
-import net.fexcraft.app.fmt.ui_old.Element;
-import net.fexcraft.app.fmt.ui_old.UserInterface;
-import net.fexcraft.app.fmt.ui_old.editor.Editor;
-import net.fexcraft.app.fmt.ui_old.general.NFC.AfterTask;
-import net.fexcraft.app.fmt.ui_old.general.NFC.ChooserMode;
-import net.fexcraft.app.fmt.ui_old.tree.RightTree;
+import net.fexcraft.app.fmt.ui.Element;
+import net.fexcraft.app.fmt.ui.UserInterface;
+import net.fexcraft.app.fmt.ui.editor.Editor;
+import net.fexcraft.app.fmt.ui.general.NFC.AfterTask;
+import net.fexcraft.app.fmt.ui.general.NFC.ChooserMode;
+import net.fexcraft.app.fmt.ui.tree.RightTree;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.HelperCollector;
 import net.fexcraft.app.fmt.utils.ImageHelper;

@@ -107,8 +107,8 @@ public class Element {
 		TextureManager.bindTexture(texture);
 		GL11.glBegin(GL11.GL_QUADS);
 		float tx = this.tx * tsx, ty = this.ty * tsy;
-		float x = (this.x + xoff) * UserInterface.XSCALE, y = (this.y + yoff) * UserInterface.YSCALE;
-		float w = this.width * UserInterface.XSCALE, h = height * UserInterface.YSCALE;
+		float x = (this.x + xoff) * 1f, y = (this.y + yoff) * 1f;
+		float w = this.width * 1f, h = height * 1f;
 		GL11.glTexCoord2f(tx, ty);
 			GL11.glVertex2f(x, y);
 		GL11.glTexCoord2f(tx + (tex_width * tsx), ty);
