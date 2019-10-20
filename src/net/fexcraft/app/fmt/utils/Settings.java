@@ -25,7 +25,7 @@ public class Settings {
 	static{ background_color.alpha = 0.2f; }
 	public static float[] light0_position = new float[]{ 0, 1, 0, 0 };
 	private static String language = "default";*/
-	private static Setting floor, lines, demo, cube, polygon_marker, polygon_count, lighting, cullface, animate, discordrpc, discordrpc_sm, discordrpc_rtonm;
+	private static Setting floor, lines, demo, cube, polygon_marker, polygon_count, lighting, cullface, animate, discordrpc, discordrpc_sm, discordrpc_rtonm, ui_scale;
 
 	public static boolean floor(){ return floor.getValue(); }
 
@@ -50,6 +50,8 @@ public class Settings {
 	public static boolean discordrpc_showmodel(){ return discordrpc_sm.getValue(); }
 	
 	public static boolean discordrpc_resettimeronnewmodel(){ return discordrpc_rtonm.getValue(); }
+
+	public static int ui_scale(){ return ui_scale.getValue(); }
 	
 	//
 
@@ -128,6 +130,7 @@ public class Settings {
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "discord_rpc-enabled", true));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "discord_rpc-show_model", true));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "discord_rpc-reset_timer_on_new_model", true));
+		DEFAULTS.add(new Setting(Type.INTEGER, "ui_scale", 1));
 	}
 
 	public static void load(){
@@ -160,6 +163,7 @@ public class Settings {
 		discordrpc = SETTINGS.get("discord_rpc-enabled");
 		discordrpc_sm = SETTINGS.get("discord_rpc-show_model");
 		discordrpc_rtonm = SETTINGS.get("discord_rpc-reset_timer_on_new_model");
+		ui_scale = SETTINGS.get("ui_scale");
 	}
 
 	public static void save(){

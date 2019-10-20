@@ -171,7 +171,7 @@ public class FMTB implements FMTGLProcess {
 			displaymode = new DisplayMode(Display.getWidth(), Display.getHeight());
 	        GLU.gluPerspective(45.0f, displaymode.getWidth() / displaymode.getHeight(), 0.1f, 4096f / 2);
 			GL11.glViewport(0, 0, displaymode.getWidth(), displaymode.getHeight());
-			this.initOpenGL();
+			this.initOpenGL(); UI.rescale();
 		}
         if(!Display.isVisible()) {
             try{ Thread.sleep(100); }
