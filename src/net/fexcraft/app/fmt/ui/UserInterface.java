@@ -41,10 +41,8 @@ public class UserInterface {
 	public UserInterface(FMTGLProcess main){
 		this.root = main; root.setupUI(this); rescale();
 		//
-		elms.add(new NewElement(null, "test0").setPosition(50, 50).setSize(200, 50).setColor(0xff32a852)
-			.setBorder(0xffeb4034, 0xfffcba03, 12, true, true, true, true));
-		elms.add(new NewElement(null, "test1").setPosition(50, 120).setSize(200, 50).setColor(0xff32a852)
-			.setBorder(0xffeb4034, 0xfffcba03, 3, true, true, true, true));
+		//elms.add(new NewElement(null, "test0").setPosition(50, 50).setSize(200, 50).setColor(0xff32a852).setBorder(0xffeb4034, 0xfffcba03, 12, true, true, true, true));
+		//elms.add(new NewElement(null, "test1").setPosition(50, 120).setSize(200, 50).setColor(0xff32a852) .setBorder(0xffeb4034, 0xfffcba03, 3, true, true, true, true));
 	}
 	
 	public void rescale(){

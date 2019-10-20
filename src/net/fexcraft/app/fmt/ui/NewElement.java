@@ -60,6 +60,19 @@ public class NewElement {
 		if(root == null){ x = xrel; y = yrel; } else { x = root.x + xrel; y = root.y + yrel; }
 		clearVertexes(); for(NewElement elm : elements) elm.repos(); return this;
 	}
+	
+	public void hovered(float mouseX, float mouseY){
+		if(vertexes == null){ this.hovered = mouseX >= x && mouseX < x + width && mouseY >= y && mouseY < y + height; }
+		else{
+			this.hovered = mouseX >= vertexes[0][0][0] && mouseX < vertexes[0][2][0]
+				&& mouseY >= vertexes[0][0][1] && mouseY < vertexes[0][2][1];
+			/*if(hovered){
+				Print.console("MV: " + mouseX + " " + mouseY);
+				Print.console("XV: " + vertexes[0][0][0] + " " + vertexes[0][2][0]);
+				Print.console("YV: " + vertexes[0][0][1] + " " + vertexes[0][2][1]);
+			}*/
+		}
+	}
 
 	public void render(int width, int height){
 		if(!Mouse.isGrabbed()) hovered(Mouse.getX() * UserInterface.scale, height - Mouse.getY() * UserInterface.scale);
@@ -76,19 +89,6 @@ public class NewElement {
 	/** To be overriden by extending classes. */
 	public void renderSelf(int rw, int rh){
 		this.renderSelfQuad();
-	}
-	
-	public void hovered(float mouseX, float mouseY){
-		if(vertexes == null){ this.hovered = mouseX >= x && mouseX < x + width && mouseY >= y && mouseY < y + height; }
-		else{
-			this.hovered = mouseX >= vertexes[0][0][0] && mouseX < vertexes[0][2][0]
-				&& mouseY >= vertexes[0][0][1] && mouseY < vertexes[0][2][1];
-			/*if(hovered){
-				Print.console("MV: " + mouseX + " " + mouseY);
-				Print.console("XV: " + vertexes[0][0][0] + " " + vertexes[0][2][0]);
-				Print.console("YV: " + vertexes[0][0][1] + " " + vertexes[0][2][1]);
-			}*/
-		}
 	}
 	
 	protected void renderSelfQuad(){
@@ -129,5 +129,58 @@ public class NewElement {
 	private void runfill(BufferedImage img, int xb, int xe, int yb, int ye, Integer fill){
 		for(int i = xb; i < xe; i++) for(int j = yb; j < ye; j++) img.setRGB(i, j, fill);
 	}
+	
+	protected void renderQuad(int x, int y, int width, int height, String texture){
+		TextureManager.bindTexture(texture);
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(0, 0); GL11.glVertex2f(x, y);
+		GL11.glTexCoord2f(1, 0); GL11.glVertex2f(x + width, y);
+		GL11.glTexCoord2f(1, 1); GL11.glVertex2f(x + width, y + height);
+		GL11.glTexCoord2f(0, 1); GL11.glVertex2f(x, y + height);
+        GL11.glEnd();
+	}
+	
+	protected void renderIcon(float x, float y, int sz, String texture){
+		TextureManager.bindTexture(texture);
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(0, 0); GL11.glVertex2f(x, y);
+		GL11.glTexCoord2f(1, 0); GL11.glVertex2f(x + sz, y);
+		GL11.glTexCoord2f(1, 1); GL11.glVertex2f(x + sz, y + sz);
+		GL11.glTexCoord2f(0, 1); GL11.glVertex2f(x, y + sz);
+        GL11.glEnd();
+	}
+
+	public boolean onButtonClick(int x, int y, boolean left, boolean hovered){
+		boolean bool = false;
+		for(NewElement elm : elements){
+			if(elm.visible && elm.enabled){
+				if(bool = elm.onButtonClick(x, y, left, elm.hovered)) break;
+			}
+		}
+		return bool ? true : hovered ? processButtonClick(x, y, left) : false;
+	}
+	
+	/** To be overridden. **/
+	protected boolean processButtonClick(int x, int y, boolean left){
+		return false;
+	}
+
+	public boolean anyHovered(){
+		if(hovered) return true; boolean bool = false;
+		for(NewElement elm : elements){ if(elm.anyHovered()){ bool = true; break; } } return bool;
+	}
+
+	public boolean onScrollWheel(int wheel){
+		boolean bool = false;
+		for(NewElement elm : elements){
+			if(elm.visible && elm.enabled){
+				if(bool = elm.onScrollWheel(wheel)) break;
+			}
+		}
+		return bool || (hovered && processScrollWheel(wheel));
+	}
+	
+	/** To be overridden. **/
+	protected boolean processScrollWheel(int wheel){ return false; }
 
 }
