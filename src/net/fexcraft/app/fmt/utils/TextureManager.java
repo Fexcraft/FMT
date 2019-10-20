@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.imageio.ImageIO;
 
 import org.lwjgl.BufferUtils;
@@ -86,6 +87,10 @@ public class TextureManager {
 			TEXTURES.put(name, new Texture(name, new FileInputStream(file), file));
 			System.out.println(String.format("Loaded Texture (%-32s) [%s]", name, file));
 		} catch(IOException e){ e.printStackTrace(); }
+	}
+
+	public static Texture createTexture(String name, BufferedImage img){
+		TEXTURES.put(name, new Texture(name, img)); return TEXTURES.get(name);
 	}
 
 	/** Usually expects in form of "temp/NAME" */
@@ -170,6 +175,8 @@ public class TextureManager {
 		
 		public boolean rebind(){ return rebind = true; }
 		
+		public boolean rebindQ(){ return rebind; }
+		
 		public boolean reload(){ rebind(); return reload = true; }
 		
 		public void bind(){
@@ -193,6 +200,10 @@ public class TextureManager {
 		@Override
 		public String toString(){
 			return String.format("Texture[ %s (%s, %s) ]", name, width, height);
+		}
+
+		public void setImage(BufferedImage img){
+			this.image = img;
 		}
 		
 	}

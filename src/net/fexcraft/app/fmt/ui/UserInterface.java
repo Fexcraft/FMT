@@ -35,10 +35,16 @@ public class UserInterface {
 	public static SettingsBox SETTINGSBOX;
 	//
 	private ArrayList<Element> elements = new ArrayList<>();
+	private ArrayList<NewElement> elms = new ArrayList<>();
 	private FMTGLProcess root;
 
 	public UserInterface(FMTGLProcess main){
 		this.root = main; root.setupUI(this); rescale();
+		//
+		elms.add(new NewElement(null, "test0").setPosition(50, 50).setSize(200, 50).setColor(0xff32a852)
+			.setBorder(0xffeb4034, 0xfffcba03, 12, true, true, true, true));
+		elms.add(new NewElement(null, "test1").setPosition(50, 120).setSize(200, 50).setColor(0xff32a852)
+			.setBorder(0xffeb4034, 0xfffcba03, 3, true, true, true, true));
 	}
 	
 	public void rescale(){
@@ -50,6 +56,7 @@ public class UserInterface {
         scale_x = (float)Math.ceil(scale_x); scale_y = (float)Math.ceil(scale_y);
         //scale = Math.min(scale_x, scale_y);
 		width = (int)scale_x; height = (int)scale_y; scale = 1f / facts;
+		for(NewElement elm : elms){ elm.repos(); }
 	}
 	
 	private int width, height;
@@ -74,8 +81,8 @@ public class UserInterface {
 			tmelm.render(width, height); logintxt.render(width, height);
 		}
 		else{
-			//for(OldElement elm : oldelements) elm.render(width, height);
 			for(Element elm : elements) elm.render(width, height);
+			for(NewElement elm : elms) elm.render(width, height);
 		}
 		GL11.glDepthFunc(GL11.GL_LESS);
 		//

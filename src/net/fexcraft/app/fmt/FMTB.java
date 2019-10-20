@@ -75,7 +75,7 @@ import net.fexcraft.lib.tmt.ModelRendererTurbo;
 public class FMTB implements FMTGLProcess {
 	
 	public static final String deftitle = "[FPS:%s] Fexcraft Modelling Toolbox - %s";
-	public static final String version = "1.2.9";
+	public static final String version = "1.3.0";
 	public static final String CLID = "587016218196574209";
 	//
 	private static String title = "Unnamed Model";
