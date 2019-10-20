@@ -1,6 +1,6 @@
 package net.fexcraft.app.fmt.ui.general;
 
-import net.fexcraft.app.fmt.ui.Element;
+import net.fexcraft.app.fmt.ui.NewElement;
 import net.fexcraft.lib.common.math.RGB;
 
 /**
@@ -8,39 +8,30 @@ import net.fexcraft.lib.common.math.RGB;
  * @author Ferdinand Calo' (FEX___96)
  *
  */
-public class Icon extends Element {
+public class Icon extends NewElement {
 	
-	protected RGB hovercolor = RGB.GREEN;
-	protected RGB discolor = RGB.RED;
-	
-	public Icon(Element root, String id, String texture, int width, int height, int x, int y){
-		super(root, id); this.setPosition(this.x = root.x + x, this.y = root.y + y);
-		this.setSize(width, height).setLevel(root.getLevel() + 1);
-		this.setTexPosSize(texture, 0, 0, 32, 32); this.setEnabled(true);
+	public Icon(NewElement root, String id, String texture, int size, int x, int y){
+		super(root, id); this.setPosition(x, y, root.z + 1).setSize(size, size).setTexture(texture).setEnabled(true);
 	}
 	
-	public Icon(Element elm, String id, String texture, int w, int h, int x, int y, RGB hover){
-		this(elm, id, texture, w, h, x, y); hovercolor = hover;
+	public Icon(NewElement elm, String id, String texture, int size, int x, int y, RGB hover){
+		this(elm, id, texture, size, x, y); hovercolor = hover;
 	}
 	
-	public Icon(Element elm, String id, String texture, int w, int h, int x, int y, RGB hover, RGB dis){
-		this(elm, id, texture, w, h, x, y, hover); discolor = dis;
-	}
-
-	public Icon setTexture(String string){
-		this.texture = string; return this;
+	public Icon(NewElement elm, String id, String texture, int size, int x, int y, RGB hover, RGB dis){
+		this(elm, id, texture, size, x, y, hover); discolor = dis;
 	}
 
 	@Override
 	public void renderSelf(int rw, int rh){
 		if(hovered) (enabled ? hovercolor : discolor).glColorApply();
-		this.renderSelfQuad();
+		this.renderIcon(x, y, width, texture);
 		if(hovered) RGB.glColorReset();
 	}
 	
 	@Override
 	public void hovered(float mx, float my){
-		super.hovered(mx, my); if(this.hovered){ for(Element elm : elements) elm.setVisible(true); }
+		super.hovered(mx, my); if(this.hovered){ for(NewElement elm : elements) elm.setVisible(true); }
 	}
 
 }

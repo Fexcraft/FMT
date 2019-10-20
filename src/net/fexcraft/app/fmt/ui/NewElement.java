@@ -12,29 +12,41 @@ import net.fexcraft.lib.common.math.RGB;
 
 public class NewElement {
 
-	private ArrayList<NewElement> elements = new ArrayList<>();
-	private final NewElement root;
-	private final String id;
+	protected ArrayList<NewElement> elements = new ArrayList<>();
+	protected final NewElement root;
+	protected final String id;
 	//
-	private float[][][] vertexes;
-	private boolean top, bot, left, right;
-	private Texture texture;
+	protected float[][][] vertexes;
+	protected boolean top, bot, left, right;
+	protected Texture texture;
 	//
-	private int width, height, x, xrel, y, yrel; 
-	private Integer fill, border, border_fill, border_width;
-	private RGB hovercolor = new RGB(218, 232, 104);
-	public boolean hovered, visible, enabled;
+	public int width, height, x, xrel, y, yrel, z, border_width; 
+	protected Integer fill, border, border_fill;
+	protected RGB hovercolor = new RGB(218, 232, 104), discolor = new RGB("#eb4034");
+	protected boolean hovered, visible = true, enabled;
 	
 	public NewElement(NewElement root, String id){
 		this.root = root; this.id = id;
 	}
 	
-	public NewElement setPosition(int x, int y){
-		xrel = x; yrel = y; this.repos(); return this;
+	public NewElement setPosition(int x, int y, Integer z){
+		xrel = x; yrel = y; if(z != null) this.z = z; this.repos(); return this;
 	}
 	
 	public NewElement setSize(int x, int y){
 		width = x; height = y; return this;
+	}
+	
+	public NewElement setTexture(String texture){
+		this.texture = TextureManager.getTexture(texture, true); return this;
+	}
+	
+	public NewElement setEnabled(boolean bool){
+		this.enabled = bool; return this;
+	}
+
+	public NewElement setVisible(boolean bool){
+		this.visible = bool; return this;
 	}
 	
 	public NewElement setBorder(int color, int color0, int width, boolean... bools){
@@ -76,12 +88,11 @@ public class NewElement {
 
 	public void render(int width, int height){
 		if(!Mouse.isGrabbed()) hovered(Mouse.getX() * UserInterface.scale, height - Mouse.getY() * UserInterface.scale);
-		this.renderSelfQuad();
 		//
 		if(this.visible){
-			//if(z != 0) GL11.glTranslatef(0, 0,  z);
+			if(z != 0) GL11.glTranslatef(0, 0,  z);
 			this.renderSelf(width, height);
-			//if(z != 0) GL11.glTranslatef(0, 0, -z);
+			if(z != 0) GL11.glTranslatef(0, 0, -z);
 		}
 		if(this.visible && !elements.isEmpty()) for(NewElement elm : elements) elm.render(width, height);
 	}
@@ -100,7 +111,7 @@ public class NewElement {
 			if(border != null) for(int i = 0; i < width; i++) for(int j = 0; j < height; j++) img.setRGB(i, j, border);
 			{
 				int xb = left ? border_width : 0, yb = top ? border_width : 0;
-				int xe = right ? width - border_width : 0, ye = bot ? height - border_width : 0;
+				int xe = right ? width - border_width : width, ye = bot ? height - border_width : height;
 				runfill(img, xb, xe, yb, ye, fill);
 			}
 			if(border_width > 2){
@@ -140,7 +151,27 @@ public class NewElement {
         GL11.glEnd();
 	}
 	
+	protected void renderQuad(int x, int y, int width, int height, Texture texture){
+		TextureManager.bindTexture(texture);
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(0, 0); GL11.glVertex2f(x, y);
+		GL11.glTexCoord2f(1, 0); GL11.glVertex2f(x + width, y);
+		GL11.glTexCoord2f(1, 1); GL11.glVertex2f(x + width, y + height);
+		GL11.glTexCoord2f(0, 1); GL11.glVertex2f(x, y + height);
+        GL11.glEnd();
+	}
+	
 	protected void renderIcon(float x, float y, int sz, String texture){
+		TextureManager.bindTexture(texture);
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(0, 0); GL11.glVertex2f(x, y);
+		GL11.glTexCoord2f(1, 0); GL11.glVertex2f(x + sz, y);
+		GL11.glTexCoord2f(1, 1); GL11.glVertex2f(x + sz, y + sz);
+		GL11.glTexCoord2f(0, 1); GL11.glVertex2f(x, y + sz);
+        GL11.glEnd();
+	}
+	
+	protected void renderIcon(float x, float y, int sz, Texture texture){
 		TextureManager.bindTexture(texture);
 		GL11.glBegin(GL11.GL_QUADS);
 		GL11.glTexCoord2f(0, 0); GL11.glVertex2f(x, y);

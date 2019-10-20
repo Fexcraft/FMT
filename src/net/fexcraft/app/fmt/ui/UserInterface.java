@@ -11,6 +11,7 @@ import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.ui.general.HoverMenu;
 import net.fexcraft.app.fmt.ui.general.NFC;
+import net.fexcraft.app.fmt.ui.general.NewToolbar;
 import net.fexcraft.app.fmt.ui.general.SettingsBox;
 import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.ui.general.Toolbar;
@@ -37,12 +38,16 @@ public class UserInterface {
 	private ArrayList<Element> elements = new ArrayList<>();
 	private ArrayList<NewElement> elms = new ArrayList<>();
 	private FMTGLProcess root;
+	//
+	public int width, height;
+	private float[] clearcolor;
 
 	public UserInterface(FMTGLProcess main){
 		this.root = main; root.setupUI(this); rescale();
 		//
 		//elms.add(new NewElement(null, "test0").setPosition(50, 50).setSize(200, 50).setColor(0xff32a852).setBorder(0xffeb4034, 0xfffcba03, 12, true, true, true, true));
 		//elms.add(new NewElement(null, "test1").setPosition(50, 120).setSize(200, 50).setColor(0xff32a852) .setBorder(0xffeb4034, 0xfffcba03, 3, true, true, true, true));
+		elms.add(new NewToolbar(this));
 	}
 	
 	public void rescale(){
@@ -56,9 +61,6 @@ public class UserInterface {
 		width = (int)scale_x; height = (int)scale_y; scale = 1f / facts;
 		for(NewElement elm : elms){ elm.repos(); }
 	}
-	
-	private int width, height;
-	private float[] clearcolor;
 
 	public void render(boolean bool){
 		//width = root.getDisplayMode().getWidth(); height = root.getDisplayMode().getHeight();

@@ -17,8 +17,8 @@ import net.fexcraft.app.fmt.utils.ImageHelper;
 import net.fexcraft.app.fmt.utils.SaveLoad;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.TextureManager;
-import net.fexcraft.app.fmt.utils.TextureUpdate;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
+import net.fexcraft.app.fmt.utils.TextureUpdate;
 import net.fexcraft.app.fmt.wrappers.BoxWrapper;
 import net.fexcraft.app.fmt.wrappers.CollisionGridWrapper;
 import net.fexcraft.app.fmt.wrappers.CylinderWrapper;
@@ -47,45 +47,9 @@ public class Toolbar extends Element {
 		TextureManager.loadTexture("icons/toolbar/save", null);
 		TextureManager.loadTexture("icons/toolbar/profile", null);
 		TextureManager.loadTexture("icons/toolbar/settings", null);
-		this.setPosition(0, 0).setLevel(-20).setTexPosSize("ui/background_dark", 0, 0, 32, 32).setSize(100, 30);
+		this.setPosition(0, 60).setLevel(-20).setTexPosSize("ui/background_dark", 0, 0, 32, 32).setSize(100, 30);
 		//
 		int btsz = 96, bthg = 28;
-		this.elements.add(new Icon(this, "info", "icons/toolbar/info", 32, 32, 0, 0){
-			@Override
-			protected boolean processButtonClick(int x, int y, boolean left){
-				DialogBox.notAvailableYet(); return true;
-			}
-		});
-		this.elements.add(new Icon(this, "new", "icons/toolbar/new", 32, 32, 0, 0){
-			@Override
-			protected boolean processButtonClick(int x, int y, boolean left){
-				SaveLoad.openNewModel(); return true;
-			}
-		});
-		this.elements.add(new Icon(this, "open", "icons/toolbar/open", 32, 32, 0, 0){
-			@Override
-			protected boolean processButtonClick(int x, int y, boolean left){
-				SaveLoad.openModel(); return true;
-			}
-		});
-		this.elements.add(new Icon(this, "save", "icons/toolbar/save", 32, 32, 0, 0){
-			@Override
-			protected boolean processButtonClick(int x, int y, boolean left){
-				SaveLoad.saveModel(false, false); return true;
-			}
-		});
-		this.elements.add(new Icon(this, "profile", "icons/toolbar/profile", 32, 32, 0, 0){
-			@Override
-			protected boolean processButtonClick(int x, int y, boolean left){
-				DialogBox.notAvailableYet(); return true;
-			}
-		});
-		this.elements.add(new Icon(this, "settings", "icons/toolbar/settings", 32, 32, 0, 0){
-			@Override
-			protected boolean processButtonClick(int x, int y, boolean left){
-				UserInterface.SETTINGSBOX.show(); return true;
-			}
-		});
 		this.elements.add(new Button(this, "file", btsz, bthg, 0, 0){
 			@Override
 			public void setupSubmenu(){
@@ -511,11 +475,12 @@ public class Toolbar extends Element {
 		this.reorderElements();
 	}
 	
+	@SuppressWarnings("unused")
 	private void reorderElements(){
-		int start = 4, high = 3;
+		int start = 4, high = 3 + 60;
 		for(Element elm : elements){
 			if(start + elm.width >= width - 4){ start = 4; high += 34; }
-			elm.setPosition(start, elm instanceof Icon ? high - 2 : high); start += elm.width + 2;
+			elm.setPosition(start, /*elm instanceof Icon*/ false ? high - 2 : high); start += elm.width + 2;
 		}
 		this.height = high + 31;
 	}

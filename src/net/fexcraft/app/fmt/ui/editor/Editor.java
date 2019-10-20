@@ -28,12 +28,12 @@ public abstract class Editor extends Element {
 				applyChange(FMTB.MODEL.multiply(wheel > 0 ? 2.0f : 0.5f)); return true;
 			}
 		}.setAsNumberfield(0, 1024, true).applyChange(FMTB.MODEL.rate)).setLevel(5));
-		this.elements.add((icon = new Icon(this, "multiplicator_reset", "", 26, 26, 258, 0){
+		/*this.elements.add((icon = new Icon(this, "multiplicator_reset", "", 26, 26, 258, 0){
 			@Override
 			protected boolean processButtonClick(int x, int y, boolean left){
 				((TextField)root.getElement("multiplicator")).applyChange(1); FMTB.MODEL.rate = 1f; return true;
 			}
-		}).setTexPosSize("icons/group_delete", 0, 0, 16, 16));
+		}).setTexPosSize("icons/group_delete", 0, 0, 16, 16));*/
 	}
 
 	protected abstract ContainerButton[] setupSubElements();
