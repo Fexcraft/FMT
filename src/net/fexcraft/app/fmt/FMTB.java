@@ -34,8 +34,19 @@ import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.editor.Editor;
+import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
+import net.fexcraft.app.fmt.ui.editor.ModelGroupEditor;
+import net.fexcraft.app.fmt.ui.editor.PreviewEditor;
+import net.fexcraft.app.fmt.ui.editor.TextureEditor;
+import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
+import net.fexcraft.app.fmt.ui.general.Crossbar;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
+import net.fexcraft.app.fmt.ui.general.NFC;
+import net.fexcraft.app.fmt.ui.general.SettingsBox;
 import net.fexcraft.app.fmt.ui.general.TextField;
+import net.fexcraft.app.fmt.ui.general.Toolbar;
+import net.fexcraft.app.fmt.ui.tree.HelperTree;
+import net.fexcraft.app.fmt.ui.tree.ModelTree;
 import net.fexcraft.app.fmt.utils.Backups;
 import net.fexcraft.app.fmt.utils.DiscordUtil;
 import net.fexcraft.app.fmt.utils.GGR;
@@ -313,7 +324,7 @@ public class FMTB implements FMTGLProcess {
 		TextureManager.loadTexture("icons/editors/minimized", null);
 		TextureManager.loadTexture("icons/editors/expanded", null);
 		//
-		/*ui.getElements().add(UserInterface.DIALOGBOX = new DialogBox());
+		ui.getElements().add(UserInterface.DIALOGBOX = new DialogBox());
 		ui.getElements().add(UserInterface.SETTINGSBOX = new SettingsBox());
 		ui.getElements().add(UserInterface.FILECHOOSER = new NFC());
 		ui.getElements().add(UserInterface.CONTROLS = new ControlsAdjuster());
@@ -326,7 +337,7 @@ public class FMTB implements FMTGLProcess {
 		ui.getElements().add(new PreviewEditor());
 		//render last
 		ui.getElements().add(UserInterface.TOOLBAR = new Toolbar());
-		ui.getElements().add(new Crossbar());*/
+		ui.getElements().add(new Crossbar());
 		FMTB.MODEL.updateFields();
 	}
 

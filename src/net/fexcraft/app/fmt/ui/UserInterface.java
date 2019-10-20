@@ -26,7 +26,7 @@ import net.fexcraft.lib.common.math.Time;
  */
 public class UserInterface {
 
-	public static float scale_x, scale_y;//, scale;
+	public static float scale_x, scale_y, scale;
 	public static Element SELECTED = null;
 	public static Toolbar TOOLBAR;
 	public static DialogBox DIALOGBOX;
@@ -38,7 +38,7 @@ public class UserInterface {
 	private FMTGLProcess root;
 
 	public UserInterface(FMTGLProcess main){
-		this.root = main; /*root.setupUI(this);*/ rescale();
+		this.root = main; root.setupUI(this); rescale();
 	}
 	
 	public void rescale(){
@@ -49,7 +49,7 @@ public class UserInterface {
         scale_x = scale_x / facts; scale_y = scale_y / facts;
         scale_x = (float)Math.ceil(scale_x); scale_y = (float)Math.ceil(scale_y);
         //scale = Math.min(scale_x, scale_y);
-		width = (int)scale_x; height = (int)scale_y;
+		width = (int)scale_x; height = (int)scale_y; scale = 1f / facts;
 	}
 	
 	private int width, height;

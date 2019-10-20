@@ -5,13 +5,14 @@ package net.fexcraft.app.fmt.ui.general;
 
 import java.util.ArrayList;
 
+import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.ui.general.NFC.AfterTask;
 import net.fexcraft.app.fmt.utils.Settings;
-import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
+import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.lib.common.math.RGB;
 
 /**
@@ -95,6 +96,7 @@ public class SettingsBox extends Element implements Dialog {
 		protected void updateTextField(){
 			setting.validateAndApply(this.getText());
 			this.setText(setting.toString(), false);
+			if(setting.getId().equals("ui_scale")) FMTB.get().UI.rescale();
 		}
 		
 	}

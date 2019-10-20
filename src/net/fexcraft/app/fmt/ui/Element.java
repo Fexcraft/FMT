@@ -141,7 +141,7 @@ public class Element {
 	}
 
 	public void render(int root_width, int root_height){
-		if(!Mouse.isGrabbed()) this.hovered(Mouse.getX(), root_height - Mouse.getY());
+		if(!Mouse.isGrabbed()) this.hovered(Mouse.getX() * UserInterface.scale, root_height - Mouse.getY() * UserInterface.scale);
 		if(this.visible){
 			if(z != 0) GL11.glTranslatef(0, 0,  z);
 			this.renderSelf(root_width, root_height);
@@ -150,7 +150,7 @@ public class Element {
 		if(this.visible && !elements.isEmpty()) for(Element elm : elements) elm.render(root_width, root_height);
 	}
 	
-	public void hovered(int mouseX, int mouseY){
+	public void hovered(float mouseX, float mouseY){
 		this.hovered = mouseX >= (x + xoff) && mouseX < (x + xoff) + width && mouseY >= (y + yoff) && mouseY < (y + yoff) + height;
 	}
 	
