@@ -137,7 +137,7 @@ public class Settings {
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "discord_rpc-show_model", true));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "discord_rpc-reset_timer_on_new_model", true));
 		DEFAULTS.add(new Setting(Type.INTEGER, "ui_scale", 1));
-		DEFAULTS.add(new Setting(Type.BOOLEAN, "bottombar", true));
+		DEFAULTS.add(new Setting(Type.BOOLEAN, "bottombar", false));
 	}
 
 	public static void load(){
