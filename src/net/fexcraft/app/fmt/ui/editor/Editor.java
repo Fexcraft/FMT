@@ -7,8 +7,8 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.general.Button;
-import net.fexcraft.app.fmt.ui.general.Icon;
 import net.fexcraft.app.fmt.ui.general.TextField;
+import net.fexcraft.app.fmt.ui.re.Icon;
 import net.fexcraft.lib.common.math.RGB;
 
 public abstract class Editor extends Element {

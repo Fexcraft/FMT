@@ -39,12 +39,11 @@ import net.fexcraft.app.fmt.ui.editor.ModelGroupEditor;
 import net.fexcraft.app.fmt.ui.editor.PreviewEditor;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
-import net.fexcraft.app.fmt.ui.general.Crossbar;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.ui.general.NFC;
 import net.fexcraft.app.fmt.ui.general.SettingsBox;
 import net.fexcraft.app.fmt.ui.general.TextField;
-import net.fexcraft.app.fmt.ui.general.Toolbar;
+import net.fexcraft.app.fmt.ui.re.Toolbar;
 import net.fexcraft.app.fmt.ui.tree.HelperTree;
 import net.fexcraft.app.fmt.ui.tree.ModelTree;
 import net.fexcraft.app.fmt.utils.Backups;
@@ -73,7 +72,7 @@ import net.fexcraft.lib.tmt.ModelRendererTurbo;
  * 
  * All rights reserved &copy; 2019 fexcraft.net
  * */
-public class FMTB implements FMTGLProcess {
+public class FMTB {
 	
 	public static final String deftitle = "[FPS:%s] Fexcraft Modelling Toolbox - %s";
 	public static final String version = "1.3.0";
@@ -122,7 +121,7 @@ public class FMTB implements FMTGLProcess {
 	public void run() throws LWJGLException, InterruptedException, IOException, NoSuchMethodException, ScriptException {
 		TextureManager.init(); this.setIcon(); Settings.load(); StyleSheet.load();
 		setupDisplay(); initOpenGL(); ggr = new GGR(this, 0, 4, 4); ggr.rotation.xCoord = 45; FontRenderer.init();
-		PorterManager.load(); HelperCollector.reload(); Display.setResizable(true); Translator.init(); UI = new UserInterface(this);
+		PorterManager.load(); HelperCollector.reload(); Display.setResizable(true); Translator.init(); UI = new UserInterface(this); this.setupUI(UI);
 		SessionHandler.checkIfLoggedIn(true, true); checkForUpdates(); KeyCompound.init(); KeyCompound.load();
 		//
 		LocalDateTime midnight = LocalDateTime.of(LocalDate.now(ZoneOffset.systemDefault()), LocalTime.MIDNIGHT);
@@ -303,12 +302,10 @@ public class FMTB implements FMTGLProcess {
 		UserInterface.DIALOGBOX.progress = progress; UserInterface.DIALOGBOX.progresscolor = color;
 	}
 
-	@Override
 	public DisplayMode getDisplayMode(){
 		return displaymode;
 	}
 
-	@Override
 	public void setupUI(UserInterface ui){
 		TextureManager.loadTexture("icons/pencil", null);
 		TextureManager.loadTexture("icons/arrow_increase", null);
@@ -337,17 +334,11 @@ public class FMTB implements FMTGLProcess {
 		ui.getElements().add(new TextureEditor());
 		ui.getElements().add(new PreviewEditor());
 		//render last
-		ui.getElements().add(UserInterface.TOOLBAR = new Toolbar());
-		ui.getElements().add(new Crossbar());
+		ui.getNewElements().add(UserInterface.TOOLBAR = new Toolbar(UI));
+		//ui.getNewElements().add(new Crossbar());
 		FMTB.MODEL.updateFields();
 	}
 
-	@Override
-	public UserInterface getUserInterface(){
-		return UI;
-	}
-
-	@Override
 	public void reset(boolean esc){
 		if(Dialog.anyVisible() || TextField.anySelected()){
 			UserInterface.DIALOGBOX.reset(); UserInterface.FILECHOOSER.reset();

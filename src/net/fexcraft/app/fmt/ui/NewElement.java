@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
+import net.fexcraft.app.fmt.utils.StyleSheet;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.lib.common.math.RGB;
@@ -22,11 +23,15 @@ public class NewElement {
 	//
 	public int width, height, x, xrel, y, yrel, z, border_width; 
 	protected Integer fill, border, border_fill;
-	protected RGB hovercolor = new RGB(218, 232, 104), discolor = new RGB("#eb4034");
-	protected boolean hovered, visible = true, enabled;
+	protected RGB hovercolor, discolor;
+	protected boolean hovered, visible = true, enabled = true;
 	
 	public NewElement(NewElement root, String id){
-		this.root = root; this.id = id;
+		this(root, id, true);
+	}
+	
+	public NewElement(NewElement root, String id, boolean inithover){
+		this.root = root; this.id = id; if(inithover) this.setHoverColor(null, false);
 	}
 	
 	public NewElement setPosition(int x, int y, Integer z){
@@ -50,10 +55,17 @@ public class NewElement {
 	}
 	
 	public NewElement setBorder(int color, int color0, int width, boolean... bools){
-		border = color; border_fill = color0; border_width = width;
+		border = StyleSheet.getColourFor(id, "border", color); border_width = width;
+		border_fill = StyleSheet.getColourFor(id, "border_fill", color0);
 		top = bools.length > 0 && bools[0]; bot = bools.length > 1 && bools[1];
 		left = bools.length > 2 && bools[2]; right = bools.length > 3 && bools[3];
 		return this.clearVertexes().clearTexture();
+	}
+	
+	public NewElement setHoverColor(Integer hover, boolean dis){
+		if(!dis) hovercolor = new RGB(StyleSheet.getColourFor(id, "hovered", hover == null ? 0xffdae868 : hover, hover != null));
+		else discolor = new RGB(StyleSheet.getColourFor(id, "disabled", hover == null ? 0xffeb4034 : hover, hover != null));
+		return this;
 	}
 
 	public NewElement clearVertexes(){
@@ -65,7 +77,7 @@ public class NewElement {
 	}
 
 	public NewElement setColor(int color){
-		fill = color; return this;
+		fill = StyleSheet.getColourFor(id, "background", color); return this;
 	}
 	
 	public NewElement repos(){
@@ -84,6 +96,18 @@ public class NewElement {
 				Print.console("YV: " + vertexes[0][0][1] + " " + vertexes[0][2][1]);
 			}*/
 		}
+	}
+	
+	public boolean isVisible(){
+		return visible;
+	}
+	
+	public boolean isEnabled(){
+		return enabled;
+	}
+	
+	public boolean isHovered(){
+		return hovered;
 	}
 
 	public void render(int width, int height){
@@ -213,5 +237,25 @@ public class NewElement {
 	
 	/** To be overridden. **/
 	protected boolean processScrollWheel(int wheel){ return false; }
+	
+	public ArrayList<NewElement> getElements(){
+		return elements;
+	}
+
+	public String getId(){
+		return id;
+	}
+	
+	public boolean isSelected(){
+		return UserInterface.SELECTED == this;
+	}
+	
+	public boolean select(){
+		UserInterface.SELECTED = this; return isSelected();
+	}
+
+	public boolean deselect(){
+		if(isSelected()) UserInterface.SELECTED = null; return UserInterface.SELECTED == null;
+	}
 
 }
