@@ -32,8 +32,8 @@ import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.FontRenderer;
+import net.fexcraft.app.fmt.ui.NewElement;
 import net.fexcraft.app.fmt.ui.UserInterface;
-import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
 import net.fexcraft.app.fmt.ui.editor.ModelGroupEditor;
 import net.fexcraft.app.fmt.ui.editor.PreviewEditor;
@@ -44,6 +44,7 @@ import net.fexcraft.app.fmt.ui.general.NFC;
 import net.fexcraft.app.fmt.ui.general.SettingsBox;
 import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.ui.re.Bottombar;
+import net.fexcraft.app.fmt.ui.re.Editor;
 import net.fexcraft.app.fmt.ui.re.Toolbar;
 import net.fexcraft.app.fmt.ui.tree.HelperTree;
 import net.fexcraft.app.fmt.ui.tree.ModelTree;
@@ -323,6 +324,7 @@ public class FMTB {
 		TextureManager.loadTexture("icons/editors/minimized", null);
 		TextureManager.loadTexture("icons/editors/expanded", null);
 		//
+		(UserInterface.TOOLBAR = new Toolbar(UI)).repos();
 		ui.getElements().add(UserInterface.DIALOGBOX = new DialogBox());
 		ui.getElements().add(UserInterface.SETTINGSBOX = new SettingsBox());
 		ui.getElements().add(UserInterface.FILECHOOSER = new NFC());
@@ -334,8 +336,15 @@ public class FMTB {
 		ui.getElements().add(new ModelGroupEditor());
 		ui.getElements().add(new TextureEditor());
 		ui.getElements().add(new PreviewEditor());
+		//
+		ui.getNewElements().add(new Editor("test_editor", "editor:test"){
+			@Override
+			protected NewElement[] setupSubElements(){
+				return new NewElement[0];
+			}
+		});
 		//render last
-		ui.getNewElements().add(UserInterface.TOOLBAR = new Toolbar(UI));
+		ui.getNewElements().add(UserInterface.TOOLBAR);
 		ui.getNewElements().add(new Bottombar(UI).setVisible(Settings.bottombar()));
 		//ui.getNewElements().add(new Crossbar());
 		FMTB.MODEL.updateFields();

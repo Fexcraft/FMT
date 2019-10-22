@@ -259,4 +259,8 @@ public class NewElement {
 		if(isSelected()) UserInterface.SELECTED = null; return UserInterface.SELECTED == null;
 	}
 
+	public NewElement getElement(String string){
+		for(NewElement elm : elements) if(elm.id.equals(string)) return elm; return null;
+	}
+
 }

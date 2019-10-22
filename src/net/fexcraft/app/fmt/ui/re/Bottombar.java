@@ -9,6 +9,7 @@ public class Bottombar extends NewElement {
 	
 	private static TextField netfield;
 	private UserInterface ui;
+	private int[] fields = new int[]{ 6, 6, 3 };
 
 	public Bottombar(UserInterface ui){
 		super(null, "bottombar", "bottombar"); this.ui = ui; hovercolor = RGB.WHITE;
@@ -33,9 +34,10 @@ public class Bottombar extends NewElement {
 	
 	@Override
 	public NewElement repos(){
-		width = ui.width; x = 0; y = ui.height - height; int buff = 0;
-		for(NewElement elm : elements){ elm.xrel = buff; buff += elm.width; elm.repos(); }
-		return this.clearVertexes();
+		width = ui.width; x = 0; y = ui.height - height; int buff = 0; NewElement elm;
+		for(int i = 0; i < elements.size(); i++){
+			elm = elements.get(i); elm.xrel = buff; buff += (elm.width = ui.width / fields[i]); elm.repos();
+		} return this.clearVertexes();
 	}
 	
 	public static void updateLoginState(String string){

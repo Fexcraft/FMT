@@ -14,7 +14,7 @@ public class Button extends NewElement {
 	private RGB iconcolor = null;
 	private boolean centered, drawbackground = true;
 	private String text, icon;
-	private int iconsize;
+	private int iconsize, texxoff = 2, texyoff = 2;
 	
 	public Button(NewElement root, String id, String style, int width, int height, int x, int y){
 		super(root, id, style == null ? root instanceof HoverMenu ? "menu:button" : "button" : style);
@@ -61,6 +61,10 @@ public class Button extends NewElement {
 		}
 		return this;
 	}
+
+	public Button setText(String string, int texxoff, int texyoff){
+		text = string; this.centered = false; this.texxoff = texxoff; this.texyoff = texyoff; return this;
+	}
 	
 	public Button setIcon(String texture, int size){
 		this.icon = texture; this.iconsize = size; return this;
@@ -84,7 +88,7 @@ public class Button extends NewElement {
 				FontRenderer.drawText(text, this.x + x + (icon == null ? 0 : iconsize + 2), this.y + y, 1, color);
 			}
 			else{
-				FontRenderer.drawText(text, x + 2 + (icon == null ? 0 : iconsize + 2), y + 2, 1, color);
+				FontRenderer.drawText(text, x + texxoff + (icon == null ? 0 : iconsize + 2), y + texyoff, 1, color);
 			}
 		}
 		if(icon != null){
