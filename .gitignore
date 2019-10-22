@@ -60,6 +60,7 @@ auth.net
 *.zip
 saves/
 settings.json
+stylesheet.json
 src/net/fexcraft/app/infl_test
 temp/
 *.exe
