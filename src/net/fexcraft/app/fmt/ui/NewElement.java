@@ -15,7 +15,7 @@ public class NewElement {
 
 	protected ArrayList<NewElement> elements = new ArrayList<>();
 	protected final NewElement root;
-	protected final String id;
+	protected final String id, stylegroup;
 	//
 	protected float[][][] vertexes;
 	protected boolean top, bot, left, right;
@@ -26,12 +26,12 @@ public class NewElement {
 	protected RGB hovercolor, discolor;
 	protected boolean hovered, visible = true, enabled = true;
 	
-	public NewElement(NewElement root, String id){
-		this(root, id, true);
+	public NewElement(NewElement root, String id, String stylegroup){
+		this(root, id, stylegroup, true);
 	}
 	
-	public NewElement(NewElement root, String id, boolean inithover){
-		this.root = root; this.id = id; if(inithover) this.setHoverColor(null, false);
+	public NewElement(NewElement root, String id, String stylegroup, boolean inithover){
+		this.root = root; this.id = id; this.stylegroup = stylegroup; if(inithover) this.setHoverColor(null, false);
 	}
 	
 	public NewElement setPosition(int x, int y, Integer z){
@@ -42,7 +42,8 @@ public class NewElement {
 		width = x; height = y; return this;
 	}
 	
-	public NewElement setTexture(String texture){
+	public NewElement setTexture(String texture, boolean load){
+		if(load) TextureManager.loadTexture(texture, null);
 		this.texture = TextureManager.getTexture(texture, true); return this;
 	}
 	
@@ -55,16 +56,16 @@ public class NewElement {
 	}
 	
 	public NewElement setBorder(int color, int color0, int width, boolean... bools){
-		border = StyleSheet.getColourFor(id, "border", color); border_width = width;
-		border_fill = StyleSheet.getColourFor(id, "border_fill", color0);
+		border = StyleSheet.getColourFor(stylegroup, "border", color); border_width = width;
+		border_fill = StyleSheet.getColourFor(stylegroup, "border_fill", color0);
 		top = bools.length > 0 && bools[0]; bot = bools.length > 1 && bools[1];
 		left = bools.length > 2 && bools[2]; right = bools.length > 3 && bools[3];
 		return this.clearVertexes().clearTexture();
 	}
 	
 	public NewElement setHoverColor(Integer hover, boolean dis){
-		if(!dis) hovercolor = new RGB(StyleSheet.getColourFor(id, "hovered", hover == null ? 0xffdae868 : hover, hover != null));
-		else discolor = new RGB(StyleSheet.getColourFor(id, "disabled", hover == null ? 0xffeb4034 : hover, hover != null));
+		if(!dis) hovercolor = new RGB(StyleSheet.getColourFor(stylegroup, "hovered", hover == null ? 0xffdae868 : hover, hover != null));
+		else discolor = new RGB(StyleSheet.getColourFor(stylegroup, "disabled", hover == null ? 0xffeb4034 : hover, hover != null));
 		return this;
 	}
 
@@ -77,7 +78,7 @@ public class NewElement {
 	}
 
 	public NewElement setColor(int color){
-		fill = StyleSheet.getColourFor(id, "background", color); return this;
+		fill = StyleSheet.getColourFor(stylegroup, "background", color); return this;
 	}
 	
 	public NewElement repos(){

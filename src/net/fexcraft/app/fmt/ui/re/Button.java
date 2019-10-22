@@ -2,7 +2,6 @@ package net.fexcraft.app.fmt.ui.re;
 
 import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.ui.NewElement;
-import net.fexcraft.app.fmt.utils.StyleSheet;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.utils.Print;
 
@@ -18,16 +17,14 @@ public class Button extends NewElement {
 	private String text, icon;
 	private int iconsize;
 	
-	public Button(NewElement root, String id, int width, int height, int x, int y){
-		super(root, id); Print.console(root.getId()); this.setPosition(x, y, root.z + 1).setSize(width, height).setColor(0xffc7c7c7).setEnabled(true);
+	public Button(NewElement root, String id, String style, int width, int height, int x, int y){
+		super(root, id, style == null ? root instanceof HoverMenu ? "menu:button" : "button" : style);
+		Print.console(root.getId()); this.setPosition(x, y, root.z + 1).setSize(width, height).setColor(0xffc7c7c7).setEnabled(true);
 		this.setBorder(0xff000000, 0xff000000, 1, root instanceof HoverMenu == false, true, true, true); this.setupSubmenu();
 	}
 	
 	public NewElement repos(){
 		x = root.x + xrel; y = root.y + yrel + (root instanceof HoverMenu ? getIndex() * 28 + 1 : 0);
-		if(root instanceof HoverMenu){
-			this.hovercolor = new RGB(StyleSheet.getColourFor("menu:button", ""));
-		}
 		clearVertexes(); for(NewElement elm : elements) elm.repos(); return this;
 	}
 	
@@ -37,12 +34,12 @@ public class Button extends NewElement {
 		} return -1;
 	}
 
-	public Button(NewElement elm, String id, int w, int h, int x, int y, int hover){
-		this(elm, id, w, h, x, y); this.setHoverColor(hover, false);
+	public Button(NewElement elm, String id, String style, int w, int h, int x, int y, int hover){
+		this(elm, id, style, w, h, x, y); this.setHoverColor(hover, false);
 	}
 	
-	public Button(NewElement elm, String id, int w, int h, int x, int y, int hover, int dis){
-		this(elm, id, w, h, x, y, hover); this.setHoverColor(dis, true);
+	public Button(NewElement elm, String id, String style, int w, int h, int x, int y, int hover, int dis){
+		this(elm, id, style, w, h, x, y, hover); this.setHoverColor(dis, true);
 	}
 	
 	public Button setBackgroundless(boolean bool){

@@ -97,7 +97,7 @@ public class UserInterface {
 		}
 	}
 	
-	private NewElement tmelm = new TextField(null, "text", 4, 4, 500){
+	private NewElement tmelm = new TextField(null, "text", "screenshot:title", 4, 4, 500){
 		@Override
 		public void renderSelf(int rw, int rh){
 			this.y = rh - FMTB.get().getDisplayMode().getHeight() + 4;
@@ -105,7 +105,7 @@ public class UserInterface {
 			super.renderSelf(rw, rh);
 		}
 	};
-	private NewElement logintxt = new TextField(null, "text", 4, 4, 500){
+	private NewElement logintxt = new TextField(null, "text", "screenshot:credits", 4, 4, 500){
 		@Override
 		public void renderSelf(int rw, int rh){
 			this.y = rh - FMTB.get().getDisplayMode().getHeight() + 32;

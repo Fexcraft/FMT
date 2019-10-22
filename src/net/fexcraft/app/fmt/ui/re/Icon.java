@@ -11,7 +11,7 @@ import net.fexcraft.lib.common.math.RGB;
 public class Icon extends NewElement {
 	
 	public Icon(NewElement root, String id, String texture, int size, int x, int y){
-		super(root, id); this.setPosition(x, y, root.z + 1).setSize(size, size).setTexture(texture).setEnabled(true);
+		super(root, id, "icon:" + id); this.setPosition(x, y, root.z + 1).setSize(size, size).setTexture(texture, true).setEnabled(true);
 	}
 	
 	public Icon(NewElement elm, String id, String texture, int size, int x, int y, RGB hover){

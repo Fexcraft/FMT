@@ -9,7 +9,7 @@ public abstract class HoverMenu extends NewElement {
 	public static final ArrayList<HoverMenu> MENUS = new ArrayList<>();
 
 	public HoverMenu(NewElement root, String id, int width){
-		super(root, id); MENUS.add(this); this.setSize(width, 0).setColor(0xffc7c7c7).setVisible(false); this.addButtons();
+		super(root, id, "hovermenu"); MENUS.add(this); this.setSize(width, 0).setColor(0xffc7c7c7).setVisible(false); this.addButtons();
 	}
 	
 	public abstract void addButtons();

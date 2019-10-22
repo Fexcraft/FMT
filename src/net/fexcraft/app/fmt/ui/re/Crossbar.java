@@ -2,7 +2,6 @@ package net.fexcraft.app.fmt.ui.re;
 
 import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.NewElement;
-import net.fexcraft.app.fmt.utils.TextureManager;
 
 /**
  * 
@@ -12,9 +11,8 @@ import net.fexcraft.app.fmt.utils.TextureManager;
 public class Crossbar extends NewElement {
 	
 	public Crossbar(){
-		super(null, "crossbar", false);
-		TextureManager.loadTexture("ui/center_marker", null);
-		this.setSize(16, 16).setTexture("ui/center_marker");
+		super(null, "crossbar", "crossbar", false);
+		this.setSize(16, 16).setTexture("ui/center_marker", true);
 	}
 
 	@Override

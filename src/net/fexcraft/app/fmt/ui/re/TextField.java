@@ -18,8 +18,8 @@ public class TextField extends NewElement {
 	private String text, tempval;
 	private RGB textcolor = new RGB(212, 212, 212), hovertextcolor = null;
 
-	public TextField(NewElement root, String id, int width, int x, int y){
-		super(root, id); FIELDS.add(this); this.setSize(width, 26);
+	public TextField(NewElement root, String id, String style, int width, int x, int y){
+		super(root, id, style == null ? "field" : style); FIELDS.add(this); this.setSize(width, 26);
 		this.setPosition(x, y, root == null ? 1 : root.z + 1);
 		this.setHoverColor(0xff70ff7f, false);
 		this.setHoverColor(0xffebc9c9, true);
@@ -229,7 +229,7 @@ public class TextField extends NewElement {
 	public static class BooleanField extends TextField {
 
 		public BooleanField(NewElement root, String id, int width, int x, int y){
-			super(root, id, width, x, y);
+			super(root, id, "field:boolean", width, x, y);
 		}
 		
 		@Override
