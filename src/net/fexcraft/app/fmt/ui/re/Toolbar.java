@@ -38,14 +38,7 @@ public class Toolbar extends NewElement {
 
 	public Toolbar(UserInterface ui){
 		super(null, "toolbar", "toolbar"); this.ui = ui; hovercolor = RGB.WHITE;
-		this.setPosition(0, 0, -20)/*.setTexture("ui/background_dark")*/.setSize(100, 30);
-		TextureManager.loadTexture("icons/toolbar/info", null);
-		TextureManager.loadTexture("icons/toolbar/new", null);
-		TextureManager.loadTexture("icons/toolbar/open", null);
-		TextureManager.loadTexture("icons/toolbar/save", null);
-		TextureManager.loadTexture("icons/toolbar/profile", null);
-		TextureManager.loadTexture("icons/toolbar/settings", null);
-		this.setColor(0xff484848).setBorder(0xff32a852, 0xffeb4034, 3, false, true);
+		this.setPosition(0, 0, -20).setSize(100, 30).setColor(0xff484848).setBorder(0xff32a852, 0xffeb4034, 3, false, true);
 		//
 		this.elements.add(new Icon(this, "info", "icons/toolbar/info", 32, 0, 0){
 			@Override

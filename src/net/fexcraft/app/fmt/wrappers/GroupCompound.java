@@ -33,6 +33,8 @@ public class GroupCompound {
 	public PolygonWrapper lastselected;
 	public String texture;
 	//
+	public static long COUNT = 0, SELECTED = 0;
+	//
 	public boolean visible = true, minimized;
 	public Vec3f pos, rot, scale;
 	
@@ -157,7 +159,7 @@ public class GroupCompound {
 	public final void clearSelection(){
 		for(TurboList list : compound.values()){
 			list.selected = false; for(PolygonWrapper poly : list) poly.selected = false;
-		}
+		} SELECTED = 0;
 	}
 
 	public boolean updateValue(TextField field, String id){
@@ -205,6 +207,7 @@ public class GroupCompound {
 			if(group != null && !compound.containsKey(group)) compound.put(group, new TurboList(group));
 			TurboList list = (group == null ? compound.containsKey("body") ? compound.get("body") : (TurboList)compound.values().toArray()[0] : compound.get(group));
 			if(clear){ clearSelection(); } shape.selected = true; list.add(shape); shape.setList(list); shape.recompile(); this.updateFields();
+			COUNT++; SELECTED++;
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -579,6 +582,13 @@ public class GroupCompound {
 	public long countTotalMRTs(){
 		long i = 0; for(TurboList list : compound.values()) i += list.size(); return i;
 	}
+	
+	public long countSelectedMRTs(){
+		long i = 0; for(TurboList list : compound.values()){
+			if(list.selected) i += list.size();
+			else for(PolygonWrapper wrapper : list) if(wrapper.selected) i++;
+		} return i;
+	}
 
 	public void setTexture(String string){
 		this.texture = string; this.compound.values().forEach(turbo -> turbo.forEach(poly -> poly.recompile()));
@@ -633,6 +643,7 @@ public class GroupCompound {
 			for(PolygonWrapper wrapper : wrapp){
 				wrapper.getTurboList().remove(wrapper);
 			}
+			COUNT = this.countTotalMRTs(); SELECTED = 0;
 		}, DialogBox.NOTHING);
 	}
 
@@ -644,7 +655,7 @@ public class GroupCompound {
 	public int ty(TurboList list){ return list == null || list.getGroupTexture() == null ? textureSizeY : list.textureY; }
 
 	public void deselectAll(){
-		for(TurboList list : compound.values()){ list.selected = false; for(PolygonWrapper wrapper : list) wrapper.selected = false; }
+		for(TurboList list : compound.values()){ list.selected = false; for(PolygonWrapper wrapper : list) wrapper.selected = false; } SELECTED = 0;
 	}
 
 }

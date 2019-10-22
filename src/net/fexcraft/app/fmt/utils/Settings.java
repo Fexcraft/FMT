@@ -25,7 +25,7 @@ public class Settings {
 	static{ background_color.alpha = 0.2f; }
 	public static float[] light0_position = new float[]{ 0, 1, 0, 0 };
 	private static String language = "default";*/
-	private static Setting floor, lines, demo, cube, polygon_marker, polygon_count, lighting, cullface, animate, discordrpc, discordrpc_sm, discordrpc_rtonm, ui_scale;
+	private static Setting floor, lines, demo, cube, polygon_marker, polygon_count, lighting, cullface, animate, discordrpc, discordrpc_sm, discordrpc_rtonm, ui_scale, bottombar;
 
 	public static boolean floor(){ return floor.getValue(); }
 
@@ -38,6 +38,8 @@ public class Settings {
 	public static boolean polygonMarker(){ return polygon_marker.getValue(); }
 
 	public static boolean polygonCount(){ return polygon_count.getValue(); }
+
+	public static boolean bottombar(){ return bottombar.getValue(); }
 
 	public static boolean lighting(){ return lighting.getValue(); }
 
@@ -77,6 +79,10 @@ public class Settings {
 
 	public static boolean togglePolygonCount(){
 		return polygon_count.toggle();
+	}
+
+	public static boolean toggleBottombar(){
+		FMTB.get().UI.getElement("bottombar").setVisible(bottombar.toggle()); return bottombar();
 	}
 
 	public static boolean toggleLighting(){
@@ -131,6 +137,7 @@ public class Settings {
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "discord_rpc-show_model", true));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "discord_rpc-reset_timer_on_new_model", true));
 		DEFAULTS.add(new Setting(Type.INTEGER, "ui_scale", 1));
+		DEFAULTS.add(new Setting(Type.BOOLEAN, "bottombar", true));
 	}
 
 	public static void load(){
@@ -164,6 +171,7 @@ public class Settings {
 		discordrpc_sm = SETTINGS.get("discord_rpc-show_model");
 		discordrpc_rtonm = SETTINGS.get("discord_rpc-reset_timer_on_new_model");
 		ui_scale = SETTINGS.get("ui_scale");
+		bottombar = SETTINGS.get("bottombar");
 	}
 
 	public static void save(){

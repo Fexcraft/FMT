@@ -43,6 +43,7 @@ import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.ui.general.NFC;
 import net.fexcraft.app.fmt.ui.general.SettingsBox;
 import net.fexcraft.app.fmt.ui.general.TextField;
+import net.fexcraft.app.fmt.ui.re.Bottombar;
 import net.fexcraft.app.fmt.ui.re.Toolbar;
 import net.fexcraft.app.fmt.ui.tree.HelperTree;
 import net.fexcraft.app.fmt.ui.tree.ModelTree;
@@ -335,6 +336,7 @@ public class FMTB {
 		ui.getElements().add(new PreviewEditor());
 		//render last
 		ui.getNewElements().add(UserInterface.TOOLBAR = new Toolbar(UI));
+		ui.getNewElements().add(new Bottombar(UI).setVisible(Settings.bottombar()));
 		//ui.getNewElements().add(new Crossbar());
 		FMTB.MODEL.updateFields();
 	}
