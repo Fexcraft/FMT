@@ -20,7 +20,7 @@ public class TextField extends NewElement {
 
 	public TextField(NewElement root, String id, int width, int x, int y){
 		super(root, id); FIELDS.add(this); this.setSize(width, 26);
-		this.setPosition(x, y, root.z + 1);
+		this.setPosition(x, y, root == null ? 1 : root.z + 1);
 		this.setHoverColor(0xff70ff7f, false);
 		this.setHoverColor(0xffebc9c9, true);
 	}

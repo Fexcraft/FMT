@@ -84,7 +84,7 @@ public class GeneralEditor extends Editor {
 						if(FMTB.MODEL.texture == null){
 							FMTB.showDialogbox("There is not texture loaded.", "ok", "load", DialogBox.NOTHING, () -> {
 								try{
-									FMTB.get().UI.getElement("toolbar").getElement("textures").getElement("menu").getElement("select").onButtonClick(x, y, left, true);
+									//TODO FMTB.get().UI.getElement("toolbar").getElement("textures").getElement("menu").getElement("select").onButtonClick(x, y, left, true);
 								}
 								catch(Exception e){
 									e.printStackTrace();

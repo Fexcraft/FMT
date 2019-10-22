@@ -272,6 +272,10 @@
     "border_fill": "#ff000000",
     "hovered": "#ffdae868"
   },
+  "text": {
+    "disabled": "#ffebc9c9",
+    "hovered": "#ff70ff7f"
+  },
   "texture": {
     "background": "#ffc7c7c7",
     "border": "#ff000000",
@@ -315,5 +319,5 @@
     "hovered": "#ffdae868"
   },
   "last_fmt_version_used": "1.3.0",
-  "last_fmt_exit": "22|10|2019 11:37:42"
+  "last_fmt_exit": "22|10|2019 11:56:34"
 }

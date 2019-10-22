@@ -11,7 +11,7 @@ import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.ui.general.HoverMenu;
 import net.fexcraft.app.fmt.ui.general.NFC;
 import net.fexcraft.app.fmt.ui.general.SettingsBox;
-import net.fexcraft.app.fmt.ui.general.TextField;
+import net.fexcraft.app.fmt.ui.re.TextField;
 import net.fexcraft.app.fmt.ui.re.Toolbar;
 import net.fexcraft.app.fmt.utils.RayCoastAway;
 import net.fexcraft.app.fmt.utils.SessionHandler;
@@ -97,7 +97,7 @@ public class UserInterface {
 		}
 	}
 	
-	private Element tmelm = new TextField(null, "text", 4, 4, 500){
+	private NewElement tmelm = new TextField(null, "text", 4, 4, 500){
 		@Override
 		public void renderSelf(int rw, int rh){
 			this.y = rh - FMTB.get().getDisplayMode().getHeight() + 4;
@@ -105,7 +105,7 @@ public class UserInterface {
 			super.renderSelf(rw, rh);
 		}
 	};
-	private Element logintxt = new TextField(null, "text", 4, 4, 500){
+	private NewElement logintxt = new TextField(null, "text", 4, 4, 500){
 		@Override
 		public void renderSelf(int rw, int rh){
 			this.y = rh - FMTB.get().getDisplayMode().getHeight() + 32;
@@ -139,7 +139,7 @@ public class UserInterface {
 
 	public boolean isAnyHovered(){
 		boolean bool = false;
-		for(Element elm : elements){ if(elm.anyHovered()){ bool = true; break; } }
+		for(NewElement elm : elms){ if(elm.anyHovered()){ bool = true; break; } }
 		return bool;
 	}
 
@@ -150,8 +150,8 @@ public class UserInterface {
 			}
 		}
 		else{
-			Element element = null;
-			for(Element elm : elements){
+			NewElement element = null;
+			for(NewElement elm : elms){
 				if(elm.visible && elm.enabled){
 					if(elm.onButtonClick(Mouse.getX(), root.getDisplayMode().getHeight() - Mouse.getY(), i == 0, elm.hovered)){
 						return;
@@ -166,15 +166,15 @@ public class UserInterface {
 	}
 
 	public boolean onScrollWheel(int wheel){
-		for(Element elm : elements){
+		for(NewElement elm : elms){
 			if(elm.visible && elm.enabled){
 				if(elm.onScrollWheel(wheel)) return true;
 			}
 		} return false;
 	}
 
-	public Element getElement(String string){
-		for(Element elm : elements) if(elm.id.equals(string)) return elm; return null;
+	public NewElement getElement(String string){
+		for(NewElement elm : elms) if(elm.id.equals(string)) return elm; return null;
 	}
 
 	public boolean hasElement(String string){
