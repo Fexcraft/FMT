@@ -226,7 +226,7 @@ public class GeneralEditor extends Editor {
 			public void addSubElements(){
 				this.elements.add(new Button(this, "text0", 290, 20, 0, 0, RGB.WHITE).setBackgroundless(false).setText("Marker Color [#hex]", false).setRowCol(0, 0));
 				this.elements.add(new TextField(this, "marker_colorx", 290, 0, 0){
-					@Override public void updateTextField(){ FMTB.MODEL.updateValue(this); }
+					@Override public void updateTextField(){ /*FMTB.MODEL.updateValue(this);*/ }//TODO
 					@Override
 					public float getFloatValue(){
 						return Integer.parseInt(this.getTextValue().replace("#", "").replace("0x", ""), 16);

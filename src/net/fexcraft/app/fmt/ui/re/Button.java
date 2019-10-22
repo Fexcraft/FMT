@@ -3,7 +3,6 @@ package net.fexcraft.app.fmt.ui.re;
 import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.ui.NewElement;
 import net.fexcraft.lib.common.math.RGB;
-import net.fexcraft.lib.common.utils.Print;
 
 /**
  * 
@@ -19,7 +18,7 @@ public class Button extends NewElement {
 	
 	public Button(NewElement root, String id, String style, int width, int height, int x, int y){
 		super(root, id, style == null ? root instanceof HoverMenu ? "menu:button" : "button" : style);
-		Print.console(root.getId()); this.setPosition(x, y, root.z + 1).setSize(width, height).setColor(0xffc7c7c7).setEnabled(true);
+		this.setPosition(x, y, root.z + 1).setSize(width, height).setColor(0xffc7c7c7).setEnabled(true);
 		this.setBorder(0xff000000, 0xff000000, 1, root instanceof HoverMenu == false, true, true, true); this.setupSubmenu();
 	}
 	

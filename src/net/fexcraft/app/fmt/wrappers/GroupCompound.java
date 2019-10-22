@@ -15,7 +15,7 @@ import net.fexcraft.app.fmt.ui.editor.ContainerButton;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
-import net.fexcraft.app.fmt.ui.general.TextField;
+import net.fexcraft.app.fmt.ui.re.TextField;
 import net.fexcraft.app.fmt.utils.RayCoastAway;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
@@ -183,8 +183,8 @@ public class GroupCompound {
 	public boolean updateValue(TextField field){
 		ArrayList<PolygonWrapper> polis = this.getSelected();
 		if(polis.isEmpty()) return false;
-		boolean x = field.id.endsWith("x"), y = field.id.endsWith("y"), z = field.id.endsWith("z");
-		String id = field.id.substring(0, field.id.length() - 1);
+		boolean x = field.getId().endsWith("x"), y = field.getId().endsWith("y"), z = field.getId().endsWith("z");
+		String id = field.getId().substring(0, field.getId().length() - 1);
 		//
 		float diffo = polis.get(0).getFloat(id, x, y, z);
 		for(int i = 0; i < polis.size(); i++){

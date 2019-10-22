@@ -3,7 +3,6 @@ package net.fexcraft.app.fmt.ui.general;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.utils.GGR;
@@ -84,7 +83,7 @@ public class TextField extends Element {
 	
 	@Override
 	protected boolean processScrollWheel(int wheel){
-		return FMTB.MODEL.updateValue(this, this.id + (wheel > 0 ? "+" : "-")) || true;
+		return true;//FMTB.MODEL.updateValue(this, this.id + (wheel > 0 ? "+" : "-")) || true;
 	}
 
 	public float tryChange(boolean positive, float rate){
@@ -184,7 +183,7 @@ public class TextField extends Element {
 	}
 
 	protected void updateNumberField(){
-		FMTB.MODEL.updateValue(this);
+		//FMTB.MODEL.updateValue(this);
 	}
 
 	protected void updateTextField(){}

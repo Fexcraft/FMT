@@ -65,15 +65,15 @@ public class Element {
 	}
 	
 	public boolean isSelected(){
-		return UserInterface.SELECTED == this;
+		return false;//UserInterface.SELECTED == this;
 	}
 	
 	public boolean select(){
-		UserInterface.SELECTED = this; return true;
+		/*UserInterface.SELECTED = this;*/ return true;
 	}
 	
 	public boolean deselect(){
-		if(UserInterface.SELECTED == this) UserInterface.SELECTED = null; return true;
+		/*if(UserInterface.SELECTED == this) UserInterface.SELECTED = null;*/ return true;
 	}
 	
 	public boolean isHovered(){
