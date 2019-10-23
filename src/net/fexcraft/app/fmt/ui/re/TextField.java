@@ -230,8 +230,8 @@ public class TextField extends NewElement {
 	
 	public static class BooleanField extends TextField {
 
-		public BooleanField(NewElement root, String id, int width, int x, int y){
-			super(root, id, "field:boolean", width, x, y);
+		public BooleanField(NewElement root, String id, String style, int width, int x, int y){
+			super(root, id, style == null ? "field:boolean" : style, width, x, y);
 		}
 		
 		@Override
