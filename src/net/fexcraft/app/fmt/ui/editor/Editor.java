@@ -3,19 +3,19 @@ package net.fexcraft.app.fmt.ui.editor;
 import java.util.ArrayList;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.NewElement;
+import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.general.Button;
 import net.fexcraft.app.fmt.ui.general.Icon;
 import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.utils.Settings;
 
-public abstract class Editor extends NewElement {
+public abstract class Editor extends Element {
 	
 	public static final ArrayList<Editor> EDITORS = new ArrayList<>();
 	public static final String[] xyz = new String[]{ "x", "y", "z" };
 	protected Container[] containers;
-	private NewElement button;
+	private Element button;
 
 	public Editor(String id, String stylegroup){
 		super(null, id, stylegroup, false); EDITORS.add(this); this.setColor(0xff999999);
@@ -39,7 +39,7 @@ public abstract class Editor extends NewElement {
 	}
 	
 	@Override
-	public NewElement repos(){
+	public Element repos(){
 		x = 0; y = UserInterface.TOOLBAR.height + UserInterface.TOOLBAR.border_width;
 		height = UserInterface.height - y; if(Settings.bottombar()) height -= 29;
 		clearVertexes(); this.reposContainers(); return this;
@@ -83,7 +83,7 @@ public abstract class Editor extends NewElement {
 
 	public ArrayList<TextField> getFields(){
 		ArrayList<TextField> fields = new ArrayList<>();
-		for(NewElement elm : elements) if(elm instanceof TextField) fields.add((TextField)elm);
+		for(Element elm : elements) if(elm instanceof TextField) fields.add((TextField)elm);
 		return fields;
 	}
 
@@ -98,7 +98,7 @@ public abstract class Editor extends NewElement {
 	}
 
 	public TextField getLocalField(String string){
-		NewElement elm = getElement(string); return elm instanceof TextField ? (TextField)elm : null;
+		Element elm = getElement(string); return elm instanceof TextField ? (TextField)elm : null;
 	}
 	
 	public TextField getMultiplicator(){

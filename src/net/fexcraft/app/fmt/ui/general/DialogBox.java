@@ -9,7 +9,7 @@ import java.net.URISyntaxException;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.FontRenderer;
-import net.fexcraft.app.fmt.ui.NewElement;
+import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.lib.common.math.RGB;
 
@@ -17,7 +17,7 @@ import net.fexcraft.lib.common.math.RGB;
  * @author Ferdinand Calo' (FEX___96)
  *
  */
-public class DialogBox extends NewElement implements Dialog {
+public class DialogBox extends Element implements Dialog {
 
 	public static final Runnable NOTHING = () -> UserInterface.DIALOGBOX.reset();
 	private Button button0, button1;
@@ -38,9 +38,9 @@ public class DialogBox extends NewElement implements Dialog {
 	}
 	
 	@Override
-	public NewElement repos(){
+	public Element repos(){
 		x = (UserInterface.width - width) / 2 + xrel; y = (UserInterface.height - height) / 2 + yrel;
-		clearVertexes(); for(NewElement elm : elements) elm.repos(); return this;
+		clearVertexes(); for(Element elm : elements) elm.repos(); return this;
 	}
 	
 	@Override

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.FontRenderer;
-import net.fexcraft.app.fmt.ui.NewElement;
+import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.general.NFC.AfterTask;
 import net.fexcraft.app.fmt.utils.Settings;
@@ -18,7 +18,7 @@ import net.fexcraft.app.fmt.utils.Settings.Setting;
  * @author Ferdinand Calo' (FEX___96)
  *
  */
-public class SettingsBox extends NewElement implements Dialog {
+public class SettingsBox extends Element implements Dialog {
 	
 	private int page = 0;
 	private static final int perpage = 7;
@@ -42,9 +42,9 @@ public class SettingsBox extends NewElement implements Dialog {
 	}
 	
 	@Override
-	public NewElement repos(){
+	public Element repos(){
 		x = (UserInterface.width - width) / 2 + xrel; y = (UserInterface.height - height) / 2 + yrel;
-		clearVertexes(); for(NewElement elm : elements) elm.repos(); return this;
+		clearVertexes(); for(Element elm : elements) elm.repos(); return this;
 	}
 	
 	@Override
@@ -82,7 +82,7 @@ public class SettingsBox extends NewElement implements Dialog {
 		private int relx, rely;
 		private Settings.Setting setting;
 
-		public Field(NewElement root, String id, int x, int y, Setting setting){
+		public Field(Element root, String id, int x, int y, Setting setting){
 			super(root, id, "settingsbox:field", 240, x, y); relx = x; rely = y; this.setting = setting;
 			this.setWithCommas(true).setText(setting.toString(), false).setBorder(0xff000000, 0, 1, true, true, true, true);
 		}
@@ -110,7 +110,7 @@ public class SettingsBox extends NewElement implements Dialog {
 		private int relx, rely;
 		private Settings.Setting setting;
 
-		public BoolButton(NewElement root, String id, int x, int y, Setting setting){
+		public BoolButton(Element root, String id, int x, int y, Setting setting){
 			super(root, id, "settingsbox:boolean", 240, 26, x, y); relx = x; rely = y; this.setting = setting;
 			this.setText(setting.toString(), false);
 		}

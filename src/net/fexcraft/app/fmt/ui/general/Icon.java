@@ -1,6 +1,6 @@
 package net.fexcraft.app.fmt.ui.general;
 
-import net.fexcraft.app.fmt.ui.NewElement;
+import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.lib.common.math.RGB;
 
 /**
@@ -8,17 +8,17 @@ import net.fexcraft.lib.common.math.RGB;
  * @author Ferdinand Calo' (FEX___96)
  *
  */
-public class Icon extends NewElement {
+public class Icon extends Element {
 	
-	public Icon(NewElement root, String id, String style, String texture, int size, int x, int y){
+	public Icon(Element root, String id, String style, String texture, int size, int x, int y){
 		super(root, id, style); this.setPosition(x, y, root.z + 1).setSize(size, size).setTexture(texture, true).setEnabled(true);
 	}
 	
-	public Icon(NewElement elm, String id, String style, String texture, int size, int x, int y, RGB hover){
+	public Icon(Element elm, String id, String style, String texture, int size, int x, int y, RGB hover){
 		this(elm, id, style, texture, size, x, y); hovercolor = hover;
 	}
 	
-	public Icon(NewElement elm, String id, String style, String texture, int size, int x, int y, RGB hover, RGB dis){
+	public Icon(Element elm, String id, String style, String texture, int size, int x, int y, RGB hover, RGB dis){
 		this(elm, id, style, texture, size, x, y, hover); discolor = dis;
 	}
 
@@ -31,7 +31,7 @@ public class Icon extends NewElement {
 	
 	@Override
 	public void hovered(float mx, float my){
-		super.hovered(mx, my); if(this.hovered){ for(NewElement elm : elements) elm.setVisible(true); }
+		super.hovered(mx, my); if(this.hovered){ for(Element elm : elements) elm.setVisible(true); }
 	}
 
 }

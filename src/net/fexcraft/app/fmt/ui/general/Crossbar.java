@@ -1,14 +1,14 @@
 package net.fexcraft.app.fmt.ui.general;
 
 import net.fexcraft.app.fmt.ui.Dialog;
-import net.fexcraft.app.fmt.ui.NewElement;
+import net.fexcraft.app.fmt.ui.Element;
 
 /**
  * 
  * @author Ferdinand Calo' (FEX___96)
  *
  */
-public class Crossbar extends NewElement {
+public class Crossbar extends Element {
 	
 	public Crossbar(){
 		super(null, "crossbar", "crossbar", false);

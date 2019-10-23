@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.FontRenderer;
-import net.fexcraft.app.fmt.ui.NewElement;
+import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.utils.KeyCompound;
 import net.fexcraft.app.fmt.utils.KeyCompound.KeyFunction;
@@ -18,7 +18,7 @@ import net.fexcraft.app.fmt.utils.StyleSheet;
  * @author Ferdinand Calo' (FEX___96)
  *
  */
-public class ControlsAdjuster extends NewElement implements Dialog {
+public class ControlsAdjuster extends Element implements Dialog {
 
 	public static boolean CATCHING = false;
 	//private Button next, prev;
@@ -34,9 +34,9 @@ public class ControlsAdjuster extends NewElement implements Dialog {
 	}
 	
 	@Override
-	public NewElement repos(){
+	public Element repos(){
 		x = (UserInterface.width - width) / 2 + xrel; y = (UserInterface.height - height) / 2 + yrel;
-		clearVertexes(); for(NewElement elm : elements) elm.repos(); return this;
+		clearVertexes(); for(Element elm : elements) elm.repos(); return this;
 	}
 	
 	@Override

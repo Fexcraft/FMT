@@ -5,7 +5,7 @@ import java.io.File;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager;
-import net.fexcraft.app.fmt.ui.NewElement;
+import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.general.NFC.AfterTask;
@@ -31,7 +31,7 @@ import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.utils.Print;
 
-public class Toolbar extends NewElement {
+public class Toolbar extends Element {
 
 	public Toolbar(){
 		super(null, "toolbar", "toolbar"); hovercolor = RGB.WHITE;
@@ -471,15 +471,15 @@ public class Toolbar extends NewElement {
 
 	private void realign(){
 		int start = 4, high = 3;
-		for(NewElement elm : elements){
+		for(Element elm : elements){
 			if(start + elm.width >= width - 4){ start = 4; high += 34; }
 			elm.setPosition(start, elm instanceof Icon ? high - 2 : high, null); start += elm.width + 2;
 		}
-		this.height = high + 31; for(NewElement elm : elements) elm.repos();
+		this.height = high + 31; for(Element elm : elements) elm.repos();
 	}
 	
 	@Override
-	public NewElement repos(){
+	public Element repos(){
 		width = UserInterface.width; x = xrel; y = yrel; realign(); return this.clearVertexes();
 	}
 

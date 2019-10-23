@@ -3,13 +3,13 @@ package net.fexcraft.app.fmt.ui.tree;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import net.fexcraft.app.fmt.ui.NewElement;
+import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.lib.common.math.RGB;
 
 @Deprecated
-public class RightTree extends NewElement {
+public class RightTree extends Element {
 	
 	public static final ArrayList<RightTree> TREES = new ArrayList<RightTree>();
 	protected int scroll, size;
@@ -21,7 +21,7 @@ public class RightTree extends NewElement {
 	}
 	
 	@Override
-	public NewElement repos(){
+	public Element repos(){
 		x = UserInterface.width - width; y = UserInterface.TOOLBAR.height + UserInterface.TOOLBAR.border_width;
 		height = UserInterface.height - y; if(Settings.bottombar()) height -= 29; clearVertexes(); return this;
 	}

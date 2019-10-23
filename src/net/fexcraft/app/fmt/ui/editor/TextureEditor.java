@@ -2,7 +2,7 @@ package net.fexcraft.app.fmt.ui.editor;
 
 import static net.fexcraft.app.fmt.utils.StyleSheet.BLACK;
 
-import net.fexcraft.app.fmt.ui.NewElement;
+import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.general.Button;
 import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.lib.common.math.RGB;
@@ -141,9 +141,9 @@ public class TextureEditor extends Editor {
 		button4.setText("Color Picker [" + (BUCKETMODE && PMODE == PaintMode.COLORPICKER ? "ON" : "OFF") + "]", true);
 	}
 	
-	public static class LargePallette extends NewElement {
+	public static class LargePallette extends Element {
 
-		public LargePallette(NewElement root, int x, int y){
+		public LargePallette(Element root, int x, int y){
 			super(root, "large_color_palette", "large_color_palette");
 			this.setSize(294, 294).setPosition(x, y, null);
 		}
@@ -170,9 +170,9 @@ public class TextureEditor extends Editor {
 		
 	}
 	
-	public static class HorizontalPallette extends NewElement {
+	public static class HorizontalPallette extends Element {
 
-		public HorizontalPallette(NewElement parent, int x, int y){
+		public HorizontalPallette(Element parent, int x, int y){
 			super(parent, "horizontal_color_palette", "horizontal_color_palette");
 			this.setSize(294, 40).setPosition(x, y, null);
 		}

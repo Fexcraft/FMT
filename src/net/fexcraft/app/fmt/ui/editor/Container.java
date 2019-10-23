@@ -2,7 +2,7 @@ package net.fexcraft.app.fmt.ui.editor;
 
 import org.lwjgl.input.Mouse;
 
-import net.fexcraft.app.fmt.ui.NewElement;
+import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.general.Button;
 
@@ -11,16 +11,16 @@ public class Container extends Button {
 	private int elementheight;
 	private boolean expanded;
 
-	public Container(NewElement root, String id, int width, int height, int x, int y, int[] rowsizes){
+	public Container(Element root, String id, int width, int height, int x, int y, int[] rowsizes){
 		super(root, id, "editor:container", width, height, x, y);
 		this.setIcon("icons/editors/minimized", height - 2);
 		this.setExpanded(false); this.setBackgroundless(false).setColor(0xff95ad9c);
 	}
 	
 	@Override
-	public NewElement repos(){
+	public Element repos(){
 		clearVertexes(); elementheight = 4;
-		for(NewElement elm : elements){
+		for(Element elm : elements){
 			elm.repos(); if(elm.xrel < 20) elementheight += elm.height + 4;
 		} return this;//reposition is handled by editor
 	}
@@ -28,12 +28,12 @@ public class Container extends Button {
 	@Override
 	public void render(int width, int height){
 		if(!Mouse.isGrabbed()) hovered(Mouse.getX() * UserInterface.scale, height - Mouse.getY() * UserInterface.scale);
-		this.renderSelf(width, height); if(expanded) for(NewElement elm : elements) elm.render(width, height);
+		this.renderSelf(width, height); if(expanded) for(Element elm : elements) elm.render(width, height);
 	}
 
 	public void setExpanded(boolean bool){
 		this.setIcon((expanded = bool) ? "icons/editors/expanded" : "icons/editors/minimized", height - 2);
-		for(NewElement elm : elements) elm.setVisible(expanded); root.repos();
+		for(Element elm : elements) elm.setVisible(expanded); root.repos();
 	}
 	
 	public boolean isExpanded(){

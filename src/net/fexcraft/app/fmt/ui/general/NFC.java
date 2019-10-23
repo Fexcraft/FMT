@@ -17,7 +17,7 @@ import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.FontRenderer;
-import net.fexcraft.app.fmt.ui.NewElement;
+import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.utils.Backups;
 import net.fexcraft.app.fmt.utils.SaveLoad;
@@ -36,7 +36,7 @@ import net.fexcraft.lib.common.utils.Print;
  *
  */
 @Deprecated
-public class NFC extends NewElement implements Dialog {
+public class NFC extends Element implements Dialog {
 
 	public static final AfterTask NOTHING = new AfterTask(){ @Override public void run(){ Print.console(file); return; }};
 	private Button exim_next, exim_prev, root;
@@ -220,9 +220,9 @@ public class NFC extends NewElement implements Dialog {
 	}
 	
 	@Override
-	public NewElement repos(){
+	public Element repos(){
 		x = (UserInterface.width - width) / 2 + xrel; y = (UserInterface.height - height) / 2 + yrel;
-		clearVertexes(); for(NewElement elm : elements) elm.repos(); return this;
+		clearVertexes(); for(Element elm : elements) elm.repos(); return this;
 	}
 	
 	@Override

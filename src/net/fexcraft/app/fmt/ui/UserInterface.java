@@ -27,7 +27,7 @@ import net.fexcraft.lib.common.math.Time;
 public class UserInterface {
 
 	public static float scale_x, scale_y, scale;
-	public static NewElement SELECTED = null, DRAGGED = null;
+	public static Element SELECTED = null, DRAGGED = null;
 	public static Toolbar TOOLBAR;
 	public static Bottombar BOTTOMBAR;
 	public static DialogBox DIALOGBOX;
@@ -35,7 +35,7 @@ public class UserInterface {
 	public static ControlsAdjuster CONTROLS;
 	public static SettingsBox SETTINGSBOX;
 	//
-	private ArrayList<NewElement> elms = new ArrayList<>();
+	private ArrayList<Element> elements = new ArrayList<>();
 	private FMTB root;
 	//
 	public static int width, height;
@@ -57,7 +57,7 @@ public class UserInterface {
         scale_x = (float)Math.ceil(scale_x); scale_y = (float)Math.ceil(scale_y);
         //scale = Math.min(scale_x, scale_y);
 		width = (int)scale_x; height = (int)scale_y; scale = 1f / facts;
-		for(NewElement elm : elms){ elm.repos(); }
+		for(Element elm : elements){ elm.repos(); }
 	}
 
 	public void render(boolean bool){
@@ -79,7 +79,7 @@ public class UserInterface {
 			tmelm.render(width, height); logintxt.render(width, height);
 		}
 		else{
-			for(NewElement elm : elms) elm.render(width, height);
+			for(Element elm : elements) elm.render(width, height);
 		}
 		GL11.glDepthFunc(GL11.GL_LESS);
 		//
@@ -97,7 +97,7 @@ public class UserInterface {
 		}
 	}
 	
-	private NewElement tmelm = new TextField(null, "text", "screenshot:title", 4, 4, 500){
+	private Element tmelm = new TextField(null, "text", "screenshot:title", 4, 4, 500){
 		@Override
 		public void renderSelf(int rw, int rh){
 			this.y = rh - FMTB.get().getDisplayMode().getHeight() + 4;
@@ -105,7 +105,7 @@ public class UserInterface {
 			super.renderSelf(rw, rh);
 		}
 	};
-	private NewElement logintxt = new TextField(null, "text", "screenshot:credits", 4, 4, 500){
+	private Element logintxt = new TextField(null, "text", "screenshot:credits", 4, 4, 500){
 		@Override
 		public void renderSelf(int rw, int rh){
 			this.y = rh - FMTB.get().getDisplayMode().getHeight() + 32;
@@ -139,7 +139,7 @@ public class UserInterface {
 
 	public boolean isAnyHovered(){
 		boolean bool = false;
-		for(NewElement elm : elms){ if(elm.anyHovered()){ bool = true; break; } }
+		for(Element elm : elements){ if(elm.anyHovered()){ bool = true; break; } }
 		return bool;
 	}
 
@@ -150,8 +150,8 @@ public class UserInterface {
 			}
 		}
 		else{
-			NewElement element = null;
-			for(NewElement elm : elms){
+			Element element = null;
+			for(Element elm : elements){
 				if(elm.visible && elm.enabled){
 					if(elm.onButtonClick(Mouse.getX(), root.getDisplayMode().getHeight() - Mouse.getY(), i == 0, elm.hovered)){
 						return;
@@ -166,8 +166,8 @@ public class UserInterface {
 	}
 
 	public void getDraggableElement(){
-		NewElement element = null;
-		for(NewElement elm : elms){
+		Element element = null;
+		for(Element elm : elements){
 			if(elm.visible){
 				element = elm.getDraggableElement(Mouse.getX(), root.getDisplayMode().getHeight() - Mouse.getY(), elm.hovered);
 				if(element != null) break;
@@ -177,21 +177,21 @@ public class UserInterface {
 	}
 
 	public boolean onScrollWheel(int wheel){
-		for(NewElement elm : elms){
+		for(Element elm : elements){
 			if(elm.visible && elm.enabled){
 				if(elm.onScrollWheel(wheel)) return true;
 			}
 		} return false;
 	}
 
-	public NewElement getElement(String string){
-		for(NewElement elm : elms) if(elm.id.equals(string)) return elm; return null;
+	public Element getElement(String string){
+		for(Element elm : elements) if(elm.id.equals(string)) return elm; return null;
 	}
 
 	public boolean hasElement(String string){
 		return getElement(string) != null;
 	}
 	
-	public ArrayList<NewElement> getNewElements(){ return elms; }
+	public ArrayList<Element> getElements(){ return elements; }
 	
 }

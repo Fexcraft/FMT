@@ -330,20 +330,20 @@ public class FMTB {
 		//
 		(UserInterface.TOOLBAR = new Toolbar()).repos();
 		(UserInterface.BOTTOMBAR = new Bottombar()).setVisible(Settings.bottombar());
-		ui.getNewElements().add(new ModelTree());
-		ui.getNewElements().add(new HelperTree());
-		ui.getNewElements().add(new GeneralEditor());
-		ui.getNewElements().add(new ModelGroupEditor());
-		ui.getNewElements().add(new TextureEditor());
-		ui.getNewElements().add(new PreviewEditor());
+		ui.getElements().add(new ModelTree());
+		ui.getElements().add(new HelperTree());
+		ui.getElements().add(new GeneralEditor());
+		ui.getElements().add(new ModelGroupEditor());
+		ui.getElements().add(new TextureEditor());
+		ui.getElements().add(new PreviewEditor());
 		//
-		ui.getNewElements().add(UserInterface.DIALOGBOX = new DialogBox());
-		ui.getNewElements().add(UserInterface.SETTINGSBOX = new SettingsBox());
-		ui.getNewElements().add(UserInterface.FILECHOOSER = new NFC());
-		ui.getNewElements().add(UserInterface.CONTROLS = new ControlsAdjuster());
+		ui.getElements().add(UserInterface.DIALOGBOX = new DialogBox());
+		ui.getElements().add(UserInterface.SETTINGSBOX = new SettingsBox());
+		ui.getElements().add(UserInterface.FILECHOOSER = new NFC());
+		ui.getElements().add(UserInterface.CONTROLS = new ControlsAdjuster());
 		//render last
-		ui.getNewElements().add(UserInterface.TOOLBAR);
-		ui.getNewElements().add(UserInterface.BOTTOMBAR);
+		ui.getElements().add(UserInterface.TOOLBAR);
+		ui.getElements().add(UserInterface.BOTTOMBAR);
 		//ui.getNewElements().add(new Crossbar());
 		FMTB.MODEL.updateFields();
 	}

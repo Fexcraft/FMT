@@ -1,6 +1,6 @@
 package net.fexcraft.app.fmt.ui.general;
 
-import net.fexcraft.app.fmt.ui.NewElement;
+import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.lib.common.math.RGB;
 
 /**
@@ -8,17 +8,17 @@ import net.fexcraft.lib.common.math.RGB;
  * @author Ferdinand Calo' (FEX___96)
  *
  */
-public class RectIcon extends NewElement {
+public class RectIcon extends Element {
 	
-	public RectIcon(NewElement root, String id, String style, String texture, int sizex, int sizey, int x, int y){
+	public RectIcon(Element root, String id, String style, String texture, int sizex, int sizey, int x, int y){
 		super(root, id, style); this.setPosition(x, y, root.z + 1).setSize(sizex, sizey).setTexture(texture, true).setEnabled(true);
 	}
 	
-	public RectIcon(NewElement elm, String id, String style, String texture, int sizex, int sizey, int x, int y, RGB hover){
+	public RectIcon(Element elm, String id, String style, String texture, int sizex, int sizey, int x, int y, RGB hover){
 		this(elm, id, style, texture, sizex, sizey, x, y); hovercolor = hover;
 	}
 	
-	public RectIcon(NewElement elm, String id, String style, String texture, int sizex, int sizey, int x, int y, RGB hover, RGB dis){
+	public RectIcon(Element elm, String id, String style, String texture, int sizex, int sizey, int x, int y, RGB hover, RGB dis){
 		this(elm, id, style, texture, sizex, sizey, x, y, hover); discolor = dis;
 	}
 
@@ -31,7 +31,7 @@ public class RectIcon extends NewElement {
 	
 	@Override
 	public void hovered(float mx, float my){
-		super.hovered(mx, my); if(this.hovered){ for(NewElement elm : elements) elm.setVisible(true); }
+		super.hovered(mx, my); if(this.hovered){ for(Element elm : elements) elm.setVisible(true); }
 	}
 
 }

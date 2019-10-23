@@ -1,7 +1,7 @@
 package net.fexcraft.app.fmt.ui.general;
 
 import net.fexcraft.app.fmt.ui.FontRenderer;
-import net.fexcraft.app.fmt.ui.NewElement;
+import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.lib.common.math.RGB;
 
 /**
@@ -9,23 +9,23 @@ import net.fexcraft.lib.common.math.RGB;
  * @author Ferdinand Calo' (FEX___96)
  *
  */
-public class Button extends NewElement {
+public class Button extends Element {
 	
 	private RGB iconcolor = null;
 	private boolean centered, drawbackground = true;
 	private String text, icon;
 	private int iconsize, texxoff = 2, texyoff = 2;
 	
-	public Button(NewElement root, String id, String style, int width, int height, int x, int y){
+	public Button(Element root, String id, String style, int width, int height, int x, int y){
 		super(root, id, style == null ? root instanceof HoverMenu ? "menu:button" : "button" : style);
 		this.setPosition(x, y, root.z + 1).setSize(width, height).setColor(0xffc7c7c7).setEnabled(true);
 		this.setBorder(0xff000000, 0xff000000, 1, root instanceof HoverMenu == false, true, true, true); this.setupSubmenu();
 	}
 	
 	@Override
-	public NewElement repos(){
+	public Element repos(){
 		x = root.x + xrel; y = root.y + yrel + (root instanceof HoverMenu ? getIndex() * 28 + 1 : 0);
-		clearVertexes(); for(NewElement elm : elements) elm.repos(); return this;
+		clearVertexes(); for(Element elm : elements) elm.repos(); return this;
 	}
 	
 	private int getIndex(){
@@ -34,11 +34,11 @@ public class Button extends NewElement {
 		} return -1;
 	}
 
-	public Button(NewElement elm, String id, String style, int w, int h, int x, int y, int hover){
+	public Button(Element elm, String id, String style, int w, int h, int x, int y, int hover){
 		this(elm, id, style, w, h, x, y); this.setHoverColor(hover, false);
 	}
 	
-	public Button(NewElement elm, String id, String style, int w, int h, int x, int y, int hover, int dis){
+	public Button(Element elm, String id, String style, int w, int h, int x, int y, int hover, int dis){
 		this(elm, id, style, w, h, x, y, hover); this.setHoverColor(dis, true);
 	}
 	
@@ -54,7 +54,7 @@ public class Button extends NewElement {
 		if(this.root instanceof HoverMenu){
 			int leng = FontRenderer.getWidth(text, 1);
 			if(leng + 10 > this.width) this.width = leng + 10;
-			for(NewElement  elm : this.root.getElements()){
+			for(Element  elm : this.root.getElements()){
 				if(elm.width < width) elm.width = this.width;
 			}
 			if(this.root.width - 4 < this.width) this.root.width = this.width + 4;
@@ -102,7 +102,7 @@ public class Button extends NewElement {
 	
 	@Override
 	public void hovered(float mx, float my){
-		super.hovered(mx, my); if(this.hovered){ for(NewElement elm : elements) elm.setVisible(true); }
+		super.hovered(mx, my); if(this.hovered){ for(Element elm : elements) elm.setVisible(true); }
 	}
 
 }

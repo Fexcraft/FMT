@@ -11,10 +11,10 @@ import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.lib.common.math.RGB;
 
-public class NewElement {
+public class Element {
 
-	protected ArrayList<NewElement> elements = new ArrayList<>();
-	protected final NewElement root;
+	protected ArrayList<Element> elements = new ArrayList<>();
+	protected final Element root;
 	protected final String id, stylegroup;
 	//
 	protected float[][][] vertexes;
@@ -26,36 +26,36 @@ public class NewElement {
 	protected RGB hovercolor, discolor;
 	protected boolean hovered, visible = true, enabled = true, draggable;
 	
-	public NewElement(NewElement root, String id, String stylegroup){
+	public Element(Element root, String id, String stylegroup){
 		this(root, id, stylegroup, true);
 	}
 	
-	public NewElement(NewElement root, String id, String stylegroup, boolean inithover){
+	public Element(Element root, String id, String stylegroup, boolean inithover){
 		this.root = root; this.id = id; this.stylegroup = stylegroup; if(inithover) this.setHoverColor(null, false);
 	}
 	
-	public NewElement setPosition(int x, int y, Integer z){
+	public Element setPosition(int x, int y, Integer z){
 		xrel = x; yrel = y; if(z != null) this.z = z; this.repos(); return this;
 	}
 	
-	public NewElement setSize(int x, int y){
+	public Element setSize(int x, int y){
 		width = x; height = y; return this;
 	}
 	
-	public NewElement setTexture(String texture, boolean load){
+	public Element setTexture(String texture, boolean load){
 		if(load) TextureManager.loadTexture(texture, null);
 		this.texture = TextureManager.getTexture(texture, true); return this;
 	}
 	
-	public NewElement setEnabled(boolean bool){
+	public Element setEnabled(boolean bool){
 		this.enabled = bool; return this;
 	}
 
-	public NewElement setVisible(boolean bool){
+	public Element setVisible(boolean bool){
 		this.visible = bool; return this;
 	}
 	
-	public NewElement setBorder(int color, int color0, int width, boolean... bools){
+	public Element setBorder(int color, int color0, int width, boolean... bools){
 		border = StyleSheet.getColourFor(stylegroup, "border", color); border_width = width;
 		border_fill = StyleSheet.getColourFor(stylegroup, "border_fill", color0);
 		top = bools.length > 0 && bools[0]; bot = bools.length > 1 && bools[1];
@@ -63,27 +63,27 @@ public class NewElement {
 		return this.clearVertexes().clearTexture();
 	}
 	
-	public NewElement setHoverColor(Integer hover, boolean dis){
+	public Element setHoverColor(Integer hover, boolean dis){
 		if(!dis) hovercolor = new RGB(StyleSheet.getColourFor(stylegroup, "hovered", hover == null ? 0xffdae868 : hover, hover != null));
 		else discolor = new RGB(StyleSheet.getColourFor(stylegroup, "disabled", hover == null ? 0xffeb4034 : hover, hover != null));
 		return this;
 	}
 
-	public NewElement clearVertexes(){
+	public Element clearVertexes(){
 		vertexes = null; return this;
 	}
 
-	public NewElement clearTexture(){
+	public Element clearTexture(){
 		if(texture != null) texture.rebind(); return this;
 	}
 
-	public NewElement setColor(int color){
+	public Element setColor(int color){
 		fill = StyleSheet.getColourFor(stylegroup, "background", color); return this;
 	}
 	
-	public NewElement repos(){
+	public Element repos(){
 		if(root == null){ x = xrel; y = yrel; } else { x = root.x + xrel; y = root.y + yrel; }
-		clearVertexes(); for(NewElement elm : elements) elm.repos(); return this;
+		clearVertexes(); for(Element elm : elements) elm.repos(); return this;
 	}
 	
 	public void hovered(float mouseX, float mouseY){
@@ -119,7 +119,7 @@ public class NewElement {
 			this.renderSelf(width, height);
 			if(z != 0) GL11.glTranslatef(0, 0, -z);
 		}
-		if(this.visible && !elements.isEmpty()) for(NewElement elm : elements) elm.render(width, height);
+		if(this.visible && !elements.isEmpty()) for(Element elm : elements) elm.render(width, height);
 	}
 	
 	/** To be overriden by extending classes. */
@@ -208,7 +208,7 @@ public class NewElement {
 
 	public boolean onButtonClick(int x, int y, boolean left, boolean hovered){
 		boolean bool = false;
-		for(NewElement elm : elements){
+		for(Element elm : elements){
 			if(elm.visible && elm.enabled){
 				if(bool = elm.onButtonClick(x, y, left, elm.hovered)) break;
 			}
@@ -216,9 +216,9 @@ public class NewElement {
 		return bool ? true : hovered ? processButtonClick(x, y, left) : false;
 	}
 
-	public NewElement getDraggableElement(int mx, int my, boolean hovered){
-		NewElement element = null;
-		for(NewElement elm : elements){
+	public Element getDraggableElement(int mx, int my, boolean hovered){
+		Element element = null;
+		for(Element elm : elements){
 			if(!elm.visible) continue;
 			if((element = elm.getDraggableElement(mx, my, elm.hovered)) != null) break;
 		}
@@ -232,12 +232,12 @@ public class NewElement {
 
 	public boolean anyHovered(){
 		if(hovered) return true; boolean bool = false;
-		for(NewElement elm : elements){ if(elm.anyHovered()){ bool = true; break; } } return bool;
+		for(Element elm : elements){ if(elm.anyHovered()){ bool = true; break; } } return bool;
 	}
 
 	public boolean onScrollWheel(int wheel){
 		boolean bool = false;
-		for(NewElement elm : elements){
+		for(Element elm : elements){
 			if(elm.visible && elm.enabled){
 				if(bool = elm.onScrollWheel(wheel)) break;
 			}
@@ -248,7 +248,7 @@ public class NewElement {
 	/** To be overridden. **/
 	public boolean processScrollWheel(int wheel){ return false; }
 	
-	public ArrayList<NewElement> getElements(){
+	public ArrayList<Element> getElements(){
 		return elements;
 	}
 
@@ -268,19 +268,19 @@ public class NewElement {
 		if(isSelected()) UserInterface.SELECTED = null; return UserInterface.SELECTED == null;
 	}
 
-	public NewElement getElement(String string){
-		for(NewElement elm : elements) if(elm.id.equals(string)) return elm; return null;
+	public Element getElement(String string){
+		for(Element elm : elements) if(elm.id.equals(string)) return elm; return null;
 	}
 	
 	public boolean isDraggable(){
 		return draggable;
 	}
 	
-	public NewElement setDraggable(boolean bool){
+	public Element setDraggable(boolean bool){
 		draggable = bool; return this;
 	}
 
-	public NewElement getRoot(){
+	public Element getRoot(){
 		return root;
 	}
 
