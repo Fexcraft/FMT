@@ -28,21 +28,21 @@ public class ModelTree extends RightTree {
 	public void renderSelf(int rw, int rh){
 		this.y = UserInterface.TOOLBAR.height;
 		this.x = rw - this.width; this.height = rh - y; trheight = 0;
-		this.renderQuad(x, y, width, height = (rh - y + 2), "ui/background_light");
-		this.renderQuad(x - 2, y, 2, height = (rh - y + 4), "ui/background_dark");
+		//this.renderQuad(x, y, width, height = (rh - y + 2), "ui/background_light");
+		//this.renderQuad(x - 2, y, 2, height = (rh - y + 4), "ui/background_dark");
 		//
 		trlist = (TurboList[])FMTB.MODEL.getCompound().values().toArray(new TurboList[]{});
 		FMTB.MODEL.getCompound().values().forEach(turbo -> trheight += turbo.tempheight = 26 + (turbo.size() * 26));
 		GL11.glTranslatef(0, 0,  10); int pass = 0;
 		if(Settings.polygonCount()){
-			this.renderQuad(x + 4, y + 4 + -scroll + (pass), width - 8, 24, "ui/background_dark");
+			this.renderQuad(x + 4, y + 4 + -scroll + (pass), width - 8, 24, "blank");
 			FontRenderer.drawText("Polygons: " + count, x + 8, y + 5 + -scroll + (pass), 1, fontcol);
 			pass += 26; count = 0;
 		}
 		for(int i = 0; i < trlist.length; i++){
 			TurboList list = trlist[i]; count += list.size();
 			color(list.visible, list.selected).glColorApply();
-			this.renderQuad(x + 4, y + 4 + -scroll + (pass), width - 8, 24, "ui/background_white");
+			this.renderQuad(x + 4, y + 4 + -scroll + (pass), width - 8, 24, "blank");
 			FontRenderer.drawText((Settings.polygonCount() ? "[" + list.size() + "] " : "") + list.id, x + 8, y + 5 + -scroll + (pass), 1, fontcol);
 			GL11.glTranslatef(0, 0,  1);
 			this.renderIcon(x + width - 92, y + 6 + -scroll + (pass), 20, "icons/group_minimize");
@@ -53,7 +53,7 @@ public class ModelTree extends RightTree {
 			if(!list.minimized){
 				for(int j = 0; j < list.size(); j++){
 					poly = list.get(j); color(poly.visible, poly.selected || list.selected).glColorApply();
-					this.renderQuad(x + 8, y + 4 + -scroll + (pass), width - 16, 24, "ui/background_white");
+					this.renderQuad(x + 8, y + 4 + -scroll + (pass), width - 16, 24, "blank");
 					FontRenderer.drawText(j + " | " + poly.name(), x + 10, y + 5 + -scroll + (pass), 1, fontcol);
 					GL11.glTranslatef(0, 0,  1);
 					this.renderIcon(x + width - 74, y + 6 + -scroll + (pass), 20, "icons/group_edit");
@@ -130,7 +130,7 @@ public class ModelTree extends RightTree {
 		} return true;
 	}
 
-	protected boolean processScrollWheel(int wheel){
+	public boolean processScrollWheel(int wheel){
 		this.modifyScroll(-wheel / (Mouse.isButtonDown(1) ? 1 : 10)); return true;
 	}
 	

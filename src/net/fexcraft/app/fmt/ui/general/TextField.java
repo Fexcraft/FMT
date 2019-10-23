@@ -60,8 +60,11 @@ public class TextField extends NewElement {
 
 	@Override
 	public void renderSelf(int rw, int rh){
-		(enabled ? isSelected() ? hovered ? hoversel : nohoversel : hovered ? hovercolor : RGB.WHITE : discolor).glColorApply();
-		if(background) this.renderSelfQuad(); if(enabled) RGB.glColorReset(); if(!number && text == null) return;
+		if(background){
+			(enabled ? isSelected() ? hovered ? hoversel : nohoversel : hovered ? hovercolor : RGB.WHITE : discolor).glColorApply();//TODO
+			this.renderSelfQuad(); RGB.glColorReset();
+		}
+		if(!number && text == null) return;
 		String tex = number ? (tempval == null ? value : "*" + tempval) + "" : tempval == null ? this.text : tempval;
 		if(centered){
 			int x = width / 2 - (FontRenderer.getWidth(tex, 1) / 2), y = height / 2 - 10;

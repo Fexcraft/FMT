@@ -45,6 +45,8 @@ import net.fexcraft.app.fmt.ui.general.NFC;
 import net.fexcraft.app.fmt.ui.general.SettingsBox;
 import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.ui.general.Toolbar;
+import net.fexcraft.app.fmt.ui.tree.HelperTree;
+import net.fexcraft.app.fmt.ui.tree.ModelTree;
 import net.fexcraft.app.fmt.utils.Backups;
 import net.fexcraft.app.fmt.utils.DiscordUtil;
 import net.fexcraft.app.fmt.utils.GGR;
@@ -328,8 +330,8 @@ public class FMTB {
 		//
 		(UserInterface.TOOLBAR = new Toolbar()).repos();
 		(UserInterface.BOTTOMBAR = new Bottombar()).setVisible(Settings.bottombar());
-		//ui.getElements().add(new ModelTree());
-		//ui.getElements().add(new HelperTree());
+		ui.getNewElements().add(new ModelTree());
+		ui.getNewElements().add(new HelperTree());
 		ui.getNewElements().add(new GeneralEditor());
 		ui.getNewElements().add(new ModelGroupEditor());
 		ui.getNewElements().add(new TextureEditor());
