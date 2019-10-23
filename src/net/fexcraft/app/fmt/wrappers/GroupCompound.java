@@ -14,6 +14,7 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.re.DialogBox;
 import net.fexcraft.app.fmt.ui.re.TextField;
+import net.fexcraft.app.fmt.ui.re.editor.Container;
 import net.fexcraft.app.fmt.ui.re.editor.Editor;
 import net.fexcraft.app.fmt.utils.RayCoastAway;
 import net.fexcraft.app.fmt.utils.TextureManager;
@@ -495,7 +496,7 @@ public class GroupCompound {
 				if(texname.length() > 32){ texname = texname.substring(texname.length() - 32, texname.length()); }
 				Editor.getGlobalField("group_texture").setText(texname, true);
 			};
-			//TODO ((Container)Editor.get("model_group_editor").getElement("animations")).addSubElements();
+			((Container)Editor.get("model_group_editor").getElement("animations")).addSubElements();
 			//
 			Editor.getGlobalField("model_posx").applyChange(pos == null ? 0 : pos.xCoord);
 			Editor.getGlobalField("model_posy").applyChange(pos == null ? 0 : pos.yCoord);
@@ -507,7 +508,7 @@ public class GroupCompound {
 			Editor.getGlobalField("model_texy").applyChange(this.textureSizeY);
 			Editor.getGlobalField("model_texz").applyChange(this.textureScale);
 			Editor.getGlobalField("model_name").setText(this.name, true);
-			Editor.getGlobalField("multiplicator").applyChange(rate);
+			Editor.EDITORS.forEach(editor -> editor.getMultiplicator().applyChange(rate));
 			//
 			String texname = this.texture + "";
 			if(texname.length() > 32){ texname = texname.substring(texname.length() - 32, texname.length()); }

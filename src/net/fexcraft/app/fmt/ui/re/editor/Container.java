@@ -53,4 +53,7 @@ public class Container extends Button {
 		if(elements.isEmpty()) return i; return elements.get(elements.size() - 1).height + i;
 	}
 
+	/** Specifically for the Group Animations Container. */
+	public void addSubElements(){}
+
 }

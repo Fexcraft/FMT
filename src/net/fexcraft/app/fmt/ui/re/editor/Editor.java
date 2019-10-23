@@ -15,10 +15,11 @@ public abstract class Editor extends NewElement {
 	public static final ArrayList<Editor> EDITORS = new ArrayList<>();
 	public static final String[] xyz = new String[]{ "x", "y", "z" };
 	protected Container[] containers;
+	private NewElement button;
 
 	public Editor(String id, String stylegroup){
 		super(null, id, stylegroup, false); EDITORS.add(this); this.setColor(0xff999999);
-		this.setPosition(0, 0, -50).setSize(308, 0).setVisible(false).setBorder(0xff000000, 0xffffffff, 1, false, false, false, true); Button button;
+		this.setPosition(0, 0, -50).setSize(308, 0).setVisible(false).setBorder(0xff000000, 0xffffffff, 1, false, false, false, true);
 		this.elements.add((button = new Button(this, "mb", "multiplicator", width - 8, 28, 4, 4, 0).setText("Multiplicator / Rate", 3, 4)).setHoverColor(0xffffffff, false));
 		button.getElements().add(new TextField(button, "mt", "multiplicator:field", 110, button.width - 144, 1){
 			@Override public boolean processScrollWheel(int wheel){
@@ -94,6 +95,14 @@ public abstract class Editor extends NewElement {
 
 	public static TextField getGlobalField(String string){
 		for(TextField field : TextField.getAllFields()) if(field.getId().equals(string)) return field; return null;
+	}
+
+	public TextField getLocalField(String string){
+		NewElement elm = getElement(string); return elm instanceof TextField ? (TextField)elm : null;
+	}
+	
+	public TextField getMultiplicator(){
+		return (TextField)button.getElement("mt");
 	}
 
 	public static void toggleContainer(int i){
