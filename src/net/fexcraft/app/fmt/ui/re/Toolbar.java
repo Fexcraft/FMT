@@ -228,7 +228,7 @@ public class Toolbar extends NewElement {
 							protected boolean processButtonClick(int x, int y, boolean left){
 								Editor.toggleAll(); return true;
 							}
-						}.setText("Toggle Visibility", false));
+						}.setText("Hide Editors", false));
 						this.elements.add(new Button(this, "general", null, 20, 26, 0, 0){
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
