@@ -35,9 +35,9 @@ import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
 import net.fexcraft.app.fmt.ui.general.NFC;
-import net.fexcraft.app.fmt.ui.general.SettingsBox;
 import net.fexcraft.app.fmt.ui.re.Bottombar;
 import net.fexcraft.app.fmt.ui.re.DialogBox;
+import net.fexcraft.app.fmt.ui.re.SettingsBox;
 import net.fexcraft.app.fmt.ui.re.TextField;
 import net.fexcraft.app.fmt.ui.re.Toolbar;
 import net.fexcraft.app.fmt.ui.re.editor.Editor;
@@ -324,7 +324,7 @@ public class FMTB {
 		//ui.getElements().add(new PreviewEditor());
 		//
 		ui.getNewElements().add(UserInterface.DIALOGBOX = new DialogBox());
-		ui.getElements().add(UserInterface.SETTINGSBOX = new SettingsBox());
+		ui.getNewElements().add(UserInterface.SETTINGSBOX = new SettingsBox());
 		ui.getElements().add(UserInterface.FILECHOOSER = new NFC());
 		ui.getElements().add(UserInterface.CONTROLS = new ControlsAdjuster());
 		//render last

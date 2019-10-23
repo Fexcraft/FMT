@@ -1,25 +1,23 @@
 /**
  * 
  */
-package net.fexcraft.app.fmt.ui.general;
+package net.fexcraft.app.fmt.ui.re;
 
 import java.util.ArrayList;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.Dialog;
-import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.FontRenderer;
+import net.fexcraft.app.fmt.ui.NewElement;
 import net.fexcraft.app.fmt.ui.general.NFC.AfterTask;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
-import net.fexcraft.app.fmt.utils.TextureManager;
-import net.fexcraft.lib.common.math.RGB;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
  *
  */
-public class SettingsBox extends Element implements Dialog {
+public class SettingsBox extends NewElement implements Dialog {
 	
 	private int page = 0;
 	private static final int perpage = 7;
@@ -30,15 +28,14 @@ public class SettingsBox extends Element implements Dialog {
 	private AfterTask task;
 	
 	public SettingsBox(){
-		super(null, "settingsbox"); this.setSize(258, 128);
-		this.visible = false; this.z = 90; Dialog.dialogs.add(this);
-		TextureManager.loadTexture("ui/settingsbox", null);
-		this.setTexPosSize("ui/settingsbox", 0, 0, 512, 256);
+		super(null, "settingsbox", "settingsbox"); this.setSize(258, 128).setDraggable(true).setColor(0xff80adcc);
+		this.setVisible(false).setPosition(0, 0, 90).setHoverColor(0xffffffff, false); Dialog.dialogs.add(this);
+		this.setBorder(0xff000000, 0xfffcba03, 5, true, true, true, true);
 		//
-		this.elements.add(Confirm = new Button(this, "confirm", 100, 20, 0, 0, new RGB(255, 255, 0)){
+		this.elements.add(Confirm = new Button(this, "confirm", "settingsbox:button", 100, 20, 0, 0, 0xffffff00){
 			@Override protected boolean processButtonClick(int x, int y, boolean left){ task.run(); reset(); return true; }
 		}.setText("Confirm", true));
-		this.elements.add(Cancel = new Button(this, "cancel", 100, 20, 0, 0, new RGB(255, 255, 0)){
+		this.elements.add(Cancel = new Button(this, "cancel", "settingsbox:button", 100, 20, 0, 0, 0xffffff00){
 			@Override protected boolean processButtonClick(int x, int y, boolean left){ reset(); return true; }
 		}.setText("Cancel", true));
 	}
@@ -65,7 +62,7 @@ public class SettingsBox extends Element implements Dialog {
 	}
 	
 	private void updateFields(){
-		this.elements.removeIf(pre -> !(pre.id.equals("confirm") || pre.id.equals("cancel")));
+		this.elements.removeIf(pre -> !(pre.getId().equals("confirm") || pre.getId().equals("cancel")));
 		for(int i = 0; i < perpage; i++){
 			int j = (page * perpage) + i; if(j >= settings.size()) break;
 			Setting setting = settings.get(j);
@@ -82,9 +79,9 @@ public class SettingsBox extends Element implements Dialog {
 		private int relx, rely;
 		private Settings.Setting setting;
 
-		public Field(Element root, String id, int x, int y, Setting setting){
-			super(root, id, 240, x, y); relx = x; rely = y; this.setting = setting;
-			this.setWithCommas(true).setText(setting.toString(), false);
+		public Field(NewElement root, String id, int x, int y, Setting setting){
+			super(root, id, "settingsbox:field", 240, x, y); relx = x; rely = y; this.setting = setting;
+			this.setWithCommas(true).setText(setting.toString(), false).setBorder(0xff000000, 0, 1, true, true, true, true);
 		}
 		
 		public void renderSelf(int rw, int rh){
@@ -106,8 +103,8 @@ public class SettingsBox extends Element implements Dialog {
 		private int relx, rely;
 		private Settings.Setting setting;
 
-		public BoolButton(Element root, String id, int x, int y, Setting setting){
-			super(root, id, 240, 26, x, y); relx = x; rely = y; this.setting = setting;
+		public BoolButton(NewElement root, String id, int x, int y, Setting setting){
+			super(root, id, "settingsbox:boolean", 240, 26, x, y); relx = x; rely = y; this.setting = setting;
 			this.setText(setting.toString(), false);
 		}
 		
@@ -150,7 +147,7 @@ public class SettingsBox extends Element implements Dialog {
 
 	@Override
 	public void reset(){
-		this.visible = false; this.elements.removeIf(pre -> !(pre.id.equals("confirm") || pre.id.equals("cancel")));
+		this.visible = false; this.elements.removeIf(pre -> !(pre.getId().equals("confirm") || pre.getId().equals("cancel")));
 		this.Confirm.setVisible(false); this.Cancel.setVisible(false); this.settings.clear(); this.updateFields();
 	}
 
