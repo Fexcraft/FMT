@@ -1,4 +1,4 @@
-package net.fexcraft.app.fmt.ui.re;
+package net.fexcraft.app.fmt.ui.re.editor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,6 +6,9 @@ import java.util.Arrays;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.NewElement;
 import net.fexcraft.app.fmt.ui.UserInterface;
+import net.fexcraft.app.fmt.ui.re.Button;
+import net.fexcraft.app.fmt.ui.re.Icon;
+import net.fexcraft.app.fmt.ui.re.TextField;
 import net.fexcraft.app.fmt.utils.Settings;
 
 public abstract class Editor extends NewElement {
@@ -36,7 +39,7 @@ public abstract class Editor extends NewElement {
 	@Override
 	public NewElement repos(){
 		x = 0; y = UserInterface.TOOLBAR.height + UserInterface.TOOLBAR.border_width;
-		height = FMTB.get().UI.height - y - UserInterface.TOOLBAR.border_width; if(Settings.bottombar()) height -= 26;
+		height = UserInterface.height - y - UserInterface.TOOLBAR.border_width; if(Settings.bottombar()) height -= 26;
 		clearVertexes(); for(NewElement elm : elements) elm.repos(); return this;
 	}
 

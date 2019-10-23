@@ -10,6 +10,7 @@ import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.general.NFC.AfterTask;
 import net.fexcraft.app.fmt.ui.general.NFC.ChooserMode;
+import net.fexcraft.app.fmt.ui.re.DialogBox;
 import net.fexcraft.app.fmt.ui.tree.RightTree;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.HelperCollector;

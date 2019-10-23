@@ -8,7 +8,6 @@ import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.ui.NewElement;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.editor.Editor;
-import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.ui.general.NFC.AfterTask;
 import net.fexcraft.app.fmt.ui.general.NFC.ChooserMode;
 import net.fexcraft.app.fmt.ui.tree.RightTree;
@@ -33,11 +32,9 @@ import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.utils.Print;
 
 public class Toolbar extends NewElement {
-	
-	private UserInterface ui;
 
-	public Toolbar(UserInterface ui){
-		super(null, "toolbar", "toolbar"); this.ui = ui; hovercolor = RGB.WHITE;
+	public Toolbar(){
+		super(null, "toolbar", "toolbar"); hovercolor = RGB.WHITE;
 		this.setPosition(0, 0, -20).setSize(100, 30).setColor(0xff484848).setBorder(0xff32a852, 0xffeb4034, 3, false, true);
 		//
 		this.elements.add(new Icon(this, "info", "toolbar:icon", "icons/toolbar/info", 32, 0, 0){
@@ -483,7 +480,7 @@ public class Toolbar extends NewElement {
 	
 	@Override
 	public NewElement repos(){
-		width = ui.width; x = xrel; y = yrel; realign(); return this.clearVertexes();
+		width = UserInterface.width; x = xrel; y = yrel; realign(); return this.clearVertexes();
 	}
 
 }

@@ -7,10 +7,10 @@ import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
-import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.ui.general.HoverMenu;
 import net.fexcraft.app.fmt.ui.general.NFC;
 import net.fexcraft.app.fmt.ui.general.SettingsBox;
+import net.fexcraft.app.fmt.ui.re.DialogBox;
 import net.fexcraft.app.fmt.ui.re.TextField;
 import net.fexcraft.app.fmt.ui.re.Toolbar;
 import net.fexcraft.app.fmt.utils.RayCoastAway;
@@ -37,7 +37,7 @@ public class UserInterface {
 	private ArrayList<NewElement> elms = new ArrayList<>();
 	private FMTB root;
 	//
-	public int width, height;
+	public static int width, height;
 	private float[] clearcolor;
 
 	public UserInterface(FMTB main){
