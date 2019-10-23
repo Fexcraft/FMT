@@ -16,14 +16,15 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.Dialog;
-import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.FontRenderer;
+import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.utils.Backups;
 import net.fexcraft.app.fmt.utils.SaveLoad;
-import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.utils.Settings.Type;
+import net.fexcraft.app.fmt.utils.StyleSheet;
+import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Time;
 import net.fexcraft.lib.common.utils.Print;
@@ -34,6 +35,7 @@ import net.fexcraft.lib.common.utils.Print;
  * @author Ferdinand Calo' (FEX___96)
  *
  */
+@Deprecated
 public class NFC extends Element implements Dialog {
 
 	public static final AfterTask NOTHING = new AfterTask(){ @Override public void run(){ Print.console(file); return; }};
@@ -48,13 +50,13 @@ public class NFC extends Element implements Dialog {
 	private ChooserMode mode;
 	
 	public NFC(){
-		super(null, "ui/filechooser"); TextureManager.loadTexture("ui/filechooser", null);
+		super(null, "filechooser", "filechooser"); this.setTexture("ui/filechooser", true).setDraggable(true);
+		this.setSize(512, 546).setVisible(false).setPosition(0, 0, 80); Dialog.dialogs.add(this);
 		TextureManager.loadTexture("icons/file_chooser_0", null); TextureManager.loadTexture("icons/file_chooser_1", null);
 		TextureManager.loadTexture("icons/file_chooser_2", null); TextureManager.loadTexture("icons/file_chooser_3", null);
 		TextureManager.loadTexture("icons/file_chooser_4", null); TextureManager.loadTexture("icons/file_chooser_5", null);
 		TextureManager.loadTexture("icons/file_chooser_6", null); TextureManager.loadTexture("icons/file_chooser_7", null);
-		this.visible = false; this.z = 80; this.height = 546; this.width = 512; Dialog.dialogs.add(this);
-		this.elements.add(sel[0] = new Button(this, "button0", 140, 28, 20, 504/*470*/, new RGB(255, 255, 0)){
+		this.elements.add(sel[0] = new Button(this, "button0", "filechooser:button", 140, 28, 20, 504/*470*/, StyleSheet.YELLOW){
 			@Override protected boolean processButtonClick(int x, int y, boolean left){
 				onfile.porter = PorterManager.getPorters(mode.exports()).get(eximscroll);
 				if(cfn.isEnabled() && isValidInput(cfn.getText())){
@@ -88,11 +90,11 @@ public class NFC extends Element implements Dialog {
 				return true;
 			}
 			@Override
-			public void hovered(int mx, int my){
+			public void hovered(float mx, float my){
 				super.hovered(mx, my); if(hovered) cfn.onReturn();
 			}
 		});
-		this.elements.add(sel[1] = new Button(this, "button1", 140, 28, 186, 504/*470*/, new RGB(255, 255, 0)){
+		this.elements.add(sel[1] = new Button(this, "button1", "filechooser:button", 140, 28, 186, 504/*470*/, StyleSheet.YELLOW){
 			@Override protected boolean processButtonClick(int x, int y, boolean left){
 				onfile.porter = PorterManager.getPorters(mode.exports()).get(eximscroll);
 				String str = Backups.getSimpleDateFormat(true).format(Time.getDate()); UserInterface.FILECHOOSER.visible = false;
@@ -101,18 +103,18 @@ public class NFC extends Element implements Dialog {
 				applySettingsToAfterTask(onfile); onfile.run(); UserInterface.FILECHOOSER.reset(); return true;
 			}
 		});
-		this.elements.add(sel[2] = new Button(this, "button2", 140, 28, 352, 504/*470*/, new RGB(255, 255, 0)){
+		this.elements.add(sel[2] = new Button(this, "button2", "filechooser:button", 140, 28, 352, 504/*470*/, StyleSheet.YELLOW){
 			@Override protected boolean processButtonClick(int x, int y, boolean left){ UserInterface.FILECHOOSER.reset(); return true; }
 		});
 		//
-		this.elements.add((eximporter = new TextField(this, "eximporter", 404, 17, 430).setRenderBackground(false).setColor(RGB.BLACK)).setEnabled(false));
-		this.elements.add(root = new Button(this, "fileroot", 472, 28, 20, 54, new RGB(200, 200, 200)){
+		this.elements.add((eximporter = new TextField(this, "eximporter", "filechooser:eximporter", 404, 17, 430).setRenderBackground(false).setColor(RGB.BLACK)).setEnabled(false));
+		this.elements.add(root = new Button(this, "fileroot", "filechooser:root", 472, 28, 20, 54, 0xffc8c8c8){
 			@Override protected boolean processButtonClick(int x, int y, boolean left){
 				if(currdir.getParentFile() != null) currdir = currdir.getParentFile().getAbsoluteFile(); ressel(); return true;
 			}
 		}.setBackgroundless(true));
 		for(int i = 0; i < files.length; i++){ int j = i;
-			this.elements.add(files[i] = new Button(this, "files" + i, 472, 28, 20, 82 + (i * 28), new RGB(255, 255, 0), new RGB("#ff8300")){
+			this.elements.add(files[i] = new Button(this, "files" + i, "filechooser:file", 472, 28, 20, 82 + (i * 28), StyleSheet.YELLOW, 0xffff8300){
 				@Override protected boolean processButtonClick(int x, int y, boolean left){
 					File[] fls = getFilteredList();
 					if(fls[selected = scroll + j].isDirectory()){
@@ -123,7 +125,7 @@ public class NFC extends Element implements Dialog {
 			}.setBackgroundless(true));
 		}
 		//
-		this.elements.add(exim_prev = new Button(this, "exim-", 26, 26, 436, 429, new RGB(120, 120, 120)){
+		this.elements.add(exim_prev = new Button(this, "exim-", "filechooser:exim", 26, 26, 436, 429, 0xff787878){
 			@Override
 			protected boolean processButtonClick(int x, int y, boolean left){
 				switch(mode){
@@ -134,8 +136,8 @@ public class NFC extends Element implements Dialog {
 					case PNG: case HELPFRAMEIMG: case SAVEFILE_SAVE: case SAVEFILE_LOAD: default: return true;
 				}
 			}
-		}); exim_prev.setTexPosSize("icons/arrow_decrease", 0, 0, 32, 32);
-		this.elements.add(exim_next = new Button(this, "exim+", 26, 26, 464, 429, new RGB(120, 120, 120)){
+		}); //TODO exim_prev.setTexPosSize("icons/arrow_decrease", 0, 0, 32, 32);
+		this.elements.add(exim_next = new Button(this, "exim+", "filechooser:exim", 26, 26, 464, 429, 0xff787878){
 			@Override
 			protected boolean processButtonClick(int x, int y, boolean left){
 				switch(mode){
@@ -146,8 +148,8 @@ public class NFC extends Element implements Dialog {
 					case PNG: case HELPFRAMEIMG: case SAVEFILE_SAVE: case SAVEFILE_LOAD: default: return true;
 				}
 			}
-		}); exim_next.setTexPosSize("icons/arrow_increase", 0, 0, 32, 32);
-		this.elements.add(cfn = new TextField(this, "customfilename", 468, 22, 470).setColorOnHover(new RGB(200, 200, 200)).setRenderBackground(false).setColor(RGB.BLACK));
+		}); //TODO exim_next.setTexPosSize("icons/arrow_increase", 0, 0, 32, 32);
+		this.elements.add(cfn = new TextField(this, "customfilename", "filechooser:filename", 468, 22, 470).setColorOnHover(new RGB(200, 200, 200)).setRenderBackground(false).setColor(RGB.BLACK));
 		//
 		//this.show(new String[]{ "test title", "OK"}, null, NOTHING, false);
 	}
@@ -218,8 +220,14 @@ public class NFC extends Element implements Dialog {
 	}
 	
 	@Override
+	public Element repos(){
+		x = (UserInterface.width - width) / 2 + xrel; y = (UserInterface.height - height) / 2 + yrel;
+		clearVertexes(); for(Element elm : elements) elm.repos(); return this;
+	}
+	
+	@Override
 	public void renderSelf(int rw, int rh) {
-		this.renderQuad(x = (rw / 2) - (width / 2), y = (rh / 2) - (height / 2), width, height, "ui/filechooser");
+		this.renderQuad(x, y, width, height, texture);
 		sel[0].x = x + 20; sel[0].y = y + 504; sel[1].x = x + 186; sel[1].y = y + 504; sel[2].x = x + 352; sel[2].y = y + 504;
 		eximporter.x = x + 22; eximporter.y = y + 430; cfn.x = x + 22; cfn.y = y + 470;
 		switch(mode){
@@ -246,7 +254,7 @@ public class NFC extends Element implements Dialog {
 		while(scroll + 12 > fls.length && scroll - 1 >= 0) scroll--;
 		for(int i = 0; i < files.length; i++){
 			files[i].x = x + 20; files[i].y = y + 82 + (i * 28); files[i].setEnabled(selected < 0 || selected != scroll + i);
-			files[i].setTexOnly(files[i].isEnabled() ? "ui/background_light" : "ui/background_dark");
+			//TODO files[i].setTexOnly(files[i].isEnabled() ? "ui/background_light" : "ui/background_dark");
 			if(scroll + i >= fls.length){ files[i].setVisible(false); }
 			else{
 				files[i].setVisible(true); files[i].setText(fls[scroll + i].getName() + (fls[scroll + i].isDirectory() ? "/" : ""), false);

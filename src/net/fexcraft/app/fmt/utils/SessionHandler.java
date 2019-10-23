@@ -1,9 +1,11 @@
 package net.fexcraft.app.fmt.utils;
 
 import java.io.File;
+
 import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.general.Bottombar;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.lib.common.json.JsonUtil;
 import net.fexcraft.lib.common.utils.HttpUtil;
@@ -50,6 +52,7 @@ public class SessionHandler {
 			if(obj.has("banned") && obj.get("banned").getAsBoolean()){
 				Print.console("Banned account detected, causing a commotion.");
 				System.exit(-1); System.exit(1); System.exit(1);
+				Bottombar.updateLoginState("BAN-N-NED");
 			}
 		}
 		if(loggedin){
@@ -57,6 +60,7 @@ public class SessionHandler {
 			obj = HttpUtil.request("http://fexcraft.net/session/api.jsp", "r=username&nossl&id=" + userid, getCookieArr());
 			if(obj.has("name")) username = obj.get("name").getAsString();
 			Print.console("Username updated to: " + username);
+			Bottombar.updateLoginState("Logged In - " + username);
 		}
 		else if(retry){
 			if(!first) load(); Print.console("Trying to re-login...");
@@ -64,7 +68,11 @@ public class SessionHandler {
 			if(!loggedin){
 				Print.console("Relogin seems to have failed.");
 				userid = -1; username = "Guest";
+				Bottombar.updateLoginState("Login Failed - GUEST");
 			}
+		}
+		else{
+			Bottombar.updateLoginState("Logged Out - GUEST");
 		}
 	}
 	

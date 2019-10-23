@@ -5,24 +5,25 @@ import java.util.Optional;
 
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.UserInterface;
+import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.lib.common.math.RGB;
 
+@Deprecated
 public class RightTree extends Element {
 	
-	private static final ArrayList<RightTree> trees = new ArrayList<RightTree>();
+	public static final ArrayList<RightTree> TREES = new ArrayList<RightTree>();
 	protected int scroll, size;
 
 	public RightTree(String id){
-		super(null, id);
-		this.setSize(308, 100).setLevel(-50).setPosition(0, 0);
-		this.setVisible(false); trees.add(this);
+		super(null, id, id); this.setSize(308, 100).setPosition(0, 0, -50).setVisible(false); TREES.add(this);
+		this.setColor(0xff999999).setBorder(0xff000000, 0xffffffff, 1, false, false, true, false);
+		this.setHoverColor(0xffffffff, false); this.repos();
 	}
-
+	
 	@Override
-	public void renderSelf(int rw, int rh){
-		this.y = UserInterface.TOOLBAR.height;
-		this.renderQuad(x, y, width, height = (rh - y + 2), "ui/background_light");
-		this.renderQuad(width - 2, y - 2, 2, height = (rh - y + 4), "ui/background_dark");
+	public Element repos(){
+		x = UserInterface.width - width; y = UserInterface.TOOLBAR.height + UserInterface.TOOLBAR.border_width;
+		height = UserInterface.height - y; if(Settings.bottombar()) height -= 29; clearVertexes(); return this;
 	}
 
 	@Override
@@ -35,17 +36,17 @@ public class RightTree extends Element {
 	}
 	
 	public static void show(String id){
-		trees.forEach(elm -> { elm.visible = elm.id.equals(id); elm.scroll = 0; });
+		TREES.forEach(elm -> { elm.visible = elm.id.equals(id); elm.scroll = 0; });
 	}
 	
 	public static void hideAll(){
-		trees.forEach(elm -> { elm.visible = false; elm.scroll = 0; } );
+		TREES.forEach(elm -> { elm.visible = false; elm.scroll = 0; } );
 	}
 
 	public static void toggle(String string){ toggle(string, true); }
 
 	public static void toggle(String string, boolean close){
-		Optional<RightTree> opt = trees.stream().filter(pre -> pre.id.equals(string)).findFirst();
+		Optional<RightTree> opt = TREES.stream().filter(pre -> pre.id.equals(string)).findFirst();
 		if(close && opt.isPresent() && opt.get().visible){ hideAll(); } else{ show(string); }
 	}
 	
@@ -61,7 +62,7 @@ public class RightTree extends Element {
 	}
 
 	public static boolean anyTreeHovered(){
-		return  trees.stream().filter(pre -> pre.isHovered()).findFirst().isPresent();
+		return  TREES.stream().filter(pre -> pre.isHovered()).findFirst().isPresent();
 	}
 	
 }

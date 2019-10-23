@@ -38,8 +38,8 @@ import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
 import net.fexcraft.app.fmt.ui.editor.ModelGroupEditor;
 import net.fexcraft.app.fmt.ui.editor.PreviewEditor;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
+import net.fexcraft.app.fmt.ui.general.Bottombar;
 import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
-import net.fexcraft.app.fmt.ui.general.Crossbar;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.ui.general.NFC;
 import net.fexcraft.app.fmt.ui.general.SettingsBox;
@@ -57,6 +57,7 @@ import net.fexcraft.app.fmt.utils.RayCoastAway;
 import net.fexcraft.app.fmt.utils.SaveLoad;
 import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.app.fmt.utils.Settings;
+import net.fexcraft.app.fmt.utils.StyleSheet;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureUpdate;
 import net.fexcraft.app.fmt.utils.Translator;
@@ -72,10 +73,11 @@ import net.fexcraft.lib.tmt.ModelRendererTurbo;
  * 
  * All rights reserved &copy; 2019 fexcraft.net
  * */
-public class FMTB implements FMTGLProcess {
+public class FMTB {
 	
 	public static final String deftitle = "[FPS:%s] Fexcraft Modelling Toolbox - %s";
-	public static final String version = "1.2.9";
+	public static final String deftitle0 = "Fexcraft Modelling Toolbox - %s";
+	public static final String version = "1.3.0";
 	public static final String CLID = "587016218196574209";
 	//
 	private static String title = "Unnamed Model";
@@ -119,9 +121,9 @@ public class FMTB implements FMTGLProcess {
 	public FMTB setTitle(String string){ title = string; DiscordUtil.update(false); return this; }
 	
 	public void run() throws LWJGLException, InterruptedException, IOException, NoSuchMethodException, ScriptException {
-		TextureManager.init(); this.setIcon(); Settings.load();
+		TextureManager.init(); this.setIcon(); Settings.load(); StyleSheet.load();
 		setupDisplay(); initOpenGL(); ggr = new GGR(this, 0, 4, 4); ggr.rotation.xCoord = 45; FontRenderer.init();
-		PorterManager.load(); HelperCollector.reload(); Display.setResizable(true); Translator.init(); UI = new UserInterface(this);
+		PorterManager.load(); HelperCollector.reload(); Display.setResizable(true); Translator.init(); UI = new UserInterface(this); this.setupUI(UI);
 		SessionHandler.checkIfLoggedIn(true, true); checkForUpdates(); KeyCompound.init(); KeyCompound.load();
 		//
 		LocalDateTime midnight = LocalDateTime.of(LocalDate.now(ZoneOffset.systemDefault()), LocalTime.MIDNIGHT);
@@ -155,7 +157,7 @@ public class FMTB implements FMTGLProcess {
 			if(Settings.discordrpc()) if(++disk_update > 60000){ DiscordRPC.discordRunCallbacks(); disk_update = 0; }
 			//Thread.sleep(50);
 		} DiscordRPC.discordShutdown();
-		Display.destroy(); Settings.save(); KeyCompound.save(); SessionHandler.save(); System.exit(0);
+		Display.destroy(); Settings.save(); StyleSheet.save(); KeyCompound.save(); SessionHandler.save(); System.exit(0);
 	}
 
 	private void setIcon(){
@@ -171,7 +173,7 @@ public class FMTB implements FMTGLProcess {
 			displaymode = new DisplayMode(Display.getWidth(), Display.getHeight());
 	        GLU.gluPerspective(45.0f, displaymode.getWidth() / displaymode.getHeight(), 0.1f, 4096f / 2);
 			GL11.glViewport(0, 0, displaymode.getWidth(), displaymode.getHeight());
-			this.initOpenGL();
+			this.initOpenGL(); UI.rescale();
 		}
         if(!Display.isVisible()) {
             try{ Thread.sleep(100); }
@@ -193,7 +195,15 @@ public class FMTB implements FMTGLProcess {
 	}
 	
     public void updateFPS() {
-        if(getTime() - lfps > 1000){ Display.setTitle(String.format(deftitle, fps, title)); fps = 0; lfps += 1000; } fps++;
+        if(getTime() - lfps > 1000){
+        	if(Settings.bottombar()){
+        		Bottombar.fps = fps; Display.setTitle(String.format(deftitle0, title)); 
+        	}
+        	else{
+        		Display.setTitle(String.format(deftitle, fps, title));
+        	}
+        	fps = 0; lfps += 1000;
+        } fps++;
     }
 	
 	private void render(){
@@ -302,12 +312,10 @@ public class FMTB implements FMTGLProcess {
 		UserInterface.DIALOGBOX.progress = progress; UserInterface.DIALOGBOX.progresscolor = color;
 	}
 
-	@Override
 	public DisplayMode getDisplayMode(){
 		return displaymode;
 	}
 
-	@Override
 	public void setupUI(UserInterface ui){
 		TextureManager.loadTexture("icons/pencil", null);
 		TextureManager.loadTexture("icons/arrow_increase", null);
@@ -317,36 +325,29 @@ public class FMTB implements FMTGLProcess {
 		TextureManager.loadTexture("icons/group_edit", null);
 		TextureManager.loadTexture("icons/group_minimize", null);
 		TextureManager.loadTexture("icons/group_clone", null);
-		TextureManager.loadTexture("ui/background_dark", null);
-		TextureManager.loadTexture("ui/background_light", null);
-		TextureManager.loadTexture("ui/background_white", null);
-		TextureManager.loadTexture("ui/background_black", null);
 		TextureManager.loadTexture("icons/editors/minimized", null);
 		TextureManager.loadTexture("icons/editors/expanded", null);
 		//
-		ui.getElements().add(UserInterface.DIALOGBOX = new DialogBox());
-		ui.getElements().add(UserInterface.SETTINGSBOX = new SettingsBox());
-		ui.getElements().add(UserInterface.FILECHOOSER = new NFC());
-		ui.getElements().add(UserInterface.CONTROLS = new ControlsAdjuster());
-		//
+		(UserInterface.TOOLBAR = new Toolbar()).repos();
+		(UserInterface.BOTTOMBAR = new Bottombar()).setVisible(Settings.bottombar());
 		ui.getElements().add(new ModelTree());
 		ui.getElements().add(new HelperTree());
 		ui.getElements().add(new GeneralEditor());
 		ui.getElements().add(new ModelGroupEditor());
 		ui.getElements().add(new TextureEditor());
 		ui.getElements().add(new PreviewEditor());
+		//
+		ui.getElements().add(UserInterface.DIALOGBOX = new DialogBox());
+		ui.getElements().add(UserInterface.SETTINGSBOX = new SettingsBox());
+		ui.getElements().add(UserInterface.FILECHOOSER = new NFC());
+		ui.getElements().add(UserInterface.CONTROLS = new ControlsAdjuster());
 		//render last
-		ui.getElements().add(UserInterface.TOOLBAR = new Toolbar());
-		ui.getElements().add(new Crossbar());
+		ui.getElements().add(UserInterface.TOOLBAR);
+		ui.getElements().add(UserInterface.BOTTOMBAR);
+		//ui.getNewElements().add(new Crossbar());
 		FMTB.MODEL.updateFields();
 	}
 
-	@Override
-	public UserInterface getUserInterface(){
-		return UI;
-	}
-
-	@Override
 	public void reset(boolean esc){
 		if(Dialog.anyVisible() || TextField.anySelected()){
 			UserInterface.DIALOGBOX.reset(); UserInterface.FILECHOOSER.reset();

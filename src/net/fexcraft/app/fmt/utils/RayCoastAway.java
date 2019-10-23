@@ -73,8 +73,13 @@ public class RayCoastAway {
 			boolean control = Keyboard.isKeyDown(Keyboard.KEY_LCONTROL);
 			boolean state = control ? wrapper.getTurboList().selected : wrapper.selected;
 			if(!Keyboard.isKeyDown(Keyboard.KEY_LMENU)) FMTB.MODEL.clearSelection();
-			if(control){ wrapper.getTurboList().selected = !state; }
-			else{ wrapper.selected = !state; }
+			if(control){
+				wrapper.getTurboList().selected = !state;
+				GroupCompound.SELECTED = FMTB.MODEL.countSelectedMRTs();
+			}
+			else{
+				wrapper.selected = !state; if(!wrapper.selected) GroupCompound.SELECTED = 0;
+			}
 			FMTB.MODEL.lastselected = control ? null : wrapper;
 			FMTB.MODEL.updateFields();
 		}

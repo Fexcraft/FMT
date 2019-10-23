@@ -10,36 +10,27 @@ import net.fexcraft.lib.common.math.RGB;
  */
 public class Icon extends Element {
 	
-	protected RGB hovercolor = RGB.GREEN;
-	protected RGB discolor = RGB.RED;
-	
-	public Icon(Element root, String id, String texture, int width, int height, int x, int y){
-		super(root, id); this.setPosition(this.x = root.x + x, this.y = root.y + y);
-		this.setSize(width, height).setLevel(root.getLevel() + 1);
-		this.setTexPosSize(texture, 0, 0, 32, 32); this.setEnabled(true);
+	public Icon(Element root, String id, String style, String texture, int size, int x, int y){
+		super(root, id, style); this.setPosition(x, y, root.z + 1).setSize(size, size).setTexture(texture, true).setEnabled(true);
 	}
 	
-	public Icon(Element elm, String id, String texture, int w, int h, int x, int y, RGB hover){
-		this(elm, id, texture, w, h, x, y); hovercolor = hover;
+	public Icon(Element elm, String id, String style, String texture, int size, int x, int y, RGB hover){
+		this(elm, id, style, texture, size, x, y); hovercolor = hover;
 	}
 	
-	public Icon(Element elm, String id, String texture, int w, int h, int x, int y, RGB hover, RGB dis){
-		this(elm, id, texture, w, h, x, y, hover); discolor = dis;
-	}
-
-	public Icon setTexture(String string){
-		this.texture = string; return this;
+	public Icon(Element elm, String id, String style, String texture, int size, int x, int y, RGB hover, RGB dis){
+		this(elm, id, style, texture, size, x, y, hover); discolor = dis;
 	}
 
 	@Override
 	public void renderSelf(int rw, int rh){
 		if(hovered) (enabled ? hovercolor : discolor).glColorApply();
-		this.renderSelfQuad();
+		this.renderIcon(x, y, width, texture);
 		if(hovered) RGB.glColorReset();
 	}
 	
 	@Override
-	public void hovered(int mx, int my){
+	public void hovered(float mx, float my){
 		super.hovered(mx, my); if(this.hovered){ for(Element elm : elements) elm.setVisible(true); }
 	}
 

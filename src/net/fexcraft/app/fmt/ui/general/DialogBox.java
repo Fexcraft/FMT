@@ -8,10 +8,9 @@ import java.net.URISyntaxException;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.Dialog;
-import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.FontRenderer;
+import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.UserInterface;
-import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.lib.common.math.RGB;
 
 /**
@@ -28,22 +27,25 @@ public class DialogBox extends Element implements Dialog {
 	private String text;
 	
 	public DialogBox(){
-		super(null, "dialogbox"); this.setSize(258, 128);
-		this.visible = false; this.z = 90; Dialog.dialogs.add(this);
-		TextureManager.loadTexture("ui/dialogbox", null);
-		this.setTexPosSize("ui/dialogbox", 0, 0, 256, 128);
-		this.elements.add(button0 = new Button(this, "positive", 100, 30, 0, 0, new RGB(255, 255, 0)){
+		super(null, "dialogbox", "dialogbox"); this.setSize(258, 128).setDraggable(true).setVisible(false).setColor(0xff80adcc);
+		Dialog.dialogs.add(this); this.setBorder(0xff000000, 0xfffcba03, 5, true, true, true, true); this.setHoverColor(0xffffffff, false);
+		this.elements.add(button0 = new Button(this, "positive", "dialogbox:button_positive", 100, 30, 20, 80, 0xffe1e100){
 			@Override protected boolean processButtonClick(int x, int y, boolean left){ return onClick(true); }
 		});
-		this.elements.add(button1 = new Button(this, "negative", 100, 30, 0, 0, new RGB(214, 79, 79)){
+		this.elements.add(button1 = new Button(this, "negative", "dialogbox:button_positive", 100, 30, 136, 80, 0xffd64f4f){
 			@Override protected boolean processButtonClick(int x, int y, boolean left){ return onClick(false); }
 		});
 	}
 	
 	@Override
+	public Element repos(){
+		x = (UserInterface.width - width) / 2 + xrel; y = (UserInterface.height - height) / 2 + yrel;
+		clearVertexes(); for(Element elm : elements) elm.repos(); return this;
+	}
+	
+	@Override
 	public void renderSelf(int rw, int rh) {
-		x = (rw / 2) - (width / 2); y = (rh / 2) - (height / 2); this.renderSelfQuad();
-		button0.x = x + 20; button0.y = y + 80; button1.x = x + 136; button1.y = y + 80;
+		this.renderSelfQuad();
 		FontRenderer.drawText(text, this.x + 20, this.y + 13, 1);
 		if(progress >= 0){
 			this.renderQuad(x + 20, y + 64, 216, 12, "ui/background_light");

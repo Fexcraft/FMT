@@ -1,11 +1,12 @@
 package net.fexcraft.app.fmt.ui;
 
 import java.util.ArrayList;
+
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.FMTGLProcess;
+import net.fexcraft.app.fmt.ui.general.Bottombar;
 import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.ui.general.HoverMenu;
@@ -25,26 +26,42 @@ import net.fexcraft.lib.common.math.Time;
  */
 public class UserInterface {
 
-	public static final float XSCALE = 1f, YSCALE = 1f;
-	public static Element SELECTED = null;
+	public static float scale_x, scale_y, scale;
+	public static Element SELECTED = null, DRAGGED = null;
 	public static Toolbar TOOLBAR;
+	public static Bottombar BOTTOMBAR;
 	public static DialogBox DIALOGBOX;
 	public static NFC FILECHOOSER;
 	public static ControlsAdjuster CONTROLS;
 	public static SettingsBox SETTINGSBOX;
 	//
 	private ArrayList<Element> elements = new ArrayList<>();
-	private FMTGLProcess root;
-
-	public UserInterface(FMTGLProcess main){
-		this.root = main; root.setupUI(this);
-	}
-	
-	private int width, height;
+	private FMTB root;
+	//
+	public static int width, height;
 	private float[] clearcolor;
 
+	public UserInterface(FMTB main){
+		this.root = main; rescale();
+		//
+		//elms.add(new NewElement(null, "test0").setPosition(50, 50).setSize(200, 50).setColor(0xff32a852).setBorder(0xffeb4034, 0xfffcba03, 12, true, true, true, true));
+		//elms.add(new NewElement(null, "test1").setPosition(50, 120).setSize(200, 50).setColor(0xff32a852) .setBorder(0xffeb4034, 0xfffcba03, 3, true, true, true, true));
+	}
+	
+	public void rescale(){
+		scale_x = root.getDisplayMode().getWidth();
+		scale_y = root.getDisplayMode().getHeight();
+		int facts = 1, uis = Settings.ui_scale(); if(uis < 0) uis = 1000;
+        while(facts < uis && scale_x / (facts + 1) >= 320 && scale_y / (facts + 1) >= 240) facts++;
+        scale_x = scale_x / facts; scale_y = scale_y / facts;
+        scale_x = (float)Math.ceil(scale_x); scale_y = (float)Math.ceil(scale_y);
+        //scale = Math.min(scale_x, scale_y);
+		width = (int)scale_x; height = (int)scale_y; scale = 1f / facts;
+		for(Element elm : elements){ elm.repos(); }
+	}
+
 	public void render(boolean bool){
-		width = root.getDisplayMode().getWidth(); height = root.getDisplayMode().getHeight();
+		//width = root.getDisplayMode().getWidth(); height = root.getDisplayMode().getHeight();
 		{
 			GL11.glPushMatrix();
 	        GL11.glMatrixMode(GL11.GL_PROJECTION);
@@ -62,7 +79,6 @@ public class UserInterface {
 			tmelm.render(width, height); logintxt.render(width, height);
 		}
 		else{
-			//for(OldElement elm : oldelements) elm.render(width, height);
 			for(Element elm : elements) elm.render(width, height);
 		}
 		GL11.glDepthFunc(GL11.GL_LESS);
@@ -81,7 +97,7 @@ public class UserInterface {
 		}
 	}
 	
-	private Element tmelm = new TextField(null, "text", 4, 4, 500){
+	private Element tmelm = new TextField(null, "text", "screenshot:title", 4, 4, 500){
 		@Override
 		public void renderSelf(int rw, int rh){
 			this.y = rh - FMTB.get().getDisplayMode().getHeight() + 4;
@@ -89,7 +105,7 @@ public class UserInterface {
 			super.renderSelf(rw, rh);
 		}
 	};
-	private Element logintxt = new TextField(null, "text", 4, 4, 500){
+	private Element logintxt = new TextField(null, "text", "screenshot:credits", 4, 4, 500){
 		@Override
 		public void renderSelf(int rw, int rh){
 			this.y = rh - FMTB.get().getDisplayMode().getHeight() + 32;
@@ -129,8 +145,8 @@ public class UserInterface {
 
 	public void onButtonPress(int i){
 		if(HoverMenu.anyMenuHovered()){
-			for(HoverMenu list : HoverMenu.arrlist){
-				if(list.hovered && list.onButtonClick(Mouse.getX(), root.getDisplayMode().getHeight() - Mouse.getY(), i == 0, true)) return;
+			for(HoverMenu list : HoverMenu.MENUS){
+				if(list.isHovered() && list.onButtonClick(Mouse.getX(), root.getDisplayMode().getHeight() - Mouse.getY(), i == 0, true)) return;
 			}
 		}
 		else{
@@ -147,6 +163,17 @@ public class UserInterface {
 				RayCoastAway.doTest(true, true);
 			}
 		}
+	}
+
+	public void getDraggableElement(){
+		Element element = null;
+		for(Element elm : elements){
+			if(elm.visible){
+				element = elm.getDraggableElement(Mouse.getX(), root.getDisplayMode().getHeight() - Mouse.getY(), elm.hovered);
+				if(element != null) break;
+			}
+		}
+		if(element != null){ UserInterface.DRAGGED = element; }
 	}
 
 	public boolean onScrollWheel(int wheel){

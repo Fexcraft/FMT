@@ -1,7 +1,6 @@
 package net.fexcraft.app.fmt.ui.editor;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.Element;
@@ -9,45 +8,47 @@ import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.general.Button;
 import net.fexcraft.app.fmt.ui.general.Icon;
 import net.fexcraft.app.fmt.ui.general.TextField;
-import net.fexcraft.lib.common.math.RGB;
+import net.fexcraft.app.fmt.utils.Settings;
 
 public abstract class Editor extends Element {
 	
-	private static final ArrayList<Editor> editors = new ArrayList<Editor>();
+	public static final ArrayList<Editor> EDITORS = new ArrayList<>();
 	public static final String[] xyz = new String[]{ "x", "y", "z" };
-	private ContainerButton[] containers;
-	private Button button; private TextField field; private Icon icon;
+	protected Container[] containers;
+	private Element button;
 
-	public Editor(String id){
-		super(null, id); this.setSize(308, 20).setLevel(-1);
-		this.setPosition(0, 34).setVisible(false); editors.add(this);
-		containers = this.setupSubElements(); elements.addAll(Arrays.asList(containers));
-		this.elements.add(button = new Button(this, "multiplicator_text", 180, 26, 4, 0, RGB.WHITE).setBackgroundless(false).setText("Multiplicator / Rate", false));
-		this.elements.add((field = new TextField(this, "multiplicator", 70, 184, 0){
-			@Override protected boolean processScrollWheel(int wheel){
+	public Editor(String id, String stylegroup){
+		super(null, id, stylegroup, false); EDITORS.add(this); this.setColor(0xff999999);
+		this.setPosition(0, 0, -50).setSize(308, 0).setVisible(false).setBorder(0xff000000, 0xffffffff, 1, false, false, false, true);
+		this.elements.add((button = new Button(this, "mb", "multiplicator", width - 8, 28, 4, 4, 0).setText("Multiplicator / Rate", 3, 4)).setHoverColor(0xffffffff, false));
+		button.getElements().add(new TextField(button, "mt", "multiplicator:field", 110, button.width - 144, 1){
+			@Override public boolean processScrollWheel(int wheel){
 				applyChange(FMTB.MODEL.multiply(wheel > 0 ? 2.0f : 0.5f)); return true;
 			}
-		}.setAsNumberfield(0, 1024, true).applyChange(FMTB.MODEL.rate)).setLevel(5));
-		this.elements.add((icon = new Icon(this, "multiplicator_reset", "", 26, 26, 258, 0){
+			@Override protected void updateNumberField(){
+				FMTB.MODEL.rate = this.getFloatValue();
+			}
+		}.setAsNumberfield(0, 1024, true, true).applyChange(FMTB.MODEL.rate));
+		button.getElements().add(new Icon(button, "mr", "multiplicator:icon", "icons/group_delete", 26, button.width - 30, 1){
 			@Override
 			protected boolean processButtonClick(int x, int y, boolean left){
-				((TextField)root.getElement("multiplicator")).applyChange(1); FMTB.MODEL.rate = 1f; return true;
+				((TextField)root.getElement("mt")).applyChange(1); FMTB.MODEL.rate = 1f; return true;
 			}
-		}).setTexPosSize("icons/group_delete", 0, 0, 16, 16));
+		});
+		this.setHoverColor(0xffffffff, false); this.repos();
 	}
-
-	protected abstract ContainerButton[] setupSubElements();
-
+	
 	@Override
-	public void renderSelf(int rw, int rh){
-		this.y = UserInterface.TOOLBAR.height;
-		button.y = y + 4; field.y = y + 4; icon.y = y + 4;
-		this.renderQuad(x, y, width, height = (rh - y + 2), "ui/background_light");
-		this.renderQuad(width - 2, y - 2, 2, height = (rh - y + 4), "ui/background_dark");
-		//
-		int pass = 32;
-		for(ContainerButton button : containers){
-			button.y = y + pass; pass += button.getExpansionHeight() + 4;
+	public Element repos(){
+		x = 0; y = UserInterface.TOOLBAR.height + UserInterface.TOOLBAR.border_width;
+		height = UserInterface.height - y; if(Settings.bottombar()) height -= 29;
+		clearVertexes(); this.reposContainers(); return this;
+	}
+	
+	public void reposContainers(){
+		if(containers == null) return; int pass = 40;
+		for(Container container : containers){
+			container.y = y + pass; pass += container.getExpansionHeight() + 4; container.repos();
 		}
 	}
 
@@ -61,15 +62,15 @@ public abstract class Editor extends Element {
 	}
 	
 	public static void show(String id){
-		for(Editor edit : editors) edit.setVisible(edit.id.equals(id));
+		for(Editor edit : EDITORS) edit.setVisible(edit.id.equals(id));
 	}
 	
 	public static void hideAll(){
-		for(Editor edit : editors) edit.setVisible(false);
+		for(Editor edit : EDITORS) edit.setVisible(false);
 	}
 	
 	public static Editor get(String id){
-		for(Editor edit : editors) if(edit.id.equals(id)) return edit; return null;
+		for(Editor edit : EDITORS) if(edit.id.equals(id)) return edit; return null;
 	}
 
 	public static void toggle(String string){ toggle(string, true); }
@@ -78,7 +79,7 @@ public abstract class Editor extends Element {
 		Editor edit = get(string); if(close && edit != null && edit.isVisible()) hideAll(); else show(string);
 	}
 	
-	protected boolean processScrollWheel(int wheel){ return true; }
+	public boolean processScrollWheel(int wheel){ return true; }
 
 	public ArrayList<TextField> getFields(){
 		ArrayList<TextField> fields = new ArrayList<>();
@@ -88,12 +89,20 @@ public abstract class Editor extends Element {
 
 	public static void toggleAll(){
 		boolean anyvisible = false;
-		for(Editor edit : editors) if(edit.isVisible()){ anyvisible = true; break; }
+		for(Editor edit : EDITORS) if(edit.isVisible()){ anyvisible = true; break; }
 		if(anyvisible) hideAll(); else show("general");
 	}
 
 	public static TextField getGlobalField(String string){
-		for(TextField field : TextField.getAllFields()) if(field.id.equals(string)) return field; return null;
+		for(TextField field : TextField.getAllFields()) if(field.getId().equals(string)) return field; return null;
+	}
+
+	public TextField getLocalField(String string){
+		Element elm = getElement(string); return elm instanceof TextField ? (TextField)elm : null;
+	}
+	
+	public TextField getMultiplicator(){
+		return (TextField)button.getElement("mt");
 	}
 
 	public static void toggleContainer(int i){
@@ -109,11 +118,11 @@ public abstract class Editor extends Element {
 	}
 
 	private static Editor getVisibleEditor(){
-		for(Editor edit : editors) if(edit.isVisible()) return edit; return null;
+		for(Editor edit : EDITORS) if(edit.isVisible()) return edit; return null;
 	}
 
 	public static boolean anyVisible(){
-		for(Editor edit : editors) if(edit.isVisible()) return true; return false;
+		for(Editor edit : EDITORS) if(edit.isVisible()) return true; return false;
 	}
 
 }

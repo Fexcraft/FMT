@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.ui.editor;
 
+import static net.fexcraft.app.fmt.utils.StyleSheet.BLACK;
+
 import java.io.File;
 import java.util.ArrayList;
 
@@ -11,9 +13,9 @@ import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.ui.general.NFC.AfterTask;
 import net.fexcraft.app.fmt.ui.general.NFC.ChooserMode;
 import net.fexcraft.app.fmt.utils.Animator;
+import net.fexcraft.app.fmt.utils.Animator.Animation;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureUpdate;
-import net.fexcraft.app.fmt.utils.Animator.Animation;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.math.RGB;
@@ -22,209 +24,203 @@ import net.fexcraft.lib.common.math.Vec3f;
 public class ModelGroupEditor extends Editor {
 	
 	private static final int[] accepted_texsiz = new int[]{ 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096 };//, 8192 };
-	private ContainerButton group, model, animations;
+	private Container group, model, animations;
 
 	public ModelGroupEditor(){
-		super("model_group_editor");
-	}
-
-	@Override
-	protected ContainerButton[] setupSubElements(){
-		group = new ContainerButton(this, "group", 300, 28, 4, y, new int[]{ 1, 3, 1, 1, 1, 3, 1, 1, 1, 1 }){
-			@Override
-			public void addSubElements(){
-				this.elements.add(new Button(this, "text0", 290, 20, 0, 0, RGB.WHITE).setText("Group Preview Color/Overlay", false).setRowCol(0, 0));
-				for(int i = 0; i < 3; i++){ final int j = i;
-					this.elements.add(new TextField(this, "group_rgb" + i, 0, 0, 0){
-						@Override public void updateNumberField(){ updateRGB(null, j); }
-						@Override protected boolean processScrollWheel(int wheel){ return updateRGB(wheel > 0, j); }
-					}.setAsNumberfield(0, 255, true).setRowCol(1, i));
+		super("model_group_editor", "editor"); this.setVisible(false);
+		this.elements.add((model = new Container(this, "model", width - 4, 28, 4, 0, null)).setText("Model Settings", false));
+		this.elements.add((group = new Container(this, "group", width - 4, 28, 4, 0, null)).setText("Group Settings", false));
+		this.elements.add((animations = new Container(this, "animations", width - 4, 28, 4, 0, null)).setText("Group Animations", false));
+		//
+		int passed = 0;
+		{//model
+			model.getElements().add(new Button(model, "text0", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true).setText("Position Offset (full unit)", false));
+			passed += 24; for(int i = 0; i < 3; i++){ final int j = i;
+				model.getElements().add(new TextField(model, "model_pos" + xyz[i], "editor:field", 96, 4 + (i * 102), passed){
+					@Override public void updateNumberField(){ updatePos(this, j, null); }
+					@Override public boolean processScrollWheel(int wheel){ return updatePos(j, wheel > 0); }
+				}.setAsNumberfield(Integer.MIN_VALUE, Integer.MAX_VALUE, true, true));
+			}
+			model.getElements().add(new Button(model, "text1", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true).setText("Rotation Offset (degrees)", false));
+			passed += 24; for(int i = 0; i < 3; i++){ final int j = i;
+				model.getElements().add(new TextField(model, "model_rot" + xyz[i], "editor:field", 96, 4 + (i * 102), passed){
+					@Override public void updateNumberField(){ updateRot(this, j, null); }
+					@Override public boolean processScrollWheel(int wheel){ return updateRot(j, wheel > 0); }
+				}.setAsNumberfield(8, 4096, true, true));
+			}
+			model.getElements().add(new Button(model, "text2", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true).setText("Texture [U/V/Scale]", false));
+			passed += 24; for(int i = 0; i < 3; i++){ final int j = i;
+				model.getElements().add(new TextField(model, "model_tex" + xyz[i], "editor:field", 96, 4 + (i * 102), passed){
+					@Override public void updateNumberField(){ updateTexSize(this, j, null); }
+					@Override public boolean processScrollWheel(int wheel){ return updateTexSize(j, wheel > 0); }
+				}.setAsNumberfield(i == 2 ? 1 : 8, i == 2 ? 4 : 4096, true, true));
+			}
+			model.getElements().add(new Button(model, "text4", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true).setText("Model Texture", false));
+			model.getElements().add(new TextField(model, "model_texture", "editor:field", 300, 4, passed += 24){
+				@Override
+				protected boolean processButtonClick(int x, int y, boolean left){
+					if(!left){
+						if(FMTB.MODEL.texture != null && TextureManager.getTexture(FMTB.MODEL.texture, true) != null){
+							FMTB.MODEL.setTexture(null); TextureManager.removeTexture(FMTB.MODEL.texture);
+						} FMTB.MODEL.updateFields(); return true;
+					}
+					UserInterface.FILECHOOSER.show(new String[]{ "Select a group texture file." }, new File("./resources/textures"), new AfterTask(){
+						@Override
+						public void run(){
+							String name = file.getPath(); TextureManager.loadTextureFromFile(name, file);
+							FMTB.MODEL.setTexture(name); FMTB.MODEL.updateFields(); 
+						}
+					}, ChooserMode.PNG);return true;
 				}
-				this.elements.add(new Button(this, "text1", 290, 20, 0, 0, RGB.WHITE).setText("Group Name/ID", false).setRowCol(2, 0));
-				this.elements.add(new TextField(this, "group_name", 0, 0, 0){
-					@Override
-					public void updateTextField(){
-						if(FMTB.MODEL.getSelected().isEmpty()) return;
-						TurboList list = null;
-						if(FMTB.MODEL.getDirectlySelectedGroupsAmount() == 1){
-							if(FMTB.MODEL.getCompound().isEmpty()) return;
-							list = FMTB.MODEL.getFirstSelectedGroup();
-							list = FMTB.MODEL.getCompound().remove(list.id);
+			}.setText("null", true));
+			model.getElements().add(new Button(model, "text3", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true).setText("Model Name", false));
+			model.getElements().add(new TextField(model, "model_name", "editor:field", 300, 4, passed += 24) {
+				@Override public void updateTextField(){ if(FMTB.MODEL == null) return; FMTB.get().setTitle(FMTB.MODEL.name = this.getTextValue()); }
+			}.setText(FMTB.MODEL.name, true));
+			//
+			model.setExpanded(false); passed = 0;
+		}
+		{//group
+			group.getElements().add(new Button(group, "text0", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true).setText("Group Preview Color/Overlay", false));
+			passed += 24; for(int i = 0; i < 3; i++){ final int j = i;
+				group.getElements().add(new TextField(group, "group_rgb" + i, "editor:field", 96, 4 + (i * 102), passed){
+					@Override public void updateNumberField(){ updateRGB(null, j); }
+					@Override public boolean processScrollWheel(int wheel){ return updateRGB(wheel > 0, j); }
+				}.setAsNumberfield(0, 255, true, true));
+			}
+			group.getElements().add(new Button(group, "text1", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true).setText("Group Name/ID", false));
+			group.getElements().add(new TextField(group, "group_name", "editor:field", 300, 4, passed += 24){
+				@Override
+				public void updateTextField(){
+					if(FMTB.MODEL.getSelected().isEmpty()) return;
+					TurboList list = null;
+					if(FMTB.MODEL.getDirectlySelectedGroupsAmount() == 1){
+						if(FMTB.MODEL.getCompound().isEmpty()) return;
+						list = FMTB.MODEL.getFirstSelectedGroup();
+						list = FMTB.MODEL.getCompound().remove(list.id);
+						list.id = this.getTextValue().replace(" ", "_").replace("-", "_").replace(".", "");
+						while(FMTB.MODEL.getCompound().containsKey(list.id)){ list.id += "_"; }
+						FMTB.MODEL.getCompound().put(list.id, list);
+					}
+					else{
+						ArrayList<TurboList> arrlist = FMTB.MODEL.getDirectlySelectedGroups();
+						for(int i = 0; i < arrlist.size(); i++){
+							list = FMTB.MODEL.getCompound().remove(arrlist.get(i).id); if(list == null) continue;
 							list.id = this.getTextValue().replace(" ", "_").replace("-", "_").replace(".", "");
+							list.id += list.id.contains("_") ? "_" + i : i + "";
 							while(FMTB.MODEL.getCompound().containsKey(list.id)){ list.id += "_"; }
 							FMTB.MODEL.getCompound().put(list.id, list);
 						}
-						else{
-							ArrayList<TurboList> arrlist = FMTB.MODEL.getDirectlySelectedGroups();
-							for(int i = 0; i < arrlist.size(); i++){
-								list = FMTB.MODEL.getCompound().remove(arrlist.get(i).id); if(list == null) continue;
-								list.id = this.getTextValue().replace(" ", "_").replace("-", "_").replace(".", "");
-								list.id += list.id.contains("_") ? "_" + i : i + "";
-								while(FMTB.MODEL.getCompound().containsKey(list.id)){ list.id += "_"; }
-								FMTB.MODEL.getCompound().put(list.id, list);
-							}
-						}
-						FMTB.MODEL.getSelected().clear();
 					}
-				}.setText("null", true).setRowCol(3, 0));
-				//
-				this.elements.add(new Button(this, "text3", 290, 20, 0, 0, RGB.WHITE).setText("Texture [U/V/Scale]", false).setRowCol(4, 0));
-				this.elements.add(new TextField(this, "group_texx", 0, 0, 0){
-					@Override public void updateNumberField(){ updateGroupTexSize(this, 0, null); }
-					@Override protected boolean processScrollWheel(int wheel){ return updateGroupTexSize(0, wheel > 0); }
-				}.setAsNumberfield(8, 4096, true).setRowCol(5, 0));
-				this.elements.add(new TextField(this, "group_texy", 0, 0, 0){
-					@Override public void updateNumberField(){ updateGroupTexSize(this, 1, null); }
-					@Override protected boolean processScrollWheel(int wheel){ return updateGroupTexSize(1, wheel > 0); }
-				}.setAsNumberfield(8, 4096, true).setRowCol(5, 1));
-				this.elements.add(new TextField(this, "group_texz", 0, 0, 0){
-					@Override public void updateNumberField(){ updateGroupTexSize(this, 2, null); }
-					@Override protected boolean processScrollWheel(int wheel){ return updateGroupTexSize(2, wheel > 0); }
-				}.setAsNumberfield(1, 4, true).setRowCol(5, 2));
-				//
-				this.elements.add(new Button(this, "text2", 290, 20, 0, 0, RGB.WHITE).setText("Group Texture", false).setRowCol(6, 0));
-				this.elements.add(new TextField(this, "group_texture", 0, 0, 0){
-					@Override
-					protected boolean processButtonClick(int x, int y, boolean left){
-						if(FMTB.MODEL.getSelected().isEmpty()) return true;
-						if(!left){
+					FMTB.MODEL.getSelected().clear();
+				}
+			}.setText("null", true));
+			//
+			group.getElements().add(new Button(group, "text2", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true).setText("Texture [U/V/Scale]", false));
+			group.getElements().add(new TextField(group, "group_texx", "editor:field", 96, 4, passed += 24){
+				@Override public void updateNumberField(){ updateGroupTexSize(this, 0, null); }
+				@Override public boolean processScrollWheel(int wheel){ return updateGroupTexSize(0, wheel > 0); }
+			}.setAsNumberfield(8, 4096, true, true));
+			group.getElements().add(new TextField(group, "group_texy", "editor:field", 96, 106, passed){
+				@Override public void updateNumberField(){ updateGroupTexSize(this, 1, null); }
+				@Override public boolean processScrollWheel(int wheel){ return updateGroupTexSize(1, wheel > 0); }
+			}.setAsNumberfield(8, 4096, true, true));
+			group.getElements().add(new TextField(group, "group_texz", "editor:field", 96, 208, passed){
+				@Override public void updateNumberField(){ updateGroupTexSize(this, 2, null); }
+				@Override public boolean processScrollWheel(int wheel){ return updateGroupTexSize(2, wheel > 0); }
+			}.setAsNumberfield(1, 4, true, true));
+			//
+			group.getElements().add(new Button(group, "text3", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true).setText("Group Texture", false));
+			group.getElements().add(new TextField(group, "group_texture", "editor:field", 300, 4, passed += 24){
+				@Override
+				protected boolean processButtonClick(int x, int y, boolean left){
+					if(FMTB.MODEL.getSelected().isEmpty()) return true;
+					if(!left){
+						ArrayList<TurboList> arrlist = FMTB.MODEL.getDirectlySelectedGroups();
+						for(TurboList group : arrlist){
+							if(TextureManager.getTexture(group.getGroupTexture(), true) != null){
+								FMTB.MODEL.setTexture(null); TextureManager.removeTexture(group.getGroupTexture());
+							} group.setTexture(null, 0, 0); group.forEach(mrt -> mrt.recompile());
+						} FMTB.MODEL.updateFields(); return true;
+					}
+					UserInterface.FILECHOOSER.show(new String[]{ "Select a group texture file." }, new File("./resources/textures"), new AfterTask(){
+						@Override
+						public void run(){
+							String name = file.getPath(); TextureManager.loadTextureFromFile(name, file);
+							TextureManager.Texture texture = TextureManager.getTexture(name, false);
 							ArrayList<TurboList> arrlist = FMTB.MODEL.getDirectlySelectedGroups();
 							for(TurboList group : arrlist){
-								if(TextureManager.getTexture(group.getGroupTexture(), true) != null){
-									FMTB.MODEL.setTexture(null); TextureManager.removeTexture(group.getGroupTexture());
-								} group.setTexture(null, 0, 0); group.forEach(mrt -> mrt.recompile());
-							} FMTB.MODEL.updateFields(); return true;
+								group.setTexture(name, texture.getWidth(), texture.getHeight());
+								group.recompile();
+							} FMTB.MODEL.updateFields(); 
 						}
-						UserInterface.FILECHOOSER.show(new String[]{ "Select a group texture file." }, new File("./resources/textures"), new AfterTask(){
-							@Override
-							public void run(){
-								String name = file.getPath(); TextureManager.loadTextureFromFile(name, file);
-								TextureManager.Texture texture = TextureManager.getTexture(name, false);
-								ArrayList<TurboList> arrlist = FMTB.MODEL.getDirectlySelectedGroups();
-								for(TurboList group : arrlist){
-									group.setTexture(name, texture.getWidth(), texture.getHeight());
-									group.recompile();
-								} FMTB.MODEL.updateFields(); 
-							}
-						}, ChooserMode.PNG); return true;
-					}
-				}.setText("null", true).setRowCol(7, 0));
-				//
-				this.elements.add(new Button(this, "text3", 290, 20, 0, 0, RGB.WHITE).setText("Add Animator", false).setRowCol(8, 0));
-				this.elements.add(new TextField(this, "group_animator", 0, 0, 0){
-					@Override
-					protected boolean processButtonClick(int x, int y, boolean left){
-						if(FMTB.MODEL.getSelected().isEmpty()) return true;
-						if(!left){
-							FMTB.showDialogbox(this.getText(), "ok", null, DialogBox.NOTHING, null);
-							this.setText("", true);
-							return true;
-						}
-						else return super.processButtonClick(x, y, left);
-					}
-					@Override
-					public void updateTextField(){
-						this.deselect(); if(FMTB.MODEL.getSelected().isEmpty()) return;
-						Animation anim = Animator.get(this.getTextValue());
-						if(anim == null){
-							FMTB.showDialogbox("Animation not found!", "ok", null, DialogBox.NOTHING, null);
-							return;
-						} final Animation ani = anim.copy();
-						ArrayList<TurboList> lists = FMTB.MODEL.getDirectlySelectedGroups();
-						AfterTask task = new AfterTask(){
-							@Override
-							public void run(){
-								for(TurboList list : lists){
-									list.animations.add(ani);
-								} FMTB.MODEL.updateFields();
-							}
-						}; task.settings = ani.settings;
-						UserInterface.SETTINGSBOX.show("Animator Settings", task);
-					}
-				}.setText("null", true).setRowCol(9, 0));
-			}
-		};
-		group.setText("Group Settings", false);
-		model = new ContainerButton(this, "model", 300, 28, 4, y, new int[]{ 1, 3, 1, 3, 1, 3, 1, 1, 1, 1 }){
-			@Override
-			public void addSubElements(){
-				this.elements.add(new Button(this, "text0", 290, 20, 0, 0, RGB.WHITE).setText("Position Offset (full unit)", false).setRowCol(0, 0));
-				this.elements.add(new Button(this, "text1", 290, 20, 0, 0, RGB.WHITE).setText("Rotation Offset (degrees)", false).setRowCol(2, 0));
-				this.elements.add(new Button(this, "text2", 290, 20, 0, 0, RGB.WHITE).setText("Texture [U/V/Scale]", false).setRowCol(4, 0));
-				this.elements.add(new Button(this, "text4", 290, 20, 0, 0, RGB.WHITE).setText("Model Texture", false).setRowCol(6, 0));
-				this.elements.add(new Button(this, "text3", 290, 20, 0, 0, RGB.WHITE).setText("Model Name", false).setRowCol(8, 0));
-				//
-				for(int i = 0; i < 3; i++){
-					final int j = i;
-					this.elements.add(new TextField(this, "model_pos" + xyz[i], 0, 0, 0){
-						@Override public void updateNumberField(){ updatePos(this, j, null); }
-						@Override protected boolean processScrollWheel(int wheel){ return updatePos(j, wheel > 0); }
-					}.setAsNumberfield(Integer.MIN_VALUE, Integer.MAX_VALUE, true).setRowCol(1, i));
-					//
-					this.elements.add(new TextField(this, "model_rot" + xyz[i], 0, 0, 0){
-						@Override public void updateNumberField(){ updateRot(this, j, null); }
-						@Override protected boolean processScrollWheel(int wheel){ return updateRot(j, wheel > 0); }
-					}.setAsNumberfield(8, 4096, true).setRowCol(3, i));
-					//
-					this.elements.add(new TextField(this, "model_tex" + xyz[i], 0, 0, 0){
-						@Override public void updateNumberField(){ updateTexSize(this, j, null); }
-						@Override protected boolean processScrollWheel(int wheel){ return updateTexSize(j, wheel > 0); }
-					}.setAsNumberfield(i == 2 ? 1 : 8, i == 2 ? 4 : 4096, true).setRowCol(5, i));
+					}, ChooserMode.PNG); return true;
 				}
-				this.elements.add(new TextField(this, "model_texture", 0, 0, 0){
-					@Override
-					protected boolean processButtonClick(int x, int y, boolean left){
-						if(!left){
-							if(FMTB.MODEL.texture != null && TextureManager.getTexture(FMTB.MODEL.texture, true) != null){
-								FMTB.MODEL.setTexture(null); TextureManager.removeTexture(FMTB.MODEL.texture);
-							} FMTB.MODEL.updateFields(); return true;
-						}
-						UserInterface.FILECHOOSER.show(new String[]{ "Select a group texture file." }, new File("./resources/textures"), new AfterTask(){
-							@Override
-							public void run(){
-								String name = file.getPath(); TextureManager.loadTextureFromFile(name, file);
-								FMTB.MODEL.setTexture(name); FMTB.MODEL.updateFields(); 
-							}
-						}, ChooserMode.PNG);return true;
+			}.setText("null", true));
+			//
+			group.getElements().add(new Button(group, "text4", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true).setText("Add Animator", false));
+			group.getElements().add(new TextField(group, "group_animator", "editor:field", 300, 4, passed += 24){
+				@Override
+				protected boolean processButtonClick(int x, int y, boolean left){
+					if(FMTB.MODEL.getSelected().isEmpty()) return true;
+					if(!left){
+						FMTB.showDialogbox(this.getText(), "ok", null, DialogBox.NOTHING, null);
+						this.setText("", true);
+						return true;
 					}
-				}.setText("null", true).setRowCol(7, 0));
-				//
-				this.elements.add(new TextField(this, "model_name", 0, 0, 0) {
-					@Override public void updateTextField(){ if(FMTB.MODEL == null) return; FMTB.get().setTitle(FMTB.MODEL.name = this.getTextValue()); }
-				}.setText(FMTB.MODEL.name, true).setRowCol(9, 0));
-			}
-		};
-		model.setText("Model Settings", false);
-		animations = new ContainerButton(this, "animations", 300, 28, 4, y, null){
-			@Override
-			public void addSubElements(){
-				this.elements.clear(); TurboList list = FMTB.MODEL.getFirstSelectedGroup();
-				int[] rows = new int[list == null ? 1 : list.animations.size() + 1];
-				for(int i = 0; i < rows.length; i++) rows[i] = 1; this.initRowData(rows);
-				if(list == null){ return; } 
-				for(int i = 0; i < rows.length - 1; i++){ int j = i;
-					this.elements.add(new TextField(this, "group_animation_" + i, 0, 0, 0) {
+					else return super.processButtonClick(x, y, left);
+				}
+				@Override
+				public void updateTextField(){
+					this.deselect(); if(FMTB.MODEL.getSelected().isEmpty()) return;
+					Animation anim = Animator.get(this.getTextValue());
+					if(anim == null){
+						FMTB.showDialogbox("Animation not found!", "ok", null, DialogBox.NOTHING, null);
+						return;
+					} final Animation ani = anim.copy();
+					ArrayList<TurboList> lists = FMTB.MODEL.getDirectlySelectedGroups();
+					AfterTask task = new AfterTask(){
 						@Override
-						protected boolean processButtonClick(int x, int y, boolean left){
-							if(left){
-								Animation anim = list.animations.get(j); this.deselect(); if(anim == null) return true;
-								AfterTask task = new AfterTask(){
-									@Override public void run(){ anim.onSettingsUpdate(); FMTB.MODEL.updateFields(); }
-								}; task.settings = anim.settings; FMTB.MODEL.updateFields();
-								UserInterface.SETTINGSBOX.show("[" + anim.id + "] Settings", task);
-							}
-							else{
-								list.animations.remove(j); this.deselect(); FMTB.MODEL.updateFields();
-							}
-							return true;
+						public void run(){
+							for(TurboList list : lists){
+								list.animations.add(ani);
+							} FMTB.MODEL.updateFields();
 						}
-					}.setText("[" + i + "] " + list.animations.get(i).id, true).setRowCol(i + 1, 0));
+					}; task.settings = ani.settings;
+					UserInterface.SETTINGSBOX.show("Animator Settings", task);
 				}
-				this.initHeight(); return;
+			}.setText("null", true));
+			//
+			group.setExpanded(false); passed = 0;
+		}
+		{//animations
+			/*animations.getElements().clear(); TurboList list = FMTB.MODEL.getFirstSelectedGroup();
+			int[] rows = new int[list == null ? 1 : list.animations.size() + 1];
+			for(int i = 0; i < rows.length; i++) rows[i] = 1; this.initRowData(rows);
+			if(list == null){ return; } 
+			for(int i = 0; i < rows.length - 1; i++){ int j = i;
+				animations.getElements().add(new TextField(animations, "group_animation_" + i, "animation:field", 0, 0, 0){
+					@Override
+					protected boolean processButtonClick(int x, int y, boolean left){
+						if(left){
+							Animation anim = list.animations.get(j); this.deselect(); if(anim == null) return true;
+							AfterTask task = new AfterTask(){
+								@Override public void run(){ anim.onSettingsUpdate(); FMTB.MODEL.updateFields(); }
+							}; task.settings = anim.settings; FMTB.MODEL.updateFields();
+							UserInterface.SETTINGSBOX.show("[" + anim.id + "] Settings", task);
+						}
+						else{
+							list.animations.remove(j); this.deselect(); FMTB.MODEL.updateFields();
+						}
+						return true;
+					}
+				}.setText("[" + i + "] " + list.animations.get(i).id, true));
 			}
-		};
-		animations.setText("Group Animations", false);
-		return new ContainerButton[]{ model, group, animations };
+			this.initHeight(); return;*/
+			animations.getElements().add(new Button(animations, "text0", "editor:title", 290, 20, 4, 30, BLACK).setBackgroundless(true).setText("Queued for reimplementation", false));
+			animations.setExpanded(false);
+		}
+		this.containers = new Container[]{ model, group, animations }; this.repos();
 	}
 	
 	protected boolean updateRGB(Boolean apply, int j){
@@ -232,7 +228,7 @@ public class ModelGroupEditor extends Editor {
 		if(apply != null) field.applyChange(field.tryChange(apply, FMTB.MODEL.rate));
 		TurboList sel = FMTB.MODEL.getFirstSelectedGroup();
 		if(sel != null){
-			if(sel.color == null) sel.color = new RGB(RGB.WHITE);
+			if(sel.color == null) sel.color = new RGB(BLACK);
 			byte[] arr = sel.color.toByteArray();
 			byte colorr = (byte)(field.getIntegerValue() - 128);
 			switch(j){

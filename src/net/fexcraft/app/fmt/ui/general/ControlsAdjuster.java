@@ -7,11 +7,12 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.ui.Dialog;
-import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.FontRenderer;
+import net.fexcraft.app.fmt.ui.Element;
+import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.utils.KeyCompound;
-import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.KeyCompound.KeyFunction;
+import net.fexcraft.app.fmt.utils.StyleSheet;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -27,13 +28,20 @@ public class ControlsAdjuster extends Element implements Dialog {
 	private float tx, ty;
 	
 	public ControlsAdjuster(){
-		super(null, "ui/controls"); TextureManager.loadTexture("ui/controls", null);
-		this.visible = false; this.z = 80; this.height = 312; this.width = 512; Dialog.dialogs.add(this);
+		super(null, "controls", "controls"); this.setTexture("ui/controls", true);
+		this.setDraggable(true).setSize(512, 312).setVisible(false);
+		this.setHoverColor(StyleSheet.WHITE, false); Dialog.dialogs.add(this);
+	}
+	
+	@Override
+	public Element repos(){
+		x = (UserInterface.width - width) / 2 + xrel; y = (UserInterface.height - height) / 2 + yrel;
+		clearVertexes(); for(Element elm : elements) elm.repos(); return this;
 	}
 	
 	@Override
 	public void renderSelf(int rw, int rh) {
-		this.renderQuad(x = (rw / 2) - (width / 2), y = (rh / 2) - (height / 2), width, height, "ui/controls");
+		this.renderQuad(x, y, width, height, texture);
 		if(hovered > -1){
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glColor4f(1, 0.2f, 0.2f, 0.2f);
@@ -48,8 +56,8 @@ public class ControlsAdjuster extends Element implements Dialog {
 		}
 		try{
 			{
-				FontRenderer.drawText("FMT Controls Settings", this.x + 18, this.y + 19, 3);
-				FontRenderer.drawText("Pg." + scroll, this.x + 446, this.y + 19, 3);
+				FontRenderer.drawText("FMT Controls Settings", this.x + 18, this.y + 15, 3);
+				FontRenderer.drawText("Pg." + scroll, this.x + 416, this.y + 15, 3);
 				for(int i = 0; i < 8; i++){
 					int j = i + (scroll * 8); if(j >= KeyCompound.keys.size()) continue; //break;
 					FontRenderer.drawText((tempkey = KeyCompound.keys.get(j)).name(), this.x + 21, this.y + 51 + (i * 32), 3);
@@ -71,7 +79,7 @@ public class ControlsAdjuster extends Element implements Dialog {
 	
 	@Override
 	public boolean onScrollWheel(int wheel){
-		if(wheel < 0) scroll++; else scroll--; if(scroll < 0) scroll = 0; hovered = -1; catched = -1; return !(CATCHING = false);
+		wheel = -wheel; if(wheel < 0) scroll++; else scroll--; if(scroll < 0) scroll = 0; hovered = -1; catched = -1; return !(CATCHING = false);
 	}
 	
 	@Override
@@ -80,7 +88,7 @@ public class ControlsAdjuster extends Element implements Dialog {
 	}
 	
 	@Override
-	public void hovered(int mx, int my){
+	public void hovered(float mx, float my){
 		super.hovered(mx, my);
 		for(int i = 0; i < 8; i++){ int j = i * 32;
 			if(mx >= (x + 346) && mx < (x + 346 + 150) && my >= (y + 46 + j) && my < (y + 46 + j + 28)){ hovered = i; return; }

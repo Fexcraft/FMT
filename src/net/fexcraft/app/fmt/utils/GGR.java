@@ -12,7 +12,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import net.fexcraft.app.fmt.FMTGLProcess;
+import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
@@ -28,14 +28,14 @@ public class GGR {
     public float maxlookrange = 85;
     public float sensivity = 1.0f;//= 0.05f;
     public Vec3f pos, rotation;
-    private final FMTGLProcess root;
+    private final FMTB root;
     
-    public GGR(FMTGLProcess root, int x, int y, int z){
+    public GGR(FMTB root, int x, int y, int z){
         pos = new Vec3f(x, y, z); this.root = root;
         rotation = new Vec3f(0, 0, 0);
     }
     
-    public GGR(FMTGLProcess root, float x, float y, float z){
+    public GGR(FMTB root, float x, float y, float z){
         pos = new Vec3f(x, y, z); this.root = root;
         rotation = new Vec3f(0, 0, 0);
     }
@@ -149,12 +149,16 @@ public class GGR {
 		} return Keyboard.getKeyName(i);
 	}
 
-	private boolean clickedL, clickedR, panning;
+	private boolean clickedL, clickedR, panning, dragging;
     private int wheel, oldMouseX=-1,oldMouseY=-1;
 
     public void acceptMouseInput(float delta){
         if(clickedR && !Mouse.isButtonDown(1)){
             Mouse.setGrabbed(false);//fix mouse grab sticking
+            
+        }
+        if(clickedL && !Mouse.isButtonDown(0)){
+            UserInterface.DRAGGED = null; dragging = true;
         }
         if(Mouse.isGrabbed()){
             rotation.yCoord += Mouse.getDX() * sensivity * delta;
@@ -165,18 +169,31 @@ public class GGR {
         }
         else{
         	if(!Mouse.isInsideWindow()) return;
-        	if(Mouse.isButtonDown(0) && !clickedL) root.getUserInterface().onButtonPress(0); clickedL = Mouse.isButtonDown(0);
-        	if(Mouse.isButtonDown(1) && !clickedR) root.getUserInterface().onButtonPress(1); clickedR = Mouse.isButtonDown(1);
+        	if(Mouse.isButtonDown(0) && !clickedL) root.UI.onButtonPress(0); clickedL = Mouse.isButtonDown(0);
+        	if(Mouse.isButtonDown(1) && !clickedR) root.UI.onButtonPress(1); clickedR = Mouse.isButtonDown(1);
         	if((wheel = Mouse.getDWheel()) != 0){
-        		if(!root.getUserInterface().onScrollWheel(wheel)){
+        		if(!root.UI.onScrollWheel(wheel)){
                     double[] zoom = rotatePoint(wheel * 0.005f, rotation.xCoord, rotation.yCoord - 90);
                     pos.xCoord += zoom[0]; pos.yCoord += zoom[1]; pos.zCoord += zoom[2];
         		}
         	}
         }
         //
-        if((Mouse.isInsideWindow() && /*Keyboard.isKeyDown(Keyboard.KEY_E) ||*/ Mouse.isButtonDown(1) && !RightTree.anyTreeHovered())){
-            Mouse.setGrabbed(true);
+        if(Mouse.isInsideWindow()){
+        	if(Mouse.isButtonDown(1) && !RightTree.anyTreeHovered()){
+        		Mouse.setGrabbed(true);
+        	}
+        	if(Mouse.isButtonDown(0) && dragging){
+        		if(UserInterface.DRAGGED != null){
+            		UserInterface.DRAGGED.xrel += Mouse.getDX();
+            		UserInterface.DRAGGED.yrel += -Mouse.getDY();
+            		UserInterface.DRAGGED.repos();
+        		}
+        		else{
+        			root.UI.getDraggableElement();
+        			if(UserInterface.DRAGGED == null) dragging = false;
+        		}
+        	}
         }
         if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE) && !ControlsAdjuster.CATCHING){
             root.reset(true); Mouse.setGrabbed(false); TextureEditor.reset();

@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.editor.ContainerButton;
+import net.fexcraft.app.fmt.ui.editor.Container;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
@@ -32,6 +32,8 @@ public class GroupCompound {
 	public File file, origin; public String name = "unnamed model";
 	public PolygonWrapper lastselected;
 	public String texture;
+	//
+	public static long COUNT = 0, SELECTED = 0;
 	//
 	public boolean visible = true, minimized;
 	public Vec3f pos, rot, scale;
@@ -157,7 +159,7 @@ public class GroupCompound {
 	public final void clearSelection(){
 		for(TurboList list : compound.values()){
 			list.selected = false; for(PolygonWrapper poly : list) poly.selected = false;
-		}
+		} SELECTED = 0;
 	}
 
 	public boolean updateValue(TextField field, String id){
@@ -183,8 +185,8 @@ public class GroupCompound {
 	public boolean updateValue(TextField field){
 		ArrayList<PolygonWrapper> polis = this.getSelected();
 		if(polis.isEmpty()) return false;
-		boolean x = field.id.endsWith("x"), y = field.id.endsWith("y"), z = field.id.endsWith("z");
-		String id = field.id.substring(0, field.id.length() - 1);
+		boolean x = field.getId().endsWith("x"), y = field.getId().endsWith("y"), z = field.getId().endsWith("z");
+		String id = field.getId().substring(0, field.getId().length() - 1);
 		//
 		float diffo = polis.get(0).getFloat(id, x, y, z);
 		for(int i = 0; i < polis.size(); i++){
@@ -205,6 +207,7 @@ public class GroupCompound {
 			if(group != null && !compound.containsKey(group)) compound.put(group, new TurboList(group));
 			TurboList list = (group == null ? compound.containsKey("body") ? compound.get("body") : (TurboList)compound.values().toArray()[0] : compound.get(group));
 			if(clear){ clearSelection(); } shape.selected = true; list.add(shape); shape.setList(list); shape.recompile(); this.updateFields();
+			COUNT++; SELECTED++;
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -493,7 +496,7 @@ public class GroupCompound {
 				if(texname.length() > 32){ texname = texname.substring(texname.length() - 32, texname.length()); }
 				Editor.getGlobalField("group_texture").setText(texname, true);
 			};
-			((ContainerButton)Editor.get("model_group_editor").getElement("animations")).addSubElements();
+			((Container)Editor.get("model_group_editor").getElement("animations")).addSubElements();
 			//
 			Editor.getGlobalField("model_posx").applyChange(pos == null ? 0 : pos.xCoord);
 			Editor.getGlobalField("model_posy").applyChange(pos == null ? 0 : pos.yCoord);
@@ -505,7 +508,7 @@ public class GroupCompound {
 			Editor.getGlobalField("model_texy").applyChange(this.textureSizeY);
 			Editor.getGlobalField("model_texz").applyChange(this.textureScale);
 			Editor.getGlobalField("model_name").setText(this.name, true);
-			Editor.getGlobalField("multiplicator").applyChange(rate);
+			Editor.EDITORS.forEach(editor -> editor.getMultiplicator().applyChange(rate));
 			//
 			String texname = this.texture + "";
 			if(texname.length() > 32){ texname = texname.substring(texname.length() - 32, texname.length()); }
@@ -579,6 +582,13 @@ public class GroupCompound {
 	public long countTotalMRTs(){
 		long i = 0; for(TurboList list : compound.values()) i += list.size(); return i;
 	}
+	
+	public long countSelectedMRTs(){
+		long i = 0; for(TurboList list : compound.values()){
+			if(list.selected) i += list.size();
+			else for(PolygonWrapper wrapper : list) if(wrapper.selected) i++;
+		} return i;
+	}
 
 	public void setTexture(String string){
 		this.texture = string; this.compound.values().forEach(turbo -> turbo.forEach(poly -> poly.recompile()));
@@ -633,6 +643,7 @@ public class GroupCompound {
 			for(PolygonWrapper wrapper : wrapp){
 				wrapper.getTurboList().remove(wrapper);
 			}
+			COUNT = this.countTotalMRTs(); SELECTED = 0;
 		}, DialogBox.NOTHING);
 	}
 
@@ -644,7 +655,7 @@ public class GroupCompound {
 	public int ty(TurboList list){ return list == null || list.getGroupTexture() == null ? textureSizeY : list.textureY; }
 
 	public void deselectAll(){
-		for(TurboList list : compound.values()){ list.selected = false; for(PolygonWrapper wrapper : list) wrapper.selected = false; }
+		for(TurboList list : compound.values()){ list.selected = false; for(PolygonWrapper wrapper : list) wrapper.selected = false; } SELECTED = 0;
 	}
 
 }

@@ -32,8 +32,8 @@ public class HelperTree extends RightTree {
 	public void renderSelf(int rw, int rh){
 		this.y = UserInterface.TOOLBAR.height;
 		this.x = rw - this.width; this.height = rh - y; trheight = 0;
-		this.renderQuad(x, y, width, height = (rh - y + 2), "ui/background_light");
-		this.renderQuad(x - 2, y, 2, height = (rh - y + 4), "ui/background_dark");
+		//this.renderQuad(x, y, width, height = (rh - y + 2), "ui/background_light");
+		//this.renderQuad(x - 2, y, 2, height = (rh - y + 4), "ui/background_dark");
 		//
 		trlist = HelperCollector.LOADED.toArray(new GroupCompound[0]); if(trlist.length == 0) SEL = -1;
 		FMTB.MODEL.getCompound().values().forEach(turbo -> trheight += turbo.tempheight = 26 + (turbo.size() * 26));
@@ -41,7 +41,7 @@ public class HelperTree extends RightTree {
 		for(int i = 0; i < trlist.length; i++){
 			GroupCompound model = trlist[i];
 			color(model.visible, i == SEL).glColorApply();
-			this.renderQuad(x + 4, y + 4 + -scroll + (pass), width - 8, 24, "ui/background_white");
+			this.renderQuad(x + 4, y + 4 + -scroll + (pass), width - 8, 24, "blank");
 			FontRenderer.drawText(model.name, x + 8, y + 6 + -scroll + (pass), 1, fontcol);
 			GL11.glTranslatef(0, 0,  1);
 			this.renderIcon(x + width - 114, y + 6 + -scroll + (pass), 20, "icons/group_minimize");
@@ -53,7 +53,7 @@ public class HelperTree extends RightTree {
 			if(!model.minimized){
 				for(int j = 0; j < model.getCompound().size(); j++){
 					poly = (TurboList)model.getCompound().values().toArray()[j]; color(poly.visible, false).glColorApply();
-					this.renderQuad(x + 8, y + 4 + -scroll + (pass), width - 16, 24, "ui/background_white");
+					this.renderQuad(x + 8, y + 4 + -scroll + (pass), width - 16, 24, "blank");
 					FontRenderer.drawText(j + " | " + poly.id, x + 10, y + 6 + -scroll + (pass), 1, fontcol);
 					GL11.glTranslatef(0, 0,  1);
 					this.renderIcon(x + width - 30, y + 6 + -scroll + (pass), 20, "icons/group_visible");
@@ -65,7 +65,7 @@ public class HelperTree extends RightTree {
 	}
 
 	@Override
-	public void hovered(int mx, int my){
+	public void hovered(float mx, float my){
 		super.hovered(mx, my);
 	}
 
@@ -147,7 +147,7 @@ public class HelperTree extends RightTree {
 		} return true;
 	}
 
-	protected boolean processScrollWheel(int wheel){
+	public boolean processScrollWheel(int wheel){
 		scroll += -wheel / 10; //if(scroll < 0) scroll = 0; if(scroll > trheight) scroll = trheight - 100;
 		return true;
 	}
