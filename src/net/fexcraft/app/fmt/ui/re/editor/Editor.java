@@ -104,8 +104,8 @@ public abstract class Editor extends NewElement {
 			if(i == 3) show("preview_editor");
 			return;
 		}
-		//if(i < 0 || i >= editor.containers.length) return;
-		//editor.containers[i].setExpanded(!editor.containers[i].isExpanded());
+		if(i < 0 || i >= editor.containers.length) return;
+		editor.containers[i].setExpanded(!editor.containers[i].isExpanded());
 	}
 
 	private static Editor getVisibleEditor(){

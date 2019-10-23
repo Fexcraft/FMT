@@ -21,7 +21,7 @@ public class GeneralEditor extends Editor {
 	private Container attributes, shape, shapebox, cylinder, texrect_a, texrect_b, marker;
 
 	public GeneralEditor(){
-		super("general_editor", "editor"); this.setVisible(true);
+		super("general_editor", "editor"); this.setVisible(false);
 		this.elements.add((attributes = new Container(this, "attributes", width - 4, 28, 4, 0, null)).setText("Polygon Attributes", false));
 		this.elements.add((shape = new Container(this, "shape", width - 4, 28, 4, 0, null)).setText("General Shape", false));
 		this.elements.add((shapebox = new Container(this, "shapebox", width - 4, 28, 4, 0, null)).setText("Shapebox Corners", false));
