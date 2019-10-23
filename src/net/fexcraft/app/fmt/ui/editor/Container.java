@@ -1,10 +1,10 @@
-package net.fexcraft.app.fmt.ui.re.editor;
+package net.fexcraft.app.fmt.ui.editor;
 
 import org.lwjgl.input.Mouse;
 
 import net.fexcraft.app.fmt.ui.NewElement;
 import net.fexcraft.app.fmt.ui.UserInterface;
-import net.fexcraft.app.fmt.ui.re.Button;
+import net.fexcraft.app.fmt.ui.general.Button;
 
 public class Container extends Button {
 	

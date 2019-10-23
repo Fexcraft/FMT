@@ -3,31 +3,47 @@ package net.fexcraft.app.fmt.ui.general;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import net.fexcraft.app.fmt.ui.Element;
+import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.FontRenderer;
+import net.fexcraft.app.fmt.ui.NewElement;
 import net.fexcraft.app.fmt.utils.GGR;
+import net.fexcraft.app.fmt.utils.Settings;
+import net.fexcraft.app.fmt.utils.StyleSheet;
 import net.fexcraft.lib.common.math.RGB;
 
-public class TextField extends Element {
+public class TextField extends NewElement {
 	
-	private static final ArrayList<TextField> fields = new ArrayList<>();
-	private RGB hovercolor = new RGB(112, 255, 127), inactivecol = new RGB(235, 201, 201), hoversel = new RGB(255, 127, 0);
-	private boolean centered, selected, number, background = true, withcommas = false;
+	public static final ArrayList<TextField> FIELDS = new ArrayList<>();
+	private RGB hoversel, nohoversel;
+	private boolean centered, number, background = true, withcommas = false;
 	private float min, max, value;
 	private String text, tempval;
 	private RGB textcolor = new RGB(212, 212, 212), hovertextcolor = null;
 
-	public TextField(Element root, String id, int width, int x, int y){
-		super(root, id); fields.add(this); this.setSize(width, 26);
-		this.setPosition(root == null ? x : root.x + x, root == null ? y : root.y + y);
+	public TextField(NewElement root, String id, String style, int width, int x, int y){
+		super(root, id, style == null ? "field" : style); FIELDS.add(this); this.setSize(width, 26);
+		this.setPosition(x, y, root == null ? 1 : root.z + 1).setColor(0xff484848);
+		this.setHoverColor(0xff70ff7f, false); this.setHoverColor(0xffebc9c9, true);
+		hoversel = new RGB(StyleSheet.getColourFor(stylegroup, "selected_hovered", 0xffff7f00, true));
+		nohoversel = new RGB(StyleSheet.getColourFor(stylegroup, "selected", 0xffffe100, true));
+		//this.setBorder(StyleSheet.WHITE, StyleSheet.BLACK, 1, true, true, true, true);
 	}
 	
 	public TextField setText(String string, boolean centered){
 		this.text = string; this.centered = centered; return this;
 	}
 	
-	public TextField setAsNumberfield(float min, float max, boolean centered){
-		this.number = true; this.min = min; this.max = max; this.centered = centered; value = 0; return this;
+	public TextField setAsNumberfield(float min, float max, boolean centered, boolean arrows){
+		this.number = true; this.min = min; this.max = max; this.centered = centered; value = 0;
+		if(Settings.numberfieldarrows() && arrows){//TODO eventually dynamic loading/adjustment so a restart isn't needed
+			width -= 20;
+			elements.add(new RectIcon(this, id + ":arrow_up", stylegroup + ":arrow", "icons/numberfield_incr", 20, height / 2, width, 0){
+				@Override protected boolean processButtonClick(int x, int y, boolean left){ return this.root.processScrollWheel(1); }
+			});
+			elements.add(new RectIcon(this, id + ":arrow_down", stylegroup + ":arrow", "icons/numberfield_decr", 20, height / 2, width, height / 2){
+				@Override protected boolean processButtonClick(int x, int y, boolean left){ return this.root.processScrollWheel(-1); }
+			});
+		} return this;
 	}
 	
 	public TextField setRenderBackground(boolean bool){
@@ -44,10 +60,8 @@ public class TextField extends Element {
 
 	@Override
 	public void renderSelf(int rw, int rh){
-		if(enabled) (isSelected() ? hovered ? hoversel : hovercolor : hovered ? RGB.BLACK : inactivecol).glColorApply();
-		if(background) this.renderQuad(x, y, width, height, "ui/background_dark");
-		if(enabled) RGB.glColorReset();
-		if(!number && text == null) return;
+		(enabled ? isSelected() ? hovered ? hoversel : nohoversel : hovered ? hovercolor : RGB.WHITE : discolor).glColorApply();
+		if(background) this.renderSelfQuad(); if(enabled) RGB.glColorReset(); if(!number && text == null) return;
 		String tex = number ? (tempval == null ? value : "*" + tempval) + "" : tempval == null ? this.text : tempval;
 		if(centered){
 			int x = width / 2 - (FontRenderer.getWidth(tex, 1) / 2), y = height / 2 - 10;
@@ -60,12 +74,12 @@ public class TextField extends Element {
 
 	@Override
 	protected boolean processButtonClick(int x, int y, boolean left){
-		if(this.isSelected()){ this.onReturn(); this.selected = false; return true; }
-		deselectAll(); return this.selected = true;
+		if(this.isSelected()){ this.onReturn(); this.deselect(); return true; }
+		deselectAll(); return select();
 	}
 
 	public static void deselectAll(){
-		fields.forEach(elm -> { if(elm.isSelected()) elm.onReturn(); elm.selected = false; });
+		FIELDS.forEach(elm -> { if(elm.isSelected()) elm.onReturn(); elm.deselect(); });
 	}
 	
 	@Override
@@ -82,8 +96,8 @@ public class TextField extends Element {
 	}
 	
 	@Override
-	protected boolean processScrollWheel(int wheel){
-		return true;//FMTB.MODEL.updateValue(this, this.id + (wheel > 0 ? "+" : "-")) || true;
+	public boolean processScrollWheel(int wheel){
+		return FMTB.MODEL.updateValue(this, this.id + (wheel > 0 ? "+" : "-")) || true;
 	}
 
 	public float tryChange(boolean positive, float rate){
@@ -107,11 +121,11 @@ public class TextField extends Element {
 	}
 
 	public static boolean anySelected(){
-		return fields.stream().filter(pre -> pre.isSelected()).findFirst().isPresent();
+		return FIELDS.stream().filter(pre -> pre.isSelected()).findFirst().isPresent();
 	}
 
 	public static TextField getSelected(){
-		Optional<TextField> sel = fields.stream().filter(pre -> pre.isSelected()).findFirst();
+		Optional<TextField> sel = FIELDS.stream().filter(pre -> pre.isSelected()).findFirst();
 		return sel.isPresent() ? sel.get() : null;
 	}
 
@@ -183,7 +197,7 @@ public class TextField extends Element {
 	}
 
 	protected void updateNumberField(){
-		//FMTB.MODEL.updateValue(this);
+		FMTB.MODEL.updateValue(this);
 	}
 
 	protected void updateTextField(){}
@@ -200,33 +214,24 @@ public class TextField extends Element {
 		return (int)value;
 	}
 
-	public boolean isSelected(){
-		return selected;
-	}
-	
-	@Override
-	public boolean deselect(){
-		super.deselect(); this.selected = false; return true;
-	}
-
 	public TextField setColor(String string, RGB rgb){
 		switch(string){
 			case "hover": this.hovercolor = rgb; break;
 			case "hover_sel": case "hover_selected": this.hoversel = rgb; break;
-			case "inactive": this.inactivecol = rgb; break;
+			case "inactive": this.discolor = rgb; break;
 		} return this;
 	}
 
-	public static ArrayList<TextField> getAllFields(){ return fields; }
+	public static ArrayList<TextField> getAllFields(){ return FIELDS; }
 
 	public static TextField getFieldById(String string){
-		for(TextField field : fields) if(field.id.equals(string)) return field; return null;
+		for(TextField field : FIELDS) if(field.id.equals(string)) return field; return null;
 	}
 	
 	public static class BooleanField extends TextField {
 
-		public BooleanField(Element root, String id, int width, int x, int y){
-			super(root, id, width, x, y);
+		public BooleanField(NewElement root, String id, String style, int width, int x, int y){
+			super(root, id, style == null ? "field:boolean" : style, width, x, y);
 		}
 		
 		@Override

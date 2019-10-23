@@ -1,13 +1,13 @@
-package net.fexcraft.app.fmt.ui.re.editor;
+package net.fexcraft.app.fmt.ui.editor;
 
 import static net.fexcraft.app.fmt.utils.StyleSheet.BLACK;
 
 import java.util.ArrayList;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.re.Button;
-import net.fexcraft.app.fmt.ui.re.DialogBox;
-import net.fexcraft.app.fmt.ui.re.TextField;
+import net.fexcraft.app.fmt.ui.general.Button;
+import net.fexcraft.app.fmt.ui.general.DialogBox;
+import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;

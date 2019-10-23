@@ -3,8 +3,8 @@ package net.fexcraft.app.fmt.ui.tree;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.UserInterface;
+import net.fexcraft.app.fmt.ui.old.Element;
 import net.fexcraft.lib.common.math.RGB;
 
 public class RightTree extends Element {

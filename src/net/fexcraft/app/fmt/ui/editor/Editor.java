@@ -1,13 +1,13 @@
-package net.fexcraft.app.fmt.ui.re.editor;
+package net.fexcraft.app.fmt.ui.editor;
 
 import java.util.ArrayList;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.NewElement;
 import net.fexcraft.app.fmt.ui.UserInterface;
-import net.fexcraft.app.fmt.ui.re.Button;
-import net.fexcraft.app.fmt.ui.re.Icon;
-import net.fexcraft.app.fmt.ui.re.TextField;
+import net.fexcraft.app.fmt.ui.general.Button;
+import net.fexcraft.app.fmt.ui.general.Icon;
+import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.utils.Settings;
 
 public abstract class Editor extends NewElement {

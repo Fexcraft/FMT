@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.fexcraft.app.fmt.ui.re;
+package net.fexcraft.app.fmt.ui.general;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

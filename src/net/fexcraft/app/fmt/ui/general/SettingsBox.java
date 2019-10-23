@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.fexcraft.app.fmt.ui.re;
+package net.fexcraft.app.fmt.ui.general;
 
 import java.util.ArrayList;
 
@@ -10,7 +10,7 @@ import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.ui.NewElement;
 import net.fexcraft.app.fmt.ui.UserInterface;
-import net.fexcraft.app.fmt.ui.general.NFC.AfterTask;
+import net.fexcraft.app.fmt.ui.old.NFC.AfterTask;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 

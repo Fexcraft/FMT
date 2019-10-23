@@ -1,7 +1,6 @@
-package net.fexcraft.app.fmt.ui.re;
+package net.fexcraft.app.fmt.ui.old;
 
 import net.fexcraft.app.fmt.ui.FontRenderer;
-import net.fexcraft.app.fmt.ui.NewElement;
 import net.fexcraft.lib.common.math.RGB;
 
 /**
@@ -9,37 +8,29 @@ import net.fexcraft.lib.common.math.RGB;
  * @author Ferdinand Calo' (FEX___96)
  *
  */
-public class Button extends NewElement {
+public class Button extends Element {
 	
-	private RGB iconcolor = null;
+	private RGB hovercolor = RGB.GREEN;
+	private RGB discolor = RGB.RED, iconcolor = null;
 	private boolean centered, drawbackground = true;
 	private String text, icon;
-	private int iconsize, texxoff = 2, texyoff = 2;
+	private int iconsize;
+	//
+	private static final RGB subhover = new RGB(218, 232, 104);
 	
-	public Button(NewElement root, String id, String style, int width, int height, int x, int y){
-		super(root, id, style == null ? root instanceof HoverMenu ? "menu:button" : "button" : style);
-		this.setPosition(x, y, root.z + 1).setSize(width, height).setColor(0xffc7c7c7).setEnabled(true);
-		this.setBorder(0xff000000, 0xff000000, 1, root instanceof HoverMenu == false, true, true, true); this.setupSubmenu();
+	public Button(Element root, String id, int width, int height, int x, int y){
+		super(root, id); this.setPosition(this.x = root.x + x, this.y = root.y + y + (root instanceof HoverMenu ? root.getElements().size() * 28 : 0));
+		this.setSize(width, height).setLevel(root.getLevel() + 1);
+		this.setTexPosSize("ui/background_light", 0, 0, 64, 64);
+		this.setEnabled(true); this.setupSubmenu();
 	}
 	
-	@Override
-	public NewElement repos(){
-		x = root.x + xrel; y = root.y + yrel + (root instanceof HoverMenu ? getIndex() * 28 + 1 : 0);
-		clearVertexes(); for(NewElement elm : elements) elm.repos(); return this;
+	public Button(Element elm, String id, int w, int h, int x, int y, RGB hover){
+		this(elm, id, w, h, x, y); hovercolor = hover;
 	}
 	
-	private int getIndex(){
-		for(int i = 0; i < root.getElements().size(); i++){
-			if(this == root.getElements().get(i)) return i;
-		} return -1;
-	}
-
-	public Button(NewElement elm, String id, String style, int w, int h, int x, int y, int hover){
-		this(elm, id, style, w, h, x, y); this.setHoverColor(hover, false);
-	}
-	
-	public Button(NewElement elm, String id, String style, int w, int h, int x, int y, int hover, int dis){
-		this(elm, id, style, w, h, x, y, hover); this.setHoverColor(dis, true);
+	public Button(Element elm, String id, int w, int h, int x, int y, RGB hover, RGB dis){
+		this(elm, id, w, h, x, y, hover); discolor = dis;
 	}
 	
 	public Button setBackgroundless(boolean bool){
@@ -54,17 +45,13 @@ public class Button extends NewElement {
 		if(this.root instanceof HoverMenu){
 			int leng = FontRenderer.getWidth(text, 1);
 			if(leng + 10 > this.width) this.width = leng + 10;
-			for(NewElement  elm : this.root.getElements()){
+			for(Element  elm : this.root.getElements()){
 				if(elm.width < width) elm.width = this.width;
 			}
 			if(this.root.width - 4 < this.width) this.root.width = this.width + 4;
 			if(this.width + 4 < this.root.width) this.width = this.root.width - 4;
 		}
 		return this;
-	}
-
-	public Button setText(String string, int texxoff, int texyoff){
-		text = string; this.centered = false; this.texxoff = texxoff; this.texyoff = texyoff; return this;
 	}
 	
 	public Button setIcon(String texture, int size){
@@ -89,7 +76,7 @@ public class Button extends NewElement {
 				FontRenderer.drawText(text, this.x + x + (icon == null ? 0 : iconsize + 2), this.y + y, 1, color);
 			}
 			else{
-				FontRenderer.drawText(text, x + texxoff + (icon == null ? 0 : iconsize + 2), y + texyoff, 1, color);
+				FontRenderer.drawText(text, x + 2 + (icon == null ? 0 : iconsize + 2), y + 2, 1, color);
 			}
 		}
 		if(icon != null){
@@ -101,8 +88,16 @@ public class Button extends NewElement {
 	}
 	
 	@Override
+	protected void realignToRoot(int index){
+		if(root instanceof HoverMenu){ this.hovercolor = subhover;
+			int height = index > 0 ? root.getElements().get(index - 1).y + root.getElements().get(index - 1).height : root.y;
+			this.setPosition(root.x + 2, height + 2);
+		}
+	}
+	
+	@Override
 	public void hovered(float mx, float my){
-		super.hovered(mx, my); if(this.hovered){ for(NewElement elm : elements) elm.setVisible(true); }
+		super.hovered(mx, my); if(this.hovered){ for(Element elm : elements) elm.setVisible(true); }
 	}
 
 }

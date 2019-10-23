@@ -1,10 +1,10 @@
-package net.fexcraft.app.fmt.ui.re.editor;
+package net.fexcraft.app.fmt.ui.editor;
 
 import static net.fexcraft.app.fmt.utils.StyleSheet.BLACK;
 
 import net.fexcraft.app.fmt.ui.NewElement;
-import net.fexcraft.app.fmt.ui.re.Button;
-import net.fexcraft.app.fmt.ui.re.TextField;
+import net.fexcraft.app.fmt.ui.general.Button;
+import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.lib.common.math.RGB;
 
 public class TextureEditor extends Editor {

@@ -1,4 +1,4 @@
-package net.fexcraft.app.fmt.ui.re;
+package net.fexcraft.app.fmt.ui.general;
 
 import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.NewElement;

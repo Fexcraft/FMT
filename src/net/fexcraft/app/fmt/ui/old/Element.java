@@ -1,4 +1,4 @@
-package net.fexcraft.app.fmt.ui;
+package net.fexcraft.app.fmt.ui.old;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,6 +6,7 @@ import java.util.List;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
+import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 

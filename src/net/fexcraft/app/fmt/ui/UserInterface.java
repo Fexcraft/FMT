@@ -6,14 +6,15 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.general.HoverMenu;
-import net.fexcraft.app.fmt.ui.general.NFC;
-import net.fexcraft.app.fmt.ui.re.Bottombar;
-import net.fexcraft.app.fmt.ui.re.ControlsAdjuster;
-import net.fexcraft.app.fmt.ui.re.DialogBox;
-import net.fexcraft.app.fmt.ui.re.SettingsBox;
-import net.fexcraft.app.fmt.ui.re.TextField;
-import net.fexcraft.app.fmt.ui.re.Toolbar;
+import net.fexcraft.app.fmt.ui.general.Bottombar;
+import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
+import net.fexcraft.app.fmt.ui.general.DialogBox;
+import net.fexcraft.app.fmt.ui.general.SettingsBox;
+import net.fexcraft.app.fmt.ui.general.TextField;
+import net.fexcraft.app.fmt.ui.general.Toolbar;
+import net.fexcraft.app.fmt.ui.old.Element;
+import net.fexcraft.app.fmt.ui.old.HoverMenu;
+import net.fexcraft.app.fmt.ui.old.NFC;
 import net.fexcraft.app.fmt.utils.RayCoastAway;
 import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.app.fmt.utils.Settings;
@@ -148,7 +149,7 @@ public class UserInterface {
 	public void onButtonPress(int i){
 		if(HoverMenu.anyMenuHovered()){
 			for(HoverMenu list : HoverMenu.arrlist){
-				if(list.hovered && list.onButtonClick(Mouse.getX(), root.getDisplayMode().getHeight() - Mouse.getY(), i == 0, true)) return;
+				if(list.isHovered() && list.onButtonClick(Mouse.getX(), root.getDisplayMode().getHeight() - Mouse.getY(), i == 0, true)) return;
 			}
 		}
 		else{

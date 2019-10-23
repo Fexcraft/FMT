@@ -5,8 +5,8 @@ import java.io.File;
 import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.re.Bottombar;
-import net.fexcraft.app.fmt.ui.re.DialogBox;
+import net.fexcraft.app.fmt.ui.general.Bottombar;
+import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.lib.common.json.JsonUtil;
 import net.fexcraft.lib.common.utils.HttpUtil;
 import net.fexcraft.lib.common.utils.Print;
