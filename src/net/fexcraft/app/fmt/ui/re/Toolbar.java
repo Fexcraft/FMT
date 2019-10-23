@@ -40,37 +40,37 @@ public class Toolbar extends NewElement {
 		super(null, "toolbar", "toolbar"); this.ui = ui; hovercolor = RGB.WHITE;
 		this.setPosition(0, 0, -20).setSize(100, 30).setColor(0xff484848).setBorder(0xff32a852, 0xffeb4034, 3, false, true);
 		//
-		this.elements.add(new Icon(this, "info", "icons/toolbar/info", 32, 0, 0){
+		this.elements.add(new Icon(this, "info", "toolbar:icon", "icons/toolbar/info", 32, 0, 0){
 			@Override
 			protected boolean processButtonClick(int x, int y, boolean left){
 				DialogBox.notAvailableYet(); return true;
 			}
 		});
-		this.elements.add(new Icon(this, "new_file", "icons/toolbar/new", 32, 0, 0){
+		this.elements.add(new Icon(this, "new_file", "toolbar:icon", "icons/toolbar/new", 32, 0, 0){
 			@Override
 			protected boolean processButtonClick(int x, int y, boolean left){
 				SaveLoad.openNewModel(); return true;
 			}
 		});
-		this.elements.add(new Icon(this, "open_file", "icons/toolbar/open", 32, 0, 0){
+		this.elements.add(new Icon(this, "open_file", "toolbar:icon", "icons/toolbar/open", 32, 0, 0){
 			@Override
 			protected boolean processButtonClick(int x, int y, boolean left){
 				SaveLoad.openModel(); return true;
 			}
 		});
-		this.elements.add(new Icon(this, "save_file", "icons/toolbar/save", 32, 0, 0){
+		this.elements.add(new Icon(this, "save_file", "toolbar:icon", "icons/toolbar/save", 32, 0, 0){
 			@Override
 			protected boolean processButtonClick(int x, int y, boolean left){
 				SaveLoad.saveModel(false, false); return true;
 			}
 		});
-		this.elements.add(new Icon(this, "profile", "icons/toolbar/profile", 32, 0, 0){
+		this.elements.add(new Icon(this, "profile", "toolbar:icon", "icons/toolbar/profile", 32, 0, 0){
 			@Override
 			protected boolean processButtonClick(int x, int y, boolean left){
 				DialogBox.notAvailableYet(); return true;
 			}
 		});
-		this.elements.add(new Icon(this, "settings", "icons/toolbar/settings", 32, 0, 0){
+		this.elements.add(new Icon(this, "settings", "toolbar:icon", "icons/toolbar/settings", 32, 0, 0){
 			@Override
 			protected boolean processButtonClick(int x, int y, boolean left){
 				UserInterface.SETTINGSBOX.show(); return true;

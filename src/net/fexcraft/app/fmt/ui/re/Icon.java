@@ -10,16 +10,16 @@ import net.fexcraft.lib.common.math.RGB;
  */
 public class Icon extends NewElement {
 	
-	public Icon(NewElement root, String id, String texture, int size, int x, int y){
-		super(root, id, "icon:" + id); this.setPosition(x, y, root.z + 1).setSize(size, size).setTexture(texture, true).setEnabled(true);
+	public Icon(NewElement root, String id, String style, String texture, int size, int x, int y){
+		super(root, id, style); this.setPosition(x, y, root.z + 1).setSize(size, size).setTexture(texture, true).setEnabled(true);
 	}
 	
-	public Icon(NewElement elm, String id, String texture, int size, int x, int y, RGB hover){
-		this(elm, id, texture, size, x, y); hovercolor = hover;
+	public Icon(NewElement elm, String id, String style, String texture, int size, int x, int y, RGB hover){
+		this(elm, id, style, texture, size, x, y); hovercolor = hover;
 	}
 	
-	public Icon(NewElement elm, String id, String texture, int size, int x, int y, RGB hover, RGB dis){
-		this(elm, id, texture, size, x, y, hover); discolor = dis;
+	public Icon(NewElement elm, String id, String style, String texture, int size, int x, int y, RGB hover, RGB dis){
+		this(elm, id, style, texture, size, x, y, hover); discolor = dis;
 	}
 
 	@Override

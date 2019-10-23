@@ -24,12 +24,12 @@ public abstract class Editor extends NewElement {
 				applyChange(FMTB.MODEL.multiply(wheel > 0 ? 2.0f : 0.5f)); return true;
 			}
 		}.setAsNumberfield(0, 1024, true).applyChange(FMTB.MODEL.rate));
-		button.getElements().add(new Icon(button, "mr", "multiplicator:icon", 26, button.width - 30, 1){
+		button.getElements().add(new Icon(button, "mr", "multiplicator:icon", "icons/group_delete", 26, button.width - 30, 1){
 			@Override
 			protected boolean processButtonClick(int x, int y, boolean left){
 				((TextField)root.getElement("mt")).applyChange(1); FMTB.MODEL.rate = 1f; return true;
 			}
-		}.setTexture("icons/group_delete", true));
+		});
 		this.setHoverColor(0xffffffff, false); this.repos();
 	}
 	
