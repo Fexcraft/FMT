@@ -71,6 +71,7 @@ import net.fexcraft.lib.tmt.ModelRendererTurbo;
 public class FMTB {
 	
 	public static final String deftitle = "[FPS:%s] Fexcraft Modelling Toolbox - %s";
+	public static final String deftitle0 = "Fexcraft Modelling Toolbox - %s";
 	public static final String version = "1.3.0";
 	public static final String CLID = "587016218196574209";
 	//
@@ -189,7 +190,15 @@ public class FMTB {
 	}
 	
     public void updateFPS() {
-        if(getTime() - lfps > 1000){ Display.setTitle(String.format(deftitle, fps, title)); fps = 0; lfps += 1000; } fps++;
+        if(getTime() - lfps > 1000){
+        	if(Settings.bottombar()){
+        		Bottombar.fps = fps; Display.setTitle(String.format(deftitle0, title)); 
+        	}
+        	else{
+        		Display.setTitle(String.format(deftitle, fps, title));
+        	}
+        	fps = 0; lfps += 1000;
+        } fps++;
     }
 	
 	private void render(){
@@ -315,6 +324,7 @@ public class FMTB {
 		TextureManager.loadTexture("icons/editors/expanded", null);
 		//
 		(UserInterface.TOOLBAR = new Toolbar()).repos();
+		(UserInterface.BOTTOMBAR = new Bottombar()).setVisible(Settings.bottombar());
 		//ui.getElements().add(new ModelTree());
 		//ui.getElements().add(new HelperTree());
 		//ui.getElements().add(new GeneralEditor());
@@ -329,7 +339,7 @@ public class FMTB {
 		ui.getElements().add(UserInterface.CONTROLS = new ControlsAdjuster());
 		//render last
 		ui.getNewElements().add(UserInterface.TOOLBAR);
-		ui.getNewElements().add(new Bottombar().setVisible(Settings.bottombar()));
+		ui.getNewElements().add(UserInterface.BOTTOMBAR);
 		//ui.getNewElements().add(new Crossbar());
 		FMTB.MODEL.updateFields();
 	}

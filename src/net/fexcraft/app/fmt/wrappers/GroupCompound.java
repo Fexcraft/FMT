@@ -11,11 +11,10 @@ import java.util.stream.Collectors;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.editor.ContainerButton;
-import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.re.DialogBox;
 import net.fexcraft.app.fmt.ui.re.TextField;
+import net.fexcraft.app.fmt.ui.re.editor.Editor;
 import net.fexcraft.app.fmt.utils.RayCoastAway;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
@@ -496,7 +495,7 @@ public class GroupCompound {
 				if(texname.length() > 32){ texname = texname.substring(texname.length() - 32, texname.length()); }
 				Editor.getGlobalField("group_texture").setText(texname, true);
 			};
-			((ContainerButton)Editor.get("model_group_editor").getElement("animations")).addSubElements();
+			//TODO ((Container)Editor.get("model_group_editor").getElement("animations")).addSubElements();
 			//
 			Editor.getGlobalField("model_posx").applyChange(pos == null ? 0 : pos.xCoord);
 			Editor.getGlobalField("model_posy").applyChange(pos == null ? 0 : pos.yCoord);

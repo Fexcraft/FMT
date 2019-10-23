@@ -97,6 +97,10 @@ public class SettingsBox extends NewElement implements Dialog {
 			setting.validateAndApply(this.getText());
 			this.setText(setting.toString(), false);
 			if(setting.getId().equals("ui_scale")) FMTB.get().UI.rescale();
+			if(setting.getId().equals("bottombar")){
+				UserInterface.BOTTOMBAR.setVisible(setting.getBooleanValue());
+				FMTB.get().UI.rescale();
+			}
 		}
 		
 	}

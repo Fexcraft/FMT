@@ -14,8 +14,8 @@ import net.fexcraft.lib.common.math.RGB;
 public class TextField extends NewElement {
 	
 	public static final ArrayList<TextField> FIELDS = new ArrayList<>();
-	private RGB hoversel = new RGB(255, 127, 0);
-	private boolean centered, selected, number, background = true, withcommas = false;
+	private RGB hoversel, nohoversel;
+	private boolean centered, number, background = true, withcommas = false;
 	private float min, max, value;
 	private String text, tempval;
 	private RGB textcolor = new RGB(212, 212, 212), hovertextcolor = null;
@@ -24,7 +24,9 @@ public class TextField extends NewElement {
 		super(root, id, style == null ? "field" : style); FIELDS.add(this); this.setSize(width, 26);
 		this.setPosition(x, y, root == null ? 1 : root.z + 1).setColor(0xff484848);
 		this.setHoverColor(0xff70ff7f, false); this.setHoverColor(0xffebc9c9, true);
-		hoversel = new RGB(StyleSheet.getColourFor(stylegroup, "selected", 0xffFF7F00, true));
+		hoversel = new RGB(StyleSheet.getColourFor(stylegroup, "selected_hovered", 0xffff7f00, true));
+		nohoversel = new RGB(StyleSheet.getColourFor(stylegroup, "selected", 0xffffe100, true));
+		//this.setBorder(StyleSheet.WHITE, StyleSheet.BLACK, 1, true, true, true, true);
 	}
 	
 	public TextField setText(String string, boolean centered){
@@ -58,7 +60,7 @@ public class TextField extends NewElement {
 
 	@Override
 	public void renderSelf(int rw, int rh){
-		if(!enabled || hovered || isSelected()) (isSelected() ? hovered ? hoversel : RGB.WHITE : hovered ? hovercolor : discolor).glColorApply();
+		(enabled ? isSelected() ? hovered ? hoversel : nohoversel : hovered ? hovercolor : RGB.WHITE : discolor).glColorApply();
 		if(background) this.renderSelfQuad(); if(enabled) RGB.glColorReset(); if(!number && text == null) return;
 		String tex = number ? (tempval == null ? value : "*" + tempval) + "" : tempval == null ? this.text : tempval;
 		if(centered){
@@ -72,12 +74,12 @@ public class TextField extends NewElement {
 
 	@Override
 	protected boolean processButtonClick(int x, int y, boolean left){
-		if(this.isSelected()){ this.onReturn(); this.selected = false; return true; }
-		deselectAll(); return this.selected = true;
+		if(this.isSelected()){ this.onReturn(); this.deselect(); return true; }
+		deselectAll(); return select();
 	}
 
 	public static void deselectAll(){
-		FIELDS.forEach(elm -> { if(elm.isSelected()) elm.onReturn(); elm.selected = false; });
+		FIELDS.forEach(elm -> { if(elm.isSelected()) elm.onReturn(); elm.deselect(); });
 	}
 	
 	@Override
@@ -210,15 +212,6 @@ public class TextField extends NewElement {
 
 	public int getIntegerValue(){
 		return (int)value;
-	}
-
-	public boolean isSelected(){
-		return selected;
-	}
-	
-	@Override
-	public boolean deselect(){
-		super.deselect(); this.selected = false; return true;
 	}
 
 	public TextField setColor(String string, RGB rgb){

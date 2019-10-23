@@ -8,7 +8,8 @@ import net.fexcraft.lib.common.math.RGB;
 public class Bottombar extends NewElement {
 	
 	private static TextField netfield;
-	private int[] fields = new int[]{ 6, 6, 3 };
+	private int[] fields = new int[]{ 6, 6, 3, 6, 6};
+	public static long fps;
 
 	public Bottombar(){
 		super(null, "bottombar", "bottombar"); hovercolor = RGB.WHITE;
@@ -16,18 +17,32 @@ public class Bottombar extends NewElement {
 		this.elements.add(new TextField(this, "polygons", "bottombar:field", UserInterface.width / 6, 0, 0){
 			@Override
 			public void renderSelf(int rw, int rh){
-				this.setText("Polygons: " + GroupCompound.COUNT, false);
+				this.setText("Polygons: " + GroupCompound.COUNT, true);
 				super.renderSelf(rw, rh);
 			}
 		}.setEnabled(false));
 		this.elements.add(new TextField(this, "selected", "bottombar:field", UserInterface.width / 6, 0, 0){
 			@Override
 			public void renderSelf(int rw, int rh){
-				this.setText("Selected: " + GroupCompound.COUNT, false);
+				this.setText("Selected: " + GroupCompound.COUNT, true);
 				super.renderSelf(rw, rh);
 			}
 		}.setEnabled(false));
 		this.elements.add((netfield = new TextField(this, "netfield", "bottombar:field", UserInterface.width / 3, 0, 0)).setEnabled(false));
+		this.elements.add(new TextField(this, "undefined", "bottombar:field", UserInterface.width / 6, 0, 0){
+			@Override
+			public void renderSelf(int rw, int rh){
+				this.setText("", true);
+				super.renderSelf(rw, rh);
+			}
+		}.setEnabled(false));
+		this.elements.add(new TextField(this, "selected", "bottombar:field", UserInterface.width / 6, 0, 0){
+			@Override
+			public void renderSelf(int rw, int rh){
+				this.setText("FPS: " + fps, true);
+				super.renderSelf(rw, rh);
+			}
+		}.setEnabled(false));
 		this.repos();
 	}
 	

@@ -37,7 +37,7 @@ public abstract class Editor extends NewElement {
 	@Override
 	public NewElement repos(){
 		x = 0; y = UserInterface.TOOLBAR.height + UserInterface.TOOLBAR.border_width;
-		height = UserInterface.height - y - UserInterface.TOOLBAR.border_width; if(Settings.bottombar()) height -= 26;
+		height = UserInterface.height - y; if(Settings.bottombar()) height -= 29;
 		clearVertexes(); this.reposContainers(); return this;
 	}
 	

@@ -9,6 +9,7 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
 import net.fexcraft.app.fmt.ui.general.HoverMenu;
 import net.fexcraft.app.fmt.ui.general.NFC;
+import net.fexcraft.app.fmt.ui.re.Bottombar;
 import net.fexcraft.app.fmt.ui.re.DialogBox;
 import net.fexcraft.app.fmt.ui.re.SettingsBox;
 import net.fexcraft.app.fmt.ui.re.TextField;
@@ -28,6 +29,7 @@ public class UserInterface {
 	public static float scale_x, scale_y, scale;
 	public static NewElement SELECTED = null, DRAGGED = null;
 	public static Toolbar TOOLBAR;
+	public static Bottombar BOTTOMBAR;
 	public static DialogBox DIALOGBOX;
 	public static NFC FILECHOOSER;
 	public static ControlsAdjuster CONTROLS;

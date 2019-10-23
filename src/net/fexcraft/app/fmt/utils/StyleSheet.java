@@ -12,6 +12,8 @@ import net.fexcraft.lib.common.math.Time;
 
 public class StyleSheet {
 	
+	public static final int BLACK = 0xff000000, WHITE = 0xffffffff;
+	
 	public static final TreeMap<String, TreeMap<String, ColorInt>> COLOURS = new TreeMap<>();
 	private static String author;
 	
