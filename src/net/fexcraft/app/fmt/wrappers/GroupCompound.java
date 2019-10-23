@@ -11,11 +11,11 @@ import java.util.stream.Collectors;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.re.DialogBox;
 import net.fexcraft.app.fmt.ui.re.TextField;
 import net.fexcraft.app.fmt.ui.re.editor.Container;
 import net.fexcraft.app.fmt.ui.re.editor.Editor;
+import net.fexcraft.app.fmt.ui.re.editor.TextureEditor;
 import net.fexcraft.app.fmt.utils.RayCoastAway;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
