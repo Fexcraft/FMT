@@ -10,7 +10,6 @@ import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.editor.Editor;
-import net.fexcraft.app.fmt.ui.old.TextField;
 import net.fexcraft.app.fmt.utils.HelperCollector;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;

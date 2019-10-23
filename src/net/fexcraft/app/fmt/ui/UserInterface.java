@@ -9,12 +9,11 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.general.Bottombar;
 import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
+import net.fexcraft.app.fmt.ui.general.HoverMenu;
 import net.fexcraft.app.fmt.ui.general.NFC;
 import net.fexcraft.app.fmt.ui.general.SettingsBox;
 import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.ui.general.Toolbar;
-import net.fexcraft.app.fmt.ui.old.Element;
-import net.fexcraft.app.fmt.ui.old.HoverMenu;
 import net.fexcraft.app.fmt.utils.RayCoastAway;
 import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.app.fmt.utils.Settings;
@@ -36,7 +35,6 @@ public class UserInterface {
 	public static ControlsAdjuster CONTROLS;
 	public static SettingsBox SETTINGSBOX;
 	//
-	private ArrayList<Element> elements = new ArrayList<>();
 	private ArrayList<NewElement> elms = new ArrayList<>();
 	private FMTB root;
 	//
@@ -81,7 +79,6 @@ public class UserInterface {
 			tmelm.render(width, height); logintxt.render(width, height);
 		}
 		else{
-			for(Element elm : elements) elm.render(width, height);
 			for(NewElement elm : elms) elm.render(width, height);
 		}
 		GL11.glDepthFunc(GL11.GL_LESS);
@@ -148,7 +145,7 @@ public class UserInterface {
 
 	public void onButtonPress(int i){
 		if(HoverMenu.anyMenuHovered()){
-			for(HoverMenu list : HoverMenu.arrlist){
+			for(HoverMenu list : HoverMenu.MENUS){
 				if(list.isHovered() && list.onButtonClick(Mouse.getX(), root.getDisplayMode().getHeight() - Mouse.getY(), i == 0, true)) return;
 			}
 		}
@@ -195,7 +192,6 @@ public class UserInterface {
 		return getElement(string) != null;
 	}
 	
-	public ArrayList<Element> getElements(){ return elements; }
 	public ArrayList<NewElement> getNewElements(){ return elms; }
 	
 }
