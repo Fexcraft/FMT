@@ -43,6 +43,7 @@ import net.fexcraft.app.fmt.ui.re.Toolbar;
 import net.fexcraft.app.fmt.ui.re.editor.Editor;
 import net.fexcraft.app.fmt.ui.re.editor.GeneralEditor;
 import net.fexcraft.app.fmt.ui.re.editor.ModelGroupEditor;
+import net.fexcraft.app.fmt.ui.re.editor.TextureEditor;
 import net.fexcraft.app.fmt.utils.Backups;
 import net.fexcraft.app.fmt.utils.DiscordUtil;
 import net.fexcraft.app.fmt.utils.GGR;
@@ -330,7 +331,7 @@ public class FMTB {
 		//ui.getElements().add(new HelperTree());
 		ui.getNewElements().add(new GeneralEditor());
 		ui.getNewElements().add(new ModelGroupEditor());
-		//ui.getElements().add(new TextureEditor());
+		ui.getNewElements().add(new TextureEditor());
 		//ui.getElements().add(new PreviewEditor());
 		//
 		ui.getNewElements().add(UserInterface.DIALOGBOX = new DialogBox());

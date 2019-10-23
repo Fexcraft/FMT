@@ -27,7 +27,7 @@ public class ModelGroupEditor extends Editor {
 	private Container group, model, animations;
 
 	public ModelGroupEditor(){
-		super("model_group_editor", "editor"); this.setVisible(true);
+		super("model_group_editor", "editor"); this.setVisible(false);
 		this.elements.add((model = new Container(this, "model", width - 4, 28, 4, 0, null)).setText("Model Settings", false));
 		this.elements.add((group = new Container(this, "group", width - 4, 28, 4, 0, null)).setText("Group Settings", false));
 		this.elements.add((animations = new Container(this, "animations", width - 4, 28, 4, 0, null)).setText("Group Animations", false));

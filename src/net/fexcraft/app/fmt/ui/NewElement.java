@@ -280,4 +280,8 @@ public class NewElement {
 		draggable = bool; return this;
 	}
 
+	public NewElement getRoot(){
+		return root;
+	}
+
 }
