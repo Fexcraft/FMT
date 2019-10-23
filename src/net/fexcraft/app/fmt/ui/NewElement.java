@@ -246,7 +246,7 @@ public class NewElement {
 	}
 	
 	/** To be overridden. **/
-	protected boolean processScrollWheel(int wheel){ return false; }
+	public boolean processScrollWheel(int wheel){ return false; }
 	
 	public ArrayList<NewElement> getElements(){
 		return elements;

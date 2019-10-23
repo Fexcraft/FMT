@@ -22,11 +22,11 @@ public abstract class Editor extends NewElement {
 		this.setPosition(0, 0, -50).setSize(308, 0).setVisible(true).setBorder(0xff000000, 0xffffffff, 1, false, false, false, true);
 		elements.addAll(Arrays.asList(containers = this.setupSubElements())); Button button;
 		this.elements.add((button = new Button(this, "mb", "multiplicator", width - 8, 28, 4, 4, 0).setText("Multiplicator / Rate", 3, 4)).setHoverColor(0xffffffff, false));
-		button.getElements().add(new TextField(button, "mt", "multiplicator:field", 70, button.width - 104, 1){
-			@Override protected boolean processScrollWheel(int wheel){
+		button.getElements().add(new TextField(button, "mt", "multiplicator:field", 110, button.width - 144, 1){
+			@Override public boolean processScrollWheel(int wheel){
 				applyChange(FMTB.MODEL.multiply(wheel > 0 ? 2.0f : 0.5f)); return true;
 			}
-		}.setAsNumberfield(0, 1024, true).applyChange(FMTB.MODEL.rate));
+		}.setAsNumberfield(0, 1024, true, true).applyChange(FMTB.MODEL.rate));
 		button.getElements().add(new Icon(button, "mr", "multiplicator:icon", "icons/group_delete", 26, button.width - 30, 1){
 			@Override
 			protected boolean processButtonClick(int x, int y, boolean left){
@@ -72,7 +72,7 @@ public abstract class Editor extends NewElement {
 		Editor edit = get(string); if(close && edit != null && edit.isVisible()) hideAll(); else show(string);
 	}
 	
-	protected boolean processScrollWheel(int wheel){ return true; }
+	public boolean processScrollWheel(int wheel){ return true; }
 
 	public ArrayList<TextField> getFields(){
 		ArrayList<TextField> fields = new ArrayList<>();

@@ -7,6 +7,7 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.ui.NewElement;
 import net.fexcraft.app.fmt.utils.GGR;
+import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.StyleSheet;
 import net.fexcraft.lib.common.math.RGB;
 
@@ -30,8 +31,17 @@ public class TextField extends NewElement {
 		this.text = string; this.centered = centered; return this;
 	}
 	
-	public TextField setAsNumberfield(float min, float max, boolean centered){
-		this.number = true; this.min = min; this.max = max; this.centered = centered; value = 0; return this;
+	public TextField setAsNumberfield(float min, float max, boolean centered, boolean arrows){
+		this.number = true; this.min = min; this.max = max; this.centered = centered; value = 0;
+		if(Settings.numberfieldarrows() && arrows){//TODO eventually dynamic loading/adjustment so a restart isn't needed
+			width -= 20;
+			elements.add(new RectIcon(this, id + ":arrow_up", stylegroup + ":arrow", "icons/numberfield_incr", 20, height / 2, width, 0){
+				@Override protected boolean processButtonClick(int x, int y, boolean left){ return this.root.processScrollWheel(1); }
+			});
+			elements.add(new RectIcon(this, id + ":arrow_down", stylegroup + ":arrow", "icons/numberfield_decr", 20, height / 2, width, height / 2){
+				@Override protected boolean processButtonClick(int x, int y, boolean left){ return this.root.processScrollWheel(-1); }
+			});
+		} return this;
 	}
 	
 	public TextField setRenderBackground(boolean bool){
@@ -84,7 +94,7 @@ public class TextField extends NewElement {
 	}
 	
 	@Override
-	protected boolean processScrollWheel(int wheel){
+	public boolean processScrollWheel(int wheel){
 		return FMTB.MODEL.updateValue(this, this.id + (wheel > 0 ? "+" : "-")) || true;
 	}
 
