@@ -149,15 +149,16 @@ public class GGR {
 		} return Keyboard.getKeyName(i);
 	}
 
-	private boolean clickedL, clickedR, panning;
+	private boolean clickedL, clickedR, panning, dragging;
     private int wheel, oldMouseX=-1,oldMouseY=-1;
 
     public void acceptMouseInput(float delta){
         if(clickedR && !Mouse.isButtonDown(1)){
             Mouse.setGrabbed(false);//fix mouse grab sticking
+            
         }
         if(clickedL && !Mouse.isButtonDown(0)){
-            UserInterface.DRAGGED = null;
+            UserInterface.DRAGGED = null; dragging = true;
         }
         if(Mouse.isGrabbed()){
             rotation.yCoord += Mouse.getDX() * sensivity * delta;
@@ -182,12 +183,16 @@ public class GGR {
         	if(Mouse.isButtonDown(1) && !RightTree.anyTreeHovered()){
         		Mouse.setGrabbed(true);
         	}
-        	if(Mouse.isButtonDown(0)){
+        	if(Mouse.isButtonDown(0) && dragging){
         		if(UserInterface.DRAGGED != null){
             		UserInterface.DRAGGED.xrel += Mouse.getDX();
             		UserInterface.DRAGGED.yrel += -Mouse.getDY();
             		UserInterface.DRAGGED.repos();
-        		} else root.UI.getDraggableElement();
+        		}
+        		else{
+        			root.UI.getDraggableElement();
+        			if(UserInterface.DRAGGED == null) dragging = false;
+        		}
         	}
         }
         if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE) && !ControlsAdjuster.CATCHING){
