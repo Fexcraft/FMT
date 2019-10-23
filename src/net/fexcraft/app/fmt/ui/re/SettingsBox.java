@@ -9,6 +9,7 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.ui.NewElement;
+import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.general.NFC.AfterTask;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
@@ -32,22 +33,24 @@ public class SettingsBox extends NewElement implements Dialog {
 		this.setVisible(false).setPosition(0, 0, 90).setHoverColor(0xffffffff, false); Dialog.dialogs.add(this);
 		this.setBorder(0xff000000, 0xff3458eb, 5, true, true, true, true);
 		//
-		this.elements.add(Confirm = new Button(this, "confirm", "settingsbox:button", 100, 20, 0, 0, 0xffffff00){
+		this.elements.add(Confirm = new Button(this, "confirm", "settingsbox:button", 100, 20, width - 112, 12, 0xffffff00){
 			@Override protected boolean processButtonClick(int x, int y, boolean left){ task.run(); reset(); return true; }
 		}.setText("Confirm", true));
-		this.elements.add(Cancel = new Button(this, "cancel", "settingsbox:button", 100, 20, 0, 0, 0xffffff00){
+		this.elements.add(Cancel = new Button(this, "cancel", "settingsbox:button", 100, 20, width - 214, 12, 0xffffff00){
 			@Override protected boolean processButtonClick(int x, int y, boolean left){ reset(); return true; }
 		}.setText("Cancel", true));
 	}
 	
 	@Override
+	public NewElement repos(){
+		x = (UserInterface.width - width) / 2 + xrel; y = (UserInterface.height - height) / 2 + yrel;
+		clearVertexes(); for(NewElement elm : elements) elm.repos(); return this;
+	}
+	
+	@Override
 	public void renderSelf(int rw, int rh) {
-		x = (rw / 2) - (width / 2); y = (rh / 2) - (height / 2); this.renderSelfQuad();
+		this.renderSelfQuad();
 		FontRenderer.drawText(alttext + " [Page: " + (page + 1) + "/" + (settings.size() / perpage + 1) + "]", this.x + 12, this.y + 12, 1);
-		if(Confirm.isVisible()){
-			Confirm.x = x + width - Confirm.width - 12; Confirm.y = y + 12;
-			Cancel.x = x + width - Confirm.width - 14 - Cancel.width; Cancel.y = y + 12;
-		}
 		for(int i = 0; i < perpage; i++){
 			int j = (page * perpage) + i; if(j >= settings.size()) break; Setting setting = settings.get(j);
 			FontRenderer.drawText("[" + j + "] " + setting.getId(), this.x + 12, this.y + 40 + (i * 30), 1);
@@ -142,7 +145,7 @@ public class SettingsBox extends NewElement implements Dialog {
 			Confirm.setVisible(false); Cancel.setVisible(false);
 			this.settings.addAll(Settings.getMap().values());
 		}
-		this.height = 256; this.width = 512; this.updateFields(); this.visible = true;
+		this.height = 256; this.width = 512; this.updateFields(); this.visible = true; this.repos();
 	}
 
 	@Override
