@@ -1,7 +1,6 @@
 package net.fexcraft.app.fmt.ui.re.editor;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.NewElement;
@@ -15,12 +14,11 @@ public abstract class Editor extends NewElement {
 	
 	public static final ArrayList<Editor> EDITORS = new ArrayList<>();
 	public static final String[] xyz = new String[]{ "x", "y", "z" };
-	private NewElement[] containers;
+	protected Container[] containers;
 
 	public Editor(String id, String stylegroup){
 		super(null, id, stylegroup, false); EDITORS.add(this); this.setColor(0xff999999);
-		this.setPosition(0, 0, -50).setSize(308, 0).setVisible(true).setBorder(0xff000000, 0xffffffff, 1, false, false, false, true);
-		elements.addAll(Arrays.asList(containers = this.setupSubElements())); Button button;
+		this.setPosition(0, 0, -50).setSize(308, 0).setVisible(false).setBorder(0xff000000, 0xffffffff, 1, false, false, false, true); Button button;
 		this.elements.add((button = new Button(this, "mb", "multiplicator", width - 8, 28, 4, 4, 0).setText("Multiplicator / Rate", 3, 4)).setHoverColor(0xffffffff, false));
 		button.getElements().add(new TextField(button, "mt", "multiplicator:field", 110, button.width - 144, 1){
 			@Override public boolean processScrollWheel(int wheel){
@@ -40,10 +38,15 @@ public abstract class Editor extends NewElement {
 	public NewElement repos(){
 		x = 0; y = UserInterface.TOOLBAR.height + UserInterface.TOOLBAR.border_width;
 		height = UserInterface.height - y - UserInterface.TOOLBAR.border_width; if(Settings.bottombar()) height -= 26;
-		clearVertexes(); for(NewElement elm : elements) elm.repos(); return this;
+		clearVertexes(); this.reposContainers(); return this;
 	}
-
-	protected abstract NewElement[] setupSubElements();
+	
+	public void reposContainers(){
+		if(containers == null) return; int pass = 40;
+		for(Container container : containers){
+			container.y = y + pass; pass += container.getExpansionHeight() + 4; container.repos();
+		}
+	}
 
 	@Override
 	protected boolean processButtonClick(int x, int y, boolean left){
@@ -98,8 +101,8 @@ public abstract class Editor extends NewElement {
 			if(i == 3) show("preview_editor");
 			return;
 		}
-		if(i < 0 || i >= editor.containers.length) return;
-		//TODO editor.containers[i].setExpanded(!editor.containers[i].isExpanded());
+		//if(i < 0 || i >= editor.containers.length) return;
+		//editor.containers[i].setExpanded(!editor.containers[i].isExpanded());
 	}
 
 	private static Editor getVisibleEditor(){

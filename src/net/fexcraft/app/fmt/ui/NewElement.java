@@ -21,7 +21,8 @@ public class NewElement {
 	protected boolean top, bot, left, right;
 	protected Texture texture;
 	//
-	public int width, height, x, xrel, y, yrel, z, border_width; 
+	public int row, col, border_width;
+	public int width, height, x, xrel, y, yrel, z; 
 	protected Integer fill, border, border_fill;
 	protected RGB hovercolor, discolor;
 	protected boolean hovered, visible = true, enabled = true, draggable;
@@ -278,6 +279,10 @@ public class NewElement {
 	
 	public NewElement setDraggable(boolean bool){
 		draggable = bool; return this;
+	}
+
+	public NewElement setRowCol(int r, int c){
+		this.row = r; this.col = c; return this;
 	}
 
 }

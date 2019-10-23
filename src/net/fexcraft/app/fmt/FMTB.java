@@ -32,22 +32,16 @@ import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.FontRenderer;
-import net.fexcraft.app.fmt.ui.NewElement;
 import net.fexcraft.app.fmt.ui.UserInterface;
-import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
-import net.fexcraft.app.fmt.ui.editor.ModelGroupEditor;
-import net.fexcraft.app.fmt.ui.editor.PreviewEditor;
-import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
 import net.fexcraft.app.fmt.ui.general.NFC;
 import net.fexcraft.app.fmt.ui.general.SettingsBox;
-import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.ui.re.Bottombar;
 import net.fexcraft.app.fmt.ui.re.DialogBox;
+import net.fexcraft.app.fmt.ui.re.TextField;
 import net.fexcraft.app.fmt.ui.re.Toolbar;
 import net.fexcraft.app.fmt.ui.re.editor.Editor;
-import net.fexcraft.app.fmt.ui.tree.HelperTree;
-import net.fexcraft.app.fmt.ui.tree.ModelTree;
+import net.fexcraft.app.fmt.ui.re.editor.GeneralEditor;
 import net.fexcraft.app.fmt.utils.Backups;
 import net.fexcraft.app.fmt.utils.DiscordUtil;
 import net.fexcraft.app.fmt.utils.GGR;
@@ -321,19 +315,13 @@ public class FMTB {
 		TextureManager.loadTexture("icons/editors/expanded", null);
 		//
 		(UserInterface.TOOLBAR = new Toolbar()).repos();
-		ui.getElements().add(new ModelTree());
-		ui.getElements().add(new HelperTree());
-		ui.getElements().add(new GeneralEditor());
-		ui.getElements().add(new ModelGroupEditor());
-		ui.getElements().add(new TextureEditor());
-		ui.getElements().add(new PreviewEditor());
-		//
-		ui.getNewElements().add(new Editor("test_editor", "editor:test"){
-			@Override
-			protected NewElement[] setupSubElements(){
-				return new NewElement[0];
-			}
-		});
+		//ui.getElements().add(new ModelTree());
+		//ui.getElements().add(new HelperTree());
+		//ui.getElements().add(new GeneralEditor());
+		ui.getNewElements().add(new GeneralEditor());
+		//ui.getElements().add(new ModelGroupEditor());
+		//ui.getElements().add(new TextureEditor());
+		//ui.getElements().add(new PreviewEditor());
 		//
 		ui.getNewElements().add(UserInterface.DIALOGBOX = new DialogBox());
 		ui.getElements().add(UserInterface.SETTINGSBOX = new SettingsBox());
