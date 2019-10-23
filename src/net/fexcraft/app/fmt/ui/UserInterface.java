@@ -26,7 +26,7 @@ import net.fexcraft.lib.common.math.Time;
 public class UserInterface {
 
 	public static float scale_x, scale_y, scale;
-	public static NewElement SELECTED = null;
+	public static NewElement SELECTED = null, DRAGGED = null;
 	public static Toolbar TOOLBAR;
 	public static DialogBox DIALOGBOX;
 	public static NFC FILECHOOSER;
@@ -163,6 +163,17 @@ public class UserInterface {
 				RayCoastAway.doTest(true, true);
 			}
 		}
+	}
+
+	public void getDraggableElement(){
+		NewElement element = null;
+		for(NewElement elm : elms){
+			if(elm.visible){
+				element = elm.getDraggableElement(Mouse.getX(), root.getDisplayMode().getHeight() - Mouse.getY(), elm.hovered);
+				if(element != null) break;
+			}
+		}
+		if(element != null){ UserInterface.DRAGGED = element; }
 	}
 
 	public boolean onScrollWheel(int wheel){

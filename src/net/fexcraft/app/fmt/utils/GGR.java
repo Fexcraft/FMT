@@ -156,6 +156,9 @@ public class GGR {
         if(clickedR && !Mouse.isButtonDown(1)){
             Mouse.setGrabbed(false);//fix mouse grab sticking
         }
+        if(clickedL && !Mouse.isButtonDown(0)){
+            UserInterface.DRAGGED = null;
+        }
         if(Mouse.isGrabbed()){
             rotation.yCoord += Mouse.getDX() * sensivity * delta;
             rotation.xCoord += -Mouse.getDY() * sensivity * delta;
@@ -175,8 +178,17 @@ public class GGR {
         	}
         }
         //
-        if((Mouse.isInsideWindow() && /*Keyboard.isKeyDown(Keyboard.KEY_E) ||*/ Mouse.isButtonDown(1) && !RightTree.anyTreeHovered())){
-            Mouse.setGrabbed(true);
+        if(Mouse.isInsideWindow()){
+        	if(Mouse.isButtonDown(1) && !RightTree.anyTreeHovered()){
+        		Mouse.setGrabbed(true);
+        	}
+        	if(Mouse.isButtonDown(0)){
+        		if(UserInterface.DRAGGED != null){
+            		UserInterface.DRAGGED.xrel += Mouse.getDX();
+            		UserInterface.DRAGGED.yrel += -Mouse.getDY();
+            		UserInterface.DRAGGED.repos();
+        		} else root.UI.getDraggableElement();
+        	}
         }
         if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE) && !ControlsAdjuster.CATCHING){
             root.reset(true); Mouse.setGrabbed(false); TextureEditor.reset();

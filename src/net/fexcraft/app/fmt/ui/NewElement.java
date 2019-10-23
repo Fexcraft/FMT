@@ -24,7 +24,7 @@ public class NewElement {
 	public int width, height, x, xrel, y, yrel, z, border_width; 
 	protected Integer fill, border, border_fill;
 	protected RGB hovercolor, discolor;
-	protected boolean hovered, visible = true, enabled = true;
+	protected boolean hovered, visible = true, enabled = true, draggable;
 	
 	public NewElement(NewElement root, String id, String stylegroup){
 		this(root, id, stylegroup, true);
@@ -215,6 +215,15 @@ public class NewElement {
 		}
 		return bool ? true : hovered ? processButtonClick(x, y, left) : false;
 	}
+
+	public NewElement getDraggableElement(int mx, int my, boolean hovered){
+		NewElement element = null;
+		for(NewElement elm : elements){
+			if(!elm.visible) continue;
+			if((element = elm.getDraggableElement(mx, my, elm.hovered)) != null) break;
+		}
+		return element != null ? element : hovered && isDraggable() ? this : null;
+	}
 	
 	/** To be overridden. **/
 	protected boolean processButtonClick(int x, int y, boolean left){
@@ -261,6 +270,14 @@ public class NewElement {
 
 	public NewElement getElement(String string){
 		for(NewElement elm : elements) if(elm.id.equals(string)) return elm; return null;
+	}
+	
+	public boolean isDraggable(){
+		return draggable;
+	}
+	
+	public NewElement setDraggable(boolean bool){
+		draggable = bool; return this;
 	}
 
 }
