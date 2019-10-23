@@ -33,9 +33,9 @@ import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.ui.UserInterface;
-import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
 import net.fexcraft.app.fmt.ui.general.NFC;
 import net.fexcraft.app.fmt.ui.re.Bottombar;
+import net.fexcraft.app.fmt.ui.re.ControlsAdjuster;
 import net.fexcraft.app.fmt.ui.re.DialogBox;
 import net.fexcraft.app.fmt.ui.re.SettingsBox;
 import net.fexcraft.app.fmt.ui.re.TextField;
@@ -338,7 +338,7 @@ public class FMTB {
 		ui.getNewElements().add(UserInterface.DIALOGBOX = new DialogBox());
 		ui.getNewElements().add(UserInterface.SETTINGSBOX = new SettingsBox());
 		ui.getElements().add(UserInterface.FILECHOOSER = new NFC());
-		ui.getElements().add(UserInterface.CONTROLS = new ControlsAdjuster());
+		ui.getNewElements().add(UserInterface.CONTROLS = new ControlsAdjuster());
 		//render last
 		ui.getNewElements().add(UserInterface.TOOLBAR);
 		ui.getNewElements().add(UserInterface.BOTTOMBAR);

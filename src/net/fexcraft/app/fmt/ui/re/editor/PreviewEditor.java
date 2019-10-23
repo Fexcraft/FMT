@@ -13,7 +13,7 @@ import net.fexcraft.lib.common.math.Vec3f;
 public class PreviewEditor extends Editor {
 
 	public PreviewEditor(){
-		super("preview_editor", "editor"); this.setVisible(true); Container container = null;
+		super("preview_editor", "editor"); this.setVisible(false); Container container = null;
 		this.elements.add((container = new Container(this, "container", width - 4, 28, 4, 0, null)).setText("General Settings", false));
 		//
 		int passed = 0;

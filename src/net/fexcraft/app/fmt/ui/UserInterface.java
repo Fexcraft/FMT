@@ -6,10 +6,10 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
 import net.fexcraft.app.fmt.ui.general.HoverMenu;
 import net.fexcraft.app.fmt.ui.general.NFC;
 import net.fexcraft.app.fmt.ui.re.Bottombar;
+import net.fexcraft.app.fmt.ui.re.ControlsAdjuster;
 import net.fexcraft.app.fmt.ui.re.DialogBox;
 import net.fexcraft.app.fmt.ui.re.SettingsBox;
 import net.fexcraft.app.fmt.ui.re.TextField;

@@ -14,7 +14,7 @@ import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.UserInterface;
-import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
+import net.fexcraft.app.fmt.ui.re.ControlsAdjuster;
 import net.fexcraft.app.fmt.ui.re.TextField;
 import net.fexcraft.app.fmt.ui.re.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.tree.RightTree;
