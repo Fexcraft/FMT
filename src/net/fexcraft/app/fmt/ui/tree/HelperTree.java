@@ -26,11 +26,6 @@ public class HelperTree extends RightTree {
 	private int trheight;
 
 	public HelperTree(){ super("helpertree"); }
-	
-	@Override
-	public void realign(){
-		
-	}
 
 	@Override
 	public void renderSelf(int rw, int rh){
@@ -39,7 +34,7 @@ public class HelperTree extends RightTree {
 		GL11.glTranslatef(0, 0,  10); int pass = 0;
 		for(int i = 0; i < trlist.length; i++){
 			GroupCompound model = trlist[i];
-			color(model.visible, i == SEL).glColorApply();
+			colorG(model.visible, i == SEL).glColorApply();
 			this.renderQuad(x + 4, y + 4 + -scroll + (pass), width - 8, 24, "blank");
 			FontRenderer.drawText(model.name, x + 8, y + 6 + -scroll + (pass), 1, fontcol);
 			GL11.glTranslatef(0, 0,  1);
@@ -51,7 +46,7 @@ public class HelperTree extends RightTree {
 			GL11.glTranslatef(0, 0, -1); pass += 26;
 			if(!model.minimized){
 				for(int j = 0; j < model.getGroups().size(); j++){
-					poly = model.getGroups().get(j); color(poly.visible, false).glColorApply();
+					poly = model.getGroups().get(j); colorG(poly.visible, false).glColorApply();
 					this.renderQuad(x + 8, y + 4 + -scroll + (pass), width - 16, 24, "blank");
 					FontRenderer.drawText(j + " | " + poly.id, x + 10, y + 6 + -scroll + (pass), 1, fontcol);
 					GL11.glTranslatef(0, 0,  1);
@@ -59,7 +54,7 @@ public class HelperTree extends RightTree {
 					GL11.glTranslatef(0, 0, -1); pass += 26;
 				}
 			}
-		} this.size = pass / 26;
+		} //this.size = pass / 26;
 		GL11.glTranslatef(0, 0, -10);
 	}
 

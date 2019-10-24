@@ -145,7 +145,7 @@ public class TextureEditor extends Editor {
 
 		public LargePallette(Element root, int x, int y){
 			super(root, "large_color_palette", "large_color_palette");
-			this.setSize(294, 294).setPosition(x, y, null);
+			this.setSize(294, 294).setPosition(x, y);
 		}
 
 		@Override
@@ -174,7 +174,7 @@ public class TextureEditor extends Editor {
 
 		public HorizontalPallette(Element parent, int x, int y){
 			super(parent, "horizontal_color_palette", "horizontal_color_palette");
-			this.setSize(294, 40).setPosition(x, y, null);
+			this.setSize(294, 40).setPosition(x, y);
 		}
 
 		@Override

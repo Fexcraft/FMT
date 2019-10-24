@@ -2,8 +2,10 @@ package net.fexcraft.app.fmt.wrappers;
 
 import java.util.ArrayList;
 
-import net.fexcraft.app.fmt.utils.Settings;
+import net.fexcraft.app.fmt.ui.tree.ModelTree;
+import net.fexcraft.app.fmt.ui.tree.RightTree.GroupButton;
 import net.fexcraft.app.fmt.utils.Animator.Animation;
+import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.lib.common.math.RGB;
 
 public class TurboList extends ArrayList<PolygonWrapper> {
@@ -17,9 +19,11 @@ public class TurboList extends ArrayList<PolygonWrapper> {
 	public int tempheight, textureX = 256, textureY = 256, textureS = 1;
 	private String texture;
 	public ArrayList<Animation> animations = new ArrayList<>();
+	//
+	public GroupButton button;
 	
 	public TurboList(String id){
-		this.id = id;
+		this.id = id; button = new GroupButton(ModelTree.TREE, this);
 	}
 
 	public void render(boolean aplcol){

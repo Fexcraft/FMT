@@ -3,72 +3,48 @@ package net.fexcraft.app.fmt.ui.tree;
 import org.lwjgl.input.Mouse;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.general.Button;
-import net.fexcraft.app.fmt.ui.general.DialogBox;
-import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.Settings;
+import net.fexcraft.app.fmt.utils.StyleSheet;
+import net.fexcraft.app.fmt.wrappers.GroupCompound;
+import net.fexcraft.app.fmt.wrappers.GroupCompound.GroupList;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 
 public class ModelTree extends RightTree {
 	
-	private TurboList[] trlist;
-	private PolygonWrapper poly;
-	private int trheight;
+	public static ModelTree TREE;
+	//private PolygonWrapper poly;
+	private int elm_height, head;
+	private GroupList groups;
 	public static long count;
 	//
 	private static Button polygoncount;
 
 	public ModelTree(){
-		super("modeltree");
-		(polygoncount = new Button(this, "", "modeltree:polygoncount", 300, 26, 4, 4)).setEnabled(false);
-	}
-	
-	@Override
-	public void realign(){
-		this.elements.clear(); if(Settings.polygonCount()) elements.add(polygoncount);
+		super("modeltree"); TREE = this;
+		polygoncount = new Button(this, "polygoncount", "modeltree:polygoncount", 300, 26, 4, 4).setText("PolygonCount", false);
+		polygoncount.setHoverColor(StyleSheet.YELLOW, true).setEnabled(false);
 	}
 
 	@Override
 	public void renderSelf(int rw, int rh){
-		super.renderSelf(rw, rh);
-		
-		
-		//
-		/*trheight = 0; trlist = (TurboList[])FMTB.MODEL.getCompound().values().toArray(new TurboList[]{});
-		FMTB.MODEL.getCompound().values().forEach(turbo -> trheight += turbo.tempheight = 26 + (turbo.size() * 26));
-		GL11.glTranslatef(0, 0,  10); int pass = 0;
+		head = elm_height = 4; groups = FMTB.MODEL.getGroups(); elements.clear();
 		if(Settings.polygonCount()){
-			this.renderQuad(x + 4, y + 4 + -scroll + (pass), width - 8, 24, "blank");
-			FontRenderer.drawText("Polygons: " + count, x + 8, y + 5 + -scroll + (pass), 1, fontcol);
-			pass += 26; count = 0;
+			polygoncount.setText("Polygons: " + GroupCompound.COUNT, false).setPosition(4, elm_height).repos();
+			elm_height += polygoncount.height + 4; elements.add(polygoncount);
 		}
-		for(int i = 0; i < trlist.length; i++){
-			TurboList list = trlist[i]; count += list.size();
-			color(list.visible, list.selected).glColorApply();
-			this.renderQuad(x + 4, y + 4 + -scroll + (pass), width - 8, 24, "blank");
-			FontRenderer.drawText((Settings.polygonCount() ? "[" + list.size() + "] " : "") + list.id, x + 8, y + 5 + -scroll + (pass), 1, fontcol);
-			GL11.glTranslatef(0, 0,  1);
-			this.renderIcon(x + width - 92, y + 6 + -scroll + (pass), 20, "icons/group_minimize");
-			this.renderIcon(x + width - 70, y + 6 + -scroll + (pass), 20, "icons/group_edit");
-			this.renderIcon(x + width - 48, y + 6 + -scroll + (pass), 20, "icons/group_visible");
-			this.renderIcon(x + width - 26, y + 6 + -scroll + (pass), 20, "icons/group_delete");
-			GL11.glTranslatef(0, 0, -1); pass += 26;
-			if(!list.minimized){
-				for(int j = 0; j < list.size(); j++){
-					poly = list.get(j); color(poly.visible, poly.selected || list.selected).glColorApply();
-					this.renderQuad(x + 8, y + 4 + -scroll + (pass), width - 16, 24, "blank");
-					FontRenderer.drawText(j + " | " + poly.name(), x + 10, y + 5 + -scroll + (pass), 1, fontcol);
-					GL11.glTranslatef(0, 0,  1);
-					this.renderIcon(x + width - 74, y + 6 + -scroll + (pass), 20, "icons/group_edit");
-					this.renderIcon(x + width - 52, y + 6 + -scroll + (pass), 20, "icons/group_visible");
-					this.renderIcon(x + width - 30, y + 6 + -scroll + (pass), 20, "icons/group_delete");
-					GL11.glTranslatef(0, 0, -1); pass += 26;
-				}
+		elm_height -= scroll; boolean bool;
+		for(TurboList list : groups){
+			if((bool = elm_height < head) && list.minimized){ elm_height += 28; continue; } if(elm_height > height) break;
+			if(!bool){ list.button.setPosition(4, elm_height); list.button.render(rw, rh); elm_height += 28; elements.add(list.button); }
+			if(list.minimized) continue;
+			for(PolygonWrapper wrapper : list){
+				if(elm_height < head){ elm_height += 28; continue; } if(elm_height > height) break;
+				wrapper.button.setPosition(8, elm_height); wrapper.button.render(rw, rh); elm_height += 28; elements.add(wrapper.button);
 			}
-		} this.size = pass;
-		GL11.glTranslatef(0, 0, -10);*/
+		}
+		if(Settings.polygonCount()){ polygoncount.renderSelf(rw, rh); }
 	}
 
 	@Override
@@ -76,71 +52,12 @@ public class ModelTree extends RightTree {
 		super.hovered(mx, my);
 	}
 
-	@Override
-	protected boolean processButtonClick(int mx, int my, boolean left){
-		if(!left || !(mx >= x + 8 && mx < x + width - 8 && my >= y + 4 && my < y + height - 8)) return false;
-		int myy = my - (y + 4 + -scroll); int i = myy / 26; int k = 0; if(Settings.polygonCount()) i -= 1;
-		for(int j = 0; j < trlist.length; j++){
-			if(k == i){
-				if(mx >= x + width - 92 && mx < x + width - 72){
-					trlist[j].minimized = !trlist[j].minimized; return true;
-				}
-				else if(mx >= x + width - 70 && mx < x + width - 50){
-					Editor.show("model_group_editor"); return true;
-				}
-				else if(mx >= x + width - 48 && mx < x + width - 28){
-					trlist[j].visible = !trlist[j].visible; return true;
-				}
-				else if(mx >= x + width - 26 && mx < x + width -  6){
-					String id = trlist[j].id;
-					FMTB.showDialogbox("Remove this group?\n" + id, "Yes", "No!", () -> {
-						FMTB.MODEL.getGroups().remove(id);
-					}, DialogBox.NOTHING);
-					return true;
-				}
-				else{
-					boolean bool = trlist[j].selected;
-					if(!GGR.isShiftDown()){ FMTB.MODEL.clearSelection(); }
-					trlist[j].selected = !bool; FMTB.MODEL.updateFields();
-					FMTB.MODEL.lastselected = null;
-				}
-				return true;
-			}
-			if(!trlist[j].minimized){
-				for(int l = 0; l < trlist[j].size(); l++){
-					k++; if(k == i){
-						if(mx >= x + width - 74 && mx < x + width - 54){
-							Editor.show("general_editor"); return true;
-						}
-						else if(mx >= x + width - 52 && mx < x + width - 32){
-							trlist[j].get(l).visible = !trlist[j].get(l).visible; return true;
-						}
-						else if(mx >= x + width - 30 && mx < x + width - 10){
-							String id = trlist[j].id; PolygonWrapper poly = trlist[j].get(l);
-							FMTB.showDialogbox("Remove this polygon?\n" + id + ":" + poly.name(), "Yes", "No!", () -> {
-								FMTB.MODEL.getGroups().get(id).remove(poly);
-							}, DialogBox.NOTHING);
-							return true;
-						}
-						else{
-							boolean bool = trlist[j].get(l).selected;
-							if(!GGR.isShiftDown()){ FMTB.MODEL.clearSelection(); }
-							trlist[j].get(l).selected = !bool; FMTB.MODEL.updateFields();
-							FMTB.MODEL.lastselected = trlist[j].get(l);
-						}
-						return true;
-					}
-				}
-			} k++;
-		} return true;
-	}
-
 	public boolean processScrollWheel(int wheel){
 		this.modifyScroll(-wheel / (Mouse.isButtonDown(1) ? 1 : 10)); return true;
 	}
 	
 	public void modifyScroll(int amount){
-		if(size < height) return; scroll += amount; if(scroll < 0) scroll = 0; if(scroll + height >= size) scroll = size - height + 26;
+		scroll += amount; if(scroll < 0) scroll = 0;
 	}
 	
 }

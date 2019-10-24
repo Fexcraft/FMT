@@ -11,7 +11,7 @@ import net.fexcraft.lib.common.math.RGB;
 public class RectIcon extends Element {
 	
 	public RectIcon(Element root, String id, String style, String texture, int sizex, int sizey, int x, int y){
-		super(root, id, style); this.setPosition(x, y, root.z + 1).setSize(sizex, sizey).setTexture(texture, true).setEnabled(true);
+		super(root, id, style); this.setPosition(x, y).setSize(sizex, sizey).setTexture(texture, true).setEnabled(true);
 	}
 	
 	public RectIcon(Element elm, String id, String style, String texture, int sizex, int sizey, int x, int y, RGB hover){

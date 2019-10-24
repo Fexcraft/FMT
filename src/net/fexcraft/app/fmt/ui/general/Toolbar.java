@@ -35,7 +35,7 @@ public class Toolbar extends Element {
 
 	public Toolbar(){
 		super(null, "toolbar", "toolbar"); hovercolor = RGB.WHITE;
-		this.setPosition(0, 0, -20).setSize(100, 30).setColor(0xff484848).setBorder(0xff32a852, 0xffeb4034, 3, false, true);
+		this.setPosition(0, 0).setSize(100, 30).setColor(0xff484848).setBorder(0xff32a852, 0xffeb4034, 3, false, true);
 		//
 		this.elements.add(new Icon(this, "info", "toolbar:icon", "icons/toolbar/info", 32, 0, 0){
 			@Override
@@ -473,7 +473,7 @@ public class Toolbar extends Element {
 		int start = 4, high = 3;
 		for(Element elm : elements){
 			if(start + elm.width >= width - 4){ start = 4; high += 34; }
-			elm.setPosition(start, elm instanceof Icon ? high - 2 : high, null); start += elm.width + 2;
+			elm.setPosition(start, elm instanceof Icon ? high - 2 : high); start += elm.width + 2;
 		}
 		this.height = high + 31; for(Element elm : elements) elm.repos();
 	}

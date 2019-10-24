@@ -7,8 +7,8 @@ import java.util.ArrayList;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.Dialog;
-import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.ui.Element;
+import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.general.NFC.AfterTask;
 import net.fexcraft.app.fmt.utils.Settings;
@@ -30,7 +30,7 @@ public class SettingsBox extends Element implements Dialog {
 	
 	public SettingsBox(){
 		super(null, "settingsbox", "settingsbox"); this.setSize(258, 128).setDraggable(true).setColor(0xff80adcc);
-		this.setVisible(false).setPosition(0, 0, 90).setHoverColor(0xffffffff, false); Dialog.dialogs.add(this);
+		this.setVisible(false).setPosition(0, 0).setHoverColor(0xffffffff, false); Dialog.dialogs.add(this);
 		this.setBorder(0xff000000, 0xff3458eb, 5, true, true, true, true);
 		//
 		this.elements.add(Confirm = new Button(this, "confirm", "settingsbox:button", 100, 20, width - 112, 12, 0xffffff00){

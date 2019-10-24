@@ -16,8 +16,8 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.Dialog;
-import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.ui.Element;
+import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.utils.Backups;
 import net.fexcraft.app.fmt.utils.SaveLoad;
@@ -51,7 +51,7 @@ public class NFC extends Element implements Dialog {
 	
 	public NFC(){
 		super(null, "filechooser", "filechooser"); this.setTexture("ui/filechooser", true).setDraggable(true);
-		this.setSize(512, 546).setVisible(false).setPosition(0, 0, 80); Dialog.dialogs.add(this);
+		this.setSize(512, 546).setVisible(false).setPosition(0, 0); Dialog.dialogs.add(this);
 		TextureManager.loadTexture("icons/file_chooser_0", null); TextureManager.loadTexture("icons/file_chooser_1", null);
 		TextureManager.loadTexture("icons/file_chooser_2", null); TextureManager.loadTexture("icons/file_chooser_3", null);
 		TextureManager.loadTexture("icons/file_chooser_4", null); TextureManager.loadTexture("icons/file_chooser_5", null);

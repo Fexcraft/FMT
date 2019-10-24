@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.ui.Element;
+import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.StyleSheet;
@@ -22,7 +22,7 @@ public class TextField extends Element {
 
 	public TextField(Element root, String id, String style, int width, int x, int y){
 		super(root, id, style == null ? "field" : style); FIELDS.add(this); this.setSize(width, 26);
-		this.setPosition(x, y, root == null ? 1 : root.z + 1).setColor(0xff484848);
+		this.setPosition(x, y).setColor(0xff484848);
 		this.setHoverColor(0xff70ff7f, false); this.setHoverColor(0xffebc9c9, true);
 		hoversel = new RGB(StyleSheet.getColourFor(stylegroup, "selected_hovered", 0xffff7f00, true));
 		nohoversel = new RGB(StyleSheet.getColourFor(stylegroup, "selected", 0xffffe100, true));

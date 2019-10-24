@@ -19,7 +19,7 @@ public abstract class Editor extends Element {
 
 	public Editor(String id, String stylegroup){
 		super(null, id, stylegroup, false); EDITORS.add(this); this.setColor(0xff999999);
-		this.setPosition(0, 0, -50).setSize(308, 0).setVisible(false).setBorder(0xff000000, 0xffffffff, 1, false, false, false, true);
+		this.setPosition(0, 0).setSize(308, 0).setVisible(false).setBorder(0xff000000, 0xffffffff, 1, false, false, false, true);
 		this.elements.add((button = new Button(this, "mb", "multiplicator", width - 8, 28, 4, 4, 0).setText("Multiplicator / Rate", 3, 4)).setHoverColor(0xffffffff, false));
 		button.getElements().add(new TextField(button, "mt", "multiplicator:field", 110, button.width - 144, 1){
 			@Override public boolean processScrollWheel(int wheel){

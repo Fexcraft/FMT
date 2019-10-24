@@ -126,7 +126,7 @@ public class GroupCompound {
 		}
 		return temptexid;
 	}
-
+	
 	public final ArrayList<PolygonWrapper> getSelected(){
 		ArrayList<PolygonWrapper> polis = new ArrayList<>();
 		for(TurboList list : groups){
@@ -619,6 +619,7 @@ public class GroupCompound {
 			ArrayList<PolygonWrapper> wrapp = this.getSelected();
 			for(PolygonWrapper wrapper : wrapp){
 				wrapper.getTurboList().remove(wrapper);
+				wrapper.button.getRoot().getElements().remove(wrapper.button);
 			}
 			COUNT = this.countTotalMRTs(); SELECTED = 0;
 		}, DialogBox.NOTHING);
@@ -649,6 +650,18 @@ public class GroupCompound {
 		public TurboList remove(String str){
 			TurboList list = get(str); if(list == null) return null;
 			if(remove(list)) return list; return null;
+		}
+		
+		@Override
+		public boolean remove(Object obj){
+			if(obj instanceof TurboList) ((TurboList)obj).button.getElements().remove(((TurboList)obj).button);
+			return super.remove(obj);
+		}
+		
+		@Override
+		public TurboList remove(int index){
+			TurboList list = get(index); if(list != null) list.button.getElements().remove(list.button);
+			return super.remove(index);
 		}
 		
 	}

@@ -17,6 +17,8 @@ import net.fexcraft.app.fmt.ui.general.Toolbar;
 import net.fexcraft.app.fmt.utils.RayCoastAway;
 import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.app.fmt.utils.Settings;
+import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
+import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.Time;
 
@@ -43,9 +45,6 @@ public class UserInterface {
 
 	public UserInterface(FMTB main){
 		this.root = main; rescale();
-		//
-		//elms.add(new NewElement(null, "test0").setPosition(50, 50).setSize(200, 50).setColor(0xff32a852).setBorder(0xffeb4034, 0xfffcba03, 12, true, true, true, true));
-		//elms.add(new NewElement(null, "test1").setPosition(50, 120).setSize(200, 50).setColor(0xff32a852) .setBorder(0xffeb4034, 0xfffcba03, 3, true, true, true, true));
 	}
 	
 	public void rescale(){
@@ -58,6 +57,9 @@ public class UserInterface {
         //scale = Math.min(scale_x, scale_y);
 		width = (int)scale_x; height = (int)scale_y; scale = 1f / facts;
 		for(Element elm : elements){ elm.repos(); }
+		for(TurboList list : FMTB.MODEL.getGroups()){
+			list.button.repos(); for(PolygonWrapper wrapper : list) wrapper.button.repos();
+		}
 	}
 
 	public void render(boolean bool){

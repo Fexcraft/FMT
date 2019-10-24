@@ -1,7 +1,7 @@
 package net.fexcraft.app.fmt.ui.general;
 
-import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.ui.Element;
+import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.lib.common.math.RGB;
 
 /**
@@ -11,14 +11,14 @@ import net.fexcraft.lib.common.math.RGB;
  */
 public class Button extends Element {
 	
-	private RGB iconcolor = null;
-	private boolean centered, drawbackground = true;
-	private String text, icon;
-	private int iconsize, texxoff = 2, texyoff = 2;
+	protected RGB iconcolor = null;
+	protected boolean centered, drawbackground = true;
+	protected String text, icon;
+	protected int iconsize, texxoff = 2, texyoff = 2;
 	
 	public Button(Element root, String id, String style, int width, int height, int x, int y){
 		super(root, id, style == null ? root instanceof HoverMenu ? "menu:button" : "button" : style);
-		this.setPosition(x, y, root.z + 1).setSize(width, height).setColor(0xffc7c7c7).setEnabled(true);
+		this.setPosition(x, y).setSize(width, height).setColor(0xffc7c7c7).setEnabled(true);
 		this.setBorder(0xff000000, 0xff000000, 1, root instanceof HoverMenu == false, true, true, true); this.setupSubmenu();
 	}
 	

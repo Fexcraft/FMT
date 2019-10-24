@@ -34,8 +34,8 @@ public class Element {
 		this.root = root; this.id = id; this.stylegroup = stylegroup; if(inithover) this.setHoverColor(null, false);
 	}
 	
-	public Element setPosition(int x, int y, Integer z){
-		xrel = x; yrel = y; if(z != null) this.z = z; this.repos(); return this;
+	public Element setPosition(int x, int y){
+		xrel = x; yrel = y; this.repos(); return this;
 	}
 	
 	public Element setSize(int x, int y){
@@ -43,7 +43,7 @@ public class Element {
 	}
 	
 	public Element setTexture(String texture, boolean load){
-		if(load) TextureManager.loadTexture(texture, null);
+		if(load && TextureManager.getTexture(texture, true) == null) TextureManager.loadTexture(texture, null);
 		this.texture = TextureManager.getTexture(texture, true); return this;
 	}
 	
@@ -132,20 +132,22 @@ public class Element {
 			int width = this.width, height = this.height;
 			if(top) height += border_width; if(bot) height += border_width;
 			if(left) width += border_width; if(right) width += border_width;
-			BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-			if(border != null) for(int i = 0; i < width; i++) for(int j = 0; j < height; j++) img.setRGB(i, j, border);
-			{
-				int xb = left ? border_width : 0, yb = top ? border_width : 0;
-				int xe = right ? width - border_width : width, ye = bot ? height - border_width : height;
-				runfill(img, xb, xe, yb, ye, fill);
+			if(texture == null || texture.rebindQ()){
+				BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+				if(border != null) for(int i = 0; i < width; i++) for(int j = 0; j < height; j++) img.setRGB(i, j, border);
+				{
+					int xb = left ? border_width : 0, yb = top ? border_width : 0;
+					int xe = right ? width - border_width : width, ye = bot ? height - border_width : height;
+					runfill(img, xb, xe, yb, ye, fill);
+				}
+				if(border_width > 2){
+					if(top) runfill(img, 1, width - 1, 1, border_width - 1, border_fill);
+					if(bot) runfill(img, 1, width - 1, height - border_width + 1, height - 1, border_fill);
+					if(left) runfill(img, 1, border_width - 1, 1, height - 1, border_fill);
+					if(right) runfill(img, width - border_width + 1, width - 1, 1, height - 1, border_fill);
+				}
+				if(texture == null) texture = TextureManager.createTexture("elm:" + id, img); else texture.setImage(img);
 			}
-			if(border_width > 2){
-				if(top) runfill(img, 1, width - 1, 1, border_width - 1, border_fill);
-				if(bot) runfill(img, 1, width - 1, height - border_width + 1, height - 1, border_fill);
-				if(left) runfill(img, 1, border_width - 1, 1, height - 1, border_fill);
-				if(right) runfill(img, width - border_width + 1, width - 1, 1, height - 1, border_fill);
-			}
-			if(texture == null) texture = TextureManager.createTexture("elm:" + id, img); else texture.setImage(img);
 			//
 			float x = this.x, y = this.y; if(top) y -= border_width; if(left) x -= border_width; vertexes = new float[2][][];
 			vertexes[0] = new float[][]{ { x, y }, { x + width, y }, { x + width, y + height }, { x, y + height } };
