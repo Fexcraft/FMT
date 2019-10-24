@@ -9,9 +9,9 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.general.Button;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
-import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.ui.general.NFC.AfterTask;
 import net.fexcraft.app.fmt.ui.general.NFC.ChooserMode;
+import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.utils.Animator;
 import net.fexcraft.app.fmt.utils.Animator.Animation;
 import net.fexcraft.app.fmt.utils.TextureManager;
@@ -95,21 +95,21 @@ public class ModelGroupEditor extends Editor {
 					if(FMTB.MODEL.getSelected().isEmpty()) return;
 					TurboList list = null;
 					if(FMTB.MODEL.getDirectlySelectedGroupsAmount() == 1){
-						if(FMTB.MODEL.getCompound().isEmpty()) return;
+						if(FMTB.MODEL.getGroups().isEmpty()) return;
 						list = FMTB.MODEL.getFirstSelectedGroup();
-						list = FMTB.MODEL.getCompound().remove(list.id);
+						list = FMTB.MODEL.getGroups().remove(list.id);
 						list.id = this.getTextValue().replace(" ", "_").replace("-", "_").replace(".", "");
-						while(FMTB.MODEL.getCompound().containsKey(list.id)){ list.id += "_"; }
-						FMTB.MODEL.getCompound().put(list.id, list);
+						while(FMTB.MODEL.getGroups().contains(list.id)){ list.id += "_"; }
+						FMTB.MODEL.getGroups().add(list);
 					}
 					else{
 						ArrayList<TurboList> arrlist = FMTB.MODEL.getDirectlySelectedGroups();
 						for(int i = 0; i < arrlist.size(); i++){
-							list = FMTB.MODEL.getCompound().remove(arrlist.get(i).id); if(list == null) continue;
+							list = FMTB.MODEL.getGroups().remove(arrlist.get(i).id); if(list == null) continue;
 							list.id = this.getTextValue().replace(" ", "_").replace("-", "_").replace(".", "");
 							list.id += list.id.contains("_") ? "_" + i : i + "";
-							while(FMTB.MODEL.getCompound().containsKey(list.id)){ list.id += "_"; }
-							FMTB.MODEL.getCompound().put(list.id, list);
+							while(FMTB.MODEL.getGroups().contains(list.id)){ list.id += "_"; }
+							FMTB.MODEL.getGroups().add(list);
 						}
 					}
 					FMTB.MODEL.getSelected().clear();

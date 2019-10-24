@@ -169,7 +169,7 @@ public class Toolbar extends Element {
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
 								long l = 0, ll = 0;
-								for(TurboList list : FMTB.MODEL.getCompound().values()){
+								for(TurboList list : FMTB.MODEL.getGroups()){
 									for(PolygonWrapper wrapper : list){
 										l += jdk.nashorn.internal.ir.debug.ObjectSizeCalculator.getObjectSize(wrapper.getTurboObject(0));
 									}
@@ -300,13 +300,13 @@ public class Toolbar extends Element {
 						this.elements.add(new Button(this, "add_group", null, 20, 26, 0, 0){
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
-								String string = "group" + FMTB.MODEL.getCompound().size();
-								if(FMTB.MODEL.getCompound().containsKey(string)){
-									string = "group0" + FMTB.MODEL.getCompound().size();
-									FMTB.MODEL.getCompound().put(string, new TurboList(string));
+								String string = "group" + FMTB.MODEL.getGroups().size();
+								if(FMTB.MODEL.getGroups().contains(string)){
+									string = "group0" + FMTB.MODEL.getGroups().size();
+									FMTB.MODEL.getGroups().add(new TurboList(string));
 								}
 								else{
-									FMTB.MODEL.getCompound().put(string, new TurboList(string));
+									FMTB.MODEL.getGroups().add(new TurboList(string));
 								}
 								RightTree.show("modeltree");
 								this.root.setVisible(false); return true;
@@ -378,7 +378,7 @@ public class Toolbar extends Element {
 						this.elements.add(new Button(this, "texreset", null, 20, 26, 0, 0){
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
-								FMTB.MODEL.getCompound().values().forEach(list -> list.forEach(turbo -> {
+								FMTB.MODEL.getGroups().forEach(list -> list.forEach(turbo -> {
 									turbo.textureX = 0; turbo.textureY = 0; turbo.recompile();
 								}));
 								FMTB.showDialogbox("Texture Positions Reset.", "ok",  null, DialogBox.NOTHING, null); return true;
@@ -398,7 +398,7 @@ public class Toolbar extends Element {
 		                    	TextureManager.newBlankTexture(texname, null);
 		                    	Texture tex = TextureManager.getTexture(texname, true);
 		                    	FMTB.MODEL.textureScale = 1; FMTB.MODEL.updateFields();
-		                    	FMTB.MODEL.getCompound().values().forEach(elm -> elm.forEach(poly -> poly.burnToTexture(tex.getImage(), null)));
+		                    	FMTB.MODEL.getGroups().forEach(elm -> elm.forEach(poly -> poly.burnToTexture(tex.getImage(), null)));
 		                    	TextureManager.saveTexture(texname); tex.reload(); FMTB.MODEL.recompile();
 								return true;
 							}

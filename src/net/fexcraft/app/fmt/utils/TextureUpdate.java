@@ -146,7 +146,7 @@ public class TextureUpdate extends TimerTask {
 	
 	private static ArrayList<PolygonWrapper> getSortedList(boolean all){
 		ArrayList<PolygonWrapper> arrlist = new ArrayList<>();
-		for(TurboList list : FMTB.MODEL.getCompound().values()){ arrlist.addAll(list); }
+		for(TurboList list : FMTB.MODEL.getGroups()){ arrlist.addAll(list); }
 		arrlist.sort(new java.util.Comparator<PolygonWrapper>(){
 			@Override
 			public int compare(PolygonWrapper left, PolygonWrapper righ){

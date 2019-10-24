@@ -1,12 +1,10 @@
 package net.fexcraft.app.fmt.ui.tree;
 
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.FontRenderer;
-import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.editor.Editor;
+import net.fexcraft.app.fmt.ui.general.Button;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.Settings;
@@ -19,19 +17,26 @@ public class ModelTree extends RightTree {
 	private PolygonWrapper poly;
 	private int trheight;
 	public static long count;
+	//
+	private static Button polygoncount;
 
 	public ModelTree(){
 		super("modeltree");
+		(polygoncount = new Button(this, "", "modeltree:polygoncount", 300, 26, 4, 4)).setEnabled(false);
+	}
+	
+	@Override
+	public void realign(){
+		this.elements.clear(); if(Settings.polygonCount()) elements.add(polygoncount);
 	}
 
 	@Override
 	public void renderSelf(int rw, int rh){
-		this.y = UserInterface.TOOLBAR.height;
-		this.x = rw - this.width; this.height = rh - y; trheight = 0;
-		//this.renderQuad(x, y, width, height = (rh - y + 2), "ui/background_light");
-		//this.renderQuad(x - 2, y, 2, height = (rh - y + 4), "ui/background_dark");
+		super.renderSelf(rw, rh);
+		
+		
 		//
-		trlist = (TurboList[])FMTB.MODEL.getCompound().values().toArray(new TurboList[]{});
+		/*trheight = 0; trlist = (TurboList[])FMTB.MODEL.getCompound().values().toArray(new TurboList[]{});
 		FMTB.MODEL.getCompound().values().forEach(turbo -> trheight += turbo.tempheight = 26 + (turbo.size() * 26));
 		GL11.glTranslatef(0, 0,  10); int pass = 0;
 		if(Settings.polygonCount()){
@@ -63,7 +68,7 @@ public class ModelTree extends RightTree {
 				}
 			}
 		} this.size = pass;
-		GL11.glTranslatef(0, 0, -10);
+		GL11.glTranslatef(0, 0, -10);*/
 	}
 
 	@Override
@@ -89,7 +94,7 @@ public class ModelTree extends RightTree {
 				else if(mx >= x + width - 26 && mx < x + width -  6){
 					String id = trlist[j].id;
 					FMTB.showDialogbox("Remove this group?\n" + id, "Yes", "No!", () -> {
-						FMTB.MODEL.getCompound().remove(id);
+						FMTB.MODEL.getGroups().remove(id);
 					}, DialogBox.NOTHING);
 					return true;
 				}
@@ -113,7 +118,7 @@ public class ModelTree extends RightTree {
 						else if(mx >= x + width - 30 && mx < x + width - 10){
 							String id = trlist[j].id; PolygonWrapper poly = trlist[j].get(l);
 							FMTB.showDialogbox("Remove this polygon?\n" + id + ":" + poly.name(), "Yes", "No!", () -> {
-								FMTB.MODEL.getCompound().get(id).remove(poly);
+								FMTB.MODEL.getGroups().get(id).remove(poly);
 							}, DialogBox.NOTHING);
 							return true;
 						}

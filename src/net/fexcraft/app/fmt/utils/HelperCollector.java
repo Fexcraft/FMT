@@ -93,7 +93,7 @@ public class HelperCollector {
 		try{
 			BufferedImage image = ImageIO.read(file);
 			TextureManager.loadTextureFromZip(image, "./temp/frame/" + file.getName(), false, false);
-			compound = new GroupCompound(file); compound.getCompound().clear();
+			compound = new GroupCompound(file); compound.getGroups().clear();
 			compound.file = file; if(!compound.name.startsWith("frame/")) compound.name = "frame/" + file.getName();
 			compound.texture = "./temp/frame/" + file.getName();
 			compound.textureSizeX = image.getWidth(); compound.textureSizeY = image.getHeight();

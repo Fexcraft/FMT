@@ -8,9 +8,9 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 
 import net.fexcraft.app.fmt.porters.PorterManager.InternalPorter;
-import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.utils.Settings.Type;
+import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 
 /**
@@ -42,7 +42,7 @@ public class PNGExporter extends InternalPorter {
 		}
 		else{
 			image = new BufferedImage(compound.tx(null), compound.ty(null), BufferedImage.TYPE_INT_ARGB);
-			compound.getCompound().values().forEach(elm -> elm.forEach(poly -> poly.burnToTexture(image, null)));
+			compound.getGroups().forEach(elm -> elm.forEach(poly -> poly.burnToTexture(image, null)));
 		}
 		try{
 			ImageIO.write(image, "PNG", file);

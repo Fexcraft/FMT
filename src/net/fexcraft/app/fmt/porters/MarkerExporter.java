@@ -47,7 +47,7 @@ public class MarkerExporter extends InternalPorter {
 			StringBuffer buffer = new StringBuffer();
 			buffer.append("# FMT Marker List // FMT version: " + FMTB.version + "\n");
 			buffer.append("# Model: " + (compound.name == null ? "unnamed" : compound.name.toLowerCase()) + "\n\n");
-			for(TurboList list : compound.getCompound().values()){
+			for(TurboList list : compound.getGroups()){
 				List<PolygonWrapper> coll = list.stream().filter(pre -> pre instanceof MarkerWrapper).collect(Collectors.toList());
 				if(!coll.isEmpty()){
 					buffer.append("# Group: " + list.id + "\n");
@@ -69,7 +69,7 @@ public class MarkerExporter extends InternalPorter {
 		}
 		else{
 			JsonArray array = new JsonArray();
-			compound.getCompound().values().forEach(list -> list.forEach(wrapper -> {
+			compound.getGroups().forEach(list -> list.forEach(wrapper -> {
 				if(wrapper.getType().isCollisionGrid()){
 					JsonArray from = new JsonArray(); CollisionGridWrapper coll = (CollisionGridWrapper)wrapper;
 					from.add(wrapper.pos.xCoord); from.add(wrapper.pos.yCoord); from.add(wrapper.pos.zCoord);

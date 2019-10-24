@@ -5,7 +5,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.lwjgl.opengl.GL11;
@@ -26,9 +25,9 @@ public class GroupCompound {
 	
 	public int textureSizeX = 256, textureSizeY = 256, textureScale = 1;
 	public float rate = 1f;
-	//
-	private TreeMap<String, TurboList> compound = new TreeMap<>();
+	public GroupList groups = new GroupList();
 	public ArrayList<String> creators = new ArrayList<>();
+	//
 	public File file, origin; public String name = "unnamed model";
 	public PolygonWrapper lastselected;
 	public String texture;
@@ -60,7 +59,7 @@ public class GroupCompound {
 	}
 
 	public void recompile(){
-		for(TurboList list : compound.values()) list.recompile();
+		for(TurboList list : groups) list.recompile();
 	}
 	
 	//private ModelRendererTurbo testmodel = new ModelRendererTurbo(null, 0, 0, 16, 16).setRotationPoint(0, -4, 0).setTextured(false);
@@ -83,18 +82,18 @@ public class GroupCompound {
 		if(RayCoastAway.PICKING){
 			if(TextureEditor.pixelMode()){
 				TextureManager.bindTexture(getTempTex());
-				compound.values().forEach(elm -> elm.render(false));
+				groups.forEach(elm -> elm.render(false));
 			}
 			else{
-				compound.values().forEach(elm -> elm.renderPicking());
+				groups.forEach(elm -> elm.renderPicking());
 			}
 			//compound.values().forEach(elm -> elm.renderLines());
 			RayCoastAway.doTest(false);
 		}
 		else{
 			//TextureManager.bindTexture(texture == null ? "blank" : texture);
-			compound.values().forEach(elm -> { TextureManager.bindTexture(elm.getApplicableTexture(this)); elm.render(true); });
-			compound.values().forEach(elm -> elm.renderLines());
+			groups.forEach(elm -> { TextureManager.bindTexture(elm.getApplicableTexture(this)); elm.render(true); });
+			groups.forEach(elm -> elm.renderLines());
 			//compound.values().forEach(elm -> elm.renderPicking());//uncomment for debugging the ray-/color-picker
 		}
 		if(scale != null){
@@ -145,7 +144,7 @@ public class GroupCompound {
 
 	public ArrayList<PolygonWrapper> getSelected(){
 		ArrayList<PolygonWrapper> polis = new ArrayList<>();
-		for(TurboList list : compound.values()){
+		for(TurboList list : groups){
 			if(list.selected){ polis.addAll(list); }
 			else{
 				for(PolygonWrapper poly : list){
@@ -157,7 +156,7 @@ public class GroupCompound {
 	}
 
 	public final void clearSelection(){
-		for(TurboList list : compound.values()){
+		for(TurboList list : groups){
 			list.selected = false; for(PolygonWrapper poly : list) poly.selected = false;
 		} SELECTED = 0;
 	}
@@ -203,9 +202,9 @@ public class GroupCompound {
 
 	public void add(PolygonWrapper shape, String group, boolean clear){
 		try{
-			if(compound.isEmpty() && group == null) compound.put("group0", new TurboList("group0"));
-			if(group != null && !compound.containsKey(group)) compound.put(group, new TurboList(group));
-			TurboList list = (group == null ? compound.containsKey("body") ? compound.get("body") : (TurboList)compound.values().toArray()[0] : compound.get(group));
+			if(groups.isEmpty() && group == null) groups.add(new TurboList("group0"));
+			if(group != null && !groups.contains(group)) groups.add(new TurboList(group));
+			TurboList list = (group == null ? groups.contains("body") ? groups.get("body") : groups.get(0) : groups.get(group));
 			if(clear){ clearSelection(); } shape.selected = true; list.add(shape); shape.setList(list); shape.recompile(); this.updateFields();
 			COUNT++; SELECTED++;
 		}
@@ -214,12 +213,12 @@ public class GroupCompound {
 		}
 	}
 
-	public TreeMap<String, TurboList> getCompound(){
-		return compound;
+	public GroupList getGroups(){
+		return groups;
 	}
 	
 	public PolygonWrapper getFirstSelection(){
-		for(TurboList list : compound.values()){
+		for(TurboList list : groups){
 			if(list.selected){ list.get(0); }
 			else{
 				for(PolygonWrapper poly : list){
@@ -231,7 +230,7 @@ public class GroupCompound {
 	}
 	
 	public String getFirstSelectedGroupName(){
-		for(TurboList list : compound.values()){
+		for(TurboList list : groups){
 			if(list.selected){ return list.id; }
 			else{
 				for(PolygonWrapper poly : list){
@@ -243,7 +242,7 @@ public class GroupCompound {
 	}
 	
 	public TurboList getFirstSelectedGroup(){
-		for(TurboList list : compound.values()){
+		for(TurboList list : groups){
 			if(list.selected){ return list; }
 			else{
 				for(PolygonWrapper poly : list){
@@ -532,7 +531,7 @@ public class GroupCompound {
 	public void changeGroupOfSelected(ArrayList<PolygonWrapper> polis2, String id){
 		ArrayList<PolygonWrapper> polis = polis2 == null ? this.getSelected() : polis2;
 		if(polis.isEmpty()) return;
-		TurboList list = compound.get(id); if(list == null) return;
+		TurboList list = groups.get(id); if(list == null) return;
 		polis.forEach(poly -> {
 			if(poly.getTurboList() != null) poly.getTurboList().remove(poly);
 		});
@@ -546,9 +545,9 @@ public class GroupCompound {
 		ArrayList<PolygonWrapper> polis = this.getSelected();
 		if(polis.isEmpty()) return;
 		String current = polis.get(0).getTurboList().id; int index = offset;
-		for(String key : compound.keySet()){ if(key.equals(current)) break; else index++; }
-		if(index >= compound.size()) index -= compound.size(); if(index < 0) index = 0;
-		changeGroupOfSelected(polis, compound.keySet().toArray(new String[0])[index]);
+		for(TurboList key : groups){ if(key.id.equals(current)) break; else index++; }
+		if(index >= groups.size()) index -= groups.size(); if(index < 0) index = 0;
+		changeGroupOfSelected(polis, groups.get(index).id);
 	}
 
 	public void changeTypeOfSelected(ArrayList<PolygonWrapper> selected, String text){
@@ -580,27 +579,27 @@ public class GroupCompound {
 	}
 	
 	public long countTotalMRTs(){
-		long i = 0; for(TurboList list : compound.values()) i += list.size(); return i;
+		long i = 0; for(TurboList list : groups) i += list.size(); return i;
 	}
 	
 	public long countSelectedMRTs(){
-		long i = 0; for(TurboList list : compound.values()){
+		long i = 0; for(TurboList list : groups){
 			if(list.selected) i += list.size();
 			else for(PolygonWrapper wrapper : list) if(wrapper.selected) i++;
 		} return i;
 	}
 
 	public void setTexture(String string){
-		this.texture = string; this.compound.values().forEach(turbo -> turbo.forEach(poly -> poly.recompile()));
+		this.texture = string; this.groups.forEach(turbo -> turbo.forEach(poly -> poly.recompile()));
 	}
 
 	public int getDirectlySelectedGroupsAmount(){
-		int i = 0; for(TurboList list : compound.values()) if(list.selected) i++; return i;
+		int i = 0; for(TurboList list : groups) if(list.selected) i++; return i;
 	}
 
 	public ArrayList<TurboList> getDirectlySelectedGroups(){
 		ArrayList<TurboList> array = new ArrayList<>();
-		for(TurboList list : compound.values()) if(list.selected) array.add(list);
+		for(TurboList list : groups) if(list.selected) array.add(list);
 		return array;
 	}
 
@@ -655,7 +654,25 @@ public class GroupCompound {
 	public int ty(TurboList list){ return list == null || list.getGroupTexture() == null ? textureSizeY : list.textureY; }
 
 	public void deselectAll(){
-		for(TurboList list : compound.values()){ list.selected = false; for(PolygonWrapper wrapper : list) wrapper.selected = false; } SELECTED = 0;
+		for(TurboList list : groups){ list.selected = false; for(PolygonWrapper wrapper : list) wrapper.selected = false; } SELECTED = 0;
+	}
+	
+	@SuppressWarnings("serial")
+	public static class GroupList extends ArrayList<TurboList> {
+		
+		public boolean contains(String str){
+			for(TurboList list : this) if(list.id.equals(str)) return true; return false;
+		}
+		
+		public TurboList get(String str){
+			for(TurboList list : this) if(list.id.equals(str)) return list; return null;
+		}
+		
+		public TurboList remove(String str){
+			TurboList list = get(str); if(list == null) return null;
+			if(remove(list)) return list; return null;
+		}
+		
 	}
 
 }

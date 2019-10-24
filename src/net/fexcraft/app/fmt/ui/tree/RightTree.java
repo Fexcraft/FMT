@@ -8,8 +8,7 @@ import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.lib.common.math.RGB;
 
-@Deprecated
-public class RightTree extends Element {
+public abstract class RightTree extends Element {
 	
 	public static final ArrayList<RightTree> TREES = new ArrayList<RightTree>();
 	protected int scroll, size;
@@ -23,7 +22,14 @@ public class RightTree extends Element {
 	@Override
 	public Element repos(){
 		x = UserInterface.width - width; y = UserInterface.TOOLBAR.height + UserInterface.TOOLBAR.border_width;
-		height = UserInterface.height - y; if(Settings.bottombar()) height -= 29; clearVertexes(); return this;
+		height = UserInterface.height - y; if(Settings.bottombar()) height -= 29; clearVertexes(); this.realign(); return this;
+	}
+	
+	public abstract void realign();
+	
+	@Override
+	public void renderSelf(int rw, int rh){
+		this.renderSelfQuad();
 	}
 
 	@Override

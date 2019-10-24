@@ -41,9 +41,9 @@ public class GeneralEditor extends Editor {
 				@Override
 				public void updateTextField(){
 					String text = this.getTextValue();
-					if(!FMTB.MODEL.getCompound().containsKey(text)){
+					if(!FMTB.MODEL.getGroups().contains(text)){
 						FMTB.showDialogbox("Group does not exists.\nDo you wish to create it?", "yes.", "no.", () -> {
-							FMTB.MODEL.getCompound().put(text, new TurboList(text));
+							FMTB.MODEL.getGroups().add(new TurboList(text));
 							FMTB.MODEL.changeGroupOfSelected(FMTB.MODEL.getSelected(), text);
 						}, DialogBox.NOTHING);
 					} else{ FMTB.MODEL.changeGroupOfSelected(FMTB.MODEL.getSelected(), text); }
@@ -209,7 +209,7 @@ public class GeneralEditor extends Editor {
 		}
 		{//texrect b
 			for(int r = 0; r < 6; r++){
-				texrect_b.getElements().add(new Button(texrect_b, "text" + r, "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(false).setText(faces[r] + " [start x/y, end x/y]", false));
+				texrect_b.getElements().add(new Button(texrect_b, "text" + r, "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true).setText(faces[r] + " [start x/y, end x/y]", false));
 				 passed += 24; for(int i = 0; i < 4; i++){
 					String id = "texpos" + r + (i < 2 ? "s" : "e") + (i % 2 == 0 ? "x" : "y"); 
 					texrect_b.getElements().add(new TextField(texrect_b, id, "editor:field", 72, 4 + (i * 75), passed).setAsNumberfield(0, Integer.MAX_VALUE, true, true));

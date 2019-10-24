@@ -1,19 +1,12 @@
 package net.fexcraft.app.fmt.porters;
 
-import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.porters.PorterManager.InternalPorter;
-import net.fexcraft.app.fmt.ui.general.DialogBox;
-import net.fexcraft.app.fmt.utils.TextureManager;
-import net.fexcraft.app.fmt.utils.Settings.Setting;
-import net.fexcraft.app.fmt.wrappers.*;
-import net.fexcraft.lib.common.math.Vec3f;
-import net.fexcraft.lib.common.utils.Print;
-import net.fexcraft.lib.common.utils.ZipUtil;
-import net.fexcraft.lib.tmt.ModelRendererTurbo;
-
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +15,23 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import javax.imageio.ImageIO;
+
+import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.porters.PorterManager.InternalPorter;
+import net.fexcraft.app.fmt.ui.general.DialogBox;
+import net.fexcraft.app.fmt.utils.Settings.Setting;
+import net.fexcraft.app.fmt.utils.TextureManager;
+import net.fexcraft.app.fmt.wrappers.BoxWrapper;
+import net.fexcraft.app.fmt.wrappers.FlexTrapezoidWrapper;
+import net.fexcraft.app.fmt.wrappers.FlexboxWrapper;
+import net.fexcraft.app.fmt.wrappers.GroupCompound;
+import net.fexcraft.app.fmt.wrappers.ShapeboxWrapper;
+import net.fexcraft.app.fmt.wrappers.TrapezoidWrapper;
+import net.fexcraft.app.fmt.wrappers.TurboList;
+import net.fexcraft.lib.common.math.Vec3f;
+import net.fexcraft.lib.common.utils.Print;
+import net.fexcraft.lib.common.utils.ZipUtil;
+import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 /**
  * @author EternalBlueFlame, FEX___96
@@ -166,10 +176,10 @@ public class MTBImporter extends InternalPorter {
                     polygon.rot = new Vec3f(getFloatFromString(parts[12]), getFloatFromString(parts[13]), getFloatFromString(parts[14]));
                     polygon.rot.zCoord = -polygon.rot.zCoord;
                     //
-                    if(!compound.getCompound().containsKey("group" + parts[4])){
-                    	compound.getCompound().put("group" + parts[4], new TurboList("group" + parts[4]));
+                    if(!compound.getGroups().contains("group" + parts[4])){
+                    	compound.getGroups().add(new TurboList("group" + parts[4]));
                     }
-                    compound.getCompound().get("group" + parts[4]).add(polygon);
+                    compound.getGroups().get("group" + parts[4]).add(polygon);
                 }
             }
             stream.close();

@@ -51,7 +51,7 @@ public class OBJPrototypeExporter extends InternalPorter {
 		buffer.append("# TextureSizeY: " + compound.ty(null) + "\n");
 		buffer.append("# FlipAxes: true\n\n");
 		//
-		for(TurboList list : compound.getCompound().values()){
+		for(TurboList list : compound.getGroups()){
 			buffer.append("# Group Name\n");
 			buffer.append("g " + list.id + "\nusemtl fmt_null_material\n");
 			for(PolygonWrapper wrapper : list){

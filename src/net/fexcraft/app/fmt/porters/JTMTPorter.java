@@ -46,7 +46,7 @@ public class JTMTPorter extends InternalPorter {
 		for(int i = 0; i < groups.entrySet().size(); i++){
 			try{
 				Entry<String, JsonElement> entry = (Entry<String, JsonElement>)groups.entrySet().toArray()[i];
-				TurboList list = compound.getCompound().get(entry.getKey());
+				TurboList list = compound.getGroups().get(entry.getKey());
 				if(list == null || !list.visible){ torem.add(entry.getKey()); }
 			} catch(Exception e){ e.printStackTrace(); }
 		}

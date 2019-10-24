@@ -102,12 +102,12 @@ public class PorterManager {
 								FMTB.MODEL.creators.add(creator);
 							}
 						}
-						for(TurboList list : compound.getCompound().values()){
+						for(TurboList list : compound.getGroups()){
 							String name = compound.name + "_" + list.id;
-							while(FMTB.MODEL.getCompound().containsKey(name)){
+							while(FMTB.MODEL.getGroups().contains(name)){
 								name += "_"; if(name.length() > 64) break;
 							}
-							FMTB.MODEL.getCompound().put(name, list);
+							FMTB.MODEL.getGroups().add(list);
 						}
 					}
 					else FMTB.MODEL = compound;

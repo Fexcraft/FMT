@@ -8,7 +8,6 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.FontRenderer;
-import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.utils.HelperCollector;
@@ -27,16 +26,16 @@ public class HelperTree extends RightTree {
 	private int trheight;
 
 	public HelperTree(){ super("helpertree"); }
+	
+	@Override
+	public void realign(){
+		
+	}
 
 	@Override
 	public void renderSelf(int rw, int rh){
-		this.y = UserInterface.TOOLBAR.height;
-		this.x = rw - this.width; this.height = rh - y; trheight = 0;
-		//this.renderQuad(x, y, width, height = (rh - y + 2), "ui/background_light");
-		//this.renderQuad(x - 2, y, 2, height = (rh - y + 4), "ui/background_dark");
-		//
-		trlist = HelperCollector.LOADED.toArray(new GroupCompound[0]); if(trlist.length == 0) SEL = -1;
-		FMTB.MODEL.getCompound().values().forEach(turbo -> trheight += turbo.tempheight = 26 + (turbo.size() * 26));
+		super.renderSelf(rw, rh); trlist = HelperCollector.LOADED.toArray(new GroupCompound[0]); if(trlist.length == 0) SEL = -1;
+		FMTB.MODEL.getGroups().forEach(turbo -> trheight += turbo.tempheight = 26 + (turbo.size() * 26));
 		GL11.glTranslatef(0, 0,  10); int pass = 0;
 		for(int i = 0; i < trlist.length; i++){
 			GroupCompound model = trlist[i];
@@ -51,8 +50,8 @@ public class HelperTree extends RightTree {
 			this.renderIcon(x + width - 26, y + 6 + -scroll + (pass), 20, "icons/group_delete");
 			GL11.glTranslatef(0, 0, -1); pass += 26;
 			if(!model.minimized){
-				for(int j = 0; j < model.getCompound().size(); j++){
-					poly = (TurboList)model.getCompound().values().toArray()[j]; color(poly.visible, false).glColorApply();
+				for(int j = 0; j < model.getGroups().size(); j++){
+					poly = model.getGroups().get(j); color(poly.visible, false).glColorApply();
 					this.renderQuad(x + 8, y + 4 + -scroll + (pass), width - 16, 24, "blank");
 					FontRenderer.drawText(j + " | " + poly.id, x + 10, y + 6 + -scroll + (pass), 1, fontcol);
 					GL11.glTranslatef(0, 0,  1);
@@ -135,10 +134,10 @@ public class HelperTree extends RightTree {
 				return true;
 			}
 			if(!trlist[j].minimized){
-				for(int l = 0; l < trlist[j].getCompound().size(); l++){
+				for(int l = 0; l < trlist[j].getGroups().size(); l++){
 					k++; if(k == i){
 						if(mx >= x + width - 30 && mx < x + width - 10){
-							trlist[j].getCompound().values().toArray(new TurboList[0])[l].visible = !trlist[j].getCompound().values().toArray(new TurboList[0])[l].visible;
+							trlist[j].getGroups().get(l).visible = !trlist[j].getGroups().get(l).visible;
 							return true;
 						} else return true;
 					}

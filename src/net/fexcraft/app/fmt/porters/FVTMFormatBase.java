@@ -69,7 +69,7 @@ public abstract class FVTMFormatBase extends InternalPorter {
 		appendClassDeclaration(buffer);
 		if(this.extended){
 			buffer.append("\n");
-			for(TurboList list : compound.getCompound().values()){
+			for(TurboList list : compound.getGroups()){
 				if((onlyvisible && !list.visible) || list.isEmpty()) continue;
 				buffer.append(tab + "public TurboList " + list.id + ";\n");
 			}
@@ -82,7 +82,7 @@ public abstract class FVTMFormatBase extends InternalPorter {
 		} buffer.append(tab2 + "//\n");
 		if(pergroupinit){
 			int count = settings.get("max_pg_init_count").getValue();
-			for(TurboList list : compound.getCompound().values()){
+			for(TurboList list : compound.getGroups()){
 				if(list.size() > count){
 					int subs = list.size() / count; if(list.size() % count > 0) subs++;
 					for(int i = 0; i < subs; i++){
@@ -93,7 +93,7 @@ public abstract class FVTMFormatBase extends InternalPorter {
 			}
 			buffer.append(tab + "}\n\n");
 			//
-			for(TurboList list : compound.getCompound().values()){
+			for(TurboList list : compound.getGroups()){
 				if(list.size() > count){
 					int subs = list.size() / count; if(list.size() % count != 0) subs++;
 					for(int i = 0; i < subs; i++){
@@ -114,7 +114,7 @@ public abstract class FVTMFormatBase extends InternalPorter {
 			buffer.append("}\n");
 		}
 		else{
-			for(TurboList list : compound.getCompound().values()){
+			for(TurboList list : compound.getGroups()){
 				insertList(compound, list, null, buffer, addedgroups, true);
 			}
 			buffer.append(tab + "}\n\n}\n");

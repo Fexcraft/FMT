@@ -15,6 +15,7 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 import javax.imageio.ImageIO;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -212,9 +213,8 @@ public class SaveLoad {
 		obj.add("creators", creators);
 		obj.addProperty("type", "jtmt");
 		JsonObject model = new JsonObject();
-		for(Entry<String, TurboList> entry : compound.getCompound().entrySet()){
+		for(TurboList list : compound.getGroups()){
 			JsonObject group = new JsonObject(); JsonArray array = new JsonArray();
-			TurboList list = entry.getValue();
 			if(!export){
 				group.addProperty("visible", list.visible);
 				if(list.color != null){
@@ -255,7 +255,7 @@ public class SaveLoad {
 				array.add(wrapper.toJson(export));
 			}
 			group.add("polygons", array);
-			model.add(entry.getKey(), group);
+			model.add(list.id, group);
 		}
 		obj.add("groups", model);
 		if(!export){
@@ -301,7 +301,7 @@ public class SaveLoad {
 	}
 	
 	public static GroupCompound getModel(File from, JsonObject obj, boolean ggr){
-		GroupCompound compound = new GroupCompound(from); compound.getCompound().clear();
+		GroupCompound compound = new GroupCompound(from); compound.getGroups();
 		compound.name = JsonUtil.getIfExists(obj, "name", "unnamed model");
 		compound.textureSizeX = JsonUtil.getIfExists(obj, "texture_size_x", 256).intValue();
 		compound.textureSizeY = JsonUtil.getIfExists(obj, "texture_size_y", 256).intValue();
@@ -313,7 +313,7 @@ public class SaveLoad {
 				try{
 					TurboList list = new TurboList(entry.getKey()); JsonArray array = entry.getValue().getAsJsonArray();
 					for(JsonElement elm : array){ list.add(JsonToTMT.parseWrapper(compound, elm.getAsJsonObject())); }
-					compound.getCompound().put(entry.getKey(), list);
+					compound.getGroups().add(list);
 				}
 				catch(Exception e){
 					e.printStackTrace();
@@ -340,7 +340,7 @@ public class SaveLoad {
 				}
 				JsonArray polygons = group.get("polygons").getAsJsonArray();
 				for(JsonElement elm : polygons){ list.add(JsonToTMT.parseWrapper(compound, elm.getAsJsonObject())); }
-				compound.getCompound().put(entry.getKey(), list);
+				compound.getGroups().add(list);
 				if(group.has("animations")){
 					JsonArray arr = group.get("animations").getAsJsonArray();
 					for(JsonElement elm : arr){

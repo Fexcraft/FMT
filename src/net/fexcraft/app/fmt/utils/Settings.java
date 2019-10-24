@@ -107,10 +107,10 @@ public class Settings {
 	public static boolean toggleAnimations(){
 		boolean bool = animate.toggle();
 		if(!bool){
-			for(TurboList list : FMTB.MODEL.getCompound().values())
+			for(TurboList list : FMTB.MODEL.getGroups())
 				for(PolygonWrapper wrapper : list) wrapper.resetPosRot();
 			for(GroupCompound compound : HelperCollector.LOADED){
-				for(TurboList list : compound.getCompound().values()){
+				for(TurboList list : compound.getGroups()){
 					for(PolygonWrapper wrapper : list) wrapper.resetPosRot();
 				}
 			}
