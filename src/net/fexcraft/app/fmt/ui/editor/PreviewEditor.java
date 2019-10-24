@@ -87,7 +87,7 @@ public class PreviewEditor extends Editor {
 	}
 	
 	protected boolean updateScale16(int axis, Boolean positive){
-		return updateScale(null, axis, positive);
+		return updateScale16(null, axis, positive);
 	}
 	
 	protected boolean updateScale16(TextField field, int axis, Boolean positive){
@@ -96,22 +96,19 @@ public class PreviewEditor extends Editor {
 		TextField field0 = TextField.getFieldById(field == null ? "helper_scale" + xyz[axis] : field.getId().replace("16", ""));
 		if(compound.scale == null) compound.scale = new Vec3f(1, 1, 1);
 		float am = positive == null ? field.getFloatValue() : positive ? FMTB.MODEL.rate : -FMTB.MODEL.rate;
-		if(am == 0f) return true;
+		if(am == 0f) return true; float temp;
 		switch(axis){
 			case 0:{
-				compound.scale.xCoord += am * 16;
-				field.applyChange(compound.scale.xCoord * Static.sixteenth);
-				field0.applyChange(compound.scale.xCoord); break;
+				temp = compound.scale.xCoord * 16; temp += am; field.applyChange(temp);
+				field0.applyChange(compound.scale.xCoord = temp * Static.sixteenth); break;
 			}
 			case 1:{
-				compound.scale.yCoord += am * 16;
-				field.applyChange(compound.scale.yCoord);
-				field0.applyChange(compound.scale.yCoord); break;
+				temp = compound.scale.yCoord * 16; temp += am; field.applyChange(temp);
+				field0.applyChange(compound.scale.yCoord = temp * Static.sixteenth); break;
 			}
 			case 2:{
-				compound.scale.zCoord += am * 16;
-				field.applyChange(compound.scale.zCoord);
-				field0.applyChange(compound.scale.zCoord); break;
+				temp = compound.scale.zCoord * 16; temp += am; field.applyChange(temp);
+				field0.applyChange(compound.scale.zCoord = temp * Static.sixteenth); break;
 			}
 		}
 		return true;

@@ -379,6 +379,9 @@ public abstract class RightTree extends Element {
 				TextField.getFieldById("helper_scalex").applyChange(0);
 				TextField.getFieldById("helper_scaley").applyChange(0);
 				TextField.getFieldById("helper_scalez").applyChange(0);
+				TextField.getFieldById("helper_scale16x").applyChange(0);
+				TextField.getFieldById("helper_scale16y").applyChange(0);
+				TextField.getFieldById("helper_scale16z").applyChange(0);
 			}
 			else{
 				TextField.getFieldById("helper_posx").applyChange(model.pos == null ? 0 : model.pos.xCoord);
@@ -390,6 +393,9 @@ public abstract class RightTree extends Element {
 				TextField.getFieldById("helper_scalex").applyChange(model.scale == null ? 1 : model.scale.xCoord);
 				TextField.getFieldById("helper_scaley").applyChange(model.scale == null ? 1 : model.scale.yCoord);
 				TextField.getFieldById("helper_scalez").applyChange(model.scale == null ? 1 : model.scale.zCoord);
+				TextField.getFieldById("helper_scale16x").applyChange((model.scale == null ? 1 : model.scale.xCoord) * 16);
+				TextField.getFieldById("helper_scale16y").applyChange((model.scale == null ? 1 : model.scale.yCoord) * 16);
+				TextField.getFieldById("helper_scale16z").applyChange((model.scale == null ? 1 : model.scale.zCoord) * 16);
 			}
 			return true;
 		}
