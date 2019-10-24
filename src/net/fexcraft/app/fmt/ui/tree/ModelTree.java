@@ -13,14 +13,14 @@ import net.fexcraft.app.fmt.wrappers.TurboList;
 
 public class ModelTree extends RightTree {
 	
-	public static ModelTree TREE;
+	public static ModelTree TREE = new ModelTree();
 	private int elm_height, head;
 	private GroupList groups;
 	//
 	private static Button polygoncount;
 
-	public ModelTree(){
-		super("modeltree"); TREE = this;
+	private ModelTree(){
+		super("modeltree");
 		polygoncount = new Button(this, "polygoncount", "modeltree:polygoncount", 300, 26, 4, 4).setText("PolygonCount", false);
 		polygoncount.setHoverColor(StyleSheet.YELLOW, true).setEnabled(false);
 	}

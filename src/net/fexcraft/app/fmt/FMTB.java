@@ -331,8 +331,8 @@ public class FMTB {
 		//
 		(UserInterface.TOOLBAR = new Toolbar()).repos();
 		(UserInterface.BOTTOMBAR = new Bottombar()).setVisible(Settings.bottombar());
-		ui.getElements().add(new ModelTree());
-		ui.getElements().add(new HelperTree());
+		ui.getElements().add(ModelTree.TREE);
+		ui.getElements().add(HelperTree.TREE);
 		ui.getElements().add(new GeneralEditor());
 		ui.getElements().add(new ModelGroupEditor());
 		ui.getElements().add(new TextureEditor());

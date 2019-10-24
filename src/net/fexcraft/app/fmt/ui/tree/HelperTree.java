@@ -1,60 +1,31 @@
 package net.fexcraft.app.fmt.ui.tree;
 
-import java.util.HashMap;
+import org.lwjgl.input.Mouse;
 
-import org.lwjgl.opengl.GL11;
-
-import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.porters.PorterManager;
-import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
-import net.fexcraft.app.fmt.ui.FontRenderer;
-import net.fexcraft.app.fmt.ui.editor.Editor;
-import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.utils.HelperCollector;
-import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.TurboList;
-import net.fexcraft.lib.common.math.Vec3f;
-import net.fexcraft.lib.common.utils.Print;
 
 public class HelperTree extends RightTree {
-	
-	public static int SEL = -1;
-	//
-	private TurboList poly;
-	private int trheight;
 
-	public HelperTree(){ super("helpertree"); }
+	public static HelperTree TREE = new HelperTree();
+	public static int SEL = -1;
+	private int elm_height;
+
+	private HelperTree(){ super("helpertree"); TREE = this; }
 
 	@Override
 	public void renderSelf(int rw, int rh){
-		super.renderSelf(rw, rh); if(HelperCollector.LOADED.size() == 0) SEL = -1;
-		FMTB.MODEL.getGroups().forEach(turbo -> trheight += turbo.tempheight = 26 + (turbo.size() * 26));
-		GL11.glTranslatef(0, 0,  10); int pass = 0;
-		for(int i = 0; i < HelperCollector.LOADED.size(); i++){
-			GroupCompound model = HelperCollector.LOADED.get(i);
-			colorG(model.visible, i == SEL).glColorApply();
-			this.renderQuad(x + 4, y + 4 + -scroll + (pass), width - 8, 24, "blank");
-			FontRenderer.drawText(model.name, x + 8, y + 6 + -scroll + (pass), 1, fontcol);
-			GL11.glTranslatef(0, 0,  1);
-			this.renderIcon(x + width - 114, y + 6 + -scroll + (pass), 20, "icons/group_minimize");
-			this.renderIcon(x + width - 92, y + 6 + -scroll + (pass), 20, "icons/group_clone");
-			this.renderIcon(x + width - 70, y + 6 + -scroll + (pass), 20, "icons/group_edit");
-			this.renderIcon(x + width - 48, y + 6 + -scroll + (pass), 20, "icons/group_visible");
-			this.renderIcon(x + width - 26, y + 6 + -scroll + (pass), 20, "icons/group_delete");
-			GL11.glTranslatef(0, 0, -1); pass += 26;
-			if(!model.minimized){
-				for(int j = 0; j < model.getGroups().size(); j++){
-					poly = model.getGroups().get(j); colorG(poly.visible, false).glColorApply();
-					this.renderQuad(x + 8, y + 4 + -scroll + (pass), width - 16, 24, "blank");
-					FontRenderer.drawText(j + " | " + poly.id, x + 10, y + 6 + -scroll + (pass), 1, fontcol);
-					GL11.glTranslatef(0, 0,  1);
-					this.renderIcon(x + width - 30, y + 6 + -scroll + (pass), 20, "icons/group_visible");
-					GL11.glTranslatef(0, 0, -1); pass += 26;
-				}
+		elm_height = 4; elements.clear(); if(HelperCollector.LOADED.size() == 0) SEL = -1; elm_height -= scroll; boolean bool;
+		for(GroupCompound compound : HelperCollector.LOADED){
+			if((bool = elm_height < 4) && compound.minimized){ elm_height += 28; continue; } if(elm_height > height) break;
+			if(!bool){ compound.button.setPosition(4, elm_height); compound.button.render(rw, rh); elm_height += 28; elements.add(compound.button); }
+			if(compound.minimized) continue;
+			for(TurboList list : compound.getGroups()){
+				if(elm_height < 4){ elm_height += 28; continue; } if(elm_height > height) break;
+				list.button.setPosition(8, elm_height); list.button.render(rw, rh); elm_height += 28; elements.add(list.button);
 			}
-		} //this.size = pass / 26;
-		GL11.glTranslatef(0, 0, -10);
+		}
 	}
 
 	@Override
@@ -62,87 +33,12 @@ public class HelperTree extends RightTree {
 		super.hovered(mx, my);
 	}
 
-	@Override
-	protected boolean processButtonClick(int mx, int my, boolean left){
-		if(!(mx >= x + 8 && mx < x + width - 8 && my >= y + 4 && my < y + height - 8)) return false;
-		int myy = my - (y + 4 + -scroll); int i = myy / 26; int k = 0;
-		for(int j = 0; j < HelperCollector.LOADED.size(); j++){
-			if(k == i){
-				if(mx >= x + width - 114 && mx < x + width - 94){
-					HelperCollector.LOADED.get(j).minimized = !HelperCollector.LOADED.get(j).minimized; return true;
-				}
-				else if(mx >= x + width - 92 && mx < x + width - 72){
-					GroupCompound compound = null, parent = HelperCollector.LOADED.get(j);
-					if(parent.name.startsWith("fmtb/")){
-						compound = HelperCollector.loadFMTB(parent.origin);
-					}
-					else if(parent.name.startsWith("frame/")){
-						compound = HelperCollector.loadFrame(parent.origin);
-					}
-					else{
-						ExImPorter porter = PorterManager.getPorterFor(parent.origin, false);
-						HashMap<String, Setting> map = new HashMap<>();
-						porter.getSettings(false).forEach(setting -> map.put(setting.getId(), setting));
-						compound = HelperCollector.load(parent.file, porter, map);
-					}
-					if(compound == null){ Print.console("Error on creating clone."); return true; }
-					if(parent.pos != null) compound.pos = new Vec3f(parent.pos);
-					if(parent.rot != null) compound.rot = new Vec3f(parent.rot);
-					if(parent.scale != null) compound.scale = new Vec3f(parent.scale);
-					return true;
-				}
-				else if(mx >= x + width - 70 && mx < x + width - 50){
-					Editor.show("preview_editor"); return true;
-				}
-				else if(mx >= x + width - 48 && mx < x + width - 28){
-					HelperCollector.LOADED.get(j).visible = !HelperCollector.LOADED.get(j).visible; return true;
-				}
-				else if(mx >= x + width - 26 && mx < x + width -  6){
-					HelperCollector.LOADED.remove(j); return true;
-				}
-				else{
-					SEL = j; GroupCompound model = getSelected();
-					if(model == null){
-						TextField.getFieldById("helper_posx").applyChange(0);
-						TextField.getFieldById("helper_posy").applyChange(0);
-						TextField.getFieldById("helper_posz").applyChange(0);
-						TextField.getFieldById("helper_rotx").applyChange(0);
-						TextField.getFieldById("helper_roty").applyChange(0);
-						TextField.getFieldById("helper_rotz").applyChange(0);
-						TextField.getFieldById("helper_scalex").applyChange(0);
-						TextField.getFieldById("helper_scaley").applyChange(0);
-						TextField.getFieldById("helper_scalez").applyChange(0);
-					}
-					else{
-						TextField.getFieldById("helper_posx").applyChange(model.pos == null ? 0 : model.pos.xCoord);
-						TextField.getFieldById("helper_posy").applyChange(model.pos == null ? 0 : model.pos.yCoord);
-						TextField.getFieldById("helper_posz").applyChange(model.pos == null ? 0 : model.pos.zCoord);
-						TextField.getFieldById("helper_rotx").applyChange(model.rot == null ? 0 : model.rot.xCoord);
-						TextField.getFieldById("helper_roty").applyChange(model.rot == null ? 0 : model.rot.yCoord);
-						TextField.getFieldById("helper_rotz").applyChange(model.rot == null ? 0 : model.rot.zCoord);
-						TextField.getFieldById("helper_scalex").applyChange(model.scale == null ? 1 : model.scale.xCoord);
-						TextField.getFieldById("helper_scaley").applyChange(model.scale == null ? 1 : model.scale.yCoord);
-						TextField.getFieldById("helper_scalez").applyChange(model.scale == null ? 1 : model.scale.zCoord);
-					}
-				}
-				return true;
-			}
-			if(!HelperCollector.LOADED.get(j).minimized){
-				for(int l = 0; l < HelperCollector.LOADED.get(j).getGroups().size(); l++){
-					k++; if(k == i){
-						if(mx >= x + width - 30 && mx < x + width - 10){
-							HelperCollector.LOADED.get(j).getGroups().get(l).visible = !HelperCollector.LOADED.get(j).getGroups().get(l).visible;
-							return true;
-						} else return true;
-					}
-				}
-			} k++;
-		} return true;
-	}
-
 	public boolean processScrollWheel(int wheel){
-		scroll += -wheel / 10; //if(scroll < 0) scroll = 0; if(scroll > trheight) scroll = trheight - 100;
-		return true;
+		this.modifyScroll(-wheel / (Mouse.isButtonDown(1) ? 1 : 10)); return true;
+	}
+	
+	public void modifyScroll(int amount){
+		scroll += amount; if(scroll < 0) scroll = 0;
 	}
 
 	public static GroupCompound getSelected(){

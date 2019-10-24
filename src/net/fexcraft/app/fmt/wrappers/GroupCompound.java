@@ -15,6 +15,8 @@ import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.ui.general.TextField;
+import net.fexcraft.app.fmt.ui.tree.HelperTree;
+import net.fexcraft.app.fmt.ui.tree.RightTree.CompoundButton;
 import net.fexcraft.app.fmt.utils.RayCoastAway;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.TextureManager;
@@ -36,10 +38,12 @@ public class GroupCompound {
 	public static long COUNT = 0, SELECTED = 0;
 	public boolean visible = true, minimized;
 	public Vec3f pos, rot, scale;
+	public CompoundButton button;
 	
 	public GroupCompound(File origin){
 		this.origin = origin; name = "unnamed model";
 		recompile(); this.updateFields();
+		button = new CompoundButton(HelperTree.TREE, this);
 	}
 
 	public void recompile(){

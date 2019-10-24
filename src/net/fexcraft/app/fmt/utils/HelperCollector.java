@@ -37,6 +37,7 @@ public class HelperCollector {
 		if(exim.isInternal()){
 			GroupCompound compound = ((InternalPorter)exim).importModel(file, settings);
 			if(!compound.name.startsWith("import/")){ compound.name = "import/" + compound.name; }
+			compound.getGroups().forEach(list -> list.button.setAsHelperPreview()); 
 			LOADED.add(compound); compound.deselectAll(); return compound;
 		}
 		else{
@@ -45,6 +46,7 @@ public class HelperCollector {
 				String result = (String)inv.invokeFunction("importModel", file);
 				GroupCompound compound = SaveLoad.getModel(file, JsonUtil.getObjectFromString(result), false);
 				if(!compound.name.startsWith("import/")){ compound.name = "import/" + compound.name; }
+				compound.getGroups().forEach(list -> list.button.setAsHelperPreview()); 
 				LOADED.add(compound); compound.deselectAll(); return compound;
 			}
 			catch(FileNotFoundException | ScriptException | NoSuchMethodException e){
@@ -81,7 +83,7 @@ public class HelperCollector {
 			FMTB.showDialogbox("Errors occured\nwhile parsing save file", "ok", null, DialogBox.NOTHING, null);
 		}
 		if(compound != null){ LOADED.add(compound); }
-		compound.deselectAll(); return compound;
+		compound.deselectAll(); compound.getGroups().forEach(list -> list.button.setAsHelperPreview()); return compound;
 	}
 
 	public static GroupCompound loadFrame(File file){

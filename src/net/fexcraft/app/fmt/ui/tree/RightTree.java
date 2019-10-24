@@ -1,12 +1,15 @@
 package net.fexcraft.app.fmt.ui.tree;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Optional;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.porters.PorterManager;
+import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.ui.UserInterface;
@@ -14,19 +17,25 @@ import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.general.Button;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.ui.general.Icon;
+import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.utils.GGR;
+import net.fexcraft.app.fmt.utils.HelperCollector;
 import net.fexcraft.app.fmt.utils.Settings;
+import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.utils.StyleSheet;
+import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.math.RGB;
+import net.fexcraft.lib.common.math.Vec3f;
+import net.fexcraft.lib.common.utils.Print;
 
 public abstract class RightTree extends Element {
 	
 	public static final ArrayList<RightTree> TREES = new ArrayList<RightTree>();
 	protected static final RGB fontcol = new RGB("#1e1e1e");
-	private static RGB sel_in_g, sel_in_p, sel_vi_g, sel_vi_p;
-	private static RGB def_g, def_p, inv_g, inv_p;
+	private static RGB sel_in_g, sel_in_p, sel_in_c, sel_vi_g, sel_vi_p, sel_vi_c;
+	private static RGB def_g, def_p, def_c, inv_g, inv_p, inv_c;
 	protected int scroll;
 
 	public RightTree(String id){
@@ -36,18 +45,24 @@ public abstract class RightTree extends Element {
 		//
 		sel_in_g = new RGB(StyleSheet.getColourFor("tree:group", "selected_invisible", 0xffaa7e36));
 		sel_in_p = new RGB(StyleSheet.getColourFor("tree:polygon", "selected_invisible", 0xffaa7e36));
+		sel_in_c = new RGB(StyleSheet.getColourFor("tree:polygon", "selected_invisible", 0xffaa7e36));
 		sel_vi_g = new RGB(StyleSheet.getColourFor("tree:group", "selected_visible", 0xff934427));
 		sel_vi_p = new RGB(StyleSheet.getColourFor("tree:polygon", "selected_visible", 0xff934427));
+		sel_vi_c = new RGB(StyleSheet.getColourFor("tree:polygon", "selected_visible", 0xff934427));
 		def_g = new RGB(StyleSheet.getColourFor("tree:group", "background_visible", 0xff0b6623));
 		def_p = new RGB(StyleSheet.getColourFor("tree:polygon", "background_visible", 0xff0b6623));
+		def_c = new RGB(StyleSheet.getColourFor("tree:polygon", "background_visible", 0xff4287f5));
 		inv_g = new RGB(StyleSheet.getColourFor("tree:group", "background_invisible", 0xff80a073));
 		inv_p = new RGB(StyleSheet.getColourFor("tree:polygon", "background_invisible", 0xff80a073));
+		inv_c = new RGB(StyleSheet.getColourFor("tree:polygon", "background_invisible", 0xff80a073));
 	}
 	
 	@Override
 	public Element repos(){
+		if(UserInterface.TOOLBAR == null){ return this; }//skip, this call is before the UI is setup
 		x = UserInterface.width - width; y = UserInterface.TOOLBAR.height + UserInterface.TOOLBAR.border_width;
-		height = UserInterface.height - y; if(Settings.bottombar()) height -= 29; clearVertexes(); return this;
+		height = UserInterface.height - y; if(Settings.bottombar()) height -= 29; clearVertexes();
+		for(Element elm : elements) elm.repos(); return this;
 	}
 	
 	@Override
@@ -92,6 +107,10 @@ public abstract class RightTree extends Element {
 	protected static RGB colorP(boolean visible, boolean selected){
 		return visible ? selected ? sel_vi_p : def_p : selected ? sel_in_p : inv_p;
 	}
+	
+	protected static RGB colorC(boolean visible, boolean selected){
+		return visible ? selected ? sel_vi_c : def_c : selected ? sel_in_c : inv_c;
+	}
 
 	public static boolean anyTreeHovered(){
 		return  TREES.stream().filter(pre -> pre.isHovered()).findFirst().isPresent();
@@ -132,6 +151,16 @@ public abstract class RightTree extends Element {
 					FMTB.showDialogbox("Remove this group?\n" + list.id, "Yes", "No!", () -> {
 						FMTB.MODEL.getGroups().remove(list.id);
 					}, DialogBox.NOTHING); return true;
+				}
+			});
+		}
+		
+		public void setAsHelperPreview(){
+			elements.clear(); this.setSize(296, 26);
+			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_visible", 22, width - 26, 2){
+				@Override
+				protected boolean processButtonClick(int mx, int my, boolean left){
+					list.visible = !list.visible; return true;
 				}
 			});
 		}
@@ -233,6 +262,135 @@ public abstract class RightTree extends Element {
 		protected boolean processButtonClick(int mx, int my, boolean left){
 			boolean bool = polygon.selected; if(!GGR.isShiftDown()){ FMTB.MODEL.clearSelection(); }
 			polygon.selected = !bool; FMTB.MODEL.updateFields(); FMTB.MODEL.lastselected = polygon;
+			return true;
+		}
+		
+		@Override
+		public Element setPosition(int x, int y){
+			if(xl != x || yl != y){ super.setPosition(x, y); xl = x; yl = y; } return this;
+		}
+		
+	}
+	
+	public static class CompoundButton extends Button {
+
+		private GroupCompound compound;
+		private int xl, yl;
+
+		public CompoundButton(Element root, GroupCompound compound){
+			super(root, compound.name, "tree:compound", 300, 26, 8, 0);
+			this.setColor(StyleSheet.WHITE).setDraggable(true);
+			this.setText((this.compound = compound).name, false);
+			this.setBorder(StyleSheet.BLACK, StyleSheet.BLACK, 0);
+			//
+			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_minimize", 22, width - 130, 2){
+				@Override
+				protected boolean processButtonClick(int mx, int my, boolean left){
+					compound.minimized = !compound.minimized; return true;
+				}
+			});
+			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_clone", 22, width - 104, 2){
+				@Override
+				protected boolean processButtonClick(int mx, int my, boolean left){
+					GroupCompound compound = null, parent = ((CompoundButton)root).compound;
+					if(parent.name.startsWith("fmtb/")){
+						compound = HelperCollector.loadFMTB(parent.origin);
+					}
+					else if(parent.name.startsWith("frame/")){
+						compound = HelperCollector.loadFrame(parent.origin);
+					}
+					else{
+						ExImPorter porter = PorterManager.getPorterFor(parent.origin, false);
+						HashMap<String, Setting> map = new HashMap<>();
+						porter.getSettings(false).forEach(setting -> map.put(setting.getId(), setting));
+						compound = HelperCollector.load(parent.file, porter, map);
+					}
+					if(compound == null){ Print.console("Error on creating clone."); return true; }
+					if(parent.pos != null) compound.pos = new Vec3f(parent.pos);
+					if(parent.rot != null) compound.rot = new Vec3f(parent.rot);
+					if(parent.scale != null) compound.scale = new Vec3f(parent.scale);
+					return true;
+				}
+			});
+			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_edit", 22, width - 78, 2){
+				@Override
+				protected boolean processButtonClick(int mx, int my, boolean left){
+					Editor.show("preview_editor"); return true;
+				}
+			});
+			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_visible", 22, width - 52, 2){
+				@Override
+				protected boolean processButtonClick(int mx, int my, boolean left){
+					compound.visible = !compound.visible; return true;
+				}
+			});
+			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_delete", 22, width - 26, 2){
+				@Override
+				protected boolean processButtonClick(int mx, int my, boolean left){
+					HelperCollector.LOADED.remove(index()); return true;
+				}
+			});
+		}
+
+		@Override
+		public void renderSelf(int rw, int rh){
+			if(drawbackground){
+				colorC(compound.visible, selected()).glColorApply(); this.renderSelfQuad(); RGB.glColorReset();
+			}
+			if(text != null){
+				RGB color = !drawbackground ? hovered ? hovercolor : !enabled ? discolor : RGB.BLACK : RGB.BLACK;
+				if(centered){
+					int x = width / 2 - (FontRenderer.getWidth(text, 1) / 2), y = height / 2 - 10;
+					FontRenderer.drawText(text, this.x + x + (icon == null ? 0 : iconsize + 2), this.y + y, 1, color);
+				}
+				else{
+					FontRenderer.drawText(text, x + texxoff + (icon == null ? 0 : iconsize + 2), y + texyoff, 1, color);
+				}
+			}
+			if(icon != null){
+				if(iconcolor != null) iconcolor.glColorApply();
+				float y = (height - iconsize) * 0.5f;
+				this.renderIcon(x + 2, this.y + y, iconsize, icon);
+				if(iconcolor != null) RGB.glColorReset();
+			}
+		}
+		
+		public boolean selected(){
+			return HelperTree.SEL > 0 && HelperTree.SEL == index();
+		}
+		
+		public int index(){
+			return HelperCollector.LOADED.indexOf(compound);
+		}
+		
+		@Override
+		protected boolean processButtonClick(int mx, int my, boolean left){
+			if(selected()){ HelperTree.SEL = -1; }
+			else{ HelperTree.SEL = index(); }
+			//
+			GroupCompound model = HelperTree.getSelected();
+			if(model == null){
+				TextField.getFieldById("helper_posx").applyChange(0);
+				TextField.getFieldById("helper_posy").applyChange(0);
+				TextField.getFieldById("helper_posz").applyChange(0);
+				TextField.getFieldById("helper_rotx").applyChange(0);
+				TextField.getFieldById("helper_roty").applyChange(0);
+				TextField.getFieldById("helper_rotz").applyChange(0);
+				TextField.getFieldById("helper_scalex").applyChange(0);
+				TextField.getFieldById("helper_scaley").applyChange(0);
+				TextField.getFieldById("helper_scalez").applyChange(0);
+			}
+			else{
+				TextField.getFieldById("helper_posx").applyChange(model.pos == null ? 0 : model.pos.xCoord);
+				TextField.getFieldById("helper_posy").applyChange(model.pos == null ? 0 : model.pos.yCoord);
+				TextField.getFieldById("helper_posz").applyChange(model.pos == null ? 0 : model.pos.zCoord);
+				TextField.getFieldById("helper_rotx").applyChange(model.rot == null ? 0 : model.rot.xCoord);
+				TextField.getFieldById("helper_roty").applyChange(model.rot == null ? 0 : model.rot.yCoord);
+				TextField.getFieldById("helper_rotz").applyChange(model.rot == null ? 0 : model.rot.zCoord);
+				TextField.getFieldById("helper_scalex").applyChange(model.scale == null ? 1 : model.scale.xCoord);
+				TextField.getFieldById("helper_scaley").applyChange(model.scale == null ? 1 : model.scale.yCoord);
+				TextField.getFieldById("helper_scalez").applyChange(model.scale == null ? 1 : model.scale.zCoord);
+			}
 			return true;
 		}
 		
