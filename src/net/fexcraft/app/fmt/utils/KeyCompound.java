@@ -109,6 +109,20 @@ public class KeyCompound {
 		keys.add(new KeyFunction("raypick", Keyboard.KEY_T, true){
 			@Override public boolean process(){ RayCoastAway.doTest(true); return true; } /* for debugging, or such */
 		});
+		/*keys.add(new KeyFunction("return", Keyboard.KEY_RETURN, true){
+			@Override public boolean process(){
+				if(UserInterface.DIALOGBOX.isVisible()){
+					UserInterface.DIALOGBOX.onClick(true); return true;
+				} return false;
+			}
+		});
+		keys.add(new KeyFunction("return", Keyboard.KEY_BACK, true){
+			@Override public boolean process(){
+				if(UserInterface.DIALOGBOX.isVisible()){
+					UserInterface.DIALOGBOX.onClick(false); return true;
+				} return false;
+			}
+		});*/
 		//sorting
 		pressed_keys.clear(); released_keys.clear();
 		for(KeyFunction func : keys){

@@ -8,8 +8,8 @@ import java.net.URISyntaxException;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.Dialog;
-import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.ui.Element;
+import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.lib.common.math.RGB;
 
@@ -79,7 +79,7 @@ public class DialogBox extends Element implements Dialog {
 		this.height = 128; this.width = 256; this.visible = true;
 	}
 
-	private boolean onClick(boolean positive){
+	public boolean onClick(boolean positive){
 		Runnable run = positive ? this.positive : this.negative;
 		this.reset(); run.run(); return visible;
 	}

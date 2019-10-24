@@ -14,10 +14,8 @@ import net.fexcraft.app.fmt.wrappers.TurboList;
 public class ModelTree extends RightTree {
 	
 	public static ModelTree TREE;
-	//private PolygonWrapper poly;
 	private int elm_height, head;
 	private GroupList groups;
-	public static long count;
 	//
 	private static Button polygoncount;
 

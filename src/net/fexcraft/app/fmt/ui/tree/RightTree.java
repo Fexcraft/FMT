@@ -139,7 +139,7 @@ public abstract class RightTree extends Element {
 		@Override
 		public void renderSelf(int rw, int rh){
 			if(drawbackground){
-				colorG(visible, list.selected).glColorApply(); this.renderSelfQuad(); RGB.glColorReset();
+				colorG(list.visible, list.selected).glColorApply(); this.renderSelfQuad(); RGB.glColorReset();
 			}
 			if(text != null){
 				RGB color = !drawbackground ? hovered ? hovercolor : !enabled ? discolor : RGB.BLACK : RGB.BLACK;
@@ -209,7 +209,7 @@ public abstract class RightTree extends Element {
 		@Override
 		public void renderSelf(int rw, int rh){
 			if(drawbackground){
-				colorP(visible, polygon.selected || polygon.getTurboList().selected).glColorApply(); this.renderSelfQuad(); RGB.glColorReset();
+				colorP(polygon.visible, polygon.selected || polygon.getTurboList().selected).glColorApply(); this.renderSelfQuad(); RGB.glColorReset();
 			}
 			if(text != null){
 				RGB color = !drawbackground ? hovered ? hovercolor : !enabled ? discolor : RGB.BLACK : RGB.BLACK;
