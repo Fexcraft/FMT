@@ -26,8 +26,9 @@ import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
-import net.fexcraft.app.fmt.ui.general.NFC.AfterTask;
-import net.fexcraft.app.fmt.ui.general.NFC.ChooserMode;
+import net.fexcraft.app.fmt.ui.general.FileChooser.AfterTask;
+import net.fexcraft.app.fmt.ui.general.FileChooser.ChooserMode;
+import net.fexcraft.app.fmt.ui.general.FileChooser.FileRoot;
 import net.fexcraft.app.fmt.utils.Animator.Animation;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
@@ -51,7 +52,7 @@ public class SaveLoad {
 	}
 
 	public static void openModel(){
-		UserInterface.FILECHOOSER.show(new String[]{ "Select file to open.", "Open" }, root, new AfterTask(){
+		UserInterface.FILECHOOSER.show(new String[]{ "Select file to open.", "Open" }, FileRoot.SAVES, new AfterTask(){
 			@Override
 			public void run(){
 				if(file == null || !file.exists()){
@@ -95,7 +96,7 @@ public class SaveLoad {
 				@Override
 				public void run(){
 					if(FMTB.MODEL.file == null){
-						UserInterface.FILECHOOSER.show(new String[]{ "Select save location.", "Select"}, root, new AfterTask(){
+						UserInterface.FILECHOOSER.show(new String[]{ "Select save location.", "Select"}, FileRoot.SAVES, new AfterTask(){
 							@Override
 							public void run(){
 								if(file == null){
@@ -140,7 +141,7 @@ public class SaveLoad {
 
 	public static void saveModel(boolean bool, boolean openfile){
 		if(bool || FMTB.MODEL.file == null){
-			UserInterface.FILECHOOSER.show(new String[]{ "Select save location.", "Select" }, root, new AfterTask(){
+			UserInterface.FILECHOOSER.show(new String[]{ "Select save location.", "Select" }, FileRoot.SAVES, new AfterTask(){
 				@Override
 				public void run(){
 					if(file == null){ FMTB.showDialogbox("Model save file is 'null'!\nModel will not be saved.", "OK", null, DialogBox.NOTHING, null); return; }

@@ -1,15 +1,15 @@
 package net.fexcraft.app.fmt.ui.general;
 
 import java.awt.Desktop;
-import java.io.File;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.editor.Editor;
-import net.fexcraft.app.fmt.ui.general.NFC.AfterTask;
-import net.fexcraft.app.fmt.ui.general.NFC.ChooserMode;
+import net.fexcraft.app.fmt.ui.general.FileChooser.AfterTask;
+import net.fexcraft.app.fmt.ui.general.FileChooser.ChooserMode;
+import net.fexcraft.app.fmt.ui.general.FileChooser.FileRoot;
 import net.fexcraft.app.fmt.ui.tree.RightTree;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.HelperCollector;
@@ -340,7 +340,7 @@ public class Toolbar extends Element {
 						this.elements.add(new Button(this, "select", null, 20, 26, 0, 0){
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
-								UserInterface.FILECHOOSER.show(new String[]{ "Select a texture file." }, new File("./resources/textures"), new AfterTask(){
+								UserInterface.FILECHOOSER.show(new String[]{ "Select a texture file." }, FileRoot.TEXTURES, new AfterTask(){
 									@Override
 									public void run(){
 										String name = file.getPath(); TextureManager.loadTextureFromFile(name, file); FMTB.MODEL.setTexture(name);
@@ -427,7 +427,7 @@ public class Toolbar extends Element {
 						this.elements.add(new Button(this, "fmtb", null, 20, 26, 0, 0){
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
-								UserInterface.FILECHOOSER.show(new String[]{ "Select a Preview/Helper file." }, new File("./helpers"), new AfterTask(){
+								UserInterface.FILECHOOSER.show(new String[]{ "Select a Preview/Helper file." }, FileRoot.HELPERS, new AfterTask(){
 									@Override public void run(){ HelperCollector.loadFMTB(file); }
 								}, ChooserMode.SAVEFILE_LOAD); return true;
 							}
@@ -435,7 +435,7 @@ public class Toolbar extends Element {
 						this.elements.add(new Button(this, "frame", null, 20, 26, 0, 0){
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
-								UserInterface.FILECHOOSER.show(new String[]{ "Select an Image file." }, new File("./helpers"), new AfterTask(){
+								UserInterface.FILECHOOSER.show(new String[]{ "Select an Image file." }, FileRoot.HELPERS, new AfterTask(){
 									@Override public void run(){ HelperCollector.loadFrame(file); }
 								}, ChooserMode.HELPFRAMEIMG); return true;
 							}
@@ -443,7 +443,7 @@ public class Toolbar extends Element {
 						this.elements.add(new Button(this, "import", null, 20, 26, 0, 0){
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
-								UserInterface.FILECHOOSER.show(new String[]{ "Select a Preview/Helper file." }, new File("./helpers"), new AfterTask(){
+								UserInterface.FILECHOOSER.show(new String[]{ "Select a Preview/Helper file." }, FileRoot.HELPERS, new AfterTask(){
 									@Override public void run(){ HelperCollector.load(file, porter, mapped_settings); }
 								}, ChooserMode.IMPORT); return true;
 							}

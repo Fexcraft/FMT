@@ -9,6 +9,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.general.FileChooser;
+import net.fexcraft.app.fmt.ui.general.FileChooser.FileRoot;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
@@ -143,6 +145,14 @@ public class Settings {
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "bottombar", false));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "numberfield_arrows", true));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "preview_colorpicker", false));
+		//
+		DEFAULTS.add(new Setting(Type.STRING, "filedir_last_type", "SAVES"));
+		DEFAULTS.add(new Setting(Type.STRING, "filedir_last", "./saves"));
+		DEFAULTS.add(new Setting(Type.STRING, "filedir_saves", "./saves"));
+		DEFAULTS.add(new Setting(Type.STRING, "filedir_export", "./exports"));
+		DEFAULTS.add(new Setting(Type.STRING, "filedir_import", "./imports"));
+		DEFAULTS.add(new Setting(Type.STRING, "filedir_helpers", "./helpers"));
+		DEFAULTS.add(new Setting(Type.STRING, "filedir_textures", "./resources/textures"));
 	}
 
 	public static void load(){
@@ -179,6 +189,7 @@ public class Settings {
 		bottombar = SETTINGS.get("bottombar");
 		numberfieldarrows = SETTINGS.get("numberfield_arrows");
 		preview_colorpicker = SETTINGS.get("preview_colorpicker");
+		FileChooser.FileRoot.last = FileRoot.valueOf(SETTINGS.get("filedir_last_type").getStringValue());
 	}
 
 	public static void save(){

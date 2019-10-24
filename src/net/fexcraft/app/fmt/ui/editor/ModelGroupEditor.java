@@ -2,15 +2,15 @@ package net.fexcraft.app.fmt.ui.editor;
 
 import static net.fexcraft.app.fmt.utils.StyleSheet.BLACK;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.general.Button;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
-import net.fexcraft.app.fmt.ui.general.NFC.AfterTask;
-import net.fexcraft.app.fmt.ui.general.NFC.ChooserMode;
+import net.fexcraft.app.fmt.ui.general.FileChooser.AfterTask;
+import net.fexcraft.app.fmt.ui.general.FileChooser.ChooserMode;
+import net.fexcraft.app.fmt.ui.general.FileChooser.FileRoot;
 import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.utils.Animator;
 import net.fexcraft.app.fmt.utils.Animator.Animation;
@@ -64,7 +64,7 @@ public class ModelGroupEditor extends Editor {
 							FMTB.MODEL.setTexture(null); TextureManager.removeTexture(FMTB.MODEL.texture);
 						} FMTB.MODEL.updateFields(); return true;
 					}
-					UserInterface.FILECHOOSER.show(new String[]{ "Select a group texture file." }, new File("./resources/textures"), new AfterTask(){
+					UserInterface.FILECHOOSER.show(new String[]{ "Select a group texture file." }, FileRoot.TEXTURES, new AfterTask(){
 						@Override
 						public void run(){
 							String name = file.getPath(); TextureManager.loadTextureFromFile(name, file);
@@ -143,7 +143,7 @@ public class ModelGroupEditor extends Editor {
 							} group.setTexture(null, 0, 0); group.forEach(mrt -> mrt.recompile());
 						} FMTB.MODEL.updateFields(); return true;
 					}
-					UserInterface.FILECHOOSER.show(new String[]{ "Select a group texture file." }, new File("./resources/textures"), new AfterTask(){
+					UserInterface.FILECHOOSER.show(new String[]{ "Select a group texture file." }, FileRoot.TEXTURES, new AfterTask(){
 						@Override
 						public void run(){
 							String name = file.getPath(); TextureManager.loadTextureFromFile(name, file);

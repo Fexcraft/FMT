@@ -23,8 +23,9 @@ import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
-import net.fexcraft.app.fmt.ui.general.NFC.AfterTask;
-import net.fexcraft.app.fmt.ui.general.NFC.ChooserMode;
+import net.fexcraft.app.fmt.ui.general.FileChooser.AfterTask;
+import net.fexcraft.app.fmt.ui.general.FileChooser.ChooserMode;
+import net.fexcraft.app.fmt.ui.general.FileChooser.FileRoot;
 import net.fexcraft.app.fmt.utils.SaveLoad;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
@@ -79,7 +80,7 @@ public class PorterManager {
 	}
 
 	public static void handleImport(){
-		UserInterface.FILECHOOSER.show(new String[]{ "Select file/model to import.", "Import" }, new File("./models"), new AfterTask(){
+		UserInterface.FILECHOOSER.show(new String[]{ "Select file/model to import.", "Import" }, FileRoot.IMPORT, new AfterTask(){
 			@Override
 			public void run(){
 				try{
@@ -123,7 +124,7 @@ public class PorterManager {
 	}
 
 	public static void handleExport(){
-		UserInterface.FILECHOOSER.show(new String[]{ "Select Export Location", "Export" }, new File("./models"), new AfterTask(){
+		UserInterface.FILECHOOSER.show(new String[]{ "Select Export Location", "Export" }, FileRoot.EXPORT, new AfterTask(){
 			@Override
 			public void run(){
 				try{
