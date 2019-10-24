@@ -19,13 +19,8 @@ import net.fexcraft.lib.common.utils.Print;
 
 public class Settings {
 	
-	/*private static boolean fullscreen, floor = true, demo, lines = true, cube = true, polygon_marker = true, polygon_count = true, lighting = false, editor_shortcuts = false;//, raypick = false;
-	public static RGB selectedColor = new RGB(255, 255, 0);
-	public static RGB background_color = new RGB(127, 127, 127);
-	static{ background_color.alpha = 0.2f; }
-	public static float[] light0_position = new float[]{ 0, 1, 0, 0 };
-	private static String language = "default";*/
-	private static Setting floor, lines, demo, cube, polygon_marker, polygon_count, lighting, cullface, animate, discordrpc, discordrpc_sm, discordrpc_rtonm, ui_scale, bottombar, numberfieldarrows;
+	private static Setting floor, lines, demo, cube, polygon_marker, polygon_count, lighting, cullface, animate,
+		discordrpc, discordrpc_sm, discordrpc_rtonm, ui_scale, bottombar, numberfieldarrows, preview_colorpicker;
 
 	public static boolean floor(){ return floor.getValue(); }
 
@@ -56,6 +51,8 @@ public class Settings {
 	public static int ui_scale(){ return ui_scale.getValue(); }
 
 	public static boolean numberfieldarrows(){ return numberfieldarrows.getValue(); }
+
+	public static boolean preview_colorpicker(){ return preview_colorpicker.getValue(); }
 	
 	//
 
@@ -81,6 +78,10 @@ public class Settings {
 
 	public static boolean togglePolygonCount(){
 		return polygon_count.toggle();
+	}
+
+	public static boolean togglePreviewColorpicker(){
+		return preview_colorpicker.toggle();
 	}
 
 	public static boolean toggleBottombar(){
@@ -141,6 +142,7 @@ public class Settings {
 		DEFAULTS.add(new Setting(Type.INTEGER, "ui_scale", 1));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "bottombar", false));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "numberfield_arrows", true));
+		DEFAULTS.add(new Setting(Type.BOOLEAN, "preview_colorpicker", false));
 	}
 
 	public static void load(){
@@ -176,6 +178,7 @@ public class Settings {
 		ui_scale = SETTINGS.get("ui_scale");
 		bottombar = SETTINGS.get("bottombar");
 		numberfieldarrows = SETTINGS.get("numberfield_arrows");
+		preview_colorpicker = SETTINGS.get("preview_colorpicker");
 	}
 
 	public static void save(){

@@ -16,6 +16,7 @@ import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.utils.RayCoastAway;
+import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.lib.common.math.RGB;
@@ -24,48 +25,29 @@ import net.fexcraft.lib.common.math.Vec3f;
 public class GroupCompound {
 	
 	public int textureSizeX = 256, textureSizeY = 256, textureScale = 1;
-	public float rate = 1f;
-	public GroupList groups = new GroupList();
 	public ArrayList<String> creators = new ArrayList<>();
-	//
-	public File file, origin; public String name = "unnamed model";
+	public GroupList groups = new GroupList();
 	public PolygonWrapper lastselected;
+	public File file, origin;
+	public float rate = 1f;
 	public String texture;
+	public String name;
 	//
 	public static long COUNT = 0, SELECTED = 0;
-	//
 	public boolean visible = true, minimized;
 	public Vec3f pos, rot, scale;
 	
 	public GroupCompound(File origin){
-		this.origin = origin;
-		//compound.put("body", new TurboList("body"));
-		/*for(int i = 0; i < 20; i++){
-			TurboList list = new TurboList("list" + i);
-			for(int j = 0; j < 1000; j++){
-				BoxWrapper box = new BoxWrapper(this);new GroupCompound(null)
-				box.size = new Vec3f(1, 1, 1);
-				box.pos = new Vec3f((j * 2) - 500, i * 2, 0);
-				box.name = "box" + j;
-				list.add(box);
-			}
-			compound.put(list.id, list);
-		};*/
+		this.origin = origin; name = "unnamed model";
 		recompile(); this.updateFields();
-		/*testmodel.addAdvancedCylinder(
-			new Vec3f[]{ new Vec3f(0, 0, 0), new Vec3f(6, 2, 0), new Vec3f(8, 8, 0)},
-			new float[]{ 8, 4, 16, 8, 16, 0, 1f, 1f, 5 },
-			new int[]{ 16, 16, 16 });*/
 	}
 
 	public void recompile(){
 		for(TurboList list : groups) list.recompile();
 	}
-	
-	//private ModelRendererTurbo testmodel = new ModelRendererTurbo(null, 0, 0, 16, 16).setRotationPoint(0, -4, 0).setTextured(false);
 
 	public void render(){
-		if(!visible) return; RGB.glColorReset(); //testmodel.render(1f);
+		if(!visible) return; RGB.glColorReset();
 		if(pos != null){
 			GL11.glTranslatef(pos.xCoord, pos.yCoord, pos.zCoord);
 		}
@@ -87,14 +69,17 @@ public class GroupCompound {
 			else{
 				groups.forEach(elm -> elm.renderPicking());
 			}
-			//compound.values().forEach(elm -> elm.renderLines());
 			RayCoastAway.doTest(false);
 		}
 		else{
-			//TextureManager.bindTexture(texture == null ? "blank" : texture);
-			groups.forEach(elm -> { TextureManager.bindTexture(elm.getApplicableTexture(this)); elm.render(true); });
-			groups.forEach(elm -> elm.renderLines());
-			//compound.values().forEach(elm -> elm.renderPicking());//uncomment for debugging the ray-/color-picker
+			if(Settings.preview_colorpicker()){
+				groups.forEach(elm -> elm.renderPicking());
+			}
+			else{
+				//TextureManager.bindTexture(texture == null ? "blank" : texture);
+				groups.forEach(elm -> { TextureManager.bindTexture(elm.getApplicableTexture(this)); elm.render(true); });
+				groups.forEach(elm -> elm.renderLines());
+			}
 		}
 		if(scale != null){
 			GL11.glPopMatrix();
@@ -118,7 +103,7 @@ public class GroupCompound {
 		if(tex == null || (tex.getImage().getWidth() != texX || tex.getImage().getHeight() != texY)){
 			if(texX >= 8192 || texY >= 8192){ /*//TODO*/ }
 			else{
-				BufferedImage image = null;//new BufferedImage(textureX, textureY, BufferedImage.TYPE_INT_ARGB);
+				BufferedImage image = null;
 				if(tex == null){
 					image = new BufferedImage(texX, texY, BufferedImage.TYPE_INT_ARGB);
 				}
@@ -142,7 +127,7 @@ public class GroupCompound {
 		return temptexid;
 	}
 
-	public ArrayList<PolygonWrapper> getSelected(){
+	public final ArrayList<PolygonWrapper> getSelected(){
 		ArrayList<PolygonWrapper> polis = new ArrayList<>();
 		for(TurboList list : groups){
 			if(list.selected){ polis.addAll(list); }
@@ -444,7 +429,6 @@ public class GroupCompound {
 				}
 			}
 			else{
-				//for(Element field : Editor.getGlobalFields()){ Print.console(field.id); }
 				for(int i = 0; i < 6; i++){
 					for(int j = 0; j < 8; j++){
 						if(j % 2 == 0){
@@ -517,13 +501,7 @@ public class GroupCompound {
 			e.printStackTrace();
 		}
 	}
-
-	/*private float round(double df){
-        BigDecimal deci = new BigDecimal(Float.toString((float)df));
-        deci = deci.setScale(3, BigDecimal.ROUND_HALF_UP);
-        return deci.floatValue();
-	}*/
-
+	
 	public float multiply(float flea){
 		return rate = (rate *= flea) < 0.01f ? 0.01f : rate > 1000 ? 1000 : rate;
 	}
