@@ -25,6 +25,7 @@ public class ControlsAdjuster extends Element implements Dialog {
 	//private Button next, prev;
 	private int scroll = 0, hovered = -1, catched = -1;
 	private KeyFunction tempkey;
+	private String translation;
 	private boolean changed;
 	private float tx, ty;
 	
@@ -32,6 +33,7 @@ public class ControlsAdjuster extends Element implements Dialog {
 		super(null, "controls", "controls"); this.setTexture("ui/controls", true);
 		this.setDraggable(true).setSize(512, 312).setVisible(false);
 		this.setHoverColor(StyleSheet.WHITE, false); Dialog.dialogs.add(this);
+		translation = translate("controls_adjuster.title", "FMT Controls Settings");
 	}
 	
 	@Override
@@ -57,8 +59,8 @@ public class ControlsAdjuster extends Element implements Dialog {
 		}
 		try{
 			{
-				FontRenderer.drawText("FMT Controls Settings", this.x + 18, this.y + 15, FontType.MONO);
-				FontRenderer.drawText("Pg." + scroll, this.x + 416, this.y + 15, FontType.MONO);
+				FontRenderer.drawText(translation, this.x + 18, this.y + 15, FontType.MONO);
+				FontRenderer.drawText("[ " + scroll + " ]", this.x + 416, this.y + 15, FontType.MONO);
 				for(int i = 0; i < 8; i++){
 					int j = i + (scroll * 8); if(j >= KeyCompound.keys.size()) continue; //break;
 					FontRenderer.drawText((tempkey = KeyCompound.keys.get(j)).name(), this.x + 21, this.y + 51 + (i * 32), FontType.MONO);

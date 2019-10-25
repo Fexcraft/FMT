@@ -139,3 +139,13 @@ dialog.editor.model_group.group.animator.not_found=Animation nicht gefunden!
 dialog.editor.model_group.group.animator.not_found.confirm=ok
 editor.model_group.group.animator_settings=Animator Einstellungen
 //
+bottombar:polygons=Vielecke: 
+bottombar:selected=Ausgewählt: 
+bottombar:groups=Gruppen: 
+bottombar:frames=FPS: 
+bottombar.netfield.loggedin=Eingeloggt - %s
+bottombar.netfield.loggedout=Ausgeloggt - GAST
+bottombar.netfield.login_failed=Login Fehlgeschlagen - GAST
+controls_adjuster.title=FMT Steuerungs Einstellungen
+settingsbox.default=FMT Einstellungen
+//

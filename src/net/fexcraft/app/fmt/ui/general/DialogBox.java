@@ -49,10 +49,10 @@ public class DialogBox extends Element implements Dialog {
 		this.renderSelfQuad();
 		FontRenderer.drawText(text, this.x + 20, this.y + 13, FontType.BOLD);
 		if(progress >= 0){
-			this.renderQuad(x + 20, y + 64, 216, 12, "ui/background_light");
+			this.renderQuad(x + 20, y + 64, 216, 12, "blank");
 			if(progress > 0){
 				(progresscolor == null ? RGB.GREEN : progresscolor).glColorApply();
-				this.renderQuad(x + 20, y + 64, (int)(progress * 2.16f), 12, "ui/background_light");
+				this.renderQuad(x + 20, y + 64, (int)(progress * 2.16f), 12, "blank");
 				RGB.glColorReset();
 			}
 		}
@@ -92,7 +92,9 @@ public class DialogBox extends Element implements Dialog {
 	}
 
 	public static boolean notAvailableYet(){
-		FMTB.showDialogbox("Feature not available yet.", "ok", "discord", NOTHING, () -> {
+		String str = translate("dialogbox.feature_not_available_yet", "Feature not available yet.");
+		String ok = translate("dialogbox.feature_not_available_yet.confirm", "ok");
+		FMTB.showDialogbox(str, ok, translate("dialogbox.feature_not_available_yet.discord", "discord"), NOTHING, () -> {
 			try { java.awt.Desktop.getDesktop().browse(new java.net.URL("https://discord.gg/AkMAzaA").toURI()); }
 			catch(IOException | URISyntaxException e){ e.printStackTrace(); }
 		}); return true;

@@ -135,3 +135,15 @@ dialog.editor.model_group.group.animator.not_found=Animation not found!
 dialog.editor.model_group.group.animator.not_found.confirm=ok
 editor.model_group.group.animator_settings=Animator Settings
 //
+bottombar:polygons=Polygons: 
+bottombar:selected=Selected: 
+bottombar:groups=Groups: 
+bottombar:frames=FPS: 
+bottombar.netfield.loggedin=Logged In - %s
+bottombar.netfield.loggedout=Logged Out - GUEST
+bottombar.netfield.login_failed=Login Failed - GUEST
+controls_adjuster.title=FMT Controls Settings
+dialogbox.feature_not_available_yet=Feature not available yet.
+dialogbox.feature_not_available_yet.confirm=ok
+dialogbox.feature_not_available_yet.discord=discord
+//

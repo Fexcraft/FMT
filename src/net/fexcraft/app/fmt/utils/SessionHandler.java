@@ -60,7 +60,7 @@ public class SessionHandler {
 			obj = HttpUtil.request("http://fexcraft.net/session/api.jsp", "r=username&nossl&id=" + userid, getCookieArr());
 			if(obj.has("name")) username = obj.get("name").getAsString();
 			Print.console("Username updated to: " + username);
-			Bottombar.updateLoginState("Logged In - " + username);
+			Bottombar.updateLoginState(Translator.format("bottombar.netfield.loggedin", "Logged In - %s", username));
 		}
 		else if(retry){
 			if(!first) load(); Print.console("Trying to re-login...");
@@ -68,11 +68,11 @@ public class SessionHandler {
 			if(!loggedin){
 				Print.console("Relogin seems to have failed.");
 				userid = -1; username = "Guest";
-				Bottombar.updateLoginState("Login Failed - GUEST");
+				Bottombar.updateLoginState(Translator.translate("bottombar.netfield.login_failed", "Login Failed - GUEST"));
 			}
 		}
 		else{
-			Bottombar.updateLoginState("Logged Out - GUEST");
+			Bottombar.updateLoginState(Translator.translate("bottombar.netfield.loggedout", "Logged Out - GUEST"));
 		}
 	}
 	

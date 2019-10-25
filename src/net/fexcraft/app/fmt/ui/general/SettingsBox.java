@@ -23,7 +23,7 @@ public class SettingsBox extends Element implements Dialog {
 	
 	private int page = 0;
 	private static final int perpage = 7;
-	private String alttext = "FMT Settings";
+	private String alttext;
 	private ArrayList<Setting> settings = new ArrayList<>();
 	//
 	private Button Confirm, Cancel;
@@ -40,6 +40,8 @@ public class SettingsBox extends Element implements Dialog {
 		this.elements.add(Cancel = new Button(this, "cancel", "settingsbox:button", 100, 20, width - 214, 12, 0xffffff00){
 			@Override protected boolean processButtonClick(int x, int y, boolean left){ reset(); return true; }
 		}.setText("Cancel", true));
+		//
+		alttext = translate("settingsbox.default", "FMT Settings");
 	}
 	
 	@Override
@@ -51,7 +53,7 @@ public class SettingsBox extends Element implements Dialog {
 	@Override
 	public void renderSelf(int rw, int rh) {
 		this.renderSelfQuad();
-		FontRenderer.drawText(alttext + " [Page: " + (page + 1) + "/" + (settings.size() / perpage + 1) + "]", this.x + 12, this.y + 12, FontType.BOLD);
+		FontRenderer.drawText(alttext + " [ " + (page + 1) + " / " + (settings.size() / perpage + 1) + " ]", this.x + 12, this.y + 12, FontType.BOLD);
 		for(int i = 0; i < perpage; i++){
 			int j = (page * perpage) + i; if(j >= settings.size()) break; Setting setting = settings.get(j);
 			FontRenderer.drawText("[" + j + "] " + setting.getId(), this.x + 12, this.y + 40 + (i * 30), FontType.BOLD);
