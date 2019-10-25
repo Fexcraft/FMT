@@ -66,7 +66,7 @@ public class SaveLoad {
 							try{
 								GroupCompound compound = parseModel(file, JsonUtil.getObjectFromInputStream(zip.getInputStream(elm)));
 								FMTB.MODEL = compound; FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
-								GroupCompound.COUNT = FMTB.MODEL.countTotalMRTs(); GroupCompound.SELECTED = FMTB.MODEL.countSelectedMRTs();
+								GroupCompound.SELECTED_POLYGONS = FMTB.MODEL.countSelectedMRTs();
 							} catch(IOException e){ e.printStackTrace(); }
 						}
 						else if(elm.getName().equals("texture.png")){

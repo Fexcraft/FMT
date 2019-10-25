@@ -35,7 +35,7 @@ public class GroupCompound {
 	public String texture;
 	public String name;
 	//
-	public static long COUNT = 0, SELECTED = 0;
+	public static long SELECTED_POLYGONS;
 	public boolean visible = true, minimized;
 	public Vec3f pos, rot, scale;
 	public CompoundButton button;
@@ -145,9 +145,7 @@ public class GroupCompound {
 	}
 
 	public final void clearSelection(){
-		for(TurboList list : groups){
-			list.selected = false; for(PolygonWrapper poly : list) poly.selected = false;
-		} SELECTED = 0;
+		for(TurboList list : groups){ list.selected = false; for(PolygonWrapper wrapper : list) wrapper.selected = false; } SELECTED_POLYGONS = 0;
 	}
 
 	public boolean updateValue(TextField field, String id){
@@ -194,8 +192,7 @@ public class GroupCompound {
 			if(groups.isEmpty() && group == null) groups.add(new TurboList("group0"));
 			if(group != null && !groups.contains(group)) groups.add(new TurboList(group));
 			TurboList list = (group == null ? groups.contains("body") ? groups.get("body") : groups.get(0) : groups.get(group));
-			if(clear){ clearSelection(); } shape.selected = true; list.add(shape); shape.setList(list); shape.recompile(); this.updateFields();
-			COUNT++; SELECTED++;
+			if(clear){ clearSelection(); } shape.selected = true; SELECTED_POLYGONS += 1; list.add(shape); shape.setList(list); shape.recompile(); this.updateFields();
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -624,8 +621,7 @@ public class GroupCompound {
 			for(PolygonWrapper wrapper : wrapp){
 				wrapper.getTurboList().remove(wrapper);
 				wrapper.button.getRoot().getElements().remove(wrapper.button);
-			}
-			COUNT = this.countTotalMRTs(); SELECTED = 0;
+			} SELECTED_POLYGONS = 0;
 		}, DialogBox.NOTHING);
 	}
 
@@ -635,10 +631,6 @@ public class GroupCompound {
 	
 	public int tx(TurboList list){ return list == null || list.getGroupTexture() == null ? textureSizeX : list.textureX; }
 	public int ty(TurboList list){ return list == null || list.getGroupTexture() == null ? textureSizeY : list.textureY; }
-
-	public void deselectAll(){
-		for(TurboList list : groups){ list.selected = false; for(PolygonWrapper wrapper : list) wrapper.selected = false; } SELECTED = 0;
-	}
 	
 	@SuppressWarnings("serial")
 	public static class GroupList extends ArrayList<TurboList> {

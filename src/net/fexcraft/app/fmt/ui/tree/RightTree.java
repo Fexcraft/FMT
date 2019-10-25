@@ -192,7 +192,7 @@ public abstract class RightTree extends Element {
 		protected boolean processButtonClick(int mx, int my, boolean left){
 			boolean bool = list.selected; if(!GGR.isShiftDown()){ FMTB.MODEL.clearSelection(); }
 			list.selected = !bool; FMTB.MODEL.updateFields(); FMTB.MODEL.lastselected = null;
-			return true;
+			GroupCompound.SELECTED_POLYGONS = FMTB.MODEL.countSelectedMRTs(); return true;
 		}
 		
 		@Override
@@ -262,7 +262,7 @@ public abstract class RightTree extends Element {
 		protected boolean processButtonClick(int mx, int my, boolean left){
 			boolean bool = polygon.selected; if(!GGR.isShiftDown()){ FMTB.MODEL.clearSelection(); }
 			polygon.selected = !bool; FMTB.MODEL.updateFields(); FMTB.MODEL.lastselected = polygon;
-			return true;
+			GroupCompound.SELECTED_POLYGONS += polygon.selected ? 1 : -1; return true;
 		}
 		
 		@Override

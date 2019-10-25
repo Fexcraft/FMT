@@ -6,7 +6,6 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.general.Button;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.StyleSheet;
-import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.GroupCompound.GroupList;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
@@ -14,6 +13,7 @@ import net.fexcraft.app.fmt.wrappers.TurboList;
 public class ModelTree extends RightTree {
 	
 	public static ModelTree TREE = new ModelTree();
+	public static long COUNT = 0;
 	private int elm_height, head;
 	private GroupList groups;
 	//
@@ -27,9 +27,9 @@ public class ModelTree extends RightTree {
 
 	@Override
 	public void renderSelf(int rw, int rh){
-		head = elm_height = 4; groups = FMTB.MODEL.getGroups(); elements.clear();
+		head = elm_height = 4; groups = FMTB.MODEL.getGroups(); elements.clear(); COUNT = FMTB.MODEL.countTotalMRTs();
 		if(Settings.polygonCount()){
-			polygoncount.setText("Polygons: " + GroupCompound.COUNT, false).setPosition(4, elm_height).repos();
+			polygoncount.setText("Polygons: " + COUNT, false).setPosition(4, elm_height).repos();
 			elm_height += polygoncount.height + 4; elements.add(polygoncount);
 		}
 		elm_height -= scroll; boolean bool;

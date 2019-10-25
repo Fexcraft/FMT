@@ -75,10 +75,10 @@ public class RayCoastAway {
 			if(!Keyboard.isKeyDown(Keyboard.KEY_LMENU)) FMTB.MODEL.clearSelection();
 			if(control){
 				wrapper.getTurboList().selected = !state;
-				GroupCompound.SELECTED = FMTB.MODEL.countSelectedMRTs();
+				GroupCompound.SELECTED_POLYGONS = FMTB.MODEL.countSelectedMRTs();
 			}
 			else{
-				wrapper.selected = !state; if(!wrapper.selected) GroupCompound.SELECTED = 0;
+				wrapper.selected = !state; GroupCompound.SELECTED_POLYGONS += wrapper.selected ? 1 : -1;
 			}
 			FMTB.MODEL.lastselected = control ? null : wrapper;
 			FMTB.MODEL.updateFields();

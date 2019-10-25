@@ -3,6 +3,7 @@ package net.fexcraft.app.fmt.ui.general;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.UserInterface;
+import net.fexcraft.app.fmt.ui.tree.ModelTree;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.lib.common.math.RGB;
 
@@ -18,14 +19,14 @@ public class Bottombar extends Element {
 		this.elements.add(new TextField(this, "polygons", "bottombar:field", UserInterface.width / 6, 0, 0){
 			@Override
 			public void renderSelf(int rw, int rh){
-				this.setText("Polygons: " + GroupCompound.COUNT, true);
+				this.setText("Polygons: " + ModelTree.COUNT, true);
 				super.renderSelf(rw, rh);
 			}
 		}.setEnabled(false));
 		this.elements.add(new TextField(this, "selected", "bottombar:field", UserInterface.width / 6, 0, 0){
 			@Override
 			public void renderSelf(int rw, int rh){
-				this.setText("Selected: " + GroupCompound.COUNT, true);
+				this.setText("Selected: " + GroupCompound.SELECTED_POLYGONS, true);
 				super.renderSelf(rw, rh);
 			}
 		}.setEnabled(false));
