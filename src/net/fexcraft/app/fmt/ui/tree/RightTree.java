@@ -185,7 +185,9 @@ public abstract class RightTree extends Element {
 			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_delete", 22, width - 26, 2){
 				@Override
 				protected boolean processButtonClick(int mx, int my, boolean left){
-					FMTB.showDialogbox("Remove this group?\n" + list.id, "Yes", "No!", () -> {
+					String str = format("modeltree.remove_group", "Remove this group?<nl>%s", list.id);
+					String yes = translate("modeltree.remove_group.confirm", "Yes");
+					FMTB.showDialogbox(str, yes, translate("modeltree.remove_group.cancel", "No!"), () -> {
 						FMTB.MODEL.getGroups().remove(list.id);
 					}, DialogBox.NOTHING); return true;
 				}
@@ -248,7 +250,8 @@ public abstract class RightTree extends Element {
 			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_delete", 22, width - 26, 2){
 				@Override
 				protected boolean processButtonClick(int mx, int my, boolean left){
-					FMTB.showDialogbox("Remove this polygon?\n" + polygon.getTurboList().id + ":" + polygon.name(), "Yes", "No!", () -> {
+					String str = format("modeltree.remove_polygon", "Remove this polygon?<nl>%s", polygon.getTurboList().id + ":" + polygon.name());
+					FMTB.showDialogbox(str, translate("modeltree.remove_polygon.confirm", "Yes"), translate("modeltree.remove_polygon.cancel", "No!"), () -> {
 						polygon.getTurboList().remove(polygon);
 					}, DialogBox.NOTHING); return true;
 				}

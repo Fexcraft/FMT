@@ -202,3 +202,10 @@ toolbar.helpers.unload_clear=Alle Entfernen
 toolbar.helpers=Helfer
 toolbar.exit=Ende
 //
+modeltree.polygons=Polygons: 
+modeltree.remove_group=Remove this group?<nl>%s
+modeltree.remove_group.confirm=Yes
+modeltree.remove_group.cancel=No!
+modeltree.remove_polygon=Remove this polygon?<nl>%s
+modeltree.remove_polygon.confirm=Yes
+modeltree.remove_polygon.cancel=No!

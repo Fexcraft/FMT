@@ -15,12 +15,13 @@ public class ModelTree extends RightTree {
 	public static ModelTree TREE = new ModelTree();
 	public static long COUNT = 0;
 	private int elm_height, head;
+	private String translation;
 	private GroupList groups;
 	//
 	private static Button polygoncount;
 
 	private ModelTree(){
-		super("modeltree");
+		super("modeltree"); translation = translate("modeltree.polygons", "Polygons: ");
 		polygoncount = new Button(this, "polygoncount", "modeltree:polygoncount", 300, 26, 4, 4).setText("PolygonCount", false);
 		polygoncount.setHoverColor(StyleSheet.YELLOW, true).setEnabled(false);
 	}
@@ -29,7 +30,7 @@ public class ModelTree extends RightTree {
 	public void renderSelf(int rw, int rh){
 		head = elm_height = 4; groups = FMTB.MODEL.getGroups(); elements.clear(); COUNT = FMTB.MODEL.countTotalMRTs();
 		if(Settings.polygonCount()){
-			polygoncount.setText("Polygons: " + COUNT, false).setPosition(4, elm_height).repos();
+			polygoncount.setText(translation + COUNT, false).setPosition(4, elm_height).repos();
 			elm_height += polygoncount.height + 4; elements.add(polygoncount);
 		}
 		elm_height -= scroll; boolean bool;
