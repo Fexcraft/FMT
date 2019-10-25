@@ -110,7 +110,7 @@ public class FileChooser extends Element implements Dialog {
 		});
 		for(Button button : sel) button.setBorder(StyleSheet.BLACK, StyleSheet.WHITE, 0);
 		//
-		this.elements.add((eximporter = new TextField(this, "eximporter", "filechooser:eximporter", 404, 17, 430).setRenderBackground(false).setColor(RGB.BLACK)).setEnabled(false));
+		this.elements.add((eximporter = new TextField(this, "eximporter", "filechooser:eximporter", 404, 17, 430).setRenderBackground(false).setTextColor(RGB.BLACK)).setEnabled(false));
 		this.elements.add(root = new Button(this, "fileroot", "filechooser:root", 472, 28, 20, 54, 0xffc8c8c8){
 			@Override protected boolean processButtonClick(int x, int y, boolean left){
 				if(currdir.getParentFile() != null) currdir = currdir.getParentFile().getAbsoluteFile();
@@ -153,7 +153,7 @@ public class FileChooser extends Element implements Dialog {
 				}
 			}
 		}.setHoverColor(0xff787878, false));
-		this.elements.add(cfn = new TextField(this, "customfilename", "filechooser:filename", 468, 22, 470).setColorOnHover(new RGB(200, 200, 200)).setRenderBackground(false).setColor(RGB.BLACK));
+		this.elements.add(cfn = new TextField(this, "customfilename", "filechooser:filename", 468, 22, 470).setColorOnHover(new RGB(200, 200, 200)).setRenderBackground(false).setTextColor(RGB.BLACK));
 		//
 		//this.show(new String[]{ "test title", "OK"}, null, NOTHING, false);
 	}

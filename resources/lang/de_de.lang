@@ -3,7 +3,7 @@
 # Author: FEX___96 (Ferdinand Calo')
 
 //Like this you can define special (e.g. non latin) characters for your language. Make sure to save the file in UTF-8!
-DEFAULT_CHARS = äöü
+DEFAULT_CHARS = äöüß
 
 dialog.greeting.welcome=Wilkommen bei FMT!<nl>[version:%s]
 dialog.greeting.newversion=Neue Version verfügbar!<nl>%s >> %s
@@ -44,3 +44,47 @@ dialog.export.success=Export Fertig.<nl>%s
 dialog.export.success.confirm=OK!
 dialog.export.fail=Fehler beim Export des Models.<nl>%s
 dialog.export.fail.confirm=ok.
+//
+editor.general.attributes.title=Polygon Eigenschaften
+editor.general.attributes.polygroup=Polygon Gruppe
+editor.general.attributes.polyname=Polygon Name
+editor.general.attributes.polytype=Polygon Typ
+editor.general.attributes.painttotexture=Textur Bestreichen
+editor.general.attributes.burntotexture=Auf die Textur brennen
+editor.general.shape.title=Allgemeine Form
+editor.general.shape.size=Größe (b/h/t)
+editor.general.shape.position=Position (x/y/z)
+editor.general.shape.offset=Offset (x/y/z)
+editor.general.shape.rotation=Rotation (x/y/z)
+editor.general.shape.texture=Textur (u/v)
+editor.general.shapebox.title=Shapebox Ecken
+editor.general.shapebox.corner0=Ecke %s (x/y/z)
+editor.general.shapebox.corner1=Ecke %s (x/y/z)
+editor.general.shapebox.corner2=Ecke %s (x/y/z)
+editor.general.shapebox.corner3=Ecke %s (x/y/z)
+editor.general.shapebox.corner4=Ecke %s (x/y/z)
+editor.general.shapebox.corner5=Ecke %s (x/y/z)
+editor.general.shapebox.corner6=Ecke %s (x/y/z)
+editor.general.shapebox.corner7=Ecke %s (x/y/z)
+editor.general.cylinder.title=Zylinder Einstellungen
+editor.general.cylinder.radius_length=Radius / Länge / R2
+editor.general.cylinder.segments_direction=Segmente / Direktion / SL
+editor.general.cylinder.scale=Basis Größe / Spitz-Größe / Spitz-Winkel
+editor.general.cylinder.top_offset=Spitzen Offset (x/y/z)
+editor.general.cylinder.base_top_toggle=Basic/Spitze (an/aus)
+editor.general.cylinder.outer_inner_toggle=Außeres/Inneres (an/aus)
+editor.general.cylinder.radial_texture=Radiale Textur (an-us/u/v)
+editor.general.texrect.front=Vorderseite
+editor.general.texrect.back=Rückseite
+editor.general.texrect.up=Oberseite
+editor.general.texrect.down=Unterseite
+editor.general.texrect.right=Rechte Seite
+editor.general.texrect.left=Linke Seite
+editor.general.texrect_a.title=TexRect [Erw.]
+editor.general.texrect_a.face_x=%s [x-pos | OR, OL, UL, UR]
+editor.general.texrect_a.face_y=%s [y-pos | OR, TL, UL, UR]
+editor.general.texrect_b.title=TexRect [Basic]
+editor.general.texrect_b.face=%s [start x/y, ende x/y]
+editor.general.marker.title=Marker Einstellungen
+editor.general.marker.color=Marker Farbe [#hex]
+editor.general.marker.biped_display=Biped Anzeige [toggle / Winkel / Größe]

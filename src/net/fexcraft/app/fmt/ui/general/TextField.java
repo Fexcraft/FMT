@@ -51,7 +51,7 @@ public class TextField extends Element {
 		this.background = bool; return this;
 	}
 	
-	public TextField setColor(RGB newcol){
+	public TextField setTextColor(RGB newcol){
 		textcolor = newcol; return this;
 	}
 	
