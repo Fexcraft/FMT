@@ -69,20 +69,21 @@ public class FileChooser extends Element implements Dialog {
 				if(onfile.file != null){
 					UserInterface.FILECHOOSER.visible = false; applySettingsToAfterTask(onfile);
 					boolean ovrd = (mode.exports() || mode.savefile_save()) && onfile.file.exists();
+					String override = format("dialog.filechooser.override", "Override existing File?<nl>%s", onfile.file.getName());
 					if(onfile.settings.isEmpty()){
 						if(ovrd){
-							FMTB.showDialogbox("Override existing File?\n" + onfile.file.getName(), "yes", "no!", onfile, DialogBox.NOTHING);
+							FMTB.showDialogbox(override, translate("dialog.filechooser.override.confirm", "yes"), translate("dialog.filechooser.override.confirm", "no!"), onfile, DialogBox.NOTHING);
 						} else{ onfile.run(); }
 						UserInterface.FILECHOOSER.reset();
 					}
 					else{
 						if(ovrd){
-							FMTB.showDialogbox("Override existing File?\n" + onfile.file.getName(), "yes", "no!", new Runnable(){
+							FMTB.showDialogbox(override, translate("dialog.filechooser.override.confirm", "yes"), translate("dialog.filechooser.override.confirm", "no!"), new Runnable(){
 								private AfterTask task = onfile;
-								@Override public void run(){ UserInterface.SETTINGSBOX.show("FileChooser Settings", task); }
+								@Override public void run(){ UserInterface.SETTINGSBOX.show(translate("filechooser.settings", "FileChooser Settings"), task); }
 							}, DialogBox.NOTHING);
 						}
-						else{ UserInterface.SETTINGSBOX.show("FileChooser Settings", onfile); }
+						else{ UserInterface.SETTINGSBOX.show(translate("filechooser.settings", "FileChooser Settings"), onfile); }
 						UserInterface.FILECHOOSER.reset();
 					}
 					return true;
@@ -165,8 +166,7 @@ public class FileChooser extends Element implements Dialog {
 
 	protected boolean isValidInput(String text){
 		if(text == null || text.length() == 0) return false;
-		else if(cfn.getText().contains(DCFNFC[0]) || cfn.getText().contains(DCFNFC[1])
-			|| cfn.getText().contains(DCFNFC[2]) || cfn.getText().contains(DCFNFC[3])) return false;
+		else if(cfn.getText().contains(translate("filechooser.customfile.active"))) return false;
 		return true;
 	}
 
@@ -233,22 +233,22 @@ public class FileChooser extends Element implements Dialog {
 		this.renderQuad(x, y, width, height, texture);
 		switch(mode){
 			case EXPORT:
-				eximporter.setText("Exporter: "+ PorterManager.getPorters(true).get(eximscroll).getName(), false);
+				eximporter.setText(format("filechooser.exporter", "Exporter: %s", PorterManager.getPorters(true).get(eximscroll).getName()), false);
 				break;
 			case IMPORT:
-				eximporter.setText("Importer: " + PorterManager.getPorters(false).get(eximscroll).getName(), false);
+				eximporter.setText(format("filechooser.importer", "Importer: %s", PorterManager.getPorters(false).get(eximscroll).getName()), false);
 				break;
 			case PNG:
-				eximporter.setText("Portable Network Graphics (PNG)", false);
+				eximporter.setText(translate("filechooser.png", "Portable Network Graphics (PNG)"), false);
 				break;
 			case SAVEFILE_SAVE: case SAVEFILE_LOAD:
-				eximporter.setText("FMT Save File (FMTB)", false);
+				eximporter.setText(translate("filechooser.fmtb", "FMT Save File (FMTB)"), false);
 				break;
 			case HELPFRAMEIMG:
-				eximporter.setText("Image File [PNG/JPG/JPEG]", false);
+				eximporter.setText(translate("filechooser.image", "Image File [PNG/JPG/JPEG]"), false);
 				break;
 			default:
-				eximporter.setText("Error, No Type Specified.", false);
+				eximporter.setText(translate("filechooser.notype", "Error, No Type Specified."), false);
 				break;
 		}
 		root.setText(currdir.getPath(), false); File[] fls = getFilteredList();
@@ -285,14 +285,11 @@ public class FileChooser extends Element implements Dialog {
 		sel[1].setText(ntext.length < 3 || ntext[2] == null ? Translator.translate("filechooser.default.suggested", "Suggested") : ntext[2], true);
 		sel[2].setText(ntext.length < 4 || ntext[3] == null ? Translator.translate("filechooser.default.cancel", "Cancel") : ntext[3], true);
 		sel[1].setEnabled(mode.exports() || mode.savefile_save()); cfn.setEnabled(sel[1].isEnabled()); this.onfile = after;
-		if(cfn.isEnabled()) cfn.setText(DCFNFC[0] + " " + DCFNFC[1] + " " +  DCFNFC[2] + " " + DCFNFC[3], false);
-		else cfn.setText("Please choose an existing file to proceed.", false);
+		if(cfn.isEnabled()) cfn.setText(translate("filechooser.customfile.active", "Choose a file to override or write a custom name here!"), false);
+		else cfn.setText(translate("filechooser.customfile.inactive", "Please choose an existing file to proceed."), false);
 		//
 		Setting[] modesettings = mode.settings(); for(Setting setting : modesettings) this.settings.add(setting);
 	}
-	
-	//DEFAULT_CUSTOM_FILE_NAME_FIELD_CONTENT 
-	private static final String[] DCFNFC = new String[]{ "Choose a file", "to override or", "write a custom", "name here!" };
 	
 	public void reset(){
 		this.onfile = null; this.currdir = SaveLoad.getRoot(); ressel(); eximscroll = 0; mode = ChooserMode.NONE;

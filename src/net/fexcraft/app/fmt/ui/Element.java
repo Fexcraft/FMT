@@ -285,6 +285,10 @@ public class Element {
 		return root;
 	}
 	
+	public static String translate(String str){
+		return Translator.translate(str);
+	}
+	
 	public static String translate(String str, String fill){
 		return Translator.translate(str, fill);
 	}
