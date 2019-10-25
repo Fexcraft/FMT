@@ -68,7 +68,7 @@ public class ModelGroupEditor extends Editor {
 							FMTB.MODEL.setTexture(null); TextureManager.removeTexture(FMTB.MODEL.texture);
 						} FMTB.MODEL.updateFields(); return true;
 					}
-					UserInterface.FILECHOOSER.show(new String[]{ "Select a group texture file." }, FileRoot.TEXTURES, new AfterTask(){
+					UserInterface.FILECHOOSER.show(new String[]{ translate("filechooser.editor.model_group.model.texture", "Select a model texture file.") }, FileRoot.TEXTURES, new AfterTask(){
 						@Override
 						public void run(){
 							String name = file.getPath(); TextureManager.loadTextureFromFile(name, file);
@@ -152,7 +152,7 @@ public class ModelGroupEditor extends Editor {
 							} group.setTexture(null, 0, 0); group.forEach(mrt -> mrt.recompile());
 						} FMTB.MODEL.updateFields(); return true;
 					}
-					UserInterface.FILECHOOSER.show(new String[]{ "Select a group texture file." }, FileRoot.TEXTURES, new AfterTask(){
+					UserInterface.FILECHOOSER.show(new String[]{ translate("filechooser.editor.model_group.group.texture", "Select a group texture file.") }, FileRoot.TEXTURES, new AfterTask(){
 						@Override
 						public void run(){
 							String name = file.getPath(); TextureManager.loadTextureFromFile(name, file);
@@ -185,7 +185,8 @@ public class ModelGroupEditor extends Editor {
 					this.deselect(); if(FMTB.MODEL.getSelected().isEmpty()) return;
 					Animation anim = Animator.get(this.getTextValue());
 					if(anim == null){
-						FMTB.showDialogbox("Animation not found!", "ok", null, DialogBox.NOTHING, null);
+						String str = translate("dialog.editor.model_group.group.animator.not_found", "Animation not found!");
+						FMTB.showDialogbox(str, translate("dialog.editor.model_group.group.animator.not_found.confirm", "ok"), null, DialogBox.NOTHING, null);
 						return;
 					} final Animation ani = anim.copy();
 					ArrayList<TurboList> lists = FMTB.MODEL.getDirectlySelectedGroups();
@@ -197,7 +198,7 @@ public class ModelGroupEditor extends Editor {
 							} FMTB.MODEL.updateFields();
 						}
 					}; task.settings = ani.settings;
-					UserInterface.SETTINGSBOX.show("Animator Settings", task);
+					UserInterface.SETTINGSBOX.show(translate("editor.model_group.group.animator_settings", "Animator Settings"), task);
 				}
 			}.setText("null", true));
 			//

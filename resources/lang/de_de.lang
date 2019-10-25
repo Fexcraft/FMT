@@ -123,3 +123,19 @@ editor.texture.brushes.group_paintbucket=(Gruppen) Farbeimer [%s]
 editor.texture.brushes.pixel_pencil=(Pixel) Farb Stift [%s]
 editor.texture.brushes.color_picker=Farbwähler [%s]
 //
+dialog.editor.general.attributes.new_group_question=Gruppe existiert nicht.<nl>Soll sie erstellt werden?
+dialog.editor.general.attributes.new_group_question.confirm=ja.
+dialog.editor.general.attributes.new_group_question.cancel=nein.
+//
+dialog.editor.general.attributes.burntotex.notex=Es ist keine Textur geladen.
+dialog.editor.general.attributes.burntotex.notex.confirm=ok
+dialog.editor.general.attributes.burntotex.notex.cancel=laden
+dialog.editor.general.attributes.burntotex.tex_not_found=Textur nicht gefunden im RAM/GL<nl>Dies is eher schlecht.
+dialog.editor.general.attributes.burntotex.tex_not_found.confirm=ok
+//
+filechooser.editor.model_group.model.texture=Wähle eine Textur für das Modell
+filechooser.editor.model_group.group.texture=Wähle eine Textur für die Gruppe
+dialog.editor.model_group.group.animator.not_found=Animation nicht gefunden!
+dialog.editor.model_group.group.animator.not_found.confirm=ok
+editor.model_group.group.animator_settings=Animator Einstellungen
+//

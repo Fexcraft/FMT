@@ -120,3 +120,18 @@ editor.texture.brushes.group_paintbucket=(Group) Paint Bucket [%s]
 editor.texture.brushes.pixel_pencil=(Pixel) Paint Pencil [%s]
 editor.texture.brushes.color_picker=Color Picker [%s]
 //
+dialog.editor.general.attributes.new_group_question=Group does not exists.<nl>Do you wish to create it?
+dialog.editor.general.attributes.new_group_question.confirm=yes.
+dialog.editor.general.attributes.new_group_question.cancel=no.
+dialog.editor.general.attributes.burntotex.notex=There is no texture loaded.
+dialog.editor.general.attributes.burntotex.notex.confirm=ok
+dialog.editor.general.attributes.burntotex.notex.cancel=load
+dialog.editor.general.attributes.burntotex.tex_not_found=Texture not found in Memory.<nl>This rather bad.
+dialog.editor.general.attributes.burntotex.tex_not_found.confirm=ok
+//
+filechooser.editor.model_group.model.texture=Select a model texture file.
+filechooser.editor.model_group.group.texture=Select a group texture file.
+dialog.editor.model_group.group.animator.not_found=Animation not found!
+dialog.editor.model_group.group.animator.not_found.confirm=ok
+editor.model_group.group.animator_settings=Animator Settings
+//

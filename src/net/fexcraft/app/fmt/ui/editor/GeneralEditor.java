@@ -42,7 +42,9 @@ public class GeneralEditor extends Editor {
 				public void updateTextField(){
 					String text = this.getTextValue();
 					if(!FMTB.MODEL.getGroups().contains(text)){
-						FMTB.showDialogbox("Group does not exists.\nDo you wish to create it?", "yes.", "no.", () -> {
+						String str = translate("dialog.editor.general.attributes.new_group_question", "Group does not exists.<nl>Do you wish to create it?");
+						String yes = translate("dialog.editor.general.attributes.new_group_question.confirm", "yes.");
+						FMTB.showDialogbox(str, yes, translate("dialog.editor.general.attributes.new_group_question.cancel", "no."), () -> {
 							FMTB.MODEL.getGroups().add(new TurboList(text));
 							FMTB.MODEL.changeGroupOfSelected(FMTB.MODEL.getSelected(), text);
 						}, DialogBox.NOTHING);
@@ -92,7 +94,9 @@ public class GeneralEditor extends Editor {
 				public boolean processButtonClick(int x, int y, boolean left){
 					if(!left) return true;
 					if(FMTB.MODEL.texture == null){
-						FMTB.showDialogbox("There is not texture loaded.", "ok", "load", DialogBox.NOTHING, () -> {
+						String str = translate("dialog.editor.general.attributes.burntotex.notex", "There is no texture loaded.");
+						String ok = translate("dialog.editor.general.attributes.burntotex.notex.confirm", "ok");
+						FMTB.showDialogbox(str, ok, translate("dialog.editor.general.attributes.burntotex.notex.cancel", "load"), DialogBox.NOTHING, () -> {
 							try{
 								FMTB.get().UI.getElement("toolbar").getElement("textures").getElement("menu").getElement("select").onButtonClick(x, y, left, true);
 							}
@@ -107,7 +111,8 @@ public class GeneralEditor extends Editor {
 							String texname = poly.getTurboList().getGroupTexture() == null ? FMTB.MODEL.texture : poly.getTurboList().getGroupTexture();
 							Texture tex = TextureManager.getTexture(texname, true);
 							if(tex == null){//TODO group tex compensation
-								FMTB.showDialogbox("Texture not found in Memory.\nThis rather bad.", "ok", null, DialogBox.NOTHING, null);
+								String str = translate("dialog.editor.general.attributes.burntotex.tex_not_found", "Texture not found in Memory.<nl>This rather bad.");
+								FMTB.showDialogbox(str, translate("dialog.editor.general.attributes.burntotex.tex_not_found.confirm", "ok"), null, DialogBox.NOTHING, null);
 								return true;
 							}
 							poly.burnToTexture(tex.getImage(), null); poly.recompile(); TextureManager.saveTexture(texname); tex.rebind();
