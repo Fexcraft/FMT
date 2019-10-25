@@ -14,14 +14,14 @@ import net.fexcraft.lib.common.math.RGB;
 public class Element {
 
 	protected ArrayList<Element> elements = new ArrayList<>();
+	protected /*final*/ String id, stylegroup;
 	protected final Element root;
-	protected final String id, stylegroup;
 	//
 	protected float[][][] vertexes;
 	protected boolean top, bot, left, right;
 	protected Texture texture;
 	//
-	public int width, height, x, xrel, y, yrel, z, border_width; 
+	public int width, height, x, xrel, y, yrel, border_width; 
 	protected Integer fill, border, border_fill;
 	protected RGB hovercolor, discolor;
 	protected boolean hovered, visible = true, enabled = true, draggable;
@@ -115,9 +115,7 @@ public class Element {
 		if(!Mouse.isGrabbed()) hovered(Mouse.getX() * UserInterface.scale, height - Mouse.getY() * UserInterface.scale);
 		//
 		if(this.visible){
-			if(z != 0) GL11.glTranslatef(0, 0,  z);
 			this.renderSelf(width, height);
-			if(z != 0) GL11.glTranslatef(0, 0, -z);
 		}
 		if(this.visible && !elements.isEmpty()) for(Element elm : elements) elm.render(width, height);
 	}

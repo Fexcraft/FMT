@@ -26,6 +26,7 @@ public class Bottombar extends Element {
 		this.elements.add(new TextField(this, "selected", "bottombar:field", UserInterface.width / 6, 0, 0){
 			@Override
 			public void renderSelf(int rw, int rh){
+				if(GroupCompound.SELECTED_POLYGONS < 0) GroupCompound.SELECTED_POLYGONS = 0;
 				this.setText("Selected: " + GroupCompound.SELECTED_POLYGONS, true);
 				super.renderSelf(rw, rh);
 			}

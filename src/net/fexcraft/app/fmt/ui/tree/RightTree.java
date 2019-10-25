@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Optional;
 
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager;
@@ -45,16 +44,16 @@ public abstract class RightTree extends Element {
 		//
 		sel_in_g = new RGB(StyleSheet.getColourFor("tree:group", "selected_invisible", 0xffaa7e36));
 		sel_in_p = new RGB(StyleSheet.getColourFor("tree:polygon", "selected_invisible", 0xffaa7e36));
-		sel_in_c = new RGB(StyleSheet.getColourFor("tree:polygon", "selected_invisible", 0xffaa7e36));
+		sel_in_c = new RGB(StyleSheet.getColourFor("tree:compound", "selected_invisible", 0xffaa7e36));
 		sel_vi_g = new RGB(StyleSheet.getColourFor("tree:group", "selected_visible", 0xff934427));
 		sel_vi_p = new RGB(StyleSheet.getColourFor("tree:polygon", "selected_visible", 0xff934427));
-		sel_vi_c = new RGB(StyleSheet.getColourFor("tree:polygon", "selected_visible", 0xff934427));
+		sel_vi_c = new RGB(StyleSheet.getColourFor("tree:compound", "selected_visible", 0xff934427));
 		def_g = new RGB(StyleSheet.getColourFor("tree:group", "background_visible", 0xff0b6623));
 		def_p = new RGB(StyleSheet.getColourFor("tree:polygon", "background_visible", 0xff0b6623));
-		def_c = new RGB(StyleSheet.getColourFor("tree:polygon", "background_visible", 0xff4287f5));
+		def_c = new RGB(StyleSheet.getColourFor("tree:compound", "background_visible", 0xff4287f5));
 		inv_g = new RGB(StyleSheet.getColourFor("tree:group", "background_invisible", 0xff80a073));
 		inv_p = new RGB(StyleSheet.getColourFor("tree:polygon", "background_invisible", 0xff80a073));
-		inv_c = new RGB(StyleSheet.getColourFor("tree:polygon", "background_invisible", 0xff80a073));
+		inv_c = new RGB(StyleSheet.getColourFor("tree:compound", "background_invisible", 0xff80a073));
 	}
 	
 	@Override
@@ -69,11 +68,7 @@ public abstract class RightTree extends Element {
 	public void render(int width, int height){
 		if(!Mouse.isGrabbed()) hovered(Mouse.getX() * UserInterface.scale, height - Mouse.getY() * UserInterface.scale);
 		//
-		if(this.visible){
-			if(z != 0) GL11.glTranslatef(0, 0,  z);
-			this.renderSelfQuad(); this.renderSelf(width, height);
-			if(z != 0) GL11.glTranslatef(0, 0, -z);
-		}
+		if(this.visible){ this.renderSelfQuad(); this.renderSelf(width, height); }
 	}
 
 	@Override
@@ -116,15 +111,56 @@ public abstract class RightTree extends Element {
 		return  TREES.stream().filter(pre -> pre.isHovered()).findFirst().isPresent();
 	}
 	
-	public static class GroupButton extends Button {
+	public static abstract class TreeButton extends Button {
 		
 		private int xl, yl;
-		private TurboList list;
+		
+		public TreeButton(Element root, String id, String ss, int width, int height, int x, int y){
+			super(root, id, ss, width, height, x, y); xl = x; yl = y;
+		}
+
+		@Override
+		public void renderSelf(int rw, int rh){
+			if(drawbackground){
+				color().glColorApply(); this.renderSelfQuad(); RGB.glColorReset();
+			}
+			if(text != null){
+				RGB color = !drawbackground ? hovered ? hovercolor : !enabled ? discolor : RGB.BLACK : RGB.BLACK;
+				if(centered){
+					int x = width / 2 - (FontRenderer.getWidth(text, 1) / 2), y = height / 2 - 10;
+					FontRenderer.drawText(text, this.x + x + (icon == null ? 0 : iconsize + 2), this.y + y, 1, color);
+				}
+				else{
+					FontRenderer.drawText(text, x + texxoff + (icon == null ? 0 : iconsize + 2), y + texyoff, 1, color);
+				}
+			}
+			if(icon != null){
+				if(iconcolor != null) iconcolor.glColorApply();
+				float y = (height - iconsize) * 0.5f;
+				this.renderIcon(x + 2, this.y + y, iconsize, icon);
+				if(iconcolor != null) RGB.glColorReset();
+			}
+		}
+		
+		public abstract RGB color();
+		
+		public abstract void update(int height, int rw, int rh);
+		
+		@Override
+		public Element setPosition(int x, int y){
+			if(xl != x || yl != y){ super.setPosition(x, y); xl = x; yl = y; } return this;
+		}
+		
+	}
+	
+	public static class GroupButton extends TreeButton {
+		
+		private int rel; private TurboList list; private boolean compound;
 
 		public GroupButton(Element root, TurboList list){
 			super(root, list.id, "tree:group", 300, 26, 4, 0);
 			this.setColor(StyleSheet.WHITE).setDraggable(true);
-			this.setText((this.list = list).id, false);
+			this.setText((this.list = list).id, false); rel = 4;
 			this.setBorder(StyleSheet.BLACK, StyleSheet.BLACK, 0);
 			//
 			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_minimize", 22, width - 104, 2){
@@ -156,7 +192,7 @@ public abstract class RightTree extends Element {
 		}
 		
 		public void setAsHelperPreview(){
-			elements.clear(); this.setSize(296, 26);
+			elements.clear(); this.setSize(296, 26); rel = 8; compound = true;
 			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_visible", 22, width - 26, 2){
 				@Override
 				protected boolean processButtonClick(int mx, int my, boolean left){
@@ -166,45 +202,28 @@ public abstract class RightTree extends Element {
 		}
 
 		@Override
-		public void renderSelf(int rw, int rh){
-			if(drawbackground){
-				colorG(list.visible, list.selected).glColorApply(); this.renderSelfQuad(); RGB.glColorReset();
-			}
-			if(text != null){
-				RGB color = !drawbackground ? hovered ? hovercolor : !enabled ? discolor : RGB.BLACK : RGB.BLACK;
-				if(centered){
-					int x = width / 2 - (FontRenderer.getWidth(text, 1) / 2), y = height / 2 - 10;
-					FontRenderer.drawText(text, this.x + x + (icon == null ? 0 : iconsize + 2), this.y + y, 1, color);
-				}
-				else{
-					FontRenderer.drawText(text, x + texxoff + (icon == null ? 0 : iconsize + 2), y + texyoff, 1, color);
-				}
-			}
-			if(icon != null){
-				if(iconcolor != null) iconcolor.glColorApply();
-				float y = (height - iconsize) * 0.5f;
-				this.renderIcon(x + 2, this.y + y, iconsize, icon);
-				if(iconcolor != null) RGB.glColorReset();
-			}
+		public RGB color(){
+			return colorG(list.visible, list.selected);
 		}
 		
 		@Override
 		protected boolean processButtonClick(int mx, int my, boolean left){
 			boolean bool = list.selected; if(!GGR.isShiftDown()){ FMTB.MODEL.clearSelection(); }
 			list.selected = !bool; FMTB.MODEL.updateFields(); FMTB.MODEL.lastselected = null;
-			GroupCompound.SELECTED_POLYGONS = FMTB.MODEL.countSelectedMRTs(); return true;
+			if(!compound) GroupCompound.SELECTED_POLYGONS = FMTB.MODEL.countSelectedMRTs(); return true;
 		}
-		
+
 		@Override
-		public Element setPosition(int x, int y){
-			if(xl != x || yl != y){ super.setPosition(x, y); xl = x; yl = y; } return this;
+		public void update(int elm_height, int rw, int rh){
+			this.setPosition(rel, elm_height); id = list.id;
+			if(!compound) this.setText("[" + list.size() + "] " + id, false);
+			else this.setText(id, false); this.render(rw, rh);
 		}
 		
 	}
 	
-	public static class PolygonButton extends Button {
+	public static class PolygonButton extends TreeButton {
 
-		private int xl, yl;
 		private PolygonWrapper polygon;
 
 		public PolygonButton(Element root, PolygonWrapper polygon){
@@ -236,26 +255,8 @@ public abstract class RightTree extends Element {
 		}
 
 		@Override
-		public void renderSelf(int rw, int rh){
-			if(drawbackground){
-				colorP(polygon.visible, polygon.selected || polygon.getTurboList().selected).glColorApply(); this.renderSelfQuad(); RGB.glColorReset();
-			}
-			if(text != null){
-				RGB color = !drawbackground ? hovered ? hovercolor : !enabled ? discolor : RGB.BLACK : RGB.BLACK;
-				if(centered){
-					int x = width / 2 - (FontRenderer.getWidth(text, 1) / 2), y = height / 2 - 10;
-					FontRenderer.drawText(text, this.x + x + (icon == null ? 0 : iconsize + 2), this.y + y, 1, color);
-				}
-				else{
-					FontRenderer.drawText(text, x + texxoff + (icon == null ? 0 : iconsize + 2), y + texyoff, 1, color);
-				}
-			}
-			if(icon != null){
-				if(iconcolor != null) iconcolor.glColorApply();
-				float y = (height - iconsize) * 0.5f;
-				this.renderIcon(x + 2, this.y + y, iconsize, icon);
-				if(iconcolor != null) RGB.glColorReset();
-			}
+		public RGB color(){
+			return colorP(polygon.visible, polygon.selected || polygon.getTurboList().selected);
 		}
 		
 		@Override
@@ -264,18 +265,17 @@ public abstract class RightTree extends Element {
 			polygon.selected = !bool; FMTB.MODEL.updateFields(); FMTB.MODEL.lastselected = polygon;
 			GroupCompound.SELECTED_POLYGONS += polygon.selected ? 1 : -1; return true;
 		}
-		
+
 		@Override
-		public Element setPosition(int x, int y){
-			if(xl != x || yl != y){ super.setPosition(x, y); xl = x; yl = y; } return this;
+		public void update(int elm_height, int rw, int rh){
+			this.setPosition(8, elm_height); this.setText(id = polygon.name(), false); this.render(rw, rh);
 		}
 		
 	}
 	
-	public static class CompoundButton extends Button {
+	public static class CompoundButton extends TreeButton {
 
 		private GroupCompound compound;
-		private int xl, yl;
 
 		public CompoundButton(Element root, GroupCompound compound){
 			super(root, compound.name, "tree:compound", 300, 26, 8, 0);
@@ -333,26 +333,8 @@ public abstract class RightTree extends Element {
 		}
 
 		@Override
-		public void renderSelf(int rw, int rh){
-			if(drawbackground){
-				colorC(compound.visible, selected()).glColorApply(); this.renderSelfQuad(); RGB.glColorReset();
-			}
-			if(text != null){
-				RGB color = !drawbackground ? hovered ? hovercolor : !enabled ? discolor : RGB.BLACK : RGB.BLACK;
-				if(centered){
-					int x = width / 2 - (FontRenderer.getWidth(text, 1) / 2), y = height / 2 - 10;
-					FontRenderer.drawText(text, this.x + x + (icon == null ? 0 : iconsize + 2), this.y + y, 1, color);
-				}
-				else{
-					FontRenderer.drawText(text, x + texxoff + (icon == null ? 0 : iconsize + 2), y + texyoff, 1, color);
-				}
-			}
-			if(icon != null){
-				if(iconcolor != null) iconcolor.glColorApply();
-				float y = (height - iconsize) * 0.5f;
-				this.renderIcon(x + 2, this.y + y, iconsize, icon);
-				if(iconcolor != null) RGB.glColorReset();
-			}
+		public RGB color(){
+			return colorC(compound.visible, selected());
 		}
 		
 		public boolean selected(){
@@ -399,10 +381,10 @@ public abstract class RightTree extends Element {
 			}
 			return true;
 		}
-		
+
 		@Override
-		public Element setPosition(int x, int y){
-			if(xl != x || yl != y){ super.setPosition(x, y); xl = x; yl = y; } return this;
+		public void update(int elm_height, int rw, int rh){
+			this.setPosition(4, elm_height); this.setText(id = compound.name, false); this.render(rw, rh);
 		}
 		
 	}

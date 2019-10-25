@@ -35,11 +35,11 @@ public class ModelTree extends RightTree {
 		elm_height -= scroll; boolean bool;
 		for(TurboList list : groups){
 			if((bool = elm_height < head) && list.minimized){ elm_height += 28; continue; } if(elm_height > height) break;
-			if(!bool){ list.button.setPosition(4, elm_height); list.button.render(rw, rh); elm_height += 28; elements.add(list.button); }
+			if(!bool){ list.button.update(elm_height, rw, rh); elm_height += 28; elements.add(list.button); }
 			if(list.minimized) continue;
 			for(PolygonWrapper wrapper : list){
 				if(elm_height < head){ elm_height += 28; continue; } if(elm_height > height) break;
-				wrapper.button.setPosition(8, elm_height); wrapper.button.render(rw, rh); elm_height += 28; elements.add(wrapper.button);
+				wrapper.button.update(elm_height, rw, rh); elm_height += 28; elements.add(wrapper.button);
 			}
 		}
 		if(Settings.polygonCount()){ polygoncount.renderSelf(rw, rh); }
