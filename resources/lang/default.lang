@@ -83,6 +83,20 @@ editor.general.texrect_a.face_y=%s [y-pos | TR, TL, BL, BR]
 editor.general.texrect_b.title=TexRect [Basic]
 editor.general.texrect_b.face=%s [start x/y, end x/y]
 editor.general.marker.title=Marker Settings
-//
 editor.general.marker.color=Marker Color [#hex]
 editor.general.marker.biped_display=Biped Display [toggle / rot / scale]
+//
+editor.model_group.model.title=Model Settings
+editor.model_group.model.position=Position Offset (full unit)
+editor.model_group.model.rotation=Rotation Offset (degrees)
+editor.model_group.model.texture_size=Texture [U/V/Scale]
+editor.model_group.model.texture=Model Texture
+editor.model_group.model.name=Model Name
+editor.model_group.group.title=Group Settings
+editor.model_group.group.color=Group Preview Color/Overlay
+editor.model_group.group.name=Group Name/ID
+editor.model_group.group.texture_size=Texture [U/V/Scale]
+editor.model_group.group.texture=Group Texture
+editor.model_group.group.add_animator=Add Animator
+editor.model_group.animations.title=Group Animations
+//

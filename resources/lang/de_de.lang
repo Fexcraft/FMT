@@ -88,3 +88,18 @@ editor.general.texrect_b.face=%s [start x/y, ende x/y]
 editor.general.marker.title=Marker Einstellungen
 editor.general.marker.color=Marker Farbe [#hex]
 editor.general.marker.biped_display=Biped Anzeige [toggle / Winkel / Größe]
+//
+editor.model_group.model.title=Modell Einstellungen
+editor.model_group.model.position=Positions Offset (volle Einheiten)
+editor.model_group.model.rotation=Rotations Offset (Winkel Grad)
+editor.model_group.model.texture_size=Textur [U/V/Größe]
+editor.model_group.model.texture=Modell Textur
+editor.model_group.model.name=Modell Name
+editor.model_group.group.title=Gruppen Einstellungen
+editor.model_group.group.color=Gruppen Preview Farbe/Overlay
+editor.model_group.group.name=Gruppen Name/ID
+editor.model_group.group.texture_size=Textur [U/V/Größe]
+editor.model_group.group.texture=Gruppen Textur
+editor.model_group.group.add_animator=Animator hinzufügen
+editor.model_group.animations.title=Gruppen Animationen
+//
