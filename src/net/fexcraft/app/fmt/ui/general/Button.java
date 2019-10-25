@@ -2,6 +2,7 @@ package net.fexcraft.app.fmt.ui.general;
 
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.FontRenderer;
+import net.fexcraft.app.fmt.ui.FontRenderer.FontType;
 import net.fexcraft.lib.common.math.RGB;
 
 /**
@@ -52,7 +53,7 @@ public class Button extends Element {
 	public Button setText(String string, boolean centered){
 		text = string; this.centered = centered;
 		if(this.root instanceof HoverMenu){
-			int leng = FontRenderer.getWidth(text, 1);
+			int leng = FontRenderer.getWidth(text, FontType.BOLD);
 			if(leng + 10 > this.width) this.width = leng + 10;
 			for(Element  elm : this.root.getElements()){
 				if(elm.width < width) elm.width = this.width;
@@ -85,11 +86,11 @@ public class Button extends Element {
 		if(text != null){
 			RGB color = !drawbackground ? hovered ? hovercolor : !enabled ? discolor : RGB.BLACK : RGB.BLACK;
 			if(centered){
-				int x = width / 2 - (FontRenderer.getWidth(text, 1) / 2), y = height / 2 - 10;
-				FontRenderer.drawText(text, this.x + x + (icon == null ? 0 : iconsize + 2), this.y + y, 1, color);
+				int x = width / 2 - (FontRenderer.getWidth(text, FontType.BOLD) / 2), y = height / 2 - 10;
+				FontRenderer.drawText(text, this.x + x + (icon == null ? 0 : iconsize + 2), this.y + y, FontType.BOLD, color);
 			}
 			else{
-				FontRenderer.drawText(text, x + texxoff + (icon == null ? 0 : iconsize + 2), y + texyoff, 1, color);
+				FontRenderer.drawText(text, x + texxoff + (icon == null ? 0 : iconsize + 2), y + texyoff, FontType.BOLD, color);
 			}
 		}
 		if(icon != null){

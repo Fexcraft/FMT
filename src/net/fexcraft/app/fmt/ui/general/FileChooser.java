@@ -18,6 +18,7 @@ import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.FontRenderer;
+import net.fexcraft.app.fmt.ui.FontRenderer.FontType;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.utils.Backups;
 import net.fexcraft.app.fmt.utils.SaveLoad;
@@ -259,7 +260,7 @@ public class FileChooser extends Element implements Dialog {
 			}
 		}
 		sel[0].setEnabled((selected > -1 && selected < fls.length && !fls[selected].isDirectory()) || (cfn.isEnabled() && this.isValidInput(cfn.getText())));
-		FontRenderer.drawText(title, this.x + 22, this.y + 17, 1);
+		FontRenderer.drawText(title, this.x + 22, this.y + 17, FontType.BOLD);
 	}
 	
 	@Override

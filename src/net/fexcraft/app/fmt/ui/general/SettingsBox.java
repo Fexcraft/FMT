@@ -9,6 +9,7 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.FontRenderer;
+import net.fexcraft.app.fmt.ui.FontRenderer.FontType;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.general.FileChooser.AfterTask;
 import net.fexcraft.app.fmt.utils.Settings;
@@ -50,10 +51,10 @@ public class SettingsBox extends Element implements Dialog {
 	@Override
 	public void renderSelf(int rw, int rh) {
 		this.renderSelfQuad();
-		FontRenderer.drawText(alttext + " [Page: " + (page + 1) + "/" + (settings.size() / perpage + 1) + "]", this.x + 12, this.y + 12, 1);
+		FontRenderer.drawText(alttext + " [Page: " + (page + 1) + "/" + (settings.size() / perpage + 1) + "]", this.x + 12, this.y + 12, FontType.BOLD);
 		for(int i = 0; i < perpage; i++){
 			int j = (page * perpage) + i; if(j >= settings.size()) break; Setting setting = settings.get(j);
-			FontRenderer.drawText("[" + j + "] " + setting.getId(), this.x + 12, this.y + 40 + (i * 30), 1);
+			FontRenderer.drawText("[" + j + "] " + setting.getId(), this.x + 12, this.y + 40 + (i * 30), FontType.BOLD);
 		}
 	}
 	

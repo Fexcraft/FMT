@@ -6,6 +6,7 @@ import java.util.Optional;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.FontRenderer;
+import net.fexcraft.app.fmt.ui.FontRenderer.FontType;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.StyleSheet;
@@ -67,11 +68,11 @@ public class TextField extends Element {
 		if(!number && text == null) return;
 		String tex = number ? (tempval == null ? value : "*" + tempval) + "" : tempval == null ? this.text : tempval;
 		if(centered){
-			int x = width / 2 - (FontRenderer.getWidth(tex, 1) / 2), y = height / 2 - 10;
-			FontRenderer.drawText(tex, this.x + x, this.y + y, 1, hovered && hovertextcolor != null ? hovertextcolor : textcolor);
+			int x = width / 2 - (FontRenderer.getWidth(tex, FontType.BOLD) / 2), y = height / 2 - 10;
+			FontRenderer.drawText(tex, this.x + x, this.y + y, FontType.BOLD, hovered && hovertextcolor != null ? hovertextcolor : textcolor);
 		}
 		else{
-			FontRenderer.drawText(tex, this.x + 2, this.y + 2, 1, hovered && hovertextcolor != null ? hovertextcolor : textcolor);
+			FontRenderer.drawText(tex, this.x + 2, this.y + 2, FontType.BOLD, hovered && hovertextcolor != null ? hovertextcolor : textcolor);
 		}
 	}
 

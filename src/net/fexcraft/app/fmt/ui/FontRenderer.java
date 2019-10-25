@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,46 +25,60 @@ import net.fexcraft.lib.common.math.RGB;
  */
 public class FontRenderer {
 	
-	private static int[] FONT_HEIGHT = new int[]{ 0, 0, 0, 0 };
-	private static boolean antialiens = true;
+	/** https://github.com/SilverTiger/lwjgl3-tutorial/wiki/Fonts - first reference, afterwards reworked. */
+	
 	private static Map<Character, Glyph> italic_glyphs = new HashMap<>();
 	private static Map<Character, Glyph> plain_glyphs = new HashMap<>();
 	private static Map<Character, Glyph> bold_glyphs = new HashMap<>();
 	private static Map<Character, Glyph> mono_glyphs = new HashMap<>();
-	public static int[] TYPE_WIDTH = new int[]{ 0, 0, 0, 0 };
+	public static Font MONO, ITALIC, PLAIN, BOLD;
+	private static boolean antialiens = true;
+	private static ArrayList<Character> CHARS = new ArrayList<>();
 	
-	/** https://github.com/SilverTiger/lwjgl3-tutorial/wiki/Fonts */
+	public static enum FontType {
+		
+		PLAIN (new Font(Font.SANS_SERIF, Font.PLAIN,  16)),
+		BOLD  (new Font(Font.SANS_SERIF, Font.BOLD,   16)),
+		ITALIC(new Font(Font.SANS_SERIF, Font.ITALIC, 16)),
+		MONO  (new Font(Font.MONOSPACED, Font.PLAIN,  16));
+		
+		private Font font;
+		private int height, width;
+		
+		private FontType(Font font){
+			this.font = font;
+		}
+		
+	}
+	
 	public static void init(){
-		initGlyphs(0); initGlyphs(1); initGlyphs(2); initGlyphs(3);
+		for(int i = 32; i < 256; i++){
+			if(i != 127) CHARS.add((char)i);
+		}
+		for(FontType type : FontType.values()) initGlyphs(type);
 	}
 
-	private static void initGlyphs(int type){
-		Font font = new Font(type == 3 ? Font.MONOSPACED : Font.SANS_SERIF,
-			type == 0 || type == 3 ? Font.PLAIN : type == 1 ? Font.BOLD : Font.ITALIC, 16);
-		//
+	private static void initGlyphs(FontType type){
 		int imageWidth = 0, imageHeight = 0;
-		for(int i = 32; i < 256; i++){
-		    if(i == 127){ continue; }
-		    char c = (char)i;
-		    BufferedImage ch = createCharImage(font, c, antialiens);
+		for(char c : CHARS){
+		    BufferedImage ch = createCharImage(type.font, c, antialiens);
 		    imageWidth += ch.getWidth() + (ch.getWidth() < 4 ? 1 : 0);
 		    imageHeight = Math.max(imageHeight, ch.getHeight());
 		}
-		FONT_HEIGHT[type] = imageHeight;
+		//
+		type.height = imageHeight;
 		BufferedImage image = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = image.createGraphics();
         int x = 0;
-        for(int i = 32; i < 256; i++) {
-            if(i == 127){ continue; }
-            char c = (char)i;
-            BufferedImage charImage = createCharImage(font, c, antialiens);
+        for(char c : CHARS){
+            BufferedImage charImage = createCharImage(type.font, c, antialiens);
             if(charImage == null){ continue; }
             int charWidth = charImage.getWidth() + (charImage.getWidth() < 4 ? 1 : 0);
             int charHeight = charImage.getHeight();
             Glyph ch = new Glyph(charWidth, charHeight, x, image.getHeight() - charHeight, 0f);
             g.drawImage(charImage, x, 0, null);
             x += ch.width;
-            switch(type){
+            switch(type.ordinal()){
             	case 0: plain_glyphs.put(c, ch); break;
             	case 1: bold_glyphs.put(c, ch); break;
             	case 2: italic_glyphs.put(c, ch); break;
@@ -71,15 +86,15 @@ public class FontRenderer {
             }
         }
         g.dispose();
-        File file = new File("./resources/textures/font/ascii" + type + ".png");
+        File file = new File("./resources/textures/font/" + type + ".png");
         if(!file.exists()){ file.getParentFile().mkdirs(); } //Print.console("Font Type " + type + " Image not found, saving a new one.");
         //
         try{ ImageIO.write(image, "png", file); } catch(Exception e){ e.printStackTrace(); }
-        TYPE_WIDTH[type] = image.getWidth();
-        TextureManager.loadTextureFromFile("font/ascii" + type, file);
+        type.width = image.getWidth();
+        TextureManager.loadTextureFromFile("font/" + type, file);
 	}
 
-	private static BufferedImage createCharImage(Font font, char c, boolean b){
+	private static BufferedImage createCharImage(Font font, char c, boolean antialiens){
 		BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = image.createGraphics();
 		if(antialiens){ g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); }
@@ -93,7 +108,7 @@ public class FontRenderer {
 		if(antialiens){ g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); }
 		g.setFont(font);
 		g.setPaint(Color.WHITE);
-		g.drawString(String.valueOf(c), 0, metrics.getAscent());
+		g.drawString(Character.toString(c), 0, metrics.getAscent());
 		g.dispose();
 		return image;
 	}
@@ -110,13 +125,13 @@ public class FontRenderer {
 	    
 	}
 
-	public static Glyph getGlyph(int type, char c){
+	public static Glyph getGlyph(FontType type, char c){
 		Glyph glyph = null;
 		switch(type){
-			case 3: glyph = mono_glyphs.get(c); break;
-			case 2: glyph = italic_glyphs.get(c); break;
-			case 1: glyph = bold_glyphs.get(c); break;
-			case 0: glyph = plain_glyphs.get(c); break;
+			case MONO:   glyph = mono_glyphs.get(c); break;
+			case ITALIC: glyph = italic_glyphs.get(c); break;
+			case BOLD:   glyph = bold_glyphs.get(c); break;
+			case PLAIN:  glyph = plain_glyphs.get(c); break;
 			default: glyph = Glyph.NULL; break;
 		}
 		return glyph == null ? Glyph.NULL : glyph;
@@ -138,7 +153,7 @@ public class FontRenderer {
 		
 	}*/
 	
-	public static int getWidth(CharSequence text, int type){
+	public static int getWidth(CharSequence text, FontType type){
         int width = 0, lineWidth = 0;
         for(int i = 0; i < text.length(); i++){
             char c = text.charAt(i);
@@ -153,7 +168,7 @@ public class FontRenderer {
         width = Math.max(width, lineWidth); return width;
     }
 	
-    public static int getHeight(CharSequence text, int type){
+    public static int getHeight(CharSequence text, FontType type){
         int height = 0, lineHeight = 0;
         for(int i = 0; i < text.length(); i++){
             char c = text.charAt(i);
@@ -167,17 +182,17 @@ public class FontRenderer {
         } height += lineHeight; return height;
     }
     
-    public static void drawText(CharSequence text, float x, float y, int type, RGB color){
+    public static void drawText(CharSequence text, float x, float y, FontType type, RGB color){
     	if(text.length() == 0) return; //int textHeight = getHeight(text, type);
         float drawX = x, drawY = y; if(color == null) color = RGB.BLACK;
         //if(textHeight > FONT_HEIGHT[type]){ drawY -= textHeight - FONT_HEIGHT[type]; }
-        TextureManager.bindTexture("font/ascii" + type);
+        TextureManager.bindTexture("font/" + type);
         for(int i = 0; i < text.length(); i++) {
             char cher = text.charAt(i);
-            if(cher == '\n'){ drawY += FONT_HEIGHT[type]; drawX = x; continue; }
+            if(cher == '\n'){ drawY += type.height; drawX = x; continue; }
             if(cher == '\r'){ continue; }
             Glyph g = getGlyph(type, cher);
-            float tw = 1f / TYPE_WIDTH[type], th = 1f / FONT_HEIGHT[type];
+            float tw = 1f / type.width, th = 1f / type.height;
             float tx = tw * g.x, ty = th * g.y;
             color.glColorApply();
     		GL11.glBegin(GL11.GL_QUADS);
@@ -195,12 +210,12 @@ public class FontRenderer {
         }
     }
     
-    public static void drawText(CharSequence text, float x, float y, int type){
+    public static void drawText(CharSequence text, float x, float y, FontType type){
         drawText(text, x, y, type, null);
     }
     
     public static void drawText(CharSequence text, float x, float y){
-        drawText(text, x, y, 0, null);
+        drawText(text, x, y, FontType.PLAIN, null);
     }
 
 }

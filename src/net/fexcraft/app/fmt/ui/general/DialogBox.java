@@ -10,6 +10,7 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.FontRenderer;
+import net.fexcraft.app.fmt.ui.FontRenderer.FontType;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.lib.common.math.RGB;
 
@@ -46,7 +47,7 @@ public class DialogBox extends Element implements Dialog {
 	@Override
 	public void renderSelf(int rw, int rh) {
 		this.renderSelfQuad();
-		FontRenderer.drawText(text, this.x + 20, this.y + 13, 1);
+		FontRenderer.drawText(text, this.x + 20, this.y + 13, FontType.BOLD);
 		if(progress >= 0){
 			this.renderQuad(x + 20, y + 64, 216, 12, "ui/background_light");
 			if(progress > 0){
