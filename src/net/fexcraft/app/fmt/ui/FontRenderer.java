@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -17,6 +18,7 @@ import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.lib.common.math.RGB;
+import net.fexcraft.lib.common.utils.Print;
 
 /**
  * 
@@ -31,9 +33,10 @@ public class FontRenderer {
 	private static Map<Character, Glyph> plain_glyphs = new HashMap<>();
 	private static Map<Character, Glyph> bold_glyphs = new HashMap<>();
 	private static Map<Character, Glyph> mono_glyphs = new HashMap<>();
-	public static Font MONO, ITALIC, PLAIN, BOLD;
 	private static boolean antialiens = true;
 	private static ArrayList<Character> CHARS = new ArrayList<>();
+	private static Font[] ALL = GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts();
+	public static String DEFAULT_CHARS = ".,!@#$%^&*()_+{};:'\"><?=-0987654321~`|/ ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 	
 	public static enum FontType {
 		
@@ -48,20 +51,28 @@ public class FontRenderer {
 		private FontType(Font font){
 			this.font = font;
 		}
+
+		public Font getFittingFont(char c){
+			if(font.canDisplay(c)) return font;
+			for(Font font : ALL){
+				if(font.canDisplay(c)){
+					Print.console("Using Font '" + font.getFontName() + "' for char: u" + Integer.toHexString(c));
+					return font.deriveFont(16f).deriveFont(this == MONO ? 0 : ordinal());
+				}
+			} return font;
+		}
 		
 	}
 	
 	public static void init(){
-		for(int i = 32; i < 256; i++){
-			if(i != 127) CHARS.add((char)i);
-		}
+		for(char c : DEFAULT_CHARS.toCharArray()) CHARS.add(c);
 		for(FontType type : FontType.values()) initGlyphs(type);
 	}
 
 	private static void initGlyphs(FontType type){
 		int imageWidth = 0, imageHeight = 0;
 		for(char c : CHARS){
-		    BufferedImage ch = createCharImage(type.font, c, antialiens);
+		    BufferedImage ch = createCharImage(type.getFittingFont(c), c, antialiens);
 		    imageWidth += ch.getWidth() + (ch.getWidth() < 4 ? 1 : 0);
 		    imageHeight = Math.max(imageHeight, ch.getHeight());
 		}
@@ -71,7 +82,7 @@ public class FontRenderer {
 		Graphics2D g = image.createGraphics();
         int x = 0;
         for(char c : CHARS){
-            BufferedImage charImage = createCharImage(type.font, c, antialiens);
+            BufferedImage charImage = createCharImage(type.getFittingFont(c), c, antialiens);
             if(charImage == null){ continue; }
             int charWidth = charImage.getWidth() + (charImage.getWidth() < 4 ? 1 : 0);
             int charHeight = charImage.getHeight();

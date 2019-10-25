@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.TreeMap;
 
+import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.lib.common.utils.Print;
 
 public class Translator {
@@ -12,7 +13,7 @@ public class Translator {
 	private static TreeMap<String, String> DEF = new TreeMap<>(), SEL = new TreeMap<>();
 	
 	public static final void init() throws FileNotFoundException {
-		Scanner scanner = new Scanner(new File("./resources/lang/default.lang"));
+		Scanner scanner = new Scanner(new File("./resources/lang/default.lang"), "UTF-8");
 		while(scanner.hasNextLine()){
 			String string = scanner.nextLine();
 			if(string.length() < 3 || string.startsWith("#") || string.startsWith("//")) continue;
@@ -22,10 +23,14 @@ public class Translator {
 		File file = new File("./resources/lang/" + Settings.getLanguage() + ".lang");
 		if(!file.exists()){ Print.console("Tried to find lang file as specified in settings, but the file seems to be missing."); return; }
 		//
-		scanner = new Scanner(file);
+		scanner = new Scanner(file, "UTF-8");
 		while(scanner.hasNextLine()){
 			String string = scanner.nextLine();
 			if(string.length() < 3 || string.startsWith("#") || string.startsWith("//")) continue;
+			if(string.startsWith("DEFAULT_CHARS = ")){
+				FontRenderer.DEFAULT_CHARS += string.replace("DEFAULT_CHARS = ", "");
+				Print.console("Applying new chars from land file."); continue;
+			}
 			String[] str = string.split("="); if(str.length < 2) continue; SEL.put(str[0], str[1]);
 		} scanner.close();
 	}

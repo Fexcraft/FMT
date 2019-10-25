@@ -1,0 +1,8 @@
+# DEFAYLT FMT LANG FILE
+# Not always up to date
+# Author: FEX___96 (Ferdinand Calo')
+
+//Like this you can define special (e.g. non latin) characters for your language.
+DEFAULT_CHARS = äöü
+
+test.string.thing=SOME TEST ENTRY

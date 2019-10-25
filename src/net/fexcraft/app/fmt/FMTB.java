@@ -122,9 +122,9 @@ public class FMTB {
 	public FMTB setTitle(String string){ title = string; DiscordUtil.update(false); return this; }
 	
 	public void run() throws LWJGLException, InterruptedException, IOException, NoSuchMethodException, ScriptException {
-		TextureManager.init(); this.setIcon(); Settings.load(); StyleSheet.load();
+		TextureManager.init(); this.setIcon(); Settings.load(); StyleSheet.load(); Translator.init(); 
 		setupDisplay(); initOpenGL(); ggr = new GGR(this, 0, 4, 4); ggr.rotation.xCoord = 45; FontRenderer.init();
-		PorterManager.load(); HelperCollector.reload(); Display.setResizable(true); Translator.init(); UI = new UserInterface(this); this.setupUI(UI);
+		PorterManager.load(); HelperCollector.reload(); Display.setResizable(true); UI = new UserInterface(this); this.setupUI(UI);
 		SessionHandler.checkIfLoggedIn(true, true); checkForUpdates(); KeyCompound.init(); KeyCompound.load();
 		//
 		LocalDateTime midnight = LocalDateTime.of(LocalDate.now(ZoneOffset.systemDefault()), LocalTime.MIDNIGHT);
