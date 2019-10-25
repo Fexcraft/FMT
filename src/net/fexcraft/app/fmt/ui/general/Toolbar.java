@@ -20,7 +20,6 @@ import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.app.fmt.utils.TextureUpdate;
 import net.fexcraft.app.fmt.wrappers.BoxWrapper;
-import net.fexcraft.app.fmt.wrappers.CollisionGridWrapper;
 import net.fexcraft.app.fmt.wrappers.CylinderWrapper;
 import net.fexcraft.app.fmt.wrappers.MarkerWrapper;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
@@ -86,48 +85,48 @@ public class Toolbar extends Element {
 							protected boolean processButtonClick(int x, int y, boolean left){
 								SaveLoad.openNewModel(); return true;
 							}
-						}.setText("New Model", false));
+						}.setText(translate("toolbar.file.new_model", "New Model"), false));
 						this.elements.add(new Button(this, "open", null, 20, 26, 0, 0){
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
 								SaveLoad.openModel(); return true;
 							}
-						}.setText("Open Model", false));
+						}.setText(translate("toolbar.file.open_model", "Open Model"), false));
 						this.elements.add(new Button(this, "save", null, 20, 26, 0, 0){
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
 								SaveLoad.saveModel(false, false); return true;
 							}
-						}.setText("Save Model", false));
+						}.setText(translate("toolbar.file.save_model", "Save Model"), false));
 						this.elements.add(new Button(this, "save_as", null, 20, 26, 0, 0){
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
 								SaveLoad.saveModel(true, false); return true;
 							}
-						}.setText("Save as...", false));
+						}.setText(translate("toolbar.file.save_as", "Save as..."), false));
 						this.elements.add(new Button(this, "import", null, 20, 26, 0, 0){
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
 								PorterManager.handleImport(); return true;
 							}
-						}.setText("Import <<", false));
+						}.setText(translate("toolbar.file.import", "Import <<"), false));
 						this.elements.add(new Button(this, "export", null, 20, 26, 0, 0){
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
 								PorterManager.handleExport(); return true;
 							}
-						}.setText("Export >>", false));
+						}.setText(translate("toolbar.file.export", "Export >>"), false));
 						this.elements.add(new Button(this, "exit", null, 20, 26, 0, 0){
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
 								SaveLoad.checkIfShouldSave(true, false); return true;
 							}
-						}.setText("Exit", false));
+						}.setText(translate("toolbar.file.exit", "Exit"), false));
 					}
 				};
 				this.elements.add(menu);
 			}
-		}.setText("File", true));
+		}.setText(translate("toolbar.file", "File"), true));
 		this.elements.add(new Button(this, "utils", null, btsz, bthg, 0, 0){
 			@Override
 			public void setupSubmenu(){
@@ -139,32 +138,32 @@ public class Toolbar extends Element {
 							protected boolean processButtonClick(int x, int y, boolean left){
 								DialogBox.notAvailableYet(); return true;
 							}
-						}.setText("Undo", false));
+						}.setText(translate("toolbar.utils.undo", "Undo"), false));
 						this.elements.add(new Button(this, "redo", null, 20, 26, 0, 0){
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
 								DialogBox.notAvailableYet(); return true;
 							}
-						}.setText("Redo", false));
+						}.setText(translate("toolbar.utils.redo", "Redo"), false));
 						this.elements.add(new Button(this, "create_gif", null, 20, 26, 0, 0){
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
 								ImageHelper.createGif(false); return true;
 							}
-						}.setText("Create Gif", false));
+						}.setText(translate("toolbar.utils.create_gif", "Create Gif"), false));
 						this.elements.add(new Button(this, "screenshot", null, 20, 26, 0, 0){
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
 								ImageHelper.takeScreenshot(true); return true;
 							}
-						}.setText("Screenshot", false));
+						}.setText(translate("toolbar.utils.sceenshot", "Screenshot"), false));
 						this.elements.add(new Button(this, "reset", null, 20, 26, 0, 0){
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
 								FMTB.ggr = new GGR(FMTB.get(), 0, 4, 4); FMTB.ggr.rotation.xCoord = 45;
 								return true;
 							}
-						}.setText("Reset Camera", false));
+						}.setText(translate("toolbar.utils.reset_camera", "Reset Camera"), false));
 						this.elements.add(new Button(this, "calc_size", null, 20, 26, 0, 0){
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
@@ -182,12 +181,12 @@ public class Toolbar extends Element {
 								Print.console("UI: " + Settings.byteCountToString(uis, true));
 								return true;
 							}
-						}.setText("Calc. Size", false));
+						}.setText(translate("toolbar.utils.calc_size", "Calc. Size"), false));
 					}
 				};
 				this.elements.add(menu);
 			}
-		}.setText("Utils", true));
+		}.setText(translate("toolbar.utils", "Utils"), true));
 		this.elements.add(new Button(this, "editor", null, btsz, bthg, 0, 0){
 			@Override
 			public void setupSubmenu(){
@@ -199,24 +198,28 @@ public class Toolbar extends Element {
 							protected boolean processButtonClick(int x, int y, boolean left){
 								FMTB.MODEL.copyAndSelect(); return true;
 							}
-						}.setText("Copy Selected", false));
+						}.setText(translate("toolbar.editor.copy_selected", "Copy Selected"), false));
 						for(int i = 0; i < 3; i++){
-							String str = i == 0 ? "x" : i == 1 ? "y" : "z"; int j = i; String[] arr = new String[]{ "[L/R]", "[U/D]", "[F/B]"};
+							String str = i == 0 ? "x" : i == 1 ? "y" : "z"; int j = i; String[] arr = new String[]{
+								translate("toolbar.editor.flip.left_right", "[L/R]"),
+								translate("toolbar.editor.flip.up_down", "[U/D]"),
+								translate("toolbar.editor.flip.front_back", "[F/B]")
+							};
 							this.elements.add(new Button(this, "flip_" + str, null, 20, 26, 0, 0){
 								@Override protected boolean processButtonClick(int x, int y, boolean left){ FMTB.MODEL.flipShapeboxes(j); return true; }
-							}.setText("Flip (" + str.toUpperCase() + ") " + arr[j], false));
+							}.setText(format("toolbar.editor.flip", "Flip (%s) %s", str.toUpperCase(), arr[j]), false));
 						}
 						this.elements.add(new Button(this, "controls", null, 20, 26, 0, 0){
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
 								UserInterface.CONTROLS.show(); return true;
 							}
-						}.setText("Controls", false));
+						}.setText(translate("toolbar.editor.controls", "Controls"), false));
 					}
 				};
 				this.elements.add(menu);
 			}
-		}.setText("Editor", true));
+		}.setText(translate("toolbar.editor", "Editor"), true));
 		this.elements.add(new Button(this, "shapeditor", null, btsz, bthg, 0, 0){
 			@Override
 			public void setupSubmenu(){
@@ -228,30 +231,30 @@ public class Toolbar extends Element {
 							protected boolean processButtonClick(int x, int y, boolean left){
 								Editor.toggleAll(); return true;
 							}
-						}.setText("Hide Editors", false));
+						}.setText(translate("toolbar.shapeditor.hide", "Hide Editors"), false));
 						this.elements.add(new Button(this, "general", null, 20, 26, 0, 0){
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
 								Editor.show("general_editor"); return true;
 							}
-						}.setText("General Editor", false));
+						}.setText(translate("toolbar.shapeditor.general", "General Editor"), false));
 						this.elements.add(new Button(this, "texture", null, 20, 26, 0, 0){
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
 								Editor.show("texture_editor"); return true;
 							}
-						}.setText("Texture Editor (beta)", false));
+						}.setText(translate("toolbar.shapeditor.texture", "Texture Editor (beta)"), false));
 						this.elements.add(new Button(this, "model_group", null, 20, 26, 0, 0){
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
 								Editor.show("model_group_editor"); return true;
 							}
-						}.setText("Model/Group Editor", false));
+						}.setText(translate("toolbar.shapeditor.model_group", "Model/Group Editor"), false));
 					}
 				};
 				this.elements.add(menu);
 			}
-		}.setText("Shapeditor", true));
+		}.setText(translate("toolbar.shapeditor", "Shapeditor"), true));
 		this.elements.add(new Button(this, "shapelist", null, btsz, bthg, 0, 0){
 			@Override
 			protected boolean processButtonClick(int x, int y, boolean left){
@@ -268,35 +271,35 @@ public class Toolbar extends Element {
 								FMTB.MODEL.add(new BoxWrapper(FMTB.MODEL), null, true);
 								this.root.setVisible(false); return true;
 							}
-						}.setText("Add Generic Box", false));
+						}.setText(translate("toolbar.shapelist.add_box", "Add Generic Box"), false));
 						this.elements.add(new Button(this, "add_shapebox", null, 20, 26, 0, 0){
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
 								FMTB.MODEL.add(new ShapeboxWrapper(FMTB.MODEL), null, true);
 								this.root.setVisible(false); return true;
 							}
-						}.setText("Add Shapebox", false));
+						}.setText(translate("toolbar.shapelist.add_shapebox", "Add Shapebox"), false));
 						this.elements.add(new Button(this, "add_texrectb", null, 20, 26, 0, 0){
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
 								FMTB.MODEL.add(new TexrectWrapperB(FMTB.MODEL), null, true);
 								this.root.setVisible(false); return true;
 							}
-						}.setText("Add TexRect [Basic]", false));
+						}.setText(translate("toolbar.shapelist.add_texrect_b", "Add TexRect [Basic]"), false));
 						this.elements.add(new Button(this, "add_texrecta", null, 20, 26, 0, 0){
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
 								FMTB.MODEL.add(new TexrectWrapperA(FMTB.MODEL), null, true);
 								this.root.setVisible(false); return true;
 							}
-						}.setText("Add TexRect [Adv.]", false));
+						}.setText(translate("toolbar.shapelist.add_texrect_a", "Add TexRect [Adv.]"), false));
 						this.elements.add(new Button(this, "add_cylinder", null, 20, 26, 0, 0){
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
 								FMTB.MODEL.add(new CylinderWrapper(FMTB.MODEL), null, true);
 								this.root.setVisible(false); return true;
 							}
-						}.setText("Add Cylinder", false));
+						}.setText(translate("toolbar.shapelist.add_cylinder", "Add Cylinder"), false));
 						this.elements.add(new Button(this, "add_group", null, 20, 26, 0, 0){
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
@@ -311,26 +314,26 @@ public class Toolbar extends Element {
 								RightTree.show("modeltree");
 								this.root.setVisible(false); return true;
 							}
-						}.setText("Add Group", false));
+						}.setText(translate("toolbar.shapelist.add_group", "Add Group"), false));
 						this.elements.add(new Button(this, "add_marker", null, 20, 26, 0, 0){
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
 								FMTB.MODEL.add(new MarkerWrapper(FMTB.MODEL), "markers", true);
 								this.root.setVisible(false); return true;
 							}
-						}.setText("Add Marker", false));
-						this.elements.add(new Button(this, "add_collisiongrid", null, 20, 26, 0, 0){
+						}.setText(translate("toolbar.shapelist.add_marker", "Add Marker"), false));
+						/*this.elements.add(new Button(this, "add_collisiongrid", null, 20, 26, 0, 0){
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
 								FMTB.MODEL.add(new CollisionGridWrapper(FMTB.MODEL), null, true);
 								this.root.setVisible(false); return true;
 							}
-						}.setText("Add CollisionGrid", false));
+						}.setText("Add CollisionGrid", false));*///TODO remove
 					}
 				};
 				this.elements.add(menu);
 			}
-		}.setText("Shapelist", true));
+		}.setText(translate("toolbar.shapelist", "Shapelist"), true));
 		this.elements.add(new Button(this, "textures", null, btsz, bthg, 0, 0){
 			@Override
 			public void setupSubmenu(){
@@ -351,7 +354,7 @@ public class Toolbar extends Element {
 									}
 								}, ChooserMode.PNG); return true;
 							}
-						}.setText("Select Texture", false));
+						}.setText(translate("toolbar.textures.select", "Select Texture"), false));
 						this.elements.add(new Button(this, "edit", null, 20, 26, 0, 0){
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
@@ -366,7 +369,7 @@ public class Toolbar extends Element {
 									else{ Desktop.getDesktop().edit(texture.getFile()); }
 								} catch(Exception e){ e.printStackTrace(); } return true;
 							}
-						}.setText("Edit (External)", false));
+						}.setText(translate("toolbar.textures.edit", "Edit (External)"), false));
 						this.elements.add(new Button(this, "remove", null, 20, 26, 0, 0){
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
@@ -374,7 +377,7 @@ public class Toolbar extends Element {
 									FMTB.MODEL.setTexture(null); TextureManager.removeTexture(FMTB.MODEL.texture);
 								} return true;
 							}
-						}.setText("Remove/Unload", false));
+						}.setText(translate("toolbar.textures.remove", "Remove/Unload"), false));
 						this.elements.add(new Button(this, "texreset", null, 20, 26, 0, 0){
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
@@ -383,13 +386,13 @@ public class Toolbar extends Element {
 								}));
 								FMTB.showDialogbox("Texture Positions Reset.", "ok",  null, DialogBox.NOTHING, null); return true;
 							}
-						}.setText("Reset TexPos.", false));
+						}.setText(translate("toolbar.textures.texpos_reset", "Reset TexPos."), false));
 						this.elements.add(new Button(this, "autopos", null, 20, 26, 0, 0){
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
 								TextureUpdate.tryAutoPos(null); return true;
 							}
-						}.setText("Auto Position", false));
+						}.setText(translate("toolbar.textures.auto_position", "Auto Position"), false));
 						this.elements.add(new Button(this, "generate", null, 20, 26, 0, 0){
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
@@ -402,12 +405,12 @@ public class Toolbar extends Element {
 		                    	TextureManager.saveTexture(texname); tex.reload(); FMTB.MODEL.recompile();
 								return true;
 							}
-						}.setText("Generate New", false));
+						}.setText(translate("toolbar.textures.generate", "Generate New"), false));
 					}
 				};
 				this.elements.add(menu);
 			}
-		}.setText("Texture", true));
+		}.setText(translate("toolbar.textures", "Texture"), true));
 		this.elements.add(new Button(this, "helpers", null, btsz, bthg, 0, 0){
 			@Override
 			protected boolean processButtonClick(int x, int y, boolean left){
@@ -423,7 +426,7 @@ public class Toolbar extends Element {
 							protected boolean processButtonClick(int x, int y, boolean left){
 								RightTree.show("helpertree"); return true;
 							}
-						}.setText("View Loaded", false));
+						}.setText(translate("toolbar.helpers.view", "View Loaded"), false));
 						this.elements.add(new Button(this, "fmtb", null, 20, 26, 0, 0){
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
@@ -431,7 +434,7 @@ public class Toolbar extends Element {
 									@Override public void run(){ HelperCollector.loadFMTB(file); }
 								}, ChooserMode.SAVEFILE_LOAD); return true;
 							}
-						}.setText("Load FMTB", false));
+						}.setText(translate("toolbar.helpers.load_fmtb", "Load FMTB"), false));
 						this.elements.add(new Button(this, "frame", null, 20, 26, 0, 0){
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
@@ -439,7 +442,7 @@ public class Toolbar extends Element {
 									@Override public void run(){ HelperCollector.loadFrame(file); }
 								}, ChooserMode.HELPFRAMEIMG); return true;
 							}
-						}.setText("Load Frame", false));
+						}.setText(translate("toolbar.helpers.load_frame", "Load Frame"), false));
 						this.elements.add(new Button(this, "import", null, 20, 26, 0, 0){
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
@@ -447,24 +450,24 @@ public class Toolbar extends Element {
 									@Override public void run(){ HelperCollector.load(file, porter, mapped_settings); }
 								}, ChooserMode.IMPORT); return true;
 							}
-						}.setText("Load Imported", false));
+						}.setText(translate("toolbar.helpers.load_imported", "Load Imported"), false));
 						this.elements.add(new Button(this, "clear", null, 20, 26, 0, 0){
 							@Override
 							protected boolean processButtonClick(int x, int y, boolean left){
 								HelperCollector.LOADED.clear(); return true;
 							}
-						}.setText("Clear All / Unload", false));
+						}.setText(translate("toolbar.helpers.unload_clear", "Clear All / Unload"), false));
 					}
 				};
 				this.elements.add(menu);
 			}
-		}.setText("Helpers", true));
+		}.setText(translate("toolbar.helpers", "Helpers"), true));
 		this.elements.add(new Button(this, "exit", null, btsz, bthg, 0, 0){
 			@Override
 			protected boolean processButtonClick(int x, int y, boolean left){
 				SaveLoad.checkIfShouldSave(true, false); return true;
 			}
-		}.setText("Exit", true));
+		}.setText(translate("toolbar.exit", "Exit"), true));
 		//
 		realign();
 	}

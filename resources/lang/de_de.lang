@@ -3,7 +3,7 @@
 # Author: FEX___96 (Ferdinand Calo')
 
 //Like this you can define special (e.g. non latin) characters for your language. Make sure to save the file in UTF-8!
-DEFAULT_CHARS = äöüß
+DEFAULT_CHARS = äöüßÄÖÜ
 
 dialog.greeting.welcome=Wilkommen bei FMT!<nl>[version:%s]
 dialog.greeting.newversion=Neue Version verfügbar!<nl>%s >> %s
@@ -147,5 +147,58 @@ bottombar.netfield.loggedin=Eingeloggt - %s
 bottombar.netfield.loggedout=Ausgeloggt - GAST
 bottombar.netfield.login_failed=Login Fehlgeschlagen - GAST
 controls_adjuster.title=FMT Steuerungs Einstellungen
+dialogbox.feature_not_available_yet=Funktion noch nicht verfügbar.
+dialogbox.feature_not_available_yet.confirm=OK
+dialogbox.feature_not_available_yet.discord=Discord
 settingsbox.default=FMT Einstellungen
+//
+toolbar.file.new_model=Neues Modell
+toolbar.file.open_model=Modell Öffnen
+toolbar.file.save_model=Modell Speichern
+toolbar.file.save_as=Speichern als...
+toolbar.file.import=Importieren
+toolbar.file.export=Exportieren
+toolbar.file.exit=Ende
+toolbar.file=Datei
+toolbar.utils.undo=Züruck
+toolbar.utils.redo=Nicht Züruck
+toolbar.utils.create_gif=GIF Erstellen
+toolbar.utils.sceenshot=Screenshot
+toolbar.utils.reset_camera=Kamera Reset
+toolbar.utils.calc_size=Größe berechnen
+toolbar.utils=Werkzeuge
+toolbar.editor.copy_selected=Auswahl Kopieren
+toolbar.editor.flip.left_right=[L/R]
+toolbar.editor.flip.up_down=[O/U]
+toolbar.editor.flip.front_back=[F/H]
+toolbar.editor.flip=Flip (%s) %s
+toolbar.editor.controls=Steuerung
+toolbar.editor=Editor
+toolbar.shapeditor.hide=Editoren verstecken
+toolbar.shapeditor.general=Allgemeiner Editor
+toolbar.shapeditor.texture=Textur Editor (beta)
+toolbar.shapeditor.model_group=Modell/Gruppen Editor
+toolbar.shapeditor=Shapeditor
+toolbar.shapelist.add_box=Normale Box einfügen
+toolbar.shapelist.add_shapebox=Shapebox einfügen
+toolbar.shapelist.add_texrect_b=TexRect [Basic] einfügen
+toolbar.shapelist.add_texrect_a=TexRect [Erw.] einfügen
+toolbar.shapelist.add_cylinder=Cylinder einfügen
+toolbar.shapelist.add_group=Gruppe einfügen
+toolbar.shapelist.add_marker=Marker einfügen
+toolbar.shapelist=Shapeliste
+toolbar.textures.select=Textur Auswählen
+toolbar.textures.edit=Bearbeiten (External)
+toolbar.textures.remove=Entfernen
+toolbar.textures.texpos_reset=TexPos. Reset
+toolbar.textures.auto_position=Auto Position
+toolbar.textures.generate=Neu Generieren
+toolbar.textures=Textur
+toolbar.helpers.view=Liste Zeigen
+toolbar.helpers.load_fmtb=FMTB laden
+toolbar.helpers.load_frame=Rahmen laden
+toolbar.helpers.load_imported=Importieren
+toolbar.helpers.unload_clear=Alle Entfernen
+toolbar.helpers=Helfer
+toolbar.exit=Ende
 //
