@@ -4,7 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.wrappers.BoxWrapper;
-import net.fexcraft.app.fmt.wrappers.CollisionGridWrapper;
 import net.fexcraft.app.fmt.wrappers.CylinderWrapper;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.MarkerWrapper;
@@ -187,13 +186,6 @@ public class JsonToTMT {
 				marker.angle = JsonUtil.getIfExists(obj, "biped_angle", -90).intValue();
 				marker.scale = JsonUtil.getIfExists(obj, "biped_scale", 1f).floatValue();
 				polygon = marker; break;
-			}
-			case "collisiongrid":{
-				CollisionGridWrapper cuboid = new CollisionGridWrapper(compound);
-				cuboid.size.xCoord = get(width, obj, def);
-				cuboid.size.yCoord = get(height, obj, def);
-				cuboid.size.zCoord = get(depth, obj, def);
-				polygon = cuboid; break;
 			}
 		}
 		polygon.textureX = get(texturex, obj, idef);

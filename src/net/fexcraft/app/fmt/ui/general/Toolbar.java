@@ -322,13 +322,6 @@ public class Toolbar extends Element {
 								this.root.setVisible(false); return true;
 							}
 						}.setText(translate("toolbar.shapelist.add_marker", "Add Marker"), false));
-						/*this.elements.add(new Button(this, "add_collisiongrid", null, 20, 26, 0, 0){
-							@Override
-							protected boolean processButtonClick(int x, int y, boolean left){
-								FMTB.MODEL.add(new CollisionGridWrapper(FMTB.MODEL), null, true);
-								this.root.setVisible(false); return true;
-							}
-						}.setText("Add CollisionGrid", false));*///TODO remove
 					}
 				};
 				this.elements.add(menu);
