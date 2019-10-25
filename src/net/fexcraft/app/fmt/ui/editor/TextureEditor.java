@@ -23,12 +23,13 @@ public class TextureEditor extends Editor {
 
 	public TextureEditor(){
 		super("texture_editor", "editor"); this.setVisible(false);
-		this.elements.add((palette = new Container(this, "attributes", width - 4, 28, 4, 0, null)).setText("Palette / Color", false));
-		this.elements.add((brushes = new Container(this, "shape", width - 4, 28, 4, 0, null)).setText("Brushes / Tools", false));
+		this.elements.add((palette = new Container(this, "attributes", width - 4, 28, 4, 0, null)).setText(translate("editor.texture.palette.title", "Palette / Color"), false));
+		this.elements.add((brushes = new Container(this, "shape", width - 4, 28, 4, 0, null)).setText(translate("editor.texture.brushes.title", "Brushes / Tools"), false));
 		//
 		int passed = 0;
 		{//palette
-			palette.getElements().add(new Button(palette, "text0", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true).setText("R-G-B / HEX Color Input", false));
+			palette.getElements().add(new Button(palette, "text0", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true)
+				.setText(translate("editor.texture.palette.color_input", "R-G-B / HEX Color Input"), false));
 			passed += 24; for(int i = 0; i < 3; i++){ final int j = i;
 			palette.getElements().add(new TextField(palette, "texture_rgb" + i, "editor:field", 96, 4 + (i * 102), passed){
 					@Override public void updateNumberField(){ updateRGB(null, j); }
@@ -42,9 +43,11 @@ public class TextureEditor extends Editor {
 					catch(Exception e){ e.printStackTrace(); }
 				}
 			}.setText("null", true));
-			palette.getElements().add(new Button(palette, "text1", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true).setText("Large Color Palette", false));
+			palette.getElements().add(new Button(palette, "text1", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true)
+				.setText(translate("editor.texture.palette.large", "Large Color Palette"), false));
 			palette.getElements().add(new LargePallette(palette, 4, passed += 24));
-			palette.getElements().add(new Button(palette, "text2", "editor:title", 290, 20, 4, passed += 298, BLACK).setBackgroundless(true).setText("Horizontal Color Palette", false));
+			palette.getElements().add(new Button(palette, "text2", "editor:title", 290, 20, 4, passed += 298, BLACK).setBackgroundless(true)
+				.setText(translate("editor.texture.palette.horizontal", "Horizontal Color Palette"), false));
 			palette.getElements().add(new HorizontalPallette(palette, 4, passed += 24));
 			palette.getElements().add(new Button(palette, "text3_current_color", "editor:title", 300, 28, 4, passed += 44, (buttonhover = new RGB(CURRENTCOLOR)).packed){
 				@Override
@@ -52,46 +55,47 @@ public class TextureEditor extends Editor {
 					buttonhover.glColorApply(); this.renderSelfQuad(); RGB.glColorReset();
 					super.renderSelf(rw, rh);
 				}
-			}.setText("[ Current Color ]", true).setBackgroundless(true));
+			}.setText(translate("editor.texture.palette.current_color", "[ Current Color ]"), true).setBackgroundless(true));
 			//
 			updateFields(); palette.setExpanded(false); passed = 0;
 		}
 		{//brushes
+			translate("editor.texture.brushes.tool_on", "ON"); String off = translate("editor.texture.brushes.tool_off", "OFF");
 			button0 = new Button(brushes, "button0", "texture_editor:button", 290, 28, 4, passed += 32, buttonhover.packed){
 				@Override
 				protected boolean processButtonClick(int x, int y, boolean left){
 					toggleBucketMode(PaintMode.FACE); return true;
 				}
 			};
-			brushes.getElements().add(button0.setText("(Face) Paint Bucket [OFF]", true));
+			brushes.getElements().add(button0.setText(format("editor.texture.brushes.face_paintbucket", "(Face) Paint Bucket [%s]", off), true));
 			button1 = new Button(brushes, "button1", "texture_editor:button", 290, 28, 4, passed += 32, buttonhover.packed){
 				@Override
 				protected boolean processButtonClick(int x, int y, boolean left){
 					toggleBucketMode(PaintMode.POLYGON); return true;
 				}
 			};
-			brushes.getElements().add(button1.setText("(Polygon) Paint Bucket [OFF]", true));
+			brushes.getElements().add(button1.setText(format("editor.texture.brushes.polygon_paintbucket", "(Polygon) Paint Bucket [%s]", off), true));
 			button2 = new Button(brushes, "button2", "texture_editor:button", 290, 28, 4, passed += 32, buttonhover.packed){
 				@Override
 				protected boolean processButtonClick(int x, int y, boolean left){
 					toggleBucketMode(PaintMode.GROUP); return true;
 				}
 			};
-			brushes.getElements().add(button2.setText("(Group) Paint Bucket [OFF]", true));
+			brushes.getElements().add(button2.setText(format("editor.texture.brushes.group_paintbucket", "(Group) Paint Bucket [%s]", off), true));
 			button3 = new Button(brushes, "button3", "texture_editor:button", 290, 28, 4, passed += 32, buttonhover.packed){
 				@Override
 				protected boolean processButtonClick(int x, int y, boolean left){
 					toggleBucketMode(PaintMode.PIXEL); return true;
 				}
 			}.setIcon("icons/pencil", 32);
-			brushes.getElements().add(button3.setText("(Pixel) Paint Pencil [OFF]", true));
+			brushes.getElements().add(button3.setText(format("editor.texture.brushes.pixel_pencil", "(Pixel) Paint Pencil [%s]", off), true));
 			button4 = new Button(brushes, "button4", "texture_editor:button", 290, 28, 4, passed += 32, buttonhover.packed){
 				@Override
 				protected boolean processButtonClick(int x, int y, boolean left){
 					toggleBucketMode(PaintMode.COLORPICKER); return true;
 				}
 			};
-			brushes.getElements().add(button4.setText("Color Picker [OFF]", true));
+			brushes.getElements().add(button4.setText(format("editor.texture.brushes.color_picker", "Color Picker [%s]", off), true));
 			//
 			brushes.setExpanded(false); passed = 0;
 		}
@@ -134,11 +138,12 @@ public class TextureEditor extends Editor {
 
 	public static void toggleBucketMode(PaintMode mode){
 		if(mode == null){ BUCKETMODE = false; } else{ BUCKETMODE = PMODE == mode ? !BUCKETMODE : true; PMODE = mode; } //if(FMTB.get() == null) return;
-		button0.setText("(Face) Paint Bucket [" + (BUCKETMODE && PMODE == PaintMode.FACE ? "ON" : "OFF") + "]", true);
-		button1.setText("(Polygon) Paint Bucket [" + (BUCKETMODE && PMODE == PaintMode.POLYGON ? "ON" : "OFF") + "]", true);
-		button2.setText("(Group) Paint Bucket [" + (BUCKETMODE && PMODE == PaintMode.GROUP ? "ON" : "OFF") + "]", true);
-		button3.setText("(Pixel) Paint Pencil [" + (BUCKETMODE && PMODE == PaintMode.PIXEL ? "ON" : "OFF") + "]", true);
-		button4.setText("Color Picker [" + (BUCKETMODE && PMODE == PaintMode.COLORPICKER ? "ON" : "OFF") + "]", true);
+		String on = translate("editor.texture.brushes.tool_on", "ON"), off = translate("editor.texture.brushes.tool_off", "OFF");
+		button0.setText(format("editor.texture.brushes.face_paintbucket", "(Face) Paint Bucket [%s]", BUCKETMODE && PMODE == PaintMode.FACE ? on : off), true);
+		button1.setText(format("editor.texture.brushes.polygon_paintbucket", "(Polygon) Paint Bucket [%s]", BUCKETMODE && PMODE == PaintMode.POLYGON ? on : off), true);
+		button2.setText(format("editor.texture.brushes.group_paintbucket", "(Group) Paint Bucket [%s]", BUCKETMODE && PMODE == PaintMode.GROUP ? on : off), true);
+		button3.setText(format("editor.texture.brushes.pixel_pencil", "(Pixel) Paint Pencil [%s]", BUCKETMODE && PMODE == PaintMode.PIXEL ? on : off), true);
+		button4.setText(format("editor.texture.brushes.color_picker", "Color Picker [%s]", BUCKETMODE && PMODE == PaintMode.COLORPICKER ? on : off), true);
 	}
 	
 	public static class LargePallette extends Element {

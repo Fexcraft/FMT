@@ -100,3 +100,23 @@ editor.model_group.group.texture=Group Texture
 editor.model_group.group.add_animator=Add Animator
 editor.model_group.animations.title=Group Animations
 //
+editor.preview.container.title=General Settings
+editor.preview.container.position=Position (full units)
+editor.preview.container.rotation=Rotation (degrees)
+editor.preview.container.scale=Scale (OpenGL)
+editor.preview.container.scale16=Scale (16 x GL)
+//
+editor.texture.palette.title=Palette / Color
+editor.texture.palette.color_input=R-G-B / HEX Color Input
+editor.texture.palette.large=Large Color Palette
+editor.texture.palette.horizontal=Horizontal Color Palette
+editor.texture.palette.current_color=[ Current Color ]
+editor.texture.brushes.title=Brushes / Tools
+editor.texture.brushes.tool_on=ON
+editor.texture.brushes.tool_off=OFF
+editor.texture.brushes.face_paintbucket=(Face) Paint Bucket [%s]
+editor.texture.brushes.polygon_paintbucket=(Polygon) Paint Bucket [%s]
+editor.texture.brushes.group_paintbucket=(Group) Paint Bucket [%s]
+editor.texture.brushes.pixel_pencil=(Pixel) Paint Pencil [%s]
+editor.texture.brushes.color_picker=Color Picker [%s]
+//

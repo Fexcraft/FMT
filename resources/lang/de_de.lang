@@ -103,3 +103,23 @@ editor.model_group.group.texture=Gruppen Textur
 editor.model_group.group.add_animator=Animator hinzufügen
 editor.model_group.animations.title=Gruppen Animationen
 //
+editor.preview.container.title=Allgemeine Einstellungen
+editor.preview.container.position=Position (volle Einheiten)
+editor.preview.container.rotation=Rotation (Winkel Grad)
+editor.preview.container.scale=Größe (OpenGL)
+editor.preview.container.scale16=Größe (16 x GL)
+//
+editor.texture.palette.title=Palette / Farbe
+editor.texture.palette.color_input=R-G-B / HEX Farb Eingabe
+editor.texture.palette.large=Große Farb Palette
+editor.texture.palette.horizontal=Horizontale Farb Palette
+editor.texture.palette.current_color=[ Aktuelle Farbe ]
+editor.texture.brushes.title=Bürsten / Werkzeuge
+editor.texture.brushes.tool_on=AN
+editor.texture.brushes.tool_off=AUS
+editor.texture.brushes.face_paintbucket=(Seiten) Farbeimer [%s]
+editor.texture.brushes.polygon_paintbucket=(Polygon) Farbeimer [%s]
+editor.texture.brushes.group_paintbucket=(Gruppen) Farbeimer [%s]
+editor.texture.brushes.pixel_pencil=(Pixel) Farb Stift [%s]
+editor.texture.brushes.color_picker=Farbwähler [%s]
+//

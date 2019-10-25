@@ -14,32 +14,37 @@ public class PreviewEditor extends Editor {
 
 	public PreviewEditor(){
 		super("preview_editor", "editor"); this.setVisible(false); Container container = null;
-		this.elements.add((container = new Container(this, "container", width - 4, 28, 4, 0, null)).setText("General Settings", false));
+		this.elements.add((container = new Container(this, "container", width - 4, 28, 4, 0, null))
+			.setText(translate("editor.preview.container.title", "General Settings"), false));
 		//
 		int passed = 0;
 		{//container
-			container.getElements().add(new Button(container, "text0", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true).setText("Position (full units)", false));
+			container.getElements().add(new Button(container, "text0", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true)
+				.setText(translate("editor.preview.container.position", "Position (full units)"), false));
 			passed += 24; for(int i = 0; i < 3; i++){ final int j = i;
 				container.getElements().add(new TextField(container, "helper_pos" + xyz[i], "editor:field", 96, 4 + (i * 102), passed){
 					@Override public void updateNumberField(){ updatePos(this, j, null); }
 					@Override public boolean processScrollWheel(int wheel){ return updatePos(j, wheel > 0); }
 				}.setAsNumberfield(Integer.MIN_VALUE, Integer.MAX_VALUE, true, true));
 			}
-			container.getElements().add(new Button(container, "text1", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true).setText("Rotation (degrees)", false));
+			container.getElements().add(new Button(container, "text1", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true)
+				.setText(translate("editor.preview.container.rotation", "Rotation (degrees)"), false));
 			passed += 24; for(int i = 0; i < 3; i++){ final int j = i;
 				container.getElements().add(new TextField(container, "helper_rot" + xyz[i], "editor:field", 96, 4 + (i * 102), passed){
 					@Override public void updateNumberField(){ updateRot(this, j, null); }
 					@Override public boolean processScrollWheel(int wheel){ return updateRot(j, wheel > 0); }
 				}.setAsNumberfield(-360, 360, true, true));
 			}
-			container.getElements().add(new Button(container, "text2", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true).setText("Scale (OpenGL)", false));
+			container.getElements().add(new Button(container, "text2", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true)
+				.setText(translate("editor.preview.container.scale", "Scale (OpenGL)"), false));
 			passed += 24; for(int i = 0; i < 3; i++){ final int j = i;
 				container.getElements().add(new TextField(container, "helper_scale" + xyz[i], "editor:field", 96, 4 + (i * 102), passed){
 					@Override public void updateNumberField(){ updateScale(this, j, null); }
 					@Override public boolean processScrollWheel(int wheel){ return updateScale(j, wheel > 0); }
 				}.setAsNumberfield(Integer.MIN_VALUE, Integer.MAX_VALUE, true, true));
 			}
-			container.getElements().add(new Button(container, "text3", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true).setText("Scale (16 x GL)", false));
+			container.getElements().add(new Button(container, "text3", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true)
+				.setText(translate("editor.preview.container.scale16", "Scale (16 x GL)"), false));
 			passed += 24; for(int i = 0; i < 3; i++){ final int j = i;
 				container.getElements().add(new TextField(container, "helper_scale16" + xyz[i], "editor:field", 96, 4 + (i * 102), passed){
 					@Override public void updateNumberField(){ updateScale16(this, j, null); }
