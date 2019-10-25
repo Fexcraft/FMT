@@ -2,4 +2,30 @@
 # Usually up-to-date.
 # Author: FEX___96 (Ferdinand Calo')
 
-test.string.thing=SOME TEST ENTRY
+dialog.greeting.welcome=Welcome to FMT!<nl>[version:%s]
+dialog.greeting.newversion=New version available!<nl>%s >> %s
+dialog.greeting.confirm=ok
+dialog.greeting.update=update
+dialog.greeting.exit=exit
+//
+filechooser.default.confirm=OK
+filechooser.default.suggested=Suggested
+filechooser.default.cancel=Cancel
+//
+filechooser.import.title=Select file/model to import.
+filechooser.import.confirm=Import
+dialog.import.fail=No valid file choosen.<nl>Import is cancelled.
+dialog.import.nofile.confirm=ok..
+dialog.import.fail=Errors while importing Model.<nl>%s
+dialog.import.fail.confirm=ok.
+dialog.import.success=Import Complete.
+dialog.import.success.confirm=OK!
+//
+filechooser.export.title=Select Export Location
+filechooser.export.confirm=Export
+dialog.export.nofile=No valid file choosen.<nl>Export is cancelled.
+dialog.export.nofile.confirm=ok..
+dialog.export.success=Export complete.<nl>%s
+dialog.export.success.confirm=OK!
+dialog.export.fail=Errors while exporting Model.<nl>%s
+dialog.export.fail.confirm=ok.

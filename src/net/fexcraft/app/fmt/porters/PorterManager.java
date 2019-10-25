@@ -28,6 +28,7 @@ import net.fexcraft.app.fmt.ui.general.FileChooser.ChooserMode;
 import net.fexcraft.app.fmt.ui.general.FileChooser.FileRoot;
 import net.fexcraft.app.fmt.utils.SaveLoad;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
+import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.json.JsonUtil;
@@ -80,12 +81,14 @@ public class PorterManager {
 	}
 
 	public static void handleImport(){
-		UserInterface.FILECHOOSER.show(new String[]{ "Select file/model to import.", "Import" }, FileRoot.IMPORT, new AfterTask(){
+		UserInterface.FILECHOOSER.show(new String[]{ Translator.translate("filechooser.import.title", "Select file/model to import."),
+			Translator.translate("filechooser.import.confirm", "Import") }, FileRoot.IMPORT, new AfterTask(){
 			@Override
 			public void run(){
 				try{
 					if(file == null){
-						FMTB.showDialogbox("No valid file choosen.\nImport is cancelled.", "ok..", null, DialogBox.NOTHING, null);
+						FMTB.showDialogbox(Translator.translate("dialog.import.nofile", "No valid file choosen.<nl>Import is cancelled."),
+							Translator.translate("dialog.import.nofile.confirm", "ok.."), null, DialogBox.NOTHING, null);
 						return;
 					}
 					GroupCompound compound = null;
@@ -115,21 +118,24 @@ public class PorterManager {
 					FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
 				}
 				catch(Exception e){
-					FMTB.showDialogbox("Errors while importing Model.\n" + e.getLocalizedMessage(), "ok.", null, DialogBox.NOTHING, null);//TODO add "open console" as 2nd button
+					String str = Translator.format("dialog.import.fail", "Errors while importing Model.<nl>%s", e.getLocalizedMessage());
+					FMTB.showDialogbox(str, Translator.translate("dialog.import.fail.confirm", "ok."), null, DialogBox.NOTHING, null);//TODO add "open console" as 2nd button
 					e.printStackTrace();
 				}
-				FMTB.showDialogbox("Import complete.", "OK!", null, DialogBox.NOTHING, null);
+				FMTB.showDialogbox(Translator.translate("dialog.import.success", "Import complete."), Translator.translate("dialog.import.success.confirm", "OK!"), null, DialogBox.NOTHING, null);
 			}
 		}, ChooserMode.IMPORT);
 	}
 
 	public static void handleExport(){
-		UserInterface.FILECHOOSER.show(new String[]{ "Select Export Location", "Export" }, FileRoot.EXPORT, new AfterTask(){
+		UserInterface.FILECHOOSER.show(new String[]{ Translator.translate("filechooser.export.title", "Select Export Location"),
+			Translator.translate("filechooser.export.confirm", "Export") }, FileRoot.EXPORT, new AfterTask(){
 			@Override
 			public void run(){
 				try{
 					if(file == null){
-						FMTB.showDialogbox("No valid file choosen.\nExport is cancelled.", "ok..", null, DialogBox.NOTHING, null);
+						FMTB.showDialogbox(Translator.translate("dialog.export.nofile", "No valid file choosen.<nl>Export is cancelled."),
+							Translator.translate("dialog.export.nofile.confirm", "ok.."), null, DialogBox.NOTHING, null);
 						return;
 					} String result;
 					if(porter.isInternal()){
@@ -139,11 +145,13 @@ public class PorterManager {
 						Invocable inv = (Invocable)((ExternalPorter)porter).eval();
 						result = (String)inv.invokeFunction("exportModel", SaveLoad.modelToJTMT(null, true).toString(), file);
 					}
-					FMTB.showDialogbox("Export complete.\n" + result, "OK!", null, DialogBox.NOTHING, null);
+					FMTB.showDialogbox(Translator.format("dialog.export.success", "Export complete.<nl>%s", result),
+						Translator.translate("dialog.export.success.confirm", "OK!"), null, DialogBox.NOTHING, null);
 					Desktop.getDesktop().open(file.getParentFile());
 				}
 				catch(Exception e){
-					FMTB.showDialogbox("Errors while exporting Model.\n" + e.getLocalizedMessage(), "ok.", null, DialogBox.NOTHING, null);//TODO add "open console" as 2nd button
+					String str = Translator.format("dialog.export.fail", "Errors while exporting Model.<nl>%s", e.getLocalizedMessage());
+					FMTB.showDialogbox(str, Translator.translate("dialog.export.fail.confirm", "ok."), null, DialogBox.NOTHING, null);//TODO add "open console" as 2nd button
 					e.printStackTrace();
 				}
 			}

@@ -70,7 +70,7 @@ public class DialogBox extends Element implements Dialog {
 	 * */
 	public void show(String text, String b0_text, String b1_text, Runnable positive, Runnable negative){
 		this.reset(); this.positive = positive; this.negative = negative;
-		if(text == null) text = "no title"; this.text = text;
+		if(text == null) text = "no title"; this.text = text.replace("<nl>", "\n");
 		//
 		button0.setEnabled(positive != null); button1.setEnabled(negative != null);
 		button0.setVisible(positive != null); button1.setVisible(negative != null);

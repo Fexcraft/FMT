@@ -377,7 +377,10 @@ public class FMTB {
 					}
 				}
 				String newver = obj.get("latest_version").getAsString(); boolean bool = version.equals(newver);
-				UserInterface.DIALOGBOX.show(bool ? "Welcome to FMT!\n<version:" + version + ">" : "New version available!\n" + newver + " >> " + version, "ok", bool ? "exit" : "update", DialogBox.NOTHING, () -> {
+				String welcome = Translator.format("dialog.greeting.welcome", "Welcome to FMT!<nl><version:%s>", version);
+				String newversion = Translator.format("dialog.greeting.newversion", "New version available!<nl>%s >> %s", newver, version);
+				UserInterface.DIALOGBOX.show(bool ? welcome : newversion, Translator.translate("dialog.greeting.confirm", "ok"),
+					bool ? Translator.translate("dialog.greeting.exit", "exit") : Translator.translate("dialog.greeting.update", "update"), DialogBox.NOTHING, () -> {
 					if(bool){
 						SaveLoad.checkIfShouldSave(true, false);
 					}

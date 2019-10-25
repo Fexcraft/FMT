@@ -26,6 +26,7 @@ import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.utils.Settings.Type;
 import net.fexcraft.app.fmt.utils.StyleSheet;
+import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Time;
 import net.fexcraft.lib.common.utils.Print;
@@ -280,9 +281,9 @@ public class FileChooser extends Element implements Dialog {
 		//
 		this.title = ntext[0]; this.visible = true; this.mode = mode;
 		this.elements.forEach(elm -> { elm.setVisible(after != null); elm.setEnabled(after != null); });
-		sel[0].setText(ntext.length < 2 || ntext[1] == null ? "OK" : ntext[1], true);
-		sel[1].setText(ntext.length < 3 || ntext[2] == null ? "Suggested" : ntext[2], true);
-		sel[2].setText(ntext.length < 4 || ntext[3] == null ? "Cancel" : ntext[3], true);
+		sel[0].setText(ntext.length < 2 || ntext[1] == null ? Translator.translate("filechooser.default.confirm", "OK") : ntext[1], true);
+		sel[1].setText(ntext.length < 3 || ntext[2] == null ? Translator.translate("filechooser.default.suggested", "Suggested") : ntext[2], true);
+		sel[2].setText(ntext.length < 4 || ntext[3] == null ? Translator.translate("filechooser.default.cancel", "Cancel") : ntext[3], true);
 		sel[1].setEnabled(mode.exports() || mode.savefile_save()); cfn.setEnabled(sel[1].isEnabled()); this.onfile = after;
 		if(cfn.isEnabled()) cfn.setText(DCFNFC[0] + " " + DCFNFC[1] + " " +  DCFNFC[2] + " " + DCFNFC[3], false);
 		else cfn.setText("Please choose an existing file to proceed.", false);

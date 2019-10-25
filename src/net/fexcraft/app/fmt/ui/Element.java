@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL11;
 import net.fexcraft.app.fmt.utils.StyleSheet;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
+import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.lib.common.math.RGB;
 
 public class Element {
@@ -282,6 +283,14 @@ public class Element {
 
 	public Element getRoot(){
 		return root;
+	}
+	
+	public static String translate(String str, String fill){
+		return Translator.translate(str, fill);
+	}
+	
+	public static String format(String str, String fill, Object... objs){
+		return Translator.format(str, fill, objs);
 	}
 
 }
