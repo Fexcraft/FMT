@@ -36,7 +36,7 @@ public class FontRenderer {
 	private static boolean antialiens = true;
 	private static ArrayList<Character> CHARS = new ArrayList<>();
 	private static Font[] ALL = GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts();
-	public static String DEFAULT_CHARS = ".,!@#$%^&*()_+{};:'\"><?=-0987654321~`|/ ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+	public static String DEFAULT_CHARS = ".,!@#$%^&*()_+{};:'\"><?=-0987654321~`|\\/ ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 	
 	public static enum FontType {
 		
