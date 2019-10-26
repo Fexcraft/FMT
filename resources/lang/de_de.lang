@@ -210,3 +210,10 @@ modeltree.remove_polygon=Polygon entfernen?<nl>%s
 modeltree.remove_polygon.confirm=Ja
 modeltree.remove_polygon.cancel=Nein!
 //
+dialong.compound.change_type.not_found=Typ nicht gefunden!<nl>[%s]
+dialong.compound.change_type.not_found.cancel=ok
+dialog.compound.change_type.failed=%s vieleck(e) übersprungen!<nl>%s !> %s
+dialog.compound.change_type.failed.cancel=ok
+dialog.compound.delete_selected=Sollen alle Auserwählten<nl>gelöscht werden?
+dialog.compound.delete_selected.confirm=Ja!
+dialog.compound.delete_selected.cancel=Abbrechen!

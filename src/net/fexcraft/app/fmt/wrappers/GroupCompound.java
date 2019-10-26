@@ -21,6 +21,7 @@ import net.fexcraft.app.fmt.utils.RayCoastAway;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
+import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
 
@@ -531,7 +532,10 @@ public class GroupCompound {
 
 	public void changeTypeOfSelected(ArrayList<PolygonWrapper> selected, String text){
 		ShapeType type = ShapeType.get(text);
-		if(type == null){ FMTB.showDialogbox("Type not found!\n[" + text.toLowerCase() + "]", null, "ok", null, DialogBox.NOTHING); return; }
+		if(type == null){
+			String str = Translator.format("dialong.compound.change_type.not_found", "Type not found!<nl>[%s]", text.toLowerCase());
+			FMTB.showDialogbox(str, null, Translator.translate("dialog.compound.change_type.not_found.cancel", "ok"), null, DialogBox.NOTHING); return;
+		}
 		int failed = 0; ShapeType lastfail = null;
 		for(PolygonWrapper sel : selected){
 			if(sel.getType().getConversionGroup().equals(type.getConversionGroup())){
@@ -544,7 +548,8 @@ public class GroupCompound {
 			} else { failed++; lastfail = sel.getType(); }
 		}
 		if(failed > 0){
-			FMTB.showDialogbox(failed + " shape(s) skipped!\n" + type.name().toLowerCase() + " !> " + lastfail.name().toLowerCase(), null, "ok", null, DialogBox.NOTHING);
+			String string = Translator.format("dialog.compound.change_type.failed", "%s shape(s) skipped!<nl>%s !> %s", failed, type.name().toLowerCase(), lastfail.name().toLowerCase());
+			FMTB.showDialogbox(string, null, Translator.translate("dialog.compound.change_type.failed.cancel", "ok"), null, DialogBox.NOTHING);
 		}
 		this.updateFields();
 	}
@@ -616,7 +621,9 @@ public class GroupCompound {
 	}
 
 	public void deleteSelected(){
-		FMTB.showDialogbox("Are you sure to\ndelete all Selected?", "Yes!", "Cancel!", () -> {
+		String str = Translator.translate("dialog.compound.delete_selected", "Are you sure to<nl>delete all Selected?");
+		String yes = Translator.translate("dialog.compound.delete_selected.confirm", "Yes!");
+		FMTB.showDialogbox(str, yes, Translator.translate("dialog.compound.delete_selected.cancel", "Cancel!"), () -> {
 			ArrayList<PolygonWrapper> wrapp = this.getSelected();
 			for(PolygonWrapper wrapper : wrapp){
 				wrapper.getTurboList().remove(wrapper);
