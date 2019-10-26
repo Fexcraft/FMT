@@ -240,3 +240,20 @@ dialog.polygon_picker.paint_bucket.no_texture=Keine Textur geladen.<nl>Kann Farb
 dialog.polygon_picker.paint_bucket.no_texture.confirm=ok
 dialog.polygon_picker.paint_bucket.no_texture.cancel=ausschalten
 //
+saveload.filechooser.open=Wählen sie eine Datei zum öffnen.
+saveload.filechooser.open.confirm=Öffnen
+saveload.filechooser.open.nofile=Ungültige Modell Datei!<nl>(existiert sie überhaupt?)
+saveload.filechooser.open.nofile.confirm=ok.
+saveload.filechooser.open.errors=Fehler sind aufgetaucht<nl>beim lesen der Datei
+saveload.filechooser.open.errors.confirm=ok
+dialog.saveload.should_save=Soll das jetzige Modell erst<nl>gespeichert werden?
+dialog.saveload.should_save.confirm=Ja
+dialog.saveload.should_save.cancel=Nein
+saveload.filechooser.save=Wähle eine Ziel Datei aus.
+saveload.filechooser.save.confirm=Auswählen
+saveload.filechooser.save.nofile=Ausgewählte Datei ist 'null'!<nl>Modell wird nicht gespeichert.
+saveload.filechooser.save.nofile.confirm=OK
+saveload.filechooser.save.nofile.save=Speichern
+dialog.saveload.save.success=Modell gespeichert!
+dialog.saveload.save.success.confirm=ok!
+//

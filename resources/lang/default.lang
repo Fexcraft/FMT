@@ -236,3 +236,20 @@ dialog.polygon_picker.paint_bucket.no_texture=No Texture loaded.<nl>Cannot use P
 dialog.polygon_picker.paint_bucket.no_texture.confirm=ok
 dialog.polygon_picker.paint_bucket.no_texture.cancel=toggle off
 //
+saveload.filechooser.open=Select file to open.
+saveload.filechooser.open.confirm=Open
+saveload.filechooser.open.nofile=Invalid Model File!<nl>(does it even exists?)
+saveload.filechooser.open.nofile.confirm=ok.
+saveload.filechooser.open.errors=Errors occured<nl>while parsing save file
+saveload.filechooser.open.errors.confirm=ok
+dialog.saveload.should_save=Do you want to save the<nl>current model first?
+dialog.saveload.should_save.confirm=Yes
+dialog.saveload.should_save.cancel=No
+saveload.filechooser.save=Select save location.
+saveload.filechooser.save.confirm=Select
+saveload.filechooser.save.nofile=Model save file is 'null'!<nl>Model will not be saved.
+saveload.filechooser.save.nofile.confirm=OK
+saveload.filechooser.save.nofile.save=Save
+dialog.saveload.save.success=Model Saved!
+dialog.saveload.save.success.confirm=ok!
+//
