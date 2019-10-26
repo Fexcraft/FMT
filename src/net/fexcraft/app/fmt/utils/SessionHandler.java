@@ -4,9 +4,7 @@ import java.io.File;
 
 import com.google.gson.JsonObject;
 
-import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.general.Bottombar;
-import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.lib.common.json.JsonUtil;
 import net.fexcraft.lib.common.utils.HttpUtil;
 import net.fexcraft.lib.common.utils.Print;
@@ -64,7 +62,7 @@ public class SessionHandler {
 		}
 		else if(retry){
 			if(!first) load(); Print.console("Trying to re-login...");
-			if(tryLogin(false)){ checkIfLoggedIn(false, false); }
+			if(tryLogin(/*false*/)){ checkIfLoggedIn(false, false); }
 			if(!loggedin){
 				Print.console("Relogin seems to have failed.");
 				userid = -1; username = "Guest";
@@ -80,7 +78,7 @@ public class SessionHandler {
 		return sessionid == null ? null : new String[]{ "JSESSIONID=" + sessionid };
 	}
 	
-	public static boolean tryLogin(boolean show){
+	public static boolean tryLogin(/*boolean show*/){
 		try{
 			//TODO http :: find solution with the certs javax can't process
 			JsonObject obj = HttpUtil.request("http://fexcraft.net/session/api.jsp", "r=login&m=" + usermail + "&p=" + hashpw + "&nossl" + (encrypted ? "&encrypted" : ""), getCookieArr());
@@ -90,13 +88,13 @@ public class SessionHandler {
 				Print.console("Updated Session ID to: " + sessionid);
 			}
 			loggedin = obj.has("success") && obj.get("success").getAsBoolean();
-			if(show){
+			/*if(show){
 				FMTB.showDialogbox((loggedin ? "Logged in!" : obj.has("status") ? obj.get("status").getAsString() : "No Status MSG.") + 
 					"api:success=" + loggedin, "ok!", "retry", DialogBox.NOTHING, () -> {
 						SessionHandler.checkIfLoggedIn(true, false);
 					}
 				);
-			}
+			}*/
 			//else{ Print.console(obj.toString()); }
 			return true;
 		}
