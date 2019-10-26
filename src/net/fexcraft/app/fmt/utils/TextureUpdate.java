@@ -59,25 +59,34 @@ public class TextureUpdate extends TimerTask {
 			String tx = (list == null ? FMTB.MODEL.textureSizeX : list.textureX) + "x," + texX + "xs";
 			String ty = (list == null ? FMTB.MODEL.textureSizeY : list.textureY) + "y," + texY + "ys";
 			if(texX > 4096 || texY > 4096){
-				UserInterface.DIALOGBOX.show(String.format("Exceeding 4096 pixel!\n[%s], [%s]\nTexture Cache NOT updated.", tx, ty), "OK,", null, DialogBox.NOTHING, null);
+				String str = Translator.format("dialog.texture_update.resize.exceeding_4096", "Exceeding 4096 pixel!<nl>[%s], [%s]<nl>Texture Cache NOT updated.", tx,ty);
+				UserInterface.DIALOGBOX.show(str, Translator.translate("dialog.texture_update.resize.exceeding_4096.confirm", "OK,"), null, DialogBox.NOTHING, null);
 				return;
 			}
 			texture.resize(texX, texY, 0x00ffffff); TextureManager.saveTexture(FMTB.MODEL.texture);
 			if(list == null) FMTB.MODEL.recompile(); else list.recompile(); updateLastEdit(Time.getDate());
-			UserInterface.DIALOGBOX.show(String.format("Resized!\n[%s], [%s]", tx, ty), "Good!", null, DialogBox.NOTHING, null);
+			String str = Translator.format("dialog.texture_update.resize.success", "Resized!<nl>[%s], [%s]", tx, ty);
+			UserInterface.DIALOGBOX.show(str, Translator.translate("dialog.texture_update.resize.success.confirm", "Good!"), null, DialogBox.NOTHING, null);
 		}
 		else return;
 	}
 
 	public static void tryAutoPos(Boolean bool){
 		if(bool == null){
-			FMTB.showDialogbox("This process may mark\nFMT as not responding.", "ok", "cancel", () -> {
+			String str = Translator.translate("dialog.texture_update.auto_positioner.info", "This process may mark<nl>FMT as not responding.");
+			String ok = Translator.translate("dialog.texture_update.auto_positioner.info.confirm", "ok");
+			FMTB.showDialogbox(str, ok, Translator.translate("dialog.texture_update.auto_positioner.info.cancel", "cancel"), () -> {
 				Runnable ZERO = () -> { HALT = false; ALL = false; };
 				Runnable AALL = () -> { HALT = false; ALL = true;  };
-				FMTB.showDialogbox("Use save-space mode?\nMay reduce readability.", "Yes", "No", () -> {
-					SAVESPACE = true; FMTB.showDialogbox("Only process polygons with\n0, 0 texture pos?", "Yes", "No (All)", ZERO, AALL);
+				String str0 = Translator.translate("dialog.texture_update.auto_positioner.save_space", "Use save-space mode?<nl>May reduce readability.");
+				String yes = Translator.translate("dialog.texture_update.auto_positioner.save_space.confirm", "Yes");
+				String str1 = Translator.translate("dialog.texture_update.auto_positioner.only_00", "Only process polygons with<nl>0, 0 texture pos?");
+				String yes0 = Translator.translate("dialog.texture_update.auto_positioner.only_00.confirm", "Yes");
+				String noall = Translator.translate("dialog.texture_update.auto_positioner.only_00.cancel", "No (All)");
+				FMTB.showDialogbox(str0, yes, Translator.translate("dialog.texture_update.auto_positioner.save_space.cancel", "No"), () -> {
+					SAVESPACE = true; FMTB.showDialogbox(str1, yes0, noall, ZERO, AALL);
 				}, () -> {
-					SAVESPACE = false; FMTB.showDialogbox("Only process polygons with\n0, 0 texture pos?", "Yes", "No (All)", ZERO, AALL);
+					SAVESPACE = false; FMTB.showDialogbox(str1, yes0, noall, ZERO, AALL);
 				});
 			}, DialogBox.NOTHING);
 			return;
@@ -93,11 +102,14 @@ public class TextureUpdate extends TimerTask {
 		}
 		try{
 			if(HALT || last < 0 || last >= list.size()){
-				FMTB.showDialogbox("Auto texture positioning\nComplete!", "Good!", null, DialogBox.NOTHING, null);
+				String str = Translator.translate("dialog.texture_update.auto_positioner.complete", "Auto texture positioning<nl>Complete!");
+				FMTB.showDialogbox(str, Translator.translate("dialog.texture_update.auto_positioner.complete.confirm", "Good!"), null, DialogBox.NOTHING, null);
 				last = (HALT = (list = null) == null) ? -1 : 0; image = null; return;
 			}
 			PolygonWrapper wrapper = list.get(last); last++;
-			FMTB.showDialogbox("Processing: " + (per = getPercent(last, list.size())) + "%\n" + wrapper.getTurboList().id + ":" + wrapper.name(), null, null, null, null, per, null);
+			String str = Translator.format("dialog.texture_update.auto_positioner.processing", "Processing: %s percent<nl>%s:%s",
+				per = getPercent(last, list.size()), wrapper.getTurboList().id, wrapper.name());
+			FMTB.showDialogbox(str, null, null, null, null, per, null);
 			if(wrapper.texpos == null || wrapper.texpos.length == 0){ Print.console("skipping1 [" + wrapper.getTurboList().id + ":" + wrapper.name() + "]"); return; }
 			if(wrapper.textureX != 0f && wrapper.textureY != 0f && !ALL){
 				Print.console("skipping0 [" + wrapper.getTurboList().id + ":" + wrapper.name() + "]");

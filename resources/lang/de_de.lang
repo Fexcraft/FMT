@@ -257,3 +257,20 @@ saveload.filechooser.save.nofile.save=Speichern
 dialog.saveload.save.success=Modell gespeichert!
 dialog.saveload.save.success.confirm=ok!
 //
+dialog.texture_update.resize.exceeding_4096=Größe überschreitet 4096 pixel!<nl>[%s], [%s]<nl>Textur Cache NICHT geupdated.
+dialog.texture_update.resize.exceeding_4096.confirm=OK,
+dialog.texture_update.resize.success=Größe geändert!<nl>[%s], [%s]
+dialog.texture_update.resize.success.confirm=Gut!
+dialog.texture_update.auto_positioner.info=Dieser Prozess könnte FMT<nl>als "reagiert nicht" makieren.
+dialog.texture_update.auto_positioner.info.confirm=Ok
+dialog.texture_update.auto_positioner.info.cancel=Abbrechen
+dialog.texture_update.auto_positioner.save_space="Save-Space" Modus verwenden?<nl>Könnte weniger lesbar sein.
+dialog.texture_update.auto_positioner.save_space.confirm=Ja
+dialog.texture_update.auto_positioner.save_space.cancel=Nein
+dialog.texture_update.auto_positioner.only_00=Nur Vielecke mit 0, 0<nl>textur pos. verarbeiten?
+dialog.texture_update.auto_positioner.only_00.confirm=Ja
+dialog.texture_update.auto_positioner.only_00.cancel=Nein (Alle)
+dialog.texture_update.auto_positioner.complete="Auto Textur Positionierer"<nl>- ist Fertig.
+dialog.texture_update.auto_positioner.complete.confirm=Gut!
+dialog.texture_update.auto_positioner.processing=Verarbeitet: %s Prozent<nl>%s:%s
+//

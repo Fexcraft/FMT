@@ -253,3 +253,20 @@ saveload.filechooser.save.nofile.save=Save
 dialog.saveload.save.success=Model Saved!
 dialog.saveload.save.success.confirm=ok!
 //
+dialog.texture_update.resize.exceeding_4096=Exceeding 4096 pixel!<nl>[%s], [%s]<nl>Texture Cache NOT updated.
+dialog.texture_update.resize.exceeding_4096.confirm=OK,
+dialog.texture_update.resize.success=Resized!\n[%s], [%s]
+dialog.texture_update.resize.success.confirm=Good!
+dialog.texture_update.auto_positioner.info=This process may mark<nl>FMT as not responding.
+dialog.texture_update.auto_positioner.info.confirm=ok
+dialog.texture_update.auto_positioner.info.cancel=cancel
+dialog.texture_update.auto_positioner.save_space=Use save-space mode?<nl>May reduce readability.
+dialog.texture_update.auto_positioner.save_space.confirm=Yes
+dialog.texture_update.auto_positioner.save_space.cancel=No
+dialog.texture_update.auto_positioner.only_00=Only process polygons with<nl>0, 0 texture pos?
+dialog.texture_update.auto_positioner.only_00.confirm=Yes
+dialog.texture_update.auto_positioner.only_00.cancel=No (All)
+dialog.texture_update.auto_positioner.complete=Auto texture positioning<nl>Complete!
+dialog.texture_update.auto_positioner.complete.confirm=Good!
+dialog.texture_update.auto_positioner.processing=Processing: %s percent<nl>%s:%s
+//
