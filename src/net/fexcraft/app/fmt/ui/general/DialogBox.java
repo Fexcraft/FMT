@@ -77,7 +77,11 @@ public class DialogBox extends Element implements Dialog {
 		button0.setText(button0.isVisible() ? b0_text : "", true);
 		button1.setText(button1.isVisible() ? b1_text : "", true);
 		//
-		this.height = 128; this.width = 256; this.visible = true;
+		int width = FontRenderer.getWidth(this.text, FontType.BOLD);
+		if(width + 40 > 256) this.width = width + 40;
+		else this.width = 256; this.height = 128; this.visible = true;
+		//
+		button1.setPosition(this.width - button1.width - 20, button1.yrel);
 	}
 
 	public boolean onClick(boolean positive){
