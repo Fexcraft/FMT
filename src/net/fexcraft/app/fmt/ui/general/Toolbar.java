@@ -468,7 +468,8 @@ public class Toolbar extends Element {
 	private void realign(){
 		int start = 4, high = 3;
 		for(Element elm : elements){
-			if(start + elm.width >= width - 4){ start = 4; high += 34; }
+			if(elm.getId().equals("exit") && start + elm.width >= width - 4){ elm.setVisible(false); continue; }
+			if(start + elm.width >= width - 4){ start = 4; high += 34; } elm.setVisible(true);
 			elm.setPosition(start, elm instanceof Icon ? high - 2 : high); start += elm.width + 2;
 		}
 		this.height = high + 31; for(Element elm : elements) elm.repos();

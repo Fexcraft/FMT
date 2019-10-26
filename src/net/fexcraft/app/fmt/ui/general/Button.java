@@ -61,6 +61,10 @@ public class Button extends Element {
 			if(this.root.width - 4 < this.width) this.root.width = this.width + 4;
 			if(this.width + 4 < this.root.width) this.width = this.root.width - 4;
 		}
+		if(root instanceof Toolbar){
+			int length = FontRenderer.getWidth(text, FontType.BOLD);
+			if(length + 8 > width) width = length + 8;
+		}
 		return this;
 	}
 
