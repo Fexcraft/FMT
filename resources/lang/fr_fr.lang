@@ -2,7 +2,8 @@
 # This WILL have grammatical mistakes, please PR with corrections. (I am not a native French speaker)
 # Author: GoldSloth
 
-DEFAULT_CHARS = àéÉèçê
+DEFAULT_CHARS = àéÉèçêù
+
 dialog.greeting.welcome=Bienvenue à FMT!<nl>[version:%s]
 dialog.greeting.newversion=Une nouveau version est disponsible<nl>%s >> %s
 dialog.greeting.confirm=ok
@@ -136,10 +137,10 @@ dialog.editor.model_group.group.animator.not_found=Animation pas trouvé!
 dialog.editor.model_group.group.animator.not_found.confirm=Ok
 editor.model_group.group.animator_settings=Animation Options
 //
-bottombar:polygons=Polygons: Polygones
-bottombar:selected=Selected: Choisi
-bottombar:groups=Groups: Groupes
-bottombar:frames=FPS: FPS
+bottombar:polygons=Polygones: 
+bottombar:selected=Choisi: 
+bottombar:groups=Groupes: 
+bottombar:frames=FPS: 
 bottombar.netfield.loggedin=Connecté - %s
 bottombar.netfield.loggedout=Pas Connecté - GUEST
 bottombar.netfield.login_failed=Connecté échoué - GUEST
