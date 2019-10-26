@@ -206,10 +206,22 @@ modeltree.remove_polygon=Remove this polygon?<nl>%s
 modeltree.remove_polygon.confirm=Yes
 modeltree.remove_polygon.cancel=No!
 //
-dialong.compound.change_type.not_found=Type not found!<nl>[%s]
-dialong.compound.change_type.not_found.cancel=ok
-dialog.compound.change_type.failed=%s shape(s) skipped!<nl>%s !> %s
+dialog.compound.change_type.not_found=Type not found!<nl>[%s]
+dialog.compound.change_type.not_found.cancel=ok
+dialog.compound.change_dialog.helper_collector.nofiletype.failed=%s shape(s) skipped!<nl>%s !> %s
 dialog.compound.change_type.failed.cancel=ok
 dialog.compound.delete_selected=Are you sure to<nl>delete all Selected?
 dialog.compound.delete_selected.confirm=Yes!
 dialog.compound.delete_selected.cancel=Cancel!
+//
+dialog.helper_collector.load_fmtb.nofile=Invalid Model File!<nl>(does it even exists?)
+dialog.helper_collector.load_fmtb.nofile.confirm=ok.
+dialog.helper_collector.load_fmtb.invalid_file=Invalid Model File<nl>model.jtmt missing.
+dialog.helper_collector.load_fmtb.invalid_file.confirm=ok.
+dialog.helper_collector.load_fmtb.errors=Errors occured<nl>while parsing save file
+dialog.helper_collector.load_fmtb.errors.confirm=ok
+dialog.helper_collector.load_frame.nofile=Invalid Image File!<nl>(does it even exists?)
+dialog.helper_collector.load_frame.nofile.confirm=ok.
+dialog.helper_collector.load_frame.errors=Errors occured<nl>while creating frame.
+dialog.helper_collector.load_frame.errors.confirm=ok
+//

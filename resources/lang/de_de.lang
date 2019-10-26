@@ -210,10 +210,22 @@ modeltree.remove_polygon=Polygon entfernen?<nl>%s
 modeltree.remove_polygon.confirm=Ja
 modeltree.remove_polygon.cancel=Nein!
 //
-dialong.compound.change_type.not_found=Typ nicht gefunden!<nl>[%s]
-dialong.compound.change_type.not_found.cancel=ok
+dialog.compound.change_type.not_found=Typ nicht gefunden!<nl>[%s]
+dialog.compound.change_type.not_found.cancel=ok
 dialog.compound.change_type.failed=%s vieleck(e) übersprungen!<nl>%s !> %s
 dialog.compound.change_type.failed.cancel=ok
 dialog.compound.delete_selected=Sollen alle Auserwählten<nl>gelöscht werden?
 dialog.compound.delete_selected.confirm=Ja!
 dialog.compound.delete_selected.cancel=Abbrechen!
+//
+dialog.helper_collector.load_fmtb.nofile=Ungültige Modell Datei!<nl>(existiert sie überhaupt?)
+dialog.helper_collector.load_fmtb.nofile.confirm=ok.
+dialog.helper_collector.load_fmtb.invalid_file=Ungültige Modell Datei!<nl>model.jtmt fehlt
+dialog.helper_collector.load_fmtb.invalid_file.confirm=ok.
+dialog.helper_collector.load_fmtb.errors=Fehler sind aufgetaucht<nl>beim lesen der Datei
+dialog.helper_collector.load_fmtb.errors.confirm=ok
+dialog.helper_collector.load_frame.nofile=Ungültige Bild Datei!<nl>(existiert sie überhaupt?)
+dialog.helper_collector.load_frame.nofile.confirm=ok.
+dialog.helper_collector.load_frame.errors=Fehler sind aufgetaucht<nl>beim erstellen des Rahmens
+dialog.helper_collector.load_frame.errors.confirm=ok
+//

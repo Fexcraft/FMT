@@ -58,7 +58,8 @@ public class HelperCollector {
 	/** For loading FMTBs.*/
 	public static GroupCompound loadFMTB(File file){
 		if(file == null || !file.exists()){
-			FMTB.showDialogbox("Invalid Model File!\n(does it even exists?)", "ok.", null, DialogBox.NOTHING, null);
+			String str = Translator.translate("dialog.helper_collector.load_fmtb.nofile", "Invalid Model File!<nl>(does it even exists?)");
+			FMTB.showDialogbox(str, Translator.translate("dialog.helper_collector.load_fmtb.nofile.confirm", "ok."), null, DialogBox.NOTHING, null);
 			return null;
 		}
 		GroupCompound compound = null;
@@ -70,7 +71,8 @@ public class HelperCollector {
 				if(!compound.name.startsWith("fmtb/")) compound.name = "fmtb/" + compound.name;
 			}
 			else{
-				FMTB.showDialogbox("Invalid Model File\nmodel.jtmt missing.", "ok.", null, DialogBox.NOTHING, null);
+				String str = Translator.translate("dialog.helper_collector.load_fmtb.invalid_file", "Invalid Model File<nl>model.jtmt missing.");
+				FMTB.showDialogbox(str, Translator.translate("dialog.helper_collector.load_fmtb.invalid_file.confirm", "ok."), null, DialogBox.NOTHING, null);
 				zip.close(); return null;
 			}
 			if(conT){
@@ -79,8 +81,8 @@ public class HelperCollector {
 			} zip.close();
 		}
 		catch(Exception e){
-			e.printStackTrace();
-			FMTB.showDialogbox("Errors occured\nwhile parsing save file", "ok", null, DialogBox.NOTHING, null);
+			e.printStackTrace(); String str = Translator.translate("dialog.helper_collector.load_fmtb.errors", "Errors occured<nl>while parsing save file");
+			FMTB.showDialogbox(str, Translator.translate("dialog.helper_collector.load_fmtb.errors.confirm", "ok"), null, DialogBox.NOTHING, null);
 		}
 		if(compound != null){ LOADED.add(compound); }
 		compound.clearSelection(); compound.getGroups().forEach(list -> list.button.setAsHelperPreview()); return compound;
@@ -88,7 +90,8 @@ public class HelperCollector {
 
 	public static GroupCompound loadFrame(File file){
 		if(file == null || !file.exists()){
-			FMTB.showDialogbox("Invalid Image File!\n(does it even exists?)", "ok.", null, DialogBox.NOTHING, null);
+			String str = Translator.translate("dialog.helper_collector.load_frame.nofile", "Invalid Image File!<nl>(does it even exists?)");
+			FMTB.showDialogbox(str, Translator.translate("dialog.helper_collector.load_frame.nofile.confirm", "ok."), null, DialogBox.NOTHING, null);
 			return null;
 		}
 		GroupCompound compound = null;
@@ -124,8 +127,8 @@ public class HelperCollector {
 			compound.add(polygon, "frame", true);
 		}
 		catch(Exception e){
-			e.printStackTrace();
-			FMTB.showDialogbox("Errors occured\nwhile creating frame.", "ok", null, DialogBox.NOTHING, null);
+			e.printStackTrace(); String str = Translator.translate("dialog.helper_collector.load_frame.errors", "Errors occured<nl>while creating frame.");
+			FMTB.showDialogbox(str, Translator.translate("dialog.helper_collector.load_frame.errors.confirm", "ok"), null, DialogBox.NOTHING, null);
 		}
 		if(compound != null){ LOADED.add(compound); }
 		compound.clearSelection(); return compound;

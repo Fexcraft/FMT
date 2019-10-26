@@ -533,7 +533,7 @@ public class GroupCompound {
 	public void changeTypeOfSelected(ArrayList<PolygonWrapper> selected, String text){
 		ShapeType type = ShapeType.get(text);
 		if(type == null){
-			String str = Translator.format("dialong.compound.change_type.not_found", "Type not found!<nl>[%s]", text.toLowerCase());
+			String str = Translator.format("dialog.compound.change_type.not_found", "Type not found!<nl>[%s]", text.toLowerCase());
 			FMTB.showDialogbox(str, null, Translator.translate("dialog.compound.change_type.not_found.cancel", "ok"), null, DialogBox.NOTHING); return;
 		}
 		int failed = 0; ShapeType lastfail = null;
