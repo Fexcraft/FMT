@@ -6,13 +6,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.Display;
 
 import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.editor.Editor;
-import net.fexcraft.app.fmt.ui.generic.DialogBox;
+import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.lib.common.json.JsonUtil;
 
 public class KeyCompound {
@@ -61,47 +60,35 @@ public class KeyCompound {
 		keys.add(new KeyFunction("toggle_lighting", Keyboard.KEY_F8, true){
 			@Override public boolean process(){ Settings.toggleLighting(); return true; }
 		});
+		keys.add(new KeyFunction("toggle_animations", Keyboard.KEY_F9, true){
+			@Override public boolean process(){ Settings.toggleAnimations(); return true; }
+		});
 		//
-		keys.add(new KeyFunction("toggle_fullscreen", Keyboard.KEY_F11, true){
+		/*keys.add(new KeyFunction("toggle_gametest", Keyboard.KEY_F10, true){
+			@Override public boolean process(){ FMTB.GAMETEST = !FMTB.GAMETEST; return true; }
+		});*/
+		//
+		/*keys.add(new KeyFunction("toggle_fullscreen", Keyboard.KEY_F11, true){
 			@Override public boolean process(){
             	try{ Display.setFullscreen(Settings.toogleFullscreen()); }
     			catch(Exception ex){ ex.printStackTrace(); } return true;
 			}
-		});
+		});*/
 		keys.add(new KeyFunction("take_screenshot", Keyboard.KEY_F12, true){
 			@Override public boolean process(){
 				ImageHelper.takeScreenshot(false);
-            	FMTB.showDialogbox("Screenshot taken.", "", "OK", "Open", DialogBox.NOTHING, () -> {
+            	FMTB.showDialogbox("Screenshot taken.", "OK", "Open", DialogBox.NOTHING, () -> {
             		try{ Desktop.getDesktop().open(new File("./screenshots/")); }
             		catch(IOException e){ e.printStackTrace(); }
             	}); return true;
 			}
 		});
 		//
-		keys.add(new KeyFunction("toggle_general_editor", Keyboard.KEY_1, true){
-			@Override public boolean process(){ Editor.toggle("general_editor", true); return true; }
-		});
-		keys.add(new KeyFunction("toggle_shapebox_editor", Keyboard.KEY_2, true){
-			@Override public boolean process(){ Editor.toggle("shapebox_editor", false); return true; }
-		});
-		keys.add(new KeyFunction("toggle_cylinder_editor", Keyboard.KEY_3, true){
-			@Override public boolean process(){ Editor.toggle("cylinder_editor", false); return true; }
-		});
-		keys.add(new KeyFunction("toggle_group_editor", Keyboard.KEY_4, true){
-			@Override public boolean process(){ Editor.toggle("group_editor", true); return true; }
-		});
-		keys.add(new KeyFunction("toggle_model_editor", Keyboard.KEY_5, true){
-			@Override public boolean process(){ Editor.toggle("model_editor", true); return true; }
-		});
-		keys.add(new KeyFunction("toggle_texrectb_editor", Keyboard.KEY_6, true){
-			@Override public boolean process(){ Editor.toggle("texrectb_editor", false); return true; }
-		});
-		keys.add(new KeyFunction("toggle_texrecta_editor", Keyboard.KEY_7, true){
-			@Override public boolean process(){ Editor.toggle("texrecta_editor", false); return true; }
-		});
-		keys.add(new KeyFunction("toggle_texture_editor", Keyboard.KEY_8, true){
-			@Override public boolean process(){ Editor.toggle("texture_editor", false); return true; }
-		});
+		for(int i = 0; i < 9; i++){ final int j = i;
+			keys.add(new KeyFunction("toggle_editor_" + i, Keyboard.KEY_1 + i, true){
+				@Override public boolean process(){ Editor.toggleContainer(j); return true; }
+			});
+		}
 		//
 		keys.add(new KeyFunction("camera_rotate_left", Keyboard.KEY_LEFT, true){
 			@Override public boolean process(){ FMTB.ggr.rotation.yCoord += 15; return true; }
@@ -122,6 +109,20 @@ public class KeyCompound {
 		keys.add(new KeyFunction("raypick", Keyboard.KEY_T, true){
 			@Override public boolean process(){ RayCoastAway.doTest(true); return true; } /* for debugging, or such */
 		});
+		/*keys.add(new KeyFunction("return", Keyboard.KEY_RETURN, true){
+			@Override public boolean process(){
+				if(UserInterface.DIALOGBOX.isVisible()){
+					UserInterface.DIALOGBOX.onClick(true); return true;
+				} return false;
+			}
+		});
+		keys.add(new KeyFunction("return", Keyboard.KEY_BACK, true){
+			@Override public boolean process(){
+				if(UserInterface.DIALOGBOX.isVisible()){
+					UserInterface.DIALOGBOX.onClick(false); return true;
+				} return false;
+			}
+		});*/
 		//sorting
 		pressed_keys.clear(); released_keys.clear();
 		for(KeyFunction func : keys){

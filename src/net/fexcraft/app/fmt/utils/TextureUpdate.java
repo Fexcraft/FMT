@@ -8,7 +8,8 @@ import java.util.TimerTask;
 import java.util.stream.Collectors;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.generic.DialogBox;
+import net.fexcraft.app.fmt.ui.UserInterface;
+import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
@@ -46,36 +47,53 @@ public class TextureUpdate extends TimerTask {
 		lastedit = date; return;
 	}
 
-	public static void updateSizes(){
-		Texture texture = TextureManager.getTexture(FMTB.MODEL.texture, true);
+	public static void updateSize(TurboList list){
+		Texture texture = TextureManager.getTexture(list == null ? FMTB.MODEL.texture : list.getGroupTexture(), true);
 		if(texture == null || texture.getImage() == null) return;
 		BufferedImage image = texture.getImage();
-		if(image.getWidth() != FMTB.MODEL.textureX || image.getHeight() != FMTB.MODEL.textureY){
-			if(image.getWidth() > FMTB.MODEL.textureX && image.getWidth() % FMTB.MODEL.textureX == 0
-				&& image.getHeight() > FMTB.MODEL.textureY && image.getHeight() % FMTB.MODEL.textureY == 0) return;
-			texture.resize(FMTB.MODEL.textureX, FMTB.MODEL.textureY, 0x00ffffff);
-			TextureManager.saveTexture(FMTB.MODEL.texture); FMTB.MODEL.recompile();
-			updateLastEdit(Time.getDate());
+		int texX = list == null ? FMTB.MODEL.textureSizeX : list.textureX;
+		int texY = list == null ? FMTB.MODEL.textureSizeY : list.textureY;
+		int texS = list == null ? FMTB.MODEL.textureScale : list.textureS;
+		for(int i = 1; i < texS; i++){ Print.console(texX + " * 2"); texX *= 2; texY *= 2; Print.console(" = " + texX);  }
+		if(image.getWidth() != texX || image.getHeight() != texY){
+			String tx = (list == null ? FMTB.MODEL.textureSizeX : list.textureX) + "x," + texX + "xs";
+			String ty = (list == null ? FMTB.MODEL.textureSizeY : list.textureY) + "y," + texY + "ys";
+			if(texX > 4096 || texY > 4096){
+				String str = Translator.format("dialog.texture_update.resize.exceeding_4096", "Exceeding 4096 pixel!<nl>[%s], [%s]<nl>Texture Cache NOT updated.", tx,ty);
+				UserInterface.DIALOGBOX.show(str, Translator.translate("dialog.texture_update.resize.exceeding_4096.confirm", "OK,"), null, DialogBox.NOTHING, null);
+				return;
+			}
+			texture.resize(texX, texY, 0x00ffffff); TextureManager.saveTexture(FMTB.MODEL.texture);
+			if(list == null) FMTB.MODEL.recompile(); else list.recompile(); updateLastEdit(Time.getDate());
+			String str = Translator.format("dialog.texture_update.resize.success", "Resized!<nl>[%s], [%s]", tx, ty);
+			UserInterface.DIALOGBOX.show(str, Translator.translate("dialog.texture_update.resize.success.confirm", "Good!"), null, DialogBox.NOTHING, null);
 		}
 		else return;
 	}
 
 	public static void tryAutoPos(Boolean bool){
 		if(bool == null){
-			FMTB.showDialogbox("This process may mark", "FMT as not responding.", "ok", "cancel", () -> {
+			String str = Translator.translate("dialog.texture_update.auto_positioner.info", "This process may mark<nl>FMT as not responding.");
+			String ok = Translator.translate("dialog.texture_update.auto_positioner.info.confirm", "ok");
+			FMTB.showDialogbox(str, ok, Translator.translate("dialog.texture_update.auto_positioner.info.cancel", "cancel"), () -> {
 				Runnable ZERO = () -> { HALT = false; ALL = false; };
 				Runnable AALL = () -> { HALT = false; ALL = true;  };
-				FMTB.showDialogbox("Use save-space mode?", "May reduce readability.", "Yes", "No", () -> {
-					SAVESPACE = true; FMTB.showDialogbox("Only process polygons with", "0, 0 texture pos?", "Yes", "No (All)", ZERO, AALL);
+				String str0 = Translator.translate("dialog.texture_update.auto_positioner.save_space", "Use save-space mode?<nl>May reduce readability.");
+				String yes = Translator.translate("dialog.texture_update.auto_positioner.save_space.confirm", "Yes");
+				String str1 = Translator.translate("dialog.texture_update.auto_positioner.only_00", "Only process polygons with<nl>0, 0 texture pos?");
+				String yes0 = Translator.translate("dialog.texture_update.auto_positioner.only_00.confirm", "Yes");
+				String noall = Translator.translate("dialog.texture_update.auto_positioner.only_00.cancel", "No (All)");
+				FMTB.showDialogbox(str0, yes, Translator.translate("dialog.texture_update.auto_positioner.save_space.cancel", "No"), () -> {
+					SAVESPACE = true; FMTB.showDialogbox(str1, yes0, noall, ZERO, AALL);
 				}, () -> {
-					SAVESPACE = false; FMTB.showDialogbox("Only process polygons with", "0, 0 texture pos?", "Yes", "No (All)", ZERO, AALL);
+					SAVESPACE = false; FMTB.showDialogbox(str1, yes0, noall, ZERO, AALL);
 				});
 			}, DialogBox.NOTHING);
 			return;
 		} HALT = false; ALL = bool;
 		//
 		if(list == null){
-			list = getSortedList(ALL); last = 0; image = new BufferedImage(FMTB.MODEL.textureX, FMTB.MODEL.textureY, BufferedImage.TYPE_INT_ARGB);
+			list = getSortedList(ALL); last = 0; image = new BufferedImage(FMTB.MODEL.tx(null), FMTB.MODEL.ty(null), BufferedImage.TYPE_INT_ARGB);
 			for(int i = 0; i < image.getWidth(); i++){
 				for(int j = 0; j < image.getHeight(); j++){
 					image.setRGB(i, j, Color.WHITE.getRGB());
@@ -84,19 +102,22 @@ public class TextureUpdate extends TimerTask {
 		}
 		try{
 			if(HALT || last < 0 || last >= list.size()){
-				FMTB.showDialogbox("Auto texture positioning", "Complete!", "Good!", null, DialogBox.NOTHING, null);
+				String str = Translator.translate("dialog.texture_update.auto_positioner.complete", "Auto texture positioning<nl>Complete!");
+				FMTB.showDialogbox(str, Translator.translate("dialog.texture_update.auto_positioner.complete.confirm", "Good!"), null, DialogBox.NOTHING, null);
 				last = (HALT = (list = null) == null) ? -1 : 0; image = null; return;
 			}
 			PolygonWrapper wrapper = list.get(last); last++;
-			FMTB.showDialogbox("Processing: " + (per = getPercent(last, list.size())) + "%", wrapper.getTurboList().id + ":" + wrapper.name(), null, null, null, null, per, null);
+			String str = Translator.format("dialog.texture_update.auto_positioner.processing", "Processing: %s percent<nl>%s:%s",
+				per = getPercent(last, list.size()), wrapper.getTurboList().id, wrapper.name());
+			FMTB.showDialogbox(str, null, null, null, null, per, null);
 			if(wrapper.texpos == null || wrapper.texpos.length == 0){ Print.console("skipping1 [" + wrapper.getTurboList().id + ":" + wrapper.name() + "]"); return; }
 			if(wrapper.textureX != 0f && wrapper.textureY != 0f && !ALL){
 				Print.console("skipping0 [" + wrapper.getTurboList().id + ":" + wrapper.name() + "]");
 				wrapper.burnToTexture(image, null); Thread.sleep(10); return;
 			}
 			//
-			for(int yar = 0; yar < FMTB.MODEL.textureY; yar++){
-				for(int xar = 0; xar < FMTB.MODEL.textureX; xar++){
+			for(int yar = 0; yar < FMTB.MODEL.ty(null); yar++){
+				for(int xar = 0; xar < FMTB.MODEL.tx(null); xar++){
 					if(check(wrapper.texpos, xar, yar)){
 						Print.console("[" + wrapper.getTurboList().id + ":" + wrapper.name() + "] >> " + xar + "x, " + yar + "y;");
 						wrapper.textureX = xar; wrapper.textureY = yar; wrapper.recompile(); wrapper.burnToTexture(image, null); Thread.sleep(10);
@@ -137,7 +158,7 @@ public class TextureUpdate extends TimerTask {
 	
 	private static ArrayList<PolygonWrapper> getSortedList(boolean all){
 		ArrayList<PolygonWrapper> arrlist = new ArrayList<>();
-		for(TurboList list : FMTB.MODEL.getCompound().values()){ arrlist.addAll(list); }
+		for(TurboList list : FMTB.MODEL.getGroups()){ arrlist.addAll(list); }
 		arrlist.sort(new java.util.Comparator<PolygonWrapper>(){
 			@Override
 			public int compare(PolygonWrapper left, PolygonWrapper righ){

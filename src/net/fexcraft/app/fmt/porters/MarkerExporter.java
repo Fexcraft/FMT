@@ -5,10 +5,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager.InternalPorter;
+import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.MarkerWrapper;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
@@ -21,21 +23,22 @@ import net.fexcraft.app.fmt.wrappers.TurboList;
  */
 public class MarkerExporter extends InternalPorter {
 	
-	private static final String[] extensions = new String[]{ ".txt" };
+	private static final String[] extensions = new String[]{ ".txt", ".json" };
+	//private static final ArrayList<Setting> settings = new ArrayList<>();
 	
 	public MarkerExporter(){}
 
 	@Override
-	public GroupCompound importModel(File file){
+	public GroupCompound importModel(File file, Map<String, Setting> settings){
 		return null;
 	}
 
 	@Override
-	public String exportModel(GroupCompound compound, File file){
+	public String exportModel(GroupCompound compound, File file, Map<String, Setting> settings){
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("# FMT Marker List // FMT version: " + FMTB.version + "\n");
 		buffer.append("# Model: " + (compound.name == null ? "unnamed" : compound.name.toLowerCase()) + "\n\n");
-		for(TurboList list : compound.getCompound().values()){
+		for(TurboList list : compound.getGroups()){
 			List<PolygonWrapper> coll = list.stream().filter(pre -> pre instanceof MarkerWrapper).collect(Collectors.toList());
 			if(!coll.isEmpty()){
 				buffer.append("# Group: " + list.id + "\n");
@@ -64,7 +67,7 @@ public class MarkerExporter extends InternalPorter {
 
 	@Override
 	public String getName(){
-		return "Marker List Exporter";
+		return "MarkerList/Collbox Exporter";
 	}
 
 	@Override
@@ -80,6 +83,11 @@ public class MarkerExporter extends InternalPorter {
 	@Override
 	public boolean isExporter(){
 		return true;
+	}
+
+	@Override
+	public List<Setting> getSettings(boolean export){
+		return nosettings;
 	}
 
 }

@@ -89,5 +89,10 @@ public class FlexboxWrapper extends BoxWrapper {
             default:case "MR_TOP":{return ModelRendererTurbo.MR_TOP;}
         }
     }
+
+	@Override
+	public PolygonWrapper convertTo(ShapeType type){
+		return type == this.getType() ? this.clone() : null;
+	}
 	
 }

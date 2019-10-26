@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.zip.ZipFile;
 
 import javax.imageio.ImageIO;
@@ -14,7 +15,8 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.porters.PorterManager.ExternalPorter;
 import net.fexcraft.app.fmt.porters.PorterManager.InternalPorter;
-import net.fexcraft.app.fmt.ui.generic.DialogBox;
+import net.fexcraft.app.fmt.ui.general.DialogBox;
+import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.TexrectWrapperA;
 import net.fexcraft.lib.common.json.JsonUtil;
@@ -29,66 +31,77 @@ public class HelperCollector {
 		LOADED.clear(); File root = new File("./helpers"); if(!root.exists()) root.mkdirs();
 	}
 	
-	public static final void load(File file, ExImPorter exim){
-		if(file == null || exim == null) return;
+	public static final GroupCompound load(File file, ExImPorter exim, Map<String, Setting> settings){
+		if(file == null || exim == null) return null;
 		Print.console("Loading Preview/Helper model: " + file.getName());
 		if(exim.isInternal()){
-			LOADED.add(((InternalPorter)exim).importModel(file));
+			GroupCompound compound = ((InternalPorter)exim).importModel(file, settings);
+			if(!compound.name.startsWith("import/")){ compound.name = "import/" + compound.name; }
+			compound.getGroups().forEach(list -> list.button.setAsHelperPreview()); 
+			LOADED.add(compound); compound.clearSelection(); return compound;
 		}
 		else{
 			try{
 				Invocable inv = (Invocable)((ExternalPorter)exim).eval();
 				String result = (String)inv.invokeFunction("importModel", file);
-				LOADED.add(SaveLoad.getModel(JsonUtil.getObjectFromString(result), false));
+				GroupCompound compound = SaveLoad.getModel(file, JsonUtil.getObjectFromString(result), false);
+				if(!compound.name.startsWith("import/")){ compound.name = "import/" + compound.name; }
+				compound.getGroups().forEach(list -> list.button.setAsHelperPreview()); 
+				LOADED.add(compound); compound.clearSelection(); return compound;
 			}
 			catch(FileNotFoundException | ScriptException | NoSuchMethodException e){
-				e.printStackTrace();
+				e.printStackTrace(); return null;
 			}
 		}
 	}
 
 	/** For loading FMTBs.*/
-	public static void loadFMTB(File file){
+	public static GroupCompound loadFMTB(File file){
 		if(file == null || !file.exists()){
-			FMTB.showDialogbox("Invalid Model File!", "(does it even exists?)", "ok.", null, DialogBox.NOTHING, null);
-			return;
+			String str = Translator.translate("dialog.helper_collector.load_fmtb.nofile", "Invalid Model File!<nl>(does it even exists?)");
+			FMTB.showDialogbox(str, Translator.translate("dialog.helper_collector.load_fmtb.nofile.confirm", "ok."), null, DialogBox.NOTHING, null);
+			return null;
 		}
 		GroupCompound compound = null;
 		try{
 			boolean conM = ZipUtil.contains(file, "model.jtmt"), conT = ZipUtil.contains(file, "texture.png");
 			ZipFile zip = new ZipFile(file);
 			if(conM){
-				compound = SaveLoad.getModel(JsonUtil.getObjectFromInputStream(zip.getInputStream(zip.getEntry("model.jtmt"))), false);
+				compound = SaveLoad.getModel(file, JsonUtil.getObjectFromInputStream(zip.getInputStream(zip.getEntry("model.jtmt"))), false);
+				if(!compound.name.startsWith("fmtb/")) compound.name = "fmtb/" + compound.name;
 			}
 			else{
-				FMTB.showDialogbox("Invalid Model File", "model.jtmt missing.", "ok.", null, DialogBox.NOTHING, null);
-				zip.close(); return;
+				String str = Translator.translate("dialog.helper_collector.load_fmtb.invalid_file", "Invalid Model File<nl>model.jtmt missing.");
+				FMTB.showDialogbox(str, Translator.translate("dialog.helper_collector.load_fmtb.invalid_file.confirm", "ok."), null, DialogBox.NOTHING, null);
+				zip.close(); return null;
 			}
 			if(conT){
-				TextureManager.loadTextureFromZip(zip.getInputStream(zip.getEntry("texture.png")), "temp/" + compound.name, true);
-				compound.setTexture("temp/" + compound.name);
+				TextureManager.loadTextureFromZip(zip.getInputStream(zip.getEntry("texture.png")), "./temp/" + compound.name, false, true);
+				compound.setTexture("./temp/" + compound.name);
 			} zip.close();
 		}
 		catch(Exception e){
-			e.printStackTrace();
-			FMTB.showDialogbox("Errors occured", "while parsing save file", "ok", null, DialogBox.NOTHING, null);
+			e.printStackTrace(); String str = Translator.translate("dialog.helper_collector.load_fmtb.errors", "Errors occured<nl>while parsing save file");
+			FMTB.showDialogbox(str, Translator.translate("dialog.helper_collector.load_fmtb.errors.confirm", "ok"), null, DialogBox.NOTHING, null);
 		}
 		if(compound != null){ LOADED.add(compound); }
+		compound.clearSelection(); compound.getGroups().forEach(list -> list.button.setAsHelperPreview()); return compound;
 	}
 
-	public static void loadFrame(File file){
+	public static GroupCompound loadFrame(File file){
 		if(file == null || !file.exists()){
-			FMTB.showDialogbox("Invalid Image File!", "(does it even exists?)", "ok.", null, DialogBox.NOTHING, null);
-			return;
+			String str = Translator.translate("dialog.helper_collector.load_frame.nofile", "Invalid Image File!<nl>(does it even exists?)");
+			FMTB.showDialogbox(str, Translator.translate("dialog.helper_collector.load_frame.nofile.confirm", "ok."), null, DialogBox.NOTHING, null);
+			return null;
 		}
 		GroupCompound compound = null;
 		try{
 			BufferedImage image = ImageIO.read(file);
-			TextureManager.loadTextureFromZip(image, "temp/frame/" + file.getName(), false);
-			compound = new GroupCompound(); compound.getCompound().clear();
-			compound.name = "frame/" + file.getName();
-			compound.texture = "temp/frame/" + file.getName();
-			compound.textureX = image.getWidth(); compound.textureY = image.getHeight();
+			TextureManager.loadTextureFromZip(image, "./temp/frame/" + file.getName(), false, false);
+			compound = new GroupCompound(file); compound.getGroups().clear();
+			compound.file = file; if(!compound.name.startsWith("frame/")) compound.name = "frame/" + file.getName();
+			compound.texture = "./temp/frame/" + file.getName();
+			compound.textureSizeX = image.getWidth(); compound.textureSizeY = image.getHeight();
 			TexrectWrapperA polygon = new TexrectWrapperA(compound);
 			polygon.size.xCoord = image.getWidth(); polygon.size.yCoord = image.getHeight(); polygon.size.zCoord = 0.2f;
 			polygon.texcor[4][0] = image.getWidth();
@@ -114,10 +127,11 @@ public class HelperCollector {
 			compound.add(polygon, "frame", true);
 		}
 		catch(Exception e){
-			e.printStackTrace();
-			FMTB.showDialogbox("Errors occured", "while creating frame.", "ok", null, DialogBox.NOTHING, null);
+			e.printStackTrace(); String str = Translator.translate("dialog.helper_collector.load_frame.errors", "Errors occured<nl>while creating frame.");
+			FMTB.showDialogbox(str, Translator.translate("dialog.helper_collector.load_frame.errors.confirm", "ok"), null, DialogBox.NOTHING, null);
 		}
 		if(compound != null){ LOADED.add(compound); }
+		compound.clearSelection(); return compound;
 	}
 
 }

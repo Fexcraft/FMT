@@ -1,10 +1,10 @@
 package net.fexcraft.app.fmt.utils;
 
 import java.io.File;
+
 import com.google.gson.JsonObject;
 
-import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.generic.DialogBox;
+import net.fexcraft.app.fmt.ui.general.Bottombar;
 import net.fexcraft.lib.common.json.JsonUtil;
 import net.fexcraft.lib.common.utils.HttpUtil;
 import net.fexcraft.lib.common.utils.Print;
@@ -50,6 +50,7 @@ public class SessionHandler {
 			if(obj.has("banned") && obj.get("banned").getAsBoolean()){
 				Print.console("Banned account detected, causing a commotion.");
 				System.exit(-1); System.exit(1); System.exit(1);
+				Bottombar.updateLoginState("BAN-N-NED");
 			}
 		}
 		if(loggedin){
@@ -57,14 +58,19 @@ public class SessionHandler {
 			obj = HttpUtil.request("http://fexcraft.net/session/api.jsp", "r=username&nossl&id=" + userid, getCookieArr());
 			if(obj.has("name")) username = obj.get("name").getAsString();
 			Print.console("Username updated to: " + username);
+			Bottombar.updateLoginState(Translator.format("bottombar.netfield.loggedin", "Logged In - %s", username));
 		}
 		else if(retry){
 			if(!first) load(); Print.console("Trying to re-login...");
-			if(tryLogin(false)){ checkIfLoggedIn(false, false); }
+			if(tryLogin(/*false*/)){ checkIfLoggedIn(false, false); }
 			if(!loggedin){
 				Print.console("Relogin seems to have failed.");
 				userid = -1; username = "Guest";
+				Bottombar.updateLoginState(Translator.translate("bottombar.netfield.login_failed", "Login Failed - GUEST"));
 			}
+		}
+		else{
+			Bottombar.updateLoginState(Translator.translate("bottombar.netfield.loggedout", "Logged Out - GUEST"));
 		}
 	}
 	
@@ -72,7 +78,7 @@ public class SessionHandler {
 		return sessionid == null ? null : new String[]{ "JSESSIONID=" + sessionid };
 	}
 	
-	public static boolean tryLogin(boolean show){
+	public static boolean tryLogin(/*boolean show*/){
 		try{
 			//TODO http :: find solution with the certs javax can't process
 			JsonObject obj = HttpUtil.request("http://fexcraft.net/session/api.jsp", "r=login&m=" + usermail + "&p=" + hashpw + "&nossl" + (encrypted ? "&encrypted" : ""), getCookieArr());
@@ -82,13 +88,13 @@ public class SessionHandler {
 				Print.console("Updated Session ID to: " + sessionid);
 			}
 			loggedin = obj.has("success") && obj.get("success").getAsBoolean();
-			if(show){
-				FMTB.showDialogbox(loggedin ? "Logged in!" : obj.has("status") ? obj.get("status").getAsString() : "No Status MSG.",
+			/*if(show){
+				FMTB.showDialogbox((loggedin ? "Logged in!" : obj.has("status") ? obj.get("status").getAsString() : "No Status MSG.") + 
 					"api:success=" + loggedin, "ok!", "retry", DialogBox.NOTHING, () -> {
 						SessionHandler.checkIfLoggedIn(true, false);
 					}
 				);
-			}
+			}*/
 			//else{ Print.console(obj.toString()); }
 			return true;
 		}

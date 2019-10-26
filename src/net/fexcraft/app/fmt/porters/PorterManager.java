@@ -7,7 +7,10 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
@@ -15,14 +18,19 @@ import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.UserInterface;
-import net.fexcraft.app.fmt.ui.generic.DialogBox;
-import net.fexcraft.app.fmt.ui.generic.FileChooser.AfterTask;
-import net.fexcraft.app.fmt.ui.generic.FileChooser.ChooserMode;
+import net.fexcraft.app.fmt.ui.general.DialogBox;
+import net.fexcraft.app.fmt.ui.general.FileChooser.AfterTask;
+import net.fexcraft.app.fmt.ui.general.FileChooser.ChooserMode;
+import net.fexcraft.app.fmt.ui.general.FileChooser.FileRoot;
 import net.fexcraft.app.fmt.utils.SaveLoad;
+import net.fexcraft.app.fmt.utils.Settings.Setting;
+import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
+import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.json.JsonUtil;
 
 /**
@@ -48,6 +56,7 @@ public class PorterManager {
 						porter.extensions = ((ScriptObjectMirror)inv.invokeFunction("getExtensions")).to(String[].class);
 						porter.importer = (boolean)inv.invokeFunction("isImporter");
 						porter.exporter = (boolean)inv.invokeFunction("isExporter");
+						porter.settings = new ArrayList<>();//TODO
 						porters.put(porter.id, porter);
 					}
 					catch(Exception e){
@@ -58,17 +67,13 @@ public class PorterManager {
 		}
 		//
 		porters.add(new MTBImporter());
-		porters.add(new FVTMExporter(false, false));
-		porters.add(new FVTMExporter(true, false));
-		porters.add(new FVTMExporter(false, true));
-		porters.add(new FVTMExporter(true, true));
+		porters.add(new FVTMExporter());
 		porters.add(new OBJPreviewImporter());
-		porters.add(new JTMTPorter(false));
-		porters.add(new JTMTPorter(true));
-		porters.add(new PNGExporter(true));
-		porters.add(new PNGExporter(false));
+		porters.add(new JTMTPorter());
+		porters.add(new PNGExporter());
 		porters.add(new OBJPrototypeExporter());
 		porters.add(new MarkerExporter());
+		porters.add(new TiMExporter());
 	}
 
 	private static ScriptEngine newEngine(){
@@ -76,54 +81,77 @@ public class PorterManager {
 	}
 
 	public static void handleImport(){
-		UserInterface.FILECHOOSER.show(new String[]{ "Select file/model to import.", "Import" }, new File("./models"), new AfterTask(){
+		UserInterface.FILECHOOSER.show(new String[]{ Translator.translate("filechooser.import.title", "Select file/model to import."),
+			Translator.translate("filechooser.import.confirm", "Import") }, FileRoot.IMPORT, new AfterTask(){
 			@Override
 			public void run(){
 				try{
 					if(file == null){
-						FMTB.showDialogbox("No valid file choosen.", "Import is cancelled.", "ok..", null, DialogBox.NOTHING, null);
+						FMTB.showDialogbox(Translator.translate("dialog.import.nofile", "No valid file choosen.<nl>Import is cancelled."),
+							Translator.translate("dialog.import.nofile.confirm", "ok.."), null, DialogBox.NOTHING, null);
 						return;
 					}
+					GroupCompound compound = null;
 					if(porter.isInternal()){
-						FMTB.MODEL = ((InternalPorter)porter).importModel(file);
-						FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
+						compound = ((InternalPorter)porter).importModel(file, mapped_settings);
 					}
 					else{
 						Invocable inv = (Invocable)((ExternalPorter)porter).eval();
 						String result = (String) inv.invokeFunction("importModel", file);
-						SaveLoad.loadModel(JsonUtil.getObjectFromString(result));
+						compound = SaveLoad.parseModel(file, JsonUtil.getObjectFromString(result));
 					}
+					if(mapped_settings.get("integrate").getBooleanValue()){
+						for(String creator : compound.creators){
+							if(!FMTB.MODEL.creators.contains(creator)){
+								FMTB.MODEL.creators.add(creator);
+							}
+						}
+						for(TurboList list : compound.getGroups()){
+							String name = compound.name + "_" + list.id;
+							while(FMTB.MODEL.getGroups().contains(name)){
+								name += "_"; if(name.length() > 64) break;
+							}
+							FMTB.MODEL.getGroups().add(list);
+						}
+					}
+					else FMTB.MODEL = compound;
+					FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
 				}
 				catch(Exception e){
-					FMTB.showDialogbox("Errors while importing Model.", e.getLocalizedMessage(), "ok.", null, DialogBox.NOTHING, null);//TODO add "open console" as 2nd button
+					String str = Translator.format("dialog.import.fail", "Errors while importing Model.<nl>%s", e.getLocalizedMessage());
+					FMTB.showDialogbox(str, Translator.translate("dialog.import.fail.confirm", "ok."), null, DialogBox.NOTHING, null);//TODO add "open console" as 2nd button
 					e.printStackTrace();
 				}
-				FMTB.showDialogbox("Import complete.", null, "OK!", null, DialogBox.NOTHING, null);
+				FMTB.showDialogbox(Translator.translate("dialog.import.success", "Import complete."), Translator.translate("dialog.import.success.confirm", "OK!"), null, DialogBox.NOTHING, null);
 			}
 		}, ChooserMode.IMPORT);
 	}
 
 	public static void handleExport(){
-		UserInterface.FILECHOOSER.show(new String[]{ "Select Export Location", "Export" }, new File("./models"), new AfterTask(){
+		UserInterface.FILECHOOSER.show(new String[]{ Translator.translate("filechooser.export.title", "Select Export Location"),
+			Translator.translate("filechooser.export.confirm", "Export") }, FileRoot.EXPORT, new AfterTask(){
 			@Override
 			public void run(){
 				try{
 					if(file == null){
-						FMTB.showDialogbox("No valid file choosen.", "Export is cancelled.", "ok..", null, DialogBox.NOTHING, null);
+						FMTB.showDialogbox(Translator.translate("dialog.export.nofile", "No valid file choosen.<nl>Export is cancelled."),
+							Translator.translate("dialog.export.nofile.confirm", "ok.."), null, DialogBox.NOTHING, null);
 						return;
 					} String result;
 					if(porter.isInternal()){
-						result = ((InternalPorter)porter).exportModel(FMTB.MODEL, file);
+						result = ((InternalPorter)porter).exportModel(FMTB.MODEL, file, mapped_settings);
 					}
 					else{
 						Invocable inv = (Invocable)((ExternalPorter)porter).eval();
 						result = (String)inv.invokeFunction("exportModel", SaveLoad.modelToJTMT(null, true).toString(), file);
 					}
-					FMTB.showDialogbox("Export complete.", result, "OK!", null, DialogBox.NOTHING, null);
+					FMTB.showDialogbox(Translator.format("dialog.export.success", "Export complete.<nl>%s", result),
+						Translator.translate("dialog.export.success.confirm", "OK!"), null, DialogBox.NOTHING, null);
 					Desktop.getDesktop().open(file.getParentFile());
 				}
 				catch(Exception e){
-					FMTB.showDialogbox("Errors while exporting Model.", e.getLocalizedMessage(), "ok.", null, DialogBox.NOTHING, null);//TODO add "open console" as 2nd button
+					String str = Translator.format("dialog.export.fail", "Errors while exporting Model.<nl>%s", e.getLocalizedMessage());
+					FMTB.showDialogbox(str, Translator.translate("dialog.export.fail.confirm", "ok."), null, DialogBox.NOTHING, null);//TODO add "open console" as 2nd button
 					e.printStackTrace();
 				}
 			}
@@ -151,6 +179,7 @@ public class PorterManager {
 		public String id, name;
 		public String[] extensions;
 		public boolean importer, exporter;
+		private ArrayList<Setting> settings;
 		
 		/**
 		 * @return new ScriptEngine instance with this porter loaded
@@ -180,6 +209,11 @@ public class PorterManager {
 		
 		@Override
 		public boolean isExporter(){ return exporter; }
+
+		@Override
+		public ArrayList<Setting> getSettings(boolean export){
+			return settings;
+		}
 		
 	}
 	
@@ -203,16 +237,20 @@ public class PorterManager {
 				if(pre.getName().endsWith(str)) return true;
 			return false;
 		}
+
+		public abstract List<Setting> getSettings(boolean export);
 		
 	}
 	
 	public static abstract class InternalPorter extends ExImPorter {
 		
+		protected static final List<Setting> nosettings = Collections.unmodifiableList(new ArrayList<>());
+		
 		/** @return new groupcompound based on data in the file */
-		public abstract GroupCompound importModel(File file);
+		public abstract GroupCompound importModel(File file, Map<String, Setting> settings);
 		
 		/** @return result/status text; */
-		public abstract String exportModel(GroupCompound compound, File file);
+		public abstract String exportModel(GroupCompound compound, File file, Map<String, Setting> settings);
 		
 		@Override
 		public boolean isInternal(){ return true; }

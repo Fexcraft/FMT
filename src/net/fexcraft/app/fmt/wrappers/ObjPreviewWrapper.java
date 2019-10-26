@@ -29,14 +29,14 @@ public class ObjPreviewWrapper extends PolygonWrapper {
 		try{
 			String str[][] = WavefrontObjUtil.findValues(new FileInputStream(source), "# FlipAxes:");
 			boolean bool = str.length == 0 ? false : Boolean.parseBoolean(str[0][0]);
-			return new ModelRendererTurbo(null, textureX, textureY, compound.textureX, compound.textureY)
+			return new ModelRendererTurbo(null, textureX, textureY, compound.tx(getTurboList()), compound.ty(getTurboList()))
 				.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
 				.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord)
 				.addObj(new FileInputStream(source), null, bool);//this.source.toString()
 		}
 		catch(Exception e){
 			e.printStackTrace();
-			return new ModelRendererTurbo(null, textureX, textureY, compound.textureX, compound.textureY)
+			return new ModelRendererTurbo(null, textureX, textureY, compound.tx(getTurboList()), compound.ty(getTurboList()))
 				.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
 				.addSphere(-8, -8, -8, 16, 16, 16, 1, 1);
 		}
@@ -56,6 +56,11 @@ public class ObjPreviewWrapper extends PolygonWrapper {
 	@Override
 	protected float[][][] newTexturePosition(){
 		return new float[0][][];
+	}
+
+	@Override
+	public PolygonWrapper convertTo(ShapeType type){
+		return type == this.getType() ? this.clone() : null;
 	}
 	
 }

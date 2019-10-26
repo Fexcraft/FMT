@@ -8,6 +8,8 @@ import org.lwjgl.opengl.GL11;
 import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
+import net.fexcraft.app.fmt.ui.tree.ModelTree;
+import net.fexcraft.app.fmt.ui.tree.RightTree.PolygonButton;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
@@ -16,7 +18,7 @@ import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public abstract class PolygonWrapper {
 	
-	protected static final ModelRendererTurbo rotmarker = new ModelRendererTurbo(null, 0, 0, 16, 16).addSphere(0, 0, 0, 0.5f, 8, 8, 0, 0).setTextured(false).setColor(Settings.selectedColor);
+	protected static final ModelRendererTurbo rotmarker = new ModelRendererTurbo(null, 0, 0, 16, 16).addBox(-.25f, -.25f, -.25f, .5f, .5f, .5f).setTextured(false).setColor(Settings.getSelectedColor());
 	private static final ModelRendererTurbo something = new ModelRendererTurbo(null, 0, 0, 16, 16).setTextured(false);
 	//
 	public Vec3f pos = new Vec3f(), off = new Vec3f(), rot = new Vec3f();
@@ -31,9 +33,11 @@ public abstract class PolygonWrapper {
 	public boolean selected;
 	public int[] color;
 	public String name;
+	//
+	public PolygonButton button;
 	
 	public PolygonWrapper(GroupCompound compound){
-		this.compound = compound;
+		this.compound = compound; button = new PolygonButton(ModelTree.TREE, this);
 	}
 	
 	public void recompile(){
@@ -151,9 +155,9 @@ public abstract class PolygonWrapper {
 	}
 	
 	protected void setupMRT(){
-		turbo = newMRT().setTextured(compound.texture != null);
+		turbo = newMRT().setTextured(compound.texture != null || (getTurboList() != null && getTurboList().getGroupTexture() != null));
 		lines = newMRT().setLines(true);
-		sellines = newMRT().setLines(Settings.selectedColor);
+		sellines = newMRT().setLines(Settings.getSelectedColor());
 		//
 		picker = new ModelRendererTurbo(null, 0, 0, 16, 16){
 			@Override
@@ -207,13 +211,14 @@ public abstract class PolygonWrapper {
 					bool = this.setFloat(id, x, y, z, value);
 				} break;
 			}
-			case "cyl0": case "cyl1": case "cyl2": case "cyl3":{
+			case "cyl0": case "cyl1": case "cyl2": case "cyl3": case "cyl4": case "cyl5": case "cyl6":{
 				if(this.getType().isCylinder()){
 					bool = this.setFloat(id, x, y, z, value);
 				} break;
 			}
 		}
 		if(id.startsWith("texpos") && this.getType().isTexRect()){ bool = this.setFloat(id, x, y, z, value); }
+		if(id.startsWith("marker") && this.getType().isMarker()){ bool = this.setFloat(id, x, y, z, value); }
 		this.recompile(); return bool;
 	}
 
@@ -288,14 +293,55 @@ public abstract class PolygonWrapper {
 
 	public PolygonWrapper clone(){
 		PolygonWrapper wrapper = this.createClone(compound);
+		return copyTo(wrapper, false);
+	}
+	
+	public PolygonWrapper copyTo(PolygonWrapper wrapper, boolean copyvisibility){
 		wrapper.pos = new Vec3f(pos); wrapper.off = new Vec3f(off); wrapper.rot = new Vec3f(rot);
 		wrapper.textureX = textureX; wrapper.textureY = textureY;
-		wrapper.visible = true; //visible;
+		wrapper.visible = copyvisibility ? visible : true;
 		wrapper.name = name == null ? null : name.endsWith("cp") ? name : name + "cp";
 		wrapper.mirror = mirror; wrapper.flip = flip;
 		return wrapper;
 	}
 
 	protected abstract PolygonWrapper createClone(GroupCompound compound);
+
+	public abstract PolygonWrapper convertTo(ShapeType type);
+
+	public void resetPosRot(){
+		turbo.rotationPointX = lines.rotationPointX = sellines.rotationPointX = picker.rotationPointX = pos.xCoord;
+		turbo.rotationPointY = lines.rotationPointY = sellines.rotationPointY = picker.rotationPointY = pos.yCoord;
+		turbo.rotationPointZ = lines.rotationPointZ = sellines.rotationPointZ = picker.rotationPointZ = pos.zCoord;
+		turbo.rotationAngleX = lines.rotationAngleX = sellines.rotationAngleX = picker.rotationAngleX = rot.xCoord;
+		turbo.rotationAngleY = lines.rotationAngleY = sellines.rotationAngleY = picker.rotationAngleY = rot.yCoord;
+		turbo.rotationAngleZ = lines.rotationAngleZ = sellines.rotationAngleZ = picker.rotationAngleZ = rot.zCoord;
+	}
+	
+	public void addPosRot(boolean pos, float x, float y, float z){
+		if(pos){
+			turbo.rotationPointX = lines.rotationPointX = sellines.rotationPointX = picker.rotationPointX += x;
+			turbo.rotationPointY = lines.rotationPointY = sellines.rotationPointY = picker.rotationPointY += y;
+			turbo.rotationPointZ = lines.rotationPointZ = sellines.rotationPointZ = picker.rotationPointZ += z;
+		}
+		else{
+			turbo.rotationAngleX = lines.rotationAngleX = sellines.rotationAngleX = picker.rotationAngleX += x;
+			turbo.rotationAngleY = lines.rotationAngleY = sellines.rotationAngleY = picker.rotationAngleY += y;
+			turbo.rotationAngleZ = lines.rotationAngleZ = sellines.rotationAngleZ = picker.rotationAngleZ += z;
+		}
+	}
+	
+	public void setPosRot(boolean pos, float x, float y, float z){
+		if(pos){
+			turbo.rotationPointX = lines.rotationPointX = sellines.rotationPointX = picker.rotationPointX = x;
+			turbo.rotationPointY = lines.rotationPointY = sellines.rotationPointY = picker.rotationPointY = y;
+			turbo.rotationPointZ = lines.rotationPointZ = sellines.rotationPointZ = picker.rotationPointZ = z;
+		}
+		else{
+			turbo.rotationAngleX = lines.rotationAngleX = sellines.rotationAngleX = picker.rotationAngleX = x;
+			turbo.rotationAngleY = lines.rotationAngleY = sellines.rotationAngleY = picker.rotationAngleY = y;
+			turbo.rotationAngleZ = lines.rotationAngleZ = sellines.rotationAngleZ = picker.rotationAngleZ = z;
+		}
+	}
 	
 }

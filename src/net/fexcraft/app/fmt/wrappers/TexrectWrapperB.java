@@ -38,7 +38,7 @@ public class TexrectWrapperB extends ShapeboxWrapper {
 
 	@Override
 	protected ModelRendererTurbo newMRT(){
-		return new ModelRendererTurbo(null, 0, 0, compound.textureX, compound.textureY)
+		return new ModelRendererTurbo(null, textureX, textureY, compound.tx(getTurboList()), compound.ty(getTurboList()))
 			.addTexRect(off.xCoord, off.yCoord, off.zCoord, size.xCoord, size.yCoord, size.zCoord, 0,
 				cor0.xCoord, cor0.yCoord, cor0.zCoord,
 				cor1.xCoord, cor1.yCoord, cor1.zCoord,
@@ -101,6 +101,20 @@ public class TexrectWrapperB extends ShapeboxWrapper {
 			};
 		} return vecs;*/
 		return new float[0][][];
+	}
+
+	@Override
+	public PolygonWrapper convertTo(ShapeType type){
+		if(!type.getConversionGroup().equals(this.getType().getConversionGroup())) return null;
+		if(type == ShapeType.BOX){ BoxWrapper box = new BoxWrapper(compound); box.size = new Vec3f(size); return copyTo(box, true); }
+		ShapeboxWrapper wrapper = null;
+		switch(type){
+			case TEXRECT_A: wrapper = new TexrectWrapperA(compound); break;
+			case SHAPEBOX: wrapper = new ShapeboxWrapper(compound); break;
+			default: return null;
+		}
+		wrapper.size = new Vec3f(size); wrapper.setCoords(cor0, cor1, cor2, cor3, cor4, cor5, cor6, cor7);
+		return copyTo(wrapper, true);
 	}
 	
 }

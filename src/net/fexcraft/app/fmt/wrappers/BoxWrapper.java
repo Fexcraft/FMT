@@ -12,9 +12,9 @@ public class BoxWrapper extends PolygonWrapper {
 	public BoxWrapper(GroupCompound compound){
 		super(compound);
 	}
-	
+
 	protected ModelRendererTurbo newMRT(){
-		return new ModelRendererTurbo(null, textureX, textureY, compound.textureX, compound.textureY)
+		return new ModelRendererTurbo(null, textureX, textureY, compound.tx(getTurboList()), compound.ty(getTurboList()))
 			.addBox(off.xCoord, off.yCoord, off.zCoord, size.xCoord, size.yCoord, size.zCoord)
 			.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
 			.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
@@ -89,6 +89,19 @@ public class BoxWrapper extends PolygonWrapper {
 	protected PolygonWrapper createClone(GroupCompound compound){
 		BoxWrapper wrapper = new BoxWrapper(compound);
 		wrapper.size = new Vec3f(size); return wrapper;
+	}
+
+	@Override
+	public PolygonWrapper convertTo(ShapeType type){
+		if(type == ShapeType.BOX) return this.clone();
+		if(!type.getConversionGroup().equals(this.getType().getConversionGroup())) return null;
+		BoxWrapper wrapper = null;
+		switch(type){
+			case SHAPEBOX: wrapper = new ShapeboxWrapper(compound); break;
+			case TEXRECT_A: wrapper = new TexrectWrapperA(compound); break;
+			case TEXRECT_B: wrapper = new TexrectWrapperB(compound); break;
+			default: return null;
+		} wrapper.size = new Vec3f(size); return copyTo(wrapper, true);
 	}
 	
 }

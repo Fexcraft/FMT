@@ -59,6 +59,9 @@ public class JsonToTMT {
 	public static final String[] topoffx = new String[]{"top_offset_x", "topoff_x", "topoffx"};
 	public static final String[] topoffy = new String[]{"top_offset_y", "topoff_y", "topoffy"};
 	public static final String[] topoffz = new String[]{"top_offset_z", "topoff_z", "topoffz"};
+	public static final String[] topangle = new String[]{"top_angle", "topangle", "ta"};
+	public static final String[] segwidth = new String[]{"segment_width", "seg_width", "sw"};
+	public static final String[] segheight = new String[]{"segment_height", "seg_height", "sh"};
 	
 	public static final float get(String s, JsonObject obj, float def){
 		if(obj.has(s)){
@@ -94,14 +97,14 @@ public class JsonToTMT {
 				BoxWrapper cuboid = new BoxWrapper(compound);
 				cuboid.size.xCoord = get(width, obj, def);
 				cuboid.size.yCoord = get(height, obj, def);
-				cuboid.size.zCoord= get(depth, obj, def);
+				cuboid.size.zCoord = get(depth, obj, def);
 				polygon = cuboid; break;
 			}
 			case "shapebox": case "sbox": case "sb": {
 				ShapeboxWrapper shapebox = new ShapeboxWrapper(compound);
 				shapebox.size.xCoord = get(width, obj, def);
 				shapebox.size.yCoord = get(height, obj, def);
-				shapebox.size.zCoord= get(depth, obj, def);
+				shapebox.size.zCoord = get(depth, obj, def);
 				//
 				shapebox.cor0 = new Vec3f(get("x0", obj, def), get("y0", obj, def), get("z0", obj, def));
 				shapebox.cor1 = new Vec3f(get("x1", obj, def), get("y1", obj, def), get("z1", obj, def));
@@ -130,6 +133,16 @@ public class JsonToTMT {
 				cylinder.topoff.xCoord = get(topoffx, obj, 0f);
 				cylinder.topoff.yCoord = get(topoffy, obj, 0f);
 				cylinder.topoff.zCoord = get(topoffz, obj, 0f);
+				if(obj.has("faces_off")){
+					JsonArray array = obj.get("faces_off").getAsJsonArray();
+					for(int i = 0; i < cylinder.bools.length; i++){
+						cylinder.bools[i] = i >= array.size() ? false : array.get(i).getAsBoolean();
+					}
+				}
+				cylinder.topangle = get(topangle, obj, 0f);
+				cylinder.radial = JsonUtil.getIfExists(obj, "radialtex", false);
+				cylinder.seg_width = get(segwidth, obj, 0);
+				cylinder.seg_height = get(segheight, obj, 0);
 				polygon = cylinder; break;
 			}
 			case "texrect": case "texrect_a": case "texrect_b": {
@@ -169,6 +182,9 @@ public class JsonToTMT {
 			case "marker":{
 				MarkerWrapper marker = new MarkerWrapper(compound);
 				marker.color = obj.has("color") ? obj.get("color").getAsInt() : RGB.GREEN.packed;
+				marker.biped = JsonUtil.getIfExists(obj, "biped", false);
+				marker.angle = JsonUtil.getIfExists(obj, "biped_angle", -90).intValue();
+				marker.scale = JsonUtil.getIfExists(obj, "biped_scale", 1f).floatValue();
 				polygon = marker; break;
 			}
 		}

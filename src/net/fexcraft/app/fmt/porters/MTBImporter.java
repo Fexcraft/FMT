@@ -1,24 +1,37 @@
 package net.fexcraft.app.fmt.porters;
 
-import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.porters.PorterManager.InternalPorter;
-import net.fexcraft.app.fmt.ui.generic.DialogBox;
-import net.fexcraft.app.fmt.utils.TextureManager;
-import net.fexcraft.app.fmt.wrappers.*;
-import net.fexcraft.lib.common.math.Vec3f;
-import net.fexcraft.lib.common.utils.Print;
-import net.fexcraft.lib.common.utils.ZipUtil;
-import net.fexcraft.lib.tmt.ModelRendererTurbo;
-
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Enumeration;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import javax.imageio.ImageIO;
+
+import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.porters.PorterManager.InternalPorter;
+import net.fexcraft.app.fmt.ui.general.DialogBox;
+import net.fexcraft.app.fmt.utils.Settings.Setting;
+import net.fexcraft.app.fmt.utils.TextureManager;
+import net.fexcraft.app.fmt.wrappers.BoxWrapper;
+import net.fexcraft.app.fmt.wrappers.FlexTrapezoidWrapper;
+import net.fexcraft.app.fmt.wrappers.FlexboxWrapper;
+import net.fexcraft.app.fmt.wrappers.GroupCompound;
+import net.fexcraft.app.fmt.wrappers.ShapeboxWrapper;
+import net.fexcraft.app.fmt.wrappers.TrapezoidWrapper;
+import net.fexcraft.app.fmt.wrappers.TurboList;
+import net.fexcraft.lib.common.math.Vec3f;
+import net.fexcraft.lib.common.utils.Print;
+import net.fexcraft.lib.common.utils.ZipUtil;
+import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 /**
  * @author EternalBlueFlame, FEX___96
@@ -61,9 +74,9 @@ public class MTBImporter extends InternalPorter {
     }
     
 	@Override
-	public GroupCompound importModel(File f){
+	public GroupCompound importModel(File f, Map<String, Setting> settings){
         try {
-            GroupCompound compound = new GroupCompound();
+            GroupCompound compound = new GroupCompound(f);
             boolean loadtex = ZipUtil.contains(f, "Model.png");
             ZipFile zip = new ZipFile(f);
             Enumeration<? extends ZipEntry> entries = zip.entries();
@@ -75,7 +88,7 @@ public class MTBImporter extends InternalPorter {
                 }
             }
             if(stream == null){
-            	FMTB.showDialogbox("Status", "Import Failed, MTB appears corrupt.", "Oh well..", "", DialogBox.NOTHING, null);
+            	FMTB.showDialogbox("Status\nImport Failed, MTB appears corrupt.", "Oh well..", "", DialogBox.NOTHING, null);
                 zip.close(); return compound;
             }
             String[] file = convertStreamToString(stream).split("\n"); //Files.readAllLines(stream.toPath());
@@ -83,10 +96,10 @@ public class MTBImporter extends InternalPorter {
                 String[] parts = s.split("\\u007C");
                 parts[0] = parts[0].trim();
                 if(parts[0].equals("TexSizeX")){
-                    compound.textureX = Integer.parseInt(parts[1].trim());
+                    compound.textureSizeX = Integer.parseInt(parts[1].trim());
                 }
                 else if(parts[0].equals("TexSizeY")){
-                    compound.textureY = Integer.parseInt(parts[1]);
+                    compound.textureSizeY = Integer.parseInt(parts[1]);
                 }
                 //
                 else if(parts[0].equals("ModelAuthor") && parts.length > 1){
@@ -163,10 +176,10 @@ public class MTBImporter extends InternalPorter {
                     polygon.rot = new Vec3f(getFloatFromString(parts[12]), getFloatFromString(parts[13]), getFloatFromString(parts[14]));
                     polygon.rot.zCoord = -polygon.rot.zCoord;
                     //
-                    if(!compound.getCompound().containsKey("group" + parts[4])){
-                    	compound.getCompound().put("group" + parts[4], new TurboList("group" + parts[4]));
+                    if(!compound.getGroups().contains("group" + parts[4])){
+                    	compound.getGroups().add(new TurboList("group" + parts[4]));
                     }
-                    compound.getCompound().get("group" + parts[4]).add(polygon);
+                    compound.getGroups().get("group" + parts[4]).add(polygon);
                 }
             }
             stream.close();
@@ -183,8 +196,8 @@ public class MTBImporter extends InternalPorter {
             			}
             		}
             		if(!transparent){
-                    	compound.setTexture("temp/" + compound.name);
-                    	TextureManager.loadTextureFromZip(image, "temp/" + compound.name, true);
+                    	compound.setTexture("./temp/" + compound.name);
+                    	TextureManager.loadTextureFromZip(image, "./temp/" + compound.name, false, true);
             		}
             	}
             	catch(Exception e){
@@ -195,12 +208,12 @@ public class MTBImporter extends InternalPorter {
         }
         catch(IOException e){
         	//literally not even possible.
-        	return new GroupCompound();
+        	return new GroupCompound(f);
         }
 	}
 	
 	@Override
-	public String exportModel(GroupCompound compound, File file){
+	public String exportModel(GroupCompound compound, File file, Map<String, Setting> settings){
 		return "This isn't an exporter as of now.";
 	}
 	
@@ -212,6 +225,11 @@ public class MTBImporter extends InternalPorter {
 	@Override
 	public boolean isExporter(){
 		return false;
+	}
+
+	@Override
+	public List<Setting> getSettings(boolean export){
+		return nosettings;
 	}
     
 }

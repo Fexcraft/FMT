@@ -21,7 +21,7 @@ public class Backups extends TimerTask {
 	public void run(){
 		if(FMTB.MODEL.countTotalMRTs() <= 0) return;
 		String str = sdf.format(Time.getDate()); Print.console("Saving backup... [" + str + "];");
-		File file = new File("./backups/(" + str + ") " + FMTB.MODEL.name + ".jtmt");
+		File file = new File("./backups/(" + str + ") " + FMTB.MODEL.name + ".fmtb");
 		if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
 		SaveLoad.toFile(FMTB.MODEL, file, false);
 	}

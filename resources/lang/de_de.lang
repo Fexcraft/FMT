@@ -1,0 +1,276 @@
+# "GERMAN" FMT LANG FILE
+# Not always up to date
+# Author: FEX___96 (Ferdinand Calo')
+
+//Like this you can define special (e.g. non latin) characters for your language. Make sure to save the file in UTF-8!
+DEFAULT_CHARS = äöüßÄÖÜ
+
+dialog.greeting.welcome=Wilkommen bei FMT!<nl>[version:%s]
+dialog.greeting.newversion=Neue Version verfügbar!<nl>%s >> %s
+dialog.greeting.confirm=ok
+dialog.greeting.update=update
+dialog.greeting.exit=exit
+//
+filechooser.default.confirm=OK
+filechooser.default.suggested=Empfohlen
+filechooser.default.cancel=Abbrechen
+dialog.filechooser.override=Existierende Datei überschreiben?<nl>%s
+dialog.filechooser.override.confirm=Ja
+dialog.filechooser.override.cancel=Nein!
+filechooser.settings="FileChooser" Einstellungen
+filechooser.exporter=Exporter: %s
+filechooser.importer=Importer: %s
+filechooser.png=Portable Network Graphics (PNG)
+filechooser.fmtb=FMT Save File (FMTB)
+filechooser.image=Image File [PNG/JPG/JPEG]
+filechooser.notype=Error, No Type Specified.
+filechooser.customfile.active=Wähle eine Datei oder schreib hier einen Dateinamen!
+filechooser.customfile.inactive=Bitte wähle einen existierende Datei aus.
+//
+filechooser.import.title=Wähle eine Datei für den Import aus.
+filechooser.import.confirm=Importieren
+dialog.import.fail=Keine Datei ausgewählt!<nl>Import wurde abgebrochen.
+dialog.import.nofile.confirm=ok..
+dialog.import.fail=Fehler beim Import<nl>%s
+dialog.import.fail.confirm=ok.
+dialog.import.success=Import Fertig.
+dialog.import.success.confirm=OK!
+//
+filechooser.export.title=Wähle eine Export Ziel Datei.
+filechooser.export.confirm=Exportieren
+dialog.export.nofile=Keine Datei ausgewählt.<nl>Export wurde abgebrochen.
+dialog.export.nofile.confirm=ok..
+dialog.export.success=Export Fertig.<nl>%s
+dialog.export.success.confirm=OK!
+dialog.export.fail=Fehler beim Export des Models.<nl>%s
+dialog.export.fail.confirm=ok.
+//
+editor.general.attributes.title=Polygon Eigenschaften
+editor.general.attributes.polygroup=Polygon Gruppe
+editor.general.attributes.polyname=Polygon Name
+editor.general.attributes.polytype=Polygon Typ
+editor.general.attributes.painttotexture=Textur Bestreichen
+editor.general.attributes.burntotexture=Auf die Textur brennen
+editor.general.shape.title=Allgemeine Form
+editor.general.shape.size=Größe (b/h/t)
+editor.general.shape.position=Position (x/y/z)
+editor.general.shape.offset=Offset (x/y/z)
+editor.general.shape.rotation=Rotation (x/y/z)
+editor.general.shape.texture=Textur (u/v)
+editor.general.shapebox.title=Shapebox Ecken
+editor.general.shapebox.corner0=Ecke %s (x/y/z)
+editor.general.shapebox.corner1=Ecke %s (x/y/z)
+editor.general.shapebox.corner2=Ecke %s (x/y/z)
+editor.general.shapebox.corner3=Ecke %s (x/y/z)
+editor.general.shapebox.corner4=Ecke %s (x/y/z)
+editor.general.shapebox.corner5=Ecke %s (x/y/z)
+editor.general.shapebox.corner6=Ecke %s (x/y/z)
+editor.general.shapebox.corner7=Ecke %s (x/y/z)
+editor.general.cylinder.title=Zylinder Einstellungen
+editor.general.cylinder.radius_length=Radius / Länge / R2
+editor.general.cylinder.segments_direction=Segmente / Direktion / SL
+editor.general.cylinder.scale=Basis Größe / Spitz-Größe / Spitz-Winkel
+editor.general.cylinder.top_offset=Spitzen Offset (x/y/z)
+editor.general.cylinder.base_top_toggle=Basic/Spitze (an/aus)
+editor.general.cylinder.outer_inner_toggle=Außeres/Inneres (an/aus)
+editor.general.cylinder.radial_texture=Radiale Textur (an-us/u/v)
+editor.general.texrect.front=Vorderseite
+editor.general.texrect.back=Rückseite
+editor.general.texrect.up=Oberseite
+editor.general.texrect.down=Unterseite
+editor.general.texrect.right=Rechte Seite
+editor.general.texrect.left=Linke Seite
+editor.general.texrect_a.title=TexRect [Erw.]
+editor.general.texrect_a.face_x=%s [x-pos | OR, OL, UL, UR]
+editor.general.texrect_a.face_y=%s [y-pos | OR, TL, UL, UR]
+editor.general.texrect_b.title=TexRect [Basic]
+editor.general.texrect_b.face=%s [start x/y, ende x/y]
+editor.general.marker.title=Marker Einstellungen
+editor.general.marker.color=Marker Farbe [#hex]
+editor.general.marker.biped_display=Biped Anzeige [toggle / Winkel / Größe]
+//
+editor.model_group.model.title=Modell Einstellungen
+editor.model_group.model.position=Positions Offset (volle Einheiten)
+editor.model_group.model.rotation=Rotations Offset (Winkel Grad)
+editor.model_group.model.texture_size=Textur [U/V/Größe]
+editor.model_group.model.texture=Modell Textur
+editor.model_group.model.name=Modell Name
+editor.model_group.group.title=Gruppen Einstellungen
+editor.model_group.group.color=Gruppen Preview Farbe/Overlay
+editor.model_group.group.name=Gruppen Name/ID
+editor.model_group.group.texture_size=Textur [U/V/Größe]
+editor.model_group.group.texture=Gruppen Textur
+editor.model_group.group.add_animator=Animator hinzufügen
+editor.model_group.animations.title=Gruppen Animationen
+//
+editor.preview.container.title=Allgemeine Einstellungen
+editor.preview.container.position=Position (volle Einheiten)
+editor.preview.container.rotation=Rotation (Winkel Grad)
+editor.preview.container.scale=Größe (OpenGL)
+editor.preview.container.scale16=Größe (16 x GL)
+//
+editor.texture.palette.title=Palette / Farbe
+editor.texture.palette.color_input=R-G-B / HEX Farb Eingabe
+editor.texture.palette.large=Große Farb Palette
+editor.texture.palette.horizontal=Horizontale Farb Palette
+editor.texture.palette.current_color=[ Aktuelle Farbe ]
+editor.texture.brushes.title=Bürsten / Werkzeuge
+editor.texture.brushes.tool_on=AN
+editor.texture.brushes.tool_off=AUS
+editor.texture.brushes.face_paintbucket=(Seiten) Farbeimer [%s]
+editor.texture.brushes.polygon_paintbucket=(Polygon) Farbeimer [%s]
+editor.texture.brushes.group_paintbucket=(Gruppen) Farbeimer [%s]
+editor.texture.brushes.pixel_pencil=(Pixel) Farb Stift [%s]
+editor.texture.brushes.color_picker=Farbwähler [%s]
+//
+dialog.editor.general.attributes.new_group_question=Gruppe existiert nicht.<nl>Soll sie erstellt werden?
+dialog.editor.general.attributes.new_group_question.confirm=ja.
+dialog.editor.general.attributes.new_group_question.cancel=nein.
+//
+dialog.editor.general.attributes.burntotex.notex=Es ist keine Textur geladen.
+dialog.editor.general.attributes.burntotex.notex.confirm=ok
+dialog.editor.general.attributes.burntotex.notex.cancel=laden
+dialog.editor.general.attributes.burntotex.tex_not_found=Textur nicht gefunden im RAM/GL<nl>Dies is eher schlecht.
+dialog.editor.general.attributes.burntotex.tex_not_found.confirm=ok
+//
+filechooser.editor.model_group.model.texture=Wähle eine Textur für das Modell
+filechooser.editor.model_group.group.texture=Wähle eine Textur für die Gruppe
+dialog.editor.model_group.group.animator.not_found=Animation nicht gefunden!
+dialog.editor.model_group.group.animator.not_found.confirm=ok
+editor.model_group.group.animator_settings=Animator Einstellungen
+//
+bottombar:polygons=Vielecke: 
+bottombar:selected=Ausgewählt: 
+bottombar:groups=Gruppen: 
+bottombar:frames=FPS: 
+bottombar.netfield.loggedin=Eingeloggt - %s
+bottombar.netfield.loggedout=Ausgeloggt - GAST
+bottombar.netfield.login_failed=Login Fehlgeschlagen - GAST
+controls_adjuster.title=FMT Steuerungs Einstellungen
+dialogbox.feature_not_available_yet=Funktion noch nicht verfügbar.
+dialogbox.feature_not_available_yet.confirm=OK
+dialogbox.feature_not_available_yet.discord=Discord
+settingsbox.default=FMT Einstellungen
+//
+toolbar.file.new_model=Neues Modell
+toolbar.file.open_model=Modell Öffnen
+toolbar.file.save_model=Modell Speichern
+toolbar.file.save_as=Speichern als...
+toolbar.file.import=Importieren
+toolbar.file.export=Exportieren
+toolbar.file.exit=Ende
+toolbar.file=Datei
+toolbar.utils.undo=Züruck
+toolbar.utils.redo=Nicht Züruck
+toolbar.utils.create_gif=GIF Erstellen
+toolbar.utils.sceenshot=Screenshot
+toolbar.utils.reset_camera=Kamera Reset
+toolbar.utils.calc_size=Größe berechnen
+toolbar.utils=Werkzeuge
+toolbar.editor.copy_selected=Auswahl Kopieren
+toolbar.editor.flip.left_right=[L/R]
+toolbar.editor.flip.up_down=[O/U]
+toolbar.editor.flip.front_back=[F/H]
+toolbar.editor.flip=Flip (%s) %s
+toolbar.editor.controls=Steuerung
+toolbar.editor=Editor
+toolbar.shapeditor.hide=Editoren verstecken
+toolbar.shapeditor.general=Allgemeiner Editor
+toolbar.shapeditor.texture=Textur Editor (beta)
+toolbar.shapeditor.model_group=Modell/Gruppen Editor
+toolbar.shapeditor=Shapeditor
+toolbar.shapelist.add_box=Normale Box einfügen
+toolbar.shapelist.add_shapebox=Shapebox einfügen
+toolbar.shapelist.add_texrect_b=TexRect [Basic] einfügen
+toolbar.shapelist.add_texrect_a=TexRect [Erw.] einfügen
+toolbar.shapelist.add_cylinder=Cylinder einfügen
+toolbar.shapelist.add_group=Gruppe einfügen
+toolbar.shapelist.add_marker=Marker einfügen
+toolbar.shapelist=Shapeliste
+toolbar.textures.select=Textur Auswählen
+toolbar.textures.edit=Bearbeiten (External)
+toolbar.textures.remove=Entfernen
+toolbar.textures.texpos_reset=TexPos. Reset
+toolbar.textures.auto_position=Auto Position
+toolbar.textures.generate=Neu Generieren
+toolbar.textures=Textur
+toolbar.helpers.view=Liste Zeigen
+toolbar.helpers.load_fmtb=FMTB laden
+toolbar.helpers.load_frame=Rahmen laden
+toolbar.helpers.load_imported=Importieren
+toolbar.helpers.unload_clear=Alle Entfernen
+toolbar.helpers=Helfer
+toolbar.exit=Ende
+//
+modeltree.polygons=Polygons: 
+modeltree.remove_group=Gruppe entfernen?<nl>%s
+modeltree.remove_group.confirm=Ja
+modeltree.remove_group.cancel=Nein!
+modeltree.remove_polygon=Polygon entfernen?<nl>%s
+modeltree.remove_polygon.confirm=Ja
+modeltree.remove_polygon.cancel=Nein!
+//
+dialog.compound.change_type.not_found=Typ nicht gefunden!<nl>[%s]
+dialog.compound.change_type.not_found.cancel=ok
+dialog.compound.change_type.failed=%s vieleck(e) übersprungen!<nl>%s !> %s
+dialog.compound.change_type.failed.cancel=ok
+dialog.compound.delete_selected=Sollen alle Auserwählten<nl>gelöscht werden?
+dialog.compound.delete_selected.confirm=Ja!
+dialog.compound.delete_selected.cancel=Abbrechen!
+//
+dialog.helper_collector.load_fmtb.nofile=Ungültige Modell Datei!<nl>(existiert sie überhaupt?)
+dialog.helper_collector.load_fmtb.nofile.confirm=ok.
+dialog.helper_collector.load_fmtb.invalid_file=Ungültige Modell Datei!<nl>model.jtmt fehlt
+dialog.helper_collector.load_fmtb.invalid_file.confirm=ok.
+dialog.helper_collector.load_fmtb.errors=Fehler sind aufgetaucht<nl>beim lesen der Datei
+dialog.helper_collector.load_fmtb.errors.confirm=ok
+dialog.helper_collector.load_frame.nofile=Ungültige Bild Datei!<nl>(existiert sie überhaupt?)
+dialog.helper_collector.load_frame.nofile.confirm=ok.
+dialog.helper_collector.load_frame.errors=Fehler sind aufgetaucht<nl>beim erstellen des Rahmens
+dialog.helper_collector.load_frame.errors.confirm=ok
+//
+dialog.image_helper.gif_created=GIF Datei Erstellt.
+dialog.image_helper.gif_created.confirm=OK
+dialog.image_helper.gif_created.open=Öffnen
+//
+dialog.polygon_picker.paint_pencil.no_texture=Keine Textur geladen.<nl>Kann Stift nicht anwenden.
+dialog.polygon_picker.paint_pencil.no_texture.confirm=ok
+dialog.polygon_picker.paint_pencil.no_texture.cancel=ausschalten
+dialog.polygon_picker.paint_bucket.no_texture=Keine Textur geladen.<nl>Kann Farbeimer nicht anwenden.
+dialog.polygon_picker.paint_bucket.no_texture.confirm=ok
+dialog.polygon_picker.paint_bucket.no_texture.cancel=ausschalten
+//
+saveload.filechooser.open=Wählen sie eine Datei zum öffnen.
+saveload.filechooser.open.confirm=Öffnen
+saveload.filechooser.open.nofile=Ungültige Modell Datei!<nl>(existiert sie überhaupt?)
+saveload.filechooser.open.nofile.confirm=ok.
+saveload.filechooser.open.errors=Fehler sind aufgetaucht<nl>beim lesen der Datei
+saveload.filechooser.open.errors.confirm=ok
+dialog.saveload.should_save=Soll das jetzige Modell erst<nl>gespeichert werden?
+dialog.saveload.should_save.confirm=Ja
+dialog.saveload.should_save.cancel=Nein
+saveload.filechooser.save=Wähle eine Ziel Datei aus.
+saveload.filechooser.save.confirm=Auswählen
+saveload.filechooser.save.nofile=Ausgewählte Datei ist 'null'!<nl>Modell wird nicht gespeichert.
+saveload.filechooser.save.nofile.confirm=OK
+saveload.filechooser.save.nofile.save=Speichern
+dialog.saveload.save.success=Modell gespeichert!
+dialog.saveload.save.success.confirm=ok!
+//
+dialog.texture_update.resize.exceeding_4096=Größe überschreitet 4096 pixel!<nl>[%s], [%s]<nl>Textur Cache NICHT geupdated.
+dialog.texture_update.resize.exceeding_4096.confirm=OK,
+dialog.texture_update.resize.success=Größe geändert!<nl>[%s], [%s]
+dialog.texture_update.resize.success.confirm=Gut!
+dialog.texture_update.auto_positioner.info=Dieser Prozess könnte FMT<nl>als "reagiert nicht" makieren.
+dialog.texture_update.auto_positioner.info.confirm=Ok
+dialog.texture_update.auto_positioner.info.cancel=Abbrechen
+dialog.texture_update.auto_positioner.save_space="Save-Space" Modus verwenden?<nl>Könnte weniger lesbar sein.
+dialog.texture_update.auto_positioner.save_space.confirm=Ja
+dialog.texture_update.auto_positioner.save_space.cancel=Nein
+dialog.texture_update.auto_positioner.only_00=Nur Vielecke mit 0, 0<nl>textur pos. verarbeiten?
+dialog.texture_update.auto_positioner.only_00.confirm=Ja
+dialog.texture_update.auto_positioner.only_00.cancel=Nein (Alle)
+dialog.texture_update.auto_positioner.complete="Auto Textur Positionierer"<nl>- ist Fertig.
+dialog.texture_update.auto_positioner.complete.confirm=Gut!
+dialog.texture_update.auto_positioner.processing=Verarbeitet: %s Prozent<nl>%s:%s
+//

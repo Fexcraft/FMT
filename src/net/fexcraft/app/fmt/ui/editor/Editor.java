@@ -1,38 +1,60 @@
 package net.fexcraft.app.fmt.ui.editor;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.Element;
-import net.fexcraft.app.fmt.ui.generic.Button;
-import net.fexcraft.app.fmt.ui.generic.IconButton;
-import net.fexcraft.app.fmt.ui.generic.TextField;
+import net.fexcraft.app.fmt.ui.UserInterface;
+import net.fexcraft.app.fmt.ui.general.Button;
+import net.fexcraft.app.fmt.ui.general.Icon;
+import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.utils.Settings;
-import net.fexcraft.app.fmt.utils.TextureManager;
 
 public abstract class Editor extends Element {
 	
-	private static final ArrayList<Editor> editors = new ArrayList<Editor>();
+	public static final ArrayList<Editor> EDITORS = new ArrayList<>();
 	public static final String[] xyz = new String[]{ "x", "y", "z" };
+	protected Container[] containers;
+	private Element button;
 
-	public Editor(String id){
-		super(null, id); this.width = 308; z = -1;
-		this.x = 0; this.y = 30; editors.add(this);
-		this.visible = false;
+	public Editor(String id, String stylegroup){
+		super(null, id, stylegroup, false); EDITORS.add(this); this.setColor(0xff999999);
+		this.setPosition(0, 0).setSize(308, 0).setVisible(false).setBorder(0xff000000, 0xffffffff, 1, false, false, false, true);
+		this.elements.add((button = new Button(this, "mb", "multiplicator", width - 8, 28, 4, 4, 0).setText("Multiplicator / Rate", 3, 4)).setHoverColor(0xffffffff, false));
+		button.getElements().add(new TextField(button, "mt", "multiplicator:field", 110, button.width - 144, 1){
+			@Override public boolean processScrollWheel(int wheel){
+				applyChange(FMTB.MODEL.multiply(wheel > 0 ? 2.0f : 0.5f)); return true;
+			}
+			@Override protected void updateNumberField(){
+				FMTB.MODEL.rate = this.getFloatValue();
+			}
+		}.setAsNumberfield(0, 1024, true, true).applyChange(FMTB.MODEL.rate));
+		button.getElements().add(new Icon(button, "mr", "multiplicator:icon", "icons/group_delete", 26, button.width - 30, 1){
+			@Override
+			protected boolean processButtonClick(int x, int y, boolean left){
+				((TextField)root.getElement("mt")).applyChange(1); FMTB.MODEL.rate = 1f; return true;
+			}
+		});
+		this.setHoverColor(0xffffffff, false); this.repos();
 	}
-
+	
 	@Override
-	public void renderSelf(int rw, int rh){
-		this.renderQuad(x, y, width, height = (rh - y + 2), "ui/button_bg");
-		this.renderQuad(width - 2, y - 2, 2, height = (rh - y + 4), "ui/background");
+	public Element repos(){
+		x = 0; y = UserInterface.TOOLBAR.height + UserInterface.TOOLBAR.border_width;
+		height = UserInterface.height - y; if(Settings.bottombar()) height -= 29;
+		clearVertexes(); this.reposContainers(); return this;
+	}
+	
+	public void reposContainers(){
+		if(containers == null) return; int pass = 40;
+		for(Container container : containers){
+			container.y = y + pass; pass += container.getExpansionHeight() + 4; container.repos();
+		}
 	}
 
 	@Override
 	protected boolean processButtonClick(int x, int y, boolean left){
-		return true;
+		return false;
 	}
 	
 	public void show(){
@@ -40,98 +62,67 @@ public abstract class Editor extends Element {
 	}
 	
 	public static void show(String id){
-		editors.forEach(elm -> elm.visible = elm.id.equals(id));
+		for(Editor edit : EDITORS) edit.setVisible(edit.id.equals(id));
 	}
 	
 	public static void hideAll(){
-		editors.forEach(elm -> elm.visible = false);
+		for(Editor edit : EDITORS) edit.setVisible(false);
+	}
+	
+	public static Editor get(String id){
+		for(Editor edit : EDITORS) if(edit.id.equals(id)) return edit; return null;
 	}
 
 	public static void toggle(String string){ toggle(string, true); }
 
 	public static void toggle(String string, boolean close){
-		Optional<Editor> opt = editors.stream().filter(pre -> pre.id.equals(string)).findFirst();
-		if(close && opt.isPresent() && opt.get().visible) hideAll(); else show(string);
+		Editor edit = get(string); if(close && edit != null && edit.isVisible()) hideAll(); else show(string);
 	}
 	
-	protected void addMultiplicator(int y){
-		this.elements.put("multiplicator-", new Button(this, "multiplicator-", 12, 26, 4, y){
-			@Override protected boolean processButtonClick(int x, int y, boolean left){
-				((TextField)parent.getElement("multiplicator")).applyChange(FMTB.MODEL.multiply(0.5f)); return true;
-			}
-		}.setText(" < ", true).setTexture("ui/background").setLevel(-1));
-		this.elements.put("multiplicator", new TextField(this, "multiplicator", 140, 16, y){
-			@Override protected boolean processScrollWheel(int wheel){
-				applyChange(FMTB.MODEL.multiply(wheel > 0 ? 2.0f : 0.5f)); return true;
-			}
-		}.setAsNumberfield(0.0001f, 1000, true).setLevel(-1));
-		this.elements.put("multiplicator+", new Button(this, "multiplicator+", 12, 26, 152, y){
-			@Override protected boolean processButtonClick(int x, int y, boolean left){
-				((TextField)parent.getElement("multiplicator")).applyChange(FMTB.MODEL.multiply(2.0f)); return true;
-			}
-		}.setText(" > ", true).setTexture("ui/background").setLevel(-1));
-		this.elements.put("multiplicator_reset", new IconButton(this, "multiplicator_reset", "icons/group_delete", 170, this.y + 3 + y){
-			@Override
-			protected boolean processButtonClick(int x, int y, boolean left){
-				((TextField)parent.getElement("multiplicator")).applyChange(1); FMTB.MODEL.rate = 1f; return true;
-			}
-		});
+	public boolean processScrollWheel(int wheel){ return true; }
+
+	public ArrayList<TextField> getFields(){
+		ArrayList<TextField> fields = new ArrayList<>();
+		for(Element elm : elements) if(elm instanceof TextField) fields.add((TextField)elm);
+		return fields;
 	}
 
-	public TextField getField(String string){
-		return (TextField)elements.get(string);
+	public static void toggleAll(){
+		boolean anyvisible = false;
+		for(Editor edit : EDITORS) if(edit.isVisible()){ anyvisible = true; break; }
+		if(anyvisible) hideAll(); else show("general");
 	}
 
-	public Button getButton(String string){
-		return (Button)elements.get(string);
+	public static TextField getGlobalField(String string){
+		for(TextField field : TextField.getAllFields()) if(field.getId().equals(string)) return field; return null;
 	}
 
-	public static Editor get(String string){
-		for(Editor edit : editors) if(edit.id.equals(string)) return edit; return null;
+	public TextField getLocalField(String string){
+		Element elm = getElement(string); return elm instanceof TextField ? (TextField)elm : null;
 	}
 	
-	protected boolean processScrollWheel(int wheel){ return true; }
-
-	public List<Element> getFields(){
-		return elements.values().stream().filter(pre -> pre instanceof TextField).collect(Collectors.toList());
+	public TextField getMultiplicator(){
+		return (TextField)button.getElement("mt");
 	}
 
-	/** Run after all editors are initialized. */
-	public static void addQuickButtons(){;
-		String[] all = getAllEditorNames();
-		for(String str : all){
-			TextureManager.loadTexture("icons/editors/" + str);
+	public static void toggleContainer(int i){
+		Editor editor = getVisibleEditor(); if(editor == null){
+			if(i == 0) show("general_editor");
+			if(i == 1) show("model_group_editor");
+			if(i == 2) show("texture_editor");
+			if(i == 3) show("preview_editor");
+			return;
 		}
-		for(Editor editor : editors){
-			String[] getwanted = editor.getExpectedQuickButtons();
-			if(getwanted == null) getwanted = all;
-			for(int i = 0; i < getwanted.length; i++){ final String wanted = getwanted[i];
-				editor.elements.put("open_" + wanted, new IconButton(editor, "open_" + wanted, "icons/editors/" + wanted, editor.x + editor.width - (i * 24) - 24, editor.y + 2){
-					@Override protected boolean processButtonClick(int x, int y, boolean left){ Editor.show(wanted); return true; }
-				});
-				editor.elements.get("open_" + wanted).visible = Settings.editorShortcuts();
-			}
-		}
+		if(i < 0 || i >= editor.containers.length) return;
+		editor.containers[i].setExpanded(!editor.containers[i].isExpanded());
 	}
 
-	private static String[] getAllEditorNames(){
-		String[] arr = new String[editors.size()];
-		for(int i = 0; i < arr.length; i++){
-			arr[i] = editors.get(i).id;
-		} return arr;
+	private static Editor getVisibleEditor(){
+		for(Editor edit : EDITORS) if(edit.isVisible()) return edit; return null;
 	}
 
-	protected abstract String[] getExpectedQuickButtons();
-
-	public static void toggleQuickButtons(){
-		Settings.toggleEditorShortcuts();
-		for(Editor editor : editors){
-			for(Element elm : editor.elements.values()){
-				if(elm instanceof IconButton && elm.id.startsWith("open_")){
-					elm.visible = Settings.editorShortcuts();
-				}
-			}
-		}
+	public static boolean anyVisible(){
+		for(Editor edit : EDITORS) if(edit.isVisible()) return true; return false;
 	}
 
 }

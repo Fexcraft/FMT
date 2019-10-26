@@ -1,14 +1,22 @@
 package net.fexcraft.app.fmt.utils;
 
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.IOException;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import net.fexcraft.app.fmt.FMTGLProcess;
+import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
-import net.fexcraft.app.fmt.ui.generic.ControlsAdjuster;
-import net.fexcraft.app.fmt.ui.generic.TextField;
+import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
+import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.ui.tree.RightTree;
 import net.fexcraft.app.fmt.utils.KeyCompound.KeyFunction;
 import net.fexcraft.lib.common.math.Vec3f;
@@ -20,14 +28,14 @@ public class GGR {
     public float maxlookrange = 85;
     public float sensivity = 1.0f;//= 0.05f;
     public Vec3f pos, rotation;
-    private final FMTGLProcess root;
+    private final FMTB root;
     
-    public GGR(FMTGLProcess root, int x, int y, int z){
+    public GGR(FMTB root, int x, int y, int z){
         pos = new Vec3f(x, y, z); this.root = root;
         rotation = new Vec3f(0, 0, 0);
     }
     
-    public GGR(FMTGLProcess root, float x, float y, float z){
+    public GGR(FMTB root, float x, float y, float z){
         pos = new Vec3f(x, y, z); this.root = root;
         rotation = new Vec3f(0, 0, 0);
     }
@@ -53,36 +61,64 @@ public class GGR {
     		int key = Keyboard.getEventKey();
     		if(Keyboard.getEventKeyState()){//"pressed"
     	        if(TextField.anySelected()){
-    	        	TextField field = TextField.getSelected();
-    	        	if(field != null){
-    	        		for(int i = 2; i < 12; i++){
-    	        			if(key == i) field.onInput(key, getKeyName(i));
-    	        		}
-    	        		for(int i = 16; i < 26; i++){
-    	        			if(key == i) field.onInput(key, getKeyName(i));
-    	        		}
-    	        		for(int i = 30; i < 39; i++){
-    	        			if(key == i) field.onInput(key, getKeyName(i));
-    	        		}
-    	        		for(int i = 44; i < 51; i++){
-    	        			if(key == i) field.onInput(key, getKeyName(i));
-    	        		}
-    	        		if(key == Keyboard.KEY_BACK){
-    	        			field.onBackSpace();
-    	        		}
-    	        		if(key == Keyboard.KEY_RETURN){
-    	        			field.onReturn();
-    	        		}
-    	        		if(key == Keyboard.KEY_MINUS){
-    	        			field.onInput(key, "-");
-    	        		}
-    	        		if(key == Keyboard.KEY_PERIOD){
-    	        			field.onInput(key, ".");
-    	        		}
-    	        		if(key == Keyboard.KEY_SPACE){
-    	        			field.onInput(key, " ");
-    	        		}
-    	        	}
+    	        	TextField field = TextField.getSelected(); if(field == null) return;
+	        		if(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL)){
+        				Clipboard cp = Toolkit.getDefaultToolkit().getSystemClipboard();
+	        			if(key == Keyboard.KEY_V){
+	        				Transferable data = cp.getContents(null);
+	        				if(data.isDataFlavorSupported(DataFlavor.stringFlavor)){
+	        					try{ field.onInput(-1, data.getTransferData(DataFlavor.stringFlavor).toString()); }
+	        					catch(UnsupportedFlavorException | IOException e){ e.printStackTrace(); }
+	        					return;
+	        				}
+	        			}
+	        			if(key == Keyboard.KEY_X || key == Keyboard.KEY_C){
+	        				StringSelection sel = new StringSelection(field.getTextValue()); cp.setContents(sel, sel);
+	        				if(key == Keyboard.KEY_X) field.onBackSpace(true); return;
+	        			}
+	        		}
+	        		//
+    	        	for(int i = 2; i < 12; i++){
+	        			if(key == i) field.onInput(key, getKeyName(i));
+	        		}
+	        		for(int i = 16; i < 26; i++){
+	        			if(key == i) field.onInput(key, getKeyName(i));
+	        		}
+	        		for(int i = 30; i < 39; i++){
+	        			if(key == i) field.onInput(key, getKeyName(i));
+	        		}
+	        		for(int i = 44; i < 51; i++){
+	        			if(key == i) field.onInput(key, getKeyName(i));
+	        		}
+	        		if(key == Keyboard.KEY_BACK){
+	        			field.onBackSpace(false);
+	        		}
+	        		if(key == Keyboard.KEY_RETURN){
+	        			field.onReturn();
+	        		}
+	        		if(key == Keyboard.KEY_MINUS){
+	        			field.onInput(key, "-");
+	        		}
+	        		if(key == Keyboard.KEY_PERIOD){
+	        			field.onInput(key, ".");
+	        		}
+	        		if(key == Keyboard.KEY_COMMA){
+	        			field.onInput(key, ",");
+	        		}
+	        		if(key == Keyboard.KEY_SPACE){
+	        			field.onInput(key, " ");
+	        		}
+	        		//
+	        		if(key == Keyboard.KEY_NUMPAD0) field.onInput(key, "0");
+	        		if(key == Keyboard.KEY_NUMPAD1) field.onInput(key, "1");
+	        		if(key == Keyboard.KEY_NUMPAD2) field.onInput(key, "2");
+	        		if(key == Keyboard.KEY_NUMPAD3) field.onInput(key, "3");
+	        		if(key == Keyboard.KEY_NUMPAD4) field.onInput(key, "4");
+	        		if(key == Keyboard.KEY_NUMPAD5) field.onInput(key, "5");
+	        		if(key == Keyboard.KEY_NUMPAD6) field.onInput(key, "6");
+	        		if(key == Keyboard.KEY_NUMPAD7) field.onInput(key, "7");
+	        		if(key == Keyboard.KEY_NUMPAD8) field.onInput(key, "8");
+	        		if(key == Keyboard.KEY_NUMPAD9) field.onInput(key, "9");
     	        }
     	        else{
     	        	for(KeyFunction keyf : KeyCompound.keys){
@@ -100,15 +136,29 @@ public class GGR {
 	}
 
 	private String getKeyName(int i){
-		return GGR.isShiftDown() ? Keyboard.getKeyName(i) : Keyboard.getKeyName(i).toLowerCase();
+		return GGR.isShiftDown() ? i < 12 ? getSpecialChar(i) : Keyboard.getKeyName(i) : Keyboard.getKeyName(i).toLowerCase();
 	}
 
-	private boolean clickedL, clickedR, panning;
+	private String getSpecialChar(int i){
+		switch(i){
+			case 2: return "!"; case 3: return "@";
+			case 4: return "#"; case 5: return "$";
+			case 6: return "%"; case 7: return "^";
+			case 8: return "&"; case 9: return "*";
+			case 10: return "("; case 11: return ")";
+		} return Keyboard.getKeyName(i);
+	}
+
+	private boolean clickedL, clickedR, panning, dragging;
     private int wheel, oldMouseX=-1,oldMouseY=-1;
 
     public void acceptMouseInput(float delta){
         if(clickedR && !Mouse.isButtonDown(1)){
             Mouse.setGrabbed(false);//fix mouse grab sticking
+            
+        }
+        if(clickedL && !Mouse.isButtonDown(0)){
+            UserInterface.DRAGGED = null; dragging = true;
         }
         if(Mouse.isGrabbed()){
             rotation.yCoord += Mouse.getDX() * sensivity * delta;
@@ -119,21 +169,34 @@ public class GGR {
         }
         else{
         	if(!Mouse.isInsideWindow()) return;
-        	if(Mouse.isButtonDown(0) && !clickedL) root.getUserInterface().onButtonPress(0); clickedL = Mouse.isButtonDown(0);
-        	if(Mouse.isButtonDown(1) && !clickedR) root.getUserInterface().onButtonPress(1); clickedR = Mouse.isButtonDown(1);
+        	if(Mouse.isButtonDown(0) && !clickedL) root.UI.onButtonPress(0); clickedL = Mouse.isButtonDown(0);
+        	if(Mouse.isButtonDown(1) && !clickedR) root.UI.onButtonPress(1); clickedR = Mouse.isButtonDown(1);
         	if((wheel = Mouse.getDWheel()) != 0){
-        		if(!root.getUserInterface().onScrollWheel(wheel)){
+        		if(!root.UI.onScrollWheel(wheel)){
                     double[] zoom = rotatePoint(wheel * 0.005f, rotation.xCoord, rotation.yCoord - 90);
                     pos.xCoord += zoom[0]; pos.yCoord += zoom[1]; pos.zCoord += zoom[2];
         		}
         	}
         }
         //
-        if((Mouse.isInsideWindow() && /*Keyboard.isKeyDown(Keyboard.KEY_E) ||*/ Mouse.isButtonDown(1) && !RightTree.anyTreeHovered())){
-            Mouse.setGrabbed(true);
+        if(Mouse.isInsideWindow()){
+        	if(Mouse.isButtonDown(1) && !RightTree.anyTreeHovered()){
+        		Mouse.setGrabbed(true);
+        	}
+        	if(Mouse.isButtonDown(0) && dragging){
+        		if(UserInterface.DRAGGED != null){
+            		UserInterface.DRAGGED.xrel += Mouse.getDX();
+            		UserInterface.DRAGGED.yrel += -Mouse.getDY();
+            		UserInterface.DRAGGED.repos();
+        		}
+        		else{
+        			root.UI.getDraggableElement();
+        			if(UserInterface.DRAGGED == null) dragging = false;
+        		}
+        	}
         }
         if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE) && !ControlsAdjuster.CATCHING){
-            root.reset(); Mouse.setGrabbed(false); TextureEditor.reset();
+            root.reset(true); Mouse.setGrabbed(false); TextureEditor.reset();
         }
     }
 
@@ -199,7 +262,11 @@ public class GGR {
     }
 
 	public static boolean isShiftDown(){
-		return Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
+		return Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_FUNCTION);
+	}
+
+	public static boolean iControlDown(){
+		return Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL);
 	}
     
 }

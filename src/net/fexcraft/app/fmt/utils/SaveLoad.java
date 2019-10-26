@@ -8,26 +8,35 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 import javax.imageio.ImageIO;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.JsonToTMT;
+import net.fexcraft.app.fmt.porters.PorterManager;
+import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.UserInterface;
-import net.fexcraft.app.fmt.ui.generic.DialogBox;
-import net.fexcraft.app.fmt.ui.generic.FileChooser.AfterTask;
-import net.fexcraft.app.fmt.ui.generic.FileChooser.ChooserMode;
+import net.fexcraft.app.fmt.ui.general.DialogBox;
+import net.fexcraft.app.fmt.ui.general.FileChooser.AfterTask;
+import net.fexcraft.app.fmt.ui.general.FileChooser.ChooserMode;
+import net.fexcraft.app.fmt.ui.general.FileChooser.FileRoot;
+import net.fexcraft.app.fmt.utils.Animator.Animation;
+import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.json.JsonUtil;
 import net.fexcraft.lib.common.math.RGB;
+import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.common.utils.Print;
 
 public class SaveLoad {
@@ -43,11 +52,14 @@ public class SaveLoad {
 	}
 
 	public static void openModel(){
-		UserInterface.FILECHOOSER.show(new String[]{ "Select file to open.", "Open" }, root, new AfterTask(){
+		String str = Translator.translate("saveload.filechooser.open", "Select file to open.");
+		String open = Translator.translate("saveload.filechooser.open.confirm", "Open");
+		UserInterface.FILECHOOSER.show(new String[]{ str, open }, FileRoot.SAVES, new AfterTask(){
 			@Override
 			public void run(){
 				if(file == null || !file.exists()){
-					FMTB.showDialogbox("Invalid Model File!", "(does it even exists?)", "ok.", null, DialogBox.NOTHING, null);
+					String str = Translator.translate("saveload.filechooser.open.nofile", "Invalid Model File!<nl>(does it even exists?)");
+					FMTB.showDialogbox(str, Translator.translate("saveload.filechooser.open.nofile.confirm", "ok."), null, DialogBox.NOTHING, null);
 					return;
 				}
 				try{
@@ -55,61 +67,74 @@ public class SaveLoad {
 					zip.stream().forEach(elm -> {
 						if(elm.getName().equals("model.jtmt")){
 							try{
-								loadModel(JsonUtil.getObjectFromInputStream(zip.getInputStream(elm)));
+								GroupCompound compound = parseModel(file, JsonUtil.getObjectFromInputStream(zip.getInputStream(elm)));
+								FMTB.MODEL = compound; FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
+								GroupCompound.SELECTED_POLYGONS = FMTB.MODEL.countSelectedMRTs();
 							} catch(IOException e){ e.printStackTrace(); }
 						}
 						else if(elm.getName().equals("texture.png")){
-							FMTB.MODEL.setTexture("temp/" + FMTB.MODEL.name);
+							FMTB.MODEL.setTexture("./temp/" + FMTB.MODEL.name);
 			            	try{ //in theory this should be always 2nd in the stream, so it is expected the model loaded already
-								TextureManager.loadTextureFromZip(zip.getInputStream(elm), "temp/" + FMTB.MODEL.name, true);
+								TextureManager.loadTextureFromZip(zip.getInputStream(elm), "./temp/" + FMTB.MODEL.name, false, true);
 							} catch(IOException e){ e.printStackTrace(); }
 						}
-					}); zip.close(); FMTB.MODEL.file = file;
+					}); zip.close(); FMTB.MODEL.file = file; DiscordUtil.update(Settings.discordrpc_resettimeronnewmodel());
 				}
 				catch(Exception e){
 					e.printStackTrace();
-					FMTB.showDialogbox("Errors occured", "while parsing save file", "ok", null, DialogBox.NOTHING, null);
+					String str = Translator.translate("saveload.filechooser.open.errors", "Errors occured<nl>while parsing save file");
+					FMTB.showDialogbox(str, Translator.translate("saveload.filechooser.open.errors.confirm", "ok"), null, DialogBox.NOTHING, null);
 				}
 			}
 		}, ChooserMode.SAVEFILE_LOAD);
 	}
 	
-	public static void loadModel(JsonObject obj){
-		FMTB.MODEL = getModel(obj, true); FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
+	public static GroupCompound parseModel(File from, JsonObject obj){
+		return getModel(from, obj, true); //FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
 	}
 	
-	public static void checkIfShouldSave(boolean shouldclose){
+	public static void checkIfShouldSave(boolean shouldclose, boolean shouldclear){
 		TextureUpdate.HALT = true;
 		if(FMTB.MODEL.countTotalMRTs() > 0){
-			FMTB.showDialogbox("Do you want to save the", "current model first?", "Yes", "No", new Runnable(){
+			String str = Translator.translate("dialog.saveload.should_save", "Do you want to save the<nl>current model first?");
+			String yes = Translator.translate("dialog.saveload.should_save.confirm", "Yes");
+			FMTB.showDialogbox(str, yes, Translator.translate("dialog.saveload.should_save.cancel", "No"), new Runnable(){
 				@Override
 				public void run(){
 					if(FMTB.MODEL.file == null){
-						UserInterface.FILECHOOSER.show(new String[]{ "Select save location.", "Select"}, root, new AfterTask(){
+						String str = Translator.translate("saveload.filechooser.save", "Select save location.");
+						String save = Translator.translate("saveload.filechooser.save.confirm", "Select");
+						UserInterface.FILECHOOSER.show(new String[]{ str, save, }, FileRoot.SAVES, new AfterTask(){
 							@Override
 							public void run(){
 								if(file == null){
-									FMTB.showDialogbox("Model save file is 'null'!", "Model will not be saved.", "OK", "Save", new Runnable(){
+									String str = Translator.translate("saveload.filechooser.save.nofile", "Model save file is 'null'!<nl>Model will not be saved.");
+									String ok = Translator.translate("saveload.filechooser.save.nofile.confirm", "OK");
+									FMTB.showDialogbox(str, ok,  Translator.translate("saveload.filechooser.save.nofile.save", "Save"), new Runnable(){
 										@Override public void run(){ if(shouldclose){ FMTB.get().close(true); } }
 									}, new Runnable(){
-										@Override public void run(){ checkIfShouldSave(shouldclose); }
+										@Override public void run(){ checkIfShouldSave(shouldclose, shouldclear); }
 									});
 								}
 								else{
-									FMTB.MODEL.file = file;
-									saveModel(false, shouldclose); if(shouldclose){ FMTB.get().close(true); }
+									FMTB.MODEL.file = file; saveModel(false, shouldclose);
+									if(shouldclear){ FMTB.MODEL = new GroupCompound(null); }
+									if(shouldclose){ FMTB.get().close(true); }
 								}
 							}
 						}, ChooserMode.SAVEFILE_SAVE);
 					}
 					else{
-						saveModel(false, shouldclose); if(shouldclose){ FMTB.get().close(true); }
+						saveModel(false, false);//shouldclose);
+						if(shouldclear){ FMTB.MODEL = new GroupCompound(null); }
+						if(shouldclose){ FMTB.get().close(true); }
 					}
 				}
 			}, new Runnable(){
 				@Override
 				public void run(){
 					Print.console("selected > no saving of current");
+					if(shouldclear){ FMTB.MODEL = new GroupCompound(null); }
 					if(shouldclose){ FMTB.get().close(true); }
 				}
 			});
@@ -120,17 +145,25 @@ public class SaveLoad {
 	}
 
 	public static void openNewModel(){
-		checkIfShouldSave(false);
-		FMTB.MODEL = new GroupCompound();
+		checkIfShouldSave(false, true);
+		//FMTB.MODEL = new GroupCompound();
 	}
 
 	public static void saveModel(boolean bool, boolean openfile){
 		if(bool || FMTB.MODEL.file == null){
-			UserInterface.FILECHOOSER.show(new String[]{ "Select save location.", "Select" }, root, new AfterTask(){
+			String str = Translator.translate("saveload.filechooser.save", "Select save location.");
+			String save = Translator.translate("saveload.filechooser.save.confirm", "Select");
+			UserInterface.FILECHOOSER.show(new String[]{ str, save }, FileRoot.SAVES, new AfterTask(){
 				@Override
 				public void run(){
-					if(file == null){ FMTB.showDialogbox("Model save file is 'null'!", "Model will not be saved.", "OK", null, DialogBox.NOTHING, null); return; }
-					FMTB.MODEL.file = file; toFile(FMTB.MODEL, null, openfile); FMTB.showDialogbox("Model Saved!", "", "ok!", null, DialogBox.NOTHING, null); return;
+					if(file == null){
+						String str = Translator.translate("saveload.filechooser.save.nofile", "Model save file is 'null'!<nl>Model will not be saved.");
+						String ok = Translator.translate("saveload.filechooser.save.nofile.confirm", "OK");
+						FMTB.showDialogbox(str, ok, null, DialogBox.NOTHING, null); return;
+					}
+					FMTB.MODEL.file = file; toFile(FMTB.MODEL, null, openfile);
+					String str = Translator.translate("dialog.saveload.save.success", "Model Saved!");
+					FMTB.showDialogbox(str, Translator.translate("dialog.saveload.save.success.confirm", "ok!"), null, DialogBox.NOTHING, null); return;
 				}
 			}, ChooserMode.SAVEFILE_SAVE);
 		}
@@ -184,8 +217,9 @@ public class SaveLoad {
 		JsonObject obj = new JsonObject();
 		obj.addProperty("format", 2);
 		obj.addProperty("name", compound.name);
-		obj.addProperty("texture_size_x", compound.textureX);
-		obj.addProperty("texture_size_y", compound.textureY);
+		obj.addProperty("texture_size_x", compound.tx(null));
+		obj.addProperty("texture_size_y", compound.ty(null));
+		obj.addProperty("texture_scale", compound.textureScale);
 		JsonArray creators = new JsonArray();
 		if(compound.creators.isEmpty()){
 			creators.add(SessionHandler.isLoggedIn() ? SessionHandler.getUserName() : "OfflineUser");
@@ -199,9 +233,8 @@ public class SaveLoad {
 		obj.add("creators", creators);
 		obj.addProperty("type", "jtmt");
 		JsonObject model = new JsonObject();
-		for(Entry<String, TurboList> entry : compound.getCompound().entrySet()){
+		for(TurboList list : compound.getGroups()){
 			JsonObject group = new JsonObject(); JsonArray array = new JsonArray();
-			TurboList list = entry.getValue();
 			if(!export){
 				group.addProperty("visible", list.visible);
 				if(list.color != null){
@@ -212,13 +245,37 @@ public class SaveLoad {
 				}
 				group.addProperty("minimized", list.minimized);
 				group.addProperty("selected", list.selected);
+				if(list.getGroupTexture() != null){
+					group.addProperty("texture", list.getGroupTexture());
+					group.addProperty("texture_size_x", list.textureX);
+					group.addProperty("texture_size_y", list.textureY);
+					group.addProperty("texture_scale", list.textureS);
+				}
+				if(!list.animations.isEmpty()){
+					JsonArray animations = new JsonArray();
+					for(Animation ani : list.animations){
+						JsonObject jsn = new JsonObject();
+						jsn.addProperty("id", ani.id);
+						JsonArray settings = new JsonArray();
+						for(Setting setting : ani.settings){
+							JsonObject sett = new JsonObject();
+							sett.addProperty("id", setting.getId());
+							sett.addProperty("type", setting.getType().name().toLowerCase());
+							sett.add("value", setting.save());
+							settings.add(sett);
+						}
+						jsn.add("settings", settings);
+						animations.add(jsn);
+					}
+					group.add("animations", animations);
+				}
 			}
 			group.addProperty("name", list.id);
 			for(PolygonWrapper wrapper : list){
 				array.add(wrapper.toJson(export));
 			}
 			group.add("polygons", array);
-			model.add(entry.getKey(), group);
+			model.add(list.id, group);
 		}
 		obj.add("groups", model);
 		if(!export){
@@ -233,14 +290,42 @@ public class SaveLoad {
 			array.add(FMTB.ggr.rotation.zCoord);
 			obj.add("camera_rot", array);
 		}
+		if(!HelperCollector.LOADED.isEmpty() && !export){
+			JsonArray array = new JsonArray();
+			for(GroupCompound group : HelperCollector.LOADED){
+				JsonObject jsn = new JsonObject();
+				jsn.addProperty("name", group.name);
+				jsn.addProperty("texture", group.texture);
+				if(group.rot != null){
+					jsn.addProperty("rot_x", group.rot.xCoord);
+					jsn.addProperty("rot_y", group.rot.yCoord);
+					jsn.addProperty("rot_z", group.rot.zCoord);
+				}
+				if(group.pos != null){
+					jsn.addProperty("pos_x", group.pos.xCoord);
+					jsn.addProperty("pos_y", group.pos.yCoord);
+					jsn.addProperty("pos_z", group.pos.zCoord);
+				}
+				if(group.scale != null){
+					jsn.addProperty("scale_x", group.scale.xCoord);
+					jsn.addProperty("scale_y", group.scale.yCoord);
+					jsn.addProperty("scale_z", group.scale.zCoord);
+				}
+				jsn.addProperty("path", group.origin.toPath().toString());
+				jsn.addProperty("visible", group.visible);
+				array.add(jsn);
+			}
+			obj.add("helpers", array);
+		}
 		return obj;
 	}
 	
-	public static GroupCompound getModel(JsonObject obj, boolean ggr){
-		GroupCompound compound = new GroupCompound(); compound.getCompound().clear();
+	public static GroupCompound getModel(File from, JsonObject obj, boolean ggr){
+		GroupCompound compound = new GroupCompound(from); compound.getGroups();
 		compound.name = JsonUtil.getIfExists(obj, "name", "unnamed model");
-		compound.textureX = JsonUtil.getIfExists(obj, "texture_size_x", 256).intValue();
-		compound.textureY = JsonUtil.getIfExists(obj, "texture_size_y", 256).intValue();
+		compound.textureSizeX = JsonUtil.getIfExists(obj, "texture_size_x", 256).intValue();
+		compound.textureSizeY = JsonUtil.getIfExists(obj, "texture_size_y", 256).intValue();
+		compound.textureScale = JsonUtil.getIfExists(obj, "texture_scale", 1).intValue();
 		compound.creators = JsonUtil.jsonArrayToStringArray(JsonUtil.getIfExists(obj, "creators", new JsonArray()).getAsJsonArray());
 		if(JsonUtil.getIfExists(obj, "format", 2).intValue() == 1){
 			JsonObject model = obj.get("model").getAsJsonObject();
@@ -248,7 +333,7 @@ public class SaveLoad {
 				try{
 					TurboList list = new TurboList(entry.getKey()); JsonArray array = entry.getValue().getAsJsonArray();
 					for(JsonElement elm : array){ list.add(JsonToTMT.parseWrapper(compound, elm.getAsJsonObject())); }
-					compound.getCompound().put(entry.getKey(), list);
+					compound.getGroups().add(list);
 				}
 				catch(Exception e){
 					e.printStackTrace();
@@ -267,9 +352,34 @@ public class SaveLoad {
 					JsonArray colorarr = group.get("color").getAsJsonArray();
 					list.color = new RGB(colorarr.get(0).getAsByte(), colorarr.get(1).getAsByte(), colorarr.get(2).getAsByte());
 				}
+				if(group.has("texture")){
+					int texx = group.get("texture_size_x").getAsInt();
+					int texy = group.get("texture_size_y").getAsInt();
+					list.setTexture(group.get("texture").getAsString(), texx, texy);
+					list.textureS = JsonUtil.getIfExists(obj, "texture_scale", 1).intValue();
+				}
 				JsonArray polygons = group.get("polygons").getAsJsonArray();
 				for(JsonElement elm : polygons){ list.add(JsonToTMT.parseWrapper(compound, elm.getAsJsonObject())); }
-				compound.getCompound().put(entry.getKey(), list);
+				compound.getGroups().add(list);
+				if(group.has("animations")){
+					JsonArray arr = group.get("animations").getAsJsonArray();
+					for(JsonElement elm : arr){
+						JsonObject animjsn = elm.getAsJsonObject();
+						Animation anim = Animator.get(animjsn.get("id").getAsString());
+						if(anim == null) continue; anim = anim.copy();
+						JsonArray settin = animjsn.get("settings").getAsJsonArray();
+						for(JsonElement elm0 : settin){
+							JsonObject sett = elm0.getAsJsonObject();
+							Setting setting = new Setting(sett.get("type").getAsString(), sett.get("id").getAsString(), sett.get("value"));
+							for(Setting satt : anim.settings){
+								if(satt.getId().equals(setting.getId()) && satt.getType() == setting.getType()){
+									satt.setValue(setting.getValue());
+								}
+							}
+						}
+						list.animations.add(anim);
+					}
+				}
 			}
 			catch(Exception e){
 				e.printStackTrace();
@@ -286,6 +396,42 @@ public class SaveLoad {
 			FMTB.ggr.rotation.xCoord = rot.get(0).getAsFloat();
 			FMTB.ggr.rotation.yCoord = rot.get(1).getAsFloat();
 			FMTB.ggr.rotation.zCoord = rot.get(2).getAsFloat();
+		}
+		if(obj.has("helpers")){
+			JsonArray arr = obj.get("helpers").getAsJsonArray();
+			for(JsonElement elm : arr){
+				try{
+					JsonObject jsn = elm.getAsJsonObject();
+					File file = new File(jsn.get("path").getAsString());
+					GroupCompound helperpreview = null;
+					if(jsn.get("name").getAsString().startsWith("frame/")){
+						helperpreview = HelperCollector.loadFrame(file);
+					}
+					else if(jsn.get("name").getAsString().startsWith("fmtb/")){
+						helperpreview = HelperCollector.loadFMTB(file);
+					}
+					else{
+						//TODO save/load the porter settings too, I guess.
+						ExImPorter porter = PorterManager.getPorterFor(file, false);
+						HashMap<String, Setting> map = new HashMap<>();
+						porter.getSettings(false).forEach(setting -> map.put(setting.getId(), setting));
+						helperpreview = HelperCollector.load(file, porter, map);
+					}
+					if(jsn.has("pos_x")){
+						helperpreview.pos = new Vec3f(jsn.get("pos_x").getAsFloat(), jsn.get("pos_y").getAsFloat(), jsn.get("pos_z").getAsFloat());
+					}
+					if(jsn.has("rot_x")){
+						helperpreview.rot = new Vec3f(jsn.get("rot_x").getAsFloat(), jsn.get("rot_y").getAsFloat(), jsn.get("rot_z").getAsFloat());
+					}
+					if(jsn.has("scale_x")){
+						helperpreview.scale = new Vec3f(jsn.get("scale_x").getAsFloat(), jsn.get("scale_y").getAsFloat(), jsn.get("scale_z").getAsFloat());
+					}
+					helperpreview.visible = JsonUtil.getIfExists(jsn, "visible", true);
+				}
+				catch(Exception e){
+					e.printStackTrace();
+				}
+			}
 		}
 		return compound;
 	}

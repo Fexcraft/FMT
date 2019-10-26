@@ -12,7 +12,7 @@ import org.lwjgl.opengl.GL11;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
-import net.fexcraft.app.fmt.ui.generic.DialogBox;
+import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
@@ -43,7 +43,9 @@ public class RayCoastAway {
 		if(TextureEditor.pixelMode()){
 			Texture tex;
 			if(FMTB.MODEL.texture == null || (tex = TextureManager.getTexture(FMTB.MODEL.texture, true)) == null){
-				FMTB.showDialogbox("No Texture loaded.", "Cannot use Paint Pencil.", "ok", "toggle off", DialogBox.NOTHING, () -> { TextureEditor.toggleBucketMode(null); });
+				String str = Translator.translate("dialog.polygon_picker.paint_pencil.no_texture", "No Texture loaded.<nl>Cannot use Paint Pencil.");
+				String ok = Translator.translate("dialog.polygon_picker.paint_pencil.no_texture.confirm", "ok");
+				FMTB.showDialogbox(str, ok, Translator.translate("dialog.polygon_picker.paint_pencil.no_texture.cancel", "toggle off"), DialogBox.NOTHING, () -> { TextureEditor.toggleBucketMode(null); });
 				return;
 			}
 			Texture calctex = TextureManager.getTexture(GroupCompound.temptexid, true);
@@ -73,15 +75,22 @@ public class RayCoastAway {
 			boolean control = Keyboard.isKeyDown(Keyboard.KEY_LCONTROL);
 			boolean state = control ? wrapper.getTurboList().selected : wrapper.selected;
 			if(!Keyboard.isKeyDown(Keyboard.KEY_LMENU)) FMTB.MODEL.clearSelection();
-			if(control){ wrapper.getTurboList().selected = !state; }
-			else{ wrapper.selected = !state; }
+			if(control){
+				wrapper.getTurboList().selected = !state;
+				GroupCompound.SELECTED_POLYGONS = FMTB.MODEL.countSelectedMRTs();
+			}
+			else{
+				wrapper.selected = !state; GroupCompound.SELECTED_POLYGONS += wrapper.selected ? 1 : -1;
+			}
 			FMTB.MODEL.lastselected = control ? null : wrapper;
 			FMTB.MODEL.updateFields();
 		}
 		else{
 			Texture tex;
 			if(FMTB.MODEL.texture == null || (tex = TextureManager.getTexture(FMTB.MODEL.texture, true)) == null){
-				FMTB.showDialogbox("No Texture loaded.", "Cannot use Paint Bucket.", "ok", "toggle off", DialogBox.NOTHING, () -> { TextureEditor.toggleBucketMode(null); });
+				String str = Translator.translate("dialog.polygon_picker.paint_bucket.no_texture", "No Texture loaded.<nl>Cannot use Paint Bucket.");
+				String ok = Translator.translate("dialog.polygon_picker.paint_bucket.no_texture.confirm", "ok");
+				FMTB.showDialogbox(str, ok, Translator.translate("dialog.polygon_picker.paint_bucket.no_texture.cancel", "toggle off"), DialogBox.NOTHING, () -> { TextureEditor.toggleBucketMode(null); });
 				return;
 			}
 			if(TextureEditor.groupMode()){
@@ -106,7 +115,7 @@ public class RayCoastAway {
 	}
 
 	private static PolygonWrapper getSelected(int id){
-		for(TurboList list : FMTB.MODEL.getCompound().values()){
+		for(TurboList list : FMTB.MODEL.getGroups()){
 			for(PolygonWrapper wrapper : list){
 				if(wrapper.color == null) continue;
 				for(int col : wrapper.color){
