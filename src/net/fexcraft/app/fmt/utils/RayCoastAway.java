@@ -43,7 +43,9 @@ public class RayCoastAway {
 		if(TextureEditor.pixelMode()){
 			Texture tex;
 			if(FMTB.MODEL.texture == null || (tex = TextureManager.getTexture(FMTB.MODEL.texture, true)) == null){
-				FMTB.showDialogbox("No Texture loaded.\nCannot use Paint Pencil.", "ok", "toggle off", DialogBox.NOTHING, () -> { TextureEditor.toggleBucketMode(null); });
+				String str = Translator.translate("dialog.polygon_picker.paint_pencil.no_texture", "No Texture loaded.<nl>Cannot use Paint Pencil.");
+				String ok = Translator.translate("dialog.polygon_picker.paint_pencil.no_texture.confirm", "ok");
+				FMTB.showDialogbox(str, ok, Translator.translate("dialog.polygon_picker.paint_pencil.no_texture.cancel", "toggle off"), DialogBox.NOTHING, () -> { TextureEditor.toggleBucketMode(null); });
 				return;
 			}
 			Texture calctex = TextureManager.getTexture(GroupCompound.temptexid, true);
@@ -86,7 +88,9 @@ public class RayCoastAway {
 		else{
 			Texture tex;
 			if(FMTB.MODEL.texture == null || (tex = TextureManager.getTexture(FMTB.MODEL.texture, true)) == null){
-				FMTB.showDialogbox("No Texture loaded.\nCannot use Paint Bucket.", "ok", "toggle off", DialogBox.NOTHING, () -> { TextureEditor.toggleBucketMode(null); });
+				String str = Translator.translate("dialog.polygon_picker.paint_bucket.no_texture", "No Texture loaded.<nl>Cannot use Paint Bucket.");
+				String ok = Translator.translate("dialog.polygon_picker.paint_bucket.no_texture.confirm", "ok");
+				FMTB.showDialogbox(str, ok, Translator.translate("dialog.polygon_picker.paint_bucket.no_texture.cancel", "toggle off"), DialogBox.NOTHING, () -> { TextureEditor.toggleBucketMode(null); });
 				return;
 			}
 			if(TextureEditor.groupMode()){

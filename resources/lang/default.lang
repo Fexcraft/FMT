@@ -225,3 +225,14 @@ dialog.helper_collector.load_frame.nofile.confirm=ok.
 dialog.helper_collector.load_frame.errors=Errors occured<nl>while creating frame.
 dialog.helper_collector.load_frame.errors.confirm=ok
 //
+dialog.image_helper.gif_created=Gif Created.
+dialog.image_helper.gif_created.confirm=OK
+dialog.image_helper.gif_created.open=Open Fl.
+//
+dialog.polygon_picker.paint_pencil.no_texture=No Texture loaded.<nl>Cannot use Paint Pencil.
+dialog.polygon_picker.paint_pencil.no_texture.confirm=ok
+dialog.polygon_picker.paint_pencil.no_texture.cancel=toggle off
+dialog.polygon_picker.paint_bucket.no_texture=No Texture loaded.<nl>Cannot use Paint Bucket.
+dialog.polygon_picker.paint_bucket.no_texture.confirm=ok
+dialog.polygon_picker.paint_bucket.no_texture.cancel=toggle off
+//

@@ -229,3 +229,14 @@ dialog.helper_collector.load_frame.nofile.confirm=ok.
 dialog.helper_collector.load_frame.errors=Fehler sind aufgetaucht<nl>beim erstellen des Rahmens
 dialog.helper_collector.load_frame.errors.confirm=ok
 //
+dialog.image_helper.gif_created=GIF Datei Erstellt.
+dialog.image_helper.gif_created.confirm=OK
+dialog.image_helper.gif_created.open=Öffnen
+//
+dialog.polygon_picker.paint_pencil.no_texture=Keine Textur geladen.<nl>Kann Stift nicht anwenden.
+dialog.polygon_picker.paint_pencil.no_texture.confirm=ok
+dialog.polygon_picker.paint_pencil.no_texture.cancel=ausschalten
+dialog.polygon_picker.paint_bucket.no_texture=Keine Textur geladen.<nl>Kann Farbeimer nicht anwenden.
+dialog.polygon_picker.paint_bucket.no_texture.confirm=ok
+dialog.polygon_picker.paint_bucket.no_texture.cancel=ausschalten
+//
