@@ -83,7 +83,9 @@ public class GroupCompound {
 			else{
 				//TextureManager.bindTexture(texture == null ? "blank" : texture);
 				groups.forEach(elm -> { TextureManager.bindTexture(elm.getApplicableTexture(this)); elm.render(true); });
+				GL11.glDisable(GL11.GL_TEXTURE_2D);
 				groups.forEach(elm -> elm.renderLines());
+				GL11.glEnable(GL11.GL_TEXTURE_2D);
 			}
 		}
 		if(scale != null){

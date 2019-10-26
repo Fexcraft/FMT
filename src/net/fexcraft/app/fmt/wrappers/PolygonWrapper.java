@@ -51,7 +51,7 @@ public abstract class PolygonWrapper {
 	
 	public void renderLines(boolean rotXb, boolean rotYb, boolean rotZb){
 		//if(Settings.lines()) (selected ? sellines : lines).render();
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		//GL11.glDisable(GL11.GL_TEXTURE_2D);
 		if((selected || turbolist.selected) && Settings.polygonMarker()){
 			rotmarker.setRotationPoint(lines.rotationPointX, lines.rotationPointY, lines.rotationPointZ);
 			rotmarker.render();
@@ -66,7 +66,7 @@ public abstract class PolygonWrapper {
 				if(lines != null) lines.render();
 			}
 		}
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		//GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}
 
 	public void renderPicking(boolean rotXb, boolean rotYb, boolean rotZb){

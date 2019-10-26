@@ -58,15 +58,13 @@ public class ControlsAdjuster extends Element implements Dialog {
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 		}
 		try{
-			{
-				FontRenderer.drawText(translation, this.x + 18, this.y + 15, FontType.MONO);
-				FontRenderer.drawText("[ " + scroll + " ]", this.x + 416, this.y + 15, FontType.MONO);
-				for(int i = 0; i < 8; i++){
-					int j = i + (scroll * 8); if(j >= KeyCompound.keys.size()) continue; //break;
-					FontRenderer.drawText((tempkey = KeyCompound.keys.get(j)).name(), this.x + 21, this.y + 51 + (i * 32), FontType.MONO);
-					String name = Keyboard.getKeyName(tempkey.ID());
-					FontRenderer.drawText(this.getName(catched == i, name), this.x + 360, this.y + 51 + (i * 32), FontType.MONO);
-				}
+			FontRenderer.drawText(translation, this.x + 18, this.y + 15, FontType.MONO);
+			FontRenderer.drawText("[ " + scroll + " ]", this.x + 416, this.y + 15, FontType.MONO);
+			for(int i = 0; i < 8; i++){
+				int j = i + (scroll * 8); if(j >= KeyCompound.keys.size()) continue; //break;
+				FontRenderer.drawText((tempkey = KeyCompound.keys.get(j)).name(), this.x + 21, this.y + 51 + (i * 32), FontType.MONO);
+				String name = Keyboard.getKeyName(tempkey.ID());
+				FontRenderer.drawText(this.getName(catched == i, name), this.x + 360, this.y + 51 + (i * 32), FontType.MONO);
 			}
 		}
 		catch(Exception e){
