@@ -199,7 +199,7 @@ toolbar.helpers.load_frame=Načist pomocný rám
 toolbar.helpers.load_imported=Načíst importované
 toolbar.helpers.unload_clear=Vymazat vše / Odnačíst
 toolbar.helpers=Pomocníci
-toolbar.exit=Exit=Ukončit
+toolbar.exit=Ukončit
 modeltree.polygons=Polygony: 
 modeltree.remove_group=Odstranit skupinu?<nl>%s
 modeltree.remove_group.confirm=Ano
