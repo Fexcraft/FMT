@@ -160,7 +160,7 @@ public abstract class RightTree extends Element {
 
 		public GroupButton(Element root, TurboList list){
 			super(root, list.id, "tree:group", 300, 26, 4, 0);
-			this.setColor(StyleSheet.WHITE).setDraggable(true);
+			this.setColor(StyleSheet.WHITE);//.setDraggable(true);
 			this.setText((this.list = list).id, false); rel = 4;
 			this.setBorder(StyleSheet.BLACK, StyleSheet.BLACK, 0);
 			//
@@ -231,7 +231,7 @@ public abstract class RightTree extends Element {
 
 		public PolygonButton(Element root, PolygonWrapper polygon){
 			super(root, polygon.name, "tree:polygon", 296, 26, 8, 0);
-			this.setColor(StyleSheet.WHITE).setDraggable(true);
+			this.setColor(StyleSheet.WHITE);//.setDraggable(true);
 			this.setText((this.polygon = polygon).name(), false);
 			this.setBorder(StyleSheet.BLACK, StyleSheet.BLACK, 0);
 			//
@@ -283,7 +283,7 @@ public abstract class RightTree extends Element {
 
 		public CompoundButton(Element root, GroupCompound compound){
 			super(root, compound.name, "tree:compound", 300, 26, 8, 0);
-			this.setColor(StyleSheet.WHITE).setDraggable(true);
+			this.setColor(StyleSheet.WHITE);//.setDraggable(true);
 			this.setText((this.compound = compound).name, false);
 			this.setBorder(StyleSheet.BLACK, StyleSheet.BLACK, 0);
 			//
