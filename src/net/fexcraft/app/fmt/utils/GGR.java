@@ -149,13 +149,12 @@ public class GGR {
 		} return Keyboard.getKeyName(i);
 	}
 
-	private boolean clickedL, clickedR, panning, dragging;
+	public static boolean clickedL, clickedR; private boolean panning, dragging;
     private int wheel, oldMouseX=-1,oldMouseY=-1;
 
     public void acceptMouseInput(float delta){
         if(clickedR && !Mouse.isButtonDown(1)){
             Mouse.setGrabbed(false);//fix mouse grab sticking
-            
         }
         if(clickedL && !Mouse.isButtonDown(0)){
             UserInterface.DRAGGED = null; dragging = true;
@@ -180,7 +179,7 @@ public class GGR {
         }
         //
         if(Mouse.isInsideWindow()){
-        	if(Mouse.isButtonDown(1) && !RightTree.anyTreeHovered()){
+        	if(Mouse.isButtonDown(1) && !RightTree.anyTreeHovered() && !UserInterface.RIGHTMENU.visible()){
         		Mouse.setGrabbed(true);
         	}
         	if(Mouse.isButtonDown(0) && dragging){

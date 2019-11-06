@@ -6,6 +6,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.general.AltMenu;
 import net.fexcraft.app.fmt.ui.general.Bottombar;
 import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
@@ -36,6 +37,7 @@ public class UserInterface {
 	public static FileChooser FILECHOOSER;
 	public static ControlsAdjuster CONTROLS;
 	public static SettingsBox SETTINGSBOX;
+	public static AltMenu RIGHTMENU;
 	//
 	private ArrayList<Element> elements = new ArrayList<>();
 	private FMTB root;
@@ -161,10 +163,16 @@ public class UserInterface {
 				}
 			}
 			if(element instanceof TextField == false) TextField.deselectAll();
-			if(i == 0 && (element == null ? true : element.id.equals("crossbar"))){
+			boolean bool = element == null ? true : element.id.equals("crossbar"); 
+			if(i == 0 && bool){
 				RayCoastAway.doTest(true, true);
 			}
+			if(i == 1 && bool && !UserInterface.RIGHTMENU.visible()){
+				ArrayList<PolygonWrapper> selected = FMTB.MODEL.getSelected();
+				UserInterface.RIGHTMENU.show(AltMenu.Type.sel(selected.isEmpty()), Mouse.getX(), FMTB.get().getDisplayMode().getHeight() - Mouse.getY(), selected);
+			}
 		}
+		return;
 	}
 
 	public void getDraggableElement(){

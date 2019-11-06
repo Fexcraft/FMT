@@ -38,6 +38,7 @@ import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
 import net.fexcraft.app.fmt.ui.editor.ModelGroupEditor;
 import net.fexcraft.app.fmt.ui.editor.PreviewEditor;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
+import net.fexcraft.app.fmt.ui.general.AltMenu;
 import net.fexcraft.app.fmt.ui.general.Bottombar;
 import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
 import net.fexcraft.app.fmt.ui.general.Crossbar;
@@ -346,6 +347,7 @@ public class FMTB {
 		ui.getElements().add(UserInterface.TOOLBAR);
 		ui.getElements().add(UserInterface.BOTTOMBAR);
 		ui.getElements().add(new Crossbar());
+		ui.getElements().add(UserInterface.RIGHTMENU = AltMenu.MENU);
 		FMTB.MODEL.updateFields();
 	}
 
