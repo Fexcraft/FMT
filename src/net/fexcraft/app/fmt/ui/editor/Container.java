@@ -45,7 +45,7 @@ public class Container extends Button {
 	}
 	
 	@Override
-	protected boolean processButtonClick(int x, int y, boolean left){
+	public boolean processButtonClick(int x, int y, boolean left){
 		this.setExpanded(!expanded); return true;
 	}
 

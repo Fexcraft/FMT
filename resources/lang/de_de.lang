@@ -274,3 +274,7 @@ dialog.texture_update.auto_positioner.complete="Auto Textur Positionierer"<nl>- 
 dialog.texture_update.auto_positioner.complete.confirm=Gut!
 dialog.texture_update.auto_positioner.processing=Verarbeitet: %s Prozent<nl>%s:%s
 //
+alt_menu.selection.deselect_all=Alles Abwählen
+alt_menu.selection.open_editor=Editor Öffnen
+alt_menu.selection.delete_selected=Auswahl Löschen
+//

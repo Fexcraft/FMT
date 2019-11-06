@@ -63,35 +63,35 @@ public class TextureEditor extends Editor {
 			translate("editor.texture.brushes.tool_on", "ON"); String off = translate("editor.texture.brushes.tool_off", "OFF");
 			button0 = new Button(brushes, "button0", "texture_editor:button", 290, 28, 4, passed += 32, buttonhover.packed){
 				@Override
-				protected boolean processButtonClick(int x, int y, boolean left){
+				public boolean processButtonClick(int x, int y, boolean left){
 					toggleBucketMode(PaintMode.FACE); return true;
 				}
 			};
 			brushes.getElements().add(button0.setText(format("editor.texture.brushes.face_paintbucket", "(Face) Paint Bucket [%s]", off), true));
 			button1 = new Button(brushes, "button1", "texture_editor:button", 290, 28, 4, passed += 32, buttonhover.packed){
 				@Override
-				protected boolean processButtonClick(int x, int y, boolean left){
+				public boolean processButtonClick(int x, int y, boolean left){
 					toggleBucketMode(PaintMode.POLYGON); return true;
 				}
 			};
 			brushes.getElements().add(button1.setText(format("editor.texture.brushes.polygon_paintbucket", "(Polygon) Paint Bucket [%s]", off), true));
 			button2 = new Button(brushes, "button2", "texture_editor:button", 290, 28, 4, passed += 32, buttonhover.packed){
 				@Override
-				protected boolean processButtonClick(int x, int y, boolean left){
+				public boolean processButtonClick(int x, int y, boolean left){
 					toggleBucketMode(PaintMode.GROUP); return true;
 				}
 			};
 			brushes.getElements().add(button2.setText(format("editor.texture.brushes.group_paintbucket", "(Group) Paint Bucket [%s]", off), true));
 			button3 = new Button(brushes, "button3", "texture_editor:button", 290, 28, 4, passed += 32, buttonhover.packed){
 				@Override
-				protected boolean processButtonClick(int x, int y, boolean left){
+				public boolean processButtonClick(int x, int y, boolean left){
 					toggleBucketMode(PaintMode.PIXEL); return true;
 				}
 			}.setIcon("icons/pencil", 32);
 			brushes.getElements().add(button3.setText(format("editor.texture.brushes.pixel_pencil", "(Pixel) Paint Pencil [%s]", off), true));
 			button4 = new Button(brushes, "button4", "texture_editor:button", 290, 28, 4, passed += 32, buttonhover.packed){
 				@Override
-				protected boolean processButtonClick(int x, int y, boolean left){
+				public boolean processButtonClick(int x, int y, boolean left){
 					toggleBucketMode(PaintMode.COLORPICKER); return true;
 				}
 			};
@@ -166,7 +166,7 @@ public class TextureEditor extends Editor {
 		}
 
 		@Override
-		protected boolean processButtonClick(int x, int y, boolean left){
+		public boolean processButtonClick(int x, int y, boolean left){
 			int xx = (x - this.x - 3) / colls, yy = (y - this.y - 3) / colls; int zz = xx + (yy * rows);
 			if(zz >= 0 && zz < pallete.length){
 				CURRENTCOLOR = pallete[zz]; ((TextureEditor)root.getRoot()).updateFields();
@@ -230,7 +230,7 @@ public class TextureEditor extends Editor {
 		}
 
 		@Override
-		protected boolean processButtonClick(int x, int y, boolean left){
+		public boolean processButtonClick(int x, int y, boolean left){
 			int xx = (x - this.x - 3) / 8;
 			if(xx >= 0 && xx < hopall.length){
 				CURRENTCOLOR = hopall[xx]; ((TextureEditor)root.getRoot()).updateFields();

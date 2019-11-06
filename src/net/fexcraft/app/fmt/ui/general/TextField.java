@@ -39,10 +39,10 @@ public class TextField extends Element {
 		if(Settings.numberfieldarrows() && arrows){//TODO eventually dynamic loading/adjustment so a restart isn't needed
 			width -= 20;
 			elements.add(new RectIcon(this, id + ":arrow_up", stylegroup + ":arrow", "icons/numberfield_incr", 20, height / 2, width, 0){
-				@Override protected boolean processButtonClick(int x, int y, boolean left){ return this.root.processScrollWheel(1); }
+				@Override public boolean processButtonClick(int x, int y, boolean left){ return this.root.processScrollWheel(1); }
 			});
 			elements.add(new RectIcon(this, id + ":arrow_down", stylegroup + ":arrow", "icons/numberfield_decr", 20, height / 2, width, height / 2){
-				@Override protected boolean processButtonClick(int x, int y, boolean left){ return this.root.processScrollWheel(-1); }
+				@Override public boolean processButtonClick(int x, int y, boolean left){ return this.root.processScrollWheel(-1); }
 			});
 		} return this;
 	}
@@ -77,7 +77,7 @@ public class TextField extends Element {
 	}
 
 	@Override
-	protected boolean processButtonClick(int x, int y, boolean left){
+	public boolean processButtonClick(int x, int y, boolean left){
 		if(this.isSelected()){ this.onReturn(); this.deselect(); return true; }
 		deselectAll(); return select();
 	}
@@ -239,7 +239,7 @@ public class TextField extends Element {
 		}
 		
 		@Override
-		protected boolean processButtonClick(int x, int y, boolean left){
+		public boolean processButtonClick(int x, int y, boolean left){
 			this.applyChange(!(this.getIntegerValue() == 1) ? 1 : 0); this.updateNumberField(); return true;
 		}
 		

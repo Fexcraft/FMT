@@ -58,7 +58,7 @@ public class FileChooser extends Element implements Dialog {
 		TextureManager.loadTexture("icons/file_chooser_4", null); TextureManager.loadTexture("icons/file_chooser_5", null);
 		TextureManager.loadTexture("icons/file_chooser_6", null); TextureManager.loadTexture("icons/file_chooser_7", null);*/
 		this.elements.add(sel[0] = new Button(this, "button0", "filechooser:button", 140, 28, 20, 504, StyleSheet.YELLOW, StyleSheet.RED){
-			@Override protected boolean processButtonClick(int x, int y, boolean left){
+			@Override public boolean processButtonClick(int x, int y, boolean left){
 				onfile.porter = PorterManager.getPorters(mode.exports()).get(eximscroll);
 				if(cfn.isEnabled() && isValidInput(cfn.getText())){
 					onfile.file = new File(currdir, cfn.getText() + (cfn.getText().endsWith(getCurrentSelectedFileExtension(onfile.porter)) ? "" : getCurrentSelectedFileExtension(onfile.porter)));
@@ -97,7 +97,7 @@ public class FileChooser extends Element implements Dialog {
 			}
 		});
 		this.elements.add(sel[1] = new Button(this, "button1", "filechooser:button", 140, 28, 186, 504/*470*/, StyleSheet.YELLOW, StyleSheet.RED){
-			@Override protected boolean processButtonClick(int x, int y, boolean left){
+			@Override public boolean processButtonClick(int x, int y, boolean left){
 				onfile.porter = PorterManager.getPorters(mode.exports()).get(eximscroll);
 				String str = Backups.getSimpleDateFormat(true).format(Time.getDate()); UserInterface.FILECHOOSER.visible = false;
 				String ext = getCurrentSelectedFileExtension(onfile.porter);
@@ -106,20 +106,20 @@ public class FileChooser extends Element implements Dialog {
 			}
 		});
 		this.elements.add(sel[2] = new Button(this, "button2", "filechooser:button", 140, 28, 352, 504/*470*/, StyleSheet.YELLOW, StyleSheet.RED){
-			@Override protected boolean processButtonClick(int x, int y, boolean left){ UserInterface.FILECHOOSER.reset(); return true; }
+			@Override public boolean processButtonClick(int x, int y, boolean left){ UserInterface.FILECHOOSER.reset(); return true; }
 		});
 		for(Button button : sel) button.setBorder(StyleSheet.BLACK, StyleSheet.WHITE, 0);
 		//
 		this.elements.add((eximporter = new TextField(this, "eximporter", "filechooser:eximporter", 404, 17, 430).setRenderBackground(false).setTextColor(RGB.BLACK)).setEnabled(false));
 		this.elements.add(root = new Button(this, "fileroot", "filechooser:root", 472, 28, 20, 54, 0xffc8c8c8){
-			@Override protected boolean processButtonClick(int x, int y, boolean left){
+			@Override public boolean processButtonClick(int x, int y, boolean left){
 				if(currdir.getParentFile() != null) currdir = currdir.getParentFile().getAbsoluteFile();
 				Settings.SETTINGS.get("filedir_last").setValue(currdir.toPath().toString()); ressel(); return true;
 			}
 		}.setBackgroundless(true));
 		for(int i = 0; i < files.length; i++){ int j = i;
 			this.elements.add(files[i] = new Button(this, "files" + i, "filechooser:file", 472, 28, 20, 82 + (i * 28), StyleSheet.YELLOW, 0xffff8300){
-				@Override protected boolean processButtonClick(int x, int y, boolean left){
+				@Override public boolean processButtonClick(int x, int y, boolean left){
 					File[] fls = getFilteredList();
 					if(fls[selected = scroll + j].isDirectory()){
 						currdir = fls[selected]; ressel();
@@ -131,7 +131,7 @@ public class FileChooser extends Element implements Dialog {
 		//
 		this.elements.add(/*exim_prev = */new Icon(this, "exim-", "filechooser:exim", "icons/arrow_decrease", 26, 436, 429){
 			@Override
-			protected boolean processButtonClick(int x, int y, boolean left){
+			public boolean processButtonClick(int x, int y, boolean left){
 				switch(mode){
 					case EXPORT: case IMPORT:{
 						eximscroll++;if(eximscroll >= PorterManager.getPorters(mode.exports()).size()) eximscroll = 0;
@@ -143,7 +143,7 @@ public class FileChooser extends Element implements Dialog {
 		}.setHoverColor(0xff787878, false));
 		this.elements.add(/*exim_next = */new Icon(this, "exim+", "filechooser:exim", "icons/arrow_increase", 26, 464, 429){
 			@Override
-			protected boolean processButtonClick(int x, int y, boolean left){
+			public boolean processButtonClick(int x, int y, boolean left){
 				switch(mode){
 					case EXPORT: case IMPORT:{
 						eximscroll--; if(eximscroll < 0) eximscroll = PorterManager.getPorters(mode.exports()).size() - 1;
@@ -265,7 +265,7 @@ public class FileChooser extends Element implements Dialog {
 	}
 	
 	@Override
-	protected boolean processButtonClick(int x, int y, boolean left){
+	public boolean processButtonClick(int x, int y, boolean left){
 		//
 		return true;
 	}

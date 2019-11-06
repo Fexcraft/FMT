@@ -84,7 +84,7 @@ public class ControlsAdjuster extends Element implements Dialog {
 	}
 	
 	@Override
-	protected boolean processButtonClick(int x, int y, boolean left){
+	public boolean processButtonClick(int x, int y, boolean left){
 		if(hovered >= 0 && hovered < 8) { catched = hovered; CATCHING = true; } return true;
 	}
 	

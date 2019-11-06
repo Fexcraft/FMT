@@ -31,10 +31,10 @@ public class DialogBox extends Element implements Dialog {
 		super(null, "dialogbox", "dialogbox"); this.setSize(258, 128).setDraggable(true).setVisible(false).setColor(0xff80adcc);
 		Dialog.dialogs.add(this); this.setBorder(0xff000000, 0xfffcba03, 5, true, true, true, true); this.setHoverColor(0xffffffff, false);
 		this.elements.add(button0 = new Button(this, "positive", "dialogbox:button_positive", 100, 30, 20, 80, 0xffe1e100){
-			@Override protected boolean processButtonClick(int x, int y, boolean left){ return onClick(true); }
+			@Override public boolean processButtonClick(int x, int y, boolean left){ return onClick(true); }
 		});
 		this.elements.add(button1 = new Button(this, "negative", "dialogbox:button_positive", 100, 30, 136, 80, 0xffd64f4f){
-			@Override protected boolean processButtonClick(int x, int y, boolean left){ return onClick(false); }
+			@Override public boolean processButtonClick(int x, int y, boolean left){ return onClick(false); }
 		});
 	}
 	
@@ -59,7 +59,7 @@ public class DialogBox extends Element implements Dialog {
 	}
 	
 	@Override
-	protected boolean processButtonClick(int x, int y, boolean left){
+	public boolean processButtonClick(int x, int y, boolean left){
 		//
 		return true;
 	}

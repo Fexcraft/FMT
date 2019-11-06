@@ -35,10 +35,10 @@ public class SettingsBox extends Element implements Dialog {
 		this.setBorder(0xff000000, 0xff3458eb, 5, true, true, true, true);
 		//
 		this.elements.add(Confirm = new Button(this, "confirm", "settingsbox:button", 100, 20, width - 112, 12, 0xffffff00){
-			@Override protected boolean processButtonClick(int x, int y, boolean left){ task.run(); reset(); return true; }
+			@Override public boolean processButtonClick(int x, int y, boolean left){ task.run(); reset(); return true; }
 		}.setText("Confirm", true));
 		this.elements.add(Cancel = new Button(this, "cancel", "settingsbox:button", 100, 20, width - 214, 12, 0xffffff00){
-			@Override protected boolean processButtonClick(int x, int y, boolean left){ reset(); return true; }
+			@Override public boolean processButtonClick(int x, int y, boolean left){ reset(); return true; }
 		}.setText("Cancel", true));
 		//
 		alttext = translate("settingsbox.default", "FMT Settings");
@@ -123,7 +123,7 @@ public class SettingsBox extends Element implements Dialog {
 			super.renderSelf(rw, rh);
 		}
 		
-		protected boolean processButtonClick(int x, int y, boolean left){
+		public boolean processButtonClick(int x, int y, boolean left){
 			if(left) setting.validateAndApply(!setting.getBooleanValue() + "");
 			this.setText(setting.toString(), false); return true;
 		}
@@ -131,7 +131,7 @@ public class SettingsBox extends Element implements Dialog {
 	}
 
 	@Override
-	protected boolean processButtonClick(int x, int y, boolean left){
+	public boolean processButtonClick(int x, int y, boolean left){
 		//
 		return true;
 	}

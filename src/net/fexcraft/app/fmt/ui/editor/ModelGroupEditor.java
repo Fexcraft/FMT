@@ -62,7 +62,7 @@ public class ModelGroupEditor extends Editor {
 				.setText(translate("editor.model_group.model.texture", "Model Texture"), false));
 			model.getElements().add(new TextField(model, "model_texture", "editor:field", 300, 4, passed += 24){
 				@Override
-				protected boolean processButtonClick(int x, int y, boolean left){
+				public boolean processButtonClick(int x, int y, boolean left){
 					if(!left){
 						if(FMTB.MODEL.texture != null && TextureManager.getTexture(FMTB.MODEL.texture, true) != null){
 							FMTB.MODEL.setTexture(null); TextureManager.removeTexture(FMTB.MODEL.texture);
@@ -142,7 +142,7 @@ public class ModelGroupEditor extends Editor {
 				.setText(translate("editor.model_group.group.texture", "Group Texture"), false));
 			group.getElements().add(new TextField(group, "group_texture", "editor:field", 300, 4, passed += 24){
 				@Override
-				protected boolean processButtonClick(int x, int y, boolean left){
+				public boolean processButtonClick(int x, int y, boolean left){
 					if(FMTB.MODEL.getSelected().isEmpty()) return true;
 					if(!left){
 						ArrayList<TurboList> arrlist = FMTB.MODEL.getDirectlySelectedGroups();
@@ -171,7 +171,7 @@ public class ModelGroupEditor extends Editor {
 				.setText(translate("editor.model_group.group.add_animator", "Add Animator"), false));
 			group.getElements().add(new TextField(group, "group_animator", "editor:field", 300, 4, passed += 24){
 				@Override
-				protected boolean processButtonClick(int x, int y, boolean left){
+				public boolean processButtonClick(int x, int y, boolean left){
 					if(FMTB.MODEL.getSelected().isEmpty()) return true;
 					if(!left){
 						FMTB.showDialogbox(this.getText(), "ok", null, DialogBox.NOTHING, null);
@@ -212,7 +212,7 @@ public class ModelGroupEditor extends Editor {
 			for(int i = 0; i < rows.length - 1; i++){ int j = i;
 				animations.getElements().add(new TextField(animations, "group_animation_" + i, "animation:field", 0, 0, 0){
 					@Override
-					protected boolean processButtonClick(int x, int y, boolean left){
+					public boolean processButtonClick(int x, int y, boolean left){
 						if(left){
 							Animation anim = list.animations.get(j); this.deselect(); if(anim == null) return true;
 							AfterTask task = new AfterTask(){

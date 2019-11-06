@@ -110,4 +110,8 @@ public class Button extends Element {
 		super.hovered(mx, my); if(this.hovered){ for(Element elm : elements) elm.setVisible(true); }
 	}
 
+	public String getText(){
+		return text;
+	}
+
 }

@@ -227,7 +227,7 @@ public class Element {
 	}
 	
 	/** To be overridden. **/
-	protected boolean processButtonClick(int x, int y, boolean left){
+	public boolean processButtonClick(int x, int y, boolean left){
 		return false;
 	}
 

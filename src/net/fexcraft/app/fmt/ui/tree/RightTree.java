@@ -73,7 +73,7 @@ public abstract class RightTree extends Element {
 	}
 
 	@Override
-	protected boolean processButtonClick(int x, int y, boolean left){
+	public boolean processButtonClick(int x, int y, boolean left){
 		return true;
 	}
 	
@@ -166,25 +166,25 @@ public abstract class RightTree extends Element {
 			//
 			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_minimize", 22, width - 104, 2){
 				@Override
-				protected boolean processButtonClick(int mx, int my, boolean left){
+				public boolean processButtonClick(int mx, int my, boolean left){
 					list.minimized = !list.minimized; return true;
 				}
 			});
 			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_edit", 22, width - 78, 2){
 				@Override
-				protected boolean processButtonClick(int mx, int my, boolean left){
+				public boolean processButtonClick(int mx, int my, boolean left){
 					Editor.show("model_group_editor"); return true;
 				}
 			});
 			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_visible", 22, width - 52, 2){
 				@Override
-				protected boolean processButtonClick(int mx, int my, boolean left){
+				public boolean processButtonClick(int mx, int my, boolean left){
 					list.visible = !list.visible; return true;
 				}
 			});
 			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_delete", 22, width - 26, 2){
 				@Override
-				protected boolean processButtonClick(int mx, int my, boolean left){
+				public boolean processButtonClick(int mx, int my, boolean left){
 					String str = format("modeltree.remove_group", "Remove this group?<nl>%s", list.id);
 					String yes = translate("modeltree.remove_group.confirm", "Yes");
 					FMTB.showDialogbox(str, yes, translate("modeltree.remove_group.cancel", "No!"), () -> {
@@ -198,7 +198,7 @@ public abstract class RightTree extends Element {
 			elements.clear(); this.setSize(296, 26); rel = 8; compound = true;
 			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_visible", 22, width - 26, 2){
 				@Override
-				protected boolean processButtonClick(int mx, int my, boolean left){
+				public boolean processButtonClick(int mx, int my, boolean left){
 					list.visible = !list.visible; return true;
 				}
 			});
@@ -210,7 +210,7 @@ public abstract class RightTree extends Element {
 		}
 		
 		@Override
-		protected boolean processButtonClick(int mx, int my, boolean left){
+		public boolean processButtonClick(int mx, int my, boolean left){
 			boolean bool = list.selected; if(!GGR.isShiftDown()){ FMTB.MODEL.clearSelection(); }
 			list.selected = !bool; FMTB.MODEL.updateFields(); FMTB.MODEL.lastselected = null;
 			if(!compound) GroupCompound.SELECTED_POLYGONS = FMTB.MODEL.countSelectedMRTs(); return true;
@@ -237,19 +237,19 @@ public abstract class RightTree extends Element {
 			//
 			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_edit", 22, width - 78, 2){
 				@Override
-				protected boolean processButtonClick(int mx, int my, boolean left){
+				public boolean processButtonClick(int mx, int my, boolean left){
 					Editor.show("general_editor"); return true;
 				}
 			});
 			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_visible", 22, width - 52, 2){
 				@Override
-				protected boolean processButtonClick(int mx, int my, boolean left){
+				public boolean processButtonClick(int mx, int my, boolean left){
 					polygon.visible = !polygon.visible; return true;
 				}
 			});
 			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_delete", 22, width - 26, 2){
 				@Override
-				protected boolean processButtonClick(int mx, int my, boolean left){
+				public boolean processButtonClick(int mx, int my, boolean left){
 					String str = format("modeltree.remove_polygon", "Remove this polygon?<nl>%s", polygon.getTurboList().id + ":" + polygon.name());
 					FMTB.showDialogbox(str, translate("modeltree.remove_polygon.confirm", "Yes"), translate("modeltree.remove_polygon.cancel", "No!"), () -> {
 						polygon.getTurboList().remove(polygon);
@@ -264,7 +264,7 @@ public abstract class RightTree extends Element {
 		}
 		
 		@Override
-		protected boolean processButtonClick(int mx, int my, boolean left){
+		public boolean processButtonClick(int mx, int my, boolean left){
 			boolean bool = polygon.selected; if(!GGR.isShiftDown()){ FMTB.MODEL.clearSelection(); }
 			polygon.selected = !bool; FMTB.MODEL.updateFields(); FMTB.MODEL.lastselected = polygon;
 			GroupCompound.SELECTED_POLYGONS += polygon.selected ? 1 : -1; return true;
@@ -289,13 +289,13 @@ public abstract class RightTree extends Element {
 			//
 			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_minimize", 22, width - 130, 2){
 				@Override
-				protected boolean processButtonClick(int mx, int my, boolean left){
+				public boolean processButtonClick(int mx, int my, boolean left){
 					compound.minimized = !compound.minimized; return true;
 				}
 			});
 			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_clone", 22, width - 104, 2){
 				@Override
-				protected boolean processButtonClick(int mx, int my, boolean left){
+				public boolean processButtonClick(int mx, int my, boolean left){
 					GroupCompound compound = null, parent = ((CompoundButton)root).compound;
 					if(parent.name.startsWith("fmtb/")){
 						compound = HelperCollector.loadFMTB(parent.origin);
@@ -318,19 +318,19 @@ public abstract class RightTree extends Element {
 			});
 			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_edit", 22, width - 78, 2){
 				@Override
-				protected boolean processButtonClick(int mx, int my, boolean left){
+				public boolean processButtonClick(int mx, int my, boolean left){
 					Editor.show("preview_editor"); return true;
 				}
 			});
 			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_visible", 22, width - 52, 2){
 				@Override
-				protected boolean processButtonClick(int mx, int my, boolean left){
+				public boolean processButtonClick(int mx, int my, boolean left){
 					compound.visible = !compound.visible; return true;
 				}
 			});
 			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_delete", 22, width - 26, 2){
 				@Override
-				protected boolean processButtonClick(int mx, int my, boolean left){
+				public boolean processButtonClick(int mx, int my, boolean left){
 					HelperCollector.LOADED.remove(index()); return true;
 				}
 			});
@@ -350,7 +350,7 @@ public abstract class RightTree extends Element {
 		}
 		
 		@Override
-		protected boolean processButtonClick(int mx, int my, boolean left){
+		public boolean processButtonClick(int mx, int my, boolean left){
 			if(selected()){ HelperTree.SEL = -1; }
 			else{ HelperTree.SEL = index(); }
 			//
