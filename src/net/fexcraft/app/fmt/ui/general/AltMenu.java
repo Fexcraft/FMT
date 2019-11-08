@@ -117,7 +117,14 @@ public class AltMenu extends Element implements Dialog {
 				public boolean processButtonClick(int x, int y, boolean left){
 					Editor.show("general_editor"); return true;
 				}
-			}.setText(translate("alt_menu.selection.open_editor", "Open Editor"), false)
+			}.setText(translate("alt_menu.selection.open_editor", "Open Editor"), false),
+			//
+			new Button(MENU, "alt_button", "alt_menu:button", 200, 28, 1, 1){
+				@Override
+				public boolean processButtonClick(int x, int y, boolean left){
+					return UserInterface.TOOLBAR.getElement("utils").getElement("menu").getElement("reset").processButtonClick(x, y, left);
+				}
+			}.setText(((Button)UserInterface.TOOLBAR.getElement("utils").getElement("menu").getElement("reset")).getText(), false)
 		);
 		
 		private Element[] elements;

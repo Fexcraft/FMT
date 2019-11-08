@@ -15,6 +15,7 @@ import net.fexcraft.app.fmt.ui.general.HoverMenu;
 import net.fexcraft.app.fmt.ui.general.SettingsBox;
 import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.ui.general.Toolbar;
+import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.RayCoastAway;
 import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.app.fmt.utils.Settings;
@@ -167,7 +168,7 @@ public class UserInterface {
 			if(i == 0 && bool){
 				RayCoastAway.doTest(true, true);
 			}
-			if(i == 1 && bool && !UserInterface.RIGHTMENU.visible()){
+			if(i == 1 && bool && !UserInterface.RIGHTMENU.visible() && GGR.iControlDown()){
 				ArrayList<PolygonWrapper> selected = FMTB.MODEL.getSelected();
 				UserInterface.RIGHTMENU.show(AltMenu.Type.sel(selected.isEmpty()), Mouse.getX(), FMTB.get().getDisplayMode().getHeight() - Mouse.getY(), selected);
 			}
