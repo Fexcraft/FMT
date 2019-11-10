@@ -5,9 +5,12 @@ import static net.fexcraft.app.fmt.utils.StyleSheet.BLACK;
 import java.util.ArrayList;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.general.Button;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
+import net.fexcraft.app.fmt.ui.general.DropDown;
+import net.fexcraft.app.fmt.ui.general.DropDownField;
 import net.fexcraft.app.fmt.ui.general.FileChooser.AfterTask;
 import net.fexcraft.app.fmt.ui.general.FileChooser.ChooserMode;
 import net.fexcraft.app.fmt.ui.general.FileChooser.FileRoot;
@@ -53,10 +56,19 @@ public class ModelGroupEditor extends Editor {
 			model.getElements().add(new Button(model, "text2", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true)
 				.setText(translate("editor.model_group.model.texture_size", "Texture [U/V/Scale]"), false));
 			passed += 24; for(int i = 0; i < 3; i++){ final int j = i;
-				model.getElements().add(new TextField(model, "model_tex" + xyz[i], "editor:field", 96, 4 + (i * 102), passed){
-					@Override public void updateNumberField(){ updateTexSize(this, j, null); }
-					@Override public boolean processScrollWheel(int wheel){ return updateTexSize(j, wheel > 0); }
-				}.setAsNumberfield(i == 2 ? 1 : 8, i == 2 ? 4 : 4096, true, true));
+				model.getElements().add(new DropDownField(model, "model_tex" + xyz[i], "editor:field", 96, 4 + (i * 102), passed){
+					@Override
+					public ArrayList<Element> getDropDownButtons(DropDown inst){
+						ArrayList<Element> elements = new ArrayList<>(); DropDownField field = this;
+						int[] arr = j == 2 ? new int[]{ 1, 2, 3, 4 } : accepted_texsiz;
+						for(int i = 0; i < arr.length; i++){ int k = i;
+							elements.add(new DropDown.Button(inst, "model_tex:" + arr[k], "dropdown:button", 0, 26, 0, 0){
+								@Override public boolean processButtonClick(int x, int y, boolean left){ updateModelTexSize(field, j, arr[k]); return true; }
+							}.setText(arr[k] + "", false));
+						}
+						return elements;
+					}
+				});
 			}
 			model.getElements().add(new Button(model, "text4", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true)
 				.setText(translate("editor.model_group.model.texture", "Model Texture"), false));
@@ -125,18 +137,21 @@ public class ModelGroupEditor extends Editor {
 			//
 			group.getElements().add(new Button(group, "text2", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true)
 				.setText(translate("editor.model_group.group.texture_size", "Texture [U/V/Scale]"), false));
-			group.getElements().add(new TextField(group, "group_texx", "editor:field", 96, 4, passed += 24){
-				@Override public void updateNumberField(){ updateGroupTexSize(this, 0, null); }
-				@Override public boolean processScrollWheel(int wheel){ return updateGroupTexSize(0, wheel > 0); }
-			}.setAsNumberfield(8, 4096, true, true));
-			group.getElements().add(new TextField(group, "group_texy", "editor:field", 96, 106, passed){
-				@Override public void updateNumberField(){ updateGroupTexSize(this, 1, null); }
-				@Override public boolean processScrollWheel(int wheel){ return updateGroupTexSize(1, wheel > 0); }
-			}.setAsNumberfield(8, 4096, true, true));
-			group.getElements().add(new TextField(group, "group_texz", "editor:field", 96, 208, passed){
-				@Override public void updateNumberField(){ updateGroupTexSize(this, 2, null); }
-				@Override public boolean processScrollWheel(int wheel){ return updateGroupTexSize(2, wheel > 0); }
-			}.setAsNumberfield(1, 4, true, true));
+			passed += 24; for(int i = 0; i < 3; i++){ final int j = i;
+				group.getElements().add(new DropDownField(group, "group_tex" + xyz[i], "editor:field", 96, 4 + (i * 102), passed){
+					@Override
+					public ArrayList<Element> getDropDownButtons(DropDown inst){
+						ArrayList<Element> elements = new ArrayList<>(); DropDownField field = this;
+						int[] arr = j == 2 ? new int[]{ 1, 2, 3, 4 } : accepted_texsiz;
+						for(int i = 0; i < arr.length; i++){ int k = i;
+							elements.add(new DropDown.Button(inst, "model_tex:" + arr[k], "dropdown:button", 0, 26, 0, 0){
+								@Override public boolean processButtonClick(int x, int y, boolean left){ updateGroupTexSize(field, j, arr[k]); return true; }
+							}.setText(arr[k] + "", false));
+						}
+						return elements;
+					}
+				});
+			}
 			//
 			group.getElements().add(new Button(group, "text3", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true)
 				.setText(translate("editor.model_group.group.texture", "Group Texture"), false));
@@ -252,48 +267,23 @@ public class ModelGroupEditor extends Editor {
 		} return true;
 	}
 	
-	protected boolean updateTexSize(int axis, Boolean positive){
-		return updateTexSize(null, axis, positive);
-	}
-	
-	protected boolean updateTexSize(TextField field, int axis, Boolean positive){
-		if(FMTB.MODEL == null) return true; if(field == null) field = (TextField)model.getElement("model_tex" + xyz[axis]);
-		if(axis < 2){
-			int index = getIndex(field.getIntegerValue());
-			if(positive && index < (accepted_texsiz.length - 1)) field.applyChange(accepted_texsiz[index + 1]);
-			else if(!positive && index > 0) field.applyChange(accepted_texsiz[index - 1]);
-		} else{ field.tryChange(positive, 1); }
-		//
-		FMTB.MODEL.textureSizeX = ((TextField)model.getElement("model_texx")).getIntegerValue();
-		FMTB.MODEL.textureSizeY = ((TextField)model.getElement("model_texy")).getIntegerValue();
-		FMTB.MODEL.textureScale = ((TextField)model.getElement("model_texz")).getIntegerValue();
+	protected boolean updateModelTexSize(DropDownField field, int axis, int value){
+		if(FMTB.MODEL == null) return true; field.setText(value + "", true);
+		FMTB.MODEL.textureSizeX = ((DropDownField)model.getElement("model_texx")).getTextAsInt();
+		FMTB.MODEL.textureSizeY = ((DropDownField)model.getElement("model_texy")).getTextAsInt();
+		FMTB.MODEL.textureScale = ((DropDownField)model.getElement("model_texz")).getTextAsInt();
 		TextureUpdate.updateSize(null); return true;
 	}
 	
-	protected boolean updateGroupTexSize(int axis, Boolean positive){
-		return updateGroupTexSize(null, axis, positive);
-	}
-	
-	protected boolean updateGroupTexSize(TextField field, int axis, Boolean positive){
-		if(FMTB.MODEL == null) return true; if(field == null) field = (TextField)group.getElement("group_tex" + xyz[axis]);
+	protected boolean updateGroupTexSize(DropDownField field, int axis, int value){
+		if(FMTB.MODEL == null) return true; field.setText(value + "", true);
 		if(FMTB.MODEL.getDirectlySelectedGroupsAmount() == 0) return true;
-		if(axis < 2){
-			int index = getIndex(field.getIntegerValue());
-			if(positive && index < (accepted_texsiz.length - 1)) field.applyChange(accepted_texsiz[index + 1]);
-			else if(!positive && index > 0) field.applyChange(accepted_texsiz[index - 1]);
-		} else{ field.tryChange(positive, 1); }
-		//
 		for(TurboList list : FMTB.MODEL.getDirectlySelectedGroups()){
-			list.textureX = ((TextField)group.getElement("group_texx")).getIntegerValue();
-			list.textureY = ((TextField)group.getElement("group_texy")).getIntegerValue();
-			list.textureS = ((TextField)group.getElement("group_texz")).getIntegerValue();
+			list.textureX = ((DropDownField)group.getElement("group_texx")).getTextAsInt();
+			list.textureY = ((DropDownField)group.getElement("group_texy")).getTextAsInt();
+			list.textureS = ((DropDownField)group.getElement("group_texz")).getTextAsInt();
 			TextureUpdate.updateSize(list); list.forEach(mrt -> mrt.recompile());
 		} return true;
-	}
-	
-	private int getIndex(int val){
-		if(val < accepted_texsiz[0]) val = accepted_texsiz[0];
-		for(int i = 0; i < accepted_texsiz.length; i++){ if(val == accepted_texsiz[i]) return i; } return 0;
 	}
 	
 	protected boolean updatePos(int axis, Boolean positive){

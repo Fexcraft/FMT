@@ -257,7 +257,7 @@ dialog.saveload.save.success.confirm=ok!
 //
 dialog.texture_update.resize.exceeding_4096=Překračuje 4096 pixelů!<nl>[%s], [%s]<nl>Mezipaměť textury NEBYLA aktualizována.
 dialog.texture_update.resize.exceeding_4096.confirm=OK,
-dialog.texture_update.resize.success=Velikost změněna!\n[%s], [%s]
+dialog.texture_update.resize.success=Velikost změněna!<nl>[%s], [%s]
 dialog.texture_update.resize.success.confirm=Skvěle!
 dialog.texture_update.auto_positioner.info=Tento proces může falešně<nl>zmrazit FMT.
 dialog.texture_update.auto_positioner.info.confirm=ok

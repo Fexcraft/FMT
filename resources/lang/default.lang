@@ -255,7 +255,7 @@ dialog.saveload.save.success.confirm=ok!
 //
 dialog.texture_update.resize.exceeding_4096=Exceeding 4096 pixel!<nl>[%s], [%s]<nl>Texture Cache NOT updated.
 dialog.texture_update.resize.exceeding_4096.confirm=OK,
-dialog.texture_update.resize.success=Resized!\n[%s], [%s]
+dialog.texture_update.resize.success=Resized!<nl>[%s], [%s]
 dialog.texture_update.resize.success.confirm=Good!
 dialog.texture_update.auto_positioner.info=This process may mark<nl>FMT as not responding.
 dialog.texture_update.auto_positioner.info.confirm=ok

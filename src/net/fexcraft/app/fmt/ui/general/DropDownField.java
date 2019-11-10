@@ -60,5 +60,11 @@ public abstract class DropDownField extends Element {
 	public static final DropDownField getField(String string){
 		for(DropDownField field : FIELDS) if(field.id.equals(string)) return field; return null;
 	}
+
+	public int getTextAsInt(){
+		try{ return Integer.parseInt(text); }
+		catch(Exception e){ e.printStackTrace(); return 0; }
+		
+	}
 	
 }

@@ -464,9 +464,9 @@ public class GroupCompound {
 				Editor.getGlobalField("group_rgb2").applyChange(0);
 				Editor.getGlobalField("group_name").setText("no polygon selected", true);
 				Editor.getGlobalField("group_texture").setText("no polygon selected", true);
-				Editor.getGlobalField("group_texx").applyChange(0);
-				Editor.getGlobalField("group_texy").applyChange(0);
-				Editor.getGlobalField("group_texz").applyChange(0);
+				DropDownField.getField("group_texx").setText("0", true);
+				DropDownField.getField("group_texy").setText("0", true);
+				DropDownField.getField("group_texz").setText("0", true);
 				Editor.getGlobalField("group_animator").setText("no polygon selected", true);
 			}
 			else{
@@ -475,9 +475,9 @@ public class GroupCompound {
 				Editor.getGlobalField("group_rgb1").applyChange(arr[1] + 128);
 				Editor.getGlobalField("group_rgb2").applyChange(arr[2] + 128);
 				Editor.getGlobalField("group_name").setText(list.id, true);
-				Editor.getGlobalField("group_texx").applyChange(list.textureX);
-				Editor.getGlobalField("group_texy").applyChange(list.textureY);
-				Editor.getGlobalField("group_texz").applyChange(list.textureS);
+				DropDownField.getField("group_texx").setText("0", true);
+				DropDownField.getField("group_texy").setText("0", true);
+				DropDownField.getField("group_texz").setText("0", true);
 				Editor.getGlobalField("group_animator").setText("", true);
 				//
 				String texname = list.getGroupTexture() + "";
@@ -492,9 +492,9 @@ public class GroupCompound {
 			Editor.getGlobalField("model_rotx").applyChange(rot == null ? 0 : rot.xCoord);
 			Editor.getGlobalField("model_roty").applyChange(rot == null ? 0 : rot.yCoord);
 			Editor.getGlobalField("model_rotz").applyChange(rot == null ? 0 : rot.zCoord);
-			Editor.getGlobalField("model_texx").applyChange(this.textureSizeX);
-			Editor.getGlobalField("model_texy").applyChange(this.textureSizeY);
-			Editor.getGlobalField("model_texz").applyChange(this.textureScale);
+			DropDownField.getField("model_texx").setText(this.textureSizeX + "", true);
+			DropDownField.getField("model_texy").setText(this.textureSizeY + "", true);
+			DropDownField.getField("model_texz").setText(this.textureScale + "", true);
 			Editor.getGlobalField("model_name").setText(this.name, true);
 			Editor.EDITORS.forEach(editor -> editor.getMultiplicator().applyChange(rate));
 			//
