@@ -14,6 +14,7 @@ import net.fexcraft.app.fmt.ui.editor.Container;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
+import net.fexcraft.app.fmt.ui.general.DropDownField;
 import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.ui.tree.HelperTree;
 import net.fexcraft.app.fmt.ui.tree.RightTree.CompoundButton;
@@ -269,7 +270,7 @@ public class GroupCompound {
 				//
 				Editor.getGlobalField("group").setText("none", true);
 				Editor.getGlobalField("boxname").setText("no polygon selected", true);
-				Editor.getGlobalField("boxtype").setText("no polygon selected", true);
+				DropDownField.getField("boxtype").setText("no polygon selected", true);
 			}
 			else{
 				Editor.getGlobalField("sizex").applyChange(poly.getFloat("size", true, false, false));
@@ -293,7 +294,7 @@ public class GroupCompound {
 				//
 				Editor.getGlobalField("group").setText(this.getFirstSelectedGroupName(), true);
 				Editor.getGlobalField("boxname").setText(poly.name == null ? "unnamed" : poly.name, true);
-				Editor.getGlobalField("boxtype").setText(poly.getType().toString().toLowerCase(), true);
+				DropDownField.getField("boxtype").setText(poly.getType().toString().toLowerCase(), true);
 			}
 			if(poly == null || !poly.getType().isShapebox()){
 				Editor.getGlobalField("cor0x").applyChange(0);

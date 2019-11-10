@@ -144,6 +144,7 @@ public class FMTB {
 			handler.setSpectateGameEventHandler(new DiscordUtil.SpectateGameEventHandler());
 			DiscordRPC.discordInitialize(CLID, handler.build(), true);
 			DiscordRPC.discordRunCallbacks(); DiscordUtil.update(true);
+			Runtime.getRuntime().addShutdownHook(new Thread(){ @Override public void run(){ DiscordRPC.discordShutdown(); } });
 		}
 		//
 		this.getDelta(); lfps = this.getTime();

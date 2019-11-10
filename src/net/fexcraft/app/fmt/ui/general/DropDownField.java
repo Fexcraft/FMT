@@ -10,13 +10,14 @@ import net.fexcraft.lib.common.math.RGB;
 
 public abstract class DropDownField extends Element {
 	
+	private static final ArrayList<DropDownField> FIELDS = new ArrayList<>();
 	private RGB textcolor = new RGB(212, 212, 212);
 	private boolean centered;
 	private String text;
 
 	public DropDownField(Element root, String id, String style, int width, int x, int y){
 		super(root, id, style == null ? "dd_field" : style); this.setSize(width, 26);
-		this.setPosition(x, y).setColor(0xff484848);
+		this.setPosition(x, y).setColor(0xff484848); FIELDS.add(this);
 		this.setHoverColor(0xff70ff7f, false); this.setHoverColor(0xffebc9c9, true);
 	}
 	
@@ -54,6 +55,10 @@ public abstract class DropDownField extends Element {
 
 	public final String getText(){
 		return text;
+	}
+
+	public static final DropDownField getField(String string){
+		for(DropDownField field : FIELDS) if(field.id.equals(string)) return field; return null;
 	}
 	
 }
