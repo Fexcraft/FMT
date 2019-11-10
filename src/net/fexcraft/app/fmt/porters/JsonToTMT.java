@@ -14,6 +14,7 @@ import net.fexcraft.app.fmt.wrappers.TexrectWrapperB;
 import net.fexcraft.lib.common.json.JsonUtil;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
+import net.fexcraft.lib.common.utils.Print;
 
 /**
 * Tool to parse `ModelRendererTurbo` objects from JSON.
@@ -187,6 +188,10 @@ public class JsonToTMT {
 				marker.scale = JsonUtil.getIfExists(obj, "biped_scale", 1f).floatValue();
 				polygon = marker; break;
 			}
+		}
+		if(polygon == null){
+			Print.console("POLYGON TYPE '" + obj.get("type").getAsString() + "' NOT FOUND, ATTEMPTING TO PARSE AS BOX. ID: " + (obj.has("name") ? obj.get("name").getAsString() : "null"));
+			obj.addProperty("type", "box"); return parseWrapper(compound, obj);
 		}
 		polygon.textureX = get(texturex, obj, idef);
 		polygon.textureY = get(texturey, obj, idef);

@@ -359,7 +359,14 @@ public class SaveLoad {
 					list.textureS = JsonUtil.getIfExists(obj, "texture_scale", 1).intValue();
 				}
 				JsonArray polygons = group.get("polygons").getAsJsonArray();
-				for(JsonElement elm : polygons){ list.add(JsonToTMT.parseWrapper(compound, elm.getAsJsonObject())); }
+				for(JsonElement elm : polygons){
+					try{
+						list.add(JsonToTMT.parseWrapper(compound, elm.getAsJsonObject()));
+					}
+					catch(Exception e){
+						Print.console(elm.getAsJsonObject()); e.printStackTrace();
+					}
+				}
 				compound.getGroups().add(list);
 				if(group.has("animations")){
 					JsonArray arr = group.get("animations").getAsJsonArray();
