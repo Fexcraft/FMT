@@ -268,7 +268,7 @@ public class GroupCompound {
 				Editor.getGlobalField("texx").applyChange(0);
 				Editor.getGlobalField("texy").applyChange(0);
 				//
-				Editor.getGlobalField("group").setText("none", true);
+				DropDownField.getField("group").setText("none", true);
 				Editor.getGlobalField("boxname").setText("no polygon selected", true);
 				DropDownField.getField("boxtype").setText("no polygon selected", true);
 			}
@@ -292,7 +292,7 @@ public class GroupCompound {
 				Editor.getGlobalField("texx").applyChange(poly.getFloat("tex", true, false, false));
 				Editor.getGlobalField("texy").applyChange(poly.getFloat("tex", false, true, false));
 				//
-				Editor.getGlobalField("group").setText(this.getFirstSelectedGroupName(), true);
+				DropDownField.getField("group").setText(this.getFirstSelectedGroupName(), true);
 				Editor.getGlobalField("boxname").setText(poly.name == null ? "unnamed" : poly.name, true);
 				DropDownField.getField("boxtype").setText(poly.getType().toString().toLowerCase(), true);
 			}
@@ -524,14 +524,14 @@ public class GroupCompound {
 		this.updateFields();
 	}
 
-	public void changeGroupOfSelected(int offset){
+	/*public void changeGroupOfSelected(int offset){
 		ArrayList<PolygonWrapper> polis = this.getSelected();
 		if(polis.isEmpty()) return;
 		String current = polis.get(0).getTurboList().id; int index = offset;
 		for(TurboList key : groups){ if(key.id.equals(current)) break; else index++; }
 		if(index >= groups.size()) index -= groups.size(); if(index < 0) index = 0;
 		changeGroupOfSelected(polis, groups.get(index).id);
-	}
+	}*/
 
 	public void changeTypeOfSelected(ArrayList<PolygonWrapper> selected, String text){
 		ShapeType type = ShapeType.get(text);

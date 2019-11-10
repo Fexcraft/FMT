@@ -6,6 +6,7 @@ import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.utils.StyleSheet;
 
+//TODO ADD SCROLL FOR LARGER DROP DOWNS
 public class DropDown extends Element implements Dialog {
 	
 	public static final DropDown INST = new DropDown();
@@ -48,6 +49,16 @@ public class DropDown extends Element implements Dialog {
 			elm.yrel = hei; hei += elm.height;
 		}
 		this.setVisible(true).repos();
+	}
+	
+	public static class Button extends net.fexcraft.app.fmt.ui.general.Button {
+
+		public Button(Element root, String id, String style, int width, int height, int x, int y){
+			super(root, id, style, width, height, x, y); border = null; border_width = 0;
+			border_fill = null; top = bot = left = right = false; gentex = true;
+			this.clearVertexes().clearTexture();
+		}
+		
 	}
 
 }

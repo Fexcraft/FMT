@@ -36,23 +36,34 @@ public class GeneralEditor extends Editor {
 		int passed = 24;
 		{//attributes
 			attributes.getElements().add(new Button(attributes, "text0", "editor:title", 290, 20, 4, passed = last(passed, attributes), BLACK).setBackgroundless(true)
-				.setText(translate("editor.general.attributes.polygroup", "Polygon Group"), false));;
-			attributes.getElements().add(new TextField(attributes, "group", "editor:field", 290, 4, passed = last(passed, attributes)){
+				.setText(translate("editor.general.attributes.polygroup", "Polygon Group"), false));
+			attributes.getElements().add(new DropDownField(attributes, "group", "editor:field", 290, 4, passed = last(passed, attributes)){
 				@Override
-				public boolean processScrollWheel(int wheel){
-					FMTB.MODEL.changeGroupOfSelected(wheel > 0 ? 1 : -1); return true;
-				}
-				@Override
-				public void updateTextField(){
-					String text = this.getTextValue();
-					if(!FMTB.MODEL.getGroups().contains(text)){
-						String str = translate("dialog.editor.general.attributes.new_group_question", "Group does not exists.<nl>Do you wish to create it?");
-						String yes = translate("dialog.editor.general.attributes.new_group_question.confirm", "yes.");
-						FMTB.showDialogbox(str, yes, translate("dialog.editor.general.attributes.new_group_question.cancel", "no."), () -> {
-							FMTB.MODEL.getGroups().add(new TurboList(text));
-							FMTB.MODEL.changeGroupOfSelected(FMTB.MODEL.getSelected(), text);
-						}, DialogBox.NOTHING);
-					} else{ FMTB.MODEL.changeGroupOfSelected(FMTB.MODEL.getSelected(), text); }
+				public ArrayList<Element> getDropDownButtons(DropDown inst){
+					ArrayList<Element> elements = new ArrayList<>();
+					for(TurboList list : FMTB.MODEL.getGroups()){
+						elements.add(new DropDown.Button(inst, "group:" + list.id, "dropdown:button", 0, 26, 0, 0){
+							@Override
+							public boolean processButtonClick(int x, int y, boolean left){
+								FMTB.MODEL.changeGroupOfSelected(FMTB.MODEL.getSelected(), list.id); return true;
+							}
+						}.setText(list.id, false));
+					}
+					elements.add(new TextField(inst, "group:new", "dropdown:field", 0, 0, 0){
+						@Override
+						public void updateTextField(){
+							String text = this.getTextValue();
+							if(!FMTB.MODEL.getGroups().contains(text)){
+								String str = translate("dialog.editor.general.attributes.new_group_question", "Group does not exists.<nl>Do you wish to create it?");
+								String yes = translate("dialog.editor.general.attributes.new_group_question.confirm", "yes.");
+								FMTB.showDialogbox(str + "\n   '" + text + "'", yes, translate("dialog.editor.general.attributes.new_group_question.cancel", "no."), () -> {
+									FMTB.MODEL.getGroups().add(new TurboList(text));
+									FMTB.MODEL.changeGroupOfSelected(FMTB.MODEL.getSelected(), text);
+								}, DialogBox.NOTHING);
+							} else{ FMTB.MODEL.changeGroupOfSelected(FMTB.MODEL.getSelected(), text); }
+						}
+					}.setText("new_group", true));
+					return elements;
 				}
 			}.setText("null", true));
 			attributes.getElements().add(new Button(attributes, "text1", "editor:title", 290, 20, 4, passed = last(passed, attributes), BLACK).setBackgroundless(true)
@@ -86,7 +97,7 @@ public class GeneralEditor extends Editor {
 				public ArrayList<Element> getDropDownButtons(DropDown inst){
 					ArrayList<Element> elements = new ArrayList<>();
 					for(ShapeType type : ShapeType.getSupportedValues()){
-						elements.add(new Button(inst, "boxtype:" + type.name().toLowerCase(), "dropdown:button", 0, 26, 0, 0){
+						elements.add(new DropDown.Button(inst, "boxtype:" + type.name().toLowerCase(), "dropdown:button", 0, 26, 0, 0){
 							@Override
 							public boolean processButtonClick(int x, int y, boolean left){
 								FMTB.MODEL.changeTypeOfSelected(FMTB.MODEL.getSelected(), type.name().toLowerCase()); return true;
