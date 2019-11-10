@@ -157,9 +157,16 @@ public class UserInterface {
 			}
 		}
 		else{
-			Element element = null;
+			Element element = null, elm0 = null;
+			for(Dialog dialog : Dialog.dialogs){
+				if((elm0 = (Element)dialog).visible && elm0.enabled){
+					if(elm0.onButtonClick(Mouse.getX(), root.getDisplayMode().getHeight() - Mouse.getY(), i == 0, elm0.hovered)){
+						return;
+					} else element = elm0;
+				}
+			}
 			for(Element elm : elements){
-				if(elm.visible && elm.enabled){
+				if(elm instanceof Dialog == false && elm.visible && elm.enabled){
 					if(elm.onButtonClick(Mouse.getX(), root.getDisplayMode().getHeight() - Mouse.getY(), i == 0, elm.hovered)){
 						return;
 					} else element = elm;
@@ -170,7 +177,7 @@ public class UserInterface {
 			if(i == 0 && bool){
 				RayCoastAway.doTest(true, true);
 			}
-			if(i == 1 && bool && !UserInterface.RIGHTMENU.visible() && GGR.iControlDown()){
+			if(GGR.iControlDown() && i == 1 && bool && !UserInterface.RIGHTMENU.visible()){
 				ArrayList<PolygonWrapper> selected = FMTB.MODEL.getSelected();
 				UserInterface.RIGHTMENU.show(AltMenu.Type.sel(selected.isEmpty()), Mouse.getX(), FMTB.get().getDisplayMode().getHeight() - Mouse.getY(), selected);
 			}
@@ -190,6 +197,12 @@ public class UserInterface {
 	}
 
 	public boolean onScrollWheel(int wheel){
+		Element elm0 = null;
+		for(Dialog dialog : Dialog.dialogs){
+			if((elm0 = (Element)dialog).visible && elm0.enabled){
+				if(elm0.onScrollWheel(wheel)) return true;
+			}
+		}
 		for(Element elm : elements){
 			if(elm.visible && elm.enabled){
 				if(elm.onScrollWheel(wheel)) return true;
