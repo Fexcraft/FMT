@@ -5,12 +5,16 @@ import static net.fexcraft.app.fmt.utils.StyleSheet.BLACK;
 import java.util.ArrayList;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.general.Button;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
+import net.fexcraft.app.fmt.ui.general.DropDown;
+import net.fexcraft.app.fmt.ui.general.DropDownField;
 import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
+import net.fexcraft.app.fmt.wrappers.ShapeType;
 import net.fexcraft.app.fmt.wrappers.ShapeboxWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.utils.Print;
@@ -77,14 +81,19 @@ public class GeneralEditor extends Editor {
 			}.setText("null", true));
 			attributes.getElements().add(new Button(attributes, "text2", "editor:title", 290, 20, 4, passed = last(passed, attributes), BLACK).setBackgroundless(true)
 				.setText(translate("editor.general.attributes.polytype", "Polygon Type"), false));
-			attributes.getElements().add(new TextField(attributes, "boxtype", "editor:field", 290, 4, passed = last(passed, attributes)){
+			attributes.getElements().add(new DropDownField(attributes, "boxtype", "editor:field", 290, 4, passed = last(passed, attributes)){
 				@Override
-				public boolean processScrollWheel(int wheel){
-					FMTB.MODEL.changeTypeOfSelected(FMTB.MODEL.getSelected(), wheel > 0 ? 1 : -1); return true;
-				}
-				@Override
-				public void updateTextField(){
-					FMTB.MODEL.changeTypeOfSelected(FMTB.MODEL.getSelected(), this.getTextValue());
+				public ArrayList<Element> getDropDownButtons(DropDown inst){
+					ArrayList<Element> elements = new ArrayList<>();
+					for(ShapeType type : ShapeType.getSupportedValues()){
+						elements.add(new Button(inst, "boxtype:" + type.name().toLowerCase(), "dropdown:button", 0, 26, 0, 0){
+							@Override
+							public boolean processButtonClick(int x, int y, boolean left){
+								FMTB.MODEL.changeTypeOfSelected(FMTB.MODEL.getSelected(), type.name().toLowerCase()); return true;
+							}
+						}.setText(type.name().toLowerCase(), true));
+					}
+					return elements;
 				}
 			}.setText("null", true));
 			attributes.getElements().add(new Button(attributes, "text3", "editor:title", 290, 20, 4, passed = last(passed, attributes), BLACK).setBackgroundless(true)

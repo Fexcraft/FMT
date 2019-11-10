@@ -25,7 +25,7 @@ public class Element {
 	public int width, height, x, xrel, y, yrel, border_width; 
 	protected Integer fill, border, border_fill;
 	protected RGB hovercolor, discolor;
-	protected boolean hovered, visible = true, enabled = true, draggable;
+	protected boolean hovered, visible = true, enabled = true, draggable, gentex = true;
 	
 	public Element(Element root, String id, String stylegroup){
 		this(root, id, stylegroup, true);
@@ -45,7 +45,7 @@ public class Element {
 	
 	public Element setTexture(String texture, boolean load){
 		if(load && TextureManager.getTexture(texture, true) == null) TextureManager.loadTexture(texture, null);
-		this.texture = TextureManager.getTexture(texture, true); return this;
+		this.texture = TextureManager.getTexture(texture, true); gentex = false; return this;
 	}
 	
 	public Element setEnabled(boolean bool){
@@ -61,7 +61,7 @@ public class Element {
 		border_fill = StyleSheet.getColourFor(stylegroup, "border_fill", color0);
 		top = bools.length > 0 && bools[0]; bot = bools.length > 1 && bools[1];
 		left = bools.length > 2 && bools[2]; right = bools.length > 3 && bools[3];
-		return this.clearVertexes().clearTexture();
+		gentex = true; return this.clearVertexes().clearTexture();
 	}
 	
 	public Element setHoverColor(Integer hover, boolean dis){
@@ -128,7 +128,7 @@ public class Element {
 	
 	protected void renderSelfQuad(){
 		if(texture == null || texture.rebindQ() || vertexes == null){
-			int width = this.width, height = this.height;
+			int width = this.width, height = this.height; gentex = true;
 			if(top) height += border_width; if(bot) height += border_width;
 			if(left) width += border_width; if(right) width += border_width;
 			if(texture == null || texture.rebindQ()){
@@ -295,6 +295,11 @@ public class Element {
 	
 	public static String format(String str, String fill, Object... objs){
 		return Translator.format(str, fill, objs);
+	}
+
+	public void dispose(){
+		if(gentex && texture != null && texture.getGLID() != null) GL11.glDeleteTextures(texture.getGLID());
+		if(!elements.isEmpty()) for(Element elm : elements) elm.dispose(); return;
 	}
 
 }

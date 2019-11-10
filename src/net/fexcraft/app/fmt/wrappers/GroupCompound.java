@@ -556,13 +556,13 @@ public class GroupCompound {
 		this.updateFields();
 	}
 
-	public void changeTypeOfSelected(ArrayList<PolygonWrapper> selected, int offset){
+	/*public void changeTypeOfSelected(ArrayList<PolygonWrapper> selected, int offset){
 		if(selected == null || selected.isEmpty()) return;
 		int i = selected.get(0).getType().ordinal() + offset;
 		if(i >= ShapeType.values().length) i = 0;
 		if(i < 0) i = ShapeType.values().length - 1;
 		this.changeTypeOfSelected(selected, ShapeType.values()[i].name());
-	}
+	}*/
 	
 	public long countTotalMRTs(){
 		long i = 0; for(TurboList list : groups) i += list.size(); return i;

@@ -273,4 +273,5 @@ dialog.texture_update.auto_positioner.processing=Processing: %s percent<nl>%s:%s
 alt_menu.selection.deselect_all=Clear Selection
 alt_menu.selection.open_editor=Open Editor
 alt_menu.selection.delete_selected=Delete Selection
+dialog.compound.change_type.failed=%s shape(s) skipped!<nl>%s !> %s
 //

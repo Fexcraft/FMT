@@ -4,8 +4,7 @@ public enum ShapeType {
 	
 	BOX("cuboid"), SHAPEBOX("cuboid"), TEXRECT_B("cuboid"), TEXRECT_A("cuboid"),
 	FLEXBOX("flexcuboid"), TRAPEZOID("flexcuboid"), FLEXTRAPEZOID("flexcuboid"),
-	CYLINDER("cylinder"), SPHERE("sphere"), OBJ("obj"), MARKER("marker"),
-	COLLISIONGRID("fvtm:collisiongrid");
+	CYLINDER("cylinder"), SPHERE("sphere"), OBJ("obj"), MARKER("marker");
 	
 	private String conversion_group;
 	
@@ -14,7 +13,7 @@ public enum ShapeType {
 	}
 
 	public boolean isCuboid(){
-		return this == BOX || this == SHAPEBOX || this == TEXRECT_B || this == TEXRECT_A || this == FLEXBOX || this == TRAPEZOID || this == FLEXTRAPEZOID || this == COLLISIONGRID;
+		return this == BOX || this == SHAPEBOX || this == TEXRECT_B || this == TEXRECT_A || this == FLEXBOX || this == TRAPEZOID || this == FLEXTRAPEZOID;
 	}
 
 	public boolean isShapebox(){
@@ -40,10 +39,6 @@ public enum ShapeType {
 	public boolean isMarker(){
 		return this == MARKER;
 	}
-	
-	public boolean isCollisionGrid(){
-		return this == COLLISIONGRID;
-	}
 
 	public static ShapeType get(String text){
 		text = text.toLowerCase();
@@ -59,13 +54,16 @@ public enum ShapeType {
 			case "sphere": return SPHERE;
 			case "obj": return OBJ;
 			case "marker": return MARKER;
-			case "fvtm:collisiongrid": return COLLISIONGRID;
 			default: return null;
 		}
 	}
 
 	public String getConversionGroup(){
 		return conversion_group;
+	}
+
+	public static ShapeType[] getSupportedValues(){
+		return new ShapeType[]{ BOX, SHAPEBOX, TEXRECT_B, TEXRECT_A, CYLINDER, MARKER };
 	}
 
 }

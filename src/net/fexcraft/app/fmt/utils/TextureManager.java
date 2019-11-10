@@ -205,6 +205,10 @@ public class TextureManager {
 		public void setImage(BufferedImage img){
 			this.image = img;
 		}
+
+		public Integer getGLID(){
+			return glTextureId;
+		}
 		
 	}
 

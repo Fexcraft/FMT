@@ -277,4 +277,5 @@ dialog.texture_update.auto_positioner.processing=Verarbeitet: %s Prozent<nl>%s:%
 alt_menu.selection.deselect_all=Alles Abwählen
 alt_menu.selection.open_editor=Editor Öffnen
 alt_menu.selection.delete_selected=Auswahl Löschen
+dialog.compound.change_type.failed=%s Vieleck(e) übersprungen!<nl>%s !> %s
 //

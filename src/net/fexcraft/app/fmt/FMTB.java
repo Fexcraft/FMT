@@ -43,6 +43,7 @@ import net.fexcraft.app.fmt.ui.general.Bottombar;
 import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
 import net.fexcraft.app.fmt.ui.general.Crossbar;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
+import net.fexcraft.app.fmt.ui.general.DropDown;
 import net.fexcraft.app.fmt.ui.general.FileChooser;
 import net.fexcraft.app.fmt.ui.general.SettingsBox;
 import net.fexcraft.app.fmt.ui.general.TextField;
@@ -348,6 +349,7 @@ public class FMTB {
 		ui.getElements().add(UserInterface.BOTTOMBAR);
 		ui.getElements().add(new Crossbar());
 		ui.getElements().add(UserInterface.RIGHTMENU = AltMenu.MENU);
+		ui.getElements().add(UserInterface.DROPDOWN = DropDown.INST);
 		FMTB.MODEL.updateFields();
 	}
 
