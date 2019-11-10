@@ -462,12 +462,12 @@ public class GroupCompound {
 				Editor.getGlobalField("group_rgb0").applyChange(0);
 				Editor.getGlobalField("group_rgb1").applyChange(0);
 				Editor.getGlobalField("group_rgb2").applyChange(0);
-				Editor.getGlobalField("group_name").setText("no polygon selected", true);
-				Editor.getGlobalField("group_texture").setText("no polygon selected", true);
+				Editor.getGlobalField("group_name").setText("no polygon(s) selected", true);
+				Editor.getGlobalField("group_texture").setText("no polygon(s) selected", true);
 				DropDownField.getField("group_texx").setText("0", true);
 				DropDownField.getField("group_texy").setText("0", true);
 				DropDownField.getField("group_texz").setText("0", true);
-				Editor.getGlobalField("group_animator").setText("no polygon selected", true);
+				DropDownField.getField("group_animator").setText("no polygon(s) selected", true);
 			}
 			else{
 				byte[] arr = list.color == null ? RGB.WHITE.toByteArray() : list.color.toByteArray();
@@ -478,7 +478,7 @@ public class GroupCompound {
 				DropDownField.getField("group_texx").setText("0", true);
 				DropDownField.getField("group_texy").setText("0", true);
 				DropDownField.getField("group_texz").setText("0", true);
-				Editor.getGlobalField("group_animator").setText("", true);
+				DropDownField.getField("group_animator").setText("Select Animator", true);
 				//
 				String texname = list.getGroupTexture() + "";
 				if(texname.length() > 32){ texname = texname.substring(texname.length() - 32, texname.length()); }

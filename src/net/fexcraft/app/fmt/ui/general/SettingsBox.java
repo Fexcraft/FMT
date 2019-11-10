@@ -30,14 +30,14 @@ public class SettingsBox extends Element implements Dialog {
 	private AfterTask task;
 	
 	public SettingsBox(){
-		super(null, "settingsbox", "settingsbox"); this.setSize(258, 128).setDraggable(true).setColor(0xff80adcc);
+		super(null, "settingsbox", "settingsbox"); this.setSize(512, 256).setDraggable(true).setColor(0xff80adcc);
 		this.setVisible(false).setPosition(0, 0).setHoverColor(0xffffffff, false); Dialog.dialogs.add(this);
 		this.setBorder(0xff000000, 0xff3458eb, 5, true, true, true, true);
 		//
-		this.elements.add(Confirm = new Button(this, "confirm", "settingsbox:button", 100, 20, width - 112, 12, 0xffffff00){
+		this.elements.add(Confirm = new Button(this, "confirm", "settingsbox:button", 100, 20, width - 112, 8, 0xffffff00){
 			@Override public boolean processButtonClick(int x, int y, boolean left){ task.run(); reset(); return true; }
 		}.setText("Confirm", true));
-		this.elements.add(Cancel = new Button(this, "cancel", "settingsbox:button", 100, 20, width - 214, 12, 0xffffff00){
+		this.elements.add(Cancel = new Button(this, "cancel", "settingsbox:button", 100, 20, width - 218, 8, 0xffffff00){
 			@Override public boolean processButtonClick(int x, int y, boolean left){ reset(); return true; }
 		}.setText("Cancel", true));
 		//

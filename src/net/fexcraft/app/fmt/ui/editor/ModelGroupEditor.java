@@ -8,7 +8,6 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.general.Button;
-import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.ui.general.DropDown;
 import net.fexcraft.app.fmt.ui.general.DropDownField;
 import net.fexcraft.app.fmt.ui.general.FileChooser.AfterTask;
@@ -184,38 +183,42 @@ public class ModelGroupEditor extends Editor {
 			//
 			group.getElements().add(new Button(group, "text4", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true)
 				.setText(translate("editor.model_group.group.add_animator", "Add Animator"), false));
-			group.getElements().add(new TextField(group, "group_animator", "editor:field", 300, 4, passed += 24){
+			group.getElements().add(new DropDownField(group, "group_animator", "editor:field", 300, 4, passed += 24){
 				@Override
 				public boolean processButtonClick(int x, int y, boolean left){
 					if(FMTB.MODEL.getSelected().isEmpty()) return true;
-					if(!left){
-						FMTB.showDialogbox(this.getText(), "ok", null, DialogBox.NOTHING, null);
-						this.setText("", true);
-						return true;
-					}
 					else return super.processButtonClick(x, y, left);
 				}
 				@Override
-				public void updateTextField(){
-					this.deselect(); if(FMTB.MODEL.getSelected().isEmpty()) return;
-					Animation anim = Animator.get(this.getTextValue());
-					if(anim == null){
-						String str = translate("dialog.editor.model_group.group.animator.not_found", "Animation not found!");
-						FMTB.showDialogbox(str, translate("dialog.editor.model_group.group.animator.not_found.confirm", "ok"), null, DialogBox.NOTHING, null);
-						return;
-					} final Animation ani = anim.copy();
-					ArrayList<TurboList> lists = FMTB.MODEL.getDirectlySelectedGroups();
-					AfterTask task = new AfterTask(){
-						@Override
-						public void run(){
-							for(TurboList list : lists){
-								list.animations.add(ani);
-							} FMTB.MODEL.updateFields();
-						}
-					}; task.settings = ani.settings;
-					UserInterface.SETTINGSBOX.show(translate("editor.model_group.group.animator_settings", "Animator Settings"), task);
+				public ArrayList<Element> getDropDownButtons(DropDown inst){
+					ArrayList<Element> elements = new ArrayList<>();
+					for(Animation am : Animator.nani){
+						elements.add(new DropDown.Button(inst, "group_animator:" + am.id, "dropdown:button", 0, 26, 0, 0){
+							@Override
+							public boolean processButtonClick(int x, int y, boolean left){
+								/*if(am == null){
+									String str = translate("dialog.editor.model_group.group.animator.not_found", "Animation not found!");
+									FMTB.showDialogbox(str, translate("dialog.editor.model_group.group.animator.not_found.confirm", "ok"), null, DialogBox.NOTHING, null);
+									return true;
+								}*/
+								final Animation ani = am.copy();
+								ArrayList<TurboList> lists = FMTB.MODEL.getDirectlySelectedGroups();
+								AfterTask task = new AfterTask(){
+									@Override
+									public void run(){
+										for(TurboList list : lists){
+											list.animations.add(ani);
+										} FMTB.MODEL.updateFields();
+									}
+								}; task.settings = ani.settings;
+								UserInterface.SETTINGSBOX.show(translate("editor.model_group.group.animator_settings", "Animator Settings"), task);
+								return true;
+							}
+						}.setText(am.id, false));
+					}
+					return elements;
 				}
-			}.setText("null", true));
+			});
 			//
 			group.setExpanded(false); passed = 0;
 		}
