@@ -32,7 +32,7 @@ public class ModelGroupEditor extends Editor {
 		super("model_group_editor", "editor"); this.setVisible(false);
 		this.elements.add((model = new Container(this, "model", width - 4, 28, 4, 0, null)).setText(translate("editor.model_group.model.title", "Model Settings"), false));
 		this.elements.add((group = new Container(this, "group", width - 4, 28, 4, 0, null)).setText(translate("editor.model_group.group.title", "Group Settings"), false));
-		this.elements.add((animations = new Container(this, "animations", width - 4, 28, 4, 0, null)).setText(translate("editor.model_group.animations.title", "Group Animations"), false));
+		//this.elements.add((animations = new Container(this, "animations", width - 4, 28, 4, 0, null)).setText(translate("editor.model_group.animations.title", "Group Animations"), false));
 		//
 		int passed = 0;
 		{//model
@@ -223,30 +223,31 @@ public class ModelGroupEditor extends Editor {
 			group.setExpanded(false); passed = 0;
 		}
 		{//animations
-			/*animations.getElements().clear(); TurboList list = FMTB.MODEL.getFirstSelectedGroup();
-			int[] rows = new int[list == null ? 1 : list.animations.size() + 1];
-			for(int i = 0; i < rows.length; i++) rows[i] = 1; this.initRowData(rows);
-			if(list == null){ return; } 
-			for(int i = 0; i < rows.length - 1; i++){ int j = i;
-				animations.getElements().add(new TextField(animations, "group_animation_" + i, "animation:field", 0, 0, 0){
-					@Override
-					public boolean processButtonClick(int x, int y, boolean left){
-						if(left){
-							Animation anim = list.animations.get(j); this.deselect(); if(anim == null) return true;
-							AfterTask task = new AfterTask(){
-								@Override public void run(){ anim.onSettingsUpdate(); FMTB.MODEL.updateFields(); }
-							}; task.settings = anim.settings; FMTB.MODEL.updateFields();
-							UserInterface.SETTINGSBOX.show("[" + anim.id + "] Settings", task);
-						}
-						else{
-							list.animations.remove(j); this.deselect(); FMTB.MODEL.updateFields();
-						}
-						return true;
+			this.elements.add((animations = new Container(this, "animations", width - 4, 28, 4, 0, null){
+				@Override
+				public void addSubElements(){
+					for(int i = 1; i < elements.size(); i++) elements.get(i).dispose(); elements.clear();
+					TurboList list = FMTB.MODEL.getFirstSelectedGroup(); if(list == null) return; int passed = 8;
+					for(int i = 0; i < list.animations.size(); i++){ int j = i;
+						this.getElements().add(new TextField(animations, "group_animation_" + j, "animation:field", 300, 4, passed += 24){
+							@Override
+							public boolean processButtonClick(int x, int y, boolean left){
+								if(left){
+									Animation anim = list.animations.get(j); this.deselect(); if(anim == null) return true;
+									AfterTask task = new AfterTask(){
+										@Override public void run(){ anim.onSettingsUpdate(); FMTB.MODEL.updateFields(); }
+									}; task.settings = anim.settings; FMTB.MODEL.updateFields();
+									UserInterface.SETTINGSBOX.show("[" + anim.id + "] Settings", task);
+								}
+								else{
+									list.animations.remove(j); this.deselect(); FMTB.MODEL.updateFields();
+								}
+								return true;
+							}
+						}.setText("[" + j + "] " + list.animations.get(j).id, true));
 					}
-				}.setText("[" + i + "] " + list.animations.get(i).id, true));
-			}
-			this.initHeight(); return;*/
-			animations.getElements().add(new Button(animations, "text0", "editor:title", 290, 20, 4, 30, BLACK).setBackgroundless(true).setText("Queued for reimplementation", false));
+				}
+			}).setText(translate("editor.model_group.animations.title", "Group Animations"), false));
 			animations.setExpanded(false);
 		}
 		this.containers = new Container[]{ model, group, animations }; this.repos();
