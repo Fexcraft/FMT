@@ -211,7 +211,7 @@ public abstract class RightTree extends Element {
 		
 		@Override
 		public boolean processButtonClick(int mx, int my, boolean left){
-			boolean bool = list.selected; if(!GGR.isShiftDown()){ FMTB.MODEL.clearSelection(); }
+			if(!left) return false; boolean bool = list.selected; if(!GGR.isShiftDown()){ FMTB.MODEL.clearSelection(); }
 			list.selected = !bool; FMTB.MODEL.updateFields(); FMTB.MODEL.lastselected = null;
 			if(!compound) GroupCompound.SELECTED_POLYGONS = FMTB.MODEL.countSelectedMRTs(); return true;
 		}
@@ -265,7 +265,7 @@ public abstract class RightTree extends Element {
 		
 		@Override
 		public boolean processButtonClick(int mx, int my, boolean left){
-			boolean bool = polygon.selected; if(!GGR.isShiftDown()){ FMTB.MODEL.clearSelection(); }
+			if(!left) return false; boolean bool = polygon.selected; if(!GGR.isShiftDown()){ FMTB.MODEL.clearSelection(); }
 			polygon.selected = !bool; FMTB.MODEL.updateFields(); FMTB.MODEL.lastselected = polygon;
 			GroupCompound.SELECTED_POLYGONS += polygon.selected ? 1 : -1; return true;
 		}
@@ -351,6 +351,7 @@ public abstract class RightTree extends Element {
 		
 		@Override
 		public boolean processButtonClick(int mx, int my, boolean left){
+			if(!left) return false;
 			if(selected()){ HelperTree.SEL = -1; }
 			else{ HelperTree.SEL = index(); }
 			//
