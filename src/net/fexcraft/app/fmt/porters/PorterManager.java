@@ -5,7 +5,6 @@ package net.fexcraft.app.fmt.porters;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,24 +12,18 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-import javax.script.Invocable;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.ui.general.FileChooser.AfterTask;
 import net.fexcraft.app.fmt.ui.general.FileChooser.ChooserMode;
 import net.fexcraft.app.fmt.ui.general.FileChooser.FileRoot;
-import net.fexcraft.app.fmt.utils.SaveLoad;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.TurboList;
-import net.fexcraft.lib.common.json.JsonUtil;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -41,30 +34,6 @@ public class PorterManager {
 	private static final PorterMap porters = new PorterMap();
 	
 	public static final void load() throws NoSuchMethodException, FileNotFoundException, ScriptException {
-		File root = new File("./resources/porters"); porters.clear();
-		if(!root.exists()){ root.mkdirs(); }
-		else{
-			for(File file : root.listFiles()){
-				if(file.getName().endsWith(".js")){
-					try{
-						ScriptEngine engine = newEngine(); engine.eval(new FileReader(file)); Invocable inv = (Invocable)engine;
-						//
-						ExternalPorter porter = new ExternalPorter(); porter.file = file;
-						porter.id = (String)inv.invokeFunction("getId");
-						porter.name = (String)inv.invokeFunction("getName");
-						porter.extensions = ((ScriptObjectMirror)inv.invokeFunction("getExtensions")).to(String[].class);
-						porter.importer = (boolean)inv.invokeFunction("isImporter");
-						porter.exporter = (boolean)inv.invokeFunction("isExporter");
-						porter.settings = new ArrayList<>();//TODO
-						porters.put(porter.id, porter);
-					}
-					catch(Exception e){
-						e.printStackTrace(); System.exit(1);
-					}
-				}
-			}
-		}
-		//
 		porters.add(new MTBImporter());
 		porters.add(new FVTMExporter());
 		porters.add(new OBJPreviewImporter());
@@ -73,10 +42,6 @@ public class PorterManager {
 		porters.add(new OBJPrototypeExporter());
 		porters.add(new MarkerExporter());
 		porters.add(new TiMExporter());
-	}
-
-	private static ScriptEngine newEngine(){
-		return new ScriptEngineManager().getEngineByName("nashorn");
 	}
 
 	public static void handleImport(){
@@ -90,15 +55,7 @@ public class PorterManager {
 							Translator.translate("dialog.import.nofile.confirm", "ok.."), null, DialogBox.NOTHING, null);
 						return;
 					}
-					GroupCompound compound = null;
-					if(porter.isInternal()){
-						compound = ((InternalPorter)porter).importModel(file, mapped_settings);
-					}
-					else{
-						Invocable inv = (Invocable)((ExternalPorter)porter).eval();
-						String result = (String) inv.invokeFunction("importModel", file);
-						compound = SaveLoad.parseModel(file, JsonUtil.getObjectFromString(result));
-					}
+					GroupCompound compound = porter.importModel(file, mapped_settings);
 					if(mapped_settings.get("integrate").getBooleanValue()){
 						for(String creator : compound.creators){
 							if(!FMTB.MODEL.creators.contains(creator)){
@@ -145,50 +102,6 @@ public class PorterManager {
 		return null;
 	}
 	
-	public static class ExternalPorter extends ExImPorter {
-
-		private File file;
-		public String id, name;
-		public String[] extensions;
-		public boolean importer, exporter;
-		private ArrayList<Setting> settings;
-		
-		/**
-		 * @return new ScriptEngine instance with this porter loaded
-		 * @throws ScriptException 
-		 * @throws FileNotFoundException 
-		 */
-		public ScriptEngine eval() throws FileNotFoundException, ScriptException{
-			ScriptEngine engine = newEngine();
-			engine.eval(new FileReader(file));
-			return engine;
-		}
-		
-		@Override
-		public boolean isInternal(){ return false; }
-		
-		@Override
-		public String getId(){ return id; }
-		
-		@Override
-		public String getName(){ return name; }
-		
-		@Override
-		public String[] getExtensions(){ return extensions; }
-		
-		@Override
-		public boolean isImporter(){ return importer; }
-		
-		@Override
-		public boolean isExporter(){ return exporter; }
-
-		@Override
-		public ArrayList<Setting> getSettings(boolean export){
-			return settings;
-		}
-		
-	}
-	
 	public static abstract class ExImPorter {
 		
 		public abstract String getId();
@@ -201,8 +114,6 @@ public class PorterManager {
 		
 		public abstract boolean isExporter();
 		
-		public abstract boolean isInternal();
-		
 		public boolean isValidFile(File pre){
 			if(pre.isDirectory()) return true;
 			for(String str : this.getExtensions())
@@ -212,10 +123,6 @@ public class PorterManager {
 
 		public abstract List<Setting> getSettings(boolean export);
 		
-	}
-	
-	public static abstract class InternalPorter extends ExImPorter {
-		
 		protected static final List<Setting> nosettings = Collections.unmodifiableList(new ArrayList<>());
 		
 		/** @return new groupcompound based on data in the file */
@@ -223,9 +130,6 @@ public class PorterManager {
 		
 		/** @return result/status text; */
 		public abstract String exportModel(GroupCompound compound, File file, Map<String, Setting> settings);
-		
-		@Override
-		public boolean isInternal(){ return true; }
 		
 	}
 

@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.porters.PorterManager.InternalPorter;
+import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.MarkerWrapper;
@@ -21,7 +21,7 @@ import net.fexcraft.app.fmt.wrappers.TurboList;
  * @author Ferdinand Calo' (FEX___96)
  *
  */
-public class MarkerExporter extends InternalPorter {
+public class MarkerExporter extends ExImPorter {
 	
 	private static final String[] extensions = new String[]{ ".txt", ".json" };
 	//private static final ArrayList<Setting> settings = new ArrayList<>();

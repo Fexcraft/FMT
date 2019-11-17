@@ -7,7 +7,7 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
-import net.fexcraft.app.fmt.porters.PorterManager.InternalPorter;
+import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.utils.Settings.Type;
 import net.fexcraft.app.fmt.utils.TextureManager;
@@ -18,7 +18,7 @@ import net.fexcraft.app.fmt.wrappers.GroupCompound;
  * @author Ferdinand Calo' (FEX___96)
  *
  */
-public class PNGExporter extends InternalPorter {
+public class PNGExporter extends ExImPorter {
 	
 	private static final String[] extensions = new String[]{ ".png" };
 	private BufferedImage image;

@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import net.fexcraft.app.fmt.porters.PorterManager.InternalPorter;
+import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.utils.SaveLoad;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.utils.Settings.Type;
@@ -21,7 +21,7 @@ import net.fexcraft.lib.common.json.JsonUtil;
  * @author Ferdinand Calo' (FEX___96)
  *
  */
-public class JTMTPorter extends InternalPorter {
+public class JTMTPorter extends ExImPorter {
 	
 	private static final String[] extensions = new String[]{ ".jtmt" };
 	private static final ArrayList<Setting> settings = new ArrayList<>();

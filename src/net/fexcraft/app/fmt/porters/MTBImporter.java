@@ -17,7 +17,7 @@ import java.util.zip.ZipFile;
 import javax.imageio.ImageIO;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.porters.PorterManager.InternalPorter;
+import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.utils.TextureManager;
@@ -37,7 +37,7 @@ import net.fexcraft.lib.tmt.ModelRendererTurbo;
  * @author EternalBlueFlame, FEX___96
  *
  */
-public class MTBImporter extends InternalPorter {
+public class MTBImporter extends ExImPorter {
 	
 	private static String[] extensions = new String[]{ ".mtb" };
 

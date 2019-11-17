@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.porters.PorterManager.InternalPorter;
+import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.utils.Settings.Type;
 import net.fexcraft.app.fmt.wrappers.BoxWrapper;
@@ -26,7 +26,7 @@ import net.fexcraft.app.fmt.wrappers.TurboList;
  * @author Ferdinand Calo' (FEX___96)
  *
  */
-public abstract class FVTMFormatBase extends InternalPorter {
+public abstract class FVTMFormatBase extends ExImPorter {
 	
 	protected static final String[] extensions = new String[]{ ".java" };
 	protected static final String tab = "\t";//"    ";

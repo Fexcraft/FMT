@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.porters.PorterManager.InternalPorter;
+import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
@@ -22,7 +22,7 @@ import net.fexcraft.lib.common.math.TexturedVertex;
  * @author Ferdinand Calo' (FEX___96)
  *
  */
-public class OBJPrototypeExporter extends InternalPorter {
+public class OBJPrototypeExporter extends ExImPorter {
 	
 	private static final String[] extensions = new String[]{ ".obj" };
 	

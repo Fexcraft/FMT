@@ -2,19 +2,14 @@ package net.fexcraft.app.fmt.utils;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.zip.ZipFile;
 
 import javax.imageio.ImageIO;
-import javax.script.Invocable;
-import javax.script.ScriptException;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
-import net.fexcraft.app.fmt.porters.PorterManager.ExternalPorter;
-import net.fexcraft.app.fmt.porters.PorterManager.InternalPorter;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.ui.tree.HelperTree;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
@@ -35,25 +30,10 @@ public class HelperCollector {
 	public static final GroupCompound load(File file, ExImPorter exim, Map<String, Setting> settings){
 		if(file == null || exim == null) return null;
 		Print.console("Loading Preview/Helper model: " + file.getName());
-		if(exim.isInternal()){
-			GroupCompound compound = ((InternalPorter)exim).importModel(file, settings);
-			if(!compound.name.startsWith("import/")){ compound.name = "import/" + compound.name; }
-			compound.getGroups().forEach(list -> list.button.setAsHelperPreview()); 
-			LOADED.add(compound); compound.clearSelection(); HelperTree.TREE.refreshFullHeight(); return compound;
-		}
-		else{
-			try{
-				Invocable inv = (Invocable)((ExternalPorter)exim).eval();
-				String result = (String)inv.invokeFunction("importModel", file);
-				GroupCompound compound = SaveLoad.getModel(file, JsonUtil.getObjectFromString(result), false);
-				if(!compound.name.startsWith("import/")){ compound.name = "import/" + compound.name; }
-				compound.getGroups().forEach(list -> list.button.setAsHelperPreview()); 
-				LOADED.add(compound); compound.clearSelection(); HelperTree.TREE.refreshFullHeight(); return compound;
-			}
-			catch(FileNotFoundException | ScriptException | NoSuchMethodException e){
-				e.printStackTrace(); return null;
-			}
-		}
+		GroupCompound compound = exim.importModel(file, settings);
+		if(!compound.name.startsWith("import/")){ compound.name = "import/" + compound.name; }
+		compound.getGroups().forEach(list -> list.button.setAsHelperPreview()); 
+		LOADED.add(compound); compound.clearSelection(); HelperTree.TREE.refreshFullHeight(); return compound;
 	}
 
 	/** For loading FMTBs.*/
