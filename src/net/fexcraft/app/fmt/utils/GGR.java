@@ -196,6 +196,10 @@ public class GGR {
             root.reset(true); Mouse.setGrabbed(false); TextureEditor.reset();
         }
     }
+    
+    public static void resetDragging(){
+    	UserInterface.DRAGGED = null; FMTB.ggr.dragging = false;
+    }
 
     public static double[] rotatePoint(double f, float pitch, float yaw) {
         double[] xyz = new double[]{f,0,0};

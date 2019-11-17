@@ -1,6 +1,7 @@
 package net.fexcraft.app.fmt.ui.tree;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -172,7 +173,7 @@ public abstract class RightTree extends Element implements Scrollable {
 
 		public GroupButton(Element root, TurboList list){
 			super(root, list.id, "tree:group", 300, 26, 4, 0);
-			this.setColor(StyleSheet.WHITE);//.setDraggable(true);
+			this.setColor(StyleSheet.WHITE).setDraggable(true);
 			this.setText((this.list = list).id, false); rel = 4;
 			this.setBorder(StyleSheet.BLACK, StyleSheet.BLACK, 0);
 			//
@@ -233,6 +234,18 @@ public abstract class RightTree extends Element implements Scrollable {
 			this.setPosition(rel, elm_height); id = list.id;
 			if(!compound) this.setText("[" + list.size() + "] " + id, false);
 			else this.setText(id, false); this.render(rw, rh);
+		}
+		
+		@Override
+		public void pullBy(int mx, int my){
+			if(FMTB.MODEL.getGroups().size() < 2) return;
+			int index = FMTB.MODEL.getGroups().indexOf(list);
+			if(my < 0 && index > 0 && FMTB.MODEL.getGroups().get(index - 1).minimized){
+				Collections.swap(FMTB.MODEL.getGroups(), index, index - 1); GGR.resetDragging(); return;
+			}
+			if(my > 0 && (index + 1) < FMTB.MODEL.getGroups().size() && list.minimized){
+				Collections.swap(FMTB.MODEL.getGroups(), index, index + 1); GGR.resetDragging(); return;
+			}
 		}
 		
 	}

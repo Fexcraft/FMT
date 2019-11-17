@@ -133,7 +133,7 @@ public class FileChooser extends Element implements Dialog {
 	}
 	
 	private void applySettingsToAfterTask(AfterTask onfile){
-		settings.addAll(onfile.porter.getSettings(mode.exports()));
+		if(porter == null) return; settings.addAll(onfile.porter.getSettings(mode.exports()));
 		onfile.settings.addAll(settings); onfile.mapped_settings = new HashMap<>();
 		onfile.settings.forEach(setting -> onfile.mapped_settings.put(setting.getId(), setting));
 	}
