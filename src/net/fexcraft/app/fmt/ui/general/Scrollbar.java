@@ -19,7 +19,7 @@ public class Scrollbar extends Element {
 		this.setColor(0xff6e6e6e).setHoverColor(StyleSheet.WHITE, false);;
 		opposite = opp; xrel = opp ? root.x - width : root.width; 
 	}
-	
+
 	@Override
 	public Element repos(){
 		visible = element.getFullHeight() > root.height;

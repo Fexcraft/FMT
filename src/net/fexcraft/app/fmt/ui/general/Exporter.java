@@ -6,6 +6,7 @@ package net.fexcraft.app.fmt.ui.general;
 import java.awt.Desktop;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.UserInterface;
@@ -24,8 +25,14 @@ public class Exporter extends Element implements Dialog {
 	//
 	
 	public Exporter(){
-		super(null, "dialogbox", "dialogbox"); this.setSize(600, 480).setDraggable(true).setVisible(false).setColor(0xff80adcc);
+		super(null, "exporter", "exporter"); this.setSize(600, 320).setDraggable(true).setVisible(false).setColor(0xff80adcc);
 		Dialog.dialogs.add(this); this.setBorder(0xff000000, 0xfffcba03, 5, true, true, true, true); this.setHoverColor(StyleSheet.WHITE, false);
+		//
+		this.elements.add(new Element(this, "exporter:0", "exporter:0").setSize(200, 300).setPosition(  0, 0).setColor(0xffffffff).setBorder(StyleSheet.BLACK, StyleSheet.WHITE, 1, true, true, true, true));
+		this.elements.add(new Element(this, "exporter:1", "exporter:1").setSize(200, 310).setPosition(200, 0).setColor(0xffffffff).setBorder(StyleSheet.BLACK, StyleSheet.WHITE, 1, true, true, true, true));
+		this.elements.add(new Element(this, "exporter:2", "exporter:2").setSize(200, 320).setPosition(400, 0).setColor(0xffffffff).setBorder(StyleSheet.BLACK, StyleSheet.WHITE, 1, true, true, true, true));
+		//
+		//this.show();
 	}
 	
 	@Override
@@ -46,15 +53,11 @@ public class Exporter extends Element implements Dialog {
 		return true;
 	}
 	
-	/** 
-	 * 
-	 * @param text 0 - desc, 1 - desc2, 2 - left button, 3 - right button
-	 * */
 	public void show(){
-		export(); //this.reset(); this.setVisible(true);
+		this.reset(); this.setVisible(true);
 	}
 	
-	public void export(){
+	public void export(ExImPorter porter){
 		UserInterface.FILECHOOSER.show(new String[]{ Translator.translate("filechooser.export.title", "Select Export Location"),
 			Translator.translate("filechooser.export.confirm", "Export") }, FileRoot.EXPORT, new AfterTask(){
 			@Override
@@ -76,7 +79,7 @@ public class Exporter extends Element implements Dialog {
 					e.printStackTrace();
 				}
 			}
-		}, ChooserMode.EXPORT);
+		}, ChooserMode.EXPORT, porter);
 	}
 	
 	public void reset(){
