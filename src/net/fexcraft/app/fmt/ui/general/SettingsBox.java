@@ -142,6 +142,7 @@ public class SettingsBox extends Element implements Dialog {
 	}
 	
 	public void show(Object... objects){
+		this.settings.clear(); this.alttext = "No Settings.";
 		if(objects != null && objects.length >= 2){
 			this.alttext = (String)objects[0]; this.task = (AfterTask)objects[1];
 			Confirm.setVisible(true); Cancel.setVisible(true);
