@@ -3,7 +3,6 @@
  */
 package net.fexcraft.app.fmt.porters;
 
-import java.awt.Desktop;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -128,34 +127,7 @@ public class PorterManager {
 	}
 
 	public static void handleExport(){
-		UserInterface.FILECHOOSER.show(new String[]{ Translator.translate("filechooser.export.title", "Select Export Location"),
-			Translator.translate("filechooser.export.confirm", "Export") }, FileRoot.EXPORT, new AfterTask(){
-			@Override
-			public void run(){
-				try{
-					if(file == null){
-						FMTB.showDialogbox(Translator.translate("dialog.export.nofile", "No valid file choosen.<nl>Export is cancelled."),
-							Translator.translate("dialog.export.nofile.confirm", "ok.."), null, DialogBox.NOTHING, null);
-						return;
-					} String result;
-					if(porter.isInternal()){
-						result = ((InternalPorter)porter).exportModel(FMTB.MODEL, file, mapped_settings);
-					}
-					else{
-						Invocable inv = (Invocable)((ExternalPorter)porter).eval();
-						result = (String)inv.invokeFunction("exportModel", SaveLoad.modelToJTMT(null, true).toString(), file);
-					}
-					FMTB.showDialogbox(Translator.format("dialog.export.success", "Export complete.<nl>%s", result),
-						Translator.translate("dialog.export.success.confirm", "OK!"), null, DialogBox.NOTHING, null);
-					Desktop.getDesktop().open(file.getParentFile());
-				}
-				catch(Exception e){
-					String str = Translator.format("dialog.export.fail", "Errors while exporting Model.<nl>%s", e.getLocalizedMessage());
-					FMTB.showDialogbox(str, Translator.translate("dialog.export.fail.confirm", "ok."), null, DialogBox.NOTHING, null);//TODO add "open console" as 2nd button
-					e.printStackTrace();
-				}
-			}
-		}, ChooserMode.EXPORT);
+		UserInterface.EXPORTER.show();
 	}
 
 	/**
