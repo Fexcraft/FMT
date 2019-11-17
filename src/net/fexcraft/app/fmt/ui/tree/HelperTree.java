@@ -47,7 +47,7 @@ public class HelperTree extends RightTree {
 
 	@Override
 	public void refreshFullHeight(){
-		//TODO
+		int full = 4; for(GroupCompound compound : HelperCollector.LOADED) full += compound.minimized ? 28 : (compound.groups.size() * 28) + 28; this.fullheight = full;
 	}
 	
 }
