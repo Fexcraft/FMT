@@ -54,7 +54,7 @@ public abstract class Editor extends Element {
 
 	@Override
 	public boolean processButtonClick(int x, int y, boolean left){
-		return false;
+		return true;
 	}
 	
 	public void show(){
