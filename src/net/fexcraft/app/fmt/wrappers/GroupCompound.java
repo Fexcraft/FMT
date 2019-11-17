@@ -197,9 +197,7 @@ public class GroupCompound {
 			if(groups.isEmpty() && group == null) groups.add(new TurboList("group0"));
 			if(group != null && !groups.contains(group)) groups.add(new TurboList(group));
 			TurboList list = (group == null ? groups.contains("body") ? groups.get("body") : groups.get(0) : groups.get(group));
-			if(clear){ clearSelection(); } shape.selected = true; SELECTED_POLYGONS += 1;
-			list.add(shape); shape.setList(list); shape.recompile(); this.updateFields();
-			ModelTree.TREE.refreshFullHeight();
+			if(clear){ clearSelection(); } shape.selected = true; SELECTED_POLYGONS += 1; list.add(shape); shape.recompile(); this.updateFields();
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -659,19 +657,24 @@ public class GroupCompound {
 		
 		public TurboList remove(String str){
 			TurboList list = get(str); if(list == null) return null;
-			if(remove(list)) return list; return null;
+			if(remove(list)){ ModelTree.TREE.refreshFullHeight(); return list; } return null;
 		}
 		
 		@Override
 		public boolean remove(Object obj){
 			if(obj instanceof TurboList) ((TurboList)obj).button.getElements().remove(((TurboList)obj).button);
-			return super.remove(obj);
+			boolean bool = super.remove(obj); ModelTree.TREE.refreshFullHeight(); return bool;
 		}
 		
 		@Override
 		public TurboList remove(int index){
 			TurboList list = get(index); if(list != null) list.button.getElements().remove(list.button);
-			return super.remove(index);
+			list = super.remove(index); ModelTree.TREE.refreshFullHeight(); return list;
+		}
+		
+		@Override
+		public void clear(){
+			super.clear(); ModelTree.TREE.refreshFullHeight();
 		}
 		
 	}

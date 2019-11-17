@@ -52,7 +52,24 @@ public class TurboList extends ArrayList<PolygonWrapper> {
 	
 	@Override
 	public boolean add(PolygonWrapper poly){
-		poly.setList(this); return super.add(poly);
+		poly.setList(this); ModelTree.TREE.refreshFullHeight(); return super.add(poly);
+	}
+	
+	@Override
+	public void clear(){
+		super.clear(); ModelTree.TREE.refreshFullHeight();
+	}
+	
+	@Override
+	public PolygonWrapper remove(int index){
+		PolygonWrapper wrapper = super.remove(index);
+		ModelTree.TREE.refreshFullHeight(); return wrapper;
+	}
+	
+	@Override
+	public boolean remove(Object wrapper){
+		boolean bool = super.remove(wrapper);
+		ModelTree.TREE.refreshFullHeight(); return bool;
 	}
 	
 	public String getGroupTexture(){

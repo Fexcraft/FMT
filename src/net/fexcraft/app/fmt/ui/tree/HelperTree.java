@@ -26,6 +26,7 @@ public class HelperTree extends RightTree {
 				list.button.update(elm_height, rw, rh); elm_height += 28; elements.add(list.button);
 			}
 		}
+		elements.add(scrollbar.repos()); scrollbar.render(rw, rh);
 	}
 
 	@Override

@@ -16,6 +16,7 @@ import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.porters.PorterManager.ExternalPorter;
 import net.fexcraft.app.fmt.porters.PorterManager.InternalPorter;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
+import net.fexcraft.app.fmt.ui.tree.HelperTree;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.TexrectWrapperA;
@@ -38,7 +39,7 @@ public class HelperCollector {
 			GroupCompound compound = ((InternalPorter)exim).importModel(file, settings);
 			if(!compound.name.startsWith("import/")){ compound.name = "import/" + compound.name; }
 			compound.getGroups().forEach(list -> list.button.setAsHelperPreview()); 
-			LOADED.add(compound); compound.clearSelection(); return compound;
+			LOADED.add(compound); compound.clearSelection(); HelperTree.TREE.refreshFullHeight(); return compound;
 		}
 		else{
 			try{
@@ -47,7 +48,7 @@ public class HelperCollector {
 				GroupCompound compound = SaveLoad.getModel(file, JsonUtil.getObjectFromString(result), false);
 				if(!compound.name.startsWith("import/")){ compound.name = "import/" + compound.name; }
 				compound.getGroups().forEach(list -> list.button.setAsHelperPreview()); 
-				LOADED.add(compound); compound.clearSelection(); return compound;
+				LOADED.add(compound); compound.clearSelection(); HelperTree.TREE.refreshFullHeight(); return compound;
 			}
 			catch(FileNotFoundException | ScriptException | NoSuchMethodException e){
 				e.printStackTrace(); return null;
@@ -84,7 +85,7 @@ public class HelperCollector {
 			e.printStackTrace(); String str = Translator.translate("dialog.helper_collector.load_fmtb.errors", "Errors occured<nl>while parsing save file");
 			FMTB.showDialogbox(str, Translator.translate("dialog.helper_collector.load_fmtb.errors.confirm", "ok"), null, DialogBox.NOTHING, null);
 		}
-		if(compound != null){ LOADED.add(compound); }
+		if(compound != null){ LOADED.add(compound); } HelperTree.TREE.refreshFullHeight(); 
 		compound.clearSelection(); compound.getGroups().forEach(list -> list.button.setAsHelperPreview()); return compound;
 	}
 
@@ -130,7 +131,7 @@ public class HelperCollector {
 			e.printStackTrace(); String str = Translator.translate("dialog.helper_collector.load_frame.errors", "Errors occured<nl>while creating frame.");
 			FMTB.showDialogbox(str, Translator.translate("dialog.helper_collector.load_frame.errors.confirm", "ok"), null, DialogBox.NOTHING, null);
 		}
-		if(compound != null){ LOADED.add(compound); }
+		if(compound != null){ LOADED.add(compound); } HelperTree.TREE.refreshFullHeight(); 
 		compound.clearSelection(); return compound;
 	}
 
