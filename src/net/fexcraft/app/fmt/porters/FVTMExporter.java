@@ -84,4 +84,9 @@ public class FVTMExporter extends FVTMFormatBase {
 		buffer.append("public class " + modelname + " extends " + modelclass + " {\n\n");
 	}
 
+	@Override
+	public String[] getCategories(){
+		return new String[]{ "model" };
+	}
+
 }

@@ -85,4 +85,9 @@ public class JTMTPorter extends ExImPorter {
 		return export ? settings : nosettings;
 	}
 
+	@Override
+	public String[] getCategories(){
+		return new String[]{ "model" };
+	}
+
 }

@@ -231,5 +231,10 @@ public class MTBImporter extends ExImPorter {
 	public List<Setting> getSettings(boolean export){
 		return nosettings;
 	}
+
+	@Override
+	public String[] getCategories(){
+		return new String[]{ "model" };
+	}
     
 }

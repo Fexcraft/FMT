@@ -55,4 +55,9 @@ public class OBJPreviewImporter extends ExImPorter {
 		return nosettings;
 	}
 
+	@Override
+	public String[] getCategories(){
+		return new String[]{ "model" };
+	}
+
 }

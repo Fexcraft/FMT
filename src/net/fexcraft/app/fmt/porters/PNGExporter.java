@@ -83,4 +83,9 @@ public class PNGExporter extends ExImPorter {
 		return settings;
 	}
 
+	@Override
+	public String[] getCategories(){
+		return new String[]{ "texture" };
+	}
+
 }

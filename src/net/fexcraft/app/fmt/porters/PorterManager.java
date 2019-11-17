@@ -110,6 +110,8 @@ public class PorterManager {
 		
 		public abstract String[] getExtensions();
 		
+		public abstract String[] getCategories();
+		
 		public abstract boolean isImporter();
 		
 		public abstract boolean isExporter();

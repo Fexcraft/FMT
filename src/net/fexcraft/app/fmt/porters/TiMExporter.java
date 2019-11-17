@@ -58,4 +58,9 @@ public class TiMExporter extends FVTMFormatBase {
 		buffer.append("public class " + modelname + " extends RollingStockModel {\n\n");
 	}
 
+	@Override
+	public String[] getCategories(){
+		return new String[]{ "model" };
+	}
+
 }
