@@ -4,6 +4,7 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.tree.ModelTree;
+import net.fexcraft.app.fmt.utils.StyleSheet;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.lib.common.math.RGB;
 
@@ -67,6 +68,7 @@ public class Bottombar extends Element {
 
 		public BottomField(Element root, String id, String style, int width, int x, int y, String translation){
 			super(root, id, style, width, x, y); this.translation = translate("bottombar:" + id, translation);
+			this.setHoverColor(StyleSheet.WHITE, false).setHoverColor(StyleSheet.WHITE, true);
 		}
 		
 	}

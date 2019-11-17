@@ -302,4 +302,8 @@ public class Element {
 		if(!elements.isEmpty()) for(Element elm : elements) elm.dispose(); return;
 	}
 
+	public void pullBy(int mx, int my){
+		xrel += mx; yrel += my; this.repos();
+	}
+
 }

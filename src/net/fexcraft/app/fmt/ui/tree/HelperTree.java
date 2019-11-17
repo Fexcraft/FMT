@@ -16,7 +16,7 @@ public class HelperTree extends RightTree {
 
 	@Override
 	public void renderSelf(int rw, int rh){
-		elm_height = 4; elements.clear(); if(HelperCollector.LOADED.size() == 0) SEL = -1; elm_height -= scroll; boolean bool;
+		elm_height = 4; elements.clear(); if(HelperCollector.LOADED.size() == 0) SEL = -1; elm_height -= scrollbar.scrolled; boolean bool;
 		for(GroupCompound compound : HelperCollector.LOADED){
 			if((bool = elm_height < 4) && compound.minimized){ elm_height += 28; continue; } if(elm_height > height) break;
 			if(!bool){ compound.button.update(elm_height, rw, rh); elm_height += 28; elements.add(compound.button); }
@@ -38,11 +38,16 @@ public class HelperTree extends RightTree {
 	}
 	
 	public void modifyScroll(int amount){
-		scroll += amount; if(scroll < 0) scroll = 0;
+		scrollbar.scrolled += amount; if(scrollbar.scrolled < 0) scrollbar.scrolled = 0;
 	}
 
 	public static GroupCompound getSelected(){
 		return SEL >= HelperCollector.LOADED.size() || SEL < 0 ? null : HelperCollector.LOADED.get(SEL);
+	}
+
+	@Override
+	public void refreshFullHeight(){
+		//TODO
 	}
 	
 }

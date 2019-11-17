@@ -11,6 +11,7 @@ import com.google.gson.JsonPrimitive;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.general.FileChooser;
 import net.fexcraft.app.fmt.ui.general.FileChooser.FileRoot;
+import net.fexcraft.app.fmt.ui.tree.ModelTree;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
@@ -79,7 +80,9 @@ public class Settings {
 	}
 
 	public static boolean togglePolygonCount(){
-		return polygon_count.toggle();
+		boolean bool = polygon_count.toggle();
+		ModelTree.TREE.refreshFullHeight();
+		return bool;
 	}
 
 	public static boolean togglePreviewColorpicker(){

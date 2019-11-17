@@ -184,9 +184,7 @@ public class GGR {
         	}
         	if(Mouse.isButtonDown(0) && dragging){
         		if(UserInterface.DRAGGED != null){
-            		UserInterface.DRAGGED.xrel += Mouse.getDX();
-            		UserInterface.DRAGGED.yrel += -Mouse.getDY();
-            		UserInterface.DRAGGED.repos();
+        			UserInterface.DRAGGED.pullBy(Mouse.getDX(), -Mouse.getDY());
         		}
         		else{
         			root.UI.getDraggableElement();

@@ -33,7 +33,7 @@ public class ModelTree extends RightTree {
 			polygoncount.setText(translation + COUNT, false).setPosition(4, elm_height).repos();
 			elm_height += polygoncount.height + 4; elements.add(polygoncount);
 		}
-		elm_height -= scroll; boolean bool;
+		elm_height -= scrollbar.scrolled; boolean bool;
 		for(TurboList list : groups){
 			if((bool = elm_height < head) && list.minimized){ elm_height += 28; continue; } if(elm_height > height) break;
 			if(!bool){ list.button.update(elm_height, rw, rh); elm_height += 28; elements.add(list.button); }
@@ -44,6 +44,7 @@ public class ModelTree extends RightTree {
 			}
 		}
 		if(Settings.polygonCount()){ polygoncount.renderSelf(rw, rh); }
+		elements.add(scrollbar.repos()); scrollbar.render(rw, rh);
 	}
 
 	@Override
@@ -52,11 +53,19 @@ public class ModelTree extends RightTree {
 	}
 
 	public boolean processScrollWheel(int wheel){
-		this.modifyScroll(-wheel / (Mouse.isButtonDown(1) ? 1 : 10)); return true;
+		modifyScroll(-wheel / (Mouse.isButtonDown(1) ? 1 : 10)); return true;
 	}
 	
 	public void modifyScroll(int amount){
-		scroll += amount; if(scroll < 0) scroll = 0;
+		scrollbar.scrolled += amount; if(scrollbar.scrolled < 0) scrollbar.scrolled = 0;
+	}
+
+	@Override
+	public void refreshFullHeight(){
+		int full = 4; groups = FMTB.MODEL.getGroups();
+		//if(Settings.polygonCount()) full += polygoncount.height + 4;
+		for(TurboList list : groups) full += list.minimized ? 28 : (list.size() * 28) + 28;
+		this.fullheight = full;
 	}
 	
 }

@@ -17,6 +17,8 @@ import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.general.Button;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.ui.general.Icon;
+import net.fexcraft.app.fmt.ui.general.Scrollbar;
+import net.fexcraft.app.fmt.ui.general.Scrollbar.Scrollable;
 import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.HelperCollector;
@@ -30,13 +32,14 @@ import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.common.utils.Print;
 
-public abstract class RightTree extends Element {
+public abstract class RightTree extends Element implements Scrollable {
 	
 	public static final ArrayList<RightTree> TREES = new ArrayList<RightTree>();
 	protected static final RGB fontcol = new RGB("#1e1e1e");
 	private static RGB sel_in_g, sel_in_p, sel_in_c, sel_vi_g, sel_vi_p, sel_vi_c;
 	private static RGB def_g, def_p, def_c, inv_g, inv_p, inv_c;
-	protected int scroll;
+	protected Scrollbar scrollbar;
+	protected int fullheight;
 
 	public RightTree(String id){
 		super(null, id, id); this.setSize(308, 100).setPosition(0, 0).setVisible(false); TREES.add(this);
@@ -55,6 +58,8 @@ public abstract class RightTree extends Element {
 		inv_g = new RGB(StyleSheet.getColourFor("tree:group", "background_invisible", 0xff80a073));
 		inv_p = new RGB(StyleSheet.getColourFor("tree:polygon", "background_invisible", 0xff80a073));
 		inv_c = new RGB(StyleSheet.getColourFor("tree:compound", "background_invisible", 0xff80a073));
+		//
+		this.elements.add(scrollbar = new Scrollbar(this, true));
 	}
 	
 	@Override
@@ -82,11 +87,11 @@ public abstract class RightTree extends Element {
 	}
 	
 	public static void show(String id){
-		TREES.forEach(elm -> { elm.visible = elm.id.equals(id); elm.scroll = 0; });
+		TREES.forEach(elm -> { elm.visible = elm.id.equals(id); elm.scrollbar.scrolled = 0; });
 	}
 	
 	public static void hideAll(){
-		TREES.forEach(elm -> { elm.visible = false; elm.scroll = 0; } );
+		TREES.forEach(elm -> { elm.visible = false; elm.scrollbar.scrolled = 0; } );
 	}
 
 	public static void toggle(String string){ toggle(string, true); }
@@ -111,6 +116,13 @@ public abstract class RightTree extends Element {
 	public static boolean anyTreeHovered(){
 		return  TREES.stream().filter(pre -> pre.isHovered()).findFirst().isPresent();
 	}
+
+	@Override
+	public int getFullHeight(){
+		return fullheight;
+	}
+	
+	public abstract void refreshFullHeight();
 	
 	public static abstract class TreeButton extends Button {
 		
@@ -167,7 +179,7 @@ public abstract class RightTree extends Element {
 			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_minimize", 22, width - 104, 2){
 				@Override
 				public boolean processButtonClick(int mx, int my, boolean left){
-					list.minimized = !list.minimized; return true;
+					list.minimized = !list.minimized; ((RightTree)root.getRoot()).refreshFullHeight(); return true;
 				}
 			});
 			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_edit", 22, width - 78, 2){
@@ -290,7 +302,7 @@ public abstract class RightTree extends Element {
 			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_minimize", 22, width - 130, 2){
 				@Override
 				public boolean processButtonClick(int mx, int my, boolean left){
-					compound.minimized = !compound.minimized; return true;
+					compound.minimized = !compound.minimized; ((RightTree)root.getRoot()).refreshFullHeight(); return true;
 				}
 			});
 			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_clone", 22, width - 104, 2){

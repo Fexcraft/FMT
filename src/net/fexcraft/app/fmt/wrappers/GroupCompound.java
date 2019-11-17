@@ -17,6 +17,7 @@ import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.ui.general.DropDownField;
 import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.ui.tree.HelperTree;
+import net.fexcraft.app.fmt.ui.tree.ModelTree;
 import net.fexcraft.app.fmt.ui.tree.RightTree.CompoundButton;
 import net.fexcraft.app.fmt.utils.RayCoastAway;
 import net.fexcraft.app.fmt.utils.Settings;
@@ -196,7 +197,9 @@ public class GroupCompound {
 			if(groups.isEmpty() && group == null) groups.add(new TurboList("group0"));
 			if(group != null && !groups.contains(group)) groups.add(new TurboList(group));
 			TurboList list = (group == null ? groups.contains("body") ? groups.get("body") : groups.get(0) : groups.get(group));
-			if(clear){ clearSelection(); } shape.selected = true; SELECTED_POLYGONS += 1; list.add(shape); shape.setList(list); shape.recompile(); this.updateFields();
+			if(clear){ clearSelection(); } shape.selected = true; SELECTED_POLYGONS += 1;
+			list.add(shape); shape.setList(list); shape.recompile(); this.updateFields();
+			ModelTree.TREE.refreshFullHeight();
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -593,7 +596,8 @@ public class GroupCompound {
 	public void copyAndSelect(){
 		ArrayList<PolygonWrapper> list = this.getSelected(), newlist = new ArrayList<>();
 		for(PolygonWrapper wrapper : list){ newlist.add(wrapper.clone()); } this.clearSelection();
-		for(PolygonWrapper wrapper : newlist){ this.add(wrapper, "clipboard", false); } return;
+		for(PolygonWrapper wrapper : newlist){ this.add(wrapper, "clipboard", false); }
+		ModelTree.TREE.refreshFullHeight(); return;
 	}
 
 	public void flipShapeboxes(int axis){
