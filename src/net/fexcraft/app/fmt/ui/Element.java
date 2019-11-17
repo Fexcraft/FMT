@@ -56,6 +56,7 @@ public class Element {
 		this.visible = bool; return this;
 	}
 	
+	/** top - 0, bot - 1, left - 2, right - 3 */
 	public Element setBorder(int color, int color0, int width, boolean... bools){
 		border = StyleSheet.getColourFor(stylegroup, "border", color); border_width = width;
 		border_fill = StyleSheet.getColourFor(stylegroup, "border_fill", color0);

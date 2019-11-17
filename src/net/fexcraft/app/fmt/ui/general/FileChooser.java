@@ -13,12 +13,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.Element;
-import net.fexcraft.app.fmt.ui.FontRenderer;
-import net.fexcraft.app.fmt.ui.FontRenderer.FontType;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.utils.Backups;
 import net.fexcraft.app.fmt.utils.SaveLoad;
@@ -40,26 +37,25 @@ import net.fexcraft.lib.common.utils.Print;
 public class FileChooser extends Element implements Dialog {
 
 	public static final AfterTask NOTHING = new AfterTask(){ @Override public void run(){ Print.console(file); return; }};
-	/*private Icon exim_next, exim_prev;*/ private Button root;
-	private int scroll, eximscroll, selected = -1;
+	private int scroll, selected = -1;
 	private File currdir = SaveLoad.getRoot();
 	private Button[] files = new Button[12], sel = new Button[3];
 	private ArrayList<Setting> settings = new ArrayList<>();
-	private String title = "No Title.";
 	private AfterTask onfile = NOTHING;
-	private TextField eximporter, cfn;
+	private ExImPorter porter;
+	private TextField cfn;
 	private ChooserMode mode;
+	private Button root, title;
 	
 	public FileChooser(){
-		super(null, "filechooser", "filechooser"); this.setTexture("ui/filechooser", true).setDraggable(true);
-		this.setSize(512, 546).setVisible(false).setPosition(0, 0); Dialog.dialogs.add(this);
-		/*TextureManager.loadTexture("icons/file_chooser_0", null); TextureManager.loadTexture("icons/file_chooser_1", null);
-		TextureManager.loadTexture("icons/file_chooser_2", null); TextureManager.loadTexture("icons/file_chooser_3", null);
-		TextureManager.loadTexture("icons/file_chooser_4", null); TextureManager.loadTexture("icons/file_chooser_5", null);
-		TextureManager.loadTexture("icons/file_chooser_6", null); TextureManager.loadTexture("icons/file_chooser_7", null);*/
-		this.elements.add(sel[0] = new Button(this, "button0", "filechooser:button", 140, 28, 20, 504, StyleSheet.YELLOW, StyleSheet.RED){
+		super(null, "filechooser", "filechooser"); this.setHoverColor(StyleSheet.WHITE, false).setDraggable(true);
+		this.setColor(0xff80adcc).setBorder(0xff000000, 0xfffcba03, 3, true, true, true, true);
+		this.setSize(512, 512).setVisible(false).setPosition(0, 0); Dialog.dialogs.add(this);
+		this.elements.add(new Element(this, "filechooser:background", "filechooser:background").setSize(480, 372).setPosition(16, 50)
+			.setColor(0xff2b4570).setHoverColor(StyleSheet.WHITE, false));
+		this.elements.add(sel[0] = new Button(this, "button0", "filechooser:button", 140, 28, 20, 470, StyleSheet.YELLOW, StyleSheet.RED){
 			@Override public boolean processButtonClick(int x, int y, boolean left){
-				onfile.porter = PorterManager.getPorters(mode.exports()).get(eximscroll);
+				onfile.porter = porter;
 				if(cfn.isEnabled() && isValidInput(cfn.getText())){
 					onfile.file = new File(currdir, cfn.getText() + (cfn.getText().endsWith(getCurrentSelectedFileExtension(onfile.porter)) ? "" : getCurrentSelectedFileExtension(onfile.porter)));
 				}
@@ -96,27 +92,26 @@ public class FileChooser extends Element implements Dialog {
 				super.hovered(mx, my); if(hovered) cfn.onReturn();
 			}
 		});
-		this.elements.add(sel[1] = new Button(this, "button1", "filechooser:button", 140, 28, 186, 504/*470*/, StyleSheet.YELLOW, StyleSheet.RED){
+		this.elements.add(sel[1] = new Button(this, "button1", "filechooser:button", 140, 28, 186, 470, StyleSheet.YELLOW, StyleSheet.RED){
 			@Override public boolean processButtonClick(int x, int y, boolean left){
-				onfile.porter = PorterManager.getPorters(mode.exports()).get(eximscroll);
+				onfile.porter = porter;
 				String str = Backups.getSimpleDateFormat(true).format(Time.getDate()); UserInterface.FILECHOOSER.visible = false;
 				String ext = getCurrentSelectedFileExtension(onfile.porter);
 				onfile.file = new File(currdir, (FMTB.MODEL.name == null ? "unnamed" : FMTB.MODEL.name) + "-(" + str + ")" + ext);
 				applySettingsToAfterTask(onfile); onfile.run(); UserInterface.FILECHOOSER.reset(); return true;
 			}
 		});
-		this.elements.add(sel[2] = new Button(this, "button2", "filechooser:button", 140, 28, 352, 504/*470*/, StyleSheet.YELLOW, StyleSheet.RED){
+		this.elements.add(sel[2] = new Button(this, "button2", "filechooser:button", 140, 28, 352, 470, StyleSheet.YELLOW, StyleSheet.RED){
 			@Override public boolean processButtonClick(int x, int y, boolean left){ UserInterface.FILECHOOSER.reset(); return true; }
 		});
-		for(Button button : sel) button.setBorder(StyleSheet.BLACK, StyleSheet.WHITE, 0);
+		for(Button button : sel) button.setBorder(0xff909090, StyleSheet.WHITE, 1, true, true, true, true);
 		//
-		this.elements.add((eximporter = new TextField(this, "eximporter", "filechooser:eximporter", 404, 17, 430).setRenderBackground(false).setTextColor(RGB.BLACK)).setEnabled(false));
 		this.elements.add(root = new Button(this, "fileroot", "filechooser:root", 472, 28, 20, 54, 0xffc8c8c8){
 			@Override public boolean processButtonClick(int x, int y, boolean left){
 				if(currdir.getParentFile() != null) currdir = currdir.getParentFile().getAbsoluteFile();
 				Settings.SETTINGS.get("filedir_last").setValue(currdir.toPath().toString()); ressel(); return true;
 			}
-		}.setBackgroundless(true));
+		}); root.setColor(0xff81cc82).setBorder(StyleSheet.BLACK, StyleSheet.WHITE, 1, false, false, true, true);
 		for(int i = 0; i < files.length; i++){ int j = i;
 			this.elements.add(files[i] = new Button(this, "files" + i, "filechooser:file", 472, 28, 20, 82 + (i * 28), StyleSheet.YELLOW, 0xffff8300){
 				@Override public boolean processButtonClick(int x, int y, boolean left){
@@ -126,36 +121,15 @@ public class FileChooser extends Element implements Dialog {
 					} return true;
 				}
 				@Override public boolean onScrollWheel(int wheel){ scroll += wheel < 0 ? 8 : -8; if(scroll < 0) scroll = 0; return true; }
-			}.setBackgroundless(true));
+			}); files[i].setBorder(StyleSheet.BLACK, StyleSheet.WHITE, 1, false, false, true, true);
 		}
+		this.elements.add(cfn = new TextField(this, "customfilename", "filechooser:filename", 468, 22, 430).setTextColor(RGB.BLACK));
+		cfn.setColor("hover_sel", new RGB(230, 164, 138)).setColor(0xffcdcdcd).setHoverColor(0xffe8cf89, false).setBorder(StyleSheet.BLACK, StyleSheet.WHITE, 1, true, true, true, true);
 		//
-		this.elements.add(/*exim_prev = */new Icon(this, "exim-", "filechooser:exim", "icons/arrow_decrease", 26, 436, 429){
-			@Override
-			public boolean processButtonClick(int x, int y, boolean left){
-				switch(mode){
-					case EXPORT: case IMPORT:{
-						eximscroll++;if(eximscroll >= PorterManager.getPorters(mode.exports()).size()) eximscroll = 0;
-						ressel(); return true;
-					}
-					case PNG: case HELPFRAMEIMG: case SAVEFILE_SAVE: case SAVEFILE_LOAD: default: return true;
-				}
-			}
-		}.setHoverColor(0xff787878, false));
-		this.elements.add(/*exim_next = */new Icon(this, "exim+", "filechooser:exim", "icons/arrow_increase", 26, 464, 429){
-			@Override
-			public boolean processButtonClick(int x, int y, boolean left){
-				switch(mode){
-					case EXPORT: case IMPORT:{
-						eximscroll--; if(eximscroll < 0) eximscroll = PorterManager.getPorters(mode.exports()).size() - 1;
-						ressel(); return true;
-					}
-					case PNG: case HELPFRAMEIMG: case SAVEFILE_SAVE: case SAVEFILE_LOAD: default: return true;
-				}
-			}
-		}.setHoverColor(0xff787878, false));
-		this.elements.add(cfn = new TextField(this, "customfilename", "filechooser:filename", 468, 22, 470).setColorOnHover(new RGB(200, 200, 200)).setRenderBackground(false).setTextColor(RGB.BLACK));
+		this.elements.add((title = new Button(this, "No Title.", "filechooser:title", 480, 30, 16, 12))
+			.setHoverColor(StyleSheet.WHITE, false).setBorder(0xff909090, StyleSheet.WHITE, 1, true, true, true, true));
 		//
-		//this.show(new String[]{ "test title", "OK"}, null, NOTHING, false);
+		//this.show(new String[]{ "test title", "OK" }, FileRoot.SAVES, NOTHING, ChooserMode.SAVEFILE_SAVE, null);
 	}
 	
 	private void applySettingsToAfterTask(AfterTask onfile){
@@ -193,7 +167,6 @@ public class FileChooser extends Element implements Dialog {
 			if(currdir.listFiles() == null) return new File[]{ NONE };
 			switch(mode){
 				case EXPORT: case IMPORT:{
-					ExImPorter porter = PorterManager.getPorters(mode.exports()).get(eximscroll);
 					stream = Arrays.asList(currdir.listFiles()).stream().filter(pre -> porter.isValidFile(pre));
 					break;
 				}
@@ -230,27 +203,7 @@ public class FileChooser extends Element implements Dialog {
 	
 	@Override
 	public void renderSelf(int rw, int rh) {
-		this.renderQuad(x, y, width, height, texture);
-		switch(mode){
-			case EXPORT:
-				eximporter.setText(format("filechooser.exporter", "Exporter: %s", PorterManager.getPorters(true).get(eximscroll).getName()), false);
-				break;
-			case IMPORT:
-				eximporter.setText(format("filechooser.importer", "Importer: %s", PorterManager.getPorters(false).get(eximscroll).getName()), false);
-				break;
-			case PNG:
-				eximporter.setText(translate("filechooser.png", "Portable Network Graphics (PNG)"), false);
-				break;
-			case SAVEFILE_SAVE: case SAVEFILE_LOAD:
-				eximporter.setText(translate("filechooser.fmtb", "FMT Save File (FMTB)"), false);
-				break;
-			case HELPFRAMEIMG:
-				eximporter.setText(translate("filechooser.image", "Image File [PNG/JPG/JPEG]"), false);
-				break;
-			default:
-				eximporter.setText(translate("filechooser.notype", "Error, No Type Specified."), false);
-				break;
-		}
+		this.renderSelfQuad();//x, y, width, height, texture);
 		root.setText(currdir.getPath(), false); File[] fls = getFilteredList();
 		while(scroll + 12 > fls.length && scroll - 1 >= 0) scroll--;
 		for(int i = 0; i < files.length; i++){
@@ -261,7 +214,6 @@ public class FileChooser extends Element implements Dialog {
 			}
 		}
 		sel[0].setEnabled((selected > -1 && selected < fls.length && !fls[selected].isDirectory()) || (cfn.isEnabled() && this.isValidInput(cfn.getText())));
-		FontRenderer.drawText(title, this.x + 22, this.y + 17, FontType.BOLD);
 	}
 	
 	@Override
@@ -276,10 +228,10 @@ public class FileChooser extends Element implements Dialog {
 	 * @param b 
 	 * @param text 0 - title, 1 - button0, 2 - button1, 3 - button2
 	 * */
-	public void show(String[] ntext, FileRoot root, AfterTask after, ChooserMode mode){
+	public void show(String[] ntext, FileRoot root, AfterTask after, ChooserMode mode, ExImPorter porter){
 		this.reset(); FMTB.get().reset(false); this.currdir = root.getFile().getAbsoluteFile();
 		//
-		this.title = ntext[0]; this.visible = true; this.mode = mode;
+		this.title.setText(ntext[0], 4, 4); this.visible = true; this.mode = mode; this.porter = porter;
 		this.elements.forEach(elm -> { elm.setVisible(after != null); elm.setEnabled(after != null); });
 		sel[0].setText(ntext.length < 2 || ntext[1] == null ? Translator.translate("filechooser.default.confirm", "OK") : ntext[1], true);
 		sel[1].setText(ntext.length < 3 || ntext[2] == null ? Translator.translate("filechooser.default.suggested", "Suggested") : ntext[2], true);
@@ -291,8 +243,12 @@ public class FileChooser extends Element implements Dialog {
 		Setting[] modesettings = mode.settings(); for(Setting setting : modesettings) this.settings.add(setting);
 	}
 	
+	public void show(String[] ntext, FileRoot root, AfterTask after, ChooserMode mode){
+		show(ntext, root, after, mode, null);
+	}
+	
 	public void reset(){
-		this.onfile = null; this.currdir = SaveLoad.getRoot(); ressel(); eximscroll = 0; mode = ChooserMode.NONE;
+		this.onfile = null; this.currdir = SaveLoad.getRoot(); ressel(); porter = null; mode = ChooserMode.NONE;
 		sel[0].setText(null, false); sel[1].setText(null, false); sel[2].setText(null, false); visible = false;
 		this.settings.clear();
 	}
