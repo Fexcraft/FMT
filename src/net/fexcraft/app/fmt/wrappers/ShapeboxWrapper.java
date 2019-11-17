@@ -67,7 +67,7 @@ public class ShapeboxWrapper extends BoxWrapper {
 	
 	@Override
 	public void renderLines(boolean rotXb, boolean rotYb, boolean rotZb){
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		//GL11.glDisable(GL11.GL_TEXTURE_2D);
 		if((selected || this.getTurboList().selected) && Settings.polygonMarker()){
 			if(this.compound.getLastSelected() != this){
 				rotmarker.setRotationPoint(lines.rotationPointX, lines.rotationPointY, lines.rotationPointZ);
@@ -97,7 +97,7 @@ public class ShapeboxWrapper extends BoxWrapper {
 				if(lines != null) lines.render();
 			}
 		}
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		//GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}
 
 	@Override

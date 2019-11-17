@@ -238,7 +238,7 @@ public abstract class PolygonWrapper {
 		if(face == null){
 			for(int i = 0; i < texpos.length; i++){
 				float[][] ends = texpos[i]; if(ends == null || ends.length == 0) continue;
-				burn(image, ends, new Color(something.getColor(i).packed).darker().darker().getRGB());
+				burn(image, ends, new Color(something.getColor(i).packed).darker().getRGB());
 			}
 		}
 		else if(face == -1){

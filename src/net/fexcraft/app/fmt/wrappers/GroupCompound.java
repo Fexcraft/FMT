@@ -54,7 +54,7 @@ public class GroupCompound {
 	}
 
 	public void render(){
-		if(!visible) return; RGB.glColorReset();
+		if(!visible) return;
 		if(pos != null){
 			GL11.glTranslatef(pos.xCoord, pos.yCoord, pos.zCoord);
 		}
