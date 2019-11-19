@@ -123,6 +123,9 @@ public abstract class RightTree extends Element implements Scrollable {
 		return fullheight;
 	}
 	
+	@Override
+	public boolean refresh(){ return true; };//TODO
+	
 	public abstract void refreshFullHeight();
 	
 	public static abstract class TreeButton extends Button {

@@ -164,7 +164,7 @@ public class Element {
         if(hovered) RGB.glColorReset();
 	}
 
-	private void runfill(BufferedImage img, int xb, int xe, int yb, int ye, Integer fill){
+	protected void runfill(BufferedImage img, int xb, int xe, int yb, int ye, Integer fill){
 		for(int i = xb; i < xe; i++) for(int j = yb; j < ye; j++) img.setRGB(i, j, fill);
 	}
 	

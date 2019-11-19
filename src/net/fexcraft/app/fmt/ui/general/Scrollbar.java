@@ -29,6 +29,8 @@ public class Scrollbar extends Element {
 	public static interface Scrollable {
 		
 		public int getFullHeight();
+
+		public boolean refresh();
 		
 	}
 	
@@ -76,7 +78,7 @@ public class Scrollbar extends Element {
 		@Override
 		public void pullBy(int mx, int my){
 			scrollbar.scrolled += my * (scrollbar.element.getFullHeight() / (float)scrollbar.height); if(scrollbar.scrolled < 0) scrollbar.scrolled = 0;
-			if(scrollbar.scrolled > scrollbar.element.getFullHeight()) scrollbar.scrolled = scrollbar.element.getFullHeight();
+			if(scrollbar.scrolled > scrollbar.element.getFullHeight()) scrollbar.scrolled = scrollbar.element.getFullHeight(); scrollbar.element.refresh();
 		}
 		
 	}
