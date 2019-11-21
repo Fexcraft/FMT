@@ -12,7 +12,6 @@ import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.ui.general.DropDown;
 import net.fexcraft.app.fmt.ui.general.Exporter;
-import net.fexcraft.app.fmt.ui.general.FileChooser;
 import net.fexcraft.app.fmt.ui.general.FileSelector;
 import net.fexcraft.app.fmt.ui.general.HoverMenu;
 import net.fexcraft.app.fmt.ui.general.SettingsBox;
@@ -38,13 +37,12 @@ public class UserInterface {
 	public static Toolbar TOOLBAR;
 	public static Bottombar BOTTOMBAR;
 	public static DialogBox DIALOGBOX;
-	public static FileChooser FILECHOOSER;
+	public static FileSelector FILECHOOSER;
 	public static ControlsAdjuster CONTROLS;
 	public static SettingsBox SETTINGSBOX;
 	public static AltMenu RIGHTMENU;
 	public static DropDown DROPDOWN;
 	public static Exporter EXPORTER;
-	public static FileSelector FILESELECTOR;
 	//
 	private ArrayList<Element> elements = new ArrayList<>();
 	private FMTB root;

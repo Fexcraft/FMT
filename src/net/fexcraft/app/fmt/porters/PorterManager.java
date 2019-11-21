@@ -17,9 +17,9 @@ import javax.script.ScriptException;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
-import net.fexcraft.app.fmt.ui.general.FileChooser.AfterTask;
-import net.fexcraft.app.fmt.ui.general.FileChooser.ChooserMode;
-import net.fexcraft.app.fmt.ui.general.FileChooser.FileRoot;
+import net.fexcraft.app.fmt.ui.general.FileSelector.AfterTask;
+import net.fexcraft.app.fmt.ui.general.FileSelector.ChooserMode;
+import net.fexcraft.app.fmt.ui.general.FileSelector.FileRoot;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
@@ -45,8 +45,8 @@ public class PorterManager {
 	}
 
 	public static void handleImport(){
-		UserInterface.FILECHOOSER.show(new String[]{ Translator.translate("filechooser.import.title", "Select file/model to import."),
-			Translator.translate("filechooser.import.confirm", "Import") }, FileRoot.IMPORT, new AfterTask(){
+		UserInterface.FILECHOOSER.show(Translator.translate("filechooser.import.title", "Select file/model to import."),
+			Translator.translate("filechooser.import.confirm", "Import"), null, null, FileRoot.IMPORT, new AfterTask(){
 			@Override
 			public void run(){
 				try{

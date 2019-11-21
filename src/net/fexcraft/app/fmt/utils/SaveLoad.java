@@ -26,9 +26,9 @@ import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
-import net.fexcraft.app.fmt.ui.general.FileChooser.AfterTask;
-import net.fexcraft.app.fmt.ui.general.FileChooser.ChooserMode;
-import net.fexcraft.app.fmt.ui.general.FileChooser.FileRoot;
+import net.fexcraft.app.fmt.ui.general.FileSelector.AfterTask;
+import net.fexcraft.app.fmt.ui.general.FileSelector.ChooserMode;
+import net.fexcraft.app.fmt.ui.general.FileSelector.FileRoot;
 import net.fexcraft.app.fmt.utils.Animator.Animation;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
@@ -54,7 +54,7 @@ public class SaveLoad {
 	public static void openModel(){
 		String str = Translator.translate("saveload.filechooser.open", "Select file to open.");
 		String open = Translator.translate("saveload.filechooser.open.confirm", "Open");
-		UserInterface.FILECHOOSER.show(new String[]{ str, open }, FileRoot.SAVES, new AfterTask(){
+		UserInterface.FILECHOOSER.show(str, open, null, null, FileRoot.SAVES, new AfterTask(){
 			@Override
 			public void run(){
 				if(file == null || !file.exists()){
@@ -104,7 +104,7 @@ public class SaveLoad {
 					if(FMTB.MODEL.file == null){
 						String str = Translator.translate("saveload.filechooser.save", "Select save location.");
 						String save = Translator.translate("saveload.filechooser.save.confirm", "Select");
-						UserInterface.FILECHOOSER.show(new String[]{ str, save, }, FileRoot.SAVES, new AfterTask(){
+						UserInterface.FILECHOOSER.show(str, save, null, null, FileRoot.SAVES, new AfterTask(){
 							@Override
 							public void run(){
 								if(file == null){
@@ -153,7 +153,7 @@ public class SaveLoad {
 		if(bool || FMTB.MODEL.file == null){
 			String str = Translator.translate("saveload.filechooser.save", "Select save location.");
 			String save = Translator.translate("saveload.filechooser.save.confirm", "Select");
-			UserInterface.FILECHOOSER.show(new String[]{ str, save }, FileRoot.SAVES, new AfterTask(){
+			UserInterface.FILECHOOSER.show(str, save, null, null, FileRoot.SAVES, new AfterTask(){
 				@Override
 				public void run(){
 					if(file == null){

@@ -2,30 +2,45 @@ package net.fexcraft.app.fmt.ui.general;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
+import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.general.Scrollbar.Scrollable;
+import net.fexcraft.app.fmt.utils.Backups;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.utils.Settings.Type;
 import net.fexcraft.app.fmt.utils.StyleSheet;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
+import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.lib.common.math.RGB;
+import net.fexcraft.lib.common.math.Time;
+import net.fexcraft.lib.common.utils.Print;
 
 public class FileSelector extends Element implements Dialog {
 
+	public static final AfterTask NOTHING = new AfterTask(){ @Override public void run(){ Print.console(file); return; }};
+	//
+	private ArrayList<Setting> settings = new ArrayList<>();
 	private ExImPorter porter;
 	private ChooserMode mode;
+	private AfterTask onfile;
+	private TextField cfn;
+	private Button[] sel;
 	private Button title;
 	private Files files;
 
@@ -39,12 +54,82 @@ public class FileSelector extends Element implements Dialog {
 			.setHoverColor(StyleSheet.WHITE, false).setBorder(0xff909090, StyleSheet.WHITE, 1, true, true, true, true));
 		this.elements.add(files = new Files(this));
 		//
-		this.show("No Title.", FileRoot.SAVES, ChooserMode.SAVEFILE_SAVE, null);
+		this.elements.add(cfn = new TextField(this, "customfilename", "fileselector:filename", 480, 16, 440).setTextColor(RGB.BLACK));
+		cfn.setColor("hover_sel", new RGB(230, 164, 138)).setColor(0xffcdcdcd).setHoverColor(0xffe8cf89, false).setBorder(StyleSheet.BLACK, StyleSheet.WHITE, 1, true, true, true, true);
+		//
+		sel = new Button[3];
+		this.elements.add(sel[0] = new Button(this, "button0", "fileselector:button", 140, 28, 16, 476, StyleSheet.YELLOW, StyleSheet.RED){
+			@Override public boolean processButtonClick(int x, int y, boolean left){
+				onfile.porter = porter;
+				if(cfn.isEnabled() && isValidInput(cfn.getText())){
+					onfile.file = new File(files.current, cfn.getText() + (cfn.getText().endsWith(getCurrentSelectedFileExtension(onfile.porter)) ? "" : getCurrentSelectedFileExtension(onfile.porter)));
+				}
+				else{
+					if(files.selected == null) return true; onfile.file = files.selected.file;
+				}
+				if(onfile.file != null){
+					UserInterface.FILECHOOSER.visible = false; applySettingsToAfterTask(onfile);
+					boolean ovrd = (mode.exports() || mode.savefile_save()) && onfile.file.exists();
+					String override = format("dialog.filechooser.override", "Override existing File?<nl>%s", onfile.file.getName());
+					if(onfile.settings.isEmpty()){
+						if(ovrd){
+							FMTB.showDialogbox(override, translate("dialog.filechooser.override.confirm", "yes"), translate("dialog.filechooser.override.cancel", "no!"), onfile, DialogBox.NOTHING);
+						} else{ onfile.run(); }
+						UserInterface.FILECHOOSER.reset();
+					}
+					else{
+						if(ovrd){
+							FMTB.showDialogbox(override, translate("dialog.filechooser.override.confirm", "yes"), translate("dialog.filechooser.override.cancel", "no!"), new Runnable(){
+								private AfterTask task = onfile;
+								@Override public void run(){ UserInterface.SETTINGSBOX.show(translate("filechooser.settings", "FileChooser Settings"), task); }
+							}, DialogBox.NOTHING);
+						}
+						else{ UserInterface.SETTINGSBOX.show(translate("filechooser.settings", "FileChooser Settings"), onfile); }
+						UserInterface.FILECHOOSER.reset();
+					}
+					return true;
+				
+				}
+				return true;
+			}
+			@Override
+			public void hovered(float mx, float my){
+				super.hovered(mx, my); if(hovered) cfn.onReturn();
+			}
+		});
+		this.elements.add(sel[1] = new Button(this, "button1", "fileselector:button", 140, 28, 186, 476, StyleSheet.YELLOW, StyleSheet.RED){
+			@Override public boolean processButtonClick(int x, int y, boolean left){
+				onfile.porter = porter;
+				String str = Backups.getSimpleDateFormat(true).format(Time.getDate()); UserInterface.FILECHOOSER.visible = false;
+				String ext = getCurrentSelectedFileExtension(onfile.porter);
+				onfile.file = new File(files.current, (FMTB.MODEL.name == null ? "unnamed" : FMTB.MODEL.name) + "-(" + str + ")" + ext);
+				applySettingsToAfterTask(onfile); onfile.run(); UserInterface.FILECHOOSER.reset(); return true;
+			}
+		});
+		this.elements.add(sel[2] = new Button(this, "button2", "fileselector:button", 140, 28, 512 - 140 - 16, 476, StyleSheet.YELLOW, StyleSheet.RED){
+			@Override public boolean processButtonClick(int x, int y, boolean left){ UserInterface.FILECHOOSER.reset(); return true; }
+		});
+		for(Button button : sel) button.setBorder(0xff909090, StyleSheet.WHITE, 1, true, true, true, true);
+		//
+		this.show("No Title.", null, null, null, FileRoot.SAVES, NOTHING, ChooserMode.SAVEFILE_SAVE, null);
 	}
 
-	private void show(String title, FileRoot root, ChooserMode mode, ExImPorter porter){
-		this.reset(); this.setVisible(true); this.title.setText(title, true);
+	public final void show(String title, String con, String sug, String can, FileRoot root, AfterTask aftertask, ChooserMode mode, ExImPorter porter){
+		this.reset(); this.setVisible(true); this.title.setText(title, true); onfile = aftertask;
 		this.mode = mode; this.porter = porter; files.current = root.getFile().getAbsoluteFile(); files.refresh0();
+		//
+		sel[0].setText(con == null ? Translator.translate("filechooser.default.confirm", "OK") : con, true);
+		sel[1].setText(sug == null ? Translator.translate("filechooser.default.suggested", "Suggested") : sug, true);
+		sel[2].setText(can == null ? Translator.translate("filechooser.default.cancel", "Cancel") : can, true);
+		sel[1].setEnabled(mode.exports() || mode.savefile_save()); cfn.setEnabled(sel[1].isEnabled());
+		if(cfn.isEnabled()) cfn.setText(translate("filechooser.customfile.active", "Choose a file to override or write a custom name here!"), false);
+		else cfn.setText(translate("filechooser.customfile.inactive", "Please choose an existing file to proceed."), false);
+		//
+		Setting[] modesettings = mode.settings(); for(Setting setting : modesettings) this.settings.add(setting);
+	}
+	
+	public final void show(String title, String con, String sug, String can, FileRoot root, AfterTask aftertask, ChooserMode mode){
+		this.show(title, con, sug, can, root, aftertask, mode, null);
 	}
 	
 	@Override
@@ -60,7 +145,14 @@ public class FileSelector extends Element implements Dialog {
 
 	@Override
 	public void reset(){
-		this.setVisible(false); porter = null; mode = null;
+		this.setVisible(false); porter = null; mode = null; files.selected = null; onfile = null;
+	}
+	
+	public static abstract class AfterTask implements Runnable {
+		public File file;
+		public ExImPorter porter;
+		public List<Setting> settings = new ArrayList<>();
+		public Map<String, Setting> mapped_settings;
 	}
 	
 	public static class Files extends Element implements Scrollable {
@@ -182,7 +274,7 @@ public class FileSelector extends Element implements Dialog {
 		@Override
 		public boolean processButtonClick(int x, int y, boolean left){
 			if(!left) return false;
-			if(file.isDirectory()){ files.current = file.getAbsoluteFile();
+			if(file.isDirectory()){ files.current = file.getAbsoluteFile(); files.selected = null;
 				Settings.SETTINGS.get("filedir_last").setValue(file.toPath()); return files.refresh0();
 			} else{ files.selected = this; return true; }
 		}
@@ -281,6 +373,31 @@ public class FileSelector extends Element implements Dialog {
 			}
 			return new Setting[0];
 		}
+	}
+	
+	//
+
+	protected boolean isValidInput(String text){
+		if(text == null || text.length() == 0) return false;
+		else if(cfn.getText().contains(translate("filechooser.customfile.active"))) return false;
+		return true;
+	}
+
+	private String getCurrentSelectedFileExtension(ExImPorter porter){
+		switch(mode){
+			case EXPORT: case IMPORT:{
+				return porter.getExtensions()[0].startsWith(".") ? porter.getExtensions()[0] : "." + porter.getExtensions()[0];
+			}
+			case PNG:{ return ".png"; }
+			case SAVEFILE_LOAD: case SAVEFILE_SAVE:{ return ".fmtb"; }
+			default: return ".error";
+		}
+	}
+	
+	private void applySettingsToAfterTask(AfterTask onfile){
+		if(porter == null) return; settings.addAll(onfile.porter.getSettings(mode.exports()));
+		onfile.settings.addAll(settings); onfile.mapped_settings = new HashMap<>();
+		onfile.settings.forEach(setting -> onfile.mapped_settings.put(setting.getId(), setting));
 	}
 
 }

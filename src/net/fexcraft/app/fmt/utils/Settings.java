@@ -9,8 +9,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.general.FileChooser;
-import net.fexcraft.app.fmt.ui.general.FileChooser.FileRoot;
+import net.fexcraft.app.fmt.ui.general.FileSelector;
+import net.fexcraft.app.fmt.ui.general.FileSelector.FileRoot;
 import net.fexcraft.app.fmt.ui.tree.ModelTree;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
@@ -192,7 +192,7 @@ public class Settings {
 		bottombar = SETTINGS.get("bottombar");
 		numberfieldarrows = SETTINGS.get("numberfield_arrows");
 		preview_colorpicker = SETTINGS.get("preview_colorpicker");
-		FileChooser.FileRoot.last = FileRoot.valueOf(SETTINGS.get("filedir_last_type").getStringValue());
+		FileSelector.FileRoot.last = FileRoot.valueOf(SETTINGS.get("filedir_last_type").getStringValue());
 	}
 
 	public static void save(){
@@ -200,9 +200,14 @@ public class Settings {
 		obj.addProperty("format", 1);
 		JsonObject settings = new JsonObject();
 		SETTINGS.values().forEach(entry -> {
-			JsonObject jsn = new JsonObject();
-			jsn.addProperty("type", entry.getType().name().toLowerCase());
-			jsn.add("value", entry.save()); settings.add(entry.getId(), jsn);
+			try{
+				JsonObject jsn = new JsonObject();
+				jsn.addProperty("type", entry.getType().name().toLowerCase());
+				jsn.add("value", entry.save()); settings.add(entry.getId(), jsn);
+			}
+			catch(Exception e){
+				e.printStackTrace();
+			}
 		});
 		obj.add("settings", settings);
 		obj.addProperty("last_fmt_version_used", FMTB.version);

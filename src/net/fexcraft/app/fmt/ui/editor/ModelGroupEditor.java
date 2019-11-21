@@ -10,9 +10,9 @@ import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.general.Button;
 import net.fexcraft.app.fmt.ui.general.DropDown;
 import net.fexcraft.app.fmt.ui.general.DropDownField;
-import net.fexcraft.app.fmt.ui.general.FileChooser.AfterTask;
-import net.fexcraft.app.fmt.ui.general.FileChooser.ChooserMode;
-import net.fexcraft.app.fmt.ui.general.FileChooser.FileRoot;
+import net.fexcraft.app.fmt.ui.general.FileSelector.AfterTask;
+import net.fexcraft.app.fmt.ui.general.FileSelector.ChooserMode;
+import net.fexcraft.app.fmt.ui.general.FileSelector.FileRoot;
 import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.utils.Animator;
 import net.fexcraft.app.fmt.utils.Animator.Animation;
@@ -79,7 +79,7 @@ public class ModelGroupEditor extends Editor {
 							FMTB.MODEL.setTexture(null); TextureManager.removeTexture(FMTB.MODEL.texture);
 						} FMTB.MODEL.updateFields(); return true;
 					}
-					UserInterface.FILECHOOSER.show(new String[]{ translate("filechooser.editor.model_group.model.texture", "Select a model texture file.") }, FileRoot.TEXTURES, new AfterTask(){
+					UserInterface.FILECHOOSER.show(translate("filechooser.editor.model_group.model.texture", "Select a model texture file."), null, null, null, FileRoot.TEXTURES, new AfterTask(){
 						@Override
 						public void run(){
 							String name = file.getPath(); TextureManager.loadTextureFromFile(name, file);
@@ -166,7 +166,7 @@ public class ModelGroupEditor extends Editor {
 							} group.setTexture(null, 0, 0); group.forEach(mrt -> mrt.recompile());
 						} FMTB.MODEL.updateFields(); return true;
 					}
-					UserInterface.FILECHOOSER.show(new String[]{ translate("filechooser.editor.model_group.group.texture", "Select a group texture file.") }, FileRoot.TEXTURES, new AfterTask(){
+					UserInterface.FILECHOOSER.show(translate("filechooser.editor.model_group.group.texture", "Select a group texture file."), null, null, null, FileRoot.TEXTURES, new AfterTask(){
 						@Override
 						public void run(){
 							String name = file.getPath(); TextureManager.loadTextureFromFile(name, file);

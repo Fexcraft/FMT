@@ -10,9 +10,9 @@ import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.UserInterface;
-import net.fexcraft.app.fmt.ui.general.FileChooser.AfterTask;
-import net.fexcraft.app.fmt.ui.general.FileChooser.ChooserMode;
-import net.fexcraft.app.fmt.ui.general.FileChooser.FileRoot;
+import net.fexcraft.app.fmt.ui.general.FileSelector.AfterTask;
+import net.fexcraft.app.fmt.ui.general.FileSelector.ChooserMode;
+import net.fexcraft.app.fmt.ui.general.FileSelector.FileRoot;
 import net.fexcraft.app.fmt.utils.StyleSheet;
 import net.fexcraft.app.fmt.utils.Translator;
 
@@ -56,8 +56,8 @@ public class Exporter extends Element implements Dialog {
 	}
 	
 	public void export(ExImPorter porter){
-		UserInterface.FILECHOOSER.show(new String[]{ Translator.translate("filechooser.export.title", "Select Export Location"),
-			Translator.translate("filechooser.export.confirm", "Export") }, FileRoot.EXPORT, new AfterTask(){
+		UserInterface.FILECHOOSER.show(Translator.translate("filechooser.export.title", "Select Export Location"),
+			Translator.translate("filechooser.export.confirm", "Export"), null, null, FileRoot.EXPORT, new AfterTask(){
 			@Override
 			public void run(){
 				try{

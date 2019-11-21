@@ -23,7 +23,7 @@ public class TextField extends Element {
 
 	public TextField(Element root, String id, String style, int width, int x, int y){
 		super(root, id, style == null ? "field" : style); FIELDS.add(this); this.setSize(width, 26);
-		this.setPosition(x, y).setColor(root instanceof DropDown || root instanceof FileChooser ? 0xff195a8c : 0xff484848);
+		this.setPosition(x, y).setColor(root instanceof DropDown || root instanceof FileSelector ? 0xff195a8c : 0xff484848);
 		this.setHoverColor(0xff70ff7f, false); this.setHoverColor(0xffebc9c9, true);
 		hoversel = new RGB(StyleSheet.getColourFor(stylegroup, "selected_hovered", 0xffff7f00, true));
 		nohoversel = new RGB(StyleSheet.getColourFor(stylegroup, "selected", 0xffffe100, true));
