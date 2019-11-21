@@ -195,6 +195,7 @@ public class FileSelector extends Element implements Dialog {
 	private File[] getFilteredList(){
 		try{
 			if(files.current.listFiles() == null) return new File[]{ NONE };
+			File[] dirs = Arrays.asList(files.current.listFiles()).stream().filter(pre -> pre.isDirectory()).collect(Collectors.<File>toList()).toArray(new File[0]);
 			switch(mode){
 				case EXPORT: case IMPORT:{
 					stream = Arrays.asList(files.current.listFiles()).stream().filter(pre -> porter.isValidFile(pre));
@@ -218,7 +219,13 @@ public class FileSelector extends Element implements Dialog {
 					break;
 				}
 			}
-			return stream.collect(Collectors.<File>toList()).toArray(new File[0]);
+			//
+			File[] fils = stream.filter(pre -> !pre.isDirectory()).collect(Collectors.<File>toList()).toArray(new File[0]);
+			if(dirs.length == 0) return fils; else if(fils.length == 0) return dirs;
+			File[] sorted = new File[dirs.length + fils.length];
+			for(int i = 0; i < dirs.length; i++) sorted[i] = dirs[i];
+			for(int i = 0; i < fils.length; i++) sorted[i + dirs.length] = fils[i];
+			return sorted;
 		}
 		catch(Exception e){
 			e.printStackTrace();
