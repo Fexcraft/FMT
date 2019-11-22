@@ -48,7 +48,7 @@ public class FileSelector extends Element implements Dialog {
 		super(null, "fileselector", "fileselector"); dialogs.add(this);
 		this.setSize(512, 512).setPosition(0, 0).setColor(0xffcdcdcd);
 		this.setBorder(StyleSheet.BLACK, StyleSheet.WHITE, 1, true, true, true, true);
-		this.setHoverColor(StyleSheet.WHITE, false).setDraggable(true);
+		this.setHoverColor(StyleSheet.WHITE, false).setDraggable(true).setVisible(false);
 		//
 		this.elements.add((title = new Button(this, "null", "fileselector:title", 480, 30, 16, 12))
 			.setHoverColor(StyleSheet.WHITE, false).setBorder(0xff909090, StyleSheet.WHITE, 1, true, true, true, true));
@@ -111,7 +111,7 @@ public class FileSelector extends Element implements Dialog {
 		});
 		for(Button button : sel) button.setBorder(0xff909090, StyleSheet.WHITE, 1, true, true, true, true);
 		//
-		this.show("No Title.", null, null, null, FileRoot.SAVES, NOTHING, ChooserMode.SAVEFILE_SAVE, null);
+		//this.show("No Title.", null, null, null, FileRoot.SAVES, NOTHING, ChooserMode.SAVEFILE_SAVE, null);
 	}
 
 	public final void show(String title, String con, String sug, String can, FileRoot root, AfterTask aftertask, ChooserMode mode, ExImPorter porter){
