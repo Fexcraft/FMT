@@ -96,12 +96,12 @@ public class OBJPrototypeExporter extends ExImPorter {
 
 	@Override
 	public String getId(){
-		return "obj_prototype";
+		return "obj_exporter";
 	}
 
 	@Override
 	public String getName(){
-		return "Prototype OBJ Exporter";
+		return "Wavefront OBJ - Prototype";
 	}
 
 	@Override

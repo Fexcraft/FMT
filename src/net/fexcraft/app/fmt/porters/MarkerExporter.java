@@ -67,7 +67,7 @@ public class MarkerExporter extends ExImPorter {
 
 	@Override
 	public String getName(){
-		return "MarkerList/Collbox Exporter";
+		return "MarkerList Exporter";
 	}
 
 	@Override

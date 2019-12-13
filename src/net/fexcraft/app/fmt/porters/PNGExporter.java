@@ -55,12 +55,12 @@ public class PNGExporter extends ExImPorter {
 
 	@Override
 	public String getId(){
-		return "internal_png_exporter";
+		return "png_exporter";
 	}
 
 	@Override
 	public String getName(){
-		return "Internal PNG Exporter";
+		return "Standard PNG Exporter";
 	}
 
 	@Override

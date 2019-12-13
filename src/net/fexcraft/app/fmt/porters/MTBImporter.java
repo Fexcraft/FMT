@@ -46,11 +46,11 @@ public class MTBImporter extends ExImPorter {
     }
     
     public String getId(){
-    	return "internal_mtb_importer";
+    	return "mtb_importer";
     }
     
     public String getName(){
-    	return "Internal MTB Importer";
+    	return "Standard MTB Importer";
     }
 
     public static float getFloatFromString(String s){

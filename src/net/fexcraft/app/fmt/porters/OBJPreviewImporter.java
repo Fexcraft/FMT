@@ -27,12 +27,12 @@ public class OBJPreviewImporter extends ExImPorter {
 
 	@Override
 	public String getId(){
-		return "obj_preview_importer";
+		return "obj_importer";
 	}
 
 	@Override
 	public String getName(){
-		return "Wavefront OBJ Preview";
+		return "Wavefront OBJ - Preview/Static";
 	}
 
 	@Override

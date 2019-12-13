@@ -57,12 +57,12 @@ public class JTMTPorter extends ExImPorter {
 
 	@Override
 	public String getId(){
-		return "internal_jtmt";
+		return "jtmt";
 	}
 
 	@Override
 	public String getName(){
-		return "Internal JTMT";
+		return "Standard JTMT";
 	}
 
 	@Override
