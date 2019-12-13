@@ -43,6 +43,7 @@ public class PorterManager {
 		porters.add(new OBJPrototypeExporter());
 		porters.add(new MarkerExporter());
 		porters.add(new TiMExporter());
+		porters.add(new TSIVMarkerExporter());
 	}
 
 	public static void handleImport(){
