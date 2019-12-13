@@ -24,6 +24,7 @@ public class Settings {
 	
 	private static Setting floor, lines, demo, cube, polygon_marker, polygon_count, lighting, cullface, animate,
 		discordrpc, discordrpc_sm, discordrpc_rtonm, ui_scale, bottombar, numberfieldarrows, preview_colorpicker;
+	public static Setting movespeed, mouse_sensivity;
 
 	public static boolean floor(){ return floor.getValue(); }
 
@@ -156,6 +157,9 @@ public class Settings {
 		DEFAULTS.add(new Setting(Type.STRING, "filedir_import", "./imports"));
 		DEFAULTS.add(new Setting(Type.STRING, "filedir_helpers", "./helpers"));
 		DEFAULTS.add(new Setting(Type.STRING, "filedir_textures", "./resources/textures"));
+		//
+		DEFAULTS.add(new Setting(Type.FLOAT, "mouse_sensivity", 2f));
+		DEFAULTS.add(new Setting(Type.FLOAT, "camera_movespeed", 2f));
 	}
 
 	public static void load(){
@@ -192,6 +196,8 @@ public class Settings {
 		bottombar = SETTINGS.get("bottombar");
 		numberfieldarrows = SETTINGS.get("numberfield_arrows");
 		preview_colorpicker = SETTINGS.get("preview_colorpicker");
+		movespeed = SETTINGS.get("camera_movespeed");
+		mouse_sensivity = SETTINGS.get("mouse_sensivity");
 		FileSelector.FileRoot.last = FileRoot.valueOf(SETTINGS.get("filedir_last_type").getStringValue());
 	}
 
@@ -410,6 +416,10 @@ public class Settings {
 
 		public String getStringValue(){
 			return value.toString();
+		}
+		
+		public float directFloat(){
+			return (float)value;
 		}
 		
 	}

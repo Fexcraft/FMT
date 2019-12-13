@@ -24,9 +24,9 @@ import net.fexcraft.lib.common.math.Vec3f;
 /** CCR */
 public class GGR {
 	
-    public float movespeed = 1.5f;//0.5f;
+    //public float movespeed = 2;
     public float maxlookrange = 85;
-    public float sensivity = 2.0f;//= 0.05f;
+    //public float sensivity = 2f;
     public Vec3f pos, rotation;
     private final FMTB root;
     
@@ -160,8 +160,8 @@ public class GGR {
             UserInterface.DRAGGED = null; dragging = true;
         }
         if(Mouse.isGrabbed()){
-            rotation.yCoord += Mouse.getDX() * sensivity * delta;
-            rotation.xCoord += -Mouse.getDY() * sensivity * delta;
+            rotation.yCoord += Mouse.getDX() * Settings.mouse_sensivity.directFloat() * delta;
+            rotation.xCoord += -Mouse.getDY() * Settings.mouse_sensivity.directFloat() * delta;
             rotation.xCoord = Math.max(-maxlookrange, Math.min(maxlookrange, rotation.xCoord));
             //
         	//if(Mouse.isButtonDown(0) && !clickedL) RayCoastAway.doTest(true, false); clickedL = Mouse.isButtonDown(0);
@@ -238,9 +238,9 @@ public class GGR {
         boolean up   = Keyboard.isKeyDown(KeyCompound.KEY_DU.ID());
         boolean down = Keyboard.isKeyDown(KeyCompound.KEY_DD.ID());
         float nspeed;
-        if(speedp) nspeed = movespeed * 5;
-        else if(speedm) nspeed = movespeed / 2;
-        else nspeed = movespeed;
+        if(speedp) nspeed = Settings.movespeed.directFloat() * 5;
+        else if(speedm) nspeed = Settings.movespeed.directFloat() / 2;
+        else nspeed = Settings.movespeed.directFloat();
         nspeed *= delta;
         if(up) pos.yCoord += nspeed;
         if(down) pos.yCoord -= nspeed;
