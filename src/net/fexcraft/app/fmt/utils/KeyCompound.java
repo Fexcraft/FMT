@@ -10,16 +10,19 @@ import org.lwjgl.input.Keyboard;
 import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.editor.Editor;
+import net.fexcraft.app.fmt.ui.general.Crossbar;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.lib.common.json.JsonUtil;
+import net.fexcraft.lib.common.math.Time;
 
 public class KeyCompound {
 	
 	public static final ArrayList<KeyFunction> keys = new ArrayList<>();
 	public static final ArrayList<KeyFunction> pressed_keys = new ArrayList<>();
 	public static final ArrayList<KeyFunction> released_keys = new ArrayList<>();
-	public static KeyFunction KEY_W, KEY_A, KEY_S, KEY_D, KEY_SPP, KEY_SPN, KEY_DU, KEY_DD;
+	public static KeyFunction KEY_W, KEY_A, KEY_S, KEY_D, KEY_SPP, KEY_SPN, KEY_DU, KEY_DD, KEY_SPM, KEY_SPL;
 	
 	public static void init(){
 		keys.clear();
@@ -29,8 +32,32 @@ public class KeyCompound {
 		keys.add(KEY_D = new FunctionlessKey("move_d", Keyboard.KEY_D, false, false));
 		keys.add(KEY_SPP = new FunctionlessKey("move_speed+", Keyboard.KEY_R, false, false));
 		keys.add(KEY_SPN = new FunctionlessKey("move_speed-", Keyboard.KEY_F, false, false));
+		keys.add(KEY_SPM = new FunctionlessKey("move_speed*", Keyboard.KEY_Y, false, false));
+		keys.add(KEY_SPL = new FunctionlessKey("move_speed/", Keyboard.KEY_U, false, false));
 		keys.add(KEY_DU = new FunctionlessKey("move_up", Keyboard.KEY_SPACE, false, false));
 		keys.add(KEY_DD = new FunctionlessKey("move_down", Keyboard.KEY_LSHIFT, false, false));
+		keys.add(KEY_SPM = new KeyFunction("move_speed*", Keyboard.KEY_Y, true){
+			@Override
+			public boolean process(){
+				if(Dialog.anyVisible()) return false;
+				if(FMTB.ggr.movemod < 32/*1024*/){
+					FMTB.ggr.movemod *= 2;
+					Crossbar.show("Speed increased to " + (FMTB.ggr.movemod * 100 ) + "%", Time.getDate() + 2000);
+				}
+				return true;
+			}
+		});
+		keys.add(KEY_SPL = new KeyFunction("move_speed/", Keyboard.KEY_U, false){
+			@Override
+			public boolean process(){
+				if(Dialog.anyVisible()) return false;
+				if(FMTB.ggr.movemod > 0.03125){
+					FMTB.ggr.movemod *= 0.5f;
+					Crossbar.show("Speed decreased to " + (FMTB.ggr.movemod * 100 ) + "%", Time.getDate() + 2000);
+				}
+				return true;
+			}
+		});
 		//
 		keys.add(new KeyFunction("toggle_help", Keyboard.KEY_F1, true){
 			@Override

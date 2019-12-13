@@ -25,6 +25,7 @@ import net.fexcraft.lib.common.math.Vec3f;
 public class GGR {
 	
     //public float movespeed = 2;
+    public float movemod = 1;
     public float maxlookrange = 85;
     //public float sensivity = 2f;
     public Vec3f pos, rotation;
@@ -241,7 +242,7 @@ public class GGR {
         if(speedp) nspeed = Settings.movespeed.directFloat() * 5;
         else if(speedm) nspeed = Settings.movespeed.directFloat() / 2;
         else nspeed = Settings.movespeed.directFloat();
-        nspeed *= delta;
+        nspeed *= delta; if(movemod != 1f) nspeed *= movemod;
         if(up) pos.yCoord += nspeed;
         if(down) pos.yCoord -= nspeed;
         if(back){
