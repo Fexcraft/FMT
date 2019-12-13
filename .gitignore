@@ -59,6 +59,8 @@ screenshots/
 auth.net
 *.zip
 saves/
+exports/
+imports/
 keys.json
 settings.json
 stylesheet.json

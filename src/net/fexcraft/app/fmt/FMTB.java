@@ -44,7 +44,6 @@ import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
 import net.fexcraft.app.fmt.ui.general.Crossbar;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.ui.general.DropDown;
-import net.fexcraft.app.fmt.ui.general.Exporter;
 import net.fexcraft.app.fmt.ui.general.FileSelector;
 import net.fexcraft.app.fmt.ui.general.SettingsBox;
 import net.fexcraft.app.fmt.ui.general.TextField;
@@ -298,7 +297,7 @@ public class FMTB {
 
 	private void setupDisplay() throws LWJGLException {
 		Display.setFullscreen(false); Display.setResizable(false);
-		Display.setDisplayMode(displaymode = new DisplayMode(1000, 600));
+		Display.setDisplayMode(displaymode = new DisplayMode(1280, 720));
 		Display.setTitle("Fexcraft Modelling Toolbox"); Display.setVSyncEnabled(true);
 		Display.create();
 	}
@@ -346,7 +345,6 @@ public class FMTB {
 		ui.getElements().add(UserInterface.SETTINGSBOX = new SettingsBox());
 		ui.getElements().add(UserInterface.FILECHOOSER = new FileSelector());
 		ui.getElements().add(UserInterface.CONTROLS = new ControlsAdjuster());
-		ui.getElements().add(UserInterface.EXPORTER = new Exporter());
 		//render last
 		ui.getElements().add(UserInterface.TOOLBAR);
 		ui.getElements().add(UserInterface.BOTTOMBAR);

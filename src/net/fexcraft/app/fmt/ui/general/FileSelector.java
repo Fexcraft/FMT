@@ -14,6 +14,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.Element;
@@ -36,17 +37,19 @@ public class FileSelector extends Element implements Dialog {
 	public static final AfterTask NOTHING = new AfterTask(){ @Override public void run(){ Print.console(file); return; }};
 	//
 	private ArrayList<Setting> settings = new ArrayList<>();
-	private ExImPorter porter;
+	private static ExImPorter[] porters;
+	private static int eximscroll;
 	private ChooserMode mode;
 	private AfterTask onfile;
-	private TextField cfn;
+	private TextField cfn, exim;
 	private Button[] sel;
 	private Button title;
 	private Files files;
+	private Icon exim_prev, exim_next;
 
 	public FileSelector(){
 		super(null, "fileselector", "fileselector"); dialogs.add(this);
-		this.setSize(512, 512).setPosition(0, 0).setColor(0xffcdcdcd);
+		this.setSize(512, 548).setPosition(0, 0).setColor(0xffcdcdcd);
 		this.setBorder(StyleSheet.BLACK, StyleSheet.WHITE, 1, true, true, true, true);
 		this.setHoverColor(StyleSheet.WHITE, false).setDraggable(true).setVisible(false);
 		//
@@ -57,10 +60,28 @@ public class FileSelector extends Element implements Dialog {
 		this.elements.add(cfn = new TextField(this, "customfilename", "fileselector:filename", 480, 16, 440).setTextColor(RGB.BLACK));
 		cfn.setColor("hover_sel", new RGB(230, 164, 138)).setColor(0xffcdcdcd).setHoverColor(0xffe8cf89, false).setBorder(StyleSheet.BLACK, StyleSheet.WHITE, 1, true, true, true, true);
 		//
-		sel = new Button[3];
-		this.elements.add(sel[0] = new Button(this, "button0", "fileselector:button", 140, 28, 16, 476, StyleSheet.YELLOW, StyleSheet.RED){
+		this.elements.add(exim = new TextField(this, "testfield", "fileselector:eximporter", 438, 16, 474).setTextColor(RGB.BLACK));
+		exim.setColor("hover_sel", new RGB(230, 164, 138)).setColor(0xffcdcdcd).setHoverColor(0xffe8cf89, false);
+		exim.setBorder(StyleSheet.BLACK, StyleSheet.WHITE, 1, true, true, true, true).setEnabled(false);
+		this.elements.add((exim_prev = new Icon(this, "exim_prev", "fileselector:eximporter_button", "icons/fileselector_prev", 20, 26, 456, 474){
 			@Override public boolean processButtonClick(int x, int y, boolean left){
-				onfile.porter = porter;
+				if(porters == null) return false;
+				if(eximscroll <= 0) eximscroll = porters.length - 1; else eximscroll--;
+				exim.setText(mode.getPorterTitle(), false); files.refresh0(); return true;
+			}
+		}).setHoverColor(StyleSheet.WHITE, true).setHoverColor(0xffcdcdcd, false));
+		this.elements.add((exim_next = new Icon(this, "exim_next", "fileselector:eximporter_button", "icons/fileselector_next", 20, 26, 476, 474){
+			@Override public boolean processButtonClick(int x, int y, boolean left){
+				if(porters == null) return false;
+				if(eximscroll >= porters.length - 1) eximscroll = 0; else eximscroll++;
+				exim.setText(mode.getPorterTitle(), false); files.refresh0(); return true;
+			}
+		}).setHoverColor(StyleSheet.WHITE, true).setHoverColor(0xffcdcdcd, false));
+		//
+		sel = new Button[3];
+		this.elements.add(sel[0] = new Button(this, "button0", "fileselector:button", 140, 28, 16, 510, StyleSheet.YELLOW, StyleSheet.RED){
+			@Override public boolean processButtonClick(int x, int y, boolean left){
+				onfile.porter = porters == null ? null : porters[eximscroll];
 				if(cfn.isEnabled() && isValidInput(cfn.getText())){
 					onfile.file = new File(files.current, cfn.getText() + (cfn.getText().endsWith(getCurrentSelectedFileExtension(onfile.porter)) ? "" : getCurrentSelectedFileExtension(onfile.porter)));
 				}
@@ -68,6 +89,7 @@ public class FileSelector extends Element implements Dialog {
 					if(files.selected == null) return true; onfile.file = files.selected.file;
 				}
 				if(onfile.file != null){
+					if(!onfile.file.getParentFile().exists()) onfile.file.getParentFile().mkdirs();
 					UserInterface.FILECHOOSER.visible = false; applySettingsToAfterTask(onfile);
 					boolean ovrd = (mode.exports() || mode.savefile_save()) && onfile.file.exists();
 					String override = format("dialog.filechooser.override", "Override existing File?<nl>%s", onfile.file.getName());
@@ -97,16 +119,16 @@ public class FileSelector extends Element implements Dialog {
 				super.hovered(mx, my); if(hovered) cfn.onReturn();
 			}
 		});
-		this.elements.add(sel[1] = new Button(this, "button1", "fileselector:button", 140, 28, 186, 476, StyleSheet.YELLOW, StyleSheet.RED){
+		this.elements.add(sel[1] = new Button(this, "button1", "fileselector:button", 140, 28, 186, 510, StyleSheet.YELLOW, StyleSheet.RED){
 			@Override public boolean processButtonClick(int x, int y, boolean left){
-				onfile.porter = porter;
+				onfile.porter = porters == null ? null : porters[eximscroll];
 				String str = Backups.getSimpleDateFormat(true).format(Time.getDate()); UserInterface.FILECHOOSER.visible = false;
 				String ext = getCurrentSelectedFileExtension(onfile.porter);
 				onfile.file = new File(files.current, (FMTB.MODEL.name == null ? "unnamed" : FMTB.MODEL.name) + "-(" + str + ")" + ext);
 				applySettingsToAfterTask(onfile); onfile.run(); UserInterface.FILECHOOSER.reset(); return true;
 			}
 		});
-		this.elements.add(sel[2] = new Button(this, "button2", "fileselector:button", 140, 28, 512 - 140 - 16, 476, StyleSheet.YELLOW, StyleSheet.RED){
+		this.elements.add(sel[2] = new Button(this, "button2", "fileselector:button", 140, 28, 512 - 140 - 16, 510, StyleSheet.YELLOW, StyleSheet.RED){
 			@Override public boolean processButtonClick(int x, int y, boolean left){ UserInterface.FILECHOOSER.reset(); return true; }
 		});
 		for(Button button : sel) button.setBorder(0xff909090, StyleSheet.WHITE, 1, true, true, true, true);
@@ -114,9 +136,9 @@ public class FileSelector extends Element implements Dialog {
 		//this.show("No Title.", null, null, null, FileRoot.SAVES, NOTHING, ChooserMode.SAVEFILE_SAVE, null);
 	}
 
-	public final void show(String title, String con, String sug, String can, FileRoot root, AfterTask aftertask, ChooserMode mode, ExImPorter porter){
+	public final void show(String title, String con, String sug, String can, FileRoot root, AfterTask aftertask, ChooserMode mode){
 		this.reset(); this.setVisible(true); this.title.setText(title, true); onfile = aftertask;
-		this.mode = mode; this.porter = porter; files.current = root.getFile().getAbsoluteFile(); files.refresh0();
+		this.mode = mode; files.current = root.getFile().getAbsoluteFile(); files.refresh0();
 		//
 		sel[0].setText(con == null ? Translator.translate("filechooser.default.confirm", "OK") : con, true);
 		sel[1].setText(sug == null ? Translator.translate("filechooser.default.suggested", "Suggested") : sug, true);
@@ -124,12 +146,19 @@ public class FileSelector extends Element implements Dialog {
 		sel[1].setEnabled(mode.exports() || mode.savefile_save()); cfn.setEnabled(sel[1].isEnabled());
 		if(cfn.isEnabled()) cfn.setText(translate("filechooser.customfile.active", "Choose a file to override or write a custom name here!"), false);
 		else cfn.setText(translate("filechooser.customfile.inactive", "Please choose an existing file to proceed."), false);
+		if(mode.hasPorter()){
+			porters = PorterManager.getPorters(mode.exports()).toArray(new ExImPorter[0]);
+			exim.setText(mode.getPorterTitle(), false);
+			exim_next.setVisible(true); exim_prev.setVisible(true);
+			exim.width = 438; exim.repos();
+		}
+		else{
+			exim_next.setVisible(false); exim_prev.setVisible(false);
+			exim.width = 480; exim.repos();
+		}
+		exim.setText(mode.getPorterTitle(), false);
 		//
 		Setting[] modesettings = mode.settings(); for(Setting setting : modesettings) this.settings.add(setting);
-	}
-	
-	public final void show(String title, String con, String sug, String can, FileRoot root, AfterTask aftertask, ChooserMode mode){
-		this.show(title, con, sug, can, root, aftertask, mode, null);
 	}
 	
 	@Override
@@ -145,7 +174,7 @@ public class FileSelector extends Element implements Dialog {
 
 	@Override
 	public void reset(){
-		this.setVisible(false); porter = null; mode = null; files.selected = null; onfile = null;
+		this.setVisible(false); porters = null; mode = null; files.selected = null; onfile = null;
 	}
 	
 	public static abstract class AfterTask implements Runnable {
@@ -290,7 +319,7 @@ public class FileSelector extends Element implements Dialog {
 			File[] dirs = Arrays.asList(files.current.listFiles()).stream().filter(pre -> pre.isDirectory()).collect(Collectors.<File>toList()).toArray(new File[0]);
 			switch(mode){
 				case EXPORT: case IMPORT:{
-					stream = Arrays.asList(files.current.listFiles()).stream().filter(pre -> porter.isValidFile(pre));
+					stream = Arrays.asList(files.current.listFiles()).stream().filter(pre -> porters[eximscroll].isValidFile(pre));
 					break;
 				}
 				case PNG:{
@@ -353,6 +382,7 @@ public class FileSelector extends Element implements Dialog {
 		public boolean helpframimg(){ return HELPFRAMEIMG == this; }
 		public boolean savefile_load(){ return SAVEFILE_LOAD == this; }
 		public boolean savefile_save(){ return SAVEFILE_SAVE == this; }
+		public boolean hasPorter(){ return exports() || imports(); }
 		public Setting[] settings(){
 			switch(this){
 				case EXPORT:
@@ -372,6 +402,16 @@ public class FileSelector extends Element implements Dialog {
 					break;
 			}
 			return new Setting[0];
+		}
+		public String getPorterTitle(){
+			switch(this){
+				case IMPORT: case EXPORT: return porters == null ? "no ex/im-porters" : (this.exports() ? "Exporter: " : "Importer: ") + porters[eximscroll].getName();
+				case HELPFRAMEIMG: return "Helpframe / Image Loader";
+				case PNG: return "PNG [Portable Network Graphics]";
+				case SAVEFILE_LOAD: return "FMTB File Loader";
+				case SAVEFILE_SAVE: return "FMTB File Saver";
+				case NONE: default: return "CHOOSING MODE NONE";
+			}
 		}
 	}
 	
@@ -395,7 +435,7 @@ public class FileSelector extends Element implements Dialog {
 	}
 	
 	private void applySettingsToAfterTask(AfterTask onfile){
-		if(porter == null) return; settings.addAll(onfile.porter.getSettings(mode.exports()));
+		if(porters == null) return; settings.addAll(onfile.porter.getSettings(mode.exports()));
 		onfile.settings.addAll(settings); onfile.mapped_settings = new HashMap<>();
 		onfile.settings.forEach(setting -> onfile.mapped_settings.put(setting.getId(), setting));
 	}

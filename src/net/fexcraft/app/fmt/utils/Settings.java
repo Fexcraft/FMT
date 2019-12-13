@@ -390,7 +390,7 @@ public class Settings {
 				}
 				case INTEGER: return new JsonPrimitive((int)value);
 				case RGB: return new JsonPrimitive("#" + Integer.toHexString(((RGB)value).packed));
-				case STRING: return new JsonPrimitive((String)value);
+				case STRING: return new JsonPrimitive(value.toString());
 				default: break;
 			}
 			return new JsonPrimitive("null");
