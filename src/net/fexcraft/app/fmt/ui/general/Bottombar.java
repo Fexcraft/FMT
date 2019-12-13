@@ -12,7 +12,6 @@ public class Bottombar extends Element {
 	
 	private static TextField netfield;
 	private int[] fields = new int[]{ 6, 6, 3, 6, 6};
-	public static long fps;
 
 	public Bottombar(){
 		super(null, "bottombar", "bottombar"); hovercolor = RGB.WHITE;
@@ -43,7 +42,7 @@ public class Bottombar extends Element {
 		this.elements.add(new BottomField(this, "frames", "bottombar:field", UserInterface.width / 6, 0, 0, "FPS:"){
 			@Override
 			public void renderSelf(int rw, int rh){
-				this.setText(translation + fps, true);
+				this.setText(translation + FMTB.timer.getFPS(), true);
 				super.renderSelf(rw, rh);
 			}
 		}.setEnabled(false));

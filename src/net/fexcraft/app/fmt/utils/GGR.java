@@ -26,7 +26,7 @@ public class GGR {
 	
     public float movespeed = 1.5f;//0.5f;
     public float maxlookrange = 85;
-    public float sensivity = 1.0f;//= 0.05f;
+    public float sensivity = 2.0f;//= 0.05f;
     public Vec3f pos, rotation;
     private final FMTB root;
     
@@ -150,7 +150,7 @@ public class GGR {
 	}
 
 	public static boolean clickedL, clickedR; private boolean panning, dragging;
-    private int wheel, oldMouseX=-1,oldMouseY=-1;
+    private int wheel, oldMouseX =- 1, oldMouseY = -1;
 
     public void acceptMouseInput(float delta){
         if(clickedR && !Mouse.isButtonDown(1)){

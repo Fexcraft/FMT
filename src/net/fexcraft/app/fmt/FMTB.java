@@ -57,6 +57,7 @@ import net.fexcraft.app.fmt.utils.HelperCollector;
 import net.fexcraft.app.fmt.utils.ImageHelper;
 import net.fexcraft.app.fmt.utils.KeyCompound;
 import net.fexcraft.app.fmt.utils.RayCoastAway;
+import net.fexcraft.app.fmt.utils.ST_Timer;
 import net.fexcraft.app.fmt.utils.SaveLoad;
 import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.app.fmt.utils.Settings;
@@ -86,16 +87,16 @@ public class FMTB {
 	private static String title = "Unnamed Model";
 	private boolean close;
 	public static GGR ggr;
-	//public int width, height;
 	private static FMTB INSTANCE;
 	private DisplayMode displaymode;
 	public UserInterface UI;
 	private static File lwjgl_natives;
 	public static GroupCompound MODEL = new GroupCompound(null);
 	public static Timer BACKUP_TIMER, TEX_UPDATE_TIMER;
-	//public static boolean GAMETEST;
-	private long lf, lfps, fps;
 	private static int disk_update;
+	//
+	public static final ST_Timer timer = new ST_Timer();
+	public float delta, accumulator = 0f, interval = 1f / 30f, alpha;
 	
 	public static void main(String... args) throws Exception {
 	    switch(LWJGLUtil.getPlatform()){
@@ -124,7 +125,7 @@ public class FMTB {
 	public FMTB setTitle(String string){ title = string; DiscordUtil.update(false); return this; }
 	
 	public void run() throws LWJGLException, InterruptedException, IOException, NoSuchMethodException, ScriptException {
-		TextureManager.init(); this.setIcon(); Settings.load(); StyleSheet.load(); Translator.init(); 
+		TextureManager.init(); this.setIcon(); Settings.load(); StyleSheet.load(); Translator.init(); timer.init();
 		setupDisplay(); initOpenGL(); ggr = new GGR(this, 0, 4, 4); ggr.rotation.xCoord = 45; FontRenderer.init();
 		PorterManager.load(); HelperCollector.reload(); Display.setResizable(true); UI = new UserInterface(this); this.setupUI(UI);
 		SessionHandler.checkIfLoggedIn(true, true); checkForUpdates(); KeyCompound.init(); KeyCompound.load();
@@ -147,30 +148,40 @@ public class FMTB {
 			Runtime.getRuntime().addShutdownHook(new Thread(){ @Override public void run(){ DiscordRPC.discordShutdown(); } });
 		}
 		//
-		this.getDelta(); lfps = this.getTime();
 		while(!close){
-			loop(this.getDelta()); render();
+            input(accumulator += (delta = timer.getDelta()));
+            while(accumulator >= interval){
+            	loop(); timer.updateUPS();
+                accumulator -= interval;
+            }
+			render(alpha = accumulator / interval);
 			if(!RayCoastAway.PICKING){
 				if(ImageHelper.HASTASK){
 					UI.render(true); ImageHelper.doTask();
 				}
 				else UI.render(false);
 				//
-			}
-			Display.update(); Display.sync(60);
+			} updateFPS();
+			Display.update(); Display.sync(60); timer.update();
 			if(Settings.discordrpc()) if(++disk_update > 60000){ DiscordRPC.discordRunCallbacks(); disk_update = 0; }
 			//Thread.sleep(50);
 		} DiscordRPC.discordShutdown();
 		Display.destroy(); Settings.save(); StyleSheet.save(); KeyCompound.save(); SessionHandler.save(); System.exit(0);
 	}
 
+	private void updateFPS(){
+		timer.updateFPS();
+	}
+
 	private void setIcon(){
 		Display.setIcon(new java.nio.ByteBuffer[]{ TextureManager.getTexture("icon", false).getBuffer(), TextureManager.getTexture("icon", false).getBuffer() });
 	}
+	
+	private void input(float delta){
+		ggr.pollInput(delta); ggr.apply();
+	}
 
-	private void loop(long delta){
-		ggr.pollInput(0.1f); ggr.apply();
-		//
+	private void loop(){
 		if(Display.isCloseRequested()){ SaveLoad.checkIfShouldSave(true, false); }
 		//
 		if(Display.wasResized()){
@@ -184,33 +195,13 @@ public class FMTB {
             catch(Exception e){ e.printStackTrace(); }
         }
         if(!TextureUpdate.HALT){ TextureUpdate.tryAutoPos(TextureUpdate.ALL); }
-        //
-        this.updateFPS();
 	}
 	
 	public long getTime(){
 	    return (Sys.getTime() * 1000) / Sys.getTimerResolution();
 	}
 	
-	public long getDelta(){
-	    long time = getTime();
-	    long delta = time - lf;
-	    lf = time; return delta;
-	}
-	
-    public void updateFPS() {
-        if(getTime() - lfps > 1000){
-        	if(Settings.bottombar()){
-        		Bottombar.fps = fps; Display.setTitle(String.format(deftitle0, title)); 
-        	}
-        	else{
-        		Display.setTitle(String.format(deftitle, fps, title));
-        	}
-        	fps = 0; lfps += 1000;
-        } fps++;
-    }
-	
-	private void render(){
+	private void render(float alpha){
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
         GL11.glLoadIdentity(); //GL11.glLoadIdentity();		
         GL11.glRotatef(ggr.rotation.xCoord, 1, 0, 0);
@@ -226,7 +217,7 @@ public class FMTB {
         }
         //
         if(RayCoastAway.PICKING){ 
-            MODEL.render(); GL11.glPopMatrix(); render();
+            MODEL.render(); GL11.glPopMatrix(); render(alpha);
         }
         else{
 	        if(Settings.floor()){
