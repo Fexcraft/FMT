@@ -81,14 +81,14 @@ public class UserInterface {
 		}
 		//
 		GL11.glLoadIdentity();
-		GL11.glDepthFunc(GL11.GL_ALWAYS);
+		GL11.glDepthFunc(GL11.GL_ALWAYS); GL11.glDisable(GL11.GL_ALPHA_TEST);
 		if(bool){
 			tmelm.render(width, height); logintxt.render(width, height);
 		}
 		else{
 			for(Element elm : elements) elm.render(width, height);
 		}
-		GL11.glDepthFunc(GL11.GL_LESS);
+		GL11.glDepthFunc(GL11.GL_LESS); GL11.glEnable(GL11.GL_ALPHA_TEST);
 		//
 		{
 	        GL11.glMatrixMode(GL11.GL_PROJECTION);
