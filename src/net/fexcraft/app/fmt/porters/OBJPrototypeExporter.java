@@ -22,7 +22,7 @@ import net.fexcraft.lib.common.math.TexturedVertex;
 import net.fexcraft.lib.common.math.Vec3f;
 
 /**
- * ALL RIGHTS RESERVED. © 2019 Fexcraft.net
+ * ALL RIGHTS RESERVED. &copy; 2019 Fexcraft.net
  * 
  * @author Ferdinand Calo' (FEX___96)
  *
