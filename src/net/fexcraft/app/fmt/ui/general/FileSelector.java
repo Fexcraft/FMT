@@ -138,7 +138,7 @@ public class FileSelector extends Element implements Dialog {
 
 	public final void show(String title, String con, String sug, String can, FileRoot root, AfterTask aftertask, ChooserMode mode){
 		this.reset(); this.setVisible(true); this.title.setText(title, true); onfile = aftertask;
-		this.mode = mode; files.current = root.getFile().getAbsoluteFile(); files.refresh0();
+		this.mode = mode; files.current = root.getFile().getAbsoluteFile();
 		//
 		sel[0].setText(con == null ? Translator.translate("filechooser.default.confirm", "OK") : con, true);
 		sel[1].setText(sug == null ? Translator.translate("filechooser.default.suggested", "Suggested") : sug, true);
@@ -148,15 +148,15 @@ public class FileSelector extends Element implements Dialog {
 		else cfn.setText(translate("filechooser.customfile.inactive", "Please choose an existing file to proceed."), false);
 		if(mode.hasPorter()){
 			porters = PorterManager.getPorters(mode.exports()).toArray(new ExImPorter[0]);
-			exim.setText(mode.getPorterTitle(), false);
+			exim.setText(mode.getPorterTitle(), false); exim.width = 438; exim.repos();
 			exim_next.setVisible(true); exim_prev.setVisible(true);
-			exim.width = 438; exim.repos();
+			if(eximscroll >= porters.length) eximscroll = 0; if(eximscroll < 0) eximscroll = 0;
 		}
 		else{
 			exim_next.setVisible(false); exim_prev.setVisible(false);
 			exim.width = 480; exim.repos();
 		}
-		exim.setText(mode.getPorterTitle(), false);
+		exim.setText(mode.getPorterTitle(), false); files.refresh0();
 		//
 		Setting[] modesettings = mode.settings(); for(Setting setting : modesettings) this.settings.add(setting);
 	}
@@ -310,38 +310,41 @@ public class FileSelector extends Element implements Dialog {
 		
 	}
 	
-	private static final File NONE = new File("no files in directory"), ERROR = new File("error.jvm (see console)");
+	private static final File NONE = new File("no files in directory"), ERROR = new File("error.jvm (see console)"), NOFOLDER = new File("folder does not exists, yet");
 	private static Stream<File> stream;
 	
 	private File[] getFilteredList(){
 		try{
-			if(files.current.listFiles() == null) return new File[]{ NONE };
-			File[] dirs = Arrays.asList(files.current.listFiles()).stream().filter(pre -> pre.isDirectory()).collect(Collectors.<File>toList()).toArray(new File[0]);
+			if(!files.current.exists()) return new File[]{ NOFOLDER };
+			File[] folder = files.current.listFiles();
+			if(folder == null || folder.length == 0) return new File[]{ NONE };
+			File[] dirs = Arrays.asList(folder).stream().filter(pre -> pre.isDirectory()).collect(Collectors.<File>toList()).toArray(new File[0]);
 			switch(mode){
 				case EXPORT: case IMPORT:{
-					stream = Arrays.asList(files.current.listFiles()).stream().filter(pre -> porters[eximscroll].isValidFile(pre));
+					stream = Arrays.asList(folder).stream().filter(pre -> porters[eximscroll].isValidFile(pre));
 					break;
 				}
 				case PNG:{
-					stream = Arrays.asList(files.current.listFiles()).stream().filter(pre -> pre.isDirectory() || pre.getName().toLowerCase().endsWith(".png"));
+					stream = Arrays.asList(folder).stream().filter(pre -> pre.isDirectory() || pre.getName().toLowerCase().endsWith(".png"));
 					break;
 				}
 				case SAVEFILE_SAVE: case SAVEFILE_LOAD:{
-					stream = Arrays.asList(files.current.listFiles()).stream().filter(pre -> pre.isDirectory() || pre.getName().toLowerCase().endsWith(".fmtb"));
+					stream = Arrays.asList(folder).stream().filter(pre -> pre.isDirectory() || pre.getName().toLowerCase().endsWith(".fmtb"));
 					break;
 				}
 				case HELPFRAMEIMG:{
-					stream = Arrays.asList(files.current.listFiles()).stream().filter(pre -> pre.isDirectory() || pre.getName().toLowerCase().endsWith(".png")
+					stream = Arrays.asList(folder).stream().filter(pre -> pre.isDirectory() || pre.getName().toLowerCase().endsWith(".png")
 						|| pre.getName().toLowerCase().endsWith(".jpg") || pre.getName().toLowerCase().endsWith(".jpeg"));
 					break;
 				}
 				default:{
-					stream = Arrays.asList(files.current.listFiles()).stream().filter(pre -> pre.isDirectory());
+					stream = Arrays.asList(folder).stream().filter(pre -> pre.isDirectory());
 					break;
 				}
 			}
 			//
 			File[] fils = stream.filter(pre -> !pre.isDirectory()).collect(Collectors.<File>toList()).toArray(new File[0]);
+			if(dirs.length == 0 && fils.length == 0) return new File[]{ NONE };
 			if(dirs.length == 0) return fils; else if(fils.length == 0) return dirs;
 			File[] sorted = new File[dirs.length + fils.length];
 			for(int i = 0; i < dirs.length; i++) sorted[i] = dirs[i];
