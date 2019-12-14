@@ -44,7 +44,7 @@ public class OBJPrototypeExporter extends ExImPorter {
 	@Override
 	public String exportModel(GroupCompound compound, File file, Map<String, Setting> settings){
 		StringBuffer buffer = new StringBuffer(); boolean bool = settings.get("flip_model").getBooleanValue();
-		buffer.append("# FMT-Marker OBJ-1\n#\n");
+		buffer.append("# FMT-Marker OBJ-2\n#\n");
 		buffer.append("# Model exported via the Internal FMT OBJ Exporter\n");
 		buffer.append("# FMT (Fex's Modelling Toolbox) v." + FMTB.version + " &copy; " + Year.now().getValue() + " - Fexcraft.net\n");
 		buffer.append("# All rights reserved. For this Model's License contact the Author/Creator.\n#\n");
