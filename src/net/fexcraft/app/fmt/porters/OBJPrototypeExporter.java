@@ -5,28 +5,36 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.Year;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
+import net.fexcraft.app.fmt.utils.Axis3D;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
+import net.fexcraft.app.fmt.utils.Settings.Type;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.math.TexturedPolygon;
 import net.fexcraft.lib.common.math.TexturedVertex;
+import net.fexcraft.lib.common.math.Vec3f;
 
 /**
+ * ALL RIGHTS RESERVED. © 2019 Fexcraft.net
  * 
  * @author Ferdinand Calo' (FEX___96)
  *
  */
 public class OBJPrototypeExporter extends ExImPorter {
 	
+	private static final ArrayList<Setting> settings = new ArrayList<>();
 	private static final String[] extensions = new String[]{ ".obj" };
 	
-	public OBJPrototypeExporter(){}
+	public OBJPrototypeExporter(){
+		settings.add(new Setting(Type.BOOLEAN, "flip_model", true));
+	}
 
 	@Override
 	public GroupCompound importModel(File file, Map<String, Setting> settings){
@@ -35,7 +43,7 @@ public class OBJPrototypeExporter extends ExImPorter {
 	
 	@Override
 	public String exportModel(GroupCompound compound, File file, Map<String, Setting> settings){
-		StringBuffer buffer = new StringBuffer();
+		StringBuffer buffer = new StringBuffer(); boolean bool = settings.get("flip_model").getBooleanValue();
 		buffer.append("# FMT-Marker OBJ-1\n#\n");
 		buffer.append("# Model exported via the Internal FMT OBJ Exporter\n");
 		buffer.append("# FMT (Fex's Modelling Toolbox) v." + FMTB.version + " &copy; " + Year.now().getValue() + " - Fexcraft.net\n");
@@ -49,10 +57,11 @@ public class OBJPrototypeExporter extends ExImPorter {
 		buffer.append("# Model Name\no " + validateName(compound.name) + "\n\n");
 		buffer.append("# TextureSizeX: " + compound.tx(null) + "\n");
 		buffer.append("# TextureSizeY: " + compound.ty(null) + "\n");
-		buffer.append("# FlipAxes: true\n\n");
+		buffer.append("# FlipAxes: true\n\n"); Axis3D axis, axis1 = null;
+		if(bool) (axis1 = new Axis3D()).setAngles(180, 180, 0);
 		//
 		for(TurboList list : compound.getGroups()){
-			buffer.append("# Group Name\n");
+			buffer.append("# Group Name\n"); axis = new Axis3D();
 			buffer.append("g " + list.id + "\nusemtl fmt_null_material\n");
 			for(PolygonWrapper wrapper : list){
 				//if(!wrapper.getType().isCuboid()) continue;
@@ -62,11 +71,19 @@ public class OBJPrototypeExporter extends ExImPorter {
 				}
 				//
 				TexturedPolygon[] polis = wrapper.getTurboObject(0).getFaces();
+				axis.setAngles(wrapper.rot.yCoord, -wrapper.rot.zCoord, -wrapper.rot.xCoord);
 				for(TexturedPolygon poly : polis){
 					for(TexturedVertex vert : poly.getVertices()){
-						buffer.append("v " + (vert.vector.xCoord + wrapper.pos.xCoord)
-							+ " " + (vert.vector.yCoord + wrapper.pos.yCoord)
-							+ " " + (vert.vector.zCoord + wrapper.pos.zCoord) + "\n");
+						Vec3f rotated = axis.getRelativeVector(vert.vector);
+						if(bool){
+							rotated = axis1.getRelativeVector(rotated.add(wrapper.pos));
+							buffer.append("v " + (rotated.xCoord) + " " + (rotated.yCoord) + " " + (rotated.zCoord) + "\n");
+						}
+						else{
+							buffer.append("v " + (rotated.xCoord + wrapper.pos.xCoord)
+								+ " " + (rotated.yCoord + wrapper.pos.yCoord)
+								+ " " + (rotated.zCoord + wrapper.pos.zCoord) + "\n");
+						}
 					}
 					for(TexturedVertex vert : poly.getVertices()){
 						buffer.append("vt " + vert.textureX + " " + vert.textureY + "\n");
@@ -121,7 +138,7 @@ public class OBJPrototypeExporter extends ExImPorter {
 
 	@Override
 	public List<Setting> getSettings(boolean export){
-		return nosettings;
+		return settings;
 	}
 
 	@Override
