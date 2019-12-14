@@ -71,7 +71,7 @@ public class OBJPrototypeExporter extends ExImPorter {
 				}
 				//
 				TexturedPolygon[] polis = wrapper.getTurboObject(0).getFaces();
-				axis.setAngles(wrapper.rot.yCoord, -wrapper.rot.zCoord, -wrapper.rot.xCoord);
+				axis.setAngles(-wrapper.rot.yCoord, -wrapper.rot.zCoord, -wrapper.rot.xCoord);
 				for(TexturedPolygon poly : polis){
 					for(TexturedVertex vert : poly.getVertices()){
 						Vec3f rotated = axis.getRelativeVector(vert.vector);
