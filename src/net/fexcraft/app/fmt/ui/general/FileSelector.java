@@ -138,7 +138,7 @@ public class FileSelector extends Element implements Dialog {
 
 	public final void show(String title, String con, String sug, String can, FileRoot root, AfterTask aftertask, ChooserMode mode){
 		this.reset(); this.setVisible(true); this.title.setText(title, true); onfile = aftertask;
-		this.mode = mode; files.current = root.getFile().getAbsoluteFile();
+		this.mode = mode; files.current = root.getFile().getAbsoluteFile(); settings.clear();
 		//
 		sel[0].setText(con == null ? Translator.translate("filechooser.default.confirm", "OK") : con, true);
 		sel[1].setText(sug == null ? Translator.translate("filechooser.default.suggested", "Suggested") : sug, true);
