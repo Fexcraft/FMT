@@ -78,8 +78,8 @@ public class DFMExporter extends ExImPorter {
 		buffer.append(" *  FMT (Fex's Modelling Toolbox) v." + FMTB.version + " &copy; " + Year.now().getValue() + " - Fexcraft.net<br>\n");
 		buffer.append(" *  All rights reserved. For this Model's License contact the Author/Creator.\n */\n");
 		buffer.append("public class " + modelname + " extends " + modeltype + " {\n\n");
-		buffer.append(tab + "private int textureX = " + compound.tx(null) + "\n");
-		buffer.append(tab + "private int textureY = " + compound.tx(null) + "\n\n");
+		buffer.append(tab + "private int textureX = " + compound.tx(null) + ";\n");
+		buffer.append(tab + "private int textureY = " + compound.tx(null) + ";\n\n");
 		buffer.append(tab + "public " + modelname + "(){\n");
 		for(TurboList list : compound.getGroups()){
 			buffer.append(tab2 + list.id + " = new ModelRendererTurbo[" + list.size() + "];\n");
@@ -105,13 +105,13 @@ public class DFMExporter extends ExImPorter {
 						buffer.append(tab + "private final void initGroup_" + list.id + i + "(){\n");
 						int j = i * count, k = (i + 1) * count;
 						List<PolygonWrapper> sub = list.subList(j, k >= list.size() ? list.size() - 1 : k);
-						insertList(compound, sub, j, list.id, buffer, false);
+						insertList(compound, sub, j, list.id, buffer);
 						buffer.append(tab + "}\n\n");
 					}
 				}
 				else{
 					buffer.append(tab + "private final void initGroup_" + list.id + "(){\n");
-					insertList(compound, list, 0, null, buffer, false);
+					insertList(compound, list, 0, null, buffer);
 					buffer.append(tab + "}\n\n");
 				}
 			}
@@ -120,7 +120,7 @@ public class DFMExporter extends ExImPorter {
 		}
 		else{
 			for(TurboList list : compound.getGroups()){
-				insertList(compound, list, 0, null, buffer, true);
+				insertList(compound, list, 0, null, buffer);
 			}
 			appendEnding(compound, buffer);
 			buffer.append(tab + "}\n\n}\n");
@@ -144,8 +144,8 @@ public class DFMExporter extends ExImPorter {
 		buffer.append(tab2 + "flipAll();\n");
 	}
 
-	private void insertList(GroupCompound compound, List<PolygonWrapper> list, int index, String id, StringBuffer buffer, boolean append){
-		String name = id; StringBuffer shape = new StringBuffer();
+	private void insertList(GroupCompound compound, List<PolygonWrapper> list, int index, String id, StringBuffer buffer){
+		String name = id;
 		if(list instanceof TurboList){
 			TurboList turbo = (TurboList)list; name = turbo.id;
 			if((onlyvisible && !turbo.visible) || list.isEmpty()) return;
@@ -163,7 +163,7 @@ public class DFMExporter extends ExImPorter {
 				}
 				case SHAPEBOX:{
 					ShapeboxWrapper box = (ShapeboxWrapper)wrapper;
-					shape.append(tab2 + name + "[" + index + "]" + format(".addShapeBox(%s, %s, %s, %s, %s, %s, 0, "
+					buffer.append(tab2 + name + "[" + index + "]" + format(".addShapeBox(%s, %s, %s, %s, %s, %s, 0, "
 						+ "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", null,
 						wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord, box.size.xCoord, box.size.yCoord, box.size.zCoord,
 						box.cor0.xCoord, box.cor0.yCoord, box.cor0.zCoord, box.cor1.xCoord, box.cor1.yCoord, box.cor1.zCoord,
@@ -207,7 +207,6 @@ public class DFMExporter extends ExImPorter {
 			} buffer.append("\n");
 			index++;
 		}
-		if(append) buffer.append(tab2 + "//\n");
 	}
 
 	private String format(String string, String add, float... arr){
