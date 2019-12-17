@@ -195,7 +195,7 @@ public class DFMExporter extends ExImPorter {
 					break;
 				}
 			}
-			buffer.append(tab2 + name + "[" + index + "].setRotationPoint(" + wrapper.pos.xCoord + ", " + wrapper.pos.yCoord + ", " + wrapper.pos.zCoord + ");\n");
+			buffer.append(tab2 + name + "[" + index + "].setRotationPoint(" + wrapper.pos.xCoord + "f, " + wrapper.pos.yCoord + "f, " + wrapper.pos.zCoord + "f);\n");
 			if(wrapper.rot.xCoord != 0f){
 				buffer.append(tab2 + name + "[" + index + "].rotateAngleX = " + (float)Math.toRadians(wrapper.rot.xCoord) + "f;\n");
 			}
