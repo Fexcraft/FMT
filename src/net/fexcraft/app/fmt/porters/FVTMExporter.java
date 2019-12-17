@@ -28,8 +28,8 @@ public class FVTMExporter extends FVTMFormatBase {
 	@Override
 	protected void initExport(GroupCompound compound, File file, Map<String, Setting> settings){
 		packid = settings.get("pack_id").getStringValue();
-		 modelname = settings.get("model_name").getStringValue();
-		 model_id = settings.get("model_id").getStringValue();
+		modelname = settings.get("model_name").getStringValue();
+		model_id = settings.get("model_id").getStringValue();
 		if(modelname.equals("default") || modelname.equals("null")) modelname = null;
 		if(model_id.equals("default") || model_id.equals("null")) model_id = null;
 		modelname = validateName(modelname == null ? compound.name + "Model" : modelname);

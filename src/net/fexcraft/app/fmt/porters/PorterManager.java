@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import javax.script.ScriptException;
@@ -32,7 +31,7 @@ import net.fexcraft.app.fmt.wrappers.TurboList;
  */
 public class PorterManager {
 	
-	private static final PorterMap porters = new PorterMap();
+	private static final ArrayList<ExImPorter> porters = new ArrayList<>();
 	
 	public static final void load() throws NoSuchMethodException, FileNotFoundException, ScriptException {
 		porters.add(new MTBImporter());
@@ -44,6 +43,7 @@ public class PorterManager {
 		porters.add(new MarkerExporter());
 		porters.add(new TiMExporter());
 		porters.add(new TSIVMarkerExporter());
+		porters.add(new DFMExporter());
 	}
 
 	public static void handleImport(){
@@ -115,7 +115,7 @@ public class PorterManager {
 	 * @return porter compatible with this file extension
 	 */
 	public static ExImPorter getPorterFor(File file, boolean export){
-		for(ExImPorter porter : porters.values()){
+		for(ExImPorter porter : porters){
 			if((export && porter.isExporter()) || (!export && porter.isImporter())){
 				for(String ext : porter.getExtensions()){
 					if(file.getName().endsWith(ext)) return porter;
@@ -162,17 +162,7 @@ public class PorterManager {
 	 * @return
 	 */
 	public static List<ExImPorter> getPorters(boolean export){
-		return porters.values().stream().filter(pre -> export ? pre.isExporter() : pre.isImporter()).collect(Collectors.<ExImPorter>toList());
-	}
-	
-	private static class PorterMap extends TreeMap<String, ExImPorter> {
-		
-		private static final long serialVersionUID = 1L;
-
-		public void add(ExImPorter porter){
-			this.put(porter.getId(), porter);
-		}
-		
+		return porters.stream().filter(pre -> export ? pre.isExporter() : pre.isImporter()).collect(Collectors.<ExImPorter>toList());
 	}
 
 }
