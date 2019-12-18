@@ -14,6 +14,7 @@ import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.utils.Settings.Type;
 import net.fexcraft.app.fmt.wrappers.BoxWrapper;
+import net.fexcraft.app.fmt.wrappers.CylinderWrapper;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.ShapeboxWrapper;
@@ -172,15 +173,25 @@ public class DFMExporter extends ExImPorter {
 						box.cor6.xCoord, box.cor6.yCoord, box.cor6.zCoord, box.cor7.xCoord, box.cor7.yCoord, box.cor7.zCoord) + ";\n");
 					break;
 				}
+				case CYLINDER:{
+					CylinderWrapper cyl = (CylinderWrapper)wrapper;
+					if(cyl.radius2 == 0f){
+						buffer.append(tab2 + name + "[" + index + "].flip = true;\n");
+						buffer.append(tab2 + name + "[" + index + "]" + format(".addCylinder(%s, %s, %s, %s, %s, %s, %s, %s, %s)", null, 
+							wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord,
+							cyl.radius, cyl.length, cyl.segments, cyl.base, cyl.top, cyl.direction) + ";\n");
+						break;
+					}
+					//else continue with the converter bellow
+				}
 				case OBJ:
-				case CYLINDER:
 				case SPHERE:
 				case TEXRECT_A:
 				case TEXRECT_B:
 				default:{
 					buffer.append(tab2 + "{//LEGACY CONVERTER START\n");
 					ModelRendererTurbo turbo = wrapper.getTurboObject(0); int face = 0;
-					buffer.append(tab3 + "TexturedPolygon[] faces = new TexturedPolygon[" + turbo.getFaces().length + "]; PositionTextureVertex[] vertices = null;\n");
+					buffer.append(tab3 + "TexturedPolygon[] faces = new TexturedPolygon[" + turbo.getFaces().length + "]; PositionTextureVertex[] vertices = null, allverts = new PositionTextureVertex[" + turbo.getVertices().length + "];\n");
 					for(TexturedPolygon poly : turbo.getFaces()){
 						buffer.append(tab3 + "vertices = new PositionTextureVertex[" + poly.getVertices().length + "];\n");
 						for(int i = 0; i < poly.getVertices().length; i++){
@@ -189,8 +200,13 @@ public class DFMExporter extends ExImPorter {
 								+ "f, " + vertex.vector.xCoord + "f, " + vertex.textureX + "f, " + vertex.textureY + "f);\n");
 						}
 						buffer.append(tab3 + "faces[" + face + "] = new TexturedPolygon(vertices);\n"); face++;
+					} buffer.append(tab3 + "//\n");
+					for(int i = 0; i < turbo.getVertices().length; i++){
+						TexturedVertex vert = turbo.getVertices()[i];
+						buffer.append(tab3 + "allverts[" + i + "] = new PositionTextureVertex(" + vert.vector.xCoord + "f, " + vert.vector.xCoord
+							+ "f, " + vert.vector.xCoord + "f, " + vert.textureX + "f, " + vert.textureY + "f);\n");
 					}
-					buffer.append(tab3 + name + "[" + index + "].copyTo(new PositionTextureVertex[0], faces);\n");
+					buffer.append(tab3 + name + "[" + index + "].copyTo(allverts, faces);\n");
 					buffer.append(tab2 + "}//LEGACY CONVERTER END\n");
 					break;
 				}
