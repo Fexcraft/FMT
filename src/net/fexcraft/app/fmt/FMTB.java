@@ -153,7 +153,7 @@ public class FMTB {
             while(accumulator >= interval){
             	loop(); timer.updateUPS();
                 accumulator -= interval;
-            }
+            } checkResizement();
 			render(alpha = accumulator / interval);
 			if(!RayCoastAway.PICKING){
 				if(ImageHelper.HASTASK){
@@ -183,7 +183,11 @@ public class FMTB {
 
 	private void loop(){
 		if(Display.isCloseRequested()){ SaveLoad.checkIfShouldSave(true, false); }
-		//
+		//checkResizement();
+        if(!TextureUpdate.HALT){ TextureUpdate.tryAutoPos(TextureUpdate.ALL); }
+	}
+	
+	private void checkResizement(){
 		if(Display.wasResized()){
 			displaymode = new DisplayMode(Display.getWidth(), Display.getHeight());
 	        GLU.gluPerspective(45.0f, displaymode.getWidth() / displaymode.getHeight(), 0.1f, 4096f / 2);
@@ -194,9 +198,8 @@ public class FMTB {
             try{ Thread.sleep(100); }
             catch(Exception e){ e.printStackTrace(); }
         }
-        if(!TextureUpdate.HALT){ TextureUpdate.tryAutoPos(TextureUpdate.ALL); }
 	}
-	
+
 	public long getTime(){
 	    return (Sys.getTime() * 1000) / Sys.getTimerResolution();
 	}
