@@ -23,10 +23,12 @@ import net.fexcraft.app.fmt.wrappers.BoxWrapper;
 import net.fexcraft.app.fmt.wrappers.CylinderWrapper;
 import net.fexcraft.app.fmt.wrappers.MarkerWrapper;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
+import net.fexcraft.app.fmt.wrappers.QuadWrapper;
 import net.fexcraft.app.fmt.wrappers.ShapeboxWrapper;
 import net.fexcraft.app.fmt.wrappers.TexrectWrapperA;
 import net.fexcraft.app.fmt.wrappers.TexrectWrapperB;
 import net.fexcraft.app.fmt.wrappers.TurboList;
+import net.fexcraft.app.fmt.wrappers.VoxelWrapper;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.utils.Print;
 
@@ -301,6 +303,13 @@ public class Toolbar extends Element {
 								this.root.setVisible(false); return true;
 							}
 						}.setText(translate("toolbar.shapelist.add_cylinder", "Add Cylinder"), false));
+						this.elements.add(new Button(this, "add_quad", null, 20, 26, 0, 0){
+							@Override
+							public boolean processButtonClick(int x, int y, boolean left){
+								FMTB.MODEL.add(new QuadWrapper(FMTB.MODEL), null, true);
+								this.root.setVisible(false); return true;
+							}
+						}.setText(translate("toolbar.shapelist.add_quad", "Add Quad"), false));
 						this.elements.add(new Button(this, "add_group", null, 20, 26, 0, 0){
 							@Override
 							public boolean processButtonClick(int x, int y, boolean left){
@@ -323,6 +332,13 @@ public class Toolbar extends Element {
 								this.root.setVisible(false); return true;
 							}
 						}.setText(translate("toolbar.shapelist.add_marker", "Add Marker"), false));
+						this.elements.add(new Button(this, "add_voxel", null, 20, 26, 0, 0){
+							@Override
+							public boolean processButtonClick(int x, int y, boolean left){
+								FMTB.MODEL.add(new VoxelWrapper(FMTB.MODEL, 16, true), "voxels", true);
+								this.root.setVisible(false); return true;
+							}
+						}.setText(translate("toolbar.shapelist.add_voxel", "Add VoxelShape(16)"), false));
 					}
 				};
 				this.elements.add(menu);

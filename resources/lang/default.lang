@@ -182,6 +182,8 @@ toolbar.shapelist.add_texrect_a=Add TexRect [Adv.]
 toolbar.shapelist.add_cylinder=Add Cylinder
 toolbar.shapelist.add_group=Add Group
 toolbar.shapelist.add_marker=Add Marker
+toolbar.shapelist.add_voxel=Add VoxelShape(16)
+toolbar.shapelist.add_quad=Add Quad
 toolbar.shapelist=Shapelist
 toolbar.textures.select=Select Texture
 toolbar.textures.edit=Edit (External)
@@ -275,3 +277,4 @@ alt_menu.selection.open_editor=Open Editor
 alt_menu.selection.delete_selected=Delete Selection
 dialog.compound.change_type.failed=%s shape(s) skipped!<nl>%s !> %s
 //
+

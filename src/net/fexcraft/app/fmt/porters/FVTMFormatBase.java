@@ -17,6 +17,8 @@ import net.fexcraft.app.fmt.wrappers.BoxWrapper;
 import net.fexcraft.app.fmt.wrappers.CylinderWrapper;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
+import net.fexcraft.app.fmt.wrappers.QuadWrapper;
+import net.fexcraft.app.fmt.wrappers.ShapeQuadWrapper;
 import net.fexcraft.app.fmt.wrappers.ShapeboxWrapper;
 import net.fexcraft.app.fmt.wrappers.TexrectWrapperB;
 import net.fexcraft.app.fmt.wrappers.TurboList;
@@ -169,6 +171,13 @@ public abstract class FVTMFormatBase extends ExImPorter {
 						box.size.xCoord, box.size.yCoord, box.size.zCoord));
 					break;
 				}
+				case QUAD:{
+					QuadWrapper quad = (QuadWrapper)wrapper;
+					shape.append(format(".addQuad(%s, %s, %s, %s, %s)", null,
+						wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord,
+						quad.size.xCoord, quad.size.yCoord));
+					break;
+				}
 				case SHAPEBOX:{
 					ShapeboxWrapper box = (ShapeboxWrapper)wrapper;
 					shape.append(format("\n" + tab3 + ".addShapeBox(%s, %s, %s, %s, %s, %s, 0, "
@@ -178,6 +187,15 @@ public abstract class FVTMFormatBase extends ExImPorter {
 						box.cor2.xCoord, box.cor2.yCoord, box.cor2.zCoord, box.cor3.xCoord, box.cor3.yCoord, box.cor3.zCoord,
 						box.cor4.xCoord, box.cor4.yCoord, box.cor4.zCoord, box.cor5.xCoord, box.cor5.yCoord, box.cor5.zCoord,
 						box.cor6.xCoord, box.cor6.yCoord, box.cor6.zCoord, box.cor7.xCoord, box.cor7.yCoord, box.cor7.zCoord));
+					extended = true;
+					break;
+				}
+				case SHAPEQUAD:{
+					ShapeQuadWrapper box = (ShapeQuadWrapper)wrapper;
+					shape.append(format("\n" + tab3 + ".addShapeQuad(%s, %s, %s, %s, %s, %s, 0, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", null,
+						wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord, box.size.xCoord, box.size.yCoord, box.size.zCoord,
+						box.cor0.xCoord, box.cor0.yCoord, box.cor0.zCoord, box.cor1.xCoord, box.cor1.yCoord, box.cor1.zCoord,
+						box.cor2.xCoord, box.cor2.yCoord, box.cor2.zCoord, box.cor3.xCoord, box.cor3.yCoord, box.cor3.zCoord));
 					extended = true;
 					break;
 				}

@@ -1,6 +1,9 @@
 package net.fexcraft.app.fmt.porters;
 
+import java.util.ArrayList;
+
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.wrappers.BoxWrapper;
@@ -8,10 +11,13 @@ import net.fexcraft.app.fmt.wrappers.CylinderWrapper;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.MarkerWrapper;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
+import net.fexcraft.app.fmt.wrappers.ShapeQuadWrapper;
 import net.fexcraft.app.fmt.wrappers.ShapeboxWrapper;
 import net.fexcraft.app.fmt.wrappers.TexrectWrapperA;
 import net.fexcraft.app.fmt.wrappers.TexrectWrapperB;
+import net.fexcraft.app.fmt.wrappers.VoxelWrapper;
 import net.fexcraft.lib.common.json.JsonUtil;
+import net.fexcraft.lib.common.lang.BitList;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.common.utils.Print;
@@ -94,7 +100,7 @@ public class JsonToTMT {
 	public final static PolygonWrapper parseWrapper(GroupCompound compound, JsonObject obj){
 		PolygonWrapper polygon = null;
 		switch(obj.get("type").getAsString()){
-			case "box": case "cube": case "b":{
+			case "box": case "cube": case "b": case "quad": case "q": {
 				BoxWrapper cuboid = new BoxWrapper(compound);
 				cuboid.size.xCoord = get(width, obj, def);
 				cuboid.size.yCoord = get(height, obj, def);
@@ -120,6 +126,18 @@ public class JsonToTMT {
 					for(int i = 0; i < 6; i++) shapebox.bool[i] = array.get(i).getAsBoolean();
 				}*/
 				polygon = shapebox; break;
+			}
+			case "shapequad": case "squad": case "sq": {
+				ShapeQuadWrapper advface = new ShapeQuadWrapper(compound);
+				advface.size.xCoord = get(width, obj, def);
+				advface.size.yCoord = get(height, obj, def);
+				advface.size.zCoord = get(depth, obj, def);
+				//
+				advface.cor0 = new Vec3f(get("x0", obj, def), get("y0", obj, def), get("z0", obj, def));
+				advface.cor1 = new Vec3f(get("x1", obj, def), get("y1", obj, def), get("z1", obj, def));
+				advface.cor2 = new Vec3f(get("x2", obj, def), get("y2", obj, def), get("z2", obj, def));
+				advface.cor3 = new Vec3f(get("x3", obj, def), get("y3", obj, def), get("z3", obj, def));
+				polygon = advface; break;
 			}
 			case "cylinder": case "cyl": case "c": case "cone": case "cn": {
 				CylinderWrapper cylinder = new CylinderWrapper(compound);
@@ -187,6 +205,49 @@ public class JsonToTMT {
 				marker.angle = JsonUtil.getIfExists(obj, "biped_angle", -90).intValue();
 				marker.scale = JsonUtil.getIfExists(obj, "biped_scale", 1f).floatValue();
 				polygon = marker; break;
+			}
+			case "voxel":{
+				VoxelWrapper voxel = new VoxelWrapper(compound, get(segments, obj, 16), false);
+				if(obj.has("data")){
+					for(JsonElement elm : obj.get("data").getAsJsonArray()){
+						ArrayList<Integer> arr = JsonUtil.jsonArrayToIntegerArray(elm.getAsJsonArray());
+						for(int x = arr.get(0); x < arr.get(3); x++){
+							for(int y = arr.get(1); y < arr.get(4); y++){
+								for(int z = arr.get(2); z < arr.get(5); z++){
+									voxel.content[x][y][z] = true;
+								}
+							}
+						}
+					}
+				}
+				else{
+					switch(voxel.divider){
+						case 4:{
+							for(int x = 0; x < 4; x++){
+								BitList list = new BitList(); list.set(obj.get("s" + x).getAsInt()); int i = 0;
+								for(int y = 0; y < 4; y++){
+									for(int z = 0; z < 4; z++){
+										voxel.content[x][y][z] = list.get(i++);
+									}
+								}
+							}
+							break;
+						}
+						case 16:{
+							int i = 0;
+							for(int x = 0; x < 16; x++){
+								for(int y = 0; y < 16; y++){
+									for(int z = 0; z < 16; z++){
+										BitList list = new BitList(); list.set(obj.get("s" + i++).getAsInt());
+										voxel.content[x][y][z] = list.get(z);
+									}
+								}
+							}
+							break;
+						}
+					}
+				}
+				polygon = voxel; break;
 			}
 		}
 		if(polygon == null){

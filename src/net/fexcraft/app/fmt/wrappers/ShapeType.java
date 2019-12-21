@@ -2,9 +2,10 @@ package net.fexcraft.app.fmt.wrappers;
 
 public enum ShapeType {
 	
-	BOX("cuboid"), SHAPEBOX("cuboid"), TEXRECT_B("cuboid"), TEXRECT_A("cuboid"),
-	FLEXBOX("flexcuboid"), TRAPEZOID("flexcuboid"), FLEXTRAPEZOID("flexcuboid"),
-	CYLINDER("cylinder"), SPHERE("sphere"), OBJ("obj"), MARKER("marker");
+	BOX("rect"), SHAPEBOX("rect"), TEXRECT_B("rect"), TEXRECT_A("rect"),
+	FLEXBOX("flexrect"), TRAPEZOID("flexrect"), FLEXTRAPEZOID("flexrect"),
+	CYLINDER("cylinder"), SPHERE("sphere"), OBJ("obj"), MARKER("marker"),
+	QUAD("rect"), SHAPEQUAD("rect"), VOXEL("voxel");
 	
 	private String conversion_group;
 	
@@ -12,12 +13,12 @@ public enum ShapeType {
 		this.conversion_group = congroup;
 	}
 
-	public boolean isCuboid(){
-		return this == BOX || this == SHAPEBOX || this == TEXRECT_B || this == TEXRECT_A || this == FLEXBOX || this == TRAPEZOID || this == FLEXTRAPEZOID;
+	public boolean isRectagular(){
+		return this == BOX || this.isShapebox() || this == FLEXBOX || this == TRAPEZOID || this == FLEXTRAPEZOID || this == QUAD;
 	}
 
 	public boolean isShapebox(){
-		return this == SHAPEBOX || this == TEXRECT_B || this == TEXRECT_A;
+		return this == SHAPEBOX || this == TEXRECT_B || this == TEXRECT_A || this == SHAPEQUAD;
 	}
 
 	public boolean isCylinder(){
@@ -39,6 +40,14 @@ public enum ShapeType {
 	public boolean isMarker(){
 		return this == MARKER;
 	}
+	
+	public boolean isVoxel(){
+		return this == VOXEL;
+	}
+	
+	public boolean isFlat(){
+		return this == QUAD || this == SHAPEQUAD;
+	}
 
 	public static ShapeType get(String text){
 		text = text.toLowerCase();
@@ -54,6 +63,9 @@ public enum ShapeType {
 			case "sphere": return SPHERE;
 			case "obj": return OBJ;
 			case "marker": return MARKER;
+			case "voxel": return VOXEL;
+			case "quad": return QUAD;
+			case "shapequad": return SHAPEQUAD;
 			default: return null;
 		}
 	}
@@ -63,7 +75,7 @@ public enum ShapeType {
 	}
 
 	public static ShapeType[] getSupportedValues(){
-		return new ShapeType[]{ BOX, SHAPEBOX, TEXRECT_B, TEXRECT_A, CYLINDER, MARKER };
+		return new ShapeType[]{ BOX, SHAPEBOX, TEXRECT_B, TEXRECT_A, CYLINDER, MARKER, VOXEL, QUAD, SHAPEQUAD };
 	}
 
 }

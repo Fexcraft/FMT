@@ -193,7 +193,7 @@ public abstract class PolygonWrapper {
 		boolean bool = false;
 		switch(id){
 			case "size":{
-				if(this.getType().isCuboid()){
+				if(this.getType().isRectagular()){
 					bool = this.setFloat(id, x, y, z, value);
 				} break;
 			}
@@ -267,7 +267,7 @@ public abstract class PolygonWrapper {
 				if(ends == null || ends.length == 0) return false;
 				burn(image, ends, new Color(TextureEditor.CURRENTCOLOR.packed).getRGB());
 			}
-			else if(this.getType().isCuboid() && !this.getType().isTexRect()){
+			else if(this.getType().isRectagular() && !this.getType().isTexRect()){
 				float[][] ends = texpos[face]; if(ends == null || ends.length == 0) return false;
 				burn(image, ends, new Color(TextureEditor.CURRENTCOLOR.packed).getRGB());
 			}
