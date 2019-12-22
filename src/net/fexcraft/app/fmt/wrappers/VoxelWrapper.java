@@ -2,6 +2,8 @@ package net.fexcraft.app.fmt.wrappers;
 
 import com.google.gson.JsonObject;
 
+import net.fexcraft.lib.common.Static;
+import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public class VoxelWrapper extends PolygonWrapper {
@@ -17,15 +19,18 @@ public class VoxelWrapper extends PolygonWrapper {
 			for(int j = 0; j < divider; j++){
 				content[i][j] = new boolean[divider];
 				for(int k = 0; k < divider; k++){
-					content[i][j][k] = def;//Static.random.nextBoolean();;
+					content[i][j][k] = Static.random.nextBoolean();;
 				}
 			}
-		 }
+		}
 	}
 
+	@Override
 	protected ModelRendererTurbo newMRT(){
-		return new ModelRendererTurbo(null, textureX, textureY, compound.tx(getTurboList()), compound.ty(getTurboList()))
-			.addVoxelShape(divider, content).setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord).setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
+		return new ModelRendererTurbo(null, textureX, textureY, compound.tx(getTurboList()), compound.ty(getTurboList())){
+			@Override public RGB getColor(int i){ return super.getColor(i % 6); }
+			@Override public String toString(){ return "VoxelShape"; }
+		}.addVoxelShape(divider, content).setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord).setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
 	}
 
 	@Override
