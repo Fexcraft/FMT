@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 import net.fexcraft.lib.tmt.VoxelBuilder;
@@ -22,7 +23,7 @@ public class VoxelWrapper extends PolygonWrapper {
 			for(int j = 0; j < divider; j++){
 				content[i][j] = new boolean[divider];
 				for(int k = 0; k < divider; k++){
-					content[i][j][k] = def;//Static.random.nextBoolean();;
+					content[i][j][k] = /*def;//*/Static.random.nextBoolean();;
 				}
 			}
 		}
