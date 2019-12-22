@@ -1,10 +1,13 @@
 package net.fexcraft.app.fmt.wrappers;
 
+import java.util.ArrayList;
+
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
+import net.fexcraft.lib.tmt.VoxelBuilder;
 
 public class VoxelWrapper extends PolygonWrapper {
 	
@@ -19,7 +22,7 @@ public class VoxelWrapper extends PolygonWrapper {
 			for(int j = 0; j < divider; j++){
 				content[i][j] = new boolean[divider];
 				for(int k = 0; k < divider; k++){
-					content[i][j][k] = Static.random.nextBoolean();;
+					content[i][j][k] = def;//Static.random.nextBoolean();;
 				}
 			}
 		}
@@ -62,6 +65,14 @@ public class VoxelWrapper extends PolygonWrapper {
 	@Override
 	protected JsonObject populateJson(JsonObject obj, boolean export){
 		obj.addProperty("segments", divider);
+		ArrayList<int[]> coords = new VoxelBuilder(null, divider).setVoxels(content).buildCoords();
+		JsonArray array = new JsonArray();
+		for(int[] arr : coords){
+			JsonArray coor = new JsonArray();
+			for(int i = 0; i < arr.length; i++) coor.add(arr[i]);
+			if(coor.size() == 6) array.add(coor);
+		}
+		obj.add("coords", array);
 		return obj;
 	}
 

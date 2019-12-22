@@ -1,7 +1,5 @@
 package net.fexcraft.app.fmt.porters;
 
-import java.util.ArrayList;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -17,7 +15,6 @@ import net.fexcraft.app.fmt.wrappers.TexrectWrapperA;
 import net.fexcraft.app.fmt.wrappers.TexrectWrapperB;
 import net.fexcraft.app.fmt.wrappers.VoxelWrapper;
 import net.fexcraft.lib.common.json.JsonUtil;
-import net.fexcraft.lib.common.lang.BitList;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.common.utils.Print;
@@ -208,42 +205,15 @@ public class JsonToTMT {
 			}
 			case "voxel":{
 				VoxelWrapper voxel = new VoxelWrapper(compound, get(segments, obj, 16), false);
-				if(obj.has("data")){
-					for(JsonElement elm : obj.get("data").getAsJsonArray()){
-						ArrayList<Integer> arr = JsonUtil.jsonArrayToIntegerArray(elm.getAsJsonArray());
-						for(int x = arr.get(0); x < arr.get(3); x++){
-							for(int y = arr.get(1); y < arr.get(4); y++){
-								for(int z = arr.get(2); z < arr.get(5); z++){
-									voxel.content[x][y][z] = true;
-								}
+				for(JsonElement elm : obj.get("coords").getAsJsonArray()){
+					JsonArray arr = elm.getAsJsonArray(); Print.console("coooord" + elm);
+					int xx = arr.get(0).getAsInt(), yy = arr.get(1).getAsInt(), zz = arr.get(2).getAsInt();
+					int x0 = xx + arr.get(3).getAsInt(), y0 = yy + arr.get(4).getAsInt(), z0 = zz + arr.get(5).getAsInt();
+					for(int x = xx; x < x0; x++){
+						for(int y = yy; y < y0; y++){
+							for(int z = zz; z < z0; z++){
+								voxel.content[x][y][z] = true;
 							}
-						}
-					}
-				}
-				else{
-					switch(voxel.divider){
-						case 4:{
-							for(int x = 0; x < 4; x++){
-								BitList list = new BitList(); list.set(obj.get("s" + x).getAsInt()); int i = 0;
-								for(int y = 0; y < 4; y++){
-									for(int z = 0; z < 4; z++){
-										voxel.content[x][y][z] = list.get(i++);
-									}
-								}
-							}
-							break;
-						}
-						case 16:{
-							int i = 0;
-							for(int x = 0; x < 16; x++){
-								for(int y = 0; y < 16; y++){
-									for(int z = 0; z < 16; z++){
-										BitList list = new BitList(); list.set(obj.get("s" + i++).getAsInt());
-										voxel.content[x][y][z] = list.get(z);
-									}
-								}
-							}
-							break;
 						}
 					}
 				}
