@@ -34,6 +34,7 @@ public class OBJPrototypeExporter extends ExImPorter {
 	
 	public OBJPrototypeExporter(){
 		settings.add(new Setting(Type.BOOLEAN, "flip_model", true));
+		settings.add(new Setting(Type.FLOAT, "scale", 1));
 	}
 
 	@Override
@@ -44,7 +45,7 @@ public class OBJPrototypeExporter extends ExImPorter {
 	@Override
 	public String exportModel(GroupCompound compound, File file, Map<String, Setting> settings){
 		StringBuffer buffer = new StringBuffer(); boolean bool = settings.get("flip_model").getBooleanValue();
-		buffer.append("# FMT-Marker OBJ-2\n#\n");
+		buffer.append("# FMT-Marker OBJ-2\n#\n"); float scale = settings.get("scale").getFloatValue();
 		buffer.append("# Model exported via the Standard FMT OBJ Exporter\n");
 		buffer.append("# FMT (Fex's Modelling Toolbox) v." + FMTB.version + " &copy; " + Year.now().getValue() + " - Fexcraft.net\n");
 		buffer.append("# All rights reserved. For this Model's License contact the Author/Creator.\n#\n");
@@ -77,12 +78,12 @@ public class OBJPrototypeExporter extends ExImPorter {
 						Vec3f rotated = axis.getRelativeVector(vert.vector);
 						if(bool){
 							rotated = axis1.getRelativeVector(rotated.add(wrapper.pos));
-							buffer.append("v " + (rotated.xCoord) + " " + (rotated.yCoord) + " " + (rotated.zCoord) + "\n");
+							buffer.append("v " + (rotated.xCoord * scale) + " " + (rotated.yCoord * scale) + " " + (rotated.zCoord * scale) + "\n");
 						}
 						else{
-							buffer.append("v " + (rotated.xCoord + wrapper.pos.xCoord)
-								+ " " + (rotated.yCoord + wrapper.pos.yCoord)
-								+ " " + (rotated.zCoord + wrapper.pos.zCoord) + "\n");
+							buffer.append("v " + ((rotated.xCoord + wrapper.pos.xCoord) * scale)
+								+ " " + ((rotated.yCoord + wrapper.pos.yCoord) * scale)
+								+ " " + ((rotated.zCoord + wrapper.pos.zCoord) * scale) + "\n");
 						}
 					}
 					for(TexturedVertex vert : poly.getVertices()){
