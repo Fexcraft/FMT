@@ -81,7 +81,7 @@ public class FMTB {
 	
 	public static final String deftitle = "[FPS:%s] Fexcraft Modelling Toolbox - %s";
 	public static final String deftitle0 = "Fexcraft Modelling Toolbox - %s";
-	public static final String version = "1.3.4";
+	public static final String version = "1.3.5";
 	public static final String CLID = "587016218196574209";
 	//
 	private static String title = "Unnamed Model";
