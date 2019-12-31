@@ -34,7 +34,8 @@ public class OBJPrototypeExporter extends ExImPorter {
 	
 	public OBJPrototypeExporter(){
 		settings.add(new Setting(Type.BOOLEAN, "flip_model", true));
-		settings.add(new Setting(Type.FLOAT, "scale", 1));
+		settings.add(new Setting(Type.FLOAT, "scale", 1f));
+		settings.add(new Setting(Type.BOOLEAN, "create_mtl", false));
 	}
 
 	@Override
@@ -45,8 +46,8 @@ public class OBJPrototypeExporter extends ExImPorter {
 	@Override
 	public String exportModel(GroupCompound compound, File file, Map<String, Setting> settings){
 		StringBuffer buffer = new StringBuffer(); boolean bool = settings.get("flip_model").getBooleanValue();
-		buffer.append("# FMT-Marker OBJ-2\n#\n"); float scale = settings.get("scale").getFloatValue();
-		buffer.append("# Model exported via the Standard FMT OBJ Exporter\n");
+		buffer.append("# FMT-Marker OBJ-2\n#\n"); float scale = settings.get("scale").getFloatValue(); String mtlname = null;
+		buffer.append("# Model exported via the Standard FMT OBJ Exporter\n"); boolean mtl = settings.get("create_mtl").getBooleanValue();
 		buffer.append("# FMT (Fex's Modelling Toolbox) v." + FMTB.version + " &copy; " + Year.now().getValue() + " - Fexcraft.net\n");
 		buffer.append("# All rights reserved. For this Model's License contact the Author/Creator.\n#\n");
 		if(compound.creators.size() > 0){
@@ -55,6 +56,7 @@ public class OBJPrototypeExporter extends ExImPorter {
 			}
 			buffer.append("\n");
 		} else { buffer.append("# Creator: Empty/FMT\n"); } int faceid = 1;
+		if(mtl) buffer.append("mtllib " + (mtlname = file.getName().substring(0, file.getName().length() - 4)) + ".mtl\n\n");
 		buffer.append("# Model Name\no " + validateName(compound.name) + "\n\n");
 		buffer.append("# TextureSizeX: " + compound.tx(null) + "\n");
 		buffer.append("# TextureSizeY: " + compound.ty(null) + "\n");
@@ -63,7 +65,7 @@ public class OBJPrototypeExporter extends ExImPorter {
 		//
 		for(TurboList list : compound.getGroups()){
 			buffer.append("# Group Name\n"); axis = new Axis3D();
-			buffer.append("g " + list.id + "\nusemtl fmt_null_material\n");
+			buffer.append("g " + list.id + "\nusemtl fmt_material\n");
 			for(PolygonWrapper wrapper : list){
 				//if(!wrapper.getType().isCuboid()) continue;
 				buffer.append("\n");
@@ -104,6 +106,18 @@ public class OBJPrototypeExporter extends ExImPorter {
 		catch(IOException e){
 			e.printStackTrace();
 			return "Error:" + e.getMessage();
+		}
+		if(mtl){
+			buffer = new StringBuffer(); buffer.append("newmtl fmt_material\nKd 1.00 1.00 1.00\nmap_Kd minecraft:blocks/" + mtlname.toLowerCase());
+			File mtlfile = new File(file.getParentFile(), mtlname + ".mtl");
+			try{
+				BufferedWriter writer = new BufferedWriter(new FileWriter(mtlfile));
+				writer.append(buffer); writer.flush(); writer.close();
+			}
+			catch(IOException e){
+				e.printStackTrace();
+				return "Error:" + e.getMessage();
+			}
 		}
 		return "Success!";
 	}
