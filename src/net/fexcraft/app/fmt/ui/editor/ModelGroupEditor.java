@@ -253,22 +253,20 @@ public class ModelGroupEditor extends Editor {
 		this.containers = new Container[]{ model, group, animations }; this.repos();
 	}
 	
-	protected boolean updateRGB(Boolean apply, int j){
-		TextField field = (TextField)group.getElement("group_rgb" + j);
+	protected boolean updateRGB(Boolean apply, int xyz){
+		TextField field = (TextField)group.getElement("group_rgb" + xyz);
 		if(apply != null) field.applyChange(field.tryChange(apply, FMTB.MODEL.rate));
-		TurboList sel = FMTB.MODEL.getFirstSelectedGroup();
-		if(sel != null){
-			if(sel.color == null) sel.color = new RGB(BLACK);
-			byte[] arr = sel.color.toByteArray();
-			byte colorr = (byte)(field.getIntegerValue() - 128);
-			switch(j){
-				case 0: sel.color = new RGB(colorr, arr[1], arr[2]); break;
-				case 1: sel.color = new RGB(arr[0], colorr, arr[2]); break;
-				case 2: sel.color = new RGB(arr[0], arr[1], colorr); break;
-			}
-			arr = sel.color.toByteArray();
-			if(arr[0] == 127 && arr[1] == 127 && arr[2] == 127) sel.color = null;
-		} return true;
+		TurboList sel = FMTB.MODEL.getFirstSelectedGroup(); if(sel == null) return true;
+		if(sel.color == null) sel.color = RGB.WHITE.copy();
+		byte[] arr = sel.color.toByteArray(); byte colorr = (byte)(field.getIntegerValue() - 128);
+		switch(xyz){
+			case 0: sel.color = new RGB(colorr, arr[1], arr[2]); break;
+			case 1: sel.color = new RGB(arr[0], colorr, arr[2]); break;
+			case 2: sel.color = new RGB(arr[0], arr[1], colorr); break;
+		}
+		arr = sel.color.toByteArray();
+		if(arr[0] == 127 && arr[1] == 127 && arr[2] == 127) sel.color = null;
+		return true;
 	}
 	
 	protected boolean updateModelTexSize(DropDownField field, int axis, int value){
@@ -301,9 +299,18 @@ public class ModelGroupEditor extends Editor {
 		float am = positive == null ? field.getFloatValue() : positive ? FMTB.MODEL.rate : -FMTB.MODEL.rate;
 		if(am == 0f) return true;
 		switch(axis){
-			case 0:{ FMTB.MODEL.pos.xCoord += am; field.applyChange(FMTB.MODEL.pos.xCoord); break; }
-			case 1:{ FMTB.MODEL.pos.yCoord += am; field.applyChange(FMTB.MODEL.pos.yCoord); break; }
-			case 2:{ FMTB.MODEL.pos.zCoord += am; field.applyChange(FMTB.MODEL.pos.zCoord); break; }
+			case 0:{
+				if(positive == null) FMTB.MODEL.pos.xCoord = am; else FMTB.MODEL.pos.xCoord += am;
+				field.applyChange(FMTB.MODEL.pos.xCoord); break;
+			}
+			case 1:{
+				if(positive == null) FMTB.MODEL.pos.yCoord = am; else FMTB.MODEL.pos.yCoord += am;
+				field.applyChange(FMTB.MODEL.pos.yCoord); break;
+			}
+			case 2:{
+				if(positive == null) FMTB.MODEL.pos.zCoord = am; else FMTB.MODEL.pos.zCoord += am;
+				field.applyChange(FMTB.MODEL.pos.zCoord); break;
+			}
 		}
 		return true;
 	}
@@ -319,21 +326,21 @@ public class ModelGroupEditor extends Editor {
 		float am = positive == null ? field.getFloatValue() : positive ? FMTB.MODEL.rate : -FMTB.MODEL.rate;
 		switch(axis){
 			case 0:{
-				compound.rot.xCoord += am;
+				if(positive == null) compound.rot.xCoord = am; else compound.rot.xCoord += am;
 				if(compound.rot.xCoord > 360) compound.rot.xCoord = 360;
 				if(compound.rot.xCoord < -360) compound.rot.xCoord = -360;
 				field.applyChange(compound.rot.xCoord);
 				break;
 			}
 			case 1:{
-				compound.rot.yCoord += am;
+				if(positive == null) compound.rot.yCoord = am; compound.rot.yCoord += am;
 				if(compound.rot.yCoord > 360) compound.rot.yCoord = 360;
 				if(compound.rot.yCoord < -360) compound.rot.yCoord = -360;
 				field.applyChange(compound.rot.yCoord);
 				break;
 			}
 			case 2:{
-				compound.rot.zCoord += am;
+				if(positive == null) compound.rot.zCoord = am; compound.rot.zCoord += am;
 				if(compound.rot.zCoord > 360) compound.rot.zCoord = 360;
 				if(compound.rot.zCoord < -360) compound.rot.zCoord = -360;
 				field.applyChange(compound.rot.zCoord);

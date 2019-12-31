@@ -70,19 +70,19 @@ public class PreviewEditor extends Editor {
 		if(am == 0f) return true;
 		switch(axis){
 			case 0:{
-				compound.scale.xCoord += am;
+				if(positive == null) compound.scale.xCoord = am; else compound.scale.xCoord += am;
 				field.applyChange(compound.scale.xCoord);
 				field0.applyChange(compound.scale.xCoord * 16);
 				break;
 			}
 			case 1:{
-				compound.scale.yCoord += am;
+				if(positive == null) compound.scale.yCoord = am; else compound.scale.yCoord += am;
 				field.applyChange(compound.scale.yCoord);
 				field0.applyChange(compound.scale.yCoord * 16); 
 				break;
 			}
 			case 2:{
-				compound.scale.zCoord += am;
+				if(positive == null) compound.scale.zCoord = am; else compound.scale.zCoord += am;
 				field.applyChange(compound.scale.zCoord);
 				field0.applyChange(compound.scale.zCoord * 16); 
 				break;
@@ -104,15 +104,15 @@ public class PreviewEditor extends Editor {
 		if(am == 0f) return true; float temp;
 		switch(axis){
 			case 0:{
-				temp = compound.scale.xCoord * 16; temp += am; field.applyChange(temp);
+				if(positive == null) temp = am; else temp = (compound.scale.xCoord * 16) + am; field.applyChange(temp);
 				field0.applyChange(compound.scale.xCoord = temp * Static.sixteenth); break;
 			}
 			case 1:{
-				temp = compound.scale.yCoord * 16; temp += am; field.applyChange(temp);
+				if(positive == null) temp = am; else temp = (compound.scale.yCoord * 16) + am; field.applyChange(temp);
 				field0.applyChange(compound.scale.yCoord = temp * Static.sixteenth); break;
 			}
 			case 2:{
-				temp = compound.scale.zCoord * 16; temp += am; field.applyChange(temp);
+				if(positive == null) temp = am; else temp = (compound.scale.zCoord * 16) + am; field.applyChange(temp);
 				field0.applyChange(compound.scale.zCoord = temp * Static.sixteenth); break;
 			}
 		}
@@ -130,9 +130,18 @@ public class PreviewEditor extends Editor {
 		float am = positive == null ? field.getFloatValue() : positive ? FMTB.MODEL.rate : -FMTB.MODEL.rate;
 		if(am == 0f) return true;
 		switch(axis){
-			case 0:{ compound.pos.xCoord += am; field.applyChange(compound.pos.xCoord); break; }
-			case 1:{ compound.pos.yCoord += am; field.applyChange(compound.pos.yCoord); break; }
-			case 2:{ compound.pos.zCoord += am; field.applyChange(compound.pos.zCoord); break; }
+			case 0:{
+				if(positive == null) compound.pos.xCoord = am; else compound.pos.xCoord += am;
+				field.applyChange(compound.pos.xCoord); break;
+			}
+			case 1:{
+				if(positive == null) compound.pos.yCoord = am; else compound.pos.yCoord += am;
+				field.applyChange(compound.pos.yCoord); break;
+			}
+			case 2:{
+				if(positive == null) compound.pos.zCoord = am; else compound.pos.zCoord += am;
+				field.applyChange(compound.pos.zCoord); break;
+			}
 		}
 		return true;
 	}
@@ -148,21 +157,21 @@ public class PreviewEditor extends Editor {
 		float am = positive == null ? field.getFloatValue() : positive ? FMTB.MODEL.rate : -FMTB.MODEL.rate;
 		switch(axis){
 			case 0:{
-				compound.rot.xCoord += am;
+				if(positive == null) compound.rot.xCoord = am; else compound.rot.xCoord += am;
 				if(compound.rot.xCoord > 360) compound.rot.xCoord = 360;
 				if(compound.rot.xCoord < -360) compound.rot.xCoord = -360;
 				field.applyChange(compound.rot.xCoord);
 				break;
 			}
 			case 1:{
-				compound.rot.yCoord += am;
+				if(positive == null) compound.rot.yCoord = am; else compound.rot.yCoord += am;
 				if(compound.rot.yCoord > 360) compound.rot.yCoord = 360;
 				if(compound.rot.yCoord < -360) compound.rot.yCoord = -360;
 				field.applyChange(compound.rot.yCoord);
 				break;
 			}
 			case 2:{
-				compound.rot.zCoord += am;
+				if(positive == null) compound.rot.zCoord = am; else compound.rot.zCoord += am;
 				if(compound.rot.zCoord > 360) compound.rot.zCoord = 360;
 				if(compound.rot.zCoord < -360) compound.rot.zCoord = -360;
 				field.applyChange(compound.rot.zCoord);
