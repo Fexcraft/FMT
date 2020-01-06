@@ -40,17 +40,15 @@ public class ShapeQuadWrapper extends QuadWrapper {
 		return ShapeType.SHAPEQUAD;
 	}
 	
-	private static ModelRendererTurbo[] cornermarkers = new ModelRendererTurbo[8];
+	private static ModelRendererTurbo[] cornermarkers = new ModelRendererTurbo[4];
 	private static RGB[] cornercolors = new RGB[]{
-		new RGB(255, 255, 0), new RGB(255, 0, 0), new RGB(0, 0, 255), new RGB(0, 255, 0),
-		new RGB(255, 0, 127), new RGB(0, 127, 255), new RGB(0, 127, 0), new RGB(127, 0, 255)
+		new RGB(255, 255, 0), new RGB(255, 0, 0), new RGB(0, 0, 255), new RGB(0, 255, 0)
 	};
 	public static RGB[] cornercolors2 = new RGB[]{
-		new RGB(255, 255, 0), new RGB(255, 0, 0), new RGB(0, 127, 255), new RGB(255, 0, 127),
-		new RGB(0, 255, 0), new RGB(0, 0, 255), new RGB(0, 127, 0), new RGB(127, 0, 255)
+		new RGB(255, 255, 0), new RGB(255, 0, 0), new RGB(0, 127, 255), new RGB(255, 0, 127)
 	};
 	static{
-		for(int i = 0; i < 8; i++){
+		for(int i = 0; i < 4; i++){
 			cornermarkers[i] = new ModelRendererTurbo(null, 0, 0, 16, 16).addBox(-.25f, -.25f, -.25f, .5f, .5f, .5f).setTextured(false).setColor(cornercolors[i]);
 		}
 	}
