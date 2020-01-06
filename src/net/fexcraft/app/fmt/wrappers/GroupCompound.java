@@ -600,28 +600,47 @@ public class GroupCompound {
 
 	public void flipShapeboxes(int axis){
 		List<PolygonWrapper> wrappers = this.getSelected().stream().filter(pre -> pre.getType().isShapebox()).collect(Collectors.toList());
-		ShapeboxWrapper shapebox = null;
 		for(PolygonWrapper wrapper : wrappers){
-			Vec3f[] copy = new Vec3f[8]; shapebox = (ShapeboxWrapper)wrapper;
-			copy[0] = shapebox.cor0; copy[1] = shapebox.cor1; copy[2] = shapebox.cor2; copy[3] = shapebox.cor3;
-			copy[4] = shapebox.cor4; copy[5] = shapebox.cor5; copy[6] = shapebox.cor6; copy[7] = shapebox.cor7;
-			switch(axis){//corner data from golddolphinskb
-				case 0:{
-					shapebox.cor0 = copy[3]; shapebox.cor1 = copy[2]; shapebox.cor2 = copy[1]; shapebox.cor3 = copy[0];
-					shapebox.cor4 = copy[7]; shapebox.cor5 = copy[6]; shapebox.cor6 = copy[5]; shapebox.cor7 = copy[4];
-					break;
-				}
-				case 1:{
-					shapebox.cor0 = copy[4]; shapebox.cor1 = copy[5]; shapebox.cor2 = copy[6]; shapebox.cor3 = copy[7];
-					shapebox.cor4 = copy[0]; shapebox.cor5 = copy[1]; shapebox.cor6 = copy[2]; shapebox.cor7 = copy[3];
-					break;
-				}
-				case 2:{
-					shapebox.cor0 = copy[1]; shapebox.cor1 = copy[0]; shapebox.cor2 = copy[3]; shapebox.cor3 = copy[2];
-					shapebox.cor4 = copy[5]; shapebox.cor5 = copy[4]; shapebox.cor6 = copy[7]; shapebox.cor7 = copy[6];
-					break;
-				}
-			} shapebox.recompile(); continue;
+			if(wrapper instanceof ShapeboxWrapper){
+				Vec3f[] copy = new Vec3f[8]; ShapeboxWrapper shapebox = (ShapeboxWrapper)wrapper;
+				copy[0] = shapebox.cor0; copy[1] = shapebox.cor1; copy[2] = shapebox.cor2; copy[3] = shapebox.cor3;
+				copy[4] = shapebox.cor4; copy[5] = shapebox.cor5; copy[6] = shapebox.cor6; copy[7] = shapebox.cor7;
+				switch(axis){//corner data from golddolphinskb
+					case 0:{
+						shapebox.cor0 = copy[3]; shapebox.cor1 = copy[2]; shapebox.cor2 = copy[1]; shapebox.cor3 = copy[0];
+						shapebox.cor4 = copy[7]; shapebox.cor5 = copy[6]; shapebox.cor6 = copy[5]; shapebox.cor7 = copy[4];
+						break;
+					}
+					case 1:{
+						shapebox.cor0 = copy[4]; shapebox.cor1 = copy[5]; shapebox.cor2 = copy[6]; shapebox.cor3 = copy[7];
+						shapebox.cor4 = copy[0]; shapebox.cor5 = copy[1]; shapebox.cor6 = copy[2]; shapebox.cor7 = copy[3];
+						break;
+					}
+					case 2:{
+						shapebox.cor0 = copy[1]; shapebox.cor1 = copy[0]; shapebox.cor2 = copy[3]; shapebox.cor3 = copy[2];
+						shapebox.cor4 = copy[5]; shapebox.cor5 = copy[4]; shapebox.cor6 = copy[7]; shapebox.cor7 = copy[6];
+						break;
+					}
+				} shapebox.recompile(); continue;
+			}
+			else if(wrapper instanceof ShapeQuadWrapper){
+				Vec3f[] copy = new Vec3f[4]; ShapeQuadWrapper quad = (ShapeQuadWrapper)wrapper;
+				copy[0] = quad.cor0; copy[1] = quad.cor1; copy[2] = quad.cor2; copy[3] = quad.cor3;
+				switch(axis){
+					case 0:{
+						quad.cor0 = copy[3]; quad.cor1 = copy[2]; quad.cor2 = copy[1]; quad.cor3 = copy[0];
+						break;
+					}
+					case 1:{
+						quad.cor0 = copy[0]; quad.cor1 = copy[1]; quad.cor2 = copy[2]; quad.cor3 = copy[3];
+						break;
+					}
+					case 2:{
+						quad.cor0 = copy[1]; quad.cor1 = copy[0]; quad.cor2 = copy[3]; quad.cor3 = copy[2];
+						break;
+					}
+				} quad.recompile(); continue;
+			}
 		} this.updateFields(); return;
 	}
 
