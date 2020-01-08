@@ -34,7 +34,7 @@ public abstract class FVTMFormatBase extends ExImPorter {
 	protected static final String tab = "\t";//"    ";
 	protected static final String tab2 = tab + tab;
 	protected static final String tab3 = tab2 + tab;
-	protected boolean extended, onlyvisible, pergroupinit;
+	protected boolean extended, onlyvisible, onlyselected, pergroupinit;
 	protected String modelname;
 	protected ArrayList<Setting> settings = new ArrayList<>();
 	//
@@ -44,6 +44,7 @@ public abstract class FVTMFormatBase extends ExImPorter {
 		this.name = name; this.id = id;
 		settings.add(new Setting(Type.BOOLEAN, "extended_form", false));
 		settings.add(new Setting(Type.BOOLEAN, "export_only_visible", false));
+		settings.add(new Setting(Type.BOOLEAN, "export_only_selected", false));
 		settings.add(new Setting(Type.BOOLEAN, "per_group_init", false));
 		settings.add(new Setting(Type.INTEGER, "max_pg_init_count", 250));
 	}
@@ -59,6 +60,7 @@ public abstract class FVTMFormatBase extends ExImPorter {
 		ArrayList<String> addedgroups = new ArrayList<>(); this.initExport(compound, file, settings);
 		extended = settings.get("extended_form").getBooleanValue();
 		onlyvisible = settings.get("export_only_visible").getBooleanValue();
+		onlyselected = settings.get("export_only_selected").getBooleanValue();
 		pergroupinit = settings.get("per_group_init").getBooleanValue();
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(getTopCommentLine());
@@ -72,7 +74,7 @@ public abstract class FVTMFormatBase extends ExImPorter {
 		if(this.extended){
 			buffer.append("\n");
 			for(TurboList list : compound.getGroups()){
-				if((onlyvisible && !list.visible) || list.isEmpty()) continue;
+				if((onlyvisible && !list.visible) || (onlyselected && !list.selected) || list.isEmpty()) continue;
 				buffer.append(tab + "public TurboList " + list.id + ";\n");
 			}
 			buffer.append("\n");
@@ -151,7 +153,7 @@ public abstract class FVTMFormatBase extends ExImPorter {
 		String name = id; StringBuffer shape = new StringBuffer();
 		if(list instanceof TurboList){
 			TurboList turbo = (TurboList)list; name = turbo.id;
-			if((onlyvisible && !turbo.visible) || list.isEmpty()) return;
+			if((onlyvisible && !turbo.visible) || (onlyselected && !turbo.selected) || list.isEmpty()) return;
 		}
 		boolean contains = groups.contains(name); if(!contains) groups.add(name);
 		if(contains){
