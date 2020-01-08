@@ -14,7 +14,7 @@ import net.fexcraft.app.fmt.wrappers.GroupCompound;
  */
 public class FVTMExporter extends FVTMFormatBase {
 	
-	private String modelclass, modelkind, packid, modelname, model_id;
+	private String modelclass, modelkind, packid, model_id;
 	private static final String VERSION = "1.4";
 	
 	public FVTMExporter(){
