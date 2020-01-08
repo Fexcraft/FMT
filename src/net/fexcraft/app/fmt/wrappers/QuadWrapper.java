@@ -53,12 +53,12 @@ public class QuadWrapper extends BoxWrapper {
 	@Override
 	protected float[][][] newTexturePosition(){
 		float tx = 0 /*textureX*/, ty = 0 /*textureY*/, w = size.xCoord, h = size.yCoord;
-		float[][][] vecs = new float[6][][];
-		vecs[4] = new float[][]{
+		float[][][] vecs = new float[2][][];
+		vecs[0] = new float[][]{
 			new float[]{ tx, ty },
 			new float[]{ tx + w, ty + h }
 		};
-		vecs[5] = new float[][]{
+		vecs[1] = new float[][]{
 			new float[]{ tx + w, ty },
 			new float[]{ tx + w + w, ty + h }
 		};
