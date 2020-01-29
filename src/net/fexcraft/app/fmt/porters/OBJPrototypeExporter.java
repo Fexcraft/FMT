@@ -63,6 +63,7 @@ public class OBJPrototypeExporter extends ExImPorter {
 		buffer.append("# FlipAxes: true\n\n"); Axis3D axis, axis1 = null;
 		if(bool) (axis1 = new Axis3D()).setAngles(180, 180, 0);
 		//
+		float texsx = 1f / compound.textureSizeX, texsy = 1f/ compound.textureSizeY;
 		for(TurboList list : compound.getGroups()){
 			buffer.append("# Group Name\n"); axis = new Axis3D();
 			buffer.append("g " + list.id + "\nusemtl fmt_material\n");
@@ -89,7 +90,7 @@ public class OBJPrototypeExporter extends ExImPorter {
 						}
 					}
 					for(TexturedVertex vert : poly.getVertices()){
-						buffer.append("vt " + vert.textureX + " " + vert.textureY + "\n");
+						buffer.append("vt " + (vert.textureX * texsx) + " " + (vert.textureY * texsy) + "\n");
 					}
 					buffer.append("f"); for(int i = 0; i < poly.getVertices().length; i++){
 						buffer.append(" " + (faceid + i) + "/" + (faceid + i));
