@@ -257,13 +257,14 @@ public class SaveLoad {
 						JsonObject jsn = new JsonObject();
 						jsn.addProperty("id", ani.id);
 						JsonArray settings = new JsonArray();
-						for(Setting setting : ani.settings){
+						for(Setting setting : ani.settings.values()){
 							JsonObject sett = new JsonObject();
 							sett.addProperty("id", setting.getId());
 							sett.addProperty("type", setting.getType().name().toLowerCase());
 							sett.add("value", setting.save());
 							settings.add(sett);
 						}
+						jsn.addProperty("active", ani.active);
 						jsn.add("settings", settings);
 						animations.add(jsn);
 					}
@@ -373,17 +374,18 @@ public class SaveLoad {
 					for(JsonElement elm : arr){
 						JsonObject animjsn = elm.getAsJsonObject();
 						Animation anim = Animator.get(animjsn.get("id").getAsString());
-						if(anim == null) continue; anim = anim.copy();
+						if(anim == null) continue; anim = anim.copy(list);
 						JsonArray settin = animjsn.get("settings").getAsJsonArray();
 						for(JsonElement elm0 : settin){
 							JsonObject sett = elm0.getAsJsonObject();
 							Setting setting = new Setting(sett.get("type").getAsString(), sett.get("id").getAsString(), sett.get("value"));
-							for(Setting satt : anim.settings){
+							for(Setting satt : anim.settings.values()){
 								if(satt.getId().equals(setting.getId()) && satt.getType() == setting.getType()){
 									satt.setValue(setting.getValue());
 								}
 							}
 						}
+						anim.active = JsonUtil.getIfExists(animjsn, "active", true);
 						list.animations.add(anim);
 					}
 				}

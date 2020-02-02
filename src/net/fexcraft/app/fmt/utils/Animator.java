@@ -1,10 +1,13 @@
 package net.fexcraft.app.fmt.utils;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+import java.util.TreeMap;
 
+import net.fexcraft.app.fmt.ui.tree.FVTMTree;
+import net.fexcraft.app.fmt.ui.tree.RightTree.AnimationButton;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.utils.Settings.Type;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
@@ -14,43 +17,49 @@ public class Animator {
 	
 	public static final HashSet<Animation> nani = new HashSet<>();
 	static {
-		nani.add(new Rotator("rotator", new Setting(Type.FLOAT, "x", 0f), new Setting(Type.FLOAT, "y", 0f), new Setting(Type.FLOAT, "z", 0f),
+		nani.add(new Rotator("rotator", null, Arrays.asList(
+			new Setting(Type.FLOAT, "x", 0f), new Setting(Type.FLOAT, "y", 0f), new Setting(Type.FLOAT, "z", 0f),
 			new Setting(Type.FLOAT, "x_min", -360f), new Setting(Type.FLOAT, "y_min", -360f), new Setting(Type.FLOAT, "z_min", -360f),
 			new Setting(Type.FLOAT, "x_max", 360f), new Setting(Type.FLOAT, "y_max", 360f), new Setting(Type.FLOAT, "z_max", 360f),
-			new Setting(Type.BOOLEAN, "loop", true), new Setting(Type.BOOLEAN, "opposite_on_end", false)));
-		nani.add(new Translator("translator", new Setting(Type.FLOAT, "x", 0f), new Setting(Type.FLOAT, "y", 0f), new Setting(Type.FLOAT, "z", 0f),
+			new Setting(Type.BOOLEAN, "loop", true), new Setting(Type.BOOLEAN, "opposite_on_end", false),
+			new Setting(Type.STRING, "fvtm:attr", "")
+		)));
+		nani.add(new Translator("translator", null, Arrays.asList(
+			new Setting(Type.FLOAT, "x", 0f), new Setting(Type.FLOAT, "y", 0f), new Setting(Type.FLOAT, "z", 0f),
 			new Setting(Type.FLOAT, "x_min",-1f), new Setting(Type.FLOAT, "y_min", -1f), new Setting(Type.FLOAT, "z_min", -1f),
 			new Setting(Type.FLOAT, "x_max", 1f), new Setting(Type.FLOAT, "y_max", 1f), new Setting(Type.FLOAT, "z_max", 1f),
-			new Setting(Type.BOOLEAN, "loop", true), new Setting(Type.BOOLEAN, "opposite_on_end", false)));
+			new Setting(Type.BOOLEAN, "loop", true), new Setting(Type.BOOLEAN, "opposite_on_end", false),
+			new Setting(Type.STRING, "fvtm:attr", "")
+		)));
 		//nani.add(new Transparency("glass", new Setting(Type.RGB, "color", RGB.BLUE)));
 	}
 	
 	public static abstract class Animation {
-		
+
+		public boolean active = true;
 		public final String id;
-		public final List<Setting> settings;
+		public final TreeMap<String, Setting> settings;
+		public final AnimationButton button;
+		public final TurboList group;
 		
-		public Animation(String id, Setting... settings){
-			this.id = id; this.settings = Arrays.asList(settings);
+		public Animation(String id, TurboList group, Collection<Setting> settings){
+			this.id = id; this.settings = new TreeMap<>(); this.group = group;
+			for(Setting setting : settings) this.settings.put(setting.getId(), setting.copy());
+			button = new AnimationButton(FVTMTree.TREE, this);
 		}
 		
 		public abstract void pre(TurboList list);
 		public abstract void post(TurboList list);
-		protected abstract Animation COPY(String id, Setting[] settings);
+		protected abstract Animation COPY(String id, TurboList group, Collection<Setting> settings);
 		public void onSettingsUpdate(){}
+		public abstract String getButtonString();
 		
-		public Animation copy(){
-			Setting[] settings = new Setting[this.settings.size()];
-			for(int i = 0; i < settings.length; i++) settings[i] = this.settings.get(i).copy();
-			return this.COPY(id, settings);
+		public Animation copy(TurboList group){
+			return this.COPY(id, group, settings.values());
 		}
 		
-		public Setting get(String id, Setting[] list){
-			for(Setting setting : list) if(setting.getId().equals(id)) return setting; return null;
-		}
-		
-		public Setting get(String id, Iterable<Setting> list){
-			for(Setting setting : list) if(setting.getId().equals(id)) return setting; return null;
+		public Setting get(String id){
+			return settings.get(id);
 		}
 		
 	}
@@ -68,11 +77,11 @@ public class Animator {
 		private Setting x, y, z, x_max, y_max, z_max, x_min, y_min, z_min, loop, ooe;
 		private int xdir = 1, ydir = 1, zdir = 1; private float xpass, ypass, zpass;
 
-		public Rotator(String id, Setting... settings){
-			super(id, settings); x = get("x", settings); y = get("y", settings); z = get("z", settings);
-			x_min = get("x_min", settings); y_min = get("y_min", settings); z_min = get("z_min", settings);
-			x_max = get("x_max", settings); y_max = get("y_max", settings); z_max = get("z_max", settings);
-			loop = get("loop", settings); ooe = get("opposite_on_end", settings);
+		public Rotator(String id, TurboList group, Collection<Setting> settings){
+			super(id, group, settings); x = get("x"); y = get("y"); z = get("z");
+			x_min = get("x_min"); y_min = get("y_min"); z_min = get("z_min");
+			x_max = get("x_max"); y_max = get("y_max"); z_max = get("z_max");
+			loop = get("loop"); ooe = get("opposite_on_end");
 		}
 
 		@Override
@@ -115,8 +124,13 @@ public class Animator {
 		}
 
 		@Override
-		protected Animation COPY(String id, Setting[] settings){
-			return new Rotator(id, settings);
+		protected Animation COPY(String id, TurboList group, Collection<Setting> settings){
+			return new Rotator(id, group, settings);
+		}
+
+		@Override
+		public String getButtonString(){
+			return settings.get("fvtm:attr").getStringValue().length() == 0 ? "rotator" : "ROT: " + settings.get("fvtm:attr");
 		}
 		
 	}
@@ -126,11 +140,11 @@ public class Animator {
 		private Setting x, y, z, x_max, y_max, z_max, x_min, y_min, z_min, loop, ooe;
 		private int xdir = 1, ydir = 1, zdir = 1; private float xpass, ypass, zpass;
 
-		public Translator(String id, Setting... settings){
-			super(id, settings); x = get("x", settings); y = get("y", settings); z = get("z", settings);
-			x_min = get("x_min", settings); y_min = get("y_min", settings); z_min = get("z_min", settings);
-			x_max = get("x_max", settings); y_max = get("y_max", settings); z_max = get("z_max", settings);
-			loop = get("loop", settings); ooe = get("opposite_on_end", settings);
+		public Translator(String id, TurboList group, Collection<Setting> settings){
+			super(id, group, settings); x = get("x"); y = get("y"); z = get("z");
+			x_min = get("x_min"); y_min = get("y_min"); z_min = get("z_min");
+			x_max = get("x_max"); y_max = get("y_max"); z_max = get("z_max");
+			loop = get("loop"); ooe = get("opposite_on_end");
 		}
 
 		@Override
@@ -173,8 +187,13 @@ public class Animator {
 		}
 
 		@Override
-		protected Animation COPY(String id, Setting[] settings){
-			return new Translator(id, settings);
+		protected Animation COPY(String id, TurboList group, Collection<Setting> settings){
+			return new Translator(id, group, settings);
+		}
+
+		@Override
+		public String getButtonString(){
+			return settings.get("fvtm:attr").getStringValue().length() == 0 ? "translator" : "TRS: " + settings.get("fvtm:attr");
 		}
 		
 	}

@@ -95,7 +95,7 @@ public class Settings {
 	}
 
 	public static boolean toggleLighting(){
-		Print.console("Toggling lighting: " + !(boolean)lighting.getValue());
+		Print.console("Toggling lighting: " + !lighting.getBooleanValue());
 		return lighting.toggle();
 	}
 
@@ -122,6 +122,7 @@ public class Settings {
 				}
 			}
 		}
+		Print.console("Toggling animations: " + animate.getBooleanValue());
 		return bool;
 	}
 	
