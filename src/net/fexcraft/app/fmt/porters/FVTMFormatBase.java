@@ -13,15 +13,7 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.utils.Settings.Type;
-import net.fexcraft.app.fmt.wrappers.BoxWrapper;
-import net.fexcraft.app.fmt.wrappers.CylinderWrapper;
-import net.fexcraft.app.fmt.wrappers.GroupCompound;
-import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
-import net.fexcraft.app.fmt.wrappers.QuadWrapper;
-import net.fexcraft.app.fmt.wrappers.ShapeQuadWrapper;
-import net.fexcraft.app.fmt.wrappers.ShapeboxWrapper;
-import net.fexcraft.app.fmt.wrappers.TexrectWrapperB;
-import net.fexcraft.app.fmt.wrappers.TurboList;
+import net.fexcraft.app.fmt.wrappers.*;
 
 /**
  * 
@@ -227,27 +219,26 @@ public abstract class FVTMFormatBase extends ExImPorter {
 					CylinderWrapper cyl = (CylinderWrapper)wrapper;
 					String topoff = cyl.topoff.xCoord != 0f || cyl.topoff.yCoord != 0f || cyl.topoff.zCoord != 0 ?
 						String.format("new net.fexcraft.lib.common.math.Vec3f(%s, %s, %s)", cyl.topoff.xCoord, cyl.topoff.yCoord, cyl.topoff.zCoord) : "null";
-					if(cyl.radius2 != 0f){
-						if(cyl.radial){
-							String str = ".setSidesVisible(" + cyl.bools[0] + ", " + cyl.bools[1] + ", " + cyl.bools[2] + ", " + cyl.bools[3] + ")";
-							shape.append(format(".newCylinderBuilder()\n" + tab3 + ".setPosition(%s, %s, %s).setRadius(%s, %s).setLength(%s).setSegments(%s, %s)" + 
-								".setScale(%s, %s).setDirection(%s)\n" + tab3 + ".setRadialTexture(%s, %s)" + str + ".setTopOffset(%s).build()", topoff, 
+					if(cyl.radial || cyl.usesTopRotation()){
+						String toprot = String.format(".setTopRotation(new net.fexcraft.lib.common.math.Vec3f(%s, %s, %s))", cyl.toprot.xCoord, cyl.toprot.yCoord, cyl.toprot.zCoord);
+						String str = ".setSidesVisible(" + cyl.bools[0] + ", " + cyl.bools[1] + ", " + cyl.bools[2] + ", " + cyl.bools[3] + ")";
+						shape.append(format(".newCylinderBuilder()\n" + tab3 + ".setPosition(%s, %s, %s).setRadius(%s, %s).setLength(%s).setSegments(%s, %s)" + 
+							".setScale(%s, %s).setDirection(%s)\n" + tab3 + ".setRadialTexture(%s, %s)" + str + ".setTopOffset(%s)" + toprot + ".build()", topoff, 
+							wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord,
+							cyl.radius, cyl.radius2, cyl.length, cyl.segments, cyl.seglimit,
+							cyl.base, cyl.top, cyl.direction, cyl.seg_width, cyl.seg_height));
+					}
+					else if(cyl.radius2 != 0f){
+						if(areAll(cyl.bools, false)){
+							shape.append(format(".addHollowCylinder(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", topoff, 
 								wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord,
-								cyl.radius, cyl.radius2, cyl.length, cyl.segments, cyl.seglimit,
-								cyl.base, cyl.top, cyl.direction, cyl.seg_width, cyl.seg_height));
+								cyl.radius, cyl.radius2, cyl.length, cyl.segments, cyl.seglimit, cyl.base, cyl.top, cyl.direction));
 						}
 						else{
-							if(areAll(cyl.bools, false) && cyl.topangle == 0f){
-								shape.append(format(".addHollowCylinder(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", topoff, 
-									wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord,
-									cyl.radius, cyl.radius2, cyl.length, cyl.segments, cyl.seglimit, cyl.base, cyl.top, cyl.direction));
-							}
-							else{
-								String str = format(".addHollowCylinder(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,\n" + tab3 + "%s", topoff, 
-									wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord,
-									cyl.radius, cyl.radius2, cyl.length, cyl.segments, cyl.seglimit, cyl.base, cyl.top, cyl.direction);
-								shape.append(str + format(", %s", null, cyl.topangle) + format(", %s)", cyl.bools));
-							}
+							String str = format(".addHollowCylinder(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,\n" + tab3 + "%s", topoff, 
+								wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord,
+								cyl.radius, cyl.radius2, cyl.length, cyl.segments, cyl.seglimit, cyl.base, cyl.top, cyl.direction);
+							shape.append(str + format(", %s)", cyl.bools));
 						}
 					}
 					else{

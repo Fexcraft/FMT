@@ -407,6 +407,10 @@ public class GroupCompound {
 				Editor.getGlobalField("cyl6x").applyChange(poly.getFloat("cyl6", true, false, false));
 				Editor.getGlobalField("cyl6y").applyChange(poly.getFloat("cyl6", false, true, false));
 				Editor.getGlobalField("cyl6z").applyChange(poly.getFloat("cyl6", false, false, true));
+				//
+				Editor.getGlobalField("cyl7x").applyChange(poly.getFloat("cyl7", true, false, false));
+				Editor.getGlobalField("cyl7y").applyChange(poly.getFloat("cyl7", false, true, false));
+				Editor.getGlobalField("cyl7z").applyChange(poly.getFloat("cyl7", false, false, true));
 			}
 			//
 			if(poly == null || !poly.getType().isTexRectB()){

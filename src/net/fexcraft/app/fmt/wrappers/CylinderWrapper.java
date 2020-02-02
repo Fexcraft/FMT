@@ -9,9 +9,9 @@ import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public class CylinderWrapper extends PolygonWrapper {
 	
-	public float radius = 2, radius2, length = 2, base = 1, top = 1, topangle;
+	public float radius = 2, radius2, length = 2, base = 1, top = 1;
 	public int segments = 8, seglimit, direction = ModelRendererTurbo.MR_TOP;
-	public Vec3f topoff = new Vec3f(0, 0, 0);
+	public Vec3f topoff = new Vec3f(0, 0, 0), toprot = new Vec3f(0, 0, 0);
 	public boolean[] bools = new boolean[4];
 	//
 	public boolean radial;
@@ -35,21 +35,23 @@ public class CylinderWrapper extends PolygonWrapper {
 	
 	protected ModelRendererTurbo newMRT(){
 		ModelRendererTurbo turbo = new ModelRendererTurbo(null, textureX, textureY, compound.tx(getTurboList()), compound.ty(getTurboList()));
-		if(radius2 != 0){
-			if(radial){
+		/*if(radius2 != 0){
+			if(radial){*/
 				turbo.newCylinderBuilder().setPosition(off.xCoord, off.yCoord, off.zCoord).setRadius(radius, radius2).setLength(length).setSegments(segments, seglimit)
-				.setScale(base, top).setDirection(direction).setTopOffset(topoff).setSidesVisible(bools).setRadialTexture(seg_width, seg_height).build();
-			}
+				.setScale(base, top).setDirection(direction).setTopOffset(topoff).setSidesVisible(bools).setRadialTexture(seg_width, seg_height)
+				.setTopRotation(toprot).build();
+			/*}
 			else{
 				turbo.addHollowCylinder(off.xCoord, off.yCoord, off.zCoord, radius, radius2, length, segments, seglimit, base, top, direction, getTopOff(), topangle, bools);
 			}
 		}
 		else{
 			turbo.addCylinder(off.xCoord, off.yCoord, off.zCoord, radius, length, segments, base, top, direction, getTopOff());
-		}
+		}*/
 		return turbo.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord).setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
 	}
 
+	@SuppressWarnings("unused")
 	private Vec3f getTopOff(){
 		return topoff.xCoord == 0f && topoff.yCoord == 0f && topoff.zCoord == 0f ? null : topoff;
 	}
@@ -64,11 +66,12 @@ public class CylinderWrapper extends PolygonWrapper {
 		switch(id){
 			case "cyl0": return x ? radius : y ? length : z ? radius2 : 0;
 			case "cyl1": return x ? segments : y ? direction : z ? seglimit : 0;
-			case "cyl2": return x ? base : y ? top : z ? topangle : 0;
+			case "cyl2": return x ? base : y ? top : 0;
 			case "cyl3": return x ? topoff.xCoord : y ? topoff.yCoord : z ? topoff.zCoord : 0;
 			case "cyl4": return x ? (bools[0] ? 1 : 0) : y ? (bools[1] ? 1 : 0) : 0;
 			case "cyl5": return x ? (bools[2] ? 1 : 0) : y ? (bools[3] ? 1 : 0) : 0;
 			case "cyl6": return x ? (radial ? 1 : 0) : y ? seg_width : z ? seg_height : 0;
+			case "cyl7": return x ? toprot.xCoord : y ? toprot.yCoord : z ? toprot.zCoord : 0;
 			default: return super.getFloat(id, x, y, z);
 		}
 	}
@@ -102,7 +105,7 @@ public class CylinderWrapper extends PolygonWrapper {
 			case "cyl2":{
 				if(x){ base = value; return true; }
 				if(y){ top = value; return true; }
-				if(z){ topangle = value; if(topangle < -360) topangle = -360; if(topangle > 360) topangle = 360; return false; }
+				if(z){ return false; }//topangle = value; if(topangle < -360) topangle = -360; if(topangle > 360) topangle = 360; return false; }
 			}
 			case "cyl3":{
 				if(x){ topoff.xCoord = value; return true; }
@@ -123,6 +126,11 @@ public class CylinderWrapper extends PolygonWrapper {
 				if(x){ radial = value == 1; return true; }
 				if(y){ seg_width = (int)value; return true; }
 				if(z){ seg_height = (int)value; return true; }
+			}
+			case "cyl7":{
+				if(x){ toprot.xCoord = value; return true; }
+				if(y){ toprot.yCoord = value; return true; }
+				if(z){ toprot.zCoord = value; return true; }
 			}
 			default: return false;
 		}
@@ -145,13 +153,16 @@ public class CylinderWrapper extends PolygonWrapper {
 		if(topoff.xCoord != 0f) obj.addProperty("top_offset_x", topoff.xCoord);
 		if(topoff.yCoord != 0f) obj.addProperty("top_offset_y", topoff.yCoord);
 		if(topoff.zCoord != 0f) obj.addProperty("top_offset_z", topoff.zCoord);
+		if(toprot.xCoord != 0f) obj.addProperty("top_rotation_x", toprot.xCoord);
+		if(toprot.yCoord != 0f) obj.addProperty("top_rotation_y", toprot.yCoord);
+		if(toprot.zCoord != 0f) obj.addProperty("top_rotation_z", toprot.zCoord);
 		boolean bool = false; for(boolean bl : bools) if(bl) bool = true;
 		if(bool){
 			JsonArray array = new JsonArray();
 			for(boolean bl : bools) array.add(bl);
 			obj.add("faces_off", array);
 		}
-		if(topangle != 0f) obj.addProperty("top_angle", topangle);
+		//if(topangle != 0f) obj.addProperty("top_angle", topangle);
 		if(radial){
 			obj.addProperty("radialtex", radial);
 			obj.addProperty("seg_width", seg_width);
@@ -217,6 +228,10 @@ public class CylinderWrapper extends PolygonWrapper {
 	@Override
 	public PolygonWrapper convertTo(ShapeType type){
 		return type == ShapeType.CYLINDER ? this.clone() : null;
+	}
+
+	public boolean usesTopRotation(){
+		return toprot.xCoord != 0f || toprot.yCoord != 0f || toprot.zCoord != 0f;
 	}
 	
 }

@@ -207,13 +207,19 @@ public class GeneralEditor extends Editor {
 				.setText(translate("editor.general.cylinder.scale", "Base Scale / Top Scale / Top Angle"), false));
 			cylinder.getElements().add(new TextField(cylinder, "cyl2x", "editor:field", 96, 4, passed += 24).setAsNumberfield(0, Integer.MAX_VALUE, true, true));
 			cylinder.getElements().add(new TextField(cylinder, "cyl2y", "editor:field", 96, 106, passed).setAsNumberfield(0, Integer.MAX_VALUE, true, true));
-			cylinder.getElements().add(new TextField(cylinder, "cyl2z", "editor:field", 96, 208, passed).setAsNumberfield(-360, 360, true, true));
+			cylinder.getElements().add(new TextField(cylinder, "cyl2z", "editor:field", 96, 208, passed).setAsNumberfield(-360, 360, true, true).setEnabled(false));
 			//
 			cylinder.getElements().add(new Button(cylinder, "text3", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true)
 				.setText(translate("editor.general.cylinder.top_offset", "Top Offset (x/y/z)"), false));
 			cylinder.getElements().add(new TextField(cylinder, "cyl3x", "editor:field", 96, 4, passed += 24).setAsNumberfield(Integer.MIN_VALUE, Integer.MAX_VALUE, true, true));
 			cylinder.getElements().add(new TextField(cylinder, "cyl3y", "editor:field", 96, 106, passed).setAsNumberfield(Integer.MIN_VALUE, Integer.MAX_VALUE, true, true));
 			cylinder.getElements().add(new TextField(cylinder, "cyl3z", "editor:field", 96, 208, passed).setAsNumberfield(Integer.MIN_VALUE, Integer.MAX_VALUE, true, true));
+			//
+			cylinder.getElements().add(new Button(cylinder, "text3", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true)
+				.setText(translate("editor.general.cylinder.top_rotation", "Top Rotation (x/y/z)"), false));
+			cylinder.getElements().add(new TextField(cylinder, "cyl7x", "editor:field", 96, 4, passed += 24).setAsNumberfield(-360, 360, true, true));
+			cylinder.getElements().add(new TextField(cylinder, "cyl7y", "editor:field", 96, 106, passed).setAsNumberfield(-360, 360, true, true));
+			cylinder.getElements().add(new TextField(cylinder, "cyl7z", "editor:field", 96, 208, passed).setAsNumberfield(-360, 360, true, true));
 			//
 			cylinder.getElements().add(new Button(cylinder, "text4", "editor:title", 290, 20, 0, passed += 30, BLACK).setBackgroundless(true)
 				.setText(translate("editor.general.cylinder.base_top_toggle", "Base/Top (on/off)"), false));

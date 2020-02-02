@@ -4,16 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import net.fexcraft.app.fmt.wrappers.BoxWrapper;
-import net.fexcraft.app.fmt.wrappers.CylinderWrapper;
-import net.fexcraft.app.fmt.wrappers.GroupCompound;
-import net.fexcraft.app.fmt.wrappers.MarkerWrapper;
-import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
-import net.fexcraft.app.fmt.wrappers.ShapeQuadWrapper;
-import net.fexcraft.app.fmt.wrappers.ShapeboxWrapper;
-import net.fexcraft.app.fmt.wrappers.TexrectWrapperA;
-import net.fexcraft.app.fmt.wrappers.TexrectWrapperB;
-import net.fexcraft.app.fmt.wrappers.VoxelWrapper;
+import net.fexcraft.app.fmt.wrappers.*;
 import net.fexcraft.lib.common.json.JsonUtil;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
@@ -63,7 +54,9 @@ public class JsonToTMT {
 	public static final String[] topoffx = new String[]{"top_offset_x", "topoff_x", "topoffx"};
 	public static final String[] topoffy = new String[]{"top_offset_y", "topoff_y", "topoffy"};
 	public static final String[] topoffz = new String[]{"top_offset_z", "topoff_z", "topoffz"};
-	public static final String[] topangle = new String[]{"top_angle", "topangle", "ta"};
+	public static final String[] toprotx = new String[]{"top_rotation_x", "toprot_x", "toprotx"};
+	public static final String[] toproty = new String[]{"top_rotation_y", "toprot_y", "toproty"};
+	public static final String[] toprotz = new String[]{"top_rotation_z", "toprot_z", "toprotz"};
 	public static final String[] segwidth = new String[]{"segment_width", "seg_width", "sw"};
 	public static final String[] segheight = new String[]{"segment_height", "seg_height", "sh"};
 	
@@ -149,13 +142,15 @@ public class JsonToTMT {
 				cylinder.topoff.xCoord = get(topoffx, obj, 0f);
 				cylinder.topoff.yCoord = get(topoffy, obj, 0f);
 				cylinder.topoff.zCoord = get(topoffz, obj, 0f);
+				cylinder.toprot.xCoord = get(toprotx, obj, 0f);
+				cylinder.toprot.yCoord = get(toproty, obj, 0f);
+				cylinder.toprot.zCoord = get(toprotz, obj, 0f);
 				if(obj.has("faces_off")){
 					JsonArray array = obj.get("faces_off").getAsJsonArray();
 					for(int i = 0; i < cylinder.bools.length; i++){
 						cylinder.bools[i] = i >= array.size() ? false : array.get(i).getAsBoolean();
 					}
 				}
-				cylinder.topangle = get(topangle, obj, 0f);
 				cylinder.radial = JsonUtil.getIfExists(obj, "radialtex", false);
 				cylinder.seg_width = get(segwidth, obj, 0);
 				cylinder.seg_height = get(segheight, obj, 0);
