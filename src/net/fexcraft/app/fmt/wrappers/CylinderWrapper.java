@@ -35,23 +35,20 @@ public class CylinderWrapper extends PolygonWrapper {
 	
 	protected ModelRendererTurbo newMRT(){
 		ModelRendererTurbo turbo = new ModelRendererTurbo(null, textureX, textureY, compound.tx(getTurboList()), compound.ty(getTurboList()));
-		/*if(radius2 != 0){
-			if(radial){*/
-				turbo.newCylinderBuilder().setPosition(off.xCoord, off.yCoord, off.zCoord).setRadius(radius, radius2).setLength(length).setSegments(segments, seglimit)
-				.setScale(base, top).setDirection(direction).setTopOffset(topoff).setSidesVisible(bools).setRadialTexture(seg_width, seg_height)
-				.setTopRotation(toprot).build();
-			/*}
-			else{
-				turbo.addHollowCylinder(off.xCoord, off.yCoord, off.zCoord, radius, radius2, length, segments, seglimit, base, top, direction, getTopOff(), topangle, bools);
-			}
+		if(radial || usesTopRotation()){
+			turbo.newCylinderBuilder().setPosition(off.xCoord, off.yCoord, off.zCoord).setRadius(radius, radius2).setLength(length).setSegments(segments, seglimit)
+			.setScale(base, top).setDirection(direction).setTopOffset(topoff).setSidesVisible(bools).setRadialTexture(seg_width, seg_height)
+			.setTopRotation(toprot).build();
+		}
+		else if(radius2 != 0){
+			turbo.addHollowCylinder(off.xCoord, off.yCoord, off.zCoord, radius, radius2, length, segments, seglimit, base, top, direction, getTopOff(), bools);
 		}
 		else{
 			turbo.addCylinder(off.xCoord, off.yCoord, off.zCoord, radius, length, segments, base, top, direction, getTopOff());
-		}*/
+		}
 		return turbo.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord).setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
 	}
 
-	@SuppressWarnings("unused")
 	private Vec3f getTopOff(){
 		return topoff.xCoord == 0f && topoff.yCoord == 0f && topoff.zCoord == 0f ? null : topoff;
 	}
