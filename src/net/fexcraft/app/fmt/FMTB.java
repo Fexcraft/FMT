@@ -220,7 +220,7 @@ public class FMTB {
                 TextureManager.bindTexture("demo"); compound0.render();
             }
             if(Settings.cullface()) GL11.glEnable(GL11.GL_CULL_FACE);
-            MODEL.render();
+            MODEL.render(); //sphere0.render(); sphere1.render();
             if(Settings.cullface()) GL11.glDisable(GL11.GL_CULL_FACE);
             if(HelperCollector.LOADED.size() > 0){
             	for(GroupCompound model : HelperCollector.LOADED) model.render();
@@ -235,6 +235,8 @@ public class FMTB {
 	
 	private static final ModelRendererTurbo compound0 = new ModelRendererTurbo(null, 0, 0);
 	static { compound0.textureHeight = compound0.textureWidth = 16; compound0.addBox(-8, 0, -8, 16, 16, 16); }
+	//private static final ModelRendererTurbo sphere0 = new ModelRendererTurbo(null, 256, 256).addSphere(0, 0, 0, 32, 128, 128, 16, 16).setTextured(false);
+	//private static final ModelRendererTurbo sphere1 = new ModelRendererTurbo(null, 256, 256).addSphere(0, 0, 0, 32.01f, 128, 128, 16, 16).setLines(true);
 
 	private void initOpenGL(){
         GL11.glEnable(GL11.GL_LIGHTING);
