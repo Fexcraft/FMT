@@ -1,9 +1,8 @@
 package net.fexcraft.app.fmt.utils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.TreeMap;
 
 import net.fexcraft.app.fmt.ui.tree.FVTMTree;
@@ -15,8 +14,9 @@ import net.fexcraft.app.fmt.wrappers.TurboList;
 
 public class Animator {
 	
-	public static final HashSet<Animation> nani = new HashSet<>();
+	public static final ArrayList<Animation> nani = new ArrayList<>();
 	static {
+		nani.add(new Title("# Multi Purpose", null, null));
 		nani.add(new Rotator("rotator", null, Arrays.asList(
 			new Setting(Type.FLOAT, "x", 0f), new Setting(Type.FLOAT, "y", 0f), new Setting(Type.FLOAT, "z", 0f),
 			new Setting(Type.FLOAT, "x_min", -360f), new Setting(Type.FLOAT, "y_min", -360f), new Setting(Type.FLOAT, "z_min", -360f),
@@ -31,6 +31,32 @@ public class Animator {
 			new Setting(Type.BOOLEAN, "loop", true), new Setting(Type.BOOLEAN, "opposite_on_end", false),
 			new Setting(Type.STRING, "fvtm:attr", "")
 		)));
+		nani.add(new Title("# Generic FVTM", null, null));
+		nani.add(new Generic("fvtm:rgb_primary", "DefaultPrograms.RGB_PRIMARY", null, null));
+		nani.add(new Generic("fvtm:rgb_primary", "DefaultPrograms.RGB_PRIMARY", null, null));
+		nani.add(new Generic("fvtm:rgb_secondary", "DefaultPrograms.RGB_SECONDARY", null, null));
+		nani.add(new Generic("fvtm:glow", "DefaultPrograms.ALWAYS_GLOW", null, null));
+		nani.add(new Generic("fvtm:lights", "DefaultPrograms.LIGHTS", null, null));
+		nani.add(new Generic("fvtm:front_lights", "DefaultPrograms.FRONT_LIGHTS", null, null));
+		nani.add(new Generic("fvtm:back_lights", "DefaultPrograms.BACK_LIGHTS", null, null));
+		nani.add(new Generic("fvtm:fog_lights", "DefaultPrograms.FOG_LIGHTS", null, null));
+		nani.add(new Generic("fvtm:reverse_lights", "DefaultPrograms.REVERSE_LIGHTS", null, null));
+		nani.add(new Generic("fvtm:turn_signal_left", "DefaultPrograms.TURN_SIGNAL_LEFT", null, null));
+		nani.add(new Generic("fvtm:turn_signal_right", "DefaultPrograms.TURN_SIGNAL_RIGHT", null, null));
+		nani.add(new Generic("fvtm:warning_lights", "DefaultPrograms.WARNING_LIGHTS", null, null));
+		nani.add(new Generic("fvtm:back_lights_signal_left", "DefaultPrograms.BACK_LIGHTS_SIGNAL_LEFT", null, null));
+		nani.add(new Generic("fvtm:back_lights_signal_right", "DefaultPrograms.BACK_LIGHTS_SIGNAL_RIGHT", null, null));
+		nani.add(new Generic("fvtm:transparent", "DefaultPrograms.TRANSPARENT", null, null));
+		nani.add(new Generic("fvtm:wheel_auto_all", "DefaultPrograms.WHEEL_AUTO_ALL", null, null));
+		nani.add(new Generic("fvtm:wheel_auto_steering", "DefaultPrograms.WHEEL_AUTO_ALL", null, null));
+		nani.add(new Generic("fvtm:no_cullface", "DefaultPrograms.NO_CULLFACE", null, null));
+		nani.add(new Window(null));
+		nani.add(new Title("# FVTM Trains", null, null));
+		nani.add(new Generic("fvtm:lights_front_forward", "DefaultPrograms.LIGHTS_FRONT_FORWARD", null, null));
+		nani.add(new Generic("fvtm:lights_front_backward", "DefaultPrograms.LIGHTS_FRONT_BACKWARD", null, null));
+		nani.add(new Generic("fvtm:lights_rear_forward", "DefaultPrograms.LIGHTS_REAR_FORWARD", null, null));
+		nani.add(new Generic("fvtm:lights_rear_backward", "DefaultPrograms.LIGHTS_REAR_BACKWARD", null, null));
+		nani.add(new Generic("fvtm:bogie_auto", "DefaultPrograms.BOGIE_AUTO", null, null));
 		//nani.add(new Transparency("glass", new Setting(Type.RGB, "color", RGB.BLUE)));
 	}
 	
@@ -53,6 +79,7 @@ public class Animator {
 		protected abstract Animation COPY(String id, TurboList group, Collection<Setting> settings);
 		public void onSettingsUpdate(){}
 		public abstract String getButtonString();
+		public abstract String getExportString(String modto);
 		
 		public Animation copy(TurboList group){
 			return this.COPY(id, group, settings.values());
@@ -64,7 +91,7 @@ public class Animator {
 		
 	}
 	
-	public static Set<Animation> get(){
+	public static ArrayList<Animation> get(){
 		return nani;
 	}
 	
@@ -132,6 +159,11 @@ public class Animator {
 		public String getButtonString(){
 			return settings.get("fvtm:attr").getStringValue().length() == 0 ? "rotator" : "ROT: " + settings.get("fvtm:attr");
 		}
+
+		@Override
+		public String getExportString(String modto){
+			return "//TODO";
+		}
 		
 	}
 	
@@ -194,6 +226,106 @@ public class Animator {
 		@Override
 		public String getButtonString(){
 			return settings.get("fvtm:attr").getStringValue().length() == 0 ? "translator" : "TRS: " + settings.get("fvtm:attr");
+		}
+
+		@Override
+		public String getExportString(String modto){
+			return "//TODO";
+		}
+		
+	}
+	
+	public static class Generic extends Animation {
+		
+		private String fvtmid;
+
+		public Generic(String id, String fvtmid, TurboList group, Collection<Setting> settings){
+			super(id, group, settings == null ? new ArrayList<Setting>() : settings); this.fvtmid = fvtmid;
+		}
+
+		@Override
+		public void pre(TurboList list){
+			//
+		}
+
+		@Override
+		public void post(TurboList list){
+			//
+		}
+
+		@Override
+		protected Animation COPY(String id, TurboList group, Collection<Setting> settings){
+			return new Generic(id, fvtmid, group, settings);
+		}
+
+		@Override
+		public String getButtonString(){
+			return id;
+		}
+
+		@Override
+		public String getExportString(String modto){
+			if(!modto.equals("fvtm")) return "null"; return fvtmid;
+		}
+		
+	}
+	
+	public static class Window extends Generic {
+
+		public Window(TurboList group){
+			super("fvtm:window", null, group, Arrays.asList(new Setting(Settings.Type.STRING, "color", "default")));
+		}
+
+		@Override
+		public String getButtonString(){
+			return id + " - " + get("color");
+		}
+
+		@Override
+		protected Animation COPY(String id, TurboList group, Collection<Setting> settings){
+			return new Window(group);
+		}
+
+		@Override
+		public String getExportString(String modto){
+			String color = get("color").getStringValue().replace("#", "");
+			if(color == null || color.equals("default") || color.equals("null")){
+				return "DefaultPrograms.WINDOW";
+			}//eventually validate if it's an integer?
+			else return "new DefaultPrograms.Window(0x" + color + ")";
+		}
+		
+	}
+	
+	public static class Title extends Animation {
+
+		public Title(String id, TurboList group, Collection<Setting> settings){
+			super(id, group, settings == null ? new ArrayList<Setting>() : settings);
+		}
+
+		@Override
+		public void pre(TurboList list){
+			//
+		}
+
+		@Override
+		public void post(TurboList list){
+			//
+		}
+
+		@Override
+		protected Animation COPY(String id, TurboList group, Collection<Setting> settings){
+			return new Title(id, group, settings);
+		}
+
+		@Override
+		public String getButtonString(){
+			return "invalid/title";
+		}
+
+		@Override
+		public String getExportString(String modto){
+			return "";
 		}
 		
 	}
