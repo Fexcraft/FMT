@@ -367,6 +367,7 @@ public class Settings {
 			return true;
 		}
 		
+		@Override
 		public String toString(){
 			switch(type){
 				case BOOLEAN: return value + "";

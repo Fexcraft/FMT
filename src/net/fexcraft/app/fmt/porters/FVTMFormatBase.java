@@ -11,6 +11,7 @@ import java.util.Map;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
+import net.fexcraft.app.fmt.utils.Animator.Animation;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.utils.Settings.Type;
 import net.fexcraft.app.fmt.wrappers.*;
@@ -273,7 +274,18 @@ public abstract class FVTMFormatBase extends ExImPorter {
 			if(extended) shape.append("\n" + tab2);
 			buffer.append(tab2 + name + ".add(" + shape.toString() + ");\n");
 		}
-		if(!contains) buffer.append(tab2 + "this.groups.add(" + name + ");\n");
+		if(!contains){
+			if(this instanceof FVTMExporter && list instanceof TurboList){
+				TurboList turbo = (TurboList)list;
+				for(Animation anim : turbo.animations){
+					String string = anim.getExportString("fvtm");
+					if(string != null && !string.equals("")){
+						buffer.append(tab2 + name + ".addProgram(" + string + ");\n");
+					}
+				}
+			}
+			buffer.append(tab2 + "this.groups.add(" + name + ");\n");
+		}
 		if(append) buffer.append(tab2 + "//\n");
 	}
 

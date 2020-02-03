@@ -22,7 +22,7 @@ public class Animator {
 			new Setting(Type.FLOAT, "x_min", -360f), new Setting(Type.FLOAT, "y_min", -360f), new Setting(Type.FLOAT, "z_min", -360f),
 			new Setting(Type.FLOAT, "x_max", 360f), new Setting(Type.FLOAT, "y_max", 360f), new Setting(Type.FLOAT, "z_max", 360f),
 			new Setting(Type.BOOLEAN, "loop", true), new Setting(Type.BOOLEAN, "opposite_on_end", false),
-			new Setting(Type.STRING, "fvtm:attr", "")
+			new Setting(Type.STRING, "fvtm:attr", ""), new Setting(Type.BOOLEAN, "fvtm:boolean_type_attr", true)
 		)));
 		nani.add(new Translator("translator", null, Arrays.asList(
 			new Setting(Type.FLOAT, "x", 0f), new Setting(Type.FLOAT, "y", 0f), new Setting(Type.FLOAT, "z", 0f),
@@ -162,7 +162,29 @@ public class Animator {
 
 		@Override
 		public String getExportString(String modto){
-			return "//TODO";
+			if(!modto.equals("fvtm")) return "\"Invalid Mod.\"";
+			String string = "new DefaultPrograms.AttributeRotator(\"%s\", %s, %sf, %sf, %sf, %s, %sf)";
+			int axis = x.directFloat() != 0f ? 0 : y.directFloat() != 0f ? 1 : z.directFloat() != 0f ? 2 : 3;
+			float min = 0, max = 0, step = 0, defrot = 0;
+			switch(axis){
+				case 0:{
+					min = get("x_min").directFloat(); max = get("x_max").directFloat(); step = get("x").directFloat();
+					defrot = group.get(0).getTurboObject(0).rotationAngleX;
+					break;
+				}
+				case 1:{
+					min = get("y_min").directFloat(); max = get("y_max").directFloat(); step = get("y").directFloat();
+					defrot = group.get(0).getTurboObject(0).rotationAngleY;
+					break;
+				}
+				case 2:{
+					min = get("z_min").directFloat(); max = get("z_max").directFloat(); step = get("z").directFloat();
+					defrot = group.get(0).getTurboObject(0).rotationAngleZ;
+					break;
+				}
+				default: return "\"Could not find applicable axis.\"";
+			}
+			return String.format(string, get("fvtm:attr"), get("fvtm:boolean_type_attr"), min, max, step, axis, defrot);
 		}
 		
 	}
@@ -230,7 +252,7 @@ public class Animator {
 
 		@Override
 		public String getExportString(String modto){
-			return "//TODO";
+			return "\"//TODO\"";
 		}
 		
 	}
