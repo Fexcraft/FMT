@@ -371,6 +371,12 @@ public class Toolbar extends Element {
 								} catch(Exception e){ e.printStackTrace(); } return true;
 							}
 						}.setText(translate("toolbar.textures.edit", "Edit (External)"), false));
+						this.elements.add(new Button(this, "texture.map.toggle", null, 20, 26, 0, 0){
+							@Override
+							public boolean processButtonClick(int x, int y, boolean left){
+								UserInterface.TEXMAP.show(); return true;
+							}
+						}.setText(translate("toolbar.textures.texture_map", "Texture Map"), false));
 						this.elements.add(new Button(this, "remove", null, 20, 26, 0, 0){
 							@Override
 							public boolean processButtonClick(int x, int y, boolean left){

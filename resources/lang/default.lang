@@ -285,3 +285,4 @@ toolbar.modtools=Mod Tools
 fvtm_tree.remove=Remove this Animation?<nl>%s
 fvtm_tree.remove.confirm=Yes
 fvtm_tree.remove.cancel=No!
+toolbar.textures.texture_map=Texture Map

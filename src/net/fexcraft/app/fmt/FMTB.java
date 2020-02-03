@@ -59,7 +59,7 @@ public class FMTB {
 	
 	public static final String deftitle = "[FPS:%s] Fexcraft Modelling Toolbox - %s";
 	public static final String deftitle0 = "Fexcraft Modelling Toolbox - %s";
-	public static final String version = "1.3.6";
+	public static final String version = "1.4.0";
 	public static final String CLID = "587016218196574209";
 	//
 	private static String title = "Unnamed Model";
@@ -327,6 +327,7 @@ public class FMTB {
 		ui.getElements().add(new Crossbar());
 		ui.getElements().add(UserInterface.RIGHTMENU = AltMenu.MENU);
 		ui.getElements().add(UserInterface.DROPDOWN = DropDown.INST);
+		ui.getElements().add(UserInterface.TEXMAP = new TextureMap());
 		FMTB.MODEL.updateFields();
 	}
 
