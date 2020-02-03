@@ -270,5 +270,9 @@ public class GGR {
 	public static boolean iControlDown(){
 		return Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL);
 	}
+
+	public boolean isDragging(){
+		return dragging;
+	}
     
 }
