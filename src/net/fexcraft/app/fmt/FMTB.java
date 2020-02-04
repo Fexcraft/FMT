@@ -335,7 +335,7 @@ public class FMTB {
 		if(Dialog.anyVisible() || TextField.anySelected()){
 			UserInterface.DIALOGBOX.reset(); UserInterface.FILECHOOSER.reset();
 			UserInterface.CONTROLS.reset(); UserInterface.SETTINGSBOX.reset();
-			TextField.deselectAll();
+			UserInterface.TEXMAP.reset(); TextField.deselectAll();
 		} else if(esc && Editor.anyVisible()){ Editor.hideAll(); } else return;//open some kind of main menu / status / login screen.
 	}
 
