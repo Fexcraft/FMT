@@ -136,7 +136,7 @@ public class Settings {
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "lines", true));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "cube", true));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "demo", false));
-		DEFAULTS.add(new Setting(Type.BOOLEAN, "polygon_marker", false));
+		DEFAULTS.add(new Setting(Type.BOOLEAN, "polygon_marker", true));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "polygon_count", true));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "lighting", false));
 		DEFAULTS.add(new Setting(Type.FLOAT_ARRAY, "light0_position", new float[]{ 0, 1, 0, 0 }));
