@@ -80,7 +80,10 @@ public class FMTB {
 	    switch(LWJGLUtil.getPlatform()){
 	        case LWJGLUtil.PLATFORM_WINDOWS:{ lwjgl_natives = new File("./libs/native/windows"); break; }
 	        case LWJGLUtil.PLATFORM_LINUX:{ lwjgl_natives = new File("./libs/native/linux"); break; }
-	        case LWJGLUtil.PLATFORM_MACOSX:{ lwjgl_natives = new File("./libs/native/macosx"); break; }
+	        case LWJGLUtil.PLATFORM_MACOSX:{
+	        	System.setProperty("apple.awt.fullscreenhidecursor", "false");
+	        	lwjgl_natives = new File("./libs/native/macosx"); break;
+	        }
 	    }
 	    System.setProperty("org.lwjgl.librarypath", lwjgl_natives.getAbsolutePath());
 	    //
@@ -324,10 +327,10 @@ public class FMTB {
 		//render last
 		ui.getElements().add(UserInterface.TOOLBAR);
 		ui.getElements().add(UserInterface.BOTTOMBAR);
-		ui.getElements().add(new Crossbar());
+		ui.getElements().add(UserInterface.TEXMAP = new TextureMap());
 		ui.getElements().add(UserInterface.RIGHTMENU = AltMenu.MENU);
 		ui.getElements().add(UserInterface.DROPDOWN = DropDown.INST);
-		ui.getElements().add(UserInterface.TEXMAP = new TextureMap());
+		//ui.getElements().add(new Cursor());
 		FMTB.MODEL.updateFields();
 	}
 
