@@ -154,7 +154,6 @@ public class GGR {
     private int wheel, oldMouseX =- 1, oldMouseY = -1;
 
     public void acceptMouseInput(float delta){
-    	Mouse.setGrabbed(Mouse.isInsideWindow());
         if(clickedR && !Mouse.isButtonDown(1)){
             Mouse.setGrabbed(false);//fix mouse grab sticking
         }
