@@ -226,7 +226,7 @@ public class FMTB {
             MODEL.render(); //sphere0.render(); sphere1.render();
             if(Settings.cullface()) GL11.glDisable(GL11.GL_CULL_FACE);
             if(HelperCollector.LOADED.size() > 0){
-            	for(GroupCompound model : HelperCollector.LOADED) model.render();
+            	for(GroupCompound model : HelperCollector.LOADED){ RGB.glColorReset(); model.render(); }
             }
             if(Settings.demo()){
                 TextureManager.bindTexture("t1p"); ModelT1P.INSTANCE.render();

@@ -14,6 +14,7 @@ import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.Static;
+import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Time;
 
 /**
@@ -72,7 +73,7 @@ public class UserInterface {
 	        GL11.glLoadIdentity();
 		}
 		//
-		GL11.glLoadIdentity();
+		GL11.glLoadIdentity(); RGB.glColorReset();
 		GL11.glDepthFunc(GL11.GL_ALWAYS); GL11.glDisable(GL11.GL_ALPHA_TEST);
 		if(bool){
 			tmelm.render(width, height); logintxt.render(width, height);
