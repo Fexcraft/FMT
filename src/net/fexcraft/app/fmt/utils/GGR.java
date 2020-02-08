@@ -194,6 +194,7 @@ public class GGR {
         	}
         }
         if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE) && !ControlsAdjuster.CATCHING){
+        	if(Mouse.isGrabbed()){ Mouse.setGrabbed(false); return; }
             root.reset(true); Mouse.setGrabbed(false); TextureEditor.reset();
         }
     }
@@ -269,6 +270,10 @@ public class GGR {
 
 	public static boolean iControlDown(){
 		return Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL);
+	}
+
+	public boolean isDragging(){
+		return dragging && UserInterface.DRAGGED != null;
 	}
     
 }

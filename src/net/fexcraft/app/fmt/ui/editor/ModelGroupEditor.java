@@ -193,7 +193,8 @@ public class ModelGroupEditor extends Editor {
 				public ArrayList<Element> getDropDownButtons(DropDown inst){
 					ArrayList<Element> elements = new ArrayList<>();
 					for(Animation am : Animator.nani){
-						elements.add(new DropDown.Button(inst, "group_animator:" + am.id, "dropdown:button", 0, 26, 0, 0){
+						boolean enabled = !am.id.startsWith("#");
+						Element button = new DropDown.Button(inst, "group_animator:" + am.id, !enabled ? "dropdown:title_button" : "dropdown:button", 0, 26, 0, 0){
 							@Override
 							public boolean processButtonClick(int x, int y, boolean left){
 								/*if(am == null){
@@ -201,20 +202,21 @@ public class ModelGroupEditor extends Editor {
 									FMTB.showDialogbox(str, translate("dialog.editor.model_group.group.animator.not_found.confirm", "ok"), null, DialogBox.NOTHING, null);
 									return true;
 								}*/
-								final Animation ani = am.copy();
+								final Animation ani = am.copy(null);
 								ArrayList<TurboList> lists = FMTB.MODEL.getDirectlySelectedGroups();
 								AfterTask task = new AfterTask(){
 									@Override
 									public void run(){
 										for(TurboList list : lists){
-											list.animations.add(ani);
+											list.animations.add(ani.copy(list));
 										} FMTB.MODEL.updateFields();
 									}
-								}; task.settings = ani.settings;
+								}; task.settings = ani.settings.values();
 								UserInterface.SETTINGSBOX.show(translate("editor.model_group.group.animator_settings", "Animator Settings"), task);
 								return true;
 							}
-						}.setText(am.id, false));
+						}.setText(am.id, false).setEnabled(enabled);
+						if(enabled) button.setColor(0xff4287f5); elements.add(button);
 					}
 					return elements;
 				}
@@ -236,7 +238,7 @@ public class ModelGroupEditor extends Editor {
 									Animation anim = list.animations.get(j); this.deselect(); if(anim == null) return true;
 									AfterTask task = new AfterTask(){
 										@Override public void run(){ anim.onSettingsUpdate(); FMTB.MODEL.updateFields(); }
-									}; task.settings = anim.settings; FMTB.MODEL.updateFields();
+									}; task.settings = anim.settings.values(); FMTB.MODEL.updateFields();
 									UserInterface.SETTINGSBOX.show("[" + anim.id + "] Settings", task);
 								}
 								else{

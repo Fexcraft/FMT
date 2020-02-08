@@ -38,33 +38,11 @@ import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
 import net.fexcraft.app.fmt.ui.editor.ModelGroupEditor;
 import net.fexcraft.app.fmt.ui.editor.PreviewEditor;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
-import net.fexcraft.app.fmt.ui.general.AltMenu;
-import net.fexcraft.app.fmt.ui.general.Bottombar;
-import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
-import net.fexcraft.app.fmt.ui.general.Crossbar;
-import net.fexcraft.app.fmt.ui.general.DialogBox;
-import net.fexcraft.app.fmt.ui.general.DropDown;
-import net.fexcraft.app.fmt.ui.general.FileSelector;
-import net.fexcraft.app.fmt.ui.general.SettingsBox;
-import net.fexcraft.app.fmt.ui.general.TextField;
-import net.fexcraft.app.fmt.ui.general.Toolbar;
+import net.fexcraft.app.fmt.ui.general.*;
+import net.fexcraft.app.fmt.ui.tree.FVTMTree;
 import net.fexcraft.app.fmt.ui.tree.HelperTree;
 import net.fexcraft.app.fmt.ui.tree.ModelTree;
-import net.fexcraft.app.fmt.utils.Backups;
-import net.fexcraft.app.fmt.utils.DiscordUtil;
-import net.fexcraft.app.fmt.utils.GGR;
-import net.fexcraft.app.fmt.utils.HelperCollector;
-import net.fexcraft.app.fmt.utils.ImageHelper;
-import net.fexcraft.app.fmt.utils.KeyCompound;
-import net.fexcraft.app.fmt.utils.RayCoastAway;
-import net.fexcraft.app.fmt.utils.ST_Timer;
-import net.fexcraft.app.fmt.utils.SaveLoad;
-import net.fexcraft.app.fmt.utils.SessionHandler;
-import net.fexcraft.app.fmt.utils.Settings;
-import net.fexcraft.app.fmt.utils.StyleSheet;
-import net.fexcraft.app.fmt.utils.TextureManager;
-import net.fexcraft.app.fmt.utils.TextureUpdate;
-import net.fexcraft.app.fmt.utils.Translator;
+import net.fexcraft.app.fmt.utils.*;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Time;
@@ -75,13 +53,13 @@ import net.fexcraft.lib.tmt.ModelRendererTurbo;
 /**
  * @author Ferdinand Calo' (FEX___96)
  * 
- * All rights reserved &copy; 2019 fexcraft.net
+ * All rights reserved &copy; 2020 fexcraft.net
  * */
 public class FMTB {
 	
 	public static final String deftitle = "[FPS:%s] Fexcraft Modelling Toolbox - %s";
 	public static final String deftitle0 = "Fexcraft Modelling Toolbox - %s";
-	public static final String version = "1.3.5";
+	public static final String version = "1.3.7";
 	public static final String CLID = "587016218196574209";
 	//
 	private static String title = "Unnamed Model";
@@ -102,7 +80,10 @@ public class FMTB {
 	    switch(LWJGLUtil.getPlatform()){
 	        case LWJGLUtil.PLATFORM_WINDOWS:{ lwjgl_natives = new File("./libs/native/windows"); break; }
 	        case LWJGLUtil.PLATFORM_LINUX:{ lwjgl_natives = new File("./libs/native/linux"); break; }
-	        case LWJGLUtil.PLATFORM_MACOSX:{ lwjgl_natives = new File("./libs/native/macosx"); break; }
+	        case LWJGLUtil.PLATFORM_MACOSX:{
+	        	System.setProperty("apple.awt.fullscreenhidecursor", "false");
+	        	lwjgl_natives = new File("./libs/native/macosx"); break;
+	        }
 	    }
 	    System.setProperty("org.lwjgl.librarypath", lwjgl_natives.getAbsolutePath());
 	    //
@@ -242,10 +223,10 @@ public class FMTB {
                 TextureManager.bindTexture("demo"); compound0.render();
             }
             if(Settings.cullface()) GL11.glEnable(GL11.GL_CULL_FACE);
-            MODEL.render();
+            MODEL.render(); //sphere0.render(); sphere1.render();
             if(Settings.cullface()) GL11.glDisable(GL11.GL_CULL_FACE);
             if(HelperCollector.LOADED.size() > 0){
-            	for(GroupCompound model : HelperCollector.LOADED) model.render();
+            	for(GroupCompound model : HelperCollector.LOADED){ RGB.glColorReset(); model.render(); }
             }
             if(Settings.demo()){
                 TextureManager.bindTexture("t1p"); ModelT1P.INSTANCE.render();
@@ -257,6 +238,8 @@ public class FMTB {
 	
 	private static final ModelRendererTurbo compound0 = new ModelRendererTurbo(null, 0, 0);
 	static { compound0.textureHeight = compound0.textureWidth = 16; compound0.addBox(-8, 0, -8, 16, 16, 16); }
+	//private static final ModelRendererTurbo sphere0 = new ModelRendererTurbo(null, 256, 256).addSphere(0, 0, 0, 32, 128, 128, 16, 16).setTextured(false);
+	//private static final ModelRendererTurbo sphere1 = new ModelRendererTurbo(null, 256, 256).addSphere(0, 0, 0, 32.01f, 128, 128, 16, 16).setLines(true);
 
 	private void initOpenGL(){
         GL11.glEnable(GL11.GL_LIGHTING);
@@ -331,6 +314,7 @@ public class FMTB {
 		(UserInterface.BOTTOMBAR = new Bottombar()).setVisible(Settings.bottombar());
 		ui.getElements().add(ModelTree.TREE);
 		ui.getElements().add(HelperTree.TREE);
+		ui.getElements().add(FVTMTree.TREE);
 		ui.getElements().add(new GeneralEditor());
 		ui.getElements().add(new ModelGroupEditor());
 		ui.getElements().add(new TextureEditor());
@@ -343,9 +327,10 @@ public class FMTB {
 		//render last
 		ui.getElements().add(UserInterface.TOOLBAR);
 		ui.getElements().add(UserInterface.BOTTOMBAR);
-		ui.getElements().add(new Crossbar());
+		ui.getElements().add(UserInterface.TEXMAP = new TextureMap());
 		ui.getElements().add(UserInterface.RIGHTMENU = AltMenu.MENU);
 		ui.getElements().add(UserInterface.DROPDOWN = DropDown.INST);
+		//ui.getElements().add(new Cursor());
 		FMTB.MODEL.updateFields();
 	}
 
@@ -353,7 +338,7 @@ public class FMTB {
 		if(Dialog.anyVisible() || TextField.anySelected()){
 			UserInterface.DIALOGBOX.reset(); UserInterface.FILECHOOSER.reset();
 			UserInterface.CONTROLS.reset(); UserInterface.SETTINGSBOX.reset();
-			TextField.deselectAll();
+			UserInterface.TEXMAP.reset(); TextField.deselectAll();
 		} else if(esc && Editor.anyVisible()){ Editor.hideAll(); } else return;//open some kind of main menu / status / login screen.
 	}
 

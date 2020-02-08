@@ -6,16 +6,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.general.AltMenu;
-import net.fexcraft.app.fmt.ui.general.Bottombar;
-import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
-import net.fexcraft.app.fmt.ui.general.DialogBox;
-import net.fexcraft.app.fmt.ui.general.DropDown;
-import net.fexcraft.app.fmt.ui.general.FileSelector;
-import net.fexcraft.app.fmt.ui.general.HoverMenu;
-import net.fexcraft.app.fmt.ui.general.SettingsBox;
-import net.fexcraft.app.fmt.ui.general.TextField;
-import net.fexcraft.app.fmt.ui.general.Toolbar;
+import net.fexcraft.app.fmt.ui.general.*;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.RayCoastAway;
 import net.fexcraft.app.fmt.utils.SessionHandler;
@@ -23,6 +14,7 @@ import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.Static;
+import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Time;
 
 /**
@@ -41,6 +33,7 @@ public class UserInterface {
 	public static SettingsBox SETTINGSBOX;
 	public static AltMenu RIGHTMENU;
 	public static DropDown DROPDOWN;
+	public static TextureMap TEXMAP;
 	//
 	private ArrayList<Element> elements = new ArrayList<>();
 	private FMTB root;
@@ -80,7 +73,7 @@ public class UserInterface {
 	        GL11.glLoadIdentity();
 		}
 		//
-		GL11.glLoadIdentity();
+		GL11.glLoadIdentity(); RGB.glColorReset();
 		GL11.glDepthFunc(GL11.GL_ALWAYS); GL11.glDisable(GL11.GL_ALPHA_TEST);
 		if(bool){
 			tmelm.render(width, height); logintxt.render(width, height);

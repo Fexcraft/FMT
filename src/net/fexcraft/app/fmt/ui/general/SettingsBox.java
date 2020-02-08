@@ -104,6 +104,9 @@ public class SettingsBox extends Element implements Dialog {
 				UserInterface.BOTTOMBAR.setVisible(setting.getBooleanValue());
 				FMTB.get().UI.rescale();
 			}
+			if(setting.getId().equals("internal_cursor")){
+				System.setProperty("apple.awt.fullscreenhidecursor", Settings.internal_cursor() + "");
+			}
 		}
 		
 	}

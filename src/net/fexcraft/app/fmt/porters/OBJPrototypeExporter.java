@@ -11,7 +11,6 @@ import java.util.Map;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
-import net.fexcraft.app.fmt.utils.Axis3D;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.utils.Settings.Type;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
@@ -20,6 +19,7 @@ import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.math.TexturedPolygon;
 import net.fexcraft.lib.common.math.TexturedVertex;
 import net.fexcraft.lib.common.math.Vec3f;
+import net.fexcraft.lib.tmt.Axis3DL;
 
 /**
  * ALL RIGHTS RESERVED. &copy; 2019 Fexcraft.net
@@ -60,11 +60,12 @@ public class OBJPrototypeExporter extends ExImPorter {
 		buffer.append("# Model Name\no " + validateName(compound.name) + "\n\n");
 		buffer.append("# TextureSizeX: " + compound.tx(null) + "\n");
 		buffer.append("# TextureSizeY: " + compound.ty(null) + "\n");
-		buffer.append("# FlipAxes: true\n\n"); Axis3D axis, axis1 = null;
-		if(bool) (axis1 = new Axis3D()).setAngles(180, 180, 0);
+		buffer.append("# FlipAxes: true\n\n"); Axis3DL axis, axis1 = null;
+		if(bool) (axis1 = new Axis3DL()).setAngles(180, 180, 0);
 		//
+		float texsx = 1f / compound.textureSizeX, texsy = 1f/ compound.textureSizeY;
 		for(TurboList list : compound.getGroups()){
-			buffer.append("# Group Name\n"); axis = new Axis3D();
+			buffer.append("# Group Name\n"); axis = new Axis3DL();
 			buffer.append("g " + list.id + "\nusemtl fmt_material\n");
 			for(PolygonWrapper wrapper : list){
 				//if(!wrapper.getType().isCuboid()) continue;
@@ -89,7 +90,7 @@ public class OBJPrototypeExporter extends ExImPorter {
 						}
 					}
 					for(TexturedVertex vert : poly.getVertices()){
-						buffer.append("vt " + vert.textureX + " " + vert.textureY + "\n");
+						buffer.append("vt " + (vert.textureX * texsx) + " " + (vert.textureY * texsy) + "\n");
 					}
 					buffer.append("f"); for(int i = 0; i < poly.getVertices().length; i++){
 						buffer.append(" " + (faceid + i) + "/" + (faceid + i));

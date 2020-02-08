@@ -15,7 +15,7 @@ public class TurboList extends ArrayList<PolygonWrapper> {
 	public String id; public RGB color;
 	private boolean rotXb, rotYb, rotZb;
 	//private float rotX, rotY, rotZ, posX, posY, posZ;//FMR stuff
-	public boolean visible = true, minimized, selected;
+	public boolean visible = true, minimized, aminimized, selected;
 	public int tempheight, textureX = 256, textureY = 256, textureS = 1;
 	private String texture;
 	public ArrayList<Animation> animations = new ArrayList<>();

@@ -19,16 +19,7 @@ import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.app.fmt.utils.TextureUpdate;
-import net.fexcraft.app.fmt.wrappers.BoxWrapper;
-import net.fexcraft.app.fmt.wrappers.CylinderWrapper;
-import net.fexcraft.app.fmt.wrappers.MarkerWrapper;
-import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
-import net.fexcraft.app.fmt.wrappers.QuadWrapper;
-import net.fexcraft.app.fmt.wrappers.ShapeboxWrapper;
-import net.fexcraft.app.fmt.wrappers.TexrectWrapperA;
-import net.fexcraft.app.fmt.wrappers.TexrectWrapperB;
-import net.fexcraft.app.fmt.wrappers.TurboList;
-import net.fexcraft.app.fmt.wrappers.VoxelWrapper;
+import net.fexcraft.app.fmt.wrappers.*;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.utils.Print;
 
@@ -380,6 +371,12 @@ public class Toolbar extends Element {
 								} catch(Exception e){ e.printStackTrace(); } return true;
 							}
 						}.setText(translate("toolbar.textures.edit", "Edit (External)"), false));
+						this.elements.add(new Button(this, "texture.map.toggle", null, 20, 26, 0, 0){
+							@Override
+							public boolean processButtonClick(int x, int y, boolean left){
+								UserInterface.TEXMAP.show(); return true;
+							}
+						}.setText(translate("toolbar.textures.texture_map", "Texture Map"), false));
 						this.elements.add(new Button(this, "remove", null, 20, 26, 0, 0){
 							@Override
 							public boolean processButtonClick(int x, int y, boolean left){
@@ -472,6 +469,27 @@ public class Toolbar extends Element {
 				this.elements.add(menu);
 			}
 		}.setText(translate("toolbar.helpers", "Helpers"), true));
+		this.elements.add(new Button(this, "modtools", null, btsz, bthg, 0, 0){
+			@Override
+			public boolean processButtonClick(int x, int y, boolean left){
+				RightTree.hideAll(); return true;
+			}
+			@Override
+			public void setupSubmenu(){
+				HoverMenu menu = new HoverMenu(this, "menu", 100){
+					@Override
+					public void addButtons(){
+						this.elements.add(new Button(this, "view", null, 20, 26, 0, 0){
+							@Override
+							public boolean processButtonClick(int x, int y, boolean left){
+								RightTree.show("fvtm_tree"); return true;
+							}
+						}.setText(translate("toolbar.modtools.fvtm_programs", "FVTM TL-Programs"), false));
+					}
+				};
+				this.elements.add(menu);
+			}
+		}.setText(translate("toolbar.modtools", "Mod Tools"), true));
 		this.elements.add(new Button(this, "exit", null, btsz, bthg, 0, 0){
 			@Override
 			public boolean processButtonClick(int x, int y, boolean left){

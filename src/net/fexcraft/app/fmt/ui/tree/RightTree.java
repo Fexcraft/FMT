@@ -17,10 +17,12 @@ import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.general.Button;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
+import net.fexcraft.app.fmt.ui.general.FileSelector.AfterTask;
 import net.fexcraft.app.fmt.ui.general.Icon;
 import net.fexcraft.app.fmt.ui.general.Scrollbar;
 import net.fexcraft.app.fmt.ui.general.Scrollbar.Scrollable;
 import net.fexcraft.app.fmt.ui.general.TextField;
+import net.fexcraft.app.fmt.utils.Animator.Animation;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.HelperCollector;
 import net.fexcraft.app.fmt.utils.Settings;
@@ -418,6 +420,70 @@ public abstract class RightTree extends Element implements Scrollable {
 		@Override
 		public void update(int elm_height, int rw, int rh){
 			this.setPosition(4, elm_height); this.setText(id = compound.name, false); this.render(rw, rh);
+		}
+		
+	}
+	
+	public static class AnimationButton extends TreeButton {
+		
+		private int rel; private Animation anim;
+
+		public AnimationButton(Element root, Animation anim){
+			super(root, anim.id, "tree:group", 296, 26, 8, 0);
+			this.setColor(StyleSheet.WHITE).setDraggable(true);
+			this.setText((this.anim = anim).id, false); rel = 8;
+			this.setBorder(StyleSheet.BLACK, StyleSheet.BLACK, 0);
+			//
+			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_edit", 22, width - 78, 2){
+				@Override
+				public boolean processButtonClick(int mx, int my, boolean left){
+					AfterTask task = new AfterTask(){ @Override public void run(){ anim.onSettingsUpdate();} }; task.settings = anim.settings.values();
+					UserInterface.SETTINGSBOX.show("[" + anim.id + "] Settings", task); return true;
+				}
+			});
+			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_visible", 22, width - 52, 2){
+				@Override
+				public boolean processButtonClick(int mx, int my, boolean left){
+					anim.active = !anim.active; return true;
+				}
+			});
+			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_delete", 22, width - 26, 2){
+				@Override
+				public boolean processButtonClick(int mx, int my, boolean left){
+					String str = format("fvtm_tree.remove", "Remove this Animation?<nl>%s", anim.id);
+					String yes = translate("fvtm_tree.remove.confirm", "Yes");
+					FMTB.showDialogbox(str, yes, translate("fvtm_tree.remove.cancel", "No!"), () -> {
+						anim.group.animations.remove(anim); FMTB.MODEL.updateFields();
+					}, DialogBox.NOTHING); return true;
+				}
+			});
+		}
+
+		@Override
+		public RGB color(){
+			return colorC(anim.active, false);
+		}
+		
+		@Override
+		public boolean processButtonClick(int mx, int my, boolean left){
+			if(!left) return false; return true;
+		}
+
+		@Override
+		public void update(int elm_height, int rw, int rh){
+			this.setPosition(rel, elm_height); this.setText(anim.getButtonString(), false); this.render(rw, rh);
+		}
+		
+		@Override
+		public void pullBy(int mx, int my){
+			if(anim.group.animations.size() < 2) return;
+			int index = anim.group.animations.indexOf(anim);
+			if(my < 0 && index > 0){
+				Collections.swap(anim.group.animations, index, index - 1); GGR.resetDragging(); return;
+			}
+			if(my > 0 && (index + 1) < anim.group.animations.size()){
+				Collections.swap(anim.group.animations, index, index + 1); GGR.resetDragging(); return;
+			}
 		}
 		
 	}

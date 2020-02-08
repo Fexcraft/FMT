@@ -4,8 +4,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -180,7 +180,7 @@ public class FileSelector extends Element implements Dialog {
 	public static abstract class AfterTask implements Runnable {
 		public File file;
 		public ExImPorter porter;
-		public List<Setting> settings = new ArrayList<>();
+		public Collection<Setting> settings = new ArrayList<>();
 		public Map<String, Setting> mapped_settings;
 	}
 	
@@ -208,6 +208,7 @@ public class FileSelector extends Element implements Dialog {
 			});
 		}
 		
+		@Override
 		public boolean onButtonClick(int x, int y, boolean left, boolean hovered){
 			if(scrollbar.onButtonClick(x, y, left, scrollbar.isHovered())) return true;
 			if(rootf.onButtonClick(x, y, left, rootf.isHovered())) return true;

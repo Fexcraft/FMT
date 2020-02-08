@@ -24,7 +24,7 @@ public class Settings {
 	
 	private static Setting floor, lines, demo, cube, polygon_marker, polygon_count, lighting, cullface, animate,
 		discordrpc, discordrpc_sm, discordrpc_rtonm, ui_scale, bottombar, numberfieldarrows, preview_colorpicker;
-	public static Setting movespeed, mouse_sensivity;
+	public static Setting movespeed, mouse_sensivity, internal_cursor;
 
 	public static boolean floor(){ return floor.getValue(); }
 
@@ -57,6 +57,8 @@ public class Settings {
 	public static boolean numberfieldarrows(){ return numberfieldarrows.getValue(); }
 
 	public static boolean preview_colorpicker(){ return preview_colorpicker.getValue(); }
+	
+	public static boolean internal_cursor(){ return internal_cursor.getValue(); }
 	
 	//
 
@@ -95,7 +97,7 @@ public class Settings {
 	}
 
 	public static boolean toggleLighting(){
-		Print.console("Toggling lighting: " + !(boolean)lighting.getValue());
+		Print.console("Toggling lighting: " + !lighting.getBooleanValue());
 		return lighting.toggle();
 	}
 
@@ -122,6 +124,7 @@ public class Settings {
 				}
 			}
 		}
+		Print.console("Toggling animations: " + animate.getBooleanValue());
 		return bool;
 	}
 	
@@ -135,7 +138,7 @@ public class Settings {
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "lines", true));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "cube", true));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "demo", false));
-		DEFAULTS.add(new Setting(Type.BOOLEAN, "polygon_marker", false));
+		DEFAULTS.add(new Setting(Type.BOOLEAN, "polygon_marker", true));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "polygon_count", true));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "lighting", false));
 		DEFAULTS.add(new Setting(Type.FLOAT_ARRAY, "light0_position", new float[]{ 0, 1, 0, 0 }));
@@ -160,6 +163,7 @@ public class Settings {
 		//
 		DEFAULTS.add(new Setting(Type.FLOAT, "mouse_sensivity", 2f));
 		DEFAULTS.add(new Setting(Type.FLOAT, "camera_movespeed", 2f));
+		//DEFAULTS.add(new Setting(Type.BOOLEAN, "internal_cursor", false));
 	}
 
 	public static void load(){
@@ -198,6 +202,7 @@ public class Settings {
 		preview_colorpicker = SETTINGS.get("preview_colorpicker");
 		movespeed = SETTINGS.get("camera_movespeed");
 		mouse_sensivity = SETTINGS.get("mouse_sensivity");
+		//internal_cursor = SETTINGS.get("internal_cursor");
 		FileSelector.FileRoot.last = FileRoot.valueOf(SETTINGS.get("filedir_last_type").getStringValue());
 	}
 
@@ -366,6 +371,7 @@ public class Settings {
 			return true;
 		}
 		
+		@Override
 		public String toString(){
 			switch(type){
 				case BOOLEAN: return value + "";
