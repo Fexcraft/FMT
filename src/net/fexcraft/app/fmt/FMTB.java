@@ -4,6 +4,7 @@ import static org.lwjgl.glfw.GLFW.*;
 
 import java.awt.Desktop;
 import java.awt.DisplayMode;
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -16,8 +17,11 @@ import java.util.Timer;
 
 import javax.script.ScriptException;
 
+import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
+import org.lwjgl.glfw.GLFWKeyCallback;
+import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.Configuration;
@@ -78,10 +82,14 @@ public class FMTB {
 	//
 	public static GLFWErrorCallback errorCallback;
 	public static GLFWFramebufferSizeCallback framebufferSizeCallback;
+	public static GLFWKeyCallback keyCallback;
+	public static GLFWCursorPosCallback cursorCallback;
+	public static GLFWMouseButtonCallback mouseCallback;
+	public static double cursor_x, cursor_y;
 	private long window;
 	
 	public static void main(String... args) throws Exception {
-	    //System.setProperty("org.lwjgl.librarypath", new File("./libs/").getAbsolutePath());
+	    System.setProperty("org.lwjgl.librarypath", new File("./libs/").getAbsolutePath());
 		Configuration.SHARED_LIBRARY_EXTRACT_DIRECTORY.set("./libs");
 		Configuration.SHARED_LIBRARY_EXTRACT_PATH.set("./libs");
 	    //
@@ -105,12 +113,43 @@ public class FMTB {
         if(window == 0) {
             throw new RuntimeException("Failed to create window");
         }
-        //Make this window's context the current on this thread.
         glfwMakeContextCurrent(window);
-        //Let LWJGL know to use this current context.
         GL.createCapabilities();
 		initOpenGL();
 		glfwShowWindow(window);
+		//
+        glfwSetKeyCallback(window, (keyCallback = new GLFWKeyCallback() {
+            @Override
+            public void invoke(long window, int key, int scancode, int action, int mods){
+                if(key == GLFW_KEY_SPACE && action == GLFW_RELEASE){
+                    //
+                } else if(key == GLFW_KEY_F1 && action == GLFW_RELEASE){
+                	// 
+                } else if(key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE){
+                	//
+                }
+            }
+        }));
+        glfwSetCursorPosCallback(window, (cursorCallback = new GLFWCursorPosCallback() {
+            @Override
+            public void invoke(long window, double xpos, double ypos) {
+                cursor_x = xpos;
+                cursor_y = /*//TODO height -*/ ypos;
+            }
+        }));
+        glfwSetMouseButtonCallback(window, (mouseCallback = new GLFWMouseButtonCallback(){
+            @Override
+            public void invoke(long window, int button, int action, int mods){
+                if(button == 0) {
+                    if(action == GLFW_PRESS){
+                        //
+                    } else if(action == GLFW_RELEASE){
+                        //
+                    }
+                }
+            }
+        }));
+        //
 		ggr = new GGR(this, 0, 4, 4); ggr.rotation.xCoord = 45; FontRenderer.init();
 		PorterManager.load(); HelperCollector.reload(); //TODO UI = new UserInterface(this); this.setupUI(UI);
 		SessionHandler.checkIfLoggedIn(true, true); checkForUpdates(); //TODO KeyCompound.init(); KeyCompound.load();
