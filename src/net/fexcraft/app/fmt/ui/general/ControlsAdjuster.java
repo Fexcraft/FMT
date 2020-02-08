@@ -3,7 +3,6 @@
  */
 package net.fexcraft.app.fmt.ui.general;
 
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.ui.Dialog;

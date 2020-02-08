@@ -2,7 +2,6 @@ package net.fexcraft.app.fmt.ui;
 
 import java.util.ArrayList;
 
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;

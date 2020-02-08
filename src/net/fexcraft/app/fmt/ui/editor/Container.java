@@ -1,7 +1,5 @@
 package net.fexcraft.app.fmt.ui.editor;
 
-import org.lwjgl.input.Mouse;
-
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.general.Button;

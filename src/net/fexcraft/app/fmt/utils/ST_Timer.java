@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright © 2014-2015, Heiko Brumme
+ * Copyright ï¿½ 2014-2015, Heiko Brumme
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,8 +22,6 @@
  * SOFTWARE.
  */
 package net.fexcraft.app.fmt.utils;
-
-import org.lwjgl.opengl.Display;
 
 import net.fexcraft.app.fmt.FMTB;
 

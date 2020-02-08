@@ -1,7 +1,9 @@
 package net.fexcraft.app.fmt;
 
+import static org.lwjgl.glfw.GLFW.*;
+
 import java.awt.Desktop;
-import java.io.File;
+import java.awt.DisplayMode;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -14,13 +16,12 @@ import java.util.Timer;
 
 import javax.script.ScriptException;
 
-import org.lwjgl.LWJGLException;
-import org.lwjgl.LWJGLUtil;
-import org.lwjgl.Sys;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
+import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.glu.GLU;
+import org.lwjgl.system.Configuration;
+import org.lwjgl.system.Platform;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -68,48 +69,51 @@ public class FMTB {
 	private static FMTB INSTANCE;
 	private DisplayMode displaymode;
 	public UserInterface UI;
-	private static File lwjgl_natives;
 	public static GroupCompound MODEL = new GroupCompound(null);
 	public static Timer BACKUP_TIMER, TEX_UPDATE_TIMER;
 	private static int disk_update;
 	//
 	public static final ST_Timer timer = new ST_Timer();
 	public float delta, accumulator = 0f, interval = 1f / 30f, alpha;
+	//
+	public static GLFWErrorCallback errorCallback;
+	public static GLFWFramebufferSizeCallback framebufferSizeCallback;
+	private long window;
 	
 	public static void main(String... args) throws Exception {
-	    switch(LWJGLUtil.getPlatform()){
-	        case LWJGLUtil.PLATFORM_WINDOWS:{ lwjgl_natives = new File("./libs/native/windows"); break; }
-	        case LWJGLUtil.PLATFORM_LINUX:{ lwjgl_natives = new File("./libs/native/linux"); break; }
-	        case LWJGLUtil.PLATFORM_MACOSX:{
-	        	System.setProperty("apple.awt.fullscreenhidecursor", "false");
-	        	lwjgl_natives = new File("./libs/native/macosx"); break;
-	        }
-	    }
-	    System.setProperty("org.lwjgl.librarypath", lwjgl_natives.getAbsolutePath());
+	    //System.setProperty("org.lwjgl.librarypath", new File("./libs/").getAbsolutePath());
+		Configuration.SHARED_LIBRARY_EXTRACT_DIRECTORY.set("./libs");
+		Configuration.SHARED_LIBRARY_EXTRACT_PATH.set("./libs");
 	    //
 		FMTB.INSTANCE = new FMTB(); try{ INSTANCE.run(); } catch(Throwable thr){ thr.printStackTrace(); System.exit(1); }
-	}
-	
-	public static final Process startProcess(Class<?> clazz) throws Exception {
-	    String sp = System.getProperty("file.separator"), path = System.getProperty("java.home") + sp + "bin" + sp + "java";
-	    return new ProcessBuilder(path, "-cp", System.getProperty("java.class.path"), clazz.getName()).start();
-	}
-	
-	public static final int getResult(String[] text, int buttons) throws Exception {
-	    String sp = System.getProperty("file.separator"), path = System.getProperty("java.home") + sp + "bin" + sp + "java";
-	    return new ProcessBuilder(path, "-cp", System.getProperty("java.class.path"), Object.class.getName()).start().waitFor();
-	    //TODO make new "dialogbox class" using this?
 	}
 
 	public static final FMTB get(){ return INSTANCE; }
 	
 	public FMTB setTitle(String string){ title = string; DiscordUtil.update(false); return this; }
 	
-	public void run() throws LWJGLException, InterruptedException, IOException, NoSuchMethodException, ScriptException {
+	public void run() throws InterruptedException, IOException, NoSuchMethodException, ScriptException {
 		TextureManager.init(); this.setIcon(); Settings.load(); StyleSheet.load(); Translator.init(); timer.init();
-		setupDisplay(); initOpenGL(); ggr = new GGR(this, 0, 4, 4); ggr.rotation.xCoord = 45; FontRenderer.init();
-		PorterManager.load(); HelperCollector.reload(); Display.setResizable(true); UI = new UserInterface(this); this.setupUI(UI);
-		SessionHandler.checkIfLoggedIn(true, true); checkForUpdates(); KeyCompound.init(); KeyCompound.load();
+        glfwSetErrorCallback(errorCallback = GLFWErrorCallback.createPrint(System.err));
+		glfwSetErrorCallback(errorCallback = GLFWErrorCallback.createPrint(System.err));
+		if(!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW.");
+        glfwWindowHint(GLFW_RESIZABLE, GL11.GL_TRUE);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+        //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        window = glfwCreateWindow(1280, 720, "Fex's Modelling Toolbox", 0, 0);
+        if(window == 0) {
+            throw new RuntimeException("Failed to create window");
+        }
+        //Make this window's context the current on this thread.
+        glfwMakeContextCurrent(window);
+        //Let LWJGL know to use this current context.
+        GL.createCapabilities();
+		initOpenGL();
+		glfwShowWindow(window);
+		ggr = new GGR(this, 0, 4, 4); ggr.rotation.xCoord = 45; FontRenderer.init();
+		PorterManager.load(); HelperCollector.reload(); //TODO UI = new UserInterface(this); this.setupUI(UI);
+		SessionHandler.checkIfLoggedIn(true, true); checkForUpdates(); //TODO KeyCompound.init(); KeyCompound.load();
 		//
 		LocalDateTime midnight = LocalDateTime.of(LocalDate.now(ZoneOffset.systemDefault()), LocalTime.MIDNIGHT);
 		long mid = midnight.toInstant(ZoneOffset.UTC).toEpochMilli(); long date = Time.getDate(); while((mid += Time.MIN_MS * 5) < date);
@@ -130,24 +134,29 @@ public class FMTB {
 		}
 		//
 		while(!close){
-            input(accumulator += (delta = timer.getDelta()));
+            //TODO input(accumulator += (delta = timer.getDelta()));
             while(accumulator >= interval){
             	loop(); timer.updateUPS();
                 accumulator -= interval;
             } checkResizement();
 			render(alpha = accumulator / interval);
-			if(!RayCoastAway.PICKING){
+			/*if(!RayCoastAway.PICKING){
 				if(ImageHelper.HASTASK){
 					UI.render(true); ImageHelper.doTask();
 				}
 				else UI.render(false);
 				//
-			} updateFPS();
-			Display.update(); Display.sync(60); timer.update();
+			}*/ updateFPS();
+            glfwPollEvents();
+            glfwSwapBuffers(window);
+            //TODO timer.update();
 			if(Settings.discordrpc()) if(++disk_update > 60000){ DiscordRPC.discordRunCallbacks(); disk_update = 0; }
 			//Thread.sleep(50);
-		} DiscordRPC.discordShutdown();
-		Display.destroy(); Settings.save(); StyleSheet.save(); KeyCompound.save(); SessionHandler.save(); System.exit(0);
+		}
+		DiscordRPC.discordShutdown();
+        glfwDestroyWindow(window);   
+        glfwTerminate();
+        Settings.save(); StyleSheet.save(); KeyCompound.save(); SessionHandler.save(); System.exit(0);
 	}
 
 	private void updateFPS(){
@@ -155,7 +164,7 @@ public class FMTB {
 	}
 
 	private void setIcon(){
-		Display.setIcon(new java.nio.ByteBuffer[]{ TextureManager.getTexture("icon", false).getBuffer(), TextureManager.getTexture("icon", false).getBuffer() });
+		//TODO Display.setIcon(new java.nio.ByteBuffer[]{ TextureManager.getTexture("icon", false).getBuffer(), TextureManager.getTexture("icon", false).getBuffer() });
 	}
 	
 	private void input(float delta){
@@ -163,26 +172,25 @@ public class FMTB {
 	}
 
 	private void loop(){
-		if(Display.isCloseRequested()){ SaveLoad.checkIfShouldSave(true, false); }
+		if(glfwWindowShouldClose(window)){ SaveLoad.checkIfShouldSave(true, false); }
 		//checkResizement();
         if(!TextureUpdate.HALT){ TextureUpdate.tryAutoPos(TextureUpdate.ALL); }
 	}
 	
 	private void checkResizement(){
-		if(Display.wasResized()){
-			displaymode = new DisplayMode(Display.getWidth(), Display.getHeight());
-	        GLU.gluPerspective(45.0f, displaymode.getWidth() / displaymode.getHeight(), 0.1f, 4096f / 2);
-			GL11.glViewport(0, 0, displaymode.getWidth(), displaymode.getHeight());
-			this.initOpenGL(); UI.rescale();
-		}
-        if(!Display.isVisible()) {
-            try{ Thread.sleep(100); }
-            catch(Exception e){ e.printStackTrace(); }
-        }
+		glfwSetFramebufferSizeCallback(window, (framebufferSizeCallback = new GLFWFramebufferSizeCallback() {
+		    @Override
+		    public void invoke(long window, int width, int height) {
+				/*displaymode = new DisplayMode(Display.getWidth(), Display.getHeight());
+		        GLU.gluPerspective(45.0f, displaymode.getWidth() / displaymode.getHeight(), 0.1f, 4096f / 2);
+				GL11.glViewport(0, 0, displaymode.getWidth(), displaymode.getHeight());*///TODO
+				initOpenGL(); UI.rescale();
+		    }
+		}));
 	}
 
 	public long getTime(){
-	    return (Sys.getTime() * 1000) / Sys.getTimerResolution();
+	    return System.currentTimeMillis();
 	}
 	
 	private void render(float alpha){
@@ -228,9 +236,9 @@ public class FMTB {
             if(HelperCollector.LOADED.size() > 0){
             	for(GroupCompound model : HelperCollector.LOADED){ RGB.glColorReset(); model.render(); }
             }
-            if(Settings.demo()){
+            //if(Settings.demo()){
                 TextureManager.bindTexture("t1p"); ModelT1P.INSTANCE.render();
-            }
+            //}
 			if(Settings.lighting()) GL11.glDisable(GL11.GL_LIGHTING);
             GL11.glPopMatrix();
         }
@@ -260,7 +268,7 @@ public class FMTB {
         GL11.glDepthFunc(GL11.GL_LEQUAL);
         GL11.glMatrixMode(GL11.GL_PROJECTION);
         GL11.glLoadIdentity();
-        GLU.gluPerspective(45.0f, (float)displaymode.getWidth() / (float)displaymode.getHeight(), 0.1f, 4096f / 2);
+        //TODO GLU.gluPerspective(45.0f, (float)displaymode.getWidth() / (float)displaymode.getHeight(), 0.1f, 4096f / 2);
         GL11.glMatrixMode(GL11.GL_MODELVIEW);
         GL11.glHint(GL11.GL_PERSPECTIVE_CORRECTION_HINT, GL11.GL_NICEST);
         //
@@ -270,14 +278,7 @@ public class FMTB {
 
 	private void setLightPos(float[] position){
 		java.nio.FloatBuffer fb = org.lwjgl.BufferUtils.createFloatBuffer(4); fb.put(position); fb.flip();
-        GL11.glLight(GL11.GL_LIGHT0, GL11.GL_POSITION, fb);
-	}
-
-	private void setupDisplay() throws LWJGLException {
-		Display.setFullscreen(false); Display.setResizable(false);
-		Display.setDisplayMode(displaymode = new DisplayMode(1280, 720));
-		Display.setTitle("Fexcraft Modelling Toolbox"); Display.setVSyncEnabled(true);
-		Display.create();
+        GL11.glLightfv(GL11.GL_LIGHT0, GL11.GL_POSITION, fb);
 	}
 	
 	/** use SaveLoad.checkIfShouldSave(true) first! */
@@ -379,7 +380,7 @@ public class FMTB {
 	}
 	
 	public static boolean linux(){
-		return LWJGLUtil.getPlatform() == LWJGLUtil.PLATFORM_LINUX;
+		return Platform.get() == Platform.LINUX;//TODO ?
 	}
 
 	public static String getTitle(){

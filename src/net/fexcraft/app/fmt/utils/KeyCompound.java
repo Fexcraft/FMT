@@ -5,8 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import org.lwjgl.input.Keyboard;
-
 import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.FMTB;

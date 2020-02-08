@@ -1,7 +1,5 @@
 package net.fexcraft.app.fmt.ui.tree;
 
-import org.lwjgl.input.Mouse;
-
 import net.fexcraft.app.fmt.utils.HelperCollector;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.TurboList;
