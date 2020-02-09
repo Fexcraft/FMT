@@ -79,6 +79,15 @@ editor.general.shape.position=Position (x/y/z)
 editor.general.shape.offset=Offset (x/y/z)
 editor.general.shape.rotation=Rotation (x/y/z)
 editor.general.shape.texture=Texture (u/v)
+editor.general.shapebox=Shapebox Corners
+editor.general.shapebox.corner0=Corner 0 (x/y/z)
+editor.general.shapebox.corner1=Corner 1 (x/y/z)
+editor.general.shapebox.corner2=Corner 2 (x/y/z)
+editor.general.shapebox.corner3=Corner 3 (x/y/z)
+editor.general.shapebox.corner4=Corner 4 (x/y/z)
+editor.general.shapebox.corner5=Corner 5 (x/y/z)
+editor.general.shapebox.corner6=Corner 6 (x/y/z)
+editor.general.shapebox.corner7=Corner 7 (x/y/z)
 
 # Errors
 error.dialog_title=Error

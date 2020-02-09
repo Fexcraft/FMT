@@ -5,7 +5,6 @@ import static net.fexcraft.app.fmt.utils.StyleSheet.BLACK;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.general.Button;
 import net.fexcraft.app.fmt.ui.general.TextField;
-import net.fexcraft.app.fmt.wrappers.ShapeboxWrapper;
 
 public class GeneralEditor extends Editor {
 	
@@ -13,24 +12,12 @@ public class GeneralEditor extends Editor {
 
 	public GeneralEditor(){
 		super("general_editor", "editor"); this.setVisible(false);
-		this.elements.add((shapebox = new Container(this, "shapebox", width - 4, 28, 4, 0, null)).setText(translate("editor.general.shapebox.title", "Shapebox Corners"), false));
 		this.elements.add((cylinder = new Container(this, "cylinder", width - 4, 28, 4, 0, null)).setText(translate("editor.general.cylinder.title", "Cylinder Settings"), false));
 		this.elements.add((texrect_a = new Container(this, "texrect_a", width - 4, 28, 4, 0, null)).setText(translate("editor.general.texrect_a.title", "TexRect [Adv.]"), false));
 		this.elements.add((texrect_b = new Container(this, "texrect_b", width - 4, 28, 4, 0, null)).setText(translate("editor.general.texrect_b.title", "TexRect [Basic]"), false));
 		this.elements.add((marker = new Container(this, "marker", width - 4, 28, 4, 0, null)).setText(translate("editor.general.marker.title", "Marker Settings"), false));
 		//
 		int passed = 24;
-		{//shapebox
-			for(int i = 0; i < 8; i++){
-				shapebox.getElements().add(new Button(shapebox, "text" + i, "editor:title", 290, 20, 4, passed += 30, BLACK).setIcon("blank", 16, ShapeboxWrapper.cornercolors2[i])
-					.setBackgroundless(true).setText(format("editor.general.shapebox.corner" + i, "Corner %s (x/y/z)", i), false)); passed += 24; 
-				for(int k = 0; k < xyz.length; k++){
-					shapebox.getElements().add(new TextField(shapebox, "cor" + i + xyz[k], "editor:field", 96, 2 + (k * 102), passed).setAsNumberfield(Integer.MIN_VALUE, Integer.MAX_VALUE, true, true));
-				}
-			}
-			//
-			shapebox.setExpanded(false); passed = 0;
-		}
 		{//cylinder
 			cylinder.getElements().add(new Button(cylinder, "text0", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true)
 				.setText(translate("editor.general.cylinder.radius_length", "Radius / Length / R2"), false));
@@ -132,7 +119,7 @@ public class GeneralEditor extends Editor {
 			//
 			marker.setExpanded(false); passed = 0;
 		}
-		this.containers = new Container[]{ shapebox, cylinder, texrect_a, texrect_b, marker }; this.repos();
+		this.containers = new Container[]{ cylinder, texrect_a, texrect_b, marker }; this.repos();
 	}
 
 }

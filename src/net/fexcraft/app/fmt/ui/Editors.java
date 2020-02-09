@@ -124,10 +124,8 @@ public class Editors {
 
 		protected void reOrderWidgets(){
 			float size = 0; for(EditorWidget widget : widgets) size += widget.getSize().y + 2;
-			if(size > FMTB.HEIGHT - 80) scrollable.setSize(scrollable.getSize().x, size); size = 0;
-			for(EditorWidget widget : widgets){
-				widget.setPosition(0, size); size += widget.getSize().y + 2;
-			}
+			scrollable.getContainer().setSize(scrollable.getSize().x, size > FMTB.HEIGHT - 80 ? size : FMTB.HEIGHT - 80); size = 0;
+			for(EditorWidget widget : widgets){ widget.setPosition(0, size); size += widget.getSize().y + 2; }
 		}
 		
 	}
@@ -140,6 +138,7 @@ public class Editors {
 		public static NumberInput20 off_x, off_y, off_z;
 		public static NumberInput20 rot_x, rot_y, rot_z;
 		public static NumberInput20 texture_x, texture_y;
+		public static NumberInput20[] corner_x, corner_y, corner_z;
 		public static SelectBox<Object> polygon_group, polygon_type;
 		
 		public GeneralEditor(){
@@ -265,7 +264,16 @@ public class Editors {
 			shape.setSize(296, pass + 52);
 	        this.addSub(shape); pass = -20;
 	        //
-	        
+			EditorWidget shapebox = new EditorWidget(this, translate("editor.general.shapebox"), 0, 0, 0, 0);
+			corner_x = new NumberInput20[8]; corner_y = new NumberInput20[8]; corner_z = new NumberInput20[8];
+	        for(int i = 0; i < 8; i++){
+	        	shapebox.getContainer().add(new Label20(translate("editor.general.shapebox.corner" + i), 3, pass += 24, 290, 20));
+				shapebox.getContainer().add(corner_x[i] = new NumberInput20("x", 4, pass += 24, 90, 20));
+				shapebox.getContainer().add(corner_y[i] = new NumberInput20("y", 102, pass, 90, 20));
+				shapebox.getContainer().add(corner_z[i] = new NumberInput20("z", 200, pass, 90, 20));
+	        }
+			shapebox.setSize(296, pass + 52);
+	        this.addSub(shapebox); pass = -20;
 	        //
 	        reOrderWidgets();
 		}
