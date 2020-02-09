@@ -47,6 +47,7 @@ import net.arikia.dev.drpc.DiscordRPC;
 import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.ui.Dialog;
+import net.fexcraft.app.fmt.ui.Editors;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.UserInterpanels;
 import net.fexcraft.app.fmt.ui.editor.Editor;
@@ -146,9 +147,9 @@ public class FMTB {
             ColorConstants.transparent() // shadowColor
         )*/Themes.FLAT_WHITE);
         frame = new Frame(WIDTH, HEIGHT);
-        Interface temp = new Interface();//WIDTH / 2, HEIGHT / 3 * 2);
+        Interface temp = new Interface();
         frame.getContainer().add(temp);
-        frame.getContainer().add(UserInterpanels.TOOLBAR);
+        Editors.initializeEditors(frame);
         UserInterpanels.addToolbarButtons(frame);
         context = new Context(window);
         CallbackKeeper keeper = new DefaultCallbackKeeper();

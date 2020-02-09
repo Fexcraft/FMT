@@ -65,8 +65,8 @@ public class Interface extends Panel {
         this(800, 600);
     }
 
-    public Interface(int width, int height) {
-        super(0, 100, width, height);
+    public Interface(int width, int height){
+        super(350, 100, width, height);
         //@formatter:off
         Panel p1 = new Panel(1 * 20, 10, 10, 10);
         this.add(p1);

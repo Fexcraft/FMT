@@ -12,6 +12,7 @@ toolbar.file.save=Save
 toolbar.file.save_as=Save as...
 toolbar.file.import=Import <<
 toolbar.file.export=Export >>
+toolbar.file.settings=Settings
 toolbar.file.exit=Exit
 toolbar.utils=Utils
 toolbar.utils.undo=Undo (WIP)
@@ -58,6 +59,11 @@ toolbar.helpers.unload_clear=Clear/Unload All
 toolbar.mod_tools=Mod Tools
 toolbar.mod_tools.fvtm_programs=FVTM TL-Programs
 toolbar.exit=Exit
+
+# Editors
+editor.multiplicator=Multiplicator
+editor.multiplicator.value=Value: 
+editor.multiplicator.current=Current: %s
 
 # Errors
 error.dialog_title=Error

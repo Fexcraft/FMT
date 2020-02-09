@@ -50,19 +50,11 @@ public class UserInterpanels {
         okbutton.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> { if(CLICK == e.getAction()) dialog.close(); });
         dialog.getContainer().add(label); dialog.getContainer().add(okbutton); dialog.show(event.getFrame());
 	};
-	public static Toolbar TOOLBAR = new Toolbar();
-	
-	public static class Toolbar extends Panel {
-		
-		private Toolbar(){
-			super(0, 0, FMTB.WIDTH, 30);
-			this.getListenerMap().addListener(WindowSizeEvent.class, event -> this.setSize(event.getWidth(), 30));
-		}
-		
-	}
 
 	@SuppressWarnings("restriction")
 	public static void addToolbarButtons(Frame frame){
+		Panel toolbar = new Panel(0, 0, FMTB.WIDTH, 30); frame.getContainer().add(toolbar);
+		toolbar.getListenerMap().addListener(WindowSizeEvent.class, event -> toolbar.setSize(event.getWidth(), 30));
 		frame.getContainer().add(new MenuEntry(0, translate("toolbar.file"),
 			new MenuButton("toolbar.file.new_model", () -> SaveLoad.openNewModel()),
 			new MenuButton("toolbar.file.open", () -> SaveLoad.openModel()),
@@ -70,6 +62,7 @@ public class UserInterpanels {
 			new MenuButton("toolbar.file.save_as", () -> SaveLoad.saveModel(true, false)),
 			new MenuButton("toolbar.file.import", () -> PorterManager.handleImport()),
 			new MenuButton("toolbar.file.export", () -> PorterManager.handleExport()),
+			new MenuButton("toolbar.file.settings", NOT_REIMPLEMENTED_YET),
 			new MenuButton("toolbar.file.exit",  () -> SaveLoad.checkIfShouldSave(true, false))
 		));
 		frame.getContainer().add(new MenuEntry(1, translate("toolbar.utils"),
