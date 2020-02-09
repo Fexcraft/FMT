@@ -14,11 +14,26 @@ import java.util.Timer;
 
 import javax.script.ScriptException;
 
+import org.joml.Vector2i;
+import org.joml.Vector4f;
+import org.liquidengine.legui.DefaultInitializer;
+import org.liquidengine.legui.animation.Animator;
+import org.liquidengine.legui.component.Component;
+import org.liquidengine.legui.component.Frame;
+import org.liquidengine.legui.event.WindowSizeEvent;
+import org.liquidengine.legui.listener.WindowSizeEventListener;
+import org.liquidengine.legui.style.color.ColorConstants;
+import org.liquidengine.legui.system.context.Context;
+import org.liquidengine.legui.system.layout.LayoutManager;
+import org.liquidengine.legui.system.renderer.Renderer;
+import org.liquidengine.legui.theme.Themes;
+import org.liquidengine.legui.theme.colored.FlatColoredTheme;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
+import org.lwjgl.glfw.GLFWWindowCloseCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLUtil;
@@ -82,11 +97,19 @@ public class FMTB {
 	public static GLFWKeyCallback keyCallback;
 	public static GLFWCursorPosCallback cursorCallback;
 	public static GLFWMouseButtonCallback mouseCallback;
+	public static GLFWWindowCloseCallback closeCallback;
 	public static double cursor_x, cursor_y, cdiffx, cdiffy;
 	public static long window;
 	public static int WIDTH = 1280, HEIGHT = 720;
+	public static Interface ui;
+	public static Context context;
+	public static Renderer renderer;
+	public static Animator animator;
+	public static Frame frame;
 	
 	public static void main(String... args) throws Exception {
+        System.setProperty("joml.nounsafe", Boolean.TRUE.toString());
+        System.setProperty("java.awt.headless", Boolean.TRUE.toString());
 	    System.setProperty("org.lwjgl.librarypath", new File("./libs/").getAbsolutePath());
 		Configuration.SHARED_LIBRARY_EXTRACT_DIRECTORY.set("./libs");
 		Configuration.SHARED_LIBRARY_EXTRACT_PATH.set("./libs");
@@ -101,7 +124,6 @@ public class FMTB {
 	public void run() throws InterruptedException, IOException, NoSuchMethodException, ScriptException {
 		TextureManager.init(); this.setIcon(); Settings.load(); StyleSheet.load(); Translator.init(); timer.init();
         glfwSetErrorCallback(errorCallback = GLFWErrorCallback.createPrint(System.err));
-		glfwSetErrorCallback(errorCallback = GLFWErrorCallback.createPrint(System.err));
 		if(!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW.");
         glfwWindowHint(GLFW_RESIZABLE, GL11.GL_TRUE);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
@@ -117,6 +139,28 @@ public class FMTB {
 		initOpenGL();
 		glfwShowWindow(window);
 		//
+        Themes.setDefaultTheme(new FlatColoredTheme(
+            new Vector4f(105, 147, 214, 1), // backgroundColor
+            new Vector4f(176, 190, 197, 1), // borderColor
+            new Vector4f(100, 181, 246, 1), // strokeColor
+            new Vector4f(165, 214, 167, 1), // allowColor
+            new Vector4f(239, 154, 154, 1), // denyColor
+            ColorConstants.transparent() // shadowColor
+        ));
+        frame = new Frame(WIDTH, HEIGHT);
+        ui = new Interface(WIDTH, HEIGHT);
+        ui.setFocused(false);
+        ui.getListenerMap().addListener(WindowSizeEvent.class, (WindowSizeEventListener) event -> ui.setSize(event.getWidth(), event.getHeight()));
+        frame.getContainer().add(ui);
+        frame.getContainer().setFocused(false);
+        DefaultInitializer initializer = new DefaultInitializer(window, frame);
+		//
+        glfwSetWindowCloseCallback(window, closeCallback = new GLFWWindowCloseCallback(){
+			@Override
+			public void invoke(long window){
+				close = true;
+			}
+		});
         glfwSetKeyCallback(window, (keyCallback = new GLFWKeyCallback() {
             @Override
             public void invoke(long window, int key, int scancode, int action, int mods){
@@ -157,6 +201,11 @@ public class FMTB {
 		    	resize(width, height);
 		    }
 		}));
+        initializer.getCallbackKeeper().getChainKeyCallback().add(keyCallback);
+        initializer.getCallbackKeeper().getChainCursorPosCallback().add(cursorCallback);
+        initializer.getCallbackKeeper().getChainWindowCloseCallback().add(closeCallback);
+        renderer = initializer.getRenderer(); animator = Animator.getInstance();
+        renderer.initialize(); context = initializer.getContext();
         //
 		ggr = new GGR(this, 0, 1, 0, 0, 0, 0);//new GGR(this, 0, 4, 4); ggr.rotation.xCoord = 45; FontRenderer.init();
 		PorterManager.load(); HelperCollector.reload(); //TODO UI = new UserInterface(this); this.setupUI(UI);
@@ -193,14 +242,24 @@ public class FMTB {
 				}
 				else UI.render(false);
 				//
-			}*/ updateFPS();
+			}*/
+			updateFPS();
             glfwPollEvents();
             glfwSwapBuffers(window);
+            animator.runAnimations();
+            initializer.getSystemEventProcessor().processEvents(frame, context);
+            initializer.getGuiEventProcessor().processEvents();
+            LayoutManager.getInstance().layout(frame);
+            if(context != null){
+                Component mouseTargetGui = context.getMouseTargetGui();
+                ui.getMouseTargetLabel().getTextState().setText("-> " + (mouseTargetGui == null ? null : mouseTargetGui.getClass().getSimpleName()));
+            }
             timer.update();
 			if(Settings.discordrpc()) if(++disk_update > 60000){ DiscordRPC.discordRunCallbacks(); disk_update = 0; }
 			//Thread.sleep(50);
 		}
 		DiscordRPC.discordShutdown();
+		renderer.destroy();
         glfwDestroyWindow(window);   
         glfwTerminate();
         Settings.save(); StyleSheet.save(); KeyCompound.save(); SessionHandler.save(); System.exit(0);
@@ -227,7 +286,6 @@ public class FMTB {
 
 	private void loop(){
 		if(glfwWindowShouldClose(window)){ close = true; }//SaveLoad.checkIfShouldSave(true, false); }
-		//checkResizement();
         if(!TextureUpdate.HALT){ TextureUpdate.tryAutoPos(TextureUpdate.ALL); }
 	}
 
@@ -292,44 +350,14 @@ public class FMTB {
 			if(Settings.lighting()) GL11.glDisable(GL11.GL_LIGHTING);
             GL11.glPopMatrix();
         }*/
+		context.updateGlfwWindow();
+        Vector2i size = context.getFramebufferSize();
+        GL11.glClearColor(0.5f, 0.5f, 0.5f, 1);
+        GL11.glViewport(0, 0, size.x, size.y);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-		//glfwGetFramebufferSize(window, WIDTH, HEIGHT);
-        /* Set viewport and clear screen */
-        GL11.glViewport(0, 0, WIDTH, HEIGHT);
-        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-        /* Set ortographic projection */
-        /* Rotate matrix */
         GL11.glLoadIdentity();
-        ggr.apply();
-        //
-        GL11.glRotatef(60, 0f, 0f, 1f);
-        //==//
-        
-        //Print.console("test");
-        //GL11.glPushMatrix();
-        //RGB.WHITE.glColorApply();
-        //glColor3f(1f, 0.001f * (float)time, 0f);
-        TextureManager.bindTexture("t1p");ModelT1P.INSTANCE.render();
-        //GL11.glPopMatrix();
-        
-        //==//
-        GL11.glColor3f(1f, 0.001f * 20, 0f);
-        // Render triangle
-        GL11.glBegin(GL11.GL_TRIANGLES);
-        GL11.glColor3f(1f, 0f, 0f);
-        GL11.glVertex3f(-0.6f, -0.4f, 0f);
-        GL11.glColor3f(0f, 1f, 0f);
-        GL11.glVertex3f(0.6f, -0.4f, 0f);
-        GL11.glColor3f(0f, 0f, 1f);
-        GL11.glVertex3f(0f, 0.6f, 0f);
-        GL11.glEnd();
-        GL11.glPushMatrix(); GL11.glBegin(GL11.GL_QUADS); float cs = 0.5f;
-		GL11.glTexCoord2f(0, 1); GL11.glVertex3f(0 + cs, 0, 0 + cs);
-        GL11.glTexCoord2f(1, 1); GL11.glVertex3f(0 + cs, 0, 0 + cs);
-        GL11.glTexCoord2f(1, 0); GL11.glVertex3f(0 + cs, 0, 0 - cs);
-        GL11.glTexCoord2f(0, 0); GL11.glVertex3f(0 + cs, 0, 0 - cs);
-        GL11.glEnd(); GL11.glPopMatrix();
-        //END
+        ggr.apply(); RGB.BLACK.glColorApply(); ModelT1P.INSTANCE.render();
+        renderer.render(frame, context);
 	}
 	
 	private static final ModelRendererTurbo compound0 = new ModelRendererTurbo(null, 0, 0);

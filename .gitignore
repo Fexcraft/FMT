@@ -67,3 +67,4 @@ stylesheet.json
 temp/
 *.exe
 *.log
+/target/
