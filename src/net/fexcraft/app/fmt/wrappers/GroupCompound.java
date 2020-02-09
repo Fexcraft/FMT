@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.Editors;
 import net.fexcraft.app.fmt.ui.editor.Container;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
@@ -667,8 +668,12 @@ public class GroupCompound {
 	public int tx(TurboList list){ return list == null || list.getGroupTexture() == null ? textureSizeX : list.textureX; }
 	public int ty(TurboList list){ return list == null || list.getGroupTexture() == null ? textureSizeY : list.textureY; }
 	
-	@SuppressWarnings("serial")
 	public static class GroupList extends ArrayList<TurboList> {
+		
+		@Override
+		public boolean add(TurboList list){
+			boolean bool = super.add(list); Editors.general.refreshGroups(); return bool;
+		}
 		
 		public boolean contains(String str){
 			for(TurboList list : this) if(list.id.equals(str)) return true; return false;

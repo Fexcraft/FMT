@@ -15,6 +15,7 @@ import java.util.Timer;
 import javax.script.ScriptException;
 
 import org.joml.Vector2i;
+import org.joml.Vector4f;
 import org.liquidengine.legui.animation.Animator;
 import org.liquidengine.legui.component.Frame;
 import org.liquidengine.legui.listener.processor.EventProcessor;
@@ -26,6 +27,7 @@ import org.liquidengine.legui.system.layout.LayoutManager;
 import org.liquidengine.legui.system.renderer.Renderer;
 import org.liquidengine.legui.system.renderer.nvg.NvgRenderer;
 import org.liquidengine.legui.theme.Themes;
+import org.liquidengine.legui.theme.colored.FlatColoredTheme;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
@@ -139,14 +141,14 @@ public class FMTB {
 		initOpenGL();
 		glfwShowWindow(window);
 		//
-        Themes.setDefaultTheme(/*new FlatColoredTheme(
-        	ColorConstants.darkGray(), // backgroundColor
-            ColorConstants.darkGreen(), // borderColor
-            new Vector4f(100, 181, 246, 1), // strokeColor
-            new Vector4f(165, 214, 167, 1), // allowColor
-            new Vector4f(239, 154, 154, 1), // denyColor
-            ColorConstants.transparent() // shadowColor
-        )*/Themes.FLAT_WHITE);
+        Themes.setDefaultTheme(new FlatColoredTheme(
+			rgba(245, 245, 245, 1), // backgroundColor
+	        rgba(176, 190, 197, 1), // borderColor
+	        rgba(100, 181, 246, 1), // strokeColor
+	        rgba(165, 214, 167, 1), // allowColor
+	        rgba(239, 154, 154, 1), // denyColor
+	        null
+        ));//Themes.FLAT_WHITE);
         frame = new Frame(WIDTH, HEIGHT);
         Interface temp = new Interface();
         frame.getContainer().add(temp);
@@ -280,6 +282,10 @@ public class FMTB {
 	public void resize(int width, int height){
     	WIDTH = width; HEIGHT = height;
 	}
+
+    private static Vector4f rgba(int r, int g, int b, float a) {
+        return new Vector4f(r / 255f, g / 255f, b / 255f, a);
+    }
 	
 	private void input(float delta){
 		ggr.pollInput(delta); ggr.apply();

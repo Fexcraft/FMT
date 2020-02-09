@@ -64,12 +64,35 @@ toolbar.exit=Exit
 editor.multiplicator=Multiplicator
 editor.multiplicator.value=Value: 
 editor.multiplicator.current=Current: %s
+editor.general.attributes=Polygon Attributes
+editor.general.attributes.group=Polygon Group
+editor.general.attributes.name=Polygon Name
+editor.general.attributes.new_group.title=Group Creator
+editor.general.attributes.new_group.desc=Enter a name for the new Group.
+editor.general.attributes.new_group.confirm=Confirm
+editor.general.attributes.new_group.cancel=Cancel
+editor.general.attributes.type=Polygon Type
+editor.general.attributes.painttotexture=Burn to Texture
+editor.general.shape=General Shape
+editor.general.shape.size=Measurements / Size
+editor.general.shape.position=Position (x/y/z)
+editor.general.shape.offset=Offset (x/y/z)
+editor.general.shape.rotation=Rotation (x/y/z)
+editor.general.shape.texture=Texture (u/v)
 
 # Errors
 error.dialog_title=Error
 error.feature_not_available_yet=This feature is not available yet.
 error.feature_not_reimplemented_yet=This feature is not reimplemented yet.
+error.no_polygon_selected=no polygon/s selected
+error.todo=//TODO
 
 # Other
 bottombar.netfield.loggedin=Logged In - %s
 bottombar.netfield.login_failed=Login Failed - GUEST
+modeltree.polygons=Polygons: 
+dialog.saveload.should_save=Do you want to save the<nl>current model first?
+dialog.saveload.should_save.confirm=Yes
+dialog.saveload.should_save.cancel=No
+filechooser.export.title=Select Export Location
+filechooser.export.confirm=Export

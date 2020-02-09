@@ -9,6 +9,7 @@ import org.liquidengine.legui.component.Dialog;
 import org.liquidengine.legui.component.Frame;
 import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.Panel;
+import org.liquidengine.legui.component.TextInput;
 import org.liquidengine.legui.component.optional.align.HorizontalAlign;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.event.WindowSizeEvent;
@@ -92,9 +93,9 @@ public class UserInterpanels {
 			new MenuButton("toolbar.utils.controls", () -> UserInterface.CONTROLS.show())
 		));
 		frame.getContainer().add(new MenuEntry(2, translate("toolbar.editor"),
-			new MenuButton("toolbar.editor.hide_all", NOT_REIMPLEMENTED_YET),
-			new MenuButton("toolbar.editor.general", NOT_REIMPLEMENTED_YET),
-			new MenuButton("toolbar.editor.model_group", NOT_REIMPLEMENTED_YET),
+			new MenuButton("toolbar.editor.hide_all", () -> Editors.hideAll()),
+			new MenuButton("toolbar.editor.general", () -> Editors.show("general")),
+			new MenuButton("toolbar.editor.model_group", () -> Editors.show("modelgroup")),
 			new MenuButton("toolbar.editor.texture", NOT_REIMPLEMENTED_YET)
 		));
 		frame.getContainer().add(new MenuEntry(3, translate("toolbar.shapelist"),
@@ -223,11 +224,12 @@ public class UserInterpanels {
 		}
 		
 		public void toggle(Boolean bool){
-			if(bool == null ? extended : bool){
+			bool = bool == null ? extended : !bool;
+			if(bool){
 				for(MenuButton button : buttons){ button.hide(); }
 				this.setSize(size, 28); extended = false;
 			}
-			else if(bool == null ? !extended : !bool){
+			else{
 				this.setSize(size, 26 + (buttons.length * 26));
 				for(MenuButton button : buttons){ button.show(); }
 				extended = true;
@@ -271,6 +273,46 @@ public class UserInterpanels {
 		
 		public void show(){
 			this.getStyle().setDisplay(DisplayType.MANUAL);
+		}
+		
+	}
+	
+	public static class Label20 extends Label {
+
+		public Label20(String string, int x, int y, int w, int h){
+			super(string, x, y, w, h); getTextState().setFontSize(20f);
+		}
+		
+	}
+	
+	public static class TextInput20 extends TextInput {
+
+		public TextInput20(String string, int x, int y, int w, int h){
+			super(string, x, y, w, h); getTextState().setFontSize(20f);
+		}
+		
+	}
+	
+	public static class NumberInput20 extends TextInput {
+
+		public NumberInput20(String string, int x, int y, int w, int h){
+			super(string, x, y, w, h); getTextState().setFontSize(20f);
+		}
+		
+	}
+	
+	public static class Button20 extends Button {
+
+		public Button20(String string, int x, int y, int w, int h){
+			super(string, x, y, w, h); getTextState().setFontSize(20f);
+		}
+		
+	}
+	
+	public static class Dialog20 extends Dialog {
+
+		public Dialog20(String string, int x, int y){
+			super(string, x, y); getTitleTextState().setFontSize(20f);
 		}
 		
 	}
