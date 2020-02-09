@@ -50,6 +50,7 @@ import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.Editors;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.UserInterpanels;
+import net.fexcraft.app.fmt.ui.UserInterpanels.TextInput20;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
 import net.fexcraft.app.fmt.ui.editor.ModelGroupEditor;
@@ -164,6 +165,7 @@ public class FMTB {
         keyCallback = new GLFWKeyCallback(){
             @Override
             public void invoke(long window, int key, int scancode, int action, int mods){
+            	if(context.getFocusedGui() instanceof TextInput20) return;
     			if(key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) glfwSetWindowShouldClose(window, true);
     			if(key == GLFW_KEY_W){ ggr.pos.xCoord++; }
     			if(key == GLFW_KEY_S){ ggr.pos.xCoord--; }
