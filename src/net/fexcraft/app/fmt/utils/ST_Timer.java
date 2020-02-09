@@ -23,6 +23,8 @@
  */
 package net.fexcraft.app.fmt.utils;
 
+import org.lwjgl.glfw.GLFW;
+
 import net.fexcraft.app.fmt.FMTB;
 
 /**
@@ -113,10 +115,10 @@ public class ST_Timer {
             timeCount -= 1f;
             //
         	if(Settings.bottombar()){
-				Display.setTitle(String.format(FMTB.deftitle0, FMTB.getTitle())); 
+				GLFW.glfwSetWindowTitle(FMTB.window, String.format(FMTB.deftitle0, FMTB.getTitle()));
         	}
         	else{
-        		Display.setTitle(String.format(FMTB.deftitle, fps, FMTB.getTitle()));
+        		GLFW.glfwSetWindowTitle(FMTB.window, String.format(FMTB.deftitle, fps, FMTB.getTitle()));
         	}
         }
     }

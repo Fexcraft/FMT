@@ -12,7 +12,6 @@ import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.UserInterface;
-import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
 import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.ui.tree.RightTree;
@@ -38,6 +37,11 @@ public class GGR {
         pos = new Vec3f(x, y, z); this.root = root;
         rotation = new Vec3f(0, 0, 0);
     }
+    
+    public GGR(FMTB root, float x, float y, float z, float rx, float ry, float rz){
+        pos = new Vec3f(x, y, z); this.root = root;
+        rotation = new Vec3f(rx, ry, rz);
+    }
 
     public void apply(){
         if(rotation.yCoord / 360 > 1){ rotation.yCoord -= 360; }
@@ -50,9 +54,9 @@ public class GGR {
     }
 
     public void pollInput(float delta){
-        acceptMouseInput(delta);
-        if(!TextField.anySelected()) acceptInputMove(delta);
-        acceptInputKeyboard();
+    	processMouseInput(delta);
+        //if(!TextField.anySelected()) acceptInputMove(delta);
+        //acceptInputKeyboard();
     }
     
     private void acceptInputKeyboard(){
@@ -151,20 +155,21 @@ public class GGR {
 	public static boolean clickedL, clickedR; private boolean panning, dragging;
     private int wheel, oldMouseX =- 1, oldMouseY = -1;
 
-    public void acceptMouseInput(float delta){
-        if(clickedR && !Mouse.isButtonDown(1)){
+    public void processMouseInput(float delta){
+        /*if(clickedR && !Mouse.isButtonDown(1)){
             Mouse.setGrabbed(false);//fix mouse grab sticking
         }
         if(clickedL && !Mouse.isButtonDown(0)){
             UserInterface.DRAGGED = null; dragging = true;
         }
-        if(Mouse.isGrabbed()){
-            rotation.yCoord += Mouse.getDX() * Settings.mouse_sensivity.directFloat() * delta;
-            rotation.xCoord += -Mouse.getDY() * Settings.mouse_sensivity.directFloat() * delta;
+        if(Mouse.isGrabbed()){*/
+            rotation.yCoord += FMTB.cdiffx * Settings.mouse_sensivity.directFloat() * delta;
+            rotation.xCoord += -FMTB.cdiffy * Settings.mouse_sensivity.directFloat() * delta;
             rotation.xCoord = Math.max(-maxlookrange, Math.min(maxlookrange, rotation.xCoord));
+            //FMTB.cdiffx = FMTB.cdiffy = 0;
             //
         	//if(Mouse.isButtonDown(0) && !clickedL) RayCoastAway.doTest(true, false); clickedL = Mouse.isButtonDown(0);
-        }
+        /*}
         else{
         	if(!Mouse.isInsideWindow()) return;
         	if(Mouse.isButtonDown(0) && !clickedL) root.UI.onButtonPress(0); clickedL = Mouse.isButtonDown(0);
@@ -194,7 +199,7 @@ public class GGR {
         if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE) && !ControlsAdjuster.CATCHING){
         	if(Mouse.isGrabbed()){ Mouse.setGrabbed(false); return; }
             root.reset(true); Mouse.setGrabbed(false); TextureEditor.reset();
-        }
+        }*/
     }
     
     public static void resetDragging(){

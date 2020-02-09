@@ -2,12 +2,9 @@ package net.fexcraft.app.fmt;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-import java.awt.Desktop;
 import java.awt.DisplayMode;
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -24,6 +21,7 @@ import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GLUtil;
 import org.lwjgl.system.Configuration;
 import org.lwjgl.system.Platform;
 
@@ -36,7 +34,6 @@ import net.arikia.dev.drpc.DiscordRPC;
 import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.ui.Dialog;
-import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
@@ -85,8 +82,9 @@ public class FMTB {
 	public static GLFWKeyCallback keyCallback;
 	public static GLFWCursorPosCallback cursorCallback;
 	public static GLFWMouseButtonCallback mouseCallback;
-	public static double cursor_x, cursor_y;
-	private long window;
+	public static double cursor_x, cursor_y, cdiffx, cdiffy;
+	public static long window;
+	public static int WIDTH = 1280, HEIGHT = 720;
 	
 	public static void main(String... args) throws Exception {
 	    System.setProperty("org.lwjgl.librarypath", new File("./libs/").getAbsolutePath());
@@ -109,32 +107,36 @@ public class FMTB {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
         //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        window = glfwCreateWindow(1280, 720, "Fex's Modelling Toolbox", 0, 0);
+        window = glfwCreateWindow(WIDTH, HEIGHT, "Fex's Modelling Toolbox", 0, 0);
         if(window == 0) {
             throw new RuntimeException("Failed to create window");
         }
         glfwMakeContextCurrent(window);
         GL.createCapabilities();
+		GLUtil.setupDebugMessageCallback();
 		initOpenGL();
 		glfwShowWindow(window);
 		//
         glfwSetKeyCallback(window, (keyCallback = new GLFWKeyCallback() {
             @Override
             public void invoke(long window, int key, int scancode, int action, int mods){
-                if(key == GLFW_KEY_SPACE && action == GLFW_RELEASE){
-                    //
-                } else if(key == GLFW_KEY_F1 && action == GLFW_RELEASE){
-                	// 
-                } else if(key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE){
-                	//
-                }
+    			if(key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) glfwSetWindowShouldClose(window, true);
+    			if(key == GLFW_KEY_W){ ggr.pos.xCoord++; }
+    			if(key == GLFW_KEY_S){ ggr.pos.xCoord--; }
+    			if(key == GLFW_KEY_A){ ggr.pos.zCoord++; }
+    			if(key == GLFW_KEY_D){ ggr.pos.zCoord--; }
+    			if(key == GLFW_KEY_UP){ ggr.rotation.xCoord -= 15; }
+    			if(key == GLFW_KEY_DOWN){ ggr.rotation.xCoord += 15; }
+    			if(key == GLFW_KEY_LEFT){ ggr.rotation.yCoord -= 15; }
+    			if(key == GLFW_KEY_RIGHT){ ggr.rotation.yCoord += 15; }
+    			//Print.console(key, action);
             }
         }));
         glfwSetCursorPosCallback(window, (cursorCallback = new GLFWCursorPosCallback() {
             @Override
             public void invoke(long window, double xpos, double ypos) {
-                cursor_x = xpos;
-                cursor_y = /*//TODO height -*/ ypos;
+                cdiffx = cursor_x - xpos; cdiffy = cursor_y - (HEIGHT - ypos);
+                cursor_x = xpos; cursor_y = HEIGHT - ypos;
             }
         }));
         glfwSetMouseButtonCallback(window, (mouseCallback = new GLFWMouseButtonCallback(){
@@ -149,8 +151,14 @@ public class FMTB {
                 }
             }
         }));
+		glfwSetFramebufferSizeCallback(window, (framebufferSizeCallback = new GLFWFramebufferSizeCallback(){
+		    @Override
+		    public void invoke(long window, int width, int height){
+		    	resize(width, height);
+		    }
+		}));
         //
-		ggr = new GGR(this, 0, 4, 4); ggr.rotation.xCoord = 45; FontRenderer.init();
+		ggr = new GGR(this, 0, 1, 0, 0, 0, 0);//new GGR(this, 0, 4, 4); ggr.rotation.xCoord = 45; FontRenderer.init();
 		PorterManager.load(); HelperCollector.reload(); //TODO UI = new UserInterface(this); this.setupUI(UI);
 		SessionHandler.checkIfLoggedIn(true, true); checkForUpdates(); //TODO KeyCompound.init(); KeyCompound.load();
 		//
@@ -173,11 +181,11 @@ public class FMTB {
 		}
 		//
 		while(!close){
-            //TODO input(accumulator += (delta = timer.getDelta()));
+            input(accumulator += (delta = timer.getDelta()));
             while(accumulator >= interval){
             	loop(); timer.updateUPS();
                 accumulator -= interval;
-            } checkResizement();
+            }
 			render(alpha = accumulator / interval);
 			/*if(!RayCoastAway.PICKING){
 				if(ImageHelper.HASTASK){
@@ -188,7 +196,7 @@ public class FMTB {
 			}*/ updateFPS();
             glfwPollEvents();
             glfwSwapBuffers(window);
-            //TODO timer.update();
+            timer.update();
 			if(Settings.discordrpc()) if(++disk_update > 60000){ DiscordRPC.discordRunCallbacks(); disk_update = 0; }
 			//Thread.sleep(50);
 		}
@@ -206,26 +214,21 @@ public class FMTB {
 		//TODO Display.setIcon(new java.nio.ByteBuffer[]{ TextureManager.getTexture("icon", false).getBuffer(), TextureManager.getTexture("icon", false).getBuffer() });
 	}
 	
+	public void resize(int width, int height){
+    	WIDTH = width; HEIGHT = height;
+		/*displaymode = new DisplayMode(Display.getWidth(), Display.getHeight());
+        GLU.gluPerspective(45.0f, displaymode.getWidth() / displaymode.getHeight(), 0.1f, 4096f / 2);*/
+		//initOpenGL(); UI.rescale();
+	}
+	
 	private void input(float delta){
 		ggr.pollInput(delta); ggr.apply();
 	}
 
 	private void loop(){
-		if(glfwWindowShouldClose(window)){ SaveLoad.checkIfShouldSave(true, false); }
+		if(glfwWindowShouldClose(window)){ close = true; }//SaveLoad.checkIfShouldSave(true, false); }
 		//checkResizement();
         if(!TextureUpdate.HALT){ TextureUpdate.tryAutoPos(TextureUpdate.ALL); }
-	}
-	
-	private void checkResizement(){
-		glfwSetFramebufferSizeCallback(window, (framebufferSizeCallback = new GLFWFramebufferSizeCallback() {
-		    @Override
-		    public void invoke(long window, int width, int height) {
-				/*displaymode = new DisplayMode(Display.getWidth(), Display.getHeight());
-		        GLU.gluPerspective(45.0f, displaymode.getWidth() / displaymode.getHeight(), 0.1f, 4096f / 2);
-				GL11.glViewport(0, 0, displaymode.getWidth(), displaymode.getHeight());*///TODO
-				initOpenGL(); UI.rescale();
-		    }
-		}));
 	}
 
 	public long getTime(){
@@ -233,8 +236,16 @@ public class FMTB {
 	}
 	
 	private void render(float alpha){
-        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-        GL11.glLoadIdentity(); //GL11.glLoadIdentity();		
+        /*GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+        GL11.glLoadIdentity(); //GL11.glLoadIdentity();
+        //
+		GL11.glViewport(0, 0, WIDTH, HEIGHT);
+        float ratio = WIDTH / (float)HEIGHT;
+        GL11.glMatrixMode(GL11.GL_PROJECTION);
+        GL11.glLoadIdentity();
+        GL11.glOrtho(-ratio, ratio, -1f, 1f, 1f, -1f);
+        GL11.glMatrixMode(GL11.GL_MODELVIEW);
+        //
         GL11.glRotatef(ggr.rotation.xCoord, 1, 0, 0);
         GL11.glRotatef(ggr.rotation.yCoord, 0, 1, 0);
         GL11.glRotatef(ggr.rotation.zCoord, 0, 0, 1);
@@ -280,7 +291,45 @@ public class FMTB {
             //}
 			if(Settings.lighting()) GL11.glDisable(GL11.GL_LIGHTING);
             GL11.glPopMatrix();
-        }
+        }*/
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+		//glfwGetFramebufferSize(window, WIDTH, HEIGHT);
+        /* Set viewport and clear screen */
+        GL11.glViewport(0, 0, WIDTH, HEIGHT);
+        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+        /* Set ortographic projection */
+        /* Rotate matrix */
+        GL11.glLoadIdentity();
+        ggr.apply();
+        //
+        GL11.glRotatef(60, 0f, 0f, 1f);
+        //==//
+        
+        //Print.console("test");
+        //GL11.glPushMatrix();
+        //RGB.WHITE.glColorApply();
+        //glColor3f(1f, 0.001f * (float)time, 0f);
+        TextureManager.bindTexture("t1p");ModelT1P.INSTANCE.render();
+        //GL11.glPopMatrix();
+        
+        //==//
+        GL11.glColor3f(1f, 0.001f * 20, 0f);
+        // Render triangle
+        GL11.glBegin(GL11.GL_TRIANGLES);
+        GL11.glColor3f(1f, 0f, 0f);
+        GL11.glVertex3f(-0.6f, -0.4f, 0f);
+        GL11.glColor3f(0f, 1f, 0f);
+        GL11.glVertex3f(0.6f, -0.4f, 0f);
+        GL11.glColor3f(0f, 0f, 1f);
+        GL11.glVertex3f(0f, 0.6f, 0f);
+        GL11.glEnd();
+        GL11.glPushMatrix(); GL11.glBegin(GL11.GL_QUADS); float cs = 0.5f;
+		GL11.glTexCoord2f(0, 1); GL11.glVertex3f(0 + cs, 0, 0 + cs);
+        GL11.glTexCoord2f(1, 1); GL11.glVertex3f(0 + cs, 0, 0 + cs);
+        GL11.glTexCoord2f(1, 0); GL11.glVertex3f(0 + cs, 0, 0 - cs);
+        GL11.glTexCoord2f(0, 0); GL11.glVertex3f(0 + cs, 0, 0 - cs);
+        GL11.glEnd(); GL11.glPopMatrix();
+        //END
 	}
 	
 	private static final ModelRendererTurbo compound0 = new ModelRendererTurbo(null, 0, 0);
@@ -289,13 +338,13 @@ public class FMTB {
 	//private static final ModelRendererTurbo sphere1 = new ModelRendererTurbo(null, 256, 256).addSphere(0, 0, 0, 32.01f, 128, 128, 16, 16).setLines(true);
 
 	private void initOpenGL(){
-        GL11.glEnable(GL11.GL_LIGHTING);
-        GL11.glEnable(GL11.GL_LIGHT0);
-        GL11.glLightModeli(GL11.GL_LIGHT_MODEL_TWO_SIDE,GL11.GL_TRUE);
+        //GL11.glEnable(GL11.GL_LIGHTING);
+        //GL11.glEnable(GL11.GL_LIGHT0);
+        //GL11.glLightModeli(GL11.GL_LIGHT_MODEL_TWO_SIDE,GL11.GL_TRUE);
         GL11.glEnable(GL11.GL_COLOR_MATERIAL);
         GL11.glColorMaterial(GL11.GL_FRONT_AND_BACK,GL11.GL_AMBIENT_AND_DIFFUSE);
-        this.setLightPos(Settings.getLight0Position());
-        if(!Settings.lighting()) GL11.glDisable(GL11.GL_LIGHTING);
+        //this.setLightPos(Settings.getLight0Position());
+        //if(!Settings.lighting()) GL11.glDisable(GL11.GL_LIGHTING);
         //
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
     	GL11.glShadeModel(GL11.GL_SMOOTH);
@@ -315,10 +364,10 @@ public class FMTB {
         GL11.glEnable(GL11.GL_BLEND); GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 	}
 
-	private void setLightPos(float[] position){
+	/*private void setLightPos(float[] position){
 		java.nio.FloatBuffer fb = org.lwjgl.BufferUtils.createFloatBuffer(4); fb.put(position); fb.flip();
         GL11.glLightfv(GL11.GL_LIGHT0, GL11.GL_POSITION, fb);
-	}
+	}*/
 	
 	/** use SaveLoad.checkIfShouldSave(true) first! */
 	public void close(boolean bool){
@@ -401,7 +450,7 @@ public class FMTB {
 						}
 					}
 				}
-				String newver = obj.get("latest_version").getAsString(); boolean bool = version.equals(newver);
+				/*String newver = obj.get("latest_version").getAsString(); boolean bool = version.equals(newver);
 				String welcome = Translator.format("dialog.greeting.welcome", "Welcome to FMT!<nl><version:%s>", version);
 				String newversion = Translator.format("dialog.greeting.newversion", "New version available!<nl>%s >> %s", newver, version);
 				UserInterface.DIALOGBOX.show(bool ? welcome : newversion, Translator.translate("dialog.greeting.confirm", "ok"),
@@ -413,7 +462,7 @@ public class FMTB {
 						try{ Desktop.getDesktop().browse(new URL("http://fexcraft.net/app/fmt").toURI()); }
 						catch(IOException | URISyntaxException e){ e.printStackTrace(); }
 					}
-				});
+				});*/
 			}
 		}.start();
 	}
