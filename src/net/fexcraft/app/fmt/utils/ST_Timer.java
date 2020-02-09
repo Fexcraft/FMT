@@ -114,12 +114,12 @@ public class ST_Timer {
             upsCount = 0;
             timeCount -= 1f;
             //
-        	if(Settings.bottombar()){
+        	/*if(Settings.bottombar()){
 				GLFW.glfwSetWindowTitle(FMTB.window, String.format(FMTB.deftitle0, FMTB.getTitle()));
         	}
-        	else{
+        	else{*/
         		GLFW.glfwSetWindowTitle(FMTB.window, String.format(FMTB.deftitle, fps, FMTB.getTitle()));
-        	}
+        	/*}*/
         }
     }
 

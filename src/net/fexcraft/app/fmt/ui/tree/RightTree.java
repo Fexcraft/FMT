@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Optional;
 
+import org.liquidengine.legui.input.Mouse;
+
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
@@ -23,7 +25,6 @@ import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.utils.Animator.Animation;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.HelperCollector;
-import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.utils.StyleSheet;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
@@ -67,7 +68,7 @@ public abstract class RightTree extends Element implements Scrollable {
 	public Element repos(){
 		if(UserInterface.TOOLBAR == null){ return this; }//skip, this call is before the UI is setup
 		x = UserInterface.width - width; y = UserInterface.TOOLBAR.height + UserInterface.TOOLBAR.border_width;
-		height = UserInterface.height - y; if(Settings.bottombar()) height -= 29; clearVertexes();
+		height = UserInterface.height - y; /*if(Settings.bottombar()) height -= 29;*/ clearVertexes();
 		for(Element elm : elements) elm.repos(); return this;
 	}
 	

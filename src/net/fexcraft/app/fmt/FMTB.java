@@ -98,6 +98,7 @@ public class FMTB {
 	public static GLFWMouseButtonCallback mouseCallback;
 	public static GLFWWindowCloseCallback closeCallback;
 	public static double cursor_x, cursor_y, cdiffx, cdiffy;
+	public static boolean hold_right, hold_left;
 	public static long window;
 	public static int WIDTH = 1280, HEIGHT = 720;
 	public static Context context;
@@ -176,7 +177,8 @@ public class FMTB {
         };
         cursorCallback = new GLFWCursorPosCallback(){
             @Override
-            public void invoke(long window, double xpos, double ypos) {
+            public void invoke(long window, double xpos, double ypos){
+            	if(!hold_right) return;
                 cdiffx = cursor_x - xpos; cdiffy = cursor_y - (HEIGHT - ypos);
                 cursor_x = xpos; cursor_y = HEIGHT - ypos;
             }
@@ -184,12 +186,13 @@ public class FMTB {
         mouseCallback = new GLFWMouseButtonCallback(){
             @Override
             public void invoke(long window, int button, int action, int mods){
-                if(button == 0) {
-                    if(action == GLFW_PRESS){
-                        //
-                    } else if(action == GLFW_RELEASE){
-                        //
-                    }
+                if(button == 0){
+                	if(action == GLFW_PRESS) hold_left = true;
+                	else if(action == GLFW_RELEASE) hold_left = false;
+                }
+                else if(button == 1){
+                	if(action == GLFW_PRESS) hold_right = true;
+                	else if(action == GLFW_RELEASE) hold_right = false;
                 }
             }
         };
@@ -280,7 +283,6 @@ public class FMTB {
 	}
 
 	private void loop(){
-		if(glfwWindowShouldClose(window)){ close = true; }//SaveLoad.checkIfShouldSave(true, false); }
         if(!TextureUpdate.HALT){ TextureUpdate.tryAutoPos(TextureUpdate.ALL); }
 	}
 
@@ -352,7 +354,10 @@ public class FMTB {
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 		GL11.glLoadIdentity(); RGB.glColorReset();
 		//
+		GL11.glPushMatrix();
+        GL11.glRotatef(180, 1, 0, 0);
         ggr.apply(); ModelT1P.INSTANCE.render();
+        GL11.glPopMatrix();
         //
 		GL11.glLoadIdentity(); RGB.glColorReset();
 		GL11.glDepthFunc(GL11.GL_ALWAYS); GL11.glDisable(GL11.GL_ALPHA_TEST);
@@ -434,7 +439,7 @@ public class FMTB {
 		TextureManager.loadTexture("icons/editors/expanded", null);
 		//
 		(UserInterface.TOOLBAR = new Toolbar()).repos();
-		(UserInterface.BOTTOMBAR = new Bottombar()).setVisible(Settings.bottombar());
+		//(UserInterface.BOTTOMBAR = new Bottombar()).setVisible(Settings.bottombar());
 		ui.getElements().add(ModelTree.TREE);
 		ui.getElements().add(HelperTree.TREE);
 		ui.getElements().add(FVTMTree.TREE);

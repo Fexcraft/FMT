@@ -33,7 +33,7 @@ public class Translator {
 			if(string.length() < 3 || string.startsWith("#") || string.startsWith("//")) continue;
 			if(string.startsWith("DEFAULT_CHARS = ")){
 				FontRenderer.DEFAULT_CHARS += string.replace("DEFAULT_CHARS = ", "");
-				Print.console("Applying new chars from land file."); continue;
+				Print.console("Applying new chars from lang file."); continue;
 			}
 			String[] str = string.split("="); if(str.length < 2) continue; SEL.put(str[0], str[1]);
 		} scanner.close();

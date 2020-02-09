@@ -23,7 +23,7 @@ import net.fexcraft.lib.common.utils.Print;
 public class Settings {
 	
 	private static Setting floor, lines, demo, cube, polygon_marker, polygon_count, lighting, cullface, animate,
-		discordrpc, discordrpc_sm, discordrpc_rtonm, ui_scale, bottombar, numberfieldarrows, preview_colorpicker;
+		discordrpc, discordrpc_sm, discordrpc_rtonm, ui_scale, numberfieldarrows, preview_colorpicker;
 	public static Setting movespeed, mouse_sensivity, internal_cursor;
 
 	public static boolean floor(){ return floor.getValue(); }
@@ -38,7 +38,7 @@ public class Settings {
 
 	public static boolean polygonCount(){ return polygon_count.getValue(); }
 
-	public static boolean bottombar(){ return bottombar.getValue(); }
+	//public static boolean bottombar(){ return bottombar.getValue(); }
 
 	public static boolean lighting(){ return lighting.getValue(); }
 
@@ -92,9 +92,9 @@ public class Settings {
 		return preview_colorpicker.toggle();
 	}
 
-	public static boolean toggleBottombar(){
+	/*public static boolean toggleBottombar(){
 		FMTB.get().UI.getElement("bottombar").setVisible(bottombar.toggle()); return bottombar();
-	}
+	}*/
 
 	public static boolean toggleLighting(){
 		Print.console("Toggling lighting: " + !lighting.getBooleanValue());
@@ -197,7 +197,7 @@ public class Settings {
 		discordrpc_sm = SETTINGS.get("discord_rpc-show_model");
 		discordrpc_rtonm = SETTINGS.get("discord_rpc-reset_timer_on_new_model");
 		ui_scale = SETTINGS.get("ui_scale");
-		bottombar = SETTINGS.get("bottombar");
+		//bottombar = SETTINGS.get("bottombar");
 		numberfieldarrows = SETTINGS.get("numberfield_arrows");
 		preview_colorpicker = SETTINGS.get("preview_colorpicker");
 		movespeed = SETTINGS.get("camera_movespeed");
@@ -243,7 +243,6 @@ public class Settings {
 		return SETTINGS;
 	}
 	
-	@SuppressWarnings("serial")
 	public static class SettingsMap extends TreeMap<String, Setting> {
 		
 		public void add(Setting setting){
