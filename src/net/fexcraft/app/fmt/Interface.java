@@ -12,8 +12,6 @@ import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.PRES
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.RELEASE;
 import static org.liquidengine.legui.input.Mouse.MouseButton.MOUSE_BUTTON_LEFT;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import org.liquidengine.legui.animation.Animation;
@@ -63,12 +61,12 @@ public class Interface extends Panel {
     private ImageView imageView;
     private CheckBox generateEventsByLayoutManager;
 
-    public Interface() {
+    public Interface(){
         this(800, 600);
     }
 
     public Interface(int width, int height) {
-        super(0, 0, width, height);
+        super(0, 100, width, height);
         //@formatter:off
         Panel p1 = new Panel(1 * 20, 10, 10, 10);
         this.add(p1);
@@ -183,7 +181,7 @@ public class Interface extends Panel {
         widget.getContainer().getStyle().setDisplay(DisplayType.FLEX);
         widget.getContainer().add(inner);
 
-        AtomicInteger counter = new AtomicInteger();
+        //AtomicInteger counter = new AtomicInteger();
         /*inner.getListenerMap().addListener(ChangeSizeEvent.class, e -> {
             counter.getAndIncrement();
             inner.getTitle().getTextState().setText(innerText + "; Resize events: " + counter.get());
