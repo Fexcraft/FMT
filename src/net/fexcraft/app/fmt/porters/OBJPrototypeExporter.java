@@ -34,6 +34,7 @@ public class OBJPrototypeExporter extends ExImPorter {
 	
 	public OBJPrototypeExporter(){
 		settings.add(new Setting(Type.BOOLEAN, "flip_model", true));
+		settings.add(new Setting(Type.BOOLEAN, "flip_texture", true));
 		settings.add(new Setting(Type.FLOAT, "scale", 1f));
 		settings.add(new Setting(Type.BOOLEAN, "create_mtl", false));
 	}
@@ -63,7 +64,7 @@ public class OBJPrototypeExporter extends ExImPorter {
 		buffer.append("# FlipAxes: true\n\n"); Axis3DL axis, axis1 = null;
 		if(bool) (axis1 = new Axis3DL()).setAngles(180, 180, 0);
 		//
-		float texsx = 1f / compound.textureSizeX, texsy = 1f/ compound.textureSizeY;
+		//float texsx = 1f / compound.textureSizeX, texsy = 1f/ compound.textureSizeY;
 		for(TurboList list : compound.getGroups()){
 			buffer.append("# Group Name\n"); axis = new Axis3DL();
 			buffer.append("g " + list.id + "\nusemtl fmt_material\n");
@@ -90,7 +91,9 @@ public class OBJPrototypeExporter extends ExImPorter {
 						}
 					}
 					for(TexturedVertex vert : poly.getVertices()){
-						buffer.append("vt " + (vert.textureX * texsx) + " " + (vert.textureY * texsy) + "\n");
+						if(settings.get("flip_texture").getBooleanValue()){
+							buffer.append("vt " + vert.textureX + " " + (-vert.textureY + 1f) + "\n");
+						} else buffer.append("vt " + vert.textureX + " " + vert.textureY + "\n");
 					}
 					buffer.append("f"); for(int i = 0; i < poly.getVertices().length; i++){
 						buffer.append(" " + (faceid + i) + "/" + (faceid + i));
