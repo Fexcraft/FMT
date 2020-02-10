@@ -2,7 +2,6 @@ package net.fexcraft.app.fmt;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-import java.awt.DisplayMode;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -66,6 +65,7 @@ import net.fexcraft.app.fmt.ui.tree.HelperTree;
 import net.fexcraft.app.fmt.ui.tree.ModelTree;
 import net.fexcraft.app.fmt.utils.*;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
+import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Time;
 import net.fexcraft.lib.common.utils.HttpUtil;
@@ -88,7 +88,6 @@ public class FMTB {
 	private boolean close;
 	public static GGR ggr;
 	private static FMTB INSTANCE;
-	private DisplayMode displaymode;
 	public UserInterface UI;
 	public static GroupCompound MODEL = new GroupCompound(null);
 	public static Timer BACKUP_TIMER, TEX_UPDATE_TIMER;
@@ -153,8 +152,7 @@ public class FMTB {
 	        null
         ));//Themes.FLAT_WHITE);
         frame = new Frame(WIDTH, HEIGHT);
-        Interface temp = new Interface();
-        frame.getContainer().add(temp);
+        //frame.getContainer().add(new Interface());
         Editors.initializeEditors(frame);
         UserInterpanels.addToolbarButtons(frame);
         context = new Context(window);
@@ -172,14 +170,16 @@ public class FMTB {
             public void invoke(long window, int key, int scancode, int action, int mods){
             	if(context.getFocusedGui() instanceof TextInput20) return;
     			if(key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) glfwSetWindowShouldClose(window, true);
-    			if(key == GLFW_KEY_W){ ggr.pos.xCoord++; }
-    			if(key == GLFW_KEY_S){ ggr.pos.xCoord--; }
-    			if(key == GLFW_KEY_A){ ggr.pos.zCoord++; }
-    			if(key == GLFW_KEY_D){ ggr.pos.zCoord--; }
-    			if(key == GLFW_KEY_UP){ ggr.rotation.xCoord -= 15; }
-    			if(key == GLFW_KEY_DOWN){ ggr.rotation.xCoord += 15; }
-    			if(key == GLFW_KEY_LEFT){ ggr.rotation.yCoord -= 15; }
-    			if(key == GLFW_KEY_RIGHT){ ggr.rotation.yCoord += 15; }
+    			if(key == GLFW_KEY_W){ ggr.pos.zCoord -= 0.25; }
+    			if(key == GLFW_KEY_S){ ggr.pos.zCoord += 0.25; }
+    			if(key == GLFW_KEY_A){ ggr.pos.xCoord -= 0.25; }
+    			if(key == GLFW_KEY_D){ ggr.pos.xCoord += 0.25; }
+    			if(key == GLFW_KEY_SPACE){ ggr.pos.yCoord += 0.25; }
+    			if(key == GLFW_KEY_LEFT_SHIFT){ ggr.pos.yCoord -= 0.25; }
+    			if(key == GLFW_KEY_UP){ ggr.rotation.xCoord -= 5; }
+    			if(key == GLFW_KEY_DOWN){ ggr.rotation.xCoord += 5; }
+    			if(key == GLFW_KEY_LEFT){ ggr.rotation.yCoord -= 5; }
+    			if(key == GLFW_KEY_RIGHT){ ggr.rotation.yCoord += 5; }
     			//Print.console(key, action);
             }
         };
@@ -229,7 +229,8 @@ public class FMTB {
         renderer = new NvgRenderer();
         renderer.initialize();
         //
-		ggr = new GGR(this, 0, 0, 0, 0, 0, 0);//new GGR(this, 0, 4, 4); ggr.rotation.xCoord = 45; FontRenderer.init();
+		//ggr = new GGR(this, 0, 0, 0, 0, 0, 0);
+		ggr = new GGR(this, 0, 4, 4); ggr.rotation.xCoord = 45;
 		PorterManager.load(); HelperCollector.reload();
 		SessionHandler.checkIfLoggedIn(true, true); checkForUpdates(); //TODO KeyCompound.init(); KeyCompound.load();
 		//
@@ -293,6 +294,7 @@ public class FMTB {
 	
 	public void resize(int width, int height){
     	WIDTH = width; HEIGHT = height;
+    	perspective(45.0f, (float)WIDTH / (float)HEIGHT, 0.1f, 4096f / 2);
 	}
 
     private static Vector4f rgba(int r, int g, int b, float a) {
@@ -312,21 +314,13 @@ public class FMTB {
 	}
 	
 	private void render(float alpha){
-        /*GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-        GL11.glLoadIdentity(); //GL11.glLoadIdentity();
-        //
-		GL11.glViewport(0, 0, WIDTH, HEIGHT);
-        float ratio = WIDTH / (float)HEIGHT;
-        GL11.glMatrixMode(GL11.GL_PROJECTION);
-        GL11.glLoadIdentity();
-        GL11.glOrtho(-ratio, ratio, -1f, 1f, 1f, -1f);
-        GL11.glMatrixMode(GL11.GL_MODELVIEW);
-        //
-        GL11.glRotatef(ggr.rotation.xCoord, 1, 0, 0);
-        GL11.glRotatef(ggr.rotation.yCoord, 0, 1, 0);
-        GL11.glRotatef(ggr.rotation.zCoord, 0, 0, 1);
-        GL11.glTranslatef(-ggr.pos.xCoord, -ggr.pos.yCoord, -ggr.pos.zCoord);
-        //if(GAMETEST){ GameHandler.render(); return; }
+		context.updateGlfwWindow();
+        Vector2i size = context.getFramebufferSize();
+        GL11.glClearColor(0.5f, 0.5f, 0.5f, 1);
+        GL11.glViewport(0, 0, size.x, size.y);
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+        RGB.glColorReset(); ggr.apply();
+		//
         GL11.glRotatef(180, 1, 0, 0);
         GL11.glPushMatrix();
         RGB.WHITE.glColorApply();
@@ -363,31 +357,45 @@ public class FMTB {
             	for(GroupCompound model : HelperCollector.LOADED){ RGB.glColorReset(); model.render(); }
             }
             //if(Settings.demo()){
-                TextureManager.bindTexture("t1p"); ModelT1P.INSTANCE.render();
+                //TextureManager.bindTexture("t1p");
+                ModelT1P.INSTANCE.render();
             //}
 			if(Settings.lighting()) GL11.glDisable(GL11.GL_LIGHTING);
             GL11.glPopMatrix();
-        }*/
-		context.updateGlfwWindow();
-        Vector2i size = context.getFramebufferSize();
-        GL11.glClearColor(0.5f, 0.5f, 0.5f, 1);
-        GL11.glViewport(0, 0, size.x, size.y);
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-		GL11.glLoadIdentity(); RGB.glColorReset();
-		//
-		GL11.glPushMatrix();
-        GL11.glRotatef(180, 1, 0, 0);
-        ggr.apply(); ModelT1P.INSTANCE.render();
-        GL11.glPopMatrix();
+        }
         //
+		{
+			GL11.glPushMatrix();
+	        GL11.glMatrixMode(GL11.GL_PROJECTION);
+	        GL11.glPushMatrix();
+	        GL11.glLoadIdentity();
+	        GL11.glOrtho(0, WIDTH, HEIGHT, 0, -100, 100);
+	        GL11.glMatrixMode(GL11.GL_MODELVIEW);
+	        GL11.glPushMatrix();
+	        GL11.glLoadIdentity();
+		}
+		//
 		GL11.glLoadIdentity(); RGB.glColorReset();
 		GL11.glDepthFunc(GL11.GL_ALWAYS); GL11.glDisable(GL11.GL_ALPHA_TEST);
-        renderer.render(frame, context);
-        GL11.glDepthFunc(GL11.GL_LEQUAL);
-        //GL11.glClearColor(0.5f, 0.5f, 0.5f, 0.2f);
-    	if(clearcolor == null){ clearcolor = Settings.getBackGroundColor(); }
-    	GL11.glClearColor(clearcolor[0], clearcolor[1], clearcolor[2], clearcolor[3]);
-        GL11.glClearDepth(1.0);
+		/*if(false){
+			//screenshot overlay
+		}
+		else{*/
+			renderer.render(frame, context);
+		//}
+		GL11.glDepthFunc(GL11.GL_LESS); GL11.glEnable(GL11.GL_ALPHA_TEST);
+		//
+		{
+	        GL11.glMatrixMode(GL11.GL_PROJECTION);
+	        GL11.glPopMatrix();
+	        GL11.glMatrixMode(GL11.GL_MODELVIEW);
+	        GL11.glPopMatrix();
+	        GL11.glDepthFunc(GL11.GL_LEQUAL);
+	    	if(clearcolor == null){ clearcolor = Settings.getBackGroundColor(); }
+	    	GL11.glClearColor(clearcolor[0], clearcolor[1], clearcolor[2], clearcolor[3]);
+	        GL11.glClearDepth(1.0);
+	        GL11.glPopMatrix();
+		}
 	}
 	
 	private float[] clearcolor;
@@ -416,12 +424,17 @@ public class FMTB {
         GL11.glDepthFunc(GL11.GL_LEQUAL);
         GL11.glMatrixMode(GL11.GL_PROJECTION);
         GL11.glLoadIdentity();
-        //TODO GLU.gluPerspective(45.0f, (float)displaymode.getWidth() / (float)displaymode.getHeight(), 0.1f, 4096f / 2);
+        perspective(45.0f, (float)WIDTH / (float)HEIGHT, 0.1f, 4096f / 2);
         GL11.glMatrixMode(GL11.GL_MODELVIEW);
         GL11.glHint(GL11.GL_PERSPECTIVE_CORRECTION_HINT, GL11.GL_NICEST);
         //
         GL11.glAlphaFunc(GL11.GL_GREATER, 0.5f); GL11.glEnable(GL11.GL_ALPHA_TEST);
         GL11.glEnable(GL11.GL_BLEND); GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+	}
+	
+	public static void perspective(float fovY, float aspect, float zNear, float zFar){
+		float fW, fH; fH = (float)(Math.tan( fovY / 360 * Static.PI) * zNear); fW = fH * aspect;
+	    GL11.glFrustum( -fW, fW, -fH, fH, zNear, zFar );
 	}
 
 	/*private void setLightPos(float[] position){
@@ -441,10 +454,6 @@ public class FMTB {
 	public static void showDialogbox(String title, String button0, String button1, Runnable run0, Runnable run1, int progress, RGB color){
 		UserInterface.DIALOGBOX.show(title, button0, button1, run0, run1);
 		UserInterface.DIALOGBOX.progress = progress; UserInterface.DIALOGBOX.progresscolor = color;
-	}
-
-	public DisplayMode getDisplayMode(){
-		return displaymode;
 	}
 
 	public void setupUI(UserInterface ui){

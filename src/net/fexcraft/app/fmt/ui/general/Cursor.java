@@ -21,7 +21,7 @@ public class Cursor extends Element {
 
 	@Override
 	public void renderSelf(int root_width, int root_height){
-		if(!Settings.internal_cursor()) return; x = FMTB.cursor_x; y = FMTB.get().getDisplayMode().getHeight() - FMTB.cursor_y;
+		if(!Settings.internal_cursor()) return; x = FMTB.cursor_x; y = FMTB.HEIGHT - FMTB.cursor_y;
 		this.renderQuad(x, y, width, height, "icons/cursor/" + (FMTB.hold_right ? "camera_rotate" : FMTB.ggr.isDragging() ? "dragging" : "default"));
 	}
 

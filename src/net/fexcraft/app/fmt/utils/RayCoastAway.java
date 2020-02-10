@@ -30,7 +30,7 @@ public class RayCoastAway {
 	public static void doTest(boolean bool, boolean mouseoff){
 		/*if(!Settings.rayPicking()) return;*/ if(bool && !PICKING){ PICKING = true; MOUSEOFF = mouseoff; return; } if(FMTB.get() == null) return;
 		//
-		int width = FMTB.get().getDisplayMode().getWidth(), height = FMTB.get().getDisplayMode().getHeight();
+		int width = FMTB.WIDTH, height = FMTB.HEIGHT;
 		if(mouseoff){ width = FMTB.cursor_x * 2; height = FMTB.cursor_y * 2; }
 		GL11.glReadPixels(width / 2, height / 2, 1, 1, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
 		byte[] byteArray = new byte[4]; buffer.get(byteArray);

@@ -42,7 +42,7 @@ public class Editors {
 		frame.getContainer().add(general = new GeneralEditor());
 		frame.getContainer().add(modelgroup = new ModelGroupEditor());
 		//temporary
-		general.show();
+		//general.show();
 	}
 	
 	public static void hideAll(){

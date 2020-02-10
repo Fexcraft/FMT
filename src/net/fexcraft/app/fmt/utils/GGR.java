@@ -34,8 +34,8 @@ public class GGR {
     }
 
     public void apply(){
-        if(rotation.yCoord / 360 > 1){ rotation.yCoord -= 360; }
-        else if(rotation.yCoord / 360 < -1){ rotation.yCoord += 360; }
+        if(rotation.yCoord / 360 > 1f){ rotation.yCoord -= 360; }
+        else if(rotation.yCoord / 360 < -1f){ rotation.yCoord += 360; }
         GL11.glLoadIdentity();
         GL11.glRotatef(rotation.xCoord, 1, 0, 0);
         GL11.glRotatef(rotation.yCoord, 0, 1, 0);
@@ -153,9 +153,9 @@ public class GGR {
             UserInterface.DRAGGED = null; dragging = true;
         }
         if(Mouse.isGrabbed()){*/
-            rotation.yCoord += FMTB.cdiffx * Settings.mouse_sensivity.directFloat() * delta;
-            rotation.xCoord += -FMTB.cdiffy * Settings.mouse_sensivity.directFloat() * delta;
-            rotation.xCoord = Math.max(-maxlookrange, Math.min(maxlookrange, rotation.xCoord));
+            //TODO rotation.yCoord += FMTB.cdiffx * Settings.mouse_sensivity.directFloat() * delta;
+            //TODO rotation.xCoord += -FMTB.cdiffy * Settings.mouse_sensivity.directFloat() * delta;
+            //TODO rotation.xCoord = Math.max(-maxlookrange, Math.min(maxlookrange, rotation.xCoord));
             //FMTB.cdiffx = FMTB.cdiffy = 0;
             //
         	//if(Mouse.isButtonDown(0) && !clickedL) RayCoastAway.doTest(true, false); clickedL = Mouse.isButtonDown(0);

@@ -45,8 +45,8 @@ public class UserInterface {
 	}
 	
 	public void rescale(){
-		scale_x = root.getDisplayMode().getWidth();
-		scale_y = root.getDisplayMode().getHeight();
+		scale_x = FMTB.WIDTH;
+		scale_y = FMTB.HEIGHT;
 		int facts = 1, uis = Settings.ui_scale(); if(uis < 0) uis = 1000;
         while(facts < uis && scale_x / (facts + 1) >= 320 && scale_y / (facts + 1) >= 240) facts++;
         scale_x = scale_x / facts; scale_y = scale_y / facts;
@@ -99,7 +99,7 @@ public class UserInterface {
 	private Element tmelm = new TextField(null, "text", "screenshot:title", 4, 4, 500){
 		@Override
 		public void renderSelf(int rw, int rh){
-			this.y = rh - FMTB.get().getDisplayMode().getHeight() + 4;
+			this.y = rh - FMTB.HEIGHT + 4;
 			this.setText((Time.getDay() % 2 == 0 ? "FMT - Fexcraft Modelling Toolbox" : "FMT - Fex's Modelling Toolbox") + (Static.dev() ? " [Developement Version]" : " [Standard Version]"), false);
 			super.renderSelf(rw, rh);
 		}
@@ -107,7 +107,7 @@ public class UserInterface {
 	private Element logintxt = new TextField(null, "text", "screenshot:credits", 4, 4, 500){
 		@Override
 		public void renderSelf(int rw, int rh){
-			this.y = rh - FMTB.get().getDisplayMode().getHeight() + 32;
+			this.y = rh - FMTB.HEIGHT + 32;
 			switch(FMTB.MODEL.creators.size()){
 				case 0: {
 					this.setText(FMTB.MODEL.name + " - " + (SessionHandler.isLoggedIn() ? SessionHandler.getUserName() : "Guest User"), false);
@@ -145,21 +145,21 @@ public class UserInterface {
 	public void onButtonPress(int i){
 		if(HoverMenu.anyMenuHovered()){
 			for(HoverMenu list : HoverMenu.MENUS){
-				if(list.isHovered() && list.onButtonClick(FMTB.cursor_x, root.getDisplayMode().getHeight() - FMTB.cursor_y, i == 0, true)) return;
+				if(list.isHovered() && list.onButtonClick(FMTB.cursor_x, FMTB.HEIGHT - FMTB.cursor_y, i == 0, true)) return;
 			}
 		}
 		else{
 			Element element = null, elm0 = null;
 			for(Dialog dialog : Dialog.dialogs){
 				if((elm0 = (Element)dialog).visible && elm0.enabled){
-					if(elm0.onButtonClick(FMTB.cursor_x, root.getDisplayMode().getHeight() - FMTB.cursor_y, i == 0, elm0.hovered)){
+					if(elm0.onButtonClick(FMTB.cursor_x, FMTB.HEIGHT - FMTB.cursor_y, i == 0, elm0.hovered)){
 						return;
 					} else element = elm0;
 				}
 			}
 			for(Element elm : elements){
 				if(elm instanceof Dialog == false && elm.visible && elm.enabled){
-					if(elm.onButtonClick(FMTB.cursor_x, root.getDisplayMode().getHeight() - FMTB.cursor_y, i == 0, elm.hovered)){
+					if(elm.onButtonClick(FMTB.cursor_x, FMTB.HEIGHT - FMTB.cursor_y, i == 0, elm.hovered)){
 						return;
 					} else element = elm;
 				}
@@ -171,7 +171,7 @@ public class UserInterface {
 			}
 			if(GGR.iControlDown() && i == 1 && bool && !UserInterface.RIGHTMENU.visible()){
 				ArrayList<PolygonWrapper> selected = FMTB.MODEL.getSelected();
-				UserInterface.RIGHTMENU.show(AltMenu.Type.sel(selected.isEmpty()), FMTB.cursor_x, FMTB.get().getDisplayMode().getHeight() - FMTB.cursor_y, selected);
+				UserInterface.RIGHTMENU.show(AltMenu.Type.sel(selected.isEmpty()), FMTB.cursor_x, FMTB.HEIGHT - FMTB.cursor_y, selected);
 			}
 		}
 		return;
@@ -181,7 +181,7 @@ public class UserInterface {
 		Element element = null;
 		for(Element elm : elements){
 			if(elm.visible){
-				element = elm.getDraggableElement(FMTB.cursor_x, root.getDisplayMode().getHeight() - FMTB.cursor_y, elm.hovered);
+				element = elm.getDraggableElement(FMTB.cursor_x, FMTB.HEIGHT - FMTB.cursor_y, elm.hovered);
 				if(element != null) break;
 			}
 		}
