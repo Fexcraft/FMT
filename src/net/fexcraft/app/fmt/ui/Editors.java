@@ -327,8 +327,39 @@ public class Editors {
 			cylinder.getContainer().add(cyl6_z = new NumberInput20(200, pass, 90, 20).setup("cyl6z", 0, Integer.MAX_VALUE, true));
 			cylinder.setSize(296, pass + 52);
 	        this.addSub(cylinder); pass = -20;
+	        //
+			final String[] faces = new String[]{
+				translate("editor.general.texrect.front"), translate("editor.general.texrect.back"),
+				translate("editor.general.texrect.up"), translate("editor.general.texrect.down"),
+				translate("editor.general.texrect.right"), translate("editor.general.texrect.left")
+			};
+			EditorWidget texrect_a = new EditorWidget(this, translate("editor.general.texrect_a"), 0, 0, 0, 0);
+			int[] tra = new int[24]; for(int i = 0; i < 12; i++){ tra[i * 2] = 1; tra[i * 2 + 1] = 4; }
+			for(int r = 0; r < 12; r++){
+				texrect_a.getContainer().add(new Label20(format("editor.general.texrect_a.face_" + (r % 2 == 0 ? "x" : "y"), faces[r / 2]), 3, pass += 24, 290, 20));
+				for(int i = 0; i < 4; i++){
+					String id = "texpos" + (r / 2) + ":" + ((i * 2) + (r % 2 == 1 ? 1 : 0)) + (r % 2 == 0 ? "x" : "y"); if(i == 0) pass += 24;
+					texrect_a.getContainer().add(new NumberInput20(6 + (i * 72), pass, 66, 20).setup(id, 0, Integer.MAX_VALUE, true));
+				}
+			}
+			texrect_a.setSize(296, pass + 52);
+	        this.addSub(texrect_a); pass = -20;
+			EditorWidget texrect_b = new EditorWidget(this, translate("editor.general.texrect_b"), 0, 0, 0, 0);
+			for(int r = 0; r < 6; r++){
+				texrect_b.getContainer().add(new Label20(format("editor.general.texrect_a.face_" + (r % 2 == 0 ? "x" : "y"), faces[r]), 3, pass += 24, 290, 20));
+				for(int i = 0; i < 4; i++){
+					String id = "texpos" + r + (i < 2 ? "s" : "e") + (i % 2 == 0 ? "x" : "y"); if(i == 0) pass += 24;
+					texrect_b.getContainer().add(new NumberInput20(6 + (i * 72), pass, 66, 20).setup(id, 0, Integer.MAX_VALUE, true));
+				}
+			}
+			texrect_b.setSize(296, pass + 52);
+	        this.addSub(texrect_b); pass = -20;
 			//
-	        reOrderWidgets();
+	        
+			//
+	        //reOrderWidgets();
+	        texrect_a.setMinimized(true);
+	        texrect_b.setMinimized(true);
 		}
 		
 		public void refreshGroups(){
@@ -357,6 +388,7 @@ public class Editors {
 			Background background = new Background(); background.setColor(ColorConstants.lightGray());
 			getTitleTextState().setFontSize(22); getTitleTextState().setText(title);
 			getTitleContainer().getStyle().setBackground(background);
+			getTitleContainer().setSize(getTitleContainer().getSize().x, 20);
 			getTitleTextState().setHorizontalAlign(HorizontalAlign.CENTER);
 	        setCloseable(false); setResizable(false); setDraggable(false);
 		}

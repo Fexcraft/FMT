@@ -12,46 +12,9 @@ public class GeneralEditor extends Editor {
 
 	public GeneralEditor(){
 		super("general_editor", "editor"); this.setVisible(false);
-		this.elements.add((texrect_a = new Container(this, "texrect_a", width - 4, 28, 4, 0, null)).setText(translate("editor.general.texrect_a.title", "TexRect [Adv.]"), false));
-		this.elements.add((texrect_b = new Container(this, "texrect_b", width - 4, 28, 4, 0, null)).setText(translate("editor.general.texrect_b.title", "TexRect [Basic]"), false));
 		this.elements.add((marker = new Container(this, "marker", width - 4, 28, 4, 0, null)).setText(translate("editor.general.marker.title", "Marker Settings"), false));
 		//
 		int passed = 24;
-		final String[] faces = new String[]{
-			translate("editor.general.texrect.front", "Front"),
-			translate("editor.general.texrect.back", "Back"),
-			translate("editor.general.texrect.up", "Up"),
-			translate("editor.general.texrect.down", "Down"),
-			translate("editor.general.texrect.right", "Right"),
-			translate("editor.general.texrect.left", "Left"),
-		};
-		{//texrect a
-			int[] tra = new int[24]; for(int i = 0; i < 12; i++){ tra[i * 2] = 1; tra[i * 2 + 1] = 4; }
-			for(int r = 0; r < 12; r++){
-				texrect_a.getElements().add(new Button(texrect_a, "text" + r, "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true)
-					.setText(format("editor.general.texrect_a.face_" + (r % 2 == 0 ? "x" : "y"), "%s [%s | TR, TL, BL, BR]", faces[r / 2]), false)); passed += 24;
-				for(int i = 0; i < 4; i++){
-					String id = "texpos" + (r / 2) + ":" + ((i * 2) + (r % 2 == 1 ? 1 : 0)) + (r % 2 == 0 ? "x" : "y");
-					boolean bool = r == 2 || r == 3 || r == 6 || r == 7 || r == 10 || r == 11; int rgb = bool ? 0xff94251f : 0xff323273;
-					texrect_a.getElements().add(new TextField(texrect_a, id, "editor:field_texrect_" + (bool ? 1 : 0), 72, 4 + (i * 75), passed)
-						.setAsNumberfield(0, Integer.MAX_VALUE, true, true).setColor(rgb));
-				}
-			}
-			//
-			texrect_a.setExpanded(false); passed = 0;
-		}
-		{//texrect b
-			for(int r = 0; r < 6; r++){
-				texrect_b.getElements().add(new Button(texrect_b, "text" + r, "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true)
-					.setText(format("editor.general.texrect_b.face", "%s [start x/y, end x/y]", faces[r]), false));
-				 passed += 24; for(int i = 0; i < 4; i++){
-					String id = "texpos" + r + (i < 2 ? "s" : "e") + (i % 2 == 0 ? "x" : "y"); 
-					texrect_b.getElements().add(new TextField(texrect_b, id, "editor:field", 72, 4 + (i * 75), passed).setAsNumberfield(0, Integer.MAX_VALUE, true, true));
-				}
-			}
-			//
-			texrect_b.setExpanded(false); passed = 0;
-		}
 		{//marker
 			marker.getElements().add(new Button(marker, "text0", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true)
 				.setText(translate("editor.general.marker.color", "Marker Color [#hex]"), false));
@@ -70,7 +33,7 @@ public class GeneralEditor extends Editor {
 			//
 			marker.setExpanded(false); passed = 0;
 		}
-		this.containers = new Container[]{ texrect_a, texrect_b, marker }; this.repos();
+		this.containers = new Container[]{ marker }; this.repos();
 	}
 
 }

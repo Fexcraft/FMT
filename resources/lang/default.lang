@@ -96,6 +96,17 @@ editor.general.cylinder.top_offset=Top Offset (x/y/z)
 editor.general.cylinder.top_rotation=Top Rotation (x/y/z)
 editor.general.cylinder.visibility_toggle=Base/Top/Outer/Inner (on/off)
 editor.general.cylinder.radial_texture=Radial Texture (on-off/u/v)
+editor.general.texrect.front=Front
+editor.general.texrect.back=Back
+editor.general.texrect.up=Up
+editor.general.texrect.down=Down
+editor.general.texrect.right=Right
+editor.general.texrect.left=Left
+editor.general.texrect_a=TexRect Advanced
+editor.general.texrect_a.face_x=%s [x-pos | TR, TL, BL, BR]
+editor.general.texrect_a.face_y=%s [y-pos | TR, TL, BL, BR]
+editor.general.texrect_b=TexRect Basic
+editor.general.texrect_b.face=%s [start x/y, end x/y]
 
 # Errors
 error.dialog_title=Error
@@ -113,3 +124,4 @@ dialog.saveload.should_save.confirm=Yes
 dialog.saveload.should_save.cancel=No
 filechooser.export.title=Select Export Location
 filechooser.export.confirm=Export
+
