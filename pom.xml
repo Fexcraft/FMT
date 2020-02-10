@@ -5,9 +5,24 @@
   <version>2.0.0</version>
     <repositories>
 	    <repository>
-	        <id>spiny-owl</id>
-	        <name>SpinyOwl Repo</name>
+	        <id>spiny-owl-snapshots</id>
+	        <name>SpinyOwl Repo snapshots</name>
 	        <url>https://raw.github.com/SpinyOwl/repo/snapshots</url>
+	    </repository>
+	    <repository>
+	        <id>spiny-owl-releases</id>
+	        <name>SpinyOwl Repo releases</name>
+	        <url>https://raw.github.com/SpinyOwl/repo/releases</url>
+	    </repository>
+	    <repository>
+	        <id>oss sonatype-snapshots</id>
+	        <name>OSS sonatype snapshots</name>
+	        <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+	    </repository>
+	    <repository>
+	        <id>oss sonatype-releases</id>
+	        <name>OSS sonatype releases</name>
+	        <url>https://oss.sonatype.org/content/repositories/releases/</url>
 	    </repository>
 	</repositories>
 	<properties>
@@ -114,6 +129,21 @@
 	</dependencyManagement>
 
 	<dependencies>
+		<dependency>
+			<artifactId>net.fexcraft</artifactId>
+			<groupId>lib</groupId>
+			<version>1.XII.52</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/libs/FCL-1.XII.52.jar</systemPath>
+		</dependency>
+		<dependency>
+			<artifactId>net.arikia</artifactId>
+			<groupId>dev.drpc</groupId>
+			<version>1.0.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/libs/discord-rpc.jar</systemPath>
+		</dependency>
+
 		<dependency>
 			<groupId>org.lwjgl</groupId>
 			<artifactId>lwjgl</artifactId>
