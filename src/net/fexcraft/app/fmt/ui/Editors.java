@@ -160,6 +160,7 @@ public class Editors {
 		public static NumberInput20 cyl6_y, cyl6_z;
 		public static NumberInput20 cyl7_x, cyl7_y, cyl7_z;
 		public static NumberInput20[] corner_x, corner_y, corner_z;
+		public static NumberInput20[][] texrect_a = new NumberInput20[12][4], texrect_b = new NumberInput20[6][4];
 		public static SelectBox<Object> polygon_group, polygon_type;
 		
 		@SuppressWarnings("unchecked")
@@ -328,38 +329,38 @@ public class Editors {
 			cylinder.setSize(296, pass + 52);
 	        this.addSub(cylinder); pass = -20;
 	        //
+	        
+	        //
 			final String[] faces = new String[]{
 				translate("editor.general.texrect.front"), translate("editor.general.texrect.back"),
 				translate("editor.general.texrect.up"), translate("editor.general.texrect.down"),
 				translate("editor.general.texrect.right"), translate("editor.general.texrect.left")
 			};
-			EditorWidget texrect_a = new EditorWidget(this, translate("editor.general.texrect_a"), 0, 0, 0, 0);
+			EditorWidget texrectA = new EditorWidget(this, translate("editor.general.texrect_a"), 0, 0, 0, 0);
 			int[] tra = new int[24]; for(int i = 0; i < 12; i++){ tra[i * 2] = 1; tra[i * 2 + 1] = 4; }
 			for(int r = 0; r < 12; r++){
-				texrect_a.getContainer().add(new Label20(format("editor.general.texrect_a.face_" + (r % 2 == 0 ? "x" : "y"), faces[r / 2]), 3, pass += 24, 290, 20));
+				texrectA.getContainer().add(new Label20(format("editor.general.texrect_a.face_" + (r % 2 == 0 ? "x" : "y"), faces[r / 2]), 3, pass += 24, 290, 20));
 				for(int i = 0; i < 4; i++){
 					String id = "texpos" + (r / 2) + ":" + ((i * 2) + (r % 2 == 1 ? 1 : 0)) + (r % 2 == 0 ? "x" : "y"); if(i == 0) pass += 24;
-					texrect_a.getContainer().add(new NumberInput20(6 + (i * 72), pass, 66, 20).setup(id, 0, Integer.MAX_VALUE, true));
+					texrectA.getContainer().add(texrect_a[r][i] = new NumberInput20(6 + (i * 72), pass, 66, 20).setup(id, 0, Integer.MAX_VALUE, true));
 				}
 			}
-			texrect_a.setSize(296, pass + 52);
-	        this.addSub(texrect_a); pass = -20;
-			EditorWidget texrect_b = new EditorWidget(this, translate("editor.general.texrect_b"), 0, 0, 0, 0);
+			texrectA.setSize(296, pass + 52);
+	        this.addSub(texrectA); pass = -20;
+			EditorWidget texrectB = new EditorWidget(this, translate("editor.general.texrect_b"), 0, 0, 0, 0);
 			for(int r = 0; r < 6; r++){
-				texrect_b.getContainer().add(new Label20(format("editor.general.texrect_a.face_" + (r % 2 == 0 ? "x" : "y"), faces[r]), 3, pass += 24, 290, 20));
+				texrectB.getContainer().add(new Label20(format("editor.general.texrect_a.face_" + (r % 2 == 0 ? "x" : "y"), faces[r]), 3, pass += 24, 290, 20));
 				for(int i = 0; i < 4; i++){
 					String id = "texpos" + r + (i < 2 ? "s" : "e") + (i % 2 == 0 ? "x" : "y"); if(i == 0) pass += 24;
-					texrect_b.getContainer().add(new NumberInput20(6 + (i * 72), pass, 66, 20).setup(id, 0, Integer.MAX_VALUE, true));
+					texrectB.getContainer().add(texrect_a[r][i] = new NumberInput20(6 + (i * 72), pass, 66, 20).setup(id, 0, Integer.MAX_VALUE, true));
 				}
 			}
-			texrect_b.setSize(296, pass + 52);
-	        this.addSub(texrect_b); pass = -20;
-			//
-	        
+			texrectB.setSize(296, pass + 52);
+	        this.addSub(texrectB); pass = -20;
 			//
 	        //reOrderWidgets();
-	        texrect_a.setMinimized(true);
-	        texrect_b.setMinimized(true);
+	        texrectA.setMinimized(true);
+	        texrectB.setMinimized(true);
 		}
 		
 		public void refreshGroups(){
