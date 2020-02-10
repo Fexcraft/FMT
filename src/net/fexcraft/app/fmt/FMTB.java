@@ -357,7 +357,7 @@ public class FMTB {
             	for(GroupCompound model : HelperCollector.LOADED){ RGB.glColorReset(); model.render(); }
             }
             //if(Settings.demo()){
-                //TextureManager.bindTexture("t1p");
+                TextureManager.bindTexture("t1p");
                 ModelT1P.INSTANCE.render();
             //}
 			if(Settings.lighting()) GL11.glDisable(GL11.GL_LIGHTING);
