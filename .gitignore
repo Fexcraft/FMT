@@ -68,3 +68,7 @@ temp/
 *.exe
 *.log
 /target/
+/.gradle/
+/.idea/
+.project
+*.iml
