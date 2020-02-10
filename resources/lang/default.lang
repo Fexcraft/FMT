@@ -107,6 +107,9 @@ editor.general.texrect_a.face_x=%s [x-pos | TR, TL, BL, BR]
 editor.general.texrect_a.face_y=%s [y-pos | TR, TL, BL, BR]
 editor.general.texrect_b=TexRect Basic
 editor.general.texrect_b.face=%s [start x/y, end x/y]
+editor.general.marker=Marker Settings
+editor.general.marker.color=Marker Color [#hex]
+editor.general.marker.biped_display=Biped Display [toggle / rot / scale]
 
 # Errors
 error.dialog_title=Error

@@ -8,12 +8,17 @@ import org.liquidengine.legui.component.*;
 import org.liquidengine.legui.component.event.slider.SliderChangeValueEventListener;
 import org.liquidengine.legui.component.misc.listener.scrollablepanel.ScrollablePanelViewportScrollListener;
 import org.liquidengine.legui.component.optional.align.HorizontalAlign;
+import org.liquidengine.legui.event.FocusEvent;
+import org.liquidengine.legui.event.KeyEvent;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.event.ScrollEvent;
 import org.liquidengine.legui.event.WindowSizeEvent;
+import org.liquidengine.legui.listener.FocusEventListener;
+import org.liquidengine.legui.listener.KeyEventListener;
 import org.liquidengine.legui.style.Background;
 import org.liquidengine.legui.style.Style.DisplayType;
 import org.liquidengine.legui.style.color.ColorConstants;
+import org.lwjgl.glfw.GLFW;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.UserInterpanels.BoolButton;
@@ -161,6 +166,8 @@ public class Editors {
 		public static NumberInput20 cyl7_x, cyl7_y, cyl7_z;
 		public static NumberInput20[] corner_x, corner_y, corner_z;
 		public static NumberInput20[][] texrect_a = new NumberInput20[12][4], texrect_b = new NumberInput20[6][4];
+		public static NumberInput20 marker_color, marker_scale, marker_angle;
+		public static BoolButton marker_biped;
 		public static SelectBox<Object> polygon_group, polygon_type;
 		
 		@SuppressWarnings("unchecked")
@@ -329,7 +336,30 @@ public class Editors {
 			cylinder.setSize(296, pass + 52);
 	        this.addSub(cylinder); pass = -20;
 	        //
-	        
+			EditorWidget marker = new EditorWidget(this, translate("editor.general.marker"), 0, 0, 0, 0);
+			marker.getContainer().add(new Label20(translate("editor.general.marker.color"), 3, pass += 24, 290, 20));
+			marker.getContainer().add(marker_color = new NumberInput20(3, pass += 24, 290, 20){
+				@Override
+				public float getValue(){
+					return Integer.parseInt(marker_color.getTextState().getText().replace("#", "").replace("0x", ""), 16);
+				}
+			});
+			marker_color.getListenerMap().addListener(FocusEvent.class, (FocusEventListener)listener -> {
+				if(!listener.isFocused()){
+					FMTB.MODEL.updateValue(marker_color, "marker_colorx");
+				}
+			});
+			marker_color.getListenerMap().addListener(KeyEvent.class, (KeyEventListener)listener -> {
+				if(listener.getKey() == GLFW.GLFW_KEY_ENTER){
+					FMTB.MODEL.updateValue(marker_color, "marker_colorx");
+				}
+			});
+	        marker.getContainer().add(new Label20(translate("editor.general.marker.biped_display"), 3, pass += 24, 290, 20));
+	        marker.getContainer().add(marker_biped = new BoolButton("marker_bipedx", 4, pass += 24, 90, 20));
+	        marker.getContainer().add(marker_angle = new NumberInput20(102, pass, 90, 20).setup("marker_anglex", -360, 360, true));
+	        marker.getContainer().add(marker_scale = new NumberInput20(200, pass, 90, 20).setup("marker_scalex", 0, 1024f, true));
+			marker.setSize(296, pass + 52);
+	        this.addSub(marker); pass = -20;
 	        //
 			final String[] faces = new String[]{
 				translate("editor.general.texrect.front"), translate("editor.general.texrect.back"),
