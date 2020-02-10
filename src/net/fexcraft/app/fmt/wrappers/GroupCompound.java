@@ -11,6 +11,7 @@ import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.Editors;
+import net.fexcraft.app.fmt.ui.UserInterpanels.NumberInput20;
 import net.fexcraft.app.fmt.ui.editor.Container;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
@@ -174,20 +175,19 @@ public class GroupCompound {
 		return true;
 	}
 	
-	public boolean updateValue(TextField field){
-		ArrayList<PolygonWrapper> polis = this.getSelected();
-		if(polis.isEmpty()) return false;
-		boolean x = field.getId().endsWith("x"), y = field.getId().endsWith("y"), z = field.getId().endsWith("z");
-		String id = field.getId().substring(0, field.getId().length() - 1);
+	public boolean updateValue(NumberInput20 field, String id){
+		ArrayList<PolygonWrapper> polis = this.getSelected(); if(polis.isEmpty()) return false;
+		boolean x = id.endsWith("x"), y = id.endsWith("y"), z = id.endsWith("z");
+		id = id.substring(0, id.length() - 1);
 		//
 		float diffo = polis.get(0).getFloat(id, x, y, z);
 		for(int i = 0; i < polis.size(); i++){
 			if(i == 0){
-				polis.get(i).apply(id, field.getFloatValue(), x, y, z);
+				polis.get(i).apply(id, field.getValue(), x, y, z);
 			}
 			else{
 				float diff = polis.get(i).getFloat(id, x, y, z) - diffo;
-				polis.get(i).apply(id, field.getFloatValue() + diff, x, y, z);
+				polis.get(i).apply(id, field.getValue() + diff, x, y, z);
 			}
 		}
 		return true;

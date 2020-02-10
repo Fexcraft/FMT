@@ -141,6 +141,7 @@ public class Editors {
 		public static NumberInput20[] corner_x, corner_y, corner_z;
 		public static SelectBox<Object> polygon_group, polygon_type;
 		
+		@SuppressWarnings("unchecked")
 		public GeneralEditor(){
 			super(); int pass = -20;
 			EditorWidget attributes = new EditorWidget(this, translate("editor.general.attributes"), 0, 0, 0, 0);
@@ -179,21 +180,20 @@ public class Editors {
 	        attributes.getContainer().add(new Label20(translate("editor.general.attributes.name"), 3, pass += 24, 290, 20));
 	        attributes.getContainer().add(polygon_name = new TextInput20(translate("error.no_polygon_selected"), 3, pass += 24, 290, 20));
 	        polygon_name.addTextInputContentChangeEventListener(event -> {
-				if(FMTB.MODEL.getSelected().isEmpty()) return;
-				PolygonWrapper wrapper;
+				String validated = UserInterpanels.validateString(event);
+				if(FMTB.MODEL.getSelected().isEmpty()) return; PolygonWrapper wrapper;
 				if(FMTB.MODEL.getSelected().size() == 1){
 					wrapper = FMTB.MODEL.getFirstSelection();
-					if(wrapper != null) wrapper.name = event.getNewValue();
+					if(wrapper != null) wrapper.name = validated;
 				}
 				else{
-					String text = event.getNewValue();
 					ArrayList<PolygonWrapper> polis = FMTB.MODEL.getSelected();
 					for(int i = 0; i < polis.size(); i++){
 						wrapper = polis.get(i);
 						if(wrapper != null){
-							String str = text.contains("_") ? "_" + i : text.contains("-") ? "-" + i :
-								text.contains(" ") ? " " + i : text.contains(".") ? "." + i : i + "";
-							wrapper.name = text + str;
+							String str = validated.contains("_") ? "_" + i : validated.contains("-") ? "-" + i :
+								validated.contains(" ") ? " " + i : validated.contains(".") ? "." + i : i + "";
+							wrapper.name = validated + str;
 						}
 					}
 				}
@@ -243,24 +243,24 @@ public class Editors {
 	        //
 			EditorWidget shape = new EditorWidget(this, translate("editor.general.shape"), 0, 0, 0, 0);
 			shape.getContainer().add(new Label20(translate("editor.general.shape.size"), 3, pass += 24, 290, 20));
-			shape.getContainer().add(size_x = new NumberInput20("x", 4, pass += 24, 90, 20));
-			shape.getContainer().add(size_y = new NumberInput20("y", 102, pass, 90, 20));
-			shape.getContainer().add(size_z = new NumberInput20("z", 200, pass, 90, 20));
+			shape.getContainer().add(size_x = new NumberInput20("x", 4, pass += 24, 90, 20).setup("sizex", 0, Integer.MAX_VALUE, false));
+			shape.getContainer().add(size_y = new NumberInput20("y", 102, pass, 90, 20).setup("sizey", 0, Integer.MAX_VALUE, false));
+			shape.getContainer().add(size_z = new NumberInput20("z", 200, pass, 90, 20).setup("sizez", 0, Integer.MAX_VALUE, false));
 			shape.getContainer().add(new Label20(translate("editor.general.shape.position"), 3, pass += 24, 290, 20));
-			shape.getContainer().add(pos_x = new NumberInput20("x", 4, pass += 24, 90, 20));
-			shape.getContainer().add(pos_y = new NumberInput20("y", 102, pass, 90, 20));
-			shape.getContainer().add(pos_z = new NumberInput20("z", 200, pass, 90, 20));
+			shape.getContainer().add(pos_x = new NumberInput20("x", 4, pass += 24, 90, 20).setup("posx", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
+			shape.getContainer().add(pos_y = new NumberInput20("y", 102, pass, 90, 20).setup("posy", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
+			shape.getContainer().add(pos_z = new NumberInput20("z", 200, pass, 90, 20).setup("posz", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
 			shape.getContainer().add(new Label20(translate("editor.general.shape.offset"), 3, pass += 24, 290, 20));
-			shape.getContainer().add(off_x = new NumberInput20("x", 4, pass += 24, 90, 20));
-			shape.getContainer().add(off_y = new NumberInput20("y", 102, pass, 90, 20));
-			shape.getContainer().add(off_z = new NumberInput20("z", 200, pass, 90, 20));
+			shape.getContainer().add(off_x = new NumberInput20("x", 4, pass += 24, 90, 20).setup("offx", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
+			shape.getContainer().add(off_y = new NumberInput20("y", 102, pass, 90, 20).setup("offy", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
+			shape.getContainer().add(off_z = new NumberInput20("z", 200, pass, 90, 20).setup("offz", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
 			shape.getContainer().add(new Label20(translate("editor.general.shape.rotation"), 3, pass += 24, 290, 20));
-			shape.getContainer().add(rot_x = new NumberInput20("x", 4, pass += 24, 90, 20));
-			shape.getContainer().add(rot_y = new NumberInput20("y", 102, pass, 90, 20));
-			shape.getContainer().add(rot_z = new NumberInput20("z", 200, pass, 90, 20));
+			shape.getContainer().add(rot_x = new NumberInput20("x", 4, pass += 24, 90, 20).setup("rotx", -360, 360, true));
+			shape.getContainer().add(rot_y = new NumberInput20("y", 102, pass, 90, 20).setup("roty", -360, 360, true));
+			shape.getContainer().add(rot_z = new NumberInput20("z", 200, pass, 90, 20).setup("rotz", -360, 360, true));
 			shape.getContainer().add(new Label20(translate("editor.general.shape.texture"), 3, pass += 24, 290, 20));
-			shape.getContainer().add(texture_x = new NumberInput20("x", 4, pass += 24, 90, 20));
-			shape.getContainer().add(texture_y = new NumberInput20("y", 102, pass, 90, 20));
+			shape.getContainer().add(texture_x = new NumberInput20("x", 4, pass += 24, 90, 20).setup("texx", 0, 8192, true));
+			shape.getContainer().add(texture_y = new NumberInput20("y", 102, pass, 90, 20).setup("texy", 0, 8192, true));
 			shape.setSize(296, pass + 52);
 	        this.addSub(shape); pass = -20;
 	        //
@@ -268,9 +268,9 @@ public class Editors {
 			corner_x = new NumberInput20[8]; corner_y = new NumberInput20[8]; corner_z = new NumberInput20[8];
 	        for(int i = 0; i < 8; i++){
 	        	shapebox.getContainer().add(new Label20(translate("editor.general.shapebox.corner" + i), 3, pass += 24, 290, 20));
-				shapebox.getContainer().add(corner_x[i] = new NumberInput20("x", 4, pass += 24, 90, 20));
-				shapebox.getContainer().add(corner_y[i] = new NumberInput20("y", 102, pass, 90, 20));
-				shapebox.getContainer().add(corner_z[i] = new NumberInput20("z", 200, pass, 90, 20));
+				shapebox.getContainer().add(corner_x[i] = new NumberInput20("x", 4, pass += 24, 90, 20).setup("cor" + i + "x", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
+				shapebox.getContainer().add(corner_y[i] = new NumberInput20("y", 102, pass, 90, 20).setup("cor" + i + "y", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
+				shapebox.getContainer().add(corner_z[i] = new NumberInput20("z", 200, pass, 90, 20).setup("cor" + i + "z", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
 	        }
 			shapebox.setSize(296, pass + 52);
 	        this.addSub(shapebox); pass = -20;

@@ -3,6 +3,8 @@ package net.fexcraft.app.fmt.ui;
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
 import java.awt.Desktop;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.component.Dialog;
@@ -10,11 +12,17 @@ import org.liquidengine.legui.component.Frame;
 import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.Panel;
 import org.liquidengine.legui.component.TextInput;
+import org.liquidengine.legui.component.event.textinput.TextInputContentChangeEvent;
 import org.liquidengine.legui.component.optional.align.HorizontalAlign;
+import org.liquidengine.legui.event.FocusEvent;
+import org.liquidengine.legui.event.KeyEvent;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.event.WindowSizeEvent;
+import org.liquidengine.legui.listener.FocusEventListener;
+import org.liquidengine.legui.listener.KeyEventListener;
 import org.liquidengine.legui.listener.MouseClickEventListener;
 import org.liquidengine.legui.style.Style.DisplayType;
+import org.lwjgl.glfw.GLFW;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager;
@@ -33,6 +41,7 @@ import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.app.fmt.utils.TextureUpdate;
 import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.app.fmt.wrappers.*;
+import net.fexcraft.lib.common.utils.Print;
 
 public class UserInterpanels {
 
@@ -299,6 +308,45 @@ public class UserInterpanels {
 			super(string, x, y, w, h); getTextState().setFontSize(20f);
 		}
 		
+		private boolean floatfield;
+		private float min, max;
+		private Float value = null;
+		
+		@SuppressWarnings("unchecked")
+		public NumberInput20 setup(String id, float min, float max, boolean flaot){
+			floatfield = flaot; this.min = min; this.max = max;
+			addTextInputContentChangeEventListener(event -> {
+				UserInterpanels.validateNumber(event); value = null;
+			});
+			getListenerMap().addListener(FocusEvent.class, (FocusEventListener)listener -> {
+				//Print.console("focus: " + listener.isFocused());
+				if(!listener.isFocused()){
+					//getValue(); Print.console(value);
+					FMTB.MODEL.updateValue(this, id);
+				}
+			});
+			getListenerMap().addListener(KeyEvent.class, (KeyEventListener)listener -> {
+				if(listener.getKey() == GLFW.GLFW_KEY_ENTER){
+					//getValue(); Print.console(value);
+					FMTB.MODEL.updateValue(this, id);
+				}
+			});
+			return this;
+		}
+
+		public float getValue(){
+			if(value != null) return value;
+			float newval = 0; String text = this.getTextState().getText();
+			try{
+				newval = floatfield ? nf.parse(text).floatValue() : nf.parse(text).intValue();
+				//newval = floatfield ? Float.parseFloat(text) : Integer.parseInt(text);
+			} catch(Exception e){ e.printStackTrace(); }
+			if(newval > max) newval = max; else if(newval < min) newval = min;
+			if(!(newval + "").equals(text)){
+				getTextState().setText(text = newval + ""); setCaretPosition(text.length());
+			} return value = newval;
+		}
+		
 	}
 	
 	public static class Button20 extends Button {
@@ -323,6 +371,27 @@ public class UserInterpanels {
 	
 	public static String format(String str, Object... objs){
 		return Translator.format(str, "no.lang.%s", objs);
+	}
+
+	public static String validateString(TextInputContentChangeEvent<TextInput20> event){
+		String newtext = event.getNewValue().replaceAll("[^A-Za-z0-9,\\.\\-_ ]", "");
+		Print.console(newtext + " / " + event.getNewValue());
+		if(!newtext.equals(event.getNewValue())){
+			event.getTargetComponent().getTextState().setText(newtext);
+			event.getTargetComponent().setCaretPosition(newtext.length());
+		} return newtext;
+	}
+	
+	public static final NumberFormat nf = NumberFormat.getInstance(Locale.US);
+
+	public static void validateNumber(TextInputContentChangeEvent<NumberInput20> event){
+		String newtext = event.getNewValue().replaceAll("[^0-9,\\.\\-]", "");
+		if(newtext.indexOf("-") > 0) newtext.replace("-", ""); if(newtext.length() == 0) newtext = "0";
+		//Print.console(newtext + " / " + event.getNewValue());
+		if(!newtext.equals(event.getNewValue())){
+			((NumberInput20)event.getTargetComponent()).getTextState().setText(newtext);
+			((NumberInput20)event.getTargetComponent()).setCaretPosition(newtext.length());
+		}
 	}
 
 }
