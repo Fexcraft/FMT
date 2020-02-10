@@ -11,13 +11,12 @@ import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.Editors;
-import net.fexcraft.app.fmt.ui.UserInterpanels.NumberInput20;
+import net.fexcraft.app.fmt.ui.UserInterpanels.Field;
 import net.fexcraft.app.fmt.ui.editor.Container;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.ui.general.DropDownField;
-import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.ui.tree.HelperTree;
 import net.fexcraft.app.fmt.ui.tree.ModelTree;
 import net.fexcraft.app.fmt.ui.tree.RightTree.CompoundButton;
@@ -155,17 +154,15 @@ public class GroupCompound {
 		for(TurboList list : groups){ list.selected = false; for(PolygonWrapper wrapper : list) wrapper.selected = false; } SELECTED_POLYGONS = 0;
 	}
 
-	public boolean updateValue(TextField field, String id){
-		ArrayList<PolygonWrapper> polis = this.getSelected();
-		if(polis.isEmpty()) return false;
-		boolean positive = id.endsWith("+"); id = id.replace("-", "").replace("+", "");
+	public boolean updateValue(Field field, String id, boolean positive){
+		ArrayList<PolygonWrapper> polis = this.getSelected(); if(polis.isEmpty()) return false;
 		boolean x = id.endsWith("x"), y = id.endsWith("y"), z = id.endsWith("z");
 		id = id.substring(0, id.length() - 1);
 		for(int i = 0; i < polis.size(); i++){
-			float f = field.tryChange(polis.get(i).getFloat(id, x, y, z), positive, rate);
+			float f = field.tryAdd(polis.get(i).getFloat(id, x, y, z), positive, rate);
 			if(i == 0){
 				if(polis.get(i).apply(id, f, x, y, z)){
-					field.applyChange(f);
+					field.apply(f);
 				}
 			}
 			else{
@@ -175,7 +172,7 @@ public class GroupCompound {
 		return true;
 	}
 	
-	public boolean updateValue(NumberInput20 field, String id){
+	public boolean updateValue(Field field, String id){
 		ArrayList<PolygonWrapper> polis = this.getSelected(); if(polis.isEmpty()) return false;
 		boolean x = id.endsWith("x"), y = id.endsWith("y"), z = id.endsWith("z");
 		id = id.substring(0, id.length() - 1);

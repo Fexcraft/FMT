@@ -33,6 +33,7 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
+import org.lwjgl.glfw.GLFWScrollCallback;
 import org.lwjgl.glfw.GLFWWindowCloseCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
@@ -52,6 +53,8 @@ import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.Editors;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.UserInterpanels;
+import net.fexcraft.app.fmt.ui.UserInterpanels.Field;
+import net.fexcraft.app.fmt.ui.UserInterpanels.NumberInput20;
 import net.fexcraft.app.fmt.ui.UserInterpanels.TextInput20;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
@@ -101,8 +104,9 @@ public class FMTB {
 	public static GLFWCursorPosCallback cursorCallback;
 	public static GLFWMouseButtonCallback mouseCallback;
 	public static GLFWWindowCloseCallback closeCallback;
+	public static GLFWScrollCallback scrollCallback;
 	public static double cursor_x, cursor_y, cdiffx, cdiffy;
-	public static boolean hold_right, hold_left;
+	public static boolean hold_right, hold_left, field_scrolled;
 	public static long window;
 	public static int WIDTH = 1280, HEIGHT = 720;
 	public static Context context;
@@ -201,6 +205,14 @@ public class FMTB {
                 }
             }
         };
+        scrollCallback = new GLFWScrollCallback(){
+			@Override
+			public void invoke(long window, double xoffset, double yoffset){
+				if(field_scrolled = (context.getFocusedGui() instanceof Field)){
+					((NumberInput20)context.getFocusedGui()).onScroll(yoffset);
+				}
+			}
+		};
 		framebufferSizeCallback = new GLFWFramebufferSizeCallback(){
 		    @Override
 		    public void invoke(long window, int width, int height){
@@ -212,6 +224,7 @@ public class FMTB {
         keeper.getChainMouseButtonCallback().add(mouseCallback);
         keeper.getChainWindowCloseCallback().add(closeCallback);
         keeper.getChainFramebufferSizeCallback().add(framebufferSizeCallback);
+        keeper.getChainScrollCallback().add(scrollCallback);
         SystemEventProcessor systemEventProcessor = new SystemEventProcessor();
         systemEventProcessor.addDefaultCallbacks(keeper);
         renderer = new NvgRenderer();

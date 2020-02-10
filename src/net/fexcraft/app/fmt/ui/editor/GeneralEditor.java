@@ -12,60 +12,11 @@ public class GeneralEditor extends Editor {
 
 	public GeneralEditor(){
 		super("general_editor", "editor"); this.setVisible(false);
-		this.elements.add((cylinder = new Container(this, "cylinder", width - 4, 28, 4, 0, null)).setText(translate("editor.general.cylinder.title", "Cylinder Settings"), false));
 		this.elements.add((texrect_a = new Container(this, "texrect_a", width - 4, 28, 4, 0, null)).setText(translate("editor.general.texrect_a.title", "TexRect [Adv.]"), false));
 		this.elements.add((texrect_b = new Container(this, "texrect_b", width - 4, 28, 4, 0, null)).setText(translate("editor.general.texrect_b.title", "TexRect [Basic]"), false));
 		this.elements.add((marker = new Container(this, "marker", width - 4, 28, 4, 0, null)).setText(translate("editor.general.marker.title", "Marker Settings"), false));
 		//
 		int passed = 24;
-		{//cylinder
-			cylinder.getElements().add(new Button(cylinder, "text0", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true)
-				.setText(translate("editor.general.cylinder.radius_length", "Radius / Length / R2"), false));
-			cylinder.getElements().add(new TextField(cylinder, "cyl0x", "editor:field", 96, 4, passed += 24).setAsNumberfield(0.01f, Integer.MAX_VALUE, true, true));
-			cylinder.getElements().add(new TextField(cylinder, "cyl0y", "editor:field", 96, 106, passed).setAsNumberfield(0.01f, Integer.MAX_VALUE, true, true));
-			cylinder.getElements().add(new TextField(cylinder, "cyl0z", "editor:field", 96, 208, passed).setAsNumberfield(0, Integer.MAX_VALUE, true, true));
-			//
-			cylinder.getElements().add(new Button(cylinder, "text1", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true)
-				.setText(translate("editor.general.cylinder.segments_direction", "Segments / Direction / SL"), false));
-			cylinder.getElements().add(new TextField(cylinder, "cyl1x", "editor:field", 96, 4, passed += 24).setAsNumberfield(3, Integer.MAX_VALUE, true, true));
-			cylinder.getElements().add(new TextField(cylinder, "cyl1y", "editor:field", 96, 106, passed).setAsNumberfield(0, 5, true, true));
-			cylinder.getElements().add(new TextField(cylinder, "cyl1z", "editor:field", 96, 208, passed).setAsNumberfield(0, Integer.MAX_VALUE, true, true));
-			//
-			cylinder.getElements().add(new Button(cylinder, "text2", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true)
-				.setText(translate("editor.general.cylinder.scale", "Base Scale / Top Scale / Top Angle"), false));
-			cylinder.getElements().add(new TextField(cylinder, "cyl2x", "editor:field", 96, 4, passed += 24).setAsNumberfield(0, Integer.MAX_VALUE, true, true));
-			cylinder.getElements().add(new TextField(cylinder, "cyl2y", "editor:field", 96, 106, passed).setAsNumberfield(0, Integer.MAX_VALUE, true, true));
-			cylinder.getElements().add(new TextField(cylinder, "cyl2z", "editor:field", 96, 208, passed).setAsNumberfield(-360, 360, true, true).setEnabled(false));
-			//
-			cylinder.getElements().add(new Button(cylinder, "text3", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true)
-				.setText(translate("editor.general.cylinder.top_offset", "Top Offset (x/y/z)"), false));
-			cylinder.getElements().add(new TextField(cylinder, "cyl3x", "editor:field", 96, 4, passed += 24).setAsNumberfield(Integer.MIN_VALUE, Integer.MAX_VALUE, true, true));
-			cylinder.getElements().add(new TextField(cylinder, "cyl3y", "editor:field", 96, 106, passed).setAsNumberfield(Integer.MIN_VALUE, Integer.MAX_VALUE, true, true));
-			cylinder.getElements().add(new TextField(cylinder, "cyl3z", "editor:field", 96, 208, passed).setAsNumberfield(Integer.MIN_VALUE, Integer.MAX_VALUE, true, true));
-			//
-			cylinder.getElements().add(new Button(cylinder, "text3", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true)
-				.setText(translate("editor.general.cylinder.top_rotation", "Top Rotation (x/y/z)"), false));
-			cylinder.getElements().add(new TextField(cylinder, "cyl7x", "editor:field", 96, 4, passed += 24).setAsNumberfield(-360, 360, true, true));
-			cylinder.getElements().add(new TextField(cylinder, "cyl7y", "editor:field", 96, 106, passed).setAsNumberfield(-360, 360, true, true));
-			cylinder.getElements().add(new TextField(cylinder, "cyl7z", "editor:field", 96, 208, passed).setAsNumberfield(-360, 360, true, true));
-			//
-			cylinder.getElements().add(new Button(cylinder, "text4", "editor:title", 290, 20, 0, passed += 30, BLACK).setBackgroundless(true)
-				.setText(translate("editor.general.cylinder.base_top_toggle", "Base/Top (on/off)"), false));
-			cylinder.getElements().add(new TextField.BooleanField(cylinder, "cyl4x", null, 96, 4, passed += 24));
-			cylinder.getElements().add(new TextField.BooleanField(cylinder, "cyl4y", null, 96, 106, passed));
-			cylinder.getElements().add(new Button(cylinder, "text5", "editor:title", 290, 20, 0, passed += 30, BLACK).setBackgroundless(true)
-				.setText(translate("editor.general.cylinder.outer_inner_toggle", "Outer/Inner (on/off)"), false));
-			cylinder.getElements().add(new TextField.BooleanField(cylinder, "cyl5x", null, 96, 4, passed += 24));
-			cylinder.getElements().add(new TextField.BooleanField(cylinder, "cyl5y", null, 96, 106, passed));
-			//
-			cylinder.getElements().add(new Button(cylinder, "text3", "editor:title", 290, 20, 0, passed += 30, BLACK).setBackgroundless(true)
-				.setText(translate("editor.general.cylinder.radial_texture", "Radial Texture (on-off/u/v)"), false));
-			cylinder.getElements().add(new TextField.BooleanField(cylinder, "cyl6x", null, 96, 4, passed += 24));
-			cylinder.getElements().add(new TextField(cylinder, "cyl6y", "editor:field", 96, 106, passed).setAsNumberfield(0, Integer.MAX_VALUE, true, true).setEnabled(false));
-			cylinder.getElements().add(new TextField(cylinder, "cyl6z", "editor:field", 96, 208, passed).setAsNumberfield(0, Integer.MAX_VALUE, true, true));
-			//
-			cylinder.setExpanded(false); passed = 0;
-		}
 		final String[] faces = new String[]{
 			translate("editor.general.texrect.front", "Front"),
 			translate("editor.general.texrect.back", "Back"),
@@ -119,7 +70,7 @@ public class GeneralEditor extends Editor {
 			//
 			marker.setExpanded(false); passed = 0;
 		}
-		this.containers = new Container[]{ cylinder, texrect_a, texrect_b, marker }; this.repos();
+		this.containers = new Container[]{ texrect_a, texrect_b, marker }; this.repos();
 	}
 
 }

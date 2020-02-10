@@ -302,19 +302,20 @@ public class UserInterpanels {
 		
 	}
 	
-	public static class NumberInput20 extends TextInput {
+	public static class NumberInput20 extends TextInput implements Field {
 
-		public NumberInput20(String string, int x, int y, int w, int h){
-			super(string, x, y, w, h); getTextState().setFontSize(20f);
+		public NumberInput20(int x, int y, int w, int h){
+			super("0", x, y, w, h); getTextState().setFontSize(20f);
 		}
 		
+		private String fieldid;
 		private boolean floatfield;
 		private float min, max;
 		private Float value = null;
 		
 		@SuppressWarnings("unchecked")
 		public NumberInput20 setup(String id, float min, float max, boolean flaot){
-			floatfield = flaot; this.min = min; this.max = max;
+			floatfield = flaot; this.min = min; this.max = max; fieldid = id;
 			addTextInputContentChangeEventListener(event -> {
 				UserInterpanels.validateNumber(event); value = null;
 			});
@@ -331,6 +332,11 @@ public class UserInterpanels {
 					FMTB.MODEL.updateValue(this, id);
 				}
 			});
+			/*getListenerMap().addListener(ScrollEvent.class, (ScrollEventListener)listener -> {
+				//Print.console(listener.getTargetComponent(), listener.getYoffset());
+				//apply(tryAdd(getValue(), true, FMTB.MODEL.rate)); Print.console(value);
+				FMTB.MODEL.updateValue(this, id, true);
+			});*/
 			return this;
 		}
 
@@ -342,10 +348,65 @@ public class UserInterpanels {
 				//newval = floatfield ? Float.parseFloat(text) : Integer.parseInt(text);
 			} catch(Exception e){ e.printStackTrace(); }
 			if(newval > max) newval = max; else if(newval < min) newval = min;
-			if(!(newval + "").equals(text)){
-				getTextState().setText(text = newval + ""); setCaretPosition(text.length());
-			} return value = newval;
+			if(!(newval + "").equals(text)) apply(newval);
+			return value = newval;
 		}
+
+		public float tryAdd(float flat, boolean positive, float rate){
+			flat += positive ? rate : -rate; if(flat > max) flat = max; if(flat < min) flat = min; return floatfield ? flat : (int)flat;
+		}
+
+		public void apply(float val){
+			getTextState().setText((value = val) + ""); setCaretPosition(getTextState().getText().length());
+		}
+
+		public void onScroll(double yoffset){
+			apply(tryAdd(getValue(), yoffset > 0, FMTB.MODEL.rate)); Print.console(value);
+			FMTB.MODEL.updateValue(this, fieldid, true);
+		}
+		
+	}
+	
+	public static class BoolButton extends Button implements Field {
+		
+		private String fieldid;
+		
+		public BoolButton(String id, int x, int y, int w, int h){
+			super("false", x, y, w, h); this.fieldid = id; this.getStyle().setBorderRadius(0f);
+	        this.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)event -> {
+	            if(event.getAction() == CLICK){ toggle(); } else return;
+	        });
+		}
+
+		private void toggle(){
+			boolean val = Boolean.parseBoolean(getTextState().getText());
+			getTextState().setText(!val + ""); FMTB.MODEL.updateValue(this, fieldid);
+		}
+
+		@Override
+		public float getValue(){
+			return Boolean.parseBoolean(getTextState().getText()) ? 1 : 0;
+		}
+
+		@Override
+		public float tryAdd(float value, boolean positive, float rate){
+			return positive ? 1 : 0;
+		}
+
+		@Override
+		public void apply(float f){
+			getTextState().setText((f > .5) + "");
+		}
+		
+	}
+	
+	public static interface Field {
+
+		public float getValue();
+
+		public float tryAdd(float value, boolean positive, float rate);
+
+		public void apply(float f);
 		
 	}
 	

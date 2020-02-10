@@ -88,6 +88,14 @@ editor.general.shapebox.corner4=Corner 4 (x/y/z)
 editor.general.shapebox.corner5=Corner 5 (x/y/z)
 editor.general.shapebox.corner6=Corner 6 (x/y/z)
 editor.general.shapebox.corner7=Corner 7 (x/y/z)
+editor.general.cylinder=Cylinder Settings
+editor.general.cylinder.radius_length=Radius / Length / Radius2
+editor.general.cylinder.segments_direction=Segments / Direction / Seg.Limit
+editor.general.cylinder.scale=Base Scale / Top Scale
+editor.general.cylinder.top_offset=Top Offset (x/y/z)
+editor.general.cylinder.top_rotation=Top Rotation (x/y/z)
+editor.general.cylinder.visibility_toggle=Base/Top/Outer/Inner (on/off)
+editor.general.cylinder.radial_texture=Radial Texture (on-off/u/v)
 
 # Errors
 error.dialog_title=Error
@@ -96,7 +104,7 @@ error.feature_not_reimplemented_yet=This feature is not reimplemented yet.
 error.no_polygon_selected=no polygon/s selected
 error.todo=//TODO
 
-# Other
+# Other / Old
 bottombar.netfield.loggedin=Logged In - %s
 bottombar.netfield.login_failed=Login Failed - GUEST
 modeltree.polygons=Polygons: 

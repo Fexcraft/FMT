@@ -6,14 +6,17 @@ import java.util.ArrayList;
 
 import org.liquidengine.legui.component.*;
 import org.liquidengine.legui.component.event.slider.SliderChangeValueEventListener;
+import org.liquidengine.legui.component.misc.listener.scrollablepanel.ScrollablePanelViewportScrollListener;
 import org.liquidengine.legui.component.optional.align.HorizontalAlign;
 import org.liquidengine.legui.event.MouseClickEvent;
+import org.liquidengine.legui.event.ScrollEvent;
 import org.liquidengine.legui.event.WindowSizeEvent;
 import org.liquidengine.legui.style.Background;
 import org.liquidengine.legui.style.Style.DisplayType;
 import org.liquidengine.legui.style.color.ColorConstants;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.UserInterpanels.BoolButton;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Button20;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Dialog20;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Label20;
@@ -102,6 +105,8 @@ public class Editors {
 	        scrollable.getStyle().getBackground().setColor(1, 1, 1, 1);
 	        scrollable.setHorizontalScrollBarVisible(false);
 	        scrollable.getContainer().setSize(296, FMTB.HEIGHT - 80);
+	        scrollable.getViewport().getListenerMap().removeAllListeners(ScrollEvent.class);
+	        scrollable.getViewport().getListenerMap().addListener(ScrollEvent.class, new SPVSL());
 	        super.add(scrollable); this.hide();
 		}
 
@@ -130,6 +135,15 @@ public class Editors {
 		
 	}
 	
+	public static class SPVSL extends ScrollablePanelViewportScrollListener {
+		
+	    @Override
+	    public void process(@SuppressWarnings("rawtypes") ScrollEvent event){
+	    	if(FMTB.field_scrolled) return; else super.process(event);
+	    }
+	    
+	}
+	
 	public static class GeneralEditor extends EditorBase {
 		
 		public static TextInput polygon_name;
@@ -138,6 +152,13 @@ public class Editors {
 		public static NumberInput20 off_x, off_y, off_z;
 		public static NumberInput20 rot_x, rot_y, rot_z;
 		public static NumberInput20 texture_x, texture_y;
+		public static NumberInput20 cyl0_x, cyl0_y, cyl0_z;
+		public static NumberInput20 cyl1_x, cyl1_y, cyl1_z;
+		public static NumberInput20 cyl2_x, cyl2_y;
+		public static NumberInput20 cyl3_x, cyl3_y, cyl3_z;
+		public static BoolButton cyl4_x, cyl4_y, cyl5_x, cyl5_y, cyl6_x;
+		public static NumberInput20 cyl6_y, cyl6_z;
+		public static NumberInput20 cyl7_x, cyl7_y, cyl7_z;
 		public static NumberInput20[] corner_x, corner_y, corner_z;
 		public static SelectBox<Object> polygon_group, polygon_type;
 		
@@ -243,24 +264,24 @@ public class Editors {
 	        //
 			EditorWidget shape = new EditorWidget(this, translate("editor.general.shape"), 0, 0, 0, 0);
 			shape.getContainer().add(new Label20(translate("editor.general.shape.size"), 3, pass += 24, 290, 20));
-			shape.getContainer().add(size_x = new NumberInput20("x", 4, pass += 24, 90, 20).setup("sizex", 0, Integer.MAX_VALUE, false));
-			shape.getContainer().add(size_y = new NumberInput20("y", 102, pass, 90, 20).setup("sizey", 0, Integer.MAX_VALUE, false));
-			shape.getContainer().add(size_z = new NumberInput20("z", 200, pass, 90, 20).setup("sizez", 0, Integer.MAX_VALUE, false));
+			shape.getContainer().add(size_x = new NumberInput20(4, pass += 24, 90, 20).setup("sizex", 0, Integer.MAX_VALUE, false));
+			shape.getContainer().add(size_y = new NumberInput20(102, pass, 90, 20).setup("sizey", 0, Integer.MAX_VALUE, false));
+			shape.getContainer().add(size_z = new NumberInput20(200, pass, 90, 20).setup("sizez", 0, Integer.MAX_VALUE, false));
 			shape.getContainer().add(new Label20(translate("editor.general.shape.position"), 3, pass += 24, 290, 20));
-			shape.getContainer().add(pos_x = new NumberInput20("x", 4, pass += 24, 90, 20).setup("posx", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
-			shape.getContainer().add(pos_y = new NumberInput20("y", 102, pass, 90, 20).setup("posy", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
-			shape.getContainer().add(pos_z = new NumberInput20("z", 200, pass, 90, 20).setup("posz", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
+			shape.getContainer().add(pos_x = new NumberInput20(4, pass += 24, 90, 20).setup("posx", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
+			shape.getContainer().add(pos_y = new NumberInput20(102, pass, 90, 20).setup("posy", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
+			shape.getContainer().add(pos_z = new NumberInput20(200, pass, 90, 20).setup("posz", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
 			shape.getContainer().add(new Label20(translate("editor.general.shape.offset"), 3, pass += 24, 290, 20));
-			shape.getContainer().add(off_x = new NumberInput20("x", 4, pass += 24, 90, 20).setup("offx", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
-			shape.getContainer().add(off_y = new NumberInput20("y", 102, pass, 90, 20).setup("offy", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
-			shape.getContainer().add(off_z = new NumberInput20("z", 200, pass, 90, 20).setup("offz", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
+			shape.getContainer().add(off_x = new NumberInput20(4, pass += 24, 90, 20).setup("offx", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
+			shape.getContainer().add(off_y = new NumberInput20(102, pass, 90, 20).setup("offy", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
+			shape.getContainer().add(off_z = new NumberInput20(200, pass, 90, 20).setup("offz", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
 			shape.getContainer().add(new Label20(translate("editor.general.shape.rotation"), 3, pass += 24, 290, 20));
-			shape.getContainer().add(rot_x = new NumberInput20("x", 4, pass += 24, 90, 20).setup("rotx", -360, 360, true));
-			shape.getContainer().add(rot_y = new NumberInput20("y", 102, pass, 90, 20).setup("roty", -360, 360, true));
-			shape.getContainer().add(rot_z = new NumberInput20("z", 200, pass, 90, 20).setup("rotz", -360, 360, true));
+			shape.getContainer().add(rot_x = new NumberInput20(4, pass += 24, 90, 20).setup("rotx", -360, 360, true));
+			shape.getContainer().add(rot_y = new NumberInput20(102, pass, 90, 20).setup("roty", -360, 360, true));
+			shape.getContainer().add(rot_z = new NumberInput20(200, pass, 90, 20).setup("rotz", -360, 360, true));
 			shape.getContainer().add(new Label20(translate("editor.general.shape.texture"), 3, pass += 24, 290, 20));
-			shape.getContainer().add(texture_x = new NumberInput20("x", 4, pass += 24, 90, 20).setup("texx", 0, 8192, true));
-			shape.getContainer().add(texture_y = new NumberInput20("y", 102, pass, 90, 20).setup("texy", 0, 8192, true));
+			shape.getContainer().add(texture_x = new NumberInput20(4, pass += 24, 90, 20).setup("texx", 0, 8192, true));
+			shape.getContainer().add(texture_y = new NumberInput20(102, pass, 90, 20).setup("texy", 0, 8192, true));
 			shape.setSize(296, pass + 52);
 	        this.addSub(shape); pass = -20;
 	        //
@@ -268,13 +289,45 @@ public class Editors {
 			corner_x = new NumberInput20[8]; corner_y = new NumberInput20[8]; corner_z = new NumberInput20[8];
 	        for(int i = 0; i < 8; i++){
 	        	shapebox.getContainer().add(new Label20(translate("editor.general.shapebox.corner" + i), 3, pass += 24, 290, 20));
-				shapebox.getContainer().add(corner_x[i] = new NumberInput20("x", 4, pass += 24, 90, 20).setup("cor" + i + "x", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
-				shapebox.getContainer().add(corner_y[i] = new NumberInput20("y", 102, pass, 90, 20).setup("cor" + i + "y", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
-				shapebox.getContainer().add(corner_z[i] = new NumberInput20("z", 200, pass, 90, 20).setup("cor" + i + "z", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
+				shapebox.getContainer().add(corner_x[i] = new NumberInput20(4, pass += 24, 90, 20).setup("cor" + i + "x", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
+				shapebox.getContainer().add(corner_y[i] = new NumberInput20(102, pass, 90, 20).setup("cor" + i + "y", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
+				shapebox.getContainer().add(corner_z[i] = new NumberInput20(200, pass, 90, 20).setup("cor" + i + "z", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
 	        }
 			shapebox.setSize(296, pass + 52);
 	        this.addSub(shapebox); pass = -20;
 	        //
+			EditorWidget cylinder = new EditorWidget(this, translate("editor.general.cylinder"), 0, 0, 0, 0);
+			cylinder.getContainer().add(new Label20(translate("editor.general.cylinder.radius_length"), 3, pass += 24, 290, 20));
+			cylinder.getContainer().add(cyl0_x = new NumberInput20(4, pass += 24, 90, 20).setup("cyl0x", 1, Integer.MAX_VALUE, false));
+			cylinder.getContainer().add(cyl0_y = new NumberInput20(102, pass, 90, 20).setup("cyl0y", 1, Integer.MAX_VALUE, false));
+			cylinder.getContainer().add(cyl0_z = new NumberInput20(200, pass, 90, 20).setup("cyl0z", 0, Integer.MAX_VALUE, true));
+			cylinder.getContainer().add(new Label20(translate("editor.general.cylinder.segments_direction"), 3, pass += 24, 290, 20));
+			cylinder.getContainer().add(cyl1_x = new NumberInput20(4, pass += 24, 90, 20).setup("cyl1x", 3, Integer.MAX_VALUE, false));
+			cylinder.getContainer().add(cyl1_y = new NumberInput20(102, pass, 90, 20).setup("cyl1y", 0, 5, false));
+			cylinder.getContainer().add(cyl1_z = new NumberInput20(200, pass, 90, 20).setup("cyl1z", 0, Integer.MAX_VALUE, false));
+			cylinder.getContainer().add(new Label20(translate("editor.general.cylinder.scale"), 3, pass += 24, 290, 20));
+			cylinder.getContainer().add(cyl2_x = new NumberInput20(4, pass += 24, 90, 20).setup("cyl2x", 0, Integer.MAX_VALUE, true));
+			cylinder.getContainer().add(cyl2_y = new NumberInput20(102, pass, 90, 20).setup("cyl2y", 0, Integer.MAX_VALUE, true));
+			cylinder.getContainer().add(new Label20(translate("editor.general.cylinder.top_offset"), 3, pass += 24, 290, 20));
+			cylinder.getContainer().add(cyl3_x = new NumberInput20(4, pass += 24, 90, 20).setup("cyl0x", 1, Integer.MAX_VALUE, true));
+			cylinder.getContainer().add(cyl3_y = new NumberInput20(102, pass, 90, 20).setup("cyl3y", 1, Integer.MAX_VALUE, true));
+			cylinder.getContainer().add(cyl3_z = new NumberInput20(200, pass, 90, 20).setup("cyl3z", 0, Integer.MAX_VALUE, true));
+			cylinder.getContainer().add(new Label20(translate("editor.general.cylinder.top_rotation"), 3, pass += 24, 290, 20));
+			cylinder.getContainer().add(cyl7_x = new NumberInput20(4, pass += 24, 90, 20).setup("cyl7x", -360, 360, true));
+			cylinder.getContainer().add(cyl7_y = new NumberInput20(102, pass, 90, 20).setup("cyl7y", -360, 360, true));
+			cylinder.getContainer().add(cyl7_z = new NumberInput20(200, pass, 90, 20).setup("cyl7z", -360, 360, true));
+			cylinder.getContainer().add(new Label20(translate("editor.general.cylinder.visibility_toggle"), 3, pass += 24, 290, 20));
+			cylinder.getContainer().add(cyl4_x = new BoolButton("cyl4x", 6, pass += 24, 66, 20));
+			cylinder.getContainer().add(cyl4_y = new BoolButton("cyl4y", 78, pass, 66, 20));
+			cylinder.getContainer().add(cyl5_x = new BoolButton("cyl5x", 148, pass, 66, 20));
+			cylinder.getContainer().add(cyl5_y = new BoolButton("cyl5y", 220, pass, 66, 20));
+			cylinder.getContainer().add(new Label20(translate("editor.general.cylinder.radial_texture"), 3, pass += 24, 290, 20));
+			cylinder.getContainer().add(cyl6_x = new BoolButton("cyl6x", 4, pass += 24, 90, 20));
+			cylinder.getContainer().add(cyl6_y = new NumberInput20(102, pass, 90, 20).setup("cyl6y", 0, Integer.MAX_VALUE, true));
+			cylinder.getContainer().add(cyl6_z = new NumberInput20(200, pass, 90, 20).setup("cyl6z", 0, Integer.MAX_VALUE, true));
+			cylinder.setSize(296, pass + 52);
+	        this.addSub(cylinder); pass = -20;
+			//
 	        reOrderWidgets();
 		}
 		
