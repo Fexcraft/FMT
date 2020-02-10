@@ -1,21 +1,10 @@
 package net.fexcraft.app.fmt.utils;
 
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
-import java.io.IOException;
-
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.UserInterface;
-import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
-import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.ui.tree.RightTree;
-import net.fexcraft.app.fmt.utils.KeyCompound.KeyFunction;
 import net.fexcraft.lib.common.math.Vec3f;
 
 /** CCR */
@@ -26,7 +15,8 @@ public class GGR {
     public float maxlookrange = 85;
     //public float sensivity = 2f;
     public Vec3f pos, rotation;
-    private final FMTB root;
+    @SuppressWarnings("unused")
+	private final FMTB root;
     
     public GGR(FMTB root, int x, int y, int z){
         pos = new Vec3f(x, y, z); this.root = root;
@@ -60,7 +50,7 @@ public class GGR {
     }
     
     private void acceptInputKeyboard(){
-    	while(Keyboard.next()){
+    	/*while(Keyboard.next()){
     		int key = Keyboard.getEventKey();
     		if(Keyboard.getEventKeyState()){//"pressed"
     	        if(TextField.anySelected()){
@@ -135,11 +125,11 @@ public class GGR {
 	        		if(keyf.ID() != key) continue; if(keyf.process()) break;
 	        	}
     		}
-    	}
+    	}*/
 	}
 
 	private String getKeyName(int i){
-		return GGR.isShiftDown() ? i < 12 ? getSpecialChar(i) : Keyboard.getKeyName(i) : Keyboard.getKeyName(i).toLowerCase();
+		return i + "";//GGR.isShiftDown() ? i < 12 ? getSpecialChar(i) : Keyboard.getKeyName(i) : Keyboard.getKeyName(i).toLowerCase();
 	}
 
 	private String getSpecialChar(int i){
@@ -149,7 +139,7 @@ public class GGR {
 			case 6: return "%"; case 7: return "^";
 			case 8: return "&"; case 9: return "*";
 			case 10: return "("; case 11: return ")";
-		} return Keyboard.getKeyName(i);
+		} return i + "@";//Keyboard.getKeyName(i);
 	}
 
 	public static boolean clickedL, clickedR; private boolean panning, dragging;
@@ -218,7 +208,7 @@ public class GGR {
     }
 
     public void acceptInputMove(float delta){
-        if(Mouse.isButtonDown(2)){
+        /*if(Mouse.isButtonDown(2)){
             if(oldMouseX == -1){
                 oldMouseX = Mouse.getX();
                 oldMouseY = Mouse.getY();
@@ -230,18 +220,18 @@ public class GGR {
         }
         else if(panning){
             oldMouseX =- 1; panning = false;
-        }
+        }*/
         //
     	//if(!Mouse.isGrabbed()) return;
         if(RightTree.anyTreeHovered()) return;
-        boolean front = Keyboard.isKeyDown(KeyCompound.KEY_W.ID());
-        boolean back  = Keyboard.isKeyDown(KeyCompound.KEY_S.ID());
-        boolean right = Keyboard.isKeyDown(KeyCompound.KEY_D.ID());
-        boolean left  = Keyboard.isKeyDown(KeyCompound.KEY_A.ID());
-        boolean speedp = Keyboard.isKeyDown(KeyCompound.KEY_SPP.ID());
-        boolean speedm = Keyboard.isKeyDown(KeyCompound.KEY_SPN.ID());
-        boolean up   = Keyboard.isKeyDown(KeyCompound.KEY_DU.ID());
-        boolean down = Keyboard.isKeyDown(KeyCompound.KEY_DD.ID());
+        boolean front = false;//Keyboard.isKeyDown(KeyCompound.KEY_W.ID());
+        boolean back  = false;//Keyboard.isKeyDown(KeyCompound.KEY_S.ID());
+        boolean right = false;//Keyboard.isKeyDown(KeyCompound.KEY_D.ID());
+        boolean left  = false;//Keyboard.isKeyDown(KeyCompound.KEY_A.ID());
+        boolean speedp = false;//Keyboard.isKeyDown(KeyCompound.KEY_SPP.ID());
+        boolean speedm = false;//Keyboard.isKeyDown(KeyCompound.KEY_SPN.ID());
+        boolean up   = false;//Keyboard.isKeyDown(KeyCompound.KEY_DU.ID());
+        boolean down = false;//Keyboard.isKeyDown(KeyCompound.KEY_DD.ID());
         float nspeed;
         if(speedp) nspeed = Settings.movespeed.directFloat() * 5;
         else if(speedm) nspeed = Settings.movespeed.directFloat() / 2;
@@ -268,11 +258,11 @@ public class GGR {
     }
 
 	public static boolean isShiftDown(){
-		return Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_FUNCTION);
+		return false;//Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_FUNCTION);
 	}
 
 	public static boolean iControlDown(){
-		return Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL);
+		return false;//Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL);
 	}
 
 	public boolean isDragging(){

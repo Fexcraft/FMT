@@ -145,21 +145,21 @@ public class UserInterface {
 	public void onButtonPress(int i){
 		if(HoverMenu.anyMenuHovered()){
 			for(HoverMenu list : HoverMenu.MENUS){
-				if(list.isHovered() && list.onButtonClick(Mouse.getX(), root.getDisplayMode().getHeight() - Mouse.getY(), i == 0, true)) return;
+				if(list.isHovered() && list.onButtonClick(FMTB.cursor_x, root.getDisplayMode().getHeight() - FMTB.cursor_y, i == 0, true)) return;
 			}
 		}
 		else{
 			Element element = null, elm0 = null;
 			for(Dialog dialog : Dialog.dialogs){
 				if((elm0 = (Element)dialog).visible && elm0.enabled){
-					if(elm0.onButtonClick(Mouse.getX(), root.getDisplayMode().getHeight() - Mouse.getY(), i == 0, elm0.hovered)){
+					if(elm0.onButtonClick(FMTB.cursor_x, root.getDisplayMode().getHeight() - FMTB.cursor_y, i == 0, elm0.hovered)){
 						return;
 					} else element = elm0;
 				}
 			}
 			for(Element elm : elements){
 				if(elm instanceof Dialog == false && elm.visible && elm.enabled){
-					if(elm.onButtonClick(Mouse.getX(), root.getDisplayMode().getHeight() - Mouse.getY(), i == 0, elm.hovered)){
+					if(elm.onButtonClick(FMTB.cursor_x, root.getDisplayMode().getHeight() - FMTB.cursor_y, i == 0, elm.hovered)){
 						return;
 					} else element = elm;
 				}
@@ -171,7 +171,7 @@ public class UserInterface {
 			}
 			if(GGR.iControlDown() && i == 1 && bool && !UserInterface.RIGHTMENU.visible()){
 				ArrayList<PolygonWrapper> selected = FMTB.MODEL.getSelected();
-				UserInterface.RIGHTMENU.show(AltMenu.Type.sel(selected.isEmpty()), Mouse.getX(), FMTB.get().getDisplayMode().getHeight() - Mouse.getY(), selected);
+				UserInterface.RIGHTMENU.show(AltMenu.Type.sel(selected.isEmpty()), FMTB.cursor_x, FMTB.get().getDisplayMode().getHeight() - FMTB.cursor_y, selected);
 			}
 		}
 		return;
@@ -181,7 +181,7 @@ public class UserInterface {
 		Element element = null;
 		for(Element elm : elements){
 			if(elm.visible){
-				element = elm.getDraggableElement(Mouse.getX(), root.getDisplayMode().getHeight() - Mouse.getY(), elm.hovered);
+				element = elm.getDraggableElement(FMTB.cursor_x, root.getDisplayMode().getHeight() - FMTB.cursor_y, elm.hovered);
 				if(element != null) break;
 			}
 		}

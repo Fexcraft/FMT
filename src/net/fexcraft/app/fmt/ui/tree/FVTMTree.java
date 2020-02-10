@@ -34,7 +34,7 @@ public class FVTMTree extends RightTree {
 	}
 
 	public boolean processScrollWheel(int wheel){
-		this.modifyScroll(-wheel / (Mouse.isButtonDown(1) ? 1 : 10)); return true;
+		this.modifyScroll(-wheel / (FMTB.hold_right ? 1 : 10)); return true;
 	}
 	
 	public void modifyScroll(int amount){

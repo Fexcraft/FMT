@@ -1,19 +1,11 @@
 package net.fexcraft.app.fmt.utils;
 
-import java.awt.Desktop;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import com.google.gson.JsonObject;
 
-import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.Dialog;
-import net.fexcraft.app.fmt.ui.editor.Editor;
-import net.fexcraft.app.fmt.ui.general.Crossbar;
-import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.lib.common.json.JsonUtil;
-import net.fexcraft.lib.common.math.Time;
 
 public class KeyCompound {
 	
@@ -24,7 +16,7 @@ public class KeyCompound {
 	
 	public static void init(){
 		keys.clear();
-		keys.add(KEY_W = new FunctionlessKey("move_w", Keyboard.KEY_W, false, false));
+		/*keys.add(KEY_W = new FunctionlessKey("move_w", Keyboard.KEY_W, false, false));
 		keys.add(KEY_A = new FunctionlessKey("move_a", Keyboard.KEY_A, false, false));
 		keys.add(KEY_S = new FunctionlessKey("move_s", Keyboard.KEY_S, false, false));
 		keys.add(KEY_D = new FunctionlessKey("move_d", Keyboard.KEY_D, false, false));
@@ -38,7 +30,7 @@ public class KeyCompound {
 			@Override
 			public boolean process(){
 				if(Dialog.anyVisible()) return false;
-				if(FMTB.ggr.movemod < 32/*1024*/){
+				if(FMTB.ggr.movemod < 32/*1024*//*){
 					FMTB.ggr.movemod *= 2;
 					Crossbar.show("Speed increased to " + (FMTB.ggr.movemod * 100 ) + "%", Time.getDate() + 2000);
 				}
@@ -98,7 +90,7 @@ public class KeyCompound {
             	try{ Display.setFullscreen(Settings.toogleFullscreen()); }
     			catch(Exception ex){ ex.printStackTrace(); } return true;
 			}
-		});*/
+		});*//*
 		keys.add(new KeyFunction("take_screenshot", Keyboard.KEY_F12, true){
 			@Override public boolean process(){
 				ImageHelper.takeScreenshot(false);
@@ -132,7 +124,7 @@ public class KeyCompound {
 			@Override public boolean process(){ FMTB.MODEL.deleteSelected(); return true; }
 		});
 		keys.add(new KeyFunction("raypick", Keyboard.KEY_T, true){
-			@Override public boolean process(){ RayCoastAway.doTest(true); return true; } /* for debugging, or such */
+			@Override public boolean process(){ RayCoastAway.doTest(true); return true; } /* for debugging, or such *//*
 		});
 		/*keys.add(new KeyFunction("return", Keyboard.KEY_RETURN, true){
 			@Override public boolean process(){

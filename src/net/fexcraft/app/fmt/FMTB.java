@@ -57,7 +57,6 @@ import net.fexcraft.app.fmt.ui.UserInterpanels.Field;
 import net.fexcraft.app.fmt.ui.UserInterpanels.NumberInput20;
 import net.fexcraft.app.fmt.ui.UserInterpanels.TextInput20;
 import net.fexcraft.app.fmt.ui.editor.Editor;
-import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
 import net.fexcraft.app.fmt.ui.editor.ModelGroupEditor;
 import net.fexcraft.app.fmt.ui.editor.PreviewEditor;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
@@ -105,7 +104,7 @@ public class FMTB {
 	public static GLFWMouseButtonCallback mouseCallback;
 	public static GLFWWindowCloseCallback closeCallback;
 	public static GLFWScrollCallback scrollCallback;
-	public static double cursor_x, cursor_y, cdiffx, cdiffy;
+	public static int cursor_x, cursor_y, cdiffx, cdiffy;
 	public static boolean hold_right, hold_left, field_scrolled;
 	public static long window;
 	public static int WIDTH = 1280, HEIGHT = 720;
@@ -188,8 +187,8 @@ public class FMTB {
             @Override
             public void invoke(long window, double xpos, double ypos){
             	if(!hold_right) return;
-                cdiffx = cursor_x - xpos; cdiffy = cursor_y - (HEIGHT - ypos);
-                cursor_x = xpos; cursor_y = HEIGHT - ypos;
+                cdiffx = (int)(cursor_x - xpos); cdiffy = (int)(cursor_y - (HEIGHT - ypos));
+                cursor_x = (int)xpos; cursor_y = (int)(HEIGHT - ypos);
             }
         };
         mouseCallback = new GLFWMouseButtonCallback(){
@@ -465,7 +464,6 @@ public class FMTB {
 		ui.getElements().add(ModelTree.TREE);
 		ui.getElements().add(HelperTree.TREE);
 		ui.getElements().add(FVTMTree.TREE);
-		ui.getElements().add(new GeneralEditor());
 		ui.getElements().add(new ModelGroupEditor());
 		ui.getElements().add(new TextureEditor());
 		ui.getElements().add(new PreviewEditor());

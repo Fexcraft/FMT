@@ -5,8 +5,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Optional;
 
-import org.liquidengine.legui.input.Mouse;
-
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
@@ -74,7 +72,7 @@ public abstract class RightTree extends Element implements Scrollable {
 	
 	@Override
 	public void render(int width, int height){
-		if(!Mouse.isGrabbed()) hovered(Mouse.getX() * UserInterface.scale, height - Mouse.getY() * UserInterface.scale);
+		if(!FMTB.hold_right) hovered(FMTB.cursor_x * UserInterface.scale, height - FMTB.cursor_y * UserInterface.scale);
 		//
 		if(this.visible){ this.renderSelfQuad(); this.renderSelf(width, height); }
 	}
