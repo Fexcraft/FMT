@@ -22,14 +22,17 @@ import javax.script.ScriptException;
 import org.joml.Vector2i;
 import org.joml.Vector4f;
 import org.liquidengine.legui.animation.Animator;
+import org.liquidengine.legui.animation.AnimatorProvider;
 import org.liquidengine.legui.component.Frame;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.listener.MouseClickEventListener;
 import org.liquidengine.legui.listener.processor.EventProcessor;
+import org.liquidengine.legui.listener.processor.EventProcessorProvider;
 import org.liquidengine.legui.system.context.CallbackKeeper;
 import org.liquidengine.legui.system.context.Context;
 import org.liquidengine.legui.system.context.DefaultCallbackKeeper;
 import org.liquidengine.legui.system.handler.processor.SystemEventProcessor;
+import org.liquidengine.legui.system.handler.processor.SystemEventProcessorImpl;
 import org.liquidengine.legui.system.layout.LayoutManager;
 import org.liquidengine.legui.system.renderer.Renderer;
 import org.liquidengine.legui.system.renderer.nvg.NvgRenderer;
@@ -229,8 +232,8 @@ public class FMTB {
         keeper.getChainWindowCloseCallback().add(closeCallback);
         keeper.getChainFramebufferSizeCallback().add(framebufferSizeCallback);
         keeper.getChainScrollCallback().add(scrollCallback);
-        SystemEventProcessor systemEventProcessor = new SystemEventProcessor();
-        systemEventProcessor.addDefaultCallbacks(keeper);
+        SystemEventProcessor systemEventProcessor = new SystemEventProcessorImpl();
+		SystemEventProcessor.addDefaultCallbacks(keeper, systemEventProcessor);
         renderer = new NvgRenderer();
         renderer.initialize();
         //
@@ -274,9 +277,9 @@ public class FMTB {
             glfwPollEvents();
             glfwSwapBuffers(window);
             systemEventProcessor.processEvents(frame, context);
-            EventProcessor.getInstance().processEvents();
+			EventProcessorProvider.getInstance().processEvents();
             LayoutManager.getInstance().layout(frame);
-            Animator.getInstance().runAnimations();
+            AnimatorProvider.getAnimator().runAnimations();
             timer.update();
 			if(Settings.discordrpc()) if(++disk_update > 60000){ DiscordRPC.discordRunCallbacks(); disk_update = 0; }
 			//Thread.sleep(50);

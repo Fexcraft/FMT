@@ -44,6 +44,7 @@ public class FileSelector {
 	/** For selecting an Ex/Im-Porter first. */
 	public static final void select(String title, String root, boolean export, SelectTask task){
         Dialog20 dialog = new Dialog20(UserInterpanels.translate("eximporter." + (export ? "export" : "import") + ".select.title"), 340, 125);
+        dialog.setResizable(false);
         Label20 label = new Label20(UserInterpanels.translate("eximporter." + (export ? "export" : "import") + ".select.desc"), 10, 10, 320, 20);
         Button20 okbutton = new Button20(UserInterpanels.translate("eximporter." + (export ? "export" : "import") + ".select.continue"), 10, 75, 100, 20);
         okbutton.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
