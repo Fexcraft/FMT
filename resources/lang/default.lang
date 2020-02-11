@@ -163,3 +163,5 @@ dialog.export.success=Export complete.<nl>%s
 dialog.export.success.confirm=OK!
 dialog.export.fail=Errors while exporting Model.<nl>%s
 dialog.export.fail.confirm=ok.
+saveload.filechooser.open.nofile=Invalid Model File!<nl>(does it even exists?)
+saveload.filechooser.open.nofile.confirm=ok.
