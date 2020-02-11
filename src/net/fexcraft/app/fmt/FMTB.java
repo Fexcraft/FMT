@@ -120,8 +120,8 @@ public class FMTB {
         System.setProperty("joml.nounsafe", Boolean.TRUE.toString());
         System.setProperty("java.awt.headless", Boolean.TRUE.toString());
 	    System.setProperty("org.lwjgl.librarypath", new File("./libs/").getAbsolutePath());
-		Configuration.SHARED_LIBRARY_EXTRACT_DIRECTORY.set("./libs");
-		Configuration.SHARED_LIBRARY_EXTRACT_PATH.set("./libs");
+		Configuration.SHARED_LIBRARY_EXTRACT_DIRECTORY.set("./libs/natives");
+		Configuration.SHARED_LIBRARY_EXTRACT_PATH.set("./libs/natives");
 	    //
 		FMTB.INSTANCE = new FMTB(); try{ INSTANCE.run(); } catch(Throwable thr){ thr.printStackTrace(); System.exit(1); }
 	}
