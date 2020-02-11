@@ -86,6 +86,7 @@ public class ImageHelper {
 				extension.appendChild(child); meta.setFromTree(name, root);
 				if(currgif == null){
 					currgif = new File("./screenshots/" + Backups.getSimpleDateFormat(true).format(Time.getDate()) + ".gif");
+					currgif.getParentFile().mkdirs();
 				}
 				gifwriter.setOutput(currgifout = new FileImageOutputStream(currgif));
 				gifwriter.prepareWriteSequence(null);

@@ -508,7 +508,7 @@ public class FMTB {
 			@Override
 			public void run(){
 				JsonObject obj = HttpUtil.request("http://fexcraft.net/minecraft/fcl/request", "mode=requestdata&modid=fmt");
-				if(obj == null || !obj.has("latest_version")){
+				if(obj == null || !(obj.has("versions")) && obj.has("latest_version")){
 					Print.console("Couldn't fetch latest version.");
 					Print.console(obj == null ? ">> no version response received" : obj.toString());
 					return;
@@ -522,7 +522,7 @@ public class FMTB {
 						}
 					}
 				}
-				/*String newver = obj.get("latest_version").getAsString(); boolean bool = version.equals(newver);
+				String newver = obj.get("latest_version").getAsString(); boolean bool = version.equals(newver);
 				String welcome = Translator.format("dialog.greeting.welcome", "Welcome to FMT!<nl><version:%s>", version);
 				String newversion = Translator.format("dialog.greeting.newversion", "New version available!<nl>%s >> %s", newver, version);
 				UserInterface.DIALOGBOX.show(bool ? welcome : newversion, Translator.translate("dialog.greeting.confirm", "ok"),
@@ -534,7 +534,7 @@ public class FMTB {
 						try{ Desktop.getDesktop().browse(new URL("http://fexcraft.net/app/fmt").toURI()); }
 						catch(IOException | URISyntaxException e){ e.printStackTrace(); }
 					}
-				});*/
+				});
 			}
 		}.start();
 	}
