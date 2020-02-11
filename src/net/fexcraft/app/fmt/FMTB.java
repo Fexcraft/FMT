@@ -102,12 +102,6 @@ public class FMTB {
 	public float delta, accumulator = 0f, interval = 1f / 30f, alpha;
 	//
 	public static GLFWErrorCallback errorCallback;
-	public static GLFWFramebufferSizeCallback framebufferSizeCallback;
-	public static GLFWKeyCallback keyCallback;
-	public static GLFWCursorPosCallback cursorCallback;
-	public static GLFWMouseButtonCallback mouseCallback;
-	public static GLFWWindowCloseCallback closeCallback;
-	public static GLFWScrollCallback scrollCallback;
 	public static int cursor_x, cursor_y, cdiffx, cdiffy;
 	public static boolean hold_right, hold_left, field_scrolled;
 	public static long window;
@@ -164,13 +158,13 @@ public class FMTB {
         CallbackKeeper keeper = new DefaultCallbackKeeper();
         CallbackKeeper.registerCallbacks(window, keeper);
 		//
-        closeCallback = new GLFWWindowCloseCallback(){
+        GLFWWindowCloseCallback closeCallback = new GLFWWindowCloseCallback(){
 			@Override
 			public void invoke(long window){
 				close = true;
 			}
 		};
-        keyCallback = new GLFWKeyCallback(){
+		GLFWKeyCallback keyCallback = new GLFWKeyCallback(){
             @Override
             public void invoke(long window, int key, int scancode, int action, int mods){
             	if(context.getFocusedGui() instanceof TextInput20) return;
@@ -188,7 +182,7 @@ public class FMTB {
     			//Print.console(key, action);
             }
         };
-        cursorCallback = new GLFWCursorPosCallback(){
+        GLFWCursorPosCallback cursorCallback = new GLFWCursorPosCallback(){
             @Override
             public void invoke(long window, double xpos, double ypos){
             	if(!hold_right) return;
@@ -196,7 +190,7 @@ public class FMTB {
                 cursor_x = (int)xpos; cursor_y = (int)(HEIGHT - ypos);
             }
         };
-        mouseCallback = new GLFWMouseButtonCallback(){
+        GLFWMouseButtonCallback mouseCallback = new GLFWMouseButtonCallback(){
             @Override
             public void invoke(long window, int button, int action, int mods){
                 if(button == 0){
@@ -209,7 +203,7 @@ public class FMTB {
                 }
             }
         };
-        scrollCallback = new GLFWScrollCallback(){
+        GLFWScrollCallback scrollCallback = new GLFWScrollCallback(){
 			@Override
 			public void invoke(long window, double xoffset, double yoffset){
 				if(field_scrolled = (context.getFocusedGui() instanceof Field)){
@@ -217,7 +211,7 @@ public class FMTB {
 				}
 			}
 		};
-		framebufferSizeCallback = new GLFWFramebufferSizeCallback(){
+		GLFWFramebufferSizeCallback framebufferSizeCallback = new GLFWFramebufferSizeCallback(){
 		    @Override
 		    public void invoke(long window, int width, int height){
 		    	resize(width, height);
@@ -418,13 +412,13 @@ public class FMTB {
 	//private static final ModelRendererTurbo sphere1 = new ModelRendererTurbo(null, 256, 256).addSphere(0, 0, 0, 32.01f, 128, 128, 16, 16).setLines(true);
 
 	private void initOpenGL(){
-        //GL11.glEnable(GL11.GL_LIGHTING);
-        //GL11.glEnable(GL11.GL_LIGHT0);
-        //GL11.glLightModeli(GL11.GL_LIGHT_MODEL_TWO_SIDE,GL11.GL_TRUE);
+        GL11.glEnable(GL11.GL_LIGHTING);
+        GL11.glEnable(GL11.GL_LIGHT0);
+        GL11.glLightModeli(GL11.GL_LIGHT_MODEL_TWO_SIDE,GL11.GL_TRUE);
         GL11.glEnable(GL11.GL_COLOR_MATERIAL);
         GL11.glColorMaterial(GL11.GL_FRONT_AND_BACK,GL11.GL_AMBIENT_AND_DIFFUSE);
-        //this.setLightPos(Settings.getLight0Position());
-        //if(!Settings.lighting()) GL11.glDisable(GL11.GL_LIGHTING);
+        this.setLightPos(Settings.getLight0Position());
+        if(!Settings.lighting()) GL11.glDisable(GL11.GL_LIGHTING);
         //
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
     	GL11.glShadeModel(GL11.GL_SMOOTH);
@@ -449,10 +443,10 @@ public class FMTB {
 	    GL11.glFrustum( -fW, fW, -fH, fH, zNear, zFar );
 	}
 
-	/*private void setLightPos(float[] position){
+	private void setLightPos(float[] position){
 		java.nio.FloatBuffer fb = org.lwjgl.BufferUtils.createFloatBuffer(4); fb.put(position); fb.flip();
         GL11.glLightfv(GL11.GL_LIGHT0, GL11.GL_POSITION, fb);
-	}*/
+	}
 	
 	/** use SaveLoad.checkIfShouldSave(true) first! */
 	public void close(boolean bool){
