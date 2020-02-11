@@ -6,15 +6,36 @@ It is able to import:
 - `jtmt` - JTMT JSON Format Models
 
 And export to:
-- `jtmt` - JTMTM JSON Format Models
+- `jtmt` - JTMT JSON Format Models
 - `java`
   - Java Models for **FVTM** (Fex's Vehicle and Transportation Mod)
   - Java Models for **TrainsInMotion** following the FVTM standard.
   - Java Models for **FlansMod** (box, shapebox and basic cylinders only)
-- `obj` - Wavefront OBJ Models
-- `tsiv` - small util for MTS/IV rotation points
-- `png` - PNG files - template or textured
+- `obj` - valid **Wavefront OBJ** Models
+- `tsiv` - small util for **MTS/IV** rotation points
+- `png` - **PNG** files - template or textured
+- `txt` - **Marker** list exporter
 - and more to come!
+
+Other features
+- internal texture editor (beta)
+- auto texture positioner
+- unlimited groups*
+- unlimited polygons*
+- various polygon types
+  - boxes
+  - shapeboxes
+  - cylinders
+    - hollow cylinders
+    - top offset and rotation
+  - texrect a/b (experimental)
+  - simple quads (experimental)
+  - markers
+    - "biped" display
+  - and maybe in the future more
+- unlimited* amount of loadable helper models or (img)frames
+- and more..
+  
 
 ## All rights reserved until further notice.
 A proper license is being written soon, till then, touch not.   
