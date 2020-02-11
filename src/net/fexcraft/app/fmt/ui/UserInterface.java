@@ -27,7 +27,6 @@ public class UserInterface {
 	public static Toolbar TOOLBAR;
 	public static Bottombar BOTTOMBAR;
 	public static DialogBox DIALOGBOX;
-	public static FileSelector FILECHOOSER;
 	public static ControlsAdjuster CONTROLS;
 	public static SettingsBox SETTINGSBOX;
 	public static AltMenu RIGHTMENU;
@@ -35,14 +34,11 @@ public class UserInterface {
 	public static TextureMap TEXMAP;
 	//
 	private ArrayList<Element> elements = new ArrayList<>();
-	private FMTB root;
 	//
 	public static int width, height;
 	private float[] clearcolor;
 
-	public UserInterface(FMTB main){
-		this.root = main; rescale();
-	}
+	public UserInterface(){ rescale(); }
 	
 	public void rescale(){
 		scale_x = FMTB.WIDTH;

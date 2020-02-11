@@ -27,10 +27,8 @@ import org.lwjgl.glfw.GLFW;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
-import net.fexcraft.app.fmt.ui.general.FileSelector.AfterTask;
-import net.fexcraft.app.fmt.ui.general.FileSelector.ChooserMode;
-import net.fexcraft.app.fmt.ui.general.FileSelector.FileRoot;
 import net.fexcraft.app.fmt.ui.tree.RightTree;
+import net.fexcraft.app.fmt.utils.FileSelector;
 import net.fexcraft.app.fmt.utils.HelperCollector;
 import net.fexcraft.app.fmt.utils.ImageHelper;
 import net.fexcraft.app.fmt.utils.SaveLoad;
@@ -131,16 +129,13 @@ public class UserInterpanels {
 		));
 		frame.getContainer().add(new MenuEntry(4, translate("toolbar.textures"),
 			new MenuButton("toolbar.textures.select", () -> {
-				UserInterface.FILECHOOSER.show("Select a texture file.", null, null, null, FileRoot.TEXTURES, new AfterTask(){
-					@Override
-					public void run(){
-						String name = file.getPath(); TextureManager.loadTextureFromFile(name, file); FMTB.MODEL.setTexture(name);
-						//
-						/*Texture tex = TextureManager.getTexture(name, true); if(tex == null) return;
-						if(tex.getWidth() > FMTB.MODEL.textureX) FMTB.MODEL.textureX = tex.getWidth();
-						if(tex.getHeight() > FMTB.MODEL.textureY) FMTB.MODEL.textureY = tex.getHeight();*/
-					}
-				}, ChooserMode.PNG);
+				FileSelector.select(translate("toolbar.textures.select.dialog"), "./", FileSelector.TYPE_PNG, file -> {
+					String name = file.getPath(); TextureManager.loadTextureFromFile(name, file); FMTB.MODEL.setTexture(name);
+					//
+					/*Texture tex = TextureManager.getTexture(name, true); if(tex == null) return;
+					if(tex.getWidth() > FMTB.MODEL.textureX) FMTB.MODEL.textureX = tex.getWidth();
+					if(tex.getHeight() > FMTB.MODEL.textureY) FMTB.MODEL.textureY = tex.getHeight();*/
+				});
 			}),
 			new MenuButton("toolbar.textures.edit", () -> {
 				if(FMTB.MODEL.texture == null) return;
@@ -180,19 +175,13 @@ public class UserInterpanels {
 		frame.getContainer().add(new MenuEntry(5, translate("toolbar.helpers"),
 			new MenuButton("toolbar.helpers.view", () -> RightTree.show("helpertree")),
 			new MenuButton("toolbar.helpers.load_fmtb", () -> {
-				UserInterface.FILECHOOSER.show("Select a Preview/Helper file.", null, null, null, FileRoot.HELPERS, new AfterTask(){
-					@Override public void run(){ HelperCollector.loadFMTB(file); }
-				}, ChooserMode.SAVEFILE_LOAD);
+				FileSelector.select(translate("toolbar.helpers.load_fmtb.dialog"), "./saves", FileSelector.TYPE_FMTB, file -> HelperCollector.loadFMTB(file));
 			}),
 			new MenuButton("toolbar.helpers.load_frame", () -> {
-				UserInterface.FILECHOOSER.show("Select an Image file.", null, null, null, FileRoot.HELPERS, new AfterTask(){
-					@Override public void run(){ HelperCollector.loadFrame(file); }
-				}, ChooserMode.HELPFRAMEIMG);
+				FileSelector.select(translate("toolbar.helpers.load_frame.dialog"), "./imports", FileSelector.TYPE_IMG, file -> HelperCollector.loadFrame(file));
 			}),
 			new MenuButton("toolbar.helpers.load_imported", () -> {
-				UserInterface.FILECHOOSER.show("Select a Preview/Helper file.", null, null, null, FileRoot.HELPERS, new AfterTask(){
-					@Override public void run(){ HelperCollector.load(file, porter, mapped_settings); }
-				}, ChooserMode.IMPORT);
+				FileSelector.select(translate("toolbar.helpers.load_fmtb.dialog"), "./imports", false, (file, porter, settings) -> HelperCollector.load(file, porter, settings));
 			}),
 			new MenuButton("toolbar.helpers.unload_clear", () -> HelperCollector.LOADED.clear())
 		));

@@ -71,7 +71,14 @@ import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.editor.ModelGroupEditor;
 import net.fexcraft.app.fmt.ui.editor.PreviewEditor;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
-import net.fexcraft.app.fmt.ui.general.*;
+import net.fexcraft.app.fmt.ui.general.AltMenu;
+import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
+import net.fexcraft.app.fmt.ui.general.DialogBox;
+import net.fexcraft.app.fmt.ui.general.DropDown;
+import net.fexcraft.app.fmt.ui.general.SettingsBox;
+import net.fexcraft.app.fmt.ui.general.TextField;
+import net.fexcraft.app.fmt.ui.general.TextureMap;
+import net.fexcraft.app.fmt.ui.general.Toolbar;
 import net.fexcraft.app.fmt.ui.tree.FVTMTree;
 import net.fexcraft.app.fmt.ui.tree.HelperTree;
 import net.fexcraft.app.fmt.ui.tree.ModelTree;
@@ -96,11 +103,11 @@ public class FMTB {
 	public static final String version = "2.0.0";
 	public static final String CLID = "587016218196574209";
 	//
-	private static String title = "Unnamed Model";
-	private boolean close;
 	public static GGR ggr;
-	private static FMTB INSTANCE;
+	private boolean close;
 	public UserInterface UI;
+	private static String title = "Unnamed Model";
+	private static FMTB INSTANCE;
 	public static GroupCompound MODEL = new GroupCompound(null);
 	public static Timer BACKUP_TIMER, TEX_UPDATE_TIMER;
 	private static int disk_update;
@@ -111,11 +118,11 @@ public class FMTB {
 	public static GLFWErrorCallback errorCallback;
 	public static int cursor_x, cursor_y, cdiffx, cdiffy;
 	public static boolean hold_right, hold_left, field_scrolled;
-	public static long window;
 	public static int WIDTH = 1280, HEIGHT = 720;
 	public static Context context;
 	public static Renderer renderer;
 	public static Frame frame;
+	public static long window;
 	
 	public static void main(String... args) throws Exception {
         System.setProperty("joml.nounsafe", Boolean.TRUE.toString());
@@ -124,6 +131,8 @@ public class FMTB {
 		Configuration.SHARED_LIBRARY_EXTRACT_DIRECTORY.set("./libs/natives");
 		Configuration.SHARED_LIBRARY_EXTRACT_PATH.set("./libs/natives");
 	    //
+		File[] folders = { new File("./saves"), new File("./imports"), new File("./exports") };
+		for(File folder : folders){ if(!folder.exists()) folder.mkdirs(); }
 		FMTB.INSTANCE = new FMTB(); try{ INSTANCE.run(); } catch(Throwable thr){ thr.printStackTrace(); System.exit(1); }
 	}
 
@@ -175,7 +184,7 @@ public class FMTB {
             @Override
             public void invoke(long window, int key, int scancode, int action, int mods){
             	if(context.getFocusedGui() instanceof TextInput20) return;
-    			if(key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) glfwSetWindowShouldClose(window, true);
+    			if(key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) reset(true);
     			KeyCompound.process(window, key, scancode, action, mods);
             }
         };
@@ -480,7 +489,6 @@ public class FMTB {
 		//
 		ui.getElements().add(UserInterface.DIALOGBOX = new DialogBox());
 		ui.getElements().add(UserInterface.SETTINGSBOX = new SettingsBox());
-		ui.getElements().add(UserInterface.FILECHOOSER = new FileSelector());
 		ui.getElements().add(UserInterface.CONTROLS = new ControlsAdjuster());
 		//render last
 		ui.getElements().add(UserInterface.TOOLBAR);
@@ -494,7 +502,7 @@ public class FMTB {
 
 	public void reset(boolean esc){
 		if(net.fexcraft.app.fmt.ui.Dialog.anyVisible() || TextField.anySelected()){
-			UserInterface.DIALOGBOX.reset(); UserInterface.FILECHOOSER.reset();
+			UserInterface.DIALOGBOX.reset(); //UserInterface.FILECHOOSER.reset();
 			UserInterface.CONTROLS.reset(); UserInterface.SETTINGSBOX.reset();
 			UserInterface.TEXMAP.reset(); TextField.deselectAll();
 		} else if(esc && Editor.anyVisible()){ Editor.hideAll(); } else return;//open some kind of main menu / status / login screen.

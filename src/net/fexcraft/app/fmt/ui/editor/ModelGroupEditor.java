@@ -11,11 +11,10 @@ import net.fexcraft.app.fmt.ui.general.Button;
 import net.fexcraft.app.fmt.ui.general.DropDown;
 import net.fexcraft.app.fmt.ui.general.DropDownField;
 import net.fexcraft.app.fmt.ui.general.FileSelector.AfterTask;
-import net.fexcraft.app.fmt.ui.general.FileSelector.ChooserMode;
-import net.fexcraft.app.fmt.ui.general.FileSelector.FileRoot;
 import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.utils.Animator;
 import net.fexcraft.app.fmt.utils.Animator.Animation;
+import net.fexcraft.app.fmt.utils.FileSelector;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureUpdate;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
@@ -79,13 +78,11 @@ public class ModelGroupEditor extends Editor {
 							FMTB.MODEL.setTexture(null); TextureManager.removeTexture(FMTB.MODEL.texture);
 						} FMTB.MODEL.updateFields(); return true;
 					}
-					UserInterface.FILECHOOSER.show(translate("filechooser.editor.model_group.model.texture", "Select a model texture file."), null, null, null, FileRoot.TEXTURES, new AfterTask(){
-						@Override
-						public void run(){
-							String name = file.getPath(); TextureManager.loadTextureFromFile(name, file);
-							FMTB.MODEL.setTexture(name); FMTB.MODEL.updateFields(); 
-						}
-					}, ChooserMode.PNG);return true;
+					FileSelector.select(translate("editor.model_group.model.texture.select", "Select a model texture file."), "./", FileSelector.TYPE_PNG, file -> {
+						String name = file.getPath(); TextureManager.loadTextureFromFile(name, file);
+						FMTB.MODEL.setTexture(name); FMTB.MODEL.updateFields(); 
+					});
+					return true;
 				}
 			}.setText("null", true));
 			model.getElements().add(new Button(model, "text3", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true)
@@ -166,18 +163,16 @@ public class ModelGroupEditor extends Editor {
 							} group.setTexture(null, 0, 0); group.forEach(mrt -> mrt.recompile());
 						} FMTB.MODEL.updateFields(); return true;
 					}
-					UserInterface.FILECHOOSER.show(translate("filechooser.editor.model_group.group.texture", "Select a group texture file."), null, null, null, FileRoot.TEXTURES, new AfterTask(){
-						@Override
-						public void run(){
-							String name = file.getPath(); TextureManager.loadTextureFromFile(name, file);
-							TextureManager.Texture texture = TextureManager.getTexture(name, false);
-							ArrayList<TurboList> arrlist = FMTB.MODEL.getDirectlySelectedGroups();
-							for(TurboList group : arrlist){
-								group.setTexture(name, texture.getWidth(), texture.getHeight());
-								group.recompile();
-							} FMTB.MODEL.updateFields(); 
-						}
-					}, ChooserMode.PNG); return true;
+					FileSelector.select(translate("filechooser.editor.model_group.group.texture.select", "Select a group texture file."), "./", FileSelector.TYPE_PNG, file -> {
+						String name = file.getPath(); TextureManager.loadTextureFromFile(name, file);
+						TextureManager.Texture texture = TextureManager.getTexture(name, false);
+						ArrayList<TurboList> arrlist = FMTB.MODEL.getDirectlySelectedGroups();
+						for(TurboList group : arrlist){
+							group.setTexture(name, texture.getWidth(), texture.getHeight());
+							group.recompile();
+						} FMTB.MODEL.updateFields(); 
+					});
+					return true;
 				}
 			}.setText("null", true));
 			//

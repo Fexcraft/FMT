@@ -15,11 +15,8 @@ import java.util.stream.Collectors;
 import javax.script.ScriptException;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
-import net.fexcraft.app.fmt.ui.general.FileSelector.AfterTask;
-import net.fexcraft.app.fmt.ui.general.FileSelector.ChooserMode;
-import net.fexcraft.app.fmt.ui.general.FileSelector.FileRoot;
+import net.fexcraft.app.fmt.utils.FileSelector;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
@@ -47,67 +44,59 @@ public class PorterManager {
 	}
 
 	public static void handleImport(){
-		UserInterface.FILECHOOSER.show(Translator.translate("filechooser.import.title", "Select file/model to import."),
-			Translator.translate("filechooser.import.confirm", "Import"), null, null, FileRoot.IMPORT, new AfterTask(){
-			@Override
-			public void run(){
-				try{
-					if(file == null){
-						FMTB.showDialogbox(Translator.translate("dialog.import.nofile", "No valid file choosen.<nl>Import is cancelled."),
-							Translator.translate("dialog.import.nofile.confirm", "ok.."), null, DialogBox.NOTHING, null);
-						return;
-					}
-					GroupCompound compound = porter.importModel(file, mapped_settings);
-					if(mapped_settings.get("integrate").getBooleanValue()){
-						for(String creator : compound.creators){
-							if(!FMTB.MODEL.creators.contains(creator)){
-								FMTB.MODEL.creators.add(creator);
-							}
-						}
-						for(TurboList list : compound.getGroups()){
-							String name = compound.name + "_" + list.id;
-							while(FMTB.MODEL.getGroups().contains(name)){
-								name += "_"; if(name.length() > 64) break;
-							}
-							FMTB.MODEL.getGroups().add(list);
+		FileSelector.select(Translator.translate("eximporter.import.title", "Select file/model to import."), "./imports", false, (file, porter, settings) -> {
+			try{
+				if(file == null){
+					FMTB.showDialogbox(Translator.translate("dialog.import.nofile", "No valid file choosen.<nl>Import is cancelled."),
+						Translator.translate("dialog.import.nofile.confirm", "ok.."), null, DialogBox.NOTHING, null);
+					return;
+				}
+				GroupCompound compound = porter.importModel(file, settings);
+				if(settings.get("integrate").getBooleanValue()){
+					for(String creator : compound.creators){
+						if(!FMTB.MODEL.creators.contains(creator)){
+							FMTB.MODEL.creators.add(creator);
 						}
 					}
-					else FMTB.MODEL = compound;
-					FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
+					for(TurboList list : compound.getGroups()){
+						String name = compound.name + "_" + list.id;
+						while(FMTB.MODEL.getGroups().contains(name)){
+							name += "_"; if(name.length() > 64) break;
+						}
+						FMTB.MODEL.getGroups().add(list);
+					}
 				}
-				catch(Exception e){
-					String str = Translator.format("dialog.import.fail", "Errors while importing Model.<nl>%s", e.getLocalizedMessage());
-					FMTB.showDialogbox(str, Translator.translate("dialog.import.fail.confirm", "ok."), null, DialogBox.NOTHING, null);//TODO add "open console" as 2nd button
-					e.printStackTrace();
-				}
-				FMTB.showDialogbox(Translator.translate("dialog.import.success", "Import complete."), Translator.translate("dialog.import.success.confirm", "OK!"), null, DialogBox.NOTHING, null);
+				else FMTB.MODEL = compound;
+				FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
 			}
-		}, ChooserMode.IMPORT);
+			catch(Exception e){
+				String str = Translator.format("dialog.import.fail", "Errors while importing Model.<nl>%s", e.getLocalizedMessage());
+				FMTB.showDialogbox(str, Translator.translate("dialog.import.fail.confirm", "ok."), null, DialogBox.NOTHING, null);//TODO add "open console" as 2nd button
+				e.printStackTrace();
+			}
+			FMTB.showDialogbox(Translator.translate("dialog.import.success", "Import complete."), Translator.translate("dialog.import.success.confirm", "OK!"), null, DialogBox.NOTHING, null);
+		});
 	}
 
 	public static void handleExport(){
-		UserInterface.FILECHOOSER.show(Translator.translate("filechooser.export.title", "Select Export Location"),
-			Translator.translate("filechooser.export.confirm", "Export"), null, null, FileRoot.EXPORT, new AfterTask(){
-			@Override
-			public void run(){
-				try{
-					if(file == null){
-						FMTB.showDialogbox(Translator.translate("dialog.export.nofile", "No valid file choosen.<nl>Export is cancelled."),
-							Translator.translate("dialog.export.nofile.confirm", "ok.."), null, DialogBox.NOTHING, null);
-						return;
-					}
-					String result = porter.exportModel(FMTB.MODEL, file, mapped_settings);
-					FMTB.showDialogbox(Translator.format("dialog.export.success", "Export complete.<nl>%s", result),
-						Translator.translate("dialog.export.success.confirm", "OK!"), null, DialogBox.NOTHING, null);
-					Desktop.getDesktop().open(file.getParentFile());
+		FileSelector.select(Translator.translate("eximporter.import.title", "Select Export Location"), "./exports", true, (file, porter, settings) -> {
+			try{
+				if(file == null){
+					FMTB.showDialogbox(Translator.translate("dialog.export.nofile", "No valid file choosen.<nl>Export is cancelled."),
+						Translator.translate("dialog.export.nofile.confirm", "ok.."), null, DialogBox.NOTHING, null);
+					return;
 				}
-				catch(Exception e){
-					String str = Translator.format("dialog.export.fail", "Errors while exporting Model.<nl>%s", e.getLocalizedMessage());
-					FMTB.showDialogbox(str, Translator.translate("dialog.export.fail.confirm", "ok."), null, DialogBox.NOTHING, null);//TODO add "open console" as 2nd button
-					e.printStackTrace();
-				}
+				String result = porter.exportModel(FMTB.MODEL, file, settings);
+				FMTB.showDialogbox(Translator.format("dialog.export.success", "Export complete.<nl>%s", result),
+					Translator.translate("dialog.export.success.confirm", "OK!"), null, DialogBox.NOTHING, null);
+				Desktop.getDesktop().open(file.getParentFile());
 			}
-		}, ChooserMode.EXPORT);
+			catch(Exception e){
+				String str = Translator.format("dialog.export.fail", "Errors while exporting Model.<nl>%s", e.getLocalizedMessage());
+				FMTB.showDialogbox(str, Translator.translate("dialog.export.fail.confirm", "ok."), null, DialogBox.NOTHING, null);//TODO add "open console" as 2nd button
+				e.printStackTrace();
+			}
+		});
 	}
 
 	/**

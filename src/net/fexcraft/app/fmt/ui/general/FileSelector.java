@@ -31,6 +31,7 @@ import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Time;
 import net.fexcraft.lib.common.utils.Print;
 
+@Deprecated
 public class FileSelector extends Element implements Dialog {
 
 	public static final AfterTask NOTHING = new AfterTask(){ @Override public void run(){ Print.console(file); return; }};
@@ -89,14 +90,14 @@ public class FileSelector extends Element implements Dialog {
 				}
 				if(onfile.file != null){
 					if(!onfile.file.getParentFile().exists()) onfile.file.getParentFile().mkdirs();
-					UserInterface.FILECHOOSER.visible = false; applySettingsToAfterTask(onfile);
+					/*UserInterface.FILECHOOSER.visible = false;*/ applySettingsToAfterTask(onfile);
 					boolean ovrd = (mode.exports() || mode.savefile_save()) && onfile.file.exists();
 					String override = format("dialog.filechooser.override", "Override existing File?<nl>%s", onfile.file.getName());
 					if(onfile.settings.isEmpty()){
 						if(ovrd){
 							FMTB.showDialogbox(override, translate("dialog.filechooser.override.confirm", "yes"), translate("dialog.filechooser.override.cancel", "no!"), onfile, DialogBox.NOTHING);
 						} else{ onfile.run(); }
-						UserInterface.FILECHOOSER.reset();
+						//UserInterface.FILECHOOSER.reset();
 					}
 					else{
 						if(ovrd){
@@ -106,7 +107,7 @@ public class FileSelector extends Element implements Dialog {
 							}, DialogBox.NOTHING);
 						}
 						else{ UserInterface.SETTINGSBOX.show(translate("filechooser.settings", "FileChooser Settings"), onfile); }
-						UserInterface.FILECHOOSER.reset();
+						//UserInterface.FILECHOOSER.reset();
 					}
 					return true;
 				
@@ -121,14 +122,14 @@ public class FileSelector extends Element implements Dialog {
 		this.elements.add(sel[1] = new Button(this, "button1", "fileselector:button", 140, 28, 186, 510, StyleSheet.YELLOW, StyleSheet.RED){
 			@Override public boolean processButtonClick(int x, int y, boolean left){
 				onfile.porter = porters == null ? null : porters[eximscroll];
-				String str = Backups.getSimpleDateFormat(true).format(Time.getDate()); UserInterface.FILECHOOSER.visible = false;
+				String str = Backups.getSimpleDateFormat(true).format(Time.getDate()); //UserInterface.FILECHOOSER.visible = false;
 				String ext = getCurrentSelectedFileExtension(onfile.porter);
 				onfile.file = new File(files.current, (FMTB.MODEL.name == null ? "unnamed" : FMTB.MODEL.name) + "-(" + str + ")" + ext);
-				applySettingsToAfterTask(onfile); onfile.run(); UserInterface.FILECHOOSER.reset(); return true;
+				applySettingsToAfterTask(onfile); onfile.run(); /*UserInterface.FILECHOOSER.reset();*/ return true;
 			}
 		});
 		this.elements.add(sel[2] = new Button(this, "button2", "fileselector:button", 140, 28, 512 - 140 - 16, 510, StyleSheet.YELLOW, StyleSheet.RED){
-			@Override public boolean processButtonClick(int x, int y, boolean left){ UserInterface.FILECHOOSER.reset(); return true; }
+			@Override public boolean processButtonClick(int x, int y, boolean left){ /*UserInterface.FILECHOOSER.reset();*/ return true; }
 		});
 		for(Button button : sel) button.setBorder(0xff909090, StyleSheet.WHITE, 1, true, true, true, true);
 		//

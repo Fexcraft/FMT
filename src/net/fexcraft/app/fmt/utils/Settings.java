@@ -153,13 +153,13 @@ public class Settings {
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "numberfield_arrows", true));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "preview_colorpicker", false));
 		//
-		DEFAULTS.add(new Setting(Type.STRING, "filedir_last_type", "SAVES"));
+		/*DEFAULTS.add(new Setting(Type.STRING, "filedir_last_type", "SAVES"));
 		DEFAULTS.add(new Setting(Type.STRING, "filedir_last", "./saves"));
 		DEFAULTS.add(new Setting(Type.STRING, "filedir_saves", "./saves"));
 		DEFAULTS.add(new Setting(Type.STRING, "filedir_export", "./exports"));
 		DEFAULTS.add(new Setting(Type.STRING, "filedir_import", "./imports"));
 		DEFAULTS.add(new Setting(Type.STRING, "filedir_helpers", "./helpers"));
-		DEFAULTS.add(new Setting(Type.STRING, "filedir_textures", "./resources/textures"));
+		DEFAULTS.add(new Setting(Type.STRING, "filedir_textures", "./resources/textures"));*/
 		//
 		DEFAULTS.add(new Setting(Type.FLOAT, "mouse_sensivity", 2f));
 		DEFAULTS.add(new Setting(Type.FLOAT, "camera_movespeed", 2f));
