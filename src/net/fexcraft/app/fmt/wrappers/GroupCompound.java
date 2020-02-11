@@ -10,12 +10,13 @@ import java.util.stream.Collectors;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.Editors;
+import net.fexcraft.app.fmt.ui.UserInterpanels.Field;
 import net.fexcraft.app.fmt.ui.editor.Container;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.ui.general.DropDownField;
-import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.ui.tree.HelperTree;
 import net.fexcraft.app.fmt.ui.tree.ModelTree;
 import net.fexcraft.app.fmt.ui.tree.RightTree.CompoundButton;
@@ -153,17 +154,15 @@ public class GroupCompound {
 		for(TurboList list : groups){ list.selected = false; for(PolygonWrapper wrapper : list) wrapper.selected = false; } SELECTED_POLYGONS = 0;
 	}
 
-	public boolean updateValue(TextField field, String id){
-		ArrayList<PolygonWrapper> polis = this.getSelected();
-		if(polis.isEmpty()) return false;
-		boolean positive = id.endsWith("+"); id = id.replace("-", "").replace("+", "");
+	public boolean updateValue(Field field, String id, boolean positive){
+		ArrayList<PolygonWrapper> polis = this.getSelected(); if(polis.isEmpty()) return false;
 		boolean x = id.endsWith("x"), y = id.endsWith("y"), z = id.endsWith("z");
 		id = id.substring(0, id.length() - 1);
 		for(int i = 0; i < polis.size(); i++){
-			float f = field.tryChange(polis.get(i).getFloat(id, x, y, z), positive, rate);
+			float f = field.tryAdd(polis.get(i).getFloat(id, x, y, z), positive, rate);
 			if(i == 0){
 				if(polis.get(i).apply(id, f, x, y, z)){
-					field.applyChange(f);
+					field.apply(f);
 				}
 			}
 			else{
@@ -173,20 +172,19 @@ public class GroupCompound {
 		return true;
 	}
 	
-	public boolean updateValue(TextField field){
-		ArrayList<PolygonWrapper> polis = this.getSelected();
-		if(polis.isEmpty()) return false;
-		boolean x = field.getId().endsWith("x"), y = field.getId().endsWith("y"), z = field.getId().endsWith("z");
-		String id = field.getId().substring(0, field.getId().length() - 1);
+	public boolean updateValue(Field field, String id){
+		ArrayList<PolygonWrapper> polis = this.getSelected(); if(polis.isEmpty()) return false;
+		boolean x = id.endsWith("x"), y = id.endsWith("y"), z = id.endsWith("z");
+		id = id.substring(0, id.length() - 1);
 		//
 		float diffo = polis.get(0).getFloat(id, x, y, z);
 		for(int i = 0; i < polis.size(); i++){
 			if(i == 0){
-				polis.get(i).apply(id, field.getFloatValue(), x, y, z);
+				polis.get(i).apply(id, field.getValue(), x, y, z);
 			}
 			else{
 				float diff = polis.get(i).getFloat(id, x, y, z) - diffo;
-				polis.get(i).apply(id, field.getFloatValue() + diff, x, y, z);
+				polis.get(i).apply(id, field.getValue() + diff, x, y, z);
 			}
 		}
 		return true;
@@ -667,8 +665,12 @@ public class GroupCompound {
 	public int tx(TurboList list){ return list == null || list.getGroupTexture() == null ? textureSizeX : list.textureX; }
 	public int ty(TurboList list){ return list == null || list.getGroupTexture() == null ? textureSizeY : list.textureY; }
 	
-	@SuppressWarnings("serial")
 	public static class GroupList extends ArrayList<TurboList> {
+		
+		@Override
+		public boolean add(TurboList list){
+			boolean bool = super.add(list); Editors.general.refreshGroups(); return bool;
+		}
 		
 		public boolean contains(String str){
 			for(TurboList list : this) if(list.id.equals(str)) return true; return false;

@@ -5,8 +5,6 @@ import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
@@ -32,8 +30,8 @@ public class RayCoastAway {
 	public static void doTest(boolean bool, boolean mouseoff){
 		/*if(!Settings.rayPicking()) return;*/ if(bool && !PICKING){ PICKING = true; MOUSEOFF = mouseoff; return; } if(FMTB.get() == null) return;
 		//
-		int width = FMTB.get().getDisplayMode().getWidth(), height = FMTB.get().getDisplayMode().getHeight();
-		if(mouseoff){ width = Mouse.getX() * 2; height = Mouse.getY() * 2; }
+		int width = FMTB.WIDTH, height = FMTB.HEIGHT;
+		if(mouseoff){ width = FMTB.cursor_x * 2; height = FMTB.cursor_y * 2; }
 		GL11.glReadPixels(width / 2, height / 2, 1, 1, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
 		byte[] byteArray = new byte[4]; buffer.get(byteArray);
 		//Print.console((((int) byteArray[0]) & 0xFF) + " " + (((int) byteArray[1]) & 0xFF) + " "  + (((int) byteArray[2]) & 0xFF));
@@ -72,9 +70,9 @@ public class RayCoastAway {
 		PolygonWrapper wrapper = getSelected(id);
 		if(wrapper == null) return;
 		if(!TextureEditor.BUCKETMODE){
-			boolean control = Keyboard.isKeyDown(Keyboard.KEY_LCONTROL);
+			boolean control = false;//Keyboard.isKeyDown(Keyboard.KEY_LCONTROL);
 			boolean state = control ? wrapper.getTurboList().selected : wrapper.selected;
-			if(!Keyboard.isKeyDown(Keyboard.KEY_LMENU)) FMTB.MODEL.clearSelection();
+			if(true/*!Keyboard.isKeyDown(Keyboard.KEY_LMENU)*/) FMTB.MODEL.clearSelection();
 			if(control){
 				wrapper.getTurboList().selected = !state;
 				GroupCompound.SELECTED_POLYGONS = FMTB.MODEL.countSelectedMRTs();

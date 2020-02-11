@@ -1,7 +1,6 @@
 package net.fexcraft.app.fmt.ui.editor;
 
-import org.lwjgl.input.Mouse;
-
+import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.general.Button;
@@ -27,7 +26,7 @@ public class Container extends Button {
 	
 	@Override
 	public void render(int width, int height){
-		if(!Mouse.isGrabbed()) hovered(Mouse.getX() * UserInterface.scale, height - Mouse.getY() * UserInterface.scale);
+		if(!FMTB.hold_right) hovered(FMTB.cursor_x * UserInterface.scale, height - FMTB.cursor_y * UserInterface.scale);
 		this.renderSelf(width, height); if(expanded) for(Element elm : elements) elm.render(width, height);
 	}
 

@@ -2,8 +2,6 @@ package net.fexcraft.app.fmt.ui.general;
 
 import java.util.ArrayList;
 
-import org.lwjgl.input.Mouse;
-
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.Element;
@@ -28,7 +26,7 @@ public class DropDown extends Element implements Dialog, Scrollable {
 	
 	@Override
 	public void renderSelf(int rw, int rh){
-		if(!hovered && !temproot.isHovered() && !scrollbar.isHovered() && !FMTB.ggr.isDragging()){ this.reset(); } this.renderSelfQuad();
+		if(!hovered && !temproot.isHovered() && !scrollbar.isHovered() /*&& !FMTB.ggr.isDragging()*/){ this.reset(); } this.renderSelfQuad();
 	}
 	
 	@Override
@@ -95,7 +93,7 @@ public class DropDown extends Element implements Dialog, Scrollable {
 
 	@Override
 	public boolean processScrollWheel(int wheel){
-		int amount = -wheel / (Mouse.isButtonDown(1) ? 1 : 10); scrollbar.scrolled += amount;
+		int amount = -wheel / (FMTB.hold_right ? 1 : 10); scrollbar.scrolled += amount;
 		if(scrollbar.scrolled < 0) scrollbar.scrolled = 0; return refresh();
 	}
 

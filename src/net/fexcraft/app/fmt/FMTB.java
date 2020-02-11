@@ -1,10 +1,11 @@
 package net.fexcraft.app.fmt;
 
-import java.awt.Desktop;
+import static org.lwjgl.glfw.GLFW.*;
+
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -14,13 +15,35 @@ import java.util.Timer;
 
 import javax.script.ScriptException;
 
-import org.lwjgl.LWJGLException;
-import org.lwjgl.LWJGLUtil;
-import org.lwjgl.Sys;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
+import org.joml.Vector2i;
+import org.joml.Vector4f;
+import org.liquidengine.legui.animation.Animator;
+import org.liquidengine.legui.component.Frame;
+import org.liquidengine.legui.listener.processor.EventProcessor;
+import org.liquidengine.legui.system.context.CallbackKeeper;
+import org.liquidengine.legui.system.context.Context;
+import org.liquidengine.legui.system.context.DefaultCallbackKeeper;
+import org.liquidengine.legui.system.handler.processor.SystemEventProcessor;
+import org.liquidengine.legui.system.layout.LayoutManager;
+import org.liquidengine.legui.system.renderer.Renderer;
+import org.liquidengine.legui.system.renderer.nvg.NvgRenderer;
+import org.liquidengine.legui.theme.Themes;
+import org.liquidengine.legui.theme.colored.FlatColoredTheme;
+import org.lwjgl.glfw.GLFWCursorPosCallback;
+import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
+import org.lwjgl.glfw.GLFWImage;
+import org.lwjgl.glfw.GLFWKeyCallback;
+import org.lwjgl.glfw.GLFWMouseButtonCallback;
+import org.lwjgl.glfw.GLFWScrollCallback;
+import org.lwjgl.glfw.GLFWWindowCloseCallback;
+import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.glu.GLU;
+import org.lwjgl.opengl.GLUtil;
+import org.lwjgl.stb.STBImage;
+import org.lwjgl.system.Configuration;
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.Platform;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -31,10 +54,13 @@ import net.arikia.dev.drpc.DiscordRPC;
 import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.ui.Dialog;
-import net.fexcraft.app.fmt.ui.FontRenderer;
+import net.fexcraft.app.fmt.ui.Editors;
 import net.fexcraft.app.fmt.ui.UserInterface;
+import net.fexcraft.app.fmt.ui.UserInterpanels;
+import net.fexcraft.app.fmt.ui.UserInterpanels.Field;
+import net.fexcraft.app.fmt.ui.UserInterpanels.NumberInput20;
+import net.fexcraft.app.fmt.ui.UserInterpanels.TextInput20;
 import net.fexcraft.app.fmt.ui.editor.Editor;
-import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
 import net.fexcraft.app.fmt.ui.editor.ModelGroupEditor;
 import net.fexcraft.app.fmt.ui.editor.PreviewEditor;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
@@ -44,6 +70,7 @@ import net.fexcraft.app.fmt.ui.tree.HelperTree;
 import net.fexcraft.app.fmt.ui.tree.ModelTree;
 import net.fexcraft.app.fmt.utils.*;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
+import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Time;
 import net.fexcraft.lib.common.utils.HttpUtil;
@@ -57,59 +84,156 @@ import net.fexcraft.lib.tmt.ModelRendererTurbo;
  * */
 public class FMTB {
 	
-	public static final String deftitle = "[FPS:%s] Fexcraft Modelling Toolbox Classic - %s";
-	public static final String deftitle0 = "Fexcraft Modelling Toolbox Classic - %s";
-	public static final String version = "1.3.8";
+	public static final String deftitle = "[FPS:%s] Fexcraft Modelling Toolbox - %s";
+	public static final String deftitle0 = "Fexcraft Modelling Toolbox - %s";
+	public static final String version = "2.0.0";
 	public static final String CLID = "587016218196574209";
 	//
 	private static String title = "Unnamed Model";
 	private boolean close;
 	public static GGR ggr;
 	private static FMTB INSTANCE;
-	private DisplayMode displaymode;
 	public UserInterface UI;
-	private static File lwjgl_natives;
 	public static GroupCompound MODEL = new GroupCompound(null);
 	public static Timer BACKUP_TIMER, TEX_UPDATE_TIMER;
 	private static int disk_update;
 	//
 	public static final ST_Timer timer = new ST_Timer();
 	public float delta, accumulator = 0f, interval = 1f / 30f, alpha;
+	//
+	public static GLFWErrorCallback errorCallback;
+	public static int cursor_x, cursor_y, cdiffx, cdiffy;
+	public static boolean hold_right, hold_left, field_scrolled;
+	public static long window;
+	public static int WIDTH = 1280, HEIGHT = 720;
+	public static Context context;
+	public static Renderer renderer;
+	public static Frame frame;
 	
 	public static void main(String... args) throws Exception {
-	    switch(LWJGLUtil.getPlatform()){
-	        case LWJGLUtil.PLATFORM_WINDOWS:{ lwjgl_natives = new File("./libs/native/windows"); break; }
-	        case LWJGLUtil.PLATFORM_LINUX:{ lwjgl_natives = new File("./libs/native/linux"); break; }
-	        case LWJGLUtil.PLATFORM_MACOSX:{
-	        	System.setProperty("apple.awt.fullscreenhidecursor", "false");
-	        	lwjgl_natives = new File("./libs/native/macosx"); break;
-	        }
-	    }
-	    System.setProperty("org.lwjgl.librarypath", lwjgl_natives.getAbsolutePath());
+        System.setProperty("joml.nounsafe", Boolean.TRUE.toString());
+        System.setProperty("java.awt.headless", Boolean.TRUE.toString());
+	    System.setProperty("org.lwjgl.librarypath", new File("./libs/").getAbsolutePath());
+		Configuration.SHARED_LIBRARY_EXTRACT_DIRECTORY.set("./libs/natives");
+		Configuration.SHARED_LIBRARY_EXTRACT_PATH.set("./libs/natives");
 	    //
 		FMTB.INSTANCE = new FMTB(); try{ INSTANCE.run(); } catch(Throwable thr){ thr.printStackTrace(); System.exit(1); }
-	}
-	
-	public static final Process startProcess(Class<?> clazz) throws Exception {
-	    String sp = System.getProperty("file.separator"), path = System.getProperty("java.home") + sp + "bin" + sp + "java";
-	    return new ProcessBuilder(path, "-cp", System.getProperty("java.class.path"), clazz.getName()).start();
-	}
-	
-	public static final int getResult(String[] text, int buttons) throws Exception {
-	    String sp = System.getProperty("file.separator"), path = System.getProperty("java.home") + sp + "bin" + sp + "java";
-	    return new ProcessBuilder(path, "-cp", System.getProperty("java.class.path"), Object.class.getName()).start().waitFor();
-	    //TODO make new "dialogbox class" using this?
 	}
 
 	public static final FMTB get(){ return INSTANCE; }
 	
 	public FMTB setTitle(String string){ title = string; DiscordUtil.update(false); return this; }
 	
-	public void run() throws LWJGLException, InterruptedException, IOException, NoSuchMethodException, ScriptException {
-		TextureManager.init(); this.setIcon(); Settings.load(); StyleSheet.load(); Translator.init(); timer.init();
-		setupDisplay(); initOpenGL(); ggr = new GGR(this, 0, 4, 4); ggr.rotation.xCoord = 45; FontRenderer.init();
-		PorterManager.load(); HelperCollector.reload(); Display.setResizable(true); UI = new UserInterface(this); this.setupUI(UI);
-		SessionHandler.checkIfLoggedIn(true, true); checkForUpdates(); KeyCompound.init(); KeyCompound.load();
+	public void run() throws InterruptedException, IOException, NoSuchMethodException, ScriptException {
+		TextureManager.init(); Settings.load(); StyleSheet.load(); Translator.init(); timer.init();
+        glfwSetErrorCallback(errorCallback = GLFWErrorCallback.createPrint(System.err));
+		if(!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW.");
+        glfwWindowHint(GLFW_RESIZABLE, GL11.GL_TRUE);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+        //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        window = glfwCreateWindow(WIDTH, HEIGHT, "Fex's Modelling Toolbox", 0, 0);
+        if(window == 0) {
+            throw new RuntimeException("Failed to create window");
+        }
+        glfwMakeContextCurrent(window);
+        GL.createCapabilities();
+		GLUtil.setupDebugMessageCallback();
+		initOpenGL(); this.setIcon();
+		glfwShowWindow(window);
+		//
+        Themes.setDefaultTheme(new FlatColoredTheme(
+			rgba(245, 245, 245, 1), // backgroundColor
+	        rgba(176, 190, 197, 1), // borderColor
+	        rgba(100, 181, 246, 1), // strokeColor
+	        rgba(165, 214, 167, 1), // allowColor
+	        rgba(239, 154, 154, 1), // denyColor
+	        null
+        ));//Themes.FLAT_WHITE);
+        frame = new Frame(WIDTH, HEIGHT);
+        frame.getContainer().add(new Interface());
+        Editors.initializeEditors(frame);
+        UserInterpanels.addToolbarButtons(frame);
+        context = new Context(window);
+        CallbackKeeper keeper = new DefaultCallbackKeeper();
+        CallbackKeeper.registerCallbacks(window, keeper);
+		//
+        GLFWWindowCloseCallback closeCallback = new GLFWWindowCloseCallback(){
+			@Override
+			public void invoke(long window){
+				close = true;
+			}
+		};
+		GLFWKeyCallback keyCallback = new GLFWKeyCallback(){
+            @Override
+            public void invoke(long window, int key, int scancode, int action, int mods){
+            	if(context.getFocusedGui() instanceof TextInput20) return;
+    			if(key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) glfwSetWindowShouldClose(window, true);
+    			if(key == GLFW_KEY_W) ggr.w_down = GGR.parseKeyAction(action);
+    			if(key == GLFW_KEY_S) ggr.s_down = GGR.parseKeyAction(action);
+    			if(key == GLFW_KEY_A) ggr.a_down = GGR.parseKeyAction(action);
+    			if(key == GLFW_KEY_D) ggr.d_down = GGR.parseKeyAction(action);
+    			if(key == GLFW_KEY_SPACE) ggr.space_down = GGR.parseKeyAction(action);
+    			if(key == GLFW_KEY_LEFT_SHIFT || key == GLFW_KEY_RIGHT_SHIFT) ggr.shift_down = GGR.parseKeyAction(action);
+    			if(key == GLFW_KEY_R) ggr.r_down = GGR.parseKeyAction(action);
+    			if(key == GLFW_KEY_F) ggr.f_down = GGR.parseKeyAction(action);
+    			if(key == GLFW_KEY_UP) ggr.rotation.xCoord -= 5;
+    			if(key == GLFW_KEY_DOWN) ggr.rotation.xCoord += 5;
+    			if(key == GLFW_KEY_LEFT) ggr.rotation.yCoord -= 5;
+    			if(key == GLFW_KEY_RIGHT) ggr.rotation.yCoord += 5;
+    			//Print.console(key, action);
+            }
+        };
+        GLFWCursorPosCallback cursorCallback = new GLFWCursorPosCallback(){
+            @Override
+            public void invoke(long window, double xpos, double ypos){
+            	if(!hold_right) return;
+                cdiffx = (int)(cursor_x - xpos); cdiffy = (int)(cursor_y - (HEIGHT - ypos));
+                cursor_x = (int)xpos; cursor_y = (int)(HEIGHT - ypos);
+            }
+        };
+        GLFWMouseButtonCallback mouseCallback = new GLFWMouseButtonCallback(){
+            @Override
+            public void invoke(long window, int button, int action, int mods){
+                if(button == 0){
+                	if(action == GLFW_PRESS) hold_left = true;
+                	else if(action == GLFW_RELEASE) hold_left = false;
+                }
+                else if(button == 1){
+                	if(action == GLFW_PRESS) hold_right = true;
+                	else if(action == GLFW_RELEASE) hold_right = false;
+                }
+            }
+        };
+        GLFWScrollCallback scrollCallback = new GLFWScrollCallback(){
+			@Override
+			public void invoke(long window, double xoffset, double yoffset){
+				if(field_scrolled = (context.getFocusedGui() instanceof Field)){
+					((NumberInput20)context.getFocusedGui()).onScroll(yoffset);
+				}
+			}
+		};
+		GLFWFramebufferSizeCallback framebufferSizeCallback = new GLFWFramebufferSizeCallback(){
+		    @Override
+		    public void invoke(long window, int width, int height){
+		    	resize(width, height);
+		    }
+		};
+        keeper.getChainKeyCallback().add(keyCallback);
+        keeper.getChainCursorPosCallback().add(cursorCallback);
+        keeper.getChainMouseButtonCallback().add(mouseCallback);
+        keeper.getChainWindowCloseCallback().add(closeCallback);
+        keeper.getChainFramebufferSizeCallback().add(framebufferSizeCallback);
+        keeper.getChainScrollCallback().add(scrollCallback);
+        SystemEventProcessor systemEventProcessor = new SystemEventProcessor();
+        systemEventProcessor.addDefaultCallbacks(keeper);
+        renderer = new NvgRenderer();
+        renderer.initialize();
+        //
+		//ggr = new GGR(this, 0, 0, 0, 0, 0, 0);
+		ggr = new GGR(0, 4, 4); ggr.rotation.xCoord = 45;
+		PorterManager.load(); HelperCollector.reload();
+		SessionHandler.checkIfLoggedIn(true, true); checkForUpdates(); //TODO KeyCompound.init(); KeyCompound.load();
 		//
 		LocalDateTime midnight = LocalDateTime.of(LocalDate.now(ZoneOffset.systemDefault()), LocalTime.MIDNIGHT);
 		long mid = midnight.toInstant(ZoneOffset.UTC).toEpochMilli(); long date = Time.getDate(); while((mid += Time.MIN_MS * 5) < date);
@@ -130,24 +254,33 @@ public class FMTB {
 		}
 		//
 		while(!close){
-            input(accumulator += (delta = timer.getDelta()));
+			ggr.pollInput(accumulator += (delta = timer.getDelta()));
             while(accumulator >= interval){
             	loop(); timer.updateUPS();
                 accumulator -= interval;
-            } checkResizement();
+            }
 			render(alpha = accumulator / interval);
 			if(!RayCoastAway.PICKING){
 				if(ImageHelper.HASTASK){
-					UI.render(true); ImageHelper.doTask();
-				}
-				else UI.render(false);
-				//
-			} updateFPS();
-			Display.update(); Display.sync(60); timer.update();
+					renderUI(true); ImageHelper.doTask();
+				} else renderUI(false);
+			}
+			updateFPS();
+            glfwPollEvents();
+            glfwSwapBuffers(window);
+            systemEventProcessor.processEvents(frame, context);
+            EventProcessor.getInstance().processEvents();
+            LayoutManager.getInstance().layout(frame);
+            Animator.getInstance().runAnimations();
+            timer.update();
 			if(Settings.discordrpc()) if(++disk_update > 60000){ DiscordRPC.discordRunCallbacks(); disk_update = 0; }
 			//Thread.sleep(50);
-		} DiscordRPC.discordShutdown();
-		Display.destroy(); Settings.save(); StyleSheet.save(); KeyCompound.save(); SessionHandler.save(); System.exit(0);
+		}
+		DiscordRPC.discordShutdown();
+		renderer.destroy();
+        glfwDestroyWindow(window);   
+        glfwTerminate();
+        Settings.save(); StyleSheet.save(); KeyCompound.save(); SessionHandler.save(); System.exit(0);
 	}
 
 	private void updateFPS(){
@@ -155,44 +288,41 @@ public class FMTB {
 	}
 
 	private void setIcon(){
-		Display.setIcon(new java.nio.ByteBuffer[]{ TextureManager.getTexture("icon", false).getBuffer(), TextureManager.getTexture("icon", false).getBuffer() });
-	}
-	
-	private void input(float delta){
-		ggr.pollInput(delta); ggr.apply();
-	}
-
-	private void loop(){
-		if(Display.isCloseRequested()){ SaveLoad.checkIfShouldSave(true, false); }
-		//checkResizement();
-        if(!TextureUpdate.HALT){ TextureUpdate.tryAutoPos(TextureUpdate.ALL); }
-	}
-	
-	private void checkResizement(){
-		if(Display.wasResized()){
-			displaymode = new DisplayMode(Display.getWidth(), Display.getHeight());
-	        GLU.gluPerspective(45.0f, displaymode.getWidth() / displaymode.getHeight(), 0.1f, 4096f / 2);
-			GL11.glViewport(0, 0, displaymode.getWidth(), displaymode.getHeight());
-			this.initOpenGL(); UI.rescale();
-		}
-        if(!Display.isVisible()) {
-            try{ Thread.sleep(100); }
-            catch(Exception e){ e.printStackTrace(); }
+        try(MemoryStack stack = MemoryStack.stackPush()){
+        	ByteBuffer imgbuff; IntBuffer ch = stack.mallocInt(1), w = stack.mallocInt(1), h = stack.mallocInt(1);
+            imgbuff = STBImage.stbi_load("./resources/textures/icon.png", w, h, ch, 4);
+            if(imgbuff == null) return;
+            GLFWImage image = GLFWImage.malloc(); GLFWImage.Buffer imagebf = GLFWImage.malloc(1);
+            image.set(w.get(), h.get(), imgbuff); imagebf.put(0, image);
+            glfwSetWindowIcon(window, imagebf);
         }
 	}
 
+	public void resize(int width, int height){
+    	WIDTH = width; HEIGHT = height;
+    	perspective(45.0f, (float)WIDTH / (float)HEIGHT, 0.1f, 4096f / 2);
+	}
+
+    private static Vector4f rgba(int r, int g, int b, float a) {
+        return new Vector4f(r / 255f, g / 255f, b / 255f, a);
+    }
+
+	private void loop(){
+        if(!TextureUpdate.HALT){ TextureUpdate.tryAutoPos(TextureUpdate.ALL); }
+	}
+
 	public long getTime(){
-	    return (Sys.getTime() * 1000) / Sys.getTimerResolution();
+	    return System.currentTimeMillis();
 	}
 	
 	private void render(float alpha){
-        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-        GL11.glLoadIdentity(); //GL11.glLoadIdentity();		
-        GL11.glRotatef(ggr.rotation.xCoord, 1, 0, 0);
-        GL11.glRotatef(ggr.rotation.yCoord, 0, 1, 0);
-        GL11.glRotatef(ggr.rotation.zCoord, 0, 0, 1);
-        GL11.glTranslatef(-ggr.pos.xCoord, -ggr.pos.yCoord, -ggr.pos.zCoord);
-        //if(GAMETEST){ GameHandler.render(); return; }
+		context.updateGlfwWindow();
+        Vector2i size = context.getFramebufferSize();
+        GL11.glClearColor(0.5f, 0.5f, 0.5f, 1);
+        GL11.glViewport(0, 0, size.x, size.y);
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+        RGB.glColorReset(); ggr.apply();
+		//
         GL11.glRotatef(180, 1, 0, 0);
         GL11.glPushMatrix();
         RGB.WHITE.glColorApply();
@@ -228,13 +358,51 @@ public class FMTB {
             if(HelperCollector.LOADED.size() > 0){
             	for(GroupCompound model : HelperCollector.LOADED){ RGB.glColorReset(); model.render(); }
             }
-            if(Settings.demo()){
-                TextureManager.bindTexture("t1p"); ModelT1P.INSTANCE.render();
-            }
+            //if(Settings.demo()){
+                TextureManager.bindTexture("t1p");
+                ModelT1P.INSTANCE.render();
+            //}
 			if(Settings.lighting()) GL11.glDisable(GL11.GL_LIGHTING);
             GL11.glPopMatrix();
         }
 	}
+	
+	public void renderUI(boolean screenshot){
+		{
+			GL11.glPushMatrix();
+	        GL11.glMatrixMode(GL11.GL_PROJECTION);
+	        GL11.glPushMatrix();
+	        GL11.glLoadIdentity();
+	        GL11.glOrtho(0, WIDTH, HEIGHT, 0, -100, 100);
+	        GL11.glMatrixMode(GL11.GL_MODELVIEW);
+	        GL11.glPushMatrix();
+	        GL11.glLoadIdentity();
+		}
+		//
+		GL11.glLoadIdentity(); RGB.glColorReset();
+		GL11.glDepthFunc(GL11.GL_ALWAYS); GL11.glDisable(GL11.GL_ALPHA_TEST);
+		if(screenshot){
+			//screenshot overlay
+		}
+		else{
+			renderer.render(frame, context);
+		}
+		GL11.glDepthFunc(GL11.GL_LESS); GL11.glEnable(GL11.GL_ALPHA_TEST);
+		//
+		{
+	        GL11.glMatrixMode(GL11.GL_PROJECTION);
+	        GL11.glPopMatrix();
+	        GL11.glMatrixMode(GL11.GL_MODELVIEW);
+	        GL11.glPopMatrix();
+	        GL11.glDepthFunc(GL11.GL_LEQUAL);
+	    	if(clearcolor == null){ clearcolor = Settings.getBackGroundColor(); }
+	    	GL11.glClearColor(clearcolor[0], clearcolor[1], clearcolor[2], clearcolor[3]);
+	        GL11.glClearDepth(1.0);
+	        GL11.glPopMatrix();
+		}
+	}
+	
+	private float[] clearcolor;
 	
 	private static final ModelRendererTurbo compound0 = new ModelRendererTurbo(null, 0, 0);
 	static { compound0.textureHeight = compound0.textureWidth = 16; compound0.addBox(-8, 0, -8, 16, 16, 16); }
@@ -260,24 +428,22 @@ public class FMTB {
         GL11.glDepthFunc(GL11.GL_LEQUAL);
         GL11.glMatrixMode(GL11.GL_PROJECTION);
         GL11.glLoadIdentity();
-        GLU.gluPerspective(45.0f, (float)displaymode.getWidth() / (float)displaymode.getHeight(), 0.1f, 4096f / 2);
+        perspective(45.0f, (float)WIDTH / (float)HEIGHT, 0.1f, 4096f / 2);
         GL11.glMatrixMode(GL11.GL_MODELVIEW);
         GL11.glHint(GL11.GL_PERSPECTIVE_CORRECTION_HINT, GL11.GL_NICEST);
         //
         GL11.glAlphaFunc(GL11.GL_GREATER, 0.5f); GL11.glEnable(GL11.GL_ALPHA_TEST);
         GL11.glEnable(GL11.GL_BLEND); GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 	}
+	
+	public static void perspective(float fovY, float aspect, float zNear, float zFar){
+		float fW, fH; fH = (float)(Math.tan( fovY / 360 * Static.PI) * zNear); fW = fH * aspect;
+	    GL11.glFrustum( -fW, fW, -fH, fH, zNear, zFar );
+	}
 
 	private void setLightPos(float[] position){
 		java.nio.FloatBuffer fb = org.lwjgl.BufferUtils.createFloatBuffer(4); fb.put(position); fb.flip();
-        GL11.glLight(GL11.GL_LIGHT0, GL11.GL_POSITION, fb);
-	}
-
-	private void setupDisplay() throws LWJGLException {
-		Display.setFullscreen(false); Display.setResizable(false);
-		Display.setDisplayMode(displaymode = new DisplayMode(1280, 720));
-		Display.setTitle("Fexcraft Modelling Toolbox"); Display.setVSyncEnabled(true);
-		Display.create();
+        GL11.glLightfv(GL11.GL_LIGHT0, GL11.GL_POSITION, fb);
 	}
 	
 	/** use SaveLoad.checkIfShouldSave(true) first! */
@@ -294,10 +460,6 @@ public class FMTB {
 		UserInterface.DIALOGBOX.progress = progress; UserInterface.DIALOGBOX.progresscolor = color;
 	}
 
-	public DisplayMode getDisplayMode(){
-		return displaymode;
-	}
-
 	public void setupUI(UserInterface ui){
 		TextureManager.loadTexture("icons/pencil", null);
 		TextureManager.loadTexture("icons/arrow_increase", null);
@@ -311,11 +473,10 @@ public class FMTB {
 		TextureManager.loadTexture("icons/editors/expanded", null);
 		//
 		(UserInterface.TOOLBAR = new Toolbar()).repos();
-		(UserInterface.BOTTOMBAR = new Bottombar()).setVisible(Settings.bottombar());
+		//(UserInterface.BOTTOMBAR = new Bottombar()).setVisible(Settings.bottombar());
 		ui.getElements().add(ModelTree.TREE);
 		ui.getElements().add(HelperTree.TREE);
 		ui.getElements().add(FVTMTree.TREE);
-		ui.getElements().add(new GeneralEditor());
 		ui.getElements().add(new ModelGroupEditor());
 		ui.getElements().add(new TextureEditor());
 		ui.getElements().add(new PreviewEditor());
@@ -361,13 +522,6 @@ public class FMTB {
 						}
 					}
 				}
-				if(obj.has("versions")){
-					for(JsonElement elm : obj.get("versions").getAsJsonArray()){
-						if(elm.getAsJsonObject().get("version").getAsString().equals("classic")){
-							obj = elm.getAsJsonObject(); break;
-						}
-					}
-				}
 				String newver = obj.get("latest_version").getAsString(); boolean bool = version.equals(newver);
 				String welcome = Translator.format("dialog.greeting.welcome", "Welcome to FMT!<nl><version:%s>", version);
 				String newversion = Translator.format("dialog.greeting.newversion", "New version available!<nl>%s >> %s", newver, version);
@@ -386,7 +540,7 @@ public class FMTB {
 	}
 	
 	public static boolean linux(){
-		return LWJGLUtil.getPlatform() == LWJGLUtil.PLATFORM_LINUX;
+		return Platform.get() == Platform.LINUX;//TODO ?
 	}
 
 	public static String getTitle(){

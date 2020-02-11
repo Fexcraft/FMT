@@ -8,7 +8,6 @@ import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.general.Button;
 import net.fexcraft.app.fmt.ui.general.Icon;
 import net.fexcraft.app.fmt.ui.general.TextField;
-import net.fexcraft.app.fmt.utils.Settings;
 
 public abstract class Editor extends Element {
 	
@@ -41,7 +40,7 @@ public abstract class Editor extends Element {
 	@Override
 	public Element repos(){
 		x = 0; y = UserInterface.TOOLBAR.height + UserInterface.TOOLBAR.border_width;
-		height = UserInterface.height - y; if(Settings.bottombar()) height -= 29;
+		height = UserInterface.height - y; //if(Settings.bottombar()) height -= 29;
 		clearVertexes(); this.reposContainers(); return this;
 	}
 	

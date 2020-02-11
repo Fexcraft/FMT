@@ -145,7 +145,7 @@ public class ImageHelper {
 	/** see http://wiki.lwjgl.org/wiki/Taking_Screen_Shots.html */
 	private static BufferedImage displayToImage(){
 		GL11.glReadBuffer(GL11.GL_FRONT);
-		int width = FMTB.get().getDisplayMode().getWidth(), height = FMTB.get().getDisplayMode().getHeight();
+		int width = FMTB.WIDTH, height = FMTB.HEIGHT;
 		int bpp = 4; // Assuming a 32-bit display with a byte each for red, green, blue, and alpha.
 		ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * bpp);
 		GL11.glReadPixels(0, 0, width, height, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);

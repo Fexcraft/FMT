@@ -1,7 +1,5 @@
 package net.fexcraft.app.fmt.ui.tree;
 
-import org.lwjgl.input.Mouse;
-
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.general.Button;
 import net.fexcraft.app.fmt.utils.Settings;
@@ -53,7 +51,7 @@ public class ModelTree extends RightTree {
 	}
 
 	public boolean processScrollWheel(int wheel){
-		modifyScroll(-wheel / (Mouse.isButtonDown(1) ? 1 : 10)); return true;
+		modifyScroll(-wheel / (FMTB.hold_right ? 1 : 10)); return true;
 	}
 	
 	public void modifyScroll(int amount){

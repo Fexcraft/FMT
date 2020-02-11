@@ -3,9 +3,9 @@ package net.fexcraft.app.fmt.ui;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
+import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.utils.StyleSheet;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
@@ -114,7 +114,7 @@ public class Element {
 	}
 
 	public void render(int width, int height){
-		if(!Mouse.isGrabbed()) hovered(Mouse.getX() * UserInterface.scale, height - Mouse.getY() * UserInterface.scale);
+		if(!FMTB.hold_right) hovered(FMTB.cursor_x * UserInterface.scale, height - FMTB.cursor_y * UserInterface.scale);
 		//
 		if(this.visible){
 			this.renderSelf(width, height);

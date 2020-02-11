@@ -1,49 +1,31 @@
 package net.fexcraft.app.fmt.utils;
 
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
-import java.io.IOException;
+import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
+import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
+import static org.lwjgl.glfw.GLFW.GLFW_REPEAT;
 
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.UserInterface;
-import net.fexcraft.app.fmt.ui.editor.TextureEditor;
-import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
-import net.fexcraft.app.fmt.ui.general.TextField;
-import net.fexcraft.app.fmt.ui.tree.RightTree;
-import net.fexcraft.app.fmt.utils.KeyCompound.KeyFunction;
 import net.fexcraft.lib.common.math.Vec3f;
 
 /** CCR */
 public class GGR {
 	
-    //public float movespeed = 2;
     public float movemod = 1;
     public float maxlookrange = 85;
-    //public float sensivity = 2f;
     public Vec3f pos, rotation;
-    private final FMTB root;
+    //
+    public boolean w_down, s_down, d_down, a_down, r_down, f_down, space_down, shift_down, alt_down, control_down;
     
-    public GGR(FMTB root, int x, int y, int z){
-        pos = new Vec3f(x, y, z); this.root = root;
-        rotation = new Vec3f(0, 0, 0);
-    }
-    
-    public GGR(FMTB root, float x, float y, float z){
-        pos = new Vec3f(x, y, z); this.root = root;
-        rotation = new Vec3f(0, 0, 0);
+    public GGR(float x, float y, float z){
+        pos = new Vec3f(x, y, z); rotation = new Vec3f(0, 0, 0);
     }
 
     public void apply(){
-        if(rotation.yCoord / 360 > 1){ rotation.yCoord -= 360; }
-        else if(rotation.yCoord / 360 < -1){ rotation.yCoord += 360; }
+        if(rotation.yCoord / 360 > 1f){ rotation.yCoord -= 360; }
+        else if(rotation.yCoord / 360 < -1f){ rotation.yCoord += 360; }
         GL11.glLoadIdentity();
         GL11.glRotatef(rotation.xCoord, 1, 0, 0);
         GL11.glRotatef(rotation.yCoord, 0, 1, 0);
@@ -52,121 +34,29 @@ public class GGR {
     }
 
     public void pollInput(float delta){
-        acceptMouseInput(delta);
-        if(!TextField.anySelected()) acceptInputMove(delta);
-        acceptInputKeyboard();
+    	processMouseInput(delta);
+        processMoveInput(delta);
+        //acceptInputKeyboard();
     }
-    
-    private void acceptInputKeyboard(){
-    	while(Keyboard.next()){
-    		int key = Keyboard.getEventKey();
-    		if(Keyboard.getEventKeyState()){//"pressed"
-    	        if(TextField.anySelected()){
-    	        	TextField field = TextField.getSelected(); if(field == null) return;
-	        		if(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL)){
-        				Clipboard cp = Toolkit.getDefaultToolkit().getSystemClipboard();
-	        			if(key == Keyboard.KEY_V){
-	        				Transferable data = cp.getContents(null);
-	        				if(data.isDataFlavorSupported(DataFlavor.stringFlavor)){
-	        					try{ field.onInput(-1, data.getTransferData(DataFlavor.stringFlavor).toString()); }
-	        					catch(UnsupportedFlavorException | IOException e){ e.printStackTrace(); }
-	        					return;
-	        				}
-	        			}
-	        			if(key == Keyboard.KEY_X || key == Keyboard.KEY_C){
-	        				StringSelection sel = new StringSelection(field.getTextValue()); cp.setContents(sel, sel);
-	        				if(key == Keyboard.KEY_X) field.onBackSpace(true); return;
-	        			}
-	        		}
-	        		//
-    	        	for(int i = 2; i < 12; i++){
-	        			if(key == i) field.onInput(key, getKeyName(i));
-	        		}
-	        		for(int i = 16; i < 26; i++){
-	        			if(key == i) field.onInput(key, getKeyName(i));
-	        		}
-	        		for(int i = 30; i < 39; i++){
-	        			if(key == i) field.onInput(key, getKeyName(i));
-	        		}
-	        		for(int i = 44; i < 51; i++){
-	        			if(key == i) field.onInput(key, getKeyName(i));
-	        		}
-	        		if(key == Keyboard.KEY_BACK){
-	        			field.onBackSpace(false);
-	        		}
-	        		if(key == Keyboard.KEY_RETURN){
-	        			field.onReturn();
-	        		}
-	        		if(key == Keyboard.KEY_MINUS){
-	        			field.onInput(key, "-");
-	        		}
-	        		if(key == Keyboard.KEY_PERIOD){
-	        			field.onInput(key, ".");
-	        		}
-	        		if(key == Keyboard.KEY_COMMA){
-	        			field.onInput(key, ",");
-	        		}
-	        		if(key == Keyboard.KEY_SPACE){
-	        			field.onInput(key, " ");
-	        		}
-	        		//
-	        		if(key == Keyboard.KEY_NUMPAD0) field.onInput(key, "0");
-	        		if(key == Keyboard.KEY_NUMPAD1) field.onInput(key, "1");
-	        		if(key == Keyboard.KEY_NUMPAD2) field.onInput(key, "2");
-	        		if(key == Keyboard.KEY_NUMPAD3) field.onInput(key, "3");
-	        		if(key == Keyboard.KEY_NUMPAD4) field.onInput(key, "4");
-	        		if(key == Keyboard.KEY_NUMPAD5) field.onInput(key, "5");
-	        		if(key == Keyboard.KEY_NUMPAD6) field.onInput(key, "6");
-	        		if(key == Keyboard.KEY_NUMPAD7) field.onInput(key, "7");
-	        		if(key == Keyboard.KEY_NUMPAD8) field.onInput(key, "8");
-	        		if(key == Keyboard.KEY_NUMPAD9) field.onInput(key, "9");
-    	        }
-    	        else{
-    	        	for(KeyFunction keyf : KeyCompound.keys){
-    	        		if(keyf.ID() != key) continue; if(keyf.process()) break;
-    	        	}
-    	        }
-    		}
-    		else{//"released"
-    			if(ControlsAdjuster.CATCHING){ UserInterface.CONTROLS.catchKey(key); }
-	        	for(KeyFunction keyf : KeyCompound.released_keys){
-	        		if(keyf.ID() != key) continue; if(keyf.process()) break;
-	        	}
-    		}
-    	}
-	}
-
-	private String getKeyName(int i){
-		return GGR.isShiftDown() ? i < 12 ? getSpecialChar(i) : Keyboard.getKeyName(i) : Keyboard.getKeyName(i).toLowerCase();
-	}
-
-	private String getSpecialChar(int i){
-		switch(i){
-			case 2: return "!"; case 3: return "@";
-			case 4: return "#"; case 5: return "$";
-			case 6: return "%"; case 7: return "^";
-			case 8: return "&"; case 9: return "*";
-			case 10: return "("; case 11: return ")";
-		} return Keyboard.getKeyName(i);
-	}
 
 	public static boolean clickedL, clickedR; private boolean panning, dragging;
     private int wheel, oldMouseX =- 1, oldMouseY = -1;
 
-    public void acceptMouseInput(float delta){
-        if(clickedR && !Mouse.isButtonDown(1)){
+    public void processMouseInput(float delta){
+        /*if(clickedR && !Mouse.isButtonDown(1)){
             Mouse.setGrabbed(false);//fix mouse grab sticking
         }
         if(clickedL && !Mouse.isButtonDown(0)){
             UserInterface.DRAGGED = null; dragging = true;
         }
-        if(Mouse.isGrabbed()){
-            rotation.yCoord += Mouse.getDX() * Settings.mouse_sensivity.directFloat() * delta;
-            rotation.xCoord += -Mouse.getDY() * Settings.mouse_sensivity.directFloat() * delta;
-            rotation.xCoord = Math.max(-maxlookrange, Math.min(maxlookrange, rotation.xCoord));
+        if(Mouse.isGrabbed()){*/
+            //TODO rotation.yCoord += FMTB.cdiffx * Settings.mouse_sensivity.directFloat() * delta;
+            //TODO rotation.xCoord += -FMTB.cdiffy * Settings.mouse_sensivity.directFloat() * delta;
+            //TODO rotation.xCoord = Math.max(-maxlookrange, Math.min(maxlookrange, rotation.xCoord));
+            //FMTB.cdiffx = FMTB.cdiffy = 0;
             //
         	//if(Mouse.isButtonDown(0) && !clickedL) RayCoastAway.doTest(true, false); clickedL = Mouse.isButtonDown(0);
-        }
+        /*}
         else{
         	if(!Mouse.isInsideWindow()) return;
         	if(Mouse.isButtonDown(0) && !clickedL) root.UI.onButtonPress(0); clickedL = Mouse.isButtonDown(0);
@@ -196,7 +86,7 @@ public class GGR {
         if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE) && !ControlsAdjuster.CATCHING){
         	if(Mouse.isGrabbed()){ Mouse.setGrabbed(false); return; }
             root.reset(true); Mouse.setGrabbed(false); TextureEditor.reset();
-        }
+        }*/
     }
     
     public static void resetDragging(){
@@ -214,8 +104,8 @@ public class GGR {
         return xyz;
     }
 
-    public void acceptInputMove(float delta){
-        if(Mouse.isButtonDown(2)){
+    public void processMoveInput(float delta){
+        /*if(Mouse.isButtonDown(2)){
             if(oldMouseX == -1){
                 oldMouseX = Mouse.getX();
                 oldMouseY = Mouse.getY();
@@ -227,18 +117,17 @@ public class GGR {
         }
         else if(panning){
             oldMouseX =- 1; panning = false;
-        }
+        }*/
         //
     	//if(!Mouse.isGrabbed()) return;
-        if(RightTree.anyTreeHovered()) return;
-        boolean front = Keyboard.isKeyDown(KeyCompound.KEY_W.ID());
-        boolean back  = Keyboard.isKeyDown(KeyCompound.KEY_S.ID());
-        boolean right = Keyboard.isKeyDown(KeyCompound.KEY_D.ID());
-        boolean left  = Keyboard.isKeyDown(KeyCompound.KEY_A.ID());
-        boolean speedp = Keyboard.isKeyDown(KeyCompound.KEY_SPP.ID());
-        boolean speedm = Keyboard.isKeyDown(KeyCompound.KEY_SPN.ID());
-        boolean up   = Keyboard.isKeyDown(KeyCompound.KEY_DU.ID());
-        boolean down = Keyboard.isKeyDown(KeyCompound.KEY_DD.ID());
+        boolean front = w_down;
+        boolean back  = s_down;
+        boolean right = d_down;
+        boolean left  = a_down;
+        boolean speedp = r_down;
+        boolean speedm = f_down;
+        boolean up   = space_down;
+        boolean down = shift_down;
         float nspeed;
         if(speedp) nspeed = Settings.movespeed.directFloat() * 5;
         else if(speedm) nspeed = Settings.movespeed.directFloat() / 2;
@@ -265,15 +154,15 @@ public class GGR {
     }
 
 	public static boolean isShiftDown(){
-		return Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_FUNCTION);
+		return FMTB.ggr.shift_down || FMTB.ggr.alt_down;
 	}
 
 	public static boolean iControlDown(){
-		return Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL);
+		return FMTB.ggr.control_down;
 	}
 
-	public boolean isDragging(){
-		return dragging && UserInterface.DRAGGED != null;
+	public static boolean parseKeyAction(int action){
+		return action == GLFW_RELEASE ? false : action == GLFW_PRESS || action == GLFW_REPEAT;
 	}
     
 }

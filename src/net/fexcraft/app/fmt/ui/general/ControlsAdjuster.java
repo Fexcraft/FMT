@@ -3,7 +3,6 @@
  */
 package net.fexcraft.app.fmt.ui.general;
 
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.ui.Dialog;
@@ -63,7 +62,7 @@ public class ControlsAdjuster extends Element implements Dialog {
 			for(int i = 0; i < 8; i++){
 				int j = i + (scroll * 8); if(j >= KeyCompound.keys.size()) continue; //break;
 				FontRenderer.drawText((tempkey = KeyCompound.keys.get(j)).name(), this.x + 21, this.y + 51 + (i * 32), FontType.MONO);
-				String name = Keyboard.getKeyName(tempkey.ID());
+				String name = "tempkey.ID";//Keyboard.getKeyName(tempkey.ID());
 				FontRenderer.drawText(this.getName(catched == i, name), this.x + 360, this.y + 51 + (i * 32), FontType.MONO);
 			}
 		}

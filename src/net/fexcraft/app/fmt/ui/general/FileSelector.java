@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
@@ -217,7 +216,7 @@ public class FileSelector extends Element implements Dialog {
 
 		@Override
 		public boolean processScrollWheel(int wheel){
-			int amount = -wheel / (Mouse.isButtonDown(1) ? 1 : 10);
+			int amount = -wheel / (FMTB.hold_right ? 1 : 10);
 			scrollbar.scrolled += amount; if(scrollbar.scrolled < 0) scrollbar.scrolled = 0; return refresh();
 		}
 		
