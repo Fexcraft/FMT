@@ -169,16 +169,18 @@ public class FMTB {
             public void invoke(long window, int key, int scancode, int action, int mods){
             	if(context.getFocusedGui() instanceof TextInput20) return;
     			if(key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) glfwSetWindowShouldClose(window, true);
-    			if(key == GLFW_KEY_W){ ggr.pos.zCoord -= 0.25; }
-    			if(key == GLFW_KEY_S){ ggr.pos.zCoord += 0.25; }
-    			if(key == GLFW_KEY_A){ ggr.pos.xCoord -= 0.25; }
-    			if(key == GLFW_KEY_D){ ggr.pos.xCoord += 0.25; }
-    			if(key == GLFW_KEY_SPACE){ ggr.pos.yCoord += 0.25; }
-    			if(key == GLFW_KEY_LEFT_SHIFT){ ggr.pos.yCoord -= 0.25; }
-    			if(key == GLFW_KEY_UP){ ggr.rotation.xCoord -= 5; }
-    			if(key == GLFW_KEY_DOWN){ ggr.rotation.xCoord += 5; }
-    			if(key == GLFW_KEY_LEFT){ ggr.rotation.yCoord -= 5; }
-    			if(key == GLFW_KEY_RIGHT){ ggr.rotation.yCoord += 5; }
+    			if(key == GLFW_KEY_W) ggr.w_down = GGR.parseKeyAction(action);
+    			if(key == GLFW_KEY_S) ggr.s_down = GGR.parseKeyAction(action);
+    			if(key == GLFW_KEY_A) ggr.a_down = GGR.parseKeyAction(action);
+    			if(key == GLFW_KEY_D) ggr.d_down = GGR.parseKeyAction(action);
+    			if(key == GLFW_KEY_SPACE) ggr.space_down = GGR.parseKeyAction(action);
+    			if(key == GLFW_KEY_LEFT_SHIFT || key == GLFW_KEY_RIGHT_SHIFT) ggr.shift_down = GGR.parseKeyAction(action);
+    			if(key == GLFW_KEY_R) ggr.r_down = GGR.parseKeyAction(action);
+    			if(key == GLFW_KEY_F) ggr.f_down = GGR.parseKeyAction(action);
+    			if(key == GLFW_KEY_UP) ggr.rotation.xCoord -= 5;
+    			if(key == GLFW_KEY_DOWN) ggr.rotation.xCoord += 5;
+    			if(key == GLFW_KEY_LEFT) ggr.rotation.yCoord -= 5;
+    			if(key == GLFW_KEY_RIGHT) ggr.rotation.yCoord += 5;
     			//Print.console(key, action);
             }
         };
@@ -229,7 +231,7 @@ public class FMTB {
         renderer.initialize();
         //
 		//ggr = new GGR(this, 0, 0, 0, 0, 0, 0);
-		ggr = new GGR(this, 0, 4, 4); ggr.rotation.xCoord = 45;
+		ggr = new GGR(0, 4, 4); ggr.rotation.xCoord = 45;
 		PorterManager.load(); HelperCollector.reload();
 		SessionHandler.checkIfLoggedIn(true, true); checkForUpdates(); //TODO KeyCompound.init(); KeyCompound.load();
 		//
@@ -252,19 +254,17 @@ public class FMTB {
 		}
 		//
 		while(!close){
-            input(accumulator += (delta = timer.getDelta()));
+			ggr.pollInput(accumulator += (delta = timer.getDelta()));
             while(accumulator >= interval){
             	loop(); timer.updateUPS();
                 accumulator -= interval;
             }
 			render(alpha = accumulator / interval);
-			/*if(!RayCoastAway.PICKING){
+			if(!RayCoastAway.PICKING){
 				if(ImageHelper.HASTASK){
-					UI.render(true); ImageHelper.doTask();
-				}
-				else UI.render(false);
-				//
-			}*/
+					renderUI(true); ImageHelper.doTask();
+				} else renderUI(false);
+			}
 			updateFPS();
             glfwPollEvents();
             glfwSwapBuffers(window);
@@ -306,10 +306,6 @@ public class FMTB {
     private static Vector4f rgba(int r, int g, int b, float a) {
         return new Vector4f(r / 255f, g / 255f, b / 255f, a);
     }
-	
-	private void input(float delta){
-		ggr.pollInput(delta); ggr.apply();
-	}
 
 	private void loop(){
         if(!TextureUpdate.HALT){ TextureUpdate.tryAutoPos(TextureUpdate.ALL); }
@@ -369,7 +365,9 @@ public class FMTB {
 			if(Settings.lighting()) GL11.glDisable(GL11.GL_LIGHTING);
             GL11.glPopMatrix();
         }
-        //
+	}
+	
+	public void renderUI(boolean screenshot){
 		{
 			GL11.glPushMatrix();
 	        GL11.glMatrixMode(GL11.GL_PROJECTION);
@@ -383,12 +381,12 @@ public class FMTB {
 		//
 		GL11.glLoadIdentity(); RGB.glColorReset();
 		GL11.glDepthFunc(GL11.GL_ALWAYS); GL11.glDisable(GL11.GL_ALPHA_TEST);
-		/*if(false){
+		if(screenshot){
 			//screenshot overlay
 		}
-		else{*/
+		else{
 			renderer.render(frame, context);
-		//}
+		}
 		GL11.glDepthFunc(GL11.GL_LESS); GL11.glEnable(GL11.GL_ALPHA_TEST);
 		//
 		{

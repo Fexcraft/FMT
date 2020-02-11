@@ -31,7 +31,6 @@ import net.fexcraft.app.fmt.ui.general.FileSelector.AfterTask;
 import net.fexcraft.app.fmt.ui.general.FileSelector.ChooserMode;
 import net.fexcraft.app.fmt.ui.general.FileSelector.FileRoot;
 import net.fexcraft.app.fmt.ui.tree.RightTree;
-import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.HelperCollector;
 import net.fexcraft.app.fmt.utils.ImageHelper;
 import net.fexcraft.app.fmt.utils.SaveLoad;
@@ -41,6 +40,7 @@ import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.app.fmt.utils.TextureUpdate;
 import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.app.fmt.wrappers.*;
+import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.common.utils.Print;
 
 public class UserInterpanels {
@@ -82,7 +82,7 @@ public class UserInterpanels {
 			new MenuButton("toolbar.utils.flip.left_right", () -> FMTB.MODEL.flipShapeboxes(0)),
 			new MenuButton("toolbar.utils.flip.up_down", () -> FMTB.MODEL.flipShapeboxes(1)),
 			new MenuButton("toolbar.utils.flip.front_back", () -> FMTB.MODEL.flipShapeboxes(2)),
-			new MenuButton("toolbar.utils.reset_camera", () -> { FMTB.ggr = new GGR(FMTB.get(), 0, 4, 4); FMTB.ggr.rotation.xCoord = 45; }),
+			new MenuButton("toolbar.utils.reset_camera", () -> { FMTB.ggr.pos = new Vec3f(0, 4, 4); FMTB.ggr.rotation = new Vec3f(45, 0, 0); }),
 			new MenuButton("toolbar.utils.create_gif", () -> ImageHelper.createGif(false)),
 			new MenuButton("toolbar.utils.screenshot", () -> ImageHelper.takeScreenshot(true)),
 			new MenuButton("toolbar.utils.calc_size", (MouseClickEventListener)event -> {
@@ -436,7 +436,7 @@ public class UserInterpanels {
 
 	public static String validateString(TextInputContentChangeEvent<TextInput20> event){
 		String newtext = event.getNewValue().replaceAll("[^A-Za-z0-9,\\.\\-_ ]", "");
-		Print.console(newtext + " / " + event.getNewValue());
+		//Print.console(newtext + " / " + event.getNewValue());
 		if(!newtext.equals(event.getNewValue())){
 			event.getTargetComponent().getTextState().setText(newtext);
 			event.getTargetComponent().setCaretPosition(newtext.length());

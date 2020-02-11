@@ -26,7 +26,7 @@ public class DropDown extends Element implements Dialog, Scrollable {
 	
 	@Override
 	public void renderSelf(int rw, int rh){
-		if(!hovered && !temproot.isHovered() && !scrollbar.isHovered() && !FMTB.ggr.isDragging()){ this.reset(); } this.renderSelfQuad();
+		if(!hovered && !temproot.isHovered() && !scrollbar.isHovered() /*&& !FMTB.ggr.isDragging()*/){ this.reset(); } this.renderSelfQuad();
 	}
 	
 	@Override
