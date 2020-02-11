@@ -166,7 +166,7 @@ public class UserInterface {
 				}
 			}
 			if(element instanceof TextField == false) TextField.deselectAll();
-			boolean bool = element == null ? true : element.id.equals("crossbar"); 
+			boolean bool = element == null ? true : element.id.equals("crossbar") || element.id.equals("bottombar");
 			if(i == 0 && bool){
 				RayCoastAway.doTest(true, true);
 			}
