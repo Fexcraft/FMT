@@ -1,5 +1,6 @@
 package net.fexcraft.app.fmt;
 
+import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 import static org.lwjgl.glfw.GLFW.*;
 
 import java.awt.Desktop;
@@ -22,6 +23,8 @@ import org.joml.Vector2i;
 import org.joml.Vector4f;
 import org.liquidengine.legui.animation.Animator;
 import org.liquidengine.legui.component.Frame;
+import org.liquidengine.legui.event.MouseClickEvent;
+import org.liquidengine.legui.listener.MouseClickEventListener;
 import org.liquidengine.legui.listener.processor.EventProcessor;
 import org.liquidengine.legui.system.context.CallbackKeeper;
 import org.liquidengine.legui.system.context.Context;
@@ -55,11 +58,13 @@ import net.arikia.dev.drpc.DiscordEventHandlers;
 import net.arikia.dev.drpc.DiscordRPC;
 import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.porters.PorterManager;
-import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.Editors;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.UserInterpanels;
+import net.fexcraft.app.fmt.ui.UserInterpanels.Button20;
+import net.fexcraft.app.fmt.ui.UserInterpanels.Dialog24;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Field;
+import net.fexcraft.app.fmt.ui.UserInterpanels.Label20;
 import net.fexcraft.app.fmt.ui.UserInterpanels.NumberInput20;
 import net.fexcraft.app.fmt.ui.UserInterpanels.TextInput20;
 import net.fexcraft.app.fmt.ui.editor.Editor;
@@ -153,7 +158,7 @@ public class FMTB {
 	        null
         ));//Themes.FLAT_WHITE);
         frame = new Frame(WIDTH, HEIGHT);
-        frame.getContainer().add(new Interface());
+        //frame.getContainer().add(new Interface());
         Editors.initializeEditors(frame);
         UserInterpanels.addToolbarButtons(frame);
         context = new Context(window);
@@ -488,7 +493,7 @@ public class FMTB {
 	}
 
 	public void reset(boolean esc){
-		if(Dialog.anyVisible() || TextField.anySelected()){
+		if(net.fexcraft.app.fmt.ui.Dialog.anyVisible() || TextField.anySelected()){
 			UserInterface.DIALOGBOX.reset(); UserInterface.FILECHOOSER.reset();
 			UserInterface.CONTROLS.reset(); UserInterface.SETTINGSBOX.reset();
 			UserInterface.TEXMAP.reset(); TextField.deselectAll();
@@ -515,18 +520,29 @@ public class FMTB {
 					}
 				}
 				String newver = obj.get("latest_version").getAsString(); boolean bool = version.equals(newver);
-				String welcome = Translator.format("dialog.greeting.welcome", "Welcome to FMT!<nl><version:%s>", version);
-				String newversion = Translator.format("dialog.greeting.newversion", "New version available!<nl>%s >> %s", newver, version);
-				UserInterface.DIALOGBOX.show(bool ? welcome : newversion, Translator.translate("dialog.greeting.confirm", "ok"),
-					bool ? Translator.translate("dialog.greeting.exit", "exit") : Translator.translate("dialog.greeting.update", "update"), DialogBox.NOTHING, () -> {
-					if(bool){
-						SaveLoad.checkIfShouldSave(true, false);
-					}
-					else{
-						try{ Desktop.getDesktop().browse(new URL("http://fexcraft.net/app/fmt").toURI()); }
-						catch(IOException | URISyntaxException e){ e.printStackTrace(); }
-					}
-				});
+				String welcome = Translator.translate("dialog.welcome.title", "Welcome to FMT!");
+				String cversion = Translator.format("dialog.welcome.version", "Client Version: %s", version);
+				String new_title = Translator.format("dialog.welcome.title_new", "New version available!", newver, version);
+				String new_version = Translator.format("dialog.welcome.version_new", "%s >> %s", newver, version);
+				//
+		        Dialog24 dialog = new Dialog24(bool ? welcome : new_title, 300, 100);
+		        Label20 label = new Label20(bool ? cversion : new_version, 10, 10, 200, 20);
+		        Button20 okbutton = new Button20(Translator.translate("dialog.welcome.confirm", "ok"), 10, 50, 50, 20);
+		        Button20 upbutton = new Button20(Translator.translate(bool ? "dialog.welcome.exit" : "dialog.welcome.update", bool ? "exit" : "update"), 70, 50, 50, 20);
+		        okbutton.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) event -> { if(event.getAction() == CLICK) dialog.close(); });
+		        upbutton.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) event -> {
+		        	if(event.getAction() == CLICK){
+		        		if(bool){
+		        			SaveLoad.checkIfShouldSave(true, false);
+		        		}
+		        		else{
+		        			try{ Desktop.getDesktop().browse(new URL("http://fexcraft.net/app/fmt").toURI()); }
+							catch(IOException | URISyntaxException e){ e.printStackTrace(); }
+		        		}
+		        	}
+		        });
+		        dialog.getContainer().add(okbutton); dialog.getContainer().add(upbutton);
+		        dialog.getContainer().add(label); dialog.show(frame);
 			}
 		}.start();
 	}

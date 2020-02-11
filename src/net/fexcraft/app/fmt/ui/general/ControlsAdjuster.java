@@ -110,7 +110,7 @@ public class ControlsAdjuster extends Element implements Dialog {
 
 	public void catchKey(Integer key){ if(key == 1) key = null;
 		int j = catched + (scroll * 8); tempkey = KeyCompound.keys.size() <= j || j < 0 ? null : KeyCompound.keys.get(j);
-		if(tempkey != null) tempkey.setID(key); CATCHING = false; changed = true; return;
+		if(tempkey != null) tempkey.setId(key); CATCHING = false; changed = true; return;
 	}
 
 }

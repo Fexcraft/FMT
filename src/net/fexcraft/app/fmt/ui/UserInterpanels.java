@@ -286,6 +286,14 @@ public class UserInterpanels {
 		
 	}
 	
+	public static class Dialog24 extends Dialog {
+		
+		public Dialog24(String string, int w, int h){
+			super(string, w, h); getTitleTextState().setFontSize(24f);
+		}
+		
+	}
+	
 	public static class Label20 extends Label {
 
 		public Label20(String string, int x, int y, int w, int h){
