@@ -347,7 +347,7 @@ public class FMTB {
 			@Override
 			public void run(){
 				JsonObject obj = HttpUtil.request("http://fexcraft.net/minecraft/fcl/request", "mode=requestdata&modid=fmt");
-				if(obj == null || !obj.has("latest_version")){
+				if(obj == null || !(obj.has("versions")) && obj.has("latest_version")){
 					Print.console("Couldn't fetch latest version.");
 					Print.console(obj == null ? ">> no version response received" : obj.toString());
 					return;
@@ -358,6 +358,13 @@ public class FMTB {
 						if(elm.isJsonPrimitive() && elm.getAsString().equals(version)){
 							Print.console("Blocked version detected, causing panic.");
 							System.exit(2); System.exit(2); System.exit(2); System.exit(2);
+						}
+					}
+				}
+				if(obj.has("versions")){
+					for(JsonElement elm : obj.get("versions").getAsJsonArray()){
+						if(elm.getAsJsonObject().get("version").getAsString().equals("classic")){
+							obj = elm.getAsJsonObject(); break;
 						}
 					}
 				}
