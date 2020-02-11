@@ -3,8 +3,11 @@ package net.fexcraft.app.fmt.utils;
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 
+import org.liquidengine.legui.component.SelectBox;
+import org.liquidengine.legui.component.optional.align.HorizontalAlign;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.listener.MouseClickEventListener;
 import org.lwjgl.PointerBuffer;
@@ -12,7 +15,9 @@ import org.lwjgl.system.MemoryStack;
 import org.lwjgl.util.tinyfd.TinyFileDialogs;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
+import net.fexcraft.app.fmt.ui.UserInterpanels;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Button20;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Dialog20;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Label20;
@@ -38,11 +43,31 @@ public class FileSelector {
 	
 	/** For selecting an Ex/Im-Porter first. */
 	public static final void select(String title, String root, boolean export, SelectTask task){
-        Dialog20 dialog = new Dialog20(Translator.translate("error.dialog_title"), 300, 100);
-        Label20 label = new Label20(Translator.translate("error.feature_not_reimplemented_yet"), 10, 10, 200, 20);
-        Button20 okbutton = new Button20("ok", 10, 50, 50, 20);
-        okbutton.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> { if(CLICK == e.getAction()) dialog.close(); });
-        dialog.getContainer().add(label); dialog.getContainer().add(okbutton); dialog.show(FMTB.frame);
+        Dialog20 dialog = new Dialog20(UserInterpanels.translate("eximporter." + (export ? "export" : "import") + ".select.title"), 340, 125);
+        Label20 label = new Label20(UserInterpanels.translate("eximporter." + (export ? "export" : "import") + ".select.desc"), 10, 10, 320, 20);
+        Button20 okbutton = new Button20(UserInterpanels.translate("eximporter." + (export ? "export" : "import") + ".select.continue"), 10, 75, 100, 20);
+        okbutton.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
+        	if(CLICK == e.getAction()){
+        		dialog.close();
+        	}
+        });
+        SelectBox<Object> selbox = new SelectBox<>(10, 40, 320, 24);
+        List<ExImPorter> eximporter = PorterManager.getPorters(export);
+        selbox.setVisibleCount(8); selbox.setElementHeight(20);
+        for(ExImPorter porter : eximporter){ selbox.addElement(porter.getName()); }
+        selbox.getSelectionButton().getTextState().setFontSize(20f);
+        selbox.getSelectBoxElements().forEach(elm -> {
+        	elm.getTextState().setHorizontalAlign(HorizontalAlign.LEFT);
+        	elm.getTextState().setFontSize(20f);
+        });
+        selbox.addSelectBoxChangeSelectionEventListener(event -> {
+        	//event.getTargetComponent().setSelected(event.getNewValue(), true);
+        	Print.console(event.getOldValue() + " / " + event.getNewValue());
+        });
+        dialog.getContainer().add(label);
+        dialog.getContainer().add(selbox);
+        dialog.getContainer().add(okbutton);
+        dialog.show(FMTB.frame);
 	}
 	
 	@FunctionalInterface

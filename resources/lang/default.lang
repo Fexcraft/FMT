@@ -124,6 +124,16 @@ dialog.welcome.confirm=ok
 dialog.welcome.update=update
 dialog.welcome.exit=exit
 
+# Ex/Im-Porter
+eximporter.export.select.title=Select Exporter
+eximporter.export.select.desc=Select an exporter to export your Model/Object.
+eximporter.export.select.continue=Continue
+eximporter.export.title=Select Export Location
+eximporter.import.select.title=Select Importer
+eximporter.import.select.desc=Select an importer to import your Model/Object.
+eximporter.import.select.continue=Continue
+eximporter.import.title=Select Import Location
+
 # Errors
 error.dialog_title=Error
 error.feature_not_available_yet=This feature is not available yet.
@@ -141,5 +151,3 @@ dialog.saveload.should_save.cancel=No
 filechooser.export.title=Select Export Location
 filechooser.export.confirm=Export
 
-saveload.open=Select file to open.
-eximporter.import.title=Select file/model to import.

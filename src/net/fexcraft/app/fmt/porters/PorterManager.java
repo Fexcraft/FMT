@@ -79,7 +79,7 @@ public class PorterManager {
 	}
 
 	public static void handleExport(){
-		FileSelector.select(Translator.translate("eximporter.import.title", "Select Export Location"), "./exports", true, (file, porter, settings) -> {
+		FileSelector.select(Translator.translate("eximporter.export.title", "Select Export Location"), "./exports", true, (file, porter, settings) -> {
 			try{
 				if(file == null){
 					FMTB.showDialogbox(Translator.translate("dialog.export.nofile", "No valid file choosen.<nl>Export is cancelled."),
