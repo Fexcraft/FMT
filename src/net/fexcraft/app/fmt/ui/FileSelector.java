@@ -31,11 +31,12 @@ import net.fexcraft.lib.common.utils.Print;
 public class FileSelector {
 	
 	/** For general file needs. */
-	public static final void select(String title, String root, String[] type, AfterTask task){
+	public static final void select(String title, String root, String[] type, boolean save, AfterTask task){
         try(MemoryStack stack = MemoryStack.stackPush()){
-        	PointerBuffer buffer = stack.mallocPointer(type.length - 1);
+        	PointerBuffer buffer = stack.mallocPointer(type.length - 1); String string = "";
             for(int i = 1; i < type.length; i++) buffer.put(stack.UTF8(type[i])); buffer.flip();
-    		String string = TinyFileDialogs.tinyfd_openFileDialog(title, root, buffer, type[0], false);
+    		if(save) TinyFileDialogs.tinyfd_saveFileDialog(title, root, buffer, type[0]);
+    		else TinyFileDialogs.tinyfd_openFileDialog(title, root, buffer, type[0], false);
     		Print.console(string); if(string != null) task.process(new File(string));
         }
 	}
@@ -58,12 +59,14 @@ public class FileSelector {
         okbutton.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
         	if(CLICK == e.getAction()){
         		ExImPorter porter = eximporter.get(selbox.getElementIndex(selbox.getSelection()));
-        		String tetle = (export ? "Exporter:" : "Importer" + ": " + porter.getName()); dialog.close();
+        		String tetle = (export ? "Exporter:" : "Importer") + ": " + porter.getName(); dialog.close();
         		SettingsBox.open((export ? "Exporter" : "Importer") + " Settings", porter.getSettings(export), false, (settings) -> {
         	        try(MemoryStack stack = MemoryStack.stackPush()){
         	        	PointerBuffer buffer = stack.mallocPointer(porter.getExtensions().length);
         	            for(String pattern : porter.getExtensions()) buffer.put(stack.UTF8(pattern)); buffer.flip();
-        	    		String string = TinyFileDialogs.tinyfd_openFileDialog(title, root, buffer, tetle, false);
+        	    		String string = "";
+        	    		if(export) TinyFileDialogs.tinyfd_saveFileDialog(title, root, buffer, tetle);
+        	    		else TinyFileDialogs.tinyfd_openFileDialog(title, root, buffer, tetle, false);
         	    		Print.console(string); if(string != null) task.process(new File(string), porter, settings);
         	        }
         		});

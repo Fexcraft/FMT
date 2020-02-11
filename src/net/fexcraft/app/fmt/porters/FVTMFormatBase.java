@@ -118,7 +118,7 @@ public abstract class FVTMFormatBase extends ExImPorter {
 		}
 		//buffer.append(tab2 + "fixRotations();\n");
 		//
-		try {
+		try{
 			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
 			writer.append(buffer); writer.flush(); writer.close();
 		}

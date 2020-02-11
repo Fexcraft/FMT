@@ -131,7 +131,7 @@ public class UserInterpanels {
 		));
 		frame.getContainer().add(new MenuEntry(4, translate("toolbar.textures"),
 			new MenuButton("toolbar.textures.select", () -> {
-				FileSelector.select(translate("toolbar.textures.select.dialog"), "./", FileSelector.TYPE_PNG, file -> {
+				FileSelector.select(translate("toolbar.textures.select.dialog"), "./", FileSelector.TYPE_PNG, false, file -> {
 					String name = file.getPath(); TextureManager.loadTextureFromFile(name, file); FMTB.MODEL.setTexture(name);
 					//
 					/*Texture tex = TextureManager.getTexture(name, true); if(tex == null) return;
@@ -177,10 +177,10 @@ public class UserInterpanels {
 		frame.getContainer().add(new MenuEntry(5, translate("toolbar.helpers"),
 			new MenuButton("toolbar.helpers.view", () -> RightTree.show("helpertree")),
 			new MenuButton("toolbar.helpers.load_fmtb", () -> {
-				FileSelector.select(translate("toolbar.helpers.load_fmtb.dialog"), "./saves", FileSelector.TYPE_FMTB, file -> HelperCollector.loadFMTB(file));
+				FileSelector.select(translate("toolbar.helpers.load_fmtb.dialog"), "./saves", FileSelector.TYPE_FMTB, false, file -> HelperCollector.loadFMTB(file));
 			}),
 			new MenuButton("toolbar.helpers.load_frame", () -> {
-				FileSelector.select(translate("toolbar.helpers.load_frame.dialog"), "./imports", FileSelector.TYPE_IMG, file -> HelperCollector.loadFrame(file));
+				FileSelector.select(translate("toolbar.helpers.load_frame.dialog"), "./imports", FileSelector.TYPE_IMG, false, file -> HelperCollector.loadFrame(file));
 			}),
 			new MenuButton("toolbar.helpers.load_imported", () -> {
 				FileSelector.select(translate("toolbar.helpers.load_fmtb.dialog"), "./imports", false, (file, porter, settings) -> HelperCollector.load(file, porter, settings));

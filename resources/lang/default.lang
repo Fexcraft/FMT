@@ -159,3 +159,7 @@ filechooser.export.confirm=Export
 
 saveload.open=Select file to open.
 saveload.filechooser.save=Select save location.
+dialog.export.success=Export complete.<nl>%s
+dialog.export.success.confirm=OK!
+dialog.export.fail=Errors while exporting Model.<nl>%s
+dialog.export.fail.confirm=ok.

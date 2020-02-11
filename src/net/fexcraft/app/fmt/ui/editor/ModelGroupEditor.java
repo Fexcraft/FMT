@@ -77,7 +77,7 @@ public class ModelGroupEditor extends Editor {
 							FMTB.MODEL.setTexture(null); TextureManager.removeTexture(FMTB.MODEL.texture);
 						} FMTB.MODEL.updateFields(); return true;
 					}
-					FileSelector.select(translate("editor.model_group.model.texture.select", "Select a model texture file."), "./", FileSelector.TYPE_PNG, file -> {
+					FileSelector.select(translate("editor.model_group.model.texture.select", "Select a model texture file."), "./", FileSelector.TYPE_PNG, false, file -> {
 						String name = file.getPath(); TextureManager.loadTextureFromFile(name, file);
 						FMTB.MODEL.setTexture(name); FMTB.MODEL.updateFields(); 
 					});
@@ -162,7 +162,7 @@ public class ModelGroupEditor extends Editor {
 							} group.setTexture(null, 0, 0); group.forEach(mrt -> mrt.recompile());
 						} FMTB.MODEL.updateFields(); return true;
 					}
-					FileSelector.select(translate("filechooser.editor.model_group.group.texture.select", "Select a group texture file."), "./", FileSelector.TYPE_PNG, file -> {
+					FileSelector.select(translate("filechooser.editor.model_group.group.texture.select", "Select a group texture file."), "./", FileSelector.TYPE_PNG, false, file -> {
 						String name = file.getPath(); TextureManager.loadTextureFromFile(name, file);
 						TextureManager.Texture texture = TextureManager.getTexture(name, false);
 						ArrayList<TurboList> arrlist = FMTB.MODEL.getDirectlySelectedGroups();

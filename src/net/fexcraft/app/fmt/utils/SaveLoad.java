@@ -40,7 +40,7 @@ public class SaveLoad {
 
 	public static void openModel(){
 		String title = Translator.translate("saveload.open", "Select file to open.");
-		FileSelector.select(title, "./saves", FileSelector.TYPE_FMTB, file -> {
+		FileSelector.select(title, "./saves", FileSelector.TYPE_FMTB, false, file -> {
 			if(file == null || !file.exists()){
 				String str = Translator.translate("saveload.filechooser.open.nofile", "Invalid Model File!<nl>(does it even exists?)");
 				FMTB.showDialogbox(str, Translator.translate("saveload.filechooser.open.nofile.confirm", "ok."), null, DialogBox.NOTHING, null);
@@ -86,7 +86,7 @@ public class SaveLoad {
 				public void run(){
 					if(FMTB.MODEL.file == null){
 						String title = Translator.translate("saveload.save", "Select save location.");
-						FileSelector.select(title, "./saves", FileSelector.TYPE_FMTB, file -> {
+						FileSelector.select(title, "./saves", FileSelector.TYPE_FMTB, true, file -> {
 							if(file == null){
 								String str = Translator.translate("saveload.filechooser.save.nofile", "Model save file is 'null'!<nl>Model will not be saved.");
 								String ok = Translator.translate("saveload.filechooser.save.nofile.confirm", "OK");
@@ -131,7 +131,7 @@ public class SaveLoad {
 	public static void saveModel(boolean bool, boolean openfile){
 		if(bool || FMTB.MODEL.file == null){
 			String title = Translator.translate("saveload.filechooser.save", "Select save location.");
-			FileSelector.select(title, "./saves", FileSelector.TYPE_FMTB, file -> {
+			FileSelector.select(title, "./saves", FileSelector.TYPE_FMTB, true, file -> {
 				if(file == null){
 					String str = Translator.translate("saveload.filechooser.save.nofile", "Model save file is 'null'!<nl>Model will not be saved.");
 					String ok = Translator.translate("saveload.filechooser.save.nofile.confirm", "OK");
