@@ -10,8 +10,8 @@ import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.FontRenderer;
-import net.fexcraft.app.fmt.ui.SettingsBox;
 import net.fexcraft.app.fmt.ui.FontRenderer.FontType;
+import net.fexcraft.app.fmt.ui.SettingsBox;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.general.Button;
@@ -64,8 +64,8 @@ public abstract class RightTree extends Element implements Scrollable {
 	
 	@Override
 	public Element repos(){
-		if(UserInterface.TOOLBAR == null){ return this; }//skip, this call is before the UI is setup
-		x = UserInterface.width - width; y = UserInterface.TOOLBAR.height + UserInterface.TOOLBAR.border_width;
+		//if(UserInterface.TOOLBAR == null){ return this; }//skip, this call is before the UI is setup
+		x = UserInterface.width - width; y = 30;//UserInterface.TOOLBAR.height + UserInterface.TOOLBAR.border_width;
 		height = UserInterface.height - y; /*if(Settings.bottombar()) height -= 29;*/ clearVertexes();
 		for(Element elm : elements) elm.repos(); return this;
 	}

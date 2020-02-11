@@ -68,19 +68,7 @@ import net.fexcraft.app.fmt.ui.UserInterpanels.Field;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Label20;
 import net.fexcraft.app.fmt.ui.UserInterpanels.TextInput20;
 import net.fexcraft.app.fmt.ui.editor.Editor;
-import net.fexcraft.app.fmt.ui.editor.ModelGroupEditor;
-import net.fexcraft.app.fmt.ui.editor.PreviewEditor;
-import net.fexcraft.app.fmt.ui.editor.TextureEditor;
-import net.fexcraft.app.fmt.ui.general.AltMenu;
-import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
-import net.fexcraft.app.fmt.ui.general.DialogBox;
-import net.fexcraft.app.fmt.ui.general.DropDown;
 import net.fexcraft.app.fmt.ui.general.TextField;
-import net.fexcraft.app.fmt.ui.general.TextureMap;
-import net.fexcraft.app.fmt.ui.general.Toolbar;
-import net.fexcraft.app.fmt.ui.tree.FVTMTree;
-import net.fexcraft.app.fmt.ui.tree.HelperTree;
-import net.fexcraft.app.fmt.ui.tree.ModelTree;
 import net.fexcraft.app.fmt.utils.*;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.lib.common.Static;
@@ -238,7 +226,7 @@ public class FMTB {
 		ggr = new GGR(0, 4, 4); ggr.rotation.xCoord = 45;
 		PorterManager.load(); HelperCollector.reload();
 		SessionHandler.checkIfLoggedIn(true, true); checkForUpdates();
-		KeyCompound.init(); KeyCompound.load();
+		KeyCompound.init(); KeyCompound.load(); FMTB.MODEL.updateFields();
 		//
 		LocalDateTime midnight = LocalDateTime.of(LocalDate.now(ZoneOffset.systemDefault()), LocalTime.MIDNIGHT);
 		long mid = midnight.toInstant(ZoneOffset.UTC).toEpochMilli(); long date = Time.getDate(); while((mid += Time.MIN_MS * 5) < date);
@@ -464,39 +452,6 @@ public class FMTB {
 	public static void showDialogbox(String title, String button0, String button1, Runnable run0, Runnable run1, int progress, RGB color){
 		UserInterface.DIALOGBOX.show(title, button0, button1, run0, run1);
 		UserInterface.DIALOGBOX.progress = progress; UserInterface.DIALOGBOX.progresscolor = color;
-	}
-
-	public void setupUI(UserInterface ui){
-		TextureManager.loadTexture("icons/pencil", null);
-		TextureManager.loadTexture("icons/arrow_increase", null);
-		TextureManager.loadTexture("icons/arrow_decrease", null);
-		TextureManager.loadTexture("icons/group_delete", null);
-		TextureManager.loadTexture("icons/group_visible", null);
-		TextureManager.loadTexture("icons/group_edit", null);
-		TextureManager.loadTexture("icons/group_minimize", null);
-		TextureManager.loadTexture("icons/group_clone", null);
-		TextureManager.loadTexture("icons/editors/minimized", null);
-		TextureManager.loadTexture("icons/editors/expanded", null);
-		//
-		(UserInterface.TOOLBAR = new Toolbar()).repos();
-		//(UserInterface.BOTTOMBAR = new Bottombar()).setVisible(Settings.bottombar());
-		ui.getElements().add(ModelTree.TREE);
-		ui.getElements().add(HelperTree.TREE);
-		ui.getElements().add(FVTMTree.TREE);
-		ui.getElements().add(new ModelGroupEditor());
-		ui.getElements().add(new TextureEditor());
-		ui.getElements().add(new PreviewEditor());
-		//
-		ui.getElements().add(UserInterface.DIALOGBOX = new DialogBox());
-		ui.getElements().add(UserInterface.CONTROLS = new ControlsAdjuster());
-		//render last
-		ui.getElements().add(UserInterface.TOOLBAR);
-		ui.getElements().add(UserInterface.BOTTOMBAR);
-		ui.getElements().add(UserInterface.TEXMAP = new TextureMap());
-		ui.getElements().add(UserInterface.RIGHTMENU = AltMenu.MENU);
-		ui.getElements().add(UserInterface.DROPDOWN = DropDown.INST);
-		//ui.getElements().add(new Cursor());
-		FMTB.MODEL.updateFields();
 	}
 
 	public void reset(boolean esc){

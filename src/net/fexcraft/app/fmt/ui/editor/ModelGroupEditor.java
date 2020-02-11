@@ -5,17 +5,12 @@ import static net.fexcraft.app.fmt.utils.StyleSheet.BLACK;
 import java.util.ArrayList;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.FileSelector;
 import net.fexcraft.app.fmt.ui.SettingsBox;
 import net.fexcraft.app.fmt.ui.general.Button;
-import net.fexcraft.app.fmt.ui.general.DropDown;
-import net.fexcraft.app.fmt.ui.general.DropDownField;
 import net.fexcraft.app.fmt.ui.general.TextField;
-import net.fexcraft.app.fmt.utils.Animator;
 import net.fexcraft.app.fmt.utils.Animator.Animation;
 import net.fexcraft.app.fmt.utils.TextureManager;
-import net.fexcraft.app.fmt.utils.TextureUpdate;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.math.RGB;
@@ -23,7 +18,7 @@ import net.fexcraft.lib.common.math.Vec3f;
 
 public class ModelGroupEditor extends Editor {
 	
-	private static final int[] accepted_texsiz = new int[]{ 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096 };//, 8192 };
+	//TODO private static final int[] accepted_texsiz = new int[]{ 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096 };//, 8192 };
 	private Container group, model, animations;
 
 	public ModelGroupEditor(){
@@ -52,7 +47,7 @@ public class ModelGroupEditor extends Editor {
 			}
 			model.getElements().add(new Button(model, "text2", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true)
 				.setText(translate("editor.model_group.model.texture_size", "Texture [U/V/Scale]"), false));
-			passed += 24; for(int i = 0; i < 3; i++){ final int j = i;
+			/*passed += 24; for(int i = 0; i < 3; i++){ final int j = i;
 				model.getElements().add(new DropDownField(model, "model_tex" + xyz[i], "editor:field", 96, 4 + (i * 102), passed){
 					@Override
 					public ArrayList<Element> getDropDownButtons(DropDown inst){
@@ -66,7 +61,7 @@ public class ModelGroupEditor extends Editor {
 						return elements;
 					}
 				});
-			}
+			}*/
 			model.getElements().add(new Button(model, "text4", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true)
 				.setText(translate("editor.model_group.model.texture", "Model Texture"), false));
 			model.getElements().add(new TextField(model, "model_texture", "editor:field", 300, 4, passed += 24){
@@ -132,7 +127,7 @@ public class ModelGroupEditor extends Editor {
 			//
 			group.getElements().add(new Button(group, "text2", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true)
 				.setText(translate("editor.model_group.group.texture_size", "Texture [U/V/Scale]"), false));
-			passed += 24; for(int i = 0; i < 3; i++){ final int j = i;
+			/*passed += 24; for(int i = 0; i < 3; i++){ final int j = i;
 				group.getElements().add(new DropDownField(group, "group_tex" + xyz[i], "editor:field", 96, 4 + (i * 102), passed){
 					@Override
 					public ArrayList<Element> getDropDownButtons(DropDown inst){
@@ -146,7 +141,7 @@ public class ModelGroupEditor extends Editor {
 						return elements;
 					}
 				});
-			}
+			}*/
 			//
 			group.getElements().add(new Button(group, "text3", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true)
 				.setText(translate("editor.model_group.group.texture", "Group Texture"), false));
@@ -177,7 +172,7 @@ public class ModelGroupEditor extends Editor {
 			//
 			group.getElements().add(new Button(group, "text4", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true)
 				.setText(translate("editor.model_group.group.add_animator", "Add Animator"), false));
-			group.getElements().add(new DropDownField(group, "group_animator", "editor:field", 300, 4, passed += 24){
+			/*group.getElements().add(new DropDownField(group, "group_animator", "editor:field", 300, 4, passed += 24){
 				@Override
 				public boolean processButtonClick(int x, int y, boolean left){
 					if(FMTB.MODEL.getSelected().isEmpty()) return true;
@@ -195,7 +190,7 @@ public class ModelGroupEditor extends Editor {
 									String str = translate("dialog.editor.model_group.group.animator.not_found", "Animation not found!");
 									FMTB.showDialogbox(str, translate("dialog.editor.model_group.group.animator.not_found.confirm", "ok"), null, DialogBox.NOTHING, null);
 									return true;
-								}*/
+								}*//*
 								final Animation ani = am.copy(null);
 								ArrayList<TurboList> lists = FMTB.MODEL.getDirectlySelectedGroups();
 								SettingsBox.open(translate("editor.model_group.group.animator_settings"), ani.settings.values(), false, settings -> {
@@ -210,7 +205,7 @@ public class ModelGroupEditor extends Editor {
 					}
 					return elements;
 				}
-			});
+			});*/
 			//
 			group.setExpanded(false); passed = 0;
 		}
@@ -259,7 +254,7 @@ public class ModelGroupEditor extends Editor {
 		return true;
 	}
 	
-	protected boolean updateModelTexSize(DropDownField field, int axis, int value){
+	/*protected boolean updateModelTexSize(DropDownField field, int axis, int value){
 		if(FMTB.MODEL == null) return true; field.setText(value + "", true);
 		FMTB.MODEL.textureSizeX = ((DropDownField)model.getElement("model_texx")).getTextAsInt();
 		FMTB.MODEL.textureSizeY = ((DropDownField)model.getElement("model_texy")).getTextAsInt();
@@ -276,7 +271,7 @@ public class ModelGroupEditor extends Editor {
 			list.textureS = ((DropDownField)group.getElement("group_texz")).getTextAsInt();
 			TextureUpdate.updateSize(list); list.forEach(mrt -> mrt.recompile());
 		} return true;
-	}
+	}*/
 	
 	protected boolean updatePos(int axis, Boolean positive){
 		return updatePos(null, axis, positive);

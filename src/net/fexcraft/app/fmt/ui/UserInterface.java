@@ -5,8 +5,11 @@ import java.util.ArrayList;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.general.*;
-import net.fexcraft.app.fmt.utils.GGR;
+import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
+import net.fexcraft.app.fmt.ui.general.DialogBox;
+import net.fexcraft.app.fmt.ui.general.HoverMenu;
+import net.fexcraft.app.fmt.ui.general.TextField;
+import net.fexcraft.app.fmt.ui.general.TextureMap;
 import net.fexcraft.app.fmt.utils.RayCoastAway;
 import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.app.fmt.utils.Settings;
@@ -24,12 +27,8 @@ public class UserInterface {
 
 	public static float scale_x, scale_y, scale;
 	public static Element SELECTED = null, DRAGGED = null;
-	public static Toolbar TOOLBAR;
-	public static Bottombar BOTTOMBAR;
 	public static DialogBox DIALOGBOX;
 	public static ControlsAdjuster CONTROLS;
-	public static AltMenu RIGHTMENU;
-	public static DropDown DROPDOWN;
 	public static TextureMap TEXMAP;
 	//
 	private ArrayList<Element> elements = new ArrayList<>();
@@ -164,10 +163,10 @@ public class UserInterface {
 			if(i == 0 && bool){
 				RayCoastAway.doTest(true, true);
 			}
-			if(GGR.iControlDown() && i == 1 && bool && !UserInterface.RIGHTMENU.visible()){
+			/*if(GGR.iControlDown() && i == 1 && bool && !UserInterface.RIGHTMENU.visible()){
 				ArrayList<PolygonWrapper> selected = FMTB.MODEL.getSelected();
 				UserInterface.RIGHTMENU.show(AltMenu.Type.sel(selected.isEmpty()), FMTB.cursor_x, FMTB.HEIGHT - FMTB.cursor_y, selected);
-			}
+			}*/
 		}
 		return;
 	}
