@@ -78,12 +78,12 @@ public class FMTB {
 	
 	public static void main(String... args) throws Exception {
 	    switch(LWJGLUtil.getPlatform()){
-	        case LWJGLUtil.PLATFORM_WINDOWS:{ lwjgl_natives = new File("./libs/native/windows"); break; }
-	        case LWJGLUtil.PLATFORM_LINUX:{ lwjgl_natives = new File("./libs/native/linux"); break; }
-	        case LWJGLUtil.PLATFORM_MACOSX:{
+	        case LWJGLUtil.PLATFORM_WINDOWS: lwjgl_natives = new File("./libs/native/windows"); break;
+	        case LWJGLUtil.PLATFORM_LINUX: lwjgl_natives = new File("./libs/native/linux"); break;
+	        case LWJGLUtil.PLATFORM_MACOSX:
 	        	System.setProperty("apple.awt.fullscreenhidecursor", "false");
-	        	lwjgl_natives = new File("./libs/native/macosx"); break;
-	        }
+	        	lwjgl_natives = new File("./libs/native/macosx");
+	        	break;
 	    }
 	    System.setProperty("org.lwjgl.librarypath", lwjgl_natives.getAbsolutePath());
 	    //
