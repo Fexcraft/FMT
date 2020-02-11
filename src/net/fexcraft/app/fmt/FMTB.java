@@ -4,6 +4,8 @@ import static org.lwjgl.glfw.GLFW.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -30,6 +32,7 @@ import org.liquidengine.legui.theme.colored.FlatColoredTheme;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
+import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.glfw.GLFWScrollCallback;
@@ -37,7 +40,9 @@ import org.lwjgl.glfw.GLFWWindowCloseCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLUtil;
+import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.Configuration;
+import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.Platform;
 
 import com.google.gson.JsonArray;
@@ -126,7 +131,7 @@ public class FMTB {
 	public FMTB setTitle(String string){ title = string; DiscordUtil.update(false); return this; }
 	
 	public void run() throws InterruptedException, IOException, NoSuchMethodException, ScriptException {
-		TextureManager.init(); this.setIcon(); Settings.load(); StyleSheet.load(); Translator.init(); timer.init();
+		TextureManager.init(); Settings.load(); StyleSheet.load(); Translator.init(); timer.init();
         glfwSetErrorCallback(errorCallback = GLFWErrorCallback.createPrint(System.err));
 		if(!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW.");
         glfwWindowHint(GLFW_RESIZABLE, GL11.GL_TRUE);
@@ -140,7 +145,7 @@ public class FMTB {
         glfwMakeContextCurrent(window);
         GL.createCapabilities();
 		GLUtil.setupDebugMessageCallback();
-		initOpenGL();
+		initOpenGL(); this.setIcon();
 		glfwShowWindow(window);
 		//
         Themes.setDefaultTheme(new FlatColoredTheme(
@@ -152,7 +157,7 @@ public class FMTB {
 	        null
         ));//Themes.FLAT_WHITE);
         frame = new Frame(WIDTH, HEIGHT);
-        //frame.getContainer().add(new Interface());
+        frame.getContainer().add(new Interface());
         Editors.initializeEditors(frame);
         UserInterpanels.addToolbarButtons(frame);
         context = new Context(window);
@@ -289,9 +294,16 @@ public class FMTB {
 	}
 
 	private void setIcon(){
-		//TODO Display.setIcon(new java.nio.ByteBuffer[]{ TextureManager.getTexture("icon", false).getBuffer(), TextureManager.getTexture("icon", false).getBuffer() });
+        try(MemoryStack stack = MemoryStack.stackPush()){
+        	ByteBuffer imgbuff; IntBuffer ch = stack.mallocInt(1), w = stack.mallocInt(1), h = stack.mallocInt(1);
+            imgbuff = STBImage.stbi_load("./resources/textures/icon.png", w, h, ch, 4);
+            if(imgbuff == null) return;
+            GLFWImage image = GLFWImage.malloc(); GLFWImage.Buffer imagebf = GLFWImage.malloc(1);
+            image.set(w.get(), h.get(), imgbuff); imagebf.put(0, image);
+            glfwSetWindowIcon(window, imagebf);
+        }
 	}
-	
+
 	public void resize(int width, int height){
     	WIDTH = width; HEIGHT = height;
     	perspective(45.0f, (float)WIDTH / (float)HEIGHT, 0.1f, 4096f / 2);
