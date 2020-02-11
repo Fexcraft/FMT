@@ -128,3 +128,8 @@ dialog.saveload.should_save.cancel=No
 filechooser.export.title=Select Export Location
 filechooser.export.confirm=Export
 
+
+dialog.greeting.welcome=Welcome to FMT!<nl><version:%s>
+dialog.greeting.newversion=New version available!<nl>%s >> %s
+dialog.greeting.confirm=ok
+dialog.greeting.update=update

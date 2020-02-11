@@ -36,7 +36,6 @@ public class GGR {
     public void pollInput(float delta){
     	processMouseInput(delta);
         processMoveInput(delta);
-        //acceptInputKeyboard();
     }
 
 	public static boolean clickedL, clickedR; private boolean panning, dragging;

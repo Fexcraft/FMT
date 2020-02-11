@@ -42,7 +42,6 @@ import org.lwjgl.glfw.GLFWScrollCallback;
 import org.lwjgl.glfw.GLFWWindowCloseCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GLUtil;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.Configuration;
 import org.lwjgl.system.MemoryStack;
@@ -141,7 +140,7 @@ public class FMTB {
         }
         glfwMakeContextCurrent(window);
         GL.createCapabilities();
-		GLUtil.setupDebugMessageCallback();
+		//GLUtil.setupDebugMessageCallback();
 		initOpenGL(); this.setIcon();
 		glfwShowWindow(window);
 		//
@@ -172,19 +171,7 @@ public class FMTB {
             public void invoke(long window, int key, int scancode, int action, int mods){
             	if(context.getFocusedGui() instanceof TextInput20) return;
     			if(key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) glfwSetWindowShouldClose(window, true);
-    			if(key == GLFW_KEY_W) ggr.w_down = GGR.parseKeyAction(action);
-    			if(key == GLFW_KEY_S) ggr.s_down = GGR.parseKeyAction(action);
-    			if(key == GLFW_KEY_A) ggr.a_down = GGR.parseKeyAction(action);
-    			if(key == GLFW_KEY_D) ggr.d_down = GGR.parseKeyAction(action);
-    			if(key == GLFW_KEY_SPACE) ggr.space_down = GGR.parseKeyAction(action);
-    			if(key == GLFW_KEY_LEFT_SHIFT || key == GLFW_KEY_RIGHT_SHIFT) ggr.shift_down = GGR.parseKeyAction(action);
-    			if(key == GLFW_KEY_R) ggr.r_down = GGR.parseKeyAction(action);
-    			if(key == GLFW_KEY_F) ggr.f_down = GGR.parseKeyAction(action);
-    			if(key == GLFW_KEY_UP) ggr.rotation.xCoord -= 5;
-    			if(key == GLFW_KEY_DOWN) ggr.rotation.xCoord += 5;
-    			if(key == GLFW_KEY_LEFT) ggr.rotation.yCoord -= 5;
-    			if(key == GLFW_KEY_RIGHT) ggr.rotation.yCoord += 5;
-    			//Print.console(key, action);
+    			KeyCompound.process(window, key, scancode, action, mods);
             }
         };
         GLFWCursorPosCallback cursorCallback = new GLFWCursorPosCallback(){
@@ -236,7 +223,8 @@ public class FMTB {
 		//ggr = new GGR(this, 0, 0, 0, 0, 0, 0);
 		ggr = new GGR(0, 4, 4); ggr.rotation.xCoord = 45;
 		PorterManager.load(); HelperCollector.reload();
-		SessionHandler.checkIfLoggedIn(true, true); checkForUpdates(); //TODO KeyCompound.init(); KeyCompound.load();
+		SessionHandler.checkIfLoggedIn(true, true); checkForUpdates();
+		KeyCompound.init(); KeyCompound.load();
 		//
 		LocalDateTime midnight = LocalDateTime.of(LocalDate.now(ZoneOffset.systemDefault()), LocalTime.MIDNIGHT);
 		long mid = midnight.toInstant(ZoneOffset.UTC).toEpochMilli(); long date = Time.getDate(); while((mid += Time.MIN_MS * 5) < date);
@@ -361,10 +349,10 @@ public class FMTB {
             if(HelperCollector.LOADED.size() > 0){
             	for(GroupCompound model : HelperCollector.LOADED){ RGB.glColorReset(); model.render(); }
             }
-            //if(Settings.demo()){
+            if(Settings.demo()){
                 TextureManager.bindTexture("t1p");
                 ModelT1P.INSTANCE.render();
-            //}
+            }
 			if(Settings.lighting()) GL11.glDisable(GL11.GL_LIGHTING);
             GL11.glPopMatrix();
         }
@@ -403,6 +391,7 @@ public class FMTB {
 	        GL11.glClearDepth(1.0);
 	        GL11.glPopMatrix();
 		}
+		TextureManager.bindTexture("null");
 	}
 	
 	private float[] clearcolor;

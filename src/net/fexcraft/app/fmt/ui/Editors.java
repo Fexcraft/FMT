@@ -440,4 +440,8 @@ public class Editors {
 		return Translator.format(str, "no.lang.%s", objs);
 	}
 
+	public static void toggleWidget(int i){
+		//TODO
+	}
+
 }
