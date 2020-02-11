@@ -15,8 +15,8 @@ import java.util.stream.Collectors;
 import javax.script.ScriptException;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.FileSelector;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
-import net.fexcraft.app.fmt.utils.FileSelector;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;

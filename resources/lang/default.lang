@@ -114,6 +114,7 @@ editor.general.texrect_b.face=%s [start x/y, end x/y]
 editor.general.marker=Marker Settings
 editor.general.marker.color=Marker Color [#hex]
 editor.general.marker.biped_display=Biped Display [toggle / rot / scale]
+editor.model_group.group.animator_settings=Animator Settings
 
 # Dialogs
 dialog.welcome.title=Welcome to FMT!
@@ -134,6 +135,10 @@ eximporter.import.select.desc=Select an importer to import your Model/Object.
 eximporter.import.select.continue=Continue
 eximporter.import.title=Select Import Location
 
+# SettingsBox
+settingsbox.continue=Continue
+settingsbox.confirm=Confirm
+
 # Errors
 error.dialog_title=Error
 error.feature_not_available_yet=This feature is not available yet.
@@ -151,3 +156,6 @@ dialog.saveload.should_save.cancel=No
 filechooser.export.title=Select Export Location
 filechooser.export.confirm=Export
 
+
+saveload.open=Select file to open.
+saveload.filechooser.save=Select save location.

@@ -21,12 +21,10 @@ import javax.script.ScriptException;
 
 import org.joml.Vector2i;
 import org.joml.Vector4f;
-import org.liquidengine.legui.animation.Animator;
 import org.liquidengine.legui.animation.AnimatorProvider;
 import org.liquidengine.legui.component.Frame;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.listener.MouseClickEventListener;
-import org.liquidengine.legui.listener.processor.EventProcessor;
 import org.liquidengine.legui.listener.processor.EventProcessorProvider;
 import org.liquidengine.legui.system.context.CallbackKeeper;
 import org.liquidengine.legui.system.context.Context;
@@ -68,7 +66,6 @@ import net.fexcraft.app.fmt.ui.UserInterpanels.Button20;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Dialog24;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Field;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Label20;
-import net.fexcraft.app.fmt.ui.UserInterpanels.NumberInput20;
 import net.fexcraft.app.fmt.ui.UserInterpanels.TextInput20;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.editor.ModelGroupEditor;
@@ -78,7 +75,6 @@ import net.fexcraft.app.fmt.ui.general.AltMenu;
 import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.ui.general.DropDown;
-import net.fexcraft.app.fmt.ui.general.SettingsBox;
 import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.ui.general.TextureMap;
 import net.fexcraft.app.fmt.ui.general.Toolbar;
@@ -216,7 +212,8 @@ public class FMTB {
 			@Override
 			public void invoke(long window, double xoffset, double yoffset){
 				if(field_scrolled = (context.getFocusedGui() instanceof Field)){
-					((NumberInput20)context.getFocusedGui()).onScroll(yoffset);
+					Field field = (Field)context.getFocusedGui();
+					if(field.id() != null) field.onScroll(yoffset);
 				}
 			}
 		};
@@ -491,7 +488,6 @@ public class FMTB {
 		ui.getElements().add(new PreviewEditor());
 		//
 		ui.getElements().add(UserInterface.DIALOGBOX = new DialogBox());
-		ui.getElements().add(UserInterface.SETTINGSBOX = new SettingsBox());
 		ui.getElements().add(UserInterface.CONTROLS = new ControlsAdjuster());
 		//render last
 		ui.getElements().add(UserInterface.TOOLBAR);
@@ -506,7 +502,7 @@ public class FMTB {
 	public void reset(boolean esc){
 		if(net.fexcraft.app.fmt.ui.Dialog.anyVisible() || TextField.anySelected()){
 			UserInterface.DIALOGBOX.reset(); //UserInterface.FILECHOOSER.reset();
-			UserInterface.CONTROLS.reset(); UserInterface.SETTINGSBOX.reset();
+			UserInterface.CONTROLS.reset(); //UserInterface.SETTINGSBOX.reset();
 			UserInterface.TEXMAP.reset(); TextField.deselectAll();
 		} else if(esc && Editor.anyVisible()){ Editor.hideAll(); } else return;//open some kind of main menu / status / login screen.
 	}

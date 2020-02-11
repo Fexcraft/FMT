@@ -28,16 +28,18 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.ui.tree.RightTree;
-import net.fexcraft.app.fmt.utils.FileSelector;
 import net.fexcraft.app.fmt.utils.HelperCollector;
 import net.fexcraft.app.fmt.utils.ImageHelper;
 import net.fexcraft.app.fmt.utils.SaveLoad;
 import net.fexcraft.app.fmt.utils.Settings;
+import net.fexcraft.app.fmt.utils.Settings.Setting;
+import net.fexcraft.app.fmt.utils.Settings.Type;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.app.fmt.utils.TextureUpdate;
 import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.app.fmt.wrappers.*;
+import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.common.utils.Print;
 
@@ -70,7 +72,7 @@ public class UserInterpanels {
 			new MenuButton("toolbar.file.save_as", () -> SaveLoad.saveModel(true, false)),
 			new MenuButton("toolbar.file.import", () -> PorterManager.handleImport()),
 			new MenuButton("toolbar.file.export", () -> PorterManager.handleExport()),
-			new MenuButton("toolbar.file.settings", NOT_REIMPLEMENTED_YET),
+			new MenuButton("toolbar.file.settings", () -> SettingsBox.open(translate("toolbar.file.settings"), Settings.SETTINGS.values(), true, settings -> {})),
 			new MenuButton("toolbar.file.exit",  () -> SaveLoad.checkIfShouldSave(true, false))
 		));
 		frame.getContainer().add(new MenuEntry(1, translate("toolbar.utils"),
@@ -296,6 +298,37 @@ public class UserInterpanels {
 		public TextInput20(String string, int x, int y, int w, int h){
 			super(string, x, y, w, h); getTextState().setFontSize(20f);
 		}
+
+		@SuppressWarnings("unchecked")
+		public TextInput20(Setting setting, int x, int y, int w, int h) {
+			this(setting.toString(), x, y, w, h);
+			this.addTextInputContentChangeEventListener(event -> {
+				String string = validateString(event);
+				if(setting.getType() == Type.STRING) setting.setValue(string);
+				else if(setting.getType() == Type.FLOAT){
+					String[] arr = string.trim().split(",");
+					float[] flt = new float[arr.length];
+					for(int i = 0; i < flt.length; i++){
+						flt[i] = Float.parseFloat(arr[i]);
+					}
+					if(((float[])setting.getValue()).length == flt.length){
+						setting.setValue(flt);
+					}
+					else{
+						float[] src = setting.getValue();
+						for(int i = 0; i < src.length; i++){
+							if(i >= flt.length) break; src[i] = flt[i];
+						}
+					}
+				}
+				else if(setting.getType() == Type.RGB){
+					((RGB)setting.getValue()).packed = Integer.parseInt(string.replace("#", ""), 16);
+				}
+				else {
+					Print.console("invalid setting type for text field / " + setting.getType() + " / " + setting.getId());
+				}
+			});
+		}
 		
 	}
 	
@@ -305,6 +338,16 @@ public class UserInterpanels {
 			super("0", x, y, w, h); getTextState().setFontSize(20f);
 		}
 		
+		public NumberInput20(Setting setting, int x, int y, int w, int h){
+			super(setting.toString(), x, y, w, h); getTextState().setFontSize(20f);
+			getListenerMap().addListener(FocusEvent.class, (FocusEventListener)listener -> {
+				if(!listener.isFocused()){ setting.setValue((float)getValue()); }
+			});
+			getListenerMap().addListener(KeyEvent.class, (KeyEventListener)listener -> {
+				if(listener.getKey() == GLFW.GLFW_KEY_ENTER){ setting.setValue((float)getValue()); }
+			});
+		}
+
 		private String fieldid;
 		private boolean floatfield;
 		private float min, max;
@@ -336,7 +379,8 @@ public class UserInterpanels {
 			});*/
 			return this;
 		}
-
+		
+		@Override
 		public float getValue(){
 			if(value != null) return value;
 			float newval = 0; String text = this.getTextState().getText();
@@ -349,17 +393,25 @@ public class UserInterpanels {
 			return value = newval;
 		}
 
+		@Override
 		public float tryAdd(float flat, boolean positive, float rate){
 			flat += positive ? rate : -rate; if(flat > max) flat = max; if(flat < min) flat = min; return floatfield ? flat : (int)flat;
 		}
 
+		@Override
 		public void apply(float val){
 			getTextState().setText((value = val) + ""); setCaretPosition(getTextState().getText().length());
 		}
 
+		@Override
 		public void onScroll(double yoffset){
 			apply(tryAdd(getValue(), yoffset > 0, FMTB.MODEL.rate)); Print.console(value);
 			FMTB.MODEL.updateValue(this, fieldid, true);
+		}
+
+		@Override
+		public String id(){
+			return fieldid;
 		}
 		
 	}
@@ -372,6 +424,15 @@ public class UserInterpanels {
 			super("false", x, y, w, h); this.fieldid = id; this.getStyle().setBorderRadius(0f);
 	        this.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)event -> {
 	            if(event.getAction() == CLICK){ toggle(); } else return;
+	        });
+		}
+		
+		public BoolButton(Setting setting, int x, int y, int w, int h){
+			super("false", x, y, w, h); this.getStyle().setBorderRadius(0f);
+	        this.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)event -> {
+	            if(event.getAction() == CLICK){
+	    			setting.toggle(); getTextState().setText(setting.getBooleanValue() + "");
+	            } else return;
 	        });
 		}
 
@@ -394,6 +455,17 @@ public class UserInterpanels {
 		public void apply(float f){
 			getTextState().setText((f > .5) + "");
 		}
+
+		@Override
+		public void onScroll(double yoffset){
+			apply(tryAdd(getValue(), yoffset > 0, FMTB.MODEL.rate));
+			FMTB.MODEL.updateValue(this, fieldid, true);
+		}
+
+		@Override
+		public String id(){
+			return fieldid;
+		}
 		
 	}
 	
@@ -404,6 +476,10 @@ public class UserInterpanels {
 		public float tryAdd(float value, boolean positive, float rate);
 
 		public void apply(float f);
+
+		public void onScroll(double yoffset);
+
+		public String id();
 		
 	}
 	

@@ -9,8 +9,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.general.FileSelector;
-import net.fexcraft.app.fmt.ui.general.FileSelector.FileRoot;
 import net.fexcraft.app.fmt.ui.tree.ModelTree;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
@@ -23,7 +21,7 @@ import net.fexcraft.lib.common.utils.Print;
 public class Settings {
 	
 	private static Setting floor, lines, demo, cube, polygon_marker, polygon_count, lighting, cullface, animate,
-		discordrpc, discordrpc_sm, discordrpc_rtonm, ui_scale, numberfieldarrows, preview_colorpicker;
+		discordrpc, discordrpc_sm, discordrpc_rtonm, numberfieldarrows, preview_colorpicker;
 	public static Setting movespeed, mouse_sensivity, internal_cursor;
 
 	public static boolean floor(){ return floor.getValue(); }
@@ -51,8 +49,6 @@ public class Settings {
 	public static boolean discordrpc_showmodel(){ return discordrpc_sm.getValue(); }
 	
 	public static boolean discordrpc_resettimeronnewmodel(){ return discordrpc_rtonm.getValue(); }
-
-	public static int ui_scale(){ return ui_scale.getValue(); }
 
 	public static boolean numberfieldarrows(){ return numberfieldarrows.getValue(); }
 
@@ -196,14 +192,14 @@ public class Settings {
 		discordrpc = SETTINGS.get("discord_rpc-enabled");
 		discordrpc_sm = SETTINGS.get("discord_rpc-show_model");
 		discordrpc_rtonm = SETTINGS.get("discord_rpc-reset_timer_on_new_model");
-		ui_scale = SETTINGS.get("ui_scale");
+		//ui_scale = SETTINGS.get("ui_scale");
 		//bottombar = SETTINGS.get("bottombar");
 		numberfieldarrows = SETTINGS.get("numberfield_arrows");
 		preview_colorpicker = SETTINGS.get("preview_colorpicker");
 		movespeed = SETTINGS.get("camera_movespeed");
 		mouse_sensivity = SETTINGS.get("mouse_sensivity");
 		//internal_cursor = SETTINGS.get("internal_cursor");
-		FileSelector.FileRoot.last = FileRoot.valueOf(SETTINGS.get("filedir_last_type").getStringValue());
+		//FileSelector.FileRoot.last = FileRoot.valueOf(SETTINGS.get("filedir_last_type").getStringValue());
 	}
 
 	public static void save(){

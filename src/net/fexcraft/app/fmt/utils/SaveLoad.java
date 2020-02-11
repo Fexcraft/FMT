@@ -24,6 +24,7 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.JsonToTMT;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
+import net.fexcraft.app.fmt.ui.FileSelector;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.utils.Animator.Animation;
 import net.fexcraft.app.fmt.utils.Settings.Setting;

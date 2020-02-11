@@ -6,15 +6,14 @@ import java.util.ArrayList;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.Element;
-import net.fexcraft.app.fmt.ui.UserInterface;
+import net.fexcraft.app.fmt.ui.FileSelector;
+import net.fexcraft.app.fmt.ui.SettingsBox;
 import net.fexcraft.app.fmt.ui.general.Button;
 import net.fexcraft.app.fmt.ui.general.DropDown;
 import net.fexcraft.app.fmt.ui.general.DropDownField;
-import net.fexcraft.app.fmt.ui.general.FileSelector.AfterTask;
 import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.utils.Animator;
 import net.fexcraft.app.fmt.utils.Animator.Animation;
-import net.fexcraft.app.fmt.utils.FileSelector;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureUpdate;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
@@ -199,15 +198,11 @@ public class ModelGroupEditor extends Editor {
 								}*/
 								final Animation ani = am.copy(null);
 								ArrayList<TurboList> lists = FMTB.MODEL.getDirectlySelectedGroups();
-								AfterTask task = new AfterTask(){
-									@Override
-									public void run(){
-										for(TurboList list : lists){
-											list.animations.add(ani.copy(list));
-										} FMTB.MODEL.updateFields();
-									}
-								}; task.settings = ani.settings.values();
-								UserInterface.SETTINGSBOX.show(translate("editor.model_group.group.animator_settings", "Animator Settings"), task);
+								SettingsBox.open(translate("editor.model_group.group.animator_settings"), ani.settings.values(), false, settings -> {
+									for(TurboList list : lists){
+										list.animations.add(ani.copy(list));
+									} FMTB.MODEL.updateFields();
+								}); 
 								return true;
 							}
 						}.setText(am.id, false).setEnabled(enabled);
@@ -230,11 +225,9 @@ public class ModelGroupEditor extends Editor {
 							@Override
 							public boolean processButtonClick(int x, int y, boolean left){
 								if(left){
-									Animation anim = list.animations.get(j); this.deselect(); if(anim == null) return true;
-									AfterTask task = new AfterTask(){
-										@Override public void run(){ anim.onSettingsUpdate(); FMTB.MODEL.updateFields(); }
-									}; task.settings = anim.settings.values(); FMTB.MODEL.updateFields();
-									UserInterface.SETTINGSBOX.show("[" + anim.id + "] Settings", task);
+									Animation anim = list.animations.get(j); this.deselect(); if(anim == null) return true; FMTB.MODEL.updateFields();
+									SettingsBox.open("[" + anim.id + "] " + translate("editor.model_group.group.animator_settings"), anim.settings.values(), false,
+										settings -> { anim.onSettingsUpdate(); FMTB.MODEL.updateFields();});
 								}
 								else{
 									list.animations.remove(j); this.deselect(); FMTB.MODEL.updateFields();

@@ -44,24 +44,14 @@ public class Toolbar extends Element {
 		this.elements.add(new Icon(this, "settings", "toolbar:icon", "icons/toolbar/settings", 32, 0, 0){
 			@Override
 			public boolean processButtonClick(int x, int y, boolean left){
-				UserInterface.SETTINGSBOX.show(); return true;
+				/*UserInterface.SETTINGSBOX.show();*/ return true;
 			}
 		});
-	}
-
-	private void realign(){
-		int start = 4, high = 3;
-		for(Element elm : elements){
-			if(elm.getId().equals("exit") && start + elm.width >= width - 4){ elm.setVisible(false); continue; }
-			if(start + elm.width >= width - 4){ start = 4; high += 34; } elm.setVisible(true);
-			elm.setPosition(start, elm instanceof Icon ? high - 2 : high); start += elm.width + 2;
-		}
-		this.height = high + 31; for(Element elm : elements) elm.repos();
 	}
 	
 	@Override
 	public Element repos(){
-		width = UserInterface.width; x = xrel; y = yrel; realign(); return this.clearVertexes();
+		width = UserInterface.width; x = xrel; y = yrel; return this.clearVertexes();
 	}
 
 }

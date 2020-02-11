@@ -28,7 +28,6 @@ public class UserInterface {
 	public static Bottombar BOTTOMBAR;
 	public static DialogBox DIALOGBOX;
 	public static ControlsAdjuster CONTROLS;
-	public static SettingsBox SETTINGSBOX;
 	public static AltMenu RIGHTMENU;
 	public static DropDown DROPDOWN;
 	public static TextureMap TEXMAP;
@@ -43,7 +42,7 @@ public class UserInterface {
 	public void rescale(){
 		scale_x = FMTB.WIDTH;
 		scale_y = FMTB.HEIGHT;
-		int facts = 1, uis = Settings.ui_scale(); if(uis < 0) uis = 1000;
+		int facts = 1, uis = 1; if(uis < 0) uis = 1000;
         while(facts < uis && scale_x / (facts + 1) >= 320 && scale_y / (facts + 1) >= 240) facts++;
         scale_x = scale_x / facts; scale_y = scale_y / facts;
         scale_x = (float)Math.ceil(scale_x); scale_y = (float)Math.ceil(scale_y);

@@ -30,7 +30,7 @@ import net.fexcraft.lib.tmt.ModelRendererTurbo;
  */
 public class DFMExporter extends ExImPorter {
 	
-	protected static final String[] extensions = new String[]{ ".java" };
+	protected static final String[] extensions = new String[]{ "*.java" };
 	protected static final String tab = "\t";//"    ";
 	protected static final String tab2 = tab + tab;
 	protected static final String tab3 = tab2 + tab;

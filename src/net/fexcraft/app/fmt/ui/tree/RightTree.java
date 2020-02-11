@@ -10,12 +10,12 @@ import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.FontRenderer;
+import net.fexcraft.app.fmt.ui.SettingsBox;
 import net.fexcraft.app.fmt.ui.FontRenderer.FontType;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.general.Button;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
-import net.fexcraft.app.fmt.ui.general.FileSelector.AfterTask;
 import net.fexcraft.app.fmt.ui.general.Icon;
 import net.fexcraft.app.fmt.ui.general.Scrollbar;
 import net.fexcraft.app.fmt.ui.general.Scrollbar.Scrollable;
@@ -434,8 +434,8 @@ public abstract class RightTree extends Element implements Scrollable {
 			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_edit", 22, width - 78, 2){
 				@Override
 				public boolean processButtonClick(int mx, int my, boolean left){
-					AfterTask task = new AfterTask(){ @Override public void run(){ anim.onSettingsUpdate();} }; task.settings = anim.settings.values();
-					UserInterface.SETTINGSBOX.show("[" + anim.id + "] Settings", task); return true;
+					SettingsBox.open("[" + anim.id + "] " + translate("editor.model_group.group.animator_settings"), anim.settings.values(), false,
+						settings -> { anim.onSettingsUpdate(); /*FMTB.MODEL.updateFields();*/ }); return true;
 				}
 			});
 			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_visible", 22, width - 52, 2){
