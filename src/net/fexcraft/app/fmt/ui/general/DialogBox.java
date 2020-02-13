@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.ui.FontRenderer.FontType;
@@ -18,7 +17,7 @@ import net.fexcraft.lib.common.math.RGB;
  * @author Ferdinand Calo' (FEX___96)
  *
  */
-public class DialogBox extends Element implements Dialog {
+public class DialogBox extends Element {
 
 	public static final Runnable NOTHING = () -> UserInterface.DIALOGBOX.reset();
 	private Button button0, button1;
@@ -29,7 +28,7 @@ public class DialogBox extends Element implements Dialog {
 	
 	public DialogBox(){
 		super(null, "dialogbox", "dialogbox"); this.setSize(258, 128).setDraggable(true).setVisible(false).setColor(0xff80adcc);
-		Dialog.dialogs.add(this); this.setBorder(0xff000000, 0xfffcba03, 5, true, true, true, true); this.setHoverColor(0xffffffff, false);
+		this.setBorder(0xff000000, 0xfffcba03, 5, true, true, true, true); this.setHoverColor(0xffffffff, false);
 		this.elements.add(button0 = new Button(this, "positive", "dialogbox:button_positive", 100, 30, 20, 80, 0xffe1e100){
 			@Override public boolean processButtonClick(int x, int y, boolean left){ return onClick(true); }
 		});
@@ -104,7 +103,6 @@ public class DialogBox extends Element implements Dialog {
 		}); return true;
 	}
 
-	@Override
 	public boolean visible(){
 		return visible;
 	}

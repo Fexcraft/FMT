@@ -140,8 +140,8 @@ public class UserInterface {
 			}
 		}
 		else{
-			Element element = null, elm0 = null;
-			for(Dialog dialog : Dialog.dialogs){
+			Element element = null;//, elm0 = null;
+			/*for(Dialog dialog : Dialog.dialogs){
 				if((elm0 = (Element)dialog).visible && elm0.enabled){
 					if(elm0.onButtonClick(GGR.mousePosX(), FMTB.HEIGHT - GGR.mousePosY(), i == 0, elm0.hovered)){
 						return;
@@ -154,7 +154,7 @@ public class UserInterface {
 						return;
 					} else element = elm;
 				}
-			}
+			}*/
 			if(element instanceof TextField == false) TextField.deselectAll();
 			boolean bool = element == null ? true : element.id.equals("crossbar"); 
 			if(i == 0 && bool){
@@ -180,12 +180,12 @@ public class UserInterface {
 	}
 
 	public boolean onScrollWheel(int wheel){
-		Element elm0 = null;
-		for(Dialog dialog : Dialog.dialogs){
+		//Element elm0 = null;
+		/*for(Dialog dialog : Dialog.dialogs){
 			if((elm0 = (Element)dialog).visible && elm0.enabled){
 				if(elm0.onScrollWheel(wheel)) return true;
 			}
-		}
+		}*/
 		for(Element elm : elements){
 			if(elm.visible && elm.enabled){
 				if(elm.onScrollWheel(wheel)) return true;
