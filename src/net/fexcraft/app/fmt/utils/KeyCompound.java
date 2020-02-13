@@ -66,8 +66,8 @@ public class KeyCompound {
         	});
 		}));
 		//
-		for(int i = 0; i < 9; i++){ final int j = i;
-			keys.add(new KeyFunction("toggle_editor_" + i, GLFW_KEY_F1 + i, (action) -> { if(action == GLFW_RELEASE) Editors.toggleWidget(j); }));
+		for(int i = 1; i < 10; i++){ final int j = i - 1;
+			keys.add(new KeyFunction("toggle_editor_" + i, GLFW_KEY_0 + i, (action) -> { if(action == GLFW_RELEASE) Editors.toggleWidget(j); }));
 		}
 		//
 		keys.add(new KeyFunction("camera_rotate_left", GLFW_KEY_LEFT, action -> FMTB.ggr.rotation.yCoord -= 5));

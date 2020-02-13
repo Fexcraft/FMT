@@ -32,11 +32,14 @@ import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.ShapeType;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.Static;
+import net.fexcraft.lib.common.utils.Print;
 
 public class Editors {
 	
 	public static GeneralEditor general;
 	public static ModelGroupEditor modelgroup;
+	//
+	public static final ArrayList<EditorBase> editors = new ArrayList<>();
 
 	public static void initializeEditors(Frame frame){
 		frame.getContainer().add(general = new GeneralEditor());
@@ -46,7 +49,7 @@ public class Editors {
 	}
 	
 	public static void hideAll(){
-		general.hide(); modelgroup.hide();
+		for(EditorBase editor : editors) editor.hide();
 	}
 	
 	public static void show(String type){
@@ -58,13 +61,21 @@ public class Editors {
 		}
 	}
 	
+	public static boolean anyVisible(){
+		for(EditorBase editor : editors) if(editor.isVisible()) return true; return false;
+	}
+	
+	public static EditorBase getVisible(){
+		for(EditorBase editor : editors) if(editor.isVisible()) return editor; return null;
+	}
+	
 	public static class EditorBase extends Panel {
 
 		protected ArrayList<EditorWidget> widgets = new ArrayList<>();
 		protected ScrollablePanel scrollable;
 		
 		public EditorBase(){
-			super(0, 30, 304, FMTB.HEIGHT - 30);
+			super(0, 30, 304, FMTB.HEIGHT - 30); editors.add(this);
 			this.getListenerMap().addListener(WindowSizeEvent.class, event -> {
 				this.setSize(304, event.getHeight() - 30);
 				scrollable.setSize(304, event.getHeight() - 80);
@@ -429,6 +440,10 @@ public class Editors {
 			super.setMinimized(bool);
 			editor.reOrderWidgets();
 		}
+
+		public void toggle(){
+			setMinimized(!isMinimized());
+		}
 		
 	}
 	
@@ -441,7 +456,18 @@ public class Editors {
 	}
 
 	public static void toggleWidget(int i){
-		//TODO
+		if(i < 0) return;
+		if(anyVisible()){
+			EditorBase editor = getVisible();
+			if(i >= editor.widgets.size()) return;
+			editor.widgets.get(i).toggle();
+			Print.console("toggled widget: " + i);
+		}
+		else{
+			Print.console("toggling editor: " + i);
+			if(i >= editors.size()) return;
+			hideAll(); editors.get(i).show();
+		}
 	}
 
 }
