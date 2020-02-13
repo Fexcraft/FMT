@@ -103,7 +103,6 @@ public class FMTB {
 	public float delta, accumulator = 0f, interval = 1f / 30f, alpha;
 	//
 	public static GLFWErrorCallback errorCallback;
-	public static int cursor_x, cursor_y, cdiffx, cdiffy;
 	public static boolean hold_right, hold_left, field_scrolled;
 	public static int WIDTH = 1280, HEIGHT = 720;
 	public static Context context;
@@ -161,68 +160,52 @@ public class FMTB {
         CallbackKeeper keeper = new DefaultCallbackKeeper();
         CallbackKeeper.registerCallbacks(window, keeper);
 		//
-        GLFWWindowCloseCallback closeCallback = new GLFWWindowCloseCallback(){
-			@Override
-			public void invoke(long window){
-				close = true;
-			}
-		};
-		GLFWKeyCallback keyCallback = new GLFWKeyCallback(){
+        keeper.getChainKeyCallback().add(new GLFWKeyCallback(){
             @Override
             public void invoke(long window, int key, int scancode, int action, int mods){
             	if(context.getFocusedGui() instanceof TextInput20) return;
     			if(key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) reset(true);
     			KeyCompound.process(window, key, scancode, action, mods);
             }
-        };
-        GLFWCursorPosCallback cursorCallback = new GLFWCursorPosCallback(){
+        });
+        keeper.getChainCursorPosCallback().add(new GLFWCursorPosCallback(){
             @Override
             public void invoke(long window, double xpos, double ypos){
-            	if(!hold_right) return;
-                cdiffx = (int)(cursor_x - xpos); cdiffy = (int)(cursor_y - (HEIGHT - ypos));
-                cursor_x = (int)xpos; cursor_y = (int)(HEIGHT - ypos);
+                ggr.cursorPosCallback(window, xpos, ypos);
             }
-        };
-        GLFWMouseButtonCallback mouseCallback = new GLFWMouseButtonCallback(){
+        });
+        keeper.getChainMouseButtonCallback().add(new GLFWMouseButtonCallback(){
             @Override
             public void invoke(long window, int button, int action, int mods){
-                if(button == 0){
-                	if(action == GLFW_PRESS) hold_left = true;
-                	else if(action == GLFW_RELEASE) hold_left = false;
-                }
-                else if(button == 1){
-                	if(action == GLFW_PRESS) hold_right = true;
-                	else if(action == GLFW_RELEASE) hold_right = false;
-                }
+            	ggr.mouseCallback(window, button, action, mods);
             }
-        };
-        GLFWScrollCallback scrollCallback = new GLFWScrollCallback(){
+        });
+        keeper.getChainWindowCloseCallback().add(new GLFWWindowCloseCallback(){
+			@Override
+			public void invoke(long window){
+				SaveLoad.checkIfShouldSave(true, false);
+			}
+		});
+        keeper.getChainFramebufferSizeCallback().add(new GLFWFramebufferSizeCallback(){
+		    @Override
+		    public void invoke(long window, int width, int height){
+		    	resize(width, height);
+		    }
+		});
+        keeper.getChainScrollCallback().add(new GLFWScrollCallback(){
 			@Override
 			public void invoke(long window, double xoffset, double yoffset){
 				if(field_scrolled = (context.getFocusedGui() instanceof Field)){
 					Field field = (Field)context.getFocusedGui();
 					if(field.id() != null) field.onScroll(yoffset);
-				}
+				} else ggr.scrollCallback(window, xoffset, yoffset);
 			}
-		};
-		GLFWFramebufferSizeCallback framebufferSizeCallback = new GLFWFramebufferSizeCallback(){
-		    @Override
-		    public void invoke(long window, int width, int height){
-		    	resize(width, height);
-		    }
-		};
-        keeper.getChainKeyCallback().add(keyCallback);
-        keeper.getChainCursorPosCallback().add(cursorCallback);
-        keeper.getChainMouseButtonCallback().add(mouseCallback);
-        keeper.getChainWindowCloseCallback().add(closeCallback);
-        keeper.getChainFramebufferSizeCallback().add(framebufferSizeCallback);
-        keeper.getChainScrollCallback().add(scrollCallback);
+		});
         SystemEventProcessor systemEventProcessor = new SystemEventProcessorImpl();
 		SystemEventProcessor.addDefaultCallbacks(keeper, systemEventProcessor);
         renderer = new NvgRenderer();
         renderer.initialize();
         //
-		//ggr = new GGR(this, 0, 0, 0, 0, 0, 0);
 		ggr = new GGR(0, 4, 4); ggr.rotation.xCoord = 45;
 		PorterManager.load(); HelperCollector.reload();
 		SessionHandler.checkIfLoggedIn(true, true); checkForUpdates();

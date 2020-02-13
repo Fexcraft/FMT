@@ -32,7 +32,6 @@ import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.ShapeType;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.Static;
-import net.fexcraft.lib.common.utils.Print;
 
 public class Editors {
 	
@@ -461,10 +460,8 @@ public class Editors {
 			EditorBase editor = getVisible();
 			if(i >= editor.widgets.size()) return;
 			editor.widgets.get(i).toggle();
-			Print.console("toggled widget: " + i);
 		}
 		else{
-			Print.console("toggling editor: " + i);
 			if(i >= editors.size()) return;
 			hideAll(); editors.get(i).show();
 		}

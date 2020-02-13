@@ -72,7 +72,7 @@ public abstract class RightTree extends Element implements Scrollable {
 	
 	@Override
 	public void render(int width, int height){
-		if(!FMTB.hold_right) hovered(FMTB.cursor_x * UserInterface.scale, height - FMTB.cursor_y * UserInterface.scale);
+		if(!FMTB.hold_right) hovered(GGR.mousePosX() * UserInterface.scale, height - GGR.mousePosY() * UserInterface.scale);
 		//
 		if(this.visible){ this.renderSelfQuad(); this.renderSelf(width, height); }
 	}
@@ -243,10 +243,10 @@ public abstract class RightTree extends Element implements Scrollable {
 			if(FMTB.MODEL.getGroups().size() < 2) return;
 			int index = FMTB.MODEL.getGroups().indexOf(list);
 			if(my < 0 && index > 0 && FMTB.MODEL.getGroups().get(index - 1).minimized){
-				Collections.swap(FMTB.MODEL.getGroups(), index, index - 1); GGR.resetDragging(); return;
+				Collections.swap(FMTB.MODEL.getGroups(), index, index - 1); /*GGR.resetDragging();*/ return;
 			}
 			if(my > 0 && (index + 1) < FMTB.MODEL.getGroups().size() && list.minimized){
-				Collections.swap(FMTB.MODEL.getGroups(), index, index + 1); GGR.resetDragging(); return;
+				Collections.swap(FMTB.MODEL.getGroups(), index, index + 1); /*GGR.resetDragging();*/ return;
 			}
 		}
 		
@@ -476,10 +476,10 @@ public abstract class RightTree extends Element implements Scrollable {
 			if(anim.group.animations.size() < 2) return;
 			int index = anim.group.animations.indexOf(anim);
 			if(my < 0 && index > 0){
-				Collections.swap(anim.group.animations, index, index - 1); GGR.resetDragging(); return;
+				Collections.swap(anim.group.animations, index, index - 1); /*GGR.resetDragging();*/ return;
 			}
 			if(my > 0 && (index + 1) < anim.group.animations.size()){
-				Collections.swap(anim.group.animations, index, index + 1); GGR.resetDragging(); return;
+				Collections.swap(anim.group.animations, index, index + 1); /*GGR.resetDragging();*/ return;
 			}
 		}
 		

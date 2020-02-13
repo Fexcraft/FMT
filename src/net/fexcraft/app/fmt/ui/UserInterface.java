@@ -10,6 +10,7 @@ import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.ui.general.HoverMenu;
 import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.ui.general.TextureMap;
+import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.RayCoastAway;
 import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.app.fmt.utils.Settings;
@@ -139,21 +140,21 @@ public class UserInterface {
 	public void onButtonPress(int i){
 		if(HoverMenu.anyMenuHovered()){
 			for(HoverMenu list : HoverMenu.MENUS){
-				if(list.isHovered() && list.onButtonClick(FMTB.cursor_x, FMTB.HEIGHT - FMTB.cursor_y, i == 0, true)) return;
+				if(list.isHovered() && list.onButtonClick(GGR.mousePosX(), FMTB.HEIGHT - GGR.mousePosY(), i == 0, true)) return;
 			}
 		}
 		else{
 			Element element = null, elm0 = null;
 			for(Dialog dialog : Dialog.dialogs){
 				if((elm0 = (Element)dialog).visible && elm0.enabled){
-					if(elm0.onButtonClick(FMTB.cursor_x, FMTB.HEIGHT - FMTB.cursor_y, i == 0, elm0.hovered)){
+					if(elm0.onButtonClick(GGR.mousePosX(), FMTB.HEIGHT - GGR.mousePosY(), i == 0, elm0.hovered)){
 						return;
 					} else element = elm0;
 				}
 			}
 			for(Element elm : elements){
 				if(elm instanceof Dialog == false && elm.visible && elm.enabled){
-					if(elm.onButtonClick(FMTB.cursor_x, FMTB.HEIGHT - FMTB.cursor_y, i == 0, elm.hovered)){
+					if(elm.onButtonClick(GGR.mousePosX(), FMTB.HEIGHT - GGR.mousePosY(), i == 0, elm.hovered)){
 						return;
 					} else element = elm;
 				}
@@ -175,7 +176,7 @@ public class UserInterface {
 		Element element = null;
 		for(Element elm : elements){
 			if(elm.visible){
-				element = elm.getDraggableElement(FMTB.cursor_x, FMTB.HEIGHT - FMTB.cursor_y, elm.hovered);
+				element = elm.getDraggableElement(GGR.mousePosX(), FMTB.HEIGHT - GGR.mousePosY(), elm.hovered);
 				if(element != null) break;
 			}
 		}

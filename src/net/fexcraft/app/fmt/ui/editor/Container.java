@@ -4,6 +4,7 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.general.Button;
+import net.fexcraft.app.fmt.utils.GGR;
 
 public class Container extends Button {
 	
@@ -26,7 +27,7 @@ public class Container extends Button {
 	
 	@Override
 	public void render(int width, int height){
-		if(!FMTB.hold_right) hovered(FMTB.cursor_x * UserInterface.scale, height - FMTB.cursor_y * UserInterface.scale);
+		if(!FMTB.hold_right) hovered(GGR.mousePosX() * UserInterface.scale, height - GGR.mousePosY() * UserInterface.scale);
 		this.renderSelf(width, height); if(expanded) for(Element elm : elements) elm.render(width, height);
 	}
 
