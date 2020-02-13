@@ -5,11 +5,9 @@ import java.util.ArrayList;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
 import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.ui.general.HoverMenu;
 import net.fexcraft.app.fmt.ui.general.TextField;
-import net.fexcraft.app.fmt.ui.general.TextureMap;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.RayCoastAway;
 import net.fexcraft.app.fmt.utils.SessionHandler;
@@ -29,8 +27,6 @@ public class UserInterface {
 	public static float scale_x, scale_y, scale;
 	public static Element SELECTED = null, DRAGGED = null;
 	public static DialogBox DIALOGBOX;
-	public static ControlsAdjuster CONTROLS;
-	public static TextureMap TEXMAP;
 	//
 	private ArrayList<Element> elements = new ArrayList<>();
 	//

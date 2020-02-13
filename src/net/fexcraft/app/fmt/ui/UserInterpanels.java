@@ -99,7 +99,7 @@ public class UserInterpanels {
                 okbutton.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> { if(CLICK == e.getAction()) dialog.close(); });
                 dialog.getContainer().add(label); dialog.getContainer().add(okbutton); dialog.show(event.getFrame());
 			}),
-			new MenuButton("toolbar.utils.controls", () -> UserInterface.CONTROLS.show())
+			new MenuButton("toolbar.utils.controls", NOT_REIMPLEMENTED_YET)
 		));
 		frame.getContainer().add(new MenuEntry(2, translate("toolbar.editor"),
 			new MenuButton("toolbar.editor.hide_all", () -> Editors.hideAll()),
@@ -151,7 +151,7 @@ public class UserInterpanels {
 					else{ Desktop.getDesktop().edit(texture.getFile()); }
 				} catch(Exception e){ e.printStackTrace(); }
 			}),
-			new MenuButton("toolbar.textures.texture_map", () -> UserInterface.TEXMAP.show()),
+			new MenuButton("toolbar.textures.texture_map", NOT_REIMPLEMENTED_YET),
 			new MenuButton("toolbar.textures.remove", () -> {
 				if(FMTB.MODEL.texture != null && TextureManager.getTexture(FMTB.MODEL.texture, true) != null){
 					FMTB.MODEL.setTexture(null); TextureManager.removeTexture(FMTB.MODEL.texture);

@@ -68,7 +68,6 @@ import net.fexcraft.app.fmt.ui.UserInterpanels.Field;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Label20;
 import net.fexcraft.app.fmt.ui.UserInterpanels.TextInput20;
 import net.fexcraft.app.fmt.ui.editor.Editor;
-import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.utils.*;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.lib.common.Static;
@@ -438,11 +437,12 @@ public class FMTB {
 	}
 
 	public void reset(boolean esc){
-		if(net.fexcraft.app.fmt.ui.Dialog.anyVisible() || TextField.anySelected()){
-			UserInterface.DIALOGBOX.reset(); //UserInterface.FILECHOOSER.reset();
-			UserInterface.CONTROLS.reset(); //UserInterface.SETTINGSBOX.reset();
-			UserInterface.TEXMAP.reset(); TextField.deselectAll();
-		} else if(esc && Editor.anyVisible()){ Editor.hideAll(); } else return;//open some kind of main menu / status / login screen.
+		if(context.getFocusedGui() instanceof Field){
+			UserInterface.DIALOGBOX.reset();
+			context.getFocusedGui().setFocused(false);
+		}
+		else if(esc && Editors.anyVisible()){ Editor.hideAll(); }
+		else return;//open some kind of main menu / status / login screen.
 	}
 
 	private void checkForUpdates(){
