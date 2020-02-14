@@ -65,7 +65,6 @@ import net.fexcraft.app.fmt.ui.UserInterpanels.Button20;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Dialog24;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Field;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Label20;
-import net.fexcraft.app.fmt.ui.UserInterpanels.TextInput20;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.utils.*;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
@@ -160,7 +159,7 @@ public class FMTB {
         keeper.getChainKeyCallback().add(new GLFWKeyCallback(){
             @Override
             public void invoke(long window, int key, int scancode, int action, int mods){
-            	if(context.getFocusedGui() instanceof TextInput20) return;
+            	if(context.getFocusedGui() instanceof Field) return;
     			if(key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) reset(true);
     			KeyCompound.process(window, key, scancode, action, mods);
             }
@@ -195,7 +194,9 @@ public class FMTB {
 				if(field_scrolled = (context.getFocusedGui() instanceof Field)){
 					Field field = (Field)context.getFocusedGui();
 					if(field.id() != null) field.onScroll(yoffset);
-				} else ggr.scrollCallback(window, xoffset, yoffset);
+				}
+				else if(context.getFocusedGui() != null){ Print.console(context.getFocusedGui()); return; }
+				else ggr.scrollCallback(window, xoffset, yoffset);
 			}
 		});
         SystemEventProcessor systemEventProcessor = new SystemEventProcessorImpl();

@@ -11,7 +11,7 @@ import static org.lwjgl.glfw.GLFW.glfwSetInputMode;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.UserInterpanels.TextInput20;
+import net.fexcraft.app.fmt.ui.UserInterpanels.Field;
 import net.fexcraft.lib.common.math.Vec3f;
 
 /** CCR */
@@ -69,7 +69,7 @@ public class GGR {
         }
         else if(button == 1){
         	if(action == GLFW_PRESS){
-        		if(FMTB.context.getFocusedGui() instanceof TextInput20 == false){
+        		if(FMTB.context.getFocusedGui() instanceof Field == false){
             		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
             		grabbed = true;
         		}
@@ -96,7 +96,7 @@ public class GGR {
 	}
 
 	public void scrollCallback(long window, double xoffset, double yoffset){
-		double[] zoom = rotatePoint(yoffset * 0.05f, rotation.xCoord, rotation.yCoord - 90);
+		double[] zoom = rotatePoint(yoffset * 0.5f, rotation.xCoord, rotation.yCoord - 90);
         pos.xCoord += zoom[0]; pos.yCoord += zoom[1]; pos.zCoord += zoom[2];
 	}
 

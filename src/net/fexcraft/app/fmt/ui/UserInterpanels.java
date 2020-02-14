@@ -6,7 +6,9 @@ import java.awt.Desktop;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+import org.joml.Vector4f;
 import org.liquidengine.legui.component.Button;
+import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.Dialog;
 import org.liquidengine.legui.component.Frame;
 import org.liquidengine.legui.component.ImageView;
@@ -15,14 +17,17 @@ import org.liquidengine.legui.component.Panel;
 import org.liquidengine.legui.component.TextInput;
 import org.liquidengine.legui.component.event.textinput.TextInputContentChangeEvent;
 import org.liquidengine.legui.component.optional.align.HorizontalAlign;
+import org.liquidengine.legui.event.CursorEnterEvent;
 import org.liquidengine.legui.event.FocusEvent;
 import org.liquidengine.legui.event.KeyEvent;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.event.WindowSizeEvent;
 import org.liquidengine.legui.image.BufferedImage;
+import org.liquidengine.legui.listener.CursorEnterEventListener;
 import org.liquidengine.legui.listener.FocusEventListener;
 import org.liquidengine.legui.listener.KeyEventListener;
 import org.liquidengine.legui.listener.MouseClickEventListener;
+import org.liquidengine.legui.style.Background;
 import org.liquidengine.legui.style.Style.DisplayType;
 import org.lwjgl.glfw.GLFW;
 
@@ -205,6 +210,7 @@ public class UserInterpanels {
 		public Icon(int index, String adress, MouseClickEventListener listener){
 			super(new BufferedImage(adress)); this.setPosition(1 + (index * 31), 1); setSize(28, 28);
 			this.getListenerMap().addListener(MouseClickEvent.class, listener);
+			this.getStyle().setBorderRadius(0);
 		}
 		
 		public Icon(int index, String adress, Runnable run){
@@ -225,6 +231,9 @@ public class UserInterpanels {
 			this.getStyle().setBorderRadius(0f);
 			Label tatle = new Label(title, 4, 0, 50, 28);
 			this.add(tatle); tatle.getTextState().setFontSize(28);
+			Background background = new Background(); background.setColor(new Vector4f(0.9f, 0.9f, 0.9f, 1));
+			this.getStyle().setBackground(background);
+	        this.getListenerMap().addListener(CursorEnterEvent.class, (CursorEnterEventListener)lis -> { if(!lis.isEntered()) this.checkClose(); });
 			//
 			this.buttons = buttons; this.index = index;
 			if(buttons == null || buttons.length == 0){//assumably this is the exit button
@@ -257,6 +266,10 @@ public class UserInterpanels {
 			this.setFocused(false);
 		}
 		
+		public void checkClose(){
+			if(this.isHovered()) return; for(MenuButton button : buttons) if(button.isHovered()) return; this.toggle(false);
+		}
+		
 	}
 	
 	public static class MenuButton extends Button {
@@ -268,11 +281,13 @@ public class UserInterpanels {
 	        this.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)event -> {
 	            if(event.getAction() == CLICK){ run.run(); entry.toggle(false); } else return;
 	        });
+	        this.getListenerMap().addListener(CursorEnterEvent.class, (CursorEnterEventListener)lis -> entry.checkClose());
 		}
 		
 		public MenuButton(String string, MouseClickEventListener listener){
 			super(translate(string)); this.getStyle().setBorderRadius(0f);
 	        this.getListenerMap().addListener(MouseClickEvent.class, listener);
+	        this.getListenerMap().addListener(CursorEnterEvent.class, (CursorEnterEventListener)lis -> entry.checkClose());
 		}
 		
 		public MenuButton(String string){
@@ -316,12 +331,12 @@ public class UserInterpanels {
 	public static class TextInput20 extends TextInput {
 
 		public TextInput20(String string, int x, int y, int w, int h){
-			super(string, x, y, w, h); getTextState().setFontSize(20f);
+			super(string, x, y, w, h); getTextState().setFontSize(20f); setupHoverCheck(this);
 		}
 
 		@SuppressWarnings("unchecked")
 		public TextInput20(Setting setting, int x, int y, int w, int h) {
-			this(setting.toString(), x, y, w, h);
+			this(setting.toString(), x, y, w, h); setupHoverCheck(this);
 			this.addTextInputContentChangeEventListener(event -> {
 				String string = validateString(event);
 				if(setting.getType() == Type.STRING) setting.setValue(string);
@@ -355,11 +370,11 @@ public class UserInterpanels {
 	public static class NumberInput20 extends TextInput implements Field {
 
 		public NumberInput20(int x, int y, int w, int h){
-			super("0", x, y, w, h); getTextState().setFontSize(20f);
+			super("0", x, y, w, h); getTextState().setFontSize(20f); setupHoverCheck(this);
 		}
 		
 		public NumberInput20(Setting setting, int x, int y, int w, int h){
-			super(setting.toString(), x, y, w, h); getTextState().setFontSize(20f);
+			super(setting.toString(), x, y, w, h); getTextState().setFontSize(20f); setupHoverCheck(this);
 			getListenerMap().addListener(FocusEvent.class, (FocusEventListener)listener -> {
 				if(!listener.isFocused()){ setting.setValue((float)getValue()); }
 			});
@@ -441,14 +456,14 @@ public class UserInterpanels {
 		private String fieldid;
 		
 		public BoolButton(String id, int x, int y, int w, int h){
-			super("false", x, y, w, h); this.fieldid = id; this.getStyle().setBorderRadius(0f);
+			super("false", x, y, w, h); this.fieldid = id; this.getStyle().setBorderRadius(0f); setupHoverCheck(this);
 	        this.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)event -> {
 	            if(event.getAction() == CLICK){ toggle(); } else return;
 	        });
 		}
 		
 		public BoolButton(Setting setting, int x, int y, int w, int h){
-			super("false", x, y, w, h); this.getStyle().setBorderRadius(0f);
+			super("false", x, y, w, h); this.getStyle().setBorderRadius(0f); setupHoverCheck(this);
 	        this.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)event -> {
 	            if(event.getAction() == CLICK){
 	    			setting.toggle(); getTextState().setText(setting.getBooleanValue() + "");
@@ -501,6 +516,15 @@ public class UserInterpanels {
 
 		public String id();
 		
+	}
+
+	private static void setupHoverCheck(Component component){
+		component.getListenerMap().addListener(CursorEnterEvent.class, listener -> {
+			if(listener.isEntered()) FMTB.context.setFocusedGui(component);
+		});
+		component.getListenerMap().addListener(MouseClickEvent.class, listener -> {
+			if(listener.getAction() == CLICK && FMTB.context.getFocusedGui() == component && !component.isFocused())component.setFocused(true);
+		});
 	}
 	
 	public static class Button20 extends Button {
