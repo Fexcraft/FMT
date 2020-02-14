@@ -13,6 +13,7 @@ import org.liquidengine.legui.listener.MouseClickEventListener;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.UserInterpanels.BoolButton;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Button20;
+import net.fexcraft.app.fmt.ui.UserInterpanels.ColorInput20;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Dialog20;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Label20;
 import net.fexcraft.app.fmt.ui.UserInterpanels.NumberInput20;
@@ -41,11 +42,14 @@ public class SettingsBox {
         	if(setting.getType().isBoolean()){
         		panel.getContainer().add(new BoolButton(setting, 190, 10 + (index * 30), 290, 20));
         	}
-        	else if(setting.getType() == Type.STRING || setting.getType() == Type.FLOAT_ARRAY || setting.getType() == Type.RGB){
+        	else if(setting.getType() == Type.STRING || setting.getType() == Type.FLOAT_ARRAY){
         		panel.getContainer().add(new TextInput20(setting, 190, 10 + (index * 30), 290, 20));
         	}
         	else if(setting.getType() == Type.FLOAT || setting.getType() == Type.INTEGER){
         		panel.getContainer().add(new NumberInput20(setting, 190, 10 + (index * 30), 290, 20));
+        	}
+        	else if(setting.getType() == Type.RGB){
+        		panel.getContainer().add(new ColorInput20(panel.getContainer(), setting, 190, 10 + (index * 30), 290, 20));
         	}
         	index++;
         }

@@ -3,6 +3,7 @@ package net.fexcraft.app.fmt.ui;
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
 import java.awt.Desktop;
+import java.nio.ByteBuffer;
 import java.text.NumberFormat;
 import java.util.Locale;
 
@@ -30,6 +31,8 @@ import org.liquidengine.legui.listener.MouseClickEventListener;
 import org.liquidengine.legui.style.Background;
 import org.liquidengine.legui.style.Style.DisplayType;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.util.tinyfd.TinyFileDialogs;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager;
@@ -407,11 +410,6 @@ public class UserInterpanels {
 					FMTB.MODEL.updateValue(this, id);
 				}
 			});
-			/*getListenerMap().addListener(ScrollEvent.class, (ScrollEventListener)listener -> {
-				//Print.console(listener.getTargetComponent(), listener.getYoffset());
-				//apply(tryAdd(getValue(), true, FMTB.MODEL.rate)); Print.console(value);
-				FMTB.MODEL.updateValue(this, id, true);
-			});*/
 			return this;
 		}
 		
@@ -504,6 +502,95 @@ public class UserInterpanels {
 		
 	}
 	
+	public static class ColorInput20 extends TextInput implements Field {
+
+		private String fieldid;
+		private Integer value = null;
+
+		@SuppressWarnings("unchecked")
+		public ColorInput20(Component root, String field, int x, int y, int w, int h){
+			super("0xffffff", x, y, root == null ? w : w - 40, h); fieldid = field;setupHoverCheck(this);
+			addTextInputContentChangeEventListener(event -> {
+				UserInterpanels.validateColorString(event); value = null;
+			});
+			getListenerMap().addListener(FocusEvent.class, (FocusEventListener)listener -> {
+				if(!listener.isFocused()){
+					FMTB.MODEL.updateValue(this, fieldid);
+				}
+			});
+			getListenerMap().addListener(KeyEvent.class, (KeyEventListener)listener -> {
+				if(listener.getKey() == GLFW.GLFW_KEY_ENTER){
+					FMTB.MODEL.updateValue(this, fieldid);
+				}
+			});
+			if(root != null){
+				Button20 button = new Button20("CP", x + w - 35, y, 30, h);
+				button.getListenerMap().addListener(MouseClickEvent.class, event -> {
+					if(event.getAction() == CLICK){
+	                    try(MemoryStack stack = MemoryStack.stackPush()) {
+	                        ByteBuffer color = stack.malloc(3);
+	                        String result = TinyFileDialogs.tinyfd_colorChooser("Choose A Color", "#" + Integer.toHexString((int)getValue()), null, color);
+							if(result == null) return; this.getTextState().setText(result); value = null; FMTB.MODEL.updateValue(this, fieldid);
+	                    }
+					}
+				}); root.add(button);
+			}
+		}
+		
+		public ColorInput20(Component root, Setting setting, int x, int y, int w, int h){
+			super(setting.toString(), x, y, root == null ? w : w - 40, h); getTextState().setFontSize(20f); setupHoverCheck(this);
+			getListenerMap().addListener(FocusEvent.class, (FocusEventListener)listener -> {
+				if(!listener.isFocused()){ ((RGB)setting.getValue()).packed = (int)getValue(); }
+			});
+			getListenerMap().addListener(KeyEvent.class, (KeyEventListener)listener -> {
+				if(listener.getKey() == GLFW.GLFW_KEY_ENTER){ ((RGB)setting.getValue()).packed = (int)getValue(); }
+			});
+			if(root != null){
+				Button20 button = new Button20("CP", x + w - 35, y, 30, h);
+				button.getListenerMap().addListener(MouseClickEvent.class, event -> {
+					if(event.getAction() == CLICK){
+	                    try(MemoryStack stack = MemoryStack.stackPush()) {
+	                        ByteBuffer color = stack.malloc(3);
+	                        String result = TinyFileDialogs.tinyfd_colorChooser("Choose A Color", "#" + Integer.toHexString((int)getValue()), null, color);
+							if(result == null) return; this.getTextState().setText(result); value = null; ((RGB)setting.getValue()).packed = (int)getValue();
+	                    }
+					}
+				}); root.add(button);
+			}
+		}
+		
+		@Override
+		public float getValue(){
+			if(value != null) return value; float newval = 0;
+			String text = this.getTextState().getText().replace("#", "").replace("0x", "");
+			try{ newval = Integer.parseInt(text, 16); } catch(Exception e){ e.printStackTrace(); }
+			apply(newval); return value = (int)newval;
+		}
+
+		@Override
+		public float tryAdd(float flat, boolean positive, float rate){
+			flat += positive ? rate : -rate; return (int)flat;
+		}
+
+		@Override
+		public void apply(float val){
+			getTextState().setText("#" + Integer.toHexString(value = (int)val));
+			setCaretPosition(getTextState().getText().length());
+		}
+
+		@Override
+		public void onScroll(double yoffset){
+			apply(tryAdd(getValue(), yoffset > 0, FMTB.MODEL.rate));
+			FMTB.MODEL.updateValue(this, fieldid, true);
+		}
+
+		@Override
+		public String id(){
+			return fieldid;
+		}
+		
+	}
+	
 	public static interface Field {
 
 		public float getValue();
@@ -553,6 +640,15 @@ public class UserInterpanels {
 
 	public static String validateString(TextInputContentChangeEvent<TextInput20> event){
 		String newtext = event.getNewValue().replaceAll("[^A-Za-z0-9,\\.\\-_ ]", "");
+		//Print.console(newtext + " / " + event.getNewValue());
+		if(!newtext.equals(event.getNewValue())){
+			event.getTargetComponent().getTextState().setText(newtext);
+			event.getTargetComponent().setCaretPosition(newtext.length());
+		} return newtext;
+	}
+
+	public static String validateColorString(TextInputContentChangeEvent<ColorInput20> event){
+		String newtext = event.getNewValue().replaceAll("[^A-Fa-f0-9#x]", "");
 		//Print.console(newtext + " / " + event.getNewValue());
 		if(!newtext.equals(event.getNewValue())){
 			event.getTargetComponent().getTextState().setText(newtext);
