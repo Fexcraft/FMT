@@ -9,6 +9,7 @@ import java.util.Locale;
 import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.component.Dialog;
 import org.liquidengine.legui.component.Frame;
+import org.liquidengine.legui.component.ImageView;
 import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.Panel;
 import org.liquidengine.legui.component.TextInput;
@@ -18,6 +19,7 @@ import org.liquidengine.legui.event.FocusEvent;
 import org.liquidengine.legui.event.KeyEvent;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.event.WindowSizeEvent;
+import org.liquidengine.legui.image.BufferedImage;
 import org.liquidengine.legui.listener.FocusEventListener;
 import org.liquidengine.legui.listener.KeyEventListener;
 import org.liquidengine.legui.listener.MouseClickEventListener;
@@ -64,6 +66,12 @@ public class UserInterpanels {
 	public static void addToolbarButtons(Frame frame){
 		Panel toolbar = new Panel(0, 0, FMTB.WIDTH, 30); frame.getContainer().add(toolbar);
 		toolbar.getListenerMap().addListener(WindowSizeEvent.class, event -> toolbar.setSize(event.getWidth(), 30));
+		frame.getContainer().add(new Icon(0, "./resources/textures/icons/toolbar/info.png", NOT_AVAILABLE_YET));
+		frame.getContainer().add(new Icon(1, "./resources/textures/icons/toolbar/new.png", () -> SaveLoad.openNewModel()));
+		frame.getContainer().add(new Icon(2, "./resources/textures/icons/toolbar/open.png", () -> SaveLoad.openModel()));
+		frame.getContainer().add(new Icon(3, "./resources/textures/icons/toolbar/save.png", () -> SaveLoad.saveModel(false, false)));
+		frame.getContainer().add(new Icon(4, "./resources/textures/icons/toolbar/profile.png", NOT_AVAILABLE_YET));
+		frame.getContainer().add(new Icon(5, "./resources/textures/icons/toolbar/settings.png", () -> SettingsBox.openFMTSettings()));
 		frame.getContainer().add(new MenuEntry(0, translate("toolbar.file"),
 			new MenuButton("toolbar.file.new_model", () -> SaveLoad.openNewModel()),
 			new MenuButton("toolbar.file.open", () -> SaveLoad.openModel()),
@@ -71,7 +79,7 @@ public class UserInterpanels {
 			new MenuButton("toolbar.file.save_as", () -> SaveLoad.saveModel(true, false)),
 			new MenuButton("toolbar.file.import", () -> PorterManager.handleImport()),
 			new MenuButton("toolbar.file.export", () -> PorterManager.handleExport()),
-			new MenuButton("toolbar.file.settings", () -> SettingsBox.open(translate("toolbar.file.settings"), Settings.SETTINGS.values(), true, settings -> {})),
+			new MenuButton("toolbar.file.settings", () -> SettingsBox.openFMTSettings()),
 			new MenuButton("toolbar.file.exit",  () -> SaveLoad.checkIfShouldSave(true, false))
 		));
 		frame.getContainer().add(new MenuEntry(1, translate("toolbar.utils"),
@@ -192,6 +200,19 @@ public class UserInterpanels {
 		frame.getContainer().add(new MenuEntry(6, translate("toolbar.exit")));
 	}
 	
+	public static class Icon extends ImageView {
+		
+		public Icon(int index, String adress, MouseClickEventListener listener){
+			super(new BufferedImage(adress)); this.setPosition(1 + (index * 31), 1); setSize(28, 28);
+			this.getListenerMap().addListener(MouseClickEvent.class, listener);
+		}
+		
+		public Icon(int index, String adress, Runnable run){
+			this(index, adress, (MouseClickEventListener)event -> { if(event.getAction() == CLICK){ run.run(); } });
+		}
+		
+	}
+	
 	public static class MenuEntry extends Panel {
 		
 		private MenuButton[] buttons;
@@ -200,7 +221,7 @@ public class UserInterpanels {
 		public static int size = 150;
 		
 		public MenuEntry(int index, String title, MenuButton... buttons){
-			super(1 + (index * (size + 2)), 1, size, 28);
+			super(187 + (index * (size + 2)), 1, size, 28);
 			this.getStyle().setBorderRadius(0f);
 			Label tatle = new Label(title, 4, 0, 50, 28);
 			this.add(tatle); tatle.getTextState().setFontSize(28);

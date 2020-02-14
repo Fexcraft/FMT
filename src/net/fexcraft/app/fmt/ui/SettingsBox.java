@@ -17,6 +17,7 @@ import net.fexcraft.app.fmt.ui.UserInterpanels.Dialog20;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Label20;
 import net.fexcraft.app.fmt.ui.UserInterpanels.NumberInput20;
 import net.fexcraft.app.fmt.ui.UserInterpanels.TextInput20;
+import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.utils.Settings.Type;
 
@@ -63,6 +64,10 @@ public class SettingsBox {
 		
 		public void process(Map<String, Setting> settings);
 		
+	}
+
+	public static void openFMTSettings(){
+		SettingsBox.open(UserInterpanels.translate("toolbar.file.settings"), Settings.SETTINGS.values(), true, settings -> {});
 	}
 
 }

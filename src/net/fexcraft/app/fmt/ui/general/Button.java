@@ -45,12 +45,7 @@ public class Button extends Element {
 	public void setupSubmenu(){}
 
 	public Button setText(String string, boolean centered){
-		text = string; this.centered = centered;
-		if(root instanceof Toolbar){
-			int length = FontRenderer.getWidth(text, FontType.BOLD);
-			if(length + 8 > width) width = length + 8;
-		}
-		return this;
+		text = string; this.centered = centered; return this;
 	}
 
 	public Button setText(String string, int texxoff, int texyoff){
