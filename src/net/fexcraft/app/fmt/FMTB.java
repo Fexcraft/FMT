@@ -195,7 +195,7 @@ public class FMTB {
 					Field field = (Field)context.getFocusedGui();
 					if(field.id() != null) field.onScroll(yoffset);
 				}
-				else if(context.getFocusedGui() != null){ Print.console(context.getFocusedGui()); return; }
+				else if(context.getFocusedGui() != null) return;
 				else ggr.scrollCallback(window, xoffset, yoffset);
 			}
 		});
