@@ -28,6 +28,7 @@ import net.fexcraft.app.fmt.ui.UserInterpanels.NumberInput20;
 import net.fexcraft.app.fmt.ui.UserInterpanels.TextInput20;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
+import net.fexcraft.app.fmt.utils.TextureUpdate;
 import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.ShapeType;
@@ -467,6 +468,8 @@ public class Editors {
 			model.setSize(296, pass + 52);
 	        this.addSub(model); pass = -20;
 	        //
+	        
+	        //
 	        reOrderWidgets();
 		}
 
@@ -487,7 +490,11 @@ public class Editors {
 		}
 
 		private void updateModelTexSize(SelectBoxChangeSelectionEvent<Float> event, Boolean bool){
-			//
+			if(FMTB.MODEL == null) return; int value = (int)(event.getNewValue() + 0f);
+			if(bool == null) FMTB.MODEL.textureScale = value;
+			else if(bool) FMTB.MODEL.textureSizeX = value;
+			else FMTB.MODEL.textureSizeY = value;
+			TextureUpdate.updateSize(null); return;
 		}
 		
 	}
