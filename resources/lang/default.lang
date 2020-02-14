@@ -125,6 +125,12 @@ editor.model_group.model.texture_size=Texture [U/V/Up-Scale]
 editor.model_group.model.texture=Model Texture
 editor.model_group.model.texture.select=Select a model texture file.
 editor.model_group.model.name=Model Name
+editor.model_group.group=Group Settings
+editor.model_group.group.color=Group Preview Color/Overlay
+editor.model_group.group.name=Group Name/ID
+editor.model_group.group.texture_size=Texture [U/V/Up-Scale]
+editor.model_group.group.texture=Group Texture
+editor.model_group.group.texture.select=Select a group texture file.
 editor.model_group.group.animator_settings=Animator Settings
 
 # Dialogs

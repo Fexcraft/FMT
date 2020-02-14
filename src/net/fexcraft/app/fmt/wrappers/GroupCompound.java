@@ -25,6 +25,7 @@ import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.lib.common.Static;
+import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
 
 public class GroupCompound {
@@ -383,34 +384,27 @@ public class GroupCompound {
 			GeneralEditor.marker_scale.apply(poly.getFloat("marker_scale", true, false, false));
 			GeneralEditor.marker_angle.apply(poly.getFloat("marker_angle", true, false, false));
 		}
-		/*TurboList list = this.getFirstSelectedGroup();
+		TurboList list = this.getFirstSelectedGroup();
 		if(list == null){
-			Editor.getGlobalField("group_rgb0").applyChange(0);
-			Editor.getGlobalField("group_rgb1").applyChange(0);
-			Editor.getGlobalField("group_rgb2").applyChange(0);
-			Editor.getGlobalField("group_name").setText("no polygon(s) selected", true);
-			Editor.getGlobalField("group_texture").setText("no polygon(s) selected", true);
-			DropDownField.getField("group_texx").setText("0", true);
-			DropDownField.getField("group_texy").setText("0", true);
-			DropDownField.getField("group_texz").setText("0", true);
-			DropDownField.getField("group_animator").setText("no polygon(s) selected", true);
+			ModelGroupEditor.group_color.apply(0xffffff);
+			ModelGroupEditor.group_name.getTextState().setText(Editors.NO_POLYGON_SELECTED);
+			ModelGroupEditor.group_texture.getTextState().setText(Editors.NO_POLYGON_SELECTED);
+			ModelGroupEditor.g_tex_x.setSelected(8f, true);
+			ModelGroupEditor.g_tex_y.setSelected(8f, true);
+			ModelGroupEditor.g_tex_s.setSelected(8f, true);
 		}
 		else{
-			byte[] arr = list.color == null ? RGB.WHITE.toByteArray() : list.color.toByteArray();
-			Editor.getGlobalField("group_rgb0").applyChange(arr[0] + 128);
-			Editor.getGlobalField("group_rgb1").applyChange(arr[1] + 128);
-			Editor.getGlobalField("group_rgb2").applyChange(arr[2] + 128);
-			Editor.getGlobalField("group_name").setText(list.id, true);
-			DropDownField.getField("group_texx").setText("0", true);
-			DropDownField.getField("group_texy").setText("0", true);
-			DropDownField.getField("group_texz").setText("0", true);
-			DropDownField.getField("group_animator").setText("Select Animator", true);
+			ModelGroupEditor.group_color.apply((list.color == null ? RGB.WHITE : list.color).packed);
+			ModelGroupEditor.group_name.getTextState().setText(list.id);
+			ModelGroupEditor.g_tex_x.setSelected(list.textureX, true);
+			ModelGroupEditor.g_tex_y.setSelected(list.textureY, true);
+			ModelGroupEditor.g_tex_s.setSelected(list.textureS, true);
 			//
 			String texname = list.getGroupTexture() + "";
 			if(texname.length() > 32){ texname = texname.substring(texname.length() - 32, texname.length()); }
-			Editor.getGlobalField("group_texture").setText(texname, true);
+			ModelGroupEditor.group_texture.getTextState().setText(texname);
 		};
-		((Container)Editor.get("model_group_editor").getElement("animations")).addSubElements();*/
+		/*((Container)Editor.get("model_group_editor").getElement("animations")).addSubElements();*/
 		//
 		ModelGroupEditor.pos_x.apply(pos == null ? 0 : pos.xCoord);
 		ModelGroupEditor.pos_y.apply(pos == null ? 0 : pos.yCoord);
@@ -421,9 +415,9 @@ public class GroupCompound {
 		ModelGroupEditor.rot_x.apply(pos == null ? 0 : rot.xCoord);
 		ModelGroupEditor.rot_y.apply(pos == null ? 0 : rot.yCoord);
 		ModelGroupEditor.rot_z.apply(pos == null ? 0 : rot.zCoord);
-		ModelGroupEditor.tex_x.setSelected((float)textureSizeX, true);
-		ModelGroupEditor.tex_y.setSelected((float)textureSizeY, true);
-		ModelGroupEditor.tex_s.setSelected((float)textureScale, true);
+		ModelGroupEditor.m_tex_x.setSelected((float)textureSizeX, true);
+		ModelGroupEditor.m_tex_y.setSelected((float)textureSizeY, true);
+		ModelGroupEditor.m_tex_s.setSelected((float)textureScale, true);
 		ModelGroupEditor.model_name.getTextState().setText(name);
 		//
 		String texname = this.texture + "";

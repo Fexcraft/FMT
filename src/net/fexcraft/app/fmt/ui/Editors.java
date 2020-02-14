@@ -34,6 +34,7 @@ import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.ShapeType;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.Static;
+import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.common.utils.Print;
 
@@ -402,7 +403,10 @@ public class Editors {
 		public static NumberInput20 pos_x, pos_y, pos_z, poss_x, poss_y, poss_z;
 		public static NumberInput20 rot_x, rot_y, rot_z;
 		public static TextInput model_texture, model_name;
-		public static SelectBox<Float> tex_x, tex_y, tex_s;
+		public static SelectBox<Float> m_tex_x, m_tex_y, m_tex_s;
+		public static ColorInput20 group_color;
+		public static TextInput group_name, group_texture;
+		public static SelectBox<Float> g_tex_x, g_tex_y, g_tex_s;
 		private String name_cache;
 		
 		@SuppressWarnings("unchecked")
@@ -422,24 +426,24 @@ public class Editors {
 			model.getContainer().add(rot_y = new NumberInput20(102, pass, 90, 20).setup(-360, 360, true, () -> updateModelRot()));
 			model.getContainer().add(rot_z = new NumberInput20(200, pass, 90, 20).setup(-360, 360, true, () -> updateModelRot()));
 			model.getContainer().add(new Label20(translate("editor.model_group.model.texture_size"), 3, pass += 24, 290, 20));
-			model.getContainer().add(tex_x = new SelectBox<>(4, pass += 24, 90, 20));
-	        for(int size : texsizes) tex_x.addElement((float)size);
-	        tex_x.getSelectBoxElements().forEach(elm -> elm.getTextState().setFontSize(20f));
-	        tex_x.setVisibleCount(10); tex_x.setElementHeight(20);
-	        tex_x.getSelectionButton().getTextState().setFontSize(20f);
-	        tex_x.addSelectBoxChangeSelectionEventListener(event -> updateModelTexSize(event, true));
-			model.getContainer().add(tex_y = new SelectBox<>(102, pass, 90, 20));
-	        for(int size : texsizes) tex_y.addElement((float)size);
-	        tex_y.getSelectBoxElements().forEach(elm -> elm.getTextState().setFontSize(20f));
-	        tex_y.setVisibleCount(10); tex_y.setElementHeight(20);
-	        tex_y.getSelectionButton().getTextState().setFontSize(20f);
-	        tex_y.addSelectBoxChangeSelectionEventListener(event -> updateModelTexSize(event, false));
-			model.getContainer().add(tex_s = new SelectBox<>(200, pass, 90, 20));
-	        tex_s.addElement(1f); tex_s.addElement(2f); tex_s.addElement(3f); tex_s.addElement(4f);
-	        tex_s.getSelectBoxElements().forEach(elm -> elm.getTextState().setFontSize(20f));
-	        tex_s.setVisibleCount(10); tex_s.setElementHeight(20);
-	        tex_s.getSelectionButton().getTextState().setFontSize(20f);
-	        tex_s.addSelectBoxChangeSelectionEventListener(event -> updateModelTexSize(event, null));
+			model.getContainer().add(m_tex_x = new SelectBox<>(4, pass += 24, 90, 20));
+	        for(int size : texsizes) m_tex_x.addElement((float)size);
+	        m_tex_x.getSelectBoxElements().forEach(elm -> elm.getTextState().setFontSize(20f));
+	        m_tex_x.setVisibleCount(10); m_tex_x.setElementHeight(20);
+	        m_tex_x.getSelectionButton().getTextState().setFontSize(20f);
+	        m_tex_x.addSelectBoxChangeSelectionEventListener(event -> updateModelTexSize(event, true));
+			model.getContainer().add(m_tex_y = new SelectBox<>(102, pass, 90, 20));
+	        for(int size : texsizes) m_tex_y.addElement((float)size);
+	        m_tex_y.getSelectBoxElements().forEach(elm -> elm.getTextState().setFontSize(20f));
+	        m_tex_y.setVisibleCount(10); m_tex_y.setElementHeight(20);
+	        m_tex_y.getSelectionButton().getTextState().setFontSize(20f);
+	        m_tex_y.addSelectBoxChangeSelectionEventListener(event -> updateModelTexSize(event, false));
+			model.getContainer().add(m_tex_s = new SelectBox<>(200, pass, 90, 20));
+	        m_tex_s.addElement(1f); m_tex_s.addElement(2f); m_tex_s.addElement(3f); m_tex_s.addElement(4f);
+	        m_tex_s.getSelectBoxElements().forEach(elm -> elm.getTextState().setFontSize(20f));
+	        m_tex_s.setVisibleCount(10); m_tex_s.setElementHeight(20);
+	        m_tex_s.getSelectionButton().getTextState().setFontSize(20f);
+	        m_tex_s.addSelectBoxChangeSelectionEventListener(event -> updateModelTexSize(event, null));
 	        model.getContainer().add(new Label20(translate("editor.model_group.model.texture"), 3, pass += 24, 290, 20));
 			model.getContainer().add(model_texture = new TextInput20(FMTB.MODEL.texture, 3, pass += 24, 290, 20));
 			model_texture.getListenerMap().addListener(MouseClickEvent.class, listener -> {
@@ -468,7 +472,86 @@ public class Editors {
 			model.setSize(296, pass + 52);
 	        this.addSub(model); pass = -20;
 	        //
-	        
+			EditorWidget group = new EditorWidget(this, translate("editor.model_group.group"), 0, 0, 0, 0);
+			group.getContainer().add(new Label20(translate("editor.model_group.group.color"), 3, pass += 24, 290, 20));
+			group.getContainer().add(group_color = new ColorInput20(group.getContainer(), result -> {
+				TurboList sel = FMTB.MODEL.getFirstSelectedGroup(); if(sel == null) return;
+				if(sel.color == null) sel.color = RGB.WHITE.copy(); sel.color.packed = result;
+			}, 3, pass += 24, 290, 20));
+			group.getContainer().add(new Label20(translate("editor.model_group.group.name"), 3, pass += 24, 290, 20));
+			group.getContainer().add(group_name = new TextInput20(NO_POLYGON_SELECTED, 3, pass += 24, 290, 20));
+			group_name.addTextInputContentChangeEventListener(listener -> name_cache = UserInterpanels.validateString(listener));
+			group_name.getListenerMap().addListener(FocusEvent.class, listener -> {
+				if(!listener.isFocused() && !FMTB.MODEL.getSelected().isEmpty()){
+					TurboList list = null;
+					if(FMTB.MODEL.getDirectlySelectedGroupsAmount() == 1){
+						if(FMTB.MODEL.getGroups().isEmpty()) return;
+						list = FMTB.MODEL.getFirstSelectedGroup();
+						list = FMTB.MODEL.getGroups().remove(list.id);
+						list.id = group_name.getTextState().getText().replace(" ", "_").replace("-", "_").replace(".", "");
+						while(FMTB.MODEL.getGroups().contains(list.id)){ list.id += "_"; }
+						FMTB.MODEL.getGroups().add(list);
+					}
+					else{
+						ArrayList<TurboList> arrlist = FMTB.MODEL.getDirectlySelectedGroups();
+						for(int i = 0; i < arrlist.size(); i++){
+							list = FMTB.MODEL.getGroups().remove(arrlist.get(i).id); if(list == null) continue;
+							list.id = group_name.getTextState().getText().replace(" ", "_").replace("-", "_").replace(".", "");
+							list.id += list.id.contains("_") ? "_" + i : i + "";
+							while(FMTB.MODEL.getGroups().contains(list.id)){ list.id += "_"; }
+							FMTB.MODEL.getGroups().add(list);
+						}
+					}
+					FMTB.MODEL.getSelected().clear();
+				}
+			});
+			group.getContainer().add(new Label20(translate("editor.model_group.group.texture_size"), 3, pass += 24, 290, 20));
+			group.getContainer().add(g_tex_x = new SelectBox<>(4, pass += 24, 90, 20));
+	        for(int size : texsizes) g_tex_x.addElement((float)size);
+	        g_tex_x.getSelectBoxElements().forEach(elm -> elm.getTextState().setFontSize(20f));
+	        g_tex_x.setVisibleCount(10); g_tex_x.setElementHeight(20);
+	        g_tex_x.getSelectionButton().getTextState().setFontSize(20f);
+	        g_tex_x.addSelectBoxChangeSelectionEventListener(event -> updateGroupTexSize(event, true));
+	        group.getContainer().add(g_tex_y = new SelectBox<>(102, pass, 90, 20));
+	        for(int size : texsizes) g_tex_y.addElement((float)size);
+	        g_tex_y.getSelectBoxElements().forEach(elm -> elm.getTextState().setFontSize(20f));
+	        g_tex_y.setVisibleCount(10); g_tex_y.setElementHeight(20);
+	        g_tex_y.getSelectionButton().getTextState().setFontSize(20f);
+	        g_tex_y.addSelectBoxChangeSelectionEventListener(event -> updateGroupTexSize(event, false));
+	        group.getContainer().add(g_tex_s = new SelectBox<>(200, pass, 90, 20));
+	        g_tex_s.addElement(1f); g_tex_s.addElement(2f); g_tex_s.addElement(3f); g_tex_s.addElement(4f);
+	        g_tex_s.getSelectBoxElements().forEach(elm -> elm.getTextState().setFontSize(20f));
+	        g_tex_s.setVisibleCount(10); g_tex_s.setElementHeight(20);
+	        g_tex_s.getSelectionButton().getTextState().setFontSize(20f);
+	        g_tex_s.addSelectBoxChangeSelectionEventListener(event -> updateGroupTexSize(event, null));
+			group.getContainer().add(new Label20(translate("editor.model_group.group.texture"), 3, pass += 24, 290, 20));
+			group.getContainer().add(group_texture = new TextInput20(FMTB.MODEL.texture, 3, pass += 24, 290, 20));
+			group_texture.getListenerMap().addListener(MouseClickEvent.class, listener -> {
+				if(listener.getAction() == CLICK){
+					if(FMTB.MODEL.getSelected().isEmpty()) return;
+					if(listener.getButton() == MouseButton.MOUSE_BUTTON_LEFT){
+						ArrayList<TurboList> arrlist = FMTB.MODEL.getDirectlySelectedGroups();
+						for(TurboList list : arrlist){
+							if(TextureManager.getTexture(list.getGroupTexture(), true) != null){
+								FMTB.MODEL.setTexture(null); TextureManager.removeTexture(list.getGroupTexture());
+							} list.setTexture(null, 0, 0); list.forEach(mrt -> mrt.recompile());
+						} FMTB.MODEL.updateFields();
+					}
+					else if(listener.getButton() == MouseButton.MOUSE_BUTTON_RIGHT){
+						FileSelector.select(translate("editor.model_group.group.texture.select"), "./", FileSelector.TYPE_PNG, false, file -> {
+							String name = file.getPath(); TextureManager.loadTextureFromFile(name, file);
+							TextureManager.Texture texture = TextureManager.getTexture(name, false);
+							ArrayList<TurboList> arrlist = FMTB.MODEL.getDirectlySelectedGroups();
+							for(TurboList list : arrlist){
+								list.setTexture(name, texture.getWidth(), texture.getHeight());
+								list.recompile();
+							} FMTB.MODEL.updateFields(); 
+						}); return;
+					}
+				}
+			});
+			group.setSize(296, pass + 52);
+	        this.addSub(group); pass = -20;
 	        //
 	        reOrderWidgets();
 		}
@@ -495,6 +578,18 @@ public class Editors {
 			else if(bool) FMTB.MODEL.textureSizeX = value;
 			else FMTB.MODEL.textureSizeY = value;
 			TextureUpdate.updateSize(null); return;
+		}
+
+		private void updateGroupTexSize(SelectBoxChangeSelectionEvent<Float> event, Boolean bool){
+			if(FMTB.MODEL == null) return; int value = (int)(event.getNewValue() + 0f);
+			if(FMTB.MODEL.getDirectlySelectedGroupsAmount() == 0) return;
+			for(TurboList list : FMTB.MODEL.getDirectlySelectedGroups()){
+				if(bool == null) FMTB.MODEL.textureScale = value;
+				else if(bool) FMTB.MODEL.textureSizeX = value;
+				else FMTB.MODEL.textureSizeY = value;
+				TextureUpdate.updateSize(list);
+				list.forEach(mrt -> mrt.recompile());
+			} return;
 		}
 		
 	}

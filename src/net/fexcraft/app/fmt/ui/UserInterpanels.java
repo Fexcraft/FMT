@@ -6,6 +6,7 @@ import java.awt.Desktop;
 import java.nio.ByteBuffer;
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.function.Consumer;
 
 import org.joml.Vector4f;
 import org.liquidengine.legui.component.Button;
@@ -569,6 +570,28 @@ public class UserInterpanels {
 	                        ByteBuffer color = stack.malloc(3);
 	                        String result = TinyFileDialogs.tinyfd_colorChooser("Choose A Color", "#" + Integer.toHexString((int)getValue()), null, color);
 							if(result == null) return; this.getTextState().setText(result); value = null; ((RGB)setting.getValue()).packed = (int)getValue();
+	                    }
+					}
+				}); root.add(button);
+			}
+		}
+		
+		public ColorInput20(Component root, Consumer<Integer> update, int x, int y, int w, int h){
+			super("#ffffff", x, y, root == null ? w : w - 40, h); getTextState().setFontSize(20f); setupHoverCheck(this);
+			getListenerMap().addListener(FocusEvent.class, (FocusEventListener)listener -> {
+				if(!listener.isFocused()){ update.accept((int)getValue()); }
+			});
+			getListenerMap().addListener(KeyEvent.class, (KeyEventListener)listener -> {
+				if(listener.getKey() == GLFW.GLFW_KEY_ENTER){ update.accept((int)getValue()); }
+			});
+			if(root != null){
+				Button20 button = new Button20("CP", x + w - 35, y, 30, h);
+				button.getListenerMap().addListener(MouseClickEvent.class, event -> {
+					if(event.getAction() == CLICK){
+	                    try(MemoryStack stack = MemoryStack.stackPush()) {
+	                        ByteBuffer color = stack.malloc(3);
+	                        String result = TinyFileDialogs.tinyfd_colorChooser("Choose A Color", "#" + Integer.toHexString((int)getValue()), null, color);
+							if(result == null) return; this.getTextState().setText(result); value = null; update.accept((int)getValue());
 	                    }
 					}
 				}); root.add(button);
