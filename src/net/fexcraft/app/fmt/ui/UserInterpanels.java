@@ -392,6 +392,7 @@ public class UserInterpanels {
 		private boolean floatfield;
 		private float min, max;
 		private Float value = null;
+		private Runnable update;
 		
 		@SuppressWarnings("unchecked")
 		public NumberInput20 setup(String id, float min, float max, boolean flaot){
@@ -400,17 +401,25 @@ public class UserInterpanels {
 				UserInterpanels.validateNumber(event); value = null;
 			});
 			getListenerMap().addListener(FocusEvent.class, (FocusEventListener)listener -> {
-				//Print.console("focus: " + listener.isFocused());
-				if(!listener.isFocused()){
-					//getValue(); Print.console(value);
-					FMTB.MODEL.updateValue(this, id);
-				}
+				if(!listener.isFocused()) FMTB.MODEL.updateValue(this, id);
 			});
 			getListenerMap().addListener(KeyEvent.class, (KeyEventListener)listener -> {
-				if(listener.getKey() == GLFW.GLFW_KEY_ENTER){
-					//getValue(); Print.console(value);
-					FMTB.MODEL.updateValue(this, id);
-				}
+				if(listener.getKey() == GLFW.GLFW_KEY_ENTER) FMTB.MODEL.updateValue(this, id);
+			});
+			return this;
+		}
+		
+		@SuppressWarnings("unchecked")
+		public NumberInput20 setup(float min, float max, boolean flaot, Runnable update){
+			floatfield = flaot; this.min = min; this.max = max; this.update = update;
+			addTextInputContentChangeEventListener(event -> {
+				UserInterpanels.validateNumber(event); value = null;
+			});
+			getListenerMap().addListener(FocusEvent.class, (FocusEventListener)listener -> {
+				if(!listener.isFocused()) update.run();
+			});
+			getListenerMap().addListener(KeyEvent.class, (KeyEventListener)listener -> {
+				if(listener.getKey() == GLFW.GLFW_KEY_ENTER) update.run();
 			});
 			return this;
 		}
@@ -441,12 +450,17 @@ public class UserInterpanels {
 		@Override
 		public void onScroll(double yoffset){
 			apply(tryAdd(getValue(), yoffset > 0, FMTB.MODEL.rate)); //Print.console(value);
-			FMTB.MODEL.updateValue(this, fieldid, true);
+			if(fieldid != null) FMTB.MODEL.updateValue(this, fieldid, true); if(update != null) update.run();
 		}
 
 		@Override
 		public String id(){
 			return fieldid;
+		}
+		
+		@Override
+		public Runnable update(){
+			return update;
 		}
 		
 	}
@@ -604,6 +618,8 @@ public class UserInterpanels {
 		public void onScroll(double yoffset);
 
 		public String id();
+
+		public default Runnable update(){ return null; }
 		
 	}
 

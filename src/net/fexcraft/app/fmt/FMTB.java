@@ -65,6 +65,7 @@ import net.fexcraft.app.fmt.ui.UserInterpanels.Button20;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Dialog24;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Field;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Label20;
+import net.fexcraft.app.fmt.ui.UserInterpanels.TextInput20;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.utils.*;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
@@ -159,7 +160,7 @@ public class FMTB {
         keeper.getChainKeyCallback().add(new GLFWKeyCallback(){
             @Override
             public void invoke(long window, int key, int scancode, int action, int mods){
-            	if(context.getFocusedGui() instanceof Field) return;
+            	if(context.getFocusedGui() instanceof Field || context.getFocusedGui() instanceof TextInput20) return;
     			if(key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) reset(true);
     			KeyCompound.process(window, key, scancode, action, mods);
             }
@@ -193,7 +194,7 @@ public class FMTB {
 			public void invoke(long window, double xoffset, double yoffset){
 				if(field_scrolled = (context.getFocusedGui() instanceof Field)){
 					Field field = (Field)context.getFocusedGui();
-					if(field.id() != null) field.onScroll(yoffset);
+					if(field.id() != null || field.update() != null) field.onScroll(yoffset);
 				}
 				else if(context.getFocusedGui() != null) return;
 				else ggr.scrollCallback(window, xoffset, yoffset);
@@ -239,7 +240,7 @@ public class FMTB {
 					renderUI(true); ImageHelper.doTask();
 				} else renderUI(false);
 			}
-			updateFPS();
+			timer.updateFPS();
             glfwPollEvents();
             glfwSwapBuffers(window);
             systemEventProcessor.processEvents(frame, context);
@@ -255,10 +256,6 @@ public class FMTB {
         glfwDestroyWindow(window);   
         glfwTerminate();
         Settings.save(); StyleSheet.save(); KeyCompound.save(); SessionHandler.save(); System.exit(0);
-	}
-
-	private void updateFPS(){
-		timer.updateFPS();
 	}
 
 	private void setIcon(){

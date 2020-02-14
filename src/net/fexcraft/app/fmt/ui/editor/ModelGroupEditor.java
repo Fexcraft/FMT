@@ -23,70 +23,10 @@ public class ModelGroupEditor extends Editor {
 
 	public ModelGroupEditor(){
 		super("model_group_editor", "editor"); this.setVisible(false);
-		this.elements.add((model = new Container(this, "model", width - 4, 28, 4, 0, null)).setText(translate("editor.model_group.model.title", "Model Settings"), false));
 		this.elements.add((group = new Container(this, "group", width - 4, 28, 4, 0, null)).setText(translate("editor.model_group.group.title", "Group Settings"), false));
 		//this.elements.add((animations = new Container(this, "animations", width - 4, 28, 4, 0, null)).setText(translate("editor.model_group.animations.title", "Group Animations"), false));
 		//
 		int passed = 0;
-		{//model
-			model.getElements().add(new Button(model, "text0", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true)
-				.setText(translate("editor.model_group.model.position", "Position Offset (full unit)"), false));
-			passed += 24; for(int i = 0; i < 3; i++){ final int j = i;
-				model.getElements().add(new TextField(model, "model_pos" + xyz[i], "editor:field", 96, 4 + (i * 102), passed){
-					@Override public void updateNumberField(){ updatePos(this, j, null); }
-					@Override public boolean processScrollWheel(int wheel){ return updatePos(j, wheel > 0); }
-				}.setAsNumberfield(Integer.MIN_VALUE, Integer.MAX_VALUE, true, true));
-			}
-			model.getElements().add(new Button(model, "text1", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true)
-				.setText(translate("editor.model_group.model.rotation", "Rotation Offset (degrees)"), false));
-			passed += 24; for(int i = 0; i < 3; i++){ final int j = i;
-				model.getElements().add(new TextField(model, "model_rot" + xyz[i], "editor:field", 96, 4 + (i * 102), passed){
-					@Override public void updateNumberField(){ updateRot(this, j, null); }
-					@Override public boolean processScrollWheel(int wheel){ return updateRot(j, wheel > 0); }
-				}.setAsNumberfield(8, 4096, true, true));
-			}
-			model.getElements().add(new Button(model, "text2", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true)
-				.setText(translate("editor.model_group.model.texture_size", "Texture [U/V/Scale]"), false));
-			/*passed += 24; for(int i = 0; i < 3; i++){ final int j = i;
-				model.getElements().add(new DropDownField(model, "model_tex" + xyz[i], "editor:field", 96, 4 + (i * 102), passed){
-					@Override
-					public ArrayList<Element> getDropDownButtons(DropDown inst){
-						ArrayList<Element> elements = new ArrayList<>(); DropDownField field = this;
-						int[] arr = j == 2 ? new int[]{ 1, 2, 3, 4 } : accepted_texsiz;
-						for(int i = 0; i < arr.length; i++){ int k = i;
-							elements.add(new DropDown.Button(inst, "model_tex:" + arr[k], "dropdown:button", 0, 26, 0, 0){
-								@Override public boolean processButtonClick(int x, int y, boolean left){ updateModelTexSize(field, j, arr[k]); return true; }
-							}.setText(arr[k] + "", false));
-						}
-						return elements;
-					}
-				});
-			}*/
-			model.getElements().add(new Button(model, "text4", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true)
-				.setText(translate("editor.model_group.model.texture", "Model Texture"), false));
-			model.getElements().add(new TextField(model, "model_texture", "editor:field", 300, 4, passed += 24){
-				@Override
-				public boolean processButtonClick(int x, int y, boolean left){
-					if(!left){
-						if(FMTB.MODEL.texture != null && TextureManager.getTexture(FMTB.MODEL.texture, true) != null){
-							FMTB.MODEL.setTexture(null); TextureManager.removeTexture(FMTB.MODEL.texture);
-						} FMTB.MODEL.updateFields(); return true;
-					}
-					FileSelector.select(translate("editor.model_group.model.texture.select", "Select a model texture file."), "./", FileSelector.TYPE_PNG, false, file -> {
-						String name = file.getPath(); TextureManager.loadTextureFromFile(name, file);
-						FMTB.MODEL.setTexture(name); FMTB.MODEL.updateFields(); 
-					});
-					return true;
-				}
-			}.setText("null", true));
-			model.getElements().add(new Button(model, "text3", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true)
-				.setText(translate("editor.model_group.model.name", "Model Name"), false));
-			model.getElements().add(new TextField(model, "model_name", "editor:field", 300, 4, passed += 24) {
-				@Override public void updateTextField(){ if(FMTB.MODEL == null) return; FMTB.get().setTitle(FMTB.MODEL.name = this.getTextValue()); }
-			}.setText(FMTB.MODEL.name, true));
-			//
-			model.setExpanded(false); passed = 0;
-		}
 		{//group
 			group.getElements().add(new Button(group, "text0", "editor:title", 290, 20, 4, passed += 30, BLACK).setBackgroundless(true)
 				.setText(translate("editor.model_group.group.color","Group Preview Color/Overlay"), false));
@@ -235,7 +175,7 @@ public class ModelGroupEditor extends Editor {
 			}).setText(translate("editor.model_group.animations.title", "Group Animations"), false));
 			animations.setExpanded(false);
 		}
-		this.containers = new Container[]{ model, group, animations }; this.repos();
+		this.containers = new Container[]{ group, animations }; this.repos();
 	}
 	
 	protected boolean updateRGB(Boolean apply, int xyz){

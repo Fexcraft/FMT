@@ -117,6 +117,14 @@ editor.general.texrect_b.face=%s [start x/y, end x/y]
 editor.general.marker=Marker Settings
 editor.general.marker.color=Marker Color [#hex]
 editor.general.marker.biped_display=Biped Display [toggle / rot / scale]
+editor.model_group.model=Model Settings
+editor.model_group.model.position_full=Position Offset (full units)
+editor.model_group.model.position_sixteenth=Position Offset (1/16th)
+editor.model_group.model.rotation=Rotation Offset (degrees)
+editor.model_group.model.texture_size=Texture [U/V/Up-Scale]
+editor.model_group.model.texture=Model Texture
+editor.model_group.model.texture.select=Select a model texture file.
+editor.model_group.model.name=Model Name
 editor.model_group.group.animator_settings=Animator Settings
 
 # Dialogs

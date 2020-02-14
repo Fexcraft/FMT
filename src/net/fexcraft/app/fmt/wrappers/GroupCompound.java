@@ -13,6 +13,7 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.ui.Editors;
 import net.fexcraft.app.fmt.ui.Editors.GeneralEditor;
+import net.fexcraft.app.fmt.ui.Editors.ModelGroupEditor;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Field;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.tree.HelperTree;
@@ -23,6 +24,7 @@ import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.app.fmt.utils.Translator;
+import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.Vec3f;
 
 public class GroupCompound {
@@ -408,23 +410,25 @@ public class GroupCompound {
 			if(texname.length() > 32){ texname = texname.substring(texname.length() - 32, texname.length()); }
 			Editor.getGlobalField("group_texture").setText(texname, true);
 		};
-		((Container)Editor.get("model_group_editor").getElement("animations")).addSubElements();
+		((Container)Editor.get("model_group_editor").getElement("animations")).addSubElements();*/
 		//
-		Editor.getGlobalField("model_posx").applyChange(pos == null ? 0 : pos.xCoord);
-		Editor.getGlobalField("model_posy").applyChange(pos == null ? 0 : pos.yCoord);
-		Editor.getGlobalField("model_posz").applyChange(pos == null ? 0 : pos.zCoord);
-		Editor.getGlobalField("model_rotx").applyChange(rot == null ? 0 : rot.xCoord);
-		Editor.getGlobalField("model_roty").applyChange(rot == null ? 0 : rot.yCoord);
-		Editor.getGlobalField("model_rotz").applyChange(rot == null ? 0 : rot.zCoord);
-		DropDownField.getField("model_texx").setText(this.textureSizeX + "", true);
-		DropDownField.getField("model_texy").setText(this.textureSizeY + "", true);
-		DropDownField.getField("model_texz").setText(this.textureScale + "", true);
-		Editor.getGlobalField("model_name").setText(this.name, true);
-		Editor.EDITORS.forEach(editor -> editor.getMultiplicator().applyChange(rate));
+		ModelGroupEditor.pos_x.apply(pos == null ? 0 : pos.xCoord);
+		ModelGroupEditor.pos_y.apply(pos == null ? 0 : pos.yCoord);
+		ModelGroupEditor.pos_z.apply(pos == null ? 0 : pos.zCoord);
+		ModelGroupEditor.poss_x.apply(pos == null ? 0 : pos.xCoord * Static.sixteenth);
+		ModelGroupEditor.poss_y.apply(pos == null ? 0 : pos.yCoord * Static.sixteenth);
+		ModelGroupEditor.poss_z.apply(pos == null ? 0 : pos.zCoord * Static.sixteenth);
+		ModelGroupEditor.rot_x.apply(pos == null ? 0 : rot.xCoord);
+		ModelGroupEditor.rot_y.apply(pos == null ? 0 : rot.yCoord);
+		ModelGroupEditor.rot_z.apply(pos == null ? 0 : rot.zCoord);
+		ModelGroupEditor.tex_x.setSelected((float)textureSizeX, true);
+		ModelGroupEditor.tex_y.setSelected((float)textureSizeY, true);
+		ModelGroupEditor.tex_s.setSelected((float)textureScale, true);
+		ModelGroupEditor.model_name.getTextState().setText(name);
 		//
 		String texname = this.texture + "";
-		if(texname.length() > 32){ texname = texname.substring(texname.length() - 32, texname.length()); }
-		Editor.getGlobalField("model_texture").setText(texname, true);*/
+		if(texname.length() > 64){ texname = texname.substring(texname.length() - 64, texname.length()); }
+		ModelGroupEditor.model_texture.getTextState().setText(texname);
 	}
 	
 	public float multiply(float flea){
