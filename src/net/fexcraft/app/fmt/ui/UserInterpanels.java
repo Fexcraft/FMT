@@ -69,6 +69,16 @@ public class UserInterpanels {
         okbutton.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> { if(CLICK == e.getAction()) dialog.close(); });
         dialog.getContainer().add(label); dialog.getContainer().add(okbutton); dialog.show(event.getFrame());
 	};
+	public static final Runnable SELECT_TEXTURE = () -> {
+		FileSelector.select(translate("toolbar.textures.select.dialog"), "./", FileSelector.TYPE_PNG, false, file -> {
+			String name = file.getPath(); TextureManager.loadTextureFromFile(name, file); FMTB.MODEL.setTexture(name);
+			//
+			/*Texture tex = TextureManager.getTexture(name, true); if(tex == null) return;
+			if(tex.getWidth() > FMTB.MODEL.textureX) FMTB.MODEL.textureX = tex.getWidth();
+			if(tex.getHeight() > FMTB.MODEL.textureY) FMTB.MODEL.textureY = tex.getHeight();*/
+		});
+	
+	};
 
 	@SuppressWarnings("restriction")
 	public static void addToolbarButtons(Frame frame){
@@ -145,15 +155,7 @@ public class UserInterpanels {
 			new MenuButton("toolbar.shapelist.add_voxel", () -> FMTB.MODEL.add(new VoxelWrapper(FMTB.MODEL, 16, true), "voxels", true))
 		));
 		frame.getContainer().add(new MenuEntry(4, translate("toolbar.textures"),
-			new MenuButton("toolbar.textures.select", () -> {
-				FileSelector.select(translate("toolbar.textures.select.dialog"), "./", FileSelector.TYPE_PNG, false, file -> {
-					String name = file.getPath(); TextureManager.loadTextureFromFile(name, file); FMTB.MODEL.setTexture(name);
-					//
-					/*Texture tex = TextureManager.getTexture(name, true); if(tex == null) return;
-					if(tex.getWidth() > FMTB.MODEL.textureX) FMTB.MODEL.textureX = tex.getWidth();
-					if(tex.getHeight() > FMTB.MODEL.textureY) FMTB.MODEL.textureY = tex.getHeight();*/
-				});
-			}),
+			new MenuButton("toolbar.textures.select", SELECT_TEXTURE),
 			new MenuButton("toolbar.textures.edit", () -> {
 				if(FMTB.MODEL.texture == null) return;
 				Texture texture = TextureManager.getTexture(FMTB.MODEL.texture, true);

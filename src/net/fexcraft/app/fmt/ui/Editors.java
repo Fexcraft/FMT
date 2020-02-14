@@ -23,11 +23,14 @@ import net.fexcraft.app.fmt.ui.UserInterpanels.Dialog20;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Label20;
 import net.fexcraft.app.fmt.ui.UserInterpanels.NumberInput20;
 import net.fexcraft.app.fmt.ui.UserInterpanels.TextInput20;
+import net.fexcraft.app.fmt.utils.TextureManager;
+import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.ShapeType;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.Static;
+import net.fexcraft.lib.common.utils.Print;
 
 public class Editors {
 	
@@ -245,18 +248,12 @@ public class Editors {
 	        	FMTB.MODEL.changeTypeOfSelected(FMTB.MODEL.getSelected(), event.getNewValue().toString());
 	        });
 	        Button20 painttotex = new Button20(translate("editor.general.attributes.painttotexture"), 3, 8 + (pass += 24), 290, 20);
-	        painttotex.getListenerMap().addListener(MouseClickEvent.class, UserInterpanels.NOT_REIMPLEMENTED_YET/*event -> {
+	        painttotex.getListenerMap().addListener(MouseClickEvent.class, event -> {
+	        	if(event.getAction() != CLICK) return;
 				if(FMTB.MODEL.texture == null){
-					String str = translate("dialog.editor.general.attributes.burntotex.notex", "There is no texture loaded.");
-					String ok = translate("dialog.editor.general.attributes.burntotex.notex.confirm", "ok");
-					FMTB.showDialogbox(str, ok, translate("dialog.editor.general.attributes.burntotex.notex.cancel", "load"), DialogBox.NOTHING, () -> {
-						try{
-							FMTB.get().UI.getElement("toolbar").getElement("textures").getElement("menu").getElement("select").onButtonClick(x, y, left, true);
-						}
-						catch(Exception e){
-							e.printStackTrace();
-						}
-					});
+					DialogBox.show(null, "dialogbox.button.ok", "dialogbox.button.load", null, () -> {
+						UserInterpanels.SELECT_TEXTURE.run();
+					}, "editor.general.attributes.painttotexture.notex");
 				}
 				else{
 					ArrayList<PolygonWrapper> selection = FMTB.MODEL.getSelected();
@@ -264,16 +261,15 @@ public class Editors {
 						String texname = poly.getTurboList().getGroupTexture() == null ? FMTB.MODEL.texture : poly.getTurboList().getGroupTexture();
 						Texture tex = TextureManager.getTexture(texname, true);
 						if(tex == null){//TODO group tex compensation
-							String str = translate("dialog.editor.general.attributes.burntotex.tex_not_found", "Texture not found in Memory.<nl>This rather bad.");
-							FMTB.showDialogbox(str, translate("dialog.editor.general.attributes.burntotex.tex_not_found.confirm", "ok"), null, DialogBox.NOTHING, null);
-							return true;
+							DialogBox.showOK(null, () -> { UserInterpanels.SELECT_TEXTURE.run(); }, null, "editor.general.attributes.painttotexture.tex_not_found");
+							return;
 						}
 						poly.burnToTexture(tex.getImage(), null); poly.recompile(); TextureManager.saveTexture(texname); tex.rebind();
 						Print.console("Polygon painted into Texture.");
 					}
-					return true;
+					return;
 				}
-	        }*/);//TODO
+	        });
 	        attributes.getContainer().add(painttotex);
 	        attributes.setSize(296, pass + 52 + 4);
 	        this.addSub(attributes); pass = -20;
