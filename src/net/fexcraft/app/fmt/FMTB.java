@@ -274,6 +274,7 @@ public class FMTB {
 
 	public void resize(int width, int height){
     	WIDTH = width; HEIGHT = height; perspective(45.0f, (float)WIDTH / (float)HEIGHT, 0.1f, 4096f / 2);
+    	Editors.resize(width, height);
 	}
 
     private static Vector4f rgba(int r, int g, int b, float a) {

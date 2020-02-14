@@ -440,7 +440,7 @@ public class UserInterpanels {
 
 		@Override
 		public void onScroll(double yoffset){
-			apply(tryAdd(getValue(), yoffset > 0, FMTB.MODEL.rate)); Print.console(value);
+			apply(tryAdd(getValue(), yoffset > 0, FMTB.MODEL.rate)); //Print.console(value);
 			FMTB.MODEL.updateValue(this, fieldid, true);
 		}
 

@@ -467,4 +467,10 @@ public class Editors {
 		}
 	}
 
+	public static void resize(int width, int height){
+		for(EditorBase editor : editors){
+			editor.scrollable.setSize(editor.scrollable.getSize().x, FMTB.HEIGHT - 80);
+		}
+	}
+
 }
