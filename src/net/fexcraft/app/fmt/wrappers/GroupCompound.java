@@ -12,9 +12,8 @@ import org.lwjgl.opengl.GL11;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.ui.Editors;
+import net.fexcraft.app.fmt.ui.Editors.GeneralEditor;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Field;
-import net.fexcraft.app.fmt.ui.editor.Container;
-import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.tree.HelperTree;
 import net.fexcraft.app.fmt.ui.tree.ModelTree;
@@ -24,7 +23,6 @@ import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.app.fmt.utils.Translator;
-import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
 
 public class GroupCompound {
@@ -242,271 +240,191 @@ public class GroupCompound {
 	}
 	
 	public void updateFields(){
-		try{
-			if(FMTB.get() == null || FMTB.frame == null) return; FMTB.get().setTitle(this.name);
-			PolygonWrapper poly = getFirstSelection();
-			//ouch, I forgot not keeping a secondary "selection" list doesn't also save which was selected first...
-			if(poly == null){
-				Editor.getGlobalField("sizex").applyChange(0);
-				Editor.getGlobalField("sizey").applyChange(0);
-				Editor.getGlobalField("sizez").applyChange(0);
-				//
-				Editor.getGlobalField("posx").applyChange(0);
-				Editor.getGlobalField("posy").applyChange(0);
-				Editor.getGlobalField("posz").applyChange(0);
-				//
-				Editor.getGlobalField("offx").applyChange(0);
-				Editor.getGlobalField("offy").applyChange(0);
-				Editor.getGlobalField("offz").applyChange(0);
-				//
-				Editor.getGlobalField("rotx").applyChange(0);
-				Editor.getGlobalField("roty").applyChange(0);
-				Editor.getGlobalField("rotz").applyChange(0);
-				//
-				Editor.getGlobalField("texx").applyChange(0);
-				Editor.getGlobalField("texy").applyChange(0);
-				//
-				//TODO DropDownField.getField("group").setText("none", true);
-				Editor.getGlobalField("boxname").setText("no polygon selected", true);
-				//TODO DropDownField.getField("boxtype").setText("no polygon selected", true);
-			}
-			else{
-				Editor.getGlobalField("sizex").applyChange(poly.getFloat("size", true, false, false));
-				Editor.getGlobalField("sizey").applyChange(poly.getFloat("size", false, true, false));
-				Editor.getGlobalField("sizez").applyChange(poly.getFloat("size", false, false, true));
-				//
-				Editor.getGlobalField("posx").applyChange(poly.getFloat("pos", true, false, false));
-				Editor.getGlobalField("posy").applyChange(poly.getFloat("pos", false, true, false));
-				Editor.getGlobalField("posz").applyChange(poly.getFloat("pos", false, false, true));
-				//
-				Editor.getGlobalField("offx").applyChange(poly.getFloat("off", true, false, false));
-				Editor.getGlobalField("offy").applyChange(poly.getFloat("off", false, true, false));
-				Editor.getGlobalField("offz").applyChange(poly.getFloat("off", false, false, true));
-				//
-				Editor.getGlobalField("rotx").applyChange(poly.getFloat("rot", true, false, false));
-				Editor.getGlobalField("roty").applyChange(poly.getFloat("rot", false, true, false));
-				Editor.getGlobalField("rotz").applyChange(poly.getFloat("rot", false, false, true));
-				//
-				Editor.getGlobalField("texx").applyChange(poly.getFloat("tex", true, false, false));
-				Editor.getGlobalField("texy").applyChange(poly.getFloat("tex", false, true, false));
-				//
-				//TODO DropDownField.getField("group").setText(this.getFirstSelectedGroupName(), true);
-				Editor.getGlobalField("boxname").setText(poly.name == null ? "unnamed" : poly.name, true);
-				//TODO DropDownField.getField("boxtype").setText(poly.getType().toString().toLowerCase(), true);
-			}
-			if(poly == null || !poly.getType().isShapebox()){
-				Editor.getGlobalField("cor0x").applyChange(0);
-				Editor.getGlobalField("cor0y").applyChange(0);
-				Editor.getGlobalField("cor0z").applyChange(0);
-				//
-				Editor.getGlobalField("cor1x").applyChange(0);
-				Editor.getGlobalField("cor1y").applyChange(0);
-				Editor.getGlobalField("cor1z").applyChange(0);
-				//
-				Editor.getGlobalField("cor2x").applyChange(0);
-				Editor.getGlobalField("cor2y").applyChange(0);
-				Editor.getGlobalField("cor2z").applyChange(0);
-				//
-				Editor.getGlobalField("cor3x").applyChange(0);
-				Editor.getGlobalField("cor3y").applyChange(0);
-				Editor.getGlobalField("cor3z").applyChange(0);
-				//
-				Editor.getGlobalField("cor4x").applyChange(0);
-				Editor.getGlobalField("cor4y").applyChange(0);
-				Editor.getGlobalField("cor4z").applyChange(0);
-				//
-				Editor.getGlobalField("cor5x").applyChange(0);
-				Editor.getGlobalField("cor5y").applyChange(0);
-				Editor.getGlobalField("cor5z").applyChange(0);
-				//
-				Editor.getGlobalField("cor6x").applyChange(0);
-				Editor.getGlobalField("cor6y").applyChange(0);
-				Editor.getGlobalField("cor6z").applyChange(0);
-				//
-				Editor.getGlobalField("cor7x").applyChange(0);
-				Editor.getGlobalField("cor7y").applyChange(0);
-				Editor.getGlobalField("cor7z").applyChange(0);
-				//
-				/*Editor.getGlobalField("face0x").applyChange(0);
-				Editor.getGlobalField("face0y").applyChange(0);
-				Editor.getGlobalField("face0z").applyChange(0);
-				Editor.getGlobalField("face1x").applyChange(0);
-				Editor.getGlobalField("face1y").applyChange(0);
-				Editor.getGlobalField("face1z").applyChange(0);*/
-			}
-			else{
-				Editor.getGlobalField("cor0x").applyChange(poly.getFloat("cor0", true, false, false));
-				Editor.getGlobalField("cor0y").applyChange(poly.getFloat("cor0", false, true, false));
-				Editor.getGlobalField("cor0z").applyChange(poly.getFloat("cor0", false, false, true));
-				//
-				Editor.getGlobalField("cor1x").applyChange(poly.getFloat("cor1", true, false, false));
-				Editor.getGlobalField("cor1y").applyChange(poly.getFloat("cor1", false, true, false));
-				Editor.getGlobalField("cor1z").applyChange(poly.getFloat("cor1", false, false, true));
-				//
-				Editor.getGlobalField("cor2x").applyChange(poly.getFloat("cor2", true, false, false));
-				Editor.getGlobalField("cor2y").applyChange(poly.getFloat("cor2", false, true, false));
-				Editor.getGlobalField("cor2z").applyChange(poly.getFloat("cor2", false, false, true));
-				//
-				Editor.getGlobalField("cor3x").applyChange(poly.getFloat("cor3", true, false, false));
-				Editor.getGlobalField("cor3y").applyChange(poly.getFloat("cor3", false, true, false));
-				Editor.getGlobalField("cor3z").applyChange(poly.getFloat("cor3", false, false, true));
-				//
-				Editor.getGlobalField("cor4x").applyChange(poly.getFloat("cor4", true, false, false));
-				Editor.getGlobalField("cor4y").applyChange(poly.getFloat("cor4", false, true, false));
-				Editor.getGlobalField("cor4z").applyChange(poly.getFloat("cor4", false, false, true));
-				//
-				Editor.getGlobalField("cor5x").applyChange(poly.getFloat("cor5", true, false, false));
-				Editor.getGlobalField("cor5y").applyChange(poly.getFloat("cor5", false, true, false));
-				Editor.getGlobalField("cor5z").applyChange(poly.getFloat("cor5", false, false, true));
-				//
-				Editor.getGlobalField("cor6x").applyChange(poly.getFloat("cor6", true, false, false));
-				Editor.getGlobalField("cor6y").applyChange(poly.getFloat("cor6", false, true, false));
-				Editor.getGlobalField("cor6z").applyChange(poly.getFloat("cor6", false, false, true));
-				//
-				Editor.getGlobalField("cor7x").applyChange(poly.getFloat("cor7", true, false, false));
-				Editor.getGlobalField("cor7y").applyChange(poly.getFloat("cor7", false, true, false));
-				Editor.getGlobalField("cor7z").applyChange(poly.getFloat("cor7", false, false, true));
-				//
-				/*Editor.getGlobalField("face0x").applyChange(poly.getFloat("face0", true, false, false));
-				Editor.getGlobalField("face0y").applyChange(poly.getFloat("face0", false, true, false));
-				Editor.getGlobalField("face0z").applyChange(poly.getFloat("face0", false, false, true));
-				Editor.getGlobalField("face1x").applyChange(poly.getFloat("face1", true, false, false));
-				Editor.getGlobalField("face1y").applyChange(poly.getFloat("face1", false, true, false));
-				Editor.getGlobalField("face1z").applyChange(poly.getFloat("face1", false, false, true));*/
-			}
-			if(poly == null || !poly.getType().isCylinder()){
-				Editor.getGlobalField("cyl0x").applyChange(0); Editor.getGlobalField("cyl0y").applyChange(0); Editor.getGlobalField("cyl0z").applyChange(0);
-				Editor.getGlobalField("cyl1x").applyChange(0); Editor.getGlobalField("cyl1y").applyChange(0); Editor.getGlobalField("cyl1z").applyChange(0);
-				Editor.getGlobalField("cyl2x").applyChange(0); Editor.getGlobalField("cyl2y").applyChange(0); //Editor.getGlobalField("cyl2z").applyChange(0);
-				Editor.getGlobalField("cyl3x").applyChange(0); Editor.getGlobalField("cyl3y").applyChange(0); Editor.getGlobalField("cyl3z").applyChange(0);
-				Editor.getGlobalField("cyl4x").applyChange(0); Editor.getGlobalField("cyl4y").applyChange(0);
-				Editor.getGlobalField("cyl5x").applyChange(0); Editor.getGlobalField("cyl5y").applyChange(0);
-			}
-			else{
-				Editor.getGlobalField("cyl0x").applyChange(poly.getFloat("cyl0", true, false, false));
-				Editor.getGlobalField("cyl0y").applyChange(poly.getFloat("cyl0", false, true, false));
-				Editor.getGlobalField("cyl0z").applyChange(poly.getFloat("cyl0", false, false, true));
-				Editor.getGlobalField("cyl1x").applyChange(poly.getFloat("cyl1", true, false, false));
-				Editor.getGlobalField("cyl1y").applyChange(poly.getFloat("cyl1", false, true, false));
-				Editor.getGlobalField("cyl1z").applyChange(poly.getFloat("cyl1", false, false, true));
-				Editor.getGlobalField("cyl2x").applyChange(poly.getFloat("cyl2", true, false, false));
-				Editor.getGlobalField("cyl2y").applyChange(poly.getFloat("cyl2", false, true, false));
-				//Editor.getGlobalField("cyl2z").applyChange(poly.getFloat("cyl2", false, false, true));
-				Editor.getGlobalField("cyl3x").applyChange(poly.getFloat("cyl3", true, false, false));
-				Editor.getGlobalField("cyl3y").applyChange(poly.getFloat("cyl3", false, true, false));
-				Editor.getGlobalField("cyl3z").applyChange(poly.getFloat("cyl3", false, false, true));
-				//
-				Editor.getGlobalField("cyl4x").applyChange(poly.getFloat("cyl4", true, false, false));
-				Editor.getGlobalField("cyl4y").applyChange(poly.getFloat("cyl4", false, true, false));
-				Editor.getGlobalField("cyl5x").applyChange(poly.getFloat("cyl5", true, false, false));
-				Editor.getGlobalField("cyl5y").applyChange(poly.getFloat("cyl5", false, true, false));
-				//
-				Editor.getGlobalField("cyl6x").applyChange(poly.getFloat("cyl6", true, false, false));
-				Editor.getGlobalField("cyl6y").applyChange(poly.getFloat("cyl6", false, true, false));
-				Editor.getGlobalField("cyl6z").applyChange(poly.getFloat("cyl6", false, false, true));
-				//
-				Editor.getGlobalField("cyl7x").applyChange(poly.getFloat("cyl7", true, false, false));
-				Editor.getGlobalField("cyl7y").applyChange(poly.getFloat("cyl7", false, true, false));
-				Editor.getGlobalField("cyl7z").applyChange(poly.getFloat("cyl7", false, false, true));
-			}
+		if(FMTB.get() == null || FMTB.frame == null) return; FMTB.get().setTitle(this.name);
+		PolygonWrapper poly = getFirstSelection();
+		if(poly == null){
+			GeneralEditor.size_x.apply(0);
+			GeneralEditor.size_y.apply(0);
+			GeneralEditor.size_z.apply(0);
 			//
-			if(poly == null || !poly.getType().isTexRectB()){
-				for(int i = 0; i < 6; i++){
-					Editor.getGlobalField("texpos" + i + "sx").applyChange(0f);
-					Editor.getGlobalField("texpos" + i + "sy").applyChange(0f);
-					Editor.getGlobalField("texpos" + i + "ex").applyChange(0f);
-					Editor.getGlobalField("texpos" + i + "ey").applyChange(0f);
+			GeneralEditor.pos_x.apply(0);
+			GeneralEditor.pos_y.apply(0);
+			GeneralEditor.pos_z.apply(0);
+			//
+			GeneralEditor.off_x.apply(0);
+			GeneralEditor.off_y.apply(0);
+			GeneralEditor.off_z.apply(0);
+			//
+			GeneralEditor.rot_x.apply(0);
+			GeneralEditor.rot_y.apply(0);
+			GeneralEditor.rot_z.apply(0);
+			//
+			GeneralEditor.texture_x.apply(0);
+			GeneralEditor.texture_y.apply(0);
+			//
+			GeneralEditor.polygon_group.setSelected("> new group <", true);
+			GeneralEditor.polygon_name.getTextState().setText(Editors.NO_POLYGON_SELECTED);
+			GeneralEditor.polygon_type.setSelected("box", true);
+		}
+		else{
+			GeneralEditor.size_x.apply(poly.getFloat("size", true, false, false));
+			GeneralEditor.size_y.apply(poly.getFloat("size", false, true, false));
+			GeneralEditor.size_z.apply(poly.getFloat("size", false, false, true));
+			//
+			GeneralEditor.pos_x.apply(poly.getFloat("pos", true, false, false));
+			GeneralEditor.pos_y.apply(poly.getFloat("pos", false, true, false));
+			GeneralEditor.pos_z.apply(poly.getFloat("pos", false, false, true));
+			//
+			GeneralEditor.off_x.apply(poly.getFloat("off", true, false, false));
+			GeneralEditor.off_y.apply(poly.getFloat("off", false, true, false));
+			GeneralEditor.off_z.apply(poly.getFloat("off", false, false, true));
+			//
+			GeneralEditor.rot_x.apply(poly.getFloat("rot", true, false, false));
+			GeneralEditor.rot_y.apply(poly.getFloat("rot", false, true, false));
+			GeneralEditor.rot_z.apply(poly.getFloat("rot", false, false, true));
+			//
+			GeneralEditor.texture_x.apply(poly.getFloat("tex", true, false, false));
+			GeneralEditor.texture_y.apply(poly.getFloat("tex", false, true, false));
+			//
+			GeneralEditor.polygon_group.setSelected(this.getFirstSelectedGroupName(), true);
+			GeneralEditor.polygon_name.getTextState().setText(poly.name == null ? "unnamed" : poly.name);
+			GeneralEditor.polygon_type.setSelected(poly.getType().toString().toLowerCase(), true);
+		}
+		if(poly == null || !poly.getType().isShapebox()){
+			for(int i = 0; i < 8; i++){
+				GeneralEditor.corner_x[i].apply(0);
+				GeneralEditor.corner_y[i].apply(0);
+				GeneralEditor.corner_z[i].apply(0);
+			}
+		}
+		else{
+			for(int i = 0; i < 8; i++){
+				GeneralEditor.corner_x[i].apply(poly.getFloat("cor" + i, true, false, false));
+				GeneralEditor.corner_y[i].apply(poly.getFloat("cor" + i, false, true, false));
+				GeneralEditor.corner_z[i].apply(poly.getFloat("cor" + i, false, false, true));
+			}
+		}
+		if(poly == null || !poly.getType().isCylinder()){
+			GeneralEditor.cyl0_x.apply(0); GeneralEditor.cyl0_y.apply(0); GeneralEditor.cyl0_z.apply(0);
+			GeneralEditor.cyl1_x.apply(0); GeneralEditor.cyl1_y.apply(0); GeneralEditor.cyl1_z.apply(0);
+			GeneralEditor.cyl2_x.apply(0); GeneralEditor.cyl2_y.apply(0);
+			GeneralEditor.cyl3_x.apply(0); GeneralEditor.cyl3_y.apply(0); GeneralEditor.cyl3_z.apply(0);
+			GeneralEditor.cyl4_x.apply(0); GeneralEditor.cyl4_y.apply(0);
+			GeneralEditor.cyl5_x.apply(0); GeneralEditor.cyl5_y.apply(0);
+			GeneralEditor.cyl6_x.apply(0); GeneralEditor.cyl6_y.apply(0); GeneralEditor.cyl6_z.apply(0);
+			GeneralEditor.cyl7_x.apply(0); GeneralEditor.cyl7_y.apply(0); GeneralEditor.cyl7_z.apply(0);
+		}
+		else{
+			GeneralEditor.cyl0_x.apply(poly.getFloat("cyl0", true, false, false));
+			GeneralEditor.cyl0_y.apply(poly.getFloat("cyl0", false, true, false));
+			GeneralEditor.cyl0_z.apply(poly.getFloat("cyl0", false, false, true));
+			GeneralEditor.cyl1_x.apply(poly.getFloat("cyl1", true, false, false));
+			GeneralEditor.cyl1_y.apply(poly.getFloat("cyl1", false, true, false));
+			GeneralEditor.cyl1_z.apply(poly.getFloat("cyl1", false, false, true));
+			GeneralEditor.cyl2_x.apply(poly.getFloat("cyl2", true, false, false));
+			GeneralEditor.cyl2_y.apply(poly.getFloat("cyl2", false, true, false));
+			GeneralEditor.cyl3_x.apply(poly.getFloat("cyl3", true, false, false));
+			GeneralEditor.cyl3_y.apply(poly.getFloat("cyl3", false, true, false));
+			GeneralEditor.cyl3_z.apply(poly.getFloat("cyl3", false, false, true));
+			//
+			GeneralEditor.cyl4_x.apply(poly.getFloat("cyl4", true, false, false));
+			GeneralEditor.cyl4_y.apply(poly.getFloat("cyl4", false, true, false));
+			GeneralEditor.cyl5_x.apply(poly.getFloat("cyl5", true, false, false));
+			GeneralEditor.cyl5_y.apply(poly.getFloat("cyl5", false, true, false));
+			//
+			GeneralEditor.cyl6_x.apply(poly.getFloat("cyl6", true, false, false));
+			GeneralEditor.cyl6_y.apply(poly.getFloat("cyl6", false, true, false));
+			GeneralEditor.cyl6_z.apply(poly.getFloat("cyl6", false, false, true));
+			//
+			GeneralEditor.cyl7_x.apply(poly.getFloat("cyl7", true, false, false));
+			GeneralEditor.cyl7_y.apply(poly.getFloat("cyl7", false, true, false));
+			GeneralEditor.cyl7_z.apply(poly.getFloat("cyl7", false, false, true));
+		}
+		//
+		if(poly == null || !poly.getType().isTexRectB()){
+			for(int i = 0; i < 6; i++){
+				GeneralEditor.texrect_b[i][0].apply(0);
+				GeneralEditor.texrect_b[i][1].apply(0);
+				GeneralEditor.texrect_b[i][2].apply(0);
+				GeneralEditor.texrect_b[i][3].apply(0);
+			}
+		}
+		else{
+			for(int i = 0; i < 6; i++){
+				GeneralEditor.texrect_b[i][0].apply(poly.getFloat("texpos" + i + "s", true, false, false));
+				GeneralEditor.texrect_b[i][1].apply(poly.getFloat("texpos" + i + "s", false, true, false));
+				GeneralEditor.texrect_b[i][2].apply(poly.getFloat("texpos" + i + "e", true, false, false));
+				GeneralEditor.texrect_b[i][3].apply(poly.getFloat("texpos" + i + "e", false, true, false));
+			}
+		}
+		//
+		if(poly == null || !poly.getType().isTexRectA()){
+			for(int i = 0; i < 6; i++) for(int j = 0; j < 8; j++) GeneralEditor.texrect_a[i][j].apply(0);
+		}
+		else{
+			for(int i = 0; i < 6; i++){
+				for(int j = 0; j < 8; j++){
+					if(j % 2 == 0) GeneralEditor.texrect_a[i][j].apply(poly.getFloat("texpos" + i + ":" + j + "x", true, false, false));
+					else GeneralEditor.texrect_a[i][j].apply(poly.getFloat("texpos" + i + ":" + j + "y", false, true, false));
 				}
 			}
-			else{
-				for(int i = 0; i < 6; i++){
-					Editor.getGlobalField("texpos" + i + "sx").applyChange(poly.getFloat("texpos" + i + "s", true, false, false));
-					Editor.getGlobalField("texpos" + i + "sy").applyChange(poly.getFloat("texpos" + i + "s", false, true, false));
-					Editor.getGlobalField("texpos" + i + "ex").applyChange(poly.getFloat("texpos" + i + "e", true, false, false));
-					Editor.getGlobalField("texpos" + i + "ey").applyChange(poly.getFloat("texpos" + i + "e", false, true, false));
-				}
-			}
+		}
+		if(poly == null || !poly.getType().isMarker()){
+			GeneralEditor.marker_color.apply(0xffffff);
+			GeneralEditor.marker_biped.apply(0);
+			GeneralEditor.marker_scale.apply(0);
+			GeneralEditor.marker_angle.apply(0);
+		}
+		else{
+			GeneralEditor.marker_color.apply(poly.getFloat("marker_color", true, false, false));
+			GeneralEditor.marker_biped.apply(poly.getFloat("marker_biped", true, false, false));
+			GeneralEditor.marker_scale.apply(poly.getFloat("marker_scale", true, false, false));
+			GeneralEditor.marker_angle.apply(poly.getFloat("marker_angle", true, false, false));
+		}
+		/*TurboList list = this.getFirstSelectedGroup();
+		if(list == null){
+			Editor.getGlobalField("group_rgb0").applyChange(0);
+			Editor.getGlobalField("group_rgb1").applyChange(0);
+			Editor.getGlobalField("group_rgb2").applyChange(0);
+			Editor.getGlobalField("group_name").setText("no polygon(s) selected", true);
+			Editor.getGlobalField("group_texture").setText("no polygon(s) selected", true);
+			DropDownField.getField("group_texx").setText("0", true);
+			DropDownField.getField("group_texy").setText("0", true);
+			DropDownField.getField("group_texz").setText("0", true);
+			DropDownField.getField("group_animator").setText("no polygon(s) selected", true);
+		}
+		else{
+			byte[] arr = list.color == null ? RGB.WHITE.toByteArray() : list.color.toByteArray();
+			Editor.getGlobalField("group_rgb0").applyChange(arr[0] + 128);
+			Editor.getGlobalField("group_rgb1").applyChange(arr[1] + 128);
+			Editor.getGlobalField("group_rgb2").applyChange(arr[2] + 128);
+			Editor.getGlobalField("group_name").setText(list.id, true);
+			DropDownField.getField("group_texx").setText("0", true);
+			DropDownField.getField("group_texy").setText("0", true);
+			DropDownField.getField("group_texz").setText("0", true);
+			DropDownField.getField("group_animator").setText("Select Animator", true);
 			//
-			if(poly == null || !poly.getType().isTexRectA()){
-				for(int i = 0; i < 6; i++){
-					for(int j = 0; j < 8; j++){
-						if(j % 2 == 0){ Editor.getGlobalField("texpos" + i + ":" + j + "x").applyChange(0f); }
-						else{ Editor.getGlobalField("texpos" + i + ":" + j + "y").applyChange(0f); }
-					}
-				}
-			}
-			else{
-				for(int i = 0; i < 6; i++){
-					for(int j = 0; j < 8; j++){
-						if(j % 2 == 0){
-							Editor.getGlobalField("texpos" + i + ":" + j + "x").applyChange(poly.getFloat("texpos" + i + ":" + j, true, false, false));
-						}
-						else{
-							Editor.getGlobalField("texpos" + i + ":" + j + "y").applyChange(poly.getFloat("texpos" + i + ":" + j, false, true, false));
-						}
-					}
-				}
-			}
-			if(poly == null || !poly.getType().isMarker()){
-				Editor.getGlobalField("marker_colorx").applyChange(0);
-				Editor.getGlobalField("marker_bipedx").applyChange(0);
-				Editor.getGlobalField("marker_scalex").applyChange(0);
-				Editor.getGlobalField("marker_anglex").applyChange(0);
-			}
-			else{
-				Editor.getGlobalField("marker_colorx").applyChange(Integer.toHexString((int)poly.getFloat("marker_color", true, false, false)));
-				Editor.getGlobalField("marker_bipedx").applyChange(poly.getFloat("marker_biped", true, false, false));
-				Editor.getGlobalField("marker_scalex").applyChange(poly.getFloat("marker_scale", true, false, false));
-				Editor.getGlobalField("marker_anglex").applyChange(poly.getFloat("marker_angle", true, false, false));
-			}
-			TurboList list = this.getFirstSelectedGroup();
-			if(list == null){
-				Editor.getGlobalField("group_rgb0").applyChange(0);
-				Editor.getGlobalField("group_rgb1").applyChange(0);
-				Editor.getGlobalField("group_rgb2").applyChange(0);
-				Editor.getGlobalField("group_name").setText("no polygon(s) selected", true);
-				Editor.getGlobalField("group_texture").setText("no polygon(s) selected", true);
-				/*DropDownField.getField("group_texx").setText("0", true);
-				DropDownField.getField("group_texy").setText("0", true);
-				DropDownField.getField("group_texz").setText("0", true);
-				DropDownField.getField("group_animator").setText("no polygon(s) selected", true);*///TODO
-			}
-			else{
-				byte[] arr = list.color == null ? RGB.WHITE.toByteArray() : list.color.toByteArray();
-				Editor.getGlobalField("group_rgb0").applyChange(arr[0] + 128);
-				Editor.getGlobalField("group_rgb1").applyChange(arr[1] + 128);
-				Editor.getGlobalField("group_rgb2").applyChange(arr[2] + 128);
-				Editor.getGlobalField("group_name").setText(list.id, true);
-				/*DropDownField.getField("group_texx").setText("0", true);
-				DropDownField.getField("group_texy").setText("0", true);
-				DropDownField.getField("group_texz").setText("0", true);
-				DropDownField.getField("group_animator").setText("Select Animator", true);*///TODO
-				//
-				String texname = list.getGroupTexture() + "";
-				if(texname.length() > 32){ texname = texname.substring(texname.length() - 32, texname.length()); }
-				Editor.getGlobalField("group_texture").setText(texname, true);
-			};
-			((Container)Editor.get("model_group_editor").getElement("animations")).addSubElements();
-			//
-			Editor.getGlobalField("model_posx").applyChange(pos == null ? 0 : pos.xCoord);
-			Editor.getGlobalField("model_posy").applyChange(pos == null ? 0 : pos.yCoord);
-			Editor.getGlobalField("model_posz").applyChange(pos == null ? 0 : pos.zCoord);
-			Editor.getGlobalField("model_rotx").applyChange(rot == null ? 0 : rot.xCoord);
-			Editor.getGlobalField("model_roty").applyChange(rot == null ? 0 : rot.yCoord);
-			Editor.getGlobalField("model_rotz").applyChange(rot == null ? 0 : rot.zCoord);
-			/*DropDownField.getField("model_texx").setText(this.textureSizeX + "", true);
-			DropDownField.getField("model_texy").setText(this.textureSizeY + "", true);
-			DropDownField.getField("model_texz").setText(this.textureScale + "", true);*///TODO
-			Editor.getGlobalField("model_name").setText(this.name, true);
-			Editor.EDITORS.forEach(editor -> editor.getMultiplicator().applyChange(rate));
-			//
-			String texname = this.texture + "";
+			String texname = list.getGroupTexture() + "";
 			if(texname.length() > 32){ texname = texname.substring(texname.length() - 32, texname.length()); }
-			Editor.getGlobalField("model_texture").setText(texname, true);
-		}
-		catch(Exception e){
-			e.printStackTrace();
-		}
+			Editor.getGlobalField("group_texture").setText(texname, true);
+		};
+		((Container)Editor.get("model_group_editor").getElement("animations")).addSubElements();
+		//
+		Editor.getGlobalField("model_posx").applyChange(pos == null ? 0 : pos.xCoord);
+		Editor.getGlobalField("model_posy").applyChange(pos == null ? 0 : pos.yCoord);
+		Editor.getGlobalField("model_posz").applyChange(pos == null ? 0 : pos.zCoord);
+		Editor.getGlobalField("model_rotx").applyChange(rot == null ? 0 : rot.xCoord);
+		Editor.getGlobalField("model_roty").applyChange(rot == null ? 0 : rot.yCoord);
+		Editor.getGlobalField("model_rotz").applyChange(rot == null ? 0 : rot.zCoord);
+		DropDownField.getField("model_texx").setText(this.textureSizeX + "", true);
+		DropDownField.getField("model_texy").setText(this.textureSizeY + "", true);
+		DropDownField.getField("model_texz").setText(this.textureScale + "", true);
+		Editor.getGlobalField("model_name").setText(this.name, true);
+		Editor.EDITORS.forEach(editor -> editor.getMultiplicator().applyChange(rate));
+		//
+		String texname = this.texture + "";
+		if(texname.length() > 32){ texname = texname.substring(texname.length() - 32, texname.length()); }
+		Editor.getGlobalField("model_texture").setText(texname, true);*/
 	}
 	
 	public float multiply(float flea){

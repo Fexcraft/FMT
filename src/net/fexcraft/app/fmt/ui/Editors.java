@@ -39,6 +39,7 @@ public class Editors {
 	public static ModelGroupEditor modelgroup;
 	//
 	public static final ArrayList<EditorBase> editors = new ArrayList<>();
+	public static String NO_POLYGON_SELECTED;
 
 	public static void initializeEditors(Frame frame){
 		frame.getContainer().add(general = new GeneralEditor());
@@ -161,7 +162,7 @@ public class Editors {
 	
 	public static class GeneralEditor extends EditorBase {
 		
-		public static TextInput polygon_name;
+		public static TextInput20 polygon_name;
 		public static NumberInput20 size_x, size_y, size_z;
 		public static NumberInput20 pos_x, pos_y, pos_z;
 		public static NumberInput20 off_x, off_y, off_z;
@@ -175,7 +176,7 @@ public class Editors {
 		public static NumberInput20 cyl6_y, cyl6_z;
 		public static NumberInput20 cyl7_x, cyl7_y, cyl7_z;
 		public static NumberInput20[] corner_x, corner_y, corner_z;
-		public static NumberInput20[][] texrect_a = new NumberInput20[12][4], texrect_b = new NumberInput20[6][4];
+		public static NumberInput20[][] texrect_a = new NumberInput20[6][8], texrect_b = new NumberInput20[6][4];
 		public static NumberInput20 marker_color, marker_scale, marker_angle;
 		public static BoolButton marker_biped;
 		public static SelectBox<Object> polygon_group, polygon_type;
@@ -217,7 +218,7 @@ public class Editors {
 	        	polygon_group.setSelected(0, false);
 	        });
 	        attributes.getContainer().add(new Label20(translate("editor.general.attributes.name"), 3, pass += 24, 290, 20));
-	        attributes.getContainer().add(polygon_name = new TextInput20(translate("error.no_polygon_selected"), 3, pass += 24, 290, 20));
+	        attributes.getContainer().add(polygon_name = new TextInput20(NO_POLYGON_SELECTED = translate("error.no_polygon_selected"), 3, pass += 24, 290, 20));
 	        polygon_name.addTextInputContentChangeEventListener(event -> {
 				String validated = UserInterpanels.validateString(event);
 				if(FMTB.MODEL.getSelected().isEmpty()) return; PolygonWrapper wrapper;
@@ -382,7 +383,7 @@ public class Editors {
 				texrectA.getContainer().add(new Label20(format("editor.general.texrect_a.face_" + (r % 2 == 0 ? "x" : "y"), faces[r / 2]), 3, pass += 24, 290, 20));
 				for(int i = 0; i < 4; i++){
 					String id = "texpos" + (r / 2) + ":" + ((i * 2) + (r % 2 == 1 ? 1 : 0)) + (r % 2 == 0 ? "x" : "y"); if(i == 0) pass += 24;
-					texrectA.getContainer().add(texrect_a[r][i] = new NumberInput20(6 + (i * 72), pass, 66, 20).setup(id, 0, Integer.MAX_VALUE, true));
+					texrectA.getContainer().add(texrect_a[r % 6][r >= 6 ? i + 4 : i] = new NumberInput20(6 + (i * 72), pass, 66, 20).setup(id, 0, Integer.MAX_VALUE, true));
 				}
 			}
 			texrectA.setSize(296, pass + 52);
@@ -392,7 +393,7 @@ public class Editors {
 				texrectB.getContainer().add(new Label20(format("editor.general.texrect_a.face_" + (r % 2 == 0 ? "x" : "y"), faces[r]), 3, pass += 24, 290, 20));
 				for(int i = 0; i < 4; i++){
 					String id = "texpos" + r + (i < 2 ? "s" : "e") + (i % 2 == 0 ? "x" : "y"); if(i == 0) pass += 24;
-					texrectB.getContainer().add(texrect_a[r][i] = new NumberInput20(6 + (i * 72), pass, 66, 20).setup(id, 0, Integer.MAX_VALUE, true));
+					texrectB.getContainer().add(texrect_b[r][i] = new NumberInput20(6 + (i * 72), pass, 66, 20).setup(id, 0, Integer.MAX_VALUE, true));
 				}
 			}
 			texrectB.setSize(296, pass + 52);
@@ -451,7 +452,7 @@ public class Editors {
 	}
 	
 	public static String format(String str, Object... objs){
-		return Translator.format(str, "no.lang.%s", objs);
+		return Translator.format(str, objs);
 	}
 
 	public static void toggleWidget(int i){
