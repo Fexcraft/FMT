@@ -31,7 +31,7 @@ public class DialogBox {
             dialog.getContainer().add(button0);
         }
         if(text1 != null){
-            Button20 button1 = new Button20(UserInterpanels.translate(text1 == null ? "dialogbox.button.cancel" : text1), 100, 20 + (text.length * 25), 100, 20);
+            Button20 button1 = new Button20(UserInterpanels.translate(text1 == null ? "dialogbox.button.cancel" : text1), 120, 20 + (text.length * 25), 100, 20);
             button1.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
             	if(CLICK == e.getAction()){ if(but1 != null) but1.process(); dialog.close(); }
             });

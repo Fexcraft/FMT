@@ -59,9 +59,5 @@ public class Translator {
 	public static String format(String key, Object... objects){
 		String string = translate(key); return String.format(string, objects);
 	}
-	
-	public static String format(String key, String fill, Object... objects){
-		String string = translate(key, fill); return String.format(string, objects);
-	}
 
 }

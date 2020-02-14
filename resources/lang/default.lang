@@ -148,7 +148,7 @@ settingsbox.continue=Continue
 settingsbox.confirm=Confirm
 
 # DialogBox
-dialogbox.title.default=Status Dialog
+dialogbox.title.default=Generic Dialog
 dialogbox.button.confirm=Confirm
 dialogbox.button.cancel=Cancel
 dialogbox.button.open=Open
@@ -195,6 +195,17 @@ helper_collector.load_fmtb.errors=Errors occured while parsing save file.
 helper_collector.load_frame.nofile=Invalid Model File! (Does it exist?)
 helper_collector.load_frame.errors=Errors occured while creating frame.
 
+# Texture Updater / Util
+texture_update.autopos.title=Texture Auto Positioner
+texture_update.autopos.info=This process may mark FMT as not responding.
+texture_update.autopos.savespace=Use save-space mode? (may reduce readability)
+texture_update.autopos.process_all=Only process polygons with 0, 0 texture pos?
+texture_update.autopos.start=Start
+texture_update.autopos.processing=Processing: %s:%s
+texture_update.autopos.complete=Auto texture positioning Complete!
+texture_update.resize.exceeding_4096=Exceeding 4096 pixel! Exceeding 4096 pixel!
+texture_update.resize.success=Resized!
+
 # Errors
 error.dialog_title=Error
 error.feature_not_available_yet=This feature is not available yet.
@@ -206,4 +217,3 @@ error.todo=//TODO
 bottombar.netfield.login_failed=Login Failed - GUEST
 bottombar.netfield.loggedin=Logged In - %s
 modeltree.polygons=Polygons: 
-

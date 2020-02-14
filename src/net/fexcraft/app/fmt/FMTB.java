@@ -454,9 +454,9 @@ public class FMTB {
 					}
 				}
 				String newver = obj.get("latest_version").getAsString(); boolean bool = version.equals(newver);
-				String welcome = Translator.translate("dialog.welcome.title", "Welcome to FMT!");
-				String cversion = Translator.format("dialog.welcome.version", "Client Version: %s", version);
-				String new_title = Translator.format("dialog.welcome.title_new", "New version available!", newver, version);
+				String welcome = Translator.translate("dialog.welcome.title");
+				String cversion = Translator.format("dialog.welcome.version", version);
+				String new_title = Translator.format("dialog.welcome.title_new", newver, version);
 				String new_version = Translator.format("dialog.welcome.version_new", "%s >> %s", newver, version);
 				//
 		        Dialog24 dialog = new Dialog24(bool ? welcome : new_title, 300, 100);

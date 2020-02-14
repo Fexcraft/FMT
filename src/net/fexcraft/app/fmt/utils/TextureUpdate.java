@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.utils;
 
+import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
+
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -7,9 +9,17 @@ import java.util.Collections;
 import java.util.TimerTask;
 import java.util.stream.Collectors;
 
+import org.liquidengine.legui.component.CheckBox;
+import org.liquidengine.legui.component.ProgressBar;
+import org.liquidengine.legui.event.MouseClickEvent;
+import org.liquidengine.legui.listener.MouseClickEventListener;
+
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.DialogBox;
-import net.fexcraft.app.fmt.ui.UserInterface;
+import net.fexcraft.app.fmt.ui.UserInterpanels;
+import net.fexcraft.app.fmt.ui.UserInterpanels.Button20;
+import net.fexcraft.app.fmt.ui.UserInterpanels.Dialog24;
+import net.fexcraft.app.fmt.ui.UserInterpanels.Label20;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
@@ -25,7 +35,8 @@ public class TextureUpdate extends TimerTask {
 	public static boolean HALT = true, ALL, SAVESPACE;
 	private static ArrayList<PolygonWrapper> list;
 	private static BufferedImage image;
-	private static int last, per;
+	private static TexUpDialog dialog;
+	private static int last;
 
 	@Override
 	public void run(){
@@ -59,36 +70,36 @@ public class TextureUpdate extends TimerTask {
 			String tx = (list == null ? FMTB.MODEL.textureSizeX : list.textureX) + "x," + texX + "xs";
 			String ty = (list == null ? FMTB.MODEL.textureSizeY : list.textureY) + "y," + texY + "ys";
 			if(texX > 4096 || texY > 4096){
-				String str = Translator.format("dialog.texture_update.resize.exceeding_4096", "Exceeding 4096 pixel!<nl>[%s], [%s]<nl>Texture Cache NOT updated.", tx,ty);
-				UserInterface.DIALOGBOX.show(str, Translator.translate("dialog.texture_update.resize.exceeding_4096.confirm", "OK,"), null, DialogBox.NOTHING, null);
-				return;
+				DialogBox.showOK(null, null, null, "texture_update.resize.exceeding_4096", "#" + String.format("[%s], [%s]", tx, ty)); return;
 			}
 			texture.resize(texX, texY, 0x00ffffff); TextureManager.saveTexture(FMTB.MODEL.texture);
 			if(list == null) FMTB.MODEL.recompile(); else list.recompile(); updateLastEdit(Time.getDate());
-			String str = Translator.format("dialog.texture_update.resize.success", "Resized!<nl>[%s], [%s]", tx, ty);
-			UserInterface.DIALOGBOX.show(str, Translator.translate("dialog.texture_update.resize.success.confirm", "Good!"), null, DialogBox.NOTHING, null);
+			DialogBox.showOK(null, null, null, "texture_update.resize.success", "#" + String.format("[%s], [%s]", tx, ty)); return;
 		}
 		else return;
 	}
 
 	public static void tryAutoPos(Boolean bool){
 		if(bool == null){
-			String str = Translator.translate("dialog.texture_update.auto_positioner.info", "This process may mark<nl>FMT as not responding.");
-			String ok = Translator.translate("dialog.texture_update.auto_positioner.info.confirm", "ok");
-			FMTB.showDialogbox(str, ok, Translator.translate("dialog.texture_update.auto_positioner.info.cancel", "cancel"), () -> {
-				Runnable ZERO = () -> { HALT = false; ALL = false; };
-				Runnable AALL = () -> { HALT = false; ALL = true;  };
-				String str0 = Translator.translate("dialog.texture_update.auto_positioner.save_space", "Use save-space mode?<nl>May reduce readability.");
-				String yes = Translator.translate("dialog.texture_update.auto_positioner.save_space.confirm", "Yes");
-				String str1 = Translator.translate("dialog.texture_update.auto_positioner.only_00", "Only process polygons with<nl>0, 0 texture pos?");
-				String yes0 = Translator.translate("dialog.texture_update.auto_positioner.only_00.confirm", "Yes");
-				String noall = Translator.translate("dialog.texture_update.auto_positioner.only_00.cancel", "No (All)");
-				FMTB.showDialogbox(str0, yes, Translator.translate("dialog.texture_update.auto_positioner.save_space.cancel", "No"), () -> {
-					SAVESPACE = true; FMTB.showDialogbox(str1, yes0, noall, ZERO, AALL);
-				}, () -> {
-					SAVESPACE = false; FMTB.showDialogbox(str1, yes0, noall, ZERO, AALL);
-				});
-			}, DialogBox.NOTHING);
+			Dialog24 dialog = new Dialog24(Translator.translate("texture_update.autopos.title"), 360, 150);
+			Label20 label = new Label20(Translator.translate("texture_update.autopos.info"), 10, 10, 340, 20);
+	        CheckBox checkbox0 = new CheckBox(10, 40, 340, 20);
+	        checkbox0.getStyle().setPadding(5f, 10f, 5f, 5f); checkbox0.setChecked(SAVESPACE);
+	        checkbox0.addCheckBoxChangeValueListener(listener -> SAVESPACE = listener.getNewValue());
+	        checkbox0.getTextState().setText(UserInterpanels.translate("texture_update.autopos.savespace"));
+	        CheckBox checkbox1 = new CheckBox(10, 70, 340, 20);
+	        checkbox1.getStyle().setPadding(5f, 10f, 5f, 5f); checkbox1.setChecked(!ALL);
+	        checkbox1.addCheckBoxChangeValueListener(listener -> ALL = !listener.getNewValue());
+	        checkbox1.getTextState().setText(UserInterpanels.translate("texture_update.autopos.process_all"));
+            Button20 button = new Button20(UserInterpanels.translate("texture_update.autopos.start"), 10, 100, 100, 20);
+            button.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
+            	if(CLICK == e.getAction()){ HALT = false; dialog.close(); }
+            });
+	        dialog.getContainer().add(label);
+	        dialog.getContainer().add(checkbox0);
+	        dialog.getContainer().add(checkbox1);
+            dialog.getContainer().add(button);
+			dialog.show(FMTB.frame);
 			return;
 		} HALT = false; ALL = bool;
 		//
@@ -102,14 +113,12 @@ public class TextureUpdate extends TimerTask {
 		}
 		try{
 			if(HALT || last < 0 || last >= list.size()){
-				String str = Translator.translate("dialog.texture_update.auto_positioner.complete", "Auto texture positioning<nl>Complete!");
-				FMTB.showDialogbox(str, Translator.translate("dialog.texture_update.auto_positioner.complete.confirm", "Good!"), null, DialogBox.NOTHING, null);
-				last = (HALT = (list = null) == null) ? -1 : 0; image = null; return;
+				DialogBox.showOK("texture_update.autopos.title", null, null, "texture_update.autopos.complete");
+				if(dialog != null) dialog.close(); last = (HALT = (list = null) == null) ? -1 : 0; image = null;
+				return;
 			}
 			PolygonWrapper wrapper = list.get(last); last++;
-			String str = Translator.format("dialog.texture_update.auto_positioner.processing", "Processing: %s percent<nl>%s:%s",
-				per = getPercent(last, list.size()), wrapper.getTurboList().id, wrapper.name());
-			FMTB.showDialogbox(str, null, null, null, null, per, null);
+			showPercentageDialog(wrapper.getTurboList().id, wrapper.name(), getPercent(last, list.size()));
 			if(wrapper.texpos == null || wrapper.texpos.length == 0){ Print.console("skipping1 [" + wrapper.getTurboList().id + ":" + wrapper.name() + "]"); return; }
 			if(wrapper.textureX != 0f && wrapper.textureY != 0f && !ALL){
 				Print.console("skipping0 [" + wrapper.getTurboList().id + ":" + wrapper.name() + "]");
@@ -131,6 +140,11 @@ public class TextureUpdate extends TimerTask {
 		}
 	}
 	
+	private static void showPercentageDialog(String group, String polygon, int percent){
+		if(dialog == null) dialog = new TexUpDialog(); dialog.progressbar.setValue(percent);
+		dialog.label.getTextState().setText(Translator.format("texture_update.autopos.processing", group, polygon));
+	}
+
 	private static boolean check(float[][][] texpos, int xx, int yy){
 		float[][] ends = null;
 		for(int i = 0; i < texpos.length; i++){ ends = texpos[i];
@@ -178,5 +192,24 @@ public class TextureUpdate extends TimerTask {
 	}
 	
 	private static int getPercent(int i, int all){ return (i * 100) / all; }
+	
+	public static class TexUpDialog extends Dialog24 {
+		
+		private ProgressBar progressbar;
+		private Label20 label;
+
+		public TexUpDialog(){
+			super(Translator.translate("texture_update.autopos.title"), 400, 90);
+			label = new Label20(Translator.format("texture_update.autopos.processing", 0, "initializing"), 10, 10, 340, 20);
+            dialog = this; dialog.setResizable(false); dialog.getContainer().add(label);
+            progressbar = new ProgressBar(10, 40, 380, 10); progressbar.setValue(0);
+	        dialog.getContainer().add(progressbar); dialog.show(FMTB.frame);
+		}
+		
+	    public void close(){
+	        super.close(); dialog = null;
+	    }
+		
+	}
 
 }
