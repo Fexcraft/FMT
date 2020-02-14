@@ -60,7 +60,6 @@ import net.arikia.dev.drpc.DiscordRPC;
 import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.ui.Editors;
-import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.UserInterpanels;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Button20;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Dialog24;
@@ -91,7 +90,6 @@ public class FMTB {
 	//
 	public static GGR ggr;
 	private boolean close;
-	public UserInterface UI;
 	private static String title = "Unnamed Model";
 	private static FMTB INSTANCE;
 	public static GroupCompound MODEL = new GroupCompound(null);

@@ -243,7 +243,7 @@ public class GroupCompound {
 	
 	public void updateFields(){
 		try{
-			if(FMTB.get() == null || FMTB.get().UI == null || !FMTB.get().UI.hasElement("general_editor")) return; FMTB.get().setTitle(this.name);
+			if(FMTB.get() == null || FMTB.frame == null) return; FMTB.get().setTitle(this.name);
 			PolygonWrapper poly = getFirstSelection();
 			//ouch, I forgot not keeping a secondary "selection" list doesn't also save which was selected first...
 			if(poly == null){

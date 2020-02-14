@@ -5,10 +5,7 @@ import java.util.ArrayList;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.general.HoverMenu;
 import net.fexcraft.app.fmt.ui.general.TextField;
-import net.fexcraft.app.fmt.utils.GGR;
-import net.fexcraft.app.fmt.utils.RayCoastAway;
 import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
@@ -124,81 +121,5 @@ public class UserInterface {
 			super.renderSelf(rw, rh);
 		}
 	};
-
-	public boolean isAnyHovered(){
-		boolean bool = false;
-		for(Element elm : elements){ if(elm.anyHovered()){ bool = true; break; } }
-		return bool;
-	}
-
-	public void onButtonPress(int i){
-		if(HoverMenu.anyMenuHovered()){
-			for(HoverMenu list : HoverMenu.MENUS){
-				if(list.isHovered() && list.onButtonClick(GGR.mousePosX(), FMTB.HEIGHT - GGR.mousePosY(), i == 0, true)) return;
-			}
-		}
-		else{
-			Element element = null;//, elm0 = null;
-			/*for(Dialog dialog : Dialog.dialogs){
-				if((elm0 = (Element)dialog).visible && elm0.enabled){
-					if(elm0.onButtonClick(GGR.mousePosX(), FMTB.HEIGHT - GGR.mousePosY(), i == 0, elm0.hovered)){
-						return;
-					} else element = elm0;
-				}
-			}
-			for(Element elm : elements){
-				if(elm instanceof Dialog == false && elm.visible && elm.enabled){
-					if(elm.onButtonClick(GGR.mousePosX(), FMTB.HEIGHT - GGR.mousePosY(), i == 0, elm.hovered)){
-						return;
-					} else element = elm;
-				}
-			}*/
-			if(element instanceof TextField == false) TextField.deselectAll();
-			boolean bool = element == null ? true : element.id.equals("crossbar"); 
-			if(i == 0 && bool){
-				RayCoastAway.doTest(true, true);
-			}
-			/*if(GGR.iControlDown() && i == 1 && bool && !UserInterface.RIGHTMENU.visible()){
-				ArrayList<PolygonWrapper> selected = FMTB.MODEL.getSelected();
-				UserInterface.RIGHTMENU.show(AltMenu.Type.sel(selected.isEmpty()), FMTB.cursor_x, FMTB.HEIGHT - FMTB.cursor_y, selected);
-			}*/
-		}
-		return;
-	}
-
-	public void getDraggableElement(){
-		Element element = null;
-		for(Element elm : elements){
-			if(elm.visible){
-				element = elm.getDraggableElement(GGR.mousePosX(), FMTB.HEIGHT - GGR.mousePosY(), elm.hovered);
-				if(element != null) break;
-			}
-		}
-		if(element != null){ UserInterface.DRAGGED = element; }
-	}
-
-	public boolean onScrollWheel(int wheel){
-		//Element elm0 = null;
-		/*for(Dialog dialog : Dialog.dialogs){
-			if((elm0 = (Element)dialog).visible && elm0.enabled){
-				if(elm0.onScrollWheel(wheel)) return true;
-			}
-		}*/
-		for(Element elm : elements){
-			if(elm.visible && elm.enabled){
-				if(elm.onScrollWheel(wheel)) return true;
-			}
-		} return false;
-	}
-
-	public Element getElement(String string){
-		for(Element elm : elements) if(elm.id.equals(string)) return elm; return null;
-	}
-
-	public boolean hasElement(String string){
-		return getElement(string) != null;
-	}
-	
-	public ArrayList<Element> getElements(){ return elements; }
 	
 }
