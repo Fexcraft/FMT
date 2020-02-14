@@ -49,6 +49,7 @@ toolbar.textures.edit=Edit (External)
 toolbar.textures.texture_map=Tex. Map (WIP)
 toolbar.textures.remove=Remove/Unload
 toolbar.textures.texpos_reset=Reset Tex.Pos.
+toolbar.textures.texpos_reset.done=Texture Positions Reset.
 toolbar.textures.auto_position=Auto Tex.Pos.
 toolbar.textures.generate=Generate New
 toolbar.helpers=Helpers
@@ -130,14 +131,69 @@ eximporter.export.select.title=Select Exporter
 eximporter.export.select.desc=Select an exporter to export your Model/Object.
 eximporter.export.select.continue=Continue
 eximporter.export.title=Select Export Location
+eximporter.export.failed=Errors while exporting Model.
+eximporter.export.nofile=No valid file choosen. Export is cancelled.
+eximporter.export.success=Export complete.
 eximporter.import.select.title=Select Importer
 eximporter.import.select.desc=Select an importer to import your Model/Object.
 eximporter.import.select.continue=Continue
 eximporter.import.title=Select Import Location
+eximporter.import.failed=Errors while importing Model.
+eximporter.import.nofile=No valid file choosen. Import is cancelled.
+eximporter.import.success=Import complete.
+eximporter.mtb_importer.stream_null=Import Failed, MTB appears corrupt.
 
 # SettingsBox
 settingsbox.continue=Continue
 settingsbox.confirm=Confirm
+
+# DialogBox
+dialogbox.title.default=Status Dialog
+dialogbox.button.confirm=Confirm
+dialogbox.button.cancel=Cancel
+dialogbox.button.open=Open
+dialogbox.button.save=Save
+dialogbox.button.yes=Yes
+dialogbox.button.no=No
+dialogbox.button.ok=Ok
+
+# Polygon Tree
+polygontree.remove_group=Remove this group?
+polygontree.remove_polygon=Remove this polygon?
+
+# Mod Tool Trees
+fvtm_tree.remove_animation=Remove this Animation?
+
+# Image Util
+image_helper.screenshot.done=Screenshot taken.
+image_helper.gif.done=Gif Created.
+
+# Polygon Picker
+polygon_picker.paint_bucket.toggle_off=Toggle Off
+polygon_picker.paint_bucket.no_texture=No Texture loaded. Cannot use Paint Bucket.
+polygon_picker.paint_pencil.toggle_off=Toggle Off
+polygon_picker.paint_pencil.no_texture=No Texture loaded. Cannot use Paint Pencil.
+
+# GroupCompound/Model
+compound.change_type.not_found=Type not found!
+compound.change_type.failed=%s shape(s) skipped!
+compound.delete_selected=Are you sure to delete all selected Polygons?
+
+# Save/Load
+saveload.title=FMTB File Manager
+saveload.open.nofile=Invalid Model File! (Does it exist?)
+saveload.open.errors=Errors occured while parsing save file.
+saveload.save.nofile=Model save file is 'null'! Model will not be saved.
+saveload.save.success=Model Saved!
+saveload.should_save=Do you want to save the current model first?
+
+# Helper/Preview Collector
+helper_collector.title=Helper/Preview Collector
+helper_collector.load_fmtb.nofile=Invalid Model File! (Does it exist?)
+helper_collector.load_fmtb.invalid_file=Invalid Model File, model.jtmt is missing.
+helper_collector.load_fmtb.errors=Errors occured while parsing save file.
+helper_collector.load_frame.nofile=Invalid Model File! (Does it exist?)
+helper_collector.load_frame.errors=Errors occured while creating frame.
 
 # Errors
 error.dialog_title=Error
@@ -147,21 +203,7 @@ error.no_polygon_selected=no polygon/s selected
 error.todo=//TODO
 
 # Other / Old
-bottombar.netfield.loggedin=Logged In - %s
 bottombar.netfield.login_failed=Login Failed - GUEST
+bottombar.netfield.loggedin=Logged In - %s
 modeltree.polygons=Polygons: 
-dialog.saveload.should_save=Do you want to save the<nl>current model first?
-dialog.saveload.should_save.confirm=Yes
-dialog.saveload.should_save.cancel=No
-filechooser.export.title=Select Export Location
-filechooser.export.confirm=Export
 
-
-saveload.open=Select file to open.
-saveload.filechooser.save=Select save location.
-dialog.export.success=Export complete.<nl>%s
-dialog.export.success.confirm=OK!
-dialog.export.fail=Errors while exporting Model.<nl>%s
-dialog.export.fail.confirm=ok.
-saveload.filechooser.open.nofile=Invalid Model File!<nl>(does it even exists?)
-saveload.filechooser.open.nofile.confirm=ok.

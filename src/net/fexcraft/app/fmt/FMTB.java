@@ -274,8 +274,7 @@ public class FMTB {
 	}
 
 	public void resize(int width, int height){
-    	WIDTH = width; HEIGHT = height;
-    	perspective(45.0f, (float)WIDTH / (float)HEIGHT, 0.1f, 4096f / 2);
+    	WIDTH = width; HEIGHT = height; perspective(45.0f, (float)WIDTH / (float)HEIGHT, 0.1f, 4096f / 2);
 	}
 
     private static Vector4f rgba(int r, int g, int b, float a) {
@@ -335,7 +334,7 @@ public class FMTB {
             }
             if(Settings.demo()){
                 TextureManager.bindTexture("t1p");
-                ModelT1P.INSTANCE.render();
+                RGB.glColorReset(); ModelT1P.INSTANCE.render();
             }
 			if(Settings.lighting()) GL11.glDisable(GL11.GL_LIGHTING);
             GL11.glPopMatrix();
@@ -426,19 +425,9 @@ public class FMTB {
 	public void close(boolean bool){
 		close = bool;
 	}
-	
-	public static void showDialogbox(String title, String button0, String button1, Runnable run0, Runnable run1){
-		UserInterface.DIALOGBOX.show(title, button0, button1, run0, run1);
-	}
-	
-	public static void showDialogbox(String title, String button0, String button1, Runnable run0, Runnable run1, int progress, RGB color){
-		UserInterface.DIALOGBOX.show(title, button0, button1, run0, run1);
-		UserInterface.DIALOGBOX.progress = progress; UserInterface.DIALOGBOX.progresscolor = color;
-	}
 
 	public void reset(boolean esc){
 		if(context.getFocusedGui() instanceof Field){
-			UserInterface.DIALOGBOX.reset();
 			context.getFocusedGui().setFocused(false);
 		}
 		else if(esc && Editors.anyVisible()){ Editor.hideAll(); }

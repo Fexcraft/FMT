@@ -8,9 +8,9 @@ import java.nio.ByteOrder;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
-import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
@@ -41,9 +41,9 @@ public class RayCoastAway {
 		if(TextureEditor.pixelMode()){
 			Texture tex;
 			if(FMTB.MODEL.texture == null || (tex = TextureManager.getTexture(FMTB.MODEL.texture, true)) == null){
-				String str = Translator.translate("dialog.polygon_picker.paint_pencil.no_texture", "No Texture loaded.<nl>Cannot use Paint Pencil.");
-				String ok = Translator.translate("dialog.polygon_picker.paint_pencil.no_texture.confirm", "ok");
-				FMTB.showDialogbox(str, ok, Translator.translate("dialog.polygon_picker.paint_pencil.no_texture.cancel", "toggle off"), DialogBox.NOTHING, () -> { TextureEditor.toggleBucketMode(null); });
+				DialogBox.show(null, "dialog.button.ok", "polygon_picker.paint_bucket.toggle_off", null, () -> {
+					TextureEditor.toggleBucketMode(null);
+				}, "polygon_picker.paint_bucket.no_texture");
 				return;
 			}
 			Texture calctex = TextureManager.getTexture(GroupCompound.temptexid, true);
@@ -86,9 +86,9 @@ public class RayCoastAway {
 		else{
 			Texture tex;
 			if(FMTB.MODEL.texture == null || (tex = TextureManager.getTexture(FMTB.MODEL.texture, true)) == null){
-				String str = Translator.translate("dialog.polygon_picker.paint_bucket.no_texture", "No Texture loaded.<nl>Cannot use Paint Bucket.");
-				String ok = Translator.translate("dialog.polygon_picker.paint_bucket.no_texture.confirm", "ok");
-				FMTB.showDialogbox(str, ok, Translator.translate("dialog.polygon_picker.paint_bucket.no_texture.cancel", "toggle off"), DialogBox.NOTHING, () -> { TextureEditor.toggleBucketMode(null); });
+				DialogBox.show(null, "dialog.button.ok", "polygon_picker.paint_bucket.toggle_off", null, () -> {
+					TextureEditor.toggleBucketMode(null);
+				}, "polygon_picker.paint_bucket.no_texture");
 				return;
 			}
 			if(TextureEditor.groupMode()){

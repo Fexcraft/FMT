@@ -16,9 +16,8 @@ import java.util.zip.ZipFile;
 
 import javax.imageio.ImageIO;
 
-import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
-import net.fexcraft.app.fmt.ui.general.DialogBox;
+import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.wrappers.BoxWrapper;
@@ -88,7 +87,7 @@ public class MTBImporter extends ExImPorter {
                 }
             }
             if(stream == null){
-            	FMTB.showDialogbox("Status\nImport Failed, MTB appears corrupt.", "Oh well..", "", DialogBox.NOTHING, null);
+            	DialogBox.showOK("eximporter.import.failed", null, null, "eximporter.mtb_importer.stream_null");
                 zip.close(); return compound;
             }
             String[] file = convertStreamToString(stream).split("\n"); //Files.readAllLines(stream.toPath());

@@ -14,7 +14,7 @@ public class Toolbar extends Element {
 		this.elements.add(new Icon(this, "info", "toolbar:icon", "icons/toolbar/info", 32, 0, 0){
 			@Override
 			public boolean processButtonClick(int x, int y, boolean left){
-				DialogBox.notAvailableYet(); return true;
+				/*DialogBox.notAvailableYet();*/ return true;
 			}
 		});
 		this.elements.add(new Icon(this, "new_file", "toolbar:icon", "icons/toolbar/new", 32, 0, 0){
@@ -38,7 +38,7 @@ public class Toolbar extends Element {
 		this.elements.add(new Icon(this, "profile", "toolbar:icon", "icons/toolbar/profile", 32, 0, 0){
 			@Override
 			public boolean processButtonClick(int x, int y, boolean left){
-				DialogBox.notAvailableYet(); return true;
+				/*DialogBox.notAvailableYet();*/ return true;
 			}
 		});
 		this.elements.add(new Icon(this, "settings", "toolbar:icon", "icons/toolbar/settings", 32, 0, 0){

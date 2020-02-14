@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.ui.Editors;
-import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.lib.common.json.JsonUtil;
 
 public class KeyCompound {
@@ -60,10 +60,10 @@ public class KeyCompound {
 		//
 		keys.add(new KeyFunction("take_screenshot", GLFW_KEY_F12, (action) -> {
 			ImageHelper.takeScreenshot(false);
-        	FMTB.showDialogbox("Screenshot taken.", "OK", "Open", DialogBox.NOTHING, () -> {
+        	DialogBox.show(null, "dialogbox.button.ok", "dialogbox.button.open", null, () -> {
         		try{ Desktop.getDesktop().open(new File("./screenshots/")); }
         		catch(IOException e){ e.printStackTrace(); }
-        	});
+        	}, "image_helper.screenshot.done");
 		}));
 		//
 		for(int i = 1; i < 10; i++){ final int j = i - 1;

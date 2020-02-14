@@ -96,7 +96,7 @@ public class GGR {
 	}
 
 	public void scrollCallback(long window, double xoffset, double yoffset){
-		double[] zoom = rotatePoint(yoffset * 0.005f, rotation.xCoord, rotation.yCoord - 90);
+		double[] zoom = rotatePoint(yoffset * 0.05f, rotation.xCoord, rotation.yCoord - 90);
         pos.xCoord += zoom[0]; pos.yCoord += zoom[1]; pos.zCoord += zoom[2];
 	}
 

@@ -26,7 +26,6 @@ import org.lwjgl.glfw.GLFW;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager;
-import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.ui.tree.RightTree;
 import net.fexcraft.app.fmt.utils.HelperCollector;
 import net.fexcraft.app.fmt.utils.ImageHelper;
@@ -161,7 +160,7 @@ public class UserInterpanels {
 				FMTB.MODEL.getGroups().forEach(list -> list.forEach(turbo -> {
 					turbo.textureX = 0; turbo.textureY = 0; turbo.recompile();
 				}));
-				FMTB.showDialogbox("Texture Positions Reset.", "ok",  null, DialogBox.NOTHING, null);
+				DialogBox.showOK(null, null, null, "toolbar.textures.texpos_reset.done");
 			}),
 			new MenuButton("toolbar.textures.auto_position", () -> TextureUpdate.tryAutoPos(null)),
 			new MenuButton("toolbar.textures.generate", () -> {

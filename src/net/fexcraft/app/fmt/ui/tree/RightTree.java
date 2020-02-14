@@ -8,6 +8,7 @@ import java.util.Optional;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
+import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.ui.FontRenderer.FontType;
@@ -15,7 +16,6 @@ import net.fexcraft.app.fmt.ui.SettingsBox;
 import net.fexcraft.app.fmt.ui.UserInterface;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.general.Button;
-import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.ui.general.Icon;
 import net.fexcraft.app.fmt.ui.general.Scrollbar;
 import net.fexcraft.app.fmt.ui.general.Scrollbar.Scrollable;
@@ -200,11 +200,10 @@ public abstract class RightTree extends Element implements Scrollable {
 			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_delete", 22, width - 26, 2){
 				@Override
 				public boolean processButtonClick(int mx, int my, boolean left){
-					String str = format("modeltree.remove_group", "Remove this group?<nl>%s", list.id);
-					String yes = translate("modeltree.remove_group.confirm", "Yes");
-					FMTB.showDialogbox(str, yes, translate("modeltree.remove_group.cancel", "No!"), () -> {
+					DialogBox.showYN(null, () -> {
 						FMTB.MODEL.getGroups().remove(list.id);
-					}, DialogBox.NOTHING); return true;
+					}, null, "polygontree.remove_group", "#" + list.id);
+					return true;
 				}
 			});
 		}
@@ -277,10 +276,10 @@ public abstract class RightTree extends Element implements Scrollable {
 			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_delete", 22, width - 26, 2){
 				@Override
 				public boolean processButtonClick(int mx, int my, boolean left){
-					String str = format("modeltree.remove_polygon", "Remove this polygon?<nl>%s", polygon.getTurboList().id + ":" + polygon.name());
-					FMTB.showDialogbox(str, translate("modeltree.remove_polygon.confirm", "Yes"), translate("modeltree.remove_polygon.cancel", "No!"), () -> {
+					DialogBox.showYN(null, () -> {
 						polygon.getTurboList().remove(polygon);
-					}, DialogBox.NOTHING); return true;
+					}, null, "polygontree.remove_polygon", "#" + polygon.getTurboList().id + ":" + polygon.name());
+					return true;
 				}
 			});
 		}
@@ -447,11 +446,10 @@ public abstract class RightTree extends Element implements Scrollable {
 			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_delete", 22, width - 26, 2){
 				@Override
 				public boolean processButtonClick(int mx, int my, boolean left){
-					String str = format("fvtm_tree.remove", "Remove this Animation?<nl>%s", anim.id);
-					String yes = translate("fvtm_tree.remove.confirm", "Yes");
-					FMTB.showDialogbox(str, yes, translate("fvtm_tree.remove.cancel", "No!"), () -> {
+					DialogBox.showYN(null, () -> {
 						anim.group.animations.remove(anim); FMTB.MODEL.updateFields();
-					}, DialogBox.NOTHING); return true;
+					}, null, "fvtm_tree.remove_animation", "#" + anim.id);
+					return true;
 				}
 			});
 		}

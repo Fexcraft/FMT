@@ -37,7 +37,7 @@ public class FileSelector {
             for(int i = 1; i < type.length; i++) buffer.put(stack.UTF8(type[i])); buffer.flip();
     		if(save) string = TinyFileDialogs.tinyfd_saveFileDialog(title, root, buffer, type[0]);
     		else string = TinyFileDialogs.tinyfd_openFileDialog(title, root, buffer, type[0], false);//Print.console(string);
-    		if(string != null && string.trim().length() > 0) task.process(new File(string));
+    		task.process(string != null && string.trim().length() > 0 ? new File(string) : null);
         }
 	}
 	
@@ -66,7 +66,7 @@ public class FileSelector {
         	            for(String pattern : porter.getExtensions()) buffer.put(stack.UTF8(pattern)); buffer.flip(); String string = "";
         	    		if(export) string = TinyFileDialogs.tinyfd_saveFileDialog(title, reet, buffer, tetle);
         	    		else string = TinyFileDialogs.tinyfd_openFileDialog(title, reet, buffer, tetle, false);//Print.console(string);
-        	    		if(string != null && string.trim().length() > 0) task.process(new File(string), porter, settings);
+        	    		task.process(string != null && string.trim().length() > 0 ? new File(string) : null, porter, settings);
         	        }
         		});
         	}

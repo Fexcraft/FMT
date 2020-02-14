@@ -10,12 +10,12 @@ import java.util.stream.Collectors;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.ui.Editors;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Field;
 import net.fexcraft.app.fmt.ui.editor.Container;
 import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
-import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.app.fmt.ui.tree.HelperTree;
 import net.fexcraft.app.fmt.ui.tree.ModelTree;
 import net.fexcraft.app.fmt.ui.tree.RightTree.CompoundButton;
@@ -538,8 +538,7 @@ public class GroupCompound {
 	public void changeTypeOfSelected(ArrayList<PolygonWrapper> selected, String text){
 		ShapeType type = ShapeType.get(text);
 		if(type == null){
-			String str = Translator.format("dialog.compound.change_type.not_found", "Type not found!<nl>[%s]", text.toLowerCase());
-			FMTB.showDialogbox(str, null, Translator.translate("dialog.compound.change_type.not_found.cancel", "ok"), null, DialogBox.NOTHING); return;
+			DialogBox.showOK(null, null, null, "compound.change_type.not_found", "#" + text.toLowerCase()); return;
 		}
 		int failed = 0; ShapeType lastfail = null;
 		for(PolygonWrapper sel : selected){
@@ -553,8 +552,7 @@ public class GroupCompound {
 			} else { failed++; lastfail = sel.getType(); }
 		}
 		if(failed > 0){
-			String string = Translator.format("dialog.compound.change_type.failed", "%s shape(s) skipped!<nl>%s !> %s", failed, type.name().toLowerCase(), lastfail.name().toLowerCase());
-			FMTB.showDialogbox(string, null, Translator.translate("dialog.compound.change_type.failed.cancel", "ok"), null, DialogBox.NOTHING);
+			DialogBox.showOK(null, null, null, "#" + Translator.format("compound.change_type.failed", failed), "#" + String.format("%s != %s", type.name().toLowerCase(), lastfail.name().toLowerCase()));
 		}
 		this.updateFields();
 	}
@@ -646,15 +644,13 @@ public class GroupCompound {
 	}
 
 	public void deleteSelected(){
-		String str = Translator.translate("dialog.compound.delete_selected", "Are you sure to<nl>delete all Selected?");
-		String yes = Translator.translate("dialog.compound.delete_selected.confirm", "Yes!");
-		FMTB.showDialogbox(str, yes, Translator.translate("dialog.compound.delete_selected.cancel", "Cancel!"), () -> {
+		DialogBox.showYN(null, () -> {
 			ArrayList<PolygonWrapper> wrapp = this.getSelected();
 			for(PolygonWrapper wrapper : wrapp){
 				wrapper.getTurboList().remove(wrapper);
 				wrapper.button.getRoot().getElements().remove(wrapper.button);
 			} SELECTED_POLYGONS = 0;
-		}, DialogBox.NOTHING);
+		}, null, "compound.delete_selected");
 	}
 
 	public PolygonWrapper getLastSelected(){
