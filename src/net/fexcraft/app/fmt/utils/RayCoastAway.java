@@ -31,7 +31,7 @@ public class RayCoastAway {
 		/*if(!Settings.rayPicking()) return;*/ if(bool && !PICKING){ PICKING = true; MOUSEOFF = mouseoff; return; } if(FMTB.get() == null) return;
 		//
 		int width = FMTB.WIDTH, height = FMTB.HEIGHT;
-		if(mouseoff){ width = GGR.mousePosX() * 2; height = GGR.mousePosY() * 2; }
+		if(mouseoff){ width = GGR.mousePosX() * 2; height = -(GGR.mousePosY() - FMTB.HEIGHT) * 2; }
 		GL11.glReadPixels(width / 2, height / 2, 1, 1, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
 		byte[] byteArray = new byte[4]; buffer.get(byteArray);
 		//Print.console((((int) byteArray[0]) & 0xFF) + " " + (((int) byteArray[1]) & 0xFF) + " "  + (((int) byteArray[2]) & 0xFF));
