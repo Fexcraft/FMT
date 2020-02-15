@@ -83,9 +83,9 @@ public class Editors {
 			super(0, 30, 304, FMTB.HEIGHT - 30); editors.add(this);
 			String[] arr = new String[]{ "normal", "sixteenth", "decimal"}; int off = 0;
 			Label label = new Label(translate("editor.multiplicator"), 4, 4, 100, 24);
-			super.add(label); label.getTextState().setFontSize(20); int am = 0;
+			super.add(label); label.getStyle().setFontSize(20f); int am = 0;
 			Label current = new Label(format("editor.multiplicator.current", 1f), 4, 28, 100, 24);
-			super.add(current); current.getTextState().setFontSize(20);
+			super.add(current); current.getStyle().setFontSize(20f);
 			for(String string : arr){
 				Slider multislider = new Slider(148, 4 + off, 150, 14);
 				switch(string){
@@ -106,7 +106,7 @@ public class Editors {
 					}
 				}
 		        final Tooltip multitip = new Tooltip();
-		        multitip.setSize(100, 20); multitip.getTextState().setFontSize(20);
+		        multitip.setSize(100, 20); multitip.getStyle().setFontSize(20f);
 		        multitip.setPosition(multislider.getSize().x + 2, 0); final String amo = "%." + am + "f";
 		        multitip.getTextState().setText(translate("editor.multiplicator.value") + String.format(amo, multislider.getValue()));
 		        multislider.addSliderChangeValueEventListener((SliderChangeValueEventListener) event -> {
@@ -188,9 +188,9 @@ public class Editors {
 			EditorWidget attributes = new EditorWidget(this, translate("editor.general.attributes"), 0, 0, 0, 0);
 	        attributes.getContainer().add(new Label20(translate("editor.general.attributes.group"), 3, pass += 24, 290, 20));
 	        attributes.getContainer().add(polygon_group = new SelectBox<>(3, pass += 24, 290, 20));
-	        polygon_group.addElement("> new_group <"); polygon_group.getSelectBoxElements().get(0).getTextState().setFontSize(20f);
+	        polygon_group.addElement("> new_group <"); polygon_group.getSelectBoxElements().get(0).getStyle().setFontSize(20f);
 	        polygon_group.setVisibleCount(12); polygon_group.setElementHeight(20);
-			polygon_group.getSelectionButton().getTextState().setFontSize(20f);
+			polygon_group.getSelectionButton().getStyle().setFontSize(20f);
 	        polygon_group.addSelectBoxChangeSelectionEventListener(event -> {
 	        	if(event.getNewValue().toString().equals("> new_group <")){
 		            Dialog20 dialog = new Dialog20(translate("editor.general.attributes.new_group.title"), 300, 120);
@@ -242,9 +242,9 @@ public class Editors {
 	        attributes.getContainer().add(new Label20(translate("editor.general.attributes.type"), 3, pass += 24, 290, 20));
 	        attributes.getContainer().add(polygon_type = new SelectBox<>(3, pass += 24, 290, 20));
 	        for(ShapeType type : ShapeType.getSupportedValues()) polygon_type.addElement(type.name().toLowerCase());
-	        polygon_type.getSelectBoxElements().forEach(elm -> elm.getTextState().setFontSize(20f));
+	        polygon_type.getSelectBoxElements().forEach(elm -> elm.getStyle().setFontSize(20f));
 	        polygon_type.setVisibleCount(12); polygon_type.setElementHeight(20);
-	        polygon_type.getSelectionButton().getTextState().setFontSize(20f);
+	        polygon_type.getSelectionButton().getStyle().setFontSize(20f);
 	        polygon_type.addSelectBoxChangeSelectionEventListener(event -> {
 	        	FMTB.MODEL.changeTypeOfSelected(FMTB.MODEL.getSelected(), event.getNewValue().toString());
 	        });
@@ -387,7 +387,7 @@ public class Editors {
 			while(!polygon_group.getElements().isEmpty()) polygon_group.removeElement(0);
 			for(TurboList list : FMTB.MODEL.getGroups()) polygon_group.addElement(list.id);
 			polygon_group.addElement("> new_group <");
-			polygon_group.getSelectBoxElements().forEach(elm -> elm.getTextState().setFontSize(20f));
+			polygon_group.getSelectBoxElements().forEach(elm -> elm.getStyle().setFontSize(20f));
 		}
 		
 	}
@@ -425,21 +425,21 @@ public class Editors {
 			model.getContainer().add(new Label20(translate("editor.model_group.model.texture_size"), 3, pass += 24, 290, 20));
 			model.getContainer().add(m_tex_x = new SelectBox<>(4, pass += 24, 90, 20));
 	        for(int size : texsizes) m_tex_x.addElement((float)size);
-	        m_tex_x.getSelectBoxElements().forEach(elm -> elm.getTextState().setFontSize(20f));
+	        m_tex_x.getSelectBoxElements().forEach(elm -> elm.getStyle().setFontSize(20f));
 	        m_tex_x.setVisibleCount(10); m_tex_x.setElementHeight(20);
-	        m_tex_x.getSelectionButton().getTextState().setFontSize(20f);
+	        m_tex_x.getSelectionButton().getStyle().setFontSize(20f);
 	        m_tex_x.addSelectBoxChangeSelectionEventListener(event -> updateModelTexSize(event, true));
 			model.getContainer().add(m_tex_y = new SelectBox<>(102, pass, 90, 20));
 	        for(int size : texsizes) m_tex_y.addElement((float)size);
-	        m_tex_y.getSelectBoxElements().forEach(elm -> elm.getTextState().setFontSize(20f));
+	        m_tex_y.getSelectBoxElements().forEach(elm -> elm.getStyle().setFontSize(20f));
 	        m_tex_y.setVisibleCount(10); m_tex_y.setElementHeight(20);
-	        m_tex_y.getSelectionButton().getTextState().setFontSize(20f);
+	        m_tex_y.getSelectionButton().getStyle().setFontSize(20f);
 	        m_tex_y.addSelectBoxChangeSelectionEventListener(event -> updateModelTexSize(event, false));
 			model.getContainer().add(m_tex_s = new SelectBox<>(200, pass, 90, 20));
 	        m_tex_s.addElement(1f); m_tex_s.addElement(2f); m_tex_s.addElement(3f); m_tex_s.addElement(4f);
-	        m_tex_s.getSelectBoxElements().forEach(elm -> elm.getTextState().setFontSize(20f));
+	        m_tex_s.getSelectBoxElements().forEach(elm -> elm.getStyle().setFontSize(20f));
 	        m_tex_s.setVisibleCount(10); m_tex_s.setElementHeight(20);
-	        m_tex_s.getSelectionButton().getTextState().setFontSize(20f);
+	        m_tex_s.getSelectionButton().getStyle().setFontSize(20f);
 	        m_tex_s.addSelectBoxChangeSelectionEventListener(event -> updateModelTexSize(event, null));
 	        model.getContainer().add(new Label20(translate("editor.model_group.model.texture"), 3, pass += 24, 290, 20));
 			model.getContainer().add(model_texture = new TextInput20(FMTB.MODEL.texture, 3, pass += 24, 290, 20));
@@ -505,21 +505,21 @@ public class Editors {
 			group.getContainer().add(new Label20(translate("editor.model_group.group.texture_size"), 3, pass += 24, 290, 20));
 			group.getContainer().add(g_tex_x = new SelectBox<>(4, pass += 24, 90, 20));
 	        for(int size : texsizes) g_tex_x.addElement((float)size);
-	        g_tex_x.getSelectBoxElements().forEach(elm -> elm.getTextState().setFontSize(20f));
+	        g_tex_x.getSelectBoxElements().forEach(elm -> elm.getStyle().setFontSize(20f));
 	        g_tex_x.setVisibleCount(10); g_tex_x.setElementHeight(20);
-	        g_tex_x.getSelectionButton().getTextState().setFontSize(20f);
+	        g_tex_x.getSelectionButton().getStyle().setFontSize(20f);
 	        g_tex_x.addSelectBoxChangeSelectionEventListener(event -> updateGroupTexSize(event, true));
 	        group.getContainer().add(g_tex_y = new SelectBox<>(102, pass, 90, 20));
 	        for(int size : texsizes) g_tex_y.addElement((float)size);
-	        g_tex_y.getSelectBoxElements().forEach(elm -> elm.getTextState().setFontSize(20f));
+	        g_tex_y.getSelectBoxElements().forEach(elm -> elm.getStyle().setFontSize(20f));
 	        g_tex_y.setVisibleCount(10); g_tex_y.setElementHeight(20);
-	        g_tex_y.getSelectionButton().getTextState().setFontSize(20f);
+	        g_tex_y.getSelectionButton().getStyle().setFontSize(20f);
 	        g_tex_y.addSelectBoxChangeSelectionEventListener(event -> updateGroupTexSize(event, false));
 	        group.getContainer().add(g_tex_s = new SelectBox<>(200, pass, 90, 20));
 	        g_tex_s.addElement(1f); g_tex_s.addElement(2f); g_tex_s.addElement(3f); g_tex_s.addElement(4f);
-	        g_tex_s.getSelectBoxElements().forEach(elm -> elm.getTextState().setFontSize(20f));
+	        g_tex_s.getSelectBoxElements().forEach(elm -> elm.getStyle().setFontSize(20f));
 	        g_tex_s.setVisibleCount(10); g_tex_s.setElementHeight(20);
-	        g_tex_s.getSelectionButton().getTextState().setFontSize(20f);
+	        g_tex_s.getSelectionButton().getStyle().setFontSize(20f);
 	        g_tex_s.addSelectBoxChangeSelectionEventListener(event -> updateGroupTexSize(event, null));
 			group.getContainer().add(new Label20(translate("editor.model_group.group.texture"), 3, pass += 24, 290, 20));
 			group.getContainer().add(group_texture = new TextInput20(FMTB.MODEL.texture, 3, pass += 24, 290, 20));
@@ -553,14 +553,14 @@ public class Editors {
 	        add_anim.getSelectBoxElements().forEach(elm -> {
         		Background background = new Background();
         		background.setColor(new Vector4f(0.8f, 0.8f, 0.8f, 1f));
-	        	elm.getTextState().setFontSize(20f);
-	        	elm.getTextState().setHorizontalAlign(HorizontalAlign.LEFT);
+	        	elm.getStyle().setFontSize(20f);
+	        	elm.getStyle().setHorizontalAlign(HorizontalAlign.LEFT);
 	        	if(elm.getObject().id.startsWith("#") && !elm.getObject().id.endsWith("#")){
 	        		elm.getStyle().setBackground(background);
 	        	}
 	        });
 	        add_anim.setVisibleCount(12); add_anim.setElementHeight(20);
-	        add_anim.getSelectionButton().getTextState().setFontSize(20f);
+	        add_anim.getSelectionButton().getStyle().setFontSize(20f);
 	        add_anim.addSelectBoxChangeSelectionEventListener(event -> addAnimation(event));
 			group.setSize(296, pass + 52);
 	        this.addSub(group); pass = -20;
@@ -595,7 +595,7 @@ public class Editors {
 								list.animations.remove(j); FMTB.MODEL.updateFields();
 							}
 						});
-						button.getTextState().setHorizontalAlign(HorizontalAlign.LEFT);
+						button.getStyle().setHorizontalAlign(HorizontalAlign.LEFT);
 						this.getContainer().add(button);
 					}
 				}
@@ -666,10 +666,10 @@ public class Editors {
 		public EditorWidget(EditorBase base, String title, int x, int y, int w, int h){
 			super(x, y, w, h); editor = base;
 			Background background = new Background(); background.setColor(ColorConstants.lightGray());
-			getTitleTextState().setFontSize(22); getTitleTextState().setText(title);
+			getTitle().getStyle().setFontSize(22f); getTitleTextState().setText(title);
 			getTitleContainer().getStyle().setBackground(background);
 			getTitleContainer().setSize(getTitleContainer().getSize().x, 20);
-			getTitleTextState().setHorizontalAlign(HorizontalAlign.CENTER);
+			getTitle().getStyle().setHorizontalAlign(HorizontalAlign.CENTER);
 	        setCloseable(false); setResizable(false); setDraggable(false);
 		}
 		

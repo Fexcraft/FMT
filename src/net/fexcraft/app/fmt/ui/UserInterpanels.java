@@ -236,7 +236,7 @@ public class UserInterpanels {
 			super(187 + (index * (size + 2)), 1, size, 28);
 			this.getStyle().setBorderRadius(0f);
 			Label tatle = new Label(title, 4, 0, 50, 28);
-			this.add(tatle); tatle.getTextState().setFontSize(28);
+			this.add(tatle); tatle.getStyle().setFontSize(28f);
 			Background background = new Background(); background.setColor(new Vector4f(0.9f, 0.9f, 0.9f, 1));
 			this.getStyle().setBackground(background);
 	        this.getListenerMap().addListener(CursorEnterEvent.class, (CursorEnterEventListener)lis -> { if(!lis.isEntered()) this.checkClose(); });
@@ -251,8 +251,8 @@ public class UserInterpanels {
 			for(int i = 0; i < buttons.length; i++){
 				this.add(buttons[i]); buttons[i].hide();
 				buttons[i].setEntry(this); buttons[i].setPosition(1, 28 + (i * 26));
-				buttons[i].getTextState().setFontSize(20); buttons[i].setSize(size - 2, 24);
-				buttons[i].getTextState().setHorizontalAlign(HorizontalAlign.LEFT);
+				buttons[i].getStyle().setFontSize(20f); buttons[i].setSize(size - 2, 24);
+				buttons[i].getStyle().setHorizontalAlign(HorizontalAlign.LEFT);
 			}
 			tatle.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)event -> { if(event.getAction() == CLICK) toggle(null); });
 			this.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)event -> { if(event.getAction() == CLICK) toggle(null); });
@@ -321,7 +321,7 @@ public class UserInterpanels {
 	public static class Dialog24 extends Dialog {
 		
 		public Dialog24(String string, int w, int h){
-			super(string, w, h); getTitleTextState().setFontSize(24f);
+			super(string, w, h); getTitle().getStyle().setFontSize(24f);
 		}
 		
 	}
@@ -329,7 +329,7 @@ public class UserInterpanels {
 	public static class Label20 extends Label {
 
 		public Label20(String string, int x, int y, int w, int h){
-			super(string, x, y, w, h); getTextState().setFontSize(20f);
+			super(string, x, y, w, h); getStyle().setFontSize(20f);
 		}
 		
 	}
@@ -337,7 +337,7 @@ public class UserInterpanels {
 	public static class TextInput20 extends TextInput {
 
 		public TextInput20(String string, int x, int y, int w, int h){
-			super(string, x, y, w, h); getTextState().setFontSize(20f); setupHoverCheck(this);
+			super(string, x, y, w, h); getStyle().setFontSize(20f); setupHoverCheck(this);
 		}
 
 		@SuppressWarnings("unchecked")
@@ -376,11 +376,11 @@ public class UserInterpanels {
 	public static class NumberInput20 extends TextInput implements Field {
 
 		public NumberInput20(int x, int y, int w, int h){
-			super("0", x, y, w, h); getTextState().setFontSize(20f); setupHoverCheck(this);
+			super("0", x, y, w, h); getStyle().setFontSize(20f); setupHoverCheck(this);
 		}
 		
 		public NumberInput20(Setting setting, int x, int y, int w, int h){
-			super(setting.toString(), x, y, w, h); getTextState().setFontSize(20f); setupHoverCheck(this);
+			super(setting.toString(), x, y, w, h); getStyle().setFontSize(20f); setupHoverCheck(this);
 			getListenerMap().addListener(FocusEvent.class, (FocusEventListener)listener -> {
 				if(!listener.isFocused()){ setting.setValue((float)getValue()); }
 			});
@@ -555,7 +555,7 @@ public class UserInterpanels {
 		}
 		
 		public ColorInput20(Component root, Setting setting, int x, int y, int w, int h){
-			super(setting.toString(), x, y, root == null ? w : w - 40, h); getTextState().setFontSize(20f); setupHoverCheck(this);
+			super(setting.toString(), x, y, root == null ? w : w - 40, h); getStyle().setFontSize(20f); setupHoverCheck(this);
 			getListenerMap().addListener(FocusEvent.class, (FocusEventListener)listener -> {
 				if(!listener.isFocused()){ ((RGB)setting.getValue()).packed = (int)getValue(); }
 			});
@@ -577,7 +577,7 @@ public class UserInterpanels {
 		}
 		
 		public ColorInput20(Component root, Consumer<Integer> update, int x, int y, int w, int h){
-			super("#ffffff", x, y, root == null ? w : w - 40, h); getTextState().setFontSize(20f); setupHoverCheck(this);
+			super("#ffffff", x, y, root == null ? w : w - 40, h); getStyle().setFontSize(20f); setupHoverCheck(this);
 			getListenerMap().addListener(FocusEvent.class, (FocusEventListener)listener -> {
 				if(!listener.isFocused()){ update.accept((int)getValue()); }
 			});
@@ -658,7 +658,7 @@ public class UserInterpanels {
 	public static class Button20 extends Button {
 
 		public Button20(String string, int x, int y, int w, int h){
-			super(string, x, y, w, h); getTextState().setFontSize(20f);
+			super(string, x, y, w, h); getStyle().setFontSize(20f);
 		}
 		
 	}
@@ -666,7 +666,7 @@ public class UserInterpanels {
 	public static class Dialog20 extends Dialog {
 
 		public Dialog20(String string, int x, int y){
-			super(string, x, y); getTitleTextState().setFontSize(20f);
+			super(string, x, y); getTitle().getStyle().setFontSize(20f);
 		}
 		
 	}
