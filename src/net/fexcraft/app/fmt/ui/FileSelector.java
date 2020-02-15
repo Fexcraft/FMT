@@ -51,10 +51,10 @@ public class FileSelector {
         List<ExImPorter> eximporter = PorterManager.getPorters(export);
         selbox.setVisibleCount(8); selbox.setElementHeight(20);
         for(ExImPorter porter : eximporter){ selbox.addElement(porter.getName()); }
-        selbox.getSelectionButton().getTextState().setFontSize(20f);
+        selbox.getSelectionButton().getStyle().setFontSize(20f);
         selbox.getSelectBoxElements().forEach(elm -> {
-        	elm.getTextState().setHorizontalAlign(HorizontalAlign.LEFT);
-        	elm.getTextState().setFontSize(20f);
+        	elm.getStyle().setHorizontalAlign(HorizontalAlign.LEFT);
+        	elm.getStyle().setFontSize(20f);
         });
         okbutton.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
         	if(CLICK == e.getAction()){

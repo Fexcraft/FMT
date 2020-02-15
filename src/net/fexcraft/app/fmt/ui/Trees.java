@@ -87,7 +87,7 @@ public class Trees {
 		public TreeBase(String name){
 			super(FMTB.WIDTH - 304, 30, 304, FMTB.HEIGHT - 30); trees.add(this); id = name;
 			super.add(counter = new Label((counterlabel = Editors.translate("tree." + id + ".counter")) + "0", 4, 1, 100, 24));
-			counter.getTextState().setFontSize(24f);
+			counter.getStyle().setFontSize(24f);
 	        scrollable = new ScrollablePanel(0, 28, 304, FMTB.HEIGHT - 60);
 	        scrollable.getStyle().getBackground().setColor(1, 1, 1, 1);
 	        scrollable.setHorizontalScrollBarVisible(false);
@@ -155,7 +155,7 @@ public class Trees {
 		public TreeGroup(TreeBase base){
 			super(0, 0, base.getSize().x - 12, 20); tree = base;
 			this.add(label = new Label20("group-label", 0, 0, (int)getSize().x, 20));
-			label.getTextState().setFont("roboto-bold");
+			label.getStyle().setFont("roboto-bold");
 			label.getStyle().setPadding(0, 0, 0, 5);
 			label.getStyle().setBorderRadius(0);
 		}
@@ -307,7 +307,7 @@ public class Trees {
 		public SubTreeGroup(TreeBase base){
 			super(0, 0, base.getSize().x - 22, 20); this.base = base;
 			this.add(label = new Label20("group-label", 0, 0, (int)getSize().x, 20));
-			label.getTextState().setFont("roboto-bold");
+			label.getStyle().setFont("roboto-bold");
 			label.getStyle().setPadding(0, 0, 0, 5);
 			label.getStyle().setBorderRadius(0);
 		}
