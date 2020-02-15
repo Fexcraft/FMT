@@ -22,7 +22,7 @@ public class Settings {
 	
 	private static Setting floor, lines, demo, cube, polygon_marker, polygon_count, lighting, cullface, animate,
 		discordrpc, discordrpc_sm, discordrpc_rtonm, numberfieldarrows, preview_colorpicker;
-	public static Setting movespeed, mouse_sensivity, internal_cursor;
+	public static Setting movespeed, mouse_sensivity, internal_cursor, vsync;
 
 	public static boolean floor(){ return floor.getValue(); }
 
@@ -55,6 +55,8 @@ public class Settings {
 	public static boolean preview_colorpicker(){ return preview_colorpicker.getValue(); }
 	
 	public static boolean internal_cursor(){ return internal_cursor.getValue(); }
+
+	public static boolean vsync(){ return vsync.getValue(); }
 	
 	//
 
@@ -159,6 +161,7 @@ public class Settings {
 		//
 		DEFAULTS.add(new Setting(Type.FLOAT, "mouse_sensivity", 2f));
 		DEFAULTS.add(new Setting(Type.FLOAT, "camera_movespeed", 2f));
+		DEFAULTS.add(new Setting(Type.BOOLEAN, "vsync", false));
 		//DEFAULTS.add(new Setting(Type.BOOLEAN, "internal_cursor", false));
 	}
 
@@ -180,6 +183,8 @@ public class Settings {
 			});
 		}
 		for(String key : DEFAULTS.keySet()){ if(!SETTINGS.containsKey(key)) SETTINGS.put(key, DEFAULTS.get(key)); }
+		SETTINGS.entrySet().removeIf(entry -> !DEFAULTS.containsKey(entry.getKey()));
+		//
 		floor = SETTINGS.get("floor");
 		lines = SETTINGS.get("lines");
 		demo = SETTINGS.get("demo");
@@ -198,6 +203,7 @@ public class Settings {
 		preview_colorpicker = SETTINGS.get("preview_colorpicker");
 		movespeed = SETTINGS.get("camera_movespeed");
 		mouse_sensivity = SETTINGS.get("mouse_sensivity");
+		vsync = SETTINGS.get("vsync");
 		//internal_cursor = SETTINGS.get("internal_cursor");
 		//FileSelector.FileRoot.last = FileRoot.valueOf(SETTINGS.get("filedir_last_type").getStringValue());
 	}
