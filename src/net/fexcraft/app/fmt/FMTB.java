@@ -60,6 +60,7 @@ import net.arikia.dev.drpc.DiscordRPC;
 import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.ui.Editors;
+import net.fexcraft.app.fmt.ui.Trees;
 import net.fexcraft.app.fmt.ui.UserInterpanels;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Button20;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Dialog24;
@@ -68,6 +69,7 @@ import net.fexcraft.app.fmt.ui.UserInterpanels.Label20;
 import net.fexcraft.app.fmt.ui.UserInterpanels.TextInput20;
 import net.fexcraft.app.fmt.utils.*;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
+import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Time;
@@ -113,8 +115,8 @@ public class FMTB {
 		Configuration.SHARED_LIBRARY_EXTRACT_DIRECTORY.set("./libs/natives");
 		Configuration.SHARED_LIBRARY_EXTRACT_PATH.set("./libs/natives");
 	    //
-		File[] folders = { new File("./saves"), new File("./imports"), new File("./exports") };
-		for(File folder : folders){ if(!folder.exists()) folder.mkdirs(); }
+		//File[] folders = { new File("./saves"), new File("./imports"), new File("./exports") };
+		//for(File folder : folders){ if(!folder.exists()) folder.mkdirs(); }
 		FMTB.INSTANCE = new FMTB(); try{ INSTANCE.run(); } catch(Throwable thr){ thr.printStackTrace(); System.exit(1); }
 	}
 
@@ -151,8 +153,9 @@ public class FMTB {
         frame = new Frame(WIDTH, HEIGHT);
         //frame.getContainer().add(new Interface());
         Editors.initializeEditors(frame);
+        Trees.initializeTrees(frame);
         UserInterpanels.addToolbarButtons(frame);
-        context = new Context(window);
+        MODEL.initButton(); context = new Context(window);
         CallbackKeeper keeper = new DefaultCallbackKeeper();
         CallbackKeeper.registerCallbacks(window, keeper);
 		//
@@ -226,12 +229,14 @@ public class FMTB {
 			DiscordRPC.discordRunCallbacks(); DiscordUtil.update(true);
 			Runtime.getRuntime().addShutdownHook(new Thread(){ @Override public void run(){ DiscordRPC.discordShutdown(); } });
 		}
+		glfwSwapInterval(Settings.vsync() ? 1 : 0);
 		//
 		while(!close){
 			ggr.pollInput(accumulator += (delta = timer.getDelta()));
             while(accumulator >= interval){
             	loop(); timer.updateUPS();
                 accumulator -= interval;
+                Trees.updateCounters();
             }
 			render(alpha = accumulator / interval);
 			if(!RayCoastAway.PICKING){
@@ -270,11 +275,20 @@ public class FMTB {
 
 	public void resize(int width, int height){
     	WIDTH = width; HEIGHT = height; perspective(45.0f, (float)WIDTH / (float)HEIGHT, 0.1f, 4096f / 2);
-    	Editors.resize(width, height);
+    	Editors.resize(width, height); Trees.resize(width, height);
 	}
 
     private static Vector4f rgba(int r, int g, int b, float a) {
         return new Vector4f(r / 255f, g / 255f, b / 255f, a);
+    }
+
+    public static final Vector4f rgba(int i){
+    	return rgba(i, null);
+    }
+
+    public static final Vector4f rgba(int i, Float a){
+    	RGB rgb = new RGB(i); float[] arr = rgb.toFloatArray();
+        return new Vector4f(arr[0], arr[1], arr[2], a == null ? arr[3] : a);
     }
 
 	private void loop(){
@@ -484,6 +498,10 @@ public class FMTB {
 
 	public static String getTitle(){
 		return title;
+	}
+
+	public static void setModel(GroupCompound compound){
+		Trees.polygon.clear(); FMTB.MODEL = compound; for(TurboList list : compound.getGroups()) Trees.polygon.addSub(list.button); Trees.polygon.reOrderGroups();
 	}
 
 }

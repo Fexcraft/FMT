@@ -9,7 +9,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.tree.ModelTree;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
@@ -20,7 +19,7 @@ import net.fexcraft.lib.common.utils.Print;
 
 public class Settings {
 	
-	private static Setting floor, lines, demo, cube, polygon_marker, polygon_count, lighting, cullface, animate,
+	private static Setting floor, lines, demo, cube, polygon_marker, lighting, cullface, animate,
 		discordrpc, discordrpc_sm, discordrpc_rtonm, numberfieldarrows, preview_colorpicker;
 	public static Setting movespeed, mouse_sensivity, internal_cursor, vsync;
 
@@ -33,8 +32,6 @@ public class Settings {
 	public static boolean cube(){ return cube.getValue(); }
 	
 	public static boolean polygonMarker(){ return polygon_marker.getValue(); }
-
-	public static boolean polygonCount(){ return polygon_count.getValue(); }
 
 	//public static boolean bottombar(){ return bottombar.getValue(); }
 
@@ -78,12 +75,6 @@ public class Settings {
 	
 	public static boolean toggleDemo(){
 		return demo.toggle();
-	}
-
-	public static boolean togglePolygonCount(){
-		boolean bool = polygon_count.toggle();
-		ModelTree.TREE.refreshFullHeight();
-		return bool;
 	}
 
 	public static boolean togglePreviewColorpicker(){
@@ -137,7 +128,7 @@ public class Settings {
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "cube", true));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "demo", false));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "polygon_marker", true));
-		DEFAULTS.add(new Setting(Type.BOOLEAN, "polygon_count", true));
+		//DEFAULTS.add(new Setting(Type.BOOLEAN, "polygon_count", true));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "lighting", false));
 		DEFAULTS.add(new Setting(Type.FLOAT_ARRAY, "light0_position", new float[]{ 0, 1, 0, 0 }));
 		DEFAULTS.add(new Setting(Type.STRING, "language_code", "default"));
@@ -190,7 +181,6 @@ public class Settings {
 		demo = SETTINGS.get("demo");
 		cube = SETTINGS.get("cube");
 		polygon_marker = SETTINGS.get("polygon_marker");
-		polygon_count = SETTINGS.get("polygon_count");
 		lighting = SETTINGS.get("lighting");
 		cullface = SETTINGS.get("cullface");
 		animate = SETTINGS.get("animate");

@@ -50,7 +50,7 @@ public class SaveLoad {
 					if(elm.getName().equals("model.jtmt")){
 						try{
 							GroupCompound compound = parseModel(file, JsonUtil.getObjectFromInputStream(zip.getInputStream(elm)));
-							FMTB.MODEL = compound; FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
+							FMTB.setModel(compound); FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
 							GroupCompound.SELECTED_POLYGONS = FMTB.MODEL.countSelectedMRTs();
 						} catch(IOException e){ e.printStackTrace(); }
 					}
@@ -89,19 +89,19 @@ public class SaveLoad {
 						}
 						else{
 							FMTB.MODEL.file = file; saveModel(false, shouldclose);
-							if(shouldclear){ FMTB.MODEL = new GroupCompound(null); }
+							if(shouldclear){ FMTB.setModel(new GroupCompound(null));}
 							if(shouldclose){ FMTB.get().close(true); }
 						}
 					});
 				}
 				else{
 					saveModel(false, false);//shouldclose);
-					if(shouldclear){ FMTB.MODEL = new GroupCompound(null); }
+					if(shouldclear){ FMTB.setModel(new GroupCompound(null)); }
 					if(shouldclose){ FMTB.get().close(true); }
 				}
 			}, () -> {
 				Print.console("selected > no saving of current");
-				if(shouldclear){ FMTB.MODEL = new GroupCompound(null); }
+				if(shouldclear){ FMTB.setModel(new GroupCompound(null)); }
 				if(shouldclose){ FMTB.get().close(true); }
 			}, "saveload.should_save");
 		}

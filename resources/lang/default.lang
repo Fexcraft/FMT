@@ -176,12 +176,13 @@ dialogbox.button.yes=Yes
 dialogbox.button.no=No
 dialogbox.button.ok=Ok
 
-# Polygon Tree
-polygontree.remove_group=Remove this group?
-polygontree.remove_polygon=Remove this polygon?
+# Trees
+tree.polygon.counter=Polygons: 
+tree.polygon.remove_group=Remove this group?
+tree.polygon.remove_polygon=Remove this polygon?
+tree.helper.counter=Helpers/Previews: 
+tree.fvtm.remove_animation=Remove this Animation?
 
-# Mod Tool Trees
-fvtm_tree.remove_animation=Remove this Animation?
 
 # Image Util
 image_helper.screenshot.done=Screenshot taken.
@@ -200,6 +201,7 @@ compound.delete_selected=Are you sure to delete all selected Polygons?
 
 # Save/Load
 saveload.title=FMTB File Manager
+saveload.open=Select file to open.
 saveload.open.nofile=Invalid Model File! (Does it exist?)
 saveload.open.errors=Errors occured while parsing save file.
 saveload.save.nofile=Model save file is 'null'! Model will not be saved.
@@ -236,4 +238,4 @@ error.todo=//TODO
 bottombar.netfield.login_failed=Login Failed - GUEST
 bottombar.netfield.loggedin=Logged In - %s
 modeltree.polygons=Polygons: 
-saveload.open=Select file to open.
+saveload.filechooser.save=Select save location.

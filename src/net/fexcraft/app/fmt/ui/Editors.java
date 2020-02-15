@@ -13,7 +13,6 @@ import org.liquidengine.legui.component.optional.align.HorizontalAlign;
 import org.liquidengine.legui.event.FocusEvent;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.event.ScrollEvent;
-import org.liquidengine.legui.event.WindowSizeEvent;
 import org.liquidengine.legui.input.Mouse.MouseButton;
 import org.liquidengine.legui.style.Background;
 import org.liquidengine.legui.style.Style.DisplayType;
@@ -52,8 +51,6 @@ public class Editors {
 	public static void initializeEditors(Frame frame){
 		frame.getContainer().add(general = new GeneralEditor());
 		frame.getContainer().add(modelgroup = new ModelGroupEditor());
-		//temporary
-		//general.show();
 	}
 	
 	public static void hideAll(){
@@ -84,11 +81,6 @@ public class Editors {
 		
 		public EditorBase(){
 			super(0, 30, 304, FMTB.HEIGHT - 30); editors.add(this);
-			this.getListenerMap().addListener(WindowSizeEvent.class, event -> {
-				this.setSize(304, event.getHeight() - 30);
-				scrollable.setSize(304, event.getHeight() - 80);
-				scrollable.getContainer().setSize(296, event.getHeight() - 88);
-			});
 			String[] arr = new String[]{ "normal", "sixteenth", "decimal"}; int off = 0;
 			Label label = new Label(translate("editor.multiplicator"), 4, 4, 100, 24);
 			super.add(label); label.getTextState().setFontSize(20); int am = 0;
@@ -233,7 +225,7 @@ public class Editors {
 				if(FMTB.MODEL.getSelected().isEmpty()) return; PolygonWrapper wrapper;
 				if(FMTB.MODEL.getSelected().size() == 1){
 					wrapper = FMTB.MODEL.getFirstSelection();
-					if(wrapper != null) wrapper.name = validated;
+					if(wrapper != null) wrapper.name = validated; wrapper.button.update();
 				}
 				else{
 					ArrayList<PolygonWrapper> polis = FMTB.MODEL.getSelected();
@@ -242,7 +234,7 @@ public class Editors {
 						if(wrapper != null){
 							String str = validated.contains("_") ? "_" + i : validated.contains("-") ? "-" + i :
 								validated.contains(" ") ? " " + i : validated.contains(".") ? "." + i : i + "";
-							wrapper.name = validated + str;
+							wrapper.name = validated + str; wrapper.button.update();
 						}
 					}
 				}
@@ -472,7 +464,7 @@ public class Editors {
 			model_name.addTextInputContentChangeEventListener(listener -> name_cache = UserInterpanels.validateString(listener));
 			model_name.getListenerMap().addListener(FocusEvent.class, listener -> {
 				if(!listener.isFocused() && !name_cache.equals(FMTB.MODEL.name))
-					FMTB.get().setTitle(FMTB.MODEL.name = name_cache);
+					FMTB.get().setTitle(FMTB.MODEL.name = name_cache); FMTB.MODEL.button.update();
 			});
 			model.setSize(296, pass + 52);
 	        this.addSub(model); pass = -20;

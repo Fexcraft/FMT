@@ -62,7 +62,7 @@ public class PorterManager {
 						FMTB.MODEL.getGroups().add(list);
 					}
 				}
-				else FMTB.MODEL = compound;
+				else FMTB.setModel(compound);
 				FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
 			}
 			catch(Exception e){

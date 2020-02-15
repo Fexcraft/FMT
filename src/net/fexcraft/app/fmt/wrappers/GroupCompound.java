@@ -14,11 +14,10 @@ import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.ui.Editors;
 import net.fexcraft.app.fmt.ui.Editors.GeneralEditor;
 import net.fexcraft.app.fmt.ui.Editors.ModelGroupEditor;
+import net.fexcraft.app.fmt.ui.Trees;
+import net.fexcraft.app.fmt.ui.Trees.TreeGroup;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Field;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
-import net.fexcraft.app.fmt.ui.tree.HelperTree;
-import net.fexcraft.app.fmt.ui.tree.ModelTree;
-import net.fexcraft.app.fmt.ui.tree.RightTree.CompoundButton;
 import net.fexcraft.app.fmt.utils.RayCoastAway;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.TextureManager;
@@ -32,7 +31,7 @@ public class GroupCompound {
 	
 	public int textureSizeX = 256, textureSizeY = 256, textureScale = 1;
 	public ArrayList<String> creators = new ArrayList<>();
-	public GroupList groups = new GroupList();
+	private GroupList groups = new GroupList();
 	public PolygonWrapper lastselected;
 	public File file, origin;
 	public float rate = 1f;
@@ -42,13 +41,15 @@ public class GroupCompound {
 	public static long SELECTED_POLYGONS;
 	public boolean visible = true, minimized;
 	public Vec3f pos, rot, scale;
-	public CompoundButton button;
+	public TreeGroup button;
 	
 	public GroupCompound(File origin){
 		this.origin = origin; name = "unnamed model";
 		recompile(); this.updateFields();
-		button = new CompoundButton(HelperTree.TREE, this);
+		if(Trees.helper != null) button = new TreeGroup(Trees.helper, this);
 	}
+	
+	public final void initButton(){ if(button == null) button = new TreeGroup(Trees.helper, this); };
 
 	public void recompile(){
 		for(TurboList list : groups) list.recompile();
@@ -151,7 +152,7 @@ public class GroupCompound {
 	}
 
 	public final void clearSelection(){
-		for(TurboList list : groups){ list.selected = false; for(PolygonWrapper wrapper : list) wrapper.selected = false; } SELECTED_POLYGONS = 0;
+		for(TurboList list : groups){ list.selected = false; list.button.updateColor(); for(PolygonWrapper wrapper : list) wrapper.selected = false; } SELECTED_POLYGONS = 0;
 	}
 
 	public boolean updateValue(Field field, String id, boolean positive){
@@ -227,7 +228,7 @@ public class GroupCompound {
 				}
 			}
 		}
-		return "no polygon selected";
+		return Editors.NO_POLYGON_SELECTED;
 	}
 	
 	public TurboList getFirstSelectedGroup(){
@@ -510,7 +511,7 @@ public class GroupCompound {
 		ArrayList<PolygonWrapper> list = this.getSelected(), newlist = new ArrayList<>();
 		for(PolygonWrapper wrapper : list){ newlist.add(wrapper.clone()); } this.clearSelection();
 		for(PolygonWrapper wrapper : newlist){ this.add(wrapper, "clipboard", false); }
-		ModelTree.TREE.refreshFullHeight(); return;
+		/*Trees.polygon.reOrderGroups();*/ return;
 	}
 
 	public void flipShapeboxes(int axis){
@@ -564,7 +565,7 @@ public class GroupCompound {
 			ArrayList<PolygonWrapper> wrapp = this.getSelected();
 			for(PolygonWrapper wrapper : wrapp){
 				wrapper.getTurboList().remove(wrapper);
-				wrapper.button.getRoot().getElements().remove(wrapper.button);
+				wrapper.button.removeFromSubTree();
 			} SELECTED_POLYGONS = 0;
 		}, null, "compound.delete_selected");
 	}
@@ -580,7 +581,9 @@ public class GroupCompound {
 		
 		@Override
 		public boolean add(TurboList list){
-			boolean bool = super.add(list); Editors.general.refreshGroups(); return bool;
+			boolean bool = super.add(list); Editors.general.refreshGroups();
+			if(bool){ Trees.polygon.addSub(list.button.update()); Trees.polygon.reOrderGroups(); }
+			return bool;
 		}
 		
 		public boolean contains(String str){
@@ -593,24 +596,28 @@ public class GroupCompound {
 		
 		public TurboList remove(String str){
 			TurboList list = get(str); if(list == null) return null;
-			if(remove(list)){ ModelTree.TREE.refreshFullHeight(); return list; } return null;
+			if(remove(list)){ return list; } return null;
 		}
 		
 		@Override
 		public boolean remove(Object obj){
-			if(obj instanceof TurboList) ((TurboList)obj).button.getElements().remove(((TurboList)obj).button);
-			boolean bool = super.remove(obj); ModelTree.TREE.refreshFullHeight(); return bool;
+			if(obj instanceof TurboList) ((TurboList)obj).button.removeFromTree();
+			boolean bool = super.remove(obj); ((TurboList)obj).button.tree().reOrderGroups(); return bool;
 		}
 		
 		@Override
 		public TurboList remove(int index){
-			TurboList list = get(index); if(list != null) list.button.getElements().remove(list.button);
-			list = super.remove(index); ModelTree.TREE.refreshFullHeight(); return list;
+			TurboList list = get(index); if(list != null) list.button.removeFromTree();
+			list = super.remove(index); list.button.tree().reOrderGroups(); return list;
 		}
 		
 		@Override
 		public void clear(){
-			super.clear(); ModelTree.TREE.refreshFullHeight();
+			super.clear(); Trees.polygon.clear();
+		}
+
+		public void setAsHelperPreview(){
+			for(TurboList list : this) list.button.removeFromTree(); Trees.polygon.reOrderGroups();
 		}
 		
 	}

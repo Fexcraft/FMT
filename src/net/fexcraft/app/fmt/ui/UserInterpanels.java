@@ -134,7 +134,7 @@ public class UserInterpanels {
 			new MenuButton("toolbar.editor.texture", NOT_REIMPLEMENTED_YET)
 		));
 		frame.getContainer().add(new MenuEntry(3, translate("toolbar.shapelist"),
-			new MenuButton("toolbar.shapelist.show", NOT_REIMPLEMENTED_YET),
+			new MenuButton("toolbar.shapelist.show", () -> Trees.toggle("polygon")),
 			new MenuButton("toolbar.shapelist.add_box", () -> FMTB.MODEL.add(new BoxWrapper(FMTB.MODEL), null, true)),
 			new MenuButton("toolbar.shapelist.add_shapebox", () -> FMTB.MODEL.add(new ShapeboxWrapper(FMTB.MODEL), null, true)),
 			new MenuButton("toolbar.shapelist.add_texrect_b", () -> FMTB.MODEL.add(new TexrectWrapperB(FMTB.MODEL), null, true)),
@@ -193,7 +193,7 @@ public class UserInterpanels {
 			})
 		));
 		frame.getContainer().add(new MenuEntry(5, translate("toolbar.helpers"),
-			new MenuButton("toolbar.helpers.view", () -> RightTree.show("helpertree")),
+			new MenuButton("toolbar.helpers.view", () -> Trees.show("helper")),
 			new MenuButton("toolbar.helpers.load_fmtb", () -> {
 				FileSelector.select(translate("toolbar.helpers.load_fmtb.dialog"), "./saves", FileSelector.TYPE_FMTB, false, file -> HelperCollector.loadFMTB(file));
 			}),
@@ -206,7 +206,7 @@ public class UserInterpanels {
 			new MenuButton("toolbar.helpers.unload_clear", () -> HelperCollector.LOADED.clear())
 		));
 		frame.getContainer().add(new MenuEntry(5, translate("toolbar.mod_tools"),
-			new MenuButton("toolbar.mod_tools.fvtm_programs", () -> RightTree.show("fvtm_tree"))
+			new MenuButton("toolbar.mod_tools.fvtm_programs", () -> Trees.show("tree"))
 		));
 		frame.getContainer().add(new MenuEntry(6, translate("toolbar.exit")));
 	}

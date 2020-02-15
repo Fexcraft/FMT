@@ -2,12 +2,9 @@ package net.fexcraft.app.fmt.ui.tree;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Optional;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.porters.PorterManager;
-import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.FontRenderer;
@@ -19,18 +16,12 @@ import net.fexcraft.app.fmt.ui.general.Button;
 import net.fexcraft.app.fmt.ui.general.Icon;
 import net.fexcraft.app.fmt.ui.general.Scrollbar;
 import net.fexcraft.app.fmt.ui.general.Scrollbar.Scrollable;
-import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.utils.Animator.Animation;
 import net.fexcraft.app.fmt.utils.GGR;
-import net.fexcraft.app.fmt.utils.HelperCollector;
-import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.utils.StyleSheet;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
-import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.math.RGB;
-import net.fexcraft.lib.common.math.Vec3f;
-import net.fexcraft.lib.common.utils.Print;
 
 public abstract class RightTree extends Element implements Scrollable {
 	
@@ -169,93 +160,11 @@ public abstract class RightTree extends Element implements Scrollable {
 		
 	}
 	
-	public static class GroupButton extends TreeButton {
-		
-		private int rel; private TurboList list; private boolean compound;
-
-		public GroupButton(Element root, TurboList list){
-			super(root, list.id, "tree:group", 300, 26, 4, 0);
-			this.setColor(StyleSheet.WHITE).setDraggable(true);
-			this.setText((this.list = list).id, false); rel = 4;
-			this.setBorder(StyleSheet.BLACK, StyleSheet.BLACK, 0);
-			//
-			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_minimize", 22, width - 104, 2){
-				@Override
-				public boolean processButtonClick(int mx, int my, boolean left){
-					list.minimized = !list.minimized; ((RightTree)root.getRoot()).refreshFullHeight(); return true;
-				}
-			});
-			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_edit", 22, width - 78, 2){
-				@Override
-				public boolean processButtonClick(int mx, int my, boolean left){
-					Editor.show("model_group_editor"); return true;
-				}
-			});
-			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_visible", 22, width - 52, 2){
-				@Override
-				public boolean processButtonClick(int mx, int my, boolean left){
-					list.visible = !list.visible; return true;
-				}
-			});
-			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_delete", 22, width - 26, 2){
-				@Override
-				public boolean processButtonClick(int mx, int my, boolean left){
-					DialogBox.showYN(null, () -> {
-						FMTB.MODEL.getGroups().remove(list.id);
-					}, null, "polygontree.remove_group", "#" + list.id);
-					return true;
-				}
-			});
-		}
-		
-		public void setAsHelperPreview(){
-			elements.clear(); this.setSize(296, 26); rel = 8; compound = true;
-			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_visible", 22, width - 26, 2){
-				@Override
-				public boolean processButtonClick(int mx, int my, boolean left){
-					list.visible = !list.visible; return true;
-				}
-			});
-		}
-
-		@Override
-		public RGB color(){
-			return colorG(list.visible, list.selected);
-		}
-		
-		@Override
-		public boolean processButtonClick(int mx, int my, boolean left){
-			if(!left) return false; boolean bool = list.selected; if(!GGR.isShiftDown()){ FMTB.MODEL.clearSelection(); }
-			list.selected = !bool; FMTB.MODEL.updateFields(); FMTB.MODEL.lastselected = null;
-			if(!compound) GroupCompound.SELECTED_POLYGONS = FMTB.MODEL.countSelectedMRTs(); return true;
-		}
-
-		@Override
-		public void update(int elm_height, int rw, int rh){
-			this.setPosition(rel, elm_height); id = list.id;
-			if(!compound) this.setText("[" + list.size() + "] " + id, false);
-			else this.setText(id, false); this.render(rw, rh);
-		}
-		
-		@Override
-		public void pullBy(int mx, int my){
-			if(FMTB.MODEL.getGroups().size() < 2) return;
-			int index = FMTB.MODEL.getGroups().indexOf(list);
-			if(my < 0 && index > 0 && FMTB.MODEL.getGroups().get(index - 1).minimized){
-				Collections.swap(FMTB.MODEL.getGroups(), index, index - 1); /*GGR.resetDragging();*/ return;
-			}
-			if(my > 0 && (index + 1) < FMTB.MODEL.getGroups().size() && list.minimized){
-				Collections.swap(FMTB.MODEL.getGroups(), index, index + 1); /*GGR.resetDragging();*/ return;
-			}
-		}
-		
-	}
-	
-	public static class PolygonButton extends TreeButton {
+	public static class OldPolygonButton extends TreeButton {
 
 		private PolygonWrapper polygon;
 
-		public PolygonButton(Element root, PolygonWrapper polygon){
+		public OldPolygonButton(Element root, PolygonWrapper polygon){
 			super(root, polygon.name, "tree:polygon", 296, 26, 8, 0);
 			this.setColor(StyleSheet.WHITE);//.setDraggable(true);
 			this.setText((this.polygon = polygon).name(), false);
@@ -303,123 +212,6 @@ public abstract class RightTree extends Element implements Scrollable {
 		
 	}
 	
-	public static class CompoundButton extends TreeButton {
-
-		private GroupCompound compound;
-
-		public CompoundButton(Element root, GroupCompound compound){
-			super(root, compound.name, "tree:compound", 300, 26, 8, 0);
-			this.setColor(StyleSheet.WHITE);//.setDraggable(true);
-			this.setText((this.compound = compound).name, false);
-			this.setBorder(StyleSheet.BLACK, StyleSheet.BLACK, 0);
-			//
-			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_minimize", 22, width - 130, 2){
-				@Override
-				public boolean processButtonClick(int mx, int my, boolean left){
-					compound.minimized = !compound.minimized; ((RightTree)root.getRoot()).refreshFullHeight(); return true;
-				}
-			});
-			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_clone", 22, width - 104, 2){
-				@Override
-				public boolean processButtonClick(int mx, int my, boolean left){
-					GroupCompound compound = null, parent = ((CompoundButton)root).compound;
-					if(parent.name.startsWith("fmtb/")){
-						compound = HelperCollector.loadFMTB(parent.origin);
-					}
-					else if(parent.name.startsWith("frame/")){
-						compound = HelperCollector.loadFrame(parent.origin);
-					}
-					else{
-						ExImPorter porter = PorterManager.getPorterFor(parent.origin, false);
-						HashMap<String, Setting> map = new HashMap<>();
-						porter.getSettings(false).forEach(setting -> map.put(setting.getId(), setting));
-						compound = HelperCollector.load(parent.file, porter, map);
-					}
-					if(compound == null){ Print.console("Error on creating clone."); return true; }
-					if(parent.pos != null) compound.pos = new Vec3f(parent.pos);
-					if(parent.rot != null) compound.rot = new Vec3f(parent.rot);
-					if(parent.scale != null) compound.scale = new Vec3f(parent.scale);
-					return true;
-				}
-			});
-			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_edit", 22, width - 78, 2){
-				@Override
-				public boolean processButtonClick(int mx, int my, boolean left){
-					Editor.show("preview_editor"); return true;
-				}
-			});
-			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_visible", 22, width - 52, 2){
-				@Override
-				public boolean processButtonClick(int mx, int my, boolean left){
-					compound.visible = !compound.visible; return true;
-				}
-			});
-			elements.add(new Icon(this, "remove", "tree:group_icon", "icons/group_delete", 22, width - 26, 2){
-				@Override
-				public boolean processButtonClick(int mx, int my, boolean left){
-					HelperCollector.LOADED.remove(index()); return true;
-				}
-			});
-		}
-
-		@Override
-		public RGB color(){
-			return colorC(compound.visible, selected());
-		}
-		
-		public boolean selected(){
-			return HelperTree.SEL > 0 && HelperTree.SEL == index();
-		}
-		
-		public int index(){
-			return HelperCollector.LOADED.indexOf(compound);
-		}
-		
-		@Override
-		public boolean processButtonClick(int mx, int my, boolean left){
-			if(!left) return false;
-			if(selected()){ HelperTree.SEL = -1; }
-			else{ HelperTree.SEL = index(); }
-			//
-			GroupCompound model = HelperTree.getSelected();
-			if(model == null){
-				TextField.getFieldById("helper_posx").applyChange(0);
-				TextField.getFieldById("helper_posy").applyChange(0);
-				TextField.getFieldById("helper_posz").applyChange(0);
-				TextField.getFieldById("helper_rotx").applyChange(0);
-				TextField.getFieldById("helper_roty").applyChange(0);
-				TextField.getFieldById("helper_rotz").applyChange(0);
-				TextField.getFieldById("helper_scalex").applyChange(0);
-				TextField.getFieldById("helper_scaley").applyChange(0);
-				TextField.getFieldById("helper_scalez").applyChange(0);
-				TextField.getFieldById("helper_scale16x").applyChange(0);
-				TextField.getFieldById("helper_scale16y").applyChange(0);
-				TextField.getFieldById("helper_scale16z").applyChange(0);
-			}
-			else{
-				TextField.getFieldById("helper_posx").applyChange(model.pos == null ? 0 : model.pos.xCoord);
-				TextField.getFieldById("helper_posy").applyChange(model.pos == null ? 0 : model.pos.yCoord);
-				TextField.getFieldById("helper_posz").applyChange(model.pos == null ? 0 : model.pos.zCoord);
-				TextField.getFieldById("helper_rotx").applyChange(model.rot == null ? 0 : model.rot.xCoord);
-				TextField.getFieldById("helper_roty").applyChange(model.rot == null ? 0 : model.rot.yCoord);
-				TextField.getFieldById("helper_rotz").applyChange(model.rot == null ? 0 : model.rot.zCoord);
-				TextField.getFieldById("helper_scalex").applyChange(model.scale == null ? 1 : model.scale.xCoord);
-				TextField.getFieldById("helper_scaley").applyChange(model.scale == null ? 1 : model.scale.yCoord);
-				TextField.getFieldById("helper_scalez").applyChange(model.scale == null ? 1 : model.scale.zCoord);
-				TextField.getFieldById("helper_scale16x").applyChange((model.scale == null ? 1 : model.scale.xCoord) * 16);
-				TextField.getFieldById("helper_scale16y").applyChange((model.scale == null ? 1 : model.scale.yCoord) * 16);
-				TextField.getFieldById("helper_scale16z").applyChange((model.scale == null ? 1 : model.scale.zCoord) * 16);
-			}
-			return true;
-		}
-
-		@Override
-		public void update(int elm_height, int rw, int rh){
-			this.setPosition(4, elm_height); this.setText(id = compound.name, false); this.render(rw, rh);
-		}
-		
-	}
-	
 	public static class AnimationButton extends TreeButton {
 		
 		private int rel; private Animation anim;
@@ -448,7 +240,7 @@ public abstract class RightTree extends Element implements Scrollable {
 				public boolean processButtonClick(int mx, int my, boolean left){
 					DialogBox.showYN(null, () -> {
 						anim.group.animations.remove(anim); FMTB.MODEL.updateFields();
-					}, null, "fvtm_tree.remove_animation", "#" + anim.id);
+					}, null, "tree.fvtm.remove_animation", "#" + anim.id);
 					return true;
 				}
 			});

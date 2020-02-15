@@ -31,7 +31,7 @@ public class HelperCollector {
 		Print.console("Loading Preview/Helper model: " + file.getName());
 		GroupCompound compound = exim.importModel(file, settings);
 		if(!compound.name.startsWith("import/")){ compound.name = "import/" + compound.name; }
-		compound.getGroups().forEach(list -> list.button.setAsHelperPreview()); 
+		compound.getGroups().setAsHelperPreview();
 		LOADED.add(compound); compound.clearSelection(); HelperTree.TREE.refreshFullHeight(); return compound;
 	}
 
@@ -61,7 +61,7 @@ public class HelperCollector {
 			e.printStackTrace(); DialogBox.showOK("helper_collector.title", null, null, "helper_collector.load_fmtb.errors");
 		}
 		if(compound != null){ LOADED.add(compound); } HelperTree.TREE.refreshFullHeight(); 
-		compound.clearSelection(); compound.getGroups().forEach(list -> list.button.setAsHelperPreview()); return compound;
+		compound.clearSelection(); compound.getGroups().setAsHelperPreview(); return compound;
 	}
 
 	public static GroupCompound loadFrame(File file){

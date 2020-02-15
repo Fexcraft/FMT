@@ -8,8 +8,6 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.general.TextField;
 import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.app.fmt.utils.Settings;
-import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
-import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Time;
@@ -40,9 +38,9 @@ public class UserInterface {
         //scale = Math.min(scale_x, scale_y);
 		width = (int)scale_x; height = (int)scale_y; scale = 1f / facts;
 		for(Element elm : elements){ elm.repos(); }
-		for(TurboList list : FMTB.MODEL.getGroups()){
+		/*for(TurboList list : FMTB.MODEL.getGroups()){
 			list.button.repos(); for(PolygonWrapper wrapper : list) wrapper.button.repos();
-		}
+		}*/
 	}
 
 	public void render(boolean bool){

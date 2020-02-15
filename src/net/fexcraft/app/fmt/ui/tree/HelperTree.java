@@ -18,11 +18,11 @@ public class HelperTree extends RightTree {
 		elm_height = 4; elements.clear(); if(HelperCollector.LOADED.size() == 0) SEL = -1; elm_height -= scrollbar.scrolled; boolean bool;
 		for(GroupCompound compound : HelperCollector.LOADED){
 			if((bool = elm_height < 4) && compound.minimized){ elm_height += 28; continue; } if(elm_height > height) break;
-			if(!bool){ compound.button.update(elm_height, rw, rh); elm_height += 28; elements.add(compound.button); }
+			if(!bool){ /*compound.button.update(elm_height, rw, rh); elm_height += 28; elements.add(compound.button);*/ }
 			if(compound.minimized) continue;
 			for(TurboList list : compound.getGroups()){
 				if(elm_height < 4){ elm_height += 28; continue; } if(elm_height > height) break;
-				list.button.update(elm_height, rw, rh); elm_height += 28; elements.add(list.button);
+				//list.button.update(elm_height, rw, rh); elm_height += 28; elements.add(list.button);
 			}
 		}
 		elements.add(scrollbar.repos()); scrollbar.render(rw, rh);
@@ -47,7 +47,7 @@ public class HelperTree extends RightTree {
 
 	@Override
 	public void refreshFullHeight(){
-		int full = 4; for(GroupCompound compound : HelperCollector.LOADED) full += compound.minimized ? 28 : (compound.groups.size() * 28) + 28; this.fullheight = full;
+		int full = 4; for(GroupCompound compound : HelperCollector.LOADED) full += compound.minimized ? 28 : (compound.getGroups().size() * 28) + 28; this.fullheight = full;
 	}
 	
 }

@@ -2,8 +2,8 @@ package net.fexcraft.app.fmt.wrappers;
 
 import java.util.ArrayList;
 
-import net.fexcraft.app.fmt.ui.tree.ModelTree;
-import net.fexcraft.app.fmt.ui.tree.RightTree.GroupButton;
+import net.fexcraft.app.fmt.ui.Trees;
+import net.fexcraft.app.fmt.ui.Trees.TreeGroup;
 import net.fexcraft.app.fmt.utils.Animator.Animation;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.lib.common.math.RGB;
@@ -20,10 +20,10 @@ public class TurboList extends ArrayList<PolygonWrapper> {
 	private String texture;
 	public ArrayList<Animation> animations = new ArrayList<>();
 	//
-	public GroupButton button;
+	public TreeGroup button;
 	
 	public TurboList(String id){
-		this.id = id; button = new GroupButton(ModelTree.TREE, this);
+		this.id = id; button = new TreeGroup(Trees.polygon, this);
 	}
 
 	public void render(boolean aplcol){
@@ -52,24 +52,28 @@ public class TurboList extends ArrayList<PolygonWrapper> {
 	
 	@Override
 	public boolean add(PolygonWrapper poly){
-		poly.setList(this); ModelTree.TREE.refreshFullHeight(); return super.add(poly);
+		poly.setList(this); boolean added = super.add(poly);
+		poly.button.setRoot(button); return added;
 	}
 	
 	@Override
 	public void clear(){
-		super.clear(); ModelTree.TREE.refreshFullHeight();
+		super.clear(); button.recalculateSize();
 	}
 	
 	@Override
 	public PolygonWrapper remove(int index){
 		PolygonWrapper wrapper = super.remove(index);
-		ModelTree.TREE.refreshFullHeight(); return wrapper;
+		button.remove(wrapper.button); button.recalculateSize(); return wrapper;
 	}
 	
 	@Override
 	public boolean remove(Object wrapper){
 		boolean bool = super.remove(wrapper);
-		ModelTree.TREE.refreshFullHeight(); return bool;
+		if(bool && wrapper instanceof PolygonWrapper){
+			button.remove(((PolygonWrapper)wrapper).button);
+			button.recalculateSize();
+		} return bool;
 	}
 	
 	public String getGroupTexture(){
