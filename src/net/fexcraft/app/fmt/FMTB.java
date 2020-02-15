@@ -66,7 +66,6 @@ import net.fexcraft.app.fmt.ui.UserInterpanels.Dialog24;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Field;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Label20;
 import net.fexcraft.app.fmt.ui.UserInterpanels.TextInput20;
-import net.fexcraft.app.fmt.ui.editor.Editor;
 import net.fexcraft.app.fmt.utils.*;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.lib.common.Static;
@@ -160,8 +159,8 @@ public class FMTB {
         keeper.getChainKeyCallback().add(new GLFWKeyCallback(){
             @Override
             public void invoke(long window, int key, int scancode, int action, int mods){
+            	if(key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) reset(); 
             	if(context.getFocusedGui() instanceof Field || context.getFocusedGui() instanceof TextInput20) return;
-    			if(key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) reset(true);
     			KeyCompound.process(window, key, scancode, action, mods);
             }
         });
@@ -423,11 +422,12 @@ public class FMTB {
 		close = bool;
 	}
 
-	public void reset(boolean esc){
-		if(context.getFocusedGui() instanceof Field){
+	public void reset(){
+		Print.console("reset");
+		if(context.getFocusedGui() instanceof Field || context.getFocusedGui() instanceof TextInput20){
 			context.getFocusedGui().setFocused(false);
 		}
-		else if(esc && Editors.anyVisible()){ Editor.hideAll(); }
+		else if(Editors.anyVisible()){ Editors.hideAll(); }
 		else return;//open some kind of main menu / status / login screen.
 	}
 
