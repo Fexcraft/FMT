@@ -39,7 +39,7 @@ public abstract class Editor extends Element {
 	
 	@Override
 	public Element repos(){
-		x = 0; y = UserInterface.TOOLBAR.height + UserInterface.TOOLBAR.border_width;
+		x = 0; y = 30;//UserInterface.TOOLBAR.height + UserInterface.TOOLBAR.border_width;
 		height = UserInterface.height - y; //if(Settings.bottombar()) height -= 29;
 		clearVertexes(); this.reposContainers(); return this;
 	}

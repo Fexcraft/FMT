@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.ui.Editors;
-import net.fexcraft.app.fmt.ui.general.DialogBox;
 import net.fexcraft.lib.common.json.JsonUtil;
 
 public class KeyCompound {
@@ -54,20 +54,20 @@ public class KeyCompound {
 		keys.add(new KeyFunction("toggle_cube", GLFW_KEY_F4, (action) -> { if(action == GLFW_RELEASE) Settings.toggleCube(); }));
 		keys.add(new KeyFunction("toggle_demo", GLFW_KEY_F5, (action) -> { if(action == GLFW_RELEASE) Settings.toggleDemo(); }));
 		keys.add(new KeyFunction("toggle_polygon_marker", GLFW_KEY_F6, (action) -> { if(action == GLFW_RELEASE) Settings.togglePolygonMarker(); }));
-		keys.add(new KeyFunction("toggle_polygon_count", GLFW_KEY_F7, (action) -> { if(action == GLFW_RELEASE) Settings.togglePolygonCount(); }));
+		//keys.add(new KeyFunction("toggle_polygon_count", GLFW_KEY_F7, (action) -> { if(action == GLFW_RELEASE) Settings.togglePolygonCount(); }));
 		keys.add(new KeyFunction("toggle_lighting", GLFW_KEY_F8, (action) -> { if(action == GLFW_RELEASE) Settings.toggleLighting(); }));
 		keys.add(new KeyFunction("toggle_animations", GLFW_KEY_F9, (action) -> { if(action == GLFW_RELEASE) Settings.toggleAnimations(); }));
 		//
 		keys.add(new KeyFunction("take_screenshot", GLFW_KEY_F12, (action) -> {
 			ImageHelper.takeScreenshot(false);
-        	FMTB.showDialogbox("Screenshot taken.", "OK", "Open", DialogBox.NOTHING, () -> {
+        	DialogBox.show(null, "dialogbox.button.ok", "dialogbox.button.open", null, () -> {
         		try{ Desktop.getDesktop().open(new File("./screenshots/")); }
         		catch(IOException e){ e.printStackTrace(); }
-        	});
+        	}, "image_helper.screenshot.done");
 		}));
 		//
-		for(int i = 0; i < 9; i++){ final int j = i;
-			keys.add(new KeyFunction("toggle_editor_" + i, GLFW_KEY_F1 + i, (action) -> { if(action == GLFW_RELEASE) Editors.toggleWidget(j); }));
+		for(int i = 1; i < 10; i++){ final int j = i - 1;
+			keys.add(new KeyFunction("toggle_editor_" + i, GLFW_KEY_0 + i, (action) -> { if(action == GLFW_RELEASE) Editors.toggleWidget(j); }));
 		}
 		//
 		keys.add(new KeyFunction("camera_rotate_left", GLFW_KEY_LEFT, action -> FMTB.ggr.rotation.yCoord -= 5));

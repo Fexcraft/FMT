@@ -20,7 +20,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.general.DialogBox;
+import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.lib.common.math.Time;
 import net.fexcraft.lib.common.utils.Print;
 
@@ -108,15 +108,11 @@ public class ImageHelper {
 		else{
 			try{
 				gifwriter.endWriteSequence(); currgifout.close();
-				
 			} catch(IOException e){ e.printStackTrace(); }
-			String str = Translator.translate("dialog.image_helper.gif_created", "Gif Created.");
-			String ok = Translator.translate("dialog.image_helper.gif_created.confirm", "OK");
-        	FMTB.showDialogbox(str, ok, Translator.translate("dialog.image_helper.gif_created.open", "Open Fl."), DialogBox.NOTHING, () -> {
-        		try{ Desktop.getDesktop().open(new File("./screenshots")); } catch(IOException e){
-        			e.printStackTrace();
-        		}
-        	});
+			//
+        	DialogBox.show(null, "dialogbox.button.ok", "dialogbox.button.open", null, () -> {
+        		try{ Desktop.getDesktop().open(new File("./screenshots/")); } catch(IOException e){ e.printStackTrace(); }
+        	}, "image_helper.gif.done");
 			reset();
 		}
 	}

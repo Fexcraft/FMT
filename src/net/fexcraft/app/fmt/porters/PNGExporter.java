@@ -20,7 +20,7 @@ import net.fexcraft.app.fmt.wrappers.GroupCompound;
  */
 public class PNGExporter extends ExImPorter {
 	
-	private static final String[] extensions = new String[]{ ".png" };
+	private static final String[] extensions = new String[]{ "*.png" };
 	private BufferedImage image;
 	private static final ArrayList<Setting> settings = new ArrayList<>();
 	static{ settings.add(new Setting(Type.BOOLEAN, "textured", false)); }

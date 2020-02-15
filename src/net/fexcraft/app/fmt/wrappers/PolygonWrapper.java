@@ -7,9 +7,9 @@ import org.lwjgl.opengl.GL11;
 
 import com.google.gson.JsonObject;
 
+import net.fexcraft.app.fmt.ui.Trees;
+import net.fexcraft.app.fmt.ui.Trees.SubTreeGroup;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
-import net.fexcraft.app.fmt.ui.tree.ModelTree;
-import net.fexcraft.app.fmt.ui.tree.RightTree.PolygonButton;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
@@ -34,10 +34,10 @@ public abstract class PolygonWrapper {
 	public int[] color;
 	public String name;
 	//
-	public PolygonButton button;
+	public SubTreeGroup button;
 	
 	public PolygonWrapper(GroupCompound compound){
-		this.compound = compound; button = new PolygonButton(ModelTree.TREE, this);
+		this.compound = compound; button = new SubTreeGroup(Trees.polygon, this);
 	}
 	
 	public void recompile(){

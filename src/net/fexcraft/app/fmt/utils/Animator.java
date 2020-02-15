@@ -16,6 +16,7 @@ public class Animator {
 	
 	public static final ArrayList<Animation> nani = new ArrayList<>();
 	static {
+		nani.add(new Title("# SELECT #", null, null));
 		nani.add(new Title("# Multi Purpose", null, null));
 		nani.add(new Rotator("rotator", null, Arrays.asList(
 			new Setting(Type.FLOAT, "x", 0f), new Setting(Type.FLOAT, "y", 0f), new Setting(Type.FLOAT, "z", 0f),
@@ -87,6 +88,11 @@ public class Animator {
 		
 		public Setting get(String id){
 			return settings.get(id);
+		}
+		
+		@Override
+		public String toString(){
+			return id;
 		}
 		
 	}

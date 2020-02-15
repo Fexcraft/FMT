@@ -49,6 +49,7 @@ toolbar.textures.edit=Edit (External)
 toolbar.textures.texture_map=Tex. Map (WIP)
 toolbar.textures.remove=Remove/Unload
 toolbar.textures.texpos_reset=Reset Tex.Pos.
+toolbar.textures.texpos_reset.done=Texture Positions Reset.
 toolbar.textures.auto_position=Auto Tex.Pos.
 toolbar.textures.generate=Generate New
 toolbar.helpers=Helpers
@@ -77,6 +78,8 @@ editor.general.attributes.new_group.confirm=Confirm
 editor.general.attributes.new_group.cancel=Cancel
 editor.general.attributes.type=Polygon Type
 editor.general.attributes.painttotexture=Burn to Texture
+editor.general.attributes.painttotexture.notex=There is no texture loaded.
+editor.general.attributes.painttotexture.tex_not_found=Texture not found in Memory. This rather bad.
 editor.general.shape=General Shape
 editor.general.shape.size=Measurements / Size
 editor.general.shape.position=Position (x/y/z)
@@ -114,6 +117,23 @@ editor.general.texrect_b.face=%s [start x/y, end x/y]
 editor.general.marker=Marker Settings
 editor.general.marker.color=Marker Color [#hex]
 editor.general.marker.biped_display=Biped Display [toggle / rot / scale]
+editor.model_group.model=Model Settings
+editor.model_group.model.position_full=Position Offset (full units)
+editor.model_group.model.position_sixteenth=Position Offset (1/16th)
+editor.model_group.model.rotation=Rotation Offset (degrees)
+editor.model_group.model.texture_size=Texture [U/V/Up-Scale]
+editor.model_group.model.texture=Model Texture
+editor.model_group.model.texture.select=Select a model texture file.
+editor.model_group.model.name=Model Name
+editor.model_group.group=Group Settings
+editor.model_group.group.color=Group Preview Color/Overlay
+editor.model_group.group.name=Group Name/ID
+editor.model_group.group.texture_size=Texture [U/V/Up-Scale]
+editor.model_group.group.texture=Group Texture
+editor.model_group.group.texture.select=Select a group texture file.
+editor.model_group.group.add_animator=Add Animator
+editor.model_group.group.animator_settings=Animator Settings
+editor.model_group.animations=Animations in first selected Group
 
 # Dialogs
 dialog.welcome.title=Welcome to FMT!
@@ -129,10 +149,83 @@ eximporter.export.select.title=Select Exporter
 eximporter.export.select.desc=Select an exporter to export your Model/Object.
 eximporter.export.select.continue=Continue
 eximporter.export.title=Select Export Location
+eximporter.export.failed=Errors while exporting Model.
+eximporter.export.nofile=No valid file choosen. Export is cancelled.
+eximporter.export.success=Export complete.
 eximporter.import.select.title=Select Importer
 eximporter.import.select.desc=Select an importer to import your Model/Object.
 eximporter.import.select.continue=Continue
 eximporter.import.title=Select Import Location
+eximporter.import.failed=Errors while importing Model.
+eximporter.import.nofile=No valid file choosen. Import is cancelled.
+eximporter.import.success=Import complete.
+eximporter.mtb_importer.stream_null=Import Failed, MTB appears corrupt.
+
+# SettingsBox
+settingsbox.continue=Continue
+settingsbox.confirm=Confirm
+
+# DialogBox
+dialogbox.title.default=Generic Dialog
+dialogbox.button.confirm=Confirm
+dialogbox.button.cancel=Cancel
+dialogbox.button.open=Open
+dialogbox.button.save=Save
+dialogbox.button.load=Load
+dialogbox.button.yes=Yes
+dialogbox.button.no=No
+dialogbox.button.ok=Ok
+
+# Trees
+tree.polygon.counter=Polygons: 
+tree.polygon.remove_group=Remove this group?
+tree.polygon.remove_polygon=Remove this polygon?
+tree.helper.counter=Helpers/Previews: 
+tree.fvtm.remove_animation=Remove this Animation?
+
+
+# Image Util
+image_helper.screenshot.done=Screenshot taken.
+image_helper.gif.done=Gif Created.
+
+# Polygon Picker
+polygon_picker.paint_bucket.toggle_off=Toggle Off
+polygon_picker.paint_bucket.no_texture=No Texture loaded. Cannot use Paint Bucket.
+polygon_picker.paint_pencil.toggle_off=Toggle Off
+polygon_picker.paint_pencil.no_texture=No Texture loaded. Cannot use Paint Pencil.
+
+# GroupCompound/Model
+compound.change_type.not_found=Type not found!
+compound.change_type.failed=%s shape(s) skipped!
+compound.delete_selected=Are you sure to delete all selected Polygons?
+
+# Save/Load
+saveload.title=FMTB File Manager
+saveload.open=Select file to open.
+saveload.open.nofile=Invalid Model File! (Does it exist?)
+saveload.open.errors=Errors occured while parsing save file.
+saveload.save.nofile=Model save file is 'null'! Model will not be saved.
+saveload.save.success=Model Saved!
+saveload.should_save=Do you want to save the current model first?
+
+# Helper/Preview Collector
+helper_collector.title=Helper/Preview Collector
+helper_collector.load_fmtb.nofile=Invalid Model File! (Does it exist?)
+helper_collector.load_fmtb.invalid_file=Invalid Model File, model.jtmt is missing.
+helper_collector.load_fmtb.errors=Errors occured while parsing save file.
+helper_collector.load_frame.nofile=Invalid Model File! (Does it exist?)
+helper_collector.load_frame.errors=Errors occured while creating frame.
+
+# Texture Updater / Util
+texture_update.autopos.title=Texture Auto Positioner
+texture_update.autopos.info=This process may mark FMT as not responding.
+texture_update.autopos.savespace=Use save-space mode? (may reduce readability)
+texture_update.autopos.process_all=Only process polygons with 0, 0 texture pos?
+texture_update.autopos.start=Start
+texture_update.autopos.processing=Processing: %s:%s
+texture_update.autopos.complete=Auto texture positioning Complete!
+texture_update.resize.exceeding_4096=Exceeding 4096 pixel! Exceeding 4096 pixel!
+texture_update.resize.success=Resized!
 
 # Errors
 error.dialog_title=Error
@@ -142,12 +235,7 @@ error.no_polygon_selected=no polygon/s selected
 error.todo=//TODO
 
 # Other / Old
-bottombar.netfield.loggedin=Logged In - %s
 bottombar.netfield.login_failed=Login Failed - GUEST
+bottombar.netfield.loggedin=Logged In - %s
 modeltree.polygons=Polygons: 
-dialog.saveload.should_save=Do you want to save the<nl>current model first?
-dialog.saveload.should_save.confirm=Yes
-dialog.saveload.should_save.cancel=No
-filechooser.export.title=Select Export Location
-filechooser.export.confirm=Export
-
+saveload.filechooser.save=Select save location.

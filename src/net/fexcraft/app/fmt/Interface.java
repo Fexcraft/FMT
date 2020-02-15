@@ -486,7 +486,7 @@ public class Interface extends Panel {
         button.getTooltip().getStyle().setPadding(4f);
 
         int[] idv = {0};
-        button.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) (MouseClickEvent event) -> {
+        button.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) event -> {
             if (event.getAction().equals(CLICK)) {
                 idv[0]++;
                 HorizontalAlign h;

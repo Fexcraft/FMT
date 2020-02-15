@@ -23,7 +23,7 @@ import net.fexcraft.app.fmt.wrappers.TurboList;
  */
 public class MarkerExporter extends ExImPorter {
 	
-	private static final String[] extensions = new String[]{ ".txt", ".json" };
+	private static final String[] extensions = new String[]{ "*.txt", "*.json" };
 	//private static final ArrayList<Setting> settings = new ArrayList<>();
 	
 	public MarkerExporter(){}

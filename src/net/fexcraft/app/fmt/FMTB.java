@@ -21,12 +21,10 @@ import javax.script.ScriptException;
 
 import org.joml.Vector2i;
 import org.joml.Vector4f;
-import org.liquidengine.legui.animation.Animator;
 import org.liquidengine.legui.animation.AnimatorProvider;
 import org.liquidengine.legui.component.Frame;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.listener.MouseClickEventListener;
-import org.liquidengine.legui.listener.processor.EventProcessor;
 import org.liquidengine.legui.listener.processor.EventProcessorProvider;
 import org.liquidengine.legui.system.context.CallbackKeeper;
 import org.liquidengine.legui.system.context.Context;
@@ -62,31 +60,16 @@ import net.arikia.dev.drpc.DiscordRPC;
 import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.ui.Editors;
-import net.fexcraft.app.fmt.ui.UserInterface;
+import net.fexcraft.app.fmt.ui.Trees;
 import net.fexcraft.app.fmt.ui.UserInterpanels;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Button20;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Dialog24;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Field;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Label20;
-import net.fexcraft.app.fmt.ui.UserInterpanels.NumberInput20;
 import net.fexcraft.app.fmt.ui.UserInterpanels.TextInput20;
-import net.fexcraft.app.fmt.ui.editor.Editor;
-import net.fexcraft.app.fmt.ui.editor.ModelGroupEditor;
-import net.fexcraft.app.fmt.ui.editor.PreviewEditor;
-import net.fexcraft.app.fmt.ui.editor.TextureEditor;
-import net.fexcraft.app.fmt.ui.general.AltMenu;
-import net.fexcraft.app.fmt.ui.general.ControlsAdjuster;
-import net.fexcraft.app.fmt.ui.general.DialogBox;
-import net.fexcraft.app.fmt.ui.general.DropDown;
-import net.fexcraft.app.fmt.ui.general.SettingsBox;
-import net.fexcraft.app.fmt.ui.general.TextField;
-import net.fexcraft.app.fmt.ui.general.TextureMap;
-import net.fexcraft.app.fmt.ui.general.Toolbar;
-import net.fexcraft.app.fmt.ui.tree.FVTMTree;
-import net.fexcraft.app.fmt.ui.tree.HelperTree;
-import net.fexcraft.app.fmt.ui.tree.ModelTree;
 import net.fexcraft.app.fmt.utils.*;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
+import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Time;
@@ -108,7 +91,6 @@ public class FMTB {
 	//
 	public static GGR ggr;
 	private boolean close;
-	public UserInterface UI;
 	private static String title = "Unnamed Model";
 	private static FMTB INSTANCE;
 	public static GroupCompound MODEL = new GroupCompound(null);
@@ -119,7 +101,6 @@ public class FMTB {
 	public float delta, accumulator = 0f, interval = 1f / 30f, alpha;
 	//
 	public static GLFWErrorCallback errorCallback;
-	public static int cursor_x, cursor_y, cdiffx, cdiffy;
 	public static boolean hold_right, hold_left, field_scrolled;
 	public static int WIDTH = 1280, HEIGHT = 720;
 	public static Context context;
@@ -134,8 +115,8 @@ public class FMTB {
 		Configuration.SHARED_LIBRARY_EXTRACT_DIRECTORY.set("./libs/natives");
 		Configuration.SHARED_LIBRARY_EXTRACT_PATH.set("./libs/natives");
 	    //
-		File[] folders = { new File("./saves"), new File("./imports"), new File("./exports") };
-		for(File folder : folders){ if(!folder.exists()) folder.mkdirs(); }
+		//File[] folders = { new File("./saves"), new File("./imports"), new File("./exports") };
+		//for(File folder : folders){ if(!folder.exists()) folder.mkdirs(); }
 		FMTB.INSTANCE = new FMTB(); try{ INSTANCE.run(); } catch(Throwable thr){ thr.printStackTrace(); System.exit(1); }
 	}
 
@@ -172,76 +153,64 @@ public class FMTB {
         frame = new Frame(WIDTH, HEIGHT);
         //frame.getContainer().add(new Interface());
         Editors.initializeEditors(frame);
+        Trees.initializeTrees(frame);
         UserInterpanels.addToolbarButtons(frame);
-        context = new Context(window);
+        MODEL.initButton(); context = new Context(window);
         CallbackKeeper keeper = new DefaultCallbackKeeper();
         CallbackKeeper.registerCallbacks(window, keeper);
 		//
-        GLFWWindowCloseCallback closeCallback = new GLFWWindowCloseCallback(){
-			@Override
-			public void invoke(long window){
-				close = true;
-			}
-		};
-		GLFWKeyCallback keyCallback = new GLFWKeyCallback(){
+        keeper.getChainKeyCallback().add(new GLFWKeyCallback(){
             @Override
             public void invoke(long window, int key, int scancode, int action, int mods){
-            	if(context.getFocusedGui() instanceof TextInput20) return;
-    			if(key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) reset(true);
+            	if(key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) reset(); 
+            	if(context.getFocusedGui() instanceof Field || context.getFocusedGui() instanceof TextInput20) return;
     			KeyCompound.process(window, key, scancode, action, mods);
             }
-        };
-        GLFWCursorPosCallback cursorCallback = new GLFWCursorPosCallback(){
+        });
+        keeper.getChainCursorPosCallback().add(new GLFWCursorPosCallback(){
             @Override
             public void invoke(long window, double xpos, double ypos){
-            	if(!hold_right) return;
-                cdiffx = (int)(cursor_x - xpos); cdiffy = (int)(cursor_y - (HEIGHT - ypos));
-                cursor_x = (int)xpos; cursor_y = (int)(HEIGHT - ypos);
+                ggr.cursorPosCallback(window, xpos, ypos);
             }
-        };
-        GLFWMouseButtonCallback mouseCallback = new GLFWMouseButtonCallback(){
+        });
+        keeper.getChainMouseButtonCallback().add(new GLFWMouseButtonCallback(){
             @Override
             public void invoke(long window, int button, int action, int mods){
-                if(button == 0){
-                	if(action == GLFW_PRESS) hold_left = true;
-                	else if(action == GLFW_RELEASE) hold_left = false;
-                }
-                else if(button == 1){
-                	if(action == GLFW_PRESS) hold_right = true;
-                	else if(action == GLFW_RELEASE) hold_right = false;
-                }
+            	ggr.mouseCallback(window, button, action, mods);
             }
-        };
-        GLFWScrollCallback scrollCallback = new GLFWScrollCallback(){
+        });
+        keeper.getChainWindowCloseCallback().add(new GLFWWindowCloseCallback(){
 			@Override
-			public void invoke(long window, double xoffset, double yoffset){
-				if(field_scrolled = (context.getFocusedGui() instanceof Field)){
-					((NumberInput20)context.getFocusedGui()).onScroll(yoffset);
-				}
+			public void invoke(long window){
+				SaveLoad.checkIfShouldSave(true, false);
 			}
-		};
-		GLFWFramebufferSizeCallback framebufferSizeCallback = new GLFWFramebufferSizeCallback(){
+		});
+        keeper.getChainFramebufferSizeCallback().add(new GLFWFramebufferSizeCallback(){
 		    @Override
 		    public void invoke(long window, int width, int height){
 		    	resize(width, height);
 		    }
-		};
-        keeper.getChainKeyCallback().add(keyCallback);
-        keeper.getChainCursorPosCallback().add(cursorCallback);
-        keeper.getChainMouseButtonCallback().add(mouseCallback);
-        keeper.getChainWindowCloseCallback().add(closeCallback);
-        keeper.getChainFramebufferSizeCallback().add(framebufferSizeCallback);
-        keeper.getChainScrollCallback().add(scrollCallback);
+		});
+        keeper.getChainScrollCallback().add(new GLFWScrollCallback(){
+			@Override
+			public void invoke(long window, double xoffset, double yoffset){
+				if(field_scrolled = (context.getFocusedGui() instanceof Field)){
+					Field field = (Field)context.getFocusedGui();
+					if(field.id() != null || field.update() != null) field.onScroll(yoffset);
+				}
+				else if(context.getFocusedGui() != null) return;
+				else ggr.scrollCallback(window, xoffset, yoffset);
+			}
+		});
         SystemEventProcessor systemEventProcessor = new SystemEventProcessorImpl();
 		SystemEventProcessor.addDefaultCallbacks(keeper, systemEventProcessor);
         renderer = new NvgRenderer();
         renderer.initialize();
         //
-		//ggr = new GGR(this, 0, 0, 0, 0, 0, 0);
 		ggr = new GGR(0, 4, 4); ggr.rotation.xCoord = 45;
 		PorterManager.load(); HelperCollector.reload();
 		SessionHandler.checkIfLoggedIn(true, true); checkForUpdates();
-		KeyCompound.init(); KeyCompound.load();
+		KeyCompound.init(); KeyCompound.load(); FMTB.MODEL.updateFields();
 		//
 		LocalDateTime midnight = LocalDateTime.of(LocalDate.now(ZoneOffset.systemDefault()), LocalTime.MIDNIGHT);
 		long mid = midnight.toInstant(ZoneOffset.UTC).toEpochMilli(); long date = Time.getDate(); while((mid += Time.MIN_MS * 5) < date);
@@ -260,12 +229,14 @@ public class FMTB {
 			DiscordRPC.discordRunCallbacks(); DiscordUtil.update(true);
 			Runtime.getRuntime().addShutdownHook(new Thread(){ @Override public void run(){ DiscordRPC.discordShutdown(); } });
 		}
+		glfwSwapInterval(Settings.vsync() ? 1 : 0);
 		//
 		while(!close){
 			ggr.pollInput(accumulator += (delta = timer.getDelta()));
             while(accumulator >= interval){
             	loop(); timer.updateUPS();
                 accumulator -= interval;
+                Trees.updateCounters();
             }
 			render(alpha = accumulator / interval);
 			if(!RayCoastAway.PICKING){
@@ -273,7 +244,7 @@ public class FMTB {
 					renderUI(true); ImageHelper.doTask();
 				} else renderUI(false);
 			}
-			updateFPS();
+			timer.updateFPS();
             glfwPollEvents();
             glfwSwapBuffers(window);
             systemEventProcessor.processEvents(frame, context);
@@ -291,10 +262,6 @@ public class FMTB {
         Settings.save(); StyleSheet.save(); KeyCompound.save(); SessionHandler.save(); System.exit(0);
 	}
 
-	private void updateFPS(){
-		timer.updateFPS();
-	}
-
 	private void setIcon(){
         try(MemoryStack stack = MemoryStack.stackPush()){
         	ByteBuffer imgbuff; IntBuffer ch = stack.mallocInt(1), w = stack.mallocInt(1), h = stack.mallocInt(1);
@@ -307,12 +274,21 @@ public class FMTB {
 	}
 
 	public void resize(int width, int height){
-    	WIDTH = width; HEIGHT = height;
-    	perspective(45.0f, (float)WIDTH / (float)HEIGHT, 0.1f, 4096f / 2);
+    	WIDTH = width; HEIGHT = height; perspective(45.0f, (float)WIDTH / (float)HEIGHT, 0.1f, 4096f / 2);
+    	Editors.resize(width, height); Trees.resize(width, height);
 	}
 
     private static Vector4f rgba(int r, int g, int b, float a) {
         return new Vector4f(r / 255f, g / 255f, b / 255f, a);
+    }
+
+    public static final Vector4f rgba(int i){
+    	return rgba(i, null);
+    }
+
+    public static final Vector4f rgba(int i, Float a){
+    	RGB rgb = new RGB(i); float[] arr = rgb.toFloatArray();
+        return new Vector4f(arr[0], arr[1], arr[2], a == null ? arr[3] : a);
     }
 
 	private void loop(){
@@ -368,7 +344,7 @@ public class FMTB {
             }
             if(Settings.demo()){
                 TextureManager.bindTexture("t1p");
-                ModelT1P.INSTANCE.render();
+                RGB.glColorReset(); ModelT1P.INSTANCE.render();
             }
 			if(Settings.lighting()) GL11.glDisable(GL11.GL_LIGHTING);
             GL11.glPopMatrix();
@@ -459,56 +435,14 @@ public class FMTB {
 	public void close(boolean bool){
 		close = bool;
 	}
-	
-	public static void showDialogbox(String title, String button0, String button1, Runnable run0, Runnable run1){
-		UserInterface.DIALOGBOX.show(title, button0, button1, run0, run1);
-	}
-	
-	public static void showDialogbox(String title, String button0, String button1, Runnable run0, Runnable run1, int progress, RGB color){
-		UserInterface.DIALOGBOX.show(title, button0, button1, run0, run1);
-		UserInterface.DIALOGBOX.progress = progress; UserInterface.DIALOGBOX.progresscolor = color;
-	}
 
-	public void setupUI(UserInterface ui){
-		TextureManager.loadTexture("icons/pencil", null);
-		TextureManager.loadTexture("icons/arrow_increase", null);
-		TextureManager.loadTexture("icons/arrow_decrease", null);
-		TextureManager.loadTexture("icons/group_delete", null);
-		TextureManager.loadTexture("icons/group_visible", null);
-		TextureManager.loadTexture("icons/group_edit", null);
-		TextureManager.loadTexture("icons/group_minimize", null);
-		TextureManager.loadTexture("icons/group_clone", null);
-		TextureManager.loadTexture("icons/editors/minimized", null);
-		TextureManager.loadTexture("icons/editors/expanded", null);
-		//
-		(UserInterface.TOOLBAR = new Toolbar()).repos();
-		//(UserInterface.BOTTOMBAR = new Bottombar()).setVisible(Settings.bottombar());
-		ui.getElements().add(ModelTree.TREE);
-		ui.getElements().add(HelperTree.TREE);
-		ui.getElements().add(FVTMTree.TREE);
-		ui.getElements().add(new ModelGroupEditor());
-		ui.getElements().add(new TextureEditor());
-		ui.getElements().add(new PreviewEditor());
-		//
-		ui.getElements().add(UserInterface.DIALOGBOX = new DialogBox());
-		ui.getElements().add(UserInterface.SETTINGSBOX = new SettingsBox());
-		ui.getElements().add(UserInterface.CONTROLS = new ControlsAdjuster());
-		//render last
-		ui.getElements().add(UserInterface.TOOLBAR);
-		ui.getElements().add(UserInterface.BOTTOMBAR);
-		ui.getElements().add(UserInterface.TEXMAP = new TextureMap());
-		ui.getElements().add(UserInterface.RIGHTMENU = AltMenu.MENU);
-		ui.getElements().add(UserInterface.DROPDOWN = DropDown.INST);
-		//ui.getElements().add(new Cursor());
-		FMTB.MODEL.updateFields();
-	}
-
-	public void reset(boolean esc){
-		if(net.fexcraft.app.fmt.ui.Dialog.anyVisible() || TextField.anySelected()){
-			UserInterface.DIALOGBOX.reset(); //UserInterface.FILECHOOSER.reset();
-			UserInterface.CONTROLS.reset(); UserInterface.SETTINGSBOX.reset();
-			UserInterface.TEXMAP.reset(); TextField.deselectAll();
-		} else if(esc && Editor.anyVisible()){ Editor.hideAll(); } else return;//open some kind of main menu / status / login screen.
+	public void reset(){
+		Print.console("reset");
+		if(context.getFocusedGui() instanceof Field || context.getFocusedGui() instanceof TextInput20){
+			context.getFocusedGui().setFocused(false);
+		}
+		else if(Editors.anyVisible()){ Editors.hideAll(); }
+		else return;//open some kind of main menu / status / login screen.
 	}
 
 	private void checkForUpdates(){
@@ -531,9 +465,9 @@ public class FMTB {
 					}
 				}
 				String newver = obj.get("latest_version").getAsString(); boolean bool = version.equals(newver);
-				String welcome = Translator.translate("dialog.welcome.title", "Welcome to FMT!");
-				String cversion = Translator.format("dialog.welcome.version", "Client Version: %s", version);
-				String new_title = Translator.format("dialog.welcome.title_new", "New version available!", newver, version);
+				String welcome = Translator.translate("dialog.welcome.title");
+				String cversion = Translator.format("dialog.welcome.version", version);
+				String new_title = Translator.format("dialog.welcome.title_new", newver, version);
 				String new_version = Translator.format("dialog.welcome.version_new", "%s >> %s", newver, version);
 				//
 		        Dialog24 dialog = new Dialog24(bool ? welcome : new_title, 300, 100);
@@ -564,6 +498,10 @@ public class FMTB {
 
 	public static String getTitle(){
 		return title;
+	}
+
+	public static void setModel(GroupCompound compound){
+		Trees.polygon.clear(); FMTB.MODEL = compound; for(TurboList list : compound.getGroups()) Trees.polygon.addSub(list.button); Trees.polygon.reOrderGroups();
 	}
 
 }

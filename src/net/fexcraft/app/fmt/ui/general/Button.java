@@ -18,21 +18,15 @@ public class Button extends Element {
 	protected int iconsize, texxoff = 2, texyoff = 2;
 	
 	public Button(Element root, String id, String style, int width, int height, int x, int y){
-		super(root, id, style == null ? root instanceof HoverMenu ? "menu:button" : "button" : style);
+		super(root, id, style == null ? "button" : style);
 		this.setPosition(x, y).setSize(width, height).setColor(0xffc7c7c7).setEnabled(true);
-		this.setBorder(0xff000000, 0xff000000, 1, root instanceof HoverMenu == false, true, true, true); this.setupSubmenu();
+		this.setBorder(0xff000000, 0xff000000, 1, true, true, true, true); this.setupSubmenu();
 	}
 	
 	@Override
 	public Element repos(){
-		x = root.x + xrel; y = root.y + yrel + (root instanceof HoverMenu ? getIndex() * 28 + 1 : 0);
+		x = root.x + xrel; y = root.y + yrel;
 		clearVertexes(); for(Element elm : elements) elm.repos(); return this;
-	}
-	
-	private int getIndex(){
-		for(int i = 0; i < root.getElements().size(); i++){
-			if(this == root.getElements().get(i)) return i;
-		} return -1;
 	}
 
 	public Button(Element elm, String id, String style, int w, int h, int x, int y, int hover){
@@ -51,21 +45,7 @@ public class Button extends Element {
 	public void setupSubmenu(){}
 
 	public Button setText(String string, boolean centered){
-		text = string; this.centered = centered;
-		if(this.root instanceof HoverMenu){
-			int leng = FontRenderer.getWidth(text, FontType.BOLD);
-			if(leng + 10 > this.width) this.width = leng + 10;
-			for(Element  elm : this.root.getElements()){
-				if(elm.width < width) elm.width = this.width;
-			}
-			if(this.root.width - 4 < this.width) this.root.width = this.width + 4;
-			if(this.width + 4 < this.root.width) this.width = this.root.width - 4;
-		}
-		if(root instanceof Toolbar){
-			int length = FontRenderer.getWidth(text, FontType.BOLD);
-			if(length + 8 > width) width = length + 8;
-		}
-		return this;
+		text = string; this.centered = centered; return this;
 	}
 
 	public Button setText(String string, int texxoff, int texyoff){

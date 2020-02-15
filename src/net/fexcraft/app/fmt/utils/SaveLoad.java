@@ -24,7 +24,8 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.JsonToTMT;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
-import net.fexcraft.app.fmt.ui.general.DialogBox;
+import net.fexcraft.app.fmt.ui.DialogBox;
+import net.fexcraft.app.fmt.ui.FileSelector;
 import net.fexcraft.app.fmt.utils.Animator.Animation;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
@@ -39,11 +40,9 @@ public class SaveLoad {
 
 	public static void openModel(){
 		String title = Translator.translate("saveload.open", "Select file to open.");
-		FileSelector.select(title, "./saves", FileSelector.TYPE_FMTB, file -> {
+		FileSelector.select(title, "./saves", FileSelector.TYPE_FMTB, false, file -> {
 			if(file == null || !file.exists()){
-				String str = Translator.translate("saveload.filechooser.open.nofile", "Invalid Model File!<nl>(does it even exists?)");
-				FMTB.showDialogbox(str, Translator.translate("saveload.filechooser.open.nofile.confirm", "ok."), null, DialogBox.NOTHING, null);
-				return;
+				DialogBox.showOK("saveload.title", null, null, "saveload.open.nofile"); return;
 			}
 			try{
 				ZipFile zip = new ZipFile(file);
@@ -51,7 +50,7 @@ public class SaveLoad {
 					if(elm.getName().equals("model.jtmt")){
 						try{
 							GroupCompound compound = parseModel(file, JsonUtil.getObjectFromInputStream(zip.getInputStream(elm)));
-							FMTB.MODEL = compound; FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
+							FMTB.setModel(compound); FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
 							GroupCompound.SELECTED_POLYGONS = FMTB.MODEL.countSelectedMRTs();
 						} catch(IOException e){ e.printStackTrace(); }
 					}
@@ -65,8 +64,7 @@ public class SaveLoad {
 			}
 			catch(Exception e){
 				e.printStackTrace();
-				String str = Translator.translate("saveload.filechooser.open.errors", "Errors occured<nl>while parsing save file");
-				FMTB.showDialogbox(str, Translator.translate("saveload.filechooser.open.errors.confirm", "ok"), null, DialogBox.NOTHING, null);
+				DialogBox.showOK("saveload.title", null, null, "saveload.open.errors"); return;
 			}
 		});
 	}
@@ -78,44 +76,34 @@ public class SaveLoad {
 	public static void checkIfShouldSave(boolean shouldclose, boolean shouldclear){
 		TextureUpdate.HALT = true;
 		if(FMTB.MODEL.countTotalMRTs() > 0){
-			String str = Translator.translate("dialog.saveload.should_save", "Do you want to save the<nl>current model first?");
-			String yes = Translator.translate("dialog.saveload.should_save.confirm", "Yes");
-			FMTB.showDialogbox(str, yes, Translator.translate("dialog.saveload.should_save.cancel", "No"), new Runnable(){
-				@Override
-				public void run(){
-					if(FMTB.MODEL.file == null){
-						String title = Translator.translate("saveload.save", "Select save location.");
-						FileSelector.select(title, "./saves", FileSelector.TYPE_FMTB, file -> {
-							if(file == null){
-								String str = Translator.translate("saveload.filechooser.save.nofile", "Model save file is 'null'!<nl>Model will not be saved.");
-								String ok = Translator.translate("saveload.filechooser.save.nofile.confirm", "OK");
-								FMTB.showDialogbox(str, ok,  Translator.translate("saveload.filechooser.save.nofile.save", "Save"), new Runnable(){
-									@Override public void run(){ if(shouldclose){ FMTB.get().close(true); } }
-								}, new Runnable(){
-									@Override public void run(){ checkIfShouldSave(shouldclose, shouldclear); }
-								});
-							}
-							else{
-								FMTB.MODEL.file = file; saveModel(false, shouldclose);
-								if(shouldclear){ FMTB.MODEL = new GroupCompound(null); }
-								if(shouldclose){ FMTB.get().close(true); }
-							}
-						});
-					}
-					else{
-						saveModel(false, false);//shouldclose);
-						if(shouldclear){ FMTB.MODEL = new GroupCompound(null); }
-						if(shouldclose){ FMTB.get().close(true); }
-					}
+			DialogBox.showYN("saveload.title", () -> {
+				if(FMTB.MODEL.file == null){
+					String title = Translator.translate("saveload.save", "Select save location.");
+					FileSelector.select(title, "./saves", FileSelector.TYPE_FMTB, true, file -> {
+						if(file == null){
+							DialogBox.show("saveload.title", "dialogbox.button.ok", "dialogbox.button.save", () -> {
+								if(shouldclose) FMTB.get().close(true);
+							}, () -> {
+								checkIfShouldSave(shouldclose, shouldclear);
+							}, "saveload.save.nofile");
+						}
+						else{
+							FMTB.MODEL.file = file; saveModel(false, shouldclose);
+							if(shouldclear){ FMTB.setModel(new GroupCompound(null));}
+							if(shouldclose){ FMTB.get().close(true); }
+						}
+					});
 				}
-			}, new Runnable(){
-				@Override
-				public void run(){
-					Print.console("selected > no saving of current");
-					if(shouldclear){ FMTB.MODEL = new GroupCompound(null); }
+				else{
+					saveModel(false, false);//shouldclose);
+					if(shouldclear){ FMTB.setModel(new GroupCompound(null)); }
 					if(shouldclose){ FMTB.get().close(true); }
 				}
-			});
+			}, () -> {
+				Print.console("selected > no saving of current");
+				if(shouldclear){ FMTB.setModel(new GroupCompound(null)); }
+				if(shouldclose){ FMTB.get().close(true); }
+			}, "saveload.should_save");
 		}
 		else if(shouldclose){
 			FMTB.get().close(true);
@@ -130,15 +118,12 @@ public class SaveLoad {
 	public static void saveModel(boolean bool, boolean openfile){
 		if(bool || FMTB.MODEL.file == null){
 			String title = Translator.translate("saveload.filechooser.save", "Select save location.");
-			FileSelector.select(title, "./saves", FileSelector.TYPE_FMTB, file -> {
+			FileSelector.select(title, "./saves", FileSelector.TYPE_FMTB, true, file -> {
 				if(file == null){
-					String str = Translator.translate("saveload.filechooser.save.nofile", "Model save file is 'null'!<nl>Model will not be saved.");
-					String ok = Translator.translate("saveload.filechooser.save.nofile.confirm", "OK");
-					FMTB.showDialogbox(str, ok, null, DialogBox.NOTHING, null); return;
+					DialogBox.showOK("saveload.title", null, null, "saveload.save.nofile"); return;
 				}
 				FMTB.MODEL.file = file; toFile(FMTB.MODEL, null, openfile);
-				String str = Translator.translate("dialog.saveload.save.success", "Model Saved!");
-				FMTB.showDialogbox(str, Translator.translate("dialog.saveload.save.success.confirm", "ok!"), null, DialogBox.NOTHING, null); return;
+				DialogBox.showOK("saveload.title", null, null, "saveload.save.success"); return;
 			});
 		}
 		else{

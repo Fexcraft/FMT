@@ -1,4 +1,4 @@
-package net.fexcraft.app.fmt.utils;
+package net.fexcraft.app.fmt.ui;
 
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
@@ -17,12 +17,10 @@ import org.lwjgl.util.tinyfd.TinyFileDialogs;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
-import net.fexcraft.app.fmt.ui.UserInterpanels;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Button20;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Dialog20;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Label20;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
-import net.fexcraft.lib.common.utils.Print;
 
 /**
  * 
@@ -32,27 +30,24 @@ import net.fexcraft.lib.common.utils.Print;
 public class FileSelector {
 	
 	/** For general file needs. */
-	public static final void select(String title, String root, String[] type, AfterTask task){
+	public static final void select(String title, String root, String[] type, boolean save, AfterTask task){
+		if(!root.endsWith("/")) root += "/";
         try(MemoryStack stack = MemoryStack.stackPush()){
-        	PointerBuffer buffer = stack.mallocPointer(type.length);
-            for(String pattern : type) buffer.put(stack.UTF8(pattern)); buffer.flip();
-    		String string = TinyFileDialogs.tinyfd_openFileDialog(title, root, buffer, type[0], false);
-    		Print.console(string); if(string != null) task.process(new File(string));
+        	PointerBuffer buffer = stack.mallocPointer(type.length - 1); String string = "";
+            for(int i = 1; i < type.length; i++) buffer.put(stack.UTF8(type[i])); buffer.flip();
+    		if(save) string = TinyFileDialogs.tinyfd_saveFileDialog(title, root, buffer, type[0]);
+    		else string = TinyFileDialogs.tinyfd_openFileDialog(title, root, buffer, type[0], false);//Print.console(string);
+    		task.process(string != null && string.trim().length() > 0 ? new File(string) : null);
         }
 	}
 	
 	/** For selecting an Ex/Im-Porter first. */
 	public static final void select(String title, String root, boolean export, SelectTask task){
         Dialog20 dialog = new Dialog20(UserInterpanels.translate("eximporter." + (export ? "export" : "import") + ".select.title"), 340, 125);
-        dialog.setResizable(false);
+        dialog.setResizable(false); if(!root.endsWith("/")) root += "/"; final String reet = root;
         Label20 label = new Label20(UserInterpanels.translate("eximporter." + (export ? "export" : "import") + ".select.desc"), 10, 10, 320, 20);
         Button20 okbutton = new Button20(UserInterpanels.translate("eximporter." + (export ? "export" : "import") + ".select.continue"), 10, 75, 100, 20);
-        okbutton.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
-        	if(CLICK == e.getAction()){
-        		dialog.close();
-        	}
-        });
-        SelectBox<Object> selbox = new SelectBox<>(10, 40, 320, 24);
+        SelectBox<String> selbox = new SelectBox<>(10, 40, 320, 24);
         List<ExImPorter> eximporter = PorterManager.getPorters(export);
         selbox.setVisibleCount(8); selbox.setElementHeight(20);
         for(ExImPorter porter : eximporter){ selbox.addElement(porter.getName()); }
@@ -61,9 +56,20 @@ public class FileSelector {
         	elm.getTextState().setHorizontalAlign(HorizontalAlign.LEFT);
         	elm.getTextState().setFontSize(20f);
         });
-        selbox.addSelectBoxChangeSelectionEventListener(event -> {
-        	//event.getTargetComponent().setSelected(event.getNewValue(), true);
-        	Print.console(event.getOldValue() + " / " + event.getNewValue());
+        okbutton.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
+        	if(CLICK == e.getAction()){
+        		ExImPorter porter = eximporter.get(selbox.getElementIndex(selbox.getSelection()));
+        		String tetle = (export ? "Exporter" : "Importer") + ": " + porter.getName(); dialog.close();
+        		SettingsBox.open((export ? "Exporter" : "Importer") + " Settings", porter.getSettings(export), false, (settings) -> {
+        	        try(MemoryStack stack = MemoryStack.stackPush()){
+        	        	PointerBuffer buffer = stack.mallocPointer(porter.getExtensions().length);
+        	            for(String pattern : porter.getExtensions()) buffer.put(stack.UTF8(pattern)); buffer.flip(); String string = "";
+        	    		if(export) string = TinyFileDialogs.tinyfd_saveFileDialog(title, reet, buffer, tetle);
+        	    		else string = TinyFileDialogs.tinyfd_openFileDialog(title, reet, buffer, tetle, false);//Print.console(string);
+        	    		task.process(string != null && string.trim().length() > 0 ? new File(string) : null, porter, settings);
+        	        }
+        		});
+        	}
         });
         dialog.getContainer().add(label);
         dialog.getContainer().add(selbox);

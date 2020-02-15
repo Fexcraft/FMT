@@ -23,7 +23,7 @@ import net.fexcraft.app.fmt.wrappers.*;
  */
 public abstract class FVTMFormatBase extends ExImPorter {
 	
-	protected static final String[] extensions = new String[]{ ".java" };
+	protected static final String[] extensions = new String[]{ "*.java" };
 	protected static final String tab = "\t";//"    ";
 	protected static final String tab2 = tab + tab;
 	protected static final String tab3 = tab2 + tab;
@@ -118,7 +118,7 @@ public abstract class FVTMFormatBase extends ExImPorter {
 		}
 		//buffer.append(tab2 + "fixRotations();\n");
 		//
-		try {
+		try{
 			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
 			writer.append(buffer); writer.flush(); writer.close();
 		}

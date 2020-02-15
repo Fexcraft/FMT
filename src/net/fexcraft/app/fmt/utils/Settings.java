@@ -9,9 +9,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.general.FileSelector;
-import net.fexcraft.app.fmt.ui.general.FileSelector.FileRoot;
-import net.fexcraft.app.fmt.ui.tree.ModelTree;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
@@ -22,9 +19,9 @@ import net.fexcraft.lib.common.utils.Print;
 
 public class Settings {
 	
-	private static Setting floor, lines, demo, cube, polygon_marker, polygon_count, lighting, cullface, animate,
-		discordrpc, discordrpc_sm, discordrpc_rtonm, ui_scale, numberfieldarrows, preview_colorpicker;
-	public static Setting movespeed, mouse_sensivity, internal_cursor;
+	private static Setting floor, lines, demo, cube, polygon_marker, lighting, cullface, animate,
+		discordrpc, discordrpc_sm, discordrpc_rtonm, numberfieldarrows, preview_colorpicker;
+	public static Setting movespeed, mouse_sensivity, internal_cursor, vsync;
 
 	public static boolean floor(){ return floor.getValue(); }
 
@@ -35,8 +32,6 @@ public class Settings {
 	public static boolean cube(){ return cube.getValue(); }
 	
 	public static boolean polygonMarker(){ return polygon_marker.getValue(); }
-
-	public static boolean polygonCount(){ return polygon_count.getValue(); }
 
 	//public static boolean bottombar(){ return bottombar.getValue(); }
 
@@ -52,13 +47,13 @@ public class Settings {
 	
 	public static boolean discordrpc_resettimeronnewmodel(){ return discordrpc_rtonm.getValue(); }
 
-	public static int ui_scale(){ return ui_scale.getValue(); }
-
 	public static boolean numberfieldarrows(){ return numberfieldarrows.getValue(); }
 
 	public static boolean preview_colorpicker(){ return preview_colorpicker.getValue(); }
 	
 	public static boolean internal_cursor(){ return internal_cursor.getValue(); }
+
+	public static boolean vsync(){ return vsync.getValue(); }
 	
 	//
 
@@ -80,12 +75,6 @@ public class Settings {
 	
 	public static boolean toggleDemo(){
 		return demo.toggle();
-	}
-
-	public static boolean togglePolygonCount(){
-		boolean bool = polygon_count.toggle();
-		ModelTree.TREE.refreshFullHeight();
-		return bool;
 	}
 
 	public static boolean togglePreviewColorpicker(){
@@ -139,7 +128,7 @@ public class Settings {
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "cube", true));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "demo", false));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "polygon_marker", true));
-		DEFAULTS.add(new Setting(Type.BOOLEAN, "polygon_count", true));
+		//DEFAULTS.add(new Setting(Type.BOOLEAN, "polygon_count", true));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "lighting", false));
 		DEFAULTS.add(new Setting(Type.FLOAT_ARRAY, "light0_position", new float[]{ 0, 1, 0, 0 }));
 		DEFAULTS.add(new Setting(Type.STRING, "language_code", "default"));
@@ -163,6 +152,7 @@ public class Settings {
 		//
 		DEFAULTS.add(new Setting(Type.FLOAT, "mouse_sensivity", 2f));
 		DEFAULTS.add(new Setting(Type.FLOAT, "camera_movespeed", 2f));
+		DEFAULTS.add(new Setting(Type.BOOLEAN, "vsync", false));
 		//DEFAULTS.add(new Setting(Type.BOOLEAN, "internal_cursor", false));
 	}
 
@@ -184,26 +174,28 @@ public class Settings {
 			});
 		}
 		for(String key : DEFAULTS.keySet()){ if(!SETTINGS.containsKey(key)) SETTINGS.put(key, DEFAULTS.get(key)); }
+		SETTINGS.entrySet().removeIf(entry -> !DEFAULTS.containsKey(entry.getKey()));
+		//
 		floor = SETTINGS.get("floor");
 		lines = SETTINGS.get("lines");
 		demo = SETTINGS.get("demo");
 		cube = SETTINGS.get("cube");
 		polygon_marker = SETTINGS.get("polygon_marker");
-		polygon_count = SETTINGS.get("polygon_count");
 		lighting = SETTINGS.get("lighting");
 		cullface = SETTINGS.get("cullface");
 		animate = SETTINGS.get("animate");
 		discordrpc = SETTINGS.get("discord_rpc-enabled");
 		discordrpc_sm = SETTINGS.get("discord_rpc-show_model");
 		discordrpc_rtonm = SETTINGS.get("discord_rpc-reset_timer_on_new_model");
-		ui_scale = SETTINGS.get("ui_scale");
+		//ui_scale = SETTINGS.get("ui_scale");
 		//bottombar = SETTINGS.get("bottombar");
 		numberfieldarrows = SETTINGS.get("numberfield_arrows");
 		preview_colorpicker = SETTINGS.get("preview_colorpicker");
 		movespeed = SETTINGS.get("camera_movespeed");
 		mouse_sensivity = SETTINGS.get("mouse_sensivity");
+		vsync = SETTINGS.get("vsync");
 		//internal_cursor = SETTINGS.get("internal_cursor");
-		FileSelector.FileRoot.last = FileRoot.valueOf(SETTINGS.get("filedir_last_type").getStringValue());
+		//FileSelector.FileRoot.last = FileRoot.valueOf(SETTINGS.get("filedir_last_type").getStringValue());
 	}
 
 	public static void save(){

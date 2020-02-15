@@ -30,6 +30,7 @@ import net.fexcraft.app.fmt.FMTB;
 /**
  * The timer class is used for calculating delta time and also FPS and UPS calculation.
  * Note by Fex: downgraded to lwjgl2.
+ * 2nd Note by Fex: unchanged after updating FMT to lwjgl3.
  *
  * @author Heiko Brumme
  */

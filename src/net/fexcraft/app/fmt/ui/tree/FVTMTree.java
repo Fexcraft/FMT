@@ -18,7 +18,7 @@ public class FVTMTree extends RightTree {
 		for(TurboList list : FMTB.MODEL.getGroups()){
 			if(list.animations.size() == 0) continue;
 			if((bool = elm_height < 4) && list.aminimized){ elm_height += 28; continue; } if(elm_height > height) break;
-			if(!bool){ list.button.update(elm_height, rw, rh); elm_height += 28; elements.add(list.button); }
+			if(!bool){ /*list.button.update(elm_height, rw, rh); elm_height += 28; elements.add(list.button);*/ }
 			if(list.aminimized) continue;
 			for(Animation anim : list.animations){
 				if(elm_height < 4){ elm_height += 28; continue; } if(elm_height > height) break;
