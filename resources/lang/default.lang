@@ -131,7 +131,9 @@ editor.model_group.group.name=Group Name/ID
 editor.model_group.group.texture_size=Texture [U/V/Up-Scale]
 editor.model_group.group.texture=Group Texture
 editor.model_group.group.texture.select=Select a group texture file.
+editor.model_group.group.add_animator=Add Animator
 editor.model_group.group.animator_settings=Animator Settings
+editor.model_group.animations=Animations in first selected Group
 
 # Dialogs
 dialog.welcome.title=Welcome to FMT!

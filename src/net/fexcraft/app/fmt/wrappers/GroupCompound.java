@@ -396,15 +396,15 @@ public class GroupCompound {
 		else{
 			ModelGroupEditor.group_color.apply((list.color == null ? RGB.WHITE : list.color).packed);
 			ModelGroupEditor.group_name.getTextState().setText(list.id);
-			ModelGroupEditor.g_tex_x.setSelected(list.textureX, true);
-			ModelGroupEditor.g_tex_y.setSelected(list.textureY, true);
-			ModelGroupEditor.g_tex_s.setSelected(list.textureS, true);
+			ModelGroupEditor.g_tex_x.setSelected((float)list.textureX, true);
+			ModelGroupEditor.g_tex_y.setSelected((float)list.textureY, true);
+			ModelGroupEditor.g_tex_s.setSelected((float)list.textureS, true);
 			//
 			String texname = list.getGroupTexture() + "";
 			if(texname.length() > 32){ texname = texname.substring(texname.length() - 32, texname.length()); }
 			ModelGroupEditor.group_texture.getTextState().setText(texname);
 		};
-		/*((Container)Editor.get("model_group_editor").getElement("animations")).addSubElements();*/
+		ModelGroupEditor.animations.refresh(list);
 		//
 		ModelGroupEditor.pos_x.apply(pos == null ? 0 : pos.xCoord);
 		ModelGroupEditor.pos_y.apply(pos == null ? 0 : pos.yCoord);

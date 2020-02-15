@@ -4,6 +4,7 @@ import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLIC
 
 import java.util.ArrayList;
 
+import org.joml.Vector4f;
 import org.liquidengine.legui.component.*;
 import org.liquidengine.legui.component.event.selectbox.SelectBoxChangeSelectionEvent;
 import org.liquidengine.legui.component.event.slider.SliderChangeValueEventListener;
@@ -26,6 +27,8 @@ import net.fexcraft.app.fmt.ui.UserInterpanels.Dialog20;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Label20;
 import net.fexcraft.app.fmt.ui.UserInterpanels.NumberInput20;
 import net.fexcraft.app.fmt.ui.UserInterpanels.TextInput20;
+import net.fexcraft.app.fmt.utils.Animator;
+import net.fexcraft.app.fmt.utils.Animator.Animation;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.app.fmt.utils.TextureUpdate;
@@ -407,6 +410,8 @@ public class Editors {
 		public static ColorInput20 group_color;
 		public static TextInput group_name, group_texture;
 		public static SelectBox<Float> g_tex_x, g_tex_y, g_tex_s;
+		public static SelectBox<Animation> add_anim;
+		public static AnimationsEditorWidget animations;
 		private String name_cache;
 		
 		@SuppressWarnings("unchecked")
@@ -550,10 +555,78 @@ public class Editors {
 					}
 				}
 			});
+			group.getContainer().add(new Label20(translate("editor.model_group.group.add_animator"), 3, pass += 24, 290, 20));
+	        group.getContainer().add(add_anim = new SelectBox<>(3, pass += 24, 290, 20));
+	        for(Animation am : Animator.nani){ add_anim.addElement(am); }
+	        add_anim.getSelectBoxElements().forEach(elm -> {
+        		Background background = new Background();
+        		background.setColor(new Vector4f(0.8f, 0.8f, 0.8f, 1f));
+	        	elm.getTextState().setFontSize(20f);
+	        	elm.getTextState().setHorizontalAlign(HorizontalAlign.LEFT);
+	        	if(elm.getObject().id.startsWith("#") && !elm.getObject().id.endsWith("#")){
+	        		elm.getStyle().setBackground(background);
+	        	}
+	        });
+	        add_anim.setVisibleCount(12); add_anim.setElementHeight(20);
+	        add_anim.getSelectionButton().getTextState().setFontSize(20f);
+	        add_anim.addSelectBoxChangeSelectionEventListener(event -> addAnimation(event));
 			group.setSize(296, pass + 52);
 	        this.addSub(group); pass = -20;
 	        //
+	        animations = new AnimationsEditorWidget(this, translate("editor.model_group.animations"), 0, 0, 0, 0);
+	        animations.refresh(null); this.addSub(animations); pass = -20;
+	        //
 	        reOrderWidgets();
+		}
+		
+		public static class AnimationsEditorWidget extends EditorWidget {
+			
+			private TurboList group = null;
+
+			public AnimationsEditorWidget(EditorBase base, String title, int x, int y, int w, int h){
+				super(base, title, x, y, w, h);
+			}
+
+			public void refresh(TurboList list){
+				if(group != list) reset(); int pass = -20;
+				if(list != null){
+					for(int i = 0; i < list.animations.size(); i++){
+						Button20 button = new Button20("[" + i + "]" + list.animations.get(i).id, 3, pass += 24, 290, 20);
+						final int j = i; button.getListenerMap().addListener(MouseClickEvent.class, listener -> {
+							if(listener.getAction() != CLICK) return;
+							if(listener.getButton() == MouseButton.MOUSE_BUTTON_LEFT){
+								Animation anim = list.animations.get(j); if(anim == null) return; FMTB.MODEL.updateFields();
+								SettingsBox.open("[" + anim.id + "] " + translate("editor.model_group.group.animator_settings"), anim.settings.values(), false,
+									settings -> { anim.onSettingsUpdate(); FMTB.MODEL.updateFields();});
+							}
+							else if(listener.getButton() == MouseButton.MOUSE_BUTTON_RIGHT){
+								list.animations.remove(j); FMTB.MODEL.updateFields();
+							}
+						});
+						button.getTextState().setHorizontalAlign(HorizontalAlign.LEFT);
+						this.getContainer().add(button);
+					}
+				}
+				this.setSize(296, pass + 52);
+			}
+
+			private void reset(){
+				this.getContainer().clearChildComponents();
+			}
+			
+		}
+
+		private void addAnimation(SelectBoxChangeSelectionEvent<Animation> event){
+			if(FMTB.MODEL.getSelected().isEmpty()) return;
+			if(event.getNewValue().id.startsWith("#")) return;
+			final Animation ani = event.getNewValue().copy(null);
+			ArrayList<TurboList> lists = FMTB.MODEL.getDirectlySelectedGroups();
+			SettingsBox.open(translate("editor.model_group.group.animator_settings"), ani.settings.values(), false, settings -> {
+				for(TurboList list : lists){
+					list.animations.add(ani.copy(list));
+				} FMTB.MODEL.updateFields();
+			}); 
+			return;
 		}
 
 		private void updateModelPos(boolean full){
@@ -643,7 +716,9 @@ public class Editors {
 
 	public static void resize(int width, int height){
 		for(EditorBase editor : editors){
+			editor.setSize(editor.getSize().x, FMTB.HEIGHT - 30);
 			editor.scrollable.setSize(editor.scrollable.getSize().x, FMTB.HEIGHT - 80);
+			editor.reOrderWidgets();
 		}
 	}
 
