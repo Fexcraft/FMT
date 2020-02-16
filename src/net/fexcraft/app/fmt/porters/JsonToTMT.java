@@ -234,6 +234,7 @@ public class JsonToTMT {
 		polygon.pos.zCoord = get(posz, obj, def);
 		polygon.name = obj.has("name") ? obj.get("name").getAsString() : null;
 		polygon.visible = obj.has("visible") ? obj.get("visible").getAsBoolean() : true;
+		polygon.button.updateColor();
 		return polygon;
 	}
 	

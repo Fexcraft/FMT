@@ -501,7 +501,9 @@ public class FMTB {
 	}
 
 	public static void setModel(GroupCompound compound){
-		Trees.polygon.clear(); FMTB.MODEL = compound; for(TurboList list : compound.getGroups()) Trees.polygon.addSub(list.button); Trees.polygon.reOrderGroups();
+		Trees.polygon.clear(); FMTB.MODEL = compound;
+		for(TurboList list : compound.getGroups()){ Trees.polygon.addSub(list.button); list.button.updateColor(); }//fix for loaded-in groups that should display "not-visible" color
+		Trees.polygon.reOrderGroups();
 	}
 
 }
