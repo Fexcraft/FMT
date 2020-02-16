@@ -181,6 +181,7 @@ tree.polygon.counter=Polygons:
 tree.polygon.remove_group=Remove this group?
 tree.polygon.remove_polygon=Remove this polygon?
 tree.helper.counter=Helpers/Previews: 
+tree.fvtm.counter=Groups in Model: 
 tree.fvtm.remove_animation=Remove this Animation?
 
 
@@ -235,7 +236,3 @@ error.no_polygon_selected=no polygon/s selected
 error.todo=//TODO
 
 # Other / Old
-bottombar.netfield.login_failed=Login Failed - GUEST
-bottombar.netfield.loggedin=Logged In - %s
-modeltree.polygons=Polygons: 
-saveload.filechooser.save=Select save location.

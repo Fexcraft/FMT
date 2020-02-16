@@ -10,7 +10,7 @@ import javax.imageio.ImageIO;
 
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.DialogBox;
-import net.fexcraft.app.fmt.ui.tree.HelperTree;
+import net.fexcraft.app.fmt.ui.Trees;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.TexrectWrapperA;
@@ -21,6 +21,7 @@ import net.fexcraft.lib.common.utils.ZipUtil;
 public class HelperCollector {
 	
 	public static final ArrayList<GroupCompound> LOADED = new ArrayList<>();
+	public static int SELECTED = -1;
 	
 	public static final void reload(){
 		LOADED.clear(); File root = new File("./helpers"); if(!root.exists()) root.mkdirs();
@@ -31,8 +32,7 @@ public class HelperCollector {
 		Print.console("Loading Preview/Helper model: " + file.getName());
 		GroupCompound compound = exim.importModel(file, settings);
 		if(!compound.name.startsWith("import/")){ compound.name = "import/" + compound.name; }
-		compound.getGroups().setAsHelperPreview();
-		LOADED.add(compound); compound.clearSelection(); HelperTree.TREE.refreshFullHeight(); return compound;
+		if(compound != null) add(compound); return compound;
 	}
 
 	/** For loading FMTBs.*/
@@ -60,8 +60,7 @@ public class HelperCollector {
 		catch(Exception e){
 			e.printStackTrace(); DialogBox.showOK("helper_collector.title", null, null, "helper_collector.load_fmtb.errors");
 		}
-		if(compound != null){ LOADED.add(compound); } HelperTree.TREE.refreshFullHeight(); 
-		compound.clearSelection(); compound.getGroups().setAsHelperPreview(); return compound;
+		if(compound != null) add(compound); return compound;
 	}
 
 	public static GroupCompound loadFrame(File file){
@@ -103,8 +102,16 @@ public class HelperCollector {
 		catch(Exception e){
 			e.printStackTrace(); DialogBox.showOK("helper_collector.title", null, null, "helper_collector.load_frame.errors");
 		}
-		if(compound != null){ LOADED.add(compound); } HelperTree.TREE.refreshFullHeight(); 
-		compound.clearSelection(); return compound;
+		if(compound != null) add(compound); return compound;
+	}
+	
+	private static void add(GroupCompound compound){
+		compound.clearSelection(); Trees.helper.addSub(compound.button);
+		compound.getGroups().setAsHelperPreview(compound); LOADED.add(compound);
+	}
+	
+	public static GroupCompound getSelected(){
+		return SELECTED >= HelperCollector.LOADED.size() || SELECTED < 0 ? null : HelperCollector.LOADED.get(SELECTED);
 	}
 
 }

@@ -3,6 +3,7 @@ package net.fexcraft.app.fmt.wrappers;
 import java.util.ArrayList;
 
 import net.fexcraft.app.fmt.ui.Trees;
+import net.fexcraft.app.fmt.ui.Trees.SubTreeGroup;
 import net.fexcraft.app.fmt.ui.Trees.TreeGroup;
 import net.fexcraft.app.fmt.utils.Animator.Animation;
 import net.fexcraft.app.fmt.utils.Settings;
@@ -21,6 +22,7 @@ public class TurboList extends ArrayList<PolygonWrapper> {
 	public ArrayList<Animation> animations = new ArrayList<>();
 	//
 	public TreeGroup button;
+	public SubTreeGroup pbutton;
 	
 	public TurboList(String id){
 		this.id = id; button = new TreeGroup(Trees.polygon, this);

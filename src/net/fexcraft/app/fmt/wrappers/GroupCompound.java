@@ -15,6 +15,7 @@ import net.fexcraft.app.fmt.ui.Editors;
 import net.fexcraft.app.fmt.ui.Editors.GeneralEditor;
 import net.fexcraft.app.fmt.ui.Editors.ModelGroupEditor;
 import net.fexcraft.app.fmt.ui.Trees;
+import net.fexcraft.app.fmt.ui.Trees.SubTreeGroup;
 import net.fexcraft.app.fmt.ui.Trees.TreeGroup;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Field;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
@@ -616,8 +617,12 @@ public class GroupCompound {
 			super.clear(); Trees.polygon.clear();
 		}
 
-		public void setAsHelperPreview(){
-			for(TurboList list : this) list.button.removeFromTree(); Trees.polygon.reOrderGroups();
+		public void setAsHelperPreview(GroupCompound compound){
+			for(TurboList list : this){
+				list.button.removeFromTree(); list.button = null;
+				list.pbutton = new SubTreeGroup(Trees.helper, list);
+				list.pbutton.setRoot(compound.button);
+			} compound.button.update(); Trees.polygon.reOrderGroups();
 		}
 		
 	}

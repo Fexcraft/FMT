@@ -49,7 +49,6 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.Configuration;
 import org.lwjgl.system.MemoryStack;
-import org.lwjgl.system.Platform;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -491,19 +490,16 @@ public class FMTB {
 			}
 		}.start();
 	}
-	
-	public static boolean linux(){
-		return Platform.get() == Platform.LINUX;//TODO ?
-	}
 
 	public static String getTitle(){
 		return title;
 	}
 
-	public static void setModel(GroupCompound compound){
-		Trees.polygon.clear(); FMTB.MODEL = compound;
+	public static void setModel(GroupCompound compound, boolean clearhelpers){
+		Trees.polygon.clear(); Trees.helper.clear(); FMTB.MODEL = compound; if(clearhelpers) HelperCollector.LOADED.clear();
 		for(TurboList list : compound.getGroups()){ Trees.polygon.addSub(list.button); list.button.updateColor(); }//fix for loaded-in groups that should display "not-visible" color
-		Trees.polygon.reOrderGroups();
+		for(GroupCompound com : HelperCollector.LOADED){ Trees.helper.addSub(com.button); com.button.updateColor(); }
+		Trees.polygon.reOrderGroups(); Trees.helper.reOrderGroups();
 	}
 
 }

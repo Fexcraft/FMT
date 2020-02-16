@@ -205,10 +205,10 @@ public class UserInterpanels {
 			}),
 			new MenuButton("toolbar.helpers.unload_clear", () -> HelperCollector.LOADED.clear())
 		));
-		frame.getContainer().add(new MenuEntry(5, translate("toolbar.mod_tools"),
+		frame.getContainer().add(new MenuEntry(6, translate("toolbar.mod_tools"),
 			new MenuButton("toolbar.mod_tools.fvtm_programs", () -> Trees.show("tree"))
 		));
-		frame.getContainer().add(new MenuEntry(6, translate("toolbar.exit")));
+		frame.getContainer().add(new MenuEntry(7, translate("toolbar.exit")));
 	}
 	
 	public static class Icon extends ImageView {
@@ -230,7 +230,7 @@ public class UserInterpanels {
 		private MenuButton[] buttons;
 		private boolean extended;
 		public final int index;
-		public static int size = 150;
+		public static int size = 135;
 		
 		public MenuEntry(int index, String title, MenuButton... buttons){
 			super(187 + (index * (size + 2)), 1, size, 28);

@@ -24,8 +24,6 @@ import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.Editors.SPVSL;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Button20;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Label20;
-import net.fexcraft.app.fmt.ui.general.TextField;
-import net.fexcraft.app.fmt.ui.tree.HelperTree;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.HelperCollector;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
@@ -45,7 +43,7 @@ public class Trees {
 		frame.getContainer().add(polygon = new TreeBase("polygon"));
 		frame.getContainer().add(helper = new TreeBase("helper"));
 		//temporary
-		polygon.show();
+		//polygon.show();
 	}
 	
 	public static void hideAll(){
@@ -56,6 +54,8 @@ public class Trees {
 		hideAll();
 		switch(type){
 			case "polygon": polygon.show(); break;
+			case "helper": case "preview":
+			case "helper_preview": helper.show(); break;
 			default: break;
 		}
 	}
@@ -115,18 +115,26 @@ public class Trees {
 		}
 
 		public void reOrderGroups(){
-			Print.console(groups.size(), scrollable.getContainer().getChildComponents().size());
 			float size = 2; for(TreeGroup tree : groups) size += tree.getSize().y + 2;
 			scrollable.getContainer().setSize(scrollable.getSize().x, size > FMTB.HEIGHT - 60 ? size : FMTB.HEIGHT - 60); size = 2;
 			for(TreeGroup tree : groups){ tree.setPosition(0, size); size += tree.getSize().y + 2; }
 		}
 
 		public void updateCounter(){
-			counter.getTextState().setText(counterlabel + FMTB.MODEL.countTotalMRTs());
+			switch(this.id){
+				case "polygon": counter.getTextState().setText(counterlabel + FMTB.MODEL.countTotalMRTs()); break;
+				case "helper": counter.getTextState().setText(counterlabel + HelperCollector.LOADED.size()); break;
+				case "fvtm": counter.getTextState().setText(counterlabel + FMTB.MODEL.getGroups().size()); break;
+				default: return;
+			}
 		}
 
 		public void clear(){
 			scrollable.getContainer().removeIf(filter -> true); groups.clear(); reOrderGroups();
+		}
+
+		public int groupAmount(){
+			return groups.size();
 		}
 		
 	}
@@ -184,7 +192,7 @@ public class Trees {
 		public TreeGroup(TreeBase base, GroupCompound group){
 			this(base); compound = group; updateColor();
 			this.add(new TreeIcon((int)getSize().x - 20, 0, "group_delete", () -> {
-				HelperCollector.LOADED.remove(index());
+				HelperCollector.LOADED.remove(index()); this.removeFromTree(); tree.reOrderGroups();
 			}));
 			this.add(new TreeIcon((int)getSize().x - 42, 0, "group_visible", () -> {
 				compound.visible = !compound.visible; updateColor();
@@ -214,9 +222,9 @@ public class Trees {
 			this.add(new TreeIcon((int)getSize().x - 108, 0, "group_minimize", () -> toggle(!compound.minimized)));
 			label.getListenerMap().addListener(MouseClickEvent.class, listener -> {
 				if(listener.getAction() != CLICK || listener.getButton() != MouseButton.MOUSE_BUTTON_LEFT) return;
-				if(selected()){ HelperTree.SEL = -1; }
-				else{ HelperTree.SEL = index(); }
-				GroupCompound model = HelperTree.getSelected();
+				if(selected()){ HelperCollector.SELECTED = -1; }
+				else{ HelperCollector.SELECTED = index(); }
+				/*GroupCompound model = HelperCollector.getSelected();
 				if(model == null){
 					TextField.getFieldById("helper_posx").applyChange(0);
 					TextField.getFieldById("helper_posy").applyChange(0);
@@ -244,7 +252,7 @@ public class Trees {
 					TextField.getFieldById("helper_scale16x").applyChange((model.scale == null ? 1 : model.scale.xCoord) * 16);
 					TextField.getFieldById("helper_scale16y").applyChange((model.scale == null ? 1 : model.scale.yCoord) * 16);
 					TextField.getFieldById("helper_scale16z").applyChange((model.scale == null ? 1 : model.scale.zCoord) * 16);
-				}
+				}*/
 				updateColor();
 			});
 			this.recalculateSize();
@@ -264,7 +272,7 @@ public class Trees {
 				this.setSize(this.getSize().x, list.minimized ? 20 : (list.size() * 22) + 20);
 			}
 			else{
-				this.setSize(this.getSize().x, compound.minimized ? 20 : (compound.getGroups().size()  * 22) + 20);
+				this.setSize(this.getSize().x, compound.minimized ? 20 : (compound.getGroups().size() * 22) + 20);
 			}
 			tree.reOrderGroups();
 		}
@@ -287,7 +295,7 @@ public class Trees {
 		}
 		
 		public boolean selected(){
-			return HelperTree.SEL > 0 && HelperTree.SEL == index();
+			return HelperCollector.SELECTED > 0 && HelperCollector.SELECTED == index();
 		}
 		
 		public int index(){

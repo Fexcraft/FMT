@@ -5,7 +5,7 @@ import static net.fexcraft.app.fmt.utils.StyleSheet.BLACK;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.general.Button;
 import net.fexcraft.app.fmt.ui.general.TextField;
-import net.fexcraft.app.fmt.ui.tree.HelperTree;
+import net.fexcraft.app.fmt.utils.HelperCollector;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.Vec3f;
@@ -62,7 +62,7 @@ public class PreviewEditor extends Editor {
 	}
 	
 	protected boolean updateScale(TextField field, int axis, Boolean positive){
-		GroupCompound compound = HelperTree.getSelected(); if(compound == null) return true;
+		GroupCompound compound = HelperCollector.getSelected(); if(compound == null) return true;
 		if(field == null) field = TextField.getFieldById("helper_scale" + xyz[axis]);
 		TextField field0 = TextField.getFieldById(field == null ? "helper_scale16" + xyz[axis] : field.getId().replace("scale", "scale16"));
 		if(compound.scale == null) compound.scale = new Vec3f(1, 1, 1);
@@ -96,7 +96,7 @@ public class PreviewEditor extends Editor {
 	}
 	
 	protected boolean updateScale16(TextField field, int axis, Boolean positive){
-		GroupCompound compound = HelperTree.getSelected(); if(compound == null) return true;
+		GroupCompound compound = HelperCollector.getSelected(); if(compound == null) return true;
 		if(field == null) field = TextField.getFieldById("helper_scale16" + xyz[axis]);
 		TextField field0 = TextField.getFieldById(field == null ? "helper_scale" + xyz[axis] : field.getId().replace("16", ""));
 		if(compound.scale == null) compound.scale = new Vec3f(1, 1, 1);
@@ -124,7 +124,7 @@ public class PreviewEditor extends Editor {
 	}
 	
 	protected boolean updatePos(TextField field, int axis, Boolean positive){
-		GroupCompound compound = HelperTree.getSelected(); if(compound == null) return true;
+		GroupCompound compound = HelperCollector.getSelected(); if(compound == null) return true;
 		if(field == null) field = TextField.getFieldById("helper_pos" + xyz[axis]);
 		if(compound.pos == null) compound.pos = new Vec3f();
 		float am = positive == null ? field.getFloatValue() : positive ? FMTB.MODEL.rate : -FMTB.MODEL.rate;
@@ -151,7 +151,7 @@ public class PreviewEditor extends Editor {
 	}
 	
 	protected boolean updateRot(TextField field, int axis, Boolean positive){
-		GroupCompound compound = HelperTree.getSelected(); if(compound == null) return true;
+		GroupCompound compound = HelperCollector.getSelected(); if(compound == null) return true;
 		if(field == null) field = TextField.getFieldById("helper_rot" + xyz[axis]);
 		if(compound.rot == null) compound.rot = new Vec3f();
 		float am = positive == null ? field.getFloatValue() : positive ? FMTB.MODEL.rate : -FMTB.MODEL.rate;
