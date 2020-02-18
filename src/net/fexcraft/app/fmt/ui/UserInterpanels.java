@@ -132,7 +132,7 @@ public class UserInterpanels {
 			new MenuButton("toolbar.editor.hide_all", () -> Editors.hideAll()),
 			new MenuButton("toolbar.editor.general", () -> Editors.show("general")),
 			new MenuButton("toolbar.editor.model_group", () -> Editors.show("modelgroup")),
-			new MenuButton("toolbar.editor.texture", NOT_REIMPLEMENTED_YET)
+			new MenuButton("toolbar.editor.texture", () -> Editors.show("texture"))
 		));
 		frame.getContainer().add(new MenuEntry(3, translate("toolbar.shapelist"),
 			new MenuButton("toolbar.shapelist.show", () -> Trees.toggle("polygon")),

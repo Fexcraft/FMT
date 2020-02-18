@@ -19,7 +19,7 @@ import net.fexcraft.app.fmt.ui.editor.EditorBase;
 import net.fexcraft.app.fmt.ui.editor.Editors;
 import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
 import net.fexcraft.app.fmt.ui.editor.ModelGroupEditor;
-import net.fexcraft.app.fmt.ui.editorold.TextureEditor;
+import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.utils.RayCoastAway;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.TextureManager;

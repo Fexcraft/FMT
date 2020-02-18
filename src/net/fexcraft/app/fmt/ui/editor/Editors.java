@@ -11,12 +11,14 @@ public class Editors {
 	public static GeneralEditor general;
 	public static ModelGroupEditor modelgroup;
 	public static PreviewEditor preview;
+	public static TextureEditor texture;
 	//
 	public static final ArrayList<EditorBase> editors = new ArrayList<>();
 
 	public static void initializeEditors(Frame frame){
 		frame.getContainer().add(general = new GeneralEditor());
 		frame.getContainer().add(modelgroup = new ModelGroupEditor());
+		frame.getContainer().add(texture = new TextureEditor());
 		frame.getContainer().add(preview = new PreviewEditor());
 	}
 	
@@ -32,6 +34,7 @@ public class Editors {
 			case "modelgroup": modelgroup.show(); break;
 			case "helper": case "preview":
 			case "helperpreview": preview.show(); break;
+			case "texture": texture.show(); break;
 		}
 	}
 	

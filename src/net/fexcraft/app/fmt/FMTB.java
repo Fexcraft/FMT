@@ -288,12 +288,15 @@ public class FMTB {
     }
 
     public static final Vector4f rgba(int i){
-    	return rgba(i, null);
+    	return rgba(new RGB(i));
     }
 
     public static final Vector4f rgba(int i, Float a){
-    	RGB rgb = new RGB(i); float[] arr = rgb.toFloatArray();
-        return new Vector4f(arr[0], arr[1], arr[2], a == null ? arr[3] : a);
+    	RGB rgb = new RGB(i); rgb.alpha = a; return rgba(rgb);
+    }
+
+    public static final Vector4f rgba(RGB rgb){
+    	float[] arr = rgb.toFloatArray(); return new Vector4f(arr[0], arr[1], arr[2], arr[3]);
     }
 
 	private void loop(){
@@ -442,7 +445,6 @@ public class FMTB {
 	}
 
 	public void reset(){
-		Print.console("reset");
 		if(context.getFocusedGui() instanceof Field || context.getFocusedGui() instanceof TextField){
 			context.getFocusedGui().setFocused(false);
 		}

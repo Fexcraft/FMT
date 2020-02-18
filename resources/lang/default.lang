@@ -140,6 +140,19 @@ editor.preview.container.position_sixteenth=Position (1/16th)
 editor.preview.container.rotation=Rotation (degrees)
 editor.preview.container.scale_full=Scale (full units / OpenGL)
 editor.preview.container.scale_sixteenth=Scale (1/16th OpenGL)
+editor.texture.palette=Palette / Color
+editor.texture.palette.inputfield=HEX Color Input
+editor.texture.palette.large=Large Color Palette
+editor.texture.palette.horizontal=Horizontal Color Palette
+editor.texture.palette.current=Currently Selected Color
+editor.texture.brushes=Brushes / Tools
+editor.texture.brushes.tool_on=ON
+editor.texture.brushes.tool_off=OFF
+editor.texture.brushes.face_bucket=Face Paint Bucket [%s]
+editor.texture.brushes.polygon_bucket=Polygon Paint Bucket [%s]
+editor.texture.brushes.group_bucket=Group Paint Bucket [%s]
+editor.texture.brushes.pixel_pencil=Pixel Paint Pencil [%s]
+editor.texture.brushes.color_picker=Color Picker [%s]
 
 # Dialogs
 dialog.welcome.title=Welcome to FMT!
@@ -241,4 +254,4 @@ error.feature_not_reimplemented_yet=This feature is not reimplemented yet.
 error.no_polygon_selected=no polygon/s selected
 error.todo=//TODO
 
-# Other / Old
+# Other

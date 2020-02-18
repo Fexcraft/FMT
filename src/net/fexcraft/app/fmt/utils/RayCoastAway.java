@@ -9,8 +9,7 @@ import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.DialogBox;
-import net.fexcraft.app.fmt.ui.editorold.Editor;
-import net.fexcraft.app.fmt.ui.editorold.TextureEditor;
+import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
@@ -55,8 +54,7 @@ public class RayCoastAway {
 				for(int y = 0; y < image.getHeight(); y++){
 					if(new Color(image.getRGB(x, y)).getRGB() + 16777216 == id){
 						if(TextureEditor.colorPicker()){
-							TextureEditor.CURRENTCOLOR.packed = tex.getImage().getRGB(x, y);
-							((TextureEditor)Editor.get("texture_editor")).updateFields();
+							TextureEditor.updateColor(tex.getImage().getRGB(x, y));
 						}
 						else{
 							tex.getImage().setRGB(x, y, new Color(TextureEditor.CURRENTCOLOR.packed).getRGB()); tex.rebind();
