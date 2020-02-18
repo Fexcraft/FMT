@@ -372,6 +372,7 @@ public class SaveLoad {
 				try{
 					JsonObject jsn = elm.getAsJsonObject();
 					File file = new File(jsn.get("path").getAsString());
+					if(file.equals(from)) continue;
 					GroupCompound helperpreview = null;
 					if(jsn.get("name").getAsString().startsWith("frame/")){
 						helperpreview = HelperCollector.loadFrame(file);

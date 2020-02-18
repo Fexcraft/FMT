@@ -134,6 +134,12 @@ editor.model_group.group.texture.select=Select a group texture file.
 editor.model_group.group.add_animator=Add Animator
 editor.model_group.group.animator_settings=Animator Settings
 editor.model_group.animations=Animations in first selected Group
+editor.preview.container=General Settings
+editor.preview.container.position_full=Position (full units)
+editor.preview.container.position_sixteenth=Position (1/16th)
+editor.preview.container.rotation=Rotation (degrees)
+editor.preview.container.scale_full=Scale (full units / OpenGL)
+editor.preview.container.scale_sixteenth=Scale (1/16th OpenGL)
 
 # Dialogs
 dialog.welcome.title=Welcome to FMT!

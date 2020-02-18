@@ -22,6 +22,7 @@ import org.liquidengine.legui.style.Style.DisplayType;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
+import net.fexcraft.app.fmt.ui.Editors.PreviewEditor;
 import net.fexcraft.app.fmt.ui.Editors.SPVSL;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.HelperCollector;
@@ -197,7 +198,7 @@ public class Trees {
 				compound.visible = !compound.visible; updateColor();
 			}));
 			this.add(new TreeIcon((int)getSize().x - 64, 0, "group_edit", () -> {
-				Editors.show("helper_preview");
+				Editors.show("preview");
 			}));
 			this.add(new TreeIcon((int)getSize().x - 86, 0, "group_clone", () -> {
 				GroupCompound newcomp = null, parent = compound;
@@ -221,38 +222,50 @@ public class Trees {
 			this.add(new TreeIcon((int)getSize().x - 108, 0, "group_minimize", () -> toggle(!compound.minimized)));
 			label.getListenerMap().addListener(MouseClickEvent.class, listener -> {
 				if(listener.getAction() != CLICK || listener.getButton() != MouseButton.MOUSE_BUTTON_LEFT) return;
-				if(selected()){ HelperCollector.SELECTED = -1; }
-				else{ HelperCollector.SELECTED = index(); }
-				/*GroupCompound model = HelperCollector.getSelected();
-				if(model == null){
-					TextField.getFieldById("helper_posx").applyChange(0);
-					TextField.getFieldById("helper_posy").applyChange(0);
-					TextField.getFieldById("helper_posz").applyChange(0);
-					TextField.getFieldById("helper_rotx").applyChange(0);
-					TextField.getFieldById("helper_roty").applyChange(0);
-					TextField.getFieldById("helper_rotz").applyChange(0);
-					TextField.getFieldById("helper_scalex").applyChange(0);
-					TextField.getFieldById("helper_scaley").applyChange(0);
-					TextField.getFieldById("helper_scalez").applyChange(0);
-					TextField.getFieldById("helper_scale16x").applyChange(0);
-					TextField.getFieldById("helper_scale16y").applyChange(0);
-					TextField.getFieldById("helper_scale16z").applyChange(0);
+				GroupCompound model = HelperCollector.getSelected();
+				if(selected()){
+					HelperCollector.SELECTED = -1; updateColor();
 				}
 				else{
-					TextField.getFieldById("helper_posx").applyChange(model.pos == null ? 0 : model.pos.xCoord);
-					TextField.getFieldById("helper_posy").applyChange(model.pos == null ? 0 : model.pos.yCoord);
-					TextField.getFieldById("helper_posz").applyChange(model.pos == null ? 0 : model.pos.zCoord);
-					TextField.getFieldById("helper_rotx").applyChange(model.rot == null ? 0 : model.rot.xCoord);
-					TextField.getFieldById("helper_roty").applyChange(model.rot == null ? 0 : model.rot.yCoord);
-					TextField.getFieldById("helper_rotz").applyChange(model.rot == null ? 0 : model.rot.zCoord);
-					TextField.getFieldById("helper_scalex").applyChange(model.scale == null ? 1 : model.scale.xCoord);
-					TextField.getFieldById("helper_scaley").applyChange(model.scale == null ? 1 : model.scale.yCoord);
-					TextField.getFieldById("helper_scalez").applyChange(model.scale == null ? 1 : model.scale.zCoord);
-					TextField.getFieldById("helper_scale16x").applyChange((model.scale == null ? 1 : model.scale.xCoord) * 16);
-					TextField.getFieldById("helper_scale16y").applyChange((model.scale == null ? 1 : model.scale.yCoord) * 16);
-					TextField.getFieldById("helper_scale16z").applyChange((model.scale == null ? 1 : model.scale.zCoord) * 16);
-				}*/
-				updateColor();
+					if(HelperCollector.SELECTED > -1) model = HelperCollector.getSelected();
+					HelperCollector.SELECTED = index();
+				}
+				if(model != null) model.button.updateColor(); updateColor();
+				model = HelperCollector.getSelected();
+				if(model == null){
+					PreviewEditor.pos_x.apply(0);
+					PreviewEditor.pos_y.apply(0);
+					PreviewEditor.pos_z.apply(0);
+					PreviewEditor.poss_x.apply(0);
+					PreviewEditor.poss_x.apply(0);
+					PreviewEditor.poss_x.apply(0);
+					PreviewEditor.rot_x.apply(0);
+					PreviewEditor.rot_y.apply(0);
+					PreviewEditor.rot_z.apply(0);
+					PreviewEditor.size_x.apply(0);
+					PreviewEditor.size_y.apply(0);
+					PreviewEditor.size_z.apply(0);
+					PreviewEditor.size16_x.apply(0);
+					PreviewEditor.size16_y.apply(0);
+					PreviewEditor.size16_z.apply(0);
+				}
+				else{
+					PreviewEditor.pos_x.apply(model.pos == null ? 0 : model.pos.xCoord);
+					PreviewEditor.pos_y.apply(model.pos == null ? 0 : model.pos.yCoord);
+					PreviewEditor.pos_z.apply(model.pos == null ? 0 : model.pos.zCoord);
+					PreviewEditor.poss_x.apply(model.pos == null ? 0 : model.pos.xCoord * 16);
+					PreviewEditor.poss_x.apply(model.pos == null ? 0 : model.pos.yCoord * 16);
+					PreviewEditor.poss_x.apply(model.pos == null ? 0 : model.pos.zCoord * 16);
+					PreviewEditor.rot_x.apply(model.rot == null ? 0 : model.rot.xCoord);
+					PreviewEditor.rot_y.apply(model.rot == null ? 0 : model.rot.yCoord);
+					PreviewEditor.rot_z.apply(model.rot == null ? 0 : model.rot.zCoord);
+					PreviewEditor.size_x.apply(model.scale == null ? 1 : model.scale.xCoord);
+					PreviewEditor.size_y.apply(model.scale == null ? 1 : model.scale.yCoord);
+					PreviewEditor.size_z.apply(model.scale == null ? 1 : model.scale.zCoord);
+					PreviewEditor.size16_x.apply(model.scale == null ? 1 : model.scale.xCoord * 16);
+					PreviewEditor.size16_y.apply(model.scale == null ? 1 : model.scale.yCoord * 16);
+					PreviewEditor.size16_z.apply(model.scale == null ? 1 : model.scale.zCoord * 16);
+				}
 			});
 			this.recalculateSize();
 		}
@@ -294,7 +307,7 @@ public class Trees {
 		}
 		
 		public boolean selected(){
-			return HelperCollector.SELECTED > 0 && HelperCollector.SELECTED == index();
+			return HelperCollector.SELECTED > -1 && HelperCollector.SELECTED == index();
 		}
 		
 		public int index(){
