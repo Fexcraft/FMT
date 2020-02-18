@@ -11,7 +11,7 @@ import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.DialogBox;
-import net.fexcraft.app.fmt.ui.Editors;
+import net.fexcraft.app.fmt.ui.editor.Editors;
 import net.fexcraft.lib.common.json.JsonUtil;
 
 public class KeyCompound {

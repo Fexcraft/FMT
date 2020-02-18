@@ -9,7 +9,7 @@ import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.SettingsBox;
 import net.fexcraft.app.fmt.ui.UserInterface;
-import net.fexcraft.app.fmt.ui.editor.Editor;
+import net.fexcraft.app.fmt.ui.editorold.Editor;
 import net.fexcraft.app.fmt.ui.general.Button;
 import net.fexcraft.app.fmt.ui.general.Icon;
 import net.fexcraft.app.fmt.ui.general.Scrollbar;

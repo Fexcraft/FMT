@@ -9,8 +9,8 @@ import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.DialogBox;
-import net.fexcraft.app.fmt.ui.editor.Editor;
-import net.fexcraft.app.fmt.ui.editor.TextureEditor;
+import net.fexcraft.app.fmt.ui.editorold.Editor;
+import net.fexcraft.app.fmt.ui.editorold.TextureEditor;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;

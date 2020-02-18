@@ -11,14 +11,15 @@ import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.DialogBox;
-import net.fexcraft.app.fmt.ui.Editors;
-import net.fexcraft.app.fmt.ui.Editors.GeneralEditor;
-import net.fexcraft.app.fmt.ui.Editors.ModelGroupEditor;
 import net.fexcraft.app.fmt.ui.Trees;
 import net.fexcraft.app.fmt.ui.Trees.SubTreeGroup;
 import net.fexcraft.app.fmt.ui.Trees.TreeGroup;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Field;
-import net.fexcraft.app.fmt.ui.editor.TextureEditor;
+import net.fexcraft.app.fmt.ui.editor.EditorBase;
+import net.fexcraft.app.fmt.ui.editor.Editors;
+import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
+import net.fexcraft.app.fmt.ui.editor.ModelGroupEditor;
+import net.fexcraft.app.fmt.ui.editorold.TextureEditor;
 import net.fexcraft.app.fmt.utils.RayCoastAway;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.TextureManager;
@@ -229,7 +230,7 @@ public class GroupCompound {
 				}
 			}
 		}
-		return Editors.NO_POLYGON_SELECTED;
+		return EditorBase.NO_POLYGON_SELECTED;
 	}
 	
 	public TurboList getFirstSelectedGroup(){
@@ -268,7 +269,7 @@ public class GroupCompound {
 			GeneralEditor.texture_y.apply(0);
 			//
 			GeneralEditor.polygon_group.setSelected("> new group <", true);
-			GeneralEditor.polygon_name.getTextState().setText(Editors.NO_POLYGON_SELECTED);
+			GeneralEditor.polygon_name.getTextState().setText(EditorBase.NO_POLYGON_SELECTED);
 			GeneralEditor.polygon_type.setSelected("box", true);
 		}
 		else{
@@ -389,8 +390,8 @@ public class GroupCompound {
 		TurboList list = this.getFirstSelectedGroup();
 		if(list == null){
 			ModelGroupEditor.group_color.apply(0xffffff);
-			ModelGroupEditor.group_name.getTextState().setText(Editors.NO_POLYGON_SELECTED);
-			ModelGroupEditor.group_texture.getTextState().setText(Editors.NO_POLYGON_SELECTED);
+			ModelGroupEditor.group_name.getTextState().setText(EditorBase.NO_POLYGON_SELECTED);
+			ModelGroupEditor.group_texture.getTextState().setText(EditorBase.NO_POLYGON_SELECTED);
 			ModelGroupEditor.g_tex_x.setSelected(8f, true);
 			ModelGroupEditor.g_tex_y.setSelected(8f, true);
 			ModelGroupEditor.g_tex_s.setSelected(8f, true);

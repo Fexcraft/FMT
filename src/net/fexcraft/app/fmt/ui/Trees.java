@@ -24,8 +24,10 @@ import org.liquidengine.legui.style.Style.DisplayType;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
-import net.fexcraft.app.fmt.ui.Editors.PreviewEditor;
-import net.fexcraft.app.fmt.ui.Editors.SPVSL;
+import net.fexcraft.app.fmt.ui.editor.EditorBase;
+import net.fexcraft.app.fmt.ui.editor.EditorBase.SPVSL;
+import net.fexcraft.app.fmt.ui.editor.Editors;
+import net.fexcraft.app.fmt.ui.editor.PreviewEditor;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.HelperCollector;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
@@ -88,7 +90,7 @@ public class Trees {
 		
 		public TreeBase(String name){
 			super(FMTB.WIDTH - 304, 30, 304, FMTB.HEIGHT - 30); trees.add(this); id = name;
-			super.add(counter = new Label((counterlabel = Editors.translate("tree." + id + ".counter")) + "0", 4, 1, 100, 24));
+			super.add(counter = new Label((counterlabel = EditorBase.translate("tree." + id + ".counter")) + "0", 4, 1, 100, 24));
 			counter.getStyle().setFontSize(24f);
 	        scrollable = new ScrollablePanel(0, 28, 304, FMTB.HEIGHT - 60);
 	        scrollable.getStyle().getBackground().setColor(1, 1, 1, 1);
