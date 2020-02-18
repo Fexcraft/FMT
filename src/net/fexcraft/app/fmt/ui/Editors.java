@@ -20,9 +20,9 @@ import org.liquidengine.legui.style.color.ColorConstants;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.UserInterpanels.BoolButton;
-import net.fexcraft.app.fmt.ui.UserInterpanels.ColorInput20;
-import net.fexcraft.app.fmt.ui.UserInterpanels.NumberInput20;
-import net.fexcraft.app.fmt.ui.UserInterpanels.TextInput20;
+import net.fexcraft.app.fmt.ui.UserInterpanels.ColorField;
+import net.fexcraft.app.fmt.ui.UserInterpanels.NumberField;
+import net.fexcraft.app.fmt.ui.UserInterpanels.TextField;
 import net.fexcraft.app.fmt.utils.Animator;
 import net.fexcraft.app.fmt.utils.Animator.Animation;
 import net.fexcraft.app.fmt.utils.TextureManager;
@@ -159,23 +159,23 @@ public class Editors {
 	
 	public static class GeneralEditor extends EditorBase {
 		
-		public static TextInput20 polygon_name;
-		public static NumberInput20 size_x, size_y, size_z;
-		public static NumberInput20 pos_x, pos_y, pos_z;
-		public static NumberInput20 off_x, off_y, off_z;
-		public static NumberInput20 rot_x, rot_y, rot_z;
-		public static NumberInput20 texture_x, texture_y;
-		public static NumberInput20 cyl0_x, cyl0_y, cyl0_z;
-		public static NumberInput20 cyl1_x, cyl1_y, cyl1_z;
-		public static NumberInput20 cyl2_x, cyl2_y;
-		public static NumberInput20 cyl3_x, cyl3_y, cyl3_z;
+		public static TextField polygon_name;
+		public static NumberField size_x, size_y, size_z;
+		public static NumberField pos_x, pos_y, pos_z;
+		public static NumberField off_x, off_y, off_z;
+		public static NumberField rot_x, rot_y, rot_z;
+		public static NumberField texture_x, texture_y;
+		public static NumberField cyl0_x, cyl0_y, cyl0_z;
+		public static NumberField cyl1_x, cyl1_y, cyl1_z;
+		public static NumberField cyl2_x, cyl2_y;
+		public static NumberField cyl3_x, cyl3_y, cyl3_z;
 		public static BoolButton cyl4_x, cyl4_y, cyl5_x, cyl5_y, cyl6_x;
-		public static NumberInput20 cyl6_y, cyl6_z;
-		public static NumberInput20 cyl7_x, cyl7_y, cyl7_z;
-		public static NumberInput20[] corner_x, corner_y, corner_z;
-		public static NumberInput20[][] texrect_a = new NumberInput20[6][8], texrect_b = new NumberInput20[6][4];
-		public static ColorInput20 marker_color;
-		public static NumberInput20 marker_scale, marker_angle;
+		public static NumberField cyl6_y, cyl6_z;
+		public static NumberField cyl7_x, cyl7_y, cyl7_z;
+		public static NumberField[] corner_x, corner_y, corner_z;
+		public static NumberField[][] texrect_a = new NumberField[6][8], texrect_b = new NumberField[6][4];
+		public static ColorField marker_color;
+		public static NumberField marker_scale, marker_angle;
 		public static BoolButton marker_biped;
 		public static SelectBox<Object> polygon_group, polygon_type;
 		
@@ -192,7 +192,7 @@ public class Editors {
 	        	if(event.getNewValue().toString().equals("> new_group <")){
 		            Dialog dialog = new Dialog(translate("editor.general.attributes.new_group.title"), 300, 120);
 		            Label label = new Label(translate("editor.general.attributes.new_group.desc"), 10, 10, 280, 20);
-		            TextInput input = new TextInput20("new_group", 10, 40, 280, 20);
+		            TextInput input = new TextField("new_group", 10, 40, 280, 20);
 		            Button confirm = new Button(translate("editor.general.attributes.new_group.confirm"), 10, 70, 70, 20);
 	                Button cancel = new Button(translate("editor.general.attributes.new_group.cancel"), 90, 70, 70, 20);
 		            dialog.getContainer().add(input); dialog.getContainer().add(label);
@@ -216,7 +216,7 @@ public class Editors {
 	        	polygon_group.setSelected(0, false);
 	        });
 	        attributes.getContainer().add(new Label(translate("editor.general.attributes.name"), 3, pass += 24, 290, 20));
-	        attributes.getContainer().add(polygon_name = new TextInput20(NO_POLYGON_SELECTED = translate("error.no_polygon_selected"), 3, pass += 24, 290, 20));
+	        attributes.getContainer().add(polygon_name = new TextField(NO_POLYGON_SELECTED = translate("error.no_polygon_selected"), 3, pass += 24, 290, 20));
 	        polygon_name.addTextInputContentChangeEventListener(event -> {
 				String validated = UserInterpanels.validateString(event);
 				if(FMTB.MODEL.getSelected().isEmpty()) return; PolygonWrapper wrapper;
@@ -274,58 +274,58 @@ public class Editors {
 	        //
 			EditorWidget shape = new EditorWidget(this, translate("editor.general.shape"), 0, 0, 0, 0);
 			shape.getContainer().add(new Label(translate("editor.general.shape.size"), 3, pass += 24, 290, 20));
-			shape.getContainer().add(size_x = new NumberInput20(4, pass += 24, 90, 20).setup("sizex", 0, Integer.MAX_VALUE, false));
-			shape.getContainer().add(size_y = new NumberInput20(102, pass, 90, 20).setup("sizey", 0, Integer.MAX_VALUE, false));
-			shape.getContainer().add(size_z = new NumberInput20(200, pass, 90, 20).setup("sizez", 0, Integer.MAX_VALUE, false));
+			shape.getContainer().add(size_x = new NumberField(4, pass += 24, 90, 20).setup("sizex", 0, Integer.MAX_VALUE, false));
+			shape.getContainer().add(size_y = new NumberField(102, pass, 90, 20).setup("sizey", 0, Integer.MAX_VALUE, false));
+			shape.getContainer().add(size_z = new NumberField(200, pass, 90, 20).setup("sizez", 0, Integer.MAX_VALUE, false));
 			shape.getContainer().add(new Label(translate("editor.general.shape.position"), 3, pass += 24, 290, 20));
-			shape.getContainer().add(pos_x = new NumberInput20(4, pass += 24, 90, 20).setup("posx", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
-			shape.getContainer().add(pos_y = new NumberInput20(102, pass, 90, 20).setup("posy", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
-			shape.getContainer().add(pos_z = new NumberInput20(200, pass, 90, 20).setup("posz", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
+			shape.getContainer().add(pos_x = new NumberField(4, pass += 24, 90, 20).setup("posx", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
+			shape.getContainer().add(pos_y = new NumberField(102, pass, 90, 20).setup("posy", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
+			shape.getContainer().add(pos_z = new NumberField(200, pass, 90, 20).setup("posz", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
 			shape.getContainer().add(new Label(translate("editor.general.shape.offset"), 3, pass += 24, 290, 20));
-			shape.getContainer().add(off_x = new NumberInput20(4, pass += 24, 90, 20).setup("offx", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
-			shape.getContainer().add(off_y = new NumberInput20(102, pass, 90, 20).setup("offy", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
-			shape.getContainer().add(off_z = new NumberInput20(200, pass, 90, 20).setup("offz", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
+			shape.getContainer().add(off_x = new NumberField(4, pass += 24, 90, 20).setup("offx", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
+			shape.getContainer().add(off_y = new NumberField(102, pass, 90, 20).setup("offy", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
+			shape.getContainer().add(off_z = new NumberField(200, pass, 90, 20).setup("offz", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
 			shape.getContainer().add(new Label(translate("editor.general.shape.rotation"), 3, pass += 24, 290, 20));
-			shape.getContainer().add(rot_x = new NumberInput20(4, pass += 24, 90, 20).setup("rotx", -360, 360, true));
-			shape.getContainer().add(rot_y = new NumberInput20(102, pass, 90, 20).setup("roty", -360, 360, true));
-			shape.getContainer().add(rot_z = new NumberInput20(200, pass, 90, 20).setup("rotz", -360, 360, true));
+			shape.getContainer().add(rot_x = new NumberField(4, pass += 24, 90, 20).setup("rotx", -360, 360, true));
+			shape.getContainer().add(rot_y = new NumberField(102, pass, 90, 20).setup("roty", -360, 360, true));
+			shape.getContainer().add(rot_z = new NumberField(200, pass, 90, 20).setup("rotz", -360, 360, true));
 			shape.getContainer().add(new Label(translate("editor.general.shape.texture"), 3, pass += 24, 290, 20));
-			shape.getContainer().add(texture_x = new NumberInput20(4, pass += 24, 90, 20).setup("texx", 0, 8192, true));
-			shape.getContainer().add(texture_y = new NumberInput20(102, pass, 90, 20).setup("texy", 0, 8192, true));
+			shape.getContainer().add(texture_x = new NumberField(4, pass += 24, 90, 20).setup("texx", 0, 8192, true));
+			shape.getContainer().add(texture_y = new NumberField(102, pass, 90, 20).setup("texy", 0, 8192, true));
 			shape.setSize(296, pass + 52);
 	        this.addSub(shape); pass = -20;
 	        //
 			EditorWidget shapebox = new EditorWidget(this, translate("editor.general.shapebox"), 0, 0, 0, 0);
-			corner_x = new NumberInput20[8]; corner_y = new NumberInput20[8]; corner_z = new NumberInput20[8];
+			corner_x = new NumberField[8]; corner_y = new NumberField[8]; corner_z = new NumberField[8];
 	        for(int i = 0; i < 8; i++){
 	        	shapebox.getContainer().add(new Label(translate("editor.general.shapebox.corner" + i), 3, pass += 24, 290, 20));
-				shapebox.getContainer().add(corner_x[i] = new NumberInput20(4, pass += 24, 90, 20).setup("cor" + i + "x", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
-				shapebox.getContainer().add(corner_y[i] = new NumberInput20(102, pass, 90, 20).setup("cor" + i + "y", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
-				shapebox.getContainer().add(corner_z[i] = new NumberInput20(200, pass, 90, 20).setup("cor" + i + "z", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
+				shapebox.getContainer().add(corner_x[i] = new NumberField(4, pass += 24, 90, 20).setup("cor" + i + "x", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
+				shapebox.getContainer().add(corner_y[i] = new NumberField(102, pass, 90, 20).setup("cor" + i + "y", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
+				shapebox.getContainer().add(corner_z[i] = new NumberField(200, pass, 90, 20).setup("cor" + i + "z", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
 	        }
 			shapebox.setSize(296, pass + 52);
 	        this.addSub(shapebox); pass = -20;
 	        //
 			EditorWidget cylinder = new EditorWidget(this, translate("editor.general.cylinder"), 0, 0, 0, 0);
 			cylinder.getContainer().add(new Label(translate("editor.general.cylinder.radius_length"), 3, pass += 24, 290, 20));
-			cylinder.getContainer().add(cyl0_x = new NumberInput20(4, pass += 24, 90, 20).setup("cyl0x", 1, Integer.MAX_VALUE, false));
-			cylinder.getContainer().add(cyl0_y = new NumberInput20(102, pass, 90, 20).setup("cyl0y", 1, Integer.MAX_VALUE, false));
-			cylinder.getContainer().add(cyl0_z = new NumberInput20(200, pass, 90, 20).setup("cyl0z", 0, Integer.MAX_VALUE, true));
+			cylinder.getContainer().add(cyl0_x = new NumberField(4, pass += 24, 90, 20).setup("cyl0x", 1, Integer.MAX_VALUE, false));
+			cylinder.getContainer().add(cyl0_y = new NumberField(102, pass, 90, 20).setup("cyl0y", 1, Integer.MAX_VALUE, false));
+			cylinder.getContainer().add(cyl0_z = new NumberField(200, pass, 90, 20).setup("cyl0z", 0, Integer.MAX_VALUE, true));
 			cylinder.getContainer().add(new Label(translate("editor.general.cylinder.segments_direction"), 3, pass += 24, 290, 20));
-			cylinder.getContainer().add(cyl1_x = new NumberInput20(4, pass += 24, 90, 20).setup("cyl1x", 3, Integer.MAX_VALUE, false));
-			cylinder.getContainer().add(cyl1_y = new NumberInput20(102, pass, 90, 20).setup("cyl1y", 0, 5, false));
-			cylinder.getContainer().add(cyl1_z = new NumberInput20(200, pass, 90, 20).setup("cyl1z", 0, Integer.MAX_VALUE, false));
+			cylinder.getContainer().add(cyl1_x = new NumberField(4, pass += 24, 90, 20).setup("cyl1x", 3, Integer.MAX_VALUE, false));
+			cylinder.getContainer().add(cyl1_y = new NumberField(102, pass, 90, 20).setup("cyl1y", 0, 5, false));
+			cylinder.getContainer().add(cyl1_z = new NumberField(200, pass, 90, 20).setup("cyl1z", 0, Integer.MAX_VALUE, false));
 			cylinder.getContainer().add(new Label(translate("editor.general.cylinder.scale"), 3, pass += 24, 290, 20));
-			cylinder.getContainer().add(cyl2_x = new NumberInput20(4, pass += 24, 90, 20).setup("cyl2x", 0, Integer.MAX_VALUE, true));
-			cylinder.getContainer().add(cyl2_y = new NumberInput20(102, pass, 90, 20).setup("cyl2y", 0, Integer.MAX_VALUE, true));
+			cylinder.getContainer().add(cyl2_x = new NumberField(4, pass += 24, 90, 20).setup("cyl2x", 0, Integer.MAX_VALUE, true));
+			cylinder.getContainer().add(cyl2_y = new NumberField(102, pass, 90, 20).setup("cyl2y", 0, Integer.MAX_VALUE, true));
 			cylinder.getContainer().add(new Label(translate("editor.general.cylinder.top_offset"), 3, pass += 24, 290, 20));
-			cylinder.getContainer().add(cyl3_x = new NumberInput20(4, pass += 24, 90, 20).setup("cyl0x", 1, Integer.MAX_VALUE, true));
-			cylinder.getContainer().add(cyl3_y = new NumberInput20(102, pass, 90, 20).setup("cyl3y", 1, Integer.MAX_VALUE, true));
-			cylinder.getContainer().add(cyl3_z = new NumberInput20(200, pass, 90, 20).setup("cyl3z", 0, Integer.MAX_VALUE, true));
+			cylinder.getContainer().add(cyl3_x = new NumberField(4, pass += 24, 90, 20).setup("cyl0x", 1, Integer.MAX_VALUE, true));
+			cylinder.getContainer().add(cyl3_y = new NumberField(102, pass, 90, 20).setup("cyl3y", 1, Integer.MAX_VALUE, true));
+			cylinder.getContainer().add(cyl3_z = new NumberField(200, pass, 90, 20).setup("cyl3z", 0, Integer.MAX_VALUE, true));
 			cylinder.getContainer().add(new Label(translate("editor.general.cylinder.top_rotation"), 3, pass += 24, 290, 20));
-			cylinder.getContainer().add(cyl7_x = new NumberInput20(4, pass += 24, 90, 20).setup("cyl7x", -360, 360, true));
-			cylinder.getContainer().add(cyl7_y = new NumberInput20(102, pass, 90, 20).setup("cyl7y", -360, 360, true));
-			cylinder.getContainer().add(cyl7_z = new NumberInput20(200, pass, 90, 20).setup("cyl7z", -360, 360, true));
+			cylinder.getContainer().add(cyl7_x = new NumberField(4, pass += 24, 90, 20).setup("cyl7x", -360, 360, true));
+			cylinder.getContainer().add(cyl7_y = new NumberField(102, pass, 90, 20).setup("cyl7y", -360, 360, true));
+			cylinder.getContainer().add(cyl7_z = new NumberField(200, pass, 90, 20).setup("cyl7z", -360, 360, true));
 			cylinder.getContainer().add(new Label(translate("editor.general.cylinder.visibility_toggle"), 3, pass += 24, 290, 20));
 			cylinder.getContainer().add(cyl4_x = new BoolButton("cyl4x", 6, pass += 24, 66, 20));
 			cylinder.getContainer().add(cyl4_y = new BoolButton("cyl4y", 78, pass, 66, 20));
@@ -333,18 +333,18 @@ public class Editors {
 			cylinder.getContainer().add(cyl5_y = new BoolButton("cyl5y", 220, pass, 66, 20));
 			cylinder.getContainer().add(new Label(translate("editor.general.cylinder.radial_texture"), 3, pass += 24, 290, 20));
 			cylinder.getContainer().add(cyl6_x = new BoolButton("cyl6x", 4, pass += 24, 90, 20));
-			cylinder.getContainer().add(cyl6_y = new NumberInput20(102, pass, 90, 20).setup("cyl6y", 0, Integer.MAX_VALUE, true));
-			cylinder.getContainer().add(cyl6_z = new NumberInput20(200, pass, 90, 20).setup("cyl6z", 0, Integer.MAX_VALUE, true));
+			cylinder.getContainer().add(cyl6_y = new NumberField(102, pass, 90, 20).setup("cyl6y", 0, Integer.MAX_VALUE, true));
+			cylinder.getContainer().add(cyl6_z = new NumberField(200, pass, 90, 20).setup("cyl6z", 0, Integer.MAX_VALUE, true));
 			cylinder.setSize(296, pass + 52);
 	        this.addSub(cylinder); pass = -20;
 	        //
 			EditorWidget marker = new EditorWidget(this, translate("editor.general.marker"), 0, 0, 0, 0);
 			marker.getContainer().add(new Label(translate("editor.general.marker.color"), 3, pass += 24, 290, 20));
-			marker.getContainer().add(marker_color = new ColorInput20(marker.getContainer(), "marker_colorx", 3, pass += 24, 290, 20));
+			marker.getContainer().add(marker_color = new ColorField(marker.getContainer(), "marker_colorx", 3, pass += 24, 290, 20));
 	        marker.getContainer().add(new Label(translate("editor.general.marker.biped_display"), 3, pass += 24, 290, 20));
 	        marker.getContainer().add(marker_biped = new BoolButton("marker_bipedx", 4, pass += 24, 90, 20));
-	        marker.getContainer().add(marker_angle = new NumberInput20(102, pass, 90, 20).setup("marker_anglex", -360, 360, true));
-	        marker.getContainer().add(marker_scale = new NumberInput20(200, pass, 90, 20).setup("marker_scalex", 0, 1024f, true));
+	        marker.getContainer().add(marker_angle = new NumberField(102, pass, 90, 20).setup("marker_anglex", -360, 360, true));
+	        marker.getContainer().add(marker_scale = new NumberField(200, pass, 90, 20).setup("marker_scalex", 0, 1024f, true));
 			marker.setSize(296, pass + 52);
 	        this.addSub(marker); pass = -20;
 	        //
@@ -359,7 +359,7 @@ public class Editors {
 				texrectA.getContainer().add(new Label(format("editor.general.texrect_a.face_" + (r % 2 == 0 ? "x" : "y"), faces[r / 2]), 3, pass += 24, 290, 20));
 				for(int i = 0; i < 4; i++){
 					String id = "texpos" + (r / 2) + ":" + ((i * 2) + (r % 2 == 1 ? 1 : 0)) + (r % 2 == 0 ? "x" : "y"); if(i == 0) pass += 24;
-					texrectA.getContainer().add(texrect_a[r % 6][r >= 6 ? i + 4 : i] = new NumberInput20(6 + (i * 72), pass, 66, 20).setup(id, 0, Integer.MAX_VALUE, true));
+					texrectA.getContainer().add(texrect_a[r % 6][r >= 6 ? i + 4 : i] = new NumberField(6 + (i * 72), pass, 66, 20).setup(id, 0, Integer.MAX_VALUE, true));
 				}
 			}
 			texrectA.setSize(296, pass + 52);
@@ -369,7 +369,7 @@ public class Editors {
 				texrectB.getContainer().add(new Label(format("editor.general.texrect_a.face_" + (r % 2 == 0 ? "x" : "y"), faces[r]), 3, pass += 24, 290, 20));
 				for(int i = 0; i < 4; i++){
 					String id = "texpos" + r + (i < 2 ? "s" : "e") + (i % 2 == 0 ? "x" : "y"); if(i == 0) pass += 24;
-					texrectB.getContainer().add(texrect_b[r][i] = new NumberInput20(6 + (i * 72), pass, 66, 20).setup(id, 0, Integer.MAX_VALUE, true));
+					texrectB.getContainer().add(texrect_b[r][i] = new NumberField(6 + (i * 72), pass, 66, 20).setup(id, 0, Integer.MAX_VALUE, true));
 				}
 			}
 			texrectB.setSize(296, pass + 52);
@@ -392,11 +392,11 @@ public class Editors {
 	public static class ModelGroupEditor extends EditorBase {
 		
 		private static final int[] texsizes = new int[]{ 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096 };//, 8192 };
-		public static NumberInput20 pos_x, pos_y, pos_z, poss_x, poss_y, poss_z;
-		public static NumberInput20 rot_x, rot_y, rot_z;
+		public static NumberField pos_x, pos_y, pos_z, poss_x, poss_y, poss_z;
+		public static NumberField rot_x, rot_y, rot_z;
 		public static TextInput model_texture, model_name;
 		public static SelectBox<Float> m_tex_x, m_tex_y, m_tex_s;
-		public static ColorInput20 group_color;
+		public static ColorField group_color;
 		public static TextInput group_name, group_texture;
 		public static SelectBox<Float> g_tex_x, g_tex_y, g_tex_s;
 		public static SelectBox<Animation> add_anim;
@@ -408,17 +408,17 @@ public class Editors {
 			super(); int pass = -20;
 			EditorWidget model = new EditorWidget(this, translate("editor.model_group.model"), 0, 0, 0, 0);
 			model.getContainer().add(new Label(translate("editor.model_group.model.position_full"), 3, pass += 24, 290, 20));
-			model.getContainer().add(pos_x = new NumberInput20(4, pass += 24, 90, 20).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> updateModelPos(true)));
-			model.getContainer().add(pos_y = new NumberInput20(102, pass, 90, 20).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> updateModelPos(true)));
-			model.getContainer().add(pos_z = new NumberInput20(200, pass, 90, 20).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> updateModelPos(true)));
+			model.getContainer().add(pos_x = new NumberField(4, pass += 24, 90, 20).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> updateModelPos(true)));
+			model.getContainer().add(pos_y = new NumberField(102, pass, 90, 20).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> updateModelPos(true)));
+			model.getContainer().add(pos_z = new NumberField(200, pass, 90, 20).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> updateModelPos(true)));
 			model.getContainer().add(new Label(translate("editor.model_group.model.position_sixteenth"), 3, pass += 24, 290, 20));
-			model.getContainer().add(poss_x = new NumberInput20(4, pass += 24, 90, 20).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> updateModelPos(false)));
-			model.getContainer().add(poss_y = new NumberInput20(102, pass, 90, 20).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> updateModelPos(false)));
-			model.getContainer().add(poss_z = new NumberInput20(200, pass, 90, 20).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> updateModelPos(false)));
+			model.getContainer().add(poss_x = new NumberField(4, pass += 24, 90, 20).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> updateModelPos(false)));
+			model.getContainer().add(poss_y = new NumberField(102, pass, 90, 20).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> updateModelPos(false)));
+			model.getContainer().add(poss_z = new NumberField(200, pass, 90, 20).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> updateModelPos(false)));
 			model.getContainer().add(new Label(translate("editor.model_group.model.rotation"), 3, pass += 24, 290, 20));
-			model.getContainer().add(rot_x = new NumberInput20(4, pass += 24, 90, 20).setup(-360, 360, true, () -> updateModelRot()));
-			model.getContainer().add(rot_y = new NumberInput20(102, pass, 90, 20).setup(-360, 360, true, () -> updateModelRot()));
-			model.getContainer().add(rot_z = new NumberInput20(200, pass, 90, 20).setup(-360, 360, true, () -> updateModelRot()));
+			model.getContainer().add(rot_x = new NumberField(4, pass += 24, 90, 20).setup(-360, 360, true, () -> updateModelRot()));
+			model.getContainer().add(rot_y = new NumberField(102, pass, 90, 20).setup(-360, 360, true, () -> updateModelRot()));
+			model.getContainer().add(rot_z = new NumberField(200, pass, 90, 20).setup(-360, 360, true, () -> updateModelRot()));
 			model.getContainer().add(new Label(translate("editor.model_group.model.texture_size"), 3, pass += 24, 290, 20));
 			model.getContainer().add(m_tex_x = new SelectBox<>(4, pass += 24, 90, 20));
 	        for(int size : texsizes) m_tex_x.addElement((float)size);
@@ -439,7 +439,7 @@ public class Editors {
 	        m_tex_s.getSelectionButton().getStyle().setFontSize(20f);
 	        m_tex_s.addSelectBoxChangeSelectionEventListener(event -> updateModelTexSize(event, null));
 	        model.getContainer().add(new Label(translate("editor.model_group.model.texture"), 3, pass += 24, 290, 20));
-			model.getContainer().add(model_texture = new TextInput20(FMTB.MODEL.texture, 3, pass += 24, 290, 20));
+			model.getContainer().add(model_texture = new TextField(FMTB.MODEL.texture, 3, pass += 24, 290, 20));
 			model_texture.getListenerMap().addListener(MouseClickEvent.class, listener -> {
 				if(listener.getAction() == CLICK){
 					if(listener.getButton() == MouseButton.MOUSE_BUTTON_LEFT){
@@ -457,7 +457,7 @@ public class Editors {
 				}
 			});
 			model.getContainer().add(new Label(translate("editor.model_group.model.name"), 3, pass += 24, 290, 20));
-			model.getContainer().add(model_name = new TextInput20(FMTB.MODEL.name, 3, pass += 24, 290, 20));
+			model.getContainer().add(model_name = new TextField(FMTB.MODEL.name, 3, pass += 24, 290, 20));
 			model_name.addTextInputContentChangeEventListener(listener -> name_cache = UserInterpanels.validateString(listener));
 			model_name.getListenerMap().addListener(FocusEvent.class, listener -> {
 				if(!listener.isFocused() && !name_cache.equals(FMTB.MODEL.name))
@@ -468,12 +468,12 @@ public class Editors {
 	        //
 			EditorWidget group = new EditorWidget(this, translate("editor.model_group.group"), 0, 0, 0, 0);
 			group.getContainer().add(new Label(translate("editor.model_group.group.color"), 3, pass += 24, 290, 20));
-			group.getContainer().add(group_color = new ColorInput20(group.getContainer(), result -> {
+			group.getContainer().add(group_color = new ColorField(group.getContainer(), result -> {
 				TurboList sel = FMTB.MODEL.getFirstSelectedGroup(); if(sel == null) return;
 				if(sel.color == null) sel.color = RGB.WHITE.copy(); sel.color.packed = result;
 			}, 3, pass += 24, 290, 20));
 			group.getContainer().add(new Label(translate("editor.model_group.group.name"), 3, pass += 24, 290, 20));
-			group.getContainer().add(group_name = new TextInput20(NO_POLYGON_SELECTED, 3, pass += 24, 290, 20));
+			group.getContainer().add(group_name = new TextField(NO_POLYGON_SELECTED, 3, pass += 24, 290, 20));
 			group_name.addTextInputContentChangeEventListener(listener -> name_cache = UserInterpanels.validateString(listener));
 			group_name.getListenerMap().addListener(FocusEvent.class, listener -> {
 				if(!listener.isFocused() && !FMTB.MODEL.getSelected().isEmpty()){
@@ -519,7 +519,7 @@ public class Editors {
 	        g_tex_s.getSelectionButton().getStyle().setFontSize(20f);
 	        g_tex_s.addSelectBoxChangeSelectionEventListener(event -> updateGroupTexSize(event, null));
 			group.getContainer().add(new Label(translate("editor.model_group.group.texture"), 3, pass += 24, 290, 20));
-			group.getContainer().add(group_texture = new TextInput20(FMTB.MODEL.texture, 3, pass += 24, 290, 20));
+			group.getContainer().add(group_texture = new TextField(FMTB.MODEL.texture, 3, pass += 24, 290, 20));
 			group_texture.getListenerMap().addListener(MouseClickEvent.class, listener -> {
 				if(listener.getAction() == CLICK){
 					if(FMTB.MODEL.getSelected().isEmpty()) return;

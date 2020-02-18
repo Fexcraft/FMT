@@ -67,7 +67,7 @@ import net.fexcraft.app.fmt.ui.Editors;
 import net.fexcraft.app.fmt.ui.Trees;
 import net.fexcraft.app.fmt.ui.UserInterpanels;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Field;
-import net.fexcraft.app.fmt.ui.UserInterpanels.TextInput20;
+import net.fexcraft.app.fmt.ui.UserInterpanels.TextField;
 import net.fexcraft.app.fmt.utils.*;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.TurboList;
@@ -168,7 +168,7 @@ public class FMTB {
             @Override
             public void invoke(long window, int key, int scancode, int action, int mods){
             	if(key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) reset(); 
-            	if(context.getFocusedGui() instanceof Field || context.getFocusedGui() instanceof TextInput20) return;
+            	if(context.getFocusedGui() instanceof Field || context.getFocusedGui() instanceof TextField) return;
     			KeyCompound.process(window, key, scancode, action, mods);
             }
         });
@@ -443,7 +443,7 @@ public class FMTB {
 
 	public void reset(){
 		Print.console("reset");
-		if(context.getFocusedGui() instanceof Field || context.getFocusedGui() instanceof TextInput20){
+		if(context.getFocusedGui() instanceof Field || context.getFocusedGui() instanceof TextField){
 			context.getFocusedGui().setFocused(false);
 		}
 		else if(Editors.anyVisible()){ Editors.hideAll(); }

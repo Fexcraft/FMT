@@ -318,14 +318,14 @@ public class UserInterpanels {
 		
 	}
 	
-	public static class TextInput20 extends TextInput {
+	public static class TextField extends TextInput {
 
-		public TextInput20(String string, int x, int y, int w, int h){
+		public TextField(String string, int x, int y, int w, int h){
 			super(string, x, y, w, h); setupHoverCheck(this);
 		}
 
 		@SuppressWarnings("unchecked")
-		public TextInput20(Setting setting, int x, int y, int w, int h) {
+		public TextField(Setting setting, int x, int y, int w, int h) {
 			this(setting.toString(), x, y, w, h); setupHoverCheck(this);
 			this.addTextInputContentChangeEventListener(event -> {
 				String string = validateString(event);
@@ -357,13 +357,13 @@ public class UserInterpanels {
 		
 	}
 	
-	public static class NumberInput20 extends TextInput implements Field {
+	public static class NumberField extends TextInput implements Field {
 
-		public NumberInput20(int x, int y, int w, int h){
+		public NumberField(int x, int y, int w, int h){
 			super("0", x, y, w, h); getStyle().setFontSize(20f); setupHoverCheck(this);
 		}
 		
-		public NumberInput20(Setting setting, int x, int y, int w, int h){
+		public NumberField(Setting setting, int x, int y, int w, int h){
 			super(setting.toString(), x, y, w, h); getStyle().setFontSize(20f); setupHoverCheck(this);
 			getListenerMap().addListener(FocusEvent.class, (FocusEventListener)listener -> {
 				if(!listener.isFocused()){ setting.setValue((float)getValue()); }
@@ -380,7 +380,7 @@ public class UserInterpanels {
 		private Runnable update;
 		
 		@SuppressWarnings("unchecked")
-		public NumberInput20 setup(String id, float min, float max, boolean flaot){
+		public NumberField setup(String id, float min, float max, boolean flaot){
 			floatfield = flaot; this.min = min; this.max = max; fieldid = id;
 			addTextInputContentChangeEventListener(event -> {
 				UserInterpanels.validateNumber(event); value = null;
@@ -395,7 +395,7 @@ public class UserInterpanels {
 		}
 		
 		@SuppressWarnings("unchecked")
-		public NumberInput20 setup(float min, float max, boolean flaot, Runnable update){
+		public NumberField setup(float min, float max, boolean flaot, Runnable update){
 			floatfield = flaot; this.min = min; this.max = max; this.update = update;
 			addTextInputContentChangeEventListener(event -> {
 				UserInterpanels.validateNumber(event); value = null;
@@ -503,13 +503,13 @@ public class UserInterpanels {
 		
 	}
 	
-	public static class ColorInput20 extends TextInput implements Field {
+	public static class ColorField extends TextInput implements Field {
 
 		private String fieldid;
 		private Integer value = null;
 
 		@SuppressWarnings("unchecked")
-		public ColorInput20(Component root, String field, int x, int y, int w, int h){
+		public ColorField(Component root, String field, int x, int y, int w, int h){
 			super("0xffffff", x, y, root == null ? w : w - 40, h); fieldid = field;setupHoverCheck(this);
 			addTextInputContentChangeEventListener(event -> {
 				UserInterpanels.validateColorString(event); value = null;
@@ -538,7 +538,7 @@ public class UserInterpanels {
 			}
 		}
 		
-		public ColorInput20(Component root, Setting setting, int x, int y, int w, int h){
+		public ColorField(Component root, Setting setting, int x, int y, int w, int h){
 			super(setting.toString(), x, y, root == null ? w : w - 40, h); getStyle().setFontSize(20f); setupHoverCheck(this);
 			getListenerMap().addListener(FocusEvent.class, (FocusEventListener)listener -> {
 				if(!listener.isFocused()){ ((RGB)setting.getValue()).packed = (int)getValue(); }
@@ -560,7 +560,7 @@ public class UserInterpanels {
 			}
 		}
 		
-		public ColorInput20(Component root, Consumer<Integer> update, int x, int y, int w, int h){
+		public ColorField(Component root, Consumer<Integer> update, int x, int y, int w, int h){
 			super("#ffffff", x, y, root == null ? w : w - 40, h); getStyle().setFontSize(20f); setupHoverCheck(this);
 			getListenerMap().addListener(FocusEvent.class, (FocusEventListener)listener -> {
 				if(!listener.isFocused()){ update.accept((int)getValue()); }
@@ -647,7 +647,7 @@ public class UserInterpanels {
 		return Translator.format(str, "no.lang.%s", objs);
 	}
 
-	public static String validateString(TextInputContentChangeEvent<TextInput20> event){
+	public static String validateString(TextInputContentChangeEvent<TextField> event){
 		String newtext = event.getNewValue().replaceAll("[^A-Za-z0-9,\\.\\-_ ]", "");
 		//Print.console(newtext + " / " + event.getNewValue());
 		if(!newtext.equals(event.getNewValue())){
@@ -656,7 +656,7 @@ public class UserInterpanels {
 		} return newtext;
 	}
 
-	public static String validateColorString(TextInputContentChangeEvent<ColorInput20> event){
+	public static String validateColorString(TextInputContentChangeEvent<ColorField> event){
 		String newtext = event.getNewValue().replaceAll("[^A-Fa-f0-9#x]", "");
 		//Print.console(newtext + " / " + event.getNewValue());
 		if(!newtext.equals(event.getNewValue())){
@@ -667,13 +667,13 @@ public class UserInterpanels {
 	
 	public static final NumberFormat nf = NumberFormat.getInstance(Locale.US);
 
-	public static void validateNumber(TextInputContentChangeEvent<NumberInput20> event){
+	public static void validateNumber(TextInputContentChangeEvent<NumberField> event){
 		String newtext = event.getNewValue().replaceAll("[^0-9,\\.\\-]", "");
 		if(newtext.indexOf("-") > 0) newtext.replace("-", ""); if(newtext.length() == 0) newtext = "0";
 		//Print.console(newtext + " / " + event.getNewValue());
 		if(!newtext.equals(event.getNewValue())){
-			((NumberInput20)event.getTargetComponent()).getTextState().setText(newtext);
-			((NumberInput20)event.getTargetComponent()).setCaretPosition(newtext.length());
+			((NumberField)event.getTargetComponent()).getTextState().setText(newtext);
+			((NumberField)event.getTargetComponent()).setCaretPosition(newtext.length());
 		}
 	}
 
