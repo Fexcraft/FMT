@@ -318,26 +318,10 @@ public class UserInterpanels {
 		
 	}
 	
-	public static class Dialog24 extends Dialog {
-		
-		public Dialog24(String string, int w, int h){
-			super(string, w, h); getTitle().getStyle().setFontSize(24f);
-		}
-		
-	}
-	
-	public static class Label20 extends Label {
-
-		public Label20(String string, int x, int y, int w, int h){
-			super(string, x, y, w, h); getStyle().setFontSize(20f);
-		}
-		
-	}
-	
 	public static class TextInput20 extends TextInput {
 
 		public TextInput20(String string, int x, int y, int w, int h){
-			super(string, x, y, w, h); getStyle().setFontSize(20f); setupHoverCheck(this);
+			super(string, x, y, w, h); setupHoverCheck(this);
 		}
 
 		@SuppressWarnings("unchecked")
@@ -541,7 +525,7 @@ public class UserInterpanels {
 				}
 			});
 			if(root != null){
-				Button20 button = new Button20("CP", x + w - 35, y, 30, h);
+				Button button = new Button("CP", x + w - 35, y, 30, h);
 				button.getListenerMap().addListener(MouseClickEvent.class, event -> {
 					if(event.getAction() == CLICK){
 	                    try(MemoryStack stack = MemoryStack.stackPush()) {
@@ -563,7 +547,7 @@ public class UserInterpanels {
 				if(listener.getKey() == GLFW.GLFW_KEY_ENTER){ ((RGB)setting.getValue()).packed = (int)getValue(); }
 			});
 			if(root != null){
-				Button20 button = new Button20("CP", x + w - 35, y, 30, h);
+				Button button = new Button("CP", x + w - 35, y, 30, h);
 				button.getListenerMap().addListener(MouseClickEvent.class, event -> {
 					if(event.getAction() == CLICK){
 	                    try(MemoryStack stack = MemoryStack.stackPush()) {
@@ -585,7 +569,7 @@ public class UserInterpanels {
 				if(listener.getKey() == GLFW.GLFW_KEY_ENTER){ update.accept((int)getValue()); }
 			});
 			if(root != null){
-				Button20 button = new Button20("CP", x + w - 35, y, 30, h);
+				Button button = new Button("CP", x + w - 35, y, 30, h);
 				button.getListenerMap().addListener(MouseClickEvent.class, event -> {
 					if(event.getAction() == CLICK){
 	                    try(MemoryStack stack = MemoryStack.stackPush()) {
@@ -653,22 +637,6 @@ public class UserInterpanels {
 		component.getListenerMap().addListener(MouseClickEvent.class, listener -> {
 			if(listener.getAction() == CLICK && FMTB.context.getFocusedGui() == component && !component.isFocused())component.setFocused(true);
 		});
-	}
-	
-	public static class Button20 extends Button {
-
-		public Button20(String string, int x, int y, int w, int h){
-			super(string, x, y, w, h); getStyle().setFontSize(20f);
-		}
-		
-	}
-	
-	public static class Dialog20 extends Dialog {
-
-		public Dialog20(String string, int x, int y){
-			super(string, x, y); getTitle().getStyle().setFontSize(20f);
-		}
-		
 	}
 	
 	public static String translate(String str){

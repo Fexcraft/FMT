@@ -6,16 +6,16 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.liquidengine.legui.component.Button;
+import org.liquidengine.legui.component.Dialog;
+import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.ScrollablePanel;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.listener.MouseClickEventListener;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.UserInterpanels.BoolButton;
-import net.fexcraft.app.fmt.ui.UserInterpanels.Button20;
 import net.fexcraft.app.fmt.ui.UserInterpanels.ColorInput20;
-import net.fexcraft.app.fmt.ui.UserInterpanels.Dialog20;
-import net.fexcraft.app.fmt.ui.UserInterpanels.Label20;
 import net.fexcraft.app.fmt.ui.UserInterpanels.NumberInput20;
 import net.fexcraft.app.fmt.ui.UserInterpanels.TextInput20;
 import net.fexcraft.app.fmt.utils.Settings;
@@ -33,12 +33,12 @@ public class SettingsBox {
 		TreeMap<String, Setting> map = new TreeMap<>();
 		for(Setting setting : coll) map.put(setting.getId(), setting);
 		if(coll.isEmpty() || map.isEmpty()){ task.process(map); return; }
-        Dialog20 dialog = new Dialog20(title, 520, 350); dialog.setResizable(false);
+        Dialog dialog = new Dialog(title, 520, 350); dialog.setResizable(false);
         ScrollablePanel panel = new ScrollablePanel(10, 10, 500, 280);
         int size = 10 + (coll.size() * 30); int index = 0;
         panel.getContainer().setSize(500, size < 280 ? 280 : size);
         for(Setting setting : coll){
-        	panel.getContainer().add(new Label20(setting.getId(), 10, 10 + (index * 30), 180, 20));
+        	panel.getContainer().add(new Label(setting.getId(), 10, 10 + (index * 30), 180, 20));
         	if(setting.getType().isBoolean()){
         		panel.getContainer().add(new BoolButton(setting, 190, 10 + (index * 30), 290, 20));
         	}
@@ -54,7 +54,7 @@ public class SettingsBox {
         	index++;
         }
         panel.setHorizontalScrollBarVisible(false);
-        Button20 button = new Button20(UserInterpanels.translate("settingsbox." + (settings ? "confirm" : "continue")), 10, 300, 100, 20);
+        Button button = new Button(UserInterpanels.translate("settingsbox." + (settings ? "confirm" : "continue")), 10, 300, 100, 20);
         button.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
         	if(CLICK == e.getAction()){ task.process(map); dialog.close(); }
         });

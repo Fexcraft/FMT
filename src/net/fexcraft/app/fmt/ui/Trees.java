@@ -5,6 +5,7 @@ import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLIC
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.Frame;
 import org.liquidengine.legui.component.ImageView;
@@ -22,8 +23,6 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.Editors.SPVSL;
-import net.fexcraft.app.fmt.ui.UserInterpanels.Button20;
-import net.fexcraft.app.fmt.ui.UserInterpanels.Label20;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.HelperCollector;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
@@ -158,11 +157,11 @@ public class Trees {
 		private GroupCompound compound;
 		private TurboList list;
 		private TreeBase tree;
-		private Label20 label;
+		private Label label;
 
 		public TreeGroup(TreeBase base){
 			super(0, 0, base.getSize().x - 12, 20); tree = base;
-			this.add(label = new Label20("group-label", 0, 0, (int)getSize().x, 20));
+			this.add(label = new Label("group-label", 0, 0, (int)getSize().x, 20));
 			label.getStyle().setFont("roboto-bold");
 			label.getStyle().setPadding(0, 0, 0, 5);
 			label.getStyle().setBorderRadius(0);
@@ -310,11 +309,11 @@ public class Trees {
 		private TreeBase base;
 		private TurboList list;
 		private PolygonWrapper polygon;
-		private Label20 label;
+		private Label label;
 
 		public SubTreeGroup(TreeBase base){
 			super(0, 0, base.getSize().x - 22, 20); this.base = base;
-			this.add(label = new Label20("group-label", 0, 0, (int)getSize().x, 20));
+			this.add(label = new Label("group-label", 0, 0, (int)getSize().x, 20));
 			label.getStyle().setFont("roboto-bold");
 			label.getStyle().setPadding(0, 0, 0, 5);
 			label.getStyle().setBorderRadius(0);
@@ -398,7 +397,7 @@ public class Trees {
 		
 	}
 	
-	public static class GroupButton extends Button20 {
+	public static class GroupButton extends Button {
 
 		public GroupButton(String string, int x, int y, int w, int h){
 			super(string, x, y, w, h);

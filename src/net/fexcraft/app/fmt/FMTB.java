@@ -22,10 +22,15 @@ import javax.script.ScriptException;
 import org.joml.Vector2i;
 import org.joml.Vector4f;
 import org.liquidengine.legui.animation.AnimatorProvider;
+import org.liquidengine.legui.component.Button;
+import org.liquidengine.legui.component.Dialog;
 import org.liquidengine.legui.component.Frame;
+import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.listener.MouseClickEventListener;
 import org.liquidengine.legui.listener.processor.EventProcessorProvider;
+import org.liquidengine.legui.style.color.ColorConstants;
+import org.liquidengine.legui.style.font.FontRegistry;
 import org.liquidengine.legui.system.context.CallbackKeeper;
 import org.liquidengine.legui.system.context.Context;
 import org.liquidengine.legui.system.context.DefaultCallbackKeeper;
@@ -61,10 +66,7 @@ import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.ui.Editors;
 import net.fexcraft.app.fmt.ui.Trees;
 import net.fexcraft.app.fmt.ui.UserInterpanels;
-import net.fexcraft.app.fmt.ui.UserInterpanels.Button20;
-import net.fexcraft.app.fmt.ui.UserInterpanels.Dialog24;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Field;
-import net.fexcraft.app.fmt.ui.UserInterpanels.Label20;
 import net.fexcraft.app.fmt.ui.UserInterpanels.TextInput20;
 import net.fexcraft.app.fmt.utils.*;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
@@ -144,10 +146,14 @@ public class FMTB {
         Themes.setDefaultTheme(new FlatColoredTheme(
 			rgba(245, 245, 245, 1), // backgroundColor
 	        rgba(176, 190, 197, 1), // borderColor
+	        rgba(176, 190, 197, 1), // sliderColor
 	        rgba(100, 181, 246, 1), // strokeColor
 	        rgba(165, 214, 167, 1), // allowColor
 	        rgba(239, 154, 154, 1), // denyColor
-	        null
+	        ColorConstants.transparent(), // shadowColor
+            ColorConstants.darkGray(), // text color
+            FontRegistry.DEFAULT, // font
+            20f //font size
         ));//Themes.FLAT_WHITE);
         frame = new Frame(WIDTH, HEIGHT);
         //frame.getContainer().add(new Interface());
@@ -469,10 +475,10 @@ public class FMTB {
 				String new_title = Translator.format("dialog.welcome.title_new", newver, version);
 				String new_version = Translator.format("dialog.welcome.version_new", "%s >> %s", newver, version);
 				//
-		        Dialog24 dialog = new Dialog24(bool ? welcome : new_title, 300, 100);
-		        Label20 label = new Label20(bool ? cversion : new_version, 10, 10, 200, 20);
-		        Button20 okbutton = new Button20(Translator.translate("dialog.welcome.confirm", "ok"), 10, 50, 50, 20);
-		        Button20 upbutton = new Button20(Translator.translate(bool ? "dialog.welcome.exit" : "dialog.welcome.update", bool ? "exit" : "update"), 70, 50, 50, 20);
+		        Dialog dialog = new Dialog(bool ? welcome : new_title, 300, 100);
+		        Label label = new Label(bool ? cversion : new_version, 10, 10, 200, 20);
+		        Button okbutton = new Button(Translator.translate("dialog.welcome.confirm", "ok"), 10, 50, 50, 20);
+		        Button upbutton = new Button(Translator.translate(bool ? "dialog.welcome.exit" : "dialog.welcome.update", bool ? "exit" : "update"), 70, 50, 50, 20);
 		        okbutton.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) event -> { if(event.getAction() == CLICK) dialog.close(); });
 		        upbutton.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) event -> {
 		        	if(event.getAction() == CLICK){

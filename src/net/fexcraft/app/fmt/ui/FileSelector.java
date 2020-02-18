@@ -6,6 +6,9 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+import org.liquidengine.legui.component.Button;
+import org.liquidengine.legui.component.Dialog;
+import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.SelectBox;
 import org.liquidengine.legui.component.optional.align.HorizontalAlign;
 import org.liquidengine.legui.event.MouseClickEvent;
@@ -17,9 +20,6 @@ import org.lwjgl.util.tinyfd.TinyFileDialogs;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
-import net.fexcraft.app.fmt.ui.UserInterpanels.Button20;
-import net.fexcraft.app.fmt.ui.UserInterpanels.Dialog20;
-import net.fexcraft.app.fmt.ui.UserInterpanels.Label20;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 
 /**
@@ -43,10 +43,10 @@ public class FileSelector {
 	
 	/** For selecting an Ex/Im-Porter first. */
 	public static final void select(String title, String root, boolean export, SelectTask task){
-        Dialog20 dialog = new Dialog20(UserInterpanels.translate("eximporter." + (export ? "export" : "import") + ".select.title"), 340, 125);
+        Dialog dialog = new Dialog(UserInterpanels.translate("eximporter." + (export ? "export" : "import") + ".select.title"), 340, 125);
         dialog.setResizable(false); if(!root.endsWith("/")) root += "/"; final String reet = root;
-        Label20 label = new Label20(UserInterpanels.translate("eximporter." + (export ? "export" : "import") + ".select.desc"), 10, 10, 320, 20);
-        Button20 okbutton = new Button20(UserInterpanels.translate("eximporter." + (export ? "export" : "import") + ".select.continue"), 10, 75, 100, 20);
+        Label label = new Label(UserInterpanels.translate("eximporter." + (export ? "export" : "import") + ".select.desc"), 10, 10, 320, 20);
+        Button okbutton = new Button(UserInterpanels.translate("eximporter." + (export ? "export" : "import") + ".select.continue"), 10, 75, 100, 20);
         SelectBox<String> selbox = new SelectBox<>(10, 40, 320, 24);
         List<ExImPorter> eximporter = PorterManager.getPorters(export);
         selbox.setVisibleCount(8); selbox.setElementHeight(20);

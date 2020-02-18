@@ -9,7 +9,10 @@ import java.util.Collections;
 import java.util.TimerTask;
 import java.util.stream.Collectors;
 
+import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.component.CheckBox;
+import org.liquidengine.legui.component.Dialog;
+import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.ProgressBar;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.listener.MouseClickEventListener;
@@ -17,9 +20,6 @@ import org.liquidengine.legui.listener.MouseClickEventListener;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.ui.UserInterpanels;
-import net.fexcraft.app.fmt.ui.UserInterpanels.Button20;
-import net.fexcraft.app.fmt.ui.UserInterpanels.Dialog24;
-import net.fexcraft.app.fmt.ui.UserInterpanels.Label20;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
@@ -81,8 +81,8 @@ public class TextureUpdate extends TimerTask {
 
 	public static void tryAutoPos(Boolean bool){
 		if(bool == null){
-			Dialog24 dialog = new Dialog24(Translator.translate("texture_update.autopos.title"), 360, 150);
-			Label20 label = new Label20(Translator.translate("texture_update.autopos.info"), 10, 10, 340, 20);
+			Dialog dialog = new Dialog(Translator.translate("texture_update.autopos.title"), 360, 150);
+			Label label = new Label(Translator.translate("texture_update.autopos.info"), 10, 10, 340, 20);
 	        CheckBox checkbox0 = new CheckBox(10, 40, 340, 20);
 	        checkbox0.getStyle().setPadding(5f, 10f, 5f, 5f); checkbox0.setChecked(SAVESPACE);
 	        checkbox0.addCheckBoxChangeValueListener(listener -> SAVESPACE = listener.getNewValue());
@@ -91,7 +91,7 @@ public class TextureUpdate extends TimerTask {
 	        checkbox1.getStyle().setPadding(5f, 10f, 5f, 5f); checkbox1.setChecked(!ALL);
 	        checkbox1.addCheckBoxChangeValueListener(listener -> ALL = !listener.getNewValue());
 	        checkbox1.getTextState().setText(UserInterpanels.translate("texture_update.autopos.process_all"));
-            Button20 button = new Button20(UserInterpanels.translate("texture_update.autopos.start"), 10, 100, 100, 20);
+            Button button = new Button(UserInterpanels.translate("texture_update.autopos.start"), 10, 100, 100, 20);
             button.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
             	if(CLICK == e.getAction()){ HALT = false; dialog.close(); }
             });
@@ -193,14 +193,14 @@ public class TextureUpdate extends TimerTask {
 	
 	private static int getPercent(int i, int all){ return (i * 100) / all; }
 	
-	public static class TexUpDialog extends Dialog24 {
+	public static class TexUpDialog extends Dialog {
 		
 		private ProgressBar progressbar;
-		private Label20 label;
+		private Label label;
 
 		public TexUpDialog(){
 			super(Translator.translate("texture_update.autopos.title"), 400, 90);
-			label = new Label20(Translator.format("texture_update.autopos.processing", 0, "initializing"), 10, 10, 340, 20);
+			label = new Label(Translator.format("texture_update.autopos.processing", 0, "initializing"), 10, 10, 340, 20);
             dialog = this; dialog.setResizable(false); dialog.getContainer().add(label);
             progressbar = new ProgressBar(10, 40, 380, 10); progressbar.setValue(0);
 	        dialog.getContainer().add(progressbar); dialog.show(FMTB.frame);
