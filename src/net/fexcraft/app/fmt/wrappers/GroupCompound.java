@@ -12,7 +12,6 @@ import org.lwjgl.opengl.GL11;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.ui.UserInterpanels.Field;
-import net.fexcraft.app.fmt.ui.editor.EditorBase;
 import net.fexcraft.app.fmt.ui.editor.Editors;
 import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
 import net.fexcraft.app.fmt.ui.editor.ModelGroupEditor;
@@ -230,7 +229,7 @@ public class GroupCompound {
 				}
 			}
 		}
-		return EditorBase.NO_POLYGON_SELECTED;
+		return FMTB.NO_POLYGON_SELECTED;
 	}
 	
 	public TurboList getFirstSelectedGroup(){
@@ -269,7 +268,7 @@ public class GroupCompound {
 			GeneralEditor.texture_y.apply(0);
 			//
 			GeneralEditor.polygon_group.setSelected("> new group <", true);
-			GeneralEditor.polygon_name.getTextState().setText(EditorBase.NO_POLYGON_SELECTED);
+			GeneralEditor.polygon_name.getTextState().setText(FMTB.NO_POLYGON_SELECTED);
 			GeneralEditor.polygon_type.setSelected("box", true);
 		}
 		else{
@@ -390,8 +389,8 @@ public class GroupCompound {
 		TurboList list = this.getFirstSelectedGroup();
 		if(list == null){
 			ModelGroupEditor.group_color.apply(0xffffff);
-			ModelGroupEditor.group_name.getTextState().setText(EditorBase.NO_POLYGON_SELECTED);
-			ModelGroupEditor.group_texture.getTextState().setText(EditorBase.NO_POLYGON_SELECTED);
+			ModelGroupEditor.group_name.getTextState().setText(FMTB.NO_POLYGON_SELECTED);
+			ModelGroupEditor.group_texture.getTextState().setText(FMTB.NO_POLYGON_SELECTED);
 			ModelGroupEditor.g_tex_x.setSelected(8f, true);
 			ModelGroupEditor.g_tex_y.setSelected(8f, true);
 			ModelGroupEditor.g_tex_s.setSelected(8f, true);
@@ -584,7 +583,10 @@ public class GroupCompound {
 		@Override
 		public boolean add(TurboList list){
 			boolean bool = super.add(list); Editors.general.refreshGroups();
-			if(bool){ Trees.polygon.addSub(list.button.update()); Trees.polygon.reOrderGroups(); }
+			if(bool){
+				Trees.polygon.addSub(list.button.update()); Trees.polygon.reOrderGroups();
+				Trees.fvtm.addSub(list.abutton.update()); Trees.fvtm.reOrderGroups();
+			}
 			return bool;
 		}
 		
@@ -603,14 +605,30 @@ public class GroupCompound {
 		
 		@Override
 		public boolean remove(Object obj){
-			if(obj instanceof TurboList) ((TurboList)obj).button.removeFromTree();
-			boolean bool = super.remove(obj); ((TurboList)obj).button.tree().reOrderGroups(); return bool;
+			TurboList list = (TurboList)obj;
+			if(obj instanceof TurboList){
+				list.button.removeFromTree();
+				list.abutton.removeFromTree();
+			}
+			boolean bool = super.remove(obj);
+			if(list != null){
+				list.button.tree().reOrderGroups();
+				list.abutton.tree().reOrderGroups();
+			}
+			return bool;
 		}
 		
 		@Override
 		public TurboList remove(int index){
-			TurboList list = get(index); if(list != null) list.button.removeFromTree();
-			list = super.remove(index); list.button.tree().reOrderGroups(); return list;
+			TurboList list = get(index);
+			if(list != null){
+				list.button.removeFromTree();
+				list.abutton.removeFromTree();
+			}
+			list = super.remove(index);
+			list.button.tree().reOrderGroups();
+			list.abutton.tree().reOrderGroups();
+			return list;
 		}
 		
 		@Override
@@ -620,7 +638,9 @@ public class GroupCompound {
 
 		public void setAsHelperPreview(GroupCompound compound){
 			for(TurboList list : this){
-				list.button.removeFromTree(); list.button = null;
+				list.button.removeFromTree();
+				list.abutton.removeFromTree();
+				list.button = null; list.abutton = null;
 				list.pbutton = new SubTreeGroup(Trees.helper, list);
 				list.pbutton.setRoot(compound.button);
 			} compound.button.update(); Trees.polygon.reOrderGroups();

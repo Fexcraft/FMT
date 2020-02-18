@@ -116,7 +116,7 @@ public class ModelGroupEditor extends EditorBase {
 			if(sel.color == null) sel.color = RGB.WHITE.copy(); sel.color.packed = result;
 		}, 3, pass += 24, 290, 20));
 		group.getContainer().add(new Label(translate("editor.model_group.group.name"), 3, pass += 24, 290, 20));
-		group.getContainer().add(group_name = new TextField(NO_POLYGON_SELECTED, 3, pass += 24, 290, 20));
+		group.getContainer().add(group_name = new TextField(FMTB.NO_POLYGON_SELECTED, 3, pass += 24, 290, 20));
 		group_name.addTextInputContentChangeEventListener(listener -> name_cache = UserInterpanels.validateString(listener));
 		group_name.getListenerMap().addListener(FocusEvent.class, listener -> {
 			if(!listener.isFocused() && !FMTB.MODEL.getSelected().isEmpty()){

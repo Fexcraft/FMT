@@ -5,8 +5,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.TreeMap;
 
-import net.fexcraft.app.fmt.ui.treeold.FVTMTree;
-import net.fexcraft.app.fmt.ui.treeold.RightTree.AnimationButton;
+import net.fexcraft.app.fmt.ui.tree.SubTreeGroup;
+import net.fexcraft.app.fmt.ui.tree.Trees;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.utils.Settings.Type;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
@@ -66,13 +66,13 @@ public class Animator {
 		public boolean active = true;
 		public final String id;
 		public final TreeMap<String, Setting> settings;
-		public final AnimationButton button;
+		public final SubTreeGroup button;
 		public final TurboList group;
 		
 		public Animation(String id, TurboList group, Collection<Setting> settings){
 			this.id = id; this.settings = new TreeMap<>(); this.group = group;
 			for(Setting setting : settings) this.settings.put(setting.getId(), setting.copy());
-			button = new AnimationButton(FVTMTree.TREE, this);
+			button = new SubTreeGroup(Trees.fvtm, this);
 		}
 		
 		public abstract void pre(TurboList list);

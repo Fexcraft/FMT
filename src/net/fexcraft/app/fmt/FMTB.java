@@ -97,6 +97,7 @@ public class FMTB {
 	public static GroupCompound MODEL = new GroupCompound(null);
 	public static Timer BACKUP_TIMER, TEX_UPDATE_TIMER;
 	private static int disk_update;
+	public static String NO_POLYGON_SELECTED;
 	//
 	public static final ST_Timer timer = new ST_Timer();
 	public float delta, accumulator = 0f, interval = 1f / 30f, alpha;
@@ -143,6 +144,7 @@ public class FMTB {
 		initOpenGL(); this.setIcon();
 		glfwShowWindow(window);
 		//
+		NO_POLYGON_SELECTED = Translator.translate("error.no_polygon_selected");
         Themes.setDefaultTheme(new FlatColoredTheme(
 			rgba(245, 245, 245, 1), // backgroundColor
 	        rgba(176, 190, 197, 1), // borderColor
@@ -157,8 +159,8 @@ public class FMTB {
         ));//Themes.FLAT_WHITE);
         frame = new Frame(WIDTH, HEIGHT);
         //frame.getContainer().add(new Interface());
-        Editors.initializeEditors(frame);
         Trees.initializeTrees(frame);
+        Editors.initializeEditors(frame);
         UserInterpanels.addToolbarButtons(frame);
         MODEL.initButton(); context = new Context(window);
         CallbackKeeper keeper = new DefaultCallbackKeeper();
@@ -504,8 +506,11 @@ public class FMTB {
 	}
 
 	public static void setModel(GroupCompound compound, boolean clearhelpers){
-		Trees.polygon.clear(); Trees.helper.clear(); FMTB.MODEL = compound; if(clearhelpers) HelperCollector.LOADED.clear();
-		for(TurboList list : compound.getGroups()){ Trees.polygon.addSub(list.button); list.button.updateColor(); }//fix for loaded-in groups that should display "not-visible" color
+		Trees.polygon.clear(); Trees.helper.clear(); Trees.fvtm.clear(); FMTB.MODEL = compound; if(clearhelpers) HelperCollector.LOADED.clear();
+		for(TurboList list : compound.getGroups()){
+			Trees.polygon.addSub(list.button); list.button.updateColor();
+			Trees.fvtm.addSub(list.abutton); list.abutton.updateColor();
+		}//fix for loaded-in groups that should display "not-visible" color
 		for(GroupCompound com : HelperCollector.LOADED){ Trees.helper.addSub(com.button); com.button.updateColor(); }
 		Trees.polygon.reOrderGroups(); Trees.helper.reOrderGroups();
 	}

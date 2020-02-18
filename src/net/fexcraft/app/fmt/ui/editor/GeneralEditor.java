@@ -84,7 +84,7 @@ public class GeneralEditor extends EditorBase {
         	polygon_group.setSelected(0, false);
         });
         attributes.getContainer().add(new Label(translate("editor.general.attributes.name"), 3, pass += 24, 290, 20));
-        attributes.getContainer().add(polygon_name = new TextField(NO_POLYGON_SELECTED = translate("error.no_polygon_selected"), 3, pass += 24, 290, 20));
+        attributes.getContainer().add(polygon_name = new TextField(FMTB.NO_POLYGON_SELECTED, 3, pass += 24, 290, 20));
         polygon_name.addTextInputContentChangeEventListener(event -> {
 			String validated = UserInterpanels.validateString(event);
 			if(FMTB.MODEL.getSelected().isEmpty()) return; PolygonWrapper wrapper;

@@ -11,7 +11,10 @@ import org.liquidengine.legui.style.Style.DisplayType;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.DialogBox;
+import net.fexcraft.app.fmt.ui.SettingsBox;
+import net.fexcraft.app.fmt.ui.UserInterpanels;
 import net.fexcraft.app.fmt.ui.editor.Editors;
+import net.fexcraft.app.fmt.utils.Animator.Animation;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
@@ -23,6 +26,7 @@ public class SubTreeGroup extends Panel {
 	private TreeBase base;
 	private TurboList list;
 	private PolygonWrapper polygon;
+	private Animation animation;
 	private Label label;
 
 	public SubTreeGroup(TreeBase base){
@@ -59,6 +63,22 @@ public class SubTreeGroup extends Panel {
 		}, "visibility"));
 	}
 
+	public SubTreeGroup(TreeBase base, Animation animation){
+		this(base); this.animation = animation; updateColor();
+		this.add(new TreeIcon((int)getSize().x - 20, 0, "group_delete", () -> {
+			DialogBox.showYN(null, () -> {
+				animation.group.animations.remove(animation); FMTB.MODEL.updateFields();
+			}, null, "tree.fvtm.remove_animation", "#" + animation.id);
+		}, "delete"));
+		this.add(new TreeIcon((int)getSize().x - 42, 0, "group_visible", () -> {
+			animation.active = !animation.active; updateColor();
+		}, "visibility"));
+		this.add(new TreeIcon((int)getSize().x - 64, 0, "group_edit", () -> {
+			SettingsBox.open("[" + animation.id + "] " + UserInterpanels.translate("editor.model_group.group.animator_settings"), animation.settings.values(), false,
+				settings -> { animation.onSettingsUpdate(); });
+		}, "edit"));
+	}
+
 	public void removeFromSubTree(){
 		if(root == null) return; root.remove(this);
 	}
@@ -72,15 +92,19 @@ public class SubTreeGroup extends Panel {
 	}
 
 	public Component update(){
-		label.getTextState().setText(list == null ? polygon.name() : list.id); return this;
+		label.getTextState().setText(animation != null ? animation.getButtonString() : list == null ? polygon.name() : list.id); return this;
 	}
 	
 	public void updateColor(){
+		if(animation != null){ label.getStyle().getBackground().setColor(FMTB.rgba(animation.active ? 0xa37a18 : 0xd6ad4b)); return; }
 		if(list == null) label.getStyle().getBackground().setColor(FMTB.rgba(polygon.selected ? polygon.visible ? 0xa37a18 : 0xd6ad4b : polygon.visible ? 0x28a148 : 0x6bbf81));
 		else label.getStyle().getBackground().setColor(FMTB.rgba(list.selected ? list.visible ? 0xa37a18 : 0xd6ad4b : list.visible ? 0x28a148 : 0x6bbf81));
 	}
 
 	public void refreshPosition(){
+		if(animation != null){
+			this.setPosition(10, (animation.group.animations.indexOf(animation) * 22) + 22);
+		}
 		if(list == null){
 			this.setPosition(10, (polygon.getTurboList().indexOf(polygon) * 22) + 22);
 		}

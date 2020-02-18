@@ -207,7 +207,7 @@ public class UserInterpanels {
 			new MenuButton("toolbar.helpers.unload_clear", () -> HelperCollector.LOADED.clear())
 		));
 		frame.getContainer().add(new MenuEntry(6, translate("toolbar.mod_tools"),
-			new MenuButton("toolbar.mod_tools.fvtm_programs", () -> Trees.show("tree"))
+			new MenuButton("toolbar.mod_tools.fvtm_programs", () -> Trees.show("fvtm"))
 		));
 		frame.getContainer().add(new MenuEntry(7, translate("toolbar.exit")));
 	}

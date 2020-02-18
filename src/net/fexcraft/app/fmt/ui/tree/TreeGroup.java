@@ -23,10 +23,12 @@ import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.common.utils.Print;
+import net.fexcraft.lib.mc.utils.Static;
 
 public class TreeGroup extends Panel {
 	
 	protected GroupCompound compound;
+	private boolean animations;
 	private TurboList list;
 	private TreeBase tree;
 	private Label label;
@@ -37,6 +39,24 @@ public class TreeGroup extends Panel {
 		label.getStyle().setFont("roboto-bold");
 		label.getStyle().setPadding(0, 0, 0, 5);
 		label.getStyle().setBorderRadius(0);
+	}
+	
+	public TreeGroup(TreeBase base, TurboList group, boolean flag){
+		this(base); list = group; updateColor(); animations = flag; if(!flag) Static.halt(0);
+		this.add(new TreeIcon((int)getSize().x - 20, 0, "group_visible", () -> {
+			list.visible = !list.visible; updateColor();
+		}, "visibility"));
+		this.add(new TreeIcon((int)getSize().x - 42, 0, "group_edit", () -> {
+			Editors.show("group");
+		}, "edit"));
+		this.add(new TreeIcon((int)getSize().x - 64, 0, "group_minimize", () -> toggle(!list.aminimized), "minimize"));
+		label.getListenerMap().addListener(MouseClickEvent.class, listener -> {
+			if(listener.getAction() != CLICK || listener.getButton() != MouseButton.MOUSE_BUTTON_LEFT) return;
+			boolean sell = list.selected; if(!GGR.isShiftDown()){ FMTB.MODEL.clearSelection(); }
+			list.selected = !sell; FMTB.MODEL.updateFields(); FMTB.MODEL.lastselected = null; updateColor();
+			GroupCompound.SELECTED_POLYGONS = FMTB.MODEL.countSelectedMRTs();
+		});
+		this.recalculateSize();
 	}
 	
 	public TreeGroup(TreeBase base, TurboList group){
@@ -142,7 +162,9 @@ public class TreeGroup extends Panel {
 	}
 	
 	public void toggle(boolean bool){
-		if(list == null) compound.minimized = bool; else list.minimized = bool; recalculateSize();
+		if(animations) list.aminimized = bool;
+		else if(list == null) compound.minimized = bool;
+		else list.minimized = bool; recalculateSize();
 		getChildComponents().forEach(con -> {
 			if(con instanceof SubTreeGroup){
 				((SubTreeGroup)con).toggle(!bool);
@@ -151,6 +173,9 @@ public class TreeGroup extends Panel {
 	}
 	
 	public void recalculateSize(){
+		if(animations){
+			this.setSize(this.getSize().x, list.aminimized ? 20 : (list.animations.size() * 22) + 20);
+		}
 		if(list != null){
 			this.setSize(this.getSize().x, list.minimized ? 20 : (list.size() * 22) + 20);
 		}
@@ -169,7 +194,7 @@ public class TreeGroup extends Panel {
 	}
 
 	public Component update(){
-		label.getTextState().setText(list == null ? compound.name : list.id); return this;
+		label.getTextState().setText(list == null ? compound.name : animations ? "[" + list.animations.size() + "] " + list.id : list.id); return this;
 	}
 	
 	public void updateColor(){

@@ -19,7 +19,6 @@ import net.fexcraft.lib.common.Static;
 
 public class EditorBase extends Panel {
 
-	public static String NO_POLYGON_SELECTED;
 	protected ArrayList<EditorWidget> widgets = new ArrayList<>();
 	protected ScrollablePanel scrollable;
 	

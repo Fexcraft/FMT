@@ -21,11 +21,11 @@ public class TurboList extends ArrayList<PolygonWrapper> {
 	private String texture;
 	public ArrayList<Animation> animations = new ArrayList<>();
 	//
-	public TreeGroup button;
+	public TreeGroup button, abutton;
 	public SubTreeGroup pbutton;
 	
 	public TurboList(String id){
-		this.id = id; button = new TreeGroup(Trees.polygon, this);
+		this.id = id; button = new TreeGroup(Trees.polygon, this); abutton = new TreeGroup(Trees.fvtm, this, true);
 	}
 
 	public void render(boolean aplcol){

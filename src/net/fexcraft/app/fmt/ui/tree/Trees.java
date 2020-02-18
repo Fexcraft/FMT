@@ -10,11 +10,12 @@ import net.fexcraft.app.fmt.FMTB;
 public class Trees {
 	
 	public static final ArrayList<TreeBase> trees = new ArrayList<>();
-	public static TreeBase polygon, helper;
+	public static TreeBase polygon, helper, fvtm;
 	
 	public static void initializeTrees(Frame frame){
 		frame.getContainer().add(polygon = new TreeBase("polygon"));
 		frame.getContainer().add(helper = new TreeBase("helper"));
+		frame.getContainer().add(fvtm = new TreeBase("fvtm"));
 	}
 	
 	public static void hideAll(){
@@ -27,6 +28,7 @@ public class Trees {
 			case "polygon": polygon.show(); break;
 			case "helper": case "preview":
 			case "helper_preview": helper.show(); break;
+			case "fvtm": fvtm.show(); break;
 			default: break;
 		}
 	}
