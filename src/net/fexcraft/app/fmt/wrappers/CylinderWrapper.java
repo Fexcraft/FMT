@@ -3,7 +3,7 @@ package net.fexcraft.app.fmt.wrappers;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import net.fexcraft.app.fmt.ui.editorold.Editor;
+import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
 import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
@@ -80,17 +80,17 @@ public class CylinderWrapper extends PolygonWrapper {
 			case "cyl0":{
 				if(x){
 					radius = value; seg_width = radius / 2;
-					Editor.getGlobalField("cyl6y").applyChange(seg_width);
+					GeneralEditor.cyl6_y.apply(seg_width);
 					return true;
 				}
 				if(y){
 					length = value; seg_height = radius - radius2;
-					Editor.getGlobalField("cyl6z").applyChange(seg_height);
+					GeneralEditor.cyl6_z.apply(seg_height);
 					return true;
 				}
 				if(z){
 					radius2 = value; seg_height = radius - radius2;
-					Editor.getGlobalField("cyl6z").applyChange(seg_height);
+					GeneralEditor.cyl6_z.apply(seg_height);
 					return true;
 				}
 			}
