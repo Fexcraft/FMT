@@ -12,6 +12,8 @@ import org.liquidengine.legui.component.ImageView;
 import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.Panel;
 import org.liquidengine.legui.component.ScrollablePanel;
+import org.liquidengine.legui.component.Tooltip;
+import org.liquidengine.legui.component.optional.align.HorizontalAlign;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.event.ScrollEvent;
 import org.liquidengine.legui.image.BufferedImage;
@@ -150,6 +152,13 @@ public class Trees {
 		public TreeIcon(int x, int y, String adress, Runnable run){
 			this(x, y, adress, (MouseClickEventListener)event -> { if(event.getAction() == CLICK){ run.run(); } });
 		}
+
+		public TreeIcon(int x, int y, String adress, Runnable run, String tooltip){
+			this(x, y, adress, run); Tooltip tool = new Tooltip(tooltip);
+			tool.setSize(80, 20); tool.setPosition(-60, 20); this.setTooltip(tool);
+			tool.getStyle().getBackground().setColor(FMTB.rgba(161, 194, 169, 0.8f));
+			tool.getStyle().setHorizontalAlign(HorizontalAlign.CENTER);
+		}
 		
 	}
 	
@@ -172,14 +181,14 @@ public class Trees {
 			this(base); list = group; updateColor();
 			this.add(new TreeIcon((int)getSize().x - 20, 0, "group_delete", () -> {
 				DialogBox.showYN(null, () -> { FMTB.MODEL.getGroups().remove(list.id); }, null, "tree.polygon.remove_group", "#" + list.id);
-			}));
+			}, "delete"));
 			this.add(new TreeIcon((int)getSize().x - 42, 0, "group_visible", () -> {
 				list.visible = !list.visible; updateColor();
-			}));
+			}, "visibility"));
 			this.add(new TreeIcon((int)getSize().x - 64, 0, "group_edit", () -> {
 				Editors.show("group");
-			}));
-			this.add(new TreeIcon((int)getSize().x - 86, 0, "group_minimize", () -> toggle(!list.minimized)));
+			}, "edit"));
+			this.add(new TreeIcon((int)getSize().x - 86, 0, "group_minimize", () -> toggle(!list.minimized), "minimize"));
 			label.getListenerMap().addListener(MouseClickEvent.class, listener -> {
 				if(listener.getAction() != CLICK || listener.getButton() != MouseButton.MOUSE_BUTTON_LEFT) return;
 				boolean sell = list.selected; if(!GGR.isShiftDown()){ FMTB.MODEL.clearSelection(); }
@@ -193,13 +202,13 @@ public class Trees {
 			this(base); compound = group; updateColor();
 			this.add(new TreeIcon((int)getSize().x - 20, 0, "group_delete", () -> {
 				HelperCollector.LOADED.remove(index()); this.removeFromTree(); tree.reOrderGroups();
-			}));
+			}, "delete"));
 			this.add(new TreeIcon((int)getSize().x - 42, 0, "group_visible", () -> {
 				compound.visible = !compound.visible; updateColor();
-			}));
+			}, "visibility"));
 			this.add(new TreeIcon((int)getSize().x - 64, 0, "group_edit", () -> {
 				Editors.show("preview");
-			}));
+			}, "edit"));
 			this.add(new TreeIcon((int)getSize().x - 86, 0, "group_clone", () -> {
 				GroupCompound newcomp = null, parent = compound;
 				if(parent.name.startsWith("fmtb/")){
@@ -218,8 +227,8 @@ public class Trees {
 				if(parent.pos != null) newcomp.pos = new Vec3f(parent.pos);
 				if(parent.rot != null) newcomp.rot = new Vec3f(parent.rot);
 				if(parent.scale != null) newcomp.scale = new Vec3f(parent.scale);
-			}));
-			this.add(new TreeIcon((int)getSize().x - 108, 0, "group_minimize", () -> toggle(!compound.minimized)));
+			}, "clone"));
+			this.add(new TreeIcon((int)getSize().x - 108, 0, "group_minimize", () -> toggle(!compound.minimized), "minimize"));
 			label.getListenerMap().addListener(MouseClickEvent.class, listener -> {
 				if(listener.getAction() != CLICK || listener.getButton() != MouseButton.MOUSE_BUTTON_LEFT) return;
 				GroupCompound model = HelperCollector.getSelected();
@@ -336,13 +345,13 @@ public class Trees {
 			this(base); polygon = wrapper; updateColor();
 			this.add(new TreeIcon((int)getSize().x - 20, 0, "group_delete", () -> {
 				DialogBox.showYN(null, () -> { polygon.getTurboList().remove(polygon); }, null, "tree.polygon.remove_polygon", "#" + polygon.getTurboList().id + ":" + polygon.name());
-			}));
+			}, "delete"));
 			this.add(new TreeIcon((int)getSize().x - 42, 0, "group_visible", () -> {
 				polygon.visible = !polygon.visible; updateColor();
-			}));
+			}, "visibility"));
 			this.add(new TreeIcon((int)getSize().x - 64, 0, "group_edit", () -> {
 				Editors.show("general");
-			}));
+			}, "edit"));
 			label.getListenerMap().addListener(MouseClickEvent.class, listener -> {
 				if(listener.getAction() != CLICK || listener.getButton() != MouseButton.MOUSE_BUTTON_LEFT) return;
 				boolean sell = list.selected; if(!GGR.isShiftDown()){ FMTB.MODEL.clearSelection(); }
@@ -355,7 +364,7 @@ public class Trees {
 			this(base); list = group; updateColor();
 			this.add(new TreeIcon((int)getSize().x - 20, 0, "group_visible", () -> {
 				list.visible = !list.visible; updateColor();
-			}));
+			}, "visibility"));
 		}
 
 		public void removeFromSubTree(){
