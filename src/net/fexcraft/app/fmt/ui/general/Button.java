@@ -1,8 +1,6 @@
 package net.fexcraft.app.fmt.ui.general;
 
 import net.fexcraft.app.fmt.ui.Element;
-import net.fexcraft.app.fmt.ui.FontRenderer;
-import net.fexcraft.app.fmt.ui.FontRenderer.FontType;
 import net.fexcraft.lib.common.math.RGB;
 
 /**
@@ -68,14 +66,14 @@ public class Button extends Element {
 			if(hovered) RGB.glColorReset();
 		}
 		if(text != null){
-			RGB color = !drawbackground ? hovered ? hovercolor : !enabled ? discolor : RGB.BLACK : RGB.BLACK;
-			if(centered){
+			//RGB color = !drawbackground ? hovered ? hovercolor : !enabled ? discolor : RGB.BLACK : RGB.BLACK;
+			/*if(centered){
 				int x = width / 2 - (FontRenderer.getWidth(text, FontType.BOLD) / 2), y = height / 2 - 10;
 				FontRenderer.drawText(text, this.x + x + (icon == null ? 0 : iconsize + 2), this.y + y, FontType.BOLD, color);
 			}
 			else{
 				FontRenderer.drawText(text, x + texxoff + (icon == null ? 0 : iconsize + 2), y + texyoff, FontType.BOLD, color);
-			}
+			}*/
 		}
 		if(icon != null){
 			if(iconcolor != null) iconcolor.glColorApply();

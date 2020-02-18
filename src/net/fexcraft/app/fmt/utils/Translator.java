@@ -8,7 +8,6 @@ import java.nio.file.StandardOpenOption;
 import java.util.Scanner;
 import java.util.TreeMap;
 
-import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.lib.common.utils.Print;
 
 public class Translator {
@@ -31,10 +30,6 @@ public class Translator {
 		while(scanner.hasNextLine()){
 			String string = scanner.nextLine();
 			if(string.length() < 3 || string.startsWith("#") || string.startsWith("//")) continue;
-			if(string.startsWith("DEFAULT_CHARS = ")){
-				FontRenderer.DEFAULT_CHARS += string.replace("DEFAULT_CHARS = ", "");
-				Print.console("Applying new chars from lang file."); continue;
-			}
 			String[] str = string.split("="); if(str.length < 2) continue; SEL.put(str[0], str[1]);
 		} scanner.close();
 	}

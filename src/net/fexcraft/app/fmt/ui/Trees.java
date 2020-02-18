@@ -251,12 +251,12 @@ public class Trees {
 					PreviewEditor.rot_x.apply(0);
 					PreviewEditor.rot_y.apply(0);
 					PreviewEditor.rot_z.apply(0);
-					PreviewEditor.size_x.apply(0);
-					PreviewEditor.size_y.apply(0);
-					PreviewEditor.size_z.apply(0);
-					PreviewEditor.size16_x.apply(0);
-					PreviewEditor.size16_y.apply(0);
-					PreviewEditor.size16_z.apply(0);
+					PreviewEditor.size_x.apply(1);
+					PreviewEditor.size_y.apply(1);
+					PreviewEditor.size_z.apply(1);
+					PreviewEditor.size16_x.apply(16);
+					PreviewEditor.size16_y.apply(16);
+					PreviewEditor.size16_z.apply(16);
 				}
 				else{
 					PreviewEditor.pos_x.apply(model.pos == null ? 0 : model.pos.xCoord);
