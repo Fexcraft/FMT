@@ -5,12 +5,8 @@ import java.util.ArrayList;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.general.TextField;
-import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.app.fmt.utils.Settings;
-import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.RGB;
-import net.fexcraft.lib.common.math.Time;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -59,7 +55,7 @@ public class UserInterface {
 		GL11.glLoadIdentity(); RGB.glColorReset();
 		GL11.glDepthFunc(GL11.GL_ALWAYS); GL11.glDisable(GL11.GL_ALPHA_TEST);
 		if(bool){
-			tmelm.render(width, height); logintxt.render(width, height);
+			//tmelm.render(width, height); logintxt.render(width, height);
 		}
 		else{
 			for(Element elm : elements) elm.render(width, height);
@@ -80,7 +76,7 @@ public class UserInterface {
 		}
 	}
 	
-	private Element tmelm = new TextField(null, "text", "screenshot:title", 4, 4, 500){
+	/*private Element tmelm = new TextField(null, "text", "screenshot:title", 4, 4, 500){
 		@Override
 		public void renderSelf(int rw, int rh){
 			this.y = rh - FMTB.HEIGHT + 4;
@@ -118,6 +114,6 @@ public class UserInterface {
 			}
 			super.renderSelf(rw, rh);
 		}
-	};
+	};*/
 	
 }
