@@ -7,9 +7,9 @@ import org.lwjgl.opengl.GL11;
 
 import com.google.gson.JsonObject;
 
-import net.fexcraft.app.fmt.ui.Trees;
-import net.fexcraft.app.fmt.ui.Trees.SubTreeGroup;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
+import net.fexcraft.app.fmt.ui.tree.SubTreeGroup;
+import net.fexcraft.app.fmt.ui.tree.Trees;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;

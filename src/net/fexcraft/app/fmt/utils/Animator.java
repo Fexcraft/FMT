@@ -5,8 +5,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.TreeMap;
 
-import net.fexcraft.app.fmt.ui.tree.FVTMTree;
-import net.fexcraft.app.fmt.ui.tree.RightTree.AnimationButton;
+import net.fexcraft.app.fmt.ui.treeold.FVTMTree;
+import net.fexcraft.app.fmt.ui.treeold.RightTree.AnimationButton;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.utils.Settings.Type;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;

@@ -2,9 +2,9 @@ package net.fexcraft.app.fmt.wrappers;
 
 import java.util.ArrayList;
 
-import net.fexcraft.app.fmt.ui.Trees;
-import net.fexcraft.app.fmt.ui.Trees.SubTreeGroup;
-import net.fexcraft.app.fmt.ui.Trees.TreeGroup;
+import net.fexcraft.app.fmt.ui.tree.SubTreeGroup;
+import net.fexcraft.app.fmt.ui.tree.TreeGroup;
+import net.fexcraft.app.fmt.ui.tree.Trees;
 import net.fexcraft.app.fmt.utils.Animator.Animation;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.lib.common.math.RGB;
