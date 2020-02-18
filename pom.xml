@@ -224,7 +224,7 @@
 		<dependency>
 		   <groupId>org.liquidengine</groupId>
 		   <artifactId>legui</artifactId>
-		   <version>2.2.1-SNAPSHOT</version>
+		   <version>2.2.2-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
   <build>
