@@ -39,7 +39,6 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.ui.editor.Editors;
 import net.fexcraft.app.fmt.ui.tree.Trees;
-import net.fexcraft.app.fmt.ui.treeold.RightTree;
 import net.fexcraft.app.fmt.utils.HelperCollector;
 import net.fexcraft.app.fmt.utils.ImageHelper;
 import net.fexcraft.app.fmt.utils.SaveLoad;
@@ -152,7 +151,7 @@ public class UserInterpanels {
 				else{
 					FMTB.MODEL.getGroups().add(new TurboList(string));
 				}
-				RightTree.show("modeltree");
+				Trees.show("polygon");
 			}),
 			new MenuButton("toolbar.shapelist.add_marker", () -> FMTB.MODEL.add(new MarkerWrapper(FMTB.MODEL), "markers", true)),
 			new MenuButton("toolbar.shapelist.add_voxel", () -> FMTB.MODEL.add(new VoxelWrapper(FMTB.MODEL, 16, true), "voxels", true))
