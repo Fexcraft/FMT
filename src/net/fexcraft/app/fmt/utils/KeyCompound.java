@@ -4,7 +4,6 @@ import static org.lwjgl.glfw.GLFW.*;
 
 import java.awt.Desktop;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import com.google.gson.JsonObject;
@@ -59,10 +58,19 @@ public class KeyCompound {
 		keys.add(new KeyFunction("toggle_animations", GLFW_KEY_F9, (action) -> { if(action == GLFW_RELEASE) Settings.toggleAnimations(); }));
 		//
 		keys.add(new KeyFunction("take_screenshot", GLFW_KEY_F12, (action) -> {
+			if(action != GLFW_RELEASE) return;
 			ImageHelper.takeScreenshot(false);
         	DialogBox.show(null, "dialogbox.button.ok", "dialogbox.button.open", null, () -> {
-        		try{ Desktop.getDesktop().open(new File("./screenshots/")); }
-        		catch(IOException e){ e.printStackTrace(); }
+        		try{
+        			if(!Desktop.isDesktopSupported()){
+        				if(System.getProperty("os.name").toLowerCase().contains("windows")){
+        					 Runtime.getRuntime().exec( "rundll32 url.dll,FileProtocolHandler " + new File("./screenshots/").getAbsolutePath());
+        				}
+        				else DialogBox.showOK(null, null, null, "#desktop.api.notsupported");
+        			}
+        			else Desktop.getDesktop().open(new File("./screenshots/"));
+        		}
+        		catch(Throwable e){ e.printStackTrace(); }
         	}, "image_helper.screenshot.done");
 		}));
 		//

@@ -107,7 +107,8 @@ public class FMTB {
 	public static int WIDTH = 1280, HEIGHT = 720;
 	public static Context context;
 	public static Renderer renderer;
-	public static Frame frame;
+	public static Frame frame, ss_frame;
+	public static Label ss_title, ss_credits;
 	public static long window;
 	
 	public static void main(String... args) throws Exception {
@@ -168,7 +169,7 @@ public class FMTB {
 	            rgba(27, 94, 32, 1), // allowColor
 	            rgba(183, 28, 28, 1), // denyColor
 	            ColorConstants.transparent(),  // shadowColor
-	            ColorConstants.white(), //text color
+	            ColorConstants.lightGray(), //text color
 	            FontRegistry.DEFAULT, // font
 	            20f //font size
 	        ));
@@ -392,7 +393,8 @@ public class FMTB {
 		GL11.glLoadIdentity(); RGB.glColorReset();
 		GL11.glDepthFunc(GL11.GL_ALWAYS); GL11.glDisable(GL11.GL_ALPHA_TEST);
 		if(screenshot){
-			//screenshot overlay
+			initScreenshotFrame();
+			renderer.render(ss_frame, context);
 		}
 		else{
 			renderer.render(frame, context);
@@ -413,6 +415,47 @@ public class FMTB {
 		TextureManager.bindTexture("null");
 	}
 	
+	private void initScreenshotFrame(){
+		if(ss_frame == null) ss_frame = new Frame(WIDTH, HEIGHT); ss_frame.setSize(WIDTH, HEIGHT);
+		if(ss_title == null){
+			ss_title = new Label(10, 10, 500, 20);
+			ss_title.getStyle().getBackground().setColor(ColorConstants.transparent());
+			ss_title.getStyle().setFont(FontRegistry.ROBOTO_BOLD);
+			ss_frame.getContainer().add(ss_title);
+		}
+		if(ss_credits == null){
+			ss_credits = new Label(10, 40, 500, 20);
+			ss_credits.getStyle().getBackground().setColor(ColorConstants.transparent());
+			ss_credits.getStyle().setFont(FontRegistry.ROBOTO_BOLD);
+			ss_frame.getContainer().add(ss_credits);
+		}
+		ss_title.getTextState().setText((Time.getDay() % 2 == 0 ? "FMT - Fexcraft Modelling Toolbox" : "FMT - Fex's Modelling Toolbox") + " [Standard Version]");
+		switch(FMTB.MODEL.creators.size()){
+			case 0: {
+				ss_credits.getTextState().setText(FMTB.MODEL.name + " - " + (SessionHandler.isLoggedIn() ? SessionHandler.getUserName() : "Guest User"));
+				break;
+			}
+			case 1: {
+				if(FMTB.MODEL.creators.get(0).equals(SessionHandler.getUserName())){
+					ss_credits.getTextState().setText(FMTB.MODEL.name + " - by " + SessionHandler.getUserName());
+				}
+				else{
+					ss_credits.getTextState().setText(FMTB.MODEL.name + " - by " + String.format("%s (logged:%s)", FMTB.MODEL.creators.get(0), SessionHandler.getUserName()));
+				}
+				break;
+			}
+			default: {
+				if(FMTB.MODEL.creators.contains(SessionHandler.getUserName())){
+					ss_credits.getTextState().setText(FMTB.MODEL.name + " - by " + SessionHandler.getUserName() + " (and " + (FMTB.MODEL.creators.size() - 1) + " others)");
+				}
+				else{
+					ss_credits.getTextState().setText(FMTB.MODEL.name + " - " + String.format("(logged:%s)", SessionHandler.getUserName()));
+				}
+				break;
+			}
+		}
+	}
+
 	private float[] clearcolor;
 	
 	private static final ModelRendererTurbo compound0 = new ModelRendererTurbo(null, 0, 0);

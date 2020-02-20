@@ -58,7 +58,16 @@ public class ImageHelper {
 			if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
 			ImageIO.write(image, "png", file);
 			if(open){
-				try{ Desktop.getDesktop().open(file); } catch(IOException e){ Desktop.getDesktop().open(file.getParentFile()); }
+        		try{
+        			if(!Desktop.isDesktopSupported()){
+        				if(System.getProperty("os.name").toLowerCase().contains("windows")){
+        					 Runtime.getRuntime().exec( "rundll32 url.dll,FileProtocolHandler " + file.getAbsolutePath());
+        				}
+        				else DialogBox.showOK(null, null, null, "#desktop.api.notsupported");
+        			}
+        			else Desktop.getDesktop().open(file);
+        		}
+        		catch(Throwable e){ e.printStackTrace(); }
 			}
 		}
 		catch(IOException e){ e.printStackTrace(); }
@@ -111,7 +120,16 @@ public class ImageHelper {
 			} catch(IOException e){ e.printStackTrace(); }
 			//
         	DialogBox.show(null, "dialogbox.button.ok", "dialogbox.button.open", null, () -> {
-        		try{ Desktop.getDesktop().open(new File("./screenshots/")); } catch(IOException e){ e.printStackTrace(); }
+        		try{
+        			if(!Desktop.isDesktopSupported()){
+        				if(System.getProperty("os.name").toLowerCase().contains("windows")){
+        					 Runtime.getRuntime().exec( "rundll32 url.dll,FileProtocolHandler " + new File("./screenshots/").getAbsolutePath());
+        				}
+        				else DialogBox.showOK(null, null, null, "#desktop.api.notsupported");
+        			}
+        			else Desktop.getDesktop().open(new File("./screenshots/"));
+        		}
+        		catch(Throwable e){ e.printStackTrace(); }
         	}, "image_helper.gif.done");
 			reset();
 		}

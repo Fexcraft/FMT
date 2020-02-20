@@ -241,7 +241,7 @@ public class UserInterfaceUtils {
 				background.setColor(new Vector4f(0.9f, 0.9f, 0.9f, 1));
 			}
 			else {
-				background.setColor(new Vector4f(0.3f, 0.3f, 0.3f, 1));
+				background.setColor(new Vector4f(0.2f, 0.2f, 0.2f, 1));
 			}
 			this.getStyle().setBackground(background);
 	        this.getListenerMap().addListener(CursorEnterEvent.class, (CursorEnterEventListener)lis -> { if(!lis.isEntered()) this.checkClose(); });
