@@ -153,7 +153,16 @@ public class GroupCompound {
 	}
 
 	public final void clearSelection(){
-		for(TurboList list : groups){ list.selected = false; list.button.updateColor(); for(PolygonWrapper wrapper : list) wrapper.selected = false; } SELECTED_POLYGONS = 0;
+		for(TurboList list : groups){
+			list.selected = false;
+			list.button.updateColor();
+			list.abutton.updateColor();
+			for(PolygonWrapper wrapper : list){
+				wrapper.selected = false;
+				wrapper.button.updateColor();
+			}
+		}
+		SELECTED_POLYGONS = 0;
 	}
 
 	public boolean updateValue(Field field, String id, boolean positive){

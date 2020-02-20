@@ -43,18 +43,17 @@ public class TreeGroup extends Panel {
 	
 	public TreeGroup(TreeBase base, TurboList group, boolean flag){
 		this(base); list = group; updateColor(); animations = flag; if(!flag) Static.halt(0);
-		this.add(new TreeIcon((int)getSize().x - 20, 0, "group_visible", () -> {
+		this.add(new TreeIcon((int)getSize().x - 42, 0, "group_visible", () -> {
 			list.visible = !list.visible; updateColor();
 		}, "visibility"));
-		this.add(new TreeIcon((int)getSize().x - 42, 0, "group_edit", () -> {
+		this.add(new TreeIcon((int)getSize().x - 64, 0, "group_edit", () -> {
 			Editors.show("group");
 		}, "edit"));
-		this.add(new TreeIcon((int)getSize().x - 64, 0, "group_minimize", () -> toggle(!list.aminimized), "minimize"));
+		this.add(new TreeIcon((int)getSize().x - 86, 0, "group_minimize", () -> toggle(!list.aminimized), "minimize"));
 		label.getListenerMap().addListener(MouseClickEvent.class, listener -> {
 			if(listener.getAction() != CLICK || listener.getButton() != MouseButton.MOUSE_BUTTON_LEFT) return;
-			boolean sell = list.selected; if(!GGR.isShiftDown()){ FMTB.MODEL.clearSelection(); }
+			boolean sell = list.selected; FMTB.MODEL.clearSelection();
 			list.selected = !sell; FMTB.MODEL.updateFields(); FMTB.MODEL.lastselected = null; updateColor();
-			GroupCompound.SELECTED_POLYGONS = FMTB.MODEL.countSelectedMRTs();
 		});
 		this.recalculateSize();
 	}
@@ -175,13 +174,17 @@ public class TreeGroup extends Panel {
 	public void recalculateSize(){
 		if(animations){
 			this.setSize(this.getSize().x, list.aminimized ? 20 : (list.animations.size() * 22) + 20);
+			this.update(); this.updateColor();
 		}
-		if(list != null){
+		else if(list != null){
 			this.setSize(this.getSize().x, list.minimized ? 20 : (list.size() * 22) + 20);
 		}
 		else{
 			this.setSize(this.getSize().x, compound.minimized ? 20 : (compound.getGroups().size() * 22) + 20);
 		}
+		getChildComponents().forEach(con -> {
+			if(con instanceof SubTreeGroup) ((SubTreeGroup)con).refreshPosition();
+		});
 		tree.reOrderGroups();
 	}
 
@@ -198,7 +201,13 @@ public class TreeGroup extends Panel {
 	}
 	
 	public void updateColor(){
-		if(list == null) label.getStyle().getBackground().setColor(FMTB.rgba(selected() ? compound.visible ? 0xa37a18 : 0xd6ad4b : compound.visible ? 0x28a148 : 0x6bbf81));
+		if(animations){
+			int color = 0;
+			if(list.animations.isEmpty()) color = list.selected ? list.visible ? 0xfc7900 : 0xffe7d1 : list.visible ? 0xffa14a : 0xd1ac8a;
+			else color = list.selected ? list.visible ? 0x2985ba : 0x7eb1cf : list.visible ? 0x28a148 : 0x6bbf81;
+			label.getStyle().getBackground().setColor(FMTB.rgba(color));
+		}
+		else if(list == null) label.getStyle().getBackground().setColor(FMTB.rgba(selected() ? compound.visible ? 0xa37a18 : 0xd6ad4b : compound.visible ? 0x5e75e6 : 0xa4b0ed));
 		else label.getStyle().getBackground().setColor(FMTB.rgba(list.selected ? list.visible ? 0xa37a18 : 0xd6ad4b : list.visible ? 0x28a148 : 0x6bbf81));
 	}
 	

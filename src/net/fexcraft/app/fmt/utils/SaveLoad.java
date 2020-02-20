@@ -346,7 +346,8 @@ public class SaveLoad {
 							}
 						}
 						anim.active = JsonUtil.getIfExists(animjsn, "active", true);
-						list.animations.add(anim);
+						list.animations.add(anim); list.abutton.update();
+						anim.button.setRoot(list.abutton);
 					}
 				}
 			}

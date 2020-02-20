@@ -512,7 +512,7 @@ public class FMTB {
 			Trees.fvtm.addSub(list.abutton); list.abutton.updateColor();
 		}//fix for loaded-in groups that should display "not-visible" color
 		for(GroupCompound com : HelperCollector.LOADED){ Trees.helper.addSub(com.button); com.button.updateColor(); }
-		Trees.polygon.reOrderGroups(); Trees.helper.reOrderGroups();
+		Trees.polygon.reOrderGroups(); Trees.fvtm.reOrderGroups(); Trees.helper.reOrderGroups();
 	}
 
 }

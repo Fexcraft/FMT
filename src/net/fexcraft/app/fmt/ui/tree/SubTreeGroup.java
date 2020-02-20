@@ -63,11 +63,12 @@ public class SubTreeGroup extends Panel {
 		}, "visibility"));
 	}
 
-	public SubTreeGroup(TreeBase base, Animation animation){
-		this(base); this.animation = animation; updateColor();
+	public SubTreeGroup(TreeBase base, Animation anim){
+		this(base); this.animation = anim; updateColor();
 		this.add(new TreeIcon((int)getSize().x - 20, 0, "group_delete", () -> {
 			DialogBox.showYN(null, () -> {
-				animation.group.animations.remove(animation); FMTB.MODEL.updateFields();
+				animation.button.removeFromSubTree(); animation.group.animations.remove(animation);
+				animation.group.abutton.recalculateSize(); FMTB.MODEL.updateFields();
 			}, null, "tree.fvtm.remove_animation", "#" + animation.id);
 		}, "delete"));
 		this.add(new TreeIcon((int)getSize().x - 42, 0, "group_visible", () -> {
@@ -96,14 +97,14 @@ public class SubTreeGroup extends Panel {
 	}
 	
 	public void updateColor(){
-		if(animation != null){ label.getStyle().getBackground().setColor(FMTB.rgba(animation.active ? 0xa37a18 : 0xd6ad4b)); return; }
+		if(animation != null){ label.getStyle().getBackground().setColor(FMTB.rgba(animation.active ? 0x28a148 : 0x6bbf81)); return; }
 		if(list == null) label.getStyle().getBackground().setColor(FMTB.rgba(polygon.selected ? polygon.visible ? 0xa37a18 : 0xd6ad4b : polygon.visible ? 0x28a148 : 0x6bbf81));
 		else label.getStyle().getBackground().setColor(FMTB.rgba(list.selected ? list.visible ? 0xa37a18 : 0xd6ad4b : list.visible ? 0x28a148 : 0x6bbf81));
 	}
 
 	public void refreshPosition(){
 		if(animation != null){
-			this.setPosition(10, (animation.group.animations.indexOf(animation) * 22) + 22);
+			this.setPosition(10, (animation.group.animations.indexOf(animation) * 22) + 22); return;
 		}
 		if(list == null){
 			this.setPosition(10, (polygon.getTurboList().indexOf(polygon) * 22) + 22);

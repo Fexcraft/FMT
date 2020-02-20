@@ -42,14 +42,14 @@ public class SettingsBox {
         	if(setting.getType().isBoolean()){
         		panel.getContainer().add(new BoolButton(setting, 190, 10 + (index * 30), 290, 20));
         	}
-        	else if(setting.getType() == Type.STRING || setting.getType() == Type.FLOAT_ARRAY){
-        		panel.getContainer().add(new TextField(setting, 190, 10 + (index * 30), 290, 20));
-        	}
         	else if(setting.getType() == Type.FLOAT || setting.getType() == Type.INTEGER){
         		panel.getContainer().add(new NumberField(setting, 190, 10 + (index * 30), 290, 20));
         	}
         	else if(setting.getType() == Type.RGB){
         		panel.getContainer().add(new ColorField(panel.getContainer(), setting, 190, 10 + (index * 30), 290, 20));
+        	}
+        	else{// if(setting.getType() == Type.STRING || setting.getType() == Type.FLOAT_ARRAY){
+        		panel.getContainer().add(new TextField(setting, 190, 10 + (index * 30), 290, 20));
         	}
         	index++;
         }

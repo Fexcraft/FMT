@@ -232,7 +232,9 @@ public class ModelGroupEditor extends EditorBase {
 								settings -> { anim.onSettingsUpdate(); FMTB.MODEL.updateFields();});
 						}
 						else if(listener.getButton() == MouseButton.MOUSE_BUTTON_RIGHT){
-							list.animations.remove(j); FMTB.MODEL.updateFields();
+							Animation anim = list.animations.get(j);
+							anim.button.removeFromSubTree(); list.animations.remove(anim);
+							list.abutton.recalculateSize(); FMTB.MODEL.updateFields();
 						}
 					});
 					button.getStyle().setHorizontalAlign(HorizontalAlign.LEFT);
@@ -255,7 +257,8 @@ public class ModelGroupEditor extends EditorBase {
 		ArrayList<TurboList> lists = FMTB.MODEL.getDirectlySelectedGroups();
 		SettingsBox.open(translate("editor.model_group.group.animator_settings"), ani.settings.values(), false, settings -> {
 			for(TurboList list : lists){
-				list.animations.add(ani.copy(list));
+				Animation anim = ani.copy(list); list.animations.add(anim);
+				anim.button.setRoot(list.abutton);
 			} FMTB.MODEL.updateFields();
 		}); 
 		return;

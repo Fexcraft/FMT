@@ -44,7 +44,6 @@ import net.fexcraft.app.fmt.utils.ImageHelper;
 import net.fexcraft.app.fmt.utils.SaveLoad;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
-import net.fexcraft.app.fmt.utils.Settings.Type;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.app.fmt.utils.TextureUpdate;
@@ -52,7 +51,6 @@ import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.app.fmt.wrappers.*;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
-import net.fexcraft.lib.common.utils.Print;
 
 public class UserInterpanels {
 
@@ -329,30 +327,7 @@ public class UserInterpanels {
 		public TextField(Setting setting, int x, int y, int w, int h) {
 			this(setting.toString(), x, y, w, h); setupHoverCheck(this);
 			this.addTextInputContentChangeEventListener(event -> {
-				String string = validateString(event);
-				if(setting.getType() == Type.STRING) setting.setValue(string);
-				else if(setting.getType() == Type.FLOAT){
-					String[] arr = string.trim().split(",");
-					float[] flt = new float[arr.length];
-					for(int i = 0; i < flt.length; i++){
-						flt[i] = Float.parseFloat(arr[i]);
-					}
-					if(((float[])setting.getValue()).length == flt.length){
-						setting.setValue(flt);
-					}
-					else{
-						float[] src = setting.getValue();
-						for(int i = 0; i < src.length; i++){
-							if(i >= flt.length) break; src[i] = flt[i];
-						}
-					}
-				}
-				else if(setting.getType() == Type.RGB){
-					((RGB)setting.getValue()).packed = Integer.parseInt(string.replace("#", ""), 16);
-				}
-				else {
-					Print.console("invalid setting type for text field / " + setting.getType() + " / " + setting.getId());
-				}
+				setting.validateAndApply(validateString(event));
 			});
 		}
 		
@@ -367,10 +342,10 @@ public class UserInterpanels {
 		public NumberField(Setting setting, int x, int y, int w, int h){
 			super(setting.toString(), x, y, w, h); getStyle().setFontSize(20f); setupHoverCheck(this);
 			getListenerMap().addListener(FocusEvent.class, (FocusEventListener)listener -> {
-				if(!listener.isFocused()){ setting.setValue((float)getValue()); }
+				if(!listener.isFocused()){ setting.validateAndApply(getTextState().getText()); }
 			});
 			getListenerMap().addListener(KeyEvent.class, (KeyEventListener)listener -> {
-				if(listener.getKey() == GLFW.GLFW_KEY_ENTER){ setting.setValue((float)getValue()); }
+				if(listener.getKey() == GLFW.GLFW_KEY_ENTER){ setting.validateAndApply(getTextState().getText()); }
 			});
 		}
 
@@ -463,7 +438,7 @@ public class UserInterpanels {
 		}
 		
 		public BoolButton(Setting setting, int x, int y, int w, int h){
-			super("false", x, y, w, h); this.getStyle().setBorderRadius(0f); setupHoverCheck(this);
+			super(setting.getBooleanValue() + "", x, y, w, h); this.getStyle().setBorderRadius(0f); setupHoverCheck(this);
 	        this.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)event -> {
 	            if(event.getAction() == CLICK){
 	    			setting.toggle(); getTextState().setText(setting.getBooleanValue() + "");
