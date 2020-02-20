@@ -54,6 +54,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.Configuration;
 import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -135,10 +136,8 @@ public class FMTB {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
         //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        window = glfwCreateWindow(WIDTH, HEIGHT, "Fex's Modelling Toolbox", 0, 0);
-        if(window == 0) {
-            throw new RuntimeException("Failed to create window");
-        }
+        window = glfwCreateWindow(WIDTH, HEIGHT, "Fex's Modelling Toolbox", MemoryUtil.NULL, MemoryUtil.NULL);
+        if(window == MemoryUtil.NULL) throw new RuntimeException("Failed to create window");
         glfwMakeContextCurrent(window);
         GL.createCapabilities();
 		//GLUtil.setupDebugMessageCallback();
