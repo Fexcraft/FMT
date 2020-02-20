@@ -77,7 +77,7 @@ public class PorterManager {
 		FileSelector.select(Translator.translate("eximporter.export.title", "Select Export Location"), "./exports", true, (file, porter, settings) -> {
 			try{
 				if(file == null){
-					DialogBox.showOK("eximporter.export.nofile", null, null, "eximporter.import.nofile.desc");
+					DialogBox.showOK("eximporter.export.nofile", null, null, "eximporter.export.nofile.desc");
 					return;
 				}
 				String result = porter.exportModel(FMTB.MODEL, file, settings);
