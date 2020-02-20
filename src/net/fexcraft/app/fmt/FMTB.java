@@ -77,7 +77,7 @@ import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Time;
 import net.fexcraft.lib.common.utils.HttpUtil;
 import net.fexcraft.lib.common.utils.Print;
-import net.fexcraft.lib.tmt.ModelRendererTurbo;
+import net.fexcraft.lib.local_tmt.ModelRendererTurbo;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -88,7 +88,7 @@ public class FMTB {
 	
 	public static final String deftitle = "[FPS:%s] Fexcraft Modelling Toolbox - %s";
 	public static final String deftitle0 = "Fexcraft Modelling Toolbox - %s";
-	public static final String version = "2.0.1";
+	public static final String version = "2.0.2";
 	public static final String CLID = "587016218196574209";
 	//
 	public static GGR ggr;

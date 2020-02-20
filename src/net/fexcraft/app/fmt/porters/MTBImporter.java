@@ -30,7 +30,7 @@ import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.common.utils.Print;
 import net.fexcraft.lib.common.utils.ZipUtil;
-import net.fexcraft.lib.tmt.ModelRendererTurbo;
+import net.fexcraft.lib.local_tmt.ModelRendererTurbo;
 
 /**
  * @author EternalBlueFlame, FEX___96

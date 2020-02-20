@@ -7,7 +7,7 @@ import com.google.gson.JsonObject;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
-import net.fexcraft.lib.tmt.ModelRendererTurbo;
+import net.fexcraft.lib.local_tmt.ModelRendererTurbo;
 
 public class ShapeboxWrapper extends BoxWrapper {
 	

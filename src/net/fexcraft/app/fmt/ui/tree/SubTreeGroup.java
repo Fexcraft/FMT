@@ -52,7 +52,7 @@ public class SubTreeGroup extends Panel {
 			Editors.show("general");
 		}, "edit"));
 		label.getListenerMap().addListener(MouseClickEvent.class, listener -> {
-			if(listener.getAction() != CLICK || listener.getButton() != MouseButton.MOUSE_BUTTON_LEFT) return;
+			if(list == null || listener.getAction() != CLICK || listener.getButton() != MouseButton.MOUSE_BUTTON_LEFT) return;
 			boolean sell = list.selected; if(!GGR.isShiftDown()){ FMTB.MODEL.clearSelection(); }
 			list.selected = !sell; FMTB.MODEL.updateFields(); FMTB.MODEL.lastselected = null; updateColor();
 			GroupCompound.SELECTED_POLYGONS = FMTB.MODEL.countSelectedMRTs();

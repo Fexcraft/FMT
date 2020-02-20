@@ -6,7 +6,7 @@ import java.io.FileInputStream;
 import com.google.gson.JsonObject;
 
 import net.fexcraft.lib.common.utils.WavefrontObjUtil;
-import net.fexcraft.lib.tmt.ModelRendererTurbo;
+import net.fexcraft.lib.local_tmt.ModelRendererTurbo;
 
 public class ObjPreviewWrapper extends PolygonWrapper {
 	
