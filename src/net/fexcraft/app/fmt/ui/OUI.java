@@ -4,7 +4,7 @@ package net.fexcraft.app.fmt.ui;
  * @author Ferdinand Calo' (FEX___96)
  *
  */
-public class UserInterface {
+public class OUI {
 	
 	/*private Element tmelm = new TextField(null, "text", "screenshot:title", 4, 4, 500){
 		@Override

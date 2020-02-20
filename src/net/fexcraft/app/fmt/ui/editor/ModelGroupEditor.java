@@ -19,10 +19,10 @@ import org.liquidengine.legui.style.Background;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.FileSelector;
 import net.fexcraft.app.fmt.ui.SettingsBox;
-import net.fexcraft.app.fmt.ui.UserInterpanels;
-import net.fexcraft.app.fmt.ui.UserInterpanels.ColorField;
-import net.fexcraft.app.fmt.ui.UserInterpanels.NumberField;
-import net.fexcraft.app.fmt.ui.UserInterpanels.TextField;
+import net.fexcraft.app.fmt.ui.UserInterfaceUtils;
+import net.fexcraft.app.fmt.ui.UserInterfaceUtils.ColorField;
+import net.fexcraft.app.fmt.ui.UserInterfaceUtils.NumberField;
+import net.fexcraft.app.fmt.ui.UserInterfaceUtils.TextField;
 import net.fexcraft.app.fmt.utils.Animator;
 import net.fexcraft.app.fmt.utils.Animator.Animation;
 import net.fexcraft.app.fmt.utils.TextureManager;
@@ -101,7 +101,7 @@ public class ModelGroupEditor extends EditorBase {
 		});
 		model.getContainer().add(new Label(translate("editor.model_group.model.name"), 3, pass += 24, 290, 20));
 		model.getContainer().add(model_name = new TextField(FMTB.MODEL.name, 3, pass += 24, 290, 20));
-		model_name.addTextInputContentChangeEventListener(listener -> name_cache = UserInterpanels.validateString(listener));
+		model_name.addTextInputContentChangeEventListener(listener -> name_cache = UserInterfaceUtils.validateString(listener));
 		model_name.getListenerMap().addListener(FocusEvent.class, listener -> {
 			if(!listener.isFocused() && !name_cache.equals(FMTB.MODEL.name))
 				FMTB.get().setTitle(FMTB.MODEL.name = name_cache); FMTB.MODEL.button.update();
@@ -117,7 +117,7 @@ public class ModelGroupEditor extends EditorBase {
 		}, 3, pass += 24, 290, 20));
 		group.getContainer().add(new Label(translate("editor.model_group.group.name"), 3, pass += 24, 290, 20));
 		group.getContainer().add(group_name = new TextField(FMTB.NO_POLYGON_SELECTED, 3, pass += 24, 290, 20));
-		group_name.addTextInputContentChangeEventListener(listener -> name_cache = UserInterpanels.validateString(listener));
+		group_name.addTextInputContentChangeEventListener(listener -> name_cache = UserInterfaceUtils.validateString(listener));
 		group_name.getListenerMap().addListener(FocusEvent.class, listener -> {
 			if(!listener.isFocused() && !FMTB.MODEL.getSelected().isEmpty()){
 				TurboList list = null;

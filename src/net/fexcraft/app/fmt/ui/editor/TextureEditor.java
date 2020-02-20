@@ -8,7 +8,7 @@ import org.liquidengine.legui.event.MouseClickEvent.MouseClickAction;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.FunctionButton;
-import net.fexcraft.app.fmt.ui.UserInterpanels.ColorField;
+import net.fexcraft.app.fmt.ui.UserInterfaceUtils.ColorField;
 import net.fexcraft.lib.common.math.RGB;
 
 public class TextureEditor extends EditorBase {

@@ -52,7 +52,7 @@ import net.fexcraft.app.fmt.wrappers.*;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
 
-public class UserInterpanels {
+public class UserInterfaceUtils {
 
 	public static final Runnable NOTHING = () -> {};
 	public static final MouseClickEventListener NOT_AVAILABLE_YET = event -> {
@@ -236,7 +236,13 @@ public class UserInterpanels {
 			this.getStyle().setBorderRadius(0f);
 			Label tatle = new Label(title, 4, 0, 50, 28);
 			this.add(tatle); tatle.getStyle().setFontSize(28f);
-			Background background = new Background(); background.setColor(new Vector4f(0.9f, 0.9f, 0.9f, 1));
+			Background background = new Background();
+			if(!Settings.darktheme()){
+				background.setColor(new Vector4f(0.9f, 0.9f, 0.9f, 1));
+			}
+			else {
+				background.setColor(new Vector4f(0.3f, 0.3f, 0.3f, 1));
+			}
 			this.getStyle().setBackground(background);
 	        this.getListenerMap().addListener(CursorEnterEvent.class, (CursorEnterEventListener)lis -> { if(!lis.isEntered()) this.checkClose(); });
 			//
@@ -359,7 +365,7 @@ public class UserInterpanels {
 		public NumberField setup(String id, float min, float max, boolean flaot){
 			floatfield = flaot; this.min = min; this.max = max; fieldid = id;
 			addTextInputContentChangeEventListener(event -> {
-				UserInterpanels.validateNumber(event); value = null;
+				UserInterfaceUtils.validateNumber(event); value = null;
 			});
 			getListenerMap().addListener(FocusEvent.class, (FocusEventListener)listener -> {
 				if(!listener.isFocused()) FMTB.MODEL.updateValue(this, id);
@@ -374,7 +380,7 @@ public class UserInterpanels {
 		public NumberField setup(float min, float max, boolean flaot, Runnable update){
 			floatfield = flaot; this.min = min; this.max = max; this.update = update;
 			addTextInputContentChangeEventListener(event -> {
-				UserInterpanels.validateNumber(event); value = null;
+				UserInterfaceUtils.validateNumber(event); value = null;
 			});
 			getListenerMap().addListener(FocusEvent.class, (FocusEventListener)listener -> {
 				if(!listener.isFocused()) update.run();
@@ -488,7 +494,7 @@ public class UserInterpanels {
 		public ColorField(Component root, String field, int x, int y, int w, int h){
 			super("0xffffff", x, y, root == null ? w : w - 40, h); fieldid = field;setupHoverCheck(this);
 			addTextInputContentChangeEventListener(event -> {
-				UserInterpanels.validateColorString(event); value = null;
+				UserInterfaceUtils.validateColorString(event); value = null;
 			});
 			getListenerMap().addListener(FocusEvent.class, (FocusEventListener)listener -> {
 				if(!listener.isFocused()){

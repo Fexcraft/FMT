@@ -9,6 +9,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
@@ -22,6 +23,7 @@ public class Settings {
 	private static Setting floor, lines, demo, cube, polygon_marker, lighting, cullface, animate,
 		discordrpc, discordrpc_sm, discordrpc_rtonm, numberfieldarrows, preview_colorpicker;
 	public static Setting movespeed, mouse_sensivity, internal_cursor, vsync;
+	public static Setting darktheme;
 
 	public static boolean floor(){ return floor.getValue(); }
 
@@ -54,6 +56,8 @@ public class Settings {
 	public static boolean internal_cursor(){ return internal_cursor.getValue(); }
 
 	public static boolean vsync(){ return vsync.getValue(); }
+
+	public static boolean darktheme(){ return darktheme.getValue(); }
 	
 	//
 
@@ -141,6 +145,7 @@ public class Settings {
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "bottombar", false));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "numberfield_arrows", true));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "preview_colorpicker", false));
+		DEFAULTS.add(new Setting(Type.BOOLEAN, "dark_theme", false));
 		//
 		/*DEFAULTS.add(new Setting(Type.STRING, "filedir_last_type", "SAVES"));
 		DEFAULTS.add(new Setting(Type.STRING, "filedir_last", "./saves"));
@@ -196,6 +201,7 @@ public class Settings {
 		vsync = SETTINGS.get("vsync");
 		//internal_cursor = SETTINGS.get("internal_cursor");
 		//FileSelector.FileRoot.last = FileRoot.valueOf(SETTINGS.get("filedir_last_type").getStringValue());
+		darktheme = SETTINGS.get("dark_theme");
 	}
 
 	public static void save(){
@@ -300,6 +306,9 @@ public class Settings {
 		
 		public boolean toggle(){
 			if(value instanceof Boolean){
+				if(this.id.equals("dark_theme")){
+					DialogBox.showOK(null, null, null, "settingsbox.darktheme.mayneedrestart");
+				}
 				return (boolean)(value = !(boolean)value);
 			} else return false;
 		}

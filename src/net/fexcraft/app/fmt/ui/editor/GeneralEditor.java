@@ -13,11 +13,11 @@ import org.liquidengine.legui.event.MouseClickEvent;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.DialogBox;
-import net.fexcraft.app.fmt.ui.UserInterpanels;
-import net.fexcraft.app.fmt.ui.UserInterpanels.BoolButton;
-import net.fexcraft.app.fmt.ui.UserInterpanels.ColorField;
-import net.fexcraft.app.fmt.ui.UserInterpanels.NumberField;
-import net.fexcraft.app.fmt.ui.UserInterpanels.TextField;
+import net.fexcraft.app.fmt.ui.UserInterfaceUtils;
+import net.fexcraft.app.fmt.ui.UserInterfaceUtils.BoolButton;
+import net.fexcraft.app.fmt.ui.UserInterfaceUtils.ColorField;
+import net.fexcraft.app.fmt.ui.UserInterfaceUtils.NumberField;
+import net.fexcraft.app.fmt.ui.UserInterfaceUtils.TextField;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
@@ -86,7 +86,7 @@ public class GeneralEditor extends EditorBase {
         attributes.getContainer().add(new Label(translate("editor.general.attributes.name"), 3, pass += 24, 290, 20));
         attributes.getContainer().add(polygon_name = new TextField(FMTB.NO_POLYGON_SELECTED, 3, pass += 24, 290, 20));
         polygon_name.addTextInputContentChangeEventListener(event -> {
-			String validated = UserInterpanels.validateString(event);
+			String validated = UserInterfaceUtils.validateString(event);
 			if(FMTB.MODEL.getSelected().isEmpty()) return; PolygonWrapper wrapper;
 			if(FMTB.MODEL.getSelected().size() == 1){
 				wrapper = FMTB.MODEL.getFirstSelection();
@@ -118,7 +118,7 @@ public class GeneralEditor extends EditorBase {
         	if(event.getAction() != CLICK) return;
 			if(FMTB.MODEL.texture == null){
 				DialogBox.show(null, "dialogbox.button.ok", "dialogbox.button.load", null, () -> {
-					UserInterpanels.SELECT_TEXTURE.run();
+					UserInterfaceUtils.SELECT_TEXTURE.run();
 				}, "editor.general.attributes.painttotexture.notex");
 			}
 			else{
@@ -127,7 +127,7 @@ public class GeneralEditor extends EditorBase {
 					String texname = poly.getTurboList().getGroupTexture() == null ? FMTB.MODEL.texture : poly.getTurboList().getGroupTexture();
 					Texture tex = TextureManager.getTexture(texname, true);
 					if(tex == null){//TODO group tex compensation
-						DialogBox.showOK(null, () -> { UserInterpanels.SELECT_TEXTURE.run(); }, null, "editor.general.attributes.painttotexture.tex_not_found");
+						DialogBox.showOK(null, () -> { UserInterfaceUtils.SELECT_TEXTURE.run(); }, null, "editor.general.attributes.painttotexture.tex_not_found");
 						return;
 					}
 					poly.burnToTexture(tex.getImage(), null); poly.recompile(); TextureManager.saveTexture(texname); tex.rebind();

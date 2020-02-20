@@ -14,10 +14,10 @@ import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.listener.MouseClickEventListener;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.UserInterpanels.BoolButton;
-import net.fexcraft.app.fmt.ui.UserInterpanels.ColorField;
-import net.fexcraft.app.fmt.ui.UserInterpanels.NumberField;
-import net.fexcraft.app.fmt.ui.UserInterpanels.TextField;
+import net.fexcraft.app.fmt.ui.UserInterfaceUtils.BoolButton;
+import net.fexcraft.app.fmt.ui.UserInterfaceUtils.ColorField;
+import net.fexcraft.app.fmt.ui.UserInterfaceUtils.NumberField;
+import net.fexcraft.app.fmt.ui.UserInterfaceUtils.TextField;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.utils.Settings.Type;
@@ -54,7 +54,7 @@ public class SettingsBox {
         	index++;
         }
         panel.setHorizontalScrollBarVisible(false);
-        Button button = new Button(UserInterpanels.translate("settingsbox." + (settings ? "confirm" : "continue")), 10, 300, 100, 20);
+        Button button = new Button(UserInterfaceUtils.translate("settingsbox." + (settings ? "confirm" : "continue")), 10, 300, 100, 20);
         button.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
         	if(CLICK == e.getAction()){ task.process(map); dialog.close(); }
         });
@@ -71,7 +71,7 @@ public class SettingsBox {
 	}
 
 	public static void openFMTSettings(){
-		SettingsBox.open(UserInterpanels.translate("toolbar.file.settings"), Settings.SETTINGS.values(), true, settings -> {});
+		SettingsBox.open(UserInterfaceUtils.translate("toolbar.file.settings"), Settings.SETTINGS.values(), true, settings -> {});
 	}
 
 }

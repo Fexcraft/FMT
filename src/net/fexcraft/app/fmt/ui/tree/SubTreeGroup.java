@@ -12,7 +12,7 @@ import org.liquidengine.legui.style.Style.DisplayType;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.ui.SettingsBox;
-import net.fexcraft.app.fmt.ui.UserInterpanels;
+import net.fexcraft.app.fmt.ui.UserInterfaceUtils;
 import net.fexcraft.app.fmt.ui.editor.Editors;
 import net.fexcraft.app.fmt.utils.Animator.Animation;
 import net.fexcraft.app.fmt.utils.GGR;
@@ -75,7 +75,7 @@ public class SubTreeGroup extends Panel {
 			animation.active = !animation.active; updateColor();
 		}, "visibility"));
 		this.add(new TreeIcon((int)getSize().x - 64, 0, "group_edit", () -> {
-			SettingsBox.open("[" + animation.id + "] " + UserInterpanels.translate("editor.model_group.group.animator_settings"), animation.settings.values(), false,
+			SettingsBox.open("[" + animation.id + "] " + UserInterfaceUtils.translate("editor.model_group.group.animator_settings"), animation.settings.values(), false,
 				settings -> { animation.onSettingsUpdate(); });
 		}, "edit"));
 	}
