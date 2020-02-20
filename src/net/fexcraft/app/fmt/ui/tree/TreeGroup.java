@@ -9,6 +9,7 @@ import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.Panel;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.input.Mouse.MouseButton;
+import org.liquidengine.legui.style.color.ColorConstants;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager;
@@ -18,6 +19,7 @@ import net.fexcraft.app.fmt.ui.editor.Editors;
 import net.fexcraft.app.fmt.ui.editor.PreviewEditor;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.HelperCollector;
+import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.TurboList;
@@ -39,6 +41,7 @@ public class TreeGroup extends Panel {
 		label.getStyle().setFont("roboto-bold");
 		label.getStyle().setPadding(0, 0, 0, 5);
 		label.getStyle().setBorderRadius(0);
+		if(Settings.darktheme()) label.getStyle().setTextColor(ColorConstants.darkGray());
 	}
 	
 	public TreeGroup(TreeBase base, TurboList group, boolean flag){

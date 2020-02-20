@@ -71,7 +71,7 @@ public class UserInterfaceUtils {
 	};
 	public static final Runnable SELECT_TEXTURE = () -> {
 		FileSelector.select(translate("toolbar.textures.select.dialog"), "./", FileSelector.TYPE_PNG, false, file -> {
-			String name = file.getPath(); TextureManager.loadTextureFromFile(name, file); FMTB.MODEL.setTexture(name);
+			if(file == null) return; String name = file.getPath(); TextureManager.loadTextureFromFile(name, file); FMTB.MODEL.setTexture(name);
 			//
 			/*Texture tex = TextureManager.getTexture(name, true); if(tex == null) return;
 			if(tex.getWidth() > FMTB.MODEL.textureX) FMTB.MODEL.textureX = tex.getWidth();

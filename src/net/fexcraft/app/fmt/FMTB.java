@@ -88,7 +88,7 @@ public class FMTB {
 	
 	public static final String deftitle = "[FPS:%s] Fexcraft Modelling Toolbox - %s";
 	public static final String deftitle0 = "Fexcraft Modelling Toolbox - %s";
-	public static final String version = "2.0.0";
+	public static final String version = "2.0.1";
 	public static final String CLID = "587016218196574209";
 	//
 	public static GGR ggr;
@@ -535,7 +535,7 @@ public class FMTB {
 				String welcome = Translator.translate("dialog.welcome.title");
 				String cversion = Translator.format("dialog.welcome.version", version);
 				String new_title = Translator.format("dialog.welcome.title_new", newver, version);
-				String new_version = Translator.format("dialog.welcome.version_new", "%s >> %s", newver, version);
+				String new_version = Translator.format("dialog.welcome.version_new", newver, version);
 				//
 		        Dialog dialog = new Dialog(bool ? welcome : new_title, 300, 100);
 		        Label label = new Label(bool ? cversion : new_version, 10, 10, 200, 20);
