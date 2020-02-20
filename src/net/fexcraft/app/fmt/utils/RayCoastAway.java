@@ -21,6 +21,7 @@ public class RayCoastAway {
 	public static boolean PICKING, MOUSEOFF;
 	private static ByteBuffer buffer;
 	static { buffer = ByteBuffer.allocateDirect(4); buffer.order(ByteOrder.nativeOrder()); }
+	public static final int CORRECTOR = 16777216;
 	
 	public static void doTest(boolean bool){
 		doTest(bool, MOUSEOFF);
@@ -34,7 +35,7 @@ public class RayCoastAway {
 		GL11.glReadPixels(width / 2, height / 2, 1, 1, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
 		byte[] byteArray = new byte[4]; buffer.get(byteArray);
 		//Print.console((((int) byteArray[0]) & 0xFF) + " " + (((int) byteArray[1]) & 0xFF) + " "  + (((int) byteArray[2]) & 0xFF));
-		int id = new Color(((int) byteArray[0]) & 0xFF, ((int) byteArray[1]) & 0xFF, ((int) byteArray[2]) & 0xFF).getRGB() + 16777216;
+		int id = new Color(((int) byteArray[0]) & 0xFF, ((int) byteArray[1]) & 0xFF, ((int) byteArray[2]) & 0xFF).getRGB() + CORRECTOR;
 		//Print.console(id + "-ID");
 		buffer.clear(); PICKING = false; MOUSEOFF = false;
 		if(TextureEditor.pixelMode()){
@@ -52,12 +53,12 @@ public class RayCoastAway {
 			//Print.console(id);
 			for(int x = 0; x < image.getWidth(); x++){
 				for(int y = 0; y < image.getHeight(); y++){
-					if(new Color(image.getRGB(x, y)).getRGB() + 16777216 == id){
+					if(new Color(image.getRGB(x, y)).getRGB() + CORRECTOR == id){
 						if(TextureEditor.colorPicker()){
 							TextureEditor.updateColor(tex.getImage().getRGB(x, y));
 						}
 						else{
-							tex.getImage().setRGB(x, y, new Color(TextureEditor.CURRENTCOLOR.packed).getRGB()); tex.rebind();
+							tex.getImage().setRGB(x, y, new Color(TextureEditor.CURRENTCOLOR.getColorInt()).getRGB()); tex.rebind();
 							TextureManager.saveTexture(FMTB.MODEL.texture); return;
 						}
 					} else continue;
