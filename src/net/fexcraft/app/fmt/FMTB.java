@@ -491,7 +491,7 @@ public class FMTB {
 	
 	public static void perspective(float fovY, float aspect, float zNear, float zFar){
 		float fW, fH; fH = (float)(Math.tan( fovY / 360 * Static.PI) * zNear); fW = fH * aspect;
-	    GL11.glFrustum( -fW, fW, -fH, fH, zNear, zFar );
+	    GL11.glFrustum( -fW, fW, -fH, fH, zNear, zFar);
 	}
 
 	private void setLightPos(float[] position){

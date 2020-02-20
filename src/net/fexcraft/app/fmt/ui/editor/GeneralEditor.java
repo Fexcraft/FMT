@@ -187,7 +187,7 @@ public class GeneralEditor extends EditorBase {
 		cylinder.getContainer().add(cyl2_x = new NumberField(4, pass += 24, 90, 20).setup("cyl2x", 0, Integer.MAX_VALUE, true));
 		cylinder.getContainer().add(cyl2_y = new NumberField(102, pass, 90, 20).setup("cyl2y", 0, Integer.MAX_VALUE, true));
 		cylinder.getContainer().add(new Label(translate("editor.general.cylinder.top_offset"), 3, pass += 24, 290, 20));
-		cylinder.getContainer().add(cyl3_x = new NumberField(4, pass += 24, 90, 20).setup("cyl0x", 1, Integer.MAX_VALUE, true));
+		cylinder.getContainer().add(cyl3_x = new NumberField(4, pass += 24, 90, 20).setup("cyl3x", 1, Integer.MAX_VALUE, true));
 		cylinder.getContainer().add(cyl3_y = new NumberField(102, pass, 90, 20).setup("cyl3y", 1, Integer.MAX_VALUE, true));
 		cylinder.getContainer().add(cyl3_z = new NumberField(200, pass, 90, 20).setup("cyl3z", 0, Integer.MAX_VALUE, true));
 		cylinder.getContainer().add(new Label(translate("editor.general.cylinder.top_rotation"), 3, pass += 24, 290, 20));
