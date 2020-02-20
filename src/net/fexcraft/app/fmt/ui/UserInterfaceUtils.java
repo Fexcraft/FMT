@@ -417,7 +417,7 @@ public class UserInterfaceUtils {
 		@Override
 		public void onScroll(double yoffset){
 			apply(tryAdd(getValue(), yoffset > 0, FMTB.MODEL.rate)); //Print.console(value);
-			if(fieldid != null) FMTB.MODEL.updateValue(this, fieldid, true); if(update != null) update.run();
+			if(fieldid != null) FMTB.MODEL.updateValue(this, fieldid, yoffset > 0); if(update != null) update.run();
 		}
 
 		@Override
@@ -475,7 +475,7 @@ public class UserInterfaceUtils {
 		@Override
 		public void onScroll(double yoffset){
 			apply(tryAdd(getValue(), yoffset > 0, FMTB.MODEL.rate));
-			FMTB.MODEL.updateValue(this, fieldid, true);
+			FMTB.MODEL.updateValue(this, fieldid, yoffset > 0);
 		}
 
 		@Override
@@ -586,7 +586,7 @@ public class UserInterfaceUtils {
 		@Override
 		public void onScroll(double yoffset){
 			apply(tryAdd(getValue(), yoffset > 0, FMTB.MODEL.rate));
-			FMTB.MODEL.updateValue(this, fieldid, true);
+			FMTB.MODEL.updateValue(this, fieldid, yoffset > 0);
 		}
 
 		@Override
