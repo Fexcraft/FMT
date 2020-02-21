@@ -11,7 +11,7 @@ import static org.lwjgl.glfw.GLFW.glfwSetInputMode;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.UserInterfaceUtils.Field;
+import net.fexcraft.app.fmt.ui.field.Field;
 import net.fexcraft.lib.common.math.Vec3f;
 
 /** CCR */

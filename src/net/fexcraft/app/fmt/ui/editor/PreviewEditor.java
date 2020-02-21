@@ -2,7 +2,7 @@ package net.fexcraft.app.fmt.ui.editor;
 
 import org.liquidengine.legui.component.Label;
 
-import net.fexcraft.app.fmt.ui.UserInterfaceUtils.NumberField;
+import net.fexcraft.app.fmt.ui.field.NumberField;
 import net.fexcraft.app.fmt.utils.HelperCollector;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.lib.common.math.Vec3f;
