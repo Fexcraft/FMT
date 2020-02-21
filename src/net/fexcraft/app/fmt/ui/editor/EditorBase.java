@@ -14,6 +14,7 @@ import org.liquidengine.legui.event.ScrollEvent;
 import org.liquidengine.legui.style.Style.DisplayType;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.lib.common.Static;
 
@@ -33,29 +34,31 @@ public class EditorBase extends Panel {
 			Slider multislider = new Slider(148, 4 + off, 150, 14);
 			switch(string){
 				case "normal":{
-					multislider.setMinValue(0); multislider.setMaxValue(64);
+					multislider.setMinValue(1); multislider.setMaxValue(16);
 					multislider.setStepSize(1); multislider.setValue(1f); am = 0;
 					break;
 				}
 				case "sixteenth":{
-					multislider.setMinValue(0); multislider.setMaxValue(1); am = 4;
+					multislider.setMinValue(Static.sixteenth); multislider.setMaxValue(1); am = 4;
 					multislider.setStepSize(Static.sixteenth); multislider.setValue(1f);
 					break;
 				}
 				case "decimal":{
-					multislider.setMinValue(0); multislider.setMaxValue(1); am = 1;
+					multislider.setMinValue(0.1f); multislider.setMaxValue(1); am = 1;
 					multislider.setStepSize(0.1f); multislider.setValue(1f);
 					break;
 				}
 			}
 	        final Tooltip multitip = new Tooltip();
-	        multitip.setSize(100, 20); multitip.getStyle().setFontSize(20f);
-	        multitip.setPosition(multislider.getSize().x + 2, 0); final String amo = "%." + am + "f";
+	        multitip.setSize(100, 28); multitip.getStyle().setPadding(0, 0, 0, 5); multitip.getStyle().setFontSize(20f);
+	        multitip.getStyle().getBackground().setColor(Settings.darktheme() ? 0.1f : 0.9f, Settings.darktheme() ? 0.1f : 0.9f, Settings.darktheme() ? 0.1f : 0.9f, 1f);
+	        multitip.setPosition(multislider.getSize().x + 10, 0); final String amo = "%." + am + "f";
 	        multitip.getTextState().setText(translate("editor.multiplicator.value") + String.format(amo, multislider.getValue()));
 	        multislider.addSliderChangeValueEventListener((SliderChangeValueEventListener) event -> {
-	            multitip.getTextState().setText(translate("editor.multiplicator.value") + String.format(amo, event.getNewValue()));
-	            current.getTextState().setText(format("editor.multiplicator.current", event.getNewValue()));
-	            multitip.setSize(100, 28); FMTB.MODEL.rate = event.getNewValue();
+	        	String formatted = String.format(amo, event.getNewValue());
+	            multitip.getTextState().setText(translate("editor.multiplicator.value") + formatted);
+	            current.getTextState().setText(format("editor.multiplicator.current", formatted));
+	            FMTB.MODEL.rate = Float.parseFloat(formatted.replace(",", "."));
 	        });
 	        multislider.setTooltip(multitip);
 	        super.add(multislider); off += 16;
