@@ -166,7 +166,7 @@ public class GeneralEditor extends EditorBase {
 		EditorWidget shapebox = new EditorWidget(this, translate("editor.general.shapebox"), 0, 0, 0, 0);
 		corner_x = new NumberField[8]; corner_y = new NumberField[8]; corner_z = new NumberField[8];
         for(int i = 0; i < 8; i++){
-        	shapebox.getContainer().add(new Label(translate("editor.general.shapebox.corner" + i), 3, pass += 24, 290, 20));
+        	shapebox.getContainer().add(new ShapeboxLabel(i, shapebox, translate("editor.general.shapebox.corner" + i), 3, pass += 24, 290, 20));
 			shapebox.getContainer().add(corner_x[i] = new NumberField(4, pass += 24, 90, 20).setup("cor" + i + "x", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
 			shapebox.getContainer().add(corner_y[i] = new NumberField(102, pass, 90, 20).setup("cor" + i + "y", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
 			shapebox.getContainer().add(corner_z[i] = new NumberField(200, pass, 90, 20).setup("cor" + i + "z", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
