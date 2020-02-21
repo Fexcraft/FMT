@@ -115,9 +115,9 @@ public class FMTB {
 	public static void main(String... args) throws Exception {
         System.setProperty("joml.nounsafe", Boolean.TRUE.toString());
         System.setProperty("java.awt.headless", Boolean.TRUE.toString());
-	    System.setProperty("org.lwjgl.librarypath", new File("./libs/").getAbsolutePath());
-		Configuration.SHARED_LIBRARY_EXTRACT_DIRECTORY.set("./libs/natives");
-		Configuration.SHARED_LIBRARY_EXTRACT_PATH.set("./libs/natives");
+	    System.setProperty("org.lwjgl.librarypath", new File("./lib/").getAbsolutePath());
+		Configuration.SHARED_LIBRARY_EXTRACT_DIRECTORY.set("./lib");
+		Configuration.SHARED_LIBRARY_EXTRACT_PATH.set("./lib");
 	    //
 		//File[] folders = { new File("./saves"), new File("./imports"), new File("./exports") };
 		//for(File folder : folders){ if(!folder.exists()) folder.mkdirs(); }
@@ -129,7 +129,7 @@ public class FMTB {
 	public FMTB setTitle(String string){ title = string; DiscordUtil.update(false); return this; }
 	
 	public void run() throws InterruptedException, IOException, NoSuchMethodException, ScriptException {
-		TextureManager.init(); Settings.load(); StyleSheet.load(); Translator.init(); timer.init();
+		TextureManager.init(); Settings.load(); Translator.init(); timer.init();
         glfwSetErrorCallback(errorCallback = GLFWErrorCallback.createPrint(System.err));
 		if(!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW.");
         glfwWindowHint(GLFW_RESIZABLE, GL11.GL_TRUE);
@@ -282,7 +282,7 @@ public class FMTB {
 		renderer.destroy();
         glfwDestroyWindow(window);   
         glfwTerminate();
-        Settings.save(); StyleSheet.save(); KeyCompound.save(); SessionHandler.save(); System.exit(0);
+        Settings.save(); KeyCompound.save(); SessionHandler.save(); System.exit(0);
 	}
 
 	private void setIcon(){
