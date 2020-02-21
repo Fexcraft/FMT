@@ -1,6 +1,10 @@
 package net.fexcraft.app.fmt.ui.field;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Locale;
 
 import org.liquidengine.legui.component.TextInput;
@@ -17,7 +21,11 @@ import net.fexcraft.app.fmt.utils.Settings.Setting;
 public class NumberField extends TextInput implements Field {
 	
 	public static final NumberFormat nf = NumberFormat.getInstance(Locale.US);
-	static { nf.setMaximumFractionDigits(4); }
+	public static final DecimalFormat df = new DecimalFormat("#.####", new DecimalFormatSymbols(Locale.US));
+	static {
+		nf.setMaximumFractionDigits(4);
+		df.setRoundingMode(RoundingMode.HALF_EVEN);
+	}
 
 	public NumberField(int x, int y, int w, int h){
 		super("0", x, y, w, h); getStyle().setFontSize(20f); UserInterfaceUtils.setupHoverCheck(this);
@@ -84,7 +92,15 @@ public class NumberField extends TextInput implements Field {
 
 	@Override
 	public float tryAdd(float flat, boolean positive, float rate){
-		flat += positive ? rate : -rate; if(flat > max) flat = max; if(flat < min) flat = min; return floatfield ? flat : (int)flat;
+		flat += positive ? rate : -rate; if(flat > max) flat = max; if(flat < min) flat = min;
+		try{
+			Number num = nf.parse(df.format(flat));
+			return floatfield ? num.floatValue() : num.intValue();
+		}
+		catch(ParseException e){
+			e.printStackTrace();
+			return flat;
+		}
 	}
 
 	@Override
