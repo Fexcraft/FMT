@@ -39,7 +39,6 @@ import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.app.fmt.utils.TextureUpdate;
 import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.app.fmt.wrappers.*;
-import net.fexcraft.lib.common.math.Vec3f;
 
 public class UserInterfaceUtils {
 
@@ -96,7 +95,7 @@ public class UserInterfaceUtils {
 			new MenuButton("toolbar.utils.flip.left_right", () -> FMTB.MODEL.flipShapeboxes(0)),
 			new MenuButton("toolbar.utils.flip.up_down", () -> FMTB.MODEL.flipShapeboxes(1)),
 			new MenuButton("toolbar.utils.flip.front_back", () -> FMTB.MODEL.flipShapeboxes(2)),
-			new MenuButton("toolbar.utils.reset_camera", () -> { FMTB.ggr.pos = new Vec3f(0, 4, 4); FMTB.ggr.rotation = new Vec3f(45, 0, 0); }),
+			new MenuButton("toolbar.utils.reset_camera", () -> { FMTB.ggr.reset(); }),
 			new MenuButton("toolbar.utils.create_gif", () -> ImageHelper.createGif(false)),
 			new MenuButton("toolbar.utils.screenshot", () -> ImageHelper.takeScreenshot(true)),
 			new MenuButton("toolbar.utils.calc_size", (MouseClickEventListener)event -> {

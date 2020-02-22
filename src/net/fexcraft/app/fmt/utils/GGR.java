@@ -169,5 +169,10 @@ public class GGR {
 	public static int mousePosY(){
 		return (int)posy;
 	}
+
+	public void reset(){
+		pos = new Vec3f(0, 4, 4); rotation = new Vec3f(45, 0, 0); movemod = 1f;
+		w_down = s_down = a_down = d_down = space_down = shift_down = false;
+	}
     
 }
