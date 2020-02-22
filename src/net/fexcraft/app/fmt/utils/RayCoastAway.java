@@ -69,9 +69,9 @@ public class RayCoastAway {
 		PolygonWrapper wrapper = getSelected(id);
 		if(wrapper == null) return;
 		if(!TextureEditor.BUCKETMODE){
-			boolean control = false;//Keyboard.isKeyDown(Keyboard.KEY_LCONTROL);
+			boolean control = GGR.isControlDown();
 			boolean state = control ? wrapper.getTurboList().selected : wrapper.selected;
-			if(true/*!Keyboard.isKeyDown(Keyboard.KEY_LMENU)*/) FMTB.MODEL.clearSelection();
+			if(!GGR.isAltDown()) FMTB.MODEL.clearSelection();
 			if(control){
 				wrapper.getTurboList().selected = !state;
 				GroupCompound.SELECTED_POLYGONS = FMTB.MODEL.countSelectedMRTs();

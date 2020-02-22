@@ -21,7 +21,8 @@ public class GGR {
     public float maxlookrange = 85;
     public Vec3f pos, rotation;
     //
-    public boolean w_down, s_down, d_down, a_down, r_down, f_down, space_down, shift_down, alt_down, control_down;
+    public boolean w_down, s_down, d_down, a_down, r_down, f_down, space_down, shift_down;
+    public boolean left_alt_down, left_control_down, right_alt_down, right_control_down;
     
     public GGR(float x, float y, float z){
         pos = new Vec3f(x, y, z); rotation = new Vec3f(0, 0, 0);
@@ -146,11 +147,15 @@ public class GGR {
     }
 
 	public static boolean isShiftDown(){
-		return FMTB.ggr.shift_down || FMTB.ggr.alt_down;
+		return FMTB.ggr.shift_down || isAltDown();
 	}
 
-	public static boolean iControlDown(){
-		return FMTB.ggr.control_down;
+	public static boolean isAltDown(){
+		return FMTB.ggr.left_alt_down || FMTB.ggr.right_alt_down;
+	}
+
+	public static boolean isControlDown(){
+		return FMTB.ggr.left_control_down || FMTB.ggr.right_control_down;
 	}
 
 	public static boolean parseKeyAction(int action){
