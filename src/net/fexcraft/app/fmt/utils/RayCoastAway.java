@@ -75,9 +75,11 @@ public class RayCoastAway {
 			if(control){
 				wrapper.getTurboList().selected = !state;
 				GroupCompound.SELECTED_POLYGONS = FMTB.MODEL.countSelectedMRTs();
+				wrapper.getTurboList().button.updateColor();
 			}
 			else{
 				wrapper.selected = !state; GroupCompound.SELECTED_POLYGONS += wrapper.selected ? 1 : -1;
+				wrapper.button.updateColor();
 			}
 			FMTB.MODEL.lastselected = control ? null : wrapper;
 			FMTB.MODEL.updateFields();
