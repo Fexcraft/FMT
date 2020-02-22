@@ -591,10 +591,11 @@ public class GroupCompound {
 		
 		@Override
 		public boolean add(TurboList list){
-			boolean bool = super.add(list); Editors.general.refreshGroups();
+			boolean bool = super.add(list);
 			if(bool){
 				Trees.polygon.addSub(list.button.update()); Trees.polygon.reOrderGroups();
 				Trees.fvtm.addSub(list.abutton.update()); Trees.fvtm.reOrderGroups();
+				Editors.general.refreshGroups();
 			}
 			return bool;
 		}
@@ -608,8 +609,13 @@ public class GroupCompound {
 		}
 		
 		public TurboList remove(String str){
-			TurboList list = get(str); if(list == null) return null;
-			if(remove(list)){ return list; } return null;
+			TurboList list = get(str);
+			if(list == null) return null;
+			if(remove(list)){
+				Editors.general.refreshGroups();
+				return list;
+			}
+			return null;
 		}
 		
 		@Override
@@ -623,6 +629,7 @@ public class GroupCompound {
 			if(list != null){
 				list.button.tree().reOrderGroups();
 				list.abutton.tree().reOrderGroups();
+				Editors.general.refreshGroups();
 			}
 			return bool;
 		}
@@ -637,6 +644,7 @@ public class GroupCompound {
 			list = super.remove(index);
 			list.button.tree().reOrderGroups();
 			list.abutton.tree().reOrderGroups();
+			Editors.general.refreshGroups();
 			return list;
 		}
 		

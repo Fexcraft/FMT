@@ -8,7 +8,6 @@ import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.component.Dialog;
 import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.SelectBox;
-import org.liquidengine.legui.component.TextInput;
 import org.liquidengine.legui.event.MouseClickEvent;
 
 import net.fexcraft.app.fmt.FMTB;
@@ -45,7 +44,9 @@ public class GeneralEditor extends EditorBase {
 	public static ColorField marker_color;
 	public static NumberField marker_scale, marker_angle;
 	public static BoolButton marker_biped;
-	public static SelectBox<Object> polygon_group, polygon_type;
+	public static SelectBox<String> polygon_group, polygon_type;
+	//
+	public static final String NEWGROUP = "> new group <";
 	
 	@SuppressWarnings("unchecked")
 	public GeneralEditor(){
@@ -53,14 +54,14 @@ public class GeneralEditor extends EditorBase {
 		EditorWidget attributes = new EditorWidget(this, translate("editor.general.attributes"), 0, 0, 0, 0);
         attributes.getContainer().add(new Label(translate("editor.general.attributes.group"), 3, pass += 24, 290, 20));
         attributes.getContainer().add(polygon_group = new SelectBox<>(3, pass += 24, 290, 20));
-        polygon_group.addElement("> new_group <"); polygon_group.getSelectBoxElements().get(0).getStyle().setFontSize(20f);
-        polygon_group.setVisibleCount(12); polygon_group.setElementHeight(20);
-		polygon_group.getSelectionButton().getStyle().setFontSize(20f);
+        polygon_group.addElement(NEWGROUP);
+        polygon_group.setVisibleCount(12);
+        polygon_group.setElementHeight(20);
         polygon_group.addSelectBoxChangeSelectionEventListener(event -> {
-        	if(event.getNewValue().toString().equals("> new_group <")){
+        	if(event.getNewValue().toString().equals(NEWGROUP)){
 	            Dialog dialog = new Dialog(translate("editor.general.attributes.new_group.title"), 300, 120);
 	            Label label = new Label(translate("editor.general.attributes.new_group.desc"), 10, 10, 280, 20);
-	            TextInput input = new TextField("new_group", 10, 40, 280, 20);
+	            TextField input = new TextField("new_group", 10, 40, 280, 20);
 	            Button confirm = new Button(translate("editor.general.attributes.new_group.confirm"), 10, 70, 70, 20);
                 Button cancel = new Button(translate("editor.general.attributes.new_group.cancel"), 90, 70, 70, 20);
 	            dialog.getContainer().add(input); dialog.getContainer().add(label);
@@ -81,7 +82,6 @@ public class GeneralEditor extends EditorBase {
         	else{
         		FMTB.MODEL.changeGroupOfSelected(FMTB.MODEL.getSelected(), event.getNewValue().toString());
         	}
-        	polygon_group.setSelected(0, false);
         });
         attributes.getContainer().add(new Label(translate("editor.general.attributes.name"), 3, pass += 24, 290, 20));
         attributes.getContainer().add(polygon_name = new TextField(FMTB.NO_POLYGON_SELECTED, 3, pass += 24, 290, 20));
@@ -251,8 +251,7 @@ public class GeneralEditor extends EditorBase {
 	public void refreshGroups(){
 		while(!polygon_group.getElements().isEmpty()) polygon_group.removeElement(0);
 		for(TurboList list : FMTB.MODEL.getGroups()) polygon_group.addElement(list.id);
-		polygon_group.addElement("> new_group <");
-		polygon_group.getSelectBoxElements().forEach(elm -> elm.getStyle().setFontSize(20f));
+		polygon_group.addElement(NEWGROUP);
 	}
 	
 }

@@ -139,6 +139,7 @@ public class ModelGroupEditor extends EditorBase {
 						FMTB.MODEL.getGroups().add(list);
 					}
 				}
+				Editors.general.refreshGroups();
 				FMTB.MODEL.getSelected().clear();
 			}
 		});
