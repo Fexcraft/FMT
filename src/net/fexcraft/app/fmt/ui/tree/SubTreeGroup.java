@@ -52,9 +52,9 @@ public class SubTreeGroup extends Panel {
 			Editors.show("general");
 		}, "edit"));
 		label.getListenerMap().addListener(MouseClickEvent.class, listener -> {
-			if(list == null || listener.getAction() != CLICK || listener.getButton() != MouseButton.MOUSE_BUTTON_LEFT) return;
-			boolean sell = list.selected; if(!GGR.isShiftDown()){ FMTB.MODEL.clearSelection(); }
-			list.selected = !sell; FMTB.MODEL.updateFields(); FMTB.MODEL.lastselected = null; updateColor();
+			if(polygon == null || listener.getAction() != CLICK || listener.getButton() != MouseButton.MOUSE_BUTTON_LEFT) return;
+			boolean sell = polygon.selected; if(!GGR.isShiftDown()){ FMTB.MODEL.clearSelection(); }
+			polygon.selected = !sell; FMTB.MODEL.updateFields(); FMTB.MODEL.lastselected = polygon; updateColor();
 			GroupCompound.SELECTED_POLYGONS = FMTB.MODEL.countSelectedMRTs();
 		});
 	}
@@ -100,8 +100,8 @@ public class SubTreeGroup extends Panel {
 	}
 	
 	public void updateColor(){
-		if(animation != null){ label.getStyle().getBackground().setColor(FMTB.rgba(animation.active ? 0x28a148 : 0x6bbf81)); return; }
-		if(list == null) label.getStyle().getBackground().setColor(FMTB.rgba(polygon.selected ? polygon.visible ? 0xa37a18 : 0xd6ad4b : polygon.visible ? 0x28a148 : 0x6bbf81));
+		if(animation != null) label.getStyle().getBackground().setColor(FMTB.rgba(animation.active ? 0x28a148 : 0x6bbf81));
+		else if(list == null) label.getStyle().getBackground().setColor(FMTB.rgba(polygon.selected ? polygon.visible ? 0xa37a18 : 0xd6ad4b : polygon.visible ? 0x28a148 : 0x6bbf81));
 		else label.getStyle().getBackground().setColor(FMTB.rgba(list.selected ? list.visible ? 0xa37a18 : 0xd6ad4b : list.visible ? 0x28a148 : 0x6bbf81));
 	}
 
