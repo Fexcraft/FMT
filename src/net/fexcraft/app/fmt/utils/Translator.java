@@ -44,12 +44,12 @@ public class Translator {
 		return SEL.containsKey(key) ? SEL.get(key) : DEF.containsKey(key) ? DEF.get(key) : key;
 	}
 	
-	public static String translate(String key, String fill){
+	/*public static String translate(String key, String fill){
 		if(key.startsWith("#")) return key.substring(1);
 		if(SEL.containsKey(key)) return SEL.get(key);
 		if(DEF.containsKey(key)) return DEF.get(key);
 		DEF.put(key, fill); append(key, fill); return fill;
-	}
+	}*/
 	
 	public static String format(String key, Object... objects){
 		String string = translate(key); return String.format(string, objects);

@@ -105,7 +105,7 @@ public class EditorBase extends Panel {
 	}
 	
 	public static String translate(String str){
-		return Translator.translate(str, "no.lang");
+		return Translator.translate(str);//, "no.lang");
 	}
 	
 	public static String format(String str, Object... objs){

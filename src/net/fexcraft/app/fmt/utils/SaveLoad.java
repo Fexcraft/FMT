@@ -39,8 +39,7 @@ import net.fexcraft.lib.common.utils.Print;
 public class SaveLoad {
 
 	public static void openModel(){
-		String title = Translator.translate("saveload.open", "Select file to open.");
-		FileSelector.select(title, "./saves", FileSelector.TYPE_FMTB, false, file -> {
+		FileSelector.select(Translator.translate("saveload.open"), new File("./saves").getAbsolutePath(), FileSelector.TYPE_FMTB, false, file -> {
 			if(file == null || !file.exists()){
 				DialogBox.showOK("saveload.title", null, null, "saveload.open.nofile"); return;
 			}
@@ -79,8 +78,7 @@ public class SaveLoad {
 		if(FMTB.MODEL.countTotalMRTs() > 0){
 			DialogBox.showYN("saveload.title", () -> {
 				if(FMTB.MODEL.file == null){
-					String title = Translator.translate("saveload.save", "Select save location.");
-					FileSelector.select(title, "./saves", FileSelector.TYPE_FMTB, true, file -> {
+					FileSelector.select(Translator.translate("saveload.save"), new File("./saves").getAbsolutePath(), FileSelector.TYPE_FMTB, true, file -> {
 						if(file == null){
 							DialogBox.show("saveload.title", "dialogbox.button.ok", "dialogbox.button.save", () -> {
 								if(shouldclose) FMTB.get().close(true);
@@ -118,8 +116,7 @@ public class SaveLoad {
 
 	public static void saveModel(boolean bool, boolean openfile){
 		if(bool || FMTB.MODEL.file == null){
-			String title = Translator.translate("saveload.filechooser.save", "Select save location.");
-			FileSelector.select(title, "./saves", FileSelector.TYPE_FMTB, true, file -> {
+			FileSelector.select(Translator.translate("saveload.save"), new File("./saves").getAbsolutePath(), FileSelector.TYPE_FMTB, true, file -> {
 				if(file == null){
 					DialogBox.showOK("saveload.title", null, null, "saveload.save.nofile"); return;
 				}

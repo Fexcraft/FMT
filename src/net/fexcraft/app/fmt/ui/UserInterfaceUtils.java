@@ -322,11 +322,11 @@ public class UserInterfaceUtils {
 	}
 	
 	public static String translate(String str){
-		return Translator.translate(str, "no.lang");
+		return Translator.translate(str);//, "no.lang");
 	}
 	
 	public static String format(String str, Object... objs){
-		return Translator.format(str, "no.lang.%s", objs);
+		return Translator.format(str, objs);
 	}
 
 	public static String validateString(TextInputContentChangeEvent<TextField> event){

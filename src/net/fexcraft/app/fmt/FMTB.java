@@ -539,8 +539,8 @@ public class FMTB {
 				//
 		        Dialog dialog = new Dialog(bool ? welcome : new_title, 300, 100);
 		        Label label = new Label(bool ? cversion : new_version, 10, 10, 200, 20);
-		        Button okbutton = new Button(Translator.translate("dialog.welcome.confirm", "ok"), 10, 50, 50, 20);
-		        Button upbutton = new Button(Translator.translate(bool ? "dialog.welcome.exit" : "dialog.welcome.update", bool ? "exit" : "update"), 70, 50, 50, 20);
+		        Button okbutton = new Button(Translator.translate("dialog.welcome.confirm"), 10, 50, 50, 20);
+		        Button upbutton = new Button(Translator.translate(bool ? "dialog.welcome.exit" : "dialog.welcome.update"), 70, 50, 50, 20);
 		        okbutton.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) event -> { if(event.getAction() == CLICK) dialog.close(); });
 		        upbutton.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) event -> {
 		        	if(event.getAction() == CLICK){

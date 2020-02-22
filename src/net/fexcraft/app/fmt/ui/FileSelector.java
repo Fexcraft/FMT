@@ -37,7 +37,15 @@ public class FileSelector {
             for(int i = 1; i < type.length; i++) buffer.put(stack.UTF8(type[i])); buffer.flip();
     		if(save) string = TinyFileDialogs.tinyfd_saveFileDialog(title, root, buffer, type[0]);
     		else string = TinyFileDialogs.tinyfd_openFileDialog(title, root, buffer, type[0], false);//Print.console(string);
-    		task.process(string != null && string.trim().length() > 0 ? new File(string) : null);
+    		if(string != null && string.trim().length() > 0){
+    			boolean ends = false;
+    			for(int i = 1; i < type.length; i++){
+    				if(string.endsWith(type[i].replace("*", ""))){ ends = true; break; }
+    			}
+    			if(!ends) string += type[1].replace("*", "");
+    			task.process(new File(string));
+    		}
+    		else task.process(null);
         }
 	}
 	
@@ -66,7 +74,15 @@ public class FileSelector {
         	            for(String pattern : porter.getExtensions()) buffer.put(stack.UTF8(pattern)); buffer.flip(); String string = "";
         	    		if(export) string = TinyFileDialogs.tinyfd_saveFileDialog(title, reet, buffer, tetle);
         	    		else string = TinyFileDialogs.tinyfd_openFileDialog(title, reet, buffer, tetle, false);//Print.console(string);
-        	    		task.process(string != null && string.trim().length() > 0 ? new File(string) : null, porter, settings);
+        	    		if(string != null && string.trim().length() > 0){
+        	    			boolean ends = false;
+        	    			for(int i = 1; i < porter.getExtensions().length; i++){
+        	    				if(string.endsWith(porter.getExtensions()[i].replace("*", ""))){ ends = true; break; }
+        	    			}
+        	    			if(!ends) string += porter.getExtensions()[1].replace("*", "");
+        	    			task.process(new File(string), porter, settings);
+        	    		}
+        	    		else task.process(null, porter, settings);
         	        }
         		});
         	}
