@@ -81,13 +81,14 @@ public class TextureUpdate extends TimerTask {
 
 	public static void tryAutoPos(Boolean bool){
 		if(bool == null){
-			Dialog dialog = new Dialog(Translator.translate("texture_update.autopos.title"), 360, 150);
-			Label label = new Label(Translator.translate("texture_update.autopos.info"), 10, 10, 340, 20);
-	        CheckBox checkbox0 = new CheckBox(10, 40, 340, 20);
+			int width = 440;
+			Dialog dialog = new Dialog(Translator.translate("texture_update.autopos.title"), width + 20, 150);
+			Label label = new Label(Translator.translate("texture_update.autopos.info"), 10, 10, width, 20);
+	        CheckBox checkbox0 = new CheckBox(10, 40, width, 20);
 	        checkbox0.getStyle().setPadding(5f, 10f, 5f, 5f); checkbox0.setChecked(SAVESPACE);
 	        checkbox0.addCheckBoxChangeValueListener(listener -> SAVESPACE = listener.getNewValue());
 	        checkbox0.getTextState().setText(UserInterfaceUtils.translate("texture_update.autopos.savespace"));
-	        CheckBox checkbox1 = new CheckBox(10, 70, 340, 20);
+	        CheckBox checkbox1 = new CheckBox(10, 70, width, 20);
 	        checkbox1.getStyle().setPadding(5f, 10f, 5f, 5f); checkbox1.setChecked(!ALL);
 	        checkbox1.addCheckBoxChangeValueListener(listener -> ALL = !listener.getNewValue());
 	        checkbox1.getTextState().setText(UserInterfaceUtils.translate("texture_update.autopos.process_all"));
