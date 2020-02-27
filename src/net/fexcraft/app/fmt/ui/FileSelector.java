@@ -67,7 +67,7 @@ public class FileSelector {
         okbutton.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
         	if(CLICK == e.getAction()){
         		ExImPorter porter = eximporter.get(selbox.getElementIndex(selbox.getSelection()));
-        		String tetle = (export ? "Exporter" : "Importer") + ": " + porter.getName(); dialog.close();
+        		String tetle = porter.getExtensions()[0]; dialog.close();
         		SettingsBox.open((export ? "Exporter" : "Importer") + " Settings", porter.getSettings(export), false, (settings) -> {
         	        try(MemoryStack stack = MemoryStack.stackPush()){
         	        	PointerBuffer buffer = stack.mallocPointer(porter.getExtensions().length);

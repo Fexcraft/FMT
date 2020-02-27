@@ -23,7 +23,7 @@ import net.fexcraft.lib.common.json.JsonUtil;
  */
 public class JTMTPorter extends ExImPorter {
 	
-	private static final String[] extensions = new String[]{ "*.jtmt" };
+	private static final String[] extensions = new String[]{ "JTMT Model", "*.jtmt" };
 	private static final ArrayList<Setting> settings = new ArrayList<>();
 	static{ settings.add(new Setting(Type.BOOLEAN, "visible_only", false)); }
 	

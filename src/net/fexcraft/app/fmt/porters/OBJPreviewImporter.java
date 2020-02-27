@@ -11,7 +11,7 @@ import net.fexcraft.app.fmt.wrappers.ObjPreviewWrapper;
 
 public class OBJPreviewImporter extends ExImPorter {
 	
-	private static final String[] extensions = new String[]{ "*.obj" };
+	private static final String[] extensions = new String[]{ "Wavefront Obj Model", "*.obj" };
 
 	@Override
 	public GroupCompound importModel(File file, Map<String, Setting> settings){

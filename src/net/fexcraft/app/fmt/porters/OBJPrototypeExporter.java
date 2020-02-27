@@ -30,7 +30,7 @@ import net.fexcraft.lib.common.math.Vec3f;
 public class OBJPrototypeExporter extends ExImPorter {
 	
 	private static final ArrayList<Setting> settings = new ArrayList<>();
-	private static final String[] extensions = new String[]{ "*.obj" };
+	private static final String[] extensions = new String[]{ "Wavefront Obj Model", "*.obj" };
 	
 	public OBJPrototypeExporter(){
 		settings.add(new Setting(Type.BOOLEAN, "flip_model", true));

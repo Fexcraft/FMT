@@ -38,7 +38,7 @@ import net.fexcraft.lib.local_tmt.ModelRendererTurbo;
  */
 public class MTBImporter extends ExImPorter {
 	
-	private static String[] extensions = new String[]{ "*.mtb" };
+	private static String[] extensions = new String[]{ "SMP Toolbox 2 Save File", "*.mtb" };
 
     public String[] getExtensions(){
         return extensions;

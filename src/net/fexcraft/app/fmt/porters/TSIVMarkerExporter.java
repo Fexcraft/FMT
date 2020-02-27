@@ -23,7 +23,7 @@ import net.fexcraft.lib.common.json.JsonUtil;
  */
 public class TSIVMarkerExporter extends ExImPorter {
 	
-	private static final String[] extensions = new String[]{ "*.json" };
+	private static final String[] extensions = new String[]{ "TS/IV RotableModelObjects JSON Snippet", "*.json" };
 	
 	public TSIVMarkerExporter(){}
 
