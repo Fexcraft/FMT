@@ -178,6 +178,7 @@ public class FMTB {
         Trees.initializeTrees(frame);
         Editors.initializeEditors(frame);
         UserInterfaceUtils.addToolbarButtons(frame);
+        //TabContainer.addTest(frame);
         MODEL.initButton(); context = new Context(window);
         CallbackKeeper keeper = new DefaultCallbackKeeper();
         CallbackKeeper.registerCallbacks(window, keeper);
