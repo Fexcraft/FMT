@@ -85,7 +85,7 @@ public class PorterManager {
 				Desktop.getDesktop().open(file.getParentFile());
 			}
 			catch(Exception e){
-				DialogBox.showOK(null, null, null, "eximporter.export.failed", e.getLocalizedMessage());
+				DialogBox.showOK(null, null, null, "eximporter.export.failed", "#" + e.getLocalizedMessage());
 				e.printStackTrace(); //TODO add "open console" as 2nd button
 			}
 		});
