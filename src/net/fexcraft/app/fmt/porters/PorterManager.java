@@ -82,7 +82,12 @@ public class PorterManager {
 				}
 				String result = porter.exportModel(FMTB.MODEL, file, settings);
 				DialogBox.showOK(null, null, null, "eximporter.export.success", "#" + result);
-				Desktop.getDesktop().open(file.getParentFile());
+				try{
+					Desktop.getDesktop().open(file.getParentFile());
+				}
+				catch(Exception e){
+					e.printStackTrace();
+				}
 			}
 			catch(Exception e){
 				DialogBox.showOK(null, null, null, "eximporter.export.failed", "#" + e.getLocalizedMessage());
