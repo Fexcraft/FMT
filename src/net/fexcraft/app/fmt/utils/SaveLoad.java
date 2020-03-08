@@ -208,6 +208,11 @@ public class SaveLoad {
 					group.addProperty("texture_size_y", list.textureY);
 					group.addProperty("texture_scale", list.textureS);
 				}
+				if(list.exportoffset != null){
+					group.addProperty("export_offset_x", list.exportoffset.xCoord);
+					group.addProperty("export_offset_y", list.exportoffset.yCoord);
+					group.addProperty("export_offset_z", list.exportoffset.zCoord);
+				}
 				if(!list.animations.isEmpty()){
 					JsonArray animations = new JsonArray();
 					for(Animation ani : list.animations){
@@ -315,6 +320,12 @@ public class SaveLoad {
 					int texy = group.get("texture_size_y").getAsInt();
 					list.setTexture(group.get("texture").getAsString(), texx, texy);
 					list.textureS = JsonUtil.getIfExists(obj, "texture_scale", 1).intValue();
+				}
+				if(group.has("export_offset_x") || group.has("export_offset_y") || group.has("export_offset_z")){
+					list.exportoffset = new Vec3f();
+					list.exportoffset.xCoord = JsonUtil.getIfExists(obj, "export_offset_x", 0).floatValue();
+					list.exportoffset.yCoord = JsonUtil.getIfExists(obj, "export_offset_y", 0).floatValue();
+					list.exportoffset.zCoord = JsonUtil.getIfExists(obj, "export_offset_z", 0).floatValue();
 				}
 				JsonArray polygons = group.get("polygons").getAsJsonArray();
 				for(JsonElement elm : polygons){

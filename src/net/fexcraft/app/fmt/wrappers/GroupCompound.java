@@ -403,6 +403,9 @@ public class GroupCompound {
 			ModelGroupEditor.g_tex_x.setSelected(8f, true);
 			ModelGroupEditor.g_tex_y.setSelected(8f, true);
 			ModelGroupEditor.g_tex_s.setSelected(8f, true);
+			ModelGroupEditor.exoff_x.apply(0);
+			ModelGroupEditor.exoff_y.apply(0);
+			ModelGroupEditor.exoff_z.apply(0);
 		}
 		else{
 			ModelGroupEditor.group_color.apply((list.color == null ? RGB.WHITE : list.color).packed);
@@ -410,6 +413,9 @@ public class GroupCompound {
 			ModelGroupEditor.g_tex_x.setSelected((float)list.textureX, true);
 			ModelGroupEditor.g_tex_y.setSelected((float)list.textureY, true);
 			ModelGroupEditor.g_tex_s.setSelected((float)list.textureS, true);
+			ModelGroupEditor.exoff_x.apply(list.exportoffset == null ? 0 : list.exportoffset.xCoord);
+			ModelGroupEditor.exoff_y.apply(list.exportoffset == null ? 0 : list.exportoffset.yCoord);
+			ModelGroupEditor.exoff_z.apply(list.exportoffset == null ? 0 : list.exportoffset.zCoord);
 			//
 			String texname = list.getGroupTexture() + "";
 			if(texname.length() > 32){ texname = texname.substring(texname.length() - 32, texname.length()); }

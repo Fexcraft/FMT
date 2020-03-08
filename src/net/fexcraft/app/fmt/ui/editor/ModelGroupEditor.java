@@ -9,6 +9,7 @@ import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.SelectBox;
 import org.liquidengine.legui.component.TextInput;
+import org.liquidengine.legui.component.Tooltip;
 import org.liquidengine.legui.component.event.selectbox.SelectBoxChangeSelectionEvent;
 import org.liquidengine.legui.component.optional.align.HorizontalAlign;
 import org.liquidengine.legui.event.FocusEvent;
@@ -36,7 +37,7 @@ public class ModelGroupEditor extends EditorBase {
 	
 	private static final int[] texsizes = new int[]{ 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096 };//, 8192 };
 	public static NumberField pos_x, pos_y, pos_z, poss_x, poss_y, poss_z;
-	public static NumberField rot_x, rot_y, rot_z;
+	public static NumberField rot_x, rot_y, rot_z, exoff_x, exoff_y, exoff_z;
 	public static TextInput model_texture, model_name;
 	public static SelectBox<Float> m_tex_x, m_tex_y, m_tex_s;
 	public static ColorField group_color;
@@ -162,6 +163,42 @@ public class ModelGroupEditor extends EditorBase {
         g_tex_s.setVisibleCount(10); g_tex_s.setElementHeight(20);
         g_tex_s.getSelectionButton().getStyle().setFontSize(20f);
         g_tex_s.addSelectBoxChangeSelectionEventListener(event -> updateGroupTexSize(event, null));
+        //
+        Label exoff_label = new Label(translate("editor.model_group.group.export_offset"), 3, pass += 24, 240, 20);
+        Button exoff_autobutton = new Button("AUTO", 240, pass + 2, 50, 18);
+        exoff_autobutton.getListenerMap().addListener(MouseClickEvent.class, listener -> {
+        	if(listener.getAction() != CLICK) return;
+        	boolean opp = listener.getButton() != MouseButton.MOUSE_BUTTON_LEFT;
+    		TurboList list = FMTB.MODEL.getFirstSelectedGroup();
+    		if(list == null || list.size() < 1) return;
+    		if(list.exportoffset == null) list.exportoffset = new Vec3f();
+			list.exportoffset.xCoord = opp ? -list.get(0).pos.xCoord : list.get(0).pos.xCoord;
+			list.exportoffset.yCoord = opp ? -list.get(0).pos.yCoord : list.get(0).pos.yCoord;
+			list.exportoffset.zCoord = opp ? -list.get(0).pos.zCoord : list.get(0).pos.zCoord;
+			exoff_x.apply(list.exportoffset.xCoord);
+			exoff_y.apply(list.exportoffset.yCoord);
+			exoff_z.apply(list.exportoffset.zCoord);
+        });
+        exoff_autobutton.getStyle().setFontSize(16f);
+        Tooltip exoff_buttontooltip = new Tooltip("Copies first polygon's position.\nleft = normal / rightclick = opposite");
+		exoff_buttontooltip.setSize(250, 40);
+		exoff_buttontooltip.setPosition(-200, -40);
+		exoff_buttontooltip.getStyle().getBackground().setColor(FMTB.rgba(69, 137, 196, 0.9f));
+		exoff_buttontooltip.getStyle().setHorizontalAlign(HorizontalAlign.CENTER);
+		exoff_autobutton.setTooltip(exoff_buttontooltip);
+        group.getContainer().add(exoff_autobutton);
+		group.getContainer().add(exoff_label);
+        Tooltip exoff_tooltip = new Tooltip("This is valid for FVTM and Flansmod* Export. (e.g. 'translate(group, x, y, z);')");
+		exoff_tooltip.setSize(290, 40);
+		exoff_tooltip.setPosition(0, -40);
+		exoff_tooltip.getStyle().getBackground().setColor(FMTB.rgba(69, 137, 196, 0.9f));
+		exoff_tooltip.getStyle().setHorizontalAlign(HorizontalAlign.CENTER);
+		exoff_label.setTooltip(exoff_tooltip);
+		group.getContainer().add(exoff_x = new NumberField(4, pass += 24, 90, 20).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> setgroupoffset()));
+		group.getContainer().add(exoff_y = new NumberField(102, pass, 90, 20).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> setgroupoffset()));
+		group.getContainer().add(exoff_z = new NumberField(200, pass, 90, 20).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> setgroupoffset()));
+		//exoff_x.setTooltip(exoff_tooltip); exoff_y.setTooltip(exoff_tooltip); exoff_z.setTooltip(exoff_tooltip);
+		//
 		group.getContainer().add(new Label(translate("editor.model_group.group.texture"), 3, pass += 24, 290, 20));
 		group.getContainer().add(group_texture = new TextField(FMTB.MODEL.texture, 3, pass += 24, 290, 20));
 		group_texture.getListenerMap().addListener(MouseClickEvent.class, listener -> {
@@ -212,6 +249,25 @@ public class ModelGroupEditor extends EditorBase {
         reOrderWidgets();
 	}
 	
+	private void setgroupoffset(){
+		ArrayList<TurboList> arrlist = FMTB.MODEL.getDirectlySelectedGroups();
+		if(arrlist.isEmpty()) return;
+		float xval = exoff_x.getValue();
+		float yval = exoff_y.getValue();
+		float zval = exoff_z.getValue();
+		if(xval == 0f && yval == 0f && zval == 0f){
+			arrlist.forEach(list -> list.exportoffset = null);
+		}
+		else{
+			arrlist.forEach(list -> {
+				if(list.exportoffset == null) list.exportoffset = new Vec3f();
+				list.exportoffset.xCoord = xval;
+				list.exportoffset.yCoord = yval;
+				list.exportoffset.zCoord = zval;
+			});
+		}
+	}
+
 	public static class AnimationsEditorWidget extends EditorWidget {
 		
 		private TurboList group = null;
