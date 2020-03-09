@@ -35,6 +35,7 @@ public class MarkerWrapper extends PolygonWrapper {
 		if(visible && turbo != null){
 			GL11.glDisable(GL11.GL_TEXTURE_2D); turbo.render(); GL11.glEnable(GL11.GL_TEXTURE_2D);
 			if(biped){
+				RGB.glColorReset();
 				GL11.glPushMatrix();
 				GL11.glScalef(scale, scale, scale);
 				GL11.glTranslatef(Static.sixteenth * pos.xCoord, Static.sixteenth * pos.yCoord, Static.sixteenth * pos.zCoord);
