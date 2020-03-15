@@ -218,7 +218,7 @@ public class FMTB {
         keeper.getChainScrollCallback().add(new GLFWScrollCallback(){
 			@Override
 			public void invoke(long window, double xoffset, double yoffset){
-				if(field_scrolled = (context.getFocusedGui() instanceof Field)){
+				if(!Settings.no_scroll_fields() && (field_scrolled = (context.getFocusedGui() instanceof Field))){
 					Field field = (Field)context.getFocusedGui();
 					if(field.id() != null || field.update() != null) field.onScroll(yoffset);
 				}

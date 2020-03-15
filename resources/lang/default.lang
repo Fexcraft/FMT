@@ -187,6 +187,7 @@ eximporter.mtb_importer.stream_null=Import Failed, MTB appears corrupt.
 settingsbox.continue=Continue
 settingsbox.confirm=Confirm
 settingsbox.darktheme.mayneedrestart=This may require a restart to take full effect.
+settingsbox.settings_needs_restart=This setting needs a restart to take full effect.
 
 # DialogBox
 dialogbox.title.default=Generic Dialog

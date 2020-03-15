@@ -23,7 +23,7 @@ public class Settings {
 	private static Setting floor, lines, demo, cube, polygon_marker, lighting, cullface, animate,
 		discordrpc, discordrpc_sm, discordrpc_rtonm, numberfieldarrows, preview_colorpicker;
 	public static Setting movespeed, mouse_sensivity, internal_cursor, vsync;
-	public static Setting darktheme;
+	public static Setting darktheme, no_scroll_fields;
 
 	public static boolean floor(){ return floor.getValue(); }
 
@@ -58,6 +58,8 @@ public class Settings {
 	public static boolean vsync(){ return vsync.getValue(); }
 
 	public static boolean darktheme(){ return darktheme.getValue(); }
+	
+	public static boolean no_scroll_fields(){ return no_scroll_fields.getValue(); }
 	
 	//
 
@@ -146,6 +148,7 @@ public class Settings {
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "numberfield_arrows", true));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "preview_colorpicker", false));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "dark_theme", false));
+		DEFAULTS.add(new Setting(Type.BOOLEAN, "no_scroll_fields", false));
 		//
 		/*DEFAULTS.add(new Setting(Type.STRING, "filedir_last_type", "SAVES"));
 		DEFAULTS.add(new Setting(Type.STRING, "filedir_last", "./saves"));
@@ -202,6 +205,7 @@ public class Settings {
 		//internal_cursor = SETTINGS.get("internal_cursor");
 		//FileSelector.FileRoot.last = FileRoot.valueOf(SETTINGS.get("filedir_last_type").getStringValue());
 		darktheme = SETTINGS.get("dark_theme");
+		no_scroll_fields = SETTINGS.get("no_scroll_fields");
 	}
 
 	public static void save(){
@@ -309,6 +313,9 @@ public class Settings {
 				if(this.id.equals("dark_theme")){
 					DialogBox.showOK(null, null, null, "settingsbox.darktheme.mayneedrestart");
 				}
+				/*if(this.id.equals("no_scroll_fields")){
+					DialogBox.showOK(null, null, null, "settingsbox.settings_needs_restart");
+				}*/
 				return (boolean)(value = !(boolean)value);
 			} else return false;
 		}
