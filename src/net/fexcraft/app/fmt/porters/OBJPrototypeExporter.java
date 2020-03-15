@@ -33,7 +33,10 @@ public class OBJPrototypeExporter extends ExImPorter {
 	private static final String[] extensions = new String[]{ "Wavefront Obj Model", "*.obj" };
 	
 	public OBJPrototypeExporter(){
-		settings.add(new Setting(Type.BOOLEAN, "flip_model", true));
+		settings.add(new Setting(Type.BOOLEAN, "rotate_model", true));
+		settings.add(new Setting(Type.FLOAT, "rotate_y", 180));
+		settings.add(new Setting(Type.FLOAT, "rotate_z", 180));
+		settings.add(new Setting(Type.FLOAT, "rotate_x", 0));
 		settings.add(new Setting(Type.BOOLEAN, "flip_texture", true));
 		settings.add(new Setting(Type.FLOAT, "scale", 1f));
 		settings.add(new Setting(Type.BOOLEAN, "create_mtl", false));
@@ -46,7 +49,7 @@ public class OBJPrototypeExporter extends ExImPorter {
 	
 	@Override
 	public String exportModel(GroupCompound compound, File file, Map<String, Setting> settings){
-		StringBuffer buffer = new StringBuffer(); boolean bool = settings.get("flip_model").getBooleanValue();
+		StringBuffer buffer = new StringBuffer(); boolean bool = settings.get("rotate_model").getBooleanValue();
 		buffer.append("# FMT-Marker OBJ-2\n#\n"); float scale = settings.get("scale").getFloatValue(); String mtlname = null;
 		buffer.append("# Model exported via the Standard FMT OBJ Exporter\n"); boolean mtl = settings.get("create_mtl").getBooleanValue();
 		buffer.append("# FMT (Fex's Modelling Toolbox) v." + FMTB.version + " &copy; " + Year.now().getValue() + " - Fexcraft.net\n");
@@ -61,8 +64,13 @@ public class OBJPrototypeExporter extends ExImPorter {
 		buffer.append("# Model Name\no " + validateName(compound.name) + "\n\n");
 		buffer.append("# TextureSizeX: " + compound.tx(null) + "\n");
 		buffer.append("# TextureSizeY: " + compound.ty(null) + "\n");
-		buffer.append("# FlipAxes: true\n\n"); Axis3DL axis, axis1 = null;
-		if(bool) (axis1 = new Axis3DL()).setAngles(180, 180, 0);
+		buffer.append("# FlipAxes: " + bool + "\n\n"); Axis3DL axis, axis1 = null;
+		if(bool){
+			float yaw = settings.get("rotate_y").getFloatValue();
+			float pit = settings.get("rotate_z").getFloatValue();
+			float rol = settings.get("rotate_x").getFloatValue();
+			(axis1 = new Axis3DL()).setAngles(yaw, pit, rol);
+		}
 		//
 		//float texsx = 1f / compound.textureSizeX, texsy = 1f/ compound.textureSizeY;
 		for(TurboList list : compound.getGroups()){
