@@ -24,7 +24,7 @@ public class EditorBase extends Panel {
 	protected ScrollablePanel scrollable;
 	
 	public EditorBase(){
-		super(0, 30, 304, FMTB.HEIGHT - 30); Editors.editors.add(this);
+		super(0, 30, 310, FMTB.HEIGHT - 30); Editors.editors.add(this);
 		String[] arr = new String[]{ "normal", "sixteenth", "decimal"}; int off = 0;
 		Label label = new Label(translate("editor.multiplicator"), 4, 4, 100, 24);
 		super.add(label); label.getStyle().setFontSize(20f); int am = 0;
@@ -63,8 +63,9 @@ public class EditorBase extends Panel {
 	        multislider.setTooltip(multitip);
 	        super.add(multislider); off += 16;
 		}
-        scrollable = new ScrollablePanel(0, 54, 304, FMTB.HEIGHT - 80);
+        scrollable = new ScrollablePanel(0, 54, 310, FMTB.HEIGHT - 80);
         scrollable.getStyle().getBackground().setColor(1, 1, 1, 1);
+        scrollable.getHorizontalScrollBar().setArrowSize(22);
         scrollable.setHorizontalScrollBarVisible(false);
         scrollable.getContainer().setSize(296, FMTB.HEIGHT - 80);
         scrollable.getViewport().getListenerMap().removeAllListeners(ScrollEvent.class);
