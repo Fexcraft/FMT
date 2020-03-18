@@ -60,7 +60,7 @@ public class Settings {
 
 	public static boolean vsync(){ return vsync.getValue(); }
 
-	//public static boolean darktheme(){ return darktheme.getValue(); }
+	public static boolean darktheme(){ return darktheme.getValue(); }
 	
 	public static boolean no_scroll_fields(){ return no_scroll_fields.getValue(); }
 	

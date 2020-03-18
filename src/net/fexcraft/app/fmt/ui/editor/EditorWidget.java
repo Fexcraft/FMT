@@ -25,6 +25,7 @@ public class EditorWidget extends Widget {
 			getTitleContainer().getStyle().setBackground(background);
 			getTitle().getStyle().setFontSize(22f);
 			getTitle().getStyle().setHorizontalAlign(HorizontalAlign.CENTER);
+			getStyle().getBorder().setEnabled(false);
 		});
 		getTitleTextState().setText(title);
 		getTitleContainer().setSize(getTitleContainer().getSize().x, 20);

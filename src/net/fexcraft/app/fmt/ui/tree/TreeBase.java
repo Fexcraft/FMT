@@ -13,6 +13,7 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.editor.EditorBase;
 import net.fexcraft.app.fmt.ui.editor.EditorBase.SPVSL;
 import net.fexcraft.app.fmt.utils.HelperCollector;
+import net.fexcraft.app.fmt.utils.Settings;
 
 public class TreeBase extends Panel {
 
@@ -25,7 +26,9 @@ public class TreeBase extends Panel {
 	public TreeBase(String name){
 		super(FMTB.WIDTH - 304, 30, 304, FMTB.HEIGHT - 30); Trees.trees.add(this); id = name;
 		super.add(counter = new Label((counterlabel = EditorBase.translate("tree." + id + ".counter")) + "0", 4, 1, 100, 24));
-		counter.getStyle().setFontSize(24f);
+		Settings.THEME_CHANGE_LISTENER.add(bool -> {
+			counter.getStyle().setFontSize(24f);
+		});
         scrollable = new ScrollablePanel(0, 28, 304, FMTB.HEIGHT - 60);
         scrollable.getStyle().getBackground().setColor(1, 1, 1, 1);
         scrollable.setHorizontalScrollBarVisible(false);

@@ -222,7 +222,7 @@ public class UserInterfaceUtils {
 		public static int size = 135;
 		
 		public MenuEntry(int index, String title, MenuButton... buttons){
-			super(186 + (index * (size + 2)), 1, size - 1, 28);
+			super(187 + (index * (size + 2)), 1, size, 28);
 			Label tatle = new Label(title, 4, 0, 50, 28); 
 			Settings.THEME_CHANGE_LISTENER.add(bool -> {
 				this.getStyle().setBorderRadius(0f);

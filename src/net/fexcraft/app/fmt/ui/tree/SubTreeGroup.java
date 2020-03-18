@@ -2,6 +2,8 @@ package net.fexcraft.app.fmt.ui.tree;
 
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
+import java.util.function.Consumer;
+
 import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.Panel;
@@ -34,7 +36,8 @@ public class SubTreeGroup extends Panel {
 	public SubTreeGroup(TreeBase base){
 		super(0, 0, base.getSize().x - 22, 20); this.base = base;
 		this.add(label = new Label("group-label", 0, 0, (int)getSize().x, 20));
-		Settings.THEME_CHANGE_LISTENER.add(bool -> {
+		Consumer<Boolean> con;
+		Settings.THEME_CHANGE_LISTENER.add(con = bool -> {
 			label.getStyle().setFont("roboto-bold");
 			label.getStyle().setPadding(0, 0, 0, 5);
 			label.getStyle().setBorderRadius(0);
@@ -44,7 +47,10 @@ public class SubTreeGroup extends Panel {
 			else{
 				label.getStyle().setTextColor(ColorConstants.lightGray());
 			}
+			getStyle().getBorder().setEnabled(false);
+			if(animation != null || list != null || polygon != null) updateColor();
 		});
+		con.accept(Settings.darktheme());
 	}
 	
 	public SubTreeGroup(TreeBase base, PolygonWrapper wrapper){
