@@ -219,7 +219,15 @@ public class GroupCompound {
 			if(groups.isEmpty() && group == null) groups.add(new TurboList("group0"));
 			if(group != null && !groups.contains(group)) groups.add(new TurboList(group));
 			TurboList list = (group == null ? groups.contains("body") ? groups.get("body") : groups.get(0) : groups.get(group));
-			if(clear){ clearSelection(); } shape.selected = true; SELECTED_POLYGONS += 1; list.add(shape); shape.recompile(); this.updateFields();
+			if(clear){
+				clearSelection();
+			}
+			shape.selected = true;
+			SELECTED_POLYGONS += 1;
+			list.add(shape);
+			shape.button.updateColor();
+			shape.recompile();
+			this.updateFields();
 		}
 		catch(Exception e){
 			e.printStackTrace();
