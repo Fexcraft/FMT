@@ -223,6 +223,11 @@ public class FMTB {
 			@Override
 			public void invoke(long window, double xoffset, double yoffset){
 				if(!Settings.no_scroll_fields() && (field_scrolled = (context.getFocusedGui() instanceof Field))){
+					if(!context.getFocusedGui().isHovered()){
+						context.setFocusedGui(null);
+						field_scrolled = false;
+						return;
+					}
 					Field field = (Field)context.getFocusedGui();
 					if(field.id() != null || field.update() != null) field.onScroll(yoffset);
 				}
