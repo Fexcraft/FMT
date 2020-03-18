@@ -50,8 +50,16 @@ public class EditorBase extends Panel {
 				}
 			}
 	        final Tooltip multitip = new Tooltip();
-	        multitip.setSize(100, 28); multitip.getStyle().setPadding(0, 0, 0, 5); multitip.getStyle().setFontSize(20f);
-	        multitip.getStyle().getBackground().setColor(Settings.darktheme() ? 0.1f : 0.9f, Settings.darktheme() ? 0.1f : 0.9f, Settings.darktheme() ? 0.1f : 0.9f, 1f);
+	        multitip.setSize(100, 28);
+	        multitip.getStyle().setPadding(0, 0, 0, 5);
+	        Settings.THEME_CHANGE_LISTENER.add(bool -> {
+	        	if(bool){
+	    	        multitip.getStyle().getBackground().setColor(0.1f, 0.1f, 0.1f, 1f);
+	        	}
+	        	else{
+	    	        multitip.getStyle().getBackground().setColor(0.9f, 0.9f, 0.9f, 1f);
+	        	}
+	        });
 	        multitip.setPosition(multislider.getSize().x + 10, 0); final String amo = "%." + am + "f";
 	        multitip.getTextState().setText(translate("editor.multiplicator.value") + String.format(amo, multislider.getValue()));
 	        multislider.addSliderChangeValueEventListener((SliderChangeValueEventListener) event -> {

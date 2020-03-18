@@ -145,34 +145,38 @@ public class FMTB {
 		glfwShowWindow(window);
 		//
 		NO_POLYGON_SELECTED = Translator.translate("error.no_polygon_selected");
-		if(!Settings.darktheme()){
-	        Themes.setDefaultTheme(new FlatColoredTheme(
-				rgba(245, 245, 245, 1), // backgroundColor
-		        rgba(176, 190, 197, 1), // borderColor
-		        rgba(176, 190, 197, 1), // sliderColor
-		        rgba(100, 181, 246, 1), // strokeColor
-		        rgba(165, 214, 167, 1), // allowColor
-		        rgba(239, 154, 154, 1), // denyColor
-		        ColorConstants.transparent(), // shadowColor
-	            ColorConstants.darkGray(), // text color
-	            FontRegistry.DEFAULT, // font
-	            20f //font size
-	        ));
-		}
-		else{
-	        Themes.setDefaultTheme(new FlatColoredTheme(
-	            rgba(33, 33, 33, 1), // backgroundColor
-	            rgba(97, 97, 97, 1), // borderColor
-	            rgba(97, 97, 97, 1), // sliderColor
-	            rgba(2, 119, 189, 1), // strokeColor
-	            rgba(27, 94, 32, 1), // allowColor
-	            rgba(183, 28, 28, 1), // denyColor
-	            ColorConstants.transparent(),  // shadowColor
-	            ColorConstants.lightGray(), //text color
-	            FontRegistry.DEFAULT, // font
-	            20f //font size
-	        ));
-		}
+		Settings.THEME_CHANGE_LISTENER.add(bool -> {
+			if(bool){
+		        Themes.setDefaultTheme(new FlatColoredTheme(
+		            rgba(33, 33, 33, 1), // backgroundColor
+		            rgba(97, 97, 97, 1), // borderColor
+		            rgba(97, 97, 97, 1), // sliderColor
+		            rgba(2, 119, 189, 1), // strokeColor
+		            rgba(27, 94, 32, 1), // allowColor
+		            rgba(183, 28, 28, 1), // denyColor
+		            ColorConstants.transparent(),  // shadowColor
+		            ColorConstants.lightGray(), //text color
+		            FontRegistry.DEFAULT, // font
+		            20f //font size
+		        ));
+			}
+			else{
+		        Themes.setDefaultTheme(new FlatColoredTheme(
+					rgba(245, 245, 245, 1), // backgroundColor
+			        rgba(176, 190, 197, 1), // borderColor
+			        rgba(176, 190, 197, 1), // sliderColor
+			        rgba(100, 181, 246, 1), // strokeColor
+			        rgba(165, 214, 167, 1), // allowColor
+			        rgba(239, 154, 154, 1), // denyColor
+			        ColorConstants.transparent(), // shadowColor
+		            ColorConstants.darkGray(), // text color
+		            FontRegistry.DEFAULT, // font
+		            20f //font size
+		        ));
+			}
+	        if(frame != null) Themes.getDefaultTheme().applyAll(frame);
+		});
+		Settings.updateTheme();
         frame = new Frame(WIDTH, HEIGHT);
         //frame.getContainer().add(new Interface());
         Trees.initializeTrees(frame);
@@ -230,6 +234,7 @@ public class FMTB {
 		SystemEventProcessor.addDefaultCallbacks(keeper, systemEventProcessor);
         renderer = new NvgRenderer();
         renderer.initialize();
+		Settings.updateTheme();
         //
 		ggr = new GGR(0, 4, 4); ggr.rotation.xCoord = 45;
 		PorterManager.load(); HelperCollector.reload();

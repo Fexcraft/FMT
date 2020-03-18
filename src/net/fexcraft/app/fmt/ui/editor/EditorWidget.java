@@ -8,25 +8,31 @@ import org.liquidengine.legui.style.color.ColorConstants;
 import net.fexcraft.app.fmt.utils.Settings;
 
 public class EditorWidget extends Widget {
-	
+
 	private EditorBase editor;
 
 	public EditorWidget(EditorBase base, String title, int x, int y, int w, int h){
-		super(x, y, w, h); editor = base;
-		Background background = new Background();
-		if(!Settings.darktheme()){
-			background.setColor(ColorConstants.lightGray());
-		}
-		else{
-			background.setColor(ColorConstants.darkGray());
-		}
-		getTitle().getStyle().setFontSize(22f); getTitleTextState().setText(title);
-		getTitleContainer().getStyle().setBackground(background);
+		super(x, y, w, h);
+		editor = base;
+		Settings.THEME_CHANGE_LISTENER.add(bool -> {
+			Background background = new Background();
+			if(!bool){
+				background.setColor(ColorConstants.lightGray());
+			}
+			else{
+				background.setColor(ColorConstants.darkGray());
+			}
+			getTitleContainer().getStyle().setBackground(background);
+			getTitle().getStyle().setFontSize(22f);
+			getTitle().getStyle().setHorizontalAlign(HorizontalAlign.CENTER);
+		});
+		getTitleTextState().setText(title);
 		getTitleContainer().setSize(getTitleContainer().getSize().x, 20);
-		getTitle().getStyle().setHorizontalAlign(HorizontalAlign.CENTER);
-        setCloseable(false); setResizable(false); setDraggable(false);
+		setCloseable(false);
+		setResizable(false);
+		setDraggable(false);
 	}
-	
+
 	@Override
 	public void setMinimized(boolean bool){
 		super.setMinimized(bool);
@@ -36,5 +42,5 @@ public class EditorWidget extends Widget {
 	public void toggle(){
 		setMinimized(!isMinimized());
 	}
-	
+
 }

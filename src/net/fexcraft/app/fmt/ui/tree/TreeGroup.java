@@ -38,10 +38,17 @@ public class TreeGroup extends Panel {
 	public TreeGroup(TreeBase base){
 		super(0, 0, base.getSize().x - 12, 20); tree = base;
 		this.add(label = new Label("group-label", 0, 0, (int)getSize().x, 20));
-		label.getStyle().setFont("roboto-bold");
-		label.getStyle().setPadding(0, 0, 0, 5);
-		label.getStyle().setBorderRadius(0);
-		if(Settings.darktheme()) label.getStyle().setTextColor(ColorConstants.darkGray());
+		Settings.THEME_CHANGE_LISTENER.add(bool -> {
+			label.getStyle().setFont("roboto-bold");
+			label.getStyle().setPadding(0, 0, 0, 5);
+			label.getStyle().setBorderRadius(0);
+			if(bool){
+				label.getStyle().setTextColor(ColorConstants.darkGray());
+			}
+			else{
+				label.getStyle().setTextColor(ColorConstants.lightGray());
+			}
+		});
 	}
 	
 	public TreeGroup(TreeBase base, TurboList group, boolean flag){
