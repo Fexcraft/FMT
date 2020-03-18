@@ -113,6 +113,9 @@ public class GGR {
     }
 
     public void processCameraInput(float delta){
+    	if(FMTB.context.getFocusedGui() != null){
+    		w_down = s_down = d_down = a_down = r_down = f_down = space_down = shift_down = false;
+    	}
         boolean front = w_down;
         boolean back  = s_down;
         boolean right = d_down;

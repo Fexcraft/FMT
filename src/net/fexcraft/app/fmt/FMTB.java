@@ -190,7 +190,7 @@ public class FMTB {
         keeper.getChainKeyCallback().add(new GLFWKeyCallback(){
             @Override
             public void invoke(long window, int key, int scancode, int action, int mods){
-            	if(key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) reset(); 
+            	if(key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) reset();
             	if(context.getFocusedGui() instanceof Field || context.getFocusedGui() instanceof TextField) return;
     			KeyCompound.process(window, key, scancode, action, mods);
             }
