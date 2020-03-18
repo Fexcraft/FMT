@@ -41,12 +41,12 @@ public class SubTreeGroup extends Panel {
 			label.getStyle().setFont("roboto-bold");
 			label.getStyle().setPadding(0, 0, 0, 5);
 			label.getStyle().setBorderRadius(0);
-			if(bool){
+			//if(bool){
 				label.getStyle().setTextColor(ColorConstants.darkGray());
-			}
-			else{
-				label.getStyle().setTextColor(ColorConstants.lightGray());
-			}
+			//}
+			//else{
+			//	label.getStyle().setTextColor(ColorConstants.lightGray());
+			//}
 			getStyle().getBorder().setEnabled(false);
 			if(animation != null || list != null || polygon != null) updateColor();
 		});
