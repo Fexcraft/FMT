@@ -61,7 +61,7 @@ public abstract class FVTMFormatBase extends ExImPorter {
 		buffer.append(getPackageLine());
 		appendImports(buffer);
 		buffer.append("/** This file was exported via the " + getTitle() + " of<br>\n");
-		buffer.append(" *  FMT (Fex's Modelling Toolbox) v." + FMTB.version + " &copy; " + Year.now().getValue() + " - Fexcraft.net<br>\n");
+		buffer.append(" *  FMT (Fex's Modelling Toolbox) v." + FMTB.VERSION + " &copy; " + Year.now().getValue() + " - Fexcraft.net<br>\n");
 		buffer.append(" *  All rights reserved. For this Model's License contact the Author/Creator.\n */\n");
 		appendClassDeclaration(buffer);
 		if(this.extended){

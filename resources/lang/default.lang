@@ -21,6 +21,8 @@ toolbar.utils.create_gif=Create GIF
 toolbar.utils.screenshot=Screenshot
 toolbar.utils.reset_camera=Reset Cam.
 toolbar.utils.calc_size=Calc. Size
+toolbar.utils.copy=Copy (ClipBoard)
+toolbar.utils.paste=Paste (ClipBoard)
 toolbar.utils.copy_selected=Copy Selected
 toolbar.utils.flip.left_right=Flip (X) [L/R]
 toolbar.utils.flip.up_down=Flip (Y) [U/D]
@@ -223,6 +225,7 @@ polygon_picker.paint_pencil.no_texture=No Texture loaded. Cannot use Paint Penci
 compound.change_type.not_found=Type not found!
 compound.change_type.failed=%s shape(s) skipped!
 compound.delete_selected=Are you sure to delete all selected Polygons?
+compound.simple-clipboard.external=Do you wish to import polygons from clipboard?
 
 # Save/Load
 saveload.title=FMTB File Manager

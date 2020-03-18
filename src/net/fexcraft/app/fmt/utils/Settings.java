@@ -226,7 +226,7 @@ public class Settings {
 			}
 		});
 		obj.add("settings", settings);
-		obj.addProperty("last_fmt_version_used", FMTB.version);
+		obj.addProperty("last_fmt_version_used", FMTB.VERSION);
 		obj.addProperty("last_fmt_exit", Time.getAsString(Time.getDate()));
 		JsonUtil.write(new File("./settings.json"), obj);
 	}

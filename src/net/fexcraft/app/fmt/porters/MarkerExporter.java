@@ -36,7 +36,7 @@ public class MarkerExporter extends ExImPorter {
 	@Override
 	public String exportModel(GroupCompound compound, File file, Map<String, Setting> settings){
 		StringBuffer buffer = new StringBuffer();
-		buffer.append("# FMT Marker List // FMT version: " + FMTB.version + "\n");
+		buffer.append("# FMT Marker List // FMT version: " + FMTB.VERSION + "\n");
 		buffer.append("# Model: " + (compound.name == null ? "unnamed" : compound.name.toLowerCase()) + "\n\n");
 		for(TurboList list : compound.getGroups()){
 			List<PolygonWrapper> coll = list.stream().filter(pre -> pre instanceof MarkerWrapper).collect(Collectors.toList());

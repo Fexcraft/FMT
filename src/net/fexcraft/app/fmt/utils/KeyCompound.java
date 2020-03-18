@@ -89,6 +89,16 @@ public class KeyCompound {
 		keys.add(new KeyFunction("left_alt", GLFW_KEY_LEFT_ALT, (action) -> FMTB.ggr.left_alt_down = GGR.parseKeyAction(action)));
 		keys.add(new KeyFunction("right_control", GLFW_KEY_RIGHT_CONTROL, (action) -> FMTB.ggr.right_control_down = GGR.parseKeyAction(action)));
 		keys.add(new KeyFunction("right_alt", GLFW_KEY_RIGHT_ALT, (action) -> FMTB.ggr.right_alt_down = GGR.parseKeyAction(action)));
+		keys.add(new KeyFunction("clipboard_copy", GLFW_KEY_C, (action) -> {
+			if(action == GLFW_PRESS && GGR.isControlDown()){
+				FMTB.MODEL.copyToClipboard();
+			}
+		}));
+		keys.add(new KeyFunction("clipboard_paste", GLFW_KEY_V, (action) -> {
+			if(action == GLFW_PRESS){
+				FMTB.MODEL.pasteFromClipboard();
+			}
+		}));
 	}
 	
 	public static void load(){

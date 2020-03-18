@@ -90,6 +90,8 @@ public class UserInterfaceUtils {
 		));
 		frame.getContainer().add(new MenuEntry(1, translate("toolbar.utils"),
 			new MenuButton("toolbar.utils.copy_selected", () -> FMTB.MODEL.copyAndSelect()),
+			new MenuButton("toolbar.utils.copy", () -> FMTB.MODEL.copyToClipboard()),
+			new MenuButton("toolbar.utils.paste", () -> FMTB.MODEL.pasteFromClipboard()),
 			new MenuButton("toolbar.utils.undo", NOT_AVAILABLE_YET),
 			new MenuButton("toolbar.utils.redo", NOT_AVAILABLE_YET),
 			new MenuButton("toolbar.utils.flip.left_right", () -> FMTB.MODEL.flipShapeboxes(0)),

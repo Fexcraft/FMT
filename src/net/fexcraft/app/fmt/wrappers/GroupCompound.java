@@ -1,16 +1,28 @@
 package net.fexcraft.app.fmt.wrappers;
 
 import java.awt.Color;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.lwjgl.opengl.GL11;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.porters.JsonToTMT;
 import net.fexcraft.app.fmt.ui.DialogBox;
+import net.fexcraft.app.fmt.ui.DialogBox.DialogTask;
 import net.fexcraft.app.fmt.ui.editor.Editors;
 import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
 import net.fexcraft.app.fmt.ui.editor.ModelGroupEditor;
@@ -25,6 +37,7 @@ import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.lib.common.Static;
+import net.fexcraft.lib.common.json.JsonUtil;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
 
@@ -669,6 +682,60 @@ public class GroupCompound {
 			} compound.button.update(); Trees.polygon.reOrderGroups();
 		}
 		
+	}
+
+	public void copyToClipboard(){
+		Static.stop();
+		ArrayList<PolygonWrapper> selected = this.getSelected();
+		if(selected.isEmpty()) return;
+		JsonObject obj = new JsonObject();
+		obj.addProperty("origin", "fmt");
+		obj.addProperty("version", FMTB.VERSION);
+		obj.addProperty("model", this.name);
+		obj.addProperty("type", "simple-clipboard");
+		JsonArray array = new JsonArray();
+		for(PolygonWrapper wrapper : selected){
+			array.add(wrapper.toJson(false));
+		}
+		obj.add("polygons", array);
+		Clipboard cp = Toolkit.getDefaultToolkit().getSystemClipboard();
+		StringSelection sel = new StringSelection(obj.toString());
+		cp.setContents(sel, sel);
+	}
+
+	public void pasteFromClipboard(){
+		Clipboard cp = Toolkit.getDefaultToolkit().getSystemClipboard();
+		Transferable data = cp.getContents(null);
+		if(data.isDataFlavorSupported(DataFlavor.stringFlavor)){
+			try{
+				String str = data.getTransferData(DataFlavor.stringFlavor).toString();
+				if(!str.startsWith("{")) return;
+				JsonObject obj = JsonUtil.getObjectFromString(str);
+				if(!obj.has("origin") && !obj.get("origin").getAsString().equals("fmt")) return;
+				if(!obj.has("type") || !obj.has("model") || !obj.has("polygons")) return;
+				this.clearSelection();
+				switch(obj.get("type").getAsString()){
+					case "simple-clipboard":{
+						boolean external = !obj.get("model").getAsString().equals(name);
+						String groupto = external ? obj.get("model").getAsString() + "|cb" : "clipboard";
+						DialogTask task = () -> {
+							obj.get("polygons").getAsJsonArray().forEach(elm -> {
+								this.add(JsonToTMT.parseWrapper(this, elm.getAsJsonObject()), groupto, false);
+							});
+						};
+						if(external){
+							DialogBox.showYN(null, task, null, "compound.simple-clipboard.external", "#ORIGIN: " + obj.get("model").getAsString());
+						}
+						else task.process();
+						return;
+					}
+					default: return;
+				}
+			}
+			catch(UnsupportedFlavorException | IOException e){
+				e.printStackTrace();
+			}
+		}
 	}
 
 }

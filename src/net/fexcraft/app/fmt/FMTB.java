@@ -88,7 +88,7 @@ public class FMTB {
 	
 	public static final String deftitle = "[FPS:%s] Fexcraft Modelling Toolbox - %s";
 	public static final String deftitle0 = "Fexcraft Modelling Toolbox - %s";
-	public static final String version = "2.0.5";
+	public static final String VERSION = "2.1.0";
 	public static final String CLID = "587016218196574209";
 	//
 	public static GGR ggr;
@@ -114,7 +114,7 @@ public class FMTB {
 	
 	public static void main(String... args) throws Exception {
         System.setProperty("joml.nounsafe", Boolean.TRUE.toString());
-        System.setProperty("java.awt.headless", Boolean.TRUE.toString());
+        //System.setProperty("java.awt.headless", Boolean.TRUE.toString());
 	    System.setProperty("org.lwjgl.librarypath", new File("./lib/").getAbsolutePath());
 		Configuration.SHARED_LIBRARY_EXTRACT_DIRECTORY.set("./lib");
 		Configuration.SHARED_LIBRARY_EXTRACT_PATH.set("./lib");
@@ -536,17 +536,17 @@ public class FMTB {
 				if(obj.has("blocked_versions")){
 					JsonArray array = obj.get("blocked_versions").getAsJsonArray();
 					for(JsonElement elm : array){
-						if(elm.isJsonPrimitive() && elm.getAsString().equals(version)){
+						if(elm.isJsonPrimitive() && elm.getAsString().equals(VERSION)){
 							Print.console("Blocked version detected, causing panic.");
 							System.exit(2); System.exit(2); System.exit(2); System.exit(2);
 						}
 					}
 				}
-				String newver = obj.get("latest_version").getAsString(); boolean bool = version.equals(newver);
+				String newver = obj.get("latest_version").getAsString(); boolean bool = VERSION.equals(newver);
 				String welcome = Translator.translate("dialog.welcome.title");
-				String cversion = Translator.format("dialog.welcome.version", version);
-				String new_title = Translator.format("dialog.welcome.title_new", newver, version);
-				String new_version = Translator.format("dialog.welcome.version_new", newver, version);
+				String cversion = Translator.format("dialog.welcome.version", VERSION);
+				String new_title = Translator.format("dialog.welcome.title_new", newver, VERSION);
+				String new_version = Translator.format("dialog.welcome.version_new", newver, VERSION);
 				//
 		        Dialog dialog = new Dialog(bool ? welcome : new_title, 300, 100);
 		        Label label = new Label(bool ? cversion : new_version, 10, 10, 200, 20);

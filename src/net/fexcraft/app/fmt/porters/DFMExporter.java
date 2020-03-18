@@ -76,7 +76,7 @@ public class DFMExporter extends ExImPorter {
 		buffer.append("import com.flansmod.client.tmt.PositionTextureVertex;\n");
 		buffer.append("import com.flansmod.client.tmt.TexturedPolygon;\n\n");
 		buffer.append("/** This file was exported via the (Default) FlansMod Exporter of<br>\n");
-		buffer.append(" *  FMT (Fex's Modelling Toolbox) v." + FMTB.version + " &copy; " + Year.now().getValue() + " - Fexcraft.net<br>\n");
+		buffer.append(" *  FMT (Fex's Modelling Toolbox) v." + FMTB.VERSION + " &copy; " + Year.now().getValue() + " - Fexcraft.net<br>\n");
 		buffer.append(" *  All rights reserved. For this Model's License contact the Author/Creator.\n */\n");
 		buffer.append("public class " + modelname + " extends " + modeltype + " {\n\n");
 		buffer.append(tab + "private int textureX = " + compound.tx(null) + ";\n");

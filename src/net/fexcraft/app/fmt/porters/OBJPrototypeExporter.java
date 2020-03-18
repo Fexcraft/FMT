@@ -52,7 +52,7 @@ public class OBJPrototypeExporter extends ExImPorter {
 		StringBuffer buffer = new StringBuffer(); boolean bool = settings.get("rotate_model").getBooleanValue();
 		buffer.append("# FMT-Marker OBJ-2\n#\n"); float scale = settings.get("scale").getFloatValue(); String mtlname = null;
 		buffer.append("# Model exported via the Standard FMT OBJ Exporter\n"); boolean mtl = settings.get("create_mtl").getBooleanValue();
-		buffer.append("# FMT (Fex's Modelling Toolbox) v." + FMTB.version + " &copy; " + Year.now().getValue() + " - Fexcraft.net\n");
+		buffer.append("# FMT (Fex's Modelling Toolbox) v." + FMTB.VERSION + " &copy; " + Year.now().getValue() + " - Fexcraft.net\n");
 		buffer.append("# All rights reserved. For this Model's License contact the Author/Creator.\n#\n");
 		if(compound.creators.size() > 0){
 			for(String str : compound.creators){
