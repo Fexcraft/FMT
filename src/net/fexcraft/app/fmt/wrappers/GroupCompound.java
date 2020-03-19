@@ -11,6 +11,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -551,8 +552,8 @@ public class GroupCompound {
 		/*Trees.polygon.reOrderGroups();*/ return;
 	}
 
-	public void flipShapeboxes(int axis){
-		List<PolygonWrapper> wrappers = this.getSelected().stream().filter(pre -> pre.getType().isShapebox()).collect(Collectors.toList());
+	public void flipShapeboxes(List<PolygonWrapper> list, int axis){
+		List<PolygonWrapper> wrappers = list != null ? list : this.getSelected().stream().filter(pre -> pre.getType().isShapebox()).collect(Collectors.toList());
 		for(PolygonWrapper wrapper : wrappers){
 			if(wrapper instanceof ShapeboxWrapper){
 				Vec3f[] copy = new Vec3f[8]; ShapeboxWrapper shapebox = (ShapeboxWrapper)wrapper;
@@ -742,6 +743,45 @@ public class GroupCompound {
 			}
 			catch(UnsupportedFlavorException | IOException e){
 				e.printStackTrace();
+			}
+		}
+	}
+
+	public void rectify(){
+		for(TurboList list : groups){
+			for(PolygonWrapper wrapper : list){
+				wrapper.pos.yCoord = -wrapper.pos.yCoord + 26;
+				if(wrapper instanceof BoxWrapper){
+					wrapper.off.yCoord = -wrapper.off.yCoord - ((BoxWrapper)wrapper).size.yCoord;
+				}
+				else if(wrapper instanceof CylinderWrapper){
+					CylinderWrapper cyl = (CylinderWrapper)wrapper;
+					if(cyl.direction > 3){
+						cyl.off.yCoord = -cyl.off.yCoord - cyl.length;
+						float base = cyl.base;
+						cyl.base = cyl.top;
+						cyl.top = base;
+					}
+					if(cyl.topoff != null){
+						cyl.topoff.yCoord = -cyl.topoff.yCoord;
+					}
+					if(cyl.toprot != null){
+						cyl.toprot.yCoord = -cyl.toprot.yCoord;
+						cyl.toprot.zCoord = -cyl.toprot.zCoord;
+					}
+				}
+				else{
+					wrapper.off.yCoord = -wrapper.off.yCoord;
+				}
+				wrapper.rot.xCoord = -wrapper.rot.xCoord;
+				wrapper.rot.zCoord = -wrapper.rot.zCoord;
+				if(wrapper.getType().isRectagular()){
+					BoxWrapper box = (BoxWrapper)wrapper;
+					if(box.getType().isShapebox()){
+						flipShapeboxes(Arrays.asList(new PolygonWrapper[]{ wrapper }), 1);
+					}
+				}
+				wrapper.recompile();
 			}
 		}
 	}
