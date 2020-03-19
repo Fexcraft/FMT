@@ -12,6 +12,7 @@ import java.util.Map;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.utils.Axis3DL;
+import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.utils.Settings.Type;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
@@ -33,9 +34,9 @@ public class OBJPrototypeExporter extends ExImPorter {
 	private static final String[] extensions = new String[]{ "Wavefront Obj Model", "*.obj" };
 	
 	public OBJPrototypeExporter(){
-		settings.add(new Setting(Type.BOOLEAN, "rotate_model", true));
-		settings.add(new Setting(Type.FLOAT, "rotate_y", 180));
-		settings.add(new Setting(Type.FLOAT, "rotate_z", 180));
+		settings.add(new Setting(Type.BOOLEAN, "rotate_model", Settings.oldrot()));
+		settings.add(new Setting(Type.FLOAT, "rotate_y", Settings.oldrot() ? 0 : 180));
+		settings.add(new Setting(Type.FLOAT, "rotate_z", Settings.oldrot() ? 0 : 180));
 		settings.add(new Setting(Type.FLOAT, "rotate_x", 0));
 		settings.add(new Setting(Type.BOOLEAN, "flip_texture", true));
 		settings.add(new Setting(Type.FLOAT, "scale", 1f));
