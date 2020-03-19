@@ -143,6 +143,7 @@ public class FMTB {
 		//GLUtil.setupDebugMessageCallback();
 		initOpenGL(); this.setIcon();
 		glfwShowWindow(window);
+		glfwFocusWindow(window);
 		//
 		NO_POLYGON_SELECTED = Translator.translate("error.no_polygon_selected");
 		Settings.THEME_CHANGE_LISTENER.add(bool -> {
@@ -183,7 +184,9 @@ public class FMTB {
         Editors.initializeEditors(frame);
         UserInterfaceUtils.addToolbarButtons(frame);
         //TabContainer.addTest(frame);
-        MODEL.initButton(); context = new Context(window);
+        MODEL.initButton();
+        context = new Context(window);
+        //context.setDebugEnabled(true);
         CallbackKeeper keeper = new DefaultCallbackKeeper();
         CallbackKeeper.registerCallbacks(window, keeper);
 		//
@@ -344,7 +347,7 @@ public class FMTB {
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
         RGB.glColorReset(); ggr.apply();
 		//
-        GL11.glRotatef(180, 1, 0, 0);
+        //GL11.glRotatef(180, 1, 0, 0);
         GL11.glPushMatrix();
         RGB.WHITE.glColorApply();
         if(ImageHelper.HASTASK && ImageHelper.getTaskId() == 2){
@@ -361,10 +364,10 @@ public class FMTB {
 	            GL11.glPushMatrix();
 	            //GL11.glCullFace(GL11.GL_BACK); GL11.glEnable(GL11.GL_CULL_FACE);
 	            GL11.glBegin(GL11.GL_QUADS); float cs = 16;
-	    		GL11.glTexCoord2f(0, 1); GL11.glVertex3f( cs, 1f / 16 * 10,  cs);
-	            GL11.glTexCoord2f(1, 1); GL11.glVertex3f(-cs, 1f / 16 * 10,  cs);
-	            GL11.glTexCoord2f(1, 0); GL11.glVertex3f(-cs, 1f / 16 * 10, -cs);
-	            GL11.glTexCoord2f(0, 0); GL11.glVertex3f( cs, 1f / 16 * 10, -cs);
+	    		GL11.glTexCoord2f(0, 1); GL11.glVertex3f( cs, 1 - 0.001f,  cs);
+	            GL11.glTexCoord2f(1, 1); GL11.glVertex3f(-cs, 1 - 0.001f,  cs);
+	            GL11.glTexCoord2f(1, 0); GL11.glVertex3f(-cs, 1 - 0.001f, -cs);
+	            GL11.glTexCoord2f(0, 0); GL11.glVertex3f( cs, 1 - 0.001f, -cs);
 	            //GL11.glCullFace(GL11.GL_FRONT_AND_BACK); GL11.glDisable(GL11.GL_CULL_FACE); //apparently the front renderer doesn't like this.
 	            GL11.glEnd(); GL11.glPopMatrix();
 	            GL11.glRotatef( 90, 0, 1, 0);
@@ -381,6 +384,8 @@ public class FMTB {
             }
             if(Settings.demo()){
                 TextureManager.bindTexture("t1p");
+                GL11.glRotatef(180, 1, 0, 0);
+                GL11.glTranslatef(0, -1.5f, 0);
                 RGB.glColorReset(); ModelT1P.INSTANCE.render();
             }
 			if(Settings.lighting()) GL11.glDisable(GL11.GL_LIGHTING);
