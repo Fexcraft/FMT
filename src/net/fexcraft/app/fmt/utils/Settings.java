@@ -24,7 +24,7 @@ public class Settings {
 	private static Setting floor, lines, demo, cube, polygon_marker, lighting, cullface, animate,
 		discordrpc, discordrpc_sm, discordrpc_rtonm, numberfieldarrows, preview_colorpicker;
 	public static Setting movespeed, mouse_sensivity, internal_cursor, vsync;
-	public static Setting darktheme, no_scroll_fields;
+	public static Setting darktheme, no_scroll_fields, old_rotation;
 	//
 	public static final ArrayList<Consumer<Boolean>> THEME_CHANGE_LISTENER = new ArrayList<>();
 
@@ -63,6 +63,8 @@ public class Settings {
 	public static boolean darktheme(){ return darktheme.getValue(); }
 	
 	public static boolean no_scroll_fields(){ return no_scroll_fields.getValue(); }
+
+	public static boolean oldrot(){ return old_rotation.getValue(); }
 	
 	//
 
@@ -152,6 +154,7 @@ public class Settings {
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "preview_colorpicker", false));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "dark_theme", false));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "no_scroll_fields", false));
+		DEFAULTS.add(new Setting(Type.BOOLEAN, "old_rotation", false));
 		//
 		/*DEFAULTS.add(new Setting(Type.STRING, "filedir_last_type", "SAVES"));
 		DEFAULTS.add(new Setting(Type.STRING, "filedir_last", "./saves"));
@@ -209,6 +212,7 @@ public class Settings {
 		//FileSelector.FileRoot.last = FileRoot.valueOf(SETTINGS.get("filedir_last_type").getStringValue());
 		darktheme = SETTINGS.get("dark_theme");
 		no_scroll_fields = SETTINGS.get("no_scroll_fields");
+		old_rotation = SETTINGS.get("old_rotation");
 	}
 
 	public static void save(){
