@@ -771,7 +771,7 @@ public class GroupCompound {
 					}
 				}
 				else{
-					wrapper.off.yCoord = -wrapper.off.yCoord;
+					wrapper.off.yCoord += -wrapper.off.yCoord;
 				}
 				wrapper.rot.xCoord = -wrapper.rot.xCoord;
 				wrapper.rot.zCoord = -wrapper.rot.zCoord;
@@ -779,6 +779,36 @@ public class GroupCompound {
 					BoxWrapper box = (BoxWrapper)wrapper;
 					if(box.getType().isShapebox()){
 						flipShapeboxes(Arrays.asList(new PolygonWrapper[]{ wrapper }), 1);
+					}
+				}
+				wrapper.recompile();
+			}
+		}
+	}
+
+	public void mirrorLRSelected(){
+		for(TurboList list : groups){
+			if(list.isEmpty()) continue;
+			for(PolygonWrapper wrapper : list){
+				if(!wrapper.selected && !list.selected) continue;
+				wrapper.pos.zCoord = -wrapper.pos.zCoord;
+				if(wrapper instanceof BoxWrapper){
+					BoxWrapper box = (BoxWrapper)wrapper;
+					if(box.off.zCoord != -box.size.zCoord / 2)
+						wrapper.off.zCoord -= ((BoxWrapper)wrapper).size.zCoord;
+				}
+				else if(wrapper instanceof CylinderWrapper){
+					//CylinderWrapper cyl = (CylinderWrapper)wrapper;
+					//
+				}
+				else{
+					//
+				}
+				wrapper.rot.yCoord = -wrapper.rot.yCoord;
+				if(wrapper.getType().isRectagular()){
+					BoxWrapper box = (BoxWrapper)wrapper;
+					if(box.getType().isShapebox()){
+						flipShapeboxes(Arrays.asList(new PolygonWrapper[]{ wrapper }), 0);
 					}
 				}
 				wrapper.recompile();

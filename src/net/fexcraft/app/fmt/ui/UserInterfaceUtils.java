@@ -115,6 +115,7 @@ public class UserInterfaceUtils {
                 dialog.getContainer().add(label); dialog.getContainer().add(okbutton); dialog.show(event.getFrame());
 			}),
 			new MenuButton("toolbar.utils.rectify", () -> FMTB.MODEL.rectify()),
+			new MenuButton("toolbar.utils.mirror_sel", () -> FMTB.MODEL.mirrorLRSelected()),
 			new MenuButton("toolbar.utils.controls", NOT_REIMPLEMENTED_YET)
 		));
 		frame.getContainer().add(new MenuEntry(2, translate("toolbar.editor"),
