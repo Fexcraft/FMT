@@ -154,7 +154,7 @@ public class Settings {
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "preview_colorpicker", false));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "dark_theme", false));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "no_scroll_fields", false));
-		DEFAULTS.add(new Setting(Type.BOOLEAN, "old_rotation", false));
+		DEFAULTS.add(new Setting(Type.BOOLEAN, "old_rotation", true));
 		//
 		/*DEFAULTS.add(new Setting(Type.STRING, "filedir_last_type", "SAVES"));
 		DEFAULTS.add(new Setting(Type.STRING, "filedir_last", "./saves"));
@@ -167,6 +167,7 @@ public class Settings {
 		DEFAULTS.add(new Setting(Type.FLOAT, "mouse_sensivity", 2f));
 		DEFAULTS.add(new Setting(Type.FLOAT, "camera_movespeed", 2f));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "vsync", false));
+		DEFAULTS.add(new Setting(Type.STRING, "last_file", "null"));
 		//DEFAULTS.add(new Setting(Type.BOOLEAN, "internal_cursor", false));
 	}
 
@@ -216,6 +217,9 @@ public class Settings {
 	}
 
 	public static void save(){
+		if(FMTB.MODEL != null && FMTB.MODEL.file != null){
+			SETTINGS.get("last_file").setValue(FMTB.MODEL.file.getAbsolutePath());
+		}
 		JsonObject obj = new JsonObject();
 		obj.addProperty("format", 1);
 		JsonObject settings = new JsonObject();

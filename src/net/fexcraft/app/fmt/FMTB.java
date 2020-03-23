@@ -144,6 +144,7 @@ public class FMTB {
 		initOpenGL(); this.setIcon();
 		glfwShowWindow(window);
 		glfwFocusWindow(window);
+		ggr = new GGR(0, 4, 4); ggr.rotation.xCoord = 45;
 		//
 		NO_POLYGON_SELECTED = Translator.translate("error.no_polygon_selected");
 		Settings.THEME_CHANGE_LISTENER.add(bool -> {
@@ -184,6 +185,10 @@ public class FMTB {
         Editors.initializeEditors(frame);
         UserInterfaceUtils.addToolbarButtons(frame);
         //TabContainer.addTest(frame);
+		File file = new File(Settings.SETTINGS.get("last_file").getStringValue());
+		if(file.exists() && file.getName().endsWith(".fmtb")){
+			SaveLoad.openModel(file);
+		}
         MODEL.initButton();
         context = new Context(window);
         //context.setDebugEnabled(true);
@@ -244,7 +249,6 @@ public class FMTB {
         renderer.initialize();
 		Settings.updateTheme();
         //
-		ggr = new GGR(0, 4, 4); ggr.rotation.xCoord = 45;
 		PorterManager.load(); HelperCollector.reload();
 		SessionHandler.checkIfLoggedIn(true, true); checkForUpdates();
 		KeyCompound.init(); KeyCompound.load(); FMTB.MODEL.updateFields();

@@ -39,34 +39,36 @@ import net.fexcraft.lib.common.utils.Print;
 public class SaveLoad {
 
 	public static void openModel(){
-		FileSelector.select(Translator.translate("saveload.open"), new File("./saves").getAbsolutePath(), FileSelector.TYPE_FMTB, false, file -> {
-			if(file == null || !file.exists()){
-				DialogBox.showOK("saveload.title", null, null, "saveload.open.nofile"); return;
-			}
-			try{
-				ZipFile zip = new ZipFile(file);
-				zip.stream().forEach(elm -> {
-					if(elm.getName().equals("model.jtmt")){
-						try{
-							HelperCollector.LOADED.clear();
-							GroupCompound compound = parseModel(file, JsonUtil.getObjectFromInputStream(zip.getInputStream(elm)));
-							FMTB.setModel(compound, false); FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
-							GroupCompound.SELECTED_POLYGONS = FMTB.MODEL.countSelectedMRTs();
-						} catch(IOException e){ e.printStackTrace(); }
-					}
-					else if(elm.getName().equals("texture.png")){
-						FMTB.MODEL.setTexture("./temp/" + FMTB.MODEL.name);
-		            	try{ //in theory this should be always 2nd in the stream, so it is expected the model loaded already
-							TextureManager.loadTextureFromZip(zip.getInputStream(elm), "./temp/" + FMTB.MODEL.name, false, true);
-						} catch(IOException e){ e.printStackTrace(); }
-					}
-				}); zip.close(); FMTB.MODEL.file = file; DiscordUtil.update(Settings.discordrpc_resettimeronnewmodel());
-			}
-			catch(Exception e){
-				e.printStackTrace();
-				DialogBox.showOK("saveload.title", null, null, "saveload.open.errors"); return;
-			}
-		});
+		FileSelector.select(Translator.translate("saveload.open"), new File("./saves").getAbsolutePath(), FileSelector.TYPE_FMTB, false, file -> openModel(file));
+	}
+	
+	public static void openModel(File file){
+		if(file == null || !file.exists()){
+			DialogBox.showOK("saveload.title", null, null, "saveload.open.nofile"); return;
+		}
+		try{
+			ZipFile zip = new ZipFile(file);
+			zip.stream().forEach(elm -> {
+				if(elm.getName().equals("model.jtmt")){
+					try{
+						HelperCollector.LOADED.clear();
+						GroupCompound compound = parseModel(file, JsonUtil.getObjectFromInputStream(zip.getInputStream(elm)));
+						FMTB.setModel(compound, false); FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
+						GroupCompound.SELECTED_POLYGONS = FMTB.MODEL.countSelectedMRTs();
+					} catch(IOException e){ e.printStackTrace(); }
+				}
+				else if(elm.getName().equals("texture.png")){
+					FMTB.MODEL.setTexture("./temp/" + FMTB.MODEL.name);
+	            	try{ //in theory this should be always 2nd in the stream, so it is expected the model loaded already
+						TextureManager.loadTextureFromZip(zip.getInputStream(elm), "./temp/" + FMTB.MODEL.name, false, true);
+					} catch(IOException e){ e.printStackTrace(); }
+				}
+			}); zip.close(); FMTB.MODEL.file = file; DiscordUtil.update(Settings.discordrpc_resettimeronnewmodel());
+		}
+		catch(Exception e){
+			e.printStackTrace();
+			DialogBox.showOK("saveload.title", null, null, "saveload.open.errors"); return;
+		}
 	}
 	
 	public static GroupCompound parseModel(File from, JsonObject obj){
