@@ -12,6 +12,8 @@ import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.field.Field;
+import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
+import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.Vec3f;
 
 /** CCR */
@@ -19,30 +21,56 @@ public class GGR {
 	
     public float movemod = 1;
     public float maxlookrange = 85;
-    public Vec3f pos, rotation;
+    public Vec3f pos, rotation, orbit;
+    public Axis3DL orbital = new Axis3DL();
+    public float distance;
     //
     public boolean w_down, s_down, d_down, a_down, r_down, f_down, space_down, shift_down;
     public boolean left_alt_down, left_control_down, right_alt_down, right_control_down;
     
     public GGR(float x, float y, float z){
-        pos = new Vec3f(x, y, z); rotation = new Vec3f(0, 0, 0);
+        pos = new Vec3f(x, y, z);
+        rotation = new Vec3f(0, 0, 0);
+        orbit = new Vec3f(0, 0, 0);
     }
 
     public void apply(){
         if(rotation.yCoord / 360 > 1f){ rotation.yCoord -= 360; }
         else if(rotation.yCoord / 360 < -1f){ rotation.yCoord += 360; }
         GL11.glLoadIdentity();
-        GL11.glRotatef(rotation.xCoord, 1, 0, 0);
-        GL11.glRotatef(rotation.yCoord, 0, 1, 0);
-        GL11.glRotatef(rotation.zCoord, 0, 0, 1);
-        GL11.glTranslatef(-pos.xCoord, -pos.yCoord, -pos.zCoord);
+        if(Settings.orbital_camera()){
+            Vec3f vec = orbital.getRelativeVector(0, 0, distance);
+            vec.xCoord += -orbit.xCoord;
+            vec.yCoord += -orbit.yCoord;
+            vec.zCoord += -orbit.zCoord;
+            GL11.glRotatef(-rotation.xCoord, 1, 0, 0);
+            GL11.glRotatef(-rotation.yCoord, 0, 1, 0);
+            GL11.glRotatef(-rotation.zCoord, 0, 0, 1);
+            if(Settings.oldrot()) GL11.glRotatef(-180, 1, 0, 0);
+            GL11.glTranslatef(vec.xCoord, vec.yCoord, vec.zCoord);
+            if(Settings.oldrot()) GL11.glRotatef(180, 1, 0, 0);
+        }
+        else{
+            GL11.glRotatef(rotation.xCoord, 1, 0, 0);
+            GL11.glRotatef(rotation.yCoord, 0, 1, 0);
+            GL11.glRotatef(rotation.zCoord, 0, 0, 1);
+            GL11.glTranslatef(-pos.xCoord, -pos.yCoord, -pos.zCoord);
+        }
     }
 
     public void pollInput(float delta){
 		if(grabbed && cursor_moved){
-            rotation.yCoord += (posx - oposx) * Settings.mouse_sensivity.directFloat() * delta;
-            rotation.xCoord += (posy - oposy) * Settings.mouse_sensivity.directFloat() * delta;
-            rotation.xCoord = Math.max(-maxlookrange, Math.min(maxlookrange, rotation.xCoord));
+            if(Settings.orbital_camera()){
+                rotation.yCoord -= (posx - oposx) * Settings.mouse_sensivity.directFloat() * delta;
+                rotation.xCoord += (posy - oposy) * Settings.mouse_sensivity.directFloat() * delta;
+                rotation.xCoord = Math.max(-maxlookrange, Math.min(maxlookrange, rotation.xCoord));
+            	orbital.setAngles(rotation.yCoord, 0, -rotation.xCoord);
+            }
+            else{
+                rotation.yCoord += (posx - oposx) * Settings.mouse_sensivity.directFloat() * delta;
+                rotation.xCoord += (posy - oposy) * Settings.mouse_sensivity.directFloat() * delta;
+                rotation.xCoord = Math.max(-maxlookrange, Math.min(maxlookrange, rotation.xCoord));
+            }
             cursor_moved = false;
 		}
 		else if(scroll_down && cursor_moved){
@@ -97,12 +125,16 @@ public class GGR {
 	}
 
 	public void scrollCallback(long window, double xoffset, double yoffset){
+		if(Settings.orbital_camera()){
+			distance -= yoffset * (movemod / 2);
+			return;
+		}
 		double[] zoom = rotatePoint(yoffset * 0.5f, rotation.xCoord, rotation.yCoord - 90);
         pos.xCoord += zoom[0]; pos.yCoord += zoom[1]; pos.zCoord += zoom[2];
 	}
 
     public static double[] rotatePoint(double f, float pitch, float yaw) {
-        double[] xyz = new double[]{f,0,0};
+        double[] xyz = new double[]{ f, 0, 0 };
             pitch *= 0.01745329251;
             xyz[1] = -(f * Math.sin(pitch));
             //
@@ -116,6 +148,20 @@ public class GGR {
     	if(FMTB.context.getFocusedGui() != null){
     		w_down = s_down = d_down = a_down = r_down = f_down = space_down = shift_down = false;
     	}
+		if(Settings.orbital_camera()){
+			if(Settings.center_on_part()){
+				PolygonWrapper wrapper = FMTB.MODEL.getFirstSelection();
+				if(wrapper != null){
+					orbit.xCoord = wrapper.pos.xCoord * Static.sixteenth;
+					orbit.yCoord = wrapper.pos.yCoord * Static.sixteenth;
+					orbit.zCoord = wrapper.pos.zCoord * Static.sixteenth;
+				}
+				else{
+					orbit.xCoord = orbit.yCoord = orbit.zCoord = 0;
+				}
+			}
+			return;
+		}
         boolean front = w_down;
         boolean back  = s_down;
         boolean right = d_down;
@@ -174,7 +220,10 @@ public class GGR {
 	}
 
 	public void reset(){
-		pos = new Vec3f(0, 4, 4); rotation = new Vec3f(45, 0, 0); movemod = 1f;
+		pos = new Vec3f(0, 4, 4);
+		rotation = new Vec3f(45, 0, 0);
+		orbit = new Vec3f(0, 0, 0);
+		movemod = 1f;
 		w_down = s_down = a_down = d_down = space_down = shift_down = false;
 	}
     

@@ -25,6 +25,7 @@ public class Settings {
 		discordrpc, discordrpc_sm, discordrpc_rtonm, numberfieldarrows, preview_colorpicker;
 	public static Setting movespeed, mouse_sensivity, internal_cursor, vsync;
 	public static Setting darktheme, no_scroll_fields, old_rotation;
+	public static Setting orbital_camera, oc_center_on_part;
 	//
 	public static final ArrayList<Consumer<Boolean>> THEME_CHANGE_LISTENER = new ArrayList<>();
 
@@ -65,6 +66,10 @@ public class Settings {
 	public static boolean no_scroll_fields(){ return no_scroll_fields.getValue(); }
 
 	public static boolean oldrot(){ return old_rotation.getValue(); }
+	
+	public static boolean orbital_camera(){ return orbital_camera.getValue(); }
+	
+	public static boolean center_on_part(){ return oc_center_on_part.getValue(); }
 	
 	//
 
@@ -155,6 +160,8 @@ public class Settings {
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "dark_theme", false));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "no_scroll_fields", false));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "old_rotation", true));
+		DEFAULTS.add(new Setting(Type.BOOLEAN, "orbital_camera", false));
+		DEFAULTS.add(new Setting(Type.BOOLEAN, "oc_center_on_part", true));
 		//
 		/*DEFAULTS.add(new Setting(Type.STRING, "filedir_last_type", "SAVES"));
 		DEFAULTS.add(new Setting(Type.STRING, "filedir_last", "./saves"));
@@ -214,6 +221,8 @@ public class Settings {
 		darktheme = SETTINGS.get("dark_theme");
 		no_scroll_fields = SETTINGS.get("no_scroll_fields");
 		old_rotation = SETTINGS.get("old_rotation");
+		orbital_camera = SETTINGS.get("orbital_camera");
+		oc_center_on_part = SETTINGS.get("oc_center_on_part");
 	}
 
 	public static void save(){
