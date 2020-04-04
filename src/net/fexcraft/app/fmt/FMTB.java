@@ -88,7 +88,7 @@ public class FMTB {
 	
 	public static final String deftitle = "[FPS:%s] Fexcraft Modelling Toolbox - %s";
 	public static final String deftitle0 = "Fexcraft Modelling Toolbox - %s";
-	public static final String VERSION = "2.1.1";
+	public static final String VERSION = "2.2.0";
 	public static final String CLID = "587016218196574209";
 	//
 	public static GGR ggr;
@@ -450,7 +450,7 @@ public class FMTB {
 			ss_credits.getStyle().setFont(FontRegistry.ROBOTO_BOLD);
 			ss_frame.getContainer().add(ss_credits);
 		}
-		ss_title.getTextState().setText((Time.getDay() % 2 == 0 ? "FMT - Fexcraft Modelling Toolbox" : "FMT - Fex's Modelling Toolbox") + " [Standard Version]");
+		ss_title.getTextState().setText((Time.getDay() % 2 == 0 ? "FMT - Fexcraft Modelling Toolbox" : "FMT - Fex's Modelling Toolbox") + " [" + SessionHandler.getLicenseName() + "]");
 		switch(FMTB.MODEL.creators.size()){
 			case 0: {
 				ss_credits.getTextState().setText(FMTB.MODEL.name + " - " + (SessionHandler.isLoggedIn() ? SessionHandler.getUserName() : "Guest User"));
