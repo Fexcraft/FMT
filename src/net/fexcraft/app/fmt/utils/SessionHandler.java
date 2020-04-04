@@ -109,7 +109,10 @@ public class SessionHandler {
 	}
 	
 	public static void tryLogout(){
-		//TODO add logout dialog
+		JsonObject obj = HttpUtil.request("http://fexcraft.net/session/api", "r=status", getCookieArr());
+		Print.console("Logout Response: " + obj.toString());
+		hashpw = perm = permname = null;
+		encrypted = false;
 	}
 	
 	public static boolean isLoggedIn(){
