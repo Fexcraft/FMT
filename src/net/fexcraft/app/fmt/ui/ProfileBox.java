@@ -7,6 +7,7 @@ import org.liquidengine.legui.component.CheckBox;
 import org.liquidengine.legui.component.Dialog;
 import org.liquidengine.legui.component.ImageView;
 import org.liquidengine.legui.component.Label;
+import org.liquidengine.legui.component.PasswordInput;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.image.BufferedImage;
 import org.liquidengine.legui.listener.MouseClickEventListener;
@@ -74,13 +75,19 @@ public class ProfileBox {
         Dialog dialog = new Dialog(UserInterfaceUtils.translate("loginbox.title"), 400, 200);
         dialog.setResizable(false);
     	dialog.getContainer().add(new Label(UserInterfaceUtils.translate("loginbox.e_mail"), 10, 5, 380, 20));
-    	dialog.getContainer().add(new TextField(SessionHandler.getUserMail(), 10, 30, 380, 20));
+    	dialog.getContainer().add(new TextField(SessionHandler.getUserMail(), 10, 30, 380, 20, newval -> {
+    		SessionHandler.updateUserMail(newval);
+    	}));
     	dialog.getContainer().add(new Label(UserInterfaceUtils.translate("loginbox.password"), 10, 60, 380, 20));
-    	dialog.getContainer().add(new TextField(SessionHandler.isEncrypted() ? "" : SessionHandler.getPassWord(), 10, 85, 380, 20));
+    	PasswordInput passinput = new PasswordInput(SessionHandler.shouldEncrypt() ? "" : SessionHandler.getPassWord(), 10, 85, 380, 20);
+    	passinput.addTextInputContentChangeEventListener(event -> {
+			SessionHandler.updatePassword(event.getNewValue());
+		});
+    	dialog.getContainer().add(passinput);
     	//dialog.getContainer().add(new Label(UserInterfaceUtils.translate("loginbox.encrypt"), 30, 115, 380, 20));
         CheckBox checkbox0 = new CheckBox(10, 115, 380, 20);
         checkbox0.getStyle().setPadding(5f, 10f, 5f, 5f);
-        checkbox0.setChecked(SessionHandler.isEncrypted());
+        checkbox0.setChecked(SessionHandler.shouldEncrypt());
         checkbox0.addCheckBoxChangeValueListener(listener -> SessionHandler.toggleEncrypt());
         checkbox0.getTextState().setText((UserInterfaceUtils.translate("loginbox.encrypt")));
         dialog.getContainer().add(checkbox0);
@@ -89,7 +96,13 @@ public class ProfileBox {
         button0.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
         	if(CLICK == e.getAction()){
         		dialog.close();
-        		ProfileBox.openLogin();
+        		SessionHandler.tryLogin(resp -> {
+        			DialogBox.show("loginbox.title", "dialogbox.button.ok", SessionHandler.isLoggedIn() ? null : "profile.button.retry", null, () -> openLogin(), resp);
+        			if(SessionHandler.isLoggedIn()){
+        				SessionHandler.encrypt();
+            			SessionHandler.save();
+        			}
+        		}, false);
         	}
         });
         dialog.getContainer().add(button0);

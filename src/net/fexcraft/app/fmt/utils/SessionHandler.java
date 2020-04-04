@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.function.Consumer;
 
 import com.google.gson.JsonObject;
 
@@ -46,7 +47,7 @@ public class SessionHandler {
 	}
 	
 	public static void checkIfLoggedIn(boolean retry, boolean first){
-		Print.console("Checking login status...");
+		Print.console("Controlling session/login data...");
 		if(first) load();
 		JsonObject obj = HttpUtil.request("http://fexcraft.net/session/api", "r=status", getCookieArr());
 		if(obj != null && obj.has("success")){
@@ -68,7 +69,7 @@ public class SessionHandler {
 			if(!first) load();
 			Print.console("Trying to re-login...");
 			sessionid = null;
-			tryLogin(() -> checkIfLoggedIn(false, false));
+			tryLogin(null, true);
 			if(!loggedin){
 				Print.console("Relogin seems to have failed.");
 				userid = "-1"; username = "Guest";
@@ -80,11 +81,11 @@ public class SessionHandler {
 		return sessionid == null ? null : new String[]{ "PHPSESSID=" + sessionid };
 	}
 	
-	public static String tryLogin(Runnable run){
+	public static String tryLogin(Consumer<String> cons, boolean already_encrypted){
 		String response;
 		try{
 			//TODO http :: find solution with the certs javax can't process
-			JsonObject obj = HttpUtil.request("http://fexcraft.net/session/api", "r=login&m=" + usermail + "&p=" + hashpw + (encrypted ? "&encrypted" : ""), getCookieArr());
+			JsonObject obj = HttpUtil.request("http://fexcraft.net/session/api", "r=login&m=" + usermail + "&p=" + hashpw + (encrypted && already_encrypted ? "&encrypted" : ""), getCookieArr());
 			if(obj == null){
 				Print.console(response = "Invalid/Empty login response, aborting.");
 				return response;
@@ -96,13 +97,14 @@ public class SessionHandler {
 			loggedin = obj.has("success") && obj.get("success").getAsBoolean();
 			response = obj.has("status") ? obj.get("status").getAsString() : "api:success=" + loggedin;
 			Print.console("Login Response: " + response);
-			run.run();
+			checkIfLoggedIn(false, false);
 		}
 		catch(Exception e){
 			response = "Error: " + e.getMessage();
 			e.printStackTrace();
 			loggedin = false;
 		}
+		if(cons != null) cons.accept(response);
 		return response;
 	}
 	
@@ -147,7 +149,7 @@ public class SessionHandler {
 		return hashpw;
 	}
 
-	public static boolean isEncrypted(){
+	public static boolean shouldEncrypt(){
 		return encrypted;
 	}
 	
@@ -175,6 +177,28 @@ public class SessionHandler {
 
 	public static boolean toggleEncrypt(){
 		return encrypted = !encrypted;
+	}
+
+	public static void updatePassword(String newValue){
+		hashpw = newValue;
+	}
+
+	public static void updateUserMail(String newValue){
+		usermail = newValue;
+	}
+
+	public static void encrypt(){
+		if(!shouldEncrypt()) return;
+		JsonObject obj = HttpUtil.request("http://fexcraft.net/session/api", "r=encrypt&raw=" + hashpw, getCookieArr());
+		if(obj == null){
+			Print.console("No encryption response from server, password could not be saved encrypted locally.");
+			return;
+		}
+		if(obj.has("success") && obj.get("success").getAsBoolean() && obj.has("result")){
+			hashpw = obj.get("result").getAsString();
+			Print.console("Received Hashed/Encrypted Password version from server.");
+		}
+		else Print.console(obj.has("status") ? "SRV-RESP: " + obj.get("status").getAsString() : "Unknown Error on server-side while requesting password encryption, status returned as 'success:false'!");
 	}
 
 }

@@ -220,6 +220,7 @@ profile.license=License:
 profile.button.login=Login
 profile.button.logout=Logout
 profile.button.register=Register
+profile.button.retry=Retry
 loginbox.title=LOGIN/SESSION BOX
 loginbox.e_mail=E-Mail / User
 loginbox.password=Password
