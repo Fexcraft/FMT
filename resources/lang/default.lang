@@ -35,6 +35,7 @@ toolbar.editor.hide_all=Hide All
 toolbar.editor.general=General Editor
 toolbar.editor.model_group=Model/Group
 toolbar.editor.texture=Texture Editor
+toolbar.editor.preview=Preview/Helper
 toolbar.shapelist=Polygons
 toolbar.shapelist.show=Show Polygon List
 toolbar.shapelist.add_box=Add Box

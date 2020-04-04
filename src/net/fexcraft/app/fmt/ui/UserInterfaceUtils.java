@@ -123,7 +123,8 @@ public class UserInterfaceUtils {
 			new MenuButton("toolbar.editor.hide_all", () -> Editors.hideAll()),
 			new MenuButton("toolbar.editor.general", () -> Editors.show("general")),
 			new MenuButton("toolbar.editor.model_group", () -> Editors.show("modelgroup")),
-			new MenuButton("toolbar.editor.texture", () -> Editors.show("texture"))
+			new MenuButton("toolbar.editor.texture", () -> Editors.show("texture")),
+			new MenuButton("toolbar.editor.preview", () -> Editors.show("preview"))
 		));
 		frame.getContainer().add(new MenuEntry(3, translate("toolbar.shapelist"),
 			new MenuButton("toolbar.shapelist.show", () -> Trees.toggle("polygon")),
