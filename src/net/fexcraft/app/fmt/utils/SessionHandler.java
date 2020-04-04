@@ -17,7 +17,7 @@ public class SessionHandler {
 	
 	private static boolean loggedin, encrypted;
 	private static String sessionid, hashpw, usermail, username, userid;
-	private static String perm = "free", permname = "Public Free Version";
+	private static String perm = "free", permname = "Public Version";
 	
 	public static void load(){
 		Print.console("Loading auth data from FILE.");
@@ -64,6 +64,12 @@ public class SessionHandler {
 			if(obj.has("name")) username = obj.get("name").getAsString();
 			Print.console("Username updated to: " + username);
 			if(first) Print.console(">>>> Welcome back! <<<<");
+			obj = HttpUtil.request("http://fexcraft.net/session/api", "r=fmt_status", getCookieArr());
+			if(obj != null && obj.has("license") && obj.has("license_title")){
+				perm = obj.get("license").getAsString();
+				permname = obj.get("license_title").getAsString();
+				Print.console("License updated to: " + permname + " (" + perm + ")");
+			}
 		}
 		else if(retry){
 			if(!first) load();
