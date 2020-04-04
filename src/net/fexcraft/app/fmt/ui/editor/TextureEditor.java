@@ -95,11 +95,6 @@ public class TextureEditor extends EditorBase {
 		brushes.getContainer().add(polygon = new Icon(off, pass, 2, "./resources/textures/icons/editors/texture/polygon.png", "editor.texture.brushes.polygon_bucket", () -> toggleBucketMode(PaintMode.POLYGON)));
 		brushes.getContainer().add(group = new Icon(off, pass, 3, "./resources/textures/icons/editors/texture/group.png", "editor.texture.brushes.group_bucket", () -> toggleBucketMode(PaintMode.GROUP)));
 		brushes.getContainer().add(picker = new Icon(off, pass, 4, "./resources/textures/icons/editors/texture/color_picker.png", "editor.texture.brushes.color_picker", () -> toggleBucketMode(PaintMode.COLORPICKER)));
-		/*brushes.getContainer().add(face = new FunctionButton(format("editor.texture.brushes.face_bucket", off), 3, pass += 24 + 20, 290, 20, () -> toggleBucketMode(PaintMode.FACE)));
-		brushes.getContainer().add(polygon = new FunctionButton(format("editor.texture.brushes.polygon_bucket", off), 3, pass += 24, 290, 20, () -> toggleBucketMode(PaintMode.POLYGON)));
-		brushes.getContainer().add(group = new FunctionButton(format("editor.texture.brushes.group_bucket", off), 3, pass += 24, 290, 20, () -> toggleBucketMode(PaintMode.GROUP)));
-		brushes.getContainer().add(pencil = new FunctionButton(format("editor.texture.brushes.pixel_pencil", off), 3, pass += 24, 290, 20, () -> toggleBucketMode(PaintMode.PIXEL)));
-		brushes.getContainer().add(picker = new FunctionButton(format("editor.texture.brushes.color_picker", off), 3, pass += 24, 290, 20, () -> toggleBucketMode(PaintMode.COLORPICKER)));*/
 		brushes.getContainer().add(current_tool = new FunctionButton(translate("editor.texture.brushes.current") + " NONE", 3, pass += 24 + 12, 290, 20, () -> toggleBucketMode(null)));
 		brushes.setSize(296, pass + 52);
         this.addSub(brushes); pass = -20;
@@ -151,13 +146,14 @@ public class TextureEditor extends EditorBase {
 	}
 
 	public static void toggleBucketMode(PaintMode mode){
-		if(mode == null){ BUCKETMODE = false; } else{ BUCKETMODE = PMODE == mode ? !BUCKETMODE : true; PMODE = mode; }
-		//String on = translate("editor.texture.brushes.tool_on"), off = translate("editor.texture.brushes.tool_off");
-		/*face.getTextState().setText(format("editor.texture.brushes.face_bucket", BUCKETMODE && PMODE == PaintMode.FACE ? on : off));
-		polygon.getTextState().setText(format("editor.texture.brushes.polygon_bucket", BUCKETMODE && PMODE == PaintMode.POLYGON ? on : off));
-		group.getTextState().setText(format("editor.texture.brushes.group_bucket", BUCKETMODE && PMODE == PaintMode.GROUP ? on : off));
-		pencil.getTextState().setText(format("editor.texture.brushes.pixel_pencil", BUCKETMODE && PMODE == PaintMode.PIXEL ? on : off));
-		picker.getTextState().setText(format("editor.texture.brushes.color_picker", BUCKETMODE && PMODE == PaintMode.COLORPICKER ? on : off));*/
+		if(mode == null){
+			BUCKETMODE = false;
+			PMODE = null;
+		}
+		else{
+			BUCKETMODE = PMODE == mode ? !BUCKETMODE : true;
+			PMODE = mode;
+		}
 		current_tool.getTextState().setText(translate("editor.texture.brushes.current") + " " + (PMODE == null ? "none" : PMODE.lang()));
 	}
 	
