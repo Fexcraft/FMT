@@ -153,11 +153,12 @@ editor.texture.palette.current=Currently Selected Color
 editor.texture.brushes=Brushes / Tools
 editor.texture.brushes.tool_on=ON
 editor.texture.brushes.tool_off=OFF
-editor.texture.brushes.face_bucket=Face Paint Bucket [%s]
-editor.texture.brushes.polygon_bucket=Polygon Paint Bucket [%s]
-editor.texture.brushes.group_bucket=Group Paint Bucket [%s]
-editor.texture.brushes.pixel_pencil=Pixel Paint Pencil [%s]
-editor.texture.brushes.color_picker=Color Picker [%s]
+editor.texture.brushes.face_bucket=Face Paint Bucket
+editor.texture.brushes.polygon_bucket=Polygon Paint Bucket
+editor.texture.brushes.group_bucket=Group Paint Bucket
+editor.texture.brushes.pixel_pencil=Pixel Paint Pencil
+editor.texture.brushes.color_picker=Color Picker
+editor.texture.brushes.current=Current:
 
 # Dialogs
 dialog.welcome.title=Welcome to FMT!

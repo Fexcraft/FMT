@@ -12,6 +12,7 @@ import org.liquidengine.legui.component.Frame;
 import org.liquidengine.legui.component.ImageView;
 import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.Panel;
+import org.liquidengine.legui.component.Tooltip;
 import org.liquidengine.legui.component.event.textinput.TextInputContentChangeEvent;
 import org.liquidengine.legui.component.optional.align.HorizontalAlign;
 import org.liquidengine.legui.event.CursorEnterEvent;
@@ -205,7 +206,9 @@ public class UserInterfaceUtils {
 	public static class Icon extends ImageView {
 		
 		public Icon(int index, String adress, MouseClickEventListener listener){
-			super(new BufferedImage(adress)); this.setPosition(1 + (index * 31), 1); setSize(28, 28);
+			super(new BufferedImage(adress));
+			this.setPosition(1 + (index * 31), 1);
+			this.setSize(28, 28);
 			this.getListenerMap().addListener(MouseClickEvent.class, listener);
 			Settings.THEME_CHANGE_LISTENER.add(bool -> {
 				this.getStyle().setBorderRadius(0);
@@ -214,6 +217,27 @@ public class UserInterfaceUtils {
 		
 		public Icon(int index, String adress, Runnable run){
 			this(index, adress, (MouseClickEventListener)event -> { if(event.getAction() == CLICK){ run.run(); } });
+		}
+
+		public Icon(int x, int y, int index, String string, String tooltip, Runnable run){
+			super(new BufferedImage(string));
+			this.setPosition(x + (index * 36), 4);
+			this.setSize(34, 34);
+			this.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)event -> {
+				if(event.getAction() == CLICK) run.run();
+			});
+			Tooltip tool = new Tooltip(UserInterfaceUtils.translate(tooltip));
+			tool.setSize(200, 20);
+			tool.setPosition(0, 34);
+			this.setTooltip(tool);
+			Settings.THEME_CHANGE_LISTENER.add(bool -> {
+				this.getStyle().setBorderRadius(0);
+				tool.getStyle().getBackground().setColor(bool ? FMTB.rgba(85, 125, 95, 0.8f) : FMTB.rgba(161, 194, 169, 0.8f));
+				tool.getStyle().setHorizontalAlign(HorizontalAlign.CENTER);
+				tool.getStyle().setFont("roboto-bold");
+				getStyle().setBorderRadius(0);
+				getStyle().getBorder().setEnabled(false);
+			});
 		}
 		
 	}
