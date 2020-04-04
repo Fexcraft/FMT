@@ -28,6 +28,7 @@ public class Editors {
 	
 	public static void show(String type){
 		hideAll();
+		TextureEditor.toggleBucketMode(null);
 		switch(type){
 			case "general": general.show(); break;
 			case "model": case "group":
