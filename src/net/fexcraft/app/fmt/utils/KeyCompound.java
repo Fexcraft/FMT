@@ -4,19 +4,23 @@ import static org.lwjgl.glfw.GLFW.*;
 
 import java.awt.Desktop;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import com.google.common.io.Files;
 import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.ui.editor.Editors;
 import net.fexcraft.lib.common.json.JsonUtil;
+import net.fexcraft.lib.common.utils.Print;
 
 public class KeyCompound {
 	
 	public static final ArrayList<KeyFunction> keys = new ArrayList<>();
 	public static KeyFunction KEY_SPP, KEY_SPN, KEY_DU, KEY_DD, KEY_SPM, KEY_SPL;
+	public static final String FORMAT = "2.0";
 	
 	public static void process(long window, int key, int scancode, int action, int mods){
 		for(KeyFunction function : keys) if(function.id == key) function.run.run(action);
@@ -104,6 +108,16 @@ public class KeyCompound {
 	public static void load(){
 		JsonObject obj = JsonUtil.get(new File("./keys.json"));
 		if(obj.entrySet().size() == 0) return;
+		if(!obj.has("format") || !obj.get("format").getAsString().equals(FORMAT)){
+			Print.console("Old keys.json format detected, skipping keys.json loading.");
+			try{
+				Files.copy(new File("./keys.json"), new File("./keys_old.json"));
+			}
+			catch(IOException e){
+				e.printStackTrace();
+			}
+			return;
+		}
 		for(KeyFunction func : keys){
 			if(obj.has(func.name)){
 				func.id = obj.get(func.name).getAsInt();
@@ -113,6 +127,7 @@ public class KeyCompound {
 	
 	public static void save(){
 		JsonObject obj = new JsonObject();
+		obj.addProperty("format", FORMAT);
 		for(KeyFunction func : keys){
 			obj.addProperty(func.name, func.id);
 		}
