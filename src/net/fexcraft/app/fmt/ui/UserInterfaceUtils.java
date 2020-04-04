@@ -76,7 +76,7 @@ public class UserInterfaceUtils {
 		frame.getContainer().add(new Icon(1, "./resources/textures/icons/toolbar/new.png", () -> SaveLoad.openNewModel()));
 		frame.getContainer().add(new Icon(2, "./resources/textures/icons/toolbar/open.png", () -> SaveLoad.openModel()));
 		frame.getContainer().add(new Icon(3, "./resources/textures/icons/toolbar/save.png", () -> SaveLoad.saveModel(false, false)));
-		frame.getContainer().add(new Icon(4, "./resources/textures/icons/toolbar/profile.png", NOT_AVAILABLE_YET));
+		frame.getContainer().add(new Icon(4, "./resources/textures/icons/toolbar/profile.png", () -> ProfileBox.open()));
 		frame.getContainer().add(new Icon(5, "./resources/textures/icons/toolbar/settings.png", () -> SettingsBox.openFMTSettings()));
 		frame.getContainer().add(new MenuEntry(0, translate("toolbar.file"),
 			new MenuButton("toolbar.file.new_model", () -> SaveLoad.openNewModel()),

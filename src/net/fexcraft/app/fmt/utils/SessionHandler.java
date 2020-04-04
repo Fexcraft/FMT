@@ -11,7 +11,7 @@ import net.fexcraft.lib.common.utils.Print;
 public class SessionHandler {
 	
 	private static boolean loggedin, encrypted;
-	private static String sessionid, hashpw, usermail, username;
+	private static String sessionid, hashpw, usermail, username, perm = "free", permname = "Public Free Version";
 	private static int userid;
 	
 	public static void load(){
@@ -23,7 +23,7 @@ public class SessionHandler {
 		hashpw = JsonUtil.getIfExists(obj, "hashpw", "testuser");
 		usermail = JsonUtil.getIfExists(obj, "mail", "testuser@fexcraft.net");
 		userid = JsonUtil.getIfExists(obj, "userid", -1).intValue();
-		username = JsonUtil.getIfExists(obj, "username", "Test-User-Access");
+		username = JsonUtil.getIfExists(obj, "username", "Unregistered Account");
 		if(!file.exists()) JsonUtil.write(file, obj);
 	}
 
@@ -36,12 +36,14 @@ public class SessionHandler {
 		if(usermail != null) obj.addProperty("mail", usermail);
 		if(userid >= 0) obj.addProperty("userid", userid);
 		if(username != null) obj.addProperty("username", username);
+		if(perm != null) obj.addProperty("perm", perm);
+		if(permname != null) obj.addProperty("perm-name", permname);
 		JsonUtil.write(new File("./auth.net"), obj);
 	}
 	
 	public static void checkIfLoggedIn(boolean retry, boolean first){
 		Print.console("Checking login status."); if(first) load();
-		JsonObject obj = HttpUtil.request("http://fexcraft.net/session/api.jsp", "r=status&nossl", getCookieArr());
+		JsonObject obj = HttpUtil.request("http://fexcraft.net/session/api", "r=status", getCookieArr());
 		if(obj != null && obj.has("success")){
 			//Print.console(obj.toString());
 			loggedin = obj.has("guest") && !obj.get("guest").getAsBoolean();
@@ -54,14 +56,18 @@ public class SessionHandler {
 		}
 		if(loggedin){
 			Print.console("Fetching Username...");
-			obj = HttpUtil.request("http://fexcraft.net/session/api.jsp", "r=username&nossl&id=" + userid, getCookieArr());
+			obj = HttpUtil.request("http://fexcraft.net/session/api", "r=username&id=" + userid, getCookieArr());
 			if(obj.has("name")) username = obj.get("name").getAsString();
 			Print.console("Username updated to: " + username);
 			//Bottombar.updateLoginState(Translator.format("bottombar.netfield.loggedin", "Logged In - %s", username));
 		}
 		else if(retry){
-			if(!first) load(); Print.console("Trying to re-login...");
-			if(tryLogin(/*false*/)){ checkIfLoggedIn(false, false); }
+			if(!first) load();
+			Print.console("Trying to re-login...");
+			sessionid = null;
+			if(tryLogin(/*false*/)){
+				checkIfLoggedIn(false, false);
+			}
 			if(!loggedin){
 				Print.console("Relogin seems to have failed.");
 				userid = -1; username = "Guest";
@@ -74,16 +80,16 @@ public class SessionHandler {
 	}
 	
 	private static String[] getCookieArr(){
-		return sessionid == null ? null : new String[]{ "JSESSIONID=" + sessionid };
+		return sessionid == null ? null : new String[]{ "PHPSESSID=" + sessionid };
 	}
 	
 	public static boolean tryLogin(/*boolean show*/){
 		try{
 			//TODO http :: find solution with the certs javax can't process
-			JsonObject obj = HttpUtil.request("http://fexcraft.net/session/api.jsp", "r=login&m=" + usermail + "&p=" + hashpw + "&nossl" + (encrypted ? "&encrypted" : ""), getCookieArr());
+			JsonObject obj = HttpUtil.request("http://fexcraft.net/session/api", "r=login&m=" + usermail + "&p=" + hashpw + (encrypted ? "&encrypted" : ""), getCookieArr());
 			if(obj == null){ Print.console("Invalid/Empty login response, aborting."); return false; }
-			if(obj.has("cookies") && obj.get("cookies").getAsJsonObject().has("JSESSIONID")){
-				sessionid = obj.get("cookies").getAsJsonObject().get("JSESSIONID").getAsString();
+			if(obj.has("cookies") && obj.get("cookies").getAsJsonObject().has("PHPSESSID")){
+				sessionid = obj.get("cookies").getAsJsonObject().get("PHPSESSID").getAsString();
 				Print.console("Updated Session ID to: " + sessionid);
 			}
 			loggedin = obj.has("success") && obj.get("success").getAsBoolean();
@@ -116,6 +122,18 @@ public class SessionHandler {
 
 	public static String getUserName(){
 		return username;
+	}
+	
+	public static String getLicenseStatus(){
+		return perm;
+	}
+	
+	public static String getLicenseName(){
+		return permname;
+	}
+	
+	public static String getLicenseTitle(){
+		return permname + " (" + perm + ")";
 	}
 
 }

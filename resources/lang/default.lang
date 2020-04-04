@@ -212,6 +212,15 @@ tree.helper.counter=Helpers/Previews:
 tree.fvtm.counter=Groups in Model: 
 tree.fvtm.remove_animation=Remove this Animation?
 
+# Profile Box
+profile.title=Profile Overview
+profile.username=Username:
+profile.userid=User ID:
+profile.license=License:
+profile.button.login=Login
+profile.button.logout=Logout
+profile.button.register=Register
+
 
 # Image Util
 image_helper.screenshot.done=Screenshot taken.
