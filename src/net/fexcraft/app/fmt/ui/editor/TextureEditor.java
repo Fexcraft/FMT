@@ -9,6 +9,7 @@ import org.liquidengine.legui.event.MouseClickEvent.MouseClickAction;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.FunctionButton;
 import net.fexcraft.app.fmt.ui.field.ColorField;
+import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.lib.common.math.RGB;
 
 public class TextureEditor extends EditorBase {
@@ -127,8 +128,11 @@ public class TextureEditor extends EditorBase {
 					updateColor(color.packed);
 				}
 			});
-			this.getStyle().setBorder(null);
-			this.getStyle().setBorderRadius(0f);
+	        Settings.THEME_CHANGE_LISTENER.add(bool -> {
+				this.getStyle().setBorder(null);
+				this.getStyle().setBorderRadius(0f);
+				setColor(color);
+	        });
 		}
 
 		public void setColor(RGB rgb){
