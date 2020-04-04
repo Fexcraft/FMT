@@ -254,6 +254,13 @@ public class SaveLoad {
 			array.add(FMTB.ggr.rotation.yCoord);
 			array.add(FMTB.ggr.rotation.zCoord);
 			obj.add("camera_rot", array);
+			obj.addProperty("camera_orbit_distance", FMTB.ggr.distance);
+			array = new JsonArray();
+			array.add(FMTB.ggr.orbit.xCoord);
+			array.add(FMTB.ggr.orbit.yCoord);
+			array.add(FMTB.ggr.orbit.zCoord);
+			obj.add("camera_orbit", array);
+			
 		}
 		if(!HelperCollector.LOADED.isEmpty() && !export){
 			JsonArray array = new JsonArray();
@@ -376,6 +383,16 @@ public class SaveLoad {
 			FMTB.ggr.rotation.xCoord = rot.get(0).getAsFloat();
 			FMTB.ggr.rotation.yCoord = rot.get(1).getAsFloat();
 			FMTB.ggr.rotation.zCoord = rot.get(2).getAsFloat();
+			FMTB.ggr.orbital.setAngles(FMTB.ggr.rotation.yCoord, 0, -FMTB.ggr.rotation.xCoord);
+		}
+		if(obj.has("camera_orbit_distance")){
+			FMTB.ggr.distance = obj.get("camera_orbit_distance").getAsFloat();
+		}
+		if(obj.has("camera_orbit")){
+			JsonArray rot = obj.getAsJsonArray("camera_orbit");
+			FMTB.ggr.orbit.xCoord = rot.get(0).getAsFloat();
+			FMTB.ggr.orbit.yCoord = rot.get(1).getAsFloat();
+			FMTB.ggr.orbit.zCoord = rot.get(2).getAsFloat();
 		}
 		if(obj.has("helpers")){
 			JsonArray arr = obj.get("helpers").getAsJsonArray();
