@@ -212,7 +212,7 @@ tree.helper.counter=Helpers/Previews:
 tree.fvtm.counter=Groups in Model: 
 tree.fvtm.remove_animation=Remove this Animation?
 
-# Profile Box
+# Profile Box / Login Box
 profile.title=Profile Overview
 profile.username=Username:
 profile.userid=User ID:
@@ -220,6 +220,10 @@ profile.license=License:
 profile.button.login=Login
 profile.button.logout=Logout
 profile.button.register=Register
+loginbox.title=LOGIN/SESSION BOX
+loginbox.e_mail=E-Mail / User
+loginbox.password=Password
+loginbox.encrypt=Encrypt Password Locally?
 
 
 # Image Util

@@ -1,6 +1,10 @@
 package net.fexcraft.app.fmt.utils;
 
+import java.awt.Desktop;
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import com.google.gson.JsonObject;
 
@@ -11,8 +15,8 @@ import net.fexcraft.lib.common.utils.Print;
 public class SessionHandler {
 	
 	private static boolean loggedin, encrypted;
-	private static String sessionid, hashpw, usermail, username, perm = "free", permname = "Public Free Version";
-	private static int userid;
+	private static String sessionid, hashpw, usermail, username, userid;
+	private static String perm = "free", permname = "Public Free Version";
 	
 	public static void load(){
 		Print.console("Loading auth data from FILE.");
@@ -22,7 +26,7 @@ public class SessionHandler {
 		encrypted = JsonUtil.getIfExists(obj, "encrypted", false);
 		hashpw = JsonUtil.getIfExists(obj, "hashpw", "testuser");
 		usermail = JsonUtil.getIfExists(obj, "mail", "testuser@fexcraft.net");
-		userid = JsonUtil.getIfExists(obj, "userid", -1).intValue();
+		userid = JsonUtil.getIfExists(obj, "userid", "-1");
 		username = JsonUtil.getIfExists(obj, "username", "Unregistered Account");
 		if(!file.exists()) JsonUtil.write(file, obj);
 	}
@@ -34,7 +38,7 @@ public class SessionHandler {
 		obj.addProperty("encrypted", encrypted);
 		if(hashpw != null) obj.addProperty("hashpw", hashpw);
 		if(usermail != null) obj.addProperty("mail", usermail);
-		if(userid >= 0) obj.addProperty("userid", userid);
+		if(userid != null) obj.addProperty("userid", userid);
 		if(username != null) obj.addProperty("username", username);
 		if(perm != null) obj.addProperty("perm", perm);
 		if(permname != null) obj.addProperty("perm-name", permname);
@@ -42,16 +46,15 @@ public class SessionHandler {
 	}
 	
 	public static void checkIfLoggedIn(boolean retry, boolean first){
-		Print.console("Checking login status."); if(first) load();
+		Print.console("Checking login status...");
+		if(first) load();
 		JsonObject obj = HttpUtil.request("http://fexcraft.net/session/api", "r=status", getCookieArr());
 		if(obj != null && obj.has("success")){
-			//Print.console(obj.toString());
 			loggedin = obj.has("guest") && !obj.get("guest").getAsBoolean();
-			userid = JsonUtil.getIfExists(obj, "user", -1).intValue();
+			userid = JsonUtil.getIfExists(obj, "user", "-1");
 			if(obj.has("banned") && obj.get("banned").getAsBoolean()){
 				Print.console("Banned account detected, causing a commotion.");
 				System.exit(-1); System.exit(1); System.exit(1);
-				//Bottombar.updateLoginState("BAN-N-NED");
 			}
 		}
 		if(loggedin){
@@ -59,23 +62,17 @@ public class SessionHandler {
 			obj = HttpUtil.request("http://fexcraft.net/session/api", "r=username&id=" + userid, getCookieArr());
 			if(obj.has("name")) username = obj.get("name").getAsString();
 			Print.console("Username updated to: " + username);
-			//Bottombar.updateLoginState(Translator.format("bottombar.netfield.loggedin", "Logged In - %s", username));
+			if(first) Print.console(">>>> Welcome back! <<<<");
 		}
 		else if(retry){
 			if(!first) load();
 			Print.console("Trying to re-login...");
 			sessionid = null;
-			if(tryLogin(/*false*/)){
-				checkIfLoggedIn(false, false);
-			}
+			tryLogin(() -> checkIfLoggedIn(false, false));
 			if(!loggedin){
 				Print.console("Relogin seems to have failed.");
-				userid = -1; username = "Guest";
-				//Bottombar.updateLoginState(Translator.translate("bottombar.netfield.login_failed", "Login Failed - GUEST"));
+				userid = "-1"; username = "Guest";
 			}
-		}
-		else{
-			//Bottombar.updateLoginState(Translator.translate("bottombar.netfield.loggedout", "Logged Out - GUEST"));
 		}
 	}
 	
@@ -83,48 +80,55 @@ public class SessionHandler {
 		return sessionid == null ? null : new String[]{ "PHPSESSID=" + sessionid };
 	}
 	
-	public static boolean tryLogin(/*boolean show*/){
+	public static String tryLogin(Runnable run){
+		String response;
 		try{
 			//TODO http :: find solution with the certs javax can't process
 			JsonObject obj = HttpUtil.request("http://fexcraft.net/session/api", "r=login&m=" + usermail + "&p=" + hashpw + (encrypted ? "&encrypted" : ""), getCookieArr());
-			if(obj == null){ Print.console("Invalid/Empty login response, aborting."); return false; }
+			if(obj == null){
+				Print.console(response = "Invalid/Empty login response, aborting.");
+				return response;
+			}
 			if(obj.has("cookies") && obj.get("cookies").getAsJsonObject().has("PHPSESSID")){
 				sessionid = obj.get("cookies").getAsJsonObject().get("PHPSESSID").getAsString();
 				Print.console("Updated Session ID to: " + sessionid);
 			}
 			loggedin = obj.has("success") && obj.get("success").getAsBoolean();
-			/*if(show){
-				FMTB.showDialogbox((loggedin ? "Logged in!" : obj.has("status") ? obj.get("status").getAsString() : "No Status MSG.") + 
-					"api:success=" + loggedin, "ok!", "retry", DialogBox.NOTHING, () -> {
-						SessionHandler.checkIfLoggedIn(true, false);
-					}
-				);
-			}*/
-			//else{ Print.console(obj.toString()); }
-			return true;
+			response = obj.has("status") ? obj.get("status").getAsString() : "api:success=" + loggedin;
+			Print.console("Login Response: " + response);
+			run.run();
 		}
 		catch(Exception e){
-			e.printStackTrace(); return loggedin = false;
+			response = "Error: " + e.getMessage();
+			e.printStackTrace();
+			loggedin = false;
 		}
+		return response;
 	}
 	
 	public static void tryLogout(){
-		JsonObject obj = HttpUtil.request("http://fexcraft.net/session/api", "r=status", getCookieArr());
+		JsonObject obj = HttpUtil.request("http://fexcraft.net/session/api", "r=logout", getCookieArr());
 		Print.console("Logout Response: " + obj.toString());
+		username = /*usermail =*/ userid = "";
 		hashpw = perm = permname = null;
-		encrypted = false;
+		//encrypted = false;
+		save();
 	}
 	
 	public static boolean isLoggedIn(){
 		return loggedin;
 	}
 
-	public static int getUserId(){
+	public static String getUserId(){
 		return userid;
 	}
 
 	public static String getUserName(){
 		return username;
+	}
+
+	public static String getUserMail(){
+		return usermail;
 	}
 	
 	public static String getLicenseStatus(){
@@ -137,6 +141,40 @@ public class SessionHandler {
 	
 	public static String getLicenseTitle(){
 		return permname + " (" + perm + ")";
+	}
+
+	public static String getPassWord(){
+		return hashpw;
+	}
+
+	public static boolean isEncrypted(){
+		return encrypted;
+	}
+	
+	public static void openRegister(){
+		if(Desktop.isDesktopSupported()){
+			Desktop desktop = Desktop.getDesktop();
+			try{
+				desktop.browse(new URI("https://fexcraft.net/register"));
+			}
+			catch(IOException | URISyntaxException er){
+				// TODO Auto-generated catch block
+				er.printStackTrace();
+			}
+		}
+		else{
+			Runtime runtime = Runtime.getRuntime();
+			try{
+				runtime.exec("xdg-open https://fexcraft.net/register");
+			}
+			catch(IOException er){
+				er.printStackTrace();
+			}
+		}
+	}
+
+	public static boolean toggleEncrypt(){
+		return encrypted = !encrypted;
 	}
 
 }

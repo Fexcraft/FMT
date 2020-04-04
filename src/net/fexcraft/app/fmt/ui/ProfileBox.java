@@ -2,12 +2,8 @@ package net.fexcraft.app.fmt.ui;
 
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
-import java.awt.Desktop;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-
 import org.liquidengine.legui.component.Button;
+import org.liquidengine.legui.component.CheckBox;
 import org.liquidengine.legui.component.Dialog;
 import org.liquidengine.legui.component.ImageView;
 import org.liquidengine.legui.component.Label;
@@ -16,6 +12,7 @@ import org.liquidengine.legui.image.BufferedImage;
 import org.liquidengine.legui.listener.MouseClickEventListener;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.field.TextField;
 import net.fexcraft.app.fmt.utils.SessionHandler;
 
 /**
@@ -55,25 +52,7 @@ public class ProfileBox {
             button2.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
             	if(CLICK == e.getAction()){
             		dialog.close();
-					if(Desktop.isDesktopSupported()){
-						Desktop desktop = Desktop.getDesktop();
-						try{
-							desktop.browse(new URI("https://fexcraft.net/register"));
-						}
-						catch(IOException | URISyntaxException er){
-							// TODO Auto-generated catch block
-							er.printStackTrace();
-						}
-					}
-					else{
-						Runtime runtime = Runtime.getRuntime();
-						try{
-							runtime.exec("xdg-open https://fexcraft.net/register");
-						}
-						catch(IOException er){
-							er.printStackTrace();
-						}
-					}
+            		SessionHandler.openRegister();
             	}
             });
             dialog.getContainer().add(button2);
@@ -92,7 +71,47 @@ public class ProfileBox {
 		if(SessionHandler.isLoggedIn()){
 			SessionHandler.tryLogout();
 		}
-		
+        Dialog dialog = new Dialog(UserInterfaceUtils.translate("loginbox.title"), 400, 200);
+        dialog.setResizable(false);
+    	dialog.getContainer().add(new Label(UserInterfaceUtils.translate("loginbox.e_mail"), 10, 5, 380, 20));
+    	dialog.getContainer().add(new TextField(SessionHandler.getUserMail(), 10, 30, 380, 20));
+    	dialog.getContainer().add(new Label(UserInterfaceUtils.translate("loginbox.password"), 10, 60, 380, 20));
+    	dialog.getContainer().add(new TextField(SessionHandler.isEncrypted() ? "" : SessionHandler.getPassWord(), 10, 85, 380, 20));
+    	//dialog.getContainer().add(new Label(UserInterfaceUtils.translate("loginbox.encrypt"), 30, 115, 380, 20));
+        CheckBox checkbox0 = new CheckBox(10, 115, 380, 20);
+        checkbox0.getStyle().setPadding(5f, 10f, 5f, 5f);
+        checkbox0.setChecked(SessionHandler.isEncrypted());
+        checkbox0.addCheckBoxChangeValueListener(listener -> SessionHandler.toggleEncrypt());
+        checkbox0.getTextState().setText((UserInterfaceUtils.translate("loginbox.encrypt")));
+        dialog.getContainer().add(checkbox0);
+    	//
+        Button button0 = new Button(UserInterfaceUtils.translate("profile.button.login"), 10, 200 - 50, 80, 20);
+        button0.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
+        	if(CLICK == e.getAction()){
+        		dialog.close();
+        		ProfileBox.openLogin();
+        	}
+        });
+        dialog.getContainer().add(button0);
+        //
+        Button button1 = new Button(UserInterfaceUtils.translate("profile.button.register"), 100, 200 - 50, 80, 20);
+        button1.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
+        	if(CLICK == e.getAction()){
+        		dialog.close();
+        		SessionHandler.openRegister();
+        	}
+        });
+        dialog.getContainer().add(button1);
+        //
+        Button button2 = new Button(UserInterfaceUtils.translate("dialogbox.button.cancel"), 400 - 90, 200 - 50, 80, 20);
+        button2.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
+        	if(CLICK == e.getAction()){
+        		dialog.close();
+        	}
+        });
+        dialog.getContainer().add(button2);
+        //
+        dialog.show(FMTB.frame);
 	}
 
 }
