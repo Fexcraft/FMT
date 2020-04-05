@@ -13,7 +13,6 @@ import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
-import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Time;
 
@@ -101,7 +100,7 @@ public class UserInterface {
 		@Override
 		public void renderSelf(int rw, int rh){
 			this.y = rh - FMTB.get().getDisplayMode().getHeight() + 4;
-			this.setText((Time.getDay() % 2 == 0 ? "FMT - Fexcraft Modelling Toolbox" : "FMT - Fex's Modelling Toolbox") + (Static.dev() ? " [Developement Version]" : " [Standard Version]"), false);
+			this.setText((Time.getDay() % 2 == 0 ? "FMT - Fexcraft Modelling Toolbox" : "FMT - Fex's Modelling Toolbox") + " [" + SessionHandler.getLicenseName() + "]", false);
 			super.renderSelf(rw, rh);
 		}
 	};
