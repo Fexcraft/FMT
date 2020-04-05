@@ -56,8 +56,8 @@ public class SessionHandler {
 		if(loggedin){
 			Print.console("Fetching Username...");
 			obj = HttpUtil.request("http://fexcraft.net/session/api.jsp", "r=username&nossl&id=" + userid, getCookieArr());
-			if(obj.has("name")) username = obj.get("name").getAsString();
-			Print.console("Username updated to: " + username);
+			username = obj.get("name").getAsString();
+			Print.console("Username updated to: " + username + " / " + userid);
 			Bottombar.updateLoginState(Translator.format("bottombar.netfield.loggedin", "Logged In - %s", username));
 		}
 		else if(retry){

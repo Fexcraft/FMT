@@ -16,10 +16,10 @@ import net.fexcraft.app.fmt.utils.Settings.Type;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
+import net.fexcraft.lib.common.math.Axis3DL;
 import net.fexcraft.lib.common.math.TexturedPolygon;
 import net.fexcraft.lib.common.math.TexturedVertex;
 import net.fexcraft.lib.common.math.Vec3f;
-import net.fexcraft.lib.tmt.Axis3DL;
 
 /**
  * ALL RIGHTS RESERVED. &copy; 2019 Fexcraft.net
