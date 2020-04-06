@@ -88,7 +88,7 @@ public class FMTB {
 	
 	public static final String deftitle = "[FPS:%s] Fexcraft Modelling Toolbox - %s";
 	public static final String deftitle0 = "Fexcraft Modelling Toolbox - %s";
-	public static final String VERSION = "2.2.0";
+	public static final String VERSION = "2.2.1";
 	public static final String CLID = "587016218196574209";
 	//
 	public static GGR ggr;
@@ -116,8 +116,8 @@ public class FMTB {
         System.setProperty("joml.nounsafe", Boolean.TRUE.toString());
         //System.setProperty("java.awt.headless", Boolean.TRUE.toString());
 	    System.setProperty("org.lwjgl.librarypath", new File("./lib/").getAbsolutePath());
-		Configuration.SHARED_LIBRARY_EXTRACT_DIRECTORY.set("./lib");
-		Configuration.SHARED_LIBRARY_EXTRACT_PATH.set("./lib");
+		Configuration.SHARED_LIBRARY_EXTRACT_DIRECTORY.set("./lib/natives");
+		Configuration.SHARED_LIBRARY_EXTRACT_PATH.set("./lib/natives");
 	    //
 		//File[] folders = { new File("./saves"), new File("./imports"), new File("./exports") };
 		//for(File folder : folders){ if(!folder.exists()) folder.mkdirs(); }
