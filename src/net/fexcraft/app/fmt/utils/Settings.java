@@ -25,7 +25,7 @@ public class Settings {
 		discordrpc, discordrpc_sm, discordrpc_rtonm, numberfieldarrows, preview_colorpicker;
 	public static Setting movespeed, mouse_sensivity, internal_cursor, vsync;
 	public static Setting darktheme, no_scroll_fields, old_rotation;
-	public static Setting orbital_camera, oc_center_on_part;
+	public static Setting orbital_camera, oc_center_on_part, internal_filechooser;
 	//
 	public static final ArrayList<Consumer<Boolean>> THEME_CHANGE_LISTENER = new ArrayList<>();
 
@@ -68,6 +68,8 @@ public class Settings {
 	public static boolean orbital_camera(){ return orbital_camera.getValue(); }
 	
 	public static boolean center_on_part(){ return oc_center_on_part.getValue(); }
+	
+	public static boolean internal_filechooser(){ return internal_filechooser.getValue(); }
 	
 	//
 
@@ -162,6 +164,7 @@ public class Settings {
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "vsync", false));
 		DEFAULTS.add(new Setting(Type.STRING, "last_file", "null"));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "internal_cursor", false));
+		DEFAULTS.add(new Setting(Type.BOOLEAN, "internal_filechooser", false));
 	}
 
 	public static void load(){
@@ -206,6 +209,7 @@ public class Settings {
 		old_rotation = SETTINGS.get("old_rotation");
 		orbital_camera = SETTINGS.get("orbital_camera");
 		oc_center_on_part = SETTINGS.get("oc_center_on_part");
+		internal_filechooser = SETTINGS.get("internal_filechooser");
 	}
 
 	public static void save(){
