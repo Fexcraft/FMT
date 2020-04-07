@@ -24,7 +24,7 @@ public class Settings {
 	private static Setting floor, lines, demo, cube, polygon_marker, lighting, cullface, animate,
 		discordrpc, discordrpc_sm, discordrpc_rtonm, numberfieldarrows, preview_colorpicker;
 	public static Setting movespeed, mouse_sensivity, internal_cursor, vsync;
-	public static Setting darktheme, no_scroll_fields, old_rotation;
+	public static Setting darktheme, no_scroll_fields, old_rotation, center_marker;
 	public static Setting orbital_camera, oc_center_on_part, internal_filechooser;
 	//
 	public static final ArrayList<Consumer<Boolean>> THEME_CHANGE_LISTENER = new ArrayList<>();
@@ -70,6 +70,8 @@ public class Settings {
 	public static boolean center_on_part(){ return oc_center_on_part.getValue(); }
 	
 	public static boolean internal_filechooser(){ return internal_filechooser.getValue(); }
+
+	public static boolean center_marker(){ return center_marker.getBooleanValue(); }
 	
 	//
 
@@ -87,6 +89,10 @@ public class Settings {
 
 	public static boolean togglePolygonMarker(){
 		return polygon_marker.toggle();
+	}
+
+	public static boolean toggleCenterMarker(){
+		return center_marker.toggle();
 	}
 	
 	public static boolean toggleDemo(){
@@ -165,6 +171,7 @@ public class Settings {
 		DEFAULTS.add(new Setting(Type.STRING, "last_file", "null"));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "internal_cursor", false));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "internal_filechooser", false));
+		DEFAULTS.add(new Setting(Type.BOOLEAN, "center_marker", false));
 	}
 
 	public static void load(){
@@ -210,6 +217,7 @@ public class Settings {
 		orbital_camera = SETTINGS.get("orbital_camera");
 		oc_center_on_part = SETTINGS.get("oc_center_on_part");
 		internal_filechooser = SETTINGS.get("internal_filechooser");
+		center_marker = SETTINGS.get("center_marker");
 	}
 
 	public static void save(){

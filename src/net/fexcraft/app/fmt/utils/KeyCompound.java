@@ -57,7 +57,7 @@ public class KeyCompound {
 		keys.add(new KeyFunction("toggle_cube", GLFW_KEY_F4, (action) -> { if(action == GLFW_RELEASE) Settings.toggleCube(); }));
 		keys.add(new KeyFunction("toggle_demo", GLFW_KEY_F5, (action) -> { if(action == GLFW_RELEASE) Settings.toggleDemo(); }));
 		keys.add(new KeyFunction("toggle_polygon_marker", GLFW_KEY_F6, (action) -> { if(action == GLFW_RELEASE) Settings.togglePolygonMarker(); }));
-		//keys.add(new KeyFunction("toggle_polygon_count", GLFW_KEY_F7, (action) -> { if(action == GLFW_RELEASE) Settings.togglePolygonCount(); }));
+		keys.add(new KeyFunction("toggle_center_marker", GLFW_KEY_F7, (action) -> { if(action == GLFW_RELEASE) Settings.toggleCenterMarker(); }));
 		keys.add(new KeyFunction("toggle_lighting", GLFW_KEY_F8, (action) -> { if(action == GLFW_RELEASE) Settings.toggleLighting(); }));
 		keys.add(new KeyFunction("toggle_animations", GLFW_KEY_F9, (action) -> { if(action == GLFW_RELEASE) Settings.toggleAnimations(); }));
 		//

@@ -412,6 +412,13 @@ public class FMTB {
                 }
                 RGB.glColorReset(); ModelT1P.INSTANCE.render();
             }
+            if(Settings.center_marker()){
+                GL11.glDisable(GL11.GL_TEXTURE_2D); 
+                centermarker0.render(0.0625f / 4);
+                centermarker1.render(0.0625f / 4);
+                centermarker2.render(0.0625f / 4);
+                GL11.glEnable(GL11.GL_TEXTURE_2D);
+            }
 			if(Settings.lighting()) GL11.glDisable(GL11.GL_LIGHTING);
             GL11.glPopMatrix();
         }
@@ -501,6 +508,9 @@ public class FMTB {
 	static { compound0.textureHeight = compound0.textureWidth = 16; compound0.addBox(-8, 0, -8, 16, 16, 16); }
 	//private static final ModelRendererTurbo sphere0 = new ModelRendererTurbo(null, 256, 256).addSphere(0, 0, 0, 32, 128, 128, 16, 16).setTextured(false);
 	//private static final ModelRendererTurbo sphere1 = new ModelRendererTurbo(null, 256, 256).addSphere(0, 0, 0, 32.01f, 128, 128, 16, 16).setLines(true);
+	private static final ModelRendererTurbo centermarker0 = new ModelRendererTurbo(null, 0, 0, 0, 0).addBox(-0.5f, -256, -0.5f, 1, 512, 1).setTextured(false).setColor(RGB.GREEN.copy());
+	private static final ModelRendererTurbo centermarker1 = new ModelRendererTurbo(null, 0, 0, 0, 0).addBox(-256, -0.5f, -0.5f, 512, 1, 1).setTextured(false).setColor(RGB.RED.copy());
+	private static final ModelRendererTurbo centermarker2 = new ModelRendererTurbo(null, 0, 0, 0, 0).addBox(-0.5f, -0.5f, -256, 1, 1, 512).setTextured(false).setColor(RGB.BLUE.copy());
 
 	private void initOpenGL(){
         GL11.glEnable(GL11.GL_LIGHTING);
