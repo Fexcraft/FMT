@@ -25,8 +25,10 @@ import org.liquidengine.legui.animation.AnimatorProvider;
 import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.component.Dialog;
 import org.liquidengine.legui.component.Frame;
+import org.liquidengine.legui.component.ImageView;
 import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.event.MouseClickEvent;
+import org.liquidengine.legui.image.BufferedImage;
 import org.liquidengine.legui.listener.MouseClickEventListener;
 import org.liquidengine.legui.listener.processor.EventProcessorProvider;
 import org.liquidengine.legui.style.color.ColorConstants;
@@ -85,10 +87,9 @@ import net.fexcraft.lib.local_tmt.ModelRendererTurbo;
  * All rights reserved &copy; 2020 fexcraft.net
  * */
 public class FMTB {
-	
-	public static final String deftitle = "[FPS:%s] Fexcraft Modelling Toolbox - %s";
-	public static final String deftitle0 = "Fexcraft Modelling Toolbox - %s";
+
 	public static final String VERSION = "2.2.1";
+	public static final String deftitle = "[FPS:%s] Fexcraft Modelling Toolbox " + VERSION + "- %s";
 	public static final String CLID = "587016218196574209";
 	//
 	public static GGR ggr;
@@ -111,6 +112,7 @@ public class FMTB {
 	public static Frame frame, ss_frame;
 	public static Label ss_title, ss_credits;
 	public static long window;
+	public static ImageView cursor;
 	
 	public static void main(String... args) throws Exception {
         System.setProperty("joml.nounsafe", Boolean.TRUE.toString());
@@ -141,7 +143,8 @@ public class FMTB {
         glfwMakeContextCurrent(window);
         GL.createCapabilities();
 		//GLUtil.setupDebugMessageCallback();
-		initOpenGL(); this.setIcon();
+		initOpenGL();
+		this.setIcon();
 		glfwShowWindow(window);
 		glfwFocusWindow(window);
 		ggr = new GGR(0, 4, 4); ggr.rotation.xCoord = 45;
@@ -190,6 +193,18 @@ public class FMTB {
 			SaveLoad.openModel(file);
 		}
         MODEL.initButton();
+        if(Settings.internal_cursor()){
+        	cursor = new ImageView(new BufferedImage("./resources/textures/cursor.png"));
+        	cursor.setSize(16, 16);
+        	cursor.setFocusable(false);
+        	cursor.setEnabled(false);
+        	Settings.THEME_CHANGE_LISTENER.add(bool -> {
+        		cursor.getStyle().getBackground().setColor(ColorConstants.transparent());
+            	cursor.getStyle().getBorder().setEnabled(false);
+            	//cursor.getStyle().setBorderRadius(0);
+        	});
+        	frame.getContainer().add(cursor);
+        }
         context = new Context(window);
         //context.setDebugEnabled(true);
         CallbackKeeper keeper = new DefaultCallbackKeeper();
@@ -207,6 +222,9 @@ public class FMTB {
             @Override
             public void invoke(long window, double xpos, double ypos){
                 ggr.cursorPosCallback(window, xpos, ypos);
+                if(cursor != null){
+                	cursor.setPosition((float)xpos - 8, (float)ypos - 8);
+                }
             }
         });
         keeper.getChainMouseButtonCallback().add(new GLFWMouseButtonCallback(){

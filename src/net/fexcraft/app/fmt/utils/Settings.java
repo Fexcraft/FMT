@@ -39,8 +39,6 @@ public class Settings {
 	
 	public static boolean polygonMarker(){ return polygon_marker.getValue(); }
 
-	//public static boolean bottombar(){ return bottombar.getValue(); }
-
 	public static boolean lighting(){ return lighting.getValue(); }
 
 	public static boolean cullface(){ return cullface.getValue(); }
@@ -96,10 +94,6 @@ public class Settings {
 	public static boolean togglePreviewColorpicker(){
 		return preview_colorpicker.toggle();
 	}
-
-	/*public static boolean toggleBottombar(){
-		FMTB.get().UI.getElement("bottombar").setVisible(bottombar.toggle()); return bottombar();
-	}*/
 
 	public static boolean toggleLighting(){
 		Print.console("Toggling lighting: " + !lighting.getBooleanValue());
@@ -163,19 +157,11 @@ public class Settings {
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "orbital_camera", false));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "oc_center_on_part", true));
 		//
-		/*DEFAULTS.add(new Setting(Type.STRING, "filedir_last_type", "SAVES"));
-		DEFAULTS.add(new Setting(Type.STRING, "filedir_last", "./saves"));
-		DEFAULTS.add(new Setting(Type.STRING, "filedir_saves", "./saves"));
-		DEFAULTS.add(new Setting(Type.STRING, "filedir_export", "./exports"));
-		DEFAULTS.add(new Setting(Type.STRING, "filedir_import", "./imports"));
-		DEFAULTS.add(new Setting(Type.STRING, "filedir_helpers", "./helpers"));
-		DEFAULTS.add(new Setting(Type.STRING, "filedir_textures", "./resources/textures"));*/
-		//
 		DEFAULTS.add(new Setting(Type.FLOAT, "mouse_sensivity", 2f));
 		DEFAULTS.add(new Setting(Type.FLOAT, "camera_movespeed", 2f));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "vsync", false));
 		DEFAULTS.add(new Setting(Type.STRING, "last_file", "null"));
-		//DEFAULTS.add(new Setting(Type.BOOLEAN, "internal_cursor", false));
+		DEFAULTS.add(new Setting(Type.BOOLEAN, "internal_cursor", false));
 	}
 
 	public static void load(){
@@ -209,15 +195,12 @@ public class Settings {
 		discordrpc = SETTINGS.get("discord_rpc-enabled");
 		discordrpc_sm = SETTINGS.get("discord_rpc-show_model");
 		discordrpc_rtonm = SETTINGS.get("discord_rpc-reset_timer_on_new_model");
-		//ui_scale = SETTINGS.get("ui_scale");
-		//bottombar = SETTINGS.get("bottombar");
 		numberfieldarrows = SETTINGS.get("numberfield_arrows");
 		preview_colorpicker = SETTINGS.get("preview_colorpicker");
 		movespeed = SETTINGS.get("camera_movespeed");
 		mouse_sensivity = SETTINGS.get("mouse_sensivity");
 		vsync = SETTINGS.get("vsync");
-		//internal_cursor = SETTINGS.get("internal_cursor");
-		//FileSelector.FileRoot.last = FileRoot.valueOf(SETTINGS.get("filedir_last_type").getStringValue());
+		internal_cursor = SETTINGS.get("internal_cursor");;
 		darktheme = SETTINGS.get("dark_theme");
 		no_scroll_fields = SETTINGS.get("no_scroll_fields");
 		old_rotation = SETTINGS.get("old_rotation");
