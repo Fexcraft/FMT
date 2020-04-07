@@ -197,6 +197,7 @@ settingsbox.settings_needs_restart=This setting needs a restart to take full eff
 dialogbox.title.default=Generic Dialog
 dialogbox.button.confirm=Confirm
 dialogbox.button.cancel=Cancel
+dialogbox.button.select=Select
 dialogbox.button.open=Open
 dialogbox.button.save=Save
 dialogbox.button.load=Load
