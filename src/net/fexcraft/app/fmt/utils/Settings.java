@@ -437,7 +437,8 @@ public class Settings {
 		}
 
 		public float getFloatValue(){
-			if(this.getType().isBoolean()) return (boolean)value ? 1f : 0f; return (float)value;
+			if(this.getType().isBoolean()) return (boolean)value ? 1f : 0f;
+			return value instanceof Float ? (float)value : (int)value + 0f;
 		}
 
 		public Setting copy(){
