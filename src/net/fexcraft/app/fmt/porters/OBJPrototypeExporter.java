@@ -35,9 +35,9 @@ public class OBJPrototypeExporter extends ExImPorter {
 	
 	public OBJPrototypeExporter(){
 		settings.add(new Setting(Type.BOOLEAN, "rotate_model", Settings.oldrot()));
-		settings.add(new Setting(Type.FLOAT, "rotate_y", Settings.oldrot() ? 0 : 180));
-		settings.add(new Setting(Type.FLOAT, "rotate_z", Settings.oldrot() ? 0 : 180));
-		settings.add(new Setting(Type.FLOAT, "rotate_x", 0));
+		settings.add(new Setting(Type.FLOAT, "rotate_y", Settings.oldrot() ? 180f : 0f));
+		settings.add(new Setting(Type.FLOAT, "rotate_z", Settings.oldrot() ? 180f : 0f));
+		settings.add(new Setting(Type.FLOAT, "rotate_x", 0f));
 		settings.add(new Setting(Type.BOOLEAN, "flip_texture", true));
 		settings.add(new Setting(Type.FLOAT, "scale", 1f));
 		settings.add(new Setting(Type.BOOLEAN, "create_mtl", false));
