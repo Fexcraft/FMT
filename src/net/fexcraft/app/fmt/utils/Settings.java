@@ -23,7 +23,7 @@ public class Settings {
 	
 	private static Setting floor, lines, demo, cube, polygon_marker, lighting, cullface, animate,
 		discordrpc, discordrpc_sm, discordrpc_rtonm, numberfieldarrows, preview_colorpicker;
-	public static Setting movespeed, mouse_sensivity, internal_cursor, vsync;
+	public static Setting movespeed, mouse_sensivity, internal_cursor, vsync, debug;
 	public static Setting darktheme, no_scroll_fields, old_rotation, center_marker;
 	public static Setting orbital_camera, oc_center_on_part, internal_filechooser;
 	//
@@ -72,6 +72,8 @@ public class Settings {
 	public static boolean internal_filechooser(){ return internal_filechooser.getValue(); }
 
 	public static boolean center_marker(){ return center_marker.getBooleanValue(); }
+
+	public static boolean ui_debug(){ return debug.getBooleanValue(); }
 	
 	//
 
@@ -172,6 +174,7 @@ public class Settings {
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "internal_cursor", false));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "internal_filechooser", false));
 		DEFAULTS.add(new Setting(Type.BOOLEAN, "center_marker", false));
+		DEFAULTS.add(new Setting(Type.BOOLEAN, "ui_debug", false));
 	}
 
 	public static void load(){
@@ -218,6 +221,7 @@ public class Settings {
 		oc_center_on_part = SETTINGS.get("oc_center_on_part");
 		internal_filechooser = SETTINGS.get("internal_filechooser");
 		center_marker = SETTINGS.get("center_marker");
+		debug = SETTINGS.get("ui_debug");
 	}
 
 	public static void save(){
@@ -329,6 +333,9 @@ public class Settings {
 				if(this.id.equals("dark_theme")){
 					//DialogBox.showOK(null, null, null, "settingsbox.darktheme.mayneedrestart");
 					updateTheme();
+				}
+				if(this.id.equals("ui_debug")){
+					FMTB.context.setDebugEnabled((boolean)value);
 				}
 				/*if(this.id.equals("no_scroll_fields")){
 					DialogBox.showOK(null, null, null, "settingsbox.settings_needs_restart");

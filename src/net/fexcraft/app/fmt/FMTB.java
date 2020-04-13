@@ -206,7 +206,7 @@ public class FMTB {
         	frame.getContainer().add(cursor);
         }
         context = new Context(window);
-        //context.setDebugEnabled(true);
+        context.setDebugEnabled(Settings.ui_debug());
         CallbackKeeper keeper = new DefaultCallbackKeeper();
         CallbackKeeper.registerCallbacks(window, keeper);
 		//
