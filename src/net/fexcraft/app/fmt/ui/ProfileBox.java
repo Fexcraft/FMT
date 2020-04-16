@@ -96,13 +96,11 @@ public class ProfileBox {
         button0.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
         	if(CLICK == e.getAction()){
         		dialog.close();
+    			SessionHandler.encrypt();
         		SessionHandler.tryLogin(resp -> {
         			DialogBox.show("loginbox.title", "dialogbox.button.ok", SessionHandler.isLoggedIn() ? null : "profile.button.retry", null, () -> openLogin(), resp);
-        			if(SessionHandler.isLoggedIn()){
-        				SessionHandler.encrypt();
-            			SessionHandler.save();
-        			}
-        		}, false);
+        			SessionHandler.save();
+        		});
         	}
         });
         dialog.getContainer().add(button0);
