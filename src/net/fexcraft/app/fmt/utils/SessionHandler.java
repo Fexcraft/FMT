@@ -16,7 +16,7 @@ import net.fexcraft.lib.common.utils.Print;
 public class SessionHandler {
 	
 	private static boolean loggedin, encrypted;
-	private static String sessionid, hashpw, usermail, username, userid;
+	private static String sessionid, pass, usermail, username, userid;
 	private static String perm = "free", permname = "Public Version";
 	
 	public static void load(){
@@ -25,7 +25,7 @@ public class SessionHandler {
 		JsonObject obj = JsonUtil.get(file);
 		sessionid = obj.has("session") ? obj.get("session").getAsString() : null;
 		encrypted = JsonUtil.getIfExists(obj, "encrypted", false);
-		hashpw = JsonUtil.getIfExists(obj, "hashpw", "testuser");
+		pass = JsonUtil.getIfExists(obj, "pass", "testuser");
 		usermail = JsonUtil.getIfExists(obj, "mail", "testuser@fexcraft.net");
 		userid = JsonUtil.getIfExists(obj, "userid", "-1");
 		username = JsonUtil.getIfExists(obj, "username", "Unregistered Account");
@@ -37,7 +37,7 @@ public class SessionHandler {
 		JsonObject obj = new JsonObject();
 		if(sessionid != null) obj.addProperty("session", sessionid);
 		obj.addProperty("encrypted", encrypted);
-		if(hashpw != null) obj.addProperty("hashpw", hashpw);
+		if(pass != null) obj.addProperty("pass", pass);
 		if(usermail != null) obj.addProperty("mail", usermail);
 		if(userid != null) obj.addProperty("userid", userid);
 		if(username != null) obj.addProperty("username", username);
@@ -70,9 +70,6 @@ public class SessionHandler {
 				permname = obj.get("license_title").getAsString();
 				Print.console("License updated to: " + permname + " (" + perm + ")");
 			}
-			if(!hashpw.startsWith("$2") && shouldEncrypt()){
-				encrypt(); save();
-			}
 		}
 		else if(retry){
 			if(!first) load();
@@ -94,7 +91,7 @@ public class SessionHandler {
 		String response;
 		try{
 			//TODO http :: find solution with the certs javax can't process
-			JsonObject obj = HttpUtil.request("http://fexcraft.net/session/api", "r=login&m=" + usermail + "&p=" + hashpw + (encrypted && hashpw.startsWith("$2") ? "&encrypted" : ""), getCookieArr());
+			JsonObject obj = HttpUtil.request("http://fexcraft.net/session/api", "r=login&m=" + usermail + "&p=" + pass + (encrypted ? "&encrypted" : ""), getCookieArr());
 			if(obj == null){
 				Print.console(response = "Invalid/Empty login response, aborting.");
 				return response;
@@ -121,7 +118,7 @@ public class SessionHandler {
 		JsonObject obj = HttpUtil.request("http://fexcraft.net/session/api", "r=logout", getCookieArr());
 		Print.console("Logout Response: " + obj.toString());
 		username = /*usermail =*/ userid = "";
-		hashpw = perm = permname = null;
+		pass = perm = permname = null;
 		//encrypted = false;
 		save();
 	}
@@ -155,11 +152,7 @@ public class SessionHandler {
 	}
 
 	public static String getPassWord(){
-		return hashpw;
-	}
-
-	public static boolean shouldEncrypt(){
-		return encrypted;
+		return pass;
 	}
 	
 	public static void openRegister(){
@@ -182,32 +175,6 @@ public class SessionHandler {
 				er.printStackTrace();
 			}
 		}
-	}
-
-	public static boolean toggleEncrypt(){
-		return encrypted = !encrypted;
-	}
-
-	public static void updatePassword(String newValue){
-		hashpw = newValue;
-	}
-
-	public static void updateUserMail(String newValue){
-		usermail = newValue;
-	}
-
-	public static void encrypt(){
-		if(!shouldEncrypt()) return;
-		JsonObject obj = HttpUtil.request("http://fexcraft.net/session/api", "r=encrypt&raw=" + hashpw, getCookieArr());
-		if(obj == null){
-			Print.console("No encryption response from server, password could not be saved encrypted locally.");
-			return;
-		}
-		if(obj.has("success") && obj.get("success").getAsBoolean() && obj.has("result")){
-			hashpw = obj.get("result").getAsString();
-			Print.console("Received Hashed/Encrypted Password version from server.");
-		}
-		else Print.console(obj.has("status") ? "SRV-RESP: " + obj.get("status").getAsString() : "Unknown Error on server-side while requesting password encryption, status returned as 'success:false'!");
 	}
 
 }
