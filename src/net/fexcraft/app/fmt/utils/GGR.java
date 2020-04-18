@@ -11,7 +11,9 @@ import static org.lwjgl.glfw.GLFW.glfwSetInputMode;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.editor.Editors;
 import net.fexcraft.app.fmt.ui.field.Field;
+import net.fexcraft.app.fmt.ui.tree.Trees;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.Vec3f;
@@ -125,6 +127,7 @@ public class GGR {
 	}
 
 	public void scrollCallback(long window, double xoffset, double yoffset){
+		if(posy > 30 && ((posx < 304 && Editors.anyVisible()) || (posx > FMTB.WIDTH - 304 && Trees.anyVisible()))) return;
 		if(Settings.orbital_camera()){
 			distance -= yoffset * (movemod / 2);
 			return;
