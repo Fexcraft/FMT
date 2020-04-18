@@ -86,10 +86,16 @@ public class TreeGroup extends Panel {
 		}, "edit"));
 		this.add(new TreeIcon((int)getSize().x - 86, 0, "group_minimize", () -> toggle(!list.minimized), "minimize"));
 		label.getListenerMap().addListener(MouseClickEvent.class, listener -> {
-			if(listener.getAction() != CLICK || listener.getButton() != MouseButton.MOUSE_BUTTON_LEFT) return;
-			boolean sell = list.selected; if(!GGR.isShiftDown()){ FMTB.MODEL.clearSelection(); }
-			list.selected = !sell; FMTB.MODEL.updateFields(); FMTB.MODEL.lastselected = null; updateColor();
-			GroupCompound.SELECTED_POLYGONS = FMTB.MODEL.countSelectedMRTs();
+			if(listener.getAction() == CLICK && listener.getButton() == MouseButton.MOUSE_BUTTON_LEFT){
+				boolean sell = list.selected; if(!GGR.isShiftDown()){ FMTB.MODEL.clearSelection(); }
+				list.selected = !sell; FMTB.MODEL.updateFields(); FMTB.MODEL.lastselected = null; updateColor();
+				GroupCompound.SELECTED_POLYGONS = FMTB.MODEL.countSelectedMRTs();
+				return;
+			}
+			if(listener.getAction() == CLICK && listener.getButton() == MouseButton.MOUSE_BUTTON_RIGHT){
+				tree.select(this);
+				return;
+			}
 		});
 		this.recalculateSize();
 	}
@@ -97,7 +103,8 @@ public class TreeGroup extends Panel {
 	public TreeGroup(TreeBase base, GroupCompound group){
 		this(base); compound = group; updateColor();
 		this.add(new TreeIcon((int)getSize().x - 20, 0, "group_delete", () -> {
-			HelperCollector.LOADED.remove(index()); this.removeFromTree(); tree.reOrderGroups();
+			HelperCollector.LOADED.remove(index());
+			this.removeFromTree(); tree.reOrderGroups();
 		}, "delete"));
 		this.add(new TreeIcon((int)getSize().x - 42, 0, "group_visible", () -> {
 			compound.visible = !compound.visible; updateColor();
@@ -126,51 +133,57 @@ public class TreeGroup extends Panel {
 		}, "clone"));
 		this.add(new TreeIcon((int)getSize().x - 108, 0, "group_minimize", () -> toggle(!compound.minimized), "minimize"));
 		label.getListenerMap().addListener(MouseClickEvent.class, listener -> {
-			if(listener.getAction() != CLICK || listener.getButton() != MouseButton.MOUSE_BUTTON_LEFT) return;
-			GroupCompound model = HelperCollector.getSelected();
-			if(selected()){
-				HelperCollector.SELECTED = -1; updateColor();
+			if(listener.getAction() == CLICK && listener.getButton() == MouseButton.MOUSE_BUTTON_LEFT){
+				GroupCompound model = HelperCollector.getSelected();
+				if(selected()){
+					HelperCollector.SELECTED = -1; updateColor();
+				}
+				else{
+					if(HelperCollector.SELECTED > -1) model = HelperCollector.getSelected();
+					HelperCollector.SELECTED = index();
+				}
+				if(model != null) model.button.updateColor(); updateColor();
+				model = HelperCollector.getSelected();
+				if(model == null){
+					PreviewEditor.pos_x.apply(0);
+					PreviewEditor.pos_y.apply(0);
+					PreviewEditor.pos_z.apply(0);
+					PreviewEditor.poss_x.apply(0);
+					PreviewEditor.poss_x.apply(0);
+					PreviewEditor.poss_x.apply(0);
+					PreviewEditor.rot_x.apply(0);
+					PreviewEditor.rot_y.apply(0);
+					PreviewEditor.rot_z.apply(0);
+					PreviewEditor.size_x.apply(1);
+					PreviewEditor.size_y.apply(1);
+					PreviewEditor.size_z.apply(1);
+					PreviewEditor.size16_x.apply(16);
+					PreviewEditor.size16_y.apply(16);
+					PreviewEditor.size16_z.apply(16);
+				}
+				else{
+					PreviewEditor.pos_x.apply(model.pos == null ? 0 : model.pos.xCoord);
+					PreviewEditor.pos_y.apply(model.pos == null ? 0 : model.pos.yCoord);
+					PreviewEditor.pos_z.apply(model.pos == null ? 0 : model.pos.zCoord);
+					PreviewEditor.poss_x.apply(model.pos == null ? 0 : model.pos.xCoord * 16);
+					PreviewEditor.poss_x.apply(model.pos == null ? 0 : model.pos.yCoord * 16);
+					PreviewEditor.poss_x.apply(model.pos == null ? 0 : model.pos.zCoord * 16);
+					PreviewEditor.rot_x.apply(model.rot == null ? 0 : model.rot.xCoord);
+					PreviewEditor.rot_y.apply(model.rot == null ? 0 : model.rot.yCoord);
+					PreviewEditor.rot_z.apply(model.rot == null ? 0 : model.rot.zCoord);
+					PreviewEditor.size_x.apply(model.scale == null ? 1 : model.scale.xCoord);
+					PreviewEditor.size_y.apply(model.scale == null ? 1 : model.scale.yCoord);
+					PreviewEditor.size_z.apply(model.scale == null ? 1 : model.scale.zCoord);
+					PreviewEditor.size16_x.apply(model.scale == null ? 1 : model.scale.xCoord * 16);
+					PreviewEditor.size16_y.apply(model.scale == null ? 1 : model.scale.yCoord * 16);
+					PreviewEditor.size16_z.apply(model.scale == null ? 1 : model.scale.zCoord * 16);
+				}
+				return;
 			}
-			else{
-				if(HelperCollector.SELECTED > -1) model = HelperCollector.getSelected();
-				HelperCollector.SELECTED = index();
-			}
-			if(model != null) model.button.updateColor(); updateColor();
-			model = HelperCollector.getSelected();
-			if(model == null){
-				PreviewEditor.pos_x.apply(0);
-				PreviewEditor.pos_y.apply(0);
-				PreviewEditor.pos_z.apply(0);
-				PreviewEditor.poss_x.apply(0);
-				PreviewEditor.poss_x.apply(0);
-				PreviewEditor.poss_x.apply(0);
-				PreviewEditor.rot_x.apply(0);
-				PreviewEditor.rot_y.apply(0);
-				PreviewEditor.rot_z.apply(0);
-				PreviewEditor.size_x.apply(1);
-				PreviewEditor.size_y.apply(1);
-				PreviewEditor.size_z.apply(1);
-				PreviewEditor.size16_x.apply(16);
-				PreviewEditor.size16_y.apply(16);
-				PreviewEditor.size16_z.apply(16);
-			}
-			else{
-				PreviewEditor.pos_x.apply(model.pos == null ? 0 : model.pos.xCoord);
-				PreviewEditor.pos_y.apply(model.pos == null ? 0 : model.pos.yCoord);
-				PreviewEditor.pos_z.apply(model.pos == null ? 0 : model.pos.zCoord);
-				PreviewEditor.poss_x.apply(model.pos == null ? 0 : model.pos.xCoord * 16);
-				PreviewEditor.poss_x.apply(model.pos == null ? 0 : model.pos.yCoord * 16);
-				PreviewEditor.poss_x.apply(model.pos == null ? 0 : model.pos.zCoord * 16);
-				PreviewEditor.rot_x.apply(model.rot == null ? 0 : model.rot.xCoord);
-				PreviewEditor.rot_y.apply(model.rot == null ? 0 : model.rot.yCoord);
-				PreviewEditor.rot_z.apply(model.rot == null ? 0 : model.rot.zCoord);
-				PreviewEditor.size_x.apply(model.scale == null ? 1 : model.scale.xCoord);
-				PreviewEditor.size_y.apply(model.scale == null ? 1 : model.scale.yCoord);
-				PreviewEditor.size_z.apply(model.scale == null ? 1 : model.scale.zCoord);
-				PreviewEditor.size16_x.apply(model.scale == null ? 1 : model.scale.xCoord * 16);
-				PreviewEditor.size16_y.apply(model.scale == null ? 1 : model.scale.yCoord * 16);
-				PreviewEditor.size16_z.apply(model.scale == null ? 1 : model.scale.zCoord * 16);
-			}
+			/*if(listener.getAction() == CLICK && listener.getButton() == MouseButton.MOUSE_BUTTON_RIGHT){
+				tree.select(this);
+				return;
+			}*/
 		});
 		this.recalculateSize();
 	}
@@ -204,7 +217,8 @@ public class TreeGroup extends Panel {
 	}
 
 	public void removeFromTree(){
-		tree.scrollable.getContainer().remove(this); tree.groups.remove(this);
+		tree.scrollable.getContainer().remove(this);
+		tree.groups.remove(this);
 	}
 	
 	public TreeBase tree(){
@@ -216,7 +230,10 @@ public class TreeGroup extends Panel {
 	}
 	
 	public void updateColor(){
-		if(animations){
+		if(tree.isSelected(this)){
+			label.getStyle().getBackground().setColor(FMTB.rgba(0xcdcdcd));
+		}
+		else if(animations){
 			int color = 0;
 			if(list.animations.isEmpty()) color = list.selected ? list.visible ? 0xfc7900 : 0xffe7d1 : list.visible ? 0xffa14a : 0xd1ac8a;
 			else color = list.selected ? list.visible ? 0x2985ba : 0x7eb1cf : list.visible ? 0x28a148 : 0x6bbf81;
@@ -232,6 +249,30 @@ public class TreeGroup extends Panel {
 	
 	public int index(){
 		return HelperCollector.LOADED.indexOf(compound);
+	}
+
+	public void onScroll(double yoffset){
+		if(list != null && !animations){
+			int index = FMTB.MODEL.getGroups().indexOf(list);
+			int dir = index + (yoffset > 0 ? -1 : 1);
+			if(dir < 0 || dir >= FMTB.MODEL.getGroups().size()) return;
+			FMTB.MODEL.getGroups().remove(list);
+			FMTB.MODEL.getGroups().add(dir, list);
+		}
+		if(compound != null){
+			int index = HelperCollector.LOADED.indexOf(compound);
+			int dir = index + (yoffset > 0 ? -1 : 1);
+			if(dir < 0 || dir >= HelperCollector.LOADED.size()) return;
+			//TODO later
+		}
+	}
+
+	public void onScrollSelect(){
+		updateColor();
+	}
+
+	public void onScrollDeselect(){
+		updateColor();
 	}
 	
 }

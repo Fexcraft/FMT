@@ -621,11 +621,23 @@ public class GroupCompound {
 		public boolean add(TurboList list){
 			boolean bool = super.add(list);
 			if(bool){
-				Trees.polygon.addSub(list.button.update()); Trees.polygon.reOrderGroups();
-				Trees.fvtm.addSub(list.abutton.update()); Trees.fvtm.reOrderGroups();
+				Trees.polygon.addSub(list.button.update());
+				Trees.polygon.reOrderGroups();
+				Trees.fvtm.addSub(list.abutton.update());
+				Trees.fvtm.reOrderGroups();
 				Editors.general.refreshGroups();
 			}
 			return bool;
+		}
+		
+		@Override
+		public void add(int index, TurboList list){
+			super.add(index, list);
+			Trees.polygon.addSub(index, list.button.update());
+			Trees.polygon.reOrderGroups();
+			Trees.fvtm.addSub(index, list.abutton.update());
+			Trees.fvtm.reOrderGroups();
+			Editors.general.refreshGroups();
 		}
 		
 		public boolean contains(String str){
@@ -688,7 +700,9 @@ public class GroupCompound {
 				list.button = null; list.abutton = null;
 				list.pbutton = new SubTreeGroup(Trees.helper, list);
 				list.pbutton.setRoot(compound.button);
-			} compound.button.update(); Trees.polygon.reOrderGroups();
+			}
+			compound.button.update();
+			Trees.polygon.reOrderGroups();
 		}
 		
 	}

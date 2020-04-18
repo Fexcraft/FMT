@@ -6,12 +6,12 @@ import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.Panel;
 import org.liquidengine.legui.component.ScrollablePanel;
+import org.liquidengine.legui.component.misc.listener.scrollablepanel.ScrollablePanelViewportScrollListener;
 import org.liquidengine.legui.event.ScrollEvent;
 import org.liquidengine.legui.style.Style.DisplayType;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.editor.EditorBase;
-import net.fexcraft.app.fmt.ui.editor.EditorBase.SPVSL;
 import net.fexcraft.app.fmt.utils.HelperCollector;
 import net.fexcraft.app.fmt.utils.Settings;
 
@@ -22,6 +22,7 @@ public class TreeBase extends Panel {
 	public String counterlabel;
 	public Label counter; 
 	public final String id;
+	private TreeGroup selected;
 	
 	public TreeBase(String name){
 		super(FMTB.WIDTH - 304, 30, 304, FMTB.HEIGHT - 30); Trees.trees.add(this); id = name;
@@ -34,7 +35,7 @@ public class TreeBase extends Panel {
         scrollable.setHorizontalScrollBarVisible(false);
         scrollable.getContainer().setSize(296, FMTB.HEIGHT - 60);
         scrollable.getViewport().getListenerMap().removeAllListeners(ScrollEvent.class);
-        scrollable.getViewport().getListenerMap().addListener(ScrollEvent.class, new SPVSL());
+        scrollable.getViewport().getListenerMap().addListener(ScrollEvent.class, new SPVSL(this));
         super.add(scrollable); this.hide();
 	}
 
@@ -51,8 +52,14 @@ public class TreeBase extends Panel {
 	}
 	
 	public boolean addSub(Component com){
-		if(com instanceof TreeGroup) groups.add((TreeGroup)com);
+		if(com instanceof TreeGroup && !groups.contains(com)) groups.add((TreeGroup)com);
 		return scrollable.getContainer().add(com);
+	}
+
+	public void addSub(int index, Component com){
+		if(com instanceof TreeGroup && !groups.contains(com)) groups.add(index, (TreeGroup)com);
+		for(TreeGroup group : groups) scrollable.getContainer().remove(group);
+		for(TreeGroup group : groups) scrollable.getContainer().add(group);
 	}
 
 	public void reOrderGroups(){
@@ -76,6 +83,37 @@ public class TreeBase extends Panel {
 
 	public int groupAmount(){
 		return groups.size();
+	}
+	
+	public void select(TreeGroup group){
+		if(selected != null){
+			TreeGroup old = selected;
+			selected = null;
+			old.onScrollDeselect();
+			if(old == group) return;
+		}
+		(selected = group).onScrollSelect();
+	}
+
+	public boolean isSelected(TreeGroup group){
+		return selected == group;
+	}
+	
+	public static class SPVSL extends ScrollablePanelViewportScrollListener {
+		
+		private TreeBase base;
+
+		public SPVSL(TreeBase base){
+			this.base = base;
+		}
+		
+	    @Override
+	    public void process(@SuppressWarnings("rawtypes") ScrollEvent event){
+	    	if(FMTB.field_scrolled) return; 
+	    	if(base.selected != null) base.selected.onScroll(event.getYoffset());
+	    	else super.process(event);
+	    }
+	    
 	}
 	
 }

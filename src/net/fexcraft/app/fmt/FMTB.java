@@ -557,6 +557,7 @@ public class FMTB {
 	public void reset(){
 		if(context.getFocusedGui() instanceof Field || context.getFocusedGui() instanceof TextField){
 			context.getFocusedGui().setFocused(false);
+			context.setFocusedGui(null);
 		}
 		else if(Editors.anyVisible()){ Editors.hideAll(); }
 		else return;//open some kind of main menu / status / login screen.

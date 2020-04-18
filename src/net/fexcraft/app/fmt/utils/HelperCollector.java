@@ -106,8 +106,11 @@ public class HelperCollector {
 	}
 	
 	private static void add(GroupCompound compound){
-		compound.clearSelection(); Trees.helper.addSub(compound.button);
-		compound.getGroups().setAsHelperPreview(compound); LOADED.add(compound);
+		compound.clearSelection();
+		compound.minimized = true;
+		Trees.helper.addSub(compound.button);
+		compound.getGroups().setAsHelperPreview(compound);
+		LOADED.add(compound);
 	}
 	
 	public static GroupCompound getSelected(){
