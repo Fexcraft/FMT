@@ -830,4 +830,12 @@ public class GroupCompound {
 		}
 	}
 
+	/**
+	 * For settings Helper Compounds "selected".
+	 * @param value the new status
+	 */
+	public void setGroupsSelected(boolean value){
+		for(TurboList list : groups) list.selected = value;
+	}
+
 }

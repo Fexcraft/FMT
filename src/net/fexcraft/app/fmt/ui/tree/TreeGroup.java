@@ -166,12 +166,17 @@ public class TreeGroup extends Panel {
 				if(selected()){
 					HelperCollector.SELECTED = -1;
 					updateColor();
+					compound.setGroupsSelected(false);
 				}
 				else{
 					if(HelperCollector.SELECTED > -1) model = HelperCollector.getSelected();
 					HelperCollector.SELECTED = index();
+					compound.setGroupsSelected(true);
 				}
-				if(model != null) model.button.updateColor();
+				if(model != null){
+					model.button.updateColor();
+					model.setGroupsSelected(false);
+				}
 				updateColor();
 				model = HelperCollector.getSelected();
 				if(model == null){
