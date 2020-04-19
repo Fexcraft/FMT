@@ -415,6 +415,8 @@ public class SaveLoad {
 						porter.getSettings(false).forEach(setting -> map.put(setting.getId(), setting));
 						helperpreview = HelperCollector.load(file, porter, map);
 					}
+					helperpreview.name = jsn.get("name").getAsString();
+					helperpreview.button.update();
 					if(jsn.has("pos_x")){
 						helperpreview.pos = new Vec3f(jsn.get("pos_x").getAsFloat(), jsn.get("pos_y").getAsFloat(), jsn.get("pos_z").getAsFloat());
 					}

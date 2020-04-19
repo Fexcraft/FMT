@@ -180,6 +180,7 @@ public class TreeGroup extends Panel {
 				updateColor();
 				model = HelperCollector.getSelected();
 				if(model == null){
+					PreviewEditor.helper_name.getTextState().setText(FMTB.NO_PREVIEW_SELECTED);
 					PreviewEditor.pos_x.apply(0);
 					PreviewEditor.pos_y.apply(0);
 					PreviewEditor.pos_z.apply(0);
@@ -197,6 +198,7 @@ public class TreeGroup extends Panel {
 					PreviewEditor.size16_z.apply(16);
 				}
 				else{
+					PreviewEditor.helper_name.getTextState().setText(model.name.substring(model.name.indexOf('/') + 1));
 					PreviewEditor.pos_x.apply(model.pos == null ? 0 : model.pos.xCoord);
 					PreviewEditor.pos_y.apply(model.pos == null ? 0 : model.pos.yCoord);
 					PreviewEditor.pos_z.apply(model.pos == null ? 0 : model.pos.zCoord);

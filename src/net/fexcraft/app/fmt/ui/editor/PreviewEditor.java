@@ -2,7 +2,10 @@ package net.fexcraft.app.fmt.ui.editor;
 
 import org.liquidengine.legui.component.Label;
 
+import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.UserInterfaceUtils;
 import net.fexcraft.app.fmt.ui.field.NumberField;
+import net.fexcraft.app.fmt.ui.field.TextField;
 import net.fexcraft.app.fmt.utils.HelperCollector;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.lib.common.math.Vec3f;
@@ -12,10 +15,22 @@ public class PreviewEditor extends EditorBase {
 	public static NumberField pos_x, pos_y, pos_z, poss_x, poss_y, poss_z;
 	public static NumberField rot_x, rot_y, rot_z;
 	public static NumberField size_x, size_y, size_z, size16_x, size16_y, size16_z;
+	public static TextField helper_name;
 	
+	@SuppressWarnings("unchecked")
 	public PreviewEditor(){
 		super(); int pass = -20;
 		EditorWidget preview = new EditorWidget(this, translate("editor.preview.container"), 0, 0, 0, 0);
+		preview.getContainer().add(new Label(translate("editor.preview.container.name"), 3, pass += 24, 290, 20));
+		preview.getContainer().add(helper_name = new TextField(FMTB.NO_POLYGON_SELECTED, 3, pass += 24, 290, 20));
+		helper_name.addTextInputContentChangeEventListener(event -> {
+			String validated = UserInterfaceUtils.validateString(event);
+			GroupCompound compound = HelperCollector.getSelected();
+			if(compound == null || !compound.name.contains("/")) return;
+			compound.name = compound.name.substring(0, compound.name.indexOf('/') + 1);
+			compound.name += validated;
+			compound.button.update();
+        });
 		preview.getContainer().add(new Label(translate("editor.preview.container.position_full"), 3, pass += 24, 290, 20));
 		preview.getContainer().add(pos_x = new NumberField(4, pass += 24, 90, 20).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> updatePos(true)));
 		preview.getContainer().add(pos_y = new NumberField(102, pass, 90, 20).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> updatePos(true)));

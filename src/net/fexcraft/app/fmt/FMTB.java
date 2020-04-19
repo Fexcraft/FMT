@@ -88,7 +88,7 @@ import net.fexcraft.lib.local_tmt.ModelRendererTurbo;
  * */
 public class FMTB {
 
-	public static final String VERSION = "2.3.1";
+	public static final String VERSION = "2.4.0";
 	public static final String deftitle = "[FPS:%s] Fexcraft Modelling Toolbox " + VERSION + " - %s";
 	public static final String CLID = "587016218196574209";
 	//
@@ -99,7 +99,7 @@ public class FMTB {
 	public static GroupCompound MODEL = new GroupCompound(null);
 	public static Timer BACKUP_TIMER, TEX_UPDATE_TIMER;
 	private static int disk_update;
-	public static String NO_POLYGON_SELECTED;
+	public static String NO_POLYGON_SELECTED, NO_PREVIEW_SELECTED;
 	//
 	public static final ST_Timer timer = new ST_Timer();
 	public float delta, accumulator = 0f, interval = 1f / 30f, alpha;
@@ -150,6 +150,7 @@ public class FMTB {
 		ggr = new GGR(0, 4, 4); ggr.rotation.xCoord = 45;
 		//
 		NO_POLYGON_SELECTED = Translator.translate("error.no_polygon_selected");
+		NO_PREVIEW_SELECTED = Translator.translate("error.no_preview_selected");
 		Settings.THEME_CHANGE_LISTENER.add(bool -> {
 			if(bool){
 		        Themes.setDefaultTheme(new FlatColoredTheme(
