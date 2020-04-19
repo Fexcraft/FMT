@@ -52,12 +52,12 @@ public class TreeBase extends Panel {
 	}
 	
 	public boolean addSub(Component com){
-		if(com instanceof TreeGroup && !groups.contains(com)) groups.add((TreeGroup)com);
+		if(com instanceof TreeGroup) groups.add((TreeGroup)com);
 		return scrollable.getContainer().add(com);
 	}
 
 	public void addSub(int index, Component com){
-		if(com instanceof TreeGroup && !groups.contains(com)) groups.add(index, (TreeGroup)com);
+		if(com instanceof TreeGroup) groups.add(index, (TreeGroup)com);
 		for(TreeGroup group : groups) scrollable.getContainer().remove(group);
 		for(TreeGroup group : groups) scrollable.getContainer().add(group);
 	}
