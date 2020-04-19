@@ -40,7 +40,7 @@ public class RayCoastAway {
 		buffer.clear(); PICKING = false; MOUSEOFF = false;
 		if(TextureEditor.pixelMode()){
 			Texture tex;
-			if(FMTB.MODEL.texture == null || (tex = TextureManager.getTexture(FMTB.MODEL.texture, true)) == null){
+			if(FMTB.MODEL.texgroup == null || (tex = FMTB.MODEL.texgroup.texture) == null){
 				DialogBox.show(null, "dialog.button.ok", "polygon_picker.paint_bucket.toggle_off", null, () -> {
 					TextureEditor.toggleBucketMode(null);
 				}, "polygon_picker.paint_bucket.no_texture");
@@ -59,7 +59,7 @@ public class RayCoastAway {
 						}
 						else{
 							tex.getImage().setRGB(x, y, new Color(TextureEditor.CURRENTCOLOR.getColorInt()).getRGB()); tex.rebind();
-							TextureManager.saveTexture(FMTB.MODEL.texture); return;
+							TextureManager.saveTexture(FMTB.MODEL.texgroup.texture.name); return;
 						}
 					} else continue;
 				}
@@ -86,7 +86,7 @@ public class RayCoastAway {
 		}
 		else{
 			Texture tex;
-			if(FMTB.MODEL.texture == null || (tex = TextureManager.getTexture(FMTB.MODEL.texture, true)) == null){
+			if(FMTB.MODEL.texgroup == null || (tex = FMTB.MODEL.texgroup.texture) == null){
 				DialogBox.show(null, "dialog.button.ok", "polygon_picker.paint_bucket.toggle_off", null, () -> {
 					TextureEditor.toggleBucketMode(null);
 				}, "polygon_picker.paint_bucket.no_texture");
@@ -98,12 +98,12 @@ public class RayCoastAway {
 					if(poly.burnToTexture(tex.getImage(), -1)){ rebind = true; }
 				}
 				if(rebind){
-					tex.rebind(); TextureManager.saveTexture(FMTB.MODEL.texture);
+					tex.rebind(); TextureManager.saveTexture(FMTB.MODEL.texgroup.texture.name);
 				}
 			}
 			else{
 				if(wrapper.burnToTexture(tex.getImage(), TextureEditor.polygonMode() ? -1 : getSelectedFace(wrapper, id))){
-					tex.rebind(); TextureManager.saveTexture(FMTB.MODEL.texture);
+					tex.rebind(); TextureManager.saveTexture(FMTB.MODEL.texgroup.texture.name);
 				}
 			}
 		}

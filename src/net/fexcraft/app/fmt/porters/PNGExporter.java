@@ -10,7 +10,6 @@ import javax.imageio.ImageIO;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.utils.Settings.Type;
-import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 
 /**
@@ -35,10 +34,10 @@ public class PNGExporter extends ExImPorter {
 	@Override
 	public String exportModel(GroupCompound compound, File file, Map<String, Setting> settings){ image = null;
 		if(settings.get("textured").getBooleanValue()){
-			if(compound.texture == null || TextureManager.getTexture(compound.texture, true) == null){
+			if(compound.texgroup == null || compound.texgroup.texture == null){
 				return "No texture loaded!";
 			}
-			image = TextureManager.getTexture(compound.texture, true).getImage();
+			image = compound.texgroup.texture.getImage();
 		}
 		else{
 			image = new BufferedImage(compound.tx(null), compound.ty(null), BufferedImage.TYPE_INT_ARGB);

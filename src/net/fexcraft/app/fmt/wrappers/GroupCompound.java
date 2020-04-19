@@ -36,6 +36,7 @@ import net.fexcraft.app.fmt.utils.RayCoastAway;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
+import net.fexcraft.app.fmt.utils.TextureManager.TextureGroup;
 import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.json.JsonUtil;
@@ -50,17 +51,19 @@ public class GroupCompound {
 	public PolygonWrapper lastselected;
 	public File file, origin;
 	public float rate = 1f;
-	public String texture;
 	public String name;
+	public TextureGroup texgroup;
 	//
 	public static long SELECTED_POLYGONS;
 	public boolean visible = true, minimized;
 	public Vec3f pos, rot, scale;
 	public TreeGroup button;
+	public String helpertex;
 	
 	public GroupCompound(File origin){
 		this.origin = origin; name = "unnamed model";
-		recompile(); this.updateFields();
+		recompile();
+		updateFields();
 		if(Trees.helper != null) button = new TreeGroup(Trees.helper, this);
 	}
 	
@@ -101,7 +104,7 @@ public class GroupCompound {
 			}
 			else{
 				//TextureManager.bindTexture(texture == null ? "blank" : texture);
-				groups.forEach(elm -> { TextureManager.bindTexture(elm.getApplicableTexture(this)); elm.render(true); });
+				groups.forEach(elm -> { elm.bindApplicableTexture(this); elm.render(true); });
 				GL11.glDisable(GL11.GL_TEXTURE_2D);
 				groups.forEach(elm -> elm.renderLines());
 				GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -421,7 +424,7 @@ public class GroupCompound {
 		if(list == null){
 			ModelGroupEditor.group_color.apply(0xffffff);
 			ModelGroupEditor.group_name.getTextState().setText(FMTB.NO_POLYGON_SELECTED);
-			ModelGroupEditor.group_texture.getTextState().setText(FMTB.NO_POLYGON_SELECTED);
+			ModelGroupEditor.group_texture.setSelected(0, true);
 			ModelGroupEditor.g_tex_x.setSelected(8f, true);
 			ModelGroupEditor.g_tex_y.setSelected(8f, true);
 			ModelGroupEditor.g_tex_s.setSelected(8f, true);
@@ -432,16 +435,18 @@ public class GroupCompound {
 		else{
 			ModelGroupEditor.group_color.apply((list.color == null ? RGB.WHITE : list.color).packed);
 			ModelGroupEditor.group_name.getTextState().setText(list.id);
+			if(list.texgroup == null){
+				ModelGroupEditor.group_texture.setSelected(0, true);
+			}
+			else{
+				ModelGroupEditor.group_texture.setSelected(list.texgroup == null ? "none" : list.texgroup.group, true);
+			}
 			ModelGroupEditor.g_tex_x.setSelected((float)list.textureX, true);
 			ModelGroupEditor.g_tex_y.setSelected((float)list.textureY, true);
 			ModelGroupEditor.g_tex_s.setSelected((float)list.textureS, true);
 			ModelGroupEditor.exoff_x.apply(list.exportoffset == null ? 0 : list.exportoffset.xCoord);
 			ModelGroupEditor.exoff_y.apply(list.exportoffset == null ? 0 : list.exportoffset.yCoord);
 			ModelGroupEditor.exoff_z.apply(list.exportoffset == null ? 0 : list.exportoffset.zCoord);
-			//
-			String texname = list.getGroupTexture() + "";
-			if(texname.length() > 32){ texname = texname.substring(texname.length() - 32, texname.length()); }
-			ModelGroupEditor.group_texture.getTextState().setText(texname);
 		};
 		ModelGroupEditor.animations.refresh(list);
 		//
@@ -459,9 +464,7 @@ public class GroupCompound {
 		ModelGroupEditor.m_tex_s.setSelected((float)textureScale, true);
 		ModelGroupEditor.model_name.getTextState().setText(name);
 		//
-		String texname = this.texture + "";
-		if(texname.length() > 64){ texname = texname.substring(texname.length() - 64, texname.length()); }
-		ModelGroupEditor.model_texture.getTextState().setText(texname);
+		ModelGroupEditor.model_texture.setSelected(FMTB.MODEL.texgroup == null ? "none" : FMTB.MODEL.texgroup.group, true);
 	}
 	
 	public float multiply(float flea){
@@ -531,8 +534,9 @@ public class GroupCompound {
 		} return i;
 	}
 
-	public void setTexture(String string){
-		this.texture = string; this.groups.forEach(turbo -> turbo.forEach(poly -> poly.recompile()));
+	public void setTexture(TextureGroup group){
+		texgroup = group;
+		this.groups.forEach(turbo -> turbo.forEach(poly -> poly.recompile()));
 	}
 
 	public int getDirectlySelectedGroupsAmount(){
@@ -612,8 +616,8 @@ public class GroupCompound {
 		return lastselected;
 	}
 	
-	public int tx(TurboList list){ return list == null || list.getGroupTexture() == null ? textureSizeX : list.textureX; }
-	public int ty(TurboList list){ return list == null || list.getGroupTexture() == null ? textureSizeY : list.textureY; }
+	public int tx(TurboList list){ return list == null || list.getTextureGroup() == null ? textureSizeX : list.textureX; }
+	public int ty(TurboList list){ return list == null || list.getTextureGroup() == null ? textureSizeY : list.textureY; }
 	
 	public static class GroupList extends ArrayList<TurboList> {
 		

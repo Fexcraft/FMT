@@ -2,6 +2,7 @@ package net.fexcraft.app.fmt.ui.tree;
 
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
+import java.awt.Desktop;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
@@ -16,12 +17,16 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.DialogBox;
+import net.fexcraft.app.fmt.ui.FileSelector;
+import net.fexcraft.app.fmt.ui.UserInterfaceUtils;
 import net.fexcraft.app.fmt.ui.editor.Editors;
 import net.fexcraft.app.fmt.ui.editor.PreviewEditor;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.HelperCollector;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
+import net.fexcraft.app.fmt.utils.TextureManager;
+import net.fexcraft.app.fmt.utils.TextureManager.TextureGroup;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.math.Vec3f;
@@ -35,6 +40,7 @@ public class TreeGroup extends Panel {
 	private TurboList list;
 	private TreeBase tree;
 	private Label label;
+	private TextureGroup texgroup;
 
 	public TreeGroup(TreeBase base){
 		super(0, 0, base.getSize().x - 12, 20);
@@ -52,7 +58,7 @@ public class TreeGroup extends Panel {
 			//	label.getStyle().setTextColor(ColorConstants.lightGray());
 			//}
 			getStyle().getBorder().setEnabled(false);
-			if(compound != null || list != null) updateColor();
+			if(compound != null || list != null || texgroup != null) updateColor();
 		});
 		con.accept(Settings.darktheme());
 	}
@@ -225,8 +231,68 @@ public class TreeGroup extends Panel {
 		this.recalculateSize();
 	}
 
+	public TreeGroup(TreeBase base, TextureGroup group){
+		this(base);
+		texgroup = group;
+		updateColor();
+		this.add(new TreeIcon((int)getSize().x - 20, 0, "group_delete", () -> {
+			TextureManager.removeGroup(texgroup);
+		}, "delete"));
+		this.add(new TreeIcon((int)getSize().x - 42, 0, "group_edit", () -> {
+			if(texgroup.texture == null) return;
+			try{
+				if(System.getProperty("os.name").toLowerCase().contains("windows")){
+					String cmd = "rundll32 url.dll,FileProtocolHandler " + texgroup.texture.getFile().getCanonicalPath();
+					Runtime.getRuntime().exec(cmd);
+				}
+				else{
+					Desktop.getDesktop().edit(texgroup.texture.getFile());
+				}
+			}
+			catch(Exception e){
+				e.printStackTrace();
+			}
+		}, "edit"));
+		this.add(new TreeIcon((int)getSize().x - 64, 0, "group_minimize", () -> toggle(!texgroup.minimized), "options"));
+		new SubTreeGroup(base, 0, "tree.textures.select", () -> {
+			FileSelector.select(UserInterfaceUtils.translate("tree.textures.select.dialog"), "./", FileSelector.TYPE_PNG, false, file -> {
+				if(file == null) return;
+				String name = file.getPath();
+				TextureManager.loadTextureFromFile(name, file);
+				texgroup.texture = TextureManager.getTexture(name, false);
+				//
+				/*Texture tex = TextureManager.getTexture(name, true); if(tex == null) return;
+				if(tex.getWidth() > FMTB.MODEL.textureX) FMTB.MODEL.textureX = tex.getWidth();
+				if(tex.getHeight() > FMTB.MODEL.textureY) FMTB.MODEL.textureY = tex.getHeight();*/
+			});
+		}).setRoot(this).updateColor();
+		new SubTreeGroup(base, 1, "tree.textures.generate", () -> {
+			texgroup.texture.clearPixels();
+			if(FMTB.MODEL.texgroup == texgroup) FMTB.MODEL.textureScale = 1;
+			for(TurboList list : FMTB.MODEL.getGroups()){
+				if(list.texgroup == texgroup){
+					list.textureS = 1;
+				}
+			}
+			FMTB.MODEL.updateFields();
+        	FMTB.MODEL.getGroups().forEach(elm -> {
+        		if(elm.texgroup == null || elm.texgroup == texgroup){
+            		elm.forEach(poly -> poly.burnToTexture(texgroup.texture.getImage(), null));
+        		}
+        	});
+        	TextureManager.saveTexture(texgroup.texture.name);
+        	texgroup.texture.reload();
+        	FMTB.MODEL.recompile();
+		}).setRoot(this).updateColor();
+		new SubTreeGroup(base, 2, "tree.textures.rename", () -> {
+			
+		}).setRoot(this).updateColor();
+		this.recalculateSize();
+	}
+
 	public void toggle(boolean bool){
-		if(animations) list.aminimized = bool;
+		if(texgroup != null) texgroup.minimized = bool;
+		else if(animations) list.aminimized = bool;
 		else if(list == null) compound.minimized = bool;
 		else list.minimized = bool;
 		recalculateSize();
@@ -238,7 +304,12 @@ public class TreeGroup extends Panel {
 	}
 
 	public void recalculateSize(){
-		if(animations){
+		if(texgroup != null){
+			this.setSize(this.getSize().x, texgroup.minimized ? 20 : (3 * 22) + 20);
+			this.update();
+			this.updateColor();
+		}
+		else if(animations){
 			this.setSize(this.getSize().x, list.aminimized ? 20 : (list.animations.size() * 22) + 20);
 			this.update();
 			this.updateColor();
@@ -265,13 +336,16 @@ public class TreeGroup extends Panel {
 	}
 
 	public Component update(){
-		label.getTextState().setText(list == null ? compound.name : animations ? "[" + list.animations.size() + "] " + list.id : list.id);
+		label.getTextState().setText(texgroup != null ? texgroup.group : list == null ? compound.name : animations ? "[" + list.animations.size() + "] " + list.id : list.id);
 		return this;
 	}
 
 	public void updateColor(){
 		if(tree.isSelected(this)){
 			label.getStyle().getBackground().setColor(FMTB.rgba(0xcdcdcd));
+		}
+		else if(texgroup != null){
+			label.getStyle().getBackground().setColor(FMTB.rgba(0x28a148));
 		}
 		else if(animations){
 			int color = 0;

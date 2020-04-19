@@ -270,9 +270,15 @@ public class FMTB {
         renderer.initialize();
 		Settings.updateTheme();
         //
-		PorterManager.load(); HelperCollector.reload(loadedold);
-		SessionHandler.checkIfLoggedIn(true, true); checkForUpdates();
-		KeyCompound.init(); KeyCompound.load(); FMTB.MODEL.updateFields();
+		PorterManager.load();
+		HelperCollector.reload(loadedold);
+		SessionHandler.checkIfLoggedIn(true, true);
+		checkForUpdates();
+		KeyCompound.init();
+		KeyCompound.load();
+		if(!loadedold){
+			FMTB.MODEL.updateFields();
+		}
 		//
 		LocalDateTime midnight = LocalDateTime.of(LocalDate.now(ZoneOffset.systemDefault()), LocalTime.MIDNIGHT);
 		long mid = midnight.toInstant(ZoneOffset.UTC).toEpochMilli(); long date = Time.getDate(); while((mid += Time.MIN_MS * 5) < date);
@@ -374,7 +380,7 @@ public class FMTB {
 		//
         if(Settings.oldrot()) GL11.glRotatef(180, 1, 0, 0);
         GL11.glPushMatrix();
-        RGB.WHITE.glColorApply();
+        RGB.glColorReset();
         if(ImageHelper.HASTASK && ImageHelper.getTaskId() == 2){
         	GL11.glRotatef((ImageHelper.getStage() - 20) * 10, 0, 1, 0);
         }
@@ -384,18 +390,26 @@ public class FMTB {
         }
         else{
 	        if(Settings.floor()){
-	            TextureManager.bindTexture("floor");
-	            GL11.glRotatef(-90, 0, 1, 0);
-	            GL11.glPushMatrix();
-	            //GL11.glCullFace(GL11.GL_BACK); GL11.glEnable(GL11.GL_CULL_FACE);
-	            GL11.glBegin(GL11.GL_QUADS); float cs = 16, mid = Settings.oldrot() ? 1f / 16 * 10 : 1 - 0.001f;
-	    		GL11.glTexCoord2f(0, 1); GL11.glVertex3f( cs, mid,  cs);
-	            GL11.glTexCoord2f(1, 1); GL11.glVertex3f(-cs, mid,  cs);
-	            GL11.glTexCoord2f(1, 0); GL11.glVertex3f(-cs, mid, -cs);
-	            GL11.glTexCoord2f(0, 0); GL11.glVertex3f( cs, mid, -cs);
-	            //GL11.glCullFace(GL11.GL_FRONT_AND_BACK); GL11.glDisable(GL11.GL_CULL_FACE); //apparently the front renderer doesn't like this.
-	            GL11.glEnd(); GL11.glPopMatrix();
-	            GL11.glRotatef( 90, 0, 1, 0);
+				TextureManager.bindTexture("floor");
+				GL11.glRotatef(-90, 0, 1, 0);
+				GL11.glPushMatrix();
+				// GL11.glCullFace(GL11.GL_BACK);
+				//GL11.glEnable(GL11.GL_CULL_FACE);
+				GL11.glBegin(GL11.GL_QUADS);
+				float cs = 16, mid = Settings.oldrot() ? 1f / 16 * 10 : 1 - 0.001f;
+				GL11.glTexCoord2f(0, 1);
+				GL11.glVertex3f(cs, mid, cs);
+				GL11.glTexCoord2f(1, 1);
+				GL11.glVertex3f(-cs, mid, cs);
+				GL11.glTexCoord2f(1, 0);
+				GL11.glVertex3f(-cs, mid, -cs);
+				GL11.glTexCoord2f(0, 0);
+				GL11.glVertex3f(cs, mid, -cs);
+				// GL11.glCullFace(GL11.GL_FRONT_AND_BACK);
+				// GL11.glDisable(GL11.GL_CULL_FACE);
+				GL11.glEnd();
+				GL11.glPopMatrix();
+				GL11.glRotatef(90, 0, 1, 0);
 	        }
 			if(Settings.lighting()) GL11.glEnable(GL11.GL_LIGHTING);
             if(Settings.cube()){
