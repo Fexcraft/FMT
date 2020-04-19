@@ -188,9 +188,11 @@ public class FMTB {
         Editors.initializeEditors(frame);
         UserInterfaceUtils.addToolbarButtons(frame);
         //TabContainer.addTest(frame);
+        boolean loadedold = false;;
 		File file = new File(Settings.SETTINGS.get("last_file").getStringValue());
 		if(file.exists() && file.getName().endsWith(".fmtb")){
 			SaveLoad.openModel(file);
+			loadedold = true;
 		}
         MODEL.initButton();
         if(Settings.internal_cursor()){
@@ -267,7 +269,7 @@ public class FMTB {
         renderer.initialize();
 		Settings.updateTheme();
         //
-		PorterManager.load(); HelperCollector.reload();
+		PorterManager.load(); HelperCollector.reload(loadedold);
 		SessionHandler.checkIfLoggedIn(true, true); checkForUpdates();
 		KeyCompound.init(); KeyCompound.load(); FMTB.MODEL.updateFields();
 		//
@@ -615,13 +617,24 @@ public class FMTB {
 	}
 
 	public static void setModel(GroupCompound compound, boolean clearhelpers){
-		Trees.polygon.clear(); Trees.helper.clear(); Trees.fvtm.clear(); FMTB.MODEL = compound; if(clearhelpers) HelperCollector.LOADED.clear();
+		Trees.polygon.clear();
+		Trees.helper.clear();
+		Trees.fvtm.clear();
+		FMTB.MODEL = compound;
+		if(clearhelpers) HelperCollector.LOADED.clear();
 		for(TurboList list : compound.getGroups()){
-			Trees.polygon.addSub(list.button); list.button.updateColor();
-			Trees.fvtm.addSub(list.abutton); list.abutton.updateColor();
-		}//fix for loaded-in groups that should display "not-visible" color
-		for(GroupCompound com : HelperCollector.LOADED){ Trees.helper.addSub(com.button); com.button.updateColor(); }
-		Trees.polygon.reOrderGroups(); Trees.fvtm.reOrderGroups(); Trees.helper.reOrderGroups();
+			Trees.polygon.addSub(list.button);
+			list.button.updateColor();
+			Trees.fvtm.addSub(list.abutton);
+			list.abutton.updateColor();
+		}// fix for loaded-in groups that should display "not-visible" color
+		for(GroupCompound com : HelperCollector.LOADED){
+			Trees.helper.addSub(com.button);
+			com.button.updateColor();
+		}
+		Trees.polygon.reOrderGroups();
+		Trees.fvtm.reOrderGroups();
+		Trees.helper.reOrderGroups();
 		Editors.general.refreshGroups();
 	}
 
