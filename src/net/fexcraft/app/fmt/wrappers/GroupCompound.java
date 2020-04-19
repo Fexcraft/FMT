@@ -740,7 +740,7 @@ public class GroupCompound {
 				switch(obj.get("type").getAsString()){
 					case "simple-clipboard":{
 						boolean external = !obj.get("model").getAsString().equals(name);
-						String groupto = external ? obj.get("model").getAsString() + "|cb" : "clipboard";
+						String groupto = external ? obj.get("model").getAsString() + "-cb" : "clipboard";
 						DialogTask task = () -> {
 							obj.get("polygons").getAsJsonArray().forEach(elm -> {
 								this.add(JsonToTMT.parseWrapper(this, elm.getAsJsonObject()), groupto, false);
