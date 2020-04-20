@@ -332,7 +332,7 @@ public class TextureManager {
 
 	public static class TextureGroup {
 
-		public final String group;
+		public String group;
 		public Texture texture;
 		public TreeGroup button;
 		public boolean minimized;

@@ -6,11 +6,14 @@ import java.awt.Desktop;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
+import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.component.Component;
+import org.liquidengine.legui.component.Dialog;
 import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.Panel;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.input.Mouse.MouseButton;
+import org.liquidengine.legui.listener.MouseClickEventListener;
 import org.liquidengine.legui.style.color.ColorConstants;
 
 import net.fexcraft.app.fmt.FMTB;
@@ -20,7 +23,9 @@ import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.ui.FileSelector;
 import net.fexcraft.app.fmt.ui.UserInterfaceUtils;
 import net.fexcraft.app.fmt.ui.editor.Editors;
+import net.fexcraft.app.fmt.ui.editor.ModelGroupEditor;
 import net.fexcraft.app.fmt.ui.editor.PreviewEditor;
+import net.fexcraft.app.fmt.ui.field.TextField;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.HelperCollector;
 import net.fexcraft.app.fmt.utils.Settings;
@@ -231,6 +236,7 @@ public class TreeGroup extends Panel {
 		this.recalculateSize();
 	}
 
+	@SuppressWarnings("unchecked")
 	public TreeGroup(TreeBase base, TextureGroup group){
 		this(base);
 		texgroup = group;
@@ -285,7 +291,22 @@ public class TreeGroup extends Panel {
         	FMTB.MODEL.recompile();
 		}).setRoot(this).updateColor();
 		new SubTreeGroup(base, 2, "tree.textures.rename", () -> {
-			
+			Dialog dialog = new Dialog(UserInterfaceUtils.translate("tree.textures.rename.dialog"), 300, 90);
+			dialog.setResizable(false);
+			TextField input = new TextField(texgroup.group, 10, 10, 280, 20);
+			input.addTextInputContentChangeEventListener(listener -> UserInterfaceUtils.validateString(listener));
+			dialog.getContainer().add(input);
+            Button button0 = new Button(UserInterfaceUtils.translate("dialogbox.button.ok"), 10, 40, 100, 20);
+            button0.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
+            	if(CLICK == e.getAction()){
+            		texgroup.group = input.getTextState().getText();
+            		ModelGroupEditor.updateTextureGroups();
+            		texgroup.button.update();
+            		dialog.close();
+            	}
+            });
+            dialog.getContainer().add(button0);
+			dialog.show(FMTB.frame);
 		}).setRoot(this).updateColor();
 		this.recalculateSize();
 	}

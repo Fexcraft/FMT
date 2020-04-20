@@ -616,8 +616,13 @@ public class GroupCompound {
 		return lastselected;
 	}
 	
-	public int tx(TurboList list){ return list == null || list.getTextureGroup() == null ? textureSizeX : list.textureX; }
-	public int ty(TurboList list){ return list == null || list.getTextureGroup() == null ? textureSizeY : list.textureY; }
+	public int tx(TurboList list){
+		return list == null || list.getTextureGroup() == null ? textureSizeX : list.textureX;
+	}
+
+	public int ty(TurboList list){
+		return list == null || list.getTextureGroup() == null ? textureSizeY : list.textureY;
+	}
 	
 	public static class GroupList extends ArrayList<TurboList> {
 		

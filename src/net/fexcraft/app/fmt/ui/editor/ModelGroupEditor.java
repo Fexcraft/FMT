@@ -256,7 +256,7 @@ public class ModelGroupEditor extends EditorBase {
 		for(TurboList list : selected){
 			list.texgroup = texgroup;
 		}
-		FMTB.MODEL.recompile();
+		if(!selected.isEmpty()) FMTB.MODEL.recompile();
 	}
 
 	public static void updateTextureGroups(){
@@ -385,11 +385,11 @@ public class ModelGroupEditor extends EditorBase {
 		int value = (int)(event.getNewValue() + 0f);
 		if(FMTB.MODEL.getDirectlySelectedGroupsAmount() == 0) return;
 		for(TurboList list : FMTB.MODEL.getDirectlySelectedGroups()){
-			if(bool == null) FMTB.MODEL.textureScale = value;
-			else if(bool) FMTB.MODEL.textureSizeX = value;
-			else FMTB.MODEL.textureSizeY = value;
+			if(bool == null) list.textureS = value;
+			else if(bool) list.textureX = value;
+			else list.textureY = value;
 			TextureUpdate.updateSize(list);
-			list.forEach(mrt -> mrt.recompile());
+			list.recompile();
 		}
 		return;
 	}

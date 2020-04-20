@@ -58,7 +58,8 @@ public class TextureUpdate extends TimerTask {
 	}
 
 	public static void updateSize(TurboList list){
-		Texture texture = (list == null ? FMTB.MODEL.texgroup : list.getTextureGroup()).texture;
+		return;//TODO reactive this later
+		/*Texture texture = (list == null ? FMTB.MODEL.texgroup : list.getTextureGroup()).texture;
 		if(texture == null || texture.getImage() == null) return;
 		BufferedImage image = texture.getImage();
 		int texX = list == null ? FMTB.MODEL.textureSizeX : list.textureX;
@@ -85,7 +86,7 @@ public class TextureUpdate extends TimerTask {
 			DialogBox.showOK(null, null, null, "texture_update.resize.success", "#" + String.format("[%s], [%s]", tx, ty));
 			return;
 		}
-		else return;
+		else return;*/
 	}
 
 	public static void tryAutoPos(Boolean bool){

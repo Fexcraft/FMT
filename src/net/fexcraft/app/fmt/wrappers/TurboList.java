@@ -117,8 +117,7 @@ public class TurboList extends ArrayList<PolygonWrapper> {
 	}
 
 	public void recompile(){
-		for(PolygonWrapper wrapper : this)
-			wrapper.recompile();
+		for(PolygonWrapper wrapper : this) wrapper.recompile();
 	}
 
 	public TextureGroup getTextureGroup(){
