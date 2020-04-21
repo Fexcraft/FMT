@@ -151,14 +151,13 @@ public class TextureUpdate extends TimerTask {
 		}
 		try{
 			if(HALT || last < 0 || last >= list.size()){
-				DialogBox.showOK("texture_update.autopos.title", null, null, "texture_update.autopos.complete");
 				if(dialog != null) dialog.close();
+				DialogBox.showOK("texture_update.autopos.title", null, null, "texture_update.autopos.complete");
 				last = (HALT = (list = null) == null) ? -1 : 0;
 				image = null;
 				return;
 			}
-			PolygonWrapper wrapper = list.get(last);
-			last++;
+			PolygonWrapper wrapper = list.get(last++);
 			showPercentageDialog(wrapper.getTurboList().id, wrapper.name(), getPercent(last, list.size()));
 			if(wrapper.texpos == null || wrapper.texpos.length == 0){
 				Print.console("skipping1 [" + wrapper.getTurboList().id + ":" + wrapper.name() + "]");
