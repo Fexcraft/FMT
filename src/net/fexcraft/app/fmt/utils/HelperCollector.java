@@ -76,12 +76,18 @@ public class HelperCollector {
 					String texid = "./temp/" + compound.name + "/" + group;
 					TextureManager.loadTextureFromZip(zip.getInputStream(zip.getEntry("texture-" + group + ".png")), texid, false, true, false);
 					for(TurboList list : compound.getGroups()){
-						if(list.helpertex.equals("group")){
+						if(list.helpertex != null && list.helpertex.equals(group)){
 							list.helpertex = texid;
+							Print.console("applied " + group + " to " + list.id);
 						}
+					}
+					if(compound.helpertex.equals(group)){
+						compound.helpertex = texid;
+						Print.console("applied " + group + " to " + compound.name);
 					}
 				}
 			}
+			compound.recompile();
 			zip.close();
 		}
 		catch(Exception e){

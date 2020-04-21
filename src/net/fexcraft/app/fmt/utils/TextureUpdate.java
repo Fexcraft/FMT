@@ -41,6 +41,9 @@ public class TextureUpdate extends TimerTask {
 	public void run(){
 		try{
 			for(TextureGroup group : TextureManager.getGroupsFE()){
+				/*if(group.texture.getFile() == null){
+					Print.console("TEXGROUP '" + group.group + "' HAS NO FILE LINKED.");
+				}*/
 				if(group.texture.getFile().lastModified() > group.texture.lastedit){
 					updateLastEdit(group.texture);
 					group.texture.reload();

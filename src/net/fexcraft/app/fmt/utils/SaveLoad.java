@@ -397,7 +397,10 @@ public class SaveLoad {
 			obj.get("textures").getAsJsonArray().forEach(elm -> TextureManager.addGroup(new TextureGroup(elm)));
 		}
 		if(obj.has("texture_group")){
-			compound.texgroup = TextureManager.getGroup(obj.get("texture_group").getAsString());
+			if(ggr_nopreview)
+				compound.texgroup = TextureManager.getGroup(obj.get("texture_group").getAsString());
+			else
+				compound.helpertex = obj.get("texture_group").getAsString();
 		}
 		JsonObject groups = obj.get("groups").getAsJsonObject();
 		for(Entry<String, JsonElement> entry : groups.entrySet()){
