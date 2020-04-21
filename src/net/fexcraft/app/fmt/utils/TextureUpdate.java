@@ -14,6 +14,7 @@ import org.liquidengine.legui.component.CheckBox;
 import org.liquidengine.legui.component.Dialog;
 import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.ProgressBar;
+import org.liquidengine.legui.component.SelectBox;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.listener.MouseClickEventListener;
 
@@ -35,6 +36,7 @@ public class TextureUpdate extends TimerTask {
 	private static ArrayList<PolygonWrapper> list;
 	private static BufferedImage image;
 	private static TexUpDialog dialog;
+	private static TurboList selected;
 	private static int last;
 
 	@Override
@@ -95,26 +97,39 @@ public class TextureUpdate extends TimerTask {
 	public static void tryAutoPos(Boolean bool){
 		if(bool == null){
 			int width = 440;
-			Dialog dialog = new Dialog(Translator.translate("texture_update.autopos.title"), width + 20, 150);
-			Label label = new Label(Translator.translate("texture_update.autopos.info"), 10, 10, width, 20);
-			CheckBox checkbox0 = new CheckBox(10, 40, width, 20);
+			Dialog dialog = new Dialog(Translator.translate("texture_update.autopos.title"), width + 20, 180);
+			Label label0 = new Label(Translator.translate("texture_update.autopos.info"), 10, 10, width, 20);
+			label0.getStyle().setFont("roboto-bold");
+			Label label1 = new Label(Translator.translate("texture_update.autopos.polygroup"), 10, 40, width / 20, 20);
+			SelectBox<String> texture = new SelectBox<>(10 + width / 2, 40, width / 2, 20);
+			texture.addElement("all-groups");
+			for(TurboList list : FMTB.MODEL.getGroups()) texture.addElement(list.id);
+			texture.addSelectBoxChangeSelectionEventListener(listener -> {
+				if(listener.getNewValue().equals("all-groups")) selected = null;
+				else selected = FMTB.MODEL.getGroups().get(listener.getNewValue());
+			});
+			texture.setSelected(0, true);
+			texture.setVisibleCount(6);
+			CheckBox checkbox0 = new CheckBox(10, 70, width, 20);
 			checkbox0.getStyle().setPadding(5f, 10f, 5f, 5f);
 			checkbox0.setChecked(SAVESPACE);
 			checkbox0.addCheckBoxChangeValueListener(listener -> SAVESPACE = listener.getNewValue());
 			checkbox0.getTextState().setText(UserInterfaceUtils.translate("texture_update.autopos.savespace"));
-			CheckBox checkbox1 = new CheckBox(10, 70, width, 20);
+			CheckBox checkbox1 = new CheckBox(10, 100, width, 20);
 			checkbox1.getStyle().setPadding(5f, 10f, 5f, 5f);
 			checkbox1.setChecked(!ALL);
 			checkbox1.addCheckBoxChangeValueListener(listener -> ALL = !listener.getNewValue());
 			checkbox1.getTextState().setText(UserInterfaceUtils.translate("texture_update.autopos.process_all"));
-			Button button = new Button(UserInterfaceUtils.translate("texture_update.autopos.start"), 10, 100, 100, 20);
+			Button button = new Button(UserInterfaceUtils.translate("texture_update.autopos.start"), 10, 130, 100, 20);
 			button.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)e -> {
 				if(CLICK == e.getAction()){
 					HALT = false;
 					dialog.close();
 				}
 			});
-			dialog.getContainer().add(label);
+			dialog.getContainer().add(label0);
+			dialog.getContainer().add(label1);
+			dialog.getContainer().add(texture);
 			dialog.getContainer().add(checkbox0);
 			dialog.getContainer().add(checkbox1);
 			dialog.getContainer().add(button);
@@ -127,7 +142,7 @@ public class TextureUpdate extends TimerTask {
 		if(list == null){
 			list = getSortedList(ALL);
 			last = 0;
-			image = new BufferedImage(FMTB.MODEL.tx(null), FMTB.MODEL.ty(null), BufferedImage.TYPE_INT_ARGB);
+			image = new BufferedImage(FMTB.MODEL.tx(selected, false), FMTB.MODEL.ty(selected, false), BufferedImage.TYPE_INT_ARGB);
 			for(int i = 0; i < image.getWidth(); i++){
 				for(int j = 0; j < image.getHeight(); j++){
 					image.setRGB(i, j, Color.WHITE.getRGB());
@@ -220,8 +235,13 @@ public class TextureUpdate extends TimerTask {
 
 	private static ArrayList<PolygonWrapper> getSortedList(boolean all){
 		ArrayList<PolygonWrapper> arrlist = new ArrayList<>();
-		for(TurboList list : FMTB.MODEL.getGroups()){
-			arrlist.addAll(list);
+		if(selected == null){
+			for(TurboList list : FMTB.MODEL.getGroups()){
+				arrlist.addAll(list);
+			}
+		}
+		else{
+			arrlist.addAll(selected);
 		}
 		arrlist.sort(new java.util.Comparator<PolygonWrapper>(){
 			@Override

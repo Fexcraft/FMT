@@ -271,6 +271,7 @@ helper_collector.load_frame.errors=Errors occured while creating frame.
 # Texture Updater / Util
 texture_update.autopos.title=Texture Auto Positioner
 texture_update.autopos.info=This process may mark FMT as not responding.
+texture_update.autopos.polygroup=Polygon Group to process: 
 texture_update.autopos.savespace=Use save-space mode? (may reduce readability)
 texture_update.autopos.process_all=Only process polygons with 0, 0 texture pos?
 texture_update.autopos.start=Start
