@@ -304,7 +304,10 @@ public class TextureManager {
 	}
 
 	public static void saveTexture(String texture){
-		Texture tex = TEXTURES.get(texture);
+		saveTexture(TEXTURES.get(texture));
+	}
+
+	public static void saveTexture(Texture tex){
 		if(tex == null){
 			Print.console(String.format("Tried to save texture '%s', but it is not loaded as it seems.", texture));
 			return;

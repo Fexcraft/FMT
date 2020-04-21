@@ -88,7 +88,7 @@ public class KeyCompound {
 		keys.add(new KeyFunction("camera_rotate_down", GLFW_KEY_DOWN, action -> FMTB.ggr.rotation.xCoord += 5));
 		//
 		keys.add(new KeyFunction("delete", GLFW_KEY_DELETE, action -> { if(action == GLFW_RELEASE) FMTB.MODEL.deleteSelected(); }));
-		keys.add(new KeyFunction("raypick", GLFW_KEY_T, action -> { if(action == GLFW_RELEASE) RayCoastAway.doTest(true); }));
+		keys.add(new KeyFunction("raypick", GLFW_KEY_T, action -> { if(action == GLFW_RELEASE) RayCoastAway.doTest(true, null, false); }));
 		keys.add(new KeyFunction("left_control", GLFW_KEY_LEFT_CONTROL, (action) -> FMTB.ggr.left_control_down = GGR.parseKeyAction(action)));
 		keys.add(new KeyFunction("left_alt", GLFW_KEY_LEFT_ALT, (action) -> FMTB.ggr.left_alt_down = GGR.parseKeyAction(action)));
 		keys.add(new KeyFunction("right_control", GLFW_KEY_RIGHT_CONTROL, (action) -> FMTB.ggr.right_control_down = GGR.parseKeyAction(action)));

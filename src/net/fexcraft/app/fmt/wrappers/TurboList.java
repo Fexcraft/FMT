@@ -18,7 +18,7 @@ public class TurboList extends ArrayList<PolygonWrapper> {
 
 	public String id;
 	public RGB color;
-	private boolean rotXb, rotYb, rotZb;
+	public boolean rotXb, rotYb, rotZb;
 	public Vec3f exportoffset;
 	// private float rotX, rotY, rotZ, posX, posY, posZ;//FMR stuff
 	public boolean visible = true, minimized, aminimized, selected;
@@ -39,11 +39,9 @@ public class TurboList extends ArrayList<PolygonWrapper> {
 	public void render(boolean aplcol){
 		if(!visible) return;
 		if(color != null && aplcol) color.glColorApply();
-		if(Settings.animate() && animations.size() > 0) for(Animation ani : animations)
-			ani.pre(this);
+		if(Settings.animate() && animations.size() > 0) for(Animation ani : animations) ani.pre(this);
 		this.forEach(elm -> elm.render(rotXb, rotYb, rotZb));
-		if(Settings.animate() && animations.size() > 0) for(Animation ani : animations)
-			ani.post(this);
+		if(Settings.animate() && animations.size() > 0) for(Animation ani : animations) ani.post(this);
 		if(color != null && aplcol) RGB.glColorReset();
 	}
 

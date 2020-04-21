@@ -68,6 +68,7 @@ import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.ui.UserInterfaceUtils;
 import net.fexcraft.app.fmt.ui.editor.Editors;
+import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.field.Field;
 import net.fexcraft.app.fmt.ui.field.TextField;
 import net.fexcraft.app.fmt.ui.tree.Trees;
@@ -371,6 +372,10 @@ public class FMTB {
 	}
 	
 	private void render(float alpha){
+		render(alpha, false);
+	}
+	
+	private void render(float alpha, boolean pixelpass){
 		context.updateGlfwWindow();
         Vector2i size = context.getFramebufferSize();
         GL11.glClearColor(0.5f, 0.5f, 0.5f, 1);
@@ -385,8 +390,16 @@ public class FMTB {
         	GL11.glRotatef((ImageHelper.getStage() - 20) * 10, 0, 1, 0);
         }
         //
-        if(RayCoastAway.PICKING){ 
-            MODEL.render(); GL11.glPopMatrix(); render(alpha);
+        if(RayCoastAway.PICKING){
+            if(pixelpass){
+				TextureManager.bindTexture(MODEL.getTempTex());
+				TurboList list = RayCoastAway.lastsel.getTurboList();
+				RayCoastAway.lastsel.render(list.rotXb, list.rotYb, list.rotZb);
+				RayCoastAway.doTest(false, null, true);
+            }
+            else MODEL.render();
+            GL11.glPopMatrix();
+            render(alpha, TextureEditor.pixelMode());
         }
         else{
 	        if(Settings.floor()){

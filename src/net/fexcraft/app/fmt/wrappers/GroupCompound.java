@@ -27,7 +27,6 @@ import net.fexcraft.app.fmt.ui.DialogBox.DialogTask;
 import net.fexcraft.app.fmt.ui.editor.Editors;
 import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
 import net.fexcraft.app.fmt.ui.editor.ModelGroupEditor;
-import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.field.Field;
 import net.fexcraft.app.fmt.ui.tree.SubTreeGroup;
 import net.fexcraft.app.fmt.ui.tree.TreeGroup;
@@ -89,14 +88,14 @@ public class GroupCompound {
 			GL11.glScalef(scale.xCoord, scale.yCoord, scale.zCoord);
 		}
 		if(RayCoastAway.PICKING){
-			if(TextureEditor.pixelMode()){
+			/*if(pencil){
 				TextureManager.bindTexture(getTempTex());
 				groups.forEach(elm -> elm.render(false));
 			}
-			else{
+			else*/{
 				groups.forEach(elm -> elm.renderPicking());
 			}
-			RayCoastAway.doTest(false);
+			RayCoastAway.doTest(false, null, false);//pencil);
 		}
 		else{
 			if(Settings.preview_colorpicker()){
@@ -126,7 +125,7 @@ public class GroupCompound {
 	
 	public static final String temptexid = "./temp/calculation_texture";
 	
-	private String getTempTex(){
+	public String getTempTex(){
 		Texture tex = TextureManager.getTexture(temptexid, true);
 		int texX = this.textureSizeX * this.textureScale, texY = this.textureSizeY * this.textureScale;
 		if(tex == null || (tex.getImage().getWidth() != texX || tex.getImage().getHeight() != texY)){
