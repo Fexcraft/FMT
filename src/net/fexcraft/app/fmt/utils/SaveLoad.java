@@ -27,6 +27,7 @@ import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.ui.FileSelector;
+import net.fexcraft.app.fmt.ui.tree.Trees;
 import net.fexcraft.app.fmt.utils.Animator.Animation;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.utils.TextureManager.TextureGroup;
@@ -52,6 +53,7 @@ public class SaveLoad {
 		try{
 			TextureManager.clearGroups();
 			ZipFile zip = new ZipFile(file);
+			boolean[] updatetree = { false };
 			zip.stream().forEach(elm -> {
 				if(elm.getName().equals("model.jtmt")){
 					try{
@@ -78,6 +80,7 @@ public class SaveLoad {
 					catch(IOException e){
 						e.printStackTrace();
 					}
+					updatetree[0] = true;
 				}
 				else if(elm.getName().startsWith("texture-")){
 					try{
@@ -88,10 +91,12 @@ public class SaveLoad {
 					catch(IOException e){
 						e.printStackTrace();
 					}
+					updatetree[0] = true;
 				}
 			});
 			zip.close();
 			FMTB.MODEL.file = file;
+			if(updatetree[0]) Trees.textures.reOrderGroups();
 			DiscordUtil.update(Settings.discordrpc_resettimeronnewmodel());
 		}
 		catch(Exception e){
