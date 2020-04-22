@@ -41,10 +41,11 @@ public class TextureUpdate extends TimerTask {
 
 	@Override
 	public void run(){
-		try{
-			for(TextureGroup group : TextureManager.getGroupsFE()){
-				if(group.texture.getFile() == null){
-					Print.console("TEXGROUP '" + group.group + "' HAS NO FILE LINKED.");
+		for(TextureGroup group : TextureManager.getGroupsFE()){
+			try{
+				if(group.texture == null || group.texture.getFile() == null){
+					//Print.console("TEXGROUP '" + group.group + "' HAS NO FILE OR TEXTURE LINKED YET.");
+					continue;
 				}
 				if(group.texture.getFile().lastModified() > group.texture.lastedit){
 					updateLastEdit(group.texture);
@@ -52,9 +53,9 @@ public class TextureUpdate extends TimerTask {
 					Print.console("Changes detected, reloading texture group '" + group.group + "'.");
 				}
 			}
-		}
-		catch(Exception e){
-			e.printStackTrace();
+			catch(Exception e){
+				e.printStackTrace();
+			}
 		}
 	}
 	
