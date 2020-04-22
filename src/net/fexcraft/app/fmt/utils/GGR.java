@@ -82,7 +82,7 @@ public class GGR {
 	        cursor_moved = false;
 	    }
         processCameraInput(delta);
-        if(left_down && TextureEditor.BUCKETMODE){
+        if(left_down && TextureEditor.BUCKETMODE && Settings.dragPainting()){
         	RayCoastAway.doTest(true, true, false);
         }
     }
