@@ -66,7 +66,7 @@ public class DFMExporter extends ExImPorter {
 		pergroupinit = settings.get("per_group_init").getBooleanValue();
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("//FMT-Marker DFM-" + VERSION + "\n");
-		for(String cr : compound.creators){
+		for(String cr : compound.getAuthors()){
 			buffer.append("//Creator: " + cr + "\n");
 		} buffer.append("\n");
 		if(settings.get("per_group_init").getBooleanValue()) buffer.append("//Using PER-GROUP-INIT mode with limit '" + settings.get("max_pg_init_count").getValue() + "'!\n");

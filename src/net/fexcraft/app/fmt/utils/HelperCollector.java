@@ -8,12 +8,17 @@ import java.util.zip.ZipFile;
 
 import javax.imageio.ImageIO;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.ui.tree.Trees;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.TexrectWrapperA;
+import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.json.JsonUtil;
 import net.fexcraft.lib.common.utils.Print;
 import net.fexcraft.lib.common.utils.ZipUtil;
@@ -50,8 +55,9 @@ public class HelperCollector {
 		try{
 			boolean conM = ZipUtil.contains(file, "model.jtmt"), conT = ZipUtil.contains(file, "texture.png");
 			ZipFile zip = new ZipFile(file);
+			JsonObject obj = JsonUtil.getObjectFromInputStream(zip.getInputStream(zip.getEntry("model.jtmt")));
 			if(conM){
-				compound = SaveLoad.getModel(file, JsonUtil.getObjectFromInputStream(zip.getInputStream(zip.getEntry("model.jtmt"))), false);
+				compound = SaveLoad.getModel(file, obj, false);
 				if(!compound.name.startsWith("fmtb/")) compound.name = "fmtb/" + compound.name;
 			}
 			else{
@@ -60,9 +66,28 @@ public class HelperCollector {
 				return null;
 			}
 			if(conT){
-				TextureManager.loadTextureFromZip(zip.getInputStream(zip.getEntry("texture.png")), "./temp/" + compound.name, false, true);
-				compound.setTexture("./temp/" + compound.name);
+				compound.helpertex = "./temp/" + compound.name;
+				TextureManager.loadTextureFromZip(zip.getInputStream(zip.getEntry("texture.png")), compound.helpertex, false, true, false);
 			}
+			if(obj.has("textures")){
+				JsonArray array = obj.get("textures").getAsJsonArray();
+				for(JsonElement elm : array){
+					String group = elm.getAsString();
+					String texid = "./temp/" + compound.name + "/" + group;
+					TextureManager.loadTextureFromZip(zip.getInputStream(zip.getEntry("texture-" + group + ".png")), texid, false, true, false);
+					for(TurboList list : compound.getGroups()){
+						if(list.helpertex != null && list.helpertex.equals(group)){
+							list.helpertex = texid;
+							Print.console("applied " + group + " to " + list.id);
+						}
+					}
+					if(compound.helpertex.equals(group)){
+						compound.helpertex = texid;
+						Print.console("applied " + group + " to " + compound.name);
+					}
+				}
+			}
+			compound.recompile();
 			zip.close();
 		}
 		catch(Exception e){
@@ -80,12 +105,12 @@ public class HelperCollector {
 		GroupCompound compound = null;
 		try{
 			BufferedImage image = ImageIO.read(file);
-			TextureManager.loadTextureFromZip(image, "./temp/frame/" + file.getName(), false, false);
+			TextureManager.loadTextureFromImgBuffer(image, "./temp/frame/" + file.getName(), false, false);
 			compound = new GroupCompound(file);
 			compound.getGroups().clear();
 			compound.file = file;
 			if(!compound.name.startsWith("frame/")) compound.name = "frame/" + file.getName();
-			compound.texture = "./temp/frame/" + file.getName();
+			compound.helpertex = "./temp/frame/" + file.getName();
 			compound.textureSizeX = image.getWidth();
 			compound.textureSizeY = image.getHeight();
 			TexrectWrapperA polygon = new TexrectWrapperA(compound);

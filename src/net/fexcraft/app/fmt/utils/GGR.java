@@ -12,6 +12,7 @@ import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.editor.Editors;
+import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.field.Field;
 import net.fexcraft.app.fmt.ui.tree.Trees;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
@@ -81,6 +82,9 @@ public class GGR {
 	        cursor_moved = false;
 	    }
         processCameraInput(delta);
+        if(left_down && TextureEditor.BUCKETMODE && Settings.dragPainting()){
+        	RayCoastAway.doTest(true, true, false);
+        }
     }
 
     public static double posx, posy, oposx = -1, oposy = -1;
@@ -93,7 +97,7 @@ public class GGR {
         	}
         	else if(action == GLFW_RELEASE){
         		if(FMTB.context.getFocusedGui() == null){
-        			RayCoastAway.doTest(true, true);
+        			RayCoastAway.doTest(true, true, false);
         		}
         		left_down = false;
         	}

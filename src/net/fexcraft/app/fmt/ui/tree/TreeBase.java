@@ -14,6 +14,7 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.editor.EditorBase;
 import net.fexcraft.app.fmt.utils.HelperCollector;
 import net.fexcraft.app.fmt.utils.Settings;
+import net.fexcraft.app.fmt.utils.TextureManager;
 
 public class TreeBase extends Panel {
 
@@ -73,6 +74,7 @@ public class TreeBase extends Panel {
 			case "polygon": counter.getTextState().setText(counterlabel + FMTB.MODEL.countTotalMRTs()); break;
 			case "helper": counter.getTextState().setText(counterlabel + HelperCollector.LOADED.size()); break;
 			case "fvtm": counter.getTextState().setText(counterlabel + FMTB.MODEL.getGroups().size()); break;
+			case "textures": counter.getTextState().setText(counterlabel + TextureManager.getGroupAmount());
 			default: return;
 		}
 	}

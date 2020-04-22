@@ -68,6 +68,8 @@ import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.ui.UserInterfaceUtils;
 import net.fexcraft.app.fmt.ui.editor.Editors;
+import net.fexcraft.app.fmt.ui.editor.ModelEditor;
+import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.field.Field;
 import net.fexcraft.app.fmt.ui.field.TextField;
 import net.fexcraft.app.fmt.ui.tree.Trees;
@@ -269,10 +271,17 @@ public class FMTB {
         renderer = new NvgRenderer();
         renderer.initialize();
 		Settings.updateTheme();
+		ModelEditor.creators.refresh();
         //
-		PorterManager.load(); HelperCollector.reload(loadedold);
-		SessionHandler.checkIfLoggedIn(true, true); checkForUpdates();
-		KeyCompound.init(); KeyCompound.load(); FMTB.MODEL.updateFields();
+		PorterManager.load();
+		HelperCollector.reload(loadedold);
+		SessionHandler.checkIfLoggedIn(true, true);
+		checkForUpdates();
+		KeyCompound.init();
+		KeyCompound.load();
+		if(!loadedold){
+			FMTB.MODEL.updateFields();
+		}
 		//
 		LocalDateTime midnight = LocalDateTime.of(LocalDate.now(ZoneOffset.systemDefault()), LocalTime.MIDNIGHT);
 		long mid = midnight.toInstant(ZoneOffset.UTC).toEpochMilli(); long date = Time.getDate(); while((mid += Time.MIN_MS * 5) < date);
@@ -299,6 +308,7 @@ public class FMTB {
             	loop(); timer.updateUPS();
                 accumulator -= interval;
                 Trees.updateCounters();
+                RayCoastAway.UNLOCKED = true;
             }
 			render(alpha = accumulator / interval);
 			if(!RayCoastAway.PICKING){
@@ -365,6 +375,10 @@ public class FMTB {
 	}
 	
 	private void render(float alpha){
+		render(alpha, false);
+	}
+	
+	private void render(float alpha, boolean pixelpass){
 		context.updateGlfwWindow();
         Vector2i size = context.getFramebufferSize();
         GL11.glClearColor(0.5f, 0.5f, 0.5f, 1);
@@ -374,28 +388,45 @@ public class FMTB {
 		//
         if(Settings.oldrot()) GL11.glRotatef(180, 1, 0, 0);
         GL11.glPushMatrix();
-        RGB.WHITE.glColorApply();
+        RGB.glColorReset();
         if(ImageHelper.HASTASK && ImageHelper.getTaskId() == 2){
         	GL11.glRotatef((ImageHelper.getStage() - 20) * 10, 0, 1, 0);
         }
         //
-        if(RayCoastAway.PICKING){ 
-            MODEL.render(); GL11.glPopMatrix(); render(alpha);
+        if(RayCoastAway.PICKING && RayCoastAway.UNLOCKED){
+            if(pixelpass){
+				TextureManager.bindTexture(MODEL.getTempTex(RayCoastAway.lastsel));
+				TurboList list = RayCoastAway.lastsel.getTurboList();
+				RayCoastAway.lastsel.render(list.rotXb, list.rotYb, list.rotZb);
+				RayCoastAway.doTest(false, null, true);
+            }
+            else MODEL.render();
+            RayCoastAway.UNLOCKED = TextureEditor.pixelMode() ? !pixelpass : false;
+            GL11.glPopMatrix();
+            render(alpha, TextureEditor.pixelMode());
         }
         else{
 	        if(Settings.floor()){
-	            TextureManager.bindTexture("floor");
-	            GL11.glRotatef(-90, 0, 1, 0);
-	            GL11.glPushMatrix();
-	            //GL11.glCullFace(GL11.GL_BACK); GL11.glEnable(GL11.GL_CULL_FACE);
-	            GL11.glBegin(GL11.GL_QUADS); float cs = 16, mid = Settings.oldrot() ? 1f / 16 * 10 : 1 - 0.001f;
-	    		GL11.glTexCoord2f(0, 1); GL11.glVertex3f( cs, mid,  cs);
-	            GL11.glTexCoord2f(1, 1); GL11.glVertex3f(-cs, mid,  cs);
-	            GL11.glTexCoord2f(1, 0); GL11.glVertex3f(-cs, mid, -cs);
-	            GL11.glTexCoord2f(0, 0); GL11.glVertex3f( cs, mid, -cs);
-	            //GL11.glCullFace(GL11.GL_FRONT_AND_BACK); GL11.glDisable(GL11.GL_CULL_FACE); //apparently the front renderer doesn't like this.
-	            GL11.glEnd(); GL11.glPopMatrix();
-	            GL11.glRotatef( 90, 0, 1, 0);
+				TextureManager.bindTexture("floor");
+				GL11.glRotatef(-90, 0, 1, 0);
+				GL11.glPushMatrix();
+				// GL11.glCullFace(GL11.GL_BACK);
+				//GL11.glEnable(GL11.GL_CULL_FACE);
+				GL11.glBegin(GL11.GL_QUADS);
+				float cs = 16, mid = Settings.oldrot() ? 1f / 16 * 10 : 1 - 0.001f;
+				GL11.glTexCoord2f(0, 1);
+				GL11.glVertex3f(cs, mid, cs);
+				GL11.glTexCoord2f(1, 1);
+				GL11.glVertex3f(-cs, mid, cs);
+				GL11.glTexCoord2f(1, 0);
+				GL11.glVertex3f(-cs, mid, -cs);
+				GL11.glTexCoord2f(0, 0);
+				GL11.glVertex3f(cs, mid, -cs);
+				// GL11.glCullFace(GL11.GL_FRONT_AND_BACK);
+				// GL11.glDisable(GL11.GL_CULL_FACE);
+				GL11.glEnd();
+				GL11.glPopMatrix();
+				GL11.glRotatef(90, 0, 1, 0);
 	        }
 			if(Settings.lighting()) GL11.glEnable(GL11.GL_LIGHTING);
             if(Settings.cube()){
@@ -479,23 +510,23 @@ public class FMTB {
 			ss_frame.getContainer().add(ss_credits);
 		}
 		ss_title.getTextState().setText((Time.getDay() % 2 == 0 ? "FMT - Fexcraft Modelling Toolbox" : "FMT - Fex's Modelling Toolbox") + " [" + SessionHandler.getLicenseName() + "]");
-		switch(FMTB.MODEL.creators.size()){
+		switch(FMTB.MODEL.getAuthors().size()){
 			case 0: {
 				ss_credits.getTextState().setText(FMTB.MODEL.name + " - " + (SessionHandler.isLoggedIn() ? SessionHandler.getUserName() : "Guest User"));
 				break;
 			}
 			case 1: {
-				if(FMTB.MODEL.creators.get(0).equals(SessionHandler.getUserName())){
+				if(FMTB.MODEL.getAuthors().get(0).equals(SessionHandler.getUserName())){
 					ss_credits.getTextState().setText(FMTB.MODEL.name + " - by " + SessionHandler.getUserName());
 				}
 				else{
-					ss_credits.getTextState().setText(FMTB.MODEL.name + " - by " + String.format("%s (logged:%s)", FMTB.MODEL.creators.get(0), SessionHandler.getUserName()));
+					ss_credits.getTextState().setText(FMTB.MODEL.name + " - by " + String.format("%s (logged:%s)", FMTB.MODEL.getAuthors().get(0), SessionHandler.getUserName()));
 				}
 				break;
 			}
 			default: {
-				if(FMTB.MODEL.creators.contains(SessionHandler.getUserName())){
-					ss_credits.getTextState().setText(FMTB.MODEL.name + " - by " + SessionHandler.getUserName() + " (and " + (FMTB.MODEL.creators.size() - 1) + " others)");
+				if(FMTB.MODEL.getAuthors().contains(SessionHandler.getUserName())){
+					ss_credits.getTextState().setText(FMTB.MODEL.name + " - by " + SessionHandler.getUserName() + " (and " + (FMTB.MODEL.getAuthors().size() - 1) + " others)");
 				}
 				else{
 					ss_credits.getTextState().setText(FMTB.MODEL.name + " - " + String.format("(logged:%s)", SessionHandler.getUserName()));
@@ -637,6 +668,7 @@ public class FMTB {
 		Trees.fvtm.reOrderGroups();
 		Trees.helper.reOrderGroups();
 		Editors.general.refreshGroups();
+		ModelEditor.creators.refresh();
 	}
 
 }

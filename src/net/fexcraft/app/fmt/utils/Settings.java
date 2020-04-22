@@ -26,6 +26,7 @@ public class Settings {
 	public static Setting movespeed, mouse_sensivity, internal_cursor, vsync, debug;
 	public static Setting darktheme, no_scroll_fields, old_rotation, center_marker;
 	public static Setting orbital_camera, oc_center_on_part, internal_filechooser;
+	public static Setting drag_painting;
 	//
 	public static final ArrayList<Consumer<Boolean>> THEME_CHANGE_LISTENER = new ArrayList<>();
 
@@ -74,6 +75,8 @@ public class Settings {
 	public static boolean center_marker(){ return center_marker.getBooleanValue(); }
 
 	public static boolean ui_debug(){ return debug.getBooleanValue(); }
+
+	public static boolean dragPainting(){ return drag_painting.getBooleanValue(); }
 	
 	//
 
@@ -143,38 +146,39 @@ public class Settings {
 	static {
 		DEFAULTS.add(new Setting(Type.RGB, "selection_color", new RGB(255, 255, 0)));
 		DEFAULTS.add(new Setting(Type.FLOAT_ARRAY, "background_color", new float[]{ 0.5f, 0.5f, 0.5f, 0.2f }));
-		DEFAULTS.add(new Setting(Type.BOOLEAN, "floor", true));
-		DEFAULTS.add(new Setting(Type.BOOLEAN, "lines", true));
-		DEFAULTS.add(new Setting(Type.BOOLEAN, "cube", true));
-		DEFAULTS.add(new Setting(Type.BOOLEAN, "demo", false));
-		DEFAULTS.add(new Setting(Type.BOOLEAN, "polygon_marker", true));
+		DEFAULTS.add(new Setting("floor", true));
+		DEFAULTS.add(new Setting("lines", true));
+		DEFAULTS.add(new Setting("cube", true));
+		DEFAULTS.add(new Setting("demo", false));
+		DEFAULTS.add(new Setting("polygon_marker", true));
 		//DEFAULTS.add(new Setting(Type.BOOLEAN, "polygon_count", true));
-		DEFAULTS.add(new Setting(Type.BOOLEAN, "lighting", false));
+		DEFAULTS.add(new Setting("lighting", false));
 		DEFAULTS.add(new Setting(Type.FLOAT_ARRAY, "light0_position", new float[]{ 0, 1, 0, 0 }));
-		DEFAULTS.add(new Setting(Type.STRING, "language_code", "default"));
-		DEFAULTS.add(new Setting(Type.BOOLEAN, "cullface", true));
-		DEFAULTS.add(new Setting(Type.BOOLEAN, "animate", false));
-		DEFAULTS.add(new Setting(Type.BOOLEAN, "discord_rpc-enabled", true));
-		DEFAULTS.add(new Setting(Type.BOOLEAN, "discord_rpc-show_model", true));
-		DEFAULTS.add(new Setting(Type.BOOLEAN, "discord_rpc-reset_timer_on_new_model", true));
+		DEFAULTS.add(new Setting("language_code", "default"));
+		DEFAULTS.add(new Setting("cullface", true));
+		DEFAULTS.add(new Setting("animate", false));
+		DEFAULTS.add(new Setting("discord_rpc-enabled", true));
+		DEFAULTS.add(new Setting("discord_rpc-show_model", true));
+		DEFAULTS.add(new Setting("discord_rpc-reset_timer_on_new_model", true));
 		//DEFAULTS.add(new Setting(Type.INTEGER, "ui_scale", 1));
-		DEFAULTS.add(new Setting(Type.BOOLEAN, "bottombar", false));
-		DEFAULTS.add(new Setting(Type.BOOLEAN, "numberfield_arrows", true));
-		DEFAULTS.add(new Setting(Type.BOOLEAN, "preview_colorpicker", false));
-		DEFAULTS.add(new Setting(Type.BOOLEAN, "dark_theme", false));
-		DEFAULTS.add(new Setting(Type.BOOLEAN, "no_scroll_fields", false));
-		DEFAULTS.add(new Setting(Type.BOOLEAN, "old_rotation", true));
-		DEFAULTS.add(new Setting(Type.BOOLEAN, "orbital_camera", false));
-		DEFAULTS.add(new Setting(Type.BOOLEAN, "oc_center_on_part", true));
+		DEFAULTS.add(new Setting("bottombar", false));
+		DEFAULTS.add(new Setting("numberfield_arrows", true));
+		DEFAULTS.add(new Setting("preview_colorpicker", false));
+		DEFAULTS.add(new Setting("dark_theme", false));
+		DEFAULTS.add(new Setting("no_scroll_fields", false));
+		DEFAULTS.add(new Setting("old_rotation", true));
+		DEFAULTS.add(new Setting("orbital_camera", false));
+		DEFAULTS.add(new Setting("oc_center_on_part", true));
 		//
-		DEFAULTS.add(new Setting(Type.FLOAT, "mouse_sensivity", 2f));
-		DEFAULTS.add(new Setting(Type.FLOAT, "camera_movespeed", 2f));
-		DEFAULTS.add(new Setting(Type.BOOLEAN, "vsync", false));
-		DEFAULTS.add(new Setting(Type.STRING, "last_file", "null"));
-		DEFAULTS.add(new Setting(Type.BOOLEAN, "internal_cursor", false));
-		DEFAULTS.add(new Setting(Type.BOOLEAN, "internal_filechooser", false));
-		DEFAULTS.add(new Setting(Type.BOOLEAN, "center_marker", false));
-		DEFAULTS.add(new Setting(Type.BOOLEAN, "ui_debug", false));
+		DEFAULTS.add(new Setting("mouse_sensivity", 2f));
+		DEFAULTS.add(new Setting("camera_movespeed", 2f));
+		DEFAULTS.add(new Setting("vsync", false));
+		DEFAULTS.add(new Setting("last_file", "null"));
+		DEFAULTS.add(new Setting("internal_cursor", false));
+		DEFAULTS.add(new Setting("internal_filechooser", false));
+		DEFAULTS.add(new Setting("center_marker", false));
+		DEFAULTS.add(new Setting("ui_debug", false));
+		DEFAULTS.add(new Setting("drag_painting", false));
 	}
 
 	public static void load(){
@@ -222,6 +226,7 @@ public class Settings {
 		internal_filechooser = SETTINGS.get("internal_filechooser");
 		center_marker = SETTINGS.get("center_marker");
 		debug = SETTINGS.get("ui_debug");
+		drag_painting = SETTINGS.get("drag_painting");
 	}
 
 	public static void save(){

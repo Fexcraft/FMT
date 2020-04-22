@@ -7,10 +7,12 @@ import org.lwjgl.opengl.GL11;
 
 import com.google.gson.JsonObject;
 
+import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.tree.SubTreeGroup;
 import net.fexcraft.app.fmt.ui.tree.Trees;
 import net.fexcraft.app.fmt.utils.Settings;
+import net.fexcraft.app.fmt.utils.TextureManager.TextureGroup;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.common.utils.Print;
@@ -155,7 +157,9 @@ public abstract class PolygonWrapper {
 	}
 	
 	protected void setupMRT(){
-		turbo = newMRT().setTextured(compound.texture != null || (getTurboList() != null && getTurboList().getGroupTexture() != null));
+		boolean textured = compound.helpertex != null || compound.texgroup != null;
+		if(!textured) textured = getTurboList() != null && (getTurboList().getTextureGroup() != null || getTurboList().helpertex != null);
+		turbo = newMRT().setTextured(textured);
 		lines = newMRT().setLines(true);
 		sellines = newMRT().setLines(Settings.getSelectedColor());
 		//
@@ -238,7 +242,7 @@ public abstract class PolygonWrapper {
 		if(face == null){
 			for(int i = 0; i < texpos.length; i++){
 				float[][] ends = texpos[i]; if(ends == null || ends.length == 0) continue;
-				burn(image, ends, new Color(something.getColor(i).packed).darker().getRGB());
+				burn(image, ends, new Color(something.getColor(i).packed).getRGB());
 			}
 		}
 		else if(face == -1){
@@ -342,6 +346,10 @@ public abstract class PolygonWrapper {
 			turbo.rotationAngleY = lines.rotationAngleY = sellines.rotationAngleY = picker.rotationAngleY = y;
 			turbo.rotationAngleZ = lines.rotationAngleZ = sellines.rotationAngleZ = picker.rotationAngleZ = z;
 		}
+	}
+
+	public TextureGroup getTextureGroup(){
+		return getTurboList().texgroup == null ? FMTB.MODEL.texgroup : getTurboList().getTextureGroup();
 	}
 	
 }

@@ -2,8 +2,6 @@ package net.fexcraft.app.fmt.ui;
 
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
-import java.awt.Desktop;
-
 import org.joml.Vector4f;
 import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.component.Component;
@@ -36,7 +34,6 @@ import net.fexcraft.app.fmt.utils.ImageHelper;
 import net.fexcraft.app.fmt.utils.SaveLoad;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.TextureManager;
-import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.app.fmt.utils.TextureUpdate;
 import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.app.fmt.wrappers.*;
@@ -57,16 +54,6 @@ public class UserInterfaceUtils {
         Button okbutton = new Button("ok", 10, 50, 50, 20);
         okbutton.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> { if(CLICK == e.getAction()) dialog.close(); });
         dialog.getContainer().add(label); dialog.getContainer().add(okbutton); dialog.show(event.getFrame());
-	};
-	public static final Runnable SELECT_TEXTURE = () -> {
-		FileSelector.select(translate("toolbar.textures.select.dialog"), "./", FileSelector.TYPE_PNG, false, file -> {
-			if(file == null) return; String name = file.getPath(); TextureManager.loadTextureFromFile(name, file); FMTB.MODEL.setTexture(name);
-			//
-			/*Texture tex = TextureManager.getTexture(name, true); if(tex == null) return;
-			if(tex.getWidth() > FMTB.MODEL.textureX) FMTB.MODEL.textureX = tex.getWidth();
-			if(tex.getHeight() > FMTB.MODEL.textureY) FMTB.MODEL.textureY = tex.getHeight();*/
-		});
-	
 	};
 
 	@SuppressWarnings("restriction")
@@ -122,7 +109,8 @@ public class UserInterfaceUtils {
 		frame.getContainer().add(new MenuEntry(2, translate("toolbar.editor"),
 			new MenuButton("toolbar.editor.hide_all", () -> Editors.hideAll()),
 			new MenuButton("toolbar.editor.general", () -> Editors.show("general")),
-			new MenuButton("toolbar.editor.model_group", () -> Editors.show("modelgroup")),
+			new MenuButton("toolbar.editor.group", () -> Editors.show("group")),
+			new MenuButton("toolbar.editor.model", () -> Editors.show("model")),
 			new MenuButton("toolbar.editor.texture", () -> Editors.show("texture")),
 			new MenuButton("toolbar.editor.preview", () -> Editors.show("preview"))
 		));
@@ -149,41 +137,10 @@ public class UserInterfaceUtils {
 			new MenuButton("toolbar.shapelist.add_voxel", () -> FMTB.MODEL.add(new VoxelWrapper(FMTB.MODEL, 16, true), "voxels", true))
 		));
 		frame.getContainer().add(new MenuEntry(4, translate("toolbar.textures"),
-			new MenuButton("toolbar.textures.select", SELECT_TEXTURE),
-			new MenuButton("toolbar.textures.edit", () -> {
-				if(FMTB.MODEL.texture == null) return;
-				Texture texture = TextureManager.getTexture(FMTB.MODEL.texture, true);
-				if(texture == null) return;
-				try{
-					if(System.getProperty("os.name").toLowerCase().contains("windows")) {
-						String cmd = "rundll32 url.dll,FileProtocolHandler " + texture.getFile().getCanonicalPath();
-						Runtime.getRuntime().exec(cmd);
-					}
-					else{ Desktop.getDesktop().edit(texture.getFile()); }
-				} catch(Exception e){ e.printStackTrace(); }
-			}),
-			new MenuButton("toolbar.textures.texture_map", NOT_REIMPLEMENTED_YET),
-			new MenuButton("toolbar.textures.remove", () -> {
-				if(FMTB.MODEL.texture != null && TextureManager.getTexture(FMTB.MODEL.texture, true) != null){
-					FMTB.MODEL.setTexture(null); TextureManager.removeTexture(FMTB.MODEL.texture);
-				}
-			}),
-			new MenuButton("toolbar.textures.texpos_reset", () -> {
-				FMTB.MODEL.getGroups().forEach(list -> list.forEach(turbo -> {
-					turbo.textureX = 0; turbo.textureY = 0; turbo.recompile();
-				}));
-				DialogBox.showOK(null, null, null, "toolbar.textures.texpos_reset.done");
-			}),
-			new MenuButton("toolbar.textures.auto_position", () -> TextureUpdate.tryAutoPos(null)),
-			new MenuButton("toolbar.textures.generate", () -> {
-				String texname = "temp/" + FMTB.MODEL.name;
-				FMTB.MODEL.setTexture(texname);
-            	TextureManager.newBlankTexture(texname, null);
-            	Texture tex = TextureManager.getTexture(texname, true);
-            	FMTB.MODEL.textureScale = 1; FMTB.MODEL.updateFields();
-            	FMTB.MODEL.getGroups().forEach(elm -> elm.forEach(poly -> poly.burnToTexture(tex.getImage(), null)));
-            	TextureManager.saveTexture(texname); tex.reload(); FMTB.MODEL.recompile();
-			})
+			new MenuButton("toolbar.textures.manage", () -> Trees.show("textures")),
+			new MenuButton("toolbar.textures.addnew", () -> TextureManager.addNewGroup()),
+			new MenuButton("toolbar.textures.texpos_reset", () -> TextureUpdate.tryResetPos()),
+			new MenuButton("toolbar.textures.auto_position", () -> TextureUpdate.tryAutoPos(null))
 		));
 		frame.getContainer().add(new MenuEntry(5, translate("toolbar.helpers"),
 			new MenuButton("toolbar.helpers.view", () -> Trees.show("helper")),

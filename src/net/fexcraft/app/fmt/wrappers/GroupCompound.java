@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.lwjgl.opengl.GL11;
@@ -26,16 +27,18 @@ import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.ui.DialogBox.DialogTask;
 import net.fexcraft.app.fmt.ui.editor.Editors;
 import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
-import net.fexcraft.app.fmt.ui.editor.ModelGroupEditor;
-import net.fexcraft.app.fmt.ui.editor.TextureEditor;
+import net.fexcraft.app.fmt.ui.editor.GroupEditor;
+import net.fexcraft.app.fmt.ui.editor.ModelEditor;
 import net.fexcraft.app.fmt.ui.field.Field;
 import net.fexcraft.app.fmt.ui.tree.SubTreeGroup;
 import net.fexcraft.app.fmt.ui.tree.TreeGroup;
 import net.fexcraft.app.fmt.ui.tree.Trees;
 import net.fexcraft.app.fmt.utils.RayCoastAway;
+import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
+import net.fexcraft.app.fmt.utils.TextureManager.TextureGroup;
 import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.json.JsonUtil;
@@ -45,22 +48,25 @@ import net.fexcraft.lib.common.math.Vec3f;
 public class GroupCompound {
 	
 	public int textureSizeX = 256, textureSizeY = 256, textureScale = 1;
-	public ArrayList<String> creators = new ArrayList<>();
+	private TreeMap<String, Boolean> creators = new TreeMap<>();
+	private ArrayList<String> authors = new ArrayList<>();
 	private GroupList groups = new GroupList();
 	public PolygonWrapper lastselected;
 	public File file, origin;
 	public float rate = 1f;
-	public String texture;
 	public String name;
+	public TextureGroup texgroup;
 	//
 	public static long SELECTED_POLYGONS;
 	public boolean visible = true, minimized;
 	public Vec3f pos, rot, scale;
 	public TreeGroup button;
+	public String helpertex;
 	
 	public GroupCompound(File origin){
 		this.origin = origin; name = "unnamed model";
-		recompile(); this.updateFields();
+		recompile();
+		updateFields();
 		if(Trees.helper != null) button = new TreeGroup(Trees.helper, this);
 	}
 	
@@ -86,14 +92,14 @@ public class GroupCompound {
 			GL11.glScalef(scale.xCoord, scale.yCoord, scale.zCoord);
 		}
 		if(RayCoastAway.PICKING){
-			if(TextureEditor.pixelMode()){
+			/*if(pencil){
 				TextureManager.bindTexture(getTempTex());
 				groups.forEach(elm -> elm.render(false));
 			}
-			else{
+			else*/{
 				groups.forEach(elm -> elm.renderPicking());
 			}
-			RayCoastAway.doTest(false);
+			RayCoastAway.doTest(false, null, false);//pencil);
 		}
 		else{
 			if(Settings.preview_colorpicker()){
@@ -101,7 +107,7 @@ public class GroupCompound {
 			}
 			else{
 				//TextureManager.bindTexture(texture == null ? "blank" : texture);
-				groups.forEach(elm -> { TextureManager.bindTexture(elm.getApplicableTexture(this)); elm.render(true); });
+				groups.forEach(elm -> { elm.bindApplicableTexture(this); elm.render(true); });
 				GL11.glDisable(GL11.GL_TEXTURE_2D);
 				groups.forEach(elm -> elm.renderLines());
 				GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -121,11 +127,15 @@ public class GroupCompound {
 		}
 	}
 	
-	public static final String temptexid = "./temp/calculation_texture";
+	public static final String temptexid = "./temp/calculation_texture_";
 	
-	private String getTempTex(){
-		Texture tex = TextureManager.getTexture(temptexid, true);
-		int texX = this.textureSizeX * this.textureScale, texY = this.textureSizeY * this.textureScale;
+	public String getTempTex(PolygonWrapper wrapper){
+		String texid = temptexid + wrapper.getTextureGroup().group;
+		Texture tex = TextureManager.getTexture(texid, true);
+		boolean nolisttex = wrapper.getTurboList().texgroup == null;
+		int scale = nolisttex ? this.textureScale : wrapper.getTurboList().textureS;
+		int texX = (nolisttex ? this.textureSizeX : wrapper.getTurboList().textureX) * scale;
+		int texY = (nolisttex ? this.textureSizeY : wrapper.getTurboList().textureY) * scale;
 		if(tex == null || (tex.getImage().getWidth() != texX || tex.getImage().getHeight() != texY)){
 			if(texX >= 8192 || texY >= 8192){ /*//TODO*/ }
 			else{
@@ -139,18 +149,20 @@ public class GroupCompound {
 				int lastint = 0;
 				for(int x = 0; x < texX; x++){
 					for(int y = 0; y < texY; y++){
-						image.setRGB(x, y, new Color(lastint).getRGB()); lastint++;
+						image.setRGB(x, y, new Color(lastint).getRGB());
+						lastint++;
 					}
 				}
 				if(tex == null){
-					TextureManager.loadTextureFromZip(image, temptexid, false, true);
+					TextureManager.loadTextureFromImgBuffer(image, texid, false, true);
 				}
 				else{
-					tex.rebind(); TextureManager.saveTexture(temptexid);
+					tex.rebind();
+					TextureManager.saveTexture(texid);
 				}
 			}
 		}
-		return temptexid;
+		return texid;
 	}
 	
 	public final ArrayList<PolygonWrapper> getSelected(){
@@ -419,49 +431,49 @@ public class GroupCompound {
 		}
 		TurboList list = this.getFirstSelectedGroup();
 		if(list == null){
-			ModelGroupEditor.group_color.apply(0xffffff);
-			ModelGroupEditor.group_name.getTextState().setText(FMTB.NO_POLYGON_SELECTED);
-			ModelGroupEditor.group_texture.getTextState().setText(FMTB.NO_POLYGON_SELECTED);
-			ModelGroupEditor.g_tex_x.setSelected(8f, true);
-			ModelGroupEditor.g_tex_y.setSelected(8f, true);
-			ModelGroupEditor.g_tex_s.setSelected(8f, true);
-			ModelGroupEditor.exoff_x.apply(0);
-			ModelGroupEditor.exoff_y.apply(0);
-			ModelGroupEditor.exoff_z.apply(0);
+			GroupEditor.group_color.apply(0xffffff);
+			GroupEditor.group_name.getTextState().setText(FMTB.NO_POLYGON_SELECTED);
+			GroupEditor.group_texture.setSelected(0, true);
+			GroupEditor.g_tex_x.setSelected(8f, true);
+			GroupEditor.g_tex_y.setSelected(8f, true);
+			GroupEditor.g_tex_s.setSelected(8f, true);
+			GroupEditor.exoff_x.apply(0);
+			GroupEditor.exoff_y.apply(0);
+			GroupEditor.exoff_z.apply(0);
 		}
 		else{
-			ModelGroupEditor.group_color.apply((list.color == null ? RGB.WHITE : list.color).packed);
-			ModelGroupEditor.group_name.getTextState().setText(list.id);
-			ModelGroupEditor.g_tex_x.setSelected((float)list.textureX, true);
-			ModelGroupEditor.g_tex_y.setSelected((float)list.textureY, true);
-			ModelGroupEditor.g_tex_s.setSelected((float)list.textureS, true);
-			ModelGroupEditor.exoff_x.apply(list.exportoffset == null ? 0 : list.exportoffset.xCoord);
-			ModelGroupEditor.exoff_y.apply(list.exportoffset == null ? 0 : list.exportoffset.yCoord);
-			ModelGroupEditor.exoff_z.apply(list.exportoffset == null ? 0 : list.exportoffset.zCoord);
-			//
-			String texname = list.getGroupTexture() + "";
-			if(texname.length() > 32){ texname = texname.substring(texname.length() - 32, texname.length()); }
-			ModelGroupEditor.group_texture.getTextState().setText(texname);
+			GroupEditor.group_color.apply((list.color == null ? RGB.WHITE : list.color).packed);
+			GroupEditor.group_name.getTextState().setText(list.id);
+			if(list.texgroup == null){
+				GroupEditor.group_texture.setSelected(0, true);
+			}
+			else{
+				GroupEditor.group_texture.setSelected(list.texgroup == null ? "none" : list.texgroup.group, true);
+			}
+			GroupEditor.g_tex_x.setSelected((float)list.textureX, true);
+			GroupEditor.g_tex_y.setSelected((float)list.textureY, true);
+			GroupEditor.g_tex_s.setSelected((float)list.textureS, true);
+			GroupEditor.exoff_x.apply(list.exportoffset == null ? 0 : list.exportoffset.xCoord);
+			GroupEditor.exoff_y.apply(list.exportoffset == null ? 0 : list.exportoffset.yCoord);
+			GroupEditor.exoff_z.apply(list.exportoffset == null ? 0 : list.exportoffset.zCoord);
 		};
-		ModelGroupEditor.animations.refresh(list);
+		GroupEditor.animations.refresh(list);
 		//
-		ModelGroupEditor.pos_x.apply(pos == null ? 0 : pos.xCoord);
-		ModelGroupEditor.pos_y.apply(pos == null ? 0 : pos.yCoord);
-		ModelGroupEditor.pos_z.apply(pos == null ? 0 : pos.zCoord);
-		ModelGroupEditor.poss_x.apply(pos == null ? 0 : pos.xCoord * Static.sixteenth);
-		ModelGroupEditor.poss_y.apply(pos == null ? 0 : pos.yCoord * Static.sixteenth);
-		ModelGroupEditor.poss_z.apply(pos == null ? 0 : pos.zCoord * Static.sixteenth);
-		ModelGroupEditor.rot_x.apply(pos == null ? 0 : rot.xCoord);
-		ModelGroupEditor.rot_y.apply(pos == null ? 0 : rot.yCoord);
-		ModelGroupEditor.rot_z.apply(pos == null ? 0 : rot.zCoord);
-		ModelGroupEditor.m_tex_x.setSelected((float)textureSizeX, true);
-		ModelGroupEditor.m_tex_y.setSelected((float)textureSizeY, true);
-		ModelGroupEditor.m_tex_s.setSelected((float)textureScale, true);
-		ModelGroupEditor.model_name.getTextState().setText(name);
+		ModelEditor.pos_x.apply(pos == null ? 0 : pos.xCoord);
+		ModelEditor.pos_y.apply(pos == null ? 0 : pos.yCoord);
+		ModelEditor.pos_z.apply(pos == null ? 0 : pos.zCoord);
+		ModelEditor.poss_x.apply(pos == null ? 0 : pos.xCoord * Static.sixteenth);
+		ModelEditor.poss_y.apply(pos == null ? 0 : pos.yCoord * Static.sixteenth);
+		ModelEditor.poss_z.apply(pos == null ? 0 : pos.zCoord * Static.sixteenth);
+		ModelEditor.rot_x.apply(pos == null ? 0 : rot.xCoord);
+		ModelEditor.rot_y.apply(pos == null ? 0 : rot.yCoord);
+		ModelEditor.rot_z.apply(pos == null ? 0 : rot.zCoord);
+		ModelEditor.m_tex_x.setSelected((float)textureSizeX, true);
+		ModelEditor.m_tex_y.setSelected((float)textureSizeY, true);
+		ModelEditor.m_tex_s.setSelected((float)textureScale, true);
+		ModelEditor.model_name.getTextState().setText(name);
 		//
-		String texname = this.texture + "";
-		if(texname.length() > 64){ texname = texname.substring(texname.length() - 64, texname.length()); }
-		ModelGroupEditor.model_texture.getTextState().setText(texname);
+		ModelEditor.model_texture.setSelected(FMTB.MODEL.texgroup == null ? "none" : FMTB.MODEL.texgroup.group, true);
 	}
 	
 	public float multiply(float flea){
@@ -531,8 +543,9 @@ public class GroupCompound {
 		} return i;
 	}
 
-	public void setTexture(String string){
-		this.texture = string; this.groups.forEach(turbo -> turbo.forEach(poly -> poly.recompile()));
+	public void setTexture(TextureGroup group){
+		texgroup = group;
+		this.groups.forEach(turbo -> turbo.forEach(poly -> poly.recompile()));
 	}
 
 	public int getDirectlySelectedGroupsAmount(){
@@ -612,8 +625,21 @@ public class GroupCompound {
 		return lastselected;
 	}
 	
-	public int tx(TurboList list){ return list == null || list.getGroupTexture() == null ? textureSizeX : list.textureX; }
-	public int ty(TurboList list){ return list == null || list.getGroupTexture() == null ? textureSizeY : list.textureY; }
+	public int tx(TurboList list){
+		return tx(null, true);
+	}
+
+	public int ty(TurboList list){
+		return ty(list, true);
+	}
+	
+	public int tx(TurboList list, boolean checktex){
+		return list == null || (checktex && list.getTextureGroup() == null) ? textureSizeX : list.textureX;
+	}
+
+	public int ty(TurboList list, boolean checktex){
+		return list == null || (checktex && list.getTextureGroup() == null) ? textureSizeY : list.textureY;
+	}
 	
 	public static class GroupList extends ArrayList<TurboList> {
 		
@@ -836,6 +862,64 @@ public class GroupCompound {
 	 */
 	public void setGroupsSelected(boolean value){
 		for(TurboList list : groups) list.selected = value;
+	}
+
+	public ArrayList<String> getAuthors(){
+		return authors;
+	}
+
+	public void setAuthors(ArrayList<String> array){
+		creators.clear();
+		authors.clear();
+		for(String str : array){
+			boolean locked = str.startsWith("!");
+			if(locked) str = str.substring(1);
+			creators.put(str, locked);
+			authors.add(str);
+		}
+		ModelEditor.creators.refresh(creators);
+	}
+
+	public void addAuthor(String string, boolean additive, boolean lock){
+		if(authors.contains(string)) return;
+		if(additive){
+			if(!allowed()) return;
+		}
+		creators.put(string, lock);
+		authors.add(string);
+		ModelEditor.creators.refresh();
+	}
+
+	public void remAuthor(String string){
+		if(!allowed()) return;
+		creators.remove(string);
+		authors.remove(string);
+		ModelEditor.creators.refresh();
+	}
+	
+	private boolean allowed(){
+		boolean anylocked = false;
+		for(boolean bool : creators.values()){
+			if(bool){
+				anylocked = true;
+				break;
+			}
+		}
+		if(anylocked && (!creators.containsKey(SessionHandler.getUserName()) || !creators.get(SessionHandler.getUserName()))){
+			DialogBox.showOK(null, null, null, "editor.model_group.authors.error_locked");
+			return false;
+		}
+		return true;
+	}
+
+	public void lockAuthor(String author, boolean lock){
+		if(!allowed()) return;
+		creators.put(author, lock);
+		ModelEditor.creators.refresh();
+	}
+
+	public TreeMap<String, Boolean> getCreators(){
+		return creators;
 	}
 
 }

@@ -9,7 +9,7 @@ import net.fexcraft.app.fmt.utils.Settings;
 
 public class EditorWidget extends Widget {
 
-	private EditorBase editor;
+	protected EditorBase editor;
 
 	public EditorWidget(EditorBase base, String title, int x, int y, int w, int h){
 		super(x, y, w, h);

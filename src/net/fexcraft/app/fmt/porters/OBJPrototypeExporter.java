@@ -55,8 +55,8 @@ public class OBJPrototypeExporter extends ExImPorter {
 		buffer.append("# Model exported via the Standard FMT OBJ Exporter\n"); boolean mtl = settings.get("create_mtl").getBooleanValue();
 		buffer.append("# FMT (Fex's Modelling Toolbox) v." + FMTB.VERSION + " &copy; " + Year.now().getValue() + " - Fexcraft.net\n");
 		buffer.append("# All rights reserved. For this Model's License contact the Author/Creator.\n#\n");
-		if(compound.creators.size() > 0){
-			for(String str : compound.creators){
+		if(compound.getAuthors().size() > 0){
+			for(String str : compound.getAuthors()){
 				buffer.append("# Creator: " + str + "\n");
 			}
 			buffer.append("\n");

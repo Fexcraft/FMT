@@ -74,7 +74,7 @@ public abstract class FVTMFormatBase extends ExImPorter {
 		}
 		buffer.append(tab + "public " + modelname + "(){\n");
 		buffer.append(tab2 + "super(); textureX = " + compound.tx(null) + "; textureY = " + compound.ty(null) + ";\n");
-		for(String cr : compound.creators){
+		for(String cr : compound.getAuthors()){
 			buffer.append(tab2 + "this.addToCreators(\"" + cr + "\");\n");//TODO add "uuid" of logged in users if available;
 		} buffer.append(tab2 + "//\n");
 		if(pergroupinit){
@@ -266,8 +266,8 @@ public abstract class FVTMFormatBase extends ExImPorter {
 				shape.append("\n" + tab3 + ".setMirrored(" + wrapper.mirror + ").setFlipped(" + wrapper.flip + ")");
 				extended = true;
 			}
-			if(this.extended && (compound.texture != null || !wrapper.visible)){
-				shape.append("\n" + tab3 + ".setTextured(" + (compound.texture != null) + ").setLines(" + !wrapper.visible + ")");
+			if(this.extended && (compound.texgroup != null || !wrapper.visible)){
+				shape.append("\n" + tab3 + ".setTextured(" + (compound.texgroup != null) + ").setLines(" + !wrapper.visible + ")");
 				extended = true;
 			}
 			if(wrapper.name != null){ shape.append(".setName(\"" + wrapper.name + "\")"); }

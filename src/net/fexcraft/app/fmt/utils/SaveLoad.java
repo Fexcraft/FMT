@@ -19,6 +19,7 @@ import javax.imageio.ImageIO;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.JsonToTMT;
@@ -26,8 +27,10 @@ import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.ui.FileSelector;
+import net.fexcraft.app.fmt.ui.tree.Trees;
 import net.fexcraft.app.fmt.utils.Animator.Animation;
 import net.fexcraft.app.fmt.utils.Settings.Setting;
+import net.fexcraft.app.fmt.utils.TextureManager.TextureGroup;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
@@ -41,40 +44,72 @@ public class SaveLoad {
 	public static void openModel(){
 		FileSelector.select(Translator.translate("saveload.open"), new File("./saves").getAbsolutePath(), FileSelector.TYPE_FMTB, false, file -> openModel(file));
 	}
-	
+
 	public static void openModel(File file){
 		if(file == null || !file.exists()){
-			DialogBox.showOK("saveload.title", null, null, "saveload.open.nofile"); return;
+			DialogBox.showOK("saveload.title", null, null, "saveload.open.nofile");
+			return;
 		}
 		try{
+			TextureManager.clearGroups();
 			ZipFile zip = new ZipFile(file);
+			boolean[] updatetree = { false };
 			zip.stream().forEach(elm -> {
 				if(elm.getName().equals("model.jtmt")){
 					try{
 						HelperCollector.LOADED.clear();
 						GroupCompound compound = parseModel(file, JsonUtil.getObjectFromInputStream(zip.getInputStream(elm)));
-						FMTB.setModel(compound, false); FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
+						FMTB.setModel(compound, false);
+						FMTB.MODEL.updateFields();
+						FMTB.MODEL.recompile();
 						GroupCompound.SELECTED_POLYGONS = FMTB.MODEL.countSelectedMRTs();
-					} catch(IOException e){ e.printStackTrace(); }
+					}
+					catch(IOException e){
+						e.printStackTrace();
+					}
 				}
 				else if(elm.getName().equals("texture.png")){
-					FMTB.MODEL.setTexture("./temp/" + FMTB.MODEL.name);
-	            	try{ //in theory this should be always 2nd in the stream, so it is expected the model loaded already
-						TextureManager.loadTextureFromZip(zip.getInputStream(elm), "./temp/" + FMTB.MODEL.name, false, true);
-					} catch(IOException e){ e.printStackTrace(); }
+					try{ //loads in old texture files
+						if(FMTB.MODEL.texgroup == null){
+							TextureManager.addGroup(FMTB.MODEL.texgroup = new TextureGroup(new JsonPrimitive("default")));
+						}
+						TextureManager.loadTextureFromZip(zip.getInputStream(elm), "group-default", false, true, true);
+						FMTB.MODEL.texgroup.reAssignTexture();
+						FMTB.MODEL.recompile();
+					}
+					catch(IOException e){
+						e.printStackTrace();
+					}
+					updatetree[0] = true;
 				}
-			}); zip.close(); FMTB.MODEL.file = file; DiscordUtil.update(Settings.discordrpc_resettimeronnewmodel());
+				else if(elm.getName().startsWith("texture-")){
+					try{
+						String group = elm.getName().substring(elm.getName().indexOf("-") + 1).replace(".png", "");
+						TextureManager.loadTextureFromZip(zip.getInputStream(elm), "group-" + group, false, true, true);
+						TextureManager.getGroup(group).reAssignTexture();
+					}
+					catch(IOException e){
+						e.printStackTrace();
+					}
+					updatetree[0] = true;
+				}
+			});
+			zip.close();
+			FMTB.MODEL.file = file;
+			if(updatetree[0]) Trees.textures.reOrderGroups();
+			DiscordUtil.update(Settings.discordrpc_resettimeronnewmodel());
 		}
 		catch(Exception e){
 			e.printStackTrace();
-			DialogBox.showOK("saveload.title", null, null, "saveload.open.errors"); return;
+			DialogBox.showOK("saveload.title", null, null, "saveload.open.errors");
+			return;
 		}
 	}
-	
+
 	public static GroupCompound parseModel(File from, JsonObject obj){
-		return getModel(from, obj, true); //FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
+		return getModel(from, obj, true); // FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
 	}
-	
+
 	public static void checkIfShouldSave(boolean shouldclose, boolean shouldclear){
 		TextureUpdate.HALT = true;
 		if(FMTB.MODEL.countTotalMRTs() > 0){
@@ -89,21 +124,34 @@ public class SaveLoad {
 							}, "saveload.save.nofile");
 						}
 						else{
-							FMTB.MODEL.file = file; saveModel(false, shouldclose);
-							if(shouldclear){ FMTB.setModel(new GroupCompound(null), true);}
-							if(shouldclose){ FMTB.get().close(true); }
+							FMTB.MODEL.file = file;
+							saveModel(false, shouldclose);
+							if(shouldclear){
+								FMTB.setModel(new GroupCompound(null), true);
+							}
+							if(shouldclose){
+								FMTB.get().close(true);
+							}
 						}
 					});
 				}
 				else{
-					saveModel(false, false);//shouldclose);
-					if(shouldclear){ FMTB.setModel(new GroupCompound(null), true); }
-					if(shouldclose){ FMTB.get().close(true); }
+					saveModel(false, false);// shouldclose);
+					if(shouldclear){
+						FMTB.setModel(new GroupCompound(null), true);
+					}
+					if(shouldclose){
+						FMTB.get().close(true);
+					}
 				}
 			}, () -> {
 				Print.console("selected > no saving of current");
-				if(shouldclear){ FMTB.setModel(new GroupCompound(null), true); }
-				if(shouldclose){ FMTB.get().close(true); }
+				if(shouldclear){
+					FMTB.setModel(new GroupCompound(null), true);
+				}
+				if(shouldclose){
+					FMTB.get().close(true);
+				}
 			}, "saveload.should_save");
 		}
 		else if(shouldclose){
@@ -113,54 +161,73 @@ public class SaveLoad {
 
 	public static void openNewModel(){
 		checkIfShouldSave(false, true);
-		//FMTB.MODEL = new GroupCompound();
+		// FMTB.MODEL = new GroupCompound();
 	}
 
 	public static void saveModel(boolean bool, boolean openfile){
 		if(bool || FMTB.MODEL.file == null){
 			FileSelector.select(Translator.translate("saveload.save"), new File("./saves").getAbsolutePath(), FileSelector.TYPE_FMTB, true, file -> {
 				if(file == null){
-					DialogBox.showOK("saveload.title", null, null, "saveload.save.nofile"); return;
+					DialogBox.showOK("saveload.title", null, null, "saveload.save.nofile");
+					return;
 				}
-				FMTB.MODEL.file = file; toFile(FMTB.MODEL, null, openfile);
-				DialogBox.showOK("saveload.title", null, null, "saveload.save.success"); return;
+				FMTB.MODEL.file = file;
+				toFile(FMTB.MODEL, null, openfile);
+				DialogBox.showOK("saveload.title", null, null, "saveload.save.success");
+				return;
 			});
 		}
 		else{
-			toFile(FMTB.MODEL, null, openfile); return;
-		} 
+			toFile(FMTB.MODEL, null, openfile);
+			return;
+		}
 	}
-	
+
 	public static void toFile(GroupCompound compound, File file, boolean openfile){
 		try{
-	        FileOutputStream fileout = new FileOutputStream(file == null ? compound.file : file);
-	        ZipOutputStream zipout = new ZipOutputStream(fileout);
-	        zipout.putNextEntry(new ZipEntry("marker.fmt")); zipout.write(new byte[]{ Byte.MIN_VALUE }); zipout.closeEntry();
-	        InputStream[] arr = new InputStream[compound.texture == null ? 1 : 2];
-	        arr[0] = new ByteArrayInputStream(modelToJTMT(null, false).toString().getBytes(StandardCharsets.UTF_8));
-	        if(arr.length > 1){
-	        	try{
-	        		ByteArrayOutputStream os = new ByteArrayOutputStream();
-	        		ImageIO.write(TextureManager.getTexture(compound.texture, false).getImage(), "png", os);
-	        		arr[1] = new ByteArrayInputStream(os.toByteArray());
-	        	} catch(Exception e){ e.printStackTrace(); }
-	        }
-	        zipout.setComment("FMTB Save File generated by the FMT (Fexcraft Modelling Toolbox).");
-	        for(int i = 0; i < arr.length; i++){
-	            zipout.putNextEntry(new ZipEntry(i == 1 ? "texture.png" : "model.jtmt"));
-	            byte[] bytes = new byte[1024]; int length;
-	            while((length = arr[i].read(bytes)) >= 0){
-	                zipout.write(bytes, 0, length);
-	            } zipout.closeEntry(); arr[i].close();
-	        }
-	        zipout.close(); fileout.close();
-	        if(file == null){
-	        	Print.console("Saved model as FMTB Archive" + (arr.length > 1 ? " with texture." : "."));
-	        }
-	        file = file == null ? compound.file : file;
-	        if(openfile && file.getParentFile() != null){
-		        Desktop.getDesktop().open(file.getParentFile());
-	        }
+			FileOutputStream fileout = new FileOutputStream(file == null ? compound.file : file);
+			ZipOutputStream zipout = new ZipOutputStream(fileout);
+			zipout.putNextEntry(new ZipEntry("marker.fmt"));
+			zipout.write(new byte[]{ Byte.MIN_VALUE });
+			zipout.closeEntry();
+			int streams = 1 + TextureManager.getGroupAmount();
+			InputStream[] arr = new InputStream[streams];
+			arr[0] = new ByteArrayInputStream(modelToJTMT(null, false).toString().getBytes(StandardCharsets.UTF_8));
+			if(arr.length > 1){
+				for(int i = 0; i < TextureManager.getGroupAmount(); i++){
+					TextureGroup group = TextureManager.getGroupsFE().get(i);
+					try{
+						ByteArrayOutputStream os = new ByteArrayOutputStream();
+						ImageIO.write(group.texture.getImage(), "png", os);
+						arr[1 + i] = new ByteArrayInputStream(os.toByteArray());
+					}
+					catch(Exception e){
+						e.printStackTrace();
+					}
+				}
+			}
+			zipout.setComment("FMTB Save File generated by the FMT (Fexcraft Modelling Toolbox).");
+			for(int i = 0; i < arr.length; i++){
+				String entryname = i == 0 ? "model.jtmt" : "texture-%s.png";
+				if(i > 0) entryname = String.format(entryname, TextureManager.getGroupsFE().get(i - 1).group);
+				zipout.putNextEntry(new ZipEntry(entryname));
+				byte[] bytes = new byte[1024];
+				int length;
+				while((length = arr[i].read(bytes)) >= 0){
+					zipout.write(bytes, 0, length);
+				}
+				zipout.closeEntry();
+				arr[i].close();
+			}
+			zipout.close();
+			fileout.close();
+			if(file == null){
+				Print.console("Saved model as FMTB Archive" + (arr.length > 1 ? " with texture." : "."));
+			}
+			file = file == null ? compound.file : file;
+			if(openfile && file.getParentFile() != null){
+				Desktop.getDesktop().open(file.getParentFile());
+			}
 		}
 		catch(IOException e){
 			e.printStackTrace();
@@ -168,44 +235,59 @@ public class SaveLoad {
 	}
 
 	/**
-	 * @param root 
+	 * @param root
 	 * @return JTMT save form of the Model/GroupCompound
 	 */
 	public static JsonObject modelToJTMT(GroupCompound root, boolean export){
 		GroupCompound compound = root == null ? FMTB.MODEL : root;
 		JsonObject obj = new JsonObject();
-		obj.addProperty("format", 2);
+		obj.addProperty("format", 3);
 		obj.addProperty("name", compound.name);
 		obj.addProperty("texture_size_x", compound.tx(null));
 		obj.addProperty("texture_size_y", compound.ty(null));
 		obj.addProperty("texture_scale", compound.textureScale);
 		JsonArray creators = new JsonArray();
-		if(compound.creators.isEmpty()){
-			creators.add(SessionHandler.isLoggedIn() ? SessionHandler.getUserName() : "OfflineUser");
+		if(compound.getAuthors().isEmpty()){
+			if(SessionHandler.isLoggedIn()) creators.add(SessionHandler.getUserName());
 		}
 		else{
-			for(String str : compound.creators) creators.add(str);
-			if(SessionHandler.isLoggedIn() && !compound.creators.contains(SessionHandler.getUserName())){
-				creators.add(SessionHandler.getUserName());
+			for(Entry<String, Boolean> entry : compound.getCreators().entrySet()){
+				String name = entry.getKey();
+				if(entry.getValue()) name = "!" + name;
+				creators.add(name);
 			}
 		}
 		obj.add("creators", creators);
 		obj.addProperty("type", "jtmt");
+		if(!TextureManager.anyGroupsLoaded()){
+			JsonArray textures = new JsonArray();
+			for(TextureGroup group : TextureManager.getGroupsFE()){
+				/*
+				 * JsonObject ksn = new JsonObject(); ksn.addProperty("name", group.group); ksn.addProperty("path", group.texture.getFile().toPath().toString()); textures.add(ksn);
+				 */
+				textures.add(group.group);
+			}
+			obj.add("textures", textures);
+		}
+		obj.addProperty("texture_group", compound.texgroup.group);
 		JsonObject model = new JsonObject();
 		for(TurboList list : compound.getGroups()){
-			JsonObject group = new JsonObject(); JsonArray array = new JsonArray();
+			JsonObject group = new JsonObject();
+			JsonArray array = new JsonArray();
 			if(!export){
 				group.addProperty("visible", list.visible);
 				if(list.color != null){
 					byte[] colarr = list.color.toByteArray();
 					JsonArray colar = new JsonArray();
-					colar.add(colarr[0]); colar.add(colarr[1]); colar.add(colarr[2]);
+					colar.add(colarr[0]);
+					colar.add(colarr[1]);
+					colar.add(colarr[2]);
 					group.add("color", colar);
 				}
 				group.addProperty("minimized", list.minimized);
 				group.addProperty("selected", list.selected);
-				if(list.getGroupTexture() != null){
-					group.addProperty("texture", list.getGroupTexture());
+				if(list.texgroup != null){
+					group.addProperty("texture_group", list.texgroup.group);
 					group.addProperty("texture_size_x", list.textureX);
 					group.addProperty("texture_size_y", list.textureY);
 					group.addProperty("texture_scale", list.textureS);
@@ -260,14 +342,13 @@ public class SaveLoad {
 			array.add(FMTB.ggr.orbit.yCoord);
 			array.add(FMTB.ggr.orbit.zCoord);
 			obj.add("camera_orbit", array);
-			
 		}
 		if(!HelperCollector.LOADED.isEmpty() && !export){
 			JsonArray array = new JsonArray();
 			for(GroupCompound group : HelperCollector.LOADED){
 				JsonObject jsn = new JsonObject();
 				jsn.addProperty("name", group.name);
-				jsn.addProperty("texture", group.texture);
+				jsn.addProperty("texture", group.helpertex);
 				if(group.rot != null){
 					jsn.addProperty("rot_x", group.rot.xCoord);
 					jsn.addProperty("rot_y", group.rot.yCoord);
@@ -291,20 +372,24 @@ public class SaveLoad {
 		}
 		return obj;
 	}
-	
-	public static GroupCompound getModel(File from, JsonObject obj, boolean ggr){
-		GroupCompound compound = new GroupCompound(from); compound.getGroups();
+
+	public static GroupCompound getModel(File from, JsonObject obj, boolean ggr_nopreview){
+		GroupCompound compound = new GroupCompound(from);
+		compound.getGroups();
 		compound.name = JsonUtil.getIfExists(obj, "name", "unnamed model");
 		compound.textureSizeX = JsonUtil.getIfExists(obj, "texture_size_x", 256).intValue();
 		compound.textureSizeY = JsonUtil.getIfExists(obj, "texture_size_y", 256).intValue();
 		compound.textureScale = JsonUtil.getIfExists(obj, "texture_scale", 1).intValue();
-		compound.creators = JsonUtil.jsonArrayToStringArray(JsonUtil.getIfExists(obj, "creators", new JsonArray()).getAsJsonArray());
+		compound.setAuthors(JsonUtil.jsonArrayToStringArray(JsonUtil.getIfExists(obj, "creators", new JsonArray()).getAsJsonArray()));
 		if(JsonUtil.getIfExists(obj, "format", 2).intValue() == 1){
 			JsonObject model = obj.get("model").getAsJsonObject();
 			for(Entry<String, JsonElement> entry : model.entrySet()){
 				try{
-					TurboList list = new TurboList(entry.getKey()); JsonArray array = entry.getValue().getAsJsonArray();
-					for(JsonElement elm : array){ list.add(JsonToTMT.parseWrapper(compound, elm.getAsJsonObject())); }
+					TurboList list = new TurboList(entry.getKey());
+					JsonArray array = entry.getValue().getAsJsonArray();
+					for(JsonElement elm : array){
+						list.add(JsonToTMT.parseWrapper(compound, elm.getAsJsonObject()));
+					}
 					compound.getGroups().add(list);
 				}
 				catch(Exception e){
@@ -313,10 +398,20 @@ public class SaveLoad {
 			}
 			return compound;
 		}
+		if(obj.has("textures") && ggr_nopreview){
+			obj.get("textures").getAsJsonArray().forEach(elm -> TextureManager.addGroup(new TextureGroup(elm)));
+		}
+		if(obj.has("texture_group")){
+			if(ggr_nopreview)
+				compound.texgroup = TextureManager.getGroup(obj.get("texture_group").getAsString());
+			else
+				compound.helpertex = obj.get("texture_group").getAsString();
+		}
 		JsonObject groups = obj.get("groups").getAsJsonObject();
 		for(Entry<String, JsonElement> entry : groups.entrySet()){
 			try{
-				TurboList list = new TurboList(entry.getKey()); JsonObject group = entry.getValue().getAsJsonObject();
+				TurboList list = new TurboList(entry.getKey());
+				JsonObject group = entry.getValue().getAsJsonObject();
 				list.minimized = JsonUtil.getIfExists(group, "minimized", false);
 				list.selected = JsonUtil.getIfExists(group, "selected", false);
 				list.visible = JsonUtil.getIfExists(group, "visible", true);
@@ -324,11 +419,23 @@ public class SaveLoad {
 					JsonArray colorarr = group.get("color").getAsJsonArray();
 					list.color = new RGB(colorarr.get(0).getAsByte(), colorarr.get(1).getAsByte(), colorarr.get(2).getAsByte());
 				}
-				if(group.has("texture")){
+				if(group.has("texture")){// import old
+					TextureManager.addGroup(new TextureGroup(list.id, new File(group.get("texture").getAsString())));
 					int texx = group.get("texture_size_x").getAsInt();
 					int texy = group.get("texture_size_y").getAsInt();
-					list.setTexture(group.get("texture").getAsString(), texx, texy);
+					list.setTexture(TextureManager.getGroup(list.id), texx, texy);
 					list.textureS = JsonUtil.getIfExists(obj, "texture_scale", 1).intValue();
+				}
+				if(group.has("texture_group")){
+					if(ggr_nopreview){
+						int texx = group.get("texture_size_x").getAsInt();
+						int texy = group.get("texture_size_y").getAsInt();
+						list.setTexture(TextureManager.getGroup(group.get("texture_group").getAsString()), texx, texy);
+						list.textureS = JsonUtil.getIfExists(obj, "texture_scale", 1).intValue();
+					}
+					else{
+						list.helpertex = group.get("texture_group").getAsString();
+					}
 				}
 				if(group.has("export_offset_x") || group.has("export_offset_y") || group.has("export_offset_z")){
 					list.exportoffset = new Vec3f();
@@ -342,7 +449,8 @@ public class SaveLoad {
 						list.add(JsonToTMT.parseWrapper(compound, elm.getAsJsonObject()));
 					}
 					catch(Exception e){
-						Print.console(elm.getAsJsonObject()); e.printStackTrace();
+						Print.console(elm.getAsJsonObject());
+						e.printStackTrace();
 					}
 				}
 				compound.getGroups().add(list);
@@ -351,7 +459,8 @@ public class SaveLoad {
 					for(JsonElement elm : arr){
 						JsonObject animjsn = elm.getAsJsonObject();
 						Animation anim = Animator.get(animjsn.get("id").getAsString());
-						if(anim == null) continue; anim = anim.copy(list);
+						if(anim == null) continue;
+						anim = anim.copy(list);
 						JsonArray settin = animjsn.get("settings").getAsJsonArray();
 						for(JsonElement elm0 : settin){
 							JsonObject sett = elm0.getAsJsonObject();
@@ -363,7 +472,8 @@ public class SaveLoad {
 							}
 						}
 						anim.active = JsonUtil.getIfExists(animjsn, "active", true);
-						list.animations.add(anim); list.abutton.update();
+						list.animations.add(anim);
+						list.abutton.update();
 						anim.button.setRoot(list.abutton);
 					}
 				}
@@ -372,13 +482,13 @@ public class SaveLoad {
 				e.printStackTrace();
 			}
 		}
-		if(obj.has("camera_pos") && ggr){
+		if(obj.has("camera_pos") && ggr_nopreview){
 			JsonArray pos = obj.getAsJsonArray("camera_pos");
 			FMTB.ggr.pos.xCoord = pos.get(0).getAsFloat();
 			FMTB.ggr.pos.yCoord = pos.get(1).getAsFloat();
 			FMTB.ggr.pos.zCoord = pos.get(2).getAsFloat();
 		}
-		if(obj.has("camera_rot") && ggr){
+		if(obj.has("camera_rot") && ggr_nopreview){
 			JsonArray rot = obj.getAsJsonArray("camera_rot");
 			FMTB.ggr.rotation.xCoord = rot.get(0).getAsFloat();
 			FMTB.ggr.rotation.yCoord = rot.get(1).getAsFloat();
@@ -409,7 +519,7 @@ public class SaveLoad {
 						helperpreview = HelperCollector.loadFMTB(file);
 					}
 					else{
-						//TODO save/load the porter settings too, I guess.
+						// TODO save/load the porter settings too, I guess.
 						ExImPorter porter = PorterManager.getPorterFor(file, false);
 						HashMap<String, Setting> map = new HashMap<>();
 						porter.getSettings(false).forEach(setting -> map.put(setting.getId(), setting));
@@ -435,5 +545,5 @@ public class SaveLoad {
 		}
 		return compound;
 	}
-	
+
 }
