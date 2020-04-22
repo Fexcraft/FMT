@@ -109,7 +109,8 @@ public class UserInterfaceUtils {
 		frame.getContainer().add(new MenuEntry(2, translate("toolbar.editor"),
 			new MenuButton("toolbar.editor.hide_all", () -> Editors.hideAll()),
 			new MenuButton("toolbar.editor.general", () -> Editors.show("general")),
-			new MenuButton("toolbar.editor.model_group", () -> Editors.show("modelgroup")),
+			new MenuButton("toolbar.editor.group", () -> Editors.show("group")),
+			new MenuButton("toolbar.editor.model", () -> Editors.show("model")),
 			new MenuButton("toolbar.editor.texture", () -> Editors.show("texture")),
 			new MenuButton("toolbar.editor.preview", () -> Editors.show("preview"))
 		));
