@@ -29,80 +29,24 @@ import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureManager.TextureGroup;
 import net.fexcraft.app.fmt.utils.TextureUpdate;
 import net.fexcraft.app.fmt.wrappers.TurboList;
-import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
 
-public class ModelGroupEditor extends EditorBase {
+public class GroupEditor extends EditorBase {
 
 	private static final int[] texsizes = new int[]{ 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096 };// , 8192 };
-	public static NumberField pos_x, pos_y, pos_z, poss_x, poss_y, poss_z;
-	public static NumberField rot_x, rot_y, rot_z, exoff_x, exoff_y, exoff_z;
-	public static TextInput model_name, group_name;
-	public static SelectBox<Float> m_tex_x, m_tex_y, m_tex_s;
+	public static NumberField exoff_x, exoff_y, exoff_z;
+	public static TextInput group_name;
 	public static ColorField group_color;
 	public static SelectBox<Float> g_tex_x, g_tex_y, g_tex_s;
 	public static SelectBox<Animation> add_anim;
 	public static AnimationsEditorWidget animations;
-	public static SelectBox<String> model_texture, group_texture;
-	private String name_cache;
+	public static SelectBox<String> group_texture;
 
 	@SuppressWarnings("unchecked")
-	public ModelGroupEditor(){
+	public GroupEditor(){
 		super();
 		int pass = -20;
-		EditorWidget model = new EditorWidget(this, translate("editor.model_group.model"), 0, 0, 0, 0);
-		model.getContainer().add(new Label(translate("editor.model_group.model.position_full"), 3, pass += 24, 290, 20));
-		model.getContainer().add(pos_x = new NumberField(4, pass += 24, 90, 20).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> updateModelPos(true)));
-		model.getContainer().add(pos_y = new NumberField(102, pass, 90, 20).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> updateModelPos(true)));
-		model.getContainer().add(pos_z = new NumberField(200, pass, 90, 20).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> updateModelPos(true)));
-		model.getContainer().add(new Label(translate("editor.model_group.model.position_sixteenth"), 3, pass += 24, 290, 20));
-		model.getContainer().add(poss_x = new NumberField(4, pass += 24, 90, 20).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> updateModelPos(false)));
-		model.getContainer().add(poss_y = new NumberField(102, pass, 90, 20).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> updateModelPos(false)));
-		model.getContainer().add(poss_z = new NumberField(200, pass, 90, 20).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> updateModelPos(false)));
-		model.getContainer().add(new Label(translate("editor.model_group.model.rotation"), 3, pass += 24, 290, 20));
-		model.getContainer().add(rot_x = new NumberField(4, pass += 24, 90, 20).setup(-360, 360, true, () -> updateModelRot()));
-		model.getContainer().add(rot_y = new NumberField(102, pass, 90, 20).setup(-360, 360, true, () -> updateModelRot()));
-		model.getContainer().add(rot_z = new NumberField(200, pass, 90, 20).setup(-360, 360, true, () -> updateModelRot()));
-		model.getContainer().add(new Label(translate("editor.model_group.model.texture_size"), 3, pass += 24, 290, 20));
-		model.getContainer().add(m_tex_x = new SelectBox<>(4, pass += 24, 90, 20));
-		for(int size : texsizes) m_tex_x.addElement((float)size);
-		m_tex_x.getSelectBoxElements().forEach(elm -> elm.getStyle().setFontSize(20f));
-		m_tex_x.setVisibleCount(10);
-		m_tex_x.setElementHeight(20);
-		m_tex_x.getSelectionButton().getStyle().setFontSize(20f);
-		m_tex_x.addSelectBoxChangeSelectionEventListener(event -> updateModelTexSize(event, true));
-		model.getContainer().add(m_tex_y = new SelectBox<>(102, pass, 90, 20));
-		for(int size : texsizes) m_tex_y.addElement((float)size);
-		m_tex_y.getSelectBoxElements().forEach(elm -> elm.getStyle().setFontSize(20f));
-		m_tex_y.setVisibleCount(10);
-		m_tex_y.setElementHeight(20);
-		m_tex_y.getSelectionButton().getStyle().setFontSize(20f);
-		m_tex_y.addSelectBoxChangeSelectionEventListener(event -> updateModelTexSize(event, false));
-		model.getContainer().add(m_tex_s = new SelectBox<>(200, pass, 90, 20));
-		m_tex_s.addElement(1f);
-		m_tex_s.addElement(2f);
-		m_tex_s.addElement(3f);
-		m_tex_s.addElement(4f);
-		m_tex_s.getSelectBoxElements().forEach(elm -> elm.getStyle().setFontSize(20f));
-		m_tex_s.setVisibleCount(10);
-		m_tex_s.setElementHeight(20);
-		m_tex_s.getSelectionButton().getStyle().setFontSize(20f);
-		m_tex_s.addSelectBoxChangeSelectionEventListener(event -> updateModelTexSize(event, null));
-		model.getContainer().add(new Label(translate("editor.model_group.model.texture"), 3, pass += 24, 290, 20));
-		model.getContainer().add(model_texture = new SelectBox<>(4, pass += 24, 290, 20));
-		model_texture.addSelectBoxChangeSelectionEventListener(event -> updateModelTexture(event));
-		model_texture.setVisibleCount(6);
-		model.getContainer().add(new Label(translate("editor.model_group.model.name"), 3, pass += 24, 290, 20));
-		model.getContainer().add(model_name = new TextField(FMTB.MODEL.name, 3, pass += 24, 290, 20));
-		model_name.addTextInputContentChangeEventListener(listener -> name_cache = UserInterfaceUtils.validateString(listener));
-		model_name.getListenerMap().addListener(FocusEvent.class, listener -> {
-			if(!listener.isFocused() && !name_cache.equals(FMTB.MODEL.name)) FMTB.get().setTitle(FMTB.MODEL.name = name_cache);
-			FMTB.MODEL.button.update();
-		});
-		model.setSize(296, pass + 52);
-		this.addSub(model);
-		pass = -20;
 		//
 		EditorWidget group = new EditorWidget(this, translate("editor.model_group.group"), 0, 0, 0, 0);
 		group.getContainer().add(new Label(translate("editor.model_group.group.color"), 3, pass += 24, 290, 20));
@@ -114,7 +58,7 @@ public class ModelGroupEditor extends EditorBase {
 		}, 3, pass += 24, 290, 20));
 		group.getContainer().add(new Label(translate("editor.model_group.group.name"), 3, pass += 24, 290, 20));
 		group.getContainer().add(group_name = new TextField(FMTB.NO_POLYGON_SELECTED, 3, pass += 24, 290, 20));
-		group_name.addTextInputContentChangeEventListener(listener -> name_cache = UserInterfaceUtils.validateString(listener));
+		group_name.addTextInputContentChangeEventListener(listener -> UserInterfaceUtils.validateString(listener));
 		group_name.getListenerMap().addListener(FocusEvent.class, listener -> {
 			if(!listener.isFocused() && !FMTB.MODEL.getSelected().isEmpty()){
 				TurboList list = null;
@@ -237,14 +181,8 @@ public class ModelGroupEditor extends EditorBase {
 		this.addSub(animations);
 		pass = -20;
 		//
-		updateTextureGroups();
+		//updateTextureGroups();
 		reOrderWidgets();
-	}
-	
-	private void updateModelTexture(SelectBoxChangeSelectionEvent<String> event){
-		if(event.getNewValue().equals("none")) FMTB.MODEL.texgroup = null;
-		FMTB.MODEL.texgroup = TextureManager.getGroup(event.getNewValue());
-		FMTB.MODEL.recompile();
 	}
 	
 	private void updateGroupTexture(SelectBoxChangeSelectionEvent<String> event){
@@ -260,13 +198,13 @@ public class ModelGroupEditor extends EditorBase {
 	}
 
 	public static void updateTextureGroups(){
-		while(model_texture.getElements().size() > 0) model_texture.removeElement(0);
-		while(group_texture.getElements().size() > 0) group_texture.removeElement(0);
-		model_texture.addElement("none");
-		group_texture.addElement("none");
+		while(ModelEditor.model_texture.getElements().size() > 0) ModelEditor.model_texture.removeElement(0);
+		while(GroupEditor.group_texture.getElements().size() > 0) GroupEditor.group_texture.removeElement(0);
+		ModelEditor.model_texture.addElement("none");
+		GroupEditor.group_texture.addElement("none");
 		for(TextureGroup group : TextureManager.getGroupsFE()){
-			model_texture.addElement(group.group);
-			group_texture.addElement(group.group);
+			ModelEditor.model_texture.addElement(group.group);
+			GroupEditor.group_texture.addElement(group.group);
 		}
 	}
 
@@ -349,34 +287,6 @@ public class ModelGroupEditor extends EditorBase {
 			}
 			FMTB.MODEL.updateFields();
 		});
-		return;
-	}
-
-	private void updateModelPos(boolean full){
-		float x = (full ? pos_x : poss_x).getValue();
-		float y = (full ? pos_y : poss_y).getValue();
-		float z = (full ? pos_z : poss_z).getValue();
-		if(FMTB.MODEL.pos == null) FMTB.MODEL.pos = new Vec3f(0, 0, 0);
-		FMTB.MODEL.pos.xCoord = full ? x : x * Static.sixteenth;
-		FMTB.MODEL.pos.yCoord = full ? y : y * Static.sixteenth;
-		FMTB.MODEL.pos.zCoord = full ? z : z * Static.sixteenth;
-	}
-
-	private void updateModelRot(){
-		float x = rot_x.getValue(), y = rot_y.getValue(), z = rot_z.getValue();
-		if(FMTB.MODEL.rot == null) FMTB.MODEL.rot = new Vec3f(0, 0, 0);
-		FMTB.MODEL.rot.xCoord = x;
-		FMTB.MODEL.rot.yCoord = y;
-		FMTB.MODEL.rot.zCoord = z;
-	}
-
-	private void updateModelTexSize(SelectBoxChangeSelectionEvent<Float> event, Boolean bool){
-		if(FMTB.MODEL == null) return;
-		int value = (int)(event.getNewValue() + 0f);
-		if(bool == null) FMTB.MODEL.textureScale = value;
-		else if(bool) FMTB.MODEL.textureSizeX = value;
-		else FMTB.MODEL.textureSizeY = value;
-		TextureUpdate.updateSize(null);
 		return;
 	}
 

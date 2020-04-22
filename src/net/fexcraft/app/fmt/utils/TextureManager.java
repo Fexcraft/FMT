@@ -21,7 +21,7 @@ import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.DialogBox;
-import net.fexcraft.app.fmt.ui.editor.ModelGroupEditor;
+import net.fexcraft.app.fmt.ui.editor.GroupEditor;
 import net.fexcraft.app.fmt.ui.tree.TreeGroup;
 import net.fexcraft.app.fmt.ui.tree.Trees;
 import net.fexcraft.app.fmt.wrappers.TurboList;
@@ -405,7 +405,7 @@ public class TextureManager {
 	public static void addGroup(TextureGroup group){
 		Trees.textures.addSub(group.button);
 		GROUPS.add(group);
-		ModelGroupEditor.updateTextureGroups();
+		GroupEditor.updateTextureGroups();
 	}
 
 	public static void clearGroups(){
@@ -421,7 +421,7 @@ public class TextureManager {
 		addGroup(new TextureGroup(name, new File("./temp/group-" + name + ".png")));
 		DialogBox.showOK(null, null, null, "tree.textures.group_added", "#" + name);
 		Trees.textures.reOrderGroups();
-		ModelGroupEditor.updateTextureGroups();
+		GroupEditor.updateTextureGroups();
 	}
 
 	public static void removeGroup(TextureGroup texgroup){
@@ -437,7 +437,7 @@ public class TextureManager {
 		}
 		texgroup.button.removeFromTree();
 		GROUPS.remove(texgroup);
-		ModelGroupEditor.updateTextureGroups();
+		GroupEditor.updateTextureGroups();
 	}
 
 }

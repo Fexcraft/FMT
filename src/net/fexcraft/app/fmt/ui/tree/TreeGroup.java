@@ -23,7 +23,7 @@ import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.ui.FileSelector;
 import net.fexcraft.app.fmt.ui.UserInterfaceUtils;
 import net.fexcraft.app.fmt.ui.editor.Editors;
-import net.fexcraft.app.fmt.ui.editor.ModelGroupEditor;
+import net.fexcraft.app.fmt.ui.editor.GroupEditor;
 import net.fexcraft.app.fmt.ui.editor.PreviewEditor;
 import net.fexcraft.app.fmt.ui.field.TextField;
 import net.fexcraft.app.fmt.utils.GGR;
@@ -300,7 +300,7 @@ public class TreeGroup extends Panel {
             button0.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
             	if(CLICK == e.getAction()){
             		texgroup.group = input.getTextState().getText();
-            		ModelGroupEditor.updateTextureGroups();
+            		GroupEditor.updateTextureGroups();
             		texgroup.button.update();
             		dialog.close();
             	}

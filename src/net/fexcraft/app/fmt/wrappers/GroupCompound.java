@@ -26,7 +26,8 @@ import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.ui.DialogBox.DialogTask;
 import net.fexcraft.app.fmt.ui.editor.Editors;
 import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
-import net.fexcraft.app.fmt.ui.editor.ModelGroupEditor;
+import net.fexcraft.app.fmt.ui.editor.GroupEditor;
+import net.fexcraft.app.fmt.ui.editor.ModelEditor;
 import net.fexcraft.app.fmt.ui.field.Field;
 import net.fexcraft.app.fmt.ui.tree.SubTreeGroup;
 import net.fexcraft.app.fmt.ui.tree.TreeGroup;
@@ -427,49 +428,49 @@ public class GroupCompound {
 		}
 		TurboList list = this.getFirstSelectedGroup();
 		if(list == null){
-			ModelGroupEditor.group_color.apply(0xffffff);
-			ModelGroupEditor.group_name.getTextState().setText(FMTB.NO_POLYGON_SELECTED);
-			ModelGroupEditor.group_texture.setSelected(0, true);
-			ModelGroupEditor.g_tex_x.setSelected(8f, true);
-			ModelGroupEditor.g_tex_y.setSelected(8f, true);
-			ModelGroupEditor.g_tex_s.setSelected(8f, true);
-			ModelGroupEditor.exoff_x.apply(0);
-			ModelGroupEditor.exoff_y.apply(0);
-			ModelGroupEditor.exoff_z.apply(0);
+			GroupEditor.group_color.apply(0xffffff);
+			GroupEditor.group_name.getTextState().setText(FMTB.NO_POLYGON_SELECTED);
+			GroupEditor.group_texture.setSelected(0, true);
+			GroupEditor.g_tex_x.setSelected(8f, true);
+			GroupEditor.g_tex_y.setSelected(8f, true);
+			GroupEditor.g_tex_s.setSelected(8f, true);
+			GroupEditor.exoff_x.apply(0);
+			GroupEditor.exoff_y.apply(0);
+			GroupEditor.exoff_z.apply(0);
 		}
 		else{
-			ModelGroupEditor.group_color.apply((list.color == null ? RGB.WHITE : list.color).packed);
-			ModelGroupEditor.group_name.getTextState().setText(list.id);
+			GroupEditor.group_color.apply((list.color == null ? RGB.WHITE : list.color).packed);
+			GroupEditor.group_name.getTextState().setText(list.id);
 			if(list.texgroup == null){
-				ModelGroupEditor.group_texture.setSelected(0, true);
+				GroupEditor.group_texture.setSelected(0, true);
 			}
 			else{
-				ModelGroupEditor.group_texture.setSelected(list.texgroup == null ? "none" : list.texgroup.group, true);
+				GroupEditor.group_texture.setSelected(list.texgroup == null ? "none" : list.texgroup.group, true);
 			}
-			ModelGroupEditor.g_tex_x.setSelected((float)list.textureX, true);
-			ModelGroupEditor.g_tex_y.setSelected((float)list.textureY, true);
-			ModelGroupEditor.g_tex_s.setSelected((float)list.textureS, true);
-			ModelGroupEditor.exoff_x.apply(list.exportoffset == null ? 0 : list.exportoffset.xCoord);
-			ModelGroupEditor.exoff_y.apply(list.exportoffset == null ? 0 : list.exportoffset.yCoord);
-			ModelGroupEditor.exoff_z.apply(list.exportoffset == null ? 0 : list.exportoffset.zCoord);
+			GroupEditor.g_tex_x.setSelected((float)list.textureX, true);
+			GroupEditor.g_tex_y.setSelected((float)list.textureY, true);
+			GroupEditor.g_tex_s.setSelected((float)list.textureS, true);
+			GroupEditor.exoff_x.apply(list.exportoffset == null ? 0 : list.exportoffset.xCoord);
+			GroupEditor.exoff_y.apply(list.exportoffset == null ? 0 : list.exportoffset.yCoord);
+			GroupEditor.exoff_z.apply(list.exportoffset == null ? 0 : list.exportoffset.zCoord);
 		};
-		ModelGroupEditor.animations.refresh(list);
+		GroupEditor.animations.refresh(list);
 		//
-		ModelGroupEditor.pos_x.apply(pos == null ? 0 : pos.xCoord);
-		ModelGroupEditor.pos_y.apply(pos == null ? 0 : pos.yCoord);
-		ModelGroupEditor.pos_z.apply(pos == null ? 0 : pos.zCoord);
-		ModelGroupEditor.poss_x.apply(pos == null ? 0 : pos.xCoord * Static.sixteenth);
-		ModelGroupEditor.poss_y.apply(pos == null ? 0 : pos.yCoord * Static.sixteenth);
-		ModelGroupEditor.poss_z.apply(pos == null ? 0 : pos.zCoord * Static.sixteenth);
-		ModelGroupEditor.rot_x.apply(pos == null ? 0 : rot.xCoord);
-		ModelGroupEditor.rot_y.apply(pos == null ? 0 : rot.yCoord);
-		ModelGroupEditor.rot_z.apply(pos == null ? 0 : rot.zCoord);
-		ModelGroupEditor.m_tex_x.setSelected((float)textureSizeX, true);
-		ModelGroupEditor.m_tex_y.setSelected((float)textureSizeY, true);
-		ModelGroupEditor.m_tex_s.setSelected((float)textureScale, true);
-		ModelGroupEditor.model_name.getTextState().setText(name);
+		ModelEditor.pos_x.apply(pos == null ? 0 : pos.xCoord);
+		ModelEditor.pos_y.apply(pos == null ? 0 : pos.yCoord);
+		ModelEditor.pos_z.apply(pos == null ? 0 : pos.zCoord);
+		ModelEditor.poss_x.apply(pos == null ? 0 : pos.xCoord * Static.sixteenth);
+		ModelEditor.poss_y.apply(pos == null ? 0 : pos.yCoord * Static.sixteenth);
+		ModelEditor.poss_z.apply(pos == null ? 0 : pos.zCoord * Static.sixteenth);
+		ModelEditor.rot_x.apply(pos == null ? 0 : rot.xCoord);
+		ModelEditor.rot_y.apply(pos == null ? 0 : rot.yCoord);
+		ModelEditor.rot_z.apply(pos == null ? 0 : rot.zCoord);
+		ModelEditor.m_tex_x.setSelected((float)textureSizeX, true);
+		ModelEditor.m_tex_y.setSelected((float)textureSizeY, true);
+		ModelEditor.m_tex_s.setSelected((float)textureScale, true);
+		ModelEditor.model_name.getTextState().setText(name);
 		//
-		ModelGroupEditor.model_texture.setSelected(FMTB.MODEL.texgroup == null ? "none" : FMTB.MODEL.texgroup.group, true);
+		ModelEditor.model_texture.setSelected(FMTB.MODEL.texgroup == null ? "none" : FMTB.MODEL.texgroup.group, true);
 	}
 	
 	public float multiply(float flea){
