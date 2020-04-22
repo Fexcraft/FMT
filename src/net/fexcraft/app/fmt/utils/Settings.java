@@ -226,6 +226,7 @@ public class Settings {
 		internal_filechooser = SETTINGS.get("internal_filechooser");
 		center_marker = SETTINGS.get("center_marker");
 		debug = SETTINGS.get("ui_debug");
+		drag_painting = SETTINGS.get("drag_painting");
 	}
 
 	public static void save(){
