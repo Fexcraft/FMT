@@ -286,7 +286,7 @@ public class TreeGroup extends Panel {
             		elm.forEach(poly -> poly.burnToTexture(texgroup.texture.getImage(), null));
         		}
         	});
-        	TextureManager.saveTexture(texgroup.texture.name);
+        	TextureManager.saveTexture(texgroup.texture);
         	texgroup.texture.reload();
         	FMTB.MODEL.recompile();
 		}).setRoot(this).updateColor();
