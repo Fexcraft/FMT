@@ -392,7 +392,7 @@ public class FMTB {
         //
         if(RayCoastAway.PICKING){
             if(pixelpass){
-				TextureManager.bindTexture(MODEL.getTempTex());
+				TextureManager.bindTexture(MODEL.getTempTex(RayCoastAway.lastsel));
 				TurboList list = RayCoastAway.lastsel.getTurboList();
 				RayCoastAway.lastsel.render(list.rotXb, list.rotYb, list.rotZb);
 				RayCoastAway.doTest(false, null, true);

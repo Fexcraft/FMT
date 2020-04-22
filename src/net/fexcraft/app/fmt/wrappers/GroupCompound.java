@@ -123,11 +123,15 @@ public class GroupCompound {
 		}
 	}
 	
-	public static final String temptexid = "./temp/calculation_texture";
+	public static final String temptexid = "./temp/calculation_texture_%s";
 	
-	public String getTempTex(){
-		Texture tex = TextureManager.getTexture(temptexid, true);
-		int texX = this.textureSizeX * this.textureScale, texY = this.textureSizeY * this.textureScale;
+	public String getTempTex(PolygonWrapper wrapper){
+		String texid = String.format(temptexid, wrapper.getTextureGroup());
+		Texture tex = TextureManager.getTexture(texid, true);
+		boolean nolisttex = wrapper.getTurboList().texgroup == null;
+		int scale = nolisttex ? this.textureScale : wrapper.getTurboList().textureS;
+		int texX = (nolisttex ? this.textureSizeX : wrapper.getTurboList().textureX) * scale;
+		int texY = (nolisttex ? this.textureSizeY : wrapper.getTurboList().textureY) * scale;
 		if(tex == null || (tex.getImage().getWidth() != texX || tex.getImage().getHeight() != texY)){
 			if(texX >= 8192 || texY >= 8192){ /*//TODO*/ }
 			else{
@@ -141,14 +145,16 @@ public class GroupCompound {
 				int lastint = 0;
 				for(int x = 0; x < texX; x++){
 					for(int y = 0; y < texY; y++){
-						image.setRGB(x, y, new Color(lastint).getRGB()); lastint++;
+						image.setRGB(x, y, new Color(lastint).getRGB());
+						lastint++;
 					}
 				}
 				if(tex == null){
-					TextureManager.loadTextureFromZip(image, temptexid, false, true);
+					TextureManager.loadTextureFromImgBuffer(image, temptexid, false, true);
 				}
 				else{
-					tex.rebind(); TextureManager.saveTexture(temptexid);
+					tex.rebind();
+					TextureManager.saveTexture(temptexid);
 				}
 			}
 		}

@@ -92,11 +92,11 @@ public class TextureManager {
 		}
 	}
 
-	public static void loadTextureFromZip(BufferedImage image, String string, Boolean rooted, boolean save){
+	public static void loadTextureFromImgBuffer(BufferedImage image, String string, Boolean rooted, boolean save){
 		try{
 			if(rooted == null) rooted = true;
 			TEXTURES.put(string, new Texture(string, image));
-			System.out.println(String.format("Loaded Texture (%-32s) [%s]", string, "<FROM IMPORTED MTB/ZIP>"));
+			System.out.println(String.format("Loaded Texture (%-32s) [%s]", string, "<IMG-BUFFER>"));
 			if(save){
 				File file = new File(rooted ? String.format("./resources/textures/%s.png", string) : string + ".png");
 				if(!file.exists()) file.getParentFile().mkdirs();
