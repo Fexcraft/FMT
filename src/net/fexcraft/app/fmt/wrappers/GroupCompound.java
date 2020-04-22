@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.lwjgl.opengl.GL11;
@@ -33,6 +34,7 @@ import net.fexcraft.app.fmt.ui.tree.SubTreeGroup;
 import net.fexcraft.app.fmt.ui.tree.TreeGroup;
 import net.fexcraft.app.fmt.ui.tree.Trees;
 import net.fexcraft.app.fmt.utils.RayCoastAway;
+import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
@@ -46,7 +48,8 @@ import net.fexcraft.lib.common.math.Vec3f;
 public class GroupCompound {
 	
 	public int textureSizeX = 256, textureSizeY = 256, textureScale = 1;
-	public ArrayList<String> creators = new ArrayList<>();
+	private TreeMap<String, Boolean> creators = new TreeMap<>();
+	private ArrayList<String> authors = new ArrayList<>();
 	private GroupList groups = new GroupList();
 	public PolygonWrapper lastselected;
 	public File file, origin;
@@ -859,6 +862,64 @@ public class GroupCompound {
 	 */
 	public void setGroupsSelected(boolean value){
 		for(TurboList list : groups) list.selected = value;
+	}
+
+	public ArrayList<String> getAuthors(){
+		return authors;
+	}
+
+	public void setAuthors(ArrayList<String> array){
+		creators.clear();
+		authors.clear();
+		for(String str : array){
+			boolean locked = str.startsWith("!");
+			if(locked) str = str.substring(1);
+			creators.put(str, locked);
+			authors.add(str);
+		}
+		ModelEditor.creators.refresh(creators);
+	}
+
+	public void addAuthor(String string, boolean additive, boolean lock){
+		if(authors.contains(string)) return;
+		if(additive){
+			if(!allowed()) return;
+		}
+		creators.put(string, lock);
+		authors.add(string);
+		ModelEditor.creators.refresh();
+	}
+
+	public void remAuthor(String string){
+		if(!allowed()) return;
+		creators.remove(string);
+		authors.remove(string);
+		ModelEditor.creators.refresh();
+	}
+	
+	private boolean allowed(){
+		boolean anylocked = false;
+		for(boolean bool : creators.values()){
+			if(bool){
+				anylocked = true;
+				break;
+			}
+		}
+		if(anylocked && (!creators.containsKey(SessionHandler.getUserName()) || !creators.get(SessionHandler.getUserName()))){
+			DialogBox.showOK(null, null, null, "editor.model_group.authors.error_locked");
+			return false;
+		}
+		return true;
+	}
+
+	public void lockAuthor(String author, boolean lock){
+		if(!allowed()) return;
+		creators.put(author, lock);
+		ModelEditor.creators.refresh();
+	}
+
+	public TreeMap<String, Boolean> getCreators(){
+		return creators;
 	}
 
 }

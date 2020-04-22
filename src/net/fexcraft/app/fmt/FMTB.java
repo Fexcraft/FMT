@@ -68,6 +68,7 @@ import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.ui.UserInterfaceUtils;
 import net.fexcraft.app.fmt.ui.editor.Editors;
+import net.fexcraft.app.fmt.ui.editor.ModelEditor;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.field.Field;
 import net.fexcraft.app.fmt.ui.field.TextField;
@@ -270,6 +271,7 @@ public class FMTB {
         renderer = new NvgRenderer();
         renderer.initialize();
 		Settings.updateTheme();
+		ModelEditor.creators.refresh();
         //
 		PorterManager.load();
 		HelperCollector.reload(loadedold);
@@ -508,23 +510,23 @@ public class FMTB {
 			ss_frame.getContainer().add(ss_credits);
 		}
 		ss_title.getTextState().setText((Time.getDay() % 2 == 0 ? "FMT - Fexcraft Modelling Toolbox" : "FMT - Fex's Modelling Toolbox") + " [" + SessionHandler.getLicenseName() + "]");
-		switch(FMTB.MODEL.creators.size()){
+		switch(FMTB.MODEL.getAuthors().size()){
 			case 0: {
 				ss_credits.getTextState().setText(FMTB.MODEL.name + " - " + (SessionHandler.isLoggedIn() ? SessionHandler.getUserName() : "Guest User"));
 				break;
 			}
 			case 1: {
-				if(FMTB.MODEL.creators.get(0).equals(SessionHandler.getUserName())){
+				if(FMTB.MODEL.getAuthors().get(0).equals(SessionHandler.getUserName())){
 					ss_credits.getTextState().setText(FMTB.MODEL.name + " - by " + SessionHandler.getUserName());
 				}
 				else{
-					ss_credits.getTextState().setText(FMTB.MODEL.name + " - by " + String.format("%s (logged:%s)", FMTB.MODEL.creators.get(0), SessionHandler.getUserName()));
+					ss_credits.getTextState().setText(FMTB.MODEL.name + " - by " + String.format("%s (logged:%s)", FMTB.MODEL.getAuthors().get(0), SessionHandler.getUserName()));
 				}
 				break;
 			}
 			default: {
-				if(FMTB.MODEL.creators.contains(SessionHandler.getUserName())){
-					ss_credits.getTextState().setText(FMTB.MODEL.name + " - by " + SessionHandler.getUserName() + " (and " + (FMTB.MODEL.creators.size() - 1) + " others)");
+				if(FMTB.MODEL.getAuthors().contains(SessionHandler.getUserName())){
+					ss_credits.getTextState().setText(FMTB.MODEL.name + " - by " + SessionHandler.getUserName() + " (and " + (FMTB.MODEL.getAuthors().size() - 1) + " others)");
 				}
 				else{
 					ss_credits.getTextState().setText(FMTB.MODEL.name + " - " + String.format("(logged:%s)", SessionHandler.getUserName()));
@@ -666,6 +668,7 @@ public class FMTB {
 		Trees.fvtm.reOrderGroups();
 		Trees.helper.reOrderGroups();
 		Editors.general.refreshGroups();
+		ModelEditor.creators.refresh();
 	}
 
 }

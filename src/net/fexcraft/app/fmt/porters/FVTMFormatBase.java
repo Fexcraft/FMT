@@ -74,7 +74,7 @@ public abstract class FVTMFormatBase extends ExImPorter {
 		}
 		buffer.append(tab + "public " + modelname + "(){\n");
 		buffer.append(tab2 + "super(); textureX = " + compound.tx(null) + "; textureY = " + compound.ty(null) + ";\n");
-		for(String cr : compound.creators){
+		for(String cr : compound.getAuthors()){
 			buffer.append(tab2 + "this.addToCreators(\"" + cr + "\");\n");//TODO add "uuid" of logged in users if available;
 		} buffer.append(tab2 + "//\n");
 		if(pergroupinit){

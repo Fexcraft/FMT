@@ -117,7 +117,7 @@ public class MTBImporter extends ExImPorter {
 				}
 				//
 				else if(parts[0].equals("ModelAuthor") && parts.length > 1){
-					compound.creators.add(parts[1]);
+					compound.addAuthor(parts[1], false, true);
 				}
 				else if(parts[0].equals("ModelName") && parts.length > 1){
 					compound.name = parts[1];

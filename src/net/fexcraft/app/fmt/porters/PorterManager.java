@@ -50,9 +50,9 @@ public class PorterManager {
 				}
 				GroupCompound compound = porter.importModel(file, settings);
 				if(settings.containsKey("integrate") && settings.get("integrate").getBooleanValue()){
-					for(String creator : compound.creators){
-						if(!FMTB.MODEL.creators.contains(creator)){
-							FMTB.MODEL.creators.add(creator);
+					for(String creator : compound.getAuthors()){
+						if(!FMTB.MODEL.getAuthors().contains(creator)){
+							FMTB.MODEL.addAuthor(creator, false, true);
 						}
 					}
 					for(TurboList list : compound.getGroups()){

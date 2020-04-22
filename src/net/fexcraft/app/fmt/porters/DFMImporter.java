@@ -93,7 +93,7 @@ public class DFMImporter extends ExImPorter {
             	}
             	matcher = creator.matcher(line);
             	if(matcher.matches()){
-            		compound.creators.add(matcher.group(1));
+            		compound.addAuthor(matcher.group(1), false, true);
             		continue;
             	}
             	matcher = declaration.matcher(line);

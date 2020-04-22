@@ -2,7 +2,11 @@ package net.fexcraft.app.fmt.ui.editor;
 
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
+import java.util.Map.Entry;
+import java.util.TreeMap;
+
 import org.liquidengine.legui.component.Button;
+import org.liquidengine.legui.component.Dialog;
 import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.SelectBox;
 import org.liquidengine.legui.component.TextInput;
@@ -11,13 +15,16 @@ import org.liquidengine.legui.component.optional.align.HorizontalAlign;
 import org.liquidengine.legui.event.FocusEvent;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.input.Mouse.MouseButton;
+import org.liquidengine.legui.listener.MouseClickEventListener;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.SettingsBox;
 import net.fexcraft.app.fmt.ui.UserInterfaceUtils;
 import net.fexcraft.app.fmt.ui.field.NumberField;
 import net.fexcraft.app.fmt.ui.field.TextField;
+import net.fexcraft.app.fmt.ui.tree.TreeIcon;
 import net.fexcraft.app.fmt.utils.Animator.Animation;
+import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureUpdate;
 import net.fexcraft.app.fmt.wrappers.TurboList;
@@ -32,6 +39,7 @@ public class ModelEditor extends EditorBase {
 	public static TextInput model_name;
 	public static SelectBox<Float> m_tex_x, m_tex_y, m_tex_s;
 	public static SelectBox<String> model_texture;
+	public static AuthorsEditorWidget creators;
 	private String name_cache;
 
 	@SuppressWarnings("unchecked")
@@ -91,10 +99,76 @@ public class ModelEditor extends EditorBase {
 		this.addSub(model);
 		pass = -20;
 		//
-		
+		creators = new AuthorsEditorWidget(this, translate("editor.model_group.authors"), 0, 0, 0, 0);
+		creators.refresh();
+		this.addSub(creators);
+		pass = -20;
 		//
 		GroupEditor.updateTextureGroups();
 		reOrderWidgets();
+	}
+	
+	public static class AuthorsEditorWidget extends EditorWidget {
+
+		public AuthorsEditorWidget(EditorBase base, String title, int x, int y, int w, int h){
+			super(base, title, x, y, w, h);
+		}
+
+		public void refresh(){
+			refresh(null);
+		}
+
+		@SuppressWarnings("unchecked")
+		public void refresh(TreeMap<String, Boolean> creators){
+			reset();
+			int pass = -20;
+			if(creators == null) creators = FMTB.MODEL.getCreators();
+			for(Entry<String, Boolean> entry : creators.entrySet()){
+				String author = entry.getKey();
+				Button button = new Button("> " + author, 3, pass += 24, 290, 20);
+				button.add(new TreeIcon((int)getSize().x - 30, 0, "group_delete", () -> FMTB.MODEL.remAuthor(author), "delete"));
+				button.add(new TreeIcon((int)getSize().x - 50, 0, entry.getValue() ? "locked" : "unlocked", () -> FMTB.MODEL.lockAuthor(author, !entry.getValue()), entry.getValue() ? "unlock" : "lock"));
+				button.getStyle().setHorizontalAlign(HorizontalAlign.LEFT);
+				this.getContainer().add(button);
+			}
+			Button button = new Button(UserInterfaceUtils.translate("editor.model_group.authors.add"), 3, pass += 24, 290, 20);
+			button.getStyle().setHorizontalAlign(HorizontalAlign.LEFT);
+			button.getListenerMap().addListener(MouseClickEvent.class, listener -> {
+				if(listener.getAction() != CLICK && listener.getButton() != MouseButton.MOUSE_BUTTON_LEFT) return;
+				Dialog dialog = new Dialog(UserInterfaceUtils.translate("editor.model_group.authors.add.dialog"), 300, 90);
+				dialog.setResizable(false);
+				TextField input = new TextField("no name", 10, 10, 280, 20);
+				input.addTextInputContentChangeEventListener(lis -> UserInterfaceUtils.validateString(lis));
+				dialog.getContainer().add(input);
+	            Button button0 = new Button(UserInterfaceUtils.translate("dialogbox.button.confirm"), 10, 40, 100, 20);
+	            button0.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
+	            	if(CLICK == e.getAction()){
+	            		FMTB.MODEL.addAuthor(input.getTextState().getText(), true, false);
+	            		dialog.close();
+	            	}
+	            });
+	            dialog.getContainer().add(button0);
+				dialog.show(FMTB.frame);
+			});
+			this.getContainer().add(button);
+			Button button1 = new Button(UserInterfaceUtils.translate("editor.model_group.authors.add_self"), 3, pass += 24, 290, 20);
+			button1.getStyle().setHorizontalAlign(HorizontalAlign.LEFT);
+			button1.getListenerMap().addListener(MouseClickEvent.class, listener -> {
+				if(listener.getAction() != CLICK && listener.getButton() != MouseButton.MOUSE_BUTTON_LEFT) return;
+				if(SessionHandler.isLoggedIn()){
+					FMTB.MODEL.addAuthor(SessionHandler.getUserName(), true, false);
+				}
+			});
+			this.getChildComponents().forEach(child -> child.getStyle().setPadding(0, 50, 0, 10));
+			this.getContainer().add(button1);
+			this.setSize(296, pass + 52);
+			editor.reOrderWidgets();
+		}
+
+		private void reset(){
+			this.getContainer().clearChildComponents();
+		}
+
 	}
 	
 	private void updateModelTexture(SelectBoxChangeSelectionEvent<String> event){

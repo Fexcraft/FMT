@@ -247,14 +247,14 @@ public class SaveLoad {
 		obj.addProperty("texture_size_y", compound.ty(null));
 		obj.addProperty("texture_scale", compound.textureScale);
 		JsonArray creators = new JsonArray();
-		if(compound.creators.isEmpty()){
-			creators.add(SessionHandler.isLoggedIn() ? SessionHandler.getUserName() : "OfflineUser");
+		if(compound.getAuthors().isEmpty()){
+			if(SessionHandler.isLoggedIn()) creators.add(SessionHandler.getUserName());
 		}
 		else{
-			for(String str : compound.creators)
-				creators.add(str);
-			if(SessionHandler.isLoggedIn() && !compound.creators.contains(SessionHandler.getUserName())){
-				creators.add(SessionHandler.getUserName());
+			for(Entry<String, Boolean> entry : compound.getCreators().entrySet()){
+				String name = entry.getKey();
+				if(entry.getValue()) name = "!" + name;
+				creators.add(name);
 			}
 		}
 		obj.add("creators", creators);
@@ -380,7 +380,7 @@ public class SaveLoad {
 		compound.textureSizeX = JsonUtil.getIfExists(obj, "texture_size_x", 256).intValue();
 		compound.textureSizeY = JsonUtil.getIfExists(obj, "texture_size_y", 256).intValue();
 		compound.textureScale = JsonUtil.getIfExists(obj, "texture_scale", 1).intValue();
-		compound.creators = JsonUtil.jsonArrayToStringArray(JsonUtil.getIfExists(obj, "creators", new JsonArray()).getAsJsonArray());
+		compound.setAuthors(JsonUtil.jsonArrayToStringArray(JsonUtil.getIfExists(obj, "creators", new JsonArray()).getAsJsonArray()));
 		if(JsonUtil.getIfExists(obj, "format", 2).intValue() == 1){
 			JsonObject model = obj.get("model").getAsJsonObject();
 			for(Entry<String, JsonElement> entry : model.entrySet()){
