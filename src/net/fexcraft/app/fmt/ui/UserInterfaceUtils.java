@@ -138,12 +138,7 @@ public class UserInterfaceUtils {
 		frame.getContainer().add(new MenuEntry(4, translate("toolbar.textures"),
 			new MenuButton("toolbar.textures.manage", () -> Trees.show("textures")),
 			new MenuButton("toolbar.textures.addnew", () -> TextureManager.addNewGroup()),
-			new MenuButton("toolbar.textures.texpos_reset", () -> {
-				FMTB.MODEL.getGroups().forEach(list -> list.forEach(turbo -> {
-					turbo.textureX = 0; turbo.textureY = 0; turbo.recompile();
-				}));
-				DialogBox.showOK(null, null, null, "toolbar.textures.texpos_reset.done");
-			}),
+			new MenuButton("toolbar.textures.texpos_reset", () -> TextureUpdate.tryResetPos()),
 			new MenuButton("toolbar.textures.auto_position", () -> TextureUpdate.tryAutoPos(null))
 		));
 		frame.getContainer().add(new MenuEntry(5, translate("toolbar.helpers"),

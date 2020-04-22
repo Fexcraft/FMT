@@ -36,7 +36,7 @@ public class TextureUpdate extends TimerTask {
 	private static ArrayList<PolygonWrapper> list;
 	private static BufferedImage image;
 	private static TexUpDialog dialog;
-	private static TurboList selected;
+	private static TurboList selected, resetsel;
 	private static int last;
 
 	@Override
@@ -92,6 +92,50 @@ public class TextureUpdate extends TimerTask {
 			return;
 		}
 		else return;*/
+	}
+
+	public static void tryResetPos(){
+		int width = 440;
+		resetsel = null;
+		Dialog dialog = new Dialog(Translator.translate("texture_update.texpos_reset.title"), width + 20, 180);
+		Label label0 = new Label(Translator.translate("texture_update.texpos_reset.info"), 10, 10, width, 20);
+		label0.getStyle().setFont("roboto-bold");
+		Label label1 = new Label(Translator.translate("texture_update.texpos_reset.polygroup"), 10, 40, width / 20, 20);
+		SelectBox<String> texture = new SelectBox<>(10 + width / 2, 40, width / 2, 20);
+		texture.addElement("all-groups");
+		for(TurboList list : FMTB.MODEL.getGroups()) texture.addElement(list.id);
+		texture.addSelectBoxChangeSelectionEventListener(listener -> {
+			if(listener.getNewValue().equals("all-groups")) resetsel = null;
+			else resetsel = FMTB.MODEL.getGroups().get(listener.getNewValue());
+		});
+		texture.setSelected(0, true);
+		texture.setVisibleCount(6);
+		Button button = new Button(UserInterfaceUtils.translate("dialogbox.button.confirm"), 10, 130, 100, 20);
+		button.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)e -> {
+			if(CLICK == e.getAction()){
+				if(resetsel != null){
+					resetsel.forEach(turbo -> {
+						turbo.textureX = 0;
+						turbo.textureY = 0;
+						turbo.recompile();
+					});
+				}
+				else{
+					FMTB.MODEL.getGroups().forEach(list -> list.forEach(turbo -> {
+						turbo.textureX = 0;
+						turbo.textureY = 0;
+						turbo.recompile();
+					}));
+				}
+				dialog.close();
+				DialogBox.showOK(null, null, null, "texture_update.texpos_reset.done");
+			}
+		});
+		dialog.getContainer().add(label0);
+		dialog.getContainer().add(label1);
+		dialog.getContainer().add(texture);
+		dialog.getContainer().add(button);
+		dialog.show(FMTB.frame);
 	}
 
 	public static void tryAutoPos(Boolean bool){
