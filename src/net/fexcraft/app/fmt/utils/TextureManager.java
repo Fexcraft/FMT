@@ -320,7 +320,7 @@ public class TextureManager {
 			if(!tex.getFile().getParentFile().exists()){
 				tex.getFile().getParentFile().mkdirs();
 			}
-			Print.console("Saving Texture (" + texture + ")!");
+			Print.console("Saving Texture (" + tex + ")!");
 			ImageIO.write(tex.image, "PNG", tex.file);
 			TextureUpdate.updateLastEdit(tex);
 		}

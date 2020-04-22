@@ -306,6 +306,7 @@ public class FMTB {
             	loop(); timer.updateUPS();
                 accumulator -= interval;
                 Trees.updateCounters();
+                RayCoastAway.UNLOCKED = true;
             }
 			render(alpha = accumulator / interval);
 			if(!RayCoastAway.PICKING){
@@ -390,7 +391,7 @@ public class FMTB {
         	GL11.glRotatef((ImageHelper.getStage() - 20) * 10, 0, 1, 0);
         }
         //
-        if(RayCoastAway.PICKING){
+        if(RayCoastAway.PICKING && RayCoastAway.UNLOCKED){
             if(pixelpass){
 				TextureManager.bindTexture(MODEL.getTempTex(RayCoastAway.lastsel));
 				TurboList list = RayCoastAway.lastsel.getTurboList();
@@ -398,6 +399,7 @@ public class FMTB {
 				RayCoastAway.doTest(false, null, true);
             }
             else MODEL.render();
+            RayCoastAway.UNLOCKED = TextureEditor.pixelMode() ? !pixelpass : false;
             GL11.glPopMatrix();
             render(alpha, TextureEditor.pixelMode());
         }

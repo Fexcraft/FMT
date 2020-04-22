@@ -187,7 +187,7 @@ public class MTBImporter extends ExImPorter {
 						}
 					}
 					if(!transparent){
-						TextureManager.loadTextureFromZip(image, "group:default", false, true);
+						TextureManager.loadTextureFromImgBuffer(image, "group:default", false, true);
 						TextureManager.addGroup(new TextureGroup("default", "group:default"));
 						compound.setTexture(TextureManager.getGroup("default"));
 					}

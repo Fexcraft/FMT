@@ -27,6 +27,7 @@ public class RayCoastAway {
 	}
 	public static final int CORRECTOR = 16777216;
 	public static PolygonWrapper lastsel;
+	public static boolean UNLOCKED = false;
 
 	/*public static void doTest(boolean bool){
 		doTest(bool, MOUSEOFF);
@@ -67,7 +68,7 @@ public class RayCoastAway {
 				}, "polygon_picker.paint_bucket.no_texture");
 				return;
 			}
-			Texture calctex = TextureManager.getTexture(GroupCompound.temptexid, true);
+			Texture calctex = TextureManager.getTexture(GroupCompound.temptexid + group.group, true);
 			if(calctex == null){
 				Print.console("Calculation texture not found or is not loaded or is not initialized, painting aborted.");
 				return;
@@ -84,7 +85,7 @@ public class RayCoastAway {
 						else{
 							tex.getImage().setRGB(x, y, new Color(TextureEditor.CURRENTCOLOR.getColorInt()).getRGB());
 							tex.rebind();
-							TextureManager.saveTexture(group.texture);
+							TextureManager.saveTexture(tex);
 							return;
 						}
 					}

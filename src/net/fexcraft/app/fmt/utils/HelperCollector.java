@@ -105,7 +105,7 @@ public class HelperCollector {
 		GroupCompound compound = null;
 		try{
 			BufferedImage image = ImageIO.read(file);
-			TextureManager.loadTextureFromZip(image, "./temp/frame/" + file.getName(), false, false);
+			TextureManager.loadTextureFromImgBuffer(image, "./temp/frame/" + file.getName(), false, false);
 			compound = new GroupCompound(file);
 			compound.getGroups().clear();
 			compound.file = file;

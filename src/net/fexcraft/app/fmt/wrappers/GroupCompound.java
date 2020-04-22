@@ -123,10 +123,10 @@ public class GroupCompound {
 		}
 	}
 	
-	public static final String temptexid = "./temp/calculation_texture_%s";
+	public static final String temptexid = "./temp/calculation_texture_";
 	
 	public String getTempTex(PolygonWrapper wrapper){
-		String texid = String.format(temptexid, wrapper.getTextureGroup());
+		String texid = temptexid + wrapper.getTextureGroup().group;
 		Texture tex = TextureManager.getTexture(texid, true);
 		boolean nolisttex = wrapper.getTurboList().texgroup == null;
 		int scale = nolisttex ? this.textureScale : wrapper.getTurboList().textureS;
@@ -150,15 +150,15 @@ public class GroupCompound {
 					}
 				}
 				if(tex == null){
-					TextureManager.loadTextureFromImgBuffer(image, temptexid, false, true);
+					TextureManager.loadTextureFromImgBuffer(image, texid, false, true);
 				}
 				else{
 					tex.rebind();
-					TextureManager.saveTexture(temptexid);
+					TextureManager.saveTexture(texid);
 				}
 			}
 		}
-		return temptexid;
+		return texid;
 	}
 	
 	public final ArrayList<PolygonWrapper> getSelected(){
