@@ -4,6 +4,7 @@ A Tool to create Models basing on the "TMT" (updated and maintained version of F
 It is able to import:
 - `mtb` - SMP Toolbox Save Files
 - `jtmt` - JTMT JSON Format Models
+- `java` - FlansMod Format Java Models (**currently not public**)
 
 And export to:
 - `jtmt` - JTMT JSON Format Models
@@ -22,6 +23,7 @@ Other features
 - auto texture positioner
 - unlimited groups*
 - unlimited polygons*
+- unlimited texture groups*
 - various polygon types
   - boxes
   - shapeboxes
