@@ -69,6 +69,7 @@ stylesheet.json
 temp/
 *.exe
 *.log
+*.log.gz
 /target/
 /.gradle/
 /.idea/
