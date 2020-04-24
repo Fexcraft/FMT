@@ -28,46 +28,54 @@ import net.fexcraft.app.fmt.utils.Settings.Type;
  *
  */
 public class SettingsBox {
-	
+
 	public static final void open(String title, Collection<Setting> coll, boolean settings, AfterTask task){
 		TreeMap<String, Setting> map = new TreeMap<>();
 		for(Setting setting : coll) map.put(setting.getId(), setting);
-		if(coll.isEmpty() || map.isEmpty()){ task.process(map); return; }
-        Dialog dialog = new Dialog(title, 520, 350); dialog.setResizable(false);
-        ScrollablePanel panel = new ScrollablePanel(10, 10, 500, 280);
-        int size = 10 + (coll.size() * 30); int index = 0;
-        panel.getContainer().setSize(500, size < 280 ? 280 : size);
-        for(Setting setting : coll){
-        	panel.getContainer().add(new Label(setting.getId(), 10, 10 + (index * 30), 180, 20));
-        	if(setting.getType().isBoolean()){
-        		panel.getContainer().add(new BoolButton(setting, 190, 10 + (index * 30), 290, 20));
-        	}
-        	else if(setting.getType() == Type.FLOAT || setting.getType() == Type.INTEGER){
-        		panel.getContainer().add(new NumberField(setting, 190, 10 + (index * 30), 290, 20));
-        	}
-        	else if(setting.getType() == Type.RGB){
-        		panel.getContainer().add(new ColorField(panel.getContainer(), setting, 190, 10 + (index * 30), 290, 20));
-        	}
-        	else{// if(setting.getType() == Type.STRING || setting.getType() == Type.FLOAT_ARRAY){
-        		panel.getContainer().add(new TextField(setting, 190, 10 + (index * 30), 290, 20));
-        	}
-        	index++;
-        }
-        panel.setHorizontalScrollBarVisible(false);
-        Button button = new Button(UserInterfaceUtils.translate("settingsbox." + (settings ? "confirm" : "continue")), 10, 300, 100, 20);
-        button.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
-        	if(CLICK == e.getAction()){ task.process(map); dialog.close(); }
-        });
-        dialog.getContainer().add(panel);
-        dialog.getContainer().add(button);
-        dialog.show(FMTB.frame);
+		if(coll.isEmpty() || map.isEmpty()){
+			task.process(map);
+			return;
+		}
+		Dialog dialog = new Dialog(title, 520, 350);
+		dialog.setResizable(false);
+		ScrollablePanel panel = new ScrollablePanel(10, 10, 500, 280);
+		int size = 10 + (coll.size() * 30);
+		int index = 0;
+		panel.getContainer().setSize(500, size < 280 ? 280 : size);
+		for(Setting setting : coll){
+			panel.getContainer().add(new Label(setting.getId(), 10, 10 + (index * 30), 180, 20));
+			if(setting.getType().isBoolean()){
+				panel.getContainer().add(new BoolButton(setting, 190, 10 + (index * 30), 290, 20));
+			}
+			else if(setting.getType() == Type.FLOAT || setting.getType() == Type.INTEGER){
+				panel.getContainer().add(new NumberField(setting, 190, 10 + (index * 30), 290, 20));
+			}
+			else if(setting.getType() == Type.RGB){
+				panel.getContainer().add(new ColorField(panel.getContainer(), setting, 190, 10 + (index * 30), 290, 20));
+			}
+			else{// if(setting.getType() == Type.STRING || setting.getType() == Type.FLOAT_ARRAY){
+				panel.getContainer().add(new TextField(setting, 190, 10 + (index * 30), 290, 20));
+			}
+			index++;
+		}
+		panel.setHorizontalScrollBarVisible(false);
+		Button button = new Button(UserInterfaceUtils.translate("settingsbox." + (settings ? "confirm" : "continue")), 10, 300, 100, 20);
+		button.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)e -> {
+			if(CLICK == e.getAction()){
+				task.process(map);
+				dialog.close();
+			}
+		});
+		dialog.getContainer().add(panel);
+		dialog.getContainer().add(button);
+		dialog.show(FMTB.frame);
 	}
-	
+
 	@FunctionalInterface
 	public static interface AfterTask {
-		
+
 		public void process(Map<String, Setting> settings);
-		
+
 	}
 
 	public static void openFMTSettings(){
