@@ -3,7 +3,7 @@ package net.fexcraft.app.fmt.ui.field;
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
 import java.nio.ByteBuffer;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.component.Component;
@@ -11,6 +11,7 @@ import org.liquidengine.legui.component.TextInput;
 import org.liquidengine.legui.event.FocusEvent;
 import org.liquidengine.legui.event.KeyEvent;
 import org.liquidengine.legui.event.MouseClickEvent;
+import org.liquidengine.legui.input.Mouse.MouseButton;
 import org.liquidengine.legui.listener.FocusEventListener;
 import org.liquidengine.legui.listener.KeyEventListener;
 import org.lwjgl.glfw.GLFW;
@@ -79,13 +80,13 @@ public class ColorField extends TextInput implements Field {
 		}
 	}
 	
-	public ColorField(Component root, Consumer<Integer> update, int x, int y, int w, int h){
+	public ColorField(Component root, BiConsumer<Integer, Boolean> update, int x, int y, int w, int h){
 		super("#ffffff", x, y, root == null ? w : w - 40, h); getStyle().setFontSize(20f); UserInterfaceUtils.setupHoverCheck(this);
 		getListenerMap().addListener(FocusEvent.class, (FocusEventListener)listener -> {
-			if(!listener.isFocused()){ update.accept((int)getValue()); }
+			if(!listener.isFocused()){ update.accept((int)getValue(), null); }
 		});
 		getListenerMap().addListener(KeyEvent.class, (KeyEventListener)listener -> {
-			if(listener.getKey() == GLFW.GLFW_KEY_ENTER){ update.accept((int)getValue()); }
+			if(listener.getKey() == GLFW.GLFW_KEY_ENTER){ update.accept((int)getValue(), null); }
 		});
 		if(root != null){
 			Button button = new Button("CP", x + w - 35, y, 30, h);
@@ -94,7 +95,7 @@ public class ColorField extends TextInput implements Field {
                     try(MemoryStack stack = MemoryStack.stackPush()) {
                         ByteBuffer color = stack.malloc(3);
                         String result = TinyFileDialogs.tinyfd_colorChooser("Choose A Color", "#" + Integer.toHexString((int)getValue()), null, color);
-						if(result == null) return; this.getTextState().setText(result); value = null; update.accept((int)getValue());
+						if(result == null) return; this.getTextState().setText(result); value = null; update.accept((int)getValue(), event.getButton() == MouseButton.MOUSE_BUTTON_LEFT);
                     }
 				}
 			}); root.add(button);

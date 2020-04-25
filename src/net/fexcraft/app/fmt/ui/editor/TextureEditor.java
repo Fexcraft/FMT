@@ -4,6 +4,7 @@ import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.Panel;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.event.MouseClickEvent.MouseClickAction;
+import org.liquidengine.legui.input.Mouse.MouseButton;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.FunctionButton;
@@ -29,7 +30,7 @@ public class TextureEditor extends EditorBase {
 		super(); int pass = -20;
 		EditorWidget palette = new EditorWidget(this, translate("editor.texture.palette"), 0, 0, 0, 0);
 		palette.getContainer().add(new Label(translate("editor.texture.palette.inputfield"), 3, pass += 24, 290, 20));
-		palette.getContainer().add(colorfield = new ColorField(palette.getContainer(), newval -> updateColor(newval), 4, pass += 24, 290, 20));
+		palette.getContainer().add(colorfield = new ColorField(palette.getContainer(), (newval, button) -> updateColor(newval, button), 4, pass += 24, 290, 20));
 		palette.getContainer().add(new Label(translate("editor.texture.palette.large"), 3, pass += 24, 290, 20)); pass += 24;
 		byte[] arr = CURRENTCOLOR.toByteArray();
 		for(int x = 0; x < rows; x++){
@@ -39,7 +40,7 @@ public class TextureEditor extends EditorBase {
 				int r = (int)Math.abs((e * (arr[0] + 128)) + ((1 - f) * h));
 				int g = (int)Math.abs((e * (arr[1] + 128)) + ((1 - f) * h));
 				int l = (int)Math.abs((e * (arr[2] + 128)) + ((1 - f) * h));
-				palette.getContainer().add(panels[x + (z * rows)] = new ColorPanel(3 + (x * 16), pass + (z * 16), 16, 16, new RGB(r, g, l)));
+				palette.getContainer().add(panels[x + (z * rows)] = new ColorPanel(3 + (x * 16), pass + (z * 16), 16, 16, new RGB(r, g, l), false));
 			}
 		} pass += 268;
 		palette.getContainer().add(new Label(translate("editor.texture.palette.horizontal"), 3, pass += 24, 290, 20)); pass += 24;
@@ -79,10 +80,10 @@ public class TextureEditor extends EditorBase {
 	        }
 	        else{ r = 127; g = 127; b = 127; }
 			RGB result = new RGB(r, g, b);
-			palette.getContainer().add(new ColorPanel(3 + (i * 8), pass, 8, 20, result));
+			palette.getContainer().add(new ColorPanel(3 + (i * 8), pass, 8, 20, result, true));
 		}
 		palette.getContainer().add(new Label(translate("editor.texture.palette.current"), 3, pass += 24, 290, 20));
-		palette.getContainer().add(current = new ColorPanel(3, pass += 24, 290, 20, new RGB()));
+		palette.getContainer().add(current = new ColorPanel(3, pass += 24, 290, 20, new RGB(), true));
 		palette.setSize(296, pass + 52);
         this.addSub(palette); pass = -20;
         //
@@ -102,19 +103,21 @@ public class TextureEditor extends EditorBase {
         reOrderWidgets();
 	}
 
-	public static void updateColor(Integer newval){
+	public static void updateColor(Integer newval, Boolean refresh){
 		if(newval == null) newval = RGB.WHITE.packed;
 		CURRENTCOLOR.packed = newval;
 		//
-		byte[] arr = CURRENTCOLOR.toByteArray();
-		for(int x = 0; x < rows; x++){
-			for(int z = 0; z < rows; z++){
-				int y = x * rows + z;
-				float e = (1f / (rows * rows)) * y, f = (1f / rows) * z, h = (255 / rows) * x;
-				int r = (int)Math.abs((e * (arr[0] + 128)) + ((1 - f) * h));
-				int g = (int)Math.abs((e * (arr[1] + 128)) + ((1 - f) * h));
-				int l = (int)Math.abs((e * (arr[2] + 128)) + ((1 - f) * h));
-				panels[x + (z * rows)].setColor(new RGB(r, g, l));
+		if(refresh == null || !refresh){
+			byte[] arr = CURRENTCOLOR.toByteArray();
+			for(int x = 0; x < rows; x++){
+				for(int z = 0; z < rows; z++){
+					int y = x * rows + z;
+					float e = (1f / (rows * rows)) * y, f = (1f / rows) * z, h = (255 / rows) * x;
+					int r = (int)Math.abs((e * (arr[0] + 128)) + ((1 - f) * h));
+					int g = (int)Math.abs((e * (arr[1] + 128)) + ((1 - f) * h));
+					int l = (int)Math.abs((e * (arr[2] + 128)) + ((1 - f) * h));
+					panels[x + (z * rows)].setColor(new RGB(r, g, l));
+				}
 			}
 		}
 		current.setColor(CURRENTCOLOR);
@@ -125,11 +128,11 @@ public class TextureEditor extends EditorBase {
 		
 		private RGB color;
 
-		public ColorPanel(int x, int y, int w, int h, RGB rgb){
+		public ColorPanel(int x, int y, int w, int h, RGB rgb, boolean hori){
 			super(x, y, w, h); color = rgb; setColor(rgb);
 			this.getListenerMap().addListener(MouseClickEvent.class, listener -> {
 				if(listener.getAction() == MouseClickAction.CLICK){
-					updateColor(color.packed);
+					updateColor(color.packed, hori ? false : listener.getButton() == MouseButton.MOUSE_BUTTON_LEFT);
 				}
 			});
 	        Settings.THEME_CHANGE_LISTENER.add(bool -> {
@@ -152,7 +155,7 @@ public class TextureEditor extends EditorBase {
 		}
 		else{
 			BUCKETMODE = PMODE == mode ? !BUCKETMODE : true;
-			PMODE = mode;
+			PMODE = PMODE == mode ? null : mode;
 		}
 		current_tool.getTextState().setText(translate("editor.texture.brushes.current") + " " + (PMODE == null ? "none" : PMODE.lang()));
 	}

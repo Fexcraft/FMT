@@ -50,7 +50,7 @@ public class GroupEditor extends EditorBase {
 		//
 		EditorWidget group = new EditorWidget(this, translate("editor.model_group.group"), 0, 0, 0, 0);
 		group.getContainer().add(new Label(translate("editor.model_group.group.color"), 3, pass += 24, 290, 20));
-		group.getContainer().add(group_color = new ColorField(group.getContainer(), result -> {
+		group.getContainer().add(group_color = new ColorField(group.getContainer(), (result, button) -> {
 			TurboList sel = FMTB.MODEL.getFirstSelectedGroup();
 			if(sel == null) return;
 			if(sel.color == null) sel.color = RGB.WHITE.copy();
