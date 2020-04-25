@@ -626,7 +626,7 @@ public class GroupCompound {
 	}
 	
 	public int tx(TurboList list){
-		return tx(null, true);
+		return tx(list, true);
 	}
 
 	public int ty(TurboList list){
