@@ -11,6 +11,7 @@ import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.Dialog;
 import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.Panel;
+import org.liquidengine.legui.component.SelectBox;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.input.Mouse.MouseButton;
 import org.liquidengine.legui.listener.MouseClickEventListener;
@@ -290,7 +291,38 @@ public class TreeGroup extends Panel {
         	texgroup.texture.reload();
         	FMTB.MODEL.recompile();
 		}).setRoot(this).updateColor();
-		new SubTreeGroup(base, 2, "tree.textures.rename", () -> {
+		new SubTreeGroup(base, 2, "tree.textures.resize", () -> {
+			Dialog dialog = new Dialog(UserInterfaceUtils.translate("tree.textures.resize.dialog"), 300, 90);
+			dialog.setResizable(false);
+			Label label = new Label(UserInterfaceUtils.translate("tree.textures.resize.copyfrom"), 10, 10, 120, 20);
+			SelectBox<String> selectbox = new SelectBox<String>(140, 10, 140, 20);
+			selectbox.addElement("model");
+			for(TurboList list : FMTB.MODEL.getGroups()){
+				selectbox.addElement("group-" + list.id);
+			}
+			selectbox.setSelected(0, true);
+			dialog.getContainer().add(label);
+			dialog.getContainer().add(selectbox);
+            Button button0 = new Button(UserInterfaceUtils.translate("dialogbox.button.ok"), 10, 40, 100, 20);
+            button0.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
+            	if(CLICK == e.getAction()){
+            		dialog.close();
+            		try{
+                		boolean model = selectbox.getSelection().equals("model");
+                		TurboList list = model ? null : FMTB.MODEL.getGroups().get(selectbox.getSelection().replace("group-", ""));
+                		texgroup.texture.resize(FMTB.MODEL.tx(list), FMTB.MODEL.ty(list), null);
+                		texgroup.texture.save();
+                		texgroup.texture.reload();
+            		}
+            		catch(Exception ex){
+            			ex.printStackTrace();
+            		}
+            	}
+            });
+            dialog.getContainer().add(button0);
+			dialog.show(FMTB.frame);
+		}).setRoot(this).updateColor();
+		new SubTreeGroup(base, 3, "tree.textures.rename", () -> {
 			Dialog dialog = new Dialog(UserInterfaceUtils.translate("tree.textures.rename.dialog"), 300, 90);
 			dialog.setResizable(false);
 			TextField input = new TextField(texgroup.group, 10, 10, 280, 20);
@@ -326,7 +358,7 @@ public class TreeGroup extends Panel {
 
 	public void recalculateSize(){
 		if(texgroup != null){
-			this.setSize(this.getSize().x, texgroup.minimized ? 20 : (3 * 22) + 20);
+			this.setSize(this.getSize().x, texgroup.minimized ? 20 : (4 * 22) + 20);
 			this.update();
 			this.updateColor();
 		}

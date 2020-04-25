@@ -140,7 +140,7 @@ public class UserInterfaceUtils {
 			new MenuButton("toolbar.textures.manage", () -> Trees.show("textures")),
 			new MenuButton("toolbar.textures.addnew", () -> TextureManager.addNewGroup()),
 			new MenuButton("toolbar.textures.texpos_reset", () -> TextureUpdate.tryResetPos()),
-			new MenuButton("toolbar.textures.auto_position", () -> TextureUpdate.tryAutoPos(null))
+			new MenuButton("toolbar.textures.auto_position", () -> TextureUpdate.tryAutoPos())
 		));
 		frame.getContainer().add(new MenuEntry(5, translate("toolbar.helpers"),
 			new MenuButton("toolbar.helpers.view", () -> Trees.show("helper")),

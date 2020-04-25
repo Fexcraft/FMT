@@ -78,7 +78,7 @@ public class VoxelWrapper extends PolygonWrapper {
 	}
 
 	@Override
-	protected float[][][] newTexturePosition(){
+	public float[][][] newTexturePosition(){
 		/*float tx = 0 , ty = 0, w = size.xCoord, h = size.yCoord, d = size.zCoord;
 		float[][][] vecs = new float[6][][];
 		vecs[0] = new float[][]{

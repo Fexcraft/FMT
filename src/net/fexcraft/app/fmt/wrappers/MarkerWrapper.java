@@ -101,7 +101,7 @@ public class MarkerWrapper extends PolygonWrapper {
 	}
 
 	@Override
-	protected float[][][] newTexturePosition(){
+	public float[][][] newTexturePosition(){
 		return new float[0][][];
 	}
 

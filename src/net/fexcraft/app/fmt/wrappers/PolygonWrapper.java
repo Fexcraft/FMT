@@ -191,7 +191,7 @@ public abstract class PolygonWrapper {
 
 	protected abstract ModelRendererTurbo newMRT();
 	
-	protected abstract float[][][] newTexturePosition();
+	public abstract float[][][] newTexturePosition();
 
 	public boolean apply(String id, float value, boolean x, boolean y, boolean z){
 		boolean bool = false;

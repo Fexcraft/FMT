@@ -139,99 +139,110 @@ public class TextureUpdate extends TimerTask {
 		dialog.show(FMTB.frame);
 	}
 
-	public static void tryAutoPos(Boolean bool){
-		if(bool == null){
-			int width = 440;
-			Dialog dialog = new Dialog(Translator.translate("texture_update.autopos.title"), width + 20, 180);
-			Label label0 = new Label(Translator.translate("texture_update.autopos.info"), 10, 10, width, 20);
-			label0.getStyle().setFont("roboto-bold");
-			Label label1 = new Label(Translator.translate("texture_update.autopos.polygroup"), 10, 40, width / 20, 20);
-			SelectBox<String> texture = new SelectBox<>(10 + width / 2, 40, width / 2, 20);
-			texture.addElement("all-groups");
-			for(TurboList list : FMTB.MODEL.getGroups()) texture.addElement(list.id);
-			texture.addSelectBoxChangeSelectionEventListener(listener -> {
-				if(listener.getNewValue().equals("all-groups")) selected = null;
-				else selected = FMTB.MODEL.getGroups().get(listener.getNewValue());
-			});
-			texture.setSelected(0, true);
-			texture.setVisibleCount(6);
-			CheckBox checkbox0 = new CheckBox(10, 70, width, 20);
-			checkbox0.getStyle().setPadding(5f, 10f, 5f, 5f);
-			checkbox0.setChecked(SAVESPACE);
-			checkbox0.addCheckBoxChangeValueListener(listener -> SAVESPACE = listener.getNewValue());
-			checkbox0.getTextState().setText(UserInterfaceUtils.translate("texture_update.autopos.savespace"));
-			CheckBox checkbox1 = new CheckBox(10, 100, width, 20);
-			checkbox1.getStyle().setPadding(5f, 10f, 5f, 5f);
-			checkbox1.setChecked(!ALL);
-			checkbox1.addCheckBoxChangeValueListener(listener -> ALL = !listener.getNewValue());
-			checkbox1.getTextState().setText(UserInterfaceUtils.translate("texture_update.autopos.process_all"));
-			Button button = new Button(UserInterfaceUtils.translate("texture_update.autopos.start"), 10, 130, 100, 20);
-			button.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)e -> {
-				if(CLICK == e.getAction()){
-					HALT = false;
-					dialog.close();
-				}
-			});
-			dialog.getContainer().add(label0);
-			dialog.getContainer().add(label1);
-			dialog.getContainer().add(texture);
-			dialog.getContainer().add(checkbox0);
-			dialog.getContainer().add(checkbox1);
-			dialog.getContainer().add(button);
-			dialog.show(FMTB.frame);
-			return;
-		}
-		HALT = false;
-		ALL = bool;
-		//
-		if(list == null){
-			list = getSortedList(ALL);
-			last = 0;
-			image = new BufferedImage(FMTB.MODEL.tx(selected, false), FMTB.MODEL.ty(selected, false), BufferedImage.TYPE_INT_ARGB);
-			for(int i = 0; i < image.getWidth(); i++){
-				for(int j = 0; j < image.getHeight(); j++){
-					image.setRGB(i, j, Color.WHITE.getRGB());
-				}
+	public static void tryAutoPos(){
+		int width = 440;
+		Dialog dialog = new Dialog(Translator.translate("texture_update.autopos.title"), width + 20, 180);
+		Label label0 = new Label(Translator.translate("texture_update.autopos.info"), 10, 10, width, 20);
+		label0.getStyle().setFont("roboto-bold");
+		Label label1 = new Label(Translator.translate("texture_update.autopos.polygroup"), 10, 40, width / 20, 20);
+		SelectBox<String> texture = new SelectBox<>(10 + width / 2, 40, width / 2, 20);
+		texture.addElement("all-groups");
+		for(TurboList list : FMTB.MODEL.getGroups()) texture.addElement(list.id);
+		texture.addSelectBoxChangeSelectionEventListener(listener -> {
+			if(listener.getNewValue().equals("all-groups")) selected = null;
+			else selected = FMTB.MODEL.getGroups().get(listener.getNewValue());
+		});
+		texture.setSelected(0, true);
+		texture.setVisibleCount(6);
+		CheckBox checkbox0 = new CheckBox(10, 70, width, 20);
+		checkbox0.getStyle().setPadding(5f, 10f, 5f, 5f);
+		checkbox0.setChecked(SAVESPACE);
+		checkbox0.addCheckBoxChangeValueListener(listener -> SAVESPACE = listener.getNewValue());
+		checkbox0.getTextState().setText(UserInterfaceUtils.translate("texture_update.autopos.savespace"));
+		CheckBox checkbox1 = new CheckBox(10, 100, width, 20);
+		checkbox1.getStyle().setPadding(5f, 10f, 5f, 5f);
+		checkbox1.setChecked(!ALL);
+		checkbox1.addCheckBoxChangeValueListener(listener -> ALL = !listener.getNewValue());
+		checkbox1.getTextState().setText(UserInterfaceUtils.translate("texture_update.autopos.process_all"));
+		Button button = new Button(UserInterfaceUtils.translate("texture_update.autopos.start"), 10, 130, 100, 20);
+		button.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)e -> {
+			if(CLICK == e.getAction()){
+				startAutoPos();
+				dialog.close();
 			}
-		}
-		try{
-			if(HALT || last < 0 || last >= list.size()){
-				if(dialog != null) dialog.close();
-				DialogBox.showOK("texture_update.autopos.title", null, null, "texture_update.autopos.complete");
-				last = (HALT = (list = null) == null) ? -1 : 0;
-				image = null;
-				return;
-			}
-			PolygonWrapper wrapper = list.get(last++);
-			showPercentageDialog(wrapper.getTurboList().id, wrapper.name(), getPercent(last, list.size()));
-			if(wrapper.texpos == null || wrapper.texpos.length == 0){
-				Print.console("skipping1 [" + wrapper.getTurboList().id + ":" + wrapper.name() + "]");
-				return;
-			}
-			if(wrapper.textureX != 0f && wrapper.textureY != 0f && !ALL){
-				Print.console("skipping0 [" + wrapper.getTurboList().id + ":" + wrapper.name() + "]");
-				wrapper.burnToTexture(image, null);
-				Thread.sleep(10);
-				return;
-			}
-			//
-			for(int yar = 0; yar < FMTB.MODEL.ty(null); yar++){
-				for(int xar = 0; xar < FMTB.MODEL.tx(null); xar++){
-					if(check(wrapper.texpos, xar, yar)){
-						Print.console("[" + wrapper.getTurboList().id + ":" + wrapper.name() + "] >> " + xar + "x, " + yar + "y;");
-						wrapper.textureX = xar;
-						wrapper.textureY = yar;
-						wrapper.recompile();
-						wrapper.burnToTexture(image, null);
-						Thread.sleep(10);
-						return;
+		});
+		dialog.getContainer().add(label0);
+		dialog.getContainer().add(label1);
+		dialog.getContainer().add(texture);
+		dialog.getContainer().add(checkbox0);
+		dialog.getContainer().add(checkbox1);
+		dialog.getContainer().add(button);
+		dialog.show(FMTB.frame);
+		return;
+	}
+
+	private static void startAutoPos(){
+		new Thread("AutoPosThread"){
+			@Override
+			public void run(){
+				Print.console("STARTING AUTOPOS THREAD");
+				HALT = false;
+				if(list == null){
+					list = getSortedList(ALL);
+					last = 0;
+					image = new BufferedImage(FMTB.MODEL.tx(selected, false), FMTB.MODEL.ty(selected, false), BufferedImage.TYPE_INT_ARGB);
+					for(int i = 0; i < image.getWidth(); i++){
+						for(int j = 0; j < image.getHeight(); j++){
+							image.setRGB(i, j, Color.WHITE.getRGB());
+						}
 					}
 				}
+				while(!HALT && last >= 0 && last < list.size()){
+					try{
+						PolygonWrapper wrapper = list.get(last);
+						last++;
+						showPercentageDialog(wrapper.getTurboList().id, wrapper.name(), getPercent(last, list.size()));
+						if(wrapper.texpos == null || wrapper.texpos.length == 0){
+							Print.console("skipping1 [" + wrapper.getTurboList().id + ":" + wrapper.name() + "]");
+							continue;
+						}
+						if(wrapper.textureX != 0f && wrapper.textureY != 0f && !ALL){
+							Print.console("skipping0 [" + wrapper.getTurboList().id + ":" + wrapper.name() + "]");
+							wrapper.burnToTexture(image, null);
+							Thread.sleep(10);
+							continue;
+						}
+						//
+						boolean pass = false;
+						for(int yar = 0; yar < FMTB.MODEL.ty(null); yar++){
+							if(pass) break;
+							for(int xar = 0; xar < FMTB.MODEL.tx(null); xar++){
+								if(check(wrapper.texpos, xar, yar)){
+									Print.console("[" + wrapper.getTurboList().id + ":" + wrapper.name() + "] >> " + xar + "x, " + yar + "y;");
+									wrapper.textureX = xar;
+									wrapper.textureY = yar;
+									wrapper.texpos = wrapper.newTexturePosition();
+									wrapper.burnToTexture(image, null);
+									pass = true;
+									Thread.sleep(10);
+									break;
+								}
+							}
+						}
+					}
+					catch(Exception e){
+						e.printStackTrace();
+						// FMTB.showDialogbox("Autoposition failed with Exception", "See Console for details.", "ok", null, DialogBox.NOTHING, null);
+					}
+				}
+				if(dialog != null) dialog.close();
+				DialogBox.showOK("texture_update.autopos.title", () -> FMTB.MODEL.recompile(), null, "texture_update.autopos.complete");
+				last = (HALT = (list = null) == null) ? -1 : 0;
+				image = null;
+				Print.console("STOPPING AUTOPOS THREAD");
+				return;
 			}
-		}
-		catch(Exception e){
-			e.printStackTrace(); // FMTB.showDialogbox("Autoposition failed with Exception", "See Console for details.", "ok", null, DialogBox.NOTHING, null);
-		}
+		}.start();
 	}
 
 	private static void showPercentageDialog(String group, String polygon, int percent){

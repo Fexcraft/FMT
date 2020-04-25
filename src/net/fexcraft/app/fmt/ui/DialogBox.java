@@ -17,7 +17,7 @@ import net.fexcraft.app.fmt.FMTB;
  */
 public class DialogBox {
 	
-	public static final void show(String title, String text0, String text1, DialogTask but0, DialogTask but1, String... text){
+	public static final Dialog show(String title, String text0, String text1, DialogTask but0, DialogTask but1, String... text){
 		if(title == null) title = "dialogbox.title.default";
         Dialog dialog = new Dialog(UserInterfaceUtils.translate(title), 400, 70 + (text.length * 25)); dialog.setResizable(false);
         for(int i = 0; i < text.length; i++){
@@ -38,6 +38,7 @@ public class DialogBox {
             dialog.getContainer().add(button1);
         }
         dialog.show(FMTB.frame);
+        return dialog;
 	}
 	
 	public static final void showYN(String title, DialogTask but0, DialogTask but1, String... text){
@@ -49,7 +50,8 @@ public class DialogBox {
 	}
 	
 	public static final void showOK(String title, DialogTask but0, DialogTask but1, String... text){
-		show(title, "dialogbox.button.ok", null, but0, but1, text);
+		Dialog dialog = show(title, "dialogbox.button.ok", null, but0, but1, text);
+		dialog.setCloseable(false);
 	}
 	
 	@FunctionalInterface

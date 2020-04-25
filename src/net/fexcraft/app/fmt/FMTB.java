@@ -125,7 +125,14 @@ public class FMTB {
 	    //
 		//File[] folders = { new File("./saves"), new File("./imports"), new File("./exports") };
 		//for(File folder : folders){ if(!folder.exists()) folder.mkdirs(); }
-		FMTB.INSTANCE = new FMTB(); try{ INSTANCE.run(); } catch(Throwable thr){ thr.printStackTrace(); System.exit(1); }
+		FMTB.INSTANCE = new FMTB();
+		try{
+			INSTANCE.run();
+		}
+		catch(Throwable thr){
+			thr.printStackTrace();
+			System.exit(1);
+		}
 	}
 
 	public static final FMTB get(){ return INSTANCE; }
@@ -367,7 +374,7 @@ public class FMTB {
     }
 
 	private void loop(){
-        if(!TextureUpdate.HALT){ TextureUpdate.tryAutoPos(TextureUpdate.ALL); }
+        //if(!TextureUpdate.HALT){ TextureUpdate.tryAutoPos(TextureUpdate.ALL); }
 	}
 
 	public long getTime(){

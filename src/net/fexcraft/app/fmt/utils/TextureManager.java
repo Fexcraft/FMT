@@ -297,6 +297,10 @@ public class TextureManager {
 			for(int x = 0; x < width; x++) for(int y = 0; y < height; y++) image.setRGB(x, y, 0xffffff);
 		}
 
+		public void save(){
+			TextureManager.saveTexture(this);
+		}
+
 	}
 
 	public static Texture removeTexture(String texture){
