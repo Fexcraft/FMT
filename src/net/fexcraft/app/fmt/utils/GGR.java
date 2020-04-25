@@ -6,6 +6,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_CURSOR_NORMAL;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 import static org.lwjgl.glfw.GLFW.GLFW_REPEAT;
+import static org.lwjgl.glfw.GLFW.glfwGetCursorPos;
 import static org.lwjgl.glfw.GLFW.glfwSetInputMode;
 
 import org.lwjgl.opengl.GL11;
@@ -96,7 +97,7 @@ public class GGR {
         		left_down = true;
         	}
         	else if(action == GLFW_RELEASE){
-        		if(FMTB.context.getFocusedGui() == null){
+        		if(FMTB.context.getFocusedGui() == null && isNotOverUI()){
         			RayCoastAway.doTest(true, true, false);
         		}
         		left_down = false;
@@ -104,7 +105,7 @@ public class GGR {
         }
         else if(button == 1){
         	if(action == GLFW_PRESS){
-        		if(FMTB.context.getFocusedGui() instanceof Field == false){
+        		if(FMTB.context.getFocusedGui() instanceof Field == false && isNotOverUI()){
             		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
             		grabbed = true;
         		}
@@ -123,6 +124,16 @@ public class GGR {
         		scroll_down = false;
         	}
         }
+	}
+
+	private boolean isNotOverUI(){
+		if(FMTB.frame.getLayers().size() > 0) return false;
+		double[] x = { 0 }, y = { 0 };
+		glfwGetCursorPos(FMTB.window, x, y);
+		if(y[0] < 30) return false;
+		if(Editors.anyVisible() && x[0] < 304) return false;
+		if(Trees.anyVisible() && x[0] > (FMTB.WIDTH - 304)) return false;
+		return true;
 	}
 
 	public void cursorPosCallback(long window, double xpos, double ypos){
