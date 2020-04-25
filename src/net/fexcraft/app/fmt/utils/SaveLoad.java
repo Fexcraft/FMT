@@ -229,7 +229,7 @@ public class SaveLoad {
 				Desktop.getDesktop().open(file.getParentFile());
 			}
 		}
-		catch(IOException e){
+		catch(Exception e){
 			e.printStackTrace();
 		}
 	}
@@ -269,7 +269,7 @@ public class SaveLoad {
 			}
 			obj.add("textures", textures);
 		}
-		obj.addProperty("texture_group", compound.texgroup.group);
+		if(compound.texgroup != null) obj.addProperty("texture_group", compound.texgroup.group);
 		JsonObject model = new JsonObject();
 		for(TurboList list : compound.getGroups()){
 			JsonObject group = new JsonObject();
