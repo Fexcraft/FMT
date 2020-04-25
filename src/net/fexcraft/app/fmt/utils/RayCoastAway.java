@@ -80,10 +80,10 @@ public class RayCoastAway {
 				for(int y = 0; y < image.getHeight(); y++){
 					if(new Color(image.getRGB(x, y)).getRGB() + CORRECTOR == id){
 						if(TextureEditor.colorPicker()){
-							TextureEditor.updateColor(tex.getImage().getRGB(x, y));
+							TextureEditor.updateColor(tex.getImage().getRGB(x, y) + CORRECTOR, null);
 						}
 						else{
-							tex.getImage().setRGB(x, y, new Color(TextureEditor.CURRENTCOLOR.getColorInt()).getRGB());
+							tex.getImage().setRGB(x, y, new Color(TextureEditor.CURRENTCOLOR.packed).getRGB());
 							tex.rebind();
 							TextureManager.saveTexture(tex);
 							return;

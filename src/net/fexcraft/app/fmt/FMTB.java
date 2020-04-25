@@ -403,7 +403,7 @@ public class FMTB {
             else MODEL.render();
             RayCoastAway.UNLOCKED = TextureEditor.pixelMode() ? !pixelpass : false;
             GL11.glPopMatrix();
-            render(alpha, TextureEditor.pixelMode());
+            render(alpha, pixelpass ? false : TextureEditor.pixelMode());
         }
         else{
 	        if(Settings.floor()){
