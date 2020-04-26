@@ -10,6 +10,7 @@ import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.component.Dialog;
 import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.ScrollablePanel;
+import org.liquidengine.legui.component.SelectBox;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.listener.MouseClickEventListener;
 
@@ -18,9 +19,10 @@ import net.fexcraft.app.fmt.ui.field.BoolButton;
 import net.fexcraft.app.fmt.ui.field.ColorField;
 import net.fexcraft.app.fmt.ui.field.NumberField;
 import net.fexcraft.app.fmt.ui.field.TextField;
+import net.fexcraft.app.fmt.utils.Setting;
+import net.fexcraft.app.fmt.utils.Setting.StringArraySetting;
+import net.fexcraft.app.fmt.utils.Setting.Type;
 import net.fexcraft.app.fmt.utils.Settings;
-import net.fexcraft.app.fmt.utils.Settings.Setting;
-import net.fexcraft.app.fmt.utils.Settings.Type;
 
 /**
  * 
@@ -52,6 +54,15 @@ public class SettingsBox {
 			}
 			else if(setting.getType() == Type.RGB){
 				panel.getContainer().add(new ColorField(panel.getContainer(), setting, 190, 10 + (index * 30), 290, 20));
+			}
+			else if(setting.getType() == Type.STRING_ARRAY){
+				SelectBox<String> box = new SelectBox<>(190, 10 + (index * 30), 290, 20);
+				String[] array = setting.getValue();
+				for(String str : array) box.addElement(str);
+				box.addSelectBoxChangeSelectionEventListener(listener -> {
+					setting.as(StringArraySetting.class).setSelected(listener.getNewValue());
+				});
+				panel.getContainer().add(box);
 			}
 			else{// if(setting.getType() == Type.STRING || setting.getType() == Type.FLOAT_ARRAY){
 				panel.getContainer().add(new TextField(setting, 190, 10 + (index * 30), 290, 20));

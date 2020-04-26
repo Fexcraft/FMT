@@ -20,7 +20,7 @@ import org.lwjgl.util.tinyfd.TinyFileDialogs;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.UserInterfaceUtils;
-import net.fexcraft.app.fmt.utils.Settings.Setting;
+import net.fexcraft.app.fmt.utils.Setting;
 import net.fexcraft.lib.common.math.RGB;
 
 public class ColorField extends TextInput implements Field {

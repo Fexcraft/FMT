@@ -18,6 +18,7 @@ import org.liquidengine.legui.input.Mouse.MouseButton;
 import org.liquidengine.legui.style.Background;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.porters.PNGExporter;
 import net.fexcraft.app.fmt.ui.SettingsBox;
 import net.fexcraft.app.fmt.ui.UserInterfaceUtils;
 import net.fexcraft.app.fmt.ui.field.ColorField;
@@ -206,6 +207,11 @@ public class GroupEditor extends EditorBase {
 			ModelEditor.model_texture.addElement(group.group);
 			GroupEditor.group_texture.addElement(group.group);
 		}
+		String[] arr = new String[TextureManager.getGroupAmount()];
+		for(int i = 0; i < arr.length; i++){
+			arr[i] = TextureManager.getGroupsFE().get(i).group;
+		}
+		PNGExporter.getSettings().get(1).setValue(arr);
 	}
 
 	private void setgroupoffset(){

@@ -16,7 +16,7 @@ import org.lwjgl.glfw.GLFW;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.UserInterfaceUtils;
-import net.fexcraft.app.fmt.utils.Settings.Setting;
+import net.fexcraft.app.fmt.utils.Setting;
 
 public class NumberField extends TextInput implements Field {
 	

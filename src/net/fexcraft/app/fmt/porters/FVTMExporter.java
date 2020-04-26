@@ -3,8 +3,8 @@ package net.fexcraft.app.fmt.porters;
 import java.io.File;
 import java.util.Map;
 
-import net.fexcraft.app.fmt.utils.Settings.Setting;
-import net.fexcraft.app.fmt.utils.Settings.Type;
+import net.fexcraft.app.fmt.utils.Setting;
+import net.fexcraft.app.fmt.utils.Setting.Type;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 
 /**

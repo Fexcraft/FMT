@@ -7,8 +7,7 @@ import java.util.TreeMap;
 
 import net.fexcraft.app.fmt.ui.tree.SubTreeGroup;
 import net.fexcraft.app.fmt.ui.tree.Trees;
-import net.fexcraft.app.fmt.utils.Settings.Setting;
-import net.fexcraft.app.fmt.utils.Settings.Type;
+import net.fexcraft.app.fmt.utils.Setting.Type;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 
@@ -301,7 +300,7 @@ public class Animator {
 	public static class Window extends Generic {
 
 		public Window(TurboList group){
-			super("fvtm:window", null, group, Arrays.asList(new Setting(Settings.Type.STRING, "color", "default")));
+			super("fvtm:window", null, group, Arrays.asList(new Setting("color", "default")));
 		}
 
 		@Override

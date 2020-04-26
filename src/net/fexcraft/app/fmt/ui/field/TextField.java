@@ -5,7 +5,7 @@ import java.util.function.Consumer;
 import org.liquidengine.legui.component.TextInput;
 
 import net.fexcraft.app.fmt.ui.UserInterfaceUtils;
-import net.fexcraft.app.fmt.utils.Settings.Setting;
+import net.fexcraft.app.fmt.utils.Setting;
 
 public class TextField extends TextInput {
 
