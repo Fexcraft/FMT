@@ -252,6 +252,11 @@ public class Setting {
 			return super.validateAndApply(newval);
 		}
 		
+		@Override 
+		public String getStringValue(){
+			return getSelected();
+		}
+		
 	}
 
 	@SuppressWarnings("unchecked")

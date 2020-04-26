@@ -62,6 +62,7 @@ public class SettingsBox {
 				box.addSelectBoxChangeSelectionEventListener(listener -> {
 					setting.as(StringArraySetting.class).setSelected(listener.getNewValue());
 				});
+				box.setVisibleCount(6);
 				panel.getContainer().add(box);
 			}
 			else{// if(setting.getType() == Type.STRING || setting.getType() == Type.FLOAT_ARRAY){
