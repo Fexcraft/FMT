@@ -55,9 +55,11 @@ public class DFMImporter extends ExImPorter {
 		}
 		if(!SessionHandler.getLicenseStatus().equals("creator")){
 			DialogBox.showOK("eximporter.import.failed", null, null, "NO PERMISSION");
+			return null;
 		}
 		if(!SessionHandler.getUserName().equals("Ferdinand")){
 			DialogBox.showOK("eximporter.import.failed", null, null, "NO PERMISSION");
+			return null;
 		}
         GroupCompound compound = new GroupCompound(file);
         boolean degrees = settings.get("degree based").getBooleanValue();
