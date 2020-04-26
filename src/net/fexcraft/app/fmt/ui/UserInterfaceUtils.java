@@ -206,6 +206,7 @@ public class UserInterfaceUtils {
 		private boolean extended;
 		public final int index;
 		public static int size = 135;
+		private static int buttonheight = 24;
 		
 		public MenuEntry(int index, String title, MenuButton... buttons){
 			super(187 + (index * (size + 2)), 1, size, 28);
@@ -213,6 +214,7 @@ public class UserInterfaceUtils {
 			Settings.THEME_CHANGE_LISTENER.add(bool -> {
 				this.getStyle().setBorderRadius(0f);
 				tatle.getStyle().setFontSize(28f);
+				tatle.setFocusable(false);
 				Background background = new Background();
 				if(bool){
 					background.setColor(new Vector4f(0.2f, 0.2f, 0.2f, 1));
@@ -224,6 +226,7 @@ public class UserInterfaceUtils {
 				for(Button button : buttons){
 					button.getStyle().setHorizontalAlign(HorizontalAlign.LEFT);
 				}
+				this.getHoveredStyle().getBackground().setColor(new Vector4f(background.getColor()).mul(0.8f, 0.8f, 0.8f, 1f));
 			});
 			this.add(tatle);
 	        this.getListenerMap().addListener(CursorEnterEvent.class, (CursorEnterEventListener)lis -> { if(!lis.isEntered()) this.checkClose(); });
@@ -238,8 +241,8 @@ public class UserInterfaceUtils {
 			for(int i = 0; i < buttons.length; i++){
 				this.add(buttons[i]); buttons[i].hide();
 				buttons[i].setEntry(this);
-				buttons[i].setPosition(1, 28 + (i * 26));
-				buttons[i].setSize(size - 2, 24);
+				buttons[i].setPosition(1, 28 + (i * buttonheight));
+				buttons[i].setSize(size, 24);
 			}
 			tatle.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)event -> { if(event.getAction() == CLICK) toggle(null); });
 			this.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)event -> { if(event.getAction() == CLICK) toggle(null); });
@@ -252,7 +255,7 @@ public class UserInterfaceUtils {
 				this.setSize(size, 28); extended = false;
 			}
 			else{
-				this.setSize(size, 26 + (buttons.length * 26));
+				this.setSize(size, 26 + (buttons.length * buttonheight));
 				for(MenuButton button : buttons){ button.show(); }
 				extended = true;
 			}
