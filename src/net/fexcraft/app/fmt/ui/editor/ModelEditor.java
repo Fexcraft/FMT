@@ -2,8 +2,8 @@ package net.fexcraft.app.fmt.ui.editor;
 
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
+import java.util.Map;
 import java.util.Map.Entry;
-import java.util.TreeMap;
 
 import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.component.Dialog;
@@ -119,7 +119,7 @@ public class ModelEditor extends EditorBase {
 		}
 
 		@SuppressWarnings("unchecked")
-		public void refresh(TreeMap<String, Boolean> creators){
+		public void refresh(Map<String, Boolean> creators){
 			reset();
 			int pass = -20;
 			if(creators == null) creators = FMTB.MODEL.getCreators();
