@@ -12,8 +12,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.TreeMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.lwjgl.opengl.GL11;
@@ -48,7 +49,7 @@ import net.fexcraft.lib.common.math.Vec3f;
 public class GroupCompound {
 	
 	public int textureSizeX = 256, textureSizeY = 256, textureScale = 1;
-	private TreeMap<String, Boolean> creators = new TreeMap<>();
+	private LinkedHashMap<String, Boolean> creators = new LinkedHashMap<>();
 	private ArrayList<String> authors = new ArrayList<>();
 	private GroupList groups = new GroupList();
 	public PolygonWrapper lastselected;
@@ -918,7 +919,7 @@ public class GroupCompound {
 		ModelEditor.creators.refresh();
 	}
 
-	public TreeMap<String, Boolean> getCreators(){
+	public Map<String, Boolean> getCreators(){
 		return creators;
 	}
 
