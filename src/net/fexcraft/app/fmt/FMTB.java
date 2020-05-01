@@ -533,7 +533,12 @@ public class FMTB {
 			}
 			default: {
 				if(FMTB.MODEL.getAuthors().contains(SessionHandler.getUserName())){
-					ss_credits.getTextState().setText(FMTB.MODEL.name + " - by " + SessionHandler.getUserName() + " (and " + (FMTB.MODEL.getAuthors().size() - 1) + " others)");
+					String authors = "";
+					for(int i = 0; i < FMTB.MODEL.getAuthors().size(); i++){
+						authors += FMTB.MODEL.getAuthors().get(i);
+						if(i < FMTB.MODEL.getAuthors().size() - 1) authors += ", ";
+					}
+					ss_credits.getTextState().setText(FMTB.MODEL.name + " - by " + authors);
 				}
 				else{
 					ss_credits.getTextState().setText(FMTB.MODEL.name + " - " + String.format("(logged:%s)", SessionHandler.getUserName()));
