@@ -53,6 +53,7 @@ public class TCNEXImporter extends ExImPorter {
             Pattern box = Pattern.compile("(.*)\\.addBox\\((.*)\\);.*");
             Pattern rotpoint = Pattern.compile("(.*)\\.setRotationPoint\\((.*)\\);");
             Pattern rotation = Pattern.compile("setRotation\\((.*), (\\d+)F, (\\d+)F, (\\d+)F\\);");
+            Pattern texsize = Pattern.compile("textureWidth = (\\d+); textureHeight = (\\d+);");
             ArrayList<TemporaryPolygon> polis = new ArrayList<>();
             while(scanner.hasNext()){
             	String line = scanner.nextLine().trim();
@@ -77,6 +78,11 @@ public class TCNEXImporter extends ExImPorter {
             		poly.v = parseI(matcher.group(3));
             		polis.add(poly);
             		continue;
+            	}
+            	matcher = texsize.matcher(line);
+            	if(matcher.matches()){
+            		compound.textureSizeX = parseI(matcher.group(1));
+            		compound.textureSizeY = parseI(matcher.group(2));
             	}
             	matcher = box.matcher(line);
             	if(matcher.matches()){
