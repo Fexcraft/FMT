@@ -173,8 +173,8 @@ public class GeneralEditor extends EditorBase {
 		shape.getContainer().add(rot_y = new NumberField(102, pass, 90, 20).setup("roty", -360, 360, true));
 		shape.getContainer().add(rot_z = new NumberField(200, pass, 90, 20).setup("rotz", -360, 360, true));
 		shape.getContainer().add(new Label(translate("editor.general.shape.texture"), 3, pass += 24, 290, 20));
-		shape.getContainer().add(texture_x = new NumberField(4, pass += 24, 90, 20).setup("texx", 0, 8192, true));
-		shape.getContainer().add(texture_y = new NumberField(102, pass, 90, 20).setup("texy", 0, 8192, true));
+		shape.getContainer().add(texture_x = new NumberField(4, pass += 24, 90, 20).setup("texx", -8192, 8192, true));
+		shape.getContainer().add(texture_y = new NumberField(102, pass, 90, 20).setup("texy", -8192, 8192, true));
 		shape.getContainer().add(new Label(translate("editor.general.shape.visibility_toggle"), 3, pass += 24, 290, 20));
 		shape.getContainer().add(side0_x = new BoolButton("side0x", 4, pass += 24, 44, 20));
 		shape.getContainer().add(side0_y = new BoolButton("side0y", 53, pass, 44, 20));
