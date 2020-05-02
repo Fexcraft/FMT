@@ -388,7 +388,8 @@ public class FMTB {
 	private void render(float alpha, boolean pixelpass){
 		context.updateGlfwWindow();
         Vector2i size = context.getFramebufferSize();
-        GL11.glClearColor(0.5f, 0.5f, 0.5f, 1);
+        float[] color = Settings.getBackGroundColor();
+        GL11.glClearColor(color[0], color[1], color[2], color[3]);
         GL11.glViewport(0, 0, size.x, size.y);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
         RGB.glColorReset(); ggr.apply();

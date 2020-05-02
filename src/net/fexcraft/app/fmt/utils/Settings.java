@@ -24,7 +24,7 @@ public class Settings {
 	public static Setting movespeed, mouse_sensivity, internal_cursor, vsync, debug;
 	public static Setting darktheme, no_scroll_fields, old_rotation, center_marker;
 	public static Setting orbital_camera, oc_center_on_part, internal_filechooser;
-	public static Setting drag_painting;
+	public static Setting drag_painting, background_color;
 	//
 	public static final ArrayList<Consumer<Boolean>> THEME_CHANGE_LISTENER = new ArrayList<>();
 
@@ -116,7 +116,7 @@ public class Settings {
 	}
 
 	public static float[] getBackGroundColor(){
-		return SETTINGS.get("background_color").getValue();
+		return background_color.getValue();
 	}
 
 	public static float[] getLight0Position(){
@@ -225,6 +225,7 @@ public class Settings {
 		center_marker = SETTINGS.get("center_marker");
 		debug = SETTINGS.get("ui_debug");
 		drag_painting = SETTINGS.get("drag_painting");
+		background_color = SETTINGS.get("background_color");
 	}
 
 	public static void save(){
