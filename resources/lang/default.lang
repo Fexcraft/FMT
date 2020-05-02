@@ -190,6 +190,7 @@ eximporter.import.nofile.desc=No valid file choosen. Import is cancelled.
 eximporter.import.success=Import complete.
 eximporter.mtb_importer.stream_null=Import Failed, MTB appears corrupt.
 eximporter.dfm_importer.no_agreement=Agreement not confirmed.
+eximporter.tch_importer.no_agreement=Please confirm you agree to the TC model import terms.
 
 # SettingsBox
 settingsbox.continue=Continue

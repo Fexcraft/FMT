@@ -40,6 +40,7 @@ public class PorterManager {
 		porters.add(new DFMExporter());
 		porters.add(new DFMImporter());
 		porters.add(new TCNEXImporter());
+		porters.add(new TCHImporter());
 	}
 
 	public static void handleImport(){

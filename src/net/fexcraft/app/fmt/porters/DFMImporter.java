@@ -48,19 +48,19 @@ public class DFMImporter extends ExImPorter {
     
 	@Override
 	public GroupCompound importModel(File file, Map<String, Setting> settings){
+        GroupCompound compound = new GroupCompound(file);
 		if(!settings.get("agreement").getBooleanValue()){
 			DialogBox.showOK("eximporter.import.failed", null, null, "eximporter.dfm_importer.no_agreement");
-			return null;
+			return compound;
 		}
 		if(!SessionHandler.getLicenseStatus().equals("creator")){
 			DialogBox.showOK("eximporter.import.failed", null, null, "NO PERMISSION");
-			return null;
+			return compound;
 		}
 		if(!SessionHandler.getUserName().equals("Ferdinand")){
 			DialogBox.showOK("eximporter.import.failed", null, null, "NO PERMISSION");
-			return null;
+			return compound;
 		}
-        GroupCompound compound = new GroupCompound(file);
         boolean degrees = settings.get("degree based").getBooleanValue();
         try{
             Scanner scanner = new Scanner(file);
