@@ -196,7 +196,7 @@ public abstract class PolygonWrapper {
 	public boolean apply(String id, float value, boolean x, boolean y, boolean z){
 		boolean bool = false;
 		switch(id){
-			case "size":{
+			case "size": case "side0": case "side1":{
 				if(this.getType().isRectagular()){
 					bool = this.setFloat(id, x, y, z, value);
 				} break;

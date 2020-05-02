@@ -1,5 +1,6 @@
 package net.fexcraft.app.fmt.wrappers;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import net.fexcraft.lib.common.math.Vec3f;
@@ -8,6 +9,7 @@ import net.fexcraft.lib.local_tmt.ModelRendererTurbo;
 public class BoxWrapper extends PolygonWrapper {
 	
 	public Vec3f size = new Vec3f(1, 1, 1);
+	public boolean[] sides = new boolean[6];
 	
 	public BoxWrapper(GroupCompound compound){
 		super(compound);
@@ -15,7 +17,7 @@ public class BoxWrapper extends PolygonWrapper {
 
 	protected ModelRendererTurbo newMRT(){
 		return new ModelRendererTurbo(null, textureX, textureY, compound.tx(getTurboList()), compound.ty(getTurboList()))
-			.addBox(off.xCoord, off.yCoord, off.zCoord, size.xCoord, size.yCoord, size.zCoord)
+			.addBox(off.xCoord, off.yCoord, off.zCoord, size.xCoord, size.yCoord, size.zCoord, 0, 1f, sides)
 			.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
 			.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
 	}
@@ -29,6 +31,8 @@ public class BoxWrapper extends PolygonWrapper {
 	public float getFloat(String id, boolean x, boolean y, boolean z){
 		switch(id){
 			case "size": return x ? size.xCoord : y ? size.yCoord : z ? size.zCoord : 0;
+			case "side0": return x ? (sides[0] ? 1 : 0) : y ? (sides[1] ? 1 : 0) : z ? (sides[2] ? 1 : 0) : 0;
+			case "side1": return x ? (sides[3] ? 1 : 0) : y ? (sides[4] ? 1 : 0) : z ? (sides[5] ? 1 : 0) : 0;
 			default: return super.getFloat(id, x, y, z);
 		}
 	}
@@ -42,6 +46,16 @@ public class BoxWrapper extends PolygonWrapper {
 				if(y){ size.yCoord = value; return true; }
 				if(z){ size.zCoord = value; return true; }
 			}
+			case "side0":{
+				if(x){ sides[0] = value == 1; return true; }
+				if(y){ sides[1] = value == 1; return true; }
+				if(z){ sides[2] = value == 1; return true; }
+			}
+			case "side1":{
+				if(x){ sides[3] = value == 1; return true; }
+				if(y){ sides[4] = value == 1; return true; }
+				if(z){ sides[5] = value == 1; return true; }
+			}
 			default: return false;
 		}
 	}
@@ -51,37 +65,58 @@ public class BoxWrapper extends PolygonWrapper {
 		obj.addProperty("width", size.xCoord);
 		obj.addProperty("height", size.yCoord);
 		obj.addProperty("depth", size.zCoord);
+		boolean anysides = false;
+		for(boolean bool : sides) if(bool) anysides = true;
+		if(anysides){
+			JsonArray array = new JsonArray();
+			for(boolean bool : sides) array.add(bool);
+			obj.add("sides_off", array);
+		}
 		return obj;
 	}
 
 	@Override
 	public float[][][] newTexturePosition(){
 		float tx = 0 /*textureX*/, ty = 0 /*textureY*/, w = size.xCoord, h = size.yCoord, d = size.zCoord;
-		float[][][] vecs = new float[6][][];
-		vecs[0] = new float[][]{
-			new float[]{ tx + d + w, ty + d },
-			new float[]{ tx + d + w + d, ty + d + h }
-		};
-		vecs[1] = new float[][]{
-			new float[]{ tx, ty + d },
-			new float[]{ tx + d, ty + d + h }
-		};
-		vecs[2] = new float[][]{
-			new float[]{ tx + d, ty },
-			new float[]{ tx + d + w, ty + d }
-		};
-		vecs[3] = new float[][]{
-			new float[]{ tx + d + w, ty + 0 },
-			new float[]{ tx + d + w + w, ty + d }
-		};
-		vecs[4] = new float[][]{
-			new float[]{ tx + d, ty + d },
-			new float[]{ tx + d + w, ty + d + h }
-		};
-		vecs[5] = new float[][]{
-			new float[]{ tx + d + w + d, ty + d },
-			new float[]{ tx + d + w + d + w, ty + d + h }
-		};
+		int sideson = 0, sideid = 0;
+		for(boolean bool : sides) if(!bool) sideson++;
+		float[][][] vecs = new float[sideson][][];
+		if(!sides[0]){
+			vecs[sideid++] = new float[][]{
+				new float[]{ tx + d + w, ty + d },
+				new float[]{ tx + d + w + d, ty + d + h }
+			};
+		}
+		if(!sides[1]){
+			vecs[sideid++] = new float[][]{
+				new float[]{ tx, ty + d },
+				new float[]{ tx + d, ty + d + h }
+			};
+		}
+		if(!sides[2]){
+			vecs[sideid++] = new float[][]{
+				new float[]{ tx + d, ty },
+				new float[]{ tx + d + w, ty + d }
+			};
+		}
+		if(!sides[3]){
+			vecs[sideid++] = new float[][]{
+				new float[]{ tx + d + w, ty + 0 },
+				new float[]{ tx + d + w + w, ty + d }
+			};
+		}
+		if(!sides[4]){
+			vecs[sideid++] = new float[][]{
+				new float[]{ tx + d, ty + d },
+				new float[]{ tx + d + w, ty + d + h }
+			};
+		}
+		if(!sides[5]){
+			vecs[sideid++] = new float[][]{
+				new float[]{ tx + d + w + d, ty + d },
+				new float[]{ tx + d + w + d + w, ty + d + h }
+			};
+		}
 		return vecs;
 	}
 
@@ -104,6 +139,12 @@ public class BoxWrapper extends PolygonWrapper {
 			case TEXRECT_B: wrapper = new TexrectWrapperB(compound); break;
 			default: return null;
 		} wrapper.size = new Vec3f(size); return copyTo(wrapper, true);
+	}
+
+	public boolean anySidesOff(){
+		boolean result = false;
+		for(boolean bool : sides) if(bool) result = true;
+		return result;
 	}
 	
 }

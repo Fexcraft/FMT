@@ -9,30 +9,42 @@ import org.liquidengine.legui.listener.MouseClickEventListener;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.UserInterfaceUtils;
 import net.fexcraft.app.fmt.utils.Setting;
+import net.fexcraft.app.fmt.utils.Settings;
 
 public class BoolButton extends Button implements Field {
-	
+
 	private String fieldid;
-	
+
 	public BoolButton(String id, int x, int y, int w, int h){
-		super("false", x, y, w, h); this.fieldid = id; this.getStyle().setBorderRadius(0f); UserInterfaceUtils.setupHoverCheck(this);
-        this.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)event -> {
-            if(event.getAction() == CLICK){ toggle(); } else return;
-        });
+		super("false", x, y, w, h);
+		this.fieldid = id;
+		Settings.THEME_CHANGE_LISTENER.add(bool -> this.getStyle().setBorderRadius(0f));
+		UserInterfaceUtils.setupHoverCheck(this);
+		this.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)event -> {
+			if(event.getAction() == CLICK){
+				toggle();
+			}
+			else return;
+		});
 	}
-	
+
 	public BoolButton(Setting setting, int x, int y, int w, int h){
-		super(setting.getBooleanValue() + "", x, y, w, h); this.getStyle().setBorderRadius(0f); UserInterfaceUtils.setupHoverCheck(this);
-        this.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)event -> {
-            if(event.getAction() == CLICK){
-    			setting.toggle(); getTextState().setText(setting.getBooleanValue() + "");
-            } else return;
-        });
+		super(setting.getBooleanValue() + "", x, y, w, h);
+		Settings.THEME_CHANGE_LISTENER.add(bool -> this.getStyle().setBorderRadius(0f));
+		UserInterfaceUtils.setupHoverCheck(this);
+		this.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)event -> {
+			if(event.getAction() == CLICK){
+				setting.toggle();
+				getTextState().setText(setting.getBooleanValue() + "");
+			}
+			else return;
+		});
 	}
 
 	private void toggle(){
 		boolean val = Boolean.parseBoolean(getTextState().getText());
-		getTextState().setText(!val + ""); FMTB.MODEL.updateValue(this, fieldid);
+		getTextState().setText(!val + "");
+		FMTB.MODEL.updateValue(this, fieldid);
 	}
 
 	@Override
@@ -60,5 +72,5 @@ public class BoolButton extends Button implements Field {
 	public String id(){
 		return fieldid;
 	}
-	
+
 }

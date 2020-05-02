@@ -311,6 +311,13 @@ public class GroupCompound {
 			GeneralEditor.texture_x.apply(0);
 			GeneralEditor.texture_y.apply(0);
 			//
+			GeneralEditor.side0_x.apply(0);
+			GeneralEditor.side0_y.apply(0);
+			GeneralEditor.side0_z.apply(0);
+			GeneralEditor.side1_x.apply(0);
+			GeneralEditor.side1_y.apply(0);
+			GeneralEditor.side1_z.apply(0);
+			//
 			GeneralEditor.polygon_group.setSelected("> new group <", true);
 			GeneralEditor.polygon_name.getTextState().setText(FMTB.NO_POLYGON_SELECTED);
 			GeneralEditor.polygon_type.setSelected("box", true);
@@ -334,6 +341,13 @@ public class GroupCompound {
 			//
 			GeneralEditor.texture_x.apply(poly.getFloat("tex", true, false, false));
 			GeneralEditor.texture_y.apply(poly.getFloat("tex", false, true, false));
+			//
+			GeneralEditor.side0_x.apply(poly.getFloat("side0", true, false, false));
+			GeneralEditor.side0_y.apply(poly.getFloat("side0", false, true, false));
+			GeneralEditor.side0_z.apply(poly.getFloat("side0", false, false, true));
+			GeneralEditor.side1_x.apply(poly.getFloat("side1", true, false, false));
+			GeneralEditor.side1_y.apply(poly.getFloat("side1", false, true, false));
+			GeneralEditor.side1_z.apply(poly.getFloat("side1", false, false, true));
 			//
 			GeneralEditor.polygon_group.setSelected(this.getFirstSelectedGroupName(), true);
 			GeneralEditor.polygon_name.getTextState().setText(poly.name == null ? "unnamed" : poly.name);

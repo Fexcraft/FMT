@@ -38,7 +38,7 @@ public class ShapeboxWrapper extends BoxWrapper {
 				cor4.xCoord, cor4.yCoord, cor4.zCoord,
 				cor5.xCoord, cor5.yCoord, cor5.zCoord,
 				cor6.xCoord, cor6.yCoord, cor6.zCoord,
-				cor7.xCoord, cor7.yCoord, cor7.zCoord)
+				cor7.xCoord, cor7.yCoord, cor7.zCoord, sides)
 			.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
 			.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
 		//for(int i = 0; i < bool.length; i++){ turbo.getFaces()[i].setOppositeTriangles(bool[i]); }
