@@ -427,8 +427,8 @@ public class GroupCompound {
 		else{
 			for(int i = 0; i < 6; i++){
 				for(int j = 0; j < 8; j++){
-					if(j % 2 == 0) GeneralEditor.texrect_a[i][j].apply(poly.getFloat("texpos" + i + ":" + j + "x", true, false, false));
-					else GeneralEditor.texrect_a[i][j].apply(poly.getFloat("texpos" + i + ":" + j + "y", false, true, false));
+					if(j % 2 == 0) GeneralEditor.texrect_a[i][j].apply(poly.getFloat("texpos" + i + ":" + j, true, false, false));
+					else GeneralEditor.texrect_a[i][j].apply(poly.getFloat("texpos" + i + ":" + j, false, true, false));
 				}
 			}
 		}
