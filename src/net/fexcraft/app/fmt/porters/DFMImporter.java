@@ -18,7 +18,6 @@ import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.ShapeboxWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
-import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.Vec3f;
 
 /**
@@ -152,15 +151,15 @@ public class DFMImporter extends ExImPorter {
             		float value = parseF(matcher.group(4));
             		switch(axis){
             			case "x":{
-            				poly.wrapper.rot.xCoord = degrees ? value : Static.rad1 * value;
+            				poly.wrapper.rot.xCoord = degrees ? value : (float)Math.toDegrees(value);
             				break;
             			}
             			case "y":{
-            				poly.wrapper.rot.yCoord = degrees ? value : Static.rad1 * value;
+            				poly.wrapper.rot.yCoord = degrees ? value : (float)Math.toDegrees(value);
             				break;
             			}
             			case "z":{
-            				poly.wrapper.rot.zCoord = degrees ? value : Static.rad1 * value;
+            				poly.wrapper.rot.zCoord = degrees ? value : (float)Math.toDegrees(value);
             				break;
             			}
             		}

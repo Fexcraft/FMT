@@ -39,6 +39,7 @@ public class PorterManager {
 		porters.add(new TSIVMarkerExporter());
 		porters.add(new DFMExporter());
 		porters.add(new DFMImporter());
+		porters.add(new TCNEXImporter());
 	}
 
 	public static void handleImport(){
