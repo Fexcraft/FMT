@@ -255,12 +255,27 @@ public class ModelRendererTurbo {
         TexturedVertex tv7 = new TexturedVertex(v7[0], v7[1], v7[2], 8.0F, 0.0F);
         verts[0] = tv0; verts[1] = tv1; verts[2] = tv2; verts[3] = tv3;
         verts[4] = tv4; verts[5] = tv5; verts[6] = tv6; verts[7] = tv7;
-        if(sides == null || (sides.length > 0 && !sides[0])) poly[0] = addPolygonReturn(new TexturedVertex[] { tv5, tv1, tv2, tv6 }, texoffx + d + w, texoffy + d, texoffx + d + w + d, texoffy + d + h);
-        if(sides == null || (sides.length > 1 && !sides[1])) poly[1] = addPolygonReturn(new TexturedVertex[] { tv0, tv4, tv7, tv3 }, texoffx + 0, texoffy + d, texoffx + d, texoffy + d + h);
-        if(sides == null || (sides.length > 2 && !sides[2])) poly[2] = addPolygonReturn(new TexturedVertex[] { tv5, tv4, tv0, tv1 }, texoffx + d, texoffy + 0, texoffx + d + w, texoffy + d);
-        if(sides == null || (sides.length > 3 && !sides[3])) poly[3] = addPolygonReturn(new TexturedVertex[] { tv2, tv3, tv7, tv6 }, texoffx + d + w, texoffy + 0, texoffx + d + w + w, texoffy + d);
-        if(sides == null || (sides.length > 4 && !sides[4])) poly[4] = addPolygonReturn(new TexturedVertex[] { tv1, tv0, tv3, tv2 }, texoffx + d, texoffy + d, texoffx + d + w, texoffy + d + h);
-        if(sides == null || (sides.length > 5 && !sides[5])) poly[5] = addPolygonReturn(new TexturedVertex[] { tv4, tv5, tv6, tv7 }, texoffx + d + w + d, texoffy + d, texoffx + d + w + d + w, texoffy + d + h);
+        if(sides == null){
+            poly[0] = addPolygonReturn(new TexturedVertex[] { tv5, tv1, tv2, tv6 }, texoffx + d + w, texoffy + d, texoffx + d + w + d, texoffy + d + h);
+            poly[1] = addPolygonReturn(new TexturedVertex[] { tv0, tv4, tv7, tv3 }, texoffx + 0, texoffy + d, texoffx + d, texoffy + d + h);
+            poly[2] = addPolygonReturn(new TexturedVertex[] { tv5, tv4, tv0, tv1 }, texoffx + d, texoffy + 0, texoffx + d + w, texoffy + d);
+            poly[3] = addPolygonReturn(new TexturedVertex[] { tv2, tv3, tv7, tv6 }, texoffx + d + w, texoffy + 0, texoffx + d + w + w, texoffy + d);
+            poly[4] = addPolygonReturn(new TexturedVertex[] { tv1, tv0, tv3, tv2 }, texoffx + d, texoffy + d, texoffx + d + w, texoffy + d + h);
+            poly[5] = addPolygonReturn(new TexturedVertex[] { tv4, tv5, tv6, tv7 }, texoffx + d + w + d, texoffy + d, texoffx + d + w + d + w, texoffy + d + h);
+        }
+        else{
+        	float yp = sides[2] && sides[3] ? 0 : d;
+        	float x0 = sides[1] ? 0 : d;
+        	float x1 = sides[2] ? 0 : w;
+        	float x2 = sides[4] ? 0 : w;
+        	float x3 = sides[0] ? 0 : d;
+            if(sides.length > 0 && !sides[0]) poly[0] = addPolygonReturn(new TexturedVertex[] { tv5, tv1, tv2, tv6 }, texoffx + x0 + x2, texoffy + yp, texoffx + x0 + x2 + d, texoffy + yp + h);
+            if(sides.length > 1 && !sides[1]) poly[1] = addPolygonReturn(new TexturedVertex[] { tv0, tv4, tv7, tv3 }, texoffx + 0, texoffy + yp, texoffx + d, texoffy + yp + h);
+            if(sides.length > 2 && !sides[2]) poly[2] = addPolygonReturn(new TexturedVertex[] { tv5, tv4, tv0, tv1 }, texoffx + x0, texoffy + 0, texoffx + x0 + w, texoffy + d);
+            if(sides.length > 3 && !sides[3]) poly[3] = addPolygonReturn(new TexturedVertex[] { tv2, tv3, tv7, tv6 }, texoffx + x0 + x1, texoffy + 0, texoffx + x0 + x1 + w, texoffy + d);
+            if(sides.length > 4 && !sides[4]) poly[4] = addPolygonReturn(new TexturedVertex[] { tv1, tv0, tv3, tv2 }, texoffx + x0, texoffy + yp, texoffx + x0 + w, texoffy + yp + h);
+            if(sides.length > 5 && !sides[5]) poly[5] = addPolygonReturn(new TexturedVertex[] { tv4, tv5, tv6, tv7 }, texoffx + x0 + x2 + x3, texoffy + yp, texoffx + x0 + x2 + x3 + w, texoffy + yp + h);
+        }
         if(mirror ^ flip){
             for(int l = 0; l < poly.length; l++){
             	poly[l].flipFace();

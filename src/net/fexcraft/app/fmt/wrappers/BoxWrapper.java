@@ -81,40 +81,47 @@ public class BoxWrapper extends PolygonWrapper {
 		int sideson = 0, sideid = 0;
 		for(boolean bool : sides) if(!bool) sideson++;
 		float[][][] vecs = new float[sideson][][];
+		//
+    	float yp = sides[2] && sides[3] ? 0 : d;
+    	float x0 = sides[1] ? 0 : d;
+    	float x1 = sides[2] ? 0 : w;
+    	float x2 = sides[4] ? 0 : w;
+    	float x3 = sides[0] ? 0 : d;
+		//
 		if(!sides[0]){
 			vecs[sideid++] = new float[][]{
-				new float[]{ tx + d + w, ty + d },
-				new float[]{ tx + d + w + d, ty + d + h }
+				new float[]{ tx + x0 + x2, ty + yp },
+				new float[]{ tx + x0 + x2 + d, ty + yp + h }
 			};
 		}
 		if(!sides[1]){
 			vecs[sideid++] = new float[][]{
-				new float[]{ tx, ty + d },
-				new float[]{ tx + d, ty + d + h }
+				new float[]{ tx, ty + yp },
+				new float[]{ tx + d, ty + yp + h }
 			};
 		}
 		if(!sides[2]){
 			vecs[sideid++] = new float[][]{
-				new float[]{ tx + d, ty },
-				new float[]{ tx + d + w, ty + d }
+				new float[]{ tx + x0, ty },
+				new float[]{ tx + x0 + w, ty + d }
 			};
 		}
 		if(!sides[3]){
 			vecs[sideid++] = new float[][]{
-				new float[]{ tx + d + w, ty + 0 },
-				new float[]{ tx + d + w + w, ty + d }
+				new float[]{ tx + x0 + x1, ty + 0 },
+				new float[]{ tx + x0 + x1 + w, ty + d }
 			};
 		}
 		if(!sides[4]){
 			vecs[sideid++] = new float[][]{
-				new float[]{ tx + d, ty + d },
-				new float[]{ tx + d + w, ty + d + h }
+				new float[]{ tx + x0, ty + yp },
+				new float[]{ tx + x0 + w, ty + yp + h }
 			};
 		}
 		if(!sides[5]){
 			vecs[sideid++] = new float[][]{
-				new float[]{ tx + d + w + d, ty + d },
-				new float[]{ tx + d + w + d + w, ty + d + h }
+				new float[]{ tx + x0 + x2 + x3, ty + yp },
+				new float[]{ tx + x0 + x2 + x3 + w, ty + yp + h }
 			};
 		}
 		return vecs;
