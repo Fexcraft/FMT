@@ -660,7 +660,8 @@ public class FMTB {
 		return title;
 	}
 
-	public static void setModel(GroupCompound compound, boolean clearhelpers){
+	public static void setModel(GroupCompound compound, boolean clearhelpers, boolean cleartex){
+		if(cleartex) TextureManager.clearGroups();
 		Trees.polygon.clear();
 		Trees.helper.clear();
 		Trees.fvtm.clear();

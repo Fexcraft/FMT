@@ -58,7 +58,7 @@ public class SaveLoad {
 					try{
 						HelperCollector.LOADED.clear();
 						GroupCompound compound = parseModel(file, JsonUtil.getObjectFromInputStream(zip.getInputStream(elm)));
-						FMTB.setModel(compound, false);
+						FMTB.setModel(compound, false, false);
 						FMTB.MODEL.updateFields();
 						FMTB.MODEL.recompile();
 						GroupCompound.SELECTED_POLYGONS = FMTB.MODEL.countSelectedMRTs();
@@ -126,7 +126,7 @@ public class SaveLoad {
 							FMTB.MODEL.file = file;
 							saveModel(false, shouldclose);
 							if(shouldclear){
-								FMTB.setModel(new GroupCompound(null), true);
+								FMTB.setModel(new GroupCompound(null), true, true);
 							}
 							if(shouldclose){
 								FMTB.get().close(true);
@@ -137,7 +137,7 @@ public class SaveLoad {
 				else{
 					saveModel(false, false);// shouldclose);
 					if(shouldclear){
-						FMTB.setModel(new GroupCompound(null), true);
+						FMTB.setModel(new GroupCompound(null), true, true);
 					}
 					if(shouldclose){
 						FMTB.get().close(true);
@@ -146,7 +146,7 @@ public class SaveLoad {
 			}, () -> {
 				Print.console("selected > no saving of current");
 				if(shouldclear){
-					FMTB.setModel(new GroupCompound(null), true);
+					FMTB.setModel(new GroupCompound(null), true, true);
 				}
 				if(shouldclose){
 					FMTB.get().close(true);
