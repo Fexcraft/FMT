@@ -219,6 +219,8 @@ public class TextureManager {
 				catch(IOException e){
 					e.printStackTrace();
 				}
+				width = image.getWidth();
+				height = image.getHeight();
 			}
 			buffer = BufferUtils.createByteBuffer(4 * image.getWidth() * image.getHeight());
 			for(int y = 0; y < image.getHeight(); y++){
