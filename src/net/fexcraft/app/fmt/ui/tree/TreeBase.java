@@ -71,7 +71,13 @@ public class TreeBase extends Panel {
 
 	public void updateCounter(){
 		switch(this.id){
-			case "polygon": counter.getTextState().setText(counterlabel + FMTB.MODEL.countTotalMRTs()); break;
+			case "polygon":{
+				String str = counterlabel + FMTB.MODEL.countTotalMRTs();
+				str += " / " + FMTB.MODEL.countTotalFaces(false);
+				str += " / " + FMTB.MODEL.countTotalFaces(true);
+				counter.getTextState().setText(str);
+				break;
+			}
 			case "helper": counter.getTextState().setText(counterlabel + HelperCollector.LOADED.size()); break;
 			case "fvtm": counter.getTextState().setText(counterlabel + FMTB.MODEL.getGroups().size()); break;
 			case "textures": counter.getTextState().setText(counterlabel + TextureManager.getGroupAmount());

@@ -548,14 +548,26 @@ public class GroupCompound {
 	}*/
 	
 	public long countTotalMRTs(){
-		long i = 0; for(TurboList list : groups) i += list.size(); return i;
+		long l = 0;
+		for(TurboList list : groups) l += list.size();
+		return l;
+	}
+
+	public long countTotalFaces(boolean visonly){
+		long l = 0;
+		for(TurboList list : groups){
+			for(PolygonWrapper poly : list){
+				l += poly.getFacesAmount(visonly);
+			}
+		}
+		return l;
 	}
 	
 	public long countSelectedMRTs(){
-		long i = 0; for(TurboList list : groups){
-			if(list.selected) i += list.size();
-			else for(PolygonWrapper wrapper : list) if(wrapper.selected) i++;
-		} return i;
+		long l = 0; for(TurboList list : groups){
+			if(list.selected) l += list.size();
+			else for(PolygonWrapper wrapper : list) if(wrapper.selected) l++;
+		} return l;
 	}
 
 	public void setTexture(TextureGroup group){

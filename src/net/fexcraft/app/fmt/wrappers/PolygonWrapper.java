@@ -351,5 +351,16 @@ public abstract class PolygonWrapper {
 	public TextureGroup getTextureGroup(){
 		return getTurboList().texgroup == null ? FMTB.MODEL.texgroup : getTurboList().getTextureGroup();
 	}
+
+	public long getFacesAmount(boolean visonly){
+		if(visonly){
+			return turbo.getFaces().length;
+		}
+		if(getType().isCylinder()){
+			CylinderWrapper cyl = (CylinderWrapper)this;
+			return cyl.seglimit > 0 && cyl.seglimit < cyl.segments ? cyl.seglimit * 4 + 2 : cyl.segments * (cyl.radius2 > 0 ? 4 : 3);
+		}
+		return 6;
+	}
 	
 }
