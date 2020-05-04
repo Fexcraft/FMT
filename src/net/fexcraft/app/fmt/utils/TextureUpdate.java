@@ -274,8 +274,8 @@ public class TextureUpdate extends TimerTask {
 			for(float y = ends[0][1]; y < ends[1][1]; y += 0.5f){
 				for(float x = ends[0][0]; x < ends[1][0]; x += 0.5f){
 					int xr = (int)(xx + x), yr = (int)(yy + y);
-					if(xr < 1 || yr < 1) continue;
-					if(xr >= image.getWidth() - 1 || yr >= image.getHeight() - 1) return false;
+					if(xr < 0 || yr < 0) continue;
+					if(xr >= image.getWidth() || yr >= image.getHeight()) return false;
 					//
 					if(image.getRGB(xr, yr) != Color.WHITE.getRGB()){
 						/* Print.console(xr + " " + yr + " || " + x + " " + y); */ return false;
