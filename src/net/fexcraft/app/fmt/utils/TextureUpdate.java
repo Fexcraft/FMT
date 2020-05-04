@@ -20,7 +20,6 @@ import org.liquidengine.legui.listener.MouseClickEventListener;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.DialogBox;
-import net.fexcraft.app.fmt.ui.UserInterfaceUtils;
 import net.fexcraft.app.fmt.utils.TextureManager.Texture;
 import net.fexcraft.app.fmt.utils.TextureManager.TextureGroup;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
@@ -111,7 +110,7 @@ public class TextureUpdate extends TimerTask {
 		});
 		texture.setSelected(0, true);
 		texture.setVisibleCount(6);
-		Button button = new Button(UserInterfaceUtils.translate("dialogbox.button.confirm"), 10, 130, 100, 20);
+		Button button = new Button(Translator.translate("dialogbox.button.confirm"), 10, 130, 100, 20);
 		button.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)e -> {
 			if(CLICK == e.getAction()){
 				if(resetsel != null){
@@ -158,13 +157,13 @@ public class TextureUpdate extends TimerTask {
 		checkbox0.getStyle().setPadding(5f, 10f, 5f, 5f);
 		checkbox0.setChecked(SAVESPACE);
 		checkbox0.addCheckBoxChangeValueListener(listener -> SAVESPACE = listener.getNewValue());
-		checkbox0.getTextState().setText(UserInterfaceUtils.translate("texture_update.autopos.savespace"));
+		checkbox0.getTextState().setText(Translator.translate("texture_update.autopos.savespace"));
 		CheckBox checkbox1 = new CheckBox(10, 100, width, 20);
 		checkbox1.getStyle().setPadding(5f, 10f, 5f, 5f);
 		checkbox1.setChecked(!ALL);
 		checkbox1.addCheckBoxChangeValueListener(listener -> ALL = !listener.getNewValue());
-		checkbox1.getTextState().setText(UserInterfaceUtils.translate("texture_update.autopos.process_all"));
-		Button button = new Button(UserInterfaceUtils.translate("texture_update.autopos.start"), 10, 130, 100, 20);
+		checkbox1.getTextState().setText(Translator.translate("texture_update.autopos.process_all"));
+		Button button = new Button(Translator.translate("texture_update.autopos.start"), 10, 130, 100, 20);
 		button.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)e -> {
 			if(CLICK == e.getAction()){
 				startAutoPos();

@@ -2,9 +2,6 @@ package net.fexcraft.app.fmt.utils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
 import java.util.Scanner;
 import java.util.TreeMap;
 
@@ -26,6 +23,7 @@ public class Translator {
 		File file = new File("./resources/lang/" + Settings.getLanguage() + ".lang");
 		if(!file.exists()){ Print.console("Tried to find lang file as specified in settings, but the file seems to be missing."); return; }
 		//
+		Print.console("Parsing '" + Settings.getLanguage() + "' language file.");
 		scanner = new Scanner(file, "UTF-8");
 		while(scanner.hasNextLine()){
 			String string = scanner.nextLine();
@@ -34,10 +32,10 @@ public class Translator {
 		} scanner.close();
 	}
 	
-	public static void append(String key, String fill) {
+	/*public static void append(String key, String fill){
 		try{ Files.write(ROOT_FILE.toPath(), ("\n" + key + "=" + fill).getBytes(), StandardOpenOption.APPEND); }
 		catch(IOException e){ e.printStackTrace(); }
-	}
+	}*/
 	
 	public static String translate(String key){
 		if(key.startsWith("#")) return key.substring(1);

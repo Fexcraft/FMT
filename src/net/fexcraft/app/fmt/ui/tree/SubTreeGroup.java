@@ -15,11 +15,11 @@ import org.liquidengine.legui.style.color.ColorConstants;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.ui.SettingsBox;
-import net.fexcraft.app.fmt.ui.UserInterfaceUtils;
 import net.fexcraft.app.fmt.ui.editor.Editors;
 import net.fexcraft.app.fmt.utils.Animator.Animation;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.Settings;
+import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
@@ -113,7 +113,7 @@ public class SubTreeGroup extends Panel {
 			updateColor();
 		}, "visibility"));
 		this.add(new TreeIcon((int)getSize().x - 64, 0, "group_edit", () -> {
-			SettingsBox.open("[" + animation.id + "] " + UserInterfaceUtils.translate("editor.model_group.group.animator_settings"), animation.settings.values(), false, settings -> {
+			SettingsBox.open("[" + animation.id + "] " + Translator.translate("editor.model_group.group.animator_settings"), animation.settings.values(), false, settings -> {
 				animation.onSettingsUpdate();
 				update();
 			});
@@ -144,7 +144,7 @@ public class SubTreeGroup extends Panel {
 	}
 
 	public Component update(){
-		label.getTextState().setText(text != null ? UserInterfaceUtils.translate(text) : animation != null ? animation.getButtonString() : list == null ? polygon.name() : list.id);
+		label.getTextState().setText(text != null ? Translator.translate(text) : animation != null ? animation.getButtonString() : list == null ? polygon.name() : list.id);
 		return this;
 	}
 

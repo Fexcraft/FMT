@@ -23,6 +23,7 @@ import net.fexcraft.app.fmt.utils.Setting;
 import net.fexcraft.app.fmt.utils.Setting.StringArraySetting;
 import net.fexcraft.app.fmt.utils.Setting.Type;
 import net.fexcraft.app.fmt.utils.Settings;
+import net.fexcraft.app.fmt.utils.Translator;
 
 /**
  * 
@@ -71,7 +72,7 @@ public class SettingsBox {
 			index++;
 		}
 		panel.setHorizontalScrollBarVisible(false);
-		Button button = new Button(UserInterfaceUtils.translate("settingsbox." + (settings ? "confirm" : "continue")), 10, 300, 100, 20);
+		Button button = new Button(Translator.translate("settingsbox." + (settings ? "confirm" : "continue")), 10, 300, 100, 20);
 		button.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)e -> {
 			if(CLICK == e.getAction()){
 				task.process(map);
@@ -91,7 +92,7 @@ public class SettingsBox {
 	}
 
 	public static void openFMTSettings(){
-		SettingsBox.open(UserInterfaceUtils.translate("toolbar.file.settings"), Settings.SETTINGS.values(), true, settings -> {});
+		SettingsBox.open(Translator.translate("toolbar.file.settings"), Settings.SETTINGS.values(), true, settings -> {});
 	}
 
 }

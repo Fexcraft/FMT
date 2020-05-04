@@ -27,6 +27,7 @@ import net.fexcraft.app.fmt.utils.Animator.Animation;
 import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureUpdate;
+import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.Vec3f;
@@ -131,16 +132,16 @@ public class ModelEditor extends EditorBase {
 				button.getStyle().setHorizontalAlign(HorizontalAlign.LEFT);
 				this.getContainer().add(button);
 			}
-			Button button = new Button(UserInterfaceUtils.translate("editor.model_group.authors.add"), 3, pass += 24, 290, 20);
+			Button button = new Button(Translator.translate("editor.model_group.authors.add"), 3, pass += 24, 290, 20);
 			button.getStyle().setHorizontalAlign(HorizontalAlign.LEFT);
 			button.getListenerMap().addListener(MouseClickEvent.class, listener -> {
 				if(listener.getAction() != CLICK && listener.getButton() != MouseButton.MOUSE_BUTTON_LEFT) return;
-				Dialog dialog = new Dialog(UserInterfaceUtils.translate("editor.model_group.authors.add.dialog"), 300, 90);
+				Dialog dialog = new Dialog(Translator.translate("editor.model_group.authors.add.dialog"), 300, 90);
 				dialog.setResizable(false);
 				TextField input = new TextField("no name", 10, 10, 280, 20);
 				input.addTextInputContentChangeEventListener(lis -> UserInterfaceUtils.validateString(lis));
 				dialog.getContainer().add(input);
-	            Button button0 = new Button(UserInterfaceUtils.translate("dialogbox.button.confirm"), 10, 40, 100, 20);
+	            Button button0 = new Button(Translator.translate("dialogbox.button.confirm"), 10, 40, 100, 20);
 	            button0.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
 	            	if(CLICK == e.getAction()){
 	            		FMTB.MODEL.addAuthor(input.getTextState().getText(), true, false);
@@ -151,7 +152,7 @@ public class ModelEditor extends EditorBase {
 				dialog.show(FMTB.frame);
 			});
 			this.getContainer().add(button);
-			Button button1 = new Button(UserInterfaceUtils.translate("editor.model_group.authors.add_self"), 3, pass += 24, 290, 20);
+			Button button1 = new Button(Translator.translate("editor.model_group.authors.add_self"), 3, pass += 24, 290, 20);
 			button1.getStyle().setHorizontalAlign(HorizontalAlign.LEFT);
 			button1.getListenerMap().addListener(MouseClickEvent.class, listener -> {
 				if(listener.getAction() != CLICK && listener.getButton() != MouseButton.MOUSE_BUTTON_LEFT) return;

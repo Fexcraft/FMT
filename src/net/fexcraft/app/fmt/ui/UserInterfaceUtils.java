@@ -42,15 +42,15 @@ public class UserInterfaceUtils {
 
 	public static final Runnable NOTHING = () -> {};
 	public static final MouseClickEventListener NOT_AVAILABLE_YET = event -> {
-        Dialog dialog = new Dialog(translate("error.dialog_title"), 300, 100);
-        Label label = new Label(translate("error.feature_not_available_yet"), 10, 10, 200, 20);
+        Dialog dialog = new Dialog(Translator.translate("error.dialog_title"), 300, 100);
+        Label label = new Label(Translator.translate("error.feature_not_available_yet"), 10, 10, 200, 20);
         Button okbutton = new Button("ok", 10, 50, 50, 20);
         okbutton.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> { if(CLICK == e.getAction()) dialog.close(); });
         dialog.getContainer().add(label); dialog.getContainer().add(okbutton); dialog.show(event.getFrame());
 	};
 	public static final MouseClickEventListener NOT_REIMPLEMENTED_YET = event -> {
-        Dialog dialog = new Dialog(translate("error.dialog_title"), 300, 100);
-        Label label = new Label(translate("error.feature_not_reimplemented_yet"), 10, 10, 200, 20);
+        Dialog dialog = new Dialog(Translator.translate("error.dialog_title"), 300, 100);
+        Label label = new Label(Translator.translate("error.feature_not_reimplemented_yet"), 10, 10, 200, 20);
         Button okbutton = new Button("ok", 10, 50, 50, 20);
         okbutton.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> { if(CLICK == e.getAction()) dialog.close(); });
         dialog.getContainer().add(label); dialog.getContainer().add(okbutton); dialog.show(event.getFrame());
@@ -66,7 +66,7 @@ public class UserInterfaceUtils {
 		frame.getContainer().add(new Icon(3, "./resources/textures/icons/toolbar/save.png", () -> SaveLoad.saveModel(false, false)));
 		frame.getContainer().add(new Icon(4, "./resources/textures/icons/toolbar/profile.png", () -> ProfileBox.open()));
 		frame.getContainer().add(new Icon(5, "./resources/textures/icons/toolbar/settings.png", () -> SettingsBox.openFMTSettings()));
-		frame.getContainer().add(new MenuEntry(0, translate("toolbar.file"),
+		frame.getContainer().add(new MenuEntry(0, Translator.translate("toolbar.file"),
 			new MenuButton("toolbar.file.new_model", () -> SaveLoad.openNewModel()),
 			new MenuButton("toolbar.file.open", () -> SaveLoad.openModel()),
 			new MenuButton("toolbar.file.save", () -> SaveLoad.saveModel(false, false)),
@@ -76,7 +76,7 @@ public class UserInterfaceUtils {
 			new MenuButton("toolbar.file.settings", () -> SettingsBox.openFMTSettings()),
 			new MenuButton("toolbar.file.exit",  () -> SaveLoad.checkIfShouldSave(true, false))
 		));
-		frame.getContainer().add(new MenuEntry(1, translate("toolbar.utils"),
+		frame.getContainer().add(new MenuEntry(1, Translator.translate("toolbar.utils"),
 			new MenuButton("toolbar.utils.copy_selected", () -> FMTB.MODEL.copyAndSelect()),
 			new MenuButton("toolbar.utils.copy", () -> FMTB.MODEL.copyToClipboard()),
 			new MenuButton("toolbar.utils.paste", () -> FMTB.MODEL.pasteFromClipboard()),
@@ -106,7 +106,7 @@ public class UserInterfaceUtils {
 			new MenuButton("toolbar.utils.mirror_sel", () -> FMTB.MODEL.mirrorLRSelected()),
 			new MenuButton("toolbar.utils.controls", NOT_REIMPLEMENTED_YET)
 		));
-		frame.getContainer().add(new MenuEntry(2, translate("toolbar.editor"),
+		frame.getContainer().add(new MenuEntry(2, Translator.translate("toolbar.editor"),
 			new MenuButton("toolbar.editor.hide_all", () -> Editors.hideAll()),
 			new MenuButton("toolbar.editor.general", () -> Editors.show("general")),
 			new MenuButton("toolbar.editor.group", () -> Editors.show("group")),
@@ -114,7 +114,7 @@ public class UserInterfaceUtils {
 			new MenuButton("toolbar.editor.texture", () -> Editors.show("texture")),
 			new MenuButton("toolbar.editor.preview", () -> Editors.show("preview"))
 		));
-		frame.getContainer().add(new MenuEntry(3, translate("toolbar.shapelist"),
+		frame.getContainer().add(new MenuEntry(3, Translator.translate("toolbar.shapelist"),
 			new MenuButton("toolbar.shapelist.show", () -> Trees.toggle("polygon")),
 			new MenuButton("toolbar.shapelist.add_box", () -> FMTB.MODEL.add(new BoxWrapper(FMTB.MODEL), null, true)),
 			new MenuButton("toolbar.shapelist.add_shapebox", () -> FMTB.MODEL.add(new ShapeboxWrapper(FMTB.MODEL), null, true)),
@@ -136,29 +136,29 @@ public class UserInterfaceUtils {
 			new MenuButton("toolbar.shapelist.add_marker", () -> FMTB.MODEL.add(new MarkerWrapper(FMTB.MODEL), "markers", true)),
 			new MenuButton("toolbar.shapelist.add_voxel", () -> FMTB.MODEL.add(new VoxelWrapper(FMTB.MODEL, 16, true), "voxels", true))
 		));
-		frame.getContainer().add(new MenuEntry(4, translate("toolbar.textures"),
+		frame.getContainer().add(new MenuEntry(4, Translator.translate("toolbar.textures"),
 			new MenuButton("toolbar.textures.manage", () -> Trees.show("textures")),
 			new MenuButton("toolbar.textures.addnew", () -> TextureManager.addNewGroup()),
 			new MenuButton("toolbar.textures.texpos_reset", () -> TextureUpdate.tryResetPos()),
 			new MenuButton("toolbar.textures.auto_position", () -> TextureUpdate.tryAutoPos())
 		));
-		frame.getContainer().add(new MenuEntry(5, translate("toolbar.helpers"),
+		frame.getContainer().add(new MenuEntry(5, Translator.translate("toolbar.helpers"),
 			new MenuButton("toolbar.helpers.view", () -> Trees.show("helper")),
 			new MenuButton("toolbar.helpers.load_fmtb", () -> {
-				FileSelector.select(translate("toolbar.helpers.load_fmtb.dialog"), "./saves", FileSelector.TYPE_FMTB, false, file -> HelperCollector.loadFMTB(file));
+				FileSelector.select(Translator.translate("toolbar.helpers.load_fmtb.dialog"), "./saves", FileSelector.TYPE_FMTB, false, file -> HelperCollector.loadFMTB(file));
 			}),
 			new MenuButton("toolbar.helpers.load_frame", () -> {
-				FileSelector.select(translate("toolbar.helpers.load_frame.dialog"), "./imports", FileSelector.TYPE_IMG, false, file -> HelperCollector.loadFrame(file));
+				FileSelector.select(Translator.translate("toolbar.helpers.load_frame.dialog"), "./imports", FileSelector.TYPE_IMG, false, file -> HelperCollector.loadFrame(file));
 			}),
 			new MenuButton("toolbar.helpers.load_imported", () -> {
-				FileSelector.select(translate("toolbar.helpers.load_fmtb.dialog"), "./imports", false, (file, porter, settings) -> HelperCollector.load(file, porter, settings));
+				FileSelector.select(Translator.translate("toolbar.helpers.load_fmtb.dialog"), "./imports", false, (file, porter, settings) -> HelperCollector.load(file, porter, settings));
 			}),
 			new MenuButton("toolbar.helpers.unload_clear", () -> HelperCollector.LOADED.clear())
 		));
-		frame.getContainer().add(new MenuEntry(6, translate("toolbar.mod_tools"),
+		frame.getContainer().add(new MenuEntry(6, Translator.translate("toolbar.mod_tools"),
 			new MenuButton("toolbar.mod_tools.fvtm_programs", () -> Trees.show("fvtm"))
 		));
-		frame.getContainer().add(new MenuEntry(7, translate("toolbar.exit")));
+		frame.getContainer().add(new MenuEntry(7, Translator.translate("toolbar.exit")));
 	}
 	
 	public static class Icon extends ImageView {
@@ -184,7 +184,7 @@ public class UserInterfaceUtils {
 			this.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)event -> {
 				if(event.getAction() == CLICK) run.run();
 			});
-			Tooltip tool = new Tooltip(UserInterfaceUtils.translate(tooltip));
+			Tooltip tool = new Tooltip(Translator.translate(tooltip));
 			tool.setSize(200, 20);
 			tool.setPosition(0, 34);
 			this.setTooltip(tool);
@@ -273,7 +273,7 @@ public class UserInterfaceUtils {
 		private MenuEntry entry;
 		
 		public MenuButton(String string, Runnable run){
-			super(translate(string));
+			super(Translator.translate(string));
 			Settings.THEME_CHANGE_LISTENER.add(bool -> {
 				this.getStyle().setBorderRadius(0f);
 			});
@@ -284,7 +284,7 @@ public class UserInterfaceUtils {
 		}
 		
 		public MenuButton(String string, MouseClickEventListener listener){
-			super(translate(string)); this.getStyle().setBorderRadius(0f);
+			super(Translator.translate(string)); this.getStyle().setBorderRadius(0f);
 	        this.getListenerMap().addListener(MouseClickEvent.class, listener);
 	        this.getListenerMap().addListener(CursorEnterEvent.class, (CursorEnterEventListener)lis -> entry.checkClose());
 		}
@@ -318,14 +318,6 @@ public class UserInterfaceUtils {
 		component.getListenerMap().addListener(MouseClickEvent.class, listener -> {
 			if(listener.getAction() == CLICK && FMTB.context.getFocusedGui() == component && !component.isFocused())component.setFocused(true);
 		});
-	}
-	
-	public static String translate(String str){
-		return Translator.translate(str);//, "no.lang");
-	}
-	
-	public static String format(String str, Object... objs){
-		return Translator.format(str, objs);
 	}
 
 	public static String validateString(TextInputContentChangeEvent<TextField> event){

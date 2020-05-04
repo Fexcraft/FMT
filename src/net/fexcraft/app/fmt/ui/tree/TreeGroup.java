@@ -33,6 +33,7 @@ import net.fexcraft.app.fmt.utils.Setting;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureManager.TextureGroup;
+import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.math.Vec3f;
@@ -262,7 +263,7 @@ public class TreeGroup extends Panel {
 		}, "edit"));
 		this.add(new TreeIcon((int)getSize().x - 64, 0, "group_minimize", () -> toggle(!texgroup.minimized), "options"));
 		new SubTreeGroup(base, 0, "tree.textures.select", () -> {
-			FileSelector.select(UserInterfaceUtils.translate("tree.textures.select.dialog"), "./", FileSelector.TYPE_PNG, false, file -> {
+			FileSelector.select(Translator.translate("tree.textures.select.dialog"), "./", FileSelector.TYPE_PNG, false, file -> {
 				if(file == null) return;
 				String name = file.getPath();
 				TextureManager.loadTextureFromFile(name, file);
@@ -292,9 +293,9 @@ public class TreeGroup extends Panel {
         	FMTB.MODEL.recompile();
 		}).setRoot(this).updateColor();
 		new SubTreeGroup(base, 2, "tree.textures.resize", () -> {
-			Dialog dialog = new Dialog(UserInterfaceUtils.translate("tree.textures.resize.dialog"), 300, 90);
+			Dialog dialog = new Dialog(Translator.translate("tree.textures.resize.dialog"), 300, 90);
 			dialog.setResizable(false);
-			Label label = new Label(UserInterfaceUtils.translate("tree.textures.resize.copyfrom"), 10, 10, 120, 20);
+			Label label = new Label(Translator.translate("tree.textures.resize.copyfrom"), 10, 10, 120, 20);
 			SelectBox<String> selectbox = new SelectBox<String>(140, 10, 140, 20);
 			selectbox.addElement("model");
 			for(TurboList list : FMTB.MODEL.getGroups()){
@@ -303,7 +304,7 @@ public class TreeGroup extends Panel {
 			selectbox.setSelected(0, true);
 			dialog.getContainer().add(label);
 			dialog.getContainer().add(selectbox);
-            Button button0 = new Button(UserInterfaceUtils.translate("dialogbox.button.ok"), 10, 40, 100, 20);
+            Button button0 = new Button(Translator.translate("dialogbox.button.ok"), 10, 40, 100, 20);
             button0.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
             	if(CLICK == e.getAction()){
             		dialog.close();
@@ -323,12 +324,12 @@ public class TreeGroup extends Panel {
 			dialog.show(FMTB.frame);
 		}).setRoot(this).updateColor();
 		new SubTreeGroup(base, 3, "tree.textures.rename", () -> {
-			Dialog dialog = new Dialog(UserInterfaceUtils.translate("tree.textures.rename.dialog"), 300, 90);
+			Dialog dialog = new Dialog(Translator.translate("tree.textures.rename.dialog"), 300, 90);
 			dialog.setResizable(false);
 			TextField input = new TextField(texgroup.group, 10, 10, 280, 20);
 			input.addTextInputContentChangeEventListener(listener -> UserInterfaceUtils.validateString(listener));
 			dialog.getContainer().add(input);
-            Button button0 = new Button(UserInterfaceUtils.translate("dialogbox.button.ok"), 10, 40, 100, 20);
+            Button button0 = new Button(Translator.translate("dialogbox.button.ok"), 10, 40, 100, 20);
             button0.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
             	if(CLICK == e.getAction()){
             		texgroup.group = input.getTextState().getText();

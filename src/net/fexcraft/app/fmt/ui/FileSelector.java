@@ -25,6 +25,7 @@ import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.field.TextField;
 import net.fexcraft.app.fmt.utils.Setting;
 import net.fexcraft.app.fmt.utils.Settings;
+import net.fexcraft.app.fmt.utils.Translator;
 
 /**
  * 
@@ -58,7 +59,7 @@ public class FileSelector {
 	}
 	
 	private static void openFileChooser(String title, String root, String[] type, boolean save, AfterTask task){
-		Dialog dialog = new Dialog(UserInterfaceUtils.translate("saveload.title"), 500, save ? 630 : 600);
+		Dialog dialog = new Dialog(Translator.translate("saveload.title"), 500, save ? 630 : 600);
         Label label = new Label(title, 10, 10, 480, 20);
         File rootfile = new File(root);
         if(!rootfile.exists()) rootfile.mkdirs();
@@ -125,7 +126,7 @@ public class FileSelector {
 		}
 		if(save){
 			TextField input = new TextField("enter custom filename here", 10, 580, 390, 20);
-			Button select = new Button(UserInterfaceUtils.translate("dialogbox.button.select"), 410, 580, 80, 20);
+			Button select = new Button(Translator.translate("dialogbox.button.select"), 410, 580, 80, 20);
 			select.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
 	        	if(CLICK == e.getAction() && input.getTextState().getText().length() > 0){
         			dialog.close();
@@ -150,10 +151,10 @@ public class FileSelector {
 
 	/** For selecting an Ex/Im-Porter first. */
 	public static final void select(String title, String root, boolean export, SelectTask task){
-        Dialog dialog = new Dialog(UserInterfaceUtils.translate("eximporter." + (export ? "export" : "import") + ".select.title"), 340, 125);
+        Dialog dialog = new Dialog(Translator.translate("eximporter." + (export ? "export" : "import") + ".select.title"), 340, 125);
         dialog.setResizable(false); if(!root.endsWith("/")) root += "/"; final String reet = root;
-        Label label = new Label(UserInterfaceUtils.translate("eximporter." + (export ? "export" : "import") + ".select.desc"), 10, 10, 320, 20);
-        Button okbutton = new Button(UserInterfaceUtils.translate("eximporter." + (export ? "export" : "import") + ".select.continue"), 10, 75, 100, 20);
+        Label label = new Label(Translator.translate("eximporter." + (export ? "export" : "import") + ".select.desc"), 10, 10, 320, 20);
+        Button okbutton = new Button(Translator.translate("eximporter." + (export ? "export" : "import") + ".select.continue"), 10, 75, 100, 20);
         SelectBox<String> selbox = new SelectBox<>(10, 40, 320, 24);
         List<ExImPorter> eximporter = PorterManager.getPorters(export);
         selbox.setVisibleCount(8); selbox.setElementHeight(20);
