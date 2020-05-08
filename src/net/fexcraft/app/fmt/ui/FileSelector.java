@@ -157,7 +157,7 @@ public class FileSelector {
         Button okbutton = new Button(Translator.translate("eximporter." + (export ? "export" : "import") + ".select.continue"), 10, 75, 100, 20);
         SelectBox<String> selbox = new SelectBox<>(10, 40, 320, 24);
         List<ExImPorter> eximporter = PorterManager.getPorters(export);
-        selbox.setVisibleCount(8); selbox.setElementHeight(20);
+        selbox.setVisibleCount(12); selbox.setElementHeight(20);
         for(ExImPorter porter : eximporter){ selbox.addElement(porter.getName()); }
         selbox.getSelectionButton().getStyle().setFontSize(20f);
         selbox.getSelectBoxElements().forEach(elm -> {
