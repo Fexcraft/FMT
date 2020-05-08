@@ -244,7 +244,7 @@ public class GeneralEditor extends EditorBase {
 		this.addSub(marker);
 		pass = -20;
 		//
-		final String[] faces = new String[]{ translate("editor.general.texrect.front"), translate("editor.general.texrect.back"), translate("editor.general.texrect.up"), translate("editor.general.texrect.down"), translate("editor.general.texrect.right"), translate("editor.general.texrect.left") };
+		/*final String[] faces = new String[]{ translate("editor.general.texrect.front"), translate("editor.general.texrect.back"), translate("editor.general.texrect.up"), translate("editor.general.texrect.down"), translate("editor.general.texrect.right"), translate("editor.general.texrect.left") };
 		EditorWidget texrectA = new EditorWidget(this, translate("editor.general.texrect_a"), 0, 0, 0, 0);
 		int[] tra = new int[24];
 		for(int i = 0; i < 12; i++){
@@ -273,11 +273,11 @@ public class GeneralEditor extends EditorBase {
 		}
 		texrectB.setSize(296, pass + 52);
 		this.addSub(texrectB);
-		pass = -20;
+		pass = -20;*/
 		//
-		// reOrderWidgets();
-		texrectA.setMinimized(true);
-		texrectB.setMinimized(true);
+		reOrderWidgets();
+		//texrectA.setMinimized(true);
+		//texrectB.setMinimized(true);
 	}
 
 	public void refreshGroups(){

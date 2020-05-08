@@ -404,7 +404,7 @@ public class GroupCompound {
 			GeneralEditor.cyl7_z.apply(poly.getFloat("cyl7", false, false, true));
 		}
 		//
-		if(poly == null || !poly.getType().isTexRectB()){
+		/*if(poly == null || !poly.getType().isTexRectB()){
 			for(int i = 0; i < 6; i++){
 				GeneralEditor.texrect_b[i][0].apply(0);
 				GeneralEditor.texrect_b[i][1].apply(0);
@@ -431,7 +431,7 @@ public class GroupCompound {
 					else GeneralEditor.texrect_a[i][j].apply(poly.getFloat("texpos" + i + ":" + j, false, true, false));
 				}
 			}
-		}
+		}*/
 		if(poly == null || !poly.getType().isMarker()){
 			GeneralEditor.marker_color.apply(0xffffff);
 			GeneralEditor.marker_biped.apply(0);

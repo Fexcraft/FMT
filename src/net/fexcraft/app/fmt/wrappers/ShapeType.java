@@ -75,7 +75,7 @@ public enum ShapeType {
 	}
 
 	public static ShapeType[] getSupportedValues(){
-		return new ShapeType[]{ BOX, SHAPEBOX, TEXRECT_B, TEXRECT_A, CYLINDER, MARKER, VOXEL, QUAD, SHAPEQUAD };
+		return new ShapeType[]{ BOX, SHAPEBOX, CYLINDER, MARKER, VOXEL };
 	}
 
 }
