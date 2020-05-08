@@ -41,6 +41,7 @@ public class PorterManager {
 		porters.add(new DFMImporter());
 		porters.add(new TCNEXImporter());
 		porters.add(new TCHImporter());
+		porters.add(new AABBExporter());
 	}
 
 	public static void handleImport(){
