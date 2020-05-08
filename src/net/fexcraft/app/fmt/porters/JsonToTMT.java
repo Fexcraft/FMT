@@ -98,6 +98,14 @@ public class JsonToTMT {
 				cuboid.sides = parseSides(obj);
 				polygon = cuboid; break;
 			}
+			case "boundingbox": case "bb": {
+				BBWrapper cuboid = new BBWrapper(compound);
+				cuboid.size.xCoord = get(width, obj, def);
+				cuboid.size.yCoord = get(height, obj, def);
+				cuboid.size.zCoord = get(depth, obj, def);
+				cuboid.sides = parseSides(obj);
+				polygon = cuboid; break;
+			}
 			case "shapebox": case "sbox": case "sb": {
 				ShapeboxWrapper shapebox = new ShapeboxWrapper(compound);
 				shapebox.size.xCoord = get(width, obj, def);

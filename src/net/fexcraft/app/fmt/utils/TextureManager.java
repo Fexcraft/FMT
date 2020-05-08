@@ -157,6 +157,10 @@ public class TextureManager {
 		/* TextureImpl.bindNone(); */ texture = nulltex;// TODO fonttex
 	}
 
+	public static String getBoundTexture(){
+		return texture.name;
+	}
+
 	public static class Texture {
 
 		private static ByteBuffer buffer;

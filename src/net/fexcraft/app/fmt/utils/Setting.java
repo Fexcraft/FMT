@@ -34,6 +34,14 @@ public class Setting {
 	public Setting(String id, boolean value){
 		this(Type.BOOLEAN, id, value);
 	}
+	
+	public Setting(String id, RGB value){
+		this(Type.RGB, id, value);
+	}
+	
+	public Setting(String id, float... value){
+		this(Type.FLOAT_ARRAY, id, value);
+	}
 
 	/** For parsing of Settings. */
 	public Setting(String type, String id, JsonElement elm){

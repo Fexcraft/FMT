@@ -44,6 +44,7 @@ toolbar.shapelist.add_texrect_b=Ajouter Texrect B
 toolbar.shapelist.add_texrect_a=Ajouter Texrect A
 toolbar.shapelist.add_cylinder=Ajouter un cylindre
 toolbar.shapelist.add_quad=Ajouter un quad
+toolbar.shapelist.add_boundingbox=Ajouter un "BB"
 toolbar.shapelist.add_group=Ajouter un groupe
 toolbar.shapelist.add_marker=Ajouter un marqueur
 toolbar.shapelist.add_voxel=Ajouter Voxel (16)

@@ -45,6 +45,7 @@ toolbar.shapelist.add_texrect_b=Add Texrect B
 toolbar.shapelist.add_texrect_a=Add Texrect A
 toolbar.shapelist.add_cylinder=Add Cylinder
 toolbar.shapelist.add_quad=Add Quad
+toolbar.shapelist.add_boundingbox=Add BoundingBox
 toolbar.shapelist.add_group=Add Group
 toolbar.shapelist.add_marker=Add Marker
 toolbar.shapelist.add_voxel=Add Voxel(16)

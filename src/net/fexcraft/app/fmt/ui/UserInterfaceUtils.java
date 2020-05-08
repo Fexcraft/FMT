@@ -36,7 +36,14 @@ import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.TextureManager;
 import net.fexcraft.app.fmt.utils.TextureUpdate;
 import net.fexcraft.app.fmt.utils.Translator;
-import net.fexcraft.app.fmt.wrappers.*;
+import net.fexcraft.app.fmt.wrappers.BBWrapper;
+import net.fexcraft.app.fmt.wrappers.BoxWrapper;
+import net.fexcraft.app.fmt.wrappers.CylinderWrapper;
+import net.fexcraft.app.fmt.wrappers.MarkerWrapper;
+import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
+import net.fexcraft.app.fmt.wrappers.ShapeboxWrapper;
+import net.fexcraft.app.fmt.wrappers.TurboList;
+import net.fexcraft.app.fmt.wrappers.VoxelWrapper;
 
 public class UserInterfaceUtils {
 
@@ -118,10 +125,10 @@ public class UserInterfaceUtils {
 			new MenuButton("toolbar.shapelist.show", () -> Trees.toggle("polygon")),
 			new MenuButton("toolbar.shapelist.add_box", () -> FMTB.MODEL.add(new BoxWrapper(FMTB.MODEL), null, true)),
 			new MenuButton("toolbar.shapelist.add_shapebox", () -> FMTB.MODEL.add(new ShapeboxWrapper(FMTB.MODEL), null, true)),
-			new MenuButton("toolbar.shapelist.add_texrect_b", () -> FMTB.MODEL.add(new TexrectWrapperB(FMTB.MODEL), null, true)),
-			new MenuButton("toolbar.shapelist.add_texrect_a", () -> FMTB.MODEL.add(new TexrectWrapperA(FMTB.MODEL), null, true)),
+			//new MenuButton("toolbar.shapelist.add_texrect_b", () -> FMTB.MODEL.add(new TexrectWrapperB(FMTB.MODEL), null, true)),
+			//new MenuButton("toolbar.shapelist.add_texrect_a", () -> FMTB.MODEL.add(new TexrectWrapperA(FMTB.MODEL), null, true)),
 			new MenuButton("toolbar.shapelist.add_cylinder", () -> FMTB.MODEL.add(new CylinderWrapper(FMTB.MODEL), null, true)),
-			new MenuButton("toolbar.shapelist.add_quad", () -> FMTB.MODEL.add(new QuadWrapper(FMTB.MODEL), null, true)),
+			new MenuButton("toolbar.shapelist.add_boundingbox", () -> FMTB.MODEL.add(new BBWrapper(FMTB.MODEL), "boundingboxes", true)),
 			new MenuButton("toolbar.shapelist.add_group", () -> {
 				String string = "group" + FMTB.MODEL.getGroups().size();
 				if(FMTB.MODEL.getGroups().contains(string)){

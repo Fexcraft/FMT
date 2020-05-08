@@ -160,8 +160,8 @@ public abstract class PolygonWrapper {
 		boolean textured = compound.helpertex != null || compound.texgroup != null;
 		if(!textured) textured = getTurboList() != null && (getTurboList().getTextureGroup() != null || getTurboList().helpertex != null);
 		turbo = newMRT().setTextured(textured);
-		lines = newMRT().setLines(true);
-		sellines = newMRT().setLines(Settings.getSelectedColor());
+		lines = newMRT().setLines(getType().isBoundingBox() ? Settings.getBoundingBoxColor() : RGB.BLACK);
+		sellines = newMRT().setLines(getType().isBoundingBox() ? Settings.getBoundingBoxColor() : Settings.getSelectedColor());
 		//
 		picker = new ModelRendererTurbo(null, 0, 0, 16, 16){
 			@Override

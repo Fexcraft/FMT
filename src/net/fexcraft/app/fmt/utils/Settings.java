@@ -8,7 +8,6 @@ import java.util.function.Consumer;
 import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.utils.Setting.Type;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
@@ -115,6 +114,10 @@ public class Settings {
 		return SETTINGS.get("selection_color").getValue();
 	}
 
+	public static RGB getBoundingBoxColor(){
+		return SETTINGS.get("boundingbox_color").getValue();
+	}
+
 	public static float[] getBackGroundColor(){
 		return background_color.getValue();
 	}
@@ -142,8 +145,8 @@ public class Settings {
 	
 	public static SettingsMap DEFAULTS = new SettingsMap(), SETTINGS = new SettingsMap();
 	static {
-		DEFAULTS.add(new Setting(Type.RGB, "selection_color", new RGB(255, 255, 0)));
-		DEFAULTS.add(new Setting(Type.FLOAT_ARRAY, "background_color", new float[]{ 0.5f, 0.5f, 0.5f, 0.2f }));
+		DEFAULTS.add(new Setting("selection_color", new RGB(255, 255, 0)));
+		DEFAULTS.add(new Setting("background_color", new float[]{ 0.5f, 0.5f, 0.5f, 0.2f }));
 		DEFAULTS.add(new Setting("floor", true));
 		DEFAULTS.add(new Setting("lines", true));
 		DEFAULTS.add(new Setting("cube", true));
@@ -151,7 +154,7 @@ public class Settings {
 		DEFAULTS.add(new Setting("polygon_marker", true));
 		//DEFAULTS.add(new Setting(Type.BOOLEAN, "polygon_count", true));
 		DEFAULTS.add(new Setting("lighting", false));
-		DEFAULTS.add(new Setting(Type.FLOAT_ARRAY, "light0_position", new float[]{ 0, 1, 0, 0 }));
+		DEFAULTS.add(new Setting("light0_position", new float[]{ 0, 1, 0, 0 }));
 		DEFAULTS.add(new Setting("language_code", "default"));
 		DEFAULTS.add(new Setting("cullface", true));
 		DEFAULTS.add(new Setting("animate", false));
@@ -177,6 +180,7 @@ public class Settings {
 		DEFAULTS.add(new Setting("center_marker", false));
 		DEFAULTS.add(new Setting("ui_debug", false));
 		DEFAULTS.add(new Setting("drag_painting", false));
+		DEFAULTS.add(new Setting("boundingbox_color", new RGB(0, 255, 0)));
 	}
 
 	public static void load(){
