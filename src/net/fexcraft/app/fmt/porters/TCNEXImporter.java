@@ -62,11 +62,11 @@ public class TCNEXImporter extends ExImPorter {
             		compound.name = line.split(" ")[2].substring(5);
             		continue;
             	}
-            	if(line.startsWith("textureWidth")){
+            	if(line.startsWith("textureWidth") && !line.contains("textureHeight")){
             		compound.textureSizeX = parseI(line.split(" ")[2]);
             		continue;
             	}
-            	if(line.startsWith("textureHeight")){
+            	if(line.startsWith("textureHeight") && !line.contains("textureWidth")){
             		compound.textureSizeY = parseI(line.split(" ")[2]);
             		continue;
             	}
