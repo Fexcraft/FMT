@@ -3,11 +3,8 @@ package net.fexcraft.app.fmt;
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 import static org.lwjgl.glfw.GLFW.*;
 
-import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.time.LocalDate;
@@ -647,8 +644,7 @@ public class FMTB {
 		        			SaveLoad.checkIfShouldSave(true, false);
 		        		}
 		        		else{
-		        			try{ Desktop.getDesktop().browse(new URL("http://fexcraft.net/app/fmt").toURI()); }
-							catch(IOException | URISyntaxException e){ e.printStackTrace(); }
+		        			openLink("https://fexcraft.net/app/fmt");
 		        		}
 		        	}
 		        });
@@ -684,6 +680,33 @@ public class FMTB {
 		Trees.helper.reOrderGroups();
 		Editors.general.refreshGroups();
 		ModelEditor.creators.refresh();
+	}
+
+	//https://mkyong.com/java/open-browser-in-java-windows-or-linux/
+	public static final void openLink(String url){
+		String os = System.getProperty("os.name").toLowerCase();
+		Runtime rt = Runtime.getRuntime();
+		try{
+			if(os.indexOf("win") >= 0){
+				rt.exec("rundll32 url.dll,FileProtocolHandler " + url);
+			}
+			else if(os.indexOf("mac") >= 0){
+				rt.exec("open " + url);
+			}
+			else if(os.indexOf("nix") >= 0 || os.indexOf("nux") >= 0){
+				String[] browsers = { "epiphany", "firefox", "mozilla", "konqueror", "netscape", "opera", "links", "lynx" };
+				StringBuffer cmd = new StringBuffer();
+				for(int i = 0; i < browsers.length; i++){
+					cmd.append((i == 0 ? "" : " || ") + browsers[i] + " \"" + url + "\" ");
+				}
+				rt.exec(new String[]{ "sh", "-c", cmd.toString() });
+			}
+			else return;
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		return;
 	}
 
 }
