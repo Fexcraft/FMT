@@ -189,7 +189,7 @@ public class TextureUpdate extends TimerTask {
 					list = getSortedList(ALL);
 					last = 0;
 					if((texture = TextureManager.getTexture("auto-pos-temp", true)) != null){
-						texture.resize( FMTB.MODEL.tx(selected, false), FMTB.MODEL.ty(selected, false), null);
+						texture.resize( FMTB.MODEL.tx(selected, false), FMTB.MODEL.ty(selected, false));
 					}
 					else{
 						texture = TextureManager.createTexture("auto-pos-temp", FMTB.MODEL.tx(selected, false), FMTB.MODEL.ty(selected, false), null);
@@ -197,7 +197,7 @@ public class TextureUpdate extends TimerTask {
 					}
 					for(int i = 0; i < texture.getWidth(); i++){
 						for(int j = 0; j < texture.getHeight(); j++){
-							texture.set(i, j, RGB.WHITE.packed);
+							texture.set(i, j, RGB.WHITE.toByteArray());
 						}
 					}
 				}

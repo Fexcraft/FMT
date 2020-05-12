@@ -10,6 +10,7 @@ import static org.lwjgl.stb.STBImageResize.stbir_resize_uint8_generic;
 import java.io.File;
 import java.nio.ByteBuffer;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.lib.common.math.RGB;
@@ -40,20 +41,18 @@ public class Texture {
 
 	public Texture(String name, int width, int height, byte[] color){
 		if(color == null) color = RGB.WHITE.toByteArray();
-		buffer = ByteBuffer.allocate(width * height * CHANNELS);
-		for(int x = 0; x < width; x++){
-			for(int y = 0; y < height; y++){
-				set(x, y, color);
-			}
-		}
-		//buffer.flip();
+		buffer = stbi_load(new File("./resources/textures/blank.png").getPath(), this.width, this.height, channels, CHANNELS);
+		resize(width, height);
+		this.width[0] = width;
+		this.height[0] = height;
+		this.channels[0] = CHANNELS;
 		this.name = name;
 	}
 
-	public void resize(int width, int height, Integer color){
-		ByteBuffer oldbuffer = ByteBuffer.allocate(this.width[0] * this.height[0] * CHANNELS);
-		buffer = ByteBuffer.allocate(width * height * CHANNELS);
-		stbir_resize_uint8_generic(oldbuffer, this.width[0], this.height[0], 0, buffer, width, height, 0, 4, 3, 0, STBIR_EDGE_ZERO, STBIR_FILTER_DEFAULT, STBIR_COLORSPACE_LINEAR);
+	public void resize(int width, int height){
+		ByteBuffer oldbuffer = buffer;
+		buffer = BufferUtils.createByteBuffer(width * height * CHANNELS);
+		stbir_resize_uint8_generic(oldbuffer, this.width[0], this.height[0], 0, buffer, width, height, 0, 4, 4, 0, STBIR_EDGE_ZERO, STBIR_FILTER_DEFAULT, STBIR_COLORSPACE_LINEAR);
 		this.width[0] = width;
 		this.height[0] = height;
 		rebind();
@@ -119,40 +118,34 @@ public class Texture {
 	}
 
 	public void clearPixels(){
-		buffer = ByteBuffer.allocate(getWidth() * getHeight() * CHANNELS);
 		for(int x = 0; x < width[0]; x++){
 			for(int y = 0; y < height[0]; y++){
 				buffer.put((byte)255);
 				buffer.put((byte)255);
 				buffer.put((byte)255);
-				buffer.put((byte)0);
+				buffer.put((byte)255);
 			}
 		}
-		//buffer.flip();
 	}
 
 	public void save(){
 		TextureManager.saveTexture(this);
 	}
 
-	public void set(int x, int y, int color){
-		buffer.position(x * (y * height[0]) * CHANNELS);
-		buffer.put((byte)(color >> 24 & 255));
-		buffer.put((byte)(color >> 16 & 255));
-		buffer.put((byte)(color >> 8 & 255));
-		buffer.put((byte)(color & 255));
-	}
-
 	public void set(int x, int y, byte[] rgb){
-		buffer.position(x * (y * height[0]) * CHANNELS);
-		buffer.put(rgb[0]);
-		buffer.put(rgb[1]);
-		buffer.put(rgb[2]);
-		buffer.put((byte)255);
+		int pos = (x + y * height[0]) * CHANNELS;
+		/*if(pos >= buffer.capacity()){
+			Print.console("overcapacity " + pos + " " + buffer.capacity());
+			Print.console("source: " + x + " " + y);
+		}*/
+		buffer.put(pos + 0, (byte)(rgb[0] + 128));
+		buffer.put(pos + 1, (byte)(rgb[1] + 128));
+		buffer.put(pos + 2, (byte)(rgb[2] + 128));
+		buffer.put(pos + 3, (byte)255);
 	}
 
 	public byte[] get(int x, int y){
-		int index = x * (y * height[0]) * CHANNELS;
+		int index = (x + y * height[0]) * CHANNELS;
 		return new byte[]{ buffer.get(index), buffer.get(index + 1), buffer.get(index + 2), buffer.get(index + 3)};
 	}
 

@@ -304,7 +304,7 @@ public class TreeGroup extends Panel {
             		try{
                 		boolean model = selectbox.getSelection().equals("model");
                 		TurboList list = model ? null : FMTB.MODEL.getGroups().get(selectbox.getSelection().replace("group-", ""));
-                		texgroup.texture.resize(FMTB.MODEL.tx(list), FMTB.MODEL.ty(list), null);
+                		texgroup.texture.resize(FMTB.MODEL.tx(list), FMTB.MODEL.ty(list));
                 		texgroup.texture.save();
                 		texgroup.texture.reload();
             		}

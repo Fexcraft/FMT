@@ -78,7 +78,7 @@ public class TextureManager {
 	public static Texture loadTextureFromFile(File file, String string, Boolean rooted, boolean save){
 		if(rooted == null) rooted = true;
 		TEXTURES.put(string, new Texture(string, file));
-		System.out.println(String.format("Loaded Texture (%-32s) [%s]", string, "<FILE>"));
+		System.out.println(String.format("Loaded Texture (%-32s) [%s]", string, "<FROM FILE>"));
 		if(save){
 			if(!file.exists()) file.getParentFile().mkdirs();
 			TEXTURES.get(string).setFile(file);
@@ -122,7 +122,7 @@ public class TextureManager {
 	}
 
 	public static void unbind(){
-		/* TextureImpl.bindNone(); */ texture = nulltex;
+		texture = nulltex;
 	}
 
 	public static String getBoundTexture(){

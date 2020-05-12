@@ -55,9 +55,6 @@ public class RayCoastAway {
 		// Print.console((((int) byteArray[0]) & 0xFF) + " " + (((int) byteArray[1]) & 0xFF) + " " + (((int) byteArray[2]) & 0xFF));
 		// Print.console(id + "-ID");
 		picker.clear();
-		picked[0] += -128;
-		picked[1] += -128;
-		picked[2] += -128;
 		PICKING = false;
 		MOUSEOFF = false;
 		if(TextureEditor.pixelMode() && pencil){
@@ -79,9 +76,13 @@ public class RayCoastAway {
 			for(int x = 0; x < calctex.getWidth(); x++){
 				for(int y = 0; y < calctex.getHeight(); y++){
 					byte[] calc = calctex.get(x, y);
-					if(calc[0] == picked[0] || calc[1] == picked[1] || calc[2] == picked[2]){
+					if(calc[0] == picked[0] && calc[1] == picked[1] && calc[2] == picked[2]){
 						if(TextureEditor.colorPicker()){
-							TextureEditor.updateColor(tex.get(x, y), null);
+							byte[] arr = tex.get(x, y);
+							arr[0] -= 128;
+							arr[1] -= 128;
+							arr[2] -= 128;
+							TextureEditor.updateColor(arr, null);
 						}
 						else{
 							tex.set(x, y, TextureEditor.CURRENTCOLOR.toByteArray());
@@ -95,6 +96,9 @@ public class RayCoastAway {
 			}
 			return;
 		}
+		picked[0] += -128;
+		picked[1] += -128;
+		picked[2] += -128;
 		PolygonWrapper wrapper = getSelected(picked);
 		if(wrapper == null) return;
 		if(!TextureEditor.BUCKETMODE){
