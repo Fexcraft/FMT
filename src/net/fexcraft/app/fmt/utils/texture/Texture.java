@@ -1,16 +1,13 @@
 package net.fexcraft.app.fmt.utils.texture;
 
 import static org.lwjgl.stb.STBImage.stbi_failure_reason;
-import static org.lwjgl.stb.STBImage.stbi_load_from_memory;
+import static org.lwjgl.stb.STBImage.stbi_load;
 import static org.lwjgl.stb.STBImageResize.STBIR_COLORSPACE_LINEAR;
 import static org.lwjgl.stb.STBImageResize.STBIR_EDGE_ZERO;
 import static org.lwjgl.stb.STBImageResize.STBIR_FILTER_DEFAULT;
 import static org.lwjgl.stb.STBImageResize.stbir_resize_uint8_generic;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
 
 import org.lwjgl.opengl.GL11;
@@ -20,18 +17,18 @@ import net.fexcraft.lib.common.utils.Print;
 
 public class Texture {
 
-	private static ByteBuffer buffer;
+	private ByteBuffer buffer;
 	private Integer glTextureId;
-	private int[] width = { 0 }, height = { 0 }, channels = { 0 } ;
+	private int[] width = { 0 }, height = { 0 }, channels = { 0 };
 	private boolean rebind = true, reload;
 	public final String name;// was required for debug
 	private File file;
 	public long lastedit;
 	public static final int CHANNELS = 4;
 
-	public Texture(String name, InputStream stream, File loc){
+	public Texture(String name, File loc){
 		this.name = name;
-		buffer = stbi_load_from_memory(TextureManager.toBuffer(stream), width, height, channels, CHANNELS);
+		buffer = stbi_load(loc.getPath(), width, height, channels, CHANNELS);
 		if(buffer == null) Print.console("Error while loading texture '" + name + "': " + stbi_failure_reason());
 		//buffer.flip();
 		this.file = loc;
@@ -64,13 +61,7 @@ public class Texture {
 
 	public ByteBuffer getBuffer(){
 		if(reload && buffer != null && file != null){
-			try{
-				buffer = stbi_load_from_memory(TextureManager.toBuffer(new FileInputStream(file)), width, height, channels, 0);
-				//buffer.flip();
-			}
-			catch(IOException e){
-				e.printStackTrace();
-			}
+			buffer = stbi_load(file.getPath(), width, height, channels, 0);
 		}
 		rebind = false;
 		return buffer;

@@ -27,7 +27,6 @@ import net.fexcraft.lib.common.utils.Print;
 /**
  * @author Ferdinand Calo' (FEX___96)
  */
-@Deprecated
 public class ImageHelper {
 	
 	public static boolean HASTASK;

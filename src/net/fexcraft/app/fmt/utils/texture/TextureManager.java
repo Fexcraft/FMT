@@ -1,17 +1,14 @@
 package net.fexcraft.app.fmt.utils.texture;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImageWrite;
 
 import net.fexcraft.app.fmt.FMTB;
@@ -39,13 +36,8 @@ public class TextureManager {
 		for(File file : folder.listFiles()){
 			if(file.isDirectory()) continue;
 			if((name = file.getName()).toLowerCase().endsWith(".png")){
-				try{
-					TEXTURES.put(name = name.replace(".png", ""), new Texture(name, new FileInputStream(file), file));
-					System.out.println(String.format("Loaded Root Texture (%-6s) [%s]", name, file));
-				}
-				catch(IOException e){
-					e.printStackTrace();
-				}
+				TEXTURES.put(name = name.replace(".png", ""), new Texture(name, file));
+				System.out.println(String.format("Loaded Root Texture (%-6s) [%s]", name, file));
 			}
 			else continue;
 		}
@@ -58,15 +50,10 @@ public class TextureManager {
 	}
 
 	public static void loadTexture(String string, Boolean rooted){
-		try{
-			if(rooted == null) rooted = true;
-			File file = new File(rooted ? String.format("./resources/textures/%s.png", string) : string + ".png");
-			TEXTURES.put(string, new Texture(string, new FileInputStream(file), file));
-			System.out.println(String.format("Loaded Texture (%-32s) [%s]", string, file));
-		}
-		catch(IOException e){
-			e.printStackTrace();
-		}
+		if(rooted == null) rooted = true;
+		File file = new File(rooted ? String.format("./resources/textures/%s.png", string) : string + ".png");
+		TEXTURES.put(string, new Texture(string, file));
+		System.out.println(String.format("Loaded Texture (%-32s) [%s]", string, file));
 	}
 
 	public static void loadTextureFromZip(InputStream stream, String string, Boolean rooted, boolean temp){
@@ -80,41 +67,30 @@ public class TextureManager {
 		    }
 		    out.flush();
 		    out.close();
-			TEXTURES.put(string, new Texture(string, new FileInputStream(file), file));
+			TEXTURES.put(string, new Texture(string, file));
 			System.out.println(String.format("Loaded Texture (%-32s) [%s]", string, "<FROM IMPORTED MTB/ZIP>"));
 		}
-		catch(Exception e){
+		catch(IOException e){
 			e.printStackTrace();
 		}
 	}
 
 	public static Texture loadTextureFromFile(File file, String string, Boolean rooted, boolean save){
-		try{
-			if(rooted == null) rooted = true;
-			TEXTURES.put(string, new Texture(string, new FileInputStream(file), file));
-			System.out.println(String.format("Loaded Texture (%-32s) [%s]", string, "<FILE>"));
-			if(save){
-				if(!file.exists()) file.getParentFile().mkdirs();
-				TEXTURES.get(string).setFile(file);
-				saveTexture(string);
-			}
-			return TEXTURES.get(string);
+		if(rooted == null) rooted = true;
+		TEXTURES.put(string, new Texture(string, file));
+		System.out.println(String.format("Loaded Texture (%-32s) [%s]", string, "<FILE>"));
+		if(save){
+			if(!file.exists()) file.getParentFile().mkdirs();
+			TEXTURES.get(string).setFile(file);
+			saveTexture(string);
 		}
-		catch(Exception e){
-			e.printStackTrace();
-			return null;
-		}
+		return TEXTURES.get(string);
 	}
 
 	public static void loadTextureFromFile(String id, File file){
-		try{
-			String name = id == null ? file.getPath() : id;
-			TEXTURES.put(name, new Texture(name, new FileInputStream(file), file));
-			System.out.println(String.format("Loaded Texture (%-32s) [%s]", name, file));
-		}
-		catch(IOException e){
-			e.printStackTrace();
-		}
+		String name = id == null ? file.getPath() : id;
+		TEXTURES.put(name, new Texture(name, file));
+		System.out.println(String.format("Loaded Texture (%-32s) [%s]", name, file));
 	}
 
 	/** Usually expects in form of "temp/NAME" */
@@ -245,21 +221,6 @@ public class TextureManager {
 		texgroup.button.removeFromTree();
 		GROUPS.remove(texgroup);
 		GroupEditor.updateTextureGroups();
-	}
-
-	public static final ByteBuffer toBuffer(InputStream stream){
-		try{
-	        byte[] bytes = new byte[stream.available()];
-	        stream.read(bytes);
-	        ByteBuffer buffer = BufferUtils.createByteBuffer(bytes.length);
-	        buffer.put(bytes);
-	        buffer.flip();
-			return buffer;
-		}
-		catch(IOException e){
-			e.printStackTrace();
-			return null;
-		}
 	}
 
 	public static Texture createTexture(String texid, int texX, int texY, byte[] color){
