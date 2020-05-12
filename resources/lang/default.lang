@@ -210,6 +210,13 @@ dialogbox.button.load=Load
 dialogbox.button.yes=Yes
 dialogbox.button.no=No
 dialogbox.button.ok=Ok
+dialogbox.button.enable=Enable
+dialogbox.button.disable=Disable
+dialogbox.warning=WARNING!
+dialogbox.setting.warning0=THIS SETTING CAN CAUSE SCREEN FLICKERING
+dialogbox.setting.warning1=DEPENDING ON HARDWARE/SOFTWARE SPEED
+dialogbox.setting.warning2=IF YOU GOT EPILEPSY OR OTHER WHERE SCREEN
+dialogbox.setting.warning3=FLICKERING IS BAD PLEASE DISABLE IT
 
 # Trees
 tree.polygon.counter=Polygons: 

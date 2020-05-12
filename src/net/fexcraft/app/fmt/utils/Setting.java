@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.utils.Print;
 
@@ -92,6 +93,11 @@ public class Setting {
 			}
 			if(this.id.equals("ui_debug")){
 				FMTB.context.setDebugEnabled((boolean)value);
+			}
+			if(this.id.equals("drag_painting") && (boolean)value){
+				DialogBox.show("dialogbox.warning", "dialogbox.button.ok", "dialogbox.button.disable", null, () -> {
+					this.setValue(false);
+				}, "dialogbox.setting.warning0", "dialogbox.setting.warning1", "dialogbox.setting.warning2", "dialogbox.setting.warning3");
 			}
 			/*if(this.id.equals("no_scroll_fields")){
 				DialogBox.showOK(null, null, null, "settingsbox.settings_needs_restart");
