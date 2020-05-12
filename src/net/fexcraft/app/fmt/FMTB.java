@@ -24,7 +24,9 @@ import org.liquidengine.legui.component.Dialog;
 import org.liquidengine.legui.component.Frame;
 import org.liquidengine.legui.component.ImageView;
 import org.liquidengine.legui.component.Label;
+import org.liquidengine.legui.component.SelectBox;
 import org.liquidengine.legui.event.MouseClickEvent;
+import org.liquidengine.legui.event.MouseClickEvent.MouseClickAction;
 import org.liquidengine.legui.image.BufferedImage;
 import org.liquidengine.legui.listener.MouseClickEventListener;
 import org.liquidengine.legui.listener.processor.EventProcessorProvider;
@@ -138,125 +140,127 @@ public class FMTB {
 	
 	public FMTB setTitle(String string){ title = string; DiscordUtil.update(false); return this; }
 	
-	public void run() throws InterruptedException, IOException, NoSuchMethodException, ScriptException {
-		TextureManager.init(); Settings.load(); Translator.init(); timer.init();
-        glfwSetErrorCallback(errorCallback = GLFWErrorCallback.createPrint(System.err));
+	public void run() throws InterruptedException, IOException, NoSuchMethodException, ScriptException{
+		TextureManager.init();
+		Settings.load();
+		Translator.init();
+		timer.init();
+		glfwSetErrorCallback(errorCallback = GLFWErrorCallback.createPrint(System.err));
 		if(!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW.");
-        glfwWindowHint(GLFW_RESIZABLE, GL11.GL_TRUE);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-        //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        window = glfwCreateWindow(WIDTH, HEIGHT, "Fex's Modelling Toolbox", MemoryUtil.NULL, MemoryUtil.NULL);
-        if(window == MemoryUtil.NULL) throw new RuntimeException("Failed to create window");
-        glfwMakeContextCurrent(window);
-        GL.createCapabilities();
-		//GLUtil.setupDebugMessageCallback();
+		glfwWindowHint(GLFW_RESIZABLE, GL11.GL_TRUE);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+		// glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		window = glfwCreateWindow(WIDTH, HEIGHT, "Fex's Modelling Toolbox", MemoryUtil.NULL, MemoryUtil.NULL);
+		if(window == MemoryUtil.NULL) throw new RuntimeException("Failed to create window");
+		glfwMakeContextCurrent(window);
+		GL.createCapabilities();
+		// GLUtil.setupDebugMessageCallback();
 		initOpenGL();
 		this.setIcon();
 		glfwShowWindow(window);
 		glfwFocusWindow(window);
-		ggr = new GGR(0, 4, 4); ggr.rotation.xCoord = 45;
+		ggr = new GGR(0, 4, 4);
+		ggr.rotation.xCoord = 45;
 		//
 		NO_POLYGON_SELECTED = Translator.translate("error.no_polygon_selected");
 		NO_PREVIEW_SELECTED = Translator.translate("error.no_preview_selected");
 		Settings.THEME_CHANGE_LISTENER.add(bool -> {
 			if(bool){
-		        Themes.setDefaultTheme(new FlatColoredTheme(
-		            rgba(33, 33, 33, 1), // backgroundColor
-		            rgba(97, 97, 97, 1), // borderColor
-		            rgba(97, 97, 97, 1), // sliderColor
-		            rgba(2, 119, 189, 1), // strokeColor
-		            rgba(27, 94, 32, 1), // allowColor
-		            rgba(183, 28, 28, 1), // denyColor
-		            ColorConstants.transparent(),  // shadowColor
-		            ColorConstants.lightGray(), //text color
-		            FontRegistry.DEFAULT, // font
-		            20f //font size
-		        ));
+				Themes.setDefaultTheme(new FlatColoredTheme(rgba(33, 33, 33, 1), // backgroundColor
+					rgba(97, 97, 97, 1), // borderColor
+					rgba(97, 97, 97, 1), // sliderColor
+					rgba(2, 119, 189, 1), // strokeColor
+					rgba(27, 94, 32, 1), // allowColor
+					rgba(183, 28, 28, 1), // denyColor
+					ColorConstants.transparent(), // shadowColor
+					ColorConstants.lightGray(), // text color
+					FontRegistry.DEFAULT, // font
+					20f // font size
+				));
 			}
 			else{
-		        Themes.setDefaultTheme(new FlatColoredTheme(
-					rgba(245, 245, 245, 1), // backgroundColor
-			        rgba(176, 190, 197, 1), // borderColor
-			        rgba(176, 190, 197, 1), // sliderColor
-			        rgba(100, 181, 246, 1), // strokeColor
-			        rgba(165, 214, 167, 1), // allowColor
-			        rgba(239, 154, 154, 1), // denyColor
-			        ColorConstants.transparent(), // shadowColor
-		            ColorConstants.darkGray(), // text color
-		            FontRegistry.DEFAULT, // font
-		            20f //font size
-		        ));
+				Themes.setDefaultTheme(new FlatColoredTheme(rgba(245, 245, 245, 1), // backgroundColor
+					rgba(176, 190, 197, 1), // borderColor
+					rgba(176, 190, 197, 1), // sliderColor
+					rgba(100, 181, 246, 1), // strokeColor
+					rgba(165, 214, 167, 1), // allowColor
+					rgba(239, 154, 154, 1), // denyColor
+					ColorConstants.transparent(), // shadowColor
+					ColorConstants.darkGray(), // text color
+					FontRegistry.DEFAULT, // font
+					20f // font size
+				));
 			}
-	        if(frame != null) Themes.getDefaultTheme().applyAll(frame);
+			if(frame != null) Themes.getDefaultTheme().applyAll(frame);
 		});
 		Settings.updateTheme();
-        frame = new Frame(WIDTH, HEIGHT);
-        //frame.getContainer().add(new Interface());
-        Trees.initializeTrees(frame);
-        Editors.initializeEditors(frame);
-        UserInterfaceUtils.addToolbarButtons(frame);
-        //TabContainer.addTest(frame);
-        boolean loadedold = false;;
+		frame = new Frame(WIDTH, HEIGHT);
+		// frame.getContainer().add(new Interface());
+		Trees.initializeTrees(frame);
+		Editors.initializeEditors(frame);
+		UserInterfaceUtils.addToolbarButtons(frame);
+		// TabContainer.addTest(frame);
+		boolean loadedold = false;
 		File file = new File(Settings.SETTINGS.get("last_file").getStringValue());
 		if(file.exists() && file.getName().endsWith(".fmtb")){
 			SaveLoad.openModel(file);
 			loadedold = true;
 		}
-        MODEL.initButton();
-        if(Settings.internal_cursor()){
-        	cursor = new ImageView(new BufferedImage("./resources/textures/cursor.png"));
-        	cursor.setSize(16, 16);
-        	cursor.setFocusable(false);
-        	cursor.setEnabled(false);
-        	Settings.THEME_CHANGE_LISTENER.add(bool -> {
-        		cursor.getStyle().getBackground().setColor(ColorConstants.transparent());
-            	cursor.getStyle().getBorder().setEnabled(false);
-            	//cursor.getStyle().setBorderRadius(0);
-        	});
-        	frame.getContainer().add(cursor);
-        }
-        context = new Context(window);
-        context.setDebugEnabled(Settings.ui_debug());
-        CallbackKeeper keeper = new DefaultCallbackKeeper();
-        CallbackKeeper.registerCallbacks(window, keeper);
+		MODEL.initButton();
+		if(Settings.internal_cursor()){
+			cursor = new ImageView(new BufferedImage("./resources/textures/cursor.png"));
+			cursor.setSize(16, 16);
+			cursor.setFocusable(false);
+			cursor.setEnabled(false);
+			Settings.THEME_CHANGE_LISTENER.add(bool -> {
+				cursor.getStyle().getBackground().setColor(ColorConstants.transparent());
+				cursor.getStyle().getBorder().setEnabled(false);
+				// cursor.getStyle().setBorderRadius(0);
+			});
+			frame.getContainer().add(cursor);
+		}
+		context = new Context(window);
+		context.setDebugEnabled(Settings.ui_debug());
+		CallbackKeeper keeper = new DefaultCallbackKeeper();
+		CallbackKeeper.registerCallbacks(window, keeper);
 		//
-        keeper.getChainKeyCallback().add(new GLFWKeyCallback(){
-            @Override
-            public void invoke(long window, int key, int scancode, int action, int mods){
-            	if(key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) reset();
-            	if(context.getFocusedGui() instanceof Field || context.getFocusedGui() instanceof TextField) return;
-    			KeyCompound.process(window, key, scancode, action, mods);
-            }
-        });
-        keeper.getChainCursorPosCallback().add(new GLFWCursorPosCallback(){
-            @Override
-            public void invoke(long window, double xpos, double ypos){
-                ggr.cursorPosCallback(window, xpos, ypos);
-                if(cursor != null){
-                	cursor.setPosition((float)xpos - 8, (float)ypos - 8);
-                }
-            }
-        });
-        keeper.getChainMouseButtonCallback().add(new GLFWMouseButtonCallback(){
-            @Override
-            public void invoke(long window, int button, int action, int mods){
-            	ggr.mouseCallback(window, button, action, mods);
-            }
-        });
-        keeper.getChainWindowCloseCallback().add(new GLFWWindowCloseCallback(){
+		keeper.getChainKeyCallback().add(new GLFWKeyCallback(){
+			@Override
+			public void invoke(long window, int key, int scancode, int action, int mods){
+				if(key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) reset();
+				if(context.getFocusedGui() instanceof Field || context.getFocusedGui() instanceof TextField) return;
+				KeyCompound.process(window, key, scancode, action, mods);
+			}
+		});
+		keeper.getChainCursorPosCallback().add(new GLFWCursorPosCallback(){
+			@Override
+			public void invoke(long window, double xpos, double ypos){
+				ggr.cursorPosCallback(window, xpos, ypos);
+				if(cursor != null){
+					cursor.setPosition((float)xpos - 8, (float)ypos - 8);
+				}
+			}
+		});
+		keeper.getChainMouseButtonCallback().add(new GLFWMouseButtonCallback(){
+			@Override
+			public void invoke(long window, int button, int action, int mods){
+				ggr.mouseCallback(window, button, action, mods);
+			}
+		});
+		keeper.getChainWindowCloseCallback().add(new GLFWWindowCloseCallback(){
 			@Override
 			public void invoke(long window){
 				SaveLoad.checkIfShouldSave(true, false);
 			}
 		});
-        keeper.getChainFramebufferSizeCallback().add(new GLFWFramebufferSizeCallback(){
-		    @Override
-		    public void invoke(long window, int width, int height){
-		    	resize(width, height);
-		    }
+		keeper.getChainFramebufferSizeCallback().add(new GLFWFramebufferSizeCallback(){
+			@Override
+			public void invoke(long window, int width, int height){
+				resize(width, height);
+			}
 		});
-        keeper.getChainScrollCallback().add(new GLFWScrollCallback(){
+		keeper.getChainScrollCallback().add(new GLFWScrollCallback(){
 			@Override
 			public void invoke(long window, double xoffset, double yoffset){
 				if(!Settings.no_scroll_fields() && (field_scrolled = (context.getFocusedGui() instanceof Field))){
@@ -272,17 +276,49 @@ public class FMTB {
 				else ggr.scrollCallback(window, xoffset, yoffset);
 			}
 		});
-        SystemEventProcessor systemEventProcessor = new SystemEventProcessorImpl();
+		SystemEventProcessor systemEventProcessor = new SystemEventProcessorImpl();
 		SystemEventProcessor.addDefaultCallbacks(keeper, systemEventProcessor);
-        renderer = new NvgRenderer();
-        renderer.initialize();
+		renderer = new NvgRenderer();
+		renderer.initialize();
 		Settings.updateTheme();
 		ModelEditor.creators.refresh();
-        //
+		//
 		PorterManager.load();
 		HelperCollector.reload(loadedold);
 		SessionHandler.checkIfLoggedIn(true, true);
 		checkForUpdates();
+		if(Settings.getLanguage().equals("none")){
+			Dialog dialog = new Dialog("INIT", 300, 110);
+			dialog.getContainer().add(new Label("SELECT LANGUAGE", 10, 5, 280, 24));
+			SelectBox<String> selectbox = new SelectBox<>(10, 30, 280, 24);
+			File folder = new File("./resources/lang/");
+			for(File lang : folder.listFiles()){
+				if(lang.getName().endsWith(".lang")){
+					String leng = lang.getName().replace(".lang", "");
+					if(leng.equals("default")) leng += " (english)";
+					selectbox.addElement(leng);
+				}
+			}
+			selectbox.addSelectBoxChangeSelectionEventListener(listener -> {
+				String newcode = listener.getNewValue();
+				if(newcode.contains(" (")){
+					newcode = newcode.substring(0, listener.getNewValue().indexOf(" "));
+				}
+				Settings.SETTINGS.get("language_code").validateAndApply(newcode);
+			});
+			selectbox.setVisibleCount(12);
+			dialog.getContainer().add(selectbox);
+			dialog.getContainer().add(new Label("APPLIES ON RESTART", 10, 60, 280, 24));
+			Button button = new Button("EXIT", 200, 60, 90, 20);
+			button.getListenerMap().addListener(MouseClickEvent.class, listener -> {
+				if(listener.getAction() == MouseClickAction.CLICK){
+					close = true;
+				}
+			});
+			dialog.getContainer().add(button);
+			dialog.setResizable(false);
+			dialog.show(frame);
+		}
 		KeyCompound.init();
 		KeyCompound.load();
 		if(!loadedold){
@@ -290,9 +326,15 @@ public class FMTB {
 		}
 		//
 		LocalDateTime midnight = LocalDateTime.of(LocalDate.now(ZoneOffset.systemDefault()), LocalTime.MIDNIGHT);
-		long mid = midnight.toInstant(ZoneOffset.UTC).toEpochMilli(); long date = Time.getDate(); while((mid += Time.MIN_MS * 5) < date);
-		if(BACKUP_TIMER == null){ (BACKUP_TIMER = new Timer()).schedule(new Backups(), new Date(mid), Time.MIN_MS * 5); }
-		if(TEX_UPDATE_TIMER == null){ (TEX_UPDATE_TIMER = new Timer()).schedule(new TextureUpdate(), Time.SEC_MS, Time.SEC_MS / 2); }
+		long mid = midnight.toInstant(ZoneOffset.UTC).toEpochMilli();
+		long date = Time.getDate();
+		while((mid += Time.MIN_MS * 5) < date);
+		if(BACKUP_TIMER == null){
+			(BACKUP_TIMER = new Timer()).schedule(new Backups(), new Date(mid), Time.MIN_MS * 5);
+		}
+		if(TEX_UPDATE_TIMER == null){
+			(TEX_UPDATE_TIMER = new Timer()).schedule(new TextureUpdate(), Time.SEC_MS, Time.SEC_MS / 2);
+		}
 		//
 		if(Settings.discordrpc()){
 			DiscordEventHandlers.Builder handler = new DiscordEventHandlers.Builder();
@@ -303,41 +345,56 @@ public class FMTB {
 			handler.setJoinRequestEventHandler(new DiscordUtil.JoinRequestEventHandler());
 			handler.setSpectateGameEventHandler(new DiscordUtil.SpectateGameEventHandler());
 			DiscordRPC.discordInitialize(CLID, handler.build(), true);
-			DiscordRPC.discordRunCallbacks(); DiscordUtil.update(true);
-			Runtime.getRuntime().addShutdownHook(new Thread(){ @Override public void run(){ DiscordRPC.discordShutdown(); } });
+			DiscordRPC.discordRunCallbacks();
+			DiscordUtil.update(true);
+			Runtime.getRuntime().addShutdownHook(new Thread(){
+				@Override
+				public void run(){
+					DiscordRPC.discordShutdown();
+				}
+			});
 		}
 		glfwSwapInterval(Settings.vsync() ? 1 : 0);
 		//
 		while(!close){
 			ggr.pollInput(accumulator += (delta = timer.getDelta()));
-            while(accumulator >= interval){
-            	loop(); timer.updateUPS();
-                accumulator -= interval;
-                Trees.updateCounters();
-                RayCoastAway.UNLOCKED = true;
-            }
+			while(accumulator >= interval){
+				loop();
+				timer.updateUPS();
+				accumulator -= interval;
+				Trees.updateCounters();
+				RayCoastAway.UNLOCKED = true;
+			}
 			render(alpha = accumulator / interval);
 			if(!RayCoastAway.PICKING){
 				if(ImageHelper.HASTASK){
-					renderUI(true); ImageHelper.doTask();
-				} else renderUI(false);
+					renderUI(true);
+					ImageHelper.doTask();
+				}
+				else renderUI(false);
 			}
 			timer.updateFPS();
-            glfwPollEvents();
-            glfwSwapBuffers(window);
-            systemEventProcessor.processEvents(frame, context);
+			glfwPollEvents();
+			glfwSwapBuffers(window);
+			systemEventProcessor.processEvents(frame, context);
 			EventProcessorProvider.getInstance().processEvents();
-            LayoutManager.getInstance().layout(frame);
-            AnimatorProvider.getAnimator().runAnimations();
-            timer.update();
-			if(Settings.discordrpc()) if(++disk_update > 60000){ DiscordRPC.discordRunCallbacks(); disk_update = 0; }
-			//Thread.sleep(50);
+			LayoutManager.getInstance().layout(frame);
+			AnimatorProvider.getAnimator().runAnimations();
+			timer.update();
+			if(Settings.discordrpc()) if(++disk_update > 60000){
+				DiscordRPC.discordRunCallbacks();
+				disk_update = 0;
+			}
+			// Thread.sleep(50);
 		}
 		DiscordRPC.discordShutdown();
 		renderer.destroy();
-        glfwDestroyWindow(window);   
-        glfwTerminate();
-        Settings.save(); KeyCompound.save(); SessionHandler.save(); System.exit(0);
+		glfwDestroyWindow(window);
+		glfwTerminate();
+		Settings.save();
+		KeyCompound.save();
+		SessionHandler.save();
+		System.exit(0);
 	}
 
 	private void setIcon(){
