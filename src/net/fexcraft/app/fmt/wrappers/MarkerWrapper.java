@@ -6,7 +6,7 @@ import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.demo.ModelSteve;
 import net.fexcraft.app.fmt.utils.Settings;
-import net.fexcraft.app.fmt.utils.TextureManager;
+import net.fexcraft.app.fmt.utils.texture.TextureManager;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.local_tmt.ModelRendererTurbo;

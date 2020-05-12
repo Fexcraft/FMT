@@ -2,7 +2,6 @@ package net.fexcraft.app.fmt.ui.tree;
 
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
-import java.awt.Desktop;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
@@ -31,9 +30,9 @@ import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.HelperCollector;
 import net.fexcraft.app.fmt.utils.Setting;
 import net.fexcraft.app.fmt.utils.Settings;
-import net.fexcraft.app.fmt.utils.TextureManager;
-import net.fexcraft.app.fmt.utils.TextureManager.TextureGroup;
 import net.fexcraft.app.fmt.utils.Translator;
+import net.fexcraft.app.fmt.utils.texture.TextureGroup;
+import net.fexcraft.app.fmt.utils.texture.TextureManager;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.math.Vec3f;
@@ -249,13 +248,7 @@ public class TreeGroup extends Panel {
 		this.add(new TreeIcon((int)getSize().x - 42, 0, "group_edit", () -> {
 			if(texgroup.texture == null) return;
 			try{
-				if(System.getProperty("os.name").toLowerCase().contains("windows")){
-					String cmd = "rundll32 url.dll,FileProtocolHandler " + texgroup.texture.getFile().getCanonicalPath();
-					Runtime.getRuntime().exec(cmd);
-				}
-				else{
-					Desktop.getDesktop().edit(texgroup.texture.getFile());
-				}
+				FMTB.openLink(texgroup.texture.getFile().getCanonicalPath());
 			}
 			catch(Exception e){
 				e.printStackTrace();
@@ -285,7 +278,7 @@ public class TreeGroup extends Panel {
 			FMTB.MODEL.updateFields();
         	FMTB.MODEL.getGroups().forEach(elm -> {
         		if(elm.texgroup == null || elm.texgroup == texgroup){
-            		elm.forEach(poly -> poly.burnToTexture(texgroup.texture.getImage(), null));
+            		elm.forEach(poly -> poly.burnToTexture(texgroup.texture, null));
         		}
         	});
         	TextureManager.saveTexture(texgroup.texture);

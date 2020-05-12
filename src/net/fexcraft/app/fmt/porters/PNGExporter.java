@@ -1,18 +1,18 @@
 package net.fexcraft.app.fmt.porters;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
 
-import javax.imageio.ImageIO;
+import org.apache.commons.io.FileUtils;
 
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.utils.Setting;
 import net.fexcraft.app.fmt.utils.Setting.StringArraySetting;
 import net.fexcraft.app.fmt.utils.Setting.Type;
-import net.fexcraft.app.fmt.utils.TextureManager;
-import net.fexcraft.app.fmt.utils.TextureManager.TextureGroup;
+import net.fexcraft.app.fmt.utils.texture.Texture;
+import net.fexcraft.app.fmt.utils.texture.TextureGroup;
+import net.fexcraft.app.fmt.utils.texture.TextureManager;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 
 /**
@@ -23,7 +23,7 @@ import net.fexcraft.app.fmt.wrappers.GroupCompound;
 public class PNGExporter extends ExImPorter {
 	
 	private static final String[] extensions = new String[]{ "Portable Network Graphics", "*.png" };
-	private BufferedImage image;
+	private Texture image;
 	private static final ArrayList<Setting> settings = new ArrayList<>();
 	static{
 		settings.add(new Setting(Type.BOOLEAN, "textured", false));
@@ -46,10 +46,10 @@ public class PNGExporter extends ExImPorter {
 			return "Texture Group not found!";
 		}
 		if(textured){
-			image = group.texture.getImage();
+			image = group.texture;
 		}
 		else{
-			image = new BufferedImage(group.texture.getWidth(), group.texture.getHeight(), BufferedImage.TYPE_INT_ARGB);
+			image = new Texture("png_exporter_cache", group.texture.getWidth(), group.texture.getHeight());
 			compound.getGroups().forEach(elm -> {
 				if(compound.texgroup == group || elm.texgroup == group){
 					elm.forEach(poly -> poly.burnToTexture(image, null));
@@ -57,7 +57,8 @@ public class PNGExporter extends ExImPorter {
 			});
 		}
 		try{
-			ImageIO.write(image, "PNG", file);
+			TextureManager.saveTexture(image);
+			FileUtils.copyFile(image.getFile(), file);
 			return "Success!";
 		}
 		catch(java.io.IOException e){

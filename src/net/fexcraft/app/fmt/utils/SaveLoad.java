@@ -1,9 +1,9 @@
 package net.fexcraft.app.fmt.utils;
 
-import java.awt.Desktop;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,7 +14,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
-import javax.imageio.ImageIO;
+import org.apache.commons.io.IOUtils;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -29,7 +29,9 @@ import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.ui.FileSelector;
 import net.fexcraft.app.fmt.ui.tree.Trees;
 import net.fexcraft.app.fmt.utils.Animator.Animation;
-import net.fexcraft.app.fmt.utils.TextureManager.TextureGroup;
+import net.fexcraft.app.fmt.utils.texture.TextureGroup;
+import net.fexcraft.app.fmt.utils.texture.TextureManager;
+import net.fexcraft.app.fmt.utils.texture.TextureUpdate;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
@@ -72,7 +74,7 @@ public class SaveLoad {
 						if(FMTB.MODEL.texgroup == null){
 							TextureManager.addGroup(FMTB.MODEL.texgroup = new TextureGroup(new JsonPrimitive("default")));
 						}
-						TextureManager.loadTextureFromZip(zip.getInputStream(elm), "group-default", false, true, true);
+						TextureManager.loadTextureFromZip(zip.getInputStream(elm), "group-default", false, true);
 						FMTB.MODEL.texgroup.reAssignTexture();
 						FMTB.MODEL.recompile();
 					}
@@ -84,7 +86,7 @@ public class SaveLoad {
 				else if(elm.getName().startsWith("texture-")){
 					try{
 						String group = elm.getName().substring(elm.getName().indexOf("-") + 1).replace(".png", "");
-						TextureManager.loadTextureFromZip(zip.getInputStream(elm), "group-" + group, false, true, true);
+						TextureManager.loadTextureFromZip(zip.getInputStream(elm), "group-" + group, false, true);
 						TextureManager.getGroup(group).reAssignTexture();
 					}
 					catch(IOException e){
@@ -197,7 +199,10 @@ public class SaveLoad {
 					TextureGroup group = TextureManager.getGroupsFE().get(i);
 					try{
 						ByteArrayOutputStream os = new ByteArrayOutputStream();
-						ImageIO.write(group.texture.getImage(), "png", os);
+						group.texture.save();
+						InputStream in = new FileInputStream(group.texture.getFile());
+						IOUtils.copy(in, os);
+						in.close();
 						arr[1 + i] = new ByteArrayInputStream(os.toByteArray());
 					}
 					catch(Exception e){
@@ -225,7 +230,7 @@ public class SaveLoad {
 			}
 			file = file == null ? compound.file : file;
 			if(openfile && file.getParentFile() != null){
-				Desktop.getDesktop().open(file.getParentFile());
+				FMTB.openLink(file.getParentFile().getAbsolutePath());
 			}
 		}
 		catch(Exception e){

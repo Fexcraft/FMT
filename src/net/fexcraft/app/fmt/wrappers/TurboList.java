@@ -7,8 +7,8 @@ import net.fexcraft.app.fmt.ui.tree.TreeGroup;
 import net.fexcraft.app.fmt.ui.tree.Trees;
 import net.fexcraft.app.fmt.utils.Animator.Animation;
 import net.fexcraft.app.fmt.utils.Settings;
-import net.fexcraft.app.fmt.utils.TextureManager;
-import net.fexcraft.app.fmt.utils.TextureManager.TextureGroup;
+import net.fexcraft.app.fmt.utils.texture.TextureGroup;
+import net.fexcraft.app.fmt.utils.texture.TextureManager;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
 

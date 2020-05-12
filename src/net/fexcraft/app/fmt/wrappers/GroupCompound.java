@@ -1,13 +1,11 @@
 package net.fexcraft.app.fmt.wrappers;
 
-import java.awt.Color;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,10 +35,10 @@ import net.fexcraft.app.fmt.ui.tree.Trees;
 import net.fexcraft.app.fmt.utils.RayCoastAway;
 import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.app.fmt.utils.Settings;
-import net.fexcraft.app.fmt.utils.TextureManager;
-import net.fexcraft.app.fmt.utils.TextureManager.Texture;
-import net.fexcraft.app.fmt.utils.TextureManager.TextureGroup;
 import net.fexcraft.app.fmt.utils.Translator;
+import net.fexcraft.app.fmt.utils.texture.Texture;
+import net.fexcraft.app.fmt.utils.texture.TextureGroup;
+import net.fexcraft.app.fmt.utils.texture.TextureManager;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.json.JsonUtil;
 import net.fexcraft.lib.common.math.RGB;
@@ -137,30 +135,24 @@ public class GroupCompound {
 		int scale = nolisttex ? this.textureScale : wrapper.getTurboList().textureS;
 		int texX = (nolisttex ? this.textureSizeX : wrapper.getTurboList().textureX) * scale;
 		int texY = (nolisttex ? this.textureSizeY : wrapper.getTurboList().textureY) * scale;
-		if(tex == null || (tex.getImage().getWidth() != texX || tex.getImage().getHeight() != texY)){
-			if(texX >= 8192 || texY >= 8192){ /*//TODO*/ }
+		if(tex == null || (tex.getWidth() != texX || tex.getHeight() != texY)){
+			if(texX >= 8192 || texY >= 8192){ /* //TODO */ }
 			else{
-				BufferedImage image = null;
 				if(tex == null){
-					image = new BufferedImage(texX, texY, BufferedImage.TYPE_INT_ARGB);
+					tex = TextureManager.createTexture(texid, texX, texY, null);
 				}
 				else{
-					tex.resize(texX, texY, null); image = tex.getImage();
+					tex.resize(texX, texY, null);
 				}
 				int lastint = 0;
 				for(int x = 0; x < texX; x++){
 					for(int y = 0; y < texY; y++){
-						image.setRGB(x, y, new Color(lastint).getRGB());
+						tex.set(x, y, lastint);
 						lastint++;
 					}
 				}
-				if(tex == null){
-					TextureManager.loadTextureFromImgBuffer(image, texid, false, true);
-				}
-				else{
-					tex.rebind();
-					TextureManager.saveTexture(texid);
-				}
+				tex.rebind();
+				TextureManager.saveTexture(texid);
 			}
 		}
 		return texid;

@@ -27,6 +27,7 @@ import net.fexcraft.lib.common.utils.Print;
 /**
  * @author Ferdinand Calo' (FEX___96)
  */
+@Deprecated
 public class ImageHelper {
 	
 	public static boolean HASTASK;
@@ -121,13 +122,7 @@ public class ImageHelper {
 			//
         	DialogBox.show(null, "dialogbox.button.ok", "dialogbox.button.open", null, () -> {
         		try{
-        			if(!Desktop.isDesktopSupported()){
-        				if(System.getProperty("os.name").toLowerCase().contains("windows")){
-        					 Runtime.getRuntime().exec( "rundll32 url.dll,FileProtocolHandler " + new File("./screenshots/").getAbsolutePath());
-        				}
-        				else DialogBox.showOK(null, null, null, "#desktop.api.notsupported");
-        			}
-        			else Desktop.getDesktop().open(new File("./screenshots/"));
+        			FMTB.openLink(new File("./screenshots/").getCanonicalPath());
         		}
         		catch(Throwable e){ e.printStackTrace(); }
         	}, "image_helper.gif.done");

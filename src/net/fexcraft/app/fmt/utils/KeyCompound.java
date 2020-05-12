@@ -2,7 +2,6 @@ package net.fexcraft.app.fmt.utils;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -66,13 +65,7 @@ public class KeyCompound {
 			ImageHelper.takeScreenshot(false);
         	DialogBox.show(null, "dialogbox.button.ok", "dialogbox.button.open", null, () -> {
         		try{
-        			if(!Desktop.isDesktopSupported()){
-        				if(System.getProperty("os.name").toLowerCase().contains("windows")){
-        					 Runtime.getRuntime().exec( "rundll32 url.dll,FileProtocolHandler " + new File("./screenshots/").getAbsolutePath());
-        				}
-        				else DialogBox.showOK(null, null, null, "#desktop.api.notsupported");
-        			}
-        			else Desktop.getDesktop().open(new File("./screenshots/"));
+        			FMTB.openLink(new File("./screenshots/").getAbsolutePath());
         		}
         		catch(Throwable e){ e.printStackTrace(); }
         	}, "image_helper.screenshot.done");

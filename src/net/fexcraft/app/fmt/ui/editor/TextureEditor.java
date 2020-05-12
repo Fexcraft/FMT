@@ -30,7 +30,7 @@ public class TextureEditor extends EditorBase {
 		super(); int pass = -20;
 		EditorWidget palette = new EditorWidget(this, translate("editor.texture.palette"), 0, 0, 0, 0);
 		palette.getContainer().add(new Label(translate("editor.texture.palette.inputfield"), 3, pass += 24, 290, 20));
-		palette.getContainer().add(colorfield = new ColorField(palette.getContainer(), (newval, button) -> updateColor(newval, button), 4, pass += 24, 290, 20));
+		palette.getContainer().add(colorfield = new ColorField(palette.getContainer(), (newval, button) -> updateColor(new RGB(newval), button), 4, pass += 24, 290, 20));
 		palette.getContainer().add(new Label(translate("editor.texture.palette.large"), 3, pass += 24, 290, 20)); pass += 24;
 		byte[] arr = CURRENTCOLOR.toByteArray();
 		for(int x = 0; x < rows; x++){
@@ -103,9 +103,13 @@ public class TextureEditor extends EditorBase {
         reOrderWidgets();
 	}
 
-	public static void updateColor(Integer newval, Boolean refresh){
-		if(newval == null) newval = RGB.WHITE.packed;
-		CURRENTCOLOR.packed = newval;
+	public static void updateColor(byte[] col, Boolean refresh){
+		updateColor(col == null ? RGB.WHITE.copy() : new RGB(col), refresh);
+	}
+
+	public static void updateColor(RGB rgb, Boolean refresh){
+		if(rgb == null) rgb = RGB.WHITE.copy();
+		CURRENTCOLOR = rgb;
 		//
 		if(refresh == null || !refresh){
 			byte[] arr = CURRENTCOLOR.toByteArray();
@@ -121,7 +125,7 @@ public class TextureEditor extends EditorBase {
 			}
 		}
 		current.setColor(CURRENTCOLOR);
-		colorfield.apply(newval);
+		colorfield.apply(CURRENTCOLOR.packed);
 	}
 	
 	public static class ColorPanel extends Panel {
@@ -132,7 +136,7 @@ public class TextureEditor extends EditorBase {
 			super(x, y, w, h); color = rgb; setColor(rgb);
 			this.getListenerMap().addListener(MouseClickEvent.class, listener -> {
 				if(listener.getAction() == MouseClickAction.CLICK){
-					updateColor(color.packed, hori ? false : listener.getButton() == MouseButton.MOUSE_BUTTON_LEFT);
+					updateColor(color.copy(), hori ? false : listener.getButton() == MouseButton.MOUSE_BUTTON_LEFT);
 				}
 			});
 	        Settings.THEME_CHANGE_LISTENER.add(bool -> {

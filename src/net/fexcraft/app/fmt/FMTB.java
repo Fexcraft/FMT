@@ -71,6 +71,8 @@ import net.fexcraft.app.fmt.ui.field.Field;
 import net.fexcraft.app.fmt.ui.field.TextField;
 import net.fexcraft.app.fmt.ui.tree.Trees;
 import net.fexcraft.app.fmt.utils.*;
+import net.fexcraft.app.fmt.utils.texture.TextureManager;
+import net.fexcraft.app.fmt.utils.texture.TextureUpdate;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.Static;
@@ -87,7 +89,7 @@ import net.fexcraft.lib.local_tmt.ModelRendererTurbo;
  * */
 public class FMTB {
 
-	public static final String VERSION = "2.4.1";
+	public static final String VERSION = "2.5.0";
 	public static final String deftitle = "[FPS:%s] Fexcraft Modelling Toolbox " + VERSION + " - %s";
 	public static final String CLID = "587016218196574209";
 	//
@@ -115,7 +117,7 @@ public class FMTB {
 	
 	public static void main(String... args) throws Exception {
         System.setProperty("joml.nounsafe", Boolean.TRUE.toString());
-        //System.setProperty("java.awt.headless", Boolean.TRUE.toString());
+        System.setProperty("java.awt.headless", Boolean.TRUE.toString());
 	    System.setProperty("org.lwjgl.librarypath", new File("./lib/").getAbsolutePath());
 		Configuration.SHARED_LIBRARY_EXTRACT_DIRECTORY.set("./lib/natives");
 		Configuration.SHARED_LIBRARY_EXTRACT_PATH.set("./lib/natives");
@@ -694,7 +696,7 @@ public class FMTB {
 				rt.exec("open " + url);
 			}
 			else if(os.indexOf("nix") >= 0 || os.indexOf("nux") >= 0){
-				String[] browsers = { "epiphany", "firefox", "mozilla", "konqueror", "netscape", "opera", "links", "lynx" };
+				String[] browsers = { "xdg-open", "epiphany", "firefox", "mozilla", "konqueror", "netscape", "opera", "links", "lynx" };
 				StringBuffer cmd = new StringBuffer();
 				for(int i = 0; i < browsers.length; i++){
 					cmd.append((i == 0 ? "" : " || ") + browsers[i] + " \"" + url + "\" ");

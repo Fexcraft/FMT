@@ -1,9 +1,8 @@
-package net.fexcraft.app.fmt.utils;
+package net.fexcraft.app.fmt.utils.texture;
 
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
-import java.awt.Color;
-import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.TimerTask;
@@ -20,10 +19,10 @@ import org.liquidengine.legui.listener.MouseClickEventListener;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.DialogBox;
-import net.fexcraft.app.fmt.utils.TextureManager.Texture;
-import net.fexcraft.app.fmt.utils.TextureManager.TextureGroup;
+import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
+import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.utils.Print;
 
 /**
@@ -33,7 +32,7 @@ public class TextureUpdate extends TimerTask {
 
 	public static boolean HALT = true, ALL, SAVESPACE;
 	private static ArrayList<PolygonWrapper> list;
-	private static BufferedImage image;
+	private static Texture texture;
 	private static TexUpDialog dialog;
 	private static TurboList selected, resetsel;
 	private static int last;
@@ -189,10 +188,16 @@ public class TextureUpdate extends TimerTask {
 				if(list == null){
 					list = getSortedList(ALL);
 					last = 0;
-					image = new BufferedImage(FMTB.MODEL.tx(selected, false), FMTB.MODEL.ty(selected, false), BufferedImage.TYPE_INT_ARGB);
-					for(int i = 0; i < image.getWidth(); i++){
-						for(int j = 0; j < image.getHeight(); j++){
-							image.setRGB(i, j, Color.WHITE.getRGB());
+					if((texture = TextureManager.getTexture("auto-pos-temp", true)) != null){
+						texture.resize( FMTB.MODEL.tx(selected, false), FMTB.MODEL.ty(selected, false), null);
+					}
+					else{
+						texture = TextureManager.createTexture("auto-pos-temp", FMTB.MODEL.tx(selected, false), FMTB.MODEL.ty(selected, false), null);
+						texture.setFile(new File("./temp/auto-pos-temp.png"));
+					}
+					for(int i = 0; i < texture.getWidth(); i++){
+						for(int j = 0; j < texture.getHeight(); j++){
+							texture.set(i, j, RGB.WHITE.packed);
 						}
 					}
 				}
@@ -207,7 +212,7 @@ public class TextureUpdate extends TimerTask {
 						}
 						if(wrapper.textureX != 0f && wrapper.textureY != 0f && !ALL){
 							Print.console("skipping0 [" + wrapper.getTurboList().id + ":" + wrapper.name() + "]");
-							wrapper.burnToTexture(image, null);
+							wrapper.burnToTexture(texture, null);
 							Thread.sleep(10);
 							continue;
 						}
@@ -221,7 +226,7 @@ public class TextureUpdate extends TimerTask {
 									wrapper.textureX = xar;
 									wrapper.textureY = yar;
 									wrapper.texpos = wrapper.newTexturePosition();
-									wrapper.burnToTexture(image, null);
+									wrapper.burnToTexture(texture, null);
 									pass = true;
 									Thread.sleep(10);
 									break;
@@ -237,7 +242,7 @@ public class TextureUpdate extends TimerTask {
 				if(dialog != null) dialog.close();
 				DialogBox.showOK("texture_update.autopos.title", () -> FMTB.MODEL.recompile(), null, "texture_update.autopos.complete");
 				last = (HALT = (list = null) == null) ? -1 : 0;
-				image = null;
+				texture = null;
 				Print.console("STOPPING AUTOPOS THREAD");
 				return;
 			}
@@ -275,9 +280,9 @@ public class TextureUpdate extends TimerTask {
 				for(float x = ends[0][0]; x < ends[1][0]; x += 0.5f){
 					int xr = (int)(xx + x), yr = (int)(yy + y);
 					if(xr < 0 || yr < 0) continue;
-					if(xr >= image.getWidth() || yr >= image.getHeight()) return false;
+					if(xr >= texture.getWidth() || yr >= texture.getHeight()) return false;
 					//
-					if(image.getRGB(xr, yr) != Color.WHITE.getRGB()){
+					if(texture.equals(xr, yr, RGB.WHITE.toByteArray())){
 						/* Print.console(xr + " " + yr + " || " + x + " " + y); */ return false;
 					}
 					else continue;

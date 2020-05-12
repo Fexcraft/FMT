@@ -1,12 +1,9 @@
 package net.fexcraft.app.fmt.utils;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.zip.ZipFile;
-
-import javax.imageio.ImageIO;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -15,6 +12,8 @@ import com.google.gson.JsonObject;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.ui.tree.Trees;
+import net.fexcraft.app.fmt.utils.texture.Texture;
+import net.fexcraft.app.fmt.utils.texture.TextureManager;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.TexrectWrapperA;
 import net.fexcraft.app.fmt.wrappers.TurboList;
@@ -66,14 +65,14 @@ public class HelperCollector {
 			}
 			if(conT){
 				compound.helpertex = "./temp/" + compound.name;
-				TextureManager.loadTextureFromZip(zip.getInputStream(zip.getEntry("texture.png")), compound.helpertex, false, true, false);
+				TextureManager.loadTextureFromZip(zip.getInputStream(zip.getEntry("texture.png")), compound.helpertex, false, false);
 			}
 			if(obj.has("textures")){
 				JsonArray array = obj.get("textures").getAsJsonArray();
 				for(JsonElement elm : array){
 					String group = elm.getAsString();
 					String texid = "./temp/" + compound.name + "/" + group;
-					TextureManager.loadTextureFromZip(zip.getInputStream(zip.getEntry("texture-" + group + ".png")), texid, false, true, false);
+					TextureManager.loadTextureFromZip(zip.getInputStream(zip.getEntry("texture-" + group + ".png")), texid, false, false);
 					for(TurboList list : compound.getGroups()){
 						if(list.helpertex != null && list.helpertex.equals(group)){
 							list.helpertex = texid;
@@ -103,38 +102,37 @@ public class HelperCollector {
 		}
 		GroupCompound compound = null;
 		try{
-			BufferedImage image = ImageIO.read(file);
-			TextureManager.loadTextureFromImgBuffer(image, "./temp/frame/" + file.getName(), false, false);
+			Texture tex = TextureManager.loadTextureFromFile(file, "./temp/frame/" + file.getName(), false, false);
 			compound = new GroupCompound(file);
 			compound.getGroups().clear();
 			compound.file = file;
 			if(!compound.name.startsWith("frame/")) compound.name = "frame/" + file.getName();
 			compound.helpertex = "./temp/frame/" + file.getName();
-			compound.textureSizeX = image.getWidth();
-			compound.textureSizeY = image.getHeight();
+			compound.textureSizeX = tex.getWidth();
+			compound.textureSizeY = tex.getHeight();
 			TexrectWrapperA polygon = new TexrectWrapperA(compound);
-			polygon.size.xCoord = image.getWidth();
-			polygon.size.yCoord = image.getHeight();
+			polygon.size.xCoord = tex.getWidth();
+			polygon.size.yCoord = tex.getHeight();
 			polygon.size.zCoord = 0.2f;
-			polygon.texcor[4][0] = image.getWidth();
+			polygon.texcor[4][0] = tex.getWidth();
 			{
 				polygon.texcor[4][1] = 0;
 				polygon.texcor[4][2] = 0;
 				polygon.texcor[4][3] = 0;
 				polygon.texcor[4][4] = 0;
-				polygon.texcor[4][5] = image.getHeight();
-				polygon.texcor[4][6] = image.getWidth();
-				polygon.texcor[4][7] = image.getHeight();
+				polygon.texcor[4][5] = tex.getHeight();
+				polygon.texcor[4][6] = tex.getWidth();
+				polygon.texcor[4][7] = tex.getHeight();
 			}
 			/*  */ {
 				polygon.texcor[5][0] = 0;
 				polygon.texcor[5][1] = 0;
-				polygon.texcor[5][2] = image.getWidth();
+				polygon.texcor[5][2] = tex.getWidth();
 				polygon.texcor[5][3] = 0;
-				polygon.texcor[5][4] = image.getWidth();
-				polygon.texcor[5][5] = image.getHeight();
+				polygon.texcor[5][4] = tex.getWidth();
+				polygon.texcor[5][5] = tex.getHeight();
 				polygon.texcor[5][6] = 0;
-				polygon.texcor[5][7] = image.getHeight();
+				polygon.texcor[5][7] = tex.getHeight();
 			}
 			polygon.off.zCoord = -0.1f;
 			polygon.off.xCoord = -(polygon.size.xCoord / 2);

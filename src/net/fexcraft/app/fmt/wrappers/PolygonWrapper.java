@@ -1,8 +1,5 @@
 package net.fexcraft.app.fmt.wrappers;
 
-import java.awt.Color;
-import java.awt.image.BufferedImage;
-
 import org.lwjgl.opengl.GL11;
 
 import com.google.gson.JsonObject;
@@ -12,7 +9,8 @@ import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.tree.SubTreeGroup;
 import net.fexcraft.app.fmt.ui.tree.Trees;
 import net.fexcraft.app.fmt.utils.Settings;
-import net.fexcraft.app.fmt.utils.TextureManager.TextureGroup;
+import net.fexcraft.app.fmt.utils.texture.Texture;
+import net.fexcraft.app.fmt.utils.texture.TextureGroup;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.common.utils.Print;
@@ -33,7 +31,7 @@ public abstract class PolygonWrapper {
 	private TurboList turbolist;
 	public boolean mirror, flip;
 	public boolean selected;
-	public int[] color;
+	public byte[][] color;
 	public String name;
 	//
 	public SubTreeGroup button;
@@ -180,13 +178,16 @@ public abstract class PolygonWrapper {
 	
 	private RGB genColor(ModelRendererTurbo turbo, int face){
 		if(color == null || face >= color.length){
-			color = new int[turbo.getFaces().length];
+			color = new byte[turbo.getFaces().length][];
 			for(int i = 0; i < color.length; i++){
-				color[i] = lastint += 1;
-				if(color[i] == 2048383){ color[i] = lastint += 1; }
+				color[i] = new RGB(lastint += 1).toByteArray();
+				if(color[i][0] == 31 && color[i][1] == 65 && color[i][2] == 127){
+					color[i] = new RGB(lastint += 1).toByteArray();
+					//I don't remember the reason behind this check but updating it.
+				}
 			}
 		}
-		RGB rgb = new RGB(); rgb.packed = color[face]; return rgb;
+		return new RGB(color[face]);
 	}
 
 	protected abstract ModelRendererTurbo newMRT();
@@ -234,7 +235,7 @@ public abstract class PolygonWrapper {
 		if(i < 0 || i > 2) i = 0; return i == 0 ? turbo : i == 1 ? lines : sellines;
 	}
 	
-	public boolean burnToTexture(BufferedImage image, Integer face){
+	public boolean burnToTexture(Texture tex, Integer face){
 		if(this.texpos == null || this.texpos.length == 0){
 			Print.console("Polygon '" + turbolist.id + ":" + this.name() + "' has no texture data, skipping.");
 			return false;
@@ -242,13 +243,13 @@ public abstract class PolygonWrapper {
 		if(face == null){
 			for(int i = 0; i < texpos.length; i++){
 				float[][] ends = texpos[i]; if(ends == null || ends.length == 0) continue;
-				burn(image, ends, new Color(something.getColor(i).packed).getRGB());
+				burn(tex, ends, something.getColor(i).toByteArray());
 			}
 		}
 		else if(face == -1){
 			for(int i = 0; i < texpos.length; i++){
 				float[][] ends = texpos[i]; if(ends == null || ends.length == 0) continue;
-				burn(image, ends, new Color(TextureEditor.CURRENTCOLOR.packed).getRGB());
+				burn(tex, ends, TextureEditor.CURRENTCOLOR.toByteArray());
 			}
 		}
 		else{
@@ -269,11 +270,11 @@ public abstract class PolygonWrapper {
 					ends = texpos[1];
 				} else return false;
 				if(ends == null || ends.length == 0) return false;
-				burn(image, ends, new Color(TextureEditor.CURRENTCOLOR.packed).getRGB());
+				burn(tex, ends, TextureEditor.CURRENTCOLOR.toByteArray());
 			}
 			else if(this.getType().isRectagular() && !this.getType().isTexRect()){
 				float[][] ends = texpos[face]; if(ends == null || ends.length == 0) return false;
-				burn(image, ends, new Color(TextureEditor.CURRENTCOLOR.packed).getRGB());
+				burn(tex, ends, TextureEditor.CURRENTCOLOR.toByteArray());
 			}
 			else{
 				Print.console("There is no known way of how to handle texture burning of '" + this.getType().name() + "'!");
@@ -282,12 +283,12 @@ public abstract class PolygonWrapper {
 		return true;
 	}
 	
-	private void burn(BufferedImage img, float[][] ends, int color){
+	private void burn(Texture tex, float[][] ends, byte[] bs){
 		for(float x = ends[0][0]; x < ends[1][0]; x += 0.5f){
 			for(float y = ends[0][1]; y < ends[1][1]; y += 0.5f){
 				int xa = (int)(x + textureX), ya = (int)(y + textureY);
-				if(xa >= 0 && xa < img.getWidth() && ya >= 0 && ya < img.getHeight()){
-					img.setRGB(xa, ya, color);
+				if(xa >= 0 && xa < tex.getWidth() && ya >= 0 && ya < tex.getHeight()){
+					tex.set(xa, ya, bs);
 				} else continue;
 			}
 		}

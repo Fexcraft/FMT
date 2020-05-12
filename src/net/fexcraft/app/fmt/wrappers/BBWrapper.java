@@ -2,7 +2,7 @@ package net.fexcraft.app.fmt.wrappers;
 
 import com.google.gson.JsonObject;
 
-import net.fexcraft.app.fmt.utils.TextureManager;
+import net.fexcraft.app.fmt.utils.texture.TextureManager;
 import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.local_tmt.ModelRendererTurbo;
 

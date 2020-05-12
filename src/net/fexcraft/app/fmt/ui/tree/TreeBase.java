@@ -14,7 +14,7 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.editor.EditorBase;
 import net.fexcraft.app.fmt.utils.HelperCollector;
 import net.fexcraft.app.fmt.utils.Settings;
-import net.fexcraft.app.fmt.utils.TextureManager;
+import net.fexcraft.app.fmt.utils.texture.TextureManager;
 
 public class TreeBase extends Panel {
 

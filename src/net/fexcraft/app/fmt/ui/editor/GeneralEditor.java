@@ -17,8 +17,8 @@ import net.fexcraft.app.fmt.ui.field.BoolButton;
 import net.fexcraft.app.fmt.ui.field.ColorField;
 import net.fexcraft.app.fmt.ui.field.NumberField;
 import net.fexcraft.app.fmt.ui.field.TextField;
-import net.fexcraft.app.fmt.utils.TextureManager;
-import net.fexcraft.app.fmt.utils.TextureManager.Texture;
+import net.fexcraft.app.fmt.utils.texture.Texture;
+import net.fexcraft.app.fmt.utils.texture.TextureManager;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.ShapeType;
 import net.fexcraft.app.fmt.wrappers.TurboList;
@@ -141,7 +141,7 @@ public class GeneralEditor extends EditorBase {
 						DialogBox.showOK(null, null, null, "editor.general.attributes.painttotexture.tex_not_found");
 						return;
 					}
-					poly.burnToTexture(tex.getImage(), null);
+					poly.burnToTexture(tex, null);
 					poly.recompile();
 					TextureManager.saveTexture(texname);
 					tex.rebind();

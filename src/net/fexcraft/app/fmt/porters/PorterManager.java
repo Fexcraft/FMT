@@ -3,7 +3,6 @@
  */
 package net.fexcraft.app.fmt.porters;
 
-import java.awt.Desktop;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -86,12 +85,7 @@ public class PorterManager {
 				}
 				String result = porter.exportModel(FMTB.MODEL, file, settings);
 				DialogBox.showOK(null, null, null, "eximporter.export.success", "#" + result);
-				try{
-					Desktop.getDesktop().open(file.getParentFile());
-				}
-				catch(Exception e){
-					e.printStackTrace();
-				}
+				FMTB.openLink(file.getParentFile().getPath());
 			}
 			catch(Exception e){
 				DialogBox.showOK(null, null, null, "eximporter.export.failed", "#" + e.getLocalizedMessage());

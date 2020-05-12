@@ -1,7 +1,5 @@
 package net.fexcraft.app.fmt.porters;
 
-import java.awt.Color;
-import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -14,13 +12,11 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import javax.imageio.ImageIO;
-
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.utils.Setting;
-import net.fexcraft.app.fmt.utils.TextureManager;
-import net.fexcraft.app.fmt.utils.TextureManager.TextureGroup;
+import net.fexcraft.app.fmt.utils.texture.TextureGroup;
+import net.fexcraft.app.fmt.utils.texture.TextureManager;
 import net.fexcraft.app.fmt.wrappers.BoxWrapper;
 import net.fexcraft.app.fmt.wrappers.FlexTrapezoidWrapper;
 import net.fexcraft.app.fmt.wrappers.FlexboxWrapper;
@@ -174,23 +170,9 @@ public class MTBImporter extends ExImPorter {
 			stream.close();
 			if(loadtex){
 				try{
-					BufferedImage image = ImageIO.read(zip.getInputStream(zip.getEntry("Model.png")));
-					boolean transparent = true;
-					Color color = null;
-					for(int x = 0; x < image.getWidth(); x++){
-						for(int y = 0; y < image.getHeight(); y++){
-							color = new Color(image.getRGB(x, y));
-							if(color.getAlpha() > 0 && color.getRed() > 0 && color.getBlue() > 0 && color.getGreen() > 0){
-								transparent = false;
-								break;
-							}
-						}
-					}
-					if(!transparent){
-						TextureManager.loadTextureFromImgBuffer(image, "group:default", false, true);
-						TextureManager.addGroup(new TextureGroup("default", "group:default"));
-						compound.setTexture(TextureManager.getGroup("default"));
-					}
+					TextureManager.loadTextureFromZip(zip.getInputStream(zip.getEntry("Model.png")), "group:default", false, true);
+					TextureManager.addGroup(new TextureGroup("default", "group:default"));
+					compound.setTexture(TextureManager.getGroup("default"));
 				}
 				catch(Exception e){
 					e.printStackTrace();

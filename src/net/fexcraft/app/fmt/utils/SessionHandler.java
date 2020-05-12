@@ -1,15 +1,12 @@
 package net.fexcraft.app.fmt.utils;
 
-import java.awt.Desktop;
 import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Base64;
 import java.util.function.Consumer;
 
 import com.google.gson.JsonObject;
 
+import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.lib.common.json.JsonUtil;
 import net.fexcraft.lib.common.utils.HttpUtil;
 import net.fexcraft.lib.common.utils.Print;
@@ -161,25 +158,7 @@ public class SessionHandler {
 	}
 	
 	public static void openRegister(){
-		if(Desktop.isDesktopSupported()){
-			Desktop desktop = Desktop.getDesktop();
-			try{
-				desktop.browse(new URI("https://fexcraft.net/register"));
-			}
-			catch(IOException | URISyntaxException er){
-				// TODO Auto-generated catch block
-				er.printStackTrace();
-			}
-		}
-		else{
-			Runtime runtime = Runtime.getRuntime();
-			try{
-				runtime.exec("xdg-open https://fexcraft.net/register");
-			}
-			catch(IOException er){
-				er.printStackTrace();
-			}
-		}
+		FMTB.openLink("https://fexcraft.net/register");
 	}
 
 	public static boolean toggleEncrypt(){
