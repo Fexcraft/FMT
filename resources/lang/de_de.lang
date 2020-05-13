@@ -214,10 +214,10 @@ dialogbox.button.ok=Ok
 dialogbox.button.enable=Einschalten
 dialogbox.button.disable=Ausschalten
 dialogbox.warning=WARNUNG!
-dialogbox.setting.warning0=DIESE EINSTELLUNG KANN BILDSCHIRM-FLACKERN
-dialogbox.setting.warning1=VERURSACHEN ABHÄNGIG VON HARD-/SOFT-WARE.
-dialogbox.setting.warning2=FALLS SIE EPILEPSIE HABEN ODER ÄHNLICH SENSITIV
-dialogbox.setting.warning3=SIND, BITTE DIESE EINSTELLUNG AUSSCHALTEN!
+dialogbox.setting.warning0=DIESE EINSTELLUNG KANN (ABHÄNGIG VON HARD-/SOFT-WARE
+dialogbox.setting.warning1=SCHNELLIGKEIT usw.) BILDSCHIRM-FLACKERN VERURSACHEN.
+dialogbox.setting.warning2=FALLS SIE EPILEPSIE HABEN ODER AUF ÄHNLICHE WEISE AUF
+dialogbox.setting.warning3=SOLCHES SENSITIV SIND -  BITTE DIESE EINSTELLUNG AUSSCHALTEN!
 
 # Trees
 tree.polygon.counter=Vielcke: 
