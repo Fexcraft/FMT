@@ -15,6 +15,7 @@ import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.ui.FileSelector;
 import net.fexcraft.app.fmt.utils.Setting;
 import net.fexcraft.app.fmt.utils.Translator;
+import net.fexcraft.app.fmt.utils.texture.TextureManager;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 
@@ -50,6 +51,7 @@ public class PorterManager {
 					DialogBox.showOK("eximporter.import.nofile", null, null, "eximporter.import.nofile.desc");
 					return;
 				}
+				TextureManager.clearGroups();
 				GroupCompound compound = porter.importModel(file, settings);
 				if(settings.containsKey("integrate") && settings.get("integrate").getBooleanValue()){
 					for(String creator : compound.getAuthors()){
@@ -65,7 +67,7 @@ public class PorterManager {
 						FMTB.MODEL.getGroups().add(list);
 					}
 				}
-				else FMTB.setModel(compound, true, true);
+				else FMTB.setModel(compound, true, false);
 				FMTB.MODEL.updateFields(); FMTB.MODEL.recompile();
 			}
 			catch(Exception e){
