@@ -24,9 +24,7 @@ import org.liquidengine.legui.component.Dialog;
 import org.liquidengine.legui.component.Frame;
 import org.liquidengine.legui.component.ImageView;
 import org.liquidengine.legui.component.Label;
-import org.liquidengine.legui.component.SelectBox;
 import org.liquidengine.legui.event.MouseClickEvent;
-import org.liquidengine.legui.event.MouseClickEvent.MouseClickAction;
 import org.liquidengine.legui.image.BufferedImage;
 import org.liquidengine.legui.listener.MouseClickEventListener;
 import org.liquidengine.legui.listener.processor.EventProcessorProvider;
@@ -291,36 +289,7 @@ public class FMTB {
 		SessionHandler.checkIfLoggedIn(true, true);
 		checkForUpdates();
 		if(Settings.getLanguage().equals("none")){
-			Dialog dialog = new Dialog("INIT", 300, 110);
-			dialog.getContainer().add(new Label("SELECT LANGUAGE", 10, 5, 280, 24));
-			SelectBox<String> selectbox = new SelectBox<>(10, 30, 280, 24);
-			File folder = new File("./resources/lang/");
-			for(File lang : folder.listFiles()){
-				if(lang.getName().endsWith(".lang")){
-					String leng = lang.getName().replace(".lang", "");
-					if(leng.equals("default")) leng += " (english)";
-					selectbox.addElement(leng);
-				}
-			}
-			selectbox.addSelectBoxChangeSelectionEventListener(listener -> {
-				String newcode = listener.getNewValue();
-				if(newcode.contains(" (")){
-					newcode = newcode.substring(0, listener.getNewValue().indexOf(" "));
-				}
-				Settings.SETTINGS.get("language_code").validateAndApply(newcode);
-			});
-			selectbox.setVisibleCount(12);
-			dialog.getContainer().add(selectbox);
-			dialog.getContainer().add(new Label("APPLIES ON RESTART", 10, 60, 280, 24));
-			Button button = new Button("EXIT", 200, 60, 90, 20);
-			button.getListenerMap().addListener(MouseClickEvent.class, listener -> {
-				if(listener.getAction() == MouseClickAction.CLICK){
-					close = true;
-				}
-			});
-			dialog.getContainer().add(button);
-			dialog.setResizable(false);
-			dialog.show(frame);
+			Translator.showSelectDialog(frame);
 		}
 		KeyCompound.init();
 		KeyCompound.load();
