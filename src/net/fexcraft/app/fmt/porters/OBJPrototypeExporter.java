@@ -13,7 +13,6 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.utils.Axis3DL;
 import net.fexcraft.app.fmt.utils.Setting;
-import net.fexcraft.app.fmt.utils.Setting.Type;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
@@ -34,13 +33,14 @@ public class OBJPrototypeExporter extends ExImPorter {
 	private static final String[] extensions = new String[]{ "Wavefront Obj Model", "*.obj" };
 	
 	public OBJPrototypeExporter(){
-		settings.add(new Setting(Type.BOOLEAN, "rotate_model", Settings.oldrot()));
-		settings.add(new Setting(Type.FLOAT, "rotate_y", Settings.oldrot() ? 180f : 0f));
-		settings.add(new Setting(Type.FLOAT, "rotate_z", Settings.oldrot() ? 180f : 0f));
-		settings.add(new Setting(Type.FLOAT, "rotate_x", 0f));
-		settings.add(new Setting(Type.BOOLEAN, "flip_texture", true));
-		settings.add(new Setting(Type.FLOAT, "scale", 1f));
-		settings.add(new Setting(Type.BOOLEAN, "create_mtl", false));
+		settings.add(new Setting("rotate_model", Settings.oldrot()));
+		settings.add(new Setting("rotate_y", Settings.oldrot() ? 180f : 0f));
+		settings.add(new Setting("rotate_z", Settings.oldrot() ? 180f : 0f));
+		settings.add(new Setting("rotate_x", 0f));
+		settings.add(new Setting("flip_texture", true));
+		settings.add(new Setting("scale", 1f));
+		settings.add(new Setting("create_mtl", false));
+		settings.add(new Setting("index_vertices", false));
 	}
 
 	@Override
@@ -74,6 +74,7 @@ public class OBJPrototypeExporter extends ExImPorter {
 		}
 		//
 		//float texsx = 1f / compound.textureSizeX, texsy = 1f/ compound.textureSizeY;
+		int indexer = 0;
 		for(TurboList list : compound.getGroups()){
 			buffer.append("# Group Name\n"); axis = new Axis3DL();
 			buffer.append("g " + list.id + "\nusemtl fmt_material\n");
