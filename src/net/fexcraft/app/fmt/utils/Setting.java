@@ -95,7 +95,7 @@ public class Setting {
 				FMTB.context.setDebugEnabled((boolean)value);
 			}
 			if(this.id.equals("drag_painting") && (boolean)value){
-				DialogBox.show("dialogbox.warning", "dialogbox.button.ok", "dialogbox.button.disable", null, () -> {
+				DialogBox.show(600, "dialogbox.warning", "dialogbox.button.ok", "dialogbox.button.disable", null, () -> {
 					this.setValue(false);
 				}, "dialogbox.setting.warning0", "dialogbox.setting.warning1", "dialogbox.setting.warning2", "dialogbox.setting.warning3");
 			}
