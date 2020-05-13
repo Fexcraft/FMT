@@ -12,7 +12,6 @@ import static org.lwjgl.glfw.GLFW.glfwSetInputMode;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.SettingsBox;
 import net.fexcraft.app.fmt.ui.editor.Editors;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.field.Field;
@@ -134,7 +133,6 @@ public class GGR {
 		if(y[0] < 30) return false;
 		if(Editors.anyVisible() && x[0] < 304) return false;
 		if(Trees.anyVisible() && x[0] > (FMTB.WIDTH - 304)) return false;
-		if(SettingsBox.isHovered()) return false;
 		return true;
 	}
 
