@@ -52,7 +52,7 @@ public class Texture {
 	public void resize(int width, int height){
 		ByteBuffer oldbuffer = buffer;
 		buffer = BufferUtils.createByteBuffer(width * height * CHANNELS);
-		stbir_resize_uint8_generic(oldbuffer, this.width[0], this.height[0], 0, buffer, width, height, 0, 4, 4, 0, STBIR_EDGE_ZERO, STBIR_FILTER_DEFAULT, STBIR_COLORSPACE_LINEAR);
+		stbir_resize_uint8_generic(oldbuffer, this.width[0], this.height[0], 0, buffer, width, height, 0, 4, 3, 0, STBIR_EDGE_ZERO, STBIR_FILTER_DEFAULT, STBIR_COLORSPACE_LINEAR);
 		this.width[0] = width;
 		this.height[0] = height;
 		rebind();
