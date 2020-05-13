@@ -272,6 +272,9 @@ public class FMTB {
 					Field field = (Field)context.getFocusedGui();
 					if(field.id() != null || field.update() != null) field.onScroll(yoffset);
 				}
+				else if(Editors.anyCurrentHovered()){
+					Editors.getVisible().modifyCurrent(yoffset);
+				}
 				else if(context.getFocusedGui() != null) return;
 				else ggr.scrollCallback(window, xoffset, yoffset);
 			}

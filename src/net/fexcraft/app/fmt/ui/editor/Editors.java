@@ -70,4 +70,13 @@ public class Editors {
 		}
 	}
 
+	public static boolean anyCurrentHovered(){
+		for(EditorBase editor : editors){
+			if(editor.isVisible() && editor.current.isHovered()){
+				return true;
+			}
+		}
+		return false;
+	}
+
 }
