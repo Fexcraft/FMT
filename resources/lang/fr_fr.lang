@@ -207,6 +207,13 @@ dialogbox.button.load=Charger
 dialogbox.button.yes=Oui
 dialogbox.button.no=Non
 dialogbox.button.ok=Ok
+dialogbox.button.enable=Activer
+dialogbox.button.disable=Désactiver
+dialogbox.warning=ATTENTION!
+dialogbox.setting.warning0=CE PARAMÈTRE PEUT PROVOQUER UN CLIGNOTEMENT  DE L'ÉCRAN 
+dialogbox.setting.warning1=SELON LA VITESSE DU MATÉRIEL / LOGICIEL
+dialogbox.setting.warning2=SI VOUS AVEZ DE L'EPILEPSIE OU AUTRE MALADIE LIE AU ECRAN
+dialogbox.setting.warning3=LE SCINTILLEMENT ET MAUVAIS ,VEUILLEZ LE DESACTIVER
 
 # Des arbres
 tree.polygon.counter=Polygones: 
