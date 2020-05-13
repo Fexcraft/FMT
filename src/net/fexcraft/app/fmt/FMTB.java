@@ -288,9 +288,6 @@ public class FMTB {
 		HelperCollector.reload(loadedold);
 		SessionHandler.checkIfLoggedIn(true, true);
 		checkForUpdates();
-		if(Settings.getLanguage().equals("none")){
-			Translator.showSelectDialog(frame);
-		}
 		KeyCompound.init();
 		KeyCompound.load();
 		if(!loadedold){
@@ -643,10 +640,12 @@ public class FMTB {
 		new Thread(){
 			@Override
 			public void run(){
+				boolean translate = Settings.getLanguage().equals("none");
 				JsonObject obj = HttpUtil.request("http://fexcraft.net/minecraft/fcl/request", "mode=requestdata&modid=fmt");
 				if(obj == null || !(obj.has("versions")) && obj.has("latest_version")){
 					Print.console("Couldn't fetch latest version.");
 					Print.console(obj == null ? ">> no version response received" : obj.toString());
+					if(translate) Translator.showSelectDialog(frame);
 					return;
 				}
 				if(obj.has("blocked_versions")){
@@ -679,8 +678,11 @@ public class FMTB {
 		        		}
 		        	}
 		        });
-		        dialog.getContainer().add(okbutton); dialog.getContainer().add(upbutton);
-		        dialog.getContainer().add(label); dialog.show(frame);
+		        dialog.getContainer().add(okbutton);
+		        dialog.getContainer().add(upbutton);
+		        dialog.getContainer().add(label);
+		        dialog.show(frame);
+		        if(translate) Translator.showSelectDialog(frame);
 			}
 		}.start();
 	}

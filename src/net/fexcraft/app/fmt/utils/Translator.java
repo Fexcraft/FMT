@@ -71,50 +71,55 @@ public class Translator {
 		}
 	}
 
-	public static void showSelectDialog(Frame frame) throws FileNotFoundException {
-		Dialog dialog = new Dialog("FMT TRANSLATOR", 300, 110);
-		Label select, applies;
-		dialog.getContainer().add(select = new Label("SELECT LANGUAGE", 10, 5, 280, 24));
-		dialog.getContainer().add(applies = new Label("APPLIES ON RESTART", 10, 60, 280, 24));
-		Button button = new Button("EXIT", 200, 60, 90, 20);
-		button.getListenerMap().addListener(MouseClickEvent.class, listener -> {
-			if(listener.getAction() == MouseClickAction.CLICK){
-				FMTB.get().close(true);
-			}
-		});
-		SelectBox<String> selectbox = new SelectBox<>(10, 30, 280, 24);
-		File folder = new File("./resources/lang/");
-		ArrayList<String[]> langdata = new ArrayList<>();
-		for(File lang : folder.listFiles()){
-			if(lang.getName().endsWith(".lang")){
-				Scanner scanner = new Scanner(lang);
-				String first = scanner.nextLine();
-				if(first.startsWith("#FMT-LANG ")){
-					String[] langs = first.replace("#FMT-LANG ", "").split("\\|");
-					for(int i = 0; i < langs.length; i++) langs[i] = langs[i].trim();
-					selectbox.addElement(langs[1]);
-					langdata.add(langs);
+	public static void showSelectDialog(Frame frame){
+		try{
+			Dialog dialog = new Dialog("FMT TRANSLATOR", 300, 110);
+			Label select, applies;
+			dialog.getContainer().add(select = new Label("SELECT LANGUAGE", 10, 5, 280, 24));
+			dialog.getContainer().add(applies = new Label("APPLIES ON RESTART", 10, 60, 280, 24));
+			Button button = new Button("EXIT", 200, 60, 90, 20);
+			button.getListenerMap().addListener(MouseClickEvent.class, listener -> {
+				if(listener.getAction() == MouseClickAction.CLICK){
+					FMTB.get().close(true);
 				}
-				else{
-					langdata.add(new String[]{ lang.getName().replace(".lang", "") });
-					selectbox.addElement(langdata.get(langdata.size() - 1)[0]);
+			});
+			SelectBox<String> selectbox = new SelectBox<>(10, 30, 280, 24);
+			File folder = new File("./resources/lang/");
+			ArrayList<String[]> langdata = new ArrayList<>();
+			for(File lang : folder.listFiles()){
+				if(lang.getName().endsWith(".lang")){
+					Scanner scanner = new Scanner(lang);
+					String first = scanner.nextLine();
+					if(first.startsWith("#FMT-LANG ")){
+						String[] langs = first.replace("#FMT-LANG ", "").split("\\|");
+						for(int i = 0; i < langs.length; i++) langs[i] = langs[i].trim();
+						selectbox.addElement(langs[1]);
+						langdata.add(langs);
+					}
+					else{
+						langdata.add(new String[]{ lang.getName().replace(".lang", "") });
+						selectbox.addElement(langdata.get(langdata.size() - 1)[0]);
+					}
+					scanner.close();
 				}
-				scanner.close();
 			}
+			selectbox.addSelectBoxChangeSelectionEventListener(listener -> {
+				int i = selectbox.getElementIndex(listener.getNewValue());
+				String[] arr = langdata.get(i);
+				select.getTextState().setText(arr.length > 2 ? arr[2] : "SELECT A LANGUAGE");
+				applies.getTextState().setText(arr.length > 3 ? arr[3] : "APPLIES ON RESTART");
+				button.getTextState().setText(arr.length > 4 ? arr[4] : "EXIT");
+				Settings.SETTINGS.get("language_code").validateAndApply(arr[0]);
+			});
+			selectbox.setVisibleCount(12);
+			dialog.getContainer().add(selectbox);
+			dialog.getContainer().add(button);
+			dialog.setResizable(false);
+			dialog.show(frame);
 		}
-		selectbox.addSelectBoxChangeSelectionEventListener(listener -> {
-			int i = selectbox.getElementIndex(listener.getNewValue());
-			String[] arr = langdata.get(i);
-			select.getTextState().setText(arr.length > 2 ? arr[2] : "SELECT A LANGUAGE");
-			applies.getTextState().setText(arr.length > 3 ? arr[3] : "APPLIES ON RESTART");
-			button.getTextState().setText(arr.length > 4 ? arr[4] : "EXIT");
-			Settings.SETTINGS.get("language_code").validateAndApply(arr[0]);
-		});
-		selectbox.setVisibleCount(12);
-		dialog.getContainer().add(selectbox);
-		dialog.getContainer().add(button);
-		dialog.setResizable(false);
-		dialog.show(frame);
+		catch(FileNotFoundException e){
+			e.printStackTrace();
+		}
 	}
 
 }
