@@ -170,8 +170,8 @@ public class MTBImporter extends ExImPorter {
 			stream.close();
 			if(loadtex){
 				try{
-					TextureManager.loadTextureFromZip(zip.getInputStream(zip.getEntry("Model.png")), "group:default", false, true);
-					TextureManager.addGroup(new TextureGroup("default", "group:default"));
+					TextureManager.loadTextureFromZip(zip.getInputStream(zip.getEntry("Model.png")), "group-default", false, true);
+					TextureManager.addGroup(new TextureGroup("default", "group-default"));
 					compound.setTexture(TextureManager.getGroup("default"));
 				}
 				catch(Exception e){
