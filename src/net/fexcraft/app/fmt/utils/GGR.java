@@ -12,6 +12,7 @@ import static org.lwjgl.glfw.GLFW.glfwSetInputMode;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.SettingsBox;
 import net.fexcraft.app.fmt.ui.editor.Editors;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.field.Field;
@@ -126,13 +127,14 @@ public class GGR {
         }
 	}
 
-	private boolean isNotOverUI(){
+	public static boolean isNotOverUI(){
 		if(FMTB.frame.getLayers().size() > 0) return false;
 		double[] x = { 0 }, y = { 0 };
 		glfwGetCursorPos(FMTB.window, x, y);
 		if(y[0] < 30) return false;
 		if(Editors.anyVisible() && x[0] < 304) return false;
 		if(Trees.anyVisible() && x[0] > (FMTB.WIDTH - 304)) return false;
+		if(SettingsBox.isHovered()) return false;
 		return true;
 	}
 
