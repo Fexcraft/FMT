@@ -20,7 +20,7 @@ public class Settings {
 	
 	private static Setting floor, lines, demo, cube, polygon_marker, lighting, cullface, animate,
 		discordrpc, discordrpc_sm, discordrpc_rtonm, numberfieldarrows, preview_colorpicker;
-	public static Setting movespeed, mouse_sensivity, internal_cursor, vsync, debug;
+	public static Setting movespeed, mouse_sensivity, internal_cursor, vsync, vsynchalf, debug;
 	public static Setting darktheme, no_scroll_fields, old_rotation, center_marker;
 	public static Setting orbital_camera, oc_center_on_part, internal_filechooser;
 	public static Setting drag_painting, background_color;
@@ -74,6 +74,8 @@ public class Settings {
 	public static boolean ui_debug(){ return debug.getBooleanValue(); }
 
 	public static boolean dragPainting(){ return drag_painting.getBooleanValue(); }
+
+	public static boolean vsyncHalf(){ return vsynchalf.getValue(); }
 	
 	//
 
@@ -173,7 +175,7 @@ public class Settings {
 		//
 		DEFAULTS.add(new Setting("mouse_sensivity", 2f));
 		DEFAULTS.add(new Setting("camera_movespeed", 2f));
-		DEFAULTS.add(new Setting("vsync", false));
+		DEFAULTS.add(new Setting("vsync", true));
 		DEFAULTS.add(new Setting("last_file", "null"));
 		DEFAULTS.add(new Setting("internal_cursor", false));
 		DEFAULTS.add(new Setting("internal_filechooser", false));
@@ -181,6 +183,7 @@ public class Settings {
 		DEFAULTS.add(new Setting("ui_debug", false));
 		DEFAULTS.add(new Setting("drag_painting", false));
 		DEFAULTS.add(new Setting("boundingbox_color", new RGB(0, 255, 0)));
+		DEFAULTS.add(new Setting("vsync_half", false));
 	}
 
 	public static void load(){
@@ -230,6 +233,7 @@ public class Settings {
 		debug = SETTINGS.get("ui_debug");
 		drag_painting = SETTINGS.get("drag_painting");
 		background_color = SETTINGS.get("background_color");
+		vsynchalf = SETTINGS.get("vsync_half");
 	}
 
 	public static void save(){

@@ -117,7 +117,7 @@ public class FMTB {
 	
 	public static void main(String... args) throws Exception {
         System.setProperty("joml.nounsafe", Boolean.TRUE.toString());
-        System.setProperty("java.awt.headless", Boolean.TRUE.toString());
+        //System.setProperty("java.awt.headless", Boolean.TRUE.toString());
 	    System.setProperty("org.lwjgl.librarypath", new File("./lib/").getAbsolutePath());
 		Configuration.SHARED_LIBRARY_EXTRACT_DIRECTORY.set("./lib/natives");
 		Configuration.SHARED_LIBRARY_EXTRACT_PATH.set("./lib/natives");
@@ -323,7 +323,7 @@ public class FMTB {
 				}
 			});
 		}
-		glfwSwapInterval(Settings.vsync() ? 1 : 0);
+		glfwSwapInterval(Settings.vsync() ? Settings.vsyncHalf() ? 2 : 1 : 0);
 		//
 		while(!close){
 			ggr.pollInput(accumulator += (delta = timer.getDelta()));
