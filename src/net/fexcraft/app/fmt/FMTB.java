@@ -323,7 +323,7 @@ public class FMTB {
 				}
 			});
 		}
-		glfwSwapInterval(Settings.vsync() ? Settings.vsyncHalf() ? 2 : 1 : 0);
+		updateVsync();
 		//
 		while(!close){
 			ggr.pollInput(accumulator += (delta = timer.getDelta()));
@@ -740,6 +740,11 @@ public class FMTB {
 			e.printStackTrace();
 		}
 		return;
+	}
+
+	public static void updateVsync(){
+		Print.console(String.format("Updating Vsync State [%s]", (Settings.vsync() ? "+" : "-") + (Settings.vsyncHalf() ? "+" : "-")));
+		glfwSwapInterval(Settings.vsync() ? Settings.vsyncHalf() ? 2 : 1 : 0);
 	}
 
 }

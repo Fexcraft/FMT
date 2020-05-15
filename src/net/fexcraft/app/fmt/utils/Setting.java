@@ -102,6 +102,9 @@ public class Setting {
 			/*if(this.id.equals("no_scroll_fields")){
 				DialogBox.showOK(null, null, null, "settingsbox.settings_needs_restart");
 			}*/
+			if(this.id.startsWith("vsync")){
+				FMTB.updateVsync();
+			}
 			return (boolean)value;
 		} else return false;
 	}
