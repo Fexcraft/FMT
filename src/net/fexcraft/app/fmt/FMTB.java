@@ -743,7 +743,7 @@ public class FMTB {
 	}
 
 	public static void updateVsync(){
-		Print.console(String.format("Updating Vsync State [%s]", (Settings.vsync() ? "+" : "-") + (Settings.vsyncHalf() ? "+" : "-")));
+		Print.console(String.format("Updating Vsync State [%s]", (Settings.vsync() ? "+" : "-") + (Settings.vsync() && Settings.vsyncHalf() ? "+" : "-")));
 		glfwSwapInterval(Settings.vsync() ? Settings.vsyncHalf() ? 2 : 1 : 0);
 	}
 
