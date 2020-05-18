@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.utils;
 
+import static net.fexcraft.app.fmt.utils.Logging.log;
+
 import net.arikia.dev.drpc.DiscordRPC;
 import net.arikia.dev.drpc.DiscordRichPresence;
 import net.arikia.dev.drpc.DiscordUser;
@@ -71,7 +73,7 @@ public class DiscordUtil {
 
 		@Override
 		public void apply(DiscordUser user){
-			System.out.println("Received Discord ID: " + user.username + "#" + user.discriminator + "");
+			log("Received Discord ID: " + user.username + "#" + user.discriminator + "");
 		}
 
 	}

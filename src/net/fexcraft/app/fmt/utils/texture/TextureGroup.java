@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.utils.texture;
 
+import static net.fexcraft.app.fmt.utils.Logging.log;
+
 import java.io.File;
 
 import com.google.gson.JsonElement;
@@ -7,7 +9,6 @@ import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.ui.tree.TreeGroup;
 import net.fexcraft.app.fmt.ui.tree.Trees;
-import net.fexcraft.lib.common.utils.Print;
 
 public class TextureGroup {
 
@@ -22,7 +23,7 @@ public class TextureGroup {
 		if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
 		if(!file.exists()){
 			Texture texture = new Texture(texid, 256, 256, null);
-			Print.console("Generated blank texgroup texture.");
+			log("Generated blank texgroup texture.");
 			texture.setFile(file);
 			TextureManager.putTexture(texid, texture);
 			TextureManager.saveTexture(texid);

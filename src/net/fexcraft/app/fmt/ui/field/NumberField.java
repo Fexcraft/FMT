@@ -110,7 +110,7 @@ public class NumberField extends TextInput implements Field {
 
 	@Override
 	public void onScroll(double yoffset){
-		apply(tryAdd(getValue(), yoffset > 0, FMTB.MODEL.rate)); //Print.console(value);
+		apply(tryAdd(getValue(), yoffset > 0, FMTB.MODEL.rate)); //log(value);
 		if(fieldid != null) FMTB.MODEL.updateValue(this, fieldid, yoffset > 0); if(update != null) update.run();
 	}
 

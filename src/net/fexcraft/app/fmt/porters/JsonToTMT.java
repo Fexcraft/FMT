@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.porters;
 
+import static net.fexcraft.app.fmt.utils.Logging.log;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -8,7 +10,6 @@ import net.fexcraft.app.fmt.wrappers.*;
 import net.fexcraft.lib.common.json.JsonUtil;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
-import net.fexcraft.lib.common.utils.Print;
 
 /**
 * Tool to parse `ModelRendererTurbo` objects from JSON.
@@ -211,7 +212,8 @@ public class JsonToTMT {
 			case "voxel":{
 				VoxelWrapper voxel = new VoxelWrapper(compound, get(segments, obj, 16), false);
 				for(JsonElement elm : obj.get("coords").getAsJsonArray()){
-					JsonArray arr = elm.getAsJsonArray(); Print.console("coooord" + elm);
+					JsonArray arr = elm.getAsJsonArray();
+					log("coord" + elm);
 					int xx = arr.get(0).getAsInt(), yy = arr.get(1).getAsInt(), zz = arr.get(2).getAsInt();
 					int x0 = xx + arr.get(3).getAsInt(), y0 = yy + arr.get(4).getAsInt(), z0 = zz + arr.get(5).getAsInt();
 					for(int x = xx; x < x0; x++){
@@ -226,7 +228,7 @@ public class JsonToTMT {
 			}
 		}
 		if(polygon == null){
-			Print.console("POLYGON TYPE '" + obj.get("type").getAsString() + "' NOT FOUND, ATTEMPTING TO PARSE AS BOX. ID: " + (obj.has("name") ? obj.get("name").getAsString() : "null"));
+			log("POLYGON TYPE '" + obj.get("type").getAsString() + "' NOT FOUND, ATTEMPTING TO PARSE AS BOX. ID: " + (obj.has("name") ? obj.get("name").getAsString() : "null"));
 			obj.addProperty("type", "box"); return parseWrapper(compound, obj);
 		}
 		polygon.textureX = get(texturex, obj, idef);

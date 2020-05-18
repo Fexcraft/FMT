@@ -1,5 +1,6 @@
 package net.fexcraft.app.fmt.utils;
 
+import static net.fexcraft.app.fmt.utils.Logging.log;
 import static org.lwjgl.glfw.GLFW.*;
 
 import java.io.File;
@@ -13,7 +14,6 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.ui.editor.Editors;
 import net.fexcraft.lib.common.json.JsonUtil;
-import net.fexcraft.lib.common.utils.Print;
 
 public class KeyCompound {
 	
@@ -102,7 +102,7 @@ public class KeyCompound {
 		JsonObject obj = JsonUtil.get(new File("./keys.json"));
 		if(obj.entrySet().size() == 0) return;
 		if(!obj.has("format") || !obj.get("format").getAsString().equals(FORMAT)){
-			Print.console("Old keys.json format detected, skipping keys.json loading.");
+			log("Old keys.json format detected, skipping keys.json loading.");
 			try{
 				Files.copy(new File("./keys.json"), new File("./keys_old.json"));
 			}

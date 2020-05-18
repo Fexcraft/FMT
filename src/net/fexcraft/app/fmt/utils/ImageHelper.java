@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.utils;
 
+import static net.fexcraft.app.fmt.utils.Logging.log;
+
 import java.awt.Desktop;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -22,7 +24,6 @@ import org.lwjgl.opengl.GL11;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.lib.common.math.Time;
-import net.fexcraft.lib.common.utils.Print;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -102,7 +103,7 @@ public class ImageHelper {
 			}
 			catch(Exception e){
 				e.printStackTrace();
-				Print.console("Failed to setup GIF creation, aborting operation.");
+				log("Failed to setup GIF creation, aborting operation.");
 				reset();
 			}
 		}
@@ -110,7 +111,7 @@ public class ImageHelper {
 		if(stage >= 20 && stage < 56){ stage++;
 			try{ gifwriter.writeToSequence(new IIOImage(displayToImage(), null, meta), param); }
 			catch(IOException e){
-				Print.console("Failed to write next GIF sequence, aborting operation.");
+				log("Failed to write next GIF sequence, aborting operation.");
 				reset(); e.printStackTrace();
 			}
 		}

@@ -61,7 +61,7 @@ public class TexrectWrapperB extends ShapeboxWrapper {
 
 	@Override
 	public float getFloat(String id, boolean x, boolean y, boolean z){
-		if(id.startsWith("texpos") && !id.contains(":")){ // Print.console(id, x);
+		if(id.startsWith("texpos") && !id.contains(":")){ // log(id, x);
 			String str = id.replace("texpos", "");
 			str = str.substring(0, str.length() - 1);
 			int i = Integer.parseInt(str);
@@ -74,7 +74,7 @@ public class TexrectWrapperB extends ShapeboxWrapper {
 	@Override
 	public boolean setFloat(String id, boolean x, boolean y, boolean z, float value){
 		if(super.setFloat(id, x, y, z, value)) return true;
-		if(id.startsWith("texpos") && !id.contains(":")){ // Print.console(id, x, value);
+		if(id.startsWith("texpos") && !id.contains(":")){ // log(id, x, value);
 			int i = Integer.parseInt(id.replace("texpos", "").replace("s", "").replace("e", ""));
 			int j = id.endsWith("s") ? 0 : 2;
 			texcor[i][j + (x ? 0 : 1)] = value;

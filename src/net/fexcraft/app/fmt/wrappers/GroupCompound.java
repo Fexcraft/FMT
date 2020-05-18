@@ -139,16 +139,16 @@ public class GroupCompound {
 			if(texX >= 8192 || texY >= 8192){ /* //TODO */ }
 			else{
 				if(tex == null){
-					//Print.console("create: " + texX + " " + texY);
+					//log("create: " + texX + " " + texY);
 					tex = TextureManager.createTexture(texid, texX, texY, null);
 					tex.setFile(new File(texid + ".png"));
 				}
 				else{
-					//Print.console("resize: " + texX + ">" + tex.getWidth() + " " + texY + ">" + tex.getHeight());
+					//log("resize: " + texX + ">" + tex.getWidth() + " " + texY + ">" + tex.getHeight());
 					tex.resize(texX, texY);
 				}
 				int lastint = 0;
-				//Print.console("size: " + texX + " " + texY);
+				//log("size: " + texX + " " + texY);
 				for(int x = 0; x < texX; x++){
 					for(int y = 0; y < texY; y++){
 						tex.set(x, y, new RGB(lastint).toByteArray());

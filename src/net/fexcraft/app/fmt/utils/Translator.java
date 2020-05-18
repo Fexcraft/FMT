@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.utils;
 
+import static net.fexcraft.app.fmt.utils.Logging.log;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.charset.StandardCharsets;
@@ -16,7 +18,6 @@ import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.event.MouseClickEvent.MouseClickAction;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.lib.common.utils.Print;
 
 public class Translator {
 
@@ -26,18 +27,18 @@ public class Translator {
 	public static final void init() throws FileNotFoundException{
 		scanTo(ROOT_FILE, DEF, true);
 		if(Settings.getLanguage().equals("default")){
-			Print.console("Langauge is set to default, skipping translation parsing.");
+			log("Langauge is set to default, skipping translation parsing.");
 			return;
 		}
 		File file = new File("./resources/lang/" + Settings.getLanguage() + ".lang");
 		if(!file.exists()){
-			Print.console("Tried to find lang file as specified in settings, but the file seems to be missing.");
-			Print.console("Resetting LANG_CODE setting to 'none'!");
+			log("Tried to find lang file as specified in settings, but the file seems to be missing.");
+			log("Resetting LANG_CODE setting to 'none'!");
 			Settings.SETTINGS.get("language_code").setValue("none");
 			return;
 		}
 		//
-		Print.console("Parsing '" + Settings.getLanguage() + "' language file.");
+		log("Parsing '" + Settings.getLanguage() + "' language file.");
 		scanTo(file, SEL, false);
 	}
 
@@ -64,8 +65,8 @@ public class Translator {
 			return String.format(string, objects);
 		}
 		catch(Exception e){
-			Print.console("Failed to format '" + key + "' as '" + string + "'!");
-			for(Object object : objects) Print.console("OBJ > " + object);
+			log("Failed to format '" + key + "' as '" + string + "'!");
+			for(Object object : objects) log("OBJ > " + object);
 			e.printStackTrace();
 			return key;
 		}

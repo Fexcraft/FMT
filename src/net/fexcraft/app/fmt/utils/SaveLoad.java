@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.utils;
 
+import static net.fexcraft.app.fmt.utils.Logging.log;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -38,7 +40,6 @@ import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.json.JsonUtil;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
-import net.fexcraft.lib.common.utils.Print;
 
 public class SaveLoad {
 
@@ -146,7 +147,7 @@ public class SaveLoad {
 					}
 				}
 			}, () -> {
-				Print.console("selected > no saving of current");
+				log("selected > no saving of current");
 				if(shouldclear){
 					FMTB.setModel(new GroupCompound(null), true, true);
 				}
@@ -226,7 +227,7 @@ public class SaveLoad {
 			zipout.close();
 			fileout.close();
 			if(file == null){
-				Print.console("Saved model as FMTB Archive" + (arr.length > 1 ? " with texture." : "."));
+				log("Saved model as FMTB Archive" + (arr.length > 1 ? " with texture." : "."));
 			}
 			file = file == null ? compound.file : file;
 			if(openfile && file.getParentFile() != null){
@@ -453,7 +454,7 @@ public class SaveLoad {
 						list.add(JsonToTMT.parseWrapper(compound, elm.getAsJsonObject()));
 					}
 					catch(Exception e){
-						Print.console(elm.getAsJsonObject());
+						log(elm.getAsJsonObject());
 						e.printStackTrace();
 					}
 				}

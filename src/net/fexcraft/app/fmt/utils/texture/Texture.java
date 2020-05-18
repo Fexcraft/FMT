@@ -1,5 +1,6 @@
 package net.fexcraft.app.fmt.utils.texture;
 
+import static net.fexcraft.app.fmt.utils.Logging.log;
 import static org.lwjgl.stb.STBImage.stbi_failure_reason;
 import static org.lwjgl.stb.STBImage.stbi_load;
 import static org.lwjgl.stb.STBImageResize.STBIR_COLORSPACE_LINEAR;
@@ -14,7 +15,6 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.lib.common.math.RGB;
-import net.fexcraft.lib.common.utils.Print;
 
 public class Texture {
 
@@ -30,7 +30,7 @@ public class Texture {
 	public Texture(String name, File loc){
 		this.name = name;
 		buffer = stbi_load(loc.getPath(), width, height, channels, CHANNELS);
-		if(buffer == null) Print.console("Error while loading texture '" + name + "': " + stbi_failure_reason());
+		if(buffer == null) log("Error while loading texture '" + name + "': " + stbi_failure_reason());
 		//buffer.flip();
 		this.file = loc;
 	}
@@ -135,8 +135,8 @@ public class Texture {
 	public void set(int x, int y, byte[] rgb){
 		int pos = (x + y * height[0]) * CHANNELS;
 		/*if(pos >= buffer.capacity()){
-			Print.console("overcapacity " + pos + " " + buffer.capacity());
-			Print.console("source: " + x + " " + y);
+			log("overcapacity " + pos + " " + buffer.capacity());
+			log("source: " + x + " " + y);
 		}*/
 		buffer.put(pos + 0, (byte)(rgb[0] + 128));
 		buffer.put(pos + 1, (byte)(rgb[1] + 128));

@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.utils;
 
+import static net.fexcraft.app.fmt.utils.Logging.log;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -14,7 +16,6 @@ import net.fexcraft.app.fmt.utils.texture.TextureManager;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
-import net.fexcraft.lib.common.utils.Print;
 
 public class RayCoastAway {
 
@@ -52,8 +53,8 @@ public class RayCoastAway {
 		GL11.glReadPixels(width / 2, height / 2, 1, 1, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, picker);
 		byte[] picked = new byte[4];
 		picker.get(picked);
-		// Print.console((((int) byteArray[0]) & 0xFF) + " " + (((int) byteArray[1]) & 0xFF) + " " + (((int) byteArray[2]) & 0xFF));
-		// Print.console(id + "-ID");
+		// log((((int) byteArray[0]) & 0xFF) + " " + (((int) byteArray[1]) & 0xFF) + " " + (((int) byteArray[2]) & 0xFF));
+		// log(id + "-ID");
 		picker.clear();
 		PICKING = false;
 		MOUSEOFF = false;
@@ -68,11 +69,11 @@ public class RayCoastAway {
 			}
 			Texture calctex = TextureManager.getTexture(GroupCompound.temptexid + group.group, true);
 			if(calctex == null){
-				Print.console("Calculation texture not found or is not loaded or is not initialized, painting aborted.");
+				log("Calculation texture not found or is not loaded or is not initialized, painting aborted.");
 				return;
 			}
 			lastsel = null;
-			// Print.console(id);
+			// log(id);
 			for(int x = 0; x < calctex.getWidth(); x++){
 				for(int y = 0; y < calctex.getHeight(); y++){
 					byte[] calc = calctex.get(x, y);

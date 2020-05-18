@@ -72,7 +72,7 @@ public class TexrectWrapperA extends TexrectWrapperB {
 	@Override
 	public boolean setFloat(String id, boolean x, boolean y, boolean z, float value){
 		if(super.setFloat(id, x, y, z, value)) return true;
-		if(id.startsWith("texpos") && id.contains(":")){ // Print.console(id, x, value);
+		if(id.startsWith("texpos") && id.contains(":")){ // log(id, x, value);
 			String[] str = id.replace("texpos", "").split(":");
 			int i = Integer.parseInt(str[0]), j = Integer.parseInt(str[1]);
 			texcor[i][j] = value;

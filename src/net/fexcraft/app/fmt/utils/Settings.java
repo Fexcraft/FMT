@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.utils;
 
+import static net.fexcraft.app.fmt.utils.Logging.log;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.TreeMap;
@@ -14,7 +16,6 @@ import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.json.JsonUtil;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Time;
-import net.fexcraft.lib.common.utils.Print;
 
 public class Settings {
 	
@@ -108,7 +109,7 @@ public class Settings {
 	}
 
 	public static boolean toggleLighting(){
-		Print.console("Toggling lighting: " + !lighting.getBooleanValue());
+		log("Toggling lighting: " + !lighting.getBooleanValue());
 		return lighting.toggle();
 	}
 
@@ -139,7 +140,7 @@ public class Settings {
 				}
 			}
 		}
-		Print.console("Toggling animations: " + animate.getBooleanValue());
+		log("Toggling animations: " + animate.getBooleanValue());
 		return bool;
 	}
 	
@@ -199,7 +200,7 @@ public class Settings {
 				}
 				catch(Exception e){
 					e.printStackTrace();
-					Print.console("Failed to load setting '" + entry.getKey() + "'!");
+					log("Failed to load setting '" + entry.getKey() + "'!");
 				}
 			});
 		}

@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.utils;
 
+import static net.fexcraft.app.fmt.utils.Logging.log;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
@@ -18,7 +20,6 @@ import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.TexrectWrapperA;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.json.JsonUtil;
-import net.fexcraft.lib.common.utils.Print;
 import net.fexcraft.lib.common.utils.ZipUtil;
 
 public class HelperCollector {
@@ -34,7 +35,7 @@ public class HelperCollector {
 
 	public static final GroupCompound load(File file, ExImPorter exim, Map<String, Setting> settings){
 		if(file == null || exim == null) return null;
-		Print.console("Loading Preview/Helper model: " + file.getName());
+		log("Loading Preview/Helper model: " + file.getName());
 		GroupCompound compound = exim.importModel(file, settings);
 		if(!compound.name.startsWith("import/")){
 			compound.name = "import/" + compound.name;
@@ -76,12 +77,12 @@ public class HelperCollector {
 					for(TurboList list : compound.getGroups()){
 						if(list.helpertex != null && list.helpertex.equals(group)){
 							list.helpertex = texid;
-							Print.console("applied " + group + " to " + list.id);
+							log("applied " + group + " to " + list.id);
 						}
 					}
 					if(compound.helpertex.equals(group)){
 						compound.helpertex = texid;
-						Print.console("applied " + group + " to " + compound.name);
+						log("applied " + group + " to " + compound.name);
 					}
 				}
 			}

@@ -1,5 +1,6 @@
 package net.fexcraft.app.fmt;
 
+import static net.fexcraft.app.fmt.utils.Logging.log;
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -79,7 +80,6 @@ import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Time;
 import net.fexcraft.lib.common.utils.HttpUtil;
-import net.fexcraft.lib.common.utils.Print;
 import net.fexcraft.lib.local_tmt.ModelRendererTurbo;
 
 /**
@@ -89,7 +89,7 @@ import net.fexcraft.lib.local_tmt.ModelRendererTurbo;
  * */
 public class FMTB {
 
-	public static final String VERSION = "2.5.0";
+	public static final String VERSION = "2.5.1";
 	public static final String deftitle = "[FPS:%s] Fexcraft Modelling Toolbox " + VERSION + " - %s";
 	public static final String CLID = "587016218196574209";
 	//
@@ -116,6 +116,8 @@ public class FMTB {
 	public static ImageView cursor;
 	
 	public static void main(String... args) throws Exception {
+		log("==================================================");
+		log("Starting FMT!");
         System.setProperty("joml.nounsafe", Boolean.TRUE.toString());
         //System.setProperty("java.awt.headless", Boolean.TRUE.toString());
 	    System.setProperty("org.lwjgl.librarypath", new File("./lib/").getAbsolutePath());
@@ -643,8 +645,8 @@ public class FMTB {
 				boolean translate = Settings.getLanguage().equals("none");
 				JsonObject obj = HttpUtil.request("http://fexcraft.net/minecraft/fcl/request", "mode=requestdata&modid=fmt");
 				if(obj == null || !(obj.has("versions")) && obj.has("latest_version")){
-					Print.console("Couldn't fetch latest version.");
-					Print.console(obj == null ? ">> no version response received" : obj.toString());
+					log("Couldn't fetch latest version.");
+					log(obj == null ? ">> no version response received" : obj.toString());
 					if(translate) Translator.showSelectDialog(frame);
 					return;
 				}
@@ -652,7 +654,7 @@ public class FMTB {
 					JsonArray array = obj.get("blocked_versions").getAsJsonArray();
 					for(JsonElement elm : array){
 						if(elm.isJsonPrimitive() && elm.getAsString().equals(VERSION)){
-							Print.console("Blocked version detected, causing panic.");
+							log("Blocked version detected, causing panic.");
 							System.exit(2); System.exit(2); System.exit(2); System.exit(2);
 						}
 					}
@@ -743,7 +745,7 @@ public class FMTB {
 	}
 
 	public static void updateVsync(){
-		Print.console(String.format("Updating Vsync State [%s]", (Settings.vsync() ? "+" : "-") + (Settings.vsync() && Settings.vsyncHalf() ? "+" : "-")));
+		log(String.format("Updating Vsync State [%s]", (Settings.vsync() ? "+" : "-") + (Settings.vsync() && Settings.vsyncHalf() ? "+" : "-")));
 		glfwSwapInterval(Settings.vsync() ? Settings.vsyncHalf() ? 2 : 1 : 0);
 	}
 

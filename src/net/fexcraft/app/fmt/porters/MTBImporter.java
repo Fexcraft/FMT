@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.porters;
 
+import static net.fexcraft.app.fmt.utils.Logging.log;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +27,6 @@ import net.fexcraft.app.fmt.wrappers.ShapeboxWrapper;
 import net.fexcraft.app.fmt.wrappers.TrapezoidWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.math.Vec3f;
-import net.fexcraft.lib.common.utils.Print;
 import net.fexcraft.lib.common.utils.ZipUtil;
 import net.fexcraft.lib.local_tmt.ModelRendererTurbo;
 
@@ -176,7 +177,7 @@ public class MTBImporter extends ExImPorter {
 				}
 				catch(Exception e){
 					e.printStackTrace();
-					Print.console("Could not load texture from MTB.");
+					log("Could not load texture from MTB.");
 				}
 			}
 			zip.close();

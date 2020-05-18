@@ -329,7 +329,7 @@ public class UserInterfaceUtils {
 
 	public static String validateString(TextInputContentChangeEvent<TextField> event){
 		String newtext = event.getNewValue().replaceAll("[^A-Za-z0-9,\\.\\-_ ]", "");
-		//Print.console(newtext + " / " + event.getNewValue());
+		//log(newtext + " / " + event.getNewValue());
 		if(!newtext.equals(event.getNewValue())){
 			event.getTargetComponent().getTextState().setText(newtext);
 			event.getTargetComponent().setCaretPosition(newtext.length());
@@ -338,7 +338,7 @@ public class UserInterfaceUtils {
 
 	public static String validateColorString(TextInputContentChangeEvent<ColorField> event){
 		String newtext = event.getNewValue().replaceAll("[^A-Fa-f0-9#x]", "");
-		//Print.console(newtext + " / " + event.getNewValue());
+		//log(newtext + " / " + event.getNewValue());
 		if(!newtext.equals(event.getNewValue())){
 			event.getTargetComponent().getTextState().setText(newtext);
 			event.getTargetComponent().setCaretPosition(newtext.length());
@@ -348,7 +348,7 @@ public class UserInterfaceUtils {
 	public static void validateNumber(TextInputContentChangeEvent<NumberField> event){
 		String newtext = event.getNewValue().replaceAll("[^0-9,\\.\\-]", "");
 		if(newtext.indexOf("-") > 0) newtext.replace("-", ""); if(newtext.length() == 0) newtext = "0";
-		//Print.console(newtext + " / " + event.getNewValue());
+		//log(newtext + " / " + event.getNewValue());
 		if(!newtext.equals(event.getNewValue())){
 			((NumberField)event.getTargetComponent()).getTextState().setText(newtext);
 			((NumberField)event.getTargetComponent()).setCaretPosition(newtext.length());

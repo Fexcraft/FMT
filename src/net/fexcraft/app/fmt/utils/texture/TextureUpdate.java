@@ -1,5 +1,6 @@
 package net.fexcraft.app.fmt.utils.texture;
 
+import static net.fexcraft.app.fmt.utils.Logging.log;
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
 import java.io.File;
@@ -23,7 +24,6 @@ import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.math.RGB;
-import net.fexcraft.lib.common.utils.Print;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -42,13 +42,13 @@ public class TextureUpdate extends TimerTask {
 		for(TextureGroup group : TextureManager.getGroupsFE()){
 			try{
 				if(group.texture == null || group.texture.getFile() == null){
-					//Print.console("TEXGROUP '" + group.group + "' HAS NO FILE OR TEXTURE LINKED YET.");
+					//log("TEXGROUP '" + group.group + "' HAS NO FILE OR TEXTURE LINKED YET.");
 					continue;
 				}
 				if(group.texture.getFile().lastModified() > group.texture.lastedit){
 					updateLastEdit(group.texture);
 					group.texture.reload();
-					Print.console("Changes detected, reloading texture group '" + group.group + "'.");
+					log("Changes detected, reloading texture group '" + group.group + "'.");
 				}
 			}
 			catch(Exception e){
@@ -70,10 +70,10 @@ public class TextureUpdate extends TimerTask {
 		int texY = list == null ? FMTB.MODEL.textureSizeY : list.textureY;
 		int texS = list == null ? FMTB.MODEL.textureScale : list.textureS;
 		for(int i = 1; i < texS; i++){
-			Print.console(texX + " * 2");
+			log(texX + " * 2");
 			texX *= 2;
 			texY *= 2;
-			Print.console(" = " + texX);
+			log(" = " + texX);
 		}
 		if(image.getWidth() != texX || image.getHeight() != texY){
 			String tx = (list == null ? FMTB.MODEL.textureSizeX : list.textureX) + "x," + texX + "xs";
@@ -183,7 +183,7 @@ public class TextureUpdate extends TimerTask {
 		new Thread("AutoPosThread"){
 			@Override
 			public void run(){
-				Print.console("STARTING AUTOPOS THREAD");
+				log("STARTING AUTOPOS THREAD");
 				HALT = false;
 				if(list == null){
 					list = getSortedList(ALL);
@@ -207,11 +207,11 @@ public class TextureUpdate extends TimerTask {
 						last++;
 						showPercentageDialog(wrapper.getTurboList().id, wrapper.name(), getPercent(last, list.size()));
 						if(wrapper.texpos == null || wrapper.texpos.length == 0){
-							Print.console("skipping1 [" + wrapper.getTurboList().id + ":" + wrapper.name() + "]");
+							log("skipping1 [" + wrapper.getTurboList().id + ":" + wrapper.name() + "]");
 							continue;
 						}
 						if(wrapper.textureX != 0f && wrapper.textureY != 0f && !ALL){
-							Print.console("skipping0 [" + wrapper.getTurboList().id + ":" + wrapper.name() + "]");
+							log("skipping0 [" + wrapper.getTurboList().id + ":" + wrapper.name() + "]");
 							wrapper.burnToTexture(texture, null);
 							Thread.sleep(10);
 							continue;
@@ -222,7 +222,7 @@ public class TextureUpdate extends TimerTask {
 							if(pass) break;
 							for(int xar = 0; xar < FMTB.MODEL.tx(null); xar++){
 								if(check(wrapper.texpos, xar, yar)){
-									Print.console("[" + wrapper.getTurboList().id + ":" + wrapper.name() + "] >> " + xar + "x, " + yar + "y;");
+									log("[" + wrapper.getTurboList().id + ":" + wrapper.name() + "] >> " + xar + "x, " + yar + "y;");
 									wrapper.textureX = xar;
 									wrapper.textureY = yar;
 									wrapper.texpos = wrapper.newTexturePosition();
@@ -243,7 +243,7 @@ public class TextureUpdate extends TimerTask {
 				DialogBox.showOK("texture_update.autopos.title", () -> FMTB.MODEL.recompile(), null, "texture_update.autopos.complete");
 				last = (HALT = (list = null) == null) ? -1 : 0;
 				texture = null;
-				Print.console("STOPPING AUTOPOS THREAD");
+				log("STOPPING AUTOPOS THREAD");
 				return;
 			}
 		}.start();
@@ -283,7 +283,7 @@ public class TextureUpdate extends TimerTask {
 					if(xr >= texture.getWidth() || yr >= texture.getHeight()) return false;
 					//
 					if(texture.equals(xr, yr, RGB.WHITE.toByteArray())){
-						/* Print.console(xr + " " + yr + " || " + x + " " + y); */ return false;
+						/* log(xr + " " + yr + " || " + x + " " + y); */ return false;
 					}
 					else continue;
 				}

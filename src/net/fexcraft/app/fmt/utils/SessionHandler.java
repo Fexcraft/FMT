@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.utils;
 
+import static net.fexcraft.app.fmt.utils.Logging.log;
+
 import java.io.File;
 import java.util.Base64;
 import java.util.function.Consumer;
@@ -9,7 +11,6 @@ import com.google.gson.JsonObject;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.lib.common.json.JsonUtil;
 import net.fexcraft.lib.common.utils.HttpUtil;
-import net.fexcraft.lib.common.utils.Print;
 
 public class SessionHandler {
 	
@@ -18,7 +19,7 @@ public class SessionHandler {
 	private static String perm = "free", permname = "Public Version";
 	
 	public static void load(){
-		Print.console("Loading auth data from FILE.");
+		log("Loading auth data from FILE.");
 		File file = new File("./auth.net");
 		JsonObject obj = JsonUtil.get(file);
 		sessionid = obj.has("session") ? obj.get("session").getAsString() : null;
@@ -31,7 +32,7 @@ public class SessionHandler {
 	}
 
 	public static void save(){
-		Print.console("Saving auth data to FILE.");
+		log("Saving auth data to FILE.");
 		JsonObject obj = new JsonObject();
 		if(sessionid != null) obj.addProperty("session", sessionid);
 		obj.addProperty("encrypt", encrypt);
@@ -45,37 +46,37 @@ public class SessionHandler {
 	}
 	
 	public static void checkIfLoggedIn(boolean retry, boolean first){
-		Print.console("Controlling session/login data...");
+		log("Controlling session/login data...");
 		if(first) load();
 		JsonObject obj = HttpUtil.request("http://fexcraft.net/session/api", "r=status", getCookieArr());
 		if(obj != null && obj.has("success")){
 			loggedin = obj.has("guest") && !obj.get("guest").getAsBoolean();
 			userid = JsonUtil.getIfExists(obj, "user", "-1");
 			if(obj.has("banned") && obj.get("banned").getAsBoolean()){
-				Print.console("Banned account detected, causing a commotion.");
+				log("Banned account detected, causing a commotion.");
 				System.exit(-1); System.exit(1); System.exit(1);
 			}
 		}
 		if(loggedin){
-			Print.console("Fetching Username...");
+			log("Fetching Username...");
 			obj = HttpUtil.request("http://fexcraft.net/session/api", "r=username&id=" + userid, getCookieArr());
 			if(obj.has("name")) username = obj.get("name").getAsString();
-			Print.console("Username updated to: " + username);
-			if(first) Print.console(">>>> Welcome back! <<<<");
+			log("Username updated to: " + username);
+			if(first) log(">>>> Welcome back! <<<<");
 			obj = HttpUtil.request("http://fexcraft.net/session/api", "r=fmt_status", getCookieArr());
 			if(obj != null && obj.has("license") && obj.has("license_title")){
 				perm = obj.get("license").getAsString();
 				permname = obj.get("license_title").getAsString();
-				Print.console("License updated to: " + permname + " (" + perm + ")");
+				log("License updated to: " + permname + " (" + perm + ")");
 			}
 		}
 		else if(retry){
 			if(!first) load();
-			Print.console("Trying to re-login...");
+			log("Trying to re-login...");
 			sessionid = null;
 			tryLogin(null);
 			if(!loggedin){
-				Print.console("Relogin seems to have failed.");
+				log("Relogin seems to have failed.");
 				userid = "-1"; username = "Guest";
 			}
 		}
@@ -91,16 +92,16 @@ public class SessionHandler {
 			//TODO http :: find solution with the certs javax can't process
 			JsonObject obj = HttpUtil.request("http://fexcraft.net/session/api", "r=login&m=" + usermail + "&p=" + decrypt(), getCookieArr());
 			if(obj == null){
-				Print.console(response = "Invalid/Empty login response, aborting.");
+				log(response = "Invalid/Empty login response, aborting.");
 				return response;
 			}
 			if(obj.has("cookies") && obj.get("cookies").getAsJsonObject().has("PHPSESSID")){
 				sessionid = obj.get("cookies").getAsJsonObject().get("PHPSESSID").getAsString();
-				Print.console("Updated Session ID to: " + sessionid);
+				log("Updated Session ID to: " + sessionid);
 			}
 			loggedin = obj.has("success") && obj.get("success").getAsBoolean();
 			response = obj.has("status") ? obj.get("status").getAsString() : "api:success=" + loggedin;
-			Print.console("Login Response: " + response);
+			log("Login Response: " + response);
 			checkIfLoggedIn(false, false);
 		}
 		catch(Exception e){
@@ -114,7 +115,7 @@ public class SessionHandler {
 	
 	public static void tryLogout(){
 		JsonObject obj = HttpUtil.request("http://fexcraft.net/session/api", "r=logout", getCookieArr());
-		Print.console("Logout Response: " + obj.toString());
+		log("Logout Response: " + obj.toString());
 		username = /*usermail =*/ userid = "";
 		pass = perm = permname = null;
 		//encrypted = false;
@@ -177,16 +178,16 @@ public class SessionHandler {
 		if(!shouldEncrypt()) return;
 		/*JsonObject obj = HttpUtil.request("http://fexcraft.net/session/api", "r=encrypt&raw=" + hashpw, getCookieArr());
 		if(obj == null){
-			Print.console("No encryption response from server, password could not be saved encrypted locally.");
+			log("No encryption response from server, password could not be saved encrypted locally.");
 			return;
 		}
 		if(obj.has("success") && obj.get("success").getAsBoolean() && obj.has("result")){
 			hashpw = obj.get("result").getAsString();
-			Print.console("Received Hashed/Encrypted Password version from server.");
+			log("Received Hashed/Encrypted Password version from server.");
 		}
-		else Print.console(obj.has("status") ? "SRV-RESP: " + obj.get("status").getAsString() : "Unknown Error on server-side while requesting password encryption, status returned as 'success:false'!");*/
+		else log(obj.has("status") ? "SRV-RESP: " + obj.get("status").getAsString() : "Unknown Error on server-side while requesting password encryption, status returned as 'success:false'!");*/
 		pass = Base64.getEncoder().encodeToString(pass.getBytes());
-		Print.console("Applied client side base encryption to password.");
+		log("Applied client side base encryption to password.");
 	}
 	
 	// generic code based on stackoverflow, as long it's not plain readable that's fine

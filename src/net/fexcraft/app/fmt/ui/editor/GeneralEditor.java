@@ -1,5 +1,6 @@
 package net.fexcraft.app.fmt.ui.editor;
 
+import static net.fexcraft.app.fmt.utils.Logging.log;
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
 import java.util.ArrayList;
@@ -22,7 +23,6 @@ import net.fexcraft.app.fmt.utils.texture.TextureManager;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.ShapeType;
 import net.fexcraft.app.fmt.wrappers.TurboList;
-import net.fexcraft.lib.common.utils.Print;
 
 public class GeneralEditor extends EditorBase {
 
@@ -145,7 +145,7 @@ public class GeneralEditor extends EditorBase {
 					poly.recompile();
 					TextureManager.saveTexture(texname);
 					tex.rebind();
-					Print.console("Polygon painted into Texture.");
+					log("Polygon painted into Texture.");
 				}
 				return;
 			}

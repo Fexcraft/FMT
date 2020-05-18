@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.wrappers;
 
+import static net.fexcraft.app.fmt.utils.Logging.log;
+
 import org.lwjgl.opengl.GL11;
 
 import com.google.gson.JsonObject;
@@ -13,7 +15,6 @@ import net.fexcraft.app.fmt.utils.texture.Texture;
 import net.fexcraft.app.fmt.utils.texture.TextureGroup;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
-import net.fexcraft.lib.common.utils.Print;
 import net.fexcraft.lib.local_tmt.ModelRendererTurbo;
 
 public abstract class PolygonWrapper {
@@ -237,7 +238,7 @@ public abstract class PolygonWrapper {
 	
 	public boolean burnToTexture(Texture tex, Integer face){
 		if(this.texpos == null || this.texpos.length == 0){
-			Print.console("Polygon '" + turbolist.id + ":" + this.name() + "' has no texture data, skipping.");
+			log("Polygon '" + turbolist.id + ":" + this.name() + "' has no texture data, skipping.");
 			return false;
 		}
 		if(face == null){
@@ -261,9 +262,9 @@ public abstract class PolygonWrapper {
 				}
 				else if(face < (segs * 2)){
 					float per = (face - segs) * 100f / segs;
-					//Print.console(false, new Object[]{ segs, face - segs, per });
+					//log(false, new Object[]{ segs, face - segs, per });
 					int i = 0; while((per -= 12.5f) > 0f) i++;
-					//Print.console(false, new Object[]{ segs, face - segs, per, i });
+					//log(false, new Object[]{ segs, face - segs, per, i });
 					ends = i < 0 || i >= 8 ? null : texpos[i + 2];
 				}
 				else if(face < (segs * 3)){
@@ -277,7 +278,7 @@ public abstract class PolygonWrapper {
 				burn(tex, ends, TextureEditor.CURRENTCOLOR.toByteArray());
 			}
 			else{
-				Print.console("There is no known way of how to handle texture burning of '" + this.getType().name() + "'!");
+				log("There is no known way of how to handle texture burning of '" + this.getType().name() + "'!");
 			}
 		}
 		return true;

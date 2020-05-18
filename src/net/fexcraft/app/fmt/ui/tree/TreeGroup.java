@@ -1,5 +1,6 @@
 package net.fexcraft.app.fmt.ui.tree;
 
+import static net.fexcraft.app.fmt.utils.Logging.log;
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
 import java.util.HashMap;
@@ -36,7 +37,6 @@ import net.fexcraft.app.fmt.utils.texture.TextureManager;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.math.Vec3f;
-import net.fexcraft.lib.common.utils.Print;
 import net.fexcraft.lib.mc.utils.Static;
 
 public class TreeGroup extends Panel {
@@ -164,7 +164,7 @@ public class TreeGroup extends Panel {
 				newcomp = HelperCollector.load(parent.file, porter, map);
 			}
 			if(newcomp == null){
-				Print.console("Error on creating clone.");
+				log("Error on creating clone.");
 				return;
 			}
 			if(parent.pos != null) newcomp.pos = new Vec3f(parent.pos);
@@ -432,7 +432,7 @@ public class TreeGroup extends Panel {
 				Trees.helper.addSub(dir, compound.button);
 				Trees.helper.reOrderGroups();
 			}
-			else Print.console("Error, couldn't move compound, index not found.");
+			else log("Error, couldn't move compound, index not found.");
 		}
 	}
 

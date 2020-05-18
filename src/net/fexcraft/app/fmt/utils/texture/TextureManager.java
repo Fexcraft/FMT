@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.utils.texture;
 
+import static net.fexcraft.app.fmt.utils.Logging.log;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -16,7 +18,6 @@ import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.ui.editor.GroupEditor;
 import net.fexcraft.app.fmt.ui.tree.Trees;
 import net.fexcraft.app.fmt.wrappers.TurboList;
-import net.fexcraft.lib.common.utils.Print;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -37,7 +38,7 @@ public class TextureManager {
 			if(file.isDirectory()) continue;
 			if((name = file.getName()).toLowerCase().endsWith(".png")){
 				TEXTURES.put(name = name.replace(".png", ""), new Texture(name, file));
-				System.out.println(String.format("Loaded Root Texture (%-6s) [%s]", name, file));
+				log(String.format("Loaded Root Texture (%-6s) [%s]", name, file));
 			}
 			else continue;
 		}
@@ -53,7 +54,7 @@ public class TextureManager {
 		if(rooted == null) rooted = true;
 		File file = new File(rooted ? String.format("./resources/textures/%s.png", string) : string + ".png");
 		TEXTURES.put(string, new Texture(string, file));
-		System.out.println(String.format("Loaded Texture (%-32s) [%s]", string, file));
+		log(String.format("Loaded Texture (%-32s) [%s]", string, file));
 	}
 
 	public static void loadTextureFromZip(InputStream stream, String string, Boolean rooted, boolean temp){
@@ -68,7 +69,7 @@ public class TextureManager {
 		    out.flush();
 		    out.close();
 			TEXTURES.put(string, new Texture(string, file));
-			System.out.println(String.format("Loaded Texture (%-32s) [%s]", string, "<FROM IMPORTED MTB/ZIP>"));
+			log(String.format("Loaded Texture (%-32s) [%s]", string, "<FROM IMPORTED MTB/ZIP>"));
 		}
 		catch(IOException e){
 			e.printStackTrace();
@@ -78,7 +79,7 @@ public class TextureManager {
 	public static Texture loadTextureFromFile(File file, String string, Boolean rooted, boolean save){
 		if(rooted == null) rooted = true;
 		TEXTURES.put(string, new Texture(string, file));
-		System.out.println(String.format("Loaded Texture (%-32s) [%s]", string, "<FROM FILE>"));
+		log(String.format("Loaded Texture (%-32s) [%s]", string, "<FROM FILE>"));
 		if(save){
 			if(!file.exists()) file.getParentFile().mkdirs();
 			TEXTURES.get(string).setFile(file);
@@ -90,7 +91,7 @@ public class TextureManager {
 	public static void loadTextureFromFile(String id, File file){
 		String name = id == null ? file.getPath() : id;
 		TEXTURES.put(name, new Texture(name, file));
-		System.out.println(String.format("Loaded Texture (%-32s) [%s]", name, file));
+		log(String.format("Loaded Texture (%-32s) [%s]", name, file));
 	}
 
 	/** Usually expects in form of "temp/NAME" */
@@ -99,7 +100,7 @@ public class TextureManager {
 		TEXTURES.put(name, tex);
 		tex.setFile(new File("./" + name + (list == null ? "" : "_" + list.id) + ".png"));
 		TextureManager.saveTexture(name);
-		System.out.println(String.format("Loaded Texture (%-32s) [%s]", name, tex.getFile()));
+		log(String.format("Loaded Texture (%-32s) [%s]", name, tex.getFile()));
 	}
 
 	public static void bindTexture(String string){
@@ -139,18 +140,18 @@ public class TextureManager {
 
 	public static void saveTexture(Texture tex){
 		if(tex == null){
-			Print.console(String.format("Tried to save texture '%s', but it is not loaded as it seems.", texture));
+			log(String.format("Tried to save texture '%s', but it is not loaded as it seems.", texture));
 			return;
 		}
 		if(tex.getFile() == null){
-			Print.console(String.format("Tried to save texture '%s', but it has no file linked.", texture));
+			log(String.format("Tried to save texture '%s', but it has no file linked.", texture));
 			return;
 		}
 		try{
 			if(!tex.getFile().getParentFile().exists()){
 				tex.getFile().getParentFile().mkdirs();
 			}
-			Print.console("Saving Texture (" + tex + ")!");
+			log("Saving Texture (" + tex + ")!");
 			STBImageWrite.stbi_write_png(tex.getFile().getPath(), tex.getWidth(), tex.getHeight(), Texture.CHANNELS, tex.getImage(), 0);
 			TextureUpdate.updateLastEdit(tex);
 		}

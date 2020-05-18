@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.utils;
 
+import static net.fexcraft.app.fmt.utils.Logging.log;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
@@ -7,7 +9,6 @@ import com.google.gson.JsonPrimitive;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.lib.common.math.RGB;
-import net.fexcraft.lib.common.utils.Print;
 
 public class Setting {
 	
@@ -162,7 +163,7 @@ public class Setting {
 				}
 			}
 			case STRING: value = newval;
-			default: Print.console("Error - typeless setting.");
+			default: log("Error - typeless setting.");
 		}
 		return true;
 	}

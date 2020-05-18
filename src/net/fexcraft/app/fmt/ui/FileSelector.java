@@ -45,7 +45,7 @@ public class FileSelector {
         	PointerBuffer buffer = stack.mallocPointer(type.length - 1); String string = "";
             for(int i = 1; i < type.length; i++) buffer.put(stack.UTF8(type[i])); buffer.flip();
     		if(save) string = TinyFileDialogs.tinyfd_saveFileDialog(title, root, buffer, type[0]);
-    		else string = TinyFileDialogs.tinyfd_openFileDialog(title, root, buffer, type[0], false);//Print.console(string);
+    		else string = TinyFileDialogs.tinyfd_openFileDialog(title, root, buffer, type[0], false);//log(string);
     		if(string != null && string.trim().length() > 0){
     			boolean ends = false;
     			for(int i = 1; i < type.length; i++){
@@ -179,7 +179,7 @@ public class FileSelector {
         	        	PointerBuffer buffer = stack.mallocPointer(porter.getExtensions().length);
         	            for(String pattern : porter.getExtensions()) buffer.put(stack.UTF8(pattern)); buffer.flip(); String string = "";
         	    		if(export) string = TinyFileDialogs.tinyfd_saveFileDialog(title, reet, buffer, tetle);
-        	    		else string = TinyFileDialogs.tinyfd_openFileDialog(title, reet, buffer, tetle, false);//Print.console(string);
+        	    		else string = TinyFileDialogs.tinyfd_openFileDialog(title, reet, buffer, tetle, false);//log(string);
         	    		if(string != null && string.trim().length() > 0){
         	    			boolean ends = false;
         	    			for(int i = 1; i < porter.getExtensions().length; i++){
