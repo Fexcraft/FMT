@@ -156,7 +156,7 @@ public class TextureManager {
 			TextureUpdate.updateLastEdit(tex);
 		}
 		catch(Exception e){
-			e.printStackTrace();
+			log(e);
 		}
 	}
 

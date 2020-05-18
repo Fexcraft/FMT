@@ -54,5 +54,13 @@ public class Logging {
 	public static void log(Level lvl, Object obj){
 		LOGGER_MAIN.log(lvl, obj);
 	}
+	
+	public static void log(Exception e){
+		LOGGER_MAIN.log(Level.INFO, "ERROR: " + e.getLocalizedMessage());
+		//LOGGER_MAIN.log(Level.INFO, "ERROR: " + e.getMessage());
+		for(StackTraceElement trace : e.getStackTrace()){
+			LOGGER_MAIN.log(Level.ERROR, "\t" + trace);
+		}
+	}
 
 }
