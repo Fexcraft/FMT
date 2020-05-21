@@ -42,7 +42,7 @@ public class Texture {
 	public Texture(String name, int width, int height, byte[] color){
 		if(color == null) color = RGB.WHITE.toByteArray();
 		buffer = stbi_load(new File("./resources/textures/blank.png").getPath(), this.width, this.height, channels, CHANNELS);
-		if(buffer == null || buffer.remaining() == 0) log("Error while creating texture '" + name + "': " + stbi_failure_reason());
+		if(buffer == null) log("Error while creating texture '" + name + "': " + stbi_failure_reason());
 		resize(width, height);
 		this.width[0] = width;
 		this.height[0] = height;
