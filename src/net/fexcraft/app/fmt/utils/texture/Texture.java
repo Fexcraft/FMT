@@ -42,6 +42,7 @@ public class Texture {
 	public Texture(String name, int width, int height, byte[] color){
 		if(color == null) color = RGB.WHITE.toByteArray();
 		buffer = stbi_load(new File("./resources/textures/blank.png").getPath(), this.width, this.height, channels, CHANNELS);
+		if(buffer == null || buffer.remaining() == 0) log("Error while creating texture '" + name + "': " + stbi_failure_reason());
 		resize(width, height);
 		this.width[0] = width;
 		this.height[0] = height;
@@ -50,12 +51,17 @@ public class Texture {
 	}
 
 	public void resize(int width, int height){
-		ByteBuffer oldbuffer = buffer;
-		buffer = BufferUtils.createByteBuffer(width * height * CHANNELS);
-		stbir_resize_uint8_generic(oldbuffer, this.width[0], this.height[0], 0, buffer, width, height, 0, 4, 3, 0, STBIR_EDGE_ZERO, STBIR_FILTER_DEFAULT, STBIR_COLORSPACE_LINEAR);
-		this.width[0] = width;
-		this.height[0] = height;
-		rebind();
+		try{
+			ByteBuffer oldbuffer = buffer;
+			buffer = BufferUtils.createByteBuffer(width * height * CHANNELS);
+			stbir_resize_uint8_generic(oldbuffer, this.width[0], this.height[0], 0, buffer, width, height, 0, 4, 3, 0, STBIR_EDGE_ZERO, STBIR_FILTER_DEFAULT, STBIR_COLORSPACE_LINEAR);
+			this.width[0] = width;
+			this.height[0] = height;
+			rebind();
+		}
+		catch(Exception e){
+			log(e);
+		}
 	}
 
 	public ByteBuffer getBuffer(){
