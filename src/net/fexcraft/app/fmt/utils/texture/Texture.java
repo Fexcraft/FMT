@@ -162,7 +162,7 @@ public class Texture {
 
 	public boolean equals(int x, int y, byte[] color){
 		byte[] local = get(x, y);
-		return local[0] == color[0] && color[1] == color[1] && local[2] == color[2];
+		return (local[0] + 128) == color[0] && (local[1] + 128) == color[1] && (local[2] + 128) == color[2];
 	}
 
 }

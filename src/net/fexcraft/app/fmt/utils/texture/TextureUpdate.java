@@ -185,18 +185,23 @@ public class TextureUpdate extends TimerTask {
 			public void run(){
 				log("STARTING AUTOPOS THREAD");
 				HALT = false;
+				final int sizex = FMTB.MODEL.tx(selected, false);
+				final int sizey = FMTB.MODEL.ty(selected, false);
+				log("Setting size to " + sizex + "x, " + sizey + "y.");
+				log("Group selected: " + (selected == null ? "none" : selected.id));
+				log("All-Polygons is set to '" + ALL + "' and Save-Space is set to '" + SAVESPACE + "'.");
 				if(list == null){
 					list = getSortedList(ALL);
 					last = 0;
 					if((texture = TextureManager.getTexture("auto-pos-temp", true)) != null){
-						texture.resize( FMTB.MODEL.tx(selected, false), FMTB.MODEL.ty(selected, false));
+						texture.resize(sizex, sizey);
 					}
 					else{
-						texture = TextureManager.createTexture("auto-pos-temp", FMTB.MODEL.tx(selected, false), FMTB.MODEL.ty(selected, false), null);
+						texture = TextureManager.createTexture("auto-pos-temp", sizex, sizey, null);
 						texture.setFile(new File("./temp/auto-pos-temp.png"));
 					}
-					for(int i = 0; i < texture.getWidth(); i++){
-						for(int j = 0; j < texture.getHeight(); j++){
+					for(int i = 0; i < sizex; i++){
+						for(int j = 0; j < sizey; j++){
 							texture.set(i, j, RGB.WHITE.toByteArray());
 						}
 					}
@@ -207,20 +212,20 @@ public class TextureUpdate extends TimerTask {
 						last++;
 						showPercentageDialog(wrapper.getTurboList().id, wrapper.name(), getPercent(last, list.size()));
 						if(wrapper.texpos == null || wrapper.texpos.length == 0){
-							log("skipping1 [" + wrapper.getTurboList().id + ":" + wrapper.name() + "]");
+							log("skipping [" + wrapper.getTurboList().id + ":" + wrapper.name() + "] (missing texture definition)");
 							continue;
 						}
-						if(wrapper.textureX != 0f && wrapper.textureY != 0f && !ALL){
-							log("skipping0 [" + wrapper.getTurboList().id + ":" + wrapper.name() + "]");
+						if((wrapper.textureX != 0f || wrapper.textureY != 0f) && !ALL){
+							log("skipping [" + wrapper.getTurboList().id + ":" + wrapper.name() + "] (texture not 0x 0y)");
 							wrapper.burnToTexture(texture, null);
 							Thread.sleep(10);
 							continue;
 						}
 						//
 						boolean pass = false;
-						for(int yar = 0; yar < FMTB.MODEL.ty(null); yar++){
+						for(int yar = 0; yar < sizex; yar++){
 							if(pass) break;
-							for(int xar = 0; xar < FMTB.MODEL.tx(null); xar++){
+							for(int xar = 0; xar < sizey; xar++){
 								if(check(wrapper.texpos, xar, yar)){
 									log("[" + wrapper.getTurboList().id + ":" + wrapper.name() + "] >> " + xar + "x, " + yar + "y;");
 									wrapper.textureX = xar;
@@ -232,6 +237,9 @@ public class TextureUpdate extends TimerTask {
 									break;
 								}
 							}
+						}
+						if(!pass){
+							log("[" + wrapper.getTurboList().id + ":" + wrapper.name() + "] >> could not be mapped;");
 						}
 					}
 					catch(Exception e){
@@ -280,10 +288,14 @@ public class TextureUpdate extends TimerTask {
 				for(float x = ends[0][0]; x < ends[1][0]; x += 0.5f){
 					int xr = (int)(xx + x), yr = (int)(yy + y);
 					if(xr < 0 || yr < 0) continue;
-					if(xr >= texture.getWidth() || yr >= texture.getHeight()) return false;
+					if(xr >= texture.getWidth() || yr >= texture.getHeight()){
+						//log("exceeding " + xr + ", " + yr);
+						return false;
+					}
 					//
-					if(texture.equals(xr, yr, RGB.WHITE.toByteArray())){
-						/* log(xr + " " + yr + " || " + x + " " + y); */ return false;
+					if(!texture.equals(xr, yr, RGB.WHITE.toByteArray())){
+						//log(xr + " " + yr + " || " + x + " " + y);
+						return false;
 					}
 					else continue;
 				}
@@ -316,7 +328,7 @@ public class TextureUpdate extends TimerTask {
 		Collections.reverse(arrlist);
 		if(!all){
 			ArrayList<PolygonWrapper> pri = (ArrayList<PolygonWrapper>)arrlist.stream().filter(pre -> pre.textureX > 0 || pre.textureY > 0).collect(Collectors.toList());
-			ArrayList<PolygonWrapper> sec = (ArrayList<PolygonWrapper>)arrlist.stream().filter(pre -> pre.textureX <= 0 || pre.textureY <= 0).collect(Collectors.toList());
+			ArrayList<PolygonWrapper> sec = (ArrayList<PolygonWrapper>)arrlist.stream().filter(pre -> pre.textureX == 0 && pre.textureY == 0).collect(Collectors.toList());
 			arrlist.clear();
 			arrlist.addAll(pri);
 			arrlist.addAll(sec);

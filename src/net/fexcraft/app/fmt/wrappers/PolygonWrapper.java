@@ -290,7 +290,8 @@ public abstract class PolygonWrapper {
 				int xa = (int)(x + textureX), ya = (int)(y + textureY);
 				if(xa >= 0 && xa < tex.getWidth() && ya >= 0 && ya < tex.getHeight()){
 					tex.set(xa, ya, bs);
-				} else continue;
+				}
+				else continue;
 			}
 		}
 	}
