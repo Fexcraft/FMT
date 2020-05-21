@@ -94,15 +94,6 @@ public class TextureManager {
 		log(String.format("Loaded Texture (%-32s) [%s]", name, file));
 	}
 
-	/** Usually expects in form of "temp/NAME" */
-	public static void newBlankTexture(String name, TurboList list){
-		Texture tex = new Texture(name, FMTB.MODEL.tx(list), FMTB.MODEL.ty(list));
-		TEXTURES.put(name, tex);
-		tex.setFile(new File("./" + name + (list == null ? "" : "_" + list.id) + ".png"));
-		TextureManager.saveTexture(name);
-		log(String.format("Loaded Texture (%-32s) [%s]", name, tex.getFile()));
-	}
-
 	public static void bindTexture(String string){
 		if(string.equals(texture.name)) return;
 		(texture = TEXTURES.containsKey(string) ? TEXTURES.get(string) : nulltex).bind();
@@ -145,6 +136,10 @@ public class TextureManager {
 		}
 		if(tex.getFile() == null){
 			log(String.format("Tried to save texture '%s', but it has no file linked.", texture));
+			return;
+		}
+		if(tex.getImage() == null){
+			log(String.format("Tried to save texture '%s', but the image buffer is NULL.", texture));
 			return;
 		}
 		try{
