@@ -2,7 +2,6 @@ package net.fexcraft.app.fmt.ui;
 
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
-import org.joml.Vector4f;
 import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.Dialog;
@@ -17,13 +16,11 @@ import org.liquidengine.legui.event.CursorEnterEvent;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.event.WindowSizeEvent;
 import org.liquidengine.legui.image.BufferedImage;
-import org.liquidengine.legui.listener.CursorEnterEventListener;
 import org.liquidengine.legui.listener.MouseClickEventListener;
-import org.liquidengine.legui.style.Background;
-import org.liquidengine.legui.style.Style.DisplayType;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager;
+import net.fexcraft.app.fmt.ui.MenuButton.MenuSubButton;
 import net.fexcraft.app.fmt.ui.editor.Editors;
 import net.fexcraft.app.fmt.ui.field.ColorField;
 import net.fexcraft.app.fmt.ui.field.NumberField;
@@ -47,7 +44,7 @@ import net.fexcraft.app.fmt.wrappers.VoxelWrapper;
 
 public class UserInterfaceUtils {
 
-	public static final Runnable NOTHING = () -> {};
+	//public static final Runnable NOTHING = () -> {};
 	public static final MouseClickEventListener NOT_AVAILABLE_YET = event -> {
         Dialog dialog = new Dialog(Translator.translate("error.dialog_title"), 300, 100);
         Label label = new Label(Translator.translate("error.feature_not_available_yet"), 10, 10, 200, 20);
@@ -85,7 +82,9 @@ public class UserInterfaceUtils {
 		));
 		frame.getContainer().add(new MenuEntry(1, Translator.translate("toolbar.utils"),
 			new MenuButton("toolbar.utils.copy_selected", () -> FMTB.MODEL.copyAndSelect()),
-			new MenuButton("toolbar.utils.copy", () -> FMTB.MODEL.copyToClipboard()),
+			new MenuButton("toolbar.utils.copy", () -> FMTB.MODEL.copyToClipboard(),
+				new MenuSubButton("toolbar.test", null)
+			),
 			new MenuButton("toolbar.utils.paste", () -> FMTB.MODEL.pasteFromClipboard()),
 			new MenuButton("toolbar.utils.undo", NOT_AVAILABLE_YET),
 			new MenuButton("toolbar.utils.redo", NOT_AVAILABLE_YET),
@@ -203,117 +202,6 @@ public class UserInterfaceUtils {
 				getStyle().setBorderRadius(0);
 				getStyle().getBorder().setEnabled(false);
 			});
-		}
-		
-	}
-	
-	public static class MenuEntry extends Panel {
-		
-		private MenuButton[] buttons;
-		private boolean extended;
-		public final int index;
-		public static int size = 135;
-		private static int buttonheight = 24;
-		
-		public MenuEntry(int index, String title, MenuButton... buttons){
-			super(187 + (index * (size + 2)), 1, size, 28);
-			Label tatle = new Label(title, 4, 0, 50, 28); 
-			Settings.THEME_CHANGE_LISTENER.add(bool -> {
-				this.getStyle().setBorderRadius(0f);
-				tatle.getStyle().setFontSize(28f);
-				tatle.setFocusable(false);
-				Background background = new Background();
-				if(bool){
-					background.setColor(new Vector4f(0.2f, 0.2f, 0.2f, 1));
-				}
-				else{
-					background.setColor(new Vector4f(0.9f, 0.9f, 0.9f, 1));
-				}
-				this.getStyle().setBackground(background);
-				for(Button button : buttons){
-					button.getStyle().setHorizontalAlign(HorizontalAlign.LEFT);
-				}
-				this.getHoveredStyle().getBackground().setColor(new Vector4f(background.getColor()).mul(0.8f, 0.8f, 0.8f, 1f));
-			});
-			this.add(tatle);
-	        this.getListenerMap().addListener(CursorEnterEvent.class, (CursorEnterEventListener)lis -> { if(!lis.isEntered()) this.checkClose(); });
-			//
-			this.buttons = buttons; this.index = index;
-			if(buttons == null || buttons.length == 0){//assumably this is the exit button
-				this.buttons = new MenuButton[0];
-				tatle.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)event -> { if(event.getAction() == CLICK) SaveLoad.checkIfShouldSave(true, false); });
-				this.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)event -> { if(event.getAction() == CLICK) SaveLoad.checkIfShouldSave(true, false); });
-				return;
-			}
-			for(int i = 0; i < buttons.length; i++){
-				this.add(buttons[i]); buttons[i].hide();
-				buttons[i].setEntry(this);
-				buttons[i].setPosition(1, 28 + (i * buttonheight));
-				buttons[i].setSize(size, 24);
-			}
-			tatle.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)event -> { if(event.getAction() == CLICK) toggle(null); });
-			this.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)event -> { if(event.getAction() == CLICK) toggle(null); });
-		}
-		
-		public void toggle(Boolean bool){
-			bool = bool == null ? extended : !bool;
-			if(bool){
-				for(MenuButton button : buttons){ button.hide(); }
-				this.setSize(size, 28); extended = false;
-			}
-			else{
-				this.setSize(size, 26 + (buttons.length * buttonheight));
-				for(MenuButton button : buttons){ button.show(); }
-				extended = true;
-			}
-			this.setFocused(false);
-		}
-		
-		public void checkClose(){
-			if(this.isHovered()) return; for(MenuButton button : buttons) if(button.isHovered()) return; this.toggle(false);
-		}
-		
-	}
-	
-	public static class MenuButton extends Button {
-		
-		private MenuEntry entry;
-		
-		public MenuButton(String string, Runnable run){
-			super(Translator.translate(string));
-			Settings.THEME_CHANGE_LISTENER.add(bool -> {
-				this.getStyle().setBorderRadius(0f);
-			});
-	        this.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)event -> {
-	            if(event.getAction() == CLICK){ run.run(); entry.toggle(false); } else return;
-	        });
-	        this.getListenerMap().addListener(CursorEnterEvent.class, (CursorEnterEventListener)lis -> entry.checkClose());
-		}
-		
-		public MenuButton(String string, MouseClickEventListener listener){
-			super(Translator.translate(string)); this.getStyle().setBorderRadius(0f);
-	        this.getListenerMap().addListener(MouseClickEvent.class, listener);
-	        this.getListenerMap().addListener(CursorEnterEvent.class, (CursorEnterEventListener)lis -> entry.checkClose());
-		}
-		
-		public MenuButton(String string){
-			this(string, NOTHING);
-		}
-		
-		public MenuButton setEntry(MenuEntry entry){
-			this.entry = entry; return this;
-		}
-
-		public void toggle(){
-			if(isVisible()) hide(); else show();
-		}
-		
-		public void hide(){
-			this.getStyle().setDisplay(DisplayType.NONE);
-		}
-		
-		public void show(){
-			this.getStyle().setDisplay(DisplayType.MANUAL);
 		}
 		
 	}
