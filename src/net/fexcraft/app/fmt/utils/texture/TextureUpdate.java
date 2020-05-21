@@ -52,7 +52,7 @@ public class TextureUpdate extends TimerTask {
 				}
 			}
 			catch(Exception e){
-				e.printStackTrace();
+				log(e);
 			}
 		}
 	}
@@ -235,7 +235,7 @@ public class TextureUpdate extends TimerTask {
 						}
 					}
 					catch(Exception e){
-						e.printStackTrace();
+						log(e);
 						// FMTB.showDialogbox("Autoposition failed with Exception", "See Console for details.", "ok", null, DialogBox.NOTHING, null);
 					}
 				}

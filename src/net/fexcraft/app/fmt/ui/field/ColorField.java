@@ -1,5 +1,6 @@
 package net.fexcraft.app.fmt.ui.field;
 
+import static net.fexcraft.app.fmt.utils.Logging.log;
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
 import java.nio.ByteBuffer;
@@ -106,7 +107,12 @@ public class ColorField extends TextInput implements Field {
 	public float getValue(){
 		if(value != null) return value; float newval = 0;
 		String text = this.getTextState().getText().replace("#", "").replace("0x", "");
-		try{ newval = Integer.parseInt(text, 16); } catch(Exception e){ e.printStackTrace(); }
+		try{
+			newval = Integer.parseInt(text, 16);
+		}
+		catch(Exception e){
+			log(e);
+		}
 		apply(newval); return value = (int)newval;
 	}
 

@@ -130,7 +130,7 @@ public class Setting {
 					return true;
 				}
 				catch(Exception e){
-					e.printStackTrace(); return false;
+					log(e); return false;
 				}
 			}
 			case FLOAT_ARRAY:
@@ -143,7 +143,7 @@ public class Setting {
 					} return true;
 				}
 				catch(Exception e){
-					e.printStackTrace(); return false;
+					log(e); return false;
 				}
 			case INTEGER:
 				try{
@@ -151,7 +151,7 @@ public class Setting {
 					return true;
 				}
 				catch(Exception e){
-					e.printStackTrace(); return false;
+					log(e); return false;
 				}
 			case RGB:{
 				try{
@@ -159,7 +159,7 @@ public class Setting {
 					((RGB)value).packed = i; return true;
 				}
 				catch(Exception e){
-					e.printStackTrace(); return false;
+					log(e); return false;
 				}
 			}
 			case STRING: value = newval;

@@ -1,7 +1,6 @@
-/**
- * 
- */
 package net.fexcraft.app.fmt.porters;
+
+import static net.fexcraft.app.fmt.utils.Logging.log;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -72,7 +71,8 @@ public class PorterManager {
 			}
 			catch(Exception e){
 				DialogBox.showOK(null, null, null, "eximporter.import.failed", "#" + e.getLocalizedMessage());
-				e.printStackTrace(); return;
+				log(e);
+				return;
 			}
 			DialogBox.showOK(null, null, null, "eximporter.import.success");
 		});
@@ -91,7 +91,7 @@ public class PorterManager {
 			}
 			catch(Exception e){
 				DialogBox.showOK(null, null, null, "eximporter.export.failed", "#" + e.getLocalizedMessage());
-				e.printStackTrace(); //TODO add "open console" as 2nd button
+				log(e);//TODO add "open console" as 2nd button
 			}
 		});
 	}

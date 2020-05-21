@@ -251,7 +251,7 @@ public class TreeGroup extends Panel {
 				FMTB.openLink(texgroup.texture.getFile().getCanonicalPath());
 			}
 			catch(Exception e){
-				e.printStackTrace();
+				log(e);
 			}
 		}, "edit"));
 		this.add(new TreeIcon((int)getSize().x - 64, 0, "group_minimize", () -> toggle(!texgroup.minimized), "options"));
@@ -309,7 +309,7 @@ public class TreeGroup extends Panel {
                 		texgroup.texture.reload();
             		}
             		catch(Exception ex){
-            			ex.printStackTrace();
+            			log(ex);
             		}
             	}
             });

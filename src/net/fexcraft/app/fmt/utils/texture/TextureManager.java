@@ -72,7 +72,7 @@ public class TextureManager {
 			log(String.format("Loaded Texture (%-32s) [%s]", string, "<FROM IMPORTED MTB/ZIP>"));
 		}
 		catch(IOException e){
-			e.printStackTrace();
+			log(e);
 		}
 	}
 

@@ -90,7 +90,7 @@ public class HelperCollector {
 			zip.close();
 		}
 		catch(Exception e){
-			e.printStackTrace();
+			log(e);
 			DialogBox.showOK("helper_collector.title", null, null, "helper_collector.load_fmtb.errors");
 		}
 		if(compound != null) add(compound);
@@ -141,7 +141,7 @@ public class HelperCollector {
 			compound.add(polygon, "frame", true);
 		}
 		catch(Exception e){
-			e.printStackTrace();
+			log(e);
 			DialogBox.showOK("helper_collector.title", null, null, "helper_collector.load_frame.errors");
 		}
 		if(compound != null) add(compound);

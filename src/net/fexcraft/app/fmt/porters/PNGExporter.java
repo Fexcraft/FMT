@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.porters;
 
+import static net.fexcraft.app.fmt.utils.Logging.log;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
@@ -62,7 +64,8 @@ public class PNGExporter extends ExImPorter {
 			return "Success!";
 		}
 		catch(java.io.IOException e){
-			e.printStackTrace(); return "Error, see Console.";
+			log(e);
+			return "Error, see Console.";
 		}
 	}
 

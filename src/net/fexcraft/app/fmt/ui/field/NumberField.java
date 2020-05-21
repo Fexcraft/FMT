@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.ui.field;
 
+import static net.fexcraft.app.fmt.utils.Logging.log;
+
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -84,7 +86,10 @@ public class NumberField extends TextInput implements Field {
 		try{
 			newval = floatfield ? nf.parse(text).floatValue() : nf.parse(text).intValue();
 			//newval = floatfield ? Float.parseFloat(text) : Integer.parseInt(text);
-		} catch(Exception e){ e.printStackTrace(); }
+		}
+		catch(Exception e){
+			log(e);
+		}
 		if(newval > max) newval = max; else if(newval < min) newval = min;
 		if(!(newval + "").equals(text)) apply(newval);
 		return value = newval;
@@ -98,7 +103,7 @@ public class NumberField extends TextInput implements Field {
 			return floatfield ? num.floatValue() : num.intValue();
 		}
 		catch(ParseException e){
-			e.printStackTrace();
+			log(e);
 			return flat;
 		}
 	}

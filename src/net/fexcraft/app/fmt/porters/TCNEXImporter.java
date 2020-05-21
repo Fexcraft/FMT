@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.porters;
 
+import static net.fexcraft.app.fmt.utils.Logging.log;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -118,7 +120,7 @@ public class TCNEXImporter extends ExImPorter {
         }
         catch(IOException e){
         	//shouldn't happen, but still.
-        	e.printStackTrace();
+        	log(e);
         	return null;
         }
 	}

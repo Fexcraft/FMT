@@ -67,7 +67,7 @@ public class SaveLoad {
 						GroupCompound.SELECTED_POLYGONS = FMTB.MODEL.countSelectedMRTs();
 					}
 					catch(IOException e){
-						e.printStackTrace();
+						log(e);
 					}
 				}
 				else if(elm.getName().equals("texture.png")){
@@ -80,7 +80,7 @@ public class SaveLoad {
 						FMTB.MODEL.recompile();
 					}
 					catch(IOException e){
-						e.printStackTrace();
+						log(e);
 					}
 					updatetree[0] = true;
 				}
@@ -91,7 +91,7 @@ public class SaveLoad {
 						TextureManager.getGroup(group).reAssignTexture();
 					}
 					catch(IOException e){
-						e.printStackTrace();
+						log(e);
 					}
 					updatetree[0] = true;
 				}
@@ -102,7 +102,7 @@ public class SaveLoad {
 			DiscordUtil.update(Settings.discordrpc_resettimeronnewmodel());
 		}
 		catch(Exception e){
-			e.printStackTrace();
+			log(e);
 			DialogBox.showOK("saveload.title", null, null, "saveload.open.errors");
 			return;
 		}
@@ -207,7 +207,7 @@ public class SaveLoad {
 						arr[1 + i] = new ByteArrayInputStream(os.toByteArray());
 					}
 					catch(Exception e){
-						e.printStackTrace();
+						log(e);
 					}
 				}
 			}
@@ -235,7 +235,7 @@ public class SaveLoad {
 			}
 		}
 		catch(Exception e){
-			e.printStackTrace();
+			log(e);
 		}
 	}
 
@@ -398,7 +398,7 @@ public class SaveLoad {
 					compound.getGroups().add(list);
 				}
 				catch(Exception e){
-					e.printStackTrace();
+					log(e);
 				}
 			}
 			return compound;
@@ -455,7 +455,7 @@ public class SaveLoad {
 					}
 					catch(Exception e){
 						log(elm.getAsJsonObject());
-						e.printStackTrace();
+						log(e);
 					}
 				}
 				compound.getGroups().add(list);
@@ -484,7 +484,7 @@ public class SaveLoad {
 				}
 			}
 			catch(Exception e){
-				e.printStackTrace();
+				log(e);
 			}
 		}
 		if(obj.has("camera_pos") && ggr_nopreview){
@@ -544,7 +544,7 @@ public class SaveLoad {
 					helperpreview.visible = JsonUtil.getIfExists(jsn, "visible", true);
 				}
 				catch(Exception e){
-					e.printStackTrace();
+					log(e);
 				}
 			}
 		}

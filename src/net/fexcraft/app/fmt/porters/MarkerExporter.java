@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.porters;
 
+import static net.fexcraft.app.fmt.utils.Logging.log;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -54,7 +56,7 @@ public class MarkerExporter extends ExImPorter {
 			writer.append(buffer); writer.flush(); writer.close();
 		}
 		catch(IOException e){
-			e.printStackTrace();
+			log(e);
 			return "Error:" + e.getMessage();
 		}
 		return "Success!";

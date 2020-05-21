@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.wrappers;
 
+import static net.fexcraft.app.fmt.utils.Logging.log;
+
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
@@ -240,7 +242,7 @@ public class GroupCompound {
 			this.updateFields();
 		}
 		catch(Exception e){
-			e.printStackTrace();
+			log(e);
 		}
 	}
 
@@ -805,7 +807,7 @@ public class GroupCompound {
 				}
 			}
 			catch(UnsupportedFlavorException | IOException e){
-				e.printStackTrace();
+				log(e);
 			}
 		}
 	}

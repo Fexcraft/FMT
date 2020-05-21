@@ -67,7 +67,7 @@ public class Translator {
 		catch(Exception e){
 			log("Failed to format '" + key + "' as '" + string + "'!");
 			for(Object object : objects) log("OBJ > " + object);
-			e.printStackTrace();
+			log(e);
 			return key;
 		}
 	}
@@ -119,7 +119,7 @@ public class Translator {
 			dialog.show(frame);
 		}
 		catch(FileNotFoundException e){
-			e.printStackTrace();
+			log(e);
 		}
 	}
 

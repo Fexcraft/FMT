@@ -68,10 +68,14 @@ public class ImageHelper {
         			}
         			else Desktop.getDesktop().open(file);
         		}
-        		catch(Throwable e){ e.printStackTrace(); }
+        		catch(Throwable e){
+        			log(e);
+        		}
 			}
 		}
-		catch(IOException e){ e.printStackTrace(); }
+		catch(IOException e){
+			log(e);
+		}
 	}
 	
 	public static final void createGif(boolean loopgif){
@@ -102,7 +106,7 @@ public class ImageHelper {
 				gifwriter.prepareWriteSequence(null);
 			}
 			catch(Exception e){
-				e.printStackTrace();
+				log(e);
 				log("Failed to setup GIF creation, aborting operation.");
 				reset();
 			}
@@ -112,19 +116,25 @@ public class ImageHelper {
 			try{ gifwriter.writeToSequence(new IIOImage(displayToImage(), null, meta), param); }
 			catch(IOException e){
 				log("Failed to write next GIF sequence, aborting operation.");
-				reset(); e.printStackTrace();
+				reset();
+				log(e);
 			}
 		}
 		else{
 			try{
 				gifwriter.endWriteSequence(); currgifout.close();
-			} catch(IOException e){ e.printStackTrace(); }
+			}
+			catch(IOException e){
+				log(e);
+			}
 			//
         	DialogBox.show(null, "dialogbox.button.ok", "dialogbox.button.open", null, () -> {
         		try{
         			FMTB.openLink(new File("./screenshots/").getCanonicalPath());
         		}
-        		catch(Throwable e){ e.printStackTrace(); }
+        		catch(Throwable e){
+        			log(e);
+        		}
         	}, "image_helper.gif.done");
 			reset();
 		}

@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.wrappers;
 
+import static net.fexcraft.app.fmt.utils.Logging.log;
+
 import java.io.File;
 import java.io.FileInputStream;
 
@@ -35,7 +37,7 @@ public class ObjPreviewWrapper extends PolygonWrapper {
 				.addObj(new FileInputStream(source), null, bool);//this.source.toString()
 		}
 		catch(Exception e){
-			e.printStackTrace();
+			log(e);
 			return new ModelRendererTurbo(null, textureX, textureY, compound.tx(getTurboList()), compound.ty(getTurboList()))
 				.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
 				.addSphere(-8, -8, -8, 16, 16, 16, 1, 1);

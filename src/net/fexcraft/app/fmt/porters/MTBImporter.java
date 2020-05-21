@@ -176,7 +176,7 @@ public class MTBImporter extends ExImPorter {
 					compound.setTexture(TextureManager.getGroup("default"));
 				}
 				catch(Exception e){
-					e.printStackTrace();
+					log(e);
 					log("Could not load texture from MTB.");
 				}
 			}
@@ -185,6 +185,7 @@ public class MTBImporter extends ExImPorter {
 		}
 		catch(IOException e){
 			// literally not even possible.
+			log(e);
 			return new GroupCompound(f);
 		}
 	}

@@ -131,7 +131,7 @@ public class FMTB {
 			INSTANCE.run();
 		}
 		catch(Throwable thr){
-			thr.printStackTrace();
+			log(thr);
 			System.exit(1);
 		}
 	}
@@ -739,7 +739,7 @@ public class FMTB {
 			else return;
 		}
 		catch(Exception e){
-			e.printStackTrace();
+			log(e);
 		}
 		return;
 	}

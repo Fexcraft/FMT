@@ -1,5 +1,7 @@
 package net.fexcraft.lib.local_tmt;
 
+import static net.fexcraft.app.fmt.utils.Logging.log;
+
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -351,7 +353,7 @@ public class ModelRendererTurbo {
     		}
             if(mirror ^ flip){ for(int l = 0; l < poly.length; l++){ poly[l].flipFace(); } } return copyTo(verts, poly);
     	}
-    	catch(Throwable thr){ if(Static.dev()) thr.printStackTrace();
+    	catch(Throwable thr){ if(Static.dev()) log(thr);
     		return this.addRectShape(v0, v1, v2, v3, v4, v5, v6, v7, w, h, d);
     		//also return in case something else breaks, due to e.g. other data missing
     	}

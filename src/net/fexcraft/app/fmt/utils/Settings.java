@@ -199,7 +199,7 @@ public class Settings {
 					SETTINGS.add(new Setting(type, entry.getKey(), jsn.get("value")));
 				}
 				catch(Exception e){
-					e.printStackTrace();
+					log(e);
 					log("Failed to load setting '" + entry.getKey() + "'!");
 				}
 			});
@@ -251,7 +251,7 @@ public class Settings {
 				jsn.add("value", entry.save()); settings.add(entry.getId(), jsn);
 			}
 			catch(Exception e){
-				e.printStackTrace();
+				log(e);
 			}
 		});
 		obj.add("settings", settings);

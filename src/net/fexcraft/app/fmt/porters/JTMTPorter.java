@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.porters;
 
+import static net.fexcraft.app.fmt.utils.Logging.log;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +50,10 @@ public class JTMTPorter extends ExImPorter {
 				Entry<String, JsonElement> entry = (Entry<String, JsonElement>)groups.entrySet().toArray()[i];
 				TurboList list = compound.getGroups().get(entry.getKey());
 				if(list == null || !list.visible){ torem.add(entry.getKey()); }
-			} catch(Exception e){ e.printStackTrace(); }
+			}
+			catch(Exception e){
+				log(e);
+			}
 		}
 		for(String str : torem) groups.remove(str);
 		obj.add("groups", groups); JsonUtil.write(file, obj);

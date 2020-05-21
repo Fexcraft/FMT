@@ -24,7 +24,7 @@ public class Logging {
 		LOGGER_MAIN.log(lvl, obj);
 	}
 	
-	public static void log(Exception e){
+	public static void log(Throwable e){
 		LOGGER_MAIN.log(Level.INFO, "ERROR: " + e.getLocalizedMessage());
 		//LOGGER_MAIN.log(Level.INFO, "ERROR: " + e.getMessage());
 		for(StackTraceElement trace : e.getStackTrace()){

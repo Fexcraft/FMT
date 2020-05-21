@@ -106,7 +106,7 @@ public class SessionHandler {
 		}
 		catch(Exception e){
 			response = "Error: " + e.getMessage();
-			e.printStackTrace();
+			log(e);
 			loggedin = false;
 		}
 		if(cons != null) cons.accept(response);

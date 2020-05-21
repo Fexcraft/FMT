@@ -67,7 +67,9 @@ public class KeyCompound {
         		try{
         			FMTB.openLink(new File("./screenshots/").getAbsolutePath());
         		}
-        		catch(Throwable e){ e.printStackTrace(); }
+        		catch(Throwable e){
+        			log(e);
+        		}
         	}, "image_helper.screenshot.done");
 		}));
 		//
@@ -107,7 +109,7 @@ public class KeyCompound {
 				Files.copy(new File("./keys.json"), new File("./keys_old.json"));
 			}
 			catch(IOException e){
-				e.printStackTrace();
+				log(e);
 			}
 			return;
 		}
