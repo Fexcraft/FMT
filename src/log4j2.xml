@@ -13,7 +13,7 @@
             </PatternLayout>
             <Policies>
                 <TimeBasedTriggeringPolicy/>
-                <SizeBasedTriggeringPolicy size="20 MB"/>
+                <SizeBasedTriggeringPolicy size="8 MB"/>
             </Policies>
             <DefaultRolloverStrategy max="10"/>
             <ThresholdFilter level="INFO"/>
