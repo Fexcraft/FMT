@@ -82,17 +82,10 @@ public class UserInterfaceUtils {
 		));
 		frame.getContainer().add(new MenuEntry(1, Translator.translate("toolbar.utils"),
 			new MenuButton("toolbar.utils.copy_selected", () -> FMTB.MODEL.copyAndSelect()),
-			new MenuButton("toolbar.utils.copy", () -> FMTB.MODEL.copyToClipboard(),
-				new MenuSubButton("toolbar.test0", null),
-				new MenuSubButton("toolbar.test1", null),
-				new MenuSubButton("toolbar.test2", null),
-				new MenuSubButton("toolbar.test3", null),
-				new MenuSubButton("toolbar.test4", null),
-				new MenuSubButton("toolbar.test5", null),
-				new MenuSubButton("toolbar.test6", null),
-				new MenuSubButton("toolbar.test7", null)
+			new MenuButton("toolbar.utils.clipboard", null,
+				new MenuSubButton("toolbar.utils.clipboard.copy", () -> FMTB.MODEL.copyToClipboard()),
+				new MenuSubButton("toolbar.utils.clipboard.paste", () -> FMTB.MODEL.pasteFromClipboard())
 			),
-			new MenuButton("toolbar.utils.paste", () -> FMTB.MODEL.pasteFromClipboard()),
 			new MenuButton("toolbar.utils.undo", NOT_AVAILABLE_YET),
 			new MenuButton("toolbar.utils.redo", NOT_AVAILABLE_YET),
 			new MenuButton("toolbar.utils.flip.left_right", () -> FMTB.MODEL.flipShapeboxes(null, 0)),

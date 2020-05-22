@@ -119,7 +119,10 @@ public class FMTB {
 		log("==================================================");
 		log("Starting FMT!");
         System.setProperty("joml.nounsafe", Boolean.TRUE.toString());
-        //System.setProperty("java.awt.headless", Boolean.TRUE.toString());
+        if(System.getProperty("os.name").toLowerCase().contains("mac")){
+        	System.setProperty("java.awt.headless", Boolean.TRUE.toString());
+        }
+		log("Running on " + System.getProperty("os.name") + " / " + System.getProperty("os.version"));
 	    System.setProperty("org.lwjgl.librarypath", new File("./lib/").getAbsolutePath());
 		Configuration.SHARED_LIBRARY_EXTRACT_DIRECTORY.set("./lib/natives");
 		Configuration.SHARED_LIBRARY_EXTRACT_PATH.set("./lib/natives");
