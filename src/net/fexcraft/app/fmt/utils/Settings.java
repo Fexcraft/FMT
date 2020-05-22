@@ -185,6 +185,7 @@ public class Settings {
 		DEFAULTS.add(new Setting("drag_painting", false));
 		DEFAULTS.add(new Setting("boundingbox_color", new RGB(0, 255, 0)));
 		DEFAULTS.add(new Setting("vsync_half", false));
+		DEFAULTS.add(new Setting("rounding_digits", 4));
 	}
 
 	public static void load(){

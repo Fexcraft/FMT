@@ -19,15 +19,13 @@ import org.lwjgl.glfw.GLFW;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.UserInterfaceUtils;
 import net.fexcraft.app.fmt.utils.Setting;
+import net.fexcraft.app.fmt.utils.Settings;
 
 public class NumberField extends TextInput implements Field {
 	
-	public static final NumberFormat nf = NumberFormat.getInstance(Locale.US);
-	public static final DecimalFormat df = new DecimalFormat("#.####", new DecimalFormatSymbols(Locale.US));
-	static {
-		nf.setMaximumFractionDigits(4);
-		df.setRoundingMode(RoundingMode.HALF_EVEN);
-	}
+	private static NumberFormat nf;
+	private static DecimalFormat df;
+	static { updateRoundingDigits(); }
 
 	public NumberField(int x, int y, int w, int h){
 		super("0", x, y, w, h); getStyle().setFontSize(20f); UserInterfaceUtils.setupHoverCheck(this);
@@ -127,6 +125,17 @@ public class NumberField extends TextInput implements Field {
 	@Override
 	public Runnable update(){
 		return update;
+	}
+
+	public static void updateRoundingDigits(){
+		nf = NumberFormat.getInstance(Locale.US);
+		nf.setMaximumFractionDigits(Settings.SETTINGS.get("rounding_digits").getValue());
+		String str = "#.";
+		for(int i = 0; i < nf.getMaximumFractionDigits(); i++){
+			str += "#";
+		}
+		df = new DecimalFormat(str, new DecimalFormatSymbols(Locale.US));
+		df.setRoundingMode(RoundingMode.HALF_EVEN);
 	}
 	
 }

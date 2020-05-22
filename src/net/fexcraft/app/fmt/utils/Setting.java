@@ -8,6 +8,7 @@ import com.google.gson.JsonPrimitive;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.DialogBox;
+import net.fexcraft.app.fmt.ui.field.NumberField;
 import net.fexcraft.lib.common.math.RGB;
 
 public class Setting {
@@ -148,6 +149,9 @@ public class Setting {
 			case INTEGER:
 				try{
 					value = Integer.parseInt(newval);
+					if(this.id.equals("rounding_digits")){
+						NumberField.updateRoundingDigits();
+					}
 					return true;
 				}
 				catch(Exception e){
