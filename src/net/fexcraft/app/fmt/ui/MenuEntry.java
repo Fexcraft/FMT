@@ -67,7 +67,7 @@ public class MenuEntry extends Panel {
 			buttons[i].setEntry(this);
 			buttons[i].setPosition(1, 28 + (i * buttonheight));
 			buttons[i].setSize(size, 24);
-			//buttons[i].updateSubs();
+			buttons[i].updateExtension(i);
 		}
 		tatle.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)event -> {
 			if(event.getAction() == CLICK) toggle(null);
@@ -99,7 +99,7 @@ public class MenuEntry extends Panel {
 	public void checkClose(){
 		if(this.isHovered()) return;
 		for(MenuButton button : buttons){
-			if(button.isHovered()) return;
+			if(button.anyHovered()) return;
 		}
 		this.toggle(false);
 	}
