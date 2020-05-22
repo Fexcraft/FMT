@@ -26,6 +26,7 @@ toolbar.utils.clipboard=ClipBoard
 toolbar.utils.clipboard.copy=Copier
 toolbar.utils.clipboard.paste=Coller
 toolbar.utils.copy_selected=Copier la sélection
+toolbar.utils.flip=Retourner Utils
 toolbar.utils.flip.left_right=Retourner (X) [L / R]
 toolbar.utils.flip.up_down=Retourner (Y) [U / D]
 toolbar.utils.flip.front_back=Retourner (Z) [F / B]

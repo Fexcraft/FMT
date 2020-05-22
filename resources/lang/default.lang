@@ -25,6 +25,7 @@ toolbar.utils.clipboard=Clipboard
 toolbar.utils.clipboard.copy=Copy
 toolbar.utils.clipboard.paste=Paste
 toolbar.utils.copy_selected=Copy Selected
+toolbar.utils.flip=Flip Tools
 toolbar.utils.flip.left_right=Flip (X) [L/R]
 toolbar.utils.flip.up_down=Flip (Y) [U/D]
 toolbar.utils.flip.front_back=Flip (Z) [F/B]

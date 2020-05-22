@@ -88,9 +88,13 @@ public class UserInterfaceUtils {
 			),
 			new MenuButton("toolbar.utils.undo", NOT_AVAILABLE_YET),
 			new MenuButton("toolbar.utils.redo", NOT_AVAILABLE_YET),
-			new MenuButton("toolbar.utils.flip.left_right", () -> FMTB.MODEL.flipShapeboxes(null, 0)),
-			new MenuButton("toolbar.utils.flip.up_down", () -> FMTB.MODEL.flipShapeboxes(null, 1)),
-			new MenuButton("toolbar.utils.flip.front_back", () -> FMTB.MODEL.flipShapeboxes(null, 2)),
+			new MenuButton("toolbar.utils.flip", null,
+				new MenuSubButton("toolbar.utils.flip.left_right", () -> FMTB.MODEL.flipShapeboxes(null, 0)),
+				new MenuSubButton("toolbar.utils.flip.up_down", () -> FMTB.MODEL.flipShapeboxes(null, 1)),
+				new MenuSubButton("toolbar.utils.flip.front_back", () -> FMTB.MODEL.flipShapeboxes(null, 2)),
+				new MenuSubButton("toolbar.utils.rectify", () -> FMTB.MODEL.rectify()),
+				new MenuSubButton("toolbar.utils.mirror_sel", () -> FMTB.MODEL.mirrorLRSelected())
+			),
 			new MenuButton("toolbar.utils.reset_camera", () -> { FMTB.ggr.reset(); }),
 			new MenuButton("toolbar.utils.create_gif", () -> ImageHelper.createGif(false)),
 			new MenuButton("toolbar.utils.screenshot", () -> ImageHelper.takeScreenshot(true)),
@@ -108,8 +112,6 @@ public class UserInterfaceUtils {
                 okbutton.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> { if(CLICK == e.getAction()) dialog.close(); });
                 dialog.getContainer().add(label); dialog.getContainer().add(okbutton); dialog.show(event.getFrame());
 			}),
-			new MenuButton("toolbar.utils.rectify", () -> FMTB.MODEL.rectify()),
-			new MenuButton("toolbar.utils.mirror_sel", () -> FMTB.MODEL.mirrorLRSelected()),
 			new MenuButton("toolbar.utils.controls", NOT_REIMPLEMENTED_YET)
 		));
 		frame.getContainer().add(new MenuEntry(2, Translator.translate("toolbar.editor"),
