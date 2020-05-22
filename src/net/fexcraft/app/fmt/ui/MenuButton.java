@@ -2,6 +2,8 @@ package net.fexcraft.app.fmt.ui;
 
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
+import java.util.ArrayList;
+
 import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.Panel;
@@ -18,7 +20,8 @@ import net.fexcraft.app.fmt.utils.Translator;
 public class MenuButton extends Button {
 
 	private MenuEntry entry;
-	private Panel extension;
+	private Extension extension;
+	public static final ArrayList<Extension> EXTENSIONS = new ArrayList<>();
 
 	public MenuButton(String string, Runnable run, MenuSubButton... subs){
 		super(Translator.translate(string));
@@ -43,7 +46,7 @@ public class MenuButton extends Button {
 			}
 		});
 		if(subs == null || subs.length == 0) return;
-		extension = new Panel(0, 0, MenuEntry.size, subs.length * MenuEntry.buttonheight);
+		extension = new Extension(this, MenuEntry.size, subs.length * MenuEntry.buttonheight);
 		extension.getStyle().setDisplay(DisplayType.NONE);
 		for(int index = 0; index < subs.length; index++){
 			MenuSubButton sub = subs[index];
@@ -65,6 +68,7 @@ public class MenuButton extends Button {
 		/*Settings.THEME_CHANGE_LISTENER.add(bool -> {
 			extension.getStyle().setBorderRadius(0f);
 		});*/
+		EXTENSIONS.add(extension);
 		FMTB.frame.getContainer().add(extension);
 	}
 
@@ -111,7 +115,18 @@ public class MenuButton extends Button {
 		}
 
 	}
+	
+	public static class Extension extends Panel {
+		
+		public Extension(MenuButton button, int w, int h){
+			super(0, 0, w, h);
+			this.button = button;
+		}
 
+		public MenuButton button;
+		
+	}
+	
 	public void updateExtension(int index){
 		if(extension == null) return;
 		extension.setPosition(entry.getPosition().x + MenuEntry.size - 1, 30 + (index * MenuEntry.buttonheight) - 1);

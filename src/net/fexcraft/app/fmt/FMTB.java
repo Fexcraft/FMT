@@ -21,6 +21,7 @@ import org.joml.Vector2i;
 import org.joml.Vector4f;
 import org.liquidengine.legui.animation.AnimatorProvider;
 import org.liquidengine.legui.component.Button;
+import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.Dialog;
 import org.liquidengine.legui.component.Frame;
 import org.liquidengine.legui.component.ImageView;
@@ -29,6 +30,7 @@ import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.image.BufferedImage;
 import org.liquidengine.legui.listener.MouseClickEventListener;
 import org.liquidengine.legui.listener.processor.EventProcessorProvider;
+import org.liquidengine.legui.style.Style.DisplayType;
 import org.liquidengine.legui.style.color.ColorConstants;
 import org.liquidengine.legui.style.font.FontRegistry;
 import org.liquidengine.legui.system.context.CallbackKeeper;
@@ -64,6 +66,7 @@ import net.arikia.dev.drpc.DiscordEventHandlers;
 import net.arikia.dev.drpc.DiscordRPC;
 import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.porters.PorterManager;
+import net.fexcraft.app.fmt.ui.MenuButton;
 import net.fexcraft.app.fmt.ui.UserInterfaceUtils;
 import net.fexcraft.app.fmt.ui.editor.Editors;
 import net.fexcraft.app.fmt.ui.editor.ModelEditor;
@@ -405,6 +408,22 @@ public class FMTB {
 
 	private void loop(){
         //if(!TextureUpdate.HALT){ TextureUpdate.tryAutoPos(TextureUpdate.ALL); }
+		for(MenuButton.Extension ext : MenuButton.EXTENSIONS){
+			if(ext.button.isVisible()) continue;
+			boolean bool = false;
+			if(ext.isHovered()) bool = true;
+			else{
+				for(Component com : ext.getChildComponents()){
+					if(com.isHovered()){
+						bool = true;
+						break;
+					}
+				}
+			}
+			if(!bool){
+				ext.getStyle().setDisplay(DisplayType.NONE);
+			}
+		}
 	}
 
 	public long getTime(){
