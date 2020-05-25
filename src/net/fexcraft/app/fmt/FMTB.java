@@ -181,7 +181,7 @@ public class FMTB {
 					rgba(183, 28, 28, 1), // denyColor
 					ColorConstants.transparent(), // shadowColor
 					ColorConstants.lightGray(), // text color
-					FontRegistry.DEFAULT, // font
+					FontRegistry.ROBOTO_LIGHT, // font
 					20f // font size
 				));
 			}
@@ -194,7 +194,7 @@ public class FMTB {
 					rgba(239, 154, 154, 1), // denyColor
 					ColorConstants.transparent(), // shadowColor
 					ColorConstants.darkGray(), // text color
-					FontRegistry.DEFAULT, // font
+					FontRegistry.ROBOTO_LIGHT, // font
 					20f // font size
 				));
 			}
