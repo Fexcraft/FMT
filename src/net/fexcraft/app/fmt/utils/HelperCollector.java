@@ -37,10 +37,13 @@ public class HelperCollector {
 		if(file == null || exim == null) return null;
 		log("Loading Preview/Helper model: " + file.getName());
 		GroupCompound compound = exim.importModel(file, settings);
-		if(!compound.name.startsWith("import/")){
-			compound.name = "import/" + compound.name;
+		if(compound != null){
+			if(!compound.name.startsWith("import/")){
+				compound.name = "import/" + compound.name;
+			}
+			compound.porter = exim;
+			add(compound);
 		}
-		if(compound != null) add(compound);
 		return compound;
 	}
 

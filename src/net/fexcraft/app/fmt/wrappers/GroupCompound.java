@@ -24,6 +24,7 @@ import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.JsonToTMT;
+import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.ui.DialogBox.DialogTask;
 import net.fexcraft.app.fmt.ui.editor.Editors;
@@ -54,6 +55,7 @@ public class GroupCompound {
 	private GroupList groups = new GroupList();
 	public PolygonWrapper lastselected;
 	public File file, origin;
+	public ExImPorter porter;
 	public float rate = 1f;
 	public String name;
 	public TextureGroup texgroup;

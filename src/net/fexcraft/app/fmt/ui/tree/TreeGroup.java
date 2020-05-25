@@ -18,7 +18,6 @@ import org.liquidengine.legui.listener.MouseClickEventListener;
 import org.liquidengine.legui.style.color.ColorConstants;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.ui.FileSelector;
@@ -158,10 +157,10 @@ public class TreeGroup extends Panel {
 				newcomp = HelperCollector.loadFrame(parent.origin);
 			}
 			else{
-				ExImPorter porter = PorterManager.getPorterFor(parent.origin, false);
+				ExImPorter porter = compound.porter;
 				HashMap<String, Setting> map = new HashMap<>();
 				porter.getSettings(false).forEach(setting -> map.put(setting.getId(), setting));
-				newcomp = HelperCollector.load(parent.file, porter, map);
+				newcomp = HelperCollector.load(parent.origin, porter, map);
 			}
 			if(newcomp == null){
 				log("Error on creating clone.");
