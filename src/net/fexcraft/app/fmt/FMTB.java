@@ -83,6 +83,7 @@ import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Time;
 import net.fexcraft.lib.common.utils.HttpUtil;
+import net.fexcraft.lib.common.utils.Print;
 import net.fexcraft.lib.local_tmt.ModelRendererTurbo;
 
 /**
@@ -228,6 +229,7 @@ public class FMTB {
 		}
 		context = new Context(window);
 		context.setDebugEnabled(Settings.ui_debug());
+		frame.getComponentLayer().setFocusable(false);
 		CallbackKeeper keeper = new DefaultCallbackKeeper();
 		CallbackKeeper.registerCallbacks(window, keeper);
 		//
