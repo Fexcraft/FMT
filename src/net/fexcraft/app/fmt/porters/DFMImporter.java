@@ -68,9 +68,10 @@ public class DFMImporter extends ExImPorter {
             Scanner scanner = new Scanner(file);
             Pattern creator = Pattern.compile("\\/\\/ Model Creator: (.*)");
             Pattern groupdef = Pattern.compile("(.*) = new ModelRendererTurbo\\[\\d+\\];");
-            Pattern declaration = Pattern.compile("(.*)\\[(\\d+)\\] = new ModelRendererTurbo\\(this, (\\d+), (\\d+), textureX, textureY\\); \\/\\/ (.*)");
+            Pattern declaration = Pattern.compile("(.*)\\[(\\d+)\\] = new ModelRendererTurbo\\(this, (\\d+), (\\d+), .*, .*\\);(.*)");
             Pattern box = Pattern.compile("(.*)\\[(\\d+)\\]\\.add.*Box\\((.*)\\);.*");
             Pattern rotpoint = Pattern.compile("(.*)\\[(\\d+)\\]\\.setRotationPoint\\((.*)\\);");
+            Pattern pospoint = Pattern.compile("(.*)\\[(\\d+)\\]\\.setPosition\\((.*)\\);");
             String component = degrees ? "rotationAngle" : "rotateAngle";
             Pattern rotangle = Pattern.compile("(.*)\\[(\\d+)\\]\\." + component + "(.) = (\\d)+F;");
             ArrayList<TemporaryPolygon> polis = new ArrayList<>();
@@ -106,7 +107,7 @@ public class DFMImporter extends ExImPorter {
             		poly.index = parseI(matcher.group(2));
             		poly.u = parseI(matcher.group(3));
             		poly.v = parseI(matcher.group(4));
-            		poly.name = matcher.group(5);
+            		poly.name = matcher.group(5).replace(" // ", "");
             		polis.add(poly);
             		continue;
             	}
@@ -139,6 +140,14 @@ public class DFMImporter extends ExImPorter {
             		continue;
             	}
             	matcher = rotpoint.matcher(line);
+            	if(matcher.matches()){
+            		TemporaryPolygon poly = get(matcher.group(1), matcher.group(2), polis);
+            		String[] array = matcher.group(3).split(", ");
+            		poly.wrapper.pos = newVec3f(array[0], array[1], array[2]);
+            		continue;
+            		
+            	}
+            	matcher = pospoint.matcher(line);
             	if(matcher.matches()){
             		TemporaryPolygon poly = get(matcher.group(1), matcher.group(2), polis);
             		String[] array = matcher.group(3).split(", ");
