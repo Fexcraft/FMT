@@ -23,7 +23,7 @@ switch(OperatingSystem.current()){
 		break
 }
 
-version = '2.2.0'
+version = '2.5.1'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 compileJava.options.encoding = 'UTF-8'
@@ -34,7 +34,7 @@ def commons_version = '3.4'
 def commons_collections = '4.1'
 def guava_version = '19.0'
 def gson_version = '2.7'
-def legui_version = '2.2.2';
+def legui_version = '3.0.2';
 
 def joml_version = "1.9.23"//"-SNAPSHOT"
 def lwjgl_version = "3.2.3"//'3.2.4-SNAPSHOT'
