@@ -61,7 +61,7 @@ FCL is licensed under http://fexcraft.net/license?id=mods (till/if it's respecti
 ## Installation
 Take the zip file from https://github.com/Fexcraft/FMT-Standalone/releases    
 And unpack it into an own folder, done. Now just run the FMT jar file.    
-**Java is required.**    
+**Java 8 is required.** Reported to not run on newer java yet.    
 
 ## Discord
 https://discord.gg/AkMAzaA
