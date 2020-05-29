@@ -80,7 +80,7 @@ public class DiscordUtil {
 	
 	public static void update(boolean updatetime){
 		if(updatetime) starttime = Time.getDate(); //int count = (int)ModelTree.count;
-		DiscordRichPresence veryrichnot = new DiscordRichPresence.Builder("Modelling").setBigImage("icon", "Fex's Modelling Toolbox")//.setParty("Polygons", FMTB.MODEL.getCompound().size(), count)
+		DiscordRichPresence veryrichnot = new DiscordRichPresence.Builder("Modelling (on " + FMTB.VERSION + ")").setBigImage("icon", "Fex's Modelling Toolbox")//.setParty("Polygons", FMTB.MODEL.getCompound().size(), count)
 			.setStartTimestamps(starttime).setDetails(Settings.discordrpc_showmodel() ? "Model: " + FMTB.getTitle() : "Working on an unknown Model").build();
 		DiscordRPC.discordUpdatePresence(veryrichnot);
 	}
