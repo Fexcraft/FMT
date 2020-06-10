@@ -22,7 +22,6 @@ public class TextureEditor extends EditorBase {
 	public static Icon face, polygon, group, pencil, picker;
 	public static FunctionButton current_tool;
 	//
-	public static boolean BUCKETMODE;
 	private static PaintMode PMODE;
 	private static final int rows = 18;
 	
@@ -153,14 +152,7 @@ public class TextureEditor extends EditorBase {
 	}
 
 	public static void toggleBucketMode(PaintMode mode){
-		if(mode == null){
-			BUCKETMODE = false;
-			PMODE = null;
-		}
-		else{
-			BUCKETMODE = PMODE == mode ? !BUCKETMODE : true;
-			PMODE = PMODE == mode ? null : mode;
-		}
+		PMODE = mode == null || PMODE == mode ? null : mode;
 		current_tool.getTextState().setText(translate("editor.texture.brushes.current") + " " + (PMODE == null ? "none" : PMODE.lang()));
 	}
 	
@@ -202,9 +194,13 @@ public class TextureEditor extends EditorBase {
 	}
 	
 	public static PaintMode paintMode(){ return PMODE; }
+	
+	public static boolean isPaintActive(){
+		return PMODE != null;
+	}
 
 	public static void reset(){
-		toggleBucketMode(null); PMODE = null; BUCKETMODE = false;
+		toggleBucketMode(null); PMODE = null;
 	}
 	
 }

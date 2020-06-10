@@ -140,28 +140,25 @@ public class GroupCompound {
 		int texX = (nolisttex ? this.textureSizeX : wrapper.getTurboList().textureX) * scale;
 		int texY = (nolisttex ? this.textureSizeY : wrapper.getTurboList().textureY) * scale;
 		if(tex == null || (tex.getWidth() != texX || tex.getHeight() != texY)){
-			if(texX >= 8192 || texY >= 8192){ /* //TODO */ }
-			else{
-				if(tex == null){
-					//log("create: " + texX + " " + texY);
-					tex = TextureManager.createTexture(texid, texX, texY, null);
-					tex.setFile(new File(texid + ".png"));
-				}
-				else{
-					//log("resize: " + texX + ">" + tex.getWidth() + " " + texY + ">" + tex.getHeight());
-					tex.resize(texX, texY);
-				}
-				int lastint = 0;
-				//log("size: " + texX + " " + texY);
-				for(int x = 0; x < texX; x++){
-					for(int y = 0; y < texY; y++){
-						tex.set(x, y, new RGB(lastint).toByteArray());
-						lastint++;
-					}
-				}
-				tex.save();
-				tex.rebind();
+			if(tex == null){
+				//log("Creating '" + wrapper.getTextureGroup().group + "' " + texX + " " + texY);
+				tex = TextureManager.createTexture(texid, texX, texY);
+				tex.setFile(new File(texid + ".png"));
 			}
+			else{
+				//log("Resizing '" + wrapper.getTextureGroup().group + "' " + texX + " " + texY);
+				tex.resize(texX, texY);
+			}
+			int lastint = 0;
+			//log("size: " + texX + " " + texY);
+			for(int x = 0; x < texX; x++){
+				for(int y = 0; y < texY; y++){
+					tex.set(x, y, new RGB(lastint).toByteArray());
+					lastint++;
+				}
+			}
+			tex.save();
+			tex.rebind();
 		}
 		return texid;
 	}

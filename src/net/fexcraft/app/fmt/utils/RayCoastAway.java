@@ -51,7 +51,6 @@ public class RayCoastAway {
 			MOUSEOFF = mouseoff;
 			return;
 		}
-		if(FMTB.get() == null) return;
 		//
 		byte[] picked = getPicked(mouseoff);
 		PICKING = false;
@@ -84,6 +83,7 @@ public class RayCoastAway {
 							TextureEditor.updateColor(arr, null);
 						}
 						else{*/
+							log(x + " " + y);
 							tex.set(x, y, TextureEditor.CURRENTCOLOR.toByteArray());
 							tex.rebind();
 							tex.save();
@@ -100,7 +100,7 @@ public class RayCoastAway {
 		picked[2] += -128;
 		PolygonWrapper wrapper = getSelected(picked);
 		if(wrapper == null) return;
-		if(!TextureEditor.BUCKETMODE){
+		if(!TextureEditor.isPaintActive()){
 			boolean control = GGR.isControlDown();
 			boolean state = control ? wrapper.getTurboList().selected : wrapper.selected;
 			if(!GGR.isAltDown()) FMTB.MODEL.clearSelection();

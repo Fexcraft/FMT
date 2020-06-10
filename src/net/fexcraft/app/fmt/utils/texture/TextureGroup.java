@@ -22,7 +22,7 @@ public class TextureGroup {
 		String texid = "group-" + id;
 		if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
 		if(!file.exists()){
-			Texture texture = new Texture(texid, 256, 256, null);
+			Texture texture = new Texture(texid, 256, 256);
 			log("Generated blank texgroup texture.");
 			texture.setFile(file);
 			TextureManager.putTexture(texid, texture);

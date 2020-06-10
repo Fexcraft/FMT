@@ -14,8 +14,6 @@ import java.nio.ByteBuffer;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
-import net.fexcraft.lib.common.math.RGB;
-
 public class Texture {
 
 	private ByteBuffer buffer;
@@ -36,19 +34,15 @@ public class Texture {
 	}
 
 	public Texture(String name, int width, int height){
-		this(name, width, height, null);
-	}
-
-	public Texture(String name, int width, int height, byte[] color){
-		if(color == null){
-			byte[] arr = RGB.WHITE.toByteArray();
-			color = new byte[]{ arr[0], arr[1], arr[2], (byte)255 };
-		}
-		buffer = stbi_load(new File("./resources/textures/blank.png").getPath(), this.width, this.height, this.channels, CHANNELS);
-		if(buffer == null) log("Error while creating texture '" + name + "': " + stbi_failure_reason());
-		resize(width, height);
+		buffer = BufferUtils.createByteBuffer(width * height * CHANNELS);
+		//buffer = stbi_load(new File("./resources/textures/blank.png").getPath(), this.width, this.height, this.channels, CHANNELS);
+		//if(buffer == null) log("Error while creating texture '" + name + "': " + stbi_failure_reason());
+		this.width[0] = width;
+		this.height[0] = height;
+		channels[0] = CHANNELS;
 		this.name = name;
-		clear(color);
+		clear(null);
+		buffer.rewind();
 	}
 
 	public void resize(int width, int height){
@@ -156,7 +150,7 @@ public class Texture {
 	}
 
 	public byte[] get(int x, int y){
-		int index = (x + y * height[0]) * channels[0];
+		int index = (x + y * width[0]) * channels[0];
 		return new byte[]{ buffer.get(index), buffer.get(index + 1), buffer.get(index + 2), buffer.get(index + 3)};
 	}
 

@@ -219,8 +219,8 @@ public class TextureManager {
 		GroupEditor.updateTextureGroups();
 	}
 
-	public static Texture createTexture(String texid, int texX, int texY, byte[] color){
-		Texture tex = new Texture(texid, texY, texY, color);
+	public static Texture createTexture(String texid, int texX, int texY){
+		Texture tex = new Texture(texid, texX, texY);
 		TEXTURES.put(texid, tex);
 		return tex;
 	}
