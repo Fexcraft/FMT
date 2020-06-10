@@ -196,8 +196,8 @@ public class TreeGroup extends Panel {
 					PreviewEditor.pos_y.apply(0);
 					PreviewEditor.pos_z.apply(0);
 					PreviewEditor.poss_x.apply(0);
-					PreviewEditor.poss_x.apply(0);
-					PreviewEditor.poss_x.apply(0);
+					PreviewEditor.poss_y.apply(0);
+					PreviewEditor.poss_z.apply(0);
 					PreviewEditor.rot_x.apply(0);
 					PreviewEditor.rot_y.apply(0);
 					PreviewEditor.rot_z.apply(0);
@@ -214,8 +214,8 @@ public class TreeGroup extends Panel {
 					PreviewEditor.pos_y.apply(model.pos == null ? 0 : model.pos.yCoord);
 					PreviewEditor.pos_z.apply(model.pos == null ? 0 : model.pos.zCoord);
 					PreviewEditor.poss_x.apply(model.pos == null ? 0 : model.pos.xCoord * 16);
-					PreviewEditor.poss_x.apply(model.pos == null ? 0 : model.pos.yCoord * 16);
-					PreviewEditor.poss_x.apply(model.pos == null ? 0 : model.pos.zCoord * 16);
+					PreviewEditor.poss_y.apply(model.pos == null ? 0 : model.pos.yCoord * 16);
+					PreviewEditor.poss_z.apply(model.pos == null ? 0 : model.pos.zCoord * 16);
 					PreviewEditor.rot_x.apply(model.rot == null ? 0 : model.rot.xCoord);
 					PreviewEditor.rot_y.apply(model.rot == null ? 0 : model.rot.yCoord);
 					PreviewEditor.rot_z.apply(model.rot == null ? 0 : model.rot.zCoord);
