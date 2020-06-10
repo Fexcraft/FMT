@@ -83,7 +83,7 @@ public class RayCoastAway {
 							TextureEditor.updateColor(arr, null);
 						}
 						else{*/
-							log(x + " " + y);
+							//log(x + " " + y);
 							tex.set(x, y, TextureEditor.CURRENTCOLOR.toByteArray());
 							tex.rebind();
 							tex.save();
