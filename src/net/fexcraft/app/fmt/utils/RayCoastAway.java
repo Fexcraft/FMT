@@ -39,23 +39,21 @@ public class RayCoastAway {
 
 	public static void doTest(boolean bool, boolean mouseoff, boolean pencil){
 		if(bool && !PICKING){
+			if(TextureEditor.colorPicker()){
+				byte[] picked = getPicked(mouseoff);
+				picked[0] -= 128;
+				picked[1] -= 128;
+				picked[2] -= 128;
+				TextureEditor.updateColor(picked, null);
+				return;
+			}
 			PICKING = true;
 			MOUSEOFF = mouseoff;
 			return;
 		}
 		if(FMTB.get() == null) return;
 		//
-		int width = FMTB.WIDTH, height = FMTB.HEIGHT;
-		if(mouseoff){
-			width = GGR.mousePosX() * 2;
-			height = -(GGR.mousePosY() - FMTB.HEIGHT) * 2;
-		}
-		GL11.glReadPixels(width / 2, height / 2, 1, 1, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, picker);
-		byte[] picked = new byte[4];
-		picker.get(picked);
-		// log((((int) byteArray[0]) & 0xFF) + " " + (((int) byteArray[1]) & 0xFF) + " " + (((int) byteArray[2]) & 0xFF));
-		// log(id + "-ID");
-		picker.clear();
+		byte[] picked = getPicked(mouseoff);
 		PICKING = false;
 		MOUSEOFF = false;
 		if(TextureEditor.pixelMode() && pencil){
@@ -78,19 +76,19 @@ public class RayCoastAway {
 				for(int y = 0; y < calctex.getHeight(); y++){
 					byte[] calc = calctex.get(x, y);
 					if(calc[0] == picked[0] && calc[1] == picked[1] && calc[2] == picked[2]){
-						if(TextureEditor.colorPicker()){
+						/*if(TextureEditor.colorPicker()){
 							byte[] arr = tex.get(x, y);
 							arr[0] -= 128;
 							arr[1] -= 128;
 							arr[2] -= 128;
 							TextureEditor.updateColor(arr, null);
 						}
-						else{
+						else{*/
 							tex.set(x, y, TextureEditor.CURRENTCOLOR.toByteArray());
 							tex.rebind();
 							tex.save();
 							return;
-						}
+						/*}*/
 					}
 					else continue;
 				}
@@ -154,6 +152,21 @@ public class RayCoastAway {
 				}
 			}
 		}
+	}
+
+	private static byte[] getPicked(boolean mouseoff){
+		int width = FMTB.WIDTH, height = FMTB.HEIGHT;
+		if(mouseoff){
+			width = GGR.mousePosX() * 2;
+			height = -(GGR.mousePosY() - FMTB.HEIGHT) * 2;
+		}
+		GL11.glReadPixels(width / 2, height / 2, 1, 1, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, picker);
+		byte[] picked = new byte[4];
+		picker.get(picked);
+		// log((((int) byteArray[0]) & 0xFF) + " " + (((int) byteArray[1]) & 0xFF) + " " + (((int) byteArray[2]) & 0xFF));
+		// log(id + "-ID");
+		picker.clear();
+		return picked;
 	}
 
 	private static int getSelectedFace(PolygonWrapper wrapper, byte[] picked){

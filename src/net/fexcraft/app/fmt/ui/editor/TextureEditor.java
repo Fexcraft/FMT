@@ -182,7 +182,7 @@ public class TextureEditor extends EditorBase {
 	}
 
 	public static boolean pixelMode(){
-		return PMODE == null ? false : PMODE == PaintMode.PIXEL || PMODE == PaintMode.COLORPICKER;
+		return PMODE == null ? false : PMODE == PaintMode.PIXEL;
 	}
 
 	public static boolean faceMode(){
