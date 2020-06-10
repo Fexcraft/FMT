@@ -159,8 +159,8 @@ public class GroupCompound {
 						lastint++;
 					}
 				}
+				TextureManager.saveTexture(tex);
 				tex.rebind();
-				TextureManager.saveTexture(texid);
 			}
 		}
 		return texid;

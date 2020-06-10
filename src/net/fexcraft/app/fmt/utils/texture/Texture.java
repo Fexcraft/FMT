@@ -19,7 +19,7 @@ import net.fexcraft.lib.common.math.RGB;
 public class Texture {
 
 	private ByteBuffer buffer;
-	private Integer glTextureId;
+	private Integer texid;
 	private int[] width = { 0 }, height = { 0 }, channels = { 0 };
 	private boolean rebind = true, reload;
 	public final String name;// was required for debug
@@ -36,18 +36,16 @@ public class Texture {
 	}
 
 	public Texture(String name, int width, int height){
-		this(name, width, height, RGB.WHITE.toByteArray());
+		this(name, width, height, null);
 	}
 
 	public Texture(String name, int width, int height, byte[] color){
 		if(color == null) color = RGB.WHITE.toByteArray();
-		buffer = stbi_load(new File("./resources/textures/blank.png").getPath(), this.width, this.height, channels, CHANNELS);
+		buffer = stbi_load(new File("./resources/textures/blank.png").getPath(), this.width, this.height, this.channels, CHANNELS);
 		if(buffer == null) log("Error while creating texture '" + name + "': " + stbi_failure_reason());
 		resize(width, height);
-		this.width[0] = width;
-		this.height[0] = height;
-		this.channels[0] = CHANNELS;
 		this.name = name;
+		clear(color);
 	}
 
 	public void resize(int width, int height){
@@ -65,8 +63,9 @@ public class Texture {
 	}
 
 	public ByteBuffer getBuffer(){
-		if(reload && buffer != null && file != null){
-			buffer = stbi_load(file.getPath(), width, height, channels, 0);
+		if(reload && file != null){
+			buffer = stbi_load(file.getPath(), width, height, channels, CHANNELS);
+			reload = false;
 		}
 		rebind = false;
 		return buffer;
@@ -89,11 +88,11 @@ public class Texture {
 	}
 
 	public void bind(){
-		if(glTextureId == null){
-			glTextureId = GL11.glGenTextures();
+		if(texid == null){
+			texid = GL11.glGenTextures();
 			rebind();
 		}
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, glTextureId);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texid);
 		if(rebind){
 			GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
@@ -119,17 +118,19 @@ public class Texture {
 		return String.format("Texture[ %s (%s, %s) ]", name, width[0], height[0]);
 	}
 
+	@Deprecated
 	public Integer getGLID(){
-		return glTextureId;
+		return texid;
 	}
 
-	public void clearPixels(){
+	public void clear(byte[] bytes){
+		if(bytes == null) bytes = new byte[]{ (byte)255, (byte)255, (byte)255, (byte)0 };
 		for(int x = 0; x < width[0]; x++){
 			for(int y = 0; y < height[0]; y++){
-				buffer.put((byte)255);
-				buffer.put((byte)255);
-				buffer.put((byte)255);
-				buffer.put((byte)255);
+				buffer.put(bytes[0]);
+				buffer.put(bytes[1]);
+				buffer.put(bytes[2]);
+				buffer.put(bytes[3]);
 			}
 		}
 	}
@@ -139,11 +140,12 @@ public class Texture {
 	}
 
 	public void set(int x, int y, byte[] rgb){
-		int pos = (x + y * height[0]) * CHANNELS;
+		int pos = (x + y * width[0]) * channels[0];
 		/*if(pos >= buffer.capacity()){
 			log("overcapacity " + pos + " " + buffer.capacity());
 			log("source: " + x + " " + y);
 		}*/
+		//log(x + ", " + y + " > " + pos);
 		buffer.put(pos + 0, (byte)(rgb[0] + 128));
 		buffer.put(pos + 1, (byte)(rgb[1] + 128));
 		buffer.put(pos + 2, (byte)(rgb[2] + 128));
@@ -151,7 +153,7 @@ public class Texture {
 	}
 
 	public byte[] get(int x, int y){
-		int index = (x + y * height[0]) * CHANNELS;
+		int index = (x + y * height[0]) * channels[0];
 		return new byte[]{ buffer.get(index), buffer.get(index + 1), buffer.get(index + 2), buffer.get(index + 3)};
 	}
 

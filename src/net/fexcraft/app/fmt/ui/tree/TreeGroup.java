@@ -267,7 +267,7 @@ public class TreeGroup extends Panel {
 			});
 		}).setRoot(this).updateColor();
 		new SubTreeGroup(base, 1, "tree.textures.generate", () -> {
-			texgroup.texture.clearPixels();
+			texgroup.texture.clear(null);
 			if(FMTB.MODEL.texgroup == texgroup) FMTB.MODEL.textureScale = 1;
 			for(TurboList list : FMTB.MODEL.getGroups()){
 				if(list.texgroup == texgroup){
@@ -281,7 +281,7 @@ public class TreeGroup extends Panel {
         		}
         	});
         	texgroup.texture.getImage().position(0);
-        	TextureManager.saveTexture(texgroup.texture);
+        	texgroup.texture.save();
         	texgroup.texture.reload();
         	FMTB.MODEL.recompile();
 		}).setRoot(this).updateColor();

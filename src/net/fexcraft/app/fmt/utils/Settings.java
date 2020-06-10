@@ -157,7 +157,7 @@ public class Settings {
 		DEFAULTS.add(new Setting("polygon_marker", true));
 		//DEFAULTS.add(new Setting(Type.BOOLEAN, "polygon_count", true));
 		DEFAULTS.add(new Setting("lighting", false));
-		DEFAULTS.add(new Setting("light0_position", new float[]{ 0, 1, 0, 0 }));
+		DEFAULTS.add(new Setting("light0_position", new float[]{ 0, 10, 0, 1 }));
 		DEFAULTS.add(new Setting("language_code", "none"));
 		DEFAULTS.add(new Setting("cullface", true));
 		DEFAULTS.add(new Setting("animate", false));

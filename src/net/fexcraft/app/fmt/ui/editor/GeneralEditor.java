@@ -18,8 +18,7 @@ import net.fexcraft.app.fmt.ui.field.BoolButton;
 import net.fexcraft.app.fmt.ui.field.ColorField;
 import net.fexcraft.app.fmt.ui.field.NumberField;
 import net.fexcraft.app.fmt.ui.field.TextField;
-import net.fexcraft.app.fmt.utils.texture.Texture;
-import net.fexcraft.app.fmt.utils.texture.TextureManager;
+import net.fexcraft.app.fmt.utils.texture.TextureGroup;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.ShapeType;
 import net.fexcraft.app.fmt.wrappers.TurboList;
@@ -129,23 +128,22 @@ public class GeneralEditor extends EditorBase {
 		Button painttotex = new Button(translate("editor.general.attributes.painttotexture"), 3, 8 + (pass += 24), 290, 20);
 		painttotex.getListenerMap().addListener(MouseClickEvent.class, event -> {
 			if(event.getAction() != CLICK) return;
-			if(FMTB.MODEL.texgroup == null){
+			ArrayList<PolygonWrapper> selection = FMTB.MODEL.getSelected();
+			if(FMTB.MODEL.texgroup == null && selection.size() < 2){
 				DialogBox.showOK(null, null, null, "editor.general.attributes.painttotexture.notex");
 			}
 			else{
-				ArrayList<PolygonWrapper> selection = FMTB.MODEL.getSelected();
 				for(PolygonWrapper poly : selection){
-					String texname = (poly.getTurboList().getTextureGroup() == null ? FMTB.MODEL.texgroup : poly.getTurboList().getTextureGroup()).group;
-					Texture tex = TextureManager.getTexture(texname, true);
-					if(tex == null){
-						DialogBox.showOK(null, null, null, "editor.general.attributes.painttotexture.tex_not_found");
+					TextureGroup texgroup = poly.getTurboList().getTextureGroup() == null ? FMTB.MODEL.texgroup : poly.getTurboList().getTextureGroup();
+					if(texgroup == null || texgroup.texture == null){
+						DialogBox.showOK(null, null, null, "editor.general.attributes.painttotexture.tex_not_found", "#" + (texgroup == null ? "no_group" : "group_no_tex"));
 						return;
 					}
-					poly.burnToTexture(tex, null);
+					poly.burnToTexture(texgroup.texture, null);
 					poly.recompile();
-					TextureManager.saveTexture(texname);
-					tex.rebind();
-					log("Polygon painted into Texture.");
+					texgroup.texture.save();
+					texgroup.texture.rebind();
+					log("Polygon (" + poly.getTurboList().id + ":" + poly.name()  + ") painted into Texture.");
 				}
 				return;
 			}

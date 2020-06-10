@@ -285,9 +285,15 @@ public abstract class PolygonWrapper {
 	}
 	
 	private void burn(Texture tex, float[][] ends, byte[] bs){
-		for(float x = ends[0][0]; x < ends[1][0]; x += 0.5f){
-			for(float y = ends[0][1]; y < ends[1][1]; y += 0.5f){
-				int xa = (int)(x + textureX), ya = (int)(y + textureY);
+		float scale_x = tex.getWidth() / turbo.textureWidth;
+		float scale_y = tex.getHeight() / turbo.textureHeight;
+		log(turbo.textureWidth + " " + tex.getWidth() + " " + scale_x);
+		log(turbo.textureHeight + " " + tex.getHeight() + " " + scale_y);
+		float[][] ands = { { ends[0][0] * scale_x, ends[0][1] * scale_y }, { ends[1][0] * scale_x, ends[1][1] * scale_y } };
+		float texx = textureX * scale_x, texy = textureY * scale_y;
+		for(float x = ands[0][0]; x < ands[1][0]; x += .5f){
+			for(float y = ands[0][1]; y < ands[1][1]; y += .5f){
+				int xa = (int)(x + texx), ya = (int)(y + texy);
 				if(xa >= 0 && xa < tex.getWidth() && ya >= 0 && ya < tex.getHeight()){
 					tex.set(xa, ya, bs);
 				}

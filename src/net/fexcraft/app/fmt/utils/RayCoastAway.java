@@ -88,7 +88,7 @@ public class RayCoastAway {
 						else{
 							tex.set(x, y, TextureEditor.CURRENTCOLOR.toByteArray());
 							tex.rebind();
-							TextureManager.saveTexture(tex);
+							tex.save();
 							return;
 						}
 					}

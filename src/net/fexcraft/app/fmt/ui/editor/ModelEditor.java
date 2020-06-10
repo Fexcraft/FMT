@@ -24,10 +24,10 @@ import net.fexcraft.app.fmt.ui.field.NumberField;
 import net.fexcraft.app.fmt.ui.field.TextField;
 import net.fexcraft.app.fmt.ui.tree.TreeIcon;
 import net.fexcraft.app.fmt.utils.Animator.Animation;
-import net.fexcraft.app.fmt.utils.texture.TextureManager;
-import net.fexcraft.app.fmt.utils.texture.TextureUpdate;
 import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.app.fmt.utils.Translator;
+import net.fexcraft.app.fmt.utils.texture.TextureManager;
+import net.fexcraft.app.fmt.utils.texture.TextureUpdate;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.Vec3f;
@@ -250,6 +250,7 @@ public class ModelEditor extends EditorBase {
 		else if(bool) FMTB.MODEL.textureSizeX = value;
 		else FMTB.MODEL.textureSizeY = value;
 		TextureUpdate.updateSize(null);
+		FMTB.MODEL.recompile();
 		return;
 	}
 
