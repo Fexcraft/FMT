@@ -159,7 +159,7 @@ public class GroupCompound {
 						lastint++;
 					}
 				}
-				TextureManager.saveTexture(tex);
+				tex.save();
 				tex.rebind();
 			}
 		}
