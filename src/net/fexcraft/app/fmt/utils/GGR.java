@@ -14,7 +14,6 @@ import org.lwjgl.opengl.GL11;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.editor.Editors;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
-import net.fexcraft.app.fmt.ui.field.Field;
 import net.fexcraft.app.fmt.ui.tree.Trees;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.lib.common.Static;
@@ -97,7 +96,7 @@ public class GGR {
         		left_down = true;
         	}
         	else if(action == GLFW_RELEASE){
-        		if(FMTB.context.getFocusedGui() == null && isNotOverUI()){
+        		if(isNotOverUI()){
         			RayCoastAway.doTest(true, true, false);
         		}
         		left_down = false;
@@ -105,7 +104,7 @@ public class GGR {
         }
         else if(button == 1){
         	if(action == GLFW_PRESS){
-        		if(FMTB.context.getFocusedGui() instanceof Field == false && isNotOverUI()){
+        		if(isNotOverUI()){
             		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
             		grabbed = true;
         		}
@@ -163,7 +162,7 @@ public class GGR {
     }
 
     public void processCameraInput(float delta){
-    	if(FMTB.context.getFocusedGui() != null){
+    	if(!isNotOverUI()){
     		w_down = s_down = d_down = a_down = r_down = f_down = space_down = shift_down = false;
     	}
 		if(Settings.orbital_camera()){

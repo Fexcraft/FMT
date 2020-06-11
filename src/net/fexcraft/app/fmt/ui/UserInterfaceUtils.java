@@ -213,7 +213,7 @@ public class UserInterfaceUtils {
 			if(listener.isEntered()) FMTB.context.setFocusedGui(component);
 		});
 		component.getListenerMap().addListener(MouseClickEvent.class, listener -> {
-			if(listener.getAction() == CLICK && FMTB.context.getFocusedGui() == component && !component.isFocused())component.setFocused(true);
+			if(listener.getAction() == CLICK && FMTB.context.getFocusedGui() == component && !component.isFocused()) component.setFocused(true);
 		});
 	}
 

@@ -36,14 +36,14 @@ public class KeyCompound {
 		keys.add(new KeyFunction("move_speed+", GLFW_KEY_R, (action) -> FMTB.ggr.r_down = GGR.parseKeyAction(action)));
 		keys.add(new KeyFunction("move_speed-", GLFW_KEY_F, (action) -> FMTB.ggr.f_down = GGR.parseKeyAction(action)));
 		keys.add(new KeyFunction("move_speed*", GLFW_KEY_Y, (action) -> {
-			if(FMTB.context.getFocusedGui() != null || action != GLFW_RELEASE) return;
+			if(!GGR.isNotOverUI() || action != GLFW_RELEASE) return;
 			if(FMTB.ggr.movemod < 32/*1024*/){
 				FMTB.ggr.movemod *= 2;
 				//TODO Crossbar.show("Speed increased to " + (FMTB.ggr.movemod * 100 ) + "%", Time.getDate() + 2000);
 			}
 		}));
 		keys.add(new KeyFunction("move_speed/", GLFW_KEY_U, (action) -> {
-			if(FMTB.context.getFocusedGui() != null || action != GLFW_RELEASE) return;
+			if(!GGR.isNotOverUI() || action != GLFW_RELEASE) return;
 			if(FMTB.ggr.movemod > 0.03125){
 				FMTB.ggr.movemod *= 0.5f;
 				//TODO Crossbar.show("Speed decreased to " + (FMTB.ggr.movemod * 100 ) + "%", Time.getDate() + 2000);
