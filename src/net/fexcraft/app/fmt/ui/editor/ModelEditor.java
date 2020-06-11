@@ -135,7 +135,7 @@ public class ModelEditor extends EditorBase {
 			Button button = new Button(Translator.translate("editor.model_group.authors.add"), 3, pass += 24, 290, 20);
 			button.getStyle().setHorizontalAlign(HorizontalAlign.LEFT);
 			button.getListenerMap().addListener(MouseClickEvent.class, listener -> {
-				if(listener.getAction() != CLICK && listener.getButton() != MouseButton.MOUSE_BUTTON_LEFT) return;
+				if(listener.getAction() != CLICK || listener.getButton() != MouseButton.MOUSE_BUTTON_LEFT) return;
 				Dialog dialog = new Dialog(Translator.translate("editor.model_group.authors.add.dialog"), 300, 90);
 				dialog.setResizable(false);
 				TextField input = new TextField("no name", 10, 10, 280, 20);
@@ -155,7 +155,7 @@ public class ModelEditor extends EditorBase {
 			Button button1 = new Button(Translator.translate("editor.model_group.authors.add_self"), 3, pass += 24, 290, 20);
 			button1.getStyle().setHorizontalAlign(HorizontalAlign.LEFT);
 			button1.getListenerMap().addListener(MouseClickEvent.class, listener -> {
-				if(listener.getAction() != CLICK && listener.getButton() != MouseButton.MOUSE_BUTTON_LEFT) return;
+				if(listener.getAction() != CLICK || listener.getButton() != MouseButton.MOUSE_BUTTON_LEFT) return;
 				if(SessionHandler.isLoggedIn()){
 					FMTB.MODEL.addAuthor(SessionHandler.getUserName(), true, false);
 				}
