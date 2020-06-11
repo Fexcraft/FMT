@@ -258,7 +258,7 @@ public class SaveLoad {
 		else{
 			for(Entry<String, Boolean> entry : compound.getCreators().entrySet()){
 				String name = entry.getKey();
-				if(entry.getValue()) name = "!" + name;
+				if(entry.getValue() && !export) name = "!" + name;
 				creators.add(name);
 			}
 		}
