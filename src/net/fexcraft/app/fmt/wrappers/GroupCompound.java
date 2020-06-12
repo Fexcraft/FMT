@@ -65,6 +65,7 @@ public class GroupCompound {
 	public Vec3f pos, rot, scale;
 	public TreeGroup button;
 	public String helpertex;
+	public boolean subhelper;
 	
 	public GroupCompound(File origin){
 		this.origin = origin; name = "unnamed model";

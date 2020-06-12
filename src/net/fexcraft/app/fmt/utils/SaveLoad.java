@@ -351,6 +351,7 @@ public class SaveLoad {
 		if(!HelperCollector.LOADED.isEmpty() && !export){
 			JsonArray array = new JsonArray();
 			for(GroupCompound group : HelperCollector.LOADED){
+				if(group.subhelper) continue;
 				JsonObject jsn = new JsonObject();
 				jsn.addProperty("name", group.name);
 				jsn.addProperty("texture", group.helpertex);
@@ -379,6 +380,10 @@ public class SaveLoad {
 	}
 
 	public static GroupCompound getModel(File from, JsonObject obj, boolean ggr_nopreview){
+		return getModel(from, obj, ggr_nopreview, false);
+	}
+
+	public static GroupCompound getModel(File from, JsonObject obj, boolean ggr_nopreview, boolean subhelper){
 		GroupCompound compound = new GroupCompound(from);
 		compound.getGroups();
 		compound.name = JsonUtil.getIfExists(obj, "name", "unnamed model");
@@ -542,6 +547,7 @@ public class SaveLoad {
 						helperpreview.scale = new Vec3f(jsn.get("scale_x").getAsFloat(), jsn.get("scale_y").getAsFloat(), jsn.get("scale_z").getAsFloat());
 					}
 					helperpreview.visible = JsonUtil.getIfExists(jsn, "visible", true);
+					helperpreview.subhelper = subhelper;
 				}
 				catch(Exception e){
 					log(e);

@@ -59,7 +59,7 @@ public class HelperCollector {
 			ZipFile zip = new ZipFile(file);
 			JsonObject obj = JsonUtil.getObjectFromInputStream(zip.getInputStream(zip.getEntry("model.jtmt")));
 			if(conM){
-				compound = SaveLoad.getModel(file, obj, false);
+				compound = SaveLoad.getModel(file, obj, false, true);
 				if(!compound.name.startsWith("fmtb/")) compound.name = "fmtb/" + compound.name;
 			}
 			else{
@@ -69,23 +69,27 @@ public class HelperCollector {
 			}
 			if(conT){
 				compound.helpertex = "./temp/" + compound.name;
-				TextureManager.loadTextureFromZip(zip.getInputStream(zip.getEntry("texture.png")), compound.helpertex, false, false);
+				if(!TextureManager.containsTexture(compound.helpertex)){
+					TextureManager.loadTextureFromZip(zip.getInputStream(zip.getEntry("texture.png")), compound.helpertex, false, false);
+				}
 			}
 			if(obj.has("textures")){
 				JsonArray array = obj.get("textures").getAsJsonArray();
 				for(JsonElement elm : array){
 					String group = elm.getAsString();
 					String texid = "./temp/" + compound.name + "/" + group;
-					TextureManager.loadTextureFromZip(zip.getInputStream(zip.getEntry("texture-" + group + ".png")), texid, false, false);
+					if(!TextureManager.containsTexture(texid)){
+						TextureManager.loadTextureFromZip(zip.getInputStream(zip.getEntry("texture-" + group + ".png")), texid, false, false);
+					}
 					for(TurboList list : compound.getGroups()){
 						if(list.helpertex != null && list.helpertex.equals(group)){
 							list.helpertex = texid;
-							log("applied " + group + " to " + list.id);
+							log("Applied '" + group + "' to " + list.id);
 						}
 					}
 					if(compound.helpertex.equals(group)){
 						compound.helpertex = texid;
-						log("applied " + group + " to " + compound.name);
+						log("Applied '" + group + "' to " + compound.name);
 					}
 				}
 			}
