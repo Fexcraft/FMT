@@ -62,7 +62,7 @@ public class JTMTPorter extends ExImPorter {
 		}
 		for(String str : torem) groups.remove(str);
 		obj.add("groups", groups); JsonUtil.write(file, obj);
-		return "Done writing. [VO]";
+		return "Done writing. [" + (visible ? "VO" : selected ? "SO" : "??") + "]";
 	}
 
 	@Override
