@@ -41,8 +41,8 @@ public class JTMTPorter extends ExImPorter {
 
 	@Override @SuppressWarnings("unchecked")
 	public String exportModel(GroupCompound compound, File file, Map<String, Setting> settings){
-		boolean selected = !settings.get("selected_only").getBooleanValue();
-		boolean visible = !settings.get("visible_only").getBooleanValue();
+		boolean selected = settings.get("selected_only").getBooleanValue();
+		boolean visible = settings.get("visible_only").getBooleanValue();
 		if(!visible && !selected){
 			JsonUtil.write(file, SaveLoad.modelToJTMT(compound, true));
 			return "Done writing. [ALL]";
