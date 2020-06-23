@@ -49,6 +49,7 @@ public class VoxImporter extends ExImPorter {
         try{
         	byte[] voxdata = FileHandler.readVoxFile(file.getPath());
         	Model model = new Model(voxdata);
+        	int chunks = 0;
             for(Chunk chunk : model.chunks){
             	int minx = 0, miny = 0, minz = 0;
             	int maxx = 0, maxy = 0, maxz = 0;
@@ -73,6 +74,7 @@ public class VoxImporter extends ExImPorter {
                 wrapper.pos.xCoord = minx;
                 wrapper.pos.yCoord = miny;
                 wrapper.pos.zCoord = minz;
+                wrapper.name = "voxel_" + (chunks++);
                 compound.add(wrapper, "voxels", false);
                 BBWrapper bounding = new BBWrapper(compound);
                 bounding.pos.xCoord = minx;
@@ -80,7 +82,8 @@ public class VoxImporter extends ExImPorter {
                 bounding.pos.zCoord = minz;
                 bounding.size = new Vec3f(cx, cy, cz);
                 bounding.visible = false;
-                compound.add(bounding, "bbs", false);
+                bounding.name = "voxel_" + chunks;
+                compound.add(bounding, "voxel_bbs", false);
             }
         }
         catch(Exception e){
