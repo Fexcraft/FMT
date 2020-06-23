@@ -106,7 +106,7 @@ dependencies {
     runtime group: 'org.lwjgl', name: 'lwjgl-tinyfd', version: lwjgl_version, changing: true, classifier: 'natives-linux'
     runtime group: 'org.lwjgl', name: 'lwjgl-tinyfd', version: lwjgl_version, changing: true, classifier: 'natives-macos'
     
-    runtime files('libs/discord-rpc.jar', 'libs/FCL-1.XII.52.jar')
+    runtime files('libs/discord-rpc.jar', 'libs/FCL-1.XII.52.jar', 'libs/VOXtoFMT-1.jar')
     //@formatter:on
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
