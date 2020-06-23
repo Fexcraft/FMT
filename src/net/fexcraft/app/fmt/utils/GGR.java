@@ -165,7 +165,7 @@ public class GGR {
     }
 
     public void processCameraInput(float delta){
-    	if(!isNotOverUI() && !grabbed){
+    	if(!isNotOverUI()){
     		w_down = s_down = d_down = a_down = r_down = f_down = space_down = shift_down = false;
     	}
 		if(Settings.orbital_camera()){
