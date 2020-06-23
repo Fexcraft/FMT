@@ -5,6 +5,7 @@ It is able to import:
 - `mtb` - SMP Toolbox Save Files
 - `jtmt` - JTMT JSON Format Models
 - `java` - FlansMod Format Java Models (**currently not public**)
+- `vox` - "MagicaVoxel" Format Files (see [VOXtoFMT](https://github.com/Fexcraft/VOXtoFMT))
 
 And export to:
 - `jtmt` - JTMT JSON Format Models
