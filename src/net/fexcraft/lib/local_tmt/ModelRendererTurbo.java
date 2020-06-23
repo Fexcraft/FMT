@@ -2012,5 +2012,9 @@ public class ModelRendererTurbo {
 	public ModelRendererTurbo addVoxelShape(int segmentation, boolean[][][] content){
 		return new VoxelBuilder(this, segmentation).setVoxels(content).build();
 	}
+
+	public ModelRendererTurbo addVoxelShape(int x, int y, int z, boolean[][][] content){
+		return new VoxelBuilder(this, x, y, z).setVoxels(content).build();
+	}
 	
 }

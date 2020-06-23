@@ -142,7 +142,7 @@ public class UserInterfaceUtils {
 				Trees.show("polygon");
 			}),
 			new MenuButton("toolbar.shapelist.add_marker", () -> FMTB.MODEL.add(new MarkerWrapper(FMTB.MODEL), "markers", true)),
-			new MenuButton("toolbar.shapelist.add_voxel", () -> FMTB.MODEL.add(new VoxelWrapper(FMTB.MODEL, 16, true), "voxels", true))
+			new MenuButton("toolbar.shapelist.add_voxel", () -> FMTB.MODEL.add(new VoxelWrapper(FMTB.MODEL, 16, 16, 16, true), "voxels", true))
 		));
 		frame.getContainer().add(new MenuEntry(4, Translator.translate("toolbar.textures"),
 			new MenuButton("toolbar.textures.manage", () -> Trees.show("textures")),

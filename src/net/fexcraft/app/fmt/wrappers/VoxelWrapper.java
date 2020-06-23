@@ -13,20 +13,29 @@ import net.fexcraft.lib.local_tmt.VoxelBuilder;
 public class VoxelWrapper extends PolygonWrapper {
 	
 	public boolean[][][] content;
-	public int divider;
+	public int segx, segy, segz;
 	
-	public VoxelWrapper(GroupCompound compound, int divider, boolean def){
-		super(compound); this.divider = divider;
-		content = new boolean[divider][][];
-		for(int i = 0; i < divider; i++){
-			content[i] = new boolean[divider][];
-			for(int j = 0; j < divider; j++){
-				content[i][j] = new boolean[divider];
-				for(int k = 0; k < divider; k++){
+	public VoxelWrapper(GroupCompound compound, int x, int y, int z, boolean def){
+		super(compound);
+		this.segx = x;
+		this.segy = y;
+		this.segz = z;
+		content = new boolean[segx][segy][segz];
+		for(int i = 0; i < segx; i++){
+			for(int j = 0; j < segy; j++){
+				for(int k = 0; k < segz; k++){
 					content[i][j][k] = /*def;//*/Static.random.nextBoolean();;
 				}
 			}
 		}
+	}
+
+	public VoxelWrapper(GroupCompound compound, int x, int y, int z, boolean[][][] bools){
+		super(compound);
+		this.content = bools;
+		this.segx = x;
+		this.segy = y;
+		this.segz = z;
 	}
 
 	@Override
@@ -34,7 +43,7 @@ public class VoxelWrapper extends PolygonWrapper {
 		return new ModelRendererTurbo(null, textureX, textureY, compound.tx(getTurboList()), compound.ty(getTurboList())){
 			@Override public RGB getColor(int i){ return super.getColor(i % 6); }
 			@Override public String toString(){ return "VoxelShape"; }
-		}.addVoxelShape(divider, content).setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord).setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
+		}.addVoxelShape(segx, segy, segz, content).setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord).setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
 	}
 
 	@Override
@@ -45,7 +54,7 @@ public class VoxelWrapper extends PolygonWrapper {
 	@Override
 	public float getFloat(String id, boolean x, boolean y, boolean z){
 		switch(id){
-			case "voxel": return x ? divider : y ? 0 : z ? 0 : 0;
+			case "voxel": return x ? segx : y ? segy : z ? segz : 0;
 			default: return super.getFloat(id, x, y, z);
 		}
 	}
@@ -55,9 +64,9 @@ public class VoxelWrapper extends PolygonWrapper {
 		if(super.setFloat(id, x, y, z, value)) return true;
 		switch(id){
 			case "size":{
-				if(x){ divider = (int)value; return true; }
-				//if(y){ size.yCoord = value; return true; }
-				//if(z){ size.zCoord = value; return true; }
+				if(x){ segx = (int)value; return true; }
+				if(y){ segy = (int)value; return true; }
+				if(z){ segz = (int)value; return true; }
 			}
 			default: return false;
 		}
@@ -65,8 +74,10 @@ public class VoxelWrapper extends PolygonWrapper {
 
 	@Override
 	protected JsonObject populateJson(JsonObject obj, boolean export){
-		obj.addProperty("segments", divider);
-		ArrayList<int[]> coords = new VoxelBuilder(null, divider).setVoxels(content).buildCoords();
+		obj.addProperty("seg_x", segx);
+		obj.addProperty("seg_y", segy);
+		obj.addProperty("seg_z", segz);
+		ArrayList<int[]> coords = new VoxelBuilder(null, segx, segy, segz).setVoxels(content).buildCoords();
 		JsonArray array = new JsonArray();
 		for(int[] arr : coords){
 			JsonArray coor = new JsonArray();
@@ -110,10 +121,10 @@ public class VoxelWrapper extends PolygonWrapper {
 
 	@Override
 	protected PolygonWrapper createClone(GroupCompound compound){
-		VoxelWrapper wrapper = new VoxelWrapper(compound, divider, false);
-		for(int i = 0; i < divider; i++){
-			for(int j = 0; j < divider; j++){
-				for(int k = 0; k < divider; k++){
+		VoxelWrapper wrapper = new VoxelWrapper(compound, segx, segy, segz, false);
+		for(int i = 0; i < segx; i++){
+			for(int j = 0; j < segy; j++){
+				for(int k = 0; k < segz; k++){
 					wrapper.content[i][j][k] = content[i][j][k];
 				}
 			}

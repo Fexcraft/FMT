@@ -13,19 +13,27 @@ public class VoxelBuilder {
 	private ModelRendererTurbo root;
 	//private boolean[] sides;
 	private Boolean[][][] data;
-	private int segments;
+	private int segx, segy, segz;
 	
 	public VoxelBuilder(ModelRendererTurbo turbo, int segments){
-		this.root = turbo == null ? new ModelRendererTurbo(null) : turbo; this.segments = segments;
+		this.root = turbo == null ? new ModelRendererTurbo(null) : turbo;
+		this.segx = segments;
+		this.segy = segments;
+		this.segz = segments;
+	}
+	
+	public VoxelBuilder(ModelRendererTurbo turbo, int x, int y, int z){
+		this.root = turbo == null ? new ModelRendererTurbo(null) : turbo;
+		this.segx = x;
+		this.segy = y;
+		this.segz = z;
 	}
 
 	public VoxelBuilder setVoxels(boolean[][][] content){
-		data = new Boolean[segments][][];
-		for(int x = 0; x < segments; x++){
-			data[x] = new Boolean[segments][];
-			for(int y = 0; y < segments; y++){
-				data[x][y] = new Boolean[segments];
-				for(int z = 0; z < segments; z++){
+		data = new Boolean[segx][segy][segz];
+		for(int x = 0; x < segx; x++){
+			for(int y = 0; y < segy; y++){
+				for(int z = 0; z < segz; z++){
 					data[x][y][z] = content[x][y][z];
 				}
 			}
@@ -34,12 +42,10 @@ public class VoxelBuilder {
 	
 	public VoxelBuilder addVoxels(int xf, int yf, int zf, int xt, int yt, int zt){
 		if(data == null){
-			data = new Boolean[segments][][];
-			for(int x = 0; x < segments; x++){
-				data[x] = new Boolean[segments][];
-				for(int y = 0; y < segments; y++){
-					data[x][y] = new Boolean[segments];
-					for(int z = 0; z < segments; z++){
+			data = new Boolean[segx][segy][segz];
+			for(int x = 0; x < segx; x++){
+				for(int y = 0; y < segy; y++){
+					for(int z = 0; z < segz; z++){
 						data[x][y][z] = false;
 					}
 				}
@@ -78,9 +84,9 @@ public class VoxelBuilder {
 	
 	private ArrayList<int[]> rectangulate(){
 		ArrayList<int[]> rects = new ArrayList<int[]>();
-		for(int x = 0; x < segments; x++){
-			for(int y = 0; y < segments; y++){
-				for(int z = 0; z < segments; z++){
+		for(int x = 0; x < segx; x++){
+			for(int y = 0; y < segy; y++){
+				for(int z = 0; z < segz; z++){
 					if(contains(x, y, z)) rects.add(find(x, y, z));
 				}
 			}
@@ -137,7 +143,7 @@ public class VoxelBuilder {
 	}
 
 	private boolean contains(int x, int y, int z){
-		if(x >= segments || y >= segments || z >= segments) return false;
+		if(x >= segx || y >= segy || z >= segz) return false;
 		return data[x][y][z] != null && data[x][y][z];
 	}
 	

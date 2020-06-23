@@ -41,6 +41,7 @@ public class PorterManager {
 		porters.add(new TCNEXImporter());
 		porters.add(new TCHImporter());
 		porters.add(new AABBExporter());
+		porters.add(new VoxImporter());
 	}
 
 	public static void handleImport(){

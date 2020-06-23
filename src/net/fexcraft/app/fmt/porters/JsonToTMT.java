@@ -60,6 +60,9 @@ public class JsonToTMT {
 	public static final String[] toprotz = new String[]{"top_rotation_z", "toprot_z", "toprotz"};
 	public static final String[] segwidth = new String[]{"segment_width", "seg_width", "sw"};
 	public static final String[] segheight = new String[]{"segment_height", "seg_height", "sh"};
+	public static final String[] segx = new String[]{"segments", "segments_x", "seg_x", "segx", "sgx"};
+	public static final String[] segy = new String[]{"segments", "segments_y", "seg_y", "segy", "sgy"};
+	public static final String[] segz = new String[]{"segments", "segments_z", "seg_z", "segz", "sgz"};
 	
 	public static final float get(String s, JsonObject obj, float def){
 		if(obj.has(s)){
@@ -210,7 +213,7 @@ public class JsonToTMT {
 				polygon = marker; break;
 			}
 			case "voxel":{
-				VoxelWrapper voxel = new VoxelWrapper(compound, get(segments, obj, 16), false);
+				VoxelWrapper voxel = new VoxelWrapper(compound, get(segx, obj, 16), get(segy, obj, 16), get(segz, obj, 16), false);
 				for(JsonElement elm : obj.get("coords").getAsJsonArray()){
 					JsonArray arr = elm.getAsJsonArray();
 					log("coord" + elm);
