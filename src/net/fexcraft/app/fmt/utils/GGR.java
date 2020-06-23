@@ -12,6 +12,7 @@ import static org.lwjgl.glfw.GLFW.glfwSetInputMode;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.MenuEntry;
 import net.fexcraft.app.fmt.ui.editor.Editors;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.tree.Trees;
@@ -112,7 +113,8 @@ public class GGR {
         	}
         	else if(action == GLFW_RELEASE){
         		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-        		right_down = false; grabbed = false;
+        		right_down = false;
+        		grabbed = false;
         	}
         }
         if(button == 2){
@@ -132,6 +134,7 @@ public class GGR {
 		if(y[0] < 30) return false;
 		if(Editors.anyVisible() && x[0] < 304) return false;
 		if(Trees.anyVisible() && x[0] > (FMTB.WIDTH - 304)) return false;
+		if(MenuEntry.anyHovered()) return false;
 		return true;
 	}
 
@@ -152,17 +155,17 @@ public class GGR {
 
     public static double[] rotatePoint(double f, float pitch, float yaw) {
         double[] xyz = new double[]{ f, 0, 0 };
-            pitch *= 0.01745329251;
-            xyz[1] = -(f * Math.sin(pitch));
-            //
-            yaw *= 0.01745329251;
-            xyz[0] = (f * Math.cos(yaw));
-            xyz[2] = (f * Math.sin(yaw));
+        pitch *= 0.01745329251;
+        xyz[1] = -(f * Math.sin(pitch));
+        //
+        yaw *= 0.01745329251;
+        xyz[0] = (f * Math.cos(yaw));
+        xyz[2] = (f * Math.sin(yaw));
         return xyz;
     }
 
     public void processCameraInput(float delta){
-    	if(!isNotOverUI()){
+    	if(!isNotOverUI() && !grabbed){
     		w_down = s_down = d_down = a_down = r_down = f_down = space_down = shift_down = false;
     	}
 		if(Settings.orbital_camera()){
