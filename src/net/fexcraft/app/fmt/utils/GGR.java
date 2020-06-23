@@ -64,17 +64,20 @@ public class GGR {
 
     public void pollInput(float delta){
 		if(grabbed && cursor_moved){
-            if(Settings.orbital_camera()){
-                rotation.yCoord -= (posx - oposx) * Settings.mouse_sensivity.directFloat() * delta;
-                rotation.xCoord += (posy - oposy) * Settings.mouse_sensivity.directFloat() * delta;
-                rotation.xCoord = Math.max(-maxlookrange, Math.min(maxlookrange, rotation.xCoord));
-            	orbital.setAngles(rotation.yCoord, 0, -rotation.xCoord);
-            }
-            else{
-                rotation.yCoord += (posx - oposx) * Settings.mouse_sensivity.directFloat() * delta;
-                rotation.xCoord += (posy - oposy) * Settings.mouse_sensivity.directFloat() * delta;
-                rotation.xCoord = Math.max(-maxlookrange, Math.min(maxlookrange, rotation.xCoord));
-            }
+        	double x = posx - oposx, y = posy - oposy;
+        	if(x < FMTB.WIDTH && y < FMTB.HEIGHT){
+                if(Settings.orbital_camera()){
+                    rotation.yCoord -= x * Settings.mouse_sensivity.directFloat() * delta;
+                    rotation.xCoord += y * Settings.mouse_sensivity.directFloat() * delta;
+                    rotation.xCoord = Math.max(-maxlookrange, Math.min(maxlookrange, rotation.xCoord));
+                	orbital.setAngles(rotation.yCoord, 0, -rotation.xCoord);
+                }
+                else{
+                    rotation.yCoord += x * Settings.mouse_sensivity.directFloat() * delta;
+                    rotation.xCoord += y * Settings.mouse_sensivity.directFloat() * delta;
+                    rotation.xCoord = Math.max(-maxlookrange, Math.min(maxlookrange, rotation.xCoord));
+                }
+        	}
             cursor_moved = false;
 		}
 		else if(scroll_down && cursor_moved){
