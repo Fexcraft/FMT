@@ -24,7 +24,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.porters.JsonToTMT;
+import net.fexcraft.app.fmt.porters.JsonToFMT;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.DialogBox;
@@ -398,7 +398,7 @@ public class SaveLoad {
 					TurboList list = new TurboList(entry.getKey());
 					JsonArray array = entry.getValue().getAsJsonArray();
 					for(JsonElement elm : array){
-						list.add(JsonToTMT.parseWrapper(compound, elm.getAsJsonObject()));
+						list.add(JsonToFMT.parseWrapper(compound, elm.getAsJsonObject()));
 					}
 					compound.getGroups().add(list);
 				}
@@ -456,7 +456,7 @@ public class SaveLoad {
 				JsonArray polygons = group.get("polygons").getAsJsonArray();
 				for(JsonElement elm : polygons){
 					try{
-						list.add(JsonToTMT.parseWrapper(compound, elm.getAsJsonObject()));
+						list.add(JsonToFMT.parseWrapper(compound, elm.getAsJsonObject()));
 					}
 					catch(Exception e){
 						log(elm.getAsJsonObject());

@@ -15,7 +15,7 @@ import net.fexcraft.lib.common.math.Vec3f;
 * Tool to parse `ModelRendererTurbo` objects from JSON.
 * @Author Ferdinand Calo' (FEX___96)
 */
-public class JsonToTMT {
+public class JsonToFMT {
 	
 	//def
 	public static final float def = 0f;
@@ -216,7 +216,7 @@ public class JsonToTMT {
 				VoxelWrapper voxel = new VoxelWrapper(compound, get(segx, obj, 16), get(segy, obj, 16), get(segz, obj, 16), false);
 				for(JsonElement elm : obj.get("coords").getAsJsonArray()){
 					JsonArray arr = elm.getAsJsonArray();
-					log("coord" + elm);
+					//log("coord" + elm);
 					int xx = arr.get(0).getAsInt(), yy = arr.get(1).getAsInt(), zz = arr.get(2).getAsInt();
 					int x0 = xx + arr.get(3).getAsInt(), y0 = yy + arr.get(4).getAsInt(), z0 = zz + arr.get(5).getAsInt();
 					for(int x = xx; x < x0; x++){
@@ -226,8 +226,10 @@ public class JsonToTMT {
 							}
 						}
 					}
+					//log("passed");
 				}
-				polygon = voxel; break;
+				polygon = voxel;
+				break;
 			}
 		}
 		if(polygon == null){

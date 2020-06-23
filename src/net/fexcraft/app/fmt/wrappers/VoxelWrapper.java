@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.local_tmt.ModelRendererTurbo;
 import net.fexcraft.lib.local_tmt.VoxelBuilder;
@@ -17,14 +16,11 @@ public class VoxelWrapper extends PolygonWrapper {
 	
 	public VoxelWrapper(GroupCompound compound, int x, int y, int z, boolean def){
 		super(compound);
-		this.segx = x;
-		this.segy = y;
-		this.segz = z;
-		content = new boolean[segx][segy][segz];
+		content = new boolean[segx = x][segy = y][segz = z];
 		for(int i = 0; i < segx; i++){
 			for(int j = 0; j < segy; j++){
 				for(int k = 0; k < segz; k++){
-					content[i][j][k] = /*def;//*/Static.random.nextBoolean();;
+					content[i][j][k] = def;//Static.random.nextBoolean();;
 				}
 			}
 		}

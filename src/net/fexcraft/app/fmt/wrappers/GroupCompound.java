@@ -23,7 +23,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.porters.JsonToTMT;
+import net.fexcraft.app.fmt.porters.JsonToFMT;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.ui.DialogBox.DialogTask;
@@ -794,7 +794,7 @@ public class GroupCompound {
 						String groupto = external ? obj.get("model").getAsString() + "-cb" : "clipboard";
 						DialogTask task = () -> {
 							obj.get("polygons").getAsJsonArray().forEach(elm -> {
-								this.add(JsonToTMT.parseWrapper(this, elm.getAsJsonObject()), groupto, false);
+								this.add(JsonToFMT.parseWrapper(this, elm.getAsJsonObject()), groupto, false);
 							});
 						};
 						if(external){
