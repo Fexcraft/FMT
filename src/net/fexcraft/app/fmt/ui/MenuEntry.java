@@ -2,6 +2,8 @@ package net.fexcraft.app.fmt.ui;
 
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
+import java.util.ArrayList;
+
 import org.joml.Vector4f;
 import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.component.Label;
@@ -18,6 +20,7 @@ import net.fexcraft.app.fmt.utils.Settings;
 
 public class MenuEntry extends Panel {
 
+	private static ArrayList<MenuEntry> entries = new ArrayList<>();
 	public MenuButton[] buttons;
 	private boolean extended;
 	public final int index;
@@ -75,6 +78,7 @@ public class MenuEntry extends Panel {
 		this.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)event -> {
 			if(event.getAction() == CLICK) toggle(null);
 		});
+		entries.add(this);
 	}
 
 	public void toggle(Boolean bool){
@@ -102,6 +106,16 @@ public class MenuEntry extends Panel {
 			if(button.anyHovered()) return;
 		}
 		this.toggle(false);
+	}
+
+	public static boolean anyHovered(){
+		for(MenuEntry entry : entries){
+			if(entry.isHovered()) return true;
+			for(MenuButton button : entry.buttons){
+				if(button.anyHovered()) return true;
+			}
+		}
+		return false;
 	}
 
 }
