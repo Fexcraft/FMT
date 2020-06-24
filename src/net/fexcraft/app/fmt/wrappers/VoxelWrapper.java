@@ -1,11 +1,14 @@
 package net.fexcraft.app.fmt.wrappers;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import net.fexcraft.lib.common.math.RGB;
+import net.fexcraft.lib.local_tmt.ColorIndexedVoxelBuilder;
 import net.fexcraft.lib.local_tmt.ModelRendererTurbo;
 import net.fexcraft.lib.local_tmt.VoxelBuilder;
 
@@ -13,6 +16,9 @@ public class VoxelWrapper extends PolygonWrapper {
 	
 	public boolean[][][] content;
 	public int segx, segy, segz;
+	//
+	public int[][][] icontent;
+	public Map<Integer, RGB> colors;
 	
 	public VoxelWrapper(GroupCompound compound, int x, int y, int z, boolean def){
 		super(compound);
@@ -34,8 +40,25 @@ public class VoxelWrapper extends PolygonWrapper {
 		this.segz = z;
 	}
 
+	public VoxelWrapper(GroupCompound compound, int x, int y, int z, int[][][] ints, HashMap<Integer, RGB> colours){
+		super(compound);
+		this.colors = colours;
+		this.icontent = ints;
+		this.segx = x;
+		this.segy = y;
+		this.segz = z;
+	}
+
 	@Override
 	protected ModelRendererTurbo newMRT(){
+		if(icontent != null){
+			return new ModelRendererTurbo(null, textureX, textureY, compound.tx(getTurboList()), compound.ty(getTurboList())){
+				@Override public RGB getColor(int i){ return super.getColor(i % 6); }
+				@Override public String toString(){ return "VoxelShape"; }
+			}.addColorIndexedVoxelShape(segx, segy, segz, icontent, colors)
+				.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
+				.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
+		}
 		return new ModelRendererTurbo(null, textureX, textureY, compound.tx(getTurboList()), compound.ty(getTurboList())){
 			@Override public RGB getColor(int i){ return super.getColor(i % 6); }
 			@Override public String toString(){ return "VoxelShape"; }
@@ -73,12 +96,22 @@ public class VoxelWrapper extends PolygonWrapper {
 		obj.addProperty("seg_x", segx);
 		obj.addProperty("seg_y", segy);
 		obj.addProperty("seg_z", segz);
-		ArrayList<int[]> coords = new VoxelBuilder(null, segx, segy, segz).setVoxels(content).buildCoords();
+		if(icontent != null){
+			obj.addProperty("color_indexed", true);
+		}
+		ArrayList<int[]> coords = icontent != null ? new ColorIndexedVoxelBuilder(null, segx, segy, segz).setVoxels(icontent).setColors(colors).buildCoords() : new VoxelBuilder(null, segx, segy, segz).setVoxels(content).buildCoords();
 		JsonArray array = new JsonArray();
 		for(int[] arr : coords){
 			JsonArray coor = new JsonArray();
 			for(int i = 0; i < arr.length; i++) coor.add(arr[i]);
-			if(coor.size() == 6) array.add(coor);
+			if(coor.size() >= 6) array.add(coor);
+		}
+		if(colors != null){
+			JsonArray corray = new JsonArray();
+			for(RGB rgb : colors.values()){
+				corray.add(rgb.packed);
+			}
+			obj.add("colors", corray);
 		}
 		obj.add("coords", array);
 		return obj;

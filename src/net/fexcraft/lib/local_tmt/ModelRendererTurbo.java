@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.lwjgl.opengl.GL11;
 
@@ -2015,6 +2016,10 @@ public class ModelRendererTurbo {
 
 	public ModelRendererTurbo addVoxelShape(int x, int y, int z, boolean[][][] content){
 		return new VoxelBuilder(this, x, y, z).setVoxels(content).build();
+	}
+
+	public ModelRendererTurbo addColorIndexedVoxelShape(int sx, int sy, int sz, int[][][] content, Map<Integer, RGB> colours){
+		return new ColorIndexedVoxelBuilder(this, sx, sy, sz).setColors(colours).setVoxels(content).build();
 	}
 	
 }
