@@ -947,4 +947,37 @@ public class GroupCompound {
 		return creators;
 	}
 
+	public void rescale(){
+		for(TurboList list : groups){
+			ArrayList<PolygonWrapper> boxes = (ArrayList<PolygonWrapper>)list.stream().filter(wrapper -> wrapper.getType() == ShapeType.BOX).collect(Collectors.toList());
+			list.removeAll(boxes);
+			boxes.forEach(box -> {
+				if(box.getType() == ShapeType.BOX){
+					list.add(box.convertTo(ShapeType.SHAPEBOX));
+				}
+			});
+			float scale = 0.5f;
+			for(PolygonWrapper wrapper : list){
+				wrapper.pos = wrapper.pos.scale(scale);
+				wrapper.off = wrapper.off.scale(scale);
+				if(wrapper instanceof ShapeboxWrapper){
+					ShapeboxWrapper sb = (ShapeboxWrapper)wrapper;
+					sb.size = sb.size.scale(scale);
+					sb.cor0 = sb.cor0.scale(scale);
+					sb.cor1 = sb.cor1.scale(scale);
+					sb.cor2 = sb.cor2.scale(scale);
+					sb.cor3 = sb.cor3.scale(scale);
+					sb.cor4 = sb.cor4.scale(scale);
+					sb.cor5 = sb.cor5.scale(scale);
+					sb.cor6 = sb.cor6.scale(scale);
+					sb.cor7 = sb.cor7.scale(scale);
+				}
+				if(wrapper instanceof CylinderWrapper){
+					//TODO
+				}
+				wrapper.recompile();
+			}
+		}
+	}
+
 }

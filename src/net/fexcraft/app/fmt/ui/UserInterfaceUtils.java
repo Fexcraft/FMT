@@ -112,6 +112,7 @@ public class UserInterfaceUtils {
                 okbutton.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> { if(CLICK == e.getAction()) dialog.close(); });
                 dialog.getContainer().add(label); dialog.getContainer().add(okbutton); dialog.show(event.getFrame());
 			}),
+			new MenuButton("toolbar.utils.rescale", () -> FMTB.MODEL.rescale()),
 			new MenuButton("toolbar.utils.controls", NOT_REIMPLEMENTED_YET)
 		));
 		frame.getContainer().add(new MenuEntry(2, Translator.translate("toolbar.editor"),

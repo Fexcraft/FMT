@@ -31,6 +31,7 @@ toolbar.utils.flip.up_down=Flip (Y) [U/D]
 toolbar.utils.flip.front_back=Flip (Z) [F/B]
 toolbar.utils.rectify=Rectify Model
 toolbar.utils.mirror_sel=Mir.Sel. (ONE-TIME)
+toolbar.utils.rescale=Re-Scale Model
 toolbar.utils.controls=Controls
 toolbar.editor=Editors
 toolbar.editor.hide_all=Hide All
