@@ -122,7 +122,7 @@ public class Texture {
 
 	public void clear(byte[] bytes){
 		if(bytes == null) bytes = new byte[]{ (byte)255, (byte)255, (byte)255, (byte)0 };
-		if(bytes.length != 4) bytes = new byte[] { bytes[0], bytes[1], bytes[2], (byte)0 };
+		if(bytes.length == 3) bytes = new byte[] { bytes[0], bytes[1], bytes[2], (byte)0 };
 		for(int x = 0; x < width[0]; x++){
 			for(int y = 0; y < height[0]; y++){
 				buffer.put(bytes[0]);
@@ -161,8 +161,13 @@ public class Texture {
 	}
 
 	public boolean equals(int x, int y, byte[] color){
+		return equals(x, y, color, true);
+	}
+
+	public boolean equals(int x, int y, byte[] color, boolean add){
 		byte[] local = get(x, y);
-		return (local[0] + 128) == color[0] && (local[1] + 128) == color[1] && (local[2] + 128) == color[2];
+		if(add) return (local[0] + 128) == color[0] && (local[1] + 128) == color[1] && (local[2] + 128) == color[2];
+		else return local[0] == color[0] && local[1] == color[1] && local[2] == color[2];
 	}
 
 }
