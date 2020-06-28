@@ -104,8 +104,8 @@ public class PorterManager {
 	public static ExImPorter getPorterFor(File file, boolean export){
 		for(ExImPorter porter : porters){
 			if((export && porter.isExporter()) || (!export && porter.isImporter())){
-				for(String ext : porter.getExtensions()){
-					if(file.getName().endsWith(ext)) return porter;
+				for(int i = 1; i < porter.getExtensions().length; i++){
+					if(file.getName().endsWith(porter.getExtensions()[i].replace("*", ""))) return porter;
 				}
 			}
 		}

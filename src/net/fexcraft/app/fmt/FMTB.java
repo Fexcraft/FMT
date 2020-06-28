@@ -206,6 +206,7 @@ public class FMTB {
 		Trees.initializeTrees(frame);
 		Editors.initializeEditors(frame);
 		UserInterfaceUtils.addToolbarButtons(frame);
+		PorterManager.load();
 		// TabContainer.addTest(frame);
 		boolean loadedold = false;
 		File file = new File(Settings.SETTINGS.get("last_file").getStringValue());
@@ -293,7 +294,6 @@ public class FMTB {
 		Settings.updateTheme();
 		ModelEditor.creators.refresh();
 		//
-		PorterManager.load();
 		HelperCollector.reload(loadedold);
 		SessionHandler.checkIfLoggedIn(true, true);
 		checkForUpdates();

@@ -531,6 +531,10 @@ public class SaveLoad {
 					else{
 						// TODO save/load the porter settings too, I guess.
 						ExImPorter porter = PorterManager.getPorterFor(file, false);
+						if(porter == null){
+							log("ERROR: Could not find importer for helper/preview '" + file.getPath() + "'!");
+							continue;
+						}
 						HashMap<String, Setting> map = new HashMap<>();
 						porter.getSettings(false).forEach(setting -> map.put(setting.getId(), setting));
 						helperpreview = HelperCollector.load(file, porter, map);
