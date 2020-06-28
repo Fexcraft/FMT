@@ -122,6 +122,7 @@ public class Texture {
 
 	public void clear(byte[] bytes){
 		if(bytes == null) bytes = new byte[]{ (byte)255, (byte)255, (byte)255, (byte)0 };
+		if(bytes.length != 4) bytes = new byte[] { bytes[0], bytes[1], bytes[2], (byte)0 };
 		for(int x = 0; x < width[0]; x++){
 			for(int y = 0; y < height[0]; y++){
 				buffer.put(bytes[0]);
