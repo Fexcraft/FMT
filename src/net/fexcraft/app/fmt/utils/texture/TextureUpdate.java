@@ -200,7 +200,12 @@ public class TextureUpdate extends TimerTask {
 						texture = TextureManager.createTexture("auto-pos-temp", sizex, sizey);
 						texture.setFile(new File("./temp/auto-pos-temp.png"));
 					}
+					//log("Clearing calculation texture...");
 					texture.clear(RGB.WHITE.toByteArray());
+					//log(texture.getWidth() + " " + texture.getHeight());
+					//log(texture.get(0, 0)[0] + " " + RGB.WHITE.toByteArray()[0]);
+					//log(texture.get(0, 0)[1] + " " + RGB.WHITE.toByteArray()[1]);
+					//log(texture.get(0, 0)[2] + " " + RGB.WHITE.toByteArray()[2]);
 				}
 				while(!HALT && last >= 0 && last < list.size()){
 					try{
@@ -289,7 +294,7 @@ public class TextureUpdate extends TimerTask {
 						return false;
 					}
 					//
-					if(!texture.equals(xr, yr, RGB.WHITE.toByteArray())){
+					if(!texture.equals(xr, yr, RGB.WHITE.toByteArray(), false)){
 						//log(xr + " " + yr + " || " + x + " " + y);
 						return false;
 					}
