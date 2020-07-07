@@ -2,8 +2,8 @@ package net.fexcraft.app.fmt.demo;
 
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.RGB;
-import net.fexcraft.lib.local_tmt.ModelRendererTurbo;
 import net.fexcraft.lib.tmt.ModelBase;
+import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 
 /**
@@ -1236,7 +1236,7 @@ public class ModelT1P extends ModelBase {
     	} bodyLines.render();*/
     }
 
-	private void render(ModelRendererTurbo[] model){
+	public void render(ModelRendererTurbo[] model){
 		for(ModelRendererTurbo turbo : model) turbo.render();
 	}
 

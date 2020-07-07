@@ -9,7 +9,7 @@ import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.texture.TextureManager;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.RGB;
-import net.fexcraft.lib.local_tmt.ModelRendererTurbo;
+import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public class MarkerWrapper extends PolygonWrapper {
 	

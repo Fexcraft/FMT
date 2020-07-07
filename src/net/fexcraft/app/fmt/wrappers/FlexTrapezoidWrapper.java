@@ -3,7 +3,7 @@ package net.fexcraft.app.fmt.wrappers;
 import com.google.gson.JsonObject;
 
 import net.fexcraft.lib.common.math.Vec3f;
-import net.fexcraft.lib.local_tmt.ModelRendererTurbo;
+import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public class FlexTrapezoidWrapper extends BoxWrapper {
 

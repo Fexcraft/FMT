@@ -15,7 +15,7 @@ import net.fexcraft.app.fmt.utils.texture.Texture;
 import net.fexcraft.app.fmt.utils.texture.TextureGroup;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
-import net.fexcraft.lib.local_tmt.ModelRendererTurbo;
+import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public abstract class PolygonWrapper {
 	

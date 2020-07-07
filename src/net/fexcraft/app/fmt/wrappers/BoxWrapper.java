@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import net.fexcraft.lib.common.math.Vec3f;
-import net.fexcraft.lib.local_tmt.ModelRendererTurbo;
+import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public class BoxWrapper extends PolygonWrapper {
 	
@@ -17,7 +17,7 @@ public class BoxWrapper extends PolygonWrapper {
 
 	protected ModelRendererTurbo newMRT(){
 		return new ModelRendererTurbo(null, textureX, textureY, compound.tx(getTurboList()), compound.ty(getTurboList()))
-			.addBox(off.xCoord, off.yCoord, off.zCoord, size.xCoord, size.yCoord, size.zCoord, 0, 1f, sides)
+			.addBox(off.xCoord, off.yCoord, off.zCoord, size.xCoord, size.yCoord, size.zCoord, 0f, 1f, sides)
 			.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
 			.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
 	}

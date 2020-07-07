@@ -80,10 +80,11 @@ import net.fexcraft.app.fmt.utils.texture.TextureUpdate;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.Static;
+import net.fexcraft.lib.common.math.AxisRotator;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Time;
 import net.fexcraft.lib.common.utils.HttpUtil;
-import net.fexcraft.lib.local_tmt.ModelRendererTurbo;
+import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -169,6 +170,7 @@ public class FMTB {
 		ggr = new GGR(0, 4, 4);
 		ggr.rotation.xCoord = 45;
 		//
+		AxisRotator.setDefImpl(Axis3DL.class);
 		NO_POLYGON_SELECTED = Translator.translate("error.no_polygon_selected");
 		NO_PREVIEW_SELECTED = Translator.translate("error.no_preview_selected");
 		Settings.THEME_CHANGE_LISTENER.add(bool -> {

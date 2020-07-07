@@ -2,7 +2,7 @@ package net.fexcraft.app.fmt.demo;
 
 import org.lwjgl.opengl.GL11;
 
-import net.fexcraft.lib.local_tmt.ModelRendererTurbo;
+import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public class ModelSteve {
 	

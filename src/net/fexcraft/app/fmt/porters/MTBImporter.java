@@ -28,7 +28,7 @@ import net.fexcraft.app.fmt.wrappers.TrapezoidWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.common.utils.ZipUtil;
-import net.fexcraft.lib.local_tmt.ModelRendererTurbo;
+import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 /**
  * @author EternalBlueFlame, FEX___96

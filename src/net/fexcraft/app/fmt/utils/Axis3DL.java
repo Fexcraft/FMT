@@ -3,10 +3,11 @@ package net.fexcraft.app.fmt.utils;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
+import net.fexcraft.lib.common.math.AxisRotator;
 import net.fexcraft.lib.common.math.Vec3f;
 
 /** Taken from FVTM and adjusted/shortened. "Lite" Version. */
-public class Axis3DL {
+public class Axis3DL implements AxisRotator {
 	
 	private Matrix4f matrix;
 	private float yaw, pitch, roll;

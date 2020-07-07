@@ -8,9 +8,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import net.fexcraft.lib.common.math.RGB;
-import net.fexcraft.lib.local_tmt.ColorIndexedVoxelBuilder;
-import net.fexcraft.lib.local_tmt.ModelRendererTurbo;
-import net.fexcraft.lib.local_tmt.VoxelBuilder;
+import net.fexcraft.lib.tmt.ColorIndexedVoxelBuilder;
+import net.fexcraft.lib.tmt.ModelRendererTurbo;
+import net.fexcraft.lib.tmt.VoxelBuilder;
 
 public class VoxelWrapper extends PolygonWrapper {
 	

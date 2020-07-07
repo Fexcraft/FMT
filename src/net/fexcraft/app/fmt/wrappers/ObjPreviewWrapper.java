@@ -8,7 +8,7 @@ import java.io.FileInputStream;
 import com.google.gson.JsonObject;
 
 import net.fexcraft.lib.common.utils.WavefrontObjUtil;
-import net.fexcraft.lib.local_tmt.ModelRendererTurbo;
+import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public class ObjPreviewWrapper extends PolygonWrapper {
 	
@@ -29,7 +29,7 @@ public class ObjPreviewWrapper extends PolygonWrapper {
 	
 	protected ModelRendererTurbo newMRT(){
 		try{
-			String str[][] = WavefrontObjUtil.findValues(new FileInputStream(source), "# FlipAxes:");
+			String str[][] = WavefrontObjUtil.findValues(new FileInputStream(source), null, "# FlipAxes:");
 			boolean bool = str.length == 0 ? false : Boolean.parseBoolean(str[0][0]);
 			return new ModelRendererTurbo(null, textureX, textureY, compound.tx(getTurboList()), compound.ty(getTurboList()))
 				.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
