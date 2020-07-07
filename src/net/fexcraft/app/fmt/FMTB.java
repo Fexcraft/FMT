@@ -310,10 +310,10 @@ public class FMTB {
 		long date = Time.getDate();
 		while((mid += Time.MIN_MS * 5) < date);
 		if(BACKUP_TIMER == null){
-			(BACKUP_TIMER = new Timer()).schedule(new Backups(), new Date(mid), Time.MIN_MS * 5);
+			(BACKUP_TIMER = new Timer("backup")).schedule(new Backups(), new Date(mid), Time.MIN_MS * 5);
 		}
 		if(TEX_UPDATE_TIMER == null){
-			(TEX_UPDATE_TIMER = new Timer()).schedule(new TextureUpdate(), Time.SEC_MS, Time.SEC_MS / 2);
+			(TEX_UPDATE_TIMER = new Timer("tex-update")).schedule(new TextureUpdate(), Time.SEC_MS, Time.SEC_MS / 2);
 		}
 		//
 		if(Settings.discordrpc()){
