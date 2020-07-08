@@ -93,7 +93,7 @@ import net.fexcraft.lib.tmt.ModelRendererTurbo;
  * */
 public class FMTB {
 
-	public static final String VERSION = "2.5.4";
+	public static final String VERSION = "2.6.0";
 	public static final String deftitle = "[FPS:%s] Fexcraft Modelling Toolbox " + VERSION + " - %s";
 	public static final String CLID = "587016218196574209";
 	//
