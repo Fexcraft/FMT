@@ -14,6 +14,8 @@ public class CylinderWrapper extends PolygonWrapper {
 	public Vec3f topoff = new Vec3f(0, 0, 0), toprot = new Vec3f(0, 0, 0);
 	public boolean[] bools = new boolean[4];
 	//
+	public static String[] faces = { "base", "top", "outer", "inner" };
+	//
 	public boolean radial;
 	public float seg_width, seg_height;
 	
@@ -229,6 +231,11 @@ public class CylinderWrapper extends PolygonWrapper {
 
 	public boolean usesTopRotation(){
 		return toprot.xCoord != 0f || toprot.yCoord != 0f || toprot.zCoord != 0f;
+	}
+
+	@Override
+	public String[] getTexturableFaceIDs(){
+		return faces;
 	}
 	
 }

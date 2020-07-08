@@ -31,6 +31,7 @@ import net.fexcraft.app.fmt.ui.editor.Editors;
 import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
 import net.fexcraft.app.fmt.ui.editor.GroupEditor;
 import net.fexcraft.app.fmt.ui.editor.ModelEditor;
+import net.fexcraft.app.fmt.ui.editor.UVEditor;
 import net.fexcraft.app.fmt.ui.field.Field;
 import net.fexcraft.app.fmt.ui.tree.SubTreeGroup;
 import net.fexcraft.app.fmt.ui.tree.TreeGroup;
@@ -400,6 +401,16 @@ public class GroupCompound {
 			GeneralEditor.cyl7_x.apply(poly.getFloat("cyl7", true, false, false));
 			GeneralEditor.cyl7_y.apply(poly.getFloat("cyl7", false, true, false));
 			GeneralEditor.cyl7_z.apply(poly.getFloat("cyl7", false, false, true));
+		}
+		UVEditor.polygon_name.getTextState().setText(poly == null ? FMTB.NO_POLYGON_SELECTED : poly.name == null ? "unnamed" : poly.name);
+		UVEditor.refreshEntries(poly);
+		if(poly == null){
+			UVEditor.texture_x.apply(0);
+			UVEditor.texture_y.apply(0);
+		}
+		else{
+			UVEditor.texture_x.apply(poly.getFloat("tex", true, false, false));
+			UVEditor.texture_y.apply(poly.getFloat("tex", false, true, false));
 		}
 		//
 		/*if(poly == null || !poly.getType().isTexRectB()){

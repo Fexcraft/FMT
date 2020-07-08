@@ -46,6 +46,7 @@ public class GeneralEditor extends EditorBase {
 	public static NumberField marker_scale, marker_angle;
 	public static BoolButton marker_biped;
 	public static SelectBox<String> polygon_group, polygon_type;
+	public static Button painttotex;
 	//
 	public static final String NEWGROUP = "> new group <";
 
@@ -125,7 +126,7 @@ public class GeneralEditor extends EditorBase {
 		polygon_type.addSelectBoxChangeSelectionEventListener(event -> {
 			FMTB.MODEL.changeTypeOfSelected(FMTB.MODEL.getSelected(), event.getNewValue().toString());
 		});
-		Button painttotex = new Button(translate("editor.general.attributes.painttotexture"), 3, 8 + (pass += 24), 290, 20);
+		painttotex = new Button(translate("editor.general.attributes.painttotexture"), 3, 8 + (pass += 24), 290, 20);
 		painttotex.getListenerMap().addListener(MouseClickEvent.class, event -> {
 			if(event.getAction() != CLICK) return;
 			ArrayList<PolygonWrapper> selection = FMTB.MODEL.getSelected();

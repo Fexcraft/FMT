@@ -10,6 +10,8 @@ public class BoxWrapper extends PolygonWrapper {
 	
 	public Vec3f size = new Vec3f(1, 1, 1);
 	public boolean[] sides = new boolean[6];
+	//
+	public static String[] faces = { "front", "back", "top", "down", "right", "left" };
 	
 	public BoxWrapper(GroupCompound compound){
 		super(compound);
@@ -152,6 +154,11 @@ public class BoxWrapper extends PolygonWrapper {
 		boolean result = false;
 		for(boolean bool : sides) if(bool) result = true;
 		return result;
+	}
+
+	@Override
+	public String[] getTexturableFaceIDs(){
+		return faces;
 	}
 	
 }

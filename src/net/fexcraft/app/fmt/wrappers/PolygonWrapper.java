@@ -21,6 +21,7 @@ public abstract class PolygonWrapper {
 	
 	protected static final ModelRendererTurbo rotmarker = new ModelRendererTurbo(null, 0, 0, 16, 16).addBox(-.25f, -.25f, -.25f, .5f, .5f, .5f).setTextured(false).setColor(Settings.getSelectedColor());
 	private static final ModelRendererTurbo something = new ModelRendererTurbo(null, 0, 0, 16, 16).setTextured(false);
+	protected static final String[] nofaces = { "none" };
 	//
 	public Vec3f pos = new Vec3f(), off = new Vec3f(), rot = new Vec3f();
 	public float[][][] texpos = new float[0][][];
@@ -371,5 +372,7 @@ public abstract class PolygonWrapper {
 		}
 		return 6;
 	}
+
+	public abstract String[] getTexturableFaceIDs();
 	
 }

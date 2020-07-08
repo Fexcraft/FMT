@@ -13,6 +13,7 @@ public class Editors {
 	public static ModelEditor model;
 	public static PreviewEditor preview;
 	public static TextureEditor texture;
+	public static UVEditor uv;
 	//
 	public static final ArrayList<EditorBase> editors = new ArrayList<>();
 
@@ -20,6 +21,7 @@ public class Editors {
 		frame.getContainer().add(general = new GeneralEditor());
 		frame.getContainer().add(group = new GroupEditor());
 		frame.getContainer().add(model = new ModelEditor());
+		frame.getContainer().add(uv = new UVEditor());
 		frame.getContainer().add(texture = new TextureEditor());
 		frame.getContainer().add(preview = new PreviewEditor());
 	}
@@ -35,6 +37,7 @@ public class Editors {
 			case "general": general.show(); break;
 			case "group": group.show(); break;
 			case "model": model.show(); break;
+			case "uv": case "texpos": uv.show(); break;
 			case "helper": case "preview":
 			case "helperpreview": preview.show(); break;
 			case "texture": texture.show(); break;

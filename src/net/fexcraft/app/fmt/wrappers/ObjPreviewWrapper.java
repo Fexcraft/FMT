@@ -64,5 +64,10 @@ public class ObjPreviewWrapper extends PolygonWrapper {
 	public PolygonWrapper convertTo(ShapeType type){
 		return type == this.getType() ? this.clone() : null;
 	}
+
+	@Override
+	public String[] getTexturableFaceIDs(){
+		return nofaces;
+	}
 	
 }

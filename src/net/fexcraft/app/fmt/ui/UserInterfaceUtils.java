@@ -120,6 +120,7 @@ public class UserInterfaceUtils {
 			new MenuButton("toolbar.editor.general", () -> Editors.show("general")),
 			new MenuButton("toolbar.editor.group", () -> Editors.show("group")),
 			new MenuButton("toolbar.editor.model", () -> Editors.show("model")),
+			new MenuButton("toolbar.editor.uv", () -> Editors.show("uv")),
 			new MenuButton("toolbar.editor.texture", () -> Editors.show("texture")),
 			new MenuButton("toolbar.editor.preview", () -> Editors.show("preview"))
 		));

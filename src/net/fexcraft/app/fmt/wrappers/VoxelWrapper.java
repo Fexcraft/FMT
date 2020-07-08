@@ -164,5 +164,10 @@ public class VoxelWrapper extends PolygonWrapper {
 	public PolygonWrapper convertTo(ShapeType type){
 		return type == ShapeType.VOXEL ? this.clone() : null;
 	}
+
+	@Override
+	public String[] getTexturableFaceIDs(){
+		return nofaces;
+	}
 	
 }

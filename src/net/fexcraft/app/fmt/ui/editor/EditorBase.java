@@ -99,6 +99,11 @@ public class EditorBase extends Panel {
 		if(com instanceof EditorWidget) widgets.add((EditorWidget)com);
 		return scrollable.getContainer().add(com);
 	}
+	
+	public boolean remSub(Component com){
+		if(com instanceof EditorWidget) widgets.remove((EditorWidget)com);
+		return scrollable.getContainer().remove(com);
+	}
 
 	protected void reOrderWidgets(){
 		float size = 0; for(EditorWidget widget : widgets) size += widget.getSize().y + 2;
