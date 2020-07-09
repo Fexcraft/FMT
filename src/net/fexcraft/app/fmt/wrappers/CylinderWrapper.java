@@ -14,7 +14,7 @@ public class CylinderWrapper extends PolygonWrapper {
 	public Vec3f topoff = new Vec3f(0, 0, 0), toprot = new Vec3f(0, 0, 0);
 	public boolean[] bools = new boolean[4];
 	//
-	public static String[] faces = { "base", "top", "outer", "inner" };
+	public static String[] faces = { "base", "top", "outer", "inner", "seg_side" };
 	//
 	public boolean radial;
 	public float seg_width, seg_height;
