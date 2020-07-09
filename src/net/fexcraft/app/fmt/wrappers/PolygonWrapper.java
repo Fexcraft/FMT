@@ -2,6 +2,8 @@ package net.fexcraft.app.fmt.wrappers;
 
 import static net.fexcraft.app.fmt.utils.Logging.log;
 
+import java.util.LinkedHashMap;
+
 import org.lwjgl.opengl.GL11;
 
 import com.google.gson.JsonObject;
@@ -35,6 +37,8 @@ public abstract class PolygonWrapper {
 	public boolean selected;
 	public byte[][] color;
 	public String name;
+	public LinkedHashMap<String, FaceUVType> uvtypes = new LinkedHashMap<>();
+	public LinkedHashMap<String, float[]> uvcoords = new LinkedHashMap<>();
 	//
 	public SubTreeGroup button;
 	
@@ -374,5 +378,13 @@ public abstract class PolygonWrapper {
 	}
 
 	public abstract String[] getTexturableFaceIDs();
+
+	public FaceUVType getFaceUVType(String side){
+		return FaceUVType.validate(uvtypes.get(side));
+	}
+
+	public float[] getFaceUVCoords(String side){
+		return uvcoords.get(side);
+	}
 	
 }

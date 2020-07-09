@@ -8,6 +8,7 @@ import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.SelectBox;
 import org.liquidengine.legui.component.event.selectbox.SelectBoxChangeSelectionEvent;
 import org.liquidengine.legui.event.MouseClickEvent;
+import org.liquidengine.legui.style.font.FontRegistry;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.field.NumberField;
@@ -25,6 +26,7 @@ public class UVEditor extends EditorBase {
 	private static ShapeType last;
 	public static ArrayList<Component> tempcomp = new ArrayList<>();
 	public static EditorWidget tempone;
+	private static String selface;
 
 	public UVEditor(){
 		super();
@@ -58,21 +60,28 @@ public class UVEditor extends EditorBase {
 		this.addSub(general);
 		pass = -20;
 		//
-		EditorWidget fields = new EditorWidget(this, translate("editor.uv.fields"), 0, 0, 0, 0);
-		fields.setSize(296, pass + 52 + 4);
-		this.addSub(fields);
-		tempone = fields;
+		tempone = new EditorWidget(this, translate("editor.uv.fields"), 0, 0, 0, 0);
+		tempone.setSize(296, pass + 52 + 4);
+		this.addSub(tempone);
 		//pass = -20;
 		//
 		reOrderWidgets();
 	}
 
 	private void updateFace(SelectBoxChangeSelectionEvent<String> event){
-		//TODO
+		selface = event.getNewValue();
+		refreshWidget(FMTB.MODEL.getFirstSelection());
 	}
 
 	private void updateType(SelectBoxChangeSelectionEvent<String> event){
-		//TODO
+		ArrayList<PolygonWrapper> polis = FMTB.MODEL.getSelected();
+		FaceUVType type = FaceUVType.validate(event.getNewValue());
+		polis.forEach(poly -> {
+			poly.uvtypes.put(selface, type);
+			if(type.arraylength == 0) poly.uvcoords.remove(selface);
+			else poly.uvcoords.put(selface, new float[type.arraylength]);
+		});
+		refreshWidget(FMTB.MODEL.getFirstSelection());
 	}
 
 	public static void refreshEntries(PolygonWrapper selected){
@@ -81,11 +90,13 @@ public class UVEditor extends EditorBase {
 		if(selected == null){
 			uv_face.addElement(FMTB.NO_POLYGON_SELECTED);
 			last = null;
+			selface = null;
 		}
 		else{
 			for(String face : selected.getTexturableFaceIDs()){
 				uv_face.addElement(face);
 			}
+			selface = selected.getTexturableFaceIDs()[0];
 			last = selected.getType();
 		}
 		refreshWidget(selected);
@@ -93,8 +104,36 @@ public class UVEditor extends EditorBase {
 
 	private static void refreshWidget(PolygonWrapper poly){
 		int pass = -20;
+		tempone.getContainer().clearChildComponents();
 		//
-		//TODO
+		Label title = null, desc = null;
+		if(poly != null){
+			switch(poly.getFaceUVType(selface)){
+				case AUTOMATIC:
+					tempone.getContainer().add(title = new Label(translate("editor.uv.fields.automatic0"), 3, pass += 24, 290, 20));
+					tempone.getContainer().add(desc = new Label(translate("editor.uv.fields.automatic1"), 3, pass += 24, 290, 20));
+					break;
+				case OFFSET_ONLY:
+					tempone.getContainer().add(title = new Label(translate("editor.uv.fields.offset_only0"), 3, pass += 24, 290, 20));
+					tempone.getContainer().add(desc = new Label(translate("editor.uv.fields.offset_only1"), 3, pass += 24, 290, 20));
+					break;
+				case OFFSET_ENDS:
+					tempone.getContainer().add(title = new Label(translate("editor.uv.fields.offset_ends0"), 3, pass += 24, 290, 20));
+					tempone.getContainer().add(desc = new Label(translate("editor.uv.fields.offset_ends1"), 3, pass += 24, 290, 20));
+					break;
+				case OFFSET_FULL:
+					tempone.getContainer().add(title = new Label(translate("editor.uv.fields.offset_full0"), 3, pass += 24, 290, 20));
+					tempone.getContainer().add(desc = new Label(translate("editor.uv.fields.offset_full1"), 3, pass += 24, 290, 20));
+					break;
+				default:
+					break;
+			}
+		}
+		else{
+			tempone.getContainer().add(title = new Label(FMTB.NO_POLYGON_SELECTED, 3, pass += 24, 290, 20));
+		}
+		title.getStyle().setFont(FontRegistry.ROBOTO_BOLD);
+		if(desc != null) desc.getStyle().setFont(FontRegistry.ROBOTO_BOLD);
 		//
 		tempone.setSize(296, pass + 52 + 4);
 		Editors.uv.reOrderWidgets();
