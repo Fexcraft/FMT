@@ -22,7 +22,15 @@ public class UVEditor extends EditorBase {
 	public static TextField polygon_name;
 	public static NumberField texture_x, texture_y;
 	public static SelectBox<String> uv_face, uv_type;
-	private static Button openview;
+	//
+	public static NumberField oo_tex_x, oo_tex_y;
+	public static Button oo_reset;
+	public static NumberField oe_tex_sx, oe_tex_sy, oe_tex_ex, oe_tex_ey;
+	public static Button oes_reset, oee_reset;
+	public static NumberField of_tex_0x, of_tex_0y, of_tex_1x, of_tex_1y, of_tex_2x, of_tex_2y, of_tex_3x, of_tex_3y;
+	public static Button of0_reset, of1_reset, of2_reset, of3_reset;
+	//
+	public static Button openview;
 	private static ShapeType last;
 	public static ArrayList<Component> tempcomp = new ArrayList<>();
 	public static EditorWidget tempone;
@@ -85,7 +93,10 @@ public class UVEditor extends EditorBase {
 	}
 
 	public static void refreshEntries(PolygonWrapper selected){
-		if((last == null && selected == null) || (selected != null && last == selected.getType())) return;
+		if((last == null && selected == null) || (selected != null && last == selected.getType())){
+			refreshWidgetValues(selected);
+			return;
+		}
 		while(!uv_face.getElements().isEmpty()) uv_face.removeElement(0);
 		if(selected == null){
 			uv_face.addElement(FMTB.NO_POLYGON_SELECTED);
@@ -99,6 +110,7 @@ public class UVEditor extends EditorBase {
 			selface = selected.getTexturableFaceIDs()[0];
 			last = selected.getType();
 		}
+		uv_type.setSelected((selface == null ? FaceUVType.AUTOMATIC : selected.getFaceUVType(selface)).name().toLowerCase(), true);
 		refreshWidget(selected);
 	}
 
@@ -114,14 +126,52 @@ public class UVEditor extends EditorBase {
 					tempone.getContainer().add(desc = new Label(translate("editor.uv.fields.automatic1"), 3, pass += 24, 290, 20));
 					break;
 				case OFFSET_ONLY:
+					tempone.getContainer().add(new Label(translate("editor.uv.fields.offset_only"), 3, pass += 24, 290, 20));
+					tempone.getContainer().add(oo_tex_x = new NumberField(4, pass += 24, 90, 20).setup("oo_tex_x", -8192, 8192, true));
+					tempone.getContainer().add(oo_tex_y = new NumberField(102, pass, 90, 20).setup("oo_tex_y", -8192, 8192, true));
+					tempone.getContainer().add(oo_reset = new Button(translate("editor.uv.fields.oo_reset"), 200, pass, 90, 20));
+					//
+					pass += 20;
 					tempone.getContainer().add(title = new Label(translate("editor.uv.fields.offset_only0"), 3, pass += 24, 290, 20));
 					tempone.getContainer().add(desc = new Label(translate("editor.uv.fields.offset_only1"), 3, pass += 24, 290, 20));
 					break;
 				case OFFSET_ENDS:
+					tempone.getContainer().add(new Label(translate("editor.uv.fields.offset_ends_0"), 3, pass += 24, 290, 20));
+					tempone.getContainer().add(oe_tex_sx = new NumberField(4, pass += 24, 90, 20).setup("oe_tex_sx", -8192, 8192, true));
+					tempone.getContainer().add(oe_tex_sy = new NumberField(102, pass, 90, 20).setup("oe_tex_sy", -8192, 8192, true));
+					tempone.getContainer().add(oes_reset = new Button(translate("editor.uv.fields.oes_reset"), 200, pass, 90, 20));
+					//
+					tempone.getContainer().add(new Label(translate("editor.uv.fields.offset_ends_1"), 3, pass += 24, 290, 20));
+					tempone.getContainer().add(oe_tex_ex = new NumberField(4, pass += 24, 90, 20).setup("oe_tex_ex", -8192, 8192, true));
+					tempone.getContainer().add(oe_tex_ey = new NumberField(102, pass, 90, 20).setup("oe_tex_ey", -8192, 8192, true));
+					tempone.getContainer().add(oee_reset = new Button(translate("editor.uv.fields.oee_reset"), 200, pass, 90, 20));
+					//
+					pass += 20;
 					tempone.getContainer().add(title = new Label(translate("editor.uv.fields.offset_ends0"), 3, pass += 24, 290, 20));
 					tempone.getContainer().add(desc = new Label(translate("editor.uv.fields.offset_ends1"), 3, pass += 24, 290, 20));
 					break;
 				case OFFSET_FULL:
+					tempone.getContainer().add(new Label(translate("editor.uv.fields.offset_full_0"), 3, pass += 24, 290, 20));
+					tempone.getContainer().add(of_tex_0x = new NumberField(4, pass += 24, 90, 20).setup("of_tex_0x", -8192, 8192, true));
+					tempone.getContainer().add(of_tex_0y = new NumberField(102, pass, 90, 20).setup("of_tex_0y", -8192, 8192, true));
+					tempone.getContainer().add(of0_reset = new Button(translate("editor.uv.fields.of0_reset"), 200, pass, 90, 20));
+					//
+					tempone.getContainer().add(new Label(translate("editor.uv.fields.offset_full_1"), 3, pass += 24, 290, 20));
+					tempone.getContainer().add(of_tex_1x = new NumberField(4, pass += 24, 90, 20).setup("of_tex_1x", -8192, 8192, true));
+					tempone.getContainer().add(of_tex_1y = new NumberField(102, pass, 90, 20).setup("of_tex_1y", -8192, 8192, true));
+					tempone.getContainer().add(of1_reset = new Button(translate("editor.uv.fields.of1_reset"), 200, pass, 90, 20));
+					//
+					tempone.getContainer().add(new Label(translate("editor.uv.fields.offset_full_2"), 3, pass += 24, 290, 20));
+					tempone.getContainer().add(of_tex_2x = new NumberField(4, pass += 24, 90, 20).setup("of_tex_2x", -8192, 8192, true));
+					tempone.getContainer().add(of_tex_2y = new NumberField(102, pass, 90, 20).setup("of_tex_2y", -8192, 8192, true));
+					tempone.getContainer().add(of2_reset = new Button(translate("editor.uv.fields.of2_reset"), 200, pass, 90, 20));
+					//
+					tempone.getContainer().add(new Label(translate("editor.uv.fields.offset_full_3"), 3, pass += 24, 290, 20));
+					tempone.getContainer().add(of_tex_3x = new NumberField(4, pass += 24, 90, 20).setup("of_tex_3x", -8192, 8192, true));
+					tempone.getContainer().add(of_tex_3y = new NumberField(102, pass, 90, 20).setup("of_tex_3y", -8192, 8192, true));
+					tempone.getContainer().add(of3_reset = new Button(translate("editor.uv.fields.of3_reset"), 200, pass, 90, 20));
+					//
+					pass += 20;
 					tempone.getContainer().add(title = new Label(translate("editor.uv.fields.offset_full0"), 3, pass += 24, 290, 20));
 					tempone.getContainer().add(desc = new Label(translate("editor.uv.fields.offset_full1"), 3, pass += 24, 290, 20));
 					break;
@@ -137,6 +187,10 @@ public class UVEditor extends EditorBase {
 		//
 		tempone.setSize(296, pass + 52 + 4);
 		Editors.uv.reOrderWidgets();
+	}
+
+	private static void refreshWidgetValues(PolygonWrapper selected){
+		// TODO Auto-generated method stub
 		
 	}
 
