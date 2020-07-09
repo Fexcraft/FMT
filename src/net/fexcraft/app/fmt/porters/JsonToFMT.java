@@ -251,6 +251,9 @@ public class JsonToFMT {
 		polygon.pos.zCoord = get(posz, obj, def);
 		polygon.name = obj.has("name") ? obj.get("name").getAsString() : null;
 		polygon.visible = obj.has("visible") ? obj.get("visible").getAsBoolean() : true;
+		if(obj.has("cuv")){
+			polygon.parseCustomUV(obj.get("cuv").getAsJsonObject());
+		}
 		polygon.button.updateColor();
 		return polygon;
 	}

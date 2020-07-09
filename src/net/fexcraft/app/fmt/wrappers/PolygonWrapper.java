@@ -3,9 +3,12 @@ package net.fexcraft.app.fmt.wrappers;
 import static net.fexcraft.app.fmt.utils.Logging.log;
 
 import java.util.LinkedHashMap;
+import java.util.Map.Entry;
 
 import org.lwjgl.opengl.GL11;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.FMTB;
@@ -189,11 +192,44 @@ public abstract class PolygonWrapper {
 		if(rot.zCoord != 0f) obj.addProperty("rot_z", rot.zCoord);
 		if(mirror != false) obj.addProperty("mirror", true);
 		if(flip != false) obj.addProperty("flip", true);
+		if(!uvcoords.isEmpty()){
+			JsonObject jsn = new JsonObject();
+			for(Entry<String, float[]> entry : uvcoords.entrySet()){
+				FaceUVType type = getFaceUVType(entry.getKey());
+				if(type != FaceUVType.AUTOMATIC){
+					JsonArray array = new JsonArray();
+					array.add(type.name().toLowerCase().toString());
+					for(int i = 0; i < entry.getValue().length; i++){
+						array.add(entry.getValue()[i]);
+					}
+					jsn.add(entry.getKey(), array);
+				}
+			}
+			obj.add("cuv", jsn);
+		}
 		//temporary data
 		if(!export){
 			obj.addProperty("visible", visible);
 		}
 		return populateJson(obj, export);
+	}
+
+	public void parseCustomUV(JsonObject obj){
+		uvtypes.clear();
+		uvcoords.clear();
+		for(Entry<String, JsonElement> entry : obj.entrySet()){
+			if(!isValidTexturableFaceIDs(entry.getKey())) continue;
+			JsonArray array = entry.getValue().getAsJsonArray();
+			FaceUVType type = FaceUVType.validate(array.get(0).getAsString());
+			if(type == FaceUVType.AUTOMATIC) continue;
+			uvtypes.put(entry.getKey(), type);
+			float[] arr = new float[type.arraylength];
+			for(int i = 0; i < type.arraylength; i++){
+				if(i + 1 >= array.size()) break;
+				arr[i] = array.get(i + 1).getAsFloat();
+			}
+			uvcoords.put(entry.getKey(), arr);
+		}
 	}
 
 	protected abstract JsonObject populateJson(JsonObject obj, boolean export);
@@ -448,6 +484,14 @@ public abstract class PolygonWrapper {
 	}
 
 	public abstract String[] getTexturableFaceIDs();
+
+	public boolean  isValidTexturableFaceIDs(String str){
+		String[] arr = this.getTexturableFaceIDs();
+		for(String string : arr){
+			if(string.equals(str)) return true;
+		}
+		return false;
+	}
 
 	public FaceUVType getFaceUVType(String side){
 		return side == null ? FaceUVType.AUTOMATIC : FaceUVType.validate(uvtypes.get(side));
