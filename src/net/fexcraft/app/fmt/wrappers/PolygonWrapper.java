@@ -10,6 +10,7 @@ import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
+import net.fexcraft.app.fmt.ui.editor.UVEditor;
 import net.fexcraft.app.fmt.ui.tree.SubTreeGroup;
 import net.fexcraft.app.fmt.ui.tree.Trees;
 import net.fexcraft.app.fmt.utils.Settings;
@@ -90,6 +91,26 @@ public abstract class PolygonWrapper {
 			case "off": return x ? off.xCoord : y ? off.yCoord : z ? off.zCoord : 0;
 			case "rot": return x ? rot.xCoord : y ? rot.yCoord : z ? rot.zCoord : 0;
 		}
+		if(id.startsWith("o")){
+			if(id.startsWith("oo_")){
+				float[] arr = getFaceUVCoords(UVEditor.getSelection());
+				if(arr != null) return arr[x ? 0 : 1];
+			}
+			else if(id.startsWith("oe_")){
+				float[] arr = getFaceUVCoords(UVEditor.getSelection());
+				if(arr != null){
+					boolean end = id.endsWith("e");
+					return arr[end ? x ? 2 : 3 : x ? 0 : 1];
+				}
+			}
+			else if(id.startsWith("of_")){
+				float[] arr = getFaceUVCoords(UVEditor.getSelection());
+				if(arr != null){
+					int index = Integer.parseInt(id.substring(id.length() - 1));
+					return arr[index * 2 + (x ? 0 : 1)];
+				}
+			}
+		}
 		return 0;
 	}
 
@@ -115,8 +136,34 @@ public abstract class PolygonWrapper {
 				if(y){ rot.yCoord = value; return true; }
 				if(z){ rot.zCoord = value; return true; }
 			}
-			default: return false;
+			default: break;
 		}
+		if(id.startsWith("o")){
+			if(id.startsWith("oo_")){
+				float[] arr = getFaceUVCoords(UVEditor.getSelection());
+				if(arr != null){
+					arr[x ? 0 : 1] = value;
+					return true;
+				}
+			}
+			else if(id.startsWith("oe_")){
+				float[] arr = getFaceUVCoords(UVEditor.getSelection());
+				if(arr != null){
+					boolean end = id.endsWith("e");
+					arr[end ? x ? 2 : 3 : x ? 0 : 1] = value;
+					return true;
+				}
+			}
+			else if(id.startsWith("of_")){
+				float[] arr = getFaceUVCoords(UVEditor.getSelection());
+				if(arr != null){
+					int index = Integer.parseInt(id.substring(id.length() - 1));
+					arr[index * 2 + (x ? 0 : 1)] = value;
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	public String name(){
@@ -230,6 +277,29 @@ public abstract class PolygonWrapper {
 		}
 		if(id.startsWith("texpos") && this.getType().isTexRect()){ bool = this.setFloat(id, x, y, z, value); }
 		if(id.startsWith("marker") && this.getType().isMarker()){ bool = this.setFloat(id, x, y, z, value); }
+		if(id.startsWith("oo_")){
+			float[] arr = getFaceUVCoords(UVEditor.getSelection());
+			if(arr != null){
+				arr[x ? 0 : 1] = value;
+				bool = true;
+			}
+		}
+		else if(id.startsWith("oe_")){
+			float[] arr = getFaceUVCoords(UVEditor.getSelection());
+			if(arr != null){
+				boolean end = id.endsWith("e");
+				arr[end ? x ? 2 : 3 : x ? 0 : 1] = value;
+				bool = true;
+			}
+		}
+		else if(id.startsWith("of_")){
+			float[] arr = getFaceUVCoords(UVEditor.getSelection());
+			if(arr != null){
+				int index = Integer.parseInt(id.substring(id.length() - 1));
+				arr[index * 2 + (x ? 0 : 1)] = value;
+				bool = true;
+			}
+		}
 		this.recompile(); return bool;
 	}
 
@@ -380,7 +450,7 @@ public abstract class PolygonWrapper {
 	public abstract String[] getTexturableFaceIDs();
 
 	public FaceUVType getFaceUVType(String side){
-		return FaceUVType.validate(uvtypes.get(side));
+		return side == null ? FaceUVType.AUTOMATIC : FaceUVType.validate(uvtypes.get(side));
 	}
 
 	public float[] getFaceUVCoords(String side){

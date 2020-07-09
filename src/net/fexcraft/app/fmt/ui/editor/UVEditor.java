@@ -32,6 +32,7 @@ public class UVEditor extends EditorBase {
 	//
 	public static Button openview;
 	private static ShapeType last;
+	private static FaceUVType lasttype = FaceUVType.AUTOMATIC;
 	public static ArrayList<Component> tempcomp = new ArrayList<>();
 	public static EditorWidget tempone;
 	private static String selface;
@@ -88,12 +89,13 @@ public class UVEditor extends EditorBase {
 			poly.uvtypes.put(selface, type);
 			if(type.arraylength == 0) poly.uvcoords.remove(selface);
 			else poly.uvcoords.put(selface, new float[type.arraylength]);
+			//TODO gen def values based on auto mode
 		});
 		refreshWidget(FMTB.MODEL.getFirstSelection());
 	}
 
 	public static void refreshEntries(PolygonWrapper selected){
-		if((last == null && selected == null) || (selected != null && last == selected.getType())){
+		if((last == null && selected == null) || (selected != null && last == selected.getType() && lasttype == selected.getFaceUVType(selface))){
 			refreshWidgetValues(selected);
 			return;
 		}
@@ -102,6 +104,7 @@ public class UVEditor extends EditorBase {
 			uv_face.addElement(FMTB.NO_POLYGON_SELECTED);
 			last = null;
 			selface = null;
+			lasttype = FaceUVType.AUTOMATIC;
 		}
 		else{
 			for(String face : selected.getTexturableFaceIDs()){
@@ -109,9 +112,11 @@ public class UVEditor extends EditorBase {
 			}
 			selface = selected.getTexturableFaceIDs()[0];
 			last = selected.getType();
+			lasttype = selface == null ? FaceUVType.AUTOMATIC : selected.getFaceUVType(selface);
 		}
 		uv_type.setSelected((selface == null ? FaceUVType.AUTOMATIC : selected.getFaceUVType(selface)).name().toLowerCase(), true);
 		refreshWidget(selected);
+		refreshWidgetValues(selected);
 	}
 
 	private static void refreshWidget(PolygonWrapper poly){
@@ -189,9 +194,36 @@ public class UVEditor extends EditorBase {
 		Editors.uv.reOrderWidgets();
 	}
 
-	private static void refreshWidgetValues(PolygonWrapper selected){
-		// TODO Auto-generated method stub
-		
+	private static void refreshWidgetValues(PolygonWrapper poly){
+		float[] vals = poly == null ? new float[lasttype.arraylength] : poly.getFaceUVCoords(selface);
+		switch(poly == null ? lasttype : poly.getFaceUVType(selface)){
+			case AUTOMATIC: return;
+			case OFFSET_ONLY:
+				oo_tex_x.apply(vals[0]);
+				oo_tex_y.apply(vals[1]);
+				break;
+			case OFFSET_ENDS:
+				oe_tex_sx.apply(vals[0]);
+				oe_tex_sy.apply(vals[1]);
+				oe_tex_ex.apply(vals[2]);
+				oe_tex_ey.apply(vals[3]);
+				break;
+			case OFFSET_FULL:
+				of_tex_0x.apply(vals[0]);
+				of_tex_0y.apply(vals[1]);
+				of_tex_1x.apply(vals[2]);
+				of_tex_1y.apply(vals[3]);
+				of_tex_2x.apply(vals[4]);
+				of_tex_2y.apply(vals[5]);
+				of_tex_3x.apply(vals[6]);
+				of_tex_3y.apply(vals[7]);
+				break;
+			default: return;
+		}
+	}
+	
+	public static String getSelection(){
+		return selface;
 	}
 
 }
