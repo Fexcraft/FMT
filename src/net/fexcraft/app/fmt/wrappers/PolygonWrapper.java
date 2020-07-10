@@ -485,12 +485,20 @@ public abstract class PolygonWrapper {
 
 	public abstract String[] getTexturableFaceIDs();
 
-	public boolean  isValidTexturableFaceIDs(String str){
+	public boolean isValidTexturableFaceIDs(String str){
 		String[] arr = this.getTexturableFaceIDs();
 		for(String string : arr){
 			if(string.equals(str)) return true;
 		}
 		return false;
+	}
+
+	public Integer getTexturableFaceIndex(String str){
+		String[] arr = this.getTexturableFaceIDs();
+		for(int i = 0; i < arr.length; i++){
+			if(arr[i].equals(str)) return i;
+		}
+		return null;
 	}
 
 	public FaceUVType getFaceUVType(String side){
@@ -499,6 +507,26 @@ public abstract class PolygonWrapper {
 
 	public float[] getFaceUVCoords(String side){
 		return uvcoords.get(side);
+	}
+	
+	public float[] getDefAutoFaceUVCoords(String side){
+		Integer index = getTexturableFaceIndex(side);
+		FaceUVType type = getFaceUVType(side);
+		if(index == null) return new float[type.arraylength];
+		float[][][] arr = texpos == null ? newTexturePosition() : texpos;
+		switch(type){
+			case OFFSET_ONLY:
+				return new float[]{ arr[index][0][0], arr[index][0][1] };
+			case OFFSET_ENDS:
+				return new float[]{ arr[index][0][0], arr[index][0][1], arr[index][1][0], arr[index][1][1] };
+			case OFFSET_FULL:
+				//TODO
+				break;
+			case AUTOMATIC:
+			default:
+				return new float[0];
+		}
+		return null;
 	}
 	
 }

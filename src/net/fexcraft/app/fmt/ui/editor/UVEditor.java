@@ -88,8 +88,7 @@ public class UVEditor extends EditorBase {
 		polis.forEach(poly -> {
 			poly.uvtypes.put(selface, type);
 			if(type.arraylength == 0) poly.uvcoords.remove(selface);
-			else poly.uvcoords.put(selface, new float[type.arraylength]);
-			//TODO gen def values based on auto mode
+			else poly.uvcoords.put(selface, poly.getDefAutoFaceUVCoords(selface));
 		});
 		refreshWidget(FMTB.MODEL.getFirstSelection());
 	}
@@ -116,7 +115,6 @@ public class UVEditor extends EditorBase {
 		}
 		uv_type.setSelected((selface == null ? FaceUVType.AUTOMATIC : selected.getFaceUVType(selface)).name().toLowerCase(), true);
 		refreshWidget(selected);
-		refreshWidgetValues(selected);
 	}
 
 	private static void refreshWidget(PolygonWrapper poly){
@@ -192,6 +190,7 @@ public class UVEditor extends EditorBase {
 		//
 		tempone.setSize(296, pass + 52 + 4);
 		Editors.uv.reOrderWidgets();
+		refreshWidgetValues(poly);
 	}
 
 	private static void refreshWidgetValues(PolygonWrapper poly){
