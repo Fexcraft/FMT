@@ -8,6 +8,7 @@ import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.SelectBox;
 import org.liquidengine.legui.component.event.selectbox.SelectBoxChangeSelectionEvent;
 import org.liquidengine.legui.event.MouseClickEvent;
+import org.liquidengine.legui.event.MouseClickEvent.MouseClickAction;
 import org.liquidengine.legui.style.font.FontRegistry;
 
 import net.fexcraft.app.fmt.FMTB;
@@ -139,6 +140,11 @@ public class UVEditor extends EditorBase {
 					tempone.getContainer().add(oo_tex_x = new NumberField(4, pass += 24, 90, 20).setup("oo_tex_x", -8192, 8192, true));
 					tempone.getContainer().add(oo_tex_y = new NumberField(102, pass, 90, 20).setup("oo_tex_y", -8192, 8192, true));
 					tempone.getContainer().add(oo_reset = new Button(translate("editor.uv.fields.oo_reset"), 200, pass, 90, 20));
+					oo_reset.getListenerMap().addListener(MouseClickEvent.class, listener -> {
+						if(listener.getAction() == MouseClickAction.CLICK){
+							resetFields(FaceUVType.OFFSET_ONLY, 0);
+						}
+					});
 					//
 					pass += 20;
 					tempone.getContainer().add(title = new Label(translate("editor.uv.fields.offset_only0"), 3, pass += 24, 290, 20));
@@ -149,11 +155,21 @@ public class UVEditor extends EditorBase {
 					tempone.getContainer().add(oe_tex_sx = new NumberField(4, pass += 24, 90, 20).setup("oe_tex_sx", -8192, 8192, true));
 					tempone.getContainer().add(oe_tex_sy = new NumberField(102, pass, 90, 20).setup("oe_tex_sy", -8192, 8192, true));
 					tempone.getContainer().add(oes_reset = new Button(translate("editor.uv.fields.oes_reset"), 200, pass, 90, 20));
+					oes_reset.getListenerMap().addListener(MouseClickEvent.class, listener -> {
+						if(listener.getAction() == MouseClickAction.CLICK){
+							resetFields(FaceUVType.OFFSET_ENDS, 0);
+						}
+					});
 					//
 					tempone.getContainer().add(new Label(translate("editor.uv.fields.offset_ends_1"), 3, pass += 24, 290, 20));
 					tempone.getContainer().add(oe_tex_ex = new NumberField(4, pass += 24, 90, 20).setup("oe_tex_ex", -8192, 8192, true));
 					tempone.getContainer().add(oe_tex_ey = new NumberField(102, pass, 90, 20).setup("oe_tex_ey", -8192, 8192, true));
 					tempone.getContainer().add(oee_reset = new Button(translate("editor.uv.fields.oee_reset"), 200, pass, 90, 20));
+					oee_reset.getListenerMap().addListener(MouseClickEvent.class, listener -> {
+						if(listener.getAction() == MouseClickAction.CLICK){
+							resetFields(FaceUVType.OFFSET_ENDS, 1);
+						}
+					});
 					//
 					pass += 20;
 					tempone.getContainer().add(title = new Label(translate("editor.uv.fields.offset_ends0"), 3, pass += 24, 290, 20));
@@ -164,21 +180,41 @@ public class UVEditor extends EditorBase {
 					tempone.getContainer().add(of_tex_0x = new NumberField(4, pass += 24, 90, 20).setup("of_tex_0x", -8192, 8192, true));
 					tempone.getContainer().add(of_tex_0y = new NumberField(102, pass, 90, 20).setup("of_tex_0y", -8192, 8192, true));
 					tempone.getContainer().add(of0_reset = new Button(translate("editor.uv.fields.of0_reset"), 200, pass, 90, 20));
+					of0_reset.getListenerMap().addListener(MouseClickEvent.class, listener -> {
+						if(listener.getAction() == MouseClickAction.CLICK){
+							resetFields(FaceUVType.OFFSET_FULL, 0);
+						}
+					});
 					//
 					tempone.getContainer().add(new Label(translate("editor.uv.fields.offset_full_1"), 3, pass += 24, 290, 20));
 					tempone.getContainer().add(of_tex_1x = new NumberField(4, pass += 24, 90, 20).setup("of_tex_1x", -8192, 8192, true));
 					tempone.getContainer().add(of_tex_1y = new NumberField(102, pass, 90, 20).setup("of_tex_1y", -8192, 8192, true));
 					tempone.getContainer().add(of1_reset = new Button(translate("editor.uv.fields.of1_reset"), 200, pass, 90, 20));
+					of1_reset.getListenerMap().addListener(MouseClickEvent.class, listener -> {
+						if(listener.getAction() == MouseClickAction.CLICK){
+							resetFields(FaceUVType.OFFSET_FULL, 1);
+						}
+					});
 					//
 					tempone.getContainer().add(new Label(translate("editor.uv.fields.offset_full_2"), 3, pass += 24, 290, 20));
 					tempone.getContainer().add(of_tex_2x = new NumberField(4, pass += 24, 90, 20).setup("of_tex_2x", -8192, 8192, true));
 					tempone.getContainer().add(of_tex_2y = new NumberField(102, pass, 90, 20).setup("of_tex_2y", -8192, 8192, true));
 					tempone.getContainer().add(of2_reset = new Button(translate("editor.uv.fields.of2_reset"), 200, pass, 90, 20));
+					of2_reset.getListenerMap().addListener(MouseClickEvent.class, listener -> {
+						if(listener.getAction() == MouseClickAction.CLICK){
+							resetFields(FaceUVType.OFFSET_FULL, 2);
+						}
+					});
 					//
 					tempone.getContainer().add(new Label(translate("editor.uv.fields.offset_full_3"), 3, pass += 24, 290, 20));
 					tempone.getContainer().add(of_tex_3x = new NumberField(4, pass += 24, 90, 20).setup("of_tex_3x", -8192, 8192, true));
 					tempone.getContainer().add(of_tex_3y = new NumberField(102, pass, 90, 20).setup("of_tex_3y", -8192, 8192, true));
 					tempone.getContainer().add(of3_reset = new Button(translate("editor.uv.fields.of3_reset"), 200, pass, 90, 20));
+					of3_reset.getListenerMap().addListener(MouseClickEvent.class, listener -> {
+						if(listener.getAction() == MouseClickAction.CLICK){
+							resetFields(FaceUVType.OFFSET_FULL, 3);
+						}
+					});
 					//
 					pass += 20;
 					tempone.getContainer().add(title = new Label(translate("editor.uv.fields.offset_full0"), 3, pass += 24, 290, 20));
@@ -223,6 +259,50 @@ public class UVEditor extends EditorBase {
 				of_tex_3x.apply(vals[6]);
 				of_tex_3y.apply(vals[7]);
 				break;
+			default: return;
+		}
+	}
+
+	private static void resetFields(FaceUVType type, int row){
+		float[] vals = last == null ? new float[lasttype.arraylength] : last.getDefAutoFaceUVCoords(selface);
+		switch(last == null ? lasttype : last.getFaceUVType(selface)){
+			case AUTOMATIC: return;
+			case OFFSET_ONLY:
+				oo_tex_x.apply(vals[0]);
+				oo_tex_y.apply(vals[1]);
+				return;
+			case OFFSET_ENDS:
+				if(row == 0){
+					oe_tex_sx.apply(vals[0]);
+					oe_tex_sy.apply(vals[1]);
+				}
+				else{
+					oe_tex_ex.apply(vals[2]);
+					oe_tex_ey.apply(vals[3]);
+				}
+				return;
+			case OFFSET_FULL:
+				if(row == 0){
+					of_tex_0x.apply(vals[0]);
+					of_tex_0y.apply(vals[1]);
+					return;
+				}
+				if(row == 1){
+					of_tex_1x.apply(vals[2]);
+					of_tex_1y.apply(vals[3]);
+					return;
+				}
+				if(row == 2){
+					of_tex_2x.apply(vals[4]);
+					of_tex_2y.apply(vals[5]);
+					return;
+				}
+				if(row == 3){
+					of_tex_3x.apply(vals[6]);
+					of_tex_3y.apply(vals[7]);
+					return;
+				}
+				return;
 			default: return;
 		}
 	}
