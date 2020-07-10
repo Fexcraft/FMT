@@ -242,18 +242,12 @@ public class UVEditor extends EditorBase {
 			case OFFSET_ONLY:
 				oo_tex_x.apply(vals[0]);
 				oo_tex_y.apply(vals[1]);
-				FMTB.MODEL.updateValue(oo_tex_x, oo_tex_x.id());
-				FMTB.MODEL.updateValue(oo_tex_y, oo_tex_y.id());
 				break;
 			case OFFSET_ENDS:
 				oe_tex_sx.apply(vals[0]);
 				oe_tex_sy.apply(vals[1]);
 				oe_tex_ex.apply(vals[2]);
 				oe_tex_ey.apply(vals[3]);
-				FMTB.MODEL.updateValue(oe_tex_sx, oe_tex_sx.id());
-				FMTB.MODEL.updateValue(oe_tex_sy, oe_tex_sy.id());
-				FMTB.MODEL.updateValue(oe_tex_ex, oe_tex_ex.id());
-				FMTB.MODEL.updateValue(oe_tex_ey, oe_tex_ey.id());
 				break;
 			case OFFSET_FULL:
 				of_tex_0x.apply(vals[0]);
@@ -264,14 +258,6 @@ public class UVEditor extends EditorBase {
 				of_tex_2y.apply(vals[5]);
 				of_tex_3x.apply(vals[6]);
 				of_tex_3y.apply(vals[7]);
-				FMTB.MODEL.updateValue(of_tex_0x, of_tex_0x.id());
-				FMTB.MODEL.updateValue(of_tex_1x, of_tex_1x.id());
-				FMTB.MODEL.updateValue(of_tex_2x, of_tex_2x.id());
-				FMTB.MODEL.updateValue(of_tex_3x, of_tex_3x.id());
-				FMTB.MODEL.updateValue(of_tex_0y, of_tex_0y.id());
-				FMTB.MODEL.updateValue(of_tex_1y, of_tex_1y.id());
-				FMTB.MODEL.updateValue(of_tex_2y, of_tex_2y.id());
-				FMTB.MODEL.updateValue(of_tex_3y, of_tex_3y.id());
 				break;
 			default: return;
 		}
@@ -284,36 +270,50 @@ public class UVEditor extends EditorBase {
 			case OFFSET_ONLY:
 				oo_tex_x.apply(vals[0]);
 				oo_tex_y.apply(vals[1]);
+				FMTB.MODEL.updateValue(oo_tex_x, oo_tex_x.id());
+				FMTB.MODEL.updateValue(oo_tex_y, oo_tex_y.id());
 				return;
 			case OFFSET_ENDS:
 				if(row == 0){
 					oe_tex_sx.apply(vals[0]);
 					oe_tex_sy.apply(vals[1]);
+					FMTB.MODEL.updateValue(oe_tex_sx, oe_tex_sx.id());
+					FMTB.MODEL.updateValue(oe_tex_sy, oe_tex_sy.id());
 				}
 				else{
 					oe_tex_ex.apply(vals[2]);
 					oe_tex_ey.apply(vals[3]);
+					FMTB.MODEL.updateValue(oe_tex_ex, oe_tex_ex.id());
+					FMTB.MODEL.updateValue(oe_tex_ey, oe_tex_ey.id());
 				}
 				return;
 			case OFFSET_FULL:
 				if(row == 0){
 					of_tex_0x.apply(vals[0]);
 					of_tex_0y.apply(vals[1]);
+					FMTB.MODEL.updateValue(of_tex_0x, of_tex_0x.id());
+					FMTB.MODEL.updateValue(of_tex_0y, of_tex_0y.id());
 					return;
 				}
 				if(row == 1){
 					of_tex_1x.apply(vals[2]);
 					of_tex_1y.apply(vals[3]);
+					FMTB.MODEL.updateValue(of_tex_1x, of_tex_1x.id());
+					FMTB.MODEL.updateValue(of_tex_1y, of_tex_1y.id());
 					return;
 				}
 				if(row == 2){
 					of_tex_2x.apply(vals[4]);
 					of_tex_2y.apply(vals[5]);
+					FMTB.MODEL.updateValue(of_tex_2x, of_tex_2x.id());
+					FMTB.MODEL.updateValue(of_tex_2y, of_tex_2y.id());
 					return;
 				}
 				if(row == 3){
 					of_tex_3x.apply(vals[6]);
 					of_tex_3y.apply(vals[7]);
+					FMTB.MODEL.updateValue(of_tex_3x, of_tex_3x.id());
+					FMTB.MODEL.updateValue(of_tex_3y, of_tex_3y.id());
 					return;
 				}
 				return;
