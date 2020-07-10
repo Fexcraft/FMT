@@ -1,9 +1,12 @@
 package net.fexcraft.app.fmt.wrappers;
 
+import java.util.Map;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import net.fexcraft.lib.common.math.Vec3f;
+import net.fexcraft.lib.tmt.BoxBuilder;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public class BoxWrapper extends PolygonWrapper {
@@ -18,10 +21,17 @@ public class BoxWrapper extends PolygonWrapper {
 	}
 
 	protected ModelRendererTurbo newMRT(){
-		return new ModelRendererTurbo(null, textureX, textureY, compound.tx(getTurboList()), compound.ty(getTurboList()))
-			.addBox(off.xCoord, off.yCoord, off.zCoord, size.xCoord, size.yCoord, size.zCoord, 0f, 1f, sides)
+		ModelRendererTurbo turbo = new ModelRendererTurbo(null, textureX, textureY, compound.tx(getTurboList()), compound.ty(getTurboList()))
 			.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
 			.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
+		BoxBuilder builder = new BoxBuilder(turbo).setOffset(off.xCoord, off.yCoord, off.zCoord).setSize(size.xCoord, size.yCoord, size.zCoord).removePolygon(sides);
+		if(!uvtypes.isEmpty()){
+			for(Map.Entry<String, float[]> entry : uvcoords.entrySet()){
+				int index = getTexturableFaceIndex(entry.getKey());
+				builder.setPolygonUV(index, entry.getValue());
+			}
+		}
+		return builder.build();
 	}
 
 	@Override

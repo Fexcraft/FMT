@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.wrappers;
 
+import java.util.Map;
+
 import org.lwjgl.opengl.GL11;
 
 import com.google.gson.JsonObject;
@@ -8,6 +10,7 @@ import net.fexcraft.app.fmt.utils.Axis3DL;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
+import net.fexcraft.lib.tmt.BoxBuilder;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public class ShapeboxWrapper extends BoxWrapper {
@@ -31,20 +34,18 @@ public class ShapeboxWrapper extends BoxWrapper {
 	}
 	
 	protected ModelRendererTurbo newMRT(){
-		return new ModelRendererTurbo(null, textureX, textureY, compound.tx(getTurboList()), compound.ty(getTurboList()))
-			.addShapeBox(off.xCoord, off.yCoord, off.zCoord, size.xCoord, size.yCoord, size.zCoord, 0,
-				cor0.xCoord, cor0.yCoord, cor0.zCoord,
-				cor1.xCoord, cor1.yCoord, cor1.zCoord,
-				cor2.xCoord, cor2.yCoord, cor2.zCoord,
-				cor3.xCoord, cor3.yCoord, cor3.zCoord,
-				cor4.xCoord, cor4.yCoord, cor4.zCoord,
-				cor5.xCoord, cor5.yCoord, cor5.zCoord,
-				cor6.xCoord, cor6.yCoord, cor6.zCoord,
-				cor7.xCoord, cor7.yCoord, cor7.zCoord, sides)
+		ModelRendererTurbo turbo = new ModelRendererTurbo(null, textureX, textureY, compound.tx(getTurboList()), compound.ty(getTurboList()))
 			.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
 			.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
-		//for(int i = 0; i < bool.length; i++){ turbo.getFaces()[i].setOppositeTriangles(bool[i]); }
-		//turbo.triline = true; return turbo;
+		BoxBuilder builder = new BoxBuilder(turbo).setOffset(off.xCoord, off.yCoord, off.zCoord).setSize(size.xCoord, size.yCoord, size.zCoord).removePolygon(sides);
+		builder.setCorners(cor0, cor1, cor2, cor3, cor4, cor5, cor6, cor7);
+		if(!uvtypes.isEmpty()){
+			for(Map.Entry<String, float[]> entry : uvcoords.entrySet()){
+				int index = getTexturableFaceIndex(entry.getKey());
+				builder.setPolygonUV(index, entry.getValue());
+			}
+		}
+		return builder.build();
 	}
 
 	@Override
