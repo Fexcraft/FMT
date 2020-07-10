@@ -403,7 +403,7 @@ public class GroupCompound {
 			GeneralEditor.cyl7_z.apply(poly.getFloat("cyl7", false, false, true));
 		}
 		UVEditor.polygon_name.getTextState().setText(poly == null ? FMTB.NO_POLYGON_SELECTED : poly.name == null ? "unnamed" : poly.name);
-		UVEditor.refreshEntries(poly);
+		UVEditor.refreshEntries(poly, null);
 		if(poly == null){
 			UVEditor.texture_x.apply(0);
 			UVEditor.texture_y.apply(0);

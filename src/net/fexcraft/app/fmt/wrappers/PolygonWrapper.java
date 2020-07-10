@@ -520,13 +520,16 @@ public abstract class PolygonWrapper {
 			case OFFSET_ENDS:
 				return new float[]{ arr[index][0][0], arr[index][0][1], arr[index][1][0], arr[index][1][1] };
 			case OFFSET_FULL:
-				//TODO
-				break;
+				return new float[]{
+					arr[index][1][0], arr[index][0][1],
+					arr[index][0][0], arr[index][0][1],
+					arr[index][0][0], arr[index][1][1],
+					arr[index][1][0], arr[index][1][1]
+				};
 			case AUTOMATIC:
 			default:
 				return new float[0];
 		}
-		return null;
 	}
 	
 }

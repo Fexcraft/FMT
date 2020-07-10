@@ -15,7 +15,6 @@ import net.fexcraft.app.fmt.ui.field.NumberField;
 import net.fexcraft.app.fmt.ui.field.TextField;
 import net.fexcraft.app.fmt.wrappers.FaceUVType;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
-import net.fexcraft.app.fmt.wrappers.ShapeType;
 
 public class UVEditor extends EditorBase {
 
@@ -31,7 +30,7 @@ public class UVEditor extends EditorBase {
 	public static Button of0_reset, of1_reset, of2_reset, of3_reset;
 	//
 	public static Button openview;
-	private static ShapeType last;
+	private static PolygonWrapper last = null;
 	private static FaceUVType lasttype = FaceUVType.AUTOMATIC;
 	public static ArrayList<Component> tempcomp = new ArrayList<>();
 	public static EditorWidget tempone;
@@ -78,8 +77,7 @@ public class UVEditor extends EditorBase {
 	}
 
 	private void updateFace(SelectBoxChangeSelectionEvent<String> event){
-		selface = event.getNewValue();
-		refreshWidget(FMTB.MODEL.getFirstSelection());
+		refreshEntries(last, event.getNewValue());
 	}
 
 	private void updateType(SelectBoxChangeSelectionEvent<String> event){
@@ -90,31 +88,39 @@ public class UVEditor extends EditorBase {
 			if(type.arraylength == 0) poly.uvcoords.remove(selface);
 			else poly.uvcoords.put(selface, poly.getDefAutoFaceUVCoords(selface));
 		});
-		refreshWidget(FMTB.MODEL.getFirstSelection());
+		refreshEntries(last, selface);
 	}
 
-	public static void refreshEntries(PolygonWrapper selected){
-		if((last == null && selected == null) || (selected != null && last == selected.getType() && lasttype == selected.getFaceUVType(selface))){
-			refreshWidgetValues(selected);
-			return;
-		}
-		while(!uv_face.getElements().isEmpty()) uv_face.removeElement(0);
+	public static void refreshEntries(PolygonWrapper selected, String self){
 		if(selected == null){
+			clearUVFaceSelBox();
 			uv_face.addElement(FMTB.NO_POLYGON_SELECTED);
-			last = null;
 			selface = null;
+			last = null;
 			lasttype = FaceUVType.AUTOMATIC;
 		}
 		else{
-			for(String face : selected.getTexturableFaceIDs()){
-				uv_face.addElement(face);
+			if(last == selected){
+				selface = self;
 			}
-			selface = selected.getTexturableFaceIDs()[0];
-			last = selected.getType();
+			else{
+				last = selected;
+				if(!last.isValidTexturableFaceIDs(selface)){
+					selface = selected.getTexturableFaceIDs()[0];
+					clearUVFaceSelBox();
+					for(String face : selected.getTexturableFaceIDs()){
+						uv_face.addElement(face);
+					}
+				}
+			}
 			lasttype = selface == null ? FaceUVType.AUTOMATIC : selected.getFaceUVType(selface);
 		}
 		uv_type.setSelected((selface == null ? FaceUVType.AUTOMATIC : selected.getFaceUVType(selface)).name().toLowerCase(), true);
 		refreshWidget(selected);
+	}
+
+	private static void clearUVFaceSelBox(){
+		while(!uv_face.getElements().isEmpty()) uv_face.removeElement(0);
 	}
 
 	private static void refreshWidget(PolygonWrapper poly){
