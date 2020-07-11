@@ -27,6 +27,7 @@ import net.fexcraft.app.fmt.ui.field.NumberField;
 import net.fexcraft.app.fmt.ui.field.TextField;
 import net.fexcraft.app.fmt.ui.tree.Trees;
 import net.fexcraft.app.fmt.utils.HelperCollector;
+import net.fexcraft.app.fmt.utils.HideUtils;
 import net.fexcraft.app.fmt.utils.ImageHelper;
 import net.fexcraft.app.fmt.utils.SaveLoad;
 import net.fexcraft.app.fmt.utils.Settings;
@@ -95,6 +96,10 @@ public class UserInterfaceUtils {
 				new MenuSubButton("toolbar.utils.rectify", () -> FMTB.MODEL.rectify()),
 				new MenuSubButton("toolbar.utils.mirror_sel", () -> FMTB.MODEL.mirrorLRSelected())
 			),
+			new MenuButton("toolbar.utils.hide", null,
+				new MenuSubButton("toolbar.utils.hide.equal", () -> HideUtils.hideEqual()),
+				new MenuSubButton("toolbar.utils.hide.covered", () -> HideUtils.hideCovered())
+			),
 			new MenuButton("toolbar.utils.reset_camera", () -> { FMTB.ggr.reset(); }),
 			new MenuButton("toolbar.utils.create_gif", () -> ImageHelper.createGif(false)),
 			new MenuButton("toolbar.utils.screenshot", () -> ImageHelper.takeScreenshot(true)),
@@ -112,7 +117,7 @@ public class UserInterfaceUtils {
                 okbutton.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> { if(CLICK == e.getAction()) dialog.close(); });
                 dialog.getContainer().add(label); dialog.getContainer().add(okbutton); dialog.show(event.getFrame());
 			}),
-			new MenuButton("toolbar.utils.rescale", () -> FMTB.MODEL.rescale()),
+			//TODO new MenuButton("toolbar.utils.rescale", () -> FMTB.MODEL.rescale()),
 			new MenuButton("toolbar.utils.controls", NOT_REIMPLEMENTED_YET)
 		));
 		frame.getContainer().add(new MenuEntry(2, Translator.translate("toolbar.editor"),
