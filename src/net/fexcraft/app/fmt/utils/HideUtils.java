@@ -26,6 +26,7 @@ public class HideUtils {
 			String id = wrapper.getTurboList().id + ":" + wrapper.getTurboList().indexOf(wrapper);
 			if(wrapper.getType() != ShapeType.BOX && wrapper.getType() != ShapeType.SHAPEBOX) continue;
 			for(int side = 0; side < 6; side++){
+				if(side >= wrapper.getTurboObject(0).getFaces().length) continue;
 				TexturedPolygon poly = wrapper.getTurboObject(0).getFaces()[side];
 				String tr = getWorldSpaceAsString(axis, poly.getVertices()[0].vector, wrapper.pos, wrapper.rot);
 				String tl = getWorldSpaceAsString(axis, poly.getVertices()[1].vector, wrapper.pos, wrapper.rot);
@@ -38,6 +39,7 @@ public class HideUtils {
 					if(Arrays.equals(arr, entry.getValue())){
 						((BoxWrapper)wrapper).sides[side] = true;
 						anychange = true;
+						break;
 					}
 				}
 			}
@@ -57,6 +59,7 @@ public class HideUtils {
 				if(wrapper.getType() != ShapeType.BOX && wrapper.getType() != ShapeType.SHAPEBOX) continue;
 				for(int side = 0; side < 6; side++){
 					String id = wrapper.getTurboList().id + ":" + wrapper.getTurboList().indexOf(wrapper);
+					if(side >= wrapper.getTurboObject(0).getFaces().length) continue;
 					TexturedPolygon poly = wrapper.getTurboObject(0).getFaces()[side];
 					String tr = getWorldSpaceAsString(axis, poly.getVertices()[0].vector, wrapper.pos, wrapper.rot);
 					String tl = getWorldSpaceAsString(axis, poly.getVertices()[1].vector, wrapper.pos, wrapper.rot);
@@ -71,15 +74,47 @@ public class HideUtils {
 		return map;
 	}
 
-	/*private static Vec3f getNormals(TexturedPolygon poly){
+	private static TreeMap<String, Object[]> getSpacedPlusVector(){
+		TreeMap<String, Object[]> map = new TreeMap<>();
+		Axis3DL axis = new Axis3DL();
+		for(TurboList list : FMTB.MODEL.getGroups()){
+			for(int i = 0; i < list.size(); i++){
+				PolygonWrapper wrapper = list.get(i);
+				if(wrapper.getType() != ShapeType.BOX && wrapper.getType() != ShapeType.SHAPEBOX) continue;
+				for(int side = 0; side < 6; side++){
+					String id = wrapper.getTurboList().id + ":" + wrapper.getTurboList().indexOf(wrapper);
+					if(side >= wrapper.getTurboObject(0).getFaces().length) continue;
+					TexturedPolygon poly = wrapper.getTurboObject(0).getFaces()[side];
+					Vec3f tr = getWorldSpace(axis, poly.getVertices()[0].vector, wrapper.pos, wrapper.rot);
+					Vec3f tl = getWorldSpace(axis, poly.getVertices()[1].vector, wrapper.pos, wrapper.rot);
+					Vec3f bl = getWorldSpace(axis, poly.getVertices()[2].vector, wrapper.pos, wrapper.rot);
+					Vec3f br = getWorldSpace(axis, poly.getVertices()[3].vector, wrapper.pos, wrapper.rot);
+					Object[] arr = new Object[]{ asString(tr), asString(tl), asString(bl), asString(br), getNormals(poly), wrapper };
+					map.put(id + "_" + side, arr);
+				}
+			}
+		}
+		return map;
+	}
+
+	private static Vec3f getNormals(TexturedPolygon poly){
         Vec3f vec0 = new Vec3f(poly.getVertices()[1].vector.subtract(poly.getVertices()[0].vector));
         Vec3f vec1 = new Vec3f(poly.getVertices()[1].vector.subtract(poly.getVertices()[2].vector));
 		return vec1.crossProduct(vec0).normalize();
-	}*/
+	}
+
+	private static Vec3f getWorldSpace(Axis3DL axis, Vec3f vector, Vec3f pos, Vec3f rot){
+		axis.setAngles(-rot.yCoord, -rot.zCoord, -rot.xCoord);
+		return axis.getRelativeVector(vector).add(pos);
+	}
 
 	private static String getWorldSpaceAsString(Axis3DL axis, Vec3f vector, Vec3f pos, Vec3f rot){
 		axis.setAngles(-rot.yCoord, -rot.zCoord, -rot.xCoord);
 		vector = axis.getRelativeVector(vector).add(pos);
+		return vector.xCoord + "," + vector.yCoord + "," + vector.zCoord;
+	}
+
+	private static String asString(Vec3f vector){
 		return vector.xCoord + "," + vector.yCoord + "," + vector.zCoord;
 	}
 
@@ -92,7 +127,75 @@ public class HideUtils {
 	}
 
 	public static void hideCovered(){
-		//TODO
+		ArrayList<PolygonWrapper> all = getAllPolygons();
+		ArrayList<PolygonWrapper> polygons = FMTB.MODEL.getSelected();
+		if(polygons.isEmpty()) polygons.addAll(all);
+		Axis3DL axis = new Axis3DL();
+		TreeMap<String, Object[]> spaced = getSpacedPlusVector();
+		boolean anychange = false;
+		for(PolygonWrapper wrapper : polygons){
+			String id = wrapper.getTurboList().id + ":" + wrapper.getTurboList().indexOf(wrapper);
+			if(wrapper.getType() != ShapeType.BOX && wrapper.getType() != ShapeType.SHAPEBOX) continue;
+			for(int side = 0; side < 6; side++){
+				if(side >= wrapper.getTurboObject(0).getFaces().length) continue;
+				TexturedPolygon poly = wrapper.getTurboObject(0).getFaces()[side];
+				String tr = getWorldSpaceAsString(axis, poly.getVertices()[0].vector, wrapper.pos, wrapper.rot);
+				String tl = getWorldSpaceAsString(axis, poly.getVertices()[1].vector, wrapper.pos, wrapper.rot);
+				String bl = getWorldSpaceAsString(axis, poly.getVertices()[2].vector, wrapper.pos, wrapper.rot);
+				String br = getWorldSpaceAsString(axis, poly.getVertices()[3].vector, wrapper.pos, wrapper.rot);
+				boolean itr = false, itl = false, ibl = false, ibr = false;
+				Vec3f normals = getNormals(poly);
+				for(Entry<String, Object[]> entry : spaced.entrySet()){
+					if(entry.getKey().equals(id + "_" + side)) continue;
+					if(!norm(entry.getKey(), normals, entry.getValue())) continue;
+					if(!itr && contains(entry.getValue(), tr)){
+						//Logging.log(id + " " + normals + " " + entry.getValue()[4]);
+						//((PolygonWrapper)entry.getValue()[5]).selected = true;
+						itr = true;
+					}
+					if(!itl && contains(entry.getValue(), tl)){
+						itl = true;
+					}
+					if(!ibl && contains(entry.getValue(), bl)){
+						ibl = true;
+					}
+					if(!ibr && contains(entry.getValue(), br)){
+						ibr = true;
+					}
+				}
+				if(itr && itl && ibl && ibr){
+					((BoxWrapper)wrapper).sides[side] = true;
+					anychange = true;
+				}
+			}
+		}
+		if(anychange){
+			FMTB.MODEL.recompile();
+		}
+		FMTB.MODEL.updateFields();
+	}
+
+	private static boolean norm(String id, Vec3f normals, Object[] value){
+		float dot = normals.dotProduct((Vec3f)value[4]);
+		return dot <= -1;
+	}
+
+	private static boolean contains(Object[] arr, String val){
+		for(int i = 0; i < 4; i++){
+			if(arr[i].equals(val)) return true;
+		}
+		return false;
+	}
+
+	public static void reset(){
+		for(TurboList list : FMTB.MODEL.getGroups()){
+			for(PolygonWrapper wrapper : list){
+				if(wrapper.getType() != ShapeType.BOX && wrapper.getType() != ShapeType.SHAPEBOX) continue;
+				((BoxWrapper)wrapper).sides = new boolean[]{ false, false, false, false, false, false };
+			}
+		}
+		FMTB.MODEL.recompile();
+		FMTB.MODEL.updateFields();
 	}
 
 }

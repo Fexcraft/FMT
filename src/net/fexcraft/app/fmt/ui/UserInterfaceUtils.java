@@ -98,7 +98,8 @@ public class UserInterfaceUtils {
 			),
 			new MenuButton("toolbar.utils.hide", null,
 				new MenuSubButton("toolbar.utils.hide.equal", () -> HideUtils.hideEqual()),
-				new MenuSubButton("toolbar.utils.hide.covered", () -> HideUtils.hideCovered())
+				new MenuSubButton("toolbar.utils.hide.covered", () -> HideUtils.hideCovered()),
+				new MenuSubButton("toolbar.utils.hide.reset", () -> HideUtils.reset())
 			),
 			new MenuButton("toolbar.utils.reset_camera", () -> { FMTB.ggr.reset(); }),
 			new MenuButton("toolbar.utils.create_gif", () -> ImageHelper.createGif(false)),
