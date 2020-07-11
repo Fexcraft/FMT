@@ -1,6 +1,8 @@
 package net.fexcraft.app.fmt.ui.tree;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.Label;
@@ -27,7 +29,7 @@ public class TreeBase extends Panel {
 	
 	public TreeBase(String name){
 		super(FMTB.WIDTH - 304, 30, 304, FMTB.HEIGHT - 30); Trees.trees.add(this); id = name;
-		super.add(counter = new Label((counterlabel = EditorBase.translate("tree." + id + ".counter")) + "0", 4, 1, 100, 24));
+		super.add(counter = new Label((counterlabel = EditorBase.translate("tree." + id + ".counter") + " ") + "0", 4, 1, 100, 24));
 		Settings.THEME_CHANGE_LISTENER.add(bool -> {
 			counter.getStyle().setFontSize(24f);
 		});
@@ -73,8 +75,10 @@ public class TreeBase extends Panel {
 		switch(this.id){
 			case "polygon":{
 				String str = counterlabel + FMTB.MODEL.countTotalMRTs();
-				str += " / " + FMTB.MODEL.countTotalFaces(false);
-				str += " / " + FMTB.MODEL.countTotalFaces(true);
+				long totaf = FMTB.MODEL.countTotalFaces(false);
+				long totat = FMTB.MODEL.countTotalFaces(true);
+				str += " / " + totaf + " / " + totat;
+				if(totaf > 0) str += " / " + nf.format((totat / (float)totaf) * 100f) + "%";
 				counter.getTextState().setText(str);
 				break;
 			}
@@ -83,6 +87,11 @@ public class TreeBase extends Panel {
 			case "textures": counter.getTextState().setText(counterlabel + TextureManager.getGroupAmount());
 			default: return;
 		}
+	}
+	
+	private static NumberFormat nf = NumberFormat.getInstance(Locale.US);
+	static{
+		nf.setMaximumFractionDigits(1);
 	}
 
 	public void clear(){
