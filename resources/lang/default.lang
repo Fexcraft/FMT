@@ -253,7 +253,7 @@ dialogbox.setting.warning2=IF YOU GOT EPILEPSY OR OTHER WHERE SCREEN
 dialogbox.setting.warning3=FLICKERING IS BAD PLEASE DISABLE IT
 
 # Trees
-tree.polygon.counter=Polygons: 
+tree.polygon.counter=P: 
 tree.polygon.remove_group=Remove this group?
 tree.polygon.remove_polygon=Remove this polygon?
 tree.helper.counter=Helpers/Previews: 
