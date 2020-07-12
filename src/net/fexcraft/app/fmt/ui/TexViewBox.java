@@ -22,11 +22,12 @@ public class TexViewBox {
 		viewbox = new Widget("TexView", 320, 50, FMTB.WIDTH / 2, FMTB.HEIGHT / 2);
 		viewbox.addWidgetCloseEventListener(listener -> viewbox = null);
 		TextureGroup group = TextureManager.getGroup(texGroup);
-		canvas = new ScrollablePanel(4, 32, viewbox.getSize().x - 8, viewbox.getSize().y - 40);
+		canvas = new ScrollablePanel(4, 32, viewbox.getSize().x - 8, viewbox.getSize().y - 56);
 		canvas.getContainer().setSize(group.texture.getWidth(), group.texture.getHeight());
 		viewbox.getResizeButton().getListenerMap().addListener(MouseDragEvent.class, listner -> {
-			canvas.setSize(viewbox.getSize().x - 8, viewbox.getSize().y - 40);
+			canvas.setSize(viewbox.getSize().x - 8, viewbox.getSize().y - 56);
 		});
+		canvas.setHorizontalScrollBarVisible(true);
 		viewbox.getContainer().add(canvas);
 		//
 		FMTB.frame.getContainer().add(viewbox);
