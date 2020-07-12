@@ -12,8 +12,10 @@ import org.liquidengine.legui.event.MouseClickEvent.MouseClickAction;
 import org.liquidengine.legui.style.font.FontRegistry;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.TexViewBox;
 import net.fexcraft.app.fmt.ui.field.NumberField;
 import net.fexcraft.app.fmt.ui.field.TextField;
+import net.fexcraft.app.fmt.utils.texture.TextureManager;
 import net.fexcraft.app.fmt.wrappers.FaceUVType;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 
@@ -48,6 +50,12 @@ public class UVEditor extends EditorBase {
 		general.getContainer().add(texture_x = new NumberField(4, pass += 24, 90, 20).setup("texx", -8192, 8192, true));
 		general.getContainer().add(texture_y = new NumberField(102, pass, 90, 20).setup("texy", -8192, 8192, true));
 		general.getContainer().add(openview = new Button(translate("editor.uv.general.openview"), 200, pass, 90, 20));
+		openview.getListenerMap().addListener(MouseClickEvent.class, event -> {
+			if(TextureManager.getGroupAmount() > 0 && event.getAction() == MouseClickAction.CLICK && !TexViewBox.isOpen()){
+				String modeltex = FMTB.MODEL.texgroup == null ? null : FMTB.MODEL.texgroup.group;
+				TexViewBox.open(modeltex == null ? TextureManager.getGroupsFE().get(0).group : modeltex);
+			}
+		});
 		general.getContainer().add(new Label(translate("editor.uv.general.face"), 3, pass += 24, 290, 20));
 		general.getContainer().add(uv_face = new SelectBox<>(3, pass += 24, 290, 20));
 		uv_face.addElement(FMTB.NO_POLYGON_SELECTED);
