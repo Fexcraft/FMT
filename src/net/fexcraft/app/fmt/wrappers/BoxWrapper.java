@@ -106,7 +106,7 @@ public class BoxWrapper extends PolygonWrapper {
 				new float[]{ tx + x0 + x2 + d, ty + yp + h }
 			};
 			if(include_offsets && getFaceUVType(faces[0]) != FaceUVType.AUTOMATIC){
-				vecs[sideid] = getCoords(faces[0], vecs[sideid]);
+				vecs[sideid - 1] = getCoords(faces[0], vecs[sideid - 1]);
 			}
 		}
 		if(!sides[1]){
@@ -115,7 +115,7 @@ public class BoxWrapper extends PolygonWrapper {
 				new float[]{ tx + d, ty + yp + h }
 			};
 			if(include_offsets && getFaceUVType(faces[1]) != FaceUVType.AUTOMATIC){
-				vecs[sideid] = getCoords(faces[1], vecs[sideid]);
+				vecs[sideid - 1] = getCoords(faces[1], vecs[sideid - 1]);
 			}
 		}
 		if(!sides[2]){
@@ -124,7 +124,7 @@ public class BoxWrapper extends PolygonWrapper {
 				new float[]{ tx + x0 + w, ty + d }
 			};
 			if(include_offsets && getFaceUVType(faces[2]) != FaceUVType.AUTOMATIC){
-				vecs[sideid] = getCoords(faces[2], vecs[sideid]);
+				vecs[sideid - 1] = getCoords(faces[2], vecs[sideid - 1]);
 			}
 		}
 		if(!sides[3]){
@@ -133,7 +133,7 @@ public class BoxWrapper extends PolygonWrapper {
 				new float[]{ tx + x0 + x1 + w, ty + d }
 			};
 			if(include_offsets && getFaceUVType(faces[3]) != FaceUVType.AUTOMATIC){
-				vecs[sideid] = getCoords(faces[3], vecs[sideid]);
+				vecs[sideid - 1] = getCoords(faces[3], vecs[sideid - 1]);
 			}
 		}
 		if(!sides[4]){
@@ -142,7 +142,7 @@ public class BoxWrapper extends PolygonWrapper {
 				new float[]{ tx + x0 + w, ty + yp + h }
 			};
 			if(include_offsets && getFaceUVType(faces[4]) != FaceUVType.AUTOMATIC){
-				vecs[sideid] = getCoords(faces[4], vecs[sideid]);
+				vecs[sideid - 1] = getCoords(faces[4], vecs[sideid - 1]);
 			}
 		}
 		if(!sides[5]){
@@ -151,7 +151,7 @@ public class BoxWrapper extends PolygonWrapper {
 				new float[]{ tx + x0 + x2 + x3 + w, ty + yp + h }
 			};
 			if(include_offsets && getFaceUVType(faces[5]) != FaceUVType.AUTOMATIC){
-				vecs[sideid] = getCoords(faces[5], vecs[sideid]);
+				vecs[sideid - 1] = getCoords(faces[5], vecs[sideid - 1]);
 			}
 		}
 		return vecs;
@@ -224,6 +224,16 @@ public class BoxWrapper extends PolygonWrapper {
 	@Override
 	public String[] getTexturableFaceIDs(){
 		return faces;
+	}
+	
+	@Override
+	public Integer getTexturableFaceIndex(String str){
+		int index = 0;
+		for(int i = 0; i < faces.length; i++){
+			if(faces[i].equals(str)) return index;
+			if(!sides[i]) index++;
+		}
+		return null;
 	}
 	
 }
