@@ -88,7 +88,7 @@ public class BoxWrapper extends PolygonWrapper {
 	}
 
 	@Override
-	public float[][][] newTexturePosition(){
+	public float[][][] newTexturePosition(boolean include_offsets){
 		float tx = 0 /*textureX*/, ty = 0 /*textureY*/, w = size.xCoord, h = size.yCoord, d = size.zCoord;
 		int sideson = 0, sideid = 0;
 		for(boolean bool : sides) if(!bool) sideson++;
@@ -105,38 +105,93 @@ public class BoxWrapper extends PolygonWrapper {
 				new float[]{ tx + x0 + x2, ty + yp },
 				new float[]{ tx + x0 + x2 + d, ty + yp + h }
 			};
+			if(include_offsets && getFaceUVType(faces[0]) != FaceUVType.AUTOMATIC){
+				vecs[sideid] = getCoords(faces[0], vecs[sideid]);
+			}
 		}
 		if(!sides[1]){
 			vecs[sideid++] = new float[][]{
 				new float[]{ tx, ty + yp },
 				new float[]{ tx + d, ty + yp + h }
 			};
+			if(include_offsets && getFaceUVType(faces[1]) != FaceUVType.AUTOMATIC){
+				vecs[sideid] = getCoords(faces[1], vecs[sideid]);
+			}
 		}
 		if(!sides[2]){
 			vecs[sideid++] = new float[][]{
 				new float[]{ tx + x0, ty },
 				new float[]{ tx + x0 + w, ty + d }
 			};
+			if(include_offsets && getFaceUVType(faces[2]) != FaceUVType.AUTOMATIC){
+				vecs[sideid] = getCoords(faces[2], vecs[sideid]);
+			}
 		}
 		if(!sides[3]){
 			vecs[sideid++] = new float[][]{
 				new float[]{ tx + x0 + x1, ty + 0 },
 				new float[]{ tx + x0 + x1 + w, ty + d }
 			};
+			if(include_offsets && getFaceUVType(faces[3]) != FaceUVType.AUTOMATIC){
+				vecs[sideid] = getCoords(faces[3], vecs[sideid]);
+			}
 		}
 		if(!sides[4]){
 			vecs[sideid++] = new float[][]{
 				new float[]{ tx + x0, ty + yp },
 				new float[]{ tx + x0 + w, ty + yp + h }
 			};
+			if(include_offsets && getFaceUVType(faces[4]) != FaceUVType.AUTOMATIC){
+				vecs[sideid] = getCoords(faces[4], vecs[sideid]);
+			}
 		}
 		if(!sides[5]){
 			vecs[sideid++] = new float[][]{
 				new float[]{ tx + x0 + x2 + x3, ty + yp },
 				new float[]{ tx + x0 + x2 + x3 + w, ty + yp + h }
 			};
+			if(include_offsets && getFaceUVType(faces[5]) != FaceUVType.AUTOMATIC){
+				vecs[sideid] = getCoords(faces[5], vecs[sideid]);
+			}
 		}
 		return vecs;
+	}
+
+	private float[][] getCoords(String string, float[][] def){
+		FaceUVType type = getFaceUVType(string);
+		float[] arr = getFaceUVCoords(string);
+		float[][] res = null;
+		switch(type){
+			case OFFSET_ONLY:
+				res = new float[][]{
+					new float[]{ def[0][0] + arr[0], def[0][1] + arr[1] },
+					new float[]{ def[1][0] + arr[0], def[1][1] + arr[1] }
+				};
+				break;
+			case OFFSET_ENDS:
+				res = new float[][]{
+					new float[]{ arr[0], arr[1] },
+					new float[]{ arr[2], arr[3] }
+				};
+				break;
+			case OFFSET_FULL:
+				float minx, miny, maxx, maxy;
+				minx = maxx = arr[0];
+				miny = maxy = arr[1];
+				for(int i = 0; i < 4; i++){
+					if(arr[i * 2] < minx) minx = arr[i * 2];
+					if(arr[i * 2 + 1] < miny) miny = arr[i * 2 + 1];
+					if(arr[i * 2] > maxx) maxx = arr[i * 2];
+					if(arr[i * 2 + 1] > maxy) maxy = arr[i * 2 + 1];
+				}
+				res = new float[][]{
+					new float[]{ minx, miny },
+					new float[]{ maxx, maxy }
+				};
+				break;
+			default: return null;
+		}
+		return res;
 	}
 
 	@Override

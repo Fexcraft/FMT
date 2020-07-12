@@ -52,7 +52,7 @@ public abstract class PolygonWrapper {
 	
 	public void recompile(){
 		this.clearMRT(turbo, lines, sellines, picker); this.setupMRT();
-		this.texpos = this.newTexturePosition();
+		this.texpos = this.newTexturePosition(true);
 	}
 
 	public void render(boolean rotX, boolean rotY, boolean rotZ){
@@ -281,7 +281,7 @@ public abstract class PolygonWrapper {
 
 	protected abstract ModelRendererTurbo newMRT();
 	
-	public abstract float[][][] newTexturePosition();
+	public abstract float[][][] newTexturePosition(boolean include_offsets);
 
 	public boolean apply(String id, float value, boolean x, boolean y, boolean z){
 		boolean bool = false;
@@ -513,7 +513,7 @@ public abstract class PolygonWrapper {
 		Integer index = getTexturableFaceIndex(side);
 		FaceUVType type = getFaceUVType(side);
 		if(index == null) return new float[type.arraylength];
-		float[][][] arr = texpos == null ? newTexturePosition() : texpos;
+		float[][][] arr = newTexturePosition(false);
 		switch(type){
 			case OFFSET_ONLY:
 				return new float[]{ arr[index][0][0], arr[index][0][1] };

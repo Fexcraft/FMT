@@ -171,7 +171,7 @@ public class CylinderWrapper extends PolygonWrapper {
 	}
 
 	@Override
-	public float[][][] newTexturePosition(){
+	public float[][][] newTexturePosition(boolean include_offsets){
 		float radius = this.radius < 1 ? 1 : this.radius;
 		float length = this.length < 1 ? 1 : this.length;
 		float tx = 0/*textureX*/, ty = 0/*textureY*/, qrad = radius / 2, rad = radius * 2, rad2 = rad + rad;

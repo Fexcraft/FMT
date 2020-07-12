@@ -149,8 +149,6 @@ public class HideUtils {
 					if(entry.getKey().equals(id + "_" + side)) continue;
 					if(!norm(entry.getKey(), normals, entry.getValue())) continue;
 					if(!itr && contains(entry.getValue(), tr)){
-						//Logging.log(id + " " + normals + " " + entry.getValue()[4]);
-						//((PolygonWrapper)entry.getValue()[5]).selected = true;
 						itr = true;
 					}
 					if(!itl && contains(entry.getValue(), tl)){

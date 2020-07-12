@@ -231,7 +231,7 @@ public class TextureUpdate extends TimerTask {
 									log("[" + wrapper.getTurboList().id + ":" + wrapper.name() + "] >> " + xar + "x, " + yar + "y;");
 									wrapper.textureX = xar;
 									wrapper.textureY = yar;
-									wrapper.texpos = wrapper.newTexturePosition();
+									wrapper.texpos = wrapper.newTexturePosition(true);
 									wrapper.burnToTexture(texture, null);
 									pass = true;
 									Thread.sleep(10);

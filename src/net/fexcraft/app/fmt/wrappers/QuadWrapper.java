@@ -51,7 +51,7 @@ public class QuadWrapper extends BoxWrapper {
 	}
 
 	@Override
-	public float[][][] newTexturePosition(){
+	public float[][][] newTexturePosition(boolean include_offsets){
 		float tx = 0 /*textureX*/, ty = 0 /*textureY*/, w = size.xCoord, h = size.yCoord;
 		float[][][] vecs = new float[2][][];
 		vecs[0] = new float[][]{
