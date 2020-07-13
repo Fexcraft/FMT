@@ -5,7 +5,10 @@ public enum FaceUVType {
 	AUTOMATIC(0),
 	OFFSET_ONLY(2),
 	OFFSET_ENDS(4),
-	OFFSET_FULL(8);
+	OFFSET_FULL(8),
+	ABSOLUTE(2),
+	ABSOLUTE_ENDS(4),
+	ABSOLUTE_FULL(8);
 	
 	public final int arraylength;
 	
@@ -25,6 +28,10 @@ public enum FaceUVType {
 			e.printStackTrace();
 		}
 		return AUTOMATIC;
+	}
+	
+	public boolean absolute(){
+		return this == ABSOLUTE || this == ABSOLUTE_ENDS || this == ABSOLUTE_FULL;
 	}
 
 }

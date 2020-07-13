@@ -30,6 +30,11 @@ public class BoxWrapper extends PolygonWrapper {
 				int index = getTexturableFaceIndex(entry.getKey());
 				builder.setPolygonUV(index, entry.getValue());
 			}
+			for(Map.Entry<String, FaceUVType> entry : uvtypes.entrySet()){
+				if(!entry.getValue().absolute()) continue;
+				int index = getTexturableFaceIndex(entry.getKey());
+				builder.setDetachedUV(index);
+			}
 		}
 		return builder.build();
 	}
@@ -162,6 +167,7 @@ public class BoxWrapper extends PolygonWrapper {
 		float[] arr = getFaceUVCoords(string);
 		float[][] res = null;
 		switch(type){
+			case ABSOLUTE:
 			case OFFSET_ONLY:{
 				res = new float[][]{
 					new float[]{ def[0][0] + arr[0], def[0][1] + arr[1] },
@@ -169,6 +175,7 @@ public class BoxWrapper extends PolygonWrapper {
 				};
 				break;
 			}
+			case ABSOLUTE_ENDS:
 			case OFFSET_ENDS:{
 				float minx, miny, maxx, maxy;
 				minx = maxx = arr[0];
@@ -183,6 +190,7 @@ public class BoxWrapper extends PolygonWrapper {
 				};
 				break;
 			}
+			case ABSOLUTE_FULL:
 			case OFFSET_FULL:{
 				float minx, miny, maxx, maxy;
 				minx = maxx = arr[0];

@@ -68,7 +68,7 @@ public class UVEditor extends EditorBase {
 			uv_type.addElement(type.name().toLowerCase());
 		}
 		uv_type.setElementHeight(20);
-		uv_type.setVisibleCount(6);
+		uv_type.setVisibleCount(7);
 		uv_type.addSelectBoxChangeSelectionEventListener(event -> updateType(event));
 		Button painttotex = new Button(translate("editor.general.attributes.painttotexture"), 3, 8 + (pass += 24), 290, 20);
 		painttotex.getListenerMap().addListener(MouseClickEvent.class, GeneralEditor.painttotex.getListenerMap().getListeners(MouseClickEvent.class).get(0));
@@ -136,13 +136,16 @@ public class UVEditor extends EditorBase {
 		int pass = -20;
 		tempone.getContainer().clearChildComponents();
 		//
-		Label title = null, desc = null;
+		Label title = null, desc0 = null, desc1 = null;
 		if(poly != null){
-			switch(poly.getFaceUVType(selface)){
+			FaceUVType type = poly.getFaceUVType(selface);
+			String typestr = type.name().toLowerCase();
+			switch(type){
 				case AUTOMATIC:
 					tempone.getContainer().add(title = new Label(translate("editor.uv.fields.automatic0"), 3, pass += 24, 290, 20));
-					tempone.getContainer().add(desc = new Label(translate("editor.uv.fields.automatic1"), 3, pass += 24, 290, 20));
+					tempone.getContainer().add(desc0 = new Label(translate("editor.uv.fields.automatic1"), 3, pass += 24, 290, 20));
 					break;
+				case ABSOLUTE:
 				case OFFSET_ONLY:
 					tempone.getContainer().add(new Label(translate("editor.uv.fields.offset_only"), 3, pass += 24, 290, 20));
 					tempone.getContainer().add(oo_tex_x = new NumberField(4, pass += 24, 90, 20).setup("oo_tex_x", -8192, 8192, true));
@@ -150,14 +153,15 @@ public class UVEditor extends EditorBase {
 					tempone.getContainer().add(oo_reset = new Button(translate("editor.uv.fields.oo_reset"), 200, pass, 90, 20));
 					oo_reset.getListenerMap().addListener(MouseClickEvent.class, listener -> {
 						if(listener.getAction() == MouseClickAction.CLICK){
-							resetFields(FaceUVType.OFFSET_ONLY, 0);
+							resetFields(type, 0);
 						}
 					});
 					//
 					pass += 20;
-					tempone.getContainer().add(title = new Label(translate("editor.uv.fields.offset_only0"), 3, pass += 24, 290, 20));
-					tempone.getContainer().add(desc = new Label(translate("editor.uv.fields.offset_only1"), 3, pass += 24, 290, 20));
+					tempone.getContainer().add(title = new Label(translate("editor.uv.fields." + typestr + "0"), 3, pass += 24, 290, 20));
+					tempone.getContainer().add(desc0 = new Label(translate("editor.uv.fields." + typestr + "1"), 3, pass += 24, 290, 20));
 					break;
+				case ABSOLUTE_ENDS:
 				case OFFSET_ENDS:
 					tempone.getContainer().add(new Label(translate("editor.uv.fields.offset_ends_0"), 3, pass += 24, 290, 20));
 					tempone.getContainer().add(oe_tex_sx = new NumberField(4, pass += 24, 90, 20).setup("oe_tex_sx", -8192, 8192, true));
@@ -165,7 +169,7 @@ public class UVEditor extends EditorBase {
 					tempone.getContainer().add(oes_reset = new Button(translate("editor.uv.fields.oes_reset"), 200, pass, 90, 20));
 					oes_reset.getListenerMap().addListener(MouseClickEvent.class, listener -> {
 						if(listener.getAction() == MouseClickAction.CLICK){
-							resetFields(FaceUVType.OFFSET_ENDS, 0);
+							resetFields(type, 0);
 						}
 					});
 					//
@@ -175,14 +179,15 @@ public class UVEditor extends EditorBase {
 					tempone.getContainer().add(oee_reset = new Button(translate("editor.uv.fields.oee_reset"), 200, pass, 90, 20));
 					oee_reset.getListenerMap().addListener(MouseClickEvent.class, listener -> {
 						if(listener.getAction() == MouseClickAction.CLICK){
-							resetFields(FaceUVType.OFFSET_ENDS, 1);
+							resetFields(type, 1);
 						}
 					});
 					//
 					pass += 20;
-					tempone.getContainer().add(title = new Label(translate("editor.uv.fields.offset_ends0"), 3, pass += 24, 290, 20));
-					tempone.getContainer().add(desc = new Label(translate("editor.uv.fields.offset_ends1"), 3, pass += 24, 290, 20));
+					tempone.getContainer().add(title = new Label(translate("editor.uv.fields." + typestr + "0"), 3, pass += 24, 290, 20));
+					tempone.getContainer().add(desc0 = new Label(translate("editor.uv.fields." + typestr + "1"), 3, pass += 24, 290, 20));
 					break;
+				case ABSOLUTE_FULL:
 				case OFFSET_FULL:
 					tempone.getContainer().add(new Label(translate("editor.uv.fields.offset_full_0"), 3, pass += 24, 290, 20));
 					tempone.getContainer().add(of_tex_0x = new NumberField(4, pass += 24, 90, 20).setup("of_tex_0x", -8192, 8192, true));
@@ -190,7 +195,7 @@ public class UVEditor extends EditorBase {
 					tempone.getContainer().add(of0_reset = new Button(translate("editor.uv.fields.of0_reset"), 200, pass, 90, 20));
 					of0_reset.getListenerMap().addListener(MouseClickEvent.class, listener -> {
 						if(listener.getAction() == MouseClickAction.CLICK){
-							resetFields(FaceUVType.OFFSET_FULL, 0);
+							resetFields(type, 0);
 						}
 					});
 					//
@@ -200,7 +205,7 @@ public class UVEditor extends EditorBase {
 					tempone.getContainer().add(of1_reset = new Button(translate("editor.uv.fields.of1_reset"), 200, pass, 90, 20));
 					of1_reset.getListenerMap().addListener(MouseClickEvent.class, listener -> {
 						if(listener.getAction() == MouseClickAction.CLICK){
-							resetFields(FaceUVType.OFFSET_FULL, 1);
+							resetFields(type, 1);
 						}
 					});
 					//
@@ -210,7 +215,7 @@ public class UVEditor extends EditorBase {
 					tempone.getContainer().add(of2_reset = new Button(translate("editor.uv.fields.of2_reset"), 200, pass, 90, 20));
 					of2_reset.getListenerMap().addListener(MouseClickEvent.class, listener -> {
 						if(listener.getAction() == MouseClickAction.CLICK){
-							resetFields(FaceUVType.OFFSET_FULL, 2);
+							resetFields(type, 2);
 						}
 					});
 					//
@@ -220,13 +225,14 @@ public class UVEditor extends EditorBase {
 					tempone.getContainer().add(of3_reset = new Button(translate("editor.uv.fields.of3_reset"), 200, pass, 90, 20));
 					of3_reset.getListenerMap().addListener(MouseClickEvent.class, listener -> {
 						if(listener.getAction() == MouseClickAction.CLICK){
-							resetFields(FaceUVType.OFFSET_FULL, 3);
+							resetFields(type, 3);
 						}
 					});
 					//
 					pass += 20;
-					tempone.getContainer().add(title = new Label(translate("editor.uv.fields.offset_full0"), 3, pass += 24, 290, 20));
-					tempone.getContainer().add(desc = new Label(translate("editor.uv.fields.offset_full1"), 3, pass += 24, 290, 20));
+					tempone.getContainer().add(title = new Label(translate("editor.uv.fields." + typestr + "0"), 3, pass += 24, 290, 20));
+					tempone.getContainer().add(desc0 = new Label(translate("editor.uv.fields." + typestr + "1"), 3, pass += 24, 290, 20));
+					tempone.getContainer().add(desc1 = new Label(translate("editor.uv.fields." + typestr + "2"), 3, pass += 24, 290, 20));
 					break;
 				default:
 					break;
@@ -236,7 +242,8 @@ public class UVEditor extends EditorBase {
 			tempone.getContainer().add(title = new Label(FMTB.NO_POLYGON_SELECTED, 3, pass += 24, 290, 20));
 		}
 		title.getStyle().setFont(FontRegistry.ROBOTO_BOLD);
-		if(desc != null) desc.getStyle().setFont(FontRegistry.ROBOTO_BOLD);
+		if(desc0 != null) desc0.getStyle().setFont(FontRegistry.ROBOTO_BOLD);
+		if(desc1 != null) desc1.getStyle().setFont(FontRegistry.ROBOTO_BOLD);
 		//
 		tempone.setSize(296, pass + 52 + 4);
 		Editors.uv.reOrderWidgets();
@@ -247,16 +254,19 @@ public class UVEditor extends EditorBase {
 		float[] vals = poly == null ? new float[lasttype.arraylength] : poly.getFaceUVCoords(selface);
 		switch(poly == null ? lasttype : poly.getFaceUVType(selface)){
 			case AUTOMATIC: return;
+			case ABSOLUTE:
 			case OFFSET_ONLY:
 				oo_tex_x.apply(vals[0]);
 				oo_tex_y.apply(vals[1]);
 				break;
+			case ABSOLUTE_ENDS:
 			case OFFSET_ENDS:
 				oe_tex_sx.apply(vals[0]);
 				oe_tex_sy.apply(vals[1]);
 				oe_tex_ex.apply(vals[2]);
 				oe_tex_ey.apply(vals[3]);
 				break;
+			case ABSOLUTE_FULL:
 			case OFFSET_FULL:
 				of_tex_0x.apply(vals[0]);
 				of_tex_0y.apply(vals[1]);
@@ -275,12 +285,14 @@ public class UVEditor extends EditorBase {
 		float[] vals = last == null ? new float[lasttype.arraylength] : last.getDefAutoFaceUVCoords(selface);
 		switch(last == null ? lasttype : last.getFaceUVType(selface)){
 			case AUTOMATIC: return;
+			case ABSOLUTE:
 			case OFFSET_ONLY:
 				oo_tex_x.apply(vals[0]);
 				oo_tex_y.apply(vals[1]);
 				FMTB.MODEL.updateValue(oo_tex_x, oo_tex_x.id());
 				FMTB.MODEL.updateValue(oo_tex_y, oo_tex_y.id());
 				return;
+			case ABSOLUTE_ENDS:
 			case OFFSET_ENDS:
 				if(row == 0){
 					oe_tex_sx.apply(vals[0]);
@@ -295,6 +307,7 @@ public class UVEditor extends EditorBase {
 					FMTB.MODEL.updateValue(oe_tex_ey, oe_tex_ey.id());
 				}
 				return;
+			case ABSOLUTE_FULL:
 			case OFFSET_FULL:
 				if(row == 0){
 					of_tex_0x.apply(vals[0]);

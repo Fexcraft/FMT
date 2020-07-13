@@ -515,10 +515,13 @@ public abstract class PolygonWrapper {
 		if(index == null) return new float[type.arraylength];
 		float[][][] arr = newTexturePosition(false);
 		switch(type){
+			case ABSOLUTE:
 			case OFFSET_ONLY:
 				return new float[]{ arr[index][0][0], arr[index][0][1] };
+			case ABSOLUTE_ENDS:
 			case OFFSET_ENDS:
 				return new float[]{ arr[index][0][0], arr[index][0][1], arr[index][1][0], arr[index][1][1] };
+			case ABSOLUTE_FULL:
 			case OFFSET_FULL:
 				return new float[]{
 					arr[index][1][0], arr[index][0][1],

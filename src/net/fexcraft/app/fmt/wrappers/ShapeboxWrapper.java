@@ -44,6 +44,11 @@ public class ShapeboxWrapper extends BoxWrapper {
 				int index = getTexturableFaceIndex(entry.getKey());
 				builder.setPolygonUV(index, entry.getValue());
 			}
+			for(Map.Entry<String, FaceUVType> entry : uvtypes.entrySet()){
+				if(!entry.getValue().absolute()) continue;
+				int index = getTexturableFaceIndex(entry.getKey());
+				builder.setDetachedUV(index);
+			}
 		}
 		return builder.build();
 	}
