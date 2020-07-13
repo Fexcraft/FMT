@@ -162,19 +162,28 @@ public class BoxWrapper extends PolygonWrapper {
 		float[] arr = getFaceUVCoords(string);
 		float[][] res = null;
 		switch(type){
-			case OFFSET_ONLY:
+			case OFFSET_ONLY:{
 				res = new float[][]{
 					new float[]{ def[0][0] + arr[0], def[0][1] + arr[1] },
 					new float[]{ def[1][0] + arr[0], def[1][1] + arr[1] }
 				};
 				break;
-			case OFFSET_ENDS:
+			}
+			case OFFSET_ENDS:{
+				float minx, miny, maxx, maxy;
+				minx = maxx = arr[0];
+				miny = maxy = arr[1];
+				if(minx > arr[2]) minx = arr[2];
+				if(maxx < arr[2]) maxx = arr[2];
+				if(miny > arr[3]) miny = arr[3];
+				if(maxy < arr[3]) maxy = arr[3];
 				res = new float[][]{
-					new float[]{ arr[0], arr[1] },
-					new float[]{ arr[2], arr[3] }
+					new float[]{ minx, miny },
+					new float[]{ maxx, maxy }
 				};
 				break;
-			case OFFSET_FULL:
+			}
+			case OFFSET_FULL:{
 				float minx, miny, maxx, maxy;
 				minx = maxx = arr[0];
 				miny = maxy = arr[1];
@@ -189,6 +198,7 @@ public class BoxWrapper extends PolygonWrapper {
 					new float[]{ maxx, maxy }
 				};
 				break;
+			}
 			default: return null;
 		}
 		return res;
