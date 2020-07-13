@@ -27,6 +27,7 @@ import net.fexcraft.app.fmt.porters.JsonToFMT;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.ui.DialogBox.DialogTask;
+import net.fexcraft.app.fmt.ui.TexViewBox;
 import net.fexcraft.app.fmt.ui.editor.Editors;
 import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
 import net.fexcraft.app.fmt.ui.editor.GroupEditor;
@@ -498,6 +499,9 @@ public class GroupCompound {
 		ModelEditor.model_name.getTextState().setText(name);
 		//
 		ModelEditor.model_texture.setSelected(FMTB.MODEL.texgroup == null ? "none" : FMTB.MODEL.texgroup.group, true);
+		if(TexViewBox.isOpen()){
+			TexViewBox.update();
+		}
 	}
 	
 	public float multiply(float flea){
