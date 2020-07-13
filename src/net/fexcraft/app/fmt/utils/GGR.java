@@ -13,6 +13,7 @@ import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.MenuEntry;
+import net.fexcraft.app.fmt.ui.TexViewBox;
 import net.fexcraft.app.fmt.ui.editor.Editors;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.tree.Trees;
@@ -138,6 +139,11 @@ public class GGR {
 		if(Editors.anyVisible() && x[0] < 304) return false;
 		if(Trees.anyVisible() && x[0] > (FMTB.WIDTH - 304)) return false;
 		if(MenuEntry.anyHovered()) return false;
+		if(TexViewBox.isOpen()){
+			if(x[0] >= TexViewBox.pos().x && x[0] < TexViewBox.pos().x + TexViewBox.size().x){
+				if(y[0] >= TexViewBox.pos().y && y[0] < TexViewBox.pos().y + TexViewBox.size().y) return false;
+			}
+		}
 		return true;
 	}
 
