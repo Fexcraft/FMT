@@ -36,7 +36,7 @@ public class CylinderWrapper extends PolygonWrapper {
 	}
 	
 	protected ModelRendererTurbo newMRT(){
-		ModelRendererTurbo turbo = new ModelRendererTurbo(null, textureX, textureY, compound.tx(getTurboList()), compound.ty(getTurboList()));
+		ModelRendererTurbo turbo = new ModelRendererTurbo(null, textureX(), textureY(), compound.tx(getTurboList()), compound.ty(getTurboList()));
 		if(radial || usesTopRotation()){
 			turbo.newCylinderBuilder().setPosition(off.xCoord, off.yCoord, off.zCoord).setRadius(radius, radius2).setLength(length).setSegments(segments, seglimit)
 			.setScale(base, top).setDirection(direction).setTopOffset(topoff).setSidesVisible(bools).setRadialTexture(seg_width, seg_height)

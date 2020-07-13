@@ -47,8 +47,8 @@ public class UVEditor extends EditorBase {
 		general.getContainer().add(polygon_name = new TextField(FMTB.NO_POLYGON_SELECTED, 3, pass += 24, 290, 20));
 		polygon_name.addTextInputContentChangeEventListener(GeneralEditor.polygon_name.getTextInputContentChangeEvents().get(0));
 		general.getContainer().add(new Label(translate("editor.general.shape.texture"), 3, pass += 24, 290, 20));
-		general.getContainer().add(texture_x = new NumberField(4, pass += 24, 90, 20).setup("texx", -8192, 8192, true));
-		general.getContainer().add(texture_y = new NumberField(102, pass, 90, 20).setup("texy", -8192, 8192, true));
+		general.getContainer().add(texture_x = new NumberField(4, pass += 24, 90, 20).setup("texx", -1, 8192, true));
+		general.getContainer().add(texture_y = new NumberField(102, pass, 90, 20).setup("texy", -1, 8192, true));
 		general.getContainer().add(openview = new Button(translate("editor.uv.general.openview"), 200, pass, 90, 20));
 		openview.getListenerMap().addListener(MouseClickEvent.class, event -> {
 			if(TextureManager.getGroupAmount() > 0 && event.getAction() == MouseClickAction.CLICK){
@@ -150,7 +150,7 @@ public class UVEditor extends EditorBase {
 					tempone.getContainer().add(new Label(translate("editor.uv.fields.offset_only"), 3, pass += 24, 290, 20));
 					tempone.getContainer().add(oo_tex_x = new NumberField(4, pass += 24, 90, 20).setup("oo_tex_x", -8192, 8192, true));
 					tempone.getContainer().add(oo_tex_y = new NumberField(102, pass, 90, 20).setup("oo_tex_y", -8192, 8192, true));
-					tempone.getContainer().add(oo_reset = new Button(translate("editor.uv.fields.oo_reset"), 200, pass, 90, 20));
+					tempone.getContainer().add(oo_reset = new Button(translate("editor.fields.reset.uppercase"), 200, pass, 90, 20));
 					oo_reset.getListenerMap().addListener(MouseClickEvent.class, listener -> {
 						if(listener.getAction() == MouseClickAction.CLICK){
 							resetFields(type, 0);
@@ -166,7 +166,7 @@ public class UVEditor extends EditorBase {
 					tempone.getContainer().add(new Label(translate("editor.uv.fields.offset_ends_0"), 3, pass += 24, 290, 20));
 					tempone.getContainer().add(oe_tex_sx = new NumberField(4, pass += 24, 90, 20).setup("oe_tex_sx", -8192, 8192, true));
 					tempone.getContainer().add(oe_tex_sy = new NumberField(102, pass, 90, 20).setup("oe_tex_sy", -8192, 8192, true));
-					tempone.getContainer().add(oes_reset = new Button(translate("editor.uv.fields.oes_reset"), 200, pass, 90, 20));
+					tempone.getContainer().add(oes_reset = new Button(translate("editor.fields.reset.uppercase"), 200, pass, 90, 20));
 					oes_reset.getListenerMap().addListener(MouseClickEvent.class, listener -> {
 						if(listener.getAction() == MouseClickAction.CLICK){
 							resetFields(type, 0);
@@ -176,7 +176,7 @@ public class UVEditor extends EditorBase {
 					tempone.getContainer().add(new Label(translate("editor.uv.fields.offset_ends_1"), 3, pass += 24, 290, 20));
 					tempone.getContainer().add(oe_tex_ex = new NumberField(4, pass += 24, 90, 20).setup("oe_tex_ex", -8192, 8192, true));
 					tempone.getContainer().add(oe_tex_ey = new NumberField(102, pass, 90, 20).setup("oe_tex_ey", -8192, 8192, true));
-					tempone.getContainer().add(oee_reset = new Button(translate("editor.uv.fields.oee_reset"), 200, pass, 90, 20));
+					tempone.getContainer().add(oee_reset = new Button(translate("editor.fields.reset.uppercase"), 200, pass, 90, 20));
 					oee_reset.getListenerMap().addListener(MouseClickEvent.class, listener -> {
 						if(listener.getAction() == MouseClickAction.CLICK){
 							resetFields(type, 1);
@@ -192,7 +192,7 @@ public class UVEditor extends EditorBase {
 					tempone.getContainer().add(new Label(translate("editor.uv.fields.offset_full_0"), 3, pass += 24, 290, 20));
 					tempone.getContainer().add(of_tex_0x = new NumberField(4, pass += 24, 90, 20).setup("of_tex_0x", -8192, 8192, true));
 					tempone.getContainer().add(of_tex_0y = new NumberField(102, pass, 90, 20).setup("of_tex_0y", -8192, 8192, true));
-					tempone.getContainer().add(of0_reset = new Button(translate("editor.uv.fields.of0_reset"), 200, pass, 90, 20));
+					tempone.getContainer().add(of0_reset = new Button(translate("editor.fields.reset.uppercase"), 200, pass, 90, 20));
 					of0_reset.getListenerMap().addListener(MouseClickEvent.class, listener -> {
 						if(listener.getAction() == MouseClickAction.CLICK){
 							resetFields(type, 0);
@@ -202,7 +202,7 @@ public class UVEditor extends EditorBase {
 					tempone.getContainer().add(new Label(translate("editor.uv.fields.offset_full_1"), 3, pass += 24, 290, 20));
 					tempone.getContainer().add(of_tex_1x = new NumberField(4, pass += 24, 90, 20).setup("of_tex_1x", -8192, 8192, true));
 					tempone.getContainer().add(of_tex_1y = new NumberField(102, pass, 90, 20).setup("of_tex_1y", -8192, 8192, true));
-					tempone.getContainer().add(of1_reset = new Button(translate("editor.uv.fields.of1_reset"), 200, pass, 90, 20));
+					tempone.getContainer().add(of1_reset = new Button(translate("editor.fields.reset.uppercase"), 200, pass, 90, 20));
 					of1_reset.getListenerMap().addListener(MouseClickEvent.class, listener -> {
 						if(listener.getAction() == MouseClickAction.CLICK){
 							resetFields(type, 1);
@@ -212,7 +212,7 @@ public class UVEditor extends EditorBase {
 					tempone.getContainer().add(new Label(translate("editor.uv.fields.offset_full_2"), 3, pass += 24, 290, 20));
 					tempone.getContainer().add(of_tex_2x = new NumberField(4, pass += 24, 90, 20).setup("of_tex_2x", -8192, 8192, true));
 					tempone.getContainer().add(of_tex_2y = new NumberField(102, pass, 90, 20).setup("of_tex_2y", -8192, 8192, true));
-					tempone.getContainer().add(of2_reset = new Button(translate("editor.uv.fields.of2_reset"), 200, pass, 90, 20));
+					tempone.getContainer().add(of2_reset = new Button(translate("editor.fields.reset.uppercase"), 200, pass, 90, 20));
 					of2_reset.getListenerMap().addListener(MouseClickEvent.class, listener -> {
 						if(listener.getAction() == MouseClickAction.CLICK){
 							resetFields(type, 2);
@@ -222,7 +222,7 @@ public class UVEditor extends EditorBase {
 					tempone.getContainer().add(new Label(translate("editor.uv.fields.offset_full_3"), 3, pass += 24, 290, 20));
 					tempone.getContainer().add(of_tex_3x = new NumberField(4, pass += 24, 90, 20).setup("of_tex_3x", -8192, 8192, true));
 					tempone.getContainer().add(of_tex_3y = new NumberField(102, pass, 90, 20).setup("of_tex_3y", -8192, 8192, true));
-					tempone.getContainer().add(of3_reset = new Button(translate("editor.uv.fields.of3_reset"), 200, pass, 90, 20));
+					tempone.getContainer().add(of3_reset = new Button(translate("editor.fields.reset.uppercase"), 200, pass, 90, 20));
 					of3_reset.getListenerMap().addListener(MouseClickEvent.class, listener -> {
 						if(listener.getAction() == MouseClickAction.CLICK){
 							resetFields(type, 3);

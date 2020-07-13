@@ -499,9 +499,7 @@ public class GroupCompound {
 		ModelEditor.model_name.getTextState().setText(name);
 		//
 		ModelEditor.model_texture.setSelected(FMTB.MODEL.texgroup == null ? "none" : FMTB.MODEL.texgroup.group, true);
-		if(TexViewBox.isOpen()){
-			TexViewBox.update();
-		}
+		TexViewBox.update();
 	}
 	
 	public float multiply(float flea){

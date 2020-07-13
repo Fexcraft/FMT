@@ -1,14 +1,14 @@
 package net.fexcraft.app.fmt.ui;
 
+import static net.fexcraft.app.fmt.ui.UserInterfaceUtils.hide;
+import static net.fexcraft.app.fmt.ui.UserInterfaceUtils.show;
+
 import org.joml.Vector2f;
 import org.joml.Vector4f;
-import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.component.Panel;
 import org.liquidengine.legui.component.ScrollablePanel;
 import org.liquidengine.legui.component.SelectBox;
 import org.liquidengine.legui.component.Widget;
-import org.liquidengine.legui.event.MouseClickEvent;
-import org.liquidengine.legui.event.MouseClickEvent.MouseClickAction;
 import org.liquidengine.legui.event.MouseDragEvent;
 import org.liquidengine.legui.style.border.SimpleLineBorder;
 
@@ -29,13 +29,14 @@ public class TexViewBox {
 	
 	private static Widget viewbox;
 	private static ScrollablePanel canvas;
-	private static boolean borders;
+	private static boolean borders, nozero;
+	private static int scale;
 
 	public static final void open(String texGroup){
 		open(texGroup, 1);
 	}
 
-	public static final void open(String texGroup, int scale){
+	public static final void open(String texGroup, int ascale){
 		Float x = null, y = null, w = null, h = null;
 		if(viewbox != null){
 			FMTB.frame.getContainer().remove(viewbox);
@@ -44,11 +45,14 @@ public class TexViewBox {
 			w = viewbox.getSize().x;
 			h = viewbox.getSize().y;
 		}
+		scale = ascale;
 		if(scale < 1) scale = 1;
 		if(scale > 4) scale = 4;
-		int[] ascale = { scale };
 		viewbox = new Widget("TexView", x == null ? 320 : x, y == null ? 50 : y, w == null ? FMTB.WIDTH / 2 : w, h == null ? FMTB.HEIGHT / 2 : h);
-		viewbox.addWidgetCloseEventListener(listener -> viewbox = null);
+		viewbox.addWidgetCloseEventListener(listener -> {
+			viewbox = null;
+			canvas = null;
+		});
 		TextureGroup group = TextureManager.getGroup(texGroup);
 		canvas = new ScrollablePanel(4, 36, viewbox.getSize().x - 8, viewbox.getSize().y - 60);
 		canvas.getContainer().setSize(group.texture.getWidth() * scale, group.texture.getHeight() * scale);
@@ -70,32 +74,24 @@ public class TexViewBox {
 			texgroups.addElement(texgroup.group);
 		}
 		texgroups.addSelectBoxChangeSelectionEventListener(listener -> {
-			open(listener.getNewValue(), ascale[0]);
+			open(listener.getNewValue(), scale);
 		});
 		viewbox.getContainer().add(texgroups);
 		//
-		Button buttonplus = new Button("+", 128, 4, 24, 24);
-		buttonplus.getListenerMap().addListener(MouseClickEvent.class, listener -> {
-			if(listener.getAction() == MouseClickAction.CLICK){
-				open(texGroup, ascale[0] + 1);
-			}
-		});
-		Button buttonminus = new Button("-", 156, 4, 24, 24);
-		buttonminus.getListenerMap().addListener(MouseClickEvent.class, listener -> {
-			if(listener.getAction() == MouseClickAction.CLICK){
-				open(texGroup, ascale[0] - 1);
-			}
-		});
-		Button buttonborders = new Button("B", 184, 4, 24, 24);
-		buttonborders.getListenerMap().addListener(MouseClickEvent.class, listener -> {
-			if(listener.getAction() == MouseClickAction.CLICK){
-				borders = !borders;
-				update();
-			}
-		});
-		viewbox.getContainer().add(buttonplus);
-		viewbox.getContainer().add(buttonminus);
-		viewbox.getContainer().add(buttonborders);
+		viewbox.getContainer().add(new ClickListenerButton("+", 128, 4, 24, 24, () -> {
+			open(texGroup, scale + 1);
+		}));
+		viewbox.getContainer().add(new ClickListenerButton("-", 156, 4, 24, 24, () -> {
+			open(texGroup, scale - 1);
+		}));
+		viewbox.getContainer().add(new ClickListenerButton("B", 184, 4, 24, 24, () -> {
+			borders = !borders;
+			update();
+		}));
+		viewbox.getContainer().add(new ClickListenerButton("N0", 212, 4, 24, 24, () -> {
+			nozero = !nozero;
+			update();
+		}));
 		//
 		boolean isactivegroup = FMTB.MODEL.texgroup != null && FMTB.MODEL.texgroup.group.equals(texGroup);
 		for(TurboList list : FMTB.MODEL.getGroups()){
@@ -106,7 +102,7 @@ public class TexViewBox {
 				float[][][] coords = wrapper.newTexturePosition(true);
 				for(int i = 0; i < coords.length; i++){
 					if(coords[i][1][0] - coords[i][0][0] == 0 || coords[i][1][1] - coords[i][0][1] == 0) continue;
-					canvas.getContainer().add(new PolyFace(wrapper, i, coords[i], scale));
+					canvas.getContainer().add(new PolyFace(wrapper, i, coords[i]));
 				}
 			}
 		}
@@ -125,7 +121,7 @@ public class TexViewBox {
 		private float[][] coords;
 		private int index;
 
-		public PolyFace(PolygonWrapper wrapper, int idx, float[][] arr, int scale){
+		public PolyFace(PolygonWrapper wrapper, int idx, float[][] arr){
 			super(wrapper.textureX + arr[0][0], wrapper.textureY + arr[0][1], arr[1][0] - arr[0][0], arr[1][1] - arr[0][1]);
 			this.setPosition(this.getPosition().mul(scale));
 			this.setSize(this.getSize().mul(scale));
@@ -133,12 +129,28 @@ public class TexViewBox {
 			this.coords = arr;
 			this.index = idx;
 			updateColor();
+			isZero();
 		}
 
 		private void updateColor(){
 			this.getStyle().setBorder(borders ? new SimpleLineBorder(new Vector4f(0f, 0f, 0f, 1f), 1) : null);
 			this.getStyle().setBorderRadius(0f);
 			this.getStyle().getBackground().setColor(FMTB.rgba(wrapper.selected || wrapper.getTurboList().selected ? Settings.getSelectedColor() : cache.getColor(index)));
+		}
+
+		public void isZero(){
+			if(nozero && (wrapper.textureX == -1 || wrapper.textureY == -1)){
+				hide(this);
+			}
+			else{
+				show(this);
+			}
+		}
+
+		public void updatePos(){
+			coords = wrapper.newTexturePosition(true)[index];
+			this.setPosition(new Vector2f(wrapper.textureX + coords[0][0], wrapper.textureY + coords[0][1]).mul(scale));
+			this.setSize(new Vector2f(coords[1][0] - coords[0][0], coords[1][1] - coords[0][1]).mul(scale));
 		}
 		
 	}
@@ -152,9 +164,13 @@ public class TexViewBox {
 	}
 
 	public static void update(){
+		if(viewbox == null) return;
 		canvas.getContainer().getChildComponents().forEach(com -> {
 			if(com instanceof PolyFace){
-				((PolyFace)com).updateColor();
+				PolyFace poly = (PolyFace)com;
+				poly.updateColor();
+				poly.isZero();
+				poly.updatePos();
 			}
 		});
 	}

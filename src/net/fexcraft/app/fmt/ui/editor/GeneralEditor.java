@@ -12,6 +12,7 @@ import org.liquidengine.legui.component.SelectBox;
 import org.liquidengine.legui.event.MouseClickEvent;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.ClickListenerButton;
 import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.ui.UserInterfaceUtils;
 import net.fexcraft.app.fmt.ui.field.BoolButton;
@@ -46,7 +47,7 @@ public class GeneralEditor extends EditorBase {
 	public static NumberField marker_scale, marker_angle;
 	public static BoolButton marker_biped;
 	public static SelectBox<String> polygon_group, polygon_type;
-	public static Button painttotex;
+	public static Button painttotex, resettex;
 	//
 	public static final String NEWGROUP = "> new group <";
 
@@ -172,8 +173,16 @@ public class GeneralEditor extends EditorBase {
 		shape.getContainer().add(rot_y = new NumberField(102, pass, 90, 20).setup("roty", -360, 360, true));
 		shape.getContainer().add(rot_z = new NumberField(200, pass, 90, 20).setup("rotz", -360, 360, true));
 		shape.getContainer().add(new Label(translate("editor.general.shape.texture"), 3, pass += 24, 290, 20));
-		shape.getContainer().add(texture_x = new NumberField(4, pass += 24, 90, 20).setup("texx", -8192, 8192, true));
-		shape.getContainer().add(texture_y = new NumberField(102, pass, 90, 20).setup("texy", -8192, 8192, true));
+		shape.getContainer().add(texture_x = new NumberField(4, pass += 24, 90, 20).setup("texx", -1, 8192, true));
+		shape.getContainer().add(texture_y = new NumberField(102, pass, 90, 20).setup("texy", -1, 8192, true));
+		shape.getContainer().add(resettex = new ClickListenerButton(translate("editor.fields.reset.uppercase"), 200, pass, 90, 20, () -> {
+			ArrayList<PolygonWrapper> polis = FMTB.MODEL.getSelected();
+			for(PolygonWrapper wrapper : polis){
+				wrapper.textureX = -1;
+				wrapper.textureY = -1;
+			}
+			FMTB.MODEL.updateFields();
+		}));
 		shape.getContainer().add(new Label(translate("editor.general.shape.visibility_toggle"), 3, pass += 24, 290, 20));
 		shape.getContainer().add(side0_x = new BoolButton("side0x", 4, pass += 24, 44, 20));
 		shape.getContainer().add(side0_y = new BoolButton("side0y", 53, pass, 44, 20));

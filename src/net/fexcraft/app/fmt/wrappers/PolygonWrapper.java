@@ -12,6 +12,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.TexViewBox;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.editor.UVEditor;
 import net.fexcraft.app.fmt.ui.tree.SubTreeGroup;
@@ -31,7 +32,7 @@ public abstract class PolygonWrapper {
 	//
 	public Vec3f pos = new Vec3f(), off = new Vec3f(), rot = new Vec3f();
 	public float[][][] texpos = new float[0][][];
-	public int textureX, textureY;
+	public int textureX = -1, textureY = -1;
 	protected ModelRendererTurbo turbo, lines, sellines, picker;
 	protected final GroupCompound compound;
 	protected static boolean widelines;
@@ -292,7 +293,9 @@ public abstract class PolygonWrapper {
 				} break;
 			}
 			case "tex":{
-				bool = this.setFloat(id, x, y, z, value); break;
+				bool = this.setFloat(id, x, y, z, value);
+				TexViewBox.update();
+				break;
 			}
 			case "pos": case "off":{
 				bool = this.setFloat(id, x, y, z, value); break;
@@ -319,6 +322,7 @@ public abstract class PolygonWrapper {
 				arr[x ? 0 : 1] = value;
 				bool = true;
 			}
+			TexViewBox.update();
 		}
 		else if(id.startsWith("oe_")){
 			float[] arr = getFaceUVCoords(UVEditor.getSelection());
@@ -327,6 +331,7 @@ public abstract class PolygonWrapper {
 				arr[end ? x ? 2 : 3 : x ? 0 : 1] = value;
 				bool = true;
 			}
+			TexViewBox.update();
 		}
 		else if(id.startsWith("of_")){
 			float[] arr = getFaceUVCoords(UVEditor.getSelection());
@@ -335,6 +340,7 @@ public abstract class PolygonWrapper {
 				arr[index * 2 + (x ? 0 : 1)] = value;
 				bool = true;
 			}
+			TexViewBox.update();
 		}
 		this.recompile(); return bool;
 	}
@@ -533,6 +539,14 @@ public abstract class PolygonWrapper {
 			default:
 				return new float[0];
 		}
+	}
+	
+	public int textureX(){
+		return textureX == -1 ? 0 : textureX;
+	}
+	
+	public int textureY(){
+		return textureY == -1 ? 0 : textureY;
 	}
 	
 }

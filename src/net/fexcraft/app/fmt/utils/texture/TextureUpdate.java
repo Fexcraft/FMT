@@ -114,15 +114,15 @@ public class TextureUpdate extends TimerTask {
 			if(CLICK == e.getAction()){
 				if(resetsel != null){
 					resetsel.forEach(turbo -> {
-						turbo.textureX = 0;
-						turbo.textureY = 0;
+						turbo.textureX = -1;
+						turbo.textureY = -1;
 						turbo.recompile();
 					});
 				}
 				else{
 					FMTB.MODEL.getGroups().forEach(list -> list.forEach(turbo -> {
-						turbo.textureX = 0;
-						turbo.textureY = 0;
+						turbo.textureX = -1;
+						turbo.textureY = -1;
 						turbo.recompile();
 					}));
 				}
@@ -328,8 +328,8 @@ public class TextureUpdate extends TimerTask {
 		});
 		Collections.reverse(arrlist);
 		if(!all){
-			ArrayList<PolygonWrapper> pri = (ArrayList<PolygonWrapper>)arrlist.stream().filter(pre -> pre.textureX > 0 || pre.textureY > 0).collect(Collectors.toList());
-			ArrayList<PolygonWrapper> sec = (ArrayList<PolygonWrapper>)arrlist.stream().filter(pre -> pre.textureX == 0 && pre.textureY == 0).collect(Collectors.toList());
+			ArrayList<PolygonWrapper> pri = (ArrayList<PolygonWrapper>)arrlist.stream().filter(pre -> pre.textureX >= 0 || pre.textureY >= 0).collect(Collectors.toList());
+			ArrayList<PolygonWrapper> sec = (ArrayList<PolygonWrapper>)arrlist.stream().filter(pre -> pre.textureX == -1 && pre.textureY == -1).collect(Collectors.toList());
 			arrlist.clear();
 			arrlist.addAll(pri);
 			arrlist.addAll(sec);

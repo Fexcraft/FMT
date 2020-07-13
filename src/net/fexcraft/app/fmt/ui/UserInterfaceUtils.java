@@ -17,6 +17,7 @@ import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.event.WindowSizeEvent;
 import org.liquidengine.legui.image.BufferedImage;
 import org.liquidengine.legui.listener.MouseClickEventListener;
+import org.liquidengine.legui.style.Style.DisplayType;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager;
@@ -251,6 +252,14 @@ public class UserInterfaceUtils {
 			((NumberField)event.getTargetComponent()).getTextState().setText(newtext);
 			((NumberField)event.getTargetComponent()).setCaretPosition(newtext.length());
 		}
+	}
+
+	public static final void hide(Component com){
+		com.getStyle().setDisplay(DisplayType.NONE);
+	}
+
+	public static final void show(Component com){
+		com.getStyle().setDisplay(DisplayType.MANUAL);
 	}
 
 }

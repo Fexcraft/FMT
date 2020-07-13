@@ -52,7 +52,7 @@ public class VoxelWrapper extends PolygonWrapper {
 	@Override
 	protected ModelRendererTurbo newMRT(){
 		if(icontent != null){
-			return new ModelRendererTurbo(null, textureX, textureY, compound.tx(getTurboList()), compound.ty(getTurboList())){
+			return new ModelRendererTurbo(null, textureX(), textureY(), compound.tx(getTurboList()), compound.ty(getTurboList())){
 				@Override public RGB getColor(int i){ return super.getColor(i % 6); }
 				@Override public String toString(){ return "VoxelShape"; }
 			}.addColorIndexedVoxelShape(segx, segy, segz, icontent, colors)
