@@ -51,7 +51,7 @@ public class UVEditor extends EditorBase {
 		general.getContainer().add(texture_y = new NumberField(102, pass, 90, 20).setup("texy", -8192, 8192, true));
 		general.getContainer().add(openview = new Button(translate("editor.uv.general.openview"), 200, pass, 90, 20));
 		openview.getListenerMap().addListener(MouseClickEvent.class, event -> {
-			if(TextureManager.getGroupAmount() > 0 && event.getAction() == MouseClickAction.CLICK && !TexViewBox.isOpen()){
+			if(TextureManager.getGroupAmount() > 0 && event.getAction() == MouseClickAction.CLICK){
 				String modeltex = FMTB.MODEL.texgroup == null ? null : FMTB.MODEL.texgroup.group;
 				TexViewBox.open(modeltex == null ? TextureManager.getGroupsFE().get(0).group : modeltex);
 			}
