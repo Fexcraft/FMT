@@ -83,4 +83,8 @@ public enum ShapeType {
 		return new ShapeType[]{ BOX, SHAPEBOX, CYLINDER, MARKER, VOXEL, BB };
 	}
 
+	public boolean isTexturable(){
+		return this.isShapebox() || this == BOX || this == CYLINDER;
+	}
+
 }
