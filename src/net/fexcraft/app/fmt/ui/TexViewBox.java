@@ -78,20 +78,21 @@ public class TexViewBox {
 		});
 		viewbox.getContainer().add(texgroups);
 		//
-		viewbox.getContainer().add(new ClickListenerButton("+", 128, 4, 24, 24, () -> {
+		int pos = 112;
+		viewbox.getContainer().add(new ClickListenerButton("+", pos += 24, 4, 24, 24, () -> {
 			open(texGroup, scale + 1);
-		}));
-		viewbox.getContainer().add(new ClickListenerButton("-", 156, 4, 24, 24, () -> {
+		}).setTooltip(" zoom in ", 28, 0, 60, 20));
+		viewbox.getContainer().add(new ClickListenerButton("-", pos += 28, 4, 24, 24, () -> {
 			open(texGroup, scale - 1);
-		}));
-		viewbox.getContainer().add(new ClickListenerButton("B", 184, 4, 24, 24, () -> {
+		}).setTooltip(" zoom out ", 28, 0, 70, 20));
+		viewbox.getContainer().add(new ClickListenerButton("B", pos += 36, 4, 24, 24, () -> {
 			borders = !borders;
 			update();
-		}));
-		viewbox.getContainer().add(new ClickListenerButton("N0", 212, 4, 24, 24, () -> {
+		}).setTooltip(" toggle borders ", 28, 0, 100, 20));
+		viewbox.getContainer().add(new ClickListenerButton("N0", pos += 28, 4, 24, 24, () -> {
 			nozero = !nozero;
 			update();
-		}));
+		}).setTooltip(" toggle notex poly ", 28, 0, 120, 20));
 		//
 		boolean isactivegroup = FMTB.MODEL.texgroup != null && FMTB.MODEL.texgroup.group.equals(texGroup);
 		for(TurboList list : FMTB.MODEL.getGroups()){
