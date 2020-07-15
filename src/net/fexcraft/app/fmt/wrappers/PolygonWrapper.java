@@ -363,7 +363,7 @@ public abstract class PolygonWrapper {
 			return false;
 		}
 		if(face == null || face == -1){
-			boolean negative = face == -1;
+			boolean negative = face != null;
 			for(String faceid : getTexturableFaceIDs()){
 				Integer index = getTexturableFaceIndex(faceid);
 				if(index == null){
