@@ -255,7 +255,7 @@ public class BoxWrapper extends PolygonWrapper {
 	
 	@Override
 	public Integer getTexturableFaceIndex(String str){
-		if(!sides[0] && str.equals(faces[0])) return null;
+		if(sides[0] && str.equals(faces[0])) return null;
 		int index = 0;
 		for(int i = 0; i < faces.length; i++){
 			if(faces[i].equals(str)) return sides[i] ? null : index;
