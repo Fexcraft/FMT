@@ -2,7 +2,6 @@ package net.fexcraft.app.fmt.wrappers;
 
 import static net.fexcraft.app.fmt.utils.Logging.log;
 
-import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
 import org.lwjgl.opengl.GL11;
@@ -20,6 +19,10 @@ import net.fexcraft.app.fmt.ui.tree.Trees;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.texture.Texture;
 import net.fexcraft.app.fmt.utils.texture.TextureGroup;
+import net.fexcraft.app.fmt.wrappers.face.Face;
+import net.fexcraft.app.fmt.wrappers.face.FaceUVType;
+import net.fexcraft.app.fmt.wrappers.face.UVCoords;
+import net.fexcraft.app.fmt.wrappers.face.UVMap;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
@@ -28,7 +31,6 @@ public abstract class PolygonWrapper {
 	
 	protected static final ModelRendererTurbo rotmarker = new ModelRendererTurbo(null, 0, 0, 16, 16).addBox(-.25f, -.25f, -.25f, .5f, .5f, .5f).setTextured(false).setColor(Settings.getSelectedColor());
 	private static final ModelRendererTurbo something = new ModelRendererTurbo(null, 0, 0, 16, 16).setTextured(false);
-	protected static final String[] nofaces = { "none" };
 	//
 	public Vec3f pos = new Vec3f(), off = new Vec3f(), rot = new Vec3f();
 	//public float[][][] texpos = new float[0][][];
@@ -42,13 +44,13 @@ public abstract class PolygonWrapper {
 	public boolean selected;
 	public byte[][] color;
 	public String name;
-	public LinkedHashMap<String, FaceUVType> uvtypes = new LinkedHashMap<>();
-	public LinkedHashMap<String, float[]> uvcoords = new LinkedHashMap<>();
+	public UVMap cuv;
 	//
 	public SubTreeGroup button;
 	
 	public PolygonWrapper(GroupCompound compound){
 		this.compound = compound; button = new SubTreeGroup(Trees.polygon, this);
+		cuv = new UVMap(this);
 	}
 	
 	public void recompile(){
@@ -96,18 +98,18 @@ public abstract class PolygonWrapper {
 		}
 		if(id.startsWith("o")){
 			if(id.startsWith("oo_")){
-				float[] arr = getFaceUVCoords(UVEditor.getSelection());
+				float[] arr = getUVCoords(UVEditor.getSelection()).value();
 				if(arr != null) return arr[x ? 0 : 1];
 			}
 			else if(id.startsWith("oe_")){
-				float[] arr = getFaceUVCoords(UVEditor.getSelection());
+				float[] arr = getUVCoords(UVEditor.getSelection()).value();
 				if(arr != null){
 					boolean end = id.endsWith("e");
 					return arr[end ? x ? 2 : 3 : x ? 0 : 1];
 				}
 			}
 			else if(id.startsWith("of_")){
-				float[] arr = getFaceUVCoords(UVEditor.getSelection());
+				float[] arr = getUVCoords(UVEditor.getSelection()).value();
 				if(arr != null){
 					int index = Integer.parseInt(id.substring(id.length() - 1));
 					return arr[index * 2 + (x ? 0 : 1)];
@@ -143,14 +145,14 @@ public abstract class PolygonWrapper {
 		}
 		if(id.startsWith("o")){
 			if(id.startsWith("oo_")){
-				float[] arr = getFaceUVCoords(UVEditor.getSelection());
+				float[] arr = getUVCoords(UVEditor.getSelection()).value();
 				if(arr != null){
 					arr[x ? 0 : 1] = value;
 					return true;
 				}
 			}
 			else if(id.startsWith("oe_")){
-				float[] arr = getFaceUVCoords(UVEditor.getSelection());
+				float[] arr = getUVCoords(UVEditor.getSelection()).value();
 				if(arr != null){
 					boolean end = id.endsWith("e");
 					arr[end ? x ? 2 : 3 : x ? 0 : 1] = value;
@@ -158,7 +160,7 @@ public abstract class PolygonWrapper {
 				}
 			}
 			else if(id.startsWith("of_")){
-				float[] arr = getFaceUVCoords(UVEditor.getSelection());
+				float[] arr = getUVCoords(UVEditor.getSelection()).value();
 				if(arr != null){
 					int index = Integer.parseInt(id.substring(id.length() - 1));
 					arr[index * 2 + (x ? 0 : 1)] = value;
@@ -192,17 +194,17 @@ public abstract class PolygonWrapper {
 		if(rot.zCoord != 0f) obj.addProperty("rot_z", rot.zCoord);
 		if(mirror != false) obj.addProperty("mirror", true);
 		if(flip != false) obj.addProperty("flip", true);
-		if(!uvcoords.isEmpty()){
+		if(cuv.anyCustom()){
 			JsonObject jsn = new JsonObject();
-			for(Entry<String, float[]> entry : uvcoords.entrySet()){
-				FaceUVType type = getFaceUVType(entry.getKey());
+			for(Entry<Face, UVCoords> entry : cuv.entrySet()){
+				FaceUVType type = entry.getValue().type();
 				if(type != FaceUVType.AUTOMATIC){
 					JsonArray array = new JsonArray();
 					array.add(type.name().toLowerCase().toString());
-					for(int i = 0; i < entry.getValue().length; i++){
-						array.add(entry.getValue()[i]);
+					for(int i = 0; i < entry.getValue().length(); i++){
+						array.add(entry.getValue().value()[i]);
 					}
-					jsn.add(entry.getKey(), array);
+					jsn.add(entry.getKey().id(), array);
 				}
 			}
 			obj.add("cuv", jsn);
@@ -215,20 +217,16 @@ public abstract class PolygonWrapper {
 	}
 
 	public void parseCustomUV(JsonObject obj){
-		uvtypes.clear();
-		uvcoords.clear();
 		for(Entry<String, JsonElement> entry : obj.entrySet()){
-			if(!isValidTexturableFaceIDs(entry.getKey())) continue;
+			if(!isValidFace(entry.getKey())) continue;
 			JsonArray array = entry.getValue().getAsJsonArray();
 			FaceUVType type = FaceUVType.validate(array.get(0).getAsString());
 			if(type == FaceUVType.AUTOMATIC) continue;
-			uvtypes.put(entry.getKey(), type);
-			float[] arr = new float[type.arraylength];
+			UVCoords coord = cuv.get(Face.byId(entry.getKey(), true)).set(type);
 			for(int i = 0; i < type.arraylength; i++){
 				if(i + 1 >= array.size()) break;
-				arr[i] = array.get(i + 1).getAsFloat();
+				coord.value()[i] = array.get(i + 1).getAsFloat();
 			}
-			uvcoords.put(entry.getKey(), arr);
 		}
 	}
 
@@ -316,7 +314,7 @@ public abstract class PolygonWrapper {
 		if(id.startsWith("texpos") && this.getType().isTexRect()){ bool = this.setFloat(id, x, y, z, value); }
 		if(id.startsWith("marker") && this.getType().isMarker()){ bool = this.setFloat(id, x, y, z, value); }
 		if(id.startsWith("oo_")){
-			float[] arr = getFaceUVCoords(UVEditor.getSelection());
+			float[] arr = getUVCoords(UVEditor.getSelection()).value();
 			if(arr != null){
 				arr[x ? 0 : 1] = value;
 				bool = true;
@@ -324,7 +322,7 @@ public abstract class PolygonWrapper {
 			TexViewBox.update();
 		}
 		else if(id.startsWith("oe_")){
-			float[] arr = getFaceUVCoords(UVEditor.getSelection());
+			float[] arr = getUVCoords(UVEditor.getSelection()).value();
 			if(arr != null){
 				boolean end = id.endsWith("e");
 				arr[end ? x ? 2 : 3 : x ? 0 : 1] = value;
@@ -333,7 +331,7 @@ public abstract class PolygonWrapper {
 			TexViewBox.update();
 		}
 		else if(id.startsWith("of_")){
-			float[] arr = getFaceUVCoords(UVEditor.getSelection());
+			float[] arr = getUVCoords(UVEditor.getSelection()).value();
 			if(arr != null){
 				int index = Integer.parseInt(id.substring(id.length() - 1));
 				arr[index * 2 + (x ? 0 : 1)] = value;
@@ -353,28 +351,29 @@ public abstract class PolygonWrapper {
 	}
 	
 	public boolean burnToTexture(Texture tex, Integer face){
-		return burnToTexture(tex, face, null, false);
+		return burnToTexture(tex, face, null, false, null);
 	}
 	
-	public boolean burnToTexture(Texture tex, Integer face, float[][][] coords, boolean detached){
+	public boolean burnToTexture(Texture tex, Integer face, float[][][] coords, boolean detached, Face sface){
 		if(coords == null) coords = newTexturePosition(true, false);
 		if(coords == null || coords.length == 0){
-			log("Polygon '" + turbolist.id + ":" + this.name() + "' has no texture data, skipping.");
+			//log("Polygon '" + turbolist.id + ":" + this.name() + "' has no texture data, skipping.");
 			return false;
 		}
 		if(face == null || face == -1){
 			boolean negative = face != null;
-			for(String faceid : getTexturableFaceIDs()){
-				Integer index = getTexturableFaceIndex(faceid);
-				if(index == null){
-					log("Polygon '" + turbolist.id + ":" + this.name() + "' face index '" + faceid + "' returned null!");
+			for(Face faceo : getTexturableFaces()){
+				if(sface != null && !isValidFace(faceo)){
+					//log("Polygon '" + turbolist.id + ":" + this.name() + "' face index '" + faceid + "' returned null!");
 					continue;
 				}
-				float[][] ends = coords[index];
+				UVCoords coord = cuv.get(faceo);
+				float[][] ends = coords[sface != null ? 0 : coord.side().index()];
 				if(ends == null || ends.length == 0) continue;
-				if(getFaceUVType(faceid).absolute()) detached = true;
-				byte[] color = (negative ? TextureEditor.CURRENTCOLOR : something.getColor(index)).toByteArray();
+				if(!detached && coord.absolute()) detached = true;
+				byte[] color = (negative ? TextureEditor.CURRENTCOLOR : something.getColor(coord.side().index())).toByteArray();
 				burn(tex, ends, color, detached);
+				if(sface != null) break;
 			}
 		}
 		else{
@@ -401,7 +400,7 @@ public abstract class PolygonWrapper {
 			else if(this.getType().isRectagular() && !this.getType().isTexRect()){
 				float[][] ends = coords[face];
 				if(ends == null || ends.length == 0) return false;
-				burn(tex, ends, TextureEditor.CURRENTCOLOR.toByteArray(), getFaceUVType(getTexturableFaceIDs()[face]).absolute());
+				burn(tex, ends, TextureEditor.CURRENTCOLOR.toByteArray(), cuv.get(getTexturableFaces()[face]).absolute());
 			}
 			else{
 				log("There is no known way of how to handle texture burning of '" + this.getType().name() + "'!");
@@ -505,38 +504,49 @@ public abstract class PolygonWrapper {
 		return 6;
 	}
 
-	public abstract String[] getTexturableFaceIDs();
+	public abstract Face[] getTexturableFaces();
 
-	public boolean isValidTexturableFaceIDs(String str){
-		String[] arr = this.getTexturableFaceIDs();
-		for(String string : arr){
-			if(string.equals(str)) return true;
+	public boolean isValidFace(String str){
+		for(Face face : getTexturableFaces()){
+			if(face.id().equals(str)) return true;
 		}
 		return false;
 	}
 
-	public Integer getTexturableFaceIndex(String str){
-		String[] arr = this.getTexturableFaceIDs();
-		for(int i = 0; i < arr.length; i++){
-			if(arr[i].equals(str)) return i;
+	public boolean isValidFace(Face other){
+		for(Face face : getTexturableFaces()){
+			if(face == other) return true;
 		}
-		return null;
+		return false;
 	}
 
-	public FaceUVType getFaceUVType(String side){
-		return side == null ? FaceUVType.AUTOMATIC : FaceUVType.validate(uvtypes.get(side));
+	public boolean isFaceActive(String str){
+		for(Face face : getTexturableFaces()){
+			if(face.id().equals(str)) return true;
+		}
+		return false;
 	}
 
-	public float[] getFaceUVCoords(String side){
-		return uvcoords.get(side);
+	public boolean isFaceActive(Face other){
+		for(Face face : getTexturableFaces()){
+			if(face == other) return true;
+		}
+		return false;
+	}
+
+	public UVCoords getUVCoords(String side){
+		return cuv.get(side);
+	}
+
+	public UVCoords getUVCoords(Face side){
+		return cuv.get(side);
 	}
 	
-	public float[] getDefAutoFaceUVCoords(String side){
-		Integer index = getTexturableFaceIndex(side);
-		FaceUVType type = getFaceUVType(side);
-		if(index == null) return new float[type.arraylength];
+	public float[] getDefAutoUVCoords(String side){
+		UVCoords coords = getUVCoords(side);
+		int index = coords.side().index();
 		float[][][] arr = newTexturePosition(false, false);
-		switch(type){
+		switch(coords.type()){
 			case ABSOLUTE:
 			case OFFSET_ONLY:
 				return new float[]{ arr[index][0][0], arr[index][0][1] };
@@ -557,6 +567,10 @@ public abstract class PolygonWrapper {
 		}
 	}
 	
+	public float[] getDefAutoUVCoords(Face side){
+		return getDefAutoUVCoords(side.id());
+	}
+	
 	public int textureX(){
 		return textureX == -1 ? 0 : textureX;
 	}
@@ -566,17 +580,16 @@ public abstract class PolygonWrapper {
 	}
 
 	public boolean anyFaceUVAbsolute(){
-		for(FaceUVType type : uvtypes.values()){
-			if(type.absolute()) return true;
+		for(UVCoords cuv : cuv.values()){
+			if(cuv.absolute()) return true;
 		}
 		return false;
 	}
 
 	public boolean isAllFaceUVAbsolute(){
-		for(String str : getTexturableFaceIDs()){
-			Integer index = getTexturableFaceIndex(str);
-			if(index == null) continue;//consider this face/side is disabled
-			if(!getFaceUVType(str).absolute()) return true;
+		for(Face face : getTexturableFaces()){
+			if(!isFaceActive(face)) continue;//consider this face/side is disabled
+			if(!cuv.get(face).absolute()) return true;
 		}
 		return false;
 	}

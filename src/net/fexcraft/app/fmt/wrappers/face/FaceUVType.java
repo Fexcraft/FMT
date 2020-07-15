@@ -1,4 +1,4 @@
-package net.fexcraft.app.fmt.wrappers;
+package net.fexcraft.app.fmt.wrappers.face;
 
 public enum FaceUVType {
 	

@@ -7,6 +7,8 @@ import java.util.Map;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import net.fexcraft.app.fmt.wrappers.face.Face;
+import net.fexcraft.app.fmt.wrappers.face.NullFace;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.tmt.ColorIndexedVoxelBuilder;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
@@ -166,8 +168,8 @@ public class VoxelWrapper extends PolygonWrapper {
 	}
 
 	@Override
-	public String[] getTexturableFaceIDs(){
-		return nofaces;
+	public Face[] getTexturableFaces(){
+		return NullFace.values();
 	}
 	
 }

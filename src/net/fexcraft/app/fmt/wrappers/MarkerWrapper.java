@@ -7,6 +7,8 @@ import com.google.gson.JsonObject;
 import net.fexcraft.app.fmt.demo.ModelSteve;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.texture.TextureManager;
+import net.fexcraft.app.fmt.wrappers.face.Face;
+import net.fexcraft.app.fmt.wrappers.face.NullFace;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
@@ -116,8 +118,8 @@ public class MarkerWrapper extends PolygonWrapper {
 	}
 
 	@Override
-	public String[] getTexturableFaceIDs(){
-		return nofaces;
+	public Face[] getTexturableFaces(){
+		return NullFace.values();
 	}
 	
 }

@@ -7,6 +7,8 @@ import java.io.FileInputStream;
 
 import com.google.gson.JsonObject;
 
+import net.fexcraft.app.fmt.wrappers.face.Face;
+import net.fexcraft.app.fmt.wrappers.face.NullFace;
 import net.fexcraft.lib.common.utils.WavefrontObjUtil;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
@@ -66,8 +68,8 @@ public class ObjPreviewWrapper extends PolygonWrapper {
 	}
 
 	@Override
-	public String[] getTexturableFaceIDs(){
-		return nofaces;
+	public Face[] getTexturableFaces(){
+		return NullFace.values();
 	}
 	
 }

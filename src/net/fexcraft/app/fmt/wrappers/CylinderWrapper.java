@@ -4,6 +4,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
+import net.fexcraft.app.fmt.wrappers.face.CylFace;
+import net.fexcraft.app.fmt.wrappers.face.Face;
 import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
@@ -13,8 +15,6 @@ public class CylinderWrapper extends PolygonWrapper {
 	public int segments = 8, seglimit, direction = ModelRendererTurbo.MR_TOP;
 	public Vec3f topoff = new Vec3f(0, 0, 0), toprot = new Vec3f(0, 0, 0);
 	public boolean[] bools = new boolean[4];
-	//
-	public static String[] faces = { "base", "top", "outer", "inner", "seg_side_0", "seg_side_1" };
 	//
 	public boolean radial;
 	public float seg_width, seg_height;
@@ -234,8 +234,8 @@ public class CylinderWrapper extends PolygonWrapper {
 	}
 
 	@Override
-	public String[] getTexturableFaceIDs(){
-		return faces;
+	public Face[] getTexturableFaces(){
+		return CylFace.values();
 	}
 	
 }

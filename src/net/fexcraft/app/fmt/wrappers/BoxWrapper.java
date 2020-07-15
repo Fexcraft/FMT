@@ -5,6 +5,9 @@ import java.util.Map;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import net.fexcraft.app.fmt.wrappers.face.BoxFace;
+import net.fexcraft.app.fmt.wrappers.face.Face;
+import net.fexcraft.app.fmt.wrappers.face.FaceUVType;
 import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.tmt.BoxBuilder;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
@@ -13,8 +16,6 @@ public class BoxWrapper extends PolygonWrapper {
 	
 	public Vec3f size = new Vec3f(1, 1, 1);
 	public boolean[] sides = new boolean[6];
-	//
-	public static String[] faces = { "front", "back", "top", "down", "right", "left" };
 	
 	public BoxWrapper(GroupCompound compound){
 		super(compound);
@@ -95,9 +96,7 @@ public class BoxWrapper extends PolygonWrapper {
 	@Override
 	public float[][][] newTexturePosition(boolean include_offsets, boolean exclude_detached){
 		float tx = 0 /*textureX*/, ty = 0 /*textureY*/, w = size.xCoord, h = size.yCoord, d = size.zCoord;
-		int sideson = 0, sideid = 0;
-		for(boolean bool : sides) if(!bool) sideson++;
-		float[][][] vecs = new float[sideson][][];
+		float[][][] vecs = new float[6][][];
 		//
     	float yp = detached(2) && detached(3) ? 0 : d;
     	float x0 = detached(1) ? 0 : d;
@@ -106,57 +105,57 @@ public class BoxWrapper extends PolygonWrapper {
     	float x3 = detached(0) ? 0 : d;
 		//
 		if(!sides[0] && !absolute(0, exclude_detached)){
-			vecs[sideid++] = new float[][]{
+			vecs[0] = new float[][]{
 				new float[]{ tx + x0 + x2, ty + yp },
 				new float[]{ tx + x0 + x2 + d, ty + yp + h }
 			};
-			if(include_offsets && getFaceUVType(faces[0]) != FaceUVType.AUTOMATIC){
-				vecs[sideid - 1] = getCoords(faces[0], vecs[sideid - 1]);
+			if(include_offsets && getFaceUVType(BoxFace.FRONT) != FaceUVType.AUTOMATIC){
+				vecs[0] = getCoords(BoxFace.FRONT, vecs[0]);
 			}
 		}
 		if(!sides[1] && !absolute(1, exclude_detached)){
-			vecs[sideid++] = new float[][]{
+			vecs[1] = new float[][]{
 				new float[]{ tx, ty + yp },
 				new float[]{ tx + d, ty + yp + h }
 			};
-			if(include_offsets && getFaceUVType(faces[1]) != FaceUVType.AUTOMATIC){
-				vecs[sideid - 1] = getCoords(faces[1], vecs[sideid - 1]);
+			if(include_offsets && getFaceUVType(BoxFace.BACK) != FaceUVType.AUTOMATIC){
+				vecs[1] = getCoords(BoxFace.BACK, vecs[1]);
 			}
 		}
 		if(!sides[2] && !absolute(2, exclude_detached)){
-			vecs[sideid++] = new float[][]{
+			vecs[2] = new float[][]{
 				new float[]{ tx + x0, ty },
 				new float[]{ tx + x0 + w, ty + d }
 			};
-			if(include_offsets && getFaceUVType(faces[2]) != FaceUVType.AUTOMATIC){
-				vecs[sideid - 1] = getCoords(faces[2], vecs[sideid - 1]);
+			if(include_offsets && getFaceUVType(BoxFace.TOP) != FaceUVType.AUTOMATIC){
+				vecs[2] = getCoords(BoxFace.TOP, vecs[2]);
 			}
 		}
 		if(!sides[3] && !absolute(3, exclude_detached)){
-			vecs[sideid++] = new float[][]{
+			vecs[3] = new float[][]{
 				new float[]{ tx + x0 + x1, ty + 0 },
 				new float[]{ tx + x0 + x1 + w, ty + d }
 			};
-			if(include_offsets && getFaceUVType(faces[3]) != FaceUVType.AUTOMATIC){
-				vecs[sideid - 1] = getCoords(faces[3], vecs[sideid - 1]);
+			if(include_offsets && getFaceUVType(BoxFace.DOWN) != FaceUVType.AUTOMATIC){
+				vecs[3] = getCoords(BoxFace.DOWN, vecs[3]);
 			}
 		}
 		if(!sides[4] && !absolute(4, exclude_detached)){
-			vecs[sideid++] = new float[][]{
+			vecs[4] = new float[][]{
 				new float[]{ tx + x0, ty + yp },
 				new float[]{ tx + x0 + w, ty + yp + h }
 			};
-			if(include_offsets && getFaceUVType(faces[4]) != FaceUVType.AUTOMATIC){
-				vecs[sideid - 1] = getCoords(faces[4], vecs[sideid - 1]);
+			if(include_offsets && getFaceUVType(BoxFace.RIGHT) != FaceUVType.AUTOMATIC){
+				vecs[4] = getCoords(BoxFace.RIGHT, vecs[4]);
 			}
 		}
 		if(!sides[5] && !absolute(5, exclude_detached)){
-			vecs[sideid++] = new float[][]{
+			vecs[5] = new float[][]{
 				new float[]{ tx + x0 + x2 + x3, ty + yp },
 				new float[]{ tx + x0 + x2 + x3 + w, ty + yp + h }
 			};
-			if(include_offsets && getFaceUVType(faces[5]) != FaceUVType.AUTOMATIC){
-				vecs[sideid - 1] = getCoords(faces[5], vecs[sideid - 1]);
+			if(include_offsets && getFaceUVType(BoxFace.LEFT) != FaceUVType.AUTOMATIC){
+				vecs[5] = getCoords(BoxFace.LEFT, vecs[5]);
 			}
 		}
 		return vecs;
@@ -164,16 +163,16 @@ public class BoxWrapper extends PolygonWrapper {
 
 	private boolean absolute(int index, boolean exclude_detached){
 		if(!exclude_detached) return false;
-		return getFaceUVType(faces[index]).absolute();
+		return getFaceUVType(BoxFace.values()[index]).absolute();
 	}
 
 	private boolean detached(int i){
-		return sides[i] ? true : getFaceUVType(faces[i]).absolute();
+		return sides[i] ? true : getFaceUVType(BoxFace.values()[i]).absolute();
 	}
 
-	private float[][] getCoords(String string, float[][] def){
-		FaceUVType type = getFaceUVType(string);
-		float[] arr = getFaceUVCoords(string);
+	private float[][] getCoords(Face face, float[][] def){
+		FaceUVType type = getFaceUVType(face);
+		float[] arr = getFaceUVCoords(face);
 		float[][] res = null;
 		switch(type){
 			case ABSOLUTE:
@@ -249,19 +248,24 @@ public class BoxWrapper extends PolygonWrapper {
 	}
 
 	@Override
-	public String[] getTexturableFaceIDs(){
-		return faces;
+	public Face[] getTexturableFaces(){
+		return BoxFace.values();
 	}
-	
+
 	@Override
-	public Integer getTexturableFaceIndex(String str){
-		if(sides[0] && str.equals(faces[0])) return null;
-		int index = 0;
-		for(int i = 0; i < faces.length; i++){
-			if(faces[i].equals(str)) return sides[i] ? null : index;
-			if(!sides[i]) index++;
+	public boolean isFaceActive(String str){
+		for(Face face : getTexturableFaces()){
+			if(face.id().equals(str)) return !sides[face.index()];
 		}
-		return null;
+		return false;
+	}
+
+	@Override
+	public boolean isFaceActive(Face other){
+		for(Face face : getTexturableFaces()){
+			if(face == other) return !sides[face.index()];
+		}
+		return false;
 	}
 	
 }

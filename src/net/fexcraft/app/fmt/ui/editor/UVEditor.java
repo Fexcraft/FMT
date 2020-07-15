@@ -16,8 +16,9 @@ import net.fexcraft.app.fmt.ui.TexViewBox;
 import net.fexcraft.app.fmt.ui.field.NumberField;
 import net.fexcraft.app.fmt.ui.field.TextField;
 import net.fexcraft.app.fmt.utils.texture.TextureManager;
-import net.fexcraft.app.fmt.wrappers.FaceUVType;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
+import net.fexcraft.app.fmt.wrappers.face.Face;
+import net.fexcraft.app.fmt.wrappers.face.FaceUVType;
 
 public class UVEditor extends EditorBase {
 
@@ -37,7 +38,7 @@ public class UVEditor extends EditorBase {
 	private static FaceUVType lasttype = FaceUVType.AUTOMATIC;
 	public static ArrayList<Component> tempcomp = new ArrayList<>();
 	public static EditorWidget tempone;
-	private static String selface;
+	private static Face selface;
 
 	public UVEditor(){
 		super();
@@ -86,21 +87,21 @@ public class UVEditor extends EditorBase {
 	}
 
 	private void updateFace(SelectBoxChangeSelectionEvent<String> event){
-		refreshEntries(last, event.getNewValue());
+		refreshEntries(last, Face.byId(event.getNewValue(), false));
 	}
 
 	private void updateType(SelectBoxChangeSelectionEvent<String> event){
 		ArrayList<PolygonWrapper> polis = FMTB.MODEL.getSelected();
 		FaceUVType type = FaceUVType.validate(event.getNewValue());
 		polis.forEach(poly -> {
-			poly.uvtypes.put(selface, type);
-			if(type.arraylength == 0) poly.uvcoords.remove(selface);
-			else poly.uvcoords.put(selface, poly.getDefAutoFaceUVCoords(selface));
+			poly.uvtypes.put(selface.id(), type);
+			if(type.arraylength == 0) poly.uvcoords.remove(selface.id());
+			else poly.uvcoords.put(selface.id(), poly.getDefAutoFaceUVCoords(selface));
 		});
 		refreshEntries(last, selface);
 	}
 
-	public static void refreshEntries(PolygonWrapper selected, String self){
+	public static void refreshEntries(PolygonWrapper selected, Face self){
 		if(selected == null){
 			clearUVFaceSelBox();
 			uv_face.addElement(FMTB.NO_POLYGON_SELECTED);
@@ -114,11 +115,11 @@ public class UVEditor extends EditorBase {
 			}
 			else{
 				last = selected;
-				if(!last.isValidTexturableFaceIDs(selface)){
-					selface = selected.getTexturableFaceIDs()[0];
+				if(!last.isValidTexturableFace(selface)){
+					selface = selected.getTexturableFaces()[0];
 					clearUVFaceSelBox();
-					for(String face : selected.getTexturableFaceIDs()){
-						uv_face.addElement(face);
+					for(Face face : selected.getTexturableFaces()){
+						uv_face.addElement(face.id());
 					}
 				}
 			}
@@ -342,7 +343,7 @@ public class UVEditor extends EditorBase {
 		}
 	}
 	
-	public static String getSelection(){
+	public static Face getSelection(){
 		return selface;
 	}
 

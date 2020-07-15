@@ -6,7 +6,6 @@ import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLIC
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Map.Entry;
 import java.util.TimerTask;
 import java.util.stream.Collectors;
 
@@ -22,10 +21,11 @@ import org.liquidengine.legui.listener.MouseClickEventListener;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.utils.Translator;
-import net.fexcraft.app.fmt.wrappers.FaceUVType;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.ShapeType;
 import net.fexcraft.app.fmt.wrappers.TurboList;
+import net.fexcraft.app.fmt.wrappers.face.Face;
+import net.fexcraft.app.fmt.wrappers.face.FaceUVType;
 import net.fexcraft.lib.common.math.RGB;
 
 /**
@@ -140,6 +140,50 @@ public class TextureUpdate extends TimerTask {
 		dialog.show(FMTB.frame);
 	}
 
+	public static void tryResetPosType(){
+		int width = 440;
+		resetsel = null;
+		Dialog dialog = new Dialog(Translator.translate("texture_update.texpostype_reset.title"), width + 20, 180);
+		Label label0 = new Label(Translator.translate("texture_update.texpostype_reset.info"), 10, 10, width, 20);
+		label0.getStyle().setFont("roboto-bold");
+		Label label1 = new Label(Translator.translate("texture_update.texpostype_reset.polygroup"), 10, 40, width / 20, 20);
+		SelectBox<String> texture = new SelectBox<>(10 + width / 2, 40, width / 2, 20);
+		texture.addElement("all-groups");
+		for(TurboList list : FMTB.MODEL.getGroups()) texture.addElement(list.id);
+		texture.addSelectBoxChangeSelectionEventListener(listener -> {
+			if(listener.getNewValue().equals("all-groups")) resetsel = null;
+			else resetsel = FMTB.MODEL.getGroups().get(listener.getNewValue());
+		});
+		texture.setSelected(0, true);
+		texture.setVisibleCount(6);
+		Button button = new Button(Translator.translate("dialogbox.button.confirm"), 10, 130, 100, 20);
+		button.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)e -> {
+			if(CLICK == e.getAction()){
+				if(resetsel != null){
+					resetsel.forEach(turbo -> {
+						turbo.uvcoords.clear();
+						turbo.uvtypes.clear();
+						turbo.recompile();
+					});
+				}
+				else{
+					FMTB.MODEL.getGroups().forEach(list -> list.forEach(turbo -> {
+						turbo.uvcoords.clear();
+						turbo.uvtypes.clear();
+						turbo.recompile();
+					}));
+				}
+				dialog.close();
+				DialogBox.showOK(null, null, null, "texture_update.texpos_reset.done");
+			}
+		});
+		dialog.getContainer().add(label0);
+		dialog.getContainer().add(label1);
+		dialog.getContainer().add(texture);
+		dialog.getContainer().add(button);
+		dialog.show(FMTB.frame);
+	}
+
 	public static void tryAutoPos(){
 		int width = 540;
 		Dialog dialog = new Dialog(Translator.translate("texture_update.autopos.title"), width + 20, 210);
@@ -198,7 +242,7 @@ public class TextureUpdate extends TimerTask {
 				final int sizey = FMTB.MODEL.ty(selected, false);
 				log("Setting size to " + sizex + "x, " + sizey + "y.");
 				log("Group selected: " + (selected == null ? "none" : selected.id));
-				log("All-Polygons is set to '" + ALL + "' and Save-Space is set to '" + SAVESPACE + "'.");
+				log("All-Polygons is set to '" + ALL + "' and Save-Space is set to '" + SAVESPACE + "'. Detach is set to '" + DETACH + "'.");
 				if(list == null){
 					list = getSortedList(ALL);
 					last = 0;
@@ -225,16 +269,16 @@ public class TextureUpdate extends TimerTask {
 							log("skipping [" + corcon.wrapper.getTurboList().id + ":" + corcon.name() + "] (missing texture definition)");
 							continue;
 						}
-						if((corcon.wrapper.textureX > -1 && corcon.wrapper.textureY > -1) && !ALL){
+						if((corcon.wrapper.textureX > -1 && corcon.wrapper.textureY > -1) && (!ALL || (!DETACH & corcon.wrapper.getFaceUVType(corcon.face.id()).absolute()))){
 							log("skipping [" + corcon.wrapper.getTurboList().id + ":" + corcon.name() + "] (texture not -1x -1y)");
 							if(!corcon.exclude && !corcon.poly()){
 								corcon.wrapper.burnToTexture(texture, null);
 							}
 							else if(corcon.exclude){
-								corcon.wrapper.burnToTexture(texture, null, corcon.coords, false);
+								corcon.wrapper.burnToTexture(texture, null, corcon.coords, false, null);
 							}
 							else{
-								corcon.wrapper.burnToTexture(texture, null, corcon.coords, true);
+								corcon.wrapper.burnToTexture(texture, null, corcon.coords, true, corcon.face.index());
 							}
 							Thread.sleep(10);
 							continue;
@@ -253,8 +297,8 @@ public class TextureUpdate extends TimerTask {
 										corcon.wrapper.burnToTexture(texture, null);
 									}
 									else{
-										FaceUVType type = corcon.wrapper.getFaceUVType(corcon.indexname);
-										float[] arr = type.automatic() ? corcon.wrapper.getDefAutoFaceUVCoords(corcon.indexname) : corcon.wrapper.uvcoords.get(corcon.indexname);
+										FaceUVType type = corcon.wrapper.getFaceUVType(corcon.face);
+										float[] arr = type.automatic() ? new float[2] : corcon.wrapper.uvcoords.get(corcon.face.id());
 										switch(type){
 											case AUTOMATIC:
 											case ABSOLUTE:
@@ -276,7 +320,7 @@ public class TextureUpdate extends TimerTask {
 											}
 											case ABSOLUTE_FULL:
 											case OFFSET_FULL:{
-												float minx = arr[0], miny = arr[1];
+												float minx = arr[2], miny = arr[3];
 												arr[0] += xar - minx;
 												arr[1] += yar - miny;
 												arr[2] += xar - minx;
@@ -289,9 +333,9 @@ public class TextureUpdate extends TimerTask {
 												break;
 											}
 										}
-										corcon.wrapper.uvtypes.put(corcon.indexname, type);
-										corcon.wrapper.uvcoords.put(corcon.indexname, arr);
-										corcon.wrapper.burnToTexture(texture, null, new float[][][]{ corcon.wrapper.newTexturePosition(true, false)[corcon.index] }, true);
+										corcon.wrapper.uvtypes.put(corcon.face.id(), type);
+										corcon.wrapper.uvcoords.put(corcon.face.id(), arr);
+										corcon.wrapper.burnToTexture(texture, null, new float[][][]{ corcon.wrapper.newTexturePosition(true, false)[corcon.face.index()] }, true, corcon.face.index());
 									}
 									pass = true;
 									Thread.sleep(10);
@@ -403,16 +447,20 @@ public class TextureUpdate extends TimerTask {
 
 	private static void addAll(ArrayList<CoordContainer> arrlist, TurboList turbolist){
 		for(PolygonWrapper wrapper : turbolist){
+			if(!wrapper.getType().isTexturable()) continue;
 			boolean detach = DETACH && (wrapper.getType() == ShapeType.BOX || wrapper.getType() == ShapeType.SHAPEBOX);
 			if(detach || wrapper.anyFaceUVAbsolute()){
-				for(Entry<String, FaceUVType> entry : wrapper.uvtypes.entrySet()){
-					if(detach || entry.getValue().absolute()){
-						new CoordContainer(wrapper, entry.getKey(), detach && !entry.getValue().absolute());
+				for(Face str : wrapper.getTexturableFaces()){
+					if(wrapper.getTexturableFaceIndex(str) == null) continue;//most probably this face/side is disabled
+					FaceUVType type = wrapper.getFaceUVType(str);
+					if(detach || type.absolute()){
+						arrlist.add(new CoordContainer(wrapper, str, detach && !type.absolute()));
 					}
 				}
 				if(!detach && !wrapper.isAllFaceUVAbsolute()){
 					arrlist.add(new CoordContainer(wrapper, true));
 				}
+				wrapper.textureX = wrapper.textureY = -1;
 			}
 			else{
 				arrlist.add(new CoordContainer(wrapper, false));
@@ -451,26 +499,23 @@ public class TextureUpdate extends TimerTask {
 	public static class CoordContainer {
 		
 		public float[][][] coords;
-		public int index;
-		public String indexname;
+		public Face face;
 		public PolygonWrapper wrapper;
 		public float min_x, min_y, max_x, max_y;
 		public boolean detached, exclude;
 		
 		public CoordContainer(PolygonWrapper wrapper, boolean excempt){
 			this.wrapper = wrapper;
-			coords = (exclude = excempt) ? wrapper.newTexturePosition(true, excempt) : wrapper.newTexturePosition(true, false);
+			coords = wrapper.newTexturePosition(true, exclude = excempt);
 		}
 
-		public CoordContainer(PolygonWrapper wrapper, String key, boolean detach){
+		public CoordContainer(PolygonWrapper wrapper, Face key, boolean detach){
 			this.wrapper = wrapper;
-			index = wrapper.getTexturableFaceIndex(indexname = key);
-			coords = new float[][][]{ wrapper.newTexturePosition(true, false)[index] };
-			if(detach){
+			coords = new float[][][]{ wrapper.newTexturePosition(true, false)[(face = key).index()] };
+			if(detached = detach){
 				coords[0][1][0] -= coords[0][0][0];
 				coords[0][1][1] -= coords[0][0][1];
 				coords[0][0][0] = coords[0][0][1] = 0;
-				detached = true;
 			}
 		}
 
@@ -490,11 +535,11 @@ public class TextureUpdate extends TimerTask {
 		}
 
 		public String name(){
-			return wrapper.name() + (indexname == null ? ";" : ":" + indexname);
+			return wrapper.name() + (face == null ? ";" : ":" + face.id());
 		}
 
 		public boolean poly(){
-			return indexname != null;
+			return face != null;
 		}
 		
 	}

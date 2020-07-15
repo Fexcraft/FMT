@@ -61,7 +61,8 @@ toolbar.shapelist.add_voxel=Add Voxel(16)
 toolbar.textures=Texture
 toolbar.textures.manage=Manage Textures
 toolbar.textures.addnew=Add New TexGroup
-toolbar.textures.texpos_reset=Reset U/V
+toolbar.textures.texpos_reset=Reset U/V Pos
+toolbar.textures.texpostype_reset=Reset U/V Type
 toolbar.textures.auto_position=Auto Pos. U/V
 toolbar.helpers=Helpers
 toolbar.helpers.view=View Loaded
@@ -336,10 +337,14 @@ texture_update.autopos.processing=Processing: %s:%s
 texture_update.autopos.complete=Auto texture positioning Complete!
 texture_update.resize.exceeding_4096=Exceeding 4096 pixel! Exceeding 4096 pixel!
 texture_update.resize.success=Resized!
-texture_update.texpos_reset.title=Texture Position Resetter
+texture_update.texpos_reset.title=Texture U/V Position Resetter
 texture_update.texpos_reset.info=This resets the polygon (automatic) U/V values!
 texture_update.texpos_reset.polygroup=Polygon Group to process: 
-texture_update.texpos_reset.done=Texture Positions Reset Successfully.
+texture_update.texpos_reset.done=Texture U/V Positions Reset Successfully.
+texture_update.texpostype_reset.title=Texture U/V Type Resetter
+texture_update.texpostype_reset.info=This resets the polygon U/V mapping types!
+texture_update.texpostype_reset.polygroup=Polygon Group to process: 
+texture_update.texpostype_reset.done=Texture U/V Types Reset Successfully.
 
 # Errors
 error.dialog_title=Error
