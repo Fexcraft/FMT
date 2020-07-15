@@ -80,5 +80,10 @@ public class BBWrapper extends BoxWrapper {
 		wrapper.size = new Vec3f(size);
 		return copyTo(wrapper, true);
 	}
+
+	@Override
+	public float[][][] newTexturePosition(boolean include_offsets, boolean exclude_detached){
+		return new float[0][][];
+	}
 	
 }
