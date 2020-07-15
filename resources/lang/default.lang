@@ -330,6 +330,7 @@ texture_update.autopos.info=This process may mark FMT as not responding.
 texture_update.autopos.polygroup=Polygon Group to process: 
 texture_update.autopos.savespace=Use save-space mode? (may reduce readability)
 texture_update.autopos.process_all=Only process polygons with no texture pos?
+texture_update.autopos.detach_all=Detach faces from polygons? (CAN ONLY BE UNDODE MANUALLY!)
 texture_update.autopos.start=Start
 texture_update.autopos.processing=Processing: %s:%s
 texture_update.autopos.complete=Auto texture positioning Complete!

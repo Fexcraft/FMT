@@ -34,4 +34,8 @@ public enum FaceUVType {
 		return this == ABSOLUTE || this == ABSOLUTE_ENDS || this == ABSOLUTE_FULL;
 	}
 
+	public boolean automatic(){
+		return this == AUTOMATIC;
+	}
+
 }

@@ -100,7 +100,7 @@ public class TexViewBox {
 			if(list.texgroup != null && !list.texgroup.group.equals(texGroup)) continue;
 			for(PolygonWrapper wrapper : list){
 				if(!wrapper.getType().isTexturable()) continue;
-				float[][][] coords = wrapper.newTexturePosition(true);
+				float[][][] coords = wrapper.newTexturePosition(true, false);
 				for(int i = 0; i < coords.length; i++){
 					if(coords[i][1][0] - coords[i][0][0] == 0 || coords[i][1][1] - coords[i][0][1] == 0) continue;
 					canvas.getContainer().add(new PolyFace(wrapper, i, coords[i]));
@@ -149,7 +149,7 @@ public class TexViewBox {
 		}
 
 		public void updatePos(){
-			coords = wrapper.newTexturePosition(true)[index];
+			coords = wrapper.newTexturePosition(true, false)[index];
 			this.setPosition(new Vector2f(wrapper.textureX + coords[0][0], wrapper.textureY + coords[0][1]).mul(scale));
 			this.setSize(new Vector2f(coords[1][0] - coords[0][0], coords[1][1] - coords[0][1]).mul(scale));
 		}

@@ -56,7 +56,7 @@ public class ObjPreviewWrapper extends PolygonWrapper {
 	}
 
 	@Override
-	public float[][][] newTexturePosition(boolean include_offsets){
+	public float[][][] newTexturePosition(boolean include_offsets, boolean exclude_detached){
 		return new float[0][][];
 	}
 

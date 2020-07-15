@@ -31,7 +31,7 @@ public abstract class PolygonWrapper {
 	protected static final String[] nofaces = { "none" };
 	//
 	public Vec3f pos = new Vec3f(), off = new Vec3f(), rot = new Vec3f();
-	public float[][][] texpos = new float[0][][];
+	//public float[][][] texpos = new float[0][][];
 	public int textureX = -1, textureY = -1;
 	protected ModelRendererTurbo turbo, lines, sellines, picker;
 	protected final GroupCompound compound;
@@ -53,7 +53,6 @@ public abstract class PolygonWrapper {
 	
 	public void recompile(){
 		this.clearMRT(turbo, lines, sellines, picker); this.setupMRT();
-		this.texpos = this.newTexturePosition(true);
 	}
 
 	public void render(boolean rotX, boolean rotY, boolean rotZ){
@@ -282,7 +281,7 @@ public abstract class PolygonWrapper {
 
 	protected abstract ModelRendererTurbo newMRT();
 	
-	public abstract float[][][] newTexturePosition(boolean include_offsets);
+	public abstract float[][][] newTexturePosition(boolean include_offsets, boolean exclude_detached);
 
 	public boolean apply(String id, float value, boolean x, boolean y, boolean z){
 		boolean bool = false;
@@ -354,45 +353,55 @@ public abstract class PolygonWrapper {
 	}
 	
 	public boolean burnToTexture(Texture tex, Integer face){
-		if(this.texpos == null || this.texpos.length == 0){
+		return burnToTexture(tex, face, null, false);
+	}
+	
+	public boolean burnToTexture(Texture tex, Integer face, float[][][] coords, boolean detached){
+		if(coords == null) coords = newTexturePosition(true, false);
+		if(coords == null || coords.length == 0){
 			log("Polygon '" + turbolist.id + ":" + this.name() + "' has no texture data, skipping.");
 			return false;
 		}
-		if(face == null){
-			for(int i = 0; i < texpos.length; i++){
-				float[][] ends = texpos[i]; if(ends == null || ends.length == 0) continue;
-				burn(tex, ends, something.getColor(i).toByteArray());
-			}
-		}
-		else if(face == -1){
-			for(int i = 0; i < texpos.length; i++){
-				float[][] ends = texpos[i]; if(ends == null || ends.length == 0) continue;
-				burn(tex, ends, TextureEditor.CURRENTCOLOR.toByteArray());
+		if(face == null || face == -1){
+			boolean negative = face == -1;
+			for(String faceid : getTexturableFaceIDs()){
+				Integer index = getTexturableFaceIndex(faceid);
+				if(index == null){
+					log("Polygon '" + turbolist.id + ":" + this.name() + "' face index '" + faceid + "' returned null!");
+					continue;
+				}
+				float[][] ends = coords[index];
+				if(ends == null || ends.length == 0) continue;
+				if(getFaceUVType(faceid).absolute()) detached = true;
+				byte[] color = (negative ? TextureEditor.CURRENTCOLOR : something.getColor(index)).toByteArray();
+				burn(tex, ends, color, detached);
 			}
 		}
 		else{
 			if(this.getType().isCylinder()){
+				//TODO update once custom cylinder uv is implemented
 				int segs = (int)this.getFloat("cyl1", true, false, false);//segments
 				float[][] ends = null;
 				if(face < segs){
-					ends = texpos[0];
+					ends = coords[0];
 				}
 				else if(face < (segs * 2)){
 					float per = (face - segs) * 100f / segs;
 					//log(false, new Object[]{ segs, face - segs, per });
 					int i = 0; while((per -= 12.5f) > 0f) i++;
 					//log(false, new Object[]{ segs, face - segs, per, i });
-					ends = i < 0 || i >= 8 ? null : texpos[i + 2];
+					ends = i < 0 || i >= 8 ? null : coords[i + 2];
 				}
 				else if(face < (segs * 3)){
-					ends = texpos[1];
+					ends = coords[1];
 				} else return false;
 				if(ends == null || ends.length == 0) return false;
 				burn(tex, ends, TextureEditor.CURRENTCOLOR.toByteArray());
 			}
 			else if(this.getType().isRectagular() && !this.getType().isTexRect()){
-				float[][] ends = texpos[face]; if(ends == null || ends.length == 0) return false;
-				burn(tex, ends, TextureEditor.CURRENTCOLOR.toByteArray());
+				float[][] ends = coords[face];
+				if(ends == null || ends.length == 0) return false;
+				burn(tex, ends, TextureEditor.CURRENTCOLOR.toByteArray(), getFaceUVType(getTexturableFaceIDs()[face]).absolute());
 			}
 			else{
 				log("There is no known way of how to handle texture burning of '" + this.getType().name() + "'!");
@@ -402,12 +411,19 @@ public abstract class PolygonWrapper {
 	}
 	
 	private void burn(Texture tex, float[][] ends, byte[] bs){
+		burn(tex, ends, bs);
+	}
+	
+	private void burn(Texture tex, float[][] ends, byte[] bs, boolean detached){
 		float scale_x = tex.getWidth() / turbo.textureWidth;
 		float scale_y = tex.getHeight() / turbo.textureHeight;
+		float tx = detached ? 0 : textureX;
+		float ty = detached ? 0 : textureY;
 		//log(turbo.textureWidth + " " + tex.getWidth() + " " + scale_x);
 		//log(turbo.textureHeight + " " + tex.getHeight() + " " + scale_y);
 		float[][] ands = { { ends[0][0] * scale_x, ends[0][1] * scale_y }, { ends[1][0] * scale_x, ends[1][1] * scale_y } };
-		float texx = textureX * scale_x, texy = textureY * scale_y;
+		//int tx = 
+		float texx = tx * scale_x, texy = ty * scale_y;
 		for(float x = ands[0][0]; x < ands[1][0]; x += .5f){
 			for(float y = ands[0][1]; y < ands[1][1]; y += .5f){
 				int xa = (int)(x + texx), ya = (int)(y + texy);
@@ -519,7 +535,7 @@ public abstract class PolygonWrapper {
 		Integer index = getTexturableFaceIndex(side);
 		FaceUVType type = getFaceUVType(side);
 		if(index == null) return new float[type.arraylength];
-		float[][][] arr = newTexturePosition(false);
+		float[][][] arr = newTexturePosition(false, false);
 		switch(type){
 			case ABSOLUTE:
 			case OFFSET_ONLY:
@@ -547,6 +563,22 @@ public abstract class PolygonWrapper {
 	
 	public int textureY(){
 		return textureY == -1 ? 0 : textureY;
+	}
+
+	public boolean anyFaceUVAbsolute(){
+		for(FaceUVType type : uvtypes.values()){
+			if(type.absolute()) return true;
+		}
+		return false;
+	}
+
+	public boolean isAllFaceUVAbsolute(){
+		for(String str : getTexturableFaceIDs()){
+			Integer index = getTexturableFaceIndex(str);
+			if(index == null) continue;//consider this face/side is disabled
+			if(!getFaceUVType(str).absolute()) return true;
+		}
+		return false;
 	}
 	
 }

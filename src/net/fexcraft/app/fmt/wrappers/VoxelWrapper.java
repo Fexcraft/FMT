@@ -118,7 +118,7 @@ public class VoxelWrapper extends PolygonWrapper {
 	}
 
 	@Override
-	public float[][][] newTexturePosition(boolean include_offsets){
+	public float[][][] newTexturePosition(boolean include_offsets, boolean exclude_detached){
 		/*float tx = 0 , ty = 0, w = size.xCoord, h = size.yCoord, d = size.zCoord;
 		float[][][] vecs = new float[6][][];
 		vecs[0] = new float[][]{

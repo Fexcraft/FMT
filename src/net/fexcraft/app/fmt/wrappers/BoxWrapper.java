@@ -93,19 +93,19 @@ public class BoxWrapper extends PolygonWrapper {
 	}
 
 	@Override
-	public float[][][] newTexturePosition(boolean include_offsets){
+	public float[][][] newTexturePosition(boolean include_offsets, boolean exclude_detached){
 		float tx = 0 /*textureX*/, ty = 0 /*textureY*/, w = size.xCoord, h = size.yCoord, d = size.zCoord;
 		int sideson = 0, sideid = 0;
 		for(boolean bool : sides) if(!bool) sideson++;
 		float[][][] vecs = new float[sideson][][];
 		//
-    	float yp = sides[2] && sides[3] ? 0 : d;
-    	float x0 = sides[1] ? 0 : d;
-    	float x1 = sides[2] ? 0 : w;
-    	float x2 = sides[4] ? 0 : w;
-    	float x3 = sides[0] ? 0 : d;
+    	float yp = detached(2) && detached(3) ? 0 : d;
+    	float x0 = detached(1) ? 0 : d;
+    	float x1 = detached(2) ? 0 : w;
+    	float x2 = detached(4) ? 0 : w;
+    	float x3 = detached(0) ? 0 : d;
 		//
-		if(!sides[0]){
+		if(!sides[0] && !absolute(0, exclude_detached)){
 			vecs[sideid++] = new float[][]{
 				new float[]{ tx + x0 + x2, ty + yp },
 				new float[]{ tx + x0 + x2 + d, ty + yp + h }
@@ -114,7 +114,7 @@ public class BoxWrapper extends PolygonWrapper {
 				vecs[sideid - 1] = getCoords(faces[0], vecs[sideid - 1]);
 			}
 		}
-		if(!sides[1]){
+		if(!sides[1] && !absolute(1, exclude_detached)){
 			vecs[sideid++] = new float[][]{
 				new float[]{ tx, ty + yp },
 				new float[]{ tx + d, ty + yp + h }
@@ -123,7 +123,7 @@ public class BoxWrapper extends PolygonWrapper {
 				vecs[sideid - 1] = getCoords(faces[1], vecs[sideid - 1]);
 			}
 		}
-		if(!sides[2]){
+		if(!sides[2] && !absolute(2, exclude_detached)){
 			vecs[sideid++] = new float[][]{
 				new float[]{ tx + x0, ty },
 				new float[]{ tx + x0 + w, ty + d }
@@ -132,7 +132,7 @@ public class BoxWrapper extends PolygonWrapper {
 				vecs[sideid - 1] = getCoords(faces[2], vecs[sideid - 1]);
 			}
 		}
-		if(!sides[3]){
+		if(!sides[3] && !absolute(3, exclude_detached)){
 			vecs[sideid++] = new float[][]{
 				new float[]{ tx + x0 + x1, ty + 0 },
 				new float[]{ tx + x0 + x1 + w, ty + d }
@@ -141,7 +141,7 @@ public class BoxWrapper extends PolygonWrapper {
 				vecs[sideid - 1] = getCoords(faces[3], vecs[sideid - 1]);
 			}
 		}
-		if(!sides[4]){
+		if(!sides[4] && !absolute(4, exclude_detached)){
 			vecs[sideid++] = new float[][]{
 				new float[]{ tx + x0, ty + yp },
 				new float[]{ tx + x0 + w, ty + yp + h }
@@ -150,7 +150,7 @@ public class BoxWrapper extends PolygonWrapper {
 				vecs[sideid - 1] = getCoords(faces[4], vecs[sideid - 1]);
 			}
 		}
-		if(!sides[5]){
+		if(!sides[5] && !absolute(5, exclude_detached)){
 			vecs[sideid++] = new float[][]{
 				new float[]{ tx + x0 + x2 + x3, ty + yp },
 				new float[]{ tx + x0 + x2 + x3 + w, ty + yp + h }
@@ -160,6 +160,15 @@ public class BoxWrapper extends PolygonWrapper {
 			}
 		}
 		return vecs;
+	}
+
+	private boolean absolute(int index, boolean exclude_detached){
+		if(!exclude_detached) return false;
+		return getFaceUVType(faces[index]).absolute();
+	}
+
+	private boolean detached(int i){
+		return sides[i] ? true : getFaceUVType(faces[i]).absolute();
 	}
 
 	private float[][] getCoords(String string, float[][] def){
@@ -246,9 +255,10 @@ public class BoxWrapper extends PolygonWrapper {
 	
 	@Override
 	public Integer getTexturableFaceIndex(String str){
+		if(!sides[0] && str.equals(faces[0])) return null;
 		int index = 0;
 		for(int i = 0; i < faces.length; i++){
-			if(faces[i].equals(str)) return index;
+			if(faces[i].equals(str)) return sides[i] ? null : index;
 			if(!sides[i]) index++;
 		}
 		return null;
