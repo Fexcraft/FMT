@@ -251,6 +251,7 @@ public class UVEditor extends EditorBase {
 	}
 
 	private static void refreshWidgetValues(PolygonWrapper poly){
+		poly = selface == null ? null : poly;
 		UVCoords coords = poly == null ? null : poly.getUVCoords(selface);
 		float[] vals = poly == null ? new float[lasttype.arraylength] : coords.value();
 		switch(poly == null ? lasttype : coords.type()){
