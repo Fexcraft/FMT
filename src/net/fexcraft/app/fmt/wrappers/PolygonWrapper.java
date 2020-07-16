@@ -351,10 +351,10 @@ public abstract class PolygonWrapper {
 	}
 	
 	public boolean burnToTexture(Texture tex, Integer face){
-		return burnToTexture(tex, face, null, false, null);
+		return burnToTexture(tex, face, null, false, false);
 	}
 	
-	public boolean burnToTexture(Texture tex, Integer face, float[][][] coords, boolean detached, Face sface){
+	public boolean burnToTexture(Texture tex, Integer face, float[][][] coords, boolean detached, boolean sface){
 		if(coords == null) coords = newTexturePosition(true, false);
 		if(coords == null || coords.length == 0){
 			//log("Polygon '" + turbolist.id + ":" + this.name() + "' has no texture data, skipping.");
@@ -362,18 +362,17 @@ public abstract class PolygonWrapper {
 		}
 		if(face == null || face == -1){
 			boolean negative = face != null;
-			for(Face faceo : getTexturableFaces()){
-				if(sface != null && !isValidFace(faceo)){
-					//log("Polygon '" + turbolist.id + ":" + this.name() + "' face index '" + faceid + "' returned null!");
+			for(UVCoords coord : cuv.values()){
+				if(!sface && !isFaceActive(coord.side())) continue;//disabled
+				float[][] ends = coords[sface ? 0 : coord.side().index()];
+				if(ends == null || ends.length == 0){
+					log("zero " + sface);
 					continue;
 				}
-				UVCoords coord = cuv.get(faceo);
-				float[][] ends = coords[sface != null ? 0 : coord.side().index()];
-				if(ends == null || ends.length == 0) continue;
 				if(!detached && coord.absolute()) detached = true;
 				byte[] color = (negative ? TextureEditor.CURRENTCOLOR : something.getColor(coord.side().index())).toByteArray();
 				burn(tex, ends, color, detached);
-				if(sface != null) break;
+				if(sface) break;
 			}
 		}
 		else{

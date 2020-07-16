@@ -26,7 +26,7 @@ public class BoxWrapper extends PolygonWrapper {
 		BoxBuilder builder = new BoxBuilder(turbo).setOffset(off.xCoord, off.yCoord, off.zCoord).setSize(size.xCoord, size.yCoord, size.zCoord).removePolygon(sides);
 		if(cuv.anyCustom()){
 			for(UVCoords coord : cuv.values()){
-				if(!isValidFace(coord.face())) continue;//disabled
+				if(!isFaceActive(coord.face())) continue;//disabled
 				builder.setPolygonUV(coord.side().index(), coord.value());
 				if(coord.absolute()) builder.setDetachedUV(coord.side().index());
 			}
@@ -89,7 +89,7 @@ public class BoxWrapper extends PolygonWrapper {
 
 	@Override
 	public float[][][] newTexturePosition(boolean include_offsets, boolean exclude_detached){
-		float tx = 0 /*textureX*/, ty = 0 /*textureY*/, w = size.xCoord, h = size.yCoord, d = size.zCoord;
+		float w = size.xCoord, h = size.yCoord, d = size.zCoord;
 		float[][][] vecs = new float[6][][];
 		//
     	float yp = detached(2) && detached(3) ? 0 : d;
@@ -100,8 +100,8 @@ public class BoxWrapper extends PolygonWrapper {
 		//
 		if(!sides[0] && !absolute(0, exclude_detached)){
 			vecs[0] = new float[][]{
-				new float[]{ tx + x0 + x2, ty + yp },
-				new float[]{ tx + x0 + x2 + d, ty + yp + h }
+				new float[]{ x0 + x2, yp },
+				new float[]{ x0 + x2 + d, yp + h }
 			};
 			if(include_offsets && !cuv.get(BoxFace.FRONT).automatic()){
 				vecs[0] = getCoords(BoxFace.FRONT, vecs[0]);
@@ -109,8 +109,8 @@ public class BoxWrapper extends PolygonWrapper {
 		}
 		if(!sides[1] && !absolute(1, exclude_detached)){
 			vecs[1] = new float[][]{
-				new float[]{ tx, ty + yp },
-				new float[]{ tx + d, ty + yp + h }
+				new float[]{ 0, yp },
+				new float[]{ d, yp + h }
 			};
 			if(include_offsets && !cuv.get(BoxFace.BACK).automatic()){
 				vecs[1] = getCoords(BoxFace.BACK, vecs[1]);
@@ -118,8 +118,8 @@ public class BoxWrapper extends PolygonWrapper {
 		}
 		if(!sides[2] && !absolute(2, exclude_detached)){
 			vecs[2] = new float[][]{
-				new float[]{ tx + x0, ty },
-				new float[]{ tx + x0 + w, ty + d }
+				new float[]{ x0, 0 },
+				new float[]{ x0 + w, d }
 			};
 			if(include_offsets && !cuv.get(BoxFace.TOP).automatic()){
 				vecs[2] = getCoords(BoxFace.TOP, vecs[2]);
@@ -127,8 +127,8 @@ public class BoxWrapper extends PolygonWrapper {
 		}
 		if(!sides[3] && !absolute(3, exclude_detached)){
 			vecs[3] = new float[][]{
-				new float[]{ tx + x0 + x1, ty + 0 },
-				new float[]{ tx + x0 + x1 + w, ty + d }
+				new float[]{ x0 + x1, 0 },
+				new float[]{ x0 + x1 + w, d }
 			};
 			if(include_offsets && !cuv.get(BoxFace.DOWN).automatic()){
 				vecs[3] = getCoords(BoxFace.DOWN, vecs[3]);
@@ -136,8 +136,8 @@ public class BoxWrapper extends PolygonWrapper {
 		}
 		if(!sides[4] && !absolute(4, exclude_detached)){
 			vecs[4] = new float[][]{
-				new float[]{ tx + x0, ty + yp },
-				new float[]{ tx + x0 + w, ty + yp + h }
+				new float[]{ x0, yp },
+				new float[]{ x0 + w, yp + h }
 			};
 			if(include_offsets && !cuv.get(BoxFace.RIGHT).automatic()){
 				vecs[4] = getCoords(BoxFace.RIGHT, vecs[4]);
@@ -145,8 +145,8 @@ public class BoxWrapper extends PolygonWrapper {
 		}
 		if(!sides[5] && !absolute(5, exclude_detached)){
 			vecs[5] = new float[][]{
-				new float[]{ tx + x0 + x2 + x3, ty + yp },
-				new float[]{ tx + x0 + x2 + x3 + w, ty + yp + h }
+				new float[]{ x0 + x2 + x3, yp },
+				new float[]{ x0 + x2 + x3 + w, yp + h }
 			};
 			if(include_offsets && !cuv.get(BoxFace.LEFT).automatic()){
 				vecs[5] = getCoords(BoxFace.LEFT, vecs[5]);
@@ -156,7 +156,7 @@ public class BoxWrapper extends PolygonWrapper {
 	}
 
 	private boolean absolute(int index, boolean exclude_detached){
-		return !exclude_detached && cuv.get(BoxFace.values()[index]).absolute();
+		return exclude_detached && cuv.get(BoxFace.values()[index]).absolute();
 	}
 
 	private boolean detached(int i){
@@ -169,6 +169,9 @@ public class BoxWrapper extends PolygonWrapper {
 		float[][] res = null;
 		switch(coords.type()){
 			case ABSOLUTE:
+				def[1][0] -= def[0][0];
+				def[1][1] -= def[0][1];
+				def[0][0] = def[0][1] = 0;
 			case OFFSET_ONLY:{
 				res = new float[][]{
 					new float[]{ def[0][0] + arr[0], def[0][1] + arr[1] },

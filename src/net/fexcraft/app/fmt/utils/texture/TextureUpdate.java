@@ -268,16 +268,17 @@ public class TextureUpdate extends TimerTask {
 							log("skipping [" + corcon.wrapper.getTurboList().id + ":" + corcon.name() + "] (missing texture definition)");
 							continue;
 						}
-						if((corcon.wrapper.textureX > -1 && corcon.wrapper.textureY > -1) && (!ALL || (!DETACH & corcon.wrapper.getUVCoords(corcon.face).absolute()))){
+						boolean whole = !corcon.poly();
+						if((corcon.wrapper.textureX > -1 && corcon.wrapper.textureY > -1) && (!ALL || (!DETACH && !whole && corcon.wrapper.getUVCoords(corcon.face).absolute()))){
 							log("skipping [" + corcon.wrapper.getTurboList().id + ":" + corcon.name() + "] (texture not -1x -1y)");
-							if(!corcon.exclude && !corcon.poly()){
+							if(!corcon.exclude && whole){
 								corcon.wrapper.burnToTexture(texture, null);
 							}
 							else if(corcon.exclude){
-								corcon.wrapper.burnToTexture(texture, null, corcon.coords, false, null);
+								corcon.wrapper.burnToTexture(texture, null, corcon.coords, false, false);
 							}
 							else{
-								corcon.wrapper.burnToTexture(texture, null, corcon.coords, true, corcon.face);
+								corcon.wrapper.burnToTexture(texture, null, corcon.coords, true, true);
 							}
 							Thread.sleep(10);
 							continue;
@@ -334,7 +335,8 @@ public class TextureUpdate extends TimerTask {
 											}
 										}
 										coords.set(type).value(arr);
-										corcon.wrapper.burnToTexture(texture, null, new float[][][]{ corcon.wrapper.newTexturePosition(true, false)[corcon.face.index()] }, true, corcon.face);
+										float[][] newarr = corcon.wrapper.newTexturePosition(true, false)[corcon.face.index()];
+										corcon.wrapper.burnToTexture(texture, null, new float[][][]{ newarr }, true, true);
 									}
 									pass = true;
 									Thread.sleep(10);
@@ -371,6 +373,7 @@ public class TextureUpdate extends TimerTask {
 		float[][] ends = null;
 		for(int i = 0; i < texpos.length; i++){
 			ends = texpos[i];
+			if(ends == null) continue;
 			if(!SAVESPACE){
 				float[][] newend = new float[ends.length][];
 				for(int k = 0; k < newend.length; k++){
@@ -450,7 +453,7 @@ public class TextureUpdate extends TimerTask {
 			boolean detach = DETACH && (wrapper.getType() == ShapeType.BOX || wrapper.getType() == ShapeType.SHAPEBOX);
 			if(detach || wrapper.anyFaceUVAbsolute()){
 				for(UVCoords coord : wrapper.cuv.values()){
-					if(!wrapper.isValidFace(coord.face())) continue;//face is disabled
+					if(!wrapper.isFaceActive(coord.face())) continue;//face is disabled
 					if(detach || coord.absolute()){
 						arrlist.add(new CoordContainer(wrapper, coord.side(), detach && !coord.absolute()));
 					}
@@ -458,7 +461,7 @@ public class TextureUpdate extends TimerTask {
 				if(!detach && !wrapper.isAllFaceUVAbsolute()){
 					arrlist.add(new CoordContainer(wrapper, true));
 				}
-				wrapper.textureX = wrapper.textureY = -1;
+				if(detach) wrapper.textureX = wrapper.textureY = -1;
 			}
 			else{
 				arrlist.add(new CoordContainer(wrapper, false));
@@ -519,6 +522,7 @@ public class TextureUpdate extends TimerTask {
 
 		public void initMinMax(){
 			for(float[][] arr : coords){
+				if(arr == null) continue;
 				for(float[] xy : arr){
 					if(xy[0] > max_x) max_x = xy[0];
 					if(xy[1] > max_y) max_y = xy[1];

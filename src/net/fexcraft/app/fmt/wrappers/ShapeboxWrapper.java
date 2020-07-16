@@ -40,7 +40,7 @@ public class ShapeboxWrapper extends BoxWrapper {
 		builder.setCorners(cor0, cor1, cor2, cor3, cor4, cor5, cor6, cor7);
 		if(cuv.anyCustom()){
 			for(UVCoords coord : cuv.values()){
-				if(!isValidFace(coord.face())) continue;//disabled
+				if(!isFaceActive(coord.face())) continue;//disabled
 				builder.setPolygonUV(coord.side().index(), coord.value());
 				if(coord.absolute()) builder.setDetachedUV(coord.side().index());
 			}

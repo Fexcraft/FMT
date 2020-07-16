@@ -102,6 +102,7 @@ public class TexViewBox {
 				if(!wrapper.getType().isTexturable()) continue;
 				float[][][] coords = wrapper.newTexturePosition(true, false);
 				for(int i = 0; i < coords.length; i++){
+					if(coords[i] == null) continue;
 					if(coords[i][1][0] - coords[i][0][0] == 0 || coords[i][1][1] - coords[i][0][1] == 0) continue;
 					canvas.getContainer().add(new PolyFace(wrapper, i, coords[i]));
 				}
