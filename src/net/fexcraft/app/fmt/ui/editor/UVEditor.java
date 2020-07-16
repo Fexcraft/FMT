@@ -138,7 +138,7 @@ public class UVEditor extends EditorBase {
 		//
 		Label title = null, desc0 = null, desc1 = null;
 		if(poly != null){
-			FaceUVType type = poly.getUVCoords(selface).type();
+			FaceUVType type = poly.isValidFace(selface) ? poly.getUVCoords(selface).type() : FaceUVType.AUTOMATIC;
 			String typestr = type.name().toLowerCase();
 			switch(type){
 				case AUTOMATIC:
