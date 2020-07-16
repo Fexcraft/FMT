@@ -22,7 +22,7 @@ public class BoxWrapper extends PolygonWrapper {
 
 	protected ModelRendererTurbo newMRT(){
 		ModelRendererTurbo turbo = initMRT()
-			.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
+ 			.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
 			.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
 		BoxBuilder builder = new BoxBuilder(turbo).setOffset(off.xCoord, off.yCoord, off.zCoord).setSize(size.xCoord, size.yCoord, size.zCoord).removePolygon(sides);
 		if(cuv.anyCustom()){
@@ -45,12 +45,23 @@ public class BoxWrapper extends PolygonWrapper {
 	}
 
 	private int distoacidx(int faceidx){
+		for(Face face : BoxFace.values()){
+			int index = getShiftedIndex(face);
+			if(index == faceidx){
+				return face.index();
+			}
+		}
+		return 0;
+	}
+
+	private int getShiftedIndex(Face face){
+		if(sides[0] && face == BoxFace.FRONT) return -1;
 		int index = 0;
 		for(int i = 0; i < 6; i++){
+			if(face.index() == i) return sides[i] ? -1 : index;
 			if(!sides[i]) index++;
-			if(faceidx == index) return i;
 		}
-		return index;
+		return -1;
 	}
 
 	@Override
