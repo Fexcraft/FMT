@@ -1,14 +1,12 @@
 package net.fexcraft.app.fmt.wrappers;
 
-import java.util.Map;
-
 import org.lwjgl.opengl.GL11;
 
 import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.utils.Axis3DL;
 import net.fexcraft.app.fmt.utils.Settings;
-import net.fexcraft.app.fmt.wrappers.face.FaceUVType;
+import net.fexcraft.app.fmt.wrappers.face.UVCoords;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.tmt.BoxBuilder;
@@ -40,15 +38,11 @@ public class ShapeboxWrapper extends BoxWrapper {
 			.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
 		BoxBuilder builder = new BoxBuilder(turbo).setOffset(off.xCoord, off.yCoord, off.zCoord).setSize(size.xCoord, size.yCoord, size.zCoord).removePolygon(sides);
 		builder.setCorners(cor0, cor1, cor2, cor3, cor4, cor5, cor6, cor7);
-		if(!uvtypes.isEmpty()){
-			for(Map.Entry<String, float[]> entry : uvcoords.entrySet()){
-				int index = getTexturableFaceIndex(entry.getKey());
-				builder.setPolygonUV(index, entry.getValue());
-			}
-			for(Map.Entry<String, FaceUVType> entry : uvtypes.entrySet()){
-				if(!entry.getValue().absolute()) continue;
-				int index = getTexturableFaceIndex(entry.getKey());
-				builder.setDetachedUV(index);
+		if(cuv.anyCustom()){
+			for(UVCoords coord : cuv.values()){
+				if(!isValidFace(coord.face())) continue;//disabled
+				builder.setPolygonUV(coord.side().index(), coord.value());
+				if(coord.absolute()) builder.setDetachedUV(coord.side().index());
 			}
 		}
 		return builder.build();

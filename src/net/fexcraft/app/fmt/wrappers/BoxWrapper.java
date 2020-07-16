@@ -1,13 +1,11 @@
 package net.fexcraft.app.fmt.wrappers;
 
-import java.util.Map;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.wrappers.face.BoxFace;
 import net.fexcraft.app.fmt.wrappers.face.Face;
-import net.fexcraft.app.fmt.wrappers.face.FaceUVType;
+import net.fexcraft.app.fmt.wrappers.face.UVCoords;
 import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.tmt.BoxBuilder;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
@@ -26,15 +24,11 @@ public class BoxWrapper extends PolygonWrapper {
 			.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
 			.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
 		BoxBuilder builder = new BoxBuilder(turbo).setOffset(off.xCoord, off.yCoord, off.zCoord).setSize(size.xCoord, size.yCoord, size.zCoord).removePolygon(sides);
-		if(!uvtypes.isEmpty()){
-			for(Map.Entry<String, float[]> entry : uvcoords.entrySet()){
-				int index = getTexturableFaceIndex(entry.getKey());
-				builder.setPolygonUV(index, entry.getValue());
-			}
-			for(Map.Entry<String, FaceUVType> entry : uvtypes.entrySet()){
-				if(!entry.getValue().absolute()) continue;
-				int index = getTexturableFaceIndex(entry.getKey());
-				builder.setDetachedUV(index);
+		if(cuv.anyCustom()){
+			for(UVCoords coord : cuv.values()){
+				if(!isValidFace(coord.face())) continue;//disabled
+				builder.setPolygonUV(coord.side().index(), coord.value());
+				if(coord.absolute()) builder.setDetachedUV(coord.side().index());
 			}
 		}
 		return builder.build();
@@ -109,7 +103,7 @@ public class BoxWrapper extends PolygonWrapper {
 				new float[]{ tx + x0 + x2, ty + yp },
 				new float[]{ tx + x0 + x2 + d, ty + yp + h }
 			};
-			if(include_offsets && getFaceUVType(BoxFace.FRONT) != FaceUVType.AUTOMATIC){
+			if(include_offsets && !cuv.get(BoxFace.FRONT).automatic()){
 				vecs[0] = getCoords(BoxFace.FRONT, vecs[0]);
 			}
 		}
@@ -118,7 +112,7 @@ public class BoxWrapper extends PolygonWrapper {
 				new float[]{ tx, ty + yp },
 				new float[]{ tx + d, ty + yp + h }
 			};
-			if(include_offsets && getFaceUVType(BoxFace.BACK) != FaceUVType.AUTOMATIC){
+			if(include_offsets && !cuv.get(BoxFace.BACK).automatic()){
 				vecs[1] = getCoords(BoxFace.BACK, vecs[1]);
 			}
 		}
@@ -127,7 +121,7 @@ public class BoxWrapper extends PolygonWrapper {
 				new float[]{ tx + x0, ty },
 				new float[]{ tx + x0 + w, ty + d }
 			};
-			if(include_offsets && getFaceUVType(BoxFace.TOP) != FaceUVType.AUTOMATIC){
+			if(include_offsets && !cuv.get(BoxFace.TOP).automatic()){
 				vecs[2] = getCoords(BoxFace.TOP, vecs[2]);
 			}
 		}
@@ -136,7 +130,7 @@ public class BoxWrapper extends PolygonWrapper {
 				new float[]{ tx + x0 + x1, ty + 0 },
 				new float[]{ tx + x0 + x1 + w, ty + d }
 			};
-			if(include_offsets && getFaceUVType(BoxFace.DOWN) != FaceUVType.AUTOMATIC){
+			if(include_offsets && !cuv.get(BoxFace.DOWN).automatic()){
 				vecs[3] = getCoords(BoxFace.DOWN, vecs[3]);
 			}
 		}
@@ -145,7 +139,7 @@ public class BoxWrapper extends PolygonWrapper {
 				new float[]{ tx + x0, ty + yp },
 				new float[]{ tx + x0 + w, ty + yp + h }
 			};
-			if(include_offsets && getFaceUVType(BoxFace.RIGHT) != FaceUVType.AUTOMATIC){
+			if(include_offsets && !cuv.get(BoxFace.RIGHT).automatic()){
 				vecs[4] = getCoords(BoxFace.RIGHT, vecs[4]);
 			}
 		}
@@ -154,7 +148,7 @@ public class BoxWrapper extends PolygonWrapper {
 				new float[]{ tx + x0 + x2 + x3, ty + yp },
 				new float[]{ tx + x0 + x2 + x3 + w, ty + yp + h }
 			};
-			if(include_offsets && getFaceUVType(BoxFace.LEFT) != FaceUVType.AUTOMATIC){
+			if(include_offsets && !cuv.get(BoxFace.LEFT).automatic()){
 				vecs[5] = getCoords(BoxFace.LEFT, vecs[5]);
 			}
 		}
@@ -162,19 +156,18 @@ public class BoxWrapper extends PolygonWrapper {
 	}
 
 	private boolean absolute(int index, boolean exclude_detached){
-		if(!exclude_detached) return false;
-		return getFaceUVType(BoxFace.values()[index]).absolute();
+		return !exclude_detached && cuv.get(BoxFace.values()[index]).absolute();
 	}
 
 	private boolean detached(int i){
-		return sides[i] ? true : getFaceUVType(BoxFace.values()[i]).absolute();
+		return sides[i] ? true : cuv.get(BoxFace.values()[i]).absolute();
 	}
 
 	private float[][] getCoords(Face face, float[][] def){
-		FaceUVType type = getFaceUVType(face);
-		float[] arr = getFaceUVCoords(face);
+		UVCoords coords = cuv.get(face);
+		float[] arr = coords.value();
 		float[][] res = null;
-		switch(type){
+		switch(coords.type()){
 			case ABSOLUTE:
 			case OFFSET_ONLY:{
 				res = new float[][]{

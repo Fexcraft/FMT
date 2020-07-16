@@ -19,6 +19,7 @@ import net.fexcraft.app.fmt.utils.texture.TextureManager;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.face.Face;
 import net.fexcraft.app.fmt.wrappers.face.FaceUVType;
+import net.fexcraft.app.fmt.wrappers.face.UVCoords;
 
 public class UVEditor extends EditorBase {
 
@@ -94,9 +95,7 @@ public class UVEditor extends EditorBase {
 		ArrayList<PolygonWrapper> polis = FMTB.MODEL.getSelected();
 		FaceUVType type = FaceUVType.validate(event.getNewValue());
 		polis.forEach(poly -> {
-			poly.uvtypes.put(selface.id(), type);
-			if(type.arraylength == 0) poly.uvcoords.remove(selface.id());
-			else poly.uvcoords.put(selface.id(), poly.getDefAutoFaceUVCoords(selface));
+			poly.getUVCoords(selface).set(type).value(poly.getDefAutoUVCoords(selface));
 		});
 		refreshEntries(last, selface);
 	}
@@ -115,7 +114,7 @@ public class UVEditor extends EditorBase {
 			}
 			else{
 				last = selected;
-				if(!last.isValidTexturableFace(selface)){
+				if(!last.isValidFace(selface)){
 					selface = selected.getTexturableFaces()[0];
 					clearUVFaceSelBox();
 					for(Face face : selected.getTexturableFaces()){
@@ -123,9 +122,9 @@ public class UVEditor extends EditorBase {
 					}
 				}
 			}
-			lasttype = selface == null ? FaceUVType.AUTOMATIC : selected.getFaceUVType(selface);
+			lasttype = selface == null ? FaceUVType.AUTOMATIC : selected.getUVCoords(selface).type();
 		}
-		uv_type.setSelected((selface == null ? FaceUVType.AUTOMATIC : selected.getFaceUVType(selface)).name().toLowerCase(), true);
+		uv_type.setSelected((selface == null ? FaceUVType.AUTOMATIC : selected.getUVCoords(selface).type()).name().toLowerCase(), true);
 		refreshWidget(selected);
 	}
 
@@ -139,7 +138,7 @@ public class UVEditor extends EditorBase {
 		//
 		Label title = null, desc0 = null, desc1 = null;
 		if(poly != null){
-			FaceUVType type = poly.getFaceUVType(selface);
+			FaceUVType type = poly.getUVCoords(selface).type();
 			String typestr = type.name().toLowerCase();
 			switch(type){
 				case AUTOMATIC:
@@ -252,8 +251,9 @@ public class UVEditor extends EditorBase {
 	}
 
 	private static void refreshWidgetValues(PolygonWrapper poly){
-		float[] vals = poly == null ? new float[lasttype.arraylength] : poly.getFaceUVCoords(selface);
-		switch(poly == null ? lasttype : poly.getFaceUVType(selface)){
+		UVCoords coords = poly.getUVCoords(selface);
+		float[] vals = poly == null ? new float[lasttype.arraylength] : coords.value();
+		switch(poly == null ? lasttype : coords.type()){
 			case AUTOMATIC: return;
 			case ABSOLUTE:
 			case OFFSET_ONLY:
@@ -283,8 +283,8 @@ public class UVEditor extends EditorBase {
 	}
 
 	private static void resetFields(FaceUVType type, int row){
-		float[] vals = last == null ? new float[lasttype.arraylength] : last.getDefAutoFaceUVCoords(selface);
-		switch(last == null ? lasttype : last.getFaceUVType(selface)){
+		float[] vals = last == null ? new float[lasttype.arraylength] : last.getDefAutoUVCoords(selface);
+		switch(last == null ? lasttype : last.getUVCoords(selface).type()){
 			case AUTOMATIC: return;
 			case ABSOLUTE:
 			case OFFSET_ONLY:

@@ -26,6 +26,7 @@ import net.fexcraft.app.fmt.wrappers.ShapeType;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.app.fmt.wrappers.face.Face;
 import net.fexcraft.app.fmt.wrappers.face.FaceUVType;
+import net.fexcraft.app.fmt.wrappers.face.UVCoords;
 import net.fexcraft.lib.common.math.RGB;
 
 /**
@@ -161,15 +162,13 @@ public class TextureUpdate extends TimerTask {
 			if(CLICK == e.getAction()){
 				if(resetsel != null){
 					resetsel.forEach(turbo -> {
-						turbo.uvcoords.clear();
-						turbo.uvtypes.clear();
+						turbo.cuv.values().forEach(cuv -> cuv.set(null));
 						turbo.recompile();
 					});
 				}
 				else{
 					FMTB.MODEL.getGroups().forEach(list -> list.forEach(turbo -> {
-						turbo.uvcoords.clear();
-						turbo.uvtypes.clear();
+						turbo.cuv.values().forEach(cuv -> cuv.set(null));
 						turbo.recompile();
 					}));
 				}
@@ -269,7 +268,7 @@ public class TextureUpdate extends TimerTask {
 							log("skipping [" + corcon.wrapper.getTurboList().id + ":" + corcon.name() + "] (missing texture definition)");
 							continue;
 						}
-						if((corcon.wrapper.textureX > -1 && corcon.wrapper.textureY > -1) && (!ALL || (!DETACH & corcon.wrapper.getFaceUVType(corcon.face.id()).absolute()))){
+						if((corcon.wrapper.textureX > -1 && corcon.wrapper.textureY > -1) && (!ALL || (!DETACH & corcon.wrapper.getUVCoords(corcon.face).absolute()))){
 							log("skipping [" + corcon.wrapper.getTurboList().id + ":" + corcon.name() + "] (texture not -1x -1y)");
 							if(!corcon.exclude && !corcon.poly()){
 								corcon.wrapper.burnToTexture(texture, null);
@@ -278,7 +277,7 @@ public class TextureUpdate extends TimerTask {
 								corcon.wrapper.burnToTexture(texture, null, corcon.coords, false, null);
 							}
 							else{
-								corcon.wrapper.burnToTexture(texture, null, corcon.coords, true, corcon.face.index());
+								corcon.wrapper.burnToTexture(texture, null, corcon.coords, true, corcon.face);
 							}
 							Thread.sleep(10);
 							continue;
@@ -297,8 +296,9 @@ public class TextureUpdate extends TimerTask {
 										corcon.wrapper.burnToTexture(texture, null);
 									}
 									else{
-										FaceUVType type = corcon.wrapper.getFaceUVType(corcon.face);
-										float[] arr = type.automatic() ? new float[2] : corcon.wrapper.uvcoords.get(corcon.face.id());
+										UVCoords coords = corcon.wrapper.getUVCoords(corcon.face);
+										FaceUVType type = coords.type();
+										float[] arr = type.automatic() ? new float[2] : coords.value();
 										switch(type){
 											case AUTOMATIC:
 											case ABSOLUTE:
@@ -333,9 +333,8 @@ public class TextureUpdate extends TimerTask {
 												break;
 											}
 										}
-										corcon.wrapper.uvtypes.put(corcon.face.id(), type);
-										corcon.wrapper.uvcoords.put(corcon.face.id(), arr);
-										corcon.wrapper.burnToTexture(texture, null, new float[][][]{ corcon.wrapper.newTexturePosition(true, false)[corcon.face.index()] }, true, corcon.face.index());
+										coords.set(type).value(arr);
+										corcon.wrapper.burnToTexture(texture, null, new float[][][]{ corcon.wrapper.newTexturePosition(true, false)[corcon.face.index()] }, true, corcon.face);
 									}
 									pass = true;
 									Thread.sleep(10);
@@ -450,11 +449,10 @@ public class TextureUpdate extends TimerTask {
 			if(!wrapper.getType().isTexturable()) continue;
 			boolean detach = DETACH && (wrapper.getType() == ShapeType.BOX || wrapper.getType() == ShapeType.SHAPEBOX);
 			if(detach || wrapper.anyFaceUVAbsolute()){
-				for(Face str : wrapper.getTexturableFaces()){
-					if(wrapper.getTexturableFaceIndex(str) == null) continue;//most probably this face/side is disabled
-					FaceUVType type = wrapper.getFaceUVType(str);
-					if(detach || type.absolute()){
-						arrlist.add(new CoordContainer(wrapper, str, detach && !type.absolute()));
+				for(UVCoords coord : wrapper.cuv.values()){
+					if(!wrapper.isValidFace(coord.face())) continue;//face is disabled
+					if(detach || coord.absolute()){
+						arrlist.add(new CoordContainer(wrapper, coord.side(), detach && !coord.absolute()));
 					}
 				}
 				if(!detach && !wrapper.isAllFaceUVAbsolute()){

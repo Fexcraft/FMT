@@ -1,5 +1,6 @@
 package net.fexcraft.app.fmt.wrappers.face;
 
+import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 
 public class UVCoords {
@@ -33,7 +34,7 @@ public class UVCoords {
 	}
 
 	public UVCoords set(FaceUVType newtype){
-		type = newtype;
+		type = FaceUVType.validate(newtype);
 		cuv = new float[type.arraylength];
 		return this;
 	}
@@ -48,6 +49,11 @@ public class UVCoords {
 
 	public boolean absolute(){
 		return type.absolute();
+	}
+
+	public void value(float[] newcuv){
+		if(cuv.length != newcuv.length) Logging.log("ERROR: Setting new CUV value but array length differs!", poly.getTurboList().id + ":" + poly.name() + ":" + side.id());
+		cuv = newcuv;
 	}
 
 }
