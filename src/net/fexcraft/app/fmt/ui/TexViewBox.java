@@ -18,6 +18,7 @@ import net.fexcraft.app.fmt.utils.texture.TextureGroup;
 import net.fexcraft.app.fmt.utils.texture.TextureManager;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
+import net.fexcraft.app.fmt.wrappers.face.Face;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 /**
@@ -102,6 +103,7 @@ public class TexViewBox {
 				if(!wrapper.getType().isTexturable()) continue;
 				float[][][] coords = wrapper.newTexturePosition(true, false);
 				for(int i = 0; i < coords.length; i++){
+					if(i > 5) break;
 					if(coords[i] == null) continue;
 					if(coords[i][1][0] - coords[i][0][0] == 0 || coords[i][1][1] - coords[i][0][1] == 0) continue;
 					canvas.getContainer().add(new PolyFace(wrapper, i, coords[i]));
@@ -121,15 +123,27 @@ public class TexViewBox {
 		private static final ModelRendererTurbo cache = new ModelRendererTurbo(null).setTextured(false);
 		private PolygonWrapper wrapper;
 		private float[][] coords;
-		private int index;
+		private Face side;
 
 		public PolyFace(PolygonWrapper wrapper, int idx, float[][] arr){
-			super(wrapper.textureX + arr[0][0], wrapper.textureY + arr[0][1], arr[1][0] - arr[0][0], arr[1][1] - arr[0][1]);
-			this.setPosition(this.getPosition().mul(scale));
-			this.setSize(this.getSize().mul(scale));
+			super(0, 0, 0, 0);//wrapper.textureX + arr[0][0], wrapper.textureY + arr[0][1], arr[1][0] - arr[0][0], arr[1][1] - arr[0][1]);
+			//this.setPosition(this.getPosition().mul(scale));
+			//this.setSize(this.getSize().mul(scale));
 			this.wrapper = wrapper;
 			this.coords = arr;
-			this.index = idx;
+			if(wrapper.getType().isCylinder()){
+				if(idx > 1){
+					if(idx > 9){
+						if(idx > 17){
+							idx = 4;
+						}
+						else idx = 3;
+					}
+					else idx = 2;
+				}
+			}
+			this.side = wrapper.getTexturableFaces()[idx];
+			updatePos();
 			updateColor();
 			isZero();
 		}
@@ -137,11 +151,11 @@ public class TexViewBox {
 		private void updateColor(){
 			this.getStyle().setBorder(borders ? new SimpleLineBorder(new Vector4f(0f, 0f, 0f, 1f), 1) : null);
 			this.getStyle().setBorderRadius(0f);
-			this.getStyle().getBackground().setColor(FMTB.rgba(wrapper.selected || wrapper.getTurboList().selected ? Settings.getSelectedColor() : cache.getColor(index)));
+			this.getStyle().getBackground().setColor(FMTB.rgba(wrapper.selected || wrapper.getTurboList().selected ? Settings.getSelectedColor() : cache.getColor(side.index())));
 		}
 
 		public void isZero(){
-			if(nozero && (wrapper.textureX == -1 || wrapper.textureY == -1)){
+			if(nozero && (wrapper.textureX == -1 || wrapper.textureY == -1) && !wrapper.cuv.get(side).absolute()){
 				hide(this);
 			}
 			else{
@@ -150,8 +164,10 @@ public class TexViewBox {
 		}
 
 		public void updatePos(){
-			coords = wrapper.newTexturePosition(true, false)[index];
-			this.setPosition(new Vector2f(wrapper.textureX + coords[0][0], wrapper.textureY + coords[0][1]).mul(scale));
+			coords = wrapper.newTexturePosition(true, false)[side.index()];
+			boolean absolute = wrapper.cuv.get(side).absolute();
+			float tx = absolute ? 0 : wrapper.textureX, ty = absolute ? 0 : wrapper.textureY;
+			this.setPosition(new Vector2f(tx + coords[0][0], ty + coords[0][1]).mul(scale));
 			this.setSize(new Vector2f(coords[1][0] - coords[0][0], coords[1][1] - coords[0][1]).mul(scale));
 		}
 		
