@@ -39,15 +39,16 @@ public class BoxWrapper extends PolygonWrapper {
 		return new ModelRendererTurbo(null, textureX(), textureY(), compound.tx(getTurboList()), compound.ty(getTurboList())){
 			@Override
 			public RGB getColor(int i){
-				return this.textured ? null : super.getColor(distoacidx(i));
+				return this.textured ? null : super.getColor(getUnShiftedIndex(i));
 			}
 		};
 	}
-
-	private int distoacidx(int faceidx){
+	
+	@Override
+	public int getUnShiftedIndex(int shifted){
 		for(Face face : BoxFace.values()){
 			int index = getShiftedIndex(face);
-			if(index == faceidx){
+			if(index == shifted){
 				return face.index();
 			}
 		}

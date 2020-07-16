@@ -594,4 +594,8 @@ public abstract class PolygonWrapper {
 		return false;
 	}
 	
+	public int getUnShiftedIndex(int shifted){
+		return shifted;//TO BE OVERRIDEN
+	}
+	
 }
