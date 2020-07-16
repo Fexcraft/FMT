@@ -545,6 +545,7 @@ public abstract class PolygonWrapper {
 		UVCoords coords = getUVCoords(side);
 		int index = coords.side().index();
 		float[][][] arr = newTexturePosition(false, false);
+		if(arr[index] == null || arr[index].length == 0) return new float[coords.type().arraylength];
 		switch(coords.type()){
 			case ABSOLUTE:
 			case OFFSET_ONLY:
