@@ -461,7 +461,7 @@ public class GroupCompound {
 			GroupEditor.group_texture.setSelected(0, true);
 			GroupEditor.g_tex_x.setSelected(8f, true);
 			GroupEditor.g_tex_y.setSelected(8f, true);
-			GroupEditor.g_tex_s.setSelected(8f, true);
+			//GroupEditor.g_tex_s.setSelected(1f, true);
 			GroupEditor.exoff_x.apply(0);
 			GroupEditor.exoff_y.apply(0);
 			GroupEditor.exoff_z.apply(0);
@@ -477,7 +477,7 @@ public class GroupCompound {
 			}
 			GroupEditor.g_tex_x.setSelected((float)list.textureX, true);
 			GroupEditor.g_tex_y.setSelected((float)list.textureY, true);
-			GroupEditor.g_tex_s.setSelected((float)list.textureS, true);
+			//GroupEditor.g_tex_s.setSelected((float)list.textureS, true);
 			GroupEditor.exoff_x.apply(list.exportoffset == null ? 0 : list.exportoffset.xCoord);
 			GroupEditor.exoff_y.apply(list.exportoffset == null ? 0 : list.exportoffset.yCoord);
 			GroupEditor.exoff_z.apply(list.exportoffset == null ? 0 : list.exportoffset.zCoord);
@@ -495,7 +495,7 @@ public class GroupCompound {
 		ModelEditor.rot_z.apply(pos == null ? 0 : rot.zCoord);
 		ModelEditor.m_tex_x.setSelected((float)textureSizeX, true);
 		ModelEditor.m_tex_y.setSelected((float)textureSizeY, true);
-		ModelEditor.m_tex_s.setSelected((float)textureScale, true);
+		//ModelEditor.m_tex_s.setSelected((float)textureScale, true);
 		ModelEditor.model_name.getTextState().setText(name);
 		//
 		ModelEditor.model_texture.setSelected(FMTB.MODEL.texgroup == null ? "none" : FMTB.MODEL.texgroup.group, true);

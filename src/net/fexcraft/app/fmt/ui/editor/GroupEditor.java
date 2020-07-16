@@ -39,7 +39,7 @@ public class GroupEditor extends EditorBase {
 	public static NumberField exoff_x, exoff_y, exoff_z;
 	public static TextInput group_name;
 	public static ColorField group_color;
-	public static SelectBox<Float> g_tex_x, g_tex_y, g_tex_s;
+	public static SelectBox<Float> g_tex_x, g_tex_y;//, g_tex_s;
 	public static SelectBox<Animation> add_anim;
 	public static AnimationsEditorWidget animations;
 	public static SelectBox<String> group_texture;
@@ -105,7 +105,7 @@ public class GroupEditor extends EditorBase {
 		g_tex_y.setElementHeight(20);
 		g_tex_y.getSelectionButton().getStyle().setFontSize(20f);
 		g_tex_y.addSelectBoxChangeSelectionEventListener(event -> updateGroupTexSize(event, false));
-		group.getContainer().add(g_tex_s = new SelectBox<>(200, pass, 90, 20));
+		/*group.getContainer().add(g_tex_s = new SelectBox<>(200, pass, 90, 20));
 		g_tex_s.addElement(1f);
 		g_tex_s.addElement(2f);
 		g_tex_s.addElement(3f);
@@ -114,7 +114,7 @@ public class GroupEditor extends EditorBase {
 		g_tex_s.setVisibleCount(10);
 		g_tex_s.setElementHeight(20);
 		g_tex_s.getSelectionButton().getStyle().setFontSize(20f);
-		g_tex_s.addSelectBoxChangeSelectionEventListener(event -> updateGroupTexSize(event, null));
+		g_tex_s.addSelectBoxChangeSelectionEventListener(event -> updateGroupTexSize(event, null));*/
 		group.getContainer().add(new Label(translate("editor.model_group.group.texture"), 3, pass += 24, 290, 20));
 		group.getContainer().add(group_texture = new SelectBox<>(4, pass += 24, 290, 20));
 		group_texture.addSelectBoxChangeSelectionEventListener(event -> updateGroupTexture(event));

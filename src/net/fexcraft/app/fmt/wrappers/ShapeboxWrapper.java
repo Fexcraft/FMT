@@ -33,7 +33,7 @@ public class ShapeboxWrapper extends BoxWrapper {
 	}
 	
 	protected ModelRendererTurbo newMRT(){
-		ModelRendererTurbo turbo = new ModelRendererTurbo(null, textureX(), textureY(), compound.tx(getTurboList()), compound.ty(getTurboList()))
+		ModelRendererTurbo turbo = initMRT()
 			.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
 			.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
 		BoxBuilder builder = new BoxBuilder(turbo).setOffset(off.xCoord, off.yCoord, off.zCoord).setSize(size.xCoord, size.yCoord, size.zCoord).removePolygon(sides);

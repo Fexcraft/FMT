@@ -38,7 +38,7 @@ public class ModelEditor extends EditorBase {
 	public static NumberField pos_x, pos_y, pos_z, poss_x, poss_y, poss_z;
 	public static NumberField rot_x, rot_y, rot_z;
 	public static TextInput model_name;
-	public static SelectBox<Float> m_tex_x, m_tex_y, m_tex_s;
+	public static SelectBox<Float> m_tex_x, m_tex_y;//, m_tex_s;
 	public static SelectBox<String> model_texture;
 	public static AuthorsEditorWidget creators;
 	private String name_cache;
@@ -75,7 +75,7 @@ public class ModelEditor extends EditorBase {
 		m_tex_y.setElementHeight(20);
 		m_tex_y.getSelectionButton().getStyle().setFontSize(20f);
 		m_tex_y.addSelectBoxChangeSelectionEventListener(event -> updateModelTexSize(event, false));
-		model.getContainer().add(m_tex_s = new SelectBox<>(200, pass, 90, 20));
+		/*model.getContainer().add(m_tex_s = new SelectBox<>(200, pass, 90, 20));
 		m_tex_s.addElement(1f);
 		m_tex_s.addElement(2f);
 		m_tex_s.addElement(3f);
@@ -84,7 +84,7 @@ public class ModelEditor extends EditorBase {
 		m_tex_s.setVisibleCount(10);
 		m_tex_s.setElementHeight(20);
 		m_tex_s.getSelectionButton().getStyle().setFontSize(20f);
-		m_tex_s.addSelectBoxChangeSelectionEventListener(event -> updateModelTexSize(event, null));
+		m_tex_s.addSelectBoxChangeSelectionEventListener(event -> updateModelTexSize(event, null));*/
 		model.getContainer().add(new Label(translate("editor.model_group.model.texture"), 3, pass += 24, 290, 20));
 		model.getContainer().add(model_texture = new SelectBox<>(4, pass += 24, 290, 20));
 		model_texture.addSelectBoxChangeSelectionEventListener(event -> updateModelTexture(event));

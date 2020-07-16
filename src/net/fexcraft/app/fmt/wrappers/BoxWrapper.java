@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import net.fexcraft.app.fmt.wrappers.face.BoxFace;
 import net.fexcraft.app.fmt.wrappers.face.Face;
 import net.fexcraft.app.fmt.wrappers.face.UVCoords;
+import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.tmt.BoxBuilder;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
@@ -20,7 +21,7 @@ public class BoxWrapper extends PolygonWrapper {
 	}
 
 	protected ModelRendererTurbo newMRT(){
-		ModelRendererTurbo turbo = new ModelRendererTurbo(null, textureX(), textureY(), compound.tx(getTurboList()), compound.ty(getTurboList()))
+		ModelRendererTurbo turbo = initMRT()
 			.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
 			.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
 		BoxBuilder builder = new BoxBuilder(turbo).setOffset(off.xCoord, off.yCoord, off.zCoord).setSize(size.xCoord, size.yCoord, size.zCoord).removePolygon(sides);
@@ -32,6 +33,24 @@ public class BoxWrapper extends PolygonWrapper {
 			}
 		}
 		return builder.build();
+	}
+	
+	protected ModelRendererTurbo initMRT(){
+		return new ModelRendererTurbo(null, textureX(), textureY(), compound.tx(getTurboList()), compound.ty(getTurboList())){
+			@Override
+			public RGB getColor(int i){
+				return this.textured ? null : super.getColor(distoacidx(i));
+			}
+		};
+	}
+
+	private int distoacidx(int faceidx){
+		int index = 0;
+		for(int i = 0; i < 6; i++){
+			if(!sides[i]) index++;
+			if(faceidx == index) return i;
+		}
+		return index;
 	}
 
 	@Override
