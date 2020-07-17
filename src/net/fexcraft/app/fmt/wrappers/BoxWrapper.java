@@ -200,10 +200,10 @@ public class BoxWrapper extends PolygonWrapper {
 		float[][] res = null;
 		switch(coords.type()){
 			case ABSOLUTE:
+			case OFFSET_ONLY:{
 				def[1][0] -= def[0][0];
 				def[1][1] -= def[0][1];
 				def[0][0] = def[0][1] = 0;
-			case OFFSET_ONLY:{
 				res = new float[][]{
 					new float[]{ def[0][0] + arr[0], def[0][1] + arr[1] },
 					new float[]{ def[1][0] + arr[0], def[1][1] + arr[1] }
