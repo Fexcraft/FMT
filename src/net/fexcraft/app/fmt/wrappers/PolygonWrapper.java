@@ -394,7 +394,7 @@ public abstract class PolygonWrapper {
 					ends = coords[1];
 				} else return false;
 				if(ends == null || ends.length == 0) return false;
-				burn(tex, ends, TextureEditor.CURRENTCOLOR.toByteArray());
+				burn(tex, ends, TextureEditor.CURRENTCOLOR.toByteArray(), false);
 			}
 			else if(this.getType().isRectagular() && !this.getType().isTexRect()){
 				float[][] ends = coords[face];
@@ -406,10 +406,6 @@ public abstract class PolygonWrapper {
 			}
 		}
 		return true;
-	}
-	
-	private void burn(Texture tex, float[][] ends, byte[] bs){
-		burn(tex, ends, bs);
 	}
 	
 	private void burn(Texture tex, float[][] ends, byte[] bs, boolean detached){
