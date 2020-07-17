@@ -275,10 +275,10 @@ public class TextureUpdate extends TimerTask {
 								corcon.wrapper.burnToTexture(texture, null);
 							}
 							else if(corcon.exclude){
-								corcon.wrapper.burnToTexture(texture, null, corcon.coords, false, false);
+								corcon.wrapper.burnToTexture(texture, null, corcon.coords, false, null);
 							}
 							else{
-								corcon.wrapper.burnToTexture(texture, null, corcon.coords, true, true);
+								corcon.wrapper.burnToTexture(texture, null, corcon.coords, true, corcon.face.index());
 							}
 							Thread.sleep(10);
 							continue;
@@ -336,7 +336,7 @@ public class TextureUpdate extends TimerTask {
 										}
 										coords.set(type).value(arr);
 										float[][] newarr = corcon.wrapper.newTexturePosition(true, false)[corcon.face.index()];
-										corcon.wrapper.burnToTexture(texture, null, new float[][][]{ newarr }, true, true);
+										corcon.wrapper.burnToTexture(texture, null, new float[][][]{ newarr }, true, corcon.face.index());
 									}
 									pass = true;
 									Thread.sleep(10);

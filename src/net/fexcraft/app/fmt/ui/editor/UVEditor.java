@@ -1,5 +1,8 @@
 package net.fexcraft.app.fmt.ui.editor;
 
+import static net.fexcraft.app.fmt.utils.Logging.log;
+import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
+
 import java.util.ArrayList;
 
 import org.liquidengine.legui.component.Button;
@@ -11,9 +14,11 @@ import org.liquidengine.legui.event.MouseClickEvent.MouseClickAction;
 import org.liquidengine.legui.style.font.FontRegistry;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.ui.TexViewBox;
 import net.fexcraft.app.fmt.ui.field.NumberField;
 import net.fexcraft.app.fmt.ui.field.TextField;
+import net.fexcraft.app.fmt.utils.texture.TextureGroup;
 import net.fexcraft.app.fmt.utils.texture.TextureManager;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.face.Face;
@@ -72,7 +77,30 @@ public class UVEditor extends EditorBase {
 		uv_type.setVisibleCount(7);
 		uv_type.addSelectBoxChangeSelectionEventListener(event -> updateType(event.getNewValue()));
 		Button painttotex = new Button(translate("editor.general.attributes.painttotexture"), 3, 8 + (pass += 24), 290, 20);
-		painttotex.getListenerMap().addListener(MouseClickEvent.class, GeneralEditor.painttotex.getListenerMap().getListeners(MouseClickEvent.class).get(0));
+		painttotex.getListenerMap().addListener(MouseClickEvent.class, listener -> {
+			if(selface == null || listener.getAction() != CLICK) return;
+			ArrayList<PolygonWrapper> selection = FMTB.MODEL.getSelected();
+			if(FMTB.MODEL.texgroup == null && selection.size() < 2){
+				DialogBox.showOK(null, null, null, "editor.general.attributes.painttotexture.notex");
+			}
+			else{
+				for(PolygonWrapper poly : selection){
+					TextureGroup texgroup = poly.getTurboList().getTextureGroup() == null ? FMTB.MODEL.texgroup : poly.getTurboList().getTextureGroup();
+					if(texgroup == null || texgroup.texture == null){
+						DialogBox.showOK(null, null, null, "editor.general.attributes.painttotexture.tex_not_found", "#" + (texgroup == null ? "no_group" : "group_no_tex"));
+						return;
+					}
+					UVCoords coord = poly.getUVCoords(selface);
+					float[][][] coords = new float[][][]{ poly.newTexturePosition(true, false)[coord.side().index()]};
+					poly.burnToTexture(texgroup.texture, null, coords, coord.absolute(), coord.side().index());
+					poly.recompile();
+					texgroup.texture.save();
+					texgroup.texture.rebind();
+					log("Polygon (" + poly.getTurboList().id + ":" + poly.name() + ":" + selface.id()  + ") painted into Texture.");
+				}
+				return;
+			}
+		});
 		general.getContainer().add(painttotex);
 		general.setSize(296, pass + 52 + 4);
 		this.addSub(general);
