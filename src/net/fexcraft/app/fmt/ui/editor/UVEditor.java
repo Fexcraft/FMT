@@ -38,7 +38,7 @@ public class UVEditor extends EditorBase {
 	private static FaceUVType lasttype = FaceUVType.AUTOMATIC;
 	public static ArrayList<Component> tempcomp = new ArrayList<>();
 	public static EditorWidget tempone;
-	private static Face selface;
+	public static Face selface;
 
 	public UVEditor(){
 		super();
@@ -109,7 +109,7 @@ public class UVEditor extends EditorBase {
 		}
 		else{
 			if(last == selected){
-				selface = self;
+				if(self != null) selface = self;
 			}
 			else{
 				last = selected;

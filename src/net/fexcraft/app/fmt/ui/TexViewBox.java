@@ -150,8 +150,10 @@ public class TexViewBox {
 			this.getListenerMap().addListener(MouseClickEvent.class, listener -> {
 				if(listener.getAction() == MouseClickAction.CLICK){
 					RayCoastAway.select(wrapper);
-					UVEditor.updateFace(side.id());
-					UVEditor.updateType(wrapper.getUVCoords(side).type().name().toLowerCase());
+					UVEditor.selface = side;
+					UVEditor.uv_face.setSelected(side.id(), true);
+					UVEditor.uv_type.setSelected(wrapper.getUVCoords(side).type().name().toLowerCase(), true);
+					UVEditor.refreshEntries(wrapper, side);
 				}
 			});
 			updatePos();
