@@ -369,7 +369,7 @@ public abstract class PolygonWrapper {
 					log("zero " + sface);
 					continue;
 				}
-				if(!detached && coord.absolute()) detached = true;
+				if(!detached && sface == null && coord.absolute()) detached = true;
 				byte[] color = (negative ? TextureEditor.CURRENTCOLOR : something.getColor(sface != null ? sface : coord.side().index())).toByteArray();
 				burn(tex, ends, color, detached);
 				if(sface != null) break;
