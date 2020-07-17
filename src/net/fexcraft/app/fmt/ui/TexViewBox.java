@@ -5,6 +5,7 @@ import static net.fexcraft.app.fmt.ui.UserInterfaceUtils.show;
 
 import org.joml.Vector2f;
 import org.joml.Vector4f;
+import org.liquidengine.legui.component.ImageView;
 import org.liquidengine.legui.component.Panel;
 import org.liquidengine.legui.component.ScrollablePanel;
 import org.liquidengine.legui.component.SelectBox;
@@ -12,6 +13,7 @@ import org.liquidengine.legui.component.Widget;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.event.MouseClickEvent.MouseClickAction;
 import org.liquidengine.legui.event.MouseDragEvent;
+import org.liquidengine.legui.image.BufferedImage;
 import org.liquidengine.legui.style.border.SimpleLineBorder;
 
 import net.fexcraft.app.fmt.FMTB;
@@ -34,8 +36,9 @@ public class TexViewBox {
 	
 	private static Widget viewbox;
 	private static ScrollablePanel canvas;
-	private static boolean borders, nozero;
+	private static boolean borders, nozero, texture;
 	private static int scale;
+	private static ImageView view;
 
 	public static final void open(String texGroup){
 		open(texGroup, 1);
@@ -74,6 +77,11 @@ public class TexViewBox {
 		canvas.getContainer().setFocusable(false);
 		viewbox.getContainer().add(canvas);
 		//
+		view = new ImageView(new BufferedImage(group.texture.getFile().toPath().toString()));
+		view.setSize(canvas.getContainer().getSize());
+		canvas.getContainer().add(view);
+		if(!texture) hide(view);
+		//
 		SelectBox<String> texgroups = new SelectBox<>(4, 4, 120, 24);
 		for(TextureGroup texgroup : TextureManager.getGroupsFE()){
 			texgroups.addElement(texgroup.group);
@@ -96,6 +104,10 @@ public class TexViewBox {
 		}).setTooltip(" toggle borders ", 28, 0, 100, 20));
 		viewbox.getContainer().add(new ClickListenerButton("N0", pos += 28, 4, 24, 24, () -> {
 			nozero = !nozero;
+			update();
+		}).setTooltip(" toggle notex poly ", 28, 0, 120, 20));
+		viewbox.getContainer().add(new ClickListenerButton("T", pos += 28, 4, 24, 24, () -> {
+			texture = !texture;
 			update();
 		}).setTooltip(" toggle notex poly ", 28, 0, 120, 20));
 		//
@@ -168,7 +180,9 @@ public class TexViewBox {
 			this.getStyle().setBorderRadius(0f);
 			boolean selected = wrapper.selected || wrapper.getTurboList().selected;
 			boolean selface = side == UVEditor.selface;
-			this.getStyle().getBackground().setColor(FMTB.rgba(selected ? (selface ? Settings.getSelectedColor() : Settings.getSelectedColor2()) : cache.getColor(side.index())));
+			Vector4f color = FMTB.rgba(selected ? (selface ? Settings.getSelectedColor() : Settings.getSelectedColor2()) : cache.getColor(side.index()));
+			color.w = texture ? 0.25f : 1f;
+			this.getStyle().getBackground().setColor(color);
 		}
 
 		public void isZero(){
@@ -205,6 +219,8 @@ public class TexViewBox {
 
 	public static void update(){
 		if(viewbox == null) return;
+		if(texture) show(view);
+		else hide(view);
 		canvas.getContainer().getChildComponents().forEach(com -> {
 			if(com instanceof PolyFace){
 				PolyFace poly = (PolyFace)com;
