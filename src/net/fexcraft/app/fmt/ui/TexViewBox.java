@@ -182,10 +182,15 @@ public class TexViewBox {
 
 		public void updatePos(){
 			coords = wrapper.newTexturePosition(true, false)[side.index()];
+			if(coords == null || coords.length == 0){
+				hide(this);
+				return;
+			}
 			boolean absolute = wrapper.cuv.get(side).absolute();
 			float tx = absolute ? 0 : wrapper.textureX, ty = absolute ? 0 : wrapper.textureY;
 			this.setPosition(new Vector2f(tx + coords[0][0], ty + coords[0][1]).mul(scale));
 			this.setSize(new Vector2f(coords[1][0] - coords[0][0], coords[1][1] - coords[0][1]).mul(scale));
+			show(this);
 		}
 		
 	}
@@ -204,8 +209,8 @@ public class TexViewBox {
 			if(com instanceof PolyFace){
 				PolyFace poly = (PolyFace)com;
 				poly.updateColor();
-				poly.isZero();
 				poly.updatePos();
+				poly.isZero();
 			}
 		});
 	}
