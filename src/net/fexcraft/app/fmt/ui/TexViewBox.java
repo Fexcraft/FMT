@@ -9,10 +9,14 @@ import org.liquidengine.legui.component.Panel;
 import org.liquidengine.legui.component.ScrollablePanel;
 import org.liquidengine.legui.component.SelectBox;
 import org.liquidengine.legui.component.Widget;
+import org.liquidengine.legui.event.MouseClickEvent;
+import org.liquidengine.legui.event.MouseClickEvent.MouseClickAction;
 import org.liquidengine.legui.event.MouseDragEvent;
 import org.liquidengine.legui.style.border.SimpleLineBorder;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.editor.UVEditor;
+import net.fexcraft.app.fmt.utils.RayCoastAway;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.texture.TextureGroup;
 import net.fexcraft.app.fmt.utils.texture.TextureManager;
@@ -48,7 +52,7 @@ public class TexViewBox {
 		}
 		scale = ascale;
 		if(scale < 1) scale = 1;
-		if(scale > 4) scale = 4;
+		if(scale > 8) scale = 8;
 		viewbox = new Widget("TexView", x == null ? 320 : x, y == null ? 50 : y, w == null ? FMTB.WIDTH / 2 : w, h == null ? FMTB.HEIGHT / 2 : h);
 		viewbox.addWidgetCloseEventListener(listener -> {
 			viewbox = null;
@@ -143,6 +147,13 @@ public class TexViewBox {
 				}
 			}
 			this.side = wrapper.getTexturableFaces()[idx];
+			this.getListenerMap().addListener(MouseClickEvent.class, listener -> {
+				if(listener.getAction() == MouseClickAction.CLICK){
+					RayCoastAway.select(wrapper);
+					UVEditor.updateFace(side.id());
+					UVEditor.updateType(wrapper.getUVCoords(side).type().name().toLowerCase());
+				}
+			});
 			updatePos();
 			updateColor();
 			isZero();

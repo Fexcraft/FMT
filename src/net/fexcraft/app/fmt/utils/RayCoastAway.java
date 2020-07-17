@@ -101,21 +101,7 @@ public class RayCoastAway {
 		PolygonWrapper wrapper = getSelected(picked);
 		if(wrapper == null) return;
 		if(!TextureEditor.isPaintActive()){
-			boolean control = GGR.isControlDown();
-			boolean state = control ? wrapper.getTurboList().selected : wrapper.selected;
-			if(!GGR.isAltDown()) FMTB.MODEL.clearSelection();
-			if(control){
-				wrapper.getTurboList().selected = !state;
-				GroupCompound.SELECTED_POLYGONS = FMTB.MODEL.countSelectedMRTs();
-				wrapper.getTurboList().button.updateColor();
-			}
-			else{
-				wrapper.selected = !state;
-				GroupCompound.SELECTED_POLYGONS += wrapper.selected ? 1 : -1;
-				wrapper.button.updateColor();
-			}
-			FMTB.MODEL.lastselected = control ? null : wrapper;
-			FMTB.MODEL.updateFields();
+			select(wrapper);
 		}
 		else{
 			if(TextureEditor.pixelMode()){
@@ -152,6 +138,24 @@ public class RayCoastAway {
 				}
 			}
 		}
+	}
+	
+	public static void select(PolygonWrapper wrapper){
+		boolean control = GGR.isControlDown();
+		boolean state = control ? wrapper.getTurboList().selected : wrapper.selected;
+		if(!GGR.isAltDown()) FMTB.MODEL.clearSelection();
+		if(control){
+			wrapper.getTurboList().selected = !state;
+			GroupCompound.SELECTED_POLYGONS = FMTB.MODEL.countSelectedMRTs();
+			wrapper.getTurboList().button.updateColor();
+		}
+		else{
+			wrapper.selected = !state;
+			GroupCompound.SELECTED_POLYGONS += wrapper.selected ? 1 : -1;
+			wrapper.button.updateColor();
+		}
+		FMTB.MODEL.lastselected = control ? null : wrapper;
+		FMTB.MODEL.updateFields();
 	}
 
 	private static byte[] getPicked(boolean mouseoff){

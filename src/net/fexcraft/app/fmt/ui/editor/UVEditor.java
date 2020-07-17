@@ -6,7 +6,6 @@ import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.SelectBox;
-import org.liquidengine.legui.component.event.selectbox.SelectBoxChangeSelectionEvent;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.event.MouseClickEvent.MouseClickAction;
 import org.liquidengine.legui.style.font.FontRegistry;
@@ -63,7 +62,7 @@ public class UVEditor extends EditorBase {
 		uv_face.addElement(FMTB.NO_POLYGON_SELECTED);
 		uv_face.setElementHeight(20);
 		uv_face.setVisibleCount(12);
-		uv_face.addSelectBoxChangeSelectionEventListener(event -> updateFace(event));
+		uv_face.addSelectBoxChangeSelectionEventListener(event -> updateFace(event.getNewValue()));
 		general.getContainer().add(new Label(translate("editor.uv.general.type"), 3, pass += 24, 290, 20));
 		general.getContainer().add(uv_type = new SelectBox<>(3, pass += 24, 290, 20));
 		for(FaceUVType type : FaceUVType.values()){
@@ -71,7 +70,7 @@ public class UVEditor extends EditorBase {
 		}
 		uv_type.setElementHeight(20);
 		uv_type.setVisibleCount(7);
-		uv_type.addSelectBoxChangeSelectionEventListener(event -> updateType(event));
+		uv_type.addSelectBoxChangeSelectionEventListener(event -> updateType(event.getNewValue()));
 		Button painttotex = new Button(translate("editor.general.attributes.painttotexture"), 3, 8 + (pass += 24), 290, 20);
 		painttotex.getListenerMap().addListener(MouseClickEvent.class, GeneralEditor.painttotex.getListenerMap().getListeners(MouseClickEvent.class).get(0));
 		general.getContainer().add(painttotex);
@@ -87,13 +86,13 @@ public class UVEditor extends EditorBase {
 		reOrderWidgets();
 	}
 
-	private void updateFace(SelectBoxChangeSelectionEvent<String> event){
-		refreshEntries(last, Face.byId(event.getNewValue(), false));
+	public static void updateFace(String newval){
+		refreshEntries(last, Face.byId(newval, false));
 	}
 
-	private void updateType(SelectBoxChangeSelectionEvent<String> event){
+	public static void updateType(String newval){
 		ArrayList<PolygonWrapper> polis = FMTB.MODEL.getSelected();
-		FaceUVType type = FaceUVType.validate(event.getNewValue());
+		FaceUVType type = FaceUVType.validate(newval);
 		polis.forEach(poly -> {
 			poly.getUVCoords(selface).set(type).value(poly.getDefAutoUVCoords(selface));
 		});
@@ -124,6 +123,7 @@ public class UVEditor extends EditorBase {
 			}
 			lasttype = selface == null ? FaceUVType.AUTOMATIC : selected.getUVCoords(selface).type();
 		}
+		uv_face.setSelected((selface == null ? "none" : selface.id()), true);
 		uv_type.setSelected((selface == null ? FaceUVType.AUTOMATIC : selected.getUVCoords(selface).type()).name().toLowerCase(), true);
 		refreshWidget(selected);
 	}
