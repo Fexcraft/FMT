@@ -149,11 +149,13 @@ public class TexViewBox {
 			this.side = wrapper.getTexturableFaces()[idx];
 			this.getListenerMap().addListener(MouseClickEvent.class, listener -> {
 				if(listener.getAction() == MouseClickAction.CLICK){
+					if(!wrapper.selected){
+						UVEditor.selface = side;
+						UVEditor.uv_face.setSelected(side.id(), true);
+						UVEditor.uv_type.setSelected(wrapper.getUVCoords(side).type().name().toLowerCase(), true);
+						UVEditor.refreshEntries(wrapper, side);
+					}
 					RayCoastAway.select(wrapper);
-					UVEditor.selface = side;
-					UVEditor.uv_face.setSelected(side.id(), true);
-					UVEditor.uv_type.setSelected(wrapper.getUVCoords(side).type().name().toLowerCase(), true);
-					UVEditor.refreshEntries(wrapper, side);
 				}
 			});
 			updatePos();
@@ -164,7 +166,9 @@ public class TexViewBox {
 		private void updateColor(){
 			this.getStyle().setBorder(borders ? new SimpleLineBorder(new Vector4f(0f, 0f, 0f, 1f), 1) : null);
 			this.getStyle().setBorderRadius(0f);
-			this.getStyle().getBackground().setColor(FMTB.rgba(wrapper.selected || wrapper.getTurboList().selected ? Settings.getSelectedColor() : cache.getColor(side.index())));
+			boolean selected = wrapper.selected || wrapper.getTurboList().selected;
+			boolean selface = side == UVEditor.selface;
+			this.getStyle().getBackground().setColor(FMTB.rgba(selected ? (selface ? Settings.getSelectedColor() : Settings.getSelectedColor2()) : cache.getColor(side.index())));
 		}
 
 		public void isZero(){

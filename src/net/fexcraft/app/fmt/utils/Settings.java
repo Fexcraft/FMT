@@ -117,6 +117,10 @@ public class Settings {
 		return SETTINGS.get("selection_color").getValue();
 	}
 
+	public static RGB getSelectedColor2(){
+		return SETTINGS.get("selection_color2").getValue();
+	}
+
 	public static RGB getBoundingBoxColor(){
 		return SETTINGS.get("boundingbox_color").getValue();
 	}
@@ -149,6 +153,7 @@ public class Settings {
 	public static SettingsMap DEFAULTS = new SettingsMap(), SETTINGS = new SettingsMap();
 	static {
 		DEFAULTS.add(new Setting("selection_color", new RGB(255, 255, 0)));
+		DEFAULTS.add(new Setting("selection_color2", new RGB(255, 255, 255)));
 		DEFAULTS.add(new Setting("background_color", new float[]{ 0.5f, 0.5f, 0.5f, 0.2f }));
 		DEFAULTS.add(new Setting("floor", true));
 		DEFAULTS.add(new Setting("lines", true));
