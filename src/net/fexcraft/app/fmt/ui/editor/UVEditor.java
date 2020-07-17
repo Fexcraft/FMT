@@ -96,6 +96,8 @@ public class UVEditor extends EditorBase {
 					poly.recompile();
 					texgroup.texture.save();
 					texgroup.texture.rebind();
+					//log(coords[0][0][0] + " " + coords[0][0][1]);
+					//log(coords[0][1][0] + " " + coords[0][1][1]);
 					log("Polygon (" + poly.getTurboList().id + ":" + poly.name() + ":" + selface.id()  + ") painted into Texture.");
 				}
 				return;
