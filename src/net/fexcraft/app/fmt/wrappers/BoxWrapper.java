@@ -191,7 +191,7 @@ public class BoxWrapper extends PolygonWrapper {
 	}
 
 	private boolean detached(int i){
-		return sides[i] ? true : cuv.get(BoxFace.values()[i]).absolute();
+		return sides[i] || cuv.get(BoxFace.values()[i]).absolute();
 	}
 
 	private float[][] getCoords(Face face, float[][] def){
