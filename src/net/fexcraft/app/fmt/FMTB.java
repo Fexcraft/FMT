@@ -441,7 +441,7 @@ public class FMTB {
 	}
 	
 	private void render(float alpha, boolean pixelpass){
-		context.updateGlfwWindow();
+		if(!RayCoastAway.PICKING) context.updateGlfwWindow();
         Vector2i size = context.getFramebufferSize();
         float[] color = Settings.getBackGroundColor();
         GL11.glClearColor(color[0], color[1], color[2], color[3]);
