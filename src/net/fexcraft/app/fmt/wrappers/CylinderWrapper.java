@@ -174,8 +174,8 @@ public class CylinderWrapper extends PolygonWrapper {
 	public float[][][] newTexturePosition(boolean include_offsets, boolean exclude_detached){
 		float radius = this.radius < 1 ? 1 : this.radius;
 		float length = this.length < 1 ? 1 : this.length;
-		float tx = 0/*textureX*/, ty = 0/*textureY*/, qrad = radius / 2, rad = radius * 2, rad2 = rad + rad;
-		float[][][] vecs = new float[radius2 != 0f ? seglimit > 0 && seglimit < segments ? 20 : 18 : 10][][];
+		float tx = 0/*textureX*/, ty = 0/*textureY*/, /*qrad = radius / 2,*/ rad = radius * 2, rad2 = rad + rad;
+		float[][][] vecs = new float[radius2 != 0f ? seglimit > 0 && seglimit < segments ? 6 : 4 : 3/*20 : 18 : 10*/][][];
 		float height = radial ? seg_height + seg_height : rad;
 		if(radial){
 			vecs[0] = new float[][]{
@@ -197,25 +197,33 @@ public class CylinderWrapper extends PolygonWrapper {
 				new float[]{ tx + rad2, ty + rad }
 			};
 		}
-		for(int i = 0; i < 8; i++){
+		/*for(int i = 0; i < 8; i++){
 			vecs[2 + i] = new float[][]{
 				new float[]{ tx + (qrad * i), ty + height },
 				new float[]{ tx + (qrad * (i + 1)), ty + height + length }
 			};
-		}
+		}*/
+		vecs[2] = new float[][]{
+			new float[]{ tx, ty + height },
+			new float[]{ tx + rad2, ty + height + length }
+		};
 		if(radius2 != 0f){
-			for(int i = 0; i < 8; i++){
+			/*for(int i = 0; i < 8; i++){
 				vecs[10 + i] = new float[][]{
 					new float[]{ tx + (qrad * i), ty + height + length },
 					new float[]{ tx + (qrad * (i + 1)), ty + height + length + length }
 				};
-			}
+			}*/
+			vecs[3] = new float[][]{
+				new float[]{ tx, ty + height + length },
+				new float[]{ tx + rad2, ty + height + length + length }
+			};
 			if(seglimit > 0 && seglimit < segments){
-				vecs[18] = new float[][]{
+				vecs[4/*18*/] = new float[][]{
 					new float[]{ tx + rad2, ty + height },
 					new float[]{ tx + rad2 + (radius - radius2), ty + height + length }
 				};
-				vecs[19] = new float[][]{
+				vecs[5/*19*/] = new float[][]{
 					new float[]{ tx + rad2, ty + height + length },
 					new float[]{ tx + rad2 + (radius - radius2), ty + height + length + length }
 				};
@@ -236,6 +244,31 @@ public class CylinderWrapper extends PolygonWrapper {
 	@Override
 	public Face[] getTexturableFaces(){
 		return CylFace.values();
+	}
+
+	@Override
+	public boolean isFaceActive(String str){
+		return isFaceActive(Face.byId(str, true));
+	}
+
+	@Override
+	public boolean isFaceActive(Face other){
+		if(other instanceof CylFace == false) return false;
+		switch((CylFace)other){
+			case BASE:
+				return !bools[0];
+			case TOP:
+				return !bools[1];
+			case OUTER:
+				return !bools[2];
+			case INNER:
+				return radius2 != 0f && !bools[3];
+			case SEG_SIDE_0:
+			case SEG_SIDE_1:
+				return seglimit > 0 && seglimit < segments;
+			default:
+				return false;
+		}
 	}
 	
 }

@@ -147,17 +147,6 @@ public class TexViewBox {
 			//this.setSize(this.getSize().mul(scale));
 			this.wrapper = wrapper;
 			this.coords = arr;
-			if(wrapper.getType().isCylinder()){
-				if(idx > 1){
-					if(idx > 9){
-						if(idx > 17){
-							idx = 4;
-						}
-						else idx = 3;
-					}
-					else idx = 2;
-				}
-			}
 			this.side = wrapper.getTexturableFaces()[idx];
 			this.getListenerMap().addListener(MouseClickEvent.class, listener -> {
 				if(listener.getAction() == MouseClickAction.CLICK){
