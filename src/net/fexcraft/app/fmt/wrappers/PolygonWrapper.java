@@ -376,8 +376,7 @@ public abstract class PolygonWrapper {
 			}
 		}
 		else{
-			if(this.getType().isCylinder()){
-				//TODO update once custom cylinder uv is implemented
+			/*if(this.getType().isCylinder()){
 				int segs = (int)this.getFloat("cyl1", true, false, false);//segments
 				float[][] ends = null;
 				if(face < segs){
@@ -396,7 +395,7 @@ public abstract class PolygonWrapper {
 				if(ends == null || ends.length == 0) return false;
 				burn(tex, ends, TextureEditor.CURRENTCOLOR.toByteArray(), false);
 			}
-			else if(this.getType().isRectagular() && !this.getType().isTexRect()){
+			else*/ if(this.getType().isTexturable()){
 				float[][] ends = coords[face];
 				if(ends == null || ends.length == 0) return false;
 				burn(tex, ends, TextureEditor.CURRENTCOLOR.toByteArray(), cuv.get(getTexturableFaces()[face]).absolute());
