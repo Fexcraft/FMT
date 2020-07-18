@@ -362,17 +362,26 @@ public abstract class PolygonWrapper {
 		}
 		if(face == null || face == -1){
 			boolean negative = face != null;
-			for(UVCoords coord : cuv.values()){
-				if(sface == null && !isFaceActive(coord.side())) continue;//disabled
-				float[][] ends = coords[sface != null ? 0 : coord.side().index()];
+			if(sface != null){
+				float[][] ends = coords[0];
 				if(ends == null || ends.length == 0){
-					log("zero " + sface);
-					continue;
+					log("error: requested single-face paint, but provided no coordinates");
+					return false;
 				}
-				if(!detached && sface == null && coord.absolute()) detached = true;
-				byte[] color = (negative ? TextureEditor.CURRENTCOLOR : something.getColor(sface != null ? sface : coord.side().index())).toByteArray();
+				byte[] color = (negative ? TextureEditor.CURRENTCOLOR : something.getColor(sface)).toByteArray();
 				burn(tex, ends, color, detached);
-				if(sface != null) break;
+			}
+			else{
+				for(UVCoords coord : cuv.values()){
+					if(!isFaceActive(coord.side())) continue;//disabled
+					float[][] ends = coords[coord.side().index()];
+					if(ends == null || ends.length == 0){
+						log("paint data for face " + coord.side().id() + " not found, skipping");
+						continue;
+					}
+					byte[] color = (negative ? TextureEditor.CURRENTCOLOR : something.getColor(coord.side().index())).toByteArray();
+					burn(tex, ends, color, coord.absolute());
+				}
 			}
 		}
 		else{
