@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.wrappers;
 
+import java.util.Arrays;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -250,7 +252,10 @@ public class BoxWrapper extends PolygonWrapper {
 	@Override
 	protected PolygonWrapper createClone(GroupCompound compound){
 		BoxWrapper wrapper = new BoxWrapper(compound);
-		wrapper.size = new Vec3f(size); return wrapper;
+		wrapper.size = new Vec3f(size);
+		wrapper.sides = Arrays.copyOf(sides, 6);
+		wrapper.cuv.copyFrom(wrapper, cuv);
+		return wrapper;
 	}
 
 	@Override
@@ -265,7 +270,11 @@ public class BoxWrapper extends PolygonWrapper {
 			case TEXRECT_A: wrapper = new TexrectWrapperA(compound); break;
 			case TEXRECT_B: wrapper = new TexrectWrapperB(compound); break;
 			default: return null;
-		} wrapper.size = new Vec3f(size); return copyTo(wrapper, true);
+		}
+		wrapper.size = new Vec3f(size);
+		wrapper.sides = Arrays.copyOf(sides, 6);
+		wrapper.cuv.copyFrom(wrapper, cuv);
+		return copyTo(wrapper, true);
 	}
 
 	public boolean anySidesOff(){
