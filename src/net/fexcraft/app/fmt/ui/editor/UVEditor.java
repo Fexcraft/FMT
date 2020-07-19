@@ -378,4 +378,8 @@ public class UVEditor extends EditorBase {
 		return selface;
 	}
 
+	public static PolygonWrapper getLast(){
+		return last;
+	}
+
 }

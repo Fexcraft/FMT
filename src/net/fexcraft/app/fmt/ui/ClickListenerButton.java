@@ -5,6 +5,7 @@ import org.liquidengine.legui.component.Tooltip;
 import org.liquidengine.legui.component.optional.align.HorizontalAlign;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.event.MouseClickEvent.MouseClickAction;
+import org.liquidengine.legui.listener.MouseClickEventListener;
 
 import net.fexcraft.app.fmt.utils.Translator;
 
@@ -17,6 +18,11 @@ public class ClickListenerButton extends Button {
 				runnable.run();
 			}
 		});
+	}
+	
+	public ClickListenerButton(String string, int x, int y, int w, int h, MouseClickEventListener listener){
+		super(string, x, y, w, h);
+		this.getListenerMap().addListener(MouseClickEvent.class, listener);
 	}
 	
 	public ClickListenerButton setTooltip(String string){

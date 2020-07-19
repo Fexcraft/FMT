@@ -3,6 +3,8 @@ package net.fexcraft.app.fmt.ui;
 import static net.fexcraft.app.fmt.ui.UserInterfaceUtils.hide;
 import static net.fexcraft.app.fmt.ui.UserInterfaceUtils.show;
 
+import java.util.ArrayList;
+
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import org.liquidengine.legui.component.ImageView;
@@ -25,6 +27,7 @@ import net.fexcraft.app.fmt.utils.texture.TextureManager;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.app.fmt.wrappers.face.Face;
+import net.fexcraft.app.fmt.wrappers.face.UVCoords;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 /**
@@ -111,6 +114,11 @@ public class TexViewBox {
 			update();
 		}).setTooltip(" toggle notex poly ", 28, 0, 120, 20));
 		//
+		/*viewbox.getContainer().add(new ClickListenerButton("<", pos += 36, 4, 24, 24, () -> move(-1, 0)).setTooltip("move left", 28, 0, 100, 20));
+		viewbox.getContainer().add(new ClickListenerButton(">", pos += 28, 4, 24, 24, () -> move(1, 0)).setTooltip("move right", 28, 0, 100, 20));
+		viewbox.getContainer().add(new ClickListenerButton("^", pos += 28, 4, 24, 24, () -> move(0, -1)).setTooltip("move up", 28, 0, 100, 20));
+		viewbox.getContainer().add(new ClickListenerButton("V", pos += 28, 4, 24, 24, () -> move(0, 1)).setTooltip("move down", 28, 0, 100, 20));*/
+		//
 		boolean isactivegroup = FMTB.MODEL.texgroup != null && FMTB.MODEL.texgroup.group.equals(texGroup);
 		for(TurboList list : FMTB.MODEL.getGroups()){
 			if(!isactivegroup && list.texgroup == null) continue;
@@ -130,6 +138,21 @@ public class TexViewBox {
 		FMTB.frame.getContainer().add(viewbox);
 	}
 	
+	/*private static void move(int x, int y){
+		NumberField field = null;
+		boolean valid = UVEditor.getSelection() != NullFace.NONE && UVEditor.getLast() != null;
+		if(valid){
+			valid = UVEditor.getLast().getUVCoords(UVEditor.getSelection()).type().arraylength == 2;//offset-only/absolute
+		}
+		if(x != 0){
+			field = valid ? UVEditor.oo_tex_x : UVEditor.texture_x;
+		}
+		else{
+			field = valid ? UVEditor.oo_tex_y : UVEditor.texture_y;
+		}
+		field.onScroll(x == 0 ? y : x);
+	}*/
+
 	public static boolean isOpen(){
 		return viewbox != null;
 	}
@@ -140,16 +163,21 @@ public class TexViewBox {
 		private PolygonWrapper wrapper;
 		private float[][] coords;
 		private Face side;
+		private boolean dragged;
 
 		public PolyFace(PolygonWrapper wrapper, int idx, float[][] arr){
 			super(0, 0, 0, 0);//wrapper.textureX + arr[0][0], wrapper.textureY + arr[0][1], arr[1][0] - arr[0][0], arr[1][1] - arr[0][1]);
 			//this.setPosition(this.getPosition().mul(scale));
 			//this.setSize(this.getSize().mul(scale));
-			this.wrapper = wrapper;
+			this.wrapper = wrapper.setTexViewComponent(this);
 			this.coords = arr;
 			this.side = wrapper.getTexturableFaces()[idx];
 			this.getListenerMap().addListener(MouseClickEvent.class, listener -> {
 				if(listener.getAction() == MouseClickAction.CLICK){
+					if(dragged){
+						dragged = false;
+						return;
+					}
 					if(!wrapper.selected){
 						UVEditor.selface = side;
 						UVEditor.uv_face.setSelected(side.id(), true);
@@ -157,6 +185,15 @@ public class TexViewBox {
 						UVEditor.refreshEntries(wrapper, side);
 					}
 					RayCoastAway.select(wrapper);
+				}
+			});
+			this.getListenerMap().addListener(MouseDragEvent.class, listener -> {
+				if(!wrapper.selected && !wrapper.getTurboList().selected) return;
+				int x = (int)(listener.getDelta().x / scale);
+				int y = (int)(listener.getDelta().y / scale);
+				if(x != 0 || y != 0){
+					moveSelection(x, y);
+					dragged = true;
 				}
 			});
 			updatePos();
@@ -195,11 +232,56 @@ public class TexViewBox {
 			this.setSize(new Vector2f(coords[1][0] - coords[0][0], coords[1][1] - coords[0][1]).mul(scale));
 			show(this);
 		}
+
+		public void update(){
+			updateColor();
+			updatePos();
+			isZero();
+		}
 		
 	}
 
 	public static Vector2f pos(){
 		return viewbox.getPosition();
+	}
+
+	public static void moveSelection(int x, int y){
+		ArrayList<PolygonWrapper> selected = FMTB.MODEL.getSelected();
+		Face selface = UVEditor.getSelection();
+		for(PolygonWrapper wrapper : selected){
+			if(!wrapper.isFaceActive(selface)) continue;
+			UVCoords coord = wrapper.getUVCoords(selface);
+			switch(coord.type()){
+				case AUTOMATIC:
+					wrapper.textureX += x;
+					wrapper.textureY += y;
+					break;
+				case ABSOLUTE:
+				case OFFSET_ONLY:
+					coord.value()[0] += x;
+					coord.value()[1] += y;
+					break;
+				case ABSOLUTE_ENDS:
+				case OFFSET_ENDS:
+					coord.value()[0] += x;
+					coord.value()[1] += y;
+					coord.value()[2] += x;
+					coord.value()[3] += y;
+					break;
+				case ABSOLUTE_FULL:
+				case OFFSET_FULL:
+					coord.value()[0] += x;
+					coord.value()[1] += y;
+					coord.value()[2] += x;
+					coord.value()[3] += y;
+					coord.value()[4] += x;
+					coord.value()[5] += y;
+					coord.value()[6] += x;
+					coord.value()[7] += y;
+					break;
+			}
+		}
+		FMTB.MODEL.updateFields();
 	}
 
 	public static Vector2f size(){
@@ -212,10 +294,7 @@ public class TexViewBox {
 		else hide(view);
 		canvas.getContainer().getChildComponents().forEach(com -> {
 			if(com instanceof PolyFace){
-				PolyFace poly = (PolyFace)com;
-				poly.updateColor();
-				poly.updatePos();
-				poly.isZero();
+				((PolyFace)com).update();
 			}
 		});
 	}

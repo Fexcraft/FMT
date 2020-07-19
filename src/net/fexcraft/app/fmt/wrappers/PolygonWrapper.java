@@ -12,6 +12,7 @@ import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.TexViewBox;
+import net.fexcraft.app.fmt.ui.TexViewBox.PolyFace;
 import net.fexcraft.app.fmt.ui.editor.TextureEditor;
 import net.fexcraft.app.fmt.ui.editor.UVEditor;
 import net.fexcraft.app.fmt.ui.tree.SubTreeGroup;
@@ -47,6 +48,7 @@ public abstract class PolygonWrapper {
 	public UVMap cuv;
 	//
 	public SubTreeGroup button;
+	public PolyFace texviewcomponent;
 	
 	public PolygonWrapper(GroupCompound compound){
 		this.compound = compound; button = new SubTreeGroup(Trees.polygon, this);
@@ -600,6 +602,11 @@ public abstract class PolygonWrapper {
 	
 	public int getUnShiftedIndex(int shifted){
 		return shifted;//TO BE OVERRIDEN
+	}
+
+	public PolygonWrapper setTexViewComponent(PolyFace polyFace){
+		texviewcomponent = polyFace;
+		return this;
 	}
 	
 }
