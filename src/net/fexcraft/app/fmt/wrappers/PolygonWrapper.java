@@ -387,18 +387,14 @@ public abstract class PolygonWrapper {
 			}
 		}
 		else{
-			/*if(this.getType().isCylinder()){
+			if(this.getType().isCylinder()){
 				int segs = (int)this.getFloat("cyl1", true, false, false);//segments
 				float[][] ends = null;
 				if(face < segs){
 					ends = coords[0];
 				}
 				else if(face < (segs * 2)){
-					float per = (face - segs) * 100f / segs;
-					//log(false, new Object[]{ segs, face - segs, per });
-					int i = 0; while((per -= 12.5f) > 0f) i++;
-					//log(false, new Object[]{ segs, face - segs, per, i });
-					ends = i < 0 || i >= 8 ? null : coords[i + 2];
+					ends = coords[2];
 				}
 				else if(face < (segs * 3)){
 					ends = coords[1];
@@ -406,7 +402,7 @@ public abstract class PolygonWrapper {
 				if(ends == null || ends.length == 0) return false;
 				burn(tex, ends, TextureEditor.CURRENTCOLOR.toByteArray(), false);
 			}
-			else*/ if(this.getType().isTexturable()){
+			else if(this.getType().isTexturable()){
 				float[][] ends = coords[face];
 				if(ends == null || ends.length == 0) return false;
 				burn(tex, ends, TextureEditor.CURRENTCOLOR.toByteArray(), cuv.get(getTexturableFaces()[face]).absolute());
