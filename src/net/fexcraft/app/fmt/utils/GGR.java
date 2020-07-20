@@ -87,7 +87,7 @@ public class GGR {
 	        cursor_moved = false;
 	    }
         processCameraInput(delta);
-        if(left_down && TextureEditor.isPaintActive() && Settings.dragPainting()){
+        if(left_down && TextureEditor.isPaintActive() && Settings.dragPainting() && isNotOverUI()){
         	RayCoastAway.doTest(true, true, false);
         }
     }
