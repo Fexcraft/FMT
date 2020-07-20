@@ -132,7 +132,7 @@ public class RayCoastAway {
 				}
 			}
 			else{
-				if(wrapper.burnToTexture(tex, TextureEditor.polygonMode() ? -1 : getSelectedFace(wrapper, picked))){
+				if(wrapper.burnToTexture(tex, TextureEditor.polygonMode() ? -1 : wrapper.getUnShiftedIndex(getSelectedFace(wrapper, picked)))){
 					tex.rebind();
 					TextureManager.saveTexture(group.texture);
 				}
