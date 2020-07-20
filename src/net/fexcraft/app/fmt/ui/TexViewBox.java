@@ -196,9 +196,7 @@ public class TexViewBox {
 					dragged = true;
 				}
 			});
-			updatePos();
-			updateColor();
-			isZero();
+			update();
 		}
 
 		private void updateColor(){
