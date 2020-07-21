@@ -147,8 +147,8 @@ public class TextureEditor extends EditorBase {
 					}
 					else{
 						if(box != null) box.reset();
-						this.getStyle().setBorder(new SimpleLineBorder(FMTB.rgba(opposite(color)), 2));
-						this.getStyle().setBorderRadius(4f);
+						//this.getStyle().setBorder(new SimpleLineBorder(FMTB.rgba(opposite(color)), 1));
+						this.getStyle().setBorderRadius(10f);
 						box = this;
 					}
 					this.setFocused(false);
