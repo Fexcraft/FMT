@@ -304,13 +304,13 @@ public abstract class FVTMFormatBase extends ExImPorter {
 						}
 					}
 					off = off.substring(0, off.length() - 2);
-					shape.append("\n" + tab3 + ".removePolygon(" + off + ")");
+					shape.append("\n" + tab3 + ".removePolygons(" + off + ")");
 				}
 				for(UVCoords coord : wrapper.cuv.values()){
 					if(coord.automatic() || !wrapper.isFaceActive(coord.side())) continue;
 					String arr = new String();
 					for(int i = 0; i < coord.value().length; i++){
-						arr += coord.value()[i] + ", ";
+						arr += coord.value()[i] + "f, ";
 					}
 					arr = arr.substring(0, arr.length() - 2);
 					shape.append("\n" + tab3 + ".setPolygonUV(" + coord.side().index() + ", new float[]{ " + arr + " })");
