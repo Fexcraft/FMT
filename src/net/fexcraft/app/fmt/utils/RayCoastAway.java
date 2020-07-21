@@ -27,7 +27,6 @@ public class RayCoastAway {
 	}
 	public static final int CORRECTOR = 16777216;
 	public static PolygonWrapper lastsel;
-	public static boolean UNLOCKED = false;
 
 	/*public static void doTest(boolean bool){
 		doTest(bool, MOUSEOFF);
