@@ -301,8 +301,8 @@ public class GroupEditor extends EditorBase {
 		int value = (int)(event.getNewValue() + 0f);
 		if(FMTB.MODEL.getDirectlySelectedGroupsAmount() == 0) return;
 		for(TurboList list : FMTB.MODEL.getDirectlySelectedGroups()){
-			if(bool == null) list.textureS = value;
-			else if(bool) list.textureX = value;
+			/*if(bool == null) list.textureS = value;
+			else*/ if(bool) list.textureX = value;
 			else list.textureY = value;
 			TextureUpdate.updateSize(list);
 			list.recompile();

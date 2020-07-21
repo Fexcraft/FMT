@@ -278,12 +278,12 @@ public class TreeGroup extends Panel {
 		}).setRoot(this).updateColor();
 		new SubTreeGroup(base, 1, "tree.textures.generate", () -> {
 			texgroup.texture.clear(null);
-			if(FMTB.MODEL.texgroup == texgroup) FMTB.MODEL.textureScale = 1;
+			/*if(FMTB.MODEL.texgroup == texgroup) FMTB.MODEL.textureScale = 1;
 			for(TurboList list : FMTB.MODEL.getGroups()){
 				if(list.texgroup == texgroup){
 					list.textureS = 1;
 				}
-			}
+			}*/
 			FMTB.MODEL.updateFields();
         	FMTB.MODEL.getGroups().forEach(elm -> {
         		if(elm.texgroup == null || elm.texgroup == texgroup){

@@ -250,7 +250,7 @@ public class SaveLoad {
 		obj.addProperty("name", compound.name);
 		obj.addProperty("texture_size_x", compound.tx(null));
 		obj.addProperty("texture_size_y", compound.ty(null));
-		obj.addProperty("texture_scale", compound.textureScale);
+		//obj.addProperty("texture_scale", compound.textureScale);
 		JsonArray creators = new JsonArray();
 		if(compound.getAuthors().isEmpty()){
 			if(SessionHandler.isLoggedIn()) creators.add(SessionHandler.getUserName());
@@ -295,7 +295,7 @@ public class SaveLoad {
 					group.addProperty("texture_group", list.texgroup.group);
 					group.addProperty("texture_size_x", list.textureX);
 					group.addProperty("texture_size_y", list.textureY);
-					group.addProperty("texture_scale", list.textureS);
+					//group.addProperty("texture_scale", list.textureS);
 				}
 				if(list.exportoffset != null){
 					group.addProperty("export_offset_x", list.exportoffset.xCoord);
@@ -389,7 +389,7 @@ public class SaveLoad {
 		compound.name = JsonUtil.getIfExists(obj, "name", "unnamed model");
 		compound.textureSizeX = JsonUtil.getIfExists(obj, "texture_size_x", 256).intValue();
 		compound.textureSizeY = JsonUtil.getIfExists(obj, "texture_size_y", 256).intValue();
-		compound.textureScale = JsonUtil.getIfExists(obj, "texture_scale", 1).intValue();
+		//compound.textureScale = JsonUtil.getIfExists(obj, "texture_scale", 1).intValue();
 		compound.setAuthors(JsonUtil.jsonArrayToStringArray(JsonUtil.getIfExists(obj, "creators", new JsonArray()).getAsJsonArray()));
 		if(JsonUtil.getIfExists(obj, "format", 2).intValue() == 1){
 			JsonObject model = obj.get("model").getAsJsonObject();
@@ -434,14 +434,14 @@ public class SaveLoad {
 					int texx = group.get("texture_size_x").getAsInt();
 					int texy = group.get("texture_size_y").getAsInt();
 					list.setTexture(TextureManager.getGroup(list.id), texx, texy);
-					list.textureS = JsonUtil.getIfExists(obj, "texture_scale", 1).intValue();
+					//list.textureS = JsonUtil.getIfExists(obj, "texture_scale", 1).intValue();
 				}
 				if(group.has("texture_group")){
 					if(ggr_nopreview){
 						int texx = group.get("texture_size_x").getAsInt();
 						int texy = group.get("texture_size_y").getAsInt();
 						list.setTexture(TextureManager.getGroup(group.get("texture_group").getAsString()), texx, texy);
-						list.textureS = JsonUtil.getIfExists(obj, "texture_scale", 1).intValue();
+						//list.textureS = JsonUtil.getIfExists(obj, "texture_scale", 1).intValue();
 					}
 					else{
 						list.helpertex = group.get("texture_group").getAsString();

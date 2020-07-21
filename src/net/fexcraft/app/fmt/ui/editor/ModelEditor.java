@@ -246,8 +246,8 @@ public class ModelEditor extends EditorBase {
 	private void updateModelTexSize(SelectBoxChangeSelectionEvent<Float> event, Boolean bool){
 		if(FMTB.MODEL == null) return;
 		int value = (int)(event.getNewValue() + 0f);
-		if(bool == null) FMTB.MODEL.textureScale = value;
-		else if(bool) FMTB.MODEL.textureSizeX = value;
+		/*if(bool == null) FMTB.MODEL.textureScale = value;
+		else*/ if(bool) FMTB.MODEL.textureSizeX = value;
 		else FMTB.MODEL.textureSizeY = value;
 		TextureUpdate.updateSize(null);
 		FMTB.MODEL.recompile();

@@ -51,7 +51,7 @@ import net.fexcraft.lib.common.math.Vec3f;
 
 public class GroupCompound {
 	
-	public int textureSizeX = 256, textureSizeY = 256, textureScale = 1;
+	public int textureSizeX = 256, textureSizeY = 256;
 	private LinkedHashMap<String, Boolean> creators = new LinkedHashMap<>();
 	private ArrayList<String> authors = new ArrayList<>();
 	private GroupList groups = new GroupList();
@@ -135,37 +135,34 @@ public class GroupCompound {
 	
 	public static final String temptexid = "./temp/calculation_texture_";
 	
-	public String getTempTex(PolygonWrapper wrapper){
-		String texid = temptexid + wrapper.getTextureGroup().group;
-		Texture tex = TextureManager.getTexture(texid, true);
-		boolean nolisttex = wrapper.getTurboList().texgroup == null;
-		int scale = nolisttex ? this.textureScale : wrapper.getTurboList().textureS;
-		int texX = (nolisttex ? this.textureSizeX : wrapper.getTurboList().textureX) * scale;
-		int texY = (nolisttex ? this.textureSizeY : wrapper.getTurboList().textureY) * scale;
-		if(tex == null || (tex.getWidth() != texX || tex.getHeight() != texY)){
-			if(tex == null){
-				//log("Creating '" + wrapper.getTextureGroup().group + "' " + texX + " " + texY);
-				tex = TextureManager.createTexture(texid, texX, texY);
-				tex.setFile(new File(texid + ".png"));
-			}
-			else{
-				//log("Resizing '" + wrapper.getTextureGroup().group + "' " + texX + " " + texY);
-				tex.resize(texX, texY);
-			}
-			int lastint = 0;
-			//log("size: " + texX + " " + texY);
-			for(int x = 0; x < texX; x++){
-				for(int y = 0; y < texY; y++){
-					tex.set(x, y, new RGB(lastint).toByteArray());
-					lastint++;
-				}
-			}
-			tex.save();
-			tex.rebind();
+	public Texture getTempTex(PolygonWrapper wrapper){
+		Texture tex = TextureManager.getTexture(temptexid + wrapper.getTextureGroup().group, true);
+		if(tex == null){
+			TextureGroup texgroup = wrapper.getTextureGroup();
+			String texid = temptexid + wrapper.getTextureGroup().group;
+			tex = TextureManager.createTexture(texid, texgroup.texture.getWidth(), texgroup.texture.getHeight());
+			tex.setFile(new File(texid + ".png"));
+			colortexcalc(tex);
 		}
-		return texid;
+		else if(tex.getWidth() != texgroup.texture.getWidth() || tex.getHeight() != texgroup.texture.getHeight()){
+			tex.resize(texgroup.texture.getWidth(), texgroup.texture.getHeight());
+			colortexcalc(tex);
+		}
+		return tex;
 	}
 	
+	private void colortexcalc(Texture tex){
+		int lastint = 0;
+		for(int x = 0; x < tex.getWidth(); x++){
+			for(int y = 0; y < tex.getHeight(); y++){
+				tex.set(x, y, new RGB(lastint).toByteArray());
+				lastint++;
+			}
+		}
+		tex.save();
+		tex.rebind();
+	}
+
 	public final ArrayList<PolygonWrapper> getSelected(){
 		ArrayList<PolygonWrapper> polis = new ArrayList<>();
 		for(TurboList list : groups){

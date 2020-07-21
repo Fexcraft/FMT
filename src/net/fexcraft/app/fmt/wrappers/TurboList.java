@@ -22,7 +22,7 @@ public class TurboList extends ArrayList<PolygonWrapper> {
 	public Vec3f exportoffset;
 	// private float rotX, rotY, rotZ, posX, posY, posZ;//FMR stuff
 	public boolean visible = true, minimized, aminimized, selected;
-	public int tempheight, textureX = 256, textureY = 256, textureS = 1;
+	public int tempheight, textureX = 256, textureY = 256;//, textureS = 1;
 	public TextureGroup texgroup;
 	public String helpertex;
 	public ArrayList<Animation> animations = new ArrayList<>();
@@ -96,7 +96,7 @@ public class TurboList extends ArrayList<PolygonWrapper> {
 		this.texgroup = group;
 		this.textureX = sizex;
 		this.textureY = sizey;
-		this.textureS = 1;
+		//this.textureS = 1;
 	}
 
 	public void bindApplicableTexture(GroupCompound compound){
