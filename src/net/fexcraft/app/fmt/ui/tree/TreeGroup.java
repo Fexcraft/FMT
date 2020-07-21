@@ -296,7 +296,7 @@ public class TreeGroup extends Panel {
         	FMTB.MODEL.recompile();
 		}).setRoot(this).updateColor();
 		new SubTreeGroup(base, 2, "tree.textures.resize", () -> {
-			Dialog dialog = new Dialog(Translator.translate("tree.textures.resize.dialog"), 300, 90);
+			Dialog dialog = new Dialog(Translator.translate("tree.textures.resize.dialog"), 300, 120);
 			dialog.setResizable(false);
 			Label label = new Label(Translator.translate("tree.textures.resize.copyfrom"), 10, 10, 120, 20);
 			SelectBox<String> selectbox = new SelectBox<String>(140, 10, 140, 20);
@@ -307,16 +307,35 @@ public class TreeGroup extends Panel {
 			selectbox.setSelected(0, true);
 			dialog.getContainer().add(label);
 			dialog.getContainer().add(selectbox);
-            Button button0 = new Button(Translator.translate("dialogbox.button.ok"), 10, 40, 100, 20);
+			Label label0 = new Label(Translator.translate("tree.textures.resize.scale"), 10, 40, 120, 20);
+			SelectBox<Integer> selectbox0 = new SelectBox<Integer>(140, 40, 140, 20);
+			selectbox0.addElement(1);
+			selectbox0.addElement(2);
+			selectbox0.addElement(3);
+			selectbox0.addElement(4);
+			selectbox0.setSelected(0, true);
+			dialog.getContainer().add(label0);
+			dialog.getContainer().add(selectbox0);
+            Button button0 = new Button(Translator.translate("dialogbox.button.ok"), 10, 70, 100, 20);
             button0.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
             	if(CLICK == e.getAction()){
             		dialog.close();
             		try{
                 		boolean model = selectbox.getSelection().equals("model");
                 		TurboList list = model ? null : FMTB.MODEL.getGroups().get(selectbox.getSelection().replace("group-", ""));
-                		texgroup.texture.resize(FMTB.MODEL.tx(list), FMTB.MODEL.ty(list));
+                		int scale = selectbox0.getSelection(), scale0 = scale;
+                		int x = FMTB.MODEL.tx(list), xx = x;
+                		int y = FMTB.MODEL.ty(list), yy = y;
+                		if(scale > 1){
+                			while(--scale > 0){
+                				xx *= 2;
+                				yy *= 2;
+                			}
+                		}
+                		texgroup.texture.resize(xx, yy);
                 		texgroup.texture.save();
                 		texgroup.texture.reload();
+                		log("Resized TexGroup '" + texgroup.group + "' to " + x + ", " + y + " with scale " + scale0 + " to " + xx + " " + yy + ".");
             		}
             		catch(Exception ex){
             			log(ex);
