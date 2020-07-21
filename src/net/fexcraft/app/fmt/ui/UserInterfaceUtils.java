@@ -80,6 +80,7 @@ public class UserInterfaceUtils {
 			new MenuButton("toolbar.file.import", () -> PorterManager.handleImport()),
 			new MenuButton("toolbar.file.export", () -> PorterManager.handleExport()),
 			new MenuButton("toolbar.file.settings", () -> SettingsBox.openFMTSettings()),
+			new MenuButton("toolbar.file.donate", () -> FMTB.openLink("https://fexcraft.net/donate")),
 			new MenuButton("toolbar.file.exit",  () -> SaveLoad.checkIfShouldSave(true, false))
 		));
 		frame.getContainer().add(new MenuEntry(1, Translator.translate("toolbar.utils"),
