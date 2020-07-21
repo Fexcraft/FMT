@@ -3,6 +3,7 @@ package net.fexcraft.app.fmt.ui.tree;
 import static net.fexcraft.app.fmt.utils.Logging.log;
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
@@ -16,6 +17,8 @@ import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.input.Mouse.MouseButton;
 import org.liquidengine.legui.listener.MouseClickEventListener;
 import org.liquidengine.legui.style.color.ColorConstants;
+
+import com.google.common.io.Files;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
@@ -257,9 +260,16 @@ public class TreeGroup extends Panel {
 		new SubTreeGroup(base, 0, "tree.textures.select", () -> {
 			FileSelector.select(Translator.translate("tree.textures.select.dialog"), "./", FileSelector.TYPE_PNG, false, file -> {
 				if(file == null) return;
-				String name = file.getPath();
-				TextureManager.loadTextureFromFile(name, file);
-				texgroup.texture = TextureManager.getTexture(name, false);
+				//String name = file.getPath();
+				//TextureManager.loadTextureFromFile(name, file);
+				//texgroup.texture = TextureManager.getTexture(name, false);
+				try{
+					Files.copy(file, texgroup.texture.getFile());
+					texgroup.texture.reload();
+				}
+				catch(IOException e){
+					e.printStackTrace();
+				}
 				//
 				/*Texture tex = TextureManager.getTexture(name, true); if(tex == null) return;
 				if(tex.getWidth() > FMTB.MODEL.textureX) FMTB.MODEL.textureX = tex.getWidth();
