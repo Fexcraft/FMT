@@ -129,13 +129,18 @@ public class TextureEditor extends EditorBase {
 	
 	public static class ColorPanel extends Panel {
 		
-		private RGB color;
+		private static ColorPanel box, hor;
+		private RGB color, orig;
 
 		public ColorPanel(int x, int y, int w, int h, RGB rgb, boolean hori){
-			super(x, y, w, h); color = rgb; setColor(rgb);
+			super(x, y, w, h); orig = (color = rgb).copy(); setColor(rgb);
 			this.getListenerMap().addListener(MouseClickEvent.class, listener -> {
 				if(listener.getAction() == MouseClickAction.CLICK){
 					updateColor(color.copy(), hori ? false : listener.getButton() == MouseButton.MOUSE_BUTTON_LEFT);
+					ColorPanel old = hori ? hor : box;
+					if(old != null) old.setColor(old.orig);
+					if(hori) hor = this; else box = this;
+					this.setColor(opposite(rgb));
 				}
 			});
 	        Settings.THEME_CHANGE_LISTENER.add(bool -> {
@@ -146,7 +151,11 @@ public class TextureEditor extends EditorBase {
 		}
 
 		public void setColor(RGB rgb){
-			this.getStyle().getBackground().setColor(FMTB.rgba(color.packed = rgb.packed));
+			this.setColor(rgb.packed);
+		}
+
+		public void setColor(int packed){
+			this.getStyle().getBackground().setColor(FMTB.rgba(color.packed = packed));
 		}
 		
 	}
@@ -156,6 +165,11 @@ public class TextureEditor extends EditorBase {
 		current_tool.getTextState().setText(translate("editor.texture.brushes.current") + " " + (PMODE == null ? "none" : PMODE.lang()));
 	}
 	
+	public static int opposite(RGB rgb){
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 	public static enum PaintMode {
 		PIXEL, FACE, POLYGON, GROUP, COLORPICKER;
 

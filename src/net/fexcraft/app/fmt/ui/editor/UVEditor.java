@@ -94,7 +94,7 @@ public class UVEditor extends EditorBase {
 					float[][][] coords = new float[][][]{ poly.newTexturePosition(true, false)[coord.side().index()]};
 					poly.burnToTexture(texgroup.texture, null, coords, coord.absolute(), coord.side().index());
 					poly.recompile();
-					texgroup.texture.save();
+					//TXO texgroup.texture.save();
 					texgroup.texture.rebind();
 					//log(coords[0][0][0] + " " + coords[0][0][1]);
 					//log(coords[0][1][0] + " " + coords[0][1][1]);

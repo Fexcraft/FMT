@@ -250,6 +250,7 @@ public class TreeGroup extends Panel {
 		this.add(new TreeIcon((int)getSize().x - 42, 0, "group_edit", () -> {
 			if(texgroup.texture == null) return;
 			try{
+				texgroup.texture.save();//TXO
 				FMTB.openLink(texgroup.texture.getFile().getCanonicalPath());
 			}
 			catch(Exception e){

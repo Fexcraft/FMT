@@ -143,7 +143,7 @@ public class GeneralEditor extends EditorBase {
 					}
 					poly.burnToTexture(texgroup.texture, null);
 					poly.recompile();
-					texgroup.texture.save();
+					//TXO texgroup.texture.save();
 					texgroup.texture.rebind();
 					log("Polygon (" + poly.getTurboList().id + ":" + poly.name()  + ") painted into Texture.");
 				}

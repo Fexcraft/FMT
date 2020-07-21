@@ -86,7 +86,7 @@ public class RayCoastAway {
 							//log(x + " " + y);
 							tex.set(x, y, TextureEditor.CURRENTCOLOR.toByteArray());
 							tex.rebind();
-							tex.save();
+							//TXO tex.save();
 							return;
 						/*}*/
 					}
@@ -128,13 +128,13 @@ public class RayCoastAway {
 				}
 				if(rebind){
 					tex.rebind();
-					TextureManager.saveTexture(group.texture);
+					//TXO group.texture.save();
 				}
 			}
 			else{
 				if(wrapper.burnToTexture(tex, TextureEditor.polygonMode() ? -1 : wrapper.getUnShiftedIndex(getSelectedFace(wrapper, picked)))){
 					tex.rebind();
-					TextureManager.saveTexture(group.texture);
+					//TXO group.texture.save();
 				}
 			}
 		}

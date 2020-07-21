@@ -59,7 +59,7 @@ public class PNGExporter extends ExImPorter {
 			});
 		}
 		try{
-			TextureManager.saveTexture(image);
+			image.save();
 			FileUtils.copyFile(image.getFile(), file);
 			return "Success!";
 		}
