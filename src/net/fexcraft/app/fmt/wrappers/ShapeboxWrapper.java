@@ -40,7 +40,7 @@ public class ShapeboxWrapper extends BoxWrapper {
 		ModelRendererTurbo turbo = initMRT()
 			.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
 			.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
-		BoxBuilder builder = new BoxBuilder(turbo).setOffset(off.xCoord, off.yCoord, off.zCoord).setSize(size.xCoord, size.yCoord, size.zCoord).removePolygon(sides);
+		BoxBuilder builder = new BoxBuilder(turbo).setOffset(off.xCoord, off.yCoord, off.zCoord).setSize(size.xCoord, size.yCoord, size.zCoord).removePolygons(sides);
 		builder.setCorners(cor0, cor1, cor2, cor3, cor4, cor5, cor6, cor7);
 		if(cuv.anyCustom()){
 			for(UVCoords coord : cuv.values()){

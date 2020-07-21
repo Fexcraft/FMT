@@ -26,7 +26,7 @@ public class BoxWrapper extends PolygonWrapper {
 		ModelRendererTurbo turbo = initMRT()
  			.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
 			.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
-		BoxBuilder builder = new BoxBuilder(turbo).setOffset(off.xCoord, off.yCoord, off.zCoord).setSize(size.xCoord, size.yCoord, size.zCoord).removePolygon(sides);
+		BoxBuilder builder = new BoxBuilder(turbo).setOffset(off.xCoord, off.yCoord, off.zCoord).setSize(size.xCoord, size.yCoord, size.zCoord).removePolygons(sides);
 		if(cuv.anyCustom()){
 			for(UVCoords coord : cuv.values()){
 				if(!isFaceActive(coord.face())) continue;//disabled

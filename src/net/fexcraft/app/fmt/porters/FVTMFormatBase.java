@@ -17,6 +17,7 @@ import net.fexcraft.app.fmt.utils.Animator.Animation;
 import net.fexcraft.app.fmt.utils.Setting;
 import net.fexcraft.app.fmt.utils.Setting.Type;
 import net.fexcraft.app.fmt.wrappers.*;
+import net.fexcraft.app.fmt.wrappers.face.UVCoords;
 
 /**
  * 
@@ -161,8 +162,10 @@ public abstract class FVTMFormatBase extends ExImPorter {
 		for(PolygonWrapper wrapper : list){
 			shape = new StringBuffer(); boolean extended = false;
 			shape.append("new ModelRendererTurbo(" + name + ", " + wrapper.textureX + ", " + wrapper.textureY + ", textureX, textureY)");
+			boolean boxbuilder = (wrapper.getType() == ShapeType.BOX || wrapper.getType() == ShapeType.SHAPEBOX) && wrapper.cuv.anyCustom();
 			switch(wrapper.getType()){
 				case BOX:{
+					if(boxbuilder) break;
 					BoxWrapper box = (BoxWrapper)wrapper;
 					if(box.anySidesOff()){
 						shape.append(format("\n" + tab3 + ".addBox(%s, %s, %s, %s, %s, %s, 0, 1f, ", null,
@@ -186,6 +189,7 @@ public abstract class FVTMFormatBase extends ExImPorter {
 					break;
 				}
 				case SHAPEBOX:{
+					if(boxbuilder) break;
 					ShapeboxWrapper box = (ShapeboxWrapper)wrapper;
 					if(box.anySidesOff()){
 						shape.append(format("\n" + tab3 + ".addShapeBox(%s, %s, %s, %s, %s, %s, 0, "
@@ -279,6 +283,49 @@ public abstract class FVTMFormatBase extends ExImPorter {
 					shape.append("/* An exporter for the polygon type " + wrapper.getType().name() + " was not made yet. */");
 					break;
 				}
+			}
+			if(boxbuilder){
+				BoxWrapper box = (BoxWrapper)wrapper;
+				shape.append(format(".newBoxBuilder()\n" + tab3 + ".setOffset(%s, %s, %s).setSize(%s, %s, %s)", null, 
+					box.off.xCoord, box.off.yCoord, box.off.zCoord, box.size.xCoord, box.size.yCoord, box.size.zCoord));
+				if(wrapper.getType().isShapebox()){
+					ShapeboxWrapper sbox = (ShapeboxWrapper)wrapper;
+					shape.append(format("\n" + tab3 + ".setCorners(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", null,
+						sbox.cor0.xCoord, sbox.cor0.yCoord, sbox.cor0.zCoord, sbox.cor1.xCoord, sbox.cor1.yCoord, sbox.cor1.zCoord,
+						sbox.cor2.xCoord, sbox.cor2.yCoord, sbox.cor2.zCoord, sbox.cor3.xCoord, sbox.cor3.yCoord, sbox.cor3.zCoord,
+						sbox.cor4.xCoord, sbox.cor4.yCoord, sbox.cor4.zCoord, sbox.cor5.xCoord, sbox.cor5.yCoord, sbox.cor5.zCoord,
+						sbox.cor6.xCoord, sbox.cor6.yCoord, sbox.cor6.zCoord, sbox.cor7.xCoord, sbox.cor7.yCoord, sbox.cor7.zCoord));
+				}
+				if(box.anySidesOff()){
+					String off = new String();
+					for(int i = 0; i < 6; i++){
+						if(box.sides[i]){
+							off += i + ", ";
+						}
+					}
+					off = off.substring(0, off.length() - 2);
+					shape.append("\n" + tab3 + ".removePolygon(" + off + ")");
+				}
+				for(UVCoords coord : wrapper.cuv.values()){
+					if(coord.automatic() || !wrapper.isFaceActive(coord.side())) continue;
+					String arr = new String();
+					for(int i = 0; i < coord.value().length; i++){
+						arr += coord.value()[i] + ", ";
+					}
+					arr = arr.substring(0, arr.length() - 2);
+					shape.append("\n" + tab3 + ".setPolygonUV(" + coord.side().index() + ", new float[]{ " + arr + " })");
+				}
+				if(wrapper.anyFaceUVAbsolute()){
+					String det = new String();
+					for(UVCoords coord : wrapper.cuv.values()){
+						if(coord.absolute() && wrapper.isFaceActive(coord.side())){
+							det += coord.side().index() + ", ";
+						}
+					}
+					det = det.substring(0, det.length() - 2);
+					shape.append("\n" + tab3 + ".setDetachedUV(" + det + ")");
+				}
+				shape.append(".build()");
 			}
 			if(wrapper.pos.xCoord != 0f || wrapper.pos.yCoord != 0f || wrapper.pos.zCoord != 0f ||
 				wrapper.rot.xCoord != 0f || wrapper.rot.yCoord != 0f || wrapper.rot.zCoord != 0f){
