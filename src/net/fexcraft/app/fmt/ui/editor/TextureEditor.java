@@ -119,11 +119,11 @@ public class TextureEditor extends EditorBase {
 					int r = (int)Math.abs((e * (arr[0] + 128)) + ((1 - f) * h));
 					int g = (int)Math.abs((e * (arr[1] + 128)) + ((1 - f) * h));
 					int l = (int)Math.abs((e * (arr[2] + 128)) + ((1 - f) * h));
-					panels[x + (z * rows)].setColor(new RGB(r, g, l));
+					panels[x + (z * rows)].setColor(new RGB(r, g, l), true);
 				}
 			}
 		}
-		current.setColor(CURRENTCOLOR);
+		current.setColor(CURRENTCOLOR, true);
 		colorfield.apply(CURRENTCOLOR.packed);
 	}
 	
@@ -133,12 +133,12 @@ public class TextureEditor extends EditorBase {
 		private RGB color, orig;
 
 		public ColorPanel(int x, int y, int w, int h, RGB rgb, boolean hori){
-			super(x, y, w, h); orig = (color = rgb).copy(); setColor(rgb);
+			super(x, y, w, h); setColor(orig = (color = rgb).copy(), false);
 			this.getListenerMap().addListener(MouseClickEvent.class, listener -> {
 				if(listener.getAction() == MouseClickAction.CLICK){
 					updateColor(color.copy(), hori ? false : listener.getButton() == MouseButton.MOUSE_BUTTON_LEFT);
 					ColorPanel old = hori ? hor : box;
-					if(old != null) old.setColor(old.orig);
+					if(old != null) old.setColor(old.orig, false);
 					if(hori) hor = this; else box = this;
 					this.setColor(opposite(rgb));
 				}
@@ -146,12 +146,13 @@ public class TextureEditor extends EditorBase {
 	        Settings.THEME_CHANGE_LISTENER.add(bool -> {
 				this.getStyle().setBorder(null);
 				this.getStyle().setBorderRadius(0f);
-				setColor(color);
+				setColor(color.packed);
 	        });
 		}
 
-		public void setColor(RGB rgb){
+		public void setColor(RGB rgb, boolean bool){
 			this.setColor(rgb.packed);
+			if(bool) orig = rgb;
 		}
 
 		public void setColor(int packed){
@@ -166,8 +167,7 @@ public class TextureEditor extends EditorBase {
 	}
 	
 	public static int opposite(RGB rgb){
-		// TODO Auto-generated method stub
-		return 0;
+		return 0xFFFFFF - rgb.packed;
 	}
 
 	public static enum PaintMode {
