@@ -5,6 +5,7 @@ import org.liquidengine.legui.component.Panel;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.event.MouseClickEvent.MouseClickAction;
 import org.liquidengine.legui.input.Mouse.MouseButton;
+import org.liquidengine.legui.style.border.SimpleLineBorder;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.FunctionButton;
@@ -119,55 +120,64 @@ public class TextureEditor extends EditorBase {
 					int r = (int)Math.abs((e * (arr[0] + 128)) + ((1 - f) * h));
 					int g = (int)Math.abs((e * (arr[1] + 128)) + ((1 - f) * h));
 					int l = (int)Math.abs((e * (arr[2] + 128)) + ((1 - f) * h));
-					panels[x + (z * rows)].setColor(new RGB(r, g, l), true);
+					panels[x + (z * rows)].setColor(new RGB(r, g, l));
 				}
 			}
+			if(ColorPanel.box != null) ColorPanel.box.reset();
 		}
-		current.setColor(CURRENTCOLOR, true);
+		current.setColor(CURRENTCOLOR);
 		colorfield.apply(CURRENTCOLOR.packed);
 	}
 	
 	public static class ColorPanel extends Panel {
 		
-		private static ColorPanel box, hor;
-		private RGB color, orig;
+		private static ColorPanel old, box;
+		private RGB color;
 
 		public ColorPanel(int x, int y, int w, int h, RGB rgb, boolean hori){
-			super(x, y, w, h); setColor(orig = (color = rgb).copy(), false);
+			super(x, y, w, h); setColor(color = rgb);
 			this.getListenerMap().addListener(MouseClickEvent.class, listener -> {
 				if(listener.getAction() == MouseClickAction.CLICK){
 					updateColor(color.copy(), hori ? false : listener.getButton() == MouseButton.MOUSE_BUTTON_LEFT);
-					ColorPanel old = hori ? hor : box;
-					if(old != null) old.setColor(old.orig, false);
-					if(hori) hor = this; else box = this;
-					this.setColor(opposite(rgb));
+					if(hori){
+						if(old != null) old.reset();
+						this.getStyle().setBorder(new SimpleLineBorder(FMTB.rgba(color.packed), 2));
+						this.getStyle().setBorderRadius(4f);
+						old = this;
+					}
+					else{
+						if(box != null) box.reset();
+						this.getStyle().setBorder(new SimpleLineBorder(FMTB.rgba(opposite(color)), 2));
+						this.getStyle().setBorderRadius(4f);
+						box = this;
+					}
+					this.setFocused(false);
 				}
 			});
 	        Settings.THEME_CHANGE_LISTENER.add(bool -> {
-				this.getStyle().setBorder(null);
-				this.getStyle().setBorderRadius(0f);
-				setColor(color.packed);
+				this.reset();
+				setColor(color);
 	        });
 		}
 
-		public void setColor(RGB rgb, boolean bool){
-			this.setColor(rgb.packed);
-			if(bool) orig = rgb;
+		private void reset(){
+			this.getStyle().setBorder(null);
+			this.getStyle().setBorderRadius(0f);
 		}
 
-		public void setColor(int packed){
-			this.getStyle().getBackground().setColor(FMTB.rgba(color.packed = packed));
+		public void setColor(RGB rgb){
+			this.getStyle().getBackground().setColor(FMTB.rgba(color.packed = rgb.packed));
 		}
 		
+	}
+	
+	public static int opposite(RGB rgb){
+		return 0xFFFFFF - rgb.packed;
 	}
 
 	public static void toggleBucketMode(PaintMode mode){
 		PMODE = mode == null || PMODE == mode ? null : mode;
 		current_tool.getTextState().setText(translate("editor.texture.brushes.current") + " " + (PMODE == null ? "none" : PMODE.lang()));
-	}
-	
-	public static int opposite(RGB rgb){
-		return 0xFFFFFF - rgb.packed;
 	}
 
 	public static enum PaintMode {
