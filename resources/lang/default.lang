@@ -13,6 +13,7 @@ toolbar.file.save_as=Save as...
 toolbar.file.import=Import <<
 toolbar.file.export=Export >>
 toolbar.file.settings=Settings
+toolbar.file.donate=Donate!
 toolbar.file.exit=Exit
 toolbar.utils=Utils
 toolbar.utils.undo=Undo (WIP)
