@@ -5,7 +5,7 @@ import static org.lwjgl.stb.STBImage.stbi_failure_reason;
 import static org.lwjgl.stb.STBImage.stbi_load;
 import static org.lwjgl.stb.STBImageResize.STBIR_COLORSPACE_LINEAR;
 import static org.lwjgl.stb.STBImageResize.STBIR_EDGE_ZERO;
-import static org.lwjgl.stb.STBImageResize.STBIR_FILTER_DEFAULT;
+import static org.lwjgl.stb.STBImageResize.STBIR_FILTER_BOX;
 import static org.lwjgl.stb.STBImageResize.stbir_resize_uint8_generic;
 
 import java.io.File;
@@ -49,7 +49,7 @@ public class Texture {
 		try{
 			ByteBuffer oldbuffer = buffer;
 			buffer = BufferUtils.createByteBuffer(width * height * CHANNELS);
-			stbir_resize_uint8_generic(oldbuffer, this.width[0], this.height[0], 0, buffer, width, height, 0, 4, 3, 0, STBIR_EDGE_ZERO, STBIR_FILTER_DEFAULT, STBIR_COLORSPACE_LINEAR);
+			stbir_resize_uint8_generic(oldbuffer, this.width[0], this.height[0], 0, buffer, width, height, 0, 4, 3, 0, STBIR_EDGE_ZERO, STBIR_FILTER_BOX, STBIR_COLORSPACE_LINEAR);
 			this.width[0] = width;
 			this.height[0] = height;
 			rebind();
