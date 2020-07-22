@@ -26,8 +26,8 @@ public class OBJPreviewImporter extends ExImPorter {
 				groups = WavefrontObjUtil.getObjects(new FileInputStream(file));
 				objmode = true;
 			}
-			for(String group : groups){
-				compound.add(new ObjPreviewWrapper(compound, file, group, objmode), group, true);
+			for(int i = 0; i < groups.length; i++){
+				compound.add(new ObjPreviewWrapper(compound, file, groups[i], objmode, i), groups[i], true);
 			}
 		}
 		catch(FileNotFoundException e){
