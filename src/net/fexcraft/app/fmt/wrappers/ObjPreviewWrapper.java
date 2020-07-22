@@ -15,9 +15,14 @@ import net.fexcraft.lib.tmt.ModelRendererTurbo;
 public class ObjPreviewWrapper extends PolygonWrapper {
 	
 	public File source;
+	public String group;
+	public boolean objmode;
 	
-	public ObjPreviewWrapper(GroupCompound compound, File file){
-		super(compound); this.source = file;
+	public ObjPreviewWrapper(GroupCompound compound, File file, String group, boolean obj){
+		super(compound);
+		this.source = file;
+		this.group = group;
+		this.objmode = obj;
 	}
 	
 	public void render(boolean rotX, boolean rotY, boolean rotZ){
@@ -26,7 +31,7 @@ public class ObjPreviewWrapper extends PolygonWrapper {
 
 	@Override
 	protected PolygonWrapper createClone(GroupCompound compound){
-		return new ObjPreviewWrapper(compound, source);
+		return new ObjPreviewWrapper(compound, source, group, objmode);
 	}
 	
 	protected ModelRendererTurbo newMRT(){
@@ -36,7 +41,7 @@ public class ObjPreviewWrapper extends PolygonWrapper {
 			return new ModelRendererTurbo(null, textureX, textureY, compound.tx(getTurboList()), compound.ty(getTurboList()))
 				.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
 				.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord)
-				.addObj(new FileInputStream(source), null, bool);//this.source.toString()
+				.addObj(new FileInputStream(source), group, bool, objmode);//this.source.toString()
 		}
 		catch(Exception e){
 			log(e);
