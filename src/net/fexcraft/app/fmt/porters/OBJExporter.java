@@ -30,12 +30,12 @@ import net.fexcraft.lib.common.math.Vec3f;
  * @author Ferdinand Calo' (FEX___96)
  *
  */
-public class OBJPrototypeExporter extends ExImPorter {
+public class OBJExporter extends ExImPorter {
 
 	private static final ArrayList<Setting> settings = new ArrayList<>();
 	private static final String[] extensions = new String[] { "Wavefront Obj Model", "*.obj" };
 
-	public OBJPrototypeExporter(){
+	public OBJExporter(){
 		settings.add(new Setting("rotate_model", Settings.oldrot()));
 		settings.add(new Setting("rotate_y", Settings.oldrot() ? 180f : 0f));
 		settings.add(new Setting("rotate_z", Settings.oldrot() ? 180f : 0f));
@@ -196,7 +196,7 @@ public class OBJPrototypeExporter extends ExImPorter {
 
 	@Override
 	public String getName(){
-		return "Wavefront OBJ - Prototype";
+		return "Wavefront OBJ";
 	}
 
 	@Override
