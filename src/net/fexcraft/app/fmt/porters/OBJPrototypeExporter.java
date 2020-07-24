@@ -45,6 +45,7 @@ public class OBJPrototypeExporter extends ExImPorter {
 		settings.add(new Setting("create_mtl", false));
 		settings.add(new Setting("index_vertices", false));
 		settings.add(new Setting("only_visible_groups", true));
+		settings.add(new Setting("groups_as_objects", false));
 	}
 
 	@Override
@@ -56,6 +57,7 @@ public class OBJPrototypeExporter extends ExImPorter {
 	public String exportModel(GroupCompound compound, File file, Map<String, Setting> settings){
 		StringBuffer buffer = new StringBuffer();
 		boolean bool = settings.get("rotate_model").getBooleanValue();
+		boolean nog = settings.get("groups_as_objects").getBooleanValue();
 		buffer.append("# FMT-Marker OBJ-2\n#\n");
 		float scale = settings.get("scale").getFloatValue();
 		String mtlname = null;
@@ -73,7 +75,7 @@ public class OBJPrototypeExporter extends ExImPorter {
 			buffer.append("# Creator: Empty/FMT\n");
 		}
 		if(mtl) buffer.append("mtllib " + (mtlname = file.getName().substring(0, file.getName().length() - 4)) + ".mtl\n\n");
-		buffer.append("# Model Name\no " + validateName(compound.name) + "\n\n");
+		buffer.append("# Model Name" + (nog ? ": " : "\no ") + validateName(compound.name) + "\n\n");
 		buffer.append("# TextureSizeX: " + compound.tx(null) + "\n");
 		buffer.append("# TextureSizeY: " + compound.ty(null) + "\n");
 		buffer.append("# FlipAxes: " + bool + "\n\n");
@@ -85,6 +87,7 @@ public class OBJPrototypeExporter extends ExImPorter {
 			(axis1 = new Axis3DL()).setAngles(yaw, pit, rol);
 		}
 		//
+		String gpfx = nog ? "o" : "g";
 		// float texsx = 1f / compound.textureSizeX, texsy = 1f/ compound.textureSizeY;
 		boolean onlyvis = settings.get("only_visible_groups").getBooleanValue();
 		boolean index = settings.get("index_vertices").getBooleanValue();
@@ -95,7 +98,7 @@ public class OBJPrototypeExporter extends ExImPorter {
 			buffer.append("# Group Name\n");
 			axis = new Axis3DL();
 			if(index) indices.clear();
-			buffer.append("g " + list.id + "\nusemtl fmt_material\n");
+			buffer.append(gpfx + " " + list.id + "\nusemtl fmt_material\n");
 			for(PolygonWrapper wrapper : list){
 				// if(!wrapper.getType().isCuboid()) continue;
 				if(wrapper.getType().isMarker() || wrapper.getType().isBoundingBox()) continue;
