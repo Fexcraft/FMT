@@ -32,7 +32,7 @@ public class PorterManager {
 		porters.add(new OBJPreviewImporter());
 		porters.add(new JTMTPorter());
 		porters.add(new PNGExporter());
-		porters.add(new OBJPrototypeExporter());
+		porters.add(new OBJExporter());
 		porters.add(new MarkerExporter());
 		porters.add(new TiMExporter());
 		porters.add(new TSIVMarkerExporter());
