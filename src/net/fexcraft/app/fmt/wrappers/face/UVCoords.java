@@ -60,7 +60,7 @@ public class UVCoords {
 
 	public UVCoords copy(PolygonWrapper wrapper){
 		UVCoords coords = new UVCoords(poly, side, type);
-		coords.cuv = Arrays.copyOf(cuv, cuv.length);
+		coords.cuv = cuv == null ? null : Arrays.copyOf(cuv, cuv.length);
 		return coords;
 	}
 
