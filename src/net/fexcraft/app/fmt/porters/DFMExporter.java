@@ -42,7 +42,7 @@ public class DFMExporter extends ExImPorter {
 	private static final String VERSION = "1.0";
 	
 	public DFMExporter(){
-		settings.add(new Setting(Type.STRING, "pack_id", "your_addon_id"));
+		settings.add(new Setting(Type.STRING, "pack_id", "your_pack_id"));
 		settings.add(new Setting(Type.STRING, "model_type", "ModelVehicle"));
 		settings.add(new Setting(Type.STRING, "model_name", "default"));
 		settings.add(new Setting(Type.BOOLEAN, "export_only_visible", false));
@@ -158,26 +158,30 @@ public class DFMExporter extends ExImPorter {
 				+ wrapper.textureY + ", textureX, textureY);" + (wrapper.name == null ? "" : " // " + wrapper.name()) + "\n");
 			switch(wrapper.getType()){
 				case BOX:{
-					BoxWrapper box = (BoxWrapper)wrapper;
-					buffer.append(tab2 + name + "[" + index + "]" + format(".addBox(%s, %s, %s, %s, %s, %s, 0f)", null,
-						wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord,
-						box.size.xCoord, box.size.yCoord, box.size.zCoord) + ";\n");
-					break;
+					if(!wrapper.cuv.anyCustom()){
+						BoxWrapper box = (BoxWrapper)wrapper;
+						buffer.append(tab2 + name + "[" + index + "]" + format(".addBox(%s, %s, %s, %s, %s, %s, 0f)", null,
+							wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord,
+							box.size.xCoord, box.size.yCoord, box.size.zCoord) + ";\n");
+						break;
+					}
 				}
 				case SHAPEBOX:{
-					ShapeboxWrapper box = (ShapeboxWrapper)wrapper;
-					buffer.append(tab2 + name + "[" + index + "]" + format(".addShapeBox(%s, %s, %s, %s, %s, %s, 0, "
-						+ "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", null,
-						wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord, box.size.xCoord, box.size.yCoord, box.size.zCoord,
-						box.cor0.xCoord, box.cor0.yCoord, box.cor0.zCoord, box.cor1.xCoord, box.cor1.yCoord, box.cor1.zCoord,
-						box.cor2.xCoord, box.cor2.yCoord, box.cor2.zCoord, box.cor3.xCoord, box.cor3.yCoord, box.cor3.zCoord,
-						box.cor4.xCoord, box.cor4.yCoord, box.cor4.zCoord, box.cor5.xCoord, box.cor5.yCoord, box.cor5.zCoord,
-						box.cor6.xCoord, box.cor6.yCoord, box.cor6.zCoord, box.cor7.xCoord, box.cor7.yCoord, box.cor7.zCoord) + ";\n");
-					break;
+					if(!wrapper.cuv.anyCustom()){
+						ShapeboxWrapper box = (ShapeboxWrapper)wrapper;
+						buffer.append(tab2 + name + "[" + index + "]" + format(".addShapeBox(%s, %s, %s, %s, %s, %s, 0, "
+							+ "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", null,
+							wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord, box.size.xCoord, box.size.yCoord, box.size.zCoord,
+							box.cor0.xCoord, box.cor0.yCoord, box.cor0.zCoord, box.cor1.xCoord, box.cor1.yCoord, box.cor1.zCoord,
+							box.cor2.xCoord, box.cor2.yCoord, box.cor2.zCoord, box.cor3.xCoord, box.cor3.yCoord, box.cor3.zCoord,
+							box.cor4.xCoord, box.cor4.yCoord, box.cor4.zCoord, box.cor5.xCoord, box.cor5.yCoord, box.cor5.zCoord,
+							box.cor6.xCoord, box.cor6.yCoord, box.cor6.zCoord, box.cor7.xCoord, box.cor7.yCoord, box.cor7.zCoord) + ";\n");
+						break;
+					}
 				}
 				case CYLINDER:{
 					CylinderWrapper cyl = (CylinderWrapper)wrapper;
-					if(cyl.radius2 == 0f){
+					if(!wrapper.cuv.anyCustom() && cyl.radius2 == 0f){
 						buffer.append(tab2 + name + "[" + index + "].flip = true;\n");
 						buffer.append(tab2 + name + "[" + index + "]" + format(".addCylinder(%s, %s, %s, %s, %s, %s, %s, %s, %s)", null, 
 							wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord,
@@ -193,22 +197,18 @@ public class DFMExporter extends ExImPorter {
 				default:{
 					buffer.append(tab2 + "{//LEGACY CONVERTER START\n");
 					ModelRendererTurbo turbo = wrapper.getTurboObject(0); int face = 0;
-					buffer.append(tab3 + "TexturedPolygon[] faces = new TexturedPolygon[" + turbo.getFaces().length + "]; PositionTextureVertex[] vertices = null, allverts = new PositionTextureVertex[" + turbo.getVertices().length + "];\n");
+					buffer.append(tab3 + "TexturedPolygon[] faces = new TexturedPolygon[" + turbo.getFaces().length + "]; PositionTextureVertex[] vertices = null;\n");
 					for(TexturedPolygon poly : turbo.getFaces()){
 						buffer.append(tab3 + "vertices = new PositionTextureVertex[" + poly.getVertices().length + "];\n");
 						for(int i = 0; i < poly.getVertices().length; i++){
 							TexturedVertex vertex = poly.getVertices()[i];
-							buffer.append(tab3 + "vertices[" + i + "] = new PositionTextureVertex(" + vertex.vector.xCoord + "f, " + vertex.vector.xCoord
-								+ "f, " + vertex.vector.xCoord + "f, " + vertex.textureX + "f, " + vertex.textureY + "f);\n");
+							buffer.append(tab3 + "vertices[" + i + "] = new PositionTextureVertex(" + vertex.vector.xCoord + "f, " + vertex.vector.yCoord
+								+ "f, " + vertex.vector.zCoord + "f, " + vertex.textureX + "f, " + vertex.textureY + "f);\n");
 						}
 						buffer.append(tab3 + "faces[" + face + "] = new TexturedPolygon(vertices);\n"); face++;
-					} buffer.append(tab3 + "//\n");
-					for(int i = 0; i < turbo.getVertices().length; i++){
-						TexturedVertex vert = turbo.getVertices()[i];
-						buffer.append(tab3 + "allverts[" + i + "] = new PositionTextureVertex(" + vert.vector.xCoord + "f, " + vert.vector.xCoord
-							+ "f, " + vert.vector.xCoord + "f, " + vert.textureX + "f, " + vert.textureY + "f);\n");
 					}
-					buffer.append(tab3 + name + "[" + index + "].copyTo(allverts, faces);\n");
+					buffer.append(tab3 + "//\n");
+					buffer.append(tab3 + name + "[" + index + "].copyTo(new PositionTextureVertex[0], faces);\n");
 					buffer.append(tab2 + "}//LEGACY CONVERTER END\n");
 					break;
 				}
@@ -217,11 +217,11 @@ public class DFMExporter extends ExImPorter {
 			if(wrapper.rot.xCoord != 0f){
 				buffer.append(tab2 + name + "[" + index + "].rotateAngleX = " + (float)Math.toRadians(wrapper.rot.xCoord) + "f;\n");
 			}
-			if(wrapper.rot.xCoord != 0f){
+			if(wrapper.rot.yCoord != 0f){
 				buffer.append(tab2 + name + "[" + index + "].rotateAngleY = " + (float)Math.toRadians(wrapper.rot.yCoord) + "f;\n");
 			}
-			if(wrapper.rot.xCoord != 0f){
-				buffer.append(tab2 + name + "[" + index + "].rotateAngleZ = " + (float)Math.toRadians(wrapper.rot.zCoord) + "f;\n");
+			if(wrapper.rot.zCoord != 0f){
+				buffer.append(tab2 + name + "[" + index + "].rotateAngleZ = " + (float)Math.toRadians(-wrapper.rot.zCoord) + "f;\n");
 			} buffer.append("\n");
 			//
 			if(list instanceof TurboList && ((TurboList)list).exportoffset != null){
