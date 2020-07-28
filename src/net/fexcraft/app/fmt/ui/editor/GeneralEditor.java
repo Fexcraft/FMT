@@ -210,7 +210,7 @@ public class GeneralEditor extends EditorBase {
 		//
 		EditorWidget cylinder = new EditorWidget(this, translate("editor.general.cylinder"), 0, 0, 0, 0);
 		cylinder.getContainer().add(new Label(translate("editor.general.cylinder.radius_length"), 3, pass += 24, 290, 20));
-		cylinder.getContainer().add(cyl0_x = new NumberField(4, pass += 24, 90, 20).setup("cyl0x", 1, Integer.MAX_VALUE, false));
+		cylinder.getContainer().add(cyl0_x = new NumberField(4, pass += 24, 90, 20).setup("cyl0x", 0.5f, Integer.MAX_VALUE, false));
 		cylinder.getContainer().add(cyl0_y = new NumberField(102, pass, 90, 20).setup("cyl0y", 1, Integer.MAX_VALUE, false));
 		cylinder.getContainer().add(cyl0_z = new NumberField(200, pass, 90, 20).setup("cyl0z", 0, Integer.MAX_VALUE, true));
 		cylinder.getContainer().add(new Label(translate("editor.general.cylinder.segments_direction"), 3, pass += 24, 290, 20));
