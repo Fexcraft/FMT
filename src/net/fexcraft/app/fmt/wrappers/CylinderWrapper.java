@@ -269,7 +269,7 @@ public class CylinderWrapper extends PolygonWrapper {
 				return radius2 != 0f && !bools[3];
 			case SEG_SIDE_0:
 			case SEG_SIDE_1:
-				return seglimit > 0 && seglimit < segments;
+				return radius2 != 0f && (seglimit > 0 && seglimit < segments);
 			default:
 				return false;
 		}
