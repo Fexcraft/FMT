@@ -7,6 +7,7 @@ import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
 import net.fexcraft.app.fmt.wrappers.face.CylFace;
 import net.fexcraft.app.fmt.wrappers.face.Face;
 import net.fexcraft.lib.common.math.Vec3f;
+import net.fexcraft.lib.tmt.CylinderBuilder;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public class CylinderWrapper extends PolygonWrapper {
@@ -38,9 +39,12 @@ public class CylinderWrapper extends PolygonWrapper {
 	protected ModelRendererTurbo newMRT(){
 		ModelRendererTurbo turbo = new ModelRendererTurbo(null, textureX(), textureY(), compound.tx(getTurboList()), compound.ty(getTurboList()));
 		if(radial || usesTopRotation()){
-			turbo.newCylinderBuilder().setPosition(off.xCoord, off.yCoord, off.zCoord).setRadius(radius, radius2).setLength(length).setSegments(segments, seglimit)
-			.setScale(base, top).setDirection(direction).setTopOffset(topoff).setSidesVisible(bools).setRadialTexture(seg_width, seg_height)
-			.setTopRotation(toprot).build();
+			CylinderBuilder builder = turbo.newCylinderBuilder().setPosition(off.xCoord, off.yCoord, off.zCoord)
+				.setRadius(radius, radius2).setLength(length).setSegments(segments, seglimit).setScale(base, top)
+				.setDirection(direction).setTopOffset(topoff).setSidesVisible(bools);
+			if(radial) builder.setRadialTexture(seg_width, seg_height);
+			else builder.setTopRotation(toprot);
+			builder.build();
 		}
 		else if(radius2 != 0){
 			turbo.addHollowCylinder(off.xCoord, off.yCoord, off.zCoord, radius, radius2, length, segments, seglimit, base, top, direction, getTopOff(), bools);
