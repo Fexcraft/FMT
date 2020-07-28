@@ -21,6 +21,7 @@ toolbar.utils.redo=Redo (WIP)
 toolbar.utils.create_gif=Create GIF
 toolbar.utils.screenshot=Screenshot
 toolbar.utils.reset_camera=Reset Cam.
+toolbar.utils.font_util=Font Util
 toolbar.utils.calc_size=Calc. Size
 toolbar.utils.clipboard=Clipboard
 toolbar.utils.clipboard.copy=Copy
@@ -297,6 +298,13 @@ loginbox.encrypt=Encrypt Password Locally?
 # Image Util
 image_helper.screenshot.done=Screenshot taken.
 image_helper.gif.done=Gif Created.
+
+# Font Util
+font_util.dialog=Font Util / Font Model Generator
+font_util.dialog.text=Text to be generated:
+font_util.dialog.selection=Please select a font (model) pack:
+font_util.dialog.position=Position
+font_util.dialog.rotation=Rotation
 
 # Polygon Picker
 polygon_picker.paint_bucket.toggle_off=Toggle Off

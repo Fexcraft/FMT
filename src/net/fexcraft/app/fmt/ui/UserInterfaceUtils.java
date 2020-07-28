@@ -27,6 +27,7 @@ import net.fexcraft.app.fmt.ui.field.ColorField;
 import net.fexcraft.app.fmt.ui.field.NumberField;
 import net.fexcraft.app.fmt.ui.field.TextField;
 import net.fexcraft.app.fmt.ui.tree.Trees;
+import net.fexcraft.app.fmt.utils.FontUtils;
 import net.fexcraft.app.fmt.utils.HelperCollector;
 import net.fexcraft.app.fmt.utils.HideUtils;
 import net.fexcraft.app.fmt.utils.ImageHelper;
@@ -106,6 +107,7 @@ public class UserInterfaceUtils {
 			new MenuButton("toolbar.utils.reset_camera", () -> { FMTB.ggr.reset(); }),
 			new MenuButton("toolbar.utils.create_gif", () -> ImageHelper.createGif(false)),
 			new MenuButton("toolbar.utils.screenshot", () -> ImageHelper.takeScreenshot(true)),
+			new MenuButton("toolbar.utils.font_util", () -> FontUtils.open()),
 			new MenuButton("toolbar.utils.calc_size", (MouseClickEventListener)event -> {
 				long l = 0, ll = 0;
 				for(TurboList list : FMTB.MODEL.getGroups()){

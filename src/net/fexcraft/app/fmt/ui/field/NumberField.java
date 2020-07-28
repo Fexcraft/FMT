@@ -47,7 +47,6 @@ public class NumberField extends TextInput implements Field {
 	private Float value = null;
 	private Runnable update;
 	
-	@SuppressWarnings("unchecked")
 	public NumberField setup(String id, float min, float max, boolean flaot){
 		floatfield = flaot; this.min = min; this.max = max; fieldid = id;
 		addTextInputContentChangeEventListener(event -> {
@@ -62,7 +61,6 @@ public class NumberField extends TextInput implements Field {
 		return this;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public NumberField setup(float min, float max, boolean flaot, Runnable update){
 		floatfield = flaot; this.min = min; this.max = max; this.update = update;
 		addTextInputContentChangeEventListener(event -> {
