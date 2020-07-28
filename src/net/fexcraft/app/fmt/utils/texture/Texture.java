@@ -46,6 +46,7 @@ public class Texture {
 	}
 
 	public void resize(int width, int height){
+		if(width == this.width[0] && height == this.height[0]) return;
 		try{
 			ByteBuffer oldbuffer = buffer;
 			buffer = BufferUtils.createByteBuffer(width * height * CHANNELS);
