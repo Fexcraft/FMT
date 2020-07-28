@@ -246,11 +246,14 @@ public class TextureUpdate extends TimerTask {
 					list = getSortedList(ALL);
 					last = 0;
 					if((texture = TextureManager.getTexture("auto-pos-temp", true)) != null){
+						texture.getImage().rewind();
 						texture.resize(sizex, sizey);
+						log("Resized auto-pos temp texture.");
 					}
 					else{
 						texture = TextureManager.createTexture("auto-pos-temp", sizex, sizey);
 						texture.setFile(new File("./temp/auto-pos-temp.png"));
+						log("Created auto-pos temp texture.");
 					}
 					//log("Clearing calculation texture...");
 					texture.clear(RGB.WHITE.toByteArray());
