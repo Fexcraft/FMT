@@ -438,6 +438,11 @@ public abstract class PolygonWrapper {
 	public TurboList getTurboList(){ return turbolist; }
 
 	public PolygonWrapper clone(){
+		return clone(null);
+	}
+
+	public PolygonWrapper clone(GroupCompound compound){
+		if(compound == null) compound = this.compound;
 		PolygonWrapper wrapper = this.createClone(compound);
 		return copyTo(wrapper, false);
 	}
