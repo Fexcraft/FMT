@@ -239,7 +239,6 @@ public class TreeGroup extends Panel {
 		this.recalculateSize();
 	}
 
-	@SuppressWarnings("unchecked")
 	public TreeGroup(TreeBase base, TextureGroup group){
 		this(base);
 		texgroup = group;
@@ -350,7 +349,7 @@ public class TreeGroup extends Panel {
 			Dialog dialog = new Dialog(Translator.translate("tree.textures.rename.dialog"), 300, 90);
 			dialog.setResizable(false);
 			TextField input = new TextField(texgroup.group, 10, 10, 280, 20);
-			input.addTextInputContentChangeEventListener(listener -> UserInterfaceUtils.validateString(listener));
+			input.addTextInputContentChangeEventListener(listener -> UserInterfaceUtils.validateString(listener, true));
 			dialog.getContainer().add(input);
             Button button0 = new Button(Translator.translate("dialogbox.button.ok"), 10, 40, 100, 20);
             button0.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {

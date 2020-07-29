@@ -2,6 +2,7 @@ package net.fexcraft.app.fmt.wrappers;
 
 import java.util.ArrayList;
 
+import net.fexcraft.app.fmt.ui.UserInterfaceUtils;
 import net.fexcraft.app.fmt.ui.tree.SubTreeGroup;
 import net.fexcraft.app.fmt.ui.tree.TreeGroup;
 import net.fexcraft.app.fmt.ui.tree.Trees;
@@ -120,6 +121,10 @@ public class TurboList extends ArrayList<PolygonWrapper> {
 
 	public TextureGroup getTextureGroup(){
 		return texgroup;
+	}
+
+	public String exportID(){
+		return id.replaceAll(UserInterfaceUtils.STRING_VALIDATOR_JAVA, "");
 	}
 
 }

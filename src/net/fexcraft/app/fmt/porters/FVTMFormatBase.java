@@ -72,7 +72,7 @@ public abstract class FVTMFormatBase extends ExImPorter {
 			buffer.append("\n");
 			for(TurboList list : compound.getGroups()){
 				if((onlyvisible && !list.visible) || (onlyselected && !list.selected) || list.isEmpty()) continue;
-				buffer.append(tab + "public TurboList " + list.id + ";\n");
+				buffer.append(tab + "public TurboList " + list.exportID() + ";\n");
 			}
 			buffer.append("\n");
 		}
@@ -87,10 +87,10 @@ public abstract class FVTMFormatBase extends ExImPorter {
 				if(list.size() > count){
 					int subs = list.size() / count; if(list.size() % count > 0) subs++;
 					for(int i = 0; i < subs; i++){
-						buffer.append(tab2 + "initGroup_" + list.id + i + "();\n");
+						buffer.append(tab2 + "initGroup_" + list.exportID() + i + "();\n");
 					}
 				}
-				else buffer.append(tab2 + "initGroup_" + list.id + "();\n");
+				else buffer.append(tab2 + "initGroup_" + list.exportID() + "();\n");
 			}
 			buffer.append(tab + "}\n\n");
 			//
@@ -98,15 +98,15 @@ public abstract class FVTMFormatBase extends ExImPorter {
 				if(list.size() > count){
 					int subs = list.size() / count; if(list.size() % count != 0) subs++;
 					for(int i = 0; i < subs; i++){
-						buffer.append(tab + "private final void initGroup_" + list.id + i + "(){\n");
+						buffer.append(tab + "private final void initGroup_" + list.exportID() + i + "(){\n");
 						int j = i * count, k = (i + 1) * count;
 						List<PolygonWrapper> sub = list.subList(j, k >= list.size() ? list.size() - 1 : k);
-						insertList(compound, sub, list.id, buffer, addedgroups, false);
+						insertList(compound, sub, list.exportID(), buffer, addedgroups, false);
 						buffer.append(tab + "}\n\n");
 					}
 				}
 				else{
-					buffer.append(tab + "private final void initGroup_" + list.id + "(){\n");
+					buffer.append(tab + "private final void initGroup_" + list.exportID() + "(){\n");
 					insertList(compound, list, null, buffer, addedgroups, false);
 					buffer.append(tab + "}\n\n");
 				}
@@ -149,7 +149,7 @@ public abstract class FVTMFormatBase extends ExImPorter {
 	private void insertList(GroupCompound compound, List<PolygonWrapper> list, String id, StringBuffer buffer, ArrayList<String> groups, boolean append){
 		String name = id; StringBuffer shape = new StringBuffer();
 		if(list instanceof TurboList){
-			TurboList turbo = (TurboList)list; name = turbo.id;
+			TurboList turbo = (TurboList)list; name = turbo.exportID();
 			if((onlyvisible && !turbo.visible) || (onlyselected && !turbo.selected) || list.isEmpty()) return;
 		}
 		boolean contains = groups.contains(name); if(!contains) groups.add(name);

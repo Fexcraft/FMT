@@ -85,7 +85,7 @@ public class DFMExporter extends ExImPorter {
 		buffer.append(tab + "private int textureY = " + compound.tx(null) + ";\n\n");
 		buffer.append(tab + "public " + modelname + "(){\n");
 		for(TurboList list : compound.getGroups()){
-			buffer.append(tab2 + list.id + " = new ModelRendererTurbo[" + list.size() + "];\n");
+			buffer.append(tab2 + list.exportID() + " = new ModelRendererTurbo[" + list.size() + "];\n");
 		} buffer.append(tab2 + "//\n");
 		if(pergroupinit){
 			int count = settings.get("max_pg_init_count").getValue();
@@ -93,10 +93,10 @@ public class DFMExporter extends ExImPorter {
 				if(list.size() > count){
 					int subs = list.size() / count; if(list.size() % count > 0) subs++;
 					for(int i = 0; i < subs; i++){
-						buffer.append(tab2 + "initGroup_" + list.id + i + "();\n");
+						buffer.append(tab2 + "initGroup_" + list.exportID() + i + "();\n");
 					}
 				}
-				else buffer.append(tab2 + "initGroup_" + list.id + "();\n");
+				else buffer.append(tab2 + "initGroup_" + list.exportID() + "();\n");
 			}
 			appendEnding(compound, buffer);
 			buffer.append(tab + "}\n\n");
@@ -105,15 +105,15 @@ public class DFMExporter extends ExImPorter {
 				if(list.size() > count){
 					int subs = list.size() / count; if(list.size() % count != 0) subs++;
 					for(int i = 0; i < subs; i++){
-						buffer.append(tab + "private final void initGroup_" + list.id + i + "(){\n");
+						buffer.append(tab + "private final void initGroup_" + list.exportID() + i + "(){\n");
 						int j = i * count, k = (i + 1) * count;
 						List<PolygonWrapper> sub = list.subList(j, k >= list.size() ? list.size() - 1 : k);
-						insertList(compound, sub, j, list.id, buffer);
+						insertList(compound, sub, j, list.exportID(), buffer);
 						buffer.append(tab + "}\n\n");
 					}
 				}
 				else{
-					buffer.append(tab + "private final void initGroup_" + list.id + "(){\n");
+					buffer.append(tab + "private final void initGroup_" + list.exportID() + "(){\n");
 					insertList(compound, list, 0, null, buffer);
 					buffer.append(tab + "}\n\n");
 				}
@@ -150,7 +150,7 @@ public class DFMExporter extends ExImPorter {
 	private void insertList(GroupCompound compound, List<PolygonWrapper> list, int index, String id, StringBuffer buffer){
 		String name = id;
 		if(list instanceof TurboList){
-			TurboList turbo = (TurboList)list; name = turbo.id;
+			TurboList turbo = (TurboList)list; name = turbo.exportID();
 			if((onlyvisible && !turbo.visible) || list.isEmpty()) return;
 		}
 		for(PolygonWrapper wrapper : list){

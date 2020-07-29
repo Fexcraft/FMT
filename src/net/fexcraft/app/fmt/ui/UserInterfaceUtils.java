@@ -229,9 +229,17 @@ public class UserInterfaceUtils {
 			if(listener.getAction() == CLICK && FMTB.context.getFocusedGui() == component && !component.isFocused()) component.setFocused(true);
 		});
 	}
-
+	
+	public static final String STRING_VALIDATOR_EXTENDED = "[^A-Za-z0-9,\\.\\-_ \\(\\)\\[\\]\\{\\}\\&\\%\\$\\#\\@\\!\\?\\;\\:\\+\\=\\*\\^\\\"\\'\\>\\<\\\\\\/\\~\\`\\|]";
+	public static final String STRING_VALIDATOR_BASIC = "[^A-Za-z0-9,\\.\\-_ ]";
+	public static final String STRING_VALIDATOR_JAVA = "[^A-Za-z0-9,_]";
+	
 	public static String validateString(TextInputContentChangeEvent<TextField> event){
-		String newtext = event.getNewValue().replaceAll("[^A-Za-z0-9,\\.\\-_ ]", "");
+		return validateString(event, false);
+	}
+
+	public static String validateString(TextInputContentChangeEvent<TextField> event, boolean basic){
+		String newtext = event.getNewValue().replaceAll(basic ? STRING_VALIDATOR_BASIC : STRING_VALIDATOR_EXTENDED, "");
 		//log(newtext + " / " + event.getNewValue());
 		if(!newtext.equals(event.getNewValue())){
 			event.getTargetComponent().getTextState().setText(newtext);

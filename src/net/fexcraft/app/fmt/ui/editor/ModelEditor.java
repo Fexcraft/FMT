@@ -43,7 +43,6 @@ public class ModelEditor extends EditorBase {
 	public static AuthorsEditorWidget creators;
 	private String name_cache;
 
-	@SuppressWarnings("unchecked")
 	public ModelEditor(){
 		super();
 		int pass = -20;
@@ -91,7 +90,7 @@ public class ModelEditor extends EditorBase {
 		model_texture.setVisibleCount(6);
 		model.getContainer().add(new Label(translate("editor.model_group.model.name"), 3, pass += 24, 290, 20));
 		model.getContainer().add(model_name = new TextField(FMTB.MODEL.name, 3, pass += 24, 290, 20));
-		model_name.addTextInputContentChangeEventListener(listener -> name_cache = UserInterfaceUtils.validateString(listener));
+		model_name.addTextInputContentChangeEventListener(listener -> name_cache = UserInterfaceUtils.validateString(listener, true));
 		model_name.getListenerMap().addListener(FocusEvent.class, listener -> {
 			if(!listener.isFocused() && !name_cache.equals(FMTB.MODEL.name)) FMTB.get().setTitle(FMTB.MODEL.name = name_cache);
 			FMTB.MODEL.button.update();

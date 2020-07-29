@@ -67,7 +67,7 @@ public class GroupEditor extends EditorBase {
 					if(FMTB.MODEL.getGroups().isEmpty()) return;
 					list = FMTB.MODEL.getFirstSelectedGroup();
 					list = FMTB.MODEL.getGroups().remove(list.id);
-					list.id = group_name.getTextState().getText().replace(" ", "_").replace("-", "_").replace(".", "");
+					list.id = group_name.getTextState().getText().replaceAll(UserInterfaceUtils.STRING_VALIDATOR_EXTENDED, "");//.replace(" ", "_").replace("-", "_").replace(".", "");
 					while(FMTB.MODEL.getGroups().contains(list.id)){
 						list.id += "_";
 					}
@@ -78,7 +78,7 @@ public class GroupEditor extends EditorBase {
 					for(int i = 0; i < arrlist.size(); i++){
 						list = FMTB.MODEL.getGroups().remove(arrlist.get(i).id);
 						if(list == null) continue;
-						list.id = group_name.getTextState().getText().replace(" ", "_").replace("-", "_").replace(".", "");
+						list.id = group_name.getTextState().getText().replaceAll(UserInterfaceUtils.STRING_VALIDATOR_EXTENDED, "");//.replace(" ", "_").replace("-", "_").replace(".", "");
 						list.id += list.id.contains("_") ? "_" + i : i + "";
 						while(FMTB.MODEL.getGroups().contains(list.id)){
 							list.id += "_";
