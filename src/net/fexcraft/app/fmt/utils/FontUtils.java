@@ -35,7 +35,7 @@ public class FontUtils {
 	private static int width = 300;
 	private static String text;
 	//
-	private static float space_width;
+	private static float interletter_space, space_width;
 	private static Char[] chars;
 
 	public static void open(){
@@ -122,23 +122,23 @@ public class FontUtils {
 		float passed = 0;
 		for(int i = 0; i < textchars.length; i++){
 			if(textchars[i] == ' '){
-				passed += space_width;
+				passed += space_width + interletter_space;
 				continue;
 			}
 			Char cher = findChar(textchars[i]);
 			if(cher == null){
-				passed += space_width;
+				passed += space_width + interletter_space;
 				continue;
 			}
 			for(PolygonWrapper wrapper : cher.wrappers){
 				PolygonWrapper clone = wrapper.clone(FMTB.MODEL);
 				clone.pos.xCoord -= cher.offset;
 				clone.off.xCoord += passed;
-				passed += cher.width;
 				clone.pos = clone.pos.addVector(px, py, pz);
 				clone.rot = clone.rot.addVector(rx, ry, rz);
 				FMTB.MODEL.add(clone, textgroupid, false);
 			}
+			passed += cher.width + interletter_space;
 		}
 		FMTB.MODEL.clearSelection();
 		FMTB.MODEL.getGroups().get(textgroupid).selected = true;
@@ -172,7 +172,15 @@ public class FontUtils {
 			log(e);
 			DialogBox.showOK("font_util.load_pack.title", null, null, "font_util.load_pack.title.errors");
 		}
-		space_width = compound.name.contains("_") ? Float.parseFloat(compound.name.split("_")[1]) : 4;
+		if(compound.name.contains("_")){
+			String[] arr = compound.name.split("_");
+			interletter_space = Float.parseFloat(arr[1]);
+			space_width = Float.parseFloat(arr[2]);
+		}
+		else{
+			space_width = 4;
+			interletter_space = 1;
+		}
 		chars = new Char[compound.getGroups().size()];
 		int index = 0;
 		for(TurboList list : compound.getGroups()){
