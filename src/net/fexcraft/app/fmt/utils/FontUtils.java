@@ -47,20 +47,20 @@ public class FontUtils {
 		input.addTextInputContentChangeEventListener(listener -> text = UserInterfaceUtils.validateString(listener));
 		dialog.getContainer().add(input);
 		dialog.getContainer().add(new Label(translate("font_util.dialog.selection"), 10, passed += 28, width - 20, 20));
-		SelectBox<File> selectbox = new SelectBox<File>(10, passed += 24, width - 20, 20);
+		SelectBox<FileWrapper> selectbox = new SelectBox<>(10, passed += 24, width - 20, 20);
 		File root = new File("./resources/fonts");
 		if(!root.exists()) root.mkdirs();
 		if(root.listFiles().length == 0){
-			selectbox.addElement(new File("no packs in ./resources/fonts"));
+			selectbox.addElement(new FileWrapper(new File("no packs in ./resources/fonts")));
 		}
 		else{
 			for(File file : root.listFiles()){
 				if(!file.getName().endsWith(".fmtb")) continue;
-				selectbox.addElement(file);
+				selectbox.addElement(new FileWrapper(file));
 			}
 		}
 		selectbox.addSelectBoxChangeSelectionEventListener(listener -> {
-			selected = listener.getNewValue();
+			selected = listener.getNewValue().file;
 		});
 		dialog.getContainer().add(selectbox);
 		//
@@ -201,6 +201,21 @@ public class FontUtils {
 			if(cher.id == c) return cher;
 		}
 		return null;
+	}
+	
+	private static class FileWrapper {
+		
+		private File file;
+
+		private FileWrapper(File file){
+			this.file = file;
+		}
+		
+		@Override
+		public String toString(){
+			return file.getName();
+		}
+		
 	}
 
 }
