@@ -128,6 +128,7 @@ public class FontUtils {
 			Char cher = findChar(textchars[i]);
 			if(cher == null){
 				passed += space_width + interletter_space;
+				log("Model for char '" + textchars[i] + "' not found!");
 				continue;
 			}
 			for(PolygonWrapper wrapper : cher.wrappers){
@@ -143,6 +144,7 @@ public class FontUtils {
 		FMTB.MODEL.clearSelection();
 		FMTB.MODEL.getGroups().get(textgroupid).selected = true;
 		FMTB.MODEL.recompile();
+		log("Font generated, group '" + textgroupid + "' created.");
 	}
 
 	private static String genTextGroupId(){
