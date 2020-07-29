@@ -43,7 +43,7 @@ public class FontUtils {
 		int passed = 0;
 		dialog.setResizable(false);
 		dialog.getContainer().add(new Label(translate("font_util.dialog.text"), 10, passed += 10, width - 20, 20));
-		TextField input = new TextField("test", 10, passed += 24, width - 20, 20);
+		TextField input = new TextField(text = "text here", 10, passed += 24, width - 20, 20);
 		input.addTextInputContentChangeEventListener(listener -> text = UserInterfaceUtils.validateString(listener));
 		dialog.getContainer().add(input);
 		dialog.getContainer().add(new Label(translate("font_util.dialog.selection"), 10, passed += 28, width - 20, 20));
@@ -99,15 +99,6 @@ public class FontUtils {
 	}
 
 	private static void generate(){
-		new Thread("font-gen"){
-			@Override
-			public void run(){
-				generate0();
-			}
-		}.start();
-	}
-	
-	protected static void generate0(){
 		log("Collecting data to generate font...");
 		log("Font Text: " + text);
 		log("Font Location: " + px + ", " + py + ", " + pz);
@@ -176,6 +167,14 @@ public class FontUtils {
 			log(e);
 			DialogBox.showOK("font_util.load_pack.title", null, null, "font_util.load_pack.title.errors");
 		}
+		compound.clearSelection();
+		for(TurboList list : compound.getGroups()){
+			if(list.button != null) list.button.removeFromTree();
+			if(list.abutton != null) list.abutton.removeFromTree();
+			if(list.pbutton != null) list.pbutton.removeFromSubTree();
+		}
+		if(compound.button != null) compound.button.removeFromTree();
+		//
 		if(compound.name.contains("_")){
 			String[] arr = compound.name.split("_");
 			interletter_space = Float.parseFloat(arr[1]);
