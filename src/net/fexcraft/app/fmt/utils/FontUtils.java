@@ -58,6 +58,7 @@ public class FontUtils {
 				if(!file.getName().endsWith(".fmtb")) continue;
 				selectbox.addElement(new FileWrapper(file));
 			}
+			selected = root.listFiles()[0];
 		}
 		selectbox.addSelectBoxChangeSelectionEventListener(listener -> {
 			selected = listener.getNewValue().file;
@@ -133,7 +134,8 @@ public class FontUtils {
 			}
 			for(PolygonWrapper wrapper : cher.wrappers){
 				PolygonWrapper clone = wrapper.clone(FMTB.MODEL);
-				clone.pos.xCoord -= cher.offset;
+				clone.pos.xCoord -= cher.offset_x;
+				clone.pos.xCoord += cher.offset_y;
 				clone.off.xCoord += passed;
 				clone.pos = clone.pos.addVector(px, py, pz);
 				clone.rot = clone.rot.addVector(rx, ry, rz);
@@ -191,7 +193,8 @@ public class FontUtils {
 			cher.id = arr[0].toCharArray()[0];
 			if(arr.length > 1) cher.width = Float.parseFloat(arr[1]);
 			if(arr.length > 2) cher.height = Float.parseFloat(arr[2]);
-			if(arr.length > 3) cher.offset = Float.parseFloat(arr[3]);
+			if(arr.length > 3) cher.offset_x = Float.parseFloat(arr[3]);
+			if(arr.length > 4) cher.offset_y = Float.parseFloat(arr[4]);
 			cher.wrappers = list;
 			chars[index++] = cher;
 		}
@@ -201,7 +204,7 @@ public class FontUtils {
 		
 		private char id;
 		@SuppressWarnings("unused")
-		private float width, height, offset;
+		private float width, height, offset_x, offset_y;
 		private TurboList wrappers;
 		
 	}
