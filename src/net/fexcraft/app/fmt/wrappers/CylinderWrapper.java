@@ -274,5 +274,18 @@ public class CylinderWrapper extends PolygonWrapper {
 				return false;
 		}
 	}
+
+	/*public Vec3f getTopOffForDir(float val){
+		Vec3f vec = new Vec3f();
+		switch(direction){
+			case 0: vec.zCoord -= val; break;
+			case 1: vec.zCoord += val; break;
+			case 2: vec.xCoord += val; break;
+			case 3: vec.xCoord -= val; break;
+			case 4: vec.yCoord -= val; break;
+			case 5: vec.yCoord += val; break;
+		}
+		return vec;
+	}*/
 	
 }

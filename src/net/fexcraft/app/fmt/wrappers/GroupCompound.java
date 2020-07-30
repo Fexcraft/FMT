@@ -983,7 +983,26 @@ public class GroupCompound {
 					sb.cor7 = sb.cor7.scale(scale);
 				}
 				if(wrapper instanceof CylinderWrapper){
-					//TODO
+					CylinderWrapper cyl = (CylinderWrapper)wrapper;
+					/*cyl.base *= scale;
+					cyl.top *= scale;
+					if(cyl.topoff != null && !cyl.topoff.isNull()){
+						cyl.topoff = cyl.topoff.scale(scale);
+					}
+					float newlen = cyl.length * scale;
+					int newlength = (int)newlen;
+					if(newlen % 1 > 0){
+						newlength += 1;
+						cyl.topoff = cyl.topoff.add(cyl.getTopOffForDir(newlen % 1));
+						cyl.pos = cyl.pos.add(cyl.getTopOffForDir(-(newlen % 1)));
+					}
+					cyl.length = newlength;*/
+					cyl.radius *= scale;
+					cyl.radius2 *= scale;
+					cyl.length *= scale;
+					if(cyl.topoff != null && !cyl.topoff.isNull()){
+						cyl.topoff = cyl.topoff.scale(scale);
+					}
 				}
 				wrapper.recompile();
 			}
