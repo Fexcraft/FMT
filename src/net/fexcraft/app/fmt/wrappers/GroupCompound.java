@@ -1,6 +1,8 @@
 package net.fexcraft.app.fmt.wrappers;
 
 import static net.fexcraft.app.fmt.utils.Logging.log;
+import static net.fexcraft.app.fmt.utils.Translator.translate;
+import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -17,6 +19,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.liquidengine.legui.component.Button;
+import org.liquidengine.legui.component.Dialog;
+import org.liquidengine.legui.component.Label;
+import org.liquidengine.legui.component.SelectBox;
+import org.liquidengine.legui.event.MouseClickEvent;
+import org.liquidengine.legui.listener.MouseClickEventListener;
 import org.lwjgl.opengl.GL11;
 
 import com.google.gson.JsonArray;
@@ -34,6 +42,7 @@ import net.fexcraft.app.fmt.ui.editor.GroupEditor;
 import net.fexcraft.app.fmt.ui.editor.ModelEditor;
 import net.fexcraft.app.fmt.ui.editor.UVEditor;
 import net.fexcraft.app.fmt.ui.field.Field;
+import net.fexcraft.app.fmt.ui.field.NumberField;
 import net.fexcraft.app.fmt.ui.tree.SubTreeGroup;
 import net.fexcraft.app.fmt.ui.tree.TreeGroup;
 import net.fexcraft.app.fmt.ui.tree.Trees;
@@ -956,9 +965,42 @@ public class GroupCompound {
 	public Map<String, Boolean> getCreators(){
 		return creators;
 	}
-
+	
 	public void rescale(){
+		int width = 300;
+		Dialog dialog = new Dialog(translate("compound.rescale.dialog"), width, 0);
+		int passed = 0;
+		TurboList[] selected = new TurboList[1];
+		dialog.setResizable(false);
+		dialog.getContainer().add(new Label(translate("compound.rescale.scale"), 10, passed += 10, width - 20, 20));
+		NumberField input = new NumberField(10, passed += 24, width - 20, 20);
+		dialog.getContainer().add(input);
+		dialog.getContainer().add(new Label(translate("compound.rescale.group"), 10, passed += 28, width - 20, 20));
+		SelectBox<String> selectbox = new SelectBox<>(10, passed += 24, width - 20, 20);
+		selectbox.addElement("all-groups");
+		for(TurboList group : groups){
+			selectbox.addElement(group.id);
+		}
+		selectbox.addSelectBoxChangeSelectionEventListener(listener -> {
+			selected[0] = listener.getNewValue().equals("all-groups") ? null : groups.get(listener.getNewValue());
+		});
+		dialog.getContainer().add(selectbox);
+		//TODO warning and numberfield listener/runnable
+        Button button0 = new Button(translate("dialogbox.button.confirm"), 10, passed += 32, 100, 20);
+        button0.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
+        	if(CLICK == e.getAction()){
+        		rescale0(selected);
+        		dialog.close();
+        	}
+        });
+        dialog.setSize(width, passed + 48);
+        dialog.getContainer().add(button0);
+		dialog.show(FMTB.frame);
+	}
+
+	public void rescale0(TurboList[] selected){
 		for(TurboList list : groups){
+			if(selected[0] != null && selected[0] != list) continue;
 			ArrayList<PolygonWrapper> boxes = (ArrayList<PolygonWrapper>)list.stream().filter(wrapper -> wrapper.getType() == ShapeType.BOX).collect(Collectors.toList());
 			list.removeAll(boxes);
 			boxes.forEach(box -> {

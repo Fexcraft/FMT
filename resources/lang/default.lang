@@ -320,6 +320,9 @@ compound.change_type.not_found=Type not found!
 compound.change_type.failed=%s shape(s) skipped!
 compound.delete_selected=Are you sure to delete all selected Polygons?
 compound.simple-clipboard.external=Do you wish to import polygons from clipboard?
+compound.rescale.dialog=Model Rescaling Util
+compound.rescale.scale=Please enter the desired scale:
+compound.rescale.group=Please the group to be rescaled:
 
 # Save/Load
 saveload.title=FMTB File Manager
