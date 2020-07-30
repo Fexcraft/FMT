@@ -11,6 +11,7 @@ import org.liquidengine.legui.component.SelectBox;
 import org.liquidengine.legui.component.TextInput;
 import org.liquidengine.legui.component.Tooltip;
 import org.liquidengine.legui.component.event.selectbox.SelectBoxChangeSelectionEvent;
+import org.liquidengine.legui.component.event.textinput.TextInputContentChangeEvent;
 import org.liquidengine.legui.component.optional.align.HorizontalAlign;
 import org.liquidengine.legui.event.FocusEvent;
 import org.liquidengine.legui.event.MouseClickEvent;
@@ -26,6 +27,7 @@ import net.fexcraft.app.fmt.ui.field.NumberField;
 import net.fexcraft.app.fmt.ui.field.TextField;
 import net.fexcraft.app.fmt.utils.Animator;
 import net.fexcraft.app.fmt.utils.Animator.Animation;
+import net.fexcraft.app.fmt.utils.FontUtils;
 import net.fexcraft.app.fmt.utils.texture.TextureGroup;
 import net.fexcraft.app.fmt.utils.texture.TextureManager;
 import net.fexcraft.app.fmt.utils.texture.TextureUpdate;
@@ -44,7 +46,6 @@ public class GroupEditor extends EditorBase {
 	public static AnimationsEditorWidget animations;
 	public static SelectBox<String> group_texture;
 
-	@SuppressWarnings("unchecked")
 	public GroupEditor(){
 		super();
 		int pass = -20;
@@ -59,15 +60,16 @@ public class GroupEditor extends EditorBase {
 		}, 3, pass += 24, 290, 20));
 		group.getContainer().add(new Label(translate("editor.model_group.group.name"), 3, pass += 24, 290, 20));
 		group.getContainer().add(group_name = new TextField(FMTB.NO_POLYGON_SELECTED, 3, pass += 24, 290, 20));
-		group_name.addTextInputContentChangeEventListener(listener -> UserInterfaceUtils.validateString(listener));
+		group_name.addTextInputContentChangeEventListener(listener -> /*UserInterfaceUtils.*/validateGroupName(listener));
 		group_name.getListenerMap().addListener(FocusEvent.class, listener -> {
 			if(!listener.isFocused() && !FMTB.MODEL.getSelected().isEmpty()){
 				TurboList list = null;
+				String newname = validateGroupName(group_name.getTextState().getText()); 
 				if(FMTB.MODEL.getDirectlySelectedGroupsAmount() == 1){
 					if(FMTB.MODEL.getGroups().isEmpty()) return;
 					list = FMTB.MODEL.getFirstSelectedGroup();
 					list = FMTB.MODEL.getGroups().remove(list.id);
-					list.id = group_name.getTextState().getText().replaceAll(UserInterfaceUtils.STRING_VALIDATOR_EXTENDED, "");//.replace(" ", "_").replace("-", "_").replace(".", "");
+					list.id = newname;//group_name.getTextState().getText().replaceAll(UserInterfaceUtils.STRING_VALIDATOR_EXTENDED, "");//.replace(" ", "_").replace("-", "_").replace(".", "");
 					while(FMTB.MODEL.getGroups().contains(list.id)){
 						list.id += "_";
 					}
@@ -78,7 +80,7 @@ public class GroupEditor extends EditorBase {
 					for(int i = 0; i < arrlist.size(); i++){
 						list = FMTB.MODEL.getGroups().remove(arrlist.get(i).id);
 						if(list == null) continue;
-						list.id = group_name.getTextState().getText().replaceAll(UserInterfaceUtils.STRING_VALIDATOR_EXTENDED, "");//.replace(" ", "_").replace("-", "_").replace(".", "");
+						list.id = newname;//group_name.getTextState().getText().replaceAll(UserInterfaceUtils.STRING_VALIDATOR_EXTENDED, "");//.replace(" ", "_").replace("-", "_").replace(".", "");
 						list.id += list.id.contains("_") ? "_" + i : i + "";
 						while(FMTB.MODEL.getGroups().contains(list.id)){
 							list.id += "_";
@@ -186,6 +188,36 @@ public class GroupEditor extends EditorBase {
 		reOrderWidgets();
 	}
 	
+	private String validateGroupName(TextInputContentChangeEvent<TextField> listener){
+		String newtext = validateGroupName(listener.getNewValue());
+		if(!newtext.equals(listener.getNewValue())){
+			listener.getTargetComponent().getTextState().setText(newtext);
+			listener.getTargetComponent().setCaretPosition(newtext.length());
+		}
+		return newtext;
+	}
+
+	private String validateGroupName(String text){
+		if(text.length() != text.replaceAll(UserInterfaceUtils.STRING_VALIDATOR_EXTENDED, "").length()){
+			char[] array = text.toCharArray();
+			int i = 0;
+			while(i < array.length){
+				char c = array[i];
+				boolean latin = Character.UnicodeBlock.of(c) == Character.UnicodeBlock.BASIC_LATIN;
+				if(latin && Character.toString(c).replaceAll(UserInterfaceUtils.STRING_VALIDATOR_EXTENDED, "").length() == 0){
+					text = FontUtils.replaceIndex(text, i, "");
+					array = text.toCharArray();
+				}
+				else if(!latin){
+					text = FontUtils.replaceIndex(text, i, "U+" + Integer.toHexString(c));
+					array = text.toCharArray();
+				}
+				i++;
+			}
+		}
+		return text;
+	}
+
 	private void updateGroupTexture(SelectBoxChangeSelectionEvent<String> event){
 		TextureGroup texgroup = null;
 		if(!event.getNewValue().equals("none")){

@@ -90,7 +90,7 @@ public class ModelEditor extends EditorBase {
 		model_texture.setVisibleCount(6);
 		model.getContainer().add(new Label(translate("editor.model_group.model.name"), 3, pass += 24, 290, 20));
 		model.getContainer().add(model_name = new TextField(FMTB.MODEL.name, 3, pass += 24, 290, 20));
-		model_name.addTextInputContentChangeEventListener(listener -> name_cache = UserInterfaceUtils.validateString(listener, true));
+		model_name.addTextInputContentChangeEventListener(listener -> name_cache = UserInterfaceUtils.validateString(listener));
 		model_name.getListenerMap().addListener(FocusEvent.class, listener -> {
 			if(!listener.isFocused() && !name_cache.equals(FMTB.MODEL.name)) FMTB.get().setTitle(FMTB.MODEL.name = name_cache);
 			FMTB.MODEL.button.update();
@@ -138,7 +138,7 @@ public class ModelEditor extends EditorBase {
 				Dialog dialog = new Dialog(Translator.translate("editor.model_group.authors.add.dialog"), 300, 90);
 				dialog.setResizable(false);
 				TextField input = new TextField("no name", 10, 10, 280, 20);
-				input.addTextInputContentChangeEventListener(lis -> UserInterfaceUtils.validateString(lis));
+				input.addTextInputContentChangeEventListener(lis -> UserInterfaceUtils.validateString(lis, true));
 				dialog.getContainer().add(input);
 	            Button button0 = new Button(Translator.translate("dialogbox.button.confirm"), 10, 40, 100, 20);
 	            button0.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {

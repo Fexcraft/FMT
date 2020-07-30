@@ -18,7 +18,6 @@ import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.DialogBox;
-import net.fexcraft.app.fmt.ui.UserInterfaceUtils;
 import net.fexcraft.app.fmt.ui.field.NumberField;
 import net.fexcraft.app.fmt.ui.field.TextField;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
@@ -44,7 +43,7 @@ public class FontUtils {
 		dialog.setResizable(false);
 		dialog.getContainer().add(new Label(translate("font_util.dialog.text"), 10, passed += 10, width - 20, 20));
 		TextField input = new TextField(text = "text here", 10, passed += 24, width - 20, 20);
-		input.addTextInputContentChangeEventListener(listener -> text = UserInterfaceUtils.validateString(listener));
+		input.addTextInputContentChangeEventListener(listener -> text = listener.getNewValue());
 		dialog.getContainer().add(input);
 		dialog.getContainer().add(new Label(translate("font_util.dialog.selection"), 10, passed += 28, width - 20, 20));
 		SelectBox<FileWrapper> selectbox = new SelectBox<>(10, passed += 24, width - 20, 20);
@@ -111,16 +110,18 @@ public class FontUtils {
 		loadFontModelFile(selected);
 		String textgroupid = genTextGroupId();
 		char[] textchars = text.toCharArray();
+		char[] upperchars = text.toUpperCase().toCharArray();
+		char[] lowerchars = text.toLowerCase().toCharArray();
 		float passed = 0;
 		for(int i = 0; i < textchars.length; i++){
 			if(textchars[i] == ' '){
 				passed += space_width + interletter_space;
 				continue;
 			}
-			Char cher = findChar(textchars[i]);
+			Char cher = findChar(textchars[i], lowerchars[i], upperchars[i]);
 			if(cher == null){
 				passed += space_width + interletter_space;
-				log("Model for char '" + textchars[i] + "' not found!");
+				log("Model for char '" + textchars[i] + "'/#" + Integer.toHexString(textchars[i]) + " not found!");
 				continue;
 			}
 			for(PolygonWrapper wrapper : cher.wrappers){
@@ -135,7 +136,8 @@ public class FontUtils {
 			passed += cher.width + interletter_space;
 		}
 		FMTB.MODEL.clearSelection();
-		FMTB.MODEL.getGroups().get(textgroupid).selected = true;
+		TurboList textgroup = FMTB.MODEL.getGroups().get(textgroupid);
+		if(textgroup != null) textgroup.selected = true;
 		FMTB.MODEL.recompile();
 		log("Font generated, group '" + textgroupid + "' created.");
 	}
@@ -189,7 +191,12 @@ public class FontUtils {
 		for(TurboList list : compound.getGroups()){
 			Char cher = new Char();
 			String[] arr = list.id.split("_");
-			cher.id = arr[0].toCharArray()[0];
+			if(arr[0].startsWith("U+")){
+				cher.id = (char)Integer.parseInt(arr[0].substring(2), 16);
+			}
+			else{
+				cher.id = arr[0].toCharArray()[0];
+			}
 			if(arr.length > 1) cher.width = Float.parseFloat(arr[1]);
 			if(arr.length > 2) cher.height = Float.parseFloat(arr[2]);
 			if(arr.length > 3) cher.offset_x = Float.parseFloat(arr[3]);
@@ -208,9 +215,15 @@ public class FontUtils {
 		
 	}
 
-	private static Char findChar(char c){
+	private static Char findChar(char c, char l, char u){
 		for(Char cher : chars){
 			if(cher.id == c) return cher;
+		}
+		for(Char cher : chars){
+			if(cher.id == u) return cher;
+		}
+		for(Char cher : chars){
+			if(cher.id == l) return cher;
 		}
 		return null;
 	}
@@ -228,6 +241,12 @@ public class FontUtils {
 			return file.getName();
 		}
 		
+	}
+
+	public static String replaceIndex(String text, int index, String replacement){
+		String start = text.substring(0, index);
+		String end00 = text.substring(index + 1);
+		return start + replacement + end00;
 	}
 
 }

@@ -107,7 +107,6 @@ public class UserInterfaceUtils {
 			new MenuButton("toolbar.utils.reset_camera", () -> { FMTB.ggr.reset(); }),
 			new MenuButton("toolbar.utils.create_gif", () -> ImageHelper.createGif(false)),
 			new MenuButton("toolbar.utils.screenshot", () -> ImageHelper.takeScreenshot(true)),
-			new MenuButton("toolbar.utils.font_util", () -> FontUtils.open()),
 			new MenuButton("toolbar.utils.calc_size", (MouseClickEventListener)event -> {
 				long l = 0, ll = 0;
 				for(TurboList list : FMTB.MODEL.getGroups()){
@@ -122,7 +121,8 @@ public class UserInterfaceUtils {
                 okbutton.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> { if(CLICK == e.getAction()) dialog.close(); });
                 dialog.getContainer().add(label); dialog.getContainer().add(okbutton); dialog.show(event.getFrame());
 			}),
-			//TODO new MenuButton("toolbar.utils.rescale", () -> FMTB.MODEL.rescale()),
+			new MenuButton("toolbar.utils.rescale", () -> FMTB.MODEL.rescale()),
+			new MenuButton("toolbar.utils.font_util", () -> FontUtils.open()),
 			new MenuButton("toolbar.utils.controls", NOT_REIMPLEMENTED_YET)
 		));
 		frame.getContainer().add(new MenuEntry(2, Translator.translate("toolbar.editor"),
