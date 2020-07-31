@@ -8,6 +8,7 @@ import com.google.gson.JsonPrimitive;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.DialogBox;
+import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
 import net.fexcraft.app.fmt.ui.field.NumberField;
 import net.fexcraft.lib.common.math.RGB;
 
@@ -106,6 +107,14 @@ public class Setting {
 			}*/
 			if(this.id.startsWith("vsync")){
 				FMTB.updateVsync();
+			}
+			if(this.id.equals("decimal_sizes")){
+				boolean value = this.getBooleanValue();
+				GeneralEditor.size_x.setAsFloatField(value);
+				GeneralEditor.size_y.setAsFloatField(value);
+				GeneralEditor.size_z.setAsFloatField(value);
+				GeneralEditor.cyl0_x.setAsFloatField(value);
+				GeneralEditor.cyl0_y.setAsFloatField(value);
 			}
 			return (boolean)value;
 		} else return false;

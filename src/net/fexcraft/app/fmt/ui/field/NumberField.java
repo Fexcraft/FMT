@@ -136,4 +136,9 @@ public class NumberField extends TextInput implements Field {
 		df.setRoundingMode(RoundingMode.HALF_EVEN);
 	}
 	
+	public NumberField setAsFloatField(boolean bool){
+		this.floatfield = bool;
+		return this;
+	}
+	
 }

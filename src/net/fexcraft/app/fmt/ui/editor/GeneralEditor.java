@@ -19,6 +19,7 @@ import net.fexcraft.app.fmt.ui.field.BoolButton;
 import net.fexcraft.app.fmt.ui.field.ColorField;
 import net.fexcraft.app.fmt.ui.field.NumberField;
 import net.fexcraft.app.fmt.ui.field.TextField;
+import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.texture.TextureGroup;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.ShapeType;
@@ -51,7 +52,6 @@ public class GeneralEditor extends EditorBase {
 	//
 	public static final String NEWGROUP = "> new group <";
 
-	@SuppressWarnings("unchecked")
 	public GeneralEditor(){
 		super();
 		int pass = -20;
@@ -157,9 +157,9 @@ public class GeneralEditor extends EditorBase {
 		//
 		EditorWidget shape = new EditorWidget(this, translate("editor.general.shape"), 0, 0, 0, 0);
 		shape.getContainer().add(new Label(translate("editor.general.shape.size"), 3, pass += 24, 290, 20));
-		shape.getContainer().add(size_x = new NumberField(4, pass += 24, 90, 20).setup("sizex", 0, Integer.MAX_VALUE, false));
-		shape.getContainer().add(size_y = new NumberField(102, pass, 90, 20).setup("sizey", 0, Integer.MAX_VALUE, false));
-		shape.getContainer().add(size_z = new NumberField(200, pass, 90, 20).setup("sizez", 0, Integer.MAX_VALUE, false));
+		shape.getContainer().add(size_x = new NumberField(4, pass += 24, 90, 20).setup("sizex", 0, Integer.MAX_VALUE, Settings.decimal_sizes()));
+		shape.getContainer().add(size_y = new NumberField(102, pass, 90, 20).setup("sizey", 0, Integer.MAX_VALUE, Settings.decimal_sizes()));
+		shape.getContainer().add(size_z = new NumberField(200, pass, 90, 20).setup("sizez", 0, Integer.MAX_VALUE, Settings.decimal_sizes()));
 		shape.getContainer().add(new Label(translate("editor.general.shape.position"), 3, pass += 24, 290, 20));
 		shape.getContainer().add(pos_x = new NumberField(4, pass += 24, 90, 20).setup("posx", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
 		shape.getContainer().add(pos_y = new NumberField(102, pass, 90, 20).setup("posy", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
@@ -210,8 +210,8 @@ public class GeneralEditor extends EditorBase {
 		//
 		EditorWidget cylinder = new EditorWidget(this, translate("editor.general.cylinder"), 0, 0, 0, 0);
 		cylinder.getContainer().add(new Label(translate("editor.general.cylinder.radius_length"), 3, pass += 24, 290, 20));
-		cylinder.getContainer().add(cyl0_x = new NumberField(4, pass += 24, 90, 20).setup("cyl0x", 0.5f, Integer.MAX_VALUE, false));
-		cylinder.getContainer().add(cyl0_y = new NumberField(102, pass, 90, 20).setup("cyl0y", 1, Integer.MAX_VALUE, false));
+		cylinder.getContainer().add(cyl0_x = new NumberField(4, pass += 24, 90, 20).setup("cyl0x", 0.5f, Integer.MAX_VALUE, Settings.decimal_sizes()));
+		cylinder.getContainer().add(cyl0_y = new NumberField(102, pass, 90, 20).setup("cyl0y", 1, Integer.MAX_VALUE, Settings.decimal_sizes()));
 		cylinder.getContainer().add(cyl0_z = new NumberField(200, pass, 90, 20).setup("cyl0z", 0, Integer.MAX_VALUE, true));
 		cylinder.getContainer().add(new Label(translate("editor.general.cylinder.segments_direction"), 3, pass += 24, 290, 20));
 		cylinder.getContainer().add(cyl1_x = new NumberField(4, pass += 24, 90, 20).setup("cyl1x", 3, Integer.MAX_VALUE, false));
