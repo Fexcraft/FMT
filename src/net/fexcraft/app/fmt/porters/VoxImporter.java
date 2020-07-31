@@ -22,6 +22,9 @@ import net.fexcraft.app.fmt.wrappers.BBWrapper;
 import net.fexcraft.app.fmt.wrappers.BoxWrapper;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.VoxelWrapper;
+import net.fexcraft.app.fmt.wrappers.face.BoxFace;
+import net.fexcraft.app.fmt.wrappers.face.Face;
+import net.fexcraft.app.fmt.wrappers.face.FaceUVType;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.tmt.ColorIndexedVoxelBuilder;
@@ -71,6 +74,8 @@ public class VoxImporter extends ExImPorter {
             	}
             	group.texture.getImage().rewind();
             	group.texture.save();
+            	compound.textureSizeX = 16;
+            	compound.textureSizeY = 16;
             	compound.setTexture(group);
             	log("Voxel Texture Created.");
             }
@@ -122,22 +127,26 @@ public class VoxImporter extends ExImPorter {
                 	ArrayList<int[]> array = null;
                 	if(wrapper.icontent != null){
                 		array = new ColorIndexedVoxelBuilder(null, wrapper.segx, wrapper.segy, wrapper.segz)
-                			.setColors(wrapper.colors).setVoxels(wrapper.icontent).buildCoords();
+                			.setColors(wrapper.colors).setVoxels(wrapper.icontent).rectangulate();
                 	}
                 	else{
-                		array = new VoxelBuilder(null, wrapper.segx, wrapper.segy, wrapper.segz).setVoxels(wrapper.content).buildCoords();
+                		array = new VoxelBuilder(null, wrapper.segx, wrapper.segy, wrapper.segz).setVoxels(wrapper.content).rectangulate();
                 	}
                 	for(int[] arr : array){
                 		BoxWrapper box = new BoxWrapper(compound);
                 		box.pos.xCoord = minx + arr[0];
                 		box.pos.yCoord = miny + arr[1];
                 		box.pos.zCoord = minz + arr[2];
-                		box.size.xCoord = arr[3];
-                		box.size.yCoord = arr[4];
-                		box.size.zCoord = arr[5];
+                		box.size.xCoord = arr[3] - arr[0] + 1;
+                		box.size.yCoord = arr[4] - arr[1] + 1;
+                		box.size.zCoord = arr[5] - arr[2] + 1;
                 		compound.add(box, "voxel_" + chunks, false);
                 		if(colors){
-                			//TODO UV
+                			for(Face face : BoxFace.values()){
+                				if(!box.isFaceActive(face)) continue;
+                				int xx = arr[6] / 16, yy = arr[6] % 16;
+                				box.getUVCoords(face).set(FaceUVType.ABSOLUTE_ENDS).value(new float[]{ xx, yy, xx + 1, yy + 1 });
+                			}
                 		}
                 	}
                 	log("Devoxelized Voxel " + chunks + ".");
