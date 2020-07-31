@@ -967,13 +967,16 @@ public class GroupCompound {
 	}
 	
 	public void rescale(){
-		int width = 300;
+		int width = 350;
 		Dialog dialog = new Dialog(translate("compound.rescale.dialog"), width, 0);
 		int passed = 0;
 		TurboList[] selected = new TurboList[1];
+		float[] scale = new float[]{ 1f };
 		dialog.setResizable(false);
 		dialog.getContainer().add(new Label(translate("compound.rescale.scale"), 10, passed += 10, width - 20, 20));
 		NumberField input = new NumberField(10, passed += 24, width - 20, 20);
+		input.setup(0.001f, 16, true, () -> { scale[0] = input.getValue(); });
+		input.apply(scale[0]);
 		dialog.getContainer().add(input);
 		dialog.getContainer().add(new Label(translate("compound.rescale.group"), 10, passed += 28, width - 20, 20));
 		SelectBox<String> selectbox = new SelectBox<>(10, passed += 24, width - 20, 20);
@@ -985,22 +988,31 @@ public class GroupCompound {
 			selected[0] = listener.getNewValue().equals("all-groups") ? null : groups.get(listener.getNewValue());
 		});
 		dialog.getContainer().add(selectbox);
-		//TODO warning and numberfield listener/runnable
+		Label label = null;
+		dialog.getContainer().add(label = new Label(translate("compound.rescale.warning0"), 10, passed += 28, width - 20, 20));
+		label.getStyle().setFont("roboto-bold");
+		dialog.getContainer().add(label = new Label(translate("compound.rescale.warning1"), 10, passed += 28, width - 20, 20));
+		label.getStyle().setFont("roboto-bold");
         Button button0 = new Button(translate("dialogbox.button.confirm"), 10, passed += 32, 100, 20);
         button0.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
         	if(CLICK == e.getAction()){
-        		rescale0(selected);
+        		rescale0(selected[0], scale[0]);
         		dialog.close();
         	}
         });
-        dialog.setSize(width, passed + 48);
         dialog.getContainer().add(button0);
+        Button button1 = new Button(translate("dialogbox.button.cancel"), 120, passed, 100, 20);
+        button1.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
+        	if(CLICK == e.getAction()) dialog.close();
+        });
+        dialog.getContainer().add(button1);
+        dialog.setSize(width, passed + 48);
 		dialog.show(FMTB.frame);
 	}
 
-	public void rescale0(TurboList[] selected){
+	public void rescale0(TurboList selected, float scale){
 		for(TurboList list : groups){
-			if(selected[0] != null && selected[0] != list) continue;
+			if(selected != null && selected != list) continue;
 			ArrayList<PolygonWrapper> boxes = (ArrayList<PolygonWrapper>)list.stream().filter(wrapper -> wrapper.getType() == ShapeType.BOX).collect(Collectors.toList());
 			list.removeAll(boxes);
 			boxes.forEach(box -> {
@@ -1008,7 +1020,6 @@ public class GroupCompound {
 					list.add(box.convertTo(ShapeType.SHAPEBOX));
 				}
 			});
-			float scale = 0.5f;
 			for(PolygonWrapper wrapper : list){
 				wrapper.pos = wrapper.pos.scale(scale);
 				wrapper.off = wrapper.off.scale(scale);
