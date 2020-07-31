@@ -82,7 +82,6 @@ public class Setting {
 		this.value = newval;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public <U> U getValue(){
 		return (U)value;
 	}
@@ -115,6 +114,11 @@ public class Setting {
 				GeneralEditor.size_z.setAsFloatField(value);
 				GeneralEditor.cyl0_x.setAsFloatField(value);
 				GeneralEditor.cyl0_y.setAsFloatField(value);
+				if(value){
+					DialogBox.show(600, "dialogbox.warning", "dialogbox.button.ok", "dialogbox.button.disable", null, () -> {
+						this.setValue(false);
+					}, "compound.rescale.warning2");
+				}
 			}
 			return (boolean)value;
 		} else return false;
@@ -290,7 +294,6 @@ public class Setting {
 		
 	}
 
-	@SuppressWarnings("unchecked")
 	public <T extends Setting> T as(Class<T> clazz){
 		return (T)this;
 	}

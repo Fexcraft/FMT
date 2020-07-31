@@ -325,6 +325,7 @@ compound.rescale.scale=Please enter the desired scale:
 compound.rescale.group=Please emter the group to be rescaled:
 compound.rescale.warning0=WARNING! THIS CAN NOT BE UNDONE!
 compound.rescale.warning1=This can cause decimal boxes and cylinders.
+compound.rescale.warning2=Using decimal-size polygons is NOT advised.
 
 # Save/Load
 saveload.title=FMTB File Manager

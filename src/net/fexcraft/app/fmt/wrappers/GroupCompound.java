@@ -993,6 +993,8 @@ public class GroupCompound {
 		label.getStyle().setFont("roboto-bold");
 		dialog.getContainer().add(label = new Label(translate("compound.rescale.warning1"), 10, passed += 28, width - 20, 20));
 		label.getStyle().setFont("roboto-bold");
+		dialog.getContainer().add(label = new Label(translate("compound.rescale.warning2"), 10, passed += 28, width - 20, 20));
+		label.getStyle().setFont("roboto-bold");
         Button button0 = new Button(translate("dialogbox.button.confirm"), 10, passed += 32, 100, 20);
         button0.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
         	if(CLICK == e.getAction()){
