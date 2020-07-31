@@ -194,13 +194,15 @@ public class TextureManager {
 		GROUPS.clear();
 	}
 
-	public static void addNewGroup(){
-		String name = "newgroup";
+	public static TextureGroup addNewGroup(String name, boolean show){
+		if(name == null) name = "newgroup";
 		while(hasGroup(name)) name += "0";
-		addGroup(new TextureGroup(name, new File("./temp/group-" + name + ".png")));
-		DialogBox.showOK(null, null, null, "tree.textures.group_added", "#" + name);
+		TextureGroup group = new TextureGroup(name, new File("./temp/group-" + name + ".png"));
+		addGroup(group);
+		if(show) DialogBox.showOK(null, null, null, "tree.textures.group_added", "#" + name);
 		Trees.textures.reOrderGroups();
 		GroupEditor.updateTextureGroups();
+		return group;
 	}
 
 	public static void removeGroup(TextureGroup texgroup){
