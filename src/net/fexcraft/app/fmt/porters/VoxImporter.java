@@ -17,10 +17,13 @@ import alemax.util.FileHandler;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.utils.Setting;
 import net.fexcraft.app.fmt.wrappers.BBWrapper;
+import net.fexcraft.app.fmt.wrappers.BoxWrapper;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.VoxelWrapper;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
+import net.fexcraft.lib.tmt.ColorIndexedVoxelBuilder;
+import net.fexcraft.lib.tmt.VoxelBuilder;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -33,6 +36,7 @@ public class VoxImporter extends ExImPorter {
 	
 	public VoxImporter(){
 		settings.add(new Setting("color_indexed", false));
+		settings.add(new Setting("devoxelize", false));
 	}
 
     public String[] getExtensions(){
@@ -51,6 +55,7 @@ public class VoxImporter extends ExImPorter {
 	public GroupCompound importModel(File file, Map<String, Setting> settings){
         GroupCompound compound = new GroupCompound(file);
         boolean colors = settings.get("color_indexed").getBooleanValue();
+        boolean devox = settings.get("devoxelize").getBooleanValue();
         try{
         	byte[] voxdata = FileHandler.readVoxFile(file.getPath());
         	Model model = new Model(voxdata);
@@ -96,7 +101,28 @@ public class VoxImporter extends ExImPorter {
                 wrapper.pos.yCoord = miny;
                 wrapper.pos.zCoord = minz;
                 wrapper.name = "voxel_" + (chunks++);
-                compound.add(wrapper, "voxels", false);
+                if(devox){
+                	ArrayList<int[]> array = null;
+                	if(wrapper.icontent != null){
+                		array = new ColorIndexedVoxelBuilder(null, wrapper.segx, wrapper.segy, wrapper.segz)
+                			.setColors(wrapper.colors).setVoxels(wrapper.icontent).buildCoords();
+                	}
+                	else{
+                		array = new VoxelBuilder(null, wrapper.segx, wrapper.segy, wrapper.segz).setVoxels(wrapper.content).buildCoords();
+                	}
+                	for(int[] arr : array){
+                		BoxWrapper box = new BoxWrapper(compound);
+                		box.pos.xCoord = minx + arr[0];
+                		box.pos.yCoord = miny + arr[1];
+                		box.pos.zCoord = minz + arr[2];
+                		box.size.xCoord = arr[3];
+                		box.size.yCoord = arr[4];
+                		box.size.zCoord = arr[5];
+                		compound.add(box, "voxel_" + chunks, false);
+                		//TODO color indexed UV
+                	}
+                }
+                else compound.add(wrapper, "voxels", false);
                 BBWrapper bounding = new BBWrapper(compound);
                 bounding.pos.xCoord = minx;
                 bounding.pos.yCoord = miny;
