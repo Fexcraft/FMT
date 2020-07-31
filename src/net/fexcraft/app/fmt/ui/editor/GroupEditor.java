@@ -188,7 +188,7 @@ public class GroupEditor extends EditorBase {
 		reOrderWidgets();
 	}
 	
-	private String validateGroupName(TextInputContentChangeEvent<TextField> listener){
+	public static String validateGroupName(TextInputContentChangeEvent<TextField> listener){
 		String newtext = validateGroupName(listener.getNewValue());
 		if(!newtext.equals(listener.getNewValue())){
 			listener.getTargetComponent().getTextState().setText(newtext);
@@ -197,7 +197,7 @@ public class GroupEditor extends EditorBase {
 		return newtext;
 	}
 
-	private String validateGroupName(String text){
+	public static String validateGroupName(String text){
 		if(text.length() != text.replaceAll(UserInterfaceUtils.STRING_VALIDATOR_EXTENDED, "").length()){
 			char[] array = text.toCharArray();
 			int i = 0;
