@@ -74,7 +74,7 @@ public class GeneralEditor extends EditorBase {
 				dialog.getContainer().add(cancel);
 				confirm.getListenerMap().addListener(MouseClickEvent.class, e -> {
 					if(CLICK == e.getAction()){
-						String text = input.getTextState().getText();
+						String text = GroupEditor.validateGroupName(input.getTextState().getText());
 						if(text.equals("new_group")) text += "0";
 						while(FMTB.MODEL.getGroups().contains(text))
 							text += "_";
