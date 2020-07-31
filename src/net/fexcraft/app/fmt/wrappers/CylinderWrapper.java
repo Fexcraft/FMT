@@ -176,8 +176,8 @@ public class CylinderWrapper extends PolygonWrapper {
 
 	@Override
 	public float[][][] newTexturePosition(boolean include_offsets, boolean exclude_detached){
-		float radius = this.radius < 1 ? 1 : this.radius;
-		float length = this.length < 1 ? 1 : this.length;
+		int radius = this.radius < 1 ? 1 : (int)this.radius;
+		float length = this.length < 1 ? 1 : this.length % 1 != 0 ? (int)this.length + (this.length % 1 > 0.5f ? 1 : 0) : (int)this.length;
 		float tx = 0/*textureX*/, ty = 0/*textureY*/, /*qrad = radius / 2,*/ rad = radius * 2, rad2 = rad + rad;
 		float[][][] vecs = new float[radius2 != 0f ? seglimit > 0 && seglimit < segments ? 6 : 4 : 3/*20 : 18 : 10*/][][];
 		float height = radial ? seg_height + seg_height : rad;
