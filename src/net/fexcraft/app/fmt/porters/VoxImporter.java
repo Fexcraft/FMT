@@ -16,6 +16,8 @@ import alemax.model.Voxel;
 import alemax.util.FileHandler;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.utils.Setting;
+import net.fexcraft.app.fmt.utils.texture.TextureGroup;
+import net.fexcraft.app.fmt.utils.texture.TextureManager;
 import net.fexcraft.app.fmt.wrappers.BBWrapper;
 import net.fexcraft.app.fmt.wrappers.BoxWrapper;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
@@ -59,6 +61,19 @@ public class VoxImporter extends ExImPorter {
         try{
         	byte[] voxdata = FileHandler.readVoxFile(file.getPath());
         	Model model = new Model(voxdata);
+            if(devox){
+            	TextureGroup group = TextureManager.addNewGroup("voxel", false);
+            	group.texture.resize(16, 16);
+            	group.texture.clear(null);
+            	for(int i = 0; i < 256; i++){
+        			Vector4f col = model.colors[i];
+            		group.texture.set(i / 16, i % 16, new RGB((int)col.x, (int)col.y, (int)col.z).toByteArray());
+            	}
+            	group.texture.getImage().rewind();
+            	group.texture.save();
+            	compound.setTexture(group);
+            	log("Voxel Texture Created.");
+            }
         	int chunks = 0;
             for(Chunk chunk : model.chunks){
             	int minx = 0, miny = 0, minz = 0;
@@ -88,6 +103,7 @@ public class VoxImporter extends ExImPorter {
                     	}
                     }
                     wrapper = new VoxelWrapper(compound, cx, cy, cz, ints, colours);
+                	log("Color Voxel " + (chunks + 1) + " Created.");
             	}
             	else{
                 	boolean[][][] bools = new boolean[cx][cy][cz];
@@ -96,6 +112,7 @@ public class VoxImporter extends ExImPorter {
                     	bools[voxel.x - minx][voxel.y - miny][voxel.z - minz] = true;
                     }
                     wrapper = new VoxelWrapper(compound, cx, cy, cz, bools);
+                	log("Voxel " + (chunks + 1) + " Created.");
             	}
                 wrapper.pos.xCoord = minx;
                 wrapper.pos.yCoord = miny;
@@ -119,10 +136,16 @@ public class VoxImporter extends ExImPorter {
                 		box.size.yCoord = arr[4];
                 		box.size.zCoord = arr[5];
                 		compound.add(box, "voxel_" + chunks, false);
-                		//TODO color indexed UV
+                		if(colors){
+                			//TODO UV
+                		}
                 	}
+                	log("Devoxelized Voxel " + chunks + ".");
                 }
-                else compound.add(wrapper, "voxels", false);
+                else{
+                	compound.add(wrapper, "voxels", false);
+                	log("Voxel Shape " + chunks + " Created.");
+                }
                 BBWrapper bounding = new BBWrapper(compound);
                 bounding.pos.xCoord = minx;
                 bounding.pos.yCoord = miny;
@@ -131,6 +154,7 @@ public class VoxImporter extends ExImPorter {
                 bounding.visible = false;
                 bounding.name = "voxel_" + chunks;
                 compound.add(bounding, "voxel_bbs", false);
+            	log("Bounding Box " + chunks + " Created.");
             }
         }
         catch(Exception e){
