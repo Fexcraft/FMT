@@ -123,6 +123,9 @@ public class BoxWrapper extends PolygonWrapper {
 	@Override
 	public float[][][] newTexturePosition(boolean include_offsets, boolean exclude_detached){
 		float w = size.xCoord, h = size.yCoord, d = size.zCoord;
+        if(w % 1 != 0) w = (int)w + (w % 1 > 0.5f ? 1 : 0);
+        if(h % 1 != 0) h = (int)h + (h % 1 > 0.5f ? 1 : 0);
+        if(d % 1 != 0) d = (int)d + (d % 1 > 0.5f ? 1 : 0);
 		float[][][] vecs = new float[6][][];
 		//
     	float yp = detached(2) && detached(3) ? 0 : d;
