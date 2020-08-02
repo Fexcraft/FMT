@@ -66,7 +66,7 @@ public class GGR {
     public void pollInput(float delta){
 		if(grabbed && cursor_moved){
         	double x = posx - oposx, y = posy - oposy;
-        	if(x < FMTB.WIDTH && y < FMTB.HEIGHT){
+        	if(x < FMTB.WIDTH / 2 && y < FMTB.HEIGHT / 2){
                 if(Settings.orbital_camera()){
                     rotation.yCoord -= x * Settings.mouse_sensivity.directFloat() * delta;
                     rotation.xCoord += y * Settings.mouse_sensivity.directFloat() * delta;
@@ -87,7 +87,7 @@ public class GGR {
 	        cursor_moved = false;
 	    }
         processCameraInput(delta);
-        if(left_down && TextureEditor.isPaintActive() && Settings.dragPainting() && isNotOverUI()){
+        if(left_down && TextureEditor.pixelMode() && Settings.dragPainting() && isNotOverUI()){
         	RayCoastAway.doTest(true, true, false);
         }
     }
