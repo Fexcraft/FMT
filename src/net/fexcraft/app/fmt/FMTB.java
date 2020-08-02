@@ -489,7 +489,10 @@ public class FMTB {
 				GL11.glPopMatrix();
 				GL11.glRotatef(90, 0, 1, 0);
 	        }
-			if(Settings.lighting()) GL11.glEnable(GL11.GL_LIGHTING);
+			if(Settings.lighting()){
+				GL11.glEnable(GL11.GL_LIGHTING);
+				setLightPos(Settings.getLight0Position());
+			}
             if(Settings.cube()){
                 TextureManager.bindTexture("demo"); compound0.render();
             }
@@ -619,7 +622,6 @@ public class FMTB {
         GL11.glLightModeli(GL11.GL_LIGHT_MODEL_TWO_SIDE, GL11.GL_TRUE);
         GL11.glEnable(GL11.GL_COLOR_MATERIAL);
         GL11.glColorMaterial(GL11.GL_FRONT_AND_BACK, GL11.GL_AMBIENT_AND_DIFFUSE);
-        setLightPos(Settings.getLight0Position());
         if(!Settings.lighting()) GL11.glDisable(GL11.GL_LIGHTING);
         //
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -646,6 +648,7 @@ public class FMTB {
 	}
 
 	public static void setLightPos(float[] position){
+		//log(position[0] + ", " + position[1] + ", " + position[2] + ", " + position[3]);
 		java.nio.FloatBuffer fb = org.lwjgl.BufferUtils.createFloatBuffer(4); fb.put(position); fb.flip();
         GL11.glLightfv(GL11.GL_LIGHT0, GL11.GL_POSITION, fb);
 	}
