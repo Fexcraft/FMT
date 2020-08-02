@@ -616,10 +616,10 @@ public class FMTB {
 	private void initOpenGL(){
         GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glEnable(GL11.GL_LIGHT0);
-        GL11.glLightModeli(GL11.GL_LIGHT_MODEL_TWO_SIDE,GL11.GL_TRUE);
+        GL11.glLightModeli(GL11.GL_LIGHT_MODEL_TWO_SIDE, GL11.GL_TRUE);
         GL11.glEnable(GL11.GL_COLOR_MATERIAL);
-        GL11.glColorMaterial(GL11.GL_FRONT_AND_BACK,GL11.GL_AMBIENT_AND_DIFFUSE);
-        this.setLightPos(Settings.getLight0Position());
+        GL11.glColorMaterial(GL11.GL_FRONT_AND_BACK, GL11.GL_AMBIENT_AND_DIFFUSE);
+        setLightPos(Settings.getLight0Position());
         if(!Settings.lighting()) GL11.glDisable(GL11.GL_LIGHTING);
         //
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -645,7 +645,7 @@ public class FMTB {
 	    GL11.glFrustum( -fW, fW, -fH, fH, zNear, zFar);
 	}
 
-	private void setLightPos(float[] position){
+	public static void setLightPos(float[] position){
 		java.nio.FloatBuffer fb = org.lwjgl.BufferUtils.createFloatBuffer(4); fb.put(position); fb.flip();
         GL11.glLightfv(GL11.GL_LIGHT0, GL11.GL_POSITION, fb);
 	}
