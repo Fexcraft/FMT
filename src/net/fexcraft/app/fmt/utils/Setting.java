@@ -155,10 +155,6 @@ public class Setting {
 						if(i >= all.length) break;
 						all[i] = Float.parseFloat(arr[i]);
 					}
-					if(this.id.equals("light0_position")){
-						//log("Updating light position...");
-						FMTB.setLightPos(Settings.getLight0Position());
-					}
 					return true;
 				}
 				catch(Exception e){
