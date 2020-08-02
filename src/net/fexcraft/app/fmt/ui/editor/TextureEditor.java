@@ -198,23 +198,23 @@ public class TextureEditor extends EditorBase {
 	}
 
 	public static boolean pixelMode(){
-		return PMODE == null ? false : PMODE == PaintMode.PIXEL;
+		return PMODE != null && PMODE == PaintMode.PIXEL;
 	}
 
 	public static boolean faceMode(){
-		return PMODE == null ? false : PMODE == PaintMode.FACE;
+		return PMODE != null && PMODE == PaintMode.FACE;
 	}
 
 	public static boolean polygonMode(){
-		return PMODE == null ? false : PMODE == PaintMode.POLYGON;
+		return PMODE != null && PMODE == PaintMode.POLYGON;
 	}
 
 	public static boolean groupMode(){
-		return PMODE == null ? false : PMODE == PaintMode.GROUP;
+		return PMODE != null && PMODE == PaintMode.GROUP;
 	}
 	
 	public static boolean colorPicker(){
-		return PMODE == null ? false : PMODE == PaintMode.COLORPICKER;
+		return PMODE != null && PMODE == PaintMode.COLORPICKER;
 	}
 	
 	public static PaintMode paintMode(){ return PMODE; }
