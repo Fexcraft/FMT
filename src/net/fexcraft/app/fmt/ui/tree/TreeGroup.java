@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.ui.tree;
 
+import static net.fexcraft.app.fmt.ui.UserInterfaceUtils.hide;
+import static net.fexcraft.app.fmt.ui.UserInterfaceUtils.show;
 import static net.fexcraft.app.fmt.utils.Logging.log;
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
@@ -132,6 +134,14 @@ public class TreeGroup extends Panel {
 				return;
 			}
 		});
+		this.add(new TreeIcon((int)getSize().x - 108, 0, "group_up", () -> {
+			onScroll(+1);
+		}, "up"));
+		this.add(new TreeIcon((int)getSize().x - 130, 0, "group_down", () -> {
+			onScroll(-1);
+		}, "down"));
+		hide(this.getChildComponents().get(5));
+		hide(this.getChildComponents().get(6));
 		this.recalculateSize();
 	}
 
@@ -174,6 +184,14 @@ public class TreeGroup extends Panel {
 			if(parent.scale != null) newcomp.scale = new Vec3f(parent.scale);
 		}, "clone"));
 		this.add(new TreeIcon((int)getSize().x - 108, 0, "group_minimize", () -> toggle(!compound.minimized), "minimize"));
+		this.add(new TreeIcon((int)getSize().x - 130, 0, "group_up", () -> {
+			onScroll(+1);
+		}, "up"));
+		this.add(new TreeIcon((int)getSize().x - 152, 0, "group_down", () -> {
+			onScroll(-1);
+		}, "down"));
+		hide(this.getChildComponents().get(6));
+		hide(this.getChildComponents().get(7));
 		label.getListenerMap().addListener(MouseClickEvent.class, listener -> {
 			if(listener.getAction() == CLICK && listener.getButton() == MouseButton.MOUSE_BUTTON_LEFT){
 				GroupCompound model = HelperCollector.getSelected();
@@ -467,10 +485,14 @@ public class TreeGroup extends Panel {
 
 	public void onScrollSelect(){
 		updateColor();
+		show(this.getChildComponents().get(compound != null ? 7 : 5));
+		show(this.getChildComponents().get(6));
 	}
 
 	public void onScrollDeselect(){
 		updateColor();
+		hide(this.getChildComponents().get(compound != null ? 7 : 5));
+		hide(this.getChildComponents().get(6));
 	}
 
 }
