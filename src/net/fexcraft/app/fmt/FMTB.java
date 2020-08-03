@@ -346,11 +346,10 @@ public class FMTB {
 			}
 			render(alpha = accumulator / interval);
 			if(!RayCoastAway.PICKING){
+				renderUI(ImageHelper.HASTASK);
 				if(ImageHelper.HASTASK){
-					renderUI(true);
 					ImageHelper.doTask();
 				}
-				else renderUI(false);
 			}
 			timer.updateFPS();
 			glfwPollEvents();
