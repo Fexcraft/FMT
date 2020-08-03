@@ -85,7 +85,7 @@ public abstract class PolygonWrapper {
 
 	public void renderPicking(boolean rotXb, boolean rotYb, boolean rotZb){
 		if(visible && picker != null){
-			GL11.glDisable(GL11.GL_TEXTURE_2D); picker.render(); GL11.glEnable(GL11.GL_TEXTURE_2D);
+			picker.render();
 		}
 	}
 	
