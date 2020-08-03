@@ -121,6 +121,7 @@ public class UVEditor extends EditorBase {
 	}
 
 	public static void updateType(String newval){
+		if(selface == null) selface = Face.byId(uv_face.getSelection(), false);
 		ArrayList<PolygonWrapper> polis = FMTB.MODEL.getSelected();
 		FaceUVType type = FaceUVType.validate(newval);
 		polis.forEach(poly -> {
