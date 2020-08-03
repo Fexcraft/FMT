@@ -60,11 +60,11 @@ public class ImageHelper {
 			ImageIO.write(image, "png", file);
 			if(open){
         		try{
+    				if(System.getProperty("os.name").toLowerCase().contains("windows")){
+    					Runtime.getRuntime().exec( "rundll32 url.dll,FileProtocolHandler " + file.getAbsolutePath());
+		   			}
         			if(!Desktop.isDesktopSupported()){
-        				if(System.getProperty("os.name").toLowerCase().contains("windows")){
-        					 Runtime.getRuntime().exec( "rundll32 url.dll,FileProtocolHandler " + file.getAbsolutePath());
-        				}
-        				else DialogBox.showOK(null, null, null, "#desktop.api.notsupported");
+        				DialogBox.showOK(null, null, null, "#desktop.api.notsupported");
         			}
         			else Desktop.getDesktop().open(file);
         		}
