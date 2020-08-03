@@ -20,7 +20,8 @@ public class MarkerWrapper extends PolygonWrapper {
 	public float scale = 1;
 	
 	public MarkerWrapper(GroupCompound compound){
-		super(compound); color = RGB.GREEN.packed;
+		super(compound);
+		color = RGB.GREEN.packed;
 	}
 	
 	protected ModelRendererTurbo newMRT(){
@@ -36,7 +37,9 @@ public class MarkerWrapper extends PolygonWrapper {
 	@Override
 	public void render(boolean rotX, boolean rotY, boolean rotZ){
 		if(visible && turbo != null){
-			GL11.glDisable(GL11.GL_TEXTURE_2D); turbo.render(); GL11.glEnable(GL11.GL_TEXTURE_2D);
+			GL11.glDisable(GL11.GL_TEXTURE_2D);
+			turbo.render();
+			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			if(biped){
 				RGB.glColorReset();
 				GL11.glPushMatrix();
@@ -50,10 +53,24 @@ public class MarkerWrapper extends PolygonWrapper {
 	}
 	
 	@Override
-	public void renderLines(boolean rotX, boolean rotY, boolean rotZ){ return; }
+	public void renderLines(boolean rotX, boolean rotY, boolean rotZ){
+		if(biped && Settings.lines() && (selected || getTurboList().selected)){
+			if(!widelines){ GL11.glLineWidth(4f); widelines = true; }
+			RGB.glColorReset();
+			GL11.glPushMatrix();
+			GL11.glScalef(scale, scale, scale);
+			GL11.glTranslatef(Static.sixteenth * pos.xCoord, Static.sixteenth * pos.yCoord, Static.sixteenth * pos.zCoord);
+			if(!Settings.oldrot()) GL11.glRotatef(180, 1, 0, 0);
+			ModelSteve.renderLines(angle);
+			GL11.glPopMatrix();
+		}
+		return;
+	}
 
 	@Override
-	public void renderPicking(boolean rotX, boolean rotY, boolean rotZ){ return; }
+	public void renderPicking(boolean rotX, boolean rotY, boolean rotZ){
+		super.renderPicking(rotX, rotY, rotZ);
+	}
 
 	@Override
 	public ShapeType getType(){
