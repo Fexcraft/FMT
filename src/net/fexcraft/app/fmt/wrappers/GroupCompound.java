@@ -111,18 +111,24 @@ public class GroupCompound {
 				TextureManager.bindTexture(getTempTex());
 				groups.forEach(elm -> elm.render(false));
 			}
-			else*/{
-				groups.forEach(elm -> elm.renderPicking());
-			}
+			else{}*/
+			GL11.glDisable(GL11.GL_TEXTURE_2D); 
+			groups.forEach(elm -> elm.renderPicking());
+			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			RayCoastAway.doTest(false, null, false);//pencil);
 		}
 		else{
 			if(Settings.preview_colorpicker()){
+				GL11.glDisable(GL11.GL_TEXTURE_2D); 
 				groups.forEach(elm -> elm.renderPicking());
+				GL11.glEnable(GL11.GL_TEXTURE_2D);
 			}
 			else{
 				//TextureManager.bindTexture(texture == null ? "blank" : texture);
-				groups.forEach(elm -> { elm.bindApplicableTexture(this); elm.render(true); });
+				groups.forEach(elm -> { 
+					elm.bindApplicableTexture(this);
+					elm.render(true);
+				});
 				GL11.glDisable(GL11.GL_TEXTURE_2D);
 				groups.forEach(elm -> elm.renderLines());
 				GL11.glEnable(GL11.GL_TEXTURE_2D);
