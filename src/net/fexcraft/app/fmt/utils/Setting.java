@@ -180,7 +180,10 @@ public class Setting {
 					log(e); return false;
 				}
 			}
-			case STRING: value = newval;
+			case STRING:{
+				value = newval;
+				return true;
+			}
 			default: log("Error - typeless setting.");
 		}
 		return true;
