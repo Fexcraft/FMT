@@ -35,14 +35,14 @@ public class MenuButton extends Button {
 					entry.toggle(false);
 				}
 				else if(extension != null){
-					extension.getStyle().setDisplay(DisplayType.MANUAL);
+					showExtension();
 				}
 			}
 		});
 		this.getListenerMap().addListener(CursorEnterEvent.class, (CursorEnterEventListener)lis -> {
 			entry.checkClose();
 			if(extension != null){
-				extension.getStyle().setDisplay(DisplayType.MANUAL);
+				showExtension();
 			}
 		});
 		if(subs == null || subs.length == 0) return;
@@ -70,6 +70,11 @@ public class MenuButton extends Button {
 		});*/
 		EXTENSIONS.add(extension);
 		FMTB.frame.getContainer().add(extension);
+	}
+
+	private void showExtension(){
+		EXTENSIONS.forEach(ext -> ext.button.anyHovered());
+		extension.getStyle().setDisplay(DisplayType.MANUAL);
 	}
 
 	public MenuButton(String string, MouseClickEventListener listener){
