@@ -661,6 +661,34 @@ public class GroupCompound {
 		} this.updateFields(); return;
 	}
 
+	public void flipBoxPosition(List<PolygonWrapper> list, int axis){
+		List<PolygonWrapper> wrappers = list != null ? list : this.getSelected();
+		for(PolygonWrapper wrapper : wrappers){
+			if(wrapper instanceof BoxWrapper == false) continue;
+			BoxWrapper box = (BoxWrapper)wrapper;
+			switch(axis){
+				case 0:{
+					box.pos.xCoord += box.size.xCoord;
+					box.pos.xCoord = -box.pos.xCoord;
+					break;
+				}
+				case 1:{
+					box.pos.yCoord += box.size.yCoord;
+					box.pos.yCoord = -box.pos.yCoord;
+					break;
+				}
+				case 2:{
+					box.pos.zCoord += box.size.zCoord;
+					box.pos.zCoord = -box.pos.zCoord;
+					break;
+				}
+			}
+			box.recompile();
+		}
+		this.updateFields();
+		return;
+	}
+
 	public void deleteSelected(){
 		DialogBox.showYN(null, () -> {
 			ArrayList<PolygonWrapper> wrapp = this.getSelected();

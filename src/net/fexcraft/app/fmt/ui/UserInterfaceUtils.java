@@ -96,6 +96,9 @@ public class UserInterfaceUtils {
 				new MenuSubButton("toolbar.utils.flip.left_right", () -> FMTB.MODEL.flipShapeboxes(null, 0)),
 				new MenuSubButton("toolbar.utils.flip.up_down", () -> FMTB.MODEL.flipShapeboxes(null, 1)),
 				new MenuSubButton("toolbar.utils.flip.front_back", () -> FMTB.MODEL.flipShapeboxes(null, 2)),
+				new MenuSubButton("toolbar.utils.flip_pos.left_right", () -> FMTB.MODEL.flipBoxPosition(null, 0)),
+				new MenuSubButton("toolbar.utils.flip_pos.up_down", () -> FMTB.MODEL.flipBoxPosition(null, 1)),
+				new MenuSubButton("toolbar.utils.flip_pos.front_back", () -> FMTB.MODEL.flipBoxPosition(null, 2)),
 				new MenuSubButton("toolbar.utils.rectify", () -> FMTB.MODEL.rectify()),
 				new MenuSubButton("toolbar.utils.mirror_sel", () -> FMTB.MODEL.mirrorLRSelected())
 			),
