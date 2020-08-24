@@ -499,7 +499,15 @@ public class FMTB {
             MODEL.render(); //sphere0.render(); sphere1.render();
             if(Settings.cullface()) GL11.glDisable(GL11.GL_CULL_FACE);
             if(HelperCollector.LOADED.size() > 0){
-            	for(GroupCompound model : HelperCollector.LOADED){ RGB.glColorReset(); model.render(); }
+            	for(GroupCompound model : HelperCollector.LOADED){
+            		RGB.glColorReset();
+            		if(model.opacity < 1f){
+            			if(model.op_color == null) model.op_color = RGB.GREEN.copy().setAlpha(model.opacity);
+            			model.op_color.glColorApply();
+            		}
+            		model.render();
+            		if(model.opacity < 1f) RGB.glColorReset();
+            	}
             }
             if(Settings.demo()){
                 TextureManager.bindTexture("t1p");

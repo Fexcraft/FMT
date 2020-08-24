@@ -77,6 +77,8 @@ public class GroupCompound {
 	public TreeGroup button;
 	public String helpertex;
 	public boolean subhelper;
+	public float opacity;
+	public RGB op_color;
 	
 	public GroupCompound(File origin){
 		this.origin = origin; name = "unnamed model";

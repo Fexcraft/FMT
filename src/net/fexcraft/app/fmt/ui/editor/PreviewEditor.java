@@ -1,6 +1,8 @@
 package net.fexcraft.app.fmt.ui.editor;
 
 import org.liquidengine.legui.component.Label;
+import org.liquidengine.legui.component.Slider;
+import org.liquidengine.legui.component.event.slider.SliderChangeValueEventListener;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.UserInterfaceUtils;
@@ -17,7 +19,6 @@ public class PreviewEditor extends EditorBase {
 	public static NumberField size_x, size_y, size_z, size16_x, size16_y, size16_z;
 	public static TextField helper_name;
 	
-	@SuppressWarnings("unchecked")
 	public PreviewEditor(){
 		super(); int pass = -20;
 		EditorWidget preview = new EditorWidget(this, translate("editor.preview.container"), 0, 0, 0, 0);
@@ -51,6 +52,19 @@ public class PreviewEditor extends EditorBase {
 		preview.getContainer().add(size16_x = new NumberField(4, pass += 24, 90, 20).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> updateScale(false)));
 		preview.getContainer().add(size16_y = new NumberField(102, pass, 90, 20).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> updateScale(false)));
 		preview.getContainer().add(size16_z = new NumberField(200, pass, 90, 20).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> updateScale(false)));
+		preview.getContainer().add(new Label(translate("editor.preview.container.opacity"), 3, pass += 24, 290, 20));
+		Slider slider = new Slider(3, pass += 24, 290, 20);
+		slider.setMinValue(0.5f);
+		slider.setMaxValue(1f);
+		slider.setStepSize(0.05f);
+		slider.setValue(1f);
+        slider.addSliderChangeValueEventListener((SliderChangeValueEventListener) event -> {
+			GroupCompound compound = HelperCollector.getSelected();
+			if(compound == null) return;
+			compound.opacity = event.getNewValue();
+			compound.op_color = null;
+        });
+		preview.getContainer().add(slider);
 		preview.setSize(296, pass + 52);
         this.addSub(preview); //pass = -20;
         reOrderWidgets();

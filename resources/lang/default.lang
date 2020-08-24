@@ -195,6 +195,7 @@ editor.preview.container.position_sixteenth=Position (1/16th)
 editor.preview.container.rotation=Rotation (degrees)
 editor.preview.container.scale_full=Scale (full units / OpenGL)
 editor.preview.container.scale_sixteenth=Scale (1/16th OpenGL)
+editor.preview.container.opacity=Opacity/Transparency
 editor.preview.container.name=Helper/Preview Name
 editor.texture.palette=Palette / Color
 editor.texture.palette.inputfield=HEX Color Input
