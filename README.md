@@ -12,7 +12,9 @@ And export to:
 - `java`
   - Java Models for **FVTM** (Fex's Vehicle and Transportation Mod)
   - Java Models for **TrainsInMotion** following the FVTM standard.
-  - Java Models for **FlansMod** (box, shapebox and basic cylinders only)
+  - Java Models for **FlansMod**
+    (box, shapebox and basic cylinders using existing MRT methods,
+    everything else using a legacy-mode converter)
 - `obj` - valid **Wavefront OBJ** Models
 - `tsiv` - small util for **MTS/IV** rotation points
 - `png` - **PNG** files - template or textured
@@ -37,6 +39,7 @@ Other features
     - "biped" display
   - and maybe in the future more
 - unlimited* amount of loadable helper models or (img)frames
+- in-editor texture uv preview, adjustment and customisation
 - and more..
   
 ## Some Preview Images
