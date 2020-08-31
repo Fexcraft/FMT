@@ -13,7 +13,7 @@ And export to:
   - Java Models for **FVTM** (Fex's Vehicle and Transportation Mod)
   - Java Models for **TrainsInMotion** following the FVTM standard.
   - Java Models for **FlansMod**    
-    (box, shapebox and basic cylinders using existing MRT methods,
+    (box, shapebox and basic cylinders using existing MRT methods,    
     everything else using a legacy-mode converter)
 - `obj` - valid **Wavefront OBJ** Models
 - `tsiv` - small util for **MTS/IV** rotation points
