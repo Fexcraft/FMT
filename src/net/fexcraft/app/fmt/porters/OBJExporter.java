@@ -46,6 +46,7 @@ public class OBJExporter extends ExImPorter {
 		settings.add(new Setting("index_vertices", false));
 		settings.add(new Setting("only_visible_groups", true));
 		settings.add(new Setting("groups_as_objects", false));
+		settings.add(new Setting("include_normals", false));
 	}
 
 	@Override
@@ -58,6 +59,7 @@ public class OBJExporter extends ExImPorter {
 		StringBuffer buffer = new StringBuffer();
 		boolean bool = settings.get("rotate_model").getBooleanValue();
 		boolean nog = settings.get("groups_as_objects").getBooleanValue();
+		boolean nor = settings.get("include_normals").getBooleanValue();
 		buffer.append("# FMT-Marker OBJ-2\n#\n");
 		float scale = settings.get("scale").getFloatValue();
 		String mtlname = null;
@@ -91,7 +93,7 @@ public class OBJExporter extends ExImPorter {
 		// float texsx = 1f / compound.textureSizeX, texsy = 1f/ compound.textureSizeY;
 		boolean onlyvis = settings.get("only_visible_groups").getBooleanValue();
 		boolean index = settings.get("index_vertices").getBooleanValue();
-		int faceid = index ? 0 : 1;
+		int faceid = index ? 0 : 1, norid = 0;
 		HashMap<String, Integer> indices = new HashMap<>();
 		for(TurboList list : compound.getGroups()){
 			if(onlyvis && !list.visible) continue;
@@ -133,6 +135,13 @@ public class OBJExporter extends ExImPorter {
 						}
 						else buffer.append("vt " + vert.textureX + " " + vert.textureY + "\n");
 					}
+					if(nor){
+				        Vec3f vec0 = new Vec3f(poly.getVertices()[1].vector.subtract(poly.getVertices()[0].vector));
+				        Vec3f vec1 = new Vec3f(poly.getVertices()[1].vector.subtract(poly.getVertices()[2].vector));
+				        Vec3f vec2 = vec1.crossProduct(vec0).normalize();
+						buffer.append("vn " + vec2.xCoord + " " + vec2.yCoord + " " + vec2.zCoord + "\n");
+						norid++;
+					}
 					buffer.append("f");
 					for(int i = 0; i < poly.getVertices().length; i++){
 						int face = faceid + i;
@@ -146,6 +155,9 @@ public class OBJExporter extends ExImPorter {
 							}
 						}
 						buffer.append(" " + face + "/" + face);
+						if(nor){
+							buffer.append("/" + norid);
+						}
 					}
 					buffer.append("\n");
 					if(!index) faceid += poly.getVertices().length;
