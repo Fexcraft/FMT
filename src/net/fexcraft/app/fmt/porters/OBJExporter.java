@@ -47,6 +47,7 @@ public class OBJExporter extends ExImPorter {
 		settings.add(new Setting("only_visible_groups", true));
 		settings.add(new Setting("groups_as_objects", false));
 		settings.add(new Setting("include_normals", false));
+		settings.add(new Setting("invert_normals", true));
 	}
 
 	@Override
@@ -60,6 +61,7 @@ public class OBJExporter extends ExImPorter {
 		boolean bool = settings.get("rotate_model").getBooleanValue();
 		boolean nog = settings.get("groups_as_objects").getBooleanValue();
 		boolean nor = settings.get("include_normals").getBooleanValue();
+		boolean inn = settings.get("invert_normals").getBooleanValue();
 		buffer.append("# FMT-Marker OBJ-2\n#\n");
 		float scale = settings.get("scale").getFloatValue();
 		String mtlname = null;
@@ -139,6 +141,11 @@ public class OBJExporter extends ExImPorter {
 				        Vec3f vec0 = new Vec3f(poly.getVertices()[1].vector.subtract(poly.getVertices()[0].vector));
 				        Vec3f vec1 = new Vec3f(poly.getVertices()[1].vector.subtract(poly.getVertices()[2].vector));
 				        Vec3f vec2 = vec1.crossProduct(vec0).normalize();
+				        if(inn){
+				        	vec2.xCoord *= -1;
+				        	vec2.yCoord *= -1;
+				        	vec2.zCoord *= -1;
+				        }
 						buffer.append("vn " + vec2.xCoord + " " + vec2.yCoord + " " + vec2.zCoord + "\n");
 						norid++;
 					}
