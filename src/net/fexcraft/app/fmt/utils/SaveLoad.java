@@ -371,6 +371,9 @@ public class SaveLoad {
 					jsn.addProperty("scale_y", group.scale.yCoord);
 					jsn.addProperty("scale_z", group.scale.zCoord);
 				}
+				if(group.opacity < 1f){
+					jsn.addProperty("opacity", group.opacity);
+				}
 				jsn.addProperty("path", group.origin.toPath().toString());
 				jsn.addProperty("visible", group.visible);
 				array.add(jsn);
@@ -543,6 +546,9 @@ public class SaveLoad {
 					}
 					helperpreview.name = jsn.get("name").getAsString();
 					helperpreview.button.update();
+					if(jsn.has("opacity")){
+						helperpreview.opacity = jsn.get("opacity").getAsFloat();
+					}
 					if(jsn.has("pos_x")){
 						helperpreview.pos = new Vec3f(jsn.get("pos_x").getAsFloat(), jsn.get("pos_y").getAsFloat(), jsn.get("pos_z").getAsFloat());
 					}
