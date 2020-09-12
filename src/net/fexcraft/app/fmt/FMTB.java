@@ -502,7 +502,7 @@ public class FMTB {
             	for(GroupCompound model : HelperCollector.LOADED){
             		RGB.glColorReset();
             		if(model.opacity < 1f){
-            			if(model.op_color == null) model.op_color = RGB.GREEN.copy().setAlpha(model.opacity);
+            			if(model.op_color == null) model.op_color = RGB.WHITE.copy().setAlpha(model.opacity);
             			model.op_color.glColorApply();
             		}
             		model.render();
