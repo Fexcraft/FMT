@@ -54,9 +54,9 @@ public class PreviewEditor extends EditorBase {
 		preview.getContainer().add(size16_z = new NumberField(200, pass, 90, 20).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> updateScale(false)));
 		preview.getContainer().add(new Label(translate("editor.preview.container.opacity"), 3, pass += 24, 290, 20));
 		Slider slider = new Slider(3, pass += 24, 290, 20);
-		slider.setMinValue(0.5f);
+		slider.setMinValue(0.51f);
 		slider.setMaxValue(1f);
-		slider.setStepSize(0.05f);
+		slider.setStepSize(0.1f);
 		slider.setValue(1f);
         slider.addSliderChangeValueEventListener((SliderChangeValueEventListener) event -> {
 			GroupCompound compound = HelperCollector.getSelected();
