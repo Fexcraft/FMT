@@ -77,7 +77,7 @@ public class GroupCompound {
 	public TreeGroup button;
 	public String helpertex;
 	public boolean subhelper;
-	public float opacity;
+	public float opacity = 1f;
 	public RGB op_color;
 	
 	public GroupCompound(File origin){
