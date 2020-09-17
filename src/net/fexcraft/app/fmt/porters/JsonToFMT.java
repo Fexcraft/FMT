@@ -210,6 +210,7 @@ public class JsonToFMT {
 				marker.biped = JsonUtil.getIfExists(obj, "biped", false);
 				marker.angle = JsonUtil.getIfExists(obj, "biped_angle", -90).intValue();
 				marker.scale = JsonUtil.getIfExists(obj, "biped_scale", 1f).floatValue();
+				marker.detached = JsonUtil.getIfExists(obj, "detached", false);
 				polygon = marker; break;
 			}
 			case "voxel":{

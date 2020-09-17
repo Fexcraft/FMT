@@ -46,7 +46,7 @@ public class GeneralEditor extends EditorBase {
 	public static NumberField[][] texrect_a = new NumberField[6][8], texrect_b = new NumberField[6][4];
 	public static ColorField marker_color;
 	public static NumberField marker_scale, marker_angle;
-	public static BoolButton marker_biped;
+	public static BoolButton marker_biped, marker_detached;
 	public static SelectBox<String> polygon_group, polygon_type;
 	public static Button painttotex, resettex;
 	//
@@ -248,6 +248,8 @@ public class GeneralEditor extends EditorBase {
 		marker.getContainer().add(marker_biped = new BoolButton("marker_bipedx", 4, pass += 24, 90, 20));
 		marker.getContainer().add(marker_angle = new NumberField(102, pass, 90, 20).setup("marker_anglex", -360, 360, true));
 		marker.getContainer().add(marker_scale = new NumberField(200, pass, 90, 20).setup("marker_scalex", 0, 1024f, true));
+		marker.getContainer().add(new Label(translate("editor.general.marker.detached"), 3, pass += 24, 290, 20));
+		marker.getContainer().add(marker_detached = new BoolButton("marker_detachedx", 4, pass += 24, 90, 20));
 		marker.setSize(296, pass + 52);
 		this.addSub(marker);
 		pass = -20;

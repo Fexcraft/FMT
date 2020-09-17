@@ -39,8 +39,7 @@ public class JTMTPorter extends ExImPorter {
 		return SaveLoad.getModel(file, JsonUtil.get(file), false);
 	}
 
-	@Override @SuppressWarnings("unchecked")
-	public String exportModel(GroupCompound compound, File file, Map<String, Setting> settings){
+	@Override public String exportModel(GroupCompound compound, File file, Map<String, Setting> settings){
 		boolean selected = settings.get("selected_only").getBooleanValue();
 		boolean visible = settings.get("visible_only").getBooleanValue();
 		if(!visible && !selected){

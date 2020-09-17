@@ -16,7 +16,7 @@ import net.fexcraft.lib.tmt.ModelRendererTurbo;
 public class MarkerWrapper extends PolygonWrapper {
 	
 	public int color, angle = -90;
-	public boolean biped;
+	public boolean biped, detached;
 	public float scale = 1;
 	
 	public MarkerWrapper(GroupCompound compound){
@@ -37,6 +37,10 @@ public class MarkerWrapper extends PolygonWrapper {
 	@Override
 	public void render(boolean rotX, boolean rotY, boolean rotZ){
 		if(visible && turbo != null){
+			if(detached && !rotX){
+				this.compound.detached.add(this);
+				return;
+			}
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			turbo.render();
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -54,6 +58,7 @@ public class MarkerWrapper extends PolygonWrapper {
 	
 	@Override
 	public void renderLines(boolean rotX, boolean rotY, boolean rotZ){
+		if(detached && !rotX) return;
 		if(biped && Settings.lines() && (selected || getTurboList().selected)){
 			if(!widelines){ GL11.glLineWidth(4f); widelines = true; }
 			RGB.glColorReset();
@@ -84,6 +89,7 @@ public class MarkerWrapper extends PolygonWrapper {
 			case "marker_biped": return biped ? 1 : 0;
 			case "marker_angle": return angle;
 			case "marker_scale": return scale;
+			case "marker_detached": return detached ? 1 : 0;
 		}
 		return super.getFloat(id, x, y, z);
 	}
@@ -104,6 +110,9 @@ public class MarkerWrapper extends PolygonWrapper {
 			case "marker_scale":{
 				if(x){ scale = value; return true; }
 			}
+			case "marker_detached":{
+				if(x){ detached = (int)value == 1 ? true : false; return true; }
+			}
 			default: return false;
 		}
 	}
@@ -116,6 +125,7 @@ public class MarkerWrapper extends PolygonWrapper {
 			obj.addProperty("biped", biped);
 			obj.addProperty("biped_angle", angle);
 			obj.addProperty("biped_scale", scale);
+			obj.addProperty("detached", detached);
 		} return obj;
 	}
 

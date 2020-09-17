@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Collectors;
 
 import org.liquidengine.legui.component.Button;
@@ -79,6 +80,7 @@ public class GroupCompound {
 	public boolean subhelper;
 	public float opacity = 1f;
 	public RGB op_color;
+	public ConcurrentLinkedQueue<PolygonWrapper> detached = new ConcurrentLinkedQueue<>();
 	
 	public GroupCompound(File origin){
 		this.origin = origin; name = "unnamed model";
@@ -138,6 +140,20 @@ public class GroupCompound {
 		}
 		if(scale != null){
 			GL11.glPopMatrix();
+		}
+		if(!detached.isEmpty() && !RayCoastAway.PICKING){
+			for(PolygonWrapper poly : detached){
+				if(!poly.getTurboList().visible) continue;
+				poly.getTurboList().bindApplicableTexture(this);
+				poly.render(true, false, false);
+			}
+			GL11.glDisable(GL11.GL_TEXTURE_2D);
+			for(PolygonWrapper poly : detached){
+				if(!poly.getTurboList().visible) continue;
+				poly.renderLines(true, false, false);
+			}
+			GL11.glEnable(GL11.GL_TEXTURE_2D);
+			detached.clear();
 		}
 		if(rot != null){
 			GL11.glRotatef(-rot.zCoord, 0, 0, 1);
@@ -461,12 +477,14 @@ public class GroupCompound {
 			GeneralEditor.marker_biped.apply(0);
 			GeneralEditor.marker_scale.apply(0);
 			GeneralEditor.marker_angle.apply(0);
+			GeneralEditor.marker_detached.apply(0);
 		}
 		else{
 			GeneralEditor.marker_color.apply(poly.getFloat("marker_color", true, false, false));
 			GeneralEditor.marker_biped.apply(poly.getFloat("marker_biped", true, false, false));
 			GeneralEditor.marker_scale.apply(poly.getFloat("marker_scale", true, false, false));
 			GeneralEditor.marker_angle.apply(poly.getFloat("marker_angle", true, false, false));
+			GeneralEditor.marker_detached.apply(poly.getFloat("marker_detached", true, false, false));
 		}
 		TurboList list = this.getFirstSelectedGroup();
 		if(list == null){
