@@ -142,6 +142,7 @@ editor.model_group.model=Model Settings
 editor.model_group.model.position_full=Position Offset (full units)
 editor.model_group.model.position_sixteenth=Position Offset (1/16th)
 editor.model_group.model.rotation=Rotation Offset (degrees)
+editor.model_group.model.scale=Model Scale (visual)
 editor.model_group.model.texture_size=Texture [ width / height ]
 editor.model_group.model.texture=Model Texture
 editor.model_group.model.texture.select=Select a model texture file.

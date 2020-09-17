@@ -507,6 +507,7 @@ public class GroupCompound {
 		ModelEditor.rot_x.apply(pos == null ? 0 : rot.xCoord);
 		ModelEditor.rot_y.apply(pos == null ? 0 : rot.yCoord);
 		ModelEditor.rot_z.apply(pos == null ? 0 : rot.zCoord);
+		ModelEditor.scale.apply(scale == null ? 1 : scale.xCoord);
 		ModelEditor.m_tex_x.setSelected((float)textureSizeX, true);
 		ModelEditor.m_tex_y.setSelected((float)textureSizeY, true);
 		//ModelEditor.m_tex_s.setSelected((float)textureScale, true);

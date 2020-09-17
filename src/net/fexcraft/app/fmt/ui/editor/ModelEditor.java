@@ -36,7 +36,7 @@ public class ModelEditor extends EditorBase {
 
 	private static final int[] texsizes = new int[]{ 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096 };// , 8192 };
 	public static NumberField pos_x, pos_y, pos_z, poss_x, poss_y, poss_z;
-	public static NumberField rot_x, rot_y, rot_z;
+	public static NumberField rot_x, rot_y, rot_z, scale;
 	public static TextInput model_name;
 	public static SelectBox<Float> m_tex_x, m_tex_y;//, m_tex_s;
 	public static SelectBox<String> model_texture;
@@ -59,6 +59,8 @@ public class ModelEditor extends EditorBase {
 		model.getContainer().add(rot_x = new NumberField(4, pass += 24, 90, 20).setup(-360, 360, true, () -> updateModelRot()));
 		model.getContainer().add(rot_y = new NumberField(102, pass, 90, 20).setup(-360, 360, true, () -> updateModelRot()));
 		model.getContainer().add(rot_z = new NumberField(200, pass, 90, 20).setup(-360, 360, true, () -> updateModelRot()));
+		model.getContainer().add(new Label(translate("editor.model_group.model.scale"), 3, pass += 24, 290, 20));
+		model.getContainer().add(scale = new NumberField(4, pass += 24, 90, 20).setup(0, 64, true, () -> FMTB.MODEL.scale = new Vec3f(scale.getValue(), scale.getValue(), scale.getValue())));
 		model.getContainer().add(new Label(translate("editor.model_group.model.texture_size"), 3, pass += 24, 290, 20));
 		model.getContainer().add(m_tex_x = new SelectBox<>(4, pass += 24, 90, 20));
 		for(int size : texsizes) m_tex_x.addElement((float)size);
@@ -118,7 +120,6 @@ public class ModelEditor extends EditorBase {
 			refresh(null);
 		}
 
-		@SuppressWarnings("unchecked")
 		public void refresh(Map<String, Boolean> creators){
 			reset();
 			int pass = -20;

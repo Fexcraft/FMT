@@ -252,6 +252,7 @@ public class SaveLoad {
 		obj.addProperty("texture_size_y", compound.ty(null));
 		//obj.addProperty("texture_scale", compound.textureScale);
 		if(!export && compound.opacity < 1f) obj.addProperty("opacity", compound.opacity);
+		if(compound.scale.xCoord != 1f) obj.addProperty("scale", compound.scale.xCoord);
 		JsonArray creators = new JsonArray();
 		if(compound.getAuthors().isEmpty()){
 			if(SessionHandler.isLoggedIn()) creators.add(SessionHandler.getUserName());
@@ -394,6 +395,8 @@ public class SaveLoad {
 		compound.textureSizeX = JsonUtil.getIfExists(obj, "texture_size_x", 256).intValue();
 		compound.textureSizeY = JsonUtil.getIfExists(obj, "texture_size_y", 256).intValue();
 		compound.opacity = JsonUtil.getIfExists(obj, "opacity", 1f).floatValue();
+		float scale = JsonUtil.getIfExists(obj, "scale", 1f).floatValue();
+		compound.scale = new Vec3f(scale, scale, scale);
 		//compound.textureScale = JsonUtil.getIfExists(obj, "texture_scale", 1).intValue();
 		compound.setAuthors(JsonUtil.jsonArrayToStringArray(JsonUtil.getIfExists(obj, "creators", new JsonArray()).getAsJsonArray()));
 		if(JsonUtil.getIfExists(obj, "format", 2).intValue() == 1){
