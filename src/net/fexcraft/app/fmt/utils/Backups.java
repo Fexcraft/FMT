@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.TimerTask;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.lib.common.math.Time;
 
 /**
@@ -21,11 +22,19 @@ public class Backups extends TimerTask {
 	@Override
 	public void run(){
 		if(FMTB.MODEL.countTotalMRTs() <= 0) return;
-		String str = sdf.format(Time.getDate());
-		log("Saving backup... [" + str + "];");
-		File file = new File("./backups/(" + str + ") " + FMTB.MODEL.name + ".fmtb");
-		if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
-		SaveLoad.toFile(FMTB.MODEL, file, false);
+		try{
+			String nani = null;
+			nani.split("");
+			String str = sdf.format(Time.getDate());
+			log("Saving backup... [" + str + "];");
+			File file = new File("./backups/(" + str + ") " + FMTB.MODEL.name + ".fmtb");
+			if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
+			SaveLoad.toFile(FMTB.MODEL, file, false);
+		}
+		catch(Exception e){
+			 DialogBox.showOK("saveload.title", null, null, "saveload.backup.error0", "saveload.backup.error1");
+			e.printStackTrace();
+		}
 	}
 
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH.mm.ss");
