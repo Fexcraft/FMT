@@ -252,7 +252,7 @@ public class SaveLoad {
 		obj.addProperty("texture_size_y", compound.ty(null));
 		//obj.addProperty("texture_scale", compound.textureScale);
 		if(!export && compound.opacity < 1f) obj.addProperty("opacity", compound.opacity);
-		if(compound.scale.xCoord != 1f) obj.addProperty("scale", compound.scale.xCoord);
+		if(compound.scale != null && compound.scale.xCoord != 1f) obj.addProperty("scale", compound.scale.xCoord);
 		JsonArray creators = new JsonArray();
 		if(compound.getAuthors().isEmpty()){
 			if(SessionHandler.isLoggedIn()) creators.add(SessionHandler.getUserName());
