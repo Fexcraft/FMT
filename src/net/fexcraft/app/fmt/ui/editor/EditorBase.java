@@ -115,7 +115,7 @@ public class EditorBase extends Panel {
 		
 	    @Override
 	    public void process(@SuppressWarnings("rawtypes") ScrollEvent event){
-	    	if(FMTB.field_scrolled) return; else super.process(event);
+	    	if(FMTB.field_scrolled || FMTB.frame.getLayers().size() > 0) return; else super.process(event);
 	    }
 	    
 	}
