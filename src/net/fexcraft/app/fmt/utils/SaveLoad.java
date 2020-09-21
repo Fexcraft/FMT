@@ -9,8 +9,10 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -22,6 +24,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import com.google.gson.reflect.TypeToken;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.JsonToFMT;
@@ -375,6 +378,15 @@ public class SaveLoad {
 				if(group.opacity < 1f){
 					jsn.addProperty("opacity", group.opacity);
 				}
+				if(group.getGroups().size() > 1){
+					JsonArray invisible = new JsonArray();
+					for(TurboList list : group.getGroups()){
+						if(!list.visible) invisible.add(list.id);
+					}
+					if(invisible.size() > 0){
+						jsn.add("invisible", invisible);
+					}
+				}
 				jsn.addProperty("path", group.origin.toPath().toString());
 				jsn.addProperty("visible", group.visible);
 				array.add(jsn);
@@ -560,6 +572,13 @@ public class SaveLoad {
 					}
 					if(jsn.has("scale_x")){
 						helperpreview.scale = new Vec3f(jsn.get("scale_x").getAsFloat(), jsn.get("scale_y").getAsFloat(), jsn.get("scale_z").getAsFloat());
+					}
+					if(jsn.has("invisible")){
+						Type type = new TypeToken<List<String>>(){}.getType();
+						List<String> list = JsonUtil.getGson().fromJson(jsn.get("invisible").toString(), type);
+						for(TurboList turbo : helperpreview.getGroups()){
+							turbo.visible = !list.contains(turbo.id);
+						}
 					}
 					helperpreview.visible = JsonUtil.getIfExists(jsn, "visible", true);
 					helperpreview.subhelper = subhelper;
