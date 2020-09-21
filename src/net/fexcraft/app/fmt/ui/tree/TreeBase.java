@@ -13,6 +13,7 @@ import org.liquidengine.legui.event.ScrollEvent;
 import org.liquidengine.legui.style.Style.DisplayType;
 
 import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.ui.UserInterfaceUtils.Icon;
 import net.fexcraft.app.fmt.ui.editor.EditorBase;
 import net.fexcraft.app.fmt.utils.HelperCollector;
 import net.fexcraft.app.fmt.utils.Settings;
@@ -26,20 +27,31 @@ public class TreeBase extends Panel {
 	public Label counter; 
 	public final String id;
 	private TreeGroup selected;
+	//
+	private static float TBH = 30;
+	private static float ICH = TBH + 60;
 	
 	public TreeBase(String name){
-		super(FMTB.WIDTH - 304, 30, 304, FMTB.HEIGHT - 30); Trees.trees.add(this); id = name;
-		super.add(counter = new Label((counterlabel = EditorBase.translate("tree." + id + ".counter") + " ") + "0", 4, 1, 100, 24));
+		super(FMTB.WIDTH - 304, 30, 304, FMTB.HEIGHT - TBH); Trees.trees.add(this); id = name;
+		super.add(counter = new Label((counterlabel = EditorBase.translate("tree." + id + ".counter") + " ") + "0", 4, 1 + TBH, 100, 24));
 		Settings.THEME_CHANGE_LISTENER.add(bool -> {
 			counter.getStyle().setFontSize(24f);
 		});
-        scrollable = new ScrollablePanel(0, 28, 304, FMTB.HEIGHT - 60);
+        scrollable = new ScrollablePanel(0, 28 + TBH, 304, FMTB.HEIGHT - ICH);
         scrollable.getStyle().getBackground().setColor(1, 1, 1, 1);
         scrollable.setHorizontalScrollBarVisible(false);
-        scrollable.getContainer().setSize(296, FMTB.HEIGHT - 60);
+        scrollable.getContainer().setSize(296, FMTB.HEIGHT - ICH);
         scrollable.getViewport().getListenerMap().removeAllListeners(ScrollEvent.class);
         scrollable.getViewport().getListenerMap().addListener(ScrollEvent.class, new SPVSL(this));
         super.add(scrollable); this.hide();
+	}
+	
+	public void addIcons(){
+		for(int i = 0; i < Trees.trees.size(); i++){
+			TreeBase tree = Trees.trees.get(i);
+			super.add(new Icon(i, "./resources/textures/icons/tree/" + tree.id + ".png", () -> Trees.show(tree.id)));
+		}
+		super.add(new Icon(Trees.trees.size(), "./resources/textures/icons/tree/hide.png", () -> Trees.hideAll()));
 	}
 
 	public void toggle(){
@@ -67,7 +79,7 @@ public class TreeBase extends Panel {
 
 	public void reOrderGroups(){
 		float size = 2; for(TreeGroup tree : groups) size += tree.getSize().y + 2;
-		scrollable.getContainer().setSize(scrollable.getSize().x, size > FMTB.HEIGHT - 60 ? size : FMTB.HEIGHT - 60); size = 2;
+		scrollable.getContainer().setSize(scrollable.getSize().x, size > FMTB.HEIGHT - ICH ? size : FMTB.HEIGHT - ICH); size = 2;
 		for(TreeGroup tree : groups){ tree.setPosition(0, size); size += tree.getSize().y + 2; }
 	}
 

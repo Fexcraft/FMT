@@ -13,10 +13,11 @@ public class Trees {
 	public static TreeBase polygon, helper, fvtm, textures;
 	
 	public static void initializeTrees(Frame frame){
-		frame.getContainer().add(textures = new TreeBase("textures"));
 		frame.getContainer().add(polygon = new TreeBase("polygon"));
+		frame.getContainer().add(textures = new TreeBase("textures"));
 		frame.getContainer().add(helper = new TreeBase("helper"));
 		frame.getContainer().add(fvtm = new TreeBase("fvtm"));
+		for(TreeBase base : trees) base.addIcons();
 	}
 	
 	public static void hideAll(){
