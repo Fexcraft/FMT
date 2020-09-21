@@ -578,6 +578,7 @@ public class SaveLoad {
 						List<String> list = JsonUtil.getGson().fromJson(jsn.get("invisible").toString(), type);
 						for(TurboList turbo : helperpreview.getGroups()){
 							turbo.visible = !list.contains(turbo.id);
+							turbo.pbutton.updateColor();
 						}
 					}
 					helperpreview.visible = JsonUtil.getIfExists(jsn, "visible", true);
