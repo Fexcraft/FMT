@@ -51,7 +51,9 @@ public class TreeBase extends Panel {
 			TreeBase tree = Trees.trees.get(i);
 			super.add(new Icon(i, "./resources/textures/icons/tree/" + tree.id + ".png", () -> Trees.show(tree.id)));
 		}
-		super.add(new Icon(Trees.trees.size(), "./resources/textures/icons/tree/hide.png", () -> Trees.hideAll()));
+		Icon icon = new Icon(0, "./resources/textures/icons/tree/hide.png", () -> Trees.hideAll());
+		icon.setPosition(304 - icon.getSize().x - 1, icon.getPosition().y);
+		super.add(icon);
 	}
 
 	public void toggle(){
