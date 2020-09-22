@@ -102,6 +102,9 @@ public class KeyCompound {
 		keys.add(new KeyFunction("open_polygon_tree", GLFW_KEY_P, action -> {
 			if(action == GLFW_PRESS) Trees.toggle("polygon");
 		}));
+		keys.add(new KeyFunction("open_helper_tree", GLFW_KEY_I, action -> {
+			if(action == GLFW_PRESS) Trees.toggle("helper");
+		}));
 	}
 	
 	public static void load(){
