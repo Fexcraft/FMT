@@ -13,6 +13,7 @@ import com.google.gson.JsonObject;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.ui.editor.Editors;
+import net.fexcraft.app.fmt.ui.tree.Trees;
 import net.fexcraft.lib.common.json.JsonUtil;
 
 public class KeyCompound {
@@ -97,6 +98,9 @@ public class KeyCompound {
 			if(action == GLFW_PRESS){
 				FMTB.MODEL.pasteFromClipboard();
 			}
+		}));
+		keys.add(new KeyFunction("open_polygon_tree", GLFW_KEY_P, action -> {
+			if(action == GLFW_PRESS) Trees.toggle("polygon");
 		}));
 	}
 	
