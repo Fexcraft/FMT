@@ -129,7 +129,7 @@ public class UserInterfaceUtils {
 			}),
 			new MenuButton("toolbar.utils.rescale", () -> FMTB.MODEL.rescale()),
 			new MenuButton("toolbar.utils.font_util", () -> FontUtils.open()),
-			new MenuButton("toolbar.utils.controls", NOT_REIMPLEMENTED_YET)
+			new MenuButton("toolbar.utils.controls", () -> KeyAdjuster.open())
 		));
 		frame.getContainer().add(new MenuEntry(2, Translator.translate("toolbar.editor"),
 			new MenuButton("toolbar.editor.hide_all", () -> Editors.hideAll()),

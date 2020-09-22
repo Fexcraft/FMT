@@ -249,8 +249,14 @@ settingsbox.confirm=Confirm
 settingsbox.darktheme.mayneedrestart=This may require a restart to take full effect.
 settingsbox.settings_needs_restart=This setting needs a restart to take full effect.
 
+# KeyAdjuster
+keyadjuster.title=FMT Keybind Adjuster
+keyadjuster.occupied=Key is already in use!
+keyadjuster.reset=Reset
+
 # DialogBox
 dialogbox.title.default=Generic Dialog
+dialogbox.button.continue=Continue
 dialogbox.button.confirm=Confirm
 dialogbox.button.cancel=Cancel
 dialogbox.button.select=Select
