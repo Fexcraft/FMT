@@ -28,16 +28,16 @@ public class TreeBase extends Panel {
 	public final String id;
 	private TreeGroup selected;
 	//
-	private static float TBH = 30;
-	private static float ICH = TBH + 60;
+	private static float TBH = 30, IH = 32;
+	private static float ICH = TBH + IH + 24;
 	
 	public TreeBase(String name){
 		super(FMTB.WIDTH - 304, 30, 304, FMTB.HEIGHT - TBH); Trees.trees.add(this); id = name;
-		super.add(counter = new Label((counterlabel = EditorBase.translate("tree." + id + ".counter") + " ") + "0", 4, 1 + TBH, 100, 24));
+		super.add(counter = new Label((counterlabel = EditorBase.translate("tree." + id + ".counter") + " ") + "0", 4, IH, 100, 24));
 		Settings.THEME_CHANGE_LISTENER.add(bool -> {
 			counter.getStyle().setFontSize(24f);
 		});
-        scrollable = new ScrollablePanel(0, 28 + TBH, 304, FMTB.HEIGHT - ICH);
+        scrollable = new ScrollablePanel(0, IH + counter.getSize().y, 304, FMTB.HEIGHT - ICH);
         scrollable.getStyle().getBackground().setColor(1, 1, 1, 1);
         scrollable.setHorizontalScrollBarVisible(false);
         scrollable.getContainer().setSize(296, FMTB.HEIGHT - ICH);
