@@ -103,7 +103,7 @@ public class KeyCompound {
 			if(action == GLFW_PRESS) Trees.toggle("polygon");
 		}));
 		keys.add(new KeyFunction("open_texture_tree", GLFW_KEY_O, action -> {
-			if(action == GLFW_PRESS) Trees.toggle("helper");
+			if(action == GLFW_PRESS) Trees.toggle("textures");
 		}));
 		keys.add(new KeyFunction("open_helper_tree", GLFW_KEY_I, action -> {
 			if(action == GLFW_PRESS) Trees.toggle("helper");
