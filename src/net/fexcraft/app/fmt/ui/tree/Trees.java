@@ -57,7 +57,7 @@ public class Trees {
 		for(TreeBase tree : trees){
 			tree.setPosition(FMTB.WIDTH - 304, 30);
 			tree.setSize(tree.getSize().x, FMTB.HEIGHT - 30);
-			tree.scrollable.setSize(tree.scrollable.getSize().x, FMTB.HEIGHT - 60);
+			tree.scrollable.setSize(tree.scrollable.getSize().x, FMTB.HEIGHT - 90);
 			tree.reOrderGroups();
 		}
 	}
