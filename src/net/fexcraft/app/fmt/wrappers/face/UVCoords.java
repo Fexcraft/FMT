@@ -10,13 +10,15 @@ public class UVCoords {
 	private PolygonWrapper poly;
 	private FaceUVType type;
 	private Face side;
+	private boolean individual;
 	//
 	private float[] cuv;
 	
-	public UVCoords(PolygonWrapper wrapper, Face face, FaceUVType uvtype){
+	public UVCoords(PolygonWrapper wrapper, Face face, FaceUVType uvtype, boolean alledges){
 		poly = wrapper;
 		side = face;
 		type = FaceUVType.validate(uvtype);
+		individual = alledges;
 	}
 
 	public boolean automatic(){
@@ -36,7 +38,12 @@ public class UVCoords {
 	}
 
 	public UVCoords set(FaceUVType newtype){
-		type = FaceUVType.validate(newtype);
+		newtype = FaceUVType.validate(newtype);
+		if(type.full() && !individual){
+			Logging.log("Invalid FaceUVType '" + newtype + "' for Polygon Type '" + poly.getType().name() + "'!");
+			return this;
+		}
+		type = newtype;
 		cuv = new float[type.arraylength];
 		return this;
 	}
@@ -59,7 +66,7 @@ public class UVCoords {
 	}
 
 	public UVCoords copy(PolygonWrapper wrapper){
-		UVCoords coords = new UVCoords(poly, side, type);
+		UVCoords coords = new UVCoords(poly, side, type, individual);
 		coords.cuv = cuv == null ? null : Arrays.copyOf(cuv, cuv.length);
 		return coords;
 	}

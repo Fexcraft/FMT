@@ -3,13 +3,14 @@ package net.fexcraft.app.fmt.wrappers.face;
 import java.util.Map;
 import java.util.TreeMap;
 
+import net.fexcraft.app.fmt.wrappers.CylinderWrapper;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 
 public class UVMap extends TreeMap<Face, UVCoords> {
 
 	public UVMap(PolygonWrapper wrapper){
 		for(Face face : wrapper.getTexturableFaces()){
-			put(face, new UVCoords(wrapper, face, null));
+			put(face, new UVCoords(wrapper, face, null, wrapper instanceof CylinderWrapper == false));
 		}
 	}
 
