@@ -22,6 +22,7 @@ import net.fexcraft.app.fmt.ui.field.NumberField;
 import net.fexcraft.app.fmt.ui.field.TextField;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
+import net.fexcraft.app.fmt.wrappers.ShapeType;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.json.JsonUtil;
 import net.fexcraft.lib.common.utils.ZipUtil;
@@ -30,6 +31,7 @@ public class FontUtils {
 	
 	private static float px, py, pz;
 	private static float rx, ry, rz;
+	private static float scale;
 	private static File selected;
 	private static int width = 300;
 	private static String text;
@@ -85,6 +87,12 @@ public class FontUtils {
 		dialog.getContainer().add(roty);
 		dialog.getContainer().add(rotz);
 		//
+		dialog.getContainer().add(new Label(translate("font_util.dialog.scale"), 10, passed += 28, width - 20, 20));
+		NumberField scale = new NumberField(10, passed += 24, 80, 20);
+		scale.setup(0, 64, true, () -> { FontUtils.scale = scale.getValue(); });
+		scale.apply(1);
+		dialog.getContainer().add(scale);
+		//
         Button button0 = new Button(translate("dialogbox.button.confirm"), 10, passed += 32, 100, 20);
         button0.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
         	if(CLICK == e.getAction()){
@@ -102,6 +110,7 @@ public class FontUtils {
 		log("Font Text: " + text);
 		log("Font Location: " + px + ", " + py + ", " + pz);
 		log("Font Rotation: " + rx + ", " + ry + ", " + rz);
+		log("Font Scale: " + scale);
 		if(selected == null || !selected.exists()){
 			log("Invalid or no file selected, cancelling font generation.");
 			return;
@@ -129,6 +138,12 @@ public class FontUtils {
 				clone.pos.xCoord -= cher.offset_x;
 				clone.pos.yCoord -= cher.offset_y;
 				clone.off.xCoord += passed;
+				if(scale != 1f){
+					if(clone.getType() == ShapeType.BOX){
+						clone = clone.convertTo(ShapeType.SHAPEBOX);
+					}
+					GroupCompound.scalePoly(clone, scale);
+				}
 				clone.pos = clone.pos.addVector(px, py, pz);
 				clone.rot = clone.rot.addVector(rx, ry, rz);
 				FMTB.MODEL.add(clone, textgroupid, false);
