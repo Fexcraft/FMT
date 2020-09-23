@@ -320,6 +320,7 @@ font_util.dialog.text=Text to be generated:
 font_util.dialog.selection=Please select a font (model) pack:
 font_util.dialog.position=Position
 font_util.dialog.rotation=Rotation
+font_util.dialog.scale=Scale
 font_util.load_pack.title=Font (Model) Pack Loader
 font_util.load_pack.title.errors=Errors occured while loading (font) model.
 font_util.load_pack.title.invalid_file=Invalid font (model) pack file.
