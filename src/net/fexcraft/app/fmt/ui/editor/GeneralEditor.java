@@ -39,7 +39,8 @@ public class GeneralEditor extends EditorBase {
 	public static NumberField cyl1_x, cyl1_y, cyl1_z;
 	public static NumberField cyl2_x, cyl2_y;
 	public static NumberField cyl3_x, cyl3_y, cyl3_z;
-	public static BoolButton cyl4_x, cyl4_y, cyl5_x, cyl5_y, cyl6_x;
+	public static BoolButton cyl4_x, cyl4_y, cyl4_z;
+	public static BoolButton cyl5_x, cyl5_y, cyl5_z, cyl6_x;
 	public static NumberField cyl6_y, cyl6_z;
 	public static NumberField cyl7_x, cyl7_y, cyl7_z;
 	public static NumberField[] corner_x, corner_y, corner_z;
@@ -229,10 +230,12 @@ public class GeneralEditor extends EditorBase {
 		cylinder.getContainer().add(cyl7_y = new NumberField(102, pass, 90, 20).setup("cyl7y", -360, 360, true));
 		cylinder.getContainer().add(cyl7_z = new NumberField(200, pass, 90, 20).setup("cyl7z", -360, 360, true));
 		cylinder.getContainer().add(new Label(translate("editor.general.cylinder.visibility_toggle"), 3, pass += 24, 290, 20));
-		cylinder.getContainer().add(cyl4_x = new BoolButton("cyl4x", 6, pass += 24, 66, 20));
-		cylinder.getContainer().add(cyl4_y = new BoolButton("cyl4y", 78, pass, 66, 20));
-		cylinder.getContainer().add(cyl5_x = new BoolButton("cyl5x", 148, pass, 66, 20));
-		cylinder.getContainer().add(cyl5_y = new BoolButton("cyl5y", 220, pass, 66, 20));
+		cylinder.getContainer().add(cyl4_x = new BoolButton("cyl4x", 4, pass += 24, 44, 20));
+		cylinder.getContainer().add(cyl4_y = new BoolButton("cyl4y", 53, pass, 44, 20));
+		cylinder.getContainer().add(cyl5_x = new BoolButton("cyl5x", 102, pass, 44, 20));
+		cylinder.getContainer().add(cyl5_y = new BoolButton("cyl5y", 151, pass, 44, 20));
+		cylinder.getContainer().add(cyl4_z = new BoolButton("cyl4z", 200, pass, 44, 20));
+		cylinder.getContainer().add(cyl5_z = new BoolButton("cyl5z", 249, pass, 44, 20));
 		cylinder.getContainer().add(new Label(translate("editor.general.cylinder.radial_texture"), 3, pass += 24, 290, 20));
 		cylinder.getContainer().add(cyl6_x = new BoolButton("cyl6x", 4, pass += 24, 90, 20));
 		cylinder.getContainer().add(cyl6_y = new NumberField(102, pass, 90, 20).setup("cyl6y", 0, Integer.MAX_VALUE, true));

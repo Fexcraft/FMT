@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
 import net.fexcraft.app.fmt.wrappers.face.CylFace;
 import net.fexcraft.app.fmt.wrappers.face.Face;
+import net.fexcraft.app.fmt.wrappers.face.UVCoords;
 import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.tmt.CylinderBuilder;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
@@ -15,7 +16,7 @@ public class CylinderWrapper extends PolygonWrapper {
 	public float radius = 2, radius2, length = 2, base = 1, top = 1;
 	public int segments = 8, seglimit, direction = ModelRendererTurbo.MR_TOP;
 	public Vec3f topoff = new Vec3f(0, 0, 0), toprot = new Vec3f(0, 0, 0);
-	public boolean[] bools = new boolean[4];
+	public boolean[] bools = new boolean[6];
 	//
 	public boolean radial;
 	public float seg_width, seg_height;
@@ -38,10 +39,17 @@ public class CylinderWrapper extends PolygonWrapper {
 	
 	protected ModelRendererTurbo newMRT(){
 		ModelRendererTurbo turbo = new ModelRendererTurbo(null, textureX(), textureY(), compound.tx(getTurboList()), compound.ty(getTurboList()));
-		if(radial || usesTopRotation()){
+		if(radial || usesTopRotation() || cuv.anyCustom()){
 			CylinderBuilder builder = turbo.newCylinderBuilder().setPosition(off.xCoord, off.yCoord, off.zCoord)
 				.setRadius(radius, radius2).setLength(length).setSegments(segments, seglimit).setScale(base, top)
-				.setDirection(direction).setTopOffset(topoff).setSidesVisible(bools);
+				.setDirection(direction).setTopOffset(topoff).removePolygons(bools);
+			if(cuv.anyCustom()){
+				for(UVCoords coord : cuv.values()){
+					if(!isFaceActive(coord.face())) continue;//disabled
+					builder.setPolygonUV(coord.side().index(), coord.value());
+					if(coord.absolute()) builder.setDetachedUV(coord.side().index());
+				}
+			}
 			if(radial) builder.setRadialTexture(seg_width, seg_height);
 			else builder.setTopRotation(toprot);
 			builder.build();
@@ -118,12 +126,12 @@ public class CylinderWrapper extends PolygonWrapper {
 			case "cyl4":{
 				if(x){ bools[0] = value == 1; return true; }
 				if(y){ bools[1] = value == 1; return true; }
-				if(z){ return false; }
+				if(z){ bools[4] = value == 1; return true; }
 			}
 			case "cyl5":{
 				if(x){ bools[2] = value == 1; return true; }
 				if(y){ bools[3] = value == 1; return true; }
-				if(z){ return false; }
+				if(z){ bools[5] = value == 1; return true; }
 			}
 			case "cyl6":{
 				if(x){ radial = value == 1; return true; }
