@@ -1078,45 +1078,49 @@ public class GroupCompound {
 				}
 			});
 			for(PolygonWrapper wrapper : list){
-				wrapper.pos = wrapper.pos.scale(scale);
-				wrapper.off = wrapper.off.scale(scale);
-				if(wrapper instanceof ShapeboxWrapper){
-					ShapeboxWrapper sb = (ShapeboxWrapper)wrapper;
-					sb.size = sb.size.scale(scale);
-					sb.cor0 = sb.cor0.scale(scale);
-					sb.cor1 = sb.cor1.scale(scale);
-					sb.cor2 = sb.cor2.scale(scale);
-					sb.cor3 = sb.cor3.scale(scale);
-					sb.cor4 = sb.cor4.scale(scale);
-					sb.cor5 = sb.cor5.scale(scale);
-					sb.cor6 = sb.cor6.scale(scale);
-					sb.cor7 = sb.cor7.scale(scale);
-				}
-				if(wrapper instanceof CylinderWrapper){
-					CylinderWrapper cyl = (CylinderWrapper)wrapper;
-					/*cyl.base *= scale;
-					cyl.top *= scale;
-					if(cyl.topoff != null && !cyl.topoff.isNull()){
-						cyl.topoff = cyl.topoff.scale(scale);
-					}
-					float newlen = cyl.length * scale;
-					int newlength = (int)newlen;
-					if(newlen % 1 > 0){
-						newlength += 1;
-						cyl.topoff = cyl.topoff.add(cyl.getTopOffForDir(newlen % 1));
-						cyl.pos = cyl.pos.add(cyl.getTopOffForDir(-(newlen % 1)));
-					}
-					cyl.length = newlength;*/
-					cyl.radius *= scale;
-					cyl.radius2 *= scale;
-					cyl.length *= scale;
-					if(cyl.topoff != null && !cyl.topoff.isNull()){
-						cyl.topoff = cyl.topoff.scale(scale);
-					}
-				}
-				wrapper.recompile();
+				scalePoly(wrapper, scale);
 			}
 		}
+	}
+
+	public static void scalePoly(PolygonWrapper wrapper, float scale){
+		wrapper.pos = wrapper.pos.scale(scale);
+		wrapper.off = wrapper.off.scale(scale);
+		if(wrapper instanceof ShapeboxWrapper){
+			ShapeboxWrapper sb = (ShapeboxWrapper)wrapper;
+			sb.size = sb.size.scale(scale);
+			sb.cor0 = sb.cor0.scale(scale);
+			sb.cor1 = sb.cor1.scale(scale);
+			sb.cor2 = sb.cor2.scale(scale);
+			sb.cor3 = sb.cor3.scale(scale);
+			sb.cor4 = sb.cor4.scale(scale);
+			sb.cor5 = sb.cor5.scale(scale);
+			sb.cor6 = sb.cor6.scale(scale);
+			sb.cor7 = sb.cor7.scale(scale);
+		}
+		if(wrapper instanceof CylinderWrapper){
+			CylinderWrapper cyl = (CylinderWrapper)wrapper;
+			/*cyl.base *= scale;
+			cyl.top *= scale;
+			if(cyl.topoff != null && !cyl.topoff.isNull()){
+				cyl.topoff = cyl.topoff.scale(scale);
+			}
+			float newlen = cyl.length * scale;
+			int newlength = (int)newlen;
+			if(newlen % 1 > 0){
+				newlength += 1;
+				cyl.topoff = cyl.topoff.add(cyl.getTopOffForDir(newlen % 1));
+				cyl.pos = cyl.pos.add(cyl.getTopOffForDir(-(newlen % 1)));
+			}
+			cyl.length = newlength;*/
+			cyl.radius *= scale;
+			cyl.radius2 *= scale;
+			cyl.length *= scale;
+			if(cyl.topoff != null && !cyl.topoff.isNull()){
+				cyl.topoff = cyl.topoff.scale(scale);
+			}
+		}
+		wrapper.recompile();
 	}
 
 }
