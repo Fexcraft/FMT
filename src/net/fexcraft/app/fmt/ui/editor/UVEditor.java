@@ -18,6 +18,7 @@ import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.ui.TexViewBox;
 import net.fexcraft.app.fmt.ui.field.NumberField;
 import net.fexcraft.app.fmt.ui.field.TextField;
+import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.fmt.utils.texture.TextureGroup;
 import net.fexcraft.app.fmt.utils.texture.TextureManager;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
@@ -125,7 +126,12 @@ public class UVEditor extends EditorBase {
 		ArrayList<PolygonWrapper> polis = FMTB.MODEL.getSelected();
 		FaceUVType type = FaceUVType.validate(newval);
 		polis.forEach(poly -> {
-			poly.getUVCoords(selface).set(type).value(poly.getDefAutoUVCoords(selface));
+			try{
+				poly.getUVCoords(selface).set(type).value(poly.getDefAutoUVCoords(selface));
+			}
+			catch(Exception e){
+				Logging.log("s/t: " + selface + "/" + type, e);
+			}
 		});
 		refreshEntries(last, selface);
 	}
