@@ -42,13 +42,13 @@ public class Logging {
 			for(int i = 0; i + 1 < str.length; i++){
 				str[i + 1] = "\t" + e.getStackTrace()[i];
 			}
-			DialogBox.show(null, "error.dialog_title", "dialogbox.button.ok", "toolbar.utils.clipboard.copy", null, () -> {
+			DialogBox.show(600, "error.dialog_title", "dialogbox.button.ok", "toolbar.utils.clipboard.copy", null, () -> {
 				String string = new String(str[0] + "\n");
 				for(int i = 1; i < str.length; i++) string += str[i] + "\n";
 				Clipboard cp = Toolkit.getDefaultToolkit().getSystemClipboard();
 				StringSelection sel = new StringSelection(string);
 				cp.setContents(sel, sel);
-			}, str);
+			}, str).setResizable(true);
 		}
 		catch(Exception ex){
 			ex.printStackTrace();
