@@ -4,7 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
-import net.fexcraft.app.fmt.wrappers.face.BoxFace;
 import net.fexcraft.app.fmt.wrappers.face.CylFace;
 import net.fexcraft.app.fmt.wrappers.face.Face;
 import net.fexcraft.app.fmt.wrappers.face.UVCoords;
@@ -185,69 +184,102 @@ public class CylinderWrapper extends PolygonWrapper {
 
 	@Override
 	public float[][][] newTexturePosition(boolean include_offsets, boolean exclude_detached){
-		float diameter = (int)Math.floor(radius * 2F);
-		float txheight = (int)Math.floor(length);
+		float dia = (int)Math.floor(radius * 2F);
+		float the = (int)Math.floor(length);
 		if(radius < 1){
 			int rad = radius < 0.5 ? 1 : 2;
-			if(diameter < rad) diameter = rad;
+			if(dia < rad) dia = rad;
 		}
-		if(length < 1) txheight = 1;
+		if(length < 1) the = 1;
 		else if(length % 1 != 0){
-			txheight = (int)length + (length % 1 > 0.5f ? 1 : 0);
+			the = (int)length + (length % 1 > 0.5f ? 1 : 0);
 		}
-		float tx = 0/*textureX*/, ty = 0/*textureY*/, /*qrad = radius / 2,*/ rad = radius * 2, rad2 = rad + rad;
+		float dia2 = dia + dia;
 		float[][][] vecs = new float[radius2 != 0f ? seglimit > 0 && seglimit < segments ? 6 : 4 : 3/*20 : 18 : 10*/][][];
-		float height = radial ? seg_height + seg_height : rad;
-		if(radial){
-			vecs[0] = new float[][]{
-				new float[]{ 0, 0 },
-				new float[]{ (seg_width * segments), height / 2 }
-			};
-			vecs[1] = new float[][]{
-				new float[]{ 0, 0 + seg_height },
-				new float[]{ tx + (seg_width * segments), height }
-			};
+		float height = radial ? detached(0) ? 0 : seg_height : dia;
+		if(!bools[0] && !absolute(0, exclude_detached)){
+			if(radial){
+				vecs[0] = new float[][]{
+					new float[]{ 0, 0 },
+					new float[]{ (seg_width * segments), seg_height }
+				};
+			}
+			else{
+				vecs[0] = new float[][]{
+					new float[]{ 0, 0 },
+					new float[]{ dia, dia }
+				};
+			}
+			if(include_offsets && !cuv.get(CylFace.BASE).automatic()){
+				vecs[0] = getCoords(CylFace.BASE, vecs[0]);
+			}
 		}
-		else{
-			vecs[0] = new float[][]{
-				new float[]{ tx, ty },
-				new float[]{ tx + rad, ty + rad }
-			};
-			vecs[1] = new float[][]{
-				new float[]{ tx + rad, ty},
-				new float[]{ tx + rad2, ty + rad }
-			};
+		if(!bools[1] && !absolute(1, exclude_detached)){
+			if(radial){
+				vecs[1] = new float[][]{
+					new float[]{ 0, seg_height },
+					new float[]{ (seg_width * segments), seg_height }
+				};
+				height += seg_height;
+			}
+			else{
+				boolean det = detached(0);
+				vecs[1] = new float[][]{
+					new float[]{ det ? 0 : dia, 0 },
+					new float[]{ (det ? 0 : dia) + dia, 0 + dia }
+				};
+			}
+			if(include_offsets && !cuv.get(CylFace.TOP).automatic()){
+				vecs[1] = getCoords(CylFace.TOP, vecs[1]);
+			}
 		}
-		/*for(int i = 0; i < 8; i++){
-			vecs[2 + i] = new float[][]{
-				new float[]{ tx + (qrad * i), ty + height },
-				new float[]{ tx + (qrad * (i + 1)), ty + height + length }
+		if(!bools[2] && !absolute(2, exclude_detached)){
+			vecs[2] = new float[][]{
+				new float[]{ 0, height },
+				new float[]{ dia2, 0 + height + the }
 			};
-		}*/
-		vecs[2] = new float[][]{
-			new float[]{ tx, ty + height },
-			new float[]{ tx + rad2, ty + height + length }
-		};
+			if(include_offsets && !cuv.get(CylFace.OUTER).automatic()){
+				vecs[2] = getCoords(CylFace.OUTER, vecs[2]);
+			}
+		}
 		if(radius2 != 0f){
-			/*for(int i = 0; i < 8; i++){
-				vecs[10 + i] = new float[][]{
-					new float[]{ tx + (qrad * i), ty + height + length },
-					new float[]{ tx + (qrad * (i + 1)), ty + height + length + length }
+			if(!bools[3] && !absolute(3, exclude_detached)){
+				float hei = (detached(2) ? 0 : the);
+				vecs[3] = new float[][]{
+					new float[]{ 0, height + hei },
+					new float[]{ 0 + dia2, 0 + height + hei + the }
 				};
-			}*/
-			vecs[3] = new float[][]{
-				new float[]{ tx, ty + height + length },
-				new float[]{ tx + rad2, ty + height + length + length }
-			};
+				if(include_offsets && !cuv.get(CylFace.INNER).automatic()){
+					vecs[3] = getCoords(CylFace.INNER, vecs[3]);
+				}
+			}
 			if(seglimit > 0 && seglimit < segments){
-				vecs[4/*18*/] = new float[][]{
-					new float[]{ tx + rad2, ty + height },
-					new float[]{ tx + rad2 + (radius - radius2), ty + height + length }
-				};
-				vecs[5/*19*/] = new float[][]{
-					new float[]{ tx + rad2, ty + height + length },
-					new float[]{ tx + rad2 + (radius - radius2), ty + height + length + length }
-				};
+				float seg = radius - radius2;
+				if(seg < 1) seg = 1;
+				else if(seg % 1 != 0){
+					seg = (int)seg + (seg % 1 > 0.5f ? 1 : 0);
+				}
+				float beg = detached(2) && detached(3) ? 0 : dia2;
+				if(!bools[4] && !absolute(4, exclude_detached)){
+					vecs[4] = new float[][]{
+						new float[]{ beg, height },
+						new float[]{ beg + seg, height + the }
+					};
+					if(include_offsets && !cuv.get(CylFace.SEG_SIDE_0).automatic()){
+						vecs[4] = getCoords(CylFace.SEG_SIDE_0, vecs[4]);
+					}
+				}
+				if(!bools[5] && !absolute(5, exclude_detached)){
+					float shi = detached(2) || detached(3) ? seg : 0;
+					float hai = detached(2) || detached(3) ? 0 : the;
+					vecs[5] = new float[][]{
+						new float[]{ beg + shi, height + hai },
+						new float[]{ beg + shi + seg, height + hai + the }
+					};
+					if(include_offsets && !cuv.get(CylFace.SEG_SIDE_1).automatic()){
+						vecs[5] = getCoords(CylFace.SEG_SIDE_1, vecs[5]);
+					}
+				}
 			}
 		}
 		return vecs;
@@ -258,7 +290,28 @@ public class CylinderWrapper extends PolygonWrapper {
 	}
 
 	private boolean detached(int i){
-		return bools[i] || cuv.get(BoxFace.values()[i]).absolute();
+		return bools[i] || cuv.get(CylFace.values()[i]).absolute();
+	}
+	
+	private float[][] getCoords(Face face, float[][] def){
+		UVCoords coords = cuv.get(face);
+		float[] arr = coords.value();
+		float[][] res = null;
+		switch(coords.type()){
+			case ABSOLUTE:
+			case OFFSET_ONLY:{
+				def[1][0] -= def[0][0];
+				def[1][1] -= def[0][1];
+				def[0][0] = def[0][1] = 0;
+				res = new float[][]{
+					new float[]{ def[0][0] + arr[0], def[0][1] + arr[1] },
+					new float[]{ def[1][0] + arr[0], def[1][1] + arr[1] }
+				};
+				break;
+			}
+			default: return null;
+		}
+		return res;
 	}
 
 	@Override
