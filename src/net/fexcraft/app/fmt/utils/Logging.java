@@ -1,8 +1,14 @@
 package net.fexcraft.app.fmt.utils;
 
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
+
+import net.fexcraft.app.fmt.ui.DialogBox;
 
 public class Logging {
 
@@ -29,6 +35,23 @@ public class Logging {
 		//LOGGER_MAIN.log(Level.INFO, "ERROR: " + e.getMessage());
 		for(StackTraceElement trace : e.getStackTrace()){
 			LOGGER_MAIN.log(Level.ERROR, "\t" + trace);
+		}
+		try{
+			String[] str = new String[e.getStackTrace().length + 1];
+			str[0] = "ERROR: " + e.getLocalizedMessage();
+			for(int i = 0; i + 1 < str.length; i++){
+				str[i + 1] = "\t" + e.getStackTrace()[i];
+			}
+			DialogBox.show(null, "error.dialog_title", "dialogbox.button.ok", "toolbar.utils.clipboard.copy", null, () -> {
+				String string = new String(str[0] + "\n");
+				for(int i = 1; i < str.length; i++) string += str[i] + "\n";
+				Clipboard cp = Toolkit.getDefaultToolkit().getSystemClipboard();
+				StringSelection sel = new StringSelection(string);
+				cp.setContents(sel, sel);
+			}, str);
+		}
+		catch(Exception ex){
+			ex.printStackTrace();
 		}
 	}
 
