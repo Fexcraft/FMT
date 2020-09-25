@@ -42,4 +42,8 @@ public enum FaceUVType {
 		return arraylength == 8;
 	}
 
+	boolean ends(){
+		return arraylength == 4;
+	}
+
 }

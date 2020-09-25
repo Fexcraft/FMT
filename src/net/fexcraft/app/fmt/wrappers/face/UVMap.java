@@ -10,7 +10,7 @@ public class UVMap extends TreeMap<Face, UVCoords> {
 
 	public UVMap(PolygonWrapper wrapper){
 		for(Face face : wrapper.getTexturableFaces()){
-			put(face, new UVCoords(wrapper, face, null, wrapper instanceof CylinderWrapper == false));
+			put(face, new UVCoords(wrapper, face, null, wrapper instanceof CylinderWrapper));
 		}
 	}
 
