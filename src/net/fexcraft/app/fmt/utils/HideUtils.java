@@ -26,8 +26,8 @@ public class HideUtils {
 			String id = wrapper.getTurboList().id + ":" + wrapper.getTurboList().indexOf(wrapper);
 			if(wrapper.getType() != ShapeType.BOX && wrapper.getType() != ShapeType.SHAPEBOX) continue;
 			for(int side = 0; side < 6; side++){
-				if(side >= wrapper.getTurboObject(0).getFaces().length) continue;
-				TexturedPolygon poly = wrapper.getTurboObject(0).getFaces()[side];
+				if(side >= wrapper.getTurboObject(0).getFaces().size()) continue;
+				TexturedPolygon poly = wrapper.getTurboObject(0).getFaces().get(side);
 				String tr = getWorldSpaceAsString(axis, poly.getVertices()[0].vector, wrapper.pos, wrapper.rot);
 				String tl = getWorldSpaceAsString(axis, poly.getVertices()[1].vector, wrapper.pos, wrapper.rot);
 				String bl = getWorldSpaceAsString(axis, poly.getVertices()[2].vector, wrapper.pos, wrapper.rot);
@@ -59,8 +59,8 @@ public class HideUtils {
 				if(wrapper.getType() != ShapeType.BOX && wrapper.getType() != ShapeType.SHAPEBOX) continue;
 				for(int side = 0; side < 6; side++){
 					String id = wrapper.getTurboList().id + ":" + wrapper.getTurboList().indexOf(wrapper);
-					if(side >= wrapper.getTurboObject(0).getFaces().length) continue;
-					TexturedPolygon poly = wrapper.getTurboObject(0).getFaces()[side];
+					if(side >= wrapper.getTurboObject(0).getFaces().size()) continue;
+					TexturedPolygon poly = wrapper.getTurboObject(0).getFaces().get(side);
 					String tr = getWorldSpaceAsString(axis, poly.getVertices()[0].vector, wrapper.pos, wrapper.rot);
 					String tl = getWorldSpaceAsString(axis, poly.getVertices()[1].vector, wrapper.pos, wrapper.rot);
 					String bl = getWorldSpaceAsString(axis, poly.getVertices()[2].vector, wrapper.pos, wrapper.rot);
@@ -83,8 +83,8 @@ public class HideUtils {
 				if(wrapper.getType() != ShapeType.BOX && wrapper.getType() != ShapeType.SHAPEBOX) continue;
 				for(int side = 0; side < 6; side++){
 					String id = wrapper.getTurboList().id + ":" + wrapper.getTurboList().indexOf(wrapper);
-					if(side >= wrapper.getTurboObject(0).getFaces().length) continue;
-					TexturedPolygon poly = wrapper.getTurboObject(0).getFaces()[side];
+					if(side >= wrapper.getTurboObject(0).getFaces().size()) continue;
+					TexturedPolygon poly = wrapper.getTurboObject(0).getFaces().get(side);
 					Vec3f tr = getWorldSpace(axis, poly.getVertices()[0].vector, wrapper.pos, wrapper.rot);
 					Vec3f tl = getWorldSpace(axis, poly.getVertices()[1].vector, wrapper.pos, wrapper.rot);
 					Vec3f bl = getWorldSpace(axis, poly.getVertices()[2].vector, wrapper.pos, wrapper.rot);
@@ -137,8 +137,8 @@ public class HideUtils {
 			String id = wrapper.getTurboList().id + ":" + wrapper.getTurboList().indexOf(wrapper);
 			if(wrapper.getType() != ShapeType.BOX && wrapper.getType() != ShapeType.SHAPEBOX) continue;
 			for(int side = 0; side < 6; side++){
-				if(side >= wrapper.getTurboObject(0).getFaces().length) continue;
-				TexturedPolygon poly = wrapper.getTurboObject(0).getFaces()[side];
+				if(side >= wrapper.getTurboObject(0).getFaces().size()) continue;
+				TexturedPolygon poly = wrapper.getTurboObject(0).getFaces().get(side);
 				String tr = getWorldSpaceAsString(axis, poly.getVertices()[0].vector, wrapper.pos, wrapper.rot);
 				String tl = getWorldSpaceAsString(axis, poly.getVertices()[1].vector, wrapper.pos, wrapper.rot);
 				String bl = getWorldSpaceAsString(axis, poly.getVertices()[2].vector, wrapper.pos, wrapper.rot);

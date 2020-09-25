@@ -111,7 +111,7 @@ public class OBJExporter extends ExImPorter {
 					buffer.append("# ID: " + wrapper.name() + "\n");
 				}
 				//
-				TexturedPolygon[] polis = wrapper.getTurboObject(0).getFaces();
+				ArrayList<TexturedPolygon> polis = wrapper.getTurboObject(0).getFaces();
 				axis.setAngles(-wrapper.rot.yCoord, -wrapper.rot.zCoord, -wrapper.rot.xCoord);
 				for(TexturedPolygon poly : polis){
 					String[] verttext = new String[poly.getVertices().length];

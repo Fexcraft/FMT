@@ -197,7 +197,7 @@ public class DFMExporter extends ExImPorter {
 				default:{
 					buffer.append(tab2 + "{//LEGACY CONVERTER START\n");
 					ModelRendererTurbo turbo = wrapper.getTurboObject(0); int face = 0;
-					buffer.append(tab3 + "TexturedPolygon[] faces = new TexturedPolygon[" + turbo.getFaces().length + "]; PositionTextureVertex[] vertices = null;\n");
+					buffer.append(tab3 + "TexturedPolygon[] faces = new TexturedPolygon[" + turbo.getFaces().size() + "]; PositionTextureVertex[] vertices = null;\n");
 					for(TexturedPolygon poly : turbo.getFaces()){
 						buffer.append(tab3 + "vertices = new PositionTextureVertex[" + poly.getVertices().length + "];\n");
 						for(int i = 0; i < poly.getVertices().length; i++){

@@ -31,6 +31,7 @@ import net.fexcraft.lib.tmt.ModelRendererTurbo;
 public abstract class PolygonWrapper {
 	
 	protected static final ModelRendererTurbo rotmarker = new ModelRendererTurbo(null, 0, 0, 16, 16).addBox(-.25f, -.25f, -.25f, .5f, .5f, .5f).setTextured(false).setColor(Settings.getSelectedColor());
+	protected static final ModelRendererTurbo rotmarker2 = new ModelRendererTurbo(null, 0, 0, 16, 16).addBox(-.2f, -.2f, -.2f, .4f, .4f, .4f).setTextured(false).setColor(Settings.getSelectedColor2());
 	private static final ModelRendererTurbo something = new ModelRendererTurbo(null, 0, 0, 16, 16).setTextured(false);
 	//
 	public Vec3f pos = new Vec3f(), off = new Vec3f(), rot = new Vec3f();
@@ -256,7 +257,7 @@ public abstract class PolygonWrapper {
 				return new RGB(genColor(this, i));
 			}
 		};
-		picker.copyTo(sellines.getVertices(), sellines.getFaces());
+		picker.copyTo(sellines.getFaces());
 		picker.setRotationPoint(sellines.rotationPointX, sellines.rotationPointY, sellines.rotationPointZ);
 		picker.setRotationAngle(sellines.rotationAngleX, sellines.rotationAngleY, sellines.rotationAngleZ);
 		picker.setTextured(false).setLines(false);
@@ -267,7 +268,7 @@ public abstract class PolygonWrapper {
 	
 	private RGB genColor(ModelRendererTurbo turbo, int face){
 		if(color == null || face >= color.length){
-			color = new byte[turbo.getFaces().length][];
+			color = new byte[turbo.getFaces().size()][];
 			for(int i = 0; i < color.length; i++){
 				color[i] = new RGB(lastint += 1).toByteArray();
 				if(color[i][0] == 31 && color[i][1] == 65 && color[i][2] == 127){
@@ -501,7 +502,7 @@ public abstract class PolygonWrapper {
 
 	public long getFacesAmount(boolean visonly){
 		if(visonly){
-			return turbo.getFaces().length;
+			return turbo.getFaces().size();
 		}
 		if(getType().isCylinder()){
 			CylinderWrapper cyl = (CylinderWrapper)this;
