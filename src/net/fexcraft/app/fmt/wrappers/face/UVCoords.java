@@ -39,7 +39,7 @@ public class UVCoords {
 
 	public UVCoords set(FaceUVType newtype){
 		newtype = FaceUVType.validate(newtype);
-		if(cylinder && (type.full() || type.ends())){
+		if(cylinder && (newtype.full() || newtype.ends())){
 			Logging.log("Invalid FaceUVType '" + newtype + "' for Polygon Type '" + poly.getType().name() + "'!");
 			return this;
 		}
