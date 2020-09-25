@@ -58,17 +58,17 @@ public class ShapeboxWrapper extends BoxWrapper {
 	}
 	
 	private static ModelRendererTurbo[] cornermarkers = new ModelRendererTurbo[8];
-	private static RGB[] cornercolors = new RGB[]{
+	/*private static RGB[] cornercolors = new RGB[]{
 		new RGB(255, 255, 0), new RGB(255, 0, 0), new RGB(0, 0, 255), new RGB(0, 255, 0),
 		new RGB(255, 0, 127), new RGB(0, 127, 255), new RGB(0, 127, 0), new RGB(127, 0, 255)
-	};
+	};*/
 	public static RGB[] cornercolors2 = new RGB[]{
 		new RGB(255, 255, 0), new RGB(255, 0, 0), new RGB(0, 127, 255), new RGB(255, 0, 127),
 		new RGB(0, 255, 0), new RGB(0, 0, 255), new RGB(0, 127, 0), new RGB(127, 0, 255)
 	};
 	static{
 		for(int i = 0; i < 8; i++){
-			cornermarkers[i] = new ModelRendererTurbo(null, 0, 0, 16, 16).addBox(-.25f, -.25f, -.25f, .5f, .5f, .5f).setTextured(false).setColor(cornercolors[i]);
+			cornermarkers[i] = new ModelRendererTurbo(null, 0, 0, 16, 16).addBox(-.25f, -.25f, -.25f, .5f, .5f, .5f).setTextured(false).setColor(cornercolors2[i]);
 		}
 	}
 	
@@ -81,11 +81,13 @@ public class ShapeboxWrapper extends BoxWrapper {
 				rotmarker.render();
 			}
 			else{
+				rotmarker2.setRotationPoint(lines.rotationPointX, lines.rotationPointY, lines.rotationPointZ);
+				rotmarker2.render();
 				GL11.glPushMatrix();
 				axe.setAngles(-rot.yCoord, -rot.zCoord, -rot.xCoord);
 				Vec3f vector = null;
 				for(int i = 0; i < cornermarkers.length; i++){
-					vector = axe.getRelativeVector(turbo.getVertices()[i].vector);
+					vector = axe.getRelativeVector(corneroffset(i).add(off));
 					cornermarkers[i].setPosition(vector.xCoord + pos.xCoord, vector.yCoord + pos.yCoord, vector.zCoord + pos.zCoord);
 					cornermarkers[i].setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
 					cornermarkers[i].render();
@@ -104,6 +106,20 @@ public class ShapeboxWrapper extends BoxWrapper {
 			}
 		}
 		//GL11.glEnable(GL11.GL_TEXTURE_2D);
+	}
+
+	private Vec3f corneroffset(int index){
+		switch(index){
+			case 0: return new Vec3f(-cor0.xCoord, -cor0.yCoord, -cor0.zCoord);
+			case 1: return new Vec3f(cor1.xCoord + size.xCoord, -cor1.yCoord, -cor1.zCoord);
+			case 2: return new Vec3f(cor2.xCoord + size.xCoord, -cor2.yCoord, cor2.zCoord + size.zCoord);
+			case 3: return new Vec3f(-cor3.xCoord, -cor3.yCoord, cor3.zCoord + size.zCoord);
+			case 4: return new Vec3f(-cor4.xCoord, cor4.yCoord + size.yCoord, -cor4.zCoord);
+			case 5: return new Vec3f(cor5.xCoord + size.xCoord, cor5.yCoord + size.yCoord, -cor5.zCoord);
+			case 6: return new Vec3f(cor6.xCoord + size.xCoord, cor6.yCoord + size.yCoord, cor6.zCoord + size.zCoord);
+			case 7: return new Vec3f(-cor7.xCoord, cor7.yCoord + size.yCoord, cor7.zCoord + size.zCoord);
+			default: return null;
+		}
 	}
 
 	@Override
