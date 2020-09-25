@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
+import net.fexcraft.app.fmt.wrappers.face.BoxFace;
 import net.fexcraft.app.fmt.wrappers.face.CylFace;
 import net.fexcraft.app.fmt.wrappers.face.Face;
 import net.fexcraft.app.fmt.wrappers.face.UVCoords;
@@ -184,19 +185,27 @@ public class CylinderWrapper extends PolygonWrapper {
 
 	@Override
 	public float[][][] newTexturePosition(boolean include_offsets, boolean exclude_detached){
-		int radius = this.radius < 1 ? 1 : (int)this.radius;
-		float length = this.length < 1 ? 1 : this.length % 1 != 0 ? (int)this.length + (this.length % 1 > 0.5f ? 1 : 0) : (int)this.length;
+		float diameter = (int)Math.floor(radius * 2F);
+		float txheight = (int)Math.floor(length);
+		if(radius < 1){
+			int rad = radius < 0.5 ? 1 : 2;
+			if(diameter < rad) diameter = rad;
+		}
+		if(length < 1) txheight = 1;
+		else if(length % 1 != 0){
+			txheight = (int)length + (length % 1 > 0.5f ? 1 : 0);
+		}
 		float tx = 0/*textureX*/, ty = 0/*textureY*/, /*qrad = radius / 2,*/ rad = radius * 2, rad2 = rad + rad;
 		float[][][] vecs = new float[radius2 != 0f ? seglimit > 0 && seglimit < segments ? 6 : 4 : 3/*20 : 18 : 10*/][][];
 		float height = radial ? seg_height + seg_height : rad;
 		if(radial){
 			vecs[0] = new float[][]{
-				new float[]{ tx, ty },
-				new float[]{ tx + (seg_width * segments), ty + height / 2 }
+				new float[]{ 0, 0 },
+				new float[]{ (seg_width * segments), height / 2 }
 			};
 			vecs[1] = new float[][]{
-				new float[]{ tx, ty + seg_height },
-				new float[]{ tx + (seg_width * segments), ty + height }
+				new float[]{ 0, 0 + seg_height },
+				new float[]{ tx + (seg_width * segments), height }
 			};
 		}
 		else{
@@ -242,6 +251,14 @@ public class CylinderWrapper extends PolygonWrapper {
 			}
 		}
 		return vecs;
+	}
+
+	private boolean absolute(int index, boolean exclude_detached){
+		return exclude_detached && cuv.get(CylFace.values()[index]).absolute();
+	}
+
+	private boolean detached(int i){
+		return bools[i] || cuv.get(BoxFace.values()[i]).absolute();
 	}
 
 	@Override
