@@ -112,7 +112,7 @@ public class TexViewBox {
 		viewbox.getContainer().add(new ClickListenerButton("T", pos += 28, 4, 24, 24, () -> {
 			texture = !texture;
 			update();
-		}).setTooltip(" toggle notex poly ", 28, 0, 120, 20));
+		}).setTooltip(" toggle texture background ", 28, 0, 120, 20));
 		//
 		/*viewbox.getContainer().add(new ClickListenerButton("<", pos += 36, 4, 24, 24, () -> move(-1, 0)).setTooltip("move left", 28, 0, 100, 20));
 		viewbox.getContainer().add(new ClickListenerButton(">", pos += 28, 4, 24, 24, () -> move(1, 0)).setTooltip("move right", 28, 0, 100, 20));
