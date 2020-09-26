@@ -38,12 +38,25 @@ public enum FaceUVType {
 		return this == AUTOMATIC;
 	}
 
-	boolean full(){
+	public boolean full(){
 		return arraylength == 8;
 	}
 
-	boolean ends(){
+	public boolean ends(){
 		return arraylength == 4;
+	}
+
+	public boolean basic(){
+		return arraylength == 2;
+	}
+
+	public static FaceUVType bySize(int length, boolean absolute){
+		switch(length){
+			case 2: return absolute ? ABSOLUTE : OFFSET_ONLY;
+			case 4: return absolute ? ABSOLUTE_ENDS : OFFSET_ENDS;
+			case 8: return absolute ? ABSOLUTE_FULL : OFFSET_FULL;
+		}
+		return AUTOMATIC;
 	}
 
 }

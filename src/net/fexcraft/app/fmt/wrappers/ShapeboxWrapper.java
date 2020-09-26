@@ -259,7 +259,7 @@ public class ShapeboxWrapper extends BoxWrapper {
 			return copyTo(box, true);
 		}
 		if(type == ShapeType.SHAPEBOX) return this.clone();
-		ShapeboxWrapper wrapper = null;
+		/*ShapeboxWrapper wrapper = null;
 		switch(type){
 			case TEXRECT_A: wrapper = new TexrectWrapperA(compound); break;
 			case TEXRECT_B: wrapper = new TexrectWrapperB(compound); break;
@@ -269,7 +269,8 @@ public class ShapeboxWrapper extends BoxWrapper {
 		wrapper.setCoords(cor0, cor1, cor2, cor3, cor4, cor5, cor6, cor7);
 		wrapper.sides = Arrays.copyOf(sides, 6);
 		wrapper.cuv.copyFrom(wrapper, cuv);
-		return copyTo(wrapper, true);
+		return copyTo(wrapper, true);*/
+		return null;
 	}
 	
 }

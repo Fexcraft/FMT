@@ -72,8 +72,6 @@ public class BBWrapper extends BoxWrapper {
 		switch(type){
 			case BOX: wrapper = new BoxWrapper(compound);
 			case QUAD: wrapper = new QuadWrapper(compound);
-			case TEXRECT_A: wrapper = new TexrectWrapperA(compound); break;
-			case TEXRECT_B: wrapper = new TexrectWrapperB(compound); break;
 			case SHAPEBOX: wrapper = new ShapeboxWrapper(compound); break;
 			default: return null;
 		}

@@ -224,28 +224,6 @@ public abstract class FVTMFormatBase extends ExImPorter {
 					extended = true;
 					break;
 				}
-				case TEXRECT_A: case TEXRECT_B: {
-					TexrectWrapperB box = (TexrectWrapperB)wrapper;
-					shape.append(format("\n" + tab3 + ".addTexRect(%s, %s, %s, %s, %s, %s, 0, "
-						+ "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,", null,
-						wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord, box.size.xCoord, box.size.yCoord, box.size.zCoord,
-						box.cor0.xCoord, box.cor0.yCoord, box.cor0.zCoord, box.cor1.xCoord, box.cor1.yCoord, box.cor1.zCoord,
-						box.cor2.xCoord, box.cor2.yCoord, box.cor2.zCoord, box.cor3.xCoord, box.cor3.yCoord, box.cor3.zCoord,
-						box.cor4.xCoord, box.cor4.yCoord, box.cor4.zCoord, box.cor5.xCoord, box.cor5.yCoord, box.cor5.zCoord,
-						box.cor6.xCoord, box.cor6.yCoord, box.cor6.zCoord, box.cor7.xCoord, box.cor7.yCoord, box.cor7.zCoord));
-					String floats = "new float[][]{ "; float[][] flot = box.texcor;
-					for(int i = 0; i < flot.length; i++){
-						float[] fl = flot[i];
-						floats += "new float[]{ ";
-						for(int j = 0; j < fl.length; j++){
-							floats += fl[j] + "f" + (j == fl.length - 1 ? " " : ", ");
-						}
-						floats += "}" + (i == flot.length - 1 ? " " : ", ");
-					}
-					shape.append("\n" + tab3 + floats + "})");
-					extended = true;
-					break;
-				}
 				case CYLINDER:{
 					CylinderWrapper cyl = (CylinderWrapper)wrapper;
 					String topoff = cyl.topoff.xCoord != 0f || cyl.topoff.yCoord != 0f || cyl.topoff.zCoord != 0 ?

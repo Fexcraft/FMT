@@ -16,9 +16,11 @@ import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.ui.tree.Trees;
 import net.fexcraft.app.fmt.utils.texture.Texture;
 import net.fexcraft.app.fmt.utils.texture.TextureManager;
+import net.fexcraft.app.fmt.wrappers.BoxWrapper;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
-import net.fexcraft.app.fmt.wrappers.TexrectWrapperA;
 import net.fexcraft.app.fmt.wrappers.TurboList;
+import net.fexcraft.app.fmt.wrappers.face.BoxFace;
+import net.fexcraft.app.fmt.wrappers.face.FaceUVType;
 import net.fexcraft.lib.common.json.JsonUtil;
 import net.fexcraft.lib.common.utils.ZipUtil;
 
@@ -118,30 +120,14 @@ public class HelperCollector {
 			compound.helpertex = "./temp/frame/" + file.getName();
 			compound.textureSizeX = tex.getWidth();
 			compound.textureSizeY = tex.getHeight();
-			TexrectWrapperA polygon = new TexrectWrapperA(compound);
+			BoxWrapper polygon = new BoxWrapper(compound);
 			polygon.size.xCoord = tex.getWidth();
 			polygon.size.yCoord = tex.getHeight();
 			polygon.size.zCoord = 0.2f;
-			polygon.texcor[4][0] = tex.getWidth();
-			{
-				polygon.texcor[4][1] = 0;
-				polygon.texcor[4][2] = 0;
-				polygon.texcor[4][3] = 0;
-				polygon.texcor[4][4] = 0;
-				polygon.texcor[4][5] = tex.getHeight();
-				polygon.texcor[4][6] = tex.getWidth();
-				polygon.texcor[4][7] = tex.getHeight();
-			}
-			/*  */ {
-				polygon.texcor[5][0] = 0;
-				polygon.texcor[5][1] = 0;
-				polygon.texcor[5][2] = tex.getWidth();
-				polygon.texcor[5][3] = 0;
-				polygon.texcor[5][4] = tex.getWidth();
-				polygon.texcor[5][5] = tex.getHeight();
-				polygon.texcor[5][6] = 0;
-				polygon.texcor[5][7] = tex.getHeight();
-			}
+			polygon.textureX = polygon.textureY = 0;
+			float w = tex.getWidth(), h = tex.getHeight();
+			polygon.cuv.get(BoxFace.RIGHT).set(FaceUVType.OFFSET_FULL).value(new float[]{ 0, 0, w, 0, w, h, 0, h });
+			polygon.cuv.get(BoxFace.LEFT).set(FaceUVType.OFFSET_ENDS).value(new float[]{ 0, 0, w, h });
 			polygon.off.zCoord = -0.1f;
 			polygon.off.xCoord = -(polygon.size.xCoord / 2);
 			polygon.off.yCoord = -(polygon.size.yCoord / 2);

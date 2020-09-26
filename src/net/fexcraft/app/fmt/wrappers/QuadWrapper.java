@@ -80,8 +80,6 @@ public class QuadWrapper extends BoxWrapper {
 			case BOX: wrapper = new BoxWrapper(compound); break;
 			case SHAPEQUAD: wrapper = new ShapeQuadWrapper(compound); break;
 			case SHAPEBOX: wrapper = new ShapeboxWrapper(compound); break;
-			case TEXRECT_A: wrapper = new TexrectWrapperA(compound); break;
-			case TEXRECT_B: wrapper = new TexrectWrapperB(compound); break;
 			default: return null;
 		} wrapper.size = new Vec3f(size.xCoord, size.yCoord, 1); return copyTo(wrapper, true);
 	}

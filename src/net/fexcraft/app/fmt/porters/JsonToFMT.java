@@ -7,6 +7,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.wrappers.*;
+import net.fexcraft.app.fmt.wrappers.face.BoxFace;
+import net.fexcraft.app.fmt.wrappers.face.FaceUVType;
 import net.fexcraft.lib.common.json.JsonUtil;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
@@ -111,25 +113,22 @@ public class JsonToFMT {
 				polygon = cuboid; break;
 			}
 			case "shapebox": case "sbox": case "sb": {
-				ShapeboxWrapper shapebox = new ShapeboxWrapper(compound);
-				shapebox.size.xCoord = get(width, obj, def);
-				shapebox.size.yCoord = get(height, obj, def);
-				shapebox.size.zCoord = get(depth, obj, def);
-				//
-				shapebox.cor0 = new Vec3f(get("x0", obj, def), get("y0", obj, def), get("z0", obj, def));
-				shapebox.cor1 = new Vec3f(get("x1", obj, def), get("y1", obj, def), get("z1", obj, def));
-				shapebox.cor2 = new Vec3f(get("x2", obj, def), get("y2", obj, def), get("z2", obj, def));
-				shapebox.cor3 = new Vec3f(get("x3", obj, def), get("y3", obj, def), get("z3", obj, def));
-				shapebox.cor4 = new Vec3f(get("x4", obj, def), get("y4", obj, def), get("z4", obj, def));
-				shapebox.cor5 = new Vec3f(get("x5", obj, def), get("y5", obj, def), get("z5", obj, def));
-				shapebox.cor6 = new Vec3f(get("x6", obj, def), get("y6", obj, def), get("z6", obj, def));
-				shapebox.cor7 = new Vec3f(get("x7", obj, def), get("y7", obj, def), get("z7", obj, def));
-				/*if(obj.has("face_triangle_flip")){
-					JsonArray array = obj.getAsJsonArray("face_triangle_flip");
-					for(int i = 0; i < 6; i++) shapebox.bool[i] = array.get(i).getAsBoolean();
-				}*/
-				shapebox.sides = parseSides(obj);
-				polygon = shapebox; break;
+				polygon = loadShapebox(compound, obj);
+				break;
+			}
+			case "texrect": case "texrect_a": case "texrect_b":{
+				ShapeboxWrapper shapebox = loadShapebox(compound, obj);
+				if(obj.has("texpos")){
+					JsonArray array = obj.get("texpos").getAsJsonArray();
+					for(int i = 0; i < 6; i++){
+						JsonArray arr = array.get(i).getAsJsonArray();
+						float[] farr = new float[arr.size()];
+						for(int a = 0; a < farr.length; a++) farr[a] = arr.get(a).getAsFloat();
+						shapebox.cuv.get(BoxFace.values()[i]).set(FaceUVType.bySize(farr.length, true)).value(farr);
+					}
+				}
+				polygon = shapebox;
+				break;
 			}
 			case "shapequad": case "squad": case "sq": {
 				ShapeQuadWrapper advface = new ShapeQuadWrapper(compound);
@@ -169,40 +168,6 @@ public class JsonToFMT {
 				cylinder.seg_width = get(segwidth, obj, 0);
 				cylinder.seg_height = get(segheight, obj, 0);
 				polygon = cylinder; break;
-			}
-			case "texrect": case "texrect_a": case "texrect_b": {
-				TexrectWrapperB texrect = null;
-				if(obj.has("texpos")){
-					JsonArray array = obj.get("texpos").getAsJsonArray();
-					for(int i = 0; i < 6; i++){
-						JsonArray arr = array.get(i).getAsJsonArray();
-						if(texrect == null){
-							texrect = arr.size() > 4 ? new TexrectWrapperA(compound) : new TexrectWrapperB(compound);
-						}
-						texrect.texcor[i][0] = arr.get(0).getAsFloat();
-						texrect.texcor[i][1] = arr.get(1).getAsFloat();
-						texrect.texcor[i][2] = arr.get(2).getAsFloat();
-						texrect.texcor[i][3] = arr.get(3).getAsFloat();
-						if(arr.size() > 4){
-							texrect.texcor[i][4] = arr.get(4).getAsFloat();
-							texrect.texcor[i][5] = arr.get(5).getAsFloat();
-							texrect.texcor[i][6] = arr.get(6).getAsFloat();
-							texrect.texcor[i][7] = arr.get(7).getAsFloat();
-						}
-					}
-				}
-				if(texrect == null){ texrect = new TexrectWrapperB(compound); }
-				texrect.size.xCoord = get(width, obj, def); texrect.size.yCoord = get(height, obj, def); texrect.size.zCoord= get(depth, obj, def);
-				//
-				texrect.cor0 = new Vec3f(get("x0", obj, def), get("y0", obj, def), get("z0", obj, def));
-				texrect.cor1 = new Vec3f(get("x1", obj, def), get("y1", obj, def), get("z1", obj, def));
-				texrect.cor2 = new Vec3f(get("x2", obj, def), get("y2", obj, def), get("z2", obj, def));
-				texrect.cor3 = new Vec3f(get("x3", obj, def), get("y3", obj, def), get("z3", obj, def));
-				texrect.cor4 = new Vec3f(get("x4", obj, def), get("y4", obj, def), get("z4", obj, def));
-				texrect.cor5 = new Vec3f(get("x5", obj, def), get("y5", obj, def), get("z5", obj, def));
-				texrect.cor6 = new Vec3f(get("x6", obj, def), get("y6", obj, def), get("z6", obj, def));
-				texrect.cor7 = new Vec3f(get("x7", obj, def), get("y7", obj, def), get("z7", obj, def));
-				polygon = texrect; break;
 			}
 			case "marker":{
 				MarkerWrapper marker = new MarkerWrapper(compound);
@@ -257,6 +222,28 @@ public class JsonToFMT {
 		}
 		polygon.button.updateColor();
 		return polygon;
+	}
+
+	private static ShapeboxWrapper loadShapebox(GroupCompound compound, JsonObject obj){
+		ShapeboxWrapper shapebox = new ShapeboxWrapper(compound);
+		shapebox.size.xCoord = get(width, obj, def);
+		shapebox.size.yCoord = get(height, obj, def);
+		shapebox.size.zCoord = get(depth, obj, def);
+		//
+		shapebox.cor0 = new Vec3f(get("x0", obj, def), get("y0", obj, def), get("z0", obj, def));
+		shapebox.cor1 = new Vec3f(get("x1", obj, def), get("y1", obj, def), get("z1", obj, def));
+		shapebox.cor2 = new Vec3f(get("x2", obj, def), get("y2", obj, def), get("z2", obj, def));
+		shapebox.cor3 = new Vec3f(get("x3", obj, def), get("y3", obj, def), get("z3", obj, def));
+		shapebox.cor4 = new Vec3f(get("x4", obj, def), get("y4", obj, def), get("z4", obj, def));
+		shapebox.cor5 = new Vec3f(get("x5", obj, def), get("y5", obj, def), get("z5", obj, def));
+		shapebox.cor6 = new Vec3f(get("x6", obj, def), get("y6", obj, def), get("z6", obj, def));
+		shapebox.cor7 = new Vec3f(get("x7", obj, def), get("y7", obj, def), get("z7", obj, def));
+		/*if(obj.has("face_triangle_flip")){
+			JsonArray array = obj.getAsJsonArray("face_triangle_flip");
+			for(int i = 0; i < 6; i++) shapebox.bool[i] = array.get(i).getAsBoolean();
+		}*/
+		shapebox.sides = parseSides(obj);
+		return shapebox;
 	}
 
 	private static boolean[] parseSides(JsonObject obj){
