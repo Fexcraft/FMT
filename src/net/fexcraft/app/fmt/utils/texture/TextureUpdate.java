@@ -257,6 +257,7 @@ public class TextureUpdate extends TimerTask {
 					}
 					//log("Clearing calculation texture...");
 					texture.clear(RGB.WHITE.toByteArray());
+					log("AutoPosTex size is " + sizex + ", " + sizey + ".");
 					//log(texture.getWidth() + " " + texture.getHeight());
 					//log(texture.get(0, 0)[0] + " " + RGB.WHITE.toByteArray()[0]);
 					//log(texture.get(0, 0)[1] + " " + RGB.WHITE.toByteArray()[1]);
@@ -288,9 +289,9 @@ public class TextureUpdate extends TimerTask {
 						}
 						//
 						boolean pass = false;
-						for(int yar = 0; yar < sizex; yar++){
+						for(int yar = 0; yar < sizey; yar++){
 							if(pass) break;
-							for(int xar = 0; xar < sizey; xar++){
+							for(int xar = 0; xar < sizex; xar++){
 								if(check(corcon.coords, xar, yar)){
 									log("[" + corcon.wrapper.getTurboList().id + ":" + corcon.name() + "] >> " + xar + "x, " + yar + "y;");
 									if(!corcon.poly()){
