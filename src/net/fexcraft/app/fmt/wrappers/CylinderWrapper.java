@@ -195,7 +195,7 @@ public class CylinderWrapper extends PolygonWrapper {
 			the = (int)length + (length % 1 > 0.5f ? 1 : 0);
 		}
 		float dia2 = dia + dia;
-		float[][][] vecs = new float[radius2 != 0f ? seglimit > 0 && seglimit < segments ? 6 : 4 : 3/*20 : 18 : 10*/][][];
+		float[][][] vecs = new float[6][][];
 		float height = radial ? detached(0) ? 0 : seg_height : dia;
 		if(!bools[0] && !absolute(0, exclude_detached)){
 			if(radial){
@@ -210,8 +210,8 @@ public class CylinderWrapper extends PolygonWrapper {
 					new float[]{ dia, dia }
 				};
 			}
-			if(include_offsets && !cuv.get(CylFace.BASE).automatic()){
-				vecs[0] = getCoords(CylFace.BASE, vecs[0]);
+			if(include_offsets && !cuv.get(CylFace.CYL_BASE).automatic()){
+				vecs[0] = getCoords(CylFace.CYL_BASE, vecs[0]);
 			}
 		}
 		if(!bools[1] && !absolute(1, exclude_detached)){
@@ -229,8 +229,8 @@ public class CylinderWrapper extends PolygonWrapper {
 					new float[]{ (det ? 0 : dia) + dia, 0 + dia }
 				};
 			}
-			if(include_offsets && !cuv.get(CylFace.TOP).automatic()){
-				vecs[1] = getCoords(CylFace.TOP, vecs[1]);
+			if(include_offsets && !cuv.get(CylFace.CYL_TOP).automatic()){
+				vecs[1] = getCoords(CylFace.CYL_TOP, vecs[1]);
 			}
 		}
 		if(!bools[2] && !absolute(2, exclude_detached)){
@@ -238,8 +238,8 @@ public class CylinderWrapper extends PolygonWrapper {
 				new float[]{ 0, height },
 				new float[]{ dia2, 0 + height + the }
 			};
-			if(include_offsets && !cuv.get(CylFace.OUTER).automatic()){
-				vecs[2] = getCoords(CylFace.OUTER, vecs[2]);
+			if(include_offsets && !cuv.get(CylFace.CYL_OUTER).automatic()){
+				vecs[2] = getCoords(CylFace.CYL_OUTER, vecs[2]);
 			}
 		}
 		if(radius2 != 0f){
@@ -249,8 +249,8 @@ public class CylinderWrapper extends PolygonWrapper {
 					new float[]{ 0, height + hei },
 					new float[]{ 0 + dia2, 0 + height + hei + the }
 				};
-				if(include_offsets && !cuv.get(CylFace.INNER).automatic()){
-					vecs[3] = getCoords(CylFace.INNER, vecs[3]);
+				if(include_offsets && !cuv.get(CylFace.CYL_INNER).automatic()){
+					vecs[3] = getCoords(CylFace.CYL_INNER, vecs[3]);
 				}
 			}
 			if(seglimit > 0 && seglimit < segments){
@@ -281,6 +281,15 @@ public class CylinderWrapper extends PolygonWrapper {
 					}
 				}
 			}
+			else{
+				vecs[4] = new float[][]{ { 0, 0 }, { 0, 0 } };
+				vecs[5] = new float[][]{ { 0, 0 }, { 0, 0 } };
+			}
+		}
+		else{
+			vecs[3] = new float[][]{ { 0, 0 }, { 0, 0 } };
+			vecs[4] = new float[][]{ { 0, 0 }, { 0, 0 } };
+			vecs[5] = new float[][]{ { 0, 0 }, { 0, 0 } };
 		}
 		return vecs;
 	}
@@ -337,13 +346,13 @@ public class CylinderWrapper extends PolygonWrapper {
 	public boolean isFaceActive(Face other){
 		if(other instanceof CylFace == false) return false;
 		switch((CylFace)other){
-			case BASE:
+			case CYL_BASE:
 				return !bools[0];
-			case TOP:
+			case CYL_TOP:
 				return !bools[1];
-			case OUTER:
+			case CYL_OUTER:
 				return !bools[2];
-			case INNER:
+			case CYL_INNER:
 				return radius2 != 0f && !bools[3];
 			case SEG_SIDE_0:
 			case SEG_SIDE_1:

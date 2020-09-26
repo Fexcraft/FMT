@@ -2,7 +2,7 @@ package net.fexcraft.app.fmt.wrappers.face;
 
 public enum CylFace implements Face {
 	
-	BASE, TOP, OUTER, INNER, SEG_SIDE_0, SEG_SIDE_1;
+	CYL_BASE, CYL_TOP, CYL_OUTER, CYL_INNER, SEG_SIDE_0, SEG_SIDE_1;
 	
 	private String id;
 	
