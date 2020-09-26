@@ -118,7 +118,12 @@ public class UVEditor extends EditorBase {
 	}
 
 	public static void updateFace(String newval){
-		refreshEntries(last, Face.byId(newval, false));
+		try{
+			refreshEntries(last, Face.byId(newval, false));
+		}
+		catch(Exception e){
+			Logging.log("t: " + newval + "/" + Face.byId(newval, false), e);
+		}
 	}
 
 	public static void updateType(String newval){

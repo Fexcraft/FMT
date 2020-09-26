@@ -6,11 +6,11 @@ import java.util.TreeMap;
 import net.fexcraft.app.fmt.wrappers.CylinderWrapper;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 
-public class UVMap extends TreeMap<Face, UVCoords> {
+public class UVMap extends TreeMap<String, UVCoords> {
 
 	public UVMap(PolygonWrapper wrapper){
 		for(Face face : wrapper.getTexturableFaces()){
-			put(face, new UVCoords(wrapper, face, null, wrapper instanceof CylinderWrapper));
+			put(face.id(), new UVCoords(wrapper, face, null, wrapper instanceof CylinderWrapper));
 		}
 	}
 
@@ -21,12 +21,12 @@ public class UVMap extends TreeMap<Face, UVCoords> {
 		return false;
 	}
 	
-	public UVCoords get(String id){
-		return get(Face.byId(id, false));
+	public UVCoords get(Face side){
+		return get(side.id());
 	}
 
 	public void copyFrom(PolygonWrapper wrapper, UVMap cuv){
-		for(Map.Entry<Face, UVCoords> entry : cuv.entrySet()){
+		for(Map.Entry<String, UVCoords> entry : cuv.entrySet()){
 			this.put(entry.getKey(), entry.getValue().copy(wrapper));
 		}
 	}

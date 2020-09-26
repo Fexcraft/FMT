@@ -199,7 +199,7 @@ public abstract class PolygonWrapper {
 		if(flip != false) obj.addProperty("flip", true);
 		if(cuv.anyCustom()){
 			JsonObject jsn = new JsonObject();
-			for(Entry<Face, UVCoords> entry : cuv.entrySet()){
+			for(Entry<String, UVCoords> entry : cuv.entrySet()){
 				FaceUVType type = entry.getValue().type();
 				if(type != FaceUVType.AUTOMATIC){
 					JsonArray array = new JsonArray();
@@ -207,7 +207,7 @@ public abstract class PolygonWrapper {
 					for(int i = 0; i < entry.getValue().length(); i++){
 						array.add(entry.getValue().value()[i]);
 					}
-					jsn.add(entry.getKey().id(), array);
+					jsn.add(entry.getKey(), array);
 				}
 			}
 			obj.add("cuv", jsn);
@@ -541,15 +541,11 @@ public abstract class PolygonWrapper {
 		return false;
 	}
 
-	public UVCoords getUVCoords(String side){
-		return cuv.get(side);
-	}
-
 	public UVCoords getUVCoords(Face side){
 		return cuv.get(side);
 	}
 	
-	public float[] getDefAutoUVCoords(String side){
+	public float[] getDefAutoUVCoords(Face side){
 		UVCoords coords = getUVCoords(side);
 		int index = coords.side().index();
 		float[][][] arr = newTexturePosition(false, false);
@@ -573,10 +569,6 @@ public abstract class PolygonWrapper {
 			default:
 				return new float[0];
 		}
-	}
-	
-	public float[] getDefAutoUVCoords(Face side){
-		return getDefAutoUVCoords(side.id());
 	}
 	
 	public int textureX(){
