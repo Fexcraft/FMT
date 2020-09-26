@@ -39,7 +39,7 @@ public class CylinderWrapper extends PolygonWrapper {
 	
 	protected ModelRendererTurbo newMRT(){
 		ModelRendererTurbo turbo = new ModelRendererTurbo(null, textureX(), textureY(), compound.tx(getTurboList()), compound.ty(getTurboList()));
-		if(radial || usesTopRotation() || cuv.anyCustom()){
+		if(radius != 0f || radial || usesTopRotation() || cuv.anyCustom()){
 			CylinderBuilder builder = turbo.newCylinderBuilder().setPosition(off.xCoord, off.yCoord, off.zCoord)
 				.setRadius(radius, radius2).setLength(length).setSegments(segments, seglimit).setScale(base, top)
 				.setDirection(direction).setTopOffset(topoff).removePolygons(bools);
@@ -54,9 +54,9 @@ public class CylinderWrapper extends PolygonWrapper {
 			else builder.setTopRotation(toprot);
 			builder.build();
 		}
-		else if(radius2 != 0){
+		/*else if(radius2 != 0){
 			turbo.addHollowCylinder(off.xCoord, off.yCoord, off.zCoord, radius, radius2, length, segments, seglimit, base, top, direction, getTopOff(), bools);
-		}
+		}*/
 		else{
 			turbo.addCylinder(off.xCoord, off.yCoord, off.zCoord, radius, length, segments, base, top, direction, getTopOff());
 		}
