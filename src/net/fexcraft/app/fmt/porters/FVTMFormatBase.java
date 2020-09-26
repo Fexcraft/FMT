@@ -228,16 +228,27 @@ public abstract class FVTMFormatBase extends ExImPorter {
 					CylinderWrapper cyl = (CylinderWrapper)wrapper;
 					String topoff = cyl.topoff.xCoord != 0f || cyl.topoff.yCoord != 0f || cyl.topoff.zCoord != 0 ?
 						String.format("new net.fexcraft.lib.common.math.Vec3f(%s, %s, %s)", cyl.topoff.xCoord, cyl.topoff.yCoord, cyl.topoff.zCoord) : "null";
-					if(cyl.radial || cyl.usesTopRotation()){
+					if(cyl.radius2 != 0f || cyl.radial || cyl.usesTopRotation() || cyl.cuv.anyCustom()){
 						String toprot = String.format(".setTopRotation(new net.fexcraft.lib.common.math.Vec3f(%s, %s, %s))", cyl.toprot.xCoord, cyl.toprot.yCoord, cyl.toprot.zCoord);
-						String str = ".removePolygons(" + cyl.bools[0] + ", " + cyl.bools[1] + ", " + cyl.bools[2] + ", " + cyl.bools[3] + ")";
 						shape.append(format(".newCylinderBuilder()\n" + tab3 + ".setPosition(%s, %s, %s).setRadius(%s, %s).setLength(%s).setSegments(%s, %s)" + 
-							".setScale(%s, %s).setDirection(%s)\n" + tab3 + ".setRadialTexture(%s, %s)" + str + ".setTopOffset(%s)" + toprot + ".build()", topoff, 
+							".setScale(%s, %s).setDirection(%s)\n" + tab3 + ".setRadialTexture(%s, %s).setTopOffset(%s)" + toprot, topoff, 
 							wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord,
 							cyl.radius, cyl.radius2, cyl.length, cyl.segments, cyl.seglimit,
 							cyl.base, cyl.top, cyl.direction, cyl.seg_width, cyl.seg_height));
+						if(cyl.anySidesOff()){
+							String off = new String();
+							for(int i = 0; i < 6; i++){
+								if(cyl.bools[i]){
+									off += i + ", ";
+								}
+							}
+							off = off.substring(0, off.length() - 2);
+							shape.append("\n" + tab3 + ".removePolygons(" + off + ")");
+						}
+						appendCustomUV(cyl, shape);
+						shape.append(".build()");
 					}
-					else if(cyl.radius2 != 0f){
+					/*else if(cyl.radius2 != 0f){
 						if(areAll(cyl.bools, false)){
 							shape.append(format(".addHollowCylinder(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", topoff, 
 								wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord,
@@ -249,7 +260,7 @@ public abstract class FVTMFormatBase extends ExImPorter {
 								cyl.radius, cyl.radius2, cyl.length, cyl.segments, cyl.seglimit, cyl.base, cyl.top, cyl.direction);
 							shape.append(str + format(", %s)", cyl.bools));
 						}
-					}
+					}*/
 					else{
 						shape.append(format(".addCylinder(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", topoff, 
 							wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord,
@@ -286,25 +297,7 @@ public abstract class FVTMFormatBase extends ExImPorter {
 					off = off.substring(0, off.length() - 2);
 					shape.append("\n" + tab3 + ".removePolygons(" + off + ")");
 				}
-				for(UVCoords coord : wrapper.cuv.values()){
-					if(coord.automatic() || !wrapper.isFaceActive(coord.side())) continue;
-					String arr = new String();
-					for(int i = 0; i < coord.value().length; i++){
-						arr += coord.value()[i] + "f, ";
-					}
-					arr = arr.substring(0, arr.length() - 2);
-					shape.append("\n" + tab3 + ".setPolygonUV(" + coord.side().index() + ", new float[]{ " + arr + " })");
-				}
-				if(wrapper.anyFaceUVAbsolute()){
-					String det = new String();
-					for(UVCoords coord : wrapper.cuv.values()){
-						if(coord.absolute() && wrapper.isFaceActive(coord.side())){
-							det += coord.side().index() + ", ";
-						}
-					}
-					det = det.substring(0, det.length() - 2);
-					shape.append("\n" + tab3 + ".setDetachedUV(" + det + ")");
-				}
+				appendCustomUV(box, shape);
 				shape.append(".build()");
 			}
 			if(wrapper.pos.xCoord != 0f || wrapper.pos.yCoord != 0f || wrapper.pos.zCoord != 0f ||
@@ -343,6 +336,28 @@ public abstract class FVTMFormatBase extends ExImPorter {
 		if(append) buffer.append(tab2 + "//\n");
 	}
 
+	private void appendCustomUV(PolygonWrapper wrapper, StringBuffer shape){
+		for(UVCoords coord : wrapper.cuv.values()){
+			if(coord.automatic() || !wrapper.isFaceActive(coord.side())) continue;
+			String arr = new String();
+			for(int i = 0; i < coord.value().length; i++){
+				arr += coord.value()[i] + "f, ";
+			}
+			arr = arr.substring(0, arr.length() - 2);
+			shape.append("\n" + tab3 + ".setPolygonUV(" + coord.side().index() + ", new float[]{ " + arr + " })");
+		}
+		if(wrapper.anyFaceUVAbsolute()){
+			String det = new String();
+			for(UVCoords coord : wrapper.cuv.values()){
+				if(coord.absolute() && wrapper.isFaceActive(coord.side())){
+					det += coord.side().index() + ", ";
+				}
+			}
+			det = det.substring(0, det.length() - 2);
+			shape.append("\n" + tab3 + ".setDetachedUV(" + det + ")");
+		}
+	}
+
 	private String format(String string, String add, double r0, double r1, double r2){
 		return format(string, add, new float[]{ (float)r0, (float)r1, (float)r2});
 	}
@@ -353,13 +368,6 @@ public abstract class FVTMFormatBase extends ExImPorter {
 		if(add != null) strs[arr.length] = add; return String.format(string, strs);
 	}
 
-	private String format(String string, boolean[] bools){
-		String array = "new boolean[]{ %s }", out = "";
-		for(int i = 0; i < bools.length; i++){
-			out += bools[i]; if(i < bools.length - 1) out += ", ";
-		} return String.format(string, String.format(array, out));
-	}
-
 	protected String validateName(String name){
 		if(name == null || name.length() == 0) return "Unnamed"; /*String[] art = name.split(" ");
 		for(int i = 0; i < art.length; i++){
@@ -368,10 +376,6 @@ public abstract class FVTMFormatBase extends ExImPorter {
 		} name = ""; for(String str : art) name += str; return name;*/
 		//Making sure it starts upper-case, eventually CamelCase output.
 		return name.trim().replace(" ", "_").replaceAll("[^a-zA-Z0-9 _]", "");
-	}
-
-	private boolean areAll(boolean[] bools, boolean same){
-		for(boolean bool : bools) if(bool != same) return false; return true;
 	}
 
 
