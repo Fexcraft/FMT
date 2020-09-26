@@ -362,6 +362,12 @@ public class CylinderWrapper extends PolygonWrapper {
 		}
 	}
 
+	public boolean anySidesOff(){
+		boolean result = false;
+		for(boolean bool : bools) if(bool) result = true;
+		return result;
+	}
+
 	/*public Vec3f getTopOffForDir(float val){
 		Vec3f vec = new Vec3f();
 		switch(direction){
