@@ -5,10 +5,12 @@ import static net.fexcraft.app.fmt.ui.UserInterfaceUtils.show;
 import static net.fexcraft.app.fmt.utils.Logging.log;
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
+import org.apache.commons.io.FileUtils;
 import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.Dialog;
@@ -33,6 +35,7 @@ import net.fexcraft.app.fmt.ui.editor.PreviewEditor;
 import net.fexcraft.app.fmt.ui.field.TextField;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.HelperCollector;
+import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.fmt.utils.Setting;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.Translator;
@@ -372,7 +375,25 @@ public class TreeGroup extends Panel {
             Button button0 = new Button(Translator.translate("dialogbox.button.ok"), 10, 40, 100, 20);
             button0.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
             	if(CLICK == e.getAction()){
-            		texgroup.group = input.getTextState().getText();
+            		String newname = input.getTextState().getText();
+            		if(TextureManager.hasGroup(newname)){
+            			dialog.close();
+            			DialogBox.showOK(null, null, null, "tree.textures.rename.duplicate");
+            			return;
+            		}
+            		try{
+            			String oldname = texgroup.group;
+            			File file = new File("./temp/group-" + newname + ".png");
+						FileUtils.copyFile(texgroup.texture.getFile(), file);
+	            		texgroup.group = newname;
+	            		texgroup.loadTexture("group-" + newname, file);
+	            		TextureManager.removeTexture("group-" + oldname);
+	            		texgroup.reAssignTexture();
+					}
+					catch(IOException e1){
+						Logging.log(e1);
+	            		texgroup.group = newname;
+					}
             		GroupEditor.updateTextureGroups();
             		texgroup.button.update();
             		dialog.close();

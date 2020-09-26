@@ -291,6 +291,7 @@ tree.textures.resize.copyfrom=Copy from:
 tree.textures.resize.scale=Relative (Up)Scale: 
 tree.textures.rename=Rename Texture Group
 tree.textures.rename.dialog=Set new Texture Group Name/ID
+tree.textures.rename.duplicate=A group with that name exists already!
 tree.textures.remove_default=Default Model Texture Group can not be removed.
 tree.textures.remove_in_use=Texture Group is still in use!
 tree.textures.group_added=New Texture group added!

@@ -16,21 +16,12 @@ public class TextureGroup {
 	public Texture texture;
 	public TreeGroup button;
 	public boolean minimized;
+	public boolean helper;
 
 	public TextureGroup(String id, File file){
 		group = id;
 		String texid = "group-" + id;
-		if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
-		if(!file.exists()){
-			Texture texture = new Texture(texid, 256, 256);
-			log("Generated blank texgroup texture.");
-			texture.setFile(file);
-			TextureManager.putTexture(texid, texture);
-			TextureManager.saveTexture(texid);
-		}
-		if(!TextureManager.containsTexture(texid)){
-			TextureManager.loadTextureFromFile(texid, file);
-		}
+		loadTexture(texid, file);
 		texture = TextureManager.getTexture(texid, false);
 		button = new TreeGroup(Trees.textures, this);
 	}
@@ -54,6 +45,20 @@ public class TextureGroup {
 
 	public void reAssignTexture(){
 		texture = TextureManager.getTexture("group-" + group, false);
+	}
+
+	public void loadTexture(String texid, File file){
+		if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
+		if(!file.exists()){
+			Texture texture = new Texture(texid, 256, 256);
+			log("Generated blank texgroup texture.");
+			texture.setFile(file);
+			TextureManager.putTexture(texid, texture);
+			TextureManager.saveTexture(texid);
+		}
+		if(!TextureManager.containsTexture(texid)){
+			TextureManager.loadTextureFromFile(texid, file);
+		}
 	}
 
 }

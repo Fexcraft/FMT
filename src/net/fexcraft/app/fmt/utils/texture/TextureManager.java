@@ -122,7 +122,9 @@ public class TextureManager {
 	}
 
 	public static Texture removeTexture(String texture){
-		return TEXTURES.remove(texture);
+		Texture tex = TEXTURES.remove(texture);
+		log(String.format("Unloaded Texture (%-32s) [%s]", texture, tex.getFile()));
+		return tex;
 	}
 
 	public static void saveTexture(String texture){
