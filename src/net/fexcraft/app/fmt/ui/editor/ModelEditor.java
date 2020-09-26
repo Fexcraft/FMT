@@ -94,6 +94,7 @@ public class ModelEditor extends EditorBase {
 		model.getContainer().add(model_name = new TextField(FMTB.MODEL.name, 3, pass += 24, 290, 20));
 		model_name.addTextInputContentChangeEventListener(listener -> name_cache = UserInterfaceUtils.validateString(listener));
 		model_name.getListenerMap().addListener(FocusEvent.class, listener -> {
+			if(name_cache == null) return;
 			if(!listener.isFocused() && !name_cache.equals(FMTB.MODEL.name)) FMTB.get().setTitle(FMTB.MODEL.name = name_cache);
 			FMTB.MODEL.button.update();
 		});
