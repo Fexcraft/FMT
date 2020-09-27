@@ -314,6 +314,7 @@ public class UserInterfaceUtils {
 				if(bool) set(i, new File(Settings.SETTINGS.get("recent_file_" + i).getStringValue()));
 				File file = get(i);
 				String name = file.exists() && file.getName().endsWith(".fmtb") ? file.getName() : "...";
+				if(name.length() > 5) name = name.substring(0, name.length() - 5);
 				((Button)open_button.extension.getChildComponents().get(i)).getTextState().setText(name);
 			}
 		}
