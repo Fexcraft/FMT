@@ -326,9 +326,9 @@ public class UserInterfaceUtils {
 		}
 
 		public void insert(File file){
-			if(contains(file)) return;
+			if(contains(file)) remove(indexOf(file));
 			this.add(0, file);
-			while(size() > 10) this.remove(10);
+			while(size() > 10) remove(10);
 			load(false);
 			save();
 		}
