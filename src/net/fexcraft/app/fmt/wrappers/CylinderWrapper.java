@@ -236,7 +236,7 @@ public class CylinderWrapper extends PolygonWrapper {
 		if(!bools[2] && !absolute(2, exclude_detached)){
 			vecs[2] = new float[][]{
 				new float[]{ 0, height },
-				new float[]{ dia2, 0 + height + the }
+				new float[]{ dia2, height + the }
 			};
 			if(include_offsets && !cuv.get(CylFace.CYL_OUTER).automatic()){
 				vecs[2] = getCoords(CylFace.CYL_OUTER, vecs[2]);
@@ -244,10 +244,10 @@ public class CylinderWrapper extends PolygonWrapper {
 		}
 		if(radius2 != 0f){
 			if(!bools[3] && !absolute(3, exclude_detached)){
-				float hei = (detached(2) ? 0 : the);
+				float hei = detached(2) ? 0 : the;
 				vecs[3] = new float[][]{
 					new float[]{ 0, height + hei },
-					new float[]{ 0 + dia2, 0 + height + hei + the }
+					new float[]{ dia2, height + hei + the }
 				};
 				if(include_offsets && !cuv.get(CylFace.CYL_INNER).automatic()){
 					vecs[3] = getCoords(CylFace.CYL_INNER, vecs[3]);
