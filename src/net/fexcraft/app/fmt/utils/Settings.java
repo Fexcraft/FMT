@@ -194,6 +194,10 @@ public class Settings {
 		DEFAULTS.add(new Setting("vsync_half", false));
 		DEFAULTS.add(new Setting("rounding_digits", 4));
 		DEFAULTS.add(new Setting("decimal_sizes", false));
+		//
+		for(int i = 0; i < 10; i++){
+			DEFAULTS.add(new Setting("recent_file_" + i, "null"));
+		}
 	}
 
 	public static void load(){

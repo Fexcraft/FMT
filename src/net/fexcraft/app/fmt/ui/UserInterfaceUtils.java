@@ -2,6 +2,9 @@ package net.fexcraft.app.fmt.ui;
 
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
+import java.io.File;
+import java.util.ArrayList;
+
 import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.Dialog;
@@ -62,6 +65,8 @@ public class UserInterfaceUtils {
         okbutton.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> { if(CLICK == e.getAction()) dialog.close(); });
         dialog.getContainer().add(label); dialog.getContainer().add(okbutton); dialog.show(event.getFrame());
 	};
+	public static final RecentFiles RECENT_FILES = new RecentFiles();
+	public static MenuButton open_button;
 
 	@SuppressWarnings("restriction")
 	public static void addToolbarButtons(Frame frame){
@@ -75,7 +80,18 @@ public class UserInterfaceUtils {
 		frame.getContainer().add(new Icon(5, "./resources/textures/icons/toolbar/settings.png", () -> SettingsBox.openFMTSettings()));
 		frame.getContainer().add(new MenuEntry(0, Translator.translate("toolbar.file"),
 			new MenuButton("toolbar.file.new_model", () -> SaveLoad.openNewModel()),
-			new MenuButton("toolbar.file.open", () -> SaveLoad.openModel()),
+			open_button = new MenuButton("toolbar.file.open", () -> SaveLoad.openModel(),
+				new MenuSubButton("toolbar.file.open.recent", () -> RECENT_FILES.open(0), 200),
+				new MenuSubButton("toolbar.file.open.recent", () -> RECENT_FILES.open(1), 200),
+				new MenuSubButton("toolbar.file.open.recent", () -> RECENT_FILES.open(2), 200),
+				new MenuSubButton("toolbar.file.open.recent", () -> RECENT_FILES.open(3), 200),
+				new MenuSubButton("toolbar.file.open.recent", () -> RECENT_FILES.open(4), 200),
+				new MenuSubButton("toolbar.file.open.recent", () -> RECENT_FILES.open(5), 200),
+				new MenuSubButton("toolbar.file.open.recent", () -> RECENT_FILES.open(6), 200),
+				new MenuSubButton("toolbar.file.open.recent", () -> RECENT_FILES.open(7), 200),
+				new MenuSubButton("toolbar.file.open.recent", () -> RECENT_FILES.open(8), 200),
+				new MenuSubButton("toolbar.file.open.recent", () -> RECENT_FILES.open(9), 200)
+			),
 			new MenuButton("toolbar.file.save", () -> SaveLoad.saveModel(false, false)),
 			new MenuButton("toolbar.file.save_as", () -> SaveLoad.saveModel(true, false)),
 			new MenuButton("toolbar.file.import", () -> PorterManager.handleImport()),
@@ -84,6 +100,7 @@ public class UserInterfaceUtils {
 			new MenuButton("toolbar.file.donate", () -> FMTB.openLink("https://fexcraft.net/donate")),
 			new MenuButton("toolbar.file.exit",  () -> SaveLoad.checkIfShouldSave(true, false))
 		));
+		RECENT_FILES.load(true);
 		frame.getContainer().add(new MenuEntry(1, Translator.translate("toolbar.utils"),
 			new MenuButton("toolbar.utils.copy_selected", () -> FMTB.MODEL.copyAndSelect()),
 			new MenuButton("toolbar.utils.clipboard", null,
@@ -278,6 +295,43 @@ public class UserInterfaceUtils {
 
 	public static final void show(Component com){
 		com.getStyle().setDisplay(DisplayType.MANUAL);
+	}
+	
+	public static class RecentFiles extends ArrayList<File> {
+		
+		public RecentFiles(){
+			for(int i = 0; i < 10; i++) add(new File("..."));
+		}
+
+		public void open(int index){
+			File file = get(index);
+			if(!file.exists() || !file.getName().endsWith(".fmtb")) return;
+			SaveLoad.openModel(file);
+		}
+
+		public void load(boolean bool){
+			for(int i = 0; i < 10; i++){
+				if(bool) set(i, new File(Settings.SETTINGS.get("recent_file_" + i).getStringValue()));
+				File file = get(i);
+				String name = file.exists() && file.getName().endsWith(".fmtb") ? file.getName() : "...";
+				((Button)open_button.extension.getChildComponents().get(i)).getTextState().setText(name);
+			}
+		}
+		
+		public void save(){
+			for(int i = 0; i < 10; i++){
+				Settings.SETTINGS.get("recent_file_" + i).setValue(get(i).getAbsolutePath());
+			}
+		}
+
+		public void insert(File file){
+			if(contains(file)) return;
+			this.add(0, file);
+			while(size() > 10) this.remove(10);
+			load(false);
+			save();
+		}
+		
 	}
 
 }

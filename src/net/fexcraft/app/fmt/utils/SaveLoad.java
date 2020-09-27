@@ -32,6 +32,7 @@ import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.ui.FileSelector;
+import net.fexcraft.app.fmt.ui.UserInterfaceUtils;
 import net.fexcraft.app.fmt.ui.tree.Trees;
 import net.fexcraft.app.fmt.utils.Animator.Animation;
 import net.fexcraft.app.fmt.utils.texture.TextureGroup;
@@ -56,6 +57,7 @@ public class SaveLoad {
 			return;
 		}
 		try{
+			UserInterfaceUtils.RECENT_FILES.insert(file);
 			TextureManager.clearGroups();
 			ZipFile zip = new ZipFile(file);
 			boolean[] updatetree = { false };

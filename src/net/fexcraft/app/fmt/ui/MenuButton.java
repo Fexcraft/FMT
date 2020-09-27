@@ -20,7 +20,7 @@ import net.fexcraft.app.fmt.utils.Translator;
 public class MenuButton extends Button {
 
 	private MenuEntry entry;
-	private Extension extension;
+	protected Extension extension;
 	public static final ArrayList<Extension> EXTENSIONS = new ArrayList<>();
 
 	public MenuButton(String string, Runnable run, MenuSubButton... subs){
@@ -46,11 +46,13 @@ public class MenuButton extends Button {
 			}
 		});
 		if(subs == null || subs.length == 0) return;
-		extension = new Extension(this, MenuEntry.size, subs.length * MenuEntry.buttonheight);
+		int size = MenuEntry.size;
+		for(MenuSubButton sub : subs) if(sub.size > size) size = sub.size;
+		extension = new Extension(this, size, subs.length * MenuEntry.buttonheight);
 		extension.getStyle().setDisplay(DisplayType.NONE);
 		for(int index = 0; index < subs.length; index++){
 			MenuSubButton sub = subs[index];
-			Button button = new Button(sub.text, 0, index * MenuEntry.buttonheight, MenuEntry.size, MenuEntry.buttonheight);
+			Button button = new Button(sub.text, 0, index * MenuEntry.buttonheight, size, MenuEntry.buttonheight);
 			button.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)event -> {
 				if(event.getAction() == CLICK){
 					if(sub.run != null) sub.run.run();
@@ -113,10 +115,16 @@ public class MenuButton extends Button {
 		
 		public String text;
 		public Runnable run;
+		public int size;
 
 		public MenuSubButton(String string, Runnable run){
 			this.text = Translator.translate(string);
 			this.run = run;
+		}
+
+		public MenuSubButton(String string, Runnable run, int size){
+			this(string, run);
+			this.size = size;
 		}
 
 	}
