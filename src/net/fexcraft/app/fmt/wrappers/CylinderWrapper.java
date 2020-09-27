@@ -217,7 +217,7 @@ public class CylinderWrapper extends PolygonWrapper {
 		if(!bools[1] && !absolute(1, exclude_detached)){
 			if(radial){
 				vecs[1] = new float[][]{
-					new float[]{ 0, seg_height },
+					new float[]{ 0, height },
 					new float[]{ (seg_width * segments), seg_height }
 				};
 				height += seg_height;
