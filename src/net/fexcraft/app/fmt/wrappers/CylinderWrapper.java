@@ -32,7 +32,7 @@ public class CylinderWrapper extends PolygonWrapper {
 		wrapper.length = length; wrapper.base = base; wrapper.top = top;
 		wrapper.segments = segments; wrapper.direction = direction;
 		wrapper.seglimit = seglimit; wrapper.topoff = new Vec3f(topoff);
-		wrapper.bools = new boolean[]{ bools[0], bools[1], bools[2], bools[2] };
+		wrapper.bools = new boolean[]{ bools[0], bools[1], bools[2], bools[3], bools[4], bools[5] };
 		wrapper.radial = radial; wrapper.seg_width = seg_width; wrapper.seg_height = seg_height;
 		return wrapper;
 	}
