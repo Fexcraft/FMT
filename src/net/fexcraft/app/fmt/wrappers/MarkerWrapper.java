@@ -18,6 +18,7 @@ public class MarkerWrapper extends PolygonWrapper {
 	public int color, angle = -90;
 	public boolean biped, detached;
 	public float scale = 1;
+	public static RGB rgbcolor = new RGB();
 	
 	public MarkerWrapper(GroupCompound compound){
 		super(compound);
@@ -42,7 +43,10 @@ public class MarkerWrapper extends PolygonWrapper {
 				return;
 			}
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
+			rgbcolor.packed = color;
+			rgbcolor.glColorApply();
 			turbo.render();
+			RGB.glColorReset();
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			if(biped){
 				RGB.glColorReset();
