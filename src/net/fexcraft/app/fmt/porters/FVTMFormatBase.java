@@ -353,8 +353,10 @@ public abstract class FVTMFormatBase extends ExImPorter {
 					det += coord.side().index() + ", ";
 				}
 			}
-			det = det.substring(0, det.length() - 2);
-			shape.append("\n" + tab3 + ".setDetachedUV(" + det + ")");
+			if(det.contains(",")){
+				det = det.substring(0, det.length() - 2);
+				shape.append("\n" + tab3 + ".setDetachedUV(" + det + ")");
+			}
 		}
 	}
 
