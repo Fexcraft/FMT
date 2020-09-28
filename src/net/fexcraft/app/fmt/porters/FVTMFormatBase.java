@@ -230,11 +230,20 @@ public abstract class FVTMFormatBase extends ExImPorter {
 						String.format("new net.fexcraft.lib.common.math.Vec3f(%s, %s, %s)", cyl.topoff.xCoord, cyl.topoff.yCoord, cyl.topoff.zCoord) : "null";
 					if(cyl.radius2 != 0f || cyl.radial || cyl.usesTopRotation() || cyl.cuv.anyCustom()){
 						String toprot = String.format(".setTopRotation(new net.fexcraft.lib.common.math.Vec3f(%s, %s, %s))", cyl.toprot.xCoord, cyl.toprot.yCoord, cyl.toprot.zCoord);
-						shape.append(format(".newCylinderBuilder()\n" + tab3 + ".setPosition(%s, %s, %s).setRadius(%s, %s).setLength(%s).setSegments(%s, %s)" + 
-							".setScale(%s, %s).setDirection(%s)\n" + tab3 + ".setRadialTexture(%s, %s).setTopOffset(%s)" + toprot, topoff, 
-							wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord,
-							cyl.radius, cyl.radius2, cyl.length, cyl.segments, cyl.seglimit,
-							cyl.base, cyl.top, cyl.direction, cyl.seg_width, cyl.seg_height));
+						if(cyl.radial){
+							shape.append(format(".newCylinderBuilder()\n" + tab3 + ".setPosition(%s, %s, %s).setRadius(%s, %s).setLength(%s).setSegments(%s, %s)" + 
+								".setScale(%s, %s).setDirection(%s)\n" + tab3 + ".setRadialTexture(%s, %s).setTopOffset(%s)" + toprot, topoff, 
+								wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord,
+								cyl.radius, cyl.radius2, cyl.length, cyl.segments, cyl.seglimit,
+								cyl.base, cyl.top, cyl.direction, cyl.seg_width, cyl.seg_height));
+						}
+						else{
+							shape.append(format(".newCylinderBuilder()\n" + tab3 + ".setPosition(%s, %s, %s).setRadius(%s, %s).setLength(%s).setSegments(%s, %s)" + 
+								".setScale(%s, %s).setDirection(%s)\n" + tab3 + ".setTopOffset(%s)" + toprot, topoff, 
+								wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord,
+								cyl.radius, cyl.radius2, cyl.length, cyl.segments, cyl.seglimit,
+								cyl.base, cyl.top, cyl.direction));
+						}
 						if(cyl.anySidesOff()){
 							String off = new String();
 							for(int i = 0; i < 6; i++){
