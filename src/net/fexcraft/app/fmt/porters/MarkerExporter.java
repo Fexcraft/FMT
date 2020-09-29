@@ -33,6 +33,8 @@ public class MarkerExporter extends ExImPorter {
 	
 	private static final String[] extensions = new String[]{ "Marker List File", "*.txt", "*.json" };
 	private static final ArrayList<Setting> settings = new ArrayList<>();
+	private static List<PolygonWrapper> markers;
+	private static List<TurboList> groups;
 	
 	public MarkerExporter(){
 		settings.add(new StringArraySetting("type",
@@ -54,16 +56,16 @@ public class MarkerExporter extends ExImPorter {
 		StringBuffer buffer = new StringBuffer();
 		Appender type = Appender.valueOf(settings.get("type").getStringValue().toUpperCase());
 		boolean selected = settings.get("selected-only").getBooleanValue();
+		groups = selected ? compound.getGroups().stream().filter(g -> g.selected).collect(Collectors.toList()) : compound.getGroups();
 		if(type == Appender.FVTM_SEAT_JSON){
 			JsonObject obj = new JsonObject();
 			obj.addProperty("__comment", "FVTM Seat List // FMT version: " + FMTB.VERSION);
-			for(TurboList list : compound.getGroups()){
-				if(selected && !list.selected) continue;
-				List<PolygonWrapper> coll = list.stream().filter(pre -> pre instanceof MarkerWrapper).collect(Collectors.toList());
-				if(!coll.isEmpty()){
+			for(TurboList list : groups){
+				markers = list.stream().filter(pre -> pre instanceof MarkerWrapper).collect(Collectors.toList());
+				if(!markers.isEmpty()){
 					JsonArray array = new JsonArray();
-					for(int i = 0; i < coll.size(); i++){
-						MarkerWrapper marker = (MarkerWrapper)coll.get(i);
+					for(int i = 0; i < markers.size(); i++){
+						MarkerWrapper marker = (MarkerWrapper)markers.get(i);
 						String name = marker.name == null ? "seat" + i : marker.name();
 						JsonObject seat = new JsonObject();
 						seat.addProperty("x", marker.pos.xCoord);
@@ -82,10 +84,9 @@ public class MarkerExporter extends ExImPorter {
 		buffer.append(type.title());
 		buffer.append("# Model: " + (compound.name == null ? "unnamed" : compound.name.toLowerCase()) + "\n\n");
 		buffer.append(type.start());
-		for(TurboList list : compound.getGroups()){
-			if(selected && !list.selected) continue;
-			List<PolygonWrapper> coll = list.stream().filter(pre -> pre instanceof MarkerWrapper).collect(Collectors.toList());
-			if(!coll.isEmpty()){
+		for(TurboList list : groups){
+			markers = list.stream().filter(pre -> pre instanceof MarkerWrapper).collect(Collectors.toList());
+			if(!markers.isEmpty()){
 				buffer.append(type.group_prefix(list));
 				for(PolygonWrapper wrapper : list){
 					buffer.append(type.polygon(list, wrapper));
@@ -223,7 +224,7 @@ public class MarkerExporter extends ExImPorter {
 
 			@Override
 			public String start(){
-				return "\"slots\":[\n";
+				return "\t\t\"slots\":[\n";
 			}
 
 			@Override
@@ -233,7 +234,9 @@ public class MarkerExporter extends ExImPorter {
 
 			@Override
 			protected String polygon(TurboList list, PolygonWrapper wrapper){
-				return String.format("\t[ %s, %s, %s, \"%s\", \"%s\"],\n", nmz(wrapper.pos.zCoord / 16), nmz(-wrapper.pos.yCoord / 16), nmz(wrapper.pos.xCoord / 16), list.id, wrapper.name());
+				String str = String.format("\t\t\t[ %s, %s, %s, \"%s\", \"%s\"],\n", nmz(wrapper.pos.zCoord / 16), nmz(-wrapper.pos.yCoord / 16), nmz(wrapper.pos.xCoord / 16), list.id, wrapper.name());
+				if(groups.indexOf(list) == groups.size() - 1 && markers.indexOf(wrapper) == markers.size() - 1) str = str.substring(0, str.length() - 2) + "\n";
+				return str;
 			}
 
 			@Override
@@ -243,7 +246,7 @@ public class MarkerExporter extends ExImPorter {
 
 			@Override
 			protected String end(){
-				return "}";
+				return "\t\t]";
 			}
 			
 		},
