@@ -35,7 +35,13 @@ public class MarkerExporter extends ExImPorter {
 	private static final ArrayList<Setting> settings = new ArrayList<>();
 	
 	public MarkerExporter(){
-		settings.add(new StringArraySetting("type", "normal", "fvtm_seats_json", "tsiv_coords"));
+		settings.add(new StringArraySetting("type",
+			Appender.NORMAL.name().toLowerCase(),
+			Appender.FVTM_SEAT_JSON.name().toLowerCase(),
+			Appender.FVTM_PART_SLOTS.name().toLowerCase(),
+			Appender.TSIV_COORDS.name().toLowerCase()
+		));
+		settings.add(new Setting("selected-only", false));
 	}
 
 	@Override
@@ -46,11 +52,13 @@ public class MarkerExporter extends ExImPorter {
 	@Override
 	public String exportModel(GroupCompound compound, File file, Map<String, Setting> settings){
 		StringBuffer buffer = new StringBuffer();
-		String type = settings.get("type").getStringValue();
-		if(type.equals("fvtm_seats_json")){
+		Appender type = Appender.valueOf(settings.get("type").getStringValue().toUpperCase());
+		boolean selected = settings.get("selected-only").getBooleanValue();
+		if(type == Appender.FVTM_SEAT_JSON){
 			JsonObject obj = new JsonObject();
 			obj.addProperty("__comment", "FVTM Seat List // FMT version: " + FMTB.VERSION);
 			for(TurboList list : compound.getGroups()){
+				if(selected && !list.selected) continue;
 				List<PolygonWrapper> coll = list.stream().filter(pre -> pre instanceof MarkerWrapper).collect(Collectors.toList());
 				if(!coll.isEmpty()){
 					JsonArray array = new JsonArray();
@@ -70,22 +78,22 @@ public class MarkerExporter extends ExImPorter {
 			JsonUtil.write(file, obj);
 			return "Success!";
 		}
-		boolean tsiv = type.equals("tsiv_coords");
 		buffer.append("# FMT Marker List // FMT version: " + FMTB.VERSION + "\n");
-		if(tsiv) buffer.append("# TS/IV Corrected Export Mode\n");
+		buffer.append(type.title());
 		buffer.append("# Model: " + (compound.name == null ? "unnamed" : compound.name.toLowerCase()) + "\n\n");
+		buffer.append(type.start());
 		for(TurboList list : compound.getGroups()){
+			if(selected && !list.selected) continue;
 			List<PolygonWrapper> coll = list.stream().filter(pre -> pre instanceof MarkerWrapper).collect(Collectors.toList());
 			if(!coll.isEmpty()){
-				buffer.append("# Group: " + list.id + "\n");
+				buffer.append(type.group_prefix(list));
 				for(PolygonWrapper wrapper : list){
-					if(tsiv){
-						buffer.append(String.format("\"pos\": [ %s, %s, %s],\n", nmz(wrapper.pos.zCoord / 16), nmz(-wrapper.pos.yCoord / 16), nmz(wrapper.pos.xCoord / 16)));
-					}
-					else buffer.append(wrapper.name() + ": " + wrapper.pos.xCoord + ", " + wrapper.pos.yCoord + ", " + wrapper.pos.zCoord + ";\n");
+					buffer.append(type.polygon(list, wrapper));
 				}
+				buffer.append(type.group_suffix(list));
 			}
 		}
+		buffer.append(type.end());
 		//
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
@@ -98,7 +106,7 @@ public class MarkerExporter extends ExImPorter {
 		return "Success!";
 	}
 
-	private String nmz(float f){
+	protected static String nmz(float f){
 		if(f > 0 || f < 0) return f + "";
 		return "0";
 	}
@@ -136,6 +144,156 @@ public class MarkerExporter extends ExImPorter {
 	@Override
 	public String[] getCategories(){
 		return new String[]{ "marker", "config" };
+	}
+	
+	public static enum Appender {
+		
+		NORMAL {
+
+			@Override
+			public String title(){
+				return "";
+			}
+
+			@Override
+			public String start(){
+				return "";
+			}
+
+			@Override
+			protected String group_prefix(TurboList list){
+				return "# Group: " + list.id + "\n";
+			}
+
+			@Override
+			protected String polygon(TurboList list, PolygonWrapper wrapper){
+				return wrapper.name() + ": " + wrapper.pos.xCoord + ", " + wrapper.pos.yCoord + ", " + wrapper.pos.zCoord + ";\n";
+			}
+
+			@Override
+			protected String group_suffix(TurboList list){
+				return "";
+			}
+
+			@Override
+			protected String end(){
+				return "";
+			}
+			
+		},
+		FVTM_SEAT_JSON {
+
+			@Override
+			public String title(){
+				return "";
+			}
+
+			@Override
+			public String start(){
+				return "";
+			}
+
+			@Override
+			protected String group_prefix(TurboList list){
+				return "";
+			}
+
+			@Override
+			protected String polygon(TurboList list, PolygonWrapper wrapper){
+				return "";
+			}
+
+			@Override
+			protected String group_suffix(TurboList list){
+				return "";
+			}
+
+			@Override
+			protected String end(){
+				return "";
+			}
+			
+		},
+		FVTM_PART_SLOTS {
+
+			@Override
+			public String title(){
+				return "";
+			}
+
+			@Override
+			public String start(){
+				return "\"slots\":[\n";
+			}
+
+			@Override
+			protected String group_prefix(TurboList list){
+				return "";
+			}
+
+			@Override
+			protected String polygon(TurboList list, PolygonWrapper wrapper){
+				return String.format("\t[ %s, %s, %s, \"%s\", \"%s\"],\n", nmz(wrapper.pos.zCoord / 16), nmz(-wrapper.pos.yCoord / 16), nmz(wrapper.pos.xCoord / 16), list.id, wrapper.name());
+			}
+
+			@Override
+			protected String group_suffix(TurboList list){
+				return "";
+			}
+
+			@Override
+			protected String end(){
+				return "}";
+			}
+			
+		},
+		TSIV_COORDS {
+
+			@Override
+			public String title(){
+				return "# TS/IV Corrected Export Mode\n";
+			}
+
+			@Override
+			public String start(){
+				return "";
+			}
+
+			@Override
+			protected String group_prefix(TurboList list){
+				return "# Group: " + list.id + "\n";
+			}
+
+			@Override
+			protected String polygon(TurboList list, PolygonWrapper wrapper){
+				return String.format("\"pos\": [ %s, %s, %s],\n", nmz(wrapper.pos.zCoord / 16), nmz(-wrapper.pos.yCoord / 16), nmz(wrapper.pos.xCoord / 16));
+			}
+
+			@Override
+			protected String group_suffix(TurboList list){
+				return "";
+			}
+
+			@Override
+			protected String end(){
+				return "";
+			}
+			
+		},
+		;
+		
+		public abstract String title();
+
+		protected abstract String start();
+
+		protected abstract String polygon(TurboList list, PolygonWrapper wrapper);
+
+		protected abstract String group_suffix(TurboList list);
+
+		protected abstract String group_prefix(TurboList list);
+		
+		protected abstract String end();
+		
 	}
 
 }
