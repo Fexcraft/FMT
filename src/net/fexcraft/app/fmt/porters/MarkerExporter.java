@@ -234,7 +234,7 @@ public class MarkerExporter extends ExImPorter {
 
 			@Override
 			protected String polygon(TurboList list, PolygonWrapper wrapper){
-				String str = String.format("\t\t\t[ %s, %s, %s, \"%s\", \"%s\"],\n", nmz(wrapper.pos.zCoord / 16), nmz(-wrapper.pos.yCoord / 16), nmz(wrapper.pos.xCoord / 16), list.id, wrapper.name());
+				String str = String.format("\t\t\t[ %s, %s, %s, \"%s\", \"%s\"],\n", wrapper.pos.zCoord, wrapper.pos.yCoord, wrapper.pos.xCoord, list.id, wrapper.name());
 				if(groups.indexOf(list) == groups.size() - 1 && markers.indexOf(wrapper) == markers.size() - 1) str = str.substring(0, str.length() - 2) + "\n";
 				return str;
 			}
