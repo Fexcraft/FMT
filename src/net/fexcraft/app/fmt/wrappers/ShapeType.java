@@ -5,7 +5,8 @@ public enum ShapeType {
 	BOX("rect"), SHAPEBOX("rect"), TEXRECT_B("rect"), TEXRECT_A("rect"),
 	FLEXBOX("flexrect"), TRAPEZOID("flexrect"), FLEXTRAPEZOID("flexrect"),
 	CYLINDER("cylinder"), SPHERE("sphere"), OBJ("obj"), MARKER("marker"),
-	QUAD("rect"), SHAPEQUAD("rect"), VOXEL("voxel"), BB("rect");
+	QUAD("rect"), SHAPEQUAD("rect"), VOXEL("voxel"), BB("rect"),
+	SHAPE3D("shape");
 	
 	private String conversion_group;
 	
@@ -52,6 +53,9 @@ public enum ShapeType {
 	public boolean isBoundingBox(){
 		return this == BB;
 	}
+	public boolean isShape3D(){
+		return this == SHAPE3D;
+	}
 
 	public static ShapeType get(String text){
 		text = text.toLowerCase();
@@ -71,6 +75,7 @@ public enum ShapeType {
 			case "quad": return QUAD;
 			case "shapequad": return SHAPEQUAD;
 			case "boundingbox": return BB;
+			case "shape3d": return SHAPE3D;
 			default: return null;
 		}
 	}
@@ -80,11 +85,11 @@ public enum ShapeType {
 	}
 
 	public static ShapeType[] getSupportedValues(){
-		return new ShapeType[]{ BOX, SHAPEBOX, CYLINDER, MARKER, VOXEL, BB };
+		return new ShapeType[]{ BOX, SHAPEBOX, CYLINDER, MARKER, VOXEL, BB, SHAPE3D };
 	}
 
 	public boolean isTexturable(){
-		return this.isShapebox() || this == BOX || this == CYLINDER;
+		return this.isShapebox() || this == BOX || this == CYLINDER || this == SHAPE3D;
 	}
 
 }
