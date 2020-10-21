@@ -3,7 +3,6 @@ package net.fexcraft.app.fmt.porters;
 import static net.fexcraft.app.fmt.utils.Logging.log;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -64,6 +63,7 @@ public class DFMImporter extends ExImPorter {
 			return compound;
 		}
         boolean degrees = settings.get("degree based").getBooleanValue();
+        String line = null;
         try{
             Scanner scanner = new Scanner(file);
             Pattern creator = Pattern.compile("\\/\\/ Model Creator: (.*)");
@@ -76,105 +76,109 @@ public class DFMImporter extends ExImPorter {
             Pattern rotangle = Pattern.compile("(.*)\\[(\\d+)\\]\\." + component + "(.) = (\\d)+F;");
             ArrayList<TemporaryPolygon> polis = new ArrayList<>();
             while(scanner.hasNext()){
-            	String line = scanner.nextLine().trim();
-            	if(line.length() < 2) continue;
-            	if(line.startsWith("public class")){
-            		compound.name = line.split(" ")[2].substring(5);
-            		continue;
+            	try{
+                	line = scanner.nextLine().trim();
+                	if(line.length() < 2) continue;
+                	if(line.startsWith("public class")){
+                		compound.name = line.split(" ")[2].substring(5);
+                		continue;
+                	}
+                	if(line.startsWith("int textureX")){
+                		compound.textureSizeX = parseI(line.split(" ")[3]);
+                		continue;
+                	}
+                	if(line.startsWith("int textureY")){
+                		compound.textureSizeY = parseI(line.split(" ")[3]);
+                		continue;
+                	}
+                	Matcher matcher = groupdef.matcher(line);
+                	if(matcher.matches()){
+                		compound.getGroups().add(new TurboList(matcher.group(1)));
+                		continue;
+                	}
+                	matcher = creator.matcher(line);
+                	if(matcher.matches()){
+                		compound.addAuthor(matcher.group(1), false, true);
+                		continue;
+                	}
+                	matcher = declaration.matcher(line);
+                	if(matcher.matches()){
+                		TemporaryPolygon poly = new TemporaryPolygon();
+                		poly.group = matcher.group(1);
+                		poly.index = parseI(matcher.group(2));
+                		poly.u = parseI(matcher.group(3));
+                		poly.v = parseI(matcher.group(4));
+                		poly.name = matcher.group(5).replace(" // ", "");
+                		polis.add(poly);
+                		continue;
+                	}
+                	matcher = box.matcher(line);
+                	if(matcher.matches()){
+                		boolean shapebox = line.contains("ShapeBox");
+                		TemporaryPolygon poly = get(matcher.group(1), matcher.group(2), polis);
+                		String[] array = matcher.group(3).split(", ");
+                		if(shapebox){
+                			ShapeboxWrapper wrapper = new ShapeboxWrapper(compound);
+                			poly.wrapper = wrapper;
+                			wrapper.cor0 = newVec3f(array[7], array[8], array[9]);
+                			wrapper.cor1 = newVec3f(array[10], array[11], array[12]);
+                			wrapper.cor2 = newVec3f(array[13], array[14], array[15]);
+                			wrapper.cor3 = newVec3f(array[16], array[17], array[18]);
+                			wrapper.cor4 = newVec3f(array[19], array[20], array[21]);
+                			wrapper.cor5 = newVec3f(array[22], array[23], array[24]);
+                			wrapper.cor6 = newVec3f(array[25], array[26], array[27]);
+                			wrapper.cor7 = newVec3f(array[28], array[29], array[30]);
+                		}
+                		else{
+                			poly.wrapper = new BoxWrapper(compound);
+                		}
+                		((BoxWrapper)poly.wrapper).size = newVec3f(array[3], array[4], array[5]);
+                		poly.wrapper.off = newVec3f(array[0], array[1], array[2]);
+                		poly.wrapper.name = poly.name;
+                		poly.wrapper.textureX = poly.u;
+                		poly.wrapper.textureY = poly.v;
+                		compound.add(poly.wrapper, poly.group, false);
+                		continue;
+                	}
+                	matcher = rotpoint.matcher(line);
+                	if(matcher.matches()){
+                		TemporaryPolygon poly = get(matcher.group(1), matcher.group(2), polis);
+                		String[] array = matcher.group(3).split(", ");
+                		poly.wrapper.pos = newVec3f(array[0], array[1], array[2]);
+                		continue;
+                	}
+                	matcher = pospoint.matcher(line);
+                	if(matcher.matches()){
+                		TemporaryPolygon poly = get(matcher.group(1), matcher.group(2), polis);
+                		String[] array = matcher.group(3).split(", ");
+                		poly.wrapper.pos = newVec3f(array[0], array[1], array[2]);
+                		continue;
+                	}
+                	matcher = rotangle.matcher(line);
+                	if(matcher.matches()){
+                		TemporaryPolygon poly = get(matcher.group(1), matcher.group(2), polis);
+                		String axis = matcher.group(3).toLowerCase();
+                		float value = parseF(matcher.group(4));
+                		switch(axis){
+                			case "x":{
+                				poly.wrapper.rot.xCoord = degrees ? value : (float)Math.toDegrees(value);
+                				break;
+                			}
+                			case "y":{
+                				poly.wrapper.rot.yCoord = degrees ? value : (float)Math.toDegrees(value);
+                				break;
+                			}
+                			case "z":{
+                				poly.wrapper.rot.zCoord = degrees ? value : (float)Math.toDegrees(value);
+                				break;
+                			}
+                		}
+                		continue;
+                	}
             	}
-            	if(line.startsWith("int textureX")){
-            		compound.textureSizeX = parseI(line.split(" ")[3]);
-            		continue;
-            	}
-            	if(line.startsWith("int textureY")){
-            		compound.textureSizeY = parseI(line.split(" ")[3]);
-            		continue;
-            	}
-            	Matcher matcher = groupdef.matcher(line);
-            	if(matcher.matches()){
-            		compound.getGroups().add(new TurboList(matcher.group(1)));
-            		continue;
-            	}
-            	matcher = creator.matcher(line);
-            	if(matcher.matches()){
-            		compound.addAuthor(matcher.group(1), false, true);
-            		continue;
-            	}
-            	matcher = declaration.matcher(line);
-            	if(matcher.matches()){
-            		TemporaryPolygon poly = new TemporaryPolygon();
-            		poly.group = matcher.group(1);
-            		poly.index = parseI(matcher.group(2));
-            		poly.u = parseI(matcher.group(3));
-            		poly.v = parseI(matcher.group(4));
-            		poly.name = matcher.group(5).replace(" // ", "");
-            		polis.add(poly);
-            		continue;
-            	}
-            	matcher = box.matcher(line);
-            	if(matcher.matches()){
-            		boolean shapebox = line.contains("ShapeBox");
-            		TemporaryPolygon poly = get(matcher.group(1), matcher.group(2), polis);
-            		String[] array = matcher.group(3).split(", ");
-            		if(shapebox){
-            			ShapeboxWrapper wrapper = new ShapeboxWrapper(compound);
-            			poly.wrapper = wrapper;
-            			wrapper.cor0 = newVec3f(array[7], array[8], array[9]);
-            			wrapper.cor1 = newVec3f(array[10], array[11], array[12]);
-            			wrapper.cor2 = newVec3f(array[13], array[14], array[15]);
-            			wrapper.cor3 = newVec3f(array[16], array[17], array[18]);
-            			wrapper.cor4 = newVec3f(array[19], array[20], array[21]);
-            			wrapper.cor5 = newVec3f(array[22], array[23], array[24]);
-            			wrapper.cor6 = newVec3f(array[25], array[26], array[27]);
-            			wrapper.cor7 = newVec3f(array[28], array[29], array[30]);
-            		}
-            		else{
-            			poly.wrapper = new BoxWrapper(compound);
-            		}
-            		((BoxWrapper)poly.wrapper).size = newVec3f(array[3], array[4], array[5]);
-            		poly.wrapper.off = newVec3f(array[0], array[1], array[2]);
-            		poly.wrapper.name = poly.name;
-            		poly.wrapper.textureX = poly.u;
-            		poly.wrapper.textureY = poly.v;
-            		compound.add(poly.wrapper, poly.group, false);
-            		continue;
-            	}
-            	matcher = rotpoint.matcher(line);
-            	if(matcher.matches()){
-            		TemporaryPolygon poly = get(matcher.group(1), matcher.group(2), polis);
-            		String[] array = matcher.group(3).split(", ");
-            		poly.wrapper.pos = newVec3f(array[0], array[1], array[2]);
-            		continue;
-            		
-            	}
-            	matcher = pospoint.matcher(line);
-            	if(matcher.matches()){
-            		TemporaryPolygon poly = get(matcher.group(1), matcher.group(2), polis);
-            		String[] array = matcher.group(3).split(", ");
-            		poly.wrapper.pos = newVec3f(array[0], array[1], array[2]);
-            		continue;
-            		
-            	}
-            	matcher = rotangle.matcher(line);
-            	if(matcher.matches()){
-            		TemporaryPolygon poly = get(matcher.group(1), matcher.group(2), polis);
-            		String axis = matcher.group(3).toLowerCase();
-            		float value = parseF(matcher.group(4));
-            		switch(axis){
-            			case "x":{
-            				poly.wrapper.rot.xCoord = degrees ? value : (float)Math.toDegrees(value);
-            				break;
-            			}
-            			case "y":{
-            				poly.wrapper.rot.yCoord = degrees ? value : (float)Math.toDegrees(value);
-            				break;
-            			}
-            			case "z":{
-            				poly.wrapper.rot.zCoord = degrees ? value : (float)Math.toDegrees(value);
-            				break;
-            			}
-            		}
-            		continue;
+            	catch(Exception e){
+                	log("Parsing error at line: " + line);
+                	continue;
             	}
             }
             /*if(!compound.creators.contains(SessionHandler.getUserName())){
@@ -184,10 +188,10 @@ public class DFMImporter extends ExImPorter {
         	scanner.close();
             return compound;
         }
-        catch(IOException e){
+        catch(Exception e){
         	//shouldn't happen, but still.
         	log(e);
-        	return null;
+        	return compound;
         }
 	}
 	
