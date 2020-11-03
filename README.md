@@ -70,7 +70,7 @@ FCL is licensed under http://fexcraft.net/license?id=mods (till/if it's respecti
   Check out TurboDefender's instructions [here](https://gist.github.com/RishiMenon2004/4343dc7debbd44379a8f43e930bd3218)!
 
 ### Java Version (important)
-FMT was compiled under Java 8, in some causes people reported FMT not working on Java 9+.    
+FMT was compiled under Java 8, in some cases people reported FMT not working on Java 9+.    
 Please try running first under Java 8 if you have it installed.
 Otherwise try Java 15+, recently it was reported that FMT works again under Java 15+.
 
