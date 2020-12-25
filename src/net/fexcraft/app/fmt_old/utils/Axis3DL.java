@@ -1,4 +1,4 @@
-package net.fexcraft.app.fmt.utils;
+package net.fexcraft.app.fmt_old.utils;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -16,21 +16,21 @@ public class Axis3DL implements AxisRotator {
     
     @Override public String toString(){ return "[ " + yaw + "y, " + pitch + "p, " + roll + "r ]";  }
     
-    public Vector3f getRelativeVector(float x, float y, float z){
+    public Vec3f getRelativeVector(float x, float y, float z){
         Matrix4f mat = new Matrix4f(); mat.m00(x); mat.m10(y); mat.m20(z);
         mat.rotate(roll  * 3.14159265F / 180f, new Vector3f(1F, 0F, 0F), mat);
         mat.rotate(pitch * 3.14159265F / 180f, new Vector3f(0F, 0F, 1F), mat);
         mat.rotate(yaw   * 3.14159265F / 180f, new Vector3f(0F, 1F, 0F), mat);
-        return new Vector3f(mat.m00(), mat.m10(), mat.m20());
+        return new Vec3f(mat.m00(), mat.m10(), mat.m20());
     }
     
-    public Vector3f getRelativeVector(Vector3f vec){
+    public Vec3f getRelativeVector(Vec3f vec){
         Matrix4f mat = new Matrix4f();
-        mat.m00(vec.x); mat.m10(vec.y); mat.m20(vec.z);
+        mat.m00(vec.xCoord); mat.m10(vec.yCoord); mat.m20(vec.zCoord);
         mat.rotate(roll  * 3.14159265F / 180f, new Vector3f(1F, 0F, 0F), mat);
         mat.rotate(pitch * 3.14159265F / 180f, new Vector3f(0F, 0F, 1F), mat);
         mat.rotate(yaw   * 3.14159265F / 180f, new Vector3f(0F, 1F, 0F), mat);
-        return new Vector3f(mat.m00(), mat.m10(), mat.m20());
+        return new Vec3f(mat.m00(), mat.m10(), mat.m20());
     }
 
     private final void convertMatrixToAngles(){
@@ -50,11 +50,5 @@ public class Axis3DL implements AxisRotator {
     public void setAngles(float yaw, float pitch, float roll){
         this.yaw = yaw; this.pitch = pitch; this.roll = roll; convertToMatrix(false);
     }
-
-	@Override
-	public Vec3f getRelativeVector(Vec3f v){
-		Vector3f vec = getRelativeVector(v.xCoord, v.yCoord, v.zCoord);
-		return new Vec3f(vec.x, vec.y, vec.z);
-	}
 
 }
