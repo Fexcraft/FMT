@@ -94,9 +94,6 @@ public class Settings {
 			));
 		}
 		if(FMT.FRAME != null) Themes.getDefaultTheme().applyAll(FMT.FRAME);
-	}
-
-	public static void updateTheme(){
 		THEME_CHANGE_LISTENERS.forEach(listener -> listener.accept(seltheme));
 	}
 
