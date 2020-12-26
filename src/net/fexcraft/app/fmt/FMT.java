@@ -7,7 +7,17 @@ import static org.lwjgl.opengl.GL11.GL_TRUE;
 import java.io.File;
 
 import org.joml.Vector4f;
+import org.liquidengine.legui.animation.AnimatorProvider;
 import org.liquidengine.legui.component.Frame;
+import org.liquidengine.legui.listener.processor.EventProcessorProvider;
+import org.liquidengine.legui.system.context.CallbackKeeper;
+import org.liquidengine.legui.system.context.Context;
+import org.liquidengine.legui.system.context.DefaultCallbackKeeper;
+import org.liquidengine.legui.system.handler.processor.SystemEventProcessor;
+import org.liquidengine.legui.system.handler.processor.SystemEventProcessorImpl;
+import org.liquidengine.legui.system.layout.LayoutManager;
+import org.liquidengine.legui.system.renderer.Renderer;
+import org.liquidengine.legui.system.renderer.nvg.NvgRenderer;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
@@ -42,6 +52,8 @@ public class FMT {
 	private long window;
 	//
 	public static Frame FRAME, SS_FRAME;
+	public static Context CONTEXT;
+	public static Renderer RENDERER;
 	
 	public static void main(String... args) throws Exception {
 		log("==================================================");
@@ -87,25 +99,45 @@ public class FMT {
 		//TODO camcon = new GGR(0, 20, 0, Static.PI + -Static.rad45, -Static.rad30);
 		AxisRotator.setDefImpl(Axis3DL.class);
 		Settings.applyTheme();
-		Settings.updateTheme();
 		FRAME = new Frame(WIDTH, HEIGHT);
-		
-		
+		//TODO interface
+		CONTEXT = new Context(window);
+		FRAME.getComponentLayer().setFocusable(false);
+		CallbackKeeper keeper = new DefaultCallbackKeeper();
+		CallbackKeeper.registerCallbacks(window, keeper);
+		//TODO callbacks
+		SystemEventProcessor systemEventProcessor = new SystemEventProcessorImpl();
+		SystemEventProcessor.addDefaultCallbacks(keeper, systemEventProcessor);
+		RENDERER = new NvgRenderer();
+		RENDERER.initialize();
+		//TODO load previous model
+		//TODO session, updates, keybinds
+		//TODO timers
+		//TODO RPC
+		//TODO VSYNC
+		//TODO shaders, gl
 		//
 		while(!glfwWindowShouldClose(window)){
-			//TODO
+			//TODO poll input
+			//TODO update
+			//TODO render
 			
-			//TODO renderer.render(frame, context);
+			RENDERER.render(FRAME, CONTEXT);
 			timer.updateFPS();
 			glfwPollEvents();
 			glfwSwapBuffers(window);
-			//TODO systemEventProcessor.processEvents(frame, context);
-			//TODO EventProcessorProvider.getInstance().processEvents();
-			//TODO LayoutManager.getInstance().layout(frame);
-			//TODO AnimatorProvider.getAnimator().runAnimations();
+			systemEventProcessor.processEvents(FRAME, CONTEXT);
+			EventProcessorProvider.getInstance().processEvents();
+			LayoutManager.getInstance().layout(FRAME);
+			AnimatorProvider.getAnimator().runAnimations();
 			timer.update();
 		}
+		//TODO other saves
+		RENDERER.destroy();
+		glfwDestroyWindow(window);
+		glfwTerminate();
 		Settings.save();
+		//TODO other saves
 		System.exit(0);
 	}
 	
