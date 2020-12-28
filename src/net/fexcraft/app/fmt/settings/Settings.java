@@ -21,7 +21,8 @@ public class Settings {
 	
 	public static final ArrayList<Consumer<Boolean>> THEME_CHANGE_LISTENERS = new ArrayList<>();
 	public static int WSX = 1280, WSY = 720;
-	public static Boolean seltheme;
+	public static Boolean SELTHEME;
+	public static boolean VSYNC = true, HVSYNC, DISCORD = true, DISCORD_HIDE;
 	//
 	public static int ct_background = 0x212121;
 	public static int ct_border = 0x616161;
@@ -36,10 +37,11 @@ public class Settings {
 		JsonObject obj = Jsoniser.parseObj(new File("./settings.json"), true);
 		WSX = get(obj, "window_width", WSX);
 		WSY = get(obj, "window_height", WSY);
-		WSY = get(obj, "window_height", WSY);
+		VSYNC = get(obj, "vsync", VSYNC);
+		HVSYNC = get(obj, "vsync/2", HVSYNC);
 		String theme = get(obj, "theme", "false");
-		if(theme.equals("custom")) seltheme = null;
-		else seltheme = Boolean.parseBoolean(theme);
+		if(theme.equals("custom")) SELTHEME = null;
+		else SELTHEME = Boolean.parseBoolean(theme);
 	}
 	
 	public static void apply(FMT fmt){
@@ -51,10 +53,12 @@ public class Settings {
 		JsonObject obj = new JsonObject();
 		obj.addProperty("window_width", WSX);
 		obj.addProperty("window_height", WSY);
+		obj.addProperty("vsync", VSYNC);
+		obj.addProperty("vsync/2", HVSYNC);
 	}
 
 	public static void applyTheme(){
-		if(seltheme == null){
+		if(SELTHEME == null){
 			Themes.setDefaultTheme(new FlatColoredTheme(
 				rgba(ct_background),
 				rgba(ct_border),
@@ -67,7 +71,7 @@ public class Settings {
 				FontRegistry.ROBOTO_LIGHT, 20f
 			));
 		}
-		else if(seltheme){
+		else if(SELTHEME){
 			Themes.setDefaultTheme(new FlatColoredTheme(
 				rgba(33, 33, 33, 1),
 				rgba(97, 97, 97, 1),
@@ -94,7 +98,7 @@ public class Settings {
 			));
 		}
 		if(FMT.FRAME != null) Themes.getDefaultTheme().applyAll(FMT.FRAME);
-		THEME_CHANGE_LISTENERS.forEach(listener -> listener.accept(seltheme));
+		THEME_CHANGE_LISTENERS.forEach(listener -> listener.accept(SELTHEME));
 	}
 
 }
