@@ -2,13 +2,20 @@ package net.fexcraft.app.fmt;
 
 import static net.fexcraft.app.fmt_old.utils.Logging.log;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.GL_TRUE;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL30.glBindVertexArray;
+import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 import java.io.File;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
+import org.joml.Matrix4f;
+import org.joml.Vector2i;
 import org.joml.Vector4f;
 import org.liquidengine.legui.animation.AnimatorProvider;
 import org.liquidengine.legui.component.Frame;
+import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.listener.processor.EventProcessorProvider;
 import org.liquidengine.legui.system.context.CallbackKeeper;
 import org.liquidengine.legui.system.context.Context;
@@ -18,16 +25,28 @@ import org.liquidengine.legui.system.handler.processor.SystemEventProcessorImpl;
 import org.liquidengine.legui.system.layout.LayoutManager;
 import org.liquidengine.legui.system.renderer.Renderer;
 import org.liquidengine.legui.system.renderer.nvg.NvgRenderer;
+import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
+import org.lwjgl.glfw.GLFWImage;
+import org.lwjgl.glfw.GLFWKeyCallback;
+import org.lwjgl.glfw.GLFWMouseButtonCallback;
+import org.lwjgl.glfw.GLFWScrollCallback;
+import org.lwjgl.glfw.GLFWWindowCloseCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.Configuration;
+import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
+import net.arikia.dev.drpc.DiscordEventHandlers;
+import net.arikia.dev.drpc.DiscordRPC;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.utils.Axis3DL;
-import net.fexcraft.app.fmt_old.utils.DiscordUtil;
-import net.fexcraft.app.fmt_old.utils.ST_Timer;
+import net.fexcraft.app.fmt.utils.DiscordUtil;
+import net.fexcraft.app.fmt.utils.ST_Timer;
+import net.fexcraft.app.fmt.utils.ShaderManager;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.AxisRotator;
 import net.fexcraft.lib.common.math.RGB;
@@ -43,13 +62,16 @@ public class FMT {
 	public static final String TITLE = getCurrentTitle();
 	public static final String CLID = "587016218196574209";
 	//
-	private static final FMT INSTANCE = new FMT();
+	public static final FMT INSTANCE = new FMT();
 	public static int WIDTH, HEIGHT;
 	private static String title;
 	//
-	private final ST_Timer timer = new ST_Timer();
+	public static final ST_Timer timer = new ST_Timer();
+	public float delta, accumulator, interval = 1f / 30f, alpha;
+	private static boolean close;
+	//
 	private GLFWErrorCallback errorCallback;
-	private long window;
+	public long window;
 	//
 	public static Frame FRAME, SS_FRAME;
 	public static Context CONTEXT;
@@ -92,7 +114,7 @@ public class FMT {
 		if(window == MemoryUtil.NULL) throw new RuntimeException("Failed to create window");
 		glfwMakeContextCurrent(window);
 		GL.createCapabilities();
-		//TODO loadIcon(window);
+		icon(window);
 		glfwShowWindow(window);
 		glfwFocusWindow(window);
 		//
@@ -101,44 +123,142 @@ public class FMT {
 		Settings.applyTheme();
 		FRAME = new Frame(WIDTH, HEIGHT);
 		//TODO interface
+		FRAME.getContainer().add(new Label("  test  "));
+		
 		CONTEXT = new Context(window);
 		FRAME.getComponentLayer().setFocusable(false);
 		CallbackKeeper keeper = new DefaultCallbackKeeper();
 		CallbackKeeper.registerCallbacks(window, keeper);
-		//TODO callbacks
-		SystemEventProcessor systemEventProcessor = new SystemEventProcessorImpl();
-		SystemEventProcessor.addDefaultCallbacks(keeper, systemEventProcessor);
+		keeper.getChainKeyCallback().add(new GLFWKeyCallback(){
+			@Override
+			public void invoke(long window, int key, int scancode, int action, int mods){
+				//
+			}
+		});
+		keeper.getChainCursorPosCallback().add(new GLFWCursorPosCallback(){
+			@Override
+			public void invoke(long window, double xpos, double ypos){
+				//
+			}
+		});
+		keeper.getChainMouseButtonCallback().add(new GLFWMouseButtonCallback(){
+			@Override
+			public void invoke(long window, int button, int action, int mods){
+				//
+			}
+		});
+		keeper.getChainWindowCloseCallback().add(new GLFWWindowCloseCallback(){
+			@Override
+			public void invoke(long window){
+				//
+			}
+		});
+		keeper.getChainFramebufferSizeCallback().add(new GLFWFramebufferSizeCallback(){
+			@Override
+			public void invoke(long window, int width, int height){
+				//
+			}
+		});
+		keeper.getChainScrollCallback().add(new GLFWScrollCallback(){
+			@Override
+			public void invoke(long window, double xoffset, double yoffset){
+				//
+			}
+		});
+		SystemEventProcessor sys_event_processor = new SystemEventProcessorImpl();
+		SystemEventProcessor.addDefaultCallbacks(keeper, sys_event_processor);
 		RENDERER = new NvgRenderer();
 		RENDERER.initialize();
 		//TODO load previous model
 		//TODO session, updates, keybinds
 		//TODO timers
-		//TODO RPC
-		//TODO VSYNC
-		//TODO shaders, gl
+		if(Settings.DISCORD){
+			DiscordEventHandlers.Builder handler = new DiscordEventHandlers.Builder();
+			handler.setReadyEventHandler(new DiscordUtil.ReadyEventHandler());
+			handler.setErroredEventHandler(new DiscordUtil.ErroredEventHandler());
+			handler.setDisconnectedEventHandler(new DiscordUtil.DisconectedEventHandler());
+			handler.setJoinGameEventHandler(new DiscordUtil.JoinGameEventHandler());
+			handler.setJoinRequestEventHandler(new DiscordUtil.JoinRequestEventHandler());
+			handler.setSpectateGameEventHandler(new DiscordUtil.SpectateGameEventHandler());
+			DiscordRPC.discordInitialize(CLID, handler.build(), true);
+			DiscordRPC.discordRunCallbacks();
+			DiscordUtil.update(true);
+			Runtime.getRuntime().addShutdownHook(new Thread(){
+				@Override
+				public void run(){
+					DiscordRPC.discordShutdown();
+				}
+			});
+			(DiscordUtil.DISCORD_THREAD = new Thread(() -> {
+				while(!close){
+					DiscordRPC.discordRunCallbacks();
+					try{
+						Thread.sleep(100);
+					}
+					catch(InterruptedException e){
+						e.printStackTrace();
+					}
+				}
+			})).start();
+		}
+		vsync();
+		ShaderManager.loadPrograms();
+		int vao = glGenVertexArrays();
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LESS);
 		//
 		while(!glfwWindowShouldClose(window)){
 			//TODO poll input
-			//TODO update
-			//TODO render
-			
+			accumulator += (delta = timer.getDelta());
+			while(accumulator >= interval){
+				//TODO "logic"
+				timer.updateUPS();
+				accumulator -= interval;
+				//Trees.updateCounters();
+			}
+			render(vao, alpha = accumulator / interval);
+			//
 			RENDERER.render(FRAME, CONTEXT);
 			timer.updateFPS();
 			glfwPollEvents();
 			glfwSwapBuffers(window);
-			systemEventProcessor.processEvents(FRAME, CONTEXT);
+			sys_event_processor.processEvents(FRAME, CONTEXT);
 			EventProcessorProvider.getInstance().processEvents();
 			LayoutManager.getInstance().layout(FRAME);
 			AnimatorProvider.getAnimator().runAnimations();
 			timer.update();
 		}
 		//TODO other saves
+		DiscordRPC.discordShutdown();
 		RENDERER.destroy();
 		glfwDestroyWindow(window);
 		glfwTerminate();
 		Settings.save();
 		//TODO other saves
 		System.exit(0);
+	}
+	
+	private void render(int vao, float alpha){
+		glClearColor(0.5f, 0.5f, 0.5f, 0.01f);
+		CONTEXT.updateGlfwWindow();
+		Vector2i size = CONTEXT.getFramebufferSize();
+		glClearColor(0.5f, 0.5f, 0.5f, 1);
+		glViewport(0, 0, size.x, size.y);
+	    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+	    //
+		////glEnable(GL_CULL_FACE);
+		//glEnable(GL_BLEND);
+		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		ShaderManager.GENERAL.use();
+		Matrix4f model_mat = new Matrix4f().identity();
+		//TODO uniforms
+		//CAMERA.apply();
+		glBindVertexArray(vao);
+	    //TODO tex bind
+		//TODO render
+		ShaderManager.applyUniforms(cons -> {});
 	}
 	
 	public static final String getCurrentTitle(){
@@ -201,5 +321,24 @@ public class FMT {
     public static final Vector4f rgba(RGB rgb){
     	float[] arr = rgb.toFloatArray(); return new Vector4f(arr[0], arr[1], arr[2], arr[3]);
     }
+
+	public static void vsync(){
+		log(String.format("Updating Vsync State [%s]", (Settings.VSYNC ? "+" : "-") + (Settings.VSYNC && Settings.HVSYNC ? "+" : "-")));
+		glfwSwapInterval(Settings.VSYNC ? Settings.HVSYNC ? 2 : 1 : 0);
+	}
+
+	public static void icon(long window){
+		try(MemoryStack stack = MemoryStack.stackPush()){
+			ByteBuffer imgbuff;
+			IntBuffer ch = stack.mallocInt(1), w = stack.mallocInt(1), h = stack.mallocInt(1);
+			imgbuff = STBImage.stbi_load("./resources/textures/icon.png", w, h, ch, 4);
+			if(imgbuff == null) return;
+			GLFWImage image = GLFWImage.malloc();
+			GLFWImage.Buffer imagebf = GLFWImage.malloc(1);
+			image.set(w.get(), h.get(), imgbuff);
+			imagebf.put(0, image);
+			glfwSetWindowIcon(window, imagebf);
+		}
+	}
 
 }
