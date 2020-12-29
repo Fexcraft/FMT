@@ -45,11 +45,14 @@ import net.arikia.dev.drpc.DiscordRPC;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.utils.Axis3DL;
 import net.fexcraft.app.fmt.utils.DiscordUtil;
+import net.fexcraft.app.fmt.utils.MRTRenderer;
 import net.fexcraft.app.fmt.utils.ST_Timer;
 import net.fexcraft.app.fmt.utils.ShaderManager;
+import net.fexcraft.app.fmt_old.demo.ModelT1P;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.AxisRotator;
 import net.fexcraft.lib.common.math.RGB;
+import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -203,6 +206,7 @@ public class FMT {
 		}
 		vsync();
 		ShaderManager.loadPrograms();
+		ModelRendererTurbo.RENDERER = new MRTRenderer();
 		int vao = glGenVertexArrays();
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
@@ -256,6 +260,7 @@ public class FMT {
 		//TODO uniforms
 		//CAMERA.apply();
 		glBindVertexArray(vao);
+		ModelT1P.INSTANCE.render();
 	    //TODO tex bind
 		//TODO render
 		ShaderManager.applyUniforms(cons -> {});
