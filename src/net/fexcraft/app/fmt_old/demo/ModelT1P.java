@@ -1222,14 +1222,14 @@ public class ModelT1P extends ModelBase {
     @Override
     public void render(){
     	render(body);
-    	COLOR.glColorApply();
+    	//COLOR.glColorApply();
     	render(body_door_close_colored_primary);
     	render(body_colored_primary);
-    	RGB.glColorReset();
+    	//RGB.glColorReset();
     	//
-    	RGB.GREEN.glColorApply();
+    	//RGB.GREEN.glColorApply();
     	render(body_colored_secondary);
-    	RGB.glColorReset();
+    	//RGB.glColorReset();
     	/*if(bodyLines == null){
     		bodyLines = new ModelCompound(body);
     		bodyLines.lines = true;
