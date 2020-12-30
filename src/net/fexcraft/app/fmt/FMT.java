@@ -45,6 +45,7 @@ import net.arikia.dev.drpc.DiscordRPC;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.utils.Axis3DL;
 import net.fexcraft.app.fmt.utils.DiscordUtil;
+import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.MRTRenderer;
 import net.fexcraft.app.fmt.utils.ST_Timer;
 import net.fexcraft.app.fmt.utils.ShaderManager;
@@ -71,7 +72,9 @@ public class FMT {
 	//
 	public static final ST_Timer timer = new ST_Timer();
 	public float delta, accumulator, interval = 1f / 30f, alpha;
-	private static boolean close;
+	private static boolean CLOSE;
+	public static GGR CAM;
+	public static Label pos, rot;
 	//
 	private GLFWErrorCallback errorCallback;
 	public long window;
@@ -121,12 +124,13 @@ public class FMT {
 		glfwShowWindow(window);
 		glfwFocusWindow(window);
 		//
-		//TODO camcon = new GGR(0, 20, 0, Static.PI + -Static.rad45, -Static.rad30);
+		CAM = new GGR(0, 20, 0, Static.PI + -Static.rad45, -Static.rad30);
 		AxisRotator.setDefImpl(Axis3DL.class);
 		Settings.applyTheme();
 		FRAME = new Frame(WIDTH, HEIGHT);
 		//TODO interface
-		FRAME.getContainer().add(new Label("  test  "));
+		FRAME.getContainer().add(pos = new Label("  test  "));
+		FRAME.getContainer().add(rot = new Label("  test  ", 0, 22, 200, 20));
 		
 		CONTEXT = new Context(window);
 		FRAME.getComponentLayer().setFocusable(false);
@@ -141,13 +145,13 @@ public class FMT {
 		keeper.getChainCursorPosCallback().add(new GLFWCursorPosCallback(){
 			@Override
 			public void invoke(long window, double xpos, double ypos){
-				//
+				CAM.cursorPosCallback(window, xpos, ypos);
 			}
 		});
 		keeper.getChainMouseButtonCallback().add(new GLFWMouseButtonCallback(){
 			@Override
 			public void invoke(long window, int button, int action, int mods){
-				//
+				CAM.mouseCallback(window, button, action, mods);
 			}
 		});
 		keeper.getChainWindowCloseCallback().add(new GLFWWindowCloseCallback(){
@@ -166,6 +170,7 @@ public class FMT {
 			@Override
 			public void invoke(long window, double xoffset, double yoffset){
 				//
+				CAM.scrollCallback(window, xoffset, yoffset);
 			}
 		});
 		SystemEventProcessor sys_event_processor = new SystemEventProcessorImpl();
@@ -193,7 +198,7 @@ public class FMT {
 				}
 			});
 			(DiscordUtil.DISCORD_THREAD = new Thread(() -> {
-				while(!close){
+				while(!CLOSE){
 					DiscordRPC.discordRunCallbacks();
 					try{
 						Thread.sleep(100);
@@ -212,7 +217,7 @@ public class FMT {
 		glDepthFunc(GL_LESS);
 		//
 		while(!glfwWindowShouldClose(window)){
-			//TODO poll input
+			CAM.pollInput(accumulator += (delta = timer.getDelta()));
 			accumulator += (delta = timer.getDelta());
 			while(accumulator >= interval){
 				//TODO "logic"
@@ -258,7 +263,7 @@ public class FMT {
 		ShaderManager.GENERAL.use();
 		Matrix4f model_mat = new Matrix4f().identity();
 		//TODO uniforms
-		//CAMERA.apply();
+		CAM.apply();
 		glBindVertexArray(vao);
 		ModelT1P.INSTANCE.render();
 	    //TODO tex bind
