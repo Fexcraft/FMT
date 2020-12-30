@@ -22,12 +22,15 @@ import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public class MRTRenderer extends ModelRendererTurbo.Renderer {
+	
+	private static Matrix4f matrix = new Matrix4f();
 
 	@Override
 	public void render(ModelRendererTurbo mrt, float scale){
         if(!mrt.showModel){ return; }
+		GlObj obj = mrt.glObject() == null ? mrt.glObject(new GlObj()) : mrt.glObject();
         if(mrt.glId() == null || mrt.forcedRecompile){
-            compileModel(mrt, scale);
+            compileModel(obj, mrt, scale);
         }
 		matrix = new Matrix4f().identity();
 		matrix.translate(new Vector3f(mrt.rotationPointX * scale, mrt.rotationPointY * scale, mrt.rotationPointZ * scale));
@@ -41,30 +44,33 @@ public class MRTRenderer extends ModelRendererTurbo.Renderer {
         glBindBuffer(GL_ARRAY_BUFFER, mrt.glId());
         glVertexAttribPointer(0, 3, GL_FLOAT, false, 3 * 4, 0);
 		glEnableVertexAttribArray(2);
-		glBindBuffer(GL_ARRAY_BUFFER, uvss);
+		glBindBuffer(GL_ARRAY_BUFFER, obj.uvss);
 		glVertexAttribPointer(2, 2, GL_FLOAT, false, 2 * 4, 0);
 		glEnableVertexAttribArray(3);
-		glBindBuffer(GL_ARRAY_BUFFER, normss);
+		glBindBuffer(GL_ARRAY_BUFFER, obj.normss);
 		glVertexAttribPointer(3, 3, GL_FLOAT, false, 3 * 4, 0);
 		glEnableVertexAttribArray(4);
-		glBindBuffer(GL_ARRAY_BUFFER, lightss);
+		glBindBuffer(GL_ARRAY_BUFFER, obj.lightss);
 		glVertexAttribPointer(4, 1, GL_FLOAT, false, 1 * 4, 0);
-		glDrawArrays(GL_TRIANGLES, 0, size);
+		glDrawArrays(GL_TRIANGLES, 0, obj.size);
 		//
         if(mrt.childModels != null){
             for(ModelRendererTurbo child : mrt.childModels) child.render(scale);
         }
 	}
-
-    public int uvss;
-    public int normss;
-    public int lightss;
-    public float[] verts;
-    public float[] uvs;
-    public float[] norms;
-    public float[] lights;
-    public Matrix4f matrix;
-    public int size;
+	
+	private static class GlObj {
+		
+	    public int uvss;
+	    public int normss;
+	    public int lightss;
+	    public float[] verts;
+	    public float[] uvs;
+	    public float[] norms;
+	    public float[] lights;
+	    public int size;
+		
+	}
     
     public static final Vector3f axis_x = new Vector3f(1, 0, 0);
     public static final Vector3f axis_y = new Vector3f(0, 1, 0);
@@ -73,14 +79,14 @@ public class MRTRenderer extends ModelRendererTurbo.Renderer {
     private static final int[] order1 = { 0, 1, 2, 3, 0, 2 };
     private static final int[] order0 = { 0, 1, 2 };
 
-	private void compileModel(ModelRendererTurbo mrt, float scale){
+	private void compileModel(GlObj obj, ModelRendererTurbo mrt, float scale){
     	for(TexturedPolygon polygon : mrt.getFaces()){
-    		size += polygon.getVertices().length > 3 ? 6 : 3;
+    		obj.size += polygon.getVertices().length > 3 ? 6 : 3;
     	}
-		verts = new float[size * 3];
-		  uvs = new float[size * 2];
-		norms = new float[size * 3];
-		lights = new float[size];
+    	obj. verts = new float[obj.size * 3];
+    	obj.   uvs = new float[obj.size * 2];
+    	obj. norms = new float[obj.size * 3];
+    	obj.lights = new float[obj.size];
 		//
 		int ver = 0, uv = 0, nor = 0, lig = 0;
     	for(int i = 0; i < mrt.getFaces().size(); i++){
@@ -91,26 +97,26 @@ public class MRTRenderer extends ModelRendererTurbo.Renderer {
 	        Vec3f vec2 = vec1.cross(vec0).normalize();
     		for(int o = 0; o < order.length; o++){
     			TexturedVertex vert = poly.getVertices()[order[o]];
-    			verts[ver++] = vert.vector.xCoord * scale;
-    			verts[ver++] = vert.vector.yCoord * scale;
-    			verts[ver++] = vert.vector.zCoord * scale;
-    			uvs[uv++] = vert.textureX;
-    			uvs[uv++] = vert.textureY;
-    			norms[nor++] = vec2.xCoord;
-    			norms[nor++] = vec2.yCoord;
-    			norms[nor++] = vec2.zCoord;
-        		lights[lig++] = 1;//poly.level;
+    			obj.verts[ver++] = vert.vector.xCoord * scale;
+    			obj.verts[ver++] = vert.vector.yCoord * scale;
+    			obj.verts[ver++] = vert.vector.zCoord * scale;
+    			obj.uvs[uv++] = vert.textureX;
+    			obj.uvs[uv++] = vert.textureY;
+    			obj.norms[nor++] = vec2.xCoord;
+    			obj.norms[nor++] = vec2.yCoord;
+    			obj.norms[nor++] = vec2.zCoord;
+    			obj.lights[lig++] = 1;//poly.level;
     		}
         }
 		//
 		glBindBuffer(GL_ARRAY_BUFFER, mrt.glId(glGenBuffers()));
-		glBufferData(GL_ARRAY_BUFFER, verts, GL_STATIC_DRAW);
-		glBindBuffer(GL_ARRAY_BUFFER, uvss = glGenBuffers());
-		glBufferData(GL_ARRAY_BUFFER, uvs, GL_STATIC_DRAW);
-		glBindBuffer(GL_ARRAY_BUFFER, normss = glGenBuffers());
-		glBufferData(GL_ARRAY_BUFFER, norms, GL_STATIC_DRAW);
-		glBindBuffer(GL_ARRAY_BUFFER, lightss = glGenBuffers());
-		glBufferData(GL_ARRAY_BUFFER, lights, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, obj.verts, GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, obj.uvss = glGenBuffers());
+		glBufferData(GL_ARRAY_BUFFER, obj.uvs, GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, obj.normss = glGenBuffers());
+		glBufferData(GL_ARRAY_BUFFER, obj.norms, GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, obj.lightss = glGenBuffers());
+		glBufferData(GL_ARRAY_BUFFER, obj.lights, GL_STATIC_DRAW);
 	}
 	
 }
