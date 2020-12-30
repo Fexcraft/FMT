@@ -1,0 +1,249 @@
+package net.fexcraft.app.fmt.utils;
+
+import static org.lwjgl.glfw.GLFW.GLFW_CURSOR;
+import static org.lwjgl.glfw.GLFW.GLFW_CURSOR_DISABLED;
+import static org.lwjgl.glfw.GLFW.GLFW_CURSOR_NORMAL;
+import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
+import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
+import static org.lwjgl.glfw.GLFW.GLFW_REPEAT;
+import static org.lwjgl.glfw.GLFW.glfwGetCursorPos;
+import static org.lwjgl.glfw.GLFW.glfwSetInputMode;
+import static org.lwjgl.opengl.GL20.glGetUniformLocation;
+import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
+
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+
+import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt_old.ui.MenuEntry;
+import net.fexcraft.app.fmt_old.utils.RayCoastAway;
+import net.fexcraft.lib.common.Static;
+
+/** CCR */
+public class GGR {
+	
+    public float movemod = 10;
+    public float maxVR = Static.rad90 - Static.rad5;
+    public Vector3f pos, initial;
+    public float distance;
+    //
+    public boolean w_down, s_down, d_down, a_down, r_down, f_down, space_down, shift_down;
+    public boolean left_alt_down, left_control_down, right_alt_down, right_control_down;
+    //
+	private static int def_view, def_proj;
+	private static Matrix4f view, projection;
+	private float fov = 45f;
+	public float hor, hordef, ver, verdef;
+	private Vector3f dir = new Vector3f(), right = new Vector3f();
+    
+    public GGR(float x, float y, float z, float h, float v){
+        pos = new Vector3f(x, y, z);
+        initial = new Vector3f(pos);
+        hor = hordef = h;
+        ver = verdef = v;
+        //
+		view = new Matrix4f().lookAt(new Vector3f(4, 3, 3), new Vector3f(0, 0, 0), new Vector3f(0, 1, 0));
+		perspective(45);
+    }
+
+    public void apply(){
+        dir = new Vector3f(
+            (float)Math.cos(ver) * (float)Math.sin(hor),
+            (float)Math.sin(ver),
+            (float)Math.cos(ver) * (float)Math.cos(hor)
+        );
+        right = new Vector3f(
+        	(float)Math.sin(hor - 3.14f / 2.0f),
+            0,
+            (float)Math.cos(hor - 3.14f / 2.0f)
+        );
+        //Vector3f up = dir.cross(right, new Vector3f());
+        view = new Matrix4f().lookAt(
+            pos,
+            new Vector3f(pos).add(dir),
+            new Vector3f(0, 1, 0)//up
+        );
+        FMT.pos.getTextState().setText(pos.toString());
+        FMT.rot.getTextState().setText(Math.toDegrees(hor) + " / " + Math.toDegrees(ver) + " : " + fov);
+        perspective(fov);
+        ShaderManager.applyUniforms(prog -> {
+        	prog.use();
+    		def_view = glGetUniformLocation(ShaderManager.GENERAL.program(), "view");
+    		glUniformMatrix4fv(def_view, false, view.get(new float[16]));
+    		def_proj = glGetUniformLocation(ShaderManager.GENERAL.program(), "projection");
+    		glUniformMatrix4fv(def_proj, false, projection.get(new float[16]));
+        });
+    }
+
+	public void resize(){
+		perspective(fov);
+	}
+	
+	public void perspective(float degree_fov){
+		projection = new Matrix4f().perspective(Static.rad1 * fov, (float)FMT.WIDTH / FMT.HEIGHT, 0.1f, 1024f);
+	}
+
+    public void pollInput(float delta){
+		/*if(grabbed && cursor_moved){
+			horizontalAngle -= (posx - oposx) * Settings.mouse_sensivity.directFloat() * delta * 0.005;
+			verticalAngle -= (posy - oposy) * Settings.mouse_sensivity.directFloat() * delta * 0.005;
+            verticalAngle = Math.max(-maxlookrange, Math.min(maxlookrange, verticalAngle));
+            cursor_moved = false;
+		}
+		else if(scroll_down && cursor_moved){
+	        pos.x += (posx - oposx) * 0.001;
+	        pos.y += (posy - oposy) * 0.001;
+	        cursor_moved = false;
+	    }*/
+        processCameraInput(delta);
+    }
+
+    public static double posx, posy, oposx = -1, oposy = -1;
+    public static boolean right_down, left_down, scroll_down, grabbed, cursor_moved;
+    
+	public void mouseCallback(long window, int button, int action, int mods){
+        if(button == 0){
+        	if(action == GLFW_PRESS){
+        		left_down = true;
+        	}
+        	else if(action == GLFW_RELEASE){
+        		if(isNotOverUI()){
+        			RayCoastAway.doTest(true, true, false);
+        		}
+        		left_down = false;
+        	}
+        }
+        else if(button == 1){
+        	if(action == GLFW_PRESS){
+        		if(isNotOverUI()){
+            		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            		grabbed = true;
+        		}
+        		right_down = true;
+        	}
+        	else if(action == GLFW_RELEASE){
+        		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        		right_down = false;
+        		grabbed = false;
+        	}
+        }
+        if(button == 2){
+        	if(action == GLFW_PRESS){
+        		scroll_down = true;
+        	}
+        	else if(action == GLFW_RELEASE){
+        		scroll_down = false;
+        	}
+        }
+	}
+
+	public static boolean isNotOverUI(){
+		if(FMT.FRAME.getLayers().size() > 0) return false;
+		double[] x = { 0 }, y = { 0 };
+		glfwGetCursorPos(FMT.INSTANCE.window, x, y);
+		if(y[0] < 30) return false;
+		//if(Editors.anyVisible() && x[0] < 304) return false;
+		//if(Trees.anyVisible() && x[0] > (FMT.WIDTH - 304)) return false;
+		if(MenuEntry.anyHovered()) return false;
+		/*if(TexViewBox.isOpen()){
+			if(x[0] >= TexViewBox.pos().x && x[0] < TexViewBox.pos().x + TexViewBox.size().x){
+				if(y[0] >= TexViewBox.pos().y && y[0] < TexViewBox.pos().y + TexViewBox.size().y) return false;
+			}
+		}*/
+		return true;
+	}
+
+	public void cursorPosCallback(long window, double xpos, double ypos){
+		if(oposx == -1 || oposy == -1){ oposx = xpos; oposy = posy; }
+		oposx = posx; oposy = posy; posx = xpos; posy = ypos; cursor_moved = true;
+	}
+
+	public void scrollCallback(long window, double xoffset, double yoffset){
+		fov -= (float)(5 * yoffset);
+		if(fov > 80) fov = 80;
+		if(fov < 30) fov = 30;
+	}
+
+    public static double[] rotatePoint(double f, float pitch, float yaw) {
+        double[] xyz = new double[]{ f, 0, 0 };
+        pitch *= 0.01745329251;
+        xyz[1] = -(f * Math.sin(pitch));
+        //
+        yaw *= 0.01745329251;
+        xyz[0] = (f * Math.cos(yaw));
+        xyz[2] = (f * Math.sin(yaw));
+        return xyz;
+    }
+
+    public void processCameraInput(float delta){
+    	if(FMT.CONTEXT.getFocusedGui() != null){
+    		w_down = s_down = d_down = a_down = r_down = f_down = space_down = shift_down = false;
+    	}
+        boolean front = w_down;
+        boolean back  = s_down;
+        boolean right = d_down;
+        boolean left  = a_down;
+        boolean speedp = r_down;
+        boolean speedm = f_down;
+        boolean up   = space_down;
+        boolean down = shift_down;
+        float nspeed;
+        if(speedp) nspeed = /*Settings.movespeed.directFloat()*/1 * 5;
+        else if(speedm) nspeed = /*Settings.movespeed.directFloat()*/1 / 2;
+        else nspeed = /*Settings.movespeed.directFloat()*/1;
+        nspeed *= delta; if(movemod != 1f) nspeed *= movemod;
+        if(up) pos.y += nspeed;
+        if(down) pos.y -= nspeed;
+        if(back){
+        	pos.sub(new Vector3f(dir).mul(nspeed, 0, nspeed));
+        }
+        if(front){
+        	pos.add(new Vector3f(dir).mul(nspeed, 0, nspeed));
+        }
+        if(left){
+        	pos.sub(new Vector3f(this.right).mul(nspeed, 0, nspeed));
+        }
+        if(right){
+        	pos.add(new Vector3f(this.right).mul(nspeed, 0, nspeed));
+        }
+    }
+
+	public static boolean isShiftDown(){
+		return FMT.CAM.shift_down || isAltDown();
+	}
+
+	public static boolean isAltDown(){
+		return FMT.CAM.left_alt_down || FMT.CAM.right_alt_down;
+	}
+
+	public static boolean isControlDown(){
+		return FMT.CAM.left_control_down || FMT.CAM.right_control_down;
+	}
+
+	public static boolean parseKeyAction(int action){
+		return action == GLFW_RELEASE ? false : action == GLFW_PRESS || action == GLFW_REPEAT;
+	}
+
+	public static int mousePosX(){
+		return (int)posx;
+	}
+
+	public static int mousePosY(){
+		return (int)posy;
+	}
+
+	public void reset(){
+		pos = new Vector3f(initial);
+		hor = hordef;
+		ver = verdef;
+		movemod = 10f;
+		w_down = s_down = a_down = d_down = false;
+		space_down = shift_down = false;
+	}
+
+	public void resetRot(){
+		hor = hordef;
+		ver = verdef;
+	}
+    
+}
