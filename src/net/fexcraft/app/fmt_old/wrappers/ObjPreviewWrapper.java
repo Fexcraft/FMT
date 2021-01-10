@@ -3,14 +3,11 @@ package net.fexcraft.app.fmt_old.wrappers;
 import static net.fexcraft.app.fmt_old.utils.Logging.log;
 
 import java.io.File;
-import java.io.FileInputStream;
 
 import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt_old.wrappers.face.Face;
 import net.fexcraft.app.fmt_old.wrappers.face.NullFace;
-import net.fexcraft.lib.common.math.RGB;
-import net.fexcraft.lib.common.utils.WavefrontObjUtil;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public class ObjPreviewWrapper extends PolygonWrapper {
@@ -39,7 +36,7 @@ public class ObjPreviewWrapper extends PolygonWrapper {
 	
 	protected ModelRendererTurbo newMRT(){
 		try{
-			String str[][] = WavefrontObjUtil.findValues(new FileInputStream(source), null, "# FlipAxes:");
+			/*String str[][] = WavefrontObjUtil.findValues(new FileInputStream(source), null, "# FlipAxes:");
 			boolean bool = str.length == 0 ? false : Boolean.parseBoolean(str[0][0]);
 			return new ModelRendererTurbo(null, textureX, textureY, compound.tx(getTurboList()), compound.ty(getTurboList())){
 					@Override
@@ -49,7 +46,7 @@ public class ObjPreviewWrapper extends PolygonWrapper {
 				}
 				.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
 				.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord)
-				.addObj(new FileInputStream(source), group, bool, objmode);//this.source.toString()
+				.addObj(new FileInputStream(source), group, bool, objmode);//this.source.toString()*/
 		}
 		catch(Exception e){
 			log(e);
@@ -57,6 +54,9 @@ public class ObjPreviewWrapper extends PolygonWrapper {
 				.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
 				.addSphere(-8, -8, -8, 16, 16, 16, 1, 1);
 		}
+		return new ModelRendererTurbo(null, textureX, textureY, compound.tx(getTurboList()), compound.ty(getTurboList()))
+			.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
+			.addSphere(-8, -8, -8, 16, 16, 16, 1, 1);
 	}
 
 	@Override
