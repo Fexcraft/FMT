@@ -46,6 +46,7 @@ import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.utils.Axis3DL;
 import net.fexcraft.app.fmt.utils.DiscordUtil;
 import net.fexcraft.app.fmt.utils.GGR;
+import net.fexcraft.app.fmt.utils.KeyCompound;
 import net.fexcraft.app.fmt.utils.MRTRenderer;
 import net.fexcraft.app.fmt.utils.ST_Timer;
 import net.fexcraft.app.fmt.utils.ShaderManager;
@@ -124,7 +125,7 @@ public class FMT {
 		glfwShowWindow(window);
 		glfwFocusWindow(window);
 		//
-		CAM = new GGR(0, 20, 0, Static.PI + -Static.rad45, -Static.rad30);
+		CAM = new GGR(7, 3, -7, -Static.rad45, -Static.rad20);
 		AxisRotator.setDefImpl(Axis3DL.class);
 		Settings.applyTheme();
 		FRAME = new Frame(WIDTH, HEIGHT);
@@ -139,7 +140,7 @@ public class FMT {
 		keeper.getChainKeyCallback().add(new GLFWKeyCallback(){
 			@Override
 			public void invoke(long window, int key, int scancode, int action, int mods){
-				//
+				KeyCompound.process(window, key, scancode, action, mods);
 			}
 		});
 		keeper.getChainCursorPosCallback().add(new GLFWCursorPosCallback(){
@@ -179,6 +180,7 @@ public class FMT {
 		RENDERER.initialize();
 		//TODO load previous model
 		//TODO session, updates, keybinds
+		KeyCompound.init();
 		//TODO timers
 		if(Settings.DISCORD){
 			DiscordEventHandlers.Builder handler = new DiscordEventHandlers.Builder();
