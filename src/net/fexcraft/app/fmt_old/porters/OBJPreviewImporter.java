@@ -1,16 +1,12 @@
 package net.fexcraft.app.fmt_old.porters;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Map;
 
 import net.fexcraft.app.fmt_old.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt_old.utils.Setting;
 import net.fexcraft.app.fmt_old.wrappers.GroupCompound;
-import net.fexcraft.app.fmt_old.wrappers.ObjPreviewWrapper;
-import net.fexcraft.lib.common.utils.WavefrontObjUtil;
 
 public class OBJPreviewImporter extends ExImPorter {
 	
@@ -19,7 +15,9 @@ public class OBJPreviewImporter extends ExImPorter {
 	@Override
 	public GroupCompound importModel(File file, Map<String, Setting> settings){
 		GroupCompound compound = new GroupCompound(file);
-		try{
+		/*try{
+			//ObjModel model = new ObjParser(new FileInputStream(file)).readComments(false).readModel(true).parse();
+			//TODO
 			String[] groups = WavefrontObjUtil.getGroups(new FileInputStream(file));
 			boolean objmode = false;
 			if(groups.length == 0){
@@ -32,7 +30,7 @@ public class OBJPreviewImporter extends ExImPorter {
 		}
 		catch(FileNotFoundException e){
 			e.printStackTrace();
-		}
+		}*/
 		return compound;
 	}
 
