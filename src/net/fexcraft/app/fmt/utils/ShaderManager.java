@@ -94,4 +94,8 @@ public class ShaderManager {
 		cons.accept(GENERAL);
 	}
 
+	public static int getUniform(String string){
+		return glGetUniformLocation(ShaderManager.GENERAL.program(), string);
+	}
+
 }

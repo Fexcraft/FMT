@@ -1211,7 +1211,7 @@ public class ModelT1P extends ModelBase {
 
         translate(0F, 0F, 0F);
         //
-        for(ModelRendererTurbo turbo : body) turbo.textured = true;
+        for(ModelRendererTurbo turbo : body) turbo.setLines(RGB.BLUE).setTextured(true);
         for(ModelRendererTurbo turbo : body_door_close_colored_primary) turbo.textured = true;
         for(ModelRendererTurbo turbo : body_colored_primary) turbo.textured = true;
         for(ModelRendererTurbo turbo : body_colored_secondary) turbo.textured = true;
