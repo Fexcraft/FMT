@@ -44,13 +44,14 @@ import net.arikia.dev.drpc.DiscordEventHandlers;
 import net.arikia.dev.drpc.DiscordRPC;
 import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.settings.Settings;
+import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.utils.Axis3DL;
 import net.fexcraft.app.fmt.utils.DiscordUtil;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.KeyCompound;
 import net.fexcraft.app.fmt.utils.MRTRenderer;
-import net.fexcraft.app.fmt.utils.Timer;
 import net.fexcraft.app.fmt.utils.ShaderManager;
+import net.fexcraft.app.fmt.utils.Timer;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.AxisRotator;
 import net.fexcraft.lib.common.math.RGB;
@@ -75,7 +76,7 @@ public class FMT {
 	public float delta, accumulator, interval = 1f / 30f, alpha;
 	private static boolean CLOSE;
 	public static GGR CAM;
-	public static Label pos, rot;
+	public static Label pos, rot, fps;
 	//
 	private GLFWErrorCallback errorCallback;
 	public long window;
@@ -132,6 +133,7 @@ public class FMT {
 		//TODO interface
 		FRAME.getContainer().add(pos = new Label("  test  "));
 		FRAME.getContainer().add(rot = new Label("  test  ", 0, 22, 200, 20));
+		FRAME.getContainer().add(fps = new Label("  test  ", 0, 44, 200, 20));
 		
 		CONTEXT = new Context(window);
 		FRAME.getComponentLayer().setFocusable(false);
@@ -178,6 +180,7 @@ public class FMT {
 		SystemEventProcessor.addDefaultCallbacks(keeper, sys_event_processor);
 		RENDERER = new NvgRenderer();
 		RENDERER.initialize();
+		TextureManager.load();
 		//TODO load previous model
 		//TODO session, updates, keybinds
 		KeyCompound.init();
@@ -226,6 +229,7 @@ public class FMT {
 				timer.updateUPS();
 				accumulator -= interval;
 				//Trees.updateCounters();
+				fps.getTextState().setText(timer.getFPS() + "");
 			}
 			render(vao, alpha = accumulator / interval);
 			//
@@ -267,6 +271,8 @@ public class FMT {
 		//TODO uniforms
 		CAM.apply();
 		glBindVertexArray(vao);
+		TextureManager.bind("null");
+		TextureManager.bind("t1p");
 		ModelT1P.INSTANCE.render();
 	    //TODO tex bind
 		//TODO render
