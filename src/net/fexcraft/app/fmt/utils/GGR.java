@@ -15,6 +15,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.lib.common.Static;
 
 /** CCR */
@@ -55,11 +56,11 @@ public class GGR {
             0,
             (float)Math.cos(hor - 3.14f / 2.0f)
         );
-        //Vector3f up = dir.cross(right, new Vector3f());
+        Vector3f up = dir.cross(right, new Vector3f());
         view = new Matrix4f().lookAt(
             pos,
             new Vector3f(pos).add(dir),
-            new Vector3f(0, 1, 0)//up
+            /*new Vector3f(0, 1, 0)*/up
         );
         FMT.pos.getTextState().setText(pos.toString());
         FMT.rot.getTextState().setText(Math.toDegrees(hor) + " / " + Math.toDegrees(ver) + " : " + fov);
@@ -82,17 +83,17 @@ public class GGR {
 	}
 
     public void pollInput(float delta){
-		/*if(grabbed && cursor_moved){
-			horizontalAngle -= (posx - oposx) * Settings.mouse_sensivity.directFloat() * delta * 0.005;
-			verticalAngle -= (posy - oposy) * Settings.mouse_sensivity.directFloat() * delta * 0.005;
-            verticalAngle = Math.max(-maxlookrange, Math.min(maxlookrange, verticalAngle));
+		if(grabbed && cursor_moved){
+			hor += (posx - oposx) * Settings.MOUSE_SENSIVITY * delta * 0.005;
+			ver += (posy - oposy) * Settings.MOUSE_SENSIVITY * delta * 0.005;
+            ver = Math.max(-maxVR, Math.min(maxVR, ver));
             cursor_moved = false;
 		}
 		else if(scroll_down && cursor_moved){
 	        pos.x += (posx - oposx) * 0.001;
 	        pos.y += (posy - oposy) * 0.001;
 	        cursor_moved = false;
-	    }*/
+	    }
         processCameraInput(delta);
     }
 
@@ -186,12 +187,12 @@ public class GGR {
         boolean up   = space_down;
         boolean down = shift_down;
         float nspeed;
-        if(speedp) nspeed = /*Settings.movespeed.directFloat()*/1 * 5;
-        else if(speedm) nspeed = /*Settings.movespeed.directFloat()*/1 / 2;
-        else nspeed = /*Settings.movespeed.directFloat()*/1;
+        if(speedp) nspeed = Settings.MOVE_SPEED * 5;
+        else if(speedm) nspeed = Settings.MOVE_SPEED / 2;
+        else nspeed = Settings.MOVE_SPEED;
         nspeed *= delta; if(movemod != 1f) nspeed *= movemod;
-        if(up) pos.y += nspeed;
-        if(down) pos.y -= nspeed;
+        if(up) pos.y -= nspeed;
+        if(down) pos.y += nspeed;
         if(back){
         	pos.sub(new Vector3f(dir).mul(nspeed, 0, nspeed));
         }
@@ -199,10 +200,10 @@ public class GGR {
         	pos.add(new Vector3f(dir).mul(nspeed, 0, nspeed));
         }
         if(left){
-        	pos.sub(new Vector3f(this.right).mul(nspeed, 0, nspeed));
+        	pos.add(new Vector3f(this.right).mul(nspeed, 0, nspeed));
         }
         if(right){
-        	pos.add(new Vector3f(this.right).mul(nspeed, 0, nspeed));
+        	pos.sub(new Vector3f(this.right).mul(nspeed, 0, nspeed));
         }
     }
 

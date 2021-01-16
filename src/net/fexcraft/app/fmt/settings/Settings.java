@@ -23,6 +23,7 @@ public class Settings {
 	public static int WSX = 1280, WSY = 720;
 	public static Boolean SELTHEME;
 	public static boolean VSYNC = true, HVSYNC, DISCORD = true, DISCORD_HIDE;
+	public static float MOUSE_SENSIVITY = 2, MOVE_SPEED = 1;
 	//
 	public static int ct_background = 0x212121;
 	public static int ct_border = 0x616161;
