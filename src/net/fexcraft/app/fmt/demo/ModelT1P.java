@@ -1221,9 +1221,9 @@ public class ModelT1P extends ModelBase {
     
     @Override
     public void render(){
-        for(ModelRendererTurbo turbo : body){
+        /*for(ModelRendererTurbo turbo : body){
         	turbo.rotationAngleY += 1f / 30f;
-        }
+        }*/
     	render(body);
     	//COLOR.glColorApply();
     	render(body_door_close_colored_primary);

@@ -1,6 +1,7 @@
 package net.fexcraft.app.fmt.utils;
 
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
+import static org.lwjgl.opengl.GL11.GL_LINES                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.glDrawArrays;
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
@@ -52,7 +53,7 @@ public class MRTRenderer extends ModelRendererTurbo.Renderer {
 		glEnableVertexAttribArray(4);
 		glBindBuffer(GL_ARRAY_BUFFER, obj.lightss);
 		glVertexAttribPointer(4, 1, GL_FLOAT, false, 1 * 4, 0);
-		glDrawArrays(GL_TRIANGLES, 0, obj.size);
+		glDrawArrays(mrt.linesColor == null ? GL_TRIANGLES : GL_LINES, 0, obj.size);
 		//
         if(mrt.childModels != null){
             for(ModelRendererTurbo child : mrt.childModels) child.render(scale);
