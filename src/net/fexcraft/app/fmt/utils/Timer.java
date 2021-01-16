@@ -34,7 +34,7 @@ import net.fexcraft.app.fmt.FMT;
  *
  * @author Heiko Brumme
  */
-public class ST_Timer {
+public class Timer {
 
     /**
      * System time since last loop.

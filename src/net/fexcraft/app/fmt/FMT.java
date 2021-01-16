@@ -49,7 +49,7 @@ import net.fexcraft.app.fmt.utils.DiscordUtil;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.KeyCompound;
 import net.fexcraft.app.fmt.utils.MRTRenderer;
-import net.fexcraft.app.fmt.utils.ST_Timer;
+import net.fexcraft.app.fmt.utils.Timer;
 import net.fexcraft.app.fmt.utils.ShaderManager;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.AxisRotator;
@@ -71,7 +71,7 @@ public class FMT {
 	public static int WIDTH, HEIGHT;
 	private static String title;
 	//
-	public static final ST_Timer timer = new ST_Timer();
+	public static final Timer timer = new Timer();
 	public float delta, accumulator, interval = 1f / 30f, alpha;
 	private static boolean CLOSE;
 	public static GGR CAM;
