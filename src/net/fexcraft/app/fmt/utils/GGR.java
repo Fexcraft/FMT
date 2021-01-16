@@ -15,8 +15,6 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt_old.ui.MenuEntry;
-import net.fexcraft.app.fmt_old.utils.RayCoastAway;
 import net.fexcraft.lib.common.Static;
 
 /** CCR */
@@ -108,7 +106,7 @@ public class GGR {
         	}
         	else if(action == GLFW_RELEASE){
         		if(isNotOverUI()){
-        			RayCoastAway.doTest(true, true, false);
+        			//TODO RayCoastAway.doTest(true, true, false);
         		}
         		left_down = false;
         	}
@@ -144,7 +142,7 @@ public class GGR {
 		if(y[0] < 30) return false;
 		//if(Editors.anyVisible() && x[0] < 304) return false;
 		//if(Trees.anyVisible() && x[0] > (FMT.WIDTH - 304)) return false;
-		if(MenuEntry.anyHovered()) return false;
+		//TODO if(MenuEntry.anyHovered()) return false;
 		/*if(TexViewBox.isOpen()){
 			if(x[0] >= TexViewBox.pos().x && x[0] < TexViewBox.pos().x + TexViewBox.size().x){
 				if(y[0] >= TexViewBox.pos().y && y[0] < TexViewBox.pos().y + TexViewBox.size().y) return false;

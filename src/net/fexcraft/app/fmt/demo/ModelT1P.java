@@ -1,4 +1,4 @@
-package net.fexcraft.app.fmt_old.demo;
+package net.fexcraft.app.fmt.demo;
 
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.RGB;

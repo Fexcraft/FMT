@@ -1,14 +1,8 @@
-package net.fexcraft.app.fmt_old.utils;
-
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
+package net.fexcraft.app.fmt.utils;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
-
-import net.fexcraft.app.fmt_old.ui.DialogBox;
 
 public class Logging {
 
@@ -49,13 +43,13 @@ public class Logging {
 			for(int i = 0; i + idx < str.length; i++){
 				str[i + idx] = "\t" + e.getStackTrace()[i];
 			}
-			DialogBox.show(600, "error.dialog_title", "dialogbox.button.ok", "toolbar.utils.clipboard.copy", null, () -> {
+			/*DialogBox.show(600, "error.dialog_title", "dialogbox.button.ok", "toolbar.utils.clipboard.copy", null, () -> {
 				String string = new String(str[0] + "\n");
 				for(int i = 1; i < str.length; i++) string += str[i] + "\n";
 				Clipboard cp = Toolkit.getDefaultToolkit().getSystemClipboard();
 				StringSelection sel = new StringSelection(string);
 				cp.setContents(sel, sel);
-			}, str).setResizable(true);
+			}, str).setResizable(true);*/
 		}
 		catch(Exception ex){
 			ex.printStackTrace();

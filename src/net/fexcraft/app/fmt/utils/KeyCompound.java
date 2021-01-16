@@ -1,6 +1,6 @@
 package net.fexcraft.app.fmt.utils;
 
-import static net.fexcraft.app.fmt_old.utils.Logging.log;
+import static net.fexcraft.app.fmt.utils.Logging.log;
 import static org.lwjgl.glfw.GLFW.*;
 
 import java.io.File;
@@ -11,7 +11,6 @@ import com.google.common.io.Files;
 import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt_old.ui.editor.Editors;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.json.JsonUtil;
 
@@ -51,7 +50,7 @@ public class KeyCompound {
 		}));
 		//
 		for(int i = 1; i < 10; i++){ final int j = i - 1;
-			keys.add(new KeyFunction("toggle_editor_" + i, GLFW_KEY_0 + i, (action) -> { if(action == GLFW_RELEASE) Editors.toggleWidget(j); }));
+			//TODO keys.add(new KeyFunction("toggle_editor_" + i, GLFW_KEY_0 + i, (action) -> { if(action == GLFW_RELEASE) Editors.toggleWidget(j); }));
 		}
 		//
 		keys.add(new KeyFunction("camera_rotate_left", GLFW_KEY_LEFT, action -> FMT.CAM.hor += Static.rad5));

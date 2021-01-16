@@ -1,6 +1,6 @@
 package net.fexcraft.app.fmt;
 
-import static net.fexcraft.app.fmt_old.utils.Logging.log;
+import static net.fexcraft.app.fmt.utils.Logging.log;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
@@ -42,6 +42,7 @@ import org.lwjgl.system.MemoryUtil;
 
 import net.arikia.dev.drpc.DiscordEventHandlers;
 import net.arikia.dev.drpc.DiscordRPC;
+import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.utils.Axis3DL;
 import net.fexcraft.app.fmt.utils.DiscordUtil;
@@ -50,7 +51,6 @@ import net.fexcraft.app.fmt.utils.KeyCompound;
 import net.fexcraft.app.fmt.utils.MRTRenderer;
 import net.fexcraft.app.fmt.utils.ST_Timer;
 import net.fexcraft.app.fmt.utils.ShaderManager;
-import net.fexcraft.app.fmt_old.demo.ModelT1P;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.AxisRotator;
 import net.fexcraft.lib.common.math.RGB;
