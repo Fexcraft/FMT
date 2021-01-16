@@ -16,7 +16,19 @@ public class Setting<TYPE> {
 	
 	public Setting(String id, TYPE def, JsonObject obj){
 		this(id, def);
-		value = (TYPE)Jsoniser.get(obj, id, def);
+		load(obj);
+	}
+	
+	public  void load(JsonObject obj){
+		value = (TYPE)Jsoniser.get(obj, id, _default);
+	}
+
+	public <VALUE> VALUE value(){
+		return (VALUE)value;
+	}
+	
+	public void value(TYPE newval){
+		this.value = newval;
 	}
 
 	public void save(JsonObject obj){

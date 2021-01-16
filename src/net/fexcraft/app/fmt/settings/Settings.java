@@ -5,6 +5,8 @@ import static net.fexcraft.app.fmt.utils.Jsoniser.get;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import org.liquidengine.legui.style.color.ColorConstants;
@@ -23,9 +25,11 @@ public class Settings {
 	public static final ArrayList<Consumer<Boolean>> THEME_CHANGE_LISTENERS = new ArrayList<>();
 	public static final int FORMAT = 2;
 	public static Setting<Integer> WINDOW_WIDTH, WINDOW_HEIGHT;
-	public static Setting<Boolean> VSYNC, HVSYNC, DISCORD, DISCORD_HIDE;
+	public static Setting<Boolean> VSYNC, HVSYNC, DISCORD, DISCORD_HIDE, TRIANGULATION;
 	public static Setting<Float> MOUSE_SENSIVITY, MOVE_SPEED;
 	public static Boolean SELTHEME;
+	//
+	public static Map<String, Map<String, Setting<?>>> SETTINGS = new LinkedHashMap<>();//External settings, e.g. plugins.
 	//
 	public static int ct_background = 0x212121;
 	public static int ct_border = 0x616161;
@@ -41,15 +45,22 @@ public class Settings {
 		if(obj.has("format") && obj.get("format").getAsInt() != FORMAT) obj = new JsonObject();
 		if(!obj.has("default")) obj.add("default", new JsonObject());
 		//
-		obj = obj.get("default").getAsJsonObject();
-		VSYNC = new Setting<>("vsync", true, obj);
-		HVSYNC = new Setting<>("vsync/2", false, obj);
-		DISCORD = new Setting<>("discord_rpc", true, obj);
-		DISCORD_HIDE = new Setting<>("discord_rpc_hide_mode", false, obj);
-		WINDOW_WIDTH = new Setting<>("window_width", 1280, obj);
-		WINDOW_HEIGHT = new Setting<>("window_height", 720, obj);
-		MOUSE_SENSIVITY = new Setting<>("mouse_sensivity", 2f, obj);
-		MOVE_SPEED = new Setting<>("movement_speed", 1f, obj);
+		JsonObject def = obj.get("default").getAsJsonObject();
+		VSYNC = new Setting<>("vsync", true, def);
+		HVSYNC = new Setting<>("vsync/2", false, def);
+		DISCORD = new Setting<>("discord_rpc", true, def);
+		DISCORD_HIDE = new Setting<>("discord_rpc_hide_mode", false, def);
+		WINDOW_WIDTH = new Setting<>("window_width", 1280, def);
+		WINDOW_HEIGHT = new Setting<>("window_height", 720, def);
+		MOUSE_SENSIVITY = new Setting<>("mouse_sensivity", 2f, def);
+		MOVE_SPEED = new Setting<>("movement_speed", 1f, def);
+		TRIANGULATION = new Setting<>("triangulated_quads", false, def);
+		//
+		for(Map.Entry<String, Map<String, Setting<?>>> entry : SETTINGS.entrySet()){
+			if(!obj.has(entry.getKey())) continue;
+			def = obj.get(entry.getKey()).getAsJsonObject();
+			for(Setting<?> setting : entry.getValue().values()) setting.load(def);
+		}
 		//
 		String theme = get(obj, "theme", "false");
 		if(theme.equals("custom")) SELTHEME = null;
@@ -74,7 +85,14 @@ public class Settings {
 		WINDOW_HEIGHT.save(def);
 		MOUSE_SENSIVITY.save(def);
 		MOVE_SPEED.save(def);
+		TRIANGULATION.save(def);
 		obj.add("default", def);
+		//
+		for(Map.Entry<String, Map<String, Setting<?>>> entry : SETTINGS.entrySet()){
+			def = new JsonObject();
+			for(Setting<?> setting : entry.getValue().values()) setting.save(def);
+			if(def.size() > 0) obj.add(entry.getKey(), def);
+		}
 		//
 		obj.addProperty("last_fmt_version", FMT.VERSION);
 		obj.addProperty("last_fmt_exit", Time.getAsString(Time.getDate()));
