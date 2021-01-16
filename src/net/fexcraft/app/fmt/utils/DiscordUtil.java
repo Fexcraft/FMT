@@ -84,7 +84,7 @@ public class DiscordUtil {
 	public static void update(boolean updatetime){
 		if(updatetime) starttime = Time.getDate();
 		DiscordRichPresence veryrichnot = new DiscordRichPresence.Builder("Modelling (on " + FMT.VERSION + ")").setBigImage("icon", FMT.TITLE)
-			.setStartTimestamps(starttime).setDetails(Settings.DISCORD_HIDE ? "Development Instance" : "Working on an unknown Model").build();
+			.setStartTimestamps(starttime).setDetails(Settings.DISCORD_HIDE.value ? "Development Instance" : "Working on an unknown Model").build();
 		DiscordRPC.discordUpdatePresence(veryrichnot);
 	}
 

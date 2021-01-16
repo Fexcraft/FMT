@@ -182,7 +182,7 @@ public class FMT {
 		//TODO session, updates, keybinds
 		KeyCompound.init();
 		//TODO timers
-		if(Settings.DISCORD){
+		if(Settings.DISCORD.value){
 			DiscordEventHandlers.Builder handler = new DiscordEventHandlers.Builder();
 			handler.setReadyEventHandler(new DiscordUtil.ReadyEventHandler());
 			handler.setErroredEventHandler(new DiscordUtil.ErroredEventHandler());
@@ -335,8 +335,8 @@ public class FMT {
     }
 
 	public static void vsync(){
-		log(String.format("Updating Vsync State [%s]", (Settings.VSYNC ? "+" : "-") + (Settings.VSYNC && Settings.HVSYNC ? "+" : "-")));
-		glfwSwapInterval(Settings.VSYNC ? Settings.HVSYNC ? 2 : 1 : 0);
+		log(String.format("Updating Vsync State [%s]", (Settings.VSYNC.value ? "+" : "-") + (Settings.VSYNC.value && Settings.HVSYNC.value ? "+" : "-")));
+		glfwSwapInterval(Settings.VSYNC.value ? Settings.HVSYNC.value ? 2 : 1 : 0);
 	}
 
 	public static void icon(long window){

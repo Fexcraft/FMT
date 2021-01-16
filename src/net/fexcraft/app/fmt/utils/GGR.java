@@ -84,8 +84,8 @@ public class GGR {
 
     public void pollInput(float delta){
 		if(grabbed && cursor_moved){
-			hor += (posx - oposx) * Settings.MOUSE_SENSIVITY * delta * 0.005;
-			ver += (posy - oposy) * Settings.MOUSE_SENSIVITY * delta * 0.005;
+			hor += (posx - oposx) * Settings.MOUSE_SENSIVITY.value * delta * 0.005;
+			ver += (posy - oposy) * Settings.MOUSE_SENSIVITY.value * delta * 0.005;
             ver = Math.max(-maxVR, Math.min(maxVR, ver));
             cursor_moved = false;
 		}
@@ -187,9 +187,9 @@ public class GGR {
         boolean up   = space_down;
         boolean down = shift_down;
         float nspeed;
-        if(speedp) nspeed = Settings.MOVE_SPEED * 5;
-        else if(speedm) nspeed = Settings.MOVE_SPEED / 2;
-        else nspeed = Settings.MOVE_SPEED;
+        if(speedp) nspeed = Settings.MOVE_SPEED.value * 5;
+        else if(speedm) nspeed = Settings.MOVE_SPEED.value / 2;
+        else nspeed = Settings.MOVE_SPEED.value;
         nspeed *= delta; if(movemod != 1f) nspeed *= movemod;
         if(up) pos.y -= nspeed;
         if(down) pos.y += nspeed;

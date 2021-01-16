@@ -11,6 +11,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 
 /**
  * A fresher JSON Utility than the one in FCL.
@@ -154,6 +155,26 @@ public class Jsoniser {
 	
 	public static String get(JsonObject obj, String member, String def){
 		return obj.has(member) ? obj.get(member).getAsString() : def;
+	}
+
+	public static Object get(JsonObject obj, String member, Object def){
+		if(def instanceof Double) return get(obj, member, (double)def);
+		if(def instanceof Float) return get(obj, member, (float)def);
+		if(def instanceof Long) return get(obj, member, (long)def);
+		if(def instanceof Integer) return get(obj, member, (int)def);
+		if(def instanceof Boolean) return get(obj, member, (boolean)def);
+		//
+		return get(obj, member, (String)def);
+	}
+
+	public static JsonElement toJson(Object val){
+		if(val instanceof Double) return new JsonPrimitive((double)val);
+		if(val instanceof Float) return new JsonPrimitive((float)val);
+		if(val instanceof Long) return new JsonPrimitive((long)val);
+		if(val instanceof Integer) return new JsonPrimitive((int)val);
+		if(val instanceof Boolean) return new JsonPrimitive((boolean)val);
+		//
+		return new JsonPrimitive((String)val);
 	}
 	
 }
