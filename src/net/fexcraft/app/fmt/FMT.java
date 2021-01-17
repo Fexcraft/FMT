@@ -45,6 +45,7 @@ import net.arikia.dev.drpc.DiscordRPC;
 import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TextureManager;
+import net.fexcraft.app.fmt.ui.Toolbar;
 import net.fexcraft.app.fmt.utils.Axis3DL;
 import net.fexcraft.app.fmt.utils.DiscordUtil;
 import net.fexcraft.app.fmt.utils.GGR;
@@ -84,6 +85,7 @@ public class FMT {
 	public static Frame FRAME, SS_FRAME;
 	public static Context CONTEXT;
 	public static Renderer RENDERER;
+	public static Toolbar TOOLBAR;
 	
 	public static void main(String... args) throws Exception {
 		log("==================================================");
@@ -130,13 +132,15 @@ public class FMT {
 		AxisRotator.setDefImpl(Axis3DL.class);
 		Settings.applyTheme();
 		FRAME = new Frame(WIDTH, HEIGHT);
+		FRAME.getContainer().add(TOOLBAR = new Toolbar());
 		//TODO interface
-		FRAME.getContainer().add(pos = new Label("  test  "));
-		FRAME.getContainer().add(rot = new Label("  test  ", 0, 22, 200, 20));
-		FRAME.getContainer().add(fps = new Label("  test  ", 0, 44, 200, 20));
+		FRAME.getContainer().add(pos = new Label("  test  ", 0, 32, 200, 20));
+		FRAME.getContainer().add(rot = new Label("  test  ", 0, 54, 200, 20));
+		FRAME.getContainer().add(fps = new Label("  test  ", 0, 76, 200, 20));
 		
 		CONTEXT = new Context(window);
 		FRAME.getComponentLayer().setFocusable(false);
+		Settings.applyTheme();
 		CallbackKeeper keeper = new DefaultCallbackKeeper();
 		CallbackKeeper.registerCallbacks(window, keeper);
 		keeper.getChainKeyCallback().add(new GLFWKeyCallback(){
@@ -166,7 +170,8 @@ public class FMT {
 		keeper.getChainFramebufferSizeCallback().add(new GLFWFramebufferSizeCallback(){
 			@Override
 			public void invoke(long window, int width, int height){
-				//
+				HEIGHT = height;
+				TOOLBAR.setSize(WIDTH = width, TOOLBAR.getSize().y);
 			}
 		});
 		keeper.getChainScrollCallback().add(new GLFWScrollCallback(){
