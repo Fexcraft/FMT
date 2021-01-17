@@ -53,6 +53,7 @@ import net.fexcraft.app.fmt.utils.KeyCompound;
 import net.fexcraft.app.fmt.utils.MRTRenderer;
 import net.fexcraft.app.fmt.utils.ShaderManager;
 import net.fexcraft.app.fmt.utils.Timer;
+import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.AxisRotator;
 import net.fexcraft.lib.common.math.RGB;
@@ -111,7 +112,7 @@ public class FMT {
 	}
 	
 	public void run() throws Exception{
-		//TODO Translator.init();
+		Translator.init();
 		timer.init();
 		glfwSetErrorCallback(errorCallback = GLFWErrorCallback.createPrint(System.err));
 		if(!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW.");

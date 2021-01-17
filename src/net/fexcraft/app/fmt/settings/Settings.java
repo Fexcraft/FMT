@@ -27,6 +27,7 @@ public class Settings {
 	public static Setting<Integer> WINDOW_WIDTH, WINDOW_HEIGHT;
 	public static Setting<Boolean> VSYNC, HVSYNC, DISCORD, DISCORD_HIDE, TRIANGULATION;
 	public static Setting<Float> MOUSE_SENSIVITY, MOVE_SPEED;
+	public static Setting<String> LANGUAGE;
 	public static Boolean SELTHEME;
 	//
 	public static Map<String, Map<String, Setting<?>>> SETTINGS = new LinkedHashMap<>();//External settings, e.g. plugins.
@@ -55,6 +56,7 @@ public class Settings {
 		MOUSE_SENSIVITY = new Setting<>("mouse_sensivity", 2f, def);
 		MOVE_SPEED = new Setting<>("movement_speed", 1f, def);
 		TRIANGULATION = new Setting<>("triangulated_quads", false, def);
+		LANGUAGE = new Setting<>("language", "null", def);
 		//
 		for(Map.Entry<String, Map<String, Setting<?>>> entry : SETTINGS.entrySet()){
 			if(!obj.has(entry.getKey())) continue;
@@ -86,6 +88,7 @@ public class Settings {
 		MOUSE_SENSIVITY.save(def);
 		MOVE_SPEED.save(def);
 		TRIANGULATION.save(def);
+		LANGUAGE.save(def);
 		obj.add("default", def);
 		//
 		for(Map.Entry<String, Map<String, Setting<?>>> entry : SETTINGS.entrySet()){
