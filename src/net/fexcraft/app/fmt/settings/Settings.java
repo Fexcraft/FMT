@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.style.color.ColorConstants;
 import org.liquidengine.legui.style.font.FontRegistry;
 import org.liquidengine.legui.theme.Themes;
@@ -40,6 +41,7 @@ public class Settings {
 	public static int ct_deny = 0xBD1C1C;
 	public static int ct_shadow = 0x0;
 	public static int ct_text = 0xCCCCCC;
+	public static int ct_buttom = 0x212121;
 	
 	public static void load(){
 		JsonObject obj = Jsoniser.parseObj(new File("./settings.json"), true);
@@ -97,6 +99,7 @@ public class Settings {
 			if(def.size() > 0) obj.add(entry.getKey(), def);
 		}
 		//
+		obj.addProperty("theme", SELTHEME == null ? "custom" : SELTHEME + "");
 		obj.addProperty("last_fmt_version", FMT.VERSION);
 		obj.addProperty("last_fmt_exit", Time.getAsString(Time.getDate()));
 		Jsoniser.print(new File("./settings.json"), obj);
@@ -113,7 +116,7 @@ public class Settings {
 				rgba(ct_deny),
 				ColorConstants.transparent(),//TODO
 				rgba(ct_text),
-				FontRegistry.ROBOTO_LIGHT, 20f
+				FontRegistry.ROBOTO_BOLD, 20f
 			));
 		}
 		else if(SELTHEME){
@@ -126,7 +129,7 @@ public class Settings {
 				rgba(183, 28, 28, 1),
 				ColorConstants.transparent(),
 				ColorConstants.lightGray(),
-				FontRegistry.ROBOTO_LIGHT, 20f
+				FontRegistry.ROBOTO_BOLD, 20f
 			));
 		}
 		else{
@@ -139,11 +142,28 @@ public class Settings {
 				rgba(239, 154, 154, 1),
 				ColorConstants.transparent(),
 				ColorConstants.darkGray(),
-				FontRegistry.ROBOTO_LIGHT, 20f
+				FontRegistry.ROBOTO_BOLD, 20f
 			));
 		}
 		if(FMT.FRAME != null) Themes.getDefaultTheme().applyAll(FMT.FRAME);
 		THEME_CHANGE_LISTENERS.forEach(listener -> listener.accept(SELTHEME));
+	}
+	
+	public static void applyMenuTheme(Component com){
+		Settings.THEME_CHANGE_LISTENERS.add(bool -> {
+			com.getStyle().setBorderRadius(0);
+			com.getStyle().setBorder(null);
+			float col = bool != null && bool ? 0.25f : 0.75f;
+			com.getStyle().setTextColor(bool != null && bool ? ColorConstants.lightGray() : ColorConstants.darkGray());
+			com.getStyle().getBackground().setColor(col, col, col, 1);
+		});
+	}
+	
+	public static void applyBorderless(Component com){
+		Settings.THEME_CHANGE_LISTENERS.add(bool -> {
+			com.getStyle().setBorderRadius(0);
+			com.getStyle().setBorder(null);
+		});
 	}
 
 }

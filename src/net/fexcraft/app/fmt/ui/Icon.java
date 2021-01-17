@@ -18,10 +18,7 @@ public class Icon extends ImageView {
 		this.setFocusable(false);
 		this.setSize(28, 28);
 		this.getListenerMap().addListener(MouseClickEvent.class, listener);
-		Settings.THEME_CHANGE_LISTENERS.add(bool -> {
-			getStyle().setBorderRadius(0);
-			getStyle().setBorder(null);
-		});
+		Settings.applyBorderless(this);
 	}
 	
 	public Icon(int index, String adress, Runnable run){

@@ -27,7 +27,7 @@ public class Translator {
 			}
 			source = "system";
 		}
-		if(!(lang = new File("./resources/lang/" + Settings.LANGUAGE.value + ".lang")).exists()){
+		else if(!(lang = new File("./resources/lang/" + Settings.LANGUAGE.value + ".lang")).exists()){
 			Logging.log("Locale '" + local + "' not found, skipping in Settings defined language parsing.");
 			source = "settings";
 		}
@@ -54,6 +54,11 @@ public class Translator {
 			Logging.log(e);
 			return false;
 		}
+	}
+
+	public static String translate(String string){
+		if(SELECTED.containsKey(string)) return SELECTED.get(string);
+		return DEFAULT.containsKey(string) ? DEFAULT.get(string) : string;
 	}
 
 }

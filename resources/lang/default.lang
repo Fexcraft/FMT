@@ -1,11 +1,22 @@
-#FMT-LANG default | English (DEF) | Choose a Language | Applies on Restart | Exit
-#
 # Authors: 
 # - Ferdinand (FEX___96)
 #
 //
 # Toolbar
 toolbar.file=File
+toolbar.editors=Editors
+toolbar.components=Components
+toolbar.utils=Utilities
+toolbar.polygons=Polygons
+toolbar.texture=Textures
+toolbar.helpers=Helper/Previews
+toolbar.exit=Exit
+
+
+
+
+
+//////// OLD ////////
 toolbar.file.new_model=New...
 toolbar.file.open=Open.
 toolbar.file.open.recent=...

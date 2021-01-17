@@ -80,7 +80,7 @@ public class FMT {
 	public static GGR CAM;
 	public static Label pos, rot, fps;
 	//
-	private GLFWErrorCallback errorCallback;
+	@SuppressWarnings("unused") private GLFWErrorCallback errorCallback;
 	public long window;
 	//
 	public static Frame FRAME, SS_FRAME;
@@ -363,6 +363,10 @@ public class FMT {
 			imagebf.put(0, image);
 			glfwSetWindowIcon(window, imagebf);
 		}
+	}
+
+	public static void close(){
+		//TODO
 	}
 
 }
