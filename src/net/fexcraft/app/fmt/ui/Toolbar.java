@@ -22,10 +22,10 @@ public class Toolbar extends Panel {
 		this.add(new Icon(4, "./resources/textures/icons/toolbar/open.png", () -> {}));
 		this.add(new Icon(5, "./resources/textures/icons/toolbar/new.png", () -> {}));
 		this.add(new ToolbarMenu(0, "file",
-			new Button(0, 0, ToolbarMenu.WIDTH, ToolbarMenu.HEIGHT),
-			new Button(0, 28, ToolbarMenu.WIDTH, ToolbarMenu.HEIGHT),
-			new Button(0, 56, ToolbarMenu.WIDTH, ToolbarMenu.HEIGHT),
-			new Button(0, 84, ToolbarMenu.WIDTH, ToolbarMenu.HEIGHT)
+			new Button(0, 1, ToolbarMenu.WIDTH, ToolbarMenu.HEIGHT),
+			new Button(0, 32, ToolbarMenu.WIDTH, ToolbarMenu.HEIGHT),
+			new Button(0, 63, ToolbarMenu.WIDTH, ToolbarMenu.HEIGHT),
+			new Button(0, 94, ToolbarMenu.WIDTH, ToolbarMenu.HEIGHT)
 		));
 		this.add(new ToolbarMenu(1, "editors"));
 		this.add(new ToolbarMenu(2, "components"));
