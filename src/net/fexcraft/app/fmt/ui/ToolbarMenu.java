@@ -17,12 +17,12 @@ import net.fexcraft.app.fmt.settings.Settings;
 
 public class ToolbarMenu extends Button {
 	
-	public static final int WIDTH = 120, HEIGHT = 28;
+	public static final int WIDTH = 120, HEIGHT = 30;
 	private Component[] components;
 	private MenuLayer layer;
 	
 	public ToolbarMenu(int index, String id, Component... components){
-		super(176 + (index * (WIDTH + 1)), 1, WIDTH, 28);
+		super(176 + (index * WIDTH), 0, WIDTH, HEIGHT);
 		this.getTextState().setText(translate("toolbar." + id));
 		Settings.applyMenuTheme(this);
 		if(components.length == 0) return;
