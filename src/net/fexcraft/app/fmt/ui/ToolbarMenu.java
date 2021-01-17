@@ -22,7 +22,7 @@ public class ToolbarMenu extends Button {
 	private MenuLayer layer;
 	
 	public ToolbarMenu(int index, String id, Component... components){
-		super(176 + (index * WIDTH), 0, WIDTH, HEIGHT);
+		super(176 + (index * (WIDTH + 1)), 0, WIDTH, HEIGHT);
 		this.getTextState().setText(translate("toolbar." + id));
 		Settings.applyMenuTheme(this);
 		if(components.length == 0) return;
@@ -44,11 +44,15 @@ public class ToolbarMenu extends Button {
 	public static class MenuLayer extends Layer {
 
         public MenuLayer(ToolbarMenu menu){
-    		Settings.applyMenuTheme(this);
+    		Settings.applyBorderless(this);
+    		Settings.THEME_CHANGE_LISTENERS.add(bool -> {
+    			float w = bool ? 0 : 1;
+    			this.getStyle().getBackground().setColor(w, w, w, 1);
+    		});
             setEventReceivable(true);
             setEventPassable(true);
-            this.setSize(WIDTH, menu.components.length * 28);
-            this.setPosition(menu.getPosition().add(0, 28, new Vector2f()));
+            this.setSize(WIDTH, menu.components.length * (HEIGHT + 1));
+            this.setPosition(menu.getPosition().add(0, HEIGHT, new Vector2f()));
         	CursorEnterEventListener listener = lis -> {
         		if(!lis.isEntered()){
         			boolean out = true;
