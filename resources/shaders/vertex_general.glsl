@@ -9,6 +9,7 @@ in float light_in;
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
+uniform vec4 line_color;
 
 //out vec3 color;
 out vec2 uv;
@@ -16,10 +17,13 @@ out vec3 normal;
 out float light;
 
 void main(){
-    uv = uv_in;
-    //color = color_in;
-    normal = normal_in;
     mat4 mvp = projection * view * model;
     gl_Position = mvp * vec4(position, 1.0);
-    light = light_in;
+    
+    if(line_color.a == 0){
+	    uv = uv_in;
+	    //color = color_in;
+	    normal = normal_in;
+	    light = light_in;
+    }
 }
