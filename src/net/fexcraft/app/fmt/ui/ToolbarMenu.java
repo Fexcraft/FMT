@@ -5,6 +5,8 @@ import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLIC
 import static org.liquidengine.legui.input.Mouse.MouseButton.MOUSE_BUTTON_LEFT;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 
 import org.joml.Vector2f;
 import org.liquidengine.legui.component.Button;
@@ -19,17 +21,18 @@ import net.fexcraft.app.fmt.settings.Settings;
 
 public class ToolbarMenu extends Button {
 	
+	public static final HashMap<String, ToolbarMenu> MENUS = new HashMap<>();
 	public static final int WIDTH = 120, HEIGHT = 30;
-	private Component[] components;
+	private ArrayList<Component> components = new ArrayList<>();
 	private MenuLayer layer;
 	
-	public ToolbarMenu(int index, String id, Component... components){
-		super(176 + (index * (WIDTH + 1)), 0, WIDTH, HEIGHT);
+	public ToolbarMenu(int index, String id, Component... comps){
+		super(index < 0 ? 0 : indexWidth(index), index < 0 ? 1 + -index * 31 : 0, WIDTH, HEIGHT);
 		this.getTextState().setText(translate("toolbar." + id));
 		Settings.applyMenuTheme(this);
-		//if(components.length == 0) return;
-		this.components = components;
-		layer = new MenuLayer(this);
+		MENUS.put(id, this);
+		for(int i = 0; i < comps.length; i++) components.add(comps[i]);
+		layer = new MenuLayer(this.getPosition(), components, index < 0 ? id.substring(0, id.lastIndexOf('.')) : null);
 		this.getListenerMap().addListener(MouseClickEvent.class, event -> {
 			if(event.getAction() != CLICK || event.getButton() != MOUSE_BUTTON_LEFT) return;
 			layer.show();
@@ -38,6 +41,10 @@ public class ToolbarMenu extends Button {
 			if(!event.isEntered()) return;
 			layer.show();
 		});
+	}
+
+	private static int indexWidth(int index){
+		return 176 + (index * (WIDTH + 1));
 	}
 
 	public ToolbarMenu(int index, String id, Runnable run){
@@ -51,8 +58,10 @@ public class ToolbarMenu extends Button {
 		
 		public static final ArrayList<MenuLayer> LAYERS = new ArrayList<>();
 		private boolean shown;
+		private Vector2f pos;
+		private String root;
 
-        public MenuLayer(ToolbarMenu menu){
+        public MenuLayer(Vector2f pos, Collection<Component> components, String rootid){
     		Settings.applyBorderless(this);
     		Settings.THEME_CHANGE_LISTENERS.add(bool -> {
     			float w = bool ? 0 : 1;
@@ -61,23 +70,25 @@ public class ToolbarMenu extends Button {
             setEventReceivable(true);
             setEventPassable(true);
             LAYERS.add(this);
-            this.setSize(WIDTH, menu.components.length * (HEIGHT + 1));
-            this.setPosition(menu.getPosition().add(0, HEIGHT, new Vector2f()));
+            root = rootid;
+            this.pos = pos;
+            this.setSize(WIDTH, components.size() * (HEIGHT + 1));
+            this.setPosition(pos.add(0, HEIGHT, new Vector2f()));
         	CursorEnterEventListener listener = lis -> {
-        		if(!lis.isEntered() && !anyComponentHovered(menu.components)) hide();
+        		if(!lis.isEntered() && !anyComponentHovered(components)) hide();
     		};
-        	for(Component com : menu.components){
+        	for(Component com : components){
         		com.getListenerMap().addListener(CursorEnterEvent.class, listener);
         		Settings.applyMenuTheme(com);
         		this.add(com);
         	}
         }
 
-		private boolean anyComponentHovered(Component[] components){
-			boolean out = true;
+		private boolean anyComponentHovered(Collection<Component> components){
+			boolean out = false;
 			for(Component com : components){
-        		if(com.isHovered() || anyComponentHovered(com.getChildComponents().toArray(new Component[0]))){
-        			out = false;
+        		if(com.isHovered() || anyComponentHovered(com instanceof ToolbarMenu ? ((ToolbarMenu)com).components : com.getChildComponents())){
+        			out = true;
         			break;
         		}
         	}
@@ -85,13 +96,29 @@ public class ToolbarMenu extends Button {
 		}
 
 		public void show(){
-			hideAll();
+			hideAll(root == null);
+			if(root != null) offset();
 			FMT.FRAME.addLayer(this);
 			shown = true;
 		}
+
+		public void offset(){
+			int j = 0;
+			float y = pos.y;
+			MenuLayer layer = this;
+			while(layer.root != null){
+				ToolbarMenu menu = MENUS.get(layer.root);
+				y += menu.getPosition().y;
+				layer = menu.layer;
+				j++;
+			}
+			setPosition(layer.getPosition().add(j * WIDTH, y, new Vector2f()));
+		}
 		
-		public static void hideAll(){
-			for(MenuLayer layer : LAYERS) layer.hide();
+		public void hideAll(boolean rootless){
+			for(MenuLayer layer : LAYERS){
+				if(rootless || (layer.root != null && layer.root.contains(root))) layer.hide();
+			}
 		}
 
 		public void hide(){
@@ -99,8 +126,20 @@ public class ToolbarMenu extends Button {
 				FMT.FRAME.removeLayer(this);
 				shown = false;
 			}
+			if(root != null){
+				MenuLayer layer = MENUS.get(root).layer;
+				if(!layer.anyComponentHovered(layer.getChildComponents())) layer.hide();
+			}
 		}
         
+	}
+	
+	public static class MenuButton extends Button {
+
+		public MenuButton(int index){
+			super(0, 1 + index * 31, WIDTH, HEIGHT);
+		}
+		
 	}
 
 }
