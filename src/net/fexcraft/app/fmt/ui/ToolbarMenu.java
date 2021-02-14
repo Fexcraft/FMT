@@ -6,6 +6,7 @@ import static org.liquidengine.legui.input.Mouse.MouseButton.MOUSE_BUTTON_LEFT;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.function.Consumer;
 
 import org.joml.Vector2f;
 import org.liquidengine.legui.component.Component;
@@ -69,7 +70,7 @@ public class ToolbarMenu extends Panel {
 	public static class MenuLayer extends Layer {
 		
 		public static final ArrayList<MenuLayer> LAYERS = new ArrayList<>();
-		public Runnable preshow;
+		public Consumer<MenuLayer> consumer;
 		private boolean shown;
 		private Vector2f pos;
 		private String root;
@@ -113,7 +114,7 @@ public class ToolbarMenu extends Panel {
 		}
 
 		public void show(){
-			if(preshow != null) preshow.run();
+			if(consumer != null) consumer.accept(this);
 			hideAll(root == null);
 			if(root != null) offset();
 			FMT.FRAME.addLayer(this);
@@ -172,24 +173,28 @@ public class ToolbarMenu extends Panel {
 				runnable.run();
 			};
 			this.getListenerMap().addListener(MouseClickEvent.class, listener);
-			label.getListenerMap().addListener(MouseClickEvent.class, listener);
+			getLabel().getListenerMap().addListener(MouseClickEvent.class, listener);
 		}
 
 		public MenuButton(int index, String key, MouseClickEventListener listener){
 			this(index, key);
 			this.getListenerMap().addListener(MouseClickEvent.class, listener);
-			label.getListenerMap().addListener(MouseClickEvent.class, listener);
+			getLabel().getListenerMap().addListener(MouseClickEvent.class, listener);
 		}
 		
 		@Override
 		public boolean isHovered(){
-			return super.isHovered() || label.isHovered();
+			return super.isHovered() || getLabel().isHovered();
+		}
+
+		public Label getLabel(){
+			return label;
 		}
 		
 	}
 
-	public ToolbarMenu setLayerPreShow(Runnable run){
-		layer.preshow = run;
+	public ToolbarMenu setLayerPreShow(Consumer<MenuLayer> cons){
+		layer.consumer = cons;
 		return this;
 	}
 

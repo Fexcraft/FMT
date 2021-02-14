@@ -37,7 +37,7 @@ public class Toolbar extends Panel {
 				new MenuButton(7, "file.recent.none"),
 				new MenuButton(8, "file.recent.none"),
 				new MenuButton(9, "file.recent.none")
-			).setLayerPreShow(() -> {
+			).setLayerPreShow(layer -> {
 				//TODO
 			}),
 			new MenuButton(3, "file.save"),
@@ -48,7 +48,13 @@ public class Toolbar extends Panel {
 			new MenuButton(8, "file.donate"),
 			new MenuButton(9, "file.exit", () -> FMT.close())
 		));
-		this.add(new ToolbarMenu(1, "editors"));
+		this.add(new ToolbarMenu(1, "editors").setLayerPreShow(layer -> {
+			while(layer.getChildComponents().size() > Editor.EDITORS.size()) layer.getChildComponents().remove(layer.getChildComponents().size() - 1);
+			while(layer.getChildComponents().size() < Editor.EDITORS.size()) layer.getChildComponents().add(new MenuButton(layer.getChildComponents().size()));
+			for(int i = 0; i < Editor.EDITORLIST.size(); i++){
+				((MenuButton)layer.getChildComponents().get(i)).getLabel().getTextState().setText(Editor.EDITORLIST.get(i).name);
+			}
+		}));
 		this.add(new ToolbarMenu(2, "components"));
 		this.add(new ToolbarMenu(3, "utils"));
 		this.add(new ToolbarMenu(4, "polygons"));

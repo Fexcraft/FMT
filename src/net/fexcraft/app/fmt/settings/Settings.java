@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.function.Consumer;
 
 import org.liquidengine.legui.component.Component;
@@ -15,9 +16,11 @@ import org.liquidengine.legui.style.font.FontRegistry;
 import org.liquidengine.legui.theme.Themes;
 import org.liquidengine.legui.theme.colored.FlatColoredTheme;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.utils.Jsoniser;
 import net.fexcraft.lib.common.math.Time;
 
@@ -164,6 +167,21 @@ public class Settings {
 			com.getStyle().setBorderRadius(0);
 			com.getStyle().setBorder(null);
 		});
+	}
+
+	public static void loadEditors(){
+		JsonObject obj = Jsoniser.parseObj(new File("./editors.fmt"), true);
+		if(obj == null || obj.entrySet().isEmpty()) loadDefaultEditors();
+		else{
+			for(Entry<String, JsonElement> entry : obj.entrySet()){
+				new Editor(entry.getKey(), entry.getValue().getAsJsonObject());
+			}
+		}
+	}
+
+	private static void loadDefaultEditors(){
+		// TODO Auto-generated method stub
+		
 	}
 
 }

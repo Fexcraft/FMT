@@ -134,6 +134,7 @@ public class FMT {
 		Settings.applyTheme();
 		FRAME = new Frame(WIDTH, HEIGHT);
 		FRAME.getContainer().add(TOOLBAR = new Toolbar());
+		Settings.loadEditors();
 		//TODO interface
 		FRAME.getContainer().add(pos = new Label("  test  ", 0, 32, 200, 20));
 		FRAME.getContainer().add(rot = new Label("  test  ", 0, 54, 200, 20));
