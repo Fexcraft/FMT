@@ -220,6 +220,7 @@ public class FMT {
 				}
 			})).start();
 		}
+		//
 		vsync();
 		ShaderManager.loadPrograms();
 		ModelRendererTurbo.RENDERER = new MRTRenderer();
@@ -258,7 +259,7 @@ public class FMT {
 		//TODO other saves
 		System.exit(0);
 	}
-	
+
 	private void render(int vao, float alpha){
 		glClearColor(0.5f, 0.5f, 0.5f, 0.01f);
 		CONTEXT.updateGlfwWindow();
@@ -366,7 +367,7 @@ public class FMT {
 	}
 
 	public static void close(){
-		//TODO
+		glfwSetWindowShouldClose(FMT.INSTANCE.window, true);
 	}
 
 }
