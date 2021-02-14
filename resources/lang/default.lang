@@ -3,7 +3,27 @@
 #
 //
 # Toolbar
+## File
 toolbar.file=File
+toolbar.file.new=New
+toolbar.file.open=Open
+toolbar.file.recent=Recent..
+toolbar.file.recent.none=.  .  .
+toolbar.file.save=Save
+toolbar.file.save_as=Save as..
+toolbar.file.import=Import <<
+toolbar.file.export=Export >>
+toolbar.file.settings=Settings
+toolbar.file.donate=Donate!
+toolbar.file.exit=Exit
+## Project
+toolbar.project=Project
+toolbar.project.open=Open
+toolbar.project.settings=Settings
+toolbar.project.import=Import
+toolbar.project.export=Export
+toolbar.project.close=Close
+## 
 toolbar.editors=Editors
 toolbar.components=Components
 toolbar.utils=Utilities
@@ -17,16 +37,6 @@ toolbar.exit=Exit
 
 
 //////// OLD ////////
-toolbar.file.new_model=New...
-toolbar.file.open=Open.
-toolbar.file.open.recent=...
-toolbar.file.save=Save
-toolbar.file.save_as=Save as...
-toolbar.file.import=Import <<
-toolbar.file.export=Export >>
-toolbar.file.settings=Settings
-toolbar.file.donate=Donate!
-toolbar.file.exit=Exit
 toolbar.utils=Utils
 toolbar.utils.undo=Undo (WIP)
 toolbar.utils.redo=Redo (WIP)
