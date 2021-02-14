@@ -64,16 +64,7 @@ public class ToolbarMenu extends Button {
             this.setSize(WIDTH, menu.components.length * (HEIGHT + 1));
             this.setPosition(menu.getPosition().add(0, HEIGHT, new Vector2f()));
         	CursorEnterEventListener listener = lis -> {
-        		if(!lis.isEntered()){
-        			boolean out = true;
-                	for(Component com : menu.components){
-                		if(com.isHovered()){
-                			out = false;
-                			break;
-                		}
-                	}
-                	if(out) FMT.FRAME.removeLayer(this);
-        		}
+        		if(!lis.isEntered() && !anyComponentHovered(menu.components)) hide();
     		};
         	for(Component com : menu.components){
         		com.getListenerMap().addListener(CursorEnterEvent.class, listener);
@@ -82,12 +73,27 @@ public class ToolbarMenu extends Button {
         	}
         }
 
+		private boolean anyComponentHovered(Component[] components){
+			boolean out = true;
+			for(Component com : components){
+        		if(com.isHovered() || anyComponentHovered(com.getChildComponents().toArray(new Component[0]))){
+        			out = false;
+        			break;
+        		}
+        	}
+			return out;
+		}
+
 		public void show(){
-			for(MenuLayer layer : LAYERS) layer.hide();
+			hideAll();
 			FMT.FRAME.addLayer(this);
 			shown = true;
 		}
 		
+		public static void hideAll(){
+			for(MenuLayer layer : LAYERS) layer.hide();
+		}
+
 		public void hide(){
 			if(shown){
 				FMT.FRAME.removeLayer(this);
