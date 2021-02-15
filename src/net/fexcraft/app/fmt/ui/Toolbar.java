@@ -56,7 +56,63 @@ public class Toolbar extends Panel {
 				((MenuButton)layer.getChildComponents().get(i)).getLabel().getTextState().setText(Editor.EDITORLIST.get(i).name);
 			}*/
 		}));
-		this.add(new ToolbarMenu(2, "components"));
+		this.add(new ToolbarMenu(2, "component",
+			new MenuButton(0, "component.list"),
+			new ToolbarMenu(-1, "component.polygon",
+				new MenuButton(0, "component.polygon.quick"),
+				new MenuButton(1, "component.polygon.list"),
+				new MenuButton(2, "component.polygon.group"),
+				new MenuButton(3, "component.polygon.general"),
+				new MenuButton(4, "component.polygon.general_box"),
+				new MenuButton(5, "component.polygon.general_cyl"),
+				new MenuButton(6, "component.polygon.general_obj"),
+				new MenuButton(7, "component.polygon.position"),
+				new MenuButton(8, "component.polygon.offset"),
+				new MenuButton(9, "component.polygon.rotation"),
+				new MenuButton(10, "component.polygon.texture"),
+				new MenuButton(11, "component.polygon.size_box"),
+				new MenuButton(12, "component.polygon.size_cyl"),
+				new MenuButton(13, "component.polygon.shapebox"),
+				new MenuButton(14, "component.polygon.cylinder"),
+				new MenuButton(15, "component.polygon.visibility"),
+				new MenuButton(16, "component.polygon.object")
+			),
+			new ToolbarMenu(-2, "component.group",
+				new MenuButton(0, "component.group.general"),
+				new MenuButton(1, "component.group.general"),
+				new MenuButton(2, "component.group.general"),
+				new MenuButton(3, "component.group.general"),
+				new MenuButton(4, "component.group.general")
+			),
+			new ToolbarMenu(-3, "component.model",
+				new MenuButton(0, "component.model.general"),
+				new MenuButton(1, "component.model.general"),
+				new MenuButton(2, "component.model.general"),
+				new MenuButton(3, "component.model.general"),
+				new MenuButton(4, "component.model.general")
+			),
+			new ToolbarMenu(-4, "component.texture",
+				new MenuButton(0, "component.texture.general"),
+				new MenuButton(1, "component.texture.general"),
+				new MenuButton(2, "component.texture.general"),
+				new MenuButton(3, "component.texture.general"),
+				new MenuButton(4, "component.texture.general")
+			),
+			new ToolbarMenu(-5, "component.helpers",
+				new MenuButton(0, "component.helpers.general"),
+				new MenuButton(1, "component.helpers.general"),
+				new MenuButton(2, "component.helpers.general"),
+				new MenuButton(3, "component.helpers.general"),
+				new MenuButton(4, "component.helpers.general")
+			),
+			new ToolbarMenu(-6, "component.project",
+				new MenuButton(0, "component.project.general"),
+				new MenuButton(1, "component.project.general"),
+				new MenuButton(2, "component.project.general"),
+				new MenuButton(3, "component.project.general"),
+				new MenuButton(4, "component.project.general")
+			)
+		));
 		this.add(new ToolbarMenu(3, "utils"));
 		this.add(new ToolbarMenu(4, "polygons"));
 		this.add(new ToolbarMenu(5, "texture"));

@@ -16,6 +16,34 @@ toolbar.file.export=Export >>
 toolbar.file.settings=Settings
 toolbar.file.donate=Donate!
 toolbar.file.exit=Exit
+## Editors
+toolbar.editors=Editors
+## Components
+toolbar.component=Components
+toolbar.component.list=Component List
+toolbar.component.polygon=Polygon
+toolbar.component.polygon.quick=Quick-Add
+toolbar.component.polygon.list=List/Tree
+toolbar.component.polygon.group=Group
+toolbar.component.polygon.general=General
+toolbar.component.polygon.general_box=General Box
+toolbar.component.polygon.general_cyl=General Cyl.
+toolbar.component.polygon.general_obj=General Obj.
+toolbar.component.polygon.position=Position
+toolbar.component.polygon.offset=Offset
+toolbar.component.polygon.rotation=Rotation
+toolbar.component.polygon.texture=Texture Pos.
+toolbar.component.polygon.size_box=Size Box
+toolbar.component.polygon.size_cyl=Size Cyl.
+toolbar.component.polygon.shapebox=Shapebox
+toolbar.component.polygon.cylinder=Cylinder
+toolbar.component.polygon.visibility=Visibility
+toolbar.component.polygon.object=Object
+toolbar.component.group=Group
+toolbar.component.model=Model
+toolbar.component.texture=Texture
+toolbar.component.helpers=Helper/Preview
+toolbar.component.project=Project
 ## Project
 toolbar.project=Project
 toolbar.project.open=Open
@@ -24,8 +52,6 @@ toolbar.project.import=Import
 toolbar.project.export=Export
 toolbar.project.close=Close
 ## 
-toolbar.editors=Editors
-toolbar.components=Components
 toolbar.utils=Utilities
 toolbar.polygons=Polygons
 toolbar.texture=Textures
