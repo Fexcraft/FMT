@@ -4,6 +4,7 @@ import org.liquidengine.legui.component.Panel;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
+import net.fexcraft.app.fmt.ui.ToolbarMenu.ComponentButton;
 import net.fexcraft.app.fmt.ui.ToolbarMenu.MenuButton;
 import net.fexcraft.app.fmt.utils.Logging;
 
@@ -59,58 +60,59 @@ public class Toolbar extends Panel {
 		this.add(new ToolbarMenu(2, "component",
 			new MenuButton(0, "component.list"),
 			new ToolbarMenu(-1, "component.polygon",
-				new MenuButton(0, "component.polygon.quick"),
-				new MenuButton(1, "component.polygon.list"),
-				new MenuButton(2, "component.polygon.group"),
-				new MenuButton(3, "component.polygon.general"),
-				new MenuButton(4, "component.polygon.general_box"),
-				new MenuButton(5, "component.polygon.general_cyl"),
-				new MenuButton(6, "component.polygon.general_obj"),
-				new MenuButton(7, "component.polygon.position"),
-				new MenuButton(8, "component.polygon.offset"),
-				new MenuButton(9, "component.polygon.rotation"),
-				new MenuButton(10, "component.polygon.texture"),
-				new MenuButton(11, "component.polygon.size_box"),
-				new MenuButton(12, "component.polygon.size_cyl"),
-				new MenuButton(13, "component.polygon.shapebox"),
-				new MenuButton(14, "component.polygon.cylinder"),
-				new MenuButton(15, "component.polygon.visibility"),
-				new MenuButton(16, "component.polygon.object")
+				new ComponentButton(0, "component.polygon.quick", 2),
+				new ComponentButton(1, "component.polygon.copypaste"),
+				new ComponentButton(2, "component.polygon.list"),
+				new ComponentButton(3, "component.polygon.group"),
+				new ComponentButton(4, "component.polygon.general"),
+				new ComponentButton(5, "component.polygon.general_box"),
+				new ComponentButton(6, "component.polygon.general_cyl"),
+				new ComponentButton(7, "component.polygon.general_obj"),
+				new ComponentButton(8, "component.polygon.position"),
+				new ComponentButton(9, "component.polygon.offset"),
+				new ComponentButton(10, "component.polygon.rotation"),
+				new ComponentButton(11, "component.polygon.texture"),
+				new ComponentButton(12, "component.polygon.size_box"),
+				new ComponentButton(13, "component.polygon.size_cyl"),
+				new ComponentButton(14, "component.polygon.shapebox"),
+				new ComponentButton(15, "component.polygon.cylinder"),
+				new ComponentButton(16, "component.polygon.visibility"),
+				new ComponentButton(17, "component.polygon.object")
 			),
 			new ToolbarMenu(-2, "component.group",
-				new MenuButton(0, "component.group.general"),
-				new MenuButton(1, "component.group.general"),
-				new MenuButton(2, "component.group.general"),
-				new MenuButton(3, "component.group.general"),
-				new MenuButton(4, "component.group.general")
+				new ComponentButton(0, "component.group.general"),
+				new ComponentButton(1, "component.group.general"),
+				new ComponentButton(2, "component.group.general"),
+				new ComponentButton(3, "component.group.general"),
+				new ComponentButton(4, "component.group.general")
 			),
 			new ToolbarMenu(-3, "component.model",
-				new MenuButton(0, "component.model.general"),
-				new MenuButton(1, "component.model.general"),
-				new MenuButton(2, "component.model.general"),
-				new MenuButton(3, "component.model.general"),
-				new MenuButton(4, "component.model.general")
+				new ComponentButton(0, "component.model.general"),
+				new ComponentButton(1, "component.model.general"),
+				new ComponentButton(2, "component.model.general"),
+				new ComponentButton(3, "component.model.general"),
+				new ComponentButton(4, "component.model.general")
 			),
 			new ToolbarMenu(-4, "component.texture",
-				new MenuButton(0, "component.texture.general"),
-				new MenuButton(1, "component.texture.general"),
-				new MenuButton(2, "component.texture.general"),
-				new MenuButton(3, "component.texture.general"),
-				new MenuButton(4, "component.texture.general")
+				new ComponentButton(0, "component.texture.general"),
+				new ComponentButton(1, "component.texture.general"),
+				new ComponentButton(2, "component.texture.general"),
+				new ComponentButton(3, "component.texture.general"),
+				new ComponentButton(4, "component.texture.general")
 			),
 			new ToolbarMenu(-5, "component.helpers",
-				new MenuButton(0, "component.helpers.general"),
-				new MenuButton(1, "component.helpers.general"),
-				new MenuButton(2, "component.helpers.general"),
-				new MenuButton(3, "component.helpers.general"),
-				new MenuButton(4, "component.helpers.general")
+				new ComponentButton(0, "component.helpers.general"),
+				new ComponentButton(1, "component.helpers.general"),
+				new ComponentButton(2, "component.helpers.general"),
+				new ComponentButton(3, "component.helpers.general"),
+				new ComponentButton(4, "component.helpers.general")
 			),
 			new ToolbarMenu(-6, "component.project",
 				new MenuButton(0, "component.project.general"),
-				new MenuButton(1, "component.project.general"),
-				new MenuButton(2, "component.project.general"),
-				new MenuButton(3, "component.project.general"),
-				new MenuButton(4, "component.project.general")
+				new ComponentButton(1, "component.project.general"),
+				new ComponentButton(2, "component.project.general"),
+				new ComponentButton(3, "component.project.general"),
+				new ComponentButton(4, "component.project.general")
 			)
 		));
 		this.add(new ToolbarMenu(3, "utils"));

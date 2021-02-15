@@ -13,6 +13,7 @@ import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.Layer;
 import org.liquidengine.legui.component.Panel;
+import org.liquidengine.legui.component.Tooltip;
 import org.liquidengine.legui.event.CursorEnterEvent;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.listener.CursorEnterEventListener;
@@ -157,7 +158,7 @@ public class ToolbarMenu extends Panel {
 	
 	public static class MenuButton extends Panel {
 		
-		private Label label;
+		protected Label label;
 
 		public MenuButton(int index){
 			super(0, 1 + index * 31, WIDTH, HEIGHT);
@@ -191,6 +192,24 @@ public class ToolbarMenu extends Panel {
 
 		public Label getLabel(){
 			return label;
+		}
+		
+	}
+	
+	public static class ComponentButton extends MenuButton {
+
+		public ComponentButton(int index, String key){
+			super(index, key);
+			//TODO
+		}
+		
+		public ComponentButton(int index, String key, int rows){
+			this(index, key);
+			Tooltip tip = new Tooltip(Translator.translate("toolbar." + key + ".desc"));
+			tip.setPosition(getPosition().x + getSize().x, getPosition().y);
+			tip.setSize(310, 24 * rows + 10);
+			this.setTooltip(tip);
+			label.setTooltip(tip);
 		}
 		
 	}
