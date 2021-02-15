@@ -5,6 +5,7 @@ import org.liquidengine.legui.component.Panel;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.ToolbarMenu.MenuButton;
+import net.fexcraft.app.fmt.utils.Logging;
 
 public class Toolbar extends Panel {
 	
@@ -17,7 +18,7 @@ public class Toolbar extends Panel {
 			getStyle().setBorderRadius(0);
 			getStyle().setBorder(null);
 		});
-		this.add(new Icon(0, "./resources/textures/icons/toolbar/info.png", NOTHING));
+		this.add(new Icon(0, "./resources/textures/icons/toolbar/info.png", () -> Logging.log("test")));
 		this.add(new Icon(1, "./resources/textures/icons/toolbar/settings.png", NOTHING));
 		this.add(new Icon(2, "./resources/textures/icons/toolbar/profile.png", NOTHING));
 		this.add(new Icon(3, "./resources/textures/icons/toolbar/save.png", NOTHING));
@@ -49,11 +50,11 @@ public class Toolbar extends Panel {
 			new MenuButton(9, "file.exit", () -> FMT.close())
 		));
 		this.add(new ToolbarMenu(1, "editors").setLayerPreShow(layer -> {
-			while(layer.getChildComponents().size() > Editor.EDITORS.size()) layer.getChildComponents().remove(layer.getChildComponents().size() - 1);
+			/*while(layer.getChildComponents().size() > Editor.EDITORS.size()) layer.getChildComponents().remove(layer.getChildComponents().size() - 1);
 			while(layer.getChildComponents().size() < Editor.EDITORS.size()) layer.getChildComponents().add(new MenuButton(layer.getChildComponents().size()));
 			for(int i = 0; i < Editor.EDITORLIST.size(); i++){
 				((MenuButton)layer.getChildComponents().get(i)).getLabel().getTextState().setText(Editor.EDITORLIST.get(i).name);
-			}
+			}*/
 		}));
 		this.add(new ToolbarMenu(2, "components"));
 		this.add(new ToolbarMenu(3, "utils"));
@@ -67,8 +68,8 @@ public class Toolbar extends Panel {
 			new MenuButton(3, "project.export"),
 			new MenuButton(4, "project.close")
 		));
-		this.add(new ToolbarMenu(8, "THEME",  () -> { Settings.SELTHEME = !Settings.SELTHEME; Settings.applyTheme(); }));
-		//this.add(new ToolbarMenu(8, "exit", () -> { FMT.close(); }));
+		//this.add(new ToolbarMenu(8, "THEME",  () -> { Settings.SELTHEME = !Settings.SELTHEME; Settings.applyTheme(); }));
+		this.add(new ToolbarMenu(8, "exit", () -> FMT.close()));
 	}
 
 }

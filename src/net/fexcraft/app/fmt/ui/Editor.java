@@ -1,9 +1,13 @@
 package net.fexcraft.app.fmt.ui;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
-import org.liquidengine.legui.component.Panel;
+import org.liquidengine.legui.component.Component;
+import org.liquidengine.legui.component.Label;
+import org.liquidengine.legui.component.ScrollablePanel;
+import org.liquidengine.legui.style.Style.DisplayType;
 
 import com.google.gson.JsonObject;
 
@@ -11,20 +15,30 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.utils.Jsoniser;
 
-public class Editor extends Panel {
+public class Editor extends Component {
 	
-	public static HashMap<String, Editor> EDITORS = new HashMap<>();
-	public static ArrayList<Editor> EDITORLIST = new ArrayList<>();
-	public static int WIDTH = 310;
+	public static final HashMap<String, Editor> EDITORS = new HashMap<>();
+	public static final ArrayList<Editor> EDITORLIST = new ArrayList<>();
+	public ArrayList<EditorComponent> components = new ArrayList<>();
+	private ScrollablePanel scrollable;
+	private Label label;
+	public static int CWIDTH = 300, WIDTH = 310, LABEL = 30;
 	public boolean alignment;
 	public String name;
 	
 	public Editor(String id, String name, boolean left){
 		Settings.applyBorderless(this);
+		this.setFocusable(false);
 		EDITORS.put(id, this);
 		EDITORLIST.add(this);
 		alignment = left;
+		add(scrollable = new ScrollablePanel(0, LABEL, WIDTH, getSize().y));
+		Settings.applyBorderless(scrollable);
+		Settings.applyBorderless(scrollable.getContainer());
+		add(label = new Label(name, 5, 0, CWIDTH - 10, LABEL));
+		label.getStyle().setFontSize(30f);
 		align();
+		hide();
 	}
 
 	public Editor(String key, JsonObject obj){
@@ -32,8 +46,50 @@ public class Editor extends Panel {
 	}
 
 	public void align(){
-		this.setPosition(alignment ? 0 : FMT.WIDTH - WIDTH, ToolbarMenu.HEIGHT);
-		this.setSize(WIDTH, FMT.HEIGHT - ToolbarMenu.HEIGHT);
+		setPosition(alignment ? 0 : FMT.WIDTH - WIDTH, ToolbarMenu.HEIGHT);
+		setSize(WIDTH, FMT.HEIGHT - ToolbarMenu.HEIGHT);
+		scrollable.setSize(WIDTH, getSize().y - LABEL);
+		scrollable.setHorizontalScrollBarVisible(false);
+		alignComponents();
+		if(scrollable.getContainer().getSize().y < getSize().y - LABEL){
+			scrollable.getContainer().setSize(WIDTH, getSize().y - LABEL);
+		}
+	}
+	
+	public void alignComponents(){
+		int passed = 0;
+		for(EditorComponent com : components){
+			com.setPosition(0, passed);
+			passed += com.getSize().y + 2;
+		}
+		scrollable.getContainer().setSize(WIDTH, passed);
+	}
+
+	public void hide(){
+		getStyle().setDisplay(DisplayType.NONE);
+	}
+	
+	public void show(){
+		getStyle().setDisplay(DisplayType.MANUAL);
+		this.setEnabled(true);
+	}
+
+	public void addComponent(EditorComponent com){
+		com.index = components.size();
+		com.editor = this;
+		components.add(com);
+		scrollable.getContainer().add(com);
+		alignComponents();
+	}
+
+	public void swap(int x, int y){
+		Collections.swap(components, x, y);
+		scrollable.getContainer().removeIf(c -> true);
+		for(int i = 0; i < components.size(); i++){
+			components.get(i).index = i;
+		}
+		scrollable.getContainer().addAll(components);
+		alignComponents();
 	}
 	
 }

@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import java.util.function.Consumer;
 
 import org.liquidengine.legui.component.Component;
+import org.liquidengine.legui.style.Style;
 import org.liquidengine.legui.style.color.ColorConstants;
 import org.liquidengine.legui.style.font.FontRegistry;
 import org.liquidengine.legui.theme.Themes;
@@ -21,6 +22,7 @@ import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.ui.Editor;
+import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.utils.Jsoniser;
 import net.fexcraft.lib.common.math.Time;
 
@@ -161,6 +163,16 @@ public class Settings {
 			com.getStyle().getBackground().setColor(col, col, col, 1);
 		});
 	}
+
+	public static void applyComponentTheme(EditorComponent com){
+		Settings.THEME_CHANGE_LISTENERS.add(bool -> {
+			com.getStyle().setBorderRadius(0);
+			com.getStyle().setBorder(null);
+			float col = bool != null && bool ? 0.1875f : 0.8125f;
+			com.getStyle().setTextColor(bool != null && bool ? ColorConstants.lightGray() : ColorConstants.darkGray());
+			com.getStyle().getBackground().setColor(col, col, col, 1);
+		});
+	}
 	
 	public static void applyBorderless(Component com){
 		Settings.THEME_CHANGE_LISTENERS.add(bool -> {
@@ -168,20 +180,32 @@ public class Settings {
 			com.getStyle().setBorder(null);
 		});
 	}
+	
+	public static void applyBorderless(Style style){
+		Settings.THEME_CHANGE_LISTENERS.add(bool -> {
+			style.setBorderRadius(0);
+			style.setBorder(null);
+		});
+	}
 
 	public static void loadEditors(){
-		JsonObject obj = Jsoniser.parseObj(new File("./editors.fmt"), true);
+		JsonObject obj = Jsoniser.parseObj(new File("./editors.fmt"), false);
 		if(obj == null || obj.entrySet().isEmpty()) loadDefaultEditors();
 		else{
 			for(Entry<String, JsonElement> entry : obj.entrySet()){
 				new Editor(entry.getKey(), entry.getValue().getAsJsonObject());
 			}
 		}
+		Editor.EDITORS.get("test").show();
+		Editor.EDITORS.get("test2").show();
 	}
 
 	private static void loadDefaultEditors(){
-		// TODO Auto-generated method stub
-		
+		Editor editor = new Editor("test", "Test Editor", true);
+		new Editor("test2", "Test Editor 2", false);
+		editor.addComponent(new EditorComponent("component.test0"));
+		editor.addComponent(new EditorComponent("component.test1"));
+		editor.addComponent(new EditorComponent("component.test2"));
 	}
 
 }

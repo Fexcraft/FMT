@@ -18,7 +18,8 @@ public class Icon extends ImageView {
 		this.setFocusable(false);
 		this.setSize(28, 28);
 		this.getListenerMap().addListener(MouseClickEvent.class, listener);
-		Settings.applyBorderless(this);
+		Settings.applyBorderless(this.getStyle());
+		Settings.applyBorderless(this.getFocusedStyle());
 	}
 	
 	public Icon(int index, String adress, Runnable run){

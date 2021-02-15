@@ -45,7 +45,9 @@ import net.arikia.dev.drpc.DiscordRPC;
 import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TextureManager;
+import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.ui.Toolbar;
+import net.fexcraft.app.fmt.ui.ToolbarMenu;
 import net.fexcraft.app.fmt.utils.Axis3DL;
 import net.fexcraft.app.fmt.utils.DiscordUtil;
 import net.fexcraft.app.fmt.utils.GGR;
@@ -135,10 +137,11 @@ public class FMT {
 		FRAME = new Frame(WIDTH, HEIGHT);
 		FRAME.getContainer().add(TOOLBAR = new Toolbar());
 		Settings.loadEditors();
+		for(Editor editor : Editor.EDITORLIST) FRAME.getContainer().add(editor);
 		//TODO interface
-		FRAME.getContainer().add(pos = new Label("  test  ", 0, 32, 200, 20));
-		FRAME.getContainer().add(rot = new Label("  test  ", 0, 54, 200, 20));
-		FRAME.getContainer().add(fps = new Label("  test  ", 0, 76, 200, 20));
+		FRAME.getContainer().add(pos = new Label("  test  ", 320, 32, 200, 20));
+		FRAME.getContainer().add(rot = new Label("  test  ", 320, 54, 200, 20));
+		FRAME.getContainer().add(fps = new Label("  test  ", 320, 76, 200, 20));
 		
 		CONTEXT = new Context(window);
 		FRAME.getComponentLayer().setFocusable(false);
@@ -174,6 +177,8 @@ public class FMT {
 			public void invoke(long window, int width, int height){
 				HEIGHT = height;
 				TOOLBAR.setSize(WIDTH = width, TOOLBAR.getSize().y);
+				Editor.EDITORLIST.forEach(editor -> editor.align());
+				ToolbarMenu.MENUS.forEach((key, menu) -> menu.layer.hide());
 			}
 		});
 		keeper.getChainScrollCallback().add(new GLFWScrollCallback(){

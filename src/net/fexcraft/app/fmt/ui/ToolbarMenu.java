@@ -27,7 +27,7 @@ public class ToolbarMenu extends Panel {
 	public static final HashMap<String, ToolbarMenu> MENUS = new HashMap<>();
 	public static final int WIDTH = 120, HEIGHT = 30;
 	private ArrayList<Component> components = new ArrayList<>();
-	private MenuLayer layer;
+	public MenuLayer layer;
 	private Label label;
 	
 	public ToolbarMenu(int index, String id, Component... comps){
@@ -57,9 +57,11 @@ public class ToolbarMenu extends Panel {
 
 	public ToolbarMenu(int index, String id, Runnable run){
 		this(index, id);
-		this.getListenerMap().addListener(MouseClickEvent.class, event -> {
+		MouseClickEventListener listener = event -> {
 			if(event.getAction() == CLICK && event.getButton() == MOUSE_BUTTON_LEFT) run.run();
-		});
+		};
+		this.getListenerMap().addListener(MouseClickEvent.class, listener);
+		label.getListenerMap().addListener(MouseClickEvent.class, listener);
 	}
 	
 	@Override
