@@ -22,6 +22,7 @@ import net.fexcraft.app.fmt.utils.Translator;
 public class EditorComponent extends Component {
 	
 	public static final HashMap<Integer, EditorComponent> COMPONENTS = new HashMap<>();
+	public static final HashMap<String, Class<EditorComponent>> REGISTRY = new HashMap<>();
 	public static final int HEIGHT = 24;
 	private ArrayList<Icon> icons = new ArrayList<>();
 	private boolean minimized, unpinned;
@@ -32,8 +33,12 @@ public class EditorComponent extends Component {
 	public int index;
 	
 	public EditorComponent(String key){
+		this(key, true);
+	}
+	
+	public EditorComponent(String key, boolean resizeable){
 		while(COMPONENTS.containsKey(uid)) uid++;
-		setSize(Editor.CWIDTH, HEIGHT);
+		setSize(Editor.CWIDTH, fullheight = HEIGHT * 2);
 		add(label = new Label(Translator.translate(key), 0, 0, 300, 24));
 		Settings.applyComponentTheme(this);
 		add(size = new Icon(1, "./resources/textures/icons/component/size.png", () -> minimize()));
@@ -47,6 +52,7 @@ public class EditorComponent extends Component {
 			icon.getListenerMap().addListener(CursorEnterEvent.class, listener);
 			icon.getStyle().setDisplay(DisplayType.NONE);
 		}
+		if(!resizeable) size.getStyle().setDisplay(DisplayType.NONE);
 	}
 
 	private void toggleIcons(){
@@ -92,6 +98,10 @@ public class EditorComponent extends Component {
 			});
 		}
 		
+	}
+
+	public static void registerComponents(){
+		//
 	}
 
 }

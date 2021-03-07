@@ -14,6 +14,7 @@ import com.google.gson.JsonObject;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.utils.Jsoniser;
+import net.fexcraft.app.fmt.utils.Logging;
 
 public class Editor extends Component {
 	
@@ -90,6 +91,10 @@ public class Editor extends Component {
 		}
 		scrollable.getContainer().addAll(components);
 		alignComponents();
+	}
+	
+	public static void addComponent(String id){
+		Logging.log(id);
 	}
 	
 }

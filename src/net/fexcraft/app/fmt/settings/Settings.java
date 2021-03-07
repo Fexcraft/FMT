@@ -204,7 +204,7 @@ public class Settings {
 		Editor editor = new Editor("test", "Test Editor", true);
 		new Editor("test2", "Test Editor 2", false);
 		editor.addComponent(new EditorComponent("component.test0"));
-		editor.addComponent(new EditorComponent("component.test1"));
+		editor.addComponent(new EditorComponent("component.test1", false));
 		editor.addComponent(new EditorComponent("component.test2"));
 	}
 

@@ -18,6 +18,7 @@ toolbar.file.donate=Donate!
 toolbar.file.exit=Exit
 ## Editors
 toolbar.editors=Editors
+toolbar.editors.new=Add/New Editor
 ## Components
 toolbar.component=Components
 toolbar.component.list=Component List

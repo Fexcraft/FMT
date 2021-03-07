@@ -46,6 +46,7 @@ import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.ui.Editor;
+import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.ui.Toolbar;
 import net.fexcraft.app.fmt.ui.ToolbarMenu;
 import net.fexcraft.app.fmt.utils.Axis3DL;
@@ -136,6 +137,7 @@ public class FMT {
 		Settings.applyTheme();
 		FRAME = new Frame(WIDTH, HEIGHT);
 		FRAME.getContainer().add(TOOLBAR = new Toolbar());
+		EditorComponent.registerComponents();
 		Settings.loadEditors();
 		for(Editor editor : Editor.EDITORLIST) FRAME.getContainer().add(editor);
 		//TODO interface

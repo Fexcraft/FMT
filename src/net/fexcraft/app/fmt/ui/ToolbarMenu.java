@@ -199,8 +199,7 @@ public class ToolbarMenu extends Panel {
 	public static class ComponentButton extends MenuButton {
 
 		public ComponentButton(int index, String key){
-			super(index, key);
-			//TODO
+			super(index, key, () -> Editor.addComponent(key.substring("component.".length())));
 		}
 		
 		public ComponentButton(int index, String key, int rows){

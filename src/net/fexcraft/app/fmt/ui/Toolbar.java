@@ -50,7 +50,9 @@ public class Toolbar extends Panel {
 			new MenuButton(8, "file.donate"),
 			new MenuButton(9, "file.exit", () -> FMT.close())
 		));
-		this.add(new ToolbarMenu(1, "editors").setLayerPreShow(layer -> {
+		this.add(new ToolbarMenu(1, "editors",
+			new MenuButton(0, "editors.new")
+			).setLayerPreShow(layer -> {
 			/*while(layer.getChildComponents().size() > Editor.EDITORS.size()) layer.getChildComponents().remove(layer.getChildComponents().size() - 1);
 			while(layer.getChildComponents().size() < Editor.EDITORS.size()) layer.getChildComponents().add(new MenuButton(layer.getChildComponents().size()));
 			for(int i = 0; i < Editor.EDITORLIST.size(); i++){
@@ -126,9 +128,9 @@ public class Toolbar extends Panel {
 		this.add(new ToolbarMenu(7, "project",
 			new MenuButton(0, "project.open"),
 			new MenuButton(1, "project.settings"),
-			new MenuButton(2, "project.import"),
-			new MenuButton(3, "project.export"),
-			new MenuButton(4, "project.close")
+			//new MenuButton(2, "project.import"),
+			//new MenuButton(3, "project.export"),
+			new MenuButton(2, "project.close")
 		));
 		//this.add(new ToolbarMenu(8, "THEME",  () -> { Settings.SELTHEME = !Settings.SELTHEME; Settings.applyTheme(); }));
 		this.add(new ToolbarMenu(8, "exit", () -> FMT.close()));
