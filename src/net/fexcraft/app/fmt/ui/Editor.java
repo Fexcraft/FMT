@@ -1,10 +1,14 @@
 package net.fexcraft.app.fmt.ui;
 
+import static net.fexcraft.app.fmt.utils.Logging.log;
+import static net.fexcraft.app.fmt.utils.Translator.translate;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
 import org.liquidengine.legui.component.Component;
+import org.liquidengine.legui.component.Dialog;
 import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.ScrollablePanel;
 import org.liquidengine.legui.style.Style.DisplayType;
@@ -14,7 +18,6 @@ import com.google.gson.JsonObject;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.utils.Jsoniser;
-import net.fexcraft.app.fmt.utils.Logging;
 
 public class Editor extends Component {
 	
@@ -94,7 +97,15 @@ public class Editor extends Component {
 	}
 	
 	public static void addComponent(String id){
-		Logging.log(id);
+		Class<? extends EditorComponent> com = EditorComponent.REGISTRY.get(id);
+		if(com == null){
+			log("Editor Component with ID '" + id + "' not found.");
+			return;
+		}
+		Dialog dialog = new Dialog(translate("editor.component.add_dialog.title"));
+		//
+		dialog.getTitleTextState().getTextWidth();
+		dialog.show(FMT.FRAME);
 	}
 	
 }

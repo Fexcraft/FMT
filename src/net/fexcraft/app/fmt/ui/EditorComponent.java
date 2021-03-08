@@ -17,12 +17,13 @@ import org.liquidengine.legui.listener.MouseClickEventListener;
 import org.liquidengine.legui.style.Style.DisplayType;
 
 import net.fexcraft.app.fmt.settings.Settings;
+import net.fexcraft.app.fmt.ui.components.QuickAdd;
 import net.fexcraft.app.fmt.utils.Translator;
 
 public class EditorComponent extends Component {
 	
 	public static final HashMap<Integer, EditorComponent> COMPONENTS = new HashMap<>();
-	public static final HashMap<String, Class<EditorComponent>> REGISTRY = new HashMap<>();
+	public static final HashMap<String, Class<? extends EditorComponent>> REGISTRY = new HashMap<>();
 	public static final int HEIGHT = 24;
 	private ArrayList<Icon> icons = new ArrayList<>();
 	private boolean minimized, unpinned;
@@ -101,7 +102,7 @@ public class EditorComponent extends Component {
 	}
 
 	public static void registerComponents(){
-		//
+		REGISTRY.put("polygon.quick", QuickAdd.class);
 	}
 
 }

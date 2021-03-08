@@ -63,8 +63,8 @@ toolbar.texture=Textures
 toolbar.helpers=Helper/Previews
 toolbar.exit=Exit
 
-
-
+# Editor
+editor.component.add_dialog.title=Select target Editor
 
 
 //////// OLD ////////
