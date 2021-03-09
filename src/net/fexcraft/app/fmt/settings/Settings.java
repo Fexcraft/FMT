@@ -30,6 +30,9 @@ public class Settings {
 	
 	public static final ArrayList<Consumer<Boolean>> THEME_CHANGE_LISTENERS = new ArrayList<>();
 	public static final int FORMAT = 2;
+	public static final float FONT_SIZE = 20f;
+	public static final String FONT = FontRegistry.ROBOTO_BOLD;
+	public static final String FONT_PATH = "org/liquidengine/legui/style/font/Roboto-Bold.ttf";
 	public static Setting<Integer> WINDOW_WIDTH, WINDOW_HEIGHT;
 	public static Setting<Boolean> VSYNC, HVSYNC, DISCORD, DISCORD_HIDE, TRIANGULATION;
 	public static Setting<Float> MOUSE_SENSIVITY, MOVE_SPEED;
@@ -121,7 +124,7 @@ public class Settings {
 				rgba(ct_deny),
 				ColorConstants.transparent(),//TODO
 				rgba(ct_text),
-				FontRegistry.ROBOTO_BOLD, 20f
+				FONT, FONT_SIZE
 			));
 		}
 		else if(SELTHEME){
@@ -134,7 +137,7 @@ public class Settings {
 				rgba(183, 28, 28, 1),
 				ColorConstants.transparent(),
 				ColorConstants.lightGray(),
-				FontRegistry.ROBOTO_BOLD, 20f
+				FONT, FONT_SIZE
 			));
 		}
 		else{
@@ -147,7 +150,7 @@ public class Settings {
 				rgba(239, 154, 154, 1),
 				ColorConstants.transparent(),
 				ColorConstants.darkGray(),
-				FontRegistry.ROBOTO_BOLD, 20f
+				FONT, FONT_SIZE
 			));
 		}
 		if(FMT.FRAME != null) Themes.getDefaultTheme().applyAll(FMT.FRAME);

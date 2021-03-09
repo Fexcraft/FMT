@@ -61,4 +61,26 @@ public class Translator {
 		return DEFAULT.containsKey(string) ? DEFAULT.get(string) : string;
 	}
 
+	public static Translations translate(String... strs){
+		String[] res = new String[strs.length];
+		float[] len = new float[strs.length];
+		for(int i = 0; i < res.length; i++){
+			res[i] = translate(strs[i]);
+			len[i] = FontSizeUtil.getWidth(res[i]);
+		}
+		return new Translations(res, len);
+	}
+	
+	public static class Translations {
+		
+		public String[] results;
+		public float[] lengths;
+
+		public Translations(String[] res, float[] len){
+			this.results = res;
+			this.lengths = len;
+		}
+		
+	}
+
 }

@@ -18,6 +18,8 @@ import com.google.gson.JsonObject;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.utils.Jsoniser;
+import net.fexcraft.app.fmt.utils.Translator;
+import net.fexcraft.app.fmt.utils.Translator.Translations;
 
 public class Editor extends Component {
 	
@@ -104,6 +106,10 @@ public class Editor extends Component {
 		}
 		Dialog dialog = new Dialog(translate("editor.component.add_dialog.title"));
 		//
+		Translations trs = Translator.translate("editor.component.add_dialog.01", "editor.component.add_dialog.002");
+		for(int i = 0; i < trs.lengths.length; i++){
+			log(trs.results[i] + " = " + trs.lengths[i]);
+		}
 		dialog.getTitleTextState().getTextWidth();
 		dialog.show(FMT.FRAME);
 	}
