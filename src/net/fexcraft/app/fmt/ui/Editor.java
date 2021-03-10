@@ -7,10 +7,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
+import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.Dialog;
 import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.ScrollablePanel;
+import org.liquidengine.legui.component.SelectBox;
+import org.liquidengine.legui.component.TextArea;
+import org.liquidengine.legui.component.optional.align.HorizontalAlign;
+import org.liquidengine.legui.component.optional.align.VerticalAlign;
+import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.style.Style.DisplayType;
 
 import com.google.gson.JsonObject;
@@ -18,7 +24,6 @@ import com.google.gson.JsonObject;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.utils.Jsoniser;
-import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.app.fmt.utils.Translator.Translations;
 
 public class Editor extends Component {
@@ -41,7 +46,7 @@ public class Editor extends Component {
 		add(scrollable = new ScrollablePanel(0, LABEL, WIDTH, getSize().y));
 		Settings.applyBorderless(scrollable);
 		Settings.applyBorderless(scrollable.getContainer());
-		add(label = new Label(name, 5, 0, CWIDTH - 10, LABEL));
+		add(label = new Label(this.name = name, 5, 0, CWIDTH - 10, LABEL));
 		label.getStyle().setFontSize(30f);
 		align();
 		hide();
@@ -98,18 +103,59 @@ public class Editor extends Component {
 		alignComponents();
 	}
 	
+	private static String selected_component;
+	private static TextArea dialog_area;
+	private static Dialog dialog;
+	
 	public static void addComponent(String id){
+		if(dialog != null){
+			dialog.close();
+			dialog = null;
+		}
 		Class<? extends EditorComponent> com = EditorComponent.REGISTRY.get(id);
 		if(com == null){
 			log("Editor Component with ID '" + id + "' not found.");
 			return;
 		}
-		Dialog dialog = new Dialog(translate("editor.component.add_dialog.title"));
-		//
-		Translations trs = Translator.translate("editor.component.add_dialog.01", "editor.component.add_dialog.002");
-		for(int i = 0; i < trs.lengths.length; i++){
-			log(trs.results[i] + " = " + trs.lengths[i]);
+		String[] strs = new String[EditorComponent.REGISTRY.size()];
+		int idx = 0;
+		for(String str : EditorComponent.REGISTRY.keySet()){
+			strs[idx] = "editor.component." + str + ".name";
 		}
+		Translations trs = translate(strs);
+		float dialog_width = 620, scrollable_width = trs.longest + 4 < 300 - 10 ? 300 - 10 : trs.longest + 4;
+		Dialog dialog = new Dialog(translate("editor.component.add_dialog.title"), dialog_width, 300);
+		ScrollablePanel panel = new ScrollablePanel(5, 5, scrollable_width, 270);
+		panel.getContainer().setSize(scrollable_width, trs.results.length * 22);
+		for(int i = 0; i < trs.results.length; i++){
+			Label label = new Label(trs.results[i], 2, i * 22, scrollable_width, 22);
+			label.getListenerMap().addListener(MouseClickEvent.class, listener -> {
+				selected_component = strs[idx].substring("editor.component.".length(), strs[idx].length() - 5);
+				dialog_area.getTextState().setText(translate("editor.component." + selected_component + ".desc").replace("\n", "\r\n") + "\nID: " + selected_component);
+			});
+			Settings.applyBorderless(label.getStyle());
+			Settings.applyBorderless(label.getPressedStyle());
+			panel.getContainer().add(label);
+		}
+		panel.setFocusable(false);
+		dialog.getContainer().add(panel);
+		dialog.getContainer().add(dialog_area = new TextArea(scrollable_width + 10, 5, dialog_width - (scrollable_width + 15), 170));
+		dialog_area.getTextAreaField().setTextState(new ALBTextState(dialog_area.getSize().x - 15));
+		dialog_area.getTextAreaField().getTextState().setEditable(false);
+		dialog_area.getTextAreaField().getStyle().setHorizontalAlign(HorizontalAlign.LEFT);
+		dialog_area.getTextAreaField().getStyle().setVerticalAlign(VerticalAlign.TOP);
+		dialog_area.setHorizontalScrollBarVisible(false);
+		dialog.getContainer().add(new Label(translate("editor.component.add_dialog.select"), scrollable_width + 10, 185, dialog_width - (scrollable_width + 15), 25));
+		SelectBox<String> box = new SelectBox<>(scrollable_width + 10, 210, dialog_width - (scrollable_width + 15), 25);
+		for(Editor editor : EDITORS.values()) box.addElement(editor.name);
+		box.setSelected(0, true);
+		dialog.getContainer().add(box);
+		Button button = new Button(translate("editor.component.add_dialog.confirm"), scrollable_width + 10, 245, dialog_width - (scrollable_width + 15), 25);
+		button.getListenerMap().addListener(MouseClickEvent.class, listener -> {
+			//TODO
+		});
+		dialog.getContainer().add(button);
+		dialog.setResizable(false);
 		dialog.getTitleTextState().getTextWidth();
 		dialog.show(FMT.FRAME);
 	}

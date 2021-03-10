@@ -21,7 +21,7 @@ public final class FontSizeUtil {
 	
     private static STBTTFontinfo info;
 
-    public static void init(){
+    private static void loadFontInfo(){
     	ByteBuffer type = null;
         try{
             type = IOUtil.resourceToByteBuffer(Settings.FONT_PATH);
@@ -31,11 +31,13 @@ public final class FontSizeUtil {
         }
         info = STBTTFontinfo.create();
         if(!stbtt_InitFont(info, type)) throw new IllegalStateException("Error while initializing font information.");
-    }
+	}
 
     public static float getWidth(String text){
+        loadFontInfo();
         int width = 0, length = text.length();
-        try (MemoryStack stack = stackPush()) {
+        try(MemoryStack stack = stackPush()){
+        	stack.push();
             IntBuffer cpoint = stack.mallocInt(1);
             IntBuffer advwidth = stack.mallocInt(1);
             IntBuffer lsb = stack.mallocInt(1);
@@ -50,11 +52,12 @@ public final class FontSizeUtil {
                     width += stbtt_GetCodepointKernAdvance(info, point, cpoint.get(0));
                 }
             }
+            stack.pop();
         }
         return width * stbtt_ScaleForPixelHeight(info, Settings.FONT_SIZE);
     }
 
-    private static int getCodePoint(String text, int length, int idx, IntBuffer out){
+	private static int getCodePoint(String text, int length, int idx, IntBuffer out){
         char c1 = text.charAt(idx);
         if(Character.isHighSurrogate(c1) && idx + 1 < length){
             char c2 = text.charAt(idx + 1);

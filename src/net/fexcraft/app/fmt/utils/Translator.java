@@ -75,10 +75,18 @@ public class Translator {
 		
 		public String[] results;
 		public float[] lengths;
+		public float longest, shortest;
 
 		public Translations(String[] res, float[] len){
 			this.results = res;
 			this.lengths = len;
+			shortest = lengths[0];
+			longest = lengths[0];
+			if(len.length < 2) return;
+			for(int i = 1; i < len.length; i++){
+				if(len[i] > longest) longest = len[i];
+				if(len[i] < shortest) shortest = len[i];
+			}
 		}
 		
 	}
