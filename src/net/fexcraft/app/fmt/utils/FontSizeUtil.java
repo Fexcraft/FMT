@@ -34,6 +34,7 @@ public final class FontSizeUtil {
 	}
 
     public static float getWidth(String text){
+    	if(text == null || text.length() < 1) return 0;
         loadFontInfo();
         int width = 0, length = text.length();
         try(MemoryStack stack = stackPush()){
