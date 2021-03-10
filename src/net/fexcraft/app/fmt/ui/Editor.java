@@ -120,23 +120,26 @@ public class Editor extends Component {
 		String[] strs = new String[EditorComponent.REGISTRY.size()];
 		int idx = 0;
 		for(String str : EditorComponent.REGISTRY.keySet()){
-			strs[idx] = "editor.component." + str + ".name";
+			strs[idx++] = "editor.component." + str + ".name";
 		}
 		Translations trs = translate(strs);
 		float dialog_width = 620, scrollable_width = trs.longest + 4 < 300 - 10 ? 300 - 10 : trs.longest + 4;
 		Dialog dialog = new Dialog(translate("editor.component.add_dialog.title"), dialog_width, 300);
 		ScrollablePanel panel = new ScrollablePanel(5, 5, scrollable_width, 270);
 		panel.getContainer().setSize(scrollable_width, trs.results.length * 22);
-		for(int i = 0; i < trs.results.length; i++){
+		for(int i = 0; i < strs.length; i++){
 			Label label = new Label(trs.results[i], 2, i * 22, scrollable_width, 22);
+			int j = i;
 			label.getListenerMap().addListener(MouseClickEvent.class, listener -> {
-				selected_component = strs[idx].substring("editor.component.".length(), strs[idx].length() - 5);
-				dialog_area.getTextState().setText(translate("editor.component." + selected_component + ".desc").replace("\n", "\r\n") + "\nID: " + selected_component);
+				selected_component = strs[j].substring("editor.component.".length(), strs[j].length() - 5);
+				dialog_area.getTextState().setText(translate("editor.component." + selected_component + ".desc"));
 			});
 			Settings.applyBorderless(label.getStyle());
 			Settings.applyBorderless(label.getPressedStyle());
 			panel.getContainer().add(label);
 		}
+		Settings.applyBorderless(panel);
+		Settings.applyBorderless(panel.getContainer());
 		panel.setFocusable(false);
 		dialog.getContainer().add(panel);
 		dialog.getContainer().add(dialog_area = new TextArea(scrollable_width + 10, 5, dialog_width - (scrollable_width + 15), 170));
