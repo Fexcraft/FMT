@@ -41,7 +41,7 @@ public class EditorComponent extends Component {
 		while(COMPONENTS.containsKey(uid)) uid++;
 		setSize(Editor.CWIDTH, fullheight = HEIGHT * 2);
 		add(label = new Label(Translator.translate(key), 0, 0, 300, 24));
-		Settings.applyComponentTheme(this);
+		Settings.applyComponentTheme(this).accept(Settings.SELTHEME);
 		add(size = new Icon(1, "./resources/textures/icons/component/size.png", () -> minimize()));
 		add(mu = new Icon(2, "./resources/textures/icons/component/move_up.png", () -> move(-1)));
 		add(md = new Icon(3, "./resources/textures/icons/component/move_down.png", () -> move(1)));

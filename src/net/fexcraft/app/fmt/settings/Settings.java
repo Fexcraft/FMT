@@ -167,14 +167,16 @@ public class Settings {
 		});
 	}
 
-	public static void applyComponentTheme(EditorComponent com){
-		Settings.THEME_CHANGE_LISTENERS.add(bool -> {
+	public static Consumer<Boolean> applyComponentTheme(EditorComponent com){
+		Consumer<Boolean> consumer = bool -> {
 			com.getStyle().setBorderRadius(0);
 			com.getStyle().setBorder(null);
 			float col = bool != null && bool ? 0.1875f : 0.8125f;
 			com.getStyle().setTextColor(bool != null && bool ? ColorConstants.lightGray() : ColorConstants.darkGray());
 			com.getStyle().getBackground().setColor(col, col, col, 1);
-		});
+		};
+		Settings.THEME_CHANGE_LISTENERS.add(consumer);
+		return consumer;
 	}
 	
 	public static void applyBorderless(Component com){

@@ -1,6 +1,5 @@
 package net.fexcraft.app.fmt.ui;
 
-import static net.fexcraft.app.fmt.utils.Logging.log;
 import static net.fexcraft.app.fmt.utils.Translator.translate;
 
 import java.util.ArrayList;
@@ -17,6 +16,8 @@ import org.liquidengine.legui.component.TextArea;
 import org.liquidengine.legui.component.optional.align.HorizontalAlign;
 import org.liquidengine.legui.component.optional.align.VerticalAlign;
 import org.liquidengine.legui.event.MouseClickEvent;
+import org.liquidengine.legui.event.MouseClickEvent.MouseClickAction;
+import org.liquidengine.legui.input.Mouse.MouseButton;
 import org.liquidengine.legui.style.Style.DisplayType;
 
 import com.google.gson.JsonObject;
@@ -24,6 +25,7 @@ import com.google.gson.JsonObject;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.utils.Jsoniser;
+import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.fmt.utils.Translator.Translations;
 
 public class Editor extends Component {
@@ -107,16 +109,13 @@ public class Editor extends Component {
 	private static TextArea dialog_area;
 	private static Dialog dialog;
 	
-	public static void addComponent(String id){
+	public static void addComponent(){
 		if(dialog != null){
 			dialog.close();
 			dialog = null;
 		}
-		Class<? extends EditorComponent> com = EditorComponent.REGISTRY.get(id);
-		if(com == null){
-			log("Editor Component with ID '" + id + "' not found.");
-			return;
-		}
+		dialog_area = null;
+		selected_component = null;
 		String[] strs = new String[EditorComponent.REGISTRY.size()];
 		int idx = 0;
 		for(String str : EditorComponent.REGISTRY.keySet()){
@@ -155,12 +154,28 @@ public class Editor extends Component {
 		dialog.getContainer().add(box);
 		Button button = new Button(translate("editor.component.add_dialog.confirm"), scrollable_width + 10, 245, dialog_width - (scrollable_width + 15), 25);
 		button.getListenerMap().addListener(MouseClickEvent.class, listener -> {
-			//TODO
+			if(listener.getButton() != MouseButton.MOUSE_BUTTON_LEFT || listener.getAction() != MouseClickAction.CLICK) return;
+			try{
+				Editor editor = byName(box.getSelection());
+				if(editor == null || selected_component == null) return;
+				editor.addComponent(EditorComponent.REGISTRY.get(selected_component).newInstance());
+				dialog.close();
+			}
+			catch(Exception e){
+				Logging.log(e);
+			}
 		});
 		dialog.getContainer().add(button);
 		dialog.setResizable(false);
 		dialog.getTitleTextState().getTextWidth();
 		dialog.show(FMT.FRAME);
+	}
+
+	private static Editor byName(String name){
+		for(Editor editor : EDITORS.values()){
+			if(editor.name.equals(name)) return editor;
+		}
+		return null;
 	}
 	
 }
