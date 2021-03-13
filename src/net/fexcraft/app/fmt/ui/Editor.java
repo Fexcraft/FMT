@@ -36,10 +36,10 @@ public class Editor extends Component {
 	public static final ArrayList<Editor> EDITORLIST = new ArrayList<>();
 	public ArrayList<EditorComponent> components = new ArrayList<>();
 	private ScrollablePanel scrollable;
-	private Icon rem, set, add;
+	private Icon rem, set, add, adj;
 	private Label label;
 	public static int CWIDTH = 300, WIDTH = 310, LABEL = 30;
-	public boolean alignment;
+	public boolean alignment, comp_adj_mode;
 	public String name;
 	
 	public Editor(String id, String name, boolean left){
@@ -57,23 +57,27 @@ public class Editor extends Component {
 		label.getStyle().setFontSize(30f);
 		add(rem = new Icon((byte)1, "./resources/textures/icons/component/remove.png", () -> {}));
 		add(set = new Icon((byte)2, "./resources/textures/icons/component/edit.png", () -> {}));
-		add(add = new Icon((byte)3, "./resources/textures/icons/component/add.png", () -> addComponentDialog()));
+		add(adj = new Icon((byte)3, "./resources/textures/icons/component/adjust.png", () -> comp_adj_mode = !comp_adj_mode));
+		add(add = new Icon((byte)4, "./resources/textures/icons/component/add.png", () -> addComponentDialog()));
 		rem.getListenerMap().addListener(CursorEnterEvent.class, lis);
 		set.getListenerMap().addListener(CursorEnterEvent.class, lis);
 		add.getListenerMap().addListener(CursorEnterEvent.class, lis);
+		adj.getListenerMap().addListener(CursorEnterEvent.class, lis);
 		rem.getStyle().setDisplay(DisplayType.NONE);
 		set.getStyle().setDisplay(DisplayType.NONE);
 		add.getStyle().setDisplay(DisplayType.NONE);
+		adj.getStyle().setDisplay(DisplayType.NONE);
 		align();
 		hide();
 	}
 
 	private void toggleIcons(){
-		boolean bool = label.isHovered() || rem.isHovered() || set.isHovered() || add.isHovered();
+		boolean bool = label.isHovered() || rem.isHovered() || set.isHovered() || add.isHovered() || adj.isHovered();
 		DisplayType type = bool ? DisplayType.MANUAL : DisplayType.NONE;
 		rem.getStyle().setDisplay(type);
 		set.getStyle().setDisplay(type);
 		add.getStyle().setDisplay(type);
+		adj.getStyle().setDisplay(type);
 	}
 
 	public Editor(String key, JsonObject obj){
