@@ -15,9 +15,11 @@ import org.liquidengine.legui.component.SelectBox;
 import org.liquidengine.legui.component.TextArea;
 import org.liquidengine.legui.component.optional.align.HorizontalAlign;
 import org.liquidengine.legui.component.optional.align.VerticalAlign;
+import org.liquidengine.legui.event.CursorEnterEvent;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.event.MouseClickEvent.MouseClickAction;
 import org.liquidengine.legui.input.Mouse.MouseButton;
+import org.liquidengine.legui.listener.CursorEnterEventListener;
 import org.liquidengine.legui.style.Style.DisplayType;
 
 import com.google.gson.JsonObject;
@@ -34,6 +36,7 @@ public class Editor extends Component {
 	public static final ArrayList<Editor> EDITORLIST = new ArrayList<>();
 	public ArrayList<EditorComponent> components = new ArrayList<>();
 	private ScrollablePanel scrollable;
+	private Icon rem, set, add;
 	private Label label;
 	public static int CWIDTH = 300, WIDTH = 310, LABEL = 30;
 	public boolean alignment;
@@ -49,9 +52,28 @@ public class Editor extends Component {
 		Settings.applyBorderless(scrollable);
 		Settings.applyBorderless(scrollable.getContainer());
 		add(label = new Label(this.name = name, 5, 0, CWIDTH - 10, LABEL));
+		CursorEnterEventListener lis = l -> toggleIcons();
+		label.getListenerMap().addListener(CursorEnterEvent.class, lis);
 		label.getStyle().setFontSize(30f);
+		add(rem = new Icon((byte)1, "./resources/textures/icons/component/remove.png", () -> {}));
+		add(set = new Icon((byte)2, "./resources/textures/icons/component/edit.png", () -> {}));
+		add(add = new Icon((byte)3, "./resources/textures/icons/component/add.png", () -> addComponentDialog()));
+		rem.getListenerMap().addListener(CursorEnterEvent.class, lis);
+		set.getListenerMap().addListener(CursorEnterEvent.class, lis);
+		add.getListenerMap().addListener(CursorEnterEvent.class, lis);
+		rem.getStyle().setDisplay(DisplayType.NONE);
+		set.getStyle().setDisplay(DisplayType.NONE);
+		add.getStyle().setDisplay(DisplayType.NONE);
 		align();
 		hide();
+	}
+
+	private void toggleIcons(){
+		boolean bool = label.isHovered() || rem.isHovered() || set.isHovered() || add.isHovered();
+		DisplayType type = bool ? DisplayType.MANUAL : DisplayType.NONE;
+		rem.getStyle().setDisplay(type);
+		set.getStyle().setDisplay(type);
+		add.getStyle().setDisplay(type);
 	}
 
 	public Editor(String key, JsonObject obj){
@@ -109,7 +131,7 @@ public class Editor extends Component {
 	private static TextArea dialog_area;
 	private static Dialog dialog;
 	
-	public static void addComponent(){
+	public static void addComponentDialog(){
 		if(dialog != null){
 			dialog.close();
 			dialog = null;

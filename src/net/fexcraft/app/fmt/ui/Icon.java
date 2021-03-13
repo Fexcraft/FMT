@@ -28,4 +28,19 @@ public class Icon extends ImageView {
 		});
 	}
 	
+	public Icon(byte index, String adress, MouseClickEventListener listener){
+		super(new StbBackedLoadableImage(adress));
+		this.setPosition(Editor.CWIDTH - (index * 23), 1);
+		this.setSize(22, 22);
+		this.getListenerMap().addListener(MouseClickEvent.class, listener);
+		Settings.applyBorderless(this.getStyle());
+		Settings.applyBorderless(this.getFocusedStyle());
+	}
+	
+	public Icon(byte index, String adress, Runnable run){
+		this(index, adress, event -> {
+			if(event.getAction() == CLICK && event.getButton() == MOUSE_BUTTON_LEFT) run.run();
+		});
+	}
+	
 }

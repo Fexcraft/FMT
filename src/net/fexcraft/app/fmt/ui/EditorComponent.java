@@ -1,19 +1,12 @@
 package net.fexcraft.app.fmt.ui;
 
-import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
-import static org.liquidengine.legui.input.Mouse.MouseButton.MOUSE_BUTTON_LEFT;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.liquidengine.legui.component.Component;
-import org.liquidengine.legui.component.ImageView;
 import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.event.CursorEnterEvent;
-import org.liquidengine.legui.event.MouseClickEvent;
-import org.liquidengine.legui.image.StbBackedLoadableImage;
 import org.liquidengine.legui.listener.CursorEnterEventListener;
-import org.liquidengine.legui.listener.MouseClickEventListener;
 import org.liquidengine.legui.style.Style.DisplayType;
 
 import net.fexcraft.app.fmt.settings.Settings;
@@ -42,10 +35,10 @@ public class EditorComponent extends Component {
 		setSize(Editor.CWIDTH, fullheight = HEIGHT * 2);
 		add(label = new Label(Translator.translate(key), 0, 0, 300, 24));
 		Settings.applyComponentTheme(this).accept(Settings.SELTHEME);
-		add(size = new Icon(1, "./resources/textures/icons/component/size.png", () -> minimize()));
-		add(mu = new Icon(2, "./resources/textures/icons/component/move_up.png", () -> move(-1)));
-		add(md = new Icon(3, "./resources/textures/icons/component/move_down.png", () -> move(1)));
-		add(pin = new Icon(4, "./resources/textures/icons/component/pin.png", () -> pin()));
+		add(size = new Icon((byte)1, "./resources/textures/icons/component/size.png", () -> minimize()));
+		add(mu = new Icon((byte)2, "./resources/textures/icons/component/move_up.png", () -> move(-1)));
+		add(md = new Icon((byte)3, "./resources/textures/icons/component/move_down.png", () -> move(1)));
+		add(pin = new Icon((byte)4, "./resources/textures/icons/component/pin.png", () -> pin()));
 		icons.add(mu); icons.add(md); icons.add(pin);
 		CursorEnterEventListener listener = l -> toggleIcons();
 		label.getListenerMap().addListener(CursorEnterEvent.class, listener);
@@ -79,25 +72,6 @@ public class EditorComponent extends Component {
 	}
 
 	private void pin(){
-		
-	}
-	
-	public class Icon extends ImageView {
-		
-		public Icon(int index, String adress, MouseClickEventListener listener){
-			super(new StbBackedLoadableImage(adress));
-			this.setPosition(Editor.CWIDTH - (index * 23), 1);
-			this.setSize(22, 22);
-			this.getListenerMap().addListener(MouseClickEvent.class, listener);
-			Settings.applyBorderless(this.getStyle());
-			Settings.applyBorderless(this.getFocusedStyle());
-		}
-		
-		public Icon(int index, String adress, Runnable run){
-			this(index, adress, event -> {
-				if(event.getAction() == CLICK && event.getButton() == MOUSE_BUTTON_LEFT) run.run();
-			});
-		}
 		
 	}
 
