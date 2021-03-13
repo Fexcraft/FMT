@@ -4,7 +4,6 @@ import org.liquidengine.legui.component.Panel;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
-import net.fexcraft.app.fmt.ui.ToolbarMenu.ComponentButton;
 import net.fexcraft.app.fmt.ui.ToolbarMenu.MenuButton;
 import net.fexcraft.app.fmt.utils.Logging;
 
@@ -59,7 +58,7 @@ public class Toolbar extends Panel {
 				((MenuButton)layer.getChildComponents().get(i)).getLabel().getTextState().setText(Editor.EDITORLIST.get(i).name);
 			}*/
 		}));
-		this.add(new ToolbarMenu(2, "component",
+		/*this.add(new ToolbarMenu(2, "component",
 			new MenuButton(0, "component.list"),
 			new ToolbarMenu(-1, "component.polygon",
 				new ComponentButton(0, "component.polygon.quick", 2),
@@ -120,12 +119,12 @@ public class Toolbar extends Panel {
 				new ComponentButton(3, "component.project.general"),
 				new ComponentButton(4, "component.project.general")
 			)
-		));
-		this.add(new ToolbarMenu(3, "utils"));
-		this.add(new ToolbarMenu(4, "polygons"));
-		this.add(new ToolbarMenu(5, "texture"));
-		this.add(new ToolbarMenu(6, "helpers"));
-		this.add(new ToolbarMenu(7, "project",
+		));*/
+		this.add(new ToolbarMenu(2, "utils"));
+		this.add(new ToolbarMenu(3, "polygons"));
+		this.add(new ToolbarMenu(4, "texture"));
+		this.add(new ToolbarMenu(5, "helpers"));
+		this.add(new ToolbarMenu(6, "project",
 			new MenuButton(0, "project.open"),
 			new MenuButton(1, "project.settings"),
 			//new MenuButton(2, "project.import"),
@@ -133,7 +132,7 @@ public class Toolbar extends Panel {
 			new MenuButton(2, "project.close")
 		));
 		//this.add(new ToolbarMenu(8, "THEME",  () -> { Settings.SELTHEME = !Settings.SELTHEME; Settings.applyTheme(); }));
-		this.add(new ToolbarMenu(8, "exit", () -> FMT.close()));
+		this.add(new ToolbarMenu(7, "exit", () -> FMT.close()));
 	}
 
 }
