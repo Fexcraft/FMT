@@ -55,10 +55,10 @@ public class Editor extends Component {
 		CursorEnterEventListener lis = l -> toggleIcons();
 		label.getListenerMap().addListener(CursorEnterEvent.class, lis);
 		label.getStyle().setFontSize(30f);
-		add(rem = new Icon((byte)1, "./resources/textures/icons/component/remove.png", () -> {}));
-		add(set = new Icon((byte)2, "./resources/textures/icons/component/edit.png", () -> {}));
-		add(adj = new Icon((byte)3, "./resources/textures/icons/component/adjust.png", () -> comp_adj_mode = !comp_adj_mode));
-		add(add = new Icon((byte)4, "./resources/textures/icons/component/add.png", () -> addComponentDialog()));
+		add(rem = new Icon((byte)10, "./resources/textures/icons/component/remove.png", () -> {}));
+		add(set = new Icon((byte)20, "./resources/textures/icons/component/edit.png", () -> {}));
+		add(adj = new Icon((byte)30, "./resources/textures/icons/component/adjust.png", () -> comp_adj_mode = !comp_adj_mode));
+		add(add = new Icon((byte)40, "./resources/textures/icons/component/add.png", () -> addComponentDialog()));
 		rem.getListenerMap().addListener(CursorEnterEvent.class, lis);
 		set.getListenerMap().addListener(CursorEnterEvent.class, lis);
 		add.getListenerMap().addListener(CursorEnterEvent.class, lis);

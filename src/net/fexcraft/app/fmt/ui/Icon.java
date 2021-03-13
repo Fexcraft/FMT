@@ -30,7 +30,12 @@ public class Icon extends ImageView {
 	
 	public Icon(byte index, String adress, MouseClickEventListener listener){
 		super(new StbBackedLoadableImage(adress));
-		this.setPosition(Editor.CWIDTH - (index * 23), 1);
+		int yoff = 1;
+		if(index >= 10){
+			index /= 10;
+			yoff = 4;
+		}
+		this.setPosition(Editor.CWIDTH - (index * 23), yoff);
 		this.setSize(22, 22);
 		this.getListenerMap().addListener(MouseClickEvent.class, listener);
 		Settings.applyBorderless(this.getStyle());
