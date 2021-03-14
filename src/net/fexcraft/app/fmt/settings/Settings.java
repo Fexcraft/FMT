@@ -202,17 +202,17 @@ public class Settings {
 				new Editor(entry.getKey(), entry.getValue().getAsJsonObject());
 			}
 		}
-		Editor.EDITORS.get("test").show();
-		Editor.EDITORS.get("test2").show();
+		Editor.EDITORS.get("polygon_editor").show();
+		Editor.EDITORS.get("polygon_tree").show();
 	}
 
 	private static void loadDefaultEditors(){
-		Editor editor = new Editor("test", "Test Editor", true);
-		new Editor("test2", "Test Editor 2", false);
+		Editor editor = new Editor("polygon_editor", "Polygon Editor", true);
+		new Editor("polygon_tree", "Polygon Tree", false);
 		editor.addComponent(new QuickAdd());
-		editor.addComponent(new EditorComponent("component.test0", 80, false));
-		editor.addComponent(new EditorComponent("component.test1", 200, false));
-		editor.addComponent(new EditorComponent("component.test2"));
+		editor.addComponent(new EditorComponent("test0", 80, false));
+		editor.addComponent(new EditorComponent("test1", 200, false));
+		editor.addComponent(new EditorComponent("test2"));
 	}
 
 }
