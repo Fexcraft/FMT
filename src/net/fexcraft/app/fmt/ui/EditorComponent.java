@@ -21,7 +21,7 @@ public class EditorComponent extends Component {
 	private ArrayList<Icon> icons = new ArrayList<>();
 	private boolean minimized, unpinned;
 	private Label label;
-	private Icon size, mu, md, pin;
+	private Icon size, mup, mdw, pin, rem;
 	private int uid, fullheight;
 	public Editor editor;
 	public int index;
@@ -36,10 +36,14 @@ public class EditorComponent extends Component {
 		add(label = new Label(Translator.translate(key), 0, 0, 300, 24));
 		Settings.applyComponentTheme(this).accept(Settings.SELTHEME);
 		add(size = new Icon((byte)1, "./resources/textures/icons/component/size.png", () -> minimize()));
-		add(mu = new Icon((byte)2, "./resources/textures/icons/component/move_up.png", () -> move(-1)));
-		add(md = new Icon((byte)3, "./resources/textures/icons/component/move_down.png", () -> move(1)));
-		add(pin = new Icon((byte)4, "./resources/textures/icons/component/pin.png", () -> pin()));
-		icons.add(mu); icons.add(md); icons.add(pin);
+		add(pin = new Icon((byte)2, "./resources/textures/icons/component/pin.png", () -> pin()));
+		add(mup = new Icon((byte)3, "./resources/textures/icons/component/move_up.png", () -> move(-1)));
+		add(mdw = new Icon((byte)4, "./resources/textures/icons/component/move_down.png", () -> move(1)));
+		add(rem = new Icon((byte)5, "./resources/textures/icons/component/remove.png", () -> rem()));
+		icons.add(pin);
+		icons.add(mup);
+		icons.add(mdw);
+		icons.add(rem);
 		CursorEnterEventListener listener = l -> toggleIcons();
 		label.getListenerMap().addListener(CursorEnterEvent.class, listener);
 		for(Icon icon : icons){
@@ -51,11 +55,23 @@ public class EditorComponent extends Component {
 
 	private void toggleIcons(){
 		boolean bool = label.isHovered();
-		for(Icon icon : icons) if(icon.isHovered()) bool = true;
-		DisplayType type = bool ? DisplayType.MANUAL : DisplayType.NONE;
-		mu.getStyle().setDisplay(!unpinned && index <= 0 ? DisplayType.NONE : type);
-		md.getStyle().setDisplay(!unpinned && index >= editor.components.size() - 1 ? DisplayType.NONE : type);
-		pin.getStyle().setDisplay(type);
+		if(!bool){
+			if(size.isHovered()) bool = true;
+			else if(editor.comp_adj_mode && (pin.isHovered() || mup.isHovered() || mdw.isHovered() || rem.isHovered())) bool = true;
+		}
+		if(!bool){
+			pin.getStyle().setDisplay(DisplayType.NONE);
+			mup.getStyle().setDisplay(DisplayType.NONE);
+			mdw.getStyle().setDisplay(DisplayType.NONE);
+			rem.getStyle().setDisplay(DisplayType.NONE);
+		}
+		else{
+			bool = !editor.comp_adj_mode || unpinned;
+			pin.getStyle().setDisplay(bool ? DisplayType.NONE : DisplayType.MANUAL);
+			mup.getStyle().setDisplay(bool || index <= 0 ? DisplayType.NONE : DisplayType.MANUAL);
+			mdw.getStyle().setDisplay(bool || index >= editor.components.size() - 1 ? DisplayType.NONE : DisplayType.MANUAL);
+			rem.getStyle().setDisplay(bool ? DisplayType.NONE : DisplayType.MANUAL);
+		}
 	}
 
 	private void minimize(){
@@ -73,6 +89,11 @@ public class EditorComponent extends Component {
 
 	private void pin(){
 		
+	}
+
+	private void rem(){
+		if(editor == null) return;
+		editor.removeComponent(this);
 	}
 
 	public static void registerComponents(){
