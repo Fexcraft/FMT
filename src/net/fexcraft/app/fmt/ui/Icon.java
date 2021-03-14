@@ -48,4 +48,20 @@ public class Icon extends ImageView {
 		});
 	}
 	
+	public Icon(int index, int size, int off, int x, int y, String adress, MouseClickEventListener listener){
+		super(new StbBackedLoadableImage(adress));
+		this.setPosition(x + (index * (size + off)), y);
+		this.setFocusable(false);
+		this.setSize(size, size);
+		this.getListenerMap().addListener(MouseClickEvent.class, listener);
+		Settings.applyBorderless(this.getStyle());
+		Settings.applyBorderless(this.getFocusedStyle());
+	}
+	
+	public Icon(int index, int size, int off, int x, int y, String adress, Runnable run){
+		this(index, size, off, x, y, adress, event -> {
+			if(event.getAction() == CLICK && event.getButton() == MOUSE_BUTTON_LEFT) run.run();
+		});
+	}
+	
 }

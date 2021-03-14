@@ -23,6 +23,7 @@ import com.google.gson.JsonObject;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.ui.EditorComponent;
+import net.fexcraft.app.fmt.ui.components.QuickAdd;
 import net.fexcraft.app.fmt.utils.Jsoniser;
 import net.fexcraft.lib.common.math.Time;
 
@@ -208,8 +209,9 @@ public class Settings {
 	private static void loadDefaultEditors(){
 		Editor editor = new Editor("test", "Test Editor", true);
 		new Editor("test2", "Test Editor 2", false);
-		editor.addComponent(new EditorComponent("component.test0"));
-		editor.addComponent(new EditorComponent("component.test1", false));
+		editor.addComponent(new QuickAdd());
+		editor.addComponent(new EditorComponent("component.test0", 80, false));
+		editor.addComponent(new EditorComponent("component.test1", 200, false));
 		editor.addComponent(new EditorComponent("component.test2"));
 	}
 

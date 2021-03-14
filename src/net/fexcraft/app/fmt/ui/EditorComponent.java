@@ -27,13 +27,13 @@ public class EditorComponent extends Component {
 	public int index;
 	
 	public EditorComponent(String key){
-		this(key, true);
+		this(key, 0, true);
 	}
 	
-	public EditorComponent(String key, boolean resizeable){
+	public EditorComponent(String key, int fullHeight, boolean resizeable){
 		while(COMPONENTS.containsKey(uid)) uid++;
-		setSize(Editor.CWIDTH, fullheight = HEIGHT * 2);
-		add(label = new Label(Translator.translate(key), 0, 0, 300, 24));
+		setSize(Editor.CWIDTH, fullheight = fullHeight > 0 ? fullHeight : HEIGHT * 2);
+		add(label = new Label(Translator.translate("editor.component." + key + ".name"), 4, 0, 296, 24));
 		Settings.applyComponentTheme(this).accept(Settings.SELTHEME);
 		add(size = new Icon((byte)1, "./resources/textures/icons/component/size.png", () -> minimize()));
 		add(pin = new Icon((byte)2, "./resources/textures/icons/component/pin.png", () -> pin()));
