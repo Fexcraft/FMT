@@ -121,6 +121,15 @@ public class Editor extends Component {
 		alignComponents();
 	}
 
+	public void removeComponent(EditorComponent com){
+		components.remove(com);
+		scrollable.getContainer().remove(com);
+		for(int i = 0; i < components.size(); i++){
+			components.get(i).index = i;
+		}
+		alignComponents();
+	}
+
 	public void swap(int x, int y){
 		Collections.swap(components, x, y);
 		scrollable.getContainer().removeIf(c -> true);
