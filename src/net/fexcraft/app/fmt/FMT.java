@@ -105,6 +105,9 @@ public class FMT {
 	    //
 		Settings.load();
 		Settings.apply(INSTANCE);
+		//Binding binding = new Binding();
+		//GroovyScriptEngine engine = new GroovyScriptEngine("./scripts/");
+		//engine.run("test.script", binding);
 		try{
 			INSTANCE.run();
 		}

@@ -122,6 +122,7 @@ sourceSets {
         }
         resources {
         	srcDirs 'resources'
+        	srcDirs 'scripts'
         }
     }
  }
