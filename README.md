@@ -1,3 +1,6 @@
+# PLEASE NOTE
+_This description is still for v2, will be updated once v3 is out._
+
 # Fex's Modelling Toolbox
 A Tool to create Models basing on the "TMT" (updated and maintained version of Fex/FCL) Library.
 
