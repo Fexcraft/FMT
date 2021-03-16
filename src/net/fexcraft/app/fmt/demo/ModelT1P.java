@@ -1236,22 +1236,18 @@ public class ModelT1P extends ModelBase {
     	} bodyLines.render();*/
     }
 
+	public void render(ModelRendererTurbo[] model){
+		for(ModelRendererTurbo turbo : model) turbo.render();
+	}
+
 	@Override
 	public void translate(float x, float y, float z){
-		translate(body, x, y, z);
-		translate(body_door_open_colored_primary, x, y, z);
-		translate(body_door_close_colored_primary, x, y, z);
-		translate(body_colored_primary, x, y, z);
-		translate(body_colored_secondary, x, y, z);
+		//
 	}
 
 	@Override
 	public void rotate(float x, float y, float z){
-		rotate(body, x, y, z);
-		rotate(body_door_open_colored_primary, x, y, z);
-		rotate(body_door_close_colored_primary, x, y, z);
-		rotate(body_colored_primary, x, y, z);
-		rotate(body_colored_secondary, x, y, z);
+		//
 	}
 
 }

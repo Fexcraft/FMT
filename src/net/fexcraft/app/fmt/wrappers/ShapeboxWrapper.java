@@ -1,12 +1,17 @@
 package net.fexcraft.app.fmt.wrappers;
 
+import java.util.Arrays;
+
 import org.lwjgl.opengl.GL11;
 
 import com.google.gson.JsonObject;
 
+import net.fexcraft.app.fmt.utils.Axis3DL;
 import net.fexcraft.app.fmt.utils.Settings;
+import net.fexcraft.app.fmt.wrappers.face.UVCoords;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
+import net.fexcraft.lib.tmt.BoxBuilder;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public class ShapeboxWrapper extends BoxWrapper {
@@ -14,6 +19,7 @@ public class ShapeboxWrapper extends BoxWrapper {
 	public Vec3f cor0 = new Vec3f(), cor1 = new Vec3f(), cor2 = new Vec3f(), cor3 = new Vec3f(),
 				 cor4 = new Vec3f(), cor5 = new Vec3f(), cor6 = new Vec3f(), cor7 = new Vec3f();
 	//public boolean bool[] = new boolean[]{ false, false, false, false, false, false };
+	private Axis3DL axe = new Axis3DL();
 	
 	public ShapeboxWrapper(GroupCompound compound){
 		super(compound);
@@ -25,24 +31,25 @@ public class ShapeboxWrapper extends BoxWrapper {
 		wrapper.cor0 = new Vec3f(cor0); wrapper.cor1 = new Vec3f(cor1); wrapper.cor2 = new Vec3f(cor2); wrapper.cor3 = new Vec3f(cor3);
 		wrapper.cor4 = new Vec3f(cor4); wrapper.cor5 = new Vec3f(cor5); wrapper.cor6 = new Vec3f(cor6); wrapper.cor7 = new Vec3f(cor7);
 		wrapper.size = new Vec3f(size); //wrapper.bool = new boolean[]{ bool[0], bool[1], bool[2], bool[3], bool[4], bool[5] };
+		wrapper.sides = Arrays.copyOf(sides, 6);
+		wrapper.cuv.copyFrom(wrapper, cuv);
 		return wrapper;
 	}
 	
 	protected ModelRendererTurbo newMRT(){
-		return new ModelRendererTurbo(null, textureX, textureY, compound.tx(getTurboList()), compound.ty(getTurboList()))
-			.addShapeBox(off.xCoord, off.yCoord, off.zCoord, size.xCoord, size.yCoord, size.zCoord, 0,
-				cor0.xCoord, cor0.yCoord, cor0.zCoord,
-				cor1.xCoord, cor1.yCoord, cor1.zCoord,
-				cor2.xCoord, cor2.yCoord, cor2.zCoord,
-				cor3.xCoord, cor3.yCoord, cor3.zCoord,
-				cor4.xCoord, cor4.yCoord, cor4.zCoord,
-				cor5.xCoord, cor5.yCoord, cor5.zCoord,
-				cor6.xCoord, cor6.yCoord, cor6.zCoord,
-				cor7.xCoord, cor7.yCoord, cor7.zCoord)
+		ModelRendererTurbo turbo = initMRT()
 			.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
 			.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
-		//for(int i = 0; i < bool.length; i++){ turbo.getFaces()[i].setOppositeTriangles(bool[i]); }
-		//turbo.triline = true; return turbo;
+		BoxBuilder builder = new BoxBuilder(turbo).setOffset(off.xCoord, off.yCoord, off.zCoord).setSize(size.xCoord, size.yCoord, size.zCoord).removePolygons(sides);
+		builder.setCorners(cor0, cor1, cor2, cor3, cor4, cor5, cor6, cor7);
+		if(cuv.anyCustom()){
+			for(UVCoords coord : cuv.values()){
+				if(!isFaceActive(coord.face())) continue;//disabled
+				builder.setPolygonUV(coord.side().index(), coord.value());
+				if(coord.absolute()) builder.setDetachedUV(coord.side().index());
+			}
+		}
+		return builder.build();
 	}
 
 	@Override
@@ -51,17 +58,17 @@ public class ShapeboxWrapper extends BoxWrapper {
 	}
 	
 	private static ModelRendererTurbo[] cornermarkers = new ModelRendererTurbo[8];
-	private static RGB[] cornercolors = new RGB[]{
+	/*private static RGB[] cornercolors = new RGB[]{
 		new RGB(255, 255, 0), new RGB(255, 0, 0), new RGB(0, 0, 255), new RGB(0, 255, 0),
 		new RGB(255, 0, 127), new RGB(0, 127, 255), new RGB(0, 127, 0), new RGB(127, 0, 255)
-	};
+	};*/
 	public static RGB[] cornercolors2 = new RGB[]{
 		new RGB(255, 255, 0), new RGB(255, 0, 0), new RGB(0, 127, 255), new RGB(255, 0, 127),
 		new RGB(0, 255, 0), new RGB(0, 0, 255), new RGB(0, 127, 0), new RGB(127, 0, 255)
 	};
 	static{
 		for(int i = 0; i < 8; i++){
-			cornermarkers[i] = new ModelRendererTurbo(null, 0, 0, 16, 16).addBox(-.25f, -.25f, -.25f, .5f, .5f, .5f).setTextured(false).setColor(cornercolors[i]);
+			cornermarkers[i] = new ModelRendererTurbo(null, 0, 0, 16, 16).addBox(-.25f, -.25f, -.25f, .5f, .5f, .5f).setTextured(false).setColor(cornercolors2[i]);
 		}
 	}
 	
@@ -74,14 +81,15 @@ public class ShapeboxWrapper extends BoxWrapper {
 				rotmarker.render();
 			}
 			else{
+				rotmarker2.setRotationPoint(lines.rotationPointX, lines.rotationPointY, lines.rotationPointZ);
+				rotmarker2.render();
 				GL11.glPushMatrix();
-				if(rot.xCoord != 0f) GL11.glRotatef(rot.xCoord, 1, 0, 0);
-				if(rot.yCoord != 0f) GL11.glRotatef(rot.yCoord, 0, 1, 0);
-				if(rot.zCoord != 0f) GL11.glRotatef(rot.zCoord, 0, 0, 1);
+				axe.setAngles(-rot.yCoord, -rot.zCoord, -rot.xCoord);
 				Vec3f vector = null;
 				for(int i = 0; i < cornermarkers.length; i++){
-					vector = turbo.getVertices()[i].vector;
+					vector = axe.getRelativeVector(corneroffset(i).add(off));
 					cornermarkers[i].setPosition(vector.xCoord + pos.xCoord, vector.yCoord + pos.yCoord, vector.zCoord + pos.zCoord);
+					cornermarkers[i].setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
 					cornermarkers[i].render();
 				}
 				GL11.glPopMatrix();
@@ -98,6 +106,20 @@ public class ShapeboxWrapper extends BoxWrapper {
 			}
 		}
 		//GL11.glEnable(GL11.GL_TEXTURE_2D);
+	}
+
+	private Vec3f corneroffset(int index){
+		switch(index){
+			case 0: return new Vec3f(-cor0.xCoord, -cor0.yCoord, -cor0.zCoord);
+			case 1: return new Vec3f(cor1.xCoord + size.xCoord, -cor1.yCoord, -cor1.zCoord);
+			case 2: return new Vec3f(cor2.xCoord + size.xCoord, -cor2.yCoord, cor2.zCoord + size.zCoord);
+			case 3: return new Vec3f(-cor3.xCoord, -cor3.yCoord, cor3.zCoord + size.zCoord);
+			case 4: return new Vec3f(-cor4.xCoord, cor4.yCoord + size.yCoord, -cor4.zCoord);
+			case 5: return new Vec3f(cor5.xCoord + size.xCoord, cor5.yCoord + size.yCoord, -cor5.zCoord);
+			case 6: return new Vec3f(cor6.xCoord + size.xCoord, cor6.yCoord + size.yCoord, cor6.zCoord + size.zCoord);
+			case 7: return new Vec3f(-cor7.xCoord, cor7.yCoord + size.yCoord, cor7.zCoord + size.zCoord);
+			default: return null;
+		}
 	}
 
 	@Override
@@ -229,16 +251,26 @@ public class ShapeboxWrapper extends BoxWrapper {
 	public PolygonWrapper convertTo(ShapeType type){
 		if(!type.getConversionGroup().equals(this.getType().getConversionGroup())) return null;
 		if(type == ShapeType.QUAD){ QuadWrapper box = new QuadWrapper(compound); box.size = new Vec3f(size); return copyTo(box, true); }
-		if(type == ShapeType.BOX){ BoxWrapper box = new BoxWrapper(compound); box.size = new Vec3f(size); return copyTo(box, true); }
+		if(type == ShapeType.BOX){
+			BoxWrapper box = new BoxWrapper(compound);
+			box.size = new Vec3f(size);
+			box.sides = Arrays.copyOf(sides, 6);
+			box.cuv.copyFrom(box, cuv);
+			return copyTo(box, true);
+		}
 		if(type == ShapeType.SHAPEBOX) return this.clone();
-		ShapeboxWrapper wrapper = null;
+		/*ShapeboxWrapper wrapper = null;
 		switch(type){
 			case TEXRECT_A: wrapper = new TexrectWrapperA(compound); break;
 			case TEXRECT_B: wrapper = new TexrectWrapperB(compound); break;
 			default: return null;
 		}
-		wrapper.size = new Vec3f(size); wrapper.setCoords(cor0, cor1, cor2, cor3, cor4, cor5, cor6, cor7);
-		return copyTo(wrapper, true);
+		wrapper.size = new Vec3f(size);
+		wrapper.setCoords(cor0, cor1, cor2, cor3, cor4, cor5, cor6, cor7);
+		wrapper.sides = Arrays.copyOf(sides, 6);
+		wrapper.cuv.copyFrom(wrapper, cuv);
+		return copyTo(wrapper, true);*/
+		return null;
 	}
 	
 }

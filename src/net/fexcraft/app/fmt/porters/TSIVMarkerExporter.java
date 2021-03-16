@@ -9,7 +9,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
-import net.fexcraft.app.fmt.utils.Settings.Setting;
+import net.fexcraft.app.fmt.utils.Setting;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.MarkerWrapper;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
@@ -23,7 +23,7 @@ import net.fexcraft.lib.common.json.JsonUtil;
  */
 public class TSIVMarkerExporter extends ExImPorter {
 	
-	private static final String[] extensions = new String[]{ ".json" };
+	private static final String[] extensions = new String[]{ "TS/IV RotableModelObjects JSON Snippet", "*.json" };
 	
 	public TSIVMarkerExporter(){}
 

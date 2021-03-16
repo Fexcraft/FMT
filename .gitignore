@@ -13,6 +13,7 @@ src/net/fexcraft/app/other/
 *.ear
 !libs/*
 libs/natives
+lib
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
@@ -68,8 +69,14 @@ stylesheet.json
 temp/
 *.exe
 *.log
+*.log.gz
 /target/
 /.gradle/
 /.idea/
 .project
 *.iml
+keys_old.json
+FMT.xml
+libs/pom.xml
+FMT.bat
+MANIFEST.MF

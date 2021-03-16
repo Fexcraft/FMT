@@ -25,6 +25,7 @@ public class ShapeQuadWrapper extends QuadWrapper {
 		return wrapper;
 	}
 	
+	@SuppressWarnings("deprecation")
 	protected ModelRendererTurbo newMRT(){
 		return new ModelRendererTurbo(null, textureX, textureY, compound.tx(getTurboList()), compound.ty(getTurboList()))
 			.addShapeQuad(off.xCoord, off.yCoord, off.zCoord, size.xCoord, size.yCoord, 0, cor0.xCoord, cor0.yCoord, cor0.zCoord,
@@ -68,7 +69,7 @@ public class ShapeQuadWrapper extends QuadWrapper {
 				if(rot.zCoord != 0f) GL11.glRotatef(rot.zCoord, 0, 0, 1);
 				Vec3f vector = null;
 				for(int i = 0; i < cornermarkers.length; i++){
-					vector = turbo.getVertices()[i].vector;
+					vector = turbo.getFaces().get(0).getVertices()[i].vector;
 					cornermarkers[i].setPosition(vector.xCoord + pos.xCoord, vector.yCoord + pos.yCoord, vector.zCoord + pos.zCoord);
 					cornermarkers[i].render();
 				}

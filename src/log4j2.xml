@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration name="FMT" packages="net.fexcraft.app.fmt.*" status="info">
+    <Appenders>
+        <Console name="FMTSTDOUT" target="SYSTEM_OUT">
+            <PatternLayout>
+                <Pattern>%d{dd MMM yyyy HH:mm:ss(SSS)} [%t]: %m%n</Pattern>
+            </PatternLayout>
+            <ThresholdFilter level="INFO"/>
+        </Console>
+        <RollingFile fileName="./logs/fmt.log" filePattern="./logs/%d{yyyy-MM}/fmt-%d{yyyy-MM-dd}.%i.log.gz" name="FMTRollingFile">
+            <PatternLayout>
+                <Pattern>%d{dd MMM yyyy HH:mm:ss(SSS)} [%t]: %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="8 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+            <ThresholdFilter level="INFO"/>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Logger level="info" name="FMT"></Logger>
+        <Root level="info">
+            <AppenderRef ref="FMTRollingFile"/>
+            <AppenderRef ref="FMTSTDOUT"/>
+        </Root>
+    </Loggers>
+</Configuration>

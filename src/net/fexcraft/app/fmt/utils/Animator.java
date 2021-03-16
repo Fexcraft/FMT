@@ -5,10 +5,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.TreeMap;
 
-import net.fexcraft.app.fmt.ui.tree.FVTMTree;
-import net.fexcraft.app.fmt.ui.tree.RightTree.AnimationButton;
-import net.fexcraft.app.fmt.utils.Settings.Setting;
-import net.fexcraft.app.fmt.utils.Settings.Type;
+import net.fexcraft.app.fmt.ui.tree.SubTreeGroup;
+import net.fexcraft.app.fmt.ui.tree.Trees;
+import net.fexcraft.app.fmt.utils.Setting.Type;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 
@@ -16,6 +15,7 @@ public class Animator {
 	
 	public static final ArrayList<Animation> nani = new ArrayList<>();
 	static {
+		nani.add(new Title("# SELECT #", null, null));
 		nani.add(new Title("# Multi Purpose", null, null));
 		nani.add(new Rotator("rotator", null, Arrays.asList(
 			new Setting(Type.FLOAT, "x", 0f), new Setting(Type.FLOAT, "y", 0f), new Setting(Type.FLOAT, "z", 0f),
@@ -65,13 +65,13 @@ public class Animator {
 		public boolean active = true;
 		public final String id;
 		public final TreeMap<String, Setting> settings;
-		public final AnimationButton button;
+		public final SubTreeGroup button;
 		public final TurboList group;
 		
 		public Animation(String id, TurboList group, Collection<Setting> settings){
 			this.id = id; this.settings = new TreeMap<>(); this.group = group;
 			for(Setting setting : settings) this.settings.put(setting.getId(), setting.copy());
-			button = new AnimationButton(FVTMTree.TREE, this);
+			button = new SubTreeGroup(Trees.fvtm, this);
 		}
 		
 		public abstract void pre(TurboList list);
@@ -87,6 +87,11 @@ public class Animator {
 		
 		public Setting get(String id){
 			return settings.get(id);
+		}
+		
+		@Override
+		public String toString(){
+			return id;
 		}
 		
 	}
@@ -295,7 +300,7 @@ public class Animator {
 	public static class Window extends Generic {
 
 		public Window(TurboList group){
-			super("fvtm:window", null, group, Arrays.asList(new Setting(Settings.Type.STRING, "color", "default")));
+			super("fvtm:window", null, group, Arrays.asList(new Setting("color", "default")));
 		}
 
 		@Override

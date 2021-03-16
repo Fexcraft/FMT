@@ -1,0 +1,316 @@
+#FMT-LANG de_de | Deutsch (DE) | Bitte Sprache auswählen. | Benötigt einen Neustart! | Beenden
+#
+# Authors: 
+# - Ferdinand (FEX___96)
+#
+#
+//
+# Toolbar
+toolbar.file=Datei
+toolbar.file.new_model=Neu...
+toolbar.file.open=Öffnen
+toolbar.file.save=Speichern
+toolbar.file.save_as=Speichern als...
+toolbar.file.import=Importieren <<
+toolbar.file.export=Exportieren >>
+toolbar.file.settings=Einstellungen
+toolbar.file.exit=Beenden
+toolbar.utils=Werkzeuge
+toolbar.utils.undo=Zurück (WIP)
+toolbar.utils.redo=Undo (WIP)
+toolbar.utils.create_gif=GIF Erstellen
+toolbar.utils.screenshot=Screenshot
+toolbar.utils.reset_camera=Kamera Reset
+toolbar.utils.calc_size=Größe Zählen
+toolbar.utils.clipboard=Clipboard
+toolbar.utils.clipboard.copy=Kopieren
+toolbar.utils.clipboard.paste=Einfügen
+toolbar.utils.copy_selected=Auswahl Kopieren
+toolbar.utils.flip=Flip Werkzeuge
+toolbar.utils.flip.left_right=Flip (X) [L/R]
+toolbar.utils.flip.up_down=Flip (Y) [U/D]
+toolbar.utils.flip.front_back=Flip (Z) [F/B]
+toolbar.utils.rectify=Modell Rectifizieren
+toolbar.utils.mirror_sel=Spgl.Aus. (EINMALIG)
+toolbar.utils.controls=Steuerung
+toolbar.editor=Editoren
+toolbar.editor.hide_all=Alle Verstecken
+toolbar.editor.general=Polygon Editor
+toolbar.editor.group=Gruppen Editor
+toolbar.editor.model=Modell Editor
+toolbar.editor.texture=Textur Editor
+toolbar.editor.preview=Preview/Helfer
+toolbar.shapelist=Vielecke
+toolbar.shapelist.show=Liste anzeigen
+toolbar.shapelist.add_box=Box einfügen
+toolbar.shapelist.add_shapebox=Shapebox einfügen
+toolbar.shapelist.add_texrect_b=Texrect B einfügen
+toolbar.shapelist.add_texrect_a=Texrect A einfügen
+toolbar.shapelist.add_cylinder=Zylinder einfügen
+toolbar.shapelist.add_quad=Quad einfügen
+toolbar.shapelist.add_boundingbox=BoundingBox einf.
+toolbar.shapelist.add_group=Gruppe einfügen
+toolbar.shapelist.add_marker=Marker einfügen
+toolbar.shapelist.add_voxel=Voxel(16) einfügen
+toolbar.textures=Textur
+toolbar.textures.manage=Texturen Verwalten
+toolbar.textures.addnew=Neue TexGruppe einfügen
+toolbar.textures.texpos_reset=U/V zurücksetzen
+toolbar.textures.auto_position=U/V Auto-Pos.
+toolbar.helpers=Helfer
+toolbar.helpers.view=Geladene Zeigen
+toolbar.helpers.load_fmtb=FMTB laden
+toolbar.helpers.load_fmtb.dialog=Wähle eine Preview/Helfer FMTB Datei.
+toolbar.helpers.load_frame=Ramen Laden
+toolbar.helpers.load_frame.dialog=Wähle eine Foto/Ramen Datei.
+toolbar.helpers.load_imported=Importierte laden
+toolbar.helpers.load_imported.dialog=Wähle eine Preview/Helper Datei.
+toolbar.helpers.unload_clear=Alle löschen
+toolbar.mod_tools=Mod Werkzg.
+toolbar.mod_tools.fvtm_programs=FVTM TL-Programs
+toolbar.exit=Beenden
+
+# Editors
+editor.multiplicator=Multiplikator
+editor.multiplicator.value=Wert: 
+editor.multiplicator.current=Aktuell: %s
+editor.general.attributes=Vieleck Eigenschaften
+editor.general.attributes.group=Vieleck Gruppe
+editor.general.attributes.name=Vieleck Name
+editor.general.attributes.new_group.title=Gruppen Ersteller
+editor.general.attributes.new_group.desc=Namen für die neue Gruppe eingeben.
+editor.general.attributes.new_group.confirm=Bestätigen
+editor.general.attributes.new_group.cancel=Abbrechen
+editor.general.attributes.type=Vieleck Typ
+editor.general.attributes.painttotexture=Zur Textur Brennen
+editor.general.attributes.painttotexture.notex=Es ist keine Textur Gelanden
+editor.general.attributes.painttotexture.tex_not_found=Textur nicht im Speicher gefunden. Dies ist eher schlecht.
+editor.general.shape=Allgemeine Form
+editor.general.shape.size=Messungen / Größe
+editor.general.shape.position=Position (x/y/z)
+editor.general.shape.offset=Offset (x/y/z)
+editor.general.shape.rotation=Rotation (x/y/z)
+editor.general.shape.texture=Textur (u/v)
+editor.general.shape.visibility_toggle=Sichtbarkeit Umschalten F/B/T/D/R/L
+editor.general.shapebox=Shapebox Ecken
+editor.general.shapebox.corner0=Ecke 0 (x/y/z)
+editor.general.shapebox.corner1=Ecke 1 (x/y/z)
+editor.general.shapebox.corner2=Ecke 2 (x/y/z)
+editor.general.shapebox.corner3=Ecke 3 (x/y/z)
+editor.general.shapebox.corner4=Ecke 4 (x/y/z)
+editor.general.shapebox.corner5=Ecke 5 (x/y/z)
+editor.general.shapebox.corner6=Ecke 6 (x/y/z)
+editor.general.shapebox.corner7=Ecke 7 (x/y/z)
+editor.general.cylinder=Zylinder Einstellungen
+editor.general.cylinder.radius_length=Radius / Länge / Radius2
+editor.general.cylinder.segments_direction=Segmente / Richtung/ Seg.Limit
+editor.general.cylinder.scale=Basis Umfang / Spitzen Umfang
+editor.general.cylinder.top_offset=Spitzen Offset (x/y/z)
+editor.general.cylinder.top_rotation=Spitzen Rotation (x/y/z)
+editor.general.cylinder.visibility_toggle=Basis/Spitze/Aussen/Innen (an/aus)
+editor.general.cylinder.radial_texture=Radiale Textur (an-aus/u/v)
+editor.general.texrect.front=Front
+editor.general.texrect.back=Back
+editor.general.texrect.up=Up
+editor.general.texrect.down=Down
+editor.general.texrect.right=Right
+editor.general.texrect.left=Left
+editor.general.texrect_a=TexRect Advanced
+editor.general.texrect_a.face_x=%s [x-pos | TR, TL, BL, BR]
+editor.general.texrect_a.face_y=%s [y-pos | TR, TL, BL, BR]
+editor.general.texrect_b=TexRect Basic
+editor.general.texrect_b.face=%s [start x/y, end x/y]
+editor.general.marker=Marker Einstellungen
+editor.general.marker.color=Marker Farbe [#hex]
+editor.general.marker.biped_display=Zweibeiner Anzeigen [an-aus / rot / umfang]
+editor.model_group.model=Modell Einstellungen
+editor.model_group.model.position_full=Positions Offset (volle einheiten)
+editor.model_group.model.position_sixteenth=Positions Offset (1/16th)
+editor.model_group.model.rotation=Rotations Offset (winkel grad)
+editor.model_group.model.texture_size=Textur [ Breite / H�he ]
+editor.model_group.model.texture=Modell Textur
+editor.model_group.model.texture.select=Wähle eine Textur Datei für das Modell.
+editor.model_group.model.name=Modell Name
+editor.model_group.group=Gruppen Einstellungen
+editor.model_group.group.color=Gruppen Preview Farbe/Überzug
+editor.model_group.group.name=Gruppen Name/ID
+editor.model_group.group.texture_size=Textur [ Breite / H�he ]
+editor.model_group.group.texture=Gruppen Textur
+editor.model_group.group.texture.select=Wähle eine Textur Datei für die Gruppe.
+editor.model_group.group.add_animator=Animator einfügen
+editor.model_group.group.animator_settings=Animator Einstellungen
+editor.model_group.group.export_offset=Export Offset/Translation
+editor.model_group.animations=Animationen in erster (ausg) Gruppe
+editor.model_group.authors=Author/Schöpfer Liste
+editor.model_group.authors.add=Author/Schöpfer einfügen
+editor.model_group.authors.add.dialog=Namen von dem Author/Schöpfer einfügen
+editor.model_group.authors.add_self=Sich selbst einfügen
+editor.model_group.authors.error_locked=Nur einer der "gesperrten" kann die Liste modifizieren.
+editor.preview.container=Allgemeine Einstellungen
+editor.preview.container.position_full=Position (volle einheiten)
+editor.preview.container.position_sixteenth=Position (1/16th)
+editor.preview.container.rotation=Rotation (winkel grad)
+editor.preview.container.scale_full=Größe/Umfang (volle einheiten / OpenGL)
+editor.preview.container.scale_sixteenth=Größe/Umfang (1/16th OpenGL)
+editor.preview.container.name=Helfer/Preview Name
+editor.texture.palette=Palette / Farbe
+editor.texture.palette.inputfield=HEX Farben Eingabe
+editor.texture.palette.large=Größe Farbpalette
+editor.texture.palette.horizontal=Horizontale Farbpalette
+editor.texture.palette.current=Aktuell ausgewählte Farbe
+editor.texture.brushes=Bürsten / Werkzeuge
+editor.texture.brushes.face_bucket=Flächen Farbeimer
+editor.texture.brushes.polygon_bucket=Vieleck Farbeimer
+editor.texture.brushes.group_bucket=Gruppen Farbeimer
+editor.texture.brushes.pixel_pencil=Pixel Farbstift
+editor.texture.brushes.color_picker=Farbwähler
+editor.texture.brushes.current=Ausgewählt:
+
+# Dialogs
+dialog.welcome.title=Willkommen in FMT!
+dialog.welcome.version=Klient Version: %s
+dialog.welcome.title_new=Neue Version verfügbar!
+dialog.welcome.version_new=%s >> %s
+dialog.welcome.confirm=ok
+dialog.welcome.update=updaten
+dialog.welcome.exit=beenden
+
+# Ex/Im-Porter
+eximporter.export.select.title=Exporter Auswählen
+eximporter.export.select.desc=Wähle einen Exporter zum export des Modell/Objekts.
+eximporter.export.select.continue=Fortfahren
+eximporter.export.title=Wähle einen Export Zielort
+eximporter.export.failed=Fehler beim Modell export!
+eximporter.export.nofile=Keine Datei
+eximporter.export.nofile.desc=Keine geeignete Datei ausgewählt. Export abgebrochen.
+eximporter.export.success=Export vollständig.
+eximporter.import.select.title=Importer Auswählen
+eximporter.import.select.desc=Wähle einen Importer zum import des Modell/Objekts.
+eximporter.import.select.continue=Fortfahren
+eximporter.import.title=Wähle einen Import Zielort
+eximporter.import.failed=Fehler beim Modell import
+eximporter.import.nofile=Keine Datei
+eximporter.import.nofile.desc=Keine geeignete Datei ausgewählt. Import abgebrochen.
+eximporter.import.success=Import vollständig.
+eximporter.mtb_importer.stream_null=Import gescheitert, MTB scheint beschädigt zu sein.
+eximporter.dfm_importer.no_agreement=Einwilliging nicht bestätigt.
+eximporter.tch_importer.no_agreement=Bitte bestätigen Sie, dass Sie den Importbedingungen für das TC-Modell zustimmen.
+
+# SettingsBox
+settingsbox.continue=Fortfahren
+settingsbox.confirm=Bestätigen
+settingsbox.darktheme.mayneedrestart=Dies mag einen neustart benötigen für vollen Effekt.
+settingsbox.settings_needs_restart=Diese Einstellung benötigt einen neustart.
+
+# DialogBox
+dialogbox.title.default=Generischer Dialog
+dialogbox.button.confirm=Bestätigen
+dialogbox.button.cancel=Abbrechen
+dialogbox.button.select=Auswählen
+dialogbox.button.open=Öffnen
+dialogbox.button.save=Speichern
+dialogbox.button.load=Laden
+dialogbox.button.yes=Ja
+dialogbox.button.no=Nein
+dialogbox.button.ok=Ok
+dialogbox.button.enable=Einschalten
+dialogbox.button.disable=Ausschalten
+dialogbox.warning=WARNUNG!
+dialogbox.setting.warning0=DIESE EINSTELLUNG KANN (ABHÄNGIG VON HARD-/SOFT-WARE
+dialogbox.setting.warning1=SCHNELLIGKEIT usw.) BILDSCHIRM-FLACKERN VERURSACHEN.
+dialogbox.setting.warning2=FALLS SIE EPILEPSIE HABEN ODER AUF ÄHNLICHE WEISE AUF
+dialogbox.setting.warning3=SOLCHES SENSITIV SIND -  BITTE DIESE EINSTELLUNG AUSSCHALTEN!
+
+# Trees
+tree.polygon.counter=Vielcke: 
+tree.polygon.remove_group=Diese Gruppe entfernen?
+tree.polygon.remove_polygon=Diesen Vieleck entfernen?
+tree.helper.counter=Helfer/Previews: 
+tree.fvtm.counter=Gruppen im Modell: 
+tree.fvtm.remove_animation=Diese Animation entfernen?
+tree.textures.counter=Aktive Textur Gruppen: 
+tree.textures.select=Textur Datei Auswählen
+tree.textures.select.dialog=Wähle eine Textur Datei
+tree.textures.generate=Textur Vorlage Generieren
+tree.textures.resize=Textur-Foto Größe ändern
+tree.textures.rename.dialog=Neue Textur Foto Größe einstellen
+tree.textures.resize.copyfrom=Kopieren von: 
+tree.textures.rename=Textur Gruppen umbenennen
+tree.textures.rename.dialog=Neuen Textur Gruppen Namen setzen
+tree.textures.remove_default=Standard Gruppe kann nicht entfernt werden.
+tree.textures.remove_in_use=Textur Gruppe ist noch im gebrauch!
+tree.textures.group_added=Neue Textur Gruppe eingefügt!
+
+# Profile Box / Login Box
+profile.title=Profil Übersicht
+profile.username=Benutzername:
+profile.userid=Benutzer ID:
+profile.license=Lizenz:
+profile.button.login=Login
+profile.button.logout=Logout
+profile.button.register=Register
+profile.button.retry=Retry
+loginbox.title=LOGIN/SITZUNGS BOX
+loginbox.e_mail=E-Mail / Benutzer
+loginbox.password=Passwort
+loginbox.encrypt=Passwort lokal Verschlüsseln?
+
+
+# Image Util
+image_helper.screenshot.done=Screenshot erstellt.
+image_helper.gif.done=Gif erstellt.
+
+# Polygon Picker
+polygon_picker.paint_bucket.toggle_off=Ausschalten
+polygon_picker.paint_bucket.no_texture=Keine Textur geladen, kann Farbeimer nicht nutzen.
+polygon_picker.paint_pencil.toggle_off=Ausschalten
+polygon_picker.paint_pencil.no_texture=Keine Textur geladen, kann Farbstift nicht nutzen.
+
+# GroupCompound/Model
+compound.change_type.not_found=Typ nicht gefunden!
+compound.change_type.failed=%s vieleck(e) übersprungen!
+compound.delete_selected=Alle ausgewählte Vielcke sicherlich löschen?
+compound.simple-clipboard.external=Möchtest du aus der Zwischenablage importieren?
+
+# Save/Load
+saveload.title=FMTB Datei Manager
+saveload.open=Datei zum öffnen auswählen.
+saveload.open.nofile=Ungültige Datei! (Existiert diese?)
+saveload.open.errors=Fehler beim laden der Datei.
+saveload.save.nofile=Modell Speicher-Datei ist leer! Modell wird nicht gespeichert.
+saveload.save.success=Modell gespeichert!
+saveload.should_save=Möchtest Du das jetzige Modell erst speichern?
+
+# Helper/Preview Collector
+helper_collector.title=Helfer/Preview Sammler
+helper_collector.load_fmtb.nofile=Ungültige Datei! (Existiert diese?)
+helper_collector.load_fmtb.invalid_file=Modell Datei ungültig, model.jtmt fehlt.
+helper_collector.load_fmtb.errors=Beim Laden der Datei sind Fehler aufgetreten.
+helper_collector.load_frame.nofile=Ungültige Datei! (Existiert diese?)
+helper_collector.load_frame.errors=Beim Erstellen des Ramens sind Fehler aufgetreten.
+
+# Texture Updater / Util
+texture_update.autopos.title=Textur Auto-Positionierer
+texture_update.autopos.info=Dieser Prozess könnte FMT als 'reagiert nicht' makieren.
+texture_update.autopos.polygroup=Gruppe zum verarbeiten:
+texture_update.autopos.savespace=Save-Space-Modus verwenden? (kompression)
+texture_update.autopos.process_all=Nur Vielecke mit 0,0 Position verarbeiten?
+texture_update.autopos.start=Starten
+texture_update.autopos.processing=Verarbeite: %s:%s
+texture_update.autopos.complete=Textur Auto-Positionierung ist fertig!
+texture_update.resize.exceeding_4096=Überschreitet 4096 pixel! Überschreitet 4096 pixel!
+texture_update.resize.success=Größe geändert!
+texture_update.texpos_reset.title=Textur Positions Resetter
+texture_update.texpos_reset.info=Dies setzt die Vieleck u/v auf 0,0!
+texture_update.texpos_reset.polygroup=Gruppe zum verarbeiten: 
+texture_update.texpos_reset.done=Textur Positions Resetter ist fertig!
+
+# Errors
+error.dialog_title=Fehler
+error.feature_not_available_yet=Diese Funktion ist noch nicht verfügbar.
+error.feature_not_reimplemented_yet=Diese Funktion ist noch nicht reimplementiert.
+error.no_polygon_selected=keine vieleck/e ausgewählt
+error.no_preview_selected=kein helfer/preview ausgewählt
+error.todo=//TODO
+
+# Other

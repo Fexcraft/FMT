@@ -12,7 +12,7 @@ public class QuadWrapper extends BoxWrapper {
 	}
 
 	protected ModelRendererTurbo newMRT(){
-		return new ModelRendererTurbo(null, textureX, textureY, compound.tx(getTurboList()), compound.ty(getTurboList()))
+		return new ModelRendererTurbo(null, textureX(), textureY(), compound.tx(getTurboList()), compound.ty(getTurboList()))
 			.addQuad(off.xCoord, off.yCoord, off.zCoord, size.xCoord, size.yCoord)
 			.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
 			.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
@@ -51,7 +51,7 @@ public class QuadWrapper extends BoxWrapper {
 	}
 
 	@Override
-	protected float[][][] newTexturePosition(){
+	public float[][][] newTexturePosition(boolean include_offsets, boolean exclude_detached){
 		float tx = 0 /*textureX*/, ty = 0 /*textureY*/, w = size.xCoord, h = size.yCoord;
 		float[][][] vecs = new float[2][][];
 		vecs[0] = new float[][]{
@@ -80,8 +80,6 @@ public class QuadWrapper extends BoxWrapper {
 			case BOX: wrapper = new BoxWrapper(compound); break;
 			case SHAPEQUAD: wrapper = new ShapeQuadWrapper(compound); break;
 			case SHAPEBOX: wrapper = new ShapeboxWrapper(compound); break;
-			case TEXRECT_A: wrapper = new TexrectWrapperA(compound); break;
-			case TEXRECT_B: wrapper = new TexrectWrapperB(compound); break;
 			default: return null;
 		} wrapper.size = new Vec3f(size.xCoord, size.yCoord, 1); return copyTo(wrapper, true);
 	}

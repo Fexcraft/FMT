@@ -1,16 +1,20 @@
 package net.fexcraft.app.fmt.porters;
 
-import java.awt.image.BufferedImage;
+import static net.fexcraft.app.fmt.utils.Logging.log;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
 
-import javax.imageio.ImageIO;
+import org.apache.commons.io.FileUtils;
 
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
-import net.fexcraft.app.fmt.utils.Settings.Setting;
-import net.fexcraft.app.fmt.utils.Settings.Type;
-import net.fexcraft.app.fmt.utils.TextureManager;
+import net.fexcraft.app.fmt.utils.Setting;
+import net.fexcraft.app.fmt.utils.Setting.StringArraySetting;
+import net.fexcraft.app.fmt.utils.Setting.Type;
+import net.fexcraft.app.fmt.utils.texture.Texture;
+import net.fexcraft.app.fmt.utils.texture.TextureGroup;
+import net.fexcraft.app.fmt.utils.texture.TextureManager;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 
 /**
@@ -20,10 +24,13 @@ import net.fexcraft.app.fmt.wrappers.GroupCompound;
  */
 public class PNGExporter extends ExImPorter {
 	
-	private static final String[] extensions = new String[]{ ".png" };
-	private BufferedImage image;
+	private static final String[] extensions = new String[]{ "Portable Network Graphics", "*.png" };
+	private Texture image;
 	private static final ArrayList<Setting> settings = new ArrayList<>();
-	static{ settings.add(new Setting(Type.BOOLEAN, "textured", false)); }
+	static{
+		settings.add(new Setting(Type.BOOLEAN, "textured", false));
+		settings.add(new StringArraySetting("texgroup", new String[]{}));
+	}
 	
 	public PNGExporter(){}
 
@@ -33,23 +40,32 @@ public class PNGExporter extends ExImPorter {
 	}
 
 	@Override
-	public String exportModel(GroupCompound compound, File file, Map<String, Setting> settings){ image = null;
-		if(settings.get("textured").getBooleanValue()){
-			if(compound.texture == null || TextureManager.getTexture(compound.texture, true) == null){
-				return "No texture loaded!";
-			}
-			image = TextureManager.getTexture(compound.texture, true).getImage();
+	public String exportModel(GroupCompound compound, File file, Map<String, Setting> settings){
+		image = null;
+		boolean textured = settings.get("textured").getBooleanValue();
+		TextureGroup group = TextureManager.getGroup(settings.get("texgroup").as(StringArraySetting.class).getSelected());
+		if(group == null){
+			return "Texture Group not found!";
+		}
+		if(textured){
+			image = group.texture;
 		}
 		else{
-			image = new BufferedImage(compound.tx(null), compound.ty(null), BufferedImage.TYPE_INT_ARGB);
-			compound.getGroups().forEach(elm -> elm.forEach(poly -> poly.burnToTexture(image, null)));
+			image = new Texture("png_exporter_cache", group.texture.getWidth(), group.texture.getHeight());
+			compound.getGroups().forEach(elm -> {
+				if(compound.texgroup == group || elm.texgroup == group){
+					elm.forEach(poly -> poly.burnToTexture(image, null));
+				}
+			});
 		}
 		try{
-			ImageIO.write(image, "PNG", file);
+			image.save();
+			FileUtils.copyFile(image.getFile(), file);
 			return "Success!";
 		}
 		catch(java.io.IOException e){
-			e.printStackTrace(); return "Error, see Console.";
+			log(e);
+			return "Error, see Console.";
 		}
 	}
 
@@ -80,6 +96,10 @@ public class PNGExporter extends ExImPorter {
 
 	@Override
 	public ArrayList<Setting> getSettings(boolean export){
+		return settings;
+	}
+
+	public static ArrayList<Setting> getSettings(){
 		return settings;
 	}
 

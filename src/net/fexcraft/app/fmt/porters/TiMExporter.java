@@ -3,8 +3,7 @@ package net.fexcraft.app.fmt.porters;
 import java.io.File;
 import java.util.Map;
 
-import net.fexcraft.app.fmt.utils.Settings;
-import net.fexcraft.app.fmt.utils.Settings.Setting;
+import net.fexcraft.app.fmt.utils.Setting;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 
 /**
@@ -19,7 +18,7 @@ public class TiMExporter extends FVTMFormatBase {
 	
 	public TiMExporter(){
 		super("TiM (FVTM-Scheme) Exporter", "tim_exporter");
-		settings.add(new Setting(Settings.Type.STRING, "package", "tim.models.locos"));
+		settings.add(new Setting("package", "tim.models.locos"));
 	}
 
 	@Override
@@ -61,6 +60,11 @@ public class TiMExporter extends FVTMFormatBase {
 	@Override
 	public String[] getCategories(){
 		return new String[]{ "model" };
+	}
+
+	@Override
+	protected String getScale(){
+		return "";
 	}
 
 }

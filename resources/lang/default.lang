@@ -1,4 +1,4 @@
-# FMT <DEFAULT> LANG FILE
+#FMT-LANG default | English (DEF) | Choose a Language | Applies on Restart | Exit
 #
 # Authors: 
 # - Ferdinand (FEX___96)
@@ -7,12 +7,14 @@
 # Toolbar
 toolbar.file=File
 toolbar.file.new_model=New...
-toolbar.file.open=Open
+toolbar.file.open=Open.
+toolbar.file.open.recent=...
 toolbar.file.save=Save
 toolbar.file.save_as=Save as...
 toolbar.file.import=Import <<
 toolbar.file.export=Export >>
 toolbar.file.settings=Settings
+toolbar.file.donate=Donate!
 toolbar.file.exit=Exit
 toolbar.utils=Utils
 toolbar.utils.undo=Undo (WIP)
@@ -20,17 +22,39 @@ toolbar.utils.redo=Redo (WIP)
 toolbar.utils.create_gif=Create GIF
 toolbar.utils.screenshot=Screenshot
 toolbar.utils.reset_camera=Reset Cam.
+toolbar.utils.font_util=Font Util
 toolbar.utils.calc_size=Calc. Size
+toolbar.utils.clipboard=Clipboard
+toolbar.utils.clipboard.copy=Copy
+toolbar.utils.clipboard.paste=Paste
 toolbar.utils.copy_selected=Copy Selected
-toolbar.utils.flip.left_right=Flip (X) [L/R]
-toolbar.utils.flip.up_down=Flip (Y) [U/D]
-toolbar.utils.flip.front_back=Flip (Z) [F/B]
+toolbar.utils.flip=Flip Tools
+toolbar.utils.flip.left_right=Flip Cor [L/R]
+toolbar.utils.flip.up_down=Flip Cor [U/D]
+toolbar.utils.flip.front_back=Flip Cor [F/B]
+toolbar.utils.flip.pos_x=Flip Pos (X)
+toolbar.utils.flip.pos_y=Flip Pos (Y)
+toolbar.utils.flip.pos_z=Flip Pos (Z)
+toolbar.utils.flip.pos_z_left_right=Pos Z + Cor [L/R]
+toolbar.utils.flip.pos_y_up_down=Pos Y + Cor [U/D]
+toolbar.utils.flip.pos_x_front_back=Pos X + Cor [F/B]
+toolbar.utils.rectify=Rectify Model
+toolbar.utils.mirror_sel=Mir.Sel. (ONE-TIME)
+toolbar.utils.rescale=ReScale Util
+toolbar.utils.hide=Hide Tools
+toolbar.utils.hide.equal=Equal Ends
+toolbar.utils.hide.covered=Covered Ends
+toolbar.utils.hide.inner=Inside Other
+toolbar.utils.hide.reset=Reset
 toolbar.utils.controls=Controls
 toolbar.editor=Editors
 toolbar.editor.hide_all=Hide All
-toolbar.editor.general=General Editor
-toolbar.editor.model_group=Model/Group
+toolbar.editor.general=Polygon Editor
+toolbar.editor.group=Group Editor
+toolbar.editor.model=Model Editor
+toolbar.editor.uv=U/V Editor
 toolbar.editor.texture=Texture Editor
+toolbar.editor.preview=Preview/Helper
 toolbar.shapelist=Polygons
 toolbar.shapelist.show=Show Polygon List
 toolbar.shapelist.add_box=Add Box
@@ -39,22 +63,24 @@ toolbar.shapelist.add_texrect_b=Add Texrect B
 toolbar.shapelist.add_texrect_a=Add Texrect A
 toolbar.shapelist.add_cylinder=Add Cylinder
 toolbar.shapelist.add_quad=Add Quad
+toolbar.shapelist.add_boundingbox=Add BoundingBox
 toolbar.shapelist.add_group=Add Group
 toolbar.shapelist.add_marker=Add Marker
 toolbar.shapelist.add_voxel=Add Voxel(16)
 toolbar.textures=Texture
-toolbar.textures.select=Select
-toolbar.textures.edit=Edit (External)
-toolbar.textures.texture_map=Tex. Map (WIP)
-toolbar.textures.remove=Remove/Unload
-toolbar.textures.texpos_reset=Reset Tex.Pos.
-toolbar.textures.auto_position=Auto Tex.Pos.
-toolbar.textures.generate=Generate New
+toolbar.textures.manage=Manage Textures
+toolbar.textures.addnew=Add New TexGroup
+toolbar.textures.texpos_reset=Reset U/V Pos
+toolbar.textures.texpostype_reset=Reset U/V Type
+toolbar.textures.auto_position=Auto Pos. U/V
 toolbar.helpers=Helpers
 toolbar.helpers.view=View Loaded
 toolbar.helpers.load_fmtb=Load FMTB
+toolbar.helpers.load_fmtb.dialog=Select a Preview/Helper FMTB file.
 toolbar.helpers.load_frame=Load Frame
+toolbar.helpers.load_frame.dialog=Select an Image/Frame file.
 toolbar.helpers.load_imported=Load Imported
+toolbar.helpers.load_imported.dialog=Select a Preview/Helper file.
 toolbar.helpers.unload_clear=Clear/Unload All
 toolbar.mod_tools=Mod Tools
 toolbar.mod_tools.fvtm_programs=FVTM TL-Programs
@@ -73,12 +99,15 @@ editor.general.attributes.new_group.confirm=Confirm
 editor.general.attributes.new_group.cancel=Cancel
 editor.general.attributes.type=Polygon Type
 editor.general.attributes.painttotexture=Burn to Texture
+editor.general.attributes.painttotexture.notex=There is no texture loaded.
+editor.general.attributes.painttotexture.tex_not_found=Texture not found in Memory. This is rather bad.
 editor.general.shape=General Shape
 editor.general.shape.size=Measurements / Size
 editor.general.shape.position=Position (x/y/z)
 editor.general.shape.offset=Offset (x/y/z)
 editor.general.shape.rotation=Rotation (x/y/z)
 editor.general.shape.texture=Texture (u/v)
+editor.general.shape.visibility_toggle=Visibility Toggle F/B/T/D/R/L (on/off)
 editor.general.shapebox=Shapebox Corners
 editor.general.shapebox.corner0=Corner 0 (x/y/z)
 editor.general.shapebox.corner1=Corner 1 (x/y/z)
@@ -94,7 +123,7 @@ editor.general.cylinder.segments_direction=Segments / Direction / Seg.Limit
 editor.general.cylinder.scale=Base Scale / Top Scale
 editor.general.cylinder.top_offset=Top Offset (x/y/z)
 editor.general.cylinder.top_rotation=Top Rotation (x/y/z)
-editor.general.cylinder.visibility_toggle=Base/Top/Outer/Inner (on/off)
+editor.general.cylinder.visibility_toggle=Base/Top/Outer/Inner/Seg0/Seg1 (on/off)
 editor.general.cylinder.radial_texture=Radial Texture (on-off/u/v)
 editor.general.texrect.front=Front
 editor.general.texrect.back=Back
@@ -110,21 +139,258 @@ editor.general.texrect_b.face=%s [start x/y, end x/y]
 editor.general.marker=Marker Settings
 editor.general.marker.color=Marker Color [#hex]
 editor.general.marker.biped_display=Biped Display [toggle / rot / scale]
+editor.general.marker.detached=Detached Coords from Model Scale
+editor.model_group.model=Model Settings
+editor.model_group.model.position_full=Position Offset (full units)
+editor.model_group.model.position_sixteenth=Position Offset (1/16th)
+editor.model_group.model.rotation=Rotation Offset (degrees)
+editor.model_group.model.scale=Model Scale (visual)
+editor.model_group.model.texture_size=Texture [ width / height ]
+editor.model_group.model.texture=Model Texture
+editor.model_group.model.texture.select=Select a model texture file.
+editor.model_group.model.name=Model Name
+editor.model_group.group=Group Settings
+editor.model_group.group.color=Group Preview Color/Overlay
+editor.model_group.group.name=Group Name/ID
+editor.model_group.group.texture_size=Texture [ width / height ]
+editor.model_group.group.texture=Group Texture
+editor.model_group.group.texture.select=Select a group texture file.
+editor.model_group.group.add_animator=Add Animator
+editor.model_group.group.animator_settings=Animator Settings
+editor.model_group.group.export_offset=Export Offset/Translation
+editor.model_group.animations=Animations in first selected Group
+editor.model_group.authors=Authors/Creators List
+editor.model_group.authors.add=Add Author/Creator
+editor.model_group.authors.add.dialog=Enter Name of the Author/Creator
+editor.model_group.authors.add_self=Add Self to List
+editor.model_group.authors.error_locked=Only one of the "locked" Authors can edit the List.
+editor.uv.general=UV/TexMapping General
+editor.uv.general.face=Selected Face/Side
+editor.uv.general.type=Mapping Handler Type
+editor.uv.general.openview=VIEW
+editor.uv.fields.automatic0=This face's UV is set as automatic,
+editor.uv.fields.automatic1=default, no further action is needed.
+editor.uv.fields.offset_only0=Offsets this face's automatic uv,
+editor.uv.fields.offset_only1=maintains default coords but offset.
+editor.uv.fields.absolute0=Detachs this face's automatic uv pos,
+editor.uv.fields.absolute1=maintains default coords but at set pos.
+editor.uv.fields.offset_only=Custom offset of Face-Automatic
+editor.uv.fields.offset_ends0=Custom offset start and end uv coords,
+editor.uv.fields.offset_ends1=e.g. for applying more tex. space to a face.
+editor.uv.fields.absolute_ends0=Custom fixed start and end uv coords,
+editor.uv.fields.absolute_ends1=e.g. for applying more tex. space to a face.
+editor.uv.fields.offset_ends_0=Custom Start U/V Offset
+editor.uv.fields.offset_ends_1=Custom End U/V Offset
+editor.uv.fields.offset_full0=Custom uv coords for every vertice/end,
+editor.uv.fields.offset_full1=full freedom and ability to fix Shapeboxes.
+editor.uv.fields.offset_full2=Still offset along the polygon's root uv.
+editor.uv.fields.absolute_full0=Custom uv coords for every vertice/end,
+editor.uv.fields.absolute_full1=full freedom and ability to fix Shapeboxes.
+editor.uv.fields.absolute_full2=Detached fixed uv independent from poly.
+editor.uv.fields.offset_full_0=Custom Top Right U/V Offset
+editor.uv.fields.offset_full_1=Custom Top Left U/V Offset
+editor.uv.fields.offset_full_2=Custom Bottom Left U/V Offset
+editor.uv.fields.offset_full_3=Custom Bottom Right U/V Offset
+editor.uv.fields=UV/TexMapping Fields
+editor.preview.container=General Settings
+editor.preview.container.position_full=Position (full units)
+editor.preview.container.position_sixteenth=Position (1/16th)
+editor.preview.container.rotation=Rotation (degrees)
+editor.preview.container.scale_full=Scale (full units / OpenGL)
+editor.preview.container.scale_sixteenth=Scale (1/16th OpenGL)
+editor.preview.container.opacity=Opacity/Transparency
+editor.preview.container.name=Helper/Preview Name
+editor.texture.palette=Palette / Color
+editor.texture.palette.inputfield=HEX Color Input
+editor.texture.palette.large=Large Color Palette
+editor.texture.palette.horizontal=Horizontal Color Palette
+editor.texture.palette.current=Currently Selected Color
+editor.texture.brushes=Brushes / Tools
+editor.texture.brushes.face_bucket=Face Paint Bucket
+editor.texture.brushes.polygon_bucket=Polygon Paint Bucket
+editor.texture.brushes.group_bucket=Group Paint Bucket
+editor.texture.brushes.pixel_pencil=Pixel Paint Pencil
+editor.texture.brushes.color_picker=Color Picker
+editor.texture.brushes.current=Current:
+editor.fields.reset.uppercase=RESET
+
+# Dialogs
+dialog.welcome.title=Welcome to FMT!
+dialog.welcome.version=Client Version: %s
+dialog.welcome.title_new=New version available!
+dialog.welcome.version_new=%s >> %s
+dialog.welcome.confirm=ok
+dialog.welcome.update=update
+dialog.welcome.exit=exit
+
+# Ex/Im-Porter
+eximporter.export.select.title=Select Exporter
+eximporter.export.select.desc=Select an exporter to export your Model/Object.
+eximporter.export.select.continue=Continue
+eximporter.export.title=Select Export Location
+eximporter.export.failed=Errors while exporting Model.
+eximporter.export.nofile=No File
+eximporter.export.nofile.desc=No valid file choosen. Export is cancelled.
+eximporter.export.success=Export complete.
+eximporter.import.select.title=Select Importer
+eximporter.import.select.desc=Select an importer to import your Model/Object.
+eximporter.import.select.continue=Continue
+eximporter.import.title=Select Import Location
+eximporter.import.failed=Errors while importing Model.
+eximporter.import.nofile=No File
+eximporter.import.nofile.desc=No valid file choosen. Import is cancelled.
+eximporter.import.success=Import complete.
+eximporter.mtb_importer.stream_null=Import Failed, MTB appears corrupt.
+eximporter.dfm_importer.no_agreement=Agreement not confirmed.
+eximporter.tch_importer.no_agreement=Please confirm you agree to the TC model import terms.
+
+# SettingsBox
+settingsbox.continue=Continue
+settingsbox.confirm=Confirm
+settingsbox.darktheme.mayneedrestart=This may require a restart to take full effect.
+settingsbox.settings_needs_restart=This setting needs a restart to take full effect.
+
+# KeyAdjuster
+keyadjuster.title=FMT Keybind Adjuster
+keyadjuster.occupied=Key is already in use!
+keyadjuster.reset=Reset
+
+# DialogBox
+dialogbox.title.default=Generic Dialog
+dialogbox.button.continue=Continue
+dialogbox.button.confirm=Confirm
+dialogbox.button.cancel=Cancel
+dialogbox.button.select=Select
+dialogbox.button.open=Open
+dialogbox.button.save=Save
+dialogbox.button.load=Load
+dialogbox.button.yes=Yes
+dialogbox.button.no=No
+dialogbox.button.ok=Ok
+dialogbox.button.enable=Enable
+dialogbox.button.disable=Disable
+dialogbox.warning=WARNING!
+dialogbox.setting.warning0=THIS SETTING CAN CAUSE SCREEN FLICKERING
+dialogbox.setting.warning1=DEPENDING ON HARDWARE/SOFTWARE SPEED
+dialogbox.setting.warning2=IF YOU GOT EPILEPSY OR OTHER WHERE SCREEN
+dialogbox.setting.warning3=FLICKERING IS BAD PLEASE DISABLE IT
+
+# Trees
+tree.polygon.counter=P: 
+tree.polygon.remove_group=Remove this group?
+tree.polygon.remove_polygon=Remove this polygon?
+tree.helper.counter=Helpers/Previews: 
+tree.fvtm.counter=Groups in Model: 
+tree.fvtm.remove_animation=Remove this Animation?
+tree.textures.counter=Active Texture Groups: 
+tree.textures.select=Select Texture File
+tree.textures.select.dialog=Select a Texture File.
+tree.textures.generate=Generate Texture Template
+tree.textures.resize=Resize Texture Image
+tree.textures.resize.dialog=Set new Texture Image Size
+tree.textures.resize.copyfrom=Copy from: 
+tree.textures.resize.scale=Relative (Up)Scale: 
+tree.textures.rename=Rename Texture Group
+tree.textures.rename.dialog=Set new Texture Group Name/ID
+tree.textures.rename.duplicate=A group with that name exists already!
+tree.textures.remove_default=Default Model Texture Group can not be removed.
+tree.textures.remove_in_use=Texture Group is still in use!
+tree.textures.group_added=New Texture group added!
+
+# Profile Box / Login Box
+profile.title=Profile Overview
+profile.username=Username:
+profile.userid=User ID:
+profile.license=License:
+profile.button.login=Login
+profile.button.logout=Logout
+profile.button.register=Register
+profile.button.retry=Retry
+loginbox.title=LOGIN/SESSION BOX
+loginbox.e_mail=E-Mail / User
+loginbox.password=Password
+loginbox.encrypt=Encrypt Password Locally?
+
+
+# Image Util
+image_helper.screenshot.done=Screenshot taken.
+image_helper.gif.done=Gif Created.
+
+# Font Util
+font_util.dialog=Font Util / Font Model Generator
+font_util.dialog.text=Text to be generated:
+font_util.dialog.selection=Please select a font (model) pack:
+font_util.dialog.position=Position
+font_util.dialog.rotation=Rotation
+font_util.dialog.scale=Scale
+font_util.load_pack.title=Font (Model) Pack Loader
+font_util.load_pack.title.errors=Errors occured while loading (font) model.
+font_util.load_pack.title.invalid_file=Invalid font (model) pack file.
+
+# Polygon Picker
+polygon_picker.paint_bucket.toggle_off=Toggle Off
+polygon_picker.paint_bucket.no_texture=No Texture loaded. Cannot use Paint Bucket.
+polygon_picker.paint_pencil.toggle_off=Toggle Off
+polygon_picker.paint_pencil.no_texture=No Texture loaded. Cannot use Paint Pencil.
+
+# GroupCompound/Model
+compound.change_type.not_found=Type not found!
+compound.change_type.failed=%s shape(s) skipped!
+compound.delete_selected=Are you sure to delete all selected Polygons?
+compound.simple-clipboard.external=Do you wish to import polygons from clipboard?
+compound.rescale.dialog=Model Rescaling Util
+compound.rescale.scale=Please enter the desired scale:
+compound.rescale.group=Please emter the group to be rescaled:
+compound.rescale.warning0=WARNING! THIS CAN NOT BE UNDONE!
+compound.rescale.warning1=This can cause decimal boxes and cylinders.
+compound.rescale.warning2=Using decimal-size polygons is NOT advised.
+
+# Save/Load
+saveload.title=FMTB File Manager
+saveload.open=Select file to open.
+saveload.open.nofile=Invalid Model File! (Does it exist?)
+saveload.open.errors=Errors occured while parsing save file.
+saveload.save.nofile=Model save file is 'null'! Model will not be saved.
+saveload.save.success=Model Saved!
+saveload.should_save=Do you want to save the current model first?
+saveload.backup.error0=Errors during creating a backup, please check the log.
+saveload.backup.error1=WARNING: Any progress may not be able to save!
+
+# Helper/Preview Collector
+helper_collector.title=Helper/Preview Collector
+helper_collector.load_fmtb.nofile=Invalid Model File! (Does it exist?)
+helper_collector.load_fmtb.invalid_file=Invalid Model File, model.jtmt is missing.
+helper_collector.load_fmtb.errors=Errors occured while parsing save file.
+helper_collector.load_frame.nofile=Invalid Model File! (Does it exist?)
+helper_collector.load_frame.errors=Errors occured while creating frame.
+
+# Texture Updater / Util
+texture_update.autopos.title=Texture Auto Positioner
+texture_update.autopos.info=This process may mark FMT as not responding.
+texture_update.autopos.polygroup=Polygon Group to process: 
+texture_update.autopos.savespace=Use save-space mode? (may reduce readability)
+texture_update.autopos.process_all=Only process polygons with no texture pos?
+texture_update.autopos.detach_all=Detach faces from polygons? (CAN ONLY BE UNDODE MANUALLY!)
+texture_update.autopos.start=Start
+texture_update.autopos.processing=Processing: %s:%s
+texture_update.autopos.complete=Auto texture positioning Complete!
+texture_update.resize.exceeding_4096=Exceeding 4096 pixel! Exceeding 4096 pixel!
+texture_update.resize.success=Resized!
+texture_update.texpos_reset.title=Texture U/V Position Resetter
+texture_update.texpos_reset.info=This resets the polygon (automatic) U/V values!
+texture_update.texpos_reset.polygroup=Polygon Group to process: 
+texture_update.texpos_reset.done=Texture U/V Positions Reset Successfully.
+texture_update.texpostype_reset.title=Texture U/V Type Resetter
+texture_update.texpostype_reset.info=This resets the polygon U/V mapping types!
+texture_update.texpostype_reset.polygroup=Polygon Group to process: 
+texture_update.texpostype_reset.done=Texture U/V Types Reset Successfully.
 
 # Errors
 error.dialog_title=Error
 error.feature_not_available_yet=This feature is not available yet.
 error.feature_not_reimplemented_yet=This feature is not reimplemented yet.
 error.no_polygon_selected=no polygon/s selected
+error.no_preview_selected=no helper/preview selected
 error.todo=//TODO
 
-# Other / Old
-bottombar.netfield.loggedin=Logged In - %s
-bottombar.netfield.login_failed=Login Failed - GUEST
-modeltree.polygons=Polygons: 
-dialog.saveload.should_save=Do you want to save the<nl>current model first?
-dialog.saveload.should_save.confirm=Yes
-dialog.saveload.should_save.cancel=No
-filechooser.export.title=Select Export Location
-filechooser.export.confirm=Export
-
+# Other

@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.porters;
 
+import static net.fexcraft.app.fmt.utils.Logging.log;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -11,8 +13,8 @@ import java.util.Map;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
-import net.fexcraft.app.fmt.utils.Settings.Setting;
-import net.fexcraft.app.fmt.utils.Settings.Type;
+import net.fexcraft.app.fmt.utils.Setting;
+import net.fexcraft.app.fmt.utils.Setting.Type;
 import net.fexcraft.app.fmt.wrappers.BoxWrapper;
 import net.fexcraft.app.fmt.wrappers.CylinderWrapper;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
@@ -30,7 +32,7 @@ import net.fexcraft.lib.tmt.ModelRendererTurbo;
  */
 public class DFMExporter extends ExImPorter {
 	
-	protected static final String[] extensions = new String[]{ ".java" };
+	protected static final String[] extensions = new String[]{ "FlansMod Java Model", "*.java" };
 	protected static final String tab = "\t";//"    ";
 	protected static final String tab2 = tab + tab;
 	protected static final String tab3 = tab2 + tab;
@@ -40,7 +42,7 @@ public class DFMExporter extends ExImPorter {
 	private static final String VERSION = "1.0";
 	
 	public DFMExporter(){
-		settings.add(new Setting(Type.STRING, "pack_id", "your_addon_id"));
+		settings.add(new Setting(Type.STRING, "pack_id", "your_pack_id"));
 		settings.add(new Setting(Type.STRING, "model_type", "ModelVehicle"));
 		settings.add(new Setting(Type.STRING, "model_name", "default"));
 		settings.add(new Setting(Type.BOOLEAN, "export_only_visible", false));
@@ -66,7 +68,7 @@ public class DFMExporter extends ExImPorter {
 		pergroupinit = settings.get("per_group_init").getBooleanValue();
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("//FMT-Marker DFM-" + VERSION + "\n");
-		for(String cr : compound.creators){
+		for(String cr : compound.getAuthors()){
 			buffer.append("//Creator: " + cr + "\n");
 		} buffer.append("\n");
 		if(settings.get("per_group_init").getBooleanValue()) buffer.append("//Using PER-GROUP-INIT mode with limit '" + settings.get("max_pg_init_count").getValue() + "'!\n");
@@ -76,14 +78,14 @@ public class DFMExporter extends ExImPorter {
 		buffer.append("import com.flansmod.client.tmt.PositionTextureVertex;\n");
 		buffer.append("import com.flansmod.client.tmt.TexturedPolygon;\n\n");
 		buffer.append("/** This file was exported via the (Default) FlansMod Exporter of<br>\n");
-		buffer.append(" *  FMT (Fex's Modelling Toolbox) v." + FMTB.version + " &copy; " + Year.now().getValue() + " - Fexcraft.net<br>\n");
+		buffer.append(" *  FMT (Fex's Modelling Toolbox) v." + FMTB.VERSION + " &copy; " + Year.now().getValue() + " - Fexcraft.net<br>\n");
 		buffer.append(" *  All rights reserved. For this Model's License contact the Author/Creator.\n */\n");
 		buffer.append("public class " + modelname + " extends " + modeltype + " {\n\n");
 		buffer.append(tab + "private int textureX = " + compound.tx(null) + ";\n");
 		buffer.append(tab + "private int textureY = " + compound.tx(null) + ";\n\n");
 		buffer.append(tab + "public " + modelname + "(){\n");
 		for(TurboList list : compound.getGroups()){
-			buffer.append(tab2 + list.id + " = new ModelRendererTurbo[" + list.size() + "];\n");
+			buffer.append(tab2 + list.exportID() + " = new ModelRendererTurbo[" + list.size() + "];\n");
 		} buffer.append(tab2 + "//\n");
 		if(pergroupinit){
 			int count = settings.get("max_pg_init_count").getValue();
@@ -91,10 +93,10 @@ public class DFMExporter extends ExImPorter {
 				if(list.size() > count){
 					int subs = list.size() / count; if(list.size() % count > 0) subs++;
 					for(int i = 0; i < subs; i++){
-						buffer.append(tab2 + "initGroup_" + list.id + i + "();\n");
+						buffer.append(tab2 + "initGroup_" + list.exportID() + i + "();\n");
 					}
 				}
-				else buffer.append(tab2 + "initGroup_" + list.id + "();\n");
+				else buffer.append(tab2 + "initGroup_" + list.exportID() + "();\n");
 			}
 			appendEnding(compound, buffer);
 			buffer.append(tab + "}\n\n");
@@ -103,15 +105,15 @@ public class DFMExporter extends ExImPorter {
 				if(list.size() > count){
 					int subs = list.size() / count; if(list.size() % count != 0) subs++;
 					for(int i = 0; i < subs; i++){
-						buffer.append(tab + "private final void initGroup_" + list.id + i + "(){\n");
+						buffer.append(tab + "private final void initGroup_" + list.exportID() + i + "(){\n");
 						int j = i * count, k = (i + 1) * count;
 						List<PolygonWrapper> sub = list.subList(j, k >= list.size() ? list.size() - 1 : k);
-						insertList(compound, sub, j, list.id, buffer);
+						insertList(compound, sub, j, list.exportID(), buffer);
 						buffer.append(tab + "}\n\n");
 					}
 				}
 				else{
-					buffer.append(tab + "private final void initGroup_" + list.id + "(){\n");
+					buffer.append(tab + "private final void initGroup_" + list.exportID() + "(){\n");
 					insertList(compound, list, 0, null, buffer);
 					buffer.append(tab + "}\n\n");
 				}
@@ -132,7 +134,7 @@ public class DFMExporter extends ExImPorter {
 			writer.append(buffer); writer.flush(); writer.close();
 		}
 		catch(IOException e){
-			e.printStackTrace();
+			log(e);
 			return "Error:" + e.getMessage();
 		}
 		return "Success!";
@@ -148,7 +150,7 @@ public class DFMExporter extends ExImPorter {
 	private void insertList(GroupCompound compound, List<PolygonWrapper> list, int index, String id, StringBuffer buffer){
 		String name = id;
 		if(list instanceof TurboList){
-			TurboList turbo = (TurboList)list; name = turbo.id;
+			TurboList turbo = (TurboList)list; name = turbo.exportID();
 			if((onlyvisible && !turbo.visible) || list.isEmpty()) return;
 		}
 		for(PolygonWrapper wrapper : list){
@@ -156,26 +158,30 @@ public class DFMExporter extends ExImPorter {
 				+ wrapper.textureY + ", textureX, textureY);" + (wrapper.name == null ? "" : " // " + wrapper.name()) + "\n");
 			switch(wrapper.getType()){
 				case BOX:{
-					BoxWrapper box = (BoxWrapper)wrapper;
-					buffer.append(tab2 + name + "[" + index + "]" + format(".addBox(%s, %s, %s, %s, %s, %s, 0f)", null,
-						wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord,
-						box.size.xCoord, box.size.yCoord, box.size.zCoord) + ";\n");
-					break;
+					if(!wrapper.cuv.anyCustom()){
+						BoxWrapper box = (BoxWrapper)wrapper;
+						buffer.append(tab2 + name + "[" + index + "]" + format(".addBox(%s, %s, %s, %s, %s, %s, 0f)", null,
+							wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord,
+							box.size.xCoord, box.size.yCoord, box.size.zCoord) + ";\n");
+						break;
+					}
 				}
 				case SHAPEBOX:{
-					ShapeboxWrapper box = (ShapeboxWrapper)wrapper;
-					buffer.append(tab2 + name + "[" + index + "]" + format(".addShapeBox(%s, %s, %s, %s, %s, %s, 0, "
-						+ "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", null,
-						wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord, box.size.xCoord, box.size.yCoord, box.size.zCoord,
-						box.cor0.xCoord, box.cor0.yCoord, box.cor0.zCoord, box.cor1.xCoord, box.cor1.yCoord, box.cor1.zCoord,
-						box.cor2.xCoord, box.cor2.yCoord, box.cor2.zCoord, box.cor3.xCoord, box.cor3.yCoord, box.cor3.zCoord,
-						box.cor4.xCoord, box.cor4.yCoord, box.cor4.zCoord, box.cor5.xCoord, box.cor5.yCoord, box.cor5.zCoord,
-						box.cor6.xCoord, box.cor6.yCoord, box.cor6.zCoord, box.cor7.xCoord, box.cor7.yCoord, box.cor7.zCoord) + ";\n");
-					break;
+					if(!wrapper.cuv.anyCustom()){
+						ShapeboxWrapper box = (ShapeboxWrapper)wrapper;
+						buffer.append(tab2 + name + "[" + index + "]" + format(".addShapeBox(%s, %s, %s, %s, %s, %s, 0, "
+							+ "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", null,
+							wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord, box.size.xCoord, box.size.yCoord, box.size.zCoord,
+							box.cor0.xCoord, box.cor0.yCoord, box.cor0.zCoord, box.cor1.xCoord, box.cor1.yCoord, box.cor1.zCoord,
+							box.cor2.xCoord, box.cor2.yCoord, box.cor2.zCoord, box.cor3.xCoord, box.cor3.yCoord, box.cor3.zCoord,
+							box.cor4.xCoord, box.cor4.yCoord, box.cor4.zCoord, box.cor5.xCoord, box.cor5.yCoord, box.cor5.zCoord,
+							box.cor6.xCoord, box.cor6.yCoord, box.cor6.zCoord, box.cor7.xCoord, box.cor7.yCoord, box.cor7.zCoord) + ";\n");
+						break;
+					}
 				}
 				case CYLINDER:{
 					CylinderWrapper cyl = (CylinderWrapper)wrapper;
-					if(cyl.radius2 == 0f){
+					if(!wrapper.cuv.anyCustom() && cyl.radius2 == 0f){
 						buffer.append(tab2 + name + "[" + index + "].flip = true;\n");
 						buffer.append(tab2 + name + "[" + index + "]" + format(".addCylinder(%s, %s, %s, %s, %s, %s, %s, %s, %s)", null, 
 							wrapper.off.xCoord, wrapper.off.yCoord, wrapper.off.zCoord,
@@ -191,22 +197,18 @@ public class DFMExporter extends ExImPorter {
 				default:{
 					buffer.append(tab2 + "{//LEGACY CONVERTER START\n");
 					ModelRendererTurbo turbo = wrapper.getTurboObject(0); int face = 0;
-					buffer.append(tab3 + "TexturedPolygon[] faces = new TexturedPolygon[" + turbo.getFaces().length + "]; PositionTextureVertex[] vertices = null, allverts = new PositionTextureVertex[" + turbo.getVertices().length + "];\n");
+					buffer.append(tab3 + "TexturedPolygon[] faces = new TexturedPolygon[" + turbo.getFaces().size() + "]; PositionTextureVertex[] vertices = null;\n");
 					for(TexturedPolygon poly : turbo.getFaces()){
 						buffer.append(tab3 + "vertices = new PositionTextureVertex[" + poly.getVertices().length + "];\n");
 						for(int i = 0; i < poly.getVertices().length; i++){
 							TexturedVertex vertex = poly.getVertices()[i];
-							buffer.append(tab3 + "vertices[" + i + "] = new PositionTextureVertex(" + vertex.vector.xCoord + "f, " + vertex.vector.xCoord
-								+ "f, " + vertex.vector.xCoord + "f, " + vertex.textureX + "f, " + vertex.textureY + "f);\n");
+							buffer.append(tab3 + "vertices[" + i + "] = new PositionTextureVertex(" + vertex.vector.xCoord + "f, " + vertex.vector.yCoord
+								+ "f, " + vertex.vector.zCoord + "f, " + vertex.textureX + "f, " + vertex.textureY + "f);\n");
 						}
 						buffer.append(tab3 + "faces[" + face + "] = new TexturedPolygon(vertices);\n"); face++;
-					} buffer.append(tab3 + "//\n");
-					for(int i = 0; i < turbo.getVertices().length; i++){
-						TexturedVertex vert = turbo.getVertices()[i];
-						buffer.append(tab3 + "allverts[" + i + "] = new PositionTextureVertex(" + vert.vector.xCoord + "f, " + vert.vector.xCoord
-							+ "f, " + vert.vector.xCoord + "f, " + vert.textureX + "f, " + vert.textureY + "f);\n");
 					}
-					buffer.append(tab3 + name + "[" + index + "].copyTo(allverts, faces);\n");
+					buffer.append(tab3 + "//\n");
+					buffer.append(tab3 + name + "[" + index + "].copyTo(new PositionTextureVertex[0], faces);\n");
 					buffer.append(tab2 + "}//LEGACY CONVERTER END\n");
 					break;
 				}
@@ -215,12 +217,17 @@ public class DFMExporter extends ExImPorter {
 			if(wrapper.rot.xCoord != 0f){
 				buffer.append(tab2 + name + "[" + index + "].rotateAngleX = " + (float)Math.toRadians(wrapper.rot.xCoord) + "f;\n");
 			}
-			if(wrapper.rot.xCoord != 0f){
+			if(wrapper.rot.yCoord != 0f){
 				buffer.append(tab2 + name + "[" + index + "].rotateAngleY = " + (float)Math.toRadians(wrapper.rot.yCoord) + "f;\n");
 			}
-			if(wrapper.rot.xCoord != 0f){
-				buffer.append(tab2 + name + "[" + index + "].rotateAngleZ = " + (float)Math.toRadians(wrapper.rot.zCoord) + "f;\n");
+			if(wrapper.rot.zCoord != 0f){
+				buffer.append(tab2 + name + "[" + index + "].rotateAngleZ = " + (float)Math.toRadians(-wrapper.rot.zCoord) + "f;\n");
 			} buffer.append("\n");
+			//
+			if(list instanceof TurboList && ((TurboList)list).exportoffset != null){
+				TurboList turbo = (TurboList)list;
+				buffer.append(tab2 + "translate(" + name + format(",%s, %s, %s);\n", null, turbo.exportoffset.xCoord, turbo.exportoffset.yCoord, turbo.exportoffset.zCoord));
+			}
 			index++;
 		}
 	}

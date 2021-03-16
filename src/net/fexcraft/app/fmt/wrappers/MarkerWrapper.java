@@ -5,7 +5,10 @@ import org.lwjgl.opengl.GL11;
 import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.demo.ModelSteve;
-import net.fexcraft.app.fmt.utils.TextureManager;
+import net.fexcraft.app.fmt.utils.Settings;
+import net.fexcraft.app.fmt.utils.texture.TextureManager;
+import net.fexcraft.app.fmt.wrappers.face.Face;
+import net.fexcraft.app.fmt.wrappers.face.NullFace;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
@@ -13,11 +16,13 @@ import net.fexcraft.lib.tmt.ModelRendererTurbo;
 public class MarkerWrapper extends PolygonWrapper {
 	
 	public int color, angle = -90;
-	public boolean biped;
+	public boolean biped, detached;
 	public float scale = 1;
+	public static RGB rgbcolor = new RGB();
 	
 	public MarkerWrapper(GroupCompound compound){
-		super(compound); color = RGB.GREEN.packed;
+		super(compound);
+		color = RGB.GREEN.packed;
 	}
 	
 	protected ModelRendererTurbo newMRT(){
@@ -33,11 +38,22 @@ public class MarkerWrapper extends PolygonWrapper {
 	@Override
 	public void render(boolean rotX, boolean rotY, boolean rotZ){
 		if(visible && turbo != null){
-			GL11.glDisable(GL11.GL_TEXTURE_2D); turbo.render(); GL11.glEnable(GL11.GL_TEXTURE_2D);
+			if(detached && !rotX){
+				this.compound.detached.add(this);
+				return;
+			}
+			GL11.glDisable(GL11.GL_TEXTURE_2D);
+			rgbcolor.packed = color;
+			rgbcolor.glColorApply();
+			turbo.render();
+			RGB.glColorReset();
+			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			if(biped){
+				RGB.glColorReset();
 				GL11.glPushMatrix();
 				GL11.glScalef(scale, scale, scale);
 				GL11.glTranslatef(Static.sixteenth * pos.xCoord, Static.sixteenth * pos.yCoord, Static.sixteenth * pos.zCoord);
+				if(!Settings.oldrot()) GL11.glRotatef(180, 1, 0, 0);
 				TextureManager.bindTexture("steve"); ModelSteve.render(angle);
 				GL11.glPopMatrix();
 			}
@@ -45,10 +61,25 @@ public class MarkerWrapper extends PolygonWrapper {
 	}
 	
 	@Override
-	public void renderLines(boolean rotX, boolean rotY, boolean rotZ){ return; }
+	public void renderLines(boolean rotX, boolean rotY, boolean rotZ){
+		if(detached && !rotX) return;
+		if(biped && Settings.lines() && (selected || getTurboList().selected)){
+			if(!widelines){ GL11.glLineWidth(4f); widelines = true; }
+			RGB.glColorReset();
+			GL11.glPushMatrix();
+			GL11.glScalef(scale, scale, scale);
+			GL11.glTranslatef(Static.sixteenth * pos.xCoord, Static.sixteenth * pos.yCoord, Static.sixteenth * pos.zCoord);
+			if(!Settings.oldrot()) GL11.glRotatef(180, 1, 0, 0);
+			ModelSteve.renderLines(angle);
+			GL11.glPopMatrix();
+		}
+		return;
+	}
 
 	@Override
-	public void renderPicking(boolean rotX, boolean rotY, boolean rotZ){ return; }
+	public void renderPicking(boolean rotX, boolean rotY, boolean rotZ){
+		super.renderPicking(rotX, rotY, rotZ);
+	}
 
 	@Override
 	public ShapeType getType(){
@@ -62,6 +93,7 @@ public class MarkerWrapper extends PolygonWrapper {
 			case "marker_biped": return biped ? 1 : 0;
 			case "marker_angle": return angle;
 			case "marker_scale": return scale;
+			case "marker_detached": return detached ? 1 : 0;
 		}
 		return super.getFloat(id, x, y, z);
 	}
@@ -82,6 +114,9 @@ public class MarkerWrapper extends PolygonWrapper {
 			case "marker_scale":{
 				if(x){ scale = value; return true; }
 			}
+			case "marker_detached":{
+				if(x){ detached = (int)value == 1 ? true : false; return true; }
+			}
 			default: return false;
 		}
 	}
@@ -94,11 +129,12 @@ public class MarkerWrapper extends PolygonWrapper {
 			obj.addProperty("biped", biped);
 			obj.addProperty("biped_angle", angle);
 			obj.addProperty("biped_scale", scale);
+			obj.addProperty("detached", detached);
 		} return obj;
 	}
 
 	@Override
-	protected float[][][] newTexturePosition(){
+	public float[][][] newTexturePosition(boolean include_offsets, boolean exclude_detached){
 		return new float[0][][];
 	}
 
@@ -110,6 +146,11 @@ public class MarkerWrapper extends PolygonWrapper {
 	@Override
 	public PolygonWrapper convertTo(ShapeType type){
 		return type == this.getType() ? this.clone() : null;
+	}
+
+	@Override
+	public Face[] getTexturableFaces(){
+		return NullFace.values();
 	}
 	
 }
