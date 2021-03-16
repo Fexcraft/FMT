@@ -1,126 +1,94 @@
 package net.fexcraft.app.fmt.utils;
 
-import static net.fexcraft.app.fmt.utils.Logging.log;
-
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Scanner;
-import java.util.TreeMap;
 
-import org.liquidengine.legui.component.Button;
-import org.liquidengine.legui.component.Dialog;
-import org.liquidengine.legui.component.Frame;
-import org.liquidengine.legui.component.Label;
-import org.liquidengine.legui.component.SelectBox;
-import org.liquidengine.legui.event.MouseClickEvent;
-import org.liquidengine.legui.event.MouseClickEvent.MouseClickAction;
-
-import net.fexcraft.app.fmt.FMTB;
+import net.fexcraft.app.fmt.settings.Settings;
 
 public class Translator {
-
-	private static TreeMap<String, String> DEF = new TreeMap<>(), SEL = new TreeMap<>();
-	private static final File ROOT_FILE = new File("./resources/lang/default.lang");
-
-	public static final void init() throws FileNotFoundException{
-		scanTo(ROOT_FILE, DEF, true);
-		if(Settings.getLanguage().equals("default")){
-			log("Langauge is set to default, skipping translation parsing.");
-			return;
+	
+	public static final Map<String, String> DEFAULT = new HashMap<>();
+	public static final Map<String, String> SELECTED = new HashMap<>();
+	
+	public static void init(){
+		if(loadLang(DEFAULT, new File("./resources/lang/default.lang"))){
+			Logging.log("Loaded default translation.");
 		}
-		File file = new File("./resources/lang/" + Settings.getLanguage() + ".lang");
-		if(!file.exists()){
-			log("Tried to find lang file as specified in settings, but the file seems to be missing.");
-			log("Resetting LANG_CODE setting to 'none'!");
-			Settings.SETTINGS.get("language_code").setValue("none");
-			return;
+		String local = Locale.getDefault().toString().toLowerCase();
+		File lang = null;
+		String source = null;
+		if(Settings.LANGUAGE.value.equals("null")){
+			if(!(lang = new File("./resources/lang/" + local + ".lang")).exists()){
+				Logging.log("Locale '" + local + "' not found, skipping JVM returned language parsing.");
+			}
+			source = "system";
 		}
-		//
-		log("Parsing '" + Settings.getLanguage() + "' language file.");
-		scanTo(file, SEL, false);
+		else if(!(lang = new File("./resources/lang/" + Settings.LANGUAGE.value + ".lang")).exists()){
+			Logging.log("Locale '" + local + "' not found, skipping in Settings defined language parsing.");
+			source = "settings";
+		}
+		if(source != null && lang.exists()){
+			if(loadLang(SELECTED, lang)) Logging.log("Loaded " + source + " specified translation.");
+			else Logging.log("Error while loading " + source + " specified translation.");
+		}
 	}
 
-	private static void scanTo(File file, TreeMap<String, String> mapto, boolean bool) throws FileNotFoundException {
-		Scanner scanner = new Scanner(file, StandardCharsets.UTF_8.name());
-		while(scanner.hasNextLine()){
-			String string = scanner.nextLine().trim();
-			if(string.length() < 3 || string.startsWith("#") || string.startsWith("//")) continue;
-			String[] str = string.split("=");
-			if(str.length < 2) continue;
-			mapto.put(str[0], str[1]);
-		}
-		scanner.close();
-	}
-
-	public static String translate(String key){
-		if(key.startsWith("#")) return key.substring(1);
-		return SEL.containsKey(key) ? SEL.get(key) : DEF.containsKey(key) ? DEF.get(key) : key;
-	}
-
-	public static String format(String key, Object... objects){
-		String string = translate(key);
+	private static boolean loadLang(Map<String, String> map, File file){
 		try{
-			return String.format(string, objects);
+			Scanner scanner = new Scanner(file, StandardCharsets.UTF_8.name());
+			while(scanner.hasNextLine()){
+				String string = scanner.nextLine().trim();
+				if(string.length() < 3 || string.startsWith("#") || string.startsWith("//")) continue;
+				String[] str = string.split("=");
+				if(str.length < 2) continue;
+				map.put(str[0], str[1]);
+			}
+			scanner.close();
+			return true;
 		}
 		catch(Exception e){
-			log("Failed to format '" + key + "' as '" + string + "'!");
-			for(Object object : objects) log("OBJ > " + object);
-			log(e);
-			return key;
+			Logging.log(e);
+			return false;
 		}
 	}
 
-	public static void showSelectDialog(Frame frame){
-		try{
-			Dialog dialog = new Dialog("FMT TRANSLATOR", 300, 110);
-			Label select, applies;
-			dialog.getContainer().add(select = new Label("SELECT LANGUAGE", 10, 5, 280, 24));
-			dialog.getContainer().add(applies = new Label("APPLIES ON RESTART", 10, 60, 280, 24));
-			Button button = new Button("EXIT", 200, 60, 90, 20);
-			button.getListenerMap().addListener(MouseClickEvent.class, listener -> {
-				if(listener.getAction() == MouseClickAction.CLICK){
-					FMTB.get().close(true);
-				}
-			});
-			SelectBox<String> selectbox = new SelectBox<>(10, 30, 280, 24);
-			File folder = new File("./resources/lang/");
-			ArrayList<String[]> langdata = new ArrayList<>();
-			for(File lang : folder.listFiles()){
-				if(lang.getName().endsWith(".lang")){
-					Scanner scanner = new Scanner(lang);
-					String first = scanner.nextLine();
-					if(first.startsWith("#FMT-LANG ")){
-						String[] langs = first.replace("#FMT-LANG ", "").split("\\|");
-						for(int i = 0; i < langs.length; i++) langs[i] = langs[i].trim();
-						selectbox.addElement(langs[1]);
-						langdata.add(langs);
-					}
-					else{
-						langdata.add(new String[]{ lang.getName().replace(".lang", "") });
-						selectbox.addElement(langdata.get(langdata.size() - 1)[0]);
-					}
-					scanner.close();
-				}
+	public static String translate(String string){
+		if(SELECTED.containsKey(string)) return SELECTED.get(string);
+		return DEFAULT.containsKey(string) ? DEFAULT.get(string) : string;
+	}
+
+	public static Translations translate(String... strs){
+		String[] res = new String[strs.length];
+		float[] len = new float[strs.length];
+		for(int i = 0; i < res.length; i++){
+			res[i] = translate(strs[i]);
+			len[i] = FontSizeUtil.getWidth(res[i]);
+		}
+		return new Translations(res, len);
+	}
+	
+	public static class Translations {
+		
+		public String[] results;
+		public float[] lengths;
+		public float longest, shortest;
+
+		public Translations(String[] res, float[] len){
+			this.results = res;
+			this.lengths = len;
+			shortest = lengths[0];
+			longest = lengths[0];
+			if(len.length < 2) return;
+			for(int i = 1; i < len.length; i++){
+				if(len[i] > longest) longest = len[i];
+				if(len[i] < shortest) shortest = len[i];
 			}
-			selectbox.addSelectBoxChangeSelectionEventListener(listener -> {
-				int i = selectbox.getElementIndex(listener.getNewValue());
-				String[] arr = langdata.get(i);
-				select.getTextState().setText(arr.length > 2 ? arr[2] : "SELECT A LANGUAGE");
-				applies.getTextState().setText(arr.length > 3 ? arr[3] : "APPLIES ON RESTART");
-				button.getTextState().setText(arr.length > 4 ? arr[4] : "EXIT");
-				Settings.SETTINGS.get("language_code").validateAndApply(arr[0]);
-			});
-			selectbox.setVisibleCount(12);
-			dialog.getContainer().add(selectbox);
-			dialog.getContainer().add(button);
-			dialog.setResizable(false);
-			dialog.show(frame);
 		}
-		catch(FileNotFoundException e){
-			log(e);
-		}
+		
 	}
 
 }

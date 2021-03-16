@@ -1,0 +1,10 @@
+class Test {
+
+    String status() {
+        def status = "OK"
+        return status + (2 + 2);
+    }
+}
+
+Test test = new Test();
+println test.status();

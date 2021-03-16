@@ -1,21 +1,77 @@
-#FMT-LANG default | English (DEF) | Choose a Language | Applies on Restart | Exit
-#
 # Authors: 
 # - Ferdinand (FEX___96)
 #
 //
 # Toolbar
+## File
 toolbar.file=File
-toolbar.file.new_model=New...
-toolbar.file.open=Open.
-toolbar.file.open.recent=...
+toolbar.file.new=New
+toolbar.file.open=Open
+toolbar.file.recent=Recent..
+toolbar.file.recent.none=.  .  .
 toolbar.file.save=Save
-toolbar.file.save_as=Save as...
+toolbar.file.save_as=Save as..
 toolbar.file.import=Import <<
 toolbar.file.export=Export >>
 toolbar.file.settings=Settings
 toolbar.file.donate=Donate!
 toolbar.file.exit=Exit
+## Editors
+toolbar.editors=Editors
+toolbar.editors.new=Add/New Editor
+## Components
+toolbar.component=Components
+toolbar.component.list=Component List
+toolbar.component.polygon=Polygon
+toolbar.component.polygon.quick=Quick-Add
+toolbar.component.polygon.quick.desc=Component including buttons for quickly adding new Polygons.
+toolbar.component.polygon.copypaste=Copy/Paste
+toolbar.component.polygon.list=List/Tree
+toolbar.component.polygon.group=Group
+toolbar.component.polygon.general=General >>
+toolbar.component.polygon.general.general=General
+toolbar.component.polygon.general.general_box=General Box
+toolbar.component.polygon.general.general_cyl=General Cyl.
+toolbar.component.polygon.general.general_obj=General Obj.
+toolbar.component.polygon.singular=Singular >>
+toolbar.component.polygon.singular.position=Position
+toolbar.component.polygon.singular.offset=Offset
+toolbar.component.polygon.singular.rotation=Rotation
+toolbar.component.polygon.singular.texture=Texture Pos.
+toolbar.component.polygon.singular.size_box=Size Box
+toolbar.component.polygon.singular.size_cyl=Size Cyl.
+toolbar.component.polygon.shapebox=Shapebox
+toolbar.component.polygon.cylinder=Cylinder
+toolbar.component.polygon.visibility=Visibility
+toolbar.component.polygon.object=Object
+toolbar.component.group=Group
+toolbar.component.model=Model
+toolbar.component.texture=Texture
+toolbar.component.helpers=Helper/Preview
+toolbar.component.project=Project
+## Project
+toolbar.project=Project
+toolbar.project.open=Open
+toolbar.project.settings=Settings
+toolbar.project.import=Import
+toolbar.project.export=Export
+toolbar.project.close=Close
+## 
+toolbar.utils=Utilities
+toolbar.polygons=Polygons
+toolbar.texture=Textures
+toolbar.helpers=Helper/Previews
+toolbar.exit=Exit
+
+# Editor
+editor.component.add_dialog.title=Select a new Component and target Editor
+editor.component.add_dialog.select=Select target Editor
+editor.component.add_dialog.confirm=Add Component
+editor.component.polygon.quick.name=Quick Add
+editor.component.polygon.quick.desc=Component including buttons for quickly adding new Polygons.
+
+
+//////// OLD ////////
 toolbar.utils=Utils
 toolbar.utils.undo=Undo (WIP)
 toolbar.utils.redo=Redo (WIP)

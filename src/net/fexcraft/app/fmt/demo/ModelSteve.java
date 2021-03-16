@@ -2,7 +2,6 @@ package net.fexcraft.app.fmt.demo;
 
 import org.lwjgl.opengl.GL11;
 
-import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public class ModelSteve {
@@ -73,7 +72,7 @@ public class ModelSteve {
 		group1[7].addShapeBox(-3F, -6F, -1F, 6, 6, 1, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F);
 		group1[7].setRotationPoint(0F, -14F, 0F);
 		for(ModelRendererTurbo turbo : group1){
-			turbo.setLines(Settings.getSelectedColor());
+			//TODO turbo.setLines(Settings.getSelectedColor());
 		}
 	}
 
