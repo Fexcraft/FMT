@@ -53,7 +53,9 @@ public class Settings {
 	public static int ct_buttom = 0x212121;
 	
 	public static void load(){
-		JsonObject obj = Jsoniser.parseObj(new File("./settings.json"), true);
+		var file = new File("./settings.json");
+		var obj = file.exists() ? Jsoniser.parseObj(file, true) : new JsonObject();
+		if(obj == null) obj = new JsonObject();
 		if(obj.has("format") && obj.get("format").getAsInt() != FORMAT) obj = new JsonObject();
 		if(!obj.has("default")) obj.add("default", new JsonObject());
 		//
