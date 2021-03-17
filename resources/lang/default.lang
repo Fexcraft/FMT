@@ -70,6 +70,9 @@ editor.component.add_dialog.confirm=Add Component
 editor.component.polygon.quick.name=Quick Add
 editor.component.polygon.quick.desc=Component including buttons for quickly adding new Polygons.
 
+# Other
+filechooser.title=FMT Internal File Chooser/Selector
+
 
 //////// OLD ////////
 toolbar.utils=Utils
