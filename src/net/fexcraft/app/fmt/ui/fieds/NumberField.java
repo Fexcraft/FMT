@@ -18,6 +18,7 @@ import org.liquidengine.legui.listener.KeyEventListener;
 import org.lwjgl.glfw.GLFW;
 
 import net.fexcraft.app.fmt.settings.Setting;
+import net.fexcraft.app.fmt.settings.Settings;
 
 public class NumberField extends TextInput implements Field {
 	
@@ -27,11 +28,13 @@ public class NumberField extends TextInput implements Field {
 
 	public NumberField(int x, int y, int w, int h){
 		super("0", x, y, w, h);
+		Settings.applyBorderless(this);
 		Field.setupHoverCheck(this);
 	}
 
 	public NumberField(Setting<?> setting, int x, int y, int w, int h){
 		super(setting.toString(), x, y, w, h);
+		Settings.applyBorderless(this);
 		Field.setupHoverCheck(this);
 		getListenerMap().addListener(FocusEvent.class, listener -> {
 			if(!listener.isFocused()){
