@@ -204,7 +204,7 @@ public class FMT {
 		//TODO session, updates, keybinds
 		KeyCompound.init();
 		//TODO timers
-		if(Settings.DISCORD.value){
+		if(Settings.DISCORD_RPC.value){
 			DiscordEventHandlers.Builder handler = new DiscordEventHandlers.Builder();
 			handler.setReadyEventHandler(new DiscordUtil.ReadyEventHandler());
 			handler.setErroredEventHandler(new DiscordUtil.ErroredEventHandler());

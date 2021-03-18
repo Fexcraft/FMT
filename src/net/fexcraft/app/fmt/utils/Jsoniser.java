@@ -158,6 +158,7 @@ public class Jsoniser {
 	}
 
 	public static Object get(JsonObject obj, String member, Object def){
+		if(obj == null) return def;
 		if(def instanceof Double) return get(obj, member, (double)def);
 		if(def instanceof Float) return get(obj, member, (float)def);
 		if(def instanceof Long) return get(obj, member, (long)def);
@@ -175,6 +176,11 @@ public class Jsoniser {
 		if(val instanceof Boolean) return new JsonPrimitive((boolean)val);
 		//
 		return new JsonPrimitive((String)val);
+	}
+
+	public static JsonObject getSubObj(JsonObject obj, String sub){
+		if(!obj.has(sub)) obj.add(sub, new JsonObject());
+		return obj.get(sub).getAsJsonObject();
 	}
 	
 }

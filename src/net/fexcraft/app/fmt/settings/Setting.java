@@ -6,20 +6,23 @@ import net.fexcraft.app.fmt.utils.Jsoniser;
 
 public class Setting<TYPE> {
 	
-	public final String id;
+	public final String id, group;
 	public TYPE _default, value;
 	
-	public Setting(String id, TYPE def){
+	public Setting(String id, TYPE def, String group){
 		this._default = value = def;
+		this.group = group;
 		this.id = id;
+		Settings.register(group, id, this);
 	}
 	
-	public Setting(String id, TYPE def, JsonObject obj){
-		this(id, def);
-		load(obj);
+	public Setting(String id, TYPE def, String group, JsonObject obj){
+		this(id, def, group);
+		load(Jsoniser.getSubObj(obj, group));
+		Settings.register(group, id, this);
 	}
 	
-	public  void load(JsonObject obj){
+	public void load(JsonObject obj){
 		value = (TYPE)Jsoniser.get(obj, id, _default);
 	}
 
