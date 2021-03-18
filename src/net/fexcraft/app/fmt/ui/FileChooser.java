@@ -19,6 +19,7 @@ import org.lwjgl.system.MemoryStack;
 import org.lwjgl.util.tinyfd.TinyFileDialogs;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.ui.fieds.TextField;
 import net.fexcraft.app.fmt.utils.Translator;
 
 /**
@@ -125,7 +126,22 @@ public class FileChooser {
 			panel.getContainer().add(filebutton);
 		}
 		if(save){
-			//TODO text field for filename input
+			TextField input = new TextField(Translator.translate("filechooser.enter_name"), 10, INTERNAL_HEIGHT - 20, 390, 20);
+			Button select = new Button(Translator.translate("dialog.button.select"), 410, INTERNAL_HEIGHT - 20, 80, 20);
+			select.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
+	        	if(CLICK == e.getAction() && input.getTextState().getText().length() > 0){
+        			dialog.close();
+	        		String string = input.getTextState().getText();
+	    			boolean ends = false;
+	    			for(int i = 0; i < type.extensions.length; i++){
+	    				if(string.endsWith(type.extensions[i].replace("*", ""))){ ends = true; break; }
+	    			}
+	    			if(!ends) string += type.extensions[0].replace("*", "");
+	    			task.accept(new File(rootfile, string));
+	        	}
+			});
+			dialog.getContainer().add(select);
+			dialog.getContainer().add(input);
 		}
 		dialog.setResizable(false);
 		dialog.getContainer().add(panel);

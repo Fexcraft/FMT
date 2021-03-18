@@ -70,8 +70,24 @@ editor.component.add_dialog.confirm=Add Component
 editor.component.polygon.quick.name=Quick Add
 editor.component.polygon.quick.desc=Component including buttons for quickly adding new Polygons.
 
+# Generic Dialogs
+dialog.title.default=Generic Dialog
+dialog.button.continue=Continue
+dialog.button.confirm=Confirm
+dialog.button.cancel=Cancel
+dialog.button.select=Select
+dialog.button.open=Open
+dialog.button.save=Save
+dialog.button.load=Load
+dialog.button.yes=Yes
+dialog.button.no=No
+dialog.button.ok=Ok
+dialog.button.enable=Enable
+dialog.button.disable=Disable
+
 # Other
 filechooser.title=FMT Internal File Chooser/Selector
+filechooser.enter_name=enter custom filename here
 
 
 //////// OLD ////////
@@ -315,19 +331,6 @@ keyadjuster.occupied=Key is already in use!
 keyadjuster.reset=Reset
 
 # DialogBox
-dialogbox.title.default=Generic Dialog
-dialogbox.button.continue=Continue
-dialogbox.button.confirm=Confirm
-dialogbox.button.cancel=Cancel
-dialogbox.button.select=Select
-dialogbox.button.open=Open
-dialogbox.button.save=Save
-dialogbox.button.load=Load
-dialogbox.button.yes=Yes
-dialogbox.button.no=No
-dialogbox.button.ok=Ok
-dialogbox.button.enable=Enable
-dialogbox.button.disable=Disable
 dialogbox.warning=WARNING!
 dialogbox.setting.warning0=THIS SETTING CAN CAUSE SCREEN FLICKERING
 dialogbox.setting.warning1=DEPENDING ON HARDWARE/SOFTWARE SPEED
