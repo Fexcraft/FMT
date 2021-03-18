@@ -1,5 +1,6 @@
 package net.fexcraft.app.fmt.utils;
 
+import static net.fexcraft.app.fmt.ui.GenericDialog.showOK;
 import static net.fexcraft.app.fmt.utils.Logging.log;
 
 import java.io.File;
@@ -32,7 +33,7 @@ public class SaveHandler {
 
 	public static void open(Model model, File file){
 		if(file == null || !file.exists()){
-			//TODO dialog DialogBox.showOK("saveload.title", null, null, "saveload.open.nofile");
+			showOK("saveload.title", null, null, "saveload.open.nofile");
 			return;
 		}
 		try{
@@ -86,7 +87,7 @@ public class SaveHandler {
 		}
 		catch(Exception e){
 			log(e);
-			//TODO dialogDialogBox.showOK("saveload.title", null, null, "saveload.open.errors");
+			showOK("saveload.title", null, null, "saveload.open.errors");
 			return;
 		}
 	}

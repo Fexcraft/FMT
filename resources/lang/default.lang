@@ -85,6 +85,17 @@ dialog.button.ok=Ok
 dialog.button.enable=Enable
 dialog.button.disable=Disable
 
+# Save/Load
+saveload.title=FMTB Save Handler
+saveload.open=Select file to open.
+saveload.open.nofile=Invalid Model File! (Does it exist?)
+saveload.open.errors=Errors occured while parsing save file.
+saveload.save.nofile=Model save file is 'null'! Model will not be saved.
+saveload.save.success=Model Saved!
+saveload.should_save=Do you want to save the current model first?
+saveload.backup.error0=Errors during creating a backup, please check the log.
+saveload.backup.error1=WARNING: Any progress may not be able to save!
+
 # Other
 filechooser.title=FMT Internal File Chooser/Selector
 filechooser.enter_name=enter custom filename here
@@ -406,17 +417,6 @@ compound.rescale.group=Please emter the group to be rescaled:
 compound.rescale.warning0=WARNING! THIS CAN NOT BE UNDONE!
 compound.rescale.warning1=This can cause decimal boxes and cylinders.
 compound.rescale.warning2=Using decimal-size polygons is NOT advised.
-
-# Save/Load
-saveload.title=FMTB File Manager
-saveload.open=Select file to open.
-saveload.open.nofile=Invalid Model File! (Does it exist?)
-saveload.open.errors=Errors occured while parsing save file.
-saveload.save.nofile=Model save file is 'null'! Model will not be saved.
-saveload.save.success=Model Saved!
-saveload.should_save=Do you want to save the current model first?
-saveload.backup.error0=Errors during creating a backup, please check the log.
-saveload.backup.error1=WARNING: Any progress may not be able to save!
 
 # Helper/Preview Collector
 helper_collector.title=Helper/Preview Collector
