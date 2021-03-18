@@ -16,6 +16,8 @@ import net.fexcraft.app.fmt.utils.SaveHandler;
  */
 public class Model {
 
+	public static int SELECTED_POLYGONS;
+	//
 	private LinkedHashMap<String, Boolean> authors = new LinkedHashMap<>();
 	public ArrayList<Group> groups = new ArrayList<>();
 	public Vector3f pos = new Vector3f();
@@ -23,7 +25,7 @@ public class Model {
 	public TextureGroup texgroup = null;
 	public String texhelper;
 	public int texSizeX = 256, texSizeY = 256;
-	public boolean loaded, visible, subhelper;
+	public boolean visible, subhelper;
 	public float opacity = 1f;
 	public Vector3f scale;
 	public String name;
@@ -36,16 +38,16 @@ public class Model {
 	
 	/** For now just for FMTB files. */
 	public Model load(){
-		return loaded(SaveHandler.load(this, file, false, false) != null);
-	}
-	
-	public Model loaded(boolean bool){
-		this.loaded = bool;
+		SaveHandler.open(this, file);
 		return this;
 	}
 	
 	public void addAuthor(String name, boolean rem){
 		
+	}
+
+	public int count(boolean selected){
+		return 0;
 	}
 
 }

@@ -43,6 +43,7 @@ import org.lwjgl.system.MemoryUtil;
 import net.arikia.dev.drpc.DiscordEventHandlers;
 import net.arikia.dev.drpc.DiscordRPC;
 import net.fexcraft.app.fmt.demo.ModelT1P;
+import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.ui.Editor;
@@ -90,6 +91,7 @@ public class FMT {
 	public static Context CONTEXT;
 	public static Renderer RENDERER;
 	public static Toolbar TOOLBAR;
+	public static Model MODEL;
 	
 	public static void main(String... args) throws Exception {
 		log("==================================================");

@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.ui;
 
+import java.io.File;
+
 import org.liquidengine.legui.component.Panel;
 
 import net.fexcraft.app.fmt.FMT;
@@ -133,6 +135,10 @@ public class Toolbar extends Panel {
 		));
 		//this.add(new ToolbarMenu(8, "THEME",  () -> { Settings.SELTHEME = !Settings.SELTHEME; Settings.applyTheme(); }));
 		this.add(new ToolbarMenu(7, "exit", () -> FMT.close()));
+	}
+
+	public static void addRecent(File file){
+		// TODO Auto-generated method stub
 	}
 
 }

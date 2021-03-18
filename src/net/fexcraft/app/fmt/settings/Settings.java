@@ -35,7 +35,8 @@ public class Settings {
 	public static final String FONT = FontRegistry.ROBOTO_BOLD;
 	public static final String FONT_PATH = "org/liquidengine/legui/style/font/Roboto-Bold.ttf";
 	public static Setting<Integer> WINDOW_WIDTH, WINDOW_HEIGHT, ROUNDING_DIGITS;
-	public static Setting<Boolean> VSYNC, HVSYNC, DISCORD, DISCORD_HIDE, TRIANGULATION, INTERNAL_CHOOSER;
+	public static Setting<Boolean> DISCORD, DISCORD_HIDE, DISCORD_RESET_ON_NEW;
+	public static Setting<Boolean> VSYNC, HVSYNC, TRIANGULATION, INTERNAL_CHOOSER;
 	public static Setting<Float> MOUSE_SENSIVITY, MOVE_SPEED;
 	public static Setting<String> LANGUAGE;
 	public static Boolean SELTHEME;
@@ -64,6 +65,7 @@ public class Settings {
 		HVSYNC = new Setting<>("vsync/2", false, def);
 		DISCORD = new Setting<>("discord_rpc", true, def);
 		DISCORD_HIDE = new Setting<>("discord_rpc_hide_mode", false, def);
+		DISCORD_HIDE = new Setting<>("discord_rpc_reset_on_new", false, def);
 		WINDOW_WIDTH = new Setting<>("window_width", 1280, def);
 		WINDOW_HEIGHT = new Setting<>("window_height", 720, def);
 		MOUSE_SENSIVITY = new Setting<>("mouse_sensivity", 2f, def);
@@ -98,12 +100,15 @@ public class Settings {
 		HVSYNC.save(def);
 		DISCORD.save(def);
 		DISCORD_HIDE.save(def);
+		DISCORD_RESET_ON_NEW.save(def);
 		WINDOW_WIDTH.save(def);
 		WINDOW_HEIGHT.save(def);
 		MOUSE_SENSIVITY.save(def);
 		MOVE_SPEED.save(def);
 		TRIANGULATION.save(def);
 		LANGUAGE.save(def);
+		INTERNAL_CHOOSER.save(def);
+		ROUNDING_DIGITS.save(def);
 		obj.add("default", def);
 		//
 		for(Map.Entry<String, Map<String, Setting<?>>> entry : SETTINGS.entrySet()){

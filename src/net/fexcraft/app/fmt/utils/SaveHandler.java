@@ -3,35 +3,96 @@ package net.fexcraft.app.fmt.utils;
 import static net.fexcraft.app.fmt.utils.Logging.log;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.zip.ZipFile;
 
 import org.joml.Vector3f;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.google.gson.reflect.TypeToken;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.polygon.Polygon;
+import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.texture.TextureManager;
+import net.fexcraft.app.fmt.ui.Toolbar;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.json.JsonUtil;
 
 public class SaveHandler {
 
-	@SuppressWarnings("unused")
-	public static Model load(Model model, File file, boolean preview, boolean sub){
-		JsonObject obj = Jsoniser.parseObj(file, true, true);
-		if(obj == null){
-			model.name = "LOADING FAILED";
-			return model;
+	public static void open(Model model, File file){
+		if(file == null || !file.exists()){
+			//TODO dialog DialogBox.showOK("saveload.title", null, null, "saveload.open.nofile");
+			return;
 		}
+		try{
+			Toolbar.addRecent(file);
+			TextureManager.clearGroups();
+			ZipFile zip = new ZipFile(file);
+			boolean[] updatetree = { false };
+			zip.stream().forEach(elm -> {
+				if(elm.getName().equals("model.jtmt")){
+					try{
+						PreviewHandler.clear();
+						FMT.MODEL = load(model, file, JsonUtil.getObjectFromInputStream(zip.getInputStream(elm)), false, false);
+						//TODO update tracked fields/attributes
+						//TODO recompile
+						Model.SELECTED_POLYGONS = FMT.MODEL.count(true);
+					}
+					catch(IOException e){
+						log(e);
+					}
+				}
+				else if(elm.getName().equals("texture.png")){
+					try{ //loads in old texture files
+						if(FMT.MODEL.texgroup == null){
+							TextureManager.addGroup(FMT.MODEL.texgroup = new TextureGroup(new JsonPrimitive("default")));
+						}
+						TextureManager.loadFromStream(zip.getInputStream(elm), "group-default", false, true);
+						FMT.MODEL.texgroup.reAssignTexture();
+						//TODO recompile
+					}
+					catch(IOException e){
+						log(e);
+					}
+					updatetree[0] = true;
+				}
+				else if(elm.getName().startsWith("texture-")){
+					try{
+						String group = elm.getName().substring(elm.getName().indexOf("-") + 1).replace(".png", "");
+						TextureManager.loadFromStream(zip.getInputStream(elm), "group-" + group, false, true);
+						TextureManager.getGroup(group).reAssignTexture();
+					}
+					catch(IOException e){
+						log(e);
+					}
+					updatetree[0] = true;
+				}
+			});
+			zip.close();
+			FMT.MODEL.file = file;
+			if(updatetree[0]) //TODO update trees?
+			DiscordUtil.update(Settings.DISCORD_RESET_ON_NEW.value);
+		}
+		catch(Exception e){
+			log(e);
+			//TODO dialogDialogBox.showOK("saveload.title", null, null, "saveload.open.errors");
+			return;
+		}
+	}
+
+	@SuppressWarnings("unused")
+	public static Model load(Model model, File from, JsonObject obj, boolean preview, boolean sub){
 		model.name = Jsoniser.get(obj, "name", "Unnamed Model");
 		model.texSizeX = Jsoniser.get(obj, "texture_size_x", 256);
 		model.texSizeY = Jsoniser.get(obj, "texture_size_y", 256);
@@ -134,23 +195,23 @@ public class SaveHandler {
 			obj.get("helpers").getAsJsonArray().forEach(elm -> {
 				try{
 					JsonObject jsn = elm.getAsJsonObject();
-					File hile = new File(jsn.get("path").getAsString());
-					if(hile.equals(file)) return;
+					File file = new File(jsn.get("path").getAsString());
+					if(file.equals(from)) return;
 					Model helper = null;
 					if(jsn.get("name").getAsString().startsWith("frame/")){
-						helper = PreviewHandler.loadFrame(file);
+						helper = PreviewHandler.loadFrame(from);
 					}
 					else if(jsn.get("name").getAsString().startsWith("fmtb/")){
-						helper = PreviewHandler.loadFMTB(file);
+						helper = PreviewHandler.loadFMTB(from);
 					}
 					else{
 						//TODO find importer
 						Object porter = null;
 						if(porter == null){
-							log("ERROR: Could not find importer for helper/preview '" + file.getPath() + "'!");
+							log("ERROR: Could not find importer for helper/preview '" + from.getPath() + "'!");
 							return;
 						}
-						helper = PreviewHandler.load(file, porter, jsn);
+						helper = PreviewHandler.load(from, porter, jsn);
 					}
 					helper.name = Jsoniser.get(jsn, "name", "Unnamed Helper-Preview");
 					if(jsn.has("opacity")){

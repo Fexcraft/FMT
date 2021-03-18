@@ -23,4 +23,8 @@ public class PreviewHandler {
 		return null;
 	}
 
+	public static void clear(){
+		// TODO Auto-generated method stub
+	}
+
 }
