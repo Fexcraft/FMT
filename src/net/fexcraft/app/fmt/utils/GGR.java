@@ -244,5 +244,13 @@ public class GGR {
 		hor = hordef;
 		ver = verdef;
 	}
+
+	public float fov(){
+		return fov;
+	}
+
+	public void fov(float fov){
+		this.fov = fov;
+	}
     
 }
