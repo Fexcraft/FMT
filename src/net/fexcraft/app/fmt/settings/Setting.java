@@ -35,4 +35,8 @@ public class Setting<TYPE> {
 		obj.add(id, Jsoniser.toJson(value));
 	}
 
+	public void validate(boolean apply, String string){
+		// TODO Auto-generated method stub
+	}
+
 }

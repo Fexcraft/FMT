@@ -34,7 +34,7 @@ public class Settings {
 	public static final float FONT_SIZE = 20f;
 	public static final String FONT = FontRegistry.ROBOTO_BOLD;
 	public static final String FONT_PATH = "org/liquidengine/legui/style/font/Roboto-Bold.ttf";
-	public static Setting<Integer> WINDOW_WIDTH, WINDOW_HEIGHT;
+	public static Setting<Integer> WINDOW_WIDTH, WINDOW_HEIGHT, ROUNDING_DIGITS;
 	public static Setting<Boolean> VSYNC, HVSYNC, DISCORD, DISCORD_HIDE, TRIANGULATION, INTERNAL_CHOOSER;
 	public static Setting<Float> MOUSE_SENSIVITY, MOVE_SPEED;
 	public static Setting<String> LANGUAGE;
@@ -71,6 +71,7 @@ public class Settings {
 		TRIANGULATION = new Setting<>("triangulated_quads", false, def);
 		LANGUAGE = new Setting<>("language", "null", def);
 		INTERNAL_CHOOSER = new Setting<>("internal_filechooser", true, def);//TODO later set to false
+		ROUNDING_DIGITS = new Setting<>("rounding_digits", 4, def);
 		//
 		for(Map.Entry<String, Map<String, Setting<?>>> entry : SETTINGS.entrySet()){
 			if(!obj.has(entry.getKey())) continue;
