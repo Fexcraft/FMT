@@ -79,7 +79,7 @@ public class ToolbarMenu extends Panel {
 
         public MenuLayer(Vector2f pos, Collection<Component> components, String rootid){
     		Settings.applyBorderless(this);
-    		Settings.THEME_CHANGE_LISTENERS.add(bool -> {
+    		Settings.applyTheme(this, bool -> {
     			float w = bool ? 0 : 1;
     			this.getStyle().getBackground().setColor(w, w, w, 1);
     		});

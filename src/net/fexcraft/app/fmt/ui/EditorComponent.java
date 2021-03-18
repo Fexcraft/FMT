@@ -9,6 +9,7 @@ import org.liquidengine.legui.event.CursorEnterEvent;
 import org.liquidengine.legui.listener.CursorEnterEventListener;
 import org.liquidengine.legui.style.Style.DisplayType;
 
+import net.fexcraft.app.fmt.attributes.UpdateHandler.UpdateHolder;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.components.QuickAdd;
 import net.fexcraft.app.fmt.utils.Translator;
@@ -18,6 +19,7 @@ public class EditorComponent extends Component {
 	public static final HashMap<Integer, EditorComponent> COMPONENTS = new HashMap<>();
 	public static final HashMap<String, Class<? extends EditorComponent>> REGISTRY = new HashMap<>();
 	public static final int HEIGHT = 24;
+	private UpdateHolder updateholder;
 	private ArrayList<Icon> icons = new ArrayList<>();
 	private boolean minimized, unpinned;
 	private Label label;
@@ -98,6 +100,10 @@ public class EditorComponent extends Component {
 
 	public static void registerComponents(){
 		REGISTRY.put("polygon.quick", QuickAdd.class);
+	}
+
+	public UpdateHolder getUpdateHolder(){
+		return updateholder;
 	}
 
 }

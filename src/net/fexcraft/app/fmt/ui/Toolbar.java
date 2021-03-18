@@ -16,10 +16,7 @@ public class Toolbar extends Panel {
 	public Toolbar(){
 		super(0, 0, FMT.WIDTH, 30);
 		this.setFocusable(false);
-		Settings.THEME_CHANGE_LISTENERS.add(bool -> {
-			getStyle().setBorderRadius(0);
-			getStyle().setBorder(null);
-		});
+		Settings.applyBorderless(this);
 		this.add(new Icon(0, "./resources/textures/icons/toolbar/info.png", () -> Logging.log("test")));
 		this.add(new Icon(1, "./resources/textures/icons/toolbar/settings.png", NOTHING));
 		this.add(new Icon(2, "./resources/textures/icons/toolbar/profile.png", NOTHING));

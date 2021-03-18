@@ -29,7 +29,7 @@ import net.fexcraft.lib.common.math.Time;
 
 public class Settings {
 	
-	public static final ArrayList<Consumer<Boolean>> THEME_CHANGE_LISTENERS = new ArrayList<>();
+	public static final ArrayList<ThemeChangeEntry> THEME_CHANGE_LISTENERS = new ArrayList<>();
 	public static final int FORMAT = 2;
 	public static final float FONT_SIZE = 20f;
 	public static final String FONT = FontRegistry.ROBOTO_BOLD;
@@ -151,17 +151,17 @@ public class Settings {
 			));
 		}
 		if(FMT.FRAME != null) Themes.getDefaultTheme().applyAll(FMT.FRAME);
-		THEME_CHANGE_LISTENERS.forEach(listener -> listener.accept(SELTHEME));
+		THEME_CHANGE_LISTENERS.forEach(listener -> listener.getValue().accept(SELTHEME));
 	}
 	
 	public static void applyMenuTheme(Component com){
-		Settings.THEME_CHANGE_LISTENERS.add(bool -> {
+		Settings.THEME_CHANGE_LISTENERS.add(new ThemeChangeEntry(com, bool -> {
 			com.getStyle().setBorderRadius(0);
 			com.getStyle().setBorder(null);
 			float col = bool != null && bool ? 0.25f : 0.75f;
 			com.getStyle().setTextColor(bool != null && bool ? ColorConstants.lightGray() : ColorConstants.darkGray());
 			com.getStyle().getBackground().setColor(col, col, col, 1);
-		});
+		}));
 	}
 
 	public static Consumer<Boolean> applyComponentTheme(EditorComponent com){
@@ -172,22 +172,22 @@ public class Settings {
 			com.getStyle().setTextColor(bool != null && bool ? ColorConstants.lightGray() : ColorConstants.darkGray());
 			com.getStyle().getBackground().setColor(col, col, col, 1);
 		};
-		Settings.THEME_CHANGE_LISTENERS.add(consumer);
+		Settings.THEME_CHANGE_LISTENERS.add(new ThemeChangeEntry(com, consumer));
 		return consumer;
 	}
 	
 	public static void applyBorderless(Component com){
-		Settings.THEME_CHANGE_LISTENERS.add(bool -> {
+		Settings.THEME_CHANGE_LISTENERS.add(new ThemeChangeEntry(com, bool -> {
 			com.getStyle().setBorderRadius(0);
 			com.getStyle().setBorder(null);
-		});
+		}));
 	}
 	
-	public static void applyBorderless(Style style){
-		Settings.THEME_CHANGE_LISTENERS.add(bool -> {
+	public static void applyBorderless(Component com, Style style){
+		Settings.THEME_CHANGE_LISTENERS.add(new ThemeChangeEntry(com, bool -> {
 			style.setBorderRadius(0);
 			style.setBorder(null);
-		});
+		}));
 	}
 
 	public static void loadEditors(){
@@ -214,6 +214,41 @@ public class Settings {
 	public static void register(String group, String id, Setting<?> setting){
 		if(!SETTINGS.containsKey(group)) SETTINGS.put(group, new LinkedHashMap<String, Setting<?>>());
 		SETTINGS.get(group).put(id, setting);
+	}
+
+	public static void applyTheme(Component com, Consumer<Boolean> con){
+		THEME_CHANGE_LISTENERS.add(new ThemeChangeEntry(com, con));
+	}
+
+	public static void deapply(Component com){
+		THEME_CHANGE_LISTENERS.removeIf(pre -> pre.getKey().equals(com));
+	}
+	
+	private static final class ThemeChangeEntry implements Map.Entry<Component, Consumer<Boolean>> {
+		
+	    private final Component key;
+	    private Consumer<Boolean> value;
+
+	    public ThemeChangeEntry(Component key, Consumer<Boolean> value){
+	        this.key = key;
+	        this.value = value;
+	    }
+
+	    @Override
+	    public Component getKey(){
+	        return key;
+	    }
+
+	    @Override
+	    public Consumer<Boolean> getValue(){
+	        return value;
+	    }
+
+	    @Override
+	    public Consumer<Boolean> setValue(Consumer<Boolean> value){
+	        return this.value = value;
+	    }
+	    
 	}
 
 }
