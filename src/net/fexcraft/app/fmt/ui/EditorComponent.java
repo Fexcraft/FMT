@@ -9,6 +9,7 @@ import org.liquidengine.legui.event.CursorEnterEvent;
 import org.liquidengine.legui.listener.CursorEnterEventListener;
 import org.liquidengine.legui.style.Style.DisplayType;
 
+import net.fexcraft.app.fmt.attributes.UpdateHandler;
 import net.fexcraft.app.fmt.attributes.UpdateHandler.UpdateHolder;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.components.QuickAdd;
@@ -104,6 +105,11 @@ public class EditorComponent extends Component {
 
 	public UpdateHolder getUpdateHolder(){
 		return updateholder;
+	}
+
+	public void deregister(){
+		Settings.deapply(this, size, pin, mup, mdw, rem);
+		UpdateHandler.deregisterHolder(updateholder);
 	}
 
 }
