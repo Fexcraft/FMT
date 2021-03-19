@@ -12,6 +12,7 @@ import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.texture.TextureGroup;
+import net.fexcraft.app.fmt.utils.MRTRenderer.DrawMode;
 import net.fexcraft.app.fmt.utils.SaveHandler;
 
 /**
@@ -21,7 +22,7 @@ import net.fexcraft.app.fmt.utils.SaveHandler;
  */
 public class Model {
 
-	public static int SELECTED_POLYGONS;
+	public static long SELECTED_POLYGONS;
 	//
 	private LinkedHashMap<String, Boolean> authors = new LinkedHashMap<>();
 	public ArrayList<Group> groups = new ArrayList<>();
@@ -30,7 +31,7 @@ public class Model {
 	public TextureGroup texgroup = null;
 	public String texhelper;
 	public int texSizeX = 256, texSizeY = 256;
-	public boolean visible, subhelper;
+	public boolean visible = true, subhelper;
 	public float opacity = 1f;
 	public Vector3f scale;
 	public String name;
@@ -53,8 +54,17 @@ public class Model {
 		update(MODEL_AUTHOR, name);
 	}
 
-	public int count(boolean selected){
-		return 0;
+	public long count(boolean selected){
+		long am = 0;
+		for(Group group : groups){
+			if(selected && !group.selected){
+				for(Polygon poly : group){
+					if(poly.selected) am++;
+				}
+			}
+			else am += group.size();
+		}
+		return am;
 	}
 	
 	public boolean isHelper(){
@@ -62,18 +72,21 @@ public class Model {
 	}
 
 	public void recompile(){
-		// TODO Auto-generated method stub
-		
+		for(Group group : groups){
+			group.recompile();
+		}
 	}
 
 	public void bindtex(){
-		// TODO Auto-generated method stub
-		
+		if(texgroup != null) texgroup.texture.bind();
 	}
 
 	public void render(){
-		// TODO Auto-generated method stub
-		
+		if(!visible) return;
+		for(Group group : groups){
+			group.render(DrawMode.NORMAL);
+			group.render(DrawMode.LINES);
+		}
 	}
 
 }

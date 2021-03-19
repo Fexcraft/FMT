@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.utils;
 
+import static java.lang.String.format;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -170,8 +172,8 @@ public class Jsoniser {
 		return get(obj, member, (String)def);
 	}
 	
-	public static Vector3f getVector(JsonObject obj, String prefix, float def){
-		return new Vector3f(get(obj, prefix + "x", def), get(obj, prefix + "y", def), get(obj, prefix + "z", def));
+	public static Vector3f getVector(JsonObject obj, String format, float def){
+		return new Vector3f(get(obj, format(format, "x"), def), get(obj, format(format, "y"), def), get(obj, format(format, "z"), def));
 	}
 
 	public static JsonElement toJson(Object val){

@@ -7,6 +7,7 @@ in float light;
 
 uniform sampler2D tex_sampler;
 uniform vec4 line_color;
+uniform vec4 poly_color;
 
 out vec4 color_out;
 

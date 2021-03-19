@@ -1,6 +1,7 @@
 package net.fexcraft.app.fmt.demo;
 
 import net.fexcraft.app.fmt.utils.MRTRenderer;
+import net.fexcraft.app.fmt.utils.MRTRenderer.DrawMode;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.tmt.ModelBase;
@@ -1225,12 +1226,12 @@ public class ModelT1P extends ModelBase {
         /*for(ModelRendererTurbo turbo : body){
         	turbo.rotationAngleY += 1f / 30f;
         }*/
-    	MRTRenderer.LINEMODE = false;
+    	MRTRenderer.mode(DrawMode.LINES);
     	render(body);
     	render(body_door_close_colored_primary);
     	render(body_colored_primary);
     	render(body_colored_secondary);
-    	MRTRenderer.LINEMODE = true;
+    	MRTRenderer.mode(DrawMode.NORMAL);
     	render(body);
     	render(body_door_close_colored_primary);
     	render(body_colored_primary);

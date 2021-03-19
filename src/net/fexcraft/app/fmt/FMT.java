@@ -10,7 +10,6 @@ import java.io.File;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
-import org.joml.Matrix4f;
 import org.joml.Vector2i;
 import org.joml.Vector4f;
 import org.liquidengine.legui.animation.AnimatorProvider;
@@ -55,12 +54,14 @@ import net.fexcraft.app.fmt.utils.DiscordUtil;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.KeyCompound;
 import net.fexcraft.app.fmt.utils.MRTRenderer;
+import net.fexcraft.app.fmt.utils.MRTRenderer.DrawMode;
 import net.fexcraft.app.fmt.utils.ShaderManager;
 import net.fexcraft.app.fmt.utils.Timer;
 import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.AxisRotator;
 import net.fexcraft.lib.common.math.RGB;
+import net.fexcraft.lib.tmt.BoxBuilder;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 /**
@@ -287,17 +288,42 @@ public class FMT {
 		//glEnable(GL_BLEND);
 		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		ShaderManager.GENERAL.use();
-		Matrix4f model_mat = new Matrix4f().identity();
+		//Matrix4f model_mat = new Matrix4f().identity();
 		//TODO uniforms
 		CAM.apply();
 		glBindVertexArray(vao);
 		TextureManager.bind("null");
-		TextureManager.bind("t1p");
-		ModelT1P.INSTANCE.render();
-		MODEL.bindtex();
+		MRTRenderer.mode(DrawMode.NORMAL);
+		if(Settings.CUBE.value){
+			TextureManager.bind("demo");
+			center_cube.render();
+		}
+		if(Settings.FLOOR.value){
+			TextureManager.bind("floor");
+			floor.render();
+		}
+		if(Settings.DEMO.value){
+			TextureManager.bind("t1p");
+			ModelT1P.INSTANCE.render();
+		}
+		if(Settings.CMARKER.value){
+            centermarker0.render(0.0625f / 4);
+            centermarker1.render(0.0625f / 4);
+            centermarker2.render(0.0625f / 4);
+		}
 		MODEL.render();
 		ShaderManager.applyUniforms(cons -> {});
 	}
+	
+	public static final ModelRendererTurbo center_cube = new BoxBuilder(new ModelRendererTurbo(null, 0, 0, 16, 16))
+		.setSize(16, 16, 16).setOffset(-8, 0, -8).build();
+	public static final ModelRendererTurbo floor = new BoxBuilder(new ModelRendererTurbo(null, 0, 0, 512, 512))
+		.setSize(512, 0, 512).setOffset(-256, 0, -256).removePolygons(0, 1, 4, 5)
+		.setPolygonUV(2, new float[]{ 512, 0, 512, 512, 0, 512, 0, 0 })
+		.setPolygonUV(3, new float[]{ 512, 0, 512, 512, 0, 512, 0, 0 }).build();
+	private static final ModelRendererTurbo centermarker0 = new ModelRendererTurbo(null, 0, 0, 0, 0).addBox(-0.5f, -256, -0.5f, 1, 512, 1).setTextured(false).setColor(RGB.GREEN.copy());
+	private static final ModelRendererTurbo centermarker1 = new ModelRendererTurbo(null, 0, 0, 0, 0).addBox(-256, -0.5f, -0.5f, 512, 1, 1).setTextured(false).setColor(RGB.RED.copy());
+	private static final ModelRendererTurbo centermarker2 = new ModelRendererTurbo(null, 0, 0, 0, 0).addBox(-0.5f, -0.5f, -256, 1, 1, 512).setTextured(false).setColor(RGB.BLUE.copy());
 	
 	public static final String getCurrentTitle(){
 		String f = Static.random.nextInt(2) == 0 ? "Fex's " : "Fexcraft ";

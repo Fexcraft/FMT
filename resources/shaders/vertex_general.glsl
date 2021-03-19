@@ -10,6 +10,7 @@ uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 uniform vec4 line_color;
+uniform vec4 poly_color;
 
 //out vec3 color;
 out vec2 uv;

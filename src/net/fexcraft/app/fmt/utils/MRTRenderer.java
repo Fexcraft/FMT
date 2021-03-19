@@ -9,6 +9,7 @@ import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
 import static org.lwjgl.opengl.GL15.glBindBuffer;
 import static org.lwjgl.opengl.GL15.glBufferData;
+import static org.lwjgl.opengl.GL15.glDeleteBuffers;
 import static org.lwjgl.opengl.GL15.glGenBuffers;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glUniform4fv;
@@ -26,19 +27,23 @@ import net.fexcraft.lib.tmt.ModelRendererTurbo;
 public class MRTRenderer extends ModelRendererTurbo.Renderer {
 	
 	private static Matrix4f matrix = new Matrix4f();
-	private static final float[] EMPTY = { 0, 0, 0, 0 }, LINECOLOR = { 0, 0, 0, 1};
-	public static boolean LINEMODE;
+	public static final float[] EMPTY = { 0, 0, 0, 0 };
+	private static final float[] LINECOLOR = { 0, 0, 0, 1};
+	private static final float[] SELCOLOR = { 1, 1, 0, 1 };//TODO setting
+	public static DrawMode MODE = DrawMode.NORMAL;
 
 	@Override
 	public void render(ModelRendererTurbo mrt, float scale){
         if(!mrt.showModel){ return; }
-        boolean lines = LINEMODE || mrt.linesColor != null;
+        boolean lines = MODE.lines();
         int index = lines ? 1 : 0;
         GlCache cache = mrt.glObject() == null ? mrt.glObject(new GlCache()) : mrt.glObject();
         if(cache.glObj[0].glid == null || mrt.forcedRecompile){
             compileModel(cache.glObj[0], mrt, scale, false);
             compileModel(cache.glObj[1], mrt, scale, true);
-            cache.linecolor = lines ? mrt.linesColor.toFloatArray() : LINECOLOR;
+            cache.linecolor =  mrt.linesColor != null ? mrt.linesColor.toFloatArray() : LINECOLOR;
+            if(cache.polycolor == null) cache.polycolor = EMPTY;
+            mrt.forcedRecompile = false;
         }
 		matrix = new Matrix4f().identity();
 		matrix.translate(new Vector3f(mrt.rotationPointX * scale, mrt.rotationPointY * scale, mrt.rotationPointZ * scale));
@@ -46,7 +51,8 @@ public class MRTRenderer extends ModelRendererTurbo.Renderer {
 		if(mrt.rotationAngleZ != 0f) matrix.rotate((float)Math.toRadians(mrt.rotationAngleZ), axis_z);
 		if(mrt.rotationAngleX != 0f) matrix.rotate((float)Math.toRadians(mrt.rotationAngleX), axis_x);
 		glUniformMatrix4fv(getUniform("model"), false, matrix.get(new float[16]));
-		glUniform4fv(getUniform("line_color"), LINEMODE ? cache.linecolor : EMPTY);
+		glUniform4fv(getUniform("line_color"), MODE == DrawMode.SELLINES ? SELCOLOR : MODE == DrawMode.LINES ? cache.linecolor : EMPTY);
+		glUniform4fv(getUniform("poly_color"), cache.polycolor);
 		//
         glEnableVertexAttribArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, cache.glObj[index].glid);
@@ -72,10 +78,21 @@ public class MRTRenderer extends ModelRendererTurbo.Renderer {
         }
 	}
 	
-	private static class GlCache {
+	public static enum DrawMode {
+		
+		NORMAL, POLYGON_PICKER, FACE_PICKER, SELLINES, LINES;
+		
+		public boolean lines(){
+			return this == LINES || this == SELLINES;
+		}
+		
+	}
+	
+	public static class GlCache {
 		
 		public GlObj[] glObj = { new GlObj(), new GlObj() };
 		public float[] linecolor;
+		public float[] polycolor;
 		
 	}
 
@@ -133,6 +150,12 @@ public class MRTRenderer extends ModelRendererTurbo.Renderer {
     			obj.lights[lig++] = 1;
     		}
         }
+    	if(obj.glid != null){
+    		glDeleteBuffers(obj.glid);
+    		glDeleteBuffers(obj.uvss);
+    		glDeleteBuffers(obj.normss);
+    		glDeleteBuffers(obj.lightss);
+    	}
 		//
 		glBindBuffer(GL_ARRAY_BUFFER, obj.glid = glGenBuffers());
 		glBufferData(GL_ARRAY_BUFFER, obj.verts, GL_STATIC_DRAW);
@@ -143,6 +166,10 @@ public class MRTRenderer extends ModelRendererTurbo.Renderer {
 		glBufferData(GL_ARRAY_BUFFER, obj.norms, GL_STATIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, obj.lightss = glGenBuffers());
 		glBufferData(GL_ARRAY_BUFFER, obj.lights, GL_STATIC_DRAW);
+	}
+
+	public static void mode(DrawMode mode){
+		MODE = mode;
 	}
 	
 }

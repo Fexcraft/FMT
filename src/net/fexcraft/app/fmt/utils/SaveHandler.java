@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.utils;
 
+import static net.fexcraft.app.fmt.attributes.UpdateHandler.update;
+import static net.fexcraft.app.fmt.attributes.UpdateType.MODEL_LOAD;
 import static net.fexcraft.app.fmt.ui.GenericDialog.showOK;
 import static net.fexcraft.app.fmt.utils.Logging.log;
 
@@ -46,7 +48,7 @@ public class SaveHandler {
 					try{
 						PreviewHandler.clear();
 						FMT.MODEL = load(model, file, JsonUtil.getObjectFromInputStream(zip.getInputStream(elm)), false, false);
-						//TODO update tracked fields/attributes
+						update(MODEL_LOAD, model);
 						FMT.MODEL.recompile();
 						Model.SELECTED_POLYGONS = FMT.MODEL.count(true);
 					}
@@ -112,7 +114,7 @@ public class SaveHandler {
 			JsonObject jmod = obj.get("model").getAsJsonObject();
 			for(Entry<String, JsonElement> entry : jmod.entrySet()){
 				try{
-					Group group = new Group(entry.getKey());
+					Group group = new Group(model, entry.getKey());
 					JsonArray array = entry.getValue().getAsJsonArray();
 					for(JsonElement elm : array){
 						group.add(Polygon.from(model, elm.getAsJsonObject()));
@@ -139,7 +141,7 @@ public class SaveHandler {
 		JsonObject groups = obj.get("groups").getAsJsonObject();
 		groups.entrySet().forEach(entry -> {
 			try{
-				Group group = new Group(entry.getKey());
+				Group group = new Group(model, entry.getKey());
 				JsonObject jsn = entry.getValue().getAsJsonObject();
 				group.minimized = Jsoniser.get(jsn, "minimized", false);
 				group.selected = Jsoniser.get(jsn, "selected", false);
@@ -190,7 +192,7 @@ public class SaveHandler {
 			}
 			FMT.CAM.hor = Jsoniser.get(obj, "camera_horizontal", -Static.rad45);
 			FMT.CAM.ver = Jsoniser.get(obj, "camera_vertical", -Static.rad20);
-			FMT.CAM.fov(Jsoniser.get(obj, "camera_vertical", FMT.CAM.fov()));
+			//FMT.CAM.fov(Jsoniser.get(obj, "camera_vertical", FMT.CAM.fov()));
 		}
 		if(obj.has("helpers")){
 			obj.get("helpers").getAsJsonArray().forEach(elm -> {
@@ -200,19 +202,19 @@ public class SaveHandler {
 					if(file.equals(from)) return;
 					Model helper = null;
 					if(jsn.get("name").getAsString().startsWith("frame/")){
-						helper = PreviewHandler.loadFrame(from);
+						helper = PreviewHandler.loadFrame(file);
 					}
 					else if(jsn.get("name").getAsString().startsWith("fmtb/")){
-						helper = PreviewHandler.loadFMTB(from);
+						helper = PreviewHandler.loadFMTB(file);
 					}
 					else{
 						//TODO find importer
 						Object porter = null;
 						if(porter == null){
-							log("ERROR: Could not find importer for helper/preview '" + from.getPath() + "'!");
+							log("ERROR: Could not find importer for helper/preview '" + file.getPath() + "'!");
 							return;
 						}
-						helper = PreviewHandler.load(from, porter, jsn);
+						helper = PreviewHandler.load(file, porter, jsn);
 					}
 					if(helper == null) return;
 					helper.name = Jsoniser.get(jsn, "name", "Unnamed Helper-Preview");
@@ -258,6 +260,7 @@ public class SaveHandler {
 				}
 			});
 		}
+		model.recompile();
 		return model;
 	}
 

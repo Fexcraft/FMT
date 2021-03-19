@@ -5,17 +5,23 @@ import org.joml.Vector3f;
 import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.utils.Jsoniser;
+import net.fexcraft.app.fmt.utils.MRTRenderer;
+import net.fexcraft.app.fmt.utils.MRTRenderer.GlCache;
 import net.fexcraft.app.fmt.utils.Translator;
+import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public abstract class Polygon {
-	
+
+	public ModelRendererTurbo turbo = new ModelRendererTurbo(this);
 	private Model model;
+	private Group group;
 	private String name;
 	public int textureX, textureY;
 	public Vector3f pos, off, rot;
 	public int colorIdx;
 	public int[] colorIds;
-	private boolean visible;
+	public boolean visible;
+	public boolean selected;
 	
 	public Polygon(Model model){
 		this.model = model;
@@ -27,10 +33,12 @@ public abstract class Polygon {
 	protected Polygon(Model model, JsonObject obj){
 		this.model = model;
 		if(obj.has("name")) name = obj.get("name").getAsString();
-		pos = Jsoniser.getVector(obj, "pos_", 0f);
-		off = Jsoniser.getVector(obj, "off_", 0f);
-		rot = Jsoniser.getVector(obj, "rot_", 0f);
+		pos = Jsoniser.getVector(obj, "pos_%s", 0f);
+		off = Jsoniser.getVector(obj, "off_%s", 0f);
+		rot = Jsoniser.getVector(obj, "rot_%s", 0f);
 		visible = Jsoniser.get(obj, "visible", true);
+		textureX = Jsoniser.get(obj, "texture_x", -1);
+		textureY = Jsoniser.get(obj, "texture_y", -1);
 		if(obj.has("cuv")){
 			//TODO
 		}
@@ -42,30 +50,54 @@ public abstract class Polygon {
 		return name == null ? String.format(Translator.UNNAMED_POLYGON, getShape().name()) : name;
 	}
 
+	public boolean group(Group group){
+		this.group = group;
+		return true;
+	}
+
 	public static Polygon from(Model model, JsonObject obj){
 		Shape shape = Shape.get(obj.get("type").getAsString());
-		Polygon poly = null;
 		switch(shape){
 			case BB:
 				break;
-			case BOX:
-				break;
+			case BOX: return new Box(model, obj);
 			case CYLINDER:
 				break;
 			case MARKER:
 				break;
 			case OBJECT:
 				break;
-			case SHAPEBOX:
-				break;
+			case SHAPEBOX: return new Shapebox(model, obj);
 			case SPHERE:
 				break;
 			case VOXEL:
 				break;
-			default:
-				break;
+			default: return null;
 		}
-		return poly;
+		return null;
 	}
+	
+	public void recompile(){
+		turbo.forcedRecompile = true;
+		turbo.clear();
+		GlCache cache;
+		if((cache = turbo.glObject()) == null) cache = turbo.glObject(new GlCache());
+		cache.polycolor = MRTRenderer.EMPTY;//TODO
+		if(textureX < 0 || textureY < 0) turbo.setTextured(false);
+		else turbo.setTextureOffset(textureX, textureY);
+		turbo.textureWidth = group.texgroup == null ? model.texSizeX : group.texSizeX;
+		turbo.textureHeight = group.texgroup == null ? model.texSizeY : group.texSizeY;
+		if(group.joined_polygons){
+			turbo.setPosition(group.pos.x, group.pos.y, group.pos.z);
+			turbo.setRotationAngle(group.rot.x + rot.x, group.rot.y + rot.y, group.rot.z + rot.z);
+		}
+		else {
+			turbo.setPosition(pos.x, pos.y, pos.z);
+			turbo.setRotationAngle(rot.x, rot.y, rot.z);
+		}
+		buildMRT();
+	}
+
+	protected abstract void buildMRT();
 
 }
