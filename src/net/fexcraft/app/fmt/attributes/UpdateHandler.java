@@ -17,7 +17,7 @@ public class UpdateHandler {
 		}
 	}
 	
-	public static void update(UpdateType event, Object value){
+	public static void update(UpdateType event, Object... value){
 		HOLDERS.get(event).forEach(holder -> holder.update(event, value, false));
 		if(event.run_groups != null){
 			for(UpdateType type : UpdateType.values()){
@@ -38,7 +38,7 @@ public class UpdateHandler {
 	@FunctionalInterface
 	public static interface UpdateConsumer {
 		
-		public <T> void update(T value, UpdateType from, T _value);
+		public <T> void update(T[] value, UpdateType from, T[] _value);
 		
 	}
 	
@@ -51,7 +51,7 @@ public class UpdateHandler {
 			return this;
 		}
 
-		private void update(UpdateType event, Object value, boolean bool){
+		private void update(UpdateType event, Object[] value, boolean bool){
 			if(bool) consumers.get(event).update(null, event, value);
 			else consumers.get(event).update(value, null, null);
 		}

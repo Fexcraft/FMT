@@ -1,9 +1,13 @@
 package net.fexcraft.app.fmt.polygon;
 
+import static net.fexcraft.app.fmt.attributes.UpdateHandler.update;
+import static net.fexcraft.app.fmt.attributes.UpdateType.POLYGON_ADDED;
+
 import org.joml.Vector3f;
 
 import com.google.gson.JsonObject;
 
+import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.utils.Jsoniser;
 import net.fexcraft.app.fmt.utils.MRTRenderer;
 import net.fexcraft.app.fmt.utils.MRTRenderer.GlCache;
@@ -24,14 +28,14 @@ public abstract class Polygon {
 	public boolean selected;
 	
 	public Polygon(Model model){
-		this.model = model;
+		this.model = model == null ? FMT.MODEL : model;
 		pos = new Vector3f();
 		off = new Vector3f();
 		rot = new Vector3f();
 	}
 	
 	protected Polygon(Model model, JsonObject obj){
-		this.model = model;
+		this.model = model == null ? FMT.MODEL : model;
 		if(obj.has("name")) name = obj.get("name").getAsString();
 		pos = Jsoniser.getVector(obj, "pos_%s", 0f);
 		off = Jsoniser.getVector(obj, "off_%s", 0f);
@@ -52,6 +56,8 @@ public abstract class Polygon {
 
 	public boolean group(Group group){
 		this.group = group;
+		update(POLYGON_ADDED, new Object[]{ group, this });
+		this.recompile();
 		return true;
 	}
 

@@ -19,36 +19,15 @@ toolbar.file.exit=Exit
 ## Editors
 toolbar.editors=Editors
 toolbar.editors.new=Add/New Editor
-## Components
-toolbar.component=Components
-toolbar.component.list=Component List
-toolbar.component.polygon=Polygon
-toolbar.component.polygon.quick=Quick-Add
-toolbar.component.polygon.quick.desc=Component including buttons for quickly adding new Polygons.
-toolbar.component.polygon.copypaste=Copy/Paste
-toolbar.component.polygon.list=List/Tree
-toolbar.component.polygon.group=Group
-toolbar.component.polygon.general=General >>
-toolbar.component.polygon.general.general=General
-toolbar.component.polygon.general.general_box=General Box
-toolbar.component.polygon.general.general_cyl=General Cyl.
-toolbar.component.polygon.general.general_obj=General Obj.
-toolbar.component.polygon.singular=Singular >>
-toolbar.component.polygon.singular.position=Position
-toolbar.component.polygon.singular.offset=Offset
-toolbar.component.polygon.singular.rotation=Rotation
-toolbar.component.polygon.singular.texture=Texture Pos.
-toolbar.component.polygon.singular.size_box=Size Box
-toolbar.component.polygon.singular.size_cyl=Size Cyl.
-toolbar.component.polygon.shapebox=Shapebox
-toolbar.component.polygon.cylinder=Cylinder
-toolbar.component.polygon.visibility=Visibility
-toolbar.component.polygon.object=Object
-toolbar.component.group=Group
-toolbar.component.model=Model
-toolbar.component.texture=Texture
-toolbar.component.helpers=Helper/Preview
-toolbar.component.project=Project
+## Polygons
+toolbar.polygons.add_box=Add Box
+toolbar.polygons.add_shapebox=Add Shapebox
+toolbar.polygons.add_cylinder=Add Cylinder
+toolbar.polygons.add_boundingbox=Add BB/Collbox
+toolbar.polygons.add_object=Add Object
+toolbar.polygons.add_marker=Add Marker
+toolbar.polygons.add_group=Add Group
+toolbar.polygons.add_voxel=Add Voxel
 ## Project
 toolbar.project=Project
 toolbar.project.open=Open

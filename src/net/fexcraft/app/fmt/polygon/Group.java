@@ -13,7 +13,7 @@ public class Group extends ArrayList<Polygon> {
 	
 	public String id;
 	public final Model model;
-	public boolean minimized, selected, visible;
+	public boolean minimized, selected, visible = true;
 	public RGB color = RGB.WHITE.copy();
 	public TextureGroup texgroup = null;
 	public String texhelper;

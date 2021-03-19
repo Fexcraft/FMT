@@ -20,6 +20,7 @@ public class Icon extends ImageView {
 		this.getListenerMap().addListener(MouseClickEvent.class, listener);
 		Settings.applyBorderless(getStyle());
 		Settings.applyBorderless(getFocusedStyle());
+		this.setFocusable(true);
 	}
 	
 	public Icon(int index, String adress, Runnable run){
@@ -40,6 +41,7 @@ public class Icon extends ImageView {
 		this.getListenerMap().addListener(MouseClickEvent.class, listener);
 		Settings.applyBorderless(getStyle());
 		Settings.applyBorderless(getFocusedStyle());
+		this.setFocusable(true);
 	}
 	
 	public Icon(byte index, String adress, Runnable run){
@@ -56,6 +58,7 @@ public class Icon extends ImageView {
 		this.getListenerMap().addListener(MouseClickEvent.class, listener);
 		Settings.applyBorderless(getStyle());
 		Settings.applyBorderless(getFocusedStyle());
+		this.setFocusable(true);
 	}
 	
 	public Icon(int index, int size, int off, int x, int y, String adress, Runnable run){

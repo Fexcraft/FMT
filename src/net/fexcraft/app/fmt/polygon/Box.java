@@ -11,9 +11,9 @@ import net.fexcraft.lib.tmt.BoxBuilder;
 public class Box extends Polygon {
 	
 	public Vector3f size = new Vector3f(1);
-	public boolean[] sides;
+	public boolean[] sides = new boolean[6];
 	
-	protected Box(Model model){
+	public Box(Model model){
 		super(model);
 	}
 
@@ -22,7 +22,6 @@ public class Box extends Polygon {
 		size.x = Jsoniser.get(obj, "width", 1f);
 		size.y = Jsoniser.get(obj, "height", 1f);
 		size.z = Jsoniser.get(obj, "depth", 1f);
-		sides = new boolean[6];
 		if(obj.has("sides_off")){
 			JsonArray array = obj.get("sides_off").getAsJsonArray();
 			for(int i = 0; i < sides.length; i++){
