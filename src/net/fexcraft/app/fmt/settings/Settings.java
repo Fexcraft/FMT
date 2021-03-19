@@ -35,7 +35,7 @@ public class Settings {
 	public static Setting<Integer> WINDOW_WIDTH, WINDOW_HEIGHT, ROUNDING_DIGITS;
 	public static Setting<Boolean> DISCORD_RPC, DISCORD_HIDE, DISCORD_RESET_ON_NEW;
 	public static Setting<Boolean> VSYNC, HVSYNC, TRIANGULATION_Q, TRIANGULATION_L, INTERNAL_CHOOSER;
-	public static Setting<Boolean> DEMO, FLOOR, CUBE, CMARKER;
+	public static Setting<Boolean> DEMO, FLOOR, CUBE, CMARKER, LINES, POLYMARKER;
 	public static Setting<Float> MOUSE_SENSIVITY, MOVE_SPEED;
 	public static Setting<String> LANGUAGE;
 	public static Boolean SELTHEME, DARKTHEME;
@@ -82,6 +82,8 @@ public class Settings {
 		FLOOR = new Setting<>("floor", true, SPACE3D, obj);
 		CUBE = new Setting<>("center_cube", true, SPACE3D, obj);
 		CMARKER = new Setting<>("center_marker", true, SPACE3D, obj);
+		LINES = new Setting<>("lines", true, SPACE3D, obj);
+		POLYMARKER = new Setting<>("polygon_marker", true, SPACE3D, obj);
 		//
 		for(Map.Entry<String, Map<String, Setting<?>>> entry : SETTINGS.entrySet()){
 			if(!obj.has(entry.getKey())) continue;

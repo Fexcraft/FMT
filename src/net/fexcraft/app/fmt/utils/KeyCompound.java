@@ -11,6 +11,7 @@ import com.google.common.io.Files;
 import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.json.JsonUtil;
 
@@ -57,6 +58,16 @@ public class KeyCompound {
 		keys.add(new KeyFunction("camera_rotate_right", GLFW_KEY_RIGHT, action -> FMT.CAM.hor += Static.rad5));
 		keys.add(new KeyFunction("camera_rotate_up", GLFW_KEY_UP, action -> FMT.CAM.ver -= Static.rad5));
 		keys.add(new KeyFunction("camera_rotate_down", GLFW_KEY_DOWN, action -> FMT.CAM.ver += Static.rad5));
+		//
+		keys.add(new KeyFunction("help", GLFW_KEY_F1, action -> {}));
+		keys.add(new KeyFunction("toggle_floor", GLFW_KEY_F2, action -> { if(action == GLFW_RELEASE) Settings.FLOOR.toggle(); }));
+		keys.add(new KeyFunction("toggle_lines", GLFW_KEY_F3, action -> { if(action == GLFW_RELEASE) Settings.LINES.toggle(); }));
+		keys.add(new KeyFunction("toggle_cube", GLFW_KEY_F4, action -> { if(action == GLFW_RELEASE) Settings.CUBE.toggle(); }));
+		keys.add(new KeyFunction("toggle_demo", GLFW_KEY_F5, action -> { if(action == GLFW_RELEASE) Settings.DEMO.toggle(); }));
+		keys.add(new KeyFunction("toggle_polygon_marker", GLFW_KEY_F6, action -> { if(action == GLFW_RELEASE) Settings.POLYMARKER.toggle(); }));
+		keys.add(new KeyFunction("toggle_center_marker", GLFW_KEY_F7, action -> { if(action == GLFW_RELEASE) Settings.CMARKER.toggle(); }));
+		keys.add(new KeyFunction("toggle_lighting", GLFW_KEY_F8, action -> { }));//TODO
+		keys.add(new KeyFunction("toggle_animations", GLFW_KEY_F9, action -> { }));//TODO
 		//
 		/*keys.add(new KeyFunction("delete", GLFW_KEY_DELETE, action -> { if(action == GLFW_RELEASE) FMT.MODEL.deleteSelected(); }));
 		//keys.add(new KeyFunction("raypick", GLFW_KEY_T, action -> { if(action == GLFW_RELEASE) RayCoastAway.doTest(true, null, false); }));

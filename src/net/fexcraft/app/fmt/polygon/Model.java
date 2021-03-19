@@ -11,6 +11,7 @@ import java.util.LinkedHashMap;
 import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.utils.MRTRenderer.DrawMode;
 import net.fexcraft.app.fmt.utils.SaveHandler;
@@ -85,7 +86,7 @@ public class Model {
 		if(!visible) return;
 		for(Group group : groups){
 			group.render(DrawMode.NORMAL);
-			group.render(DrawMode.LINES);
+			if(Settings.LINES.value) group.render(DrawMode.LINES);
 		}
 	}
 
