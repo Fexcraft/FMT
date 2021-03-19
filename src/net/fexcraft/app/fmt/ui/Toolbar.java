@@ -130,7 +130,6 @@ public class Toolbar extends Panel {
 			//new MenuButton(3, "project.export"),
 			new MenuButton(2, "project.close")
 		));
-		//this.add(new ToolbarMenu(8, "THEME",  () -> { Settings.SELTHEME = !Settings.SELTHEME; Settings.applyTheme(); }));
 		this.add(new ToolbarMenu(7, "exit", () -> FMT.close()));
 	}
 
