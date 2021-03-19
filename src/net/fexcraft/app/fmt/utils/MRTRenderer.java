@@ -1,5 +1,6 @@
 package net.fexcraft.app.fmt.utils;
 
+import static net.fexcraft.app.fmt.settings.Settings.TRIANGULATION_L;
 import static net.fexcraft.app.fmt.utils.ShaderManager.getUniform;
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL11.GL_LINES                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ;
@@ -71,7 +72,7 @@ public class MRTRenderer extends ModelRendererTurbo.Renderer {
     		glBindBuffer(GL_ARRAY_BUFFER, cache.glObj[index].lightss);
     		glVertexAttribPointer(4, 1, GL_FLOAT, false, 1 * 4, 0);
         }
-		glDrawArrays(!lines ? GL_TRIANGLES : GL_LINES, 0, cache.glObj[index].size);
+		glDrawArrays(lines ? GL_LINES : GL_TRIANGLES, 0, cache.glObj[index].size);
 		//
         if(mrt.childModels != null){
             for(ModelRendererTurbo child : mrt.childModels) child.render(scale);
@@ -132,7 +133,7 @@ public class MRTRenderer extends ModelRendererTurbo.Renderer {
 		int ver = 0, uv = 0, nor = 0, lig = 0;
     	for(int i = 0; i < mrt.getFaces().size(); i++){
     		TexturedPolygon poly = mrt.getFaces().get(i);
-    		int[] order = poly.getVertices().length == 4 ? lines ? order2 : order1 : order0;
+    		int[] order = poly.getVertices().length == 4 ? lines && !TRIANGULATION_L.value ? order2 : order1 : order0;
         	Vec3f vec0 = new Vec3f(poly.getVertices()[1].vector.subtract(poly.getVertices()[0].vector));
 	        Vec3f vec1 = new Vec3f(poly.getVertices()[1].vector.subtract(poly.getVertices()[2].vector));
 	        Vec3f vec2 = vec1.cross(vec0).normalize();

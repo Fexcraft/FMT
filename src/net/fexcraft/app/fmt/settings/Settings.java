@@ -23,6 +23,7 @@ import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.ui.components.QuickAdd;
 import net.fexcraft.app.fmt.utils.Jsoniser;
+import net.fexcraft.lib.common.math.TexturedPolygon;
 import net.fexcraft.lib.common.math.Time;
 
 public class Settings {
@@ -33,7 +34,7 @@ public class Settings {
 	public static final String FONT_PATH = "org/liquidengine/legui/style/font/Roboto-Bold.ttf";
 	public static Setting<Integer> WINDOW_WIDTH, WINDOW_HEIGHT, ROUNDING_DIGITS;
 	public static Setting<Boolean> DISCORD_RPC, DISCORD_HIDE, DISCORD_RESET_ON_NEW;
-	public static Setting<Boolean> VSYNC, HVSYNC, TRIANGULATION, INTERNAL_CHOOSER;
+	public static Setting<Boolean> VSYNC, HVSYNC, TRIANGULATION_Q, TRIANGULATION_L, INTERNAL_CHOOSER;
 	public static Setting<Boolean> DEMO, FLOOR, CUBE, CMARKER;
 	public static Setting<Float> MOUSE_SENSIVITY, MOVE_SPEED;
 	public static Setting<String> LANGUAGE;
@@ -72,7 +73,8 @@ public class Settings {
 		WINDOW_HEIGHT = new Setting<>("window_height", 720, GRAPHIC, obj);
 		MOUSE_SENSIVITY = new Setting<>("mouse_sensivity", 2f, CONTROL, obj);
 		MOVE_SPEED = new Setting<>("movement_speed", 1f, CONTROL, obj);
-		TRIANGULATION = new Setting<>("triangulated_quads", false, GRAPHIC, obj);
+		TRIANGULATION_Q = new Setting<>("triangulated_quads", true, GRAPHIC, obj);
+		TRIANGULATION_L = new Setting<>("triangulated_lines", false, GRAPHIC, obj);
 		LANGUAGE = new Setting<>("language", "null", GENERAL, obj);
 		INTERNAL_CHOOSER = new Setting<>("internal_filechooser", true, GENERAL, obj);//TODO later set to false
 		ROUNDING_DIGITS = new Setting<>("rounding_digits", 4, GENERAL, obj);
@@ -95,6 +97,7 @@ public class Settings {
 	public static void apply(FMT fmt){
 		FMT.WIDTH = WINDOW_WIDTH.value;
 		FMT.HEIGHT = WINDOW_HEIGHT.value;
+		TexturedPolygon.TRIANGULATED_QUADS = TRIANGULATION_Q.value;
 	}
 	
 	public static void save(){

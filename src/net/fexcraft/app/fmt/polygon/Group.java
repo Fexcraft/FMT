@@ -49,7 +49,7 @@ public class Group extends ArrayList<Polygon> {
 		if(!visible) return;
 		bindtex();
 		if(mode == DrawMode.LINES){
-			MRTRenderer.mode(selected ? DrawMode.LINES : DrawMode.SELLINES);
+			MRTRenderer.mode(selected ? DrawMode.SELLINES : DrawMode.LINES);
 			for(Polygon poly : this){
 				if(!selected && poly.selected) MRTRenderer.mode(DrawMode.SELLINES);
 				poly.turbo.render();
