@@ -199,6 +199,7 @@ public class FMT {
 		RENDERER = new NvgRenderer();
 		RENDERER.initialize();
 		TextureManager.load();
+		FMT.MODEL = new Model(new File("./saves/dodici.fmtb"), null).load();
 		//TODO load previous model
 		//TODO session, updates, keybinds
 		KeyCompound.init();
@@ -293,8 +294,8 @@ public class FMT {
 		TextureManager.bind("null");
 		TextureManager.bind("t1p");
 		ModelT1P.INSTANCE.render();
-	    //TODO tex bind
-		//TODO render
+		MODEL.bindtex();
+		MODEL.render();
 		ShaderManager.applyUniforms(cons -> {});
 	}
 	

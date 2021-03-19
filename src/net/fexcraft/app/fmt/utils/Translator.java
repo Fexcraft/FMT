@@ -13,6 +13,7 @@ public class Translator {
 	
 	public static final Map<String, String> DEFAULT = new HashMap<>();
 	public static final Map<String, String> SELECTED = new HashMap<>();
+	public static String UNNAMED_POLYGON;
 	
 	public static void init(){
 		if(loadLang(DEFAULT, new File("./resources/lang/default.lang"))){
@@ -35,6 +36,8 @@ public class Translator {
 			if(loadLang(SELECTED, lang)) Logging.log("Loaded " + source + " specified translation.");
 			else Logging.log("Error while loading " + source + " specified translation.");
 		}
+		//
+		UNNAMED_POLYGON = translate("polygon.unnamed");
 	}
 
 	private static boolean loadLang(Map<String, String> map, File file){

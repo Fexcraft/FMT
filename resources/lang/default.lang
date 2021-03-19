@@ -99,6 +99,7 @@ saveload.backup.error1=WARNING: Any progress may not be able to save!
 # Other
 filechooser.title=FMT Internal File Chooser/Selector
 filechooser.enter_name=enter custom filename here
+polygon.unnamed=unnamed %s
 
 
 //////// OLD ////////

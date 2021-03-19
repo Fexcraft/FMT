@@ -61,4 +61,19 @@ public class Model {
 		return subhelper || FMT.MODEL != this;
 	}
 
+	public void recompile(){
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void bindtex(){
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void render(){
+		// TODO Auto-generated method stub
+		
+	}
+
 }

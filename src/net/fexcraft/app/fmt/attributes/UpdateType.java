@@ -34,7 +34,11 @@ public enum UpdateType {
 	}
 
 	boolean containsAny(ArrayList<String> groups){
-		for(String group : groups) if(this.groups.contains(group)) return true;
+		if(this.groups != null){
+			for(String group : groups){
+				if(this.groups.contains(group)) return true;
+			}
+		}
 		return false;
 	}
 

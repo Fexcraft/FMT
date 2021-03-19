@@ -5,6 +5,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import org.joml.Vector3f;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -166,6 +168,10 @@ public class Jsoniser {
 		if(def instanceof Boolean) return get(obj, member, (boolean)def);
 		//
 		return get(obj, member, (String)def);
+	}
+	
+	public static Vector3f getVector(JsonObject obj, String prefix, float def){
+		return new Vector3f(get(obj, prefix + "x", def), get(obj, prefix + "y", def), get(obj, prefix + "z", def));
 	}
 
 	public static JsonElement toJson(Object val){

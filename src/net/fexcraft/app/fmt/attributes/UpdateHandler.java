@@ -6,10 +6,13 @@ import java.util.HashMap;
 public class UpdateHandler {
 	
 	public static final HashMap<UpdateType, ArrayList<UpdateHolder>> HOLDERS = new HashMap<>();
+	static {
+		for(UpdateType type : UpdateType.values()) HOLDERS.put(type, new ArrayList<>());
+	}
 	
 	public static void registerHolder(UpdateHolder holder){
 		for(UpdateType type : holder.consumers.keySet()){
-			if(!HOLDERS.containsKey(type)) HOLDERS.put(type, new ArrayList<>());
+			//if(!HOLDERS.containsKey(type)) HOLDERS.put(type, new ArrayList<>());
 			HOLDERS.get(type).add(holder);
 		}
 	}

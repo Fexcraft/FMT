@@ -2,6 +2,7 @@ package net.fexcraft.app.fmt.ui;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.Label;
@@ -17,7 +18,7 @@ import net.fexcraft.app.fmt.utils.Translator;
 public class EditorComponent extends Component {
 	
 	public static final HashMap<Integer, EditorComponent> COMPONENTS = new HashMap<>();
-	public static final HashMap<String, Class<? extends EditorComponent>> REGISTRY = new HashMap<>();
+	public static final LinkedHashMap<String, Class<? extends EditorComponent>> REGISTRY = new LinkedHashMap<>();
 	public static final int HEIGHT = 24;
 	private UpdateHolder updateholder = new UpdateHolder();
 	private ArrayList<Icon> icons = new ArrayList<>();

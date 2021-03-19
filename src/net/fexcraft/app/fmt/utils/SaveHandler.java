@@ -47,7 +47,7 @@ public class SaveHandler {
 						PreviewHandler.clear();
 						FMT.MODEL = load(model, file, JsonUtil.getObjectFromInputStream(zip.getInputStream(elm)), false, false);
 						//TODO update tracked fields/attributes
-						//TODO recompile
+						FMT.MODEL.recompile();
 						Model.SELECTED_POLYGONS = FMT.MODEL.count(true);
 					}
 					catch(IOException e){
@@ -61,7 +61,7 @@ public class SaveHandler {
 						}
 						TextureManager.loadFromStream(zip.getInputStream(elm), "group-default", false, true);
 						FMT.MODEL.texgroup.reAssignTexture();
-						//TODO recompile
+						FMT.MODEL.recompile();
 					}
 					catch(IOException e){
 						log(e);
@@ -82,7 +82,7 @@ public class SaveHandler {
 			});
 			zip.close();
 			FMT.MODEL.file = file;
-			if(updatetree[0]) //TODO update trees?
+			//if(updatetree[0]) //TODO update trees?
 			DiscordUtil.update(Settings.DISCORD_RESET_ON_NEW.value);
 		}
 		catch(Exception e){
@@ -100,7 +100,7 @@ public class SaveHandler {
 		model.opacity = Jsoniser.get(obj, "opacity", 1f);
 		model.scale = new Vector3f(Jsoniser.get(obj, "scale", 1f));
 		if(obj.has("creators")){
-			obj.getAsJsonArray().forEach(elm -> {
+			obj.get("creators").getAsJsonArray().forEach(elm -> {
 				String auth = elm.getAsString();
 				boolean bool = auth.startsWith("!");
 				if(bool) auth = auth.substring(1);
@@ -115,7 +115,7 @@ public class SaveHandler {
 					Group group = new Group(entry.getKey());
 					JsonArray array = entry.getValue().getAsJsonArray();
 					for(JsonElement elm : array){
-						group.add(parsePolygon(model, group, elm.getAsJsonObject()));
+						group.add(Polygon.from(model, elm.getAsJsonObject()));
 					}
 					model.groups.add(group);
 				}
@@ -166,7 +166,7 @@ public class SaveHandler {
 				if(jsn.has("polygons")){
 					jsn.get("polygons").getAsJsonArray().forEach(elm -> {
 						try{
-							group.add(parsePolygon(model, group, elm.getAsJsonObject()));
+							group.add(Polygon.from(model, elm.getAsJsonObject()));
 						}
 						catch(Exception e){
 							log(elm.getAsJsonObject());
@@ -214,6 +214,7 @@ public class SaveHandler {
 						}
 						helper = PreviewHandler.load(from, porter, jsn);
 					}
+					if(helper == null) return;
 					helper.name = Jsoniser.get(jsn, "name", "Unnamed Helper-Preview");
 					if(jsn.has("opacity")){
 						helper.opacity = jsn.get("opacity").getAsFloat();
@@ -258,11 +259,6 @@ public class SaveHandler {
 			});
 		}
 		return model;
-	}
-
-	private static Polygon parsePolygon(Model model, Group group, JsonObject obj){
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }
