@@ -25,7 +25,6 @@ import org.liquidengine.legui.style.Style.DisplayType;
 import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.attributes.UpdateHandler;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.utils.Jsoniser;
 import net.fexcraft.app.fmt.utils.Logging;
@@ -125,8 +124,7 @@ public class Editor extends Component {
 	public void removeComponent(EditorComponent com){
 		components.remove(com);
 		scrollable.getContainer().remove(com);
-		Settings.deapply(com);
-		UpdateHandler.deregisterHolder(com.getUpdateHolder());
+		com.deregister();
 		for(int i = 0; i < components.size(); i++){
 			components.get(i).index = i;
 		}
