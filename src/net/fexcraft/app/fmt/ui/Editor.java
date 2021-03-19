@@ -25,6 +25,7 @@ import org.liquidengine.legui.style.Style.DisplayType;
 import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.attributes.UpdateHandler;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.utils.Jsoniser;
 import net.fexcraft.app.fmt.utils.Logging;
@@ -118,13 +119,14 @@ public class Editor extends Component {
 		com.editor = this;
 		components.add(com);
 		scrollable.getContainer().add(com);
+		UpdateHandler.registerHolder(com.getUpdateHolder());
 		alignComponents();
 	}
 
 	public void removeComponent(EditorComponent com){
 		components.remove(com);
 		scrollable.getContainer().remove(com);
-		com.deregister();
+		UpdateHandler.deregisterHolder(com.getUpdateHolder());
 		for(int i = 0; i < components.size(); i++){
 			components.get(i).index = i;
 		}
@@ -169,8 +171,8 @@ public class Editor extends Component {
 				selected_component = strs[j].substring("editor.component.".length(), strs[j].length() - 5);
 				dialog_area.getTextState().setText(translate("editor.component." + selected_component + ".desc"));
 			});
-			Settings.applyBorderless(label, label.getStyle());
-			Settings.applyBorderless(label, label.getPressedStyle());
+			Settings.applyBorderless(label.getStyle());
+			Settings.applyBorderless(label.getPressedStyle());
 			panel.getContainer().add(label);
 		}
 		Settings.applyBorderless(panel);

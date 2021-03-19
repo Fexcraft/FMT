@@ -9,7 +9,6 @@ import org.liquidengine.legui.event.CursorEnterEvent;
 import org.liquidengine.legui.listener.CursorEnterEventListener;
 import org.liquidengine.legui.style.Style.DisplayType;
 
-import net.fexcraft.app.fmt.attributes.UpdateHandler;
 import net.fexcraft.app.fmt.attributes.UpdateHandler.UpdateHolder;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.components.QuickAdd;
@@ -20,7 +19,7 @@ public class EditorComponent extends Component {
 	public static final HashMap<Integer, EditorComponent> COMPONENTS = new HashMap<>();
 	public static final HashMap<String, Class<? extends EditorComponent>> REGISTRY = new HashMap<>();
 	public static final int HEIGHT = 24;
-	private UpdateHolder updateholder;
+	private UpdateHolder updateholder = new UpdateHolder();
 	private ArrayList<Icon> icons = new ArrayList<>();
 	private boolean minimized, unpinned;
 	private Label label;
@@ -37,7 +36,7 @@ public class EditorComponent extends Component {
 		while(COMPONENTS.containsKey(uid)) uid++;
 		setSize(Editor.CWIDTH, fullheight = fullHeight > 0 ? fullHeight : HEIGHT * 2);
 		add(label = new Label(Translator.translate("editor.component." + key + ".name"), 4, 0, 296, 24));
-		Settings.applyComponentTheme(this).accept(Settings.SELTHEME);
+		Settings.applyComponentTheme(this);
 		add(size = new Icon((byte)1, "./resources/textures/icons/component/size.png", () -> minimize()));
 		add(pin = new Icon((byte)2, "./resources/textures/icons/component/pin.png", () -> pin()));
 		add(mup = new Icon((byte)3, "./resources/textures/icons/component/move_up.png", () -> move(-1)));
@@ -99,17 +98,12 @@ public class EditorComponent extends Component {
 		editor.removeComponent(this);
 	}
 
-	public static void registerComponents(){
-		REGISTRY.put("polygon.quick", QuickAdd.class);
-	}
-
 	public UpdateHolder getUpdateHolder(){
 		return updateholder;
 	}
 
-	public void deregister(){
-		Settings.deapply(this, size, pin, mup, mdw, rem);
-		UpdateHandler.deregisterHolder(updateholder);
+	public static void registerComponents(){
+		REGISTRY.put("polygon.quick", QuickAdd.class);
 	}
 
 }

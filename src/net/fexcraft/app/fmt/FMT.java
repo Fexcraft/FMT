@@ -152,7 +152,6 @@ public class FMT {
 		
 		CONTEXT = new Context(window);
 		FRAME.getComponentLayer().setFocusable(false);
-		Settings.applyTheme();
 		CallbackKeeper keeper = new DefaultCallbackKeeper();
 		CallbackKeeper.registerCallbacks(window, keeper);
 		keeper.getChainKeyCallback().add(new GLFWKeyCallback(){

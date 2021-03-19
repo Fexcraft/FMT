@@ -8,7 +8,6 @@ public class UpdateHandler {
 	public static final HashMap<UpdateType, ArrayList<UpdateHolder>> HOLDERS = new HashMap<>();
 	
 	public static void registerHolder(UpdateHolder holder){
-		if(holder == null) return;
 		for(UpdateType type : holder.consumers.keySet()){
 			if(!HOLDERS.containsKey(type)) HOLDERS.put(type, new ArrayList<>());
 			HOLDERS.get(type).add(holder);
@@ -27,7 +26,6 @@ public class UpdateHandler {
 	}
 
 	public static void deregisterHolder(UpdateHolder holder){
-		if(holder == null) return;
 		for(UpdateType type : holder.consumers.keySet()){
 			if(!HOLDERS.containsKey(type)) continue;
 			HOLDERS.get(type).remove(holder);

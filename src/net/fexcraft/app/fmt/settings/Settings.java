@@ -4,11 +4,9 @@ import static net.fexcraft.app.fmt.FMT.rgba;
 import static net.fexcraft.app.fmt.utils.Jsoniser.get;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.function.Consumer;
 
 import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.style.Style;
@@ -29,7 +27,6 @@ import net.fexcraft.lib.common.math.Time;
 
 public class Settings {
 	
-	public static final ArrayList<ThemeChangeEntry> THEME_CHANGE_LISTENERS = new ArrayList<>();
 	public static final int FORMAT = 2;
 	public static final float FONT_SIZE = 20f;
 	public static final String FONT = FontRegistry.ROBOTO_BOLD;
@@ -39,7 +36,7 @@ public class Settings {
 	public static Setting<Boolean> VSYNC, HVSYNC, TRIANGULATION, INTERNAL_CHOOSER;
 	public static Setting<Float> MOUSE_SENSIVITY, MOVE_SPEED;
 	public static Setting<String> LANGUAGE;
-	public static Boolean SELTHEME;
+	public static Boolean SELTHEME, DARKTHEME;
 	//
 	public static String GENERAL = "general";
 	public static String GRAPHIC = "graphic";
@@ -150,44 +147,34 @@ public class Settings {
 				FONT, FONT_SIZE
 			));
 		}
+		DARKTHEME = SELTHEME != null && SELTHEME;
 		if(FMT.FRAME != null) Themes.getDefaultTheme().applyAll(FMT.FRAME);
-		THEME_CHANGE_LISTENERS.forEach(listener -> listener.getValue().accept(SELTHEME));
 	}
 	
 	public static void applyMenuTheme(Component com){
-		Settings.THEME_CHANGE_LISTENERS.add(new ThemeChangeEntry(com, bool -> {
-			com.getStyle().setBorderRadius(0);
-			com.getStyle().setBorder(null);
-			float col = bool != null && bool ? 0.25f : 0.75f;
-			com.getStyle().setTextColor(bool != null && bool ? ColorConstants.lightGray() : ColorConstants.darkGray());
-			com.getStyle().getBackground().setColor(col, col, col, 1);
-		}));
+		com.getStyle().setBorderRadius(0);
+		com.getStyle().setBorder(null);
+		float col = DARKTHEME ? 0.25f : 0.75f;
+		com.getStyle().setTextColor(DARKTHEME ? ColorConstants.lightGray() : ColorConstants.darkGray());
+		com.getStyle().getBackground().setColor(col, col, col, 1);
 	}
 
-	public static Consumer<Boolean> applyComponentTheme(EditorComponent com){
-		Consumer<Boolean> consumer = bool -> {
-			com.getStyle().setBorderRadius(0);
-			com.getStyle().setBorder(null);
-			float col = bool != null && bool ? 0.1875f : 0.8125f;
-			com.getStyle().setTextColor(bool != null && bool ? ColorConstants.lightGray() : ColorConstants.darkGray());
-			com.getStyle().getBackground().setColor(col, col, col, 1);
-		};
-		Settings.THEME_CHANGE_LISTENERS.add(new ThemeChangeEntry(com, consumer));
-		return consumer;
+	public static void applyComponentTheme(EditorComponent com){
+		com.getStyle().setBorderRadius(0);
+		com.getStyle().setBorder(null);
+		float col = DARKTHEME ? 0.1875f : 0.8125f;
+		com.getStyle().setTextColor(DARKTHEME ? ColorConstants.lightGray() : ColorConstants.darkGray());
+		com.getStyle().getBackground().setColor(col, col, col, 1);
 	}
 	
 	public static void applyBorderless(Component com){
-		Settings.THEME_CHANGE_LISTENERS.add(new ThemeChangeEntry(com, bool -> {
-			com.getStyle().setBorderRadius(0);
-			com.getStyle().setBorder(null);
-		}));
+		com.getStyle().setBorderRadius(0);
+		com.getStyle().setBorder(null);
 	}
 	
-	public static void applyBorderless(Component com, Style style){
-		Settings.THEME_CHANGE_LISTENERS.add(new ThemeChangeEntry(com, bool -> {
-			style.setBorderRadius(0);
-			style.setBorder(null);
-		}));
+	public static void applyBorderless(Style style){
+		style.setBorderRadius(0);
+		style.setBorder(null);
 	}
 
 	public static void loadEditors(){
@@ -214,45 +201,6 @@ public class Settings {
 	public static void register(String group, String id, Setting<?> setting){
 		if(!SETTINGS.containsKey(group)) SETTINGS.put(group, new LinkedHashMap<String, Setting<?>>());
 		SETTINGS.get(group).put(id, setting);
-	}
-
-	public static void applyTheme(Component com, Consumer<Boolean> con){
-		THEME_CHANGE_LISTENERS.add(new ThemeChangeEntry(com, con));
-	}
-
-	public static void deapply(Component com){
-		THEME_CHANGE_LISTENERS.removeIf(pre -> pre.getKey().equals(com));
-	}
-
-	public static void deapply(Component... coms){
-		for(Component com : coms) deapply(com);
-	}
-	
-	private static final class ThemeChangeEntry implements Map.Entry<Component, Consumer<Boolean>> {
-		
-	    private final Component key;
-	    private Consumer<Boolean> value;
-
-	    public ThemeChangeEntry(Component key, Consumer<Boolean> value){
-	        this.key = key;
-	        this.value = value;
-	    }
-
-	    @Override
-	    public Component getKey(){
-	        return key;
-	    }
-
-	    @Override
-	    public Consumer<Boolean> getValue(){
-	        return value;
-	    }
-
-	    @Override
-	    public Consumer<Boolean> setValue(Consumer<Boolean> value){
-	        return this.value = value;
-	    }
-	    
 	}
 
 }
