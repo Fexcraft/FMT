@@ -139,7 +139,7 @@ public class FMT {
 		glfwShowWindow(window);
 		glfwFocusWindow(window);
 		//
-		CAM = new GGR(7, 3, -7, -Static.rad45, -Static.rad20);
+		CAM = new GGR(5, -5, -5, -Static.rad45, Static.rad30);
 		AxisRotator.setDefImpl(Axis3DL.class);
 		Settings.applyTheme();
 		FRAME = new Frame(WIDTH, HEIGHT);
@@ -201,7 +201,8 @@ public class FMT {
 		RENDERER = new NvgRenderer();
 		RENDERER.initialize();
 		TextureManager.load();
-		FMT.MODEL = new Model(new File("./saves/dodici.fmtb"), null).load();
+		//FMT.MODEL = new Model(new File("./saves/dodici.fmtb"), null).load();
+		FMT.MODEL = new Model(null, "Unnamed Model");
 		//TODO load previous model
 		//TODO session, updates, keybinds
 		KeyCompound.init();
@@ -321,7 +322,7 @@ public class FMT {
 	public static final ModelRendererTurbo center_cube = new BoxBuilder(new ModelRendererTurbo(null, 0, 0, 16, 16))
 		.setSize(16, 16, 16).setOffset(-8, 0, -8).build();
 	public static final ModelRendererTurbo floor = new BoxBuilder(new ModelRendererTurbo(null, 0, 0, 512, 512))
-		.setSize(512, 0, 512).setOffset(-256, 0, -256).removePolygons(0, 1, 4, 5)
+		.setSize(512, 0, 512).setOffset(-256, 10, -256).removePolygons(0, 1, 4, 5)
 		.setPolygonUV(2, new float[]{ 512, 0, 512, 512, 0, 512, 0, 0 })
 		.setPolygonUV(3, new float[]{ 512, 0, 512, 512, 0, 512, 0, 0 }).build();
 	private static final ModelRendererTurbo centermarker0 = new ModelRendererTurbo(null, 0, 0, 0, 0).addBox(-0.5f, -256, -0.5f, 1, 512, 1).setTextured(false).setColor(RGB.GREEN.copy());

@@ -28,7 +28,6 @@ import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.ui.Toolbar;
-import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.json.JsonUtil;
 
 public class SaveHandler {
@@ -190,8 +189,8 @@ public class SaveHandler {
 				FMT.CAM.pos.y = pos.get(1).getAsFloat();
 				FMT.CAM.pos.z = pos.get(2).getAsFloat();
 			}
-			FMT.CAM.hor = Jsoniser.get(obj, "camera_horizontal", -Static.rad45);
-			FMT.CAM.ver = Jsoniser.get(obj, "camera_vertical", -Static.rad20);
+			FMT.CAM.hor = Jsoniser.get(obj, "camera_horizontal", FMT.CAM.hor);
+			FMT.CAM.ver = Jsoniser.get(obj, "camera_vertical", FMT.CAM.ver);
 			//FMT.CAM.fov(Jsoniser.get(obj, "camera_vertical", FMT.CAM.fov()));
 		}
 		if(obj.has("helpers")){
