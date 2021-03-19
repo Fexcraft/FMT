@@ -55,6 +55,7 @@ import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.KeyCompound;
 import net.fexcraft.app.fmt.utils.MRTRenderer;
 import net.fexcraft.app.fmt.utils.MRTRenderer.DrawMode;
+import net.fexcraft.app.fmt.utils.MRTRenderer.GlCache;
 import net.fexcraft.app.fmt.utils.ShaderManager;
 import net.fexcraft.app.fmt.utils.Timer;
 import net.fexcraft.app.fmt.utils.Translator;
@@ -307,9 +308,11 @@ public class FMT {
 			ModelT1P.INSTANCE.render();
 		}
 		if(Settings.CMARKER.value){
+			MRTRenderer.mode(DrawMode.POLYGON_PICKER);
             centermarker0.render(0.0625f / 4);
             centermarker1.render(0.0625f / 4);
             centermarker2.render(0.0625f / 4);
+    		MRTRenderer.mode(DrawMode.NORMAL);
 		}
 		MODEL.render();
 		ShaderManager.applyUniforms(cons -> {});
@@ -324,6 +327,11 @@ public class FMT {
 	private static final ModelRendererTurbo centermarker0 = new ModelRendererTurbo(null, 0, 0, 0, 0).addBox(-0.5f, -256, -0.5f, 1, 512, 1).setTextured(false).setColor(RGB.GREEN.copy());
 	private static final ModelRendererTurbo centermarker1 = new ModelRendererTurbo(null, 0, 0, 0, 0).addBox(-256, -0.5f, -0.5f, 512, 1, 1).setTextured(false).setColor(RGB.RED.copy());
 	private static final ModelRendererTurbo centermarker2 = new ModelRendererTurbo(null, 0, 0, 0, 0).addBox(-0.5f, -0.5f, -256, 1, 1, 512).setTextured(false).setColor(RGB.BLUE.copy());
+	static {
+		centermarker0.glObject(new GlCache()).polycolor = centermarker0.getColor().toFloatArray();
+		centermarker1.glObject(new GlCache()).polycolor = centermarker1.getColor().toFloatArray();
+		centermarker2.glObject(new GlCache()).polycolor = centermarker2.getColor().toFloatArray();
+	}
 	
 	public static final String getCurrentTitle(){
 		String f = Static.random.nextInt(2) == 0 ? "Fex's " : "Fexcraft ";

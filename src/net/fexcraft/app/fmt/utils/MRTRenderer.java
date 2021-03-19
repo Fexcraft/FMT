@@ -53,7 +53,7 @@ public class MRTRenderer extends ModelRendererTurbo.Renderer {
 		if(mrt.rotationAngleX != 0f) matrix.rotate((float)Math.toRadians(mrt.rotationAngleX), axis_x);
 		glUniformMatrix4fv(getUniform("model"), false, matrix.get(new float[16]));
 		glUniform4fv(getUniform("line_color"), MODE == DrawMode.SELLINES ? SELCOLOR : MODE == DrawMode.LINES ? cache.linecolor : EMPTY);
-		glUniform4fv(getUniform("poly_color"), cache.polycolor);
+		glUniform4fv(getUniform("poly_color"), MODE == DrawMode.POLYGON_PICKER ? cache.polycolor : EMPTY);
 		//
         glEnableVertexAttribArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, cache.glObj[index].glid);
