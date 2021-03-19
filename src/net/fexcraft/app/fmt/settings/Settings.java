@@ -223,6 +223,10 @@ public class Settings {
 	public static void deapply(Component com){
 		THEME_CHANGE_LISTENERS.removeIf(pre -> pre.getKey().equals(com));
 	}
+
+	public static void deapply(Component... coms){
+		for(Component com : coms) deapply(com);
+	}
 	
 	private static final class ThemeChangeEntry implements Map.Entry<Component, Consumer<Boolean>> {
 		
