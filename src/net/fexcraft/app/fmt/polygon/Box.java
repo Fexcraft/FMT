@@ -43,4 +43,9 @@ public class Box extends Polygon {
 		builder.build();
 	}
 
+	@Override
+	public float[] getFaceColor(int i){
+		return turbo.getColor(i).toFloatArray();
+	}
+
 }

@@ -53,7 +53,7 @@ public class MRTRenderer extends ModelRendererTurbo.Renderer {
 		if(mrt.rotationAngleZ != 0f) matrix.rotate((float)Math.toRadians(mrt.rotationAngleZ), axis_z);
 		if(mrt.rotationAngleX != 0f) matrix.rotate((float)Math.toRadians(mrt.rotationAngleX), axis_x);
 		glUniformMatrix4fv(getUniform("model"), false, matrix.get(new float[16]));
-		glUniform4fv(getUniform("line_color"), MODE == DrawMode.SELLINES ? SELCOLOR : MODE == DrawMode.LINES ? cache.linecolor : EMPTY);
+		glUniform4fv(getUniform("line_color"), MODE == DrawMode.LINES ? cache.linecolor : MODE == DrawMode.SELLINES ? SELCOLOR : EMPTY);
 		glUniform4fv(getUniform("poly_color"), MODE.singleColor() ? cache.polycolor : EMPTY);
 		//
         glEnableVertexAttribArray(0);
@@ -162,7 +162,7 @@ public class MRTRenderer extends ModelRendererTurbo.Renderer {
     			obj.norms[nor++] = vec2.xCoord;
     			obj.norms[nor++] = vec2.yCoord;
     			obj.norms[nor++] = vec2.zCoord;
-    			colarr = EMPTY;//TODO
+    			colarr = cache.polygon == null ? EMPTY : cache.polygon.getFaceColor(i);
     			obj.colors[col++] = colarr[0];
     			obj.colors[col++] = colarr[1];
     			obj.colors[col++] = colarr[2];

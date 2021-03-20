@@ -107,4 +107,6 @@ public abstract class Polygon {
 
 	protected abstract void buildMRT();
 
+	public abstract float[] getFaceColor(int i);
+
 }
