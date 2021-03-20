@@ -1231,7 +1231,7 @@ public class ModelT1P extends ModelBase {
     	render(body_door_close_colored_primary);
     	render(body_colored_primary);
     	render(body_colored_secondary);
-    	MRTRenderer.mode(DrawMode.NORMAL);
+    	MRTRenderer.mode(DrawMode.TEXTURED);
     	render(body);
     	render(body_door_close_colored_primary);
     	render(body_colored_primary);

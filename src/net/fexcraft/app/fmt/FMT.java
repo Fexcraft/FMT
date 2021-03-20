@@ -295,7 +295,7 @@ public class FMT {
 		CAM.apply();
 		glBindVertexArray(vao);
 		TextureManager.bind("null");
-		MRTRenderer.mode(DrawMode.NORMAL);
+		MRTRenderer.mode(DrawMode.TEXTURED);
 		if(Settings.CUBE.value){
 			TextureManager.bind("demo");
 			center_cube.render();
@@ -309,11 +309,10 @@ public class FMT {
 			ModelT1P.INSTANCE.render();
 		}
 		if(Settings.CMARKER.value){
-			MRTRenderer.mode(DrawMode.POLYGON_PICKER);
+			MRTRenderer.mode(DrawMode.RGBCOLOR);
             centermarker0.render(0.0625f / 4);
             centermarker1.render(0.0625f / 4);
             centermarker2.render(0.0625f / 4);
-    		MRTRenderer.mode(DrawMode.NORMAL);
 		}
 		MODEL.render();
 		ShaderManager.applyUniforms(cons -> {});

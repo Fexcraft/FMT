@@ -1,6 +1,6 @@
 #version 330 core
 
-//in vec3 color;
+in vec4 color;
 in vec2 uv;
 in vec3 normal;
 in float light;
@@ -12,7 +12,8 @@ uniform vec4 poly_color;
 out vec4 color_out;
 
 void main(){
-	if(poly_color.a > 0) color_out = poly_color;
+	if(color.a > 0) color_out = color;
+	else if(poly_color.a > 0) color_out = poly_color;
 	else if(line_color.a > 0) color_out = line_color;
 	else{
 		color_out = texture(tex_sampler, uv).rgba;

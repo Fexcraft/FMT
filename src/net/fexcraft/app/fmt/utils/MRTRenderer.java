@@ -20,6 +20,7 @@ import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
+import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.lib.common.math.TexturedPolygon;
 import net.fexcraft.lib.common.math.TexturedVertex;
 import net.fexcraft.lib.common.math.Vec3f;
@@ -31,7 +32,7 @@ public class MRTRenderer extends ModelRendererTurbo.Renderer {
 	public static final float[] EMPTY = { 0, 0, 0, 0 };
 	private static final float[] LINECOLOR = { 0, 0, 0, 1};
 	private static final float[] SELCOLOR = { 1, 1, 0, 1 };//TODO setting
-	public static DrawMode MODE = DrawMode.NORMAL;
+	public static DrawMode MODE = DrawMode.TEXTURED;
 
 	@Override
 	public void render(ModelRendererTurbo mrt, float scale){
@@ -40,8 +41,8 @@ public class MRTRenderer extends ModelRendererTurbo.Renderer {
         int index = lines ? 1 : 0;
         GlCache cache = mrt.glObject() == null ? mrt.glObject(new GlCache()) : mrt.glObject();
         if(cache.glObj[0].glid == null || mrt.forcedRecompile){
-            compileModel(cache.glObj[0], mrt, scale, false);
-            compileModel(cache.glObj[1], mrt, scale, true);
+            compileModel(cache, cache.glObj[0], mrt, scale, false);
+            compileModel(cache, cache.glObj[1], mrt, scale, true);
             cache.linecolor =  mrt.linesColor != null ? mrt.linesColor.toFloatArray() : LINECOLOR;
             if(cache.polycolor == null) cache.polycolor = EMPTY;
             mrt.forcedRecompile = false;
@@ -53,15 +54,15 @@ public class MRTRenderer extends ModelRendererTurbo.Renderer {
 		if(mrt.rotationAngleX != 0f) matrix.rotate((float)Math.toRadians(mrt.rotationAngleX), axis_x);
 		glUniformMatrix4fv(getUniform("model"), false, matrix.get(new float[16]));
 		glUniform4fv(getUniform("line_color"), MODE == DrawMode.SELLINES ? SELCOLOR : MODE == DrawMode.LINES ? cache.linecolor : EMPTY);
-		glUniform4fv(getUniform("poly_color"), MODE == DrawMode.POLYGON_PICKER ? cache.polycolor : EMPTY);
+		glUniform4fv(getUniform("poly_color"), MODE.singleColor() ? cache.polycolor : EMPTY);
 		//
         glEnableVertexAttribArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, cache.glObj[index].glid);
         glVertexAttribPointer(0, 3, GL_FLOAT, false, 3 * 4, 0);
-		//glEnableVertexAttribArray(1);
-		//glBindBuffer(GL_ARRAY_BUFFER, obj.colorss);
-		//glVertexAttribPointer(1, 3, GL_FLOAT, false, 3 * 1, 0);
         if(!lines){
+    		glEnableVertexAttribArray(1);
+    		glBindBuffer(GL_ARRAY_BUFFER, cache.glObj[index].colorss);
+    		glVertexAttribPointer(1, 4, GL_FLOAT, false, 4 * 4, 0);
     		glEnableVertexAttribArray(2);
     		glBindBuffer(GL_ARRAY_BUFFER, cache.glObj[index].uvss);
     		glVertexAttribPointer(2, 2, GL_FLOAT, false, 2 * 4, 0);
@@ -81,10 +82,18 @@ public class MRTRenderer extends ModelRendererTurbo.Renderer {
 	
 	public static enum DrawMode {
 		
-		NORMAL, POLYGON_PICKER, FACE_PICKER, SELLINES, LINES;
+		TEXTURED, UNTEXTURED, RGBCOLOR, POLYGON_PICKER, FACE_PICKER, SELLINES, LINES;
 		
 		public boolean lines(){
 			return this == LINES || this == SELLINES;
+		}
+
+		boolean singleColor(){
+			return this == POLYGON_PICKER || this == RGBCOLOR;
+		}
+
+		public static DrawMode textured(boolean bool){
+			return bool ? TEXTURED : UNTEXTURED;
 		}
 		
 	}
@@ -94,6 +103,7 @@ public class MRTRenderer extends ModelRendererTurbo.Renderer {
 		public GlObj[] glObj = { new GlObj(), new GlObj() };
 		public float[] linecolor;
 		public float[] polycolor;
+		public Polygon polygon;
 		
 	}
 
@@ -101,10 +111,12 @@ public class MRTRenderer extends ModelRendererTurbo.Renderer {
 		
 	    public int uvss;
 	    public int normss;
+	    public int colorss;
 	    public int lightss;
 	    public float[] verts;
 	    public float[] uvs;
 	    public float[] norms;
+	    public float[] colors;
 	    public float[] lights;
 	    public int size;
 	    public Integer glid;
@@ -119,7 +131,7 @@ public class MRTRenderer extends ModelRendererTurbo.Renderer {
     private static final int[] order1 = { 0, 1, 2, 3, 0, 2 };
     private static final int[] order0 = { 0, 1, 2 };
 
-	private void compileModel(GlObj obj, ModelRendererTurbo mrt, float scale, boolean lines){
+	private void compileModel(GlCache cache, GlObj obj, ModelRendererTurbo mrt, float scale, boolean lines){
     	for(TexturedPolygon polygon : mrt.getFaces()){
     		obj.size += polygon.getVertices().length == 4 ? lines ? 8 : 6 : 3;
     	}
@@ -127,10 +139,12 @@ public class MRTRenderer extends ModelRendererTurbo.Renderer {
     	if(!lines){
         	obj.   uvs = new float[obj.size * 2];
         	obj. norms = new float[obj.size * 3];
+        	obj.colors = new float[obj.size * 4];
         	obj.lights = new float[obj.size];
     	}
 		//
-		int ver = 0, uv = 0, nor = 0, lig = 0;
+    	float[] colarr;
+		int ver = 0, uv = 0, nor = 0, lig = 0, col = 0;
     	for(int i = 0; i < mrt.getFaces().size(); i++){
     		TexturedPolygon poly = mrt.getFaces().get(i);
     		int[] order = poly.getVertices().length == 4 ? lines && !TRIANGULATION_L.value ? order2 : order1 : order0;
@@ -148,14 +162,22 @@ public class MRTRenderer extends ModelRendererTurbo.Renderer {
     			obj.norms[nor++] = vec2.xCoord;
     			obj.norms[nor++] = vec2.yCoord;
     			obj.norms[nor++] = vec2.zCoord;
+    			colarr = EMPTY;//TODO
+    			obj.colors[col++] = colarr[0];
+    			obj.colors[col++] = colarr[1];
+    			obj.colors[col++] = colarr[2];
+    			obj.colors[col++] = colarr[3];
     			obj.lights[lig++] = 1;
     		}
         }
     	if(obj.glid != null){
     		glDeleteBuffers(obj.glid);
-    		glDeleteBuffers(obj.uvss);
-    		glDeleteBuffers(obj.normss);
-    		glDeleteBuffers(obj.lightss);
+    		if(!lines){
+        		glDeleteBuffers(obj.uvss);
+        		glDeleteBuffers(obj.normss);
+        		glDeleteBuffers(obj.colorss);
+        		glDeleteBuffers(obj.lightss);
+    		}
     	}
 		//
 		glBindBuffer(GL_ARRAY_BUFFER, obj.glid = glGenBuffers());
@@ -165,6 +187,8 @@ public class MRTRenderer extends ModelRendererTurbo.Renderer {
 		glBufferData(GL_ARRAY_BUFFER, obj.uvs, GL_STATIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, obj.normss = glGenBuffers());
 		glBufferData(GL_ARRAY_BUFFER, obj.norms, GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, obj.colorss = glGenBuffers());
+		glBufferData(GL_ARRAY_BUFFER, obj.colors, GL_STATIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, obj.lightss = glGenBuffers());
 		glBufferData(GL_ARRAY_BUFFER, obj.lights, GL_STATIC_DRAW);
 	}

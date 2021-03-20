@@ -84,8 +84,9 @@ public class Model {
 
 	public void render(){
 		if(!visible) return;
+		DrawMode mode = DrawMode.textured(texgroup != null);
 		for(Group group : groups){
-			group.render(DrawMode.NORMAL);
+			group.render(mode);
 			if(Settings.LINES.value) group.render(DrawMode.LINES);
 		}
 	}

@@ -89,6 +89,7 @@ public abstract class Polygon {
 		GlCache cache;
 		if((cache = turbo.glObject()) == null) cache = turbo.glObject(new GlCache());
 		cache.polycolor = MRTRenderer.EMPTY;//TODO
+		cache.polygon = this;
 		if(textureX < 0 || textureY < 0) turbo.setTextured(false);
 		else turbo.setTextureOffset(textureX, textureY);
 		turbo.textureWidth = group.texgroup == null ? model.texSizeX : group.texSizeX;

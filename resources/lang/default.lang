@@ -37,7 +37,6 @@ toolbar.project.export=Export
 toolbar.project.close=Close
 ## 
 toolbar.utils=Utilities
-toolbar.polygons=Polygons
 toolbar.texture=Textures
 toolbar.helpers=Helper/Previews
 toolbar.exit=Exit
