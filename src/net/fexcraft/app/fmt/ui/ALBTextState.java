@@ -20,7 +20,11 @@ public class ALBTextState extends TextState {
         int processed = 1;
         String str = split[0];
         while(processed < split.length){
-        	if(getWidth(str + " " + split[processed]) >= width){
+        	if(str.endsWith("<n>")){
+        		text += str.substring(0, str.length() - 3) + "\n";
+        		str = split[processed++];
+        	}
+        	else if(getWidth(str + " " + split[processed]) >= width){
         		text += str + "\n";
         		str = split[processed++];
         	}
