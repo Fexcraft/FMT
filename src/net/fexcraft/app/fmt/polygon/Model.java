@@ -95,12 +95,12 @@ public class Model {
 	public void add(String groupid, Polygon poly){
 		Group group = null;
 		if(groupid == null){
-			if(groups.size() == 0) groups.add(group = new Group(this, "group0"));
+			if(groups.size() == 0) addGroup(group = new Group(this, "group0"));
 			else group = groups.get(Settings.ADD_TO_LAST.value ? groups.size() - 1 : 0);
 		}
 		else{
 			group = get(groupid);
-			if(group == null) groups.add(group = new Group(this, groupid));
+			if(group == null) addGroup(group = new Group(this, groupid));
 		}
 		group.add(poly);
 	}
