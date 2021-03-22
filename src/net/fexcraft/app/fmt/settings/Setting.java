@@ -42,11 +42,12 @@ public class Setting<TYPE> {
 		// TODO Auto-generated method stub
 	}
 
-	public void toggle(){
+	public boolean toggle(){
 		if(value instanceof Boolean){
 			Object obj = !(Boolean)value;
 			value((TYPE)obj);
 		}
+		return value();
 	}
 
 }

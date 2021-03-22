@@ -2,6 +2,10 @@ package net.fexcraft.app.fmt.settings;
 
 import static net.fexcraft.app.fmt.FMT.rgba;
 import static net.fexcraft.app.fmt.utils.Jsoniser.get;
+import static org.lwjgl.glfw.GLFW.GLFW_DONT_CARE;
+import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
+import static org.lwjgl.glfw.GLFW.glfwGetVideoMode;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowMonitor;
 
 import java.io.File;
 import java.util.LinkedHashMap;
@@ -14,6 +18,8 @@ import org.liquidengine.legui.style.color.ColorConstants;
 import org.liquidengine.legui.style.font.FontRegistry;
 import org.liquidengine.legui.theme.Themes;
 import org.liquidengine.legui.theme.colored.FlatColoredTheme;
+import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.system.MemoryUtil;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -34,7 +40,7 @@ public class Settings {
 	public static final String FONT = FontRegistry.ROBOTO_BOLD;
 	public static final String FONT_PATH = "org/liquidengine/legui/style/font/Roboto-Bold.ttf";
 	public static Setting<Integer> WINDOW_WIDTH, WINDOW_HEIGHT, ROUNDING_DIGITS;
-	public static Setting<Boolean> DISCORD_RPC, DISCORD_HIDE, DISCORD_RESET_ON_NEW;
+	public static Setting<Boolean> DISCORD_RPC, DISCORD_HIDE, DISCORD_RESET_ON_NEW, FULLSCREEN;
 	public static Setting<Boolean> VSYNC, HVSYNC, TRIANGULATION_Q, TRIANGULATION_L, INTERNAL_CHOOSER;
 	public static Setting<Boolean> DEMO, FLOOR, CUBE, CMARKER, LINES, POLYMARKER, ADD_TO_LAST;
 	public static Setting<Float> MOUSE_SENSIVITY, MOVE_SPEED;
@@ -86,6 +92,7 @@ public class Settings {
 		LINES = new Setting<>("lines", true, SPACE3D, obj);
 		POLYMARKER = new Setting<>("polygon_marker", true, SPACE3D, obj);
 		ADD_TO_LAST = new Setting<>("add_to_last", false, GENERAL, obj);
+		FULLSCREEN = new Setting<>("fullscreen", false, GRAPHIC, obj);
 		//
 		for(Map.Entry<String, Map<String, Setting<?>>> entry : SETTINGS.entrySet()){
 			if(!obj.has(entry.getKey())) continue;
@@ -212,6 +219,16 @@ public class Settings {
 	public static void register(String group, String id, Setting<?> setting){
 		if(!SETTINGS.containsKey(group)) SETTINGS.put(group, new LinkedHashMap<String, Setting<?>>());
 		SETTINGS.get(group).put(id, setting);
+	}
+
+	public static void toggleFullScreen(boolean toggle){
+		boolean bool = toggle ? FULLSCREEN.toggle() : FULLSCREEN.value;
+		long moni = glfwGetPrimaryMonitor();
+		GLFWVidMode mode = glfwGetVideoMode(moni);
+		int width = bool ? mode.width() : Settings.WINDOW_WIDTH.value;
+		int height = bool ? mode.height() : Settings.WINDOW_HEIGHT.value;
+		int x = bool ? 0 : 50, y = bool ? 0 : 50;
+		glfwSetWindowMonitor(FMT.INSTANCE.window, bool ? moni : MemoryUtil.NULL, x, y, width, height, GLFW_DONT_CARE);
 	}
 
 }
