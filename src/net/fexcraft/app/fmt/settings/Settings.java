@@ -21,6 +21,7 @@ import com.google.gson.JsonObject;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.ui.EditorComponent;
+import net.fexcraft.app.fmt.ui.components.PolygonGeneral;
 import net.fexcraft.app.fmt.ui.components.QuickAdd;
 import net.fexcraft.app.fmt.utils.Jsoniser;
 import net.fexcraft.lib.common.math.TexturedPolygon;
@@ -203,11 +204,9 @@ public class Settings {
 
 	private static void loadDefaultEditors(){
 		Editor editor = new Editor("polygon_editor", "Polygon Editor", true);
-		new Editor("polygon_tree", "Polygon Tree", false);
-		editor.addComponent(new QuickAdd());
-		editor.addComponent(new EditorComponent("test0", 80, false));
-		editor.addComponent(new EditorComponent("test1", 200, false));
-		editor.addComponent(new EditorComponent("test2"));
+		Editor tree = new Editor("polygon_tree", "Polygon Tree", false);
+		tree.addComponent(new QuickAdd());
+		editor.addComponent(new PolygonGeneral());
 	}
 
 	public static void register(String group, String id, Setting<?> setting){

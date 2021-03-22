@@ -56,6 +56,11 @@ editor.component.polygon.quick.add_object=Add Object
 editor.component.polygon.quick.add_marker=Add Marker
 editor.component.polygon.quick.add_group=Add Group
 editor.component.polygon.quick.add_voxel=Add Voxel
+editor.component.polygon.general.name=Polygon General Settings
+editor.component.polygon.general.desc=General polygon settings like:<n> - name,<n> - group,<n> - position,<n> - rotation,<n> - offset,<n> - texture root uv
+editor.component.polygon.general.pos=Position ( x / y / z )
+editor.component.polygon.general.off=Offset ( x / y / z )
+editor.component.polygon.general.rot=Rotation ( x / y / z )
 
 # Generic Dialogs
 dialog.title.default=Generic Dialog

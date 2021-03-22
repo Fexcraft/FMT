@@ -110,7 +110,7 @@ public class Model {
 	}
 
 	public boolean contains(String group){
-		return get(group) == null;
+		return get(group) != null;
 	}
 
 	public void addGroup(String name){

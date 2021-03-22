@@ -26,13 +26,13 @@ public class NumberField extends TextInput implements Field {
 	private static DecimalFormat df;
 	static { updateRoundingDigits(); }
 
-	public NumberField(int x, int y, int w, int h){
+	public NumberField(float x, float y, float w, float h){
 		super("0", x, y, w, h);
 		Settings.applyBorderless(this);
 		Field.setupHoverCheck(this);
 	}
 
-	public NumberField(Setting<?> setting, int x, int y, int w, int h){
+	public NumberField(Setting<?> setting, float x, float y, float w, float h){
 		super(setting.toString(), x, y, w, h);
 		Settings.applyBorderless(this);
 		Field.setupHoverCheck(this);

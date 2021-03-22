@@ -12,15 +12,20 @@ import org.liquidengine.legui.style.Style.DisplayType;
 
 import net.fexcraft.app.fmt.attributes.UpdateHandler.UpdateHolder;
 import net.fexcraft.app.fmt.settings.Settings;
+import net.fexcraft.app.fmt.ui.components.PolygonGeneral;
 import net.fexcraft.app.fmt.ui.components.QuickAdd;
 import net.fexcraft.app.fmt.utils.Translator;
 
 public class EditorComponent extends Component {
 	
+	public static final float F30 = 7.5f, F31 = 105f, F32 = 202.5f;
+	public static final float L5 = 5f, LW = Editor.CWIDTH - (L5 * 2);
+	public static final float R0 = 0, R1 = 25, R2 = 50, R3 = 75, R4 = 100, R5 = 125, R6 = 150, R7 = 175, R9 = 200, R10 = 225, R11 = 250;
+	public static final int HEIGHT = 24;
+	//
 	public static final HashMap<Integer, EditorComponent> COMPONENTS = new HashMap<>();
 	public static final LinkedHashMap<String, Class<? extends EditorComponent>> REGISTRY = new LinkedHashMap<>();
 	public static final String LANG_PREFIX = "editor.component.";
-	public static final int HEIGHT = 24;
 	private UpdateHolder updateholder = new UpdateHolder();
 	private ArrayList<Icon> icons = new ArrayList<>();
 	private boolean minimized, unpinned;
@@ -39,6 +44,7 @@ public class EditorComponent extends Component {
 		while(COMPONENTS.containsKey(uid)) uid++;
 		setSize(Editor.CWIDTH, fullheight = fullHeight > 0 ? fullHeight : HEIGHT * 2);
 		add(label = new Label(Translator.translate(LANG_PREFIX + (id = key) + ".name"), 4, 0, 296, 24));
+		label.getStyle().setFontSize(22f);
 		Settings.applyComponentTheme(this);
 		add(size = new Icon((byte)1, "./resources/textures/icons/component/size.png", () -> minimize()));
 		add(pin = new Icon((byte)2, "./resources/textures/icons/component/pin.png", () -> pin()));
@@ -107,6 +113,7 @@ public class EditorComponent extends Component {
 
 	public static void registerComponents(){
 		REGISTRY.put("polygon.quick", QuickAdd.class);
+		REGISTRY.put("polygon.general", PolygonGeneral.class);
 	}
 
 }

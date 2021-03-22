@@ -165,7 +165,7 @@ public class Editor extends Component {
 		ScrollablePanel panel = new ScrollablePanel(5, 5, scrollable_width, 270);
 		panel.getContainer().setSize(scrollable_width, trs.results.length * 22);
 		for(int i = 0; i < strs.length; i++){
-			Label label = new Label(trs.results[i], 2, i * 22, scrollable_width, 22);
+			Label label = new Label(trs.results[i], 0, i * 22, scrollable_width, 22);
 			int j = i;
 			label.getListenerMap().addListener(MouseClickEvent.class, listener -> {
 				selected_component = strs[j].substring("editor.component.".length(), strs[j].length() - 5);
@@ -173,6 +173,7 @@ public class Editor extends Component {
 			});
 			Settings.applyBorderless(label.getStyle());
 			Settings.applyBorderless(label.getPressedStyle());
+			label.getFocusedStyle().getBackground().setColor(FMT.rgba(127, 127, 127, 1f));
 			panel.getContainer().add(label);
 		}
 		Settings.applyBorderless(panel);

@@ -10,7 +10,7 @@ public class QuickAdd extends EditorComponent {
 
 	public QuickAdd(){
 		super("polygon.quick", 55, false);
-		int yoff = 22, xoff = 4, size = 28;
+		int yoff = HEIGHT, xoff = 4, size = 28;
 		this.add(new Icon(0, size, 2, xoff, yoff, "./resources/textures/icons/polygon/box.png", () -> addBox()).addTooltip(LANG_PREFIX + id + ".add_box"));
 		this.add(new Icon(1, size, 2, xoff, yoff, "./resources/textures/icons/polygon/shapebox.png", () -> addShapebox()).addTooltip(LANG_PREFIX + id + ".add_shapebox"));
 		this.add(new Icon(2, size, 2, xoff, yoff, "./resources/textures/icons/polygon/cylinder.png", () -> {}).addTooltip(LANG_PREFIX + id + ".add_cylinder"));
