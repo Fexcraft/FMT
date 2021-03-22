@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.liquidengine.legui.component.Component;
+import org.liquidengine.legui.component.ScrollablePanel;
 import org.liquidengine.legui.style.Style;
 import org.liquidengine.legui.style.color.ColorConstants;
 import org.liquidengine.legui.style.font.FontRegistry;
@@ -198,6 +199,14 @@ public class Settings {
 	public static void applyBorderless(Style style){
 		style.setBorderRadius(0);
 		style.setBorder(null);
+	}
+
+	public static void applyBorderlessScrollable(ScrollablePanel scrollable, boolean nell){
+		if(nell) applyBorderless(scrollable);
+		else scrollable.getStyle().setBorderRadius(0);
+		scrollable.getContainer().getStyle().setBorderRadius(0);
+		applyBorderless(scrollable.getVerticalScrollBar());
+		applyBorderless(scrollable.getHorizontalScrollBar());
 	}
 
 	public static void loadEditors(){

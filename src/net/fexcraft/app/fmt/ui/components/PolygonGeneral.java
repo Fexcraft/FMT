@@ -37,6 +37,9 @@ public class PolygonGeneral extends EditorComponent {
 		box.setPosition(L5, HEIGHT + R3);
 		box.setVisibleCount(8);
 		Settings.applyBorderless(box);
+		Settings.applyBorderless(box.getSelectionButton());
+		Settings.applyBorderless(box.getExpandButton());
+		Settings.applyBorderlessScrollable(box.getSelectionListPanel(), false);
 		updateSelectBox();
 		this.add(box);
 		this.add(new Label(translate(LANG_PREFIX + id + ".pos"), L5, HEIGHT + R4, LW, HEIGHT));

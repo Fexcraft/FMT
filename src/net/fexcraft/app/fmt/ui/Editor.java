@@ -50,8 +50,7 @@ public class Editor extends Component {
 		EDITORLIST.add(this);
 		alignment = left;
 		add(scrollable = new ScrollablePanel(0, LABEL, WIDTH, getSize().y));
-		Settings.applyBorderless(scrollable);
-		Settings.applyBorderless(scrollable.getContainer());
+		Settings.applyBorderlessScrollable(scrollable, true);
 		add(label = new Label(this.name = name, 5, 0, CWIDTH - 10, LABEL));
 		CursorEnterEventListener lis = l -> toggleIcons();
 		label.getListenerMap().addListener(CursorEnterEvent.class, lis);
