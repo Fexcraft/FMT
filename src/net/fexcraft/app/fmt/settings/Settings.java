@@ -44,7 +44,7 @@ public class Settings {
 	public static Setting<Boolean> VSYNC, HVSYNC, TRIANGULATION_Q, TRIANGULATION_L, INTERNAL_CHOOSER;
 	public static Setting<Boolean> DEMO, FLOOR, CUBE, CMARKER, LINES, POLYMARKER, ADD_TO_LAST;
 	public static Setting<Float> MOUSE_SENSIVITY, MOVE_SPEED;
-	public static Setting<String> LANGUAGE;
+	public static Setting<String> LANGUAGE, POLYGON_SUFFIX, GROUP_SUFFIX;
 	public static Boolean SELTHEME, DARKTHEME;
 	//
 	public static String GENERAL = "general";
@@ -52,6 +52,7 @@ public class Settings {
 	public static String DISCORD = "discord";
 	public static String CONTROL = "control";
 	public static String SPACE3D = "space3d";
+	public static String NAMING = "naming";
 	//
 	public static Map<String, Map<String, Setting<?>>> SETTINGS = new LinkedHashMap<>();
 	//
@@ -93,6 +94,8 @@ public class Settings {
 		POLYMARKER = new Setting<>("polygon_marker", true, SPACE3D, obj);
 		ADD_TO_LAST = new Setting<>("add_to_last", false, GENERAL, obj);
 		FULLSCREEN = new Setting<>("fullscreen", false, GRAPHIC, obj);
+		POLYGON_SUFFIX = new Setting<>("polygon_duplicate_suffix", "_%s", NAMING, obj);
+		GROUP_SUFFIX = new Setting<>("group_duplicate_suffix", "_%s", NAMING, obj);
 		//
 		for(Map.Entry<String, Map<String, Setting<?>>> entry : SETTINGS.entrySet()){
 			if(!obj.has(entry.getKey())) continue;
