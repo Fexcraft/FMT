@@ -43,6 +43,10 @@ toolbar.helpers=Helper/Previews
 toolbar.exit=Exit
 
 # Editor
+editor.add_component=Add Editor Component
+editor.adjust_components=Adjust Components (Sort, Remove)
+editor.edit=Edit Editor
+editor.remove=Remove Editor
 editor.component.add_dialog.title=Select a new Component and target Editor
 editor.component.add_dialog.select=Select target Editor
 editor.component.add_dialog.confirm=Add Component

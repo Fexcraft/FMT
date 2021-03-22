@@ -3,7 +3,6 @@ package net.fexcraft.app.fmt.ui;
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 import static org.liquidengine.legui.input.Mouse.MouseButton.MOUSE_BUTTON_LEFT;
 
-import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.ImageView;
 import org.liquidengine.legui.component.Tooltip;
 import org.liquidengine.legui.event.MouseClickEvent;
@@ -71,13 +70,18 @@ public class Icon extends ImageView {
 		});
 	}
 
-	public Component addTooltip(String string){
+	public Icon addTooltip(String string, boolean alignment){
 		Tooltip tip = new Tooltip(Translator.translate(string));
 		tip.setSize(FontSizeUtil.getWidth(tip.getTextState().getText()) + 8, 24);
 		tip.getStyle().setPadding(2f);
-		tip.setPosition(getSize().x, (getSize().y - 24) / 2);
+		tip.setPosition(alignment ? getSize().x : -tip.getSize().x, (getSize().y - 24) / 2);
+		tip.getStyle().setBorderRadius(0f);
 		this.setTooltip(tip);
 		return this;
+	}
+
+	public Icon addTooltip(String string){
+		return addTooltip(string, true);
 	}
 	
 }

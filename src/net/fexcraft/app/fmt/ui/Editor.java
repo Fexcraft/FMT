@@ -55,10 +55,10 @@ public class Editor extends Component {
 		CursorEnterEventListener lis = l -> toggleIcons();
 		label.getListenerMap().addListener(CursorEnterEvent.class, lis);
 		label.getStyle().setFontSize(30f);
-		add(rem = new Icon((byte)10, "./resources/textures/icons/component/remove.png", () -> {}));
-		add(set = new Icon((byte)20, "./resources/textures/icons/component/edit.png", () -> {}));
-		add(adj = new Icon((byte)30, "./resources/textures/icons/component/adjust.png", () -> comp_adj_mode = !comp_adj_mode));
-		add(add = new Icon((byte)40, "./resources/textures/icons/component/add.png", () -> addComponentDialog()));
+		add(rem = new Icon((byte)10, "./resources/textures/icons/component/remove.png", () -> {}).addTooltip("editor.remove", alignment));
+		add(set = new Icon((byte)20, "./resources/textures/icons/component/edit.png", () -> {}).addTooltip("editor.edit", alignment));
+		add(adj = new Icon((byte)30, "./resources/textures/icons/component/adjust.png", () -> comp_adj_mode = !comp_adj_mode).addTooltip("editor.adjust_components", alignment));
+		add(add = new Icon((byte)40, "./resources/textures/icons/component/add.png", () -> addComponentDialog()).addTooltip("editor.add_component", alignment));
 		rem.getListenerMap().addListener(CursorEnterEvent.class, lis);
 		set.getListenerMap().addListener(CursorEnterEvent.class, lis);
 		add.getListenerMap().addListener(CursorEnterEvent.class, lis);
