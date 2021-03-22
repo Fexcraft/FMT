@@ -20,6 +20,7 @@ toolbar.file.exit=Exit
 toolbar.editors=Editors
 toolbar.editors.new=Add/New Editor
 ## Polygons
+toolbar.polygons=Polygons
 toolbar.polygons.add_box=Add Box
 toolbar.polygons.add_shapebox=Add Shapebox
 toolbar.polygons.add_cylinder=Add Cylinder
@@ -47,6 +48,14 @@ editor.component.add_dialog.select=Select target Editor
 editor.component.add_dialog.confirm=Add Component
 editor.component.polygon.quick.name=Quick Add
 editor.component.polygon.quick.desc=Component including buttons for quickly adding new Polygons.
+editor.component.polygon.quick.add_box=Add Box
+editor.component.polygon.quick.add_shapebox=Add Shapebox
+editor.component.polygon.quick.add_cylinder=Add Cylinder
+editor.component.polygon.quick.add_boundingbox=Add BB/Collbox
+editor.component.polygon.quick.add_object=Add Object
+editor.component.polygon.quick.add_marker=Add Marker
+editor.component.polygon.quick.add_group=Add Group
+editor.component.polygon.quick.add_voxel=Add Voxel
 
 # Generic Dialogs
 dialog.title.default=Generic Dialog

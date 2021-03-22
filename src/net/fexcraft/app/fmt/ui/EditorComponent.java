@@ -19,6 +19,7 @@ public class EditorComponent extends Component {
 	
 	public static final HashMap<Integer, EditorComponent> COMPONENTS = new HashMap<>();
 	public static final LinkedHashMap<String, Class<? extends EditorComponent>> REGISTRY = new LinkedHashMap<>();
+	public static final String LANG_PREFIX = "editor.component.";
 	public static final int HEIGHT = 24;
 	private UpdateHolder updateholder = new UpdateHolder();
 	private ArrayList<Icon> icons = new ArrayList<>();
@@ -27,6 +28,7 @@ public class EditorComponent extends Component {
 	private Icon size, mup, mdw, pin, rem;
 	private int uid, fullheight;
 	public Editor editor;
+	protected String id;
 	public int index;
 	
 	public EditorComponent(String key){
@@ -36,7 +38,7 @@ public class EditorComponent extends Component {
 	public EditorComponent(String key, int fullHeight, boolean resizeable){
 		while(COMPONENTS.containsKey(uid)) uid++;
 		setSize(Editor.CWIDTH, fullheight = fullHeight > 0 ? fullHeight : HEIGHT * 2);
-		add(label = new Label(Translator.translate("editor.component." + key + ".name"), 4, 0, 296, 24));
+		add(label = new Label(Translator.translate(LANG_PREFIX + (id = key) + ".name"), 4, 0, 296, 24));
 		Settings.applyComponentTheme(this);
 		add(size = new Icon((byte)1, "./resources/textures/icons/component/size.png", () -> minimize()));
 		add(pin = new Icon((byte)2, "./resources/textures/icons/component/pin.png", () -> pin()));
