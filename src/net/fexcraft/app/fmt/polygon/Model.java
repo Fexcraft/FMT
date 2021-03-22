@@ -26,7 +26,7 @@ public class Model {
 	public static long SELECTED_POLYGONS;
 	//
 	private LinkedHashMap<String, Boolean> authors = new LinkedHashMap<>();
-	public ArrayList<Group> groups = new ArrayList<>();
+	private ArrayList<Group> groups = new ArrayList<>();
 	public Vector3f pos = new Vector3f();
 	public Vector3f rot = new Vector3f();
 	public TextureGroup texgroup = null;
@@ -111,6 +111,14 @@ public class Model {
 
 	public boolean contains(String group){
 		return get(group) == null;
+	}
+
+	public void addGroup(String name){
+		groups.add(new Group(this, name));
+	}
+	
+	public ArrayList<Group> groups(){
+		return groups;
 	}
 
 }

@@ -11,14 +11,28 @@ public class QuickAdd extends EditorComponent {
 	public QuickAdd(){
 		super("polygon.quick", 55, false);
 		int yoff = 22, xoff = 4, size = 28;
-		this.add(new Icon(0, size, 2, xoff, yoff, "./resources/textures/icons/polygon/box.png", () -> FMT.MODEL.add(null, new Box(null))).addTooltip(LANG_PREFIX + id + ".add_box"));
-		this.add(new Icon(1, size, 2, xoff, yoff, "./resources/textures/icons/polygon/shapebox.png", () -> FMT.MODEL.add(null, new Shapebox(null))).addTooltip(LANG_PREFIX + id + ".add_shapebox"));
+		this.add(new Icon(0, size, 2, xoff, yoff, "./resources/textures/icons/polygon/box.png", () -> addBox()).addTooltip(LANG_PREFIX + id + ".add_box"));
+		this.add(new Icon(1, size, 2, xoff, yoff, "./resources/textures/icons/polygon/shapebox.png", () -> addShapebox()).addTooltip(LANG_PREFIX + id + ".add_shapebox"));
 		this.add(new Icon(2, size, 2, xoff, yoff, "./resources/textures/icons/polygon/cylinder.png", () -> {}).addTooltip(LANG_PREFIX + id + ".add_cylinder"));
 		this.add(new Icon(3, size, 2, xoff, yoff, "./resources/textures/icons/polygon/boundingbox.png", () -> {}).addTooltip(LANG_PREFIX + id + ".add_boundingbox"));
 		this.add(new Icon(4, size, 2, xoff, yoff, "./resources/textures/icons/polygon/object.png", () -> {}).addTooltip(LANG_PREFIX + id + ".add_object"));
 		this.add(new Icon(5, size, 2, xoff, yoff, "./resources/textures/icons/polygon/marker.png", () -> {}).addTooltip(LANG_PREFIX + id + ".add_marker"));
-		this.add(new Icon(6, size, 2, xoff, yoff, "./resources/textures/icons/polygon/group.png", () -> {}).addTooltip(LANG_PREFIX + id + ".add_group"));
+		this.add(new Icon(6, size, 2, xoff, yoff, "./resources/textures/icons/polygon/group.png", () -> addGroup()).addTooltip(LANG_PREFIX + id + ".add_group"));
 		this.add(new Icon(7, size, 2, xoff, yoff, "./resources/textures/icons/polygon/voxel.png", () -> {}).addTooltip(LANG_PREFIX + id + ".add_voxel"));
+	}
+
+	public static void addBox(){
+		FMT.MODEL.add(null, new Box(null));
+	}
+
+	public static void addShapebox(){
+		FMT.MODEL.add(null, new Shapebox(null));
+	}
+
+	public static void addGroup(){
+		String name = "group" + FMT.MODEL.groups().size();
+		while(FMT.MODEL.contains(name)) name += "0";
+		FMT.MODEL.addGroup(name);
 	}
 
 }

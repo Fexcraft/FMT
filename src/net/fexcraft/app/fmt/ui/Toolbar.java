@@ -5,10 +5,9 @@ import java.io.File;
 import org.liquidengine.legui.component.Panel;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.polygon.Box;
-import net.fexcraft.app.fmt.polygon.Shapebox;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.ToolbarMenu.MenuButton;
+import net.fexcraft.app.fmt.ui.components.QuickAdd;
 import net.fexcraft.app.fmt.utils.Logging;
 
 public class Toolbar extends Panel {
@@ -123,13 +122,13 @@ public class Toolbar extends Panel {
 		));*/
 		this.add(new ToolbarMenu(2, "utils"));
 		this.add(new ToolbarMenu(3, "polygons",
-			new MenuButton(0, "polygons.add_box", () -> FMT.MODEL.add(null, new Box(null))),
-			new MenuButton(1, "polygons.add_shapebox", () -> FMT.MODEL.add(null, new Shapebox(null))),
+			new MenuButton(0, "polygons.add_box", () -> QuickAdd.addBox()),
+			new MenuButton(1, "polygons.add_shapebox", () -> QuickAdd.addShapebox()),
 			new MenuButton(2, "polygons.add_cylinder"),
 			new MenuButton(3, "polygons.add_boundingbox"),
 			new MenuButton(4, "polygons.add_object"),
 			new MenuButton(5, "polygons.add_marker"),
-			new MenuButton(6, "polygons.add_group"),
+			new MenuButton(6, "polygons.add_group", () -> QuickAdd.addGroup()),
 			new MenuButton(7, "polygons.add_voxel")
 		));
 		this.add(new ToolbarMenu(4, "texture"));

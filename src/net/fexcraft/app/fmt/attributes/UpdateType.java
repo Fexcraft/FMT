@@ -13,6 +13,8 @@ public enum UpdateType {
 	GROUP_POSITION("group"),
 	GROUP_ROTATION("group"),
 	GROUP_OFFSET("group"),
+	GROUP_ADDED("group"),
+	GROUP_REMOVED,
 	
 	MODEL_POSITION("model"),
 	MODEL_ROTATION("model"),

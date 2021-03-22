@@ -118,7 +118,7 @@ public class SaveHandler {
 					for(JsonElement elm : array){
 						group.add(Polygon.from(model, elm.getAsJsonObject()));
 					}
-					model.groups.add(group);
+					model.groups().add(group);
 				}
 				catch(Exception e){
 					log(e);
@@ -175,7 +175,7 @@ public class SaveHandler {
 						}
 					});
 				}
-				model.groups.add(group);
+				model.groups().add(group);
 				//TODO load animations
 			}
 			catch(Throwable thr){
@@ -247,7 +247,7 @@ public class SaveHandler {
 					if(jsn.has("invisible")){
 						Type type = new TypeToken<List<String>>(){}.getType();
 						List<String> list = JsonUtil.getGson().fromJson(jsn.get("invisible").toString(), type);
-						for(Group turbogroup : helper.groups){
+						for(Group turbogroup : helper.groups()){
 							turbogroup.visible = !list.contains(turbogroup.id);
 						}
 					}
