@@ -11,6 +11,7 @@ import java.util.LinkedHashMap;
 import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.attributes.UpdateType;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.utils.MRTRenderer.DrawMode;
@@ -114,11 +115,48 @@ public class Model {
 	}
 
 	public void addGroup(String name){
-		groups.add(new Group(this, name));
+		Group group = new Group(this, name);
+		groups.add(group);
+		update(UpdateType.GROUP_ADDED, new Object[]{ this, group });
+	}
+
+	public void addGroup(Group group){
+		groups.add(group);
+		update(UpdateType.GROUP_ADDED, new Object[]{ this, group });
+	}
+	
+	public void remGroup(int i){
+		Group group = groups.remove(i);
+		update(UpdateType.GROUP_REMOVED, new Object[]{ this, group });
+	}
+	
+	public void remGroup(String id){
+		Group group = get(id);
+		if(group == null) return;
+		update(UpdateType.GROUP_REMOVED, new Object[]{ this, group });
+	}
+	
+	public void remGroup(Group group){
+		if(groups.remove(group)){
+			update(UpdateType.GROUP_REMOVED, new Object[]{ this, group });
+		}
 	}
 	
 	public ArrayList<Group> groups(){
 		return groups;
+	}
+
+	public ArrayList<Polygon> selected(){
+		var list = new ArrayList<Polygon>();
+		for(Group group : groups){
+			if(group.selected) list.addAll(group);
+			else{
+				for(Polygon poly : group){
+					if(poly.selected) list.add(poly);
+				}
+			}
+		}
+		return list;
 	}
 
 }

@@ -38,7 +38,7 @@ public class UpdateHandler {
 	@FunctionalInterface
 	public static interface UpdateConsumer {
 		
-		public <T> void update(T[] value, UpdateType from, T[] _value);
+		public void update(Object[] value, UpdateType from, Object[] _value);
 		
 	}
 	

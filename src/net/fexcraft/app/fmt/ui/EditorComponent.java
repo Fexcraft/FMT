@@ -20,13 +20,13 @@ public class EditorComponent extends Component {
 	
 	public static final float F30 = 7.5f, F31 = 105f, F32 = 202.5f;
 	public static final float L5 = 5f, LW = Editor.CWIDTH - (L5 * 2);
-	public static final float R0 = 0, R1 = 25, R2 = 50, R3 = 75, R4 = 100, R5 = 125, R6 = 150, R7 = 175, R9 = 200, R10 = 225, R11 = 250;
+	public static final int R0 = 0, R1 = 25, R2 = 50, R3 = 75, R4 = 100, R5 = 125, R6 = 150, R7 = 175, R8 = 200, R9 = 225, R10 = 250, R11 = 275, R12 = 300;
 	public static final int HEIGHT = 24;
 	//
 	public static final HashMap<Integer, EditorComponent> COMPONENTS = new HashMap<>();
 	public static final LinkedHashMap<String, Class<? extends EditorComponent>> REGISTRY = new LinkedHashMap<>();
 	public static final String LANG_PREFIX = "editor.component.";
-	private UpdateHolder updateholder = new UpdateHolder();
+	protected UpdateHolder updateholder = new UpdateHolder();
 	private ArrayList<Icon> icons = new ArrayList<>();
 	private boolean minimized, unpinned;
 	private Label label;

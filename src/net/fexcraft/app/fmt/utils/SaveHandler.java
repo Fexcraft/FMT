@@ -118,7 +118,7 @@ public class SaveHandler {
 					for(JsonElement elm : array){
 						group.add(Polygon.from(model, elm.getAsJsonObject()));
 					}
-					model.groups().add(group);
+					model.addGroup(group);
 				}
 				catch(Exception e){
 					log(e);
@@ -175,7 +175,7 @@ public class SaveHandler {
 						}
 					});
 				}
-				model.groups().add(group);
+				model.addGroup(group);
 				//TODO load animations
 			}
 			catch(Throwable thr){

@@ -1,12 +1,9 @@
 package net.fexcraft.app.fmt.polygon;
 
-import static net.fexcraft.app.fmt.attributes.UpdateHandler.update;
-
 import java.util.ArrayList;
 
 import org.joml.Vector3f;
 
-import net.fexcraft.app.fmt.attributes.UpdateType;
 import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.utils.MRTRenderer;
 import net.fexcraft.app.fmt.utils.MRTRenderer.DrawMode;
@@ -29,7 +26,6 @@ public class Group extends ArrayList<Polygon> {
 	public Group(Model model, String key){
 		this.model = model;
 		this.id = key;
-		update(UpdateType.GROUP_ADDED, new Object[]{ model, this });
 	}
 	
 	@Override

@@ -2,6 +2,7 @@ package net.fexcraft.app.fmt.polygon;
 
 import static net.fexcraft.app.fmt.attributes.UpdateHandler.update;
 import static net.fexcraft.app.fmt.attributes.UpdateType.POLYGON_ADDED;
+import static net.fexcraft.app.fmt.attributes.UpdateType.POLYGON_REMOVED;
 
 import org.joml.Vector3f;
 
@@ -53,8 +54,15 @@ public abstract class Polygon {
 	public String name(){
 		return name == null ? String.format(Translator.UNNAMED_POLYGON, getShape().name()) : name;
 	}
+	
+	public void name(String name){
+		this.name = name;
+	}
 
 	public boolean group(Group group){
+		if(this.group != null){
+			update(POLYGON_REMOVED, new Object[]{ this.group, this });
+		}
 		this.group = group;
 		update(POLYGON_ADDED, new Object[]{ group, this });
 		this.recompile();
