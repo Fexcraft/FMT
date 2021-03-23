@@ -68,7 +68,7 @@ import net.fexcraft.lib.tmt.ModelRendererTurbo;
 /**
  * @author Ferdinand Calo' (FEX___96)
  * 
- * All rights reserved &copy; 2020 fexcraft.net
+ * All rights reserved &copy; 2021 fexcraft.net
  * */
 public class FMT {
 
@@ -89,7 +89,7 @@ public class FMT {
 	@SuppressWarnings("unused") private GLFWErrorCallback errorCallback;
 	public long window;
 	//
-	public static Frame FRAME, SS_FRAME;
+	public static Frame FRAME, IMG_FRAME;
 	public static Context CONTEXT;
 	public static Renderer RENDERER;
 	public static Toolbar TOOLBAR;
