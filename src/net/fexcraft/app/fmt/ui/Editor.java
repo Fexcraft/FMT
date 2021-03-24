@@ -20,6 +20,7 @@ import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.event.MouseClickEvent.MouseClickAction;
 import org.liquidengine.legui.input.Mouse.MouseButton;
 import org.liquidengine.legui.listener.CursorEnterEventListener;
+import org.liquidengine.legui.style.Border;
 import org.liquidengine.legui.style.Style.DisplayType;
 
 import com.google.gson.JsonObject;
@@ -27,6 +28,7 @@ import com.google.gson.JsonObject;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.attributes.UpdateHandler;
 import net.fexcraft.app.fmt.settings.Settings;
+import net.fexcraft.app.fmt.ui.fieds.TextField;
 import net.fexcraft.app.fmt.utils.Jsoniser;
 import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.fmt.utils.Translator.Translations;
@@ -56,32 +58,39 @@ public class Editor extends Component {
 		CursorEnterEventListener lis = l -> toggleIcons();
 		label.getListenerMap().addListener(CursorEnterEvent.class, lis);
 		label.getStyle().setFontSize(30f);
-		add(rem = new Icon((byte)10, "./resources/textures/icons/component/remove.png", () -> {}).addTooltip("editor.remove", alignment));
-		add(set = new Icon((byte)20, "./resources/textures/icons/component/edit.png", () -> {}).addTooltip("editor.edit", alignment));
-		add(adj = new Icon((byte)30, "./resources/textures/icons/component/adjust.png", () -> comp_adj_mode = !comp_adj_mode).addTooltip("editor.adjust_components", alignment));
-		add(add = new Icon((byte)40, "./resources/textures/icons/component/add.png", () -> addComponentDialog()).addTooltip("editor.add_component", alignment));
-		add(sid = new Icon((byte)50, "./resources/textures/icons/component/side.png", () -> changeSide()).addTooltip("editor.change_side", alignment));
-		rem.getListenerMap().addListener(CursorEnterEvent.class, lis);
+		if(!tree){
+			add(rem = new Icon((byte)10, "./resources/textures/icons/component/remove.png", () -> {}).addTooltip("editor.remove", alignment));
+			add(adj = new Icon((byte)30, "./resources/textures/icons/component/adjust.png", () -> comp_adj_mode = !comp_adj_mode).addTooltip("editor.adjust_components", alignment));
+			add(add = new Icon((byte)40, "./resources/textures/icons/component/add.png", () -> addComponentDialog()).addTooltip("editor.add_component", alignment));
+		}
+		add(set = new Icon((byte)(tree ? 10 : 20), "./resources/textures/icons/component/edit.png", () -> rename()).addTooltip("editor.rename", alignment));
+		add(sid = new Icon((byte)(tree ? 20 : 50), "./resources/textures/icons/component/side.png", () -> changeSide()).addTooltip("editor.change_side", alignment));
+		if(!tree){
+			rem.getListenerMap().addListener(CursorEnterEvent.class, lis);
+			add.getListenerMap().addListener(CursorEnterEvent.class, lis);
+			adj.getListenerMap().addListener(CursorEnterEvent.class, lis);
+			rem.getStyle().setDisplay(DisplayType.NONE);
+			add.getStyle().setDisplay(DisplayType.NONE);
+			adj.getStyle().setDisplay(DisplayType.NONE);
+		}
 		set.getListenerMap().addListener(CursorEnterEvent.class, lis);
-		add.getListenerMap().addListener(CursorEnterEvent.class, lis);
-		adj.getListenerMap().addListener(CursorEnterEvent.class, lis);
 		sid.getListenerMap().addListener(CursorEnterEvent.class, lis);
-		rem.getStyle().setDisplay(DisplayType.NONE);
 		set.getStyle().setDisplay(DisplayType.NONE);
-		add.getStyle().setDisplay(DisplayType.NONE);
-		adj.getStyle().setDisplay(DisplayType.NONE);
 		sid.getStyle().setDisplay(DisplayType.NONE);
 		align();
 		hide();
 	}
 
 	private void toggleIcons(){
-		boolean bool = label.isHovered() || rem.isHovered() || set.isHovered() || add.isHovered() || adj.isHovered() || sid.isHovered();
-		DisplayType type = bool && !tree ? DisplayType.MANUAL : DisplayType.NONE;
-		rem.getStyle().setDisplay(type);
+		boolean bool = label.isHovered() || set.isHovered() || sid.isHovered();
+		if(!bool && !tree) bool = rem.isHovered() || add.isHovered() || adj.isHovered();
+		DisplayType type = bool ? DisplayType.MANUAL : DisplayType.NONE;
+		if(!tree){
+			rem.getStyle().setDisplay(type);
+			add.getStyle().setDisplay(type);
+			adj.getStyle().setDisplay(type);
+		}
 		set.getStyle().setDisplay(type);
-		add.getStyle().setDisplay(type);
-		adj.getStyle().setDisplay(type);
 		sid.getStyle().setDisplay(type);
 	}
 
@@ -93,6 +102,24 @@ public class Editor extends Component {
 		}
 		alignment = !alignment;
 		this.align();
+	}
+
+	private void rename(){
+		float dialog_width = 300;
+		Dialog dialog = new Dialog(translate("editor.rename"), dialog_width, 80);
+		TextField field = new TextField(name, 5, 5, dialog_width - 10, 25, true);
+		field.getStyle().setBorder(new Border(){});
+		dialog.getContainer().add(field);
+		Button button = new Button(translate("dialog.button.confirm"), 5, 35, 100, 20);
+		button.getListenerMap().addListener(MouseClickEvent.class, listener -> {
+			if(listener.getButton() != MouseButton.MOUSE_BUTTON_LEFT || listener.getAction() != MouseClickAction.CLICK) return;
+			label.getTextState().setText(name = field.getTextState().getText());
+			dialog.close();
+		});
+		dialog.getContainer().add(button);
+		dialog.setResizable(false);
+		dialog.getTitleTextState().getTextWidth();
+		dialog.show(FMT.FRAME);
 	}
 
 	public Editor(String key, JsonObject obj){
