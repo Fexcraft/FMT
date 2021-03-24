@@ -23,7 +23,7 @@ public class PolygonGeneral extends EditorComponent {
 	private static final String NOGROUPS = "< no groups >";
 
 	public PolygonGeneral(){
-		super("polygon.general", 280, true);
+		super("polygon.general", 280, false, true);
 		this.add(new Label(translate(LANG_PREFIX + id + ".name/id"), L5, HEIGHT + R0, LW, HEIGHT));
 		this.add(new TextField("", L5, HEIGHT + R1, LW, HEIGHT, false).accept(con -> rename(con)));
 		this.add(new Label(translate(LANG_PREFIX + id + ".group"), L5, HEIGHT + R2, LW, HEIGHT));

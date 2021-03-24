@@ -9,7 +9,7 @@ import net.fexcraft.app.fmt.ui.Icon;
 public class QuickAdd extends EditorComponent {
 
 	public QuickAdd(){
-		super("polygon.quick", 55, false);
+		super("polygon.quick", 55, false, false);
 		int yoff = HEIGHT, xoff = 4, size = 28;
 		this.add(new Icon(0, size, 2, xoff, yoff, "./resources/textures/icons/polygon/box.png", () -> addBox()).addTooltip(LANG_PREFIX + id + ".add_box"));
 		this.add(new Icon(1, size, 2, xoff, yoff, "./resources/textures/icons/polygon/shapebox.png", () -> addShapebox()).addTooltip(LANG_PREFIX + id + ".add_shapebox"));

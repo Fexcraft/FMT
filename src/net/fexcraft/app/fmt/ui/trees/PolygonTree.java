@@ -6,6 +6,7 @@ import net.fexcraft.app.fmt.attributes.UpdateHandler;
 import net.fexcraft.app.fmt.attributes.UpdateHandler.UpdateHolder;
 import net.fexcraft.app.fmt.attributes.UpdateType;
 import net.fexcraft.app.fmt.ui.Editor;
+import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.utils.Jsoniser;
 
 public class PolygonTree extends Editor {
@@ -17,6 +18,11 @@ public class PolygonTree extends Editor {
 		holder.add(UpdateType.GROUP_ADDED, (x, y, z) -> addGroup());
 		holder.add(UpdateType.GROUP_REMOVED, (x, y, z) -> remGroup());
 		UpdateHandler.registerHolder(holder);
+		addComponent(new EditorComponent("tree.test.group", 200, true, true));
+		addComponent(new EditorComponent("tree.test.group", 200, true, true));
+		addComponent(new EditorComponent("tree.test.group", 200, true, true));
+		addComponent(new EditorComponent("tree.test.group", 200, true, true));
+		addComponent(new EditorComponent("tree.test.group", 200, true, true));
 	}
 
 	public PolygonTree(String key, JsonObject obj){
