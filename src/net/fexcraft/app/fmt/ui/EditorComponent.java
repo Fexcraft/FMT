@@ -30,9 +30,9 @@ public class EditorComponent extends Component {
 	protected UpdateHolder updateholder = new UpdateHolder();
 	private ArrayList<Icon> icons = new ArrayList<>();
 	private boolean minimized, unpinned, tree;
-	private Label label;
+	protected Label label;
 	private Icon size, mup, mdw, pin, rem;
-	private int uid, fullheight;
+	protected int uid, fullheight;
 	public Editor editor;
 	protected String id;
 	public int index;
@@ -88,7 +88,11 @@ public class EditorComponent extends Component {
 	}
 
 	protected void minimize(){
-		minimized = !minimized;
+		this.minimize(!minimized);
+	}
+
+	protected void minimize(boolean bool){
+		this.minimized = bool;
 		setSize(getSize().x, minimized ? HEIGHT : fullheight);
 		editor.alignComponents();
 	}

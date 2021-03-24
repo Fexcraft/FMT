@@ -19,13 +19,13 @@ public class UpdateHandler {
 	
 	public static void update(UpdateType event, Object... value){
 		HOLDERS.get(event).forEach(holder -> holder.update(event, value, false));
-		if(event.run_groups != null){
+		/*if(event.run_groups != null){
 			for(UpdateType type : UpdateType.values()){
 				if(type.containsAny(event.run_groups)){
 					HOLDERS.get(type).forEach(holder -> holder.update(event, value, true));
 				}
 			}
-		}
+		}*/
 	}
 
 	public static void deregisterHolder(UpdateHolder holder){

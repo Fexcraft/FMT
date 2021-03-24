@@ -8,6 +8,7 @@ public enum UpdateType {
 	POLYGON_ROTATION("polygon"),
 	POLYGON_OFFSET("polygon"),
 	POLYGON_ADDED("polygon"),
+	POLYGON_RENAMED("polygon"),
 	POLYGON_REMOVED,
 	
 	GROUP_POSITION("group"),

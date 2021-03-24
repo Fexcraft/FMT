@@ -5,8 +5,8 @@ import com.google.gson.JsonObject;
 import net.fexcraft.app.fmt.attributes.UpdateHandler;
 import net.fexcraft.app.fmt.attributes.UpdateHandler.UpdateHolder;
 import net.fexcraft.app.fmt.attributes.UpdateType;
+import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.ui.Editor;
-import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.utils.Jsoniser;
 
 public class PolygonTree extends Editor {
@@ -16,14 +16,9 @@ public class PolygonTree extends Editor {
 	public PolygonTree(String name, boolean alignment){
 		super(TREES.get(0), name == null ? "Polygon Tree" : name, true, alignment);
 		this.addTreeIcons(0);
-		holder.add(UpdateType.GROUP_ADDED, (x, y, z) -> addGroup());
-		holder.add(UpdateType.GROUP_REMOVED, (x, y, z) -> remGroup());
+		holder.add(UpdateType.GROUP_ADDED, (x, y, z) -> addGroup((Group)x[1]));
+		holder.add(UpdateType.GROUP_REMOVED, (x, y, z) -> remGroup((Group)x[1]));
 		UpdateHandler.registerHolder(holder);
-		addComponent(new EditorComponent("tree.test.group", 200, true, true));
-		addComponent(new EditorComponent("tree.test.group", 200, true, true));
-		addComponent(new EditorComponent("tree.test.group", 200, true, true));
-		addComponent(new EditorComponent("tree.test.group", 200, true, true));
-		addComponent(new EditorComponent("tree.test.group", 200, true, true));
 	}
 
 	public PolygonTree(String key, JsonObject obj){
@@ -35,11 +30,11 @@ public class PolygonTree extends Editor {
 		return 60f;
 	}
 
-	private void addGroup(){
-		// TODO Auto-generated method stub
+	private void addGroup(Group group){
+		this.addComponent(new GroupComponent(group));
 	}
 	
-	private void remGroup(){
+	private void remGroup(Group group){
 		// TODO Auto-generated method stub
 	}
 
