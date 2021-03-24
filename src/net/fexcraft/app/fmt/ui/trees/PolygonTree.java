@@ -15,6 +15,7 @@ public class PolygonTree extends Editor {
 
 	public PolygonTree(String name, boolean alignment){
 		super(TREES.get(0), name == null ? "Polygon Tree" : name, true, alignment);
+		this.addTreeIcons(0);
 		holder.add(UpdateType.GROUP_ADDED, (x, y, z) -> addGroup());
 		holder.add(UpdateType.GROUP_REMOVED, (x, y, z) -> remGroup());
 		UpdateHandler.registerHolder(holder);
@@ -27,6 +28,11 @@ public class PolygonTree extends Editor {
 
 	public PolygonTree(String key, JsonObject obj){
 		this(Jsoniser.get(obj, "name", "Polygon Tree"), Jsoniser.get(obj, "alignment", true));
+	}
+	
+	@Override
+	protected float topSpace(){
+		return 60f;
 	}
 
 	private void addGroup(){

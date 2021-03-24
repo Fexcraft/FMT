@@ -43,6 +43,7 @@ public class Editor extends Component {
 	public ArrayList<EditorComponent> components = new ArrayList<>();
 	private ScrollablePanel scrollable;
 	private Icon rem, set, add, adj, sid;
+	private Icon[] trees;
 	private Label label;
 	public static int CWIDTH = 300, WIDTH = 310, LABEL = 30;
 	public boolean alignment, comp_adj_mode, tree;
@@ -55,7 +56,7 @@ public class Editor extends Component {
 		EDITORLIST.add(this);
 		alignment = left;
 		this.tree = tree;
-		add(scrollable = new ScrollablePanel(0, LABEL, WIDTH, getSize().y));
+		add(scrollable = new ScrollablePanel(0, topSpace(), WIDTH, getSize().y));
 		Settings.applyBorderlessScrollable(scrollable, true);
 		add(label = new Label(this.name = name, 5, 0, CWIDTH - 10, LABEL));
 		CursorEnterEventListener lis = l -> toggleIcons();
@@ -84,9 +85,14 @@ public class Editor extends Component {
 		hide();
 	}
 
-	private void toggleIcons(){
+	protected float topSpace(){
+		return LABEL;
+	}
+
+	protected DisplayType toggleIcons(){
 		boolean bool = label.isHovered() || set.isHovered() || sid.isHovered();
 		if(!bool && !tree) bool = rem.isHovered() || add.isHovered() || adj.isHovered();
+		if(!bool && trees != null) for(Icon icon : trees) if(icon.isHovered()) bool = true;
 		DisplayType type = bool ? DisplayType.MANUAL : DisplayType.NONE;
 		if(!tree){
 			rem.getStyle().setDisplay(type);
@@ -95,6 +101,18 @@ public class Editor extends Component {
 		}
 		set.getStyle().setDisplay(type);
 		sid.getStyle().setDisplay(type);
+		if(trees != null) for(Icon icon : trees) icon.getStyle().setDisplay(type);
+		return type;
+	}
+	
+	protected void addTreeIcons(int i){
+		byte idx = 20;
+		trees = new Icon[3];
+		if(i != 0) add(trees[i++] = new Icon(idx += 10, "./resources/textures/icons/tree/polygon.png", () -> Editor.show("polygon_tree")).addTooltip("editor.tree.polygon", alignment));
+		if(i != 1) add(trees[i++] = new Icon(idx += 10, "./resources/textures/icons/tree/helper.png", () -> Editor.show("helper_tree")).addTooltip("editor.tree.helper", alignment));
+		if(i != 2) add(trees[i++] = new Icon(idx += 10, "./resources/textures/icons/tree/textures.png", () -> Editor.show("texture_tree")).addTooltip("editor.tree.texture", alignment));
+		if(i != 3) add(trees[i++] = new Icon(idx += 10, "./resources/textures/icons/tree/fvtm.png", () -> Editor.show("fvtm_tree")).addTooltip("editor.tree.animation", alignment));
+		if(trees != null) for(Icon icon : trees) icon.getStyle().setDisplay(DisplayType.NONE);
 	}
 
 	private void changeSide(){
@@ -132,11 +150,11 @@ public class Editor extends Component {
 	public void align(){
 		setPosition(alignment ? 0 : FMT.WIDTH - WIDTH, ToolbarMenu.HEIGHT);
 		setSize(WIDTH, FMT.HEIGHT - ToolbarMenu.HEIGHT);
-		scrollable.setSize(WIDTH, getSize().y - LABEL);
+		scrollable.setSize(WIDTH, getSize().y - topSpace());
 		scrollable.setHorizontalScrollBarVisible(false);
 		alignComponents();
-		if(scrollable.getContainer().getSize().y < getSize().y - LABEL){
-			scrollable.getContainer().setSize(WIDTH, getSize().y - LABEL);
+		if(scrollable.getContainer().getSize().y < getSize().y - topSpace()){
+			scrollable.getContainer().setSize(WIDTH, getSize().y - topSpace());
 		}
 	}
 	
@@ -261,10 +279,19 @@ public class Editor extends Component {
 		return null;
 	}
 
-	private Editor get(boolean alignment){
+	private static Editor get(boolean alignment){
 		for(Editor editor : EDITORS.values()){
 			if(editor.alignment == alignment && editor.isVisible()) return editor;
 		}
 		return null;
 	}
+
+	public static void show(String id){
+		Editor editor = EDITORS.get(id);
+		if(editor == null) return;
+		Editor other = get(editor.alignment);
+		if(other != null) other.hide();
+		editor.show();
+	}
+	
 }
