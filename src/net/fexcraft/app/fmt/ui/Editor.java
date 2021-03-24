@@ -3,8 +3,10 @@ package net.fexcraft.app.fmt.ui;
 import static net.fexcraft.app.fmt.utils.Translator.translate;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.component.Component;
@@ -35,6 +37,7 @@ import net.fexcraft.app.fmt.utils.Translator.Translations;
 
 public class Editor extends Component {
 	
+	public static final List<String> TREES = Arrays.asList("polygon_tree");
 	public static final HashMap<String, Editor> EDITORS = new HashMap<>();
 	public static final ArrayList<Editor> EDITORLIST = new ArrayList<>();
 	public ArrayList<EditorComponent> components = new ArrayList<>();

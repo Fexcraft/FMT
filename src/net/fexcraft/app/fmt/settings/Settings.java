@@ -30,6 +30,7 @@ import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.ui.components.PolygonGeneral;
 import net.fexcraft.app.fmt.ui.components.QuickAdd;
+import net.fexcraft.app.fmt.ui.trees.PolygonTree;
 import net.fexcraft.app.fmt.utils.Jsoniser;
 import net.fexcraft.lib.common.math.TexturedPolygon;
 import net.fexcraft.lib.common.math.Time;
@@ -223,7 +224,7 @@ public class Settings {
 
 	private static void loadDefaultEditors(){
 		Editor editor = new Editor("polygon_editor", "Polygon Editor", false, true);
-		Editor tree = new Editor("polygon_tree", "Polygon Tree", true, false);
+		new PolygonTree(null, false);
 		editor.addComponent(new QuickAdd());
 		editor.addComponent(new PolygonGeneral());
 	}
@@ -239,7 +240,7 @@ public class Settings {
 		GLFWVidMode mode = glfwGetVideoMode(moni);
 		int width = bool ? mode.width() : Settings.WINDOW_WIDTH.value;
 		int height = bool ? mode.height() : Settings.WINDOW_HEIGHT.value;
-		int x = bool ? 0 : 50, y = bool ? 0 : 50;
+		int x = bool ? 0 : 100, y = bool ? 0 : 100;
 		glfwSetWindowMonitor(FMT.INSTANCE.window, bool ? moni : MemoryUtil.NULL, x, y, width, height, GLFW_DONT_CARE);
 	}
 
