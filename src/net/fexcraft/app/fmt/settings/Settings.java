@@ -222,9 +222,9 @@ public class Settings {
 	}
 
 	private static void loadDefaultEditors(){
-		Editor editor = new Editor("polygon_editor", "Polygon Editor", true);
-		Editor tree = new Editor("polygon_tree", "Polygon Tree", false);
-		tree.addComponent(new QuickAdd());
+		Editor editor = new Editor("polygon_editor", "Polygon Editor", false, true);
+		Editor tree = new Editor("polygon_tree", "Polygon Tree", true, false);
+		editor.addComponent(new QuickAdd());
 		editor.addComponent(new PolygonGeneral());
 	}
 

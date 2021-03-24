@@ -37,18 +37,19 @@ public class Editor extends Component {
 	public static final ArrayList<Editor> EDITORLIST = new ArrayList<>();
 	public ArrayList<EditorComponent> components = new ArrayList<>();
 	private ScrollablePanel scrollable;
-	private Icon rem, set, add, adj;
+	private Icon rem, set, add, adj, sid;
 	private Label label;
 	public static int CWIDTH = 300, WIDTH = 310, LABEL = 30;
-	public boolean alignment, comp_adj_mode;
+	public boolean alignment, comp_adj_mode, tree;
 	public String name;
 	
-	public Editor(String id, String name, boolean left){
+	public Editor(String id, String name, boolean tree, boolean left){
 		Settings.applyBorderless(this);
 		this.setFocusable(false);
 		EDITORS.put(id, this);
 		EDITORLIST.add(this);
 		alignment = left;
+		this.tree = tree;
 		add(scrollable = new ScrollablePanel(0, LABEL, WIDTH, getSize().y));
 		Settings.applyBorderlessScrollable(scrollable, true);
 		add(label = new Label(this.name = name, 5, 0, CWIDTH - 10, LABEL));
@@ -59,29 +60,43 @@ public class Editor extends Component {
 		add(set = new Icon((byte)20, "./resources/textures/icons/component/edit.png", () -> {}).addTooltip("editor.edit", alignment));
 		add(adj = new Icon((byte)30, "./resources/textures/icons/component/adjust.png", () -> comp_adj_mode = !comp_adj_mode).addTooltip("editor.adjust_components", alignment));
 		add(add = new Icon((byte)40, "./resources/textures/icons/component/add.png", () -> addComponentDialog()).addTooltip("editor.add_component", alignment));
+		add(sid = new Icon((byte)50, "./resources/textures/icons/component/side.png", () -> changeSide()).addTooltip("editor.change_side", alignment));
 		rem.getListenerMap().addListener(CursorEnterEvent.class, lis);
 		set.getListenerMap().addListener(CursorEnterEvent.class, lis);
 		add.getListenerMap().addListener(CursorEnterEvent.class, lis);
 		adj.getListenerMap().addListener(CursorEnterEvent.class, lis);
+		sid.getListenerMap().addListener(CursorEnterEvent.class, lis);
 		rem.getStyle().setDisplay(DisplayType.NONE);
 		set.getStyle().setDisplay(DisplayType.NONE);
 		add.getStyle().setDisplay(DisplayType.NONE);
 		adj.getStyle().setDisplay(DisplayType.NONE);
+		sid.getStyle().setDisplay(DisplayType.NONE);
 		align();
 		hide();
 	}
 
 	private void toggleIcons(){
-		boolean bool = label.isHovered() || rem.isHovered() || set.isHovered() || add.isHovered() || adj.isHovered();
-		DisplayType type = bool ? DisplayType.MANUAL : DisplayType.NONE;
+		boolean bool = label.isHovered() || rem.isHovered() || set.isHovered() || add.isHovered() || adj.isHovered() || sid.isHovered();
+		DisplayType type = bool && !tree ? DisplayType.MANUAL : DisplayType.NONE;
 		rem.getStyle().setDisplay(type);
 		set.getStyle().setDisplay(type);
 		add.getStyle().setDisplay(type);
 		adj.getStyle().setDisplay(type);
+		sid.getStyle().setDisplay(type);
+	}
+
+	private void changeSide(){
+		Editor other = get(!alignment);
+		if(other != null){
+			other.alignment = alignment;
+			other.align();
+		}
+		alignment = !alignment;
+		this.align();
 	}
 
 	public Editor(String key, JsonObject obj){
-		this(key, Jsoniser.get(obj, "name", "Nameless Editor"), Jsoniser.get(obj, "alignment", true));
+		this(key, Jsoniser.get(obj, "name", "Nameless Editor"), false, Jsoniser.get(obj, "alignment", true));
 	}
 
 	public void align(){
@@ -196,7 +211,7 @@ public class Editor extends Component {
 			try{
 				Editor editor = byName(box.getSelection());
 				if(editor == null || selected_component == null) return;
-				editor.addComponent(EditorComponent.REGISTRY.get(selected_component).newInstance());
+				editor.addComponent(EditorComponent.REGISTRY.get(selected_component).getDeclaredConstructor().newInstance());
 				dialog.close();
 			}
 			catch(Exception e){
@@ -215,5 +230,11 @@ public class Editor extends Component {
 		}
 		return null;
 	}
-	
+
+	private Editor get(boolean alignment){
+		for(Editor editor : EDITORS.values()){
+			if(editor.alignment == alignment && editor.isVisible()) return editor;
+		}
+		return null;
+	}
 }
