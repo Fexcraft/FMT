@@ -1,6 +1,7 @@
 package net.fexcraft.app.fmt.ui.trees;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.event.CursorEnterEvent;
@@ -18,6 +19,7 @@ import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.ui.GenericDialog;
 import net.fexcraft.app.fmt.ui.Icon;
 import net.fexcraft.app.fmt.ui.UIUtils;
+import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.lib.common.math.RGB;
 
 public class GroupComponent extends EditorComponent {
@@ -32,31 +34,34 @@ public class GroupComponent extends EditorComponent {
 		label.getTextState().setText((this.group = group).id);
 		this.genFullheight();
 		updateholder.add(UpdateType.GROUP_RENAMED, wrp -> { if(wrp.objs[1] == group) label.getTextState().setText(group.id); });
-		updateholder.add(UpdateType.POLYGON_ADDED, wrp -> { if(wrp.objs[0] == group) addPolygon(wrp.get(1), group.size() - 1); });
+		updateholder.add(UpdateType.POLYGON_ADDED, wrp -> { if(wrp.objs[0] == group) addPolygon(wrp.get(1), group.size() - 1, true); });
 		updateholder.add(UpdateType.POLYGON_RENAMED, wrp -> { if(wrp.objs[0] == group) renamePolygon(wrp.get(1)); });
 		updateholder.add(UpdateType.POLYGON_REMOVED, wrp -> { if(wrp.objs[0] == group) removePolygon(wrp.get(1)); });
 		for(int i = 0; i < group.size(); i++){
-			addPolygon(group.get(i), i);
+			addPolygon(group.get(i), i, false);
 		}
 		label.getStyle().setTextColor(ColorConstants.lightGray());
 		this.getStyle().getBackground().setColor(FMT.rgba(GROUP.packed));
+		if(!group.visible) UIUtils.hide(this);
 	}
 
 	private int genFullheight(){
 		return fullheight = HEIGHT + group.size() * PHS + 4;
 	}
 
-	private void addPolygon(Polygon polygon, int index){
+	private void addPolygon(Polygon polygon, int index, boolean resort){
 		PolygonLabel label = new PolygonLabel(this).polygon(polygon).sortin(index).update();
 		this.add(label);
 		polygons.add(label);
-		sort();
+		if(resort) minimize(minimized);
 	}
 	
-	private void sort(){
+	@Override
+	protected void minimize(boolean bool){
+		this.minimized = bool;
 		this.setSize(Editor.CWIDTH, genFullheight());
 		for(int i = 0; i < polygons.size(); i++) polygons.get(i).sortin(i);
-		this.minimize(false);
+		if(editor != null) editor.alignComponents();
 	}
 
 	private void renamePolygon(Polygon polygon){
@@ -76,11 +81,26 @@ public class GroupComponent extends EditorComponent {
 				break;
 			}
 		}
-		sort();
+		minimize(minimized);
 	}
 
 	public Group group(){
 		return group;
+	}
+
+	@Override
+	protected boolean move(int dir){
+		if(super.move(dir)){
+			try{
+				int index = FMT.MODEL.groups().indexOf(group);
+				Collections.swap(FMT.MODEL.groups(), index, index + dir);
+			}
+			catch(Exception e){
+				Logging.log(e);
+			}
+			return true;
+		}
+		return false;
 	}
 	
 	@Override

@@ -89,5 +89,10 @@ public class Group extends ArrayList<Polygon> {
 			}
 		}
 	}
+	
+	@Override
+	public boolean equals(Object other){
+		return other == this;
+	}
 
 }

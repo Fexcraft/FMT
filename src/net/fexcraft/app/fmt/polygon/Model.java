@@ -133,7 +133,7 @@ public class Model {
 	public void remGroup(String id){
 		Group group = get(id);
 		if(group == null) return;
-		update(UpdateType.GROUP_REMOVED, new Object[]{ this, group });
+		remGroup(group);
 	}
 	
 	public void remGroup(Group group){

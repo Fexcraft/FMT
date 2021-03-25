@@ -29,7 +29,7 @@ public class EditorComponent extends Component {
 	public static final String LANG_PREFIX = "editor.component.";
 	protected UpdateHolder updateholder = new UpdateHolder();
 	private ArrayList<Icon> icons = new ArrayList<>();
-	private boolean minimized, unpinned, tree;
+	protected boolean minimized, unpinned, tree;
 	protected Label label;
 	private Icon size, mup, mdw, pin, rem;
 	protected int uid, fullheight;
@@ -97,11 +97,12 @@ public class EditorComponent extends Component {
 		editor.alignComponents();
 	}
 
-	protected void move(int dir){
-		if(unpinned) return;
+	protected boolean move(int dir){
+		if(unpinned) return false;
 		int nidx = index + dir;
-		if(nidx < 0 || nidx >= editor.components.size()) return;
+		if(nidx < 0 || nidx >= editor.components.size()) return false;
 		editor.swap(index, index + dir);
+		return true;
 	}
 
 	protected void pin(){
