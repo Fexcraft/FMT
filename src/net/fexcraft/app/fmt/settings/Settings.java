@@ -1,7 +1,6 @@
 package net.fexcraft.app.fmt.settings;
 
 import static net.fexcraft.app.fmt.FMT.rgba;
-import static net.fexcraft.app.fmt.utils.Jsoniser.get;
 import static org.lwjgl.glfw.GLFW.GLFW_DONT_CARE;
 import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
 import static org.lwjgl.glfw.GLFW.glfwGetVideoMode;
@@ -32,6 +31,7 @@ import net.fexcraft.app.fmt.ui.components.PolygonGeneral;
 import net.fexcraft.app.fmt.ui.components.QuickAdd;
 import net.fexcraft.app.fmt.ui.trees.PolygonTree;
 import net.fexcraft.app.fmt.utils.Jsoniser;
+import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.TexturedPolygon;
 import net.fexcraft.lib.common.math.Time;
 
@@ -47,7 +47,19 @@ public class Settings {
 	public static Setting<Boolean> DEMO, FLOOR, CUBE, CMARKER, LINES, POLYMARKER, ADD_TO_LAST;
 	public static Setting<Float> MOUSE_SENSIVITY, MOVE_SPEED;
 	public static Setting<String> LANGUAGE, POLYGON_SUFFIX, GROUP_SUFFIX;
-	public static Boolean SELTHEME, DARKTHEME;
+	//
+	public static Setting<String> SEL_THEME;
+	public static Setting<Boolean> DARKTHEME;
+	public static RGBSetting THEME_BACKGROUND;
+	public static RGBSetting THEME_BORDER;
+	public static RGBSetting THEME_SLIDER;
+	public static RGBSetting THEME_STROKE;
+	public static RGBSetting THEME_ALLOW;
+	public static RGBSetting THEME_DENY;
+	public static RGBSetting THEME_SHADOW;
+	public static RGBSetting THEME_TEXT;
+	public static RGBSetting THEME_BUTTON;
+	public static Setting<String> THEME_FONT;
 	//
 	public static String GENERAL = "general";
 	public static String GRAPHIC = "graphic";
@@ -55,18 +67,9 @@ public class Settings {
 	public static String CONTROL = "control";
 	public static String SPACE3D = "space3d";
 	public static String NAMING = "naming";
+	public static String THEME = "theme";
 	//
 	public static Map<String, Map<String, Setting<?>>> SETTINGS = new LinkedHashMap<>();
-	//
-	public static int ct_background = 0x212121;
-	public static int ct_border = 0x616161;
-	public static int ct_slider = 0x616161;
-	public static int ct_stroke = 0x0277BD;
-	public static int ct_allow = 0x1B5E20;
-	public static int ct_deny = 0xBD1C1C;
-	public static int ct_shadow = 0x0;
-	public static int ct_text = 0xCCCCCC;
-	public static int ct_buttom = 0x212121;
 	
 	public static void load(){
 		var file = new File("./settings.json");
@@ -99,15 +102,26 @@ public class Settings {
 		POLYGON_SUFFIX = new Setting<>("polygon_duplicate_suffix", "_%s", NAMING, obj);
 		GROUP_SUFFIX = new Setting<>("group_duplicate_suffix", "_%s", NAMING, obj);
 		//
+		SEL_THEME = new StringArraySetting("selected_theme", "light", THEME, obj, "light", "dark", "custom");
+		DARKTHEME = new Setting<>("is_dark", false, THEME, obj);
+		THEME_BACKGROUND = new RGBSetting("background", new RGB(0x212121), THEME, obj);
+		THEME_BORDER = new RGBSetting("border", new RGB(0x616161), THEME, obj);
+		THEME_SLIDER = new RGBSetting("slider", new RGB(0x616161), THEME, obj);
+		THEME_STROKE = new RGBSetting("stroke", new RGB(0x0277BD), THEME, obj);
+		THEME_ALLOW = new RGBSetting("allow", new RGB(0x1B5E20), THEME, obj);
+		THEME_DENY = new RGBSetting("deny", new RGB(0xBD1C1C), THEME, obj);
+		THEME_SHADOW = new RGBSetting("shadow", new RGB(0x0), THEME, obj);
+		THEME_TEXT = new RGBSetting("text", new RGB(0xCCCCCC), THEME);
+		THEME_BUTTON = new RGBSetting("button", new RGB(0x212121), THEME, obj);
+		THEME_FONT = new StringArraySetting("font", FONT, THEME, obj, FontRegistry.ENTYPO, FontRegistry.ROBOTO_LIGHT, FontRegistry.ROBOTO_BOLD, FontRegistry.ROBOTO_REGULAR);
+		//
 		for(Map.Entry<String, Map<String, Setting<?>>> entry : SETTINGS.entrySet()){
 			if(!obj.has(entry.getKey())) continue;
 			JsonObject def = obj.get(entry.getKey()).getAsJsonObject();
 			for(Setting<?> setting : entry.getValue().values()) setting.load(def);
 		}//TODO load plugin settings ?
 		//
-		String theme = get(obj, "theme", "false");
-		if(theme.equals("custom")) SELTHEME = null;
-		else SELTHEME = Boolean.parseBoolean(theme);
+		if(!SEL_THEME.value.equals("custom")) DARKTHEME.value = SEL_THEME.value.contains("dark");
 	}
 	
 	public static void apply(FMT fmt){
@@ -126,69 +140,72 @@ public class Settings {
 			obj.add(entry.getKey(), jsn);
 		});
 		//
-		obj.addProperty("theme", SELTHEME == null ? "custom" : SELTHEME + "");
 		obj.addProperty("last_fmt_version", FMT.VERSION);
 		obj.addProperty("last_fmt_exit", Time.getAsString(Time.getDate()));
 		Jsoniser.print(new File("./settings.json"), obj);
 	}
 
 	public static void applyTheme(){
-		if(SELTHEME == null){
-			Themes.setDefaultTheme(new FlatColoredTheme(
-				rgba(ct_background),
-				rgba(ct_border),
-				rgba(ct_slider),
-				rgba(ct_stroke),
-				rgba(ct_allow),
-				rgba(ct_deny),
-				ColorConstants.transparent(),//TODO
-				rgba(ct_text),
-				FONT, FONT_SIZE
-			));
+		switch(SEL_THEME.value){
+			case "custom":{
+				Themes.setDefaultTheme(new FlatColoredTheme(
+					rgba(THEME_BACKGROUND.value),
+					rgba(THEME_BORDER.value),
+					rgba(THEME_SLIDER.value),
+					rgba(THEME_STROKE.value),
+					rgba(THEME_ALLOW.value),
+					rgba(THEME_DENY.value),
+					ColorConstants.transparent(),//TODO
+					rgba(THEME_TEXT.value),
+					FONT, FONT_SIZE
+				));
+				break;
+			}
+			case "dark":{
+				Themes.setDefaultTheme(new FlatColoredTheme(
+					rgba(33, 33, 33, 1),
+					rgba(97, 97, 97, 1),
+					rgba(97, 97, 97, 1),
+					rgba(2, 119, 189, 1),
+					rgba(27, 94, 32, 1),
+					rgba(183, 28, 28, 1),
+					ColorConstants.transparent(),
+					ColorConstants.lightGray(),
+					FONT, FONT_SIZE
+				));
+				break;
+			}
+			case "light":{
+				Themes.setDefaultTheme(new FlatColoredTheme(
+					rgba(245, 245, 245, 1),
+					rgba(176, 190, 197, 1),
+					rgba(176, 190, 197, 1),
+					rgba(100, 181, 246, 1),
+					rgba(165, 214, 167, 1),
+					rgba(239, 154, 154, 1),
+					ColorConstants.transparent(),
+					ColorConstants.darkGray(),
+					FONT, FONT_SIZE
+				));
+				break;
+			}
 		}
-		else if(SELTHEME){
-			Themes.setDefaultTheme(new FlatColoredTheme(
-				rgba(33, 33, 33, 1),
-				rgba(97, 97, 97, 1),
-				rgba(97, 97, 97, 1),
-				rgba(2, 119, 189, 1),
-				rgba(27, 94, 32, 1),
-				rgba(183, 28, 28, 1),
-				ColorConstants.transparent(),
-				ColorConstants.lightGray(),
-				FONT, FONT_SIZE
-			));
-		}
-		else{
-			Themes.setDefaultTheme(new FlatColoredTheme(
-				rgba(245, 245, 245, 1),
-				rgba(176, 190, 197, 1),
-				rgba(176, 190, 197, 1),
-				rgba(100, 181, 246, 1),
-				rgba(165, 214, 167, 1),
-				rgba(239, 154, 154, 1),
-				ColorConstants.transparent(),
-				ColorConstants.darkGray(),
-				FONT, FONT_SIZE
-			));
-		}
-		DARKTHEME = SELTHEME != null && SELTHEME;
 		if(FMT.FRAME != null) Themes.getDefaultTheme().applyAll(FMT.FRAME);
 	}
 	
 	public static void applyMenuTheme(Component com){
 		com.getStyle().setBorderRadius(0);
 		com.getStyle().setBorder(null);
-		float col = DARKTHEME ? 0.25f : 0.75f;
-		com.getStyle().setTextColor(DARKTHEME ? ColorConstants.lightGray() : ColorConstants.darkGray());
+		float col = DARKTHEME.value ? 0.25f : 0.75f;
+		com.getStyle().setTextColor(DARKTHEME.value ? ColorConstants.lightGray() : ColorConstants.darkGray());
 		com.getStyle().getBackground().setColor(col, col, col, 1);
 	}
 
 	public static void applyComponentTheme(EditorComponent com){
 		com.getStyle().setBorderRadius(0);
 		com.getStyle().setBorder(null);
-		float col = DARKTHEME ? 0.1875f : 0.8125f;
-		com.getStyle().setTextColor(DARKTHEME ? ColorConstants.lightGray() : ColorConstants.darkGray());
+		float col = DARKTHEME.value ? 0.1875f : 0.8125f;
+		com.getStyle().setTextColor(DARKTHEME.value ? ColorConstants.lightGray() : ColorConstants.darkGray());
 		com.getStyle().getBackground().setColor(col, col, col, 1);
 	}
 	

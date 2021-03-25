@@ -79,7 +79,7 @@ public class ToolbarMenu extends Panel {
 
         public MenuLayer(Vector2f pos, Collection<Component> components, String rootid){
     		Settings.applyBorderless(this);
-			float w = Settings.DARKTHEME ? 0 : 1;
+			float w = Settings.DARKTHEME.value ? 0 : 1;
 			this.getStyle().getBackground().setColor(w, w, w, 1);
             setEventReceivable(true);
             setEventPassable(true);

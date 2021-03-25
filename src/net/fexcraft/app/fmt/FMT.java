@@ -387,11 +387,14 @@ public class FMT {
     }
 
     public static final Vector4f rgba(int i, Float a){
-    	RGB rgb = new RGB(i); rgb.alpha = a; return rgba(rgb);
+    	RGB rgb = new RGB(i);
+    	rgb.alpha = a;
+    	return rgba(rgb);
     }
 
     public static final Vector4f rgba(RGB rgb){
-    	float[] arr = rgb.toFloatArray(); return new Vector4f(arr[0], arr[1], arr[2], arr[3]);
+    	float[] arr = rgb.toFloatArray();
+    	return new Vector4f(arr[0], arr[1], arr[2], arr[3]);
     }
 
 	public static void vsync(){
