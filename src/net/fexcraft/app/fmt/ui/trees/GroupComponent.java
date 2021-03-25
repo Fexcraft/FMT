@@ -84,6 +84,11 @@ public class GroupComponent extends EditorComponent {
 	}
 	
 	@Override
+	public void pin(){
+		group.visible = !group.visible;
+	}
+	
+	@Override
 	public void rem(){
 		if(Settings.ASK_GROUP_REMOVAL.value){
 			GenericDialog.showOC(null, () -> { FMT.MODEL.remGroup(group); super.rem(); }, null, "editor.component.group.group.remove", group.id);
