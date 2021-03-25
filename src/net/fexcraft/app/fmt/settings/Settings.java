@@ -61,6 +61,7 @@ public class Settings {
 	public static RGBSetting THEME_TEXT;
 	public static RGBSetting THEME_BUTTON;
 	public static Setting<String> THEME_FONT;
+	public static RGBSetting POLYGON, POLYGON_SELECTED, GROUP, GROUP_SELECTED;
 	//
 	public static String GENERAL = "general";
 	public static String GRAPHIC = "graphic";
@@ -117,6 +118,10 @@ public class Settings {
 		THEME_TEXT = new RGBSetting("text", new RGB(0xCCCCCC), THEME);
 		THEME_BUTTON = new RGBSetting("button", new RGB(0x212121), THEME, obj);
 		THEME_FONT = new StringArraySetting("font", FONT, THEME, obj, FontRegistry.ENTYPO, FontRegistry.ROBOTO_LIGHT, FontRegistry.ROBOTO_BOLD, FontRegistry.ROBOTO_REGULAR);
+		POLYGON = new RGBSetting("component_polygon", new RGB(38, 127, 0), THEME, obj);
+		GROUP = new RGBSetting("component_group", new RGB(0, 74, 127), THEME, obj);
+		POLYGON_SELECTED = new RGBSetting("component_polygon_selected", new RGB(219, 156, 46), THEME, obj);
+		GROUP_SELECTED = new RGBSetting("component_group_selected", new RGB(191, 128, 50), THEME, obj);
 		//
 		for(Map.Entry<String, Map<String, Setting<?>>> entry : SETTINGS.entrySet()){
 			if(!obj.has(entry.getKey())) continue;

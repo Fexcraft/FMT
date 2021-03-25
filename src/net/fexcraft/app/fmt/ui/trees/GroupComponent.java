@@ -20,11 +20,9 @@ import net.fexcraft.app.fmt.ui.GenericDialog;
 import net.fexcraft.app.fmt.ui.Icon;
 import net.fexcraft.app.fmt.ui.UIUtils;
 import net.fexcraft.app.fmt.utils.Logging;
-import net.fexcraft.lib.common.math.RGB;
 
 public class GroupComponent extends EditorComponent {
 
-	public static final RGB GROUP = new RGB(0, 74, 127), POLYGON = new RGB(38, 127, 0);//TODO adjust colors, selected colors
 	private static final int PH = 20, PHS = 21;
 	private ArrayList<PolygonLabel> polygons = new ArrayList<>();
 	private Group group;
@@ -41,7 +39,7 @@ public class GroupComponent extends EditorComponent {
 			addPolygon(group.get(i), i, false);
 		}
 		label.getStyle().setTextColor(ColorConstants.lightGray());
-		this.getStyle().getBackground().setColor(FMT.rgba(GROUP.packed));
+		update_color();
 		if(!group.visible) UIUtils.hide(this);
 	}
 
@@ -148,7 +146,7 @@ public class GroupComponent extends EditorComponent {
 		public PolygonLabel update(){
 			this.getTextState().setText(" " + polygon.name());
 			getStyle().setTextColor(ColorConstants.lightGray());
-			getStyle().getBackground().setColor(FMT.rgba(POLYGON.packed));
+			getStyle().getBackground().setColor(FMT.rgba(polygon.selected ? Settings.POLYGON.value : Settings.POLYGON_SELECTED.value));
 			return this;
 		}
 		
@@ -157,6 +155,10 @@ public class GroupComponent extends EditorComponent {
 			return this;
 		}
 		
+	}
+
+	public void update_color(){
+		this.getStyle().getBackground().setColor(FMT.rgba(group.selected ? Settings.GROUP.value : Settings.GROUP_SELECTED.value));
 	}
 
 }
