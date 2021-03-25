@@ -19,6 +19,7 @@ import org.lwjgl.glfw.GLFW;
 
 import net.fexcraft.app.fmt.settings.Setting;
 import net.fexcraft.app.fmt.settings.Settings;
+import net.fexcraft.app.fmt.ui.EditorComponent;
 
 public class NumberField extends TextInput implements Field {
 	
@@ -26,10 +27,11 @@ public class NumberField extends TextInput implements Field {
 	private static DecimalFormat df;
 	static { updateRoundingDigits(); }
 
-	public NumberField(float x, float y, float w, float h){
+	public NumberField(EditorComponent comp, float x, float y, float w, float h){
 		super("0", x, y, w, h);
 		Settings.applyBorderless(this);
 		Field.setupHoverCheck(this);
+		this.comp = comp;
 	}
 
 	public NumberField(Setting<?> setting, float x, float y, float w, float h){
@@ -48,17 +50,18 @@ public class NumberField extends TextInput implements Field {
 		});
 	}
 
-	private String fieldid;
+	private EditorComponent comp;
+	private String[] value_id;
 	private boolean floatfield;
 	private float min, max;
 	private Float value = null;
 	private Runnable update;
 	
-	public NumberField setup(String id, float min, float max, boolean flaot){
+	public NumberField setup(float min, float max, boolean flaot, String... strs){
 		floatfield = flaot;
 		this.min = min;
 		this.max = max;
-		fieldid = id;
+		value_id = strs;
 		addTextInputContentChangeEventListener(event -> {
 			Field.validateNumber(event);
 			value = null;
@@ -130,7 +133,7 @@ public class NumberField extends TextInput implements Field {
 	@Override
 	public void scroll(double scroll){
 		apply(test(value(), scroll > 0, 1f));//TODO global rate value
-		if(fieldid != null){
+		if(value_id != null){
 			//TODO update tracked model value/attribute
 			//<>.update(this, fieldid, scroll > 0);
 			if(update != null) update.run();
@@ -139,7 +142,7 @@ public class NumberField extends TextInput implements Field {
 
 	@Override
 	public String id(){
-		return fieldid;
+		return value_id[0] + "_" + value_id[1];
 	}
 	
 	@Override
