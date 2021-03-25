@@ -16,6 +16,7 @@ import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
+import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.lib.common.Static;
 
 /** CCR */
@@ -34,6 +35,7 @@ public class GGR {
 	private float fov = 45f;
 	public float hor, hordef, ver, verdef;
 	private Vector3f dir = new Vector3f(), right = new Vector3f();
+	public static double[] cursor_x = { 0 }, cursor_y = { 0 };
     
     public GGR(float x, float y, float z, float h, float v){
         pos = new Vector3f(x, y, z);
@@ -106,7 +108,7 @@ public class GGR {
         		left_down = true;
         	}
         	else if(action == GLFW_RELEASE){
-        		if(isNotOverUI()){
+        		if(!isOverUI()){
         			//TODO RayCoastAway.doTest(true, true, false);
         		}
         		left_down = false;
@@ -114,7 +116,7 @@ public class GGR {
         }
         else if(button == 1){
         	if(action == GLFW_PRESS){
-        		if(isNotOverUI()){
+        		if(!isOverUI()){
             		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
             		grabbed = true;
         		}
@@ -136,20 +138,18 @@ public class GGR {
         }
 	}
 
-	public static boolean isNotOverUI(){
-		if(FMT.FRAME.getLayers().size() > 0) return false;
-		double[] x = { 0 }, y = { 0 };
-		glfwGetCursorPos(FMT.INSTANCE.window, x, y);
-		if(y[0] < 30) return false;
-		//if(Editors.anyVisible() && x[0] < 304) return false;
-		//if(Trees.anyVisible() && x[0] > (FMT.WIDTH - 304)) return false;
-		//TODO if(MenuEntry.anyHovered()) return false;
+	public static boolean isOverUI(){
+		if(FMT.FRAME.getLayers().size() > 0) return true;
+		glfwGetCursorPos(FMT.INSTANCE.window, cursor_x, cursor_y);
+		if(cursor_y[0] < FMT.TOOLBAR.getSize().y) return true;
+		if(Editor.LEFT != null && cursor_x[0] < Editor.WIDTH) return true;
+		if(Editor.RIGHT != null && cursor_x[0] > FMT.WIDTH - Editor.WIDTH) return true;
 		/*if(TexViewBox.isOpen()){
 			if(x[0] >= TexViewBox.pos().x && x[0] < TexViewBox.pos().x + TexViewBox.size().x){
 				if(y[0] >= TexViewBox.pos().y && y[0] < TexViewBox.pos().y + TexViewBox.size().y) return false;
 			}
 		}*/
-		return true;
+		return false;
 	}
 
 	public void cursorPosCallback(long window, double xpos, double ypos){
@@ -158,9 +158,10 @@ public class GGR {
 	}
 
 	public void scrollCallback(long window, double xoffset, double yoffset){
+		if(isOverUI()) return;
 		fov -= (float)(5 * yoffset);
-		if(fov > 80) fov = 80;
-		if(fov < 30) fov = 30;
+		if(fov > 120) fov = 120;
+		if(fov < 5) fov = 5;
 	}
 
     public static double[] rotatePoint(double f, float pitch, float yaw) {

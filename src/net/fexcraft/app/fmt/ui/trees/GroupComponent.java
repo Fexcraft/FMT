@@ -111,12 +111,9 @@ public class GroupComponent extends EditorComponent {
 	@Override
 	public void rem(){
 		if(Settings.ASK_GROUP_REMOVAL.value){
-			GenericDialog.showOC(null, () -> { FMT.MODEL.remGroup(group); super.rem(); }, null, "editor.component.group.group.remove", group.id);
+			GenericDialog.showOC(null, () -> FMT.MODEL.remGroup(group), null, "editor.component.group.group.remove", group.id);
 		}
-		else{
-			FMT.MODEL.remGroup(group);
-			super.rem();
-		}
+		else FMT.MODEL.remGroup(group);
 	}
 	
 	public static class PolygonLabel extends Label {
