@@ -10,6 +10,7 @@ import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.ui.EditorComponent;
+import net.fexcraft.app.fmt.ui.GenericDialog;
 import net.fexcraft.lib.common.math.RGB;
 
 public class GroupComponent extends EditorComponent {
@@ -59,6 +60,11 @@ public class GroupComponent extends EditorComponent {
 
 	public Group group(){
 		return group;
+	}
+	
+	@Override
+	public void rem(){
+		GenericDialog.showOC(null, () -> { FMT.MODEL.remGroup(group); super.rem(); }, null, "editor.component.group.remove", group.id);
 	}
 
 }

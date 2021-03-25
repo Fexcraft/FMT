@@ -7,6 +7,7 @@ import net.fexcraft.app.fmt.attributes.UpdateHandler.UpdateHolder;
 import net.fexcraft.app.fmt.attributes.UpdateType;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.ui.Editor;
+import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.utils.Jsoniser;
 
 public class PolygonTree extends Editor {
@@ -35,7 +36,14 @@ public class PolygonTree extends Editor {
 	}
 	
 	private void remGroup(Group group){
-		// TODO Auto-generated method stub
+		this.removeComponent(getComponent(group));
+	}
+
+	private EditorComponent getComponent(Group group){
+		for(EditorComponent com : this.components){
+			if(((GroupComponent)com).group() == group) return com;
+		}
+		return null;
 	}
 
 }

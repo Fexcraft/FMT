@@ -186,6 +186,7 @@ public class Editor extends Component {
 	}
 
 	public void removeComponent(EditorComponent com){
+		if(com == null) return;
 		components.remove(com);
 		scrollable.getContainer().remove(com);
 		UpdateHandler.deregisterHolder(com.getUpdateHolder());
