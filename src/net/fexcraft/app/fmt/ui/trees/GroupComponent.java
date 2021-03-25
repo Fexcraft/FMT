@@ -50,13 +50,13 @@ public class GroupComponent extends EditorComponent {
 		PolygonLabel label = new PolygonLabel(this).polygon(polygon).sortin(index).update();
 		this.add(label);
 		polygons.add(label);
-		sort(true);
+		sort();
 	}
 	
-	private void sort(boolean maximize){
+	private void sort(){
 		this.setSize(Editor.CWIDTH, genFullheight());
 		for(int i = 0; i < polygons.size(); i++) polygons.get(i).sortin(i);
-		if(maximize) this.minimize(false);
+		this.minimize(false);
 	}
 
 	private void renamePolygon(Polygon polygon){
@@ -76,7 +76,7 @@ public class GroupComponent extends EditorComponent {
 				break;
 			}
 		}
-		sort(false);
+		sort();
 	}
 
 	public Group group(){
