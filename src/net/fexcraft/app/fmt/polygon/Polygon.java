@@ -2,7 +2,6 @@ package net.fexcraft.app.fmt.polygon;
 
 import static net.fexcraft.app.fmt.attributes.UpdateHandler.update;
 import static net.fexcraft.app.fmt.attributes.UpdateType.POLYGON_ADDED;
-import static net.fexcraft.app.fmt.attributes.UpdateType.POLYGON_REMOVED;
 
 import org.joml.Vector3f;
 
@@ -52,7 +51,7 @@ public abstract class Polygon {
 	public abstract Shape getShape();
 	
 	public String name(){
-		return name == null ? String.format(Translator.UNNAMED_POLYGON, getShape().name()) : name;
+		return name == null ? String.format(Translator.UNNAMED_POLYGON, getShape().name().toLowerCase()) : name;
 	}
 	
 	public void name(String name){
@@ -60,13 +59,19 @@ public abstract class Polygon {
 	}
 
 	public boolean group(Group group){
-		if(this.group != null){
+		/*if(this.group != null){
 			update(POLYGON_REMOVED, new Object[]{ this.group, this });
-		}
+		}*///handled by group.remove() instead!
 		this.group = group;
-		update(POLYGON_ADDED, new Object[]{ group, this });
-		this.recompile();
+		if(this.group != null){
+			update(POLYGON_ADDED, new Object[]{ group, this });
+			this.recompile();
+		}
 		return true;
+	}
+
+	public Group group(){
+		return group;
 	}
 
 	public static Polygon from(Model model, JsonObject obj){

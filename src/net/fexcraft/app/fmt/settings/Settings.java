@@ -47,6 +47,7 @@ public class Settings {
 	public static Setting<Boolean> DEMO, FLOOR, CUBE, CMARKER, LINES, POLYMARKER, ADD_TO_LAST;
 	public static Setting<Float> MOUSE_SENSIVITY, MOVE_SPEED;
 	public static Setting<String> LANGUAGE, POLYGON_SUFFIX, GROUP_SUFFIX;
+	public static Setting<Boolean> ASK_POLYGON_REMOVAL, ASK_GROUP_REMOVAL;
 	//
 	public static Setting<String> SEL_THEME;
 	public static Setting<Boolean> DARKTHEME;
@@ -101,6 +102,8 @@ public class Settings {
 		FULLSCREEN = new Setting<>("fullscreen", false, GRAPHIC, obj);
 		POLYGON_SUFFIX = new Setting<>("polygon_duplicate_suffix", "_%s", NAMING, obj);
 		GROUP_SUFFIX = new Setting<>("group_duplicate_suffix", "_%s", NAMING, obj);
+		ASK_GROUP_REMOVAL = new Setting<>("ask_group_removal", true, GENERAL, obj);
+		ASK_POLYGON_REMOVAL = new Setting<>("ask_polygon_removal", false, GENERAL, obj);
 		//
 		SEL_THEME = new StringArraySetting("selected_theme", "light", THEME, obj, "light", "dark", "custom");
 		DARKTHEME = new Setting<>("is_dark", false, THEME, obj);

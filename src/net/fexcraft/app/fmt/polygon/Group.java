@@ -1,5 +1,8 @@
 package net.fexcraft.app.fmt.polygon;
 
+import static net.fexcraft.app.fmt.attributes.UpdateHandler.update;
+import static net.fexcraft.app.fmt.attributes.UpdateType.POLYGON_REMOVED;
+
 import java.util.ArrayList;
 
 import org.joml.Vector3f;
@@ -32,6 +35,29 @@ public class Group extends ArrayList<Polygon> {
 	public boolean add(Polygon poly){
 		if(poly == null) return false;
 		return super.add(poly) && poly.group(this);
+	}
+	
+	@Override
+	public boolean remove(Object obj){
+		return obj instanceof Polygon ? remove(obj) : false;
+	}
+	
+	@Override
+	public Polygon remove(int index){
+		Polygon poly = super.remove(index);
+		poly.group(null);
+		update(POLYGON_REMOVED, new Object[]{ this, poly });
+		return poly;
+	}
+	
+	public boolean remove(Polygon poly){
+		if(poly == null) return false;
+		if(super.remove(poly)){
+			poly.group(null);
+			update(POLYGON_REMOVED, new Object[]{ this, poly });
+			return true;
+		}
+		return false;
 	}
 
 	public void recompile(){
