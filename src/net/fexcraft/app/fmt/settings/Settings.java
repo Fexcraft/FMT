@@ -61,7 +61,7 @@ public class Settings {
 	public static RGBSetting THEME_TEXT;
 	public static RGBSetting THEME_BUTTON;
 	public static Setting<String> THEME_FONT;
-	public static RGBSetting POLYGON, POLYGON_SELECTED, GROUP, GROUP_SELECTED;
+	public static RGBSetting POLYGON_NORMAL, POLYGON_SELECTED, POLYGON_INVISIBLE, POLYGON_INV_SEL, GROUP_NORMAL, GROUP_SELECTED, GROUP_INVISIBLE, GROUP_INV_SEL;
 	//
 	public static String GENERAL = "general";
 	public static String GRAPHIC = "graphic";
@@ -118,10 +118,14 @@ public class Settings {
 		THEME_TEXT = new RGBSetting("text", new RGB(0xCCCCCC), THEME);
 		THEME_BUTTON = new RGBSetting("button", new RGB(0x212121), THEME, obj);
 		THEME_FONT = new StringArraySetting("font", FONT, THEME, obj, FontRegistry.ENTYPO, FontRegistry.ROBOTO_LIGHT, FontRegistry.ROBOTO_BOLD, FontRegistry.ROBOTO_REGULAR);
-		POLYGON = new RGBSetting("component_polygon", new RGB(38, 127, 0), THEME, obj);
-		GROUP = new RGBSetting("component_group", new RGB(0, 74, 127), THEME, obj);
+		POLYGON_NORMAL = new RGBSetting("component_polygon_normal", new RGB(38, 127, 0), THEME, obj);
+		GROUP_NORMAL = new RGBSetting("component_group_normal", new RGB(0, 74, 127), THEME, obj);
 		POLYGON_SELECTED = new RGBSetting("component_polygon_selected", new RGB(219, 156, 46), THEME, obj);
 		GROUP_SELECTED = new RGBSetting("component_group_selected", new RGB(191, 128, 50), THEME, obj);
+		POLYGON_INVISIBLE = new RGBSetting("component_polygon_invisible", new RGB(126, 196, 96), THEME, obj);
+		GROUP_INVISIBLE = new RGBSetting("component_group_invisible", new RGB(67, 142, 196), THEME, obj);
+		POLYGON_INV_SEL = new RGBSetting("component_polygon_invis_sel", new RGB(250, 202, 117), THEME, obj);
+		GROUP_INV_SEL = new RGBSetting("component_group_invis_sel", new RGB(232, 158, 67), THEME, obj);
 		//
 		for(Map.Entry<String, Map<String, Setting<?>>> entry : SETTINGS.entrySet()){
 			if(!obj.has(entry.getKey())) continue;

@@ -32,6 +32,7 @@ public abstract class Polygon {
 		pos = new Vector3f();
 		off = new Vector3f();
 		rot = new Vector3f();
+		visible = true;
 	}
 	
 	protected Polygon(Model model, JsonObject obj){

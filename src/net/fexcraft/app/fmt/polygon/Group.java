@@ -85,7 +85,7 @@ public class Group extends ArrayList<Polygon> {
 		else{
 			MRTRenderer.mode(mode);
 			for(Polygon poly : this){
-				poly.turbo.render();
+				if(poly.visible) poly.turbo.render();
 			}
 		}
 	}

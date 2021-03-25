@@ -48,7 +48,7 @@ public class EditorComponent extends Component {
 		label.getStyle().setFontSize(22f);
 		Settings.applyComponentTheme(this);
 		byte[] order = (this.tree = tree) ? orderT : orderE;
-		add(size = new Icon(order[0], "./resources/textures/icons/component/" + (tree ? "minimize" : "size") + ".png", () -> minimize()));
+		add(size = new Icon(order[0], "./resources/textures/icons/component/" + (tree ? "minimize" : "size") + ".png", () -> minimize(null)));
 		add(pin = new Icon(order[1], "./resources/textures/icons/component/" + (tree ? "visible" : "pin") + ".png", () -> pin()));
 		add(mup = new Icon(order[2], "./resources/textures/icons/component/move_up.png", () -> move(-1)));
 		add(mdw = new Icon(order[3], "./resources/textures/icons/component/move_down.png", () -> move(1)));
@@ -87,14 +87,10 @@ public class EditorComponent extends Component {
 		}
 	}
 
-	protected void minimize(){
-		this.minimize(!minimized);
-	}
-
-	protected void minimize(boolean bool){
-		this.minimized = bool;
+	protected void minimize(Boolean bool){
+		this.minimized = bool == null ? !minimized : bool;
 		setSize(getSize().x, minimized ? HEIGHT : fullheight);
-		editor.alignComponents();
+		if(editor != null) editor.alignComponents();
 	}
 
 	protected boolean move(int dir){

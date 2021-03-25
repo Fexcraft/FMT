@@ -13,4 +13,12 @@ public class UIUtils {
 		com.getStyle().setDisplay(DisplayType.MANUAL);
 	}
 
+	public static final void hide(Component... coms){
+		for(Component com : coms) hide(com);
+	}
+
+	public static final void show(Component... coms){
+		for(Component com : coms) show(com);
+	}
+
 }

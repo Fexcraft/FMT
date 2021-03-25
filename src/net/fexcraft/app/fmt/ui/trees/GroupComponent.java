@@ -1,11 +1,17 @@
 package net.fexcraft.app.fmt.ui.trees;
 
+import static net.fexcraft.app.fmt.settings.Settings.*;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
 import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.event.CursorEnterEvent;
+import org.liquidengine.legui.event.MouseClickEvent;
+import org.liquidengine.legui.event.MouseClickEvent.MouseClickAction;
+import org.liquidengine.legui.input.Mouse.MouseButton;
 import org.liquidengine.legui.listener.CursorEnterEventListener;
+import org.liquidengine.legui.listener.MouseClickEventListener;
 import org.liquidengine.legui.style.Style.DisplayType;
 import org.liquidengine.legui.style.color.ColorConstants;
 
@@ -28,7 +34,7 @@ public class GroupComponent extends EditorComponent {
 	private Group group;
 	
 	public GroupComponent(Group group){
-		super(group.id, HEIGHT + group.size() * PH + 4, true, true);
+		super(group.id, group.isEmpty() ? HEIGHT : HEIGHT + group.size() * PH + 4, true, true);
 		label.getTextState().setText((this.group = group).id);
 		this.genFullheight();
 		updateholder.add(UpdateType.GROUP_RENAMED, wrp -> { if(wrp.objs[1] == group) label.getTextState().setText(group.id); });
@@ -38,34 +44,40 @@ public class GroupComponent extends EditorComponent {
 		for(int i = 0; i < group.size(); i++){
 			addPolygon(group.get(i), i, false);
 		}
-		label.getStyle().setTextColor(ColorConstants.lightGray());
 		update_color();
 		if(!group.visible) UIUtils.hide(this);
+		MouseClickEventListener listener = lis -> {
+			if(lis.getAction() == MouseClickAction.CLICK && lis.getButton() == MouseButton.MOUSE_BUTTON_LEFT){
+				group.selected = !group.selected;
+				update_color();
+			}
+		};
+		this.getListenerMap().addListener(MouseClickEvent.class, listener);
+		label.getListenerMap().addListener(MouseClickEvent.class, listener);
 	}
 
 	private int genFullheight(){
-		return fullheight = HEIGHT + group.size() * PHS + 4;
+		return fullheight = group.isEmpty() ? HEIGHT : HEIGHT + group.size() * PHS + 4;
 	}
 
 	private void addPolygon(Polygon polygon, int index, boolean resort){
-		PolygonLabel label = new PolygonLabel(this).polygon(polygon).sortin(index).update();
+		PolygonLabel label = new PolygonLabel(this).polygon(polygon).sortin(index).update_name().update_color();
 		this.add(label);
 		polygons.add(label);
-		if(resort) minimize(minimized);
+		if(resort){
+			resize();
+			minimize(minimized);
+		}
 	}
 	
-	@Override
-	protected void minimize(boolean bool){
-		this.minimized = bool;
-		this.setSize(Editor.CWIDTH, genFullheight());
-		for(int i = 0; i < polygons.size(); i++) polygons.get(i).sortin(i);
-		if(editor != null) editor.alignComponents();
+	private void resize(){
+		setSize(Editor.CWIDTH, genFullheight());
 	}
 
 	private void renamePolygon(Polygon polygon){
 		for(PolygonLabel label : polygons){
 			if(label.polygon == polygon){
-				label.update();
+				label.update_name();
 				break;
 			}
 		}
@@ -79,6 +91,7 @@ public class GroupComponent extends EditorComponent {
 				break;
 			}
 		}
+		resize();
 		minimize(minimized);
 	}
 
@@ -104,11 +117,12 @@ public class GroupComponent extends EditorComponent {
 	@Override
 	public void pin(){
 		group.visible = !group.visible;
+		update_color();
 	}
 	
 	@Override
 	public void rem(){
-		if(Settings.ASK_GROUP_REMOVAL.value){
+		if(ASK_GROUP_REMOVAL.value){
 			GenericDialog.showOC(null, () -> FMT.MODEL.remGroup(group), null, "editor.component.group.group.remove", group.id);
 		}
 		else FMT.MODEL.remGroup(group);
@@ -120,18 +134,34 @@ public class GroupComponent extends EditorComponent {
 
 		public PolygonLabel(GroupComponent com){
 			Settings.applyBorderless(this);
-			setSize(Editor.CWIDTH - 5, PH);
-			Icon icon = new Icon(0, 16, 4, Editor.CWIDTH - 16 - 5, 2, "./resources/textures/icons/component/remove.png", () -> {
-				if(Settings.ASK_POLYGON_REMOVAL.value){
+			setSize(Editor.CWIDTH - 8, PH);
+			Icon icon = new Icon(0, 16, 4, Editor.CWIDTH - 26, 2, "./resources/textures/icons/component/remove.png", () -> {
+				if(ASK_POLYGON_REMOVAL.value){
 					GenericDialog.showOC(null, () -> com.group.remove(polygon), null, "editor.component.group.polygon.remove", com.group.id + ":" + polygon.name());
 				}
 				else com.group.remove(polygon);
 			});
-			CursorEnterEventListener listener = lis -> icon.getStyle().setDisplay(this.isHovered() || icon.isHovered() ? DisplayType.MANUAL : DisplayType.NONE);
+			Icon visi = new Icon(0, 16, 4, Editor.CWIDTH - 46, 2, "./resources/textures/icons/component/visible.png", () -> {
+				polygon.visible = !polygon.visible;
+				update_color();
+			});
+			CursorEnterEventListener listener = lis -> {
+				DisplayType type = this.isHovered() || icon.isHovered() || visi.isHovered() ? DisplayType.MANUAL : DisplayType.NONE;
+				icon.getStyle().setDisplay(type);
+				visi.getStyle().setDisplay(type);
+			};
 			this.getListenerMap().addListener(CursorEnterEvent.class, listener);
 			icon.getListenerMap().addListener(CursorEnterEvent.class, listener);
-			UIUtils.hide(icon);
+			visi.getListenerMap().addListener(CursorEnterEvent.class, listener);
+			this.getListenerMap().addListener(MouseClickEvent.class, lis -> {
+				if(lis.getAction() == MouseClickAction.CLICK && lis.getButton() == MouseButton.MOUSE_BUTTON_LEFT){
+					polygon.selected = !polygon.selected;
+					update_color();
+				}
+			});
+			UIUtils.hide(icon, visi);
 			this.add(icon);
+			this.add(visi);
 		}
 		
 		public PolygonLabel polygon(Polygon poly){
@@ -143,10 +173,14 @@ public class GroupComponent extends EditorComponent {
 			return polygon;
 		}
 		
-		public PolygonLabel update(){
+		public PolygonLabel update_name(){
 			this.getTextState().setText(" " + polygon.name());
-			getStyle().setTextColor(ColorConstants.lightGray());
-			getStyle().getBackground().setColor(FMT.rgba(polygon.selected ? Settings.POLYGON.value : Settings.POLYGON_SELECTED.value));
+			return this;
+		}
+		
+		public PolygonLabel update_color(){
+			getStyle().setTextColor(polygon.selected ? ColorConstants.darkGray() : ColorConstants.lightGray());
+			getStyle().getBackground().setColor(FMT.rgba((polygon.selected ? polygon.visible ? POLYGON_SELECTED : POLYGON_INV_SEL : polygon.visible ? POLYGON_NORMAL : POLYGON_INVISIBLE).value));
 			return this;
 		}
 		
@@ -158,7 +192,8 @@ public class GroupComponent extends EditorComponent {
 	}
 
 	public void update_color(){
-		this.getStyle().getBackground().setColor(FMT.rgba(group.selected ? Settings.GROUP.value : Settings.GROUP_SELECTED.value));
+		label.getStyle().setTextColor(group.selected ? ColorConstants.darkGray() : ColorConstants.lightGray());
+		this.getStyle().getBackground().setColor(FMT.rgba((group.selected ? group.visible ? GROUP_SELECTED : GROUP_INV_SEL : group.visible ? GROUP_NORMAL : GROUP_INVISIBLE).value));
 	}
 
 }
