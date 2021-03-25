@@ -2,7 +2,13 @@ package net.fexcraft.app.fmt.attributes;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.function.Consumer;
 
+/**
+ * 
+ * @author Ferdinand Calo' (FEX___96)
+ *
+ */
 public class UpdateHandler {
 	
 	public static final HashMap<UpdateType, ArrayList<UpdateHolder>> HOLDERS = new HashMap<>();
@@ -18,14 +24,9 @@ public class UpdateHandler {
 	}
 	
 	public static void update(UpdateType event, Object... value){
-		HOLDERS.get(event).forEach(holder -> holder.update(event, value, false));
-		/*if(event.run_groups != null){
-			for(UpdateType type : UpdateType.values()){
-				if(type.containsAny(event.run_groups)){
-					HOLDERS.get(type).forEach(holder -> holder.update(event, value, true));
-				}
-			}
-		}*/
+		if(!HOLDERS.containsKey(event)) return;
+		UpdateWrapper wrapper = new UpdateWrapper(value);
+		HOLDERS.get(event).forEach(holder -> holder.update(event, wrapper));
 	}
 
 	public static void deregisterHolder(UpdateHolder holder){
@@ -35,25 +36,31 @@ public class UpdateHandler {
 		}
 	}
 	
-	@FunctionalInterface
-	public static interface UpdateConsumer {
-		
-		public void update(Object[] value, UpdateType from, Object[] _value);
-		
-	}
-	
 	public static class UpdateHolder {
 		
-		public HashMap<UpdateType, UpdateConsumer> consumers = new HashMap<>();
+		public HashMap<UpdateType, Consumer<UpdateWrapper>> consumers = new HashMap<>();
 		
-		public UpdateHolder add(UpdateType event, UpdateConsumer cons){
+		public UpdateHolder add(UpdateType event, Consumer<UpdateWrapper> cons){
 			consumers.put(event, cons);
 			return this;
 		}
 
-		private void update(UpdateType event, Object[] value, boolean bool){
-			if(bool) consumers.get(event).update(null, event, value);
-			else consumers.get(event).update(value, null, null);
+		private void update(UpdateType event, UpdateWrapper wrapper){
+			consumers.get(event).accept(wrapper);
+		}
+		
+	}
+	
+	public static class UpdateWrapper {
+		
+		public Object[] objs;
+
+		public UpdateWrapper(Object... objs){
+			this.objs = objs;
+		}
+		
+		public <T> T get(int index){
+			return (T)objs[index];
 		}
 		
 	}

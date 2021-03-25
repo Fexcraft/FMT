@@ -22,10 +22,10 @@ public class GroupComponent extends EditorComponent {
 		super(group.id, HEIGHT + group.size() * PH + 4, true, true);
 		label.getTextState().setText((this.group = group).id);
 		this.genFullheight();
-		updateholder.add(UpdateType.GROUP_RENAMED, (x, y, z) -> { if((Group)x[1] == group) label.getTextState().setText(group.id); });
-		updateholder.add(UpdateType.POLYGON_ADDED, (x, y, z) -> { if((Group)x[0] == group) addPolygon((Polygon)x[1], group.size() - 1); });
-		updateholder.add(UpdateType.POLYGON_RENAMED, (x, y, z) -> { if((Group)x[0] == group) renamePolygon((Polygon)x[1]); });
-		updateholder.add(UpdateType.POLYGON_REMOVED, (x, y, z) -> { if((Group)x[0] == group) removePolygon((Polygon)x[1]); });
+		updateholder.add(UpdateType.GROUP_RENAMED, wrp -> { if(wrp.objs[1] == group) label.getTextState().setText(group.id); });
+		updateholder.add(UpdateType.POLYGON_ADDED, wrp -> { if(wrp.objs[0] == group) addPolygon(wrp.get(1), group.size() - 1); });
+		updateholder.add(UpdateType.POLYGON_RENAMED, wrp -> { if(wrp.objs[0] == group) renamePolygon(wrp.get(1)); });
+		updateholder.add(UpdateType.POLYGON_REMOVED, wrp -> { if(wrp.objs[0] == group) removePolygon(wrp.get(1)); });
 		for(int i = 0; i < group.size(); i++){
 			addPolygon(group.get(i), i);
 		}

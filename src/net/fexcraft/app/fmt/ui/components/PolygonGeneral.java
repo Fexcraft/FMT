@@ -54,9 +54,9 @@ public class PolygonGeneral extends EditorComponent {
 		this.add(new NumberField(F30, HEIGHT + R9, 90, HEIGHT));
 		this.add(new NumberField(F31, HEIGHT + R9, 90, HEIGHT));
 		this.add(new NumberField(F32, HEIGHT + R9, 90, HEIGHT));
-		updateholder.add(UpdateType.GROUP_ADDED, (x, y, z) -> updateSelectBox());
-		updateholder.add(UpdateType.GROUP_REMOVED, (x, y, z) -> updateSelectBox());
-		updateholder.add(UpdateType.GROUP_RENAMED, (x, y, z) -> updateSelectBox());
+		updateholder.add(UpdateType.GROUP_ADDED, vals -> updateSelectBox());
+		updateholder.add(UpdateType.GROUP_REMOVED, vals -> updateSelectBox());
+		updateholder.add(UpdateType.GROUP_RENAMED, vals -> updateSelectBox());
 	}
 
 	private void updateSelectBox(){

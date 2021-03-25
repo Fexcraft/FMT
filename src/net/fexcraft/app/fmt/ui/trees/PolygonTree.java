@@ -16,8 +16,8 @@ public class PolygonTree extends Editor {
 	public PolygonTree(String name, boolean alignment){
 		super(TREES.get(0), name == null ? "Polygon Tree" : name, true, alignment);
 		this.addTreeIcons(0);
-		holder.add(UpdateType.GROUP_ADDED, (x, y, z) -> addGroup((Group)x[1]));
-		holder.add(UpdateType.GROUP_REMOVED, (x, y, z) -> remGroup((Group)x[1]));
+		holder.add(UpdateType.GROUP_ADDED, wrp -> addGroup(wrp.get(1)));
+		holder.add(UpdateType.GROUP_REMOVED, wrp -> remGroup(wrp.get(1)));
 		UpdateHandler.registerHolder(holder);
 	}
 
