@@ -52,6 +52,19 @@ public class GroupComponent extends EditorComponent {
 				update_color();
 			}
 		};
+		updateholder.add(UpdateType.GROUP_SELECTED, cons -> {
+			if(cons.objs[0] == group){
+				update_color();
+				for(PolygonLabel poly : polygons){
+					poly.update_color();
+				}
+			}
+		});
+		updateholder.add(UpdateType.POLYGON_SELECTED, cons -> {
+			for(PolygonLabel poly : polygons){
+				if(poly.polygon == cons.objs[0]) poly.update_color();
+			}
+		});
 		this.getListenerMap().addListener(MouseClickEvent.class, listener);
 		label.getListenerMap().addListener(MouseClickEvent.class, listener);
 	}

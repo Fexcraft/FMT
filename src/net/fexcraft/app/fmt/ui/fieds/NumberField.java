@@ -9,6 +9,7 @@ import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
+import java.util.function.Consumer;
 
 import org.liquidengine.legui.component.TextInput;
 import org.liquidengine.legui.event.FocusEvent;
@@ -20,6 +21,7 @@ import org.lwjgl.glfw.GLFW;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.attributes.UpdateHandler.UpdateHolder;
+import net.fexcraft.app.fmt.attributes.UpdateHandler.UpdateWrapper;
 import net.fexcraft.app.fmt.attributes.UpdateType;
 import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.settings.Setting;
@@ -73,11 +75,16 @@ public class NumberField extends TextInput implements Field {
 				apply(((Polygon)cons.objs[0]).getValue(val));
 			}
 		});
-		holder.add(UpdateType.POLYGON_SELECTED, cons -> {
-			int size = cons.get(1);
+		Consumer<UpdateWrapper> consumer = cons -> {
+			int size = cons.get(2), old = cons.get(1);
 			if(size == 0) apply(0);
-			else if(size == 1) apply(((Polygon)cons.objs[0]).getValue(val));
-		});
+			else if(size == 1 || (old == 0 && size > 0)){
+				apply(FMT.MODEL.first_selected().getValue(val));
+			}
+		
+		};
+		holder.add(UpdateType.POLYGON_SELECTED, consumer);
+		holder.add(UpdateType.GROUP_SELECTED, consumer);
 		addTextInputContentChangeEventListener(event -> {
 			Field.validateNumber(event);
 			value = null;

@@ -162,6 +162,10 @@ public class Model {
 		return list;*/
 		return selected;
 	}
+	
+	public Polygon first_selected(){
+		return selected.isEmpty() ? null : selected.get(0);
+	}
 
 	public void updateValue(PolygonValue value, NumberField field){
 		if(selected.isEmpty()) return;
@@ -181,20 +185,24 @@ public class Model {
 	}
 
 	public void select(Polygon polygon){
+		int old = selected.size();
 		if(polygon.selected) polygon.selected = !selected.remove(polygon);
 		else polygon.selected = selected.add(polygon);
-		update(UpdateType.POLYGON_SELECTED, polygon, selected.size());
+		update(UpdateType.POLYGON_SELECTED, polygon, old, selected.size());
 	}
 
 	public void select(Group group){
+		int old = selected.size();
 		if(group.selected){
 			selected.removeAll(group);
 			group.selected = false;
+			group.forEach(poly -> poly.selected = false);
 		}
 		else{
 			selected.addAll(group);
 			group.selected = true;
 		}
+		update(UpdateType.GROUP_SELECTED, group, old, selected.size());
 	}
 
 }
