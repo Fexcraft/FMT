@@ -17,6 +17,11 @@ import org.liquidengine.legui.listener.FocusEventListener;
 import org.liquidengine.legui.listener.KeyEventListener;
 import org.lwjgl.glfw.GLFW;
 
+import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
+import net.fexcraft.app.fmt.attributes.UpdateHandler.UpdateHolder;
+import net.fexcraft.app.fmt.attributes.UpdateType;
+import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.settings.Setting;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.EditorComponent;
@@ -51,24 +56,35 @@ public class NumberField extends TextInput implements Field {
 	}
 
 	private EditorComponent comp;
-	private String[] value_id;
+	private PolygonValue poly_value;
 	private boolean floatfield;
 	private float min, max;
 	private Float value = null;
 	private Runnable update;
 	
-	public NumberField setup(float min, float max, boolean flaot, String... strs){
+	public NumberField setup(float min, float max, boolean flaot, PolygonValue val){
 		floatfield = flaot;
 		this.min = min;
 		this.max = max;
-		value_id = strs;
+		poly_value = val;
+		UpdateHolder holder = comp.getUpdateHolder().sub();
+		holder.add(UpdateType.POLYGON_VALUE, cons -> {
+			if(cons.get(1).equals(val)){
+				apply(((Polygon)cons.objs[0]).getValue(val));
+			}
+		});
+		holder.add(UpdateType.POLYGON_SELECTED, cons -> {
+			int size = cons.get(1);
+			if(size == 0) apply(0);
+			else if(size == 1) apply(((Polygon)cons.objs[0]).getValue(val));
+		});
 		addTextInputContentChangeEventListener(event -> {
 			Field.validateNumber(event);
 			value = null;
 		});
 		getListenerMap().addListener(FocusEvent.class, (FocusEventListener)listener -> {
 			if(!listener.isFocused()){
-				//TODO update tracked model value/attribute
+				FMT.MODEL.updateValue(poly_value, this);
 			}
 		});
 		getListenerMap().addListener(KeyEvent.class, (KeyEventListener)listener -> {
@@ -127,13 +143,14 @@ public class NumberField extends TextInput implements Field {
 
 	@Override
 	public void apply(float val){
-		getTextState().setText((value = val) + ""); setCaretPosition(getTextState().getText().length());
+		getTextState().setText((value = val) + "");
+		setCaretPosition(getTextState().getText().length());
 	}
 
 	@Override
 	public void scroll(double scroll){
 		apply(test(value(), scroll > 0, 1f));//TODO global rate value
-		if(value_id != null){
+		if(poly_value != null){
 			//TODO update tracked model value/attribute
 			//<>.update(this, fieldid, scroll > 0);
 			if(update != null) update.run();
@@ -142,7 +159,7 @@ public class NumberField extends TextInput implements Field {
 
 	@Override
 	public String id(){
-		return value_id[0] + "_" + value_id[1];
+		return poly_value.toString();
 	}
 	
 	@Override

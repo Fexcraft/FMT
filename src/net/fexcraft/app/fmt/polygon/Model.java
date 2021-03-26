@@ -11,9 +11,11 @@ import java.util.LinkedHashMap;
 import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.attributes.UpdateType;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TextureGroup;
+import net.fexcraft.app.fmt.ui.fieds.NumberField;
 import net.fexcraft.app.fmt.utils.MRTRenderer.DrawMode;
 import net.fexcraft.app.fmt.utils.SaveHandler;
 
@@ -28,6 +30,7 @@ public class Model {
 	//
 	private LinkedHashMap<String, Boolean> authors = new LinkedHashMap<>();
 	private ArrayList<Group> groups = new ArrayList<>();
+	private ArrayList<Polygon> selected = new ArrayList<>();
 	public Vector3f pos = new Vector3f();
 	public Vector3f rot = new Vector3f();
 	public TextureGroup texgroup = null;
@@ -147,7 +150,7 @@ public class Model {
 	}
 
 	public ArrayList<Polygon> selected(){
-		var list = new ArrayList<Polygon>();
+		/*var list = new ArrayList<Polygon>();
 		for(Group group : groups){
 			if(group.selected) list.addAll(group);
 			else{
@@ -156,7 +159,42 @@ public class Model {
 				}
 			}
 		}
-		return list;
+		return list;*/
+		return selected;
+	}
+
+	public void updateValue(PolygonValue value, NumberField field){
+		if(selected.isEmpty()) return;
+		Polygon poly = selected.get(0);
+		float curr = poly.getValue(value);
+		float fval = field.value();
+		poly.setValue(value, fval);
+		update(UpdateType.POLYGON_VALUE, poly, value);
+		if(selected.size() > 1){
+			for(int i = 1; i < selected.size(); i++){
+				poly = selected.get(i);
+				float diff = poly.getValue(value) - curr;
+				poly.setValue(value, fval + diff);
+				update(UpdateType.POLYGON_VALUE, poly, value);
+			}
+		}
+	}
+
+	public void select(Polygon polygon){
+		if(polygon.selected) polygon.selected = !selected.remove(polygon);
+		else polygon.selected = selected.add(polygon);
+		update(UpdateType.POLYGON_SELECTED, polygon, selected.size());
+	}
+
+	public void select(Group group){
+		if(group.selected){
+			selected.removeAll(group);
+			group.selected = false;
+		}
+		else{
+			selected.addAll(group);
+			group.selected = true;
+		}
 	}
 
 }

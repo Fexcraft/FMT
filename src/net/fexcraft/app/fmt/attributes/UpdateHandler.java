@@ -21,6 +21,7 @@ public class UpdateHandler {
 			//if(!HOLDERS.containsKey(type)) HOLDERS.put(type, new ArrayList<>());
 			HOLDERS.get(type).add(holder);
 		}
+		if(!holder.subs.isEmpty()) holder.subs.forEach(sub -> registerHolder(sub));
 	}
 	
 	public static void update(UpdateType event, Object... value){
@@ -34,11 +35,13 @@ public class UpdateHandler {
 			if(!HOLDERS.containsKey(type)) continue;
 			HOLDERS.get(type).remove(holder);
 		}
+		if(!holder.subs.isEmpty()) holder.subs.forEach(sub -> deregisterHolder(sub));
 	}
 	
 	public static class UpdateHolder {
 		
 		public HashMap<UpdateType, Consumer<UpdateWrapper>> consumers = new HashMap<>();
+		public ArrayList<UpdateHolder> subs = new ArrayList<>();
 		
 		public UpdateHolder add(UpdateType event, Consumer<UpdateWrapper> cons){
 			consumers.put(event, cons);
@@ -47,6 +50,12 @@ public class UpdateHandler {
 
 		private void update(UpdateType event, UpdateWrapper wrapper){
 			consumers.get(event).accept(wrapper);
+		}
+
+		public UpdateHolder sub(){
+			UpdateHolder holder = new UpdateHolder();
+			subs.add(holder);
+			return holder;
 		}
 		
 	}

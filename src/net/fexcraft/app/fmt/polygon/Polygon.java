@@ -8,6 +8,8 @@ import org.joml.Vector3f;
 import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
+import net.fexcraft.app.fmt.attributes.PolyVal.ValAxe;
 import net.fexcraft.app.fmt.utils.Jsoniser;
 import net.fexcraft.app.fmt.utils.MRTRenderer;
 import net.fexcraft.app.fmt.utils.MRTRenderer.GlCache;
@@ -122,5 +124,47 @@ public abstract class Polygon {
 	protected abstract void buildMRT();
 
 	public abstract float[] getFaceColor(int i);
+
+	public float getValue(PolygonValue polyval){
+		switch(polyval.val()){
+			case POS: return getVectorValue(pos, polyval.axe());
+			case OFF: return getVectorValue(off, polyval.axe());
+			case ROT: return getVectorValue(rot, polyval.axe());
+			case TEX: return polyval.axe().x() ? textureX : textureY;
+			default: return 0;
+		}
+	}
+
+	private float getVectorValue(Vector3f vec, ValAxe axe){
+		switch(axe){
+			case X: return vec.x;
+			case Y: return vec.y;
+			case Z: return vec.z;
+			default: return 0;
+		}
+	}
+
+	public void setValue(PolygonValue polyval, float value){
+		switch(polyval.val()){
+			case POS: setVectorValue(pos, polyval.axe(), value); break;
+			case OFF: setVectorValue(off, polyval.axe(), value); break;
+			case ROT: setVectorValue(rot, polyval.axe(), value); break;
+			case TEX:
+				if(polyval.axe().x()) textureX = (int)value;
+				else textureY = (int)value;
+				break;
+			default: return;
+		}
+		this.recompile();
+	}
+
+	private void setVectorValue(Vector3f vec, ValAxe axe, float value){
+		switch(axe){
+			case X: vec.x = value; return;
+			case Y: vec.y = value; return;
+			case Z: vec.z = value; return;
+			default: return;
+		}
+	}
 
 }

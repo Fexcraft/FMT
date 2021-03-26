@@ -48,7 +48,7 @@ public class GroupComponent extends EditorComponent {
 		if(!group.visible) UIUtils.hide(this);
 		MouseClickEventListener listener = lis -> {
 			if(lis.getAction() == MouseClickAction.CLICK && lis.getButton() == MouseButton.MOUSE_BUTTON_LEFT){
-				group.selected = !group.selected;
+				group.model.select(group);
 				update_color();
 			}
 		};
@@ -158,7 +158,7 @@ public class GroupComponent extends EditorComponent {
 			visi.getListenerMap().addListener(CursorEnterEvent.class, listener);
 			this.getListenerMap().addListener(MouseClickEvent.class, lis -> {
 				if(lis.getAction() == MouseClickAction.CLICK && lis.getButton() == MouseButton.MOUSE_BUTTON_LEFT){
-					polygon.selected = !polygon.selected;
+					polygon.group().model.select(polygon);
 					update_color();
 				}
 			});

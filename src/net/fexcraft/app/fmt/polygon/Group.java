@@ -46,6 +46,7 @@ public class Group extends ArrayList<Polygon> {
 	public Polygon remove(int index){
 		Polygon poly = super.remove(index);
 		poly.group(null);
+		if(poly.selected) model.select(poly);
 		update(POLYGON_REMOVED, new Object[]{ this, poly });
 		return poly;
 	}
@@ -54,6 +55,7 @@ public class Group extends ArrayList<Polygon> {
 		if(poly == null) return false;
 		if(super.remove(poly)){
 			poly.group(null);
+			if(poly.selected) model.select(poly);
 			update(POLYGON_REMOVED, new Object[]{ this, poly });
 			return true;
 		}
