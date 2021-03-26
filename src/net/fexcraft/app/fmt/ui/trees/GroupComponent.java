@@ -72,6 +72,9 @@ public class GroupComponent extends EditorComponent {
 	
 	private void resize(){
 		setSize(Editor.CWIDTH, genFullheight());
+		for(int i = 0; i < polygons.size(); i++){
+			polygons.get(i).sortin(i);
+		}
 	}
 
 	private void renamePolygon(Polygon polygon){
