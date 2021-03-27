@@ -12,15 +12,16 @@ import org.liquidengine.legui.style.Style.DisplayType;
 
 import net.fexcraft.app.fmt.attributes.UpdateHandler.UpdateHolder;
 import net.fexcraft.app.fmt.settings.Settings;
+import net.fexcraft.app.fmt.ui.components.BoxComponent;
 import net.fexcraft.app.fmt.ui.components.PolygonGeneral;
 import net.fexcraft.app.fmt.ui.components.QuickAdd;
 import net.fexcraft.app.fmt.utils.Translator;
 
 public class EditorComponent extends Component {
 	
-	public static final float F30 = 7.5f, F31 = 105f, F32 = 202.5f;
+	public static final float F30 = 7.5f, F31 = 105f, F32 = 202.5f, F3S = 90;
+	public static final float F60 = 6, F61 = 55, F62 = 104, F63 = 153, F64 = 202, F65 = 251, F6S = 43;
 	public static final float L5 = 5f, LW = Editor.CWIDTH - (L5 * 2);
-	public static final int R0 = 0, R1 = 25, R2 = 50, R3 = 75, R4 = 100, R5 = 125, R6 = 150, R7 = 175, R8 = 200, R9 = 225, R10 = 250, R11 = 275, R12 = 300;
 	public static final int HEIGHT = 24;
 	private static final byte[] orderT = { 1, 2, 4, 5, 3 }, orderE = { 1, 2, 3, 4, 5 };
 	//
@@ -32,7 +33,7 @@ public class EditorComponent extends Component {
 	protected boolean minimized, unpinned, tree;
 	protected Label label;
 	private Icon size, mup, mdw, pin, rem;
-	protected int uid, fullheight;
+	protected int uid, fullheight, row;
 	public Editor editor;
 	protected String id;
 	public int index;
@@ -113,10 +114,20 @@ public class EditorComponent extends Component {
 	public UpdateHolder getUpdateHolder(){
 		return updateholder;
 	}
+	
+	public int row(int next){
+		if(next > 0) row += next * 25;
+		return row;
+	}
+	
+	public int row(){
+		return row;
+	}
 
 	public static void registerComponents(){
 		REGISTRY.put("polygon.quick", QuickAdd.class);
 		REGISTRY.put("polygon.general", PolygonGeneral.class);
+		REGISTRY.put("polygon.general.box", BoxComponent.class);
 	}
 
 }

@@ -33,7 +33,7 @@ public enum PolyVal {
 	
 	public static enum ValAxe {
 		
-		X, Y, Z, N;
+		X, Y, Z, X2, Y2, Z2, N;
 
 		public boolean x(){
 			return this == X;
@@ -49,6 +49,18 @@ public enum PolyVal {
 		
 		public boolean none(){
 			return this == N;
+		}
+		
+		public boolean x2(){
+			return this == X2;
+		}
+		
+		public boolean y2(){
+			return this == Y2;
+		}
+		
+		public boolean z2(){
+			return this == Z2;
 		}
 		
 	}

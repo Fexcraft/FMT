@@ -27,6 +27,7 @@ import com.google.gson.JsonObject;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.ui.EditorComponent;
+import net.fexcraft.app.fmt.ui.components.BoxComponent;
 import net.fexcraft.app.fmt.ui.components.PolygonGeneral;
 import net.fexcraft.app.fmt.ui.components.QuickAdd;
 import net.fexcraft.app.fmt.ui.trees.PolygonTree;
@@ -256,6 +257,7 @@ public class Settings {
 		new PolygonTree(null, false);
 		editor.addComponent(new QuickAdd());
 		editor.addComponent(new PolygonGeneral());
+		editor.addComponent(new BoxComponent());
 	}
 
 	public static void register(String group, String id, Setting<?> setting){

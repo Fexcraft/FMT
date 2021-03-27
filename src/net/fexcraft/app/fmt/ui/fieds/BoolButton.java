@@ -6,28 +6,26 @@ import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.listener.MouseClickEventListener;
 
+import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.settings.Setting;
 import net.fexcraft.app.fmt.settings.Settings;
+import net.fexcraft.app.fmt.ui.Editor;
+import net.fexcraft.app.fmt.ui.EditorComponent;
 
 public class BoolButton extends Button implements Field {
 
-	private String fieldid;
+	private PolygonValue poly_value;
 
-	public BoolButton(String id, int x, int y, int w, int h){
+	public BoolButton(EditorComponent comp, float x, float y, float w, float h, PolygonValue val){
 		super("false", x, y, w, h);
-		this.fieldid = id;
+		this.poly_value = val;
 		Settings.applyBorderless(this);
 		Field.setupHoverCheck(this);
-		this.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)event -> {
-			if(event.getAction() == CLICK){
-				toggle();
-			}
-			else return;
-		});
+		Field.setupHolderAndListeners(this, comp, val);
 	}
 
-	public BoolButton(Setting<Boolean> setting, int x, int y, int w, int h){
+	public BoolButton(Setting<Boolean> setting, float x, float y, float w, float h){
 		super(setting.value + "", x, y, w, h);
 		Settings.applyBorderless(this);
 		Field.setupHoverCheck(this);
@@ -40,10 +38,10 @@ public class BoolButton extends Button implements Field {
 		});
 	}
 
-	private void toggle(){
+	protected void toggle(){
 		boolean val = Boolean.parseBoolean(getTextState().getText());
 		getTextState().setText(!val + "");
-		//TODO update tracked model value/attribute
+		FMT.MODEL.updateValue(poly_value, this);
 	}
 
 	@Override
@@ -64,20 +62,20 @@ public class BoolButton extends Button implements Field {
 
 	@Override
 	public void scroll(double yoffset){
-		apply(test(value(), yoffset > 0, 1f));//TODO global rate value
-		//TODO update tracked model value/attribute
-		//<>.update(this, fieldid, scroll > 0);
+		apply(test(value(), yoffset > 0, Editor.RATE));
+		if(poly_value != null){
+			FMT.MODEL.updateValue(poly_value, this);
+		}
 	}
 
 	@Override
 	public String id(){
-		return fieldid;
+		return poly_value.toString();
 	}
 
 	@Override
 	public PolygonValue polyval(){
-		// TODO Auto-generated method stub
-		return null;
+		return poly_value;
 	}
 
 }

@@ -135,13 +135,18 @@ public abstract class Polygon {
 		}
 	}
 
-	private float getVectorValue(Vector3f vec, ValAxe axe){
+	protected float getVectorValue(Vector3f vec, ValAxe axe){
 		switch(axe){
 			case X: return vec.x;
 			case Y: return vec.y;
 			case Z: return vec.z;
 			default: return 0;
 		}
+	}
+	
+	protected int getIndexValue(boolean[] array, int index){
+		if(index < 0 || index >= array.length) return 0;
+		return array[index] ? 1 : 0;
 	}
 
 	public void setValue(PolygonValue polyval, float value){
@@ -158,13 +163,18 @@ public abstract class Polygon {
 		this.recompile();
 	}
 
-	private void setVectorValue(Vector3f vec, ValAxe axe, float value){
+	protected void setVectorValue(Vector3f vec, ValAxe axe, float value){
 		switch(axe){
 			case X: vec.x = value; return;
 			case Y: vec.y = value; return;
 			case Z: vec.z = value; return;
 			default: return;
 		}
+	}
+	
+	protected void setIndexValue(boolean[] array, int index, float value){
+		if(index < 0 || index >= array.length) return;
+		array[index] = value > .5;
 	}
 
 }

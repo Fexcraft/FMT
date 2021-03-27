@@ -15,7 +15,7 @@ import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.attributes.UpdateType;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TextureGroup;
-import net.fexcraft.app.fmt.ui.fieds.NumberField;
+import net.fexcraft.app.fmt.ui.fieds.Field;
 import net.fexcraft.app.fmt.utils.MRTRenderer.DrawMode;
 import net.fexcraft.app.fmt.utils.SaveHandler;
 
@@ -167,7 +167,7 @@ public class Model {
 		return selected.isEmpty() ? null : selected.get(0);
 	}
 
-	public void updateValue(PolygonValue value, NumberField field){
+	public void updateValue(PolygonValue value, Field field){
 		if(selected.isEmpty()) return;
 		Polygon poly = selected.get(0);
 		float curr = poly.getValue(value);

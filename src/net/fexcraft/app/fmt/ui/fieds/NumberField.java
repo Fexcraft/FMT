@@ -9,7 +9,6 @@ import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
-import java.util.function.Consumer;
 
 import org.liquidengine.legui.component.TextInput;
 import org.liquidengine.legui.event.FocusEvent;
@@ -20,10 +19,6 @@ import org.lwjgl.glfw.GLFW;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
-import net.fexcraft.app.fmt.attributes.UpdateHandler.UpdateHolder;
-import net.fexcraft.app.fmt.attributes.UpdateHandler.UpdateWrapper;
-import net.fexcraft.app.fmt.attributes.UpdateType;
-import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.settings.Setting;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.Editor;
@@ -62,7 +57,7 @@ public class NumberField extends TextInput implements Field {
 	private PolygonValue poly_value;
 	private boolean floatfield;
 	private float min, max;
-	private Float value = null;
+	protected Float value = null;
 	private Runnable update;
 	
 	public NumberField setup(float min, float max, boolean flaot, PolygonValue val){
@@ -70,36 +65,7 @@ public class NumberField extends TextInput implements Field {
 		this.min = min;
 		this.max = max;
 		poly_value = val;
-		UpdateHolder holder = comp.getUpdateHolder().sub();
-		holder.add(UpdateType.POLYGON_VALUE, cons -> {
-			if(cons.get(1).equals(val)){
-				apply(((Polygon)cons.objs[0]).getValue(val));
-			}
-		});
-		Consumer<UpdateWrapper> consumer = cons -> {
-			int size = cons.get(2), old = cons.get(1);
-			if(size == 0) apply(0);
-			else if(size == 1 || (old == 0 && size > 0)){
-				apply(FMT.MODEL.first_selected().getValue(val));
-			}
-		
-		};
-		holder.add(UpdateType.POLYGON_SELECTED, consumer);
-		holder.add(UpdateType.GROUP_SELECTED, consumer);
-		addTextInputContentChangeEventListener(event -> {
-			Field.validateNumber(event);
-			value = null;
-		});
-		getListenerMap().addListener(FocusEvent.class, (FocusEventListener)listener -> {
-			if(!listener.isFocused()){
-				FMT.MODEL.updateValue(poly_value, this);
-			}
-		});
-		getListenerMap().addListener(KeyEvent.class, (KeyEventListener)listener -> {
-			if(listener.getKey() == GLFW.GLFW_KEY_ENTER){
-				FMT.MODEL.updateValue(poly_value, this);
-			}
-		});
+		Field.setupHolderAndListeners(this, comp, val);
 		return this;
 	}
 	
@@ -163,8 +129,8 @@ public class NumberField extends TextInput implements Field {
 		apply(test(value(), scroll > 0, Editor.RATE));
 		if(poly_value != null){
 			FMT.MODEL.updateValue(poly_value, this);
-			if(update != null) update.run();
 		}
+		if(update != null) update.run();
 	}
 
 	@Override

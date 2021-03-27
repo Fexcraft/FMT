@@ -5,6 +5,7 @@ import org.joml.Vector3f;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.utils.Jsoniser;
 import net.fexcraft.lib.tmt.BoxBuilder;
 
@@ -46,6 +47,23 @@ public class Box extends Polygon {
 	@Override
 	public float[] getFaceColor(int i){
 		return turbo.getColor(i).toFloatArray();
+	}
+	
+	public float getValue(PolygonValue polyval){
+		switch(polyval.val()){
+			case SIZE: return getVectorValue(size, polyval.axe());
+			case SIDES: return getIndexValue(sides, polyval.axe().ordinal());
+			default: return super.getValue(polyval);
+		}
+	}
+
+	public void setValue(PolygonValue polyval, float value){
+		switch(polyval.val()){
+			case SIZE: setVectorValue(size, polyval.axe(), value); break;
+			case SIDES: setIndexValue(sides, polyval.axe().ordinal(), value); break;
+			default: super.setValue(polyval, value);
+		}
+		this.recompile();
 	}
 
 }
