@@ -39,6 +39,15 @@ public class PolygonGeneral extends EditorComponent {
 		updateholder.add(UpdateType.GROUP_ADDED, vals -> updateSelectBox());
 		updateholder.add(UpdateType.GROUP_REMOVED, vals -> updateSelectBox());
 		updateholder.add(UpdateType.GROUP_RENAMED, vals -> updateSelectBox());
+		updateholder.add(UpdateType.POLYGON_SELECTED, vals -> {
+			int old = vals.get(1);
+			if(old < 0) return;
+			int size = vals.get(2);
+			if(size == 0) box.setSelected(0, true);
+			else if(size == 1 || (old == 0 && size > 0)){
+				box.setSelected(FMT.MODEL.first_selected().group().id, true);
+			}
+		});
 	}
 
 	protected void addSortingFields(){
@@ -49,7 +58,10 @@ public class PolygonGeneral extends EditorComponent {
 			if(listener.getNewValue().equals(NOGROUPS)) return;
 			Group group = FMT.MODEL.get(listener.getNewValue());
 			if(group == null) return;
-			FMT.MODEL.selected().forEach(poly -> poly.group(group));
+			FMT.MODEL.selection_copy().forEach(poly -> {
+				poly.group().remove(poly);
+				group.add(poly);
+			});
 		});
 		box.setSize(LW, HEIGHT);
 		box.setPosition(L5, row(1));

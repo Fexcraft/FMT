@@ -38,12 +38,10 @@ public class GroupComponent extends EditorComponent {
 		label.getTextState().setText((this.group = group).id);
 		this.genFullheight();
 		updateholder.add(UpdateType.GROUP_RENAMED, wrp -> { if(wrp.objs[1] == group) label.getTextState().setText(group.id); });
-		updateholder.add(UpdateType.POLYGON_ADDED, wrp -> { if(wrp.objs[0] == group) addPolygon(wrp.get(1), group.size() - 1, true); });
+		updateholder.add(UpdateType.POLYGON_ADDED, wrp -> { if(wrp.objs[0] == group) addPolygon(wrp.get(1), true); });
 		updateholder.add(UpdateType.POLYGON_RENAMED, wrp -> { if(wrp.objs[0] == group) renamePolygon(wrp.get(1)); });
 		updateholder.add(UpdateType.POLYGON_REMOVED, wrp -> { if(wrp.objs[0] == group) removePolygon(wrp.get(1)); });
-		for(int i = 0; i < group.size(); i++){
-			addPolygon(group.get(i), i, false);
-		}
+		group.forEach(poly -> addPolygon(poly, false));
 		update_color();
 		if(!group.visible) UIUtils.hide(this);
 		MouseClickEventListener listener = lis -> {
@@ -61,8 +59,10 @@ public class GroupComponent extends EditorComponent {
 			}
 		});
 		updateholder.add(UpdateType.POLYGON_SELECTED, cons -> {
+			Polygon pn = cons.get(0);
+			if(pn.group() != group) return;
 			for(PolygonLabel poly : polygons){
-				if(poly.polygon == cons.objs[0]) poly.update_color();
+				if(poly.polygon == pn) poly.update_color();
 			}
 		});
 		this.getListenerMap().addListener(MouseClickEvent.class, listener);
@@ -73,8 +73,8 @@ public class GroupComponent extends EditorComponent {
 		return fullheight = group.isEmpty() ? HEIGHT : HEIGHT + group.size() * PHS + 4;
 	}
 
-	private void addPolygon(Polygon polygon, int index, boolean resort){
-		PolygonLabel label = new PolygonLabel(this).polygon(polygon).sortin(index).update_name().update_color();
+	private void addPolygon(Polygon polygon, boolean resort){
+		PolygonLabel label = new PolygonLabel(this).polygon(polygon).update_name().update_color();
 		this.add(label);
 		polygons.add(label);
 		if(resort){

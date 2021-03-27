@@ -16,6 +16,7 @@ import net.fexcraft.app.fmt.attributes.UpdateType;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.ui.fieds.Field;
+import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.MRTRenderer.DrawMode;
 import net.fexcraft.app.fmt.utils.SaveHandler;
 
@@ -162,6 +163,12 @@ public class Model {
 		return list;*/
 		return selected;
 	}
+
+	public ArrayList<Polygon> selection_copy(){
+		var  list = new ArrayList<Polygon>();
+		list.addAll(selected);
+		return list;
+	}
 	
 	public Polygon first_selected(){
 		return selected.isEmpty() ? null : selected.get(0);
@@ -187,8 +194,22 @@ public class Model {
 	public void select(Polygon polygon){
 		int old = selected.size();
 		if(polygon.selected) polygon.selected = !selected.remove(polygon);
-		else polygon.selected = selected.add(polygon);
+		else{
+			if(!GGR.isAltDown()) clear_selection();
+			polygon.selected = selected.add(polygon);
+		}
 		update(UpdateType.POLYGON_SELECTED, polygon, old, selected.size());
+	}
+
+	private void clear_selection(){
+		for(Group group : groups){
+			if(group.selected) select(group);
+		}
+		for(Polygon poly : selected){
+			poly.selected = false;
+			update(UpdateType.POLYGON_SELECTED, poly, -1);
+		}
+		selected.clear();
 	}
 
 	public void select(Group group){
@@ -199,6 +220,9 @@ public class Model {
 			group.forEach(poly -> poly.selected = false);
 		}
 		else{
+			if(!GGR.isAltDown()){
+				clear_selection();
+			}
 			selected.addAll(group);
 			group.selected = true;
 		}

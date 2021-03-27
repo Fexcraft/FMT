@@ -96,7 +96,9 @@ public interface Field {
 			}
 		});
 		Consumer<UpdateWrapper> consumer = cons -> {
-			int size = cons.get(2), old = cons.get(1);
+			int old = cons.get(1);
+			if(old < 0) return;
+			int size = cons.get(2);
 			if(size == 0) field.apply(0);
 			else if(size == 1 || (old == 0 && size > 0)){
 				field.apply(FMT.MODEL.first_selected().getValue(val));
