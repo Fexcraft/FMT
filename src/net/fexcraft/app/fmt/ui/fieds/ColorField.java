@@ -19,6 +19,7 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.util.tinyfd.TinyFileDialogs;
 
+import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.settings.Setting;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.lib.common.math.RGB;
@@ -170,6 +171,12 @@ public class ColorField extends TextInput implements Field {
 	@Override
 	public String id(){
 		return fieldid;
+	}
+
+	@Override
+	public PolygonValue polyval(){
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

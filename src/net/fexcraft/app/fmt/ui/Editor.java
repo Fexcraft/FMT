@@ -40,6 +40,7 @@ public class Editor extends Component {
 	public static final List<String> TREES = Arrays.asList("polygon_tree");
 	public static final HashMap<String, Editor> EDITORS = new HashMap<>();
 	public static final ArrayList<Editor> EDITORLIST = new ArrayList<>();
+	public static float RATE = 1f;
 	public static Editor LEFT = null, RIGHT = null;
 	public ArrayList<EditorComponent> components = new ArrayList<>();
 	private ScrollablePanel scrollable;

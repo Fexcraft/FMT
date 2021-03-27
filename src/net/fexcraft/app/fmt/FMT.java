@@ -49,6 +49,7 @@ import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.ui.Toolbar;
 import net.fexcraft.app.fmt.ui.ToolbarMenu;
+import net.fexcraft.app.fmt.ui.fieds.Field;
 import net.fexcraft.app.fmt.utils.Axis3DL;
 import net.fexcraft.app.fmt.utils.DiscordUtil;
 import net.fexcraft.app.fmt.utils.GGR;
@@ -84,7 +85,7 @@ public class FMT {
 	public float delta, accumulator, interval = 1f / 30f, alpha;
 	private static boolean CLOSE;
 	public static GGR CAM;
-	public static Label pos, rot, fps;
+	public static Label pos, rot, fps, poly, info;
 	//
 	@SuppressWarnings("unused") private GLFWErrorCallback errorCallback;
 	public long window;
@@ -94,6 +95,7 @@ public class FMT {
 	public static Renderer RENDERER;
 	public static Toolbar TOOLBAR;
 	public static Model MODEL;
+	public static Field SELFIELD;
 	
 	public static void main(String... args) throws Exception {
 		log("==================================================");
@@ -151,6 +153,8 @@ public class FMT {
 		FRAME.getContainer().add(pos = new Label("  test  ", 320, 32, 200, 20));
 		FRAME.getContainer().add(rot = new Label("  test  ", 320, 54, 200, 20));
 		FRAME.getContainer().add(fps = new Label("  test  ", 320, 76, 200, 20));
+		FRAME.getContainer().add(poly = new Label(" test  ", 320, 98, 200, 20));
+		FRAME.getContainer().add(info = new Label(" test  ", 320, 120, 200, 20));
 		
 		CONTEXT = new Context(window);
 		FRAME.getComponentLayer().setFocusable(false);
@@ -192,8 +196,8 @@ public class FMT {
 		keeper.getChainScrollCallback().add(new GLFWScrollCallback(){
 			@Override
 			public void invoke(long window, double xoffset, double yoffset){
-				//
-				CAM.scrollCallback(window, xoffset, yoffset);
+				if(SELFIELD == null) CAM.scrollCallback(window, xoffset, yoffset);
+				else SELFIELD.scroll(yoffset);
 			}
 		});
 		SystemEventProcessor sys_event_processor = new SystemEventProcessorImpl();
@@ -253,6 +257,8 @@ public class FMT {
 				accumulator -= interval;
 				//Trees.updateCounters();
 				fps.getTextState().setText(timer.getFPS() + "");
+				info.getTextState().setText(SELFIELD == null ? "none" : SELFIELD.polyval().toString());
+				poly.getTextState().setText(MODEL.selected().isEmpty() ? "none" : MODEL.first_selected().name());
 			}
 			render(vao, alpha = accumulator / interval);
 			//

@@ -12,20 +12,20 @@ public class TextField extends TextInput {
 	public TextField(String string, float x, float y, float w, float h){
 		super(string, x, y, w, h);
 		Settings.applyBorderless(this);
-		Field.setupHoverCheck(this);
+		//Field.setupHoverCheck(this);
 	}
 
 	public TextField(Setting<?> setting, float x, float y, float w, float h){
 		this(setting.toString(), x, y, w, h);
 		Settings.applyBorderless(this);
-		Field.setupHoverCheck(this);
+		//Field.setupHoverCheck(this);
 		this.addTextInputContentChangeEventListener(event -> setting.validate(true, Field.validateString(event, true)));
 	}
 
 	public TextField(String string, float x, float y, float w, float h, boolean bool){
 		this(string, x, y, w, h);
 		Settings.applyBorderless(this);
-		Field.setupHoverCheck(this);
+		//Field.setupHoverCheck(this);
 		this.addTextInputContentChangeEventListener(event -> Field.validateString(event, bool));
 	}
 	

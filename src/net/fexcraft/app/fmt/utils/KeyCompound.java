@@ -54,10 +54,10 @@ public class KeyCompound {
 			//TODO keys.add(new KeyFunction("toggle_editor_" + i, GLFW_KEY_0 + i, (action) -> { if(action == GLFW_RELEASE) Editors.toggleWidget(j); }));
 		}
 		//
-		keys.add(new KeyFunction("camera_rotate_left", GLFW_KEY_LEFT, action -> FMT.CAM.hor -= Static.rad5));
-		keys.add(new KeyFunction("camera_rotate_right", GLFW_KEY_RIGHT, action -> FMT.CAM.hor += Static.rad5));
-		keys.add(new KeyFunction("camera_rotate_up", GLFW_KEY_UP, action -> FMT.CAM.ver -= Static.rad5));
-		keys.add(new KeyFunction("camera_rotate_down", GLFW_KEY_DOWN, action -> FMT.CAM.ver += Static.rad5));
+		keys.add(new KeyFunction("camera_rotate_left",  GLFW_KEY_LEFT,  action -> { if(!GGR.isOverUI()) FMT.CAM.hor -= Static.rad5; }));
+		keys.add(new KeyFunction("camera_rotate_right", GLFW_KEY_RIGHT, action -> { if(!GGR.isOverUI()) FMT.CAM.hor += Static.rad5; }));
+		keys.add(new KeyFunction("camera_rotate_up",    GLFW_KEY_UP,    action -> { if(!GGR.isOverUI()) FMT.CAM.ver -= Static.rad5; }));
+		keys.add(new KeyFunction("camera_rotate_down",  GLFW_KEY_DOWN,  action -> { if(!GGR.isOverUI()) FMT.CAM.ver += Static.rad5; }));
 		//
 		keys.add(new KeyFunction("help", GLFW_KEY_F1, action -> {}));
 		keys.add(new KeyFunction("toggle_floor", GLFW_KEY_F2, action -> { if(action == GLFW_RELEASE) Settings.FLOOR.toggle(); }));

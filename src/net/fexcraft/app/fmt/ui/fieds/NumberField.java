@@ -26,6 +26,7 @@ import net.fexcraft.app.fmt.attributes.UpdateType;
 import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.settings.Setting;
 import net.fexcraft.app.fmt.settings.Settings;
+import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.ui.EditorComponent;
 
 public class NumberField extends TextInput implements Field {
@@ -137,7 +138,9 @@ public class NumberField extends TextInput implements Field {
 
 	@Override
 	public float test(float flat, boolean positive, float rate){
-		flat += positive ? rate : -rate; if(flat > max) flat = max; if(flat < min) flat = min;
+		flat += positive ? rate : -rate;
+		if(flat > max) flat = max;
+		if(flat < min) flat = min;
 		try{
 			Number num = nf.parse(df.format(flat));
 			return floatfield ? num.floatValue() : num.intValue();
@@ -156,10 +159,9 @@ public class NumberField extends TextInput implements Field {
 
 	@Override
 	public void scroll(double scroll){
-		apply(test(value(), scroll > 0, 1f));//TODO global rate value
+		apply(test(value(), scroll > 0, Editor.RATE));
 		if(poly_value != null){
-			//TODO update tracked model value/attribute
-			//<>.update(this, fieldid, scroll > 0);
+			FMT.MODEL.updateValue(poly_value, this);
 			if(update != null) update.run();
 		}
 	}
@@ -188,6 +190,11 @@ public class NumberField extends TextInput implements Field {
 	public NumberField floatbased(boolean bool){
 		this.floatfield = bool;
 		return this;
+	}
+
+	@Override
+	public PolygonValue polyval(){
+		return poly_value;
 	}
 	
 }

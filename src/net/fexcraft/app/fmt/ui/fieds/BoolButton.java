@@ -6,6 +6,7 @@ import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.listener.MouseClickEventListener;
 
+import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.settings.Setting;
 import net.fexcraft.app.fmt.settings.Settings;
 
@@ -70,6 +71,12 @@ public class BoolButton extends Button implements Field {
 	@Override
 	public String id(){
 		return fieldid;
+	}
+
+	@Override
+	public PolygonValue polyval(){
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

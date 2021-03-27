@@ -8,8 +8,10 @@ import org.liquidengine.legui.event.CursorEnterEvent;
 import org.liquidengine.legui.event.MouseClickEvent;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
 
 public interface Field {
+	
 
 	public float value();
 
@@ -17,20 +19,23 @@ public interface Field {
 
 	public void apply(float value);
 
-	public void scroll(double scroll);
+	public void scroll(double yoffset);
 
 	public String id();
 
 	public default Runnable update(){ return null; }
+
+	public PolygonValue polyval();
 	
 	//
 	
 	public static void setupHoverCheck(Component component){
 		component.getListenerMap().addListener(CursorEnterEvent.class, listener -> {
-			if(listener.isEntered()) FMT.CONTEXT.setFocusedGui(component);
+			if(listener.isEntered()) FMT.SELFIELD = (Field)component;
+			else if(FMT.SELFIELD == component) FMT.SELFIELD = null;
 		});
 		component.getListenerMap().addListener(MouseClickEvent.class, listener -> {
-			if(listener.getAction() == CLICK && FMT.CONTEXT.getFocusedGui() == component && !component.isFocused()) component.setFocused(true);
+			if(listener.getAction() == CLICK) FMT.SELFIELD = (Field)component;
 		});
 	}
 	
