@@ -152,9 +152,10 @@ public class NumberField extends TextInput implements Field {
 	}
 
 	@Override
-	public void apply(float val){
+	public NumberField apply(float val){
 		getTextState().setText((value = val) + "");
 		setCaretPosition(getTextState().getText().length());
+		return this;
 	}
 
 	@Override

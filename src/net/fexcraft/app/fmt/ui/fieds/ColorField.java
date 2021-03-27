@@ -156,9 +156,10 @@ public class ColorField extends TextInput implements Field {
 	}
 
 	@Override
-	public void apply(float val){
+	public ColorField apply(float val){
 		getTextState().setText("#" + Integer.toHexString(value = (int)val));
 		setCaretPosition(getTextState().getText().length());
+		return this;
 	}
 
 	@Override

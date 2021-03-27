@@ -22,7 +22,7 @@ public abstract class Polygon {
 	private Model model;
 	private Group group;
 	private String name;
-	public int textureX, textureY;
+	public int textureX = -1, textureY = -1;
 	public Vector3f pos, off, rot;
 	public int colorIdx;
 	public int[] colorIds;

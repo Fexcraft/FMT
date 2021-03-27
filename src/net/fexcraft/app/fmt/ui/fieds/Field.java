@@ -17,7 +17,7 @@ public interface Field {
 
 	public float test(float value, boolean additive, float rate);
 
-	public void apply(float value);
+	public Field apply(float value);
 
 	public void scroll(double yoffset);
 

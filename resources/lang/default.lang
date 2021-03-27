@@ -74,6 +74,8 @@ editor.component.polygon.general.group=Group
 editor.component.polygon.general.pos=Position ( x / y / z )
 editor.component.polygon.general.off=Offset ( x / y / z )
 editor.component.polygon.general.rot=Rotation ( x / y / z )
+editor.component.polygon.general.tex=Texture ( root u / v )
+editor.component.polygon.general.tex_reset=Reset R-UV
 
 # Generic Dialogs
 dialog.title.default=Generic Dialog

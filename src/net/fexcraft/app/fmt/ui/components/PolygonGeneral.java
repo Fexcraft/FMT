@@ -18,15 +18,17 @@ import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.ui.fieds.NumberField;
+import net.fexcraft.app.fmt.ui.fieds.RunButton;
 import net.fexcraft.app.fmt.ui.fieds.TextField;
 
 public class PolygonGeneral extends EditorComponent {
 	
 	private SelectBox<String> box = new SelectBox<>();
 	private static final String NOGROUPS = "< no groups >";
+	private NumberField TX, TY;
 
 	public PolygonGeneral(){
-		super("polygon.general", 280, false, true);
+		super("polygon.general", 330, false, true);
 		this.add(new Label(translate(LANG_PREFIX + id + ".name/id"), L5, HEIGHT + R0, LW, HEIGHT));
 		this.add(new TextField("", L5, HEIGHT + R1, LW, HEIGHT, false).accept(con -> rename(con)));
 		this.add(new Label(translate(LANG_PREFIX + id + ".group"), L5, HEIGHT + R2, LW, HEIGHT));
@@ -57,6 +59,10 @@ public class PolygonGeneral extends EditorComponent {
 		this.add(new NumberField(this, F30, HEIGHT + R9, 90, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.ROT, ValAxe.X)));
 		this.add(new NumberField(this, F31, HEIGHT + R9, 90, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.ROT, ValAxe.Y)));
 		this.add(new NumberField(this, F32, HEIGHT + R9, 90, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.ROT, ValAxe.Z)));
+		this.add(new Label(translate(LANG_PREFIX + id + ".tex"), L5, HEIGHT + R10, LW, HEIGHT));
+		this.add(TX = new NumberField(this, F30, HEIGHT + R11, 90, HEIGHT).setup(-1, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.TEX, ValAxe.X)));
+		this.add(TY = new NumberField(this, F31, HEIGHT + R11, 90, HEIGHT).setup(-1, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.TEX, ValAxe.Y)));
+		this.add(new RunButton(LANG_PREFIX + id + ".tex_reset", F32, HEIGHT + R11, 90, HEIGHT, () -> resetUV()));
 		updateholder.add(UpdateType.GROUP_ADDED, vals -> updateSelectBox());
 		updateholder.add(UpdateType.GROUP_REMOVED, vals -> updateSelectBox());
 		updateholder.add(UpdateType.GROUP_RENAMED, vals -> updateSelectBox());
@@ -84,6 +90,11 @@ public class PolygonGeneral extends EditorComponent {
 				polis.get(i).name(string + String.format(POLYGON_SUFFIX.value, i));
 			}
 		}
+	}
+
+	private void resetUV(){
+		FMT.MODEL.updateValue(TX.polyval(), TX.apply(-1));
+		FMT.MODEL.updateValue(TY.polyval(), TY.apply(-1));
 	}
 
 }

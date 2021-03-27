@@ -57,8 +57,9 @@ public class BoolButton extends Button implements Field {
 	}
 
 	@Override
-	public void apply(float f){
+	public BoolButton apply(float f){
 		getTextState().setText((f > .5) + "");
+		return this;
 	}
 
 	@Override
