@@ -96,7 +96,7 @@ public class NumberField extends TextInput implements Field {
 		});
 		getListenerMap().addListener(KeyEvent.class, (KeyEventListener)listener -> {
 			if(listener.getKey() == GLFW.GLFW_KEY_ENTER){
-				//TODO update tracked model value/attribute
+				FMT.MODEL.updateValue(poly_value, this);
 			}
 		});
 		return this;
