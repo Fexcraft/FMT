@@ -33,6 +33,7 @@ public class NumberField extends TextInput implements Field {
 	public NumberField(EditorComponent comp, float x, float y, float w, float h){
 		super("0", x, y, w, h);
 		Settings.applyBorderless(this);
+		Settings.applyGrayText(this);
 		Field.setupHoverCheck(this);
 		this.comp = comp;
 	}
@@ -40,6 +41,7 @@ public class NumberField extends TextInput implements Field {
 	public NumberField(Setting<?> setting, float x, float y, float w, float h){
 		super(setting.toString(), x, y, w, h);
 		Settings.applyBorderless(this);
+		Settings.applyGrayText(this);
 		Field.setupHoverCheck(this);
 		getListenerMap().addListener(FocusEvent.class, listener -> {
 			if(!listener.isFocused()){

@@ -32,6 +32,7 @@ public class ColorField extends TextInput implements Field {
 	public ColorField(Component root, String field, int x, int y, int w, int h){
 		super("0xffffff", x, y, root == null ? w : w - 40, h);
 		Settings.applyBorderless(this);
+		Settings.applyGrayText(this);
 		Field.setupHoverCheck(this);
 		fieldid = field;
 		addTextInputContentChangeEventListener(event -> {
@@ -68,6 +69,7 @@ public class ColorField extends TextInput implements Field {
 	public ColorField(Component root, Setting<RGB> setting, int x, int y, int w, int h){
 		super(setting.toString(), x, y, root == null ? w : w - 40, h);
 		Settings.applyBorderless(this);
+		Settings.applyGrayText(this);
 		Field.setupHoverCheck(this);
 		addTextInputContentChangeEventListener(event -> {
 			Field.validateColorString(event); value = null;

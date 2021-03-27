@@ -13,6 +13,7 @@ public class RunButton extends Button {
 	public RunButton(String str, float x, float y, float w, float h, Runnable run){
 		super(Translator.translate(str), x, y, w, h);
 		Settings.applyBorderless(this);
+		Settings.applyGrayText(this);
 		this.getListenerMap().addListener(MouseClickEvent.class, l -> {
 			if(l.getAction() == MouseClickAction.CLICK && l.getButton() == MouseButton.MOUSE_BUTTON_LEFT) run.run();
 		});

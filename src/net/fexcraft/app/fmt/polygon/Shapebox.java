@@ -1,14 +1,26 @@
 package net.fexcraft.app.fmt.polygon;
 
+import static net.fexcraft.app.fmt.attributes.PolyVal.CORNER_0;
+import static net.fexcraft.app.fmt.attributes.PolyVal.CORNER_1;
+import static net.fexcraft.app.fmt.attributes.PolyVal.CORNER_2;
+import static net.fexcraft.app.fmt.attributes.PolyVal.CORNER_3;
+import static net.fexcraft.app.fmt.attributes.PolyVal.CORNER_4;
+import static net.fexcraft.app.fmt.attributes.PolyVal.CORNER_5;
+import static net.fexcraft.app.fmt.attributes.PolyVal.CORNER_6;
+import static net.fexcraft.app.fmt.attributes.PolyVal.CORNER_7;
+
 import org.joml.Vector3f;
 
 import com.google.gson.JsonObject;
 
+import net.fexcraft.app.fmt.attributes.PolyVal;
+import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.utils.Jsoniser;
 import net.fexcraft.lib.tmt.BoxBuilder;
 
 public class Shapebox extends Box {
 	
+	public static PolyVal[] CORNERS = { CORNER_0, CORNER_1, CORNER_2, CORNER_3, CORNER_4, CORNER_5, CORNER_6, CORNER_7 };
 	public Vector3f cor0;
 	public Vector3f cor1;
 	public Vector3f cor2;
@@ -60,6 +72,35 @@ public class Shapebox extends Box {
 		builder.setCorner(7, cor7.x, cor7.y, cor7.z);
 		//TODO custom uv
 		builder.build();
+	}
+	
+	public float getValue(PolygonValue polyval){
+		switch(polyval.val()){
+			case CORNER_0: return getVectorValue(cor0, polyval.axe());
+			case CORNER_1: return getVectorValue(cor1, polyval.axe());
+			case CORNER_2: return getVectorValue(cor2, polyval.axe());
+			case CORNER_3: return getVectorValue(cor3, polyval.axe());
+			case CORNER_4: return getVectorValue(cor4, polyval.axe());
+			case CORNER_5: return getVectorValue(cor5, polyval.axe());
+			case CORNER_6: return getVectorValue(cor6, polyval.axe());
+			case CORNER_7: return getVectorValue(cor7, polyval.axe());
+			default: return super.getValue(polyval);
+		}
+	}
+
+	public void setValue(PolygonValue polyval, float value){
+		switch(polyval.val()){
+			case CORNER_0: setVectorValue(cor0, polyval.axe(), value); break;
+			case CORNER_1: setVectorValue(cor1, polyval.axe(), value); break;
+			case CORNER_2: setVectorValue(cor2, polyval.axe(), value); break;
+			case CORNER_3: setVectorValue(cor3, polyval.axe(), value); break;
+			case CORNER_4: setVectorValue(cor4, polyval.axe(), value); break;
+			case CORNER_5: setVectorValue(cor5, polyval.axe(), value); break;
+			case CORNER_6: setVectorValue(cor6, polyval.axe(), value); break;
+			case CORNER_7: setVectorValue(cor7, polyval.axe(), value); break;
+			default: super.setValue(polyval, value);
+		}
+		this.recompile();
 	}
 
 }

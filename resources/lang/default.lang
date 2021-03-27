@@ -80,6 +80,16 @@ editor.component.polygon.box.name=Box Settings
 editor.component.polygon.box.desc=Includes:<n> - box size,<n> - face visibility toggle
 editor.component.polygon.box.size=Measurements ( x / y / z )
 editor.component.polygon.box.face_vis=Face (In)Visibility Toggle (F/B/T/D/R/L)
+editor.component.polygon.shapebox.name=Shapebox Corners
+editor.component.polygon.shapebox.desc=Includes:<n> - all 8 shapebox corners
+editor.component.polygon.shapebox.corner_0=Corner 1 ( x / y / z )
+editor.component.polygon.shapebox.corner_1=Corner 2 ( x / y / z )
+editor.component.polygon.shapebox.corner_2=Corner 3 ( x / y / z )
+editor.component.polygon.shapebox.corner_3=Corner 4 ( x / y / z )
+editor.component.polygon.shapebox.corner_4=Corner 5 ( x / y / z )
+editor.component.polygon.shapebox.corner_5=Corner 6 ( x / y / z )
+editor.component.polygon.shapebox.corner_6=Corner 7 ( x / y / z )
+editor.component.polygon.shapebox.corner_7=Corner 8 ( x / y / z )
 
 # Generic Dialogs
 dialog.title.default=Generic Dialog

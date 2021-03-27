@@ -11,6 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.joml.Vector4f;
 import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.ScrollablePanel;
 import org.liquidengine.legui.style.Style;
@@ -30,6 +31,7 @@ import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.ui.components.BoxComponent;
 import net.fexcraft.app.fmt.ui.components.PolygonGeneral;
 import net.fexcraft.app.fmt.ui.components.QuickAdd;
+import net.fexcraft.app.fmt.ui.components.ShapeboxComponent;
 import net.fexcraft.app.fmt.ui.trees.PolygonTree;
 import net.fexcraft.app.fmt.utils.Jsoniser;
 import net.fexcraft.lib.common.math.RGB;
@@ -232,6 +234,10 @@ public class Settings {
 		style.setBorder(null);
 	}
 
+	public static void applyGrayText(Component com){
+		com.getStyle().setTextColor(DARKTHEME.value ? new Vector4f(.65f, .65f, .65f, 1f) : new Vector4f(.35f, .35f, .35f, 1f));
+	}
+
 	public static void applyBorderlessScrollable(ScrollablePanel scrollable, boolean nell){
 		if(nell) applyBorderless(scrollable);
 		else scrollable.getStyle().setBorderRadius(0);
@@ -258,6 +264,7 @@ public class Settings {
 		editor.addComponent(new QuickAdd());
 		editor.addComponent(new PolygonGeneral());
 		editor.addComponent(new BoxComponent());
+		editor.addComponent(new ShapeboxComponent());
 	}
 
 	public static void register(String group, String id, Setting<?> setting){

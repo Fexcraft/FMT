@@ -15,6 +15,7 @@ import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.components.BoxComponent;
 import net.fexcraft.app.fmt.ui.components.PolygonGeneral;
 import net.fexcraft.app.fmt.ui.components.QuickAdd;
+import net.fexcraft.app.fmt.ui.components.ShapeboxComponent;
 import net.fexcraft.app.fmt.utils.Translator;
 
 public class EditorComponent extends Component {
@@ -127,7 +128,8 @@ public class EditorComponent extends Component {
 	public static void registerComponents(){
 		REGISTRY.put("polygon.quick", QuickAdd.class);
 		REGISTRY.put("polygon.general", PolygonGeneral.class);
-		REGISTRY.put("polygon.general.box", BoxComponent.class);
+		REGISTRY.put("polygon.box", BoxComponent.class);
+		REGISTRY.put("polygon.shapebox", ShapeboxComponent.class);
 	}
 
 }

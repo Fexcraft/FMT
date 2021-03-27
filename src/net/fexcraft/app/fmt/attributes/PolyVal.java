@@ -5,8 +5,8 @@ public enum PolyVal {
 	/* General */
 	POS, ROT, OFF, TEX,
 	
-	/* Box / Shapebox */
-	SIZE, SIDES, CORNER,
+	/* Box, Shapebox */
+	SIZE, SIDES, CORNER_0, CORNER_1, CORNER_2, CORNER_3, CORNER_4, CORNER_5, CORNER_6, CORNER_7,
 	
 	/* Cylinder */
 	RADIUS, RADIUS2, LENGTH,

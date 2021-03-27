@@ -21,6 +21,7 @@ public class BoolButton extends Button implements Field {
 		super("false", x, y, w, h);
 		this.poly_value = val;
 		Settings.applyBorderless(this);
+		Settings.applyGrayText(this);
 		Field.setupHoverCheck(this);
 		Field.setupHolderAndListeners(this, comp, val);
 	}
@@ -28,6 +29,7 @@ public class BoolButton extends Button implements Field {
 	public BoolButton(Setting<Boolean> setting, float x, float y, float w, float h){
 		super(setting.value + "", x, y, w, h);
 		Settings.applyBorderless(this);
+		Settings.applyGrayText(this);
 		Field.setupHoverCheck(this);
 		this.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)event -> {
 			if(event.getAction() == CLICK){
