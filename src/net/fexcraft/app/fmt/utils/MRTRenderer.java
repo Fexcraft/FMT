@@ -148,20 +148,20 @@ public class MRTRenderer extends ModelRendererTurbo.Renderer {
     	for(int i = 0; i < mrt.getFaces().size(); i++){
     		TexturedPolygon poly = mrt.getFaces().get(i);
     		int[] order = poly.getVertices().length == 4 ? lines && !TRIANGULATION_L.value ? order2 : order1 : order0;
-        	Vec3f vec0 = new Vec3f(poly.getVertices()[1].vector.subtract(poly.getVertices()[0].vector));
-	        Vec3f vec1 = new Vec3f(poly.getVertices()[1].vector.subtract(poly.getVertices()[2].vector));
+        	Vec3f vec0 = new Vec3f(poly.getVertices()[1].vector.sub(poly.getVertices()[0].vector));
+	        Vec3f vec1 = new Vec3f(poly.getVertices()[1].vector.sub(poly.getVertices()[2].vector));
 	        Vec3f vec2 = vec1.cross(vec0).normalize();
     		for(int o = 0; o < order.length; o++){
     			TexturedVertex vert = poly.getVertices()[order[o]];
-    			obj.verts[ver++] = vert.vector.xCoord * scale;
-    			obj.verts[ver++] = vert.vector.yCoord * scale;
-    			obj.verts[ver++] = vert.vector.zCoord * scale;
+    			obj.verts[ver++] = vert.vector.x * scale;
+    			obj.verts[ver++] = vert.vector.y * scale;
+    			obj.verts[ver++] = vert.vector.z * scale;
     			if(lines) continue;
     			obj.uvs[uv++] = vert.textureX;
     			obj.uvs[uv++] = vert.textureY;
-    			obj.norms[nor++] = vec2.xCoord;
-    			obj.norms[nor++] = vec2.yCoord;
-    			obj.norms[nor++] = vec2.zCoord;
+    			obj.norms[nor++] = vec2.x;
+    			obj.norms[nor++] = vec2.y;
+    			obj.norms[nor++] = vec2.z;
     			colarr = cache.polygon == null ? EMPTY : cache.polygon.getFaceColor(i);
     			obj.colors[col++] = colarr[0];
     			obj.colors[col++] = colarr[1];
