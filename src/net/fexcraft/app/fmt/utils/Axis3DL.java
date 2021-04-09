@@ -53,7 +53,7 @@ public class Axis3DL implements AxisRotator {
 
 	@Override
 	public Vec3f getRelativeVector(Vec3f v){
-		Vector3f vec = getRelativeVector(v.xCoord, v.yCoord, v.zCoord);
+		Vector3f vec = getRelativeVector(v.x, v.y, v.z);
 		return new Vec3f(vec.x, vec.y, vec.z);
 	}
 
