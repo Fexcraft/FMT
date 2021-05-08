@@ -96,6 +96,13 @@ public class Model {
 		}
 	}
 
+	public void renderPicking(){
+		if(!visible) return;
+		for(Group group : groups){
+			group.renderPicking();
+		}
+	}
+
 	public void add(String groupid, Polygon poly){
 		Group group = null;
 		if(groupid == null){

@@ -91,6 +91,13 @@ public class Group extends ArrayList<Polygon> {
 			}
 		}
 	}
+
+	public void renderPicking(){
+		if(!visible) return;
+		for(Polygon poly : this){
+			if(poly.visible) poly.turbo.render();
+		}
+	}
 	
 	@Override
 	public boolean equals(Object other){

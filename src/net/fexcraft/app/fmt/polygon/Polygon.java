@@ -11,13 +11,14 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.attributes.PolyVal.ValAxe;
 import net.fexcraft.app.fmt.utils.Jsoniser;
-import net.fexcraft.app.fmt.utils.MRTRenderer;
 import net.fexcraft.app.fmt.utils.MRTRenderer.GlCache;
 import net.fexcraft.app.fmt.utils.Translator;
+import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public abstract class Polygon {
 
+	public static int polygons = 1;//temporary
 	public ModelRendererTurbo turbo = new ModelRendererTurbo(this);
 	private Model model;
 	private Group group;
@@ -104,7 +105,7 @@ public abstract class Polygon {
 		turbo.clear();
 		GlCache cache;
 		if((cache = turbo.glObject()) == null) cache = turbo.glObject(new GlCache());
-		cache.polycolor = MRTRenderer.EMPTY;//TODO
+		if(cache.polycolor == null) cache.polycolor = new RGB(colorIdx == 0 ? colorIdx = polygons++ : colorIdx).toFloatArray();
 		cache.polygon = this;
 		if(textureX < 0 || textureY < 0) turbo.setTextured(false);
 		else turbo.setTextureOffset(textureX, textureY);

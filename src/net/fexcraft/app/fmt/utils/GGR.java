@@ -17,6 +17,7 @@ import org.joml.Vector3f;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.Editor;
+import net.fexcraft.app.fmt.utils.Picker.PickType;
 import net.fexcraft.lib.common.Static;
 
 /** CCR */
@@ -109,7 +110,7 @@ public class GGR {
         	}
         	else if(action == GLFW_RELEASE){
         		if(!isOverUI()){
-        			//TODO RayCoastAway.doTest(true, true, false);
+        			Picker.pick(PickType.POLYGON, true);
         		}
         		left_down = false;
         	}

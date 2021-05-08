@@ -50,16 +50,9 @@ import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.ui.Toolbar;
 import net.fexcraft.app.fmt.ui.ToolbarMenu;
 import net.fexcraft.app.fmt.ui.fieds.Field;
-import net.fexcraft.app.fmt.utils.Axis3DL;
-import net.fexcraft.app.fmt.utils.DiscordUtil;
-import net.fexcraft.app.fmt.utils.GGR;
-import net.fexcraft.app.fmt.utils.KeyCompound;
-import net.fexcraft.app.fmt.utils.MRTRenderer;
+import net.fexcraft.app.fmt.utils.*;
 import net.fexcraft.app.fmt.utils.MRTRenderer.DrawMode;
 import net.fexcraft.app.fmt.utils.MRTRenderer.GlCache;
-import net.fexcraft.app.fmt.utils.ShaderManager;
-import net.fexcraft.app.fmt.utils.Timer;
-import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.AxisRotator;
 import net.fexcraft.lib.common.math.RGB;
@@ -191,6 +184,7 @@ public class FMT {
 				TOOLBAR.setSize(WIDTH = width, TOOLBAR.getSize().y);
 				Editor.EDITORLIST.forEach(editor -> editor.align());
 				ToolbarMenu.MENUS.forEach((key, menu) -> menu.layer.hide());
+				Picker.resetBuffer(true);
 			}
 		});
 		keeper.getChainScrollCallback().add(new GLFWScrollCallback(){
@@ -205,8 +199,8 @@ public class FMT {
 		RENDERER = new NvgRenderer();
 		RENDERER.initialize();
 		TextureManager.load();
-		//FMT.MODEL = new Model(new File("./saves/dodici.fmtb"), null).load();
-		FMT.MODEL = new Model(null, "Unnamed Model");
+		FMT.MODEL = new Model(new File("./saves/dodici.fmtb"), null).load();
+		//FMT.MODEL = new Model(null, "Unnamed Model");
 		//TODO load previous model
 		//TODO session, updates, keybinds
 		KeyCompound.init();
@@ -247,6 +241,7 @@ public class FMT {
 		int vao = glGenVertexArrays();
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
+		Picker.resetBuffer(true);
 		//
 		while(!glfwWindowShouldClose(window)){
 			CAM.pollInput(accumulator += (delta = timer.getDelta()));
@@ -283,12 +278,10 @@ public class FMT {
 	}
 
 	private void render(int vao, float alpha){
-		glClearColor(0.5f, 0.5f, 0.5f, 0.01f);
+		//glClearColor(0.5f, 0.5f, 0.5f, 0.01f);
 		CONTEXT.updateGlfwWindow();
 		Vector2i size = CONTEXT.getFramebufferSize();
-		glClearColor(0.5f, 0.5f, 0.5f, 1);
 		glViewport(0, 0, size.x, size.y);
-	    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 	    //
@@ -301,6 +294,25 @@ public class FMT {
 		CAM.apply();
 		glBindVertexArray(vao);
 		TextureManager.bind("null");
+		if(Picker.TYPE.polygon()){
+			glClearColor(1, 1, 1, 1);
+		    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			MRTRenderer.mode(DrawMode.POLYGON_PICKER);
+			MODEL.renderPicking();
+			Logging.log("normal pick");
+			Picker.process();
+			if(Picker.TYPE.face()){
+				glClearColor(1, 1, 1, 1);
+			    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+				MRTRenderer.mode(DrawMode.FACE_PICKER);
+				MODEL.renderPicking();
+				Logging.log("face pick");
+				Picker.process();
+			}
+		    Picker.reset();
+		}
+		glClearColor(0.5f, 0.5f, 0.5f, 1);
+	    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		MRTRenderer.mode(DrawMode.TEXTURED);
 		if(Settings.CUBE.value){
 			TextureManager.bind("demo");
@@ -321,7 +333,7 @@ public class FMT {
             centermarker2.render(0.0625f / 4);
 		}
 		MODEL.render();
-		ShaderManager.applyUniforms(cons -> {});
+		//ShaderManager.applyUniforms(cons -> {});
 	}
 	
 	public static final ModelRendererTurbo center_cube = new BoxBuilder(new ModelRendererTurbo(null, 0, 0, 16, 16))
