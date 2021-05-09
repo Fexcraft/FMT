@@ -81,7 +81,7 @@ public abstract class Polygon {
 	public static Polygon from(Model model, JsonObject obj){
 		Shape shape = Shape.get(obj.get("type").getAsString());
 		switch(shape){
-			case BB:
+			case BOUNDING_BOX:
 				break;
 			case BOX: return new Box(model, obj);
 			case CYLINDER:

@@ -7,18 +7,18 @@ public enum Shape {
 	CYLINDER("cylinder"),
 	SPHERE("sphere"),
 	OBJECT("object"),
-	MARKER("marker"),
+	MARKER("marker", "rect"),
 	VOXEL("voxel"),
-	BB("rect");
+	BOUNDING_BOX("rect");
 	
-	private String conversion_group;
+	private String[] conversion_groups;
 	
-	Shape(String congroup){
-		this.conversion_group = congroup;
+	Shape(String... congroup){
+		this.conversion_groups = congroup;
 	}
 
 	public boolean isRectagular(){
-		return this == BOX || this.isShapebox() || this == BB;
+		return this == BOX || this.isShapebox() || this == BOUNDING_BOX;
 	}
 
 	public boolean isShapebox(){
@@ -38,7 +38,7 @@ public enum Shape {
 	}
 
 	public boolean isBoundingBox(){
-		return this == BB;
+		return this == BOUNDING_BOX;
 	}
 	
 	public boolean isObject(){
@@ -55,21 +55,36 @@ public enum Shape {
 			case "object": return OBJECT;
 			case "marker": return MARKER;
 			case "voxel": return VOXEL;
-			case "bb": return BB;
+			case "bb":
+			case "bounding_box": return BOUNDING_BOX;
 			default: return null;
 		}
 	}
 
-	public String getConversionGroup(){
-		return conversion_group;
+	public String[] getConversionGroup(){
+		return conversion_groups;
+	}
+	
+	public boolean isInConversionGroup(String group){
+		for(String con : conversion_groups) if(con.equals(group)) return true;
+		return false;
+	}
+
+	public boolean sharesConversionGroup(Shape shape){
+		for(String group : shape.conversion_groups) if(isInConversionGroup(group)) return true;
+		return false;
 	}
 
 	public static Shape[] getSupportedValues(){
-		return new Shape[]{ BOX, SHAPEBOX, CYLINDER, MARKER, VOXEL, BB };
+		return new Shape[]{ BOX, SHAPEBOX, CYLINDER, MARKER, VOXEL, BOUNDING_BOX };
 	}
 
 	public boolean isTexturable(){
-		return this != BB && this != MARKER;
+		return this != BOUNDING_BOX && this != MARKER;
+	}
+	
+	public String getName(){
+		return name().toLowerCase();
 	}
 
 }
