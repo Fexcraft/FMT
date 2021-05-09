@@ -18,7 +18,7 @@ import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public abstract class Polygon {
 
-	public static int polygons = 1;//temporary
+	public static int polyIdx = 1;//temporary
 	public ModelRendererTurbo turbo = new ModelRendererTurbo(this);
 	private Model model;
 	private Group group;
@@ -105,7 +105,7 @@ public abstract class Polygon {
 		turbo.clear();
 		GlCache cache;
 		if((cache = turbo.glObject()) == null) cache = turbo.glObject(new GlCache());
-		if(cache.polycolor == null) cache.polycolor = new RGB(colorIdx == 0 ? colorIdx = polygons++ : colorIdx).toFloatArray();
+		if(cache.polycolor == null) cache.polycolor = new RGB(colorIdx == 0 ? colorIdx = polyIdx++ : colorIdx).toFloatArray();
 		cache.polygon = this;
 		if(textureX < 0 || textureY < 0) turbo.setTextured(false);
 		else turbo.setTextureOffset(textureX, textureY);

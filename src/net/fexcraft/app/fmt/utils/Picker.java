@@ -6,6 +6,7 @@ import java.nio.ByteOrder;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Polygon;
 
 public class Picker {
@@ -68,20 +69,25 @@ public class Picker {
 			
 		}
 		else{
-			byte[] pick = getPick();
-			Logging.log(pick[0]);
-			Logging.log(pick[1]);
-			Logging.log(pick[2]);
-			Logging.log(pick[3]);
-			pickres.put(0, pick);
-			int res = pickres.getInt(0);
-			Logging.log(res);
+			int pick = getPick();
+			Logging.log(pick);
+			for(Group group : FMT.MODEL.groups()){
+				if(polygon != null) break;
+				for(Polygon poly : group){
+					Logging.log(poly.colorIdx + " ? " + pick);
+					if(poly.colorIdx == pick){
+						polygon = poly;
+						break;
+					}
+				}
+			}
+			if(polygon != null) polygon.selected = !polygon.selected;
 		}
 	}
 
-	private static byte[] getPick(){
+	private static int getPick(){
 		int x, y;
-		byte[] picked = new byte[4];
+		byte[] picked = new byte[3];
 		if(offcenter){
 			x = GGR.mousePosX();
 			y = -(GGR.mousePosY() - FMT.HEIGHT);
@@ -90,12 +96,12 @@ public class Picker {
 			x = FMT.WIDTH / 2;
 			y = FMT.HEIGHT / 2;
 		}
-		buffer.get((x + y * FMT.WIDTH) * 4, picked);
-		return picked;
+		buffer.get((x + y * FMT.WIDTH) * 3, picked);
+		return ByteUtils.getRGB(picked);
 	}
 
 	private static void fillBuffer(){
-		GL11.glReadPixels(0, 0, FMT.WIDTH, FMT.HEIGHT, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
+		GL11.glReadPixels(0, 0, FMT.WIDTH, FMT.HEIGHT, GL11.GL_RGB, GL11.GL_UNSIGNED_BYTE, buffer);
 	}
 
 }
