@@ -50,12 +50,14 @@ public enum Shape {
 		switch(text){
 			case "box": return BOX;
 			case "shapebox": return SHAPEBOX;
+			case "cyl": 
 			case "cylinder": return CYLINDER;
 			case "sphere": return SPHERE;
 			case "object": return OBJECT;
 			case "marker": return MARKER;
 			case "voxel": return VOXEL;
 			case "bb":
+			case "boundingbox": 
 			case "bounding_box": return BOUNDING_BOX;
 			default: return null;
 		}

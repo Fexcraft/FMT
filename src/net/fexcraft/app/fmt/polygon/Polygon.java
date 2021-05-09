@@ -84,8 +84,7 @@ public abstract class Polygon {
 			case BOUNDING_BOX:
 				break;
 			case BOX: return new Box(model, obj);
-			case CYLINDER:
-				break;
+			case CYLINDER: return new Cylinder(model, obj);
 			case MARKER:
 				break;
 			case OBJECT:
@@ -149,6 +148,10 @@ public abstract class Polygon {
 		if(index < 0 || index >= array.length) return 0;
 		return array[index] ? 1 : 0;
 	}
+	
+	protected int getBooleanAsIntValue(boolean bool){
+		return bool ? 1 : 0;
+	}
 
 	public void setValue(PolygonValue polyval, float value){
 		switch(polyval.val()){
@@ -176,6 +179,10 @@ public abstract class Polygon {
 	protected void setIndexValue(boolean[] array, int index, float value){
 		if(index < 0 || index >= array.length) return;
 		array[index] = value > .5;
+	}
+	
+	protected boolean parseBooleanValue(float value){
+		return value > .5;
 	}
 
 }
