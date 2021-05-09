@@ -16,6 +16,7 @@ import net.fexcraft.app.fmt.attributes.UpdateType;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.ui.fieds.Field;
+import net.fexcraft.app.fmt.utils.CornerUtil;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.MRTRenderer.DrawMode;
 import net.fexcraft.app.fmt.utils.SaveHandler;
@@ -94,6 +95,7 @@ public class Model {
 			group.render(mode);
 			if(Settings.LINES.value) group.render(DrawMode.LINES);
 		}
+		if(Settings.LINES.value && isLastSelectedCornerMarked()) CornerUtil.renderCorners();
 	}
 
 	public void renderPicking(){
@@ -179,6 +181,14 @@ public class Model {
 	
 	public Polygon first_selected(){
 		return selected.isEmpty() ? null : selected.get(0);
+	}
+	
+	public Polygon last_selected(){
+		return selected.isEmpty() ? null : selected.get(selected.size() - 1);
+	}
+
+	private boolean isLastSelectedCornerMarked(){
+		return selected.size() > 0 && selected.get(selected.size() - 1) instanceof Shapebox;
 	}
 
 	public void updateValue(PolygonValue value, Field field){

@@ -25,6 +25,7 @@ public class Logging {
 	}
 	
 	public static void log(Throwable e){
+		log(e.getCause());
 		log((String)null, e);
 	}
 	
