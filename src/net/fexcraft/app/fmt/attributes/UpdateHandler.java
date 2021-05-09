@@ -71,6 +71,10 @@ public class UpdateHandler {
 		public <T> T get(int index){
 			return (T)objs[index];
 		}
+
+		public <T> T get(int index, Class<T> clazz){
+			return (T)objs[index];
+		}
 		
 	}
 

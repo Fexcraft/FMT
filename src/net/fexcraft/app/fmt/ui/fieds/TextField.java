@@ -24,12 +24,12 @@ public class TextField extends TextInput {
 		this.addTextInputContentChangeEventListener(event -> setting.validate(true, Field.validateString(event, true)));
 	}
 
-	public TextField(String string, float x, float y, float w, float h, boolean bool){
+	public TextField(String string, float x, float y, float w, float h, boolean basic){
 		this(string, x, y, w, h);
 		Settings.applyBorderless(this);
 		Settings.applyGrayText(this);
 		//Field.setupHoverCheck(this);
-		this.addTextInputContentChangeEventListener(event -> Field.validateString(event, bool));
+		this.addTextInputContentChangeEventListener(event -> Field.validateString(event, basic));
 	}
 	
 	public TextField accept(Consumer<String> cons){

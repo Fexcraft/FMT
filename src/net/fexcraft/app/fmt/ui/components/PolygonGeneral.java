@@ -25,7 +25,9 @@ public class PolygonGeneral extends EditorComponent {
 	
 	private SelectBox<String> box = new SelectBox<>();
 	private static final String NOGROUPS = "< no groups >";
+	private static final String NOPOLYSEL = "< no polygon selected >";
 	protected static final String genid = "polygon.general";
+	private TextField name;
 	private NumberField TX, TY;
 	
 	public PolygonGeneral(){
@@ -43,16 +45,20 @@ public class PolygonGeneral extends EditorComponent {
 			int old = vals.get(1);
 			if(old < 0) return;
 			int size = vals.get(2);
-			if(size == 0) box.setSelected(0, true);
+			if(size == 0){
+				box.setSelected(0, true);
+				name.getTextState().setText(NOPOLYSEL);
+			}
 			else if(size == 1 || (old == 0 && size > 0)){
 				box.setSelected(FMT.MODEL.first_selected().group().id, true);
+				name.getTextState().setText(vals.get(0, Polygon.class).name());
 			}
 		});
 	}
 
 	protected void addSortingFields(){
 		this.add(new Label(translate(LANG_PREFIX + genid + ".name/id"), L5, row(1), LW, HEIGHT));
-		this.add(new TextField("", L5, row(1), LW, HEIGHT, false).accept(con -> rename(con)));
+		this.add(name = new TextField(NOPOLYSEL, L5, row(1), LW, HEIGHT, false).accept(con -> rename(con)));
 		this.add(new Label(translate(LANG_PREFIX + genid + ".group"), L5, row(1), LW, HEIGHT));
 		box.addSelectBoxChangeSelectionEventListener(listener -> {
 			if(listener.getNewValue().equals(NOGROUPS)) return;
