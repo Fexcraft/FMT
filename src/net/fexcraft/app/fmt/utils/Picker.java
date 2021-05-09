@@ -12,7 +12,7 @@ import net.fexcraft.app.fmt.polygon.Polygon;
 public class Picker {
 	
 	public static PickType TYPE = PickType.NONE;
-	private static ByteBuffer buffer, pickres = ByteBuffer.allocate(4);
+	private static ByteBuffer buffer;
 	private static boolean filled, offcenter;
 	private static Polygon polygon;
 
