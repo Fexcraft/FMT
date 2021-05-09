@@ -50,9 +50,17 @@ import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.ui.Toolbar;
 import net.fexcraft.app.fmt.ui.ToolbarMenu;
 import net.fexcraft.app.fmt.ui.fieds.Field;
-import net.fexcraft.app.fmt.utils.*;
+import net.fexcraft.app.fmt.utils.Axis3DL;
+import net.fexcraft.app.fmt.utils.DiscordUtil;
+import net.fexcraft.app.fmt.utils.GGR;
+import net.fexcraft.app.fmt.utils.KeyCompound;
+import net.fexcraft.app.fmt.utils.MRTRenderer;
 import net.fexcraft.app.fmt.utils.MRTRenderer.DrawMode;
 import net.fexcraft.app.fmt.utils.MRTRenderer.GlCache;
+import net.fexcraft.app.fmt.utils.Picker;
+import net.fexcraft.app.fmt.utils.ShaderManager;
+import net.fexcraft.app.fmt.utils.Timer;
+import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.AxisRotator;
 import net.fexcraft.lib.common.math.RGB;
@@ -299,14 +307,12 @@ public class FMT {
 		    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			MRTRenderer.mode(DrawMode.POLYGON_PICKER);
 			MODEL.renderPicking();
-			Logging.log("normal pick");
 			Picker.process();
 			if(Picker.TYPE.face()){
 				glClearColor(1, 1, 1, 1);
 			    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 				MRTRenderer.mode(DrawMode.FACE_PICKER);
-				MODEL.renderPicking();
-				Logging.log("face pick");
+				Picker.polygon().turbo.render();
 				Picker.process();
 			}
 		    Picker.reset();

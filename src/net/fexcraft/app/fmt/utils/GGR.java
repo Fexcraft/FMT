@@ -17,6 +17,7 @@ import org.joml.Vector3f;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.Editor;
+import net.fexcraft.app.fmt.utils.Picker.PickTask;
 import net.fexcraft.app.fmt.utils.Picker.PickType;
 import net.fexcraft.lib.common.Static;
 
@@ -110,7 +111,7 @@ public class GGR {
         	}
         	else if(action == GLFW_RELEASE){
         		if(!isOverUI()){
-        			Picker.pick(PickType.POLYGON, true);
+        			Picker.pick(PickType.POLYGON, PickTask.SELECT, true);
         		}
         		left_down = false;
         	}

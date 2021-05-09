@@ -12,6 +12,7 @@ import net.fexcraft.app.fmt.polygon.Polygon;
 public class Picker {
 	
 	public static PickType TYPE = PickType.NONE;
+	public static PickTask TASK = PickTask.NONE;
 	private static ByteBuffer buffer;
 	private static boolean filled, offcenter;
 	private static Polygon polygon;
@@ -47,17 +48,35 @@ public class Picker {
 		}
 		
 	}
+	
+	public static enum PickTask {
+		
+		NONE, SELECT, PAINT;
+		
+		public boolean pick(){
+			return this != NONE;
+		}
+
+		public boolean select(){
+			return this == SELECT;
+		}
+
+		public boolean paint(){
+			return this == PAINT;
+		}
+		
+	}
 
 	public static void reset(){
 		TYPE = PickType.NONE;
-		Logging.log("ending pick");
+		TASK = PickTask.NONE;
 	}
 
-	public static void pick(PickType type, boolean off){
+	public static void pick(PickType type, PickTask task, boolean off){
 		TYPE = type;
+		TASK = task;
 		offcenter = off;
 		polygon = null;
-		Logging.log("starting pick");
 	}
 
 	public static void process(){
@@ -70,18 +89,24 @@ public class Picker {
 		}
 		else{
 			int pick = getPick();
-			Logging.log(pick);
 			for(Group group : FMT.MODEL.groups()){
 				if(polygon != null) break;
 				for(Polygon poly : group){
-					Logging.log(poly.colorIdx + " ? " + pick);
 					if(poly.colorIdx == pick){
 						polygon = poly;
 						break;
 					}
 				}
 			}
-			if(polygon != null) polygon.selected = !polygon.selected;
+			if(polygon == null) reset();
+			else{
+				if(TASK.select()){
+					polygon.group().model.select(polygon);
+				}
+				else if(TASK.paint()){
+					//
+				}
+			}
 		}
 	}
 
@@ -102,6 +127,10 @@ public class Picker {
 
 	private static void fillBuffer(){
 		GL11.glReadPixels(0, 0, FMT.WIDTH, FMT.HEIGHT, GL11.GL_RGB, GL11.GL_UNSIGNED_BYTE, buffer);
+	}
+
+	public static Polygon polygon(){
+		return polygon;
 	}
 
 }
