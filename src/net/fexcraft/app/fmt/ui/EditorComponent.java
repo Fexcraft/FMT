@@ -13,6 +13,7 @@ import org.liquidengine.legui.style.Style.DisplayType;
 import net.fexcraft.app.fmt.attributes.UpdateHandler.UpdateHolder;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.components.BoxComponent;
+import net.fexcraft.app.fmt.ui.components.CylinderComponentFull;
 import net.fexcraft.app.fmt.ui.components.PolygonGeneral;
 import net.fexcraft.app.fmt.ui.components.QuickAdd;
 import net.fexcraft.app.fmt.ui.components.ShapeboxComponent;
@@ -130,6 +131,7 @@ public class EditorComponent extends Component {
 		REGISTRY.put("polygon.general", PolygonGeneral.class);
 		REGISTRY.put("polygon.box", BoxComponent.class);
 		REGISTRY.put("polygon.shapebox", ShapeboxComponent.class);
+		REGISTRY.put("polygon.cylinder.all", CylinderComponentFull.class);
 	}
 
 }
