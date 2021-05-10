@@ -16,7 +16,7 @@ public class CylinderComponentFull extends EditorComponent {
 	public CylinderComponentFull(){
 		super("polygon.cylinder.all", 380, false, true);
 		String id = "polygon.cylinder";
-		this.add(new Label(translate(LANG_PREFIX + id + ".radius_length"), L5, row(1), LW, HEIGHT));
+		this.add(new Label(translate(LANG_PREFIX + id + ".radius_length_radius2"), L5, row(1), LW, HEIGHT));
 		this.add(new NumberField(this, F30, row(1), F3S, HEIGHT).setup(0.5f, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.RADIUS, ValAxe.N)));
 		this.add(new NumberField(this, F31, row(0), F3S, HEIGHT).setup(0.5f, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.LENGTH, ValAxe.N)));
 		this.add(new NumberField(this, F32, row(0), F3S, HEIGHT).setup(0f, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.RADIUS2, ValAxe.N)));

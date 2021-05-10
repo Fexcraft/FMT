@@ -28,6 +28,7 @@ import com.google.gson.JsonObject;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.ui.EditorComponent;
+import net.fexcraft.app.fmt.ui.components.CylinderComponentBasic;
 import net.fexcraft.app.fmt.ui.components.CylinderComponentFull;
 import net.fexcraft.app.fmt.ui.components.PolygonGeneral;
 import net.fexcraft.app.fmt.ui.components.QuickAdd;
@@ -265,6 +266,7 @@ public class Settings {
 		//editor.addComponent(new BoxComponent());
 		//editor.addComponent(new ShapeboxComponent());
 		editor.addComponent(new CylinderComponentFull());
+		editor.addComponent(new CylinderComponentBasic());
 	}
 
 	public static void register(String group, String id, Setting<?> setting){
