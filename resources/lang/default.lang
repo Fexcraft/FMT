@@ -30,6 +30,9 @@ toolbar.polygons.add_object=Add Object
 toolbar.polygons.add_marker=Add Marker
 toolbar.polygons.add_group=Add Group
 toolbar.polygons.add_voxel=Add Voxel
+toolbar.polygons.special=Sp. Polygons
+toolbar.polygons.special.fvtm_rail=FVTM Rail
+toolbar.polygons.special.curve_line=Curve/Lines
 ## Project
 toolbar.project=Project
 toolbar.project.open=Open
