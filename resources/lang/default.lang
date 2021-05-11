@@ -19,6 +19,7 @@ toolbar.file.exit=Exit
 ## Editors
 toolbar.editors=Editors
 toolbar.editors.new=Add/New Editor
+toolbar.trees=Trees
 ## Polygons
 toolbar.polygons=Polygons
 toolbar.polygons.add_box=Add Box

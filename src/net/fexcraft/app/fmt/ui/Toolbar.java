@@ -60,8 +60,7 @@ public class Toolbar extends Panel {
 		));
 		holder.add(UpdateType.EDITOR_CREATED, wrap -> {
 			Editor editor = wrap.get(0);
-			if(editor.tree) return;
-			ToolbarMenu menu = ToolbarMenu.MENUS.get("editors");
+			ToolbarMenu menu = ToolbarMenu.MENUS.get(editor.tree ? "trees" : "editors");
 			MenuButton button = new MenuButton(menu.components.size(), editor.id, editor.name);
 			button.addListener(() -> editor.toggle());
 			menu.components.add(button);
@@ -69,9 +68,12 @@ public class Toolbar extends Panel {
 			menu.layer.refreshSize();
 		});
 		holder.add(UpdateType.EDITOR_REMOVED, wrap -> {
+			Editor editor = wrap.get(0);
+			if(editor.tree) return;
 			//TODO
 		});
-		this.add(new ToolbarMenu(3, "polygons",
+		this.add(new ToolbarMenu(3, "trees"));
+		this.add(new ToolbarMenu(4, "polygons",
 			new MenuButton(0, "polygons.add_box", () -> QuickAdd.addBox()),
 			new MenuButton(1, "polygons.add_shapebox", () -> QuickAdd.addShapebox()),
 			new MenuButton(2, "polygons.add_cylinder"),
@@ -81,16 +83,16 @@ public class Toolbar extends Panel {
 			new MenuButton(6, "polygons.add_group", () -> QuickAdd.addGroup()),
 			new MenuButton(7, "polygons.add_voxel")
 		));
-		this.add(new ToolbarMenu(4, "texture"));
-		this.add(new ToolbarMenu(5, "helpers"));
-		this.add(new ToolbarMenu(6, "project",
+		this.add(new ToolbarMenu(5, "texture"));
+		this.add(new ToolbarMenu(6, "helpers"));
+		this.add(new ToolbarMenu(7, "project",
 			new MenuButton(0, "project.open"),
 			new MenuButton(1, "project.settings"),
 			//new MenuButton(2, "project.import"),
 			//new MenuButton(3, "project.export"),
 			new MenuButton(2, "project.close")
 		));
-		this.add(new ToolbarMenu(7, "exit", () -> FMT.close()));
+		this.add(new ToolbarMenu(8, "exit", () -> FMT.close()));
 		UpdateHandler.registerHolder(holder);
 	}
 
