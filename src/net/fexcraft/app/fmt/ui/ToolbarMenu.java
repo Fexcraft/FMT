@@ -26,7 +26,7 @@ public class ToolbarMenu extends Panel {
 	
 	public static final HashMap<String, ToolbarMenu> MENUS = new HashMap<>();
 	public static final int WIDTH = 120, HEIGHT = 30;
-	private ArrayList<Component> components = new ArrayList<>();
+	protected ArrayList<Component> components = new ArrayList<>();
 	public MenuLayer layer;
 	private Label label;
 	
@@ -73,34 +73,44 @@ public class ToolbarMenu extends Panel {
 		
 		public static final ArrayList<MenuLayer> LAYERS = new ArrayList<>();
 		public Consumer<MenuLayer> consumer;
+		private Collection<Component> components;
 		private boolean shown;
 		private Vector2f pos;
 		private String root;
 
-        public MenuLayer(Vector2f pos, Collection<Component> components, String rootid){
+        public MenuLayer(Vector2f pos, Collection<Component> comps, String rootid){
     		Settings.applyBorderless(this);
 			float w = Settings.DARKTHEME.value ? 0 : 1;
 			this.getStyle().getBackground().setColor(w, w, w, 1);
             setEventReceivable(true);
             setEventPassable(true);
             LAYERS.add(this);
+            components = comps;
             root = rootid;
             this.pos = pos;
-            this.setSize(WIDTH + (root == null ? 0 : 1), components.size() * (HEIGHT + 1));
+            refreshSize();
             this.setPosition(pos.add(0, HEIGHT, new Vector2f()));
+        	for(Component com : components){
+        		regComponent(com);
+        	}
+        }
+
+		protected void regComponent(Component com){
         	CursorEnterEventListener listener = lis -> {
         		if(!lis.isEntered() && !anyComponentHovered(components)) hide();
     		};
-        	for(Component com : components){
-        		com.getListenerMap().addListener(CursorEnterEvent.class, listener);
-        		if(com.getChildComponents().size() > 0){
-        			com.getChildComponents().get(0).getListenerMap().addListener(CursorEnterEvent.class, listener);
-        		}
-        		Settings.applyMenuTheme(com);
-        		if(root != null) com.getPosition().x += 1;
-        		this.add(com);
-        	}
-        }
+			com.getListenerMap().addListener(CursorEnterEvent.class, listener);
+    		if(com.getChildComponents().size() > 0){
+    			com.getChildComponents().get(0).getListenerMap().addListener(CursorEnterEvent.class, listener);
+    		}
+    		Settings.applyMenuTheme(com);
+    		if(root != null) com.getPosition().x += 1;
+    		this.add(com);
+		}
+
+		protected void refreshSize(){
+			this.setSize(WIDTH + (root == null ? 0 : 1), components.size() * (HEIGHT + 1));
+		}
 
 		private boolean anyComponentHovered(Collection<Component> components){
 			boolean out = false;
@@ -156,6 +166,7 @@ public class ToolbarMenu extends Panel {
 	public static class MenuButton extends Panel {
 		
 		protected Label label;
+		protected String key;
 
 		public MenuButton(int index){
 			super(0, 1 + index * 31, WIDTH, HEIGHT);
@@ -163,22 +174,34 @@ public class ToolbarMenu extends Panel {
 
 		public MenuButton(int index, String key){
 			this(index);
-			this.add(label = new Label(Translator.translate("toolbar." + key), 4, 0, WIDTH - 4, HEIGHT));
+			this.add(label = new Label(Translator.translate("toolbar." + (this.key = key)), 4, 0, WIDTH - 4, HEIGHT));
+		}
+
+		public MenuButton(int index, String key, String name){
+			this(index);
+			this.key = key;
+			this.add(label = new Label(name, 4, 0, WIDTH - 4, HEIGHT));
 		}
 
 		public MenuButton(int index, String key, Runnable runnable){
 			this(index, key);
-			MouseClickEventListener listener = event -> {
-				if(event.getAction() != CLICK || event.getButton() != MOUSE_BUTTON_LEFT) return;
-				runnable.run();
-			};
-			this.getListenerMap().addListener(MouseClickEvent.class, listener);
-			getLabel().getListenerMap().addListener(MouseClickEvent.class, listener);
+			addListener(runnable);
 		}
 
 		public MenuButton(int index, String key, MouseClickEventListener listener){
 			this(index, key);
-			this.getListenerMap().addListener(MouseClickEvent.class, listener);
+			addListener(listener);
+		}
+		
+		public void addListener(Runnable runnable){
+			addListener(event -> {
+				if(event.getAction() != CLICK || event.getButton() != MOUSE_BUTTON_LEFT) return;
+				runnable.run();
+			});
+		}
+		
+		public void addListener(MouseClickEventListener listener){
+			getListenerMap().addListener(MouseClickEvent.class, listener);
 			getLabel().getListenerMap().addListener(MouseClickEvent.class, listener);
 		}
 		

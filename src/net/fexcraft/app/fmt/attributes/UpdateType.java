@@ -14,6 +14,9 @@ public enum UpdateType {
 	GROUP_SELECTED,
 	
 	MODEL_AUTHOR,
-	MODEL_LOAD;
+	MODEL_LOAD,
+	
+	EDITOR_CREATED,
+	EDITOR_REMOVED;
 
 }

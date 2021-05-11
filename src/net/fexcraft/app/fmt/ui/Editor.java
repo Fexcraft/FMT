@@ -29,6 +29,7 @@ import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.attributes.UpdateHandler;
+import net.fexcraft.app.fmt.attributes.UpdateType;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.fieds.TextField;
 import net.fexcraft.app.fmt.utils.Jsoniser;
@@ -49,12 +50,13 @@ public class Editor extends Component {
 	private Label label;
 	public static int CWIDTH = 300, WIDTH = 310, LABEL = 30;
 	public boolean alignment, comp_adj_mode, tree;
+	public final String id;
 	public String name;
 	
 	public Editor(String id, String name, boolean tree, boolean left){
 		Settings.applyBorderless(this);
 		this.setFocusable(false);
-		EDITORS.put(id, this);
+		EDITORS.put(this.id = id, this);
 		EDITORLIST.add(this);
 		alignment = left;
 		this.tree = tree;
@@ -85,6 +87,7 @@ public class Editor extends Component {
 		sid.getStyle().setDisplay(DisplayType.NONE);
 		align();
 		hide();
+		UpdateHandler.update(UpdateType.EDITOR_CREATED, this);
 	}
 
 	protected float topSpace(){
@@ -178,6 +181,11 @@ public class Editor extends Component {
 		this.setEnabled(true);
 		if(alignment) LEFT = this;
 		else RIGHT = this;
+	}
+	
+	public void toggle(){
+		if(getStyle().getDisplay() == DisplayType.NONE) show();
+		else hide();
 	}
 
 	public void addComponent(EditorComponent com){
