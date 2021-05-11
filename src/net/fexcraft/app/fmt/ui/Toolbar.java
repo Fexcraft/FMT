@@ -54,7 +54,8 @@ public class Toolbar extends Panel {
 			new MenuButton(8, "file.donate"),
 			new MenuButton(9, "file.exit", () -> FMT.close())
 		));
-		this.add(new ToolbarMenu(1, "editors",
+		this.add(new ToolbarMenu(1, "utils"));
+		this.add(new ToolbarMenu(2, "editors",
 			new MenuButton(0, "editors.new")
 		));
 		holder.add(UpdateType.EDITOR_CREATED, wrap -> {
@@ -70,7 +71,6 @@ public class Toolbar extends Panel {
 		holder.add(UpdateType.EDITOR_REMOVED, wrap -> {
 			//TODO
 		});
-		this.add(new ToolbarMenu(2, "utils"));
 		this.add(new ToolbarMenu(3, "polygons",
 			new MenuButton(0, "polygons.add_box", () -> QuickAdd.addBox()),
 			new MenuButton(1, "polygons.add_shapebox", () -> QuickAdd.addShapebox()),
