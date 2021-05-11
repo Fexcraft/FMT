@@ -81,7 +81,11 @@ public class Toolbar extends Panel {
 			new MenuButton(4, "polygons.add_object"),
 			new MenuButton(5, "polygons.add_marker"),
 			new MenuButton(6, "polygons.add_group", () -> QuickAdd.addGroup()),
-			new MenuButton(7, "polygons.add_voxel")
+			new MenuButton(7, "polygons.add_voxel"),
+			new ToolbarMenu(-8, "polygons.special",
+				new MenuButton(0, "polygons.special.fvtm_rail"),
+				new MenuButton(1, "polygons.special.curve_line")
+			)
 		));
 		this.add(new ToolbarMenu(5, "texture"));
 		this.add(new ToolbarMenu(6, "helpers"));
