@@ -76,7 +76,7 @@ public class Toolbar extends Panel {
 		this.add(new ToolbarMenu(4, "polygons",
 			new MenuButton(0, "polygons.add_box", () -> QuickAdd.addBox()),
 			new MenuButton(1, "polygons.add_shapebox", () -> QuickAdd.addShapebox()),
-			new MenuButton(2, "polygons.add_cylinder"),
+			new MenuButton(2, "polygons.add_cylinder", () -> QuickAdd.addCylinder()),
 			new MenuButton(3, "polygons.add_boundingbox"),
 			new MenuButton(4, "polygons.add_object"),
 			new MenuButton(5, "polygons.add_marker"),
