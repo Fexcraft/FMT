@@ -38,13 +38,13 @@ public class ToolbarMenu extends Panel {
 		for(int i = 0; i < comps.length; i++) components.add(comps[i]);
 		layer = new MenuLayer(this.getPosition(), components, index < 0 ? id.substring(0, id.lastIndexOf('.')) : null);
 		MouseClickEventListener mlistener = event -> {
-			if(event.getAction() != CLICK || event.getButton() != MOUSE_BUTTON_LEFT) return;
+			if(event.getAction() != CLICK || event.getButton() != MOUSE_BUTTON_LEFT || components.isEmpty()) return;
 			layer.show();
 		};
 		this.getListenerMap().addListener(MouseClickEvent.class, mlistener);
 		label.getListenerMap().addListener(MouseClickEvent.class, mlistener);
 		CursorEnterEventListener clistener = event -> {
-			if(!event.isEntered()) return;
+			if(!event.isEntered() || components.isEmpty()) return;
 			layer.show();
 		};
 		this.getListenerMap().addListener(CursorEnterEvent.class, clistener);
