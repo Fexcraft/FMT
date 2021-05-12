@@ -209,6 +209,7 @@ public class FMT {
 		TextureManager.load();
 		//FMT.MODEL = new Model(new File("./saves/dodici.fmtb"), null).load();
 		FMT.MODEL = new Model(null, "Unnamed Model");
+		FMT.updateTitle();
 		//TODO load previous model
 		//TODO session, updates, keybinds
 		KeyCompound.init();
@@ -373,6 +374,10 @@ public class FMT {
 		glfwSetWindowTitle(window, getTitle());
 		DiscordUtil.update(false);
 		return this;
+	}
+
+	public static FMT updateTitle(){
+		return INSTANCE.setTitle(FMT.MODEL.name);
 	}
 
 	//https://mkyong.com/java/open-browser-in-java-windows-or-linux/

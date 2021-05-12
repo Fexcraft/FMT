@@ -55,6 +55,7 @@ public class Model {
 	public Model load(){
 		SaveHandler.open(this, file);
 		update(MODEL_LOAD, this);
+		if(FMT.MODEL == this) FMT.updateTitle();
 		return this;
 	}
 	

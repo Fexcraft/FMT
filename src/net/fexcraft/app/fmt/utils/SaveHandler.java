@@ -353,6 +353,7 @@ public class SaveHandler {
         			FMT.MODEL = new Model(null, field.getTextState().getText());
         			FMT.MODEL.orient = ModelOrientation.valueOf(box0.getSelection());
         			FMT.MODEL.format = ModelFormat.fromName(box1.getSelection());
+        			FMT.updateTitle();
         			DiscordUtil.update(Settings.DISCORD_RESET_ON_NEW.value);
         			UpdateHandler.update(UpdateType.MODEL_LOAD, FMT.MODEL);
             		dialog.close();
