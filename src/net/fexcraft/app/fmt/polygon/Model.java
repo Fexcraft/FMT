@@ -7,8 +7,11 @@ import static net.fexcraft.app.fmt.attributes.UpdateType.MODEL_LOAD;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.joml.Vector3f;
+
+import com.google.common.collect.ImmutableMap;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
@@ -59,9 +62,17 @@ public class Model {
 		return this;
 	}
 	
-	public void addAuthor(String name, boolean locked){
+	public final void addAuthor(String name, boolean locked){
 		authors.put(name, locked);
 		update(MODEL_AUTHOR, name);
+	}
+	
+	public final Map<String, Boolean> getAuthors(){
+		return ImmutableMap.copyOf(authors);
+	}
+	
+	public final boolean hasAuthors(){
+		return !authors.isEmpty();
 	}
 
 	public long count(boolean selected){

@@ -27,7 +27,7 @@ public class Toolbar extends Panel {
 		this.add(new Icon(0, "./resources/textures/icons/toolbar/info.png", () -> Logging.log("test")));
 		this.add(new Icon(1, "./resources/textures/icons/toolbar/settings.png", NOTHING));
 		this.add(new Icon(2, "./resources/textures/icons/toolbar/profile.png", NOTHING));
-		this.add(new Icon(3, "./resources/textures/icons/toolbar/save.png", () -> SaveHandler.save(FMT.MODEL, null)));
+		this.add(new Icon(3, "./resources/textures/icons/toolbar/save.png", () -> SaveHandler.save(FMT.MODEL, null, null)));
 		this.add(new Icon(4, "./resources/textures/icons/toolbar/open.png", () -> SaveHandler.openDialog()));
 		this.add(new Icon(5, "./resources/textures/icons/toolbar/new.png", () -> SaveHandler.newDialog()));
 		this.add(new ToolbarMenu(0, "file",

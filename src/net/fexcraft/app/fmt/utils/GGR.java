@@ -27,7 +27,6 @@ public class GGR {
     public float movemod = 10;
     public float maxVR = Static.rad90 - Static.rad5;
     public Vector3f pos, initial;
-    public float distance;
     //
     public boolean w_down, s_down, d_down, a_down, r_down, f_down, space_down, shift_down;
     public boolean left_alt_down, left_control_down, right_alt_down, right_control_down;

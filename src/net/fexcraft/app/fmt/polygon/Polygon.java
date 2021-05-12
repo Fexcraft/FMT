@@ -52,6 +52,13 @@ public abstract class Polygon {
 		}
 	}
 
+	public JsonObject save(boolean export){
+		JsonObject obj = new JsonObject();
+		
+		
+		return obj;
+	}
+
 	public abstract Shape getShape();
 	
 	public String name(){

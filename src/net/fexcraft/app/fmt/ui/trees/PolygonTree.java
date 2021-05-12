@@ -21,6 +21,7 @@ public class PolygonTree extends Editor {
 		holder.add(UpdateType.GROUP_ADDED, wrp -> addGroup(wrp.get(1)));
 		holder.add(UpdateType.GROUP_REMOVED, wrp -> remGroup(wrp.get(1)));
 		holder.add(UpdateType.MODEL_LOAD, wrp -> resizeGroups(wrp.get(0)));
+		holder.add(UpdateType.MODEL_UNLOAD, wrp -> removeGroups(wrp.get(0)));
 		UpdateHandler.registerHolder(holder);
 	}
 
@@ -50,6 +51,10 @@ public class PolygonTree extends Editor {
 
 	private void resizeGroups(Model model){
 		components.forEach(com -> ((GroupComponent)com).resize());
+	}
+
+	private void removeGroups(Model model){
+		for(Group group : model.groups()) remGroup(group);
 	}
 
 }
