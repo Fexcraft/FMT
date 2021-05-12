@@ -28,7 +28,8 @@ public class GenericDialog {
 		if(width == null) width = 400;
 		if(title == null) title = "dialog.title.default";
 		for(int i = 0; i < text.length; i++){
-			text[i] = Translator.translate(text[i]);
+			if(text[i].startsWith("#")) text[i] = text[i].substring(1);
+			else text[i] = Translator.translate(text[i]);
 			float w = FontSizeUtil.getWidth(text[i]);
 			if(w + 40 > width) width = (int)w + 40;
 		}

@@ -15,6 +15,7 @@ public enum UpdateType {
 	
 	MODEL_AUTHOR,
 	MODEL_LOAD,
+	MODEL_UNLOAD,
 	
 	EDITOR_CREATED,
 	EDITOR_REMOVED;

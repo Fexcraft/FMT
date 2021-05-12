@@ -207,8 +207,8 @@ public class FMT {
 		RENDERER = new NvgRenderer();
 		RENDERER.initialize();
 		TextureManager.load();
-		FMT.MODEL = new Model(new File("./saves/dodici.fmtb"), null).load();
-		//FMT.MODEL = new Model(null, "Unnamed Model");
+		//FMT.MODEL = new Model(new File("./saves/dodici.fmtb"), null).load();
+		FMT.MODEL = new Model(null, "Unnamed Model");
 		//TODO load previous model
 		//TODO session, updates, keybinds
 		KeyCompound.init();

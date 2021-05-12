@@ -19,6 +19,7 @@ import org.lwjgl.system.MemoryStack;
 import org.lwjgl.util.tinyfd.TinyFileDialogs;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.fieds.TextField;
 import net.fexcraft.app.fmt.utils.Translator;
 
@@ -43,14 +44,18 @@ public class FileChooser {
         try(MemoryStack stack = MemoryStack.stackPush()){
         	PointerBuffer buffer = stack.mallocPointer(type.extensions.length); String string = "";
             for(int i = 0; i < type.extensions.length; i++){
-            	buffer.put(stack.UTF8(type.extensions[i])); buffer.flip();
+            	buffer.put(stack.UTF8(type.extensions[i]));
+            	buffer.flip();
             }
     		if(save) string = TinyFileDialogs.tinyfd_saveFileDialog(title, root, buffer, type.name);
     		else string = TinyFileDialogs.tinyfd_openFileDialog(title, root, buffer, type.name, false);
     		if(string != null && string.trim().length() > 0){
     			boolean ends = false;
     			for(int i = 0; i < type.extensions.length; i++){
-    				if(string.endsWith(type.extensions[i].replace("*", ""))){ ends = true; break; }
+    				if(string.endsWith(type.extensions[i].replace("*", ""))){
+    					ends = true;
+    					break;
+    				}
     			}
     			if(!ends) string += type.extensions[0].replace("*", "");
     			task.accept(new File(string));
@@ -61,6 +66,7 @@ public class FileChooser {
 	
 	private static void openInternalChooser(String title, String root, FileType type, boolean save, Consumer<File> task){
 		Dialog dialog = new Dialog(Translator.translate("filechooser.title"), 500, INTERNAL_HEIGHT + (save ? 30 : 0));
+		Settings.applyComponentTheme(dialog.getContainer());
         Label label = new Label(title, 10, 10, 480, 20);
         File rootfile = new File(root);
         if(!rootfile.exists()) rootfile.mkdirs();

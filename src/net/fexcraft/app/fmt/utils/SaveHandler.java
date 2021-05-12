@@ -4,6 +4,7 @@ import static net.fexcraft.app.fmt.attributes.UpdateHandler.update;
 import static net.fexcraft.app.fmt.attributes.UpdateType.MODEL_LOAD;
 import static net.fexcraft.app.fmt.ui.GenericDialog.showOK;
 import static net.fexcraft.app.fmt.utils.Logging.log;
+import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +14,12 @@ import java.util.Map.Entry;
 import java.util.zip.ZipFile;
 
 import org.joml.Vector3f;
+import org.liquidengine.legui.component.Button;
+import org.liquidengine.legui.component.Dialog;
+import org.liquidengine.legui.component.Label;
+import org.liquidengine.legui.component.SelectBox;
+import org.liquidengine.legui.event.MouseClickEvent;
+import org.liquidengine.legui.listener.MouseClickEventListener;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -21,13 +28,20 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.reflect.TypeToken;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.attributes.UpdateHandler;
+import net.fexcraft.app.fmt.attributes.UpdateType;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Model;
+import net.fexcraft.app.fmt.polygon.ModelFormat;
+import net.fexcraft.app.fmt.polygon.ModelOrientation;
 import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.texture.TextureManager;
+import net.fexcraft.app.fmt.ui.FileChooser;
+import net.fexcraft.app.fmt.ui.GenericDialog;
 import net.fexcraft.app.fmt.ui.Toolbar;
+import net.fexcraft.app.fmt.ui.fieds.TextField;
 import net.fexcraft.lib.common.json.JsonUtil;
 
 public class SaveHandler {
@@ -100,6 +114,8 @@ public class SaveHandler {
 		model.texSizeY = Jsoniser.get(obj, "texture_size_y", 256);
 		model.opacity = Jsoniser.get(obj, "opacity", 1f);
 		model.scale = new Vector3f(Jsoniser.get(obj, "scale", 1f));
+		model.orient = ModelOrientation.fromString(Jsoniser.get(obj, "orientation", null));
+		model.format = ModelFormat.fromString(Jsoniser.get(obj, "target_format", null));
 		if(obj.has("creators")){
 			obj.get("creators").getAsJsonArray().forEach(elm -> {
 				String auth = elm.getAsString();
@@ -261,6 +277,101 @@ public class SaveHandler {
 		}
 		model.recompile();
 		return model;
+	}
+
+	public static void save(Model model, File file){
+		// TODO Auto-generated method stub
+		
+	}
+
+	public static void openDialog(){
+		Runnable run = () -> {
+			FileChooser.chooseFile(Translator.translate("saveload.open"), "./saves", FileChooser.TYPE_FMTB, false, task -> {
+				UpdateHandler.update(UpdateType.MODEL_UNLOAD, FMT.MODEL);
+				FMT.MODEL = new Model(task, null);
+				FMT.MODEL.load();
+			});
+		};
+		if(FMT.MODEL.groups().isEmpty()){
+			run.run();
+			return;
+		}
+		shouldSaveDialog(run);
+	}
+
+	private static void shouldSaveDialog(Runnable run){
+		GenericDialog.showYN("saveload.title", () -> saveDialogByState(run), () -> run.run(), "saveload.should_save");
+	}
+
+	public static void saveDialogByState(Runnable run){
+		if(FMT.MODEL.file == null) saveAsDialog(run);
+		else saveDialog(null, run);
+	}
+
+	public static void saveDialog(File file, Runnable run){
+		GenericDialog.showCC("saveload.title", () -> {
+			save(FMT.MODEL, file);
+			if(run != null) run.run();
+		}, null, "saveload.confirm_save", "#" + file);
+	}
+
+	public static void saveAsDialog(Runnable run){
+		FileChooser.chooseFile(Translator.translate("saveload.save"), "./saves", FileChooser.TYPE_FMTB, true, task -> saveDialog(task, run));
+	}
+	
+	public static void newDialog(){
+		Runnable run = () -> {
+			float width = 400;
+	        Dialog dialog = new Dialog(Translator.translate("saveload.new"), width, 230);
+	        Settings.applyComponentTheme(dialog.getContainer());
+	        dialog.setResizable(true);
+        	Label label0 = new Label(Translator.translate("saveload.new.name"), 10, 10, width - 20, 20);
+        	dialog.getContainer().add(label0);
+        	TextField field = new TextField("Unnamed Model", 10, 35, width - 20, 20);
+        	dialog.getContainer().add(field);
+        	Label label1 = new Label(Translator.translate("saveload.new.orientation"), 10, 65, width - 20, 20);
+        	dialog.getContainer().add(label1);
+        	SelectBox<String> box0 = new SelectBox<>(10, 90, width - 20, 20);
+        	for(ModelOrientation orient : ModelOrientation.values()){
+        		box0.addElement(orient.name());
+        	}
+        	box0.setSelected(0, true);
+        	dialog.getContainer().add(box0);
+        	Label label2 = new Label(Translator.translate("saveload.new.target_format"), 10, 120, width - 20, 20);
+        	dialog.getContainer().add(label2);
+        	SelectBox<String> box1 = new SelectBox<>(10, 145, width - 20, 20);
+        	for(ModelFormat format : ModelFormat.values()){
+        		box1.addElement(format.name);
+        	}
+        	box1.setSelected(0, true);
+        	dialog.getContainer().add(box1);
+        	//
+            Button button0 = new Button(Translator.translate("dialog.button.confirm"), 10, 180, 100, 20);
+            button0.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
+            	if(CLICK == e.getAction()){
+        			UpdateHandler.update(UpdateType.MODEL_UNLOAD, FMT.MODEL);
+        			FMT.MODEL = new Model(null, field.getTextState().getText());
+        			FMT.MODEL.orient = ModelOrientation.valueOf(box0.getSelection());
+        			FMT.MODEL.format = ModelFormat.fromName(box1.getSelection());
+        			DiscordUtil.update(Settings.DISCORD_RESET_ON_NEW.value);
+        			UpdateHandler.update(UpdateType.MODEL_LOAD, FMT.MODEL);
+            		dialog.close();
+            	}
+            });
+            dialog.getContainer().add(button0);
+            //
+            Button button1 = new Button(Translator.translate("dialog.button.cancel"), 120, 180, 100, 20);
+            button1.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
+            	if(CLICK == e.getAction()) dialog.close();
+            });
+            dialog.getContainer().add(button1);
+            //
+	        dialog.show(FMT.FRAME);
+		};
+		if(!FMT.MODEL.groups().isEmpty()){
+			shouldSaveDialog(run);
+		}
+		else run.run();
 	}
 
 }

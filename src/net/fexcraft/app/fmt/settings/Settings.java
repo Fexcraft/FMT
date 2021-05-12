@@ -27,7 +27,6 @@ import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.ui.Editor;
-import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.ui.components.BoxComponent;
 import net.fexcraft.app.fmt.ui.components.CylinderComponentFull;
 import net.fexcraft.app.fmt.ui.components.PolygonGeneral;
@@ -217,7 +216,7 @@ public class Settings {
 		com.getStyle().getBackground().setColor(col, col, col, 1);
 	}
 
-	public static void applyComponentTheme(EditorComponent com){
+	public static void applyComponentTheme(Component com){
 		com.getStyle().setBorderRadius(0);
 		com.getStyle().setBorder(null);
 		float col = DARKTHEME.value ? 0.1875f : 0.8125f;

@@ -12,6 +12,7 @@ import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.ToolbarMenu.MenuButton;
 import net.fexcraft.app.fmt.ui.components.QuickAdd;
 import net.fexcraft.app.fmt.utils.Logging;
+import net.fexcraft.app.fmt.utils.SaveHandler;
 
 public class Toolbar extends Panel {
 	
@@ -26,12 +27,12 @@ public class Toolbar extends Panel {
 		this.add(new Icon(0, "./resources/textures/icons/toolbar/info.png", () -> Logging.log("test")));
 		this.add(new Icon(1, "./resources/textures/icons/toolbar/settings.png", NOTHING));
 		this.add(new Icon(2, "./resources/textures/icons/toolbar/profile.png", NOTHING));
-		this.add(new Icon(3, "./resources/textures/icons/toolbar/save.png", NOTHING));
-		this.add(new Icon(4, "./resources/textures/icons/toolbar/open.png", NOTHING));
-		this.add(new Icon(5, "./resources/textures/icons/toolbar/new.png", NOTHING));
+		this.add(new Icon(3, "./resources/textures/icons/toolbar/save.png", () -> SaveHandler.save(FMT.MODEL, null)));
+		this.add(new Icon(4, "./resources/textures/icons/toolbar/open.png", () -> SaveHandler.openDialog()));
+		this.add(new Icon(5, "./resources/textures/icons/toolbar/new.png", () -> SaveHandler.newDialog()));
 		this.add(new ToolbarMenu(0, "file",
-			new MenuButton(0, "file.new"),
-			new MenuButton(1, "file.open"),
+			new MenuButton(0, "file.new", () -> SaveHandler.newDialog()),
+			new MenuButton(1, "file.open", () -> SaveHandler.openDialog()),
 			new ToolbarMenu(-2, "file.recent",
 				new MenuButton(0, "file.recent.none"),
 				new MenuButton(1, "file.recent.none"),
@@ -46,8 +47,8 @@ public class Toolbar extends Panel {
 			).setLayerPreShow(layer -> {
 				//TODO
 			}),
-			new MenuButton(3, "file.save"),
-			new MenuButton(4, "file.save_as"),
+			new MenuButton(3, "file.save", () -> SaveHandler.saveDialogByState(null)),
+			new MenuButton(4, "file.save_as", () -> SaveHandler.saveAsDialog(null)),
 			new MenuButton(5, "file.import"),
 			new MenuButton(6, "file.export"),
 			new MenuButton(7, "file.settings"),
