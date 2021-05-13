@@ -75,12 +75,19 @@ public class Settings {
 	public static String THEME = "theme";
 	//
 	public static Map<String, Map<String, Setting<?>>> SETTINGS = new LinkedHashMap<>();
+	//
+	public static String update_found;
+	public static int update_choice;
+	public static long update_checked;
 	
 	public static void load(){
 		var file = new File("./settings.json");
 		var obj = file.exists() ? Jsoniser.parseObj(file, true) : new JsonObject();
 		if(obj == null) obj = new JsonObject();
 		if(obj.has("format") && obj.get("format").getAsInt() != FORMAT) obj = new JsonObject();
+		update_found = Jsoniser.get(obj, "update_found", FMT.VERSION);
+		update_choice = Jsoniser.get(obj, "update_choice", 0);
+		update_checked = Jsoniser.get(obj, "update_checked", 0);
 		//
 		VSYNC = new Setting<>("vsync", true, GRAPHIC, obj);
 		HVSYNC = new Setting<>("vsync/2", false, GRAPHIC, obj);
@@ -158,6 +165,9 @@ public class Settings {
 		//
 		obj.addProperty("last_fmt_version", FMT.VERSION);
 		obj.addProperty("last_fmt_exit", Time.getAsString(Time.getDate()));
+		obj.addProperty("update_found", update_found);
+		obj.addProperty("update_choice", update_choice);
+		obj.addProperty("update_checked", update_checked);
 		Jsoniser.print(new File("./settings.json"), obj);
 	}
 
