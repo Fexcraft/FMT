@@ -50,9 +50,17 @@ import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.ui.Toolbar;
 import net.fexcraft.app.fmt.ui.ToolbarMenu;
 import net.fexcraft.app.fmt.ui.fieds.Field;
-import net.fexcraft.app.fmt.utils.*;
+import net.fexcraft.app.fmt.utils.Axis3DL;
+import net.fexcraft.app.fmt.utils.DiscordUtil;
+import net.fexcraft.app.fmt.utils.GGR;
+import net.fexcraft.app.fmt.utils.KeyCompound;
+import net.fexcraft.app.fmt.utils.MRTRenderer;
 import net.fexcraft.app.fmt.utils.MRTRenderer.DrawMode;
 import net.fexcraft.app.fmt.utils.MRTRenderer.GlCache;
+import net.fexcraft.app.fmt.utils.Picker;
+import net.fexcraft.app.fmt.utils.ShaderManager;
+import net.fexcraft.app.fmt.utils.Timer;
+import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.AxisRotator;
 import net.fexcraft.lib.common.math.RGB;
@@ -92,7 +100,7 @@ public class FMT {
 	
 	public static void main(String... args) throws Exception {
 		log("==================================================");
-		log("Starting FMT" + VERSION + "!");
+		log("Starting FMT " + VERSION + "!");
         System.setProperty("joml.nounsafe", Boolean.TRUE.toString());
         if(System.getProperty("os.name").toLowerCase().contains("mac")){
         	System.setProperty("java.awt.headless", Boolean.TRUE.toString());
@@ -103,8 +111,8 @@ public class FMT {
 		Configuration.SHARED_LIBRARY_EXTRACT_PATH.set("./lib/natives");
 	    //
 		Settings.load();
-		Updater.check();
 		Settings.apply(INSTANCE);
+		Settings.checkForUpdates();
 		//Binding binding = new Binding();
 		//GroovyScriptEngine engine = new GroovyScriptEngine("./scripts/");
 		//engine.run("test.script", binding);
@@ -236,6 +244,7 @@ public class FMT {
 				}
 			})).start();
 		}
+		Settings.showWelcome();
 		//
 		vsync();
 		ShaderManager.loadPrograms();
