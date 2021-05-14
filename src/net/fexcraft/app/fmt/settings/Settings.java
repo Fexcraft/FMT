@@ -350,7 +350,7 @@ public class Settings {
 			if(!SHOW_UPDATE.value && update) update = false;
 		}
 		float width = 300;
-		Dialog dialog = new Dialog(translate("welcome.title"), width, update ? 140 : 80);
+		Dialog dialog = new Dialog(translate("welcome.title"), width, update ? 140 : 110);
 		if(update){
 			dialog.getContainer().add(new Label(translate("welcome.update.available"), 10, 10, width - 20, 20));
 			dialog.getContainer().add(new Label(format("welcome.update.version", FMT.VERSION, UPDATE_FOUND), 10, 35, width - 20, 20));
@@ -364,7 +364,7 @@ public class Settings {
             	}
             });
 			dialog.getContainer().add(button0);
-			Button button1 = new Button(translate("dialog.button.skip"), 100, 90, 80, 20);
+			Button button1 = new Button(translate("welcome.update.skip"), 100, 90, 100, 20);
             button1.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
             	if(CLICK == e.getAction()){
             		UPDATE_SKIPPED = UPDATE_FOUND;
@@ -373,7 +373,7 @@ public class Settings {
             	}
             });
 			dialog.getContainer().add(button1);
-			Button button2 = new Button(translate("dialog.button.cancel"), 190, 90, 80, 20);
+			Button button2 = new Button(translate("dialog.button.close"), 210, 90, 80, 20);
             button2.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
             	if(CLICK == e.getAction()) dialog.close();
             });
@@ -382,6 +382,11 @@ public class Settings {
 		else if(welcome){
 			dialog.getContainer().add(new Label(translate("welcome.normal.greeting_" + "guest"), 10, 10, width - 20, 20));//TODO session handler
 			dialog.getContainer().add(new Label(format("welcome.normal.version", FMT.VERSION), 10, 35, width - 20, 20));
+			Button button = new Button(translate("dialog.button.close"), width - 90, 60, 80, 20);
+            button.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
+            	if(CLICK == e.getAction()) dialog.close();
+            });
+			dialog.getContainer().add(button);
 		}
 		applyComponentTheme(dialog.getContainer());
 		dialog.show(FMT.FRAME);
