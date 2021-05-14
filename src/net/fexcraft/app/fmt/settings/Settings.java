@@ -1,6 +1,9 @@
 package net.fexcraft.app.fmt.settings;
 
 import static net.fexcraft.app.fmt.FMT.rgba;
+import static net.fexcraft.app.fmt.utils.Translator.format;
+import static net.fexcraft.app.fmt.utils.Translator.translate;
+import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 import static org.lwjgl.glfw.GLFW.GLFW_DONT_CARE;
 import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
 import static org.lwjgl.glfw.GLFW.glfwGetVideoMode;
@@ -12,8 +15,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.joml.Vector4f;
+import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.component.Component;
+import org.liquidengine.legui.component.Dialog;
+import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.ScrollablePanel;
+import org.liquidengine.legui.event.MouseClickEvent;
+import org.liquidengine.legui.listener.MouseClickEventListener;
 import org.liquidengine.legui.style.Style;
 import org.liquidengine.legui.style.color.ColorConstants;
 import org.liquidengine.legui.style.font.FontRegistry;
@@ -56,6 +64,7 @@ public class Settings {
 	public static Setting<Float> MOUSE_SENSIVITY, MOVE_SPEED;
 	public static Setting<String> LANGUAGE, POLYGON_SUFFIX, GROUP_SUFFIX;
 	public static Setting<Boolean> ASK_POLYGON_REMOVAL, ASK_GROUP_REMOVAL, OPEN_FOLDER_AFTER_SAVE;
+	public static Setting<Boolean> SHOW_WELCOME, SHOW_UPDATE;
 	//
 	public static Setting<String> SEL_THEME;
 	public static Setting<Boolean> DARKTHEME;
@@ -116,6 +125,8 @@ public class Settings {
 		ASK_GROUP_REMOVAL = new Setting<>("ask_group_removal", true, GENERAL, obj);
 		ASK_POLYGON_REMOVAL = new Setting<>("ask_polygon_removal", false, GENERAL, obj);
 		OPEN_FOLDER_AFTER_SAVE = new Setting<>("open_folder_after_save", true, GENERAL, obj);
+		SHOW_WELCOME = new Setting<>("show_welcome", true, GENERAL, obj);
+		SHOW_UPDATE = new Setting<>("show_update", true, GENERAL, obj);
 		//
 		SEL_THEME = new StringArraySetting("selected_theme", "light", THEME, obj, "light", "dark", "custom");
 		DARKTHEME = new Setting<>("is_dark", false, THEME, obj);
@@ -315,7 +326,12 @@ public class Settings {
 			UPDATE_FOUND = obj.get("latest_version").getAsString();
 			Logging.log("Received remote version: " + UPDATE_FOUND);
 	        //
-			if(!UPDATE_FOUND.equals(FMT.VERSION) && remoteVersionIsNewer()) FOUND_UPDATE = true;
+			if(!UPDATE_FOUND.equals(FMT.VERSION) && remoteVersionIsNewer()){
+				Logging.log(">> Remote version is newer than installed version.");
+				FOUND_UPDATE = true;
+			}
+			if(!UPDATE_FOUND.equals(UPDATE_SKIPPED)) UPDATE_SKIPPED = "";
+			showWelcome(true);
 		});
 		thread.setName("UPCK");
 		thread.start();
@@ -327,8 +343,48 @@ public class Settings {
 		return remote > local;
 	}
 
-	public static void showWelcome(){
-		//TODO
+	public static void showWelcome(boolean welcome){
+		boolean update = FOUND_UPDATE && !UPDATE_FOUND.equals(UPDATE_SKIPPED);
+		if(welcome){
+			if(!SHOW_WELCOME.value && (!update || !SHOW_UPDATE.value)) return;
+			if(!SHOW_UPDATE.value && update) update = false;
+		}
+		float width = 300;
+		Dialog dialog = new Dialog(translate("welcome.title"), width, update ? 140 : 80);
+		if(update){
+			dialog.getContainer().add(new Label(translate("welcome.update.available"), 10, 10, width - 20, 20));
+			dialog.getContainer().add(new Label(format("welcome.update.version", FMT.VERSION, UPDATE_FOUND), 10, 35, width - 20, 20));
+			dialog.getContainer().add(new Label(translate("welcome.update.select"), 10, 60, width - 20, 20));
+			Button button0 = new Button(translate("dialog.button.yes"), 10, 90, 80, 20);
+            button0.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
+            	if(CLICK == e.getAction()){
+            		UPDATE_QUEUED = true;
+            		dialog.close();
+            		FMT.close();
+            	}
+            });
+			dialog.getContainer().add(button0);
+			Button button1 = new Button(translate("dialog.button.skip"), 100, 90, 80, 20);
+            button1.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
+            	if(CLICK == e.getAction()){
+            		UPDATE_SKIPPED = UPDATE_FOUND;
+            		dialog.close();
+            		save();
+            	}
+            });
+			dialog.getContainer().add(button1);
+			Button button2 = new Button(translate("dialog.button.cancel"), 190, 90, 80, 20);
+            button2.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
+            	if(CLICK == e.getAction()) dialog.close();
+            });
+			dialog.getContainer().add(button2);
+		}
+		else if(welcome){
+			dialog.getContainer().add(new Label(translate("welcome.normal.greeting_" + "guest"), 10, 10, width - 20, 20));//TODO session handler
+			dialog.getContainer().add(new Label(format("welcome.normal.version", FMT.VERSION), 10, 35, width - 20, 20));
+		}
+		applyComponentTheme(dialog.getContainer());
+		dialog.show(FMT.FRAME);
 	}
 
 }

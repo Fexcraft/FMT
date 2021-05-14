@@ -120,6 +120,7 @@ dialog.button.select=Select
 dialog.button.open=Open
 dialog.button.save=Save
 dialog.button.load=Load
+dialog.button.skip=Skip
 dialog.button.yes=Yes
 dialog.button.no=No
 dialog.button.ok=Ok
@@ -142,6 +143,15 @@ saveload.new=New Model Creator
 saveload.new.name=Model Name
 saveload.new.orientation=Orientation
 saveload.new.target_format=Target Format
+
+# Welcome Dialog
+welcome.title=Welcome to FMT!
+welcome.update.available=An update is available!
+welcome.update.version=Local: %s  || Remote: %s
+welcome.update.select=Do you wish to update?
+welcome.normal.greeting_logged=Welcome back %s!
+welcome.normal.greeting_guest=Have a nice time using FMT!
+welcome.normal.version=Running FMT v. %s
 
 # Other
 filechooser.title=FMT Internal File Chooser/Selector

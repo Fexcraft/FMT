@@ -63,6 +63,11 @@ public class Translator {
 		if(SELECTED.containsKey(string)) return SELECTED.get(string);
 		return DEFAULT.containsKey(string) ? DEFAULT.get(string) : string;
 	}
+	
+	public static String format(String str, Object... args){
+		String string = translate(str);
+		return String.format(string, args);
+	}
 
 	public static Translations translate(String... strs){
 		String[] res = new String[strs.length];

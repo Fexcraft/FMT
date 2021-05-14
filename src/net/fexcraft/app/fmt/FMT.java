@@ -112,7 +112,6 @@ public class FMT {
 	    //
 		Settings.load();
 		Settings.apply(INSTANCE);
-		Settings.checkForUpdates();
 		//Binding binding = new Binding();
 		//GroovyScriptEngine engine = new GroovyScriptEngine("./scripts/");
 		//engine.run("test.script", binding);
@@ -213,6 +212,7 @@ public class FMT {
 		FMT.updateTitle();
 		//TODO load previous model
 		//TODO session, updates, keybinds
+		Settings.checkForUpdates();
 		KeyCompound.init();
 		//TODO timers
 		if(Settings.DISCORD_RPC.value){
@@ -232,7 +232,7 @@ public class FMT {
 					DiscordRPC.discordShutdown();
 				}
 			});
-			(DiscordUtil.DISCORD_THREAD = new Thread(() -> {
+			DiscordUtil.DISCORD_THREAD = new Thread(() -> {
 				while(!CLOSE){
 					DiscordRPC.discordRunCallbacks();
 					try{
@@ -242,9 +242,10 @@ public class FMT {
 						e.printStackTrace();
 					}
 				}
-			})).start();
+			});
+			DiscordUtil.DISCORD_THREAD.setName("DRPC");
+			DiscordUtil.DISCORD_THREAD.start();
 		}
-		Settings.showWelcome();
 		//
 		vsync();
 		ShaderManager.loadPrograms();
