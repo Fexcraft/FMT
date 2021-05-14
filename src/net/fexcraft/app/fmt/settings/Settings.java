@@ -22,6 +22,7 @@ import org.liquidengine.legui.theme.colored.FlatColoredTheme;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryUtil;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -34,9 +35,11 @@ import net.fexcraft.app.fmt.ui.components.QuickAdd;
 import net.fexcraft.app.fmt.ui.components.ShapeboxComponent;
 import net.fexcraft.app.fmt.ui.trees.PolygonTree;
 import net.fexcraft.app.fmt.utils.Jsoniser;
+import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.TexturedPolygon;
 import net.fexcraft.lib.common.math.Time;
+import net.fexcraft.lib.common.utils.HttpUtil;
 
 public class Settings {
 	
@@ -44,6 +47,8 @@ public class Settings {
 	public static final float FONT_SIZE = 20f;
 	public static final String FONT = FontRegistry.ROBOTO_BOLD;
 	public static final String FONT_PATH = "org/liquidengine/legui/style/font/Roboto-Bold.ttf";
+	public static String UPDATE_FOUND, UPDATE_SKIPPED = "";
+	public static boolean FOUND_UPDATE, UPDATE_QUEUED, UPDATECHECK_FAILED;
 	public static Setting<Integer> WINDOW_WIDTH, WINDOW_HEIGHT, ROUNDING_DIGITS;
 	public static Setting<Boolean> DISCORD_RPC, DISCORD_HIDE, DISCORD_RESET_ON_NEW, FULLSCREEN;
 	public static Setting<Boolean> VSYNC, HVSYNC, TRIANGULATION_Q, TRIANGULATION_L, INTERNAL_CHOOSER;
@@ -75,19 +80,14 @@ public class Settings {
 	public static String THEME = "theme";
 	//
 	public static Map<String, Map<String, Setting<?>>> SETTINGS = new LinkedHashMap<>();
-	//
-	public static String update_found;
-	public static int update_choice;
-	public static long update_checked;
 	
 	public static void load(){
 		var file = new File("./settings.json");
 		var obj = file.exists() ? Jsoniser.parseObj(file, true) : new JsonObject();
 		if(obj == null) obj = new JsonObject();
 		if(obj.has("format") && obj.get("format").getAsInt() != FORMAT) obj = new JsonObject();
-		update_found = Jsoniser.get(obj, "update_found", FMT.VERSION);
-		update_choice = Jsoniser.get(obj, "update_choice", 0);
-		update_checked = Jsoniser.get(obj, "update_checked", 0);
+		UPDATE_FOUND = Jsoniser.get(obj, "update_found", FMT.VERSION);
+		UPDATE_SKIPPED = Jsoniser.get(obj, "update_skipped", UPDATE_SKIPPED);
 		//
 		VSYNC = new Setting<>("vsync", true, GRAPHIC, obj);
 		HVSYNC = new Setting<>("vsync/2", false, GRAPHIC, obj);
@@ -165,9 +165,9 @@ public class Settings {
 		//
 		obj.addProperty("last_fmt_version", FMT.VERSION);
 		obj.addProperty("last_fmt_exit", Time.getAsString(Time.getDate()));
-		obj.addProperty("update_found", update_found);
-		obj.addProperty("update_choice", update_choice);
-		obj.addProperty("update_checked", update_checked);
+		obj.addProperty("update_found", UPDATE_FOUND);
+		obj.addProperty("update_queued", UPDATE_QUEUED);
+		obj.addProperty("update_skipped", UPDATE_SKIPPED);
 		Jsoniser.print(new File("./settings.json"), obj);
 	}
 
@@ -292,6 +292,43 @@ public class Settings {
 		int height = bool ? mode.height() : Settings.WINDOW_HEIGHT.value;
 		int x = bool ? 0 : 100, y = bool ? 0 : 100;
 		glfwSetWindowMonitor(FMT.INSTANCE.window, bool ? moni : MemoryUtil.NULL, x, y, width, height, GLFW_DONT_CARE);
+	}
+
+	public static void checkForUpdates(){
+		Thread thread = new Thread(() -> {
+			JsonObject obj = HttpUtil.request("http://fexcraft.net/minecraft/fcl/request", "mode=requestdata&modid=fmt");
+			if(obj == null || !obj.has("latest_version")){
+				Logging.log("Couldn't fetch latest version.");
+				Logging.log(obj == null ? ">> no version response received" : obj.toString());
+				UPDATECHECK_FAILED = true;
+				return;
+			}
+			if(obj.has("blocked_versions")){
+				JsonArray array = obj.get("blocked_versions").getAsJsonArray();
+				for(JsonElement elm : array){
+					if(elm.isJsonPrimitive() && elm.getAsString().equals(FMT.VERSION)){
+						Logging.log("Blocked version detected, causing panic.");
+						System.exit(2); System.exit(2); System.exit(2); System.exit(2);
+					}
+				}
+			}
+			UPDATE_FOUND = obj.get("latest_version").getAsString();
+			Logging.log("Received remote version: " + UPDATE_FOUND);
+	        //
+			if(!UPDATE_FOUND.equals(FMT.VERSION) && remoteVersionIsNewer()) FOUND_UPDATE = true;
+		});
+		thread.setName("UPCK");
+		thread.start();
+	}
+
+	private static boolean remoteVersionIsNewer(){
+		Long remote = Long.parseLong(UPDATE_FOUND.replaceAll("[^0-9]", ""));
+		Long local = Long.parseLong(FMT.VERSION.replaceAll("[^0-9]", ""));
+		return remote > local;
+	}
+
+	public static void showWelcome(){
+		//TODO
 	}
 
 }
