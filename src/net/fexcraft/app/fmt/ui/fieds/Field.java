@@ -106,7 +106,8 @@ public interface Field {
 		};
 		holder.add(UpdateType.POLYGON_SELECTED, consumer);
 		holder.add(UpdateType.GROUP_SELECTED, consumer);
-		if(field instanceof NumberField input){
+		if(field instanceof NumberField){
+			NumberField input = (NumberField)field;
 			input.addTextInputContentChangeEventListener(event -> {
 				Field.validateNumber(event);
 				input.value = null;
@@ -122,7 +123,8 @@ public interface Field {
 				}
 			});
 		}
-		else if(field instanceof BoolButton button){
+		else if(field instanceof BoolButton){
+			BoolButton button = (BoolButton)field;
 			button.getListenerMap().addListener(MouseClickEvent.class, lis -> {
 				if(lis.getAction() == MouseClickAction.CLICK && lis.getButton() == MouseButton.MOUSE_BUTTON_LEFT){
 					button.toggle();

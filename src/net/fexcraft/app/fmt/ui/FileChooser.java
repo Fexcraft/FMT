@@ -156,6 +156,16 @@ public class FileChooser {
 		dialog.show(FMT.FRAME);
 	}
 
-	public static record FileType(String name, String... extensions){}
+	public static class FileType {
+		
+		private String name;
+		private String[] extensions;
+		
+		public FileType(String name, String... extensions){
+			this.name = name;
+			this.extensions = extensions;
+		}
+		
+	}
 
 }

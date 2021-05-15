@@ -14,11 +14,20 @@ public enum PolyVal {
 	/* */
 	;
 	
-	public static record PolygonValue(PolyVal val, ValAxe axe){
+	public static class PolygonValue {
+		
+		private PolyVal val;
+		private ValAxe axe;
+		
+		public PolygonValue(PolyVal val, ValAxe axe){
+			this.val = val;
+			this.axe = axe;
+		}
 		
 		@Override
 		public boolean equals(Object other){
-			if(other instanceof PolygonValue value){
+			if(other instanceof PolygonValue){
+				PolygonValue value = (PolygonValue)other;
 				return value.val == val && value.axe == axe;
 			}
 			return false;
@@ -27,6 +36,14 @@ public enum PolyVal {
 		@Override
 		public String toString(){
 			return (val().name() + "_" + axe().name()).toLowerCase();
+		}
+		
+		public PolyVal val(){
+			return val;
+		}
+		
+		public ValAxe axe(){
+			return axe;
 		}
 		
 	}
