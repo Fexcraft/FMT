@@ -1,12 +1,18 @@
 package net.fexcraft.app.fmt.utils;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.ui.GenericDialog;
 import net.fexcraft.lib.common.utils.HttpUtil;
 
 /**
@@ -17,9 +23,10 @@ import net.fexcraft.lib.common.utils.HttpUtil;
 public class Catalog {
 	
 	private static ArrayList<Resource> files = new ArrayList<>();
-	private static ArrayList<File> mismatches = new ArrayList<>();
+	private static ArrayList<Resource> mismatches = new ArrayList<>();
 	private static final File CATALOG_FILE = new File("./catalog.fmt");
 	private static String REMOTE_ROOT = "http://fexcraft.net/files/app_data/fmt/";
+	private static boolean DIALOG;
 
 	public static void fetch(){
 		Logging.log("Fetching catalog...");
@@ -38,7 +45,6 @@ public class Catalog {
 		}
 		REMOTE_ROOT = Jsoniser.get(obj, "file_root", REMOTE_ROOT);
 		obj.get("files").getAsJsonArray().forEach(elm -> files.add(new Resource(elm)));
-		Logging.log(obj);
 		return true;
 	}
 	
@@ -47,13 +53,15 @@ public class Catalog {
 		mismatches.clear();
 	}
 
-	public static void check(){
+	public static boolean check(){
 		for(Resource res : files){
-			if(!res.file.exists() || (res.file.lastModified() != res.date && res.override) || res.remove) mismatches.add(res.file);
+			if(!res.file.exists() || (res.file.lastModified() != res.date && res.override) || res.remove) mismatches.add(res);
 		}
 		if(mismatches.size() > 0){
 			Logging.log("Found " + mismatches.size() + " missing or outdated files.");
+			return true;
 		}
+		return false;
 	}
 	
 	public static class Resource {
@@ -61,24 +69,28 @@ public class Catalog {
 		public String id;
 		private File file;
 		private long date;
-		private boolean override, remove;
+		private boolean override = true, remove;
 		
 		public Resource(JsonElement elm){
 			if(elm.isJsonArray()){
 				JsonArray array = elm.getAsJsonArray();
-				file = new File(id = array.get(0).getAsString());
+				id = array.get(0).getAsString();
 				if(array.size() > 1) date = array.get(1).getAsLong();
 				if(array.size() > 2) override = array.get(2).getAsBoolean();
 				if(array.size() > 3) remove = array.get(3).getAsBoolean();
 			}
 			else{
 				JsonObject obj = elm.getAsJsonObject();
-				file = new File(id = Jsoniser.get(obj, "file", null));
+				id = Jsoniser.get(obj, "file", null);
 				date = Jsoniser.get(obj, "date", 0);
-				override = Jsoniser.get(obj, "override", true);
-				remove = Jsoniser.get(obj, "remove", false);
+				override = Jsoniser.get(obj, "override", override);
+				remove = Jsoniser.get(obj, "remove", remove);
 			}
-			id = file.toString();
+			file = new File(!id.startsWith("./") ? "./" + id : id);
+		}
+
+		public URL getURL() throws MalformedURLException {
+			return new URL(REMOTE_ROOT + id);
 		}
 		
 	}
@@ -86,16 +98,41 @@ public class Catalog {
 	public static void process(boolean fresh){
 		if(fresh) fetch();
 		if(!load()) return;
-		check();
-		update();
+		if(check() && update(fresh)){
+			if(fresh) GenericDialog.show("update.title", "dialog.button.exit", null, () -> FMT.close(), null, "update.remote_catalog_update");
+			else DIALOG = true;
+		}
 		clear();
 	}
 
-	private static void update(){
-		mismatches.forEach(file -> {
-			if(file.exists()) file.delete();
-		});
-		//TODO
+	private static boolean update(boolean fresh){
+		boolean bool = false;
+		int files = 0;
+		for(Resource res : mismatches){
+			if(res.file.exists() && res.file.delete()){
+				bool = true;
+				files++;
+			}
+		}
+		if(bool) Logging.log("Removed outdated files. (" + files + " total)");
+		files = 0;
+		for(Resource res : mismatches){
+	        try{
+	            Files.copy(res.getURL().openStream(), Paths.get(res.file.toURI()));
+	            files++;
+	        }
+	        catch(Exception e){
+	        	if(fresh) Logging.log(e);
+	        }
+		}
+		Logging.log("Downloaded latest files. (" + files + " total)");
+		return bool;
+	}
+
+	public static void show(){
+		if(!DIALOG) return;
+		GenericDialog.show("update.title", "dialog.button.exit", "dialog.button.ok", () -> FMT.close(), null, "update.local_catalog_update0", "update.local_catalog_update1");
+		DIALOG = false;
 	}
 
 }

@@ -18,7 +18,6 @@ import net.fexcraft.app.fmt.utils.Translator;
  *
  */
 public class GenericDialog {
-	
 
 	public static final Dialog show(String title, String text0, String text1, DialogTask but0, DialogTask but1, String... text){
 		return show(null, title, text0, text1, but0, but1, text);

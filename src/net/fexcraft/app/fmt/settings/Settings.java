@@ -374,12 +374,16 @@ public class Settings {
             		UPDATE_SKIPPED = UPDATE_FOUND;
             		dialog.close();
             		save();
+            		Catalog.show();
             	}
             });
 			dialog.getContainer().add(button1);
 			Button button2 = new Button(translate("dialog.button.close"), 210, 90, 80, 20);
             button2.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
-            	if(CLICK == e.getAction()) dialog.close();
+            	if(CLICK == e.getAction()){
+            		dialog.close();
+            		Catalog.show();
+            	}
             });
 			dialog.getContainer().add(button2);
 		}
@@ -388,7 +392,10 @@ public class Settings {
 			dialog.getContainer().add(new Label(format("welcome.normal.version", FMT.VERSION), 10, 35, width - 20, 20));
 			Button button = new Button(translate("dialog.button.close"), width - 90, 60, 80, 20);
             button.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
-            	if(CLICK == e.getAction()) dialog.close();
+            	if(CLICK == e.getAction()){
+            		dialog.close();
+            		Catalog.show();
+            	}
             });
 			dialog.getContainer().add(button);
 		}
