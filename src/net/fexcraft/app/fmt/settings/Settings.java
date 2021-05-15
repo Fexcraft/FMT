@@ -313,9 +313,8 @@ public class Settings {
 				Logging.log("Couldn't fetch latest version.");
 				Logging.log(obj == null ? ">> no version response received" : obj.toString());
 				UPDATECHECK_FAILED = true;
-				return;
 			}
-			if(obj.has("blocked_versions")){
+			else if(obj.has("blocked_versions")){
 				JsonArray array = obj.get("blocked_versions").getAsJsonArray();
 				for(JsonElement elm : array){
 					if(elm.isJsonPrimitive() && elm.getAsString().equals(FMT.VERSION)){
@@ -324,14 +323,16 @@ public class Settings {
 					}
 				}
 			}
-			UPDATE_FOUND = obj.get("latest_version").getAsString();
-			Logging.log("Received remote version: " + UPDATE_FOUND);
-	        //
-			if(!UPDATE_FOUND.equals(FMT.VERSION) && remoteVersionIsNewer()){
-				Logging.log(">> Remote version is newer than installed version.");
-				FOUND_UPDATE = true;
+			else{
+				UPDATE_FOUND = obj.get("latest_version").getAsString();
+				Logging.log("Received remote version: " + UPDATE_FOUND);
+		        //
+				if(!UPDATE_FOUND.equals(FMT.VERSION) && remoteVersionIsNewer()){
+					Logging.log(">> Remote version is newer than installed version.");
+					FOUND_UPDATE = true;
+				}
+				if(!UPDATE_FOUND.equals(UPDATE_SKIPPED)) UPDATE_SKIPPED = "";
 			}
-			if(!UPDATE_FOUND.equals(UPDATE_SKIPPED)) UPDATE_SKIPPED = "";
 			showWelcome(true);
 		});
 		thread.setName("UPCK");

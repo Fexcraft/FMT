@@ -50,17 +50,9 @@ import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.ui.Toolbar;
 import net.fexcraft.app.fmt.ui.ToolbarMenu;
 import net.fexcraft.app.fmt.ui.fieds.Field;
-import net.fexcraft.app.fmt.utils.Axis3DL;
-import net.fexcraft.app.fmt.utils.DiscordUtil;
-import net.fexcraft.app.fmt.utils.GGR;
-import net.fexcraft.app.fmt.utils.KeyCompound;
-import net.fexcraft.app.fmt.utils.MRTRenderer;
+import net.fexcraft.app.fmt.utils.*;
 import net.fexcraft.app.fmt.utils.MRTRenderer.DrawMode;
 import net.fexcraft.app.fmt.utils.MRTRenderer.GlCache;
-import net.fexcraft.app.fmt.utils.Picker;
-import net.fexcraft.app.fmt.utils.ShaderManager;
-import net.fexcraft.app.fmt.utils.Timer;
-import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.AxisRotator;
 import net.fexcraft.lib.common.math.RGB;
@@ -111,6 +103,7 @@ public class FMT {
 		Configuration.SHARED_LIBRARY_EXTRACT_PATH.set("./lib/natives");
 	    //
 		Settings.load();
+		Catalog.process(false);
 		Settings.apply(INSTANCE);
 		//Binding binding = new Binding();
 		//GroovyScriptEngine engine = new GroovyScriptEngine("./scripts/");

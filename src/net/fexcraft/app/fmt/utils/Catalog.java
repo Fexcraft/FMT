@@ -7,7 +7,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import net.fexcraft.lib.common.json.JsonUtil;
 import net.fexcraft.lib.common.utils.HttpUtil;
 
 /**
@@ -20,19 +19,27 @@ public class Catalog {
 	private static ArrayList<Resource> files = new ArrayList<>();
 	private static ArrayList<File> mismatches = new ArrayList<>();
 	private static final File CATALOG_FILE = new File("./catalog.fmt");
+	private static String REMOTE_ROOT = "http://fexcraft.net/files/app_data/fmt/";
 
 	public static void fetch(){
 		Logging.log("Fetching catalog...");
-		JsonElement elm = HttpUtil.request("http://fexcraft.net/files/fmt/catalog.fmt");
+		JsonElement elm = HttpUtil.request("http://fexcraft.net/files/app_data/fmt/catalog.fmt");
 		if(!CATALOG_FILE.getParentFile().exists()) CATALOG_FILE.getParentFile().mkdirs();
 		if(elm == null || !elm.isJsonObject()) return;
-		JsonUtil.write(CATALOG_FILE, elm.getAsJsonObject());
+		Jsoniser.print(CATALOG_FILE, elm, false);
 	}
 	
-	public static void load(){
-		JsonObject obj = JsonUtil.get(CATALOG_FILE);
-		if(!obj.has("files")) return;
+	public static boolean load(){
+		Logging.log("Loading file catalog...");
+		JsonObject obj = Jsoniser.parseObj(CATALOG_FILE);
+		if(obj == null || !obj.has("files")){
+			Logging.log(">> Catalog is empty or missing.");
+			return false;
+		}
+		REMOTE_ROOT = Jsoniser.get(obj, "file_root", REMOTE_ROOT);
 		obj.get("files").getAsJsonArray().forEach(elm -> files.add(new Resource(elm)));
+		Logging.log(obj);
+		return true;
 	}
 	
 	public static void clear(){
@@ -43,6 +50,9 @@ public class Catalog {
 	public static void check(){
 		for(Resource res : files){
 			if(!res.file.exists() || (res.file.lastModified() != res.date && res.override) || res.remove) mismatches.add(res.file);
+		}
+		if(mismatches.size() > 0){
+			Logging.log("Found " + mismatches.size() + " missing or outdated files.");
 		}
 	}
 	
@@ -75,13 +85,16 @@ public class Catalog {
 
 	public static void process(boolean fresh){
 		if(fresh) fetch();
-		load();
+		if(!load()) return;
+		check();
 		update();
 		clear();
 	}
 
 	private static void update(){
-		mismatches.forEach(file -> file.delete());
+		mismatches.forEach(file -> {
+			if(file.exists()) file.delete();
+		});
 		//TODO
 	}
 
