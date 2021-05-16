@@ -164,5 +164,34 @@ task copyForUpload(){
 	}
 }
 
+def String[] res_types = [ "resources/", "scripts/" ]
+
+task compileCatalog(){
+	def String catalog_fmt = '{\n\t"file_root": "http://fexcraft.net/files/app_data/fmt/",\n\t"files": [\n'
+	def String path, restype;
+	sourceSets.main.resources.each {
+		path = it.getPath()
+		path = path.replace("\\", "/")
+		for(String type : res_types){
+			if(path.contains(type)){
+				restype = type;
+				break;
+			}
+		}
+		path = path.substring(path.indexOf(restype))
+		catalog_fmt += '\t\t[ "' + path + '", ' + it.lastModified() + '" ]' + (it == sourceSets.main.resources.last() ? '' : ',') + '\n'
+	}
+	configurations.compile.each {
+		path = it.getPath().replace("\\", "/")
+		path = "lib" + path.substring(path.lastIndexOf("/"))
+		catalog_fmt += '\t\t[ "' + path + '", ' + it.lastModified() + '", true ]' + (it == configurations.compile.last() ? '' : ',') + '\n'
+	}
+	catalog_fmt += '\t]\n'
+	catalog_fmt += '\t"last_catalog_update": "' + new SimpleDateFormat("HH:mm:ss dd.MMM.yyyy z").format(new Date()) + '",\n';
+	catalog_fmt += '}\n'
+	new File(projectDir, "catalog.fmt").text = catalog_fmt
+}
+
 build.finalizedBy(mainJar)
 build.finalizedBy(copyForUpload)
+//build.finalizedBy(compileCatalog)
