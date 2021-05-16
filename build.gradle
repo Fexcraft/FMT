@@ -183,12 +183,12 @@ task compileCatalog(){
 			}
 		}
 		path = path.substring(path.indexOf(restype))
-		catalog_fmt += '\t\t[ "' + path + '", ' + it.lastModified() + '" ]' + (it == sourceSets.main.resources.last() ? '' : ',') + '\n'
+		catalog_fmt += '\t\t[ "' + path + '", ' + it.lastModified() + ' ]' + (it == sourceSets.main.resources.last() ? '' : ',') + '\n'
 	}
 	configurations.compile.each {
 		path = it.getPath().replace("\\", "/")
 		path = "lib" + path.substring(path.lastIndexOf("/"))
-		catalog_fmt += '\t\t[ "' + path + '", ' + it.lastModified() + '", true ]' + (it == configurations.compile.last() ? '' : ',') + '\n'
+		catalog_fmt += '\t\t[ "' + path + '", ' + it.lastModified() + ', true ]' + (it == configurations.compile.last() ? '' : ',') + '\n'
 	}
 	catalog_fmt += '\t\t[ "FMT.jar", ' + new File(projectDir, "/upload/FMT.jar").lastModified() + ', true, false ]\n';
 	catalog_fmt += '\t]\n'
