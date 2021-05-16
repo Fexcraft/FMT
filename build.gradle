@@ -142,6 +142,9 @@ task mainJar(type: Jar) {
 		filter { String line -> line.replace("#FMT-VERSION#", version) }
     	include 'net/fexcraft/app/fmt'
     }
+    from('src/') {
+    	include 'log4j2.xml'
+	}
     baseName = "FMT"
     version = "";
 }
