@@ -66,7 +66,7 @@ import net.fexcraft.lib.tmt.ModelRendererTurbo;
  * */
 public class FMT {
 
-	public static final String VERSION = "#FMT-VERSION#";
+	public static final String VERSION = "3.0.0";
 	public static final String TITLE = getCurrentTitle();
 	public static final String CLID = "587016218196574209";
 	//

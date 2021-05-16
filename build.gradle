@@ -24,8 +24,13 @@ switch(OperatingSystem.current()){
 		project.ext.lwjglNatives = System.getProperty("os.arch").contains("64") ? "natives-windows" : "natives-windows-x86"
 		break
 }
-
-version = '3.0.' + new SimpleDateFormat("yyyyMMdd.HHmmss").format(new Date());
+new File(projectDir, '/src/net/fexcraft/app/fmt/FMT.java').find { line ->
+    if(line.contains('String VERSION')){
+        version = line.substring(line.indexOf('"') + 1).replace('";', '')
+        return true
+    }
+    return false;
+}
 sourceCompatibility = 15
 targetCompatibility = 15
 compileJava.options.encoding = 'UTF-8'
@@ -119,7 +124,7 @@ dependencies {
 sourceSets {
     main {
         java {
-            srcDirs "$buildDir/generated/java"
+            srcDirs "src"
         }
         resources {
         	srcDirs 'resources'
@@ -129,12 +134,6 @@ sourceSets {
 }
  
 mainClassName = 'net.fexcraft.app.fmt.FMT'
-
-task applyVersion(type: Copy){
-	from 'src/'
-	into "$buildDir/generated/java"
-	filter { String line -> line.replace("#FMT-VERSION#", version) }
-} 
 
 task mainJar(type: Jar){
 	manifest {
@@ -198,7 +197,6 @@ task compileCatalog(){
 	new File(projectDir, "catalog.fmt").text = catalog_fmt
 }
 
-compileJava.dependsOn(applyVersion)
 build.finalizedBy(mainJar)
 build.finalizedBy(copyForUpload)
 build.finalizedBy(compileCatalog)
