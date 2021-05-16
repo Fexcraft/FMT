@@ -194,7 +194,7 @@ task compileCatalog(){
 	catalog_fmt += '\t]\n'
 	catalog_fmt += '\t"last_catalog_update": "' + new SimpleDateFormat("HH:mm:ss dd.MMM.yyyy z").format(new Date()) + '",\n';
 	catalog_fmt += '}\n'
-	new File(projectDir, "catalog.fmt").text = catalog_fmt
+	new File(projectDir, "upload/catalog.fmt").text = catalog_fmt
 }
 
 build.finalizedBy(mainJar)
