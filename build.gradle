@@ -24,6 +24,7 @@ switch(OperatingSystem.current()){
 		project.ext.lwjglNatives = System.getProperty("os.arch").contains("64") ? "natives-windows" : "natives-windows-x86"
 		break
 }
+version = "3.0.0";
 new File(projectDir, '/src/net/fexcraft/app/fmt/FMT.java').find { line ->
     if(line.contains('String VERSION')){
         version = line.substring(line.indexOf('"') + 1).replace('";', '')
@@ -183,18 +184,19 @@ task compileCatalog(){
 			}
 		}
 		path = path.substring(path.indexOf(restype))
-		catalog_fmt += '\t\t[ "' + path + '", ' + it.lastModified() + ' ]' + (it == sourceSets.main.resources.last() ? '' : ',') + '\n'
+		catalog_fmt += '\t\t[ "' + path + '", ' + it.lastModified() + ' ],\n'
 	}
 	configurations.compile.each {
 		path = it.getPath().replace("\\", "/")
 		path = "lib" + path.substring(path.lastIndexOf("/"))
-		catalog_fmt += '\t\t[ "' + path + '", ' + it.lastModified() + ', true ]' + (it == configurations.compile.last() ? '' : ',') + '\n'
+		catalog_fmt += '\t\t[ "' + path + '", ' + it.lastModified() + ', true ],\n'
 	}
 	catalog_fmt += '\t\t[ "FMT.jar", ' + new File(projectDir, "/upload/FMT.jar").lastModified() + ', true, false ]\n';
-	catalog_fmt += '\t]\n'
-	catalog_fmt += '\t"last_catalog_update": "' + new SimpleDateFormat("HH:mm:ss dd.MMM.yyyy z").format(new Date()) + '",\n';
+	catalog_fmt += '\t],\n'
+	catalog_fmt += '\t"last_catalog_update": "' + new SimpleDateFormat("HH:mm:ss dd.MMM.yyyy z").format(new Date()) + '"\n';
 	catalog_fmt += '}\n'
 	new File(projectDir, "upload/catalog.fmt").text = catalog_fmt
+	new File(projectDir, "catalog.fmt").text = catalog_fmt
 }
 
 build.finalizedBy(mainJar)
