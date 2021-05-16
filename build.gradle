@@ -119,7 +119,7 @@ dependencies {
 sourceSets {
     main {
         java {
-            srcDirs 'src'
+            srcDirs "$buildDir/generated/java"
         }
         resources {
         	srcDirs 'resources'
@@ -129,24 +129,29 @@ sourceSets {
 }
  
 mainClassName = 'net.fexcraft.app.fmt.FMT'
- 
-task mainJar(type: Jar) {
-    manifest {
-        attributes 'Title': "Fex's Modelling Toolbox",  
-        	'Version': version,
-        	'Main-Class': mainClassName,
-        	'Created-By': "Ferdinand Calo' (FEX___96)",
-        	"Class-Path": ". " + (configurations.compile.collect { "lib/" + it.getName() }.join(' '))
-    }
-    from(zipTree("${destinationDir}/${archiveName}")){
-		filter { String line -> line.replace("#FMT-VERSION#", version) }
-    	include 'net/fexcraft/app/fmt'
-    }
-    from('src/') {
-    	include 'log4j2.xml'
+
+task applyVersion(type: Copy){
+	from 'src/'
+	into "$buildDir/generated/java"
+	filter { String line -> line.replace("#FMT-VERSION#", version) }
+} 
+
+task mainJar(type: Jar){
+	manifest {
+		attributes 'Title': "Fex's Modelling Toolbox",  
+		'Version': version,
+		'Main-Class': mainClassName,
+		'Created-By': "Ferdinand Calo' (FEX___96)",
+		"Class-Path": ". " + (configurations.compile.collect { "lib/" + it.getName() }.join(' '))
 	}
-    baseName = "FMT"
-    version = "";
+	from(zipTree("${destinationDir}/${archiveName}")){
+		include 'net/fexcraft/app/fmt/'
+	}
+	from('src/'){
+		include 'log4j2.xml'
+	}
+	baseName = "FMT"
+	version = "";
 }
 
 task copyForUpload(){
@@ -193,6 +198,7 @@ task compileCatalog(){
 	new File(projectDir, "catalog.fmt").text = catalog_fmt
 }
 
+compileJava.dependsOn(applyVersion)
 build.finalizedBy(mainJar)
 build.finalizedBy(copyForUpload)
-//build.finalizedBy(compileCatalog)
+build.finalizedBy(compileCatalog)
