@@ -82,4 +82,5 @@ libs/pom.xml
 FMT.bat
 MANIFEST.MF
 catalog.fmt
-/build/
+build/
+upload/

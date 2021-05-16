@@ -149,4 +149,20 @@ task mainJar(type: Jar) {
     version = "";
 }
 
+task copyForUpload(){
+	copy {
+    	from configurations.compile
+    	into "upload/lib"
+	}
+	copy {
+    	from "build/libs/FMT.jar"
+    	into "upload/"
+	}
+	copy {
+    	from "resources/"
+    	into "upload/resources"
+	}
+}
+
 build.finalizedBy(mainJar)
+build.finalizedBy(copyForUpload)
