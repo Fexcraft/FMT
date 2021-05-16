@@ -186,6 +186,7 @@ task compileCatalog(){
 		path = "lib" + path.substring(path.lastIndexOf("/"))
 		catalog_fmt += '\t\t[ "' + path + '", ' + it.lastModified() + '", true ]' + (it == configurations.compile.last() ? '' : ',') + '\n'
 	}
+	catalog_fmt += '\t\t[ "FMT.jar", ' + new File(projectDir, "/upload/FMT.jar").lastModified() + ', true, false ]\n';
 	catalog_fmt += '\t]\n'
 	catalog_fmt += '\t"last_catalog_update": "' + new SimpleDateFormat("HH:mm:ss dd.MMM.yyyy z").format(new Date()) + '",\n';
 	catalog_fmt += '}\n'
