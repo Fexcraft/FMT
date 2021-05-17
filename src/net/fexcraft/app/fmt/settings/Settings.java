@@ -42,7 +42,7 @@ import net.fexcraft.app.fmt.ui.components.PolygonGeneral;
 import net.fexcraft.app.fmt.ui.components.QuickAdd;
 import net.fexcraft.app.fmt.ui.components.ShapeboxComponent;
 import net.fexcraft.app.fmt.ui.trees.PolygonTree;
-import net.fexcraft.app.fmt.utils.Catalog;
+import net.fexcraft.app.fmt.update.Catalog;
 import net.fexcraft.app.fmt.utils.Jsoniser;
 import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.lib.common.math.RGB;
@@ -362,9 +362,9 @@ public class Settings {
             	if(CLICK == e.getAction()){
             		UPDATE_QUEUED = true;
             		dialog.close();
-            		Thread thread = new Thread(() -> Catalog.process(true));
-            		thread.setName("Update");
-            		thread.start();
+            		//Thread thread = new Thread(() -> Catalog.process(true));
+            		//thread.setName("Update");
+            		//thread.start();
             	}
             });
 			dialog.getContainer().add(button0);
