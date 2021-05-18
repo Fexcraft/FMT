@@ -150,43 +150,50 @@ public class FJHandler {
 	}
 
 	public static String toString(FJObject<?> obj){
-		return toString(obj, 0, false);
+		return toString(obj, 0, false, false, false);
 	}
 
-	public static String toString(FJObject<?> obj, int depth, boolean append){
-		String ret = "", tab = "", tabo = "    ", app = append ? "," : "";
-		for(int j = 0; j < depth; j++){
-			tab += tabo;
+	public static String toString(FJObject<?> obj, boolean flat, boolean spaced){
+		return toString(obj, 0, false, flat, spaced);
+	}
+
+	public static String toString(FJObject<?> obj, int depth, boolean append, boolean flat, boolean spaced){
+		String ret = "", tab = "", tabo = "    ", space = spaced ? "" : " ", app = append ? "," + space : "", n = flat ? "" : "\n";
+		if(!flat){
+			for(int j = 0; j < depth; j++){
+				tab += tabo;
+			}
 		}
+		else tabo = "";
 		if(obj.isMap()){
 			if(obj.asMap().empty()){
-				ret += "{}" + app + "\n";
+				ret += "{}" + app + n;
 			}
 			else{
-				ret += "{\n";
+				ret += "{" + space + n;
 				Iterator<Entry<String, FJObject<?>>> it = obj.asMap().value.entrySet().iterator();
 				while(it.hasNext()){
 					Map.Entry<String, FJObject<?>> entry = it.next();
-					ret += tab + tabo + '"' + entry.getKey() + '"' + ": " + toString(entry.getValue(), depth + 1, it.hasNext());
+					ret += tab + tabo + '"' + entry.getKey() + '"' + ":" + space + toString(entry.getValue(), depth + 1, it.hasNext(), flat, spaced);
 				}
-				ret += tab + "}" + app + "\n";
+				ret += tab + space + "}" + app + n;
 			}
 		}
 		else if(obj.isArray()){
 			if(obj.asArray().empty()){
-				ret += "[]" + app + "\n";
+				ret += "[]" + app + n;
 			}
 			else{
-				ret += "[\n";
+				ret += "[" + space + n;
 				Iterator<FJObject<?>> it = obj.asArray().value.iterator();
 				while(it.hasNext()){
-					ret += tab + tabo + toString(it.next(), depth + 1, it.hasNext());
+					ret += tab + tabo + toString(it.next(), depth + 1, it.hasNext(), flat, spaced);
 				}
-				ret += tab + "]" + app + "\n";
+				ret += tab + space + "]" + app + n;
 			}
 		}
 		else{
-			ret += (obj.value instanceof String ? '"' + obj.value.toString() + '"' : obj.value) + app + "\n";
+			ret += (obj.value instanceof String ? '"' + obj.value.toString() + '"' : obj.value) + app + n;
 		}
 		return ret;
 	}
