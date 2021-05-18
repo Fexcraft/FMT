@@ -21,8 +21,8 @@ import java.util.regex.Pattern;
  */
 public class JsonHandler {
 	
-	private static String NUMBER = "^\\d+$";
-	private static String FLOATN = "^\\d\\.\\d+$";
+	private static String NUMBER = "^\\-?\\d+$";
+	private static String FLOATN = "^\\-?\\d+\\.\\d+$";
 	
 	public static JsonObject<?> parse(String str, boolean defmap){
 		JsonObject<?> root;
@@ -156,7 +156,7 @@ public class JsonHandler {
 
 	private static String scanTill(String str, char c){
 		int index = 1;
-		while(index < str.length() && end(str.charAt(index), c) && str.charAt(index - 1) != '\\') index++;
+		while(index < str.length() && end(str.charAt(index), c) /*&& str.charAt(index - 1) != '\\'*/) index++;
 		return str.substring(0, index);
 	}
 
