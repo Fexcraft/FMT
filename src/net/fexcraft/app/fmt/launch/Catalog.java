@@ -1,4 +1,4 @@
-package net.fexcraft.app.fmt.update;
+package net.fexcraft.app.fmt.launch;
 
 import java.io.File;
 import java.net.HttpURLConnection;
