@@ -25,16 +25,14 @@ import org.liquidengine.legui.listener.CursorEnterEventListener;
 import org.liquidengine.legui.style.Border;
 import org.liquidengine.legui.style.Style.DisplayType;
 
-import com.google.gson.JsonObject;
-
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.attributes.UpdateHandler;
 import net.fexcraft.app.fmt.attributes.UpdateType;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.fieds.TextField;
-import net.fexcraft.app.fmt.utils.Jsoniser;
 import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.fmt.utils.Translator.Translations;
+import net.fexcraft.app.json.JsonMap;
 
 public class Editor extends Component {
 	
@@ -148,8 +146,8 @@ public class Editor extends Component {
 		dialog.show(FMT.FRAME);
 	}
 
-	public Editor(String key, JsonObject obj){
-		this(key, Jsoniser.get(obj, "name", "Nameless Editor"), false, Jsoniser.get(obj, "alignment", true));
+	public Editor(String key, JsonMap obj){
+		this(key, obj.get("name", "Nameless Editor"), false, obj.get("alignment", true));
 	}
 
 	public void align(){

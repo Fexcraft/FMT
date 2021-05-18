@@ -8,41 +8,41 @@ import java.util.List;
  * @author Ferdinand Calo' (FEX___96)
  *
  */
-public class FJArray extends FJObject<List<FJObject<?>>> {
+public class JsonArray extends JsonObject<List<JsonObject<?>>> {
 	
-	public FJArray(){
+	public JsonArray(){
 		value = new ArrayList<>();
 	}
 	
-	public boolean add(FJObject<?> elm){
+	public boolean add(JsonObject<?> elm){
 		return value.add(elm);
 	}
 	
-	public boolean rem(FJObject<?> elm){
+	public boolean rem(JsonObject<?> elm){
 		return value.remove(elm);
 	}
 	
-	public FJObject<?> get(int index){
+	public JsonObject<?> get(int index){
 		return value.get(index);
 	}
 	
-	public FJArray getArray(int index){
+	public JsonArray getArray(int index){
 		return value.get(index).asArray();
 	}
 	
-	public FJMap getMap(int index){
+	public JsonMap getMap(int index){
 		return value.get(index).asMap();
 	}
 	
-	public FJObject<?> rem(int index){
+	public JsonObject<?> rem(int index){
 		return value.remove(index);
 	}
 	
-	public FJObject<?> set(int index, FJObject<?> elm){
+	public JsonObject<?> set(int index, JsonObject<?> elm){
 		return value.set(index, elm);
 	}
 	
-	public boolean contains(FJObject<?> val){
+	public boolean contains(JsonObject<?> val){
 		return value.contains(val);
 	}
 	
@@ -57,43 +57,47 @@ public class FJArray extends FJObject<List<FJObject<?>>> {
 	}
 	
 	public boolean add(String val){
-		return add(new FJObject<String>(val));
+		return add(new JsonObject<String>(val));
 	}
 	
 	public boolean add(byte val){
-		return add(new FJObject<Byte>(val));
+		return add(new JsonObject<Byte>(val));
 	}
 	
 	public boolean add(char val){
-		return add(new FJObject<Character>(val));
+		return add(new JsonObject<Character>(val));
 	}
 	
 	public boolean add(short val){
-		return add(new FJObject<Short>(val));
+		return add(new JsonObject<Short>(val));
 	}
 	
 	public boolean add(int val){
-		return add(new FJObject<Integer>(val));
+		return add(new JsonObject<Integer>(val));
 	}
 	
 	public boolean add(long val){
-		return add(new FJObject<Long>(val));
+		return add(new JsonObject<Long>(val));
 	}
 	
 	public boolean add(float val){
-		return add(new FJObject<Float>(val));
+		return add(new JsonObject<Float>(val));
 	}
 	
 	public boolean add(double val){
-		return add(new FJObject<Double>(val));
+		return add(new JsonObject<Double>(val));
+	}
+	
+	public boolean add(boolean val){
+		return add(new JsonObject<Boolean>(val));
 	}
 	
 	public boolean addArray(){
-		return add(new FJArray());
+		return add(new JsonArray());
 	}
 	
 	public boolean addMap(){
-		return add(new FJMap());
+		return add(new JsonMap());
 	}
 	
 	public int size(){
@@ -108,13 +112,13 @@ public class FJArray extends FJObject<List<FJObject<?>>> {
 		return value.size() > 0;
 	}
 
-	public List<FJObject<?>> elements(){
+	public List<JsonObject<?>> elements(){
 		return value;
 	}
 	
 	@Override
 	public String toString(){
-		return FJHandler.toString(this);
+		return JsonHandler.toString(this);
 	}
 
 }

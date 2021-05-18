@@ -1,8 +1,7 @@
 package net.fexcraft.app.fmt.settings;
 
-import com.google.gson.JsonObject;
-
 import net.fexcraft.app.fmt.utils.Jsoniser;
+import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.RGB;
 
 public class RGBSetting extends Setting<RGB> {
@@ -11,13 +10,13 @@ public class RGBSetting extends Setting<RGB> {
 		super(id, def, group);
 	}
 	
-	public RGBSetting(String id, RGB def, String group, JsonObject obj){
+	public RGBSetting(String id, RGB def, String group, JsonMap obj){
 		super(id, def, group, obj);
 	}
 	
 	@Override
-	public void load(JsonObject obj){
-		value.packed = Jsoniser.get(obj, id, _default.packed);
+	public void load(JsonMap obj){
+		value.packed = obj.get(id, _default.packed);
 	}
 	
 	@Override
@@ -26,7 +25,7 @@ public class RGBSetting extends Setting<RGB> {
 	}
 	
 	@Override
-	public void save(JsonObject obj){
+	public void save(JsonMap obj){
 		obj.add(id, Jsoniser.toJson(value.packed));
 	}
 

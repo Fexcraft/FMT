@@ -2,11 +2,9 @@ package net.fexcraft.app.fmt.polygon;
 
 import org.joml.Vector3f;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-
 import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
-import net.fexcraft.app.fmt.utils.Jsoniser;
+import net.fexcraft.app.json.JsonArray;
+import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.tmt.CylinderBuilder;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
@@ -24,32 +22,32 @@ public class Cylinder extends Polygon {
 		super(model);
 	}
 
-	protected Cylinder(Model model, JsonObject obj){
+	protected Cylinder(Model model, JsonMap obj){
 		super(model, obj);
-		radius = Jsoniser.get(obj, "radius", radius);
-		radius2 = Jsoniser.get(obj, "radius2", radius2);
-		length = Jsoniser.get(obj, "length", length);
-		segments = Jsoniser.get(obj, "segments", segments);
-		seglimit = Jsoniser.get(obj, "seglimit", seglimit);
-		direction = Jsoniser.get(obj, "direction", direction);
-		base = Jsoniser.get(obj, "basescale", base);
-		top = Jsoniser.get(obj, "topscale", top);
-		topoff.x = Jsoniser.get(obj, "top_offset_x", topoff.x);
-		topoff.y = Jsoniser.get(obj, "top_offset_y", topoff.y);
-		topoff.z = Jsoniser.get(obj, "top_offset_z", topoff.z);
-		toprot.x = Jsoniser.get(obj, "top_rotation_x", toprot.x);
-		toprot.y = Jsoniser.get(obj, "top_rotation_y", toprot.y);
-		toprot.z = Jsoniser.get(obj, "top_rotation_z", toprot.z);
+		radius = obj.get("radius", radius);
+		radius2 = obj.get("radius2", radius2);
+		length = obj.get("length", length);
+		segments = obj.get("segments", segments);
+		seglimit = obj.get("seglimit", seglimit);
+		direction = obj.get("direction", direction);
+		base = obj.get("basescale", base);
+		top = obj.get("topscale", top);
+		topoff.x = obj.get("top_offset_x", topoff.x);
+		topoff.y = obj.get("top_offset_y", topoff.y);
+		topoff.z = obj.get("top_offset_z", topoff.z);
+		toprot.x = obj.get("top_rotation_x", toprot.x);
+		toprot.y = obj.get("top_rotation_y", toprot.y);
+		toprot.z = obj.get("top_rotation_z", toprot.z);
 		if(obj.has("faces_off")){
-			JsonArray array = obj.get("faces_off").getAsJsonArray();
+			JsonArray array = obj.getArray("faces_off");
 			for(int i = 0; i < bools.length; i++){
 				if(i >= array.size()) break;
-				bools[i] = array.get(i).getAsBoolean();
+				bools[i] = array.get(i).value();
 			}
 		}
-		radial = Jsoniser.get(obj, "radialtex", radial);
-		seg_width = Jsoniser.get(obj, "seg_width", seg_width);
-		seg_height = Jsoniser.get(obj, "seg_height", seg_height);
+		radial = obj.get("radialtex", radial);
+		seg_width = obj.get("seg_width", seg_width);
+		seg_height = obj.get("seg_height", seg_height);
 	}
 
 	@Override

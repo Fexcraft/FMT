@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import net.fexcraft.app.fmt.polygon.Model;
-import net.fexcraft.app.json.FJMap;
+import net.fexcraft.app.json.JsonMap;
 
 public class PreviewHandler {
 
@@ -19,7 +19,7 @@ public class PreviewHandler {
 		return null;
 	}
 
-	public static Model load(File file, Object porter, FJMap map){
+	public static Model load(File file, Object porter, JsonMap map){
 		// TODO Auto-generated method stub
 		return null;
 	}

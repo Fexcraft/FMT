@@ -30,10 +30,6 @@ import org.liquidengine.legui.theme.colored.FlatColoredTheme;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryUtil;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.launch.Catalog;
 import net.fexcraft.app.fmt.ui.Editor;
@@ -43,12 +39,14 @@ import net.fexcraft.app.fmt.ui.components.PolygonGeneral;
 import net.fexcraft.app.fmt.ui.components.QuickAdd;
 import net.fexcraft.app.fmt.ui.components.ShapeboxComponent;
 import net.fexcraft.app.fmt.ui.trees.PolygonTree;
-import net.fexcraft.app.fmt.utils.Jsoniser;
 import net.fexcraft.app.fmt.utils.Logging;
+import net.fexcraft.app.json.JsonArray;
+import net.fexcraft.app.json.JsonHandler;
+import net.fexcraft.app.json.JsonMap;
+import net.fexcraft.app.json.JsonObject;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.TexturedPolygon;
 import net.fexcraft.lib.common.math.Time;
-import net.fexcraft.lib.common.utils.HttpUtil;
 
 public class Settings {
 	
@@ -93,11 +91,10 @@ public class Settings {
 	
 	public static void load(){
 		var file = new File("./settings.json");
-		var obj = file.exists() ? Jsoniser.parseObj(file, true) : new JsonObject();
-		if(obj == null) obj = new JsonObject();
-		if(obj.has("format") && obj.get("format").getAsInt() != FORMAT) obj = new JsonObject();
-		UPDATE_FOUND = Jsoniser.get(obj, "update_found", FMT.VERSION);
-		UPDATE_SKIPPED = Jsoniser.get(obj, "update_skipped", UPDATE_SKIPPED);
+		var obj = file.exists() ? JsonHandler.parse(file) : new JsonMap();
+		if(obj.has("format") && obj.get("format").integer_value() != FORMAT) obj = new JsonMap();
+		UPDATE_FOUND = obj.get("update_found", FMT.VERSION);
+		UPDATE_SKIPPED = obj.get("update_skipped", UPDATE_SKIPPED);
 		//
 		VSYNC = new Setting<>("vsync", true, GRAPHIC, obj);
 		HVSYNC = new Setting<>("vsync/2", false, GRAPHIC, obj);
@@ -152,7 +149,7 @@ public class Settings {
 		//
 		for(Map.Entry<String, Map<String, Setting<?>>> entry : SETTINGS.entrySet()){
 			if(!obj.has(entry.getKey())) continue;
-			JsonObject def = obj.get(entry.getKey()).getAsJsonObject();
+			JsonMap def = obj.getMap(entry.getKey());
 			for(Setting<?> setting : entry.getValue().values()) setting.load(def);
 		}//TODO load plugin settings ?
 		//
@@ -166,21 +163,21 @@ public class Settings {
 	}
 	
 	public static void save(){
-		JsonObject obj = new JsonObject();
-		obj.addProperty("format", FORMAT);
+		JsonMap obj = new JsonMap();
+		obj.add("format", FORMAT);
 		//
 		SETTINGS.entrySet().forEach(entry -> {
-			JsonObject jsn = new JsonObject();
+			JsonMap jsn = new JsonMap();
 			entry.getValue().values().forEach(setting -> setting.save(jsn));
 			obj.add(entry.getKey(), jsn);
 		});
 		//
-		obj.addProperty("last_fmt_version", FMT.VERSION);
-		obj.addProperty("last_fmt_exit", Time.getAsString(Time.getDate()));
-		obj.addProperty("update_found", UPDATE_FOUND);
-		obj.addProperty("update_queued", UPDATE_QUEUED);
-		obj.addProperty("update_skipped", UPDATE_SKIPPED);
-		Jsoniser.print(new File("./settings.json"), obj);
+		obj.add("last_fmt_version", FMT.VERSION);
+		obj.add("last_fmt_exit", Time.getAsString(Time.getDate()));
+		obj.add("update_found", UPDATE_FOUND);
+		obj.add("update_queued", UPDATE_QUEUED);
+		obj.add("update_skipped", UPDATE_SKIPPED);
+		JsonHandler.print(new File("./settings.json"), obj, false, false);
 	}
 
 	public static void applyTheme(){
@@ -270,11 +267,11 @@ public class Settings {
 	}
 
 	public static void loadEditors(){
-		JsonObject obj = Jsoniser.parseObj(new File("./editors.fmt"), false);
-		if(obj == null || obj.entrySet().isEmpty()) loadDefaultEditors();
+		JsonMap obj = JsonHandler.parse(new File("./editors.fmt"));
+		if(obj == null || obj.empty()) loadDefaultEditors();
 		else{
-			for(Entry<String, JsonElement> entry : obj.entrySet()){
-				new Editor(entry.getKey(), entry.getValue().getAsJsonObject());
+			for(Entry<String, JsonObject<?>> entry : obj.entries()){
+				new Editor(entry.getKey(), entry.getValue().asMap());
 			}
 		}
 		Editor.EDITORS.get("polygon_editor").show();
@@ -308,23 +305,23 @@ public class Settings {
 
 	public static void checkForUpdates(){
 		Thread thread = new Thread(() -> {
-			JsonObject obj = HttpUtil.request("http://fexcraft.net/minecraft/fcl/request", "mode=requestdata&modid=fmt");
+			JsonMap obj = JsonHandler.parseURL("http://fexcraft.net/minecraft/fcl/request", "mode=requestdata&modid=fmt");
 			if(obj == null || !obj.has("latest_version")){
 				Logging.log("Couldn't fetch latest version.");
 				Logging.log(obj == null ? ">> no version response received" : obj.toString());
 				UPDATECHECK_FAILED = true;
 			}
 			else if(obj.has("blocked_versions")){
-				JsonArray array = obj.get("blocked_versions").getAsJsonArray();
-				for(JsonElement elm : array){
-					if(elm.isJsonPrimitive() && elm.getAsString().equals(FMT.VERSION)){
+				JsonArray array = obj.getArray("blocked_versions");
+				for(JsonObject<?> elm : array.elements()){
+					if(elm.string_value().equals(FMT.VERSION)){
 						Logging.log("Blocked version detected, causing panic.");
 						System.exit(2); System.exit(2); System.exit(2); System.exit(2);
 					}
 				}
 			}
 			else{
-				UPDATE_FOUND = obj.get("latest_version").getAsString();
+				UPDATE_FOUND = obj.get("latest_version").string_value();
 				Logging.log("Received remote version: " + UPDATE_FOUND);
 		        //
 				if(!UPDATE_FOUND.equals(FMT.VERSION) && remoteVersionIsNewer()){

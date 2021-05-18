@@ -8,15 +8,13 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.ui.GenericDialog;
-import net.fexcraft.app.fmt.utils.Jsoniser;
 import net.fexcraft.app.fmt.utils.Logging;
-import net.fexcraft.lib.common.utils.HttpUtil;
+import net.fexcraft.app.json.JsonArray;
+import net.fexcraft.app.json.JsonHandler;
+import net.fexcraft.app.json.JsonMap;
+import net.fexcraft.app.json.JsonObject;
 
 /**
  * 
@@ -33,21 +31,21 @@ public class Catalog {
 
 	public static void fetch(){
 		Logging.log("Fetching catalog...");
-		JsonElement elm = HttpUtil.request("http://fexcraft.net/files/app_data/fmt/catalog.fmt");
+		JsonMap map = JsonHandler.parseURL("http://fexcraft.net/files/app_data/fmt/catalog.fmt");
 		if(!CATALOG_FILE.getParentFile().exists()) CATALOG_FILE.getParentFile().mkdirs();
-		if(elm == null || !elm.isJsonObject()) return;
-		Jsoniser.print(CATALOG_FILE, elm, false);
+		if(map == null || map.empty()) return;
+		JsonHandler.print(CATALOG_FILE, map, false, false);
 	}
 	
 	public static boolean load(){
 		Logging.log("Loading file catalog...");
-		JsonObject obj = Jsoniser.parseObj(CATALOG_FILE);
-		if(obj == null || !obj.has("files")){
+		JsonMap map = JsonHandler.parse(CATALOG_FILE);
+		if(map == null || !map.has("files")){
 			Logging.log(">> Catalog is empty or missing.");
 			return false;
 		}
-		REMOTE_ROOT = Jsoniser.get(obj, "file_root", REMOTE_ROOT);
-		obj.get("files").getAsJsonArray().forEach(elm -> files.add(new Resource(elm)));
+		REMOTE_ROOT = map.get("file_root", REMOTE_ROOT);
+		map.getArrayElements("files").forEach(elm -> files.add(new Resource(elm)));
 		return true;
 	}
 	
@@ -74,20 +72,20 @@ public class Catalog {
 		private long date;
 		private boolean override = true, remove;
 		
-		public Resource(JsonElement elm){
-			if(elm.isJsonArray()){
-				JsonArray array = elm.getAsJsonArray();
-				id = array.get(0).getAsString();
-				if(array.size() > 1) date = array.get(1).getAsLong();
-				if(array.size() > 2) override = array.get(2).getAsBoolean();
-				if(array.size() > 3) remove = array.get(3).getAsBoolean();
+		public Resource(JsonObject<?> obj){
+			if(obj.isArray()){
+				JsonArray array = obj.asArray();
+				id = array.get(0).value();
+				if(array.size() > 1) date = array.get(1).long_value();
+				if(array.size() > 2) override = array.get(2).value();
+				if(array.size() > 3) remove = array.get(3).value();
 			}
 			else{
-				JsonObject obj = elm.getAsJsonObject();
-				id = Jsoniser.get(obj, "file", null);
-				date = Jsoniser.get(obj, "date", 0);
-				override = Jsoniser.get(obj, "override", override);
-				remove = Jsoniser.get(obj, "remove", remove);
+				JsonMap map = obj.asMap();
+				id = map.get("file", null);
+				date = map.get("date", 0);
+				override = map.get("override", override);
+				remove = map.get("remove", remove);
 			}
 			file = new File(!id.startsWith("./") ? "./" + id : id);
 		}

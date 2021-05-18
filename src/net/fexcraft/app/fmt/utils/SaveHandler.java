@@ -13,9 +13,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -29,11 +27,6 @@ import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.SelectBox;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.listener.MouseClickEventListener;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.reflect.TypeToken;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.attributes.UpdateHandler;
@@ -50,11 +43,10 @@ import net.fexcraft.app.fmt.ui.FileChooser;
 import net.fexcraft.app.fmt.ui.GenericDialog;
 import net.fexcraft.app.fmt.ui.Toolbar;
 import net.fexcraft.app.fmt.ui.fieds.TextField;
-import net.fexcraft.app.json.FJArray;
-import net.fexcraft.app.json.FJHandler;
-import net.fexcraft.app.json.FJMap;
-import net.fexcraft.app.json.FJObject;
-import net.fexcraft.lib.common.json.JsonUtil;
+import net.fexcraft.app.json.JsonArray;
+import net.fexcraft.app.json.JsonHandler;
+import net.fexcraft.app.json.JsonMap;
+import net.fexcraft.app.json.JsonObject;
 
 public class SaveHandler {
 
@@ -72,7 +64,7 @@ public class SaveHandler {
 				if(elm.getName().equals("model.jtmt")){
 					try{
 						PreviewHandler.clear();
-						FMT.MODEL = load(model, file, FJHandler.parse(zip.getInputStream(elm)), false, false);
+						FMT.MODEL = load(model, file, JsonHandler.parse(zip.getInputStream(elm)), false, false);
 						update(MODEL_LOAD, model);
 						FMT.MODEL.recompile();
 						Model.SELECTED_POLYGONS = FMT.MODEL.count(true);
@@ -84,7 +76,7 @@ public class SaveHandler {
 				else if(elm.getName().equals("texture.png")){
 					try{ //loads in old texture files
 						if(FMT.MODEL.texgroup == null){
-							TextureManager.addGroup(FMT.MODEL.texgroup = new TextureGroup(new JsonPrimitive("default")));
+							TextureManager.addGroup(FMT.MODEL.texgroup = new TextureGroup(new JsonObject<>("default")));
 						}
 						TextureManager.loadFromStream(zip.getInputStream(elm), "group-default", false, true);
 						FMT.MODEL.texgroup.reAssignTexture();
@@ -120,7 +112,7 @@ public class SaveHandler {
 	}
 
 	@SuppressWarnings("unused")
-	public static Model load(Model model, File from, FJMap obj, boolean preview, boolean sub){
+	public static Model load(Model model, File from, JsonMap obj, boolean preview, boolean sub){
 		model.name = obj.get("name", "Unnamed Model");
 		model.texSizeX = obj.get("texture_size_x", 256);
 		model.texSizeY = obj.get("texture_size_y", 256);
@@ -138,12 +130,12 @@ public class SaveHandler {
 		}
 		int format = obj.getInteger("format", 2);
 		if(format == 1){
-			FJMap jmod = obj.getMap("model");
-			for(Entry<String, FJObject<?>> entry : jmod.entries()){
+			JsonMap jmod = obj.getMap("model");
+			for(Entry<String, JsonObject<?>> entry : jmod.entries()){
 				try{
 					Group group = new Group(model, entry.getKey());
-					FJArray array = entry.getValue().asArray();
-					for(FJObject<?> elm : array.elements()){
+					JsonArray array = entry.getValue().asArray();
+					for(JsonObject<?> elm : array.elements()){
 						group.add(Polygon.from(model, elm.asMap()));
 					}
 					model.addGroup(group);
@@ -165,11 +157,11 @@ public class SaveHandler {
 				model.texgroup = TextureManager.getGroup(obj.get("texture_group").string_value());
 			}
 		}
-		FJMap groups = obj.getMap("groups");
+		JsonMap groups = obj.getMap("groups");
 		groups.entries().forEach(entry -> {
 			try{
 				Group group = new Group(model, entry.getKey());
-				FJMap jsn = entry.getValue().asMap();
+				JsonMap jsn = entry.getValue().asMap();
 				group.minimized = jsn.getBoolean("minimized", false);
 				group.selected = jsn.getBoolean("selected", false);
 				group.visible = jsn.getBoolean("visible", true);
@@ -187,7 +179,7 @@ public class SaveHandler {
 					}
 				}
 				if(jsn.has("offset")){
-					FJArray array = jsn.getArray("offset");
+					JsonArray array = jsn.getArray("offset");
 					group.pos.x = array.get(0).float_value();
 					group.pos.y = array.get(1).float_value();
 					group.pos.z = array.get(2).float_value();
@@ -198,7 +190,7 @@ public class SaveHandler {
 							group.add(Polygon.from(model, elm.asMap()));
 						}
 						catch(Exception e){
-							log(FJHandler.toString(obj, true, true));
+							log(JsonHandler.toString(obj, true, true));
 							log(e);
 						}
 					});
@@ -212,7 +204,7 @@ public class SaveHandler {
 		});
 		if(!preview){
 			if(obj.has("camera_pos")){
-				FJArray pos = obj.getArray("camera_pos");
+				JsonArray pos = obj.getArray("camera_pos");
 				FMT.CAM.pos.x = pos.get(0).float_value();
 				FMT.CAM.pos.y = pos.get(1).float_value();
 				FMT.CAM.pos.z = pos.get(2).float_value();
@@ -224,7 +216,7 @@ public class SaveHandler {
 		if(obj.has("helpers")){
 			obj.getArrayElements("helpers").forEach(elm -> {
 				try{
-					FJMap jsn = elm.asMap();
+					JsonMap jsn = elm.asMap();
 					File file = new File(jsn.get("path").string_value());
 					if(file.equals(from)) return;
 					Model helper = null;
@@ -252,7 +244,7 @@ public class SaveHandler {
 						helper.pos = new Vector3f(jsn.get("pos_x").float_value(), jsn.get("pos_y").float_value(), jsn.get("pos_z").float_value());
 					}
 					else if(jsn.has("pos")){
-						FJArray pos = obj.getArray("pos");
+						JsonArray pos = obj.getArray("pos");
 						helper.pos.x = pos.get(0).float_value();
 						helper.pos.y = pos.get(1).float_value();
 						helper.pos.z = pos.get(2).float_value();
@@ -261,7 +253,7 @@ public class SaveHandler {
 						helper.rot = new Vector3f(jsn.get("rot_x").float_value(), jsn.get("rot_y").float_value(), jsn.get("rot_z").float_value());
 					}
 					else if(jsn.has("rot")){
-						FJArray pos = obj.getArray("rot");
+						JsonArray pos = obj.getArray("rot");
 						helper.rot.x = pos.get(0).float_value();
 						helper.rot.y = pos.get(1).float_value();
 						helper.rot.z = pos.get(2).float_value();
@@ -273,11 +265,10 @@ public class SaveHandler {
 						helper.scale = new Vector3f(jsn.get("scale").float_value());
 					}
 					if(jsn.has("invisible")){
-						Type type = new TypeToken<List<String>>(){}.getType();
-						List<String> list = JsonUtil.getGson().fromJson(jsn.get("invisible").toString(), type);
+						/*List<String> list = JsonUtil.getGson().fromJson(jsn.get("invisible").toString(), type);
 						for(Group turbogroup : helper.groups()){
 							turbogroup.visible = !list.contains(turbogroup.id);
-						}
+						}*///TODO
 					}
 					helper.visible = jsn.get("visible", true);
 					helper.subhelper = sub;
@@ -349,17 +340,17 @@ public class SaveHandler {
 		}
 	}
 	
-	public static JsonObject modelToJTMT(Model root, boolean export){
+	public static JsonMap modelToJTMT(Model root, boolean export){
 		Model model = root == null ? FMT.MODEL : root;
-		JsonObject obj = new JsonObject();
-		obj.addProperty("format", 4);
-		obj.addProperty("name", model.name);
-		obj.addProperty("texture_size_x", model.texSizeX);
-		obj.addProperty("texture_size_y", model.texSizeY);
-		obj.addProperty("orientation", model.orient.name().toLowerCase());
-		obj.addProperty("target_format", model.format.name().toLowerCase());
-		if(!export && model.opacity < 1f) obj.addProperty("opacity", model.opacity);
-		if(model.scale != null && model.scale.x != 1f) obj.addProperty("scale", model.scale.x);
+		JsonMap obj = new JsonMap();
+		obj.add("format", 4);
+		obj.add("name", model.name);
+		obj.add("texture_size_x", model.texSizeX);
+		obj.add("texture_size_y", model.texSizeY);
+		obj.add("orientation", model.orient.name().toLowerCase());
+		obj.add("target_format", model.format.name().toLowerCase());
+		if(!export && model.opacity < 1f) obj.add("opacity", model.opacity);
+		if(model.scale != null && model.scale.x != 1f) obj.add("scale", model.scale.x);
 		JsonArray creators = new JsonArray();
 		if(model.getAuthors().isEmpty()){
 			//TODO add to creators if logged in
@@ -372,7 +363,7 @@ public class SaveHandler {
 			}
 		}
 		obj.add("creators", creators);
-		obj.addProperty("type", "jtmt");
+		obj.add("type", "jtmt");
 		if(!TextureManager.anyGroupsLoaded()){
 			JsonArray textures = new JsonArray();
 			for(TextureGroup group : TextureManager.getGroups()){
@@ -380,13 +371,13 @@ public class SaveHandler {
 			}
 			obj.add("textures", textures);
 		}
-		if(model.texgroup != null) obj.addProperty("texture_group", model.texgroup.name);
-		JsonObject modobj = new JsonObject();
+		if(model.texgroup != null) obj.add("texture_group", model.texgroup.name);
+		JsonMap modobj = new JsonMap();
 		for(Group group : model.groups()){
-			JsonObject grobj = new JsonObject();
+			JsonMap grobj = new JsonMap();
 			JsonArray array = new JsonArray();
 			if(!export){
-				grobj.addProperty("visible", group.visible);
+				grobj.add("visible", group.visible);
 				if(group.color != null){
 					byte[] colarr = group.color.toByteArray();
 					JsonArray colar = new JsonArray();
@@ -395,16 +386,16 @@ public class SaveHandler {
 					colar.add(colarr[2]);
 					grobj.add("color", colar);
 				}
-				grobj.addProperty("minimized", group.minimized);
-				grobj.addProperty("selected", group.selected);
+				grobj.add("minimized", group.minimized);
+				grobj.add("selected", group.selected);
 				if(group.texgroup != null){
-					grobj.addProperty("texture_group", group.texgroup.name);
-					grobj.addProperty("texture_size_x", group.texSizeX);
-					grobj.addProperty("texture_size_y", group.texSizeY);
+					grobj.add("texture_group", group.texgroup.name);
+					grobj.add("texture_size_x", group.texSizeX);
+					grobj.add("texture_size_y", group.texSizeY);
 				}
 				//TODO animations
 			}
-			grobj.addProperty("name", group.id);
+			grobj.add("name", group.id);
 			for(Polygon polygon : group){
 				array.add(polygon.save(export));
 			}
@@ -418,33 +409,33 @@ public class SaveHandler {
 			array.add(FMT.CAM.pos.y);
 			array.add(FMT.CAM.pos.z);
 			obj.add("camera_pos", array);
-			obj.addProperty("camera_horizontal", FMT.CAM.hor);
-			obj.addProperty("camera_vertical", FMT.CAM.ver);
+			obj.add("camera_horizontal", FMT.CAM.hor);
+			obj.add("camera_vertical", FMT.CAM.ver);
 		}
 		if(!PreviewHandler.getLoaded().isEmpty() && !export){
 			JsonArray array = new JsonArray();
 			for(Model premod : PreviewHandler.getLoaded()){
 				if(premod.subhelper) continue;
-				JsonObject jsn = new JsonObject();
-				jsn.addProperty("name", premod.name);
-				jsn.addProperty("texture", premod.texhelper);
+				JsonMap jsn = new JsonMap();
+				jsn.add("name", premod.name);
+				jsn.add("texture", premod.texhelper);
 				if(premod.rot != null){
-					jsn.addProperty("rot_x", premod.rot.x);
-					jsn.addProperty("rot_y", premod.rot.y);
-					jsn.addProperty("rot_z", premod.rot.z);
+					jsn.add("rot_x", premod.rot.x);
+					jsn.add("rot_y", premod.rot.y);
+					jsn.add("rot_z", premod.rot.z);
 				}
 				if(premod.pos != null){
-					jsn.addProperty("pos_x", premod.pos.x);
-					jsn.addProperty("pos_y", premod.pos.y);
-					jsn.addProperty("pos_z", premod.pos.z);
+					jsn.add("pos_x", premod.pos.x);
+					jsn.add("pos_y", premod.pos.y);
+					jsn.add("pos_z", premod.pos.z);
 				}
 				if(premod.scale != null){
-					jsn.addProperty("scale_x", premod.scale.x);
-					jsn.addProperty("scale_y", premod.scale.y);
-					jsn.addProperty("scale_z", premod.scale.z);
+					jsn.add("scale_x", premod.scale.x);
+					jsn.add("scale_y", premod.scale.y);
+					jsn.add("scale_z", premod.scale.z);
 				}
 				if(premod.opacity < 1f){
-					jsn.addProperty("opacity", premod.opacity);
+					jsn.add("opacity", premod.opacity);
 				}
 				if(premod.groups().size() > 1){
 					JsonArray invisible = new JsonArray();
@@ -455,8 +446,8 @@ public class SaveHandler {
 						jsn.add("invisible", invisible);
 					}
 				}
-				jsn.addProperty("path", premod.file.toPath().toString());
-				jsn.addProperty("visible", premod.visible);
+				jsn.add("path", premod.file.toPath().toString());
+				jsn.add("visible", premod.visible);
 				array.add(jsn);
 			}
 			obj.add("helpers", array);

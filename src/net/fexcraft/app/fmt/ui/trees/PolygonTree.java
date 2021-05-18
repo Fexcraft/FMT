@@ -1,7 +1,5 @@
 package net.fexcraft.app.fmt.ui.trees;
 
-import com.google.gson.JsonObject;
-
 import net.fexcraft.app.fmt.attributes.UpdateHandler;
 import net.fexcraft.app.fmt.attributes.UpdateHandler.UpdateHolder;
 import net.fexcraft.app.fmt.attributes.UpdateType;
@@ -9,7 +7,7 @@ import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.ui.EditorComponent;
-import net.fexcraft.app.fmt.utils.Jsoniser;
+import net.fexcraft.app.json.JsonMap;
 
 public class PolygonTree extends Editor {
 	
@@ -25,8 +23,8 @@ public class PolygonTree extends Editor {
 		UpdateHandler.registerHolder(holder);
 	}
 
-	public PolygonTree(String key, JsonObject obj){
-		this(Jsoniser.get(obj, "name", "Polygon Tree"), Jsoniser.get(obj, "alignment", true));
+	public PolygonTree(String key, JsonMap obj){
+		this(obj.get("name", "Polygon Tree"), obj.get("alignment", true));
 	}
 	
 	@Override

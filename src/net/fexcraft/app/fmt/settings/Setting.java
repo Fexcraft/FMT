@@ -1,8 +1,7 @@
 package net.fexcraft.app.fmt.settings;
 
-import com.google.gson.JsonObject;
-
 import net.fexcraft.app.fmt.utils.Jsoniser;
+import net.fexcraft.app.json.JsonMap;
 
 public class Setting<TYPE> {
 	
@@ -16,14 +15,14 @@ public class Setting<TYPE> {
 		Settings.register(group, id, this);
 	}
 	
-	public Setting(String id, TYPE def, String group, JsonObject obj){
+	public Setting(String id, TYPE def, String group, JsonMap obj){
 		this(id, def, group);
-		load(Jsoniser.getSubObj(obj, group));
-		Settings.register(group, id, this);
+		load(obj.getMap(group));
+		//Settings.register(group, id, this);
 	}
 	
-	public void load(JsonObject obj){
-		value = (TYPE)Jsoniser.get(obj, id, _default);
+	public void load(JsonMap obj){
+		value = (TYPE)obj.get(id, _default);
 	}
 
 	public <VALUE> VALUE value(){
@@ -34,7 +33,7 @@ public class Setting<TYPE> {
 		this.value = newval;
 	}
 
-	public void save(JsonObject obj){
+	public void save(JsonMap obj){
 		obj.add(id, Jsoniser.toJson(value));
 	}
 

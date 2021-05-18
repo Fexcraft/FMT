@@ -2,11 +2,9 @@ package net.fexcraft.app.fmt.polygon;
 
 import org.joml.Vector3f;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-
 import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
-import net.fexcraft.app.fmt.utils.Jsoniser;
+import net.fexcraft.app.json.JsonArray;
+import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.tmt.BoxBuilder;
 
 public class Box extends Polygon {
@@ -18,16 +16,16 @@ public class Box extends Polygon {
 		super(model);
 	}
 
-	protected Box(Model model, JsonObject obj){
+	protected Box(Model model, JsonMap obj){
 		super(model, obj);
-		size.x = Jsoniser.get(obj, "width", 1f);
-		size.y = Jsoniser.get(obj, "height", 1f);
-		size.z = Jsoniser.get(obj, "depth", 1f);
+		size.x = obj.get("width", 1f);
+		size.y = obj.get("height", 1f);
+		size.z = obj.get("depth", 1f);
 		if(obj.has("sides_off")){
-			JsonArray array = obj.get("sides_off").getAsJsonArray();
+			JsonArray array = obj.getArray("sides_off");
 			for(int i = 0; i < sides.length; i++){
 				if(i >= array.size()) break;
-				sides[i] = array.get(i).getAsBoolean();
+				sides[i] = array.get(i).value();
 			}
 		}
 	}

@@ -19,12 +19,12 @@ public interface FJson {
 		return false;
 	}
 	
-	public default FJArray asArray(){
-		return (FJArray)this;
+	public default JsonArray asArray(){
+		return (JsonArray)this;
 	}
 	
-	public default FJMap asMap(){
-		return (FJMap)this;
+	public default JsonMap asMap(){
+		return (JsonMap)this;
 	}
 
 }

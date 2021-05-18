@@ -11,11 +11,10 @@ import static net.fexcraft.app.fmt.attributes.PolyVal.CORNER_7;
 
 import org.joml.Vector3f;
 
-import com.google.gson.JsonObject;
-
 import net.fexcraft.app.fmt.attributes.PolyVal;
 import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.utils.Jsoniser;
+import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.tmt.BoxBuilder;
 
 public class Shapebox extends Box {
@@ -42,7 +41,7 @@ public class Shapebox extends Box {
 		cor7 = new Vector3f();
 	}
 
-	public Shapebox(Model model, JsonObject obj){
+	public Shapebox(Model model, JsonMap obj){
 		super(model, obj);
 		cor0 = Jsoniser.getVector(obj, "%s0", 0);
 		cor1 = Jsoniser.getVector(obj, "%s1", 0);

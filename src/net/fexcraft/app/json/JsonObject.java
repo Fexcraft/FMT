@@ -5,13 +5,13 @@ package net.fexcraft.app.json;
  * @author Ferdinand Calo' (FEX___96)
  *
  */
-public class FJObject<V> implements FJson {
+public class JsonObject<V> implements FJson {
 	
 	public V value;
 	
-	public FJObject(){}
+	public JsonObject(){}
 	
-	public FJObject(V value){
+	public JsonObject(V value){
 		this.value = value;
 	}
 	
@@ -30,7 +30,7 @@ public class FJObject<V> implements FJson {
 	
 	@Override
 	public String toString(){
-		return FJHandler.toString(this);
+		return JsonHandler.toString(this);
 	}
 
 	public float float_value(){

@@ -4,7 +4,7 @@ import static net.fexcraft.app.fmt.utils.Logging.log;
 
 import java.io.File;
 
-import com.google.gson.JsonElement;
+import net.fexcraft.app.json.JsonObject;
 
 public class TextureGroup {
 	
@@ -26,9 +26,10 @@ public class TextureGroup {
 		this(id);
 		texture = TextureManager.get(existing, false);
 	}
+	
 	/** To be used while loading in FMTBs */
-	public TextureGroup(JsonElement elm){
-		name = elm.getAsString();
+	public TextureGroup(JsonObject<?> elm){
+		name = elm.string_value();
 		texture = null;//assigned/loaded later;
 	}
 

@@ -5,15 +5,13 @@ import static net.fexcraft.app.fmt.attributes.UpdateType.POLYGON_ADDED;
 
 import org.joml.Vector3f;
 
-import com.google.gson.JsonObject;
-
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.attributes.PolyVal.ValAxe;
 import net.fexcraft.app.fmt.utils.Jsoniser;
 import net.fexcraft.app.fmt.utils.MRTRenderer.GlCache;
 import net.fexcraft.app.fmt.utils.Translator;
-import net.fexcraft.app.json.FJMap;
+import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
@@ -39,22 +37,22 @@ public abstract class Polygon {
 		visible = true;
 	}
 	
-	protected Polygon(Model model, JsonObject obj){
+	protected Polygon(Model model, JsonMap obj){
 		this.model = model == null ? FMT.MODEL : model;
-		if(obj.has("name")) name = obj.get("name").getAsString();
+		if(obj.has("name")) name = obj.get("name").string_value();
 		pos = Jsoniser.getVector(obj, "pos_%s", 0f);
 		off = Jsoniser.getVector(obj, "off_%s", 0f);
 		rot = Jsoniser.getVector(obj, "rot_%s", 0f);
-		visible = Jsoniser.get(obj, "visible", true);
-		textureX = Jsoniser.get(obj, "texture_x", -1);
-		textureY = Jsoniser.get(obj, "texture_y", -1);
+		visible = obj.get("visible", true);
+		textureX = obj.get("texture_x", -1);
+		textureY = obj.get("texture_y", -1);
 		if(obj.has("cuv")){
 			//TODO
 		}
 	}
 
-	public JsonObject save(boolean export){
-		JsonObject obj = new JsonObject();
+	public JsonMap save(boolean export){
+		JsonMap obj = new JsonMap();
 		
 		
 		return obj;
@@ -86,8 +84,8 @@ public abstract class Polygon {
 		return group;
 	}
 
-	public static Polygon from(Model model, FJMap obj){
-		Shape shape = Shape.get(obj.get("type"));
+	public static Polygon from(Model model, JsonMap obj){
+		Shape shape = Shape.get(obj.get("type").string_value());
 		switch(shape){
 			case BOUNDING_BOX:
 				break;

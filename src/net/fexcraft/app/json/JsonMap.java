@@ -11,38 +11,39 @@ import java.util.Set;
  * @author Ferdinand Calo' (FEX___96)
  *
  */
-public class FJMap extends FJObject<Map<String, FJObject<?>>> {
+public class JsonMap extends JsonObject<Map<String, JsonObject<?>>> {
 	
-	public FJMap(){
+	public JsonMap(){
 		value = new LinkedHashMap<>();
 	}
 	
-	public <V> FJObject<V> get(String key){
-		return (FJObject<V>)value.get(key);
+	public <V> JsonObject<V> get(String key){
+		return (JsonObject<V>)value.get(key);
 	}
 	
-	public FJArray getArray(String key){
+	public JsonArray getArray(String key){
 		return value.get(key).asArray();
 	}
 
-	public List<FJObject<?>> getArrayElements(String key){
+	public List<JsonObject<?>> getArrayElements(String key){
 		return getArray(key).elements();
 	}
 	
-	public FJMap getMap(String key){
+	public JsonMap getMap(String key){
+		if(!value.containsKey(key)) addMap(key);
 		return value.get(key).asMap();
 	}
 	
-	public FJObject<?> add(String key, FJObject<?> elm){
+	public JsonObject<?> add(String key, JsonObject<?> elm){
 		if(key.contains(".")){
 			String sub = key.substring(0, key.indexOf("."));
-			if(!value.containsKey(sub)) value.put(sub, new FJMap());
+			if(!value.containsKey(sub)) value.put(sub, new JsonMap());
 			return value.get(sub).asMap().add(key.substring(key.indexOf(".") + 1), elm);
 		}
 		return value.put(key, elm);
 	}
 	
-	public FJObject<?> rem(String key){
+	public JsonObject<?> rem(String key){
 		return value.remove(key);
 	}
 	
@@ -50,7 +51,7 @@ public class FJMap extends FJObject<Map<String, FJObject<?>>> {
 		return value.containsKey(key);
 	}
 	
-	public boolean contains(FJObject<?> val){
+	public boolean contains(JsonObject<?> val){
 		return value.containsValue(val);
 	}
 	
@@ -64,44 +65,48 @@ public class FJMap extends FJObject<Map<String, FJObject<?>>> {
 		return false;
 	}
 	
-	public FJObject<?> add(String key, String val){
-		return add(key, new FJObject<String>(val));
+	public JsonObject<?> add(String key, String val){
+		return add(key, new JsonObject<String>(val));
 	}
 	
-	public FJObject<?> add(String key, byte val){
-		return add(key, new FJObject<Byte>(val));
+	public JsonObject<?> add(String key, byte val){
+		return add(key, new JsonObject<Byte>(val));
 	}
 	
-	public FJObject<?> add(String key, char val){
-		return add(key, new FJObject<Character>(val));
+	public JsonObject<?> add(String key, char val){
+		return add(key, new JsonObject<Character>(val));
 	}
 	
-	public FJObject<?> add(String key, short val){
-		return add(key, new FJObject<Short>(val));
+	public JsonObject<?> add(String key, short val){
+		return add(key, new JsonObject<Short>(val));
 	}
 	
-	public FJObject<?> add(String key, int val){
-		return add(key, new FJObject<Integer>(val));
+	public JsonObject<?> add(String key, int val){
+		return add(key, new JsonObject<Integer>(val));
 	}
 	
-	public FJObject<?> add(String key, long val){
-		return add(key, new FJObject<Long>(val));
+	public JsonObject<?> add(String key, long val){
+		return add(key, new JsonObject<Long>(val));
 	}
 	
-	public FJObject<?> add(String key, float val){
-		return add(key, new FJObject<Float>(val));
+	public JsonObject<?> add(String key, float val){
+		return add(key, new JsonObject<Float>(val));
 	}
 	
-	public FJObject<?> add(String key, double val){
-		return add(key, new FJObject<Double>(val));
+	public JsonObject<?> add(String key, double val){
+		return add(key, new JsonObject<Double>(val));
+	}
+
+	public JsonObject<?> add(String key, boolean val){
+		return add(key, new JsonObject<Boolean>(val));
 	}
 	
-	public FJObject<?> addArray(String key){
-		return add(key, new FJArray());
+	public JsonObject<?> addArray(String key){
+		return add(key, new JsonArray());
 	}
 	
-	public FJObject<?> addMap(String key){
-		return add(key, new FJMap());
+	public JsonObject<?> addMap(String key){
+		return add(key, new JsonMap());
 	}
 	
 	public int size(){
@@ -116,13 +121,13 @@ public class FJMap extends FJObject<Map<String, FJObject<?>>> {
 		return value.size() > 0;
 	}
 
-	public Set<Entry<String, FJObject<?>>> entries(){
+	public Set<Entry<String, JsonObject<?>>> entries(){
 		return value.entrySet();
 	}
 	
 	@Override
 	public String toString(){
-		return FJHandler.toString(this);
+		return JsonHandler.toString(this);
 	}
 
 	public <V> V get(String key, V def){
