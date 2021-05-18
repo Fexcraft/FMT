@@ -1,11 +1,11 @@
-package net.fexcraft.app.fyadf;
+package net.fexcraft.app.json;
 
 /**
  * 
  * @author Ferdinand Calo' (FEX___96)
  *
  */
-public interface FDFInterface {
+public interface FJson {
 	
 	public default boolean isArray(){
 		return false;
@@ -19,12 +19,12 @@ public interface FDFInterface {
 		return false;
 	}
 	
-	public default FDFArray asArray(){
-		return (FDFArray)this;
+	public default FJArray asArray(){
+		return (FJArray)this;
 	}
 	
-	public default FDFMap asMap(){
-		return (FDFMap)this;
+	public default FJMap asMap(){
+		return (FJMap)this;
 	}
 
 }

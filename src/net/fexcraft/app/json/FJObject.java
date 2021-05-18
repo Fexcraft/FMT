@@ -1,17 +1,17 @@
-package net.fexcraft.app.fyadf;
+package net.fexcraft.app.json;
 
 /**
  * 
  * @author Ferdinand Calo' (FEX___96)
  *
  */
-public class FDFObject<V> implements FDFInterface {
+public class FJObject<V> implements FJson {
 	
 	public V value;
 	
-	public FDFObject(){}
+	public FJObject(){}
 	
-	public FDFObject(V value){
+	public FJObject(V value){
 		this.value = value;
 	}
 	
@@ -30,7 +30,7 @@ public class FDFObject<V> implements FDFInterface {
 	
 	@Override
 	public String toString(){
-		return FDFHandler.toString(this);
+		return FJHandler.toString(this);
 	}
 
 }

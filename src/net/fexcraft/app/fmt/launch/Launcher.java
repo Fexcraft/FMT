@@ -2,8 +2,8 @@ package net.fexcraft.app.fmt.launch;
 
 import java.io.File;
 
-import net.fexcraft.app.fyadf.FDFHandler;
-import net.fexcraft.app.fyadf.FDFMap;
+import net.fexcraft.app.json.FJHandler;
+import net.fexcraft.app.json.FJMap;
 
 /**
  * 
@@ -13,7 +13,8 @@ import net.fexcraft.app.fyadf.FDFMap;
 public class Launcher {
 	
 	public static void main(String[] args){
-		FDFMap map = FDFHandler.parse(new File("./catalog.fmt"));
+		FJMap map = FJHandler.parse(new File("./catalog.fmt"));
+		FJMap lau = FJHandler.parse(new File("./launch.fmt"));
 	}
 
 }

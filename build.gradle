@@ -172,7 +172,7 @@ task copyForUpload(){
 def String[] res_types = [ "resources/", "scripts/" ]
 
 task compileCatalog(){
-	def String catalog_fmt = 'file_root = http://fexcraft.net/files/app_data/fmt/\nfiles = [\n'
+	def String catalog_fmt = '{\n\t"file_root": "http://fexcraft.net/files/app_data/fmt/",\n\t"files": [\n'
 	def String path, restype;
 	sourceSets.main.resources.each {
 		path = it.getPath()
@@ -184,16 +184,17 @@ task compileCatalog(){
 			}
 		}
 		path = path.substring(path.indexOf(restype))
-		catalog_fmt += '\t[ "' + path + '", ' + it.lastModified() + ' ]\n'
+		catalog_fmt += '\t\t[ "' + path + '", ' + it.lastModified() + ' ],\n'
 	}
 	configurations.compile.each {
 		path = it.getPath().replace("\\", "/")
 		path = "lib" + path.substring(path.lastIndexOf("/"))
-		catalog_fmt += '\t[ "' + path + '", ' + it.lastModified() + ', true ]\n'
+		catalog_fmt += '\t\t[ "' + path + '", ' + it.lastModified() + ', true ],\n'
 	}
-	catalog_fmt += '\t[ "FMT.jar", ' + new File(projectDir, "/upload/FMT.jar").lastModified() + ', true, false ]\n';
-	catalog_fmt += ']\n'
-	catalog_fmt += 'last_catalog_update = ' + new SimpleDateFormat("HH:mm:ss dd.MMM.yyyy z").format(new Date()) + '\n';
+	catalog_fmt += '\t\t[ "FMT.jar", ' + new File(projectDir, "/upload/FMT.jar").lastModified() + ', true, false ]\n';
+	catalog_fmt += '\t],\n'
+	catalog_fmt += '\t"last_catalog_update": "' + new SimpleDateFormat("HH:mm:ss dd.MMM.yyyy z").format(new Date()) + '"\n';
+	catalog_fmt += '}\n'
 	new File(projectDir, "upload/catalog.fmt").text = catalog_fmt
 	new File(projectDir, "catalog.fmt").text = catalog_fmt
 }
