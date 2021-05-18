@@ -158,7 +158,7 @@ public class FJHandler {
 	}
 
 	public static String toString(FJObject<?> obj, int depth, boolean append, boolean flat, boolean spaced){
-		String ret = "", tab = "", tabo = "    ", space = spaced ? "" : " ", app = append ? "," + space : "", n = flat ? "" : "\n";
+		String ret = "", tab = "", tabo = "    ", space = spaced ? " " : "", app = append ? "," + space : "", n = flat ? "" : "\n";
 		if(!flat){
 			for(int j = 0; j < depth; j++){
 				tab += tabo;
