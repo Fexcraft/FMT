@@ -107,6 +107,10 @@ public class FJArray extends FJObject<List<FJObject<?>>> {
 	public boolean not_empty(){
 		return value.size() > 0;
 	}
+
+	public List<FJObject<?>> elements(){
+		return value;
+	}
 	
 	@Override
 	public String toString(){

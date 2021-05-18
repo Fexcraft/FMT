@@ -1,7 +1,11 @@
 package net.fexcraft.app.json;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Iterator;
 import java.util.Map;
@@ -45,6 +49,17 @@ public class FJHandler {
 
 	public static FJMap parse(File file){
 		return parse(file, true).asMap();
+	}
+
+	public static FJObject<?> parse(InputStream stream, boolean defmap) throws IOException {
+		BufferedInputStream bis = new BufferedInputStream(stream);
+		ByteArrayOutputStream buf = new ByteArrayOutputStream();
+		for(int res = bis.read(); res != -1; res = bis.read()) buf.write((byte)res);
+		return parse(buf.toString(StandardCharsets.UTF_8), defmap);
+	}
+
+	public static FJMap parse(InputStream stream) throws IOException {
+		return parse(stream, true).asMap();
 	}
 
 	private static Ret parseMap(FJMap root, String str){

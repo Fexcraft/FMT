@@ -1,7 +1,10 @@
 package net.fexcraft.app.json;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * 
@@ -20,6 +23,10 @@ public class FJMap extends FJObject<Map<String, FJObject<?>>> {
 	
 	public FJArray getArray(String key){
 		return value.get(key).asArray();
+	}
+
+	public List<FJObject<?>> getArrayElements(String key){
+		return getArray(key).elements();
 	}
 	
 	public FJMap getMap(String key){
@@ -108,10 +115,38 @@ public class FJMap extends FJObject<Map<String, FJObject<?>>> {
 	public boolean not_empty(){
 		return value.size() > 0;
 	}
+
+	public Set<Entry<String, FJObject<?>>> entries(){
+		return value.entrySet();
+	}
 	
 	@Override
 	public String toString(){
 		return FJHandler.toString(this);
+	}
+
+	public <V> V get(String key, V def){
+		return value.containsKey(key) ? value.get(key).value() : def;
+	}
+
+	public float getFloat(String key, float def){
+		return value.containsKey(key) ? value.get(key).float_value() : def;
+	}
+
+	public int getInteger(String key, int def){
+		return value.containsKey(key) ? value.get(key).integer_value() : def;
+	}
+
+	public long getLong(String key, long def){
+		return value.containsKey(key) ? value.get(key).long_value() : def;
+	}
+
+	public String getString(String key, String def){
+		return value.containsKey(key) ? value.get(key).string_value() : def;
+	}
+
+	public boolean getBoolean(String key, boolean def){
+		return value.containsKey(key) ? value.get(key).value() : def;
 	}
 
 }

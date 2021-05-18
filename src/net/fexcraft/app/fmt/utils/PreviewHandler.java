@@ -4,9 +4,8 @@ import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
-import com.google.gson.JsonObject;
-
 import net.fexcraft.app.fmt.polygon.Model;
+import net.fexcraft.app.json.FJMap;
 
 public class PreviewHandler {
 
@@ -20,7 +19,7 @@ public class PreviewHandler {
 		return null;
 	}
 
-	public static Model load(File file, Object porter, JsonObject obj){
+	public static Model load(File file, Object porter, FJMap map){
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -9,24 +9,12 @@ import java.io.IOException;
 
 import org.joml.Vector3f;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
-
 /**
  * A fresher JSON Utility than the one in FCL.
  * 
  * @author Ferdinand Calo' (FEX___96)
  */
 public class Jsoniser {
-	
-	private static final JsonParser parser = new JsonParser();
-	public static final Gson PRETTY = new GsonBuilder().setPrettyPrinting().create();
-	public static final Gson NRGSON = new GsonBuilder().create();
 	
 	public static JsonElement parse(String string, boolean errprt){
 		if(string == null) return null;

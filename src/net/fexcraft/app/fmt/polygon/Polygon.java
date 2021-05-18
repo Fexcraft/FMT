@@ -13,6 +13,7 @@ import net.fexcraft.app.fmt.attributes.PolyVal.ValAxe;
 import net.fexcraft.app.fmt.utils.Jsoniser;
 import net.fexcraft.app.fmt.utils.MRTRenderer.GlCache;
 import net.fexcraft.app.fmt.utils.Translator;
+import net.fexcraft.app.json.FJMap;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
@@ -85,8 +86,8 @@ public abstract class Polygon {
 		return group;
 	}
 
-	public static Polygon from(Model model, JsonObject obj){
-		Shape shape = Shape.get(obj.get("type").getAsString());
+	public static Polygon from(Model model, FJMap obj){
+		Shape shape = Shape.get(obj.get("type"));
 		switch(shape){
 			case BOUNDING_BOX:
 				break;
