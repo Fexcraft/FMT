@@ -246,12 +246,13 @@ public class JsonHandler {
 			connection.setRequestProperty("User-Agent", "Mozilla/5.0");
 			connection.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
 			connection.setConnectTimeout(10000);
-			connection.setDoOutput(true);
-			//
-			DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
-			wr.writeBytes(adr[1]);
-			wr.flush();
-			wr.close();
+			connection.setDoOutput(adr.length > 1);
+			if(adr.length > 1){
+				DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
+				wr.writeBytes(adr[1]);
+				wr.flush();
+				wr.close();
+			}
 			//
 			JsonMap obj = parse(connection.getInputStream());
 			connection.disconnect();

@@ -8,9 +8,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.ui.GenericDialog;
-import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
@@ -27,10 +24,10 @@ public class Catalog {
 	private static ArrayList<Resource> mismatches = new ArrayList<>();
 	private static final File CATALOG_FILE = new File("./catalog.fmt");
 	private static String REMOTE_ROOT = "http://fexcraft.net/files/app_data/fmt/";
-	private static boolean DIALOG;
+	//private static boolean DIALOG;
 
 	public static void fetch(){
-		Logging.log("Fetching catalog...");
+		Launcher.log("Fetching catalog...");
 		JsonMap map = JsonHandler.parseURL("http://fexcraft.net/files/app_data/fmt/catalog.fmt");
 		if(!CATALOG_FILE.getParentFile().exists()) CATALOG_FILE.getParentFile().mkdirs();
 		if(map == null || map.empty()) return;
@@ -38,10 +35,11 @@ public class Catalog {
 	}
 	
 	public static boolean load(){
-		Logging.log("Loading file catalog...");
+		clear();
+		Launcher.log("Loading file catalog...");
 		JsonMap map = JsonHandler.parse(CATALOG_FILE);
 		if(map == null || !map.has("files")){
-			Logging.log(">> Catalog is empty or missing.");
+			Launcher.log(">> Catalog is empty or missing.");
 			return false;
 		}
 		REMOTE_ROOT = map.get("file_root", REMOTE_ROOT);
@@ -55,14 +53,19 @@ public class Catalog {
 	}
 
 	public static boolean check(){
+		Launcher.log("Checking files based on catalog...");
 		for(Resource res : files){
-			if(!res.file.exists() || (res.file.lastModified() != res.date && res.override) || res.remove) mismatches.add(res);
+			if(!res.file.exists() || (res.file.lastModified() < res.date && res.override) || res.remove) mismatches.add(res);
 		}
 		if(mismatches.size() > 0){
-			Logging.log("Found " + mismatches.size() + " missing or outdated files.");
+			Launcher.log("Found " + mismatches.size() + " missing or outdated files.");
 			return true;
 		}
-		return false;
+		else{
+			Launcher.log("No missing or outdated files found.");
+			Launcher.log("FMT can be launched.");
+			return false;
+		}
 	}
 	
 	public static class Resource {
@@ -96,52 +99,31 @@ public class Catalog {
 		
 	}
 
-	public static void process(boolean fresh){
-		FMT.INSTANCE.setTitle("Checking Catalog...");
-		if(fresh) fetch();
-		if(!load()){
-			FMT.updateTitle();
-			return;
-		}
-		FMT.INSTANCE.setTitle("Updating Installation...");
-		if(check() && update(fresh)){
-			if(fresh) GenericDialog.show("update.title", "dialog.button.exit", null, () -> FMT.close(), null, "update.remote_catalog_update");
-			else DIALOG = true;
-		}
-		clear();
-		FMT.updateTitle();
-	}
-
-	private static boolean update(boolean fresh){
+	public static boolean update(){
 		boolean bool = false;
 		int files = 0;
 		for(Resource res : mismatches){
 			if(res.file.exists() && res.file.delete()){
+	        	Launcher.log("Removing " + res.id);
 				bool = true;
 				files++;
 			}
 		}
-		if(bool) Logging.log("Removed outdated files. (" + files + " total)");
+		if(bool) Launcher.log(">> Removed outdated files. (" + files + " total)");
 		files = 0;
 		for(Resource res : mismatches){
 	        try{
-	        	Logging.log("Downloading " + res.id);
+	        	Launcher.log("Downloading " + res.id);
 	        	HttpURLConnection conn = (HttpURLConnection)res.getURL().openConnection();
 	            Files.copy(conn.getInputStream(), Paths.get(res.file.toURI()));
 	            files++;
 	        }
 	        catch(Exception e){
-	        	Logging.log(e);
+	        	Launcher.log(e);
 	        }
 		}
-		Logging.log("Downloaded latest files. (" + files + " total)");
+		Launcher.log(">> Downloaded latest files. (" + files + " total)");
 		return bool;
-	}
-
-	public static void show(){
-		if(!DIALOG) return;
-		GenericDialog.show("update.title", "dialog.button.exit", "dialog.button.ok", () -> FMT.close(), null, "update.local_catalog_update0", "update.local_catalog_update1");
-		DIALOG = false;
 	}
 
 }

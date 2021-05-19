@@ -31,8 +31,8 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryUtil;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.launch.Catalog;
 import net.fexcraft.app.fmt.ui.Editor;
+import net.fexcraft.app.fmt.ui.GenericDialog;
 import net.fexcraft.app.fmt.ui.components.BoxComponent;
 import net.fexcraft.app.fmt.ui.components.CylinderComponentFull;
 import net.fexcraft.app.fmt.ui.components.PolygonGeneral;
@@ -362,6 +362,7 @@ public class Settings {
             		//Thread thread = new Thread(() -> Catalog.process(true));
             		//thread.setName("Update");
             		//thread.start();
+            		//GenericDialog.show("update.title", "dialog.button.exit", null, () -> FMT.close(), null, "update.remote_catalog_update");
             	}
             });
 			dialog.getContainer().add(button0);
@@ -371,7 +372,7 @@ public class Settings {
             		UPDATE_SKIPPED = UPDATE_FOUND;
             		dialog.close();
             		save();
-            		Catalog.show();
+            		showUpdate();
             	}
             });
 			dialog.getContainer().add(button1);
@@ -379,7 +380,7 @@ public class Settings {
             button2.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
             	if(CLICK == e.getAction()){
             		dialog.close();
-            		Catalog.show();
+            		showUpdate();
             	}
             });
 			dialog.getContainer().add(button2);
@@ -391,13 +392,17 @@ public class Settings {
             button.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
             	if(CLICK == e.getAction()){
             		dialog.close();
-            		Catalog.show();
+            		showUpdate();
             	}
             });
 			dialog.getContainer().add(button);
 		}
 		applyComponentTheme(dialog.getContainer());
 		dialog.show(FMT.FRAME);
+	}
+
+	private static void showUpdate(){
+		GenericDialog.show("update.title", "dialog.button.exit", "dialog.button.ok", () -> FMT.close(), null, "update.local_catalog_update0", "update.local_catalog_update1");
 	}
 
 }
