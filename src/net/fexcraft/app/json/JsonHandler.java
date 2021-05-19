@@ -2,9 +2,12 @@ package net.fexcraft.app.json;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Iterator;
@@ -234,9 +237,29 @@ public class JsonHandler {
 		}
 	}
 
-	public static JsonMap parseURL(String... url){
-		// TODO Auto-generated method stub
-		return null;
+	public static JsonMap parseURL(String... adr){
+		try{
+			URL url = new URL(adr[0]);
+			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+			connection.setRequestMethod(adr.length > 1 ? "POST" : "GET");
+			connection.setRequestProperty("User-Agent", "Mozilla/5.0");
+			connection.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+			connection.setConnectTimeout(10000);
+			connection.setDoOutput(true);
+			//
+			DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
+			wr.writeBytes(adr[1]);
+			wr.flush();
+			wr.close();
+			//
+			JsonMap obj = parse(connection.getInputStream());
+			connection.disconnect();
+			return obj;
+		}
+		catch(IOException e){
+			e.printStackTrace();
+			return new JsonMap();
+		}
 	}
 
 }
