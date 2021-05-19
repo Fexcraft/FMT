@@ -176,7 +176,8 @@ public class JsonHandler {
 	}
 
 	public static String toString(JsonObject<?> obj, int depth, boolean append, boolean flat, boolean spaced){
-		String ret = "", tab = "", tabo = "    ", space = spaced ? " " : "", app = append ? "," + space : "", n = flat ? "" : "\n";
+		String ret = "", tab = "", tabo = "    ", space = spaced ? " " : "", colspace = !flat || spaced ? " " : "";
+		String app = append ? "," + space : "", n = flat ? "" : "\n";
 		if(!flat){
 			for(int j = 0; j < depth; j++){
 				tab += tabo;
@@ -192,7 +193,7 @@ public class JsonHandler {
 				Iterator<Entry<String, JsonObject<?>>> it = obj.asMap().value.entrySet().iterator();
 				while(it.hasNext()){
 					Map.Entry<String, JsonObject<?>> entry = it.next();
-					ret += tab + tabo + '"' + entry.getKey() + '"' + ":" + space + toString(entry.getValue(), depth + 1, it.hasNext(), flat, spaced);
+					ret += tab + tabo + '"' + entry.getKey() + '"' + ":" + colspace + toString(entry.getValue(), depth + 1, it.hasNext(), flat, spaced);
 				}
 				ret += tab + space + "}" + app + n;
 			}
