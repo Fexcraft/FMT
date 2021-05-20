@@ -7,6 +7,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
@@ -47,6 +48,17 @@ public class Launcher extends Frame {
 		//area.addTextListener(lis -> area.setText(log));
 		add(area);
 		//
+		Thread thread = new Thread(() -> {
+			try{
+				Files.writeString(new File("./launcher.log").toPath(), log);
+			}
+			catch(IOException e){
+				e.printStackTrace();
+			}
+		});
+		thread.setName("LogWriter");
+		Runtime.getRuntime().addShutdownHook(thread);
+		//
 		start = new Button("Start FMT");
 		start.setBounds(10, H - 40, 100, 30);
 		start.addActionListener(event -> {
@@ -63,14 +75,17 @@ public class Launcher extends Frame {
 					start.setEnabled(false);
 					Catalog.fetch();
 					boolean loaded = Catalog.load();
-					boolean check = false;
 					if(loaded){
-						check = !Catalog.check();
-						Catalog.update();
-						check = !Catalog.check();
+						Catalog.check();
+						Catalog.update(() -> {
+							boolean check = !Catalog.check();
+							update.setEnabled(true);
+							start.setEnabled(check);
+						});
 					}
-					update.setEnabled(loaded);
-					start.setEnabled(check);
+					else{
+						update.setEnabled(false);
+					}
 				}
 			}
 			catch(IOException | InterruptedException e){
@@ -86,7 +101,7 @@ public class Launcher extends Frame {
 		//
 		update = new Button("Update FMT");
 		update.setBounds(120, H - 40, 100, 30);
-		update.addActionListener(event -> update(false));
+		update.addActionListener(event -> Catalog.update(() -> start.setEnabled(!Catalog.check())));
 		update.setEnabled(false);
 		add(update);
 		//
@@ -124,11 +139,6 @@ public class Launcher extends Frame {
 		}
 		update.setEnabled(loaded);
 		start.setEnabled(check);
-	}
-
-	private void update(boolean quiet){
-		Catalog.update();
-		start.setEnabled(!Catalog.check());
 	}
 
 	public static void log(Object obj){
