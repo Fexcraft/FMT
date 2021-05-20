@@ -54,6 +54,7 @@ public class Catalog {
 	}
 
 	public static boolean check(){
+		clear();
 		Launcher.log("Looking for missing or outdated files...");
 		for(Resource res : files){
 			if(!res.file.exists() || (res.file.lastModified() < res.date && res.override) || res.remove) mismatches.add(res);
