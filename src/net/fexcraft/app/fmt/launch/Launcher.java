@@ -70,7 +70,7 @@ public class Launcher extends Frame {
 				int code = pro.waitFor();
 				setVisible(true);
 				log("FMT has closed with exit code '" + code + "'.");
-				if(code % 10 == 0){
+				if(code > 0 && code % 10 == 0){
 					log("> Update request detected, attempting to update...");
 					start.setEnabled(false);
 					Catalog.fetch();
