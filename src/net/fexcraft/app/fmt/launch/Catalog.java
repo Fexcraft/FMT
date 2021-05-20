@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 
 import net.fexcraft.app.json.JsonArray;
@@ -94,39 +95,44 @@ public class Catalog {
 		}
 
 		public URL getURL() throws MalformedURLException {
-			return new URL(REMOTE_ROOT + id);
+			return new URL((REMOTE_ROOT + id).replace(" ", "%20"));
 		}
 		
 	}
 
-	public static boolean update(){
-		boolean bool = false;
-		int files = 0;
-		for(Resource res : mismatches){
-			if(res.file.exists() && res.file.delete()){
-	        	Launcher.log("Removing " + res.id);
-				bool = true;
-				files++;
-			}
-		}
-		if(bool) Launcher.log("> Removed outdated files. (" + files + " total)");
-		files = 0;
-		for(Resource res : mismatches){
-	        try{
-	        	Launcher.log("Downloading " + res.id);
-	        	HttpURLConnection conn = (HttpURLConnection)res.getURL().openConnection();
-	            Files.copy(conn.getInputStream(), Paths.get(res.file.toURI()));
-	            files++;
-	        }
-	        catch(Exception e){
-	        	Launcher.log(e);
-				for(StackTraceElement trace : e.getStackTrace()){
-					Launcher.log(trace.toString());
+	public static void update(Runnable run){
+		Thread thread = new Thread(() -> {
+			boolean bool = false;
+			int files = 0;
+			for(Resource res : mismatches){
+				if(res.file.exists() && res.file.delete()){
+		        	Launcher.log("Removing " + res.id);
+					bool = true;
+					files++;
 				}
-	        }
-		}
-		Launcher.log("> Downloaded latest files. (" + files + " total)");
-		return bool;
+			}
+			if(bool) Launcher.log("> Removed outdated files. (" + files + " total)");
+			files = 0;
+			for(Resource res : mismatches){
+		        try{
+		        	Launcher.log("Downloading " + res.id);
+		        	HttpURLConnection conn = (HttpURLConnection)res.getURL().openConnection();
+		        	if(!res.file.getParentFile().exists()) res.file.getParentFile().mkdirs();
+		            Files.copy(conn.getInputStream(), Paths.get(res.file.toURI()), StandardCopyOption.REPLACE_EXISTING);
+		            files++;
+		        }
+		        catch(Exception e){
+		        	Launcher.log(e);
+					for(StackTraceElement trace : e.getStackTrace()){
+						Launcher.log(trace.toString());
+					}
+		        }
+			}
+			Launcher.log("> Downloaded latest files. (" + files + " total)");
+			if(run != null) run.run();
+		});
+		thread.setName("File Remover/Downloader");
+		thread.start();
 	}
 
 }
