@@ -28,13 +28,7 @@ public class Launcher extends Frame {
 		log("Starting launcher...");
 		File laufile = new File("./launch.fmt");
 		if(!laufile.exists()) log("No launch.fmt file found... Welcome to FMT Launcher!");
-		File setfile = new File("./settings.json");
 		JsonMap lau = JsonHandler.parse(laufile);
-		JsonMap set = JsonHandler.parse(setfile);
-		if(set.getBoolean("update_queued", false)){
-			log("Update marked as queued, fetching catalog...");
-			Catalog.fetch();
-		}
 		boolean loaded = Catalog.load();
 		boolean check = false;
 		if(loaded){
@@ -43,8 +37,6 @@ public class Launcher extends Frame {
 		reload.setEnabled(true);
 		update.setEnabled(loaded);
 		start.setEnabled(check);
-		set.get("update_queued").value(false);
-		JsonHandler.print(setfile, set, false, false);
 		JsonHandler.print(laufile, lau, false, false);
 	}
 
