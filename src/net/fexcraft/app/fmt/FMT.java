@@ -79,7 +79,7 @@ public class FMT {
 	public static final String CLID = "587016218196574209";
 	//
 	public static final FMT INSTANCE = new FMT();
-	public static int WIDTH, HEIGHT;
+	public static int WIDTH, HEIGHT, EXIT_CODE = 0;
 	private static String title;
 	//
 	public static final Timer timer = new Timer();
@@ -286,7 +286,7 @@ public class FMT {
 		glfwTerminate();
 		Settings.save();
 		//TODO other saves
-		System.exit(0);
+		System.exit(EXIT_CODE);
 	}
 
 	private void render(int vao, float alpha){
@@ -448,7 +448,8 @@ public class FMT {
 		}
 	}
 
-	public static void close(){
+	public static void close(int exit_code){
+		EXIT_CODE = exit_code;
 		glfwSetWindowShouldClose(FMT.INSTANCE.window, true);
 	}
 

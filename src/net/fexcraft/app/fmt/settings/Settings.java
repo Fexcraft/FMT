@@ -32,7 +32,6 @@ import org.lwjgl.system.MemoryUtil;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.ui.Editor;
-import net.fexcraft.app.fmt.ui.GenericDialog;
 import net.fexcraft.app.fmt.ui.components.BoxComponent;
 import net.fexcraft.app.fmt.ui.components.CylinderComponentFull;
 import net.fexcraft.app.fmt.ui.components.PolygonGeneral;
@@ -359,10 +358,7 @@ public class Settings {
             	if(CLICK == e.getAction()){
             		UPDATE_QUEUED = true;
             		dialog.close();
-            		//Thread thread = new Thread(() -> Catalog.process(true));
-            		//thread.setName("Update");
-            		//thread.start();
-            		//GenericDialog.show("update.title", "dialog.button.exit", null, () -> FMT.close(), null, "update.remote_catalog_update");
+            		FMT.close(10);
             	}
             });
 			dialog.getContainer().add(button0);
@@ -372,37 +368,22 @@ public class Settings {
             		UPDATE_SKIPPED = UPDATE_FOUND;
             		dialog.close();
             		save();
-            		showUpdate();
             	}
             });
 			dialog.getContainer().add(button1);
 			Button button2 = new Button(translate("dialog.button.close"), 210, 90, 80, 20);
-            button2.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
-            	if(CLICK == e.getAction()){
-            		dialog.close();
-            		showUpdate();
-            	}
-            });
+            button2.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> { if(CLICK == e.getAction()) dialog.close(); });
 			dialog.getContainer().add(button2);
 		}
 		else if(welcome){
 			dialog.getContainer().add(new Label(translate("welcome.normal.greeting_" + "guest"), 10, 10, width - 20, 20));//TODO session handler
 			dialog.getContainer().add(new Label(format("welcome.normal.version", FMT.VERSION), 10, 35, width - 20, 20));
 			Button button = new Button(translate("dialog.button.close"), width - 90, 60, 80, 20);
-            button.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
-            	if(CLICK == e.getAction()){
-            		dialog.close();
-            		showUpdate();
-            	}
-            });
+            button.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> { if(CLICK == e.getAction()) dialog.close(); });
 			dialog.getContainer().add(button);
 		}
 		applyComponentTheme(dialog.getContainer());
 		dialog.show(FMT.FRAME);
-	}
-
-	private static void showUpdate(){
-		GenericDialog.show("update.title", "dialog.button.exit", "dialog.button.ok", () -> FMT.close(), null, "update.local_catalog_update0", "update.local_catalog_update1");
 	}
 
 }

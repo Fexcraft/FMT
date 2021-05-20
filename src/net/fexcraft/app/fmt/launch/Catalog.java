@@ -39,7 +39,7 @@ public class Catalog {
 		Launcher.log("Loading file catalog...");
 		JsonMap map = JsonHandler.parse(CATALOG_FILE);
 		if(map == null || !map.has("files")){
-			Launcher.log(">> Catalog is empty or missing.");
+			Launcher.log("> Catalog is empty or missing.");
 			return false;
 		}
 		REMOTE_ROOT = map.get("file_root", REMOTE_ROOT);
@@ -53,7 +53,7 @@ public class Catalog {
 	}
 
 	public static boolean check(){
-		Launcher.log("Checking files based on catalog...");
+		Launcher.log("Looking for missing or outdated files...");
 		for(Resource res : files){
 			if(!res.file.exists() || (res.file.lastModified() < res.date && res.override) || res.remove) mismatches.add(res);
 		}
@@ -62,8 +62,8 @@ public class Catalog {
 			return true;
 		}
 		else{
-			Launcher.log("No missing or outdated files found.");
-			Launcher.log("FMT can be launched.");
+			Launcher.log("# No missing or outdated files found.");
+			Launcher.log("# FMT can be launched.");
 			return false;
 		}
 	}
@@ -109,7 +109,7 @@ public class Catalog {
 				files++;
 			}
 		}
-		if(bool) Launcher.log(">> Removed outdated files. (" + files + " total)");
+		if(bool) Launcher.log("> Removed outdated files. (" + files + " total)");
 		files = 0;
 		for(Resource res : mismatches){
 	        try{
@@ -120,9 +120,12 @@ public class Catalog {
 	        }
 	        catch(Exception e){
 	        	Launcher.log(e);
+				for(StackTraceElement trace : e.getStackTrace()){
+					Launcher.log(trace.toString());
+				}
 	        }
 		}
-		Launcher.log(">> Downloaded latest files. (" + files + " total)");
+		Launcher.log("> Downloaded latest files. (" + files + " total)");
 		return bool;
 	}
 

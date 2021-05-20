@@ -155,10 +155,6 @@ welcome.update.skip=Skip Version
 welcome.normal.greeting_logged=Welcome back %s!
 welcome.normal.greeting_guest=Have a nice time using FMT!
 welcome.normal.version=Running FMT v. %s
-update.title=FMT Updater
-update.local_catalog_update0=Installation refreshed based local file/resource catalog.
-update.local_catalog_update1=A restart may be required for changes to take full effect.
-update.remote_catalog_update=Installation updated, a restart is required.
 
 # Other
 filechooser.title=FMT Internal File Chooser/Selector

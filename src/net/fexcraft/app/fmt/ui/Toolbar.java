@@ -53,7 +53,7 @@ public class Toolbar extends Panel {
 			new MenuButton(6, "file.export"),
 			new MenuButton(7, "file.settings"),
 			new MenuButton(8, "file.donate"),
-			new MenuButton(9, "file.exit", () -> FMT.close())
+			new MenuButton(9, "file.exit", () -> FMT.close(0))
 		));
 		this.add(new ToolbarMenu(1, "utils"));
 		this.add(new ToolbarMenu(2, "editors",
@@ -97,7 +97,7 @@ public class Toolbar extends Panel {
 			//new MenuButton(3, "project.export"),
 			new MenuButton(2, "project.close")
 		));
-		this.add(new ToolbarMenu(8, "exit", () -> FMT.close()));
+		this.add(new ToolbarMenu(8, "exit", () -> FMT.close(0)));
 		UpdateHandler.registerHolder(holder);
 	}
 

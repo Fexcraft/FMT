@@ -65,6 +65,20 @@ public class Launcher extends Frame {
 				int code = pro.waitFor();
 				setVisible(true);
 				log("FMT has closed with exit code '" + code + "'.");
+				if(code % 10 == 0){
+					log("> Update request detected, attempting to update...");
+					start.setEnabled(false);
+					Catalog.fetch();
+					boolean loaded = Catalog.load();
+					boolean check = false;
+					if(loaded){
+						check = !Catalog.check();
+						Catalog.update();
+						check = !Catalog.check();
+					}
+					update.setEnabled(loaded);
+					start.setEnabled(check);
+				}
 			}
 			catch(IOException | InterruptedException e){
 				e.printStackTrace();
@@ -79,25 +93,13 @@ public class Launcher extends Frame {
 		//
 		update = new Button("Update FMT");
 		update.setBounds(120, H - 40, 100, 30);
-		update.addActionListener(event -> {
-			Catalog.update();
-			start.setEnabled(!Catalog.check());
-		});
+		update.addActionListener(event -> update(false));
 		update.setEnabled(false);
 		add(update);
 		//
 		reload = new Button("Reload Catalog");
 		reload.setBounds(230, H - 40, 100, 30);
-		reload.addActionListener(event -> {
-			Catalog.fetch();
-			boolean loaded = Catalog.load();
-			boolean check = false;
-			if(loaded){
-				check = !Catalog.check();
-			}
-			update.setEnabled(loaded);
-			start.setEnabled(check);
-		});
+		reload.addActionListener(event -> reload());
 		reload.setEnabled(false);
 		add(reload);
 		//
@@ -120,9 +122,26 @@ public class Launcher extends Frame {
 		});
 	}
 
+	private void reload(){
+		Catalog.fetch();
+		boolean loaded = Catalog.load();
+		boolean check = false;
+		if(loaded){
+			check = !Catalog.check();
+		}
+		update.setEnabled(loaded);
+		start.setEnabled(check);
+	}
+
+	private void update(boolean quiet){
+		Catalog.update();
+		start.setEnabled(!Catalog.check());
+	}
+
 	public static void log(Object obj){
 		log += obj + "\n";
 		area.setText(log);
+		area.setCaretPosition(log.length() - 1);
 		System.out.println(obj);
 	}
 
