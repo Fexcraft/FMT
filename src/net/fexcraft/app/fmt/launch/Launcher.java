@@ -6,6 +6,7 @@ import java.awt.TextArea;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.IOException;
 
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
@@ -23,7 +24,7 @@ public class Launcher extends Frame {
 	private static Button start, update, reload, exit;
 
 	public static void main(String[] args){
-		Launcher launcher = new Launcher();
+		new Launcher();
 		log("Starting launcher...");
 		File laufile = new File("./launch.fmt");
 		if(!laufile.exists()) log("No launch.fmt file found... Welcome to FMT Launcher!");
@@ -45,7 +46,6 @@ public class Launcher extends Frame {
 		set.get("update_queued").value(false);
 		JsonHandler.print(setfile, set, false, false);
 		JsonHandler.print(laufile, lau, false, false);
-
 	}
 
 	public Launcher(){
@@ -58,7 +58,21 @@ public class Launcher extends Frame {
 		start = new Button("Start FMT");
 		start.setBounds(10, H - 40, 100, 30);
 		start.addActionListener(event -> {
-			log("//TODO");
+			try{
+				log("Launching FMT...");
+				Process pro = Runtime.getRuntime().exec(" java -jar " + (new File("./FMT.jar").getPath()));
+				setVisible(false);
+				int code = pro.waitFor();
+				setVisible(true);
+				log("FMT has closed with exit code '" + code + "'.");
+			}
+			catch(IOException | InterruptedException e){
+				e.printStackTrace();
+				log("ERROR: " + e.getMessage());
+				for(StackTraceElement trace : e.getStackTrace()){
+					log(trace.toString());
+				}
+			}
 		});
 		start.setEnabled(false);
 		add(start);
