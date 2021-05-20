@@ -188,6 +188,10 @@ task copyForUpload(){
     	from "resources/"
     	into "upload/resources"
 	}
+	copy {
+    	from "scripts/"
+    	into "upload/scripts"
+	}
 }
 
 def String[] res_types = [ "resources/", "scripts/" ]
