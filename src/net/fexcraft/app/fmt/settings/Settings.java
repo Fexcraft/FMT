@@ -54,7 +54,7 @@ public class Settings {
 	public static final String FONT = FontRegistry.ROBOTO_BOLD;
 	public static final String FONT_PATH = "org/liquidengine/legui/style/font/Roboto-Bold.ttf";
 	public static String UPDATE_FOUND, UPDATE_SKIPPED = "";
-	public static boolean FOUND_UPDATE, UPDATE_QUEUED, UPDATECHECK_FAILED;
+	public static boolean FOUND_UPDATE, UPDATECHECK_FAILED;
 	public static Setting<Integer> WINDOW_WIDTH, WINDOW_HEIGHT, ROUNDING_DIGITS;
 	public static Setting<Boolean> DISCORD_RPC, DISCORD_HIDE, DISCORD_RESET_ON_NEW, FULLSCREEN;
 	public static Setting<Boolean> VSYNC, HVSYNC, TRIANGULATION_Q, TRIANGULATION_L, INTERNAL_CHOOSER;
@@ -174,7 +174,6 @@ public class Settings {
 		obj.add("last_fmt_version", FMT.VERSION);
 		obj.add("last_fmt_exit", Time.getAsString(Time.getDate()));
 		obj.add("update_found", UPDATE_FOUND);
-		obj.add("update_queued", UPDATE_QUEUED);
 		obj.add("update_skipped", UPDATE_SKIPPED);
 		JsonHandler.print(new File("./settings.json"), obj, false, false);
 	}
@@ -356,7 +355,6 @@ public class Settings {
 			Button button0 = new Button(translate("dialog.button.yes"), 10, 90, 80, 20);
             button0.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
             	if(CLICK == e.getAction()){
-            		UPDATE_QUEUED = true;
             		dialog.close();
             		FMT.close(10);
             	}
