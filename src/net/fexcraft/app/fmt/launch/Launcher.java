@@ -52,7 +52,8 @@ public class Launcher extends Frame {
 		start.addActionListener(event -> {
 			try{
 				log("Launching FMT...");
-				Process pro = Runtime.getRuntime().exec(" java -jar " + (new File("./FMT.jar").getPath()));
+				String macfix = System.getProperty("os.name").toLowerCase().contains("mac") ? "-XstartOnFirstThread " : "";
+				Process pro = Runtime.getRuntime().exec(" java " + macfix + "-jar " + (new File("./FMT.jar").getPath()));
 				setVisible(false);
 				int code = pro.waitFor();
 				setVisible(true);
