@@ -57,6 +57,7 @@ public class Settings {
 	public static String UPDATE_FOUND, UPDATE_SKIPPED = "";
 	public static boolean FOUND_UPDATE, UPDATECHECK_FAILED;
 	public static ArrayList<File> RECENT = new ArrayList<File>();
+	public static File NO_FILE_DOTS = new File("...");
 	public static Setting<Integer> WINDOW_WIDTH, WINDOW_HEIGHT, ROUNDING_DIGITS;
 	public static Setting<Boolean> DISCORD_RPC, DISCORD_HIDE, DISCORD_RESET_ON_NEW, FULLSCREEN;
 	public static Setting<Boolean> VSYNC, HVSYNC, TRIANGULATION_Q, TRIANGULATION_L, INTERNAL_CHOOSER;
@@ -96,9 +97,14 @@ public class Settings {
 		if(obj.has("format") && obj.get("format").integer_value() != FORMAT) obj = new JsonMap();
 		UPDATE_FOUND = obj.get("update_found", FMT.VERSION);
 		UPDATE_SKIPPED = obj.get("update_skipped", UPDATE_SKIPPED);
-		for(int i = 0; i < 10; i++){
-			RECENT.add(new File("..."));
+		if(obj.has("recent_files")){
+			JsonArray array = obj.getArray("recent_files");
+			for(int i = 0; i < 10; i++){
+				if(i >= array.size()) RECENT.add(new File("..."));
+				else RECENT.add(new File(array.get(i).string_value()));
+			}
 		}
+		else for(int i = 0; i < 10; i++) RECENT.add(NO_FILE_DOTS);
 		//
 		VSYNC = new Setting<>("vsync", true, GRAPHIC, obj);
 		HVSYNC = new Setting<>("vsync/2", false, GRAPHIC, obj);
@@ -180,6 +186,12 @@ public class Settings {
 		obj.add("last_fmt_exit", Time.getAsString(Time.getDate()));
 		obj.add("update_found", UPDATE_FOUND);
 		obj.add("update_skipped", UPDATE_SKIPPED);
+		JsonArray recent = new JsonArray();
+		for(File file : RECENT){
+			if(file.equals(NO_FILE_DOTS)) continue;
+			recent.add(file.toString());
+		}
+		if(recent.size() > 0) obj.add("recent_files", recent);
 		JsonHandler.print(new File("./settings.json"), obj, false, false);
 	}
 
