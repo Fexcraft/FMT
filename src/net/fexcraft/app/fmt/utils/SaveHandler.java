@@ -460,6 +460,7 @@ public class SaveHandler {
 			FileChooser.chooseFile(Translator.translate("saveload.open"), "./saves", FileChooser.TYPE_FMTB, false, task -> {
 				UpdateHandler.update(UpdateType.MODEL_UNLOAD, FMT.MODEL);
 				FMT.MODEL = new Model(task, null);
+				Settings.addRecentFile(task);
 				FMT.MODEL.load();
 			});
 		};

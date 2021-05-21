@@ -45,7 +45,11 @@ public class Toolbar extends Panel {
 				new MenuButton(8, "file.recent.none"),
 				new MenuButton(9, "file.recent.none")
 			).setLayerPreShow(layer -> {
-				//TODO
+				int[] idx = { 0 };
+				layer.getMenuComponents().forEach(com -> {
+					((MenuButton)com).label.getTextState().setText(Settings.RECENT.get(idx[0]).getName());
+					idx[0]++;
+				});
 			}),
 			new MenuButton(3, "file.save", () -> SaveHandler.saveDialogByState(null)),
 			new MenuButton(4, "file.save_as", () -> SaveHandler.saveAsDialog(null)),

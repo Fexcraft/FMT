@@ -10,6 +10,7 @@ import static org.lwjgl.glfw.GLFW.glfwGetVideoMode;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowMonitor;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -55,6 +56,7 @@ public class Settings {
 	public static final String FONT_PATH = "org/liquidengine/legui/style/font/Roboto-Bold.ttf";
 	public static String UPDATE_FOUND, UPDATE_SKIPPED = "";
 	public static boolean FOUND_UPDATE, UPDATECHECK_FAILED;
+	public static ArrayList<File> RECENT = new ArrayList<File>();
 	public static Setting<Integer> WINDOW_WIDTH, WINDOW_HEIGHT, ROUNDING_DIGITS;
 	public static Setting<Boolean> DISCORD_RPC, DISCORD_HIDE, DISCORD_RESET_ON_NEW, FULLSCREEN;
 	public static Setting<Boolean> VSYNC, HVSYNC, TRIANGULATION_Q, TRIANGULATION_L, INTERNAL_CHOOSER;
@@ -94,6 +96,9 @@ public class Settings {
 		if(obj.has("format") && obj.get("format").integer_value() != FORMAT) obj = new JsonMap();
 		UPDATE_FOUND = obj.get("update_found", FMT.VERSION);
 		UPDATE_SKIPPED = obj.get("update_skipped", UPDATE_SKIPPED);
+		for(int i = 0; i < 10; i++){
+			RECENT.add(new File("..."));
+		}
 		//
 		VSYNC = new Setting<>("vsync", true, GRAPHIC, obj);
 		HVSYNC = new Setting<>("vsync/2", false, GRAPHIC, obj);
@@ -382,6 +387,21 @@ public class Settings {
 		}
 		applyComponentTheme(dialog.getContainer());
 		dialog.show(FMT.FRAME);
+	}
+
+	public static void addRecentFile(File file){
+		if(RECENT.get(0).equals(file)) return;
+		if(RECENT.contains(file)){
+			int index = RECENT.indexOf(file);
+			if(index >= 0){
+				RECENT.remove(index);
+				RECENT.add(0, file);
+			}
+		}
+		else{
+			RECENT.add(0, file);
+		}
+		while(RECENT.size() > 10) RECENT.remove(RECENT.size() - 1);
 	}
 
 }

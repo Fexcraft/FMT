@@ -160,6 +160,10 @@ public class ToolbarMenu extends Panel {
 				if(!layer.anyComponentHovered(layer.getChildComponents())) layer.hide();
 			}
 		}
+		
+		public Collection<Component> getMenuComponents(){
+			return components;
+		}
         
 	}
 	
