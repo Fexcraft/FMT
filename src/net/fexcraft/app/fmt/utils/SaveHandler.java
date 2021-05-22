@@ -41,7 +41,6 @@ import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.ui.FileChooser;
 import net.fexcraft.app.fmt.ui.GenericDialog;
-import net.fexcraft.app.fmt.ui.Toolbar;
 import net.fexcraft.app.fmt.ui.fieds.TextField;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
@@ -56,7 +55,7 @@ public class SaveHandler {
 			return;
 		}
 		try{
-			Toolbar.addRecent(file);
+			Settings.addRecentFile(file);
 			TextureManager.clearGroups();
 			ZipFile zip = new ZipFile(file);
 			boolean[] updatetree = { false };
@@ -455,14 +454,22 @@ public class SaveHandler {
 		return obj;
 	}
 
-	public static void openDialog(){
+	public static void openDialog(File file){
 		Runnable run = () -> {
-			FileChooser.chooseFile(Translator.translate("saveload.open"), "./saves", FileChooser.TYPE_FMTB, false, task -> {
+			if(file == null){
+				FileChooser.chooseFile(Translator.translate("saveload.open"), "./saves", FileChooser.TYPE_FMTB, false, task -> {
+					UpdateHandler.update(UpdateType.MODEL_UNLOAD, FMT.MODEL);
+					FMT.MODEL = new Model(task, null);
+					Settings.addRecentFile(task);
+					FMT.MODEL.load();
+				});
+			}
+			else{
 				UpdateHandler.update(UpdateType.MODEL_UNLOAD, FMT.MODEL);
-				FMT.MODEL = new Model(task, null);
-				Settings.addRecentFile(task);
+				FMT.MODEL = new Model(file, null);
+				Settings.addRecentFile(file);
 				FMT.MODEL.load();
-			});
+			}
 		};
 		if(FMT.MODEL.groups().isEmpty()){
 			run.run();

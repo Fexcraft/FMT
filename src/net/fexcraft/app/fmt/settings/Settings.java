@@ -40,6 +40,7 @@ import net.fexcraft.app.fmt.ui.components.QuickAdd;
 import net.fexcraft.app.fmt.ui.components.ShapeboxComponent;
 import net.fexcraft.app.fmt.ui.trees.PolygonTree;
 import net.fexcraft.app.fmt.utils.Logging;
+import net.fexcraft.app.fmt.utils.SaveHandler;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
@@ -414,6 +415,13 @@ public class Settings {
 			RECENT.add(0, file);
 		}
 		while(RECENT.size() > 10) RECENT.remove(RECENT.size() - 1);
+	}
+
+	public static void openRecent(int index){
+		if(index < 0 || index >= 10) return;
+		File file = RECENT.get(index);
+		if(file.equals(NO_FILE_DOTS)) return;
+		SaveHandler.openDialog(file);
 	}
 
 }

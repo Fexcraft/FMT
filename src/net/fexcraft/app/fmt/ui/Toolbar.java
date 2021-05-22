@@ -1,7 +1,5 @@
 package net.fexcraft.app.fmt.ui;
 
-import java.io.File;
-
 import org.liquidengine.legui.component.Panel;
 
 import net.fexcraft.app.fmt.FMT;
@@ -28,22 +26,22 @@ public class Toolbar extends Panel {
 		this.add(new Icon(1, "./resources/textures/icons/toolbar/settings.png", NOTHING));
 		this.add(new Icon(2, "./resources/textures/icons/toolbar/profile.png", NOTHING));
 		this.add(new Icon(3, "./resources/textures/icons/toolbar/save.png", () -> SaveHandler.save(FMT.MODEL, null, null)));
-		this.add(new Icon(4, "./resources/textures/icons/toolbar/open.png", () -> SaveHandler.openDialog()));
+		this.add(new Icon(4, "./resources/textures/icons/toolbar/open.png", () -> SaveHandler.openDialog(null)));
 		this.add(new Icon(5, "./resources/textures/icons/toolbar/new.png", () -> SaveHandler.newDialog()));
 		this.add(new ToolbarMenu(0, "file",
 			new MenuButton(0, "file.new", () -> SaveHandler.newDialog()),
-			new MenuButton(1, "file.open", () -> SaveHandler.openDialog()),
+			new MenuButton(1, "file.open", () -> SaveHandler.openDialog(null)),
 			new ToolbarMenu(-2, "file.recent",
-				new MenuButton(0, "file.recent.none"),
-				new MenuButton(1, "file.recent.none"),
-				new MenuButton(2, "file.recent.none"),
-				new MenuButton(3, "file.recent.none"),
-				new MenuButton(4, "file.recent.none"),
-				new MenuButton(5, "file.recent.none"),
-				new MenuButton(6, "file.recent.none"),
-				new MenuButton(7, "file.recent.none"),
-				new MenuButton(8, "file.recent.none"),
-				new MenuButton(9, "file.recent.none")
+				new MenuButton(0, "file.recent.none", () -> Settings.openRecent(0)),
+				new MenuButton(1, "file.recent.none", () -> Settings.openRecent(1)),
+				new MenuButton(2, "file.recent.none", () -> Settings.openRecent(2)),
+				new MenuButton(3, "file.recent.none", () -> Settings.openRecent(3)),
+				new MenuButton(4, "file.recent.none", () -> Settings.openRecent(4)),
+				new MenuButton(5, "file.recent.none", () -> Settings.openRecent(5)),
+				new MenuButton(6, "file.recent.none", () -> Settings.openRecent(6)),
+				new MenuButton(7, "file.recent.none", () -> Settings.openRecent(7)),
+				new MenuButton(8, "file.recent.none", () -> Settings.openRecent(8)),
+				new MenuButton(9, "file.recent.none", () -> Settings.openRecent(9))
 			).setLayerPreShow(layer -> {
 				int[] idx = { 0 };
 				layer.getMenuComponents().forEach(com -> {
@@ -103,10 +101,6 @@ public class Toolbar extends Panel {
 		));
 		this.add(new ToolbarMenu(8, "exit", () -> FMT.close(0)));
 		UpdateHandler.registerHolder(holder);
-	}
-
-	public static void addRecent(File file){
-		// TODO Auto-generated method stub
 	}
 
 }
