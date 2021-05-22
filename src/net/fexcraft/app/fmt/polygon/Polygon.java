@@ -9,6 +9,7 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.attributes.PolyVal.ValAxe;
 import net.fexcraft.app.fmt.utils.Jsoniser;
+import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.fmt.utils.MRTRenderer.GlCache;
 import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.app.json.JsonMap;
@@ -85,7 +86,12 @@ public abstract class Polygon {
 	}
 
 	public static Polygon from(Model model, JsonMap obj){
+		if(!obj.has("type")) return null;
 		Shape shape = Shape.get(obj.get("type").string_value());
+		if(shape == null){
+			Logging.log("Unknown Shape type '" + obj.get("type").string_value() + "' in model file, skipping.");
+			return null;
+		}
 		switch(shape){
 			case BOUNDING_BOX:
 				break;
