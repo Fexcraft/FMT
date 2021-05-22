@@ -190,7 +190,7 @@ public class Settings {
 		JsonArray recent = new JsonArray();
 		for(File file : RECENT){
 			if(file.equals(NO_FILE_DOTS)) continue;
-			recent.add(file.toString());
+			recent.add(file.toString().replace("\\", "\\\\"));
 		}
 		if(recent.size() > 0) obj.add("recent_files", recent);
 		JsonHandler.print(new File("./settings.json"), obj, false, false);
