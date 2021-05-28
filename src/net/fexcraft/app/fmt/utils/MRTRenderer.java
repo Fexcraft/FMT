@@ -13,6 +13,7 @@ import static org.lwjgl.opengl.GL15.glBufferData;
 import static org.lwjgl.opengl.GL15.glDeleteBuffers;
 import static org.lwjgl.opengl.GL15.glGenBuffers;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
+import static org.lwjgl.opengl.GL20.glUniform1f;
 import static org.lwjgl.opengl.GL20.glUniform4fv;
 import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
 import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
@@ -55,6 +56,7 @@ public class MRTRenderer extends ModelRendererTurbo.Renderer {
 		glUniformMatrix4fv(getUniform("model"), false, matrix.get(new float[16]));
 		glUniform4fv(getUniform("line_color"), MODE == DrawMode.LINES ? cache.linecolor : MODE == DrawMode.SELLINES ? SELCOLOR : EMPTY);
 		glUniform4fv(getUniform("poly_color"), MODE.singleColor() ? cache.polycolor : EMPTY);
+		glUniform1f(getUniform("textured"), MODE == DrawMode.TEXTURED ? 1 : 0);
 		//
         glEnableVertexAttribArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, cache.glObj[index].glid);

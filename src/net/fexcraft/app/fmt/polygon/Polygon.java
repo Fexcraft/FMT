@@ -119,7 +119,7 @@ public abstract class Polygon {
 		if(cache.polycolor == null) cache.polycolor = new RGB(colorIdx == 0 ? colorIdx = polyIdx++ : colorIdx).toFloatArray();
 		cache.polygon = this;
 		if(textureX < 0 || textureY < 0) turbo.setTextured(false);
-		else turbo.setTextureOffset(textureX, textureY);
+		else turbo.setTextured(true).setTextureOffset(textureX, textureY);
 		turbo.textureWidth = group.texgroup == null ? model.texSizeX : group.texSizeX;
 		turbo.textureHeight = group.texgroup == null ? model.texSizeY : group.texSizeY;
 		if(group.joined_polygons){
