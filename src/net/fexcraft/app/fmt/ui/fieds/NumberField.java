@@ -166,4 +166,8 @@ public class NumberField extends TextInput implements Field {
 		return poly_value;
 	}
 	
+	public static DecimalFormat getFormat(){
+		return df;
+	}
+	
 }
