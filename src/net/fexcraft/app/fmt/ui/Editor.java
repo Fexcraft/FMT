@@ -15,11 +15,13 @@ import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.ScrollablePanel;
 import org.liquidengine.legui.component.SelectBox;
 import org.liquidengine.legui.component.TextArea;
+import org.liquidengine.legui.component.misc.listener.scrollablepanel.ScrollablePanelViewportScrollListener;
 import org.liquidengine.legui.component.optional.align.HorizontalAlign;
 import org.liquidengine.legui.component.optional.align.VerticalAlign;
 import org.liquidengine.legui.event.CursorEnterEvent;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.event.MouseClickEvent.MouseClickAction;
+import org.liquidengine.legui.event.ScrollEvent;
 import org.liquidengine.legui.input.Mouse.MouseButton;
 import org.liquidengine.legui.listener.CursorEnterEventListener;
 import org.liquidengine.legui.style.Border;
@@ -59,6 +61,8 @@ public class Editor extends Component {
 		alignment = left;
 		this.tree = tree;
 		add(scrollable = new ScrollablePanel(0, topSpace(), WIDTH, getSize().y));
+		scrollable.getViewport().getListenerMap().removeAllListeners(ScrollEvent.class);
+		scrollable.getViewport().getListenerMap().addListener(ScrollEvent.class, new SPVSL());
 		Settings.applyBorderlessScrollable(scrollable, true);
 		add(label = new Label(this.name = name, 5, 0, CWIDTH - 10, LABEL));
 		CursorEnterEventListener lis = l -> toggleIcons();
@@ -303,6 +307,16 @@ public class Editor extends Component {
 		Editor other = get(editor.alignment);
 		if(other != null) other.hide();
 		editor.show();
+	}
+	
+	public static class SPVSL extends ScrollablePanelViewportScrollListener {
+		
+	    @Override
+	    public void process(@SuppressWarnings("rawtypes") ScrollEvent event){
+	    	if(FMT.SELFIELD != null || FMT.FRAME.getLayers().size() > 0) return;
+	    	else super.process(event);
+	    }
+	    
 	}
 	
 }
