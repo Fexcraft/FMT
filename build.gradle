@@ -59,7 +59,6 @@ repositories {
     jcenter()
     mavenCentral()
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-    maven { url "https://raw.githubusercontent.com/SpinyOwl/repo/snapshots" }
     maven { url "https://raw.githubusercontent.com/SpinyOwl/repo/releases" }
 }
 
@@ -77,7 +76,7 @@ dependencies {
 
     compile group: 'org.liquidengine', name: 'cbchain', version: le_cbchain, changing: true
     compile group: 'org.liquidengine', name: 'leutil', version: le_util, changing: true
-	compile group: 'org.liquidengine', name: 'legui', version: legui_version + '-SNAPSHOT', changing: true;
+	compile group: 'org.liquidengine', name: 'legui', version: legui_version, changing: true;
 
     compile group: 'org.lwjgl', name: 'lwjgl-stb', version: lwjgl_version, changing: true
     runtime group: 'org.lwjgl', name: 'lwjgl-stb', version: lwjgl_version, changing: true, classifier: 'natives-windows'
