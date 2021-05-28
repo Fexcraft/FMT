@@ -17,6 +17,7 @@ import org.joml.Vector3f;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.Editor;
+import net.fexcraft.app.fmt.ui.fieds.NumberField;
 import net.fexcraft.app.fmt.utils.Picker.PickTask;
 import net.fexcraft.app.fmt.utils.Picker.PickType;
 import net.fexcraft.lib.common.Static;
@@ -65,8 +66,8 @@ public class GGR {
             new Vector3f(pos).add(dir),
             /*new Vector3f(0, 1, 0)*/up
         );
-        FMT.pos.getTextState().setText(pos.toString());
-        FMT.rot.getTextState().setText(Math.toDegrees(hor) + " / " + Math.toDegrees(ver) + " : " + fov);
+        FMT.pos.getTextState().setText(format(pos.x) + ", " + format(pos.y) + ", " + format(pos.z));
+        FMT.rot.getTextState().setText(format(Math.toDegrees(hor)) + " / " + format(Math.toDegrees(ver)) + " : " + (int)fov);
         perspective(fov);
         ShaderManager.applyUniforms(prog -> {
         	prog.use();
@@ -253,6 +254,10 @@ public class GGR {
 
 	public void fov(float fov){
 		this.fov = fov;
+	}
+
+	private String format(double n){
+		return NumberField.getFormat().format(n);
 	}
     
 }
