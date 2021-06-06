@@ -2,13 +2,14 @@ package net.fexcraft.app.fmt.polygon;
 
 import static net.fexcraft.app.fmt.attributes.UpdateHandler.update;
 import static net.fexcraft.app.fmt.attributes.UpdateType.POLYGON_ADDED;
+import static net.fexcraft.app.fmt.utils.Jsoniser.getVector;
+import static net.fexcraft.app.fmt.utils.Jsoniser.setVector;
 
 import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.attributes.PolyVal.ValAxe;
-import net.fexcraft.app.fmt.utils.Jsoniser;
 import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.fmt.utils.MRTRenderer.GlCache;
 import net.fexcraft.app.fmt.utils.Translator;
@@ -29,6 +30,8 @@ public abstract class Polygon {
 	public int[] colorIds;
 	public boolean visible;
 	public boolean selected;
+	public boolean mirror;
+	public boolean flip;
 	
 	public Polygon(Model model){
 		this.model = model == null ? FMT.MODEL : model;
@@ -40,13 +43,15 @@ public abstract class Polygon {
 	
 	protected Polygon(Model model, JsonMap obj){
 		this.model = model == null ? FMT.MODEL : model;
-		if(obj.has("name")) name = obj.get("name").string_value();
-		pos = Jsoniser.getVector(obj, "pos_%s", 0f);
-		off = Jsoniser.getVector(obj, "off_%s", 0f);
-		rot = Jsoniser.getVector(obj, "rot_%s", 0f);
+		name = obj.get("name", null);
+		pos = getVector(obj, "pos_%s", 0f);
+		off = getVector(obj, "off_%s", 0f);
+		rot = getVector(obj, "rot_%s", 0f);
 		visible = obj.get("visible", true);
 		textureX = obj.get("texture_x", -1);
 		textureY = obj.get("texture_y", -1);
+		mirror = obj.get("mirror", false);
+		flip = obj.get("flip", false);
 		if(obj.has("cuv")){
 			//TODO
 		}
@@ -54,8 +59,19 @@ public abstract class Polygon {
 
 	public JsonMap save(boolean export){
 		JsonMap obj = new JsonMap();
-		
-		
+		obj.add("texture_x", textureX);
+		obj.add("texture_y", textureY);
+		obj.add("type", getShape().getName());
+		if(name != null) obj.add("name", name);
+		setVector(obj, "pos_%s", pos);
+		setVector(obj, "off_%s", off);
+		setVector(obj, "rot_%s", rot);
+		if(mirror) obj.add("mirror", true);
+		if(flip) obj.add("flip", true);
+		//TODO cuv
+		if(!export){
+			obj.add("visible", visible);
+		}
 		return obj;
 	}
 

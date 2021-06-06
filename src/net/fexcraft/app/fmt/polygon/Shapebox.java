@@ -8,12 +8,13 @@ import static net.fexcraft.app.fmt.attributes.PolyVal.CORNER_4;
 import static net.fexcraft.app.fmt.attributes.PolyVal.CORNER_5;
 import static net.fexcraft.app.fmt.attributes.PolyVal.CORNER_6;
 import static net.fexcraft.app.fmt.attributes.PolyVal.CORNER_7;
+import static net.fexcraft.app.fmt.utils.Jsoniser.getVector;
+import static net.fexcraft.app.fmt.utils.Jsoniser.setVector;
 
 import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.attributes.PolyVal;
 import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
-import net.fexcraft.app.fmt.utils.Jsoniser;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.tmt.BoxBuilder;
 
@@ -43,14 +44,28 @@ public class Shapebox extends Box {
 
 	public Shapebox(Model model, JsonMap obj){
 		super(model, obj);
-		cor0 = Jsoniser.getVector(obj, "%s0", 0);
-		cor1 = Jsoniser.getVector(obj, "%s1", 0);
-		cor2 = Jsoniser.getVector(obj, "%s2", 0);
-		cor3 = Jsoniser.getVector(obj, "%s3", 0);
-		cor4 = Jsoniser.getVector(obj, "%s4", 0);
-		cor5 = Jsoniser.getVector(obj, "%s5", 0);
-		cor6 = Jsoniser.getVector(obj, "%s6", 0);
-		cor7 = Jsoniser.getVector(obj, "%s7", 0);
+		cor0 = getVector(obj, "%s0", 0);
+		cor1 = getVector(obj, "%s1", 0);
+		cor2 = getVector(obj, "%s2", 0);
+		cor3 = getVector(obj, "%s3", 0);
+		cor4 = getVector(obj, "%s4", 0);
+		cor5 = getVector(obj, "%s5", 0);
+		cor6 = getVector(obj, "%s6", 0);
+		cor7 = getVector(obj, "%s7", 0);
+	}
+	
+	@Override
+	public JsonMap save(boolean export){
+		JsonMap map = super.save(export);
+		setVector(map, "%s0", cor0);
+		setVector(map, "%s1", cor1);
+		setVector(map, "%s2", cor2);
+		setVector(map, "%s3", cor3);
+		setVector(map, "%s4", cor4);
+		setVector(map, "%s5", cor5);
+		setVector(map, "%s6", cor6);
+		setVector(map, "%s7", cor7);
+		return map;
 	}
 
 	@Override

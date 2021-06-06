@@ -1,5 +1,8 @@
 package net.fexcraft.app.fmt.polygon;
 
+import static net.fexcraft.app.fmt.utils.Jsoniser.getVector;
+import static net.fexcraft.app.fmt.utils.Jsoniser.setVector;
+
 import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
@@ -32,12 +35,8 @@ public class Cylinder extends Polygon {
 		direction = obj.get("direction", direction);
 		base = obj.get("basescale", base);
 		top = obj.get("topscale", top);
-		topoff.x = obj.get("top_offset_x", topoff.x);
-		topoff.y = obj.get("top_offset_y", topoff.y);
-		topoff.z = obj.get("top_offset_z", topoff.z);
-		toprot.x = obj.get("top_rotation_x", toprot.x);
-		toprot.y = obj.get("top_rotation_y", toprot.y);
-		toprot.z = obj.get("top_rotation_z", toprot.z);
+		topoff = getVector(obj, "top_offset_%s", 0f);
+		toprot = getVector(obj, "top_rotation_%s", 0f);
 		if(obj.has("faces_off")){
 			JsonArray array = obj.getArray("faces_off");
 			for(int i = 0; i < bools.length; i++){
@@ -48,6 +47,32 @@ public class Cylinder extends Polygon {
 		radial = obj.get("radialtex", radial);
 		seg_width = obj.get("seg_width", seg_width);
 		seg_height = obj.get("seg_height", seg_height);
+	}
+	
+	@Override
+	public JsonMap save(boolean export){
+		JsonMap map = super.save(export);
+		map.add("radius", radius);
+		map.add("radius2", radius2);
+		map.add("length", length);
+		map.add("segments", segments);
+		map.add("seglimit", seglimit);
+		map.add("direction", direction);
+		map.add("basescale", base);
+		map.add("topscale", top);
+		setVector(map, "top_offset_%s", topoff);
+		setVector(map, "top_rotation_%s", toprot);
+		boolean anyoff = false;
+		for(boolean bool : bools) if(bool) anyoff = true;
+		if(anyoff){
+			JsonArray array = new JsonArray();
+			for(boolean bool : bools) array.add(bool);
+			map.add("faces_off", array);
+		}
+		map.add("radialtex", radial);
+		map.add("seg_width", seg_width);
+		map.add("seg_height", seg_height);
+		return map;
 	}
 
 	@Override

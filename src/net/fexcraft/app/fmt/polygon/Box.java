@@ -29,6 +29,22 @@ public class Box extends Polygon {
 			}
 		}
 	}
+	
+	@Override
+	public JsonMap save(boolean export){
+		JsonMap map = super.save(export);
+		map.add("width", size.x);
+		map.add("height", size.y);
+		map.add("depth", size.z);
+		boolean anysides = false;
+		for(boolean bool : sides) if(bool) anysides = true;
+		if(anysides){
+			JsonArray array = new JsonArray();
+			for(boolean bool : sides) array.add(bool);
+			map.add("sides_off", array);
+		}
+		return map;
+	}
 
 	@Override
 	public Shape getShape(){
