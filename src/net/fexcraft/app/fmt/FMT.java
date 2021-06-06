@@ -141,6 +141,7 @@ public class FMT {
 		icon(window);
 		glfwShowWindow(window);
 		glfwFocusWindow(window);
+		//new WindowContainer();
 		//
 		CAM = new GGR(5, -5, -5, -Static.rad45, Static.rad30);
 		AxisRotator.setDefImpl(Axis3DL.class);
@@ -451,6 +452,10 @@ public class FMT {
 	public static void close(int exit_code){
 		EXIT_CODE = exit_code;
 		glfwSetWindowShouldClose(FMT.INSTANCE.window, true);
+	}
+
+	public static long getWindow(){
+		return INSTANCE.window;
 	}
 
 }
