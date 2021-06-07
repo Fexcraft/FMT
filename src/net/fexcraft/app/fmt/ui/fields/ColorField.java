@@ -8,6 +8,7 @@ import java.util.function.BiConsumer;
 
 import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.component.Component;
+import org.liquidengine.legui.component.Panel;
 import org.liquidengine.legui.component.TextInput;
 import org.liquidengine.legui.event.FocusEvent;
 import org.liquidengine.legui.event.KeyEvent;
@@ -19,6 +20,7 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.util.tinyfd.TinyFileDialogs;
 
+import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.settings.Setting;
 import net.fexcraft.app.fmt.settings.Settings;
@@ -29,9 +31,10 @@ public class ColorField extends TextInput implements Field {
 	private String fieldid;
 	private Integer value = null;
 	private Setting<RGB> setting;
+	private Panel panel;
 
 	public ColorField(Component root, String field, int x, int y, int w, int h){
-		super("#ffffff", x, y, root == null ? w : w - 40, h);
+		super("#ffffff", x + (root == null ? 0 : h - 2), y, root == null ? w : w - 40 - h - 2, h);
 		Settings.applyBorderless(this);
 		Settings.applyGrayText(this);
 		Field.setupHoverCheck(this);
@@ -64,11 +67,15 @@ public class ColorField extends TextInput implements Field {
 				}
 			});
 			root.add(button);
+			panel = new Panel(x, y, h, h);
+			Settings.applyBorderless(panel);
+			panel.getStyle().getBackground().setColor(FMT.rgba((int)value()));
+			root.add(panel);
 		}
 	}
 	
 	public ColorField(Component root, Setting<RGB> setting, int x, int y, int w, int h){
-		super("#" + Integer.toHexString(setting.value.packed), x, y, root == null ? w : w - 40, h);
+		super("#" + Integer.toHexString(setting.value.packed), x + (root == null ? 0 : h - 2), y, root == null ? w : w - 40 - h - 2, h);
 		Settings.applyMenuTheme(this);
 		Settings.applyGrayText(this);
 		Field.setupHoverCheck(this);
@@ -100,12 +107,16 @@ public class ColorField extends TextInput implements Field {
 				}
 			});
 			root.add(button);
+			panel = new Panel(x, y, h, h);
+			Settings.applyBorderless(panel);
+			panel.getStyle().getBackground().setColor(FMT.rgba((int)value()));
+			root.add(panel);
 		}
 		this.setting = setting;
 	}
 	
 	public ColorField(Component root, BiConsumer<Integer, Boolean> update, int x, int y, int w, int h){
-		super("#ffffff", x, y, root == null ? w : w - 40, h);
+		super("#ffffff", x + (root == null ? 0 : h - 2), y, root == null ? w : w - 40 - h - 2, h);
 		Settings.applyBorderless(this);
 		Field.setupHoverCheck(this);
 		addTextInputContentChangeEventListener(event -> {
@@ -136,6 +147,10 @@ public class ColorField extends TextInput implements Field {
 				}
 			});
 			root.add(button);
+			panel = new Panel(x, y, h, h);
+			Settings.applyBorderless(panel);
+			panel.getStyle().getBackground().setColor(FMT.rgba((int)value()));
+			root.add(panel);
 		}
 	}
 	
@@ -151,6 +166,7 @@ public class ColorField extends TextInput implements Field {
 			log(e);
 		}
 		apply(newval);
+		if(panel != null) panel.getStyle().getBackground().setColor(FMT.rgba((int)value));
 		return value = (int)newval;
 	}
 
