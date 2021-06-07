@@ -156,6 +156,16 @@ welcome.normal.greeting_logged=Welcome back %s!
 welcome.normal.greeting_guest=Have a nice time using FMT!
 welcome.normal.version=Running FMT v. %s
 
+# Settings
+settings.dialog.title=FMT Settings
+settings.category.general=General
+settings.category.graphic=Graphic
+settings.category.discord=Discord
+settings.category.control=Control
+settings.category.space3d=Space 3D
+settings.category.naming=Naming
+settings.category.theme=Theme
+
 # Other
 filechooser.title=FMT Internal File Chooser/Selector
 filechooser.enter_name=enter custom filename here
