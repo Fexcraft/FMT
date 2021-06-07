@@ -107,6 +107,14 @@ public class Settings {
 		}
 		else for(int i = 0; i < 10; i++) RECENT.add(NO_FILE_DOTS);
 		//
+		SETTINGS.put(GENERAL, new LinkedHashMap<>());
+		SETTINGS.put(GRAPHIC, new LinkedHashMap<>());
+		SETTINGS.put(CONTROL, new LinkedHashMap<>());
+		SETTINGS.put(SPACE3D, new LinkedHashMap<>());
+		SETTINGS.put(DISCORD, new LinkedHashMap<>());
+		SETTINGS.put(NAMING, new LinkedHashMap<>());
+		SETTINGS.put(THEME, new LinkedHashMap<>());
+		//
 		VSYNC = new Setting<>("vsync", true, GRAPHIC, obj);
 		HVSYNC = new Setting<>("vsync/2", false, GRAPHIC, obj);
 		DISCORD_RPC = new Setting<>("enabled", true, DISCORD, obj);
@@ -119,7 +127,7 @@ public class Settings {
 		TRIANGULATION_Q = new Setting<>("triangulated_quads", true, GRAPHIC, obj);
 		TRIANGULATION_L = new Setting<>("triangulated_lines", false, GRAPHIC, obj);
 		LANGUAGE = new Setting<>("language", "null", GENERAL, obj);
-		INTERNAL_CHOOSER = new Setting<>("internal_filechooser", true, GENERAL, obj);//TODO later set to false
+		INTERNAL_CHOOSER = new Setting<>("internal_filechooser", false, GENERAL, obj);
 		ROUNDING_DIGITS = new Setting<>("rounding_digits", 4, GENERAL, obj);
 		DEMO = new Setting<>("demo_model", false, SPACE3D, obj);
 		FLOOR = new Setting<>("floor", true, SPACE3D, obj);
@@ -305,7 +313,7 @@ public class Settings {
 	}
 
 	public static void register(String group, String id, Setting<?> setting){
-		if(!SETTINGS.containsKey(group)) SETTINGS.put(group, new LinkedHashMap<String, Setting<?>>());
+		if(!SETTINGS.containsKey(group)) SETTINGS.put(group, new LinkedHashMap<>());
 		SETTINGS.get(group).put(id, setting);
 	}
 

@@ -49,7 +49,7 @@ import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.ui.Toolbar;
 import net.fexcraft.app.fmt.ui.ToolbarMenu;
-import net.fexcraft.app.fmt.ui.fieds.Field;
+import net.fexcraft.app.fmt.ui.fields.Field;
 import net.fexcraft.app.fmt.utils.Axis3DL;
 import net.fexcraft.app.fmt.utils.DiscordUtil;
 import net.fexcraft.app.fmt.utils.GGR;
@@ -264,7 +264,7 @@ public class FMT {
 				accumulator -= interval;
 				//Trees.updateCounters();
 				fps.getTextState().setText(timer.getFPS() + "");
-				info.getTextState().setText(SELFIELD == null ? "none" : SELFIELD.polyval().toString());
+				info.getTextState().setText(SELFIELD == null ? "none" : SELFIELD.polyval() == null ? "setting:" + SELFIELD.setting().id : SELFIELD.polyval().toString());
 				poly.getTextState().setText(MODEL.selected().isEmpty() ? "none" : MODEL.first_selected().name());
 			}
 			render(vao, alpha = accumulator / interval);

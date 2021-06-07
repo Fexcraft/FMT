@@ -31,7 +31,7 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.attributes.UpdateHandler;
 import net.fexcraft.app.fmt.attributes.UpdateType;
 import net.fexcraft.app.fmt.settings.Settings;
-import net.fexcraft.app.fmt.ui.fieds.TextField;
+import net.fexcraft.app.fmt.ui.fields.TextField;
 import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.fmt.utils.Translator.Translations;
 import net.fexcraft.app.json.JsonMap;

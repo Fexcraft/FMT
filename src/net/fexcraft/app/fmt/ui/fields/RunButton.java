@@ -1,4 +1,4 @@
-package net.fexcraft.app.fmt.ui.fieds;
+package net.fexcraft.app.fmt.ui.fields;
 
 import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.event.MouseClickEvent;

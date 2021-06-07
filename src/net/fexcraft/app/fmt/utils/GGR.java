@@ -17,7 +17,7 @@ import org.joml.Vector3f;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.Editor;
-import net.fexcraft.app.fmt.ui.fieds.NumberField;
+import net.fexcraft.app.fmt.ui.fields.NumberField;
 import net.fexcraft.app.fmt.utils.Picker.PickTask;
 import net.fexcraft.app.fmt.utils.Picker.PickType;
 import net.fexcraft.lib.common.Static;

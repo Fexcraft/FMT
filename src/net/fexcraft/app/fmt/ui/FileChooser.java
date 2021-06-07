@@ -20,7 +20,7 @@ import org.lwjgl.util.tinyfd.TinyFileDialogs;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
-import net.fexcraft.app.fmt.ui.fieds.TextField;
+import net.fexcraft.app.fmt.ui.fields.TextField;
 import net.fexcraft.app.fmt.utils.Translator;
 
 /**

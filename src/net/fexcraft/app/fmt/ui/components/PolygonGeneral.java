@@ -18,9 +18,9 @@ import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.polygon.Shape;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.EditorComponent;
-import net.fexcraft.app.fmt.ui.fieds.NumberField;
-import net.fexcraft.app.fmt.ui.fieds.RunButton;
-import net.fexcraft.app.fmt.ui.fieds.TextField;
+import net.fexcraft.app.fmt.ui.fields.NumberField;
+import net.fexcraft.app.fmt.ui.fields.RunButton;
+import net.fexcraft.app.fmt.ui.fields.TextField;
 
 public class PolygonGeneral extends EditorComponent {
 	

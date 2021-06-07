@@ -18,7 +18,7 @@ import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.attributes.UpdateType;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TextureGroup;
-import net.fexcraft.app.fmt.ui.fieds.Field;
+import net.fexcraft.app.fmt.ui.fields.Field;
 import net.fexcraft.app.fmt.utils.CornerUtil;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.MRTRenderer.DrawMode;

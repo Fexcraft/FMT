@@ -8,8 +8,8 @@ import net.fexcraft.app.fmt.attributes.PolyVal;
 import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.attributes.PolyVal.ValAxe;
 import net.fexcraft.app.fmt.ui.EditorComponent;
-import net.fexcraft.app.fmt.ui.fieds.BoolButton;
-import net.fexcraft.app.fmt.ui.fieds.NumberField;
+import net.fexcraft.app.fmt.ui.fields.BoolButton;
+import net.fexcraft.app.fmt.ui.fields.NumberField;
 
 public class CylinderComponentSimple extends EditorComponent {
 	

@@ -1,4 +1,4 @@
-package net.fexcraft.app.fmt.ui.fieds;
+package net.fexcraft.app.fmt.ui.fields;
 
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
@@ -16,6 +16,7 @@ import net.fexcraft.app.fmt.ui.EditorComponent;
 public class BoolButton extends Button implements Field {
 
 	private PolygonValue poly_value;
+	private Setting<Boolean> setting;
 
 	public BoolButton(EditorComponent comp, float x, float y, float w, float h, PolygonValue val){
 		super("false", x, y, w, h);
@@ -28,9 +29,10 @@ public class BoolButton extends Button implements Field {
 
 	public BoolButton(Setting<Boolean> setting, float x, float y, float w, float h){
 		super(setting.value + "", x, y, w, h);
-		Settings.applyBorderless(this);
+		Settings.applyMenuTheme(this);
 		Settings.applyGrayText(this);
 		Field.setupHoverCheck(this);
+		this.setting = setting;
 		this.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)event -> {
 			if(event.getAction() == CLICK){
 				setting.toggle();
@@ -78,6 +80,11 @@ public class BoolButton extends Button implements Field {
 	@Override
 	public PolygonValue polyval(){
 		return poly_value;
+	}
+
+	@Override
+	public Setting<?> setting(){
+		return setting;
 	}
 
 }

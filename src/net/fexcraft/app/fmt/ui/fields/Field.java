@@ -1,4 +1,4 @@
-package net.fexcraft.app.fmt.ui.fieds;
+package net.fexcraft.app.fmt.ui.fields;
 
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
@@ -22,6 +22,7 @@ import net.fexcraft.app.fmt.attributes.UpdateHandler.UpdateHolder;
 import net.fexcraft.app.fmt.attributes.UpdateHandler.UpdateWrapper;
 import net.fexcraft.app.fmt.attributes.UpdateType;
 import net.fexcraft.app.fmt.polygon.Polygon;
+import net.fexcraft.app.fmt.settings.Setting;
 import net.fexcraft.app.fmt.ui.EditorComponent;
 
 public interface Field {
@@ -40,6 +41,8 @@ public interface Field {
 	public default Runnable update(){ return null; }
 
 	public PolygonValue polyval();
+	
+	public Setting<?> setting();
 	
 	//
 	

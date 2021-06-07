@@ -41,7 +41,7 @@ import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.ui.FileChooser;
 import net.fexcraft.app.fmt.ui.GenericDialog;
-import net.fexcraft.app.fmt.ui.fieds.TextField;
+import net.fexcraft.app.fmt.ui.fields.TextField;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;

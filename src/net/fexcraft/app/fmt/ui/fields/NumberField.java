@@ -1,4 +1,4 @@
-package net.fexcraft.app.fmt.ui.fieds;
+package net.fexcraft.app.fmt.ui.fields;
 
 import static net.fexcraft.app.fmt.settings.Settings.ROUNDING_DIGITS;
 import static net.fexcraft.app.fmt.utils.Logging.log;
@@ -29,6 +29,7 @@ public class NumberField extends TextInput implements Field {
 	private static NumberFormat nf;
 	private static DecimalFormat df;
 	static { updateRoundingDigits(); }
+	private Setting<?> setting;
 
 	public NumberField(EditorComponent comp, float x, float y, float w, float h){
 		super("0", x, y, w, h);
@@ -39,8 +40,8 @@ public class NumberField extends TextInput implements Field {
 	}
 
 	public NumberField(Setting<?> setting, float x, float y, float w, float h){
-		super(setting.toString(), x, y, w, h);
-		Settings.applyBorderless(this);
+		super(setting.value.toString(), x, y, w, h);
+		Settings.applyMenuTheme(this);
 		Settings.applyGrayText(this);
 		Field.setupHoverCheck(this);
 		getListenerMap().addListener(FocusEvent.class, listener -> {
@@ -53,6 +54,7 @@ public class NumberField extends TextInput implements Field {
 				setting.validate(true, getTextState().getText()); 
 			}
 		});
+		this.setting = setting;
 	}
 
 	private EditorComponent comp;
@@ -168,6 +170,11 @@ public class NumberField extends TextInput implements Field {
 	
 	public static DecimalFormat getFormat(){
 		return df;
+	}
+
+	@Override
+	public Setting<?> setting(){
+		return setting;
 	}
 	
 }

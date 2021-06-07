@@ -1,4 +1,4 @@
-package net.fexcraft.app.fmt.ui.fieds;
+package net.fexcraft.app.fmt.ui.fields;
 
 import static net.fexcraft.app.fmt.utils.Logging.log;
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
@@ -28,9 +28,10 @@ public class ColorField extends TextInput implements Field {
 
 	private String fieldid;
 	private Integer value = null;
+	private Setting<RGB> setting;
 
 	public ColorField(Component root, String field, int x, int y, int w, int h){
-		super("0xffffff", x, y, root == null ? w : w - 40, h);
+		super("#ffffff", x, y, root == null ? w : w - 40, h);
 		Settings.applyBorderless(this);
 		Settings.applyGrayText(this);
 		Field.setupHoverCheck(this);
@@ -67,8 +68,8 @@ public class ColorField extends TextInput implements Field {
 	}
 	
 	public ColorField(Component root, Setting<RGB> setting, int x, int y, int w, int h){
-		super(setting.toString(), x, y, root == null ? w : w - 40, h);
-		Settings.applyBorderless(this);
+		super("#" + Integer.toHexString(setting.value.packed), x, y, root == null ? w : w - 40, h);
+		Settings.applyMenuTheme(this);
 		Settings.applyGrayText(this);
 		Field.setupHoverCheck(this);
 		addTextInputContentChangeEventListener(event -> {
@@ -100,6 +101,7 @@ public class ColorField extends TextInput implements Field {
 			});
 			root.add(button);
 		}
+		this.setting = setting;
 	}
 	
 	public ColorField(Component root, BiConsumer<Integer, Boolean> update, int x, int y, int w, int h){
@@ -178,8 +180,12 @@ public class ColorField extends TextInput implements Field {
 
 	@Override
 	public PolygonValue polyval(){
-		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public Setting<?> setting(){
+		return setting;
 	}
 	
 }
