@@ -4,8 +4,8 @@ import static net.fexcraft.app.fmt.utils.Translator.translate;
 
 import java.util.ArrayList;
 
+import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.component.Dialog;
-import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.ScrollablePanel;
 import org.liquidengine.legui.component.optional.align.HorizontalAlign;
 
@@ -29,16 +29,18 @@ public class SettingsDialog {
 		dialog = new Dialog(translate("settings.dialog.title"), width, 350);
 		dialog.setResizable(false);
 		ScrollablePanel tabs = new ScrollablePanel(0, 0, width, 40);
-		tabs.getContainer().setSize(Settings.SETTINGS.size() * lw, 30);
+		tabs.getContainer().setSize(Settings.SETTINGS.size() * (lw + 2), 30);
 		int[] i = { 0 };
 		Settings.SETTINGS.keySet().forEach(key -> {
-			Label label = new Label(translate("settings.category." + key), i[0]++ * lw, 0, 100, 30);
-			label.getStyle().setHorizontalAlign(HorizontalAlign.CENTER);
-			Settings.applyBorderless(label);
-			tabs.getContainer().add(label);
+			Button button = new Button(translate("settings.category." + key), i[0]++ * (lw + 2), 0, 100, 30);
+			button.getStyle().setHorizontalAlign(HorizontalAlign.CENTER);
+			Settings.applyMenuTheme(button);
+			tabs.getContainer().add(button);
 		});
 		Settings.applyBorderless(tabs);
 		tabs.setVerticalScrollBarVisible(false);
+		tabs.setFocusable(false);
+		tabs.getContainer().setFocusable(false);
 		dialog.getContainer().add(tabs);
 		//
 		dialog.show(FMT.FRAME);
