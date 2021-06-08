@@ -1,8 +1,13 @@
 package net.fexcraft.app.fmt.polygon;
 
 import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
+import net.fexcraft.app.fmt.demo.ModelSteve;
 import net.fexcraft.app.fmt.settings.Settings;
+import net.fexcraft.app.fmt.texture.TextureManager;
+import net.fexcraft.app.fmt.utils.MRTRenderer;
+import net.fexcraft.app.fmt.utils.MRTRenderer.DrawMode;
 import net.fexcraft.app.json.JsonMap;
+import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.tmt.BoxBuilder;
 
@@ -58,6 +63,20 @@ public class Marker extends Polygon {
 	@Override
 	public float[] getFaceColor(int i){
 		return turbo.getColor(i).toFloatArray();
+	}
+	
+	@Override
+	public void render(){
+		DrawMode mode = MRTRenderer.MODE;
+		MRTRenderer.mode(DrawMode.RGBCOLOR);
+		turbo.render(Static.sixteenth * scale);
+		MRTRenderer.mode(mode);
+		if(biped && !MRTRenderer.MODE.lines()){
+			String tex = TextureManager.getBound();
+			TextureManager.bind("steve");
+			ModelSteve.render(pos, angle, scale);
+			TextureManager.bind(tex);
+		}
 	}
 	
 	public float getValue(PolygonValue polyval){

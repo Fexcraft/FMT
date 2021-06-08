@@ -80,14 +80,14 @@ public class Group extends ArrayList<Polygon> {
 			MRTRenderer.mode(selected ? DrawMode.SELLINES : DrawMode.LINES);
 			for(Polygon poly : this){
 				if(!selected && poly.selected) MRTRenderer.mode(DrawMode.SELLINES);
-				poly.turbo.render();
+				poly.render();
 				if(poly.selected && !selected) MRTRenderer.mode(DrawMode.LINES);
 			}
 		}
 		else{
 			MRTRenderer.mode(mode);
 			for(Polygon poly : this){
-				if(poly.visible) poly.turbo.render();
+				if(poly.visible) poly.render();
 			}
 		}
 	}

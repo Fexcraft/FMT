@@ -152,6 +152,10 @@ public abstract class Polygon {
 
 	public abstract float[] getFaceColor(int i);
 
+	public void render(){
+		turbo.render();
+	}
+
 	public float getValue(PolygonValue polyval){
 		switch(polyval.val()){
 			case POS: return getVectorValue(pos, polyval.axe());
