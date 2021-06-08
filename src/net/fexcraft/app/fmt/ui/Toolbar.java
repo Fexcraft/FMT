@@ -82,7 +82,7 @@ public class Toolbar extends Panel {
 			new MenuButton(2, "polygons.add_cylinder", () -> QuickAdd.addCylinder()),
 			new MenuButton(3, "polygons.add_boundingbox"),
 			new MenuButton(4, "polygons.add_object"),
-			new MenuButton(5, "polygons.add_marker"),
+			new MenuButton(5, "polygons.add_marker", () -> QuickAdd.addMarker()),
 			new MenuButton(6, "polygons.add_group", () -> QuickAdd.addGroup()),
 			new MenuButton(7, "polygons.add_voxel"),
 			new ToolbarMenu(-8, "polygons.special",
