@@ -31,6 +31,7 @@ public class StringArraySetting extends Setting<String> {
 		for(String str : vals) box.addElement(str);
 		box.addSelectBoxChangeSelectionEventListener(lis -> value(lis.getNewValue()));
 		Settings.applyMenuTheme(box);
+		box.setSelected(value, true);
 		return box;
 	}
 
