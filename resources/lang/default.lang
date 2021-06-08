@@ -190,6 +190,7 @@ setting.space3d.center_cube=Center Cube
 setting.space3d.center_marker=Center Marker
 setting.space3d.lines=(Polygon) Lines
 setting.space3d.polygon_marker=Polygon Marker
+setting.space3d.sphere_marker=Spherical Markers
 setting.discord.enabled=Enable Discord RPC
 setting.discord.hidden_mode=Hide Model Info
 setting.discord.reset_on_new=Reset timer on new Model

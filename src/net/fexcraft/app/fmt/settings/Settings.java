@@ -62,7 +62,7 @@ public class Settings {
 	public static Setting<Integer> WINDOW_WIDTH, WINDOW_HEIGHT, ROUNDING_DIGITS;
 	public static Setting<Boolean> DISCORD_RPC, DISCORD_HIDE, DISCORD_RESET_ON_NEW, FULLSCREEN;
 	public static Setting<Boolean> VSYNC, HVSYNC, TRIANGULATION_Q, TRIANGULATION_L, INTERNAL_CHOOSER;
-	public static Setting<Boolean> DEMO, FLOOR, CUBE, CMARKER, LINES, POLYMARKER, ADD_TO_LAST;
+	public static Setting<Boolean> DEMO, FLOOR, CUBE, CMARKER, LINES, POLYMARKER, ADD_TO_LAST, SPHERE_MARKER;
 	public static Setting<Float> MOUSE_SENSIVITY, MOVE_SPEED;
 	public static Setting<String> LANGUAGE, POLYGON_SUFFIX, GROUP_SUFFIX;
 	public static Setting<Boolean> ASK_POLYGON_REMOVAL, ASK_GROUP_REMOVAL, OPEN_FOLDER_AFTER_SAVE;
@@ -144,6 +144,7 @@ public class Settings {
 		OPEN_FOLDER_AFTER_SAVE = new Setting<>("open_folder_after_save", true, GENERAL, obj);
 		SHOW_WELCOME = new Setting<>("show_welcome", true, GENERAL, obj);
 		SHOW_UPDATE = new Setting<>("show_update", true, GENERAL, obj);
+		SPHERE_MARKER = new Setting<>("sphere_marker", false, SPACE3D, obj);
 		//
 		SEL_THEME = new StringArraySetting("selected_theme", "light", THEME, obj, "light", "dark", "custom");
 		DARKTHEME = new Setting<>("is_dark", false, THEME, obj);

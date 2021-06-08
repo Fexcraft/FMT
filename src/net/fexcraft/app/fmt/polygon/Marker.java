@@ -1,6 +1,7 @@
 package net.fexcraft.app.fmt.polygon;
 
 import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
+import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.tmt.BoxBuilder;
@@ -49,7 +50,9 @@ public class Marker extends Polygon {
 
 	@Override
 	protected void buildMRT(){
-		new BoxBuilder(turbo).setOffset(-hs, -hs, -hs).setSize(size, size, size).build().setColor(rgb);
+		if(Settings.SPHERE_MARKER.value) turbo.addSphere(0, 0, 0, hs, 8, 5, 1, 1);
+		else new BoxBuilder(turbo).setOffset(-hs, -hs, -hs).setSize(size, size, size).build();
+		turbo.setColor(rgb);
 	}
 
 	@Override
