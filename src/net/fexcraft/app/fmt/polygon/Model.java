@@ -3,6 +3,7 @@ package net.fexcraft.app.fmt.polygon;
 import static net.fexcraft.app.fmt.attributes.UpdateHandler.update;
 import static net.fexcraft.app.fmt.attributes.UpdateType.MODEL_AUTHOR;
 import static net.fexcraft.app.fmt.attributes.UpdateType.MODEL_LOAD;
+import static net.fexcraft.app.fmt.settings.Settings.ASK_POLYGON_REMOVAL;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -18,6 +19,8 @@ import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.attributes.UpdateType;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TextureGroup;
+import net.fexcraft.app.fmt.ui.GenericDialog;
+import net.fexcraft.app.fmt.ui.GenericDialog.DialogTask;
 import net.fexcraft.app.fmt.ui.fields.Field;
 import net.fexcraft.app.fmt.utils.CornerUtil;
 import net.fexcraft.app.fmt.utils.GGR;
@@ -258,6 +261,16 @@ public class Model {
 			group.selected = true;
 		}
 		update(UpdateType.GROUP_SELECTED, group, old, selected.size());
+	}
+
+	public void delsel(){
+		ArrayList<Polygon> selected = new ArrayList<>();
+		selected.addAll(selected());
+		DialogTask rem = () -> selected.removeIf(poly -> poly.group().remove(poly));
+		if(ASK_POLYGON_REMOVAL.value){
+			GenericDialog.showOC(null, rem, null, "keybind.delete.remove_selected_polygons", selected.size() + "");
+		}
+		else rem.process();
 	}
 
 }
