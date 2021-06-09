@@ -77,7 +77,7 @@ public class Marker extends Polygon {
 		if(biped && !MRTRenderer.MODE.lines()){
 			String tex = TextureManager.getBound();
 			TextureManager.bind("steve");
-			ModelSteve.render(pos, angle, scale);
+			ModelSteve.render(pos, angle, biped_scale);
 			TextureManager.bind(tex);
 		}
 	}
@@ -94,7 +94,7 @@ public class Marker extends Polygon {
 			case COLOR: return rgb.packed;
 			case BIPED: return biped ? 1 : 0;
 			case BIPED_ANGLE: return angle;
-			case BIPED_SCALE: return scale;
+			case BIPED_SCALE: return biped_scale;
 			case DETACHED: return detached ? 1 : 0;
 			case SCALE: return scale;
 			default: return super.getValue(polyval);

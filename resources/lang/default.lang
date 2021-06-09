@@ -113,6 +113,8 @@ editor.component.polygon.cylinder.radial=Radial Texture / Seg. Width / Seg. Heig
 editor.component.polygon.marker.name=Marker Settings
 editor.component.polygon.marker.desc=Various Marker specific settings.
 editor.component.polygon.marker.color=Color
+editor.component.polygon.marker.biped=Biped Display ([on/off] / angle / scale)
+editor.component.polygon.marker.scale=Scale / Detached (inac.)
 
 # Generic Dialogs
 dialog.title.default=Generic Dialog
