@@ -156,6 +156,10 @@ public abstract class Polygon {
 		turbo.render();
 	}
 
+	public void renderPicking(){
+		turbo.render();
+	}
+
 	public float getValue(PolygonValue polyval){
 		switch(polyval.val()){
 			case POS: return getVectorValue(pos, polyval.axe());

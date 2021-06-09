@@ -6,6 +6,7 @@ import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.utils.MRTRenderer;
 import net.fexcraft.app.fmt.utils.MRTRenderer.DrawMode;
+import net.fexcraft.app.fmt.utils.MRTRenderer.GlCache;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.RGB;
@@ -17,7 +18,8 @@ public class Marker extends Polygon {
 	public int angle = -90;
 	public boolean biped, detached;
 	public float biped_scale = 1, scale = 1;
-	public RGB rgb = new RGB();
+	public RGB rgb = RGB.WHITE.copy();
+	public static RGB rect = new RGB();
 	
 	public Marker(Model model){
 		super(model);
@@ -69,6 +71,7 @@ public class Marker extends Polygon {
 	public void render(){
 		DrawMode mode = MRTRenderer.MODE;
 		MRTRenderer.mode(DrawMode.RGBCOLOR);
+		((GlCache)turbo.glObject()).polycolor = rgb.toFloatArray();
 		turbo.render(Static.sixteenth * scale);
 		MRTRenderer.mode(mode);
 		if(biped && !MRTRenderer.MODE.lines()){
@@ -77,6 +80,13 @@ public class Marker extends Polygon {
 			ModelSteve.render(pos, angle, scale);
 			TextureManager.bind(tex);
 		}
+	}
+	
+	@Override
+	public void renderPicking(){
+		rect.packed = colorIdx;
+		((GlCache)turbo.glObject()).polycolor = rect.toFloatArray();
+		turbo.render(Static.sixteenth * scale);
 	}
 	
 	public float getValue(PolygonValue polyval){

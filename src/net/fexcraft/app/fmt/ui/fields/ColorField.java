@@ -24,33 +24,26 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.settings.Setting;
 import net.fexcraft.app.fmt.settings.Settings;
+import net.fexcraft.app.fmt.ui.Editor;
+import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.lib.common.math.RGB;
 
 public class ColorField extends TextInput implements Field {
 
-	private String fieldid;
-	private Integer value = null;
+	private PolygonValue poly_value;
+	protected Integer value = null;
 	private Setting<RGB> setting;
 	private Panel panel;
 
-	public ColorField(Component root, String field, int x, int y, int w, int h){
-		super("#ffffff", x + (root == null ? 0 : h - 2), y, root == null ? w : w - 40 - h - 2, h);
+	public ColorField(EditorComponent root, float x, float y, float w, float h, PolygonValue polyval){
+		super("#ffffff", x + (root == null ? 0 : h - 2), y, root == null ? w : w - 35 - h - 2, h);
 		Settings.applyBorderless(this);
 		Settings.applyGrayText(this);
 		Field.setupHoverCheck(this);
-		fieldid = field;
+		poly_value = polyval;
+		Field.setupHolderAndListeners(this, root, polyval);
 		addTextInputContentChangeEventListener(event -> {
 			Field.validateColorString(event); value = null;
-		});
-		getListenerMap().addListener(FocusEvent.class, (FocusEventListener)listener -> {
-			if(!listener.isFocused()){
-				//TODO update tracked model value/attribute
-			}
-		});
-		getListenerMap().addListener(KeyEvent.class, (KeyEventListener)listener -> {
-			if(listener.getKey() == GLFW.GLFW_KEY_ENTER){
-				//TODO update tracked model value/attribute
-			}
 		});
 		if(root != null){
 			Button button = new Button("CP", x + w - 35, y, 30, h);
@@ -62,10 +55,11 @@ public class ColorField extends TextInput implements Field {
 						if(result == null) return;
 						this.getTextState().setText(result);
 						value = null;
-						//TODO update tracked model value/attribute
+						FMT.MODEL.updateValue(polyval(), this);
                     }
 				}
 			});
+			Settings.applyBorderless(button);
 			root.add(button);
 			panel = new Panel(x, y, h, h);
 			Settings.applyBorderless(panel);
@@ -75,7 +69,7 @@ public class ColorField extends TextInput implements Field {
 	}
 	
 	public ColorField(Component root, Setting<RGB> setting, int x, int y, int w, int h){
-		super("#" + Integer.toHexString(setting.value.packed), x + (root == null ? 0 : h - 2), y, root == null ? w : w - 40 - h - 2, h);
+		super("#" + Integer.toHexString(setting.value.packed), x + (root == null ? 0 : h - 2), y, root == null ? w : w - 35 - h - 2, h);
 		Settings.applyMenuTheme(this);
 		Settings.applyGrayText(this);
 		Field.setupHoverCheck(this);
@@ -106,6 +100,7 @@ public class ColorField extends TextInput implements Field {
                     }
 				}
 			});
+			Settings.applyBorderless(button);
 			root.add(button);
 			panel = new Panel(x, y, h, h);
 			Settings.applyBorderless(panel);
@@ -116,7 +111,7 @@ public class ColorField extends TextInput implements Field {
 	}
 	
 	public ColorField(Component root, BiConsumer<Integer, Boolean> update, int x, int y, int w, int h){
-		super("#ffffff", x + (root == null ? 0 : h - 2), y, root == null ? w : w - 40 - h - 2, h);
+		super("#ffffff", x + (root == null ? 0 : h - 2), y, root == null ? w : w - 35 - h - 2, h);
 		Settings.applyBorderless(this);
 		Field.setupHoverCheck(this);
 		addTextInputContentChangeEventListener(event -> {
@@ -146,6 +141,7 @@ public class ColorField extends TextInput implements Field {
                     }
 				}
 			});
+			Settings.applyBorderless(button);
 			root.add(button);
 			panel = new Panel(x, y, h, h);
 			Settings.applyBorderless(panel);
@@ -179,24 +175,26 @@ public class ColorField extends TextInput implements Field {
 	public ColorField apply(float val){
 		getTextState().setText("#" + Integer.toHexString(value = (int)val));
 		setCaretPosition(getTextState().getText().length());
+		if(panel != null) panel.getStyle().getBackground().setColor(FMT.rgba((int)val));
 		return this;
 	}
 
 	@Override
 	public void scroll(double yoffset){
-		apply(test(value(), yoffset > 0, 1f));//TODO global rate value
-		//TODO update tracked model value/attribute
-		//<>.update(this, fieldid, scroll > 0);
+		apply(test(value(), yoffset > 0, Editor.RATE));
+		if(poly_value != null){
+			FMT.MODEL.updateValue(poly_value, this);
+		}
 	}
 
 	@Override
 	public String id(){
-		return fieldid;
+		return poly_value.toString();
 	}
 
 	@Override
 	public PolygonValue polyval(){
-		return null;
+		return poly_value;
 	}
 
 	@Override

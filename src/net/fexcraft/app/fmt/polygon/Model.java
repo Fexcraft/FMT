@@ -209,7 +209,10 @@ public class Model {
 	}
 
 	public void updateValue(PolygonValue value, Field field){
-		if(selected.isEmpty()) return;
+		if(selected.isEmpty()){
+			field.value();
+			return;
+		}
 		Polygon poly = selected.get(0);
 		float curr = poly.getValue(value);
 		float fval = field.value();

@@ -109,18 +109,28 @@ public interface Field {
 		};
 		holder.add(UpdateType.POLYGON_SELECTED, consumer);
 		holder.add(UpdateType.GROUP_SELECTED, consumer);
-		if(field instanceof NumberField){
-			NumberField input = (NumberField)field;
-			input.addTextInputContentChangeEventListener(event -> {
-				Field.validateNumber(event);
-				input.value = null;
-			});
-			input.getListenerMap().addListener(FocusEvent.class, (FocusEventListener)listener -> {
+		if(field instanceof NumberField || field instanceof ColorField){
+			Component com = (Component)field;
+			if(field instanceof NumberField){
+				NumberField input = (NumberField)field;
+				input.addTextInputContentChangeEventListener(event -> {
+					Field.validateNumber(event);
+					input.value = null;
+				});
+			}
+			else{
+				ColorField input = (ColorField)field;
+				input.addTextInputContentChangeEventListener(event -> {
+					Field.validateColorString(event);
+					input.value = null;
+				});
+			}
+			com.getListenerMap().addListener(FocusEvent.class, (FocusEventListener)listener -> {
 				if(!listener.isFocused()){
 					FMT.MODEL.updateValue(field.polyval(), field);
 				}
 			});
-			input.getListenerMap().addListener(KeyEvent.class, (KeyEventListener)listener -> {
+			com.getListenerMap().addListener(KeyEvent.class, (KeyEventListener)listener -> {
 				if(listener.getKey() == GLFW.GLFW_KEY_ENTER){
 					FMT.MODEL.updateValue(field.polyval(), field);
 				}

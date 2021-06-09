@@ -110,6 +110,9 @@ editor.component.polygon.cylinder.top_off=Top Offset ( x / y / z )
 editor.component.polygon.cylinder.top_rot=Top Rotation ( x / y / z )
 editor.component.polygon.cylinder.face_vis=Face (In)Visibility Toggle (B/T/O/I/S0/S1)
 editor.component.polygon.cylinder.radial=Radial Texture / Seg. Width / Seg. Height
+editor.component.polygon.marker.name=Marker Settings
+editor.component.polygon.marker.desc=Various Marker specific settings.
+editor.component.polygon.marker.color=Color
 
 # Generic Dialogs
 dialog.title.default=Generic Dialog
