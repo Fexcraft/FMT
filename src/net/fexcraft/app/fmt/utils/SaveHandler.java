@@ -284,7 +284,7 @@ public class SaveHandler {
 	public static void save(Model model, File file, Runnable run){
 		file = file == null ? model.file : file;
 		if(file == null){
-			GenericDialog.showOC(null, () -> run.run(), null, "saveload.save.nofile");
+			GenericDialog.showOC(null, () -> { if(run != null) run.run(); }, null, "saveload.save.nofile");
 			return;
 		}
 		try{
