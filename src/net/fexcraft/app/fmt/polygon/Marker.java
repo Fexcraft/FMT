@@ -8,12 +8,14 @@ import net.fexcraft.app.fmt.utils.MRTRenderer;
 import net.fexcraft.app.fmt.utils.MRTRenderer.DrawMode;
 import net.fexcraft.app.fmt.utils.MRTRenderer.GlCache;
 import net.fexcraft.app.json.JsonMap;
-import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.tmt.BoxBuilder;
+import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public class Marker extends Polygon {
-	
+
+	private ModelRendererTurbo marker = new ModelRendererTurbo(this);
+	private ModelSteve model = new ModelSteve();
 	public static float size = 0.5f, hs = 0.25f;
 	public int angle = -90;
 	public boolean biped, detached;
@@ -57,9 +59,23 @@ public class Marker extends Polygon {
 
 	@Override
 	protected void buildMRT(){
-		if(Settings.SPHERE_MARKER.value) turbo.addSphere(0, 0, 0, hs, 8, 5, 1, 1);
-		else new BoxBuilder(turbo).setOffset(-hs, -hs, -hs).setSize(size, size, size).build();
-		turbo.setColor(rgb);
+		marker.clear();
+		marker.forcedRecompile = true;
+		marker.setPosition(pos.x, pos.y, pos.z);
+		float hs = Marker.hs * scale, size = Marker.size * scale;
+		if(Settings.SPHERE_MARKER.value){
+			turbo.addSphere(0, 0, 0, hs, 8, 5, 1, 1);
+			marker.addSphere(0, 0, 0, hs, 8, 5, 1, 1);
+		}
+		else{
+			new BoxBuilder(turbo).setOffset(-hs, -hs, -hs).setSize(size, size, size).build();
+			new BoxBuilder(marker).setOffset(-hs, -hs, -hs).setSize(size, size, size).build();
+		}
+		GlCache cache;
+		if((cache = marker.glObject()) == null) cache = marker.glObject(new GlCache());
+		cache.polycolor = rgb.toFloatArray();
+		cache.polygon = this;
+		model.fill(this);
 	}
 
 	@Override
@@ -71,22 +87,14 @@ public class Marker extends Polygon {
 	public void render(){
 		DrawMode mode = MRTRenderer.MODE;
 		MRTRenderer.mode(DrawMode.RGBCOLOR);
-		((GlCache)turbo.glObject()).polycolor = rgb.toFloatArray();
-		turbo.render(Static.sixteenth * scale);
+		marker.render();
 		MRTRenderer.mode(mode);
 		if(biped && !MRTRenderer.MODE.lines()){
 			String tex = TextureManager.getBound();
 			TextureManager.bind("steve");
-			ModelSteve.render(pos, angle, biped_scale);
+			model.render();
 			TextureManager.bind(tex);
 		}
-	}
-	
-	@Override
-	public void renderPicking(){
-		rect.packed = colorIdx;
-		((GlCache)turbo.glObject()).polycolor = rect.toFloatArray();
-		turbo.render(Static.sixteenth * scale);
 	}
 	
 	public float getValue(PolygonValue polyval){

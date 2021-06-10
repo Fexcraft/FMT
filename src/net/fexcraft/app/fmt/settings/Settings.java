@@ -199,7 +199,7 @@ public class Settings {
 		obj.add("update_skipped", UPDATE_SKIPPED);
 		JsonArray recent = new JsonArray();
 		for(File file : RECENT){
-			if(file.equals(NO_FILE_DOTS)) continue;
+			if(NO_FILE_DOTS.equals(file)) continue;
 			recent.add(file.toString().replace("\\", "\\\\"));
 		}
 		if(recent.size() > 0) obj.add("recent_files", recent);
