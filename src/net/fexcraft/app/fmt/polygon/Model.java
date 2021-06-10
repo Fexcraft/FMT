@@ -276,4 +276,16 @@ public class Model {
 		else rem.process();
 	}
 
+	public int totalPolygons(){
+		int am = 0;
+		for(Group group : groups){
+			am += group.size();
+		}
+		return am;
+	}
+
+	public int totalGroups(){
+		return groups.size();
+	}
+
 }

@@ -60,7 +60,7 @@ public class Settings {
 	public static boolean FOUND_UPDATE, UPDATECHECK_FAILED;
 	public static ArrayList<File> RECENT = new ArrayList<File>();
 	public static File NO_FILE_DOTS = new File("...");
-	public static Setting<Integer> WINDOW_WIDTH, WINDOW_HEIGHT, ROUNDING_DIGITS;
+	public static Setting<Integer> WINDOW_WIDTH, WINDOW_HEIGHT, ROUNDING_DIGITS, BACKUP_INTERVAL;
 	public static Setting<Boolean> DISCORD_RPC, DISCORD_HIDE, DISCORD_RESET_ON_NEW, FULLSCREEN;
 	public static Setting<Boolean> VSYNC, HVSYNC, TRIANGULATION_Q, TRIANGULATION_L, INTERNAL_CHOOSER;
 	public static Setting<Boolean> DEMO, FLOOR, CUBE, CMARKER, LINES, POLYMARKER, ADD_TO_LAST, SPHERE_MARKER;
@@ -146,6 +146,7 @@ public class Settings {
 		SHOW_WELCOME = new Setting<>("show_welcome", true, GENERAL, obj);
 		SHOW_UPDATE = new Setting<>("show_update", true, GENERAL, obj);
 		SPHERE_MARKER = new Setting<>("sphere_marker", false, SPACE3D, obj);
+		BACKUP_INTERVAL = new Setting<>("backup_interval", 5, GENERAL, obj);
 		//
 		SEL_THEME = new StringArraySetting("selected_theme", "light", THEME, obj, "light", "dark", "custom");
 		DARKTHEME = new Setting<>("is_dark", false, THEME, obj);

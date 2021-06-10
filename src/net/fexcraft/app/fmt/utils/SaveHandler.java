@@ -282,6 +282,10 @@ public class SaveHandler {
 	}
 
 	public static void save(Model model, File file, Runnable run){
+		save(model, file, run, false);
+	}
+
+	public static void save(Model model, File file, Runnable run, boolean backup){
 		file = file == null ? model.file : file;
 		if(file == null){
 			GenericDialog.showOC(null, () -> { if(run != null) run.run(); }, null, "saveload.save.nofile");
@@ -327,11 +331,13 @@ public class SaveHandler {
 			}
 			zipout.close();
 			fileout.close();
-			if(file != null){
-				log("Saved model as FMTB " + (arr.length > 1 ? " with texture." : "."));
-			}
-			if(Settings.OPEN_FOLDER_AFTER_SAVE.value && file.getParentFile() != null){
-				FMT.openLink(file.getParentFile().getAbsolutePath());
+			if(!backup){
+				if(file != null){
+					log("Saved model as FMTB " + (arr.length > 1 ? " with texture." : "."));
+				}
+				if(Settings.OPEN_FOLDER_AFTER_SAVE.value && file.getParentFile() != null){
+					FMT.openLink(file.getParentFile().getAbsolutePath());
+				}
 			}
 		}
 		catch(Exception e){

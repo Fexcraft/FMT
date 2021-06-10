@@ -9,6 +9,12 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
+import java.util.Date;
+import java.util.Timer;
 
 import org.joml.Vector2i;
 import org.joml.Vector4f;
@@ -50,20 +56,13 @@ import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.ui.Toolbar;
 import net.fexcraft.app.fmt.ui.ToolbarMenu;
 import net.fexcraft.app.fmt.ui.fields.Field;
-import net.fexcraft.app.fmt.utils.Axis3DL;
-import net.fexcraft.app.fmt.utils.DiscordUtil;
-import net.fexcraft.app.fmt.utils.GGR;
-import net.fexcraft.app.fmt.utils.KeyCompound;
-import net.fexcraft.app.fmt.utils.MRTRenderer;
+import net.fexcraft.app.fmt.utils.*;
 import net.fexcraft.app.fmt.utils.MRTRenderer.DrawMode;
 import net.fexcraft.app.fmt.utils.MRTRenderer.GlCache;
-import net.fexcraft.app.fmt.utils.Picker;
-import net.fexcraft.app.fmt.utils.ShaderManager;
-import net.fexcraft.app.fmt.utils.Timer;
-import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.AxisRotator;
 import net.fexcraft.lib.common.math.RGB;
+import net.fexcraft.lib.common.math.Time;
 import net.fexcraft.lib.tmt.BoxBuilder;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
@@ -80,9 +79,10 @@ public class FMT {
 	//
 	public static final FMT INSTANCE = new FMT();
 	public static int WIDTH, HEIGHT, EXIT_CODE = 0;
+	public static Timer BACKUP_TIMER;
 	private static String title;
 	//
-	public static final Timer timer = new Timer();
+	public static final ITimer timer = new ITimer();
 	public float delta, accumulator, interval = 1f / 30f, alpha;
 	private static boolean CLOSE;
 	public static GGR CAM;
@@ -150,13 +150,11 @@ public class FMT {
 		EditorComponent.registerComponents();
 		Settings.loadEditors();
 		for(Editor editor : Editor.EDITORLIST) FRAME.getContainer().add(editor);
-		//TODO interface
 		FRAME.getContainer().add(pos = new Label("  test  ", 320, 32, 200, 20));
 		FRAME.getContainer().add(rot = new Label("  test  ", 320, 54, 200, 20));
 		FRAME.getContainer().add(fps = new Label("  test  ", 320, 76, 200, 20));
 		FRAME.getContainer().add(poly = new Label(" test  ", 320, 98, 200, 20));
 		FRAME.getContainer().add(info = new Label(" test  ", 320, 120, 200, 20));
-		
 		CONTEXT = new Context(window);
 		FRAME.getComponentLayer().setFocusable(false);
 		CallbackKeeper keeper = new DefaultCallbackKeeper();
@@ -214,7 +212,16 @@ public class FMT {
 		//TODO session, updates, keybinds
 		Settings.checkForUpdates();
 		KeyCompound.init();
-		//TODO timers
+		//
+		LocalDateTime midnight = LocalDateTime.of(LocalDate.now(ZoneOffset.systemDefault()), LocalTime.MIDNIGHT);
+		long mid = midnight.toInstant(ZoneOffset.UTC).toEpochMilli();
+		long date = Time.getDate();
+		while((mid += Time.MIN_MS * 5) < date);
+		if(BACKUP_TIMER == null && Settings.BACKUP_INTERVAL.value > 0){
+			(BACKUP_TIMER = new Timer("BKUP")).schedule(new BackupHandler(), new Date(mid), Time.MIN_MS * Settings.BACKUP_INTERVAL.value);
+		}
+		//TODO tex timer
+		//
 		if(Settings.DISCORD_RPC.value){
 			DiscordEventHandlers.Builder handler = new DiscordEventHandlers.Builder();
 			handler.setReadyEventHandler(new DiscordUtil.ReadyEventHandler());

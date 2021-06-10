@@ -150,6 +150,7 @@ saveload.new=New Model Creator
 saveload.new.name=Model Name
 saveload.new.orientation=Orientation
 saveload.new.target_format=Target Format
+saveload.backup.failure=Error/s while saving backup, please check the log.
 
 # Welcome/Update Dialog
 welcome.title=Welcome to FMT!
@@ -180,6 +181,7 @@ setting.general.ask_polygon_removal=Ask on Polygon Removal
 setting.general.open_folder_after_save=Open Folder after Save
 setting.general.show_welcome=Show Welcome Message
 setting.general.show_update=Show Update Message
+setting.general.backup_interval=Backup Interval (in minutes)
 setting.graphic.vsync=Normal V-Sync (60fps~)
 setting.graphic.vsync/2=Half V-Sync (30fps~)
 setting.graphic.window_width=Default Window Width
