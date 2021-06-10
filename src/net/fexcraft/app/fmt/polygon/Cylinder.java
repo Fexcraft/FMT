@@ -150,4 +150,24 @@ public class Cylinder extends Polygon {
 		return topoff.x == 0f && topoff.y == 0f && topoff.z == 0f ? null : new Vec3f(topoff.x, topoff.y, topoff.z);
 	}
 
+	@Override
+	protected Polygon copyInternal(Polygon poly){
+		Cylinder cyl = (Cylinder)poly;
+		cyl.radius = radius;
+		cyl.radius2 = radius2;
+		cyl.length = length;
+		cyl.segments = segments;
+		cyl.seglimit = seglimit;
+		cyl.direction = direction;
+		cyl.base = base;
+		cyl.top = top;
+		cyl.topoff.set(topoff);
+		cyl.toprot.set(toprot);
+		cyl.radial = radial;
+		cyl.seg_width = seg_width;
+		cyl.seg_height = seg_height;
+		for(int i = 0; i < bools.length; i++) cyl.bools[i] = bools[i];
+		return poly;
+	}
+
 }

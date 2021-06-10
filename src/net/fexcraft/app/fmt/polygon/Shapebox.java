@@ -117,4 +117,18 @@ public class Shapebox extends Box {
 		this.recompile();
 	}
 
+	@Override
+	protected Polygon copyInternal(Polygon poly){
+		Shapebox box = (Shapebox)super.copyInternal(poly);
+		box.cor0.set(cor0);
+		box.cor1.set(cor1);
+		box.cor2.set(cor2);
+		box.cor3.set(cor3);
+		box.cor4.set(cor4);
+		box.cor5.set(cor5);
+		box.cor6.set(cor6);
+		box.cor7.set(cor7);
+		return poly;
+	}
+
 }

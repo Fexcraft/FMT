@@ -57,7 +57,9 @@ public class Toolbar extends Panel {
 			new MenuButton(8, "file.donate", () -> FMT.openLink("https://fexcraft.net/donate")),
 			new MenuButton(9, "file.exit", () -> FMT.close(0))
 		));
-		this.add(new ToolbarMenu(1, "utils"));
+		this.add(new ToolbarMenu(1, "utils",
+			new MenuButton(0, "utils.copy_selected", () -> FMT.MODEL.copySelected())
+		));
 		this.add(new ToolbarMenu(2, "editors",
 			new MenuButton(0, "editors.new")
 		));

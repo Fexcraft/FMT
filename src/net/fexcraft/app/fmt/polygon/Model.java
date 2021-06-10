@@ -191,7 +191,7 @@ public class Model {
 	}
 
 	public ArrayList<Polygon> selection_copy(){
-		var  list = new ArrayList<Polygon>();
+		var list = new ArrayList<Polygon>();
 		list.addAll(selected);
 		return list;
 	}
@@ -267,8 +267,7 @@ public class Model {
 	}
 
 	public void delsel(){
-		ArrayList<Polygon> selected = new ArrayList<>();
-		selected.addAll(selected());
+		ArrayList<Polygon> selected = selection_copy();
 		DialogTask rem = () -> selected.removeIf(poly -> poly.group().remove(poly));
 		if(ASK_POLYGON_REMOVAL.value){
 			GenericDialog.showOC(null, rem, null, "keybind.delete.remove_selected_polygons", selected.size() + "");
@@ -286,6 +285,21 @@ public class Model {
 
 	public int totalGroups(){
 		return groups.size();
+	}
+
+	public void copySelected(){
+		ArrayList<Polygon> selected = selection_copy();
+		var bool = Settings.SELECT_COPIED.value;
+		ArrayList<Polygon> copied = new ArrayList<>();
+		for(Polygon poly : selected){
+			Polygon newpoly = poly.copy();
+			if(bool) copied.add(newpoly);
+			this.add("clipboard", newpoly);
+		}
+		if(bool){
+			clear_selection();
+			copied.forEach(poly -> select(poly));
+		}
 	}
 
 }

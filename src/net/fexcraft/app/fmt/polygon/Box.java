@@ -80,4 +80,12 @@ public class Box extends Polygon {
 		this.recompile();
 	}
 
+	@Override
+	protected Polygon copyInternal(Polygon poly){
+		Box box = (Box)poly;
+		box.size.set(size);
+		for(int i = 0; i < sides.length; i++) box.sides[i] = sides[i];
+		return poly;
+	}
+
 }

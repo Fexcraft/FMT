@@ -10,6 +10,7 @@ import org.joml.Vector3f;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.attributes.PolyVal.ValAxe;
+import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.fmt.utils.MRTRenderer.GlCache;
 import net.fexcraft.app.fmt.utils.Translator;
@@ -126,6 +127,42 @@ public abstract class Polygon {
 		return null;
 	}
 	
+	public static Polygon from(Model model, Shape shape){
+		switch(shape){
+			case BOUNDING_BOX:
+				break;
+			case BOX: return new Box(model);
+			case CYLINDER: return new Cylinder(model);
+			case MARKER: return new Marker(model);
+			case OBJECT:
+				break;
+			case SHAPEBOX: return new Shapebox(model);
+			case SPHERE:
+				break;
+			case VOXEL:
+				break;
+			default: return null;
+		}
+		return null;
+	}
+
+	public Polygon copy(){
+		Polygon poly = from(model, this.getShape());
+		poly.pos.set(pos);
+		poly.off.set(off);
+		poly.rot.set(rot);
+		poly.visible = visible;
+		poly.textureX = textureX;
+		poly.textureY = textureY;
+		poly.mirror = mirror;
+		poly.flip = flip;
+		if(name != null) poly.name = String.format(Settings.COPIED_POLYGON.value, name);
+		//TODO cuv
+		return copyInternal(poly);
+	}
+	
+	protected abstract Polygon copyInternal(Polygon poly);
+
 	public void recompile(){
 		turbo.forcedRecompile = true;
 		turbo.clear();

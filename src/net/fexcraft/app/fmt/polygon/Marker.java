@@ -21,7 +21,6 @@ public class Marker extends Polygon {
 	public boolean biped, detached;
 	public float biped_scale = 1, scale = 1;
 	public RGB rgb = RGB.WHITE.copy();
-	public static RGB rect = new RGB();
 	
 	public Marker(Model model){
 		super(model);
@@ -120,6 +119,18 @@ public class Marker extends Polygon {
 			default: super.setValue(polyval, value);
 		}
 		this.recompile();
+	}
+
+	@Override
+	protected Polygon copyInternal(Polygon poly){
+		Marker marker = (Marker)poly;
+		marker.rgb.packed = rgb.packed;
+		marker.biped = biped;
+		marker.angle = angle;
+		marker.scale = biped_scale;
+		marker.detached = detached;
+		marker.scale = scale;
+		return poly;
 	}
 
 }
