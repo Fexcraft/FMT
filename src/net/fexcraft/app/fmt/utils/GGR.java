@@ -161,21 +161,11 @@ public class GGR {
 
 	public void scrollCallback(long window, double xoffset, double yoffset){
 		if(isOverUI()) return;
-		fov -= (float)(5 * yoffset);
-		if(fov > 120) fov = 120;
-		if(fov < 5) fov = 5;
+		double v = yoffset * -0.5f;
+        pos.x += v * Math.cos(hor);
+        pos.y += -v * Math.sin(ver);
+        pos.z += v * Math.sin(hor);
 	}
-
-    public static double[] rotatePoint(double f, float pitch, float yaw) {
-        double[] xyz = new double[]{ f, 0, 0 };
-        pitch *= 0.01745329251;
-        xyz[1] = -(f * Math.sin(pitch));
-        //
-        yaw *= 0.01745329251;
-        xyz[0] = (f * Math.cos(yaw));
-        xyz[2] = (f * Math.sin(yaw));
-        return xyz;
-    }
 
     public void processCameraInput(float delta){
     	if(FMT.CONTEXT.getFocusedGui() != null){
