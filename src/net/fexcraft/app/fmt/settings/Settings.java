@@ -316,6 +316,7 @@ public class Settings {
 		editor.addComponent(new ShapeboxComponent());
 		editor.addComponent(new CylinderComponentFull());
 		editor.addComponent(new MarkerComponent());
+		editor = new Editor("group_editor", "Group Editor", false, true);
 	}
 
 	public static void register(String group, String id, Setting<?> setting){
