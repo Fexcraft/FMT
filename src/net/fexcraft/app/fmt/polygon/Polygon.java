@@ -10,6 +10,8 @@ import org.joml.Vector3f;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.attributes.PolyVal.ValAxe;
+import net.fexcraft.app.fmt.attributes.UpdateHandler;
+import net.fexcraft.app.fmt.attributes.UpdateType;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.fmt.utils.MRTRenderer.GlCache;
@@ -84,6 +86,7 @@ public abstract class Polygon {
 	
 	public void name(String name){
 		this.name = name;
+		UpdateHandler.update(UpdateType.POLYGON_RENAMED, this, name);
 	}
 
 	public boolean group(Group group){
