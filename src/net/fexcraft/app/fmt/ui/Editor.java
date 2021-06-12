@@ -179,6 +179,7 @@ public class Editor extends Component {
 	}
 	
 	public void show(){
+		for(Editor editor : EDITORLIST) if(editor.alignment == alignment) editor.hide();
 		getStyle().setDisplay(DisplayType.MANUAL);
 		this.setEnabled(true);
 		if(alignment) LEFT = this;
