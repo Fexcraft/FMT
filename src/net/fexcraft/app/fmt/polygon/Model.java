@@ -190,6 +190,14 @@ public class Model {
 		return selected;
 	}
 
+	public ArrayList<Group> selected_groups(){
+		ArrayList<Group> groups = new ArrayList<>();
+		for(Group group : this.groups){
+			if(group.selected) groups.add(group);
+		}
+		return groups;
+	}
+
 	public ArrayList<Polygon> selection_copy(){
 		var list = new ArrayList<Polygon>();
 		list.addAll(selected);

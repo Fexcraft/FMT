@@ -35,6 +35,7 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.ui.components.BoxComponent;
 import net.fexcraft.app.fmt.ui.components.CylinderComponentFull;
+import net.fexcraft.app.fmt.ui.components.GroupGeneral;
 import net.fexcraft.app.fmt.ui.components.MarkerComponent;
 import net.fexcraft.app.fmt.ui.components.PolygonGeneral;
 import net.fexcraft.app.fmt.ui.components.QuickAdd;
@@ -317,6 +318,8 @@ public class Settings {
 		editor.addComponent(new CylinderComponentFull());
 		editor.addComponent(new MarkerComponent());
 		editor = new Editor("group_editor", "Group Editor", false, true);
+		editor.addComponent(new QuickAdd());
+		editor.addComponent(new GroupGeneral());
 	}
 
 	public static void register(String group, String id, Setting<?> setting){

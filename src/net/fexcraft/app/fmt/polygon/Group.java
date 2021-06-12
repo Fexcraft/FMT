@@ -7,6 +7,8 @@ import java.util.ArrayList;
 
 import org.joml.Vector3f;
 
+import net.fexcraft.app.fmt.attributes.UpdateHandler;
+import net.fexcraft.app.fmt.attributes.UpdateType;
 import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.utils.MRTRenderer;
 import net.fexcraft.app.fmt.utils.MRTRenderer.DrawMode;
@@ -102,6 +104,11 @@ public class Group extends ArrayList<Polygon> {
 	@Override
 	public boolean equals(Object other){
 		return other == this;
+	}
+
+	public void reid(String name){
+		this.id = name;
+		UpdateHandler.update(UpdateType.GROUP_RENAMED, this, name);
 	}
 
 }

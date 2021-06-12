@@ -37,7 +37,7 @@ public class GroupComponent extends EditorComponent {
 		super(group.id, group.isEmpty() ? HEIGHT : HEIGHT + group.size() * PH + 4, true, true);
 		label.getTextState().setText((this.group = group).id);
 		this.genFullheight();
-		updateholder.add(UpdateType.GROUP_RENAMED, wrp -> { if(wrp.objs[1] == group) label.getTextState().setText(group.id); });
+		updateholder.add(UpdateType.GROUP_RENAMED, wrp -> { if(wrp.objs[0] == group) label.getTextState().setText(group.id); });
 		updateholder.add(UpdateType.POLYGON_ADDED, wrp -> { if(wrp.objs[0] == group) addPolygon(wrp.get(1), true); });
 		updateholder.add(UpdateType.POLYGON_RENAMED, wrp -> { if(((Polygon)wrp.get(0)).group() == group) renamePolygon(wrp.get(0)); });
 		updateholder.add(UpdateType.POLYGON_REMOVED, wrp -> { if(wrp.objs[0] == group) removePolygon(wrp.get(1)); });

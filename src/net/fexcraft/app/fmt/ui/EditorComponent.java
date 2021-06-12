@@ -16,6 +16,7 @@ import net.fexcraft.app.fmt.ui.components.BoxComponent;
 import net.fexcraft.app.fmt.ui.components.CylinderComponentBasic;
 import net.fexcraft.app.fmt.ui.components.CylinderComponentFull;
 import net.fexcraft.app.fmt.ui.components.CylinderComponentSimple;
+import net.fexcraft.app.fmt.ui.components.GroupGeneral;
 import net.fexcraft.app.fmt.ui.components.MarkerComponent;
 import net.fexcraft.app.fmt.ui.components.PolygonGeneral;
 import net.fexcraft.app.fmt.ui.components.QuickAdd;
@@ -139,6 +140,7 @@ public class EditorComponent extends Component {
 		REGISTRY.put("polygon.cylinder.basic", CylinderComponentBasic.class);
 		REGISTRY.put("polygon.cylinder.simple", CylinderComponentSimple.class);
 		REGISTRY.put("polygon.marker", MarkerComponent.class);
+		REGISTRY.put("group.general", GroupGeneral.class);
 	}
 
 }
