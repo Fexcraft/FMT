@@ -16,6 +16,7 @@ import org.liquidengine.legui.style.Style.DisplayType;
 import org.liquidengine.legui.style.color.ColorConstants;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.attributes.UpdateHandler;
 import net.fexcraft.app.fmt.attributes.UpdateType;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Polygon;
@@ -58,7 +59,22 @@ public class GroupComponent extends EditorComponent {
 				}
 			}
 		});
+		updateholder.add(UpdateType.GROUP_VISIBLITY, cons -> {
+			if(cons.objs[0] == group){
+				update_color();
+				for(PolygonLabel poly : polygons){
+					poly.update_color();
+				}
+			}
+		});
 		updateholder.add(UpdateType.POLYGON_SELECTED, cons -> {
+			Polygon pn = cons.get(0);
+			if(pn.group() != group) return;
+			for(PolygonLabel poly : polygons){
+				if(poly.polygon == pn) poly.update_color();
+			}
+		});
+		updateholder.add(UpdateType.POLYGON_VISIBLITY, cons -> {
 			Polygon pn = cons.get(0);
 			if(pn.group() != group) return;
 			for(PolygonLabel poly : polygons){
@@ -133,7 +149,8 @@ public class GroupComponent extends EditorComponent {
 	@Override
 	public void pin(){
 		group.visible = !group.visible;
-		update_color();
+		//update_color();
+		UpdateHandler.update(UpdateType.GROUP_VISIBLITY, group, group.visible);
 	}
 	
 	@Override
@@ -159,7 +176,8 @@ public class GroupComponent extends EditorComponent {
 			});
 			Icon visi = new Icon(0, 16, 4, Editor.CWIDTH - 46, 2, "./resources/textures/icons/component/visible.png", () -> {
 				polygon.visible = !polygon.visible;
-				update_color();
+				//update_color();
+				UpdateHandler.update(UpdateType.POLYGON_VISIBLITY, polygon, polygon.visible);
 			});
 			CursorEnterEventListener listener = lis -> {
 				DisplayType type = this.isHovered() || icon.isHovered() || visi.isHovered() ? DisplayType.MANUAL : DisplayType.NONE;

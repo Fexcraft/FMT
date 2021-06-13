@@ -45,6 +45,10 @@ toolbar.utils=Utilities
 toolbar.texture=Textures
 toolbar.helpers=Helper/Previews
 toolbar.exit=Exit
+## Selected Polygon Right-Click Menu
+toolbar.polyselmenu.hide=Hide/Show
+toolbar.polyselmenu.copy=Copy
+toolbar.polyselmenu.delete=Delete
 
 # Editor
 editor.add_component=Add Editor Component

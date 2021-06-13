@@ -17,6 +17,7 @@ import org.joml.Vector3f;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.Editor;
+import net.fexcraft.app.fmt.ui.PolySelMenu;
 import net.fexcraft.app.fmt.ui.fields.NumberField;
 import net.fexcraft.app.fmt.utils.Picker.PickTask;
 import net.fexcraft.app.fmt.utils.Picker.PickType;
@@ -87,22 +88,22 @@ public class GGR {
 	}
 
     public void pollInput(float delta){
-		if(grabbed && cursor_moved){
+		if(grabbed && cursor_moved0){
 			hor += (posx - oposx) * Settings.MOUSE_SENSIVITY.value * delta * 0.005;
 			ver += (posy - oposy) * Settings.MOUSE_SENSIVITY.value * delta * 0.005;
             ver = Math.max(-maxVR, Math.min(maxVR, ver));
-            cursor_moved = false;
+            cursor_moved0 = false;
 		}
-		else if(scroll_down && cursor_moved){
+		else if(scroll_down && cursor_moved0){
 	        pos.x += (posx - oposx) * 0.001;
 	        pos.y += (posy - oposy) * 0.001;
-	        cursor_moved = false;
+	        cursor_moved0 = false;
 	    }
         processCameraInput(delta);
     }
 
     public static double posx, posy, oposx = -1, oposy = -1;
-    public static boolean right_down, left_down, scroll_down, grabbed, cursor_moved;
+    public static boolean right_down, left_down, scroll_down, grabbed, cursor_moved0, cursor_moved1;
     
 	public void mouseCallback(long window, int button, int action, int mods){
         if(button == 0){
@@ -128,6 +129,10 @@ public class GGR {
         		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         		right_down = false;
         		grabbed = false;
+        		if(!cursor_moved1 && !isOverUI()){
+        			PolySelMenu.show();
+        		}
+        		cursor_moved1 = false;
         	}
         }
         if(button == 2){
@@ -155,8 +160,16 @@ public class GGR {
 	}
 
 	public void cursorPosCallback(long window, double xpos, double ypos){
-		if(oposx == -1 || oposy == -1){ oposx = xpos; oposy = posy; }
-		oposx = posx; oposy = posy; posx = xpos; posy = ypos; cursor_moved = true;
+		if(oposx == -1 || oposy == -1){
+			oposx = xpos;
+			oposy = posy;
+		}
+		oposx = posx;
+		oposy = posy;
+		posx = xpos;
+		posy = ypos;
+		cursor_moved0 = true;
+		cursor_moved1 = oposx != posx || oposy != posy;
 	}
 
 	public void scrollCallback(long window, double xoffset, double yoffset){

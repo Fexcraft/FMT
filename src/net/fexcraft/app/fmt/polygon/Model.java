@@ -283,6 +283,14 @@ public class Model {
 		else rem.process();
 	}
 
+	public void hidesel(){
+		ArrayList<Polygon> selected = selection_copy();
+		selected.forEach(poly -> {
+			poly.visible = !poly.visible;
+			update(UpdateType.POLYGON_VISIBLITY, poly, poly.visible);
+		});
+	}
+
 	public int totalPolygons(){
 		int am = 0;
 		for(Group group : groups){
