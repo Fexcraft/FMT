@@ -369,7 +369,7 @@ public class SaveHandler {
 		}
 		obj.add("creators", creators);
 		obj.add("type", "jtmt");
-		if(!TextureManager.anyGroupsLoaded()){
+		if(TextureManager.anyGroupsLoaded()){
 			JsonArray textures = new JsonArray();
 			for(TextureGroup group : TextureManager.getGroups()){
 				textures.add(group.name);

@@ -276,6 +276,7 @@ public class FMT {
 			}
 			render(vao, alpha = accumulator / interval);
 			//
+			adjustLabels();
 			RENDERER.render(FRAME, CONTEXT);
 			timer.updateFPS();
 			glfwPollEvents();
@@ -294,6 +295,15 @@ public class FMT {
 		Settings.save();
 		//TODO other saves
 		System.exit(EXIT_CODE);
+	}
+
+	private void adjustLabels(){
+		int xoff = Editor.LEFT == null ? 5 : 320;
+		pos.setPosition(xoff, pos.getPosition().y);
+		rot.setPosition(xoff, rot.getPosition().y);
+		fps.setPosition(xoff, fps.getPosition().y);
+		poly.setPosition(xoff, poly.getPosition().y);
+		info.setPosition(xoff, info.getPosition().y);
 	}
 
 	private void render(int vao, float alpha){

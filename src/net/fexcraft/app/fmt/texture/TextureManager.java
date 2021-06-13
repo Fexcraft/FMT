@@ -187,7 +187,7 @@ public class TextureManager {
 	}
 
 	public static boolean anyGroupsLoaded(){
-		return GROUPS.isEmpty();
+		return GROUPS.size() > 0;
 	}
 
 	public static ArrayList<TextureGroup> getGroups(){

@@ -58,7 +58,14 @@ public class Toolbar extends Panel {
 			new MenuButton(9, "file.exit", () -> FMT.close(0))
 		));
 		this.add(new ToolbarMenu(1, "utils",
-			new MenuButton(0, "utils.copy_selected", () -> FMT.MODEL.copySelected())
+			new MenuButton(0, "utils.copy_selected", () -> FMT.MODEL.copySelected()),
+			new ToolbarMenu(-1, "utils.clipboard",
+				new MenuButton(0, "utils.clipboard.copy", () -> FMT.MODEL.copyToClipboard(false)),
+				new MenuButton(1, "utils.clipboard.paste", () -> FMT.MODEL.pasteFromClipboard()),
+				new MenuButton(2, "utils.clipboard.copy_grouped", () -> FMT.MODEL.copyToClipboard(true))
+			),
+			new MenuButton(2, "utils.undo"),
+			new MenuButton(3, "utils.redo")
 		));
 		this.add(new ToolbarMenu(2, "editors",
 			new MenuButton(0, "editors.new")

@@ -78,16 +78,21 @@ public class KeyCompound {
 		keys.add(new KeyFunction("left_alt", GLFW_KEY_LEFT_ALT, (action) -> FMT.CAM.left_alt_down = parseKeyAction(action)));
 		keys.add(new KeyFunction("right_control", GLFW_KEY_RIGHT_CONTROL, (action) -> FMT.CAM.right_control_down = parseKeyAction(action)));
 		keys.add(new KeyFunction("right_alt", GLFW_KEY_RIGHT_ALT, (action) -> FMT.CAM.right_alt_down = parseKeyAction(action)));
-		/*keys.add(new KeyFunction("clipboard_copy", GLFW_KEY_C, (action) -> {
-			if(action == GLFW_PRESS && CAM.isControlDown()){
-				FMT.MODEL.copyToClipboard();
+		keys.add(new KeyFunction("clipboard_copy", GLFW_KEY_C, (action) -> {
+			if(action == GLFW_PRESS && GGR.isControlDown()){
+				FMT.MODEL.copyToClipboard(false);
 			}
-		}));
+		}).set_ctrl());
+		keys.add(new KeyFunction("clipboard_copy_grouped", GLFW_KEY_G, (action) -> {
+			if(action == GLFW_PRESS && GGR.isControlDown()){
+				FMT.MODEL.copyToClipboard(true);
+			}
+		}).set_ctrl());
 		keys.add(new KeyFunction("clipboard_paste", GLFW_KEY_V, (action) -> {
 			if(action == GLFW_PRESS){
 				FMT.MODEL.pasteFromClipboard();
 			}
-		}));*/
+		}).set_ctrl());
 	}
 	
 	public static void load(){
@@ -120,23 +125,43 @@ public class KeyCompound {
 	}
 	
 	public static class KeyFunction {
-		
+
 		private String name;
 		private int id, def;
 		private KeyRunnable run;
-		
+		private boolean ctrl;
+
 		public KeyFunction(String name, int defid, KeyRunnable run){
-			this.name = name; this.id = this.def = defid; this.run = run;
+			this.name = name;
+			this.id = def = defid;
+			this.run = run;
 		}
 
-		public int id(){ return id; }
-		
-		public int def(){ return def; }
-		
-		public String name(){ return name; }
+		public int id(){
+			return id;
+		}
 
-		public void setId(Integer key){ this.id = key == null || key < 0 ? def : key; }
-		
+		public int def(){
+			return def;
+		}
+
+		public String name(){
+			return name;
+		}
+
+		public void setId(Integer key){
+			this.id = key == null || key < 0 ? def : key;
+		}
+
+		public boolean control(){
+			return ctrl;
+		};
+
+		public KeyFunction set_ctrl(){
+			ctrl = true;
+			return this;
+		}
+
 	}
 	
 	@FunctionalInterface

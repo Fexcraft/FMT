@@ -40,8 +40,16 @@ toolbar.project.settings=Settings
 toolbar.project.import=Import
 toolbar.project.export=Export
 toolbar.project.close=Close
-## 
+## Utils 
 toolbar.utils=Utilities
+toolbar.utils.copy_selected=Copy Selected
+toolbar.utils.clipboard=Clipboard
+toolbar.utils.clipboard.copy=Copy
+toolbar.utils.clipboard.paste=Paste
+toolbar.utils.clipboard.copy_grouped=Copy Grouped
+toolbar.utils.undo=Undo (WIP)
+toolbar.utils.redo=Redo (WIP)
+##
 toolbar.texture=Textures
 toolbar.helpers=Helper/Previews
 toolbar.exit=Exit
@@ -214,6 +222,7 @@ setting.discord.reset_on_new=Reset timer on new Model
 setting.naming.polygon_duplicate_suffix=Polygon Duplicate Suffix
 setting.naming.group_duplicate_suffix=Group Duplicate Suffix
 setting.naming.copied_polygon=Copied Polygon Name Format
+setting.naming.pasted_group_suffix=Pasted Group Suffix
 setting.theme.selected_theme=Selected Theme
 setting.theme.is_dark=(Custom) is Dark
 setting.theme.background=Custom Background
@@ -239,22 +248,17 @@ setting.theme.component_group_invis_sel=Com. Inv. Sel. Group
 filechooser.title=FMT Internal File Chooser/Selector
 filechooser.enter_name=enter custom filename here
 polygon.unnamed=unnamed %s
-keybind.delete.remove_selected_polygons=Remove ALL selected polygons? Total:
+model.delete.remove_selected_polygons=Remove ALL selected polygons? Total:
+model.clipboard.paste_external=Are you sure to paste these polygons?
+model.clipboard.paste_external_grouped=Are you sure to paste these groups and polygons?
 
 
 //////// OLD ////////
-toolbar.utils=Utils
-toolbar.utils.undo=Undo (WIP)
-toolbar.utils.redo=Redo (WIP)
 toolbar.utils.create_gif=Create GIF
 toolbar.utils.screenshot=Screenshot
 toolbar.utils.reset_camera=Reset Cam.
 toolbar.utils.font_util=Font Util
 toolbar.utils.calc_size=Calc. Size
-toolbar.utils.clipboard=Clipboard
-toolbar.utils.clipboard.copy=Copy
-toolbar.utils.clipboard.paste=Paste
-toolbar.utils.copy_selected=Copy Selected
 toolbar.utils.flip=Flip Tools
 toolbar.utils.flip.left_right=Flip Cor [L/R]
 toolbar.utils.flip.up_down=Flip Cor [U/D]

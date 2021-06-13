@@ -5,10 +5,18 @@ import static net.fexcraft.app.fmt.attributes.UpdateType.MODEL_AUTHOR;
 import static net.fexcraft.app.fmt.attributes.UpdateType.MODEL_LOAD;
 import static net.fexcraft.app.fmt.settings.Settings.ASK_POLYGON_REMOVAL;
 
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.joml.Vector3f;
 
@@ -20,12 +28,16 @@ import net.fexcraft.app.fmt.attributes.UpdateType;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.ui.GenericDialog;
-import net.fexcraft.app.fmt.ui.GenericDialog.DialogTask;
 import net.fexcraft.app.fmt.ui.fields.Field;
 import net.fexcraft.app.fmt.utils.CornerUtil;
 import net.fexcraft.app.fmt.utils.GGR;
+import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.fmt.utils.MRTRenderer.DrawMode;
 import net.fexcraft.app.fmt.utils.SaveHandler;
+import net.fexcraft.app.json.JsonArray;
+import net.fexcraft.app.json.JsonHandler;
+import net.fexcraft.app.json.JsonMap;
+import net.fexcraft.app.json.JsonObject;
 
 /**
  * 
@@ -276,11 +288,11 @@ public class Model {
 
 	public void delsel(){
 		ArrayList<Polygon> selected = selection_copy();
-		DialogTask rem = () -> selected.removeIf(poly -> poly.group().remove(poly));
+		Runnable rem = () -> selected.removeIf(poly -> poly.group().remove(poly));
 		if(ASK_POLYGON_REMOVAL.value){
-			GenericDialog.showOC(null, rem, null, "keybind.delete.remove_selected_polygons", selected.size() + "");
+			GenericDialog.showOC(null, rem, null, "model.delete.remove_selected_polygons", selected.size() + "");
 		}
-		else rem.process();
+		else rem.run();
 	}
 
 	public void hidesel(){
@@ -315,6 +327,97 @@ public class Model {
 		if(bool){
 			clear_selection();
 			copied.forEach(poly -> select(poly));
+		}
+	}
+
+	public void copyToClipboard(boolean hierarchy){
+		ArrayList<Polygon> selected = selection_copy();
+		if(selected.isEmpty()) return;
+		JsonMap map = new JsonMap();
+		map.add("origin", "fmt");
+		map.add("version", FMT.VERSION);
+		map.add("model", name);
+		map.add("type", hierarchy ? "grouped-clipboard" : "simple-clipboard");
+		if(hierarchy){
+			JsonMap groups = new JsonMap();
+			for(Polygon polygon : selected){
+				if(!groups.has(polygon.group().id)) groups.addArray(polygon.group().id);
+				groups.getArray(polygon.group().id).add(polygon.save(false));
+			}
+			map.add("groups", groups);
+		}
+		else{
+			JsonArray array = new JsonArray();
+			for(Polygon polygon : selected){
+				array.add(polygon.save(false));
+			}
+			map.add("polygons", array);
+		}
+		Clipboard cp = Toolkit.getDefaultToolkit().getSystemClipboard();
+		StringSelection sel = new StringSelection(map.toString());
+		cp.setContents(sel, sel);
+	}
+
+	public void pasteFromClipboard(){
+		Clipboard cp = Toolkit.getDefaultToolkit().getSystemClipboard();
+		Transferable data = cp.getContents(null);
+		if(!data.isDataFlavorSupported(DataFlavor.stringFlavor)) return;
+		try{
+			String str = data.getTransferData(DataFlavor.stringFlavor).toString();
+			if(!str.startsWith("{")) return;
+			JsonMap map = JsonHandler.parse(str, true).asMap();
+			if(!map.has("origin") && !map.get("origin").string_value().contains("fmt")) return;
+			if(!map.has("type") || !map.has("model")) return;
+			this.clear_selection();
+			boolean external = !map.get("model").string_value().equals(name);
+			String model = map.getString("model", "unknown");
+			switch(map.get("type").string_value()){
+				case "simple-clipboard":{
+					String groupto = external ? model + Settings.PASTED_GROUP.value : "clipboard";
+					Runnable run = () -> {
+						map.get("polygons").asArray().value.forEach(elm -> {
+							add(groupto, Polygon.from(this, elm.asMap()));
+						});
+					};
+					if(external){
+						GenericDialog.showYN("model.clipboard.paste_external", run, null,
+							"#ORIGIN: " + map.get("origin").string_value() + " " + map.getString("version", ""),
+							"#MODEL: " + model,
+							"#POLYGONS: " + map.get("polygons").asArray().size()
+						);
+					}
+					else run.run();
+					return;
+				}
+				case "grouped-clipboard":{
+					Runnable run = () -> {
+						for(Entry<String, JsonObject<?>> group : map.get("groups").asMap().value.entrySet()){
+							String groupto = external ? model + "-" + group.getKey() + Settings.PASTED_GROUP.value : group.getKey() + "-cb";
+							group.getValue().asArray().value.forEach(poly -> {
+								add(groupto, Polygon.from(this, poly.asMap()));
+							});
+						}
+					};
+					if(external){
+						int polygons = 0;
+						for(JsonObject<?> array : map.get("groups").asMap().value.values()){
+							polygons += array.asArray().size();
+						}
+						GenericDialog.showYN("model.clipboard.paste_external_grouped", run, null,
+							"#ORIGIN: " + map.get("origin").string_value() + " " + map.getString("version", ""),
+							"#MODEL: " + model,
+							"#GROUPS: " + map.get("groups").asMap().size(),
+							"#POLYGONS: " + polygons
+						);
+					}
+					else run.run();
+					return;
+				}
+				default: return;
+			}
+		}
+		catch(UnsupportedFlavorException | IOException e){
+			Logging.log(e);
 		}
 	}
 

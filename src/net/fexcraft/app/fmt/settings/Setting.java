@@ -46,7 +46,7 @@ public class Setting<TYPE> {
 	}
 
 	public void validate(boolean apply, String string){
-		// TODO Auto-generated method stub
+		if(value instanceof String) value = (TYPE)string;
 	}
 
 	public boolean toggle(){

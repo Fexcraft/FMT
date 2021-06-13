@@ -130,6 +130,14 @@ public class Editor extends Component {
 		}
 		alignment = !alignment;
 		this.align();
+		if(alignment){
+			LEFT = this;
+			RIGHT = other;
+		}
+		else {
+			LEFT = other;
+			RIGHT = this;
+		}
 	}
 
 	private void rename(){
@@ -176,6 +184,8 @@ public class Editor extends Component {
 
 	public void hide(){
 		getStyle().setDisplay(DisplayType.NONE);
+		if(LEFT == this) LEFT = null;
+		if(RIGHT == this) RIGHT = null;
 	}
 	
 	public void show(){
