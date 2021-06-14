@@ -65,7 +65,27 @@ public class Toolbar extends Panel {
 				new MenuButton(2, "utils.clipboard.copy_grouped", () -> FMT.MODEL.copyToClipboard(true))
 			),
 			new MenuButton(2, "utils.undo"),
-			new MenuButton(3, "utils.redo")
+			new MenuButton(3, "utils.redo"),
+			new ToolbarMenu(-4, "utils.flip_tools",
+				new MenuButton(0, "utils.flip_tools.left_right", () -> FMT.MODEL.flipShapeboxes(null, 0)),
+				new MenuButton(1, "utils.flip_tools.up_down", () -> FMT.MODEL.flipShapeboxes(null, 1)),
+				new MenuButton(2, "utils.flip_tools.front_back", () -> FMT.MODEL.flipShapeboxes(null, 2)),
+				new MenuButton(3, "utils.flip_tools.pos_x", () -> FMT.MODEL.flipBoxPosition(null, 0)),
+				new MenuButton(4, "utils.flip_tools.pos_y", () -> FMT.MODEL.flipBoxPosition(null, 1)),
+				new MenuButton(5, "utils.flip_tools.pos_z", () -> FMT.MODEL.flipBoxPosition(null, 2)),
+				new MenuButton(6, "utils.flip_tools.pos_x_front_back", () -> {
+					FMT.MODEL.flipShapeboxes(null, 2);
+					FMT.MODEL.flipBoxPosition(null, 0);
+				}),
+				new MenuButton(7, "utils.flip_tools.pos_y_up_down", () -> {
+					FMT.MODEL.flipShapeboxes(null, 1);
+					FMT.MODEL.flipBoxPosition(null, 1);
+				}),
+				new MenuButton(8, "utils.flip_tools.pos_z_left_right", () -> {
+					FMT.MODEL.flipShapeboxes(null, 0);
+					FMT.MODEL.flipBoxPosition(null, 2);
+				})
+			)
 		));
 		this.add(new ToolbarMenu(2, "editors",
 			new MenuButton(0, "editors.new")

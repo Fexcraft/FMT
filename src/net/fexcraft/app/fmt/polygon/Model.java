@@ -14,9 +14,11 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import org.joml.Vector3f;
 
@@ -419,6 +421,90 @@ public class Model {
 		catch(UnsupportedFlavorException | IOException e){
 			Logging.log(e);
 		}
+	}
+
+	public void flipShapeboxes(Collection<Polygon> collection, int axe){
+		Collection<Polygon> polygons = collection != null ? collection : selection_copy().stream().filter(pre -> pre.getShape().isShapebox()).collect(Collectors.toList());
+		for(Polygon polygon : polygons){
+			if(polygon instanceof Shapebox == false) continue;
+			Vector3f[] copy = new Vector3f[8];
+			Shapebox shapebox = (Shapebox)polygon;
+			copy[0] = shapebox.cor0;
+			copy[1] = shapebox.cor1;
+			copy[2] = shapebox.cor2;
+			copy[3] = shapebox.cor3;
+			copy[4] = shapebox.cor4;
+			copy[5] = shapebox.cor5;
+			copy[6] = shapebox.cor6;
+			copy[7] = shapebox.cor7;
+			switch(axe){
+				case 0:{
+					shapebox.cor0 = copy[3];
+					shapebox.cor1 = copy[2];
+					shapebox.cor2 = copy[1];
+					shapebox.cor3 = copy[0];
+					shapebox.cor4 = copy[7];
+					shapebox.cor5 = copy[6];
+					shapebox.cor6 = copy[5];
+					shapebox.cor7 = copy[4];
+					break;
+				}
+				case 1:{
+					shapebox.cor0 = copy[4];
+					shapebox.cor1 = copy[5];
+					shapebox.cor2 = copy[6];
+					shapebox.cor3 = copy[7];
+					shapebox.cor4 = copy[0];
+					shapebox.cor5 = copy[1];
+					shapebox.cor6 = copy[2];
+					shapebox.cor7 = copy[3];
+					break;
+				}
+				case 2:{
+					shapebox.cor0 = copy[1];
+					shapebox.cor1 = copy[0];
+					shapebox.cor2 = copy[3];
+					shapebox.cor3 = copy[2];
+					shapebox.cor4 = copy[5];
+					shapebox.cor5 = copy[4];
+					shapebox.cor6 = copy[7];
+					shapebox.cor7 = copy[6];
+					break;
+				}
+			}
+			shapebox.recompile();
+			continue;
+		}
+		//TODO update event/s
+		return;
+	}
+
+	public void flipBoxPosition(Collection<Polygon> collection, int axe){
+		Collection<Polygon> polygons = collection != null ? collection : selection_copy();
+		for(Polygon polygon : polygons){
+			if(!polygon.getShape().isRectagular()) continue;
+			Box box = (Box)polygon;
+			switch(axe){
+				case 0:{
+					box.pos.x += box.size.x;
+					box.pos.x = -box.pos.x;
+					break;
+				}
+				case 1:{
+					box.pos.y += box.size.y;
+					box.pos.y = -box.pos.y;
+					break;
+				}
+				case 2:{
+					box.pos.z += box.size.z;
+					box.pos.z = -box.pos.z;
+					break;
+				}
+			}
+			box.recompile();
+		}
+		//TODO update event/s
+		return;
 	}
 
 }
