@@ -86,7 +86,8 @@ public class FMT {
 	public float delta, accumulator, interval = 1f / 30f, alpha;
 	private static boolean CLOSE;
 	public static GGR CAM;
-	public static Label pos, rot, fps, poly, info;
+	public static Label pos, rot, fps, poly, info, bar;
+	public static long bar_timer;
 	//
 	@SuppressWarnings("unused") private GLFWErrorCallback errorCallback;
 	public long window;
@@ -150,11 +151,12 @@ public class FMT {
 		EditorComponent.registerComponents();
 		Settings.loadEditors();
 		for(Editor editor : Editor.EDITORLIST) FRAME.getContainer().add(editor);
-		FRAME.getContainer().add(pos = new Label("  test  ", 320, 32, 200, 20));
-		FRAME.getContainer().add(rot = new Label("  test  ", 320, 54, 200, 20));
-		FRAME.getContainer().add(fps = new Label("  test  ", 320, 76, 200, 20));
-		FRAME.getContainer().add(poly = new Label(" test  ", 320, 98, 200, 20));
-		FRAME.getContainer().add(info = new Label(" test  ", 320, 120, 200, 20));
+		FRAME.getContainer().add(pos = new Label("  test  ", 0, 32, 200, 20));
+		FRAME.getContainer().add(rot = new Label("  test  ", 0, 54, 200, 20));
+		FRAME.getContainer().add(fps = new Label("  test  ", 0, 76, 200, 20));
+		FRAME.getContainer().add(poly = new Label(" test  ", 0, 98, 200, 20));
+		FRAME.getContainer().add(info = new Label(" test  ", 0, 120, 200, 20));
+		FRAME.getContainer().add(bar = new Label(" test  ", 0, 0, 500, 20));
 		CONTEXT = new Context(window);
 		FRAME.getComponentLayer().setFocusable(false);
 		CallbackKeeper keeper = new DefaultCallbackKeeper();
@@ -304,6 +306,15 @@ public class FMT {
 		fps.setPosition(xoff, fps.getPosition().y);
 		poly.setPosition(xoff, poly.getPosition().y);
 		info.setPosition(xoff, info.getPosition().y);
+		if(!Settings.SHOW_BOTTOMBAR.value) return;
+		if(bar_timer == 0 || Time.getDate() >= bar_timer){
+			bar_timer = 0;
+			bar.setPosition(0, HEIGHT + 20);
+			bar.getTextState().setText("");
+		}
+		else{
+			bar.setPosition((WIDTH / 2) - (FontSizeUtil.getWidth(bar.getTextState().getText()) / 2), HEIGHT - 20);
+		}
 	}
 
 	private void render(int vao, float alpha){

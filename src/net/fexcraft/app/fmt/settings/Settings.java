@@ -68,7 +68,7 @@ public class Settings {
 	public static Setting<Float> MOUSE_SENSIVITY, MOVE_SPEED;
 	public static Setting<String> LANGUAGE, POLYGON_SUFFIX, GROUP_SUFFIX, COPIED_POLYGON, PASTED_GROUP;
 	public static Setting<Boolean> ASK_POLYGON_REMOVAL, ASK_GROUP_REMOVAL, OPEN_FOLDER_AFTER_SAVE;
-	public static Setting<Boolean> SHOW_WELCOME, SHOW_UPDATE, SELECT_COPIED;
+	public static Setting<Boolean> SHOW_WELCOME, SHOW_UPDATE, SELECT_COPIED, SHOW_BOTTOMBAR;
 	//
 	public static Setting<String> SEL_THEME;
 	public static Setting<Boolean> DARKTHEME;
@@ -151,6 +151,7 @@ public class Settings {
 		COPIED_POLYGON = new Setting<>("copied_polygon", "%s_cp", NAMING, obj);
 		SELECT_COPIED = new Setting<>("select_copied", true, GENERAL, obj);
 		PASTED_GROUP = new Setting<>("pasted_group_suffix", "-cb", NAMING, obj);
+		SHOW_BOTTOMBAR = new Setting<>("show_bottom_bar", true, GENERAL, obj);
 		//
 		SEL_THEME = new StringArraySetting("selected_theme", "light", THEME, obj, "light", "dark", "custom");
 		DARKTHEME = new Setting<>("is_dark", false, THEME, obj);

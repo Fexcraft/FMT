@@ -4,6 +4,10 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
 
+import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.settings.Settings;
+import net.fexcraft.lib.common.math.Time;
+
 public class Logging {
 
 	private static final Logger LOGGER_MAIN = (Logger)LogManager.getLogger("FMT");
@@ -55,6 +59,22 @@ public class Logging {
 		catch(Exception ex){
 			ex.printStackTrace();
 		}
+	}
+	
+	public static void bar(String string){
+		bar(string, false, 3);
+	}
+	
+	public static void bar(String string, boolean log){
+		bar(string, log, 3);
+	}
+	
+	public static void bar(String string, boolean log, int secs){
+		if(Settings.SHOW_BOTTOMBAR.value){
+			FMT.bar.getTextState().setText(string);
+			FMT.bar_timer = Time.getDate() + Time.SEC_MS * secs;
+		}
+		if(log) log(string);
 	}
 
 }

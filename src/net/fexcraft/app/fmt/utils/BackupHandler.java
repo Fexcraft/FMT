@@ -3,7 +3,7 @@
  */
 package net.fexcraft.app.fmt.utils;
 
-import static net.fexcraft.app.fmt.utils.Logging.log;
+import static net.fexcraft.app.fmt.utils.Logging.bar;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -25,7 +25,7 @@ public class BackupHandler extends TimerTask {
 		if(FMT.MODEL.totalPolygons() == 0) return;
 		try{
 			String str = sdf.format(Time.getDate());
-			log("Saving backup... [" + str + "];");
+			bar("Saving backup... [" + str + "];", true, 10);
 			File file = new File("./backups/(" + str + ") " + FMT.MODEL.name + ".fmtb");
 			if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
 			SaveHandler.save(FMT.MODEL, file, null, true);

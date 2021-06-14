@@ -34,20 +34,26 @@ public class KeyCompound {
 		keys.add(new KeyFunction("move_d", GLFW_KEY_D, (action) -> FMT.CAM.d_down = parseKeyAction(action)));
 		keys.add(new KeyFunction("move_up", GLFW_KEY_SPACE, (action) -> FMT.CAM.space_down = parseKeyAction(action)));
 		keys.add(new KeyFunction("move_down", GLFW_KEY_LEFT_SHIFT, (action) -> FMT.CAM.shift_down = parseKeyAction(action)));
-		keys.add(new KeyFunction("move_speed+", GLFW_KEY_R, (action) -> FMT.CAM.r_down = parseKeyAction(action)));
-		keys.add(new KeyFunction("move_speed-", GLFW_KEY_F, (action) -> FMT.CAM.f_down = parseKeyAction(action)));
+		keys.add(new KeyFunction("move_speed+", GLFW_KEY_R, (action) -> {
+			FMT.CAM.r_down = parseKeyAction(action);
+			Logging.bar("5x speed key pressed", false, 1);
+		}));
+		keys.add(new KeyFunction("move_speed-", GLFW_KEY_F, (action) -> {
+			FMT.CAM.f_down = parseKeyAction(action);
+			Logging.bar("2/ speed key pressed", false, 1);
+		}));
 		keys.add(new KeyFunction("move_speed*", GLFW_KEY_Y, (action) -> {
 			if(GGR.isOverUI() || action != GLFW_RELEASE) return;
 			if(FMT.CAM.movemod < 32){
 				FMT.CAM.movemod *= 2;
-				//TODO Statusbar.add("Speed increased to " + (FMTB.ggr.movemod * 100 ) + "%", Time.getDate() + 2000);
+				Logging.bar("Speed increased to " + (FMT.CAM.movemod * 100) + "%", true);
 			}
 		}));
 		keys.add(new KeyFunction("move_speed/", GLFW_KEY_U, (action) -> {
 			if(GGR.isOverUI() || action != GLFW_RELEASE) return;
 			if(FMT.CAM.movemod > 0.03125){
 				FMT.CAM.movemod *= 0.5f;
-				//TODO Statusbar.add("Speed decreased to " + (FMTB.ggr.movemod * 100 ) + "%", Time.getDate() + 2000);
+				Logging.bar("Speed decreased to " + (FMT.CAM.movemod * 100) + "%", true);
 			}
 		}));
 		//

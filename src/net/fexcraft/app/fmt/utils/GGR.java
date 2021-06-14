@@ -26,7 +26,7 @@ import net.fexcraft.lib.common.Static;
 /** CCR */
 public class GGR {
 	
-    public float movemod = 10;
+    public float movemod = 1;
     public float maxVR = Static.rad90 - Static.rad5;
     public Vector3f pos, initial;
     //
