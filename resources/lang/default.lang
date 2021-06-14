@@ -205,6 +205,7 @@ settings.category.space3d=Space 3D
 settings.category.naming=Naming
 settings.category.theme=Theme
 settings.no_field_found=No suitable field found.
+settings.control_adjuster=Control Adjuster
 setting.general.language=Language
 setting.general.internal_filechooser=Internal Filechooser
 setting.general.rounding_digits=Rounding Digits

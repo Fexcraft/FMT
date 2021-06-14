@@ -23,6 +23,8 @@ import net.fexcraft.app.fmt.attributes.UpdateHandler;
 import net.fexcraft.app.fmt.attributes.UpdateHandler.UpdateHolder;
 import net.fexcraft.app.fmt.settings.Setting;
 import net.fexcraft.app.fmt.settings.Settings;
+import net.fexcraft.app.fmt.ui.fields.RunButton;
+import net.fexcraft.app.fmt.utils.KeyCompound;
 
 /**
  * 
@@ -59,7 +61,8 @@ public class SettingsDialog {
 			Panel wrapper = new Panel(10, 50, width - 20, height - 80);
 			Map<String, Setting<?>> settings = entry.getValue();
 			ScrollablePanel panel = new ScrollablePanel(0, 0, width - 20, height - 80);
-			panel.getContainer().setSize(width - 20, settings.size() * 30 + 5);
+			boolean control = entry.getKey().equals(Settings.CONTROL);
+			panel.getContainer().setSize(width - 20, settings.size() * 30 + 5 + (control ? 30 : 0));
 			int[] j = { 0 };
 			settings.values().forEach(setting -> {
 				Label label = new Label(translate("setting." + entry.getKey() + "." + setting.id), 5, j[0] * 30 + 5, 200, 25);
@@ -76,6 +79,20 @@ public class SettingsDialog {
 				}
 				j[0]++;
 			});
+			if(control){
+				Label label = new Label(translate("settings.control_adjuster"), 5, j[0] * 30 + 5, 200, 25);
+				Settings.applyBorderless(label);
+				label.getStyle().setHorizontalAlign(HorizontalAlign.RIGHT);
+				panel.getContainer().add(label);
+				RunButton button = new RunButton("dialog.button.open", 215, j[0] * 30 + 5, width - 250, 25, () -> {
+					dialog.close();
+					KeyCompound.openAdjuster();
+				});
+				Settings.applyMenuTheme(button);
+				button.getStyle().setHorizontalAlign(HorizontalAlign.CENTER);
+				panel.getContainer().add(button);
+				j[0]++;
+			}
 			Settings.applyBorderless(panel);
 			Settings.applyBorderless(panel.getContainer());
 			panel.getViewport().getListenerMap().removeAllListeners(ScrollEvent.class);

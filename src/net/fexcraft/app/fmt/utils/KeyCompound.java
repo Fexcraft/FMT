@@ -176,4 +176,8 @@ public class KeyCompound {
 		public void run(int action);
 	}
 
+	public static void openAdjuster(){
+		//
+	}
+
 }
