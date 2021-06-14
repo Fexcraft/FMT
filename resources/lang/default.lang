@@ -59,6 +59,12 @@ toolbar.utils.flip_tools.pos_z=Flip Pos (Z)
 toolbar.utils.flip_tools.pos_z_left_right=Pos Z + Cor [L/R]
 toolbar.utils.flip_tools.pos_y_up_down=Pos Y + Cor [U/D]
 toolbar.utils.flip_tools.pos_x_front_back=Pos X + Cor [F/B]
+toolbar.utils.reset_camera=Reset Camera
+toolbar.utils.create_gif=Create GIF
+toolbar.utils.screenshot=Screenshot
+toolbar.utils.calc_size=Calc. Size (WIP)
+toolbar.utils.rescale=ReScale Util
+toolbar.utils.font_util=Font Util
 ##
 toolbar.texture=Textures
 toolbar.helpers=Helper/Previews
@@ -265,18 +271,6 @@ model.clipboard.paste_external_grouped=Are you sure to paste these groups and po
 
 
 //////// OLD ////////
-toolbar.utils.create_gif=Create GIF
-toolbar.utils.screenshot=Screenshot
-toolbar.utils.reset_camera=Reset Cam.
-toolbar.utils.font_util=Font Util
-toolbar.utils.calc_size=Calc. Size
-toolbar.utils.rescale=ReScale Util
-toolbar.utils.hide=Hide Tools
-toolbar.utils.hide.equal=Equal Ends
-toolbar.utils.hide.covered=Covered Ends
-toolbar.utils.hide.inner=Inside Other
-toolbar.utils.hide.reset=Reset
-toolbar.utils.controls=Controls
 toolbar.editor=Editors
 toolbar.editor.hide_all=Hide All
 toolbar.editor.general=Polygon Editor

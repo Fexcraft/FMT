@@ -9,6 +9,8 @@ import net.fexcraft.app.fmt.attributes.UpdateType;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.ToolbarMenu.MenuButton;
 import net.fexcraft.app.fmt.ui.components.QuickAdd;
+import net.fexcraft.app.fmt.utils.FontUtils;
+import net.fexcraft.app.fmt.utils.ImageHandler;
 import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.fmt.utils.SaveHandler;
 
@@ -85,7 +87,13 @@ public class Toolbar extends Panel {
 					FMT.MODEL.flipShapeboxes(null, 0);
 					FMT.MODEL.flipBoxPosition(null, 2);
 				})
-			)
+			),
+			new MenuButton(5, "utils.reset_camera", () -> { FMT.CAM.reset(); }),
+			new MenuButton(6, "utils.create_gif", () -> ImageHandler.createGif()),
+			new MenuButton(7, "utils.screenshot", () -> ImageHandler.takeScreenshot()),
+			new MenuButton(8, "utils.calc_size"),
+			new MenuButton(9, "utils.rescale", () -> FMT.MODEL.rescale()),
+			new MenuButton(10, "utils.font_util", () -> FontUtils.open())
 		));
 		this.add(new ToolbarMenu(2, "editors",
 			new MenuButton(0, "editors.new")

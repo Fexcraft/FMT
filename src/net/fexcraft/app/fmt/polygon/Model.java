@@ -507,4 +507,8 @@ public class Model {
 		return;
 	}
 
+	public void rescale(){
+		//TODO
+	}
+
 }
