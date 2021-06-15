@@ -273,7 +273,7 @@ public class FMT {
 				accumulator -= interval;
 				//Trees.updateCounters();
 				fps.getTextState().setText(timer.getFPS() + "");
-				info.getTextState().setText(SELFIELD == null ? "none" : SELFIELD.polyval() == null ? "setting:" + SELFIELD.setting().id : SELFIELD.polyval().toString());
+				info.getTextState().setText(SELFIELD == null ? "none" : SELFIELD.polyval() == null ? SELFIELD.setting() == null ? "other" : "setting:" + SELFIELD.setting().id : SELFIELD.polyval().toString());
 				poly.getTextState().setText(MODEL.selected().isEmpty() ? "none" : MODEL.first_selected().name());
 			}
 			render(vao, alpha = accumulator / interval);

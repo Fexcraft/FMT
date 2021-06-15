@@ -40,9 +40,9 @@ public class GroupSelectionPanel extends Panel {
 		this.add(sel_button);
 		this.add(des_button);
 		int i = 0, gh = FMT.MODEL.groups().size() * 25;
-		ScrollablePanel panel = new ScrollablePanel(10, 40, width - 20, height - 70);
+		ScrollablePanel panel = new ScrollablePanel(10, 40, width - 20, height - 50);
 		panel.setHorizontalScrollBarVisible(false);
-		panel.getContainer().setSize(width, gh);
+		panel.getContainer().setSize(width, gh < panel.getSize().y ? panel.getSize().y : gh);
 		for(Group group : FMT.MODEL.groups()){
 			CheckBox box = new CheckBox("", 10, (i * 25) + 2.5f, width - 20, 20);
 			Label label = new Label(group.id, 30, (i++ * 25) + 2.5f, width - 20, 20);
@@ -54,6 +54,8 @@ public class GroupSelectionPanel extends Panel {
 			box.setChecked(true);
 		}
 		this.add(panel);
+		Settings.applyBorderless(this);
+		Settings.applyBorderless(panel);
 	}
 	
 	public ArrayList<String> getSelectedGroupIds(){

@@ -4,6 +4,8 @@ import static net.fexcraft.app.fmt.attributes.UpdateHandler.update;
 import static net.fexcraft.app.fmt.attributes.UpdateType.MODEL_AUTHOR;
 import static net.fexcraft.app.fmt.attributes.UpdateType.MODEL_LOAD;
 import static net.fexcraft.app.fmt.settings.Settings.ASK_POLYGON_REMOVAL;
+import static net.fexcraft.app.fmt.utils.Translator.translate;
+import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -21,6 +23,10 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import org.joml.Vector3f;
+import org.liquidengine.legui.component.Button;
+import org.liquidengine.legui.component.Dialog;
+import org.liquidengine.legui.component.Label;
+import org.liquidengine.legui.event.MouseClickEvent;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -29,8 +35,11 @@ import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.attributes.UpdateType;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TextureGroup;
+import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.ui.GenericDialog;
+import net.fexcraft.app.fmt.ui.GroupSelectionPanel;
 import net.fexcraft.app.fmt.ui.fields.Field;
+import net.fexcraft.app.fmt.ui.fields.NumberField;
 import net.fexcraft.app.fmt.utils.CornerUtil;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.Logging;
@@ -508,6 +517,62 @@ public class Model {
 	}
 
 	public void rescale(){
+		int width = 420, height = 410;
+		Dialog dialog = new Dialog(translate("model.rescale.dialog"), width, 0);
+		Settings.applyComponentTheme(dialog.getContainer());
+		dialog.getContainer().add(new Label(translate("model.rescale.scale"), 10, 10, width - 20, 20));
+		NumberField input = new NumberField((EditorComponent)null, 10, 30, width - 20, 20);
+		float[] scale = { 1 };
+		input.setup(0.001f, 16, true, () -> {
+			scale[0] = input.value();
+		});
+		input.apply(scale[0]);
+		dialog.getContainer().add(input);
+		dialog.getContainer().add(new Label(translate("model.rescale.groups"), 10, 60, width - 20, 20));
+		GroupSelectionPanel panel = new GroupSelectionPanel(10, 80, width - 20, 200);
+		dialog.getContainer().add(panel);
+		Label label = null;
+		dialog.getContainer().add(label = new Label(translate("model.rescale.warning0"), 10, 290, width - 20, 20));
+		label.getStyle().setFont("roboto-bold");
+		dialog.getContainer().add(label = new Label(translate("model.rescale.warning1"), 10, 310, width - 20, 20));
+		label.getStyle().setFont("roboto-bold");
+		dialog.getContainer().add(label = new Label(translate("model.rescale.warning2"), 10, 330, width - 20, 20));
+		label.getStyle().setFont("roboto-bold");
+		Button button0 = new Button(translate("dialog.button.confirm"), 10, 360, 100, 20);
+		button0.getListenerMap().addListener(MouseClickEvent.class, lis -> {
+			if(lis.getAction() == CLICK){
+				rescale0(panel.getSelectedGroups(), scale[0]);
+				dialog.close();
+			}
+		});
+		dialog.getContainer().add(button0);
+		Button button1 = new Button(translate("dialog.button.cancel"), 120, 360, 100, 20);
+		button1.getListenerMap().addListener(MouseClickEvent.class, lis -> {
+			if(lis.getAction() == CLICK) dialog.close();
+		});
+		dialog.getContainer().add(button1);
+		dialog.setSize(width, height);
+		dialog.setResizable(false);
+		dialog.show(FMT.FRAME);
+	}
+
+	public void rescale0(ArrayList<Group> selected, float scale){
+		for(Group group : selected){
+			ArrayList<Polygon> boxes = (ArrayList<Polygon>)group.stream().filter(wrapper -> wrapper.getShape().isRectagular()).collect(Collectors.toList());
+			group.removeAll(boxes);
+			boxes.forEach(box -> {
+				if(box.getShape() == Shape.BOX){
+					group.add(box.convert(Shape.BOX));
+				}
+			});
+			for(Polygon poly : group){
+				scalePolygon(poly, scale);
+			}
+		}
+		//TODO update event/s
+	}
+
+	private void scalePolygon(Polygon poly, float scale){
 		//TODO
 	}
 

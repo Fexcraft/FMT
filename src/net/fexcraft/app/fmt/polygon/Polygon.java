@@ -260,4 +260,8 @@ public abstract class Polygon {
 		return value > .5;
 	}
 
+	protected Polygon convert(Shape box){
+		return null;//TODO
+	}
+
 }

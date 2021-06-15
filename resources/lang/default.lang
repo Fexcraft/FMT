@@ -269,6 +269,14 @@ polygon.unnamed=unnamed %s
 model.delete.remove_selected_polygons=Remove ALL selected polygons? Total:
 model.clipboard.paste_external=Are you sure to paste these polygons?
 model.clipboard.paste_external_grouped=Are you sure to paste these groups and polygons?
+model.rescale.dialog=Model Rescaling
+model.rescale.scale=Scaling Rate
+model.rescale.groups=Groups to rescale:
+model.rescale.warning0=WARNING! THIS CAN NOT BE UNDONE!
+model.rescale.warning1=This can cause decimal boxes and cylinders.
+model.rescale.warning2=Using decimal-size polygons is NOT advised.
+group_sel_panel.select_all=Select ALL
+group_sel_panel.deselect_all=Deselect ALL
 
 
 //////// OLD ////////
@@ -548,14 +556,6 @@ polygon_picker.paint_pencil.no_texture=No Texture loaded. Cannot use Paint Penci
 # GroupCompound/Model
 compound.change_type.not_found=Type not found!
 compound.change_type.failed=%s shape(s) skipped!
-compound.delete_selected=Are you sure to delete all selected Polygons?
-compound.simple-clipboard.external=Do you wish to import polygons from clipboard?
-compound.rescale.dialog=Model Rescaling Util
-compound.rescale.scale=Please enter the desired scale:
-compound.rescale.group=Please emter the group to be rescaled:
-compound.rescale.warning0=WARNING! THIS CAN NOT BE UNDONE!
-compound.rescale.warning1=This can cause decimal boxes and cylinders.
-compound.rescale.warning2=Using decimal-size polygons is NOT advised.
 
 # Helper/Preview Collector
 helper_collector.title=Helper/Preview Collector
