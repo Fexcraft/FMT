@@ -573,7 +573,30 @@ public class Model {
 	}
 
 	private void scalePolygon(Polygon poly, float scale){
-		//TODO
+		poly.pos = poly.pos.mul(scale);
+		poly.off = poly.off.mul(scale);
+		if(poly instanceof Shapebox){
+			Shapebox sb = (Shapebox)poly;
+			sb.size = sb.size.mul(scale);
+			sb.cor0 = sb.cor0.mul(scale);
+			sb.cor1 = sb.cor1.mul(scale);
+			sb.cor2 = sb.cor2.mul(scale);
+			sb.cor3 = sb.cor3.mul(scale);
+			sb.cor4 = sb.cor4.mul(scale);
+			sb.cor5 = sb.cor5.mul(scale);
+			sb.cor6 = sb.cor6.mul(scale);
+			sb.cor7 = sb.cor7.mul(scale);
+		}
+		if(poly instanceof Cylinder){
+			Cylinder cyl = (Cylinder)poly;
+			cyl.radius *= scale;
+			cyl.radius2 *= scale;
+			cyl.length *= scale;
+			if(cyl.topoff != null && !(cyl.topoff.x == 0f && cyl.topoff.y == 0f && cyl.topoff.z == 0f)){
+				cyl.topoff = cyl.topoff.mul(scale);
+			}
+		}
+		poly.recompile();
 	}
 
 }
