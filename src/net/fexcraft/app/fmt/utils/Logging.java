@@ -20,6 +20,10 @@ public class Logging {
 		LOGGER_MAIN.log(Level.INFO, obj);
 	}
 	
+	public static void log(Iterable<?> it){
+		for(Object obj : it) log(obj);
+	}
+	
 	public static void log(Level lvl, Object... log){
 		for(Object obj : log) log(lvl, obj);
 	}

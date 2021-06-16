@@ -331,7 +331,7 @@ public class Model {
 		var bool = Settings.SELECT_COPIED.value;
 		ArrayList<Polygon> copied = new ArrayList<>();
 		for(Polygon poly : selected){
-			Polygon newpoly = poly.copy();
+			Polygon newpoly = poly.copy(null);
 			if(bool) copied.add(newpoly);
 			this.add("clipboard", newpoly);
 		}
@@ -558,13 +558,9 @@ public class Model {
 
 	public void rescale0(ArrayList<Group> selected, float scale){
 		for(Group group : selected){
-			ArrayList<Polygon> boxes = (ArrayList<Polygon>)group.stream().filter(wrapper -> wrapper.getShape().isRectagular()).collect(Collectors.toList());
+			ArrayList<Polygon> boxes = (ArrayList<Polygon>)group.stream().filter(wrapper -> wrapper.getShape() == Shape.BOX).collect(Collectors.toList());
 			group.removeAll(boxes);
-			boxes.forEach(box -> {
-				if(box.getShape() == Shape.BOX){
-					group.add(box.convert(Shape.BOX));
-				}
-			});
+			boxes.forEach(box -> group.add(box.convert(Shape.SHAPEBOX)));
 			for(Polygon poly : group){
 				scalePolygon(poly, scale);
 			}
@@ -573,19 +569,19 @@ public class Model {
 	}
 
 	private void scalePolygon(Polygon poly, float scale){
-		poly.pos = poly.pos.mul(scale);
-		poly.off = poly.off.mul(scale);
+		poly.pos.mul(scale);
+		poly.off.mul(scale);
 		if(poly instanceof Shapebox){
 			Shapebox sb = (Shapebox)poly;
-			sb.size = sb.size.mul(scale);
-			sb.cor0 = sb.cor0.mul(scale);
-			sb.cor1 = sb.cor1.mul(scale);
-			sb.cor2 = sb.cor2.mul(scale);
-			sb.cor3 = sb.cor3.mul(scale);
-			sb.cor4 = sb.cor4.mul(scale);
-			sb.cor5 = sb.cor5.mul(scale);
-			sb.cor6 = sb.cor6.mul(scale);
-			sb.cor7 = sb.cor7.mul(scale);
+			sb.size.mul(scale);
+			sb.cor0.mul(scale);
+			sb.cor1.mul(scale);
+			sb.cor2.mul(scale);
+			sb.cor3.mul(scale);
+			sb.cor4.mul(scale);
+			sb.cor5.mul(scale);
+			sb.cor6.mul(scale);
+			sb.cor7.mul(scale);
 		}
 		if(poly instanceof Cylinder){
 			Cylinder cyl = (Cylinder)poly;
@@ -593,7 +589,7 @@ public class Model {
 			cyl.radius2 *= scale;
 			cyl.length *= scale;
 			if(cyl.topoff != null && !(cyl.topoff.x == 0f && cyl.topoff.y == 0f && cyl.topoff.z == 0f)){
-				cyl.topoff = cyl.topoff.mul(scale);
+				cyl.topoff.mul(scale);
 			}
 		}
 		poly.recompile();

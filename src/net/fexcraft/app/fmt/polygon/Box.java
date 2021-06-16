@@ -82,6 +82,7 @@ public class Box extends Polygon {
 
 	@Override
 	protected Polygon copyInternal(Polygon poly){
+		if(poly instanceof Box == false) return poly;
 		Box box = (Box)poly;
 		box.size.set(size);
 		for(int i = 0; i < sides.length; i++) box.sides[i] = sides[i];

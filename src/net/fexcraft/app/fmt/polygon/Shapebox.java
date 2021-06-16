@@ -119,6 +119,7 @@ public class Shapebox extends Box {
 
 	@Override
 	protected Polygon copyInternal(Polygon poly){
+		if(poly instanceof Shapebox == false) return super.copyInternal(poly);
 		Shapebox box = (Shapebox)super.copyInternal(poly);
 		box.cor0.set(cor0);
 		box.cor1.set(cor1);

@@ -67,7 +67,7 @@ public class GroupSelectionPanel extends Panel {
 	}
 	
 	public ArrayList<Group> getSelectedGroups(){
-		ArrayList<String> ids = new ArrayList<>();
+		ArrayList<String> ids = getSelectedGroupIds();
 		ArrayList<Group> list = new ArrayList<>();
 		ids.forEach(id -> {
 			Group group = FMT.MODEL.get(id);

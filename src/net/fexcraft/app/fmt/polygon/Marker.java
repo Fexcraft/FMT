@@ -123,6 +123,7 @@ public class Marker extends Polygon {
 
 	@Override
 	protected Polygon copyInternal(Polygon poly){
+		if(poly instanceof Marker == false) return poly;
 		Marker marker = (Marker)poly;
 		marker.rgb.packed = rgb.packed;
 		marker.biped = biped;

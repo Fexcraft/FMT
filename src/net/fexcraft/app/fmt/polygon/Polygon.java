@@ -149,8 +149,8 @@ public abstract class Polygon {
 		return null;
 	}
 
-	public Polygon copy(){
-		Polygon poly = from(model, this.getShape());
+	public Polygon copy(Polygon poly){
+		if(poly == null) poly = from(model, this.getShape());
 		poly.pos.set(pos);
 		poly.off.set(off);
 		poly.rot.set(rot);
@@ -260,8 +260,27 @@ public abstract class Polygon {
 		return value > .5;
 	}
 
-	protected Polygon convert(Shape box){
-		return null;//TODO
+	protected Polygon convert(Shape shape){
+		switch(shape){
+			case BOUNDING_BOX:
+				//TODO
+				break;
+			case BOX: return copy(new Box(model));
+			case CYLINDER: return copy(new Cylinder(model));
+			case MARKER: return copy(new Marker(model));
+			case OBJECT:
+				//TODO
+				break;
+			case SHAPEBOX: return copy(new Shapebox(model));
+			case SPHERE:
+				//TODO
+				break;
+			case VOXEL:
+				//TODO
+				break;
+			default: return null;
+		}
+		return null;
 	}
 
 }

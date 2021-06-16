@@ -152,6 +152,7 @@ public class Cylinder extends Polygon {
 
 	@Override
 	protected Polygon copyInternal(Polygon poly){
+		if(poly instanceof Cylinder == false) return poly;
 		Cylinder cyl = (Cylinder)poly;
 		cyl.radius = radius;
 		cyl.radius2 = radius2;
