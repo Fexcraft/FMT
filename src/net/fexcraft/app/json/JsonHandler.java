@@ -10,10 +10,20 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
+import net.fexcraft.lib.common.math.Time;
 
 /**
  * 
@@ -261,6 +271,89 @@ public class JsonHandler {
 		catch(IOException e){
 			e.printStackTrace();
 			return new JsonMap();
+		}
+	}
+	
+	public static JsonMap parseURLwithCookies(String adress, String parameters, String... cookies){
+		return parseURLwithCookies(adress, parameters, (int)Time.SEC_MS * 10, cookies);
+	}
+	
+	public static JsonMap parseURLwithCookies(String adress, String parameters, int timeout, String... cookies){
+		try{
+			URL url = new URL(null, adress, new sun.net.www.protocol.https.Handler());
+			old = HttpsURLConnection.getDefaultSSLSocketFactory();
+			HttpsURLConnection.setDefaultSSLSocketFactory(temp_off);
+			HttpsURLConnection connection = (HttpsURLConnection)url.openConnection();
+			connection.setRequestMethod("POST");
+			connection.setRequestProperty("User-Agent", "Mozilla/5.0");
+			connection.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+			if(cookies != null && cookies.length > 0){
+				String str = "";
+				for(int i = 0; i < cookies.length; i++){
+					str += cookies[i];
+					if(i != cookies.length - 1){
+						str += "; ";
+					}
+				}
+				connection.setRequestProperty("Cookie", str);
+			}
+			connection.setConnectTimeout(timeout);
+			connection.setDoOutput(true);
+			//
+			DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
+			wr.writeBytes(parameters);
+			wr.flush();
+			wr.close();
+			//
+			JsonMap cook = new JsonMap();
+			for(int i = 0;; i++){
+				String name = connection.getHeaderFieldKey(i), val = connection.getHeaderField(i);
+				if(name == null && val == null){
+					break;
+				}
+				if("Set-Cookie".equalsIgnoreCase(name)){
+					String[] fields = val.split(";\\s*"), split;
+					for(String str : fields){
+						if((split = str.split("=")).length >= 2){
+							cook.add(split[0], split[1]);
+						}
+					}
+				}
+			}
+			JsonMap map = parse(connection.getInputStream());
+			if(cook.entries().size() > 0) map.add(map.has("cookies") ? "%http:cookies%" : "cookies", cook);
+			connection.disconnect();
+			HttpsURLConnection.setDefaultSSLSocketFactory(old);
+			return map;
+		}
+		catch(Exception e){
+			e.printStackTrace();
+			if(old != null) HttpsURLConnection.setDefaultSSLSocketFactory(old);
+			return null;
+		}
+	}
+	
+	private static SSLSocketFactory temp_off, old;
+	static {
+		try{
+			TrustManager[] temp_toggle_off = new TrustManager[]{
+				new X509TrustManager(){
+					public java.security.cert.X509Certificate[] getAcceptedIssuers(){
+						return null;
+					}
+					public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType){}
+					public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType){}
+				}
+			};
+			SSLContext sc = SSLContext.getInstance("SSL");
+			sc.init(null, temp_toggle_off, new java.security.SecureRandom());
+			temp_off = sc.getSocketFactory();
+		}
+		catch(NoSuchAlgorithmException e){
+			e.printStackTrace();
+		}
+		catch(KeyManagementException e){
+			e.printStackTrace();
 		}
 	}
 

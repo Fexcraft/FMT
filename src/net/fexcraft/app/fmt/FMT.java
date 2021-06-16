@@ -211,8 +211,7 @@ public class FMT {
 		FMT.MODEL = new Model(null, "Unnamed Model");
 		FMT.updateTitle();
 		//TODO load previous model
-		//TODO session, updates, keybinds
-		Settings.checkForUpdates();
+		Settings.checkForUpdatesAndLogin();
 		KeyCompound.init();
 		//
 		LocalDateTime midnight = LocalDateTime.of(LocalDate.now(ZoneOffset.systemDefault()), LocalTime.MIDNIGHT);

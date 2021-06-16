@@ -339,7 +339,7 @@ public class Settings {
 		glfwSetWindowMonitor(FMT.INSTANCE.window, bool ? moni : MemoryUtil.NULL, x, y, width, height, GLFW_DONT_CARE);
 	}
 
-	public static void checkForUpdates(){
+	public static void checkForUpdatesAndLogin(){
 		Thread thread = new Thread(() -> {
 			JsonMap obj = JsonHandler.parseURL("http://fexcraft.net/minecraft/fcl/request", "mode=requestdata&modid=fmt");
 			if(obj == null || !obj.has("latest_version")){
