@@ -43,6 +43,7 @@ import net.fexcraft.app.fmt.ui.components.ShapeboxComponent;
 import net.fexcraft.app.fmt.ui.trees.PolygonTree;
 import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.fmt.utils.SaveHandler;
+import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
@@ -367,6 +368,7 @@ public class Settings {
 				if(!UPDATE_FOUND.equals(UPDATE_SKIPPED)) UPDATE_SKIPPED = "";
 			}
 			showWelcome(true);
+			SessionHandler.checkIfLoggedIn(true, true);
 		});
 		thread.setName("UPCK");
 		thread.start();
