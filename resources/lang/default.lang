@@ -203,6 +203,7 @@ settings.category.discord=Discord
 settings.category.control=Control
 settings.category.space3d=Space 3D
 settings.category.naming=Naming
+settings.category.image=Image
 settings.category.theme=Theme
 settings.no_field_found=No suitable field found.
 settings.control_adjuster=Control Adjuster
@@ -234,6 +235,7 @@ setting.space3d.center_marker=Center Marker
 setting.space3d.lines=(Polygon) Lines
 setting.space3d.polygon_marker=Polygon Marker
 setting.space3d.sphere_marker=Spherical Markers
+setting.space3d.background=Background Color
 setting.discord.enabled=Enable Discord RPC
 setting.discord.hidden_mode=Hide Model Info
 setting.discord.reset_on_new=Reset timer on new Model
@@ -241,6 +243,12 @@ setting.naming.polygon_duplicate_suffix=Polygon Duplicate Suffix
 setting.naming.group_duplicate_suffix=Group Duplicate Suffix
 setting.naming.copied_polygon=Copied Polygon Name Format
 setting.naming.pasted_group_suffix=Pasted Group Suffix
+setting.image.open_folder_after_image=Open Folder after Image
+setting.image.gif_delay_time=GIF Delay Time (ms)
+setting.image.gif_loop=GIF Loop
+setting.image.gif_rotation_passes=GIF Rotation Passes
+setting.image.hide_ui_for_image=Hide UI for Image
+setting.image.no_random_title=No Random FMT Title
 setting.theme.selected_theme=Selected Theme
 setting.theme.is_dark=(Custom) is Dark
 setting.theme.background=Custom Background
@@ -491,12 +499,6 @@ eximporter.mtb_importer.stream_null=Import Failed, MTB appears corrupt.
 eximporter.dfm_importer.no_agreement=Agreement not confirmed.
 eximporter.tch_importer.no_agreement=Please confirm you agree to the TC model import terms.
 
-# SettingsBox
-settingsbox.continue=Continue
-settingsbox.confirm=Confirm
-settingsbox.darktheme.mayneedrestart=This may require a restart to take full effect.
-settingsbox.settings_needs_restart=This setting needs a restart to take full effect.
-
 # KeyAdjuster
 keyadjuster.title=FMT Keybind Adjuster
 keyadjuster.occupied=Key is already in use!
@@ -530,10 +532,6 @@ tree.textures.rename.duplicate=A group with that name exists already!
 tree.textures.remove_default=Default Model Texture Group can not be removed.
 tree.textures.remove_in_use=Texture Group is still in use!
 tree.textures.group_added=New Texture group added!
-
-# Image Util
-image_helper.screenshot.done=Screenshot taken.
-image_helper.gif.done=Gif Created.
 
 # Font Util
 font_util.dialog=Font Util / Font Model Generator

@@ -63,13 +63,14 @@ public class Settings {
 	public static ArrayList<File> RECENT = new ArrayList<File>();
 	public static File NO_FILE_DOTS = new File("...");
 	public static Setting<Integer> WINDOW_WIDTH, WINDOW_HEIGHT, ROUNDING_DIGITS, BACKUP_INTERVAL, GIF_DELAY_TIME, GIF_ROT_PASS;
-	public static Setting<Boolean> DISCORD_RPC, DISCORD_HIDE, DISCORD_RESET_ON_NEW, FULLSCREEN;
+	public static Setting<Boolean> DISCORD_RPC, DISCORD_HIDE, DISCORD_RESET_ON_NEW, FULLSCREEN, NO_RANDOM_TITLE;
 	public static Setting<Boolean> VSYNC, HVSYNC, TRIANGULATION_Q, TRIANGULATION_L, INTERNAL_CHOOSER;
 	public static Setting<Boolean> DEMO, FLOOR, CUBE, CMARKER, LINES, POLYMARKER, ADD_TO_LAST, SPHERE_MARKER;
 	public static Setting<Float> MOUSE_SENSIVITY, MOVE_SPEED;
 	public static Setting<String> LANGUAGE, POLYGON_SUFFIX, GROUP_SUFFIX, COPIED_POLYGON, PASTED_GROUP;
 	public static Setting<Boolean> ASK_POLYGON_REMOVAL, ASK_GROUP_REMOVAL, OPEN_FOLDER_AFTER_SAVE, OPEN_FOLDER_AFTER_IMG;
 	public static Setting<Boolean> SHOW_WELCOME, SHOW_UPDATE, SELECT_COPIED, SHOW_BOTTOMBAR, GIF_LOOP, HIDE_UI_FOR_IMAGE;
+	public static RGBSetting BACKGROUND;
 	//
 	public static Setting<String> SEL_THEME;
 	public static Setting<Boolean> DARKTHEME;
@@ -160,6 +161,8 @@ public class Settings {
 		GIF_LOOP = new Setting<>("gif_loop", true, IMAGE, obj);
 		GIF_ROT_PASS = new Setting<>("gif_rotation_passes", 36, IMAGE, obj);
 		HIDE_UI_FOR_IMAGE = new Setting<>("hide_ui_for_image", true, IMAGE, obj);
+		BACKGROUND = new RGBSetting("background", new RGB(0x7f7f7f), SPACE3D, obj);
+		NO_RANDOM_TITLE = new Setting<>("no_random_title", false, IMAGE, obj);
 		//
 		SEL_THEME = new StringArraySetting("selected_theme", "light", THEME, obj, "light", "dark", "custom");
 		DARKTHEME = new Setting<>("is_dark", false, THEME, obj);

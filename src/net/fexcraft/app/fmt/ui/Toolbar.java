@@ -90,7 +90,7 @@ public class Toolbar extends Panel {
 			),
 			new MenuButton(5, "utils.reset_camera", () -> { FMT.CAM.reset(); }),
 			new MenuButton(6, "utils.create_gif", () -> ImageHandler.createGif()),
-			new MenuButton(7, "utils.screenshot", () -> ImageHandler.takeScreenshot()),
+			new MenuButton(7, "utils.screenshot", () -> ImageHandler.takeScreenshot(false)),
 			new MenuButton(8, "utils.calc_size"),
 			new MenuButton(9, "utils.rescale", () -> FMT.MODEL.rescale()),
 			new MenuButton(10, "utils.font_util", () -> FontUtils.open())

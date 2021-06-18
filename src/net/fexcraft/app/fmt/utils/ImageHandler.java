@@ -40,6 +40,7 @@ public class ImageHandler {
 		if(writer != null) param = writer.getDefaultWriteParam();
 	}
 	private static Task CURRENT = Task.NONE;
+	private static int WAIT;
 	private static int pass;
 	public static Float ROT;
 
@@ -50,6 +51,7 @@ public class ImageHandler {
 	public static void takeScreenshot(boolean fromKey){
 		if(CURRENT == Task.NONE){
 			CURRENT = fromKey || !Settings.OPEN_FOLDER_AFTER_IMG.value ? Task.SCREENSHOT : Task.SCREENSHOT_OPEN;
+			WAIT = 2;
 			return;
 		}
 		BufferedImage image = displayToImage();
@@ -72,6 +74,7 @@ public class ImageHandler {
 	public static void createGif(){
 		if(CURRENT == Task.NONE){
 			CURRENT = Task.GIF;
+			WAIT = 2;
 			return;
 		}
 		if(meta == null){
@@ -176,12 +179,49 @@ public class ImageHandler {
 	
 	public static void processTask(){
 		if(CURRENT == Task.NONE) return;
+		else if(WAIT > 0){
+			WAIT--;
+			return;
+		}
 		else if(CURRENT == Task.GIF) createGif();
 		else takeScreenshot();
 	}
 	
-	public boolean shouldHide(){
+	public static boolean shouldHide(){
 		return CURRENT != Task.NONE && Settings.HIDE_UI_FOR_IMAGE.value;
+	}
+
+	public static void updateText(){
+		if(CURRENT == Task.NONE) return;
+		String title = Settings.NO_RANDOM_TITLE.value ? "FMT - Fex's Modelling Toolbox " + FMT.VERSION + " - " + SessionHandler.getLicenseName() : FMT.getTitle(SessionHandler.getLicenseName());
+		FMT.img_line0.getTextState().setText(title);
+		if(FMT.MODEL.getAuthors().size() == 0){
+			FMT.img_line1.getTextState().setText(FMT.MODEL.name + " - " + (SessionHandler.isLoggedIn() ? SessionHandler.getUserName() : "Guest User"));
+		}
+		else if(FMT.MODEL.getAuthors().size() == 1){
+			String author = FMT.MODEL.getAuthors().keySet().toArray(new String[]{})[0];
+			if(author.equals(SessionHandler.getUserName())){
+				FMT.img_line1.getTextState().setText(FMT.MODEL.name + " - by " + SessionHandler.getUserName());
+			}
+			else{
+				FMT.img_line1.getTextState().setText(FMT.MODEL.name + " - by " + String.format("%s (logged:%s)", author, SessionHandler.getUserName()));
+			}
+		}
+		else{
+			if(FMT.MODEL.getAuthors().keySet().contains(SessionHandler.getUserName())){
+				String authors = "";
+				int i = 0;
+				for(String author : FMT.MODEL.getAuthors().keySet()){
+					authors += author;
+					if(i < FMT.MODEL.getAuthors().size() - 1) authors += ", ";
+					i++;
+				}
+				FMT.img_line1.getTextState().setText(FMT.MODEL.name + " - by " + authors);
+			}
+			else{
+				FMT.img_line1.getTextState().setText(FMT.MODEL.name + " - " + String.format("(logged:%s)", SessionHandler.getUserName()));
+			}
+		}
 	}
 
 }

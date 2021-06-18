@@ -119,7 +119,7 @@ public class ITimer {
 				GLFW.glfwSetWindowTitle(FMTB.window, String.format(FMTB.deftitle0, FMTB.getTitle()));
         	}
         	else{*/
-        		GLFW.glfwSetWindowTitle(FMT.INSTANCE.window, FMT.getTitle());
+        		GLFW.glfwSetWindowTitle(FMT.INSTANCE.window, FMT.getTitle(null));
         	/*}*/
         }
     }

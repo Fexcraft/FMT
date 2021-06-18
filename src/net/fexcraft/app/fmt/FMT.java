@@ -22,6 +22,8 @@ import org.liquidengine.legui.animation.AnimatorProvider;
 import org.liquidengine.legui.component.Frame;
 import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.listener.processor.EventProcessorProvider;
+import org.liquidengine.legui.style.color.ColorConstants;
+import org.liquidengine.legui.style.font.FontRegistry;
 import org.liquidengine.legui.system.context.CallbackKeeper;
 import org.liquidengine.legui.system.context.Context;
 import org.liquidengine.legui.system.context.DefaultCallbackKeeper;
@@ -87,6 +89,7 @@ public class FMT {
 	private static boolean CLOSE;
 	public static GGR CAM;
 	public static Label pos, rot, fps, poly, info, bar;
+	public static Label img_line0, img_line1;
 	public static long bar_timer;
 	//
 	@SuppressWarnings("unused") private GLFWErrorCallback errorCallback;
@@ -135,7 +138,7 @@ public class FMT {
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-		window = glfwCreateWindow(WIDTH, HEIGHT, getTitle(), MemoryUtil.NULL, MemoryUtil.NULL);
+		window = glfwCreateWindow(WIDTH, HEIGHT, getTitle(null), MemoryUtil.NULL, MemoryUtil.NULL);
 		if(window == MemoryUtil.NULL) throw new RuntimeException("Failed to create window");
 		glfwMakeContextCurrent(window);
 		GL.createCapabilities();
@@ -157,8 +160,17 @@ public class FMT {
 		FRAME.getContainer().add(poly = new Label(" test  ", 0, 98, 200, 20));
 		FRAME.getContainer().add(info = new Label(" test  ", 0, 120, 200, 20));
 		FRAME.getContainer().add(bar = new Label(" test  ", 0, 0, 500, 20));
-		CONTEXT = new Context(window);
 		FRAME.getComponentLayer().setFocusable(false);
+		CONTEXT = new Context(window);
+		//
+		IMG_FRAME = new Frame(WIDTH, HEIGHT);
+		IMG_FRAME.getContainer().add(img_line0 = new Label("", 20, 20, 500, 20));
+		img_line0.getStyle().getBackground().setColor(ColorConstants.transparent());
+		img_line0.getStyle().setFont(FontRegistry.ROBOTO_BOLD);
+		IMG_FRAME.getContainer().add(img_line1 = new Label("", 20, 40, 500, 20));
+		img_line1.getStyle().getBackground().setColor(ColorConstants.transparent());
+		img_line1.getStyle().setFont(FontRegistry.ROBOTO_BOLD);
+		//
 		CallbackKeeper keeper = new DefaultCallbackKeeper();
 		CallbackKeeper.registerCallbacks(window, keeper);
 		keeper.getChainKeyCallback().add(new GLFWKeyCallback(){
@@ -278,7 +290,8 @@ public class FMT {
 			render(vao, alpha = accumulator / interval);
 			//
 			adjustLabels();
-			RENDERER.render(FRAME, CONTEXT);
+			ImageHandler.updateText();
+			RENDERER.render(ImageHandler.shouldHide() ? IMG_FRAME : FRAME, CONTEXT);
 			timer.updateFPS();
 			glfwPollEvents();
 			glfwSwapBuffers(window);
@@ -349,7 +362,8 @@ public class FMT {
 			}
 		    Picker.reset();
 		}
-		glClearColor(0.5f, 0.5f, 0.5f, 1);
+		float[] background = Settings.BACKGROUND.value.toFloatArray();
+		glClearColor(background[0], background[1], background[2], 1);
 	    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		MRTRenderer.mode(DrawMode.TEXTURED);
 		if(Settings.CUBE.value){
@@ -396,13 +410,12 @@ public class FMT {
 		return f + m + t + VERSION + " - %s";
 	}
 	
-	public static final String getTitle(){
-		return String.format(TITLE, title);
+	public static final String getTitle(String title){
+		return String.format(TITLE, title == null ? FMT.title : title);
 	}
 	
 	public FMT setTitle(String string){
-		title = string;
-		glfwSetWindowTitle(window, getTitle());
+		glfwSetWindowTitle(window, getTitle(title = string));
 		DiscordUtil.update(false);
 		return this;
 	}
