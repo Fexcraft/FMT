@@ -62,14 +62,14 @@ public class Settings {
 	public static boolean FOUND_UPDATE, UPDATECHECK_FAILED;
 	public static ArrayList<File> RECENT = new ArrayList<File>();
 	public static File NO_FILE_DOTS = new File("...");
-	public static Setting<Integer> WINDOW_WIDTH, WINDOW_HEIGHT, ROUNDING_DIGITS, BACKUP_INTERVAL;
+	public static Setting<Integer> WINDOW_WIDTH, WINDOW_HEIGHT, ROUNDING_DIGITS, BACKUP_INTERVAL, GIF_DELAY_TIME, GIF_ROT_PASS;
 	public static Setting<Boolean> DISCORD_RPC, DISCORD_HIDE, DISCORD_RESET_ON_NEW, FULLSCREEN;
 	public static Setting<Boolean> VSYNC, HVSYNC, TRIANGULATION_Q, TRIANGULATION_L, INTERNAL_CHOOSER;
 	public static Setting<Boolean> DEMO, FLOOR, CUBE, CMARKER, LINES, POLYMARKER, ADD_TO_LAST, SPHERE_MARKER;
 	public static Setting<Float> MOUSE_SENSIVITY, MOVE_SPEED;
 	public static Setting<String> LANGUAGE, POLYGON_SUFFIX, GROUP_SUFFIX, COPIED_POLYGON, PASTED_GROUP;
-	public static Setting<Boolean> ASK_POLYGON_REMOVAL, ASK_GROUP_REMOVAL, OPEN_FOLDER_AFTER_SAVE;
-	public static Setting<Boolean> SHOW_WELCOME, SHOW_UPDATE, SELECT_COPIED, SHOW_BOTTOMBAR;
+	public static Setting<Boolean> ASK_POLYGON_REMOVAL, ASK_GROUP_REMOVAL, OPEN_FOLDER_AFTER_SAVE, OPEN_FOLDER_AFTER_IMG;
+	public static Setting<Boolean> SHOW_WELCOME, SHOW_UPDATE, SELECT_COPIED, SHOW_BOTTOMBAR, GIF_LOOP, HIDE_UI_FOR_IMAGE;
 	//
 	public static Setting<String> SEL_THEME;
 	public static Setting<Boolean> DARKTHEME;
@@ -91,6 +91,7 @@ public class Settings {
 	public static String CONTROL = "control";
 	public static String SPACE3D = "space3d";
 	public static String NAMING = "naming";
+	public static String IMAGE = "image";
 	public static String THEME = "theme";
 	//
 	public static Map<String, Map<String, Setting<?>>> SETTINGS = new LinkedHashMap<>();
@@ -116,6 +117,7 @@ public class Settings {
 		SETTINGS.put(SPACE3D, new LinkedHashMap<>());
 		SETTINGS.put(DISCORD, new LinkedHashMap<>());
 		SETTINGS.put(NAMING, new LinkedHashMap<>());
+		SETTINGS.put(IMAGE, new LinkedHashMap<>());
 		SETTINGS.put(THEME, new LinkedHashMap<>());
 		//
 		VSYNC = new Setting<>("vsync", true, GRAPHIC, obj);
@@ -153,6 +155,11 @@ public class Settings {
 		SELECT_COPIED = new Setting<>("select_copied", true, GENERAL, obj);
 		PASTED_GROUP = new Setting<>("pasted_group_suffix", "-cb", NAMING, obj);
 		SHOW_BOTTOMBAR = new Setting<>("show_bottom_bar", true, GENERAL, obj);
+		OPEN_FOLDER_AFTER_IMG = new Setting<>("open_folder_after_image", true, IMAGE, obj);
+		GIF_DELAY_TIME = new Setting<>("gif_delay_time", 100, IMAGE, obj);
+		GIF_LOOP = new Setting<>("gif_loop", true, IMAGE, obj);
+		GIF_ROT_PASS = new Setting<>("gif_rotation_passes", 36, IMAGE, obj);
+		HIDE_UI_FOR_IMAGE = new Setting<>("hide_ui_for_image", true, IMAGE, obj);
 		//
 		SEL_THEME = new StringArraySetting("selected_theme", "light", THEME, obj, "light", "dark", "custom");
 		DARKTHEME = new Setting<>("is_dark", false, THEME, obj);

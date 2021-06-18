@@ -286,6 +286,7 @@ public class FMT {
 			EventProcessorProvider.getInstance().processEvents();
 			LayoutManager.getInstance().layout(FRAME);
 			AnimatorProvider.getAnimator().runAnimations();
+			ImageHandler.processTask();
 			timer.update();
 		}
 		//TODO other saves

@@ -33,6 +33,7 @@ public class MRTRenderer extends ModelRendererTurbo.Renderer {
 	public static final float[] EMPTY = { 0, 0, 0, 0 };
 	private static final float[] LINECOLOR = { 0, 0, 0, 1};
 	private static final float[] SELCOLOR = { 1, 1, 0, 1 };//TODO setting
+	private static final Vector3f GIF_AXIS = new Vector3f(0, 1, 0);
 	public static DrawMode MODE = DrawMode.TEXTURED;
 
 	@Override
@@ -50,6 +51,7 @@ public class MRTRenderer extends ModelRendererTurbo.Renderer {
         }
 		matrix = new Matrix4f().identity();
 		matrix.translate(new Vector3f(mrt.rotationPointX * scale, mrt.rotationPointY * scale, mrt.rotationPointZ * scale));
+		if(ImageHandler.ROT != null) matrix.rotate(ImageHandler.ROT, GIF_AXIS);
 		if(mrt.rotationAngleY != 0f) matrix.rotate((float)Math.toRadians(mrt.rotationAngleY), axis_y);
 		if(mrt.rotationAngleZ != 0f) matrix.rotate((float)Math.toRadians(mrt.rotationAngleZ), axis_z);
 		if(mrt.rotationAngleX != 0f) matrix.rotate((float)Math.toRadians(mrt.rotationAngleX), axis_x);

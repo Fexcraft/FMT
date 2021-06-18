@@ -75,8 +75,9 @@ public class KeyCompound {
 		keys.add(new KeyFunction("toggle_center_marker", GLFW_KEY_F7, action -> { if(action == GLFW_RELEASE) Settings.CMARKER.toggle(); }));
 		keys.add(new KeyFunction("toggle_lighting", GLFW_KEY_F8, action -> { }));//TODO
 		keys.add(new KeyFunction("toggle_animations", GLFW_KEY_F9, action -> { }));//TODO
-		keys.add(new KeyFunction("toggle_todo", GLFW_KEY_F10, action -> { }));//TODO
+		keys.add(new KeyFunction("toggle_gif", GLFW_KEY_F10, action -> { if(action == GLFW_RELEASE) ImageHandler.createGif(); }));
 		keys.add(new KeyFunction("toggle_fullscreen", GLFW_KEY_F11, action -> { if(action == GLFW_RELEASE) Settings.toggleFullScreen(true); }));
+		keys.add(new KeyFunction("screenshot", GLFW_KEY_F2, action -> { if(action == GLFW_RELEASE) ImageHandler.takeScreenshot(); }));
 		//
 		keys.add(new KeyFunction("delete", GLFW_KEY_DELETE, action -> { if(action == GLFW_RELEASE) FMT.MODEL.delsel(); }));
 		//keys.add(new KeyFunction("raypick", GLFW_KEY_T, action -> { if(action == GLFW_RELEASE) RayCoastAway.doTest(true, null, false); }));
