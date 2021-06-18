@@ -107,6 +107,7 @@ public class SettingsDialog {
 		UpdateHandler.registerHolder(holder);
 		dialog.addWidgetCloseEventListener(lis -> {
 			UpdateHandler.deregisterHolder(holder);
+			Settings.refresh();
 		});
 		dialog.show(FMT.FRAME);
 	}

@@ -236,6 +236,7 @@ setting.space3d.lines=(Polygon) Lines
 setting.space3d.polygon_marker=Polygon Marker
 setting.space3d.sphere_marker=Spherical Markers
 setting.space3d.background=Background Color
+setting.space3d.selection_lines=Selection Lines Color
 setting.discord.enabled=Enable Discord RPC
 setting.discord.hidden_mode=Hide Model Info
 setting.discord.reset_on_new=Reset timer on new Model

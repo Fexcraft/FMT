@@ -32,7 +32,7 @@ public class MRTRenderer extends ModelRendererTurbo.Renderer {
 	private static Matrix4f matrix = new Matrix4f();
 	public static final float[] EMPTY = { 0, 0, 0, 0 };
 	private static final float[] LINECOLOR = { 0, 0, 0, 1};
-	private static final float[] SELCOLOR = { 1, 1, 0, 1 };//TODO setting
+	public static final float[] SELCOLOR = { 1, 1, 0, 1 };//TODO setting
 	private static final Vector3f GIF_AXIS = new Vector3f(0, 1, 0);
 	public static DrawMode MODE = DrawMode.TEXTURED;
 

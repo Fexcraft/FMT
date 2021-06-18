@@ -70,7 +70,7 @@ public class Settings {
 	public static Setting<String> LANGUAGE, POLYGON_SUFFIX, GROUP_SUFFIX, COPIED_POLYGON, PASTED_GROUP;
 	public static Setting<Boolean> ASK_POLYGON_REMOVAL, ASK_GROUP_REMOVAL, OPEN_FOLDER_AFTER_SAVE, OPEN_FOLDER_AFTER_IMG;
 	public static Setting<Boolean> SHOW_WELCOME, SHOW_UPDATE, SELECT_COPIED, SHOW_BOTTOMBAR, GIF_LOOP, HIDE_UI_FOR_IMAGE;
-	public static RGBSetting BACKGROUND;
+	public static RGBSetting BACKGROUND, SELECTION_LINES;
 	//
 	public static Setting<String> SEL_THEME;
 	public static Setting<Boolean> DARKTHEME;
@@ -163,6 +163,7 @@ public class Settings {
 		HIDE_UI_FOR_IMAGE = new Setting<>("hide_ui_for_image", true, IMAGE, obj);
 		BACKGROUND = new RGBSetting("background", new RGB(0x7f7f7f), SPACE3D, obj);
 		NO_RANDOM_TITLE = new Setting<>("no_random_title", false, IMAGE, obj);
+		SELECTION_LINES = new RGBSetting("selection_lines", new RGB(0xffff00), SPACE3D, obj);
 		//
 		SEL_THEME = new StringArraySetting("selected_theme", "light", THEME, obj, "light", "dark", "custom");
 		DARKTHEME = new Setting<>("is_dark", false, THEME, obj);
@@ -198,6 +199,7 @@ public class Settings {
 		FMT.WIDTH = WINDOW_WIDTH.value;
 		FMT.HEIGHT = WINDOW_HEIGHT.value;
 		TexturedPolygon.TRIANGULATED_QUADS = TRIANGULATION_Q.value;
+		refresh();
 	}
 	
 	public static void save(){
@@ -454,6 +456,10 @@ public class Settings {
 		File file = RECENT.get(index);
 		if(file.equals(NO_FILE_DOTS)) return;
 		SaveHandler.openDialog(file);
+	}
+
+	public static void refresh(){
+		SETTINGS.values().forEach(map -> map.values().forEach(setting -> setting.refresh()));
 	}
 
 }

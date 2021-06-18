@@ -2,12 +2,14 @@ package net.fexcraft.app.fmt.settings;
 
 import org.liquidengine.legui.component.Component;
 
+import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.attributes.UpdateHandler.UpdateHolder;
 import net.fexcraft.app.fmt.ui.fields.BoolButton;
 import net.fexcraft.app.fmt.ui.fields.ColorField;
 import net.fexcraft.app.fmt.ui.fields.NumberField;
 import net.fexcraft.app.fmt.ui.fields.TextField.TextFieldField;
 import net.fexcraft.app.fmt.utils.Jsoniser;
+import net.fexcraft.app.fmt.utils.MRTRenderer;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.RGB;
 
@@ -77,6 +79,18 @@ public class Setting<TYPE> {
 			});
 		}
 		return null;
+	}
+
+	public void refresh(){
+		if(id.equals("background")){
+			FMT.background = Settings.BACKGROUND.value.toFloatArray();
+		}
+		if(id.equals("selection_lines")){
+			float[] arr = Settings.SELECTION_LINES.value.toFloatArray();
+			MRTRenderer.SELCOLOR[0] = arr[0];
+			MRTRenderer.SELCOLOR[1] = arr[1];
+			MRTRenderer.SELCOLOR[2] = arr[2];
+		}
 	}
 
 }

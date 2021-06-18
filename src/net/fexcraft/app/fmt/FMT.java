@@ -95,6 +95,7 @@ public class FMT {
 	@SuppressWarnings("unused") private GLFWErrorCallback errorCallback;
 	public long window;
 	//
+	public static float[] background;
 	public static Frame FRAME, IMG_FRAME;
 	public static Context CONTEXT;
 	public static Renderer RENDERER;
@@ -362,7 +363,6 @@ public class FMT {
 			}
 		    Picker.reset();
 		}
-		float[] background = Settings.BACKGROUND.value.toFloatArray();
 		glClearColor(background[0], background[1], background[2], 1);
 	    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		MRTRenderer.mode(DrawMode.TEXTURED);
