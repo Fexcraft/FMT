@@ -113,8 +113,8 @@ dependencies {
     runtime group: 'org.lwjgl', name: 'lwjgl-tinyfd', version: lwjgl_version, changing: true, classifier: 'natives-linux'
     runtime group: 'org.lwjgl', name: 'lwjgl-tinyfd', version: lwjgl_version, changing: true, classifier: 'natives-macos'
     
-    compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '3.0.7', changing: true
-    runtime group: 'org.codehaus.groovy', name: 'groovy-all', version: '3.0.7', changing: true
+    //compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '3.0.7', changing: true
+    //runtime group: 'org.codehaus.groovy', name: 'groovy-all', version: '3.0.7', changing: true
     
     compile files('libs/discord-rpc.jar', 'libs/VOXtoFMT-1.jar', 'libs/FCL-1.12.64.jar')
     //@formatter:on
