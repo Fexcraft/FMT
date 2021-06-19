@@ -49,7 +49,7 @@ public class SessionHandler {
 	public static void checkIfLoggedIn(boolean retry, boolean first){
 		log("Verifying session/login data...");
 		if(first) load();
-		JsonMap map = parseURLwithCookies("http://fexcraft.net/session/api", "r=status", getCookieArr());
+		JsonMap map = parseURLwithCookies("https://fexcraft.net/session/api", "r=status", getCookieArr());
 		if(map != null && map.has("success")){
 			loggedin = !map.getBoolean("guest", true);
 			userid = map.getString("user", "-1");
@@ -60,11 +60,11 @@ public class SessionHandler {
 		}
 		if(loggedin){
 			log("Fetching Username...");
-			map = parseURLwithCookies("http://fexcraft.net/session/api", "r=username&id=" + userid, getCookieArr());
+			map = parseURLwithCookies("https://fexcraft.net/session/api", "r=username&id=" + userid, getCookieArr());
 			if(map.has("name")) username = map.getString("name", defusername);
 			log("Username updated to: " + username);
 			if(first) log(">>>> Welcome back! <<<<");
-			map = parseURLwithCookies("http://fexcraft.net/session/api", "r=fmt_status", getCookieArr());
+			map = parseURLwithCookies("https://fexcraft.net/session/api", "r=fmt_status", getCookieArr());
 			if(map != null && map.has("license") && map.has("license_title")){
 				perm = map.getString("license", defperm);
 				permname = map.getString("license_title", defpermname);
@@ -91,7 +91,7 @@ public class SessionHandler {
 	public static String tryLogin(Consumer<String> cons){
 		String response;
 		try{
-			JsonMap map = parseURLwithCookies("http://fexcraft.net/session/api", "r=login&m=" + usermail + "&p=" + decrypt(), getCookieArr());
+			JsonMap map = parseURLwithCookies("https://fexcraft.net/session/api", "r=login&m=" + usermail + "&p=" + decrypt(), getCookieArr());
 			if(map == null){
 				log(response = "Invalid/Empty login response, aborting.");
 				return response;
@@ -115,7 +115,7 @@ public class SessionHandler {
 	}
 
 	public static void tryLogout(){
-		JsonMap map = parseURLwithCookies("http://fexcraft.net/session/api", "r=logout", getCookieArr());
+		JsonMap map = parseURLwithCookies("https://fexcraft.net/session/api", "r=logout", getCookieArr());
 		log("Logout Response: " + map.toString());
 		username = userid = "";
 		pass = perm = permname = null;
