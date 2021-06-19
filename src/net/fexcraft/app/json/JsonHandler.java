@@ -7,22 +7,27 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpRequest.Builder;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
-import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.SSLParameters;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.lib.common.math.Time;
 
 /**
@@ -280,13 +285,7 @@ public class JsonHandler {
 	
 	public static JsonMap parseURLwithCookies(String adress, String parameters, int timeout, String... cookies){
 		try{
-			URL url = new URL(null, adress, new sun.net.www.protocol.https.Handler());
-			old = HttpsURLConnection.getDefaultSSLSocketFactory();
-			HttpsURLConnection.setDefaultSSLSocketFactory(temp_off);
-			HttpsURLConnection connection = (HttpsURLConnection)url.openConnection();
-			connection.setRequestMethod("POST");
-			connection.setRequestProperty("User-Agent", "Mozilla/5.0");
-			connection.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+			String cookie = null;
 			if(cookies != null && cookies.length > 0){
 				String str = "";
 				for(int i = 0; i < cookies.length; i++){
@@ -295,23 +294,16 @@ public class JsonHandler {
 						str += "; ";
 					}
 				}
-				connection.setRequestProperty("Cookie", str);
+				cookie = str;
 			}
-			connection.setConnectTimeout(timeout);
-			connection.setDoOutput(true);
-			//
-			DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
-			wr.writeBytes(parameters);
-			wr.flush();
-			wr.close();
-			//
+			HttpClient client = HttpClient.newBuilder().sslContext(ctx).sslParameters(param).build();
+		    Builder request = HttpRequest.newBuilder().uri(URI.create(adress + "?" + parameters)).setHeader("User-Agent", "Mozilla/5.0").setHeader("Accept-Language", "en-US,en;q=0.5").GET();
+		    if(cookie != null) request.setHeader("Cookie", cookie);
+		    HttpResponse<?> response = client.send(request.build(), BodyHandlers.ofString());
 			JsonMap cook = new JsonMap();
-			for(int i = 0;; i++){
-				String name = connection.getHeaderFieldKey(i), val = connection.getHeaderField(i);
-				if(name == null && val == null){
-					break;
-				}
-				if("Set-Cookie".equalsIgnoreCase(name)){
+			if(response.headers().map().containsKey("Set-Cookie")){
+				List<String> vals = response.headers().allValues("Set-Cookie");
+				for(String val : vals){
 					String[] fields = val.split(";\\s*"), split;
 					for(String str : fields){
 						if((split = str.split("=")).length >= 2){
@@ -320,40 +312,34 @@ public class JsonHandler {
 					}
 				}
 			}
-			JsonMap map = parse(connection.getInputStream());
+			JsonMap map = response.body() == null ? new JsonMap() : parse(response.body().toString(), true).asMap();
 			if(cook.entries().size() > 0) map.add(map.has("cookies") ? "%http:cookies%" : "cookies", cook);
-			connection.disconnect();
-			HttpsURLConnection.setDefaultSSLSocketFactory(old);
-			return map;
+		    return map;
 		}
 		catch(Exception e){
-			e.printStackTrace();
-			if(old != null) HttpsURLConnection.setDefaultSSLSocketFactory(old);
-			return null;
+			Logging.log(e);
+			return new JsonMap();
 		}
 	}
 	
-	private static SSLSocketFactory temp_off, old;
+	private static SSLContext ctx;
+	private static SSLParameters param;
 	static {
 		try{
-			TrustManager[] temp_toggle_off = new TrustManager[]{
+			TrustManager[] tm = new TrustManager[]{
 				new X509TrustManager(){
-					public java.security.cert.X509Certificate[] getAcceptedIssuers(){
-						return null;
-					}
+					public java.security.cert.X509Certificate[] getAcceptedIssuers(){ return null; }
 					public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType){}
 					public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType){}
 				}
 			};
-			SSLContext sc = SSLContext.getInstance("SSL");
-			sc.init(null, temp_toggle_off, new java.security.SecureRandom());
-			temp_off = sc.getSocketFactory();
+			ctx = SSLContext.getInstance("SSL");
+			ctx.init(null, tm, new java.security.SecureRandom());
+			param = new SSLParameters();
+			param.setEndpointIdentificationAlgorithm("");
 		}
-		catch(NoSuchAlgorithmException e){
-			e.printStackTrace();
-		}
-		catch(KeyManagementException e){
-			e.printStackTrace();
+		catch(Exception e){
+			Logging.log(e);
 		}
 	}
 
