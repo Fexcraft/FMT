@@ -155,12 +155,12 @@ public class FMT {
 		EditorComponent.registerComponents();
 		Settings.loadEditors();
 		for(Editor editor : Editor.EDITORLIST) FRAME.getContainer().add(editor);
-		FRAME.getContainer().add(pos = new Label("  test  ", 0, 32, 200, 20));
-		FRAME.getContainer().add(rot = new Label("  test  ", 0, 54, 200, 20));
-		FRAME.getContainer().add(fps = new Label("  test  ", 0, 76, 200, 20));
-		FRAME.getContainer().add(poly = new Label(" test  ", 0, 98, 200, 20));
-		FRAME.getContainer().add(info = new Label(" test  ", 0, 120, 200, 20));
-		FRAME.getContainer().add(bar = new Label(" test  ", 0, 0, 500, 20));
+		FRAME.getContainer().add(pos = new Label("test", 0, 32, 200, 20));
+		FRAME.getContainer().add(rot = new Label("test", 0, 54, 200, 20));
+		FRAME.getContainer().add(fps = new Label("test", 0, 76, 200, 20));
+		FRAME.getContainer().add(poly = new Label("test", 0, 98, 200, 20));
+		FRAME.getContainer().add(info = new Label("test", 0, 120, 200, 20));
+		FRAME.getContainer().add(bar = new Label("test", 0, 0, 500, 20));
 		FRAME.getComponentLayer().setFocusable(false);
 		CONTEXT = new Context(window);
 		//
@@ -303,7 +303,6 @@ public class FMT {
 			ImageHandler.processTask();
 			timer.update();
 		}
-		//TODO other saves
 		DiscordRPC.discordShutdown();
 		RENDERER.destroy();
 		glfwDestroyWindow(window);
@@ -336,15 +335,11 @@ public class FMT {
 		CONTEXT.updateGlfwWindow();
 		Vector2i size = CONTEXT.getFramebufferSize();
 		glViewport(0, 0, size.x, size.y);
+		glEnable(GL_CULL_FACE);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 	    //
-		////glEnable(GL_CULL_FACE);
-		//glEnable(GL_BLEND);
-		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		ShaderManager.GENERAL.use();
-		//Matrix4f model_mat = new Matrix4f().identity();
-		//TODO uniforms
 		CAM.apply();
 		glBindVertexArray(vao);
 		TextureManager.bind("null");
@@ -385,7 +380,6 @@ public class FMT {
             centermarker2.render(0.0625f / 4);
 		}
 		MODEL.render();
-		//ShaderManager.applyUniforms(cons -> {});
 	}
 	
 	public static final ModelRendererTurbo center_cube = new BoxBuilder(new ModelRendererTurbo(null, 0, 0, 16, 16))

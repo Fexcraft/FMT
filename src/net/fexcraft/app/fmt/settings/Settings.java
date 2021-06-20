@@ -437,7 +437,7 @@ public class Settings {
 	}
 
 	public static void addRecentFile(File file){
-		if(RECENT.get(0).equals(file)) return;
+		if(file == null || RECENT.get(0).equals(file)) return;
 		if(RECENT.contains(file)){
 			int index = RECENT.indexOf(file);
 			if(index >= 0){

@@ -18,6 +18,7 @@ void main(){
 	else if(color.a > 0 && !textured) color_out = color;
 	else{
 		color_out = texture(tex_sampler, uv).rgba;
+		if(color_out.a < 0.1) discard;
 		if(light > -1){
 			color_out = vec4(color_out.rgb * light, color_out.a);
 		}
