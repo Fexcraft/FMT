@@ -96,7 +96,7 @@ public class KeyCompound {
 			}
 		}).set_ctrl());
 		keys.add(new KeyFunction("clipboard_paste", GLFW_KEY_V, (action) -> {
-			if(action == GLFW_PRESS){
+			if(action == GLFW_PRESS && GGR.isControlDown()){
 				FMT.MODEL.pasteFromClipboard();
 			}
 		}).set_ctrl());
