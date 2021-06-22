@@ -32,7 +32,7 @@ public class PolygonGeneral extends EditorComponent {
 	private NumberField TX, TY;
 	
 	public PolygonGeneral(){
-		this(null, 330);
+		this(null, 380);
 		addSortingFields();
 		addGeneralFields();
 	}
