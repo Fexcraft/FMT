@@ -16,6 +16,7 @@ import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -341,6 +342,40 @@ public class JsonHandler {
 		catch(Exception e){
 			Logging.log(e);
 		}
+	}
+
+	public static JsonMap wrap(Map<String, Object> map, JsonMap json){
+		if(json == null) json = new JsonMap();
+		for(Entry<String, Object> entry : map.entrySet()){
+			if(entry.getValue() instanceof Collection){
+				json.add(entry.getKey(), wrap((Collection<?>)entry.getValue(), null));
+			}
+			else if(entry.getValue() instanceof Map){
+				json.add(entry.getKey(), wrap((Map<String, Object>)entry.getValue(), null));
+			}
+			else if(entry.getValue() instanceof String){
+				json.add(entry.getKey(), entry.getValue() + "");
+			}
+			else json.add(entry.getKey(), parseValue(entry.getValue() + ""));
+		}
+		return json;
+	}
+
+	private static JsonArray wrap(Collection<?> collection, JsonArray json){
+		if(json == null) json = new JsonArray();
+		for(Object obj : collection){
+			if(obj instanceof Collection){
+				json.add(wrap((Collection<?>)obj, null));
+			}
+			else if(obj instanceof Map){
+				json.add(wrap((Map<String, Object>)obj, null));
+			}
+			else if(obj instanceof String){
+				json.add(obj + "");
+			}
+			else json.add(parseValue(obj + ""));
+		}
+		return json;
 	}
 
 }
