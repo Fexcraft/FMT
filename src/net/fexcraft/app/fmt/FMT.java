@@ -308,6 +308,7 @@ public class FMT {
 		glfwDestroyWindow(window);
 		glfwTerminate();
 		Settings.save();
+		SessionHandler.save();
 		//TODO other saves
 		System.exit(EXIT_CODE);
 	}
