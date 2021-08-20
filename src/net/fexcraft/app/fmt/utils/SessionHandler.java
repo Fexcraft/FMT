@@ -96,8 +96,8 @@ public class SessionHandler {
 				log(response = "Invalid/Empty login response, aborting.");
 				return response;
 			}
-			if(map.getMap("cookies").has("PHPSESSID")){
-				sessionid = map.getMap("cookies").get("PHPSESSID").string_value();
+			if(map.getMap("cookies").has("JSESSIONID")){
+				sessionid = map.getMap("cookies").get("JSESSIONID").string_value();
 				log("Updated Session ID to: " + sessionid);
 			}
 			loggedin = map.getBoolean("success", false);
