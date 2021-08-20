@@ -41,6 +41,7 @@ import net.fexcraft.app.fmt.ui.components.PolygonGeneral;
 import net.fexcraft.app.fmt.ui.components.QuickAdd;
 import net.fexcraft.app.fmt.ui.components.ShapeboxComponent;
 import net.fexcraft.app.fmt.ui.trees.PolygonTree;
+import net.fexcraft.app.fmt.ui.trees.TextureTree;
 import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.fmt.utils.SaveHandler;
 import net.fexcraft.app.fmt.utils.SessionHandler;
@@ -326,6 +327,7 @@ public class Settings {
 	private static void loadDefaultEditors(){
 		Editor editor = new Editor("polygon_editor", "Polygon Editor", false, true);
 		new PolygonTree(null, false);
+		new TextureTree(null, false);
 		editor.addComponent(new QuickAdd());
 		editor.addComponent(new PolygonGeneral());
 		editor.addComponent(new BoxComponent());

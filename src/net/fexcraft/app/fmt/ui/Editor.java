@@ -38,7 +38,7 @@ import net.fexcraft.app.json.JsonMap;
 
 public class Editor extends Component {
 	
-	public static final List<String> TREES = Arrays.asList("polygon_tree");
+	public static final List<String> TREES = Arrays.asList("polygon_tree", "texture_tree");
 	public static final HashMap<String, Editor> EDITORS = new HashMap<>();
 	public static final ArrayList<Editor> EDITORLIST = new ArrayList<>();
 	public static float RATE = 1f;
@@ -113,12 +113,12 @@ public class Editor extends Component {
 	}
 	
 	protected void addTreeIcons(int i){
-		byte idx = 20;
+		byte idx = 20, t = 0;
 		trees = new Icon[3];
-		if(i != 0) add(trees[i++] = new Icon(idx += 10, "./resources/textures/icons/tree/polygon.png", () -> Editor.show("polygon_tree")).addTooltip("editor.tree.polygon", alignment));
-		if(i != 1) add(trees[i++] = new Icon(idx += 10, "./resources/textures/icons/tree/helper.png", () -> Editor.show("helper_tree")).addTooltip("editor.tree.helper", alignment));
-		if(i != 2) add(trees[i++] = new Icon(idx += 10, "./resources/textures/icons/tree/textures.png", () -> Editor.show("texture_tree")).addTooltip("editor.tree.texture", alignment));
-		if(i != 3) add(trees[i++] = new Icon(idx += 10, "./resources/textures/icons/tree/fvtm.png", () -> Editor.show("fvtm_tree")).addTooltip("editor.tree.animation", alignment));
+		if(i != 0) add(trees[t++] = new Icon(idx += 10, "./resources/textures/icons/tree/polygon.png", () -> Editor.show("polygon_tree")).addTooltip("editor.tree.polygon", alignment));
+		if(i != 1) add(trees[t++] = new Icon(idx += 10, "./resources/textures/icons/tree/helper.png", () -> Editor.show("helper_tree")).addTooltip("editor.tree.helper", alignment));
+		if(i != 2) add(trees[t++] = new Icon(idx += 10, "./resources/textures/icons/tree/textures.png", () -> Editor.show("texture_tree")).addTooltip("editor.tree.texture", alignment));
+		if(i != 3) add(trees[t++] = new Icon(idx += 10, "./resources/textures/icons/tree/fvtm.png", () -> Editor.show("fvtm_tree")).addTooltip("editor.tree.animation", alignment));
 		if(trees != null) for(Icon icon : trees) icon.getStyle().setDisplay(DisplayType.NONE);
 	}
 
