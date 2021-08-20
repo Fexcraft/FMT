@@ -13,8 +13,10 @@ import java.util.Map;
 
 import org.lwjgl.stb.STBImageWrite;
 
+import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.attributes.UpdateHandler;
 import net.fexcraft.app.fmt.attributes.UpdateType;
+import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.ui.GenericDialog;
 
 /**
@@ -219,21 +221,22 @@ public class TextureManager {
 		}
 		TextureGroup group = new TextureGroup(name, new File("./temp/group-" + name + ".png"));
 		addGroup(group);
-		if(show) GenericDialog.showOK(null, null, null, "texture.added_group", "#" + group.name);
+		if(show) GenericDialog.showOK("texture.manager", null, null, "texture.added_group", "#" + group.name);
 		return group;
 	}
 
 	public static void remGroup(TextureGroup texgroup){
 		if(texgroup == null) return;
-		/*if(texgroup == FMTB.MODEL.texgroup){
-			//TODO notify default
+		if(texgroup == FMT.MODEL.texgroup){
+			GenericDialog.showOK("texture.manager", null, null, "texture.group_in_use_model", "#texgroup:" + texgroup.name);
+			return;
 		}
-		for(TurboList list : FMTB.MODEL.getGroups()){
-			if(list.texgroup == texgroup){
-				//TODO notify in use
+		for(Group group : FMT.MODEL.groups()){
+			if(group.texgroup == texgroup){
+				GenericDialog.showOK("texture.manager", null, null, "texture.group_in_use_group", "#group:" + group.id, "#texgroup:" + texgroup.name);
 				return;
 			}
-		}*/
+		}
 		GROUPS.remove(texgroup);
 		UpdateHandler.update(UpdateType.TEXGROUP_REMOVED, texgroup);
 	}

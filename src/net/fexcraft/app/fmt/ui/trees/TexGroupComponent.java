@@ -76,7 +76,7 @@ public class TexGroupComponent extends EditorComponent {
 	@Override
 	public void rem(){
 		if(ASK_TEXTURE_GROUP_REMOVAL.value){
-			GenericDialog.showOC(null, () -> TextureManager.remGroup(group), null, "texture.remove_group", group.name);
+			GenericDialog.showCC("texture.manager", () -> TextureManager.remGroup(group), null, "texture.remove_group", group.name);
 		}
 		else TextureManager.remGroup(group);
 	}

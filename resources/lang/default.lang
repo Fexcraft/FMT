@@ -288,12 +288,15 @@ loginbox.password=Password
 loginbox.encrypt=Encrypt Password Locally?
 
 # Texture
+texture.manager=Texture Manager
 texture.added_group=New texture group added.
 texture.remove_group=Remove this texture group?
 texture.group.rename=Rename Group
 texture.group.resize=Resize Group
 texture.group.generate=Generate Texture Template
 texture.group.select=Select Texture (Copy)
+texture.group_in_use_model=TextureGroup is in use in the Model
+texture.group_in_use_group=TextureGroup is in use in a Group
 
 # Other
 filechooser.title=FMT Internal File Chooser/Selector
