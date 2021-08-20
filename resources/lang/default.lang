@@ -65,8 +65,10 @@ toolbar.utils.screenshot=Screenshot
 toolbar.utils.calc_size=Calc. Size (WIP)
 toolbar.utils.rescale=ReScale Util
 toolbar.utils.font_util=Font Util
-##
+## Texture
 toolbar.texture=Textures
+toolbar.texture.add_group=Add Tex. Group
+##
 toolbar.helpers=Helper/Previews
 toolbar.exit=Exit
 ## Selected Polygon Right-Click Menu
@@ -285,6 +287,14 @@ loginbox.e_mail=E-Mail / User
 loginbox.password=Password
 loginbox.encrypt=Encrypt Password Locally?
 
+# Texture
+texture.added_group=New texture group added.
+texture.remove_group=Remove this texture group?
+texture.group.rename=Rename Group
+texture.group.resize=Resize Group
+texture.group.generate=Generate Texture Template
+texture.group.select=Select Texture (Copy)
+
 # Other
 filechooser.title=FMT Internal File Chooser/Selector
 filechooser.enter_name=enter custom filename here
@@ -300,6 +310,7 @@ model.rescale.warning1=This can cause decimal boxes and cylinders.
 model.rescale.warning2=Using decimal-size polygons is NOT advised.
 group_sel_panel.select_all=Select ALL
 group_sel_panel.deselect_all=Deselect ALL
+
 
 
 //////// OLD ////////

@@ -69,7 +69,7 @@ public class Settings {
 	public static Setting<Boolean> DEMO, FLOOR, CUBE, CMARKER, LINES, POLYMARKER, ADD_TO_LAST, SPHERE_MARKER;
 	public static Setting<Float> MOUSE_SENSIVITY, MOVE_SPEED;
 	public static Setting<String> LANGUAGE, POLYGON_SUFFIX, GROUP_SUFFIX, COPIED_POLYGON, PASTED_GROUP;
-	public static Setting<Boolean> ASK_POLYGON_REMOVAL, ASK_GROUP_REMOVAL, OPEN_FOLDER_AFTER_SAVE, OPEN_FOLDER_AFTER_IMG;
+	public static Setting<Boolean> ASK_POLYGON_REMOVAL, ASK_GROUP_REMOVAL, ASK_TEXTURE_GROUP_REMOVAL, OPEN_FOLDER_AFTER_SAVE, OPEN_FOLDER_AFTER_IMG;
 	public static Setting<Boolean> SHOW_WELCOME, SHOW_UPDATE, SELECT_COPIED, SHOW_BOTTOMBAR, GIF_LOOP, HIDE_UI_FOR_IMAGE;
 	public static RGBSetting BACKGROUND, SELECTION_LINES;
 	//
@@ -165,6 +165,7 @@ public class Settings {
 		BACKGROUND = new RGBSetting("background", new RGB(0x7f7f7f), SPACE3D, obj);
 		NO_RANDOM_TITLE = new Setting<>("no_random_title", false, IMAGE, obj);
 		SELECTION_LINES = new RGBSetting("selection_lines", new RGB(0xffff00), SPACE3D, obj);
+		ASK_TEXTURE_GROUP_REMOVAL = new Setting<>("ask_texture_group_removal", true, GENERAL, obj);
 		//
 		SEL_THEME = new StringArraySetting("selected_theme", "light", THEME, obj, "light", "dark", "custom");
 		DARKTHEME = new Setting<>("is_dark", false, THEME, obj);

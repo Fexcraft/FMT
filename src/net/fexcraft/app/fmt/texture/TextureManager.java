@@ -13,6 +13,10 @@ import java.util.Map;
 
 import org.lwjgl.stb.STBImageWrite;
 
+import net.fexcraft.app.fmt.attributes.UpdateHandler;
+import net.fexcraft.app.fmt.attributes.UpdateType;
+import net.fexcraft.app.fmt.ui.GenericDialog;
+
 /**
  * @author Ferdinand Calo' (FEX___96)
  *
@@ -195,24 +199,27 @@ public class TextureManager {
 	}
 
 	public static void addGroup(TextureGroup group){
-		//TODO add buttons to UI
 		GROUPS.add(group);
+		UpdateHandler.update(UpdateType.TEXGROUP_ADDED, group);
 	}
 
 	public static void clearGroups(){
 		for(TextureGroup group : GROUPS){
-			//TODO remove from UI
+			UpdateHandler.update(UpdateType.TEXGROUP_REMOVED, group);
 		}
 		GROUPS.clear();
 	}
 
 	public static TextureGroup addGroup(String name, boolean show){
 		if(name == null) name = "newgroup";
-		while(hasGroup(name)) name += "0";
+		if(hasGroup(name)){
+			int i = 0;
+			while(hasGroup(name + i)) i++;
+			name += i;
+		}
 		TextureGroup group = new TextureGroup(name, new File("./temp/group-" + name + ".png"));
 		addGroup(group);
-		//if(show) //TODO show confirm
-		//TODO reorder/update UI
+		if(show) GenericDialog.showOK(null, null, null, "texture.added_group", "#" + group.name);
 		return group;
 	}
 
@@ -227,9 +234,8 @@ public class TextureManager {
 				return;
 			}
 		}*/
-		//TODO remove from UI
 		GROUPS.remove(texgroup);
-		//TODO update UI
+		UpdateHandler.update(UpdateType.TEXGROUP_REMOVED, texgroup);
 	}
 
 }

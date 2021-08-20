@@ -7,6 +7,7 @@ import net.fexcraft.app.fmt.attributes.UpdateHandler;
 import net.fexcraft.app.fmt.attributes.UpdateHandler.UpdateHolder;
 import net.fexcraft.app.fmt.attributes.UpdateType;
 import net.fexcraft.app.fmt.settings.Settings;
+import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.ui.ToolbarMenu.MenuButton;
 import net.fexcraft.app.fmt.ui.components.QuickAdd;
 import net.fexcraft.app.fmt.utils.FontUtils;
@@ -127,7 +128,9 @@ public class Toolbar extends Panel {
 				new MenuButton(1, "polygons.special.curve_line")
 			)
 		));
-		this.add(new ToolbarMenu(5, "texture"));
+		this.add(new ToolbarMenu(5, "texture",
+			new MenuButton(0, "texture.add_group", () -> TextureManager.addGroup(null, true))
+		));
 		this.add(new ToolbarMenu(6, "helpers"));
 		this.add(new ToolbarMenu(7, "project",
 			new MenuButton(0, "project.open"),
