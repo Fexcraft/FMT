@@ -252,7 +252,7 @@ public class Model {
 		if(selected.size() > 1){
 			for(int i = 1; i < selected.size(); i++){
 				poly = selected.get(i);
-				float diff = poly.getValue(value) - curr;
+				float diff = curr - poly.getValue(value);
 				poly.setValue(value, fval + diff);
 				update(UpdateType.POLYGON_VALUE, poly, value);
 			}
