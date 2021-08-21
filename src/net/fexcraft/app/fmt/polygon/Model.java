@@ -221,6 +221,13 @@ public class Model {
 		return groups;
 	}
 
+	public Group first_selected_group(){
+		for(Group group : this.groups){
+			if(group.selected) return group;
+		}
+		return null;
+	}
+
 	public ArrayList<Polygon> selection_copy(){
 		var list = new ArrayList<Polygon>();
 		list.addAll(selected);
