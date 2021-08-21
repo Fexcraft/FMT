@@ -11,6 +11,7 @@ import org.liquidengine.legui.component.SelectBox;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.attributes.UpdateType;
 import net.fexcraft.app.fmt.polygon.Group;
+import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.ui.fields.TextField;
@@ -47,17 +48,51 @@ public class GroupGeneral extends EditorComponent {
 				name.getTextState().setText(NOGROUPSEL);
 				texsx.setSelected((Integer)FMT.MODEL.texSizeX, true);
 				texsy.setSelected((Integer)FMT.MODEL.texSizeY, true);
+				texgroups.setSelected(0, true);
 			}
-			else if(size == 1 || (old == 0 && size > 0)){
+			else if(size > 0){
 				name.getTextState().setText(vals.get(0, Group.class).id);
 				texsx.setSelected((Integer)group.texSizeX, true);
 				texsy.setSelected((Integer)group.texSizeY, true);
+				if(group.texgroup == null) texgroups.setSelected(0, true);
+				else texgroups.setSelected(group.texgroup.name, true);
 			}
 		});
 		this.add(new Label(translate(LANG_PREFIX + genid + ".tex_group"), L5, row(1), LW, HEIGHT));
 		texgroups.setPosition(L5, row(1));
 		texgroups.setSize(LW, HEIGHT);
+		updateholder.add(UpdateType.TEXGROUP_ADDED, vals -> refreshTexGroupEntries());
+		updateholder.add(UpdateType.TEXGROUP_RENAMED, vals -> refreshTexGroupEntries());
+		updateholder.add(UpdateType.TEXGROUP_REMOVED, vals -> refreshTexGroupEntries());
+		texgroups.addSelectBoxChangeSelectionEventListener(listener -> {
+			ArrayList<Group> groups = FMT.MODEL.selected_groups();
+			if(groups.isEmpty()) return;
+			if(listener.getNewValue().equals("none")){
+				for(Group group : groups){
+					group.texgroup = null;
+				}
+			}
+			else{
+				TextureGroup texgroup = TextureManager.getGroup(listener.getNewValue());
+				for(Group group : groups){
+					group.texgroup = texgroup;
+				}
+			}
+		});
+		refreshTexGroupEntries();
 		this.add(texgroups);
+	}
+
+	private void refreshTexGroupEntries(){
+		while(texgroups.getElements().size() > 0) texgroups.removeElement(0);
+		texgroups.addElement("none");
+		for(TextureGroup group : TextureManager.getGroups()){
+			texgroups.addElement(group.name);
+		}
+		if(FMT.MODEL == null) return;
+		Group group = FMT.MODEL.first_selected_group();
+		if(group == null || group.texgroup == null) texgroups.setSelected(0, true);
+		else texgroups.setSelected(group.texgroup.name, true);
 	}
 
 	private void rename(String string){
