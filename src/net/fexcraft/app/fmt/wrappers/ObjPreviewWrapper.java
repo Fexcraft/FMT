@@ -4,43 +4,47 @@ import static net.fexcraft.app.fmt.utils.Logging.log;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.ArrayList;
 
 import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.wrappers.face.Face;
 import net.fexcraft.app.fmt.wrappers.face.NullFace;
 import net.fexcraft.lib.common.math.RGB;
-import net.fexcraft.lib.common.utils.WavefrontObjUtil;
+import net.fexcraft.lib.common.math.TexturedPolygon;
+import net.fexcraft.lib.common.utils.ObjParser;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public class ObjPreviewWrapper extends PolygonWrapper {
 	
 	public File source;
 	public String group;
-	public boolean objmode;
-	public int groupidx;
+	private ArrayList<TexturedPolygon> polis;
+	private int groupidx;
 	
-	public ObjPreviewWrapper(GroupCompound compound, File file, String group, boolean obj, int idx){
+	public ObjPreviewWrapper(GroupCompound compound, File file, String group, ArrayList<TexturedPolygon> value, int idx){
 		super(compound);
 		this.source = file;
 		this.group = group;
-		this.objmode = obj;
+		this.polis = value;
 		this.groupidx = idx;
 	}
-	
+
 	public void render(boolean rotX, boolean rotY, boolean rotZ){
 		if(visible && turbo != null) turbo.render(); this.selected = false;
 	}
 
 	@Override
 	protected PolygonWrapper createClone(GroupCompound compound){
-		return new ObjPreviewWrapper(compound, source, group, objmode, groupidx);
+		return new ObjPreviewWrapper(compound, source, group, null, groupidx);
 	}
 	
+	@SuppressWarnings("resource")
 	protected ModelRendererTurbo newMRT(){
 		try{
-			String str[][] = WavefrontObjUtil.findValues(new FileInputStream(source), null, "# FlipAxes:");
-			boolean bool = str.length == 0 ? false : Boolean.parseBoolean(str[0][0]);
+			if(polis == null){
+				polis = new ObjParser(new FileInputStream(source)).readComments(false).readModel(true).parse().polygons.get(group);
+			}
 			return new ModelRendererTurbo(null, textureX, textureY, compound.tx(getTurboList()), compound.ty(getTurboList())){
 					@Override
 					public RGB getColor(int i){
@@ -49,7 +53,7 @@ public class ObjPreviewWrapper extends PolygonWrapper {
 				}
 				.setRotationPoint(pos.x, pos.y, pos.z)
 				.setRotationAngle(rot.x, rot.y, rot.z)
-				.addObj(new FileInputStream(source), group, bool, objmode);//this.source.toString()
+				.copyTo(polis);//this.source.toString()
 		}
 		catch(Exception e){
 			log(e);

@@ -3,13 +3,18 @@ package net.fexcraft.app.fmt.porters;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.utils.Setting;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.ObjPreviewWrapper;
+import net.fexcraft.lib.common.math.TexturedPolygon;
+import net.fexcraft.lib.common.utils.ObjParser;
+import net.fexcraft.lib.common.utils.ObjParser.ObjModel;
 
 public class OBJPreviewImporter extends ExImPorter {
 	
@@ -19,14 +24,10 @@ public class OBJPreviewImporter extends ExImPorter {
 	public GroupCompound importModel(File file, Map<String, Setting> settings){
 		GroupCompound compound = new GroupCompound(file);
 		try{
-			String[] groups = WavefrontObjUtil.getGroups(new FileInputStream(file));
-			boolean objmode = false;
-			if(groups.length == 0){
-				groups = WavefrontObjUtil.getObjects(new FileInputStream(file));
-				objmode = true;
-			}
-			for(int i = 0; i < groups.length; i++){
-				compound.add(new ObjPreviewWrapper(compound, file, groups[i], objmode, i), groups[i], true);
+			ObjModel model = new ObjParser(new FileInputStream(file)).readComments(false).readModel(true).parse();
+			ArrayList<String> list = new ArrayList<>(model.polygons.keySet());
+			for(Entry<String, ArrayList<TexturedPolygon>> entry : model.polygons.entrySet()){
+				compound.add(new ObjPreviewWrapper(compound, file, entry.getKey(), entry.getValue(), list.indexOf(entry.getKey())), entry.getKey(), true);
 			}
 		}
 		catch(FileNotFoundException e){
