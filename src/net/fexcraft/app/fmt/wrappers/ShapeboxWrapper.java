@@ -273,4 +273,8 @@ public class ShapeboxWrapper extends BoxWrapper {
 		return null;
 	}
 	
+	public Vec3f[] cornerArray(){
+		return new Vec3f[]{ cor0, cor1, cor2, cor3, cor4, cor5, cor6, cor7 };
+	}
+	
 }

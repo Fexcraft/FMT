@@ -27,6 +27,7 @@ public class PorterManager {
 	private static final ArrayList<ExImPorter> porters = new ArrayList<>();
 	
 	public static final void load(){
+		porters.add(new FMFExporter());
 		porters.add(new MTBImporter());
 		porters.add(new FVTMExporter());
 		porters.add(new OBJPreviewImporter());

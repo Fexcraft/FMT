@@ -92,4 +92,8 @@ public enum ShapeType {
 		return this.isShapebox() || this == BOX || this == CYLINDER || this == SHAPE3D;
 	}
 
+	public boolean isFMFExportable(){
+		return this == BOX || this == SHAPEBOX || this == CYLINDER;
+	}
+
 }
