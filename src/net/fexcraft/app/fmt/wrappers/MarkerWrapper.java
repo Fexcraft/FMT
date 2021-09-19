@@ -27,8 +27,8 @@ public class MarkerWrapper extends PolygonWrapper {
 	
 	protected ModelRendererTurbo newMRT(){
 		return new ModelRendererTurbo(null, textureX, textureY, compound.tx(getTurboList()), compound.ty(getTurboList()))
-			.addBox(-.25f, -.25f, -.25f, .5f, .5f, .5f) .setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
-			.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord).setTextured(false).setColor(new RGB(color));
+			.addBox(-.25f, -.25f, -.25f, .5f, .5f, .5f) .setRotationPoint(pos.x, pos.y, pos.z)
+			.setRotationAngle(rot.x, rot.y, rot.z).setTextured(false).setColor(new RGB(color));
 	}
 	
 	protected MarkerWrapper setup(int color, boolean biped, int angle, float scale){
@@ -52,7 +52,7 @@ public class MarkerWrapper extends PolygonWrapper {
 				RGB.glColorReset();
 				GL11.glPushMatrix();
 				GL11.glScalef(scale, scale, scale);
-				GL11.glTranslatef(Static.sixteenth * pos.xCoord, Static.sixteenth * pos.yCoord, Static.sixteenth * pos.zCoord);
+				GL11.glTranslatef(Static.sixteenth * pos.x, Static.sixteenth * pos.y, Static.sixteenth * pos.z);
 				if(!Settings.oldrot()) GL11.glRotatef(180, 1, 0, 0);
 				TextureManager.bindTexture("steve"); ModelSteve.render(angle);
 				GL11.glPopMatrix();
@@ -68,7 +68,7 @@ public class MarkerWrapper extends PolygonWrapper {
 			RGB.glColorReset();
 			GL11.glPushMatrix();
 			GL11.glScalef(scale, scale, scale);
-			GL11.glTranslatef(Static.sixteenth * pos.xCoord, Static.sixteenth * pos.yCoord, Static.sixteenth * pos.zCoord);
+			GL11.glTranslatef(Static.sixteenth * pos.x, Static.sixteenth * pos.y, Static.sixteenth * pos.z);
 			if(!Settings.oldrot()) GL11.glRotatef(180, 1, 0, 0);
 			ModelSteve.renderLines(angle);
 			GL11.glPopMatrix();

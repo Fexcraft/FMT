@@ -20,11 +20,8 @@ import net.fexcraft.app.fmt.utils.Setting;
 import net.fexcraft.app.fmt.utils.texture.TextureGroup;
 import net.fexcraft.app.fmt.utils.texture.TextureManager;
 import net.fexcraft.app.fmt.wrappers.BoxWrapper;
-import net.fexcraft.app.fmt.wrappers.FlexTrapezoidWrapper;
-import net.fexcraft.app.fmt.wrappers.FlexboxWrapper;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.ShapeboxWrapper;
-import net.fexcraft.app.fmt.wrappers.TrapezoidWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.common.utils.ZipUtil;
@@ -130,7 +127,7 @@ public class MTBImporter extends ExImPorter {
 							polygon = new ShapeboxWrapper(compound).setCoords(new Vec3f(getFloatFromString(parts[20]), getFloatFromString(parts[28]), getFloatFromString(parts[36])), new Vec3f(getFloatFromString(parts[21]), getFloatFromString(parts[29]), getFloatFromString(parts[37])), new Vec3f(getFloatFromString(parts[22]), getFloatFromString(parts[30]), getFloatFromString(parts[38])), new Vec3f(getFloatFromString(parts[23]), getFloatFromString(parts[31]), getFloatFromString(parts[39])), new Vec3f(getFloatFromString(parts[24]), getFloatFromString(parts[32]), getFloatFromString(parts[40])), new Vec3f(getFloatFromString(parts[25]), getFloatFromString(parts[33]), getFloatFromString(parts[41])), new Vec3f(getFloatFromString(parts[26]), getFloatFromString(parts[34]), getFloatFromString(parts[42])), new Vec3f(getFloatFromString(parts[27]), getFloatFromString(parts[35]), getFloatFromString(parts[43])));
 							break;
 						}
-						case "FlexBox":{
+						/*case "FlexBox":{
 							polygon = new FlexboxWrapper(compound).setCoords(getFloatFromString(parts[47]), getFloatFromString(parts[48]), getFloatFromString(parts[49]), getFloatFromString(parts[50]), parts[44]);
 							break;
 						}
@@ -141,7 +138,7 @@ public class MTBImporter extends ExImPorter {
 						case "FlexTrapezoid":{
 							polygon = new FlexTrapezoidWrapper(compound).setCoords(getFloatFromString(parts[52]), getFloatFromString(parts[53]), getFloatFromString(parts[54]), getFloatFromString(parts[55]), getFloatFromString(parts[55]), getFloatFromString(parts[55]), parts[44]);
 							break;
-						}
+						}*/
 						/*
 						 * case "Shape":{ turbo.addShape3D(); break; }
 						 */
@@ -156,11 +153,11 @@ public class MTBImporter extends ExImPorter {
 					polygon.textureY = Integer.parseInt(parts[19]);
 					//
 					/*
-					 * polygon.rot = new Vec3f(Math.toDegrees(getFloatFromString(parts[12])), Math.toDegrees(getFloatFromString(parts[13])), Math.toDegrees(getFloatFromString(parts[14]))); if(polygon.rot.xCoord != 0){ polygon.rot.xCoord *= 0.01745329259; }
-					 * if(polygon.rot.yCoord != 0){ polygon.rot.yCoord *= 0.01745329259; } if(polygon.rot.zCoord != 0){ polygon.rot.zCoord *= -0.01745329259; }
+					 * polygon.rot = new Vec3f(Math.toDegrees(getFloatFromString(parts[12])), Math.toDegrees(getFloatFromString(parts[13])), Math.toDegrees(getFloatFromString(parts[14]))); if(polygon.rot.x != 0){ polygon.rot.x *= 0.01745329259; }
+					 * if(polygon.rot.y != 0){ polygon.rot.y *= 0.01745329259; } if(polygon.rot.z != 0){ polygon.rot.z *= -0.01745329259; }
 					 */
 					polygon.rot = new Vec3f(getFloatFromString(parts[12]), getFloatFromString(parts[13]), getFloatFromString(parts[14]));
-					polygon.rot.zCoord = -polygon.rot.zCoord;
+					polygon.rot.z = -polygon.rot.z;
 					//
 					if(!compound.getGroups().contains("group" + parts[4])){
 						compound.getGroups().add(new TurboList("group" + parts[4]));

@@ -115,15 +115,15 @@ public class TCHImporter extends ExImPorter {
             		float value = parseF(matcher.group(3));
             		switch(axis){
             			case "x":{
-            				poly.wrapper.rot.xCoord = (float)Math.toDegrees(value);
+            				poly.wrapper.rot.x = (float)Math.toDegrees(value);
             				break;
             			}
             			case "y":{
-            				poly.wrapper.rot.yCoord = (float)Math.toDegrees(value);
+            				poly.wrapper.rot.y = (float)Math.toDegrees(value);
             				break;
             			}
             			case "z":{
-            				poly.wrapper.rot.zCoord = -(float)Math.toDegrees(value);
+            				poly.wrapper.rot.z = -(float)Math.toDegrees(value);
             				break;
             			}
             		}

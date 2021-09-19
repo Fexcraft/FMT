@@ -10,7 +10,6 @@ import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.utils.Setting;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.ObjPreviewWrapper;
-import net.fexcraft.lib.common.utils.WavefrontObjUtil;
 
 public class OBJPreviewImporter extends ExImPorter {
 	

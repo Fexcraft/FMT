@@ -98,17 +98,17 @@ public class GroupCompound {
 	public void render(){
 		if(!visible) return;
 		if(pos != null){
-			GL11.glTranslatef(pos.xCoord, pos.yCoord, pos.zCoord);
+			GL11.glTranslatef(pos.x, pos.y, pos.z);
 		}
 		if(rot != null){
 			GL11.glPushMatrix();
-			GL11.glRotatef(rot.xCoord, 1, 0, 0);
-			GL11.glRotatef(rot.yCoord, 0, 1, 0);
-			GL11.glRotatef(rot.zCoord, 0, 0, 1);
+			GL11.glRotatef(rot.x, 1, 0, 0);
+			GL11.glRotatef(rot.y, 0, 1, 0);
+			GL11.glRotatef(rot.z, 0, 0, 1);
 		}
 		if(scale != null){
 			GL11.glPushMatrix();
-			GL11.glScalef(scale.xCoord, scale.yCoord, scale.zCoord);
+			GL11.glScalef(scale.x, scale.y, scale.z);
 		}
 		if(RayCoastAway.PICKING){
 			/*if(pencil){
@@ -156,13 +156,13 @@ public class GroupCompound {
 			detached.clear();
 		}
 		if(rot != null){
-			GL11.glRotatef(-rot.zCoord, 0, 0, 1);
-			GL11.glRotatef(-rot.yCoord, 0, 1, 0);
-			GL11.glRotatef(-rot.xCoord, 1, 0, 0);
+			GL11.glRotatef(-rot.z, 0, 0, 1);
+			GL11.glRotatef(-rot.y, 0, 1, 0);
+			GL11.glRotatef(-rot.x, 1, 0, 0);
 			GL11.glPopMatrix();
 		}
 		if(pos != null){
-			GL11.glTranslatef(-pos.xCoord, -pos.yCoord, -pos.zCoord);
+			GL11.glTranslatef(-pos.x, -pos.y, -pos.z);
 		}
 	}
 	
@@ -510,22 +510,22 @@ public class GroupCompound {
 			GroupEditor.g_tex_x.setSelected((float)list.textureX, true);
 			GroupEditor.g_tex_y.setSelected((float)list.textureY, true);
 			//GroupEditor.g_tex_s.setSelected((float)list.textureS, true);
-			GroupEditor.exoff_x.apply(list.exportoffset == null ? 0 : list.exportoffset.xCoord);
-			GroupEditor.exoff_y.apply(list.exportoffset == null ? 0 : list.exportoffset.yCoord);
-			GroupEditor.exoff_z.apply(list.exportoffset == null ? 0 : list.exportoffset.zCoord);
+			GroupEditor.exoff_x.apply(list.exportoffset == null ? 0 : list.exportoffset.x);
+			GroupEditor.exoff_y.apply(list.exportoffset == null ? 0 : list.exportoffset.y);
+			GroupEditor.exoff_z.apply(list.exportoffset == null ? 0 : list.exportoffset.z);
 		};
 		GroupEditor.animations.refresh(list);
 		//
-		ModelEditor.pos_x.apply(pos == null ? 0 : pos.xCoord);
-		ModelEditor.pos_y.apply(pos == null ? 0 : pos.yCoord);
-		ModelEditor.pos_z.apply(pos == null ? 0 : pos.zCoord);
-		ModelEditor.poss_x.apply(pos == null ? 0 : pos.xCoord * Static.sixteenth);
-		ModelEditor.poss_y.apply(pos == null ? 0 : pos.yCoord * Static.sixteenth);
-		ModelEditor.poss_z.apply(pos == null ? 0 : pos.zCoord * Static.sixteenth);
-		ModelEditor.rot_x.apply(pos == null ? 0 : rot.xCoord);
-		ModelEditor.rot_y.apply(pos == null ? 0 : rot.yCoord);
-		ModelEditor.rot_z.apply(pos == null ? 0 : rot.zCoord);
-		ModelEditor.scale.apply(scale == null ? 1 : scale.xCoord);
+		ModelEditor.pos_x.apply(pos == null ? 0 : pos.x);
+		ModelEditor.pos_y.apply(pos == null ? 0 : pos.y);
+		ModelEditor.pos_z.apply(pos == null ? 0 : pos.z);
+		ModelEditor.poss_x.apply(pos == null ? 0 : pos.x * Static.sixteenth);
+		ModelEditor.poss_y.apply(pos == null ? 0 : pos.y * Static.sixteenth);
+		ModelEditor.poss_z.apply(pos == null ? 0 : pos.z * Static.sixteenth);
+		ModelEditor.rot_x.apply(pos == null ? 0 : rot.x);
+		ModelEditor.rot_y.apply(pos == null ? 0 : rot.y);
+		ModelEditor.rot_z.apply(pos == null ? 0 : rot.z);
+		ModelEditor.scale.apply(scale == null ? 1 : scale.x);
 		ModelEditor.m_tex_x.setSelected((float)textureSizeX, true);
 		ModelEditor.m_tex_y.setSelected((float)textureSizeY, true);
 		//ModelEditor.m_tex_s.setSelected((float)textureScale, true);
@@ -689,18 +689,18 @@ public class GroupCompound {
 			BoxWrapper box = (BoxWrapper)wrapper;
 			switch(axis){
 				case 0:{
-					box.pos.xCoord += box.size.xCoord;
-					box.pos.xCoord = -box.pos.xCoord;
+					box.pos.x += box.size.x;
+					box.pos.x = -box.pos.x;
 					break;
 				}
 				case 1:{
-					box.pos.yCoord += box.size.yCoord;
-					box.pos.yCoord = -box.pos.yCoord;
+					box.pos.y += box.size.y;
+					box.pos.y = -box.pos.y;
 					break;
 				}
 				case 2:{
-					box.pos.zCoord += box.size.zCoord;
-					box.pos.zCoord = -box.pos.zCoord;
+					box.pos.z += box.size.z;
+					box.pos.z = -box.pos.z;
 					break;
 				}
 			}
@@ -889,31 +889,31 @@ public class GroupCompound {
 	public void rectify(){
 		for(TurboList list : groups){
 			for(PolygonWrapper wrapper : list){
-				wrapper.pos.yCoord = -wrapper.pos.yCoord + 26;
+				wrapper.pos.y = -wrapper.pos.y + 26;
 				if(wrapper instanceof BoxWrapper){
-					wrapper.off.yCoord = -wrapper.off.yCoord - ((BoxWrapper)wrapper).size.yCoord;
+					wrapper.off.y = -wrapper.off.y - ((BoxWrapper)wrapper).size.y;
 				}
 				else if(wrapper instanceof CylinderWrapper){
 					CylinderWrapper cyl = (CylinderWrapper)wrapper;
 					if(cyl.direction > 3){
-						cyl.off.yCoord = -cyl.off.yCoord - cyl.length;
+						cyl.off.y = -cyl.off.y - cyl.length;
 						float base = cyl.base;
 						cyl.base = cyl.top;
 						cyl.top = base;
 					}
 					if(cyl.topoff != null){
-						cyl.topoff.yCoord = -cyl.topoff.yCoord;
+						cyl.topoff.y = -cyl.topoff.y;
 					}
 					if(cyl.toprot != null){
-						cyl.toprot.yCoord = -cyl.toprot.yCoord;
-						cyl.toprot.zCoord = -cyl.toprot.zCoord;
+						cyl.toprot.y = -cyl.toprot.y;
+						cyl.toprot.z = -cyl.toprot.z;
 					}
 				}
 				else{
-					wrapper.off.yCoord += -wrapper.off.yCoord;
+					wrapper.off.y += -wrapper.off.y;
 				}
-				wrapper.rot.xCoord = -wrapper.rot.xCoord;
-				wrapper.rot.zCoord = -wrapper.rot.zCoord;
+				wrapper.rot.x = -wrapper.rot.x;
+				wrapper.rot.z = -wrapper.rot.z;
 				if(wrapper.getType().isRectagular()){
 					BoxWrapper box = (BoxWrapper)wrapper;
 					if(box.getType().isShapebox()){
@@ -930,11 +930,11 @@ public class GroupCompound {
 			if(list.isEmpty()) continue;
 			for(PolygonWrapper wrapper : list){
 				if(!wrapper.selected && !list.selected) continue;
-				wrapper.pos.zCoord = -wrapper.pos.zCoord;
+				wrapper.pos.z = -wrapper.pos.z;
 				if(wrapper instanceof BoxWrapper){
 					BoxWrapper box = (BoxWrapper)wrapper;
-					if(box.off.zCoord != -box.size.zCoord / 2)
-						wrapper.off.zCoord -= ((BoxWrapper)wrapper).size.zCoord;
+					if(box.off.z != -box.size.z / 2)
+						wrapper.off.z -= ((BoxWrapper)wrapper).size.z;
 				}
 				else if(wrapper instanceof CylinderWrapper){
 					//CylinderWrapper cyl = (CylinderWrapper)wrapper;
@@ -943,7 +943,7 @@ public class GroupCompound {
 				else{
 					//
 				}
-				wrapper.rot.yCoord = -wrapper.rot.yCoord;
+				wrapper.rot.y = -wrapper.rot.y;
 				if(wrapper.getType().isRectagular()){
 					BoxWrapper box = (BoxWrapper)wrapper;
 					if(box.getType().isShapebox()){

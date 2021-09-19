@@ -28,10 +28,10 @@ public class ShapeQuadWrapper extends QuadWrapper {
 	@SuppressWarnings("deprecation")
 	protected ModelRendererTurbo newMRT(){
 		return new ModelRendererTurbo(null, textureX, textureY, compound.tx(getTurboList()), compound.ty(getTurboList()))
-			.addShapeQuad(off.xCoord, off.yCoord, off.zCoord, size.xCoord, size.yCoord, 0, cor0.xCoord, cor0.yCoord, cor0.zCoord,
-				cor1.xCoord, cor1.yCoord, cor1.zCoord, cor2.xCoord, cor2.yCoord, cor2.zCoord, cor3.xCoord, cor3.yCoord, cor3.zCoord)
-			.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
-			.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
+			.addShapeQuad(off.x, off.y, off.z, size.x, size.y, 0, cor0.x, cor0.y, cor0.z,
+				cor1.x, cor1.y, cor1.z, cor2.x, cor2.y, cor2.z, cor3.x, cor3.y, cor3.z)
+			.setRotationPoint(pos.x, pos.y, pos.z)
+			.setRotationAngle(rot.x, rot.y, rot.z);
 		//for(int i = 0; i < bool.length; i++){ turbo.getFaces()[i].setOppositeTriangles(bool[i]); }
 		//turbo.triline = true; return turbo;
 	}
@@ -64,13 +64,13 @@ public class ShapeQuadWrapper extends QuadWrapper {
 			}
 			else{
 				GL11.glPushMatrix();
-				if(rot.xCoord != 0f) GL11.glRotatef(rot.xCoord, 1, 0, 0);
-				if(rot.yCoord != 0f) GL11.glRotatef(rot.yCoord, 0, 1, 0);
-				if(rot.zCoord != 0f) GL11.glRotatef(rot.zCoord, 0, 0, 1);
+				if(rot.x != 0f) GL11.glRotatef(rot.x, 1, 0, 0);
+				if(rot.y != 0f) GL11.glRotatef(rot.y, 0, 1, 0);
+				if(rot.z != 0f) GL11.glRotatef(rot.z, 0, 0, 1);
 				Vec3f vector = null;
 				for(int i = 0; i < cornermarkers.length; i++){
 					vector = turbo.getFaces().get(0).getVertices()[i].vector;
-					cornermarkers[i].setPosition(vector.xCoord + pos.xCoord, vector.yCoord + pos.yCoord, vector.zCoord + pos.zCoord);
+					cornermarkers[i].setPosition(vector.x + pos.x, vector.y + pos.y, vector.z + pos.z);
 					cornermarkers[i].render();
 				}
 				GL11.glPopMatrix();
@@ -92,10 +92,10 @@ public class ShapeQuadWrapper extends QuadWrapper {
 	@Override
 	public float getFloat(String id, boolean x, boolean y, boolean z){
 		switch(id){
-			case "cor0": return x ? cor0.xCoord : y ? cor0.yCoord : z ? cor0.zCoord : 0;
-			case "cor1": return x ? cor1.xCoord : y ? cor1.yCoord : z ? cor1.zCoord : 0;
-			case "cor2": return x ? cor2.xCoord : y ? cor2.yCoord : z ? cor2.zCoord : 0;
-			case "cor3": return x ? cor3.xCoord : y ? cor3.yCoord : z ? cor3.zCoord : 0;
+			case "cor0": return x ? cor0.x : y ? cor0.y : z ? cor0.z : 0;
+			case "cor1": return x ? cor1.x : y ? cor1.y : z ? cor1.z : 0;
+			case "cor2": return x ? cor2.x : y ? cor2.y : z ? cor2.z : 0;
+			case "cor3": return x ? cor3.x : y ? cor3.y : z ? cor3.z : 0;
 			default: return super.getFloat(id, x, y, z);
 		}
 	}
@@ -107,24 +107,24 @@ public class ShapeQuadWrapper extends QuadWrapper {
 		//int iID = Integer.parseInt(id.replace("cor", ""));
 		switch(id){
 			case "cor0":{
-				if(x){ cor0.xCoord = value; return true; }
-				if(y){ cor0.yCoord = value; return true; }
-				if(z){ cor0.zCoord = value; return true; }
+				if(x){ cor0.x = value; return true; }
+				if(y){ cor0.y = value; return true; }
+				if(z){ cor0.z = value; return true; }
 			}
 			case "cor1":{
-				if(x){ cor1.xCoord = value; return true; }
-				if(y){ cor1.yCoord = value; return true; }
-				if(z){ cor1.zCoord = value; return true; }
+				if(x){ cor1.x = value; return true; }
+				if(y){ cor1.y = value; return true; }
+				if(z){ cor1.z = value; return true; }
 			}
 			case "cor2":{
-				if(x){ cor2.xCoord = value; return true; }
-				if(y){ cor2.yCoord = value; return true; }
-				if(z){ cor2.zCoord = value; return true; }
+				if(x){ cor2.x = value; return true; }
+				if(y){ cor2.y = value; return true; }
+				if(z){ cor2.z = value; return true; }
 			}
 			case "cor3":{
-				if(x){ cor3.xCoord = value; return true; }
-				if(y){ cor3.yCoord = value; return true; }
-				if(z){ cor3.zCoord = value; return true; }
+				if(x){ cor3.x = value; return true; }
+				if(y){ cor3.y = value; return true; }
+				if(z){ cor3.z = value; return true; }
 			}
 			default: return false;
 		}
@@ -133,21 +133,21 @@ public class ShapeQuadWrapper extends QuadWrapper {
 	@Override
 	protected JsonObject populateJson(JsonObject obj, boolean export){
 		obj = super.populateJson(obj, export);
-		if(cor0.xCoord != 0) obj.addProperty("x0", cor0.xCoord);
-		if(cor0.yCoord != 0) obj.addProperty("y0", cor0.yCoord);
-		if(cor0.zCoord != 0) obj.addProperty("z0", cor0.zCoord);
+		if(cor0.x != 0) obj.addProperty("x0", cor0.x);
+		if(cor0.y != 0) obj.addProperty("y0", cor0.y);
+		if(cor0.z != 0) obj.addProperty("z0", cor0.z);
 		//
-		if(cor1.xCoord != 0) obj.addProperty("x1", cor1.xCoord);
-		if(cor1.yCoord != 0) obj.addProperty("y1", cor1.yCoord);
-		if(cor1.zCoord != 0) obj.addProperty("z1", cor1.zCoord);
+		if(cor1.x != 0) obj.addProperty("x1", cor1.x);
+		if(cor1.y != 0) obj.addProperty("y1", cor1.y);
+		if(cor1.z != 0) obj.addProperty("z1", cor1.z);
 		//
-		if(cor2.xCoord != 0) obj.addProperty("x2", cor2.xCoord);
-		if(cor2.yCoord != 0) obj.addProperty("y2", cor2.yCoord);
-		if(cor2.zCoord != 0) obj.addProperty("z2", cor2.zCoord);
+		if(cor2.x != 0) obj.addProperty("x2", cor2.x);
+		if(cor2.y != 0) obj.addProperty("y2", cor2.y);
+		if(cor2.z != 0) obj.addProperty("z2", cor2.z);
 		//
-		if(cor3.xCoord != 0) obj.addProperty("x3", cor3.xCoord);
-		if(cor3.yCoord != 0) obj.addProperty("y3", cor3.yCoord);
-		if(cor3.zCoord != 0) obj.addProperty("z3", cor3.zCoord);
+		if(cor3.x != 0) obj.addProperty("x3", cor3.x);
+		if(cor3.y != 0) obj.addProperty("y3", cor3.y);
+		if(cor3.z != 0) obj.addProperty("z3", cor3.z);
 		//
 		/*if(!export){
 			JsonArray array = new JsonArray();
@@ -158,7 +158,7 @@ public class ShapeQuadWrapper extends QuadWrapper {
 	}
 
 
-	public ShapeQuadWrapper setCoords(Vec3f xyz0, Vec3f xyz1, Vec3f xyz2, Vec3f xyz3){
+	public ShapeQuadWrapper sets(Vec3f xyz0, Vec3f xyz1, Vec3f xyz2, Vec3f xyz3){
 		cor0 = xyz0; cor1 = xyz1; cor2 = xyz2; cor3 = xyz3; return this;
 	}
 
@@ -174,7 +174,7 @@ public class ShapeQuadWrapper extends QuadWrapper {
 			case TEXRECT_B: wrapper = new TexrectWrapperB(compound); break;
 			default: return null;
 		}
-		wrapper.size = new Vec3f(size); wrapper.setCoords(cor0, cor1, cor2, cor3, cor4, cor5, cor6, cor7);*///TODO
+		wrapper.size = new Vec3f(size); wrapper.sets(cor0, cor1, cor2, cor3, cor4, cor5, cor6, cor7);*///TODO
 		return null;//copyTo(wrapper, true);
 	}
 	

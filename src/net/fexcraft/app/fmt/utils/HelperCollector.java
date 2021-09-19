@@ -121,16 +121,16 @@ public class HelperCollector {
 			compound.textureSizeX = tex.getWidth();
 			compound.textureSizeY = tex.getHeight();
 			BoxWrapper polygon = new BoxWrapper(compound);
-			polygon.size.xCoord = tex.getWidth();
-			polygon.size.yCoord = tex.getHeight();
-			polygon.size.zCoord = 0.2f;
+			polygon.size.x = tex.getWidth();
+			polygon.size.y = tex.getHeight();
+			polygon.size.z = 0.2f;
 			polygon.textureX = polygon.textureY = 0;
 			float w = tex.getWidth(), h = tex.getHeight();
 			polygon.cuv.get(BoxFace.RIGHT).set(FaceUVType.OFFSET_FULL).value(new float[]{ 0, 0, w, 0, w, h, 0, h });
 			polygon.cuv.get(BoxFace.LEFT).set(FaceUVType.OFFSET_ENDS).value(new float[]{ 0, 0, w, h });
-			polygon.off.zCoord = -0.1f;
-			polygon.off.xCoord = -(polygon.size.xCoord / 2);
-			polygon.off.yCoord = -(polygon.size.yCoord / 2);
+			polygon.off.z = -0.1f;
+			polygon.off.x = -(polygon.size.x / 2);
+			polygon.off.y = -(polygon.size.y / 2);
 			compound.add(polygon, "frame", true);
 		}
 		catch(Exception e){

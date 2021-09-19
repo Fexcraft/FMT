@@ -79,10 +79,10 @@ public class KeyCompound {
 			keys.add(new KeyFunction("toggle_editor_" + i, GLFW_KEY_0 + i, (action) -> { if(action == GLFW_RELEASE) Editors.toggleWidget(j); }));
 		}
 		//
-		keys.add(new KeyFunction("camera_rotate_left", GLFW_KEY_LEFT, action -> FMTB.ggr.rotation.yCoord -= 5));
-		keys.add(new KeyFunction("camera_rotate_right", GLFW_KEY_RIGHT, action -> FMTB.ggr.rotation.yCoord += 5));
-		keys.add(new KeyFunction("camera_rotate_up", GLFW_KEY_UP, action -> FMTB.ggr.rotation.xCoord -= 5));
-		keys.add(new KeyFunction("camera_rotate_down", GLFW_KEY_DOWN, action -> FMTB.ggr.rotation.xCoord += 5));
+		keys.add(new KeyFunction("camera_rotate_left", GLFW_KEY_LEFT, action -> FMTB.ggr.rotation.y -= 5));
+		keys.add(new KeyFunction("camera_rotate_right", GLFW_KEY_RIGHT, action -> FMTB.ggr.rotation.y += 5));
+		keys.add(new KeyFunction("camera_rotate_up", GLFW_KEY_UP, action -> FMTB.ggr.rotation.x -= 5));
+		keys.add(new KeyFunction("camera_rotate_down", GLFW_KEY_DOWN, action -> FMTB.ggr.rotation.x += 5));
 		//
 		keys.add(new KeyFunction("delete", GLFW_KEY_DELETE, action -> { if(action == GLFW_RELEASE) FMTB.MODEL.deleteSelected(); }));
 		keys.add(new KeyFunction("raypick", GLFW_KEY_T, action -> { if(action == GLFW_RELEASE) RayCoastAway.doTest(true, null, false); }));

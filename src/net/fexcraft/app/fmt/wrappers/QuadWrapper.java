@@ -13,9 +13,9 @@ public class QuadWrapper extends BoxWrapper {
 
 	protected ModelRendererTurbo newMRT(){
 		return new ModelRendererTurbo(null, textureX(), textureY(), compound.tx(getTurboList()), compound.ty(getTurboList()))
-			.addQuad(off.xCoord, off.yCoord, off.zCoord, size.xCoord, size.yCoord)
-			.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
-			.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
+			.addQuad(off.x, off.y, off.z, size.x, size.y)
+			.setRotationPoint(pos.x, pos.y, pos.z)
+			.setRotationAngle(rot.x, rot.y, rot.z);
 	}
 
 	@Override
@@ -26,7 +26,7 @@ public class QuadWrapper extends BoxWrapper {
 	@Override
 	public float getFloat(String id, boolean x, boolean y, boolean z){
 		switch(id){
-			case "size": return x ? size.xCoord : y ? size.yCoord : 0;
+			case "size": return x ? size.x : y ? size.y : 0;
 			default: return super.getFloat(id, x, y, z);
 		}
 	}
@@ -36,8 +36,8 @@ public class QuadWrapper extends BoxWrapper {
 		if(super.setFloat(id, x, y, z, value)) return true;
 		switch(id){
 			case "size":{
-				if(x){ size.xCoord = value; return true; }
-				if(y){ size.yCoord = value; return true; }
+				if(x){ size.x = value; return true; }
+				if(y){ size.y = value; return true; }
 			}
 			default: return false;
 		}
@@ -45,14 +45,14 @@ public class QuadWrapper extends BoxWrapper {
 
 	@Override
 	protected JsonObject populateJson(JsonObject obj, boolean export){
-		obj.addProperty("width", size.xCoord);
-		obj.addProperty("height", size.yCoord);
+		obj.addProperty("width", size.x);
+		obj.addProperty("height", size.y);
 		return obj;
 	}
 
 	@Override
 	public float[][][] newTexturePosition(boolean include_offsets, boolean exclude_detached){
-		float tx = 0 /*textureX*/, ty = 0 /*textureY*/, w = size.xCoord, h = size.yCoord;
+		float tx = 0 /*textureX*/, ty = 0 /*textureY*/, w = size.x, h = size.y;
 		float[][][] vecs = new float[2][][];
 		vecs[0] = new float[][]{
 			new float[]{ tx, ty },
@@ -81,7 +81,7 @@ public class QuadWrapper extends BoxWrapper {
 			case SHAPEQUAD: wrapper = new ShapeQuadWrapper(compound); break;
 			case SHAPEBOX: wrapper = new ShapeboxWrapper(compound); break;
 			default: return null;
-		} wrapper.size = new Vec3f(size.xCoord, size.yCoord, 1); return copyTo(wrapper, true);
+		} wrapper.size = new Vec3f(size.x, size.y, 1); return copyTo(wrapper, true);
 	}
 	
 }

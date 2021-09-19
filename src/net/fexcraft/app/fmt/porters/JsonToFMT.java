@@ -98,17 +98,17 @@ public class JsonToFMT {
 		switch(obj.get("type").getAsString()){
 			case "box": case "cube": case "b": case "quad": case "q": {
 				BoxWrapper cuboid = new BoxWrapper(compound);
-				cuboid.size.xCoord = get(width, obj, def);
-				cuboid.size.yCoord = get(height, obj, def);
-				cuboid.size.zCoord = get(depth, obj, def);
+				cuboid.size.x = get(width, obj, def);
+				cuboid.size.y = get(height, obj, def);
+				cuboid.size.z = get(depth, obj, def);
 				cuboid.sides = parseSides(obj);
 				polygon = cuboid; break;
 			}
 			case "boundingbox": case "bb": {
 				BBWrapper cuboid = new BBWrapper(compound);
-				cuboid.size.xCoord = get(width, obj, def);
-				cuboid.size.yCoord = get(height, obj, def);
-				cuboid.size.zCoord = get(depth, obj, def);
+				cuboid.size.x = get(width, obj, def);
+				cuboid.size.y = get(height, obj, def);
+				cuboid.size.z = get(depth, obj, def);
 				cuboid.sides = parseSides(obj);
 				polygon = cuboid; break;
 			}
@@ -132,9 +132,9 @@ public class JsonToFMT {
 			}
 			case "shapequad": case "squad": case "sq": {
 				ShapeQuadWrapper advface = new ShapeQuadWrapper(compound);
-				advface.size.xCoord = get(width, obj, def);
-				advface.size.yCoord = get(height, obj, def);
-				advface.size.zCoord = get(depth, obj, def);
+				advface.size.x = get(width, obj, def);
+				advface.size.y = get(height, obj, def);
+				advface.size.z = get(depth, obj, def);
 				//
 				advface.cor0 = new Vec3f(get("x0", obj, def), get("y0", obj, def), get("z0", obj, def));
 				advface.cor1 = new Vec3f(get("x1", obj, def), get("y1", obj, def), get("z1", obj, def));
@@ -152,12 +152,12 @@ public class JsonToFMT {
 				cylinder.direction = get(direction, obj, 4);
 				cylinder.base = get(basescale, obj, 1f);
 				cylinder.top = get(topscale, obj, 1f);
-				cylinder.topoff.xCoord = get(topoffx, obj, 0f);
-				cylinder.topoff.yCoord = get(topoffy, obj, 0f);
-				cylinder.topoff.zCoord = get(topoffz, obj, 0f);
-				cylinder.toprot.xCoord = get(toprotx, obj, 0f);
-				cylinder.toprot.yCoord = get(toproty, obj, 0f);
-				cylinder.toprot.zCoord = get(toprotz, obj, 0f);
+				cylinder.topoff.x = get(topoffx, obj, 0f);
+				cylinder.topoff.y = get(topoffy, obj, 0f);
+				cylinder.topoff.z = get(topoffz, obj, 0f);
+				cylinder.toprot.x = get(toprotx, obj, 0f);
+				cylinder.toprot.y = get(toproty, obj, 0f);
+				cylinder.toprot.z = get(toprotz, obj, 0f);
 				if(obj.has("faces_off")){
 					JsonArray array = obj.get("faces_off").getAsJsonArray();
 					for(int i = 0; i < cylinder.bools.length; i++){
@@ -206,15 +206,15 @@ public class JsonToFMT {
 		polygon.textureY = get(texturey, obj, idef);
 		polygon.mirror = JsonUtil.getIfExists(obj, mirror, false);
 		polygon.flip = JsonUtil.getIfExists(obj, flip, false);
-		polygon.rot.xCoord = get(rotx, obj, def);
-		polygon.rot.yCoord = get(roty, obj, def);
-		polygon.rot.zCoord = get(rotz, obj, def);
-		polygon.off.xCoord = get(offx, obj, def);
-		polygon.off.yCoord = get(offy, obj, def);
-		polygon.off.zCoord = get(offz, obj, def);
-		polygon.pos.xCoord = get(posx, obj, def);
-		polygon.pos.yCoord = get(posy, obj, def);
-		polygon.pos.zCoord = get(posz, obj, def);
+		polygon.rot.x = get(rotx, obj, def);
+		polygon.rot.y = get(roty, obj, def);
+		polygon.rot.z = get(rotz, obj, def);
+		polygon.off.x = get(offx, obj, def);
+		polygon.off.y = get(offy, obj, def);
+		polygon.off.z = get(offz, obj, def);
+		polygon.pos.x = get(posx, obj, def);
+		polygon.pos.y = get(posy, obj, def);
+		polygon.pos.z = get(posz, obj, def);
 		polygon.name = obj.has("name") ? obj.get("name").getAsString() : null;
 		polygon.visible = obj.has("visible") ? obj.get("visible").getAsBoolean() : true;
 		if(obj.has("cuv")){
@@ -226,9 +226,9 @@ public class JsonToFMT {
 
 	private static ShapeboxWrapper loadShapebox(GroupCompound compound, JsonObject obj){
 		ShapeboxWrapper shapebox = new ShapeboxWrapper(compound);
-		shapebox.size.xCoord = get(width, obj, def);
-		shapebox.size.yCoord = get(height, obj, def);
-		shapebox.size.zCoord = get(depth, obj, def);
+		shapebox.size.x = get(width, obj, def);
+		shapebox.size.y = get(height, obj, def);
+		shapebox.size.z = get(depth, obj, def);
 		//
 		shapebox.cor0 = new Vec3f(get("x0", obj, def), get("y0", obj, def), get("z0", obj, def));
 		shapebox.cor1 = new Vec3f(get("x1", obj, def), get("y1", obj, def), get("z1", obj, def));

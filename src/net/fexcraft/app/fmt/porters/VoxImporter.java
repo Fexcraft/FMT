@@ -119,9 +119,9 @@ public class VoxImporter extends ExImPorter {
                     wrapper = new VoxelWrapper(compound, cx, cy, cz, bools);
                 	log("Voxel " + (chunks + 1) + " Created.");
             	}
-                wrapper.pos.xCoord = minx;
-                wrapper.pos.yCoord = miny;
-                wrapper.pos.zCoord = minz;
+                wrapper.pos.x = minx;
+                wrapper.pos.y = miny;
+                wrapper.pos.z = minz;
                 wrapper.name = "voxel_" + (chunks++);
                 if(devox){
                 	ArrayList<int[]> array = null;
@@ -134,12 +134,12 @@ public class VoxImporter extends ExImPorter {
                 	}
                 	for(int[] arr : array){
                 		BoxWrapper box = new BoxWrapper(compound);
-                		box.pos.xCoord = minx + arr[0];
-                		box.pos.yCoord = miny + arr[1];
-                		box.pos.zCoord = minz + arr[2];
-                		box.size.xCoord = arr[3] - arr[0] + 1;
-                		box.size.yCoord = arr[4] - arr[1] + 1;
-                		box.size.zCoord = arr[5] - arr[2] + 1;
+                		box.pos.x = minx + arr[0];
+                		box.pos.y = miny + arr[1];
+                		box.pos.z = minz + arr[2];
+                		box.size.x = arr[3] - arr[0] + 1;
+                		box.size.y = arr[4] - arr[1] + 1;
+                		box.size.z = arr[5] - arr[2] + 1;
                 		compound.add(box, "voxel_" + chunks, false);
                 		if(colors){
                 			for(Face face : BoxFace.values()){
@@ -156,9 +156,9 @@ public class VoxImporter extends ExImPorter {
                 	log("Voxel Shape " + chunks + " Created.");
                 }
                 BBWrapper bounding = new BBWrapper(compound);
-                bounding.pos.xCoord = minx;
-                bounding.pos.yCoord = miny;
-                bounding.pos.zCoord = minz;
+                bounding.pos.x = minx;
+                bounding.pos.y = miny;
+                bounding.pos.z = minz;
                 bounding.size = new Vec3f(cx, cy, cz);
                 bounding.visible = false;
                 bounding.name = "voxel_" + chunks;

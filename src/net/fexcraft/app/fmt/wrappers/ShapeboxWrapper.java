@@ -38,9 +38,9 @@ public class ShapeboxWrapper extends BoxWrapper {
 	
 	protected ModelRendererTurbo newMRT(){
 		ModelRendererTurbo turbo = initMRT()
-			.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
-			.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
-		BoxBuilder builder = new BoxBuilder(turbo).setOffset(off.xCoord, off.yCoord, off.zCoord).setSize(size.xCoord, size.yCoord, size.zCoord).removePolygons(sides);
+			.setRotationPoint(pos.x, pos.y, pos.z)
+			.setRotationAngle(rot.x, rot.y, rot.z);
+		BoxBuilder builder = new BoxBuilder(turbo).setOffset(off.x, off.y, off.z).setSize(size.x, size.y, size.z).removePolygons(sides);
 		builder.setCorners(cor0, cor1, cor2, cor3, cor4, cor5, cor6, cor7);
 		if(cuv.anyCustom()){
 			for(UVCoords coord : cuv.values()){
@@ -84,12 +84,12 @@ public class ShapeboxWrapper extends BoxWrapper {
 				rotmarker2.setRotationPoint(lines.rotationPointX, lines.rotationPointY, lines.rotationPointZ);
 				rotmarker2.render();
 				GL11.glPushMatrix();
-				axe.setAngles(-rot.yCoord, -rot.zCoord, -rot.xCoord);
+				axe.setAngles(-rot.y, -rot.z, -rot.x);
 				Vec3f vector = null;
 				for(int i = 0; i < cornermarkers.length; i++){
 					vector = axe.getRelativeVector(corneroffset(i).add(off));
-					cornermarkers[i].setPosition(vector.xCoord + pos.xCoord, vector.yCoord + pos.yCoord, vector.zCoord + pos.zCoord);
-					cornermarkers[i].setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
+					cornermarkers[i].setPosition(vector.x + pos.x, vector.y + pos.y, vector.z + pos.z);
+					cornermarkers[i].setRotationAngle(rot.x, rot.y, rot.z);
 					cornermarkers[i].render();
 				}
 				GL11.glPopMatrix();
@@ -110,14 +110,14 @@ public class ShapeboxWrapper extends BoxWrapper {
 
 	private Vec3f corneroffset(int index){
 		switch(index){
-			case 0: return new Vec3f(-cor0.xCoord, -cor0.yCoord, -cor0.zCoord);
-			case 1: return new Vec3f(cor1.xCoord + size.xCoord, -cor1.yCoord, -cor1.zCoord);
-			case 2: return new Vec3f(cor2.xCoord + size.xCoord, -cor2.yCoord, cor2.zCoord + size.zCoord);
-			case 3: return new Vec3f(-cor3.xCoord, -cor3.yCoord, cor3.zCoord + size.zCoord);
-			case 4: return new Vec3f(-cor4.xCoord, cor4.yCoord + size.yCoord, -cor4.zCoord);
-			case 5: return new Vec3f(cor5.xCoord + size.xCoord, cor5.yCoord + size.yCoord, -cor5.zCoord);
-			case 6: return new Vec3f(cor6.xCoord + size.xCoord, cor6.yCoord + size.yCoord, cor6.zCoord + size.zCoord);
-			case 7: return new Vec3f(-cor7.xCoord, cor7.yCoord + size.yCoord, cor7.zCoord + size.zCoord);
+			case 0: return new Vec3f(-cor0.x, -cor0.y, -cor0.z);
+			case 1: return new Vec3f(cor1.x + size.x, -cor1.y, -cor1.z);
+			case 2: return new Vec3f(cor2.x + size.x, -cor2.y, cor2.z + size.z);
+			case 3: return new Vec3f(-cor3.x, -cor3.y, cor3.z + size.z);
+			case 4: return new Vec3f(-cor4.x, cor4.y + size.y, -cor4.z);
+			case 5: return new Vec3f(cor5.x + size.x, cor5.y + size.y, -cor5.z);
+			case 6: return new Vec3f(cor6.x + size.x, cor6.y + size.y, cor6.z + size.z);
+			case 7: return new Vec3f(-cor7.x, cor7.y + size.y, cor7.z + size.z);
 			default: return null;
 		}
 	}
@@ -125,14 +125,14 @@ public class ShapeboxWrapper extends BoxWrapper {
 	@Override
 	public float getFloat(String id, boolean x, boolean y, boolean z){
 		switch(id){
-			case "cor0": return x ? cor0.xCoord : y ? cor0.yCoord : z ? cor0.zCoord : 0;
-			case "cor1": return x ? cor1.xCoord : y ? cor1.yCoord : z ? cor1.zCoord : 0;
-			case "cor2": return x ? cor2.xCoord : y ? cor2.yCoord : z ? cor2.zCoord : 0;
-			case "cor3": return x ? cor3.xCoord : y ? cor3.yCoord : z ? cor3.zCoord : 0;
-			case "cor4": return x ? cor4.xCoord : y ? cor4.yCoord : z ? cor4.zCoord : 0;
-			case "cor5": return x ? cor5.xCoord : y ? cor5.yCoord : z ? cor5.zCoord : 0;
-			case "cor6": return x ? cor6.xCoord : y ? cor6.yCoord : z ? cor6.zCoord : 0;
-			case "cor7": return x ? cor7.xCoord : y ? cor7.yCoord : z ? cor7.zCoord : 0;
+			case "cor0": return x ? cor0.x : y ? cor0.y : z ? cor0.z : 0;
+			case "cor1": return x ? cor1.x : y ? cor1.y : z ? cor1.z : 0;
+			case "cor2": return x ? cor2.x : y ? cor2.y : z ? cor2.z : 0;
+			case "cor3": return x ? cor3.x : y ? cor3.y : z ? cor3.z : 0;
+			case "cor4": return x ? cor4.x : y ? cor4.y : z ? cor4.z : 0;
+			case "cor5": return x ? cor5.x : y ? cor5.y : z ? cor5.z : 0;
+			case "cor6": return x ? cor6.x : y ? cor6.y : z ? cor6.z : 0;
+			case "cor7": return x ? cor7.x : y ? cor7.y : z ? cor7.z : 0;
 			//case "face0": return x ? bool[0] ? 1 : 0 : y ? bool[1] ? 1 : 0 : z ? bool[2] ? 1 : 0 : 0;
 			//case "face1": return x ? bool[3] ? 1 : 0 : y ? bool[4] ? 1 : 0 : z ? bool[5] ? 1 : 0 : 0;
 			default: return super.getFloat(id, x, y, z);
@@ -146,44 +146,44 @@ public class ShapeboxWrapper extends BoxWrapper {
 		//int iID = Integer.parseInt(id.replace("cor", ""));
 		switch(id){
 			case "cor0":{
-				if(x){ cor0.xCoord = value; return true; }
-				if(y){ cor0.yCoord = value; return true; }
-				if(z){ cor0.zCoord = value; return true; }
+				if(x){ cor0.x = value; return true; }
+				if(y){ cor0.y = value; return true; }
+				if(z){ cor0.z = value; return true; }
 			}
 			case "cor1":{
-				if(x){ cor1.xCoord = value; return true; }
-				if(y){ cor1.yCoord = value; return true; }
-				if(z){ cor1.zCoord = value; return true; }
+				if(x){ cor1.x = value; return true; }
+				if(y){ cor1.y = value; return true; }
+				if(z){ cor1.z = value; return true; }
 			}
 			case "cor2":{
-				if(x){ cor2.xCoord = value; return true; }
-				if(y){ cor2.yCoord = value; return true; }
-				if(z){ cor2.zCoord = value; return true; }
+				if(x){ cor2.x = value; return true; }
+				if(y){ cor2.y = value; return true; }
+				if(z){ cor2.z = value; return true; }
 			}
 			case "cor3":{
-				if(x){ cor3.xCoord = value; return true; }
-				if(y){ cor3.yCoord = value; return true; }
-				if(z){ cor3.zCoord = value; return true; }
+				if(x){ cor3.x = value; return true; }
+				if(y){ cor3.y = value; return true; }
+				if(z){ cor3.z = value; return true; }
 			}
 			case "cor4":{
-				if(x){ cor4.xCoord = value; return true; }
-				if(y){ cor4.yCoord = value; return true; }
-				if(z){ cor4.zCoord = value; return true; }
+				if(x){ cor4.x = value; return true; }
+				if(y){ cor4.y = value; return true; }
+				if(z){ cor4.z = value; return true; }
 			}
 			case "cor5":{
-				if(x){ cor5.xCoord = value; return true; }
-				if(y){ cor5.yCoord = value; return true; }
-				if(z){ cor5.zCoord = value; return true; }
+				if(x){ cor5.x = value; return true; }
+				if(y){ cor5.y = value; return true; }
+				if(z){ cor5.z = value; return true; }
 			}
 			case "cor6":{
-				if(x){ cor6.xCoord = value; return true; }
-				if(y){ cor6.yCoord = value; return true; }
-				if(z){ cor6.zCoord = value; return true; }
+				if(x){ cor6.x = value; return true; }
+				if(y){ cor6.y = value; return true; }
+				if(z){ cor6.z = value; return true; }
 			}
 			case "cor7":{
-				if(x){ cor7.xCoord = value; return true; }
-				if(y){ cor7.yCoord = value; return true; }
-				if(z){ cor7.zCoord = value; return true; }
+				if(x){ cor7.x = value; return true; }
+				if(y){ cor7.y = value; return true; }
+				if(z){ cor7.z = value; return true; }
 			}
 			/*case "face0":{
 				if(x){ bool[0] = (int)value == 1; return true; }
@@ -202,37 +202,37 @@ public class ShapeboxWrapper extends BoxWrapper {
 	@Override
 	protected JsonObject populateJson(JsonObject obj, boolean export){
 		obj = super.populateJson(obj, export);
-		if(cor0.xCoord != 0) obj.addProperty("x0", cor0.xCoord);
-		if(cor0.yCoord != 0) obj.addProperty("y0", cor0.yCoord);
-		if(cor0.zCoord != 0) obj.addProperty("z0", cor0.zCoord);
+		if(cor0.x != 0) obj.addProperty("x0", cor0.x);
+		if(cor0.y != 0) obj.addProperty("y0", cor0.y);
+		if(cor0.z != 0) obj.addProperty("z0", cor0.z);
 		//
-		if(cor1.xCoord != 0) obj.addProperty("x1", cor1.xCoord);
-		if(cor1.yCoord != 0) obj.addProperty("y1", cor1.yCoord);
-		if(cor1.zCoord != 0) obj.addProperty("z1", cor1.zCoord);
+		if(cor1.x != 0) obj.addProperty("x1", cor1.x);
+		if(cor1.y != 0) obj.addProperty("y1", cor1.y);
+		if(cor1.z != 0) obj.addProperty("z1", cor1.z);
 		//
-		if(cor2.xCoord != 0) obj.addProperty("x2", cor2.xCoord);
-		if(cor2.yCoord != 0) obj.addProperty("y2", cor2.yCoord);
-		if(cor2.zCoord != 0) obj.addProperty("z2", cor2.zCoord);
+		if(cor2.x != 0) obj.addProperty("x2", cor2.x);
+		if(cor2.y != 0) obj.addProperty("y2", cor2.y);
+		if(cor2.z != 0) obj.addProperty("z2", cor2.z);
 		//
-		if(cor3.xCoord != 0) obj.addProperty("x3", cor3.xCoord);
-		if(cor3.yCoord != 0) obj.addProperty("y3", cor3.yCoord);
-		if(cor3.zCoord != 0) obj.addProperty("z3", cor3.zCoord);
+		if(cor3.x != 0) obj.addProperty("x3", cor3.x);
+		if(cor3.y != 0) obj.addProperty("y3", cor3.y);
+		if(cor3.z != 0) obj.addProperty("z3", cor3.z);
 		//
-		if(cor4.xCoord != 0) obj.addProperty("x4", cor4.xCoord);
-		if(cor4.yCoord != 0) obj.addProperty("y4", cor4.yCoord);
-		if(cor4.zCoord != 0) obj.addProperty("z4", cor4.zCoord);
+		if(cor4.x != 0) obj.addProperty("x4", cor4.x);
+		if(cor4.y != 0) obj.addProperty("y4", cor4.y);
+		if(cor4.z != 0) obj.addProperty("z4", cor4.z);
 		//
-		if(cor5.xCoord != 0) obj.addProperty("x5", cor5.xCoord);
-		if(cor5.yCoord != 0) obj.addProperty("y5", cor5.yCoord);
-		if(cor5.zCoord != 0) obj.addProperty("z5", cor5.zCoord);
+		if(cor5.x != 0) obj.addProperty("x5", cor5.x);
+		if(cor5.y != 0) obj.addProperty("y5", cor5.y);
+		if(cor5.z != 0) obj.addProperty("z5", cor5.z);
 		//
-		if(cor6.xCoord != 0) obj.addProperty("x6", cor6.xCoord);
-		if(cor6.yCoord != 0) obj.addProperty("y6", cor6.yCoord);
-		if(cor6.zCoord != 0) obj.addProperty("z6", cor6.zCoord);
+		if(cor6.x != 0) obj.addProperty("x6", cor6.x);
+		if(cor6.y != 0) obj.addProperty("y6", cor6.y);
+		if(cor6.z != 0) obj.addProperty("z6", cor6.z);
 		//
-		if(cor7.xCoord != 0) obj.addProperty("x7", cor7.xCoord);
-		if(cor7.yCoord != 0) obj.addProperty("y7", cor7.yCoord);
-		if(cor7.zCoord != 0) obj.addProperty("z7", cor7.zCoord);
+		if(cor7.x != 0) obj.addProperty("x7", cor7.x);
+		if(cor7.y != 0) obj.addProperty("y7", cor7.y);
+		if(cor7.z != 0) obj.addProperty("z7", cor7.z);
 		//
 		/*if(!export){
 			JsonArray array = new JsonArray();
@@ -243,7 +243,7 @@ public class ShapeboxWrapper extends BoxWrapper {
 	}
 
 
-	public ShapeboxWrapper setCoords(Vec3f xyz0, Vec3f xyz1, Vec3f xyz2, Vec3f xyz3, Vec3f xyz4, Vec3f xyz5, Vec3f xyz6, Vec3f xyz7){
+	public ShapeboxWrapper sets(Vec3f xyz0, Vec3f xyz1, Vec3f xyz2, Vec3f xyz3, Vec3f xyz4, Vec3f xyz5, Vec3f xyz6, Vec3f xyz7){
 		cor0 = xyz0; cor1 = xyz1; cor2 = xyz2; cor3 = xyz3; cor4 = xyz4; cor5 = xyz5; cor6 = xyz6; cor7 = xyz7; return this;
 	}
 
@@ -266,7 +266,7 @@ public class ShapeboxWrapper extends BoxWrapper {
 			default: return null;
 		}
 		wrapper.size = new Vec3f(size);
-		wrapper.setCoords(cor0, cor1, cor2, cor3, cor4, cor5, cor6, cor7);
+		wrapper.sets(cor0, cor1, cor2, cor3, cor4, cor5, cor6, cor7);
 		wrapper.sides = Arrays.copyOf(sides, 6);
 		wrapper.cuv.copyFrom(wrapper, cuv);
 		return copyTo(wrapper, true);*/

@@ -24,9 +24,9 @@ public class BoxWrapper extends PolygonWrapper {
 
 	protected ModelRendererTurbo newMRT(){
 		ModelRendererTurbo turbo = initMRT()
- 			.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
-			.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
-		BoxBuilder builder = new BoxBuilder(turbo).setOffset(off.xCoord, off.yCoord, off.zCoord).setSize(size.xCoord, size.yCoord, size.zCoord).removePolygons(sides);
+ 			.setRotationPoint(pos.x, pos.y, pos.z)
+			.setRotationAngle(rot.x, rot.y, rot.z);
+		BoxBuilder builder = new BoxBuilder(turbo).setOffset(off.x, off.y, off.z).setSize(size.x, size.y, size.z).removePolygons(sides);
 		if(cuv.anyCustom()){
 			for(UVCoords coord : cuv.values()){
 				if(!isFaceActive(coord.face())) continue;//disabled
@@ -75,7 +75,7 @@ public class BoxWrapper extends PolygonWrapper {
 	@Override
 	public float getFloat(String id, boolean x, boolean y, boolean z){
 		switch(id){
-			case "size": return x ? size.xCoord : y ? size.yCoord : z ? size.zCoord : 0;
+			case "size": return x ? size.x : y ? size.y : z ? size.z : 0;
 			case "side0": return x ? (sides[0] ? 1 : 0) : y ? (sides[1] ? 1 : 0) : z ? (sides[2] ? 1 : 0) : 0;
 			case "side1": return x ? (sides[3] ? 1 : 0) : y ? (sides[4] ? 1 : 0) : z ? (sides[5] ? 1 : 0) : 0;
 			default: return super.getFloat(id, x, y, z);
@@ -87,9 +87,9 @@ public class BoxWrapper extends PolygonWrapper {
 		if(super.setFloat(id, x, y, z, value)) return true;
 		switch(id){
 			case "size":{
-				if(x){ size.xCoord = value; return true; }
-				if(y){ size.yCoord = value; return true; }
-				if(z){ size.zCoord = value; return true; }
+				if(x){ size.x = value; return true; }
+				if(y){ size.y = value; return true; }
+				if(z){ size.z = value; return true; }
 			}
 			case "side0":{
 				if(x){ sides[0] = value == 1; return true; }
@@ -107,9 +107,9 @@ public class BoxWrapper extends PolygonWrapper {
 
 	@Override
 	protected JsonObject populateJson(JsonObject obj, boolean export){
-		obj.addProperty("width", size.xCoord);
-		obj.addProperty("height", size.yCoord);
-		obj.addProperty("depth", size.zCoord);
+		obj.addProperty("width", size.x);
+		obj.addProperty("height", size.y);
+		obj.addProperty("depth", size.z);
 		boolean anysides = false;
 		for(boolean bool : sides) if(bool) anysides = true;
 		if(anysides){
@@ -122,7 +122,7 @@ public class BoxWrapper extends PolygonWrapper {
 
 	@Override
 	public float[][][] newTexturePosition(boolean include_offsets, boolean exclude_detached){
-		float w = size.xCoord, h = size.yCoord, d = size.zCoord;
+		float w = size.x, h = size.y, d = size.z;
         if(w % 1 != 0) w = w < 1 ? 1 : (int)w + (w % 1 > 0.5f ? 1 : 0);
         if(h % 1 != 0) h = h < 1 ? 1 : (int)h + (h % 1 > 0.5f ? 1 : 0);
         if(d % 1 != 0) d = d < 1 ? 1 : (int)d + (d % 1 > 0.5f ? 1 : 0);
@@ -140,7 +140,7 @@ public class BoxWrapper extends PolygonWrapper {
 				new float[]{ x0 + x2 + d, yp + h }
 			};
 			if(include_offsets && !cuv.get(BoxFace.FRONT).automatic()){
-				vecs[0] = getCoords(BoxFace.FRONT, vecs[0]);
+				vecs[0] = gets(BoxFace.FRONT, vecs[0]);
 			}
 		}
 		if(!sides[1] && !absolute(1, exclude_detached)){
@@ -149,7 +149,7 @@ public class BoxWrapper extends PolygonWrapper {
 				new float[]{ d, yp + h }
 			};
 			if(include_offsets && !cuv.get(BoxFace.BACK).automatic()){
-				vecs[1] = getCoords(BoxFace.BACK, vecs[1]);
+				vecs[1] = gets(BoxFace.BACK, vecs[1]);
 			}
 		}
 		if(!sides[2] && !absolute(2, exclude_detached)){
@@ -158,7 +158,7 @@ public class BoxWrapper extends PolygonWrapper {
 				new float[]{ x0 + w, d }
 			};
 			if(include_offsets && !cuv.get(BoxFace.TOP).automatic()){
-				vecs[2] = getCoords(BoxFace.TOP, vecs[2]);
+				vecs[2] = gets(BoxFace.TOP, vecs[2]);
 			}
 		}
 		if(!sides[3] && !absolute(3, exclude_detached)){
@@ -167,7 +167,7 @@ public class BoxWrapper extends PolygonWrapper {
 				new float[]{ x0 + x1 + w, d }
 			};
 			if(include_offsets && !cuv.get(BoxFace.DOWN).automatic()){
-				vecs[3] = getCoords(BoxFace.DOWN, vecs[3]);
+				vecs[3] = gets(BoxFace.DOWN, vecs[3]);
 			}
 		}
 		if(!sides[4] && !absolute(4, exclude_detached)){
@@ -176,7 +176,7 @@ public class BoxWrapper extends PolygonWrapper {
 				new float[]{ x0 + w, yp + h }
 			};
 			if(include_offsets && !cuv.get(BoxFace.RIGHT).automatic()){
-				vecs[4] = getCoords(BoxFace.RIGHT, vecs[4]);
+				vecs[4] = gets(BoxFace.RIGHT, vecs[4]);
 			}
 		}
 		if(!sides[5] && !absolute(5, exclude_detached)){
@@ -185,7 +185,7 @@ public class BoxWrapper extends PolygonWrapper {
 				new float[]{ x0 + x2 + x3 + w, yp + h }
 			};
 			if(include_offsets && !cuv.get(BoxFace.LEFT).automatic()){
-				vecs[5] = getCoords(BoxFace.LEFT, vecs[5]);
+				vecs[5] = gets(BoxFace.LEFT, vecs[5]);
 			}
 		}
 		return vecs;
@@ -199,7 +199,7 @@ public class BoxWrapper extends PolygonWrapper {
 		return sides[i] || cuv.get(BoxFace.values()[i]).absolute();
 	}
 
-	private float[][] getCoords(Face face, float[][] def){
+	private float[][] gets(Face face, float[][] def){
 		UVCoords coords = cuv.get(face);
 		float[] arr = coords.value();
 		float[][] res = null;

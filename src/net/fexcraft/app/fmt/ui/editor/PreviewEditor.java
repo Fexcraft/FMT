@@ -73,28 +73,28 @@ public class PreviewEditor extends EditorBase {
 	private void updatePos(boolean full){
 		GroupCompound compound = HelperCollector.getSelected(); if(compound == null) return;
 		if(compound.pos == null) compound.pos = new Vec3f(0, 0, 0);
-		compound.pos.xCoord = full ? pos_x.getValue() : poss_x.getValue() / 16f;
-		compound.pos.yCoord = full ? pos_y.getValue() : poss_y.getValue() / 16f;
-		compound.pos.zCoord = full ? pos_z.getValue() : poss_z.getValue() / 16f;
-		pos_x.apply(compound.pos.xCoord); pos_y.apply(compound.pos.yCoord); pos_z.apply(compound.pos.zCoord);
-		poss_x.apply(compound.pos.xCoord * 16); poss_y.apply(compound.pos.yCoord * 16); poss_z.apply(compound.pos.zCoord * 16);
+		compound.pos.x = full ? pos_x.getValue() : poss_x.getValue() / 16f;
+		compound.pos.y = full ? pos_y.getValue() : poss_y.getValue() / 16f;
+		compound.pos.z = full ? pos_z.getValue() : poss_z.getValue() / 16f;
+		pos_x.apply(compound.pos.x); pos_y.apply(compound.pos.y); pos_z.apply(compound.pos.z);
+		poss_x.apply(compound.pos.x * 16); poss_y.apply(compound.pos.y * 16); poss_z.apply(compound.pos.z * 16);
 	}
 
 	private void updateRotation(){
 		GroupCompound compound = HelperCollector.getSelected(); if(compound == null) return;
 		if(compound.rot == null) compound.rot = new Vec3f(0, 0, 0);
-		compound.rot.xCoord = rot_x.getValue(); compound.rot.yCoord = rot_y.getValue(); compound.rot.zCoord = rot_z.getValue();
-		rot_x.apply(compound.rot.xCoord); rot_y.apply(compound.rot.yCoord); rot_z.apply(compound.rot.zCoord);
+		compound.rot.x = rot_x.getValue(); compound.rot.y = rot_y.getValue(); compound.rot.z = rot_z.getValue();
+		rot_x.apply(compound.rot.x); rot_y.apply(compound.rot.y); rot_z.apply(compound.rot.z);
 	}
 
 	private void updateScale(boolean full){
 		GroupCompound compound = HelperCollector.getSelected(); if(compound == null) return;
 		if(compound.scale == null) compound.scale = new Vec3f(0, 0, 0);
-		compound.scale.xCoord = full ? size_x.getValue() : size16_x.getValue() / 16f;
-		compound.scale.yCoord = full ? size_y.getValue() : size16_y.getValue() / 16f;
-		compound.scale.zCoord = full ? size_z.getValue() : size16_z.getValue() / 16f;
-		size_x.apply(compound.scale.xCoord); size_y.apply(compound.scale.yCoord); size_z.apply(compound.scale.zCoord);
-		size16_x.apply(compound.scale.xCoord * 16); size16_y.apply(compound.scale.yCoord * 16); size16_z.apply(compound.scale.zCoord * 16);
+		compound.scale.x = full ? size_x.getValue() : size16_x.getValue() / 16f;
+		compound.scale.y = full ? size_y.getValue() : size16_y.getValue() / 16f;
+		compound.scale.z = full ? size_z.getValue() : size16_z.getValue() / 16f;
+		size_x.apply(compound.scale.x); size_y.apply(compound.scale.y); size_z.apply(compound.scale.z);
+		size16_x.apply(compound.scale.x * 16); size16_y.apply(compound.scale.y * 16); size16_z.apply(compound.scale.z * 16);
 	}
 	
 }

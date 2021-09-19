@@ -135,17 +135,17 @@ public class FontUtils {
 			}
 			for(PolygonWrapper wrapper : cher.wrappers){
 				PolygonWrapper clone = wrapper.clone(FMTB.MODEL);
-				clone.pos.xCoord -= cher.offset_x;
-				clone.pos.yCoord -= cher.offset_y;
-				clone.off.xCoord += passed;
+				clone.pos.x -= cher.offset_x;
+				clone.pos.y -= cher.offset_y;
+				clone.off.x += passed;
 				if(scale != 1f){
 					if(clone.getType() == ShapeType.BOX){
 						clone = clone.convertTo(ShapeType.SHAPEBOX);
 					}
 					GroupCompound.scalePoly(clone, scale);
 				}
-				clone.pos = clone.pos.addVector(px, py, pz);
-				clone.rot = clone.rot.addVector(rx, ry, rz);
+				clone.pos = clone.pos.add(px, py, pz);
+				clone.rot = clone.rot.add(rx, ry, rz);
 				FMTB.MODEL.add(clone, textgroupid, false);
 			}
 			passed += cher.width + interletter_space;

@@ -40,26 +40,26 @@ public class GGR {
     }
 
     public void apply(){
-        if(rotation.yCoord / 360 > 1f){ rotation.yCoord -= 360; }
-        else if(rotation.yCoord / 360 < -1f){ rotation.yCoord += 360; }
+        if(rotation.y / 360 > 1f){ rotation.y -= 360; }
+        else if(rotation.y / 360 < -1f){ rotation.y += 360; }
         GL11.glLoadIdentity();
         if(Settings.orbital_camera()){
             Vec3f vec = orbital.getRelativeVector(0, 0, distance);
-            vec.xCoord += -orbit.xCoord;
-            vec.yCoord += -orbit.yCoord;
-            vec.zCoord += -orbit.zCoord;
-            GL11.glRotatef(-rotation.xCoord, 1, 0, 0);
-            GL11.glRotatef(-rotation.yCoord, 0, 1, 0);
-            GL11.glRotatef(-rotation.zCoord, 0, 0, 1);
+            vec.x += -orbit.x;
+            vec.y += -orbit.y;
+            vec.z += -orbit.z;
+            GL11.glRotatef(-rotation.x, 1, 0, 0);
+            GL11.glRotatef(-rotation.y, 0, 1, 0);
+            GL11.glRotatef(-rotation.z, 0, 0, 1);
             if(Settings.oldrot()) GL11.glRotatef(-180, 1, 0, 0);
-            GL11.glTranslatef(vec.xCoord, vec.yCoord, vec.zCoord);
+            GL11.glTranslatef(vec.x, vec.y, vec.z);
             if(Settings.oldrot()) GL11.glRotatef(180, 1, 0, 0);
         }
         else{
-            GL11.glRotatef(rotation.xCoord, 1, 0, 0);
-            GL11.glRotatef(rotation.yCoord, 0, 1, 0);
-            GL11.glRotatef(rotation.zCoord, 0, 0, 1);
-            GL11.glTranslatef(-pos.xCoord, -pos.yCoord, -pos.zCoord);
+            GL11.glRotatef(rotation.x, 1, 0, 0);
+            GL11.glRotatef(rotation.y, 0, 1, 0);
+            GL11.glRotatef(rotation.z, 0, 0, 1);
+            GL11.glTranslatef(-pos.x, -pos.y, -pos.z);
         }
     }
 
@@ -68,22 +68,22 @@ public class GGR {
         	double x = posx - oposx, y = posy - oposy;
         	if(x < FMTB.WIDTH && y < FMTB.HEIGHT){
                 if(Settings.orbital_camera()){
-                    rotation.yCoord -= x * Settings.mouse_sensivity.directFloat() * delta;
-                    rotation.xCoord += y * Settings.mouse_sensivity.directFloat() * delta;
-                    rotation.xCoord = Math.max(-maxlookrange, Math.min(maxlookrange, rotation.xCoord));
-                	orbital.setAngles(rotation.yCoord, 0, -rotation.xCoord);
+                    rotation.y -= x * Settings.mouse_sensivity.directFloat() * delta;
+                    rotation.x += y * Settings.mouse_sensivity.directFloat() * delta;
+                    rotation.x = Math.max(-maxlookrange, Math.min(maxlookrange, rotation.x));
+                	orbital.setAngles(rotation.y, 0, -rotation.x);
                 }
                 else{
-                    rotation.yCoord += x * Settings.mouse_sensivity.directFloat() * delta;
-                    rotation.xCoord += y * Settings.mouse_sensivity.directFloat() * delta;
-                    rotation.xCoord = Math.max(-maxlookrange, Math.min(maxlookrange, rotation.xCoord));
+                    rotation.y += x * Settings.mouse_sensivity.directFloat() * delta;
+                    rotation.x += y * Settings.mouse_sensivity.directFloat() * delta;
+                    rotation.x = Math.max(-maxlookrange, Math.min(maxlookrange, rotation.x));
                 }
         	}
             cursor_moved = false;
 		}
 		else if(scroll_down && cursor_moved){
-	        pos.xCoord += (posx - oposx) * 0.001;
-	        pos.yCoord += (posy - oposy) * 0.001;
+	        pos.x += (posx - oposx) * 0.001;
+	        pos.y += (posy - oposy) * 0.001;
 	        cursor_moved = false;
 	    }
         processCameraInput(delta);
@@ -158,8 +158,8 @@ public class GGR {
 			distance -= yoffset * (movemod / 2);
 			return;
 		}
-		double[] zoom = rotatePoint(yoffset * 0.5f, rotation.xCoord, rotation.yCoord - 90);
-        pos.xCoord += zoom[0]; pos.yCoord += zoom[1]; pos.zCoord += zoom[2];
+		double[] zoom = rotatePoint(yoffset * 0.5f, rotation.x, rotation.y - 90);
+        pos.x += zoom[0]; pos.y += zoom[1]; pos.z += zoom[2];
 	}
 
     public static double[] rotatePoint(double f, float pitch, float yaw) {
@@ -181,12 +181,12 @@ public class GGR {
 			if(Settings.center_on_part()){
 				PolygonWrapper wrapper = FMTB.MODEL.getFirstSelection();
 				if(wrapper != null){
-					orbit.xCoord = wrapper.pos.xCoord * Static.sixteenth;
-					orbit.yCoord = wrapper.pos.yCoord * Static.sixteenth;
-					orbit.zCoord = wrapper.pos.zCoord * Static.sixteenth;
+					orbit.x = wrapper.pos.x * Static.sixteenth;
+					orbit.y = wrapper.pos.y * Static.sixteenth;
+					orbit.z = wrapper.pos.z * Static.sixteenth;
 				}
 				else{
-					orbit.xCoord = orbit.yCoord = orbit.zCoord = 0;
+					orbit.x = orbit.y = orbit.z = 0;
 				}
 			}
 			return;
@@ -204,23 +204,23 @@ public class GGR {
         else if(speedm) nspeed = Settings.movespeed.directFloat() / 2;
         else nspeed = Settings.movespeed.directFloat();
         nspeed *= delta; if(movemod != 1f) nspeed *= movemod;
-        if(up) pos.yCoord += nspeed;
-        if(down) pos.yCoord -= nspeed;
+        if(up) pos.y += nspeed;
+        if(down) pos.y -= nspeed;
         if(back){
-            pos.xCoord -= Math.sin(Math.toRadians(rotation.yCoord)) * nspeed;
-            pos.zCoord += Math.cos(Math.toRadians(rotation.yCoord)) * nspeed;
+            pos.x -= Math.sin(Math.toRadians(rotation.y)) * nspeed;
+            pos.z += Math.cos(Math.toRadians(rotation.y)) * nspeed;
         }
         if(front){
-            pos.xCoord += Math.sin(Math.toRadians(rotation.yCoord)) * nspeed;
-            pos.zCoord -= Math.cos(Math.toRadians(rotation.yCoord)) * nspeed;
+            pos.x += Math.sin(Math.toRadians(rotation.y)) * nspeed;
+            pos.z -= Math.cos(Math.toRadians(rotation.y)) * nspeed;
         }
         if(left){
-            pos.xCoord += Math.sin(Math.toRadians(rotation.yCoord - 90)) * nspeed;
-            pos.zCoord -= Math.cos(Math.toRadians(rotation.yCoord - 90)) * nspeed;
+            pos.x += Math.sin(Math.toRadians(rotation.y - 90)) * nspeed;
+            pos.z -= Math.cos(Math.toRadians(rotation.y - 90)) * nspeed;
         }
         if(right){
-            pos.xCoord += Math.sin(Math.toRadians(rotation.yCoord + 90)) * nspeed;
-            pos.zCoord -= Math.cos(Math.toRadians(rotation.yCoord + 90)) * nspeed;
+            pos.x += Math.sin(Math.toRadians(rotation.y + 90)) * nspeed;
+            pos.z -= Math.cos(Math.toRadians(rotation.y + 90)) * nspeed;
         }
     }
 

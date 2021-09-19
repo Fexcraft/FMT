@@ -161,15 +161,15 @@ public class DFMImporter extends ExImPorter {
                 		float value = parseF(matcher.group(4));
                 		switch(axis){
                 			case "x":{
-                				poly.wrapper.rot.xCoord = degrees ? value : (float)Math.toDegrees(value);
+                				poly.wrapper.rot.x = degrees ? value : (float)Math.toDegrees(value);
                 				break;
                 			}
                 			case "y":{
-                				poly.wrapper.rot.yCoord = degrees ? value : (float)Math.toDegrees(value);
+                				poly.wrapper.rot.y = degrees ? value : (float)Math.toDegrees(value);
                 				break;
                 			}
                 			case "z":{
-                				poly.wrapper.rot.zCoord = degrees ? value : (float)Math.toDegrees(value);
+                				poly.wrapper.rot.z = degrees ? value : (float)Math.toDegrees(value);
                 				break;
                 			}
                 		}

@@ -130,12 +130,12 @@ public class GroupEditor extends EditorBase {
 			TurboList list = FMTB.MODEL.getFirstSelectedGroup();
 			if(list == null || list.size() < 1) return;
 			if(list.exportoffset == null) list.exportoffset = new Vec3f();
-			list.exportoffset.xCoord = opp ? -list.get(0).pos.xCoord : list.get(0).pos.xCoord;
-			list.exportoffset.yCoord = opp ? -list.get(0).pos.yCoord : list.get(0).pos.yCoord;
-			list.exportoffset.zCoord = opp ? -list.get(0).pos.zCoord : list.get(0).pos.zCoord;
-			exoff_x.apply(list.exportoffset.xCoord);
-			exoff_y.apply(list.exportoffset.yCoord);
-			exoff_z.apply(list.exportoffset.zCoord);
+			list.exportoffset.x = opp ? -list.get(0).pos.x : list.get(0).pos.x;
+			list.exportoffset.y = opp ? -list.get(0).pos.y : list.get(0).pos.y;
+			list.exportoffset.z = opp ? -list.get(0).pos.z : list.get(0).pos.z;
+			exoff_x.apply(list.exportoffset.x);
+			exoff_y.apply(list.exportoffset.y);
+			exoff_z.apply(list.exportoffset.z);
 		});
 		exoff_autobutton.getStyle().setFontSize(16f);
 		Tooltip exoff_buttontooltip = new Tooltip("Copies first polygon's position.\nleft = normal / rightclick = opposite");
@@ -258,9 +258,9 @@ public class GroupEditor extends EditorBase {
 		else{
 			arrlist.forEach(list -> {
 				if(list.exportoffset == null) list.exportoffset = new Vec3f();
-				list.exportoffset.xCoord = xval;
-				list.exportoffset.yCoord = yval;
-				list.exportoffset.zCoord = zval;
+				list.exportoffset.x = xval;
+				list.exportoffset.y = yval;
+				list.exportoffset.z = zval;
 			});
 		}
 	}

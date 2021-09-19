@@ -30,7 +30,7 @@ public class Shape3DWrapper extends PolygonWrapper {
 		wrapper.corners = corners;
 		wrapper.coords = new Coord2D[corners];
 		for(int i = 0; i < corners; i++){
-			wrapper.coords[i] = new Coord2D(coords[i].xCoord, coords[i].yCoord);
+			wrapper.coords[i] = new Coord2D(coords[i].x, coords[i].y);
 		}
 		return wrapper;
 	}
@@ -38,10 +38,10 @@ public class Shape3DWrapper extends PolygonWrapper {
 	protected ModelRendererTurbo newMRT(){
 		ModelRendererTurbo turbo = new ModelRendererTurbo(null, textureX(), textureY(), compound.tx(getTurboList()), compound.ty(getTurboList()));
 		ArrayList<Coord2D> ceerds = new ArrayList<>();
-		for(int i = 0; i < corners; i++) ceerds.add(new Coord2D(coords[i].xCoord, coords[i].yCoord));
-		turbo.addShape3D(off.xCoord, off.yCoord, off.zCoord, ceerds, depth, shape_tex_width, shape_tex_height, side_tex_width, side_tex_height, direction);
+		for(int i = 0; i < corners; i++) ceerds.add(new Coord2D(coords[i].x, coords[i].y));
+		turbo.addShape3D(off.x, off.y, off.z, ceerds, depth, shape_tex_width, shape_tex_height, side_tex_width, side_tex_height, direction);
 		//TODO if(cuv.anyCustom()){}
-		return turbo.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord).setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
+		return turbo.setRotationPoint(pos.x, pos.y, pos.z).setRotationAngle(rot.x, rot.y, rot.z);
 	}
 
 	@Override
@@ -79,7 +79,7 @@ public class Shape3DWrapper extends PolygonWrapper {
 					Coord2D[] caards = new Coord2D[corners];
 					for(int i = 0; i < corners; i++){
 						if(i >= coords.length) caards[0] = new Coord2D(0, 0);
-						else caards[i] = new Coord2D(coords[i].xCoord, coords[i].yCoord);
+						else caards[i] = new Coord2D(coords[i].x, coords[i].y);
 					}
 					return true;
 				}
@@ -109,8 +109,8 @@ public class Shape3DWrapper extends PolygonWrapper {
 		if(side_tex_height != 0f) obj.addProperty("side_tex_height", 1);
 		JsonArray array = new JsonArray();
 		for(Coord2D coord : coords){
-			array.add(coord.xCoord);
-			array.add(coord.yCoord);
+			array.add(coord.x);
+			array.add(coord.y);
 		}
 		obj.add("coords", array);
 		return obj;

@@ -40,7 +40,7 @@ public class CylinderWrapper extends PolygonWrapper {
 	protected ModelRendererTurbo newMRT(){
 		ModelRendererTurbo turbo = new ModelRendererTurbo(null, textureX(), textureY(), compound.tx(getTurboList()), compound.ty(getTurboList()));
 		if(radius != 0f || radial || usesTopRotation() || cuv.anyCustom()){
-			CylinderBuilder builder = turbo.newCylinderBuilder().setPosition(off.xCoord, off.yCoord, off.zCoord)
+			CylinderBuilder builder = turbo.newCylinderBuilder().setPosition(off.x, off.y, off.z)
 				.setRadius(radius, radius2).setLength(length).setSegments(segments, seglimit).setScale(base, top)
 				.setDirection(direction).setTopOffset(topoff).removePolygons(bools);
 			if(cuv.anyCustom()){
@@ -55,16 +55,16 @@ public class CylinderWrapper extends PolygonWrapper {
 			builder.build();
 		}
 		/*else if(radius2 != 0){
-			turbo.addHollowCylinder(off.xCoord, off.yCoord, off.zCoord, radius, radius2, length, segments, seglimit, base, top, direction, getTopOff(), bools);
+			turbo.addHollowCylinder(off.x, off.y, off.z, radius, radius2, length, segments, seglimit, base, top, direction, getTopOff(), bools);
 		}*/
 		else{
-			turbo.addCylinder(off.xCoord, off.yCoord, off.zCoord, radius, length, segments, base, top, direction, getTopOff());
+			turbo.addCylinder(off.x, off.y, off.z, radius, length, segments, base, top, direction, getTopOff());
 		}
-		return turbo.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord).setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
+		return turbo.setRotationPoint(pos.x, pos.y, pos.z).setRotationAngle(rot.x, rot.y, rot.z);
 	}
 
 	private Vec3f getTopOff(){
-		return topoff.xCoord == 0f && topoff.yCoord == 0f && topoff.zCoord == 0f ? null : topoff;
+		return topoff.x == 0f && topoff.y == 0f && topoff.z == 0f ? null : topoff;
 	}
 
 	@Override
@@ -78,11 +78,11 @@ public class CylinderWrapper extends PolygonWrapper {
 			case "cyl0": return x ? radius : y ? length : z ? radius2 : 0;
 			case "cyl1": return x ? segments : y ? direction : z ? seglimit : 0;
 			case "cyl2": return x ? base : y ? top : 0;
-			case "cyl3": return x ? topoff.xCoord : y ? topoff.yCoord : z ? topoff.zCoord : 0;
+			case "cyl3": return x ? topoff.x : y ? topoff.y : z ? topoff.z : 0;
 			case "cyl4": return x ? (bools[0] ? 1 : 0) : y ? (bools[1] ? 1 : 0) : 0;
 			case "cyl5": return x ? (bools[2] ? 1 : 0) : y ? (bools[3] ? 1 : 0) : 0;
 			case "cyl6": return x ? (radial ? 1 : 0) : y ? seg_width : z ? seg_height : 0;
-			case "cyl7": return x ? toprot.xCoord : y ? toprot.yCoord : z ? toprot.zCoord : 0;
+			case "cyl7": return x ? toprot.x : y ? toprot.y : z ? toprot.z : 0;
 			default: return super.getFloat(id, x, y, z);
 		}
 	}
@@ -119,9 +119,9 @@ public class CylinderWrapper extends PolygonWrapper {
 				if(z){ return false; }//topangle = value; if(topangle < -360) topangle = -360; if(topangle > 360) topangle = 360; return false; }
 			}
 			case "cyl3":{
-				if(x){ topoff.xCoord = value; return true; }
-				if(y){ topoff.yCoord = value; return true; }
-				if(z){ topoff.zCoord = value; return true; }
+				if(x){ topoff.x = value; return true; }
+				if(y){ topoff.y = value; return true; }
+				if(z){ topoff.z = value; return true; }
 			}
 			case "cyl4":{
 				if(x){ bools[0] = value == 1; return true; }
@@ -139,9 +139,9 @@ public class CylinderWrapper extends PolygonWrapper {
 				if(z){ seg_height = (int)value; return true; }
 			}
 			case "cyl7":{
-				if(x){ toprot.xCoord = value; return true; }
-				if(y){ toprot.yCoord = value; return true; }
-				if(z){ toprot.zCoord = value; return true; }
+				if(x){ toprot.x = value; return true; }
+				if(y){ toprot.y = value; return true; }
+				if(z){ toprot.z = value; return true; }
 			}
 			default: return false;
 		}
@@ -161,12 +161,12 @@ public class CylinderWrapper extends PolygonWrapper {
 		obj.addProperty("direction", direction);
 		obj.addProperty("basescale", base);
 		obj.addProperty("topscale", top);
-		if(topoff.xCoord != 0f) obj.addProperty("top_offset_x", topoff.xCoord);
-		if(topoff.yCoord != 0f) obj.addProperty("top_offset_y", topoff.yCoord);
-		if(topoff.zCoord != 0f) obj.addProperty("top_offset_z", topoff.zCoord);
-		if(toprot.xCoord != 0f) obj.addProperty("top_rotation_x", toprot.xCoord);
-		if(toprot.yCoord != 0f) obj.addProperty("top_rotation_y", toprot.yCoord);
-		if(toprot.zCoord != 0f) obj.addProperty("top_rotation_z", toprot.zCoord);
+		if(topoff.x != 0f) obj.addProperty("top_offset_x", topoff.x);
+		if(topoff.y != 0f) obj.addProperty("top_offset_y", topoff.y);
+		if(topoff.z != 0f) obj.addProperty("top_offset_z", topoff.z);
+		if(toprot.x != 0f) obj.addProperty("top_rotation_x", toprot.x);
+		if(toprot.y != 0f) obj.addProperty("top_rotation_y", toprot.y);
+		if(toprot.z != 0f) obj.addProperty("top_rotation_z", toprot.z);
 		boolean bool = false; for(boolean bl : bools) if(bl) bool = true;
 		if(bool){
 			JsonArray array = new JsonArray();
@@ -211,7 +211,7 @@ public class CylinderWrapper extends PolygonWrapper {
 				};
 			}
 			if(include_offsets && !cuv.get(CylFace.CYL_BASE).automatic()){
-				vecs[0] = getCoords(CylFace.CYL_BASE, vecs[0]);
+				vecs[0] = gets(CylFace.CYL_BASE, vecs[0]);
 			}
 		}
 		if(!bools[1] && !absolute(1, exclude_detached)){
@@ -230,7 +230,7 @@ public class CylinderWrapper extends PolygonWrapper {
 				};
 			}
 			if(include_offsets && !cuv.get(CylFace.CYL_TOP).automatic()){
-				vecs[1] = getCoords(CylFace.CYL_TOP, vecs[1]);
+				vecs[1] = gets(CylFace.CYL_TOP, vecs[1]);
 			}
 		}
 		if(!bools[2] && !absolute(2, exclude_detached)){
@@ -239,7 +239,7 @@ public class CylinderWrapper extends PolygonWrapper {
 				new float[]{ dia2, height + the }
 			};
 			if(include_offsets && !cuv.get(CylFace.CYL_OUTER).automatic()){
-				vecs[2] = getCoords(CylFace.CYL_OUTER, vecs[2]);
+				vecs[2] = gets(CylFace.CYL_OUTER, vecs[2]);
 			}
 		}
 		if(radius2 != 0f){
@@ -250,7 +250,7 @@ public class CylinderWrapper extends PolygonWrapper {
 					new float[]{ dia2, height + hei + the }
 				};
 				if(include_offsets && !cuv.get(CylFace.CYL_INNER).automatic()){
-					vecs[3] = getCoords(CylFace.CYL_INNER, vecs[3]);
+					vecs[3] = gets(CylFace.CYL_INNER, vecs[3]);
 				}
 			}
 			if(seglimit > 0 && seglimit < segments){
@@ -266,7 +266,7 @@ public class CylinderWrapper extends PolygonWrapper {
 						new float[]{ beg + seg, height + the }
 					};
 					if(include_offsets && !cuv.get(CylFace.SEG_SIDE_0).automatic()){
-						vecs[4] = getCoords(CylFace.SEG_SIDE_0, vecs[4]);
+						vecs[4] = gets(CylFace.SEG_SIDE_0, vecs[4]);
 					}
 				}
 				if(!bools[5] && !absolute(5, exclude_detached)){
@@ -277,7 +277,7 @@ public class CylinderWrapper extends PolygonWrapper {
 						new float[]{ beg + shi + seg, height + hai + the }
 					};
 					if(include_offsets && !cuv.get(CylFace.SEG_SIDE_1).automatic()){
-						vecs[5] = getCoords(CylFace.SEG_SIDE_1, vecs[5]);
+						vecs[5] = gets(CylFace.SEG_SIDE_1, vecs[5]);
 					}
 				}
 			}
@@ -302,7 +302,7 @@ public class CylinderWrapper extends PolygonWrapper {
 		return bools[i] || cuv.get(CylFace.values()[i]).absolute();
 	}
 	
-	private float[][] getCoords(Face face, float[][] def){
+	private float[][] gets(Face face, float[][] def){
 		UVCoords coords = cuv.get(face);
 		float[] arr = coords.value();
 		float[][] res = null;
@@ -329,7 +329,7 @@ public class CylinderWrapper extends PolygonWrapper {
 	}
 
 	public boolean usesTopRotation(){
-		return toprot.xCoord != 0f || toprot.yCoord != 0f || toprot.zCoord != 0f;
+		return toprot.x != 0f || toprot.y != 0f || toprot.z != 0f;
 	}
 
 	@Override
@@ -371,12 +371,12 @@ public class CylinderWrapper extends PolygonWrapper {
 	/*public Vec3f getTopOffForDir(float val){
 		Vec3f vec = new Vec3f();
 		switch(direction){
-			case 0: vec.zCoord -= val; break;
-			case 1: vec.zCoord += val; break;
-			case 2: vec.xCoord += val; break;
-			case 3: vec.xCoord -= val; break;
-			case 4: vec.yCoord -= val; break;
-			case 5: vec.yCoord += val; break;
+			case 0: vec.z -= val; break;
+			case 1: vec.z += val; break;
+			case 2: vec.x += val; break;
+			case 3: vec.x -= val; break;
+			case 4: vec.y -= val; break;
+			case 5: vec.y += val; break;
 		}
 		return vec;
 	}*/

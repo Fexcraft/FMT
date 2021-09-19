@@ -109,9 +109,9 @@ public class TCNEXImporter extends ExImPorter {
             	matcher = rotation.matcher(line);
             	if(matcher.matches()){
             		TemporaryPolygon poly = get(matcher.group(1), polis);
-            		poly.wrapper.rot.xCoord = (float)Math.toDegrees(parseF(matcher.group(2)));
-            		poly.wrapper.rot.xCoord = (float)Math.toDegrees(parseF(matcher.group(3)));
-            		poly.wrapper.rot.xCoord = (float)Math.toDegrees(parseF(matcher.group(4)));
+            		poly.wrapper.rot.x = (float)Math.toDegrees(parseF(matcher.group(2)));
+            		poly.wrapper.rot.x = (float)Math.toDegrees(parseF(matcher.group(3)));
+            		poly.wrapper.rot.x = (float)Math.toDegrees(parseF(matcher.group(4)));
             		continue;
             	}
             }

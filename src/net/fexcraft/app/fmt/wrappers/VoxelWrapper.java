@@ -58,13 +58,13 @@ public class VoxelWrapper extends PolygonWrapper {
 				@Override public RGB getColor(int i){ return super.getColor(i % 6); }
 				@Override public String toString(){ return "VoxelShape"; }
 			}.addColorIndexedVoxelShape(segx, segy, segz, icontent, colors)
-				.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
-				.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
+				.setRotationPoint(pos.x, pos.y, pos.z)
+				.setRotationAngle(rot.x, rot.y, rot.z);
 		}
 		return new ModelRendererTurbo(null, textureX, textureY, compound.tx(getTurboList()), compound.ty(getTurboList())){
 			@Override public RGB getColor(int i){ return super.getColor(i % 6); }
 			@Override public String toString(){ return "VoxelShape"; }
-		}.addVoxelShape(segx, segy, segz, content).setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord).setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
+		}.addVoxelShape(segx, segy, segz, content).setRotationPoint(pos.x, pos.y, pos.z).setRotationAngle(rot.x, rot.y, rot.z);
 	}
 
 	@Override
@@ -121,7 +121,7 @@ public class VoxelWrapper extends PolygonWrapper {
 
 	@Override
 	public float[][][] newTexturePosition(boolean include_offsets, boolean exclude_detached){
-		/*float tx = 0 , ty = 0, w = size.xCoord, h = size.yCoord, d = size.zCoord;
+		/*float tx = 0 , ty = 0, w = size.x, h = size.y, d = size.z;
 		float[][][] vecs = new float[6][][];
 		vecs[0] = new float[][]{
 			new float[]{ tx + d + w, ty + d },

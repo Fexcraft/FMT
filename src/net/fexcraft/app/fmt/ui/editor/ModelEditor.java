@@ -231,17 +231,17 @@ public class ModelEditor extends EditorBase {
 		float y = (full ? pos_y : poss_y).getValue();
 		float z = (full ? pos_z : poss_z).getValue();
 		if(FMTB.MODEL.pos == null) FMTB.MODEL.pos = new Vec3f(0, 0, 0);
-		FMTB.MODEL.pos.xCoord = full ? x : x * Static.sixteenth;
-		FMTB.MODEL.pos.yCoord = full ? y : y * Static.sixteenth;
-		FMTB.MODEL.pos.zCoord = full ? z : z * Static.sixteenth;
+		FMTB.MODEL.pos.x = full ? x : x * Static.sixteenth;
+		FMTB.MODEL.pos.y = full ? y : y * Static.sixteenth;
+		FMTB.MODEL.pos.z = full ? z : z * Static.sixteenth;
 	}
 
 	private void updateModelRot(){
 		float x = rot_x.getValue(), y = rot_y.getValue(), z = rot_z.getValue();
 		if(FMTB.MODEL.rot == null) FMTB.MODEL.rot = new Vec3f(0, 0, 0);
-		FMTB.MODEL.rot.xCoord = x;
-		FMTB.MODEL.rot.yCoord = y;
-		FMTB.MODEL.rot.zCoord = z;
+		FMTB.MODEL.rot.x = x;
+		FMTB.MODEL.rot.y = y;
+		FMTB.MODEL.rot.z = z;
 	}
 
 	private void updateModelTexSize(SelectBoxChangeSelectionEvent<Float> event, Boolean bool){

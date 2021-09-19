@@ -257,7 +257,7 @@ public class SaveLoad {
 		obj.addProperty("texture_size_y", compound.ty(null));
 		//obj.addProperty("texture_scale", compound.textureScale);
 		if(!export && compound.opacity < 1f) obj.addProperty("opacity", compound.opacity);
-		if(compound.scale != null && compound.scale.xCoord != 1f) obj.addProperty("scale", compound.scale.xCoord);
+		if(compound.scale != null && compound.scale.x != 1f) obj.addProperty("scale", compound.scale.x);
 		JsonArray creators = new JsonArray();
 		if(compound.getAuthors().isEmpty()){
 			if(SessionHandler.isLoggedIn()) creators.add(SessionHandler.getUserName());
@@ -305,9 +305,9 @@ public class SaveLoad {
 					//group.addProperty("texture_scale", list.textureS);
 				}
 				if(list.exportoffset != null){
-					group.addProperty("export_offset_x", list.exportoffset.xCoord);
-					group.addProperty("export_offset_y", list.exportoffset.yCoord);
-					group.addProperty("export_offset_z", list.exportoffset.zCoord);
+					group.addProperty("export_offset_x", list.exportoffset.x);
+					group.addProperty("export_offset_y", list.exportoffset.y);
+					group.addProperty("export_offset_z", list.exportoffset.z);
 				}
 				if(!list.animations.isEmpty()){
 					JsonArray animations = new JsonArray();
@@ -339,20 +339,20 @@ public class SaveLoad {
 		obj.add("groups", model);
 		if(!export){
 			JsonArray array = new JsonArray();
-			array.add(FMTB.ggr.pos.xCoord);
-			array.add(FMTB.ggr.pos.yCoord);
-			array.add(FMTB.ggr.pos.zCoord);
+			array.add(FMTB.ggr.pos.x);
+			array.add(FMTB.ggr.pos.y);
+			array.add(FMTB.ggr.pos.z);
 			obj.add("camera_pos", array);
 			array = new JsonArray();
-			array.add(FMTB.ggr.rotation.xCoord);
-			array.add(FMTB.ggr.rotation.yCoord);
-			array.add(FMTB.ggr.rotation.zCoord);
+			array.add(FMTB.ggr.rotation.x);
+			array.add(FMTB.ggr.rotation.y);
+			array.add(FMTB.ggr.rotation.z);
 			obj.add("camera_rot", array);
 			obj.addProperty("camera_orbit_distance", FMTB.ggr.distance);
 			array = new JsonArray();
-			array.add(FMTB.ggr.orbit.xCoord);
-			array.add(FMTB.ggr.orbit.yCoord);
-			array.add(FMTB.ggr.orbit.zCoord);
+			array.add(FMTB.ggr.orbit.x);
+			array.add(FMTB.ggr.orbit.y);
+			array.add(FMTB.ggr.orbit.z);
 			obj.add("camera_orbit", array);
 		}
 		if(!HelperCollector.LOADED.isEmpty() && !export){
@@ -363,19 +363,19 @@ public class SaveLoad {
 				jsn.addProperty("name", group.name);
 				jsn.addProperty("texture", group.helpertex);
 				if(group.rot != null){
-					jsn.addProperty("rot_x", group.rot.xCoord);
-					jsn.addProperty("rot_y", group.rot.yCoord);
-					jsn.addProperty("rot_z", group.rot.zCoord);
+					jsn.addProperty("rot_x", group.rot.x);
+					jsn.addProperty("rot_y", group.rot.y);
+					jsn.addProperty("rot_z", group.rot.z);
 				}
 				if(group.pos != null){
-					jsn.addProperty("pos_x", group.pos.xCoord);
-					jsn.addProperty("pos_y", group.pos.yCoord);
-					jsn.addProperty("pos_z", group.pos.zCoord);
+					jsn.addProperty("pos_x", group.pos.x);
+					jsn.addProperty("pos_y", group.pos.y);
+					jsn.addProperty("pos_z", group.pos.z);
 				}
 				if(group.scale != null){
-					jsn.addProperty("scale_x", group.scale.xCoord);
-					jsn.addProperty("scale_y", group.scale.yCoord);
-					jsn.addProperty("scale_z", group.scale.zCoord);
+					jsn.addProperty("scale_x", group.scale.x);
+					jsn.addProperty("scale_y", group.scale.y);
+					jsn.addProperty("scale_z", group.scale.z);
 				}
 				if(group.opacity < 1f){
 					jsn.addProperty("opacity", group.opacity);
@@ -471,9 +471,9 @@ public class SaveLoad {
 				}
 				if(group.has("export_offset_x") || group.has("export_offset_y") || group.has("export_offset_z")){
 					list.exportoffset = new Vec3f();
-					list.exportoffset.xCoord = JsonUtil.getIfExists(obj, "export_offset_x", 0).floatValue();
-					list.exportoffset.yCoord = JsonUtil.getIfExists(obj, "export_offset_y", 0).floatValue();
-					list.exportoffset.zCoord = JsonUtil.getIfExists(obj, "export_offset_z", 0).floatValue();
+					list.exportoffset.x = JsonUtil.getIfExists(obj, "export_offset_x", 0).floatValue();
+					list.exportoffset.y = JsonUtil.getIfExists(obj, "export_offset_y", 0).floatValue();
+					list.exportoffset.z = JsonUtil.getIfExists(obj, "export_offset_z", 0).floatValue();
 				}
 				JsonArray polygons = group.get("polygons").getAsJsonArray();
 				for(JsonElement elm : polygons){
@@ -516,25 +516,25 @@ public class SaveLoad {
 		}
 		if(obj.has("camera_pos") && ggr_nopreview){
 			JsonArray pos = obj.getAsJsonArray("camera_pos");
-			FMTB.ggr.pos.xCoord = pos.get(0).getAsFloat();
-			FMTB.ggr.pos.yCoord = pos.get(1).getAsFloat();
-			FMTB.ggr.pos.zCoord = pos.get(2).getAsFloat();
+			FMTB.ggr.pos.x = pos.get(0).getAsFloat();
+			FMTB.ggr.pos.y = pos.get(1).getAsFloat();
+			FMTB.ggr.pos.z = pos.get(2).getAsFloat();
 		}
 		if(obj.has("camera_rot") && ggr_nopreview){
 			JsonArray rot = obj.getAsJsonArray("camera_rot");
-			FMTB.ggr.rotation.xCoord = rot.get(0).getAsFloat();
-			FMTB.ggr.rotation.yCoord = rot.get(1).getAsFloat();
-			FMTB.ggr.rotation.zCoord = rot.get(2).getAsFloat();
-			FMTB.ggr.orbital.setAngles(FMTB.ggr.rotation.yCoord, 0, -FMTB.ggr.rotation.xCoord);
+			FMTB.ggr.rotation.x = rot.get(0).getAsFloat();
+			FMTB.ggr.rotation.y = rot.get(1).getAsFloat();
+			FMTB.ggr.rotation.z = rot.get(2).getAsFloat();
+			FMTB.ggr.orbital.setAngles(FMTB.ggr.rotation.y, 0, -FMTB.ggr.rotation.x);
 		}
 		if(obj.has("camera_orbit_distance")){
 			FMTB.ggr.distance = obj.get("camera_orbit_distance").getAsFloat();
 		}
 		if(obj.has("camera_orbit")){
 			JsonArray rot = obj.getAsJsonArray("camera_orbit");
-			FMTB.ggr.orbit.xCoord = rot.get(0).getAsFloat();
-			FMTB.ggr.orbit.yCoord = rot.get(1).getAsFloat();
-			FMTB.ggr.orbit.zCoord = rot.get(2).getAsFloat();
+			FMTB.ggr.orbit.x = rot.get(0).getAsFloat();
+			FMTB.ggr.orbit.y = rot.get(1).getAsFloat();
+			FMTB.ggr.orbit.z = rot.get(2).getAsFloat();
 		}
 		if(obj.has("helpers")){
 			JsonArray arr = obj.get("helpers").getAsJsonArray();

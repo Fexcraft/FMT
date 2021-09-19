@@ -168,7 +168,7 @@ public class FMTB {
 		glfwShowWindow(window);
 		glfwFocusWindow(window);
 		ggr = new GGR(0, 4, 4);
-		ggr.rotation.xCoord = 45;
+		ggr.rotation.x = 45;
 		//
 		AxisRotator.setDefImpl(Axis3DL.class);
 		NO_POLYGON_SELECTED = Translator.translate("error.no_polygon_selected");

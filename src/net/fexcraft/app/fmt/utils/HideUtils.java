@@ -98,24 +98,24 @@ public class HideUtils {
 	}
 
 	private static Vec3f getNormals(TexturedPolygon poly){
-        Vec3f vec0 = new Vec3f(poly.getVertices()[1].vector.subtract(poly.getVertices()[0].vector));
-        Vec3f vec1 = new Vec3f(poly.getVertices()[1].vector.subtract(poly.getVertices()[2].vector));
-		return vec1.crossProduct(vec0).normalize();
+        Vec3f vec0 = new Vec3f(poly.getVertices()[1].vector.sub(poly.getVertices()[0].vector));
+        Vec3f vec1 = new Vec3f(poly.getVertices()[1].vector.sub(poly.getVertices()[2].vector));
+		return vec1.cross(vec0).normalize();
 	}
 
 	private static Vec3f getWorldSpace(Axis3DL axis, Vec3f vector, Vec3f pos, Vec3f rot){
-		axis.setAngles(-rot.yCoord, -rot.zCoord, -rot.xCoord);
+		axis.setAngles(-rot.y, -rot.z, -rot.x);
 		return axis.getRelativeVector(vector).add(pos);
 	}
 
 	private static String getWorldSpaceAsString(Axis3DL axis, Vec3f vector, Vec3f pos, Vec3f rot){
-		axis.setAngles(-rot.yCoord, -rot.zCoord, -rot.xCoord);
+		axis.setAngles(-rot.y, -rot.z, -rot.x);
 		vector = axis.getRelativeVector(vector).add(pos);
-		return vector.xCoord + "," + vector.yCoord + "," + vector.zCoord;
+		return vector.x + "," + vector.y + "," + vector.z;
 	}
 
 	private static String asString(Vec3f vector){
-		return vector.xCoord + "," + vector.yCoord + "," + vector.zCoord;
+		return vector.x + "," + vector.y + "," + vector.z;
 	}
 
 	private static ArrayList<PolygonWrapper> getAllPolygons(){
@@ -174,7 +174,7 @@ public class HideUtils {
 	}
 
 	private static boolean norm(String id, Vec3f normals, Object[] value){
-		float dot = normals.dotProduct((Vec3f)value[4]);
+		float dot = normals.dot((Vec3f)value[4]);
 		return dot <= -1;
 	}
 

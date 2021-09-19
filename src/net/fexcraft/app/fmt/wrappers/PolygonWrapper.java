@@ -95,9 +95,9 @@ public abstract class PolygonWrapper {
 	public float getFloat(String id, boolean x, boolean y, boolean z){
 		switch(id){
 			case "tex": return x ? textureX : y ? textureY : 0;
-			case "pos": return x ? pos.xCoord : y ? pos.yCoord : z ? pos.zCoord : 0;
-			case "off": return x ? off.xCoord : y ? off.yCoord : z ? off.zCoord : 0;
-			case "rot": return x ? rot.xCoord : y ? rot.yCoord : z ? rot.zCoord : 0;
+			case "pos": return x ? pos.x : y ? pos.y : z ? pos.z : 0;
+			case "off": return x ? off.x : y ? off.y : z ? off.z : 0;
+			case "rot": return x ? rot.x : y ? rot.y : z ? rot.z : 0;
 		}
 		if(id.startsWith("o")){
 			if(id.startsWith("oo_")){
@@ -130,19 +130,19 @@ public abstract class PolygonWrapper {
 				if(z) return false;
 			}
 			case "pos":{
-				if(x){ pos.xCoord = value; return true; }
-				if(y){ pos.yCoord = value; return true; }
-				if(z){ pos.zCoord = value; return true; }
+				if(x){ pos.x = value; return true; }
+				if(y){ pos.y = value; return true; }
+				if(z){ pos.z = value; return true; }
 			}
 			case "off":{
-				if(x){ off.xCoord = value; return true; }
-				if(y){ off.yCoord = value; return true; }
-				if(z){ off.zCoord = value; return true; }
+				if(x){ off.x = value; return true; }
+				if(y){ off.y = value; return true; }
+				if(z){ off.z = value; return true; }
 			}
 			case "rot":{
-				if(x){ rot.xCoord = value; return true; }
-				if(y){ rot.yCoord = value; return true; }
-				if(z){ rot.zCoord = value; return true; }
+				if(x){ rot.x = value; return true; }
+				if(y){ rot.y = value; return true; }
+				if(z){ rot.z = value; return true; }
 			}
 			default: break;
 		}
@@ -184,17 +184,17 @@ public abstract class PolygonWrapper {
 		obj.addProperty("texture_y", textureY);
 		obj.addProperty("type", this.getType().name().toLowerCase());
 		if(name != null) obj.addProperty("name", name);
-		if(pos.xCoord != 0f) obj.addProperty("pos_x", pos.xCoord);
-		if(pos.yCoord != 0f) obj.addProperty("pos_y", pos.yCoord);
-		if(pos.zCoord != 0f) obj.addProperty("pos_z", pos.zCoord);
+		if(pos.x != 0f) obj.addProperty("pos_x", pos.x);
+		if(pos.y != 0f) obj.addProperty("pos_y", pos.y);
+		if(pos.z != 0f) obj.addProperty("pos_z", pos.z);
 		//
-		if(off.xCoord != 0f) obj.addProperty("off_x", off.xCoord);
-		if(off.yCoord != 0f) obj.addProperty("off_y", off.yCoord);
-		if(off.zCoord != 0f) obj.addProperty("off_z", off.zCoord);
+		if(off.x != 0f) obj.addProperty("off_x", off.x);
+		if(off.y != 0f) obj.addProperty("off_y", off.y);
+		if(off.z != 0f) obj.addProperty("off_z", off.z);
 		//
-		if(rot.xCoord != 0f) obj.addProperty("rot_x", rot.xCoord);
-		if(rot.yCoord != 0f) obj.addProperty("rot_y", rot.yCoord);
-		if(rot.zCoord != 0f) obj.addProperty("rot_z", rot.zCoord);
+		if(rot.x != 0f) obj.addProperty("rot_x", rot.x);
+		if(rot.y != 0f) obj.addProperty("rot_y", rot.y);
+		if(rot.z != 0f) obj.addProperty("rot_z", rot.z);
 		if(mirror != false) obj.addProperty("mirror", true);
 		if(flip != false) obj.addProperty("flip", true);
 		if(cuv.anyCustom()){
@@ -462,12 +462,12 @@ public abstract class PolygonWrapper {
 	public abstract PolygonWrapper convertTo(ShapeType type);
 
 	public void resetPosRot(){
-		turbo.rotationPointX = lines.rotationPointX = sellines.rotationPointX = picker.rotationPointX = pos.xCoord;
-		turbo.rotationPointY = lines.rotationPointY = sellines.rotationPointY = picker.rotationPointY = pos.yCoord;
-		turbo.rotationPointZ = lines.rotationPointZ = sellines.rotationPointZ = picker.rotationPointZ = pos.zCoord;
-		turbo.rotationAngleX = lines.rotationAngleX = sellines.rotationAngleX = picker.rotationAngleX = rot.xCoord;
-		turbo.rotationAngleY = lines.rotationAngleY = sellines.rotationAngleY = picker.rotationAngleY = rot.yCoord;
-		turbo.rotationAngleZ = lines.rotationAngleZ = sellines.rotationAngleZ = picker.rotationAngleZ = rot.zCoord;
+		turbo.rotationPointX = lines.rotationPointX = sellines.rotationPointX = picker.rotationPointX = pos.x;
+		turbo.rotationPointY = lines.rotationPointY = sellines.rotationPointY = picker.rotationPointY = pos.y;
+		turbo.rotationPointZ = lines.rotationPointZ = sellines.rotationPointZ = picker.rotationPointZ = pos.z;
+		turbo.rotationAngleX = lines.rotationAngleX = sellines.rotationAngleX = picker.rotationAngleX = rot.x;
+		turbo.rotationAngleY = lines.rotationAngleY = sellines.rotationAngleY = picker.rotationAngleY = rot.y;
+		turbo.rotationAngleZ = lines.rotationAngleZ = sellines.rotationAngleZ = picker.rotationAngleZ = rot.z;
 	}
 	
 	public void addPosRot(boolean pos, float x, float y, float z){

@@ -234,21 +234,21 @@ public class TreeGroup extends Panel {
 				}
 				else{
 					PreviewEditor.helper_name.getTextState().setText(model.name.substring(model.name.indexOf('/') + 1));
-					PreviewEditor.pos_x.apply(model.pos == null ? 0 : model.pos.xCoord);
-					PreviewEditor.pos_y.apply(model.pos == null ? 0 : model.pos.yCoord);
-					PreviewEditor.pos_z.apply(model.pos == null ? 0 : model.pos.zCoord);
-					PreviewEditor.poss_x.apply(model.pos == null ? 0 : model.pos.xCoord * 16);
-					PreviewEditor.poss_y.apply(model.pos == null ? 0 : model.pos.yCoord * 16);
-					PreviewEditor.poss_z.apply(model.pos == null ? 0 : model.pos.zCoord * 16);
-					PreviewEditor.rot_x.apply(model.rot == null ? 0 : model.rot.xCoord);
-					PreviewEditor.rot_y.apply(model.rot == null ? 0 : model.rot.yCoord);
-					PreviewEditor.rot_z.apply(model.rot == null ? 0 : model.rot.zCoord);
-					PreviewEditor.size_x.apply(model.scale == null ? 1 : model.scale.xCoord);
-					PreviewEditor.size_y.apply(model.scale == null ? 1 : model.scale.yCoord);
-					PreviewEditor.size_z.apply(model.scale == null ? 1 : model.scale.zCoord);
-					PreviewEditor.size16_x.apply(model.scale == null ? 1 : model.scale.xCoord * 16);
-					PreviewEditor.size16_y.apply(model.scale == null ? 1 : model.scale.yCoord * 16);
-					PreviewEditor.size16_z.apply(model.scale == null ? 1 : model.scale.zCoord * 16);
+					PreviewEditor.pos_x.apply(model.pos == null ? 0 : model.pos.x);
+					PreviewEditor.pos_y.apply(model.pos == null ? 0 : model.pos.y);
+					PreviewEditor.pos_z.apply(model.pos == null ? 0 : model.pos.z);
+					PreviewEditor.poss_x.apply(model.pos == null ? 0 : model.pos.x * 16);
+					PreviewEditor.poss_y.apply(model.pos == null ? 0 : model.pos.y * 16);
+					PreviewEditor.poss_z.apply(model.pos == null ? 0 : model.pos.z * 16);
+					PreviewEditor.rot_x.apply(model.rot == null ? 0 : model.rot.x);
+					PreviewEditor.rot_y.apply(model.rot == null ? 0 : model.rot.y);
+					PreviewEditor.rot_z.apply(model.rot == null ? 0 : model.rot.z);
+					PreviewEditor.size_x.apply(model.scale == null ? 1 : model.scale.x);
+					PreviewEditor.size_y.apply(model.scale == null ? 1 : model.scale.y);
+					PreviewEditor.size_z.apply(model.scale == null ? 1 : model.scale.z);
+					PreviewEditor.size16_x.apply(model.scale == null ? 1 : model.scale.x * 16);
+					PreviewEditor.size16_y.apply(model.scale == null ? 1 : model.scale.y * 16);
+					PreviewEditor.size16_z.apply(model.scale == null ? 1 : model.scale.z * 16);
 				}
 				return;
 			}

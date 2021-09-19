@@ -37,7 +37,7 @@ public class FVTMExporter extends FVTMFormatBase {
 		if(modelname.equals("default") || modelname.equals("null")) modelname = null;
 		if(model_id.equals("default") || model_id.equals("null")) model_id = null;
 		modelname = validateName(modelname == null ? compound.name + "Model" : modelname);
-		scaled = settings.get("scaled").getBooleanValue() && compound.scale.xCoord != 1f;
+		scaled = settings.get("scaled").getBooleanValue() && compound.scale.x != 1f;
 		switch(settings.get("model_type").getStringValue()){
 			case "part":{
 				modelclass = "PartModel";
@@ -109,7 +109,7 @@ public class FVTMExporter extends FVTMFormatBase {
 
 	@Override
 	protected String getScale(){
-		return scaled ? "scale = " + compound.scale.xCoord + "f; " : "";
+		return scaled ? "scale = " + compound.scale.x + "f; " : "";
 	}
 
 }

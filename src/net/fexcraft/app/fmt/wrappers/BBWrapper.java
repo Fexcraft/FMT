@@ -27,9 +27,9 @@ public class BBWrapper extends BoxWrapper {
 	
 	protected ModelRendererTurbo newMRT(){
 		return new ModelRendererTurbo(null, 0, 0, 8, 8)
-			.addBox(off.xCoord, off.yCoord, off.zCoord, size.xCoord, size.yCoord, size.zCoord, 0, 1f, sides)
-			.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
-			.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord);
+			.addBox(off.x, off.y, off.z, size.x, size.y, size.z, 0, 1f, sides)
+			.setRotationPoint(pos.x, pos.y, pos.z)
+			.setRotationAngle(rot.x, rot.y, rot.z);
 	}
 
 	@Override

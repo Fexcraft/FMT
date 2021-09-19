@@ -68,9 +68,9 @@ public class MarkerExporter extends ExImPorter {
 						MarkerWrapper marker = (MarkerWrapper)markers.get(i);
 						String name = marker.name == null ? "seat" + i : marker.name();
 						JsonObject seat = new JsonObject();
-						seat.addProperty("x", marker.pos.xCoord);
-						seat.addProperty("y", -marker.pos.yCoord);
-						seat.addProperty("z", -marker.pos.zCoord);
+						seat.addProperty("x", marker.pos.x);
+						seat.addProperty("y", -marker.pos.y);
+						seat.addProperty("z", -marker.pos.z);
 						seat.addProperty("name", name);
 						array.add(seat);
 					}
@@ -168,7 +168,7 @@ public class MarkerExporter extends ExImPorter {
 
 			@Override
 			protected String polygon(TurboList list, PolygonWrapper wrapper){
-				return wrapper.name() + ": " + wrapper.pos.xCoord + ", " + wrapper.pos.yCoord + ", " + wrapper.pos.zCoord + ";\n";
+				return wrapper.name() + ": " + wrapper.pos.x + ", " + wrapper.pos.y + ", " + wrapper.pos.z + ";\n";
 			}
 
 			@Override
@@ -234,7 +234,7 @@ public class MarkerExporter extends ExImPorter {
 
 			@Override
 			protected String polygon(TurboList list, PolygonWrapper wrapper){
-				String str = String.format("\t\t\t[ %s, %s, %s, \"%s\", \"%s\"],\n", wrapper.pos.xCoord, wrapper.pos.yCoord, wrapper.pos.zCoord, list.id, wrapper.name());
+				String str = String.format("\t\t\t[ %s, %s, %s, \"%s\", \"%s\"],\n", wrapper.pos.x, wrapper.pos.y, wrapper.pos.z, list.id, wrapper.name());
 				if(groups.indexOf(list) == groups.size() - 1 && markers.indexOf(wrapper) == markers.size() - 1) str = str.substring(0, str.length() - 2) + "\n";
 				return str;
 			}
@@ -269,7 +269,7 @@ public class MarkerExporter extends ExImPorter {
 
 			@Override
 			protected String polygon(TurboList list, PolygonWrapper wrapper){
-				return String.format("\"pos\": [ %s, %s, %s],\n", nmz(wrapper.pos.zCoord / 16), nmz(-wrapper.pos.yCoord / 16), nmz(wrapper.pos.xCoord / 16));
+				return String.format("\"pos\": [ %s, %s, %s],\n", nmz(wrapper.pos.z / 16), nmz(-wrapper.pos.y / 16), nmz(wrapper.pos.x / 16));
 			}
 
 			@Override

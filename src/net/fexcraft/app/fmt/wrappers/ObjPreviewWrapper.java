@@ -47,14 +47,14 @@ public class ObjPreviewWrapper extends PolygonWrapper {
 						return super.getColor(groupidx);
 					}
 				}
-				.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
-				.setRotationAngle(rot.xCoord, rot.yCoord, rot.zCoord)
+				.setRotationPoint(pos.x, pos.y, pos.z)
+				.setRotationAngle(rot.x, rot.y, rot.z)
 				.addObj(new FileInputStream(source), group, bool, objmode);//this.source.toString()
 		}
 		catch(Exception e){
 			log(e);
 			return new ModelRendererTurbo(null, textureX, textureY, compound.tx(getTurboList()), compound.ty(getTurboList()))
-				.setRotationPoint(pos.xCoord, pos.yCoord, pos.zCoord)
+				.setRotationPoint(pos.x, pos.y, pos.z)
 				.addSphere(-8, -8, -8, 16, 16, 16, 1, 1);
 		}
 	}

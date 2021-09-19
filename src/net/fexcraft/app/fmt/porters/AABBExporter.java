@@ -49,11 +49,11 @@ public class AABBExporter extends ExImPorter {
 				for(PolygonWrapper wrapper : list){
 					if(!(wrapper instanceof BBWrapper)) continue;
 					BBWrapper box = (BBWrapper)wrapper;
-					Vec3f start = box.pos.addVector(8, box.size.yCoord, 8).scale(Static.sixteenth);
-					Vec3f end = box.pos.addVector(8 + box.size.xCoord, 0, 8 + box.size.zCoord).scale(Static.sixteenth);
+					Vec3f start = box.pos.add(8, box.size.y, 8).scale(Static.sixteenth);
+					Vec3f end = box.pos.add(8 + box.size.x, 0, 8 + box.size.z).scale(Static.sixteenth);
 					String name = wrapper.name().replace(" ", "_").replace("-", "_").toUpperCase();
 					buffer.append(String.format("AxisAlignedBB %s = new AxisAlignedBB(%sF, %sF, %sF, %sF, %sF, %sF);\n", name,
-						start.xCoord, start.yCoord == 0 ? 0 : -start.yCoord, start.zCoord, end.xCoord, end.yCoord == 0 ? 0 : -end.yCoord, end.zCoord));
+						start.x, start.y == 0 ? 0 : -start.y, start.z, end.x, end.y == 0 ? 0 : -end.y, end.z));
 				}
 			}
 		}

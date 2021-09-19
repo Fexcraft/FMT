@@ -112,7 +112,7 @@ public class OBJExporter extends ExImPorter {
 				}
 				//
 				ArrayList<TexturedPolygon> polis = wrapper.getTurboObject(0).getFaces();
-				axis.setAngles(-wrapper.rot.yCoord, -wrapper.rot.zCoord, -wrapper.rot.xCoord);
+				axis.setAngles(-wrapper.rot.y, -wrapper.rot.z, -wrapper.rot.x);
 				for(TexturedPolygon poly : polis){
 					String[] verttext = new String[poly.getVertices().length];
 					for(int i = 0; i < verttext.length; i++){
@@ -120,10 +120,10 @@ public class OBJExporter extends ExImPorter {
 						Vec3f rotated = axis.getRelativeVector(vert.vector);
 						if(bool){
 							rotated = axis1.getRelativeVector(rotated.add(wrapper.pos));
-							verttext[i] = (rotated.xCoord * scale) + " " + (rotated.yCoord * scale) + " " + (rotated.zCoord * scale);
+							verttext[i] = (rotated.x * scale) + " " + (rotated.y * scale) + " " + (rotated.z * scale);
 						}
 						else{
-							verttext[i] = ((rotated.xCoord + wrapper.pos.xCoord) * scale) + " " + ((rotated.yCoord + wrapper.pos.yCoord) * scale) + " " + ((rotated.zCoord + wrapper.pos.zCoord) * scale);
+							verttext[i] = ((rotated.x + wrapper.pos.x) * scale) + " " + ((rotated.y + wrapper.pos.y) * scale) + " " + ((rotated.z + wrapper.pos.z) * scale);
 						}
 						if(!index || !indices.containsKey(verttext[i])){
 							buffer.append("v " + verttext[i] + "\n");
@@ -138,15 +138,15 @@ public class OBJExporter extends ExImPorter {
 						else buffer.append("vt " + vert.textureX + " " + vert.textureY + "\n");
 					}
 					if(nor){
-				        Vec3f vec0 = new Vec3f(poly.getVertices()[1].vector.subtract(poly.getVertices()[0].vector));
-				        Vec3f vec1 = new Vec3f(poly.getVertices()[1].vector.subtract(poly.getVertices()[2].vector));
-				        Vec3f vec2 = vec1.crossProduct(vec0).normalize();
+				        Vec3f vec0 = new Vec3f(poly.getVertices()[1].vector.sub(poly.getVertices()[0].vector));
+				        Vec3f vec1 = new Vec3f(poly.getVertices()[1].vector.sub(poly.getVertices()[2].vector));
+				        Vec3f vec2 = vec1.cross(vec0).normalize();
 				        if(inn){
-				        	vec2.xCoord *= -1;
-				        	vec2.yCoord *= -1;
-				        	vec2.zCoord *= -1;
+				        	vec2.x *= -1;
+				        	vec2.y *= -1;
+				        	vec2.z *= -1;
 				        }
-						buffer.append("vn " + vec2.xCoord + " " + vec2.yCoord + " " + vec2.zCoord + "\n");
+						buffer.append("vn " + vec2.x + " " + vec2.y + " " + vec2.z + "\n");
 						norid++;
 					}
 					buffer.append("f");
