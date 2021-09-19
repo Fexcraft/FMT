@@ -140,13 +140,19 @@ public class FMFExporter extends ExImPorter {
 							UVCoords coord = wrapper.cuv.get((box ? BoxFace.values() : CylFace.values())[i]);
 							if(coord.absolute()) detached[i] = true;
 							if(coord.automatic()) continue;
-							int l = coord.length();
 							stream.write(PCU);
 							stream.write(i);
-							stream.write(l);
+							stream.write(coord.length());
 							writeFloat(stream, coord.value());
 						}
-						writeBooleans(stream, PDU, detached);
+						boolean any = false;
+						for(boolean bool : detached){
+							if(bool){
+								any = true;
+								break;
+							}
+						}
+						if(any) writeBooleans(stream, PDU, detached);
 					}
 					stream.write(0);
 				}
@@ -232,8 +238,7 @@ public class FMFExporter extends ExImPorter {
 		if(floats.length == 0) return;
 		ByteBuffer buffer = ByteBuffer.allocate(4 * floats.length);
 		for(float i : floats) buffer.putFloat(i);
-		byte[] bytes = buffer.array();
-		stream.write(bytes);
+		stream.write(buffer.array());
 	}
 
 	@Override
