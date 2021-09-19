@@ -17,6 +17,7 @@ import java.util.zip.ZipFile;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.utils.Setting;
+import net.fexcraft.app.fmt.utils.texture.Texture;
 import net.fexcraft.app.fmt.utils.texture.TextureGroup;
 import net.fexcraft.app.fmt.utils.texture.TextureManager;
 import net.fexcraft.app.fmt.wrappers.BoxWrapper;
@@ -168,9 +169,34 @@ public class MTBImporter extends ExImPorter {
 			stream.close();
 			if(loadtex){
 				try{
-					TextureManager.loadTextureFromZip(zip.getInputStream(zip.getEntry("Model.png")), "group-default", false, true);
-					TextureManager.addGroup(new TextureGroup("default", "group-default"));
-					compound.setTexture(TextureManager.getGroup("default"));
+					if(zip.getEntry("Model.png") == null){
+						log("No Texture found in MTB, skipping texture loading.");
+						compound.setTexture(null);
+					}
+					else{
+						TextureManager.loadTextureFromZip(zip.getInputStream(zip.getEntry("Model.png")), "group-default", false, true);
+						Texture tex = TextureManager.getTexture("group-default", true);
+						boolean empty = true;
+						byte[] bts;
+						for(int x = 0; x < tex.getWidth(); x++){
+							if(!empty) break;
+							for(int y = 0; y < tex.getWidth(); y++){
+								bts = tex.get(x, y);
+								if(bts[0] > 0 || bts[1] > 0 || bts[2] > 0){
+									empty = false;
+									break;
+								}
+							}
+						}
+						if(!empty){
+							TextureManager.addGroup(new TextureGroup("default", "group-default"));
+							compound.setTexture(TextureManager.getGroup("default"));
+						}
+						else{
+							log("Texture in MTB is blank, not creating a group.");
+							TextureManager.removeTexture("group-default");
+						}
+					}
 				}
 				catch(Exception e){
 					log(e);
