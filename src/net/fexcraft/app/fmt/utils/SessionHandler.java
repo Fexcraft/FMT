@@ -11,6 +11,7 @@ import com.google.gson.JsonObject;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.lib.common.json.JsonUtil;
 import net.fexcraft.lib.common.utils.HttpUtil;
+import net.fexcraft.lib.common.utils.HttpsUtil;
 
 public class SessionHandler {
 	
@@ -83,20 +84,19 @@ public class SessionHandler {
 	}
 	
 	private static String[] getCookieArr(){
-		return sessionid == null ? null : new String[]{ "PHPSESSID=" + sessionid };
+		return sessionid == null ? null : new String[]{ "JSESSIONID=" + sessionid };
 	}
 	
 	public static String tryLogin(Consumer<String> cons){
 		String response;
 		try{
-			//TODO http :: find solution with the certs javax can't process
-			JsonObject obj = HttpUtil.request("http://fexcraft.net/session/api", "r=login&m=" + usermail + "&p=" + decrypt(), getCookieArr());
+			JsonObject obj = HttpsUtil.request("https://fexcraft.net/session/api", "r=login&m=" + usermail + "&p=" + decrypt(), getCookieArr());
 			if(obj == null){
 				log(response = "Invalid/Empty login response, aborting.");
 				return response;
 			}
-			if(obj.has("cookies") && obj.get("cookies").getAsJsonObject().has("PHPSESSID")){
-				sessionid = obj.get("cookies").getAsJsonObject().get("PHPSESSID").getAsString();
+			if(obj.has("cookies") && obj.get("cookies").getAsJsonObject().has("JSESSIONID")){
+				sessionid = obj.get("cookies").getAsJsonObject().get("JSESSIONID").getAsString();
 				log("Updated Session ID to: " + sessionid);
 			}
 			loggedin = obj.has("success") && obj.get("success").getAsBoolean();
