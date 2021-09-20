@@ -83,7 +83,7 @@ public class FMFExporter extends ExImPorter {
 					if(nn(wrapper.off)){
 						writeVector(stream, PF, wrapper.off);
 					}
-					if(wrapper.textureX >= 0 || wrapper.textureY >= -1){
+					if(wrapper.textureX >= 0 || wrapper.textureY >= 0){
 						writeIntegers(stream, PT, wrapper.textureX, wrapper.textureY);
 					}
 					if(group.color != null){
@@ -124,7 +124,7 @@ public class FMFExporter extends ExImPorter {
 						if(nn(cyl.topoff)){
 							writeVector(stream, PCTO, cyl.topoff);
 						}
-						if(nn(cyl.rot)){
+						if(nn(cyl.toprot)){
 							writeVector(stream, PCTR, cyl.toprot);
 						}
 						if(cyl.anySidesOff()){
@@ -139,7 +139,7 @@ public class FMFExporter extends ExImPorter {
 						for(int i = 0; i < detached.length; i++){
 							UVCoords coord = wrapper.cuv.get((box ? BoxFace.values() : CylFace.values())[i]);
 							if(coord.absolute()) detached[i] = true;
-							if(coord.automatic()) continue;
+							if(coord.automatic() || !wrapper.isFaceActive(coord.face())) continue;
 							stream.write(PCU);
 							stream.write(i);
 							stream.write(coord.length());
@@ -206,18 +206,16 @@ public class FMFExporter extends ExImPorter {
 		if(ints.length == 0) return;
 		ByteBuffer buffer = ByteBuffer.allocate(4 * ints.length);
 		for(int i : ints) buffer.putInt(i);
-		byte[] bytes = buffer.array();
 		stream.write(code);
-		stream.write(bytes);
+		stream.write(buffer.array());
 	}
 
 	private void writeFloats(FileOutputStream stream, int code, float... flts) throws IOException {
 		if(flts.length == 0) return;
 		ByteBuffer buffer = ByteBuffer.allocate(4 * flts.length);
 		for(float f : flts) buffer.putFloat(f);
-		byte[] bytes = buffer.array();
 		stream.write(code);
-		stream.write(bytes);
+		stream.write(buffer.array());
 	}
 
 	private void writeBooleans(FileOutputStream stream, int code, boolean... bools) throws IOException {
@@ -237,7 +235,7 @@ public class FMFExporter extends ExImPorter {
 	private void writeFloat(FileOutputStream stream, float... floats) throws IOException {
 		if(floats.length == 0) return;
 		ByteBuffer buffer = ByteBuffer.allocate(4 * floats.length);
-		for(float i : floats) buffer.putFloat(i);
+		for(float f : floats) buffer.putFloat(f);
 		stream.write(buffer.array());
 	}
 
