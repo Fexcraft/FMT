@@ -14,6 +14,7 @@ import java.util.Map;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
+import net.fexcraft.app.fmt.utils.Animator.Animation;
 import net.fexcraft.app.fmt.utils.Axis3DL;
 import net.fexcraft.app.fmt.utils.Setting;
 import net.fexcraft.app.fmt.utils.Settings;
@@ -83,6 +84,17 @@ public class OBJExporter extends ExImPorter {
 		buffer.append("# TextureSizeX: " + compound.tx(null) + "\n");
 		buffer.append("# TextureSizeY: " + compound.ty(null) + "\n");
 		buffer.append("# FlipAxes: " + bool + "\n\n");
+		boolean anyprog = false;
+		for(TurboList group : compound.getGroups()){
+			for(Animation anim : group.animations){
+				String string = anim.getExportString("obj");
+				if(string != null && !string.equals("")){
+					buffer.append("# Program: " + string + "\n");
+					anyprog = true;
+				}
+			}
+		}
+		if(anyprog) buffer.append("\n");
 		Axis3DL axis, axis1 = null;
 		if(bool){
 			float yaw = settings.get("rotate_y").getFloatValue();

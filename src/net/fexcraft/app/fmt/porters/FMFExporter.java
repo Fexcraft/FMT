@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
+import net.fexcraft.app.fmt.utils.Animator.Animation;
 import net.fexcraft.app.fmt.utils.Setting;
 import net.fexcraft.app.fmt.wrappers.BoxWrapper;
 import net.fexcraft.app.fmt.wrappers.CylinderWrapper;
@@ -158,6 +159,23 @@ public class FMFExporter extends ExImPorter {
 				}
 				stream.write(0);
 			}
+			//
+			ArrayList<String> programs = new ArrayList<>();
+			for(TurboList group : compound.getGroups()){
+				for(Animation anim : group.animations){
+					String string = anim.getExportString("fmf");
+					if(string != null && !string.equals("")){
+						programs.add(string);
+					}
+				}
+			}
+			if(programs.size() > 0){
+				write(stream, 6, "Programs");
+				for(String string : programs){
+					write(stream, 7, string);
+				}
+			}
+			//
 			stream.write(0);
 			/*stream.close();
 			FileInputStream in = new FileInputStream(file);

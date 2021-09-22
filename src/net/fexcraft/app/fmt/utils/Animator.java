@@ -29,8 +29,9 @@ public class Animator {
 			new Setting(Type.FLOAT, "x_min",-1f), new Setting(Type.FLOAT, "y_min", -1f), new Setting(Type.FLOAT, "z_min", -1f),
 			new Setting(Type.FLOAT, "x_max", 1f), new Setting(Type.FLOAT, "y_max", 1f), new Setting(Type.FLOAT, "z_max", 1f),
 			new Setting(Type.BOOLEAN, "loop", true), new Setting(Type.BOOLEAN, "opposite_on_end", false),
-			new Setting(Type.STRING, "fvtm:attr", "")
+			new Setting(Type.STRING, "fvtm:attr", ""), new Setting(Type.BOOLEAN, "fvtm:boolean_type_attr", true)
 		)));
+		nani.add(new Custom("custom", null, Arrays.asList(new Setting(Type.STRING, "fvtm:prog", "enter here program id and parameters (if required)") )));
 		nani.add(new Title("# Generic FVTM", null, null));
 		nani.add(new Generic("fvtm:rgb_primary", "DefaultPrograms.RGB_PRIMARY", null, null));
 		nani.add(new Generic("fvtm:rgb_primary", "DefaultPrograms.RGB_PRIMARY", null, null));
@@ -167,7 +168,7 @@ public class Animator {
 
 		@Override
 		public String getExportString(String modto){
-			if(!modto.equals("fvtm")) return "\"Invalid Mod.\"";
+			if(!modto.equals("fvtm") && !modto.equals("fmf") && !modto.equals("obj")) return "invalid_mod";
 			String string = "new DefaultPrograms.AttributeRotator(\"%s\", %s, %sf, %sf, %sf, %s, %sf)";
 			int axis = x.directFloat() != 0f ? 0 : y.directFloat() != 0f ? 1 : z.directFloat() != 0f ? 2 : 3;
 			float min = 0, max = 0, step = 0, defrot = 0;
@@ -189,7 +190,16 @@ public class Animator {
 				}
 				default: return "\"Could not find applicable axis.\"";
 			}
-			return String.format(string, get("fvtm:attr"), get("fvtm:boolean_type_attr"), min, max, step, axis, defrot);
+			if(modto.equals("fmf") || modto.equals("obj")){
+				String attr = get("fvtm:attr").getStringValue();
+				String export = group.id + " ";
+				export += "fvtm:attribute_rotator ";
+				export += (attr.length() == 0 ? "null" : attr) + " ";
+				export += get("fvtm:boolean_type_attr") + " ";
+				export += min + " " + max + " " + step + " " + axis + " " + defrot;
+				return export;
+			}
+			else return String.format(string, get("fvtm:attr"), get("fvtm:boolean_type_attr"), min, max, step, axis, defrot);
 		}
 		
 	}
@@ -257,7 +267,69 @@ public class Animator {
 
 		@Override
 		public String getExportString(String modto){
-			return "\"//TODO\"";
+			if(!modto.equals("fvtm") && !modto.equals("fmf") && !modto.equals("obj")) return "invalid_mod";
+			String string = "new DefaultPrograms.AttributeTranslator(\"%s\", %s, %sf, %sf, %sf, %s, %sf)";
+			int axis = x.directFloat() != 0f ? 0 : y.directFloat() != 0f ? 1 : z.directFloat() != 0f ? 2 : 3;
+			float min = 0, max = 0, step = 0;
+			switch(axis){
+				case 0:{
+					min = get("x_min").directFloat(); max = get("x_max").directFloat(); step = get("x").directFloat();
+					break;
+				}
+				case 1:{
+					min = get("y_min").directFloat(); max = get("y_max").directFloat(); step = get("y").directFloat();
+					break;
+				}
+				case 2:{
+					min = get("z_min").directFloat(); max = get("z_max").directFloat(); step = get("z").directFloat();
+					break;
+				}
+				default: return "\"Could not find applicable axis.\"";
+			}
+			if(modto.equals("fmf") || modto.equals("obj")){
+				String attr = get("fvtm:attr").getStringValue();
+				String export = group.id + " ";
+				export += "fvtm:attribute_translator ";
+				export += (attr.length() == 0 ? "null" : attr) + " ";
+				export += get("fvtm:boolean_type_attr") + " ";
+				export += min + " " + max + " " + step + " " + axis;
+				return export;
+			}
+			else return String.format(string, get("fvtm:attr"), get("fvtm:boolean_type_attr"), min, max, step, axis);
+		}
+		
+	}
+	
+	public static class Custom extends Animation {
+		
+		private Setting custom;
+
+		public Custom(String id, TurboList group, Collection<Setting> settings){
+			super(id, group, settings);
+			custom = get("fvtm:prog");
+		}
+
+		@Override
+		public void pre(TurboList list){}
+
+		@Override
+		public void post(TurboList list){}
+
+		@Override
+		protected Animation COPY(String id, TurboList group, Collection<Setting> settings){
+			return new Custom(id, group, settings);
+		}
+
+		@Override
+		public String getButtonString(){
+			int l = custom.toString().length();
+			return l == 0 ? "Custom Program Data" : "CPD: " + (l > 20 ? custom.toString().substring(0, 20) : custom.toString());
+		}
+
+		@Override
+		public String getExportString(String modto){
+			if(!modto.equals("fvtm") && !modto.equals("fmf") && !modto.equals("obj")) return "invalid_mod";
+			return group.id + " " + get("fvtm:prog").toString();
 		}
 		
 	}
@@ -292,7 +364,9 @@ public class Animator {
 
 		@Override
 		public String getExportString(String modto){
-			if(!modto.equals("fvtm")) return "null"; return fvtmid;
+			if(modto.equals("fvtm")) return fvtmid;
+			if(modto.equals("fmf") || modto.equals("obj")) return id;
+			return "null";
 		}
 		
 	}
