@@ -130,7 +130,7 @@ public class FMFExporter extends ExImPorter {
 						if(cyl.anySidesOff()){
 							writeBooleans(stream, PDF, cyl.bools);
 						}
-						if(cyl.seg_width != 0f || cyl.seg_height != 0f){
+						if(cyl.seg_width > 0f || cyl.seg_height > 0f){
 							writeFloats(stream, PCRT, cyl.seg_width, cyl.seg_height);
 						}
 					}
