@@ -82,6 +82,7 @@ import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.AxisRotator;
 import net.fexcraft.lib.common.math.RGB;
+import net.fexcraft.lib.common.math.TexturedPolygon;
 import net.fexcraft.lib.common.math.Time;
 import net.fexcraft.lib.common.utils.HttpUtil;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
@@ -152,6 +153,7 @@ public class FMTB {
 		Settings.load();
 		Translator.init();
 		timer.init();
+		TexturedPolygon.TRIANGULATED_QUADS = Settings.triangles.getBooleanValue();
 		glfwSetErrorCallback(errorCallback = GLFWErrorCallback.createPrint(System.err));
 		if(!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW.");
 		glfwWindowHint(GLFW_RESIZABLE, GL11.GL_TRUE);

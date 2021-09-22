@@ -11,6 +11,7 @@ import net.fexcraft.app.fmt.ui.DialogBox;
 import net.fexcraft.app.fmt.ui.editor.GeneralEditor;
 import net.fexcraft.app.fmt.ui.field.NumberField;
 import net.fexcraft.lib.common.math.RGB;
+import net.fexcraft.lib.common.math.TexturedPolygon;
 
 public class Setting {
 	
@@ -119,6 +120,9 @@ public class Setting {
 						this.setValue(false);
 					}, "compound.rescale.warning2");
 				}
+			}
+			if(this.id.equals("triangulation")){
+				TexturedPolygon.TRIANGULATED_QUADS = this.getBooleanValue();
 			}
 			return (boolean)value;
 		} else return false;
