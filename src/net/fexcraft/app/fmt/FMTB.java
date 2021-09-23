@@ -297,6 +297,7 @@ public class FMTB {
 		renderer.initialize();
 		Settings.updateTheme();
 		ModelEditor.creators.refresh();
+		ModelEditor.values.refresh();
 		//
 		HelperCollector.reload(loadedold);
 		SessionHandler.checkIfLoggedIn(true, true);
@@ -753,6 +754,7 @@ public class FMTB {
 		Trees.helper.reOrderGroups();
 		Editors.general.refreshGroups();
 		ModelEditor.creators.refresh();
+		ModelEditor.values.refresh();
 	}
 
 	//https://mkyong.com/java/open-browser-in-java-windows-or-linux/

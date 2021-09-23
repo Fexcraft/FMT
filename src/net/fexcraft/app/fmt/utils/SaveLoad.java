@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -395,6 +396,24 @@ public class SaveLoad {
 			}
 			obj.add("helpers", array);
 		}
+		if(!export){
+			if(compound.values.size() > 0){
+				JsonObject values = new JsonObject();
+				for(Entry<String, String> entry : compound.values.entrySet()){
+					values.addProperty(entry.getKey(), entry.getValue());
+				}
+				obj.add("export_values", values);
+			}
+			if(compound.arrvalues.size() > 0){
+				JsonObject values = new JsonObject();
+				for(Entry<String, ArrayList<String>> entry : compound.arrvalues.entrySet()){
+					JsonArray array = new JsonArray();
+					for(String value : entry.getValue()) array.add(value);
+					values.add(entry.getKey(), array);
+				}
+				obj.add("export_array_values", values);
+			}
+		}
 		return obj;
 	}
 
@@ -589,6 +608,20 @@ public class SaveLoad {
 				catch(Exception e){
 					log(e);
 				}
+			}
+		}
+		if(obj.has("export_values")){
+			JsonObject exv = obj.get("export_values").getAsJsonObject();
+			for(Entry<String, JsonElement> entry : exv.entrySet()){
+				compound.values.put(entry.getKey(), entry.getValue().getAsString());
+			}
+		}
+		if(obj.has("export_array_values")){
+			JsonObject exv = obj.get("export_array_values").getAsJsonObject();
+			for(Entry<String, JsonElement> entry : exv.entrySet()){
+				ArrayList<String> list = new ArrayList<>();
+				for(JsonElement elm : entry.getValue().getAsJsonArray()) list.add(elm.getAsString());
+				compound.arrvalues.put(entry.getKey(), list);
 			}
 		}
 		return compound;

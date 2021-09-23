@@ -2,6 +2,7 @@ package net.fexcraft.app.fmt.ui.editor;
 
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -18,17 +19,14 @@ import org.liquidengine.legui.input.Mouse.MouseButton;
 import org.liquidengine.legui.listener.MouseClickEventListener;
 
 import net.fexcraft.app.fmt.FMTB;
-import net.fexcraft.app.fmt.ui.SettingsBox;
 import net.fexcraft.app.fmt.ui.UserInterfaceUtils;
 import net.fexcraft.app.fmt.ui.field.NumberField;
 import net.fexcraft.app.fmt.ui.field.TextField;
 import net.fexcraft.app.fmt.ui.tree.TreeIcon;
-import net.fexcraft.app.fmt.utils.Animator.Animation;
 import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.app.fmt.utils.texture.TextureManager;
 import net.fexcraft.app.fmt.utils.texture.TextureUpdate;
-import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.Vec3f;
 
@@ -41,6 +39,7 @@ public class ModelEditor extends EditorBase {
 	public static SelectBox<Float> m_tex_x, m_tex_y;//, m_tex_s;
 	public static SelectBox<String> model_texture;
 	public static AuthorsEditorWidget creators;
+	public static ValuesEditorWidget values;
 	private String name_cache;
 
 	public ModelEditor(){
@@ -107,6 +106,11 @@ public class ModelEditor extends EditorBase {
 		this.addSub(creators);
 		pass = -20;
 		//
+		values = new ValuesEditorWidget(this, translate("editor.model_group.values"), 0, 0, 0, 0);
+		values.refresh();
+		this.addSub(values);
+		pass = -20;
+		//
 		GroupEditor.updateTextureGroups();
 		reOrderWidgets();
 	}
@@ -161,10 +165,118 @@ public class ModelEditor extends EditorBase {
 					FMTB.MODEL.addAuthor(SessionHandler.getUserName(), true, false);
 				}
 			});
-			this.getChildComponents().forEach(child -> child.getStyle().setPadding(0, 50, 0, 10));
+			this.getContainer().getChildComponents().forEach(child -> child.getStyle().setPadding(0, 50, 0, 10));
 			this.getContainer().add(button1);
 			this.setSize(296, pass + 52);
 			editor.reOrderWidgets();
+		}
+
+		private void reset(){
+			this.getContainer().clearChildComponents();
+		}
+
+	}
+	
+	public static class ValuesEditorWidget extends EditorWidget {
+
+		public ValuesEditorWidget(EditorBase base, String title, int x, int y, int w, int h){
+			super(base, title, x, y, w, h);
+		}
+
+		public void refresh(){
+			reset();
+			int pass = -20;
+			for(Entry<String, String> entry : FMTB.MODEL.values.entrySet()){
+				Button button = new Button("[V] " + entry.getKey(), 3, pass += 24, 290, 20);
+				button.add(new TreeIcon((int)getSize().x - 30, 0, "group_delete", () -> {
+					FMTB.MODEL.values.remove(entry.getKey());
+				}, "delete"));
+				button.add(new TreeIcon((int)getSize().x - 50, 0, "group_edit", () -> {
+					openValueDialog(entry.getKey(), entry.getValue());
+				}, "edit"));
+				button.getStyle().setHorizontalAlign(HorizontalAlign.LEFT);
+				this.getContainer().add(button);
+			}
+			for(Entry<String, ArrayList<String>> entry : FMTB.MODEL.arrvalues.entrySet()){
+				for(int i = 0; i < entry.getValue().size(); i++){
+					int j = i;
+					Button button = new Button("[A] " + entry.getKey() + " / " + j, 3, pass += 24, 290, 20);
+					button.add(new TreeIcon((int)getSize().x - 30, 0, "group_delete", () -> {
+						FMTB.MODEL.arrvalues.get(entry.getKey()).remove(j);
+						refresh();
+					}, "delete"));
+					button.add(new TreeIcon((int)getSize().x - 50, 0, "group_edit", () -> {
+						openArrayValueDialog(entry.getKey(), j);
+					}, "edit"));
+					button.getStyle().setHorizontalAlign(HorizontalAlign.LEFT);
+					this.getContainer().add(button);
+				}
+			}
+			Button button0 = new Button(Translator.translate("editor.model_group.values.add"), 3, pass += 24, 290, 20);
+			button0.getStyle().setHorizontalAlign(HorizontalAlign.LEFT);
+			button0.getListenerMap().addListener(MouseClickEvent.class, listener -> {
+				if(listener.getAction() != CLICK || listener.getButton() != MouseButton.MOUSE_BUTTON_LEFT) return;
+				openValueDialog(null, null);
+			});
+			this.getContainer().add(button0);
+			Button button1 = new Button(Translator.translate("editor.model_group.values.add_array"), 3, pass += 24, 290, 20);
+			button1.getStyle().setHorizontalAlign(HorizontalAlign.LEFT);
+			button1.getListenerMap().addListener(MouseClickEvent.class, listener -> {
+				if(listener.getAction() != CLICK || listener.getButton() != MouseButton.MOUSE_BUTTON_LEFT) return;
+				openArrayValueDialog(null, -1);
+			});
+			this.getContainer().add(button1);
+			this.getContainer().getChildComponents().forEach(child -> child.getStyle().setPadding(0, 50, 0, 10));
+			this.setSize(296, pass + 52);
+			editor.reOrderWidgets();
+		}
+
+		private void openArrayValueDialog(String key, int idx){
+			Dialog dialog = new Dialog(Translator.translate("editor.model_group.values.add_array.dialog"), 300, 130);
+			TextField input0 = new TextField(key == null ? "export array key" : key, 10, 10, 280, 20);
+			if(key != null) input0.setEditable(false);
+			input0.addTextInputContentChangeEventListener(lis -> UserInterfaceUtils.validateString(lis, true));
+			dialog.getContainer().add(input0);
+			TextField input1 = new TextField(idx < 0 ? "export value" : FMTB.MODEL.arrvalues.get(key).get(idx), 10, 40, 280, 20);
+			input1.addTextInputContentChangeEventListener(lis -> UserInterfaceUtils.validateString(lis, false));
+			dialog.getContainer().add(input1);
+            Button button = new Button(Translator.translate("dialogbox.button.confirm"), 10, 70, 100, 20);
+            button.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
+            	if(CLICK == e.getAction()){
+            		String valkkey = input0.getTextState().getText();
+            		if(!FMTB.MODEL.arrvalues.containsKey(valkkey)) FMTB.MODEL.arrvalues.put(valkkey, new ArrayList<>());
+            		ArrayList<String> list = FMTB.MODEL.arrvalues.get(valkkey);
+            		if(idx < 0) list.add(input1.getTextState().getText());
+            		else list.set(idx, input1.getTextState().getText());
+            		dialog.close();
+            		refresh();
+            	}
+            });
+            dialog.getContainer().add(button);
+			dialog.setResizable(false);
+			dialog.show(FMTB.frame);
+		}
+
+		private void openValueDialog(String key, String value){
+			Dialog dialog = new Dialog(Translator.translate("editor.model_group.values.add.dialog"), 300, 130);
+			TextField input0 = new TextField(key == null ? "export key" : key, 10, 10, 280, 20);
+			if(key != null) input0.setEditable(false);
+			input0.addTextInputContentChangeEventListener(lis -> UserInterfaceUtils.validateString(lis, true));
+			dialog.getContainer().add(input0);
+			TextField input1 = new TextField(value == null ? "export value" : value, 10, 40, 280, 20);
+			input1.addTextInputContentChangeEventListener(lis -> UserInterfaceUtils.validateString(lis, false));
+			dialog.getContainer().add(input1);
+            Button button = new Button(Translator.translate("dialogbox.button.confirm"), 10, 70, 100, 20);
+            button.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
+            	if(CLICK == e.getAction()){
+            		FMTB.MODEL.values.put(input0.getTextState().getText(), input1.getTextState().getText());
+            		dialog.close();
+            		refresh();
+            	}
+            });
+            dialog.getContainer().add(button);
+			dialog.setResizable(false);
+			dialog.show(FMTB.frame);
 		}
 
 		private void reset(){
@@ -177,53 +289,6 @@ public class ModelEditor extends EditorBase {
 		if(event.getNewValue().equals("none")) FMTB.MODEL.texgroup = null;
 		FMTB.MODEL.texgroup = TextureManager.getGroup(event.getNewValue());
 		FMTB.MODEL.recompile();
-	}
-
-	public static class AnimationsEditorWidget extends EditorWidget {
-
-		private TurboList group = null;
-
-		public AnimationsEditorWidget(EditorBase base, String title, int x, int y, int w, int h){
-			super(base, title, x, y, w, h);
-		}
-
-		public void refresh(TurboList list){
-			if(group != list) reset();
-			int pass = -20;
-			if(list != null){
-				for(int i = 0; i < list.animations.size(); i++){
-					Button button = new Button("[" + i + "]" + list.animations.get(i).id, 3, pass += 24, 290, 20);
-					final int j = i;
-					button.getListenerMap().addListener(MouseClickEvent.class, listener -> {
-						if(listener.getAction() != CLICK) return;
-						if(listener.getButton() == MouseButton.MOUSE_BUTTON_LEFT){
-							Animation anim = list.animations.get(j);
-							if(anim == null) return;
-							FMTB.MODEL.updateFields();
-							SettingsBox.open("[" + anim.id + "] " + translate("editor.model_group.group.animator_settings"), anim.settings.values(), false, settings -> {
-								anim.onSettingsUpdate();
-								FMTB.MODEL.updateFields();
-							});
-						}
-						else if(listener.getButton() == MouseButton.MOUSE_BUTTON_RIGHT){
-							Animation anim = list.animations.get(j);
-							anim.button.removeFromSubTree();
-							list.animations.remove(anim);
-							list.abutton.recalculateSize();
-							FMTB.MODEL.updateFields();
-						}
-					});
-					button.getStyle().setHorizontalAlign(HorizontalAlign.LEFT);
-					this.getContainer().add(button);
-				}
-			}
-			this.setSize(296, pass + 52);
-		}
-
-		private void reset(){
-			this.getContainer().clearChildComponents();
-		}
-
 	}
 
 	private void updateModelPos(boolean full){

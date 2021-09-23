@@ -71,6 +71,8 @@ public class GroupCompound {
 	public float rate = 1f;
 	public String name;
 	public TextureGroup texgroup;
+	public LinkedHashMap<String, String> values = new LinkedHashMap<>();
+	public LinkedHashMap<String, ArrayList<String>> arrvalues = new LinkedHashMap<>();
 	//
 	public static long SELECTED_POLYGONS;
 	public boolean visible = true, minimized;
