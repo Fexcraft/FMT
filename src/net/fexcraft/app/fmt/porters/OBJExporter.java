@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
@@ -95,6 +96,18 @@ public class OBJExporter extends ExImPorter {
 			}
 		}
 		if(anyprog) buffer.append("\n");
+		boolean anyval = false;
+		for(Entry<String, String> entry : compound.values.entrySet()){
+			buffer.append("# " + entry.getKey() + ": " + entry.getValue() + "\n");
+			anyval = true;
+		}
+		for(Entry<String, ArrayList<String>> entry : compound.arrvalues.entrySet()){
+			for(String string : entry.getValue()){
+				buffer.append("# " + entry.getKey() + ": " + string + "\n");
+			}
+			anyval = true;
+		}
+		if(anyval) buffer.append("\n");
 		Axis3DL axis, axis1 = null;
 		if(bool){
 			float yaw = settings.get("rotate_y").getFloatValue();
