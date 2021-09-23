@@ -10,6 +10,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.utils.Animator.Animation;
@@ -175,6 +176,21 @@ public class FMFExporter extends ExImPorter {
 					write(stream, 7, string);
 				}
 			}
+			if(compound.values.size() > 0){
+				for(Entry<String, String> entry : compound.values.entrySet()){
+					write(stream, 5, entry.getKey());
+					write(stream, 0, entry.getValue());
+				}
+			}
+			if(compound.arrvalues.size() > 0){
+				for(Entry<String, ArrayList<String>> entry : compound.arrvalues.entrySet()){
+					if(entry.getValue().size() == 0) continue;
+					write(stream, 6, entry.getKey());
+					for(String string : entry.getValue()){
+						write(stream, 7, string);
+					}
+				}
+			}
 			//
 			stream.write(0);
 			/*stream.close();
@@ -209,7 +225,7 @@ public class FMFExporter extends ExImPorter {
 	}
 
 	private void write(FileOutputStream stream, int code, String string) throws IOException {
-		stream.write(code);
+		if(code > 0) stream.write(code);
 		stream.write(string.getBytes(UTF_8));
 		stream.write(0);
 	}
