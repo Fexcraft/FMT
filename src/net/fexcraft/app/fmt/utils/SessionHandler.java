@@ -11,7 +11,6 @@ import com.google.gson.JsonObject;
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.lib.common.json.JsonUtil;
 import net.fexcraft.lib.common.utils.HttpUtil;
-import net.fexcraft.lib.common.utils.HttpsUtil;
 
 public class SessionHandler {
 	
@@ -90,7 +89,7 @@ public class SessionHandler {
 	public static String tryLogin(Consumer<String> cons){
 		String response;
 		try{
-			JsonObject obj = HttpsUtil.request("https://fexcraft.net/session/api", "r=login&m=" + usermail + "&p=" + decrypt(), getCookieArr());
+			JsonObject obj = HttpUtil.request("https://fexcraft.net/session/api", "r=login&m=" + usermail + "&p=" + decrypt(), getCookieArr());
 			if(obj == null){
 				log(response = "Invalid/Empty login response, aborting.");
 				return response;
