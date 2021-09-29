@@ -43,9 +43,9 @@ public class SwivelPointLite {
 	
 	public void update(GroupCompound compound, int mode){
 		axe.setAngles(rot.x, rot.y, rot.z);
-		GL11.glRotatef(rot.x, 1, 0, 0);
 		GL11.glRotatef(rot.y, 0, 1, 0);
 		GL11.glRotatef(rot.z, 0, 0, 1);
+		GL11.glRotatef(rot.x, 1, 0, 0);
 		if(lists.size() > 0){
 			if(mode == 0){
 				for(TurboList list : lists){
@@ -65,7 +65,7 @@ public class SwivelPointLite {
 			}
 		}
 		for(SwivelPointLite lite : subs){
-			Vec3f vec = axe.getRelativeVector(pos);
+			Vec3f vec = axe.getRelativeVector(lite.pos);
 			GL11.glPushMatrix();
 			GL11.glTranslatef(vec.x * sixteenth, vec.y * sixteenth, vec.z * sixteenth);
 			lite.update(compound, mode);
