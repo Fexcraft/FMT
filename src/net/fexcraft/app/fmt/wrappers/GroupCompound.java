@@ -1177,7 +1177,7 @@ public class GroupCompound {
 			sp.lists.clear();
 			sp.root = sp.rootid == null ? null : pivots.get(sp.rootid);
 			if(sp.root != null){
-				sp.subs.add(sp);
+				sp.root.subs.add(sp);
 				//
 				if(sp.root.root == sp){
 					sp.root.root = null;
