@@ -298,6 +298,7 @@ public class FMTB {
 		Settings.updateTheme();
 		ModelEditor.creators.refresh();
 		ModelEditor.values.refresh();
+		ModelEditor.pivots.refresh();
 		//
 		HelperCollector.reload(loadedold);
 		SessionHandler.checkIfLoggedIn(true, true);
@@ -460,8 +461,7 @@ public class FMTB {
         if(RayCoastAway.PICKING){
             if(pixelpass){
 				TextureManager.bindTexture(MODEL.getTempTex(RayCoastAway.lastsel));
-				TurboList list = RayCoastAway.lastsel.getTurboList();
-				RayCoastAway.lastsel.render(list.rotXb, list.rotYb, list.rotZb);
+				RayCoastAway.lastsel.render();
 				RayCoastAway.doTest(false, null, true);
             }
             else MODEL.render();

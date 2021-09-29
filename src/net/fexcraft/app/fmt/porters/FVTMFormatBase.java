@@ -336,8 +336,8 @@ public abstract class FVTMFormatBase extends ExImPorter {
 						buffer.append(tab2 + name + ".addProgram(" + string + ");\n");
 					}
 				}
-				if(turbo.exportoffset != null){
-					buffer.append(tab2 + name + format(".translate(%s, %s, %s);\n", null, turbo.exportoffset.x, turbo.exportoffset.y, turbo.exportoffset.z));
+				if(!turbo.exoff.isNull()){
+					buffer.append(tab2 + name + format(".translate(%s, %s, %s);\n", null, turbo.exoff.x, turbo.exoff.y, turbo.exoff.z));
 				}
 			}
 			buffer.append(tab2 + "this.groups.add(" + name + ");\n");

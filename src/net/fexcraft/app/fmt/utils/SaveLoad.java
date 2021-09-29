@@ -41,6 +41,7 @@ import net.fexcraft.app.fmt.utils.texture.TextureManager;
 import net.fexcraft.app.fmt.utils.texture.TextureUpdate;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
+import net.fexcraft.app.fmt.wrappers.SwivelPointLite;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.json.JsonUtil;
 import net.fexcraft.lib.common.math.RGB;
@@ -305,11 +306,12 @@ public class SaveLoad {
 					group.addProperty("texture_size_y", list.textureY);
 					//group.addProperty("texture_scale", list.textureS);
 				}
-				if(list.exportoffset != null){
-					group.addProperty("export_offset_x", list.exportoffset.x);
-					group.addProperty("export_offset_y", list.exportoffset.y);
-					group.addProperty("export_offset_z", list.exportoffset.z);
+				if(list.exoff.x != 0f || list.exoff.y != 0 || list.exoff.z != 0f){
+					group.addProperty("export_offset_x", list.exoff.x);
+					group.addProperty("export_offset_y", list.exoff.y);
+					group.addProperty("export_offset_z", list.exoff.z);
 				}
+				if(list.pivot_root != null) group.addProperty("pivot_root", list.pivot_root);
 				if(!list.animations.isEmpty()){
 					JsonArray animations = new JsonArray();
 					for(Animation ani : list.animations){
@@ -413,6 +415,13 @@ public class SaveLoad {
 				}
 				obj.add("export_array_values", values);
 			}
+			if(compound.pivots.size() > 0){
+				JsonObject pivots = new JsonObject();
+				for(Entry<String, SwivelPointLite> entry : compound.pivots.entrySet()){
+					pivots.add(entry.getKey(), entry.getValue().save());
+				}
+				obj.add("pivots", pivots);
+			}
 		}
 		return obj;
 	}
@@ -489,11 +498,11 @@ public class SaveLoad {
 					}
 				}
 				if(group.has("export_offset_x") || group.has("export_offset_y") || group.has("export_offset_z")){
-					list.exportoffset = new Vec3f();
-					list.exportoffset.x = JsonUtil.getIfExists(obj, "export_offset_x", 0).floatValue();
-					list.exportoffset.y = JsonUtil.getIfExists(obj, "export_offset_y", 0).floatValue();
-					list.exportoffset.z = JsonUtil.getIfExists(obj, "export_offset_z", 0).floatValue();
+					list.exoff.x = JsonUtil.getIfExists(obj, "export_offset_x", 0).floatValue();
+					list.exoff.y = JsonUtil.getIfExists(obj, "export_offset_y", 0).floatValue();
+					list.exoff.z = JsonUtil.getIfExists(obj, "export_offset_z", 0).floatValue();
 				}
+				if(group.has("pivot_root")) list.pivot_root = group.get("pivot_root").getAsString();
 				JsonArray polygons = group.get("polygons").getAsJsonArray();
 				for(JsonElement elm : polygons){
 					try{
@@ -623,6 +632,19 @@ public class SaveLoad {
 				for(JsonElement elm : entry.getValue().getAsJsonArray()) list.add(elm.getAsString());
 				compound.arrvalues.put(entry.getKey(), list);
 			}
+		}
+		if(obj.has("pivots")){
+			for(Entry<String, JsonElement> entry : obj.get("pivots").getAsJsonObject().entrySet()){
+				compound.pivots.put(entry.getKey(), new SwivelPointLite(null).load(entry.getValue().getAsJsonArray()));
+			}
+			compound.relinkPivots();
+		}
+		if(compound.pivots.size() > 0){
+			JsonObject pivots = new JsonObject();
+			for(Entry<String, SwivelPointLite> entry : compound.pivots.entrySet()){
+				pivots.add(entry.getKey(), entry.getValue().save());
+			}
+			obj.add("pivots", pivots);
 		}
 		return compound;
 	}

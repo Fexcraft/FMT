@@ -60,11 +60,11 @@ public abstract class PolygonWrapper {
 		this.clearMRT(turbo, lines, sellines, picker); this.setupMRT();
 	}
 
-	public void render(boolean rotX, boolean rotY, boolean rotZ){
+	public void render(){
 		if(visible && turbo != null) turbo.render();
 	}
 	
-	public void renderLines(boolean rotXb, boolean rotYb, boolean rotZb){
+	public void renderLines(){
 		//if(Settings.lines()) (selected ? sellines : lines).render();
 		//GL11.glDisable(GL11.GL_TEXTURE_2D);
 		if((selected || turbolist.selected) && Settings.polygonMarker()){
@@ -84,7 +84,7 @@ public abstract class PolygonWrapper {
 		//GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}
 
-	public void renderPicking(boolean rotXb, boolean rotYb, boolean rotZb){
+	public void renderPicking(){
 		if(visible && picker != null){
 			picker.render();
 		}

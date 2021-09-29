@@ -19,14 +19,15 @@ public class TurboList extends ArrayList<PolygonWrapper> {
 
 	public String id;
 	public RGB color;
-	public boolean rotXb, rotYb, rotZb;
-	public Vec3f exportoffset;
+	public Vec3f exoff = new Vec3f();
+	public Vec3f off = new Vec3f();
 	// private float rotX, rotY, rotZ, posX, posY, posZ;//FMR stuff
 	public boolean visible = true, minimized, aminimized, selected;
 	public int tempheight, textureX = 256, textureY = 256;//, textureS = 1;
 	public TextureGroup texgroup;
-	public String helpertex;
+	public String helpertex, pivot_root;
 	public ArrayList<Animation> animations = new ArrayList<>();
+	public SwivelPointLite pivotroot;
 	//
 	public TreeGroup button, abutton;
 	public SubTreeGroup pbutton;
@@ -41,19 +42,19 @@ public class TurboList extends ArrayList<PolygonWrapper> {
 		if(!visible) return;
 		if(color != null && aplcol) color.glColorApply();
 		if(Settings.animate() && animations.size() > 0) for(Animation ani : animations) ani.pre(this);
-		this.forEach(elm -> elm.render(rotXb, rotYb, rotZb));
+		this.forEach(elm -> elm.render());
 		if(Settings.animate() && animations.size() > 0) for(Animation ani : animations) ani.post(this);
 		if(color != null && aplcol) RGB.glColorReset();
 	}
 
 	public void renderLines(){
 		if(!visible) return;
-		this.forEach(elm -> elm.renderLines(rotXb, rotYb, rotZb));
+		this.forEach(elm -> elm.renderLines());
 	}
 
 	public void renderPicking(){
 		if(!visible) return;
-		this.forEach(elm -> elm.renderPicking(rotXb, rotYb, rotZb));
+		this.forEach(elm -> elm.renderPicking());
 	}
 
 	@Override

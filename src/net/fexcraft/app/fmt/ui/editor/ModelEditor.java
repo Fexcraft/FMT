@@ -27,6 +27,8 @@ import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.app.fmt.utils.texture.TextureManager;
 import net.fexcraft.app.fmt.utils.texture.TextureUpdate;
+import net.fexcraft.app.fmt.wrappers.SwivelPointLite;
+import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.Vec3f;
 
@@ -40,6 +42,7 @@ public class ModelEditor extends EditorBase {
 	public static SelectBox<String> model_texture;
 	public static AuthorsEditorWidget creators;
 	public static ValuesEditorWidget values;
+	public static SPLEditorWidget pivots;
 	private String name_cache;
 
 	public ModelEditor(){
@@ -100,6 +103,11 @@ public class ModelEditor extends EditorBase {
 		model.setSize(296, pass + 52);
 		this.addSub(model);
 		pass = -20;
+		pivots = new SPLEditorWidget(this, translate("editor.model_group.pivots"), 0, 0, 0, 0);
+		pivots.refresh();
+		this.addSub(pivots);
+		pass = -20;
+		//
 		//
 		creators = new AuthorsEditorWidget(this, translate("editor.model_group.authors"), 0, 0, 0, 0);
 		creators.refresh();
@@ -271,6 +279,98 @@ public class ModelEditor extends EditorBase {
             	if(CLICK == e.getAction()){
             		FMTB.MODEL.values.put(input0.getTextState().getText(), input1.getTextState().getText());
             		dialog.close();
+            		refresh();
+            	}
+            });
+            dialog.getContainer().add(button);
+			dialog.setResizable(false);
+			dialog.show(FMTB.frame);
+		}
+
+		private void reset(){
+			this.getContainer().clearChildComponents();
+		}
+
+	}
+	
+
+	
+	public static class SPLEditorWidget extends EditorWidget {
+
+		public SPLEditorWidget(EditorBase base, String title, int x, int y, int w, int h){
+			super(base, title, x, y, w, h);
+		}
+
+		public void refresh(){
+			reset();
+			int pass = -20;
+			for(Entry<String, SwivelPointLite> entry : FMTB.MODEL.pivots.entrySet()){
+				Button button = new Button(entry.getKey(), 3, pass += 24, 290, 20);
+				button.add(new TreeIcon((int)getSize().x - 30, 0, "group_delete", () -> {
+					FMTB.MODEL.pivots.remove(entry.getKey());
+					FMTB.MODEL.relinkPivots();
+					refresh();
+				}, "delete"));
+				button.add(new TreeIcon((int)getSize().x - 50, 0, "group_edit", () -> {
+					openSPLDialog(entry.getKey(), entry.getValue());
+				}, "rename/edit"));
+				button.getStyle().setHorizontalAlign(HorizontalAlign.LEFT);
+				this.getContainer().add(button);
+				SwivelPointLite sp = entry.getValue();
+				NumberField pox = new NumberField(4, pass += 24, 90, 20);
+				pox.setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> sp.pos(0, pox));
+				this.getContainer().add(pox);
+				NumberField poy = new NumberField(102, pass, 90, 20);
+				poy.setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> sp.pos(1, poy));
+				this.getContainer().add(poy);
+				NumberField poz = new NumberField(200, pass, 90, 20);
+				poz.setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> sp.pos(2, poz));
+				this.getContainer().add(poz);
+				NumberField rox = new NumberField(4, pass += 24, 90, 20);
+				rox.setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> sp.rot(0, rox));
+				this.getContainer().add(rox);
+				NumberField toy = new NumberField(102, pass, 90, 20);
+				toy.setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> sp.rot(1, toy));
+				this.getContainer().add(toy);
+				NumberField toz = new NumberField(200, pass, 90, 20);
+				toz.setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> sp.rot(2, toz));
+				this.getContainer().add(toz);
+			}
+			Button button0 = new Button(Translator.translate("editor.model_group.pivots.add"), 3, pass += 24, 290, 20);
+			button0.getStyle().setHorizontalAlign(HorizontalAlign.LEFT);
+			button0.getListenerMap().addListener(MouseClickEvent.class, listener -> {
+				if(listener.getAction() != CLICK || listener.getButton() != MouseButton.MOUSE_BUTTON_LEFT) return;
+				openSPLDialog(null, null);
+			});
+			this.getContainer().add(button0);
+			this.getContainer().getChildComponents().forEach(child -> child.getStyle().setPadding(0, 50, 0, 10));
+			this.setSize(296, pass + 52);
+			editor.reOrderWidgets();
+		}
+
+		private void openSPLDialog(String string, SwivelPointLite spl){
+			Dialog dialog = new Dialog(Translator.translate("editor.model_group.pivots.add.dialog"), 300, 130);
+			TextField input0 = new TextField(string == null ? "sp_name" : string, 10, 10, 280, 20);
+			input0.addTextInputContentChangeEventListener(lis -> UserInterfaceUtils.validateString(lis, true));
+			dialog.getContainer().add(input0);
+			TextField input1 = new TextField(spl == null  || spl.rootid == null ? "" : spl.rootid, 10, 40, 280, 20);
+			input1.addTextInputContentChangeEventListener(lis -> UserInterfaceUtils.validateString(lis, false));
+			dialog.getContainer().add(input1);
+            Button button = new Button(Translator.translate("dialogbox.button.confirm"), 10, 70, 100, 20);
+            button.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
+            	if(CLICK == e.getAction()){
+            		if(string != null){
+            			SwivelPointLite sp = FMTB.MODEL.pivots.remove(string);
+            			String in = input0.getTextState().getText();
+            			for(TurboList list : FMTB.MODEL.getGroups()){
+            				if(list.pivot_root != null && list.pivot_root.equals(string)) list.pivot_root = in;
+            			}
+            			FMTB.MODEL.pivots.put(in, sp);
+            			sp.rootid = input1.getTextState().getText();
+            		}
+            		else FMTB.MODEL.pivots.put(input0.getTextState().getText(), new SwivelPointLite(input1.getTextState().getText()));
+            		dialog.close();
+            		FMTB.MODEL.relinkPivots();
             		refresh();
             	}
             });

@@ -36,9 +36,9 @@ public class MarkerWrapper extends PolygonWrapper {
 	}
 	
 	@Override
-	public void render(boolean rotX, boolean rotY, boolean rotZ){
+	public void render(){
 		if(visible && turbo != null){
-			if(detached && !rotX){
+			if(detached){
 				this.compound.detached.add(this);
 				return;
 			}
@@ -61,8 +61,8 @@ public class MarkerWrapper extends PolygonWrapper {
 	}
 	
 	@Override
-	public void renderLines(boolean rotX, boolean rotY, boolean rotZ){
-		if(detached && !rotX) return;
+	public void renderLines(){
+		if(detached) return;
 		if(biped && Settings.lines() && (selected || getTurboList().selected)){
 			if(!widelines){ GL11.glLineWidth(4f); widelines = true; }
 			RGB.glColorReset();
@@ -77,8 +77,8 @@ public class MarkerWrapper extends PolygonWrapper {
 	}
 
 	@Override
-	public void renderPicking(boolean rotX, boolean rotY, boolean rotZ){
-		super.renderPicking(rotX, rotY, rotZ);
+	public void renderPicking(){
+		super.renderPicking();
 	}
 
 	@Override

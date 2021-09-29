@@ -2,6 +2,7 @@ package net.fexcraft.app.fmt.wrappers;
 
 import static net.fexcraft.app.fmt.utils.Logging.log;
 import static net.fexcraft.app.fmt.utils.Translator.translate;
+import static net.fexcraft.lib.common.Static.sixteenth;
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
 import java.awt.Toolkit;
@@ -65,7 +66,7 @@ public class GroupCompound {
 	private LinkedHashMap<String, Boolean> creators = new LinkedHashMap<>();
 	private ArrayList<String> authors = new ArrayList<>();
 	private GroupList groups = new GroupList();
-	public PolygonWrapper lastselected;
+;	public PolygonWrapper lastselected;
 	public File file, origin;
 	public ExImPorter porter;
 	public float rate = 1f;
@@ -73,6 +74,8 @@ public class GroupCompound {
 	public TextureGroup texgroup;
 	public LinkedHashMap<String, String> values = new LinkedHashMap<>();
 	public LinkedHashMap<String, ArrayList<String>> arrvalues = new LinkedHashMap<>();
+	public LinkedHashMap<String, SwivelPointLite> pivots = new LinkedHashMap<>();
+	public ArrayList<SwivelPointLite> roots = new ArrayList<>();
 	//
 	public static long SELECTED_POLYGONS;
 	public boolean visible = true, minimized;
@@ -119,24 +122,22 @@ public class GroupCompound {
 			}
 			else{}*/
 			GL11.glDisable(GL11.GL_TEXTURE_2D); 
-			groups.forEach(elm -> elm.renderPicking());
+			renderPicking();
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			RayCoastAway.doTest(false, null, false);//pencil);
 		}
 		else{
 			if(Settings.preview_colorpicker()){
 				GL11.glDisable(GL11.GL_TEXTURE_2D); 
+				renderPicking();
 				groups.forEach(elm -> elm.renderPicking());
 				GL11.glEnable(GL11.GL_TEXTURE_2D);
 			}
 			else{
 				//TextureManager.bindTexture(texture == null ? "blank" : texture);
-				groups.forEach(elm -> { 
-					elm.bindApplicableTexture(this);
-					elm.render(true);
-				});
+				renderNormal();
 				GL11.glDisable(GL11.GL_TEXTURE_2D);
-				groups.forEach(elm -> elm.renderLines());
+				renderLines();
 				GL11.glEnable(GL11.GL_TEXTURE_2D);
 			}
 		}
@@ -147,12 +148,12 @@ public class GroupCompound {
 			for(PolygonWrapper poly : detached){
 				if(!poly.getTurboList().visible) continue;
 				poly.getTurboList().bindApplicableTexture(this);
-				poly.render(true, false, false);
+				poly.render();
 			}
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			for(PolygonWrapper poly : detached){
 				if(!poly.getTurboList().visible) continue;
-				poly.renderLines(true, false, false);
+				poly.renderLines();
 			}
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			detached.clear();
@@ -168,6 +169,49 @@ public class GroupCompound {
 		}
 	}
 	
+	private void renderNormal(){
+		for(TurboList list : groups){
+			if(list.pivotroot == null){
+				list.bindApplicableTexture(this);
+				list.render(true);
+			}
+		}
+		for(SwivelPointLite point : roots){
+			GL11.glPushMatrix();
+			GL11.glTranslatef(point.pos.x * sixteenth, point.pos.y * sixteenth, point.pos.z * sixteenth);
+			point.update(this, 0);
+			GL11.glPopMatrix();
+		}
+	}
+
+	private void renderLines(){
+		for(TurboList list : groups){
+			if(list.pivotroot == null){
+				list.renderLines();
+			}
+		}
+		for(SwivelPointLite point : roots){
+			GL11.glPushMatrix();
+			GL11.glTranslatef(point.pos.x * sixteenth, point.pos.y * sixteenth, point.pos.z * sixteenth);
+			point.update(this, 1);
+			GL11.glPopMatrix();
+		}
+	}
+
+	private void renderPicking(){
+		for(TurboList list : groups){
+			if(list.pivotroot == null){
+				list.renderPicking();
+			}
+		}
+		for(SwivelPointLite point : roots){
+			GL11.glPushMatrix();
+			GL11.glTranslatef(point.pos.x * sixteenth, point.pos.y * sixteenth, point.pos.z * sixteenth);
+			point.update(this, 2);
+			GL11.glPopMatrix();
+		}
+	}
+
 	public static final String temptexid = "./temp/calculation_texture_";
 	
 	public Texture getTempTex(PolygonWrapper wrapper){
@@ -499,6 +543,7 @@ public class GroupCompound {
 			GroupEditor.exoff_x.apply(0);
 			GroupEditor.exoff_y.apply(0);
 			GroupEditor.exoff_z.apply(0);
+			GroupEditor.pivot_root.getTextState().setText(FMTB.NO_POLYGON_SELECTED);
 		}
 		else{
 			GroupEditor.group_color.apply((list.color == null ? RGB.WHITE : list.color).packed);
@@ -512,9 +557,10 @@ public class GroupCompound {
 			GroupEditor.g_tex_x.setSelected((float)list.textureX, true);
 			GroupEditor.g_tex_y.setSelected((float)list.textureY, true);
 			//GroupEditor.g_tex_s.setSelected((float)list.textureS, true);
-			GroupEditor.exoff_x.apply(list.exportoffset == null ? 0 : list.exportoffset.x);
-			GroupEditor.exoff_y.apply(list.exportoffset == null ? 0 : list.exportoffset.y);
-			GroupEditor.exoff_z.apply(list.exportoffset == null ? 0 : list.exportoffset.z);
+			GroupEditor.exoff_x.apply(list.exoff.x);
+			GroupEditor.exoff_y.apply(list.exoff.y);
+			GroupEditor.exoff_z.apply(list.exoff.z);
+			GroupEditor.pivot_root.getTextState().setText(list.pivot_root);
 		};
 		GroupEditor.animations.refresh(list);
 		//
@@ -1123,6 +1169,33 @@ public class GroupCompound {
 			}
 		}
 		wrapper.recompile();
+	}
+
+	public void relinkPivots(){
+		for(TurboList list : groups){
+			if(list.pivot_root != null) list.pivotroot = pivots.get(list.pivot_root);
+			if(list.pivotroot != null) list.pivotroot.lists.add(list);
+		}
+		for(SwivelPointLite sp : pivots.values()){
+			sp.subs.clear();
+			sp.root = sp.root == null ? null : pivots.get(sp.rootid);
+			if(sp.root != null){
+				sp.subs.add(sp);
+				//
+				if(sp.root.root == sp){
+					sp.root.root = null;
+					sp.root.rootid = null;
+				}
+				if(sp.subs.contains(sp.root)){
+					sp.subs.remove(sp.root);
+					sp.root.root = null;
+					sp.root.rootid = null;
+				}
+			}
+		}
+		for(SwivelPointLite sp : pivots.values()){
+			if(sp.root == null) roots.add(sp);
+		}
 	}
 
 }

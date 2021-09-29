@@ -39,7 +39,7 @@ public class GroupEditor extends EditorBase {
 
 	private static final int[] texsizes = new int[]{ 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096 };// , 8192 };
 	public static NumberField exoff_x, exoff_y, exoff_z;
-	public static TextInput group_name;
+	public static TextInput group_name, pivot_root;
 	public static ColorField group_color;
 	public static SelectBox<Float> g_tex_x, g_tex_y;//, g_tex_s;
 	public static SelectBox<Animation> add_anim;
@@ -129,13 +129,12 @@ public class GroupEditor extends EditorBase {
 			boolean opp = listener.getButton() != MouseButton.MOUSE_BUTTON_LEFT;
 			TurboList list = FMTB.MODEL.getFirstSelectedGroup();
 			if(list == null || list.size() < 1) return;
-			if(list.exportoffset == null) list.exportoffset = new Vec3f();
-			list.exportoffset.x = opp ? -list.get(0).pos.x : list.get(0).pos.x;
-			list.exportoffset.y = opp ? -list.get(0).pos.y : list.get(0).pos.y;
-			list.exportoffset.z = opp ? -list.get(0).pos.z : list.get(0).pos.z;
-			exoff_x.apply(list.exportoffset.x);
-			exoff_y.apply(list.exportoffset.y);
-			exoff_z.apply(list.exportoffset.z);
+			list.exoff.x = opp ? -list.get(0).pos.x : list.get(0).pos.x;
+			list.exoff.y = opp ? -list.get(0).pos.y : list.get(0).pos.y;
+			list.exoff.z = opp ? -list.get(0).pos.z : list.get(0).pos.z;
+			exoff_x.apply(list.exoff.x);
+			exoff_y.apply(list.exoff.y);
+			exoff_z.apply(list.exoff.z);
 		});
 		exoff_autobutton.getStyle().setFontSize(16f);
 		Tooltip exoff_buttontooltip = new Tooltip("Copies first polygon's position.\nleft = normal / rightclick = opposite");
@@ -156,6 +155,14 @@ public class GroupEditor extends EditorBase {
 		group.getContainer().add(exoff_y = new NumberField(102, pass, 90, 20).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> setgroupoffset()));
 		group.getContainer().add(exoff_z = new NumberField(200, pass, 90, 20).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> setgroupoffset()));
 		// exoff_x.setTooltip(exoff_tooltip); exoff_y.setTooltip(exoff_tooltip); exoff_z.setTooltip(exoff_tooltip);
+		group.getContainer().add(new Label(translate("editor.model_group.group.pivot_root"), 3, pass += 24, 290, 20));
+		group.getContainer().add(pivot_root = new TextField("", 3, pass, 290, 20));
+		pivot_root.addTextInputContentChangeEventListener(listener -> {
+			for(TurboList list : FMTB.MODEL.getDirectlySelectedGroups()){
+				list.pivot_root = listener.getNewValue();
+			}
+			FMTB.MODEL.relinkPivots();
+		});
 		//
 		group.getContainer().add(new Label(translate("editor.model_group.group.add_animator"), 3, pass += 24, 290, 20));
 		group.getContainer().add(add_anim = new SelectBox<>(3, pass += 24, 290, 20));
@@ -253,14 +260,13 @@ public class GroupEditor extends EditorBase {
 		float yval = exoff_y.getValue();
 		float zval = exoff_z.getValue();
 		if(xval == 0f && yval == 0f && zval == 0f){
-			arrlist.forEach(list -> list.exportoffset = null);
+			arrlist.forEach(list -> list.exoff = new Vec3f());
 		}
 		else{
 			arrlist.forEach(list -> {
-				if(list.exportoffset == null) list.exportoffset = new Vec3f();
-				list.exportoffset.x = xval;
-				list.exportoffset.y = yval;
-				list.exportoffset.z = zval;
+				list.exoff.x = xval;
+				list.exoff.y = yval;
+				list.exoff.z = zval;
 			});
 		}
 	}

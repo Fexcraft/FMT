@@ -224,9 +224,9 @@ public class DFMExporter extends ExImPorter {
 				buffer.append(tab2 + name + "[" + index + "].rotateAngleZ = " + (float)Math.toRadians(-wrapper.rot.z) + "f;\n");
 			} buffer.append("\n");
 			//
-			if(list instanceof TurboList && ((TurboList)list).exportoffset != null){
+			if(list instanceof TurboList && !((TurboList)list).exoff.isNull()){
 				TurboList turbo = (TurboList)list;
-				buffer.append(tab2 + "translate(" + name + format(",%s, %s, %s);\n", null, turbo.exportoffset.x, turbo.exportoffset.y, turbo.exportoffset.z));
+				buffer.append(tab2 + "translate(" + name + format(",%s, %s, %s);\n", null, turbo.exoff.x, turbo.exoff.y, turbo.exoff.z));
 			}
 			index++;
 		}

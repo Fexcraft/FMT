@@ -38,7 +38,7 @@ public class BBWrapper extends BoxWrapper {
 	}
 	
 	@Override
-	public void render(boolean rotX, boolean rotY, boolean rotZ){
+	public void render(){
 		if(visible && turbo != null){
 			String tex = TextureManager.getBoundTexture();
 			TextureManager.bindTexture("transparent");

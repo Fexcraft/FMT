@@ -466,5 +466,82 @@ public class Animator {
 		}
 		
 	}*/
+	
+
+	
+	public static class PivotAligner extends Animation {
+		
+		private Setting x, y, z, pivot;
+		private int xdir = 1, ydir = 1, zdir = 1;
+		private float xpass, ypass, zpass;
+
+		public PivotAligner(String id, TurboList group, Collection<Setting> settings){
+			super(id, group, settings);
+			x = get("pos_x");
+			y = get("pos_y");
+			z = get("pos_z");
+			pivot = get("pivot");
+		}
+
+		@Override
+		public void pre(TurboList list){
+			xpass += xdir * x.getFloatValue(); ypass += ydir * y.getFloatValue(); zpass += zdir * z.getFloatValue();
+			//
+			//
+			for(PolygonWrapper wrap : list){ wrap.addPosRot(false, xpass, ypass, zpass); }
+		}
+
+		@Override
+		public void post(TurboList list){
+			for(PolygonWrapper wrap : list){ wrap.addPosRot(false, -xpass, -ypass, -zpass); }
+		}
+
+		@Override
+		protected Animation COPY(String id, TurboList group, Collection<Setting> settings){
+			return new Rotator(id, group, settings);
+		}
+
+		@Override
+		public String getButtonString(){
+			return settings.get("fvtm:attr").getStringValue().length() == 0 ? "rotator" : "ROT: " + settings.get("fvtm:attr");
+		}
+
+		@Override
+		public String getExportString(String modto){
+			if(!modto.equals("fvtm") && !modto.equals("fmf") && !modto.equals("obj")) return "invalid_mod";
+			String string = "new DefaultPrograms.AttributeRotator(\"%s\", %s, %sf, %sf, %sf, %s, %sf)";
+			int axis = x.directFloat() != 0f ? 0 : y.directFloat() != 0f ? 1 : z.directFloat() != 0f ? 2 : 3;
+			float min = 0, max = 0, step = 0, defrot = 0;
+			switch(axis){
+				case 0:{
+					min = get("x_min").directFloat(); max = get("x_max").directFloat(); step = get("x").directFloat();
+					defrot = group.get(0).getTurboObject(0).rotationAngleX;
+					break;
+				}
+				case 1:{
+					min = get("y_min").directFloat(); max = get("y_max").directFloat(); step = get("y").directFloat();
+					defrot = group.get(0).getTurboObject(0).rotationAngleY;
+					break;
+				}
+				case 2:{
+					min = get("z_min").directFloat(); max = get("z_max").directFloat(); step = get("z").directFloat();
+					defrot = group.get(0).getTurboObject(0).rotationAngleZ;
+					break;
+				}
+				default: return "\"Could not find applicable axis.\"";
+			}
+			if(modto.equals("fmf") || modto.equals("obj")){
+				String attr = get("fvtm:attr").getStringValue();
+				String export = group.id + " ";
+				export += "fvtm:attribute_rotator ";
+				export += (attr.length() == 0 ? "null" : attr) + " ";
+				export += get("fvtm:boolean_type_attr") + " ";
+				export += min + " " + max + " " + step + " " + axis + " " + defrot;
+				return export;
+			}
+			else return String.format(string, get("fvtm:attr"), get("fvtm:boolean_type_attr"), min, max, step, axis, defrot);
+		}
+		
+	}
 
 }

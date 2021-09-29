@@ -55,7 +55,7 @@ public class ShapeQuadWrapper extends QuadWrapper {
 	}
 	
 	@Override
-	public void renderLines(boolean rotXb, boolean rotYb, boolean rotZb){
+	public void renderLines(){
 		//GL11.glDisable(GL11.GL_TEXTURE_2D);
 		if((selected || this.getTurboList().selected) && Settings.polygonMarker()){
 			if(this.compound.getLastSelected() != this){
