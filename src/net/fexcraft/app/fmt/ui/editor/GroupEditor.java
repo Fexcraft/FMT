@@ -156,7 +156,7 @@ public class GroupEditor extends EditorBase {
 		group.getContainer().add(exoff_z = new NumberField(200, pass, 90, 20).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> setgroupoffset()));
 		// exoff_x.setTooltip(exoff_tooltip); exoff_y.setTooltip(exoff_tooltip); exoff_z.setTooltip(exoff_tooltip);
 		group.getContainer().add(new Label(translate("editor.model_group.group.pivot_root"), 3, pass += 24, 290, 20));
-		group.getContainer().add(pivot_root = new TextField("", 3, pass, 290, 20));
+		group.getContainer().add(pivot_root = new TextField("", 3, pass += 24, 290, 20));
 		pivot_root.addTextInputContentChangeEventListener(listener -> {
 			for(TurboList list : FMTB.MODEL.getDirectlySelectedGroups()){
 				list.pivot_root = listener.getNewValue();
