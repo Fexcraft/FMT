@@ -1172,13 +1172,10 @@ public class GroupCompound {
 	}
 
 	public void relinkPivots(){
-		for(TurboList list : groups){
-			if(list.pivot_root != null) list.pivotroot = pivots.get(list.pivot_root);
-			if(list.pivotroot != null) list.pivotroot.lists.add(list);
-		}
 		for(SwivelPointLite sp : pivots.values()){
 			sp.subs.clear();
-			sp.root = sp.root == null ? null : pivots.get(sp.rootid);
+			sp.lists.clear();
+			sp.root = sp.rootid == null ? null : pivots.get(sp.rootid);
 			if(sp.root != null){
 				sp.subs.add(sp);
 				//
@@ -1195,6 +1192,10 @@ public class GroupCompound {
 		}
 		for(SwivelPointLite sp : pivots.values()){
 			if(sp.root == null) roots.add(sp);
+		}
+		for(TurboList list : groups){
+			if(list.pivot_root != null) list.pivotroot = pivots.get(list.pivot_root);
+			if(list.pivotroot != null) list.pivotroot.lists.add(list);
 		}
 	}
 
