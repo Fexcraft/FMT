@@ -65,7 +65,7 @@ public class SwivelPointLite {
 			}
 		}
 		for(SwivelPointLite lite : subs){
-			Vec3f vec = axe.getRelativeVector(lite.pos);
+			Vec3f vec = lite.pos;
 			GL11.glPushMatrix();
 			GL11.glTranslatef(vec.x * sixteenth, vec.y * sixteenth, vec.z * sixteenth);
 			lite.update(compound, mode);
