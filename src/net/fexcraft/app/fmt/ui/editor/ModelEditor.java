@@ -316,6 +316,7 @@ public class ModelEditor extends EditorBase {
 				}, "rename/edit"));
 				button.getStyle().setHorizontalAlign(HorizontalAlign.LEFT);
 				this.getContainer().add(button);
+				//
 				SwivelPointLite sp = entry.getValue();
 				NumberField pox = new NumberField(4, pass += 24, 90, 20);
 				pox.setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> sp.pos(0, pox));
@@ -329,12 +330,19 @@ public class ModelEditor extends EditorBase {
 				NumberField rox = new NumberField(4, pass += 24, 90, 20);
 				rox.setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> sp.rot(0, rox));
 				this.getContainer().add(rox);
-				NumberField toy = new NumberField(102, pass, 90, 20);
-				toy.setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> sp.rot(1, toy));
-				this.getContainer().add(toy);
-				NumberField toz = new NumberField(200, pass, 90, 20);
-				toz.setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> sp.rot(2, toz));
-				this.getContainer().add(toz);
+				NumberField roy = new NumberField(102, pass, 90, 20);
+				roy.setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> sp.rot(1, roy));
+				this.getContainer().add(roy);
+				NumberField roz = new NumberField(200, pass, 90, 20);
+				roz.setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, () -> sp.rot(2, roz));
+				this.getContainer().add(roz);
+				//
+				pox.apply(sp.pos.x);
+				poy.apply(sp.pos.y);
+				poz.apply(sp.pos.z);
+				rox.apply(sp.rot.x);
+				roy.apply(sp.rot.y);
+				roz.apply(sp.rot.z);
 			}
 			Button button0 = new Button(Translator.translate("editor.model_group.pivots.add"), 3, pass += 24, 290, 20);
 			button0.getStyle().setHorizontalAlign(HorizontalAlign.LEFT);
