@@ -5,11 +5,19 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.TreeMap;
 
+import org.lwjgl.opengl.GL11;
+
+import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.tree.SubTreeGroup;
 import net.fexcraft.app.fmt.ui.tree.Trees;
 import net.fexcraft.app.fmt.utils.Setting.Type;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
+import net.fexcraft.app.fmt.wrappers.SwivelPointLite;
 import net.fexcraft.app.fmt.wrappers.TurboList;
+import net.fexcraft.lib.common.Static;
+import net.fexcraft.lib.common.math.RGB;
+import net.fexcraft.lib.common.math.Vec3f;
+import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public class Animator {
 	
@@ -32,6 +40,11 @@ public class Animator {
 			new Setting(Type.STRING, "fvtm:attr", ""), new Setting(Type.BOOLEAN, "fvtm:boolean_type_attr", true)
 		)));
 		nani.add(new Custom("custom", null, Arrays.asList(new Setting(Type.STRING, "fvtm:prog", "enter here program id and parameters (if required)") )));
+		nani.add(new Title("# Pivot Aligner", null, null));
+		nani.add(new ZVerHyd("zverhyd", null, Arrays.asList(
+				new Setting(Type.FLOAT, "pos0_x", 0f), new Setting(Type.FLOAT, "pos0_y", 0f), new Setting(Type.FLOAT, "pos0_z", 0f), new Setting(Type.STRING, "pivot0", ""), new Setting(Type.FLOAT, "rot_z", 90f),
+				new Setting(Type.FLOAT, "pos1_x", 0f), new Setting(Type.FLOAT, "pos1_y", 0f), new Setting(Type.FLOAT, "pos1_z", 0f), new Setting(Type.STRING, "pivot1", ""), new Setting(Type.STRING, "pivot2", "")
+		)));
 		nani.add(new Title("# Generic FVTM", null, null));
 		nani.add(new Generic("fvtm:rgb_primary", "DefaultPrograms.RGB_PRIMARY", null, null));
 		nani.add(new Generic("fvtm:rgb_primary", "DefaultPrograms.RGB_PRIMARY", null, null));
@@ -469,77 +482,70 @@ public class Animator {
 	
 
 	
-	public static class PivotAligner extends Animation {
+	public static class ZVerHyd extends Animation {
 		
-		private Setting x, y, z, pivot;
-		private int xdir = 1, ydir = 1, zdir = 1;
-		private float xpass, ypass, zpass;
+		public static final ModelRendererTurbo sp0 = new ModelRendererTurbo(null).addSphere(0, 0, 0, 2, 8, 8, 1, 1).setColor(RGB.BLUE).setTextured(false);
+		public static final ModelRendererTurbo sp1 = new ModelRendererTurbo(null).addSphere(0, 0, 0, 2, 8, 8, 1, 1).setColor(RGB.GREEN).setTextured(false);
+		public static final ModelRendererTurbo sp2 = new ModelRendererTurbo(null).addSphere(0, 0, 0, 0.2f, 8, 8, 1, 1).setColor(RGB.RED).setTextured(false);
+		public static final ModelRendererTurbo sp = new ModelRendererTurbo(null).addSphere(0, 0, 0, 1, 8, 8, 1, 1).setColor(RGB.RED).setTextured(false);
+		private Setting x0, y0, z0, x1, y1, z1, pivot0, pivot1, pivot2, rz;
+		private float angle;
 
-		public PivotAligner(String id, TurboList group, Collection<Setting> settings){
+		public ZVerHyd(String id, TurboList group, Collection<Setting> settings){
 			super(id, group, settings);
-			x = get("pos_x");
-			y = get("pos_y");
-			z = get("pos_z");
-			pivot = get("pivot");
+			x0 = get("pos0_x");
+			y0 = get("pos0_y");
+			z0 = get("pos0_z");
+			x1 = get("pos1_x");
+			y1 = get("pos1_y");
+			z1 = get("pos1_z");
+			pivot0 = get("pivot0");
+			pivot1 = get("pivot1");
+			pivot2 = get("pivot2");
+			rz = get("rot_z");
 		}
 
 		@Override
 		public void pre(TurboList list){
-			xpass += xdir * x.getFloatValue(); ypass += ydir * y.getFloatValue(); zpass += zdir * z.getFloatValue();
-			//
-			//
-			for(PolygonWrapper wrap : list){ wrap.addPosRot(false, xpass, ypass, zpass); }
+			SwivelPointLite o0 = FMTB.MODEL.pivots.get(pivot0.getStringValue());
+			SwivelPointLite o1 = FMTB.MODEL.pivots.get(pivot1.getStringValue());
+			SwivelPointLite o2 = FMTB.MODEL.pivots.get(pivot2.getStringValue());
+			if(o0 == null || o1 == null) return;
+			Vec3f vec1 = o0.getRelVec(x0.directFloat(), y0.directFloat(), z0.directFloat());
+			Vec3f vec0 = o1.getRelVec(x1.directFloat(), y1.directFloat(), z1.directFloat());
+			/*FMTB.MODEL.markers.add(vec0);
+			FMTB.MODEL.markers.add(vec1);
+			float l = vec0.dis(vec1);
+			for(float x = 0.2f; x < l; x += 0.4){
+				FMTB.MODEL.markers.add(vec0.distance(vec1, x));
+			}*/
+	        double dx = vec0.x - vec1.x, dy = vec0.y - vec1.y;
+			angle = Static.toDegrees((float)Math.atan2(dy, dx)) + rz.getFloatValue();
+			if(o2 != null){
+				angle -= o2.rot.z;
+			}
+			GL11.glRotatef(angle, 0, 0, 1);
+			RGB.glColorReset();
 		}
 
 		@Override
 		public void post(TurboList list){
-			for(PolygonWrapper wrap : list){ wrap.addPosRot(false, -xpass, -ypass, -zpass); }
+			GL11.glRotatef(-angle, 0, 0, 1);
 		}
 
 		@Override
 		protected Animation COPY(String id, TurboList group, Collection<Setting> settings){
-			return new Rotator(id, group, settings);
+			return new ZVerHyd(id, group, settings);
 		}
 
 		@Override
 		public String getButtonString(){
-			return settings.get("fvtm:attr").getStringValue().length() == 0 ? "rotator" : "ROT: " + settings.get("fvtm:attr");
+			return "zverhyd";
 		}
 
 		@Override
 		public String getExportString(String modto){
-			if(!modto.equals("fvtm") && !modto.equals("fmf") && !modto.equals("obj")) return "invalid_mod";
-			String string = "new DefaultPrograms.AttributeRotator(\"%s\", %s, %sf, %sf, %sf, %s, %sf)";
-			int axis = x.directFloat() != 0f ? 0 : y.directFloat() != 0f ? 1 : z.directFloat() != 0f ? 2 : 3;
-			float min = 0, max = 0, step = 0, defrot = 0;
-			switch(axis){
-				case 0:{
-					min = get("x_min").directFloat(); max = get("x_max").directFloat(); step = get("x").directFloat();
-					defrot = group.get(0).getTurboObject(0).rotationAngleX;
-					break;
-				}
-				case 1:{
-					min = get("y_min").directFloat(); max = get("y_max").directFloat(); step = get("y").directFloat();
-					defrot = group.get(0).getTurboObject(0).rotationAngleY;
-					break;
-				}
-				case 2:{
-					min = get("z_min").directFloat(); max = get("z_max").directFloat(); step = get("z").directFloat();
-					defrot = group.get(0).getTurboObject(0).rotationAngleZ;
-					break;
-				}
-				default: return "\"Could not find applicable axis.\"";
-			}
-			if(modto.equals("fmf") || modto.equals("obj")){
-				String attr = get("fvtm:attr").getStringValue();
-				String export = group.id + " ";
-				export += "fvtm:attribute_rotator ";
-				export += (attr.length() == 0 ? "null" : attr) + " ";
-				export += get("fvtm:boolean_type_attr") + " ";
-				export += min + " " + max + " " + step + " " + axis + " " + defrot;
-				return export;
-			}
-			else return String.format(string, get("fvtm:attr"), get("fvtm:boolean_type_attr"), min, max, step, axis, defrot);
+			return "non-exportable";
 		}
 		
 	}

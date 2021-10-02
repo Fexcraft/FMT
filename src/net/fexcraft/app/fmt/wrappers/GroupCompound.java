@@ -48,6 +48,7 @@ import net.fexcraft.app.fmt.ui.field.NumberField;
 import net.fexcraft.app.fmt.ui.tree.SubTreeGroup;
 import net.fexcraft.app.fmt.ui.tree.TreeGroup;
 import net.fexcraft.app.fmt.ui.tree.Trees;
+import net.fexcraft.app.fmt.utils.Animator.ZVerHyd;
 import net.fexcraft.app.fmt.utils.RayCoastAway;
 import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.app.fmt.utils.Settings;
@@ -76,6 +77,7 @@ public class GroupCompound {
 	public LinkedHashMap<String, ArrayList<String>> arrvalues = new LinkedHashMap<>();
 	public LinkedHashMap<String, SwivelPointLite> pivots = new LinkedHashMap<>();
 	public ArrayList<SwivelPointLite> roots = new ArrayList<>();
+	public ArrayList<Vec3f> markers = new ArrayList<>();
 	//
 	public static long SELECTED_POLYGONS;
 	public boolean visible = true, minimized;
@@ -175,6 +177,16 @@ public class GroupCompound {
 				list.bindApplicableTexture(this);
 				list.render(true);
 			}
+		}
+		if(!markers.isEmpty()){
+			int odd = 0;
+			for(Vec3f mark : markers){
+				GL11.glTranslatef(mark.x * sixteenth, mark.y * sixteenth, mark.z * sixteenth);
+				(odd > 0 ? odd > 1 ? ZVerHyd.sp2 : ZVerHyd.sp1 : ZVerHyd.sp0).render();
+				GL11.glTranslatef(-mark.x * sixteenth, -mark.y * sixteenth, -mark.z * sixteenth);
+				odd++;
+			}
+			markers.clear();
 		}
 		if(Settings.pivot_polygon_markers.getBooleanValue()){
 			for(SwivelPointLite point : roots){
