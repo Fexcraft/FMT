@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL11;
 import com.google.gson.JsonArray;
 
 import net.fexcraft.app.fmt.ui.field.NumberField;
+import net.fexcraft.app.fmt.utils.Animator.PivotAligner;
 import net.fexcraft.app.fmt.utils.Axis3DL;
 import net.fexcraft.lib.common.math.Vec3f;
 
@@ -40,9 +41,28 @@ public class SwivelPointLite {
 			case 2: rot.z = field.getValue(); break;
 		}
 	}
+
+	public void updatee(GroupCompound compound){
+		for(TurboList list : lists){
+			for(PolygonWrapper wrapper : list){
+				Vec3f vec = getRelVec(wrapper.pos.x, wrapper.pos.y, wrapper.pos.z);
+				PivotAligner.sp.setPosition(vec.x, vec.y, vec.z).render();
+			}
+		}
+		for(SwivelPointLite lite : subs){
+			lite.updatee(compound);
+		}
+	}
 	
+	private Vec3f getRelVec(float x, float y, float z){
+		axe.setAngles(-rot.y, -rot.z, -rot.x);
+		Vec3f vec = axe.getRelativeVector(x, y, z).add(pos);
+		if(root != null) return root.getRelVec(vec.x, vec.y, vec.z);
+		return vec;
+	}
+
 	public void update(GroupCompound compound, int mode){
-		axe.setAngles(rot.x, rot.y, rot.z);
+		axe.setAngles(-rot.y, -rot.z, -rot.x);
 		GL11.glRotatef(rot.y, 0, 1, 0);
 		GL11.glRotatef(rot.z, 0, 0, 1);
 		GL11.glRotatef(rot.x, 1, 0, 0);

@@ -25,6 +25,7 @@ public class Settings {
 	public static Setting darktheme, no_scroll_fields, old_rotation, center_marker;
 	public static Setting orbital_camera, oc_center_on_part, internal_filechooser;
 	public static Setting drag_painting, background_color, decimal_sizes, triangles;
+	public static Setting pivot_polygon_markers;
 	//
 	public static final ArrayList<Consumer<Boolean>> THEME_CHANGE_LISTENER = new ArrayList<>();
 
@@ -195,6 +196,7 @@ public class Settings {
 		DEFAULTS.add(new Setting("rounding_digits", 4));
 		DEFAULTS.add(new Setting("decimal_sizes", false));
 		DEFAULTS.add(new Setting("triangulation", false));
+		DEFAULTS.add(new Setting("pivot_polygon_markers", false));
 		//
 		for(int i = 0; i < 10; i++){
 			DEFAULTS.add(new Setting("recent_file_" + i, "null"));
@@ -251,6 +253,7 @@ public class Settings {
 		vsynchalf = SETTINGS.get("vsync_half");
 		decimal_sizes = SETTINGS.get("decimal_sizes");
 		triangles = SETTINGS.get("triangulation");
+		pivot_polygon_markers = SETTINGS.get("pivot_polygon_markers");
 	}
 
 	public static void save(){

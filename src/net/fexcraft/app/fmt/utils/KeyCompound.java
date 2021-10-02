@@ -60,7 +60,7 @@ public class KeyCompound {
 		keys.add(new KeyFunction("toggle_center_marker", GLFW_KEY_F7, (action) -> { if(action == GLFW_RELEASE) Settings.toggleCenterMarker(); }));
 		keys.add(new KeyFunction("toggle_lighting", GLFW_KEY_F8, (action) -> { if(action == GLFW_RELEASE) Settings.toggleLighting(); }));
 		keys.add(new KeyFunction("toggle_animations", GLFW_KEY_F9, (action) -> { if(action == GLFW_RELEASE) Settings.toggleAnimations(); }));
-		//keys.add(new KeyFunction("toggle_arrows", GLFW_KEY_F10, (action) -> { if(action == GLFW_RELEASE) Settings.toggleAnimations(); }));
+		keys.add(new KeyFunction("toggle_pivot_polygon_markers", GLFW_KEY_F10, (action) -> { if(action == GLFW_RELEASE) Settings.pivot_polygon_markers.toggle(); }));
 		//
 		keys.add(new KeyFunction("take_screenshot", GLFW_KEY_F12, (action) -> {
 			if(action != GLFW_RELEASE) return;

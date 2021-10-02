@@ -176,6 +176,11 @@ public class GroupCompound {
 				list.render(true);
 			}
 		}
+		if(Settings.pivot_polygon_markers.getBooleanValue()){
+			for(SwivelPointLite point : roots){
+				point.updatee(this);
+			}
+		}
 		for(SwivelPointLite point : roots){
 			GL11.glPushMatrix();
 			GL11.glTranslatef(point.pos.x * sixteenth, point.pos.y * sixteenth, point.pos.z * sixteenth);
