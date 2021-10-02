@@ -513,12 +513,14 @@ public class Animator {
 			if(o0 == null || o1 == null) return;
 			Vec3f vec1 = o0.getRelVec(x0.directFloat(), y0.directFloat(), z0.directFloat());
 			Vec3f vec0 = o1.getRelVec(x1.directFloat(), y1.directFloat(), z1.directFloat());
-			/*FMTB.MODEL.markers.add(vec0);
-			FMTB.MODEL.markers.add(vec1);
-			float l = vec0.dis(vec1);
-			for(float x = 0.2f; x < l; x += 0.4){
-				FMTB.MODEL.markers.add(vec0.distance(vec1, x));
-			}*/
+			if(Settings.pivot_polygon_markers.getBooleanValue()){
+				FMTB.MODEL.markers.add(vec0);
+				FMTB.MODEL.markers.add(vec1);
+				float l = vec0.dis(vec1);
+				for(float x = 0.2f; x < l; x += 0.4){
+					FMTB.MODEL.markers.add(vec0.distance(vec1, x));
+				}
+			}
 	        double dx = vec0.x - vec1.x, dy = vec0.y - vec1.y;
 			angle = Static.toDegrees((float)Math.atan2(dy, dx)) + rz.getFloatValue();
 			if(o2 != null){
