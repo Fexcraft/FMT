@@ -49,12 +49,16 @@ public class TurboList extends ArrayList<PolygonWrapper> {
 
 	public void renderLines(){
 		if(!visible) return;
+		if(Settings.animate() && animations.size() > 0) for(Animation ani : animations) ani.pre(this);
 		this.forEach(elm -> elm.renderLines());
+		if(Settings.animate() && animations.size() > 0) for(Animation ani : animations) ani.post(this);
 	}
 
 	public void renderPicking(){
 		if(!visible) return;
+		if(Settings.animate() && animations.size() > 0) for(Animation ani : animations) ani.pre(this);
 		this.forEach(elm -> elm.renderPicking());
+		if(Settings.animate() && animations.size() > 0) for(Animation ani : animations) ani.post(this);
 	}
 
 	@Override
