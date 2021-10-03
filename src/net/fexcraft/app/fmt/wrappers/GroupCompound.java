@@ -696,6 +696,7 @@ public class GroupCompound {
 
 	public void copyAndSelect(){
 		ArrayList<PolygonWrapper> list = this.getSelected(), newlist = new ArrayList<>();
+		if(list.size() == 0) return;
 		for(PolygonWrapper wrapper : list){
 			newlist.add(wrapper.clone());
 		}
