@@ -696,9 +696,16 @@ public class GroupCompound {
 
 	public void copyAndSelect(){
 		ArrayList<PolygonWrapper> list = this.getSelected(), newlist = new ArrayList<>();
-		for(PolygonWrapper wrapper : list){ newlist.add(wrapper.clone()); } this.clearSelection();
-		for(PolygonWrapper wrapper : newlist){ this.add(wrapper, "clipboard", false); }
-		/*Trees.polygon.reOrderGroups();*/ return;
+		for(PolygonWrapper wrapper : list){
+			newlist.add(wrapper.clone());
+		}
+		this.clearSelection();
+		String target = Settings.use_clipboard_group.getBooleanValue() ? "clipboard" : list.get(0).getTurboList().id;
+		for(PolygonWrapper wrapper : newlist){
+			this.add(wrapper, target, false);
+		}
+		//Trees.polygon.reOrderGroups();
+		return;
 	}
 
 	public void flipShapeboxes(List<PolygonWrapper> list, int axis){
