@@ -487,7 +487,7 @@ public class Animator {
 		public static final ModelRendererTurbo sp0 = new ModelRendererTurbo(null).addSphere(0, 0, 0, 2, 8, 8, 1, 1).setColor(RGB.BLUE).setTextured(false);
 		public static final ModelRendererTurbo sp1 = new ModelRendererTurbo(null).addSphere(0, 0, 0, 2, 8, 8, 1, 1).setColor(RGB.GREEN).setTextured(false);
 		public static final ModelRendererTurbo sp2 = new ModelRendererTurbo(null).addSphere(0, 0, 0, 0.2f, 8, 8, 1, 1).setColor(RGB.RED).setTextured(false);
-		public static final ModelRendererTurbo sp = new ModelRendererTurbo(null).addSphere(0, 0, 0, 1, 8, 8, 1, 1).setColor(RGB.RED).setTextured(false);
+		public static final ModelRendererTurbo sp = new ModelRendererTurbo(null).addSphere(0, 0, 0, 0.25f, 8, 8, 1, 1).setColor(RGB.RED).setTextured(false);
 		private Setting x0, y0, z0, x1, y1, z1, pivot0, pivot1, pivot2, rz;
 		private float angle;
 
