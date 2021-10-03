@@ -523,8 +523,10 @@ public class Animator {
 			}
 	        double dx = vec0.x - vec1.x, dy = vec0.y - vec1.y;
 			angle = Static.toDegrees((float)Math.atan2(dy, dx)) + rz.getFloatValue();
-			if(o2 != null){
-				angle -= o2.rot.z;
+			SwivelPointLite r = o2;
+			while(r != null){
+				angle -= r.rot.z;
+				r = r.root;
 			}
 			GL11.glRotatef(angle, 0, 0, 1);
 			RGB.glColorReset();
