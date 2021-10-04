@@ -322,16 +322,26 @@ public class GroupCompound {
 	}
 
 	public void add(PolygonWrapper shape, String group, boolean clear){
+		add(shape, group, clear, false);
+	}
+
+	public void add(PolygonWrapper shape, String group, boolean clear, boolean iscopy){
 		try{
 			if(groups.isEmpty() && group == null) groups.add(new TurboList("group0"));
 			if(group != null && !groups.contains(group)) groups.add(new TurboList(group));
 			TurboList list = (group == null ? groups.contains("body") ? groups.get("body") : groups.get(0) : groups.get(group));
+			Vec3f pos = null;
+			if(!iscopy && Settings.set_new_at_selected.getBooleanValue()){
+				PolygonWrapper sel = this.getFirstSelection();
+				if(sel != null) pos = sel.pos;
+			}
 			if(clear){
 				clearSelection();
 			}
 			shape.selected = true;
 			SELECTED_POLYGONS += 1;
 			list.add(shape);
+			if(pos != null) shape.pos = shape.pos.add(pos);
 			shape.button.updateColor();
 			shape.recompile();
 			this.updateFields();
@@ -703,7 +713,7 @@ public class GroupCompound {
 		this.clearSelection();
 		String target = Settings.use_clipboard_group.getBooleanValue() ? "clipboard" : list.get(0).getTurboList().id;
 		for(PolygonWrapper wrapper : newlist){
-			this.add(wrapper, target, false);
+			this.add(wrapper, target, false, true);
 		}
 		//Trees.polygon.reOrderGroups();
 		return;
@@ -941,7 +951,7 @@ public class GroupCompound {
 						String groupto = external ? obj.get("model").getAsString() + "-cb" : "clipboard";
 						DialogTask task = () -> {
 							obj.get("polygons").getAsJsonArray().forEach(elm -> {
-								this.add(JsonToFMT.parseWrapper(this, elm.getAsJsonObject()), groupto, false);
+								this.add(JsonToFMT.parseWrapper(this, elm.getAsJsonObject()), groupto, false, true);
 							});
 						};
 						if(external){
