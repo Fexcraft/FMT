@@ -333,7 +333,10 @@ public class GroupCompound {
 			Vec3f pos = null;
 			if(!iscopy && Settings.set_new_at_selected.getBooleanValue()){
 				PolygonWrapper sel = this.getFirstSelection();
-				if(sel != null) pos = sel.pos;
+				if(sel != null){
+					pos = sel.pos;
+					if(group == null) list = sel.getTurboList();
+				}
 			}
 			if(clear){
 				clearSelection();
