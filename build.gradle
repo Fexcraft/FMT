@@ -64,61 +64,61 @@ repositories {
 
 dependencies {
     // https://mvnrepository.com/artifact/org.reflections/reflections
-    compile group: 'org.reflections', name: 'reflections', version: '0.9.11'
+    implementation group: 'org.reflections', name: 'reflections', version: '0.9.11'
 
     //@formatter:off
-    compile group: "org.joml", name: "joml", version: joml_version, changing: true
-    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: log4j_version, changing: false
-    compile group: 'org.apache.commons', name: 'commons-lang3', version: commons_version, changing: false
-    compile group: 'org.apache.commons', name: 'commons-collections4', version: commons_collections, changing: false
-    compile group: 'com.google.guava', name: 'guava', version: guava_version, changing: false
-    compile group: 'com.google.code.gson', name: 'gson', version: gson_version, changing: false
+    implementation group: "org.joml", name: "joml", version: joml_version, changing: true
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: log4j_version, changing: false
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: commons_version, changing: false
+    implementation group: 'org.apache.commons', name: 'commons-collections4', version: commons_collections, changing: false
+    implementation group: 'com.google.guava', name: 'guava', version: guava_version, changing: false
+    implementation group: 'com.google.code.gson', name: 'gson', version: gson_version, changing: false
 
-    compile group: 'org.liquidengine', name: 'cbchain', version: le_cbchain, changing: true
-    compile group: 'org.liquidengine', name: 'leutil', version: le_util, changing: true
-	compile group: 'org.liquidengine', name: 'legui', version: legui_version, changing: true;
+    implementation group: 'org.liquidengine', name: 'cbchain', version: le_cbchain, changing: true
+    implementation group: 'org.liquidengine', name: 'leutil', version: le_util, changing: true
+	implementation group: 'org.liquidengine', name: 'legui', version: legui_version, changing: true;
 
-    compile group: 'org.lwjgl', name: 'lwjgl-stb', version: lwjgl_version, changing: true
-    runtime group: 'org.lwjgl', name: 'lwjgl-stb', version: lwjgl_version, changing: true, classifier: 'natives-windows'
-    runtime group: 'org.lwjgl', name: 'lwjgl-stb', version: lwjgl_version, changing: true, classifier: 'natives-linux'
-    runtime group: 'org.lwjgl', name: 'lwjgl-stb', version: lwjgl_version, changing: true, classifier: 'natives-macos'
+    implementation group: 'org.lwjgl', name: 'lwjgl-stb', version: lwjgl_version, changing: true
+    runtimeOnly group: 'org.lwjgl', name: 'lwjgl-stb', version: lwjgl_version, changing: true, classifier: 'natives-windows'
+    runtimeOnly group: 'org.lwjgl', name: 'lwjgl-stb', version: lwjgl_version, changing: true, classifier: 'natives-linux'
+    runtimeOnly group: 'org.lwjgl', name: 'lwjgl-stb', version: lwjgl_version, changing: true, classifier: 'natives-macos'
 
-    compile group: 'org.lwjgl', name: 'lwjgl-glfw', version: lwjgl_version, changing: true
-    runtime group: 'org.lwjgl', name: 'lwjgl-glfw', version: lwjgl_version, changing: true, classifier: 'natives-windows'
-    runtime group: 'org.lwjgl', name: 'lwjgl-glfw', version: lwjgl_version, changing: true, classifier: 'natives-linux'
-    runtime group: 'org.lwjgl', name: 'lwjgl-glfw', version: lwjgl_version, changing: true, classifier: 'natives-macos'
+    implementation group: 'org.lwjgl', name: 'lwjgl-glfw', version: lwjgl_version, changing: true
+    runtimeOnly group: 'org.lwjgl', name: 'lwjgl-glfw', version: lwjgl_version, changing: true, classifier: 'natives-windows'
+    runtimeOnly group: 'org.lwjgl', name: 'lwjgl-glfw', version: lwjgl_version, changing: true, classifier: 'natives-linux'
+    runtimeOnly group: 'org.lwjgl', name: 'lwjgl-glfw', version: lwjgl_version, changing: true, classifier: 'natives-macos'
 
-    compile group: 'org.lwjgl', name: 'lwjgl-nanovg', version: lwjgl_version, changing: true
-    runtime group: 'org.lwjgl', name: 'lwjgl-nanovg', version: lwjgl_version, changing: true, classifier: 'natives-windows'
-    runtime group: 'org.lwjgl', name: 'lwjgl-nanovg', version: lwjgl_version, changing: true, classifier: 'natives-linux'
-    runtime group: 'org.lwjgl', name: 'lwjgl-nanovg', version: lwjgl_version, changing: true, classifier: 'natives-macos'
+    implementation group: 'org.lwjgl', name: 'lwjgl-nanovg', version: lwjgl_version, changing: true
+    runtimeOnly group: 'org.lwjgl', name: 'lwjgl-nanovg', version: lwjgl_version, changing: true, classifier: 'natives-windows'
+    runtimeOnly group: 'org.lwjgl', name: 'lwjgl-nanovg', version: lwjgl_version, changing: true, classifier: 'natives-linux'
+    runtimeOnly group: 'org.lwjgl', name: 'lwjgl-nanovg', version: lwjgl_version, changing: true, classifier: 'natives-macos'
 
-    compile group: 'org.lwjgl', name: 'lwjgl-opengl', version: lwjgl_version, changing: true
-    compile group: 'org.lwjgl', name: 'lwjgl-opengl', version: lwjgl_version, changing: true, classifier: 'natives-windows'
-    compile group: 'org.lwjgl', name: 'lwjgl-opengl', version: lwjgl_version, changing: true, classifier: 'natives-linux'
-    compile group: 'org.lwjgl', name: 'lwjgl-opengl', version: lwjgl_version, changing: true, classifier: 'natives-macos'
+    implementation group: 'org.lwjgl', name: 'lwjgl-opengl', version: lwjgl_version, changing: true
+    implementation group: 'org.lwjgl', name: 'lwjgl-opengl', version: lwjgl_version, changing: true, classifier: 'natives-windows'
+    implementation group: 'org.lwjgl', name: 'lwjgl-opengl', version: lwjgl_version, changing: true, classifier: 'natives-linux'
+    implementation group: 'org.lwjgl', name: 'lwjgl-opengl', version: lwjgl_version, changing: true, classifier: 'natives-macos'
 
-    compile group: 'org.lwjgl', name: 'lwjgl', version: lwjgl_version, changing: true
-    runtime group: 'org.lwjgl', name: 'lwjgl', version: lwjgl_version, changing: true, classifier: 'natives-windows'
-    runtime group: 'org.lwjgl', name: 'lwjgl', version: lwjgl_version, changing: true, classifier: 'natives-linux'
-    runtime group: 'org.lwjgl', name: 'lwjgl', version: lwjgl_version, changing: true, classifier: 'natives-macos'
+    implementation group: 'org.lwjgl', name: 'lwjgl', version: lwjgl_version, changing: true
+    runtimeOnly group: 'org.lwjgl', name: 'lwjgl', version: lwjgl_version, changing: true, classifier: 'natives-windows'
+    runtimeOnly group: 'org.lwjgl', name: 'lwjgl', version: lwjgl_version, changing: true, classifier: 'natives-linux'
+    runtimeOnly group: 'org.lwjgl', name: 'lwjgl', version: lwjgl_version, changing: true, classifier: 'natives-macos'
 
-    compile group: 'org.lwjgl', name: 'lwjgl-yoga', version: lwjgl_version, changing: true
-    runtime group: 'org.lwjgl', name: 'lwjgl-yoga', version: lwjgl_version, changing: true, classifier: 'natives-windows'
-    runtime group: 'org.lwjgl', name: 'lwjgl-yoga', version: lwjgl_version, changing: true, classifier: 'natives-linux'
-    runtime group: 'org.lwjgl', name: 'lwjgl-yoga', version: lwjgl_version, changing: true, classifier: 'natives-macos'
+    implementation group: 'org.lwjgl', name: 'lwjgl-yoga', version: lwjgl_version, changing: true
+    runtimeOnly group: 'org.lwjgl', name: 'lwjgl-yoga', version: lwjgl_version, changing: true, classifier: 'natives-windows'
+    runtimeOnly group: 'org.lwjgl', name: 'lwjgl-yoga', version: lwjgl_version, changing: true, classifier: 'natives-linux'
+    runtimeOnly group: 'org.lwjgl', name: 'lwjgl-yoga', version: lwjgl_version, changing: true, classifier: 'natives-macos'
     
-    compile group: 'org.lwjgl', name: 'lwjgl-tinyfd', version: lwjgl_version, changing: true
-    runtime group: 'org.lwjgl', name: 'lwjgl-tinyfd', version: lwjgl_version, changing: true, classifier: 'natives-windows'
-    runtime group: 'org.lwjgl', name: 'lwjgl-tinyfd', version: lwjgl_version, changing: true, classifier: 'natives-linux'
-    runtime group: 'org.lwjgl', name: 'lwjgl-tinyfd', version: lwjgl_version, changing: true, classifier: 'natives-macos'
+    implementation group: 'org.lwjgl', name: 'lwjgl-tinyfd', version: lwjgl_version, changing: true
+    runtimeOnly group: 'org.lwjgl', name: 'lwjgl-tinyfd', version: lwjgl_version, changing: true, classifier: 'natives-windows'
+    runtimeOnly group: 'org.lwjgl', name: 'lwjgl-tinyfd', version: lwjgl_version, changing: true, classifier: 'natives-linux'
+    runtimeOnly group: 'org.lwjgl', name: 'lwjgl-tinyfd', version: lwjgl_version, changing: true, classifier: 'natives-macos'
     
-    //compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '3.0.7', changing: true
-    //runtime group: 'org.codehaus.groovy', name: 'groovy-all', version: '3.0.7', changing: true
+    //implementation group: 'org.codehaus.groovy', name: 'groovy-all', version: '3.0.7', changing: true
+    //runtimeOnly group: 'org.codehaus.groovy', name: 'groovy-all', version: '3.0.7', changing: true
     
-    compile files('libs/discord-rpc.jar', 'libs/VOXtoFMT-1.jar', 'libs/FCL-1.12.64.jar')
+    implementation files('libs/discord-rpc.jar', 'libs/VOXtoFMT-1.jar', 'libs/FCL-1.12.64.jar')
     //@formatter:on
-    testCompile group: 'junit', name: 'junit', version: '4.11'
+    //testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
 sourceSets {
@@ -141,7 +141,7 @@ task mainJar(type: Jar){
 		'Version': version,
 		'Main-Class': mainClassName,
 		'Created-By': "Ferdinand Calo' (FEX___96)",
-		"Class-Path": ". " + (configurations.compile.collect { "lib/" + it.getName() }.join(' '))
+		"Class-Path": ". " + (configurations.runtimeClasspath.collect { "lib/" + it.getName() }.join(' '))
 	}
 	from(zipTree("${destinationDir}/${archiveName}")){
 		exclude 'net/fexcraft/app/fmt/launch/'
@@ -172,7 +172,7 @@ task launcherJar(type: Jar){
 
 task copyForUpload(){
 	copy {
-    	from configurations.compile
+    	from configurations.runtimeClasspath
     	into "upload/lib"
 	}
 	copy {
@@ -210,7 +210,7 @@ task compileCatalog(){
 		path = path.substring(path.indexOf(restype))
 		catalog_fmt += '\t\t[ "' + path + '", ' + it.lastModified() + ' ],\n'
 	}
-	configurations.compile.each {
+	configurations.runtimeClasspath.each {
 		path = it.getPath().replace("\\", "/")
 		path = "lib" + path.substring(path.lastIndexOf("/"))
 		catalog_fmt += '\t\t[ "' + path + '", ' + it.lastModified() + ', true ],\n'
