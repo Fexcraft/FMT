@@ -111,6 +111,7 @@ public class FMT {
         	System.setProperty("java.awt.headless", Boolean.TRUE.toString());
         }
 		log("Running on " + System.getProperty("os.name") + " / " + System.getProperty("os.version"));
+		log("Java " + System.getProperty("java.version") + " (" + System.getProperty("java.home") + ")");
 	    System.setProperty("org.lwjgl.librarypath", new File("./lib/").getAbsolutePath());
 		Configuration.SHARED_LIBRARY_EXTRACT_DIRECTORY.set("./lib/natives");
 		Configuration.SHARED_LIBRARY_EXTRACT_PATH.set("./lib/natives");
