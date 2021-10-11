@@ -144,6 +144,9 @@ public class FMT {
 		if(window == MemoryUtil.NULL) throw new RuntimeException("Failed to create window");
 		glfwMakeContextCurrent(window);
 		GL.createCapabilities();
+		log("GL Renderer: " + glGetString(GL_RENDERER));
+		log("GL Vendor:   " + glGetString(GL_VENDOR));
+		log("GL Version:  " + glGetString(GL_VERSION));
 		icon(window);
 		glfwShowWindow(window);
 		glfwFocusWindow(window);
