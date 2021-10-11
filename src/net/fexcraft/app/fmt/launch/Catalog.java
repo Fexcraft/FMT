@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
+import net.fexcraft.app.json.JsonHandler.PrintOption;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.app.json.JsonObject;
 
@@ -32,7 +33,7 @@ public class Catalog {
 		JsonMap map = JsonHandler.parseURL("http://fexcraft.net/files/app_data/fmt/catalog.fmt");
 		if(!CATALOG_FILE.getParentFile().exists()) CATALOG_FILE.getParentFile().mkdirs();
 		if(map == null || map.empty()) return;
-		JsonHandler.print(CATALOG_FILE, map, false, false);
+		JsonHandler.print(CATALOG_FILE, map, PrintOption.FLAT);
 	}
 	
 	public static boolean load(){

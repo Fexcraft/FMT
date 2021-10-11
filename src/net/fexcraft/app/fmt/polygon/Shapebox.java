@@ -8,8 +8,8 @@ import static net.fexcraft.app.fmt.attributes.PolyVal.CORNER_4;
 import static net.fexcraft.app.fmt.attributes.PolyVal.CORNER_5;
 import static net.fexcraft.app.fmt.attributes.PolyVal.CORNER_6;
 import static net.fexcraft.app.fmt.attributes.PolyVal.CORNER_7;
-import static net.fexcraft.app.fmt.utils.Jsoniser.getVector;
-import static net.fexcraft.app.fmt.utils.Jsoniser.setVector;
+import static net.fexcraft.app.fmt.utils.JsonUtil.getVector;
+import static net.fexcraft.app.fmt.utils.JsonUtil.setVector;
 
 import org.joml.Vector3f;
 

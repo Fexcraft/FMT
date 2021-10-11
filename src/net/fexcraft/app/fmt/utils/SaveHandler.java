@@ -44,6 +44,7 @@ import net.fexcraft.app.fmt.ui.GenericDialog;
 import net.fexcraft.app.fmt.ui.fields.TextField;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
+import net.fexcraft.app.json.JsonHandler.PrintOption;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.app.json.JsonObject;
 
@@ -189,7 +190,7 @@ public class SaveHandler {
 							group.add(Polygon.from(model, elm.asMap()));
 						}
 						catch(Exception e){
-							log(JsonHandler.toString(obj, true, true));
+							log(JsonHandler.toString(obj, PrintOption.SPACED));
 							log(e);
 						}
 					});

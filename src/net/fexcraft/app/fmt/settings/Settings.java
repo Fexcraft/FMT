@@ -47,6 +47,7 @@ import net.fexcraft.app.fmt.utils.SaveHandler;
 import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
+import net.fexcraft.app.json.JsonHandler.PrintOption;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.app.json.JsonObject;
 import net.fexcraft.lib.common.math.RGB;
@@ -224,7 +225,7 @@ public class Settings {
 			recent.add(file.toString().replace("\\", "\\\\"));
 		}
 		if(recent.size() > 0) obj.add("recent_files", recent);
-		JsonHandler.print(new File("./settings.json"), obj, false, false);
+		JsonHandler.print(new File("./settings.json"), obj, PrintOption.FLAT);
 	}
 
 	public static void applyTheme(){

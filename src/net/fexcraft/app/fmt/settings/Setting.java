@@ -8,7 +8,7 @@ import net.fexcraft.app.fmt.ui.fields.BoolButton;
 import net.fexcraft.app.fmt.ui.fields.ColorField;
 import net.fexcraft.app.fmt.ui.fields.NumberField;
 import net.fexcraft.app.fmt.ui.fields.TextField.TextFieldField;
-import net.fexcraft.app.fmt.utils.Jsoniser;
+import net.fexcraft.app.fmt.utils.JsonUtil;
 import net.fexcraft.app.fmt.utils.MRTRenderer;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.RGB;
@@ -44,7 +44,7 @@ public class Setting<TYPE> {
 	}
 
 	public void save(JsonMap obj){
-		obj.add(id, Jsoniser.toJson(value));
+		obj.add(id, JsonUtil.toJson(value));
 	}
 
 	public void validate(boolean apply, String string){

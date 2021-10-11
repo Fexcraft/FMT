@@ -1,7 +1,7 @@
 package net.fexcraft.app.fmt.utils;
 
+import static net.fexcraft.app.fmt.utils.JsonUtil.parseURLwithCookies;
 import static net.fexcraft.app.fmt.utils.Logging.log;
-import static net.fexcraft.app.json.JsonHandler.parseURLwithCookies;
 
 import java.io.File;
 import java.util.Base64;
@@ -9,6 +9,7 @@ import java.util.function.Consumer;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.json.JsonHandler;
+import net.fexcraft.app.json.JsonHandler.PrintOption;
 import net.fexcraft.app.json.JsonMap;
 
 public class SessionHandler {
@@ -29,7 +30,7 @@ public class SessionHandler {
 		usermail = map.getString("mail", "testuser@fexcraft.net");
 		userid = map.getString("userid", "-1");
 		username = map.getString("username", defusername);
-		if(!file.exists()) JsonHandler.print(file, map, true, false);
+		if(!file.exists()) JsonHandler.print(file, map, PrintOption.FLAT);
 	}
 
 	public static void save(){
@@ -43,7 +44,7 @@ public class SessionHandler {
 		if(username != null) map.add("username", username);
 		if(perm != null) map.add("perm", perm);
 		if(permname != null) map.add("perm-name", permname);
-		JsonHandler.print(new File("./auth.net"), map, true, false);
+		JsonHandler.print(new File("./auth.net"), map, PrintOption.FLAT);
 	}
 
 	public static void checkIfLoggedIn(boolean retry, boolean first){

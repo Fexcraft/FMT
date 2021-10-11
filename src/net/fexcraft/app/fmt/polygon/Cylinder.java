@@ -1,7 +1,7 @@
 package net.fexcraft.app.fmt.polygon;
 
-import static net.fexcraft.app.fmt.utils.Jsoniser.getVector;
-import static net.fexcraft.app.fmt.utils.Jsoniser.setVector;
+import static net.fexcraft.app.fmt.utils.JsonUtil.getVector;
+import static net.fexcraft.app.fmt.utils.JsonUtil.setVector;
 
 import org.joml.Vector3f;
 

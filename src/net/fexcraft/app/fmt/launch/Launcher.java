@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 import net.fexcraft.app.json.JsonHandler;
+import net.fexcraft.app.json.JsonHandler.PrintOption;
 import net.fexcraft.app.json.JsonMap;
 
 /**
@@ -38,7 +39,7 @@ public class Launcher extends Frame {
 		reload.setEnabled(true);
 		update.setEnabled(loaded);
 		start.setEnabled(check);
-		JsonHandler.print(laufile, lau, false, false);
+		JsonHandler.print(laufile, lau, PrintOption.FLAT);
 	}
 
 	public Launcher(){
@@ -124,6 +125,7 @@ public class Launcher extends Frame {
 		setLayout(null);
 		setVisible(true);
 		this.addWindowListener(new WindowAdapter(){
+			@Override
 			public void windowClosing(WindowEvent we){
 				System.exit(0);
 			}

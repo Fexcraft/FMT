@@ -1,6 +1,6 @@
 package net.fexcraft.app.fmt.settings;
 
-import net.fexcraft.app.fmt.utils.Jsoniser;
+import net.fexcraft.app.fmt.utils.JsonUtil;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.RGB;
 
@@ -26,7 +26,7 @@ public class RGBSetting extends Setting<RGB> {
 	
 	@Override
 	public void save(JsonMap obj){
-		obj.add(id, Jsoniser.toJson(value.packed));
+		obj.add(id, JsonUtil.toJson(value.packed));
 	}
 
 	@Override
