@@ -1,20 +1,53 @@
 package net.fexcraft.app.fmt.utils;
 
-import static net.fexcraft.app.fmt.utils.GGR.parseKeyAction;
-import static net.fexcraft.app.fmt.utils.Logging.log;
-import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_C;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_DELETE;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_F;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_F1;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_F10;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_F11;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_F12;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_F2;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_F3;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_F4;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_F5;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_F6;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_F7;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_F8;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_F9;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_G;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT_ALT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT_CONTROL;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT_SHIFT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_R;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT_ALT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT_CONTROL;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_S;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_U;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_V;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_Y;
+import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
+import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
-import com.google.common.io.Files;
-import com.google.gson.JsonObject;
+import org.lwjgl.glfw.GLFW;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
+import net.fexcraft.app.json.JsonHandler;
+import net.fexcraft.app.json.JsonHandler.PrintOption;
+import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.Static;
-import net.fexcraft.lib.common.json.JsonUtil;
 
 public class KeyCompound {
 	
@@ -102,33 +135,27 @@ public class KeyCompound {
 		}).set_ctrl());
 	}
 	
+	private static boolean parseKeyAction(int action){
+		return action == GLFW.GLFW_PRESS || action == GLFW_RELEASE;
+	}
+
 	public static void load(){
-		JsonObject obj = JsonUtil.get(new File("./keys.json"));
-		if(obj.entrySet().size() == 0) return;
-		if(!obj.has("format") || !obj.get("format").getAsString().equals(FORMAT)){
-			log("Old keys.json format detected, skipping keys.json loading.");
-			try{
-				Files.copy(new File("./keys.json"), new File("./keys_old.json"));
-			}
-			catch(IOException e){
-				log(e);
-			}
-			return;
-		}
+		JsonMap map = JsonHandler.parse(new File("./keys.json"));
+		if(map.entries().size() == 0) return;
 		for(KeyFunction func : keys){
-			if(obj.has(func.name)){
-				func.id = obj.get(func.name).getAsInt();
+			if(map.has(func.name)){
+				func.id = map.get(func.name).integer_value();
 			}
 		}
 	}
 	
 	public static void save(){
-		JsonObject obj = new JsonObject();
-		obj.addProperty("format", FORMAT);
+		JsonMap map = new JsonMap();
+		map.add("format", FORMAT);
 		for(KeyFunction func : keys){
-			obj.addProperty(func.name, func.id);
+			map.add(func.name, func.id);
 		}
-		JsonUtil.write(new File("./keys.json"), obj);
+		JsonHandler.print(new File("./keys.json"), map, PrintOption.SPACED);
 	}
 	
 	public static class KeyFunction {
