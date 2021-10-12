@@ -3,6 +3,10 @@ package net.fexcraft.app.fmt;
 import static net.fexcraft.app.fmt.utils.Logging.log;
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.GL_RENDERER;
+import static org.lwjgl.opengl.GL11.GL_VENDOR;
+import static org.lwjgl.opengl.GL11.GL_VERSION;
+import static org.lwjgl.opengl.GL11.glGetString;
 
 import java.io.File;
 import java.io.IOException;
@@ -128,6 +132,7 @@ public class FMTB {
         	System.setProperty("java.awt.headless", Boolean.TRUE.toString());
         }
 		log("Running on " + System.getProperty("os.name") + " / " + System.getProperty("os.version"));
+		log("Java " + System.getProperty("java.version") + " (" + System.getProperty("java.home") + ")");
 	    System.setProperty("org.lwjgl.librarypath", new File("./lib/").getAbsolutePath());
 		Configuration.SHARED_LIBRARY_EXTRACT_DIRECTORY.set("./lib/natives");
 		Configuration.SHARED_LIBRARY_EXTRACT_PATH.set("./lib/natives");
@@ -164,6 +169,9 @@ public class FMTB {
 		if(window == MemoryUtil.NULL) throw new RuntimeException("Failed to create window");
 		glfwMakeContextCurrent(window);
 		GL.createCapabilities();
+		log("GL Renderer: " + glGetString(GL_RENDERER));
+		log("GL Vendor:   " + glGetString(GL_VENDOR));
+		log("GL Version:  " + glGetString(GL_VERSION));
 		// GLUtil.setupDebugMessageCallback();
 		initOpenGL();
 		this.setIcon();
