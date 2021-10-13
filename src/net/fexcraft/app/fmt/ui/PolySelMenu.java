@@ -27,7 +27,7 @@ public class PolySelMenu {
 			FMT.MODEL.delsel();
 			layer.hide();
 		}));
-		layer = new MenuLayer(new Vector2f((float)GGR.posx, (float)GGR.posy), components, null);
+		layer = new MenuLayer(null, new Vector2f((float)GGR.posx, (float)GGR.posy), components, null);
 	}
 
 	public static void show(){

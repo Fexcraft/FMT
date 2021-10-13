@@ -295,6 +295,7 @@ public class FMT {
 			render(vao, alpha = accumulator / interval);
 			//
 			adjustLabels();
+			ToolbarMenu.checkHide();
 			ImageHandler.updateText();
 			RENDERER.render(ImageHandler.shouldHide() ? IMG_FRAME : FRAME, CONTEXT);
 			timer.updateFPS();

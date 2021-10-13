@@ -24,6 +24,7 @@ import net.fexcraft.app.fmt.utils.Translator;
 
 public class ToolbarMenu extends Panel {
 	
+	public static final ArrayList<MenuLayer> ACTIVE = new ArrayList<>();
 	public static final HashMap<String, ToolbarMenu> MENUS = new HashMap<>();
 	public static final int WIDTH = 120, HEIGHT = 30;
 	protected ArrayList<Component> components = new ArrayList<>();
@@ -36,7 +37,7 @@ public class ToolbarMenu extends Panel {
 		Settings.applyMenuTheme(this);
 		MENUS.put(id, this);
 		for(int i = 0; i < comps.length; i++) components.add(comps[i]);
-		layer = new MenuLayer(this.getPosition(), components, index < 0 ? id.substring(0, id.lastIndexOf('.')) : null);
+		layer = new MenuLayer(this, this.getPosition(), components, index < 0 ? id.substring(0, id.lastIndexOf('.')) : null);
 		MouseClickEventListener mlistener = event -> {
 			if(event.getAction() != CLICK || event.getButton() != MOUSE_BUTTON_LEFT || components.isEmpty()) return;
 			layer.show();
@@ -74,11 +75,12 @@ public class ToolbarMenu extends Panel {
 		public static final ArrayList<MenuLayer> LAYERS = new ArrayList<>();
 		public Consumer<MenuLayer> consumer;
 		private Collection<Component> components;
+		private ToolbarMenu barmenu;
 		private boolean shown;
 		private Vector2f pos;
 		private String root;
 
-        public MenuLayer(Vector2f pos, Collection<Component> comps, String rootid){
+        public MenuLayer(ToolbarMenu menu, Vector2f pos, Collection<Component> comps, String rootid){
     		Settings.applyBorderless(this);
 			float w = Settings.DARKTHEME.value ? 0 : 1;
 			this.getStyle().getBackground().setColor(w, w, w, 1);
@@ -87,6 +89,7 @@ public class ToolbarMenu extends Panel {
             LAYERS.add(this);
             components = comps;
             root = rootid;
+    		barmenu = menu;
             this.pos = pos;
             refreshSize();
             this.setPosition(pos.add(0, HEIGHT, new Vector2f()));
@@ -96,13 +99,13 @@ public class ToolbarMenu extends Panel {
         }
 
 		protected void regComponent(Component com){
-        	CursorEnterEventListener listener = lis -> {
+        	/*CursorEnterEventListener listener = lis -> {
         		if(!lis.isEntered() && !anyComponentHovered(components)) hide();
     		};
 			com.getListenerMap().addListener(CursorEnterEvent.class, listener);
     		if(com.getChildComponents().size() > 0){
     			com.getChildComponents().get(0).getListenerMap().addListener(CursorEnterEvent.class, listener);
-    		}
+    		}*/
     		Settings.applyMenuTheme(com);
     		if(root != null) com.getPosition().x += 1;
     		this.add(com);
@@ -128,6 +131,7 @@ public class ToolbarMenu extends Panel {
 			hideAll(root == null);
 			if(root != null) offset();
 			FMT.FRAME.addLayer(this);
+			ACTIVE.add(this);
 			shown = true;
 		}
 
@@ -240,6 +244,20 @@ public class ToolbarMenu extends Panel {
 	public ToolbarMenu setLayerPreShow(Consumer<MenuLayer> cons){
 		layer.consumer = cons;
 		return this;
+	}
+	
+	private static ArrayList<MenuLayer> removable = new ArrayList<>();
+
+	public static void checkHide(){
+		if(ACTIVE.size() == 0) return;
+		for(MenuLayer layer : ACTIVE){
+			if(!layer.anyComponentHovered(layer.components) && (layer.barmenu == null ? true : !layer.barmenu.isHovered())){
+				removable.add(layer);
+				layer.hide();
+			}
+		}
+		ACTIVE.removeAll(removable);
+		removable.clear();
 	}
 
 }
