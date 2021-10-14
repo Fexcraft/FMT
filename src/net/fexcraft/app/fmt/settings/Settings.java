@@ -37,6 +37,7 @@ import net.fexcraft.app.fmt.ui.components.BoxComponent;
 import net.fexcraft.app.fmt.ui.components.CylinderComponentFull;
 import net.fexcraft.app.fmt.ui.components.GroupGeneral;
 import net.fexcraft.app.fmt.ui.components.MarkerComponent;
+import net.fexcraft.app.fmt.ui.components.MultiplierComponent;
 import net.fexcraft.app.fmt.ui.components.PolygonGeneral;
 import net.fexcraft.app.fmt.ui.components.QuickAdd;
 import net.fexcraft.app.fmt.ui.components.ShapeboxComponent;
@@ -330,6 +331,7 @@ public class Settings {
 		Editor editor = new Editor("polygon_editor", "Polygon Editor", false, true);
 		new PolygonTree(null, false);
 		new TextureTree(null, false);
+		editor.addComponent(new MultiplierComponent());
 		editor.addComponent(new QuickAdd());
 		editor.addComponent(new PolygonGeneral());
 		editor.addComponent(new BoxComponent());
@@ -337,6 +339,7 @@ public class Settings {
 		editor.addComponent(new CylinderComponentFull());
 		editor.addComponent(new MarkerComponent());
 		editor = new Editor("group_editor", "Group Editor", false, true);
+		editor.addComponent(new MultiplierComponent());
 		editor.addComponent(new QuickAdd());
 		editor.addComponent(new GroupGeneral());
 	}

@@ -32,7 +32,7 @@ public class Setting<TYPE> {
 	}
 	
 	public void load(JsonMap obj){
-		value = (TYPE)obj.get(id, _default);
+		value = obj.get(id, _default);
 	}
 
 	public <VALUE> VALUE value(){
@@ -72,8 +72,7 @@ public class Setting<TYPE> {
 		if(value instanceof Float || value instanceof Integer){
 			float min = id.equals("rounding_digits") ? 0 : Integer.MIN_VALUE;
 			float max = id.equals("rounding_digits") ? 10 : Integer.MAX_VALUE;
-			NumberField field = new NumberField(this, x, y, w, h);
-			return field.setup(min, max, value instanceof Float, () -> {
+			return new NumberField(this, x, y, w, h).setup(min, max, value instanceof Float, field -> {
 				value = value instanceof Float ? (TYPE)(Object)field.value() : (TYPE)(Object)(int)field.value();
 				if(id.equals("rounding_digits")) NumberField.updateRoundingDigits();
 			});

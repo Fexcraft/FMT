@@ -12,15 +12,7 @@ import org.liquidengine.legui.style.Style.DisplayType;
 
 import net.fexcraft.app.fmt.attributes.UpdateHandler.UpdateHolder;
 import net.fexcraft.app.fmt.settings.Settings;
-import net.fexcraft.app.fmt.ui.components.BoxComponent;
-import net.fexcraft.app.fmt.ui.components.CylinderComponentBasic;
-import net.fexcraft.app.fmt.ui.components.CylinderComponentFull;
-import net.fexcraft.app.fmt.ui.components.CylinderComponentSimple;
-import net.fexcraft.app.fmt.ui.components.GroupGeneral;
-import net.fexcraft.app.fmt.ui.components.MarkerComponent;
-import net.fexcraft.app.fmt.ui.components.PolygonGeneral;
-import net.fexcraft.app.fmt.ui.components.QuickAdd;
-import net.fexcraft.app.fmt.ui.components.ShapeboxComponent;
+import net.fexcraft.app.fmt.ui.components.*;
 import net.fexcraft.app.fmt.utils.Translator;
 
 public class EditorComponent extends Component {
@@ -141,6 +133,7 @@ public class EditorComponent extends Component {
 		REGISTRY.put("polygon.cylinder.simple", CylinderComponentSimple.class);
 		REGISTRY.put("polygon.marker", MarkerComponent.class);
 		REGISTRY.put("group.general", GroupGeneral.class);
+		REGISTRY.put("multiplier", MultiplierComponent.class);
 	}
 
 }

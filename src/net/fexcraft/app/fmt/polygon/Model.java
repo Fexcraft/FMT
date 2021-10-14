@@ -530,8 +530,8 @@ public class Model {
 		dialog.getContainer().add(new Label(translate("model.rescale.scale"), 10, 10, width - 20, 20));
 		NumberField input = new NumberField((EditorComponent)null, 10, 30, width - 20, 20);
 		float[] scale = { 1 };
-		input.setup(0.001f, 16, true, () -> {
-			scale[0] = input.value();
+		input.setup(0.001f, 16, true, field -> {
+			scale[0] = field.value();
 		});
 		input.apply(scale[0]);
 		dialog.getContainer().add(input);

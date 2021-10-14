@@ -9,6 +9,7 @@ import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
+import java.util.function.Consumer;
 
 import org.liquidengine.legui.component.TextInput;
 import org.liquidengine.legui.event.FocusEvent;
@@ -62,7 +63,7 @@ public class NumberField extends TextInput implements Field {
 	private boolean floatfield;
 	private float min, max;
 	protected Float value = null;
-	private Runnable update;
+	protected Consumer<NumberField> update;
 	
 	public NumberField setup(float min, float max, boolean flaot, PolygonValue val){
 		floatfield = flaot;
@@ -73,7 +74,7 @@ public class NumberField extends TextInput implements Field {
 		return this;
 	}
 	
-	public NumberField setup(float min, float max, boolean flaot, Runnable update){
+	public NumberField setup(float min, float max, boolean flaot, Consumer<NumberField> update){
 		floatfield = flaot;
 		this.min = min;
 		this.max = max;
@@ -83,10 +84,10 @@ public class NumberField extends TextInput implements Field {
 			value = null;
 		});
 		getListenerMap().addListener(FocusEvent.class, (FocusEventListener)listener -> {
-			if(!listener.isFocused()) update.run();
+			if(!listener.isFocused()) update.accept(this);
 		});
 		getListenerMap().addListener(KeyEvent.class, (KeyEventListener)listener -> {
-			if(listener.getKey() == GLFW.GLFW_KEY_ENTER) update.run();
+			if(listener.getKey() == GLFW.GLFW_KEY_ENTER) update.accept(this);
 		});
 		return this;
 	}
@@ -134,7 +135,7 @@ public class NumberField extends TextInput implements Field {
 		if(poly_value != null){
 			FMT.MODEL.updateValue(poly_value, this);
 		}
-		if(update != null) update.run();
+		if(update != null) update.accept(this);
 	}
 
 	@Override
@@ -143,7 +144,7 @@ public class NumberField extends TextInput implements Field {
 	}
 	
 	@Override
-	public Runnable update(){
+	public Consumer<NumberField> update(){
 		return update;
 	}
 

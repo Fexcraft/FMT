@@ -38,7 +38,7 @@ public interface Field {
 
 	public String id();
 
-	public default Runnable update(){ return null; }
+	public default Consumer<? extends Field> update(){ return null; }
 
 	public PolygonValue polyval();
 	
@@ -86,8 +86,8 @@ public interface Field {
 		String newtext = event.getNewValue().replaceAll("[^0-9,\\.\\-]", "");
 		if(newtext.indexOf("-") > 0) newtext.replace("-", ""); if(newtext.length() == 0) newtext = "0";
 		if(!newtext.equals(event.getNewValue())){
-			((NumberField)event.getTargetComponent()).getTextState().setText(newtext);
-			((NumberField)event.getTargetComponent()).setCaretPosition(newtext.length());
+			event.getTargetComponent().getTextState().setText(newtext);
+			event.getTargetComponent().setCaretPosition(newtext.length());
 		}
 	}
 
