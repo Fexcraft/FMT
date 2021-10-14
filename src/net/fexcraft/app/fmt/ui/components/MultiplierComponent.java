@@ -19,7 +19,7 @@ public class MultiplierComponent extends EditorComponent {
 	private NumberField field;
 	
 	public MultiplierComponent(){
-		super("multiplier", 65, false, true);
+		super("multiplier", 55, false, false);
 		this.add(field = new NumberField(this, F30, row(1), F3S, HEIGHT){
 			@Override
 			public void scroll(double scroll){
@@ -38,7 +38,7 @@ public class MultiplierComponent extends EditorComponent {
 		String[] arr = new String[]{ "normal", "sixteenth", "decimal"};
 		int off = 0, am = 0;
 		for(String string : arr){
-			Slider slider = new Slider(F31, row(0) + off, 190, 12);
+			Slider slider = new Slider(F31, 8 + off, 190, 14);
 			switch(string){
 				case "normal":{
 					slider.setMinValue(1);
@@ -79,7 +79,7 @@ public class MultiplierComponent extends EditorComponent {
 	        });
 	        slider.setTooltip(tooltip);
 	        super.add(slider);
-	        off += 12;
+	        off += 15;
 		}
 	}
 

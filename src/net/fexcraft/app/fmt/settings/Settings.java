@@ -331,16 +331,16 @@ public class Settings {
 		Editor editor = new Editor("polygon_editor", "Polygon Editor", false, true);
 		new PolygonTree(null, false);
 		new TextureTree(null, false);
-		editor.addComponent(new MultiplierComponent());
 		editor.addComponent(new QuickAdd());
+		editor.addComponent(new MultiplierComponent());
 		editor.addComponent(new PolygonGeneral());
 		editor.addComponent(new BoxComponent());
 		editor.addComponent(new ShapeboxComponent());
 		editor.addComponent(new CylinderComponentFull());
 		editor.addComponent(new MarkerComponent());
 		editor = new Editor("group_editor", "Group Editor", false, true);
-		editor.addComponent(new MultiplierComponent());
 		editor.addComponent(new QuickAdd());
+		editor.addComponent(new MultiplierComponent());
 		editor.addComponent(new GroupGeneral());
 	}
 
