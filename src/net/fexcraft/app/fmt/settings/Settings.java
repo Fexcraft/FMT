@@ -226,7 +226,7 @@ public class Settings {
 			recent.add(file.toString().replace("\\", "\\\\"));
 		}
 		if(recent.size() > 0) obj.add("recent_files", recent);
-		JsonHandler.print(new File("./settings.json"), obj, PrintOption.FLAT);
+		JsonHandler.print(new File("./settings.json"), obj, PrintOption.SPACED);
 	}
 
 	public static void applyTheme(){
