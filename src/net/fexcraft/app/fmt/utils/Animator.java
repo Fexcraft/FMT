@@ -29,15 +29,14 @@ public class Animator {
 			new Setting(Type.FLOAT, "x", 0f), new Setting(Type.FLOAT, "y", 0f), new Setting(Type.FLOAT, "z", 0f),
 			new Setting(Type.FLOAT, "x_min", -360f), new Setting(Type.FLOAT, "y_min", -360f), new Setting(Type.FLOAT, "z_min", -360f),
 			new Setting(Type.FLOAT, "x_max", 360f), new Setting(Type.FLOAT, "y_max", 360f), new Setting(Type.FLOAT, "z_max", 360f),
-			new Setting(Type.BOOLEAN, "loop", true), new Setting(Type.BOOLEAN, "opposite_on_end", false),
+			new Setting(Type.BOOLEAN, "loop", true), new Setting(Type.BOOLEAN, "fvtm:not_additive", true),
 			new Setting(Type.STRING, "fvtm:attr", ""), new Setting(Type.BOOLEAN, "fvtm:boolean_type_attr", true)
 		)));
 		nani.add(new Translator("translator", null, Arrays.asList(
 			new Setting(Type.FLOAT, "x", 0f), new Setting(Type.FLOAT, "y", 0f), new Setting(Type.FLOAT, "z", 0f),
 			new Setting(Type.FLOAT, "x_min",-1f), new Setting(Type.FLOAT, "y_min", -1f), new Setting(Type.FLOAT, "z_min", -1f),
 			new Setting(Type.FLOAT, "x_max", 1f), new Setting(Type.FLOAT, "y_max", 1f), new Setting(Type.FLOAT, "z_max", 1f),
-			new Setting(Type.BOOLEAN, "loop", true), new Setting(Type.BOOLEAN, "opposite_on_end", false),
-			new Setting(Type.STRING, "fvtm:attr", ""), new Setting(Type.BOOLEAN, "fvtm:boolean_type_attr", true)
+			new Setting(Type.BOOLEAN, "loop", true), new Setting(Type.STRING, "fvtm:attr", ""), new Setting(Type.BOOLEAN, "fvtm:boolean_type_attr", true)
 		)));
 		nani.add(new Custom("custom", null, Arrays.asList(new Setting(Type.STRING, "fvtm:prog", "enter here program id and parameters (if required)") )));
 		nani.add(new Title("# Pivot Aligner", null, null));
@@ -120,14 +119,14 @@ public class Animator {
 	
 	public static class Rotator extends Animation {
 		
-		private Setting x, y, z, x_max, y_max, z_max, x_min, y_min, z_min, loop, ooe;
+		private Setting x, y, z, x_max, y_max, z_max, x_min, y_min, z_min, loop;
 		private int xdir = 1, ydir = 1, zdir = 1; private float xpass, ypass, zpass;
 
 		public Rotator(String id, TurboList group, Collection<Setting> settings){
 			super(id, group, settings); x = get("x"); y = get("y"); z = get("z");
 			x_min = get("x_min"); y_min = get("y_min"); z_min = get("z_min");
 			x_max = get("x_max"); y_max = get("y_max"); z_max = get("z_max");
-			loop = get("loop"); ooe = get("opposite_on_end");
+			loop = get("loop");
 		}
 
 		@Override
@@ -135,29 +134,35 @@ public class Animator {
 			xpass += xdir * x.getFloatValue(); ypass += ydir * y.getFloatValue(); zpass += zdir * z.getFloatValue();
 			//
 			if(xpass > x_max.getFloatValue()){
-				xpass = x_max.getFloatValue(); if(ooe.getBooleanValue()) xdir = -xdir;
+				xpass = x_max.getFloatValue();
+				if(!loop.getBooleanValue()) xdir = -xdir;
 				if(loop.getBooleanValue()) xpass = x_min.getFloatValue();
 			}
 			if(xpass < x_min.getFloatValue()){
-				xpass = x_min.getFloatValue(); if(ooe.getBooleanValue()) xdir = -xdir;
+				xpass = x_min.getFloatValue();
+				if(!loop.getBooleanValue()) xdir = -xdir;
 				if(loop.getBooleanValue()) xpass = x_max.getFloatValue();
 			}
 			//
 			if(ypass > y_max.getFloatValue()){
-				ypass = y_max.getFloatValue(); if(ooe.getBooleanValue()) ydir = -ydir;
+				ypass = y_max.getFloatValue();
+				if(!loop.getBooleanValue()) ydir = -ydir;
 				if(loop.getBooleanValue()) ypass = y_min.getFloatValue();
 			}
 			if(ypass < y_min.getFloatValue()){
-				ypass = y_min.getFloatValue(); if(ooe.getBooleanValue()) ydir = -ydir;
+				ypass = y_min.getFloatValue();
+				if(!loop.getBooleanValue()) ydir = -ydir;
 				if(loop.getBooleanValue()) ypass = y_max.getFloatValue();
 			}
 			//
 			if(zpass > z_max.getFloatValue()){
-				zpass = z_max.getFloatValue(); if(ooe.getBooleanValue()) zdir = -zdir;
+				zpass = z_max.getFloatValue();
+				if(!loop.getBooleanValue()) zdir = -zdir;
 				if(loop.getBooleanValue()) zpass = z_min.getFloatValue();
 			}
 			if(zpass < z_min.getFloatValue()){
-				zpass = z_min.getFloatValue(); if(ooe.getBooleanValue()) zdir = -zdir;
+				zpass = z_min.getFloatValue();
+				if(!loop.getBooleanValue()) zdir = -zdir;
 				if(loop.getBooleanValue()) zpass = z_max.getFloatValue();
 			}
 			//
@@ -182,7 +187,8 @@ public class Animator {
 		@Override
 		public String getExportString(String modto){
 			if(!modto.equals("fvtm") && !modto.equals("fmf") && !modto.equals("obj")) return "invalid_mod";
-			String string = "new DefaultPrograms.AttributeRotator(\"%s\", %s, %sf, %sf, %sf, %s, %sf)";
+			boolean attri = get("fvtm:attr").getStringValue().length() > 0;
+			String string = attri ? "new DefaultPrograms.AttributeRotator(\"%s\", %s, %sf, %sf, %sf, %s, %sf)" : "new DefaultPrograms.Rotator(%sf, %sf, %sf, %s, %sf, %s, %s)";
 			int axis = x.directFloat() != 0f ? 0 : y.directFloat() != 0f ? 1 : z.directFloat() != 0f ? 2 : 3;
 			float min = 0, max = 0, step = 0, defrot = 0;
 			switch(axis){
@@ -206,27 +212,37 @@ public class Animator {
 			if(modto.equals("fmf") || modto.equals("obj")){
 				String attr = get("fvtm:attr").getStringValue();
 				String export = group.id + " ";
-				export += "fvtm:attribute_rotator ";
-				export += (attr.length() == 0 ? "null" : attr) + " ";
-				export += get("fvtm:boolean_type_attr") + " ";
-				export += min + " " + max + " " + step + " " + axis + " " + defrot;
+				if(attri){
+					export += "fvtm:attribute_rotator ";
+					export += (attr.length() == 0 ? "null" : attr) + " ";
+					export += get("fvtm:boolean_type_attr") + " ";
+					export += min + " " + max + " " + step + " " + axis + " " + defrot;
+				}
+				else{
+					export += "fvtm:rotator ";
+					export += min + " " + max + " " + step + " " + axis + " " + defrot + " ";
+					export += get("loop") + " " + get("fvtm:not_additive");
+				}
 				return export;
 			}
-			else return String.format(string, get("fvtm:attr"), get("fvtm:boolean_type_attr"), min, max, step, axis, defrot);
+			else{
+				if(attri) return String.format(string, get("fvtm:attr"), get("fvtm:boolean_type_attr"), min, max, step, axis, defrot);
+				else return String.format(string, min, max, step, axis, defrot, get("loop"), get("fvtm:not_additive"));
+			}
 		}
 		
 	}
 	
 	public static class Translator extends Animation {
 		
-		private Setting x, y, z, x_max, y_max, z_max, x_min, y_min, z_min, loop, ooe;
+		private Setting x, y, z, x_max, y_max, z_max, x_min, y_min, z_min, loop;
 		private int xdir = 1, ydir = 1, zdir = 1; private float xpass, ypass, zpass;
 
 		public Translator(String id, TurboList group, Collection<Setting> settings){
 			super(id, group, settings); x = get("x"); y = get("y"); z = get("z");
 			x_min = get("x_min"); y_min = get("y_min"); z_min = get("z_min");
 			x_max = get("x_max"); y_max = get("y_max"); z_max = get("z_max");
-			loop = get("loop"); ooe = get("opposite_on_end");
+			loop = get("loop");
 		}
 
 		@Override
@@ -234,29 +250,35 @@ public class Animator {
 			xpass += xdir * x.getFloatValue(); ypass += ydir * y.getFloatValue(); zpass += zdir * z.getFloatValue();
 			//
 			if(xpass > x_max.getFloatValue()){
-				xpass = x_max.getFloatValue(); if(ooe.getBooleanValue()) xdir = -xdir;
+				xpass = x_max.getFloatValue();
+				if(!loop.getBooleanValue()) xdir = -xdir;
 				if(loop.getBooleanValue()) xpass = x_min.getFloatValue();
 			}
 			if(xpass < x_min.getFloatValue()){
-				xpass = x_min.getFloatValue(); if(ooe.getBooleanValue()) xdir = -xdir;
+				xpass = x_min.getFloatValue();
+				if(!loop.getBooleanValue()) xdir = -xdir;
 				if(loop.getBooleanValue()) xpass = x_max.getFloatValue();
 			}
 			//
 			if(ypass > y_max.getFloatValue()){
-				ypass = y_max.getFloatValue(); if(ooe.getBooleanValue()) ydir = -ydir;
+				ypass = y_max.getFloatValue();
+				if(!loop.getBooleanValue()) ydir = -ydir;
 				if(loop.getBooleanValue()) ypass = y_min.getFloatValue();
 			}
 			if(ypass < y_min.getFloatValue()){
-				ypass = y_min.getFloatValue(); if(ooe.getBooleanValue()) ydir = -ydir;
+				ypass = y_min.getFloatValue();
+				if(!loop.getBooleanValue()) ydir = -ydir;
 				if(loop.getBooleanValue()) ypass = y_max.getFloatValue();
 			}
 			//
 			if(zpass > z_max.getFloatValue()){
-				zpass = z_max.getFloatValue(); if(ooe.getBooleanValue()) zdir = -zdir;
+				zpass = z_max.getFloatValue();
+				if(!loop.getBooleanValue()) zdir = -zdir;
 				if(loop.getBooleanValue()) zpass = z_min.getFloatValue();
 			}
 			if(zpass < z_min.getFloatValue()){
-				zpass = z_min.getFloatValue(); if(ooe.getBooleanValue()) zdir = -zdir;
+				zpass = z_min.getFloatValue();
+				if(!loop.getBooleanValue()) zdir = -zdir;
 				if(loop.getBooleanValue()) zpass = z_max.getFloatValue();
 			}
 			//
@@ -281,7 +303,8 @@ public class Animator {
 		@Override
 		public String getExportString(String modto){
 			if(!modto.equals("fvtm") && !modto.equals("fmf") && !modto.equals("obj")) return "invalid_mod";
-			String string = "new DefaultPrograms.AttributeTranslator(\"%s\", %s, %sf, %sf, %sf, %s, %sf)";
+			boolean attri = get("fvtm:attr").getStringValue().length() > 0;
+			String string = attri ? "new DefaultPrograms.AttributeTranslator(\"%s\", %s, %sf, %sf, %sf, %s, %sf)" : "new DefaultPrograms.Translator(%sf, %sf, %sf, %s, %sf)";
 			int axis = x.directFloat() != 0f ? 0 : y.directFloat() != 0f ? 1 : z.directFloat() != 0f ? 2 : 3;
 			float min = 0, max = 0, step = 0;
 			switch(axis){
@@ -302,13 +325,22 @@ public class Animator {
 			if(modto.equals("fmf") || modto.equals("obj")){
 				String attr = get("fvtm:attr").getStringValue();
 				String export = group.id + " ";
-				export += "fvtm:attribute_translator ";
-				export += (attr.length() == 0 ? "null" : attr) + " ";
-				export += get("fvtm:boolean_type_attr") + " ";
-				export += min + " " + max + " " + step + " " + axis;
+				if(attri){
+					export += "fvtm:attribute_translator ";
+					export += (attr.length() == 0 ? "null" : attr) + " ";
+					export += get("fvtm:boolean_type_attr") + " ";
+					export += min + " " + max + " " + step + " " + axis;
+				}
+				else{
+					export += "fvtm:translator ";
+					export += min + " " + max + " " + step + " " + axis + " " + get("loop");
+				}
 				return export;
 			}
-			else return String.format(string, get("fvtm:attr"), get("fvtm:boolean_type_attr"), min, max, step, axis);
+			else{
+				if(attri) return String.format(string, get("fvtm:attr"), get("fvtm:boolean_type_attr"), min, max, step, axis);
+				else return String.format(string, min, max, step, axis, get("loop"));
+			}
 		}
 		
 	}
