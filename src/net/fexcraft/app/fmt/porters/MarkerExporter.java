@@ -119,7 +119,7 @@ public class MarkerExporter extends ExImPorter {
 
 	@Override
 	public String getName(){
-		return "MarkerList Exporter";
+		return "Marker List";
 	}
 
 	@Override

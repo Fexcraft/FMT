@@ -17,7 +17,7 @@ public class TiMExporter extends FVTMFormatBase {
 	private String pkg;
 	
 	public TiMExporter(){
-		super("TiM (FVTM-Scheme) Exporter", "tim_exporter");
+		super("Trains in Motion (FVTM Java)", "tim_exporter");
 		settings.add(new Setting("package", "tim.models.locos"));
 	}
 

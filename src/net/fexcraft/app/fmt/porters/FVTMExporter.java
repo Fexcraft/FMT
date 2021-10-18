@@ -20,7 +20,7 @@ public class FVTMExporter extends FVTMFormatBase {
 	private boolean scaled;
 
 	public FVTMExporter(){
-		super("FVTM v3 Scheme", "fvtm_exporter");
+		super("FVTM v3 Java", "fvtm_exporter");
 		settings.add(new Setting("pack_id", "your_addon_id"));
 		settings.add(new Setting("model_id", "null"));
 		settings.add(new StringArraySetting("model_type", "part", "vehicle", "container", "roadsign", "block"));

@@ -76,7 +76,7 @@ public class PNGExporter extends ExImPorter {
 
 	@Override
 	public String getName(){
-		return "Standard PNG Exporter";
+		return "PNG / Texture";
 	}
 
 	@Override

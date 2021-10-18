@@ -71,7 +71,7 @@ public class JTMTPorter extends ExImPorter {
 
 	@Override
 	public String getName(){
-		return "Standard JTMT";
+		return "JTMT";
 	}
 
 	@Override

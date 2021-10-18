@@ -76,7 +76,7 @@ public class AABBExporter extends ExImPorter {
 
 	@Override
 	public String getName(){
-		return "AABB Exporter";
+		return "AABB / AxisAlignedBB";
 	}
 
 	@Override

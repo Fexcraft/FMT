@@ -44,7 +44,7 @@ public class DFMImporter extends ExImPorter {
     }
     
     public String getName(){
-    	return "Standard (F) Java Importer";
+    	return "FM Java";
     }
     
 	@Override

@@ -256,7 +256,7 @@ public class DFMExporter extends ExImPorter {
 
 	@Override
 	public String getName(){
-		return "Default Flansmod Exporter";
+		return "Default Flansmod";
 	}
 
 	@Override

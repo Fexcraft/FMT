@@ -36,7 +36,6 @@ public class PorterManager {
 		porters.add(new OBJExporter());
 		porters.add(new MarkerExporter());
 		porters.add(new TiMExporter());
-		porters.add(new TSIVMarkerExporter());
 		porters.add(new DFMExporter());
 		porters.add(new DFMImporter());
 		porters.add(new TCNEXImporter());

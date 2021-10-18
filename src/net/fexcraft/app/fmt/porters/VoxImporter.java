@@ -53,7 +53,7 @@ public class VoxImporter extends ExImPorter {
     }
     
     public String getName(){
-    	return "AM Based VOX Importer";
+    	return "MagicaVoxel VOX (AM)";
     }
     
 	@Override

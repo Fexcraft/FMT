@@ -41,7 +41,7 @@ public class TCNEXImporter extends ExImPorter {
     }
     
     public String getName(){
-    	return "Techne Exported Java Importer";
+    	return "Techne Exported Java";
     }
     
 	@Override

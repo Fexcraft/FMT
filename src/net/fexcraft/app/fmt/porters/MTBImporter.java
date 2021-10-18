@@ -45,7 +45,7 @@ public class MTBImporter extends ExImPorter {
 	}
 
 	public String getName(){
-		return "Standard MTB Importer";
+		return "SMP Toolbox MTB";
 	}
 
 	public static float getFloatFromString(String s){

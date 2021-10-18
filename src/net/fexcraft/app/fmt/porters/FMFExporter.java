@@ -280,7 +280,7 @@ public class FMFExporter extends ExImPorter {
 
 	@Override
 	public String getName(){
-		return "FMF Exporter";
+		return "FMF";
 	}
 
 	@Override

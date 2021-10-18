@@ -42,7 +42,7 @@ public class TCHImporter extends ExImPorter {
     }
     
     public String getName(){
-    	return "TrainCraft Heritage Importer";
+    	return "TrainCraft Heritage";
     }
     
 	@Override

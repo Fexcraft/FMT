@@ -48,7 +48,7 @@ public class OBJPreviewImporter extends ExImPorter {
 
 	@Override
 	public String getName(){
-		return "Wavefront OBJ - Preview/Static";
+		return "Wavefront OBJ (ViewOnly)";
 	}
 
 	@Override
