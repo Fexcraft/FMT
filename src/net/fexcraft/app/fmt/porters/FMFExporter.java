@@ -64,7 +64,7 @@ public class FMFExporter extends ExImPorter {
 			}
 			stream.write(3);
 			stream.write(putInt(compound.textureSizeX));
-			stream.write(putInt(compound.textureSizeX));
+			stream.write(putInt(compound.textureSizeY));
 			stream.write(0);
 			for(TurboList group : compound.getGroups()){
 				if(group.stream().filter(poly -> poly.getType().isFMFExportable()).count() == 0) continue;
