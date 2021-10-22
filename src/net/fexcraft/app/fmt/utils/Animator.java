@@ -410,7 +410,7 @@ public class Animator {
 		@Override
 		public String getExportString(String modto){
 			if(modto.equals("fvtm")) return fvtmid;
-			if(modto.equals("fmf") || modto.equals("obj")) return id;
+			if(modto.equals("fmf") || modto.equals("obj")) return group.id + " " + id;
 			return "null";
 		}
 		
