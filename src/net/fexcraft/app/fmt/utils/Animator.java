@@ -65,10 +65,8 @@ public class Animator {
 		nani.add(new Generic("fvtm:no_cullface", "DefaultPrograms.NO_CULLFACE", null, null));
 		nani.add(new Window(null));
 		nani.add(new Title("# FVTM Trains", null, null));
-		nani.add(new Generic("fvtm:lights_front_forward", "DefaultPrograms.LIGHTS_FRONT_FORWARD", null, null));
-		nani.add(new Generic("fvtm:lights_front_backward", "DefaultPrograms.LIGHTS_FRONT_BACKWARD", null, null));
-		nani.add(new Generic("fvtm:lights_rear_forward", "DefaultPrograms.LIGHTS_REAR_FORWARD", null, null));
-		nani.add(new Generic("fvtm:lights_rear_backward", "DefaultPrograms.LIGHTS_REAR_BACKWARD", null, null));
+		nani.add(new Generic("fvtm:lights_rail_forward", "DefaultPrograms.LIGHTS_RAIL_FORWARD", null, null));
+		nani.add(new Generic("fvtm:lights_rail_backward", "DefaultPrograms.LIGHTS_RAIL_BACKWARD", null, null));
 		nani.add(new Generic("fvtm:bogie_auto", "DefaultPrograms.BOGIE_AUTO", null, null));
 		//nani.add(new Transparency("glass", new Setting(Type.RGB, "color", RGB.BLUE)));
 	}
