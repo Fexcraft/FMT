@@ -86,7 +86,7 @@ public class SessionHandler {
 	}
 
 	private static String[] getCookieArr(){
-		return sessionid == null ? null : new String[] { "PHPSESSID=" + sessionid };
+		return sessionid == null ? null : new String[] { "JSESSIONID=" + sessionid };
 	}
 
 	public static String tryLogin(Consumer<String> cons){
