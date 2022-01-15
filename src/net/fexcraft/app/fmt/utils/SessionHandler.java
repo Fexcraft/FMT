@@ -10,7 +10,7 @@ import com.google.gson.JsonObject;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.lib.common.json.JsonUtil;
-import net.fexcraft.lib.common.utils.HttpsUtil;
+import net.fexcraft.lib.common.utils.HttpUtil;
 
 public class SessionHandler {
 	
@@ -48,7 +48,7 @@ public class SessionHandler {
 	public static void checkIfLoggedIn(boolean retry, boolean first){
 		log("Controlling session/login data...");
 		if(first) load();
-		JsonObject obj = HttpsUtil.request("http://fexcraft.net/session/api", "r=status", getCookieArr());
+		JsonObject obj = HttpUtil.request("http://fexcraft.net/session/api", "r=status", getCookieArr());
 		if(obj != null && obj.has("success")){
 			loggedin = obj.has("guest") && !obj.get("guest").getAsBoolean();
 			userid = JsonUtil.getIfExists(obj, "user", "-1");
@@ -59,11 +59,11 @@ public class SessionHandler {
 		}
 		if(loggedin){
 			log("Fetching Username...");
-			obj = HttpsUtil.request("http://fexcraft.net/session/api", "r=username&id=" + userid, getCookieArr());
+			obj = HttpUtil.request("http://fexcraft.net/session/api", "r=username&id=" + userid, getCookieArr());
 			if(obj.has("name")) username = obj.get("name").getAsString();
 			log("Username updated to: " + username);
 			if(first) log(">>>> Welcome back! <<<<");
-			obj = HttpsUtil.request("http://fexcraft.net/session/api", "r=fmt_status", getCookieArr());
+			obj = HttpUtil.request("http://fexcraft.net/session/api", "r=fmt_status", getCookieArr());
 			if(obj != null && obj.has("license") && obj.has("license_title")){
 				perm = obj.get("license").getAsString();
 				permname = obj.get("license_title").getAsString();
@@ -89,7 +89,7 @@ public class SessionHandler {
 	public static String tryLogin(Consumer<String> cons){
 		String response;
 		try{
-			JsonObject obj = HttpsUtil.request("https://fexcraft.net/session/api", "r=login&m=" + usermail + "&p=" + decrypt(), getCookieArr());
+			JsonObject obj = HttpUtil.request("http://fexcraft.net/session/api", "r=login&m=" + usermail + "&p=" + decrypt(), getCookieArr());
 			if(obj == null){
 				log(response = "Invalid/Empty login response, aborting.");
 				return response;
@@ -113,7 +113,7 @@ public class SessionHandler {
 	}
 	
 	public static void tryLogout(){
-		JsonObject obj = HttpsUtil.request("http://fexcraft.net/session/api", "r=logout", getCookieArr());
+		JsonObject obj = HttpUtil.request("http://fexcraft.net/session/api", "r=logout", getCookieArr());
 		log("Logout Response: " + obj.toString());
 		username = /*usermail =*/ userid = "";
 		pass = perm = permname = null;
