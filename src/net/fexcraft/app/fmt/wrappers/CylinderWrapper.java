@@ -39,7 +39,7 @@ public class CylinderWrapper extends PolygonWrapper {
 	
 	protected ModelRendererTurbo newMRT(){
 		ModelRendererTurbo turbo = new ModelRendererTurbo(null, textureX(), textureY(), compound.tx(getTurboList()), compound.ty(getTurboList()));
-		if(radius != 0f || radial || usesTopRotation() || cuv.anyCustom()){
+		if(radius2 != 0f || (seglimit > 0 && seglimit < segments) || radial || usesTopRotation() || cuv.anyCustom()){
 			CylinderBuilder builder = turbo.newCylinderBuilder().setPosition(off.x, off.y, off.z)
 				.setRadius(radius, radius2).setLength(length).setSegments(segments, seglimit).setScale(base, top)
 				.setDirection(direction).setTopOffset(topoff).removePolygons(bools);
