@@ -77,9 +77,9 @@ public abstract class FVTMFormatBase extends ExImPorter {
 			buffer.append("\n");
 		}
 		buffer.append(tab + "public " + modelname + "(){\n");
-		buffer.append(tab2 + "super(); " + getScale() + "textureX = " + compound.tx(null) + "; textureY = " + compound.ty(null) + ";\n");
+		buffer.append(tab2 + "super();\n\t\ttextureX = " + compound.tx(null) + ";\n\t\ttextureY = " + compound.ty(null) + ";\n");
 		for(String cr : compound.getAuthors()){
-			buffer.append(tab2 + "this.addToCreators(\"" + cr + "\");\n");//TODO add "uuid" of logged in users if available;
+			buffer.append(tab2 + "addToCreators(\"" + cr + "\");\n");//TODO add "uuid" of logged in users if available;
 		} buffer.append(tab2 + "//\n");
 		if(pergroupinit){
 			int count = settings.get("max_pg_init_count").getValue();
@@ -132,8 +132,6 @@ public abstract class FVTMFormatBase extends ExImPorter {
 		}
 		return "Success!";
 	}
-
-	protected abstract String getScale();
 
 	protected abstract String getTopCommentLine();
 
@@ -340,7 +338,7 @@ public abstract class FVTMFormatBase extends ExImPorter {
 					buffer.append(tab2 + name + format(".translate(%s, %s, %s);\n", null, turbo.exoff.x, turbo.exoff.y, turbo.exoff.z));
 				}
 			}
-			buffer.append(tab2 + "this.groups.add(" + name + ");\n");
+			buffer.append(tab2 + "groups.add(" + name + ");\n");
 		}
 		if(append) buffer.append(tab2 + "//\n");
 	}
