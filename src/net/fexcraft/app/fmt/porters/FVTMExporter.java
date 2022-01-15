@@ -17,7 +17,6 @@ public class FVTMExporter extends FVTMFormatBase {
 	private String modelclass, modelimport, modelkind, packid, model_id;
 	private static final String VERSION = "1.5";
 	private GroupCompound compound;
-	private boolean scaled;
 
 	public FVTMExporter(){
 		super("FVTM v3 Java", "fvtm_exporter");
@@ -25,7 +24,6 @@ public class FVTMExporter extends FVTMFormatBase {
 		settings.add(new Setting("model_id", "null"));
 		settings.add(new StringArraySetting("model_type", "part", "vehicle", "container", "roadsign", "block"));
 		settings.add(new Setting("model_name", "default"));
-		settings.add(new Setting("scaled", true));
 	}
 
 	@Override
@@ -37,7 +35,6 @@ public class FVTMExporter extends FVTMFormatBase {
 		if(modelname.equals("default") || modelname.equals("null")) modelname = null;
 		if(model_id.equals("default") || model_id.equals("null")) model_id = null;
 		modelname = validateName(modelname == null ? compound.name + "Model" : modelname);
-		scaled = settings.get("scaled").getBooleanValue() && compound.scale.x != 1f;
 		switch(settings.get("model_type").getStringValue()){
 			case "part":{
 				modelclass = "PartModel";
@@ -70,7 +67,7 @@ public class FVTMExporter extends FVTMFormatBase {
 				break;
 			}
 		}
-		modelimport = modelclass + (scaled ? ".Scaled" + modelclass : "");
+		modelimport = modelclass;
 	}
 
 	@Override
@@ -99,17 +96,12 @@ public class FVTMExporter extends FVTMFormatBase {
 	@Override
 	protected void appendClassDeclaration(StringBuffer buffer){
 		buffer.append("@fModel(registryname = \"" + packid + ":models/" + modelkind + "/" + (model_id == null ? modelname : model_id) + "\")\n");
-		buffer.append("public class " + modelname + " extends " + (scaled ? "Scaled" : "") + modelclass + " {\n\n");
+		buffer.append("public class " + modelname + " extends " + modelclass + " {\n\n");
 	}
 
 	@Override
 	public String[] getCategories(){
 		return new String[] { "model" };
-	}
-
-	@Override
-	protected String getScale(){
-		return scaled ? "scale = " + compound.scale.x + "f; " : "";
 	}
 
 }
