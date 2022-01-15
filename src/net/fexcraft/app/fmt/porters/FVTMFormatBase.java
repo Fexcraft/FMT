@@ -228,7 +228,7 @@ public abstract class FVTMFormatBase extends ExImPorter {
 					CylinderWrapper cyl = (CylinderWrapper)wrapper;
 					String topoff = cyl.topoff.x != 0f || cyl.topoff.y != 0f || cyl.topoff.z != 0 ?
 						String.format("new net.fexcraft.lib.common.math.Vec3f(%s, %s, %s)", cyl.topoff.x, cyl.topoff.y, cyl.topoff.z) : "null";
-					if(cyl.radius2 != 0f || cyl.radial || cyl.usesTopRotation() || cyl.cuv.anyCustom()){
+					if(cyl.radius2 != 0f || (cyl.seglimit > 0 && cyl.seglimit < cyl.segments) || cyl.radial || cyl.usesTopRotation() || cyl.cuv.anyCustom()){
 						String toprot = String.format(".setTopRotation(new net.fexcraft.lib.common.math.Vec3f(%s, %s, %s))", cyl.toprot.x, cyl.toprot.y, cyl.toprot.z);
 						if(cyl.radial){
 							shape.append(format(".newCylinderBuilder()\n" + tab3 + ".setPosition(%s, %s, %s).setRadius(%s, %s).setLength(%s).setSegments(%s, %s)" + 
