@@ -62,9 +62,4 @@ public class TiMExporter extends FVTMFormatBase {
 		return new String[]{ "model" };
 	}
 
-	@Override
-	protected String getScale(){
-		return "";
-	}
-
 }
