@@ -67,7 +67,7 @@ public class SettingsBox {
 				panel.getContainer().add(box);
 			}
 			else{// if(setting.getType() == Type.STRING || setting.getType() == Type.FLOAT_ARRAY){
-				panel.getContainer().add(new TextField(setting, 190, 10 + (index * 30), 290, 20));
+				panel.getContainer().add(new TextField(setting, 190, 10 + (index * 30), 290, 20, false));
 			}
 			index++;
 		}
