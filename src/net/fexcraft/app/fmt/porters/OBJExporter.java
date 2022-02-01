@@ -81,7 +81,7 @@ public class OBJExporter extends ExImPorter {
 			buffer.append("# Creator: Empty/FMT\n");
 		}
 		if(mtl) buffer.append("mtllib " + (mtlname = file.getName().substring(0, file.getName().length() - 4)) + ".mtl\n\n");
-		buffer.append("# Model Name" + (nog ? ": " : "\no ") + validateName(compound.name) + "\n\n");
+		buffer.append("# Model Name: " + validateName(compound.name) + "\n\n");
 		buffer.append("# TextureSizeX: " + compound.tx(null) + "\n");
 		buffer.append("# TextureSizeY: " + compound.ty(null) + "\n");
 		buffer.append("# FlipAxes: " + bool + "\n\n");
