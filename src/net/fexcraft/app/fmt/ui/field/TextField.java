@@ -13,11 +13,17 @@ public class TextField extends TextInput {
 		super(string, x, y, w, h); UserInterfaceUtils.setupHoverCheck(this);
 	}
 
-	@SuppressWarnings("unchecked")
 	public TextField(Setting setting, int x, int y, int w, int h){
 		this(setting.toString(), x, y, w, h); UserInterfaceUtils.setupHoverCheck(this);
 		this.addTextInputContentChangeEventListener(event -> {
 			setting.validateAndApply(UserInterfaceUtils.validateString(event, true));
+		});
+	}
+
+	public TextField(Setting setting, int x, int y, int w, int h, boolean validator){
+		this(setting.toString(), x, y, w, h); UserInterfaceUtils.setupHoverCheck(this);
+		this.addTextInputContentChangeEventListener(event -> {
+			setting.validateAndApply(UserInterfaceUtils.validateString(event, validator));
 		});
 	}
 
