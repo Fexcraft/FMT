@@ -116,7 +116,7 @@ dependencies {
     //implementation group: 'org.codehaus.groovy', name: 'groovy-all', version: '3.0.7', changing: true
     //runtimeOnly group: 'org.codehaus.groovy', name: 'groovy-all', version: '3.0.7', changing: true
     
-    implementation files('libs/discord-rpc.jar', 'libs/VOXtoFMT-1.jar', 'libs/FCL-1.12.69.jar')
+    implementation files('libs/discord-rpc.jar', 'libs/VOXtoFMT-1.jar', 'libs/FCL-1.12.72.jar')
     //@formatter:on
     //testCompile group: 'junit', name: 'junit', version: '4.11'
 }
