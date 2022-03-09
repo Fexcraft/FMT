@@ -16,7 +16,13 @@ import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.utils.Animator.Animation;
 import net.fexcraft.app.fmt.utils.Setting;
 import net.fexcraft.app.fmt.utils.Setting.Type;
-import net.fexcraft.app.fmt.wrappers.*;
+import net.fexcraft.app.fmt.wrappers.BoxWrapper;
+import net.fexcraft.app.fmt.wrappers.CylinderWrapper;
+import net.fexcraft.app.fmt.wrappers.GroupCompound;
+import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
+import net.fexcraft.app.fmt.wrappers.ShapeType;
+import net.fexcraft.app.fmt.wrappers.ShapeboxWrapper;
+import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.app.fmt.wrappers.face.UVCoords;
 
 /**
@@ -181,13 +187,6 @@ public abstract class FVTMFormatBase extends ExImPorter {
 					}
 					break;
 				}
-				case QUAD:{
-					QuadWrapper quad = (QuadWrapper)wrapper;
-					shape.append(format(".addQuad(%s, %s, %s, %s, %s)", null,
-						wrapper.off.x, wrapper.off.y, wrapper.off.z,
-						quad.size.x, quad.size.y));
-					break;
-				}
 				case SHAPEBOX:{
 					if(boxbuilder) break;
 					ShapeboxWrapper box = (ShapeboxWrapper)wrapper;
@@ -210,15 +209,6 @@ public abstract class FVTMFormatBase extends ExImPorter {
 							box.cor4.x, box.cor4.y, box.cor4.z, box.cor5.x, box.cor5.y, box.cor5.z,
 							box.cor6.x, box.cor6.y, box.cor6.z, box.cor7.x, box.cor7.y, box.cor7.z));
 					}
-					extended = true;
-					break;
-				}
-				case SHAPEQUAD:{
-					ShapeQuadWrapper box = (ShapeQuadWrapper)wrapper;
-					shape.append(format("\n" + tab3 + ".addShapeQuad(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", null,
-						wrapper.off.x, wrapper.off.y, wrapper.off.z, box.size.x, box.size.y, box.size.z,
-						box.cor0.x, box.cor0.y, box.cor0.z, box.cor1.x, box.cor1.y, box.cor1.z,
-						box.cor2.x, box.cor2.y, box.cor2.z, box.cor3.x, box.cor3.y, box.cor3.z));
 					extended = true;
 					break;
 				}

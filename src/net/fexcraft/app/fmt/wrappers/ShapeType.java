@@ -5,8 +5,7 @@ public enum ShapeType {
 	BOX("rect"), SHAPEBOX("rect"), TEXRECT_B("rect"), TEXRECT_A("rect"),
 	FLEXBOX("flexrect"), TRAPEZOID("flexrect"), FLEXTRAPEZOID("flexrect"),
 	CYLINDER("cylinder"), SPHERE("sphere"), OBJ("obj"), MARKER("marker"),
-	QUAD("rect"), SHAPEQUAD("rect"), VOXEL("voxel"), BB("rect"),
-	SHAPE3D("shape");
+	VOXEL("voxel"), BB("rect"), SHAPE3D("shape");
 	
 	private String conversion_group;
 	
@@ -15,11 +14,11 @@ public enum ShapeType {
 	}
 
 	public boolean isRectagular(){
-		return this == BOX || this.isShapebox() || this == FLEXBOX || this == TRAPEZOID || this == FLEXTRAPEZOID || this == QUAD || this == BB;
+		return this == BOX || this.isShapebox() || this == FLEXBOX || this == TRAPEZOID || this == FLEXTRAPEZOID || this == BB;
 	}
 
 	public boolean isShapebox(){
-		return this == SHAPEBOX || this == TEXRECT_B || this == TEXRECT_A || this == SHAPEQUAD;
+		return this == SHAPEBOX || this == TEXRECT_B || this == TEXRECT_A;
 	}
 
 	public boolean isCylinder(){
@@ -45,10 +44,6 @@ public enum ShapeType {
 	public boolean isVoxel(){
 		return this == VOXEL;
 	}
-	
-	public boolean isFlat(){
-		return this == QUAD || this == SHAPEQUAD;
-	}
 
 	public boolean isBoundingBox(){
 		return this == BB;
@@ -72,8 +67,6 @@ public enum ShapeType {
 			case "obj": return OBJ;
 			case "marker": return MARKER;
 			case "voxel": return VOXEL;
-			case "quad": return QUAD;
-			case "shapequad": return SHAPEQUAD;
 			case "boundingbox": return BB;
 			case "shape3d": return SHAPE3D;
 			default: return null;

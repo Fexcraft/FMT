@@ -747,25 +747,9 @@ public class GroupCompound {
 					}
 				} shapebox.recompile(); continue;
 			}
-			else if(wrapper instanceof ShapeQuadWrapper){
-				Vec3f[] copy = new Vec3f[4]; ShapeQuadWrapper quad = (ShapeQuadWrapper)wrapper;
-				copy[0] = quad.cor0; copy[1] = quad.cor1; copy[2] = quad.cor2; copy[3] = quad.cor3;
-				switch(axis){
-					case 0:{
-						quad.cor0 = copy[3]; quad.cor1 = copy[2]; quad.cor2 = copy[1]; quad.cor3 = copy[0];
-						break;
-					}
-					case 1:{
-						quad.cor0 = copy[0]; quad.cor1 = copy[1]; quad.cor2 = copy[2]; quad.cor3 = copy[3];
-						break;
-					}
-					case 2:{
-						quad.cor0 = copy[1]; quad.cor1 = copy[0]; quad.cor2 = copy[3]; quad.cor3 = copy[2];
-						break;
-					}
-				} quad.recompile(); continue;
-			}
-		} this.updateFields(); return;
+		}
+		this.updateFields();
+		return;
 	}
 
 	public void flipBoxPosition(List<PolygonWrapper> list, int axis){

@@ -71,7 +71,6 @@ public class BBWrapper extends BoxWrapper {
 		BoxWrapper wrapper = null;
 		switch(type){
 			case BOX: wrapper = new BoxWrapper(compound);
-			case QUAD: wrapper = new QuadWrapper(compound);
 			case SHAPEBOX: wrapper = new ShapeboxWrapper(compound); break;
 			default: return null;
 		}

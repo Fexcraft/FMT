@@ -265,13 +265,7 @@ public class BoxWrapper extends PolygonWrapper {
 	public PolygonWrapper convertTo(ShapeType type){
 		if(type == ShapeType.BOX) return this.clone();
 		if(!type.getConversionGroup().equals(this.getType().getConversionGroup())) return null;
-		BoxWrapper wrapper = null;
-		switch(type){
-			case QUAD: wrapper = new QuadWrapper(compound); break;
-			case SHAPEQUAD: wrapper = new ShapeQuadWrapper(compound); break;
-			case SHAPEBOX: wrapper = new ShapeboxWrapper(compound); break;
-			default: return null;
-		}
+		BoxWrapper wrapper = new ShapeboxWrapper(compound);
 		wrapper.size = new Vec3f(size);
 		wrapper.sides = Arrays.copyOf(sides, 6);
 		wrapper.cuv.copyFrom(wrapper, cuv);

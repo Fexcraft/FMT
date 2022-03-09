@@ -250,7 +250,6 @@ public class ShapeboxWrapper extends BoxWrapper {
 	@Override
 	public PolygonWrapper convertTo(ShapeType type){
 		if(!type.getConversionGroup().equals(this.getType().getConversionGroup())) return null;
-		if(type == ShapeType.QUAD){ QuadWrapper box = new QuadWrapper(compound); box.size = new Vec3f(size); return copyTo(box, true); }
 		if(type == ShapeType.BOX){
 			BoxWrapper box = new BoxWrapper(compound);
 			box.size = new Vec3f(size);

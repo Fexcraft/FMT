@@ -6,7 +6,14 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import net.fexcraft.app.fmt.wrappers.*;
+import net.fexcraft.app.fmt.wrappers.BBWrapper;
+import net.fexcraft.app.fmt.wrappers.BoxWrapper;
+import net.fexcraft.app.fmt.wrappers.CylinderWrapper;
+import net.fexcraft.app.fmt.wrappers.GroupCompound;
+import net.fexcraft.app.fmt.wrappers.MarkerWrapper;
+import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
+import net.fexcraft.app.fmt.wrappers.ShapeboxWrapper;
+import net.fexcraft.app.fmt.wrappers.VoxelWrapper;
 import net.fexcraft.app.fmt.wrappers.face.BoxFace;
 import net.fexcraft.app.fmt.wrappers.face.FaceUVType;
 import net.fexcraft.lib.common.json.JsonUtil;
@@ -129,18 +136,6 @@ public class JsonToFMT {
 				}
 				polygon = shapebox;
 				break;
-			}
-			case "shapequad": case "squad": case "sq": {
-				ShapeQuadWrapper advface = new ShapeQuadWrapper(compound);
-				advface.size.x = get(width, obj, def);
-				advface.size.y = get(height, obj, def);
-				advface.size.z = get(depth, obj, def);
-				//
-				advface.cor0 = new Vec3f(get("x0", obj, def), get("y0", obj, def), get("z0", obj, def));
-				advface.cor1 = new Vec3f(get("x1", obj, def), get("y1", obj, def), get("z1", obj, def));
-				advface.cor2 = new Vec3f(get("x2", obj, def), get("y2", obj, def), get("z2", obj, def));
-				advface.cor3 = new Vec3f(get("x3", obj, def), get("y3", obj, def), get("z3", obj, def));
-				polygon = advface; break;
 			}
 			case "cylinder": case "cyl": case "c": case "cone": case "cn": {
 				CylinderWrapper cylinder = new CylinderWrapper(compound);
