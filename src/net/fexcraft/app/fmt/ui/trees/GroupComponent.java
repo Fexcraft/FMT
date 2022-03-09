@@ -44,7 +44,7 @@ public class GroupComponent extends EditorComponent {
 		updateholder.add(UpdateType.POLYGON_REMOVED, wrp -> { if(wrp.objs[0] == group) removePolygon(wrp.get(1)); });
 		group.forEach(poly -> addPolygon(poly, false));
 		update_color();
-		if(!group.visible) UIUtils.hide(this);
+		//if(!group.visible) UIUtils.hide(this);
 		MouseClickEventListener listener = lis -> {
 			if(lis.getAction() == MouseClickAction.CLICK && lis.getButton() == MouseButton.MOUSE_BUTTON_LEFT){
 				group.model.select(group);
