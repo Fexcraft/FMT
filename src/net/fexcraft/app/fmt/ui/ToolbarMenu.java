@@ -20,6 +20,7 @@ import org.liquidengine.legui.listener.MouseClickEventListener;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
+import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.Translator;
 
 public class ToolbarMenu extends Panel {
@@ -45,7 +46,7 @@ public class ToolbarMenu extends Panel {
 		this.getListenerMap().addListener(MouseClickEvent.class, mlistener);
 		label.getListenerMap().addListener(MouseClickEvent.class, mlistener);
 		CursorEnterEventListener clistener = event -> {
-			if(!event.isEntered() || components.isEmpty()) return;
+			if(!event.isEntered() || components.isEmpty() || GGR.grabbed) return;
 			layer.show();
 		};
 		this.getListenerMap().addListener(CursorEnterEvent.class, clistener);
