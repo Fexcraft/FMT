@@ -1,5 +1,8 @@
 package net.fexcraft.app.fmt.ui;
 
+import java.util.ArrayList;
+
+import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.Panel;
 
 import net.fexcraft.app.fmt.FMT;
@@ -46,11 +49,11 @@ public class Toolbar extends Panel {
 				new MenuButton(8, "file.recent.none", () -> Settings.openRecent(8)),
 				new MenuButton(9, "file.recent.none", () -> Settings.openRecent(9))
 			).setLayerPreShow(layer -> {
-				int[] idx = { 0 };
-				layer.getMenuComponents().forEach(com -> {
-					((MenuButton)com).label.getTextState().setText(Settings.RECENT.get(idx[0]).getName());
-					idx[0]++;
-				});
+				ArrayList<Component> list = new ArrayList<>();
+				list.addAll(layer.getMenuComponents());
+				for(int  i = 0; i < list.size(); i++){
+					((MenuButton)list.get(i)).label.getTextState().setText(Settings.RECENT.get(i).getName());
+				}
 			}),
 			new MenuButton(3, "file.save", () -> SaveHandler.saveDialogByState(null)),
 			new MenuButton(4, "file.save_as", () -> SaveHandler.saveAsDialog(null)),
