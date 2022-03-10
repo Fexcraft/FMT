@@ -78,4 +78,4 @@ Please try running first under Java 8 if you have it installed.
 Otherwise try Java 15+, recently it was reported that FMT works again under Java 15+.
 
 ## Discord
-https://discord.gg/AkMAzaA
+https://discord.gg/mJNemZ2qT5
