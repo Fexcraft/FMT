@@ -28,7 +28,7 @@ public class BackupHandler extends TimerTask {
 			bar("Saving backup... [" + str + "];", true, 10);
 			File file = new File("./backups/(" + str + ") " + FMT.MODEL.name + ".fmtb");
 			if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
-			SaveHandler.save(FMT.MODEL, file, null, true);
+			SaveHandler.save(FMT.MODEL, file, null, true, false);
 		}
 		catch(Exception e){
 			GenericDialog.showOK("saveload.title", null, null, "saveload.backup.failure");
