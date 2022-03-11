@@ -126,6 +126,7 @@ public class EditorComponent extends Component {
 	public static void registerComponents(){
 		REGISTRY.put("polygon.quick", QuickAdd.class);
 		REGISTRY.put("polygon.general", PolygonGeneral.class);
+		REGISTRY.put("polygon.general.box", PolygonAndBox.class);
 		REGISTRY.put("polygon.box", BoxComponent.class);
 		REGISTRY.put("polygon.shapebox", ShapeboxComponent.class);
 		REGISTRY.put("polygon.cylinder.all", CylinderComponentFull.class);
