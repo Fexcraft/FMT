@@ -156,6 +156,7 @@ public class Model {
 			if(group == null) addGroup(group = new Group(this, groupid));
 		}
 		group.add(poly);
+		if(Settings.SELECT_NEW.value) select(poly);
 	}
 
 	public Group get(String string){

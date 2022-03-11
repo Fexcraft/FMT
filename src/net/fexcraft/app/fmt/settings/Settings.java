@@ -72,7 +72,7 @@ public class Settings {
 	public static Setting<Float> MOUSE_SENSIVITY, MOVE_SPEED;
 	public static Setting<String> LANGUAGE, POLYGON_SUFFIX, GROUP_SUFFIX, COPIED_POLYGON, PASTED_GROUP;
 	public static Setting<Boolean> ASK_POLYGON_REMOVAL, ASK_GROUP_REMOVAL, ASK_TEXTURE_GROUP_REMOVAL, OPEN_FOLDER_AFTER_SAVE, OPEN_FOLDER_AFTER_IMG;
-	public static Setting<Boolean> SHOW_WELCOME, SHOW_UPDATE, SELECT_COPIED, SHOW_BOTTOMBAR, GIF_LOOP, HIDE_UI_FOR_IMAGE;
+	public static Setting<Boolean> SHOW_WELCOME, SHOW_UPDATE, SELECT_COPIED, SELECT_NEW, SHOW_BOTTOMBAR, GIF_LOOP, HIDE_UI_FOR_IMAGE;
 	public static RGBSetting BACKGROUND, SELECTION_LINES;
 	//
 	public static Setting<String> SEL_THEME;
@@ -157,6 +157,7 @@ public class Settings {
 		BACKUP_INTERVAL = new Setting<>("backup_interval", 5, GENERAL, obj);
 		COPIED_POLYGON = new Setting<>("copied_polygon", "%s_cp", NAMING, obj);
 		SELECT_COPIED = new Setting<>("select_copied", true, GENERAL, obj);
+		SELECT_NEW = new Setting<>("select_new", true, GENERAL, obj);
 		PASTED_GROUP = new Setting<>("pasted_group_suffix", "-cb", NAMING, obj);
 		SHOW_BOTTOMBAR = new Setting<>("show_bottom_bar", true, GENERAL, obj);
 		OPEN_FOLDER_AFTER_IMG = new Setting<>("open_folder_after_image", true, IMAGE, obj);
