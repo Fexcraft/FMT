@@ -283,10 +283,10 @@ public class SaveHandler {
 	}
 
 	public static void save(Model model, File file, Runnable run){
-		save(model, file, run, false);
+		save(model, file, run, false, true);
 	}
 
-	public static void save(Model model, File file, Runnable run, boolean backup){
+	public static void save(Model model, File file, Runnable run, boolean backup, boolean open){
 		file = file == null ? model.file : file;
 		if(file == null){
 			GenericDialog.showOC(null, () -> { if(run != null) run.run(); }, null, "saveload.save.nofile");
@@ -336,7 +336,7 @@ public class SaveHandler {
 				if(file != null){
 					log("Saved model as FMTB " + (arr.length > 1 ? " with texture." : "."));
 				}
-				if(Settings.OPEN_FOLDER_AFTER_SAVE.value && file.getParentFile() != null){
+				if(Settings.OPEN_FOLDER_AFTER_SAVE.value && open && file.getParentFile() != null){
 					FMT.openLink(file.getParentFile().getAbsolutePath());
 				}
 			}
@@ -344,6 +344,7 @@ public class SaveHandler {
 		catch(Exception e){
 			log(e);
 		}
+		if(run != null) run.run();
 	}
 	
 	public static JsonMap modelToJTMT(Model root, boolean export){
@@ -497,7 +498,7 @@ public class SaveHandler {
 	public static void saveDialog(File file, Runnable run){
 		GenericDialog.showCC("saveload.title", () -> {
 			save(FMT.MODEL, file, run);
-		}, null, "saveload.confirm_save", "#" + file);
+		}, null, "saveload.confirm_save", "#" + (file == null ? FMT.MODEL.file : file));
 	}
 
 	public static void saveAsDialog(Runnable run){
