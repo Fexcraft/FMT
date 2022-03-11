@@ -260,5 +260,12 @@ public class ToolbarMenu extends Panel {
 		ACTIVE.removeAll(removable);
 		removable.clear();
 	}
+	
+	public static void hideAll(){
+		if(ACTIVE.size() == 0) return;
+		for(MenuLayer layer : ACTIVE) layer.hide();
+		ACTIVE.clear();
+		removable.clear();
+	}
 
 }

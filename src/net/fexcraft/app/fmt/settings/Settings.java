@@ -73,6 +73,7 @@ public class Settings {
 	public static Setting<String> LANGUAGE, POLYGON_SUFFIX, GROUP_SUFFIX, COPIED_POLYGON, PASTED_GROUP;
 	public static Setting<Boolean> ASK_POLYGON_REMOVAL, ASK_GROUP_REMOVAL, ASK_TEXTURE_GROUP_REMOVAL, OPEN_FOLDER_AFTER_SAVE, OPEN_FOLDER_AFTER_IMG;
 	public static Setting<Boolean> SHOW_WELCOME, SHOW_UPDATE, SELECT_COPIED, SELECT_NEW, SHOW_BOTTOMBAR, GIF_LOOP, HIDE_UI_FOR_IMAGE;
+	public static Setting<Boolean> HIDE_MENU_AFTER_POLYGON;
 	public static RGBSetting BACKGROUND, SELECTION_LINES;
 	//
 	public static Setting<String> SEL_THEME;
@@ -170,6 +171,7 @@ public class Settings {
 		NO_RANDOM_TITLE = new Setting<>("no_random_title", false, IMAGE, obj);
 		SELECTION_LINES = new RGBSetting("selection_lines", new RGB(0xffff00), SPACE3D, obj);
 		ASK_TEXTURE_GROUP_REMOVAL = new Setting<>("ask_texture_group_removal", true, GENERAL, obj);
+		HIDE_MENU_AFTER_POLYGON = new Setting<>("hide_menu_after_polygon", true, GENERAL, obj);
 		//
 		SEL_THEME = new StringArraySetting("selected_theme", "light", THEME, obj, "light", "dark", "custom");
 		DARKTHEME = new Setting<>("is_dark", false, THEME, obj);

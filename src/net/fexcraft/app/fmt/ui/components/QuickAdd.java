@@ -5,8 +5,10 @@ import net.fexcraft.app.fmt.polygon.Box;
 import net.fexcraft.app.fmt.polygon.Cylinder;
 import net.fexcraft.app.fmt.polygon.Marker;
 import net.fexcraft.app.fmt.polygon.Shapebox;
+import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.ui.Icon;
+import net.fexcraft.app.fmt.ui.ToolbarMenu;
 
 public class QuickAdd extends EditorComponent {
 
@@ -25,24 +27,33 @@ public class QuickAdd extends EditorComponent {
 
 	public static void addBox(){
 		FMT.MODEL.add(null, new Box(null));
+		hideMenu();
 	}
 
 	public static void addShapebox(){
 		FMT.MODEL.add(null, new Shapebox(null));
+		hideMenu();
 	}
 
 	public static void addGroup(){
 		String name = "group" + FMT.MODEL.groups().size();
 		while(FMT.MODEL.contains(name)) name += "0";
 		FMT.MODEL.addGroup(name);
+		hideMenu();
 	}
 
 	public static void addCylinder(){
 		FMT.MODEL.add(null, new Cylinder(null));
+		hideMenu();
 	}
 
 	public static void addMarker(){
 		FMT.MODEL.add(null, new Marker(null));
+		hideMenu();
+	}
+
+	private static void hideMenu(){
+		if(Settings.HIDE_MENU_AFTER_POLYGON.value) ToolbarMenu.hideAll();
 	}
 
 }
