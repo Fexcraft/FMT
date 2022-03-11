@@ -174,13 +174,13 @@ public class GGR {
 
 	public void scrollCallback(long window, double xoffset, double yoffset){
 		if(isOverUI()) return;
-		double v = yoffset * -0.5f;
-        pos.x += v * Math.cos(hor);
-        pos.y += -v * Math.sin(ver);
-        pos.z += v * Math.sin(hor);
+		double s = yoffset * Settings.SCROLL_SPEED.value;
+        pos.x += s * Math.sin(hor);
+        pos.y += s * Math.sin(ver);
+        pos.z += s * Math.cos(hor);
 	}
 
-    public void processCameraInput(float delta){
+	public void processCameraInput(float delta){
     	if(FMT.CONTEXT.getFocusedGui() != null){
     		w_down = s_down = d_down = a_down = r_down = f_down = space_down = shift_down = false;
     	}

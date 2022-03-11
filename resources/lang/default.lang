@@ -234,6 +234,7 @@ setting.graphic.triangulated_lines=Triangulated Lines
 setting.graphic.fullscreen=Full Screen Mode
 setting.control.mouse_sensivity=Mouse Sensivity
 setting.control.movement_speed=Movement Speed
+setting.control.scroll_speed=(Camera) Scroll Speed
 setting.space3d.demo_model=Demo Model
 setting.space3d.floor=Floor
 setting.space3d.center_cube=Center Cube

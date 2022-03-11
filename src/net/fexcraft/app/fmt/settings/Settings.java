@@ -69,7 +69,7 @@ public class Settings {
 	public static Setting<Boolean> DISCORD_RPC, DISCORD_HIDE, DISCORD_RESET_ON_NEW, FULLSCREEN, NO_RANDOM_TITLE;
 	public static Setting<Boolean> VSYNC, HVSYNC, TRIANGULATION_Q, TRIANGULATION_L, INTERNAL_CHOOSER;
 	public static Setting<Boolean> DEMO, FLOOR, CUBE, CMARKER, LINES, POLYMARKER, ADD_TO_LAST, SPHERE_MARKER;
-	public static Setting<Float> MOUSE_SENSIVITY, MOVE_SPEED;
+	public static Setting<Float> MOUSE_SENSIVITY, MOVE_SPEED, SCROLL_SPEED;
 	public static Setting<String> LANGUAGE, POLYGON_SUFFIX, GROUP_SUFFIX, COPIED_POLYGON, PASTED_GROUP;
 	public static Setting<Boolean> ASK_POLYGON_REMOVAL, ASK_GROUP_REMOVAL, ASK_TEXTURE_GROUP_REMOVAL, OPEN_FOLDER_AFTER_SAVE, OPEN_FOLDER_AFTER_IMG;
 	public static Setting<Boolean> SHOW_WELCOME, SHOW_UPDATE, SELECT_COPIED, SELECT_NEW, SHOW_BOTTOMBAR, GIF_LOOP, HIDE_UI_FOR_IMAGE;
@@ -133,6 +133,7 @@ public class Settings {
 		WINDOW_HEIGHT = new Setting<>("window_height", 720, GRAPHIC, obj);
 		MOUSE_SENSIVITY = new Setting<>("mouse_sensivity", 2f, CONTROL, obj);
 		MOVE_SPEED = new Setting<>("movement_speed", 1f, CONTROL, obj);
+		SCROLL_SPEED = new Setting<>("scroll_speed", 1f, CONTROL, obj);
 		TRIANGULATION_Q = new Setting<>("triangulated_quads", true, GRAPHIC, obj);
 		TRIANGULATION_L = new Setting<>("triangulated_lines", false, GRAPHIC, obj);
 		LANGUAGE = new Setting<>("language", "null", GENERAL, obj);
