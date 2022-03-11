@@ -2,6 +2,7 @@ package net.fexcraft.app.fmt.utils;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.function.Consumer;
 
 import org.lwjgl.opengl.GL11;
 
@@ -16,6 +17,7 @@ public class Picker {
 	private static ByteBuffer buffer;
 	private static boolean filled, offcenter;
 	private static Polygon polygon;
+	private static Consumer<Polygon> consumer;
 
 	public static void resetBuffer(boolean resize){
 		if(resize){
@@ -51,7 +53,7 @@ public class Picker {
 	
 	public static enum PickTask {
 		
-		NONE, SELECT, PAINT;
+		NONE, SELECT, PAINT, FUNCTION;
 		
 		public boolean pick(){
 			return this != NONE;
@@ -63,6 +65,14 @@ public class Picker {
 
 		public boolean paint(){
 			return this == PAINT;
+		}
+
+		boolean function(){
+			return this == FUNCTION;
+		}
+
+		boolean nonfunc(){
+			return this != FUNCTION;
 		}
 		
 	}
@@ -98,13 +108,17 @@ public class Picker {
 					}
 				}
 			}
-			if(polygon == null) reset();
+			if(polygon == null && TASK.nonfunc()) reset();
 			else{
 				if(TASK.select()){
 					polygon.group().model.select(polygon);
 				}
 				else if(TASK.paint()){
 					//
+				}
+				else if(TASK.function()){
+					consumer.accept(polygon);
+					consumer = null;
 				}
 			}
 		}
@@ -131,6 +145,10 @@ public class Picker {
 
 	public static Polygon polygon(){
 		return polygon;
+	}
+	
+	public static void setConsumer(Consumer<Polygon> cons){
+		consumer = cons;
 	}
 
 }

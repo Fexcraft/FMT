@@ -285,6 +285,7 @@ public class FMT {
 			accumulator += (delta = timer.getDelta());
 			while(accumulator >= interval){
 				//TODO "logic"
+				ToolbarMenu.checkHide();
 				timer.updateUPS();
 				accumulator -= interval;
 				//Trees.updateCounters();
@@ -295,7 +296,6 @@ public class FMT {
 			render(vao, alpha = accumulator / interval);
 			//
 			adjustLabels();
-			ToolbarMenu.checkHide();
 			ImageHandler.updateText();
 			RENDERER.render(ImageHandler.shouldHide() ? IMG_FRAME : FRAME, CONTEXT);
 			timer.updateFPS();

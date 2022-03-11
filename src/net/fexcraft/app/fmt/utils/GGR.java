@@ -94,10 +94,9 @@ public class GGR {
             ver = Math.max(-maxVR, Math.min(maxVR, ver));
             cursor_moved0 = false;
 		}
-		else if(scroll_down && cursor_moved0){
+		else if(scroll_down){
 	        pos.x += (posx - oposx) * 0.001;
 	        pos.y += (posy - oposy) * 0.001;
-	        cursor_moved0 = false;
 	    }
         processCameraInput(delta);
     }
@@ -168,8 +167,7 @@ public class GGR {
 		oposy = posy;
 		posx = xpos;
 		posy = ypos;
-		cursor_moved0 = true;
-		cursor_moved1 = oposx != posx || oposy != posy;
+		cursor_moved0 = cursor_moved1 = oposx != posx || oposy != posy;
 	}
 
 	public void scrollCallback(long window, double xoffset, double yoffset){

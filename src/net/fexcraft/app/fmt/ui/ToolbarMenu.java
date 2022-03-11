@@ -133,6 +133,7 @@ public class ToolbarMenu extends Panel {
 			if(root != null) offset();
 			FMT.FRAME.addLayer(this);
 			ACTIVE.add(this);
+			timeout = 30;
 			shown = true;
 		}
 
@@ -168,6 +169,10 @@ public class ToolbarMenu extends Panel {
 		
 		public Collection<Component> getMenuComponents(){
 			return components;
+		}
+		
+		public boolean timed(){
+			return false;
 		}
         
 	}
@@ -248,10 +253,15 @@ public class ToolbarMenu extends Panel {
 	}
 	
 	private static ArrayList<MenuLayer> removable = new ArrayList<>();
+	private static int timeout = 0;
 
 	public static void checkHide(){
 		if(ACTIVE.size() == 0) return;
 		for(MenuLayer layer : ACTIVE){
+			if(layer.timed() && timeout > 0){
+				timeout--;
+				continue;
+			}
 			if(!layer.anyComponentHovered(layer.components) && (layer.barmenu == null ? true : !layer.barmenu.isHovered())){
 				removable.add(layer);
 				layer.hide();
