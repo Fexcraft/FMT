@@ -71,7 +71,7 @@ public class Editor extends Component {
 		if(!tree){
 			add(rem = new Icon((byte)10, "./resources/textures/icons/component/remove.png", () -> {}).addTooltip("editor.remove", alignment));
 			add(adj = new Icon((byte)30, "./resources/textures/icons/component/adjust.png", () -> comp_adj_mode = !comp_adj_mode).addTooltip("editor.adjust_components", alignment));
-			add(add = new Icon((byte)40, "./resources/textures/icons/component/add.png", () -> addComponentDialog()).addTooltip("editor.add_component", alignment));
+			add(add = new Icon((byte)40, "./resources/textures/icons/component/add.png", () -> addComponentDialog(this)).addTooltip("editor.add_component", alignment));
 		}
 		add(set = new Icon((byte)(tree ? 10 : 20), "./resources/textures/icons/component/edit.png", () -> rename()).addTooltip("editor.rename", alignment));
 		add(sid = new Icon((byte)(tree ? 20 : 50), "./resources/textures/icons/component/side.png", () -> changeSide()).addTooltip("editor.change_side", alignment));
@@ -235,7 +235,7 @@ public class Editor extends Component {
 	private static TextArea dialog_area;
 	private static Dialog dialog;
 	
-	public static void addComponentDialog(){
+	public static void addComponentDialog(Editor edfrom){
 		if(dialog != null){
 			dialog.close();
 			dialog = null;
@@ -276,8 +276,11 @@ public class Editor extends Component {
 		dialog_area.setHorizontalScrollBarVisible(false);
 		dialog.getContainer().add(new Label(translate("editor.component.add_dialog.select"), scrollable_width + 10, 185, dialog_width - (scrollable_width + 15), 25));
 		SelectBox<String> box = new SelectBox<>(scrollable_width + 10, 210, dialog_width - (scrollable_width + 15), 25);
-		for(Editor editor : EDITORS.values()) box.addElement(editor.name);
-		box.setSelected(0, true);
+		for(Editor editor : EDITORS.values()){
+			if(editor.tree) continue;
+			box.addElement(editor.name);
+		}
+		box.setSelected(edfrom.name, true);
 		dialog.getContainer().add(box);
 		Button button = new Button(translate("editor.component.add_dialog.confirm"), scrollable_width + 10, 245, dialog_width - (scrollable_width + 15), 25);
 		button.getListenerMap().addListener(MouseClickEvent.class, listener -> {
