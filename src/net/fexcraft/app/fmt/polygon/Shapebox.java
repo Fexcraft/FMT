@@ -16,7 +16,7 @@ import org.joml.Vector3f;
 import net.fexcraft.app.fmt.attributes.PolyVal;
 import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
 import net.fexcraft.app.json.JsonMap;
-import net.fexcraft.lib.tmt.BoxBuilder;
+import net.fexcraft.lib.frl.gen.Generator;
 
 public class Shapebox extends Box {
 	
@@ -74,8 +74,8 @@ public class Shapebox extends Box {
 	}
 
 	@Override
-	protected void buildMRT(){
-		BoxBuilder builder = new BoxBuilder(turbo).setOffset(off.x, off.y, off.z).setSize(size.x, size.y, size.z).removePolygons(sides);
+	protected Generator<GLObject> getGenerator(){
+		/*BoxBuilder builder = new BoxBuilder(turbo).setOffset(off.x, off.y, off.z).setSize(size.x, size.y, size.z).removePolygons(sides);
 		builder.setCorner(0, cor0.x, cor0.y, cor0.z);
 		builder.setCorner(1, cor1.x, cor1.y, cor1.z);
 		builder.setCorner(2, cor2.x, cor2.y, cor2.z);
@@ -85,7 +85,10 @@ public class Shapebox extends Box {
 		builder.setCorner(6, cor6.x, cor6.y, cor6.z);
 		builder.setCorner(7, cor7.x, cor7.y, cor7.z);
 		//TODO custom uv
-		builder.build();
+		builder.build();*/
+		Generator<GLObject> gen = super.getGenerator();
+		//TODO
+		return gen;
 	}
 	
 	public float getValue(PolygonValue polyval){

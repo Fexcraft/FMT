@@ -359,7 +359,7 @@ public class FMT {
 				glClearColor(1, 1, 1, 1);
 			    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 				MRTRenderer.mode(DrawMode.FACE_PICKER);
-				Picker.polygon().turbo.render();
+				Picker.polygon().glm.render();
 				Picker.process();
 			}
 		    Picker.reset();

@@ -8,8 +8,9 @@ import org.joml.Vector3f;
 import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
+import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
-import net.fexcraft.lib.tmt.CylinderBuilder;
+import net.fexcraft.lib.frl.gen.Generator;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public class Cylinder extends Polygon {
@@ -81,8 +82,8 @@ public class Cylinder extends Polygon {
 	}
 
 	@Override
-	protected void buildMRT(){
-		if(radius != 0f || radial || usesTopRotation() /*|| cuv.anyCustom()*/){
+	protected Generator<GLObject> getGenerator(){
+		/*if(radius != 0f || radial || usesTopRotation() /*|| cuv.anyCustom()*//*){
 			CylinderBuilder builder = turbo.newCylinderBuilder().setPosition(off.x, off.y, off.z)
 				.setRadius(radius, radius2).setLength(length).setSegments(segments, seglimit).setScale(base, top)
 				.setDirection(direction).setTopOffset(topoff.x, topoff.y, topoff.z).removePolygons(bools);
@@ -93,12 +94,21 @@ public class Cylinder extends Polygon {
 		}
 		else{
 			turbo.addCylinder(off.x, off.y, off.z, radius, length, segments, base, top, direction, getTopOff());
-		}
+		}*/
+		Generator<GLObject> gen = new Generator<GLObject>(glm, glm.glObj.grouptex ? group().texSizeX : model().texSizeX, glm.glObj.grouptex ? group().texSizeY : model().texSizeY)
+				.set("type", Generator.Type.CYLINDER)
+				.set("x", off.x)
+				.set("y", off.y)
+				.set("z", off.z)
+				//TODO
+				;
+			for(int i = 0; i < bools.length; i++) if(bools[i]) gen.removePolygon(i);
+		return gen;
 	}
 
 	@Override
 	public float[] getFaceColor(int i){
-		return turbo.getColor(i).toFloatArray();
+		return RGB.RED.toFloatArray();//turbo.getColor(i).toFloatArray();
 	}
 	
 	public float getValue(PolygonValue polyval){

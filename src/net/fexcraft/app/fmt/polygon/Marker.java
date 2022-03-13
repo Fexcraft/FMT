@@ -2,14 +2,12 @@ package net.fexcraft.app.fmt.polygon;
 
 import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.demo.ModelSteve;
-import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.utils.MRTRenderer;
 import net.fexcraft.app.fmt.utils.MRTRenderer.DrawMode;
-import net.fexcraft.app.fmt.utils.MRTRenderer.GlCache;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.RGB;
-import net.fexcraft.lib.tmt.BoxBuilder;
+import net.fexcraft.lib.frl.gen.Generator;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public class Marker extends Polygon {
@@ -57,8 +55,8 @@ public class Marker extends Polygon {
 	}
 
 	@Override
-	protected void buildMRT(){
-		marker.clear();
+	protected Generator<GLObject> getGenerator(){
+		/*marker.clear();
 		marker.forcedRecompile = true;
 		marker.setPosition(pos.x, pos.y, pos.z);
 		float hs = Marker.hs * scale, size = Marker.size * scale;
@@ -74,12 +72,13 @@ public class Marker extends Polygon {
 		if((cache = marker.glObject()) == null) cache = marker.glObject(new GlCache());
 		cache.polycolor = rgb.toFloatArray();
 		cache.polygon = this;
-		model.fill(this);
+		model.fill(this);*/
+		return null;//TODO
 	}
 
 	@Override
 	public float[] getFaceColor(int i){
-		return turbo.getColor(i).toFloatArray();
+		return RGB.WHITE.toFloatArray();//turbo.getColor(i).toFloatArray();
 	}
 	
 	@Override
