@@ -8,6 +8,7 @@ import org.joml.Vector3f;
 import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
+import net.fexcraft.lib.common.math.AxisRotator;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.frl.gen.Generator;
@@ -83,26 +84,33 @@ public class Cylinder extends Polygon {
 
 	@Override
 	protected Generator<GLObject> getGenerator(){
-		/*if(radius != 0f || radial || usesTopRotation() /*|| cuv.anyCustom()*//*){
-			CylinderBuilder builder = turbo.newCylinderBuilder().setPosition(off.x, off.y, off.z)
-				.setRadius(radius, radius2).setLength(length).setSegments(segments, seglimit).setScale(base, top)
-				.setDirection(direction).setTopOffset(topoff.x, topoff.y, topoff.z).removePolygons(bools);
-			//TODO custom uv
-			if(radial) builder.setRadialTexture(seg_width, seg_height);
-			else builder.setTopRotation(toprot.x, toprot.y, toprot.z);
-			builder.build();
-		}
-		else{
-			turbo.addCylinder(off.x, off.y, off.z, radius, length, segments, base, top, direction, getTopOff());
-		}*/
 		Generator<GLObject> gen = new Generator<GLObject>(glm, glm.glObj.grouptex ? group().texSizeX : model().texSizeX, glm.glObj.grouptex ? group().texSizeY : model().texSizeY)
-				.set("type", Generator.Type.CYLINDER)
-				.set("x", off.x)
-				.set("y", off.y)
-				.set("z", off.z)
-				//TODO
-				;
-			for(int i = 0; i < bools.length; i++) if(bools[i]) gen.removePolygon(i);
+			.set("type", Generator.Type.CYLINDER)
+			.set("x", off.x)
+			.set("y", off.y)
+			.set("z", off.z)
+			.set("radius", radius)
+			.set("radius2`", radius2)
+			.set("length", length)
+			.set("direction", direction)
+			.set("segments", segments)
+			.set("seg_limit", seglimit)
+			.set("base_scale", base)
+			.set("top_scale", top);
+		if(topoff.x != 0f || topoff.y != 0f || topoff.z != 0f){
+			gen.set("top_offset", new Vec3f(topoff.x, topoff.y, topoff.z));
+		}
+		if(toprot.x != 0f || toprot.y != 0f || toprot.z != 0f){
+			AxisRotator axe = AxisRotator.newDefInstance();
+			axe.setAngles(toprot.x, toprot.y, toprot.z);
+			gen.set("top_rot", axe);
+		}
+		if(radial){
+			gen.set("radial", true);
+			gen.set("seg_width", seg_width);
+			gen.set("seg_height", seg_height);
+		}
+		for(int i = 0; i < bools.length; i++) if(bools[i]) gen.removePolygon(i);
 		return gen;
 	}
 
