@@ -2,17 +2,12 @@ package net.fexcraft.app.fmt.polygon;
 
 import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.demo.ModelSteve;
-import net.fexcraft.app.fmt.texture.TextureManager;
-import net.fexcraft.app.fmt.utils.MRTRenderer;
-import net.fexcraft.app.fmt.utils.MRTRenderer.DrawMode;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.frl.gen.Generator;
-import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public class Marker extends Polygon {
 
-	private ModelRendererTurbo marker = new ModelRendererTurbo(this);
 	private ModelSteve model = new ModelSteve();
 	public static float size = 0.5f, hs = 0.25f;
 	public int angle = -90;
@@ -56,24 +51,17 @@ public class Marker extends Polygon {
 
 	@Override
 	protected Generator<GLObject> getGenerator(){
-		/*marker.clear();
-		marker.forcedRecompile = true;
-		marker.setPosition(pos.x, pos.y, pos.z);
 		float hs = Marker.hs * scale, size = Marker.size * scale;
-		if(Settings.SPHERE_MARKER.value){
-			turbo.addSphere(0, 0, 0, hs, 8, 5, 1, 1);
-			marker.addSphere(0, 0, 0, hs, 8, 5, 1, 1);
-		}
-		else{
-			new BoxBuilder(turbo).setOffset(-hs, -hs, -hs).setSize(size, size, size).build();
-			new BoxBuilder(marker).setOffset(-hs, -hs, -hs).setSize(size, size, size).build();
-		}
-		GlCache cache;
-		if((cache = marker.glObject()) == null) cache = marker.glObject(new GlCache());
-		cache.polycolor = rgb.toFloatArray();
-		cache.polygon = this;
-		model.fill(this);*/
-		return null;//TODO
+		Generator<GLObject> gen = new Generator<GLObject>(glm, glm.glObj.grouptex ? group().texSizeX : model().texSizeX, glm.glObj.grouptex ? group().texSizeY : model().texSizeY)
+			.set("type", Generator.Type.CUBOID)
+			.set("x", -hs)
+			.set("y", -hs)
+			.set("z", -hs)
+			.set("width", size)
+			.set("height", size)
+			.set("depth", size);
+		glm.glObj.pickercolor = rgb.toFloatArray();
+		return gen;
 	}
 
 	@Override
@@ -83,16 +71,17 @@ public class Marker extends Polygon {
 	
 	@Override
 	public void render(){
-		DrawMode mode = MRTRenderer.MODE;
+		/*DrawMode mode = MRTRenderer.MODE;
 		MRTRenderer.mode(DrawMode.RGBCOLOR);
-		marker.render();
+		//TODO marker.render();
 		MRTRenderer.mode(mode);
 		if(biped && !MRTRenderer.MODE.lines()){
 			String tex = TextureManager.getBound();
 			TextureManager.bind("steve");
 			model.render();
 			TextureManager.bind(tex);
-		}
+		}*/
+		super.render();
 	}
 	
 	public float getValue(PolygonValue polyval){
