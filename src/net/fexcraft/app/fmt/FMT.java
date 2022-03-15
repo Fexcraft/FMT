@@ -154,7 +154,7 @@ public class FMT {
 		glfwShowWindow(window);
 		glfwFocusWindow(window);
 		//
-		CAM = new GGR(5, -5, -5, -Static.rad45, Static.rad30);
+		CAM = new GGR(75, -75, -75, -Static.rad45, Static.rad30);
 		AxisRotator.setDefImpl(Axis3DL.class);
 		Settings.applyTheme();
 		FRAME = new Frame(WIDTH, HEIGHT);
