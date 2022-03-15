@@ -67,8 +67,16 @@ public class Box extends Polygon {
 	}
 
 	@Override
-	public float[] getFaceColor(int i){
-		return RGB.GREEN.toFloatArray();//turbo.getColor(i).toFloatArray();
+	public float[] getFaceColor(int idx){
+		switch(idx){
+			case 0: return blu0.toFloatArray();
+			case 1: return blu1.toFloatArray();
+			case 2: return red1.toFloatArray();
+			case 3: return red0.toFloatArray();
+			case 4: return gre1.toFloatArray();
+			case 5: return gre0.toFloatArray();
+		}
+		return RGB.GREEN.toFloatArray();
 	}
 	
 	public float getValue(PolygonValue polyval){

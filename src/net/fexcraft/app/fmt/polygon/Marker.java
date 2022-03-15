@@ -60,7 +60,7 @@ public class Marker extends Polygon {
 			.set("width", size)
 			.set("height", size)
 			.set("depth", size);
-		glm.glObj.pickercolor = rgb.toFloatArray();
+		glm.glObj.polycolor = rgb.toFloatArray();
 		return gen;
 	}
 

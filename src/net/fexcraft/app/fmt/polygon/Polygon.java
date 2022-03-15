@@ -195,7 +195,15 @@ public abstract class Polygon {
 
 	protected abstract Generator<GLObject> getGenerator();
 
-	public abstract float[] getFaceColor(int i);
+	protected static RGB red1 = new RGB(138,  65,  92);//new RGB(255, 127, 175);
+	protected static RGB gre1 = new RGB( 92, 138,  65);//new RGB(175, 255, 127);
+	protected static RGB blu1 = new RGB( 65,  92, 138);//new RGB(127, 175, 255);
+	protected static RGB red0 = new RGB(150,   0,   0);
+	protected static RGB gre0 = new RGB(  0, 150,   0);
+	protected static RGB blu0 = new RGB(  0,   0, 150);
+	protected static RGB gray = new RGB( 89,  89,  89);
+
+	public abstract float[] getFaceColor(int idx);
 
 	public void render(){
 		glm.render();

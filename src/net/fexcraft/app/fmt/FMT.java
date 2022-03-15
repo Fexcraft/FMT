@@ -355,13 +355,12 @@ public class FMT {
 		if(Picker.TYPE.polygon()){
 			glClearColor(1, 1, 1, 1);
 		    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			PolyRenderer.mode(DrawMode.POLYGON_PICKER);
+			PolyRenderer.mode(DrawMode.PICKER);
 			MODEL.renderPicking();
 			Picker.process();
 			if(Picker.TYPE.face()){
 				glClearColor(1, 1, 1, 1);
 			    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			    PolyRenderer.mode(DrawMode.FACE_PICKER);
 				Picker.polygon().glm.render();
 				Picker.process();
 			}

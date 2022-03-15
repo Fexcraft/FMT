@@ -9,7 +9,6 @@ import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.AxisRotator;
-import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.frl.gen.Generator;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
@@ -90,7 +89,7 @@ public class Cylinder extends Polygon {
 			.set("y", off.y)
 			.set("z", off.z)
 			.set("radius", radius)
-			.set("radius2`", radius2)
+			.set("radius2", radius2)
 			.set("length", length)
 			.set("direction", direction)
 			.set("segments", segments)
@@ -115,8 +114,21 @@ public class Cylinder extends Polygon {
 	}
 
 	@Override
-	public float[] getFaceColor(int i){
-		return RGB.RED.toFloatArray();//turbo.getColor(i).toFloatArray();
+	public float[] getFaceColor(int idx){
+		int segs = seglimit < segments && seglimit > 0 ? seglimit : segments;
+		if(idx < segs){
+			return blu0.toFloatArray();
+		}
+		if(idx < segs * 2){
+			return blu1.toFloatArray();
+		}
+		if(idx < segs * 3){
+			return red1.toFloatArray();
+		}
+		if(idx < segs * 4){
+			return red0.toFloatArray();
+		}
+		return (idx % 2 == 1 ? gre1 : gre0).toFloatArray();
 	}
 	
 	public float getValue(PolygonValue polyval){

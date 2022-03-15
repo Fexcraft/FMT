@@ -47,6 +47,7 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 			compile(poly, glo, glo.gpu[1], true);
 			glo.linecolor = LINECOLOR;
 			if(glo.polycolor == null) glo.polycolor = EMPTY;
+			if(glo.pickercolor == null) glo.pickercolor = EMPTY;
 			poly.recompile = false;
 		}
 		matrix = new Matrix4f().identity();
@@ -57,7 +58,7 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 		if(poly.rotX != 0f) matrix.rotate((float)Math.toRadians(poly.rotX), axis_x);
 		glUniformMatrix4fv(getUniform("model"), false, matrix.get(new float[16]));
 		glUniform4fv(getUniform("line_color"), MODE == DrawMode.LINES ? glo.linecolor : MODE == DrawMode.SELLINES ? SELCOLOR : EMPTY);
-		glUniform4fv(getUniform("poly_color"), MODE.singleColor() ? glo.polycolor : EMPTY);
+		glUniform4fv(getUniform("poly_color"), MODE.picker() ? glo.pickercolor : MODE.color() ? glo.polycolor : EMPTY);
 		glUniform1f(getUniform("textured"), MODE == DrawMode.TEXTURED ? 1 : 0);
 		//
         glEnableVertexAttribArray(0);
@@ -169,14 +170,18 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 	
 	public static enum DrawMode {
 		
-		TEXTURED, UNTEXTURED, RGBCOLOR, POLYGON_PICKER, FACE_PICKER, SELLINES, LINES;
+		TEXTURED, UNTEXTURED, RGBCOLOR, PICKER, SELLINES, LINES;
 		
 		public boolean lines(){
 			return this == LINES || this == SELLINES;
 		}
 
-		boolean singleColor(){
-			return this == POLYGON_PICKER || this == RGBCOLOR;
+		boolean picker(){
+			return this == PICKER;
+		}
+
+		boolean color(){
+			return this == RGBCOLOR;
 		}
 
 		public static DrawMode textured(boolean bool){

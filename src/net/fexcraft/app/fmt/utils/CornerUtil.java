@@ -1,7 +1,5 @@
 package net.fexcraft.app.fmt.utils;
 
-import static net.fexcraft.lib.common.Static.sixteenth;
-
 import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.FMT;
@@ -15,8 +13,8 @@ import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public class CornerUtil {
 
-	protected static final Polyhedron<GLObject> ROT_MARKER_NORMAL = new Polyhedron<GLObject>().importMRT(new ModelRendererTurbo(null, 0, 0, 16, 16).addBox(-.25f, -.25f, -.25f, .5f, .5f, .5f), false, sixteenth);
-	protected static final Polyhedron<GLObject> ROT_MARKER_SMALL = new Polyhedron<GLObject>().importMRT(new ModelRendererTurbo(null, 0, 0, 16, 16).addBox(-.2f, -.2f, -.2f, .4f, .4f, .4f), false, sixteenth);
+	protected static final Polyhedron<GLObject> ROT_MARKER_NORMAL = new Polyhedron<GLObject>().importMRT(new ModelRendererTurbo(null, 0, 0, 16, 16).addBox(-.25f, -.25f, -.25f, .5f, .5f, .5f), false, 1f);
+	protected static final Polyhedron<GLObject> ROT_MARKER_SMALL = new Polyhedron<GLObject>().importMRT(new ModelRendererTurbo(null, 0, 0, 16, 16).addBox(-.2f, -.2f, -.2f, .4f, .4f, .4f), false, 1f);
 	private static Polyhedron<GLObject>[] CORNER_MARKER = new Polyhedron[8];
 	public static RGB[] CORNER_COLOURS = new RGB[]{
 		new RGB(255, 255, 0), new RGB(255, 0, 0), new RGB(0, 127, 255), new RGB(255, 0, 127),
@@ -25,7 +23,7 @@ public class CornerUtil {
 	private static Axis3DL axe = new Axis3DL();
 	static{
 		for(int i = 0; i < 8; i++){
-			CORNER_MARKER[i] = new Polyhedron<GLObject>().importMRT(new ModelRendererTurbo(null, 0, 0, 16, 16).addBox(-.25f, -.25f, -.25f, .5f, .5f, .5f), false, sixteenth);
+			CORNER_MARKER[i] = new Polyhedron<GLObject>().importMRT(new ModelRendererTurbo(null, 0, 0, 16, 16).addBox(-.25f, -.25f, -.25f, .5f, .5f, .5f), false, 1f);
 			CORNER_MARKER[i].setGlObj(new GLObject()).glObj.polycolor = CORNER_COLOURS[i].toFloatArray();
 		}
 		ROT_MARKER_NORMAL.setGlObj(new GLObject()).glObj.polycolor = RGB.GREEN.toFloatArray();
