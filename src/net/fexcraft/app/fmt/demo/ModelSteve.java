@@ -1,7 +1,6 @@
 package net.fexcraft.app.fmt.demo;
 
 import net.fexcraft.app.fmt.polygon.Marker;
-import net.fexcraft.app.fmt.utils.MRTRenderer.GlCache;
 import net.fexcraft.lib.common.math.TexturedPolygon;
 import net.fexcraft.lib.common.math.TexturedVertex;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
@@ -29,7 +28,7 @@ public class ModelSteve {
 		marker[4].addBox(-4,     0,    -4, 4, 12, 4).setTextureOffset( 0, 16).setRotationPoint(0, 2 * s, 0).setRotationAngle(-83, 14.5f, 0);
 		marker[5].addBox( 0,     0,    -4, 4, 12, 4).setTextureOffset(16, 48).setRotationPoint(0, 2 * s, 0).setRotationAngle(-83, -14.5f, 0);
 		for(ModelRendererTurbo turbo : marker){
-			if(turbo.glObject() == null) turbo.glObject(new GlCache());
+			//if(turbo.glObject() == null) turbo.glObject(new GlCache());
 			turbo.setTextured(true);
 			for(TexturedPolygon poly : turbo.getFaces()){
 				for(TexturedVertex vert : poly.getVertices()){
@@ -44,7 +43,7 @@ public class ModelSteve {
 	}
 
 	public void render(){
-		for(ModelRendererTurbo turbo : marker) turbo.render();
+		//for(ModelRendererTurbo turbo : marker) turbo.render();
 	}
 
 }

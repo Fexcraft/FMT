@@ -9,9 +9,8 @@ import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.attributes.UpdateHandler;
 import net.fexcraft.app.fmt.attributes.UpdateType;
+import net.fexcraft.app.fmt.polygon.PolyRenderer.DrawMode;
 import net.fexcraft.app.fmt.texture.TextureGroup;
-import net.fexcraft.app.fmt.utils.MRTRenderer;
-import net.fexcraft.app.fmt.utils.MRTRenderer.DrawMode;
 import net.fexcraft.lib.common.math.RGB;
 
 public class Group extends ArrayList<Polygon> {
@@ -79,15 +78,15 @@ public class Group extends ArrayList<Polygon> {
 		if(!visible) return;
 		bindtex();
 		if(mode == DrawMode.LINES){
-			MRTRenderer.mode(selected ? DrawMode.SELLINES : DrawMode.LINES);
+			PolyRenderer.mode(selected ? DrawMode.SELLINES : DrawMode.LINES);
 			for(Polygon poly : this){
-				if(!selected && poly.selected) MRTRenderer.mode(DrawMode.SELLINES);
+				if(!selected && poly.selected) PolyRenderer.mode(DrawMode.SELLINES);
 				poly.render();
-				if(poly.selected && !selected) MRTRenderer.mode(DrawMode.LINES);
+				if(poly.selected && !selected) PolyRenderer.mode(DrawMode.LINES);
 			}
 		}
 		else{
-			MRTRenderer.mode(mode);
+			PolyRenderer.mode(mode);
 			for(Polygon poly : this){
 				if(poly.visible) poly.render();
 			}
