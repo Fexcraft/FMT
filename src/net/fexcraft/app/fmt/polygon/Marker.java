@@ -1,14 +1,16 @@
 package net.fexcraft.app.fmt.polygon;
 
 import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
-import net.fexcraft.app.fmt.demo.ModelSteve;
+import net.fexcraft.app.fmt.demo.ModelMark;
+import net.fexcraft.app.fmt.polygon.PolyRenderer.DrawMode;
+import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.frl.gen.Generator;
 
 public class Marker extends Polygon {
 
-	private ModelSteve model = new ModelSteve();
+	private ModelMark model = new ModelMark();
 	public static float size = 0.5f, hs = 0.25f;
 	public int angle = -90;
 	public boolean biped, detached;
@@ -66,22 +68,22 @@ public class Marker extends Polygon {
 
 	@Override
 	public float[] getFaceColor(int i){
-		return RGB.WHITE.toFloatArray();//turbo.getColor(i).toFloatArray();
+		return rgb.toFloatArray();
 	}
 	
 	@Override
 	public void render(){
-		/*DrawMode mode = MRTRenderer.MODE;
-		MRTRenderer.mode(DrawMode.RGBCOLOR);
-		//TODO marker.render();
-		MRTRenderer.mode(mode);
-		if(biped && !MRTRenderer.MODE.lines()){
+		DrawMode mode = PolyRenderer.mode();
+		PolyRenderer.mode(DrawMode.RGBCOLOR);
+		glm.render();
+		PolyRenderer.mode(mode);
+		if(biped && !PolyRenderer.mode().lines()){
 			String tex = TextureManager.getBound();
-			TextureManager.bind("steve");
+			TextureManager.bind("mark");
+			model.fill(this);
 			model.render();
 			TextureManager.bind(tex);
-		}*/
-		super.render();
+		}
 	}
 	
 	public float getValue(PolygonValue polyval){
