@@ -194,4 +194,8 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 		MODE = mode;
 	}
 
+	public static DrawMode mode(){
+		return MODE;
+	}
+
 }
