@@ -11,12 +11,15 @@ import static net.fexcraft.app.fmt.attributes.PolyVal.CORNER_7;
 import static net.fexcraft.app.fmt.utils.JsonUtil.getVector;
 import static net.fexcraft.app.fmt.utils.JsonUtil.setVector;
 
+import java.util.ArrayList;
+
 import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.attributes.PolyVal;
 import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
 import net.fexcraft.app.json.JsonMap;
-import net.fexcraft.lib.tmt.BoxBuilder;
+import net.fexcraft.lib.common.math.Vec3f;
+import net.fexcraft.lib.frl.gen.Generator;
 
 public class Shapebox extends Box {
 	
@@ -74,18 +77,19 @@ public class Shapebox extends Box {
 	}
 
 	@Override
-	protected void buildMRT(){
-		BoxBuilder builder = new BoxBuilder(turbo).setOffset(off.x, off.y, off.z).setSize(size.x, size.y, size.z).removePolygons(sides);
-		builder.setCorner(0, cor0.x, cor0.y, cor0.z);
-		builder.setCorner(1, cor1.x, cor1.y, cor1.z);
-		builder.setCorner(2, cor2.x, cor2.y, cor2.z);
-		builder.setCorner(3, cor3.x, cor3.y, cor3.z);
-		builder.setCorner(4, cor4.x, cor4.y, cor4.z);
-		builder.setCorner(5, cor5.x, cor5.y, cor5.z);
-		builder.setCorner(6, cor6.x, cor6.y, cor6.z);
-		builder.setCorner(7, cor7.x, cor7.y, cor7.z);
-		//TODO custom uv
-		builder.build();
+	protected Generator<GLObject> getGenerator(){
+		Generator<GLObject> gen = super.getGenerator();
+		ArrayList<Vec3f> list = new ArrayList<>();
+		list.add(new Vec3f(cor0.x, cor0.y, cor0.z));
+		list.add(new Vec3f(cor1.x, cor1.y, cor1.z));
+		list.add(new Vec3f(cor2.x, cor2.y, cor2.z));
+		list.add(new Vec3f(cor3.x, cor3.y, cor3.z));
+		list.add(new Vec3f(cor4.x, cor4.y, cor4.z));
+		list.add(new Vec3f(cor5.x, cor5.y, cor5.z));
+		list.add(new Vec3f(cor6.x, cor6.y, cor6.z));
+		list.add(new Vec3f(cor7.x, cor7.y, cor7.z));
+		gen.set("corners", list);
+		return gen;
 	}
 	
 	public float getValue(PolygonValue polyval){

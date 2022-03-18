@@ -8,8 +8,10 @@ import org.joml.Vector3f;
 import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
+import net.fexcraft.lib.common.math.AxisRotator;
 import net.fexcraft.lib.common.math.Vec3f;
-import net.fexcraft.lib.tmt.CylinderBuilder;
+import net.fexcraft.lib.frl.gen.AxisDir;
+import net.fexcraft.lib.frl.gen.Generator;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public class Cylinder extends Polygon {
@@ -81,24 +83,53 @@ public class Cylinder extends Polygon {
 	}
 
 	@Override
-	protected void buildMRT(){
-		if(radius != 0f || radial || usesTopRotation() /*|| cuv.anyCustom()*/){
-			CylinderBuilder builder = turbo.newCylinderBuilder().setPosition(off.x, off.y, off.z)
-				.setRadius(radius, radius2).setLength(length).setSegments(segments, seglimit).setScale(base, top)
-				.setDirection(direction).setTopOffset(topoff.x, topoff.y, topoff.z).removePolygons(bools);
-			//TODO custom uv
-			if(radial) builder.setRadialTexture(seg_width, seg_height);
-			else builder.setTopRotation(toprot.x, toprot.y, toprot.z);
-			builder.build();
+	protected Generator<GLObject> getGenerator(){
+		Generator<GLObject> gen = new Generator<GLObject>(glm, glm.glObj.grouptex ? group().texSizeX : model().texSizeX, glm.glObj.grouptex ? group().texSizeY : model().texSizeY)
+			.set("type", Generator.Type.CYLINDER)
+			.set("x", off.x)
+			.set("y", off.y)
+			.set("z", off.z)
+			.set("radius", radius)
+			.set("radius2", radius2)
+			.set("length", length)
+			.set("axis_dir", AxisDir.values()[direction])
+			.set("segments", segments)
+			.set("seg_limit", seglimit)
+			.set("base_scale", base)
+			.set("top_scale", top);
+		if(topoff.x != 0f || topoff.y != 0f || topoff.z != 0f){
+			gen.set("top_offset", new Vec3f(topoff.x, topoff.y, topoff.z));
 		}
-		else{
-			turbo.addCylinder(off.x, off.y, off.z, radius, length, segments, base, top, direction, getTopOff());
+		if(toprot.x != 0f || toprot.y != 0f || toprot.z != 0f){
+			AxisRotator axe = AxisRotator.newDefInstance();
+			axe.setAngles(toprot.x, toprot.y, toprot.z);
+			gen.set("top_rot", axe);
 		}
+		if(radial){
+			gen.set("radial", true);
+			gen.set("seg_width", seg_width);
+			gen.set("seg_height", seg_height);
+		}
+		for(int i = 0; i < bools.length; i++) if(bools[i]) gen.removePolygon(i);
+		return gen;
 	}
 
 	@Override
-	public float[] getFaceColor(int i){
-		return turbo.getColor(i).toFloatArray();
+	public float[] getFaceColor(int idx){
+		int segs = seglimit < segments && seglimit > 0 ? seglimit : segments;
+		if(idx < segs){
+			return blu0.toFloatArray();
+		}
+		if(idx < segs * 2){
+			return blu1.toFloatArray();
+		}
+		if(idx < segs * 3){
+			return red1.toFloatArray();
+		}
+		if(idx < segs * 4){
+			return red0.toFloatArray();
+		}
+		return (idx % 2 == 1 ? gre1 : gre0).toFloatArray();
 	}
 	
 	public float getValue(PolygonValue polyval){

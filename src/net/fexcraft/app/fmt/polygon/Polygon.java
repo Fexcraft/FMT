@@ -14,16 +14,16 @@ import net.fexcraft.app.fmt.attributes.UpdateHandler;
 import net.fexcraft.app.fmt.attributes.UpdateType;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.utils.Logging;
-import net.fexcraft.app.fmt.utils.MRTRenderer.GlCache;
 import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.RGB;
-import net.fexcraft.lib.tmt.ModelRendererTurbo;
+import net.fexcraft.lib.frl.Polyhedron;
+import net.fexcraft.lib.frl.gen.Generator;
 
 public abstract class Polygon {
 
 	public static int polyIdx = 1;//temporary
-	public ModelRendererTurbo turbo = new ModelRendererTurbo(this);
+	public Polyhedron<GLObject> glm = new Polyhedron<GLObject>().setGlObj(new GLObject());
 	private Model model;
 	private Group group;
 	private String name;
@@ -104,6 +104,10 @@ public abstract class Polygon {
 	public Group group(){
 		return group;
 	}
+	
+	public Model model(){
+		return model;
+	}
 
 	public static Polygon from(Model model, JsonMap obj){
 		if(!obj.has("type")) return null;
@@ -167,37 +171,46 @@ public abstract class Polygon {
 	protected abstract Polygon copyInternal(Polygon poly);
 
 	public void recompile(){
-		turbo.forcedRecompile = true;
-		turbo.clear();
-		GlCache cache;
-		if((cache = turbo.glObject()) == null) cache = turbo.glObject(new GlCache());
-		if(cache.polycolor == null) cache.polycolor = new RGB(colorIdx == 0 ? colorIdx = polyIdx++ : colorIdx).toFloatArray();
-		cache.polygon = this;
-		if(textureX < 0 || textureY < 0) turbo.setTextured(false);
-		else turbo.setTextured(true).setTextureOffset(textureX, textureY);
-		turbo.textureWidth = group.texgroup == null ? model.texSizeX : group.texSizeX;
-		turbo.textureHeight = group.texgroup == null ? model.texSizeY : group.texSizeY;
+		glm.recompile = true;
+		glm.clear();
+		if(glm.glObj.pickercolor == null) glm.glObj.pickercolor = new RGB(colorIdx == 0 ? colorIdx = polyIdx++ : colorIdx).toFloatArray();
+		glm.glObj.polygon = this;
+		if(textureX < 0 || textureY < 0) glm.glObj.textured = false;
+		else{
+			glm.glObj.textured = true;
+			glm.texU = textureX;
+			glm.texV = textureY;
+		}
+		glm.glObj.grouptex = group.texgroup != null;
 		if(group.joined_polygons){
-			turbo.setPosition(group.pos.x, group.pos.y, group.pos.z);
-			turbo.setRotationAngle(group.rot.x + rot.x, group.rot.y + rot.y, group.rot.z + rot.z);
+			glm.pos(group.pos.x, group.pos.y, group.pos.z);
+			glm.rot(group.rot.x + rot.x, group.rot.y + rot.y, group.rot.z + rot.z);
 		}
-		else {
-			turbo.setPosition(pos.x, pos.y, pos.z);
-			turbo.setRotationAngle(rot.x, rot.y, rot.z);
+		else{
+			glm.pos(pos.x, pos.y, pos.z);
+			glm.rot(rot.x, rot.y, rot.z);
 		}
-		buildMRT();
+		getGenerator().make();
 	}
 
-	protected abstract void buildMRT();
+	protected abstract Generator<GLObject> getGenerator();
 
-	public abstract float[] getFaceColor(int i);
+	protected static RGB red1 = new RGB(138,  65,  92);//new RGB(255, 127, 175);
+	protected static RGB gre1 = new RGB( 92, 138,  65);//new RGB(175, 255, 127);
+	protected static RGB blu1 = new RGB( 65,  92, 138);//new RGB(127, 175, 255);
+	protected static RGB red0 = new RGB(150,   0,   0);
+	protected static RGB gre0 = new RGB(  0, 150,   0);
+	protected static RGB blu0 = new RGB(  0,   0, 150);
+	protected static RGB gray = new RGB( 89,  89,  89);
+
+	public abstract float[] getFaceColor(int idx);
 
 	public void render(){
-		turbo.render();
+		glm.render();
 	}
 
 	public void renderPicking(){
-		turbo.render();
+		glm.render();
 	}
 
 	public float getValue(PolygonValue polyval){

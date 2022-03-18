@@ -133,7 +133,7 @@ public class Settings {
 		WINDOW_WIDTH = new Setting<>("window_width", 1280, GRAPHIC, obj);
 		WINDOW_HEIGHT = new Setting<>("window_height", 720, GRAPHIC, obj);
 		MOUSE_SENSIVITY = new Setting<>("mouse_sensivity", 2f, CONTROL, obj);
-		MOVE_SPEED = new Setting<>("movement_speed", 1f, CONTROL, obj);
+		MOVE_SPEED = new Setting<>("movement_speed", 20f, CONTROL, obj);
 		SCROLL_SPEED = new Setting<>("scroll_speed", 1f, CONTROL, obj);
 		TRIANGULATION_Q = new Setting<>("triangulated_quads", true, GRAPHIC, obj);
 		TRIANGULATION_L = new Setting<>("triangulated_lines", false, GRAPHIC, obj);

@@ -3,17 +3,19 @@ package net.fexcraft.app.fmt.utils;
 import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.polygon.GLObject;
+import net.fexcraft.app.fmt.polygon.PolyRenderer;
+import net.fexcraft.app.fmt.polygon.PolyRenderer.DrawMode;
 import net.fexcraft.app.fmt.polygon.Shapebox;
-import net.fexcraft.app.fmt.utils.MRTRenderer.DrawMode;
-import net.fexcraft.app.fmt.utils.MRTRenderer.GlCache;
 import net.fexcraft.lib.common.math.RGB;
+import net.fexcraft.lib.frl.Polyhedron;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public class CornerUtil {
 
-	protected static final ModelRendererTurbo ROT_MARKER_NORMAL = new ModelRendererTurbo(null, 0, 0, 16, 16).addBox(-.25f, -.25f, -.25f, .5f, .5f, .5f);
-	protected static final ModelRendererTurbo ROT_MARKER_SMALL = new ModelRendererTurbo(null, 0, 0, 16, 16).addBox(-.2f, -.2f, -.2f, .4f, .4f, .4f);
-	private static ModelRendererTurbo[] CORNER_MARKER = new ModelRendererTurbo[8];
+	protected static final Polyhedron<GLObject> ROT_MARKER_NORMAL = new Polyhedron<GLObject>().importMRT(new ModelRendererTurbo(null, 0, 0, 16, 16).addBox(-.25f, -.25f, -.25f, .5f, .5f, .5f), false, 1f);
+	protected static final Polyhedron<GLObject> ROT_MARKER_SMALL = new Polyhedron<GLObject>().importMRT(new ModelRendererTurbo(null, 0, 0, 16, 16).addBox(-.2f, -.2f, -.2f, .4f, .4f, .4f), false, 1f);
+	private static Polyhedron<GLObject>[] CORNER_MARKER = new Polyhedron[8];
 	public static RGB[] CORNER_COLOURS = new RGB[]{
 		new RGB(255, 255, 0), new RGB(255, 0, 0), new RGB(0, 127, 255), new RGB(255, 0, 127),
 		new RGB(0, 255, 0), new RGB(0, 0, 255), new RGB(0, 127, 0), new RGB(127, 0, 255)
@@ -21,25 +23,25 @@ public class CornerUtil {
 	private static Axis3DL axe = new Axis3DL();
 	static{
 		for(int i = 0; i < 8; i++){
-			CORNER_MARKER[i] = new ModelRendererTurbo(null, 0, 0, 16, 16).addBox(-.25f, -.25f, -.25f, .5f, .5f, .5f);
-			CORNER_MARKER[i].glObject(new GlCache()).polycolor = CORNER_COLOURS[i].toFloatArray();
+			CORNER_MARKER[i] = new Polyhedron<GLObject>().importMRT(new ModelRendererTurbo(null, 0, 0, 16, 16).addBox(-.25f, -.25f, -.25f, .5f, .5f, .5f), false, 1f);
+			CORNER_MARKER[i].setGlObj(new GLObject()).glObj.polycolor = CORNER_COLOURS[i].toFloatArray();
 		}
-		ROT_MARKER_NORMAL.glObject(new GlCache()).polycolor = RGB.GREEN.toFloatArray();
-		ROT_MARKER_SMALL.glObject(new GlCache()).polycolor = RGB.WHITE.toFloatArray();
+		ROT_MARKER_NORMAL.setGlObj(new GLObject()).glObj.polycolor = RGB.GREEN.toFloatArray();
+		ROT_MARKER_SMALL.setGlObj(new GLObject()).glObj.polycolor = RGB.WHITE.toFloatArray();
 	}
 
 	public static void renderCorners(){
 		Shapebox box = (Shapebox)FMT.MODEL.last_selected();
-		MRTRenderer.mode(DrawMode.RGBCOLOR);
+		PolyRenderer.mode(DrawMode.RGBCOLOR);
 		for(int i = 0; i < CORNER_MARKER.length; i++){
-			ROT_MARKER_SMALL.setRotationPoint(box.pos.x, box.pos.y, box.pos.z);
+			ROT_MARKER_SMALL.pos(box.pos.x, box.pos.y, box.pos.z);
 			ROT_MARKER_SMALL.render();
 			axe.setAngles(-box.rot.y, -box.rot.z, -box.rot.x);
 			Vector3f vector = null;
 			for(int j = 0; j < CORNER_MARKER.length; j++){
 				vector = axe.getRelativeVector(corneroffset(box, j).add(box.off));
-				CORNER_MARKER[j].setPosition(vector.x + box.pos.x, vector.y + box.pos.y, vector.z + box.pos.z);
-				CORNER_MARKER[j].setRotationAngle(box.rot.x, box.rot.y, box.rot.z);
+				CORNER_MARKER[j].pos(vector.x + box.pos.x, vector.y + box.pos.y, vector.z + box.pos.z);
+				CORNER_MARKER[j].rot(box.rot.x, box.rot.y, box.rot.z);
 				CORNER_MARKER[j].render();
 			}
 		}

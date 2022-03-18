@@ -1,21 +1,16 @@
 package net.fexcraft.app.fmt.polygon;
 
 import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
-import net.fexcraft.app.fmt.demo.ModelSteve;
-import net.fexcraft.app.fmt.settings.Settings;
+import net.fexcraft.app.fmt.demo.ModelMark;
+import net.fexcraft.app.fmt.polygon.PolyRenderer.DrawMode;
 import net.fexcraft.app.fmt.texture.TextureManager;
-import net.fexcraft.app.fmt.utils.MRTRenderer;
-import net.fexcraft.app.fmt.utils.MRTRenderer.DrawMode;
-import net.fexcraft.app.fmt.utils.MRTRenderer.GlCache;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.RGB;
-import net.fexcraft.lib.tmt.BoxBuilder;
-import net.fexcraft.lib.tmt.ModelRendererTurbo;
+import net.fexcraft.lib.frl.gen.Generator;
 
 public class Marker extends Polygon {
 
-	private ModelRendererTurbo marker = new ModelRendererTurbo(this);
-	private ModelSteve model = new ModelSteve();
+	private ModelMark model = new ModelMark();
 	public static float size = 0.5f, hs = 0.25f;
 	public int angle = -90;
 	public boolean biped, detached;
@@ -57,40 +52,35 @@ public class Marker extends Polygon {
 	}
 
 	@Override
-	protected void buildMRT(){
-		marker.clear();
-		marker.forcedRecompile = true;
-		marker.setPosition(pos.x, pos.y, pos.z);
+	protected Generator<GLObject> getGenerator(){
 		float hs = Marker.hs * scale, size = Marker.size * scale;
-		if(Settings.SPHERE_MARKER.value){
-			turbo.addSphere(0, 0, 0, hs, 8, 5, 1, 1);
-			marker.addSphere(0, 0, 0, hs, 8, 5, 1, 1);
-		}
-		else{
-			new BoxBuilder(turbo).setOffset(-hs, -hs, -hs).setSize(size, size, size).build();
-			new BoxBuilder(marker).setOffset(-hs, -hs, -hs).setSize(size, size, size).build();
-		}
-		GlCache cache;
-		if((cache = marker.glObject()) == null) cache = marker.glObject(new GlCache());
-		cache.polycolor = rgb.toFloatArray();
-		cache.polygon = this;
-		model.fill(this);
+		Generator<GLObject> gen = new Generator<GLObject>(glm, glm.glObj.grouptex ? group().texSizeX : model().texSizeX, glm.glObj.grouptex ? group().texSizeY : model().texSizeY)
+			.set("type", Generator.Type.CUBOID)
+			.set("x", -hs)
+			.set("y", -hs)
+			.set("z", -hs)
+			.set("width", size)
+			.set("height", size)
+			.set("depth", size);
+		glm.glObj.polycolor = rgb.toFloatArray();
+		return gen;
 	}
 
 	@Override
 	public float[] getFaceColor(int i){
-		return turbo.getColor(i).toFloatArray();
+		return rgb.toFloatArray();
 	}
 	
 	@Override
 	public void render(){
-		DrawMode mode = MRTRenderer.MODE;
-		MRTRenderer.mode(DrawMode.RGBCOLOR);
-		marker.render();
-		MRTRenderer.mode(mode);
-		if(biped && !MRTRenderer.MODE.lines()){
+		DrawMode mode = PolyRenderer.mode();
+		PolyRenderer.mode(DrawMode.RGBCOLOR);
+		glm.render();
+		PolyRenderer.mode(mode);
+		if(biped && !PolyRenderer.mode().lines()){
 			String tex = TextureManager.getBound();
-			TextureManager.bind("steve");
+			TextureManager.bind("mark");
+			model.fill(this);
 			model.render();
 			TextureManager.bind(tex);
 		}

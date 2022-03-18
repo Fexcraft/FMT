@@ -50,7 +50,10 @@ import org.lwjgl.system.MemoryUtil;
 import net.arikia.dev.drpc.DiscordEventHandlers;
 import net.arikia.dev.drpc.DiscordRPC;
 import net.fexcraft.app.fmt.demo.ModelT1P;
+import net.fexcraft.app.fmt.polygon.GLObject;
 import net.fexcraft.app.fmt.polygon.Model;
+import net.fexcraft.app.fmt.polygon.PolyRenderer;
+import net.fexcraft.app.fmt.polygon.PolyRenderer.DrawMode;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.ui.Editor;
@@ -59,12 +62,12 @@ import net.fexcraft.app.fmt.ui.Toolbar;
 import net.fexcraft.app.fmt.ui.ToolbarMenu;
 import net.fexcraft.app.fmt.ui.fields.Field;
 import net.fexcraft.app.fmt.utils.*;
-import net.fexcraft.app.fmt.utils.MRTRenderer.DrawMode;
-import net.fexcraft.app.fmt.utils.MRTRenderer.GlCache;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.AxisRotator;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Time;
+import net.fexcraft.lib.frl.Polyhedron;
+import net.fexcraft.lib.frl.gen.Generator;
 import net.fexcraft.lib.tmt.BoxBuilder;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
@@ -151,7 +154,7 @@ public class FMT {
 		glfwShowWindow(window);
 		glfwFocusWindow(window);
 		//
-		CAM = new GGR(5, -5, -5, -Static.rad45, Static.rad30);
+		CAM = new GGR(75, -75, -75, -Static.rad45, Static.rad30);
 		AxisRotator.setDefImpl(Axis3DL.class);
 		Settings.applyTheme();
 		FRAME = new Frame(WIDTH, HEIGHT);
@@ -274,7 +277,7 @@ public class FMT {
 		//
 		vsync();
 		ShaderManager.loadPrograms();
-		ModelRendererTurbo.RENDERER = new MRTRenderer();
+		net.fexcraft.lib.frl.Renderer.RENDERER = new PolyRenderer();
 		int vao = glGenVertexArrays();
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
@@ -352,21 +355,20 @@ public class FMT {
 		if(Picker.TYPE.polygon()){
 			glClearColor(1, 1, 1, 1);
 		    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			MRTRenderer.mode(DrawMode.POLYGON_PICKER);
+			PolyRenderer.mode(DrawMode.PICKER);
 			MODEL.renderPicking();
 			Picker.process();
 			if(Picker.TYPE.face()){
 				glClearColor(1, 1, 1, 1);
 			    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-				MRTRenderer.mode(DrawMode.FACE_PICKER);
-				Picker.polygon().turbo.render();
+				Picker.polygon().glm.render();
 				Picker.process();
 			}
 		    Picker.reset();
 		}
 		glClearColor(background[0], background[1], background[2], 1);
 	    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		MRTRenderer.mode(DrawMode.TEXTURED);
+	    PolyRenderer.mode(DrawMode.TEXTURED);
 		if(Settings.CUBE.value){
 			TextureManager.bind("demo");
 			center_cube.render();
@@ -380,27 +382,30 @@ public class FMT {
 			ModelT1P.INSTANCE.render();
 		}
 		if(Settings.CMARKER.value){
-			MRTRenderer.mode(DrawMode.RGBCOLOR);
-            centermarker0.render(0.0625f / 4);
-            centermarker1.render(0.0625f / 4);
-            centermarker2.render(0.0625f / 4);
+			PolyRenderer.mode(DrawMode.RGBCOLOR);
+            centermarker0.render();
+            centermarker1.render();
+            centermarker2.render();
 		}
 		MODEL.render();
 	}
 	
-	public static final ModelRendererTurbo center_cube = new BoxBuilder(new ModelRendererTurbo(null, 0, 0, 16, 16))
-		.setSize(16, 16, 16).setOffset(-8, 0, -8).build();
-	public static final ModelRendererTurbo floor = new BoxBuilder(new ModelRendererTurbo(null, 0, 0, 512, 512))
+	public static final Polyhedron<GLObject> center_cube = new Polyhedron<GLObject>().importMRT(new BoxBuilder(new ModelRendererTurbo(null, 0, 0, 16, 16))
+		.setSize(16, 16, 16).setOffset(-8, 0, -8).build(), false, 1f).setGlObj(new GLObject());;
+	public static final Polyhedron<GLObject> floor = new Polyhedron<GLObject>().importMRT(new BoxBuilder(new ModelRendererTurbo(null, 0, 0, 512, 512))
 		.setSize(512, 0, 512).setOffset(-256, 10, -256).removePolygons(0, 1, 4, 5)
 		.setPolygonUV(2, new float[]{ 512, 0, 512, 512, 0, 512, 0, 0 })
-		.setPolygonUV(3, new float[]{ 512, 0, 512, 512, 0, 512, 0, 0 }).build();
-	private static final ModelRendererTurbo centermarker0 = new ModelRendererTurbo(null, 0, 0, 0, 0).addBox(-0.5f, -256, -0.5f, 1, 512, 1).setTextured(false).setColor(RGB.GREEN.copy());
-	private static final ModelRendererTurbo centermarker1 = new ModelRendererTurbo(null, 0, 0, 0, 0).addBox(-256, -0.5f, -0.5f, 512, 1, 1).setTextured(false).setColor(RGB.RED.copy());
-	private static final ModelRendererTurbo centermarker2 = new ModelRendererTurbo(null, 0, 0, 0, 0).addBox(-0.5f, -0.5f, -256, 1, 1, 512).setTextured(false).setColor(RGB.BLUE.copy());
+		.setPolygonUV(3, new float[]{ 512, 0, 512, 512, 0, 512, 0, 0 }).build(), false, 1f).setGlObj(new GLObject());;
+	private static final Polyhedron<GLObject> centermarker0 = new Generator<GLObject>(null, Generator.Type.CUBOID)
+		.set("x", -.125f).set("y", -256f).set("z", -.125f).set("width", .25f).set("height", 512f).set("depth", .25f).make().setGlObj(new GLObject());
+	private static final Polyhedron<GLObject> centermarker1 = new Generator<GLObject>(null, Generator.Type.CUBOID)
+		.set("x", -256f).set("y", -.125f).set("z", -.125f).set("width", 512f).set("height", .25f).set("depth", .25f).make().setGlObj(new GLObject());
+	private static final Polyhedron<GLObject> centermarker2 = new Generator<GLObject>(null, Generator.Type.CUBOID)
+		.set("x", -.125f).set("y", -.125f).set("z", -256f).set("width", .25f).set("height", .25f).set("depth", 512f).make().setGlObj(new GLObject());
 	static {
-		centermarker0.glObject(new GlCache()).polycolor = centermarker0.getColor().toFloatArray();
-		centermarker1.glObject(new GlCache()).polycolor = centermarker1.getColor().toFloatArray();
-		centermarker2.glObject(new GlCache()).polycolor = centermarker2.getColor().toFloatArray();
+		centermarker0.glObj.polycolor = RGB.GREEN.toFloatArray();
+		centermarker1.glObj.polycolor = RGB.RED.toFloatArray();
+		centermarker2.glObj.polycolor = RGB.BLUE.toFloatArray();
 	}
 	
 	public static final String getCurrentTitle(){

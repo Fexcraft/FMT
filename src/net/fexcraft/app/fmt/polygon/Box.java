@@ -5,7 +5,8 @@ import org.joml.Vector3f;
 import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
-import net.fexcraft.lib.tmt.BoxBuilder;
+import net.fexcraft.lib.common.math.RGB;
+import net.fexcraft.lib.frl.gen.Generator;
 
 public class Box extends Polygon {
 	
@@ -52,15 +53,30 @@ public class Box extends Polygon {
 	}
 
 	@Override
-	protected void buildMRT(){
-		BoxBuilder builder = new BoxBuilder(turbo).setOffset(off.x, off.y, off.z).setSize(size.x, size.y, size.z).removePolygons(sides);
-		//TODO custom uv
-		builder.build();
+	protected Generator<GLObject> getGenerator(){
+		Generator<GLObject> gen = new Generator<GLObject>(glm, glm.glObj.grouptex ? group().texSizeX : model().texSizeX, glm.glObj.grouptex ? group().texSizeY : model().texSizeY)
+			.set("type", Generator.Type.CUBOID)
+			.set("x", off.x)
+			.set("y", off.y)
+			.set("z", off.z)
+			.set("width", size.x)
+			.set("height", size.y)
+			.set("depth", size.z);
+		for(int i = 0; i < sides.length; i++) if(sides[i]) gen.removePolygon(i);
+		return gen;
 	}
 
 	@Override
-	public float[] getFaceColor(int i){
-		return turbo.getColor(i).toFloatArray();
+	public float[] getFaceColor(int idx){
+		switch(idx){
+			case 0: return blu0.toFloatArray();
+			case 1: return blu1.toFloatArray();
+			case 2: return red1.toFloatArray();
+			case 3: return red0.toFloatArray();
+			case 4: return gre1.toFloatArray();
+			case 5: return gre0.toFloatArray();
+		}
+		return RGB.GREEN.toFloatArray();
 	}
 	
 	public float getValue(PolygonValue polyval){
