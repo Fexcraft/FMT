@@ -170,6 +170,10 @@ public class OBJExporter extends ExImPorter {
 				        	vec2.x *= -1;
 				        	vec2.y *= -1;
 				        	vec2.z *= -1;
+				        	if(bool){
+								Vec3f rotated = axis.getRelativeVector(vec2);
+								vec2 = axis1.getRelativeVector(rotated.add(wrapper.pos));
+				        	}
 				        }
 						buffer.append("vn " + vec2.x + " " + vec2.y + " " + vec2.z + "\n");
 						norid++;
