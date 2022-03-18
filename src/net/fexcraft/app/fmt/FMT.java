@@ -397,11 +397,11 @@ public class FMT {
 		.setPolygonUV(2, new float[]{ 512, 0, 512, 512, 0, 512, 0, 0 })
 		.setPolygonUV(3, new float[]{ 512, 0, 512, 512, 0, 512, 0, 0 }).build(), false, 1f).setGlObj(new GLObject());;
 	private static final Polyhedron<GLObject> centermarker0 = new Generator<GLObject>(null, Generator.Type.CUBOID)
-		.set("x", -.5f).set("y", -256f).set("z", -.5f).set("width", 1f).set("height", 512f).set("depth", 1f).make().setGlObj(new GLObject());
+		.set("x", -.125f).set("y", -256f).set("z", -.125f).set("width", .25f).set("height", 512f).set("depth", .25f).make().setGlObj(new GLObject());
 	private static final Polyhedron<GLObject> centermarker1 = new Generator<GLObject>(null, Generator.Type.CUBOID)
-		.set("x", -256f).set("y", -.5f).set("z", -.5f).set("width", 512f).set("height", 1f).set("depth", 1f).make().setGlObj(new GLObject());
+		.set("x", -256f).set("y", -.125f).set("z", -.125f).set("width", 512f).set("height", .25f).set("depth", .25f).make().setGlObj(new GLObject());
 	private static final Polyhedron<GLObject> centermarker2 = new Generator<GLObject>(null, Generator.Type.CUBOID)
-		.set("x", -.5f).set("y", -.5f).set("z", -256f).set("width", 1f).set("height", 1f).set("depth", 512f).make().setGlObj(new GLObject());
+		.set("x", -.125f).set("y", -.125f).set("z", -256f).set("width", .25f).set("height", .25f).set("depth", 512f).make().setGlObj(new GLObject());
 	static {
 		centermarker0.glObj.polycolor = RGB.GREEN.toFloatArray();
 		centermarker1.glObj.polycolor = RGB.RED.toFloatArray();
