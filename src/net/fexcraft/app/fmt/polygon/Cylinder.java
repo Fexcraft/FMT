@@ -10,6 +10,7 @@ import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.AxisRotator;
 import net.fexcraft.lib.common.math.Vec3f;
+import net.fexcraft.lib.frl.gen.AxisDir;
 import net.fexcraft.lib.frl.gen.Generator;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
@@ -91,7 +92,7 @@ public class Cylinder extends Polygon {
 			.set("radius", radius)
 			.set("radius2", radius2)
 			.set("length", length)
-			.set("direction", direction)
+			.set("axis_dir", AxisDir.values()[direction])
 			.set("segments", segments)
 			.set("seg_limit", seglimit)
 			.set("base_scale", base)
