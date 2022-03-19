@@ -27,7 +27,7 @@ public class Cylinder extends Polygon {
 		super(model);
 	}
 
-	protected Cylinder(Model model, JsonMap obj){
+	protected Cylinder(Model model, JsonMap obj, int format){
 		super(model, obj);
 		radius = obj.get("radius", radius);
 		radius2 = obj.get("radius2", radius2);
@@ -35,6 +35,9 @@ public class Cylinder extends Polygon {
 		segments = obj.get("segments", segments);
 		seglimit = obj.get("seglimit", seglimit);
 		direction = obj.get("direction", direction);
+		if(format < 4 && (direction == 2 || direction == 3)){
+			direction = direction == 2 ? 3 : 2;
+		}
 		base = obj.get("basescale", base);
 		top = obj.get("topscale", top);
 		topoff = getVector(obj, "top_offset_%s", 0f);
