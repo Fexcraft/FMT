@@ -109,7 +109,7 @@ public abstract class Polygon {
 		return model;
 	}
 
-	public static Polygon from(Model model, JsonMap obj){
+	public static Polygon from(Model model, JsonMap obj, int format){
 		if(!obj.has("type")) return null;
 		Shape shape = Shape.get(obj.get("type").string_value());
 		if(shape == null){
@@ -120,7 +120,7 @@ public abstract class Polygon {
 			case BOUNDING_BOX:
 				break;
 			case BOX: return new Box(model, obj);
-			case CYLINDER: return new Cylinder(model, obj);
+			case CYLINDER: return new Cylinder(model, obj, format);
 			case MARKER: return new Marker(model, obj);
 			case OBJECT:
 				break;
