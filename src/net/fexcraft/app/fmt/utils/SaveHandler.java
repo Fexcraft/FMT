@@ -136,7 +136,7 @@ public class SaveHandler {
 					Group group = new Group(model, entry.getKey());
 					JsonArray array = entry.getValue().asArray();
 					for(JsonObject<?> elm : array.elements()){
-						group.add(Polygon.from(model, elm.asMap()));
+						group.add(Polygon.from(model, elm.asMap(), format));
 					}
 					model.addGroup(group);
 				}
@@ -187,7 +187,7 @@ public class SaveHandler {
 				if(jsn.has("polygons")){
 					jsn.getArrayElements("polygons").forEach(elm -> {
 						try{
-							group.add(Polygon.from(model, elm.asMap()));
+							group.add(Polygon.from(model, elm.asMap(), format));
 						}
 						catch(Exception e){
 							log(JsonHandler.toString(obj, PrintOption.SPACED));
