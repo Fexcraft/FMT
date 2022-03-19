@@ -2,8 +2,6 @@ package net.fexcraft.app.fmt.polygon;
 
 import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.demo.ModelMark;
-import net.fexcraft.app.fmt.polygon.PolyRenderer.DrawMode;
-import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.frl.gen.Generator;
@@ -73,7 +71,7 @@ public class Marker extends Polygon {
 	
 	@Override
 	public void render(){
-		DrawMode mode = PolyRenderer.mode();
+		/*DrawMode mode = PolyRenderer.mode();
 		PolyRenderer.mode(DrawMode.RGBCOLOR);
 		glm.render();
 		PolyRenderer.mode(mode);
@@ -83,7 +81,8 @@ public class Marker extends Polygon {
 			model.fill(this);
 			model.render();
 			TextureManager.bind(tex);
-		}
+		}*/
+		super.render();
 	}
 	
 	public float getValue(PolygonValue polyval){
