@@ -387,6 +387,7 @@ public class Model {
 			JsonMap map = JsonHandler.parse(str, true).asMap();
 			if(!map.has("origin") && !map.get("origin").string_value().contains("fmt")) return;
 			if(!map.has("type") || !map.has("model")) return;
+			int format = map.getInteger("format", SaveHandler.FORMAT);
 			this.clear_selection();
 			boolean external = !map.get("model").string_value().equals(name);
 			String model = map.getString("model", "unknown");
@@ -395,7 +396,7 @@ public class Model {
 					String groupto = external ? model + Settings.PASTED_GROUP.value : "clipboard";
 					Runnable run = () -> {
 						map.get("polygons").asArray().value.forEach(elm -> {
-							add(groupto, Polygon.from(this, elm.asMap()));
+							add(groupto, Polygon.from(this, elm.asMap(), format));
 						});
 					};
 					if(external){
@@ -413,7 +414,7 @@ public class Model {
 						for(Entry<String, JsonObject<?>> group : map.get("groups").asMap().value.entrySet()){
 							String groupto = external ? model + "-" + group.getKey() + Settings.PASTED_GROUP.value : group.getKey() + "-cb";
 							group.getValue().asArray().value.forEach(poly -> {
-								add(groupto, Polygon.from(this, poly.asMap()));
+								add(groupto, Polygon.from(this, poly.asMap(), format));
 							});
 						}
 					};
