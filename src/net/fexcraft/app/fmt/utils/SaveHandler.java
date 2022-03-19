@@ -49,6 +49,8 @@ import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.app.json.JsonObject;
 
 public class SaveHandler {
+	
+	public static int FORMAT = 4;
 
 	public static void open(Model model, File file){
 		if(file == null || !file.exists()){
@@ -350,7 +352,7 @@ public class SaveHandler {
 	public static JsonMap modelToJTMT(Model root, boolean export){
 		Model model = root == null ? FMT.MODEL : root;
 		JsonMap obj = new JsonMap();
-		obj.add("format", 4);
+		obj.add("format", FORMAT);
 		obj.add("name", model.name);
 		obj.add("texture_size_x", model.texSizeX);
 		obj.add("texture_size_y", model.texSizeY);
