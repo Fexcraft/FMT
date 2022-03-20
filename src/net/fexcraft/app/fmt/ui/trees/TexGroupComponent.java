@@ -1,8 +1,6 @@
 package net.fexcraft.app.fmt.ui.trees;
 
 import static net.fexcraft.app.fmt.settings.Settings.ASK_TEXTURE_GROUP_REMOVAL;
-import static net.fexcraft.app.fmt.settings.Settings.GROUP_NORMAL;
-import static net.fexcraft.app.fmt.settings.Settings.POLYGON_NORMAL;
 
 import java.util.Collections;
 
@@ -32,13 +30,13 @@ public class TexGroupComponent extends EditorComponent {
 		label.getTextState().setText((this.group = group).name);
 		this.genFullheight();
 		updateholder.add(UpdateType.TEXGROUP_RENAMED, wrp -> { if(wrp.objs[0] == group) label.getTextState().setText(group.name); });
-		label.getStyle().setTextColor(ColorConstants.lightGray());
-		label.getStyle().getBackground().setColor(FMT.rgba(0x7f7f7f));
+		label.getStyle().setTextColor(ColorConstants.darkGray());
+		label.getStyle().getBackground().setColor(FMT.rgba(Settings.GROUP_SELECTED.value));
 		label.getPosition().set(0, 0);
 		label.getSize().add(4, 0);
 		label.getStyle().setPaddingLeft(new Length<Float>(5f, LengthType.PIXEL));
 		Settings.applyBorderless(label);
-		this.getStyle().getBackground().setColor(FMT.rgba(GROUP_NORMAL.value));
+		this.getStyle().getBackground().setColor(FMT.rgba(Settings.GROUP_INVISIBLE.value));
 		this.add(new OptionLabel(this, 0, "texture.group.rename", () -> {}));
 		this.add(new OptionLabel(this, 1, "texture.group.resize", () -> {}));
 		this.add(new OptionLabel(this, 2, "texture.group.generate", () -> {}));
@@ -85,7 +83,8 @@ public class TexGroupComponent extends EditorComponent {
 
 		public OptionLabel(TexGroupComponent com, int index, String string, Runnable run){
 			this.getTextState().setText(Translator.translate(string));
-			this.getStyle().getBackground().setColor(FMT.rgba(POLYGON_NORMAL.value));
+			this.getStyle().setTextColor(ColorConstants.lightGray());
+			this.getStyle().getBackground().setColor(FMT.rgba(Settings.POLYGON_NORMAL.value));
 			this.getStyle().setPaddingLeft(new Length<Float>(5f, LengthType.PIXEL));
 			Settings.applyBorderless(this);
 			setPosition(4, index * 21 + 26);
