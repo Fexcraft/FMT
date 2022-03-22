@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
+import net.fexcraft.app.fmt.settings.Settings;
+import net.fexcraft.app.fmt.utils.Logging;
+
 /**
  * 
  * @author Ferdinand Calo' (FEX___96)
@@ -25,6 +28,11 @@ public class UpdateHandler {
 	}
 	
 	public static void update(UpdateType event, Object... value){
+		if(Settings.LOG_UPDATES.value){
+			String str = new String();
+			for(Object obj : value) str += (obj == null ? "null" : obj.toString()) + " ";
+			Logging.log(event.name() + " -> " + str);
+		}
 		if(!HOLDERS.containsKey(event)) return;
 		UpdateWrapper wrapper = new UpdateWrapper(value);
 		HOLDERS.get(event).forEach(holder -> holder.update(event, wrapper));
