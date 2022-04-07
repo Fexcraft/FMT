@@ -26,7 +26,7 @@ public class CylinderComponentFull extends EditorComponent {
 		this.add(new NumberField(this, F32, row(0), F3S, HEIGHT).setup(0, 360, false, new PolygonValue(PolyVal.SEG_LIMIT, ValAxe.N)));
 		this.add(new Label(translate(LANG_PREFIX + id + ".base_top_scale"), L5, row(1), LW, HEIGHT));
 		this.add(new NumberField(this, F30, row(1), F3S, HEIGHT).setup(0, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.BASE_SCALE, ValAxe.N)));
-		this.add(new NumberField(this, F31, row(0), F3S, HEIGHT).setup(0, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.TOP_OFF, ValAxe.N)));
+		this.add(new NumberField(this, F31, row(0), F3S, HEIGHT).setup(0, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.TOP_SCALE, ValAxe.N)));
 		this.add(new Label(translate(LANG_PREFIX + id + ".top_off"), L5, row(1), LW, HEIGHT));
 		this.add(new NumberField(this, F30, row(1), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.TOP_OFF, ValAxe.X)));
 		this.add(new NumberField(this, F31, row(0), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.TOP_OFF, ValAxe.Y)));
