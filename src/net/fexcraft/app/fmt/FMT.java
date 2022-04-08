@@ -285,7 +285,7 @@ public class FMT {
 		//
 		while(!glfwWindowShouldClose(window)){
 			CAM.pollInput(accumulator += (delta = timer.getDelta()));
-			accumulator += (delta = timer.getDelta());
+			//accumulator += (delta = timer.getDelta());
 			while(accumulator >= interval){
 				//TODO "logic"
 				ToolbarMenu.checkHide();
