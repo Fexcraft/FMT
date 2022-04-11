@@ -135,6 +135,7 @@ public class EditorComponent extends Component {
 		REGISTRY.put("polygon.marker", MarkerComponent.class);
 		REGISTRY.put("group.general", GroupGeneral.class);
 		REGISTRY.put("multiplier", MultiplierComponent.class);
+		REGISTRY.put("folder", FolderComponent.class);
 	}
 
 }
