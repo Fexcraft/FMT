@@ -90,6 +90,7 @@ public class Setting<TYPE> {
 			PolyRenderer.SELCOLOR[1] = arr[1];
 			PolyRenderer.SELCOLOR[2] = arr[2];
 		}
+		if(FMT.WORKSPACE != null && group.equals("workspace")) FMT.WORKSPACE.update(this);
 	}
 
 }

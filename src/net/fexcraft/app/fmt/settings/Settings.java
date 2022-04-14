@@ -33,14 +33,7 @@ import org.lwjgl.system.MemoryUtil;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.ui.Editor;
-import net.fexcraft.app.fmt.ui.components.BoxComponent;
-import net.fexcraft.app.fmt.ui.components.CylinderComponentFull;
-import net.fexcraft.app.fmt.ui.components.GroupGeneral;
-import net.fexcraft.app.fmt.ui.components.MarkerComponent;
-import net.fexcraft.app.fmt.ui.components.MultiplierComponent;
-import net.fexcraft.app.fmt.ui.components.PolygonGeneral;
-import net.fexcraft.app.fmt.ui.components.QuickAdd;
-import net.fexcraft.app.fmt.ui.components.ShapeboxComponent;
+import net.fexcraft.app.fmt.ui.components.*;
 import net.fexcraft.app.fmt.ui.trees.PolygonTree;
 import net.fexcraft.app.fmt.ui.trees.TextureTree;
 import net.fexcraft.app.fmt.utils.Logging;
@@ -76,6 +69,9 @@ public class Settings {
 	public static Setting<Boolean> HIDE_MENU_AFTER_POLYGON, LOG_UPDATES;
 	public static RGBSetting BACKGROUND, SELECTION_LINES;
 	//
+	public static Setting<String> WORKSPACE_NAME;
+	public static Setting<String> WORKSPACE_ROOT;
+	//
 	public static Setting<String> SEL_THEME;
 	public static Setting<Boolean> DARKTHEME;
 	public static RGBSetting THEME_BACKGROUND;
@@ -98,6 +94,7 @@ public class Settings {
 	public static String NAMING = "naming";
 	public static String IMAGE = "image";
 	public static String THEME = "theme";
+	public static String WORKSPACE = "workspace";
 	//
 	public static Map<String, Map<String, Setting<?>>> SETTINGS = new LinkedHashMap<>();
 	
@@ -120,6 +117,7 @@ public class Settings {
 		SETTINGS.put(GRAPHIC, new LinkedHashMap<>());
 		SETTINGS.put(CONTROL, new LinkedHashMap<>());
 		SETTINGS.put(SPACE3D, new LinkedHashMap<>());
+		SETTINGS.put(WORKSPACE, new LinkedHashMap<>());
 		SETTINGS.put(DISCORD, new LinkedHashMap<>());
 		SETTINGS.put(NAMING, new LinkedHashMap<>());
 		SETTINGS.put(IMAGE, new LinkedHashMap<>());
@@ -173,6 +171,9 @@ public class Settings {
 		ASK_TEXTURE_GROUP_REMOVAL = new Setting<>("ask_texture_group_removal", true, GENERAL, obj);
 		HIDE_MENU_AFTER_POLYGON = new Setting<>("hide_menu_after_polygon", true, GENERAL, obj);
 		LOG_UPDATES = new Setting<>("log_updates", false, GENERAL, obj);
+		//
+		WORKSPACE_NAME = new Setting<>("name", "FMT Workspace", WORKSPACE, obj);
+		WORKSPACE_ROOT = new Setting<>("root", "/workspace/", WORKSPACE, obj);
 		//
 		SEL_THEME = new StringArraySetting("selected_theme", "light", THEME, obj, "light", "dark", "custom");
 		DARKTHEME = new Setting<>("is_dark", false, THEME, obj);
@@ -336,6 +337,7 @@ public class Settings {
 		Editor editor = new Editor("polygon_editor", "Polygon Editor", false, true);
 		new PolygonTree(null, false);
 		new TextureTree(null, false);
+		editor.addComponent(new FolderComponent(500));
 		editor.addComponent(new QuickAdd());
 		editor.addComponent(new MultiplierComponent());
 		editor.addComponent(new PolygonGeneral());

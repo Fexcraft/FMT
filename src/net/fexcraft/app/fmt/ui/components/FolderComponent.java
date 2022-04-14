@@ -26,10 +26,10 @@ public class FolderComponent extends EditorComponent {
 	public ArrayList<DirComponent> rootfolders = new ArrayList<DirComponent>();
 	public ScrollablePanel panel;
 	public File folder = new File("./workspace/");
-	public int height = 300, scrollableheight;
+	public int scrollableheight;
 
-	public FolderComponent(){
-		super("folder", 300, false, true);
+	public FolderComponent(int height){
+		super("folder", height, false, true);
 		this.add(new RunButton(LANG_PREFIX + "folder.select", F31, height - 28, F3S, HEIGHT, () -> {
 	        try(MemoryStack stack = MemoryStack.stackPush()){
 	    		String string = TinyFileDialogs.tinyfd_selectFolderDialog(Translator.translate("editor.component.folder.select.dialog"), folder.toString());
@@ -111,6 +111,7 @@ public class FolderComponent extends EditorComponent {
 		public static final int xoff = 10;
 		private ArrayList<DirComponent> subcom = new ArrayList<>();
 		private boolean expanded = false;
+		private FileType type;
 		private DirComponent root;
 		private Label label;
 		private Icon icon;
@@ -118,6 +119,7 @@ public class FolderComponent extends EditorComponent {
 
 		public DirComponent(FileType type, FolderComponent folcom, DirComponent root, File file, int row){
 			//this.file = file;
+			this.type = type;
 			this.root = root;
 			add(label = new Label(ROWHEIGHT + 2, 0, LW, ROWHEIGHT));
 			label.getTextState().setText(file.getName());
@@ -167,6 +169,7 @@ public class FolderComponent extends EditorComponent {
 		}
 		
 		public void updateIcon(FileType type, FolderComponent folcom){
+			this.type = type;
 			this.remove(icon);
 			this.add(icon = new Icon(0, 32, 0, 0, -1, "./resources/textures/icons/filetree/" + type.filename() + ".png", () -> {
 				expanded = !expanded;
@@ -179,7 +182,7 @@ public class FolderComponent extends EditorComponent {
 	public static enum FileType {
 		
 		NORMAL_FOLDER, EMPTY_FOLDER, FVTMPACK,
-		FILE, FVTM_ADDONPACKFILE, FVTM_CONFIGFILE, JSON;
+		FILE, FVTM_ADDONPACKFILE, FVTM_CONFIGFILE, JSON, FMTB;
 
 		public String filename(){
 			switch(this){
@@ -216,6 +219,8 @@ public class FolderComponent extends EditorComponent {
 						case "fuel":
 						case "recipe":
 							return FVTM_CONFIGFILE;
+						case "fmtb":
+							return FMTB;
 						default: break;
 					}
 				}

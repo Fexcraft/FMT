@@ -135,14 +135,7 @@ public class Toolbar extends Panel {
 			new MenuButton(0, "texture.add_group", () -> TextureManager.addGroup(null, true))
 		));
 		this.add(new ToolbarMenu(6, "helpers"));
-		this.add(new ToolbarMenu(7, "project",
-			new MenuButton(0, "project.open"),
-			new MenuButton(1, "project.settings"),
-			//new MenuButton(2, "project.import"),
-			//new MenuButton(3, "project.export"),
-			new MenuButton(2, "project.close")
-		));
-		this.add(new ToolbarMenu(8, "exit", () -> FMT.close(0)));
+		this.add(new ToolbarMenu(7, "exit", () -> FMT.close(0)));
 		UpdateHandler.registerHolder(holder);
 	}
 

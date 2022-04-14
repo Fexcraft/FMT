@@ -33,13 +33,6 @@ toolbar.polygons.add_voxel=Add Voxel
 toolbar.polygons.special=Sp. Polygons
 toolbar.polygons.special.fvtm_rail=FVTM Rail
 toolbar.polygons.special.curve_line=Curve/Lines
-## Project
-toolbar.project=Project
-toolbar.project.open=Open
-toolbar.project.settings=Settings
-toolbar.project.import=Import
-toolbar.project.export=Export
-toolbar.project.close=Close
 ## Utils 
 toolbar.utils=Utilities
 toolbar.utils.copy_selected=Copy Selected
@@ -220,6 +213,7 @@ settings.category.space3d=Space 3D
 settings.category.naming=Naming
 settings.category.image=Image
 settings.category.theme=Theme
+settings.category.workspace=Workspace
 settings.no_field_found=No suitable field found.
 settings.control_adjuster=Control Adjuster
 setting.general.language=Language
@@ -290,6 +284,8 @@ setting.theme.component_polygon_invisible=Com. Invis. Polygon
 setting.theme.component_group_invisible=Com. Invis. Group
 setting.theme.component_polygon_invis_sel=Com. Inv. Sel. Polygon
 setting.theme.component_group_invis_sel=Com. Inv. Sel. Group
+setting.workspace.name=Workspace Name
+setting.workspace.root=Workspace Root
 
 # Profile / Login Dialog
 profile.title=Profile Overview

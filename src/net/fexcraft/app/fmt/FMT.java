@@ -62,6 +62,7 @@ import net.fexcraft.app.fmt.ui.Toolbar;
 import net.fexcraft.app.fmt.ui.ToolbarMenu;
 import net.fexcraft.app.fmt.ui.fields.Field;
 import net.fexcraft.app.fmt.utils.*;
+import net.fexcraft.app.fmt.workspace.Workspace;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.AxisRotator;
 import net.fexcraft.lib.common.math.RGB;
@@ -105,6 +106,7 @@ public class FMT {
 	public static Toolbar TOOLBAR;
 	public static Model MODEL;
 	public static Field SELFIELD;
+	public static Workspace WORKSPACE;
 	
 	public static void main(String... args) throws Exception {
 		log("==================================================");
@@ -229,6 +231,7 @@ public class FMT {
 		TextureManager.load();
 		//FMT.MODEL = new Model(new File("./saves/dodici.fmtb"), null).load();
 		FMT.MODEL = new Model(null, "Unnamed Model");
+		FMT.WORKSPACE = new Workspace();
 		FMT.updateTitle();
 		//TODO load previous model
 		Settings.checkForUpdatesAndLogin();
@@ -426,7 +429,7 @@ public class FMT {
 	}
 
 	public static FMT updateTitle(){
-		return INSTANCE.setTitle(FMT.MODEL.name);
+		return INSTANCE.setTitle(FMT.WORKSPACE.name + " - " +  FMT.MODEL.name);
 	}
 
 	//https://mkyong.com/java/open-browser-in-java-windows-or-linux/
