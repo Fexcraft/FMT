@@ -91,7 +91,7 @@ public class Box extends Polygon {
 		switch(polyval.val()){
 			case SIZE: setVectorValue(size, polyval.axe(), value); break;
 			case SIDES: setIndexValue(sides, polyval.axe().ordinal(), value); break;
-			default: super.setValue(polyval, value);
+			default: super.setValue(polyval, value); break;
 		}
 		this.recompile();
 	}
