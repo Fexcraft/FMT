@@ -83,8 +83,17 @@ public class PolygonGeneral extends EditorComponent {
 		this.add(box);
 		this.add(new Label(translate(LANG_PREFIX + genid + ".shape_type"), L5, row(1), LW, HEIGHT));
 		type.addSelectBoxChangeSelectionEventListener(listener -> {
-			if(listener.getNewValue().equals(NOPOLYSEL)) return;
-			//TODO
+			Shape shape = Shape.get(listener.getNewValue());
+			if(shape == null) return;
+			ArrayList<Polygon> polis = FMT.MODEL.selected();
+			for(Polygon poly : polis){
+				Polygon npol = poly.convert(shape);
+				if(npol != null){
+					poly.group().add(npol);
+					poly.group().remove(poly);
+					FMT.MODEL.select(npol);
+				}
+			}
 		});
 		type.setSize(LW, HEIGHT);
 		type.setPosition(L5, row(1));
