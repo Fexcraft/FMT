@@ -273,7 +273,7 @@ public abstract class Polygon {
 		return value > .5;
 	}
 
-	protected Polygon convert(Shape shape){
+	public Polygon convert(Shape shape){
 		switch(shape){
 			case BOUNDING_BOX:
 				//TODO
