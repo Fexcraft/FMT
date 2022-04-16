@@ -171,7 +171,7 @@ public class Cylinder extends Polygon {
 			case SEG_WIDTH: seg_width = value; break;
 			case SEG_HEIGHT: seg_height = value; break;
 			case SIDES: setIndexValue(bools, polyval.axe().ordinal(), value); break;
-			default: super.setValue(polyval, value);
+			default: super.setValue(polyval, value); break;
 		}
 		this.recompile();
 	}
