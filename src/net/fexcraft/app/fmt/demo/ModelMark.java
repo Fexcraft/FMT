@@ -33,7 +33,7 @@ public class ModelMark {
 		for(Polyhedron<GLObject> hed : poly){
 			hed.posX += mark.pos.x;
 			hed.posY += mark.pos.y;
-			hed.posY += mark.pos.z;
+			hed.posZ += mark.pos.z;
 			hed.rotY += mark.angle;
 		}
 	}
