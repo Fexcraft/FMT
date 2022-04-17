@@ -10,6 +10,7 @@ import static org.lwjgl.glfw.GLFW.glfwGetVideoMode;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowMonitor;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -33,7 +34,14 @@ import org.lwjgl.system.MemoryUtil;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.ui.Editor;
-import net.fexcraft.app.fmt.ui.components.*;
+import net.fexcraft.app.fmt.ui.components.BoxComponent;
+import net.fexcraft.app.fmt.ui.components.CylinderComponentFull;
+import net.fexcraft.app.fmt.ui.components.GroupGeneral;
+import net.fexcraft.app.fmt.ui.components.MarkerComponent;
+import net.fexcraft.app.fmt.ui.components.MultiplierComponent;
+import net.fexcraft.app.fmt.ui.components.PolygonGeneral;
+import net.fexcraft.app.fmt.ui.components.QuickAdd;
+import net.fexcraft.app.fmt.ui.components.ShapeboxComponent;
 import net.fexcraft.app.fmt.ui.trees.PolygonTree;
 import net.fexcraft.app.fmt.ui.trees.TextureTree;
 import net.fexcraft.app.fmt.utils.Logging;
@@ -233,6 +241,13 @@ public class Settings {
 		}
 		if(recent.size() > 0) obj.add("recent_files", recent);
 		JsonHandler.print(new File("./settings.json"), obj, PrintOption.SPACED);
+		//
+		JsonMap editors = new JsonMap();
+		for(Editor editor : Editor.EDITORS.values()){
+			if(editor.tree) continue;
+			editors.add(editor.id, editor.save());
+		}
+		JsonHandler.print(new File("./editors.fmt"), editors, PrintOption.SPACED);
 	}
 
 	public static void applyTheme(){
@@ -326,18 +341,22 @@ public class Settings {
 		if(obj == null || obj.empty()) loadDefaultEditors();
 		else{
 			for(Entry<String, JsonObject<?>> entry : obj.entries()){
-				new Editor(entry.getKey(), entry.getValue().asMap());
+				try{
+					new Editor(entry.getKey(), entry.getValue().asMap());
+				}
+				catch(InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e){
+					e.printStackTrace();
+				}
 			}
 		}
-		Editor.EDITORS.get("polygon_editor").show();
-		Editor.EDITORS.get("polygon_tree").show();
+		new PolygonTree(null, false);
+		new TextureTree(null, false);
+		//Editor.EDITORS.get("polygon_tree").show();
 	}
 
 	private static void loadDefaultEditors(){
 		Editor editor = new Editor("polygon_editor", "Polygon Editor", false, true);
-		new PolygonTree(null, false);
-		new TextureTree(null, false);
-		editor.addComponent(new FolderComponent(500));
+		//editor.addComponent(new FolderComponent(500));
 		editor.addComponent(new QuickAdd());
 		editor.addComponent(new MultiplierComponent());
 		editor.addComponent(new PolygonGeneral());
@@ -349,6 +368,8 @@ public class Settings {
 		editor.addComponent(new QuickAdd());
 		editor.addComponent(new MultiplierComponent());
 		editor.addComponent(new GroupGeneral());
+		//
+		Editor.EDITORS.get("polygon_editor").show();
 	}
 
 	public static void register(String group, String id, Setting<?> setting){
