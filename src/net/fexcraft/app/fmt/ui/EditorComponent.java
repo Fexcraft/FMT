@@ -14,6 +14,7 @@ import net.fexcraft.app.fmt.attributes.UpdateHandler.UpdateHolder;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.components.*;
 import net.fexcraft.app.fmt.utils.Translator;
+import net.fexcraft.app.json.JsonMap;
 
 public class EditorComponent extends Component {
 
@@ -136,6 +137,14 @@ public class EditorComponent extends Component {
 		REGISTRY.put("group.general", GroupGeneral.class);
 		REGISTRY.put("multiplier", MultiplierComponent.class);
 		REGISTRY.put("folder", FolderComponent.class);
+	}
+
+	public EditorComponent load(JsonMap map){
+		return this;
+	}
+
+	public JsonMap save(){
+		return null;
 	}
 
 }
