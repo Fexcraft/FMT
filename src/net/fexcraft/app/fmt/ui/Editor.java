@@ -2,6 +2,7 @@ package net.fexcraft.app.fmt.ui;
 
 import static net.fexcraft.app.fmt.utils.Translator.translate;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -34,7 +35,9 @@ import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.fields.TextField;
 import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.fmt.utils.Translator.Translations;
+import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
+import net.fexcraft.app.json.JsonObject;
 
 public class Editor extends Component {
 	
@@ -158,8 +161,24 @@ public class Editor extends Component {
 		dialog.show(FMT.FRAME);
 	}
 
-	public Editor(String key, JsonMap obj){
+	@SuppressWarnings("unlikely-arg-type")
+	public Editor(String key, JsonMap obj) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		this(key, obj.get("name", "Nameless Editor"), false, obj.get("alignment", true));
+		if(obj.has("components")){
+			JsonArray array = obj.getArray("components");
+			for(JsonObject<?> elm : array.elements()){
+				Logging.log(elm);
+				if(elm.isMap()){
+					Class<? extends EditorComponent> com = EditorComponent.REGISTRY.get(elm.asMap().get("id"));
+					if(com != null) this.addComponent(com.getConstructor().newInstance().load(elm.asMap()));
+				}
+				else{
+					Class<? extends EditorComponent> com = EditorComponent.REGISTRY.get(elm.string_value());
+					if(com != null) this.addComponent(com.getConstructor().newInstance());
+				}
+			}
+		}
+		if(obj.getBoolean("shown", false)) this.show();
 	}
 
 	public void align(){
@@ -331,6 +350,23 @@ public class Editor extends Component {
 	    	else super.process(event);
 	    }
 	    
+	}
+
+	public JsonMap save(){
+		JsonMap map = new JsonMap();
+		map.add("name", name);
+		map.add("alignment", alignment);
+		map.add("shown", this.getStyle().getDisplay() != DisplayType.NONE);
+		if(components.size() > 0){
+			JsonArray array = new JsonArray();
+			for(EditorComponent component : components){
+				JsonMap com = component.save();
+				if(com != null) array.add(com);
+				else array.add(component.id);
+			}
+			map.add("components", array);
+		}
+		return map;
 	}
 	
 }
