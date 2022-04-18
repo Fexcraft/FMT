@@ -15,7 +15,6 @@ import net.fexcraft.app.fmt.ui.ToolbarMenu.MenuButton;
 import net.fexcraft.app.fmt.ui.components.QuickAdd;
 import net.fexcraft.app.fmt.utils.FontUtils;
 import net.fexcraft.app.fmt.utils.ImageHandler;
-import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.fmt.utils.SaveHandler;
 
 public class Toolbar extends Panel {
@@ -28,12 +27,12 @@ public class Toolbar extends Panel {
 		this.setFocusable(false);
 		Settings.applyBorderless(this);
 		holder = new UpdateHolder();
-		this.add(new Icon(0, "./resources/textures/icons/toolbar/info.png", () -> Logging.log("test")));
-		this.add(new Icon(1, "./resources/textures/icons/toolbar/settings.png", () -> SettingsDialog.open()));
-		this.add(new Icon(2, "./resources/textures/icons/toolbar/profile.png", () -> ProfileDialog.open()));
-		this.add(new Icon(3, "./resources/textures/icons/toolbar/save.png", () -> SaveHandler.save(FMT.MODEL, null, null, false, false)));
-		this.add(new Icon(4, "./resources/textures/icons/toolbar/open.png", () -> SaveHandler.openDialog(null)));
-		this.add(new Icon(5, "./resources/textures/icons/toolbar/new.png", () -> SaveHandler.newDialog()));
+		this.add(new Icon(0, "./resources/textures/icons/toolbar/info.png", () -> FMT.openLink("https://fexcraft/app/fmt")).addTooltip("toolbar.icon.info"));
+		this.add(new Icon(1, "./resources/textures/icons/toolbar/settings.png", () -> SettingsDialog.open()).addTooltip("toolbar.icon.settings"));
+		this.add(new Icon(2, "./resources/textures/icons/toolbar/profile.png", () -> ProfileDialog.open()).addTooltip("toolbar.icon.profile"));
+		this.add(new Icon(3, "./resources/textures/icons/toolbar/save.png", () -> SaveHandler.save(FMT.MODEL, null, null, false, false)).addTooltip("toolbar.icon.save"));
+		this.add(new Icon(4, "./resources/textures/icons/toolbar/open.png", () -> SaveHandler.openDialog(null)).addTooltip("toolbar.icon.open"));
+		this.add(new Icon(5, "./resources/textures/icons/toolbar/new.png", () -> SaveHandler.newDialog()).addTooltip("toolbar.icon.new"));
 		this.add(new ToolbarMenu(0, "file",
 			new MenuButton(0, "file.new", () -> SaveHandler.newDialog()),
 			new MenuButton(1, "file.open", () -> SaveHandler.openDialog(null)),
