@@ -3,6 +3,13 @@
 #
 //
 # Toolbar
+## Icons
+toolbar.icon.info=FMT Webpage
+toolbar.icon.settings=Settings
+toolbar.icon.profile=Fexcraft Profile
+toolbar.icon.save=Save Model
+toolbar.icon.open=Open Model
+toolbar.icon.new=New Model
 ## File
 toolbar.file=File
 toolbar.file.new=New
