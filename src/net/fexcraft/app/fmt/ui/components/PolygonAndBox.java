@@ -26,7 +26,7 @@ public class PolygonAndBox extends PolygonGeneral {
 	}
 
 	public PolygonAndBox(int height){
-		super(null, height);
+		super("box", height);
 		addSortingFields();
 		this.add(new Label(translate(LANG_PREFIX + "polygon.box" + ".size"), L5, row(1), LW, HEIGHT));
 		this.add(new NumberField(this, F30, row(1), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.SIZE, ValAxe.X)));
