@@ -23,6 +23,7 @@ public class QuickAdd extends EditorComponent {
 		this.add(new Icon(5, size, 2, xoff, yoff, "./resources/textures/icons/polygon/marker.png", () -> addMarker()).addTooltip(LANG_PREFIX + id + ".add_marker"));
 		this.add(new Icon(6, size, 2, xoff, yoff, "./resources/textures/icons/polygon/group.png", () -> addGroup()).addTooltip(LANG_PREFIX + id + ".add_group"));
 		this.add(new Icon(7, size, 2, xoff, yoff, "./resources/textures/icons/polygon/voxel.png", () -> {}).addTooltip(LANG_PREFIX + id + ".add_voxel"));
+		this.add(new Icon(8, size, 2, xoff, yoff, "./resources/textures/icons/polygon/copy_sel.png", () -> FMT.MODEL.copySelected()).addTooltip(LANG_PREFIX + id + ".copy_sel"));
 	}
 
 	public static void addBox(){
