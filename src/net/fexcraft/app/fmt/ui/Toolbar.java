@@ -27,7 +27,7 @@ public class Toolbar extends Panel {
 		this.setFocusable(false);
 		Settings.applyBorderless(this);
 		holder = new UpdateHolder();
-		this.add(new Icon(0, "./resources/textures/icons/toolbar/info.png", () -> FMT.openLink("https://fexcraft/app/fmt")).addTooltip("toolbar.icon.info"));
+		this.add(new Icon(0, "./resources/textures/icons/toolbar/info.png", () -> FMT.openLink("https://fexcraft.net/app/fmt")).addTooltip("toolbar.icon.info"));
 		this.add(new Icon(1, "./resources/textures/icons/toolbar/settings.png", () -> SettingsDialog.open()).addTooltip("toolbar.icon.settings"));
 		this.add(new Icon(2, "./resources/textures/icons/toolbar/profile.png", () -> ProfileDialog.open()).addTooltip("toolbar.icon.profile"));
 		this.add(new Icon(3, "./resources/textures/icons/toolbar/save.png", () -> SaveHandler.save(FMT.MODEL, null, null, false, false)).addTooltip("toolbar.icon.save"));
