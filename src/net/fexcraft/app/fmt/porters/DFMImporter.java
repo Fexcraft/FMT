@@ -144,7 +144,7 @@ public class DFMImporter extends ExImPorter {
                 	if(matcher.matches()){
                 		TemporaryPolygon poly = get(matcher.group(1), matcher.group(2), polis);
                 		String[] array = matcher.group(3).split(", ");
-                		poly.wrapper.pos = newVec3f(array[0], array[1], array[2]);
+                		poly.wrapper.rot = newVec3f(array[0], array[1], array[2]);
                 		continue;
                 	}
                 	matcher = pospoint.matcher(line);
