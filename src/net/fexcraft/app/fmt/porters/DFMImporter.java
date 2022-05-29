@@ -250,5 +250,10 @@ public class DFMImporter extends ExImPorter {
 	public String[] getCategories(){
 		return new String[]{ "model" };
 	}
+	
+	@Override
+	public boolean addLegalNotice(){
+		return true;
+	}
     
 }

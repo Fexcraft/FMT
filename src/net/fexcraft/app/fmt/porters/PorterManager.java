@@ -126,6 +126,8 @@ public class PorterManager {
 		
 		public abstract boolean isExporter();
 		
+		public boolean addLegalNotice(){ return false; };
+		
 		public boolean isValidFile(File pre){
 			if(pre.isDirectory()) return true;
 			for(String str : this.getExtensions())

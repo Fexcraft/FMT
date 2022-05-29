@@ -193,5 +193,10 @@ public class TCHImporter extends ExImPorter {
 	public String[] getCategories(){
 		return new String[]{ "model" };
 	}
+	
+	@Override
+	public boolean addLegalNotice(){
+		return true;
+	}
     
 }

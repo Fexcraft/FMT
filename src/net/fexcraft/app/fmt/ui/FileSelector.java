@@ -177,31 +177,42 @@ public class FileSelector {
         okbutton.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
         	if(CLICK == e.getAction()){
         		ExImPorter porter = eximporter.get(selbox.getElementIndex(selbox.getSelection()));
-        		String tetle = porter.getExtensions()[0]; dialog.close();
-        		SettingsBox.open((export ? "Exporter" : "Importer") + " Settings", porter.getSettings(export), false, (settings) -> {
-    	    		ArrayList<TurboList> groups = export && panel[0] != null ? panel[0].getSelectedGroups() : null;
-        			if(Settings.internal_filechooser()){
-        				openFileChooser(title, reet, porter.getExtensions(), export, (file) -> {
-        					task.process(file, porter, groups, settings);
-        				});
-        				return;
-        			}
-        	        try(MemoryStack stack = MemoryStack.stackPush()){
-        	        	PointerBuffer buffer = stack.mallocPointer(porter.getExtensions().length);
-        	            for(String pattern : porter.getExtensions()) buffer.put(stack.UTF8(pattern)); buffer.flip(); String string = "";
-        	    		if(export) string = TinyFileDialogs.tinyfd_saveFileDialog(title, reet, buffer, tetle);
-        	    		else string = TinyFileDialogs.tinyfd_openFileDialog(title, reet, buffer, tetle, false);//log(string);
-        	    		if(string != null && string.trim().length() > 0){
-        	    			boolean ends = false;
-        	    			for(int i = 1; i < porter.getExtensions().length; i++){
-        	    				if(string.endsWith(porter.getExtensions()[i].replace("*", ""))){ ends = true; break; }
-        	    			}
-        	    			if(!ends) string += porter.getExtensions()[1].replace("*", "");
-        	    			task.process(new File(string), porter, groups, settings);
-        	    		}
-        	    		else task.process(null, porter, groups, settings);
-        	        }
-        		});
+        		dialog.close();
+        		Runnable run = () -> {
+            		String tetle = porter.getExtensions()[0];
+            		SettingsBox.open((export ? "Exporter" : "Importer") + " Settings", porter.getSettings(export), false, (settings) -> {
+        	    		ArrayList<TurboList> groups = export && panel[0] != null ? panel[0].getSelectedGroups() : null;
+            			if(Settings.internal_filechooser()){
+            				openFileChooser(title, reet, porter.getExtensions(), export, (file) -> {
+            					task.process(file, porter, groups, settings);
+            				});
+            				return;
+            			}
+            	        try(MemoryStack stack = MemoryStack.stackPush()){
+            	        	PointerBuffer buffer = stack.mallocPointer(porter.getExtensions().length);
+            	            for(String pattern : porter.getExtensions()) buffer.put(stack.UTF8(pattern)); buffer.flip(); String string = "";
+            	    		if(export) string = TinyFileDialogs.tinyfd_saveFileDialog(title, reet, buffer, tetle);
+            	    		else string = TinyFileDialogs.tinyfd_openFileDialog(title, reet, buffer, tetle, false);//log(string);
+            	    		if(string != null && string.trim().length() > 0){
+            	    			boolean ends = false;
+            	    			for(int i = 1; i < porter.getExtensions().length; i++){
+            	    				if(string.endsWith(porter.getExtensions()[i].replace("*", ""))){ ends = true; break; }
+            	    			}
+            	    			if(!ends) string += porter.getExtensions()[1].replace("*", "");
+            	    			task.process(new File(string), porter, groups, settings);
+            	    		}
+            	    		else task.process(null, porter, groups, settings);
+            	        }
+            		});
+        		};
+        		if(porter.addLegalNotice()){
+        			DialogBox.showOC("eximporter.import.legal_notice", () -> run.run(), null,
+        				"eximporter.import.legal_notice_line_1", "eximporter.import.legal_notice_line_2",
+        				"eximporter.import.legal_notice_line_3", "eximporter.import.legal_notice_line_4",
+        				"eximporter.import.legal_notice_line_5", "eximporter.import.legal_notice_line_6",
+        				"eximporter.import.legal_notice_line_7", "eximporter.import.legal_notice_line_8");
+        		}
+        		else run.run();
         	}
         });
         dialog.getContainer().add(label);
