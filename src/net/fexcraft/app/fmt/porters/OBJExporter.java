@@ -46,7 +46,6 @@ public class OBJExporter extends ExImPorter {
 		settings.add(new Setting("scale", 1f));
 		settings.add(new Setting("create_mtl", false));
 		settings.add(new Setting("index_vertices", false));
-		settings.add(new Setting("only_visible_groups", true));
 		settings.add(new Setting("groups_as_objects", false));
 		settings.add(new Setting("include_normals", false));
 		settings.add(new Setting("invert_normals", true));
@@ -58,7 +57,7 @@ public class OBJExporter extends ExImPorter {
 	}
 
 	@Override
-	public String exportModel(GroupCompound compound, File file, Map<String, Setting> settings){
+	public String exportModel(GroupCompound compound, File file, ArrayList<TurboList> groups, Map<String, Setting> settings){
 		StringBuffer buffer = new StringBuffer();
 		boolean bool = settings.get("rotate_model").getBooleanValue();
 		boolean nog = settings.get("groups_as_objects").getBooleanValue();
@@ -86,7 +85,7 @@ public class OBJExporter extends ExImPorter {
 		buffer.append("# TextureSizeY: " + compound.ty(null) + "\n");
 		buffer.append("# FlipAxes: " + bool + "\n\n");
 		boolean anyprog = false;
-		for(TurboList group : compound.getGroups()){
+		for(TurboList group : groups){
 			for(Animation anim : group.animations){
 				String string = anim.getExportString("obj");
 				if(string != null && !string.equals("")){
@@ -118,12 +117,10 @@ public class OBJExporter extends ExImPorter {
 		//
 		String gpfx = nog ? "o" : "g";
 		// float texsx = 1f / compound.textureSizeX, texsy = 1f/ compound.textureSizeY;
-		boolean onlyvis = settings.get("only_visible_groups").getBooleanValue();
 		boolean index = settings.get("index_vertices").getBooleanValue();
 		int faceid = index ? 0 : 1, norid = 0;
 		HashMap<String, Integer> indices = new HashMap<>();
-		for(TurboList list : compound.getGroups()){
-			if(onlyvis && !list.visible) continue;
+		for(TurboList list : groups){
 			buffer.append("# Group Name\n");
 			axis = new Axis3DL();
 			if(index) indices.clear();

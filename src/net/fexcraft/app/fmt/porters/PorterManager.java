@@ -45,7 +45,7 @@ public class PorterManager {
 	}
 
 	public static void handleImport(){
-		FileSelector.select(Translator.translate("eximporter.import.title"), "./imports", false, (file, porter, settings) -> {
+		FileSelector.select(Translator.translate("eximporter.import.title"), "./imports", false, (file, porter, groups, settings) -> {
 			try{
 				if(file == null){
 					DialogBox.showOK("eximporter.import.nofile", null, null, "eximporter.import.nofile.desc");
@@ -80,13 +80,13 @@ public class PorterManager {
 	}
 
 	public static void handleExport(){
-		FileSelector.select(Translator.translate("eximporter.export.title"), "./exports", true, (file, porter, settings) -> {
+		FileSelector.select(Translator.translate("eximporter.export.title"), "./exports", true, (file, porter, groups, settings) -> {
 			try{
 				if(file == null){
 					DialogBox.showOK("eximporter.export.nofile", null, null, "eximporter.export.nofile.desc");
 					return;
 				}
-				String result = porter.exportModel(FMTB.MODEL, file, settings);
+				String result = porter.exportModel(FMTB.MODEL, file, groups, settings);
 				DialogBox.showOK(null, null, null, "eximporter.export.success", "#" + result);
 				FMTB.openLink(file.getParentFile().getPath());
 			}
@@ -141,7 +141,7 @@ public class PorterManager {
 		public abstract GroupCompound importModel(File file, Map<String, Setting> settings);
 		
 		/** @return result/status text; */
-		public abstract String exportModel(GroupCompound compound, File file, Map<String, Setting> settings);
+		public abstract String exportModel(GroupCompound compound, File file, ArrayList<TurboList> groups, Map<String, Setting> settings);
 		
 	}
 

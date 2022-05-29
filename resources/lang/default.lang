@@ -236,6 +236,7 @@ dialog.welcome.exit=exit
 eximporter.export.select.title=Select Exporter
 eximporter.export.select.desc=Select an exporter to export your Model/Object.
 eximporter.export.select.continue=Continue
+eximporter.export.select.groups=Select Groups to Export
 eximporter.export.title=Select Export Location
 eximporter.export.failed=Errors while exporting Model.
 eximporter.export.nofile=No File
@@ -403,3 +404,7 @@ error.no_preview_selected=no helper/preview selected
 error.todo=//TODO
 
 # Other
+group_sel_panel.select_all=Select All
+group_sel_panel.deselect_all=Deselect All
+group_sel_panel.select_selected=Sel. Selected
+group_sel_panel.select_visible=Sel. Visible

@@ -43,7 +43,6 @@ public class MarkerExporter extends ExImPorter {
 			Appender.FVTM_PART_SLOTS.name().toLowerCase(),
 			Appender.TSIV_COORDS.name().toLowerCase()
 		));
-		settings.add(new Setting("selected-only", false));
 	}
 
 	@Override
@@ -52,11 +51,10 @@ public class MarkerExporter extends ExImPorter {
 	}
 
 	@Override
-	public String exportModel(GroupCompound compound, File file, Map<String, Setting> settings){
+	public String exportModel(GroupCompound compound, File file, ArrayList<TurboList> mgroups, Map<String, Setting> settings){
 		StringBuffer buffer = new StringBuffer();
 		Appender type = Appender.valueOf(settings.get("type").getStringValue().toUpperCase());
-		boolean selected = settings.get("selected-only").getBooleanValue();
-		groups = selected ? compound.getGroups().stream().filter(g -> g.selected).collect(Collectors.toList()) : compound.getGroups();
+		groups = mgroups;
 		if(type == Appender.FVTM_SEAT_JSON){
 			JsonObject obj = new JsonObject();
 			obj.addProperty("__comment", "FVTM Seat List // FMT version: " + FMTB.VERSION);

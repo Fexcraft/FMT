@@ -51,7 +51,7 @@ public class FMFExporter extends ExImPorter {
 	}
 
 	@Override
-	public String exportModel(GroupCompound compound, File file, Map<String, Setting> settings){
+	public String exportModel(GroupCompound compound, File file, ArrayList<TurboList> groups, Map<String, Setting> settings){
 		FileOutputStream stream = null;
 		try{
 			stream = new FileOutputStream(file);
@@ -66,7 +66,7 @@ public class FMFExporter extends ExImPorter {
 			stream.write(putInt(compound.textureSizeX));
 			stream.write(putInt(compound.textureSizeY));
 			stream.write(0);
-			for(TurboList group : compound.getGroups()){
+			for(TurboList group : groups){
 				if(group.stream().filter(poly -> poly.getType().isFMFExportable()).count() == 0) continue;
 				write(stream, 2, group.id);
 				for(PolygonWrapper wrapper : group){
@@ -162,7 +162,7 @@ public class FMFExporter extends ExImPorter {
 			}
 			//
 			ArrayList<String> programs = new ArrayList<>();
-			for(TurboList group : compound.getGroups()){
+			for(TurboList group : groups){
 				for(Animation anim : group.animations){
 					String string = anim.getExportString("fmf");
 					if(string != null && !string.equals("")){

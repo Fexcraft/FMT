@@ -37,7 +37,7 @@ public abstract class FVTMFormatBase extends ExImPorter {
 	protected static final String tab2 = tab + tab;
 	protected static final String tab3 = tab2 + tab;
 	protected static final String tab4 = tab2 + tab2;
-	protected boolean extended, onlyvisible, onlyselected, pergroupinit;
+	protected boolean extended, pergroupinit;
 	protected String modelname;
 	protected ArrayList<Setting> settings = new ArrayList<>();
 	//
@@ -46,8 +46,6 @@ public abstract class FVTMFormatBase extends ExImPorter {
 	public FVTMFormatBase(String name, String id){
 		this.name = name; this.id = id;
 		settings.add(new Setting(Type.BOOLEAN, "extended_form", false));
-		settings.add(new Setting(Type.BOOLEAN, "export_only_visible", false));
-		settings.add(new Setting(Type.BOOLEAN, "export_only_selected", false));
 		settings.add(new Setting(Type.BOOLEAN, "per_group_init", false));
 		settings.add(new Setting(Type.INTEGER, "max_pg_init_count", 250));
 	}
@@ -59,11 +57,9 @@ public abstract class FVTMFormatBase extends ExImPorter {
 
 	/** The in-string "TODO" markers are for those who implement the model into the game. */
 	@Override
-	public String exportModel(GroupCompound compound, File file, Map<String, Setting> settings){
+	public String exportModel(GroupCompound compound, File file, ArrayList<TurboList> groups, Map<String, Setting> settings){
 		ArrayList<String> addedgroups = new ArrayList<>(); this.initExport(compound, file, settings);
 		extended = settings.get("extended_form").getBooleanValue();
-		onlyvisible = settings.get("export_only_visible").getBooleanValue();
-		onlyselected = settings.get("export_only_selected").getBooleanValue();
 		pergroupinit = settings.get("per_group_init").getBooleanValue();
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(getTopCommentLine());
@@ -76,8 +72,8 @@ public abstract class FVTMFormatBase extends ExImPorter {
 		appendClassDeclaration(buffer);
 		if(this.extended){
 			buffer.append("\n");
-			for(TurboList list : compound.getGroups()){
-				if((onlyvisible && !list.visible) || (onlyselected && !list.selected) || list.isEmpty()) continue;
+			for(TurboList list : groups){
+				if(list.isEmpty()) continue;
 				buffer.append(tab + "public TurboList " + list.exportID() + ";\n");
 			}
 			buffer.append("\n");
@@ -89,7 +85,7 @@ public abstract class FVTMFormatBase extends ExImPorter {
 		} buffer.append(tab2 + "//\n");
 		if(pergroupinit){
 			int count = settings.get("max_pg_init_count").getValue();
-			for(TurboList list : compound.getGroups()){
+			for(TurboList list : groups){
 				if(list.size() > count){
 					int subs = list.size() / count; if(list.size() % count > 0) subs++;
 					for(int i = 0; i < subs; i++){
@@ -100,7 +96,7 @@ public abstract class FVTMFormatBase extends ExImPorter {
 			}
 			buffer.append(tab + "}\n\n");
 			//
-			for(TurboList list : compound.getGroups()){
+			for(TurboList list : groups){
 				if(list.size() > count){
 					int subs = list.size() / count; if(list.size() % count != 0) subs++;
 					for(int i = 0; i < subs; i++){
@@ -121,7 +117,7 @@ public abstract class FVTMFormatBase extends ExImPorter {
 			buffer.append("}\n");
 		}
 		else{
-			for(TurboList list : compound.getGroups()){
+			for(TurboList list : groups){
 				insertList(compound, list, null, buffer, addedgroups, true);
 			}
 			buffer.append(tab + "}\n\n}\n");
@@ -156,7 +152,7 @@ public abstract class FVTMFormatBase extends ExImPorter {
 		String name = id; StringBuffer shape = new StringBuffer();
 		if(list instanceof TurboList){
 			TurboList turbo = (TurboList)list; name = turbo.exportID();
-			if((onlyvisible && !turbo.visible) || (onlyselected && !turbo.selected) || list.isEmpty()) return;
+			if(list.isEmpty()) return;
 		}
 		boolean contains = groups.contains(name); if(!contains) groups.add(name);
 		if(contains){

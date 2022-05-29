@@ -195,7 +195,7 @@ public class UserInterfaceUtils {
 				FileSelector.select(Translator.translate("toolbar.helpers.load_frame.dialog"), "./imports", FileSelector.TYPE_IMG, false, file -> HelperCollector.loadFrame(file));
 			}),
 			new MenuButton("toolbar.helpers.load_imported", () -> {
-				FileSelector.select(Translator.translate("toolbar.helpers.load_fmtb.dialog"), "./imports", false, (file, porter, settings) -> HelperCollector.load(file, porter, settings));
+				FileSelector.select(Translator.translate("toolbar.helpers.load_fmtb.dialog"), "./imports", false, (file, porter, groups, settings) -> HelperCollector.load(file, porter, settings));
 			}),
 			new MenuButton("toolbar.helpers.unload_clear", () -> HelperCollector.LOADED.clear())
 		));

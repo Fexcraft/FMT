@@ -707,6 +707,12 @@ public class GroupCompound {
 		return array;
 	}
 
+	public ArrayList<TurboList> getVisibleGroups(){
+		ArrayList<TurboList> array = new ArrayList<>();
+		for(TurboList list : groups) if(list.visible) array.add(list);
+		return array;
+	}
+
 	public void copyAndSelect(){
 		ArrayList<PolygonWrapper> list = this.getSelected(), newlist = new ArrayList<>();
 		if(list.size() == 0) return;

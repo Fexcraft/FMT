@@ -16,6 +16,7 @@ import net.fexcraft.app.fmt.utils.texture.Texture;
 import net.fexcraft.app.fmt.utils.texture.TextureGroup;
 import net.fexcraft.app.fmt.utils.texture.TextureManager;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
+import net.fexcraft.app.fmt.wrappers.TurboList;
 
 /**
  * 
@@ -40,7 +41,7 @@ public class PNGExporter extends ExImPorter {
 	}
 
 	@Override
-	public String exportModel(GroupCompound compound, File file, Map<String, Setting> settings){
+	public String exportModel(GroupCompound compound, File file, ArrayList<TurboList> groups, Map<String, Setting> settings){
 		image = null;
 		boolean textured = settings.get("textured").getBooleanValue();
 		TextureGroup group = TextureManager.getGroup(settings.get("texgroup").as(StringArraySetting.class).getSelected());

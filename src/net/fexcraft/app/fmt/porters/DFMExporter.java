@@ -36,7 +36,7 @@ public class DFMExporter extends ExImPorter {
 	protected static final String tab = "\t";//"    ";
 	protected static final String tab2 = tab + tab;
 	protected static final String tab3 = tab2 + tab;
-	protected boolean onlyvisible, pergroupinit;
+	protected boolean pergroupinit;
 	protected String modelname, modeltype, packid;
 	protected ArrayList<Setting> settings = new ArrayList<>();
 	private static final String VERSION = "1.0";
@@ -45,7 +45,6 @@ public class DFMExporter extends ExImPorter {
 		settings.add(new Setting(Type.STRING, "pack_id", "your_pack_id"));
 		settings.add(new Setting(Type.STRING, "model_type", "ModelVehicle"));
 		settings.add(new Setting(Type.STRING, "model_name", "default"));
-		settings.add(new Setting(Type.BOOLEAN, "export_only_visible", false));
 		settings.add(new Setting(Type.BOOLEAN, "per_group_init", false));
 		settings.add(new Setting(Type.INTEGER, "max_pg_init_count", 250));
 	}
@@ -57,14 +56,13 @@ public class DFMExporter extends ExImPorter {
 
 	/** The in-string "TODO" markers are for those who implement the model into the game. */
 	@Override
-	public String exportModel(GroupCompound compound, File file, Map<String, Setting> settings){
+	public String exportModel(GroupCompound compound, File file, ArrayList<TurboList> groups, Map<String, Setting> settings){
 		packid = settings.get("pack_id").getStringValue();
 		modelname = settings.get("model_name").getStringValue();
 		if(modelname.equals("default") || modelname.equals("null")) modelname = null;
 		modelname = validateName(modelname == null ? compound.name + "Model" : modelname);
 		modeltype = settings.get("model_type").getStringValue();
 		//
-		onlyvisible = settings.get("export_only_visible").getBooleanValue();
 		pergroupinit = settings.get("per_group_init").getBooleanValue();
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("//FMT-Marker DFM-" + VERSION + "\n");
@@ -84,12 +82,12 @@ public class DFMExporter extends ExImPorter {
 		buffer.append(tab + "private int textureX = " + compound.tx(null) + ";\n");
 		buffer.append(tab + "private int textureY = " + compound.tx(null) + ";\n\n");
 		buffer.append(tab + "public " + modelname + "(){\n");
-		for(TurboList list : compound.getGroups()){
+		for(TurboList list : groups){
 			buffer.append(tab2 + list.exportID() + " = new ModelRendererTurbo[" + list.size() + "];\n");
 		} buffer.append(tab2 + "//\n");
 		if(pergroupinit){
 			int count = settings.get("max_pg_init_count").getValue();
-			for(TurboList list : compound.getGroups()){
+			for(TurboList list : groups){
 				if(list.size() > count){
 					int subs = list.size() / count; if(list.size() % count > 0) subs++;
 					for(int i = 0; i < subs; i++){
@@ -101,7 +99,7 @@ public class DFMExporter extends ExImPorter {
 			appendEnding(compound, buffer);
 			buffer.append(tab + "}\n\n");
 			//
-			for(TurboList list : compound.getGroups()){
+			for(TurboList list : groups){
 				if(list.size() > count){
 					int subs = list.size() / count; if(list.size() % count != 0) subs++;
 					for(int i = 0; i < subs; i++){
@@ -122,7 +120,7 @@ public class DFMExporter extends ExImPorter {
 			buffer.append("}\n");
 		}
 		else{
-			for(TurboList list : compound.getGroups()){
+			for(TurboList list : groups){
 				insertList(compound, list, 0, null, buffer);
 			}
 			appendEnding(compound, buffer);
@@ -151,7 +149,7 @@ public class DFMExporter extends ExImPorter {
 		String name = id;
 		if(list instanceof TurboList){
 			TurboList turbo = (TurboList)list; name = turbo.exportID();
-			if((onlyvisible && !turbo.visible) || list.isEmpty()) return;
+			if(list.isEmpty()) return;
 		}
 		for(PolygonWrapper wrapper : list){
 			buffer.append(tab2 + name + "[" + index + "] = new ModelRendererTurbo(this, " + wrapper.textureX + ", "

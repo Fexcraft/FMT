@@ -12,7 +12,6 @@ import java.util.regex.Pattern;
 
 import net.fexcraft.app.fmt.porters.PorterManager.ExImPorter;
 import net.fexcraft.app.fmt.ui.DialogBox;
-import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.app.fmt.utils.Setting;
 import net.fexcraft.app.fmt.wrappers.BoxWrapper;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
@@ -54,14 +53,14 @@ public class DFMImporter extends ExImPorter {
 			DialogBox.showOK("eximporter.import.failed", null, null, "eximporter.dfm_importer.no_agreement");
 			return compound;
 		}
-		if(!SessionHandler.getLicenseStatus().equals("creator")){
+		/*if(!SessionHandler.getLicenseStatus().equals("creator")){
 			DialogBox.showOK("eximporter.import.failed", null, null, "NO PERMISSION");
 			return compound;
 		}
 		if(!SessionHandler.getUserName().equals("Ferdinand")){
 			DialogBox.showOK("eximporter.import.failed", null, null, "NO PERMISSION");
 			return compound;
-		}
+		}*/
         boolean degrees = settings.get("degree based").getBooleanValue();
         String line = null;
         try{
@@ -228,7 +227,7 @@ public class DFMImporter extends ExImPorter {
     }
 
 	@Override
-	public String exportModel(GroupCompound compound, File file, Map<String, Setting> settings){
+	public String exportModel(GroupCompound compound, File file, ArrayList<TurboList> groups, Map<String, Setting> settings){
 		return "This isn't an exporter as of now.";
 	}
 	

@@ -6,6 +6,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -38,11 +39,11 @@ public class AABBExporter extends ExImPorter {
 	}
 
 	@Override
-	public String exportModel(GroupCompound compound, File file, Map<String, Setting> settings){
+	public String exportModel(GroupCompound compound, File file, ArrayList<TurboList> groups, Map<String, Setting> settings){
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("# FMT AABB Export // FMT version: " + FMTB.VERSION + "\n");
 		buffer.append("# Model: " + (compound.name == null ? "unnamed" : compound.name.toUpperCase()) + "\n\n");
-		for(TurboList list : compound.getGroups()){
+		for(TurboList list : groups){
 			List<PolygonWrapper> coll = list.stream().filter(pre -> pre instanceof BBWrapper).collect(Collectors.toList());
 			if(!coll.isEmpty()){
 				buffer.append("# Group: " + list.id.toUpperCase() + "\n");

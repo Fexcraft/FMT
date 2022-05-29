@@ -21,6 +21,7 @@ import net.fexcraft.app.fmt.utils.texture.TextureManager;
 import net.fexcraft.app.fmt.wrappers.BBWrapper;
 import net.fexcraft.app.fmt.wrappers.BoxWrapper;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
+import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.app.fmt.wrappers.VoxelWrapper;
 import net.fexcraft.app.fmt.wrappers.face.BoxFace;
 import net.fexcraft.app.fmt.wrappers.face.Face;
@@ -174,7 +175,7 @@ public class VoxImporter extends ExImPorter {
 	}
 
 	@Override
-	public String exportModel(GroupCompound compound, File file, Map<String, Setting> settings){
+	public String exportModel(GroupCompound compound, File file, ArrayList<TurboList> groups, Map<String, Setting> settings){
 		return "This isn't an exporter.";
 	}
 	
