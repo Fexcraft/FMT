@@ -148,7 +148,7 @@ public class Texture {
 		buffer.put(pos + 0, (byte)(rgb[0] + 128));
 		buffer.put(pos + 1, (byte)(rgb[1] + 128));
 		buffer.put(pos + 2, (byte)(rgb[2] + 128));
-		buffer.put(pos + 3, (byte)255);
+		buffer.put(pos + 3, (byte)(rgb.length > 3 ? rgb[3] + 128 : 255));
 	}
 
 	public byte[] get(int x, int y){

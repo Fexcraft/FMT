@@ -32,7 +32,8 @@ public class Editors {
 	
 	public static void show(String type){
 		hideAll();
-		TextureEditor.toggleBucketMode(null);
+		TextureEditor.toggleBucketMode(null, null);
+		TextureEditor.toggleBucketMode(null, false);
 		switch(type){
 			case "general": general.show(); break;
 			case "group": group.show(); break;

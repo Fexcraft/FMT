@@ -16,14 +16,15 @@ import net.fexcraft.lib.common.math.RGB;
 
 public class TextureEditor extends EditorBase {
 	
-	public static RGB CURRENTCOLOR = new RGB(RGB.WHITE);
+	private static RGB CURRENTCOLOR = new RGB(RGB.WHITE), ERASE = new RGB(0, 0, 0).setAlpha(0);
 	public static ColorPanel[] panels = new ColorPanel[18 * 18]; 
 	public static ColorField colorfield;
 	public static ColorPanel current;
 	public static Icon face, polygon, group, pencil, picker;
-	public static FunctionButton current_tool;
+	public static FunctionButton current_tool, eraser_button;
 	//
 	private static PaintMode PMODE;
+	private static boolean eraser;
 	private static final int rows = 18;
 	
 	public TextureEditor(){
@@ -91,12 +92,13 @@ public class TextureEditor extends EditorBase {
 		//String off = translate("editor.texture.brushes.tool_off");
 		pass += 24;
 		int off = 55;
-		brushes.getContainer().add(pencil = new Icon(off, pass, 0, "./resources/textures/icons/editors/texture/pixel.png", "editor.texture.brushes.pixel_pencil", () -> toggleBucketMode(PaintMode.PIXEL)));
-		brushes.getContainer().add(face = new Icon(off, pass, 1, "./resources/textures/icons/editors/texture/face.png", "editor.texture.brushes.face_bucket", () -> toggleBucketMode(PaintMode.FACE)));
-		brushes.getContainer().add(polygon = new Icon(off, pass, 2, "./resources/textures/icons/editors/texture/polygon.png", "editor.texture.brushes.polygon_bucket", () -> toggleBucketMode(PaintMode.POLYGON)));
-		brushes.getContainer().add(group = new Icon(off, pass, 3, "./resources/textures/icons/editors/texture/group.png", "editor.texture.brushes.group_bucket", () -> toggleBucketMode(PaintMode.GROUP)));
-		brushes.getContainer().add(picker = new Icon(off, pass, 4, "./resources/textures/icons/editors/texture/color_picker.png", "editor.texture.brushes.color_picker", () -> toggleBucketMode(PaintMode.COLORPICKER)));
-		brushes.getContainer().add(current_tool = new FunctionButton(translate("editor.texture.brushes.current") + " NONE", 3, pass += 24 + 12, 290, 20, () -> toggleBucketMode(null)));
+		brushes.getContainer().add(pencil = new Icon(off, pass, 0, "./resources/textures/icons/editors/texture/pixel.png", "editor.texture.brushes.pixel_pencil", () -> toggleBucketMode(PaintMode.PIXEL, null)));
+		brushes.getContainer().add(face = new Icon(off, pass, 1, "./resources/textures/icons/editors/texture/face.png", "editor.texture.brushes.face_bucket", () -> toggleBucketMode(PaintMode.FACE, null)));
+		brushes.getContainer().add(polygon = new Icon(off, pass, 2, "./resources/textures/icons/editors/texture/polygon.png", "editor.texture.brushes.polygon_bucket", () -> toggleBucketMode(PaintMode.POLYGON, null)));
+		brushes.getContainer().add(group = new Icon(off, pass, 3, "./resources/textures/icons/editors/texture/group.png", "editor.texture.brushes.group_bucket", () -> toggleBucketMode(PaintMode.GROUP, null)));
+		brushes.getContainer().add(picker = new Icon(off, pass, 4, "./resources/textures/icons/editors/texture/color_picker.png", "editor.texture.brushes.color_picker", () -> toggleBucketMode(PaintMode.COLORPICKER, null)));
+		brushes.getContainer().add(current_tool = new FunctionButton(translate("editor.texture.brushes.current") + " NONE", 3, pass += 24 + 12, 290, 20, () -> toggleBucketMode(null, null)));
+		brushes.getContainer().add(eraser_button = new FunctionButton(translate("editor.texture.brushes.eraser") + " OFF", 3, pass += 24 + 12, 290, 20, () -> toggleBucketMode(null, !eraser)));
 		brushes.setSize(296, pass + 52);
         this.addSub(brushes); pass = -20;
         //
@@ -175,9 +177,14 @@ public class TextureEditor extends EditorBase {
 		return 0xFFFFFF - rgb.packed;
 	}
 
-	public static void toggleBucketMode(PaintMode mode){
-		PMODE = mode == null || PMODE == mode ? null : mode;
+	public static void toggleBucketMode(PaintMode mode, Boolean erase){
+		if(erase == null){
+			PMODE = mode == null || PMODE == mode ? null : mode;
+			if(PMODE == null) eraser = false;
+		}
+		else eraser = erase;
 		current_tool.getTextState().setText(translate("editor.texture.brushes.current") + " " + (PMODE == null ? "none" : PMODE.lang()));
+		eraser_button.getTextState().setText(translate("editor.texture.brushes.eraser") + " " + (eraser ? "ON" : "OFF"));
 	}
 
 	public static enum PaintMode {
@@ -224,7 +231,15 @@ public class TextureEditor extends EditorBase {
 	}
 
 	public static void reset(){
-		toggleBucketMode(null); PMODE = null;
+		eraser = false;
+		toggleBucketMode(null, null);
+		PMODE = null;
+	}
+
+	public static byte[] getCurrentColor(){
+		byte[] b = (eraser ? ERASE : CURRENTCOLOR).toByteArray();
+		float a = (eraser ? ERASE : CURRENTCOLOR).alpha;
+		return new byte[]{ b[0], b[1], b[2], (byte)(Math.floor(a >= 1.0f ? 255 : a * 256.0f) - 128) };
 	}
 	
 }

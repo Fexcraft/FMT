@@ -59,7 +59,7 @@ public class RayCoastAway {
 			TextureGroup group = lastsel.getTextureGroup();
 			if(group == null || (tex = group.texture) == null){
 				DialogBox.show(null, "dialog.button.ok", "polygon_picker.paint_bucket.toggle_off", null, () -> {
-					TextureEditor.toggleBucketMode(null);
+					TextureEditor.toggleBucketMode(null, null);
 				}, "polygon_picker.paint_bucket.no_texture");
 				return;
 			}
@@ -83,7 +83,7 @@ public class RayCoastAway {
 						}
 						else{*/
 							//log(x + " " + y);
-							tex.set(x, y, TextureEditor.CURRENTCOLOR.toByteArray());
+							tex.set(x, y, TextureEditor.getCurrentColor());
 							tex.rebind();
 							//TXO tex.save();
 							return;
@@ -113,7 +113,7 @@ public class RayCoastAway {
 			TextureGroup group = wrapper.getTextureGroup();
 			if(group == null || (tex = group.texture) == null){
 				DialogBox.show(null, "dialog.button.ok", "polygon_picker.paint_bucket.toggle_off", null, () -> {
-					TextureEditor.toggleBucketMode(null);
+					TextureEditor.toggleBucketMode(null, null);
 				}, "polygon_picker.paint_bucket.no_texture");
 				return;
 			}

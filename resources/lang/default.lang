@@ -221,6 +221,7 @@ editor.texture.brushes.group_bucket=Group Paint Bucket
 editor.texture.brushes.pixel_pencil=Pixel Paint Pencil
 editor.texture.brushes.color_picker=Color Picker
 editor.texture.brushes.current=Current:
+editor.texture.brushes.eraser=Eraser:
 editor.fields.reset.uppercase=RESET
 
 # Dialogs

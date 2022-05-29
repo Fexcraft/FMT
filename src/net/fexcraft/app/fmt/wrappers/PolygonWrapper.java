@@ -371,7 +371,7 @@ public abstract class PolygonWrapper {
 					log("error: requested single-face paint, but provided no coordinates");
 					return false;
 				}
-				byte[] color = (negative ? TextureEditor.CURRENTCOLOR : something.getColor(sface)).toByteArray();
+				byte[] color = (negative ? TextureEditor.getCurrentColor() : something.getColor(sface).toByteArray());
 				burn(tex, ends, color, detached);
 			}
 			else{
@@ -382,7 +382,7 @@ public abstract class PolygonWrapper {
 						log("paint data for face " + coord.side().id() + " not found, skipping");
 						continue;
 					}
-					byte[] color = (negative ? TextureEditor.CURRENTCOLOR : something.getColor(coord.side().index())).toByteArray();
+					byte[] color = (negative ? TextureEditor.getCurrentColor() : something.getColor(coord.side().index()).toByteArray());
 					burn(tex, ends, color, coord.absolute());
 				}
 			}
@@ -401,12 +401,12 @@ public abstract class PolygonWrapper {
 					ends = coords[1];
 				} else return false;
 				if(ends == null || ends.length == 0) return false;
-				burn(tex, ends, TextureEditor.CURRENTCOLOR.toByteArray(), false);
+				burn(tex, ends, TextureEditor.getCurrentColor(), false);
 			}
 			else if(this.getType().isTexturable()){
 				float[][] ends = coords[face];
 				if(ends == null || ends.length == 0) return false;
-				burn(tex, ends, TextureEditor.CURRENTCOLOR.toByteArray(), cuv.get(getTexturableFaces()[face]).absolute());
+				burn(tex, ends, TextureEditor.getCurrentColor(), cuv.get(getTexturableFaces()[face]).absolute());
 			}
 			else{
 				log("There is no known way of how to handle texture burning of '" + this.getType().name() + "'!");
