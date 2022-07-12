@@ -100,7 +100,9 @@ public class ColorField extends TextInput implements Field {
 				if(event.getAction() == CLICK){
                     try(MemoryStack stack = MemoryStack.stackPush()) {
                         ByteBuffer color = stack.malloc(3);
-                        String result = TinyFileDialogs.tinyfd_colorChooser("Choose A Color", "#" + Integer.toHexString((int)getValue()), null, color);
+                        String colorstring = Integer.toHexString((int)getValue());
+                        for(int i = 0; i < 5; i++) if(colorstring.length() < 6)  colorstring = "0" + colorstring; else break;
+                        String result = TinyFileDialogs.tinyfd_colorChooser("Choose A Color", "#" + colorstring, null, color);
 						if(result == null) return; this.getTextState().setText(result); value = null; update.accept((int)getValue(), event.getButton() == MouseButton.MOUSE_BUTTON_LEFT);
                     }
 				}
