@@ -50,7 +50,7 @@ public class ColorField extends TextInput implements Field {
 				if(event.getAction() == CLICK){
                     try(MemoryStack stack = MemoryStack.stackPush()) {
                         ByteBuffer color = stack.malloc(3);
-                        String result = TinyFileDialogs.tinyfd_colorChooser("Choose A Color", "#" + Integer.toHexString((int)getValue()), null, color);
+                        String result = TinyFileDialogs.tinyfd_colorChooser("Choose A Color", "#" + amz((int)getValue()), null, color);
 						if(result == null) return; this.getTextState().setText(result); value = null; FMTB.MODEL.updateValue(this, fieldid);
                     }
 				}
@@ -75,7 +75,7 @@ public class ColorField extends TextInput implements Field {
 				if(event.getAction() == CLICK){
                     try(MemoryStack stack = MemoryStack.stackPush()) {
                         ByteBuffer color = stack.malloc(3);
-                        String result = TinyFileDialogs.tinyfd_colorChooser("Choose A Color", "#" + Integer.toHexString((int)getValue()), null, color);
+                        String result = TinyFileDialogs.tinyfd_colorChooser("Choose A Color", "#" + amz((int)getValue()), null, color);
 						if(result == null) return; this.getTextState().setText(result); value = null; ((RGB)setting.getValue()).packed = (int)getValue();
                     }
 				}
@@ -100,9 +100,7 @@ public class ColorField extends TextInput implements Field {
 				if(event.getAction() == CLICK){
                     try(MemoryStack stack = MemoryStack.stackPush()) {
                         ByteBuffer color = stack.malloc(3);
-                        String colorstring = Integer.toHexString((int)getValue());
-                        for(int i = 0; i < 5; i++) if(colorstring.length() < 6)  colorstring = "0" + colorstring; else break;
-                        String result = TinyFileDialogs.tinyfd_colorChooser("Choose A Color", "#" + colorstring, null, color);
+                        String result = TinyFileDialogs.tinyfd_colorChooser("Choose A Color", "#" + amz((int)getValue()), null, color);
 						if(result == null) return; this.getTextState().setText(result); value = null; update.accept((int)getValue(), event.getButton() == MouseButton.MOUSE_BUTTON_LEFT);
                     }
 				}
@@ -120,7 +118,8 @@ public class ColorField extends TextInput implements Field {
 		catch(Exception e){
 			log(e);
 		}
-		apply(newval); return value = (int)newval;
+		apply(newval);
+		return value = (int)newval;
 	}
 
 	@Override
@@ -130,7 +129,7 @@ public class ColorField extends TextInput implements Field {
 
 	@Override
 	public void apply(float val){
-		getTextState().setText("#" + Integer.toHexString(value = (int)val));
+		getTextState().setText("#" + amz(value = (int)val));
 		setCaretPosition(getTextState().getText().length());
 	}
 
@@ -143,6 +142,12 @@ public class ColorField extends TextInput implements Field {
 	@Override
 	public String id(){
 		return fieldid;
+	}
+	
+	public String amz(int hex){
+        String str = Integer.toHexString(hex);
+        for(int i = 0; i < 5; i++) if(str.length() < 6)  str = "0" + str; else break;
+        return str;
 	}
 	
 }
