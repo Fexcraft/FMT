@@ -40,10 +40,7 @@ public class RayCoastAway {
 		if(bool && !PICKING){
 			if(TextureEditor.colorPicker()){
 				byte[] picked = getPicked(mouseoff);
-				picked[0] -= 128;
-				picked[1] -= 128;
-				picked[2] -= 128;
-				TextureEditor.updateColor(picked, null);
+				TextureEditor.updateColor(new byte[]{ (byte)(picked[0] - 128), (byte)(picked[1] - 128), (byte)(picked[2] - 128) }, null);
 				return;
 			}
 			PICKING = true;
