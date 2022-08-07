@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.polygon.PolyRenderer;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonHandler.PrintOption;
@@ -70,7 +71,7 @@ public class KeyCompound {
 		keys.add(new KeyFunction("toggle_demo", GLFW_KEY_F5, action -> { if(action == GLFW_RELEASE) Settings.DEMO.toggle(); }));
 		keys.add(new KeyFunction("toggle_polygon_marker", GLFW_KEY_F6, action -> { if(action == GLFW_RELEASE) Settings.POLYMARKER.toggle(); }));
 		keys.add(new KeyFunction("toggle_center_marker", GLFW_KEY_F7, action -> { if(action == GLFW_RELEASE) Settings.CMARKER.toggle(); }));
-		keys.add(new KeyFunction("toggle_lighting", GLFW_KEY_F8, action -> { }));//TODO
+		keys.add(new KeyFunction("toggle_lighting", GLFW_KEY_F8, action -> { if(action == GLFW_RELEASE) Logging.bar("Toggled lighting " + ((PolyRenderer.LIGHTING = !PolyRenderer.LIGHTING) ? "on" : "off") + ".", true); }));//TODO
 		keys.add(new KeyFunction("toggle_animations", GLFW_KEY_F9, action -> { }));//TODO
 		keys.add(new KeyFunction("toggle_gif", GLFW_KEY_F10, action -> { if(action == GLFW_RELEASE) ImageHandler.createGif(); }));
 		keys.add(new KeyFunction("toggle_fullscreen", GLFW_KEY_F11, action -> { if(action == GLFW_RELEASE) Settings.toggleFullScreen(true); }));
