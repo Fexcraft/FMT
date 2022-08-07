@@ -34,7 +34,8 @@ public class TextField extends TextInput {
 	}
 	
 	public TextField accept(Consumer<String> cons){
-		this.addTextInputContentChangeEventListener(event -> cons.accept(event.getNewValue()));
+		if(cons == null) return this;
+		addTextInputContentChangeEventListener(event -> cons.accept(event.getNewValue()));
 		return this;
 	}
 	
