@@ -170,6 +170,7 @@ public class FMT {
 		FRAME.getContainer().add(poly = new Label("test", 0, 98, 200, 20));
 		FRAME.getContainer().add(info = new Label("test", 0, 120, 200, 20));
 		FRAME.getContainer().add(bar = new Label("test", 0, 0, 500, 20));
+		bar.getStyle().setTextColor(rgba(Settings.BOTTOM_INFO_BAR_COLOR.value));
 		FRAME.getComponentLayer().setFocusable(false);
 		CONTEXT = new Context(window);
 		//
