@@ -23,8 +23,8 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.polygon.GLObject.GPUData;
+import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.utils.ImageHandler;
-import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.frl.Polygon;
 import net.fexcraft.lib.frl.Polyhedron;
@@ -34,7 +34,6 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 
 	private static Matrix4f matrix = new Matrix4f();
 	private static DrawMode MODE = DrawMode.TEXTURED;
-	public static boolean LIGHTING;
 	public static final float[] LINECOLOR = { 0, 0, 0, 1}, EMPTY = { 0, 0, 0, 0 }, SELCOLOR = { 1, 1, 0, 1 };
 	private static final Vector3f GIF_AXIS = new Vector3f(0, 1, 0);
 	private boolean lines;
@@ -63,11 +62,6 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 		glUniform4fv(getUniform("line_color"), MODE == DrawMode.LINES ? glo.linecolor : MODE == DrawMode.SELLINES ? SELCOLOR : EMPTY);
 		glUniform4fv(getUniform("poly_color"), MODE.picker() ? glo.pickercolor : MODE.color() ? glo.polycolor : EMPTY);
 		glUniform1f(getUniform("textured"), MODE == DrawMode.TEXTURED ? 1 : 0);
-		glUniform1f(getUniform("lighting"), LIGHTING && !MODE.picker() && !MODE.lines() ? 1 : 0);
-		glUniform3fv(getUniform("lightcolor"), new RGB("#ffffff").toFloatArray());
-		glUniform3fv(getUniform("lightpos"), new float[]{ 600, -600, -600 });
-		glUniform1f(getUniform("ambient"), 0.5f);
-		glUniform1f(getUniform("diffuse"), 1);
 		//
         glEnableVertexAttribArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, glo.gpu[index].glid);
@@ -91,6 +85,14 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
         if(poly.sub != null){
             for(Polyhedron<GLObject> sub : poly.sub) sub.render();
         }
+	}
+	
+	public static void updateLightState(){
+		glUniform1f(getUniform("lighting"), Settings.LIGHTING_ON.value && !MODE.picker() && !MODE.lines() ? 1 : 0);
+		glUniform3fv(getUniform("lightcolor"), Settings.LIGHT_COLOR.value.toFloatArray());
+		glUniform3fv(getUniform("lightpos"), new float[]{ Settings.LIGHT_POSX.value, Settings.LIGHT_POSY.value, Settings.LIGHT_POSZ.value });
+		glUniform1f(getUniform("ambient"), Settings.LIGHT_AMBIENT.value);
+		glUniform1f(getUniform("diffuse"), Settings.LIGHT_DIFFUSE.value);
 	}
     
     public static final Vector3f axis_x = new Vector3f(1, 0, 0);
