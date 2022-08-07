@@ -32,6 +32,7 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 
 	private static Matrix4f matrix = new Matrix4f();
 	private static DrawMode MODE = DrawMode.TEXTURED;
+	public static boolean LIGHTING;
 	public static final float[] LINECOLOR = { 0, 0, 0, 1}, EMPTY = { 0, 0, 0, 0 }, SELCOLOR = { 1, 1, 0, 1 };
 	private static final Vector3f GIF_AXIS = new Vector3f(0, 1, 0);
 	private boolean lines;
