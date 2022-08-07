@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.settings;
 
+import java.util.function.Consumer;
+
 import org.liquidengine.legui.component.Component;
 
 import net.fexcraft.app.fmt.FMT;
@@ -17,6 +19,8 @@ public class Setting<TYPE> {
 	
 	public final String id, group;
 	public TYPE _default, value;
+	protected TYPE min, max;
+	protected Consumer<?> cons;
 	
 	public Setting(String id, TYPE def, String group){
 		this._default = value = def;
@@ -58,6 +62,17 @@ public class Setting<TYPE> {
 		}
 		return value();
 	}
+	
+	public Setting<TYPE> minmax(TYPE min, TYPE max){
+		this.min = min;
+		this.max = max;
+		return this;
+	}
+	
+	public Setting<TYPE> consumer(Consumer<?> cons){
+		this.cons = cons;
+		return this;
+	}
 
 	public Component createField(Component root, UpdateHolder holder, int x, int y, int w, int h){
 		if(value instanceof Boolean){
@@ -67,14 +82,15 @@ public class Setting<TYPE> {
 			return new ColorField(root, (Setting<RGB>)this, x, y, w, h);
 		}
 		if(value instanceof String){
-			return new TextFieldField((Setting<String>)this, x, y, w, h);
+			return new TextFieldField((Setting<String>)this, x, y, w, h).accept((Consumer<String>)cons);
 		}
-		if(value instanceof Float || value instanceof Integer){
-			float min = id.equals("rounding_digits") ? 0 : Integer.MIN_VALUE;
-			float max = id.equals("rounding_digits") ? 10 : Integer.MAX_VALUE;
+		boolean flt = value instanceof Float;
+		if(flt || value instanceof Integer){
+			float min = this.min == null ? Integer.MIN_VALUE : flt ? (float)this.min : (int)this.min;
+			float max = this.max == null ? Integer.MAX_VALUE : flt ? (float)this.max : (int)this.max;
 			return new NumberField(this, x, y, w, h).setup(min, max, value instanceof Float, field -> {
 				value = value instanceof Float ? (TYPE)(Object)field.value() : (TYPE)(Object)(int)field.value();
-				if(id.equals("rounding_digits")) NumberField.updateRoundingDigits();
+				if(cons != null) ((Consumer<NumberField>)cons).accept(field);
 			});
 		}
 		return null;
