@@ -42,6 +42,7 @@ import net.fexcraft.app.fmt.ui.components.MultiplierComponent;
 import net.fexcraft.app.fmt.ui.components.PolygonGeneral;
 import net.fexcraft.app.fmt.ui.components.QuickAdd;
 import net.fexcraft.app.fmt.ui.components.ShapeboxComponent;
+import net.fexcraft.app.fmt.ui.fields.NumberField;
 import net.fexcraft.app.fmt.ui.trees.PolygonTree;
 import net.fexcraft.app.fmt.ui.trees.TextureTree;
 import net.fexcraft.app.fmt.utils.Logging;
@@ -70,12 +71,12 @@ public class Settings {
 	public static Setting<Boolean> DISCORD_RPC, DISCORD_HIDE, DISCORD_RESET_ON_NEW, FULLSCREEN, NO_RANDOM_TITLE;
 	public static Setting<Boolean> VSYNC, HVSYNC, TRIANGULATION_Q, TRIANGULATION_L, INTERNAL_CHOOSER;
 	public static Setting<Boolean> DEMO, FLOOR, CUBE, CMARKER, LINES, POLYMARKER, ADD_TO_LAST, SPHERE_MARKER;
-	public static Setting<Float> MOUSE_SENSIVITY, MOVE_SPEED, SCROLL_SPEED;
+	public static Setting<Float> MOUSE_SENSIVITY, MOVE_SPEED, SCROLL_SPEED, LIGHT_AMBIENT, LIGHT_DIFFUSE, LIGHT_POSX, LIGHT_POSY, LIGHT_POSZ;
 	public static Setting<String> LANGUAGE, POLYGON_SUFFIX, GROUP_SUFFIX, COPIED_POLYGON, PASTED_GROUP;
 	public static Setting<Boolean> ASK_POLYGON_REMOVAL, ASK_GROUP_REMOVAL, ASK_TEXTURE_GROUP_REMOVAL, OPEN_FOLDER_AFTER_SAVE, OPEN_FOLDER_AFTER_IMG;
 	public static Setting<Boolean> SHOW_WELCOME, SHOW_UPDATE, SELECT_COPIED, SELECT_NEW, SHOW_BOTTOMBAR, GIF_LOOP, HIDE_UI_FOR_IMAGE;
-	public static Setting<Boolean> HIDE_MENU_AFTER_POLYGON, LOG_UPDATES;
-	public static RGBSetting BACKGROUND, SELECTION_LINES, BOTTOM_INFO_BAR_COLOR;
+	public static Setting<Boolean> HIDE_MENU_AFTER_POLYGON, LOG_UPDATES, LIGHTING_ON;
+	public static RGBSetting BACKGROUND, SELECTION_LINES, BOTTOM_INFO_BAR_COLOR, LIGHT_COLOR;
 	//
 	public static Setting<String> WORKSPACE_NAME;
 	public static Setting<String> WORKSPACE_ROOT;
@@ -103,6 +104,7 @@ public class Settings {
 	public static String IMAGE = "image";
 	public static String THEME = "theme";
 	public static String WORKSPACE = "workspace";
+	public static String LIGHTING = "lighting";
 	//
 	public static Map<String, Map<String, Setting<?>>> SETTINGS = new LinkedHashMap<>();
 	
@@ -123,6 +125,7 @@ public class Settings {
 		//
 		SETTINGS.put(GENERAL, new LinkedHashMap<>());
 		SETTINGS.put(GRAPHIC, new LinkedHashMap<>());
+		SETTINGS.put(LIGHTING, new LinkedHashMap<>());
 		SETTINGS.put(CONTROL, new LinkedHashMap<>());
 		SETTINGS.put(SPACE3D, new LinkedHashMap<>());
 		SETTINGS.put(WORKSPACE, new LinkedHashMap<>());
@@ -145,7 +148,7 @@ public class Settings {
 		TRIANGULATION_L = new Setting<>("triangulated_lines", false, GRAPHIC, obj);
 		LANGUAGE = new Setting<>("language", "null", GENERAL, obj);
 		INTERNAL_CHOOSER = new Setting<>("internal_filechooser", false, GENERAL, obj);
-		ROUNDING_DIGITS = new Setting<>("rounding_digits", 4, GENERAL, obj);
+		ROUNDING_DIGITS = new Setting<>("rounding_digits", 4, GENERAL, obj).minmax(0, 10).consumer(con -> NumberField.updateRoundingDigits());
 		DEMO = new Setting<>("demo_model", false, SPACE3D, obj);
 		FLOOR = new Setting<>("floor", true, SPACE3D, obj);
 		CUBE = new Setting<>("center_cube", true, SPACE3D, obj);
@@ -179,6 +182,13 @@ public class Settings {
 		ASK_TEXTURE_GROUP_REMOVAL = new Setting<>("ask_texture_group_removal", true, GENERAL, obj);
 		HIDE_MENU_AFTER_POLYGON = new Setting<>("hide_menu_after_polygon", true, GENERAL, obj);
 		LOG_UPDATES = new Setting<>("log_updates", false, GENERAL, obj);
+		LIGHTING_ON = new Setting<>("enabled", false, LIGHTING, obj);
+		LIGHT_AMBIENT = new Setting<>("ambient", 0.5f, LIGHTING, obj).minmax(0f, 1f);
+		LIGHT_DIFFUSE = new Setting<>("diffuse", 1f, LIGHTING, obj).minmax(0f, 1f);
+		LIGHT_COLOR = new RGBSetting("color", RGB.WHITE.copy(), LIGHTING, obj);
+		LIGHT_POSX = new Setting<>("pos_x", 600f, LIGHTING, obj);
+		LIGHT_POSY = new Setting<>("pos_y", -600f, LIGHTING, obj);
+		LIGHT_POSZ = new Setting<>("pos_z", -600f, LIGHTING, obj);
 		//
 		WORKSPACE_NAME = new Setting<>("name", "FMT Workspace", WORKSPACE, obj);
 		WORKSPACE_ROOT = new Setting<>("root", "/workspace/", WORKSPACE, obj);
