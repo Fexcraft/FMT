@@ -373,6 +373,7 @@ public class FMT {
 		glClearColor(background[0], background[1], background[2], 1);
 	    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	    PolyRenderer.mode(DrawMode.TEXTURED);
+		PolyRenderer.updateLightState();
 		if(Settings.CUBE.value){
 			TextureManager.bind("demo");
 			center_cube.render();
