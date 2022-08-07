@@ -75,7 +75,7 @@ public class Settings {
 	public static Setting<Boolean> ASK_POLYGON_REMOVAL, ASK_GROUP_REMOVAL, ASK_TEXTURE_GROUP_REMOVAL, OPEN_FOLDER_AFTER_SAVE, OPEN_FOLDER_AFTER_IMG;
 	public static Setting<Boolean> SHOW_WELCOME, SHOW_UPDATE, SELECT_COPIED, SELECT_NEW, SHOW_BOTTOMBAR, GIF_LOOP, HIDE_UI_FOR_IMAGE;
 	public static Setting<Boolean> HIDE_MENU_AFTER_POLYGON, LOG_UPDATES;
-	public static RGBSetting BACKGROUND, SELECTION_LINES;
+	public static RGBSetting BACKGROUND, SELECTION_LINES, BOTTOM_INFO_BAR_COLOR;
 	//
 	public static Setting<String> WORKSPACE_NAME;
 	public static Setting<String> WORKSPACE_ROOT;
@@ -203,6 +203,7 @@ public class Settings {
 		GROUP_INVISIBLE = new RGBSetting("component_group_invisible", new RGB(67, 142, 196), THEME, obj);
 		POLYGON_INV_SEL = new RGBSetting("component_polygon_invis_sel", new RGB(250, 202, 117), THEME, obj);
 		GROUP_INV_SEL = new RGBSetting("component_group_invis_sel", new RGB(232, 158, 67), THEME, obj);
+		BOTTOM_INFO_BAR_COLOR = new RGBSetting("bottom_infobar_color", new RGB(200, 200, 200), THEME, obj);
 		//
 		for(Map.Entry<String, Map<String, Setting<?>>> entry : SETTINGS.entrySet()){
 			if(!obj.has(entry.getKey())) continue;
