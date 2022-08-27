@@ -118,7 +118,8 @@ public class Animator {
 	public static class Rotator extends Animation {
 		
 		private Setting x, y, z, x_max, y_max, z_max, x_min, y_min, z_min, loop;
-		private int xdir = 1, ydir = 1, zdir = 1; private float xpass, ypass, zpass;
+		private int[] xdir = { 1 }, ydir = { 1 }, zdir = { 1 };
+		private float xpass, ypass, zpass;
 
 		public Rotator(String id, TurboList group, Collection<Setting> settings){
 			super(id, group, settings); x = get("x"); y = get("y"); z = get("z");
@@ -129,41 +130,9 @@ public class Animator {
 
 		@Override
 		public void pre(TurboList list){
-			xpass += xdir * x.getFloatValue(); ypass += ydir * y.getFloatValue(); zpass += zdir * z.getFloatValue();
-			//
-			if(xpass > x_max.getFloatValue()){
-				xpass = x_max.getFloatValue();
-				if(!loop.getBooleanValue()) xdir = -xdir;
-				if(loop.getBooleanValue()) xpass = x_min.getFloatValue();
-			}
-			if(xpass < x_min.getFloatValue()){
-				xpass = x_min.getFloatValue();
-				if(!loop.getBooleanValue()) xdir = -xdir;
-				if(loop.getBooleanValue()) xpass = x_max.getFloatValue();
-			}
-			//
-			if(ypass > y_max.getFloatValue()){
-				ypass = y_max.getFloatValue();
-				if(!loop.getBooleanValue()) ydir = -ydir;
-				if(loop.getBooleanValue()) ypass = y_min.getFloatValue();
-			}
-			if(ypass < y_min.getFloatValue()){
-				ypass = y_min.getFloatValue();
-				if(!loop.getBooleanValue()) ydir = -ydir;
-				if(loop.getBooleanValue()) ypass = y_max.getFloatValue();
-			}
-			//
-			if(zpass > z_max.getFloatValue()){
-				zpass = z_max.getFloatValue();
-				if(!loop.getBooleanValue()) zdir = -zdir;
-				if(loop.getBooleanValue()) zpass = z_min.getFloatValue();
-			}
-			if(zpass < z_min.getFloatValue()){
-				zpass = z_min.getFloatValue();
-				if(!loop.getBooleanValue()) zdir = -zdir;
-				if(loop.getBooleanValue()) zpass = z_max.getFloatValue();
-			}
-			//
+			xpass = processMinMax(xpass, xdir, x.getFloatValue(), x_min.getFloatValue(), x_max.getFloatValue(), loop.getBooleanValue());
+			ypass = processMinMax(ypass, ydir, y.getFloatValue(), y_min.getFloatValue(), y_max.getFloatValue(), loop.getBooleanValue());
+			zpass = processMinMax(zpass, zdir, z.getFloatValue(), z_min.getFloatValue(), z_max.getFloatValue(), loop.getBooleanValue());
 			for(PolygonWrapper wrap : list){ wrap.addPosRot(false, xpass, ypass, zpass); }
 		}
 
@@ -234,7 +203,7 @@ public class Animator {
 	public static class Translator extends Animation {
 		
 		private Setting x, y, z, x_max, y_max, z_max, x_min, y_min, z_min, loop;
-		private int xdir = 1, ydir = 1, zdir = 1; private float xpass, ypass, zpass;
+		private int[] xdir = { 1 }, ydir = { 1 }, zdir = { 1 }; private float xpass, ypass, zpass;
 
 		public Translator(String id, TurboList group, Collection<Setting> settings){
 			super(id, group, settings); x = get("x"); y = get("y"); z = get("z");
@@ -245,41 +214,9 @@ public class Animator {
 
 		@Override
 		public void pre(TurboList list){
-			xpass += xdir * x.getFloatValue(); ypass += ydir * y.getFloatValue(); zpass += zdir * z.getFloatValue();
-			//
-			if(xpass > x_max.getFloatValue()){
-				xpass = x_max.getFloatValue();
-				if(!loop.getBooleanValue()) xdir = -xdir;
-				if(loop.getBooleanValue()) xpass = x_min.getFloatValue();
-			}
-			if(xpass < x_min.getFloatValue()){
-				xpass = x_min.getFloatValue();
-				if(!loop.getBooleanValue()) xdir = -xdir;
-				if(loop.getBooleanValue()) xpass = x_max.getFloatValue();
-			}
-			//
-			if(ypass > y_max.getFloatValue()){
-				ypass = y_max.getFloatValue();
-				if(!loop.getBooleanValue()) ydir = -ydir;
-				if(loop.getBooleanValue()) ypass = y_min.getFloatValue();
-			}
-			if(ypass < y_min.getFloatValue()){
-				ypass = y_min.getFloatValue();
-				if(!loop.getBooleanValue()) ydir = -ydir;
-				if(loop.getBooleanValue()) ypass = y_max.getFloatValue();
-			}
-			//
-			if(zpass > z_max.getFloatValue()){
-				zpass = z_max.getFloatValue();
-				if(!loop.getBooleanValue()) zdir = -zdir;
-				if(loop.getBooleanValue()) zpass = z_min.getFloatValue();
-			}
-			if(zpass < z_min.getFloatValue()){
-				zpass = z_min.getFloatValue();
-				if(!loop.getBooleanValue()) zdir = -zdir;
-				if(loop.getBooleanValue()) zpass = z_max.getFloatValue();
-			}
-			//
+			xpass = processMinMax(xpass, xdir, x.getFloatValue(), x_min.getFloatValue(), x_max.getFloatValue(), loop.getBooleanValue());
+			ypass = processMinMax(ypass, ydir, y.getFloatValue(), y_min.getFloatValue(), y_max.getFloatValue(), loop.getBooleanValue());
+			zpass = processMinMax(zpass, zdir, z.getFloatValue(), z_min.getFloatValue(), z_max.getFloatValue(), loop.getBooleanValue());
 			for(PolygonWrapper wrap : list){ wrap.addPosRot(true, xpass, ypass, zpass); }
 		}
 
@@ -582,6 +519,30 @@ public class Animator {
 			return "non-exportable";
 		}
 		
+	}
+
+	public static float processMinMax(float value, int[] dir, float by, float min, float max, boolean loop){
+		float add = dir[0] * by;
+		if(value + add > max){
+			if(!loop){
+				dir[0] = -dir[0];
+				value = max + (max - (value + add));
+			}
+			else{
+				value = min - (max - (value + add));
+			}
+		}
+		else if(value + add < min){
+			if(!loop){
+				dir[0] = -dir[0];
+				value = min + (min - (value + add));
+			}
+			else{
+				value = max - (min - (value + add));
+			}
+		}
+		else value += add;
+		return value;
 	}
 
 }
