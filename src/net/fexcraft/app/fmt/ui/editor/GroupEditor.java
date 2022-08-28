@@ -28,6 +28,7 @@ import net.fexcraft.app.fmt.ui.field.TextField;
 import net.fexcraft.app.fmt.utils.Animator;
 import net.fexcraft.app.fmt.utils.Animator.Animation;
 import net.fexcraft.app.fmt.utils.FontUtils;
+import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.texture.TextureGroup;
 import net.fexcraft.app.fmt.utils.texture.TextureManager;
 import net.fexcraft.app.fmt.utils.texture.TextureUpdate;
@@ -186,6 +187,9 @@ public class GroupEditor extends EditorBase {
 		this.addSub(group);
 		pass = -20;
 		//
+		addAnimPlayPause(this, pass);
+		pass = -20;
+		//
 		animations = new AnimationsEditorWidget(this, translate("editor.model_group.animations"), 0, 0, 0, 0);
 		animations.refresh(null);
 		this.addSub(animations);
@@ -195,6 +199,29 @@ public class GroupEditor extends EditorBase {
 		reOrderWidgets();
 	}
 	
+	public static void addAnimPlayPause(EditorBase editor, int pass){
+		Button play, pause, reset;
+		EditorWidget playpause = new EditorWidget(editor, translate("editor.model_group.playpause"), 0, 0, 0, 0);
+		playpause.getContainer().add(play = new Button(translate("editor.model_group.playpause.play"), 4, pass += 24, 90, 20));
+		playpause.getContainer().add(pause = new Button(translate("editor.model_group.playpause.pause"), 102, pass, 90, 20));
+		playpause.getContainer().add(reset = new Button(translate("editor.model_group.playpause.reset"), 200, pass, 90, 20));
+		play.getListenerMap().addListener(MouseClickEvent.class, event -> {
+			if(event.getAction() != CLICK) return;
+			if(!Settings.animate.getBooleanValue()) Settings.toggleAnimations();
+		});
+		pause.getListenerMap().addListener(MouseClickEvent.class, event -> {
+			if(event.getAction() != CLICK) return;
+			if(Settings.animate.getBooleanValue()) Settings.toggleAnimations();
+		});
+		reset.getListenerMap().addListener(MouseClickEvent.class, event -> {
+			if(event.getAction() != CLICK) return;
+			Settings.resetAnimationPosRot();
+			Animator.resetAnimations();
+		});
+		playpause.setSize(296, pass + 52);
+		editor.addSub(playpause);
+	}
+
 	public static String validateGroupName(TextInputContentChangeEvent<TextField> listener){
 		String newtext = validateGroupName(listener.getNewValue());
 		if(!newtext.equals(listener.getNewValue())){
