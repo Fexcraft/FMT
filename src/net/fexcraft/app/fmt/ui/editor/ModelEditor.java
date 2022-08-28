@@ -1,5 +1,6 @@
 package net.fexcraft.app.fmt.ui.editor;
 
+import static net.fexcraft.app.fmt.ui.editor.GroupEditor.addAnimPlayPause;
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
 import java.util.ArrayList;
@@ -103,11 +104,14 @@ public class ModelEditor extends EditorBase {
 		model.setSize(296, pass + 52);
 		this.addSub(model);
 		pass = -20;
+		//
+		addAnimPlayPause(this, pass);
+		pass = -20;
+		//
 		pivots = new SPLEditorWidget(this, translate("editor.model_group.pivots"), 0, 0, 0, 0);
 		pivots.refresh();
 		this.addSub(pivots);
 		pass = -20;
-		//
 		//
 		creators = new AuthorsEditorWidget(this, translate("editor.model_group.authors"), 0, 0, 0, 0);
 		creators.refresh();
