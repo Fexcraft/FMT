@@ -19,10 +19,10 @@ import net.fexcraft.lib.common.math.Time;
 
 public class Settings {
 	
-	private static Setting floor, lines, demo, cube, polygon_marker, lighting, cullface, animate,
+	private static Setting floor, lines, demo, cube, polygon_marker, lighting, cullface,
 		discordrpc, discordrpc_sm, discordrpc_rtonm, numberfieldarrows, preview_colorpicker;
 	public static Setting movespeed, mouse_sensivity, internal_cursor, vsync, vsynchalf, debug;
-	public static Setting darktheme, no_scroll_fields, old_rotation, center_marker;
+	public static Setting darktheme, no_scroll_fields, old_rotation, center_marker, animate;
 	public static Setting orbital_camera, oc_center_on_part, internal_filechooser;
 	public static Setting drag_painting, background_color, decimal_sizes, triangles;
 	public static Setting pivot_polygon_markers, use_clipboard_group, set_new_at_selected;
@@ -138,19 +138,21 @@ public class Settings {
 	
 	public static boolean toggleAnimations(){
 		boolean bool = animate.toggle();
-		if(!bool){
-			for(TurboList list : FMTB.MODEL.getGroups())
-				for(PolygonWrapper wrapper : list) wrapper.resetPosRot();
-			for(GroupCompound compound : HelperCollector.LOADED){
-				for(TurboList list : compound.getGroups()){
-					for(PolygonWrapper wrapper : list) wrapper.resetPosRot();
-				}
-			}
-		}
+		if(!bool) resetAnimationPosRot();
 		log("Toggling animations: " + animate.getBooleanValue());
 		return bool;
 	}
 	
+	public static void resetAnimationPosRot(){
+		for(TurboList list : FMTB.MODEL.getGroups())
+			for(PolygonWrapper wrapper : list) wrapper.resetPosRot();
+		for(GroupCompound compound : HelperCollector.LOADED){
+			for(TurboList list : compound.getGroups()){
+				for(PolygonWrapper wrapper : list) wrapper.resetPosRot();
+			}
+		}
+	}
+
 	//
 	
 	public static SettingsMap DEFAULTS = new SettingsMap(), SETTINGS = new SettingsMap();
