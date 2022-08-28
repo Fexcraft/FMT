@@ -11,6 +11,7 @@ import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.tree.SubTreeGroup;
 import net.fexcraft.app.fmt.ui.tree.Trees;
 import net.fexcraft.app.fmt.utils.Setting.Type;
+import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.SwivelPointLite;
 import net.fexcraft.app.fmt.wrappers.TurboList;
@@ -91,6 +92,7 @@ public class Animator {
 		public void onSettingsUpdate(){}
 		public abstract String getButtonString();
 		public abstract String getExportString(String modto);
+		public void reset(){};
 		
 		public Animation copy(TurboList group){
 			return this.COPY(id, group, settings.values());
@@ -197,6 +199,12 @@ public class Animator {
 				else return String.format(string, min, max, step, axis, defrot, get("loop"), get("fvtm:not_additive"));
 			}
 		}
+
+		@Override
+		public void reset() {
+			xdir[0] = ydir[0] = zdir[0];
+			xpass = ypass = zpass = 0;
+		}
 		
 	}
 	
@@ -276,6 +284,12 @@ public class Animator {
 				if(attri) return String.format(string, get("fvtm:attr"), get("fvtm:boolean_type_attr"), min, max, step, axis);
 				else return String.format(string, min, max, step, axis, get("loop"));
 			}
+		}
+
+		@Override
+		public void reset() {
+			xdir[0] = ydir[0] = zdir[0];
+			xpass = ypass = zpass = 0;
 		}
 		
 	}
@@ -543,6 +557,17 @@ public class Animator {
 		}
 		else value += add;
 		return value;
+	}
+
+	public static void resetAnimations(){
+		for(TurboList list : FMTB.MODEL.getGroups()){
+			list.animations.forEach(anim -> anim.reset());
+		}
+		for(GroupCompound com : HelperCollector.LOADED){
+			for(TurboList list : com.getGroups()){
+				list.animations.forEach(anim -> anim.reset());
+			}
+		}
 	}
 
 }
