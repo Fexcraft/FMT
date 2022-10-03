@@ -32,6 +32,7 @@ import com.google.common.collect.ImmutableMap;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
+import net.fexcraft.app.fmt.attributes.UpdateHandler;
 import net.fexcraft.app.fmt.attributes.UpdateType;
 import net.fexcraft.app.fmt.polygon.PolyRenderer.DrawMode;
 import net.fexcraft.app.fmt.settings.Settings;
@@ -602,6 +603,13 @@ public class Model {
 			}
 		}
 		poly.recompile();
+	}
+
+	public void name(String string){
+		String old = name;
+		name = string;
+		FMT.updateTitle();
+		UpdateHandler.update(UpdateType.MODEL_RENAMED, this, name, old);
 	}
 
 }
