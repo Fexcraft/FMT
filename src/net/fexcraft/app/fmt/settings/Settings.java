@@ -34,14 +34,7 @@ import org.lwjgl.system.MemoryUtil;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.ui.Editor;
-import net.fexcraft.app.fmt.ui.components.BoxComponent;
-import net.fexcraft.app.fmt.ui.components.CylinderComponentFull;
-import net.fexcraft.app.fmt.ui.components.GroupGeneral;
-import net.fexcraft.app.fmt.ui.components.MarkerComponent;
-import net.fexcraft.app.fmt.ui.components.MultiplierComponent;
-import net.fexcraft.app.fmt.ui.components.PolygonGeneral;
-import net.fexcraft.app.fmt.ui.components.QuickAdd;
-import net.fexcraft.app.fmt.ui.components.ShapeboxComponent;
+import net.fexcraft.app.fmt.ui.components.*;
 import net.fexcraft.app.fmt.ui.fields.NumberField;
 import net.fexcraft.app.fmt.ui.trees.PolygonTree;
 import net.fexcraft.app.fmt.ui.trees.TextureTree;
@@ -379,6 +372,10 @@ public class Settings {
 		editor.addComponent(new QuickAdd());
 		editor.addComponent(new MultiplierComponent());
 		editor.addComponent(new GroupGeneral());
+		editor = new Editor("model_editor", "Model Editor", false, true);
+		editor.addComponent(new QuickAdd());
+		editor.addComponent(new MultiplierComponent());
+		editor.addComponent(new ModelGeneral());
 		//
 		Editor.EDITORS.get("polygon_editor").show();
 	}
