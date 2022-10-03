@@ -25,7 +25,7 @@ import net.fexcraft.app.fmt.ui.GenericDialog;
  */
 public class TextureManager {
 
-	public static int[] RESOLUTIONS = { 8, 16, 32, 64, 128, 256, 512, 1024, 2948, 4096 };
+	public static int[] RESOLUTIONS = { 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096 };
 	private static final Map<String, Texture> TEXTURES = new HashMap<>();
 	private static final ArrayList<TextureGroup> GROUPS = new ArrayList<>();
 	private static Texture texture, nulltex;
