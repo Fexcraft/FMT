@@ -15,6 +15,8 @@ import net.fexcraft.app.fmt.utils.Translator;
 
 public class Icon extends ImageView {
 	
+	private int index;
+	
 	public Icon(int index, String adress, MouseClickEventListener listener){
 		super(new StbBackedLoadableImage(adress));
 		this.setPosition(1 + (index * 29), 1);
@@ -24,12 +26,14 @@ public class Icon extends ImageView {
 		Settings.applyBorderless(getStyle());
 		Settings.applyBorderless(getFocusedStyle());
 		this.setFocusable(true);
+		this.index = index;
 	}
 	
 	public Icon(int index, String adress, Runnable run){
 		this(index, adress, event -> {
 			if(event.getAction() == CLICK && event.getButton() == MOUSE_BUTTON_LEFT) run.run();
 		});
+		this.index = index;
 	}
 	
 	public Icon(byte index, String adress, MouseClickEventListener listener){
@@ -82,6 +86,11 @@ public class Icon extends ImageView {
 
 	public Icon addTooltip(String string){
 		return addTooltip(string, true);
+	}
+
+	public void onWindowResize(){
+		if(index < 0) return;
+		this.getPosition().x = Toolbar.OFFSET + (index * (29 + 1));
 	}
 	
 }

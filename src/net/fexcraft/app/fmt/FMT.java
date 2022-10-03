@@ -49,6 +49,8 @@ import org.lwjgl.system.MemoryUtil;
 
 import net.arikia.dev.drpc.DiscordEventHandlers;
 import net.arikia.dev.drpc.DiscordRPC;
+import net.fexcraft.app.fmt.attributes.UpdateHandler;
+import net.fexcraft.app.fmt.attributes.UpdateType;
 import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.polygon.GLObject;
 import net.fexcraft.app.fmt.polygon.Model;
@@ -216,6 +218,7 @@ public class FMT {
 				Editor.EDITORLIST.forEach(editor -> editor.align());
 				ToolbarMenu.MENUS.forEach((key, menu) -> menu.layer.hide());
 				Picker.resetBuffer(true);
+				UpdateHandler.update(UpdateType.WINDOW_RESIZE);
 			}
 		});
 		keeper.getChainScrollCallback().add(new GLFWScrollCallback(){

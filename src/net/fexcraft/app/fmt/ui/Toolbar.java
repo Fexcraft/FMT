@@ -20,6 +20,7 @@ import net.fexcraft.app.fmt.utils.SaveHandler;
 public class Toolbar extends Panel {
 	
 	public static final Runnable NOTHING = () -> {};
+	public static int OFFSET;
 	private UpdateHolder holder;
 
 	public Toolbar(){
@@ -135,7 +136,18 @@ public class Toolbar extends Panel {
 		));
 		this.add(new ToolbarMenu(6, "helpers"));
 		this.add(new ToolbarMenu(7, "exit", () -> FMT.close(0)));
+		holder.add(UpdateType.WINDOW_RESIZE, cons -> onWindowResize());
 		UpdateHandler.registerHolder(holder);
+		onWindowResize();
+	}
+
+	private void onWindowResize(){
+		if(!Settings.CENTERED_TOOLBAR.value && !Settings.RIGHT_TOOLBAR.value) return;
+		OFFSET = (FMT.WIDTH - (176 + 121 * 8)) / (Settings.RIGHT_TOOLBAR.value ? 1 : 2);
+		for(Component com : this.getChildComponents()){
+			if(com instanceof Icon) ((Icon)com).onWindowResize();
+			if(com instanceof ToolbarMenu) ((ToolbarMenu)com).onWindowResize();
+		}
 	}
 
 }

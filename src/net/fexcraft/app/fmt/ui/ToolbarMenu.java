@@ -31,11 +31,13 @@ public class ToolbarMenu extends Panel {
 	protected ArrayList<Component> components = new ArrayList<>();
 	public MenuLayer layer;
 	private Label label;
+	private int index;
 	
 	public ToolbarMenu(int index, String id, Component... comps){
 		super(index < 0 ? 0 : indexWidth(index), index < 0 ? 1 + -index * 31 : 0, WIDTH, HEIGHT);
 		this.add(label = new Label(Translator.translate("toolbar." + id), 4, 0, WIDTH - 4, HEIGHT));
 		Settings.applyMenuTheme(this);
+		this.index = index;
 		MENUS.put(id, this);
 		for(int i = 0; i < comps.length; i++) components.add(comps[i]);
 		layer = new MenuLayer(this, this.getPosition(), components, index < 0 ? id.substring(0, id.lastIndexOf('.')) : null);
@@ -276,6 +278,11 @@ public class ToolbarMenu extends Panel {
 		for(MenuLayer layer : ACTIVE) layer.hide();
 		ACTIVE.clear();
 		removable.clear();
+	}
+
+	public void onWindowResize(){
+		if(index < 0) return;
+		this.getPosition().x = Toolbar.OFFSET + indexWidth(index);
 	}
 
 }
