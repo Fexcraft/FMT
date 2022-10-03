@@ -39,6 +39,8 @@ public class GroupGeneral extends EditorComponent {
 			texsx.addElement(res);
 			texsy.addElement(res);
 		}
+		texsx.setVisibleCount(6);
+		texsy.setVisibleCount(6);
 		updateholder.add(UpdateType.GROUP_SELECTED, vals -> {
 			int old = vals.get(1);
 			if(old < 0) return;
