@@ -117,6 +117,10 @@ public class GGR {
         	}
         }
         else if(button == 1){
+    		if(isControlDown()){
+    			PolySelMenu.show();
+    			return;
+    		}
         	if(action == GLFW_PRESS){
         		if(!isOverUI()){
             		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -128,9 +132,6 @@ public class GGR {
         		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         		right_down = false;
         		grabbed = false;
-        		if(!cursor_moved1 && !isOverUI()){
-        			PolySelMenu.show();
-        		}
         		cursor_moved1 = false;
         	}
         }
