@@ -27,7 +27,7 @@ import net.fexcraft.app.fmt.utils.SessionHandler;
 public class ProfileDialog {
 
 	public static void open(){
-		Dialog dialog = new Dialog(translate("profile.title"), 400, 200);
+		Dialog dialog = new Dialog(translate("profile.title"), 550, 200);
 		dialog.setResizable(false);
 		Label label0 = new Label(translate("profile.username") + " " + SessionHandler.getUserName(), 10, 10, 380, 20);
 		Label label1 = new Label(translate("profile.userid") + " " + SessionHandler.getUserId(), 10, 40, 380, 20);
@@ -64,7 +64,7 @@ public class ProfileDialog {
 		//
 		ImageView view = new ImageView();
 		view.setImage(new StbBackedLoadableImage("./resources/textures/icon.png"));
-		view.setPosition(400 - 10 - 120, 10);
+		view.setPosition(550 - 10 - 120, 10);
 		view.setSize(120, 120);
 		Settings.applyBorderless(view);
 		dialog.getContainer().add(view);
