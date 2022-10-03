@@ -51,7 +51,6 @@ public class TexGroupComponent extends EditorComponent {
 	}
 
 	private void openRenameDialog(){
-		Logging.log("opening");
 		float width = 400;
         Dialog dialog = new Dialog(Translator.translate("editor.tree.texture.rename_group.title"), width, 130);
         Settings.applyComponentTheme(dialog.getContainer());
