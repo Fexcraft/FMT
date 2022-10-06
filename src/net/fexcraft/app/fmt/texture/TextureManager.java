@@ -8,8 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.lwjgl.stb.STBImageWrite;
 
@@ -26,9 +24,10 @@ import net.fexcraft.app.fmt.ui.GenericDialog;
 public class TextureManager {
 
 	public static int[] RESOLUTIONS = { 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096 };
-	private static final Map<String, Texture> TEXTURES = new HashMap<>();
+	public static Texture NULLTEX;
+	private static final TextureMap TEXTURES = new TextureMap();
 	private static final ArrayList<TextureGroup> GROUPS = new ArrayList<>();
-	private static Texture texture, nulltex;
+	private static Texture texture;
 
 	public static void load(){
 		TEXTURES.clear();
@@ -43,7 +42,7 @@ public class TextureManager {
 			}
 			else continue;
 		}
-		texture = nulltex = TEXTURES.get("null");
+		texture = NULLTEX = TEXTURES.get("null");
 	}
 
 	public static Texture get(String string, boolean allownull){
@@ -97,7 +96,7 @@ public class TextureManager {
 
 	public static void bind(String string){
 		if(string.equals(texture.name)) return;
-		(texture = TEXTURES.containsKey(string) ? TEXTURES.get(string) : nulltex).bind();
+		(texture = TEXTURES.containsKey(string) ? TEXTURES.get(string) : NULLTEX).bind();
 	}
 
 	public static void bind(Texture newtex){
@@ -115,7 +114,7 @@ public class TextureManager {
 	}
 
 	public static void unbind(){
-		texture = nulltex;
+		texture = NULLTEX;
 	}
 
 	public static String getBound(){
@@ -170,10 +169,6 @@ public class TextureManager {
 
 	public static boolean containsTexture(String texid){
 		return TEXTURES.containsKey(texid);
-	}
-
-	public static Texture getNullTex(){
-		return nulltex;
 	}
 	
 	// GROUPS
