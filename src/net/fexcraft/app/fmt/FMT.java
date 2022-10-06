@@ -56,6 +56,7 @@ import net.fexcraft.app.fmt.polygon.PolyRenderer;
 import net.fexcraft.app.fmt.polygon.PolyRenderer.DrawMode;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TextureManager;
+import net.fexcraft.app.fmt.texture.TextureUpdate;
 import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.ui.Toolbar;
@@ -85,7 +86,7 @@ public class FMT {
 	//
 	public static final FMT INSTANCE = new FMT();
 	public static int WIDTH, HEIGHT, EXIT_CODE = 0;
-	public static Timer BACKUP_TIMER;
+	public static Timer BACKUP_TIMER, TEXUP_TIMER;
 	private static String title;
 	//
 	public static final ITimer timer = new ITimer();
@@ -243,9 +244,11 @@ public class FMT {
 		long date = Time.getDate();
 		while((mid += Time.MIN_MS * 5) < date);
 		if(BACKUP_TIMER == null && Settings.BACKUP_INTERVAL.value > 0){
-			(BACKUP_TIMER = new Timer("BKUP")).schedule(new BackupHandler(), new Date(mid), Time.MIN_MS * Settings.BACKUP_INTERVAL.value);
+			(BACKUP_TIMER = new Timer("BACKUP")).schedule(new BackupHandler(), new Date(mid), Time.MIN_MS * Settings.BACKUP_INTERVAL.value);
 		}
-		//TODO tex timer
+		if(TEXUP_TIMER == null){
+			(TEXUP_TIMER = new Timer("TEXUPD")).schedule(new TextureUpdate(), Time.SEC_MS, Time.SEC_MS / 2);
+		}
 		//
 		if(Settings.DISCORD_RPC.value){
 			DiscordEventHandlers.Builder handler = new DiscordEventHandlers.Builder();
