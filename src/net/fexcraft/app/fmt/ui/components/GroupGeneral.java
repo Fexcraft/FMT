@@ -81,6 +81,7 @@ public class GroupGeneral extends EditorComponent {
 				}
 			}
 		});
+		texgroups.setVisibleCount(6);
 		refreshTexGroupEntries();
 		this.add(texgroups);
 	}
