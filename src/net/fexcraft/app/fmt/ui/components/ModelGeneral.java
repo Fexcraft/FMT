@@ -54,6 +54,7 @@ public class ModelGeneral extends EditorComponent {
 			FMT.MODEL.texgroup = TextureManager.getGroup(listener.getNewValue());
 			UpdateHandler.update(UpdateType.MODEL_TEXGROUP_CHANGED, FMT.MODEL.texgroup);
 		});
+		texgroups.setVisibleCount(6);
 		refreshTexGroupEntries();
 		this.add(texgroups);
 	}
