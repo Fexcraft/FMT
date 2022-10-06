@@ -10,14 +10,17 @@ import net.fexcraft.app.fmt.utils.Translator;
 
 public class RunButton extends Button {
 
-	public RunButton(String str, float x, float y, float w, float h, Runnable run){
+	public RunButton(String str, float x, float y, float w, float h, Runnable run, boolean borderless){
 		super(Translator.translate(str), x, y, w, h);
-		Settings.applyBorderless(this);
+		if(borderless) Settings.applyBorderless(this);
 		Settings.applyGrayText(this);
 		this.getListenerMap().addListener(MouseClickEvent.class, l -> {
 			if(l.getAction() == MouseClickAction.CLICK && l.getButton() == MouseButton.MOUSE_BUTTON_LEFT) run.run();
 		});
-		
+	}
+	
+	public RunButton(String str, float x, float y, float w, float h, Runnable run){
+		this(str, x, y, w, h, run, true);
 	}
 
 }
