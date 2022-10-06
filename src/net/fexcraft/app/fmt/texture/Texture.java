@@ -155,7 +155,7 @@ public class Texture {
 	}
 
 	public void save(){
-		//TODO
+		TextureManager.save(this);
 	}
 
 }
