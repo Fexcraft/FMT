@@ -65,9 +65,6 @@ toolbar.utils.screenshot=Screenshot
 toolbar.utils.calc_size=Calc. Size (WIP)
 toolbar.utils.rescale=ReScale Util
 toolbar.utils.font_util=Font Util
-## Texture
-toolbar.texture=Textures
-toolbar.texture.add_group=Add Tex. Group
 ##
 toolbar.helpers=Helper/Previews
 toolbar.exit=Exit
@@ -86,6 +83,9 @@ editor.change_side=Change Side/Alignment
 editor.tree.polygon=Polygon Tree
 editor.tree.helper=Helper Tree
 editor.tree.texture=Texture Tree
+editor.tree.texture.add_group=Add Group
+editor.tree.texture.auto_pos=Auto-Pos
+editor.tree.texture.reset_pos=Reset Pos
 editor.tree.texture.rename_group.title=Rename Texture Group
 editor.tree.texture.rename_group.desc=Enter the new name for this Texture Group.
 editor.tree.texture.rename_group.duplicate=There is another Texture Group with this name!
