@@ -382,7 +382,8 @@ public class FMT {
 			center_cube.render();
 		}
 		if(Settings.FLOOR.value){
-			TextureManager.bind("floor");
+			TextureManager.bind(MODEL.orient.floor_texture);
+			floor.posY = MODEL.orient.floor_height;
 			floor.render();
 		}
 		if(Settings.DEMO.value){
@@ -401,7 +402,7 @@ public class FMT {
 	public static final Polyhedron<GLObject> center_cube = new Polyhedron<GLObject>().importMRT(new BoxBuilder(new ModelRendererTurbo(null, 0, 0, 16, 16))
 		.setSize(16, 16, 16).setOffset(-8, 0, -8).build(), false, 1f).setGlObj(new GLObject());;
 	public static final Polyhedron<GLObject> floor = new Polyhedron<GLObject>().importMRT(new BoxBuilder(new ModelRendererTurbo(null, 0, 0, 512, 512))
-		.setSize(512, 0, 512).setOffset(-256, 10, -256).removePolygons(0, 1, 4, 5)
+		.setSize(512, 0, 512).setOffset(-256, 0, -256).removePolygons(0, 1, 4, 5)
 		.setPolygonUV(2, new float[]{ 512, 0, 512, 512, 0, 512, 0, 0 })
 		.setPolygonUV(3, new float[]{ 512, 0, 512, 512, 0, 512, 0, 0 }).build(), false, 1f).setGlObj(new GLObject());;
 	private static final Polyhedron<GLObject> centermarker0 = new Generator<GLObject>(null, Generator.Type.CUBOID)
