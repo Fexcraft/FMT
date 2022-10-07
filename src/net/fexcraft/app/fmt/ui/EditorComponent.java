@@ -137,6 +137,7 @@ public class EditorComponent extends Component {
 		REGISTRY.put("polygon.fliptools", FlipTools.class);
 		REGISTRY.put("group.general", GroupGeneral.class);
 		REGISTRY.put("model.general", ModelGeneral.class);
+		REGISTRY.put("model.export_values", ModelExports.class);
 		REGISTRY.put("multiplier", MultiplierComponent.class);
 		REGISTRY.put("folder", FolderComponent.class);
 	}
