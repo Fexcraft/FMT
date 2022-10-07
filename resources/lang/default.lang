@@ -175,6 +175,7 @@ editor.component.model.general.desc=General model settings.
 editor.component.model.general.model_name=Name
 editor.component.model.general.tex_size=Texture Size
 editor.component.model.general.tex_group=Texture Group
+editor.component.model.general.orientation=Orientation
 editor.component.folder.name=Folder/Directory Viewer
 editor.component.folder.desc=Component offering a file-tree view of a specific folder.
 editor.component.folder.refresh=Refresh
