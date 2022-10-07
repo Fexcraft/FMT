@@ -63,7 +63,7 @@ public class Model {
 	private LinkedHashMap<String, Boolean> authors = new LinkedHashMap<>();
 	private ArrayList<Group> groups = new ArrayList<>();
 	private ArrayList<Polygon> selected = new ArrayList<>();
-	public ModelOrientation orient = ModelOrientation.CLASSIC;
+	public ModelOrientation orient = ModelOrientation.CLASSIC_VEHICLE;
 	public ModelFormat format = ModelFormat.UNIVERSAL;
 	public Vector3f pos = new Vector3f();
 	public Vector3f rot = new Vector3f();
