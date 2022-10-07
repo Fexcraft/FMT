@@ -376,6 +376,7 @@ public class Settings {
 		editor.addComponent(new QuickAdd());
 		editor.addComponent(new MultiplierComponent());
 		editor.addComponent(new ModelGeneral());
+		editor.addComponent(new ModelExports());
 		//
 		Editor.EDITORS.get("polygon_editor").show();
 	}
