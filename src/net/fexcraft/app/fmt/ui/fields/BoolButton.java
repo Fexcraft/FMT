@@ -10,7 +10,6 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.settings.Setting;
 import net.fexcraft.app.fmt.settings.Settings;
-import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.ui.EditorComponent;
 
 public class BoolButton extends Button implements Field {
@@ -66,10 +65,10 @@ public class BoolButton extends Button implements Field {
 
 	@Override
 	public void scroll(double yoffset){
-		apply(test(value(), yoffset > 0, Editor.RATE));
+		/*apply(test(value(), yoffset > 0, Editor.RATE));
 		if(poly_value != null){
 			FMT.MODEL.updateValue(poly_value, this);
-		}
+		}*/
 	}
 
 	@Override
