@@ -8,6 +8,7 @@ import org.liquidengine.legui.component.SelectBox;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.attributes.UpdateHandler;
 import net.fexcraft.app.fmt.attributes.UpdateType;
+import net.fexcraft.app.fmt.polygon.ModelOrientation;
 import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.ui.EditorComponent;
@@ -15,13 +16,13 @@ import net.fexcraft.app.fmt.ui.fields.TextField;
 
 public class ModelGeneral extends EditorComponent {
 	
-	private SelectBox<String> texgroups = new SelectBox<>();
+	private SelectBox<String> texgroups = new SelectBox<>(), orient = new SelectBox<>();
 	private SelectBox<Integer> texsx = new SelectBox<>(), texsy = new SelectBox<>();
 	protected static final String genid = "model.general";
 	private TextField name;
 	
 	public ModelGeneral(){
-		super(genid, 180, false, true);
+		super(genid, 240, false, true);
 		this.add(new Label(translate(LANG_PREFIX + genid + ".model_name"), L5, row(1), LW, HEIGHT));
 		this.add(name = new TextField("", L5, row(1), LW, HEIGHT, false).accept(con -> FMT.MODEL.name(con)));
 		//
@@ -52,11 +53,22 @@ public class ModelGeneral extends EditorComponent {
 		updateholder.add(UpdateType.TEXGROUP_REMOVED, vals -> refreshTexGroupEntries());
 		texgroups.addSelectBoxChangeSelectionEventListener(listener -> {
 			FMT.MODEL.texgroup = TextureManager.getGroup(listener.getNewValue());
-			UpdateHandler.update(UpdateType.MODEL_TEXGROUP_CHANGED, FMT.MODEL.texgroup);
+			UpdateHandler.update(UpdateType.MODEL_TEXGROUP, FMT.MODEL.texgroup);
 		});
 		texgroups.setVisibleCount(6);
 		refreshTexGroupEntries();
 		this.add(texgroups);
+		//
+		this.add(new Label(translate(LANG_PREFIX + genid + ".orientation"), L5, row(1), LW, HEIGHT));
+		orient.setPosition(L5, row(1));
+		orient.setSize(LW, HEIGHT);
+		for(ModelOrientation or : ModelOrientation.values()) orient.addElement(or.name());
+		orient.addSelectBoxChangeSelectionEventListener(listener -> {
+			FMT.MODEL.orient = ModelOrientation.valueOf(listener.getNewValue());
+			UpdateHandler.update(UpdateType.MODEL_ORIENTATION, FMT.MODEL.orient);
+		});
+		updateholder.add(UpdateType.MODEL_LOAD, vals -> orient.setSelected(FMT.MODEL.orient.name(), true));
+		this.add(orient);
 	}
 
 	private void refreshTexGroupEntries(){
