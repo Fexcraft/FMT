@@ -14,6 +14,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -280,6 +281,19 @@ public class SaveHandler {
 				}
 			});
 		}
+		if(obj.has("export_values")){
+			obj.getMap("export_values").entries().forEach(entry -> {
+				model.export_values.put(entry.getKey(), entry.getValue().string_value());
+			});
+		}
+		if(obj.has("export_array_values")){
+			obj.getMap("export_array_values").entries().forEach(entry -> {
+				model.export_listed_values.put(entry.getKey(), new ArrayList<>());
+				entry.getValue().asArray().elements().forEach(elm -> {
+					model.export_listed_values.get(entry.getKey()).add(elm.string_value());
+				});
+			});
+		}
 		model.recompile();
 		return model;
 	}
@@ -460,6 +474,20 @@ public class SaveHandler {
 				array.add(jsn);
 			}
 			obj.add("helpers", array);
+		}
+		if(!export && model.export_values.size() > 0){
+			obj.addMap("export_values");
+			model.export_values.entrySet().forEach(entry -> {
+				obj.getMap("export_values").add(entry.getKey(), entry.getValue());
+			});
+		}
+		if(!export && model.export_listed_values.size() > 0){
+			obj.addMap("export_array_values");
+			model.export_listed_values.entrySet().forEach(entry -> {
+				JsonArray array = new JsonArray();
+				entry.getValue().forEach(elm -> array.add(elm));
+				obj.getMap("export_array_values").add(entry.getKey(), array);
+			});
 		}
 		return obj;
 	}
