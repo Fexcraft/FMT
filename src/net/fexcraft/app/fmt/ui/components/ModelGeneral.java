@@ -44,7 +44,7 @@ public class ModelGeneral extends EditorComponent {
 		texgroups.setPosition(L5, row(1));
 		texgroups.setSize(LW, HEIGHT);
 		//
-		updateholder.add(UpdateType.MODEL_LOAD, vals -> {
+		updateholder.sub().add(UpdateType.MODEL_LOAD, vals -> {
 			name.getTextState().setText(FMT.MODEL.name);
 			refreshTexGroupEntries();
 		});
@@ -67,7 +67,7 @@ public class ModelGeneral extends EditorComponent {
 			FMT.MODEL.orient = ModelOrientation.valueOf(listener.getNewValue());
 			UpdateHandler.update(UpdateType.MODEL_ORIENTATION, FMT.MODEL.orient);
 		});
-		updateholder.add(UpdateType.MODEL_LOAD, vals -> orient.setSelected(FMT.MODEL.orient.name(), true));
+		updateholder.sub().add(UpdateType.MODEL_LOAD, vals -> orient.setSelected(FMT.MODEL.orient.name(), true));
 		this.add(orient);
 	}
 
@@ -77,7 +77,7 @@ public class ModelGeneral extends EditorComponent {
 		for(TextureGroup group : TextureManager.getGroups()){
 			texgroups.addElement(group.name);
 		}
-		if(FMT.MODEL == null|| FMT.MODEL.texgroup == null) texgroups.setSelected(0, true);
+		if(FMT.MODEL == null || FMT.MODEL.texgroup == null) texgroups.setSelected(0, true);
 		else texgroups.setSelected(FMT.MODEL.texgroup.name, true);
 	}
 
