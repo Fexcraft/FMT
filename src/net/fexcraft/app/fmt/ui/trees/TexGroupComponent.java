@@ -1,6 +1,7 @@
 package net.fexcraft.app.fmt.ui.trees;
 
 import static net.fexcraft.app.fmt.settings.Settings.ASK_TEXTURE_GROUP_REMOVAL;
+import static net.fexcraft.app.fmt.utils.Logging.log;
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
 import java.util.Collections;
@@ -9,6 +10,7 @@ import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.component.Dialog;
 import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.event.MouseClickEvent;
+import org.liquidengine.legui.image.StbBackedLoadableImage;
 import org.liquidengine.legui.listener.MouseClickEventListener;
 import org.liquidengine.legui.style.color.ColorConstants;
 import org.liquidengine.legui.style.length.Length;
@@ -48,6 +50,7 @@ public class TexGroupComponent extends EditorComponent {
 		this.add(new OptionLabel(this, 1, "texture.group.resize", () -> {}));
 		this.add(new OptionLabel(this, 2, "texture.group.generate", () -> {}));
 		this.add(new OptionLabel(this, 3, "texture.group.select", () -> {}));
+		pin.setImage(new StbBackedLoadableImage("./resources/textures/icons/component/edit.png"));
 	}
 
 	private void openRenameDialog(){
@@ -108,7 +111,14 @@ public class TexGroupComponent extends EditorComponent {
 	
 	@Override
 	public void pin(){
-		//
+		if(group.texture == null) return;
+		try{
+			group.texture.save();
+			FMT.openLink(group.texture.getFile().getCanonicalPath());
+		}
+		catch(Exception e){
+			log(e);
+		}
 	}
 	
 	@Override
