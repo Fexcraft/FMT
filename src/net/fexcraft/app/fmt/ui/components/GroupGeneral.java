@@ -42,18 +42,16 @@ public class GroupGeneral extends EditorComponent {
 		texsx.setVisibleCount(6);
 		texsy.setVisibleCount(6);
 		updateholder.add(UpdateType.GROUP_SELECTED, vals -> {
-			int old = vals.get(1);
-			if(old < 0) return;
-			int size = vals.get(2);
-			Group group = vals.get(0);
-			if(size == 0){
+			ArrayList<Group> list = FMT.MODEL.selected_groups();
+			if(list.size() == 0){
 				name.getTextState().setText(NOGROUPSEL);
 				texsx.setSelected((Integer)FMT.MODEL.texSizeX, true);
 				texsy.setSelected((Integer)FMT.MODEL.texSizeY, true);
 				texgroups.setSelected(0, true);
 			}
-			else if(size > 0){
-				name.getTextState().setText(vals.get(0, Group.class).id);
+			else{
+				Group group = list.get(0);
+				name.getTextState().setText(group.id);
 				texsx.setSelected((Integer)group.texSizeX, true);
 				texsy.setSelected((Integer)group.texSizeY, true);
 				if(group.texgroup == null) texgroups.setSelected(0, true);
