@@ -363,6 +363,23 @@ texture.group.generate=Generate Texture Template
 texture.group.select=Select Texture (Copy)
 texture.group_in_use_model=TextureGroup is in use in the Model
 texture.group_in_use_group=TextureGroup is in use in a Group
+texture_autopos.reset.dialog=Texture Root UV Resetter
+texture_autopos.reset.info=This resets the polygon root UV values!
+texture_autopos.reset.group=Group to process: 
+texture_autopos.reset.done=Texture root UV reset successfully.
+texture_autopos.reset_type.dialog=Texture UV Type Resetter
+texture_autopos.reset_type.info=This resets the polygon UV mapping types!
+texture_autopos.reset_type.group=Group to process: 
+texture_autopos.reset_type.done=Texture UV types reset successfully.
+texture_autopos.autopos.dialog=Texture Auto Positioner
+texture_autopos.autopos.info=This process may mark FMT as not responding.
+texture_autopos.autopos.group=Group to process: 
+texture_autopos.autopos.savespace=Use save-space mode? (this may reduce readability)
+texture_autopos.autopos.process_all=Only process polygons with no texture pos?
+texture_autopos.autopos.detach_all=Detach faces from polygons? (CAN ONLY BE UNDODE MANUALLY!)
+texture_autopos.autopos.start=Start
+texture_autopos.autopos.processing=Processing: %s:%s
+texture_autopos.autopos.complete=Auto texture positioning Complete!
 
 # Other
 filechooser.title=FMT Internal File Chooser/Selector
@@ -550,15 +567,6 @@ editor.texture.brushes.color_picker=Color Picker
 editor.texture.brushes.current=Current:
 editor.fields.reset.uppercase=RESET
 
-# Dialogs
-dialog.welcome.title=Welcome to FMT!
-dialog.welcome.version=Client Version: %s
-dialog.welcome.title_new=New version available!
-dialog.welcome.version_new=%s >> %s
-dialog.welcome.confirm=ok
-dialog.welcome.update=update
-dialog.welcome.exit=exit
-
 # Ex/Im-Porter
 eximporter.export.select.title=Select Exporter
 eximporter.export.select.desc=Select an exporter to export your Model/Object.
@@ -592,28 +600,6 @@ dialogbox.setting.warning1=DEPENDING ON HARDWARE/SOFTWARE SPEED
 dialogbox.setting.warning2=IF YOU GOT EPILEPSY OR OTHER WHERE SCREEN
 dialogbox.setting.warning3=FLICKERING IS BAD PLEASE DISABLE IT
 
-# Trees
-tree.polygon.counter=P: 
-tree.polygon.remove_group=Remove this group?
-tree.polygon.remove_polygon=Remove this polygon?
-tree.helper.counter=Helpers/Previews: 
-tree.fvtm.counter=Groups in Model: 
-tree.fvtm.remove_animation=Remove this Animation?
-tree.textures.counter=Active Texture Groups: 
-tree.textures.select=Select Texture File
-tree.textures.select.dialog=Select a Texture File.
-tree.textures.generate=Generate Texture Template
-tree.textures.resize=Resize Texture Image
-tree.textures.resize.dialog=Set new Texture Image Size
-tree.textures.resize.copyfrom=Copy from: 
-tree.textures.resize.scale=Relative (Up)Scale: 
-tree.textures.rename=Rename Texture Group
-tree.textures.rename.dialog=Set new Texture Group Name/ID
-tree.textures.rename.duplicate=A group with that name exists already!
-tree.textures.remove_default=Default Model Texture Group can not be removed.
-tree.textures.remove_in_use=Texture Group is still in use!
-tree.textures.group_added=New Texture group added!
-
 # Font Util
 font_util.dialog=Font Util / Font Model Generator
 font_util.dialog.text=Text to be generated:
@@ -643,26 +629,6 @@ helper_collector.load_fmtb.errors=Errors occured while parsing save file.
 helper_collector.load_frame.nofile=Invalid Model File! (Does it exist?)
 helper_collector.load_frame.errors=Errors occured while creating frame.
 
-# Texture Updater / Util
-texture_update.autopos.title=Texture Auto Positioner
-texture_update.autopos.info=This process may mark FMT as not responding.
-texture_update.autopos.polygroup=Polygon Group to process: 
-texture_update.autopos.savespace=Use save-space mode? (may reduce readability)
-texture_update.autopos.process_all=Only process polygons with no texture pos?
-texture_update.autopos.detach_all=Detach faces from polygons? (CAN ONLY BE UNDODE MANUALLY!)
-texture_update.autopos.start=Start
-texture_update.autopos.processing=Processing: %s:%s
-texture_update.autopos.complete=Auto texture positioning Complete!
-texture_update.resize.exceeding_4096=Exceeding 4096 pixel! Exceeding 4096 pixel!
-texture_update.resize.success=Resized!
-texture_update.texpos_reset.title=Texture U/V Position Resetter
-texture_update.texpos_reset.info=This resets the polygon (automatic) U/V values!
-texture_update.texpos_reset.polygroup=Polygon Group to process: 
-texture_update.texpos_reset.done=Texture U/V Positions Reset Successfully.
-texture_update.texpostype_reset.title=Texture U/V Type Resetter
-texture_update.texpostype_reset.info=This resets the polygon U/V mapping types!
-texture_update.texpostype_reset.polygroup=Polygon Group to process: 
-texture_update.texpostype_reset.done=Texture U/V Types Reset Successfully.
 
 # Errors
 error.dialog_title=Error
@@ -671,5 +637,3 @@ error.feature_not_reimplemented_yet=This feature is not reimplemented yet.
 error.no_polygon_selected=no polygon/s selected
 error.no_preview_selected=no helper/preview selected
 error.todo=//TODO
-
-# Other
