@@ -86,7 +86,9 @@ public class Settings {
 	public static RGBSetting THEME_TEXT;
 	public static RGBSetting THEME_BUTTON;
 	public static Setting<String> THEME_FONT;
-	public static RGBSetting POLYGON_NORMAL, POLYGON_SELECTED, POLYGON_INVISIBLE, POLYGON_INV_SEL, GROUP_NORMAL, GROUP_SELECTED, GROUP_INVISIBLE, GROUP_INV_SEL;
+	public static RGBSetting POLYGON_NORMAL, POLYGON_SELECTED, POLYGON_INVISIBLE, POLYGON_INV_SEL;
+	public static RGBSetting GROUP_NORMAL, GROUP_SELECTED, GROUP_INVISIBLE, GROUP_INV_SEL;
+	public static RGBSetting TEXTURE_GROUP, TEXTURE_OPTION;
 	//
 	public static String GENERAL = "general";
 	public static String GRAPHIC = "graphic";
@@ -207,6 +209,8 @@ public class Settings {
 		POLYGON_INV_SEL = new RGBSetting("component_polygon_invis_sel", new RGB(250, 202, 117), THEME, obj);
 		GROUP_INV_SEL = new RGBSetting("component_group_invis_sel", new RGB(232, 158, 67), THEME, obj);
 		BOTTOM_INFO_BAR_COLOR = new RGBSetting("bottom_infobar_color", new RGB(200, 200, 200), THEME, obj);
+		TEXTURE_GROUP = new RGBSetting("component_texture_group", new RGB(0, 74, 127), THEME, obj);
+		TEXTURE_OPTION = new RGBSetting("component_texture_group_option", new RGB(0, 74, 127), THEME, obj);
 		//
 		for(Map.Entry<String, Map<String, Setting<?>>> entry : SETTINGS.entrySet()){
 			if(!obj.has(entry.getKey())) continue;
