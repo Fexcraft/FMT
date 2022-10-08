@@ -32,7 +32,7 @@ public class EditorComponent extends Component {
 	private ArrayList<Icon> icons = new ArrayList<>();
 	protected boolean minimized, unpinned, tree;
 	protected Label label;
-	private Icon size, mup, mdw, pin, rem;
+	protected Icon size, mup, mdw, pin, rem;
 	protected int uid, fullheight, row;
 	public Editor editor;
 	protected String id;
