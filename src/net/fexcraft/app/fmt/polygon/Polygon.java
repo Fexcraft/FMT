@@ -175,12 +175,9 @@ public abstract class Polygon {
 		glm.clear();
 		if(glm.glObj.pickercolor == null) glm.glObj.pickercolor = new RGB(colorIdx == 0 ? colorIdx = polyIdx++ : colorIdx).toFloatArray();
 		glm.glObj.polygon = this;
-		if(textureX < 0 || textureY < 0) glm.glObj.textured = false;
-		else{
-			glm.glObj.textured = true;
-			glm.texU = textureX;
-			glm.texV = textureY;
-		}
+		glm.glObj.textured = textureX > 0 && textureY > 0;
+		glm.texU = textureX;
+		glm.texV = textureY;
 		glm.glObj.grouptex = group.texgroup != null;
 		if(group.joined_polygons){
 			glm.pos(group.pos.x, group.pos.y, group.pos.z);
