@@ -31,7 +31,7 @@ import net.fexcraft.app.fmt.utils.Translator;
 public class FileChooser {
 	
 	public static FileType TYPE_PNG = new FileType("Portable Network Graphics", "*.png");
-	public static FileType TYPE_IMG = new FileType("Image Files", "*.png", ".jpg", ".jpeg", ".bmp");
+	public static FileType TYPE_IMG = new FileType("Image Files", "*.png", "*.jpg", "*.jpeg", "*.bmp");
 	public static FileType TYPE_FMTB = new FileType("FMT Save File", "*.fmtb");
 	public static final int INTERNAL_HEIGHT = 500;
 	
@@ -42,11 +42,12 @@ public class FileChooser {
 			return;
 		}
         try(MemoryStack stack = MemoryStack.stackPush()){
-        	PointerBuffer buffer = stack.mallocPointer(type.extensions.length); String string = "";
+        	PointerBuffer buffer = stack.mallocPointer(type.extensions.length);
+        	String string = "";
             for(int i = 0; i < type.extensions.length; i++){
             	buffer.put(stack.UTF8(type.extensions[i]));
-            	buffer.flip();
             }
+        	buffer.flip();
     		if(save) string = TinyFileDialogs.tinyfd_saveFileDialog(title, root, buffer, type.name);
     		else string = TinyFileDialogs.tinyfd_openFileDialog(title, root, buffer, type.name, false);
     		if(string != null && string.trim().length() > 0){
