@@ -18,6 +18,8 @@ import org.liquidengine.legui.style.color.ColorConstants;
 import org.liquidengine.legui.style.length.Length;
 import org.liquidengine.legui.style.length.LengthType;
 
+import com.google.common.io.Files;
+
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.attributes.UpdateHandler;
 import net.fexcraft.app.fmt.attributes.UpdateType;
@@ -27,6 +29,7 @@ import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.ui.EditorComponent;
+import net.fexcraft.app.fmt.ui.FileChooser;
 import net.fexcraft.app.fmt.ui.GenericDialog;
 import net.fexcraft.app.fmt.ui.fields.TextField;
 import net.fexcraft.app.fmt.utils.Logging;
@@ -51,8 +54,20 @@ public class TexGroupComponent extends EditorComponent {
 		this.add(new OptionLabel(this, 0, "texture.group.rename", () -> openRenameDialog()));
 		this.add(new OptionLabel(this, 1, "texture.group.resize", () -> openResizeDialog()));
 		this.add(new OptionLabel(this, 2, "texture.group.generate", () -> {}));
-		this.add(new OptionLabel(this, 3, "texture.group.select", () -> {}));
+		this.add(new OptionLabel(this, 3, "texture.group.select", () -> openSelectDialog()));
 		pin.setImage(new StbBackedLoadableImage("./resources/textures/icons/component/edit.png"));
+	}
+
+	private void openSelectDialog(){
+		FileChooser.chooseFile(translate("editor.tree.texture.select_texture.dialog"), "./", FileChooser.TYPE_IMG, false, file -> {
+			if(file == null) return;
+			try{
+				Files.copy(file, group.texture.getFile());
+			}
+			catch(Throwable e){
+				log(e);
+			}
+		});
 	}
 
 	private void openRenameDialog(){
