@@ -16,7 +16,7 @@ import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public class Cylinder extends Polygon {
 	
-	public float radius = 2, radius2, length = 2, base = 1, top = 1;
+	public float radius = 2, radius2, length = 1, base = 1, top = 1;
 	public int segments = 8, seglimit, direction = ModelRendererTurbo.MR_TOP;
 	public Vector3f topoff = new Vector3f(), toprot = new Vector3f();
 	public boolean[] bools = new boolean[6];
@@ -25,6 +25,7 @@ public class Cylinder extends Polygon {
 	
 	public Cylinder(Model model){
 		super(model);
+		pos.y = -1;
 	}
 
 	protected Cylinder(Model model, JsonMap obj, int format){
