@@ -40,27 +40,27 @@ public class SettingsDialog {
 		if(dialog != null) dialog.close();
 		panels.clear();
 		UpdateHolder holder = new UpdateHolder();
-		int width = 520, lw = 100, height = 320;
+		int width = 640, height = 320;
 		dialog = new Dialog(translate("settings.dialog.title"), width, height);
 		dialog.setResizable(false);
-		ScrollablePanel tabs = new ScrollablePanel(0, 0, width, 40);
-		tabs.getContainer().setSize(Settings.SETTINGS.size() * (lw + 2), 30);
+		ScrollablePanel tabs = new ScrollablePanel(0, 2, 110, height - 4);
+		tabs.getContainer().setSize(100, Settings.SETTINGS.size() * 32 + 16);
 		int[] i = { 0 };
 		Settings.SETTINGS.keySet().forEach(key -> {
-			Button button = new Button(translate("settings.category." + key), i[0]++ * (lw + 2), 0, 100, 30);
+			Button button = new Button(translate("settings.category." + key), 0, i[0]++ * 32, 100, 30);
 			button.getStyle().setHorizontalAlign(HorizontalAlign.CENTER);
 			Settings.applyMenuTheme(button);
 			button.getListenerMap().addListener(MouseClickEvent.class, lis -> show(key));
 			tabs.getContainer().add(button);
 		});
 		Settings.applyBorderless(tabs);
-		tabs.setVerticalScrollBarVisible(false);
+		tabs.setHorizontalScrollBarVisible(false);
 		dialog.getContainer().add(tabs);
 		//
 		for(Entry<String, Map<String, Setting<?>>> entry : Settings.SETTINGS.entrySet()){
-			Panel wrapper = new Panel(10, 50, width - 20, height - 80);
+			Panel wrapper = new Panel(120, 10, width - 130, height - 20);
 			Map<String, Setting<?>> settings = entry.getValue();
-			ScrollablePanel panel = new ScrollablePanel(0, 0, width - 20, height - 80);
+			ScrollablePanel panel = new ScrollablePanel(0, 0, width - 130, height - 20);
 			boolean control = entry.getKey().equals(Settings.CONTROL);
 			panel.getContainer().setSize(width - 20, settings.size() * 30 + 5 + (control ? 30 : 0));
 			int[] j = { 0 };
@@ -69,10 +69,10 @@ public class SettingsDialog {
 				Settings.applyBorderless(label);
 				label.getStyle().setHorizontalAlign(HorizontalAlign.RIGHT);
 				panel.getContainer().add(label);
-				Component comp = setting.createField(panel.getContainer(), holder, 215, j[0] * 30 + 5, width - 250, 25);
+				Component comp = setting.createField(panel.getContainer(), holder, 215, j[0] * 30 + 5, width - 360, 25);
 				if(comp != null) panel.getContainer().add(comp);
 				else {
-					label = new Label(translate("settings.no_field_found"), 215, j[0] * 30 + 5, width - 250, 25);
+					label = new Label(translate("settings.no_field_found"), 215, j[0] * 30 + 5, width - 360, 25);
 					Settings.applyBorderless(label);
 					label.getStyle().setHorizontalAlign(HorizontalAlign.CENTER);
 					panel.getContainer().add(label);
