@@ -58,9 +58,9 @@ public class SettingsDialog {
 		dialog.getContainer().add(tabs);
 		//
 		for(Entry<String, Map<String, Setting<?>>> entry : Settings.SETTINGS.entrySet()){
-			Panel wrapper = new Panel(120, 10, width - 130, height - 20);
+			Panel wrapper = new Panel(120, 10, width - 130, height - 40);
 			Map<String, Setting<?>> settings = entry.getValue();
-			ScrollablePanel panel = new ScrollablePanel(0, 0, width - 130, height - 20);
+			ScrollablePanel panel = new ScrollablePanel(0, 0, width - 130, height - 40);
 			boolean control = entry.getKey().equals(Settings.CONTROL);
 			panel.getContainer().setSize(width - 20, settings.size() * 30 + 5 + (control ? 30 : 0));
 			int[] j = { 0 };
