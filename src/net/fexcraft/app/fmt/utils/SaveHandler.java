@@ -62,13 +62,11 @@ public class SaveHandler {
 			Settings.addRecentFile(file);
 			TextureManager.clearGroups();
 			ZipFile zip = new ZipFile(file);
-			boolean[] updatetree = { false };
 			zip.stream().forEach(elm -> {
 				if(elm.getName().equals("model.jtmt")){
 					try{
 						PreviewHandler.clear();
 						FMT.MODEL = load(model, file, JsonHandler.parse(zip.getInputStream(elm)), false, false);
-						update(MODEL_LOAD, model);
 						FMT.MODEL.recompile();
 						Model.SELECTED_POLYGONS = FMT.MODEL.count(true);
 					}
@@ -88,7 +86,6 @@ public class SaveHandler {
 					catch(IOException e){
 						log(e);
 					}
-					updatetree[0] = true;
 				}
 				else if(elm.getName().startsWith("texture-")){
 					try{
@@ -99,12 +96,11 @@ public class SaveHandler {
 					catch(IOException e){
 						log(e);
 					}
-					updatetree[0] = true;
 				}
 			});
 			zip.close();
 			FMT.MODEL.file = file;
-			//if(updatetree[0]) //TODO update trees?
+			update(MODEL_LOAD, FMT.MODEL);
 			DiscordUtil.update(Settings.DISCORD_RESET_ON_NEW.value);
 		}
 		catch(Exception e){
