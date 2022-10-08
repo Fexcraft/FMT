@@ -92,6 +92,7 @@ editor.tree.texture.rename_group.duplicate=There is another Texture Group with t
 editor.tree.texture.resize_group.dialog=Resize Texture Group
 editor.tree.texture.resize_group.from=Copy size from:
 editor.tree.texture.resize_group.scale=Upscale times:
+editor.tree.texture.select_texture.dialog=[WARNING! MAY CRASH!] Select Texture File
 editor.tree.animation=Animation Tree
 editor.component.group.group.remove=Remove group? This can not be undone.
 editor.component.group.polygon.remove=Remove polygon? This can not be undone.
