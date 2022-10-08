@@ -37,8 +37,8 @@ public class TexGroupComponent extends EditorComponent {
 		label.getTextState().setText((this.group = group).name);
 		this.genFullheight();
 		updateholder.add(UpdateType.TEXGROUP_RENAMED, wrp -> { if(wrp.objs[0] == group) label.getTextState().setText(group.name); });
-		label.getStyle().setTextColor(ColorConstants.darkGray());
-		label.getStyle().getBackground().setColor(FMT.rgba(Settings.GROUP_SELECTED.value));
+		label.getStyle().setTextColor(ColorConstants.lightGray());
+		label.getStyle().getBackground().setColor(FMT.rgba(Settings.GROUP_NORMAL.value));
 		label.getPosition().set(0, 0);
 		label.getSize().add(4, 0);
 		label.getStyle().setPaddingLeft(new Length<Float>(5f, LengthType.PIXEL));
