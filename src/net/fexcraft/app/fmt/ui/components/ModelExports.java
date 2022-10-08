@@ -28,7 +28,7 @@ public class ModelExports extends EditorComponent {
 	protected static final String genid = "model.export_values";
 	private TextField currval;
 	private String current;
-	private int idx;
+	private int curridx = -3;
 	
 	public ModelExports(){
 		super(genid, 180, false, true);
@@ -42,8 +42,8 @@ public class ModelExports extends EditorComponent {
 		updateholder.add(UpdateType.MODEL_EXPORT_VALUE, vals -> updateValuesBox());
 		values.addSelectBoxChangeSelectionEventListener(listener -> updateCurrentField(listener.getNewValue()));
 		this.add(currval = new TextField("", L5, row(1), LW, HEIGHT - 2));
-		this.add(new RunButton(LANG_PREFIX + genid + ".update", F20, row(1), F2S, HEIGHT, () -> {}));
-		this.add(new RunButton(LANG_PREFIX + genid + ".remove", F21, row(), F2S, HEIGHT, () -> {}));
+		this.add(new RunButton(LANG_PREFIX + genid + ".update", F20, row(1), F2S, HEIGHT, () -> updateValue()));
+		this.add(new RunButton(LANG_PREFIX + genid + ".remove", F21, row(), F2S, HEIGHT, () -> removeValue()));
 		this.add(values);
 	}
 
@@ -60,7 +60,7 @@ public class ModelExports extends EditorComponent {
 		}
 		current = "";
 		currval.getTextState().setText("");
-		index = -3;
+		curridx = -3;
 		if(values.getElements().size() > 0){
 			values.setSelected(0, true);
 			updateCurrentField(values.getElements().get(0));
@@ -70,18 +70,56 @@ public class ModelExports extends EditorComponent {
 	private void updateCurrentField(String newval){
 		if(newval.startsWith("[L]")){
 			currval.getTextState().setText(current = newval.substring(4));
-			index = -1;
+			curridx = -1;
 		}
 		else if(newval.startsWith("[L/")){
 			int lidx = newval.indexOf("]");
-			index = Integer.parseInt(newval.substring(3, lidx));
+			curridx = Integer.parseInt(newval.substring(3, lidx));
 			current = newval.substring(lidx + 2);
-			currval.getTextState().setText(FMT.MODEL.export_listed_values.get(current).get(index));
+			currval.getTextState().setText(FMT.MODEL.export_listed_values.get(current).get(curridx));
 		}
 		else if(newval.startsWith("[V]")){
 			currval.getTextState().setText(FMT.MODEL.export_values.get(current = newval.substring(4)));
-			index = -2;
+			curridx = -2;
 		}
+	}
+
+	private void updateValue(){
+		switch(curridx){
+			case -3: return;
+			case -2:{
+				FMT.MODEL.export_values.put(current, currval.getTextState().getText());
+				break;
+			}
+			case -1:{
+				ArrayList<String> list = FMT.MODEL.export_listed_values.remove(current);
+				if(list == null) return;
+				FMT.MODEL.export_listed_values.put(currval.getTextState().getText(), list);
+				break;
+			}
+		}
+		if(curridx >= 0){
+			FMT.MODEL.export_listed_values.get(current).set(curridx, currval.getTextState().getText());
+		}
+		UpdateHandler.update(UpdateType.MODEL_EXPORT_VALUE);
+	}
+
+	private void removeValue(){
+		switch(curridx){
+			case -3: return;
+			case -2:{
+				FMT.MODEL.export_values.remove(current);
+				break;
+			}
+			case -1:{
+				FMT.MODEL.export_listed_values.remove(current);
+				break;
+			}
+		}
+		if(curridx >= 0){
+			FMT.MODEL.export_listed_values.get(current).remove(curridx);
+		}
+		UpdateHandler.update(UpdateType.MODEL_EXPORT_VALUE);
 	}
 
 	private void addEntryDialog(){
