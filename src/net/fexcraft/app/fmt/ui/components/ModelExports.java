@@ -20,7 +20,6 @@ import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.ui.fields.RunButton;
 import net.fexcraft.app.fmt.ui.fields.TextField;
-import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.fmt.utils.Translator;
 
 public class ModelExports extends EditorComponent {
@@ -41,24 +40,7 @@ public class ModelExports extends EditorComponent {
 		values.setVisibleCount(12);
 		updateholder.add(UpdateType.MODEL_LOAD, vals -> updateValuesBox());
 		updateholder.add(UpdateType.MODEL_EXPORT_VALUE, vals -> updateValuesBox());
-		values.addSelectBoxChangeSelectionEventListener(listener -> {
-			current = listener.getNewValue();
-			if(current.startsWith("[L]")){
-				currval.getTextState().setText(current = current.substring(4));
-				index = -1;
-			}
-			else if(current.startsWith("[L/")){
-				int lidx = current.indexOf("]");
-				index = Integer.parseInt(current.substring(3, lidx));
-				current = current.substring(lidx + 2);
-				Logging.log(current);
-				currval.getTextState().setText(FMT.MODEL.export_listed_values.get(current).get(index));
-			}
-			else if(current.startsWith("[V]")){
-				currval.getTextState().setText(FMT.MODEL.export_values.get(current = current.substring(4)));
-				index = -2;
-			}
-		});
+		values.addSelectBoxChangeSelectionEventListener(listener -> updateCurrentField(listener.getNewValue()));
 		this.add(currval = new TextField("", L5, row(1), LW, HEIGHT - 2));
 		this.add(new RunButton(LANG_PREFIX + genid + ".update", F20, row(1), F2S, HEIGHT, () -> {}));
 		this.add(new RunButton(LANG_PREFIX + genid + ".remove", F21, row(), F2S, HEIGHT, () -> {}));
@@ -79,6 +61,27 @@ public class ModelExports extends EditorComponent {
 		current = "";
 		currval.getTextState().setText("");
 		index = -3;
+		if(values.getElements().size() > 0){
+			values.setSelected(0, true);
+			updateCurrentField(values.getElements().get(0));
+		}
+	}
+
+	private void updateCurrentField(String newval){
+		if(newval.startsWith("[L]")){
+			currval.getTextState().setText(current = newval.substring(4));
+			index = -1;
+		}
+		else if(newval.startsWith("[L/")){
+			int lidx = newval.indexOf("]");
+			index = Integer.parseInt(newval.substring(3, lidx));
+			current = newval.substring(lidx + 2);
+			currval.getTextState().setText(FMT.MODEL.export_listed_values.get(current).get(index));
+		}
+		else if(newval.startsWith("[V]")){
+			currval.getTextState().setText(FMT.MODEL.export_values.get(current = newval.substring(4)));
+			index = -2;
+		}
 	}
 
 	private void addEntryDialog(){
