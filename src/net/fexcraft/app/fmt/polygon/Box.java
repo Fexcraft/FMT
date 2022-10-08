@@ -15,6 +15,7 @@ public class Box extends Polygon {
 	
 	public Box(Model model){
 		super(model);
+		pos.y = -1;
 	}
 
 	protected Box(Model model, JsonMap obj){
