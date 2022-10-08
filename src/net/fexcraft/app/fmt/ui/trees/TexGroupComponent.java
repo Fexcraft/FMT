@@ -2,6 +2,7 @@ package net.fexcraft.app.fmt.ui.trees;
 
 import static net.fexcraft.app.fmt.settings.Settings.ASK_TEXTURE_GROUP_REMOVAL;
 import static net.fexcraft.app.fmt.utils.Logging.log;
+import static net.fexcraft.app.fmt.utils.Translator.translate;
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
 import java.util.Collections;
@@ -9,6 +10,7 @@ import java.util.Collections;
 import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.component.Dialog;
 import org.liquidengine.legui.component.Label;
+import org.liquidengine.legui.component.SelectBox;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.image.StbBackedLoadableImage;
 import org.liquidengine.legui.listener.MouseClickEventListener;
@@ -19,6 +21,7 @@ import org.liquidengine.legui.style.length.LengthType;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.attributes.UpdateHandler;
 import net.fexcraft.app.fmt.attributes.UpdateType;
+import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.texture.TextureManager;
@@ -47,7 +50,7 @@ public class TexGroupComponent extends EditorComponent {
 		Settings.applyBorderless(label);
 		this.getStyle().getBackground().setColor(FMT.rgba(Settings.GROUP_INVISIBLE.value));
 		this.add(new OptionLabel(this, 0, "texture.group.rename", () -> openRenameDialog()));
-		this.add(new OptionLabel(this, 1, "texture.group.resize", () -> {}));
+		this.add(new OptionLabel(this, 1, "texture.group.resize", () -> openResizeDialog()));
 		this.add(new OptionLabel(this, 2, "texture.group.generate", () -> {}));
 		this.add(new OptionLabel(this, 3, "texture.group.select", () -> {}));
 		pin.setImage(new StbBackedLoadableImage("./resources/textures/icons/component/edit.png"));
@@ -55,15 +58,15 @@ public class TexGroupComponent extends EditorComponent {
 
 	private void openRenameDialog(){
 		float width = 400;
-        Dialog dialog = new Dialog(Translator.translate("editor.tree.texture.rename_group.title"), width, 130);
+        Dialog dialog = new Dialog(translate("editor.tree.texture.rename_group.title"), width, 130);
         Settings.applyComponentTheme(dialog.getContainer());
         dialog.setResizable(true);
-    	Label label0 = new Label(Translator.translate("editor.tree.texture.rename_group.desc"), 10, 10, width - 20, 20);
+    	Label label0 = new Label(translate("editor.tree.texture.rename_group.desc"), 10, 10, width - 20, 20);
     	dialog.getContainer().add(label0);
     	TextField field = new TextField(group.name, 10, 35, width - 20, 20);
     	dialog.getContainer().add(field);
     	//
-        Button button0 = new Button(Translator.translate("dialog.button.confirm"), 10, 80, 100, 20);
+        Button button0 = new Button(translate("dialog.button.confirm"), 10, 80, 100, 20);
         button0.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
         	if(CLICK == e.getAction()){
         		String newname = field.getTextState().getText();
@@ -77,13 +80,62 @@ public class TexGroupComponent extends EditorComponent {
         });
         dialog.getContainer().add(button0);
         //
-        Button button1 = new Button(Translator.translate("dialog.button.cancel"), 120, 80, 100, 20);
+        Button button1 = new Button(translate("dialog.button.cancel"), 120, 80, 100, 20);
         button1.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
         	if(CLICK == e.getAction()) dialog.close();
         });
         dialog.getContainer().add(button1);
         //
         dialog.show(FMT.FRAME);
+	}
+
+	private void openResizeDialog(){
+		Dialog dialog = new Dialog(translate("editor.tree.texture.resize_group.dialog"), 380, 120);
+		dialog.setResizable(false);
+		dialog.getContainer().add(new Label(translate("editor.tree.texture.resize_group.from"), 10, 10, 140, 20));
+		SelectBox<String> from = new SelectBox<String>(150, 10, 220, 20);
+		from.addElement("model");
+		for(Group list : FMT.MODEL.groups()){
+			from.addElement("/ " + list.id);
+		}
+		from.setSelected(0, true);
+		from.setVisibleCount(12);
+		dialog.getContainer().add(from);
+		dialog.getContainer().add(new Label(translate("editor.tree.texture.resize_group.scale"), 10, 40, 140, 20));
+		SelectBox<Integer> upscale = new SelectBox<Integer>(150, 40, 220, 20);
+		upscale.addElement(0);
+		upscale.addElement(1);
+		upscale.addElement(2);
+		upscale.addElement(3);
+		upscale.setVisibleCount(4);
+		upscale.setSelected(0, true);
+		dialog.getContainer().add(upscale);
+        Button button0 = new Button(Translator.translate("dialog.button.confirm"), 10, 70, 100, 20);
+        button0.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) lis -> {
+        	if(CLICK != lis.getAction()) return;
+        	dialog.close();
+        	try{
+        		boolean model = !from.getSelection().startsWith("/");
+        		Group group = model ? null : FMT.MODEL.get(from.getSelection().substring(2));
+        		int scale = upscale.getSelection();
+        		int x = model ? FMT.MODEL.texSizeX : group.texSizeX, ox = x;
+        		int y = model ? FMT.MODEL.texSizeY : group.texSizeY, oy = y;
+        		while(scale > 0){
+        			x *= 2;
+        			y *= 2;
+        			scale--;
+        		}
+        		texgroup().texture.resize(x, y);
+        		texgroup().texture.save();
+        		texgroup().texture.reload();
+        		log("Resized TextureGroup '" + texgroup().name + "' to " + ox + ", " + oy + " with " + upscale.getSelection() + " times upscaling to " + x + " " + y + ".");
+        	}
+        	catch(Exception e){
+				log(e);
+			}
+        });
+        dialog.getContainer().add(button0);
+		dialog.show(FMT.FRAME);
 	}
 
 	private int genFullheight(){
