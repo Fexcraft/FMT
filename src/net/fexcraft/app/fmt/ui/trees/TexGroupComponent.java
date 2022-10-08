@@ -43,12 +43,11 @@ public class TexGroupComponent extends EditorComponent {
 		this.genFullheight();
 		updateholder.add(UpdateType.TEXGROUP_RENAMED, wrp -> { if(wrp.objs[0] == group) label.getTextState().setText(group.name); });
 		label.getStyle().setTextColor(ColorConstants.lightGray());
-		label.getStyle().getBackground().setColor(FMT.rgba(Settings.GROUP_NORMAL.value));
+		label.getStyle().getBackground().setColor(FMT.rgba(Settings.TEXTURE_GROUP.value));
 		label.getPosition().set(0, 0);
 		label.getSize().add(4, 0);
 		label.getStyle().setPaddingLeft(new Length<Float>(5f, LengthType.PIXEL));
 		Settings.applyBorderless(label);
-		this.getStyle().getBackground().setColor(FMT.rgba(Settings.GROUP_INVISIBLE.value));
 		this.add(new OptionLabel(this, 0, "texture.group.rename", () -> openRenameDialog()));
 		this.add(new OptionLabel(this, 1, "texture.group.resize", () -> openResizeDialog()));
 		this.add(new OptionLabel(this, 2, "texture.group.generate", () -> {}));
@@ -184,9 +183,9 @@ public class TexGroupComponent extends EditorComponent {
 	public static class OptionLabel extends Label {
 
 		public OptionLabel(TexGroupComponent com, int index, String string, Runnable run){
-			this.getTextState().setText(Translator.translate(string));
+			this.getTextState().setText(translate(string));
 			this.getStyle().setTextColor(ColorConstants.lightGray());
-			this.getStyle().getBackground().setColor(FMT.rgba(Settings.POLYGON_NORMAL.value));
+			this.getStyle().getBackground().setColor(FMT.rgba(Settings.TEXTURE_OPTION.value));
 			this.getStyle().setPaddingLeft(new Length<Float>(5f, LengthType.PIXEL));
 			Settings.applyBorderless(this);
 			setPosition(4, index * 21 + 26);
