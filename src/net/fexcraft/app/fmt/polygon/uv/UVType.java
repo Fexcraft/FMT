@@ -1,7 +1,5 @@
 package net.fexcraft.app.fmt.polygon.uv;
 
-import net.fexcraft.app.fmt.utils.Logging;
-
 public enum UVType {
 	
 	AUTOMATIC(0),
@@ -33,7 +31,6 @@ public enum UVType {
 	}
 	
 	public static UVType from(String string){
-		Logging.log("NF " + string);
 		switch(string){
 			case "offset":
 			case "offset_only":
