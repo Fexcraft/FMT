@@ -21,9 +21,10 @@ public class TextureTree extends Editor {
 		holder.add(UpdateType.TEXGROUP_ADDED, wrp -> addTexGroup(wrp.get(0)));
 		holder.add(UpdateType.TEXGROUP_REMOVED, wrp -> remTexGroup(wrp.get(0)));
 		UpdateHandler.registerHolder(holder);
-		this.add(new RunButton("editor.tree.texture.add_group", 7.5f, 30, 90, 24, () -> TextureManager.addGroup(null, true), false));
-		this.add(new RunButton("editor.tree.texture.auto_pos", 105, 30, 90, 24, () -> {}, false));//TODO
-		this.add(new RunButton("editor.tree.texture.reset_pos", 202.5f, 30, 90, 24, () -> AutoUVPositioner.runReset(false), false));
+		this.add(new RunButton("editor.tree.texture.add_group", 10, 30, 135, 24, () -> TextureManager.addGroup(null, true), false));
+		this.add(new RunButton("editor.tree.texture.auto_pos", 155, 30, 135, 24, () -> AutoUVPositioner.runAutoPos(), false));
+		this.add(new RunButton("editor.tree.texture.reset_pos", 10, 60, 135, 24, () -> AutoUVPositioner.runReset(false), false));
+		this.add(new RunButton("editor.tree.texture.reset_type", 155, 60, 135, 24, () -> AutoUVPositioner.runReset(true), false));
 	}
 
 	public TextureTree(String key, JsonMap obj){
@@ -32,7 +33,7 @@ public class TextureTree extends Editor {
 	
 	@Override
 	protected float topSpace(){
-		return 60f;
+		return 90f;
 	}
 
 	private void addTexGroup(TextureGroup group){
