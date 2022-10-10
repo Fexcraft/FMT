@@ -53,7 +53,7 @@ public class TexGroupComponent extends EditorComponent {
 		Settings.applyBorderless(label);
 		this.add(new OptionLabel(this, 0, "texture.group.rename", () -> openRenameDialog()));
 		this.add(new OptionLabel(this, 1, "texture.group.resize", () -> openResizeDialog()));
-		this.add(new OptionLabel(this, 2, "texture.group.generate", () -> {}));
+		this.add(new OptionLabel(this, 2, "texture.group.generate", () -> generate()));
 		this.add(new OptionLabel(this, 3, "texture.group.select", () -> openSelectDialog()));
 		pin.setImage(new StbBackedLoadableImage("./resources/textures/icons/component/edit.png"));
 	}
@@ -101,6 +101,18 @@ public class TexGroupComponent extends EditorComponent {
         dialog.getContainer().add(button1);
         //
         dialog.show(FMT.FRAME);
+	}
+
+	private void generate(){
+    	FMT.MODEL.groups().forEach(elm -> {
+    		if(elm.texgroup == null || elm.texgroup == group){
+        		elm.forEach(poly -> poly.paintTex(group.texture, null));
+    		}
+    	});
+    	group.texture.getImage().position(0);
+    	group.texture.save();
+    	group.texture.reload();
+    	FMT.MODEL.recompile();
 	}
 
 	private void openResizeDialog(){
