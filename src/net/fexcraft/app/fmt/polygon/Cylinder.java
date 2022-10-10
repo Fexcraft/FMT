@@ -3,9 +3,13 @@ package net.fexcraft.app.fmt.polygon;
 import static net.fexcraft.app.fmt.utils.JsonUtil.getVector;
 import static net.fexcraft.app.fmt.utils.JsonUtil.setVector;
 
+import java.util.ArrayList;
+
 import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
+import net.fexcraft.app.fmt.polygon.uv.CylFace;
+import net.fexcraft.app.fmt.polygon.uv.Face;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.AxisRotator;
@@ -115,6 +119,16 @@ public class Cylinder extends Polygon {
 			gen.set("seg_height", seg_height);
 		}
 		for(int i = 0; i < bools.length; i++) if(bools[i]) gen.removePolygon(i);
+		if(cuv.any()){
+			ArrayList<Integer> list = new ArrayList<>();
+			ArrayList<float[]> uv = new ArrayList<>();
+			for(int i = 0; i < 6; i++){
+				if(cuv.get(CylFace.values()[i]).detached()) list.add(i);
+				uv.add(cuv.get(CylFace.values()[i]).value());
+			}
+			gen.set("detached_uv", list);
+			gen.set("uv", uv);
+		}
 		return gen;
 	}
 
@@ -204,6 +218,11 @@ public class Cylinder extends Polygon {
 		cyl.seg_height = seg_height;
 		for(int i = 0; i < bools.length; i++) cyl.bools[i] = bools[i];
 		return poly;
+	}
+
+	@Override
+	public Face[] getUVFaces(){
+		return CylFace.values();
 	}
 
 }
