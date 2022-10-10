@@ -30,4 +30,19 @@ public class UVMap extends TreeMap<String, UVCoords> {
 		entrySet().forEach(entry -> poly.cuv.get(entry.getKey()).copy(entry.getValue()));
 	}
 
+	public boolean anyDetached(){
+		for(UVCoords coord : values()){
+			if(coord.detached()) return true;
+		}
+		return false;
+	}
+	
+	public boolean allDetached(){
+		for(Face face : poly.getUVFaces()){
+			if(!poly.isActive(face)) continue;
+			if(!get(face).detached()) return false;
+		}
+		return true;
+	}
+
 }
