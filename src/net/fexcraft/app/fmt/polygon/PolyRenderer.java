@@ -134,7 +134,7 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
     			obj.norms[nor++] = vec2.x;
     			obj.norms[nor++] = vec2.y;
     			obj.norms[nor++] = vec2.z;
-    			colarr = glo.polygon == null ? EMPTY : glo.polygon.getFaceColor(i);
+    			colarr = glo.polygon == null ? EMPTY : glo.polygon.getFaceColor(i).toFloatArray();
     			obj.colors[col++] = colarr[0];
     			obj.colors[col++] = colarr[1];
     			obj.colors[col++] = colarr[2];
