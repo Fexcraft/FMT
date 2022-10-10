@@ -67,8 +67,8 @@ public class Marker extends Polygon {
 	}
 
 	@Override
-	public float[] getFaceColor(int i){
-		return rgb.toFloatArray();
+	public RGB getFaceColor(int i){
+		return rgb;
 	}
 	
 	@Override
@@ -128,6 +128,11 @@ public class Marker extends Polygon {
 		marker.detached = detached;
 		marker.scale = scale;
 		return poly;
+	}
+
+	@Override
+	public float[][][] newUV(boolean with_offsets, boolean exclude_detached){
+		return new float[0][][];
 	}
 
 }
