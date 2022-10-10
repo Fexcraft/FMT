@@ -1,8 +1,12 @@
 package net.fexcraft.app.fmt.polygon;
 
+import java.util.ArrayList;
+
 import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
+import net.fexcraft.app.fmt.polygon.uv.BoxFace;
+import net.fexcraft.app.fmt.polygon.uv.Face;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.RGB;
@@ -64,6 +68,16 @@ public class Box extends Polygon {
 			.set("height", size.y)
 			.set("depth", size.z);
 		for(int i = 0; i < sides.length; i++) if(sides[i]) gen.removePolygon(i);
+		if(cuv.any()){
+			ArrayList<Integer> list = new ArrayList<>();
+			ArrayList<float[]> uv = new ArrayList<>();
+			for(int i = 0; i < 6; i++){
+				if(cuv.get(BoxFace.values()[i]).detached()) list.add(i);
+				uv.add(cuv.get(BoxFace.values()[i]).value());
+			}
+			gen.set("detached_uv", list);
+			gen.set("uv", uv);
+		}
 		return gen;
 	}
 
@@ -104,6 +118,11 @@ public class Box extends Polygon {
 		box.size.set(size);
 		for(int i = 0; i < sides.length; i++) box.sides[i] = sides[i];
 		return poly;
+	}
+
+	@Override
+	public Face[] getUVFaces(){
+		return BoxFace.values();
 	}
 
 }
