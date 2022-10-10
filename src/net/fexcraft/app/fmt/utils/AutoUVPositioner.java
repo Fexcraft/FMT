@@ -1,9 +1,13 @@
 package net.fexcraft.app.fmt.utils;
 
+import static net.fexcraft.app.fmt.utils.Logging.log;
 import static net.fexcraft.app.fmt.utils.Translator.format;
 import static net.fexcraft.app.fmt.utils.Translator.translate;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.stream.Collectors;
 
 import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.component.CheckBox;
@@ -17,7 +21,12 @@ import org.liquidengine.legui.listener.MouseClickEventListener;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.Group;
+import net.fexcraft.app.fmt.polygon.Polygon;
+import net.fexcraft.app.fmt.polygon.uv.Face;
+import net.fexcraft.app.fmt.polygon.uv.UVCoords;
+import net.fexcraft.app.fmt.polygon.uv.UVType;
 import net.fexcraft.app.fmt.texture.Texture;
+import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.ui.GenericDialog;
 import net.fexcraft.lib.common.math.RGB;
 
@@ -90,12 +99,12 @@ public class AutoUVPositioner {
 		dialog.show(FMT.FRAME);
 	}
 
-	public static void tryAutoPos(){
+	public static void runAutoPos(){
 		int width = 540;
 		Dialog dialog = new Dialog(translate("texture_autopos.autopos.dialog"), width + 20, 210);
 		Label label0 = new Label(translate("texture_autopos.autopos.info"), 10, 10, width, 20);
 		label0.getStyle().setFont("roboto-bold");
-		Label label1 = new Label(translate("texture_autopos.autopos.polygroup"), 10, 40, width / 20, 20);
+		Label label1 = new Label(translate("texture_autopos.autopos.group"), 10, 40, width / 20, 20);
 		SelectBox<String> texture = new SelectBox<>(10 + width / 2, 40, width / 2, 20);
 		texture.addElement("all-groups");
 		for(Group group : FMT.MODEL.groups()) texture.addElement(group.id);
@@ -138,7 +147,7 @@ public class AutoUVPositioner {
 	}
 
 	private static void startAutoPos(){
-		/*new Thread("AutoPosThread"){
+		new Thread("AutoPosThread"){
 			@Override
 			public void run(){
 				log("STARTING AUTOPOS THREAD");
@@ -168,22 +177,22 @@ public class AutoUVPositioner {
 					try{
 						CoordContainer corcon = list.get(last);
 						last++;
-						showPercentageDialog(corcon.wrapper.getTurboList().id, corcon.name(), getPercent(last, list.size()));
+						showPercentDialog(corcon.polygon.group().id, corcon.name(), getPercent(last, list.size()));
 						if(corcon.coords == null || corcon.coords.length == 0){
-							log("skipping [" + corcon.wrapper.getTurboList().id + ":" + corcon.name() + "] (missing texture definition)");
+							log("skipping [" + corcon.polygon.group().id + ":" + corcon.name() + "] (missing texture definition)");
 							continue;
 						}
 						boolean whole = !corcon.poly();
-						if((corcon.wrapper.textureX > -1 && corcon.wrapper.textureY > -1) && (!ALL || (!DETACH && !whole && corcon.wrapper.getUVCoords(corcon.face).absolute()))){
-							log("skipping [" + corcon.wrapper.getTurboList().id + ":" + corcon.name() + "] (texture not -1x -1y)");
+						if((corcon.polygon.textureX > -1 && corcon.polygon.textureY > -1) && (!ALL || (!DETACH && !whole && corcon.polygon.cuv.get(corcon.face).detached()))){
+							log("skipping [" + corcon.polygon.group().id + ":" + corcon.name() + "] (texture not -1x -1y)");
 							if(!corcon.exclude && whole){
-								corcon.wrapper.burnToTexture(texture, null);
+								corcon.polygon.paintTex(texture, null);
 							}
 							else if(corcon.exclude){
-								corcon.wrapper.burnToTexture(texture, null, corcon.coords, false, null);
+								corcon.polygon.paintTex(texture, null, corcon.coords, false, null);
 							}
 							else{
-								corcon.wrapper.burnToTexture(texture, null, corcon.coords, true, corcon.face.index());
+								corcon.polygon.paintTex(texture, null, corcon.coords, true, corcon.face.index());
 							}
 							Thread.sleep(10);
 							continue;
@@ -194,37 +203,37 @@ public class AutoUVPositioner {
 							if(pass) break;
 							for(int xar = 0; xar < sizex; xar++){
 								if(check(corcon.coords, xar, yar)){
-									log("[" + corcon.wrapper.getTurboList().id + ":" + corcon.name() + "] >> " + xar + "x, " + yar + "y;");
+									log("[" + corcon.polygon.group().id + ":" + corcon.name() + "] >> " + xar + "x, " + yar + "y;");
 									if(!corcon.poly()){
-										corcon.wrapper.textureX = xar;
-										corcon.wrapper.textureY = yar;
-										//wrapper.texpos = wrapper.newTexturePosition(true, false);
-										corcon.wrapper.burnToTexture(texture, null);
+										corcon.polygon.textureX = xar;
+										corcon.polygon.textureY = yar;
+										//polygon.texpos = polygon.newTexturePosition(true, false);
+										corcon.polygon.paintTex(texture, null);
 									}
 									else{
-										UVCoords coords = corcon.wrapper.getUVCoords(corcon.face);
-										FaceUVType type = coords.type();
+										UVCoords coords = corcon.polygon.cuv.get(corcon.face);
+										UVType type = coords.type();
 										float[] arr = type.automatic() ? new float[2] : coords.value();
 										switch(type){
 											case AUTOMATIC:
-											case ABSOLUTE:
-											case OFFSET_ONLY:{
-												type = FaceUVType.ABSOLUTE;
+											case DETACHED:
+											case OFFSET:{
+												type = UVType.DETACHED;
 												arr[0] = xar;
 												arr[1] = yar;
 												break;
 											}
-											case ABSOLUTE_ENDS:
+											case DETACHED_ENDS:
 											case OFFSET_ENDS:{
 												float minx = arr[0], miny = arr[1];
 												arr[0] += xar - minx;
 												arr[1] += yar - miny;
 												arr[2] += xar - minx;
 												arr[3] += yar - miny;
-												type = FaceUVType.ABSOLUTE_ENDS;
+												type = UVType.DETACHED_ENDS;
 												break;
 											}
-											case ABSOLUTE_FULL:
+											case DETACHED_FULL:
 											case OFFSET_FULL:{
 												float minx = arr[2], miny = arr[3];
 												arr[0] += xar - minx;
@@ -235,13 +244,13 @@ public class AutoUVPositioner {
 												arr[5] += yar - miny;
 												arr[6] += xar - minx;
 												arr[7] += yar - miny;
-												type = FaceUVType.ABSOLUTE_FULL;
+												type = UVType.DETACHED_FULL;
 												break;
 											}
 										}
 										coords.set(type).value(arr);
-										float[][] newarr = corcon.wrapper.newTexturePosition(true, false)[corcon.face.index()];
-										corcon.wrapper.burnToTexture(texture, null, new float[][][]{ newarr }, true, corcon.face.index());
+										float[][] newarr = corcon.polygon.newUV(true, false)[corcon.face.index()];
+										corcon.polygon.paintTex(texture, null, new float[][][]{ newarr }, true, corcon.face.index());
 									}
 									pass = true;
 									Thread.sleep(10);
@@ -250,25 +259,24 @@ public class AutoUVPositioner {
 							}
 						}
 						if(!pass){
-							log("[" + corcon.wrapper.getTurboList().id + ":" + corcon.name() + "] >> could not be mapped;");
+							log("[" + corcon.polygon.group().id + ":" + corcon.name() + "] >> could not be mapped;");
 						}
 					}
 					catch(Exception e){
 						log(e);
-						// FMTB.showDialogbox("Autoposition failed with Exception", "See Console for details.", "ok", null, DialogBox.NOTHING, null);
 					}
 				}
 				if(dialog != null) dialog.close();
-				DialogBox.showOK("texture_autopos.autopos.title", () -> FMTB.MODEL.recompile(), null, "texture_autopos.autopos.complete");
+				GenericDialog.showOK("texture_autopos.autopos.title", () -> FMT.MODEL.recompile(), null, "texture_autopos.autopos.complete");
 				last = (HALT = (list = null) == null) ? -1 : 0;
 				texture = null;
 				log("STOPPING AUTOPOS THREAD");
 				return;
 			}
-		}.start();*/
+		}.start();
 	}
 
-	private static void showPercentageDialog(String group, String polygon, int percent){
+	private static void showPercentDialog(String group, String polygon, int percent){
 		if(dialog == null) dialog = new ProgressDialog();
 		dialog.progressbar.setValue(percent);
 		dialog.label.getTextState().setText(format("texture_autopos.autopos.processing", group, polygon));
@@ -314,16 +322,16 @@ public class AutoUVPositioner {
 	}
 
 	private static ArrayList<CoordContainer> getSortedList(boolean all){
-		ArrayList<CoordContainer> arrlist = new ArrayList<>();
-		/*if(selected == null){
+		ArrayList<CoordContainer> list = new ArrayList<>();
+		if(selected == null){
 			for(Group group : FMT.MODEL.groups()){
-				addAll(arrlist, group);
+				addAll(list, group);
 			}
 		}
 		else{
-			addAll(arrlist, selected);
+			addAll(list, selected);
 		}
-		arrlist.sort(new java.util.Comparator<CoordContainer>(){
+		list.sort(new java.util.Comparator<CoordContainer>(){
 			@Override
 			public int compare(CoordContainer left, CoordContainer righ){
 				left.initMinMax();
@@ -336,37 +344,37 @@ public class AutoUVPositioner {
 				return Float.compare(x0, x1);
 			}
 		});
-		Collections.reverse(arrlist);
+		Collections.reverse(list);
 		if(!all){
-			ArrayList<CoordContainer> pri = (ArrayList<CoordContainer>)arrlist.stream().filter(con -> con.positioned()).collect(Collectors.toList());
-			ArrayList<CoordContainer> sec = (ArrayList<CoordContainer>)arrlist.stream().filter(con -> !con.positioned()).collect(Collectors.toList());
-			arrlist.clear();
-			arrlist.addAll(pri);
-			arrlist.addAll(sec);
-		}*/
-		return arrlist;
+			ArrayList<CoordContainer> pri = (ArrayList<CoordContainer>)list.stream().filter(con -> con.positioned()).collect(Collectors.toList());
+			ArrayList<CoordContainer> sec = (ArrayList<CoordContainer>)list.stream().filter(con -> !con.positioned()).collect(Collectors.toList());
+			list.clear();
+			list.addAll(pri);
+			list.addAll(sec);
+		}
+		return list;
 	}
 
-	private static void addAll(ArrayList<CoordContainer> arrlist, Group group){
-		/*for(PolygonWrapper wrapper : group){
-			if(!wrapper.getType().isTexturable()) continue;
-			boolean detach = DETACH && (wrapper.getType() == ShapeType.BOX || wrapper.getType() == ShapeType.SHAPEBOX);
-			if(detach || wrapper.anyFaceUVAbsolute()){
-				for(UVCoords coord : wrapper.cuv.values()){
-					if(!wrapper.isFaceActive(coord.face())) continue;//face is disabled
-					if(detach || coord.absolute()){
-						arrlist.add(new CoordContainer(wrapper, coord.side(), detach && !coord.absolute()));
+	private static void addAll(ArrayList<CoordContainer> list, Group group){
+		for(Polygon polygon : group){
+			if(!polygon.getShape().isTexturable()) continue;
+			boolean detach = DETACH && polygon.getShape().isRectagular();
+			if(detach || polygon.cuv.anyDetached()){
+				for(UVCoords coord : polygon.cuv.values()){
+					if(!polygon.isActive(coord.face())) continue;//face is disabled
+					if(detach || coord.detached()){
+						list.add(new CoordContainer(polygon, coord.side(), detach && !coord.detached()));
 					}
 				}
-				if(!detach && !wrapper.isAllFaceUVAbsolute()){
-					arrlist.add(new CoordContainer(wrapper, true));
+				if(!detach && !polygon.cuv.allDetached()){
+					list.add(new CoordContainer(polygon, true));
 				}
-				if(detach) wrapper.textureX = wrapper.textureY = -1;
+				if(detach) polygon.textureX = polygon.textureY = -1;
 			}
 			else{
-				arrlist.add(new CoordContainer(wrapper, false));
+				list.add(new CoordContainer(polygon, false));
 			}
-		}*/
+		}
 	}
 
 	private static int getPercent(int i, int all){
@@ -379,7 +387,7 @@ public class AutoUVPositioner {
 		private Label label;
 
 		public ProgressDialog(){
-			super(translate("texture_autopos.autopos.title"), 400, 90);
+			super(translate("texture_autopos.autopos.dialog"), 400, 90);
 			label = new Label(format("texture_autopos.autopos.processing", 0, "initializing"), 10, 10, 340, 20);
 			dialog = this;
 			dialog.setResizable(false);
@@ -398,21 +406,21 @@ public class AutoUVPositioner {
 	}
 	
 	public static class CoordContainer {
-		
-		/*public float[][][] coords;
-		public Face face;
-		public PolygonWrapper wrapper;
+
 		public float min_x, min_y, max_x, max_y;
 		public boolean detached, exclude;
+		public float[][][] coords;
+		public Polygon polygon;
+		public Face face;
 		
-		public CoordContainer(PolygonWrapper wrapper, boolean excempt){
-			this.wrapper = wrapper;
-			coords = wrapper.newTexturePosition(true, exclude = excempt);
+		public CoordContainer(Polygon polygon, boolean excempt){
+			this.polygon = polygon;
+			coords = polygon.newUV(true, exclude = excempt);
 		}
 
-		public CoordContainer(PolygonWrapper wrapper, Face key, boolean detach){
-			this.wrapper = wrapper;
-			coords = new float[][][]{ wrapper.newTexturePosition(true, false)[(face = key).index()] };
+		public CoordContainer(Polygon polygon, Face key, boolean detach){
+			this.polygon = polygon;
+			coords = new float[][][]{ polygon.newUV(true, false)[(face = key).index()] };
 			if(detached = detach){
 				coords[0][1][0] -= coords[0][0][0];
 				coords[0][1][1] -= coords[0][0][1];
@@ -433,16 +441,16 @@ public class AutoUVPositioner {
 		}
 
 		public boolean positioned(){
-			return wrapper.textureX > -1 && wrapper.textureY >= -1 && !detached;
+			return polygon.textureX > -1 && polygon.textureY >= -1 && !detached;
 		}
 
 		public String name(){
-			return wrapper.name() + (face == null ? ";" : ":" + face.id());
+			return polygon.name() + (face == null ? ";" : ":" + face.id());
 		}
 
 		public boolean poly(){
 			return face != null;
-		}*/
+		}
 		
 	}
 	
