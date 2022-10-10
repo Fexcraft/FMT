@@ -12,9 +12,15 @@ import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.attributes.PolyVal.ValAxe;
 import net.fexcraft.app.fmt.attributes.UpdateHandler;
 import net.fexcraft.app.fmt.attributes.UpdateType;
+import net.fexcraft.app.fmt.polygon.uv.Face;
+import net.fexcraft.app.fmt.polygon.uv.NoFace;
+import net.fexcraft.app.fmt.polygon.uv.UVCoords;
+import net.fexcraft.app.fmt.polygon.uv.UVMap;
+import net.fexcraft.app.fmt.polygon.uv.UVType;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.fmt.utils.Translator;
+import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.frl.Polyhedron;
@@ -35,12 +41,14 @@ public abstract class Polygon {
 	public boolean selected;
 	public boolean mirror;
 	public boolean flip;
+	public UVMap cuv;
 	
 	public Polygon(Model model){
 		this.model = model == null ? FMT.MODEL : model;
 		pos = new Vector3f();
 		off = new Vector3f();
 		rot = new Vector3f();
+		cuv = new UVMap(this);
 		visible = true;
 	}
 	
@@ -50,13 +58,24 @@ public abstract class Polygon {
 		pos = getVector(obj, "pos_%s", 0f);
 		off = getVector(obj, "off_%s", 0f);
 		rot = getVector(obj, "rot_%s", 0f);
+		cuv = new UVMap(this);
 		visible = obj.get("visible", true);
 		textureX = obj.get("texture_x", -1);
 		textureY = obj.get("texture_y", -1);
 		mirror = obj.get("mirror", false);
 		flip = obj.get("flip", false);
 		if(obj.has("cuv")){
-			//TODO
+			obj.getMap("cuv").entries().forEach(entry -> {
+				if(!isValidUVFace(entry.getKey())) return;
+				JsonArray array = entry.getValue().asArray();
+				UVType type = UVType.validate(array.get(0).string_value());
+				if(type.automatic()) return;
+				UVCoords coord = cuv.get(Face.get(entry.getKey(), true)).set(type);
+				for(int i = 0; i < type.length; i++){
+					if(i + 1 > array.size()) break;
+					coord.value()[i] = array.get(i + 1).float_value();
+				}
+			});
 		}
 	}
 
@@ -71,7 +90,20 @@ public abstract class Polygon {
 		setVector(obj, "rot_%s", rot);
 		if(mirror) obj.add("mirror", true);
 		if(flip) obj.add("flip", true);
-		//TODO cuv
+		if(cuv.any()){
+			JsonMap cap = new JsonMap();
+			cuv.entrySet().forEach(entry -> {
+				UVType type = entry.getValue().type();
+				if(type.automatic()) return;
+				JsonArray array = new JsonArray();
+				array.add(type.name().toLowerCase().toString());
+				for(int i = 0; i < entry.getValue().length(); i++){
+					array.add(entry.getValue().value()[i]);
+				}
+				cap.add(entry.getKey(), array);
+			});
+			obj.add("cuv", cap);
+		}
 		if(!export){
 			obj.add("visible", visible);
 		}
@@ -164,7 +196,7 @@ public abstract class Polygon {
 		poly.mirror = mirror;
 		poly.flip = flip;
 		if(name != null) poly.name = String.format(Settings.COPIED_POLYGON.value, name);
-		//TODO cuv
+		cuv.copyTo(poly);
 		return copyInternal(poly);
 	}
 	
@@ -291,6 +323,24 @@ public abstract class Polygon {
 			default: return null;
 		}
 		return null;
+	}
+
+	public Face[] getUVFaces(){
+		return NoFace.values();
+	}
+	
+	public boolean isValidUVFace(String str){
+		for(Face face : getUVFaces()){
+			if(face.id().equals(str)) return true;
+		}
+		return false;
+	}
+
+	public boolean isValidUVFace(Face other){
+		for(Face face : getUVFaces()){
+			if(face == other) return true;
+		}
+		return false;
 	}
 
 }
