@@ -4,6 +4,7 @@ import static net.fexcraft.app.fmt.attributes.UpdateHandler.update;
 import static net.fexcraft.app.fmt.attributes.UpdateType.POLYGON_ADDED;
 import static net.fexcraft.app.fmt.utils.JsonUtil.getVector;
 import static net.fexcraft.app.fmt.utils.JsonUtil.setVector;
+import static net.fexcraft.app.fmt.utils.Logging.log;
 
 import org.joml.Vector3f;
 
@@ -18,6 +19,8 @@ import net.fexcraft.app.fmt.polygon.uv.UVCoords;
 import net.fexcraft.app.fmt.polygon.uv.UVMap;
 import net.fexcraft.app.fmt.polygon.uv.UVType;
 import net.fexcraft.app.fmt.settings.Settings;
+import net.fexcraft.app.fmt.texture.Texture;
+import net.fexcraft.app.fmt.texture.TexturePainter;
 import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.app.json.JsonArray;
@@ -232,7 +235,7 @@ public abstract class Polygon {
 	protected static RGB blu0 = new RGB(  0,   0, 150);
 	protected static RGB gray = new RGB( 89,  89,  89);
 
-	public abstract float[] getFaceColor(int idx);
+	public abstract RGB getFaceColor(int idx);
 
 	public void render(){
 		glm.render();
@@ -341,6 +344,94 @@ public abstract class Polygon {
 			if(face == other) return true;
 		}
 		return false;
+	}
+
+	public abstract float[][][] newUV(boolean with_offsets, boolean exclude_detached);
+
+	public boolean isActive(Face face){
+		for(Face fuv : getUVFaces()){
+			return fuv == face;
+		}
+		return false;
+	}
+	
+	public boolean paintTex(Texture tex, Integer face){
+		return paintTex(tex, face, null, false, null);
+	}
+	
+	public boolean paintTex(Texture tex, Integer face, float[][][] coords, boolean detached, Integer sface){
+		if(coords == null) coords = newUV(true, false);
+		if(coords == null || coords.length == 0){
+			return false;
+		}
+		if(face == null || face == -1){
+			boolean negative = face != null;
+			if(sface != null){
+				float[][] ends = coords[0];
+				if(ends == null || ends.length == 0){
+					log("error: requested single-face paint, but provided no coordinates");
+					return false;
+				}
+				byte[] color = (negative ? TexturePainter.getCurrentColor() : getFaceColor(sface).toByteArray());
+				paint(tex, ends, color, detached);
+			}
+			else{
+				for(UVCoords coord : cuv.values()){
+					if(!isActive(coord.side())) continue;//disabled
+					float[][] ends = coords[coord.side().index()];
+					if(ends == null || ends.length == 0){
+						log("paint data for face " + coord.side().id() + " not found, skipping");
+						continue;
+					}
+					byte[] color = (negative ? TexturePainter.getCurrentColor() : getFaceColor(coord.side().index()).toByteArray());
+					paint(tex, ends, color, coord.detached());
+				}
+			}
+		}
+		else{
+			if(getShape().isCylinder()){
+				int segs = ((Cylinder)this).segments;
+				float[][] ends = null;
+				if(face < segs){
+					ends = coords[0];
+				}
+				else if(face < (segs * 2)){
+					ends = coords[2];
+				}
+				else if(face < (segs * 3)){
+					ends = coords[1];
+				} else return false;
+				if(ends == null || ends.length == 0) return false;
+				paint(tex, ends, TexturePainter.getCurrentColor(), false);
+			}
+			else if(getShape().isTexturable()){
+				float[][] ends = coords[face];
+				if(ends == null || ends.length == 0) return false;
+				paint(tex, ends, TexturePainter.getCurrentColor(), cuv.get(getUVFaces()[face]).detached());
+			}
+			else{
+				log("There is no known way of how to handle texture burning of '" + getShape().name() + "'!");
+			}
+		}
+		return true;
+	}
+	
+	private void paint(Texture tex, float[][] ends, byte[] bs, boolean detached){
+		float scale_x = tex.getWidth() / (glm.glObj.grouptex ? group().texSizeX : model().texSizeX);
+		float scale_y = tex.getHeight() / (glm.glObj.grouptex ? group().texSizeY : model().texSizeY);
+		float tx = detached ? 0 : textureX;
+		float ty = detached ? 0 : textureY;
+		float[][] ands = { { ends[0][0] * scale_x, ends[0][1] * scale_y }, { ends[1][0] * scale_x, ends[1][1] * scale_y } };
+		float texx = tx * scale_x, texy = ty * scale_y;
+		for(float x = ands[0][0]; x < ands[1][0]; x += .5f){
+			for(float y = ands[0][1]; y < ands[1][1]; y += .5f){
+				int xa = (int)(x + texx), ya = (int)(y + texy);
+				if(xa >= 0 && xa < tex.getWidth() && ya >= 0 && ya < tex.getHeight()){
+					tex.set(xa, ya, bs);
+				}
+				else continue;
+			}
+		}
 	}
 
 }
