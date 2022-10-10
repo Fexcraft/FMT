@@ -23,7 +23,7 @@ public class TextureTree extends Editor {
 		UpdateHandler.registerHolder(holder);
 		this.add(new RunButton("editor.tree.texture.add_group", 7.5f, 30, 90, 24, () -> TextureManager.addGroup(null, true), false));
 		this.add(new RunButton("editor.tree.texture.auto_pos", 105, 30, 90, 24, () -> {}, false));//TODO
-		this.add(new RunButton("editor.tree.texture.reset_pos", 202.5f, 30, 90, 24, () -> AutoUVPositioner.runReset(), false));
+		this.add(new RunButton("editor.tree.texture.reset_pos", 202.5f, 30, 90, 24, () -> AutoUVPositioner.runReset(false), false));
 	}
 
 	public TextureTree(String key, JsonMap obj){
