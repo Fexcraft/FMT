@@ -10,9 +10,11 @@ import org.joml.Vector3f;
 import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.polygon.uv.CylFace;
 import net.fexcraft.app.fmt.polygon.uv.Face;
+import net.fexcraft.app.fmt.polygon.uv.UVCoords;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.AxisRotator;
+import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.frl.gen.AxisDir;
 import net.fexcraft.lib.frl.gen.Generator;
@@ -133,21 +135,21 @@ public class Cylinder extends Polygon {
 	}
 
 	@Override
-	public float[] getFaceColor(int idx){
+	public RGB getFaceColor(int idx){
 		int segs = seglimit < segments && seglimit > 0 ? seglimit : segments;
 		if(idx < segs){
-			return blu0.toFloatArray();
+			return blu0;
 		}
 		if(idx < segs * 2){
-			return blu1.toFloatArray();
+			return blu1;
 		}
 		if(idx < segs * 3){
-			return red1.toFloatArray();
+			return red1;
 		}
 		if(idx < segs * 4){
-			return red0.toFloatArray();
+			return red0;
 		}
-		return (idx % 2 == 1 ? gre1 : gre0).toFloatArray();
+		return idx % 2 == 1 ? gre1 : gre0;
 	}
 	
 	public float getValue(PolygonValue polyval){
@@ -223,6 +225,167 @@ public class Cylinder extends Polygon {
 	@Override
 	public Face[] getUVFaces(){
 		return CylFace.values();
+	}
+
+	@Override
+	public float[][][] newUV(boolean include_offsets, boolean exclude_detached){
+		float dia = (int)Math.floor(radius * 2F);
+		float the = (int)Math.floor(length);
+		if(radius < 1){
+			int rad = radius < 0.5 ? 1 : 2;
+			if(dia < rad) dia = rad;
+		}
+		if(length < 1) the = 1;
+		else if(length % 1 != 0){
+			the = (int)length + (length % 1 > 0.5f ? 1 : 0);
+		}
+		float dia2 = dia + dia;
+		float[][][] vecs = new float[6][][];
+		float height = radial ? detached(0) ? 0 : seg_height : dia;
+		if(!bools[0] && !detached(0, exclude_detached)){
+			if(radial){
+				vecs[0] = new float[][]{
+					new float[]{ 0, 0 },
+					new float[]{ (seg_width * segments), seg_height }
+				};
+			}
+			else{
+				vecs[0] = new float[][]{
+					new float[]{ 0, 0 },
+					new float[]{ dia, dia }
+				};
+			}
+			if(include_offsets && !cuv.get(CylFace.CYL_BASE).automatic()){
+				vecs[0] = gets(CylFace.CYL_BASE, vecs[0]);
+			}
+		}
+		if(!bools[1] && !detached(1, exclude_detached)){
+			if(radial){
+				vecs[1] = new float[][]{
+					new float[]{ 0, height },
+					new float[]{ (seg_width * segments), seg_height }
+				};
+				height += seg_height;
+			}
+			else{
+				boolean det = detached(0);
+				vecs[1] = new float[][]{
+					new float[]{ det ? 0 : dia, 0 },
+					new float[]{ (det ? 0 : dia) + dia, 0 + dia }
+				};
+			}
+			if(include_offsets && !cuv.get(CylFace.CYL_TOP).automatic()){
+				vecs[1] = gets(CylFace.CYL_TOP, vecs[1]);
+			}
+		}
+		if(!bools[2] && !detached(2, exclude_detached)){
+			vecs[2] = new float[][]{
+				new float[]{ 0, height },
+				new float[]{ dia2, height + the }
+			};
+			if(include_offsets && !cuv.get(CylFace.CYL_OUTER).automatic()){
+				vecs[2] = gets(CylFace.CYL_OUTER, vecs[2]);
+			}
+		}
+		if(radius2 != 0f){
+			if(!bools[3] && !detached(3, exclude_detached)){
+				float hei = detached(2) ? 0 : the;
+				vecs[3] = new float[][]{
+					new float[]{ 0, height + hei },
+					new float[]{ dia2, height + hei + the }
+				};
+				if(include_offsets && !cuv.get(CylFace.CYL_INNER).automatic()){
+					vecs[3] = gets(CylFace.CYL_INNER, vecs[3]);
+				}
+			}
+			if(seglimit > 0 && seglimit < segments){
+				float seg = radius - radius2;
+				if(seg < 1) seg = 1;
+				else if(seg % 1 != 0){
+					seg = (int)seg + (seg % 1 > 0.5f ? 1 : 0);
+				}
+				float beg = detached(2) && detached(3) ? 0 : dia2;
+				if(!bools[4] && !detached(4, exclude_detached)){
+					vecs[4] = new float[][]{
+						new float[]{ beg, height },
+						new float[]{ beg + seg, height + the }
+					};
+					if(include_offsets && !cuv.get(CylFace.SEG_SIDE_0).automatic()){
+						vecs[4] = gets(CylFace.SEG_SIDE_0, vecs[4]);
+					}
+				}
+				if(!bools[5] && !detached(5, exclude_detached)){
+					float shi = detached(2) || detached(3) ? seg : 0;
+					float hai = detached(2) || detached(3) ? 0 : the;
+					vecs[5] = new float[][]{
+						new float[]{ beg + shi, height + hai },
+						new float[]{ beg + shi + seg, height + hai + the }
+					};
+					if(include_offsets && !cuv.get(CylFace.SEG_SIDE_1).automatic()){
+						vecs[5] = gets(CylFace.SEG_SIDE_1, vecs[5]);
+					}
+				}
+			}
+			else{
+				vecs[4] = new float[][]{ { 0, 0 }, { 0, 0 } };
+				vecs[5] = new float[][]{ { 0, 0 }, { 0, 0 } };
+			}
+		}
+		else{
+			vecs[3] = new float[][]{ { 0, 0 }, { 0, 0 } };
+			vecs[4] = new float[][]{ { 0, 0 }, { 0, 0 } };
+			vecs[5] = new float[][]{ { 0, 0 }, { 0, 0 } };
+		}
+		return vecs;
+	}
+
+	private boolean detached(int index, boolean exclude_detached){
+		return exclude_detached && cuv.get(CylFace.values()[index]).detached();
+	}
+
+	private boolean detached(int i){
+		return bools[i] || cuv.get(CylFace.values()[i]).detached();
+	}
+	
+	private float[][] gets(Face face, float[][] def){
+		UVCoords coords = cuv.get(face);
+		float[] arr = coords.value();
+		float[][] res = null;
+		switch(coords.type()){
+			case DETACHED:
+			case OFFSET:{
+				def[1][0] -= def[0][0];
+				def[1][1] -= def[0][1];
+				def[0][0] = def[0][1] = 0;
+				res = new float[][]{
+					new float[]{ def[0][0] + arr[0], def[0][1] + arr[1] },
+					new float[]{ def[1][0] + arr[0], def[1][1] + arr[1] }
+				};
+				break;
+			}
+			default: return null;
+		}
+		return res;
+	}
+
+	@Override
+	public boolean isActive(Face face){
+		if(face instanceof CylFace == false) return false;
+		switch((CylFace)face){
+			case CYL_BASE:
+				return !bools[0];
+			case CYL_TOP:
+				return !bools[1];
+			case CYL_OUTER:
+				return !bools[2];
+			case CYL_INNER:
+				return radius2 != 0f && !bools[3];
+			case SEG_SIDE_0:
+			case SEG_SIDE_1:
+				return radius2 != 0f && (seglimit > 0 && seglimit < segments);
+			default:
+				return false;
+		}
 	}
 
 }
