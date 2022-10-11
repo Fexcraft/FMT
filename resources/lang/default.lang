@@ -25,7 +25,7 @@ toolbar.file.donate=Donate!
 toolbar.file.exit=Exit
 ## Editors
 toolbar.editors=Editors
-toolbar.editors.new=Add/New Editor
+toolbar.editors.new=Add new Editor
 toolbar.trees=Trees
 ## Polygons
 toolbar.polygons=Polygons
@@ -198,6 +198,9 @@ editor.component.folder.desc=Component offering a file-tree view of a specific f
 editor.component.folder.refresh=Refresh
 editor.component.folder.select=Select
 editor.component.folder.select.dialog=Select a folder to display.
+editor.component.painter.current.name=Current Painter Color
+editor.component.painter.current.desc=Component to see current color/s active in the painter utils as well as a quick way to update them.
+editor.component.painter.current.color=Primary / Secondary
 
 # Generic Dialogs
 dialog.title.default=Generic Dialog
