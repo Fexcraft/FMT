@@ -381,6 +381,8 @@ public class Settings {
 		editor.addComponent(new MultiplierComponent());
 		editor.addComponent(new ModelGeneral());
 		editor.addComponent(new ModelExports());
+		editor = new Editor("painter", "Painting Utils", false, true);
+		editor.addComponent(new CurrentColor());
 		//
 		Editor.EDITORS.get("polygon_editor").show();
 	}
