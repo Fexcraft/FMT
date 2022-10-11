@@ -140,6 +140,7 @@ public class EditorComponent extends Component {
 		REGISTRY.put("model.export_values", ModelExports.class);
 		REGISTRY.put("multiplier", MultiplierComponent.class);
 		REGISTRY.put("folder", FolderComponent.class);
+		REGISTRY.put("painter.current", CurrentColor.class);
 	}
 
 	public EditorComponent load(JsonMap map){
