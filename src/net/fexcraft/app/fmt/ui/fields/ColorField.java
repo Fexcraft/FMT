@@ -110,7 +110,7 @@ public class ColorField extends TextInput implements Field {
 		this.setting = setting;
 	}
 	
-	public ColorField(Component root, BiConsumer<Integer, Boolean> update, int x, int y, int w, int h){
+	public ColorField(Component root, BiConsumer<Integer, Boolean> update, float x, float y, float w, float h){
 		super("#ffffff", x + (root == null ? 0 : h - 2), y, root == null ? w : w - 35 - h - 2, h);
 		Settings.applyBorderless(this);
 		Field.setupHoverCheck(this);
@@ -173,7 +173,9 @@ public class ColorField extends TextInput implements Field {
 
 	@Override
 	public ColorField apply(float val){
-		getTextState().setText("#" + Integer.toHexString(value = (int)val));
+		String str = Integer.toHexString(value = (int)val);
+		while(str.length() < 6) str = "0" + str;
+		getTextState().setText("#" + str);
 		setCaretPosition(getTextState().getText().length());
 		if(panel != null) panel.getStyle().getBackground().setColor(FMT.rgba((int)val));
 		return this;
