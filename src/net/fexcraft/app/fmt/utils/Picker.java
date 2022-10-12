@@ -7,8 +7,11 @@ import java.util.function.Consumer;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.attributes.UpdateHandler;
+import net.fexcraft.app.fmt.attributes.UpdateType;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Polygon;
+import net.fexcraft.app.fmt.texture.TexturePainter;
 
 public class Picker {
 	
@@ -31,7 +34,7 @@ public class Picker {
 	
 	public static enum PickType {
 		
-		NONE, POLYGON, FACE, COLOR;
+		NONE, POLYGON, FACE, COLOR1, COLOR2;
 		
 		public boolean pick(){
 			return this != NONE;
@@ -46,7 +49,7 @@ public class Picker {
 		}
 		
 		public boolean color(){
-			return this == COLOR;
+			return this == COLOR1 || this == COLOR2;
 		}
 		
 	}
@@ -80,6 +83,7 @@ public class Picker {
 	public static void reset(){
 		TYPE = PickType.NONE;
 		TASK = PickTask.NONE;
+		UpdateHandler.update(UpdateType.PICK_MODE, TYPE, TASK, false);
 	}
 
 	public static void pick(PickType type, PickTask task, boolean off){
@@ -87,12 +91,13 @@ public class Picker {
 		TASK = task;
 		offcenter = off;
 		polygon = null;
+		UpdateHandler.update(UpdateType.PICK_MODE, type, task, off);
 	}
 
 	public static void process(){
 		if(!filled) fillBuffer();
 		if(TYPE.color()){
-			
+			TexturePainter.updateColor(getPick(), TYPE == PickType.COLOR1);
 		}
 		else if(TYPE.face() && polygon != null){
 			
