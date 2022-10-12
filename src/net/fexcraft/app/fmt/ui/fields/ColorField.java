@@ -8,11 +8,13 @@ import java.util.function.BiConsumer;
 
 import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.component.Component;
+import org.liquidengine.legui.component.ImageView;
 import org.liquidengine.legui.component.Panel;
 import org.liquidengine.legui.component.TextInput;
 import org.liquidengine.legui.event.FocusEvent;
 import org.liquidengine.legui.event.KeyEvent;
 import org.liquidengine.legui.event.MouseClickEvent;
+import org.liquidengine.legui.image.StbBackedLoadableImage;
 import org.liquidengine.legui.input.Mouse.MouseButton;
 import org.liquidengine.legui.listener.FocusEventListener;
 import org.liquidengine.legui.listener.KeyEventListener;
@@ -110,7 +112,7 @@ public class ColorField extends TextInput implements Field {
 		this.setting = setting;
 	}
 	
-	public ColorField(Component root, BiConsumer<Integer, Boolean> update, float x, float y, float w, float h){
+	public ColorField(Component root, BiConsumer<Integer, Boolean> update, float x, float y, float w, float h, String icon){
 		super("#ffffff", x + (root == null ? 0 : h - 2), y, root == null ? w : w - 35 - h - 2, h);
 		Settings.applyBorderless(this);
 		Field.setupHoverCheck(this);
@@ -128,21 +130,42 @@ public class ColorField extends TextInput implements Field {
 			}
 		});
 		if(root != null){
-			Button button = new Button("CP", x + w - 35, y, 30, h);
-			button.getListenerMap().addListener(MouseClickEvent.class, event -> {
-				if(event.getAction() == CLICK){
-                    try(MemoryStack stack = MemoryStack.stackPush()) {
-                        ByteBuffer color = stack.malloc(3);
-                        String result = TinyFileDialogs.tinyfd_colorChooser("Choose A Color", "#" + Integer.toHexString((int)value()), null, color);
-						if(result == null) return;
-						this.getTextState().setText(result);
-						value = null;
-						update.accept((int)value(), event.getButton() == MouseButton.MOUSE_BUTTON_LEFT);
-                    }
-				}
-			});
-			Settings.applyBorderless(button);
-			root.add(button);
+			if(icon == null){
+				Button button = new Button(icon == null ? "CP" : "", x + w - 35, y, 30, h) ;
+				button.getListenerMap().addListener(MouseClickEvent.class, event -> {
+					if(event.getAction() == CLICK){
+	                    try(MemoryStack stack = MemoryStack.stackPush()) {
+	                        ByteBuffer color = stack.malloc(3);
+	                        String result = TinyFileDialogs.tinyfd_colorChooser("Choose A Color", "#" + Integer.toHexString((int)value()), null, color);
+							if(result == null) return;
+							this.getTextState().setText(result);
+							value = null;
+							update.accept((int)value(), event.getButton() == MouseButton.MOUSE_BUTTON_LEFT);
+	                    }
+					}
+				});
+				Settings.applyBorderless(button);
+				root.add(button);
+			}
+			else{
+				ImageView img = new ImageView(new StbBackedLoadableImage(icon));
+				img.setPosition(x + w - 35, y);
+				img.setSize(h, h);
+				img.getListenerMap().addListener(MouseClickEvent.class, event -> {
+					if(event.getAction() == CLICK){
+	                    try(MemoryStack stack = MemoryStack.stackPush()) {
+	                        ByteBuffer color = stack.malloc(3);
+	                        String result = TinyFileDialogs.tinyfd_colorChooser("Choose A Color", "#" + Integer.toHexString((int)value()), null, color);
+							if(result == null) return;
+							this.getTextState().setText(result);
+							value = null;
+							update.accept((int)value(), event.getButton() == MouseButton.MOUSE_BUTTON_LEFT);
+	                    }
+					}
+				});
+				Settings.applyBorderless(img);
+				root.add(img);
+			}
 			panel = new Panel(x, y, h, h);
 			Settings.applyBorderless(panel);
 			panel.getStyle().getBackground().setColor(FMT.rgba((int)value()));
