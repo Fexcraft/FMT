@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.texture;
 
+import net.fexcraft.app.fmt.attributes.UpdateHandler;
+import net.fexcraft.app.fmt.attributes.UpdateType;
 import net.fexcraft.lib.common.math.RGB;
 
 /**
@@ -27,6 +29,7 @@ public class TexturePainter {
 	public static void updateColor(Integer value, boolean primary){
 		if(primary) PRIMARY.packed = value;
 		else SECONDARY.packed = value;
+		UpdateHandler.update(UpdateType.PAINTER_COLOR, value, primary);
 	}
 
 }
