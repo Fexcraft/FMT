@@ -111,7 +111,8 @@ public class GGR {
         	}
         	else if(action == GLFW_RELEASE){
         		if(!isOverUI()){
-        			Picker.pick(PickType.POLYGON, PickTask.SELECT, true);
+        			if(Picker.TYPE.pick()) Picker.process();
+        			else Picker.pick(PickType.POLYGON, PickTask.SELECT, true);
         		}
         		left_down = false;
         	}
