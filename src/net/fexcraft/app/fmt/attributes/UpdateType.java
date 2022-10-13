@@ -35,6 +35,7 @@ public enum UpdateType {
 	WORKSPACE_ROOT,
 	
 	PAINTER_COLOR,
+	PAINTER_TOOL,
 	PICK_MODE
 
 }
