@@ -408,6 +408,12 @@ texture.painter.tool.brush=Brush
 texture.painter.tool.eraser=Eraser
 texture.painter.tool.none=none
 
+# Exporters
+export.choose.dialog=Exporter Chooser
+export.choose.category=Category/Type:
+export.choose.exporter=Exporter:
+export.choose.file=Choose file to save to.
+
 # Other
 filechooser.title=FMT Internal File Chooser/Selector
 filechooser.enter_name=enter custom filename here

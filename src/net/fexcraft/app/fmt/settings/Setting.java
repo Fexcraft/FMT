@@ -26,7 +26,7 @@ public class Setting<TYPE> {
 		this._default = value = def;
 		this.group = group;
 		this.id = id;
-		Settings.register(group, id, this);
+		if(group != null) Settings.register(group, id, this);
 	}
 	
 	public Setting(String id, TYPE def, String group, JsonMap obj){

@@ -9,6 +9,7 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.attributes.UpdateHandler;
 import net.fexcraft.app.fmt.attributes.UpdateHandler.UpdateHolder;
 import net.fexcraft.app.fmt.attributes.UpdateType;
+import net.fexcraft.app.fmt.export.ExportManager;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.ToolbarMenu.MenuButton;
 import net.fexcraft.app.fmt.ui.components.QuickAdd;
@@ -27,7 +28,7 @@ public class Toolbar extends Panel {
 		Settings.applyBorderless(this);
 		holder = new UpdateHolder();
 		this.add(new Icon(0, "./resources/textures/icons/toolbar/info.png", () -> FMT.openLink("https://fexcraft.net/wiki/app/fmt")).addTooltip("toolbar.icon.info"));
-		this.add(new Icon(1, "./resources/textures/icons/toolbar/settings.png", () -> SettingsDialog.open()).addTooltip("toolbar.icon.settings"));
+		this.add(new Icon(1, "./resources/textures/icons/toolbar/settings.png", () -> SettingsDialog.open(null, null)).addTooltip("toolbar.icon.settings"));
 		this.add(new Icon(2, "./resources/textures/icons/toolbar/profile.png", () -> ProfileDialog.open()).addTooltip("toolbar.icon.profile"));
 		this.add(new Icon(3, "./resources/textures/icons/toolbar/save.png", () -> SaveHandler.save(FMT.MODEL, null, null, false, false)).addTooltip("toolbar.icon.save"));
 		this.add(new Icon(4, "./resources/textures/icons/toolbar/open.png", () -> SaveHandler.openDialog(null)).addTooltip("toolbar.icon.open"));
@@ -56,8 +57,8 @@ public class Toolbar extends Panel {
 			new MenuButton(3, "file.save", () -> SaveHandler.saveDialogByState(null)),
 			new MenuButton(4, "file.save_as", () -> SaveHandler.saveAsDialog(null)),
 			new MenuButton(5, "file.import"),
-			new MenuButton(6, "file.export"),
-			new MenuButton(7, "file.settings", () -> SettingsDialog.open()),
+			new MenuButton(6, "file.export", () -> ExportManager.export()),
+			new MenuButton(7, "file.settings", () -> SettingsDialog.open(null, null)),
 			new MenuButton(8, "file.donate", () -> FMT.openLink("https://fexcraft.net/donate")),
 			new MenuButton(9, "file.exit", () -> FMT.close(0))
 		));
