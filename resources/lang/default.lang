@@ -198,9 +198,22 @@ editor.component.folder.desc=Component offering a file-tree view of a specific f
 editor.component.folder.refresh=Refresh
 editor.component.folder.select=Select
 editor.component.folder.select.dialog=Select a folder to display.
-editor.component.painter.current.name=Current Painter Color
+editor.component.painter.current.name=Current Painter Values
 editor.component.painter.current.desc=Component to see current color/s active in the painter utils as well as a quick way to update them.
 editor.component.painter.current.color=Primary / Secondary
+editor.component.painter.current.active_tool=Active Tool:
+editor.component.painter.tools.name=Painter Tools
+editor.component.painter.tools.desc=Component to select which painting tool and selection mode should be active.
+editor.component.painter.tools.selection=Selection Mode
+editor.component.painter.tools.tool=Tool Mode
+editor.component.painter.tools.none=Disable Painting
+editor.component.painter.tools.pixel=Pixel Painting
+editor.component.painter.tools.face=Polygon Face Painting
+editor.component.painter.tools.polygon=Polygon (Whole) Painting
+editor.component.painter.tools.group=Group Painting
+editor.component.painter.tools.bucket=Application Mode
+editor.component.painter.tools.brush=Brush Mode
+editor.component.painter.tools.eraser=Removal (Eraser) Mode
 
 # Generic Dialogs
 dialog.title.default=Generic Dialog
@@ -384,6 +397,16 @@ texture_autopos.autopos.detach_all=Detach faces from polygons? (CAN ONLY BE UNDO
 texture_autopos.autopos.start=Start
 texture_autopos.autopos.processing=Processing: %s:%s
 texture_autopos.autopos.complete=Auto texture positioning Complete!
+texture.painter.selection.pixel=Pixel
+texture.painter.selection.face=Face
+texture.painter.selection.polygon=Polygon
+texture.painter.selection.group=Group
+texture.painter.selection.none=none
+texture.painter.tool.pencil=Pencil
+texture.painter.tool.bucket=Bucket
+texture.painter.tool.brush=Brush
+texture.painter.tool.eraser=Eraser
+texture.painter.tool.none=none
 
 # Other
 filechooser.title=FMT Internal File Chooser/Selector
