@@ -11,9 +11,11 @@ import org.liquidengine.legui.image.StbBackedLoadableImage;
 import net.fexcraft.app.fmt.attributes.UpdateType;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TexturePainter;
+import net.fexcraft.app.fmt.texture.TexturePainter.Tool;
 import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.ui.fields.ColorField;
+import net.fexcraft.app.fmt.ui.fields.RunButton;
 import net.fexcraft.app.fmt.utils.Picker;
 import net.fexcraft.app.fmt.utils.Picker.PickTask;
 import net.fexcraft.app.fmt.utils.Picker.PickType;
@@ -25,9 +27,10 @@ public class CurrentColor extends EditorComponent {
 	private static StbBackedLoadableImage picker_act = new StbBackedLoadableImage("./resources/textures/icons/painter/picker_active.png");
 	private ColorField field1, field2;
 	private ColorPickerIcon icon1, icon2;
+	private RunButton tool;
 
 	public CurrentColor(){
-		super("painter.current", 110, false, true);
+		super("painter.current", 140, false, true);
 		this.add(new Label(translate(LANG_PREFIX + id + ".color"), L5, row(1), LW, HEIGHT));
 		this.add(field1 = new ColorField(this, (c, b) -> {
 			TexturePainter.updateColor(c, true);
@@ -45,8 +48,16 @@ public class CurrentColor extends EditorComponent {
 			icon1.setImage(type == PickType.COLOR1 ? picker_act : picker_png);
 			icon2.setImage(type == PickType.COLOR2 ? picker_act : picker_png);
 		});
+		updateholder.add(UpdateType.PAINTER_TOOL, vals -> updateToolButton());
+		row += 5;
+		this.add(tool = new RunButton(translate(LANG_PREFIX + id + ".active_tool"), L5, row(1), LW, HEIGHT, () -> TexturePainter.setTool(Tool.NONE)));
+		updateToolButton();
 	}
 	
+	private void updateToolButton(){
+		tool.getTextState().setText(translate(LANG_PREFIX + id + ".active_tool") + " " + TexturePainter.getToolName());
+	}
+
 	private static class ColorPickerIcon extends ImageView {
 		
 		public ColorPickerIcon(int y, boolean primary){
