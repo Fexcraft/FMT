@@ -1,6 +1,7 @@
 package net.fexcraft.app.fmt.export;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -8,11 +9,17 @@ import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.settings.Setting;
 import net.fexcraft.app.fmt.ui.FileChooser.FileType;
+import net.fexcraft.app.json.JsonMap;
 
 public class FMFExporter implements Exporter {
 	
 	private static final List<String> categories = Arrays.asList("model");
+	private static final List<Setting<?>> settings = new ArrayList<>();
 	public static FileType TYPE_FMF = new FileType("Fex's Model Format", "*.fmf");
+
+	public FMFExporter(JsonMap map){
+		settings.add(new Setting<>("test", "value", "exporter_fmf"));
+	}
 
 	@Override
 	public String id(){
@@ -36,7 +43,7 @@ public class FMFExporter implements Exporter {
 
 	@Override
 	public List<Setting<?>> settings(){
-		return Arrays.asList(new Setting<>("test", "value", null), new Setting<>("other", "value", null));
+		return settings;
 	}
 
 	@Override
