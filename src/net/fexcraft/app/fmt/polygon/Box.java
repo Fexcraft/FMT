@@ -266,4 +266,9 @@ public class Box extends Polygon {
 		return false;
 	}
 
+	public boolean anySidesOff(){
+		for(boolean side : sides) if(side) return true;
+		return false;
+	}
+
 }
