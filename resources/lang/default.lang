@@ -415,6 +415,8 @@ export.choose.exporter=Exporter:
 export.choose.file=Choose file to save to.
 export.choose.groups=Select Groups to Export
 export.settings.dialog=Exporter Settings
+export.complete=Export Complete
+export.result=Export Result Dialog
 
 # Other
 filechooser.title=FMT Internal File Chooser/Selector
