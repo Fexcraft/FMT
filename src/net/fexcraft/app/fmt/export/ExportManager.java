@@ -14,6 +14,7 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.FileChooser;
+import net.fexcraft.app.fmt.ui.GenericDialog;
 import net.fexcraft.app.fmt.ui.GroupSelectionPanel;
 import net.fexcraft.app.fmt.ui.SettingsDialog;
 import net.fexcraft.app.fmt.ui.fields.RunButton;
@@ -97,7 +98,7 @@ public class ExportManager {
 
 	private static void showFileChooserDialog(Exporter exporter, List<Group> groups){
 		FileChooser.chooseFile("export.choose.file", "", exporter.extensions(), true, file -> {
-			Runnable run = () -> exporter.export(FMT.MODEL, file, groups);
+			Runnable run = () -> GenericDialog.showOK("export.result", null, null, exporter.export(FMT.MODEL, file, groups));
 			if(exporter.settings().size() > 0){
 				SettingsDialog.open("export.settings.dialog", exporter.settings(), exporter.id(), run);
 			}
