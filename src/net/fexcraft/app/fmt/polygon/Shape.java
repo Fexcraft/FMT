@@ -21,6 +21,10 @@ public enum Shape {
 		return this == BOX || this.isShapebox() || this == BOUNDING_BOX;
 	}
 
+	public boolean isBox(){
+		return this == BOX;
+	}
+
 	public boolean isShapebox(){
 		return this == SHAPEBOX;
 	}
