@@ -17,6 +17,7 @@ import net.fexcraft.app.fmt.ui.FileChooser;
 import net.fexcraft.app.fmt.ui.GroupSelectionPanel;
 import net.fexcraft.app.fmt.ui.SettingsDialog;
 import net.fexcraft.app.fmt.ui.fields.RunButton;
+import net.fexcraft.app.json.JsonMap;
 
 /**
  * 
@@ -27,8 +28,11 @@ public class ExportManager {
 	
 	private static final ArrayList<Exporter> EXPORTERS = new ArrayList<>();
 	private static final ArrayList<String> CATEGORIES = new ArrayList<>();
-	static {
-		addExporter(new FMFExporter());
+
+	public static void init(JsonMap map){
+		EXPORTERS.clear();
+		CATEGORIES.clear();
+		addExporter(new FMFExporter(map));
 	}
 	
 	private static void addExporter(Exporter exporter){
