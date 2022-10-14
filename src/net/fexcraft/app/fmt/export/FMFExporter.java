@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -33,12 +32,15 @@ public class FMFExporter implements Exporter {
 	
 	private static final List<String> categories = Arrays.asList("model");
 	public static FileType TYPE_FMF = new FileType("Fex's Model Format", "*.fmf");
+	private static final ArrayList<Setting<?>> settings = new ArrayList<>();
 	//from fvtm
 	private static final int PP = 1, PR = 2, PF = 3, PT = 4, PL = 6, PM = 7, PDF = 8, PDU = 9, PCU = 10;
 	private static final int PBS = 16, PBC = 17;
 	private static final int PCRL = 16, PCD = 17, PCSG = 18, PCSL = 19, PCTO = 20, PCTR = 21, PCRT = 22;
 
-	public FMFExporter(JsonMap map){}
+	public FMFExporter(JsonMap map){
+		settings.add(new Setting<>("modeldata", true, "exporter-fmf"));
+	}
 
 	@Override
 	public String id(){
@@ -62,7 +64,7 @@ public class FMFExporter implements Exporter {
 
 	@Override
 	public List<Setting<?>> settings(){
-		return Collections.EMPTY_LIST;
+		return settings;
 	}
 
 	@Override
@@ -181,26 +183,28 @@ public class FMFExporter implements Exporter {
 				stream.write(0);
 			}
 			//
-			ArrayList<String> programs = new ArrayList<>();
-			//TODO export animations as programs
-			if(programs.size() > 0){
-				write(stream, 6, "Programs");
-				for(String string : programs){
-					write(stream, 7, string);
-				}
-			}
-			if(model.export_values.size() > 0){
-				for(Entry<String, String> entry : model.export_values.entrySet()){
-					write(stream, 5, entry.getKey());
-					write(stream, 0, entry.getValue());
-				}
-			}
-			if(model.export_listed_values.size() > 0){
-				for(Entry<String, ArrayList<String>> entry : model.export_listed_values.entrySet()){
-					if(entry.getValue().size() == 0) continue;
-					write(stream, 6, entry.getKey());
-					for(String string : entry.getValue()){
+			if(settings.get(0).bool()){
+				ArrayList<String> programs = new ArrayList<>();
+				//TODO export animations as programs
+				if(programs.size() > 0){
+					write(stream, 6, "Programs");
+					for(String string : programs){
 						write(stream, 7, string);
+					}
+				}
+				if(model.export_values.size() > 0){
+					for(Entry<String, String> entry : model.export_values.entrySet()){
+						write(stream, 5, entry.getKey());
+						write(stream, 0, entry.getValue());
+					}
+				}
+				if(model.export_listed_values.size() > 0){
+					for(Entry<String, ArrayList<String>> entry : model.export_listed_values.entrySet()){
+						if(entry.getValue().size() == 0) continue;
+						write(stream, 6, entry.getKey());
+						for(String string : entry.getValue()){
+							write(stream, 7, string);
+						}
 					}
 				}
 			}
