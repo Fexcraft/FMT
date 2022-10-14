@@ -119,6 +119,10 @@ public abstract class Polygon {
 		return name == null ? String.format(Translator.UNNAMED_POLYGON, getShape().name().toLowerCase()) : name;
 	}
 	
+	public String name(boolean nell){
+		return nell ? name : name();
+	}
+	
 	public void name(String name){
 		this.name = name;
 		UpdateHandler.update(UpdateType.POLYGON_RENAMED, this, name);
