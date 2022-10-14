@@ -388,4 +388,9 @@ public class Cylinder extends Polygon {
 		}
 	}
 
+	public boolean anySidesOff(){
+		for(boolean bool : bools) if(bool) return true;
+		return false;
+	}
+
 }
