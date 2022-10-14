@@ -35,4 +35,8 @@ public class StringArraySetting extends Setting<String> {
 		return box;
 	}
 
+	public void setElms(String[] array){
+		vals = array;
+	}
+
 }
