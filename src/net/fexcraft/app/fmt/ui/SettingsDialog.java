@@ -37,14 +37,18 @@ public class SettingsDialog {
 	public static Dialog dialog;
 	public static HashMap<String, Panel> panels = new HashMap<>();
 
-	public static final void open(List<Setting<?>> list, String catid){
+	public static final void open(){
+		open(null, null, null, null);
+	}
+
+	public static final void open(String title, List<Setting<?>> list, String catid, Runnable run){
 		if(dialog != null) dialog.close();
 		panels.clear();
 		UpdateHolder holder = new UpdateHolder();
 		boolean hlist = list != null;
 		int width = 530, height = 320, minus = hlist ? 0 : 110;
 		if(!hlist) width += minus;
-		dialog = new Dialog(translate("settings.dialog.title"), width, height);
+		dialog = new Dialog(translate(title == null ? "settings.dialog.title" : title), width, height + (hlist ? 35 : 0));
 		dialog.setResizable(false);
 		if(!hlist){
 			ScrollablePanel tabs = new ScrollablePanel(0, 2, 110, height - 4);
@@ -63,7 +67,7 @@ public class SettingsDialog {
 		}
 		//
 		if(hlist){
-			addSinglePanel(list, catid, holder, width, height);
+			addSinglePanel(list, catid, holder, width, height, run);
 		}
 		else{
 			for(Entry<String, Map<String, Setting<?>>> entry : Settings.SETTINGS.entrySet()){
@@ -81,7 +85,7 @@ public class SettingsDialog {
 		dialog.show(FMT.FRAME);
 	}
 	
-	private static void addSinglePanel(List<Setting<?>> list, String catid, UpdateHolder holder, int width, int height){
+	private static void addSinglePanel(List<Setting<?>> list, String catid, UpdateHolder holder, int width, int height, Runnable run){
 		Panel wrapper = new Panel(10, 10, width - 20, height - 40);
 		ScrollablePanel panel = new ScrollablePanel(0, 0, width - 20, height - 40);
 		panel.getContainer().setSize(width - 20, list.size() * 30 + 5);
@@ -106,7 +110,10 @@ public class SettingsDialog {
 		panel.getViewport().getListenerMap().removeAllListeners(ScrollEvent.class);
 		panel.getViewport().getListenerMap().addListener(ScrollEvent.class, new SPVSL());
 		panel.setHorizontalScrollBarVisible(false);
-		//TODO continue button
+		dialog.getContainer().add(new RunButton("dialog.button.continue", width - 110, height - 20, 100, 25, () -> {
+			dialog.close();
+			run.run();
+		}, false));
 		wrapper.add(panel);
 		dialog.getContainer().add(wrapper);
 		panels.put("exporter", wrapper);

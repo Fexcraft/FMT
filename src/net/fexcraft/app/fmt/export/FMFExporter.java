@@ -1,7 +1,6 @@
 package net.fexcraft.app.fmt.export;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -13,7 +12,7 @@ import net.fexcraft.app.fmt.ui.FileChooser.FileType;
 public class FMFExporter implements Exporter {
 	
 	private static final List<String> categories = Arrays.asList("model");
-	public static FileType TYPE_FMF = new FileType("Fex's Model Format)", "*.fmf");
+	public static FileType TYPE_FMF = new FileType("Fex's Model Format", "*.fmf");
 
 	@Override
 	public String id(){
@@ -22,7 +21,7 @@ public class FMFExporter implements Exporter {
 
 	@Override
 	public String name(){
-		return "FMF (Fex's Model Format";
+		return "FMF (Fex's Model Format)";
 	}
 
 	@Override
@@ -41,7 +40,12 @@ public class FMFExporter implements Exporter {
 	}
 
 	@Override
-	public String export(Model model, File file, ArrayList<Group> groups){
+	public boolean nogroups(){
+		return false;
+	}
+
+	@Override
+	public String export(Model model, File file, List<Group> groups){
 		return "//TODO";
 	}
 

@@ -3,13 +3,18 @@ package net.fexcraft.app.fmt.export;
 import static net.fexcraft.app.fmt.utils.Translator.translate;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.liquidengine.legui.component.Dialog;
 import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.SelectBox;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.polygon.Group;
+import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.FileChooser;
+import net.fexcraft.app.fmt.ui.GroupSelectionPanel;
 import net.fexcraft.app.fmt.ui.SettingsDialog;
 import net.fexcraft.app.fmt.ui.fields.RunButton;
 
@@ -36,6 +41,7 @@ public class ExportManager {
 	public static void export(){
 		Dialog dialog = new Dialog(translate("export.choose.dialog"), 400, 190);
 		dialog.setResizable(false);
+		Settings.applyComponentTheme(dialog.getContainer());
 		dialog.getContainer().add(new Label(translate("export.choose.category"), 10, 10, 380, 25));
 		SelectBox<String> selcat = new SelectBox<>(10, 35, 380, 25);
 		for(String cat : CATEGORIES){
@@ -64,16 +70,35 @@ public class ExportManager {
 				if(ex.name().equals(sel)) exporter = ex;
 			}
 			if(exporter == null) return;
-			Exporter export = exporter;
-			FileChooser.chooseFile("export.choose.file", "", exporter.extensions(), true, file -> {
-				//TODO choose groups
-				if(export.settings().size() > 0){
-					SettingsDialog.open(export.settings(), export.id());
-				}
-				else export.export(FMT.MODEL, file, null);
-			});
-		}, false));
+			if(exporter.nogroups()){
+				showFileChooserDialog(exporter, Collections.EMPTY_LIST);
+			}
+			else showGroupSelectionDialog(exporter);
+		}));
 		dialog.show(FMT.FRAME);
+	}
+
+	private static void showGroupSelectionDialog(Exporter exporter){
+		Dialog dialog = new Dialog(translate("export.choose.groups"), 400, 400);
+		dialog.setResizable(false);
+		Settings.applyComponentTheme(dialog.getContainer());
+		GroupSelectionPanel panel = new GroupSelectionPanel(10, 10, 380, 320);
+		dialog.getContainer().add(panel);
+		dialog.getContainer().add(new RunButton("dialog.button.continue", 10, 340, 100, 30, () -> {
+			dialog.close();
+			showFileChooserDialog(exporter, panel.getSelectedGroups());
+		}));
+		dialog.show(FMT.FRAME);
+	}
+
+	private static void showFileChooserDialog(Exporter exporter, List<Group> groups){
+		FileChooser.chooseFile("export.choose.file", "", exporter.extensions(), true, file -> {
+			Runnable run = () -> exporter.export(FMT.MODEL, file, groups);
+			if(exporter.settings().size() > 0){
+				SettingsDialog.open("export.settings.dialog", exporter.settings(), exporter.id(), run);
+			}
+			else run.run();
+		});
 	}
 
 }

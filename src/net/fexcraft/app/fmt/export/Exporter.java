@@ -1,7 +1,6 @@
 package net.fexcraft.app.fmt.export;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import net.fexcraft.app.fmt.polygon.Group;
@@ -26,6 +25,8 @@ public interface Exporter {
 	
 	public List<Setting<?>> settings();
 	
-	public String export(Model model, File file, ArrayList<Group> groups);
+	public boolean nogroups();
+	
+	public String export(Model model, File file, List<Group> groups);
 
 }
