@@ -34,6 +34,8 @@ public class ExportManager {
 		EXPORTERS.clear();
 		CATEGORIES.clear();
 		addExporter(new FMFExporter(map));
+		addExporter(new PNGExporter(map));
+		addExporter(new ModelDataExporter());
 	}
 	
 	private static void addExporter(Exporter exporter){
@@ -53,9 +55,11 @@ public class ExportManager {
 			selcat.addElement(cat);
 		}
 		selcat.setSelected(0, true);
+		selcat.setVisibleCount(6);
 		dialog.getContainer().add(selcat);
 		dialog.getContainer().add(new Label(translate("export.choose.exporter"), 10, 70, 380, 25));
 		SelectBox<String> select = new SelectBox<>(10, 95, 380, 25);
+		select.setVisibleCount(6);
 		String fircat = CATEGORIES.get(0);
 		for(Exporter exporter : EXPORTERS){
 			if(exporter.categories().contains(fircat)) select.addElement(exporter.name());
@@ -98,6 +102,10 @@ public class ExportManager {
 
 	private static void showFileChooserDialog(Exporter exporter, List<Group> groups){
 		FileChooser.chooseFile("export.choose.file", "", exporter.extensions(), true, file -> {
+			if(file == null){
+				GenericDialog.showYN(null, () -> showFileChooserDialog(exporter, groups), null, "export.choose.nofile");
+				return;
+			}
 			Runnable run = () -> GenericDialog.showOK("export.result", null, null, exporter.export(FMT.MODEL, file, groups));
 			if(exporter.settings().size() > 0){
 				SettingsDialog.open("export.settings.dialog", exporter.settings(), exporter.id(), run);
