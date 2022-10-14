@@ -42,9 +42,17 @@ public class Setting<TYPE> {
 	public <VALUE> VALUE value(){
 		return (VALUE)value;
 	}
+
+	public <V> V value(Class<V> type){
+		return (V)value;
+	}
+
+	public boolean bool(){
+		return value instanceof Boolean ? (boolean)value : Boolean.parseBoolean(value.toString());
+	}
 	
-	public void value(TYPE newval){
-		this.value = newval;
+	public void value(Object newval){
+		this.value = (TYPE)newval;
 	}
 
 	public void save(JsonMap obj){
@@ -57,8 +65,7 @@ public class Setting<TYPE> {
 
 	public boolean toggle(){
 		if(value instanceof Boolean){
-			Object obj = !(Boolean)value;
-			value((TYPE)obj);
+			value(!bool());
 		}
 		return value();
 	}
