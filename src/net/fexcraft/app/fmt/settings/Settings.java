@@ -33,6 +33,7 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryUtil;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.export.ExportManager;
 import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.ui.components.*;
 import net.fexcraft.app.fmt.ui.fields.NumberField;
@@ -211,6 +212,8 @@ public class Settings {
 		BOTTOM_INFO_BAR_COLOR = new RGBSetting("bottom_infobar_color", new RGB(200, 200, 200), THEME, obj);
 		TEXTURE_GROUP = new RGBSetting("component_texture_group", new RGB(0, 74, 127), THEME, obj);
 		TEXTURE_OPTION = new RGBSetting("component_texture_group_option", new RGB(0, 74, 127), THEME, obj);
+		//
+		ExportManager.init(obj);
 		//
 		for(Map.Entry<String, Map<String, Setting<?>>> entry : SETTINGS.entrySet()){
 			if(!obj.has(entry.getKey())) continue;
