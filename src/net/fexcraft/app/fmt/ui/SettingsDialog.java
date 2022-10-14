@@ -91,7 +91,7 @@ public class SettingsDialog {
 		panel.getContainer().setSize(width - 20, list.size() * 30 + 5);
 		int[] j = { 0 }, w = { width };
 		list.forEach(setting -> {
-			Label label = new Label(translate("setting." + catid + "." + setting.id), 5, j[0] * 30 + 5, 200, 25);
+			Label label = new Label(translate("setting." + setting.group + "." + setting.id), 5, j[0] * 30 + 5, 200, 25);
 			Settings.applyBorderless(label);
 			label.getStyle().setHorizontalAlign(HorizontalAlign.RIGHT);
 			panel.getContainer().add(label);
