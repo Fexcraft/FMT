@@ -136,4 +136,8 @@ public class Shapebox extends Box {
 		return poly;
 	}
 
+	public Vector3f[] corners(){
+		return new Vector3f[]{ cor0, cor1, cor2, cor3, cor4, cor5, cor6, cor7 };
+	}
+
 }
