@@ -20,8 +20,9 @@ public class RGBSetting extends Setting<RGB> {
 	}
 	
 	@Override
-	public void value(RGB newval){
-		value.packed = newval.packed;
+	public void value(Object newval){
+		if(newval instanceof RGB == false) return;
+		value.packed = ((RGB)newval).packed;
 	}
 	
 	@Override
