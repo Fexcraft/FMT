@@ -236,4 +236,10 @@ public class TextureManager {
 		UpdateHandler.update(UpdateType.TEXGROUP_REMOVED, texgroup);
 	}
 
+	public static String[] getGroupNames(){
+		ArrayList<String> list = new ArrayList<>();
+		for(TextureGroup group : GROUPS) list.add(group.name);
+		return list.toArray(new String[0]);
+	}
+
 }
