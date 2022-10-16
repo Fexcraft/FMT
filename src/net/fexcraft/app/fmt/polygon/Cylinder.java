@@ -10,6 +10,7 @@ import org.joml.Vector3f;
 import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.polygon.uv.CylFace;
 import net.fexcraft.app.fmt.polygon.uv.Face;
+import net.fexcraft.app.fmt.polygon.uv.NoFace;
 import net.fexcraft.app.fmt.polygon.uv.UVCoords;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
@@ -131,6 +132,7 @@ public class Cylinder extends Polygon {
 			gen.set("detached_uv", list);
 			gen.set("uv", uv);
 		}
+		gen.set("ordered", true);
 		return gen;
 	}
 
@@ -150,6 +152,17 @@ public class Cylinder extends Polygon {
 			return red0;
 		}
 		return idx % 2 == 1 ? gre1 : gre0;
+	}
+
+	@Override
+	public Face getFaceByColor(int color){
+		if(color == c_blu0) return CylFace.CYL_TOP;
+		if(color == c_blu1) return CylFace.CYL_BASE;
+		if(color == c_red1) return CylFace.CYL_OUTER;
+		if(color == c_red0) return CylFace.CYL_INNER;
+		if(color == c_gre0) return CylFace.SEG_SIDE_0;
+		if(color == c_gre1) return CylFace.SEG_SIDE_1;
+		return NoFace.NONE;
 	}
 	
 	public float getValue(PolygonValue polyval){
