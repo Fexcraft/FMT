@@ -3,6 +3,8 @@ package net.fexcraft.app.fmt.polygon;
 import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.demo.ModelMark;
 import net.fexcraft.app.fmt.polygon.PolyRenderer.DrawMode;
+import net.fexcraft.app.fmt.polygon.uv.Face;
+import net.fexcraft.app.fmt.polygon.uv.NoFace;
 import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.RGB;
@@ -69,6 +71,11 @@ public class Marker extends Polygon {
 	@Override
 	public RGB getFaceColor(int i){
 		return rgb;
+	}
+
+	@Override
+	public Face getFaceByColor(int i){
+		return NoFace.NONE;
 	}
 	
 	@Override
