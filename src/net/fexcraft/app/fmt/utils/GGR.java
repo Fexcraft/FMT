@@ -16,6 +16,7 @@ import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
+import net.fexcraft.app.fmt.texture.TexturePainter;
 import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.ui.PolySelMenu;
 import net.fexcraft.app.fmt.ui.fields.NumberField;
@@ -111,7 +112,10 @@ public class GGR {
         	}
         	else if(action == GLFW_RELEASE){
         		if(!isOverUI()){
-        			if(Picker.TYPE.pick()) Picker.process();
+        			if(TexturePainter.TOOL.active()){
+        				Picker.pick(TexturePainter.SELMODE.getPickType(), PickTask.PAINT, true);
+        			}
+        			else if(Picker.TYPE.color()) Picker.process();
         			else Picker.pick(PickType.POLYGON, PickTask.SELECT, true);
         		}
         		left_down = false;
