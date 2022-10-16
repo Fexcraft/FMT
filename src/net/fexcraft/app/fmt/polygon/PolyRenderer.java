@@ -61,7 +61,7 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 		glUniformMatrix4fv(getUniform("model"), false, matrix.get(new float[16]));
 		glUniform4fv(getUniform("line_color"), MODE == DrawMode.LINES ? glo.linecolor : MODE == DrawMode.SELLINES ? SELCOLOR : EMPTY);
 		glUniform4fv(getUniform("poly_color"), MODE.picker() ? glo.pickercolor : MODE.color() ? glo.polycolor : EMPTY);
-		glUniform1f(getUniform("textured"), MODE == DrawMode.TEXTURED ? 1 : 0);
+		glUniform1f(getUniform("textured"), MODE.textured() ? 1 : 0);
 		//
         glEnableVertexAttribArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, glo.gpu[index].glid);
@@ -88,7 +88,7 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 	}
 	
 	public static void updateLightState(){
-		glUniform1f(getUniform("lighting"), Settings.LIGHTING_ON.value && !MODE.picker() && !MODE.lines() ? 1 : 0);
+		glUniform1f(getUniform("lighting"), Settings.LIGHTING_ON.value && MODE.lighting() ? 1 : 0);
 		glUniform3fv(getUniform("lightcolor"), Settings.LIGHT_COLOR.value.toFloatArray());
 		glUniform3fv(getUniform("lightpos"), new float[]{ Settings.LIGHT_POSX.value, Settings.LIGHT_POSY.value, Settings.LIGHT_POSZ.value });
 		glUniform1f(getUniform("ambient"), Settings.LIGHT_AMBIENT.value);
@@ -180,7 +180,7 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 	
 	public static enum DrawMode {
 		
-		TEXTURED, UNTEXTURED, RGBCOLOR, PICKER, SELLINES, LINES;
+		TEXTURED, UNTEXTURED, RGBCOLOR, PICKER, PICKER_FACE, SELLINES, LINES;
 		
 		public boolean lines(){
 			return this == LINES || this == SELLINES;
@@ -190,12 +190,24 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 			return this == PICKER;
 		}
 
+		boolean face_picker(){
+			return this == PICKER_FACE;
+		}
+
 		boolean color(){
 			return this == RGBCOLOR;
 		}
 
 		public static DrawMode textured(boolean bool){
 			return bool ? TEXTURED : UNTEXTURED;
+		}
+
+		public boolean lighting(){
+			return this != PICKER && this != PICKER_FACE && this != LINES;
+		}
+
+		public boolean textured(){
+			return this == TEXTURED && this != PICKER_FACE;
 		}
 		
 	}
