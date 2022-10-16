@@ -238,8 +238,13 @@ public abstract class Polygon {
 	protected static RGB gre0 = new RGB(  0, 150,   0);
 	protected static RGB blu0 = new RGB(  0,   0, 150);
 	protected static RGB gray = new RGB( 89,  89,  89);
+	protected static int c_red1 = red1.packed, c_red0 = red0.packed;
+	protected static int c_blu1 = blu1.packed, c_blu0 = blu0.packed;
+	protected static int c_gre1 = gre1.packed, c_gre0 = gre0.packed;
 
 	public abstract RGB getFaceColor(int idx);
+	
+	public abstract Face getFaceByColor(int color);
 
 	public void render(){
 		glm.render();
