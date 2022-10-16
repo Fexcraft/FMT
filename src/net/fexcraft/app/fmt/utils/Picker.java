@@ -100,7 +100,10 @@ public class Picker {
 			TexturePainter.updateColor(getPick(), TYPE == PickType.COLOR1);
 		}
 		else if(TYPE.face() && polygon != null){
-			
+			int face = getPick();
+			if(TASK.paint()){
+				TexturePainter.paint(polygon, face);
+			}
 		}
 		else{
 			int pick = getPick();
@@ -119,7 +122,8 @@ public class Picker {
 					polygon.group().model.select(polygon);
 				}
 				else if(TASK.paint()){
-					//
+					if(TexturePainter.SELMODE.getPickType() == PickType.FACE) return;
+					TexturePainter.paint(polygon, -1);
 				}
 				else if(TASK.function()){
 					consumer.accept(polygon);
