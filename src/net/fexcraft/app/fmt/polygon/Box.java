@@ -7,6 +7,7 @@ import org.joml.Vector3f;
 import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.polygon.uv.BoxFace;
 import net.fexcraft.app.fmt.polygon.uv.Face;
+import net.fexcraft.app.fmt.polygon.uv.NoFace;
 import net.fexcraft.app.fmt.polygon.uv.UVCoords;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
@@ -93,6 +94,17 @@ public class Box extends Polygon {
 			case 5: return gre0;
 		}
 		return RGB.GREEN;
+	}
+
+	@Override
+	public Face getFaceByColor(int color){
+		if(color == c_blu0) return BoxFace.FRONT;
+		if(color == c_blu1) return BoxFace.BACK;
+		if(color == c_red1) return BoxFace.TOP;
+		if(color == c_red0) return BoxFace.DOWN;
+		if(color == c_gre1) return BoxFace.LEFT;
+		if(color == c_gre0) return BoxFace.RIGHT;
+		return NoFace.NONE;
 	}
 	
 	public float getValue(PolygonValue polyval){
