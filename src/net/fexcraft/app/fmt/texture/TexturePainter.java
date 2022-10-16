@@ -4,6 +4,9 @@ import static net.fexcraft.app.fmt.utils.Translator.translate;
 
 import net.fexcraft.app.fmt.attributes.UpdateHandler;
 import net.fexcraft.app.fmt.attributes.UpdateType;
+import net.fexcraft.app.fmt.polygon.Polygon;
+import net.fexcraft.app.fmt.utils.Logging;
+import net.fexcraft.app.fmt.utils.Picker.PickType;
 import net.fexcraft.lib.common.math.RGB;
 
 /**
@@ -43,6 +46,18 @@ public class TexturePainter {
 		public String trs(){
 			return translate("texture.painter.selection." + name().toLowerCase());
 		}
+
+		public PickType getPickType(){
+			return this == FACE || this == PIXEL ? PickType.FACE : PickType.POLYGON;
+		}
+
+		public boolean face(){
+			return this == FACE;
+		}
+
+		public boolean pixel(){
+			return this == PIXEL;
+		}
 		
 	}
 	
@@ -52,6 +67,10 @@ public class TexturePainter {
 		
 		public String trs(){
 			return translate("texture.painter.tool." + name().toLowerCase());
+		}
+
+		public boolean active(){
+			return this != NONE;
 		}
 		
 	}
@@ -73,6 +92,27 @@ public class TexturePainter {
 		SELMODE = sel;
 		if(TOOL == Tool.NONE) TOOL = Tool.BUCKET;
 		UpdateHandler.update(UpdateType.PAINTER_TOOL, TOOL, sel);
+	}
+
+	public static void paint(Polygon polygon, int face){
+		Logging.log(polygon, face);
+		switch(SELMODE){
+			case PIXEL:
+				break;
+			case FACE:
+				break;
+			case POLYGON:
+				break;
+			case GROUP:
+				break;
+			case NONE:
+			default:
+				break;
+		}
+	}
+
+	public static void bindTex(){
+		//
 	}
 
 }
