@@ -56,6 +56,7 @@ import net.fexcraft.app.fmt.polygon.PolyRenderer;
 import net.fexcraft.app.fmt.polygon.PolyRenderer.DrawMode;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TextureManager;
+import net.fexcraft.app.fmt.texture.TexturePainter;
 import net.fexcraft.app.fmt.texture.TextureUpdate;
 import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.ui.EditorComponent;
@@ -368,6 +369,9 @@ public class FMT {
 			if(Picker.TYPE.face()){
 				glClearColor(1, 1, 1, 1);
 			    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			    boolean tex = Picker.TASK.paint() && TexturePainter.SELMODE.pixel();
+				PolyRenderer.mode(tex ? DrawMode.TEXTURED : DrawMode.PICKER_FACE);
+				if(tex) TexturePainter.bindTex();
 				Picker.polygon().glm.render();
 				Picker.process();
 			}
