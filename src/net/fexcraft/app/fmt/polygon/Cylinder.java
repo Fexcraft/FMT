@@ -156,8 +156,8 @@ public class Cylinder extends Polygon {
 
 	@Override
 	public Face getFaceByColor(int color){
-		if(color == c_blu0) return CylFace.CYL_TOP;
-		if(color == c_blu1) return CylFace.CYL_BASE;
+		if(color == c_blu1) return CylFace.CYL_TOP;
+		if(color == c_blu0) return CylFace.CYL_BASE;
 		if(color == c_red1) return CylFace.CYL_OUTER;
 		if(color == c_red0) return CylFace.CYL_INNER;
 		if(color == c_gre0) return CylFace.SEG_SIDE_0;
