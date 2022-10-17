@@ -4,8 +4,10 @@ import static net.fexcraft.app.fmt.utils.Translator.translate;
 
 import net.fexcraft.app.fmt.attributes.UpdateHandler;
 import net.fexcraft.app.fmt.attributes.UpdateType;
+import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Polygon;
-import net.fexcraft.app.fmt.utils.Logging;
+import net.fexcraft.app.fmt.polygon.uv.Face;
+import net.fexcraft.app.fmt.utils.Picker;
 import net.fexcraft.app.fmt.utils.Picker.PickType;
 import net.fexcraft.lib.common.math.RGB;
 
@@ -18,12 +20,9 @@ public class TexturePainter {
 	
 	public static final RGB PRIMARY = RGB.BLACK.copy();
 	public static final RGB SECONDARY = RGB.WHITE.copy();
+	public static final RGB ERASER = new RGB(0, 0, 0).setAlpha(0);
 	public static Selection SELMODE = Selection.NONE;
 	public static Tool TOOL = Tool.NONE;
-	
-	public static byte[] getCurrentColor(boolean primary){
-		return (primary ? PRIMARY : SECONDARY).toByteArray();
-	}
 
 	public static byte[] getPrimaryColor(){
 		return PRIMARY.toByteArray();
@@ -94,25 +93,47 @@ public class TexturePainter {
 		UpdateHandler.update(UpdateType.PAINTER_TOOL, TOOL, sel);
 	}
 
-	public static void paint(Polygon polygon, int face){
-		Logging.log(polygon, face);
+	public static void paint(boolean primary, Polygon polygon, int face){
+		Group group = Picker.polygon().group();
+		TextureGroup tex = group.texgroup == null ? group.model.texgroup : group.texgroup;
+		if(tex == null) return;
 		switch(SELMODE){
 			case PIXEL:
+				int x = face / tex.painter.getHeight();
+				int y = face % tex.painter.getHeight();
+				if(x < 0 || y < 0 || x >= tex.texture.getWidth() || y >= tex.texture.getHeight()) return;
+				tex.texture.set(x, y, getCurrentColor(primary));
 				break;
 			case FACE:
+				polygon.paintTex(tex.texture, polygon.getFaceByColor(face).index(), primary);
 				break;
 			case POLYGON:
+				for(Face f : polygon.getUVFaces()) polygon.paintTex(tex.texture, f.index(), primary);
 				break;
 			case GROUP:
+				group.forEach(poly -> {
+					for(Face f : poly.getUVFaces()) poly.paintTex(tex.texture, f.index(), primary);
+				});
 				break;
 			case NONE:
 			default:
-				break;
+				return;
 		}
+		tex.texture.rebind();
 	}
 
-	public static void bindTex(){
-		//
+	public static byte[] getCurrentColor(boolean primary){
+		byte[] b = (TOOL == Tool.ERASER ? ERASER : primary ? PRIMARY : SECONDARY).toByteArray();
+		float a = (TOOL == Tool.ERASER ? ERASER : primary ? PRIMARY : SECONDARY).alpha;
+		return new byte[]{ b[0], b[1], b[2], (byte)(Math.floor(a >= 1.0f ? 255 : a * 256.0f) - 128) };
+	}
+
+	public static boolean bindTex(){
+		Group group = Picker.polygon().group();
+		TextureGroup tex = group.texgroup == null ? group.model.texgroup : group.texgroup;
+		if(tex == null) return false;
+		TextureManager.bind(tex.painter);
+		return true;
 	}
 
 }
