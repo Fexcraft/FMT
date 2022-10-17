@@ -113,7 +113,7 @@ public class GGR {
         	else if(action == GLFW_RELEASE){
         		if(!isOverUI()){
         			if(TexturePainter.TOOL.active()){
-        				Picker.pick(TexturePainter.SELMODE.getPickType(), PickTask.PAINT, true);
+        				Picker.pick(TexturePainter.SELMODE.getPickType(), PickTask.PAINT1, true);
         			}
         			else if(Picker.TYPE.color()) Picker.process();
         			else Picker.pick(PickType.POLYGON, PickTask.SELECT, true);
@@ -123,7 +123,10 @@ public class GGR {
         }
         else if(button == 1){
     		if(isControlDown()){
-    			PolySelMenu.show();
+    			if(TexturePainter.TOOL.active()){
+    				Picker.pick(TexturePainter.SELMODE.getPickType(), PickTask.PAINT2, true);
+    			}
+    			else PolySelMenu.show();
     			return;
     		}
         	if(action == GLFW_PRESS){
