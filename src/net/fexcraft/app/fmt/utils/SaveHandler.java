@@ -77,7 +77,7 @@ public class SaveHandler {
 				else if(elm.getName().equals("texture.png")){
 					try{ //loads in old texture files
 						if(FMT.MODEL.texgroup == null){
-							TextureManager.addGroup(FMT.MODEL.texgroup = new TextureGroup(new JsonObject<>("default")));
+							TextureManager.addGroup(FMT.MODEL.texgroup = new TextureGroup("default"));
 						}
 						TextureManager.loadFromStream(zip.getInputStream(elm), "group-default", false, true);
 						FMT.MODEL.texgroup.reAssignTexture();
