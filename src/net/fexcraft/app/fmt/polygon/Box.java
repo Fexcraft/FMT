@@ -102,8 +102,8 @@ public class Box extends Polygon {
 		if(color == c_blu1) return BoxFace.BACK;
 		if(color == c_red1) return BoxFace.TOP;
 		if(color == c_red0) return BoxFace.DOWN;
-		if(color == c_gre1) return BoxFace.LEFT;
-		if(color == c_gre0) return BoxFace.RIGHT;
+		if(color == c_gre0) return BoxFace.LEFT;
+		if(color == c_gre1) return BoxFace.RIGHT;
 		return NoFace.NONE;
 	}
 	
