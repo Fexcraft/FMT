@@ -214,7 +214,7 @@ public class TextureManager {
 			while(hasGroup(name + i)) i++;
 			name += i;
 		}
-		TextureGroup group = new TextureGroup(name, new File("./temp/group-" + name + ".png"));
+		TextureGroup group = new TextureGroup(name, new File("./temp/"));
 		addGroup(group);
 		if(show) GenericDialog.showOK("texture.manager", null, null, "texture.added_group", "#" + group.name);
 		return group;
