@@ -371,9 +371,10 @@ public class FMT {
 			    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			    boolean tex = Picker.TASK.paint() && TexturePainter.SELMODE.pixel();
 				PolyRenderer.mode(tex ? DrawMode.TEXTURED : DrawMode.PICKER_FACE);
-				if(tex) TexturePainter.bindTex();
-				Picker.polygon().glm.render();
-				Picker.process();
+				if(!tex || TexturePainter.bindTex()){
+					Picker.polygon().glm.render();
+					Picker.process();
+				}
 			}
 		    Picker.reset();
 		}
