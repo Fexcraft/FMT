@@ -402,23 +402,7 @@ public abstract class Polygon {
 			}
 		}
 		else{
-			if(getShape().isCylinder()){
-				int segs = ((Cylinder)this).segments;
-				float[][] ends = null;
-				log(face);
-				if(face < segs){
-					ends = coords[0];
-				}
-				else if(face < (segs * 2)){
-					ends = coords[2];
-				}
-				else if(face < (segs * 3)){
-					ends = coords[1];
-				} else return false;
-				if(ends == null || ends.length == 0) return false;
-				paint(tex, ends, TexturePainter.getCurrentColor(primary), false);
-			}
-			else if(getShape().isTexturable()){
+			if(getShape().isTexturable()){
 				float[][] ends = coords[face];
 				if(ends == null || ends.length == 0) return false;
 				paint(tex, ends, TexturePainter.getCurrentColor(primary), cuv.get(getUVFaces()[face]).detached());
