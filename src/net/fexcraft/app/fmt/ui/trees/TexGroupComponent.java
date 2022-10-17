@@ -154,6 +154,7 @@ public class TexGroupComponent extends EditorComponent {
         		texgroup().texture.resize(x, y);
         		texgroup().texture.save();
         		texgroup().texture.reload();
+        		texgroup().genPainterTex();
         		log("Resized TextureGroup '" + texgroup().name + "' to " + ox + ", " + oy + " with " + upscale.getSelection() + " times upscaling to " + x + " " + y + ".");
         	}
         	catch(Exception e){
