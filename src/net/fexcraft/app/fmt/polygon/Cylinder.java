@@ -28,7 +28,7 @@ public class Cylinder extends Polygon {
 	public Vector3f topoff = new Vector3f(), toprot = new Vector3f();
 	public boolean[] bools = new boolean[6];
 	public boolean radial;
-	public float seg_width, seg_height;
+	public float seg_width, seg_height, seg_off;
 	
 	public Cylinder(Model model){
 		super(model);
@@ -60,6 +60,7 @@ public class Cylinder extends Polygon {
 		radial = obj.get("radialtex", radial);
 		seg_width = obj.get("seg_width", seg_width);
 		seg_height = obj.get("seg_height", seg_height);
+		seg_off = obj.get("seg_off", seg_off);
 	}
 	
 	@Override
@@ -85,6 +86,7 @@ public class Cylinder extends Polygon {
 		map.add("radialtex", radial);
 		map.add("seg_width", seg_width);
 		map.add("seg_height", seg_height);
+		map.add("seg_off", seg_off);
 		return map;
 	}
 
@@ -107,7 +109,8 @@ public class Cylinder extends Polygon {
 			.set("segments", segments)
 			.set("seg_limit", seglimit)
 			.set("base_scale", base)
-			.set("top_scale", top);
+			.set("top_scale", top)
+			.set("seg_off", seg_off);
 		if(topoff.x != 0f || topoff.y != 0f || topoff.z != 0f){
 			gen.set("top_offset", new Vec3f(topoff.x, topoff.y, topoff.z));
 		}
@@ -172,6 +175,7 @@ public class Cylinder extends Polygon {
 			case LENGTH: return length;
 			case SEGMENTS: return segments;
 			case SEG_LIMIT: return seglimit;
+			case SEG_OFF: return seg_off;
 			case DIRECTION: return direction;
 			case BASE_SCALE: return base;
 			case TOP_SCALE: return top;
@@ -192,6 +196,7 @@ public class Cylinder extends Polygon {
 			case LENGTH: length = value; break;
 			case SEGMENTS: segments = (int)value; break;
 			case SEG_LIMIT: seglimit = (int)value; break;
+			case SEG_OFF: seg_off = value; break;
 			case DIRECTION: direction = (int)value; break;
 			case BASE_SCALE: base = value; break;
 			case TOP_SCALE: top = value; break;
@@ -231,6 +236,7 @@ public class Cylinder extends Polygon {
 		cyl.radial = radial;
 		cyl.seg_width = seg_width;
 		cyl.seg_height = seg_height;
+		cyl.seg_off = seg_off;
 		for(int i = 0; i < bools.length; i++) cyl.bools[i] = bools[i];
 		return poly;
 	}
