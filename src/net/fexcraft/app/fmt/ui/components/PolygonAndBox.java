@@ -29,9 +29,9 @@ public class PolygonAndBox extends PolygonGeneral {
 		super("box", height);
 		addSortingFields();
 		this.add(new Label(translate(LANG_PREFIX + "polygon.box" + ".size"), L5, row(1), LW, HEIGHT));
-		this.add(new NumberField(this, F30, row(1), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.SIZE, ValAxe.X)));
-		this.add(new NumberField(this, F31, row(0), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.SIZE, ValAxe.Y)));
-		this.add(new NumberField(this, F32, row(0), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.SIZE, ValAxe.Z)));
+		this.add(new NumberField(this, F30, row(1), F3S, HEIGHT).setup(0, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.SIZE, ValAxe.X)));
+		this.add(new NumberField(this, F31, row(0), F3S, HEIGHT).setup(0, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.SIZE, ValAxe.Y)));
+		this.add(new NumberField(this, F32, row(0), F3S, HEIGHT).setup(0, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.SIZE, ValAxe.Z)));
 		addGeneralFields();
 		this.add(new Label(translate(LANG_PREFIX + "polygon.box" + ".face_vis"), L5, row(1), LW, HEIGHT));
 		this.add(new BoolButton(this, F30, row(1), F6S, HEIGHT, new PolygonValue(PolyVal.SIDES, ValAxe.X)));
