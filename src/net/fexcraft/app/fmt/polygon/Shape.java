@@ -9,7 +9,9 @@ public enum Shape {
 	OBJECT("object"),
 	MARKER("marker", "rect"),
 	VOXEL("voxel"),
-	BOUNDING_BOX("rect");
+	BOUNDING_BOX("rect"),
+	RECT_CURVE("rect"),
+	CYL_CURVE("cylinder");
 	
 	private String[] conversion_groups;
 	
@@ -18,7 +20,7 @@ public enum Shape {
 	}
 
 	public boolean isRectagular(){
-		return this == BOX || this.isShapebox() || this == BOUNDING_BOX;
+		return this == BOX || isShapebox() || this == BOUNDING_BOX || this == RECT_CURVE;
 	}
 
 	public boolean isBox(){
@@ -31,6 +33,10 @@ public enum Shape {
 
 	public boolean isCylinder(){
 		return this == CYLINDER;
+	}
+
+	public boolean isCylindrical(){
+		return this == CYLINDER || this == CYL_CURVE;
 	}
 	
 	public boolean isMarker(){
@@ -48,6 +54,14 @@ public enum Shape {
 	public boolean isObject(){
 		return this == OBJECT;
 	}
+	
+	public boolean isCurve(){
+		return this == RECT_CURVE || this == CYL_CURVE;
+	}
+	
+	public boolean is(Shape type){
+		return this == type;
+	}
 
 	public static Shape get(String text){
 		text = text.toLowerCase();
@@ -63,6 +77,8 @@ public enum Shape {
 			case "bb":
 			case "boundingbox": 
 			case "bounding_box": return BOUNDING_BOX;
+			case "cyl_curve": return CYL_CURVE;
+			case "rect_curve": return RECT_CURVE;
 			default: return null;
 		}
 	}
