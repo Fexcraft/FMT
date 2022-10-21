@@ -374,6 +374,7 @@ public class Settings {
 		editor.addComponent(new BoxComponent());
 		editor.addComponent(new ShapeboxComponent());
 		editor.addComponent(new CylinderComponentFull());
+		editor.addComponent(new CurveComponent());
 		editor.addComponent(new MarkerComponent());
 		editor = new Editor("group_editor", "Group Editor", false, true);
 		editor.addComponent(new QuickAdd());
