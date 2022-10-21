@@ -120,15 +120,13 @@ public class Toolbar extends Panel {
 			new MenuButton(0, "polygons.add_box", () -> QuickAdd.addBox()),
 			new MenuButton(1, "polygons.add_shapebox", () -> QuickAdd.addShapebox()),
 			new MenuButton(2, "polygons.add_cylinder", () -> QuickAdd.addCylinder()),
-			new MenuButton(3, "polygons.add_boundingbox"),
-			new MenuButton(4, "polygons.add_object"),
-			new MenuButton(5, "polygons.add_marker", () -> QuickAdd.addMarker()),
-			new MenuButton(6, "polygons.add_group", () -> QuickAdd.addGroup()),
-			new MenuButton(7, "polygons.add_voxel"),
-			new ToolbarMenu(-8, "polygons.special",
-				new MenuButton(0, "polygons.special.fvtm_rail"),
-				new MenuButton(1, "polygons.special.curve_line")
-			)
+			new MenuButton(3, "polygons.add_marker", () -> QuickAdd.addMarker()),
+			new MenuButton(4, "polygons.add_group", () -> QuickAdd.addGroup()),
+			new MenuButton(5, "polygons.add_boundingbox"),
+			new MenuButton(6, "polygons.add_rect_curve", () -> QuickAdd.addCurve(false)),
+			new MenuButton(7, "polygons.add_cyl_curve", () -> QuickAdd.addCurve(true)),
+			new MenuButton(8, "polygons.add_object"),
+			new MenuButton(9, "polygons.add_voxel")
 		));
 		this.add(new ToolbarMenu(5, "helpers"));
 		this.add(new ToolbarMenu(6, "exit", () -> FMT.close(0)));
