@@ -260,6 +260,7 @@ public class Model {
 		float fval = field.value();
 		poly.setValue(value, fval);
 		update(UpdateType.POLYGON_VALUE, poly, value);
+		if(poly.getShape().isCurve()) update(UpdateType.POLYGON_SELECTED, poly, selected.size(), selected.size());
 		if(selected.size() > 1){
 			for(int i = 1; i < selected.size(); i++){
 				poly = selected.get(i);
