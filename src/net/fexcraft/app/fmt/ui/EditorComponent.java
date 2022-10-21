@@ -133,6 +133,7 @@ public class EditorComponent extends Component {
 		REGISTRY.put("polygon.cylinder.all", CylinderComponentFull.class);
 		REGISTRY.put("polygon.cylinder.basic", CylinderComponentBasic.class);
 		REGISTRY.put("polygon.cylinder.simple", CylinderComponentSimple.class);
+		REGISTRY.put("polygon.curve", CurveComponent.class);
 		REGISTRY.put("polygon.marker", MarkerComponent.class);
 		REGISTRY.put("polygon.fliptools", FlipTools.class);
 		REGISTRY.put("group.general", GroupGeneral.class);
