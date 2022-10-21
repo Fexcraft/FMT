@@ -4,6 +4,7 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.Box;
 import net.fexcraft.app.fmt.polygon.Cylinder;
 import net.fexcraft.app.fmt.polygon.Marker;
+import net.fexcraft.app.fmt.polygon.RectCurve;
 import net.fexcraft.app.fmt.polygon.Shapebox;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.EditorComponent;
@@ -55,6 +56,16 @@ public class QuickAdd extends EditorComponent {
 
 	private static void hideMenu(){
 		if(Settings.HIDE_MENU_AFTER_POLYGON.value) ToolbarMenu.hideAll();
+	}
+
+	public static void addCurve(boolean cyl){
+		if(cyl){
+			
+		}
+		else{
+			FMT.MODEL.add(null, new RectCurve(null));
+		}
+		hideMenu();
 	}
 
 }
