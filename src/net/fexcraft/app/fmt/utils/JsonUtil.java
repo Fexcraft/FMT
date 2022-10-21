@@ -17,6 +17,7 @@ import javax.net.ssl.X509TrustManager;
 
 import org.joml.Vector3f;
 
+import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.app.json.JsonObject;
@@ -31,6 +32,11 @@ public class JsonUtil {
 	
 	public static Vector3f getVector(JsonMap obj, String format, float def){
 		return new Vector3f(obj.get(format(format, "x"), def), obj.get(format(format, "y"), def), obj.get(format(format, "z"), def));
+	}
+	
+	public static Vector3f getVector(JsonArray array, float def){
+		if(array.empty()) return new Vector3f(def);
+		return new Vector3f(array.get(0).float_value(), array.get(1).float_value(), array.get(2).float_value());
 	}
 	
 	public static void setVector(JsonMap obj, String format, Vector3f vec){
