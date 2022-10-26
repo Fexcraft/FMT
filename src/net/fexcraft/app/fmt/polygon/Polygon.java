@@ -168,6 +168,7 @@ public abstract class Polygon {
 				break;
 			case VOXEL:
 				break;
+			case RECT_CURVE: return new RectCurve(model, obj);
 			default: return null;
 		}
 		return null;
@@ -187,6 +188,7 @@ public abstract class Polygon {
 				break;
 			case VOXEL:
 				break;
+			case RECT_CURVE: return new RectCurve(model);
 			default: return null;
 		}
 		return null;
