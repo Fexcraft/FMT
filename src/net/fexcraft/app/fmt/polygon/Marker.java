@@ -8,6 +8,7 @@ import net.fexcraft.app.fmt.polygon.uv.NoFace;
 import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.RGB;
+import net.fexcraft.lib.frl.Polyhedron;
 import net.fexcraft.lib.frl.gen.Generator;
 
 public class Marker extends Polygon {
@@ -55,17 +56,14 @@ public class Marker extends Polygon {
 
 	@Override
 	protected Generator<GLObject> getGenerator(){
-		float hs = Marker.hs * scale, size = Marker.size * scale;
-		Generator<GLObject> gen = new Generator<GLObject>(glm, glm.glObj.grouptex ? group().texSizeX : model().texSizeX, glm.glObj.grouptex ? group().texSizeY : model().texSizeY)
-			.set("type", Generator.Type.CUBOID)
-			.set("x", -hs)
-			.set("y", -hs)
-			.set("z", -hs)
-			.set("width", size)
-			.set("height", size)
-			.set("depth", size);
+		Generator<GLObject> gen = getMarkerGenerator(glm, scale);
 		glm.glObj.polycolor = rgb.toFloatArray();
 		return gen;
+	}
+
+	public static Generator<GLObject> getMarkerGenerator(Polyhedron<GLObject> glm, float scale){
+		float hs = Marker.hs * scale, size = Marker.size * scale;
+		return new Generator<GLObject>(glm, 1, 1).set("type", Generator.Type.CUBOID).set("x", -hs).set("y", -hs).set("z", -hs).set("width", size).set("height", size).set("depth", size);
 	}
 
 	@Override
