@@ -13,6 +13,7 @@ import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.attributes.PolyVal;
 import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
+import net.fexcraft.app.fmt.polygon.PolyRenderer.DrawMode;
 import net.fexcraft.app.fmt.polygon.uv.BoxFace;
 import net.fexcraft.app.fmt.polygon.uv.Face;
 import net.fexcraft.app.fmt.polygon.uv.NoFace;
@@ -21,6 +22,8 @@ import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.app.json.JsonObject;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
+import net.fexcraft.lib.frl.Polyhedron;
+import net.fexcraft.lib.frl.Vertex;
 import net.fexcraft.lib.frl.gen.Generator;
 import net.fexcraft.lib.frl.gen.Path;
 
@@ -109,6 +112,10 @@ public class RectCurve extends Polygon {
 			color.packed = rgb;
 		}
 
+		public Point(Point point){
+			this(new Vector3f(point.vector), point.color.packed);
+		}
+
 		public Vec3f toVec3f(){
 			return new Vec3f(vector.x, vector.y, vector.z);
 		}
@@ -117,8 +124,8 @@ public class RectCurve extends Polygon {
 	
 	public RectCurve(Model model){
 		super(model);
-		points.add(new Point());
-		points.add(new Point(1, 0, 0));
+		points.add(new Point(pos.x, pos.y, pos.z));
+		points.add(new Point(pos.x + 1, pos.y, pos.z));
 		compath();
 		segments.add(new RectSegment());
 		segments.add(new RectSegment());
@@ -135,6 +142,7 @@ public class RectCurve extends Polygon {
 		segs.value.forEach(elm -> {
 			segments.add(new RectSegment(elm.asMap()));
 		});
+		compath();
 	}
 	
 	@Override
@@ -154,6 +162,7 @@ public class RectCurve extends Polygon {
 		segments.forEach(segment -> {
 			segs.add(segment.save());
 		});
+		map.add("segments", segs);
 		return map;
 	}
 
@@ -164,17 +173,72 @@ public class RectCurve extends Polygon {
 
 	@Override
 	protected Generator<GLObject> getGenerator(){
-		float hs = Marker.hs, size = Marker.size;
-		Generator<GLObject> gen = new Generator<GLObject>(glm, glm.glObj.grouptex ? group().texSizeX : model().texSizeX, glm.glObj.grouptex ? group().texSizeY : model().texSizeY)
-			.set("type", Generator.Type.CUBOID)
-			.set("x", -hs)
-			.set("y", -hs)
-			.set("z", -hs)
-			.set("width", size)
-			.set("height", size)
-			.set("depth", size);
-		glm.glObj.polycolor = RGB.WHITE.toFloatArray();
-		return gen;
+		if(glm.sub == null){
+			glm.sub = new ArrayList<>();
+			Polyhedron<GLObject> poly = new Polyhedron<>();
+			poly.setGlObj(new GLObject());
+			glm.sub.add(poly);
+			poly = new Polyhedron<>();
+			poly.setGlObj(new GLObject());
+			poly.sub = new ArrayList<>();
+			glm.sub.add(poly);
+		}
+		if(glm.sub.get(1).sub.size() != points.size()){
+			while(glm.sub.get(1).sub.size() > points.size()){
+				PolyRenderer.RENDERER.delete(glm.sub.get(1).sub.remove(glm.sub.get(1).sub.size() - 1));
+			}
+			while(glm.sub.get(1).sub.size() < points.size()){
+				Polyhedron<GLObject> poly = new Polyhedron<>();
+				poly.setGlObj(new GLObject());
+				glm.sub.get(1).sub.add(poly);
+			}
+		}
+		for(int i = 0; i < points.size(); i++){
+			Polyhedron<GLObject> poly = glm.sub.get(1).sub.get(i);
+			poly.glObj.polycolor = points.get(i).color.toFloatArray();
+			Vector3f vec = i == 0 ? pos : points.get(i).vector;
+			poly.pos(vec.x, vec.y, vec.z);
+			Marker.getMarkerGenerator(poly, 1).make();
+		}
+		Vec3f las = path.start;
+		float by = path.length / points.size() * 0.25f;
+		for(int i = 0; i < points.size() * 4; i++){
+			Vec3f vec = path.getVectorPosition(by * i + by, false);
+			var poly = new net.fexcraft.lib.frl.Polygon(new Vertex[]{
+				new Vertex(las.sub(pos.x, pos.y, pos.z).add(0, 0.05f, 0)),
+				new Vertex(vec.sub(pos.x, pos.y, pos.z).add(0, 0.05f, 0)),
+				new Vertex(vec.sub(pos.x, pos.y, pos.z).add(0, -.05f, 0)),
+				new Vertex(las.sub(pos.x, pos.y, pos.z).add(0, -.05f, 0))
+			});
+			glm.sub.get(0).polygons.add(poly);
+			poly = new net.fexcraft.lib.frl.Polygon(new Vertex[]{
+				new Vertex(vec.sub(pos.x, pos.y, pos.z).add(0, 0.05f, 0)),
+				new Vertex(las.sub(pos.x, pos.y, pos.z).add(0, 0.05f, 0)),
+				new Vertex(las.sub(pos.x, pos.y, pos.z).add(0, -.05f, 0)),
+				new Vertex(vec.sub(pos.x, pos.y, pos.z).add(0, -.05f, 0))
+			});
+			glm.sub.get(0).polygons.add(poly);
+			glm.sub.get(0).glObj.polycolor = points.get(0).color.toFloatArray();
+			glm.sub.get(0).pos(pos.x, pos.y, pos.z);
+			las = vec;
+		}
+		return new Generator<>(glm);
+	}
+	
+	@Override
+	public void recompile(){
+		if(glm.sub != null){
+			glm.sub.get(1).sub.forEach(sub -> { sub.recompile = true; sub.clear(); });
+			glm.sub.get(0).recompile = true;
+			glm.sub.get(0).clear();
+		}
+		super.recompile();
+	}
+	
+	@Override
+	public void render(){
+		PolyRenderer.mode(DrawMode.RGBCOLOR);
+		glm.render();
 	}
 
 	private void compath(){
@@ -217,7 +281,8 @@ public class RectCurve extends Polygon {
 		switch(polyval.val()){
 			case POS:{
 				if(active_point == 0) super.setValue(polyval, value);
-				else setVectorValue(points.get(active_point).vector, polyval.axe(), value);
+				setVectorValue(points.get(active_point).vector, polyval.axe(), value);
+				compath();
 				break;
 			}
 			case SIZE: setVectorValue(segments.get(active_segment).size, polyval.axe(), value); break;
@@ -254,7 +319,8 @@ public class RectCurve extends Polygon {
 					while(points.size() > val) points.remove(points.size() - 1);
 					if(active_point >= points.size()) active_point = points.size() - 1;
 				}
-				if(val > points.size()) while(points.size() < val) points.add(new Point());
+				if(val > points.size()) while(points.size() < val) points.add(new Point(points.get(points.size() - 1)));
+				compath();
 				break;
 			}
 			case CUR_SEGMENTS:{
