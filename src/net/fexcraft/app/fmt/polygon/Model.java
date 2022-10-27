@@ -138,7 +138,7 @@ public class Model {
 			group.render(mode);
 			if(Settings.LINES.value) group.render(DrawMode.LINES);
 		}
-		if(Settings.LINES.value && isLastSelectedCornerMarked()) CornerUtil.renderCorners();
+		if(Settings.LINES.value && Settings.POLYMARKER.value && isLastSelectedCornerMarked()) CornerUtil.renderCorners();
 	}
 
 	public void renderPicking(){
