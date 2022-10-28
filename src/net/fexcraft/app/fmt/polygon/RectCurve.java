@@ -290,7 +290,7 @@ public class RectCurve extends Polygon {
 				break;
 			}
 			case ROT:{
-				if(active_point == 0) super.setValue(polyval, value);
+				if(active_segment == 0) super.setValue(polyval, value);
 				setVectorValue(segments.get(active_segment).rot, polyval.axe(), value);
 				break;
 			}
