@@ -254,6 +254,10 @@ public class RectCurve extends Polygon {
 				if(active_point > 0) return getVectorValue(points.get(active_point).vector, polyval.axe());
 				else return super.getValue(polyval);
 			}
+			case ROT: {
+				if(active_segment > 0) return getVectorValue(segments.get(active_segment).rot, polyval.axe());
+				else return super.getValue(polyval);
+			}
 			case SIZE: return getVectorValue(segments.get(active_segment).size, polyval.axe());
 			case SIDES:{
 				int idx = polyval.axe().ordinal();
@@ -283,6 +287,11 @@ public class RectCurve extends Polygon {
 				if(active_point == 0) super.setValue(polyval, value);
 				setVectorValue(points.get(active_point).vector, polyval.axe(), value);
 				compath();
+				break;
+			}
+			case ROT:{
+				if(active_point == 0) super.setValue(polyval, value);
+				setVectorValue(segments.get(active_segment).rot, polyval.axe(), value);
 				break;
 			}
 			case SIZE: setVectorValue(segments.get(active_segment).size, polyval.axe(), value); break;
