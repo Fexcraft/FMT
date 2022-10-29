@@ -8,6 +8,7 @@ import static net.fexcraft.app.fmt.utils.JsonUtil.getVector;
 import static net.fexcraft.app.fmt.utils.JsonUtil.setVector;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.joml.Vector3f;
 
@@ -17,6 +18,7 @@ import net.fexcraft.app.fmt.polygon.PolyRenderer.DrawMode;
 import net.fexcraft.app.fmt.polygon.uv.BoxFace;
 import net.fexcraft.app.fmt.polygon.uv.Face;
 import net.fexcraft.app.fmt.polygon.uv.NoFace;
+import net.fexcraft.app.fmt.utils.Axis3DL;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.app.json.JsonObject;
@@ -44,12 +46,25 @@ public class RectCurve extends Polygon {
 		public Vector3f cor0, cor1, cor2, cor3, rot;
 		public float location;
 		
-		public RectSegment(){
+		public RectSegment(float loc){
 			cor0 = new Vector3f();
 			cor1 = new Vector3f();
 			cor2 = new Vector3f();
 			cor3 = new Vector3f();
 			rot = new Vector3f();
+			location = loc;
+		}
+		
+		public RectSegment(RectSegment seg){
+			cor0 = new Vector3f(seg.cor0);
+			cor1 = new Vector3f(seg.cor1);
+			cor2 = new Vector3f(seg.cor2);
+			cor3 = new Vector3f(seg.cor3);
+			rot = new Vector3f(seg.rot);
+			size.set(seg.size);
+			offset.set(seg.offset);
+			location = seg.location + 1;
+			sides = Arrays.copyOf(seg.sides, 4);
 		}
 		
 		public RectSegment(JsonMap map){
@@ -69,6 +84,7 @@ public class RectCurve extends Polygon {
 			cor3 = getVector(map, "%s3", 0);
 			rot = getVector(map, "rot%s", 0);
 			offset = getVector(map, "off%s", 0);
+			location = map.getFloat("loc", 0);
 		}
 
 		public Vector3f[] corners(){
@@ -93,6 +109,7 @@ public class RectCurve extends Polygon {
 			setVector(map, "%s3", cor3);
 			setVector(map, "rot%s", rot);
 			setVector(map, "off%s", offset);
+			map.add("loc", location);
 			return map;
 		}
 		
@@ -120,8 +137,8 @@ public class RectCurve extends Polygon {
 			this(new Vector3f(point.vector), point.color.packed);
 		}
 
-		public Vec3f toVec3f(){
-			return new Vec3f(vector.x, vector.y, vector.z);
+		public Vec3f toVec3f(Vector3f pos){
+			return new Vec3f(vector.x + pos.x, vector.y + pos.y, vector.z + pos.z);
 		}
 		
 	}
@@ -131,8 +148,8 @@ public class RectCurve extends Polygon {
 		points.add(new Point(pos.x, pos.y, pos.z));
 		points.add(new Point(pos.x + 1, pos.y, pos.z));
 		compath();
-		segments.add(new RectSegment());
-		segments.add(new RectSegment());
+		segments.add(new RectSegment(0));
+		segments.add(new RectSegment(1));
 	}
 
 	public RectCurve(Model model, JsonMap obj){
@@ -200,26 +217,27 @@ public class RectCurve extends Polygon {
 		for(int i = 0; i < points.size(); i++){
 			Polyhedron<GLObject> poly = glm.sub.get(1).sub.get(i);
 			poly.glObj.polycolor = points.get(i).color.toFloatArray();
-			Vector3f vec = i == 0 ? pos : points.get(i).vector;
+			Vector3f vec = i == 0 ? pos : new Vector3f(pos).add(points.get(i).vector);
 			poly.pos(vec.x, vec.y, vec.z);
 			Marker.getMarkerGenerator(poly, 1).make();
 		}
-		Vec3f las = path.start;
+		Vec3f vpos = new Vec3f(pos.x, pos.y, pos.z);
+		Vec3f las = path.start.sub(vpos);
 		float by = path.length / points.size() * 0.25f;
 		for(int i = 0; i < points.size() * 4; i++){
-			Vec3f vec = path.getVectorPosition(by * i + by, false);
+			Vec3f vec = path.getVectorPosition(by * i + by, false).sub(vpos);
 			var poly = new net.fexcraft.lib.frl.Polygon(new Vertex[]{
-				new Vertex(las.sub(pos.x, pos.y, pos.z).add(0, 0.05f, 0)),
-				new Vertex(vec.sub(pos.x, pos.y, pos.z).add(0, 0.05f, 0)),
-				new Vertex(vec.sub(pos.x, pos.y, pos.z).add(0, -.05f, 0)),
-				new Vertex(las.sub(pos.x, pos.y, pos.z).add(0, -.05f, 0))
+				new Vertex(las.add(0, 0.05f, 0)),
+				new Vertex(vec.add(0, 0.05f, 0)),
+				new Vertex(vec.add(0, -.05f, 0)),
+				new Vertex(las.add(0, -.05f, 0))
 			});
 			glm.sub.get(0).polygons.add(poly);
 			poly = new net.fexcraft.lib.frl.Polygon(new Vertex[]{
-				new Vertex(vec.sub(pos.x, pos.y, pos.z).add(0, 0.05f, 0)),
-				new Vertex(las.sub(pos.x, pos.y, pos.z).add(0, 0.05f, 0)),
-				new Vertex(las.sub(pos.x, pos.y, pos.z).add(0, -.05f, 0)),
-				new Vertex(vec.sub(pos.x, pos.y, pos.z).add(0, -.05f, 0))
+				new Vertex(vec.add(0, 0.05f, 0)),
+				new Vertex(las.add(0, 0.05f, 0)),
+				new Vertex(las.add(0, -.05f, 0)),
+				new Vertex(vec.add(0, -.05f, 0))
 			});
 			glm.sub.get(0).polygons.add(poly);
 			glm.sub.get(0).glObj.polycolor = points.get(0).color.toFloatArray();
@@ -227,6 +245,51 @@ public class RectCurve extends Polygon {
 			las = vec;
 		}
 		//
+		Axis3DL axe = new Axis3DL();
+		Vec3f loff = new Vec3f(off.x, off.y, off.z);
+		axe.set(loff, path.getVectorPosition(0.001f, false).sub(vpos));
+		Vec3f lrot = new Vec3f(rot.x, rot.y, rot.z);
+		Vec3f tr, tl, br, bl, ntr, ntl, nbr, nbl, coff;
+		RectSegment seg = segments.get(0);
+		tr = ntr = loff;
+		tl = ntl = loff.add(axe.get(0, 0, seg.size.z));
+		bl = nbl = loff.add(axe.get(0, seg.size.y, seg.size.z));
+		br = nbr = loff.add(axe.get(0, seg.size.y, 0));
+		if(!side_top){
+			glm.polygons.add(new net.fexcraft.lib.frl.Polygon(new Vertex[]{
+				new Vertex(tr), new Vertex(tl), new Vertex(bl), new Vertex(br)
+			}));
+		}
+		for(int i = 0; i < segments.size(); i++){
+			seg = segments.get(i);
+			coff = path.getVectorPosition(seg.location, false).sub(vpos);
+			axe.set(path.getVectorPosition(seg.location - 0.001f, false).sub(vpos), coff);
+			ntr = coff;
+			ntl = coff.add(axe.get(0, 0, seg.size.z));
+			nbl = coff.add(axe.get(0, seg.size.y, seg.size.z));
+			nbr = coff.add(axe.get(0, seg.size.y, 0));
+			glm.polygons.add(new net.fexcraft.lib.frl.Polygon(new Vertex[]{
+				new Vertex(ntr), new Vertex(tr), new Vertex(br), new Vertex(nbr)
+			}));
+			glm.polygons.add(new net.fexcraft.lib.frl.Polygon(new Vertex[]{
+				new Vertex(ntl), new Vertex(nbl), new Vertex(bl), new Vertex(tl)
+			}));
+			glm.polygons.add(new net.fexcraft.lib.frl.Polygon(new Vertex[]{
+				new Vertex(tr), new Vertex(ntr), new Vertex(ntl), new Vertex(tl)
+			}));
+			glm.polygons.add(new net.fexcraft.lib.frl.Polygon(new Vertex[]{
+				new Vertex(nbl), new Vertex(nbr), new Vertex(br), new Vertex(bl)
+			}));
+			tr = ntr;
+			tl = ntl;
+			br = nbr;
+			bl = nbl;
+		}
+		if(!side_bot){
+			glm.polygons.add(new net.fexcraft.lib.frl.Polygon(new Vertex[]{
+				new Vertex(ntl), new Vertex(ntr), new Vertex(nbr), new Vertex(nbl)
+			}));
+		}
 		return new Generator<>(glm);
 	}
 	
@@ -243,13 +306,14 @@ public class RectCurve extends Polygon {
 	@Override
 	public void render(){
 		PolyRenderer.mode(DrawMode.RGBCOLOR);
+		//GL11.glDisable(GL11.GL_CULL_FACE);
 		glm.render();
 	}
 
 	private void compath(){
 		Vec3f[] arr = new Vec3f[points.size()];
 		int idx = 0;
-		for(Point point : points) arr[idx++] = point.toVec3f();
+		for(Point point : points) arr[idx++] = point.toVec3f(pos);
 		path = new Path(arr);
 	}
 	
@@ -294,7 +358,7 @@ public class RectCurve extends Polygon {
 		switch(polyval.val()){
 			case POS:{
 				if(active_point == 0) super.setValue(polyval, value);
-				setVectorValue(points.get(active_point).vector, polyval.axe(), value);
+				else setVectorValue(points.get(active_point).vector, polyval.axe(), value);
 				compath();
 				break;
 			}
@@ -355,7 +419,7 @@ public class RectCurve extends Polygon {
 					while(segments.size() > val) segments.remove(segments.size() - 1);
 					if(active_segment >= segments.size()) active_segment = segments.size() - 1;
 				}
-				if(val > segments.size()) while(segments.size() < val) segments.add(new RectSegment());
+				if(val > segments.size()) while(segments.size() < val) segments.add(new RectSegment(segments.get(segments.size() - 1)));
 				break;
 			}
 			case SEG_ROT: setVectorValue(segments.get(active_segment).rot, polyval.axe(), value); break;
@@ -378,13 +442,14 @@ public class RectCurve extends Polygon {
 
 	@Override
 	public RGB getFaceColor(int idx){
+		if(idx == 0) return blu1;
+		if(idx == glm.polygons.size() - 1) return blu0;
+		idx = (idx - 1) % 4;;
 		switch(idx){
-			case 0: return blu0;
-			case 1: return blu1;
+			case 0: return gre1;
+			case 1: return gre0;
 			case 2: return red1;
 			case 3: return red0;
-			case 4: return gre1;
-			case 5: return gre0;
 		}
 		return RGB.GREEN;
 	}
