@@ -256,16 +256,17 @@ public class Model {
 			return;
 		}
 		Polygon poly = selected.get(0);
-		float curr = poly.getValue(value);
 		float fval = field.value();
 		poly.setValue(value, fval);
 		update(UpdateType.POLYGON_VALUE, poly, value);
-		if(poly.getShape().isCurve()) update(UpdateType.POLYGON_SELECTED, poly, selected.size(), selected.size());
+		if(value.doesUpdateMoreFields()) update(UpdateType.POLYGON_SELECTED, poly, selected.size(), selected.size());
 		if(selected.size() > 1){
+			float nval = poly.getValue(value);
+			if(nval != fval) fval = nval;
 			for(int i = 1; i < selected.size(); i++){
 				poly = selected.get(i);
-				float diff = curr - poly.getValue(value);
-				poly.setValue(value, fval + diff);
+				float diff = nval - poly.getValue(value);
+				poly.setValue(value, nval + diff);
 				update(UpdateType.POLYGON_VALUE, poly, value);
 			}
 		}
