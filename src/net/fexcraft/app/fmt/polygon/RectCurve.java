@@ -35,7 +35,7 @@ public class RectCurve extends Polygon {
 	public ArrayList<RectSegment> segments = new ArrayList<>();
 	public ArrayList<Point> points = new ArrayList<>();
 	public int active_point = 0, active_segment = 0;
-	public boolean side_top, side_bot;
+	public boolean side_top, side_bot, dirloc;
 	public Path path;
 	
 	public static class RectSegment {
@@ -55,7 +55,7 @@ public class RectCurve extends Polygon {
 			location = loc;
 		}
 		
-		public RectSegment(RectSegment seg){
+		public RectSegment(RectSegment seg, boolean loc){
 			cor0 = new Vector3f(seg.cor0);
 			cor1 = new Vector3f(seg.cor1);
 			cor2 = new Vector3f(seg.cor2);
@@ -63,7 +63,7 @@ public class RectCurve extends Polygon {
 			rot = new Vector3f(seg.rot);
 			size.set(seg.size);
 			offset.set(seg.offset);
-			location = seg.location + 1;
+			location = seg.location + (loc ? 0 : 1);
 			sides = Arrays.copyOf(seg.sides, 4);
 		}
 		
@@ -163,6 +163,7 @@ public class RectCurve extends Polygon {
 		segs.value.forEach(elm -> {
 			segments.add(new RectSegment(elm.asMap()));
 		});
+		dirloc = obj.getBoolean("litloc", dirloc);
 		compath();
 	}
 	
@@ -184,6 +185,7 @@ public class RectCurve extends Polygon {
 			segs.add(segment.save());
 		});
 		map.add("segments", segs);
+		map.add("litloc", dirloc);
 		return map;
 	}
 
@@ -251,6 +253,7 @@ public class RectCurve extends Polygon {
 		Vec3f lrot = new Vec3f(rot.x, rot.y, rot.z);
 		Vec3f tr, tl, br, bl, ntr, ntl, nbr, nbl, coff;
 		RectSegment seg = segments.get(0);
+		float loc = 0;
 		tr = ntr = loff;
 		tl = ntl = loff.add(axe.get(0, 0, seg.size.z));
 		bl = nbl = loff.add(axe.get(0, seg.size.y, seg.size.z));
@@ -262,8 +265,9 @@ public class RectCurve extends Polygon {
 		}
 		for(int i = 0; i < segments.size(); i++){
 			seg = segments.get(i);
-			coff = path.getVectorPosition(seg.location, false).sub(vpos);
-			axe.set(path.getVectorPosition(seg.location - 0.001f, false).sub(vpos), coff);
+			loc = dirloc ? path.length * seg.location : seg.location;
+			coff = path.getVectorPosition(loc, false).sub(vpos);
+			axe.set(path.getVectorPosition(loc - 0.001f, false).sub(vpos), coff);
 			ntr = coff;
 			ntl = coff.add(axe.get(0, 0, seg.size.z));
 			nbl = coff.add(axe.get(0, seg.size.y, seg.size.z));
@@ -287,7 +291,7 @@ public class RectCurve extends Polygon {
 		}
 		if(!side_bot){
 			glm.polygons.add(new net.fexcraft.lib.frl.Polygon(new Vertex[]{
-				new Vertex(ntl), new Vertex(ntr), new Vertex(nbr), new Vertex(nbl)
+				new Vertex(tl), new Vertex(tr), new Vertex(br), new Vertex(bl)
 			}));
 		}
 		return new Generator<>(glm);
@@ -350,6 +354,7 @@ public class RectCurve extends Polygon {
 			case CUR_LENGTH: return path.length;
 			case SEG_ROT: return getVectorValue(segments.get(active_segment).rot, polyval.axe());
 			case SEG_LOC: return segments.get(active_segment).location;
+			case SEG_LOC_LIT: return dirloc ? 1 : 0;
 			default: return super.getValue(polyval);
 		}
 	}
@@ -419,11 +424,12 @@ public class RectCurve extends Polygon {
 					while(segments.size() > val) segments.remove(segments.size() - 1);
 					if(active_segment >= segments.size()) active_segment = segments.size() - 1;
 				}
-				if(val > segments.size()) while(segments.size() < val) segments.add(new RectSegment(segments.get(segments.size() - 1)));
+				if(val > segments.size()) while(segments.size() < val) segments.add(new RectSegment(segments.get(segments.size() - 1), dirloc));
 				break;
 			}
 			case SEG_ROT: setVectorValue(segments.get(active_segment).rot, polyval.axe(), value); break;
 			case SEG_LOC: segments.get(active_segment).location = value; break;
+			case SEG_LOC_LIT: dirloc = value >= 0.5;
 			default: super.setValue(polyval, value);
 		}
 		this.recompile();
