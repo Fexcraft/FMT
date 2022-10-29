@@ -39,6 +39,7 @@ public class RectCurve extends Polygon {
 	public static class RectSegment {
 
 		public Vector3f size = new Vector3f(1);
+		public Vector3f offset = new Vector3f(1);
 		public boolean[] sides = new boolean[4];
 		public Vector3f cor0, cor1, cor2, cor3, rot;
 		public float location;
@@ -67,6 +68,7 @@ public class RectCurve extends Polygon {
 			cor2 = getVector(map, "%s2", 0);
 			cor3 = getVector(map, "%s3", 0);
 			rot = getVector(map, "rot%s", 0);
+			offset = getVector(map, "off%s", 0);
 		}
 
 		public Vector3f[] corners(){
@@ -90,12 +92,14 @@ public class RectCurve extends Polygon {
 			setVector(map, "%s2", cor2);
 			setVector(map, "%s3", cor3);
 			setVector(map, "rot%s", rot);
+			setVector(map, "off%s", offset);
 			return map;
 		}
 		
 	}
 	
 	public static class Point {
+		
 		public Vector3f vector;
 		public RGB color = RGB.WHITE.copy();
 		
@@ -222,6 +226,7 @@ public class RectCurve extends Polygon {
 			glm.sub.get(0).pos(pos.x, pos.y, pos.z);
 			las = vec;
 		}
+		//
 		return new Generator<>(glm);
 	}
 	
@@ -252,6 +257,10 @@ public class RectCurve extends Polygon {
 		switch(polyval.val()){
 			case POS: {
 				if(active_point > 0) return getVectorValue(points.get(active_point).vector, polyval.axe());
+				else return super.getValue(polyval);
+			}
+			case OFF: {
+				if(active_segment > 0) return getVectorValue(segments.get(active_segment).offset, polyval.axe());
 				else return super.getValue(polyval);
 			}
 			case ROT: {
@@ -287,6 +296,11 @@ public class RectCurve extends Polygon {
 				if(active_point == 0) super.setValue(polyval, value);
 				setVectorValue(points.get(active_point).vector, polyval.axe(), value);
 				compath();
+				break;
+			}
+			case OFF:{
+				if(active_segment == 0) super.setValue(polyval, value);
+				setVectorValue(segments.get(active_segment).offset, polyval.axe(), value);
 				break;
 			}
 			case ROT:{
