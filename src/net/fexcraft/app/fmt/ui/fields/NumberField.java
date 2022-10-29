@@ -60,7 +60,7 @@ public class NumberField extends TextInput implements Field {
 
 	private EditorComponent comp;
 	private PolygonValue poly_value;
-	private boolean floatfield;
+	private boolean floatfield, indexfield;
 	private float min, max;
 	protected Float value = null;
 	protected Consumer<NumberField> update;
@@ -92,6 +92,11 @@ public class NumberField extends TextInput implements Field {
 		return this;
 	}
 	
+	public NumberField index(){
+		indexfield = true;
+		return this;
+	}
+	
 	@Override
 	public float value(){
 		if(value != null) return value;
@@ -114,7 +119,7 @@ public class NumberField extends TextInput implements Field {
 		if(flat < min) flat = min;
 		try{
 			Number num = nf.parse(df.format(flat));
-			return floatfield ? num.floatValue() : num.intValue();
+			return floatfield ? num.floatValue() : indexfield && positive && num.floatValue() % 1f > 0 ? num.intValue() + 1 : num.intValue();
 		}
 		catch(ParseException e){
 			log(e);
