@@ -54,6 +54,10 @@ public enum PolyVal {
 		public ValAxe axe(){
 			return axe;
 		}
+
+		public boolean doesUpdateMoreFields(){
+			return val == CUR_ACTIVE_POINT || val == CUR_ACTIVE_SEGMENT || val == CUR_POINTS || val == CUR_SEGMENTS;
+		}
 		
 	}
 	
