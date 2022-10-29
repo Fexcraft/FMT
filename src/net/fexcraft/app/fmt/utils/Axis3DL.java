@@ -47,6 +47,7 @@ public class Axis3DL implements AxisRotator {
         convertMatrixToAngles();
     }
 
+    @Override
     public void setAngles(float yaw, float pitch, float roll){
         this.yaw = yaw; this.pitch = pitch; this.roll = roll; convertToMatrix(false);
     }
@@ -56,5 +57,28 @@ public class Axis3DL implements AxisRotator {
 		Vector3f vec = getRelativeVector(v.x, v.y, v.z);
 		return new Vec3f(vec.x, vec.y, vec.z);
 	}
+
+	public Vec3f get(Vec3f v){
+		return getRelativeVector(v);
+	}
+
+	public Vec3f get(float x, float y, float z){
+		Vector3f vec = getRelativeVector(x, y, z);
+		return new Vec3f(vec.x, vec.y, vec.z);
+	}
+
+	public void set(Vec3f vec1, Vec3f vec0){
+        double dx = vec0.x - vec1.x, dy = vec0.y - vec1.y, dz = vec0.z - vec1.z;
+        double dxz = Math.sqrt(dx * dx + dz * dz);
+        yaw = (float)Math.atan2(dz, dx);
+        pitch = (float)-Math.atan2(dy, dxz);
+        roll = 0;
+        convertToMatrix(true);
+	}
+
+    public void add(float x, float y, float z){
+        yaw += y; pitch += z; roll += x;
+        convertToMatrix(false);
+    }
 
 }
