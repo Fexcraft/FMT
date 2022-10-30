@@ -26,7 +26,8 @@ public class CurveComponent extends EditorComponent {
 		this.add(new NumberField(this, F31, row(0), F3S, HEIGHT).setup(0, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.SEG_LOC, ValAxe.N)));
 		this.add(new BoolButton(this, F32, row(0), F3S, HEIGHT, new PolygonValue(PolyVal.SEG_LOC_LIT, ValAxe.N)));
 		this.add(new Label(translate(LANG_PREFIX + id + ".cur_length"), L5, row(1), LW, HEIGHT));
-		this.add(new NumberField(this, L5, row(1), LW, HEIGHT).setup(0, 360, false, new PolygonValue(PolyVal.CUR_LENGTH, ValAxe.N)));
+		this.add(new NumberField(this, F20, row(1), F2S, HEIGHT).setup(0, 360, false, new PolygonValue(PolyVal.CUR_LENGTH, ValAxe.N)));
+		this.add(new BoolButton(this, F21, row(0), F2S, HEIGHT, new PolygonValue(PolyVal.RADIAL, ValAxe.N)));
 	}
 
 }
