@@ -36,7 +36,7 @@ public class FMFExporter implements Exporter {
 	//from fvtm
 	private static final int PP = 1, PR = 2, PF = 3, PT = 4, PL = 6, PM = 7, PDF = 8, PDU = 9, PCU = 10;
 	private static final int PBS = 16, PBC = 17;
-	private static final int PCRL = 16, PCD = 17, PCSG = 18, PCSL = 19, PCTO = 20, PCTR = 21, PCRT = 22;
+	private static final int PCRL = 16, PCD = 17, PCSG = 18, PCSL = 19, PCTO = 20, PCTR = 21, PCRT = 22, PCSO = 23;
 
 	public FMFExporter(JsonMap map){
 		settings.add(new Setting<>("modeldata", true, "exporter-fmf"));
@@ -156,6 +156,9 @@ public class FMFExporter implements Exporter {
 						}
 						if(cyl.seg_width > 0f || cyl.seg_height > 0f){
 							writeFloats(stream, PCRT, cyl.seg_width, cyl.seg_height);
+						}
+						if(cyl.seg_off != 0f){
+							writeFloats(stream, PCSO, cyl.seg_off);
 						}
 					}
 					if(polygon.cuv.any()){
