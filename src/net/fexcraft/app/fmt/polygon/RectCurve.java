@@ -30,28 +30,30 @@ import net.fexcraft.lib.frl.gen.Generator;
 import net.fexcraft.lib.frl.gen.Path;
 
 public class RectCurve extends Polygon {
-	
+
+	public Polyhedron<GLObject> gll = new Polyhedron<GLObject>().setGlObj(new GLObject());
+	public Polyhedron<GLObject> glp = new Polyhedron<GLObject>().setGlObj(new GLObject());
 	public static PolyVal[] CORNERS = { CORNER_0, CORNER_1, CORNER_2, CORNER_3 };
 	public ArrayList<RectSegment> segments = new ArrayList<>();
 	public ArrayList<Point> points = new ArrayList<>();
 	public int active_point = 0, active_segment = 0;
-	public boolean side_top, side_bot, dirloc;
+	public boolean side_top, side_bot, dirloc, showline = true;
 	public Path path;
 	
 	public static class RectSegment {
 
 		public Vector3f size = new Vector3f(1);
-		public Vector3f offset = new Vector3f(1);
+		public Vector3f offset = new Vector3f(0);
 		public boolean[] sides = new boolean[4];
-		public Vector3f cor0, cor1, cor2, cor3, rot;
-		public float location;
+		public Vector3f cor0, cor1, cor2, cor3;//, rot;
+		public float location, rot;
 		
 		public RectSegment(float loc){
 			cor0 = new Vector3f();
 			cor1 = new Vector3f();
 			cor2 = new Vector3f();
 			cor3 = new Vector3f();
-			rot = new Vector3f();
+			//rot = new Vector3f();
 			location = loc;
 		}
 		
@@ -60,7 +62,8 @@ public class RectCurve extends Polygon {
 			cor1 = new Vector3f(seg.cor1);
 			cor2 = new Vector3f(seg.cor2);
 			cor3 = new Vector3f(seg.cor3);
-			rot = new Vector3f(seg.rot);
+			//rot = new Vector3f(seg.rot);
+			rot = seg.rot;
 			size.set(seg.size);
 			offset.set(seg.offset);
 			location = seg.location + (loc ? 0 : 1);
@@ -82,7 +85,8 @@ public class RectCurve extends Polygon {
 			cor1 = getVector(map, "%s1", 0);
 			cor2 = getVector(map, "%s2", 0);
 			cor3 = getVector(map, "%s3", 0);
-			rot = getVector(map, "rot%s", 0);
+			//rot = getVector(map, "rot%s", 0);
+			rot = map.getFloat("rot", 0);
 			offset = getVector(map, "off%s", 0);
 			location = map.getFloat("loc", 0);
 		}
@@ -107,7 +111,8 @@ public class RectCurve extends Polygon {
 			setVector(map, "%s1", cor1);
 			setVector(map, "%s2", cor2);
 			setVector(map, "%s3", cor3);
-			setVector(map, "rot%s", rot);
+			//setVector(map, "rot%s", rot);
+			map.add("rot", rot);
 			setVector(map, "off%s", offset);
 			map.add("loc", location);
 			return map;
@@ -164,6 +169,7 @@ public class RectCurve extends Polygon {
 			segments.add(new RectSegment(elm.asMap()));
 		});
 		dirloc = obj.getBoolean("litloc", dirloc);
+		showline = obj.getBoolean("line", showline);
 		compath();
 	}
 	
@@ -186,6 +192,7 @@ public class RectCurve extends Polygon {
 		});
 		map.add("segments", segs);
 		map.add("litloc", dirloc);
+		map.add("line", showline);
 		return map;
 	}
 
@@ -196,61 +203,53 @@ public class RectCurve extends Polygon {
 
 	@Override
 	protected Generator<GLObject> getGenerator(){
-		if(glm.sub == null){
-			glm.sub = new ArrayList<>();
-			Polyhedron<GLObject> poly = new Polyhedron<>();
-			poly.setGlObj(new GLObject());
-			glm.sub.add(poly);
-			poly = new Polyhedron<>();
-			poly.setGlObj(new GLObject());
-			poly.sub = new ArrayList<>();
-			glm.sub.add(poly);
-		}
-		if(glm.sub.get(1).sub.size() != points.size()){
-			while(glm.sub.get(1).sub.size() > points.size()){
-				PolyRenderer.RENDERER.delete(glm.sub.get(1).sub.remove(glm.sub.get(1).sub.size() - 1));
+		if(glp.sub == null) glp.sub = new ArrayList<>();
+		if(glp.sub.size() != points.size()){
+			while(glp.sub.size() > points.size()){
+				PolyRenderer.RENDERER.delete(glp.sub.remove(glp.sub.size() - 1));
 			}
-			while(glm.sub.get(1).sub.size() < points.size()){
+			while(glp.sub.size() < points.size()){
 				Polyhedron<GLObject> poly = new Polyhedron<>();
 				poly.setGlObj(new GLObject());
-				glm.sub.get(1).sub.add(poly);
+				glp.sub.add(poly);
 			}
 		}
 		for(int i = 0; i < points.size(); i++){
-			Polyhedron<GLObject> poly = glm.sub.get(1).sub.get(i);
+			Polyhedron<GLObject> poly = glp.sub.get(i);
 			poly.glObj.polycolor = points.get(i).color.toFloatArray();
 			Vector3f vec = i == 0 ? pos : new Vector3f(pos).add(points.get(i).vector);
 			poly.pos(vec.x, vec.y, vec.z);
 			Marker.getMarkerGenerator(poly, 1).make();
 		}
 		Vec3f vpos = new Vec3f(pos.x, pos.y, pos.z);
-		Vec3f las = path.start.sub(vpos);
-		float by = path.length / points.size() * 0.25f;
-		for(int i = 0; i < points.size() * 4; i++){
-			Vec3f vec = path.getVectorPosition(by * i + by, false).sub(vpos);
-			var poly = new net.fexcraft.lib.frl.Polygon(new Vertex[]{
-				new Vertex(las.add(0, 0.05f, 0)),
-				new Vertex(vec.add(0, 0.05f, 0)),
-				new Vertex(vec.add(0, -.05f, 0)),
-				new Vertex(las.add(0, -.05f, 0))
-			});
-			glm.sub.get(0).polygons.add(poly);
-			poly = new net.fexcraft.lib.frl.Polygon(new Vertex[]{
-				new Vertex(vec.add(0, 0.05f, 0)),
-				new Vertex(las.add(0, 0.05f, 0)),
-				new Vertex(las.add(0, -.05f, 0)),
-				new Vertex(vec.add(0, -.05f, 0))
-			});
-			glm.sub.get(0).polygons.add(poly);
-			glm.sub.get(0).glObj.polycolor = points.get(0).color.toFloatArray();
-			glm.sub.get(0).pos(pos.x, pos.y, pos.z);
-			las = vec;
+		if(showline){
+			Vec3f las = path.start.sub(vpos);
+			float by = path.length / points.size() * 0.25f;
+			for(int i = 0; i < points.size() * 4; i++){
+				Vec3f vec = path.getVectorPosition(by * i + by, false).sub(vpos);
+				var poly = new net.fexcraft.lib.frl.Polygon(new Vertex[]{
+					new Vertex(las.add(0, 0.05f, 0)),
+					new Vertex(vec.add(0, 0.05f, 0)),
+					new Vertex(vec.add(0, -.05f, 0)),
+					new Vertex(las.add(0, -.05f, 0))
+				});
+				gll.polygons.add(poly);
+				poly = new net.fexcraft.lib.frl.Polygon(new Vertex[]{
+					new Vertex(vec.add(0, 0.05f, 0)),
+					new Vertex(las.add(0, 0.05f, 0)),
+					new Vertex(las.add(0, -.05f, 0)),
+					new Vertex(vec.add(0, -.05f, 0))
+				});
+				gll.polygons.add(poly);
+				gll.glObj.polycolor = points.get(0).color.toFloatArray();
+				gll.pos(pos.x, pos.y, pos.z);
+				las = vec;
+			}
 		}
 		//
 		Axis3DL axe = new Axis3DL();
 		Vec3f loff = new Vec3f(off.x, off.y, off.z);
 		axe.set(loff, path.getVectorPosition(0.001f, false).sub(vpos));
-		Vec3f lrot = new Vec3f(rot.x, rot.y, rot.z);
 		Vec3f tr, tl, br, bl, ntr, ntl, nbr, nbl, coff;
 		RectSegment seg = segments.get(0);
 		float loc = 0;
@@ -265,13 +264,14 @@ public class RectCurve extends Polygon {
 		}
 		for(int i = 0; i < segments.size(); i++){
 			seg = segments.get(i);
-			loc = dirloc ? path.length * seg.location : seg.location;
+			loc = dirloc ? seg.location >= 1f ? path.length % 1f == 0f ? path.length : path.length - 0.1f : path.length * seg.location : seg.location;
 			coff = path.getVectorPosition(loc, false).sub(vpos);
 			axe.set(path.getVectorPosition(loc - 0.001f, false).sub(vpos), coff);
-			ntr = coff;
-			ntl = coff.add(axe.get(0, 0, seg.size.z));
-			nbl = coff.add(axe.get(0, seg.size.y, seg.size.z));
-			nbr = coff.add(axe.get(0, seg.size.y, 0));
+			axe.add(seg.rot, 0, 0);
+			ntr = coff.add(axe.get(seg.offset.x, seg.offset.y, seg.offset.z));
+			ntl = coff.add(axe.get(seg.offset.x, seg.offset.y, seg.offset.z + seg.size.z));
+			nbl = coff.add(axe.get(seg.offset.x, seg.offset.y + seg.size.y, seg.offset.z + seg.size.z));
+			nbr = coff.add(axe.get(seg.offset.x, seg.offset.y + seg.size.y, seg.offset.z));
 			glm.polygons.add(new net.fexcraft.lib.frl.Polygon(new Vertex[]{
 				new Vertex(ntr), new Vertex(tr), new Vertex(br), new Vertex(nbr)
 			}));
@@ -309,8 +309,13 @@ public class RectCurve extends Polygon {
 	
 	@Override
 	public void render(){
-		PolyRenderer.mode(DrawMode.RGBCOLOR);
-		//GL11.glDisable(GL11.GL_CULL_FACE);
+		if(PolyRenderer.mode().lines()){
+			DrawMode mode = PolyRenderer.mode();
+			PolyRenderer.mode(DrawMode.RGBCOLOR);
+			glp.render();
+			if(showline) gll.render();
+			PolyRenderer.mode(mode);
+		}
 		glm.render();
 	}
 
@@ -331,10 +336,10 @@ public class RectCurve extends Polygon {
 				if(active_segment > 0) return getVectorValue(segments.get(active_segment).offset, polyval.axe());
 				else return super.getValue(polyval);
 			}
-			case ROT: {
+			/*case ROT: {
 				if(active_segment > 0) return getVectorValue(segments.get(active_segment).rot, polyval.axe());
 				else return super.getValue(polyval);
-			}
+			}*/
 			case SIZE: return getVectorValue(segments.get(active_segment).size, polyval.axe());
 			case SIDES:{
 				int idx = polyval.axe().ordinal();
@@ -352,9 +357,10 @@ public class RectCurve extends Polygon {
 			case CUR_POINTS: return points.size();
 			case CUR_SEGMENTS: return segments.size();
 			case CUR_LENGTH: return path.length;
-			case SEG_ROT: return getVectorValue(segments.get(active_segment).rot, polyval.axe());
+			case SEG_ROT: return segments.get(active_segment).rot;
 			case SEG_LOC: return segments.get(active_segment).location;
 			case SEG_LOC_LIT: return dirloc ? 1 : 0;
+			case RADIAL: return showline ? 1 : 0;
 			default: return super.getValue(polyval);
 		}
 	}
@@ -372,11 +378,11 @@ public class RectCurve extends Polygon {
 				setVectorValue(segments.get(active_segment).offset, polyval.axe(), value);
 				break;
 			}
-			case ROT:{
+			/*case ROT:{
 				if(active_segment == 0) super.setValue(polyval, value);
 				setVectorValue(segments.get(active_segment).rot, polyval.axe(), value);
 				break;
-			}
+			}*/
 			case SIZE: setVectorValue(segments.get(active_segment).size, polyval.axe(), value); break;
 			case SIDES:{
 				int idx = polyval.axe().ordinal();
@@ -427,9 +433,10 @@ public class RectCurve extends Polygon {
 				if(val > segments.size()) while(segments.size() < val) segments.add(new RectSegment(segments.get(segments.size() - 1), dirloc));
 				break;
 			}
-			case SEG_ROT: setVectorValue(segments.get(active_segment).rot, polyval.axe(), value); break;
+			case SEG_ROT: segments.get(active_segment).rot = value; break;
 			case SEG_LOC: segments.get(active_segment).location = value; break;
-			case SEG_LOC_LIT: dirloc = value >= 0.5;
+			case SEG_LOC_LIT: dirloc = value > 0; break;
+			case RADIAL: showline = value > 0; break;
 			default: super.setValue(polyval, value);
 		}
 		this.recompile();
@@ -462,12 +469,7 @@ public class RectCurve extends Polygon {
 
 	@Override
 	public Face getFaceByColor(int color){
-		if(color == c_blu0) return BoxFace.FRONT;
-		if(color == c_blu1) return BoxFace.BACK;
-		if(color == c_red1) return BoxFace.TOP;
-		if(color == c_red0) return BoxFace.DOWN;
-		if(color == c_gre0) return BoxFace.LEFT;
-		if(color == c_gre1) return BoxFace.RIGHT;
+		//
 		return NoFace.NONE;
 	}
 
