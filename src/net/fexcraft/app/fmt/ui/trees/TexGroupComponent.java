@@ -104,6 +104,7 @@ public class TexGroupComponent extends EditorComponent {
 	}
 
 	private void generate(){
+		group.texture.clear(null);
     	FMT.MODEL.groups().forEach(elm -> {
     		if(elm.texgroup == null || elm.texgroup == group){
         		elm.forEach(poly -> poly.paintTex(group.texture, null));
