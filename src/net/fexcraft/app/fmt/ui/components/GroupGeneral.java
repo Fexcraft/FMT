@@ -41,6 +41,18 @@ public class GroupGeneral extends EditorComponent {
 		}
 		texsx.setVisibleCount(6);
 		texsy.setVisibleCount(6);
+		texsx.addSelectBoxChangeSelectionEventListener(listener -> {
+			FMT.MODEL.selected_groups().forEach(group -> {
+				group.texSizeX = listener.getNewValue();
+				group.recompile();
+			});
+		});
+		texsx.addSelectBoxChangeSelectionEventListener(listener -> {
+			FMT.MODEL.selected_groups().forEach(group -> {
+				group.texSizeY = listener.getNewValue();
+				group.recompile();
+			});
+		});
 		updateholder.add(UpdateType.GROUP_SELECTED, vals -> {
 			ArrayList<Group> list = FMT.MODEL.selected_groups();
 			if(list.size() == 0){
