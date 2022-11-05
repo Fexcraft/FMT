@@ -89,6 +89,12 @@ public class GroupComponent extends EditorComponent {
 		return fullheight = group.isEmpty() ? HEIGHT : HEIGHT + group.size() * PHS + 4;
 	}
 
+	@Override
+	protected void minimize(Boolean bool){
+		super.minimize(bool);
+		group.minimized = minimized;
+	}
+
 	private void addPolygon(Polygon polygon, boolean resort){
 		PolygonLabel label = new PolygonLabel(this).polygon(polygon).update_name().update_color();
 		this.add(label);
@@ -101,6 +107,7 @@ public class GroupComponent extends EditorComponent {
 	
 	protected void resize(){
 		setSize(Editor.CWIDTH, genFullheight());
+		minimize(group.minimized);
 		for(int i = 0; i < polygons.size(); i++){
 			polygons.get(i).sortin(i);
 		}
