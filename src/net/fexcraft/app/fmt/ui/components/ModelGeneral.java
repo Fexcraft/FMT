@@ -39,6 +39,14 @@ public class ModelGeneral extends EditorComponent {
 		}
 		texsx.setVisibleCount(6);
 		texsy.setVisibleCount(6);
+		texsx.addSelectBoxChangeSelectionEventListener(listener -> {
+			FMT.MODEL.texSizeX = listener.getNewValue();
+			FMT.MODEL.recompile();
+		});
+		texsx.addSelectBoxChangeSelectionEventListener(listener -> {
+			FMT.MODEL.texSizeY = listener.getNewValue();
+			FMT.MODEL.recompile();
+		});
 		//
 		this.add(new Label(translate(LANG_PREFIX + genid + ".tex_group"), L5, row(1), LW, HEIGHT));
 		texgroups.setPosition(L5, row(1));
