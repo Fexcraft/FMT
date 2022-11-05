@@ -43,7 +43,7 @@ public class ModelGeneral extends EditorComponent {
 			FMT.MODEL.texSizeX = listener.getNewValue();
 			FMT.MODEL.recompile();
 		});
-		texsx.addSelectBoxChangeSelectionEventListener(listener -> {
+		texsy.addSelectBoxChangeSelectionEventListener(listener -> {
 			FMT.MODEL.texSizeY = listener.getNewValue();
 			FMT.MODEL.recompile();
 		});
@@ -55,6 +55,8 @@ public class ModelGeneral extends EditorComponent {
 		updateholder.sub().add(UpdateType.MODEL_LOAD, vals -> {
 			name.getTextState().setText(FMT.MODEL.name);
 			refreshTexGroupEntries();
+			texsx.setSelected((Integer)FMT.MODEL.texSizeX, true);
+			texsy.setSelected((Integer)FMT.MODEL.texSizeY, true);
 		});
 		updateholder.add(UpdateType.TEXGROUP_ADDED, vals -> refreshTexGroupEntries());
 		updateholder.add(UpdateType.TEXGROUP_RENAMED, vals -> refreshTexGroupEntries());
