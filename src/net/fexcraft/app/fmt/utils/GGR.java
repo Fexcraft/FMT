@@ -33,6 +33,7 @@ public class GGR {
     //
     public boolean w_down, s_down, d_down, a_down, r_down, f_down, space_down, shift_down;
     public boolean left_alt_down, left_control_down, right_alt_down, right_control_down;
+    public boolean zoomed;
     //
 	private static int def_view, def_proj;
 	private static Matrix4f view, projection;
@@ -185,6 +186,11 @@ public class GGR {
         pos.x += s * Math.sin(hor);
         pos.y += s * Math.sin(ver);
         pos.z += s * Math.cos(hor);
+	}
+
+	public void toggleZoom(){
+		if(isOverUI()) return;
+		perspective(fov = ((zoomed = !zoomed) ? Settings.ZOOM_LEVEL.value : 45));
 	}
 
 	public void processCameraInput(float delta){
