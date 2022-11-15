@@ -53,6 +53,7 @@ public class KeyCompound {
 				Logging.bar("Speed decreased to " + (FMT.CAM.movemod * 100) + "%", true);
 			}
 		}));
+		keys.add(new KeyFunction("zoom_in", GLFW_KEY_Z, (action) -> onRelease(action, () -> FMT.CAM.toggleZoom())));
 		//
 		for(int i = 1; i < 10; i++){ final int j = i - 1;
 			//TODO keys.add(new KeyFunction("toggle_editor_" + i, GLFW_KEY_0 + i, (action) -> { if(action == GLFW_RELEASE) Editors.toggleWidget(j); }));
@@ -97,6 +98,11 @@ public class KeyCompound {
 				FMT.MODEL.pasteFromClipboard();
 			}
 		}).set_ctrl());
+	}
+
+	private static void onRelease(int action, Runnable run){
+		if(action != GLFW_RELEASE) return;
+		run.run();
 	}
 
 	public static void load(){
