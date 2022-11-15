@@ -65,7 +65,7 @@ public class Settings {
 	public static Setting<Boolean> DISCORD_RPC, DISCORD_HIDE, DISCORD_RESET_ON_NEW, FULLSCREEN, NO_RANDOM_TITLE;
 	public static Setting<Boolean> VSYNC, HVSYNC, TRIANGULATION_Q, TRIANGULATION_L, INTERNAL_CHOOSER;
 	public static Setting<Boolean> DEMO, FLOOR, CUBE, CMARKER, LINES, POLYMARKER, ADD_TO_LAST, SPHERE_MARKER;
-	public static Setting<Float> MOUSE_SENSIVITY, MOVE_SPEED, SCROLL_SPEED, LIGHT_AMBIENT, LIGHT_DIFFUSE, LIGHT_POSX, LIGHT_POSY, LIGHT_POSZ;
+	public static Setting<Float> MOUSE_SENSIVITY, MOVE_SPEED, SCROLL_SPEED, LIGHT_AMBIENT, LIGHT_DIFFUSE, LIGHT_POSX, LIGHT_POSY, LIGHT_POSZ, ZOOM_LEVEL;
 	public static Setting<String> LANGUAGE, POLYGON_SUFFIX, GROUP_SUFFIX, COPIED_POLYGON, PASTED_GROUP;
 	public static Setting<Boolean> ASK_POLYGON_REMOVAL, ASK_GROUP_REMOVAL, ASK_TEXTURE_GROUP_REMOVAL, OPEN_FOLDER_AFTER_SAVE, OPEN_FOLDER_AFTER_IMG;
 	public static Setting<Boolean> SHOW_WELCOME, SHOW_UPDATE, SELECT_COPIED, SELECT_NEW, SHOW_BOTTOMBAR, GIF_LOOP, HIDE_UI_FOR_IMAGE;
@@ -185,6 +185,7 @@ public class Settings {
 		LIGHT_POSX = new Setting<>("pos_x", 600f, LIGHTING, obj);
 		LIGHT_POSY = new Setting<>("pos_y", -600f, LIGHTING, obj);
 		LIGHT_POSZ = new Setting<>("pos_z", -600f, LIGHTING, obj);
+		ZOOM_LEVEL = new Setting<>("zoom_by", 10f, CONTROL, obj).minmax(0.001f, 160f);
 		//
 		WORKSPACE_NAME = new Setting<>("name", "FMT Workspace", WORKSPACE, obj);
 		WORKSPACE_ROOT = new Setting<>("root", "/workspace/", WORKSPACE, obj);
