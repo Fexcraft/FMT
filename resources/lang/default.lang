@@ -221,6 +221,14 @@ editor.component.painter.tools.group=Group Painting
 editor.component.painter.tools.bucket=Application Mode
 editor.component.painter.tools.brush=Brush Mode
 editor.component.painter.tools.eraser=Removal (Eraser) Mode
+editor.component.arrow.mode.name=Arrow Mode
+editor.component.arrow.mode.desc=Component to set current Arrow Mode
+editor.component.arrow.mode.none=None / Disabled
+editor.component.arrow.mode.pos=Position
+editor.component.arrow.mode.off=Offset
+editor.component.arrow.mode.rot=Rotation
+editor.component.arrow.mode.size=Size / Measurements
+editor.component.arrow.mode.shape=Shape / Corners
 
 # Generic Dialogs
 dialog.title.default=Generic Dialog
@@ -311,6 +319,7 @@ setting.control.mouse_sensivity=Mouse Sensivity
 setting.control.movement_speed=Movement Speed
 setting.control.scroll_speed=(Camera) Scroll Speed
 setting.control.zoom_by=Zoom FOV
+setting.control.arrow_sensivity=Arrow Sensivity
 setting.space3d.demo_model=Demo Model
 setting.space3d.floor=Floor
 setting.space3d.center_cube=Center Cube
