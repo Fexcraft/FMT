@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL11;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.attributes.UpdateHandler;
 import net.fexcraft.app.fmt.attributes.UpdateType;
+import net.fexcraft.app.fmt.polygon.Arrows;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.texture.TexturePainter;
@@ -107,6 +108,12 @@ public class Picker {
 		}
 		else{
 			int pick = getPick();
+			Logging.bar("dir: " + pick);
+			if(pick > 0 && pick < Polygon.startIdx){
+				Arrows.SEL = pick;
+				Arrows.DIR = pick % 2 == 0;
+				return;
+			}
 			for(Group group : FMT.MODEL.groups()){
 				if(polygon != null) break;
 				for(Polygon poly : group){
