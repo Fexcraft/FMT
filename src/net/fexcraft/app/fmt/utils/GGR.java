@@ -15,6 +15,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.polygon.Arrows;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TexturePainter;
 import net.fexcraft.app.fmt.ui.Editor;
@@ -100,6 +101,12 @@ public class GGR {
 	        pos.x += (posx - oposx) * 0.001;
 	        pos.y += (posy - oposy) * 0.001;
 	    }
+		else if(Arrows.SEL > 0 && cursor_moved0){
+			float f0 = (float)(posx - oposx) * Settings.ARROW_SENSIVITY.value * delta;
+			float f1 = (float)(posy - oposy) * Settings.ARROW_SENSIVITY.value * delta;
+			Arrows.process(Math.abs((f0 + f1) * 0.5f));
+            cursor_moved0 = false;
+		}
         processCameraInput(delta);
     }
 
@@ -112,7 +119,10 @@ public class GGR {
         		left_down = true;
         	}
         	else if(action == GLFW_RELEASE){
-        		if(!isOverUI()){
+        		if(Arrows.SEL > 0){
+        			Arrows.SEL = 0;
+        		}
+        		else if(!isOverUI()){
         			if(TexturePainter.TOOL.active()){
         				Picker.pick(TexturePainter.SELMODE.getPickType(), PickTask.PAINT1, true);
         			}
@@ -123,7 +133,12 @@ public class GGR {
         	}
         }
         else if(button == 1){
+        	if(Arrows.SEL > 0){
+        		if(action == GLFW_RELEASE) Arrows.DIR = !Arrows.DIR;
+        		return;
+        	}
     		if(isControlDown()){
+    			if(action == GLFW_PRESS) return; 
     			if(TexturePainter.TOOL.active()){
     				Picker.pick(TexturePainter.SELMODE.getPickType(), PickTask.PAINT2, true);
     			}
