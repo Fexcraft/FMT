@@ -167,8 +167,8 @@ public class PolygonGeneral extends EditorComponent {
 	}
 
 	private void resetUV(){
-		FMT.MODEL.updateValue(TX.polyval(), TX.apply(-1));
-		FMT.MODEL.updateValue(TY.polyval(), TY.apply(-1));
+		FMT.MODEL.updateValue(TX.polyval(), TX.apply(-1), 0);
+		FMT.MODEL.updateValue(TY.polyval(), TY.apply(-1), 0);
 	}
 
 }
