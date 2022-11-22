@@ -44,7 +44,7 @@ public class BoolButton extends Button implements Field {
 	protected void toggle(){
 		boolean val = Boolean.parseBoolean(getTextState().getText());
 		getTextState().setText(!val + "");
-		FMT.MODEL.updateValue(poly_value, this);
+		FMT.MODEL.updateValue(poly_value, this, 0);
 	}
 
 	@Override
