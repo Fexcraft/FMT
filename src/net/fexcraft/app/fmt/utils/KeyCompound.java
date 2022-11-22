@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.polygon.Arrows;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonHandler.PrintOption;
@@ -61,8 +62,18 @@ public class KeyCompound {
 		//
 		keys.add(new KeyFunction("camera_rotate_left",  GLFW_KEY_LEFT,  action -> { if(!GGR.isOverUI()) FMT.CAM.hor -= Static.rad5; }));
 		keys.add(new KeyFunction("camera_rotate_right", GLFW_KEY_RIGHT, action -> { if(!GGR.isOverUI()) FMT.CAM.hor += Static.rad5; }));
-		keys.add(new KeyFunction("camera_rotate_up",    GLFW_KEY_UP,    action -> { if(!GGR.isOverUI()) FMT.CAM.ver -= Static.rad5; }));
-		keys.add(new KeyFunction("camera_rotate_down",  GLFW_KEY_DOWN,  action -> { if(!GGR.isOverUI()) FMT.CAM.ver += Static.rad5; }));
+		keys.add(new KeyFunction("camera_rotate_up",    GLFW_KEY_UP,    action -> {
+			if(!GGR.isOverUI()){
+				if(Arrows.SEL == 0) FMT.CAM.ver -= Static.rad5;
+				else Arrows.process(1);
+			}
+		}));
+		keys.add(new KeyFunction("camera_rotate_down",  GLFW_KEY_DOWN,  action -> {
+			if(!GGR.isOverUI()){
+				if(Arrows.SEL == 0) FMT.CAM.ver += Static.rad5;
+				else Arrows.process(-1);
+			}
+		}));
 		//
 		keys.add(new KeyFunction("help", GLFW_KEY_F1, action -> {}));
 		keys.add(new KeyFunction("toggle_floor", GLFW_KEY_F2, action -> { if(action == GLFW_RELEASE) Settings.FLOOR.toggle(); }));
