@@ -365,6 +365,7 @@ public class FMT {
 			glClearColor(1, 1, 1, 1);
 		    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			PolyRenderer.mode(DrawMode.PICKER);
+			if(Arrows.MODE.active()) Arrows.render(DrawMode.PICKER); 
 			MODEL.renderPicking();
 			Picker.process();
 			if(Picker.TYPE.face()){
@@ -402,7 +403,7 @@ public class FMT {
             centermarker1.render();
             centermarker2.render();
 		}
-		if(Arrows.MODE.active()) Arrows.render(); 
+		if(Arrows.MODE.active()) Arrows.render(DrawMode.RGBCOLOR); 
 		MODEL.render();
 	}
 	
