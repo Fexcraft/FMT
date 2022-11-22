@@ -127,12 +127,12 @@ public interface Field {
 			}
 			com.getListenerMap().addListener(FocusEvent.class, (FocusEventListener)listener -> {
 				if(!listener.isFocused()){
-					FMT.MODEL.updateValue(field.polyval(), field);
+					FMT.MODEL.updateValue(field.polyval(), field, 0);
 				}
 			});
 			com.getListenerMap().addListener(KeyEvent.class, (KeyEventListener)listener -> {
 				if(listener.getKey() == GLFW.GLFW_KEY_ENTER){
-					FMT.MODEL.updateValue(field.polyval(), field);
+					FMT.MODEL.updateValue(field.polyval(), field, 0);
 				}
 			});
 		}
