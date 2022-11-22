@@ -31,7 +31,8 @@ import net.fexcraft.lib.frl.gen.Generator;
 
 public abstract class Polygon {
 
-	public static int polyIdx = 1;//temporary
+	public static final int startIdx = 7;
+	public static int polyIdx = startIdx;
 	public Polyhedron<GLObject> glm = new Polyhedron<GLObject>().setGlObj(new GLObject());
 	private Model model;
 	private Group group;
