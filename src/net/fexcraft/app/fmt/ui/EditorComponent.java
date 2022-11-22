@@ -143,6 +143,7 @@ public class EditorComponent extends Component {
 		REGISTRY.put("folder", FolderComponent.class);
 		REGISTRY.put("painter.current", CurrentColor.class);
 		REGISTRY.put("painter.tools", PainterTools.class);
+		REGISTRY.put("arrow.mode", ArrowMode.class);
 	}
 
 	public EditorComponent load(JsonMap map){
