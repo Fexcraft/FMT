@@ -402,9 +402,7 @@ public class FMT {
             centermarker1.render();
             centermarker2.render();
 		}
-		if(Arrows.MODE.active()){
-			Arrows.render();
-		}
+		if(Arrows.MODE.active()) Arrows.render(); 
 		MODEL.render();
 	}
 	
