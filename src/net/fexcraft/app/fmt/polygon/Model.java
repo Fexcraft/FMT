@@ -250,13 +250,13 @@ public class Model {
 		return selected.size() > 0 && selected.get(selected.size() - 1) instanceof Shapebox;
 	}
 
-	public void updateValue(PolygonValue value, Field field){
+	public void updateValue(PolygonValue value, Field field, float alt){
 		if(selected.isEmpty()){
-			field.value();
+			if(field != null) field.value();
 			return;
 		}
 		Polygon poly = selected.get(0);
-		float fval = field.value();
+		float fval = field == null ? poly.getValue(value) + alt : field.value();
 		poly.setValue(value, fval);
 		update(UpdateType.POLYGON_VALUE, poly, value);
 		if(value.doesUpdateMoreFields()) update(UpdateType.POLYGON_SELECTED, poly, selected.size(), selected.size());
