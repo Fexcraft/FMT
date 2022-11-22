@@ -138,7 +138,7 @@ public class NumberField extends TextInput implements Field {
 	public void scroll(double scroll){
 		apply(test(value(), scroll > 0, Editor.RATE));
 		if(poly_value != null){
-			FMT.MODEL.updateValue(poly_value, this);
+			FMT.MODEL.updateValue(poly_value, this, 0);
 		}
 		if(update != null) update.accept(this);
 	}
