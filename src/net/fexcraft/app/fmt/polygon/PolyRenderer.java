@@ -26,6 +26,7 @@ import net.fexcraft.app.fmt.polygon.GLObject.GPUData;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.utils.ImageHandler;
 import net.fexcraft.lib.common.math.Vec3f;
+import net.fexcraft.lib.frl.ColoredVertex;
 import net.fexcraft.lib.frl.Polygon;
 import net.fexcraft.lib.frl.Polyhedron;
 import net.fexcraft.lib.frl.Vertex;
@@ -134,11 +135,27 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
     			obj.norms[nor++] = vec2.x;
     			obj.norms[nor++] = vec2.y;
     			obj.norms[nor++] = vec2.z;
-    			colarr = glo.polygon == null ? EMPTY : glo.polygon.getFaceColor(i).toFloatArray();
-    			obj.colors[col++] = colarr[0];
-    			obj.colors[col++] = colarr[1];
-    			obj.colors[col++] = colarr[2];
-    			obj.colors[col++] = colarr[3];
+    			if(glo.polygon == null){
+    				if(vert instanceof ColoredVertex){
+            			obj.colors[col++] = vert.color().x;
+            			obj.colors[col++] = vert.color().y;
+            			obj.colors[col++] = vert.color().z;
+            			obj.colors[col++] = 1f;
+    				}
+    				else{
+            			obj.colors[col++] = EMPTY[0];
+            			obj.colors[col++] = EMPTY[1];
+            			obj.colors[col++] = EMPTY[2];
+            			obj.colors[col++] = EMPTY[3];
+    				}
+    			}
+    			else{
+        			colarr = glo.polygon.getFaceColor(i).toFloatArray();
+        			obj.colors[col++] = colarr[0];
+        			obj.colors[col++] = colarr[1];
+        			obj.colors[col++] = colarr[2];
+        			obj.colors[col++] = colarr[3];
+    			}
     			obj.lights[lig++] = 1;
     		}
         }
