@@ -50,6 +50,7 @@ import org.lwjgl.system.MemoryUtil;
 import net.arikia.dev.drpc.DiscordEventHandlers;
 import net.arikia.dev.drpc.DiscordRPC;
 import net.fexcraft.app.fmt.demo.ModelT1P;
+import net.fexcraft.app.fmt.polygon.Arrows;
 import net.fexcraft.app.fmt.polygon.GLObject;
 import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.polygon.PolyRenderer;
@@ -400,6 +401,9 @@ public class FMT {
             centermarker0.render();
             centermarker1.render();
             centermarker2.render();
+		}
+		if(Arrows.MODE.active()){
+			Arrows.render();
 		}
 		MODEL.render();
 	}
