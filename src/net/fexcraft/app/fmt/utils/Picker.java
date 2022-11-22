@@ -111,7 +111,7 @@ public class Picker {
 			Logging.bar("dir: " + pick);
 			if(pick > 0 && pick < Polygon.startIdx){
 				Arrows.SEL = pick;
-				Arrows.DIR = pick % 2 == 0;
+				Arrows.DIR = Arrows.MODE == Arrows.ArrowMode.SIZE ? false : pick % 2 == 0;
 				return;
 			}
 			for(Group group : FMT.MODEL.groups()){
