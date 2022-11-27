@@ -94,6 +94,7 @@ public interface Field {
 	public static void setupHolderAndListeners(Field field, EditorComponent comp, PolygonValue val){
 		UpdateHolder holder = comp.getUpdateHolder().sub();
 		holder.add(UpdateType.POLYGON_VALUE, cons -> {
+			if(!(boolean)cons.get(2)) return;
 			if(cons.get(1).equals(val)){
 				field.apply(((Polygon)cons.objs[0]).getValue(val));
 			}
