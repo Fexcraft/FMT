@@ -4,6 +4,7 @@ import static net.fexcraft.app.fmt.attributes.UpdateHandler.update;
 import static net.fexcraft.app.fmt.attributes.UpdateType.MODEL_AUTHOR;
 import static net.fexcraft.app.fmt.attributes.UpdateType.MODEL_LOAD;
 import static net.fexcraft.app.fmt.settings.Settings.ASK_POLYGON_REMOVAL;
+import static net.fexcraft.app.fmt.ui.fields.NumberField.round;
 import static net.fexcraft.app.fmt.utils.Translator.translate;
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
@@ -256,18 +257,18 @@ public class Model {
 			return;
 		}
 		Polygon poly = selected.get(0);
-		float fval = field == null ? poly.getValue(value) + alt : field.value();
-		poly.setValue(value, fval);
-		update(UpdateType.POLYGON_VALUE, poly, value);
+		float oval = poly.getValue(value);
+		float fval = field == null ? oval + alt : field.value();
+		poly.setValue(value, round(fval));
+		update(UpdateType.POLYGON_VALUE, poly, value, true);
 		if(value.doesUpdateMoreFields()) update(UpdateType.POLYGON_SELECTED, poly, selected.size(), selected.size());
 		if(selected.size() > 1){
-			float nval = poly.getValue(value);
-			if(nval != fval) fval = nval;
+			float diff = poly.getValue(value) - oval;
+			diff = round(diff);
 			for(int i = 1; i < selected.size(); i++){
 				poly = selected.get(i);
-				float diff = nval - poly.getValue(value);
-				poly.setValue(value, nval + diff);
-				update(UpdateType.POLYGON_VALUE, poly, value);
+				poly.setValue(value, round(poly.getValue(value) + diff));
+				update(UpdateType.POLYGON_VALUE, poly, value, false);
 			}
 		}
 	}
