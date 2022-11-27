@@ -24,6 +24,7 @@ import net.fexcraft.app.fmt.settings.Setting;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.ui.EditorComponent;
+import net.fexcraft.app.fmt.utils.Logging;
 
 public class NumberField extends TextInput implements Field {
 	
@@ -181,6 +182,16 @@ public class NumberField extends TextInput implements Field {
 	@Override
 	public Setting<?> setting(){
 		return setting;
+	}
+	
+	public static float round(float flat){
+		try{
+			return nf.parse(df.format(flat)).floatValue();
+		}
+		catch(ParseException e){
+			Logging.log(e);
+			return flat;
+		}
 	}
 	
 }
