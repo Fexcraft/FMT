@@ -117,7 +117,6 @@ dependencies {
     //runtimeOnly group: 'org.codehaus.groovy', name: 'groovy-all', version: '3.0.7', changing: true
     
     implementation files('libs/discord-rpc.jar', 'libs/VOXtoFMT-1.jar')
-    implementation files('libs/FCL-1.12.77.jar')
     //@formatter:on
     //testCompile group: 'junit', name: 'junit', version: '4.11'
 }
@@ -126,6 +125,8 @@ sourceSets {
     main {
         java {
             srcDirs "src"
+			srcDirs "../Json/src"
+			srcDirs "../FCLN/src"
         }
         resources {
         	srcDirs 'resources'
