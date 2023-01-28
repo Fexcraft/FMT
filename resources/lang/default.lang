@@ -290,6 +290,9 @@ settings.category.workspace=Workspace
 settings.category.lighting=Lighting
 settings.category.exporter-fmf=FMF Exporter
 settings.category.exporter-png=PNG Exporter
+settings.category.exporter-fvtm-format=FVTM Format
+settings.category.exporter-fvtm=FVTM Model (Java)
+settings.category.exporter-tim=TiM Model (Java)
 settings.no_field_found=No suitable field found.
 settings.control_adjuster=Control Adjuster
 setting.general.language=Language
@@ -377,6 +380,14 @@ setting.lighting.pos_z=Light Pos Z
 setting.exporter-fmf.modeldata=Include ModelData?
 setting.exporter-png.textured=Export Textured?
 setting.exporter-png.group=Texture Group
+setting.exporter-fvtm-format.extended_form=Extended Form
+setting.exporter-fvtm-format.per_group_init=Per-Group Init
+setting.exporter-fvtm-format.max_pg_init_count=Max Per-Group Init Entries
+setting.exporter-fvtm.pack_id=Pack ID
+setting.exporter-fvtm.model_id=Model ID
+setting.exporter-fvtm.model_type=Model Type
+setting.exporter-fvtm.model_name=Model Name
+setting.exporter-tim.package=Java Package
 
 # Profile / Login Dialog
 profile.title=Profile Overview
