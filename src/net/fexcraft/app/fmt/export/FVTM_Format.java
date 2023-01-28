@@ -37,7 +37,8 @@ public abstract class FVTM_Format implements Exporter {
 	private String name, id;
 	
 	public FVTM_Format(String name, String id){
-		this.name = name; this.id = id;
+		this.name = name;
+		this.id = id;
 		settings.add(new Setting("extended_form", false, "exporter-fvtm-format"));
 		settings.add(new Setting("per_group_init", false, "exporter-fvtm-format"));
 		settings.add(new Setting("max_pg_init_count", 250, "exporter-fvtm-format"));
@@ -161,6 +162,8 @@ public abstract class FVTM_Format implements Exporter {
 
 	protected abstract String title();
 
+	protected abstract String group_class();
+
 	protected abstract void append_imports(StringBuffer buffer);
 
 	protected abstract void append_declaration(StringBuffer buffer);
@@ -176,10 +179,10 @@ public abstract class FVTM_Format implements Exporter {
 		boolean contains = groups.contains(name);
 		if(!contains) groups.add(name);
 		if(contains){
-			buffer.append(tab2 + "TurboList " + name + " = groups.get(\"" + name + "\");\n");
+			buffer.append(tab2 + group_class() + " " + name + " = groups.get(\"" + name + "\");\n");
 		}
 		else{
-			buffer.append(tab2 + (this.extended ? "" : "TurboList ") + name + " = new TurboList(\"" + name + "\");\n");
+			buffer.append(tab2 + (this.extended ? "" : group_class() + " ") + name + " = new " + group_class() + "(\"" + name + "\");\n");
 		}
 		for(Polygon polygon : list){
 			shape = new StringBuffer();
