@@ -36,6 +36,8 @@ public class ExportManager {
 		addExporter(new FMFExporter(map));
 		addExporter(new PNGExporter(map));
 		addExporter(new ModelDataExporter());
+		addExporter(new FVTMExporter());
+		addExporter(new TiMExporter());
 	}
 	
 	private static void addExporter(Exporter exporter){
