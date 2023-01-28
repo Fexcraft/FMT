@@ -110,4 +110,7 @@ public class Group extends ArrayList<Polygon> {
 		UpdateHandler.update(UpdateType.GROUP_RENAMED, this, name);
 	}
 
+    public String exportId(){
+		return id.trim().replace(" ", "_").replaceAll("[^a-zA-Z0-9 _]", "");
+    }
 }
