@@ -56,6 +56,11 @@ public class TiMExporter extends FVTM_Format {
 	}
 
 	@Override
+	protected String group_class() {
+		return "TurboList";
+	}
+
+	@Override
 	protected void append_declaration(StringBuffer buffer){
 		buffer.append("public class " + modelname + " extends RollingStockModel {\n\n");
 	}
