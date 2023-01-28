@@ -87,13 +87,19 @@ public class FVTMExporter extends FVTM_Format {
 	protected void append_imports(StringBuffer buffer){
 		buffer.append("import net.fexcraft.lib.mc.api.registry.fModel;\n");
 		buffer.append("import net.fexcraft.lib.tmt.ModelRendererTurbo;\n");
-		buffer.append("import net.fexcraft.mod.fvtm.model.TurboList;\n");
+		buffer.append("import net.fexcraft.mod.fvtm.model.DefaultPrograms;\n");
+		buffer.append("import net.fexcraft.mod.fvtm.model.ModelGroup;\n");
 		buffer.append("import net.fexcraft.mod.fvtm.model." + modelimport + ";\n\n");
 	}
 
 	@Override
 	protected String title(){
 		return "FVTM Exporter v" + VERSION;
+	}
+
+	@Override
+	protected String group_class() {
+		return "ModelGroup";
 	}
 
 	@Override
