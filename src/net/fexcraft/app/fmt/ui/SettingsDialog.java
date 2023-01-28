@@ -48,17 +48,21 @@ public class SettingsDialog {
 		boolean hlist = list != null;
 		int width = 530, height = 320, minus = hlist ? 0 : 110;
 		if(!hlist) width += minus;
-		dialog = new Dialog(translate(title == null ? "settings.dialog.title" : title), width, height + (hlist ? 35 : 0));
+		dialog = new Dialog(title = translate(title == null ? "settings.dialog.title" : title), width, height + (hlist ? 35 : 0));
 		dialog.setResizable(false);
 		if(!hlist){
 			ScrollablePanel tabs = new ScrollablePanel(0, 2, 110, height - 4);
 			tabs.getContainer().setSize(100, Settings.SETTINGS.size() * 32 + 16);
 			int[] i = { 0 };
+			String dtitle = title;
 			Settings.SETTINGS.keySet().forEach(key -> {
 				Button button = new Button(translate("settings.category." + key), 0, i[0]++ * 32, 100, 30);
 				button.getStyle().setHorizontalAlign(HorizontalAlign.CENTER);
 				Settings.applyMenuTheme(button);
-				button.getListenerMap().addListener(MouseClickEvent.class, lis -> show(key));
+				button.getListenerMap().addListener(MouseClickEvent.class, lis -> {
+					dialog.getTitleTextState().setText(dtitle + " - " + button.getTextState().getText());
+					show(key);
+				});
 				tabs.getContainer().add(button);
 			});
 			Settings.applyBorderless(tabs);
