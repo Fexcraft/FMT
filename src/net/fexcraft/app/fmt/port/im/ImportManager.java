@@ -40,6 +40,7 @@ public class ImportManager {
 		IMPORTERS.clear();
 		CATEGORIES.clear();
 		addImporter(new MTBImporter());
+		addImporter(new DFMImporter());
 	}
 	
 	private static void addImporter(Importer importer){
@@ -104,6 +105,7 @@ public class ImportManager {
 				GenericDialog.showOK("import.result", null, null, importer._import(FMT.MODEL, file));
 				FMT.updateTitle();
 				UpdateHandler.update(UpdateType.MODEL_LOAD, FMT.MODEL);
+				FMT.MODEL.recompile();
 			};
 			if(importer.settings().size() > 0){
 				SettingsDialog.open("import.settings.dialog", importer.settings(), importer.id(), run);
