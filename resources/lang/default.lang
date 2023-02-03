@@ -388,6 +388,8 @@ setting.exporter-fvtm.model_id=Model ID
 setting.exporter-fvtm.model_type=Model Type
 setting.exporter-fvtm.model_name=Model Name
 setting.exporter-tim.package=Java Package
+setting.importer-dfm.agreement=I respect Model Copyright
+setting.importer-dfm.degree_based=Model uses Degrees
 
 # Profile / Login Dialog
 profile.title=Profile Overview
@@ -465,6 +467,7 @@ import.result=Import Result Dialog
 import.complete=Import Complete
 import.errors=Error, see console output.
 importer.mtb.stream_null=Model Entry not found in file.
+importer.dfm.no_agreement=You have not confirmed to act according to the source model's license / author's will.
 
 # Other
 filechooser.title=FMT Internal File Chooser/Selector
