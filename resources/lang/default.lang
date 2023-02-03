@@ -464,6 +464,7 @@ import.settings.dialog=Importer Settings
 import.result=Import Result Dialog
 import.complete=Import Complete
 import.errors=Error, see console output.
+importer.mtb.stream_null=Model Entry not found in file.
 
 # Other
 filechooser.title=FMT Internal File Chooser/Selector
