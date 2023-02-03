@@ -16,6 +16,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import net.fexcraft.app.fmt.port.im.ImportManager;
 import org.joml.Vector4f;
 import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.component.Component;
@@ -33,7 +34,7 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryUtil;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.export.ExportManager;
+import net.fexcraft.app.fmt.port.ex.ExportManager;
 import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.ui.components.*;
 import net.fexcraft.app.fmt.ui.fields.NumberField;
@@ -217,6 +218,7 @@ public class Settings {
 		TEXTURE_OPTION = new RGBSetting("component_texture_group_option", new RGB(0, 74, 127), THEME, obj);
 		//
 		ExportManager.init(obj);
+		ImportManager.init(obj);
 		//
 		for(Map.Entry<String, Map<String, Setting<?>>> entry : SETTINGS.entrySet()){
 			if(!obj.has(entry.getKey())) continue;

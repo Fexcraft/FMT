@@ -1,4 +1,4 @@
-package net.fexcraft.app.fmt.export;
+package net.fexcraft.app.fmt.port.ex;
 
 import static net.fexcraft.app.fmt.ui.FileChooser.TYPE_PNG;
 import static net.fexcraft.app.fmt.utils.Logging.log;

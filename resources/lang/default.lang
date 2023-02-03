@@ -454,6 +454,17 @@ export.complete=Export Complete
 export.errors=Error, see console output.
 exporter.png.group_not_found=Texture Group not found!
 
+# Importers
+import.choose.dialog=Importer Chooser
+import.choose.category=Category/Type:
+import.choose.importer=Importer:
+import.choose.file=Choose file to import.
+import.choose.nofile=No File choosen, do you want to retry?
+import.settings.dialog=Importer Settings
+import.result=Import Result Dialog
+import.complete=Import Complete
+import.errors=Error, see console output.
+
 # Other
 filechooser.title=FMT Internal File Chooser/Selector
 filechooser.enter_name=enter custom filename here

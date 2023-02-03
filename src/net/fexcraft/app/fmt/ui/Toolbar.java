@@ -2,6 +2,7 @@ package net.fexcraft.app.fmt.ui;
 
 import java.util.ArrayList;
 
+import net.fexcraft.app.fmt.port.im.ImportManager;
 import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.Panel;
 
@@ -9,7 +10,7 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.attributes.UpdateHandler;
 import net.fexcraft.app.fmt.attributes.UpdateHandler.UpdateHolder;
 import net.fexcraft.app.fmt.attributes.UpdateType;
-import net.fexcraft.app.fmt.export.ExportManager;
+import net.fexcraft.app.fmt.port.ex.ExportManager;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.ToolbarMenu.MenuButton;
 import net.fexcraft.app.fmt.ui.components.QuickAdd;
@@ -56,7 +57,7 @@ public class Toolbar extends Panel {
 			}),
 			new MenuButton(3, "file.save", () -> SaveHandler.saveDialogByState(null)),
 			new MenuButton(4, "file.save_as", () -> SaveHandler.saveAsDialog(null)),
-			new MenuButton(5, "file.import"),
+			new MenuButton(5, "file.import", () -> ImportManager._import()),
 			new MenuButton(6, "file.export", () -> ExportManager.export()),
 			new MenuButton(7, "file.settings", () -> SettingsDialog.open()),
 			new MenuButton(8, "file.donate", () -> FMT.openLink("https://fexcraft.net/donate")),

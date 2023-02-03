@@ -1,4 +1,4 @@
-package net.fexcraft.app.fmt.export;
+package net.fexcraft.app.fmt.port.ex;
 
 import static net.fexcraft.app.fmt.utils.Logging.log;
 
@@ -8,7 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.Year;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import net.fexcraft.app.fmt.FMT;
