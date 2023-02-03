@@ -1,7 +1,12 @@
 package net.fexcraft.app.fmt.port.im;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.attributes.UpdateHandler;
+import net.fexcraft.app.fmt.attributes.UpdateType;
 import net.fexcraft.app.fmt.polygon.Group;
+import net.fexcraft.app.fmt.polygon.Model;
+import net.fexcraft.app.fmt.polygon.ModelFormat;
+import net.fexcraft.app.fmt.polygon.ModelOrientation;
 import net.fexcraft.app.fmt.port.ex.*;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.FileChooser;
@@ -9,6 +14,7 @@ import net.fexcraft.app.fmt.ui.GenericDialog;
 import net.fexcraft.app.fmt.ui.GroupSelectionPanel;
 import net.fexcraft.app.fmt.ui.SettingsDialog;
 import net.fexcraft.app.fmt.ui.fields.RunButton;
+import net.fexcraft.app.fmt.utils.DiscordUtil;
 import net.fexcraft.app.json.JsonMap;
 import org.liquidengine.legui.component.Dialog;
 import org.liquidengine.legui.component.Label;
@@ -88,7 +94,17 @@ public class ImportManager {
 				GenericDialog.showYN(null, () -> showFileChooserDialog(importer, groups), null, "import.choose.nofile");
 				return;
 			}
-			Runnable run = () -> GenericDialog.showOK("import.result", null, null, importer._import(FMT.MODEL, file));
+			Runnable run = () -> {
+				Model old = FMT.MODEL;
+				UpdateHandler.update(UpdateType.MODEL_UNLOAD, FMT.MODEL);
+				FMT.MODEL = new Model(null, "imported model");
+				FMT.MODEL.orient = old.orient;
+				FMT.MODEL.format = old.format;
+				DiscordUtil.update(Settings.DISCORD_RESET_ON_NEW.value);
+				GenericDialog.showOK("import.result", null, null, importer._import(FMT.MODEL, file));
+				FMT.updateTitle();
+				UpdateHandler.update(UpdateType.MODEL_LOAD, FMT.MODEL);
+			};
 			if(importer.settings().size() > 0){
 				SettingsDialog.open("import.settings.dialog", importer.settings(), importer.id(), run);
 			}
