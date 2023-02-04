@@ -31,10 +31,10 @@ public class Launcher extends Frame {
 		File laufile = new File("./launch.fmt");
 		if(!laufile.exists()) log("No launch.fmt file found... Welcome to FMT Launcher!");
 		JsonMap lau = JsonHandler.parse(laufile);
-		boolean loaded = Catalog.load();
+		boolean loaded = Catalog.load(true);
 		boolean check = false;
 		if(loaded){
-			check = !Catalog.check();
+			check = !Catalog.check(true);
 		}
 		reload.setEnabled(true);
 		update.setEnabled(loaded);
@@ -74,12 +74,12 @@ public class Launcher extends Frame {
 				if(code > 0 && code % 10 == 0){
 					log("> Update request detected, attempting to update...");
 					start.setEnabled(false);
-					Catalog.fetch();
-					boolean loaded = Catalog.load();
+					Catalog.fetch(true);
+					boolean loaded = Catalog.load(true);
 					if(loaded){
-						Catalog.check();
+						Catalog.check(true);
 						Catalog.update(() -> {
-							boolean check = !Catalog.check();
+							boolean check = !Catalog.check(true);
 							update.setEnabled(true);
 							start.setEnabled(check);
 						});
@@ -102,7 +102,7 @@ public class Launcher extends Frame {
 		//
 		update = new Button("Update FMT");
 		update.setBounds(120, H - 40, 100, 30);
-		update.addActionListener(event -> Catalog.update(() -> start.setEnabled(!Catalog.check())));
+		update.addActionListener(event -> Catalog.update(() -> start.setEnabled(!Catalog.check(true))));
 		update.setEnabled(false);
 		add(update);
 		//
@@ -133,11 +133,11 @@ public class Launcher extends Frame {
 	}
 
 	private void reload(){
-		Catalog.fetch();
-		boolean loaded = Catalog.load();
+		Catalog.fetch(true);
+		boolean loaded = Catalog.load(true);
 		boolean check = false;
 		if(loaded){
-			check = !Catalog.check();
+			check = !Catalog.check(true);
 		}
 		update.setEnabled(loaded);
 		start.setEnabled(check);
