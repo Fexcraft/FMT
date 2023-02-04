@@ -16,6 +16,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import net.fexcraft.app.fmt.launch.Catalog;
 import net.fexcraft.app.fmt.port.im.ImportManager;
 import org.joml.Vector4f;
 import org.liquidengine.legui.component.Button;
@@ -58,8 +59,8 @@ public class Settings {
 	public static final float FONT_SIZE = 20f;
 	public static final String FONT = FontRegistry.ROBOTO_BOLD;
 	public static final String FONT_PATH = "org/liquidengine/legui/style/font/Roboto-Bold.ttf";
-	public static String UPDATE_FOUND, UPDATE_SKIPPED = "";
 	public static boolean FOUND_UPDATE, UPDATECHECK_FAILED;
+	public static long UPDATE_FOR_FILES_FOUND = 0, LAST_CATALOG_RELOAD;
 	public static ArrayList<File> RECENT = new ArrayList<File>();
 	public static File NO_FILE_DOTS = new File("...");
 	public static Setting<Integer> WINDOW_WIDTH, WINDOW_HEIGHT, ROUNDING_DIGITS, BACKUP_INTERVAL, GIF_DELAY_TIME, GIF_ROT_PASS;
@@ -110,8 +111,7 @@ public class Settings {
 		var file = new File("./settings.json");
 		var obj = file.exists() ? JsonHandler.parse(file) : new JsonMap();
 		if(obj.has("format") && obj.get("format").integer_value() != FORMAT) obj = new JsonMap();
-		UPDATE_FOUND = obj.get("update_found", FMT.VERSION);
-		UPDATE_SKIPPED = obj.get("update_skipped", UPDATE_SKIPPED);
+		if(obj.has("last_catalog_reload")) LAST_CATALOG_RELOAD = obj.get("last_catalog_reload").long_value();
 		if(obj.has("recent_files")){
 			JsonArray array = obj.getArray("recent_files");
 			for(int i = 0; i < 10; i++){
@@ -246,10 +246,9 @@ public class Settings {
 			obj.add(entry.getKey(), jsn);
 		});
 		//
+		obj.add("last_catalog_reload", LAST_CATALOG_RELOAD);
 		obj.add("last_fmt_version", FMT.VERSION);
 		obj.add("last_fmt_exit", Time.getAsString(Time.getDate()));
-		obj.add("update_found", UPDATE_FOUND);
-		obj.add("update_skipped", UPDATE_SKIPPED);
 		JsonArray recent = new JsonArray();
 		for(File file : RECENT){
 			if(NO_FILE_DOTS.equals(file)) continue;
@@ -415,9 +414,8 @@ public class Settings {
 	public static void checkForUpdatesAndLogin(){
 		Thread thread = new Thread(() -> {
 			JsonMap obj = JsonHandler.parseURL("http://fexcraft.net/minecraft/fcl/request", "mode=requestdata&modid=fmt");
-			if(obj == null || !obj.has("latest_version")){
+			if(obj == null){
 				Logging.log("Couldn't fetch latest version.");
-				Logging.log(obj == null ? ">> no version response received" : obj.toString());
 				UPDATECHECK_FAILED = true;
 			}
 			else if(obj.has("blocked_versions")){
@@ -429,15 +427,16 @@ public class Settings {
 					}
 				}
 			}
-			else{
-				UPDATE_FOUND = obj.get("latest_version").string_value();
-				Logging.log("Received remote version: " + UPDATE_FOUND);
-		        //
-				if(!UPDATE_FOUND.equals(FMT.VERSION) && remoteVersionIsNewer()){
-					Logging.log(">> Remote version is newer than installed version.");
+			if(LAST_CATALOG_RELOAD + (Time.MIN_MS * 720) < Time.getDate()){
+				Logging.log("Starting catalog update.");
+				Catalog.fetch(false);
+				Catalog.load(false);
+				Catalog.check(false);
+				if(Catalog.get() > 0){
+					Logging.log("Found update for " + Catalog.get() + " files.");
 					FOUND_UPDATE = true;
 				}
-				if(!UPDATE_FOUND.equals(UPDATE_SKIPPED)) UPDATE_SKIPPED = "";
+				LAST_CATALOG_RELOAD = Time.getDate();
 			}
 			showWelcome(true);
 			SessionHandler.checkIfLoggedIn(true, true);
@@ -446,14 +445,8 @@ public class Settings {
 		thread.start();
 	}
 
-	private static boolean remoteVersionIsNewer(){
-		Long remote = Long.parseLong(UPDATE_FOUND.replaceAll("[^0-9]", ""));
-		Long local = Long.parseLong(FMT.VERSION.replaceAll("[^0-9]", ""));
-		return remote > local;
-	}
-
 	public static void showWelcome(boolean welcome){
-		boolean update = FOUND_UPDATE && !UPDATE_FOUND.equals(UPDATE_SKIPPED);
+		boolean update = FOUND_UPDATE;
 		if(welcome){
 			if(!SHOW_WELCOME.value && (!update || !SHOW_UPDATE.value)) return;
 			if(!SHOW_UPDATE.value && update) update = false;
@@ -462,7 +455,7 @@ public class Settings {
 		Dialog dialog = new Dialog(translate("welcome.title"), width, update ? 140 : 110);
 		if(update){
 			dialog.getContainer().add(new Label(translate("welcome.update.available"), 10, 10, width - 20, 20));
-			dialog.getContainer().add(new Label(format("welcome.update.version", FMT.VERSION, UPDATE_FOUND), 10, 35, width - 20, 20));
+			dialog.getContainer().add(new Label(format("welcome.update.files"), 10, 35, width - 20, 20));
 			dialog.getContainer().add(new Label(translate("welcome.update.select"), 10, 60, width - 20, 20));
 			Button button0 = new Button(translate("dialog.button.yes"), 10, 90, 80, 20);
             button0.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
@@ -472,16 +465,7 @@ public class Settings {
             	}
             });
 			dialog.getContainer().add(button0);
-			Button button1 = new Button(translate("welcome.update.skip"), 100, 90, 100, 20);
-            button1.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
-            	if(CLICK == e.getAction()){
-            		UPDATE_SKIPPED = UPDATE_FOUND;
-            		dialog.close();
-            		save();
-            	}
-            });
-			dialog.getContainer().add(button1);
-			Button button2 = new Button(translate("dialog.button.close"), 210, 90, 80, 20);
+			Button button2 = new Button(translate("dialog.button.close"), 100, 90, 80, 20);
             button2.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> { if(CLICK == e.getAction()) dialog.close(); });
 			dialog.getContainer().add(button2);
 		}
