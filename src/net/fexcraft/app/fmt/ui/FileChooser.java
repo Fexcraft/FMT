@@ -34,6 +34,7 @@ public class FileChooser {
 	public static FileType TYPE_IMG = new FileType("Image Files", "*.png", "*.jpg", "*.jpeg", "*.bmp");
 	public static FileType TYPE_FMTB = new FileType("FMT Save File", "*.fmtb");
 	public static FileType TYPE_JSON = new FileType("JSON", "*.json");
+	public static FileType TYPE_JARZIP = new FileType("Jar/Zip Archive", "*.jar", "*.zip");
 	public static final int INTERNAL_HEIGHT = 500;
 	
 	public static void chooseFile(String title, String root, FileType type, boolean save, Consumer<File> task){
