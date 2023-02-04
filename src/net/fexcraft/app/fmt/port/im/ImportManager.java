@@ -41,6 +41,7 @@ public class ImportManager {
 		CATEGORIES.clear();
 		addImporter(new MTBImporter());
 		addImporter(new DFMImporter());
+		addImporter(new FVTM_OLD_Importer());
 	}
 	
 	private static void addImporter(Importer importer){
