@@ -146,7 +146,7 @@ task mainJar(type: Jar){
 		"Class-Path": ". " + (configurations.runtimeClasspath.collect { "lib/" + it.getName() }.join(' '))
 	}
 	from(zipTree("${destinationDir}/${archiveName}")){
-		exclude 'net/fexcraft/app/fmt/launch/'
+		include 'net/fexcraft/app/fmt/launch/'
 		include 'net/fexcraft/app/fmt/'
 		include 'net/fexcraft/app/json/'
 		include 'net/fexcraft/lib/'
