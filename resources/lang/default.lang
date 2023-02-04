@@ -269,9 +269,8 @@ saveload.backup.failure=Error/s while saving backup, please check the log.
 # Welcome/Update Dialog
 welcome.title=Welcome to FMT!
 welcome.update.available=An update is available!
-welcome.update.version=Local: %s  || Remote: %s
+welcome.update.files=(Use the launcher to download.)
 welcome.update.select=Do you wish to update?
-welcome.update.skip=Skip Version
 welcome.normal.greeting_logged=Welcome back %s!
 welcome.normal.greeting_guest=Have a nice time using FMT!
 welcome.normal.version=Running FMT v. %s
