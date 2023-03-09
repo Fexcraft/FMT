@@ -111,6 +111,7 @@ public class Group extends ArrayList<Polygon> {
 	}
 
     public String exportId(){
-		return id.trim().replace(" ", "_").replaceAll("[^a-zA-Z0-9 _]", "");
+		String str = id.trim().replace(" ", "_").replaceAll("[^a-zA-Z0-9 _]", "");
+		return str.charAt(0) >= '0' && str.charAt(0) <= '9' ? "g" + str : str;
     }
 }
