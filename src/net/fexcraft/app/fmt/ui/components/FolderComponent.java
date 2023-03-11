@@ -28,6 +28,10 @@ public class FolderComponent extends EditorComponent {
 	public File folder = new File("./workspace/");
 	public int scrollableheight;
 
+	public FolderComponent(){
+		this(500);
+	}
+
 	public FolderComponent(int height){
 		super("folder", height, false, true);
 		this.add(new RunButton(LANG_PREFIX + "folder.select", F31, height - 28, F3S, HEIGHT, () -> {
