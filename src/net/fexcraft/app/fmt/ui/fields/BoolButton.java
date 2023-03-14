@@ -2,6 +2,8 @@ package net.fexcraft.app.fmt.ui.fields;
 
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
+import java.util.function.Consumer;
+
 import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.listener.MouseClickEventListener;
@@ -36,6 +38,21 @@ public class BoolButton extends Button implements Field {
 			if(event.getAction() == CLICK){
 				setting.toggle();
 				getTextState().setText(setting.value + "");
+			}
+			else return;
+		});
+	}
+
+	public BoolButton(float x, float y, float w, float h, boolean def, Consumer<Boolean> cons){
+		super(def + "", x, y, w, h);
+		Settings.applyMenuTheme(this);
+		Settings.applyGrayText(this);
+		Field.setupHoverCheck(this);
+		this.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)event -> {
+			if(event.getAction() == CLICK){
+				boolean bool = !Boolean.parseBoolean(getTextState().getText());
+				cons.accept(bool);
+				getTextState().setText(bool + "");
 			}
 			else return;
 		});
