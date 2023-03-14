@@ -60,7 +60,7 @@ public class KeyCompound {
 		for(int i = 1; i < 10; i++){ final int j = i - 1;
 			keys.add(new KeyFunction("toggle_editor_" + i, GLFW_KEY_0 + i, action -> {
 				if(GGR.isOverUI()) return;
-				if(action == GLFW_RELEASE) Editor.toggle(j, GGR.isShiftDown());
+				if(action == GLFW_RELEASE) Editor.toggle(j, GGR.isAltDown());
 			}));
 		}
 		//
