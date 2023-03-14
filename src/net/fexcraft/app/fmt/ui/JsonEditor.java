@@ -22,21 +22,24 @@ import org.liquidengine.legui.component.ScrollablePanel;
 import org.liquidengine.legui.component.TextInput;
 import org.liquidengine.legui.component.misc.listener.widget.WidgetResizeButtonDragListener;
 import org.liquidengine.legui.event.MouseClickEvent;
+import org.liquidengine.legui.input.Mouse;
 import org.liquidengine.legui.listener.MouseClickEventListener;
 
 public class JsonEditor extends Dialog {
 
-    private File file;
-    private JsonMap map;
+    private static File file;
+    private static JsonMap map;
     private static ScrollablePanel panel;
     private static int height;
     private static int width;
+    private static JsonEditor INST;
 
     public JsonEditor(File file){
         map = JsonHandler.parse(this.file = file);
         getTitleTextState().setText("JsonEditor - " + file.getName());
         setResizable(false);
         setSize(700, 470);
+        INST = this;
         Settings.applyComponentTheme(getContainer());
         getContainer().add(panel = new ScrollablePanel(10, 10, 680, 400));
         fill(panel.getContainer(), map);
@@ -54,14 +57,17 @@ public class JsonEditor extends Dialog {
     private void fill(Component container, JsonMap map){
         removeIf(com -> com instanceof Resizeable);
         for(Map.Entry<String, JsonObject<?>> entry : map.entries()){
+            Runnable run = () -> {
+              JsonEditorMenu.show(this, map, entry.getKey(), entry.getValue());
+            };
             if(entry.getValue().isMap()){
-                container.add(new JMapCom(entry.getKey(), entry.getValue().asMap()));
+                container.add(new JMapCom(entry.getKey(), entry.getValue().asMap(), run));
             }
             else if(entry.getValue().isArray()){
-                container.add(new JArrCom(entry.getKey(), entry.getValue().asArray()));
+                container.add(new JArrCom(entry.getKey(), entry.getValue().asArray(), run));
             }
             else{
-                container.add(new JElmCom(entry.getKey(), entry.getValue()));
+                container.add(new JElmCom(entry.getKey(), entry.getValue(), run));
             }
         }
     }
@@ -81,24 +87,34 @@ public class JsonEditor extends Dialog {
         public String key;
         public Label label;
 
-        public JMapCom(String key, JsonMap map){
-            add(label = new Label(this.key = key, 10, 0, 100, 30));
+        public JMapCom(String key, JsonMap map, Runnable run){
+            add(label = new Label(this.key = key, 10, 0, 200, 30));
             label.getListenerMap().addListener(MouseClickEvent.class, lis -> {
-                if(lis.getAction() == MouseClickEvent.MouseClickAction.CLICK){
+                if(lis.getAction() == MouseClickEvent.MouseClickAction.CLICK && lis.getButton() == Mouse.MouseButton.MOUSE_BUTTON_LEFT){
                     minimized = !minimized;
                     JsonEditor.resize();
                 }
             });
+            MouseClickEventListener listener = lis -> {
+                if(lis.getAction() == MouseClickEvent.MouseClickAction.CLICK && lis.getButton() == Mouse.MouseButton.MOUSE_BUTTON_RIGHT){
+                    run.run();
+                }
+            };
+            label.getListenerMap().addListener(MouseClickEvent.class, listener);
+            getListenerMap().addListener(MouseClickEvent.class, listener);
             this.map = map;
             for(Map.Entry<String, JsonObject<?>> entry : map.entries()){
+                Runnable ran = () -> {
+                    JsonEditorMenu.show(INST, map, entry.getKey(), entry.getValue());
+                };
                 if(entry.getValue().isMap()){
-                    add(new JMapCom(entry.getKey(), entry.getValue().asMap()));
+                    add(new JMapCom(entry.getKey(), entry.getValue().asMap(), ran));
                 }
                 else if(entry.getValue().isArray()){
-                    add(new JArrCom(entry.getKey(), entry.getValue().asArray()));
+                    add(new JArrCom(entry.getKey(), entry.getValue().asArray(), ran));
                 }
                 else{
-                    add(new JElmCom(entry.getKey(), entry.getValue()));
+                    add(new JElmCom(entry.getKey(), entry.getValue(), ran));
                 }
             }
         }
@@ -125,25 +141,36 @@ public class JsonEditor extends Dialog {
         public String key;
         public Label label;
 
-        public JArrCom(String key, JsonArray arr) {
-            add(label = new Label(this.key = key, 10, 0, 100, 30));
+        public JArrCom(String key, JsonArray arr, Runnable run){
+            add(label = new Label(this.key = key, 10, 0, 200, 30));
             label.getListenerMap().addListener(MouseClickEvent.class, lis -> {
                 if(lis.getAction() == MouseClickEvent.MouseClickAction.CLICK){
                     minimized = !minimized;
                     JsonEditor.resize();
                 }
             });
+            MouseClickEventListener listener = lis -> {
+                if(lis.getAction() == MouseClickEvent.MouseClickAction.CLICK && lis.getButton() == Mouse.MouseButton.MOUSE_BUTTON_RIGHT){
+                    run.run();
+                }
+            };
+            label.getListenerMap().addListener(MouseClickEvent.class, listener);
+            getListenerMap().addListener(MouseClickEvent.class, listener);
             this.array = arr;
             for(int i = 0; i < array.size(); i++){
+                String idx = i + "";
                 JsonObject elm = array.get(i);
+                Runnable ran = () -> {
+                    JsonEditorMenu.show(INST, array, idx, elm);
+                };
                 if(elm.isMap()){
-                    add(new JMapCom(i + "", elm.asMap()));
+                    add(new JMapCom(i + "", elm.asMap(), ran));
                 }
                 else if(elm.isArray()){
-                    add(new JArrCom(i + "", elm.asArray()));
+                    add(new JArrCom(i + "", elm.asArray(), ran));
                 }
                 else{
-                    add(new JElmCom(i + "", elm));
+                    add(new JElmCom(i + "", elm, ran));
                 }
             }
         }
@@ -171,8 +198,15 @@ public class JsonEditor extends Dialog {
         public Label label;
         public TextInput input;
 
-        public JElmCom(String key, JsonObject<?> elm){
+        public JElmCom(String key, JsonObject<?> elm, Runnable run){
             add(label = new Label(this.key = key, 10, 0, 200, 30));
+            MouseClickEventListener listener = lis -> {
+                if(lis.getAction() == MouseClickEvent.MouseClickAction.CLICK && lis.getButton() == Mouse.MouseButton.MOUSE_BUTTON_RIGHT){
+                    run.run();
+                }
+            };
+            label.getListenerMap().addListener(MouseClickEvent.class, listener);
+            getListenerMap().addListener(MouseClickEvent.class, listener);
             this.elm = elm;
             if(elm.string_value().equals("true") || elm.string_value().equals("false")){
                 add(new BoolButton(220, 2, 300, 26, elm.bool(), bool -> ((JsonObject<Boolean>)elm).value(bool)));
