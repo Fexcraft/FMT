@@ -167,9 +167,8 @@ public class Editor extends Component {
 		if(obj.has("components")){
 			JsonArray array = obj.getArray("components");
 			for(JsonObject<?> elm : array.elements()){
-				Logging.log(elm);
 				if(elm.isMap()){
-					Class<? extends EditorComponent> com = EditorComponent.REGISTRY.get(elm.asMap().get("id"));
+					Class<? extends EditorComponent> com = EditorComponent.REGISTRY.get(elm.asMap().get("id").string_value());
 					if(com != null) this.addComponent(com.getConstructor().newInstance().load(elm.asMap()));
 				}
 				else{
