@@ -3,6 +3,8 @@ package net.fexcraft.app.fmt.ui.components;
 import java.io.File;
 import java.util.ArrayList;
 
+import net.fexcraft.app.fmt.utils.Logging;
+import net.fexcraft.app.json.JsonMap;
 import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.ScrollablePanel;
@@ -28,12 +30,8 @@ public class FolderComponent extends EditorComponent {
 	public File folder = new File("./workspace/");
 	public int scrollableheight;
 
-	public FolderComponent(){
-		this(500);
-	}
-
-	public FolderComponent(int height){
-		super("folder", height, false, true);
+	public FolderComponent(String suffix, int height){
+		super("folder." + suffix, height, false, true);
 		this.add(new RunButton(LANG_PREFIX + "folder.select", F31, height - 28, F3S, HEIGHT, () -> {
 	        try(MemoryStack stack = MemoryStack.stackPush()){
 	    		String string = TinyFileDialogs.tinyfd_selectFolderDialog(Translator.translate("editor.component.folder.select.dialog"), folder.toString());
@@ -46,7 +44,7 @@ public class FolderComponent extends EditorComponent {
 		this.add(new RunButton(LANG_PREFIX + "folder.refresh", F32, height - 28, F3S, HEIGHT, () -> genView()));
 		panel = new ScrollablePanel(5, 30, Editor.CWIDTH - 10, fullheight - 65);
 		//panel.setVerticalScrollBarVisible(false);
-		panel.getContainer().setSize(500, scrollableheight = fullheight - 65);
+		panel.getContainer().setSize(height, scrollableheight = fullheight - 65);
 		Settings.applyBorderless(panel);
 		this.add(panel);
 		if(!folder.exists()) folder.mkdirs();
@@ -61,6 +59,7 @@ public class FolderComponent extends EditorComponent {
 				rootfolders.clear();
 				addFolder(folder, null, 0);
 				resize();
+				panel.getVerticalScrollBar().setScrollStep(0f);
 			}
 		}.start();
 	}
@@ -232,6 +231,45 @@ public class FolderComponent extends EditorComponent {
 			return FILE;
 		}
 		
+	}
+
+	@Override
+	public FolderComponent load(JsonMap map){
+		folder = new File(map.getString("root", "./workspace/"));
+		Logging.log(folder, this);
+		return this;
+	}
+
+	@Override
+	public JsonMap save(){
+		JsonMap map = new JsonMap();
+		map.add("root", folder.getPath().toString());
+		map.add("id", id);
+		return map;
+	}
+
+	public static class Small extends FolderComponent {
+
+		public Small(){
+			super("small", 200);
+		}
+
+	}
+
+	public static class Medium extends FolderComponent {
+
+		public Medium(){
+			super("medium", 400);
+		}
+
+	}
+
+	public static class Large extends FolderComponent {
+
+		public Large(){
+			super("large", 600);
+		}
+
 	}
 
 }
