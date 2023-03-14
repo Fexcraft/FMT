@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.Arrows;
 import net.fexcraft.app.fmt.settings.Settings;
+import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonHandler.PrintOption;
 import net.fexcraft.app.json.JsonMap;
@@ -57,7 +58,10 @@ public class KeyCompound {
 		keys.add(new KeyFunction("zoom_in", GLFW_KEY_Z, (action) -> onRelease(action, () -> FMT.CAM.toggleZoom())));
 		//
 		for(int i = 1; i < 10; i++){ final int j = i - 1;
-			//TODO keys.add(new KeyFunction("toggle_editor_" + i, GLFW_KEY_0 + i, (action) -> { if(action == GLFW_RELEASE) Editors.toggleWidget(j); }));
+			keys.add(new KeyFunction("toggle_editor_" + i, GLFW_KEY_0 + i, action -> {
+				if(GGR.isOverUI()) return;
+				if(action == GLFW_RELEASE) Editor.toggle(j, GGR.isShiftDown());
+			}));
 		}
 		//
 		keys.add(new KeyFunction("camera_rotate_left",  GLFW_KEY_LEFT,  action -> { if(!GGR.isOverUI()) FMT.CAM.hor -= Static.rad5; }));
