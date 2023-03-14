@@ -76,6 +76,13 @@ toolbar.polyselmenu.delete=Delete
 toolbar.fileeditmenu.rename=Rename
 toolbar.fileeditmenu.copy=Copy
 toolbar.fileeditmenu.delete=Delete
+## Json Editor Right-Click Menu
+toolbar.jsoneditormenu.insert=Insert
+toolbar.jsoneditormenu.add_before=Add Before
+toolbar.jsoneditormenu.add_after=Add After
+toolbar.jsoneditormenu.rename=Rename
+toolbar.jsoneditormenu.copy=Copy
+toolbar.jsoneditormenu.delete=Delete
 
 # Editor
 editor.add_component=Add Editor Component
