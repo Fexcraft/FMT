@@ -144,7 +144,7 @@ public class JsonEditor extends Dialog {
         public JArrCom(String key, JsonArray arr, Runnable run){
             add(label = new Label(this.key = key, 10, 0, 200, 30));
             label.getListenerMap().addListener(MouseClickEvent.class, lis -> {
-                if(lis.getAction() == MouseClickEvent.MouseClickAction.CLICK){
+                if(lis.getAction() == MouseClickEvent.MouseClickAction.CLICK && lis.getButton() == Mouse.MouseButton.MOUSE_BUTTON_LEFT){
                     minimized = !minimized;
                     JsonEditor.resize();
                 }
