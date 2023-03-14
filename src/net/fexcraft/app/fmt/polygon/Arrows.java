@@ -1,9 +1,9 @@
 package net.fexcraft.app.fmt.polygon;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.attributes.PolyVal;
-import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
-import net.fexcraft.app.fmt.attributes.PolyVal.ValAxe;
+import net.fexcraft.app.fmt.update.PolyVal;
+import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
+import net.fexcraft.app.fmt.update.PolyVal.ValAxe;
 import net.fexcraft.app.fmt.polygon.PolyRenderer.DrawMode;
 import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.ui.fields.NumberField;

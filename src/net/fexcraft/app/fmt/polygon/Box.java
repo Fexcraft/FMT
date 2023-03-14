@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import org.joml.Vector3f;
 
-import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
+import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.polygon.uv.BoxFace;
 import net.fexcraft.app.fmt.polygon.uv.Face;
 import net.fexcraft.app.fmt.polygon.uv.NoFace;

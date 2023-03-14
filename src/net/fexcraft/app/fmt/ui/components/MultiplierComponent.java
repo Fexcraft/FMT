@@ -7,8 +7,8 @@ import org.liquidengine.legui.component.Tooltip;
 import org.liquidengine.legui.component.event.slider.SliderChangeValueEventListener;
 import org.liquidengine.legui.component.optional.align.HorizontalAlign;
 
-import net.fexcraft.app.fmt.attributes.UpdateHandler;
-import net.fexcraft.app.fmt.attributes.UpdateType;
+import net.fexcraft.app.fmt.update.UpdateHandler;
+import net.fexcraft.app.fmt.update.UpdateType;
 import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.ui.fields.NumberField;

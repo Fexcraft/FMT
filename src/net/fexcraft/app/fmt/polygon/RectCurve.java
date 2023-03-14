@@ -1,9 +1,9 @@
 package net.fexcraft.app.fmt.polygon;
 
-import static net.fexcraft.app.fmt.attributes.PolyVal.CORNER_0;
-import static net.fexcraft.app.fmt.attributes.PolyVal.CORNER_1;
-import static net.fexcraft.app.fmt.attributes.PolyVal.CORNER_2;
-import static net.fexcraft.app.fmt.attributes.PolyVal.CORNER_3;
+import static net.fexcraft.app.fmt.update.PolyVal.CORNER_0;
+import static net.fexcraft.app.fmt.update.PolyVal.CORNER_1;
+import static net.fexcraft.app.fmt.update.PolyVal.CORNER_2;
+import static net.fexcraft.app.fmt.update.PolyVal.CORNER_3;
 import static net.fexcraft.app.fmt.utils.JsonUtil.getVector;
 import static net.fexcraft.app.fmt.utils.JsonUtil.setVector;
 
@@ -12,8 +12,8 @@ import java.util.Arrays;
 
 import org.joml.Vector3f;
 
-import net.fexcraft.app.fmt.attributes.PolyVal;
-import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
+import net.fexcraft.app.fmt.update.PolyVal;
+import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.polygon.PolyRenderer.DrawMode;
 import net.fexcraft.app.fmt.polygon.uv.BoxFace;
 import net.fexcraft.app.fmt.polygon.uv.Face;

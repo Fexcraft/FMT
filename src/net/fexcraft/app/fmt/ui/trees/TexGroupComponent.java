@@ -21,8 +21,8 @@ import org.liquidengine.legui.style.length.LengthType;
 import com.google.common.io.Files;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.attributes.UpdateHandler;
-import net.fexcraft.app.fmt.attributes.UpdateType;
+import net.fexcraft.app.fmt.update.UpdateHandler;
+import net.fexcraft.app.fmt.update.UpdateType;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TextureGroup;

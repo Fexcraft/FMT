@@ -1,7 +1,7 @@
 package net.fexcraft.app.fmt.utils;
 
-import static net.fexcraft.app.fmt.attributes.UpdateHandler.update;
-import static net.fexcraft.app.fmt.attributes.UpdateType.MODEL_LOAD;
+import static net.fexcraft.app.fmt.update.UpdateHandler.update;
+import static net.fexcraft.app.fmt.update.UpdateType.MODEL_LOAD;
 import static net.fexcraft.app.fmt.ui.GenericDialog.showOK;
 import static net.fexcraft.app.fmt.utils.Logging.log;
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
@@ -30,8 +30,8 @@ import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.listener.MouseClickEventListener;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.attributes.UpdateHandler;
-import net.fexcraft.app.fmt.attributes.UpdateType;
+import net.fexcraft.app.fmt.update.UpdateHandler;
+import net.fexcraft.app.fmt.update.UpdateType;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.polygon.ModelFormat;

@@ -16,8 +16,8 @@ import org.liquidengine.legui.style.Style.DisplayType;
 import org.liquidengine.legui.style.color.ColorConstants;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.attributes.UpdateHandler;
-import net.fexcraft.app.fmt.attributes.UpdateType;
+import net.fexcraft.app.fmt.update.UpdateHandler;
+import net.fexcraft.app.fmt.update.UpdateType;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.settings.Settings;

@@ -1,8 +1,8 @@
 package net.fexcraft.app.fmt.ui.trees;
 
-import net.fexcraft.app.fmt.attributes.UpdateHandler;
-import net.fexcraft.app.fmt.attributes.UpdateHandler.UpdateHolder;
-import net.fexcraft.app.fmt.attributes.UpdateType;
+import net.fexcraft.app.fmt.update.UpdateHandler;
+import net.fexcraft.app.fmt.update.UpdateHandler.UpdateHolder;
+import net.fexcraft.app.fmt.update.UpdateType;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.ui.Editor;

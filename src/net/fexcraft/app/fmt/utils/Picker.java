@@ -7,8 +7,8 @@ import java.util.function.Consumer;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.attributes.UpdateHandler;
-import net.fexcraft.app.fmt.attributes.UpdateType;
+import net.fexcraft.app.fmt.update.UpdateHandler;
+import net.fexcraft.app.fmt.update.UpdateType;
 import net.fexcraft.app.fmt.polygon.Arrows;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Polygon;

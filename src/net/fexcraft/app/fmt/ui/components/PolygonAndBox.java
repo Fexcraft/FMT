@@ -5,9 +5,9 @@ import static net.fexcraft.app.fmt.utils.Translator.translate;
 import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.SelectBox;
 
-import net.fexcraft.app.fmt.attributes.PolyVal;
-import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
-import net.fexcraft.app.fmt.attributes.PolyVal.ValAxe;
+import net.fexcraft.app.fmt.update.PolyVal;
+import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
+import net.fexcraft.app.fmt.update.PolyVal.ValAxe;
 import net.fexcraft.app.fmt.ui.fields.BoolButton;
 import net.fexcraft.app.fmt.ui.fields.NumberField;
 import net.fexcraft.app.fmt.ui.fields.TextField;

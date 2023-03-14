@@ -1,14 +1,14 @@
 package net.fexcraft.app.fmt.polygon;
 
-import static net.fexcraft.app.fmt.attributes.UpdateHandler.update;
-import static net.fexcraft.app.fmt.attributes.UpdateType.POLYGON_REMOVED;
+import static net.fexcraft.app.fmt.update.UpdateHandler.update;
+import static net.fexcraft.app.fmt.update.UpdateType.POLYGON_REMOVED;
 
 import java.util.ArrayList;
 
 import org.joml.Vector3f;
 
-import net.fexcraft.app.fmt.attributes.UpdateHandler;
-import net.fexcraft.app.fmt.attributes.UpdateType;
+import net.fexcraft.app.fmt.update.UpdateHandler;
+import net.fexcraft.app.fmt.update.UpdateType;
 import net.fexcraft.app.fmt.polygon.PolyRenderer.DrawMode;
 import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.lib.common.math.RGB;

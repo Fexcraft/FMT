@@ -4,7 +4,7 @@ import java.util.function.Consumer;
 
 import org.liquidengine.legui.component.TextInput;
 
-import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
+import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.settings.Setting;
 import net.fexcraft.app.fmt.settings.Settings;
 

@@ -1,8 +1,8 @@
 package net.fexcraft.app.fmt.polygon;
 
-import static net.fexcraft.app.fmt.attributes.UpdateHandler.update;
-import static net.fexcraft.app.fmt.attributes.UpdateType.MODEL_AUTHOR;
-import static net.fexcraft.app.fmt.attributes.UpdateType.MODEL_LOAD;
+import static net.fexcraft.app.fmt.update.UpdateHandler.update;
+import static net.fexcraft.app.fmt.update.UpdateType.MODEL_AUTHOR;
+import static net.fexcraft.app.fmt.update.UpdateType.MODEL_LOAD;
 import static net.fexcraft.app.fmt.settings.Settings.ASK_POLYGON_REMOVAL;
 import static net.fexcraft.app.fmt.ui.fields.NumberField.round;
 import static net.fexcraft.app.fmt.utils.Translator.translate;
@@ -32,9 +32,9 @@ import org.liquidengine.legui.event.MouseClickEvent;
 import com.google.common.collect.ImmutableMap;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
-import net.fexcraft.app.fmt.attributes.UpdateHandler;
-import net.fexcraft.app.fmt.attributes.UpdateType;
+import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
+import net.fexcraft.app.fmt.update.UpdateHandler;
+import net.fexcraft.app.fmt.update.UpdateType;
 import net.fexcraft.app.fmt.polygon.PolyRenderer.DrawMode;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TextureGroup;

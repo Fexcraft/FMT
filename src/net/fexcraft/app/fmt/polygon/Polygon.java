@@ -1,7 +1,7 @@
 package net.fexcraft.app.fmt.polygon;
 
-import static net.fexcraft.app.fmt.attributes.UpdateHandler.update;
-import static net.fexcraft.app.fmt.attributes.UpdateType.POLYGON_ADDED;
+import static net.fexcraft.app.fmt.update.UpdateHandler.update;
+import static net.fexcraft.app.fmt.update.UpdateType.POLYGON_ADDED;
 import static net.fexcraft.app.fmt.utils.JsonUtil.getVector;
 import static net.fexcraft.app.fmt.utils.JsonUtil.setVector;
 import static net.fexcraft.app.fmt.utils.Logging.log;
@@ -9,10 +9,10 @@ import static net.fexcraft.app.fmt.utils.Logging.log;
 import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
-import net.fexcraft.app.fmt.attributes.PolyVal.ValAxe;
-import net.fexcraft.app.fmt.attributes.UpdateHandler;
-import net.fexcraft.app.fmt.attributes.UpdateType;
+import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
+import net.fexcraft.app.fmt.update.PolyVal.ValAxe;
+import net.fexcraft.app.fmt.update.UpdateHandler;
+import net.fexcraft.app.fmt.update.UpdateType;
 import net.fexcraft.app.fmt.polygon.uv.Face;
 import net.fexcraft.app.fmt.polygon.uv.NoFace;
 import net.fexcraft.app.fmt.polygon.uv.UVCoords;

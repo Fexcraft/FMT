@@ -1,8 +1,8 @@
 package net.fexcraft.app.fmt.port.im;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.attributes.UpdateHandler;
-import net.fexcraft.app.fmt.attributes.UpdateType;
+import net.fexcraft.app.fmt.update.UpdateHandler;
+import net.fexcraft.app.fmt.update.UpdateType;
 import net.fexcraft.app.fmt.polygon.Box;
 import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.polygon.Shapebox;
@@ -11,11 +11,7 @@ import net.fexcraft.app.fmt.texture.Texture;
 import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.ui.FileChooser;
-import net.fexcraft.app.fmt.ui.GenericDialog;
-import net.fexcraft.app.fmt.utils.Logging;
-import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.common.utils.ZipUtil;
-import net.fexcraft.lib.tmt.ModelRendererTurbo;
 import org.joml.Vector3f;
 
 import java.io.*;

@@ -1,4 +1,4 @@
-package net.fexcraft.app.fmt.attributes;
+package net.fexcraft.app.fmt.update;
 
 import java.util.ArrayList;
 import java.util.HashMap;

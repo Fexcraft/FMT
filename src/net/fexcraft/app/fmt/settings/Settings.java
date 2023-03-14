@@ -258,7 +258,7 @@ public class Settings {
 		JsonHandler.print(new File("./settings.json"), obj, PrintOption.SPACED);
 		//
 		JsonMap editors = new JsonMap();
-		for(Editor editor : Editor.EDITORS.values()){
+		for(Editor editor : Editor.EDITORLIST){
 			if(editor.tree) continue;
 			editors.add(editor.id, editor.save());
 		}

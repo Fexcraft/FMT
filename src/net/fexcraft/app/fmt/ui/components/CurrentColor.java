@@ -8,7 +8,7 @@ import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.image.StbBackedLoadableImage;
 
-import net.fexcraft.app.fmt.attributes.UpdateType;
+import net.fexcraft.app.fmt.update.UpdateType;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TexturePainter;
 import net.fexcraft.app.fmt.texture.TexturePainter.Tool;

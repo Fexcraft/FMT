@@ -1,4 +1,4 @@
-package net.fexcraft.app.fmt.attributes;
+package net.fexcraft.app.fmt.update;
 
 public enum PolyVal {
 	

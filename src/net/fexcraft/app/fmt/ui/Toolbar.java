@@ -7,9 +7,9 @@ import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.Panel;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.attributes.UpdateHandler;
-import net.fexcraft.app.fmt.attributes.UpdateHandler.UpdateHolder;
-import net.fexcraft.app.fmt.attributes.UpdateType;
+import net.fexcraft.app.fmt.update.UpdateHandler;
+import net.fexcraft.app.fmt.update.UpdateHandler.UpdateHolder;
+import net.fexcraft.app.fmt.update.UpdateType;
 import net.fexcraft.app.fmt.port.ex.ExportManager;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.ToolbarMenu.MenuButton;

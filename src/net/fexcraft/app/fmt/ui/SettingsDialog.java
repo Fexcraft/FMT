@@ -20,8 +20,8 @@ import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.event.ScrollEvent;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.attributes.UpdateHandler;
-import net.fexcraft.app.fmt.attributes.UpdateHandler.UpdateHolder;
+import net.fexcraft.app.fmt.update.UpdateHandler;
+import net.fexcraft.app.fmt.update.UpdateHandler.UpdateHolder;
 import net.fexcraft.app.fmt.settings.Setting;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.fields.RunButton;

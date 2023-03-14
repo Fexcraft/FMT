@@ -10,7 +10,7 @@ import org.liquidengine.legui.event.CursorEnterEvent;
 import org.liquidengine.legui.listener.CursorEnterEventListener;
 import org.liquidengine.legui.style.Style.DisplayType;
 
-import net.fexcraft.app.fmt.attributes.UpdateHandler.UpdateHolder;
+import net.fexcraft.app.fmt.update.UpdateHandler.UpdateHolder;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.components.*;
 import net.fexcraft.app.fmt.utils.Translator;

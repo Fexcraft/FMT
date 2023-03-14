@@ -17,10 +17,10 @@ import org.liquidengine.legui.listener.KeyEventListener;
 import org.lwjgl.glfw.GLFW;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
-import net.fexcraft.app.fmt.attributes.UpdateHandler.UpdateHolder;
-import net.fexcraft.app.fmt.attributes.UpdateHandler.UpdateWrapper;
-import net.fexcraft.app.fmt.attributes.UpdateType;
+import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
+import net.fexcraft.app.fmt.update.UpdateHandler.UpdateHolder;
+import net.fexcraft.app.fmt.update.UpdateHandler.UpdateWrapper;
+import net.fexcraft.app.fmt.update.UpdateType;
 import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.settings.Setting;
 import net.fexcraft.app.fmt.ui.EditorComponent;

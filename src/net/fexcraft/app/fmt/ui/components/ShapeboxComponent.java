@@ -4,8 +4,8 @@ import static net.fexcraft.app.fmt.utils.Translator.translate;
 
 import org.liquidengine.legui.component.Label;
 
-import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
-import net.fexcraft.app.fmt.attributes.PolyVal.ValAxe;
+import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
+import net.fexcraft.app.fmt.update.PolyVal.ValAxe;
 import net.fexcraft.app.fmt.polygon.Shapebox;
 import net.fexcraft.app.fmt.ui.ColorPanel;
 import net.fexcraft.app.fmt.ui.EditorComponent;

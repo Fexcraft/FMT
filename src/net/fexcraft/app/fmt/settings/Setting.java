@@ -5,7 +5,7 @@ import java.util.function.Consumer;
 import org.liquidengine.legui.component.Component;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.attributes.UpdateHandler.UpdateHolder;
+import net.fexcraft.app.fmt.update.UpdateHandler.UpdateHolder;
 import net.fexcraft.app.fmt.polygon.PolyRenderer;
 import net.fexcraft.app.fmt.ui.fields.BoolButton;
 import net.fexcraft.app.fmt.ui.fields.ColorField;

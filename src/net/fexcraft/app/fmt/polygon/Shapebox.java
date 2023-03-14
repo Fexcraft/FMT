@@ -1,13 +1,13 @@
 package net.fexcraft.app.fmt.polygon;
 
-import static net.fexcraft.app.fmt.attributes.PolyVal.CORNER_0;
-import static net.fexcraft.app.fmt.attributes.PolyVal.CORNER_1;
-import static net.fexcraft.app.fmt.attributes.PolyVal.CORNER_2;
-import static net.fexcraft.app.fmt.attributes.PolyVal.CORNER_3;
-import static net.fexcraft.app.fmt.attributes.PolyVal.CORNER_4;
-import static net.fexcraft.app.fmt.attributes.PolyVal.CORNER_5;
-import static net.fexcraft.app.fmt.attributes.PolyVal.CORNER_6;
-import static net.fexcraft.app.fmt.attributes.PolyVal.CORNER_7;
+import static net.fexcraft.app.fmt.update.PolyVal.CORNER_0;
+import static net.fexcraft.app.fmt.update.PolyVal.CORNER_1;
+import static net.fexcraft.app.fmt.update.PolyVal.CORNER_2;
+import static net.fexcraft.app.fmt.update.PolyVal.CORNER_3;
+import static net.fexcraft.app.fmt.update.PolyVal.CORNER_4;
+import static net.fexcraft.app.fmt.update.PolyVal.CORNER_5;
+import static net.fexcraft.app.fmt.update.PolyVal.CORNER_6;
+import static net.fexcraft.app.fmt.update.PolyVal.CORNER_7;
 import static net.fexcraft.app.fmt.utils.JsonUtil.getVector;
 import static net.fexcraft.app.fmt.utils.JsonUtil.setVector;
 
@@ -15,8 +15,8 @@ import java.util.ArrayList;
 
 import org.joml.Vector3f;
 
-import net.fexcraft.app.fmt.attributes.PolyVal;
-import net.fexcraft.app.fmt.attributes.PolyVal.PolygonValue;
+import net.fexcraft.app.fmt.update.PolyVal;
+import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.frl.gen.Generator;
