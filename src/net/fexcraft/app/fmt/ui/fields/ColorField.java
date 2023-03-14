@@ -111,10 +111,14 @@ public class ColorField extends TextInput implements Field {
 		}
 		this.setting = setting;
 	}
-	
+
 	public ColorField(Component root, BiConsumer<Integer, Boolean> update, float x, float y, float w, float h, String icon){
+		this(root, update, x, y, w, h, icon, true);
+	}
+	
+	public ColorField(Component root, BiConsumer<Integer, Boolean> update, float x, float y, float w, float h, String icon, boolean borderless){
 		super("#ffffff", x + (root == null ? 0 : h - 2), y, root == null ? w : w - 35 - h - 2, h);
-		Settings.applyBorderless(this);
+		if(borderless) Settings.applyBorderless(this);
 		Field.setupHoverCheck(this);
 		addTextInputContentChangeEventListener(event -> {
 			Field.validateColorString(event); value = null;
@@ -144,7 +148,7 @@ public class ColorField extends TextInput implements Field {
 	                    }
 					}
 				});
-				Settings.applyBorderless(button);
+				if(borderless) Settings.applyBorderless(button);
 				root.add(button);
 			}
 			else{
