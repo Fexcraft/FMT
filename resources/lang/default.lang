@@ -72,6 +72,10 @@ toolbar.polyselmenu.hide=Hide/Show
 toolbar.polyselmenu.selgroup=Sel. Group
 toolbar.polyselmenu.copy=Copy
 toolbar.polyselmenu.delete=Delete
+## Directory Viever File Right-Click Menu
+toolbar.fileeditmenu.rename=Rename
+toolbar.fileeditmenu.copy=Copy
+toolbar.fileeditmenu.delete=Delete
 
 # Editor
 editor.add_component=Add Editor Component
