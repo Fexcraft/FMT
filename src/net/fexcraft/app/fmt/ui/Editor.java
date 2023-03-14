@@ -29,8 +29,8 @@ import org.liquidengine.legui.style.Border;
 import org.liquidengine.legui.style.Style.DisplayType;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.attributes.UpdateHandler;
-import net.fexcraft.app.fmt.attributes.UpdateType;
+import net.fexcraft.app.fmt.update.UpdateHandler;
+import net.fexcraft.app.fmt.update.UpdateType;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.fields.TextField;
 import net.fexcraft.app.fmt.utils.Logging;
@@ -367,6 +367,23 @@ public class Editor extends Component {
 			map.add("components", array);
 		}
 		return map;
+	}
+
+	public static void toggle(int idx, boolean sub){
+		if(idx >= EDITORLIST.size()) return;
+		if(sub){
+			Editor edit = Editor.LEFT == null ? Editor.RIGHT  : Editor.LEFT;
+			int i = 0;
+			for(EditorComponent com : edit.components){
+				if(!com.size.isVisible()) continue;
+				if(i == idx){
+					com.minimize(null);
+					break;
+				}
+				else i++;
+			}
+		}
+		else EDITORLIST.get(idx).toggle();
 	}
 	
 }
