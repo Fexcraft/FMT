@@ -3,6 +3,8 @@ package net.fexcraft.app.fmt.ui.components;
 import java.io.File;
 import java.util.ArrayList;
 
+import net.fexcraft.app.fmt.ui.FileEditMenu;
+import net.fexcraft.app.fmt.ui.JsonEditor;
 import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.json.JsonMap;
 import org.liquidengine.legui.component.Component;
@@ -129,9 +131,33 @@ public class FolderComponent extends EditorComponent {
 			Settings.applyBorderless(label);
 			Settings.applyBorderless(this);
 			label.getListenerMap().addListener(MouseClickEvent.class, listener -> {
-				if(listener.getAction() == MouseClickAction.CLICK && listener.getButton() == MouseButton.MOUSE_BUTTON_LEFT){
-					expanded = !expanded;
-					folcom.resize();
+				if(listener.getAction() == MouseClickAction.CLICK){
+					if(listener.getButton() == MouseButton.MOUSE_BUTTON_LEFT){
+						if(type.directory){
+							expanded = !expanded;
+							folcom.resize();
+						}
+						else if(type.editable){
+							switch(type){
+								case FVTM_ADDONPACKFILE:{
+									new JsonEditor(file);//temporary
+									break;
+								}
+								case FVTM_CONFIGFILE:{
+									new JsonEditor(file);//temporary
+									break;
+								}
+								case JSON:{
+									new JsonEditor(file);
+									break;
+								}
+								default: break;
+							}
+						}
+					}
+					else if(listener.getButton() == MouseButton.MOUSE_BUTTON_RIGHT){
+						FileEditMenu.show(folcom, this, file);
+					}
 				}
 			});
 			updateIcon(type, folcom);
@@ -184,8 +210,21 @@ public class FolderComponent extends EditorComponent {
 	
 	public static enum FileType {
 		
-		NORMAL_FOLDER, EMPTY_FOLDER, FVTMPACK,
-		FILE, FVTM_ADDONPACKFILE, FVTM_CONFIGFILE, JSON, FMTB;
+		NORMAL_FOLDER(true, false),
+		EMPTY_FOLDER(true, false),
+		FVTMPACK(true, false),
+		FILE(false, false),
+		FVTM_ADDONPACKFILE(false, true),
+		FVTM_CONFIGFILE(false, true),
+		JSON(false, true),
+		FMTB(false, false);
+
+		private boolean editable, directory;
+
+		FileType(boolean dir, boolean edit){
+			editable = edit;
+			directory = dir;
+		}
 
 		public String filename(){
 			switch(this){
@@ -211,6 +250,7 @@ public class FolderComponent extends EditorComponent {
 						case "json":
 							return JSON;
 						case "block":
+						case "multiblock":
 						case "cloth":
 						case "container":
 						case "material":
@@ -230,7 +270,6 @@ public class FolderComponent extends EditorComponent {
 			}
 			return FILE;
 		}
-		
 	}
 
 	@Override
