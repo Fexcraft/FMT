@@ -6,6 +6,8 @@ import java.util.Map;
 import com.google.gson.JsonElement;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
+import net.fexcraft.app.fmt.ui.fields.BoolButton;
+import net.fexcraft.app.fmt.ui.fields.ColorField;
 import net.fexcraft.app.fmt.ui.fields.RunButton;
 import net.fexcraft.app.fmt.ui.fields.TextField;
 import net.fexcraft.app.fmt.utils.Logging;
@@ -19,12 +21,14 @@ import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.ScrollablePanel;
 import org.liquidengine.legui.component.TextInput;
 import org.liquidengine.legui.component.misc.listener.widget.WidgetResizeButtonDragListener;
+import org.liquidengine.legui.event.MouseClickEvent;
+import org.liquidengine.legui.listener.MouseClickEventListener;
 
 public class JsonEditor extends Dialog {
 
     private File file;
     private JsonMap map;
-    private ScrollablePanel panel;
+    private static ScrollablePanel panel;
     private static int height;
     private static int width;
 
@@ -62,7 +66,7 @@ public class JsonEditor extends Dialog {
         }
     }
 
-    private void resize(){
+    private static void resize(){
         height = 0;
         panel.getContainer().getChildComponents().forEach(com -> {
             if(com instanceof Resizeable) height += ((Resizeable)com).resize(0);
@@ -79,6 +83,12 @@ public class JsonEditor extends Dialog {
 
         public JMapCom(String key, JsonMap map){
             add(label = new Label(this.key = key, 10, 0, 100, 30));
+            label.getListenerMap().addListener(MouseClickEvent.class, lis -> {
+                if(lis.getAction() == MouseClickEvent.MouseClickAction.CLICK){
+                    minimized = !minimized;
+                    JsonEditor.resize();
+                }
+            });
             this.map = map;
             for(Map.Entry<String, JsonObject<?>> entry : map.entries()){
                 if(entry.getValue().isMap()){
@@ -94,14 +104,14 @@ public class JsonEditor extends Dialog {
         }
 
         @Override
-        public int resize(int off){
-            setPosition(off == 0 ? 0 : 20, off == 0 ? height : off * 30);
+        public int resize(int ph){
+            setPosition(ph == 0 ? 0 : 20, ph == 0 ? height : ph);
             int h = 30;
-            off = 1;
             if(!minimized){
                 for(Component com : getChildComponents()){
-                    if(com instanceof Resizeable) h += ((Resizeable)com).resize(off++);
+                    if(com instanceof Resizeable) h += ((Resizeable)com).resize(h);
                 }
+                h += 5;
             }
             setSize(width - getPosition().x, h);
             return h;
@@ -117,6 +127,12 @@ public class JsonEditor extends Dialog {
 
         public JArrCom(String key, JsonArray arr) {
             add(label = new Label(this.key = key, 10, 0, 100, 30));
+            label.getListenerMap().addListener(MouseClickEvent.class, lis -> {
+                if(lis.getAction() == MouseClickEvent.MouseClickAction.CLICK){
+                    minimized = !minimized;
+                    JsonEditor.resize();
+                }
+            });
             this.array = arr;
             for(int i = 0; i < array.size(); i++){
                 JsonObject elm = array.get(i);
@@ -133,14 +149,14 @@ public class JsonEditor extends Dialog {
         }
 
         @Override
-        public int resize(int off){
-            setPosition(off == 0 ? 0 : 20, off == 0 ? height : off * 30);
+        public int resize(int ph){
+            setPosition(ph == 0 ? 0 : 20, ph == 0 ? height : ph);
             int h = 30;
-            off = 1;
             if(!minimized){
                 for(Component com : getChildComponents()){
-                    if(com instanceof Resizeable) h += ((Resizeable)com).resize(off++);
+                    if(com instanceof Resizeable) h += ((Resizeable)com).resize(h);
                 }
+                h += 5;
             }
             setSize(width - getPosition().x, h);
             return h;
@@ -158,18 +174,28 @@ public class JsonEditor extends Dialog {
         public JElmCom(String key, JsonObject<?> elm){
             add(label = new Label(this.key = key, 10, 0, 200, 30));
             this.elm = elm;
-            add(input = new TextInput(elm.string_value(), 220, 2, 300, 26));
-            input.addTextInputContentChangeEventListener(event -> {
-                if(elm.isNumber()){
-                    ((JsonObject<Number>)elm).value(Float.parseFloat(event.getNewValue()));
-                }
-                else ((JsonObject<String>)elm).value(event.getNewValue());
-            });
+            if(elm.string_value().equals("true") || elm.string_value().equals("false")){
+                add(new BoolButton(220, 2, 300, 26, elm.bool(), bool -> ((JsonObject<Boolean>)elm).value(bool)));
+            }
+            else if(elm.string_value().startsWith("#") && elm.string_value().length() == 7){
+                add(new ColorField(this, (color, bool) -> {
+                    ((JsonObject<String>)elm).value("#" + Integer.toHexString(color));
+                }, 220, 2, 300, 26, null, false));
+            }
+            else{
+                add(input = new TextInput(elm.string_value(), 220, 2, 300, 26));
+                input.addTextInputContentChangeEventListener(event -> {
+                    if(elm.isNumber()){
+                        ((JsonObject<Number>)elm).value(Float.parseFloat(event.getNewValue()));
+                    }
+                    else ((JsonObject<String>)elm).value(event.getNewValue());
+                });
+            }
         }
 
         @Override
-        public int resize(int off){
-            setPosition(off == 0 ? 0 : 20, off == 0 ? height : off * 30);
+        public int resize(int ph){
+            setPosition(ph == 0 ? 0 : 20, ph == 0 ? height : ph);
             setSize(width - getPosition().x, 30);
             return 30;
         }
@@ -178,7 +204,7 @@ public class JsonEditor extends Dialog {
 
     private static interface Resizeable {
 
-        public int resize(int off);
+        public int resize(int ph);
 
     }
 
