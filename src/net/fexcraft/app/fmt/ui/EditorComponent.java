@@ -140,7 +140,9 @@ public class EditorComponent extends Component {
 		REGISTRY.put("model.general", ModelGeneral.class);
 		REGISTRY.put("model.export_values", ModelExports.class);
 		REGISTRY.put("multiplier", MultiplierComponent.class);
-		REGISTRY.put("folder", FolderComponent.class);
+		REGISTRY.put("folder.small", FolderComponent.Small.class);
+		REGISTRY.put("folder.medium", FolderComponent.Medium.class);
+		REGISTRY.put("folder.large", FolderComponent.Large.class);
 		REGISTRY.put("painter.current", CurrentColor.class);
 		REGISTRY.put("painter.tools", PainterTools.class);
 		REGISTRY.put("arrow.mode", ArrowMode.class);
