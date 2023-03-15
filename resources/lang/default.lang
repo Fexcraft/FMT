@@ -83,6 +83,11 @@ toolbar.jsoneditormenu.add_after=Add After
 toolbar.jsoneditormenu.rename=Rename
 toolbar.jsoneditormenu.copy=Copy
 toolbar.jsoneditormenu.delete=Delete
+toolbar.jsoneditormenu.picktype.title=Pick JSON Type
+toolbar.jsoneditormenu.picktype.desc=Pick the type of the JSON element you wish to add.
+toolbar.jsoneditormenu.picktype.key=Enter the Key value for the new JSON element.
+toolbar.jsoneditormenu.picktype.rename=Enter new element Key/Name
+toolbar.jsoneditormenu.picktype.desc=Enter a new name for the selected JSON element.
 
 # Editor
 editor.add_component=Add Editor Component
