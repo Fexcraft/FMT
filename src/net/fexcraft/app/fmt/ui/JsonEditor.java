@@ -55,7 +55,7 @@ public class JsonEditor extends Dialog {
     }
 
     private void fill(Component container, JsonMap map){
-        removeIf(com -> com instanceof Resizeable);
+        container.removeIf(com -> com instanceof Resizeable);
         for(Map.Entry<String, JsonObject<?>> entry : map.entries()){
             Runnable run = () -> {
               JsonEditorMenu.show(this, map, entry.getKey(), entry.getValue());
@@ -80,6 +80,11 @@ public class JsonEditor extends Dialog {
         panel.getContainer().setSize(width, height < panel.getSize().y - 10 ? panel.getSize().y - 10 : height);
     }
 
+    protected void refill(){
+        fill(panel.getContainer(), map);
+        resize();
+    }
+
     public static class JMapCom extends Component implements Resizeable{
 
         public boolean minimized = false;
@@ -88,7 +93,7 @@ public class JsonEditor extends Dialog {
         public Label label;
 
         public JMapCom(String key, JsonMap map, Runnable run){
-            add(label = new Label(this.key = key, 10, 0, 200, 30));
+            add(label = new Label("{} " + (this.key = key), 10, 0, 200, 30));
             label.getListenerMap().addListener(MouseClickEvent.class, lis -> {
                 if(lis.getAction() == MouseClickEvent.MouseClickAction.CLICK && lis.getButton() == Mouse.MouseButton.MOUSE_BUTTON_LEFT){
                     minimized = !minimized;
@@ -142,7 +147,7 @@ public class JsonEditor extends Dialog {
         public Label label;
 
         public JArrCom(String key, JsonArray arr, Runnable run){
-            add(label = new Label(this.key = key, 10, 0, 200, 30));
+            add(label = new Label("[] " + (this.key = key), 10, 0, 200, 30));
             label.getListenerMap().addListener(MouseClickEvent.class, lis -> {
                 if(lis.getAction() == MouseClickEvent.MouseClickAction.CLICK && lis.getButton() == Mouse.MouseButton.MOUSE_BUTTON_LEFT){
                     minimized = !minimized;
