@@ -250,6 +250,9 @@ editor.component.arrow.mode.rot=Rotation
 editor.component.arrow.mode.size=Size / Measurements
 editor.component.arrow.mode.shape=Shape / Corners
 
+# FVTM Config Editor
+fvtmeditor.title=FVTM Config Editor
+
 # Generic Dialogs
 dialog.title.default=Generic Dialog
 dialog.button.continue=Continue
