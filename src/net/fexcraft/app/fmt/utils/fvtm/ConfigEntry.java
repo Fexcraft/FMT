@@ -2,8 +2,6 @@ package net.fexcraft.app.fmt.utils.fvtm;
 
 import java.util.ArrayList;
 
-import net.fexcraft.app.fmt.polygon.uv.UVCoords;
-
 public class ConfigEntry {
 
     public String name, def;
@@ -30,7 +28,7 @@ public class ConfigEntry {
         return this;
     }
 
-    protected ConfigEntry type(EntryType name){
+    protected ConfigEntry type(EntryType type){
         this.type = type;
         return this;
     }
