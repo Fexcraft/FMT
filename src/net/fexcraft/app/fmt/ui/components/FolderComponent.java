@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import net.fexcraft.app.fmt.ui.FileEditMenu;
 import net.fexcraft.app.fmt.ui.JsonEditor;
 import net.fexcraft.app.fmt.utils.Logging;
+import net.fexcraft.app.fmt.utils.fvtm.FVTMConfigEditor;
 import net.fexcraft.app.json.JsonMap;
 import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.Label;
@@ -144,7 +145,7 @@ public class FolderComponent extends EditorComponent {
 									break;
 								}
 								case FVTM_CONFIGFILE:{
-									new JsonEditor(file);//temporary
+									new FVTMConfigEditor(file);//temporary
 									break;
 								}
 								case JSON:{
@@ -275,7 +276,8 @@ public class FolderComponent extends EditorComponent {
 	@Override
 	public FolderComponent load(JsonMap map){
 		folder = new File(map.getString("root", "./workspace/"));
-		Logging.log(folder, this);
+		minimize(map.getBoolean("minimized", false));
+		//Logging.log(folder, this);
 		return this;
 	}
 
@@ -283,6 +285,7 @@ public class FolderComponent extends EditorComponent {
 	public JsonMap save(){
 		JsonMap map = new JsonMap();
 		map.add("root", folder.getPath().toString());
+		if(minimized )map.add("minimized", minimized);
 		map.add("id", id);
 		return map;
 	}
