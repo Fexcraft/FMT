@@ -32,6 +32,7 @@ public class FileEditMenu {
 		}));
 		components.add(new MenuButton(3, "fileeditmenu.delete", () -> {
 			file.delete();
+			component.genView();
 			layer.hide();
 		}));
 		layer = new MenuLayer(null, new Vector2f((float)GGR.posx, (float)GGR.posy), components, null){
