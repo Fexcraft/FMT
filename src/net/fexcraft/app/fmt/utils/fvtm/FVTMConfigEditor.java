@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
+import net.fexcraft.app.fmt.ui.Icon;
+import net.fexcraft.app.fmt.ui.JsonEditor;
 import net.fexcraft.app.fmt.ui.fields.BoolButton;
 import net.fexcraft.app.fmt.ui.fields.ColorField;
 import net.fexcraft.app.fmt.ui.fields.RunButton;
@@ -31,6 +33,7 @@ public class FVTMConfigEditor extends Widget {
     private File file;
 
     public static int width = 700, height = 500, pwidth = 1000;
+    private static int height_;
 
     public FVTMConfigEditor(File file){
         getTitleTextState().setText(Translator.translate("fvtmeditor.title") + " - " + file.getName());
@@ -55,21 +58,19 @@ public class FVTMConfigEditor extends Widget {
             EDITORS.remove(this);
         }));
         fill();
-        addWidgetCloseEventListener(lis -> {
-            EDITORS.remove(this);
-        });
+        addWidgetCloseEventListener(lis -> EDITORS.remove(this));
         FMT.FRAME.getContainer().add(this);
         EDITORS.add(this);
     }
 
     private void fill(){
-        int height = 0;
+        height_ = 0;
         for(ConfigEntry entry : ref.getEntries()){
             EntryComponent com = new EntryComponent(entry, map, entry.name, map.get(entry.name));
-            height += com.gen(height);
+            height_ += com.gen(0);
             panel.getContainer().add(com);
         }
-        panel.getContainer().setSize(pwidth, height);
+        panel.getContainer().setSize(pwidth, height_);
     }
 
     public static class EntryComponent extends Component {
@@ -77,9 +78,11 @@ public class FVTMConfigEditor extends Widget {
         private Label label;
         public TextInput input;
         private static String[] xyz = { "x", "y", "z" };
+        private ArrayList<EntryComponent> coms = new ArrayList<>();
 
         public EntryComponent(ConfigEntry entry, JsonObject root, Object idxkey, JsonObject obj){
-            add(label = new Label(entry.name + (entry.required ? "*" : ""), 10, 0, 200, 30));
+            add(new Icon(0, 20, 0, 0, 5, "./resources/textures/icons/configeditor/" + entry.type.icon() + ".png", () -> {}).addTooltip(entry.type.icon()));
+            add(label = new Label((entry.name == null ? idxkey : entry.name) + (entry.required ? "*" : ""), 30, 0, 200, 30));
             if(entry.type.subs()){
                 if(entry.type == EntryType.ARRAY || entry.type == EntryType.ARRAY_OR_TEXT){
 
@@ -88,8 +91,13 @@ public class FVTMConfigEditor extends Widget {
 
                 }
                 else if(entry.type == EntryType.OBJECT_KEY_VAL){
-
+                    if(obj != null){
+                        obj.asMap().entries().forEach(e -> {
+                            addsub(new EntryComponent(entry.subs.get(0), obj.asMap(), e.getKey(), e.getValue()));
+                        });
+                    }
                 }
+                add(new Icon(0, 20, 0, 220, 5, "./resources/textures/icons/configeditor/add.png", () -> {}));
             }
             else if(entry.type.trio()){
                 Object ik = idxkey;
@@ -113,12 +121,13 @@ public class FVTMConfigEditor extends Widget {
             }
             else if(entry.type.color()){
                 add(new ColorField(this, (color, bool) -> {
+                    String col = "#" + Integer.toHexString(color);
                     if(obj == null){
-                        if(root.isMap()) root.asMap().add(idxkey.toString(), color);
-                        else root.asArray().value.set((int)idxkey, new JsonObject<Integer>(color));
+                        if(root.isMap()) root.asMap().add(idxkey.toString(), col);
+                        else root.asArray().value.set((int)idxkey, new JsonObject<String>(col));
                     }
-                    else obj.value(color);
-                }, 220, 2, 300, 26, null, false).apply(obj == null ? entry.defi : obj.integer_value()));
+                    else obj.value(col);
+                }, 220, 2, 300, 26, null, false).apply(obj == null ? entry.defi : Integer.parseInt(obj.string_value().replace("#", ""), 16)));
             }
             else if(entry.type.bool()){
                 add(new BoolButton(220, 2, 300, 26, obj == null ? entry.defb : obj.bool(), bool -> {
@@ -146,7 +155,7 @@ public class FVTMConfigEditor extends Widget {
                 add(box);
             }
             else{//text
-                add(input = new TextInput(obj == null ? entry.def : obj.string_value(), 220, 2, 300, 26));
+                add(input = new TextInput(obj == null ? entry.typedef() : obj.string_value(), 220, 2, 300, 26));
                 input.addTextInputContentChangeEventListener(event -> {
                     if(obj == null){
                         if(root.isMap()){
@@ -167,10 +176,20 @@ public class FVTMConfigEditor extends Widget {
             return event.getNewValue();
         }
 
+        private void addsub(EntryComponent com){
+            coms.add(com);
+            add(com);
+        }
+
         public int gen(int height){
-            setSize(pwidth, 30);
-            setPosition(0, height);
-            return 30;
+            setPosition(height == 0 ? 0 : 30, height == 0 ? height_ : height);
+            int h = 30;
+            for(EntryComponent sub : coms){
+                h += sub.gen(h);
+            }
+            if(h > 30) h += 10;
+            setSize(pwidth, h);
+            return h;
         }
     }
 
