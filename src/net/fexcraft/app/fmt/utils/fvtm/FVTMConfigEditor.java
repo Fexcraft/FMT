@@ -66,7 +66,7 @@ public class FVTMConfigEditor extends Widget {
     private void fill(){
         height_ = 0;
         for(ConfigEntry entry : ref.getEntries()){
-            EntryComponent com = new EntryComponent(entry, map, entry.name, map.get(entry.name));
+            EntryComponent com = new EntryComponent(entry, map, entry.name, map.get(entry.name), null);
             height_ += com.gen(0);
             panel.getContainer().add(com);
         }
@@ -80,20 +80,35 @@ public class FVTMConfigEditor extends Widget {
         private static String[] xyz = { "x", "y", "z" };
         private ArrayList<EntryComponent> coms = new ArrayList<>();
 
-        public EntryComponent(ConfigEntry entry, JsonObject root, Object idxkey, JsonObject obj){
-            add(new Icon(0, 20, 0, 0, 5, "./resources/textures/icons/configeditor/" + entry.type.icon() + ".png", () -> {}).addTooltip(entry.type.icon()));
+        public EntryComponent(ConfigEntry entry, JsonObject root, Object idxkey, JsonObject obj, Boolean container){
             add(label = new Label((entry.name == null ? idxkey : entry.name) + (entry.required ? "*" : ""), 30, 0, 200, 30));
+            if(container != null){
+                if(container){
+                    add(input = new TextInput(idxkey.toString(), 220, 2, 300, 26));
+                    add(new Icon(0, 20, 0, 530, 5, "./resources/textures/icons/configeditor/confirm.png", () -> {
+
+                    }).addTooltip("rename"));
+                }
+                return;
+            }
+            add(new Icon(0, 20, 0, 5, 5, "./resources/textures/icons/configeditor/" + entry.type.icon() + ".png", () -> {}).addTooltip(entry.type.icon()));
             if(entry.type.subs()){
                 if(entry.type == EntryType.ARRAY || entry.type == EntryType.ARRAY_OR_TEXT){
 
                 }
                 else if(entry.type == EntryType.OBJECT){
-
+                    if(obj != null){
+                        obj.asMap().entries().forEach(e -> {
+                            EntryComponent con = new EntryComponent(ConfigEntry.EMPTY, obj.asMap(), e.getKey(), e.getValue(), true);
+                            //
+                            addsub(con);
+                        });
+                    }
                 }
                 else if(entry.type == EntryType.OBJECT_KEY_VAL){
                     if(obj != null){
                         obj.asMap().entries().forEach(e -> {
-                            addsub(new EntryComponent(entry.subs.get(0), obj.asMap(), e.getKey(), e.getValue()));
+                            addsub(new EntryComponent(entry.subs.get(0), obj.asMap(), e.getKey(), e.getValue(), null));
                         });
                     }
                 }
