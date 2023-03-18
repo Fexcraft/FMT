@@ -219,7 +219,7 @@ public class JsonEditor extends Dialog {
             else if(elm.string_value().startsWith("#") && elm.string_value().length() == 7){
                 add(new ColorField(this, (color, bool) -> {
                     ((JsonObject<String>)elm).value("#" + Integer.toHexString(color));
-                }, 220, 2, 300, 26, null, false));
+                }, 220, 2, 300, 26, null, false).apply(Integer.parseInt(elm.string_value().replace("#", ""), 16)));
             }
             else{
                 add(input = new TextInput(elm.string_value(), 220, 2, 300, 26));
