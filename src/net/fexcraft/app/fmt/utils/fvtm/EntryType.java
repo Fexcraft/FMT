@@ -54,11 +54,11 @@ public enum EntryType {
             case COLOR: return "color";
             case ARRAY: return "array";
             case OBJECT: return "object";
-            case ARRAY_SIMPLE: return "array";
+            case ARRAY_SIMPLE: return "array_s";
             case OBJECT_KEY_VAL: return "object_kv";
             case ENUM: return "enum";
-            case POSITION: return "array";
-            case ROTATION: return "array";
+            case POSITION: return "array_s";
+            case ROTATION: return "array_s";
         }
         return "unknown";
     }
