@@ -20,7 +20,7 @@ public class BlockConfigReference implements Reference {
         entries.add(of("Name", TEXT).def("Unnamed Block", true));
         entries.add(of("Description", ARRAY_OR_TEXT));
         entries.add(of("Textures", ARRAY_OR_TEXT).add(of(TEXLOC)));
-        entries.add(of("Colors", OBJECT_KEY_VAL).add(of(TEXT)).add(of(COLOR)));
+        entries.add(of("Colors", OBJECT_KEY_VAL).add(of(COLOR)));
         entries.add(of("MaxItemStackSize", INTEGER).limit(64, 0, 64));
         entries.add(of("ItemBurnTime", INTEGER).limit(0, 0));
         entries.add(of("OreDictionary", TEXT));
