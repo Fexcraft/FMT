@@ -11,6 +11,7 @@ import static org.lwjgl.glfw.GLFW.glfwSetInputMode;
 import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
 
+import net.fexcraft.app.fmt.utils.fvtm.FVTMConfigEditor;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -175,6 +176,11 @@ public class GGR {
 		if(cursor_y[0] < FMT.TOOLBAR.getSize().y) return true;
 		if(Editor.LEFT != null && cursor_x[0] < Editor.WIDTH) return true;
 		if(Editor.RIGHT != null && cursor_x[0] > FMT.WIDTH - Editor.WIDTH) return true;
+		for(FVTMConfigEditor editor : FVTMConfigEditor.EDITORS){
+			if(cursor_x[0] >= editor.getPosition().x && cursor_x[0] <= editor.getPosition().x + editor.width){
+				if(cursor_y[0] >= editor.getPosition().y && cursor_y[0] <= editor.getPosition().y + editor.height) return true;
+			}
+		}
 		/*if(TexViewBox.isOpen()){
 			if(x[0] >= TexViewBox.pos().x && x[0] < TexViewBox.pos().x + TexViewBox.size().x){
 				if(y[0] >= TexViewBox.pos().y && y[0] < TexViewBox.pos().y + TexViewBox.size().y) return false;
