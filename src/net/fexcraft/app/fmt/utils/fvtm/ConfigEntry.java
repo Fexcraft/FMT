@@ -2,12 +2,15 @@ package net.fexcraft.app.fmt.utils.fvtm;
 
 import java.util.ArrayList;
 
+import net.fexcraft.app.fmt.polygon.uv.UVCoords;
+import net.fexcraft.app.fmt.utils.Logging;
+
 public class ConfigEntry {
 
     public String name, def;
     public EntryType type;
     public boolean required, def_ok;
-    public ArrayList subs;
+    public ArrayList<ConfigEntry> subs;
     public int defi, mini, maxi;
     public float deff, minf, maxf;
     public String[] enums;
@@ -87,4 +90,9 @@ public class ConfigEntry {
         return this;
     }
 
+    public String typedef(){
+        if(type == EntryType.INTEGER) return "" + defi;
+        if(type == EntryType.DECIMAL) return "" + deff;
+        return def;
+    }
 }
