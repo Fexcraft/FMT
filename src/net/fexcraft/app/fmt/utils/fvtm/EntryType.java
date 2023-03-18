@@ -42,4 +42,24 @@ public enum EntryType {
         return this == POSITION || this == ROTATION;
     }
 
+    public String icon(){
+        switch(this){
+            case TEXT: return "text";
+            case PACKID: return "text";
+            case TEXLOC: return "text";
+            case MODELLOC: return "text";
+            case INTEGER: return "integer";
+            case DECIMAL: return "float";
+            case BOOLEAN: return "bool";
+            case COLOR: return "color";
+            case ARRAY: return "array";
+            case OBJECT: return "object";
+            case ARRAY_OR_TEXT: return "array";
+            case OBJECT_KEY_VAL: return "object_kv";
+            case ENUM: return "enum";
+            case POSITION: return "array";
+            case ROTATION: return "array";
+        }
+        return "unknown";
+    }
 }
