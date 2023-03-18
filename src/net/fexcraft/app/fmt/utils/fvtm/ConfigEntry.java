@@ -7,6 +7,8 @@ import net.fexcraft.app.fmt.utils.Logging;
 
 public class ConfigEntry {
 
+    public static final ConfigEntry EMPTY = ConfigEntry.of(EntryType.OBJECT);
+
     public String name, def;
     public EntryType type;
     public boolean required, def_ok;
