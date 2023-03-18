@@ -145,7 +145,7 @@ public class FolderComponent extends EditorComponent {
 									break;
 								}
 								case FVTM_CONFIGFILE:{
-									new FVTMConfigEditor(file);//temporary
+									new FVTMConfigEditor(file);
 									break;
 								}
 								case JSON:{
