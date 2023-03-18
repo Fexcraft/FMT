@@ -54,7 +54,7 @@ public class FolderComponent extends EditorComponent {
 		genView();
 	}
 
-	private void genView(){
+	public void genView(){
 		new Thread("FolderViewGenerator"){
 			@Override
 			public void run(){
