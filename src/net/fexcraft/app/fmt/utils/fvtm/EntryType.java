@@ -13,7 +13,7 @@ public enum EntryType {
 
     ARRAY,
     OBJECT,
-    ARRAY_OR_TEXT,
+    ARRAY_SIMPLE,
     OBJECT_KEY_VAL,
     ENUM,
 
@@ -23,7 +23,7 @@ public enum EntryType {
     ;
 
     public boolean subs(){
-        return this == ARRAY || this == OBJECT || this == ARRAY_OR_TEXT || this == OBJECT_KEY_VAL;
+        return this == ARRAY || this == OBJECT || this == ARRAY_SIMPLE || this == OBJECT_KEY_VAL;
     }
 
     public boolean bool(){
@@ -54,7 +54,7 @@ public enum EntryType {
             case COLOR: return "color";
             case ARRAY: return "array";
             case OBJECT: return "object";
-            case ARRAY_OR_TEXT: return "array";
+            case ARRAY_SIMPLE: return "array";
             case OBJECT_KEY_VAL: return "object_kv";
             case ENUM: return "enum";
             case POSITION: return "array";
