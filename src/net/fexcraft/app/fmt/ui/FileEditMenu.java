@@ -18,7 +18,11 @@ public class FileEditMenu {
 	private static File file;
 	static {
 		ArrayList<Component> components = new ArrayList<>();
-		components.add(new MenuButton(0, "fileeditmenu.rename", () -> {
+		components.add(new MenuButton(0, "fileeditmenu.asjson", () -> {
+			new JsonEditor(file);
+			layer.hide();
+		}));
+		components.add(new MenuButton(1, "fileeditmenu.rename", () -> {
 			//
 			layer.hide();
 		}));
@@ -26,8 +30,8 @@ public class FileEditMenu {
 			//
 			layer.hide();
 		}));
-		components.add(new MenuButton(1, "fileeditmenu.delete", () -> {
-			//
+		components.add(new MenuButton(3, "fileeditmenu.delete", () -> {
+			file.delete();
 			layer.hide();
 		}));
 		layer = new MenuLayer(null, new Vector2f((float)GGR.posx, (float)GGR.posy), components, null){
