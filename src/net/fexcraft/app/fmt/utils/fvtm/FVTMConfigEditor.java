@@ -12,6 +12,7 @@ import net.fexcraft.app.fmt.ui.fields.ColorField;
 import net.fexcraft.app.fmt.ui.fields.RunButton;
 import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.fmt.utils.Translator;
+import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.app.json.JsonObject;
@@ -22,6 +23,7 @@ import org.liquidengine.legui.component.SelectBox;
 import org.liquidengine.legui.component.TextInput;
 import org.liquidengine.legui.component.Widget;
 import org.liquidengine.legui.component.event.textinput.TextInputContentChangeEvent;
+import org.lwjgl.system.CallbackI;
 
 public class FVTMConfigEditor extends Widget {
 
@@ -93,13 +95,33 @@ public class FVTMConfigEditor extends Widget {
             }
             add(new Icon(0, 20, 0, 5, 5, "./resources/textures/icons/configeditor/" + entry.type.icon() + ".png", () -> {}).addTooltip(entry.type.icon()));
             if(entry.type.subs()){
-                if(entry.type == EntryType.ARRAY || entry.type == EntryType.ARRAY_OR_TEXT){
-
+                if(entry.type == EntryType.ARRAY){
+                    if(obj != null){
+                        JsonArray arr = obj.isArray() ? obj.asArray() : new JsonArray();
+                        for(int i = 0; i < arr.size(); i++){
+                            EntryComponent con = new EntryComponent(ConfigEntry.EMPTY, arr, i + "", null, false);
+                            //
+                            addsub(con);
+                        }
+                    }
+                }
+                else if(entry.type == EntryType.ARRAY_SIMPLE){
+                    if(obj != null){
+                        JsonArray arr = obj.isArray() ? obj.asArray() : null;
+                        if(arr == null){
+                            arr = new JsonArray();
+                            arr.add(obj);
+                        }
+                        for(int i = 0; i < arr.size(); i++){
+                            if(entry.subs == null) addsub(new EntryComponent(ConfigEntry.TEXT, arr, i, arr.get(i), null));
+                            else addsub(new EntryComponent(entry.subs.get(0), arr, i, arr.get(i), null));
+                        }
+                    }
                 }
                 else if(entry.type == EntryType.OBJECT){
                     if(obj != null){
                         obj.asMap().entries().forEach(e -> {
-                            EntryComponent con = new EntryComponent(ConfigEntry.EMPTY, obj.asMap(), e.getKey(), e.getValue(), true);
+                            EntryComponent con = new EntryComponent(ConfigEntry.EMPTY, obj.asMap(), e.getKey(), null, true);
                             //
                             addsub(con);
                         });
@@ -198,11 +220,11 @@ public class FVTMConfigEditor extends Widget {
 
         public int gen(int height){
             setPosition(height == 0 ? 0 : 30, height == 0 ? height_ : height);
-            int h = 30;
+            int h = label == null ? 0 : 30;
             for(EntryComponent sub : coms){
                 h += sub.gen(h);
             }
-            if(h > 30) h += 10;
+            if(h > (label == null ? 0 : 30)) h += 10;
             setSize(pwidth, h);
             return h;
         }
