@@ -123,7 +123,7 @@ public class Toolbar extends Panel {
 			new MenuButton(2, "polygons.add_cylinder", () -> QuickAdd.addCylinder()),
 			new MenuButton(3, "polygons.add_marker", () -> QuickAdd.addMarker()),
 			new MenuButton(4, "polygons.add_group", () -> QuickAdd.addGroup()),
-			new MenuButton(5, "polygons.add_boundingbox"),
+			new MenuButton(5, "polygons.add_boundingbox", () -> QuickAdd.addScructBox()),
 			new MenuButton(6, "polygons.add_rect_curve", () -> QuickAdd.addCurve(false)),
 			new MenuButton(7, "polygons.add_cyl_curve", () -> QuickAdd.addCurve(true)),
 			new MenuButton(8, "polygons.add_object"),
