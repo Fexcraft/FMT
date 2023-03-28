@@ -68,11 +68,17 @@ public class FVTMConfigEditor extends Widget {
     private void fill(){
         height_ = 0;
         for(ConfigEntry entry : ref.getEntries()){
-            EntryComponent com = new EntryComponent(entry, map, entry.name, map.get(entry.name), null);
+            EntryComponent com = new EntryComponent(entry, map, entry.name, get(map, entry), null);
             height_ += com.gen(0);
             panel.getContainer().add(com);
         }
         panel.getContainer().setSize(pwidth, height_);
+    }
+
+    private JsonObject get(JsonMap map, ConfigEntry entry){
+        if(map.has(entry.name)) return map.get(entry.name);
+        if(map.has(entry.alt)) return map.get(entry.alt);
+        return null;
     }
 
     public static class EntryComponent extends Component {
@@ -109,7 +115,7 @@ public class FVTMConfigEditor extends Widget {
                     if(obj != null){
                         JsonArray arr = obj.isArray() ? obj.asArray() : null;
                         if(arr == null){
-                            arr = new JsonArray();
+                            root.asMap().add(idxkey.toString(), arr = new JsonArray());
                             arr.add(obj);
                         }
                         for(int i = 0; i < arr.size(); i++){
@@ -134,7 +140,20 @@ public class FVTMConfigEditor extends Widget {
                         });
                     }
                 }
-                add(new Icon(0, 20, 0, 220, 5, "./resources/textures/icons/configeditor/add.png", () -> {}));
+                add(new Icon(0, 20, 0, 220, 5, "./resources/textures/icons/configeditor/add.png", () -> {
+                    if(entry.type == EntryType.ARRAY){
+                        //
+                    }
+                    else if(entry.type == EntryType.ARRAY_SIMPLE){
+                        //
+                    }
+                    else if(entry.type == EntryType.OBJECT){
+                        //
+                    }
+                    else if(entry.type == EntryType.OBJECT_KEY_VAL){
+                        //
+                    }
+                }));
             }
             else if(entry.type.trio()){
                 Object ik = idxkey;
