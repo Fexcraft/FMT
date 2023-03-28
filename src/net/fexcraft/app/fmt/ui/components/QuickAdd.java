@@ -5,6 +5,7 @@ import net.fexcraft.app.fmt.polygon.Box;
 import net.fexcraft.app.fmt.polygon.Cylinder;
 import net.fexcraft.app.fmt.polygon.Marker;
 import net.fexcraft.app.fmt.polygon.RectCurve;
+import net.fexcraft.app.fmt.polygon.ScructBox;
 import net.fexcraft.app.fmt.polygon.Shapebox;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.EditorComponent;
@@ -19,7 +20,7 @@ public class QuickAdd extends EditorComponent {
 		this.add(new Icon(0, size, 2, xoff, yoff, "./resources/textures/icons/polygon/box.png", () -> addBox()).addTooltip(LANG_PREFIX + id + ".add_box"));
 		this.add(new Icon(1, size, 2, xoff, yoff, "./resources/textures/icons/polygon/shapebox.png", () -> addShapebox()).addTooltip(LANG_PREFIX + id + ".add_shapebox"));
 		this.add(new Icon(2, size, 2, xoff, yoff, "./resources/textures/icons/polygon/cylinder.png", () -> addCylinder()).addTooltip(LANG_PREFIX + id + ".add_cylinder"));
-		this.add(new Icon(3, size, 2, xoff, yoff, "./resources/textures/icons/polygon/boundingbox.png", () -> {}).addTooltip(LANG_PREFIX + id + ".add_boundingbox"));
+		this.add(new Icon(3, size, 2, xoff, yoff, "./resources/textures/icons/polygon/boundingbox.png", () -> addScructBox()).addTooltip(LANG_PREFIX + id + ".add_boundingbox"));
 		this.add(new Icon(4, size, 2, xoff, yoff, "./resources/textures/icons/polygon/object.png", () -> {}).addTooltip(LANG_PREFIX + id + ".add_object"));
 		this.add(new Icon(5, size, 2, xoff, yoff, "./resources/textures/icons/polygon/marker.png", () -> addMarker()).addTooltip(LANG_PREFIX + id + ".add_marker"));
 		this.add(new Icon(6, size, 2, xoff, yoff, "./resources/textures/icons/polygon/group.png", () -> addGroup()).addTooltip(LANG_PREFIX + id + ".add_group"));
@@ -34,6 +35,11 @@ public class QuickAdd extends EditorComponent {
 
 	public static void addShapebox(){
 		FMT.MODEL.add(null, new Shapebox(null));
+		hideMenu();
+	}
+
+	public static void addScructBox(){
+		FMT.MODEL.add(null, new ScructBox(null));
 		hideMenu();
 	}
 
