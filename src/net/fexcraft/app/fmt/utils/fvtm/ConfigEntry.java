@@ -10,7 +10,7 @@ public class ConfigEntry {
     public static final ConfigEntry EMPTY = ConfigEntry.of(EntryType.OBJECT);
     public static final ConfigEntry TEXT = ConfigEntry.of(EntryType.TEXT);
 
-    public String name, def;
+    public String name, def, alt;
     public EntryType type;
     public boolean required, def_ok;
     public ArrayList<ConfigEntry> subs;
@@ -36,6 +36,11 @@ public class ConfigEntry {
 
     protected ConfigEntry type(EntryType type){
         this.type = type;
+        return this;
+    }
+
+    protected ConfigEntry alt(String alt){
+        this.alt = alt;
         return this;
     }
 
@@ -98,4 +103,5 @@ public class ConfigEntry {
         if(type == EntryType.DECIMAL) return "" + deff;
         return def;
     }
+
 }
