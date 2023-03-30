@@ -5,7 +5,7 @@ import net.fexcraft.app.fmt.polygon.Box;
 import net.fexcraft.app.fmt.polygon.Cylinder;
 import net.fexcraft.app.fmt.polygon.Marker;
 import net.fexcraft.app.fmt.polygon.RectCurve;
-import net.fexcraft.app.fmt.polygon.ScructBox;
+import net.fexcraft.app.fmt.polygon.StructBox;
 import net.fexcraft.app.fmt.polygon.Shapebox;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.EditorComponent;
@@ -39,7 +39,7 @@ public class QuickAdd extends EditorComponent {
 	}
 
 	public static void addScructBox(){
-		FMT.MODEL.add(null, new ScructBox(null));
+		FMT.MODEL.add(null, new StructBox(null));
 		hideMenu();
 	}
 
