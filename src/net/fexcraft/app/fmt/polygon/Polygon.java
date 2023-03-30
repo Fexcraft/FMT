@@ -157,7 +157,7 @@ public abstract class Polygon {
 			return null;
 		}
 		switch(shape){
-			case BOUNDING_BOX: return new ScructBox(model, obj);
+			case BOUNDING_BOX: return new StructBox(model, obj);
 			case BOX: return new Box(model, obj);
 			case CYLINDER: return new Cylinder(model, obj, format);
 			case MARKER: return new Marker(model, obj);
@@ -176,7 +176,7 @@ public abstract class Polygon {
 	
 	public static Polygon from(Model model, Shape shape){
 		switch(shape){
-			case BOUNDING_BOX: return new ScructBox(model);
+			case BOUNDING_BOX: return new StructBox(model);
 			case BOX: return new Box(model);
 			case CYLINDER: return new Cylinder(model);
 			case MARKER: return new Marker(model);
@@ -317,7 +317,7 @@ public abstract class Polygon {
 
 	public Polygon convert(Shape shape){
 		switch(shape){
-			case BOUNDING_BOX: return copy(new ScructBox(model));
+			case BOUNDING_BOX: return copy(new StructBox(model));
 			case BOX: return copy(new Box(model));
 			case CYLINDER: return copy(new Cylinder(model));
 			case MARKER: return copy(new Marker(model));
