@@ -6,16 +6,20 @@ import static net.fexcraft.app.fmt.utils.JsonUtil.setVector;
 
 import java.util.ArrayList;
 
+import net.fexcraft.app.fmt.polygon.uv.Face;
+import net.fexcraft.app.fmt.polygon.uv.NoFace;
+import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.update.PolyVal;
 import net.fexcraft.app.fmt.update.PolyVal.*;
 import net.fexcraft.app.json.JsonMap;
+import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.frl.gen.Generator;
 import org.joml.Vector3f;
 
 public class ScructBox extends Box {
 
-	//
+	public RGB rgb = new RGB(0x8aeda4);
 
 	public ScructBox(Model model){
 		super(model);
@@ -23,46 +27,128 @@ public class ScructBox extends Box {
 
 	public ScructBox(Model model, JsonMap obj){
 		super(model, obj);
+		rgb.packed = obj.getInteger("color", 0x8aeda4);
 	}
 	
 	@Override
 	public JsonMap save(boolean export){
 		JsonMap map = super.save(export);
-		//
+		if(!export){
+			map.add("color", rgb.packed);
+		}
 		return map;
 	}
 
 	@Override
 	public Shape getShape(){
-		return Shape.SHAPEBOX;
+		return Shape.BOUNDING_BOX;
 	}
 
 	@Override
 	protected Generator<GLObject> getGenerator(){
 		Generator<GLObject> gen = super.getGenerator();
-		/*ArrayList<Vec3f> list = new ArrayList<>();
-		list.add(new Vec3f(cor0.x, cor0.y, cor0.z));
-		list.add(new Vec3f(cor1.x, cor1.y, cor1.z));
-		list.add(new Vec3f(cor2.x, cor2.y, cor2.z));
-		list.add(new Vec3f(cor3.x, cor3.y, cor3.z));
-		list.add(new Vec3f(cor4.x, cor4.y, cor4.z));
-		list.add(new Vec3f(cor5.x, cor5.y, cor5.z));
-		list.add(new Vec3f(cor6.x, cor6.y, cor6.z));
-		list.add(new Vec3f(cor7.x, cor7.y, cor7.z));
-		gen.set("corners", list);*/
-		return gen;
+		float s = 0.125f, m = 0.125f / 8;
+		if(size.x < 1) size.x = 1;
+		if(size.y < 1) size.y = 1;
+		if(size.z < 1) size.z = 1;
+		new Generator<GLObject>(glm, 1, 1).set("type", Generator.Type.CUBOID)
+				.set("x", off.x - m)
+				.set("y", off.y - m)
+				.set("z", off.z - m)
+				.set("width", size.x).set("height", s).set("depth", s).make();
+		new Generator<GLObject>(glm, 1, 1).set("type", Generator.Type.CUBOID)
+				.set("x", off.x - m)
+				.set("y", off.y - m)
+				.set("z", off.z - m)
+				.set("width", s).set("height", size.y).set("depth", s).make();
+		new Generator<GLObject>(glm, 1, 1).set("type", Generator.Type.CUBOID)
+				.set("x", off.x - m)
+				.set("y", off.y - m)
+				.set("z", off.z - m)
+				.set("width", s).set("height", s).set("depth", size.z).make();
+		//
+		new Generator<GLObject>(glm, 1, 1).set("type", Generator.Type.CUBOID)
+				.set("x", off.x - m)
+				.set("y", off.y + m + size.y - s)
+				.set("z", off.z - m)
+				.set("width", size.x).set("height", s).set("depth", s).make();
+		new Generator<GLObject>(glm, 1, 1).set("type", Generator.Type.CUBOID)
+				.set("x", off.x - m)
+				.set("y", off.y + m + size.y - s)
+				.set("z", off.z - m)
+				.set("width", s).set("height", s).set("depth", size.z).make();
+		//
+		new Generator<GLObject>(glm, 1, 1).set("type", Generator.Type.CUBOID)
+				.set("x", off.x + m + size.x - s)
+				.set("y", off.y - m + 0f)
+				.set("z", off.z + m + size.z - s)
+				.set("width", s).set("height", off.y + size.y).set("depth", s).make();
+		new Generator<GLObject>(glm, 1, 1).set("type", Generator.Type.CUBOID)
+				.set("x", off.x - m + 0f)
+				.set("y", off.z - m + 0f)
+				.set("z", off.z + m + size.z - s)
+				.set("width", s).set("height", off.y + size.y).set("depth", s).make();
+		new Generator<GLObject>(glm, 1, 1).set("type", Generator.Type.CUBOID)
+				.set("x", off.x + m + size.x - s)
+				.set("y", off.y - m + 0f)
+				.set("z", off.z - m + 0f)
+				.set("width", s).set("height", off.y + size.y).set("depth", s).make();
+		//
+		new Generator<GLObject>(glm, 1, 1).set("type", Generator.Type.CUBOID)
+				.set("x", off.x + m + size.x - s)
+				.set("y", off.y - m + 0f)
+				.set("z", off.z - m + 0f)
+				.set("width", s).set("height", s).set("depth", size.z).make();
+		new Generator<GLObject>(glm, 1, 1).set("type", Generator.Type.CUBOID)
+				.set("x", off.x + m + size.x - s)
+				.set("y", off.y + m + size.y - s)
+				.set("z", off.z - m + 0f)
+				.set("width", s).set("height", s).set("depth", size.z).make();
+		//
+		new Generator<GLObject>(glm, 1, 1).set("type", Generator.Type.CUBOID)
+				.set("x", off.x - m + 0f)
+				.set("y", off.y - m + 0f)
+				.set("z", off.z + m + size.z - s)
+				.set("width", size.x).set("height", s).set("depth", s).make();
+		new Generator<GLObject>(glm, 1, 1).set("type", Generator.Type.CUBOID)
+				.set("x", off.x - m + 0f)
+				.set("y", off.y + m + size.y - s)
+				.set("z", off.z + m + size.z - s)
+				.set("width", size.x).set("height", s).set("depth", s).make();
+		//
+		glm.glObj.polycolor = rgb.toFloatArray();
+		return new Generator<>(glm, 1, 1);
+	}
+
+	@Override
+	public RGB getFaceColor(int i){
+		return RGB.BLACK;
+	}
+
+	@Override
+	public Face getFaceByColor(int i){
+		return NoFace.NONE;
+	}
+
+	@Override
+	public void render(){
+		PolyRenderer.DrawMode mode = PolyRenderer.mode();
+		PolyRenderer.mode(PolyRenderer.DrawMode.RGBCOLOR);
+		glm.render();
+		PolyRenderer.mode(mode);
+		//super.render();
 	}
 	
 	public float getValue(PolygonValue polyval){
 		switch(polyval.val()){
-			//
+			case COLOR: return rgb.packed;
 			default: return super.getValue(polyval);
 		}
 	}
 
 	public void setValue(PolygonValue polyval, float value){
 		switch(polyval.val()){
-			//
+			case COLOR: rgb.packed = (int)value; break;
 			default: super.setValue(polyval, value);
 		}
 		this.recompile();
@@ -72,7 +158,7 @@ public class ScructBox extends Box {
 	protected Polygon copyInternal(Polygon poly){
 		if(poly instanceof ScructBox == false) return super.copyInternal(poly);
 		ScructBox box = (ScructBox)super.copyInternal(poly);
-		//
+		box.rgb.packed = rgb.packed;
 		return poly;
 	}
 
