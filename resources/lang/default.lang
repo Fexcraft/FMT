@@ -316,6 +316,7 @@ settings.category.exporter-png=PNG Exporter
 settings.category.exporter-fvtm-format=FVTM Format
 settings.category.exporter-fvtm=FVTM Model (Java)
 settings.category.exporter-tim=TiM Model (Java)
+settings.category.exporter-aabb=Block AABB
 settings.no_field_found=No suitable field found.
 settings.control_adjuster=Control Adjuster
 setting.general.language=Language
