@@ -66,8 +66,9 @@ public class AABBExporter implements Exporter {
 				if(poli instanceof StructBox){
 					StructBox box = (StructBox)poli;
 					JsonArray array = new JsonArray();
-					Vector3f start = box.pos.add(8, box.size.y, 8).mul(Static.sixteenth);
-					Vector3f end = box.pos.add(8 + box.size.x, 0, 8 + box.size.z).mul(Static.sixteenth);
+					Vector3f start = new Vector3f(), end = new Vector3f();
+					box.pos.add(0, box.size.y, 0, start).mul(Static.sixteenth);
+					box.pos.add(box.size.x, 0, box.size.z, end).mul(Static.sixteenth);
 					buffer.append("\t\t\"" + poli.name().replace(" ", "_") + "\": " + " [ ");
 					buffer.append(start.x + ", ");
 					buffer.append((start.y == 0 ? 0 : -start.y) + ", ");
