@@ -59,7 +59,7 @@ public class AABBExporter implements Exporter {
 	@Override
 	public String export(Model model, File file, List<Group> groups){
 		StringBuffer buffer = new StringBuffer();
-		buffer.append("{\n\t\"AABBs\":[\n");
+		buffer.append("{\n\t\"AABBs\":{\n");
 		boolean[] first = { true };
 		for(Group group : model.groups()){
 			for(Polygon poli : group){
@@ -82,7 +82,7 @@ public class AABBExporter implements Exporter {
 		}
 		int i = buffer.indexOf(",");
 		if(i > 0) buffer.deleteCharAt(i);
-		buffer.append("\t]\n}\n");
+		buffer.append("\t}\n}\n");
 		try{
 			BufferedWriter writer = writer = new BufferedWriter(new FileWriter(file));
 			writer.write(buffer.toString());
