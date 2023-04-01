@@ -72,15 +72,15 @@ public class AABBExporter implements Exporter {
 					buffer.append("\t\t\"" + poli.name().replace(" ", "_") + "\": " + " [ ");
 					buffer.append(start.x + ", ");
 					buffer.append((start.y == 0 ? 0 : -start.y) + ", ");
-					buffer.append(start.z + ", ");
+					buffer.append((1 - start.z) + ", ");
 					buffer.append(end.x + ", ");
 					buffer.append((end.y == 0 ? 0 : -end.y) + ", ");
-					buffer.append(end.z);
+					buffer.append((1 - end.z));
 					buffer.append(" ],\n");
 				}
 			}
 		}
-		int i = buffer.indexOf(",");
+		int i = buffer.lastIndexOf(",");
 		if(i > 0) buffer.deleteCharAt(i);
 		buffer.append("\t}\n}\n");
 		try{
