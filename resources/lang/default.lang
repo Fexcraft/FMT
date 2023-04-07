@@ -1,7 +1,7 @@
 # Authors: 
 # - Ferdinand (FEX___96)
 #
-//
+
 # Toolbar
 ## Icons
 toolbar.icon.info=FMT Wiki
@@ -61,7 +61,7 @@ toolbar.utils.flip_tools.pos_x_front_back=Pos X + Cor [F/B]
 toolbar.utils.reset_camera=Reset Camera
 toolbar.utils.create_gif=Create GIF
 toolbar.utils.screenshot=Screenshot
-toolbar.utils.calc_size=Calc. Size (WIP)
+toolbar.utils.uv_editor=UV Editor
 toolbar.utils.rescale=ReScale Util
 toolbar.utils.font_util=Font Util
 ##
@@ -250,6 +250,9 @@ editor.component.arrow.mode.off=Offset
 editor.component.arrow.mode.rot=Rotation
 editor.component.arrow.mode.size=Size / Measurements
 editor.component.arrow.mode.shape=Shape / Corners
+
+# UV Editor
+uveditor.title=UV Editor (Texture Pos)
 
 # FVTM Config Editor
 fvtmeditor.title=FVTM Config Editor
