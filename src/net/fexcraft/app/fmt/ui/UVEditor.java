@@ -8,6 +8,7 @@ import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.fields.BoolButton;
 import net.fexcraft.app.fmt.ui.fields.ColorField;
 import net.fexcraft.app.fmt.ui.fields.RunButton;
+import net.fexcraft.app.fmt.utils.FBOUVIMG;
 import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.app.fmt.utils.fvtm.BlockConfigReference;
 import net.fexcraft.app.fmt.utils.fvtm.ConfigEntry;
@@ -46,6 +47,10 @@ public class UVEditor extends Widget {
        if(INSTANCE == null) INSTANCE = new UVEditor();
        else if(INSTANCE.getStyle().getDisplay() == Style.DisplayType.FLEX) INSTANCE.hide();
        else INSTANCE.show();
+    }
+
+    public static boolean visible(){
+        return INSTANCE != null && INSTANCE.getStyle().getDisplay() != Style.DisplayType.NONE;
     }
 
 }
