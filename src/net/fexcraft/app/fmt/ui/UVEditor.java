@@ -20,6 +20,7 @@ import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateHolder;
 import net.fexcraft.app.fmt.update.UpdateType;
+import net.fexcraft.app.fmt.utils.Logging;
 import org.joml.Vector2f;
 import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.Label;
@@ -97,10 +98,19 @@ public class UVEditor extends Widget {
         }
         type.setVisibleCount(8);
         type.addSelectBoxChangeSelectionEventListener(lis -> {
-            int idx = lis.getNewValue().equals("automatic") ? 0 : -1;
+            UVType uvt = UVType.from(lis.getNewValue());
+            int idx = uvt.automatic() ? 0 : -1;
             if(idx == -1){
-                UVType uvt = UVType.from(lis.getNewValue());
                 idx = uvt.ordinal() > 3 ? uvt.ordinal() - 3 : uvt.ordinal();
+            }
+            Polygon poly = FMT.MODEL.first_selected();
+            if(poly != null){
+                UVCoords cor = poly.cuv.get(SELECTED);
+                if(cor != null && cor.type() != uvt){
+                    cor.set(uvt);
+                    int i = FMT.MODEL.selected().size();
+                    UpdateHandler.update(UpdateType.POLYGON_SELECTED, poly, i, i);
+                }
             }
             showField(idx);
         });
