@@ -16,6 +16,7 @@ import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.Timer;
 
+import net.fexcraft.app.fmt.ui.UVEditor;
 import org.joml.Vector2i;
 import org.joml.Vector4f;
 import org.liquidengine.legui.animation.AnimatorProvider;
@@ -31,6 +32,7 @@ import org.liquidengine.legui.system.handler.processor.SystemEventProcessor;
 import org.liquidengine.legui.system.handler.processor.SystemEventProcessorImpl;
 import org.liquidengine.legui.system.layout.LayoutManager;
 import org.liquidengine.legui.system.renderer.Renderer;
+import org.liquidengine.legui.system.renderer.RendererProvider;
 import org.liquidengine.legui.system.renderer.nvg.NvgRenderer;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -230,6 +232,7 @@ public class FMT {
 		});
 		SystemEventProcessor sys_event_processor = new SystemEventProcessorImpl();
 		SystemEventProcessor.addDefaultCallbacks(keeper, sys_event_processor);
+		RendererProvider.getInstance().addComponentRenderer(UVEditor.UvElm.class, new UVEditor.UvElmRenderer());
 		RENDERER = new NvgRenderer();
 		RENDERER.initialize();
 		TextureManager.load();
