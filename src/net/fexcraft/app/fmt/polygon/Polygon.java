@@ -6,6 +6,7 @@ import static net.fexcraft.app.fmt.utils.JsonUtil.getVector;
 import static net.fexcraft.app.fmt.utils.JsonUtil.setVector;
 import static net.fexcraft.app.fmt.utils.Logging.log;
 
+import net.fexcraft.app.fmt.ui.UVEditor;
 import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.FMT;
@@ -261,6 +262,29 @@ public abstract class Polygon {
 			case OFF: return getVectorValue(off, polyval.axe());
 			case ROT: return getVectorValue(rot, polyval.axe());
 			case TEX: return polyval.axe().x() ? textureX : textureY;
+			case CUV:
+			case CUV_START:
+			case CUV_TR:{
+				UVCoords cor = cuv.get(UVEditor.SELECTED);
+				if(cor != null && cor.value() != null) return cor.value()[polyval.axe().x() ? 0 : 1];
+				else return 0;
+			}
+			case CUV_END:
+			case CUV_TL:{
+				UVCoords cor = cuv.get(UVEditor.SELECTED);
+				if(cor != null && cor.value() != null && cor.length() > 2) return cor.value()[polyval.axe().x() ? 2 : 3];
+				else return 0;
+			}
+			case CUV_BL:{
+				UVCoords cor = cuv.get(UVEditor.SELECTED);
+				if(cor != null && cor.value() != null && cor.length() > 4) return cor.value()[polyval.axe().x() ? 4 : 5];
+				else return 0;
+			}
+			case CUV_BR:{
+				UVCoords cor = cuv.get(UVEditor.SELECTED);
+				if(cor != null && cor.value() != null && cor.length() > 4) return cor.value()[polyval.axe().x() ? 6 : 7];
+				else return 0;
+			}
 			default: return 0;
 		}
 	}
@@ -292,6 +316,35 @@ public abstract class Polygon {
 				if(polyval.axe().x()) textureX = (int)value;
 				else textureY = (int)value;
 				break;
+			case CUV:
+			case CUV_START:
+			case CUV_TR:{
+				UVCoords cor = cuv.get(UVEditor.SELECTED);
+				if(cor != null && cor.value() != null){
+					cor.value()[polyval.axe().x() ? 0 : 1] = value;
+				}
+				break;
+			}
+			case CUV_END:
+			case CUV_TL:{
+				UVCoords cor = cuv.get(UVEditor.SELECTED);
+				if(cor != null && cor.value() != null && cor.length() > 2){
+					cor.value()[polyval.axe().x() ? 2 : 3] = value;
+				}
+				break;
+			}
+			case CUV_BL:{
+				UVCoords cor = cuv.get(UVEditor.SELECTED);
+				if(cor != null && cor.value() != null && cor.length() > 4){
+					cor.value()[polyval.axe().x() ? 4 : 5] = value;
+				}
+			}
+			case CUV_BR:{
+				UVCoords cor = cuv.get(UVEditor.SELECTED);
+				if(cor != null && cor.value() != null && cor.length() > 4){
+					cor.value()[polyval.axe().x() ? 6 : 7] = value;
+				}
+			}
 			default: return;
 		}
 		this.recompile();
