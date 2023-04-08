@@ -1,33 +1,30 @@
 package net.fexcraft.app.fmt.ui;
 
-import static net.fexcraft.app.fmt.ui.EditorComponent.F30;
-import static net.fexcraft.app.fmt.ui.EditorComponent.F31;
-import static net.fexcraft.app.fmt.ui.EditorComponent.F32;
-import static net.fexcraft.app.fmt.ui.EditorComponent.F3S;
+import static net.fexcraft.app.fmt.ui.EditorComponent.*;
 import static net.fexcraft.app.fmt.utils.Translator.translate;
 import static org.liquidengine.legui.system.renderer.nvg.util.NvgRenderUtils.createScissor;
 import static org.liquidengine.legui.system.renderer.nvg.util.NvgRenderUtils.resetScissor;
 
-import javax.swing.text.View;
-
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.Polygon;
+import net.fexcraft.app.fmt.polygon.uv.Face;
+import net.fexcraft.app.fmt.polygon.uv.NoFace;
+import net.fexcraft.app.fmt.polygon.uv.UVCoords;
 import net.fexcraft.app.fmt.polygon.uv.UVType;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.fields.NumberField;
 import net.fexcraft.app.fmt.ui.fields.RunButton;
 import net.fexcraft.app.fmt.ui.fields.TextField;
 import net.fexcraft.app.fmt.update.PolyVal;
+import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateHolder;
 import net.fexcraft.app.fmt.update.UpdateType;
 import org.joml.Vector2f;
-import org.liquidengine.legui.component.AbstractTextComponent;
 import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.SelectBox;
 import org.liquidengine.legui.component.Widget;
-import org.liquidengine.legui.component.optional.align.HorizontalAlign;
 import org.liquidengine.legui.style.Style;
 import org.liquidengine.legui.style.border.SimpleLineBorder;
 import org.liquidengine.legui.style.color.ColorConstants;
@@ -40,6 +37,8 @@ public class UVEditor extends Widget {
 
     public static UVEditor INSTANCE;
     public static UVFields[] fields = new UVFields[4];
+    public static Face SELECTED = NoFace.NONE;
+    private SelectBox<String> face, type;
 
     private UVEditor(){
         getTitleTextState().setText(translate("uveditor.title"));
@@ -62,28 +61,37 @@ public class UVEditor extends Widget {
         //
         con.add(new Label(translate("uveditor.root"), 10, 60, 280, 20));
         NumberField tx, ty;
-        con.add(tx = new NumberField(holder, F30, 85, F3S, 20).setup(-1, Integer.MAX_VALUE, true, new PolyVal.PolygonValue(PolyVal.TEX, PolyVal.ValAxe.X)));
-        con.add(ty = new NumberField(holder, F31, 85, F3S, 20).setup(-1, Integer.MAX_VALUE, true, new PolyVal.PolygonValue(PolyVal.TEX, PolyVal.ValAxe.Y)));
+        con.add(tx = new NumberField(holder, F30, 85, F3S, 20).setup(-1, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.TEX, PolyVal.ValAxe.X)));
+        con.add(ty = new NumberField(holder, F31, 85, F3S, 20).setup(-1, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.TEX, PolyVal.ValAxe.Y)));
         con.add(new RunButton("uveditor.root_reset", F32, 85, F3S, 20, () -> {
             FMT.MODEL.updateValue(tx.polyval(), tx.apply(-1), 0);
             FMT.MODEL.updateValue(ty.polyval(), ty.apply(-1), 0);
         }));
         //
         con.add(new Label(translate("uveditor.face"), 10, 120, 280, 20));
-        SelectBox<String> face = new SelectBox<>(10, 145, 280, 20);
+        face = new SelectBox<>(10, 145, 280, 20);
         holder.sub().add(UpdateType.POLYGON_SELECTED, o -> {
             while(face.getElements().size() > 0) face.removeElement(0);
             face.addElement("none");
             Polygon poly = FMT.MODEL.first_selected();
             if(poly != null){
                 poly.cuv.keySet().forEach(key -> face.addElement(key));
+                if(poly.isValidUVFace(SELECTED)) face.setSelected(SELECTED.id(), true);
+                else face.setSelected(poly.getUVFaces()[0].id(), true);
             }
+            else face.setSelected("none", true);
+            updateSelFace(poly);
+        });
+        face.addSelectBoxChangeSelectionEventListener(lis -> {
+            SELECTED = Face.get(lis.getNewValue(), true);
+            Polygon poly = FMT.MODEL.first_selected();
+            updateSelFace(poly);
         });
         face.setVisibleCount(8);
         con.add(face);
         //
         con.add(new Label(translate("uveditor.type"), 10, 170, 280, 20));
-        SelectBox<String> type = new SelectBox<>(10, 195, 280, 20);
+        type = new SelectBox<>(10, 195, 280, 20);
         for(UVType uvt : UVType.values()){
             type.addElement(uvt.name().toLowerCase());
         }
@@ -92,15 +100,49 @@ public class UVEditor extends Widget {
             int idx = lis.getNewValue().equals("automatic") ? 0 : -1;
             if(idx == -1){
                 UVType uvt = UVType.from(lis.getNewValue());
-                idx = uvt.ordinal() / 2;
+                idx = uvt.ordinal() > 3 ? uvt.ordinal() - 3 : uvt.ordinal();
             }
-            UIUtils.show(fields[idx]);
+            showField(idx);
         });
         con.add(type);
         //
         for(int i = 0; i < 4; i++){
-            fields[i] = new UVFields(5, 230, 290, 20);
-
+            int w = 294;
+            fields[i] = new UVFields(8, 230, w, 20);
+            if(i == 0){
+                fields[i].setSize(w, 40);
+                fields[i].add(new CenteredLabel(translate("uveditor.type.automatic"), 7, 10, 270, 20));
+            }
+            else if(i == 1){
+                fields[i].setSize(w, 70);
+                fields[i].add(new Label(translate("uveditor.type.offset"), 7, 10, 270, 20));
+                fields[i].add(new NumberField(holder, F20 - 3, 40, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV, PolyVal.ValAxe.X)));
+                fields[i].add(new NumberField(holder, F21 - 3, 40, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV, PolyVal.ValAxe.Y)));
+            }
+            else if(i == 2){
+                fields[i].setSize(w, 130);
+                fields[i].add(new Label(translate("uveditor.type.start"), 7, 10, 270, 20));
+                fields[i].add(new NumberField(holder, F20 - 3, 40, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_START, PolyVal.ValAxe.X)));
+                fields[i].add(new NumberField(holder, F21 - 3, 40, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_START, PolyVal.ValAxe.Y)));
+                fields[i].add(new Label(translate("uveditor.type.end"), 7, 70, 270, 20));
+                fields[i].add(new NumberField(holder, F20 - 3, 100, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_START, PolyVal.ValAxe.X)));
+                fields[i].add(new NumberField(holder, F21 - 3, 100, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_START, PolyVal.ValAxe.Y)));
+            }
+            else{
+                fields[i].setSize(w, 250);
+                fields[i].add(new Label(translate("uveditor.type.top_right"), 7, 10, 270, 20));
+                fields[i].add(new NumberField(holder, F20 - 3, 40, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_TR, PolyVal.ValAxe.X)));
+                fields[i].add(new NumberField(holder, F21 - 3, 40, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_TR, PolyVal.ValAxe.Y)));
+                fields[i].add(new Label(translate("uveditor.type.top_left"), 7, 70, 270, 20));
+                fields[i].add(new NumberField(holder, F20 - 3, 100, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_TL, PolyVal.ValAxe.X)));
+                fields[i].add(new NumberField(holder, F21 - 3, 100, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_TL, PolyVal.ValAxe.Y)));
+                fields[i].add(new Label(translate("uveditor.type.bot_left"), 7, 130, 270, 20));
+                fields[i].add(new NumberField(holder, F20 - 3, 160, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_BL, PolyVal.ValAxe.X)));
+                fields[i].add(new NumberField(holder, F21 - 3, 160, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_BL, PolyVal.ValAxe.Y)));
+                fields[i].add(new Label(translate("uveditor.type.bot_right"), 7, 190, 270, 20));
+                fields[i].add(new NumberField(holder, F20 - 3, 220, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_BR, PolyVal.ValAxe.X)));
+                fields[i].add(new NumberField(holder, F21 - 3, 220, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_BR, PolyVal.ValAxe.Y)));
+            }
             UIUtils.hide(fields[i]);
             con.add(fields[i]);
         }
@@ -113,6 +155,30 @@ public class UVEditor extends Widget {
         UpdateHandler.registerHolder(holder);
         FMT.FRAME.getContainer().add(this);
         show();
+    }
+
+    private void updateSelFace(Polygon poly){
+        if(poly == null) showField(0);
+        else{
+            UVCoords cuv = poly.cuv.get(SELECTED);
+            if(cuv == null || cuv.automatic()){
+                showField(0);
+                type.setSelected(UVType.AUTOMATIC.name().toLowerCase(), true);
+            }
+            else if(cuv.detached()){
+                showField(cuv.type().ordinal() - 3);
+                type.setSelected(cuv.type().name().toLowerCase(), true);
+            }
+            else{
+                showField(cuv.type().ordinal());
+                type.setSelected(cuv.type().name().toLowerCase(), true);
+            }
+        }
+    }
+
+    private void showField(int idx){
+        for(UVFields field : fields) UIUtils.hide(field);
+        UIUtils.show(fields[idx]);
     }
 
     public static void toggle(){
@@ -138,15 +204,15 @@ public class UVEditor extends Widget {
         public UVFields(float x, float y, float w, float h){
             setSize(w, h);
             setPosition(x, y);
-            getStyle().setBorderRadius(0);
-            getStyle().setBorder(new SimpleLineBorder(ColorConstants.black(), 2));
+            getStyle().setBorderRadius(8);
+            Settings.applyComponentTheme(this);
+            getStyle().setBorder(new SimpleLineBorder(FMT.rgba(0x2ea4e8), 2));
             setFocusable(false);
         }
 
     }
 
     public static class View extends Component {
-
 
         public View(float x, float y, float w, float h, UpdateHolder holder){
             setSize(w, h);
