@@ -11,6 +11,7 @@ import static org.lwjgl.glfw.GLFW.glfwSetInputMode;
 import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
 
+import net.fexcraft.app.fmt.ui.UVEditor;
 import net.fexcraft.app.fmt.utils.fvtm.FVTMConfigEditor;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -28,8 +29,8 @@ import net.fexcraft.lib.common.Static;
 
 /** CCR */
 public class GGR {
-	
-    public float movemod = 1;
+
+	public float movemod = 1;
     public float maxVR = Static.rad90 - Static.rad5;
     public Vector3f pos, initial;
     //
@@ -61,7 +62,7 @@ public class GGR {
             (float)Math.cos(ver) * (float)Math.cos(hor)
         );
         right = new Vector3f(
-        	(float)Math.sin(hor - 3.14f / 2.0f),
+				(float)Math.sin(hor - 3.14f / 2.0f),
             0,
             (float)Math.cos(hor - 3.14f / 2.0f)
         );
@@ -75,18 +76,18 @@ public class GGR {
         FMT.rot.getTextState().setText(format(Math.toDegrees(hor)) + " / " + format(Math.toDegrees(ver)) + " : " + (int)fov);
         perspective(fov);
         ShaderManager.applyUniforms(prog -> {
-        	prog.use();
-    		def_view = glGetUniformLocation(ShaderManager.GENERAL.program(), "view");
-    		glUniformMatrix4fv(def_view, false, view.get(new float[16]));
-    		def_proj = glGetUniformLocation(ShaderManager.GENERAL.program(), "projection");
-    		glUniformMatrix4fv(def_proj, false, projection.get(new float[16]));
+			prog.use();
+			def_view = glGetUniformLocation(ShaderManager.GENERAL.program(), "view");
+			glUniformMatrix4fv(def_view, false, view.get(new float[16]));
+			def_proj = glGetUniformLocation(ShaderManager.GENERAL.program(), "projection");
+			glUniformMatrix4fv(def_proj, false, projection.get(new float[16]));
         });
     }
 
 	public void resize(){
 		perspective(fov);
 	}
-	
+
 	public void perspective(float degree_fov){
 		projection = new Matrix4f().perspective(Static.rad1 * fov, (float)FMT.WIDTH / FMT.HEIGHT, 0.1f, 1024f);
 	}
@@ -99,9 +100,9 @@ public class GGR {
             cursor_moved0 = false;
 		}
 		else if(scroll_down){
-	        pos.x += (posx - oposx) * 0.001;
-	        pos.y += (posy - oposy) * 0.001;
-	    }
+			pos.x += (posx - oposx) * 0.001;
+			pos.y += (posy - oposy) * 0.001;
+		}
 		else if(Arrows.SEL > 0 && cursor_moved0){
 			float f0 = (float)(posx - oposx) * Settings.ARROW_SENSIVITY.value * delta;
 			float f1 = (float)(posy - oposy) * Settings.ARROW_SENSIVITY.value * delta;
@@ -113,60 +114,60 @@ public class GGR {
 
     public static double posx, posy, oposx = -1, oposy = -1;
     public static boolean right_down, left_down, scroll_down, grabbed, cursor_moved0, cursor_moved1;
-    
+
 	public void mouseCallback(long window, int button, int action, int mods){
         if(button == 0){
-        	if(action == GLFW_PRESS){
-        		left_down = true;
-        	}
-        	else if(action == GLFW_RELEASE){
-        		if(Arrows.SEL > 0){
-        			Arrows.SEL = 0;
-        		}
-        		else if(!isOverUI()){
-        			if(TexturePainter.TOOL.active()){
-        				Picker.pick(TexturePainter.SELMODE.getPickType(), PickTask.PAINT1, true);
-        			}
-        			else if(Picker.TYPE.color()) Picker.process();
-        			else Picker.pick(PickType.POLYGON, PickTask.SELECT, true);
-        		}
-        		left_down = false;
-        	}
+			if(action == GLFW_PRESS){
+				left_down = true;
+			}
+			else if(action == GLFW_RELEASE){
+				if(Arrows.SEL > 0){
+					Arrows.SEL = 0;
+				}
+				else if(!isOverUI()){
+					if(TexturePainter.TOOL.active()){
+						Picker.pick(TexturePainter.SELMODE.getPickType(), PickTask.PAINT1, true);
+					}
+					else if(Picker.TYPE.color()) Picker.process();
+					else Picker.pick(PickType.POLYGON, PickTask.SELECT, true);
+				}
+				left_down = false;
+			}
         }
         else if(button == 1){
-        	if(Arrows.SEL > 0){
-        		if(action == GLFW_RELEASE) Arrows.DIR = !Arrows.DIR;
-        		return;
-        	}
-    		if(isControlDown()){
-    			if(action == GLFW_PRESS) return; 
-    			if(TexturePainter.TOOL.active()){
-    				Picker.pick(TexturePainter.SELMODE.getPickType(), PickTask.PAINT2, true);
-    			}
-    			else PolySelMenu.show();
-    			return;
-    		}
-        	if(action == GLFW_PRESS){
-        		if(!isOverUI()){
-            		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-            		grabbed = true;
-        		}
-        		right_down = true;
-        	}
-        	else if(action == GLFW_RELEASE){
-        		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-        		right_down = false;
-        		grabbed = false;
-        		cursor_moved1 = false;
-        	}
+			if(Arrows.SEL > 0){
+				if(action == GLFW_RELEASE) Arrows.DIR = !Arrows.DIR;
+				return;
+			}
+			if(isControlDown()){
+				if(action == GLFW_PRESS) return;
+				if(TexturePainter.TOOL.active()){
+					Picker.pick(TexturePainter.SELMODE.getPickType(), PickTask.PAINT2, true);
+				}
+				else PolySelMenu.show();
+				return;
+			}
+			if(action == GLFW_PRESS){
+				if(!isOverUI()){
+					glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+					grabbed = true;
+				}
+				right_down = true;
+			}
+			else if(action == GLFW_RELEASE){
+				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+				right_down = false;
+				grabbed = false;
+				cursor_moved1 = false;
+			}
         }
         if(button == 2){
-        	if(action == GLFW_PRESS){
-        		scroll_down = true;
-        	}
-        	else if(action == GLFW_RELEASE){
-        		scroll_down = false;
-        	}
+			if(action == GLFW_PRESS){
+				scroll_down = true;
+			}
+			else if(action == GLFW_RELEASE){
+				scroll_down = false;
+			}
         }
 	}
 
@@ -181,11 +182,11 @@ public class GGR {
 				if(cursor_y[0] >= editor.getPosition().y && cursor_y[0] <= editor.getPosition().y + editor.height) return true;
 			}
 		}
-		/*if(TexViewBox.isOpen()){
-			if(x[0] >= TexViewBox.pos().x && x[0] < TexViewBox.pos().x + TexViewBox.size().x){
-				if(y[0] >= TexViewBox.pos().y && y[0] < TexViewBox.pos().y + TexViewBox.size().y) return false;
+		if(UVEditor.visible()){
+			if(cursor_x[0] >= UVEditor.pos().x && cursor_x[0] <= UVEditor.pos().x + UVEditor.size().x){
+				if(cursor_y[0] >= UVEditor.pos().y && cursor_y[0] <= UVEditor.pos().y + UVEditor.size().y) return true;
 			}
-		}*/
+		}
 		return false;
 	}
 
@@ -215,9 +216,9 @@ public class GGR {
 	}
 
 	public void processCameraInput(float delta){
-    	if(FMT.CONTEXT.getFocusedGui() != null){
-    		w_down = s_down = d_down = a_down = r_down = f_down = space_down = shift_down = false;
-    	}
+		if(FMT.CONTEXT.getFocusedGui() != null){
+			w_down = s_down = d_down = a_down = r_down = f_down = space_down = shift_down = false;
+		}
         boolean front = w_down;
         boolean back  = s_down;
         boolean right = d_down;
@@ -234,16 +235,16 @@ public class GGR {
         if(up) pos.y -= nspeed;
         if(down) pos.y += nspeed;
         if(back){
-        	pos.sub(new Vector3f(dir).mul(nspeed, 0, nspeed));
+			pos.sub(new Vector3f(dir).mul(nspeed, 0, nspeed));
         }
         if(front){
-        	pos.add(new Vector3f(dir).mul(nspeed, 0, nspeed));
+			pos.add(new Vector3f(dir).mul(nspeed, 0, nspeed));
         }
         if(left){
-        	pos.add(new Vector3f(this.right).mul(nspeed, 0, nspeed));
+			pos.add(new Vector3f(this.right).mul(nspeed, 0, nspeed));
         }
         if(right){
-        	pos.sub(new Vector3f(this.right).mul(nspeed, 0, nspeed));
+			pos.sub(new Vector3f(this.right).mul(nspeed, 0, nspeed));
         }
     }
 
