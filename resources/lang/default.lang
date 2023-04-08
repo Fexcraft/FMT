@@ -253,6 +253,11 @@ editor.component.arrow.mode.shape=Shape / Corners
 
 # UV Editor
 uveditor.title=UV Editor (Texture Pos)
+uveditor.selected=Selected Polygon
+uveditor.root=Root UV
+uveditor.root_reset=Reset
+uveditor.face=Selected Face
+uveditor.type=Mapping Type
 
 # FVTM Config Editor
 fvtmeditor.title=FVTM Config Editor
