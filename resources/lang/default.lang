@@ -61,7 +61,7 @@ toolbar.utils.flip_tools.pos_x_front_back=Pos X + Cor [F/B]
 toolbar.utils.reset_camera=Reset Camera
 toolbar.utils.create_gif=Create GIF
 toolbar.utils.screenshot=Screenshot
-toolbar.utils.uv_editor=UV Editor
+toolbar.utils.uv_viewer=UV Viewer
 toolbar.utils.rescale=ReScale Util
 toolbar.utils.font_util=Font Util
 ##
@@ -194,6 +194,21 @@ editor.component.polygon.curve.segments=Segments / Active Segment
 editor.component.polygon.curve.seg_loc=Segment: Rotation / Location / Literal Loc.
 editor.component.polygon.curve.segment=Segment %s
 editor.component.polygon.curve.cur_length=Curve Length / Show Line
+editor.component.polygon.texuv.name=Texture Pos/UV
+editor.component.polygon.texuv.desc=Advanced UV (Texture Pos) Settings for each polygon face.
+editor.component.polygon.texuv.root=Root UV
+editor.component.polygon.texuv.root_reset=Reset
+editor.component.polygon.texuv.face=Selected Face
+editor.component.polygon.texuv.type=Mapping Type
+editor.component.polygon.texuv.type.automatic=Default mappings are active.
+editor.component.polygon.texuv.type.offset=Offset
+editor.component.polygon.texuv.type.start=Start (Top Left)
+editor.component.polygon.texuv.type.end=End (Bottom Right)
+editor.component.polygon.texuv.type.top_left=Top Left
+editor.component.polygon.texuv.type.top_right=Top Right
+editor.component.polygon.texuv.type.bot_left=Bottom Left
+editor.component.polygon.texuv.type.bot_right=Bottom Right
+editor.component.polygon.texuv.viewer=Open UV/Texture Viewer
 editor.component.group.general.name=Group Settings
 editor.component.group.general.desc=General group settings.
 editor.component.group.general.name/id=Name / Id
@@ -251,27 +266,13 @@ editor.component.arrow.mode.rot=Rotation
 editor.component.arrow.mode.size=Size / Measurements
 editor.component.arrow.mode.shape=Shape / Corners
 
-# UV Editor
-uveditor.title=UV Editor (Texture Pos)
-uveditor.selected=Selected Polygon
-uveditor.root=Root UV
-uveditor.root_reset=Reset
-uveditor.face=Selected Face
-uveditor.type=Mapping Type
-uveditor.type.automatic=Default mappings are active.
-uveditor.type.offset=Offset
-uveditor.type.start=Start (Top Left)
-uveditor.type.end=End (Bottom Right)
-uveditor.type.top_left=Top Left
-uveditor.type.top_right=Top Right
-uveditor.type.bot_left=Bottom Left
-uveditor.type.bot_right=Bottom Right
-uveditor.button.borders=Toggle Borders
-uveditor.button.only_pos=Show only Positioned Polygons (uv > -1)
-uveditor.button.texture=Toggle Texture
-uveditor.button.zoom_in=Zoom In
-uveditor.button.zoom_out=Zoom Out
-uveditor.group=Selected Texture Group
+# UV Vieweer
+uvviewer.title=UV Viewer
+uvviewer.button.borders=Toggle Borders
+uvviewer.button.only_pos=Show only Positioned Polygons
+uvviewer.button.texture=Toggle Texture
+uvviewer.button.zoom_in=Zoom In
+uvviewer.button.zoom_out=Zoom Out
 
 # FVTM Config Editor
 fvtmeditor.title=FVTM Config Editor

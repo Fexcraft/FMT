@@ -146,6 +146,7 @@ public class EditorComponent extends Component {
 		REGISTRY.put("painter.current", CurrentColor.class);
 		REGISTRY.put("painter.tools", PainterTools.class);
 		REGISTRY.put("arrow.mode", ArrowMode.class);
+		REGISTRY.put("polygon.texuv", UVComponent.class);
 	}
 
 	public EditorComponent load(JsonMap map){

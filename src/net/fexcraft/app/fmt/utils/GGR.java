@@ -11,7 +11,7 @@ import static org.lwjgl.glfw.GLFW.glfwSetInputMode;
 import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
 
-import net.fexcraft.app.fmt.ui.UVEditor;
+import net.fexcraft.app.fmt.ui.UVViewer;
 import net.fexcraft.app.fmt.utils.fvtm.FVTMConfigEditor;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -182,9 +182,9 @@ public class GGR {
 				if(cursor_y[0] >= editor.getPosition().y && cursor_y[0] <= editor.getPosition().y + editor.height) return true;
 			}
 		}
-		if(UVEditor.visible()){
-			if(cursor_x[0] >= UVEditor.pos().x && cursor_x[0] <= UVEditor.pos().x + UVEditor.size().x){
-				if(cursor_y[0] >= UVEditor.pos().y && cursor_y[0] <= UVEditor.pos().y + UVEditor.size().y) return true;
+		if(UVViewer.visible()){
+			if(cursor_x[0] >= UVViewer.pos().x && cursor_x[0] <= UVViewer.pos().x + UVViewer.size().x){
+				if(cursor_y[0] >= UVViewer.pos().y && cursor_y[0] <= UVViewer.pos().y + UVViewer.size().y) return true;
 			}
 		}
 		return false;
