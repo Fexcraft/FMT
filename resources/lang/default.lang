@@ -266,6 +266,12 @@ uveditor.type.top_left=Top Left
 uveditor.type.top_right=Top Right
 uveditor.type.bot_left=Bottom Left
 uveditor.type.bot_right=Bottom Right
+uveditor.button.borders=Toggle Borders
+uveditor.button.only_pos=Show only Positioned Polygons (uv > -1)
+uveditor.button.texture=Toggle Texture
+uveditor.button.zoom_in=Zoom In
+uveditor.button.zoom_out=Zoom Out
+uveditor.group=Selected Texture Group
 
 # FVTM Config Editor
 fvtmeditor.title=FVTM Config Editor
