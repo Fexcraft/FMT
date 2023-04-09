@@ -5,13 +5,18 @@ import static net.fexcraft.app.fmt.utils.Translator.translate;
 import static org.liquidengine.legui.system.renderer.nvg.util.NvgRenderUtils.createScissor;
 import static org.liquidengine.legui.system.renderer.nvg.util.NvgRenderUtils.resetScissor;
 
+import java.util.ArrayList;
+
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.polygon.uv.Face;
 import net.fexcraft.app.fmt.polygon.uv.NoFace;
 import net.fexcraft.app.fmt.polygon.uv.UVCoords;
 import net.fexcraft.app.fmt.polygon.uv.UVType;
 import net.fexcraft.app.fmt.settings.Settings;
+import net.fexcraft.app.fmt.texture.TextureGroup;
+import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.ui.fields.NumberField;
 import net.fexcraft.app.fmt.ui.fields.RunButton;
 import net.fexcraft.app.fmt.ui.fields.TextField;
@@ -20,10 +25,10 @@ import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateHolder;
 import net.fexcraft.app.fmt.update.UpdateType;
-import net.fexcraft.app.fmt.utils.Logging;
 import org.joml.Vector2f;
 import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.Label;
+import org.liquidengine.legui.component.ScrollablePanel;
 import org.liquidengine.legui.component.SelectBox;
 import org.liquidengine.legui.component.Widget;
 import org.liquidengine.legui.style.Style;
@@ -31,8 +36,6 @@ import org.liquidengine.legui.style.border.SimpleLineBorder;
 import org.liquidengine.legui.style.color.ColorConstants;
 import org.liquidengine.legui.system.context.Context;
 import org.liquidengine.legui.system.renderer.nvg.component.NvgDefaultComponentRenderer;
-import org.lwjgl.nanovg.NVGColor;
-import org.lwjgl.nanovg.NanoVG;
 
 public class UVEditor extends Widget {
 
@@ -43,7 +46,7 @@ public class UVEditor extends Widget {
 
     private UVEditor(){
         getTitleTextState().setText(translate("uveditor.title"));
-        int width = 840, height = 570;
+        int width = 880, height = 580;
         setSize(width, height);
         setPosition(FMT.WIDTH / 2 - width / 2, FMT.HEIGHT / 2 - height / 2);
         setResizable(false);
@@ -157,9 +160,27 @@ public class UVEditor extends Widget {
             con.add(fields[i]);
         }
         //
-        View view = new View(width - 530, 20, 512, 512, holder.sub());
-        view.add(new UvElm());
-        con.add(view);
+        con.add(new Label(translate("uveditor.group"), 10, height - 90, 280, 20));
+        SelectBox<String> tex = new SelectBox<>(10, height - 65, 280, 20);
+        for(TextureGroup group : TextureManager.getGroups()){
+            tex.addElement(group.name);
+        }
+        tex.setVisibleCount(8);
+        tex.addSelectBoxChangeSelectionEventListener(lis -> {
+            //
+        });
+        con.add(tex);
+        //
+        ScrollablePanel panel = new ScrollablePanel(width - 570, 20, 522, 522);
+        View view = new View(panel, 0, 0, 4096, 4096, holder.sub());
+        panel.getContainer().add(view);
+        panel.getContainer().setSize(4096, 4096);
+        con.add(panel);
+        con.add(new Icon(0, 32, 0, width - 42, 20, "./resources/textures/icons/uveditor/borders.png", () -> {}).addTooltip("uveditor.button.borders"));
+        con.add(new Icon(0, 32, 0, width - 42, 55, "./resources/textures/icons/uveditor/only_pos.png", () -> {}).addTooltip("uveditor.button.only_pos"));
+        con.add(new Icon(0, 32, 0, width - 42, 90, "./resources/textures/icons/uveditor/texture.png", () -> {}).addTooltip("uveditor.button.texture"));
+        con.add(new Icon(0, 32, 0, width - 42, 145, "./resources/textures/icons/uveditor/zoom_in.png", () -> {}).addTooltip("uveditor.button.zoom_in"));
+        con.add(new Icon(0, 32, 0, width - 42, 180, "./resources/textures/icons/uveditor/zoom_out.png", () -> {}).addTooltip("uveditor.button.zoom_out"));
         //
         addWidgetCloseEventListener(lis -> {});
         UpdateHandler.registerHolder(holder);
@@ -224,23 +245,55 @@ public class UVEditor extends Widget {
 
     public static class View extends Component {
 
-        public View(float x, float y, float w, float h, UpdateHolder holder){
+        private ArrayList<UvElm> elements = new ArrayList<>();
+        private ScrollablePanel root;
+
+        public View(ScrollablePanel panel, float x, float y, float w, float h, UpdateHolder holder){
             setSize(w, h);
             setPosition(x, y);
             getStyle().setBorderRadius(0);
             getStyle().getBackground().setColor(FMT.rgba(0xffffffff));
             getStyle().setBorder(new SimpleLineBorder(ColorConstants.black(), 3));
             setFocusable(false);
+            for(Group group : FMT.MODEL.groups()){
+                for(Polygon polygon : group){
+                    UvElm elm = new UvElm(polygon);
+                    elements.add(elm);
+                    add(elm);
+                }
+            }
+            holder.add(UpdateType.POLYGON_ADDED, uw -> {
+                UvElm elm = new UvElm(uw.get(1));
+                elements.add(elm);
+                add(elm);
+            });
+            holder.add(UpdateType.POLYGON_REMOVED, uw -> {
+                Polygon poly = uw.get(1);
+                UvElm ulm = null;
+                for(UvElm elm : elements){
+                    if(elm.poly == poly){
+                        ulm = elm;
+                        break;
+                    }
+                }
+                if(ulm != null){
+                    elements.remove(ulm);
+                    remove(ulm);
+                }
+            });
+            root = panel;
         }
 
     }
 
     public static class UvElm extends Component {
 
-        public UvElm(){
+        private Polygon poly;
+
+        public UvElm(Polygon poli){
             setPosition(10, 10);
             setSize(300, 300);
-
+            poly = poli;
         }
 
     }
