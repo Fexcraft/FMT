@@ -276,7 +276,7 @@ public class GGR {
 		pos = new Vector3f(initial);
 		hor = hordef;
 		ver = verdef;
-		movemod = 10f;
+		movemod = 1f;
 		w_down = s_down = a_down = d_down = false;
 		space_down = shift_down = false;
 	}
