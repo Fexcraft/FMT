@@ -6,18 +6,8 @@ import static org.liquidengine.legui.system.renderer.nvg.util.NvgRenderUtils.res
 
 import java.util.ArrayList;
 
-import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.polygon.Group;
-import net.fexcraft.app.fmt.polygon.Polygon;
-import net.fexcraft.app.fmt.polygon.uv.Face;
-import net.fexcraft.app.fmt.polygon.uv.NoFace;
-import net.fexcraft.app.fmt.settings.Settings;
-import net.fexcraft.app.fmt.update.UpdateHandler;
-import net.fexcraft.app.fmt.update.UpdateHandler.UpdateHolder;
-import net.fexcraft.app.fmt.update.UpdateType;
 import org.joml.Vector2f;
 import org.liquidengine.legui.component.Component;
-import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.ScrollablePanel;
 import org.liquidengine.legui.component.SelectBox;
 import org.liquidengine.legui.component.Widget;
@@ -27,6 +17,18 @@ import org.liquidengine.legui.style.color.ColorConstants;
 import org.liquidengine.legui.system.context.Context;
 import org.liquidengine.legui.system.renderer.nvg.component.NvgDefaultComponentRenderer;
 
+import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.polygon.Group;
+import net.fexcraft.app.fmt.polygon.Polygon;
+import net.fexcraft.app.fmt.polygon.uv.Face;
+import net.fexcraft.app.fmt.polygon.uv.NoFace;
+import net.fexcraft.app.fmt.settings.Settings;
+import net.fexcraft.app.fmt.texture.TextureGroup;
+import net.fexcraft.app.fmt.texture.TextureManager;
+import net.fexcraft.app.fmt.update.UpdateHandler;
+import net.fexcraft.app.fmt.update.UpdateHandler.UpdateHolder;
+import net.fexcraft.app.fmt.update.UpdateType;
+
 public class UVViewer extends Widget {
 
     public static UVViewer INSTANCE;
@@ -34,24 +36,29 @@ public class UVViewer extends Widget {
 
     private UVViewer(){
         getTitleTextState().setText(translate("uvviewer.title"));
-        int width = 650, height = 580;
+        int width = 552, height = 599;
         setSize(width, height);
         setPosition(FMT.WIDTH / 2 - width / 2, FMT.HEIGHT / 2 - height / 2);
-        setResizable(false);
         Settings.applyComponentTheme(getContainer());
         UpdateHolder holder = new UpdateHolder();
         Component con = getContainer();
         //
-        ScrollablePanel panel = new ScrollablePanel(width - 570, 20, 522, 522);
-        View view = new View(panel, 0, 0, 512, 512, holder.sub());
+        ScrollablePanel panel = new ScrollablePanel(15.0F, 42.0F, 522.0F, 522.0F);
+        View view = new View(panel, 0.0F, 0.0F, 512.0F, 512.0F, holder.sub());
         panel.getContainer().add(view);
-        panel.getContainer().setSize(512, 512);
+        panel.getContainer().setSize(512.0F, 512.0F);
         con.add(panel);
-        con.add(new Icon(0, 32, 0, width - 42, 20, "./resources/textures/icons/uvviewer/borders.png", () -> {}).addTooltip("uvviewer.button.borders"));
-        con.add(new Icon(0, 32, 0, width - 42, 55, "./resources/textures/icons/uvviewer/only_pos.png", () -> {}).addTooltip("uvviewer.button.only_pos"));
-        con.add(new Icon(0, 32, 0, width - 42, 90, "./resources/textures/icons/uvviewer/texture.png", () -> {}).addTooltip("uvviewer.button.texture"));
-        con.add(new Icon(0, 32, 0, width - 42, 145, "./resources/textures/icons/uvviewer/zoom_in.png", () -> {}).addTooltip("uvviewer.button.zoom_in"));
-        con.add(new Icon(0, 32, 0, width - 42, 180, "./resources/textures/icons/uvviewer/zoom_out.png", () -> {}).addTooltip("uvviewer.button.zoom_out"));
+        con.add(new Icon(0, 32, 8, 15, 5, "./resources/textures/icons/uvviewer/borders.png", () -> {}).addTooltip("uvviewer.button.borders"));
+        con.add(new Icon(1, 32, 8, 15, 5, "./resources/textures/icons/uvviewer/only_pos.png", () -> {}).addTooltip("uvviewer.button.only_pos"));
+        con.add(new Icon(2, 32, 8, 15, 5, "./resources/textures/icons/uvviewer/texture.png", () -> {}).addTooltip("uvviewer.button.texture"));
+        con.add(new Icon(0, 32, 8, 160, 5, "./resources/textures/icons/uvviewer/zoom_in.png", () -> {}).addTooltip("uvviewer.button.zoom_in"));
+        con.add(new Icon(1, 32, 8, 160, 5, "./resources/textures/icons/uvviewer/zoom_out.png", () -> {}).addTooltip("uvviewer.button.zoom_out"));
+        //
+        SelectBox<String> tex = new SelectBox<>(255.0F, 5.0F, 280.0F, 32.0F);
+        for(TextureGroup group : TextureManager.getGroups()) tex.addElement(group.name);
+    	tex.setVisibleCount(8);
+    	tex.addSelectBoxChangeSelectionEventListener(lis -> {});
+    	con.add(tex);
         //
         addWidgetCloseEventListener(lis -> {});
         UpdateHandler.registerHolder(holder);
