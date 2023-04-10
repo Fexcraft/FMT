@@ -7,10 +7,13 @@ import static org.liquidengine.legui.system.renderer.nvg.util.NvgRenderUtils.res
 import java.util.ArrayList;
 
 import org.joml.Vector2f;
+import org.joml.Vector2fc;
 import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.ScrollablePanel;
 import org.liquidengine.legui.component.SelectBox;
 import org.liquidengine.legui.component.Widget;
+import org.liquidengine.legui.component.event.component.ChangeSizeEvent;
+import org.liquidengine.legui.component.misc.listener.widget.WidgetResizeButtonDragListener;
 import org.liquidengine.legui.style.Style;
 import org.liquidengine.legui.style.border.SimpleLineBorder;
 import org.liquidengine.legui.style.color.ColorConstants;
@@ -60,6 +63,21 @@ public class UVViewer extends Widget {
     	tex.addSelectBoxChangeSelectionEventListener(lis -> {});
     	con.add(tex);
         //
+        getListenerMap().addListener(ChangeSizeEvent.class, lis -> {
+            float x = lis.getNewSize().x(), y = lis.getNewSize().y();
+            boolean c = false;
+            if(x < 552){
+                x = 552;
+                c = true;
+            }
+            if(y < 599){
+                y = 599;
+                c = true;
+            }
+            if(c) setSize(x, y);
+            panel.setSize(x - 30, y - 77);
+            panel.getContainer().setSize(x - 30, y - 77);
+        });
         addWidgetCloseEventListener(lis -> {});
         UpdateHandler.registerHolder(holder);
         FMT.FRAME.getContainer().add(this);
