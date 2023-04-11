@@ -62,6 +62,9 @@ public class UVViewer extends Widget {
     	tex.setVisibleCount(8);
     	tex.addSelectBoxChangeSelectionEventListener(lis -> {});
     	con.add(tex);
+        holder.add(UpdateType.TEXGROUP_ADDED, uw -> refreshTexGroups(tex));
+        holder.add(UpdateType.TEXGROUP_REMOVED, uw -> refreshTexGroups(tex));
+        holder.add(UpdateType.TEXGROUP_RENAMED, uw -> refreshTexGroups(tex));
         //
         getListenerMap().addListener(ChangeSizeEvent.class, lis -> {
             float x = lis.getNewSize().x(), y = lis.getNewSize().y();
@@ -76,12 +79,15 @@ public class UVViewer extends Widget {
             }
             if(c) setSize(x, y);
             panel.setSize(x - 30, y - 77);
-            panel.getContainer().setSize(x - 30, y - 77);
+            panel.getContainer().setSize(x - 40, y - 87);
         });
         addWidgetCloseEventListener(lis -> {});
         UpdateHandler.registerHolder(holder);
         FMT.FRAME.getContainer().add(this);
         show();
+    }
+
+    private void refreshTexGroups(SelectBox<String> tex){
     }
 
     public static void toggle(){
