@@ -9,11 +9,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
+import net.fexcraft.app.fmt.update.UpdateEvent;
+import net.fexcraft.app.fmt.update.UpdateEvent.TexGroupAdded;
+import net.fexcraft.app.fmt.update.UpdateEvent.TexGroupRemoved;
 import org.lwjgl.stb.STBImageWrite;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.update.UpdateHandler;
-import net.fexcraft.app.fmt.update.UpdateType;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.ui.GenericDialog;
 
@@ -197,12 +199,12 @@ public class TextureManager {
 
 	public static void addGroup(TextureGroup group){
 		GROUPS.add(group);
-		UpdateHandler.update(UpdateType.TEXGROUP_ADDED, group);
+		UpdateHandler.update(new TexGroupAdded(group));
 	}
 
 	public static void clearGroups(){
 		for(TextureGroup group : GROUPS){
-			UpdateHandler.update(UpdateType.TEXGROUP_REMOVED, group);
+			UpdateHandler.update(new TexGroupRemoved(group));
 		}
 		GROUPS.clear();
 	}
@@ -233,7 +235,7 @@ public class TextureManager {
 			}
 		}
 		GROUPS.remove(texgroup);
-		UpdateHandler.update(UpdateType.TEXGROUP_REMOVED, texgroup);
+		UpdateHandler.update(new TexGroupRemoved(texgroup));
 	}
 
 	public static String[] getGroupNames(){

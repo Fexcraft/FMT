@@ -3,12 +3,14 @@ package net.fexcraft.app.fmt.ui.components;
 import static net.fexcraft.app.fmt.utils.Translator.translate;
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
+import net.fexcraft.app.fmt.update.UpdateEvent.PainterColor;
+import net.fexcraft.app.fmt.update.UpdateEvent.PainterTool;
+import net.fexcraft.app.fmt.update.UpdateEvent.PickMode;
 import org.liquidengine.legui.component.ImageView;
 import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.image.StbBackedLoadableImage;
 
-import net.fexcraft.app.fmt.update.UpdateType;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TexturePainter;
 import net.fexcraft.app.fmt.texture.TexturePainter.Tool;
@@ -40,15 +42,14 @@ public class CurrentColor extends EditorComponent {
 			TexturePainter.updateColor(c, false);
 		}, L5, (float)row(1), Editor.CWIDTH - 27.5f, (float)HEIGHT, palette_png).apply(TexturePainter.SECONDARY.packed));
 		this.add(icon2 = new ColorPickerIcon(row(), false));
-		updateholder.add(UpdateType.PAINTER_COLOR, vals -> {
-			((boolean)vals.get(1) ? field1 : field2).apply((int)vals.get(0) + 0f);
+		updcom.add(PainterColor.class, event -> {
+			(event.primary() ? field1 : field2).apply(event.value());
 		});
-		updateholder.add(UpdateType.PICK_MODE, vals -> {
-			PickType type = vals.get(0);
-			icon1.setImage(type == PickType.COLOR1 ? picker_act : picker_png);
-			icon2.setImage(type == PickType.COLOR2 ? picker_act : picker_png);
+		updcom.add(PickMode.class, event -> {
+			icon1.setImage(event.type() == PickType.COLOR1 ? picker_act : picker_png);
+			icon2.setImage(event.type() == PickType.COLOR2 ? picker_act : picker_png);
 		});
-		updateholder.add(UpdateType.PAINTER_TOOL, vals -> updateToolButton());
+		updcom.add(PainterTool.class, event -> updateToolButton());
 		row += 5;
 		this.add(tool = new RunButton(translate(LANG_PREFIX + id + ".active_tool"), L5, row(1), LW, HEIGHT, () -> TexturePainter.setTool(Tool.NONE)));
 		updateToolButton();

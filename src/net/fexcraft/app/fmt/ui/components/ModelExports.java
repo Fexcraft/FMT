@@ -6,6 +6,8 @@ import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLIC
 import java.util.ArrayList;
 import java.util.Map.Entry;
 
+import net.fexcraft.app.fmt.update.UpdateEvent.ModelExportValue;
+import net.fexcraft.app.fmt.update.UpdateEvent.ModelLoad;
 import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.component.Dialog;
 import org.liquidengine.legui.component.Label;
@@ -15,7 +17,6 @@ import org.liquidengine.legui.listener.MouseClickEventListener;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.update.UpdateHandler;
-import net.fexcraft.app.fmt.update.UpdateType;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.ui.fields.RunButton;
@@ -38,8 +39,8 @@ public class ModelExports extends EditorComponent {
 		values.setPosition(L5, row(1));
 		values.setSize(LW, HEIGHT - 2);
 		values.setVisibleCount(12);
-		updateholder.add(UpdateType.MODEL_LOAD, vals -> updateValuesBox());
-		updateholder.add(UpdateType.MODEL_EXPORT_VALUE, vals -> updateValuesBox());
+		updcom.add(ModelLoad.class, event -> updateValuesBox());
+		updcom.add(ModelExportValue.class, event -> updateValuesBox());
 		values.addSelectBoxChangeSelectionEventListener(listener -> updateCurrentField(listener.getNewValue()));
 		this.add(currval = new TextField("", L5, row(1), LW, HEIGHT - 2));
 		this.add(new RunButton(LANG_PREFIX + genid + ".update", F20, row(1), F2S, HEIGHT, () -> updateValue()));
@@ -101,7 +102,7 @@ public class ModelExports extends EditorComponent {
 		if(curridx >= 0){
 			FMT.MODEL.export_listed_values.get(current).set(curridx, currval.getTextState().getText());
 		}
-		UpdateHandler.update(UpdateType.MODEL_EXPORT_VALUE);
+		UpdateHandler.update(new ModelExportValue(null, null, false));
 	}
 
 	private void removeValue(){
@@ -119,7 +120,7 @@ public class ModelExports extends EditorComponent {
 		if(curridx >= 0){
 			FMT.MODEL.export_listed_values.get(current).remove(curridx);
 		}
-		UpdateHandler.update(UpdateType.MODEL_EXPORT_VALUE);
+		UpdateHandler.update(new ModelExportValue(null, null, false));
 	}
 
 	private void addEntryDialog(){
@@ -144,7 +145,7 @@ public class ModelExports extends EditorComponent {
         		boolean islist = FMT.MODEL.export_listed_values.containsKey(name);
         		if(islist) FMT.MODEL.export_listed_values.get(name).add(value);
         		else FMT.MODEL.export_values.put(name, value);
-    			UpdateHandler.update(UpdateType.MODEL_EXPORT_VALUE, name, value, islist);
+    			UpdateHandler.update(new ModelExportValue(name, value, islist));
         		dialog.close();
         	}
         });
@@ -175,7 +176,7 @@ public class ModelExports extends EditorComponent {
         		String name = field.getTextState().getText();
         		if(!FMT.MODEL.export_listed_values.containsKey(name)){
         			FMT.MODEL.export_listed_values.put(name, new ArrayList<>());
-        			UpdateHandler.update(UpdateType.MODEL_EXPORT_VALUE, name);
+        			UpdateHandler.update(new ModelExportValue(name, null, true));
         		}
         		dialog.close();
         	}

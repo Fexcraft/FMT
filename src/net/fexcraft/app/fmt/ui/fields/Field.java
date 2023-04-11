@@ -4,6 +4,11 @@ import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLIC
 
 import java.util.function.Consumer;
 
+import net.fexcraft.app.fmt.update.UpdateEvent;
+import net.fexcraft.app.fmt.update.UpdateEvent.GroupSelected;
+import net.fexcraft.app.fmt.update.UpdateEvent.PolygonSelected;
+import net.fexcraft.app.fmt.update.UpdateEvent.PolygonValueEvent;
+import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
 import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.event.textinput.TextInputContentChangeEvent;
 import org.liquidengine.legui.event.CursorEnterEvent;
@@ -18,10 +23,6 @@ import org.lwjgl.glfw.GLFW;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
-import net.fexcraft.app.fmt.update.UpdateHandler.UpdateHolder;
-import net.fexcraft.app.fmt.update.UpdateHandler.UpdateWrapper;
-import net.fexcraft.app.fmt.update.UpdateType;
-import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.settings.Setting;
 import net.fexcraft.app.fmt.ui.EditorComponent;
 
@@ -91,25 +92,27 @@ public interface Field {
 		}
 	}
 
-	public static void setupHolderAndListeners(Field field, UpdateHolder rolder, PolygonValue val){
-		UpdateHolder holder = rolder.sub();
-		holder.add(UpdateType.POLYGON_VALUE, cons -> {
-			if(!(boolean)cons.get(2)) return;
-			if(cons.get(1).equals(val)){
-				field.apply(((Polygon)cons.objs[0]).getValue(val));
+	public static void setupUpdatesAndListeners(Field field, UpdateCompound updcom, PolygonValue val){
+		updcom.add(PolygonValueEvent.class, event -> {
+			if(!event.first()) return;
+			if(event.value().equals(val)){
+				field.apply(event.polygon().getValue(val));
 			}
 		});
-		Consumer<UpdateWrapper> consumer = cons -> {
-			int old = cons.get(1);
-			if(old < 0) return;
-			int size = cons.get(2);
-			if(size == 0) field.apply(0);
-			else if(size == 1 || (old == 0 && size > 0)){
+		updcom.add(PolygonSelected.class, event -> {
+			if(event.prevselected() < 0) return;
+			if(event.selected() == 0) field.apply(0);
+			else if(event.selected() == 1 || (event.prevselected() == 0 && event.selected() == 0)){
 				field.apply(FMT.MODEL.first_selected().getValue(val));
 			}
-		};
-		holder.add(UpdateType.POLYGON_SELECTED, consumer);
-		holder.add(UpdateType.GROUP_SELECTED, consumer);
+		});
+		updcom.add(GroupSelected.class, event -> {
+			if(event.prevselected() < 0) return;
+			if(event.selected() == 0) field.apply(0);
+			else if(event.selected() == 1 || (event.prevselected() == 0 && event.selected() == 0)){
+				field.apply(FMT.MODEL.first_selected().getValue(val));
+			}
+		});
 		if(field instanceof NumberField || field instanceof ColorField){
 			Component com = (Component)field;
 			if(field instanceof NumberField){

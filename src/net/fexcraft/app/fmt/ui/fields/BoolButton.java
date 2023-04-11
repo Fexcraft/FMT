@@ -25,7 +25,7 @@ public class BoolButton extends Button implements Field {
 		Settings.applyBorderless(this);
 		Settings.applyGrayText(this);
 		Field.setupHoverCheck(this);
-		Field.setupHolderAndListeners(this, comp.getUpdateHolder(), val);
+		Field.setupUpdatesAndListeners(this, comp.getUpdCom(), val);
 	}
 
 	public BoolButton(Setting<Boolean> setting, float x, float y, float w, float h){

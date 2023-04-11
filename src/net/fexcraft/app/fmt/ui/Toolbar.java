@@ -3,13 +3,14 @@ package net.fexcraft.app.fmt.ui;
 import java.util.ArrayList;
 
 import net.fexcraft.app.fmt.port.im.ImportManager;
+import net.fexcraft.app.fmt.update.UpdateEvent.EditorCreated;
+import net.fexcraft.app.fmt.update.UpdateEvent.EditorRemoved;
+import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
 import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.Panel;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.update.UpdateHandler;
-import net.fexcraft.app.fmt.update.UpdateHandler.UpdateHolder;
-import net.fexcraft.app.fmt.update.UpdateType;
 import net.fexcraft.app.fmt.port.ex.ExportManager;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.ToolbarMenu.MenuButton;
@@ -21,13 +22,12 @@ import net.fexcraft.app.fmt.utils.SaveHandler;
 public class Toolbar extends Panel {
 	
 	public static final Runnable NOTHING = () -> {};
-	private UpdateHolder holder;
+	private UpdateCompound updcom = new UpdateCompound();
 
 	public Toolbar(){
 		super(0, 0, FMT.WIDTH, 30);
 		this.setFocusable(false);
 		Settings.applyBorderless(this);
-		holder = new UpdateHolder();
 		this.add(new Icon(0, "./resources/textures/icons/toolbar/info.png", () -> FMT.openLink("https://fexcraft.net/wiki/app/fmt")).addTooltip("toolbar.icon.info"));
 		this.add(new Icon(1, "./resources/textures/icons/toolbar/settings.png", () -> SettingsDialog.open()).addTooltip("toolbar.icon.settings"));
 		this.add(new Icon(2, "./resources/textures/icons/toolbar/profile.png", () -> ProfileDialog.open()).addTooltip("toolbar.icon.profile"));
@@ -102,8 +102,8 @@ public class Toolbar extends Panel {
 		this.add(new ToolbarMenu(2, "editors",
 			new MenuButton(0, "editors.new")
 		));
-		holder.add(UpdateType.EDITOR_CREATED, wrap -> {
-			Editor editor = wrap.get(0);
+		updcom.get(EditorCreated.class).add(event -> {
+			Editor editor = event.editor();
 			ToolbarMenu menu = ToolbarMenu.MENUS.get(editor.tree ? "trees" : "editors");
 			MenuButton button = new MenuButton(menu.components.size(), editor.id, editor.name);
 			button.addListener(() -> editor.toggle());
@@ -111,9 +111,8 @@ public class Toolbar extends Panel {
 			menu.layer.regComponent(button);
 			menu.layer.refreshSize();
 		});
-		holder.add(UpdateType.EDITOR_REMOVED, wrap -> {
-			Editor editor = wrap.get(0);
-			if(editor.tree) return;
+		updcom.get(EditorRemoved.class).add(event -> {
+			if(event.editor().tree) return;
 			//TODO
 		});
 		this.add(new ToolbarMenu(3, "trees"));
@@ -131,7 +130,7 @@ public class Toolbar extends Panel {
 		));
 		this.add(new ToolbarMenu(5, "helpers"));
 		this.add(new ToolbarMenu(6, "exit", () -> FMT.close(0)));
-		UpdateHandler.registerHolder(holder);
+		UpdateHandler.register(updcom);
 	}
 
 }

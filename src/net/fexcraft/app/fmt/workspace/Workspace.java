@@ -3,8 +3,10 @@ package net.fexcraft.app.fmt.workspace;
 import java.io.File;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.update.UpdateEvent;
+import net.fexcraft.app.fmt.update.UpdateEvent.WorkspaceName;
+import net.fexcraft.app.fmt.update.UpdateEvent.WorkspaceRoot;
 import net.fexcraft.app.fmt.update.UpdateHandler;
-import net.fexcraft.app.fmt.update.UpdateType;
 import net.fexcraft.app.fmt.settings.Setting;
 import net.fexcraft.app.fmt.settings.Settings;
 
@@ -23,12 +25,12 @@ public class Workspace {
 			String oname = name;
 			name = setting.value();
 			FMT.updateTitle();
-			UpdateHandler.update(UpdateType.WORKSPACE_NAME, oname, name);
+			UpdateHandler.update(new WorkspaceName(oname, name));
 		}
 		if(setting.id.equals("root")){
 			File oroot = root_folder;
 			root_folder = new File((String)setting.value());
-			UpdateHandler.update(UpdateType.WORKSPACE_ROOT, oroot, root_folder);
+			UpdateHandler.update(new WorkspaceRoot(oroot, root_folder));
 		}
 	}
 	

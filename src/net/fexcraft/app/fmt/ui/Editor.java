@@ -9,6 +9,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import net.fexcraft.app.fmt.update.UpdateEvent;
+import net.fexcraft.app.fmt.update.UpdateEvent.EditorCreated;
 import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.Dialog;
@@ -30,7 +32,6 @@ import org.liquidengine.legui.style.Style.DisplayType;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.update.UpdateHandler;
-import net.fexcraft.app.fmt.update.UpdateType;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.fields.TextField;
 import net.fexcraft.app.fmt.utils.Logging;
@@ -92,7 +93,7 @@ public class Editor extends Component {
 		sid.getStyle().setDisplay(DisplayType.NONE);
 		align();
 		hide();
-		UpdateHandler.update(UpdateType.EDITOR_CREATED, this);
+		UpdateHandler.update(new EditorCreated(this));
 	}
 
 	protected float topSpace(){
@@ -224,7 +225,7 @@ public class Editor extends Component {
 		com.editor = this;
 		components.add(com);
 		scrollable.getContainer().add(com);
-		UpdateHandler.registerHolder(com.getUpdateHolder());
+		UpdateHandler.register(com.updcom);
 		alignComponents();
 	}
 
@@ -232,7 +233,7 @@ public class Editor extends Component {
 		if(com == null) return;
 		components.remove(com);
 		scrollable.getContainer().remove(com);
-		UpdateHandler.deregisterHolder(com.getUpdateHolder());
+		UpdateHandler.deregister(com.updcom);
 		for(int i = 0; i < components.size(); i++){
 			components.get(i).index = i;
 		}

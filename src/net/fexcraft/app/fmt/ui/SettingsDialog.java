@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
 import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.Dialog;
@@ -44,7 +45,7 @@ public class SettingsDialog {
 	public static final void open(String title, List<Setting<?>> list, String catid, Runnable run){
 		if(dialog != null) dialog.close();
 		panels.clear();
-		UpdateHolder holder = new UpdateHolder();
+		UpdateCompound updcom = new UpdateCompound();
 		boolean hlist = list != null;
 		int width = 530, height = 320, minus = hlist ? 0 : 110;
 		if(!hlist) width += minus;
@@ -71,25 +72,25 @@ public class SettingsDialog {
 		}
 		//
 		if(hlist){
-			addSinglePanel(list, catid, holder, width, height, run);
+			addSinglePanel(list, catid, updcom, width, height, run);
 		}
 		else{
 			for(Entry<String, Map<String, Setting<?>>> entry : Settings.SETTINGS.entrySet()){
-				addPanel(entry, holder, width, height);
+				addPanel(entry, updcom, width, height);
 			}
 		}
 		if(!hlist) show(Settings.GENERAL);
-		UpdateHandler.registerHolder(holder);
+		UpdateHandler.register(updcom);
 		if(!hlist){
 			dialog.addWidgetCloseEventListener(lis -> {
-				UpdateHandler.deregisterHolder(holder);
+				UpdateHandler.deregister(updcom);
 				if(!hlist) Settings.refresh();
 			});
 		}
 		dialog.show(FMT.FRAME);
 	}
 	
-	private static void addSinglePanel(List<Setting<?>> list, String catid, UpdateHolder holder, int width, int height, Runnable run){
+	private static void addSinglePanel(List<Setting<?>> list, String catid, UpdateCompound updcom, int width, int height, Runnable run){
 		Panel wrapper = new Panel(10, 10, width - 20, height - 40);
 		ScrollablePanel panel = new ScrollablePanel(0, 0, width - 20, height - 40);
 		panel.getContainer().setSize(width - 20, list.size() * 30 + 5);
@@ -99,7 +100,7 @@ public class SettingsDialog {
 			Settings.applyBorderless(label);
 			label.getStyle().setHorizontalAlign(HorizontalAlign.RIGHT);
 			panel.getContainer().add(label);
-			Component comp = setting.createField(panel.getContainer(), holder, 215, j[0] * 30 + 5, w[0] - 250, 25);
+			Component comp = setting.createField(panel.getContainer(), updcom, 215, j[0] * 30 + 5, w[0] - 250, 25);
 			if(comp != null) panel.getContainer().add(comp);
 			else {
 				label = new Label(translate("settings.no_field_found"), 215, j[0] * 30 + 5, w[0] - 250, 25);
@@ -123,7 +124,7 @@ public class SettingsDialog {
 		panels.put("exporter", wrapper);
 	}
 
-	private static void addPanel(Entry<String, Map<String, Setting<?>>> entry, UpdateHolder holder, int width, int height){
+	private static void addPanel(Entry<String, Map<String, Setting<?>>> entry, UpdateCompound updcom, int width, int height){
 		Panel wrapper = new Panel(120, 10, width - 130, height - 40);
 		Map<String, Setting<?>> settings = entry.getValue();
 		ScrollablePanel panel = new ScrollablePanel(0, 0, width - 130, height - 40);
@@ -135,7 +136,7 @@ public class SettingsDialog {
 			Settings.applyBorderless(label);
 			label.getStyle().setHorizontalAlign(HorizontalAlign.RIGHT);
 			panel.getContainer().add(label);
-			Component comp = setting.createField(panel.getContainer(), holder, 215, j[0] * 30 + 5, w[0] - 360, 25);
+			Component comp = setting.createField(panel.getContainer(), updcom, 215, j[0] * 30 + 5, w[0] - 360, 25);
 			if(comp != null) panel.getContainer().add(comp);
 			else {
 				label = new Label(translate("settings.no_field_found"), 215, j[0] * 30 + 5, w[0] - 360, 25);

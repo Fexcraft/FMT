@@ -1,8 +1,10 @@
 package net.fexcraft.app.fmt.port.im;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.update.UpdateEvent;
+import net.fexcraft.app.fmt.update.UpdateEvent.ModelLoad;
+import net.fexcraft.app.fmt.update.UpdateEvent.ModelUnload;
 import net.fexcraft.app.fmt.update.UpdateHandler;
-import net.fexcraft.app.fmt.update.UpdateType;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.settings.Settings;
@@ -94,14 +96,14 @@ public class ImportManager {
 			}
 			Runnable run = () -> {
 				Model old = FMT.MODEL;
-				UpdateHandler.update(UpdateType.MODEL_UNLOAD, FMT.MODEL);
+				UpdateHandler.update(new ModelUnload(FMT.MODEL));
 				FMT.MODEL = new Model(null, "imported model");
 				FMT.MODEL.orient = old.orient;
 				FMT.MODEL.format = old.format;
 				DiscordUtil.update(Settings.DISCORD_RESET_ON_NEW.value);
 				GenericDialog.showOK("import.result", null, null, importer._import(FMT.MODEL, file));
 				FMT.updateTitle();
-				UpdateHandler.update(UpdateType.MODEL_LOAD, FMT.MODEL);
+				UpdateHandler.update(new ModelLoad(FMT.MODEL));
 				FMT.MODEL.recompile();
 			};
 			if(importer.settings().size() > 0){

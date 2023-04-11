@@ -6,6 +6,8 @@ import static org.liquidengine.legui.system.renderer.nvg.util.NvgRenderUtils.res
 
 import java.util.ArrayList;
 
+import net.fexcraft.app.fmt.update.UpdateEvent.*;
+import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
 import org.liquidengine.legui.component.Component;
@@ -30,7 +32,6 @@ import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateHolder;
-import net.fexcraft.app.fmt.update.UpdateType;
 
 public class UVViewer extends Widget {
 
@@ -43,11 +44,11 @@ public class UVViewer extends Widget {
         setSize(width, height);
         setPosition(FMT.WIDTH / 2 - width / 2, FMT.HEIGHT / 2 - height / 2);
         Settings.applyComponentTheme(getContainer());
-        UpdateHolder holder = new UpdateHolder();
+        UpdateCompound updcom = new UpdateCompound();
         Component con = getContainer();
         //
         ScrollablePanel panel = new ScrollablePanel(15.0F, 42.0F, 522.0F, 522.0F);
-        View view = new View(panel, 0.0F, 0.0F, 512.0F, 512.0F, holder.sub());
+        View view = new View(panel, 0.0F, 0.0F, 512.0F, 512.0F, updcom);
         panel.getContainer().add(view);
         panel.getContainer().setSize(512.0F, 512.0F);
         con.add(panel);
@@ -62,9 +63,9 @@ public class UVViewer extends Widget {
     	tex.setVisibleCount(8);
     	tex.addSelectBoxChangeSelectionEventListener(lis -> {});
     	con.add(tex);
-        holder.add(UpdateType.TEXGROUP_ADDED, uw -> refreshTexGroups(tex));
-        holder.add(UpdateType.TEXGROUP_REMOVED, uw -> refreshTexGroups(tex));
-        holder.add(UpdateType.TEXGROUP_RENAMED, uw -> refreshTexGroups(tex));
+        updcom.add(TexGroupAdded.class, e -> refreshTexGroups(tex));
+        updcom.add(TexGroupRemoved.class, e -> refreshTexGroups(tex));
+        updcom.add(TexGroupRenamed.class, e -> refreshTexGroups(tex));
         //
         getListenerMap().addListener(ChangeSizeEvent.class, lis -> {
             float x = lis.getNewSize().x(), y = lis.getNewSize().y();
@@ -82,7 +83,7 @@ public class UVViewer extends Widget {
             panel.getContainer().setSize(x - 40, y - 87);
         });
         addWidgetCloseEventListener(lis -> {});
-        UpdateHandler.registerHolder(holder);
+        UpdateHandler.register(updcom);
         FMT.FRAME.getContainer().add(this);
         show();
     }
@@ -126,7 +127,7 @@ public class UVViewer extends Widget {
         private ArrayList<UvElm> elements = new ArrayList<>();
         private ScrollablePanel root;
 
-        public View(ScrollablePanel panel, float x, float y, float w, float h, UpdateHolder holder){
+        public View(ScrollablePanel panel, float x, float y, float w, float h, UpdateCompound updcom){
             setSize(w, h);
             setPosition(x, y);
             getStyle().setBorderRadius(0);
@@ -140,16 +141,15 @@ public class UVViewer extends Widget {
                     add(elm);
                 }
             }
-            holder.add(UpdateType.POLYGON_ADDED, uw -> {
-                UvElm elm = new UvElm(uw.get(1));
+            updcom.add(PolygonAdded.class, e -> {
+                UvElm elm = new UvElm(e.polygon());
                 elements.add(elm);
                 add(elm);
             });
-            holder.add(UpdateType.POLYGON_REMOVED, uw -> {
-                Polygon poly = uw.get(1);
+            updcom.add(PolygonRemoved.class, e -> {
                 UvElm ulm = null;
                 for(UvElm elm : elements){
-                    if(elm.poly == poly){
+                    if(elm.poly == e.polygon()){
                         ulm = elm;
                         break;
                     }

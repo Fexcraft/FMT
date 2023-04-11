@@ -43,7 +43,7 @@ public class ColorField extends TextInput implements Field {
 		Settings.applyGrayText(this);
 		Field.setupHoverCheck(this);
 		poly_value = polyval;
-		Field.setupHolderAndListeners(this, root.getUpdateHolder(), polyval);
+		Field.setupUpdatesAndListeners(this, root.getUpdCom(), polyval);
 		addTextInputContentChangeEventListener(event -> {
 			Field.validateColorString(event); value = null;
 		});

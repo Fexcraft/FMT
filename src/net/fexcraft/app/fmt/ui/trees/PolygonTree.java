@@ -1,8 +1,12 @@
 package net.fexcraft.app.fmt.ui.trees;
 
+import net.fexcraft.app.fmt.update.UpdateEvent.GroupAdded;
+import net.fexcraft.app.fmt.update.UpdateEvent.GroupRemoved;
+import net.fexcraft.app.fmt.update.UpdateEvent.ModelLoad;
+import net.fexcraft.app.fmt.update.UpdateEvent.ModelUnload;
 import net.fexcraft.app.fmt.update.UpdateHandler;
+import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateHolder;
-import net.fexcraft.app.fmt.update.UpdateType;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.ui.Editor;
@@ -11,16 +15,16 @@ import net.fexcraft.app.json.JsonMap;
 
 public class PolygonTree extends Editor {
 	
-	private static UpdateHolder holder = new UpdateHolder();
+	private static UpdateCompound updcom = new UpdateCompound();
 
 	public PolygonTree(String name, boolean alignment){
 		super(TREES.get(0), name == null ? "Polygon Tree" : name, true, alignment);
 		this.addTreeIcons(0);
-		holder.add(UpdateType.GROUP_ADDED, wrp -> addGroup(wrp.get(1)));
-		holder.add(UpdateType.GROUP_REMOVED, wrp -> remGroup(wrp.get(1)));
-		holder.add(UpdateType.MODEL_LOAD, wrp -> resizeGroups(wrp.get(0)));
-		holder.add(UpdateType.MODEL_UNLOAD, wrp -> removeGroups(wrp.get(0)));
-		UpdateHandler.registerHolder(holder);
+		updcom.add(GroupAdded.class, event -> addGroup(event.group()));
+		updcom.add(GroupRemoved.class, event -> remGroup(event.group()));
+		updcom.add(ModelLoad.class, event -> resizeGroups(event.model()));
+		updcom.add(ModelUnload.class, event -> removeGroups(event.model()));
+		UpdateHandler.register(updcom);
 	}
 
 	public PolygonTree(String key, JsonMap obj){

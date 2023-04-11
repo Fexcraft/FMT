@@ -4,11 +4,12 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.function.Consumer;
 
+import net.fexcraft.app.fmt.update.UpdateEvent;
+import net.fexcraft.app.fmt.update.UpdateEvent.PickMode;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.update.UpdateHandler;
-import net.fexcraft.app.fmt.update.UpdateType;
 import net.fexcraft.app.fmt.polygon.Arrows;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Polygon;
@@ -84,7 +85,7 @@ public class Picker {
 	public static void reset(){
 		TYPE = PickType.NONE;
 		TASK = PickTask.NONE;
-		UpdateHandler.update(UpdateType.PICK_MODE, TYPE, TASK, false);
+		UpdateHandler.update(new PickMode(TYPE, TASK, false));
 	}
 
 	public static void pick(PickType type, PickTask task, boolean off){
@@ -92,7 +93,7 @@ public class Picker {
 		TASK = task;
 		offcenter = off;
 		polygon = null;
-		UpdateHandler.update(UpdateType.PICK_MODE, type, task, off);
+		UpdateHandler.update(new PickMode(type, task, off));
 	}
 
 	public static void process(){

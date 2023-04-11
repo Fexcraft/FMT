@@ -1,14 +1,15 @@
 package net.fexcraft.app.fmt.polygon;
 
 import static net.fexcraft.app.fmt.update.UpdateHandler.update;
-import static net.fexcraft.app.fmt.update.UpdateType.POLYGON_REMOVED;
 
 import java.util.ArrayList;
 
+import net.fexcraft.app.fmt.update.UpdateEvent;
+import net.fexcraft.app.fmt.update.UpdateEvent.GroupRenamed;
+import net.fexcraft.app.fmt.update.UpdateEvent.PolygonRemoved;
 import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.update.UpdateHandler;
-import net.fexcraft.app.fmt.update.UpdateType;
 import net.fexcraft.app.fmt.polygon.PolyRenderer.DrawMode;
 import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.lib.common.math.RGB;
@@ -48,7 +49,7 @@ public class Group extends ArrayList<Polygon> {
 		Polygon poly = super.remove(index);
 		poly.group(null);
 		if(poly.selected) model.select(poly);
-		update(POLYGON_REMOVED, new Object[]{ this, poly });
+		update(new PolygonRemoved(this, poly));
 		return poly;
 	}
 	
@@ -57,7 +58,7 @@ public class Group extends ArrayList<Polygon> {
 		if(super.remove(poly)){
 			poly.group(null);
 			if(poly.selected) model.select(poly);
-			update(POLYGON_REMOVED, new Object[]{ this, poly });
+			update(new PolygonRemoved(this, poly));
 			return true;
 		}
 		return false;
@@ -107,7 +108,7 @@ public class Group extends ArrayList<Polygon> {
 
 	public void reid(String name){
 		this.id = name;
-		UpdateHandler.update(UpdateType.GROUP_RENAMED, this, name);
+		UpdateHandler.update(new GroupRenamed(this, name));
 	}
 
     public String exportId(){

@@ -2,6 +2,7 @@ package net.fexcraft.app.fmt.settings;
 
 import java.util.function.Consumer;
 
+import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
 import org.liquidengine.legui.component.Component;
 
 import net.fexcraft.app.fmt.FMT;
@@ -81,7 +82,7 @@ public class Setting<TYPE> {
 		return this;
 	}
 
-	public Component createField(Component root, UpdateHolder holder, int x, int y, int w, int h){
+	public Component createField(Component root, UpdateCompound updcom, int x, int y, int w, int h){
 		if(value instanceof Boolean){
 			return new BoolButton((Setting<Boolean>)this, x, y, w, h);
 		}

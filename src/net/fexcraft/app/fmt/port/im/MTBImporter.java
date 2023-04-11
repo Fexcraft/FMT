@@ -1,8 +1,9 @@
 package net.fexcraft.app.fmt.port.im;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.update.UpdateEvent;
+import net.fexcraft.app.fmt.update.UpdateEvent.ModelTexGroup;
 import net.fexcraft.app.fmt.update.UpdateHandler;
-import net.fexcraft.app.fmt.update.UpdateType;
 import net.fexcraft.app.fmt.polygon.Box;
 import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.polygon.Shapebox;
@@ -161,7 +162,7 @@ public class MTBImporter implements Importer {
                             TextureManager.addGroup(new TextureGroup("default"));
                             model.texgroup = TextureManager.getGroup("default");
                             model.texgroup.reAssignTexture();
-                            UpdateHandler.update(UpdateType.MODEL_TEXGROUP, FMT.MODEL.texgroup);
+                            UpdateHandler.update(new ModelTexGroup(FMT.MODEL.texgroup));
                         }
                         else{
                             log("Texture in MTB is blank, not creating a group.");

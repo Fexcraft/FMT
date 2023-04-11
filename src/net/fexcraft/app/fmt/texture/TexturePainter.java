@@ -2,11 +2,14 @@ package net.fexcraft.app.fmt.texture;
 
 import static net.fexcraft.app.fmt.utils.Translator.translate;
 
-import net.fexcraft.app.fmt.update.UpdateHandler;
-import net.fexcraft.app.fmt.update.UpdateType;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.polygon.uv.Face;
+import net.fexcraft.app.fmt.ui.components.PainterTools;
+import net.fexcraft.app.fmt.update.UpdateEvent;
+import net.fexcraft.app.fmt.update.UpdateEvent.PainterColor;
+import net.fexcraft.app.fmt.update.UpdateEvent.PainterTool;
+import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.utils.Picker;
 import net.fexcraft.app.fmt.utils.Picker.PickType;
 import net.fexcraft.lib.common.math.RGB;
@@ -35,7 +38,7 @@ public class TexturePainter {
 	public static void updateColor(Integer value, boolean primary){
 		if(primary) PRIMARY.packed = value;
 		else SECONDARY.packed = value;
-		UpdateHandler.update(UpdateType.PAINTER_COLOR, value, primary);
+		UpdateHandler.update(new PainterColor(value, primary));
 	}
 	
 	public static enum Selection {
@@ -84,13 +87,13 @@ public class TexturePainter {
 	public static void setTool(Tool tool){
 		TOOL = tool;
 		if(SELMODE == Selection.NONE) SELMODE = Selection.PIXEL;
-		UpdateHandler.update(UpdateType.PAINTER_TOOL, tool, SELMODE);
+		UpdateHandler.update(new PainterTool(tool, SELMODE));
 	}
 
 	public static void setSelection(Selection sel){
 		SELMODE = sel;
 		if(TOOL == Tool.NONE) TOOL = Tool.BUCKET;
-		UpdateHandler.update(UpdateType.PAINTER_TOOL, TOOL, sel);
+		UpdateHandler.update(new PainterTool(TOOL, sel));
 	}
 
 	public static void paint(boolean primary, Polygon polygon, int face){

@@ -1,8 +1,6 @@
 package net.fexcraft.app.fmt.polygon;
 
 import static net.fexcraft.app.fmt.update.UpdateHandler.update;
-import static net.fexcraft.app.fmt.update.UpdateType.MODEL_AUTHOR;
-import static net.fexcraft.app.fmt.update.UpdateType.MODEL_LOAD;
 import static net.fexcraft.app.fmt.settings.Settings.ASK_POLYGON_REMOVAL;
 import static net.fexcraft.app.fmt.ui.fields.NumberField.round;
 import static net.fexcraft.app.fmt.utils.Translator.translate;
@@ -23,6 +21,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import net.fexcraft.app.fmt.update.UpdateEvent;
+import net.fexcraft.app.fmt.update.UpdateEvent.*;
 import org.joml.Vector3f;
 import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.component.Dialog;
@@ -34,7 +34,6 @@ import com.google.common.collect.ImmutableMap;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.update.UpdateHandler;
-import net.fexcraft.app.fmt.update.UpdateType;
 import net.fexcraft.app.fmt.polygon.PolyRenderer.DrawMode;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TextureGroup;
@@ -87,14 +86,14 @@ public class Model {
 	/** For now just for FMTB files. */
 	public Model load(){
 		SaveHandler.open(this, file);
-		update(MODEL_LOAD, this);
+		update(new ModelLoad(this));
 		if(FMT.MODEL == this) FMT.updateTitle();
 		return this;
 	}
 	
 	public final void addAuthor(String name, boolean locked){
 		authors.put(name, locked);
-		update(MODEL_AUTHOR, name);
+		update(new ModelAuthor(this, name));
 	}
 	
 	public final Map<String, Boolean> getAuthors(){
@@ -175,17 +174,17 @@ public class Model {
 	public void addGroup(String name){
 		Group group = new Group(this, name);
 		groups.add(group);
-		update(UpdateType.GROUP_ADDED, new Object[]{ this, group });
+		update(new GroupAdded(this, group));
 	}
 
 	public void addGroup(Group group){
 		groups.add(group);
-		update(UpdateType.GROUP_ADDED, new Object[]{ this, group });
+		update(new GroupAdded(this, group));
 	}
 	
 	public void remGroup(int i){
 		Group group = groups.remove(i);
-		update(UpdateType.GROUP_REMOVED, new Object[]{ this, group });
+		update(new GroupRemoved(this, group));
 	}
 	
 	public void remGroup(String id){
@@ -196,7 +195,7 @@ public class Model {
 	
 	public void remGroup(Group group){
 		if(groups.remove(group)){
-			update(UpdateType.GROUP_REMOVED, new Object[]{ this, group });
+			update(new GroupRemoved(this, group));
 		}
 	}
 	
@@ -260,15 +259,15 @@ public class Model {
 		float oval = poly.getValue(value);
 		float fval = field == null ? oval + alt : field.value();
 		poly.setValue(value, round(fval));
-		update(UpdateType.POLYGON_VALUE, poly, value, true);
-		if(value.doesUpdateMoreFields()) update(UpdateType.POLYGON_SELECTED, poly, selected.size(), selected.size());
+		update(new PolygonValueEvent(poly, value, true));
+		if(value.doesUpdateMoreFields()) update(new PolygonSelected(poly, selected.size(), selected.size()));
 		if(selected.size() > 1){
 			float diff = poly.getValue(value) - oval;
 			diff = round(diff);
 			for(int i = 1; i < selected.size(); i++){
 				poly = selected.get(i);
 				poly.setValue(value, round(poly.getValue(value) + diff));
-				update(UpdateType.POLYGON_VALUE, poly, value, false);
+				update(new PolygonValueEvent(poly, value, false));
 			}
 		}
 	}
@@ -280,7 +279,7 @@ public class Model {
 			if(!GGR.isAltDown()) clear_selection();
 			polygon.selected = selected.add(polygon);
 		}
-		update(UpdateType.POLYGON_SELECTED, polygon, old, selected.size());
+		update(new PolygonSelected(polygon, old, selected.size()));
 	}
 
 	private void clear_selection(){
@@ -289,7 +288,7 @@ public class Model {
 		}
 		for(Polygon poly : selected){
 			poly.selected = false;
-			update(UpdateType.POLYGON_SELECTED, poly, -1);
+			update(new PolygonSelected(poly, -1, -1));
 		}
 		selected.clear();
 	}
@@ -308,7 +307,7 @@ public class Model {
 			selected.addAll(group);
 			group.selected = true;
 		}
-		update(UpdateType.GROUP_SELECTED, group, old, selected.size());
+		update(new GroupSelected(group, old, selected.size()));
 	}
 
 	public void delsel(){
@@ -324,7 +323,7 @@ public class Model {
 		ArrayList<Polygon> selected = selection_copy();
 		selected.forEach(poly -> {
 			poly.visible = !poly.visible;
-			update(UpdateType.POLYGON_VISIBLITY, poly, poly.visible);
+			update(new PolygonVisibility(poly, poly.visible));
 		});
 	}
 
@@ -614,7 +613,7 @@ public class Model {
 		String old = name;
 		name = string;
 		FMT.updateTitle();
-		UpdateHandler.update(UpdateType.MODEL_RENAMED, this, name, old);
+		UpdateHandler.update(new ModelRenamed(this, old, name));
 	}
 
 }

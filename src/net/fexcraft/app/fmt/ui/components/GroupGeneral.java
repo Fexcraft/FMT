@@ -5,11 +5,14 @@ import static net.fexcraft.app.fmt.utils.Translator.translate;
 
 import java.util.ArrayList;
 
+import net.fexcraft.app.fmt.update.UpdateEvent.GroupSelected;
+import net.fexcraft.app.fmt.update.UpdateEvent.TexGroupAdded;
+import net.fexcraft.app.fmt.update.UpdateEvent.TexGroupRemoved;
+import net.fexcraft.app.fmt.update.UpdateEvent.TexGroupRenamed;
 import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.SelectBox;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.update.UpdateType;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.texture.TextureManager;
@@ -53,7 +56,7 @@ public class GroupGeneral extends EditorComponent {
 				group.recompile();
 			});
 		});
-		updateholder.add(UpdateType.GROUP_SELECTED, vals -> {
+		updcom.add(GroupSelected.class, event -> {
 			ArrayList<Group> list = FMT.MODEL.selected_groups();
 			if(list.size() == 0){
 				name.getTextState().setText(NOGROUPSEL);
@@ -73,9 +76,9 @@ public class GroupGeneral extends EditorComponent {
 		this.add(new Label(translate(LANG_PREFIX + genid + ".tex_group"), L5, row(1), LW, HEIGHT));
 		texgroups.setPosition(L5, row(1));
 		texgroups.setSize(LW, HEIGHT);
-		updateholder.add(UpdateType.TEXGROUP_ADDED, vals -> refreshTexGroupEntries());
-		updateholder.add(UpdateType.TEXGROUP_RENAMED, vals -> refreshTexGroupEntries());
-		updateholder.add(UpdateType.TEXGROUP_REMOVED, vals -> refreshTexGroupEntries());
+		updcom.add(TexGroupAdded.class, event -> refreshTexGroupEntries());
+		updcom.add(TexGroupRenamed.class, event -> refreshTexGroupEntries());
+		updcom.add(TexGroupRemoved.class, event -> refreshTexGroupEntries());
 		texgroups.addSelectBoxChangeSelectionEventListener(listener -> {
 			ArrayList<Group> groups = FMT.MODEL.selected_groups();
 			if(groups.isEmpty()) return;

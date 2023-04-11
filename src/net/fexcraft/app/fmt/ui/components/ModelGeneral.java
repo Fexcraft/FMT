@@ -2,12 +2,13 @@ package net.fexcraft.app.fmt.ui.components;
 
 import static net.fexcraft.app.fmt.utils.Translator.translate;
 
+import net.fexcraft.app.fmt.update.UpdateEvent;
+import net.fexcraft.app.fmt.update.UpdateEvent.*;
 import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.SelectBox;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.update.UpdateHandler;
-import net.fexcraft.app.fmt.update.UpdateType;
 import net.fexcraft.app.fmt.polygon.ModelOrientation;
 import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.texture.TextureManager;
@@ -52,18 +53,18 @@ public class ModelGeneral extends EditorComponent {
 		texgroups.setPosition(L5, row(1));
 		texgroups.setSize(LW, HEIGHT);
 		//
-		updateholder.sub().add(UpdateType.MODEL_LOAD, vals -> {
+		updcom.add(ModelLoad.class, event -> {
 			name.getTextState().setText(FMT.MODEL.name);
 			refreshTexGroupEntries();
 			texsx.setSelected((Integer)FMT.MODEL.texSizeX, true);
 			texsy.setSelected((Integer)FMT.MODEL.texSizeY, true);
 		});
-		updateholder.add(UpdateType.TEXGROUP_ADDED, vals -> refreshTexGroupEntries());
-		updateholder.add(UpdateType.TEXGROUP_RENAMED, vals -> refreshTexGroupEntries());
-		updateholder.add(UpdateType.TEXGROUP_REMOVED, vals -> refreshTexGroupEntries());
+		updcom.add(TexGroupAdded.class, event -> refreshTexGroupEntries());
+		updcom.add(TexGroupRenamed.class, event -> refreshTexGroupEntries());
+		updcom.add(TexGroupRemoved.class, event -> refreshTexGroupEntries());
 		texgroups.addSelectBoxChangeSelectionEventListener(listener -> {
 			FMT.MODEL.texgroup = TextureManager.getGroup(listener.getNewValue());
-			UpdateHandler.update(UpdateType.MODEL_TEXGROUP, FMT.MODEL.texgroup);
+			UpdateHandler.update(new ModelTexGroup(FMT.MODEL.texgroup));
 		});
 		texgroups.setVisibleCount(6);
 		refreshTexGroupEntries();
@@ -75,9 +76,9 @@ public class ModelGeneral extends EditorComponent {
 		for(ModelOrientation or : ModelOrientation.values()) orient.addElement(or.name());
 		orient.addSelectBoxChangeSelectionEventListener(listener -> {
 			FMT.MODEL.orient = ModelOrientation.valueOf(listener.getNewValue());
-			UpdateHandler.update(UpdateType.MODEL_ORIENTATION, FMT.MODEL.orient);
+			UpdateHandler.update(new ModelOrientEvent(FMT.MODEL.orient));
 		});
-		updateholder.sub().add(UpdateType.MODEL_LOAD, vals -> orient.setSelected(FMT.MODEL.orient.name(), true));
+		updcom.add(ModelLoad.class, event -> orient.setSelected(FMT.MODEL.orient.name(), true));
 		this.add(orient);
 	}
 

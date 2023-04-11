@@ -2,13 +2,14 @@ package net.fexcraft.app.fmt.ui.components;
 
 import static net.fexcraft.app.fmt.utils.Translator.translate;
 
+import net.fexcraft.app.fmt.update.UpdateEvent;
+import net.fexcraft.app.fmt.update.UpdateEvent.EditorRate;
 import org.liquidengine.legui.component.Slider;
 import org.liquidengine.legui.component.Tooltip;
 import org.liquidengine.legui.component.event.slider.SliderChangeValueEventListener;
 import org.liquidengine.legui.component.optional.align.HorizontalAlign;
 
 import net.fexcraft.app.fmt.update.UpdateHandler;
-import net.fexcraft.app.fmt.update.UpdateType;
 import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.ui.fields.NumberField;
@@ -30,10 +31,10 @@ public class MultiplierComponent extends EditorComponent {
 			float val = field.value();
 			if(Editor.RATE != val){
 				Editor.RATE = field.value();
-				UpdateHandler.update(UpdateType.EDITOR_RATE, Editor.RATE);
+				UpdateHandler.update(new EditorRate(Editor.RATE));
 			}
 		}).apply(Editor.RATE));
-		updateholder.add(UpdateType.EDITOR_RATE, vals -> field.apply(vals.get(0)));
+		updcom.add(EditorRate.class, event -> field.apply(event.rate()));
 		//
 		String[] arr = new String[]{ "normal", "sixteenth", "decimal"};
 		int off = 0, am = 0;

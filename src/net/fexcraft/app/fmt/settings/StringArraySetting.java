@@ -1,5 +1,6 @@
 package net.fexcraft.app.fmt.settings;
 
+import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
 import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.SelectBox;
 
@@ -26,7 +27,7 @@ public class StringArraySetting extends Setting<String> {
 	}
 
 	@Override
-	public Component createField(Component root, UpdateHolder holder, int x, int y, int w, int h){
+	public Component createField(Component root, UpdateCompound updcom, int x, int y, int w, int h){
 		SelectBox<String> box = new SelectBox<>(x, y, w, h);
 		for(String str : vals) box.addElement(str);
 		box.addSelectBoxChangeSelectionEventListener(lis -> value(lis.getNewValue()));

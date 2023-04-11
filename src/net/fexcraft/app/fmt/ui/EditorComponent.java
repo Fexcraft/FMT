@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
 import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.event.CursorEnterEvent;
@@ -28,7 +29,7 @@ public class EditorComponent extends Component {
 	public static final HashMap<Integer, EditorComponent> COMPONENTS = new HashMap<>();
 	public static final LinkedHashMap<String, Class<? extends EditorComponent>> REGISTRY = new LinkedHashMap<>();
 	public static final String LANG_PREFIX = "editor.component.";
-	protected UpdateHolder updateholder = new UpdateHolder();
+	protected UpdateCompound updcom = new UpdateCompound();
 	private ArrayList<Icon> icons = new ArrayList<>();
 	protected boolean minimized, unpinned, tree;
 	protected Label label;
@@ -102,6 +103,10 @@ public class EditorComponent extends Component {
 		return true;
 	}
 
+	public UpdateCompound getUpdCom(){
+		return updcom;
+	}
+
 	protected void pin(){
 		
 	}
@@ -109,10 +114,6 @@ public class EditorComponent extends Component {
 	protected void rem(){
 		if(editor == null) return;
 		editor.removeComponent(this);
-	}
-
-	public UpdateHolder getUpdateHolder(){
-		return updateholder;
 	}
 	
 	public int row(int next){

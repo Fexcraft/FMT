@@ -7,6 +7,7 @@ import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLIC
 
 import java.util.Collections;
 
+import net.fexcraft.app.fmt.update.UpdateEvent.TexGroupRenamed;
 import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.component.Dialog;
 import org.liquidengine.legui.component.Label;
@@ -22,7 +23,6 @@ import com.google.common.io.Files;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.update.UpdateHandler;
-import net.fexcraft.app.fmt.update.UpdateType;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TextureGroup;
@@ -44,7 +44,7 @@ public class TexGroupComponent extends EditorComponent {
 		super(group.name, HEIGHT + A * PHS + 4, true, false);
 		label.getTextState().setText((this.group = group).name);
 		this.genFullheight();
-		updateholder.add(UpdateType.TEXGROUP_RENAMED, wrp -> { if(wrp.objs[0] == group) label.getTextState().setText(group.name); });
+		updcom.add(TexGroupRenamed.class, event -> { if(event.group() == group) label.getTextState().setText(group.name); });
 		label.getStyle().setTextColor(ColorConstants.lightGray());
 		label.getStyle().getBackground().setColor(FMT.rgba(Settings.TEXTURE_GROUP.value));
 		label.getPosition().set(0, 0);
@@ -88,7 +88,7 @@ public class TexGroupComponent extends EditorComponent {
         			GenericDialog.showOK(null, null, null, "editor.tree.texture.rename_group.duplicate");
         			return;
         		}
-    			UpdateHandler.update(UpdateType.TEXGROUP_RENAMED, group, group.name, group.name = newname);
+    			UpdateHandler.update(new TexGroupRenamed(group, group.name, group.name = newname));
         		dialog.close();
         	}
         });

@@ -1,7 +1,6 @@
 package net.fexcraft.app.fmt.utils;
 
 import static net.fexcraft.app.fmt.update.UpdateHandler.update;
-import static net.fexcraft.app.fmt.update.UpdateType.MODEL_LOAD;
 import static net.fexcraft.app.fmt.ui.GenericDialog.showOK;
 import static net.fexcraft.app.fmt.utils.Logging.log;
 import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
@@ -20,6 +19,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
+import net.fexcraft.app.fmt.update.UpdateEvent;
+import net.fexcraft.app.fmt.update.UpdateEvent.ModelLoad;
+import net.fexcraft.app.fmt.update.UpdateEvent.ModelUnload;
 import org.apache.commons.io.IOUtils;
 import org.joml.Vector3f;
 import org.liquidengine.legui.component.Button;
@@ -31,7 +33,6 @@ import org.liquidengine.legui.listener.MouseClickEventListener;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.update.UpdateHandler;
-import net.fexcraft.app.fmt.update.UpdateType;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.polygon.ModelFormat;
@@ -100,7 +101,7 @@ public class SaveHandler {
 			});
 			zip.close();
 			FMT.MODEL.file = file;
-			update(MODEL_LOAD, FMT.MODEL);
+			update(new ModelLoad(FMT.MODEL));
 			DiscordUtil.update(Settings.DISCORD_RESET_ON_NEW.value);
 		}
 		catch(Exception e){
@@ -492,14 +493,14 @@ public class SaveHandler {
 		Runnable run = () -> {
 			if(file == null){
 				FileChooser.chooseFile(Translator.translate("saveload.open"), "./saves", FileChooser.TYPE_FMTB, false, task -> {
-					UpdateHandler.update(UpdateType.MODEL_UNLOAD, FMT.MODEL);
+					UpdateHandler.update(new ModelUnload(FMT.MODEL));
 					FMT.MODEL = new Model(task, null);
 					Settings.addRecentFile(task);
 					FMT.MODEL.load();
 				});
 			}
 			else{
-				UpdateHandler.update(UpdateType.MODEL_UNLOAD, FMT.MODEL);
+				UpdateHandler.update(new ModelUnload(FMT.MODEL));
 				FMT.MODEL = new Model(file, null);
 				Settings.addRecentFile(file);
 				FMT.MODEL.load();
@@ -564,13 +565,13 @@ public class SaveHandler {
             Button button0 = new Button(Translator.translate("dialog.button.confirm"), 10, 180, 100, 20);
             button0.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
             	if(CLICK == e.getAction()){
-        			UpdateHandler.update(UpdateType.MODEL_UNLOAD, FMT.MODEL);
+        			UpdateHandler.update(new ModelUnload(FMT.MODEL));
         			FMT.MODEL = new Model(null, field.getTextState().getText());
         			FMT.MODEL.orient = ModelOrientation.valueOf(box0.getSelection());
         			FMT.MODEL.format = ModelFormat.fromName(box1.getSelection());
         			FMT.updateTitle();
         			DiscordUtil.update(Settings.DISCORD_RESET_ON_NEW.value);
-        			UpdateHandler.update(UpdateType.MODEL_LOAD, FMT.MODEL);
+        			UpdateHandler.update(new ModelLoad(FMT.MODEL));
             		dialog.close();
             	}
             });

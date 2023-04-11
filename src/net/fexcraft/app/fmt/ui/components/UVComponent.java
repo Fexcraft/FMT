@@ -5,13 +5,11 @@ import static net.fexcraft.app.fmt.utils.Translator.translate;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.Polygon;
-import net.fexcraft.app.fmt.polygon.Shapebox;
 import net.fexcraft.app.fmt.polygon.uv.Face;
 import net.fexcraft.app.fmt.polygon.uv.UVCoords;
 import net.fexcraft.app.fmt.polygon.uv.UVType;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.CenteredLabel;
-import net.fexcraft.app.fmt.ui.ColorPanel;
 import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.ui.UIUtils;
 import net.fexcraft.app.fmt.ui.UVViewer;
@@ -19,10 +17,8 @@ import net.fexcraft.app.fmt.ui.fields.NumberField;
 import net.fexcraft.app.fmt.ui.fields.RunButton;
 import net.fexcraft.app.fmt.update.PolyVal;
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
-import net.fexcraft.app.fmt.update.PolyVal.ValAxe;
+import net.fexcraft.app.fmt.update.UpdateEvent.PolygonSelected;
 import net.fexcraft.app.fmt.update.UpdateHandler;
-import net.fexcraft.app.fmt.update.UpdateType;
-import net.fexcraft.app.fmt.utils.CornerUtil;
 import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.SelectBox;
@@ -47,7 +43,7 @@ public class UVComponent extends EditorComponent {
 		//
 		add(new Label(translate(LANG_PREFIX + id + ".face"), L5, row(1), LW, HEIGHT));
 		face = new SelectBox<>(L5, row(1), LW, HEIGHT);
-		updateholder.sub().add(UpdateType.POLYGON_SELECTED, o -> {
+		updcom.add(PolygonSelected.class, e -> {
 			while(face.getElements().size() > 0) face.removeElement(0);
 			face.addElement("none");
 			Polygon poly = FMT.MODEL.first_selected();
@@ -85,7 +81,7 @@ public class UVComponent extends EditorComponent {
 				if(cor != null && cor.type() != uvt){
 					cor.set(uvt);
 					int i = FMT.MODEL.selected().size();
-					UpdateHandler.update(UpdateType.POLYGON_SELECTED, poly, i, i);
+					UpdateHandler.update(new PolygonSelected(poly, i, i));
 				}
 			}
 			showField(idx);
@@ -103,32 +99,32 @@ public class UVComponent extends EditorComponent {
 			else if(i == 1){
 				fields[i].setSize(w, 70);
 				fields[i].add(new Label(translate(LANG_PREFIX + id + ".type.offset"), 7, 10, 270, 20));
-				fields[i].add(new NumberField(updateholder, F20 - 3, 40, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV, PolyVal.ValAxe.X)));
-				fields[i].add(new NumberField(updateholder, F21 - 3, 40, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV, PolyVal.ValAxe.Y)));
+				fields[i].add(new NumberField(updcom, F20 - 3, 40, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV, PolyVal.ValAxe.X)));
+				fields[i].add(new NumberField(updcom, F21 - 3, 40, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV, PolyVal.ValAxe.Y)));
 			}
 			else if(i == 2){
 				fields[i].setSize(w, 130);
 				fields[i].add(new Label(translate(LANG_PREFIX + id + ".type.start"), 7, 10, 270, 20));
-				fields[i].add(new NumberField(updateholder, F20 - 3, 40, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_START, PolyVal.ValAxe.X)));
-				fields[i].add(new NumberField(updateholder, F21 - 3, 40, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_START, PolyVal.ValAxe.Y)));
+				fields[i].add(new NumberField(updcom, F20 - 3, 40, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_START, PolyVal.ValAxe.X)));
+				fields[i].add(new NumberField(updcom, F21 - 3, 40, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_START, PolyVal.ValAxe.Y)));
 				fields[i].add(new Label(translate(LANG_PREFIX + id + ".type.end"), 7, 70, 270, 20));
-				fields[i].add(new NumberField(updateholder, F20 - 3, 100, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_START, PolyVal.ValAxe.X)));
-				fields[i].add(new NumberField(updateholder, F21 - 3, 100, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_START, PolyVal.ValAxe.Y)));
+				fields[i].add(new NumberField(updcom, F20 - 3, 100, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_START, PolyVal.ValAxe.X)));
+				fields[i].add(new NumberField(updcom, F21 - 3, 100, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_START, PolyVal.ValAxe.Y)));
 			}
 			else{
 				fields[i].setSize(w, 250);
 				fields[i].add(new Label(translate(LANG_PREFIX + id + ".type.top_right"), 7, 10, 270, 20));
-				fields[i].add(new NumberField(updateholder, F20 - 3, 40, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_TR, PolyVal.ValAxe.X)));
-				fields[i].add(new NumberField(updateholder, F21 - 3, 40, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_TR, PolyVal.ValAxe.Y)));
+				fields[i].add(new NumberField(updcom, F20 - 3, 40, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_TR, PolyVal.ValAxe.X)));
+				fields[i].add(new NumberField(updcom, F21 - 3, 40, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_TR, PolyVal.ValAxe.Y)));
 				fields[i].add(new Label(translate(LANG_PREFIX + id + ".type.top_left"), 7, 70, 270, 20));
-				fields[i].add(new NumberField(updateholder, F20 - 3, 100, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_TL, PolyVal.ValAxe.X)));
-				fields[i].add(new NumberField(updateholder, F21 - 3, 100, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_TL, PolyVal.ValAxe.Y)));
+				fields[i].add(new NumberField(updcom, F20 - 3, 100, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_TL, PolyVal.ValAxe.X)));
+				fields[i].add(new NumberField(updcom, F21 - 3, 100, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_TL, PolyVal.ValAxe.Y)));
 				fields[i].add(new Label(translate(LANG_PREFIX + id + ".type.bot_left"), 7, 130, 270, 20));
-				fields[i].add(new NumberField(updateholder, F20 - 3, 160, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_BL, PolyVal.ValAxe.X)));
-				fields[i].add(new NumberField(updateholder, F21 - 3, 160, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_BL, PolyVal.ValAxe.Y)));
+				fields[i].add(new NumberField(updcom, F20 - 3, 160, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_BL, PolyVal.ValAxe.X)));
+				fields[i].add(new NumberField(updcom, F21 - 3, 160, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_BL, PolyVal.ValAxe.Y)));
 				fields[i].add(new Label(translate(LANG_PREFIX + id + ".type.bot_right"), 7, 190, 270, 20));
-				fields[i].add(new NumberField(updateholder, F20 - 3, 220, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_BR, PolyVal.ValAxe.X)));
-				fields[i].add(new NumberField(updateholder, F21 - 3, 220, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_BR, PolyVal.ValAxe.Y)));
+				fields[i].add(new NumberField(updcom, F20 - 3, 220, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_BR, PolyVal.ValAxe.X)));
+				fields[i].add(new NumberField(updcom, F21 - 3, 220, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_BR, PolyVal.ValAxe.Y)));
 			}
 			UIUtils.hide(fields[i]);
 			add(fields[i]);

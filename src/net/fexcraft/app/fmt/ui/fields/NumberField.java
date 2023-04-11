@@ -12,6 +12,7 @@ import java.util.Locale;
 import java.util.function.Consumer;
 
 import net.fexcraft.app.fmt.update.UpdateHandler;
+import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateHolder;
 import org.liquidengine.legui.component.TextInput;
 import org.liquidengine.legui.event.FocusEvent;
@@ -35,16 +36,16 @@ public class NumberField extends TextInput implements Field {
 	static { updateRoundingDigits(); }
 	private Setting<?> setting;
 
-	public NumberField(UpdateHolder holder, float x, float y, float w, float h){
+	public NumberField(UpdateCompound updcom, float x, float y, float w, float h){
 		super("0", x, y, w, h);
 		Settings.applyBorderless(this);
 		Settings.applyGrayText(this);
 		Field.setupHoverCheck(this);
-		rootholder = holder;
+		this.updcom = updcom;
 	}
 
 	public NumberField(EditorComponent comp, float x, float y, float w, float h){
-		this(comp.getUpdateHolder(), x, y, w, h);
+		this(comp.getUpdCom(), x, y, w, h);
 	}
 
 	public NumberField(Setting<?> setting, float x, float y, float w, float h){
@@ -65,7 +66,7 @@ public class NumberField extends TextInput implements Field {
 		this.setting = setting;
 	}
 
-	private UpdateHolder rootholder;
+	private UpdateCompound updcom;
 	private EditorComponent comp;
 	private PolygonValue poly_value;
 	private boolean floatfield, indexfield;
@@ -78,7 +79,7 @@ public class NumberField extends TextInput implements Field {
 		this.min = min;
 		this.max = max;
 		poly_value = val;
-		Field.setupHolderAndListeners(this, rootholder, val);
+		Field.setupUpdatesAndListeners(this, updcom, val);
 		return this;
 	}
 	

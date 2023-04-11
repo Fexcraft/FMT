@@ -1,19 +1,19 @@
 package net.fexcraft.app.fmt.polygon;
 
 import static net.fexcraft.app.fmt.update.UpdateHandler.update;
-import static net.fexcraft.app.fmt.update.UpdateType.POLYGON_ADDED;
 import static net.fexcraft.app.fmt.utils.JsonUtil.getVector;
 import static net.fexcraft.app.fmt.utils.JsonUtil.setVector;
 import static net.fexcraft.app.fmt.utils.Logging.log;
 
 import net.fexcraft.app.fmt.ui.UVViewer;
+import net.fexcraft.app.fmt.update.UpdateEvent.PolygonAdded;
+import net.fexcraft.app.fmt.update.UpdateEvent.PolygonRenamed;
 import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.update.PolyVal.ValAxe;
 import net.fexcraft.app.fmt.update.UpdateHandler;
-import net.fexcraft.app.fmt.update.UpdateType;
 import net.fexcraft.app.fmt.polygon.uv.Face;
 import net.fexcraft.app.fmt.polygon.uv.NoFace;
 import net.fexcraft.app.fmt.polygon.uv.UVCoords;
@@ -127,7 +127,7 @@ public abstract class Polygon {
 	
 	public void name(String name){
 		this.name = name;
-		UpdateHandler.update(UpdateType.POLYGON_RENAMED, this, name);
+		UpdateHandler.update(new PolygonRenamed(this, name));
 	}
 
 	public boolean group(Group group){
@@ -136,7 +136,7 @@ public abstract class Polygon {
 		}*///handled by group.remove() instead!
 		this.group = group;
 		if(this.group != null){
-			update(POLYGON_ADDED, new Object[]{ group, this });
+			update(new PolygonAdded(group, this));
 			this.recompile();
 		}
 		return true;

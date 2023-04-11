@@ -5,6 +5,10 @@ import static net.fexcraft.app.fmt.utils.Translator.translate;
 
 import java.util.ArrayList;
 
+import net.fexcraft.app.fmt.update.UpdateEvent.GroupAdded;
+import net.fexcraft.app.fmt.update.UpdateEvent.GroupRemoved;
+import net.fexcraft.app.fmt.update.UpdateEvent.GroupRenamed;
+import net.fexcraft.app.fmt.update.UpdateEvent.PolygonSelected;
 import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.SelectBox;
 
@@ -12,7 +16,6 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.update.PolyVal;
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.update.PolyVal.ValAxe;
-import net.fexcraft.app.fmt.update.UpdateType;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.polygon.Shape;
@@ -39,21 +42,19 @@ public class PolygonGeneral extends EditorComponent {
 
 	public PolygonGeneral(String sub, int height){
 		super(genid + (sub == null ? "" : "." + sub), height, false, true);
-		updateholder.add(UpdateType.GROUP_ADDED, vals -> updateSelectBoxes());
-		updateholder.add(UpdateType.GROUP_REMOVED, vals -> updateSelectBoxes());
-		updateholder.add(UpdateType.GROUP_RENAMED, vals -> updateSelectBoxes());
-		updateholder.add(UpdateType.POLYGON_SELECTED, vals -> {
+		updcom.add(GroupAdded.class, event -> updateSelectBoxes());
+		updcom.add(GroupRemoved.class, event -> updateSelectBoxes());
+		updcom.add(GroupRenamed.class, event -> updateSelectBoxes());
+		updcom.add(PolygonSelected.class, event -> {
 			updateTypeBox();
-			int old = vals.get(1);
-			if(old < 0) return;
-			int size = vals.get(2);
-			if(size == 0){
+			if(event.prevselected() < 0) return;
+			if(event.selected() == 0){
 				box.setSelected(0, true);
 				name.getTextState().setText(NOPOLYSEL);
 			}
-			else if(size == 1 || (old == 0 && size > 0)){
+			else if(event.selected() == 1 || (event.prevselected() == 0 && event.selected() > 0)){
 				box.setSelected(FMT.MODEL.first_selected().group().id, true);
-				name.getTextState().setText(vals.get(0, Polygon.class).name());
+				name.getTextState().setText(event.polygon().name());
 				type.setSelected(FMT.MODEL.first_selected().getShape().getName(), true);
 			}
 		});
