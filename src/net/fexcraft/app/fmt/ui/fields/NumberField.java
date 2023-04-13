@@ -11,9 +11,7 @@ import java.text.ParseException;
 import java.util.Locale;
 import java.util.function.Consumer;
 
-import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
-import net.fexcraft.app.fmt.update.UpdateHandler.UpdateHolder;
 import org.liquidengine.legui.component.TextInput;
 import org.liquidengine.legui.event.FocusEvent;
 import org.liquidengine.legui.event.KeyEvent;
@@ -30,10 +28,12 @@ import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.utils.Logging;
 
 public class NumberField extends TextInput implements Field {
-	
+
 	private static NumberFormat nf;
 	private static DecimalFormat df;
+
 	static { updateRoundingDigits(); }
+
 	private Setting<?> setting;
 
 	public NumberField(UpdateCompound updcom, float x, float y, float w, float h){
@@ -45,7 +45,15 @@ public class NumberField extends TextInput implements Field {
 	}
 
 	public NumberField(EditorComponent comp, float x, float y, float w, float h){
-		this(comp.getUpdCom(), x, y, w, h);
+		this(comp.getUpdCom(), x, y, Settings.NUMBERFIELD_BUTTONS.value ? w - 30 : w, h);
+		if(Settings.NUMBERFIELD_BUTTONS.value){
+			comp.add(new RunButton("+", x + w - 30, y, 30, h / 2, () -> {
+				this.scroll(1);
+			}));
+			comp.add(new RunButton("-", x + w - 30, y + h / 2, 30, h / 2, () -> {
+				this.scroll(-1);
+			}));
+		}
 	}
 
 	public NumberField(Setting<?> setting, float x, float y, float w, float h){
@@ -60,7 +68,7 @@ public class NumberField extends TextInput implements Field {
 		});
 		getListenerMap().addListener(KeyEvent.class, (KeyEventListener)listener -> {
 			if(listener.getKey() == GLFW.GLFW_KEY_ENTER){
-				setting.validate(true, getTextState().getText()); 
+				setting.validate(true, getTextState().getText());
 			}
 		});
 		this.setting = setting;
@@ -73,7 +81,7 @@ public class NumberField extends TextInput implements Field {
 	private float min, max;
 	protected Float value = null;
 	protected Consumer<NumberField> update;
-	
+
 	public NumberField setup(float min, float max, boolean flaot, PolygonValue val){
 		floatfield = flaot;
 		this.min = min;
@@ -82,7 +90,7 @@ public class NumberField extends TextInput implements Field {
 		Field.setupUpdatesAndListeners(this, updcom, val);
 		return this;
 	}
-	
+
 	public NumberField setup(float min, float max, boolean flaot, Consumer<NumberField> update){
 		floatfield = flaot;
 		this.min = min;
@@ -100,20 +108,19 @@ public class NumberField extends TextInput implements Field {
 		});
 		return this;
 	}
-	
+
 	public NumberField index(){
 		indexfield = true;
 		return this;
 	}
-	
+
 	@Override
 	public float value(){
 		if(value != null) return value;
 		float newval = 0; String text = this.getTextState().getText();
 		try{
 			newval = floatfield ? nf.parse(text).floatValue() : nf.parse(text).intValue();
-		}
-		catch(Exception e){
+		} catch(Exception e){
 			log(e);
 		}
 		if(newval > max) newval = max; else if(newval < min) newval = min;
@@ -129,8 +136,7 @@ public class NumberField extends TextInput implements Field {
 		try{
 			Number num = nf.parse(df.format(flat));
 			return floatfield ? num.floatValue() : indexfield && positive && num.floatValue() % 1f > 0 ? num.intValue() + 1 : num.intValue();
-		}
-		catch(ParseException e){
+		} catch(ParseException e){
 			log(e);
 			return flat;
 		}
@@ -156,7 +162,7 @@ public class NumberField extends TextInput implements Field {
 	public String id(){
 		return poly_value.toString();
 	}
-	
+
 	@Override
 	public Consumer<NumberField> update(){
 		return update;
@@ -172,7 +178,7 @@ public class NumberField extends TextInput implements Field {
 		df = new DecimalFormat(str, new DecimalFormatSymbols(Locale.US));
 		df.setRoundingMode(RoundingMode.HALF_EVEN);
 	}
-	
+
 	public NumberField floatbased(boolean bool){
 		this.floatfield = bool;
 		return this;
@@ -182,7 +188,7 @@ public class NumberField extends TextInput implements Field {
 	public PolygonValue polyval(){
 		return poly_value;
 	}
-	
+
 	public static DecimalFormat getFormat(){
 		return df;
 	}
@@ -191,15 +197,14 @@ public class NumberField extends TextInput implements Field {
 	public Setting<?> setting(){
 		return setting;
 	}
-	
+
 	public static float round(float flat){
 		try{
 			return nf.parse(df.format(flat)).floatValue();
-		}
-		catch(ParseException e){
+		} catch(ParseException e){
 			Logging.log(e);
 			return flat;
 		}
 	}
-	
+
 }
