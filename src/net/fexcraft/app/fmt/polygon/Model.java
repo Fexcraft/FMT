@@ -616,4 +616,9 @@ public class Model {
 		UpdateHandler.update(new ModelRenamed(this, old, name));
 	}
 
+	@Override
+	public String toString(){
+		return "Model([" + name + "], " + groups.size() + ")";
+	}
+
 }

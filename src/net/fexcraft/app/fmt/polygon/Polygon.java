@@ -47,7 +47,7 @@ public abstract class Polygon {
 	public boolean mirror;
 	public boolean flip;
 	public UVMap cuv;
-	
+
 	public Polygon(Model model){
 		this.model = model == null ? FMT.MODEL : model;
 		pos = new Vector3f();
@@ -56,7 +56,7 @@ public abstract class Polygon {
 		cuv = new UVMap(this);
 		visible = true;
 	}
-	
+
 	protected Polygon(Model model, JsonMap obj){
 		this.model = model == null ? FMT.MODEL : model;
 		name = obj.get("name", null);
@@ -116,22 +116,22 @@ public abstract class Polygon {
 	}
 
 	public abstract Shape getShape();
-	
+
 	public String name(){
 		return name == null ? String.format(Translator.UNNAMED_POLYGON, getShape().name().toLowerCase()) : name;
 	}
-	
+
 	public String name(boolean nell){
 		return nell ? name : name();
 	}
-	
+
 	public void name(String name){
 		this.name = name;
 		UpdateHandler.update(new PolygonRenamed(this, name));
 	}
 
 	public boolean group(Group group){
-		/*if(this.group != null){
+        /*if(this.group != null){
 			update(POLYGON_REMOVED, new Object[]{ this.group, this });
 		}*///handled by group.remove() instead!
 		this.group = group;
@@ -145,7 +145,7 @@ public abstract class Polygon {
 	public Group group(){
 		return group;
 	}
-	
+
 	public Model model(){
 		return model;
 	}
@@ -174,7 +174,7 @@ public abstract class Polygon {
 		}
 		return null;
 	}
-	
+
 	public static Polygon from(Model model, Shape shape){
 		switch(shape){
 			case BOUNDING_BOX: return new StructBox(model);
@@ -208,7 +208,7 @@ public abstract class Polygon {
 		cuv.copyTo(poly);
 		return copyInternal(poly);
 	}
-	
+
 	protected abstract Polygon copyInternal(Polygon poly);
 
 	public void recompile(){
@@ -297,12 +297,12 @@ public abstract class Polygon {
 			default: return 0;
 		}
 	}
-	
+
 	protected int getIndexValue(boolean[] array, int index){
 		if(index < 0 || index >= array.length) return 0;
 		return array[index] ? 1 : 0;
 	}
-	
+
 	protected int getBooleanAsIntValue(boolean bool){
 		return bool ? 1 : 0;
 	}
@@ -358,12 +358,12 @@ public abstract class Polygon {
 			default: return;
 		}
 	}
-	
+
 	protected void setIndexValue(boolean[] array, int index, float value){
 		if(index < 0 || index >= array.length) return;
 		array[index] = value > .5;
 	}
-	
+
 	protected boolean parseBooleanValue(float value){
 		return value > .5;
 	}
@@ -392,7 +392,7 @@ public abstract class Polygon {
 	public Face[] getUVFaces(){
 		return NoFace.values();
 	}
-	
+
 	public boolean isValidUVFace(String str){
 		for(Face face : getUVFaces()){
 			if(face.id().equals(str)) return true;
@@ -415,15 +415,15 @@ public abstract class Polygon {
 		}
 		return false;
 	}
-	
+
 	public boolean paintTex(Texture tex, Integer face){
 		return paintTex(tex, face, true, null, false, null);
 	}
-	
+
 	public boolean paintTex(Texture tex, Integer face, boolean primary){
 		return paintTex(tex, face, primary, null, false, null);
 	}
-	
+
 	public boolean paintTex(Texture tex, Integer face, boolean primary, float[][][] coords, boolean detached, Integer sface){
 		if(coords == null) coords = newUV(true, false);
 		if(coords == null || coords.length == 0){

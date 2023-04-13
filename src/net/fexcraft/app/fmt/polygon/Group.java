@@ -115,4 +115,10 @@ public class Group extends ArrayList<Polygon> {
 		String str = id.trim().replace(" ", "_").replaceAll("[^a-zA-Z0-9 _]", "");
 		return str.charAt(0) >= '0' && str.charAt(0) <= '9' ? "g" + str : str;
     }
+
+	@Override
+	public String toString(){
+		return "Group([" + id + "], " + size() + (selected ? ", selected" : "") + ")";
+	}
+
 }

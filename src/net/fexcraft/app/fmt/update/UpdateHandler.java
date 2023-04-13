@@ -25,7 +25,7 @@ public class UpdateHandler {
 
 	public static <E> void update(E event){
 		if(Settings.LOG_UPDATES.value){
-			Logging.log(event.getClass().getName() + " -> " + event.toString());
+			Logging.log(event.toString());
 		}
 		if(!HOLDERS.containsKey(event.getClass())) return;
 		HOLDERS.get(event.getClass()).forEach(holder -> holder.update(event));
