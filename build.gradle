@@ -32,8 +32,8 @@ new File(projectDir, '/src/net/fexcraft/app/fmt/FMT.java').find { line ->
     }
     return false;
 }
-sourceCompatibility = 15
-targetCompatibility = 15
+sourceCompatibility = 17
+targetCompatibility = 17
 compileJava.options.encoding = 'UTF-8'
 
 //@formatter:off
