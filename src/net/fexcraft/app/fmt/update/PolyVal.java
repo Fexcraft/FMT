@@ -22,8 +22,8 @@ public enum PolyVal {
 	
 	/* */
 	;
-	
-	public static class PolygonValue {
+
+    public static class PolygonValue {
 		
 		private PolyVal val;
 		private ValAxe axe;
@@ -93,6 +93,10 @@ public enum PolyVal {
 			return this == Z2;
 		}
 		
+	}
+
+	public boolean uv(){
+		return this == TEX || (this.ordinal() >= CUV.ordinal() && this.ordinal() <= CUV_BR.ordinal());
 	}
 
 }
