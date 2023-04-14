@@ -61,7 +61,7 @@ public class UVViewer extends Widget {
         SelectBox<String> tex = new SelectBox<>(255.0F, 5.0F, 280.0F, 32.0F);
         for(TextureGroup group : TextureManager.getGroups()) tex.addElement(group.name);
     	tex.setVisibleCount(8);
-    	tex.addSelectBoxChangeSelectionEventListener(lis -> {});
+    	tex.addSelectBoxChangeSelectionEventListener(lis -> seltex(lis.getNewValue()));
     	con.add(tex);
         updcom.add(TexGroupAdded.class, e -> refreshTexGroups(tex));
         updcom.add(TexGroupRemoved.class, e -> refreshTexGroups(tex));
@@ -89,6 +89,20 @@ public class UVViewer extends Widget {
     }
 
     private void refreshTexGroups(SelectBox<String> tex){
+        String sel = tex.getSelection();
+        while(tex.getElements().size() > 0) tex.removeElement(0);
+        for(TextureGroup group : TextureManager.getGroups()) tex.addElement(group.name);
+        if(sel != null && TextureManager.getGroup(sel) != null){
+            tex.setSelected(sel, true);
+            seltex(sel);
+        }
+        else if(TextureManager.getGroups().size() > 0){
+            seltex(tex.getElements().get(0));
+        }
+    }
+
+    private void seltex(String groupid){
+
     }
 
     public static void toggle(){
