@@ -6,16 +6,17 @@ import static org.liquidengine.legui.system.renderer.nvg.util.NvgRenderUtils.res
 
 import java.util.ArrayList;
 
+import net.fexcraft.app.fmt.polygon.uv.UVCoords;
+import net.fexcraft.app.fmt.update.PolyVal;
 import net.fexcraft.app.fmt.update.UpdateEvent.*;
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
+import net.fexcraft.lib.common.math.RGB;
 import org.joml.Vector2f;
-import org.joml.Vector2fc;
 import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.ScrollablePanel;
 import org.liquidengine.legui.component.SelectBox;
 import org.liquidengine.legui.component.Widget;
 import org.liquidengine.legui.component.event.component.ChangeSizeEvent;
-import org.liquidengine.legui.component.misc.listener.widget.WidgetResizeButtonDragListener;
 import org.liquidengine.legui.style.Style;
 import org.liquidengine.legui.style.border.SimpleLineBorder;
 import org.liquidengine.legui.style.color.ColorConstants;
@@ -31,7 +32,8 @@ import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.update.UpdateHandler;
-import net.fexcraft.app.fmt.update.UpdateHandler.UpdateHolder;
+import org.lwjgl.nanovg.NVGColor;
+import org.lwjgl.nanovg.NanoVG;
 
 public class UVViewer extends Widget {
 
@@ -148,32 +150,40 @@ public class UVViewer extends Widget {
             getStyle().getBackground().setColor(FMT.rgba(0xffffffff));
             getStyle().setBorder(new SimpleLineBorder(ColorConstants.black(), 3));
             setFocusable(false);
-            for(Group group : FMT.MODEL.groups()){
-                for(Polygon polygon : group){
-                    UvElm elm = new UvElm(polygon);
-                    elements.add(elm);
-                    add(elm);
-                }
-            }
-            updcom.add(PolygonAdded.class, e -> {
-                UvElm elm = new UvElm(e.polygon());
-                elements.add(elm);
-                add(elm);
-            });
-            updcom.add(PolygonRemoved.class, e -> {
-                UvElm ulm = null;
+            for(Group group : FMT.MODEL.groups()) for(Polygon polygon : group) addElm(polygon);
+            updcom.add(PolygonAdded.class, e -> addElm(e.polygon()));
+            updcom.add(PolygonRemoved.class, e -> remElm(e.polygon()));
+            updcom.add(PolygonValueEvent.class, e -> {
+                if(!e.value().val().uv()) return;
                 for(UvElm elm : elements){
                     if(elm.poly == e.polygon()){
-                        ulm = elm;
+                        elm.update();
                         break;
                     }
                 }
-                if(ulm != null){
-                    elements.remove(ulm);
-                    remove(ulm);
-                }
             });
             root = panel;
+        }
+
+        private void addElm(Polygon polygon){
+            for(Face face : polygon.getUVFaces()){
+                UvElm elm = new UvElm(polygon, face);
+                elements.add(elm);
+                add(elm);
+            }
+        }
+
+        private void remElm(Polygon polygon){
+            ArrayList<UvElm> elms = new ArrayList<>();
+            for(UvElm elm : elements){
+                if(elm.poly == polygon){
+                    elms.add(elm);
+                }
+            }
+            if(elms.size() > 0){
+                elements.removeAll(elms);
+                removeAll(elms);
+            }
         }
 
     }
@@ -181,13 +191,47 @@ public class UVViewer extends Widget {
     public static class UvElm extends Component {
 
         private Polygon poly;
+        private Face face;
+        private RGB color;
 
-        public UvElm(Polygon poli){
-            setPosition(10, 10);
-            setSize(300, 300);
+        public UvElm(Polygon poli, Face faccia){
             poly = poli;
+            face = faccia;
+            update();
         }
 
+        public void update(){
+            color = poly.getFaceColor(face.index());
+            UVCoords cuv = poly.cuv.get(face);
+            if(cuv == null) return;
+            float[][][] poss = poly.newUV(true, false);
+            if(poss == null || poss.length == 0) return;
+            float[][] pos = poss[face.index()];
+            switch(cuv.type()){
+                case AUTOMATIC -> {
+                    setPosition(poly.textureX, poly.textureY);
+                    setSize(pos[1][0] - pos[0][0], pos[1][1] - pos[0][1]);
+                }
+                case OFFSET -> {
+
+                }
+                case OFFSET_ENDS -> {
+
+                }
+                case OFFSET_FULL -> {
+
+                }
+                case DETACHED -> {
+
+                }
+                case DETACHED_ENDS -> {
+
+                }
+                case DETACHED_FULL -> {
+
+                }
+            }
+        }
     }
 
     public static class UvElmRenderer extends NvgDefaultComponentRenderer<UvElm> {
@@ -196,6 +240,14 @@ public class UVViewer extends Widget {
         protected void renderComponent(UVViewer.UvElm com, Context context, long ctx){
             createScissor(ctx, com);
             Vector2f pos = com.getAbsolutePosition();
+            Vector2f siz = com.getSize();
+            byte[] rgb = com.color.toByteArray();
+            //
+            NanoVG.nvgBeginPath(ctx);
+            NanoVG.nvgRect(ctx, pos.x, pos.y, siz.x, siz.y);
+            NanoVG.nvgFillColor(ctx, NVGColor.calloc().r(rgb[0]).g(rgb[1]).b(rgb[2]).a(1));
+            NanoVG.nvgFill(ctx);
+            NanoVG.nvgClosePath(ctx);
             //
             resetScissor(ctx);
         }
