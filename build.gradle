@@ -24,25 +24,25 @@ switch(OperatingSystem.current()){
 		project.ext.lwjglNatives = System.getProperty("os.arch").contains("64") ? "natives-windows" : "natives-windows-x86"
 		break
 }
-version = "3.0.0";
+version = "3.0.0"
 new File(projectDir, '/src/net/fexcraft/app/fmt/FMT.java').find { line ->
     if(line.contains('String VERSION')){
         version = line.substring(line.indexOf('"') + 1).replace('";', '')
         return true
     }
-    return false;
+    return false
 }
 sourceCompatibility = 17
 targetCompatibility = 17
 compileJava.options.encoding = 'UTF-8'
 
 //@formatter:off
-def log4j_version = '2.5'
+def log4j_version = '2.12.4'
 def commons_version = '3.4'
-def commons_collections = '4.1'
-def guava_version = '19.0'
-def gson_version = '2.7'
-def legui_version = '3.3.1';
+def commons_collections = '4.3'
+def guava_version = '30.0-jre'
+def gson_version = '2.8.9'
+def legui_version = '3.3.1'
 
 def joml_version = "1.9.25"//"-SNAPSHOT"
 def lwjgl_version = "3.2.3"//'3.2.4-SNAPSHOT'
@@ -76,7 +76,7 @@ dependencies {
 
     implementation group: 'org.liquidengine', name: 'cbchain', version: le_cbchain, changing: true
     implementation group: 'org.liquidengine', name: 'leutil', version: le_util, changing: true
-	implementation group: 'org.liquidengine', name: 'legui', version: legui_version, changing: true;
+	implementation group: 'org.liquidengine', name: 'legui', version: legui_version, changing: true
 
     implementation group: 'org.lwjgl', name: 'lwjgl-stb', version: lwjgl_version, changing: true
     runtimeOnly group: 'org.lwjgl', name: 'lwjgl-stb', version: lwjgl_version, changing: true, classifier: 'natives-windows'
@@ -137,77 +137,77 @@ sourceSets {
  
 mainClassName = 'net.fexcraft.app.fmt.FMT'
 
-task mainJar(type: Jar){
+tasks.register('mainJar', Jar) {
 	manifest {
-		attributes 'Title': "Fex's Modelling Toolbox",  
-		'Version': version,
-		'Main-Class': mainClassName,
-		'Created-By': "Ferdinand Calo' (FEX___96)",
-		"Class-Path": ". " + (configurations.runtimeClasspath.collect { "lib/" + it.getName() }.join(' '))
+		attributes 'Title': "Fex's Modelling Toolbox",
+				'Version': version,
+				'Main-Class': mainClassName,
+				'Created-By': "Ferdinand Calo' (FEX___96)",
+				"Class-Path": ". " + (configurations.runtimeClasspath.collect { "lib/" + it.getName() }.join(' '))
 	}
-	from(zipTree("${destinationDir}/${archiveName}")){
+	from(zipTree("${destinationDir}/${archiveName}")) {
 		include 'net/fexcraft/app/fmt/launch/'
 		include 'net/fexcraft/app/fmt/'
 		include 'net/fexcraft/app/json/'
 		include 'net/fexcraft/lib/'
 	}
-	from('src/'){
+	from('src/') {
 		include 'log4j2.xml'
 	}
 	baseName = "FMT"
-	version = "";
+	version = ""
 }
 
-task launcherJar(type: Jar){
+tasks.register('launcherJar', Jar) {
 	manifest {
-		attributes 'Title': "Fex's Modelling Toolbox Launcher/Updater",  
-		'Version': version,
-		'Main-Class': 'net.fexcraft.app.fmt.launch.Launcher',
-		'Created-By': "Ferdinand Calo' (FEX___96)"
+		attributes 'Title': "Fex's Modelling Toolbox Launcher/Updater",
+				'Version': version,
+				'Main-Class': 'net.fexcraft.app.fmt.launch.Launcher',
+				'Created-By': "Ferdinand Calo' (FEX___96)"
 	}
-	from(zipTree("${destinationDir}/${archiveName}")){
+	from(zipTree("${destinationDir}/${archiveName}")) {
 		include 'net/fexcraft/app/fmt/launch/'
 		include 'net/fexcraft/app/json/'
 	}
 	baseName = "FMT_Launcher"
-	version = "";
+	version = ""
 }
 
-task copyForUpload(){
+tasks.register('copyForUpload') {
 	copy {
-    	from configurations.runtimeClasspath
-    	into "upload/lib"
+		from configurations.runtimeClasspath
+		into "upload/lib"
 	}
 	copy {
-    	from "build/libs/FMT.jar"
-    	into "upload/"
+		from "build/libs/FMT.jar"
+		into "upload/"
 	}
 	copy {
-    	from "build/libs/FMT_Launcher.jar"
-    	into "upload/"
+		from "build/libs/FMT_Launcher.jar"
+		into "upload/"
 	}
 	copy {
-    	from "resources/"
-    	into "upload/resources"
+		from "resources/"
+		into "upload/resources"
 	}
 	copy {
-    	from "scripts/"
-    	into "upload/scripts"
+		from "scripts/"
+		into "upload/scripts"
 	}
 }
 
-def String[] res_types = [ "resources/", "scripts/" ]
+String[] res_types = [ "resources/", "scripts/" ]
 
-task compileCatalog(){
-	def String catalog_fmt = '{\n\t"file_root": "http://fexcraft.net/files/app_data/fmt/",\n\t"files": [\n'
-	def String path, restype;
+tasks.register('compileCatalog') {
+	String catalog_fmt = '{\n\t"file_root": "http://fexcraft.net/files/app_data/fmt/",\n\t"files": [\n'
+	String path, restype
 	sourceSets.main.resources.each {
 		path = it.getPath()
 		path = path.replace("\\", "/")
-		for(String type : res_types){
-			if(path.contains(type)){
-				restype = type;
-				break;
+		for (String type : res_types) {
+			if (path.contains(type)) {
+				restype = type
+				break
 			}
 		}
 		path = path.substring(path.indexOf(restype))
@@ -218,9 +218,9 @@ task compileCatalog(){
 		path = "lib" + path.substring(path.lastIndexOf("/"))
 		catalog_fmt += '\t\t[ "' + path + '", ' + it.lastModified() + ', true ],\n'
 	}
-	catalog_fmt += '\t\t[ "FMT.jar", ' + new File(projectDir, "/upload/FMT.jar").lastModified() + ', true, false ]\n';
+	catalog_fmt += '\t\t[ "FMT.jar", ' + new File(projectDir, "/upload/FMT.jar").lastModified() + ', true, false ]\n'
 	catalog_fmt += '\t],\n'
-	catalog_fmt += '\t"last_catalog_update": "' + new SimpleDateFormat("HH:mm:ss dd.MMM.yyyy z").format(new Date()) + '"\n';
+	catalog_fmt += '\t"last_catalog_update": "' + new SimpleDateFormat("HH:mm:ss dd.MMM.yyyy z").format(new Date()) + '"\n'
 	catalog_fmt += '}\n'
 	new File(projectDir, "upload/catalog.fmt").text = catalog_fmt
 	new File(projectDir, "catalog.fmt").text = catalog_fmt
