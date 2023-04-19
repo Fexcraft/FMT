@@ -43,10 +43,12 @@ public class ModelGeneral extends EditorComponent {
 		texsx.addSelectBoxChangeSelectionEventListener(listener -> {
 			FMT.MODEL.texSizeX = listener.getNewValue();
 			FMT.MODEL.recompile();
+			UpdateHandler.update(new ModelTextureSize(FMT.MODEL, FMT.MODEL.texSizeX, FMT.MODEL.texSizeY));
 		});
 		texsy.addSelectBoxChangeSelectionEventListener(listener -> {
 			FMT.MODEL.texSizeY = listener.getNewValue();
 			FMT.MODEL.recompile();
+			UpdateHandler.update(new ModelTextureSize(FMT.MODEL, FMT.MODEL.texSizeX, FMT.MODEL.texSizeY));
 		});
 		//
 		this.add(new Label(translate(LANG_PREFIX + genid + ".tex_group"), L5, row(1), LW, HEIGHT));
@@ -64,7 +66,7 @@ public class ModelGeneral extends EditorComponent {
 		updcom.add(TexGroupRemoved.class, event -> refreshTexGroupEntries());
 		texgroups.addSelectBoxChangeSelectionEventListener(listener -> {
 			FMT.MODEL.texgroup = TextureManager.getGroup(listener.getNewValue());
-			UpdateHandler.update(new ModelTexGroup(FMT.MODEL.texgroup));
+			UpdateHandler.update(new ModelTexGroup(FMT.MODEL, FMT.MODEL.texgroup));
 		});
 		texgroups.setVisibleCount(6);
 		refreshTexGroupEntries();
@@ -76,7 +78,7 @@ public class ModelGeneral extends EditorComponent {
 		for(ModelOrientation or : ModelOrientation.values()) orient.addElement(or.name());
 		orient.addSelectBoxChangeSelectionEventListener(listener -> {
 			FMT.MODEL.orient = ModelOrientation.valueOf(listener.getNewValue());
-			UpdateHandler.update(new ModelOrientEvent(FMT.MODEL.orient));
+			UpdateHandler.update(new ModelOrientEvent(FMT.MODEL, FMT.MODEL.orient));
 		});
 		updcom.add(ModelLoad.class, event -> orient.setSelected(FMT.MODEL.orient.name(), true));
 		this.add(orient);

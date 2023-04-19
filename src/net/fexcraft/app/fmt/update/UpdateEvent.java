@@ -32,9 +32,10 @@ public class UpdateEvent {
     public static record ModelLoad(Model model){};
     public static record ModelUnload(Model model){};
     public static record ModelRenamed(Model model, String oldname, String newname){};
-    public static record ModelTexGroup(TextureGroup group){};
-    public static record ModelOrientEvent(ModelOrientation orientation){};
-    public static record ModelExportValue(String name, String value, boolean list){};
+    public static record ModelTexGroup(Model model, TextureGroup group){};
+    public static record ModelTextureSize(Model model, int x, int y){};
+    public static record ModelOrientEvent(Model model, ModelOrientation orientation){};
+    public static record ModelExportValue(Model model, String name, String value, boolean list){};
 
     public static record TexGroupAdded(TextureGroup group){};
     public static record TexGroupRenamed(TextureGroup group, String oldname, String newname){};

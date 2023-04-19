@@ -7,16 +7,13 @@ import static org.liquidengine.legui.system.renderer.nvg.util.NvgRenderUtils.res
 import java.util.ArrayList;
 
 import net.fexcraft.app.fmt.polygon.uv.UVCoords;
-import net.fexcraft.app.fmt.update.PolyVal;
 import net.fexcraft.app.fmt.update.UpdateEvent.*;
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
 import net.fexcraft.lib.common.math.RGB;
 import org.joml.Vector2f;
-import org.liquidengine.legui.component.Component;
-import org.liquidengine.legui.component.ScrollablePanel;
-import org.liquidengine.legui.component.SelectBox;
-import org.liquidengine.legui.component.Widget;
+import org.liquidengine.legui.component.*;
 import org.liquidengine.legui.component.event.component.ChangeSizeEvent;
+import org.liquidengine.legui.image.StbBackedLoadableImage;
 import org.liquidengine.legui.style.Style;
 import org.liquidengine.legui.style.border.SimpleLineBorder;
 import org.liquidengine.legui.style.color.ColorConstants;
@@ -39,6 +36,8 @@ public class UVViewer extends Widget {
 
     public static UVViewer INSTANCE;
     public static Face SELECTED = NoFace.NONE;
+    private static String seltex;
+    private View view;
 
     private UVViewer(){
         getTitleTextState().setText(translate("uvviewer.title"));
@@ -50,21 +49,22 @@ public class UVViewer extends Widget {
         Component con = getContainer();
         //
         ScrollablePanel panel = new ScrollablePanel(15.0F, 42.0F, 522.0F, 522.0F);
-        View view = new View(panel, 0.0F, 0.0F, 512.0F, 512.0F, updcom);
+        view = new View(panel, 0.0F, 0.0F, 512.0F, 512.0F, updcom);
         panel.getContainer().add(view);
         panel.getContainer().setSize(512.0F, 512.0F);
         con.add(panel);
-        con.add(new Icon(0, 32, 8, 15, 5, "./resources/textures/icons/uvviewer/borders.png", () -> {}).addTooltip("uvviewer.button.borders"));
-        con.add(new Icon(1, 32, 8, 15, 5, "./resources/textures/icons/uvviewer/only_pos.png", () -> {}).addTooltip("uvviewer.button.only_pos"));
-        con.add(new Icon(2, 32, 8, 15, 5, "./resources/textures/icons/uvviewer/texture.png", () -> {}).addTooltip("uvviewer.button.texture"));
-        con.add(new Icon(0, 32, 8, 160, 5, "./resources/textures/icons/uvviewer/zoom_in.png", () -> {}).addTooltip("uvviewer.button.zoom_in"));
-        con.add(new Icon(1, 32, 8, 160, 5, "./resources/textures/icons/uvviewer/zoom_out.png", () -> {}).addTooltip("uvviewer.button.zoom_out"));
+        con.add(new Icon(0, 32, 8, 15, 5, "./resources/textures/icons/uvviewer/borders.png", () -> view.toggleBorders()).addTooltip("uvviewer.button.borders"));
+        con.add(new Icon(1, 32, 8, 15, 5, "./resources/textures/icons/uvviewer/only_pos.png", () -> view.toggleVisibility()).addTooltip("uvviewer.button.only_pos"));
+        con.add(new Icon(2, 32, 8, 15, 5, "./resources/textures/icons/uvviewer/texture.png", () -> view.toggleTexture()).addTooltip("uvviewer.button.texture"));
+        con.add(new Icon(0, 32, 8, 160, 5, "./resources/textures/icons/uvviewer/zoom_in.png", () -> view.upsize()).addTooltip("uvviewer.button.zoom_in"));
+        con.add(new Icon(1, 32, 8, 160, 5, "./resources/textures/icons/uvviewer/zoom_out.png", () -> view.downsize()).addTooltip("uvviewer.button.zoom_out"));
         //
         SelectBox<String> tex = new SelectBox<>(255.0F, 5.0F, 280.0F, 32.0F);
         for(TextureGroup group : TextureManager.getGroups()) tex.addElement(group.name);
-    	tex.setVisibleCount(8);
-    	tex.addSelectBoxChangeSelectionEventListener(lis -> seltex(lis.getNewValue()));
-    	con.add(tex);
+        tex.setVisibleCount(8);
+        tex.addSelectBoxChangeSelectionEventListener(lis -> seltex(lis.getNewValue()));
+        seltex = TextureManager.getGroups().size() > 0 ? TextureManager.getGroups().get(0).name : null;
+        con.add(tex);
         updcom.add(TexGroupAdded.class, e -> refreshTexGroups(tex));
         updcom.add(TexGroupRemoved.class, e -> refreshTexGroups(tex));
         updcom.add(TexGroupRenamed.class, e -> refreshTexGroups(tex));
@@ -104,7 +104,8 @@ public class UVViewer extends Widget {
     }
 
     private void seltex(String groupid){
-
+        seltex = groupid;
+        view.updateImg();
     }
 
     public static void toggle(){
@@ -142,14 +143,19 @@ public class UVViewer extends Widget {
 
         private ArrayList<UvElm> elements = new ArrayList<>();
         private ScrollablePanel root;
+        private boolean borders, posi, texture;
+        private ImageView image;
+        private int zoom = 1;
 
         public View(ScrollablePanel panel, float x, float y, float w, float h, UpdateCompound updcom){
             setSize(w, h);
             setPosition(x, y);
             getStyle().setBorderRadius(0);
             getStyle().getBackground().setColor(FMT.rgba(0xffffffff));
-            getStyle().setBorder(new SimpleLineBorder(ColorConstants.black(), 3));
+            //getStyle().setBorder(new SimpleLineBorder(ColorConstants.black(), 3));
             setFocusable(false);
+            add(image = new ImageView());
+            UIUtils.hide(image);
             for(Group group : FMT.MODEL.groups()) for(Polygon polygon : group) addElm(polygon);
             updcom.add(PolygonAdded.class, e -> addElm(e.polygon()));
             updcom.add(PolygonRemoved.class, e -> remElm(e.polygon()));
@@ -162,12 +168,23 @@ public class UVViewer extends Widget {
                     }
                 }
             });
+            updcom.add(ModelLoad.class, e ->  resize());
+            updcom.add(ModelTextureSize.class, e ->  resize());
             root = panel;
+            resize();
+        }
+
+        private void resize(){
+            int x = FMT.MODEL.texSizeX * zoom, y = FMT.MODEL.texSizeY * zoom;
+            setSize(x, y);
+            image.setSize(x, y);
+            root.getContainer().setSize(x, y);
+            for(UvElm elm : elements) elm.update();
         }
 
         private void addElm(Polygon polygon){
             for(Face face : polygon.getUVFaces()){
-                UvElm elm = new UvElm(polygon, face);
+                UvElm elm = new UvElm(this, polygon, face);
                 elements.add(elm);
                 add(elm);
             }
@@ -186,18 +203,58 @@ public class UVViewer extends Widget {
             }
         }
 
+        public void toggleBorders(){
+            borders = !borders;
+        }
+
+        public void toggleVisibility(){
+            posi = !posi;
+            for(UvElm elm : elements){
+                elm.setEnabled(!posi || (elm.poly.textureX >= 0 && elm.poly.textureY >= 0));
+            }
+        }
+
+        public void toggleTexture(){
+            texture = !texture;
+            updateImg();
+        }
+
+        public void updateImg(){
+            if(texture){
+                TextureGroup group = TextureManager.getGroup(seltex);
+                if(group == null) return;
+                UIUtils.show(image);
+                image.setImage(new StbBackedLoadableImage(group.texture.getFile().toPath().toString()));
+                image.setSize(getSize());
+            }
+            else{
+                UIUtils.hide(image);
+            }
+        }
+
+        public void upsize(){
+            if(++zoom > 16) zoom = 16;
+            resize();
+        }
+
+        public void downsize(){
+            if(--zoom < 1) zoom = 1;
+            resize();
+        }
     }
 
     public static class UvElm extends Component {
 
         private Polygon poly;
+        private View view;
         private Face face;
         private RGB color;
 
-        public UvElm(Polygon poli, Face faccia){
+        public UvElm(View parr, Polygon poli, Face faccia){
             poly = poli;
             face = faccia;
-            update();
+            view = parr;
+            //update();
         }
 
         public void update(){
@@ -209,7 +266,7 @@ public class UVViewer extends Widget {
             float[][] pos = poss[face.index()];
             switch(cuv.type()){
                 case AUTOMATIC -> {
-                    setPosition(poly.textureX, poly.textureY);
+                    setPosition(poly.textureX + pos[0][0], poly.textureY + pos[0][1]);
                     setSize(pos[1][0] - pos[0][0], pos[1][1] - pos[0][1]);
                 }
                 case OFFSET -> {
@@ -231,22 +288,46 @@ public class UVViewer extends Widget {
 
                 }
             }
+            if(view.zoom > 1){
+                setPosition(getPosition().mul(view.zoom));
+                setSize(getSize().mul(view.zoom));
+            }
         }
+
     }
 
     public static class UvElmRenderer extends NvgDefaultComponentRenderer<UvElm> {
 
+        private static float[] selcol = Settings.SELECTION_LINES.value.toFloatArray();
+
         @Override
         protected void renderComponent(UVViewer.UvElm com, Context context, long ctx){
+            if(!com.isEnabled()) return;
             createScissor(ctx, com);
             Vector2f pos = com.getAbsolutePosition();
             Vector2f siz = com.getSize();
             byte[] rgb = com.color.toByteArray();
             //
+            NVGColor color = NVGColor.calloc();
+            if(com.poly.selected){
+                color.r(selcol[0]).g(selcol[1]).b(selcol[2]).a(1);
+            }
+            else if(com.view.borders){
+                color.r(0).g(0).b(0).a(1);
+            }
+            else{
+                color.r(rgb[0]).g(rgb[1]).b(rgb[2]).a(1);
+            }
             NanoVG.nvgBeginPath(ctx);
             NanoVG.nvgRect(ctx, pos.x, pos.y, siz.x, siz.y);
-            NanoVG.nvgFillColor(ctx, NVGColor.calloc().r(rgb[0]).g(rgb[1]).b(rgb[2]).a(1));
-            NanoVG.nvgFill(ctx);
+            if(com.view.borders){
+                NanoVG.nvgStrokeColor(ctx, color);
+                NanoVG.nvgStroke(ctx);
+            }
+            else{
+                NanoVG.nvgFillColor(ctx, color);
+                NanoVG.nvgFill(ctx);
+            }
             NanoVG.nvgClosePath(ctx);
             //
             resetScissor(ctx);

@@ -102,7 +102,7 @@ public class ModelExports extends EditorComponent {
 		if(curridx >= 0){
 			FMT.MODEL.export_listed_values.get(current).set(curridx, currval.getTextState().getText());
 		}
-		UpdateHandler.update(new ModelExportValue(null, null, false));
+		UpdateHandler.update(new ModelExportValue(FMT.MODEL, null, null, false));
 	}
 
 	private void removeValue(){
@@ -120,7 +120,7 @@ public class ModelExports extends EditorComponent {
 		if(curridx >= 0){
 			FMT.MODEL.export_listed_values.get(current).remove(curridx);
 		}
-		UpdateHandler.update(new ModelExportValue(null, null, false));
+		UpdateHandler.update(new ModelExportValue(FMT.MODEL,null, null, false));
 	}
 
 	private void addEntryDialog(){
@@ -145,7 +145,7 @@ public class ModelExports extends EditorComponent {
         		boolean islist = FMT.MODEL.export_listed_values.containsKey(name);
         		if(islist) FMT.MODEL.export_listed_values.get(name).add(value);
         		else FMT.MODEL.export_values.put(name, value);
-    			UpdateHandler.update(new ModelExportValue(name, value, islist));
+    			UpdateHandler.update(new ModelExportValue(FMT.MODEL, name, value, islist));
         		dialog.close();
         	}
         });
@@ -176,7 +176,7 @@ public class ModelExports extends EditorComponent {
         		String name = field.getTextState().getText();
         		if(!FMT.MODEL.export_listed_values.containsKey(name)){
         			FMT.MODEL.export_listed_values.put(name, new ArrayList<>());
-        			UpdateHandler.update(new ModelExportValue(name, null, true));
+        			UpdateHandler.update(new ModelExportValue(FMT.MODEL, name, null, true));
         		}
         		dialog.close();
         	}

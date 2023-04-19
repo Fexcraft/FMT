@@ -162,7 +162,7 @@ public class MTBImporter implements Importer {
                             TextureManager.addGroup(new TextureGroup("default"));
                             model.texgroup = TextureManager.getGroup("default");
                             model.texgroup.reAssignTexture();
-                            UpdateHandler.update(new ModelTexGroup(FMT.MODEL.texgroup));
+                            UpdateHandler.update(new ModelTexGroup(FMT.MODEL, FMT.MODEL.texgroup));
                         }
                         else{
                             log("Texture in MTB is blank, not creating a group.");
