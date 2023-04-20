@@ -119,8 +119,8 @@ public class UVComponent extends EditorComponent {
 				fields[i].add(new NumberField(updcom, F20 - 3, 40, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_START, PolyVal.ValAxe.X)));
 				fields[i].add(new NumberField(updcom, F21 - 3, 40, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_START, PolyVal.ValAxe.Y)));
 				fields[i].add(new Label(translate(LANG_PREFIX + id + ".type.end"), 7, 70, 270, 20));
-				fields[i].add(new NumberField(updcom, F20 - 3, 100, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_START, PolyVal.ValAxe.X)));
-				fields[i].add(new NumberField(updcom, F21 - 3, 100, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_START, PolyVal.ValAxe.Y)));
+				fields[i].add(new NumberField(updcom, F20 - 3, 100, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_END, PolyVal.ValAxe.X)));
+				fields[i].add(new NumberField(updcom, F21 - 3, 100, F2S, 20).setup(-4096, 4096, true, new PolygonValue(PolyVal.CUV_END, PolyVal.ValAxe.Y)));
 			}
 			else{
 				fields[i].setSize(w, 250);
