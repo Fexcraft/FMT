@@ -174,13 +174,13 @@ public class GroupComponent extends EditorComponent {
 		public PolygonLabel(GroupComponent com){
 			Settings.applyBorderless(this);
 			setSize(Editor.CWIDTH - 8, PH);
-			Icon icon = new Icon(0, 16, 4, Editor.CWIDTH - 26, 2, "./resources/textures/ievent/component/remove.png", () -> {
+			Icon icon = new Icon(0, 16, 4, Editor.CWIDTH - 26, 2, "./resources/textures/icons/component/remove.png", () -> {
 				if(ASK_POLYGON_REMOVAL.value){
 					GenericDialog.showOC(null, () -> com.group.remove(polygon), null, "editor.component.group.polygon.remove", com.group.id + ":" + polygon.name());
 				}
 				else com.group.remove(polygon);
 			});
-			Icon visi = new Icon(0, 16, 4, Editor.CWIDTH - 46, 2, "./resources/textures/ievent/component/visible.png", () -> {
+			Icon visi = new Icon(0, 16, 4, Editor.CWIDTH - 46, 2, "./resources/textures/icons/component/visible.png", () -> {
 				polygon.visible = !polygon.visible;
 				//update_color();
 				UpdateHandler.update(new PolygonVisibility(polygon, polygon.visible));
