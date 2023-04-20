@@ -266,7 +266,7 @@ public abstract class Polygon {
 			case CUV_START:
 			case CUV_TR:{
 				UVCoords cor = cuv.get(UVViewer.SELECTED);
-				if(cor != null && cor.value() != null) return cor.value()[polyval.axe().x() ? 0 : 1];
+				if(cor != null && cor.value() != null && cor.length()> 0) return cor.value()[polyval.axe().x() ? 0 : 1];
 				else return 0;
 			}
 			case CUV_END:
@@ -320,7 +320,7 @@ public abstract class Polygon {
 			case CUV_START:
 			case CUV_TR:{
 				UVCoords cor = cuv.get(UVViewer.SELECTED);
-				if(cor != null && cor.value() != null){
+				if(cor != null && cor.value() != null && cor.length() > 0){
 					cor.value()[polyval.axe().x() ? 0 : 1] = value;
 				}
 				break;
