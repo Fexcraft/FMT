@@ -4,6 +4,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.function.Consumer;
 
+import net.fexcraft.app.fmt.polygon.uv.Face;
+import net.fexcraft.app.fmt.polygon.uv.NoFace;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateEvent.PickMode;
 import org.lwjgl.opengl.GL11;
@@ -23,6 +25,7 @@ public class Picker {
 	private static boolean filled, offcenter;
 	private static Polygon polygon;
 	private static Consumer<Polygon> consumer;
+	public static Face selected_face = NoFace.NONE;
 
 	public static void resetBuffer(boolean resize){
 		if(resize){
@@ -58,14 +61,14 @@ public class Picker {
 	
 	public static enum PickTask {
 		
-		NONE, SELECT, PAINT1, PAINT2, FUNCTION;
+		NONE, SELECT, RESELECT, PAINT1, PAINT2, FUNCTION;
 		
 		public boolean pick(){
 			return this != NONE;
 		}
 
 		public boolean select(){
-			return this == SELECT;
+			return this == SELECT || this == RESELECT;
 		}
 
 		public boolean paint(){
@@ -93,6 +96,7 @@ public class Picker {
 		TASK = task;
 		offcenter = off;
 		polygon = null;
+		selected_face = NoFace.NONE;
 		UpdateHandler.update(new PickMode(type, task, off));
 	}
 
@@ -105,6 +109,10 @@ public class Picker {
 			int face = getPick();
 			if(TASK.paint()){
 				TexturePainter.paint(TASK == PickTask.PAINT1, polygon, face);
+			}
+			else{
+				selected_face = polygon.getFaceByColor(face);
+				UpdateHandler.update(new UpdateEvent.PickFace(polygon, selected_face));
 			}
 		}
 		else{
@@ -127,7 +135,7 @@ public class Picker {
 			if(polygon == null && TASK.nonfunc()) reset();
 			else{
 				if(TASK.select()){
-					polygon.group().model.select(polygon);
+					polygon.group().model.select(polygon, TASK == PickTask.RESELECT);
 				}
 				else if(TASK.paint()){
 					if(TexturePainter.SELMODE.getPickType() == PickType.FACE) return;

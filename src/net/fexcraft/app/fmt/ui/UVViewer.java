@@ -9,14 +9,15 @@ import java.util.ArrayList;
 import net.fexcraft.app.fmt.polygon.uv.UVCoords;
 import net.fexcraft.app.fmt.update.UpdateEvent.*;
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
+import net.fexcraft.app.fmt.utils.Picker;
 import net.fexcraft.lib.common.math.RGB;
 import org.joml.Vector2f;
 import org.liquidengine.legui.component.*;
 import org.liquidengine.legui.component.event.component.ChangeSizeEvent;
+import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.image.StbBackedLoadableImage;
 import org.liquidengine.legui.style.Style;
 import org.liquidengine.legui.style.border.SimpleLineBorder;
-import org.liquidengine.legui.style.color.ColorConstants;
 import org.liquidengine.legui.system.context.Context;
 import org.liquidengine.legui.system.renderer.nvg.component.NvgDefaultComponentRenderer;
 
@@ -52,6 +53,7 @@ public class UVViewer extends Widget {
         view = new View(panel, 0.0F, 0.0F, 512.0F, 512.0F, updcom);
         panel.getContainer().add(view);
         panel.getContainer().setSize(512.0F, 512.0F);
+        panel.getContainer().setFocusable(false);
         con.add(panel);
         con.add(new Icon(0, 32, 8, 15, 5, "./resources/textures/icons/uvviewer/borders.png", () -> view.toggleBorders()).addTooltip("uvviewer.button.borders"));
         con.add(new Icon(1, 32, 8, 15, 5, "./resources/textures/icons/uvviewer/only_pos.png", () -> view.toggleVisibility()).addTooltip("uvviewer.button.only_pos"));
@@ -82,9 +84,11 @@ public class UVViewer extends Widget {
             }
             if(c) setSize(x, y);
             panel.setSize(x - 30, y - 77);
-            panel.getContainer().setSize(x - 40, y - 87);
         });
-        addWidgetCloseEventListener(lis -> {});
+        addWidgetCloseEventListener(lis -> {
+            UpdateHandler.deregister(updcom);
+            INSTANCE = null;
+        });
         UpdateHandler.register(updcom);
         FMT.FRAME.getContainer().add(this);
         show();
@@ -108,14 +112,12 @@ public class UVViewer extends Widget {
         view.updateImg();
     }
 
-    public static void toggle(){
+    public static void addIfAbsent(){
        if(INSTANCE == null) INSTANCE = new UVViewer();
-       else if(INSTANCE.getStyle().getDisplay() == Style.DisplayType.FLEX) INSTANCE.hide();
-       else INSTANCE.show();
     }
 
     public static boolean visible(){
-        return INSTANCE != null && INSTANCE.getStyle().getDisplay() != Style.DisplayType.NONE;
+        return INSTANCE != null;
     }
 
     public static Vector2f pos(){
@@ -161,6 +163,14 @@ public class UVViewer extends Widget {
             updcom.add(PolygonRemoved.class, e -> remElm(e.polygon()));
             updcom.add(PolygonValueEvent.class, e -> {
                 if(!e.value().val().uv()) return;
+                for(UvElm elm : elements){
+                    if(elm.poly == e.polygon()){
+                        elm.update();
+                        break;
+                    }
+                }
+            });
+            updcom.add(PickFace.class, e -> {
                 for(UvElm elm : elements){
                     if(elm.poly == e.polygon()){
                         elm.update();
@@ -222,7 +232,7 @@ public class UVViewer extends Widget {
         public void updateImg(){
             if(texture){
                 TextureGroup group = TextureManager.getGroup(seltex);
-                if(group == null) return;
+                if(group == null || group.texture == null) return;
                 UIUtils.show(image);
                 image.setImage(new StbBackedLoadableImage(group.texture.getFile().toPath().toString()));
                 image.setSize(getSize());
@@ -255,6 +265,11 @@ public class UVViewer extends Widget {
             face = faccia;
             view = parr;
             //update();
+            getListenerMap().addListener(MouseClickEvent.class, lis -> {
+                FMT.MODEL.select(poly, true);
+                Picker.selected_face = face;
+                UpdateHandler.update(new PickFace(poly, face));
+            });
         }
 
         public void update(){
@@ -306,11 +321,12 @@ public class UVViewer extends Widget {
             createScissor(ctx, com);
             Vector2f pos = com.getAbsolutePosition();
             Vector2f siz = com.getSize();
-            byte[] rgb = com.color.toByteArray();
+            float[] rgb = com.color.toFloatArray();
             //
             NVGColor color = NVGColor.calloc();
             if(com.poly.selected){
-                color.r(selcol[0]).g(selcol[1]).b(selcol[2]).a(1);
+                if(com.face == Picker.selected_face) color.r(selcol[0]).g(selcol[1]).b(selcol[2]).a(1);
+                else color.r(selcol[0] * .5f).g(selcol[1] * .5f).b(selcol[2] * .5f).a(1);
             }
             else if(com.view.borders){
                 color.r(0).g(0).b(0).a(1);

@@ -4,6 +4,7 @@ import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.polygon.ModelOrientation;
 import net.fexcraft.app.fmt.polygon.Polygon;
+import net.fexcraft.app.fmt.polygon.uv.Face;
 import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.texture.TexturePainter;
 import net.fexcraft.app.fmt.ui.Editor;
@@ -51,5 +52,6 @@ public class UpdateEvent {
     public static record PainterColor(Integer value, boolean primary){};
     public static record PainterTool(TexturePainter.Tool tool, TexturePainter.Selection selection){};
     public static record PickMode(PickType type, PickTask task, boolean offcenter){};
+    public static record PickFace(Polygon polygon, Face face){};
 
 }

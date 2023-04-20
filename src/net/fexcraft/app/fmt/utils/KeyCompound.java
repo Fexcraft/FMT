@@ -56,6 +56,7 @@ public class KeyCompound {
 			}
 		}));
 		keys.add(new KeyFunction("zoom_in", GLFW_KEY_Z, (action) -> onRelease(action, () -> FMT.CAM.toggleZoom())));
+		keys.add(new KeyFunction("pick_face", GLFW_KEY_I, (action) -> onRelease(action, () -> Picker.pick(Picker.PickType.FACE, Picker.PickTask.RESELECT, true))));
 		//
 		for(int i = 1; i < 10; i++){ final int j = i - 1;
 			keys.add(new KeyFunction("toggle_editor_" + i, GLFW_KEY_0 + i, action -> {

@@ -273,8 +273,12 @@ public class Model {
 	}
 
 	public void select(Polygon polygon){
+		select(polygon, false);
+	}
+
+	public void select(Polygon polygon, boolean resel){
 		int old = selected.size();
-		if(polygon.selected) polygon.selected = !selected.remove(polygon);
+		if(!resel && polygon.selected) polygon.selected = !selected.remove(polygon);
 		else{
 			if(!GGR.isAltDown()) clear_selection();
 			polygon.selected = selected.add(polygon);

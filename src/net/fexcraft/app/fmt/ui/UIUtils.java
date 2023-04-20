@@ -21,4 +21,8 @@ public class UIUtils {
 		for(Component com : coms) show(com);
 	}
 
+	public static final void show(boolean bool, Component com){
+		com.getStyle().setDisplay(bool ? DisplayType.MANUAL : DisplayType.NONE);
+	}
+
 }

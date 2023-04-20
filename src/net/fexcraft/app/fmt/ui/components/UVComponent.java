@@ -6,6 +6,7 @@ import static net.fexcraft.app.fmt.utils.Translator.translate;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.polygon.uv.Face;
+import net.fexcraft.app.fmt.polygon.uv.NoFace;
 import net.fexcraft.app.fmt.polygon.uv.UVCoords;
 import net.fexcraft.app.fmt.polygon.uv.UVType;
 import net.fexcraft.app.fmt.settings.Settings;
@@ -17,6 +18,8 @@ import net.fexcraft.app.fmt.ui.fields.NumberField;
 import net.fexcraft.app.fmt.ui.fields.RunButton;
 import net.fexcraft.app.fmt.update.PolyVal;
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
+import net.fexcraft.app.fmt.update.UpdateEvent;
+import net.fexcraft.app.fmt.update.UpdateEvent.PickFace;
 import net.fexcraft.app.fmt.update.UpdateEvent.PolygonSelected;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 import org.liquidengine.legui.component.Component;
@@ -50,9 +53,17 @@ public class UVComponent extends EditorComponent {
 			if(poly != null){
 				poly.cuv.keySet().forEach(key -> face.addElement(key));
 				if(poly.isValidUVFace(SELECTED)) face.setSelected(SELECTED.id(), true);
-				else face.setSelected(poly.getUVFaces()[0].id(), true);
+				else face.setSelected((SELECTED = poly.getUVFaces()[0]).id(), true);
 			}
-			else face.setSelected("none", true);
+			else face.setSelected((SELECTED = NoFace.NONE).id(), true);
+			updateSelFace(poly);
+		});
+		updcom.add(PickFace.class, e -> {
+			while(face.getElements().size() > 0) face.removeElement(0);
+			face.addElement("none");
+			Polygon poly = e.polygon();
+			poly.cuv.keySet().forEach(key -> face.addElement(key));
+			face.setSelected((SELECTED = e.face()).id(), true);
 			updateSelFace(poly);
 		});
 		face.addSelectBoxChangeSelectionEventListener(lis -> {
@@ -129,7 +140,7 @@ public class UVComponent extends EditorComponent {
 			UIUtils.hide(fields[i]);
 			add(fields[i]);
 			//
-			add(new RunButton(LANG_PREFIX + id + ".viewer", L5, fullheight - 35, LW, HEIGHT, () -> UVViewer.toggle()));
+			add(new RunButton(LANG_PREFIX + id + ".viewer", L5, fullheight - 35, LW, HEIGHT, () -> UVViewer.addIfAbsent()));
 		}
 	}
 
