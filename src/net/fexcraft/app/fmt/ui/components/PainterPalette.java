@@ -4,8 +4,11 @@ import static net.fexcraft.app.fmt.utils.Translator.translate;
 
 import java.util.ArrayList;
 
+import javax.swing.*;
+
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
+import net.fexcraft.app.fmt.texture.TexturePainter;
 import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.ui.fields.RunButton;
 import net.fexcraft.app.fmt.update.UpdateEvent.PainterColor;
@@ -18,6 +21,7 @@ public class PainterPalette extends EditorComponent {
 
 	private ArrayList<Component> cols = new ArrayList<>();
 	private int c = 28, r = 12;
+	private RunButton button;
 	private boolean prim;
 
 	public PainterPalette(){
@@ -25,9 +29,11 @@ public class PainterPalette extends EditorComponent {
 	}
 
 	public PainterPalette(boolean bool){
-		super("painter.palette", 180, false, false);
-		add(new Label(translate(LANG_PREFIX + id + ".primary"), L5, row(1), LW - 60, HEIGHT));
-		add(new RunButton("", L5 + LW - 50, row(0), 50, HEIGHT, () -> prim = !prim));
+		super("painter.palette", 160, false, false);
+		add(button = new RunButton("", L5 + LW - 88, row(0) + 5, 80, 20, () -> {
+			prim = !prim;
+			refresh(null);
+		}));
 		prim = bool;
 		updcom.add(PainterColor.class, e -> {
 			if(e.primary() == prim){
@@ -42,12 +48,13 @@ public class PainterPalette extends EditorComponent {
 				add(button);
 			}
 		}
-		refresh(RGB.GREEN.packed);
+		refresh(null);
 	}
 
 	private void refresh(Integer value){
+		button.getTextState().setText(prim ? "primary" : "secondary");
 		int idx = 0;
-		byte[] arr = new RGB(value).toByteArray();
+		byte[] arr = value == null ? prim ? TexturePainter.getPrimaryColor() : TexturePainter.getSecondaryColor() : new RGB(value).toByteArray();
 		for(int x = 0; x < c; x++){
 			for(int z = 0; z < r; z++){
 				int y = x * c + z;
@@ -63,6 +70,7 @@ public class PainterPalette extends EditorComponent {
 	@Override
 	public PainterPalette load(JsonMap map){
 		prim = map.getBoolean("primary", true);
+		refresh(null);
 		return this;
 	}
 
