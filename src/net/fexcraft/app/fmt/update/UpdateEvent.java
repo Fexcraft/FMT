@@ -5,6 +5,7 @@ import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.polygon.ModelOrientation;
 import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.polygon.uv.Face;
+import net.fexcraft.app.fmt.polygon.uv.UVType;
 import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.texture.TexturePainter;
 import net.fexcraft.app.fmt.ui.Editor;
@@ -22,6 +23,7 @@ public class UpdateEvent {
     public static record PolygonSelected(Polygon polygon, int prevselected, int selected){};
     public static record PolygonVisibility(Polygon polygon, boolean visible){};
     public static record PolygonValueEvent(Polygon polygon, PolygonValue value, boolean first){};
+    public static record PolygonUVType(Polygon polygon, UVType newtype){};
 
     public static record GroupAdded(Model model, Group group){};
     public static record GroupRenamed(Group group, String name){};
