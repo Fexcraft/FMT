@@ -21,7 +21,9 @@ import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateEvent.PickFace;
 import net.fexcraft.app.fmt.update.UpdateEvent.PolygonSelected;
+import net.fexcraft.app.fmt.update.UpdateEvent.PolygonUVType;
 import net.fexcraft.app.fmt.update.UpdateHandler;
+import net.fexcraft.app.fmt.utils.Logging;
 import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.SelectBox;
@@ -86,16 +88,68 @@ public class UVComponent extends EditorComponent {
 			if(idx == -1){
 				idx = uvt.ordinal() > 3 ? uvt.ordinal() - 3 : uvt.ordinal();
 			}
-			Polygon poly = FMT.MODEL.first_selected();
-			if(poly != null){
+			for(Polygon poly : FMT.MODEL.selected()){
 				UVCoords cor = poly.cuv.get(SELECTED);
 				if(cor != null && cor.type() != uvt){
 					cor.set(uvt);
-					int i = FMT.MODEL.selected().size();
-					UpdateHandler.update(new PolygonSelected(poly, i, i));
+					float[][][] poss = poly.newUV(false, false);
+					//if(poss == null || poss.length == 0) return;
+					float[][] pos = poss[SELECTED.index()];
+					//if(pos == null) return;
+					switch(cor.type()){
+						case AUTOMATIC: break;
+						case OFFSET:{
+							cor.value(new float[]{ poly.textureX + pos[0][0], poly.textureY + pos[0][1] });
+							break;
+						}
+						case OFFSET_ENDS:{
+							cor.value()[0] = poly.textureX + pos[0][0];
+							cor.value()[1] = poly.textureY + pos[0][1];
+							cor.value()[2] = poly.textureX + pos[1][0];
+							cor.value()[3] = poly.textureY + pos[1][1];
+							break;
+						}
+						case OFFSET_FULL:{
+							float w = pos[1][0] - pos[0][0];
+							cor.value()[0] = poly.textureX + pos[0][0] + w;
+							cor.value()[1] = poly.textureY + pos[0][1];
+							cor.value()[2] = poly.textureX + pos[0][0];
+							cor.value()[3] = poly.textureY + pos[0][1];
+							cor.value()[4] = poly.textureX + pos[1][0] - w;
+							cor.value()[5] = poly.textureY + pos[1][1];
+							cor.value()[6] = poly.textureX + pos[1][0];
+							cor.value()[7] = poly.textureY + pos[1][1];
+							break;
+						}
+						case DETACHED:{
+							cor.value(new float[]{ pos[0][0], pos[0][1] });
+							break;
+						}
+						case DETACHED_ENDS:{
+							cor.value()[0] = pos[0][0];
+							cor.value()[1] = pos[0][1];
+							cor.value()[2] = pos[1][0];
+							cor.value()[3] = pos[1][1];
+							break;
+						}
+						case DETACHED_FULL:{
+							float w = pos[1][0] - pos[0][0];
+							cor.value()[0] = pos[0][0] + w;
+							cor.value()[1] = pos[0][1];
+							cor.value()[2] = pos[0][0];
+							cor.value()[3] = pos[0][1];
+							cor.value()[4] = pos[1][0] - w;
+							cor.value()[5] = pos[1][1];
+							cor.value()[6] = pos[1][0];
+							cor.value()[7] = pos[1][1];
+							break;
+						}
+					}
+					UpdateHandler.update(new PolygonUVType(poly, uvt));
 				}
 			}
-			showField(idx);
+			UpdateHandler.update(new PolygonSelected(FMT.MODEL.first_selected(), 0, 0));
+			showField(idx, null);
 		});
 		add(type);
 		//
@@ -145,27 +199,30 @@ public class UVComponent extends EditorComponent {
 	}
 
 	public void updateSelFace(Polygon poly){
-		if(poly == null) showField(0);
+		if(poly == null) showField(0, poly);
 		else{
 			UVCoords cuv = poly.cuv.get(SELECTED);
 			if(cuv == null || cuv.automatic()){
-				showField(0);
+				showField(0, poly);
 				type.setSelected(UVType.AUTOMATIC.name().toLowerCase(), true);
 			}
 			else if(cuv.detached()){
-				showField(cuv.type().ordinal() - 3);
+				showField(cuv.type().ordinal() - 3, poly);
 				type.setSelected(cuv.type().name().toLowerCase(), true);
 			}
 			else{
-				showField(cuv.type().ordinal());
+				showField(cuv.type().ordinal(), poly);
 				type.setSelected(cuv.type().name().toLowerCase(), true);
 			}
 		}
 	}
 
-	private void showField(int idx){
+	private void showField(int idx, Polygon poly){
 		for(UVViewer.UVFields field : fields) UIUtils.hide(field);
 		UIUtils.show(fields[idx]);
+		fields[idx].getChildComponents().forEach(com -> {
+			if(com instanceof NumberField) ((NumberField)com).updateValue(poly);
+		});
 	}
 
 	public static class UVFields extends Component {
