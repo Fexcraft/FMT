@@ -41,8 +41,9 @@ public class UVCoords {
 			Logging.log("Invalid UVType '" + newtype + "' for Polygon Shape '" + poly.getShape().name() + "'!");
 			return this;
 		}
+		boolean sale = type.length == newtype.length;
 		type = newtype;
-		cuv = new float[type.length];
+		if(!sale) cuv = new float[type.length];
 		return this;
 	}
 
