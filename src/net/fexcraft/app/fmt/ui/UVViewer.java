@@ -6,10 +6,12 @@ import static org.liquidengine.legui.system.renderer.nvg.util.NvgRenderUtils.res
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Vector;
 
 import net.fexcraft.app.fmt.polygon.uv.UVCoords;
 import net.fexcraft.app.fmt.update.UpdateEvent.*;
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
+import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.fmt.utils.Picker;
 import net.fexcraft.lib.common.math.RGB;
 import org.joml.Vector2f;
@@ -57,10 +59,11 @@ public class UVViewer extends Widget {
         panel.getContainer().setFocusable(false);
         con.add(panel);
         con.add(new Icon(0, 32, 8, 15, 5, "./resources/textures/icons/uvviewer/borders.png", () -> view.toggleBorders()).addTooltip("uvviewer.button.borders"));
-        con.add(new Icon(1, 32, 8, 15, 5, "./resources/textures/icons/uvviewer/only_pos.png", () -> view.toggleVisibility()).addTooltip("uvviewer.button.only_pos"));
-        con.add(new Icon(2, 32, 8, 15, 5, "./resources/textures/icons/uvviewer/texture.png", () -> view.toggleTexture()).addTooltip("uvviewer.button.texture"));
-        con.add(new Icon(0, 32, 8, 160, 5, "./resources/textures/icons/uvviewer/zoom_in.png", () -> view.upsize()).addTooltip("uvviewer.button.zoom_in"));
-        con.add(new Icon(1, 32, 8, 160, 5, "./resources/textures/icons/uvviewer/zoom_out.png", () -> view.downsize()).addTooltip("uvviewer.button.zoom_out"));
+        con.add(new Icon(1, 32, 8, 15, 5, "./resources/textures/icons/uvviewer/only_pos.png", () -> view.togglePositioned()).addTooltip("uvviewer.button.only_pos"));
+        con.add(new Icon(2, 32, 8, 15, 5, "./resources/textures/icons/component/visible.png", () -> view.toggleVisibility()).addTooltip("uvviewer.button.only_vis"));
+        con.add(new Icon(3, 32, 8, 15, 5, "./resources/textures/icons/uvviewer/texture.png", () -> view.toggleTexture()).addTooltip("uvviewer.button.texture"));
+        con.add(new Icon(4, 32, 8, 15, 5, "./resources/textures/icons/uvviewer/zoom_in.png", () -> view.upsize()).addTooltip("uvviewer.button.zoom_in"));
+        con.add(new Icon(5, 32, 8, 15, 5, "./resources/textures/icons/uvviewer/zoom_out.png", () -> view.downsize()).addTooltip("uvviewer.button.zoom_out"));
         //
         SelectBox<String> tex = new SelectBox<>(255.0F, 5.0F, 280.0F, 32.0F);
         for(TextureGroup group : TextureManager.getGroups()) tex.addElement(group.name);
@@ -146,7 +149,7 @@ public class UVViewer extends Widget {
 
         private HashMap<Polygon, ArrayList<UvElm>> elements = new HashMap<>();
         private ScrollablePanel root;
-        private boolean borders, posi, texture;
+        private boolean borders, posi, visi, texture;
         private ImageView image;
         private int zoom = 1;
 
@@ -170,6 +173,20 @@ public class UVViewer extends Widget {
             updcom.add(PickFace.class, e -> {
                 ArrayList<UvElm> elms = elements.get(e.polygon());
                 if(elms != null) for(UvElm elm : elms) elm.update();
+            });
+            updcom.add(PolygonUVType.class, e -> {
+                ArrayList<UvElm> elms = elements.get(e.polygon());
+                if(elms != null) for(UvElm elm : elms) elm.update();
+            });
+            updcom.add(PolygonVisibility.class, e -> {
+                ArrayList<UvElm> elms = elements.get(e.polygon());
+                if(elms != null) for(UvElm elm : elms) elm.checkVisible();
+            });
+            updcom.add(GroupVisibility.class, e -> {
+                for(Polygon poly : e.group()){
+                    ArrayList<UvElm> elms = elements.get(poly);
+                    if(elms != null) for(UvElm elm : elms) elm.checkVisible();
+                }
             });
             updcom.add(ModelLoad.class, e ->  resize());
             updcom.add(ModelTextureSize.class, e ->  resize());
@@ -204,11 +221,20 @@ public class UVViewer extends Widget {
             borders = !borders;
         }
 
-        public void toggleVisibility(){
+        public void togglePositioned(){
             posi = !posi;
             for(ArrayList<UvElm> elms : elements.values()){
                 for(UvElm elm : elms){
                     elm.setEnabled(!posi || (elm.poly.textureX >= 0 && elm.poly.textureY >= 0));
+                }
+            }
+        }
+
+        public void toggleVisibility(){
+            visi = !visi;
+            for(ArrayList<UvElm> elms : elements.values()){
+                for(UvElm elm : elms){
+                    elm.setEnabled(!visi || (elm.poly.visible && elm.poly.group().visible));
                 }
             }
         }
@@ -248,6 +274,7 @@ public class UVViewer extends Widget {
         private View view;
         private Face face;
         private RGB color;
+        private float[] cords;
 
         public UvElm(View parr, Polygon poli, Face faccia, boolean init){
             poly = poli;
@@ -268,27 +295,50 @@ public class UVViewer extends Widget {
             float[][][] poss = poly.newUV(true, false);
             if(poss == null || poss.length == 0) return;
             float[][] pos = poss[face.index()];
+            if(pos == null) return;
             switch(cuv.type()){
                 case AUTOMATIC:
                 case OFFSET:
-                case OFFSET_ENDS:
-                case DETACHED:
-                case DETACHED_ENDS: {
+                case OFFSET_ENDS:{
                     setPosition(poly.textureX + pos[0][0], poly.textureY + pos[0][1]);
+                    setSize(pos[1][0] - pos[0][0], pos[1][1] - pos[0][1]);
+                    cords = null;
+                    break;
+                }
+                case DETACHED:
+                case DETACHED_ENDS:{
+                    setPosition(pos[0][0], pos[0][1]);
                     setSize(pos[1][0] - pos[0][0], pos[1][1] - pos[0][1]);
                     break;
                 }
                 case OFFSET_FULL:{
-
+                    cords = new float[8];
+                    setPosition(poly.textureX + pos[0][0], poly.textureY + pos[0][1]);
+                    setSize(pos[1][0] - pos[0][0], pos[1][1] - pos[0][1]);
+                    for(int i = 0; i < cords.length; i++){
+                        cords[i] = cuv.value()[i];
+                        if(i % 2 == 0) cords[i] += poly.textureX;
+                        else cords[i] += poly.textureY;
+                    }
+                    break;
                 }
                 case DETACHED_FULL:{
-
+                    cords = new float[8];
+                    setPosition(pos[0][0], pos[0][1]);
+                    setSize(pos[1][0] - pos[0][0], pos[1][1] - pos[0][1]);
+                    for(int i = 0; i < cords.length; i++) cords[i] = cuv.value()[i];
+                    break;
                 }
             }
             if(view.zoom > 1){
                 setPosition(getPosition().mul(view.zoom));
                 setSize(getSize().mul(view.zoom));
+                if(cords != null) for(int i = 0; i < cords.length; i++) cords[i] *= view.zoom;
             }
+        }
+
+        public void checkVisible(){
+            setEnabled(!view.visi || (poly.visible && poly.group().visible));
         }
 
     }
@@ -296,6 +346,7 @@ public class UVViewer extends Widget {
     public static class UvElmRenderer extends NvgDefaultComponentRenderer<UvElm> {
 
         private static float[] selcol = Settings.SELECTION_LINES.value.toFloatArray();
+        private Vector2f temp = new Vector2f();
 
         @Override
         protected void renderComponent(UVViewer.UvElm com, Context context, long ctx){
@@ -317,7 +368,17 @@ public class UVViewer extends Widget {
                 color.r(rgb[0]).g(rgb[1]).b(rgb[2]).a(1);
             }
             NanoVG.nvgBeginPath(ctx);
-            NanoVG.nvgRect(ctx, pos.x, pos.y, siz.x, siz.y);
+            if(com.cords == null){
+                NanoVG.nvgRect(ctx, pos.x, pos.y, siz.x, siz.y);
+            }
+            else{
+                pos = com.getParent().getAbsolutePosition();
+                NanoVG.nvgMoveTo(ctx, pos.add(com.cords[0], com.cords[1], temp).x, temp.y);
+                NanoVG.nvgLineTo(ctx, pos.add(com.cords[2], com.cords[3], temp).x, temp.y);
+                NanoVG.nvgLineTo(ctx, pos.add(com.cords[4], com.cords[5], temp).x, temp.y);
+                NanoVG.nvgLineTo(ctx, pos.add(com.cords[6], com.cords[7], temp).x, temp.y);
+                NanoVG.nvgLineTo(ctx, pos.add(com.cords[0], com.cords[1], temp).x, temp.y);
+            }
             if(com.view.borders){
                 NanoVG.nvgStrokeColor(ctx, color);
                 NanoVG.nvgStroke(ctx);
