@@ -272,6 +272,7 @@ editor.component.arrow.mode.shape=Shape / Corners
 uvviewer.title=UV Viewer
 uvviewer.button.borders=Toggle Borders
 uvviewer.button.only_pos=Show only Positioned Polygons
+uvviewer.button.only_vis=Show only Visible Polygons
 uvviewer.button.texture=Toggle Texture
 uvviewer.button.zoom_in=Zoom In
 uvviewer.button.zoom_out=Zoom Out
