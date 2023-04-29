@@ -11,6 +11,7 @@ import java.text.ParseException;
 import java.util.Locale;
 import java.util.function.Consumer;
 
+import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
 import org.liquidengine.legui.component.TextInput;
 import org.liquidengine.legui.event.FocusEvent;
@@ -205,6 +206,10 @@ public class NumberField extends TextInput implements Field {
 			Logging.log(e);
 			return flat;
 		}
+	}
+
+	public void updateValue(Polygon poly){
+		apply((poly == null ? FMT.MODEL.first_selected() : poly).getValue(poly_value));
 	}
 
 }
