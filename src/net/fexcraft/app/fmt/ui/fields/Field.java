@@ -101,17 +101,17 @@ public interface Field {
 		});
 		updcom.add(PolygonSelected.class, event -> {
 			if(event.prevselected() < 0) return;
-			if(event.selected() == 0) field.apply(0);
 			else if(event.selected() == 1 || (event.prevselected() == 0 && event.selected() == 0)){
 				field.apply(FMT.MODEL.first_selected().getValue(val));
 			}
+			else if(event.selected() == 0) field.apply(0);
 		});
 		updcom.add(GroupSelected.class, event -> {
 			if(event.prevselected() < 0) return;
-			if(event.selected() == 0) field.apply(0);
 			else if(event.selected() == 1 || (event.prevselected() == 0 && event.selected() == 0)){
 				field.apply(FMT.MODEL.first_selected().getValue(val));
 			}
+			else if(event.selected() == 0) field.apply(0);
 		});
 		if(field instanceof NumberField || field instanceof ColorField){
 			Component com = (Component)field;
