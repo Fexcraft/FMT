@@ -338,12 +338,14 @@ public abstract class Polygon {
 				if(cor != null && cor.value() != null && cor.length() > 4){
 					cor.value()[polyval.axe().x() ? 4 : 5] = value;
 				}
+				break;
 			}
 			case CUV_BR:{
 				UVCoords cor = cuv.get(UVViewer.SELECTED);
 				if(cor != null && cor.value() != null && cor.length() > 4){
 					cor.value()[polyval.axe().x() ? 6 : 7] = value;
 				}
+				break;
 			}
 			default: return;
 		}
