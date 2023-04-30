@@ -35,11 +35,11 @@ public class CurrentColor extends EditorComponent {
 		super("painter.current", 140, false, true);
 		this.add(new Label(translate(LANG_PREFIX + id + ".color"), L5, row(1), LW, HEIGHT));
 		this.add(field1 = new ColorField(this, (c, b) -> {
-			TexturePainter.updateColor(c, true);
+			TexturePainter.updateColor(c, true, true);
 		}, L5, (float)row(1), Editor.CWIDTH - 27.5f, (float)HEIGHT, palette_png).apply(TexturePainter.PRIMARY.packed));
 		this.add(icon1 = new ColorPickerIcon(row(), true));
 		this.add(field2 = new ColorField(this, (c, b) -> {
-			TexturePainter.updateColor(c, false);
+			TexturePainter.updateColor(c, false, true);
 		}, L5, (float)row(1), Editor.CWIDTH - 27.5f, (float)HEIGHT, palette_png).apply(TexturePainter.SECONDARY.packed));
 		this.add(icon2 = new ColorPickerIcon(row(), false));
 		updcom.add(PainterColor.class, event -> {
