@@ -51,7 +51,7 @@ public class UpdateEvent {
     public static record WorkspaceName(String oldname, String newname){};
     public static record WorkspaceRoot(File oldroot, File newroot){};
 
-    public static record PainterColor(Integer value, boolean primary){};
+    public static record PainterColor(Integer value, boolean primary, boolean upd_plt){};
     public static record PainterTool(TexturePainter.Tool tool, TexturePainter.Selection selection){};
     public static record PickMode(PickType type, PickTask task, boolean offcenter){};
     public static record PickFace(Polygon polygon, Face face){};
