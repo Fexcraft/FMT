@@ -103,7 +103,7 @@ public class Picker {
 	public static void process(){
 		if(!filled) fillBuffer();
 		if(TYPE.color()){
-			TexturePainter.updateColor(getPick(), TYPE == PickType.COLOR1);
+			TexturePainter.updateColor(getPick(), TYPE == PickType.COLOR1, true);
 		}
 		else if(TYPE.face() && polygon != null){
 			int face = getPick();
