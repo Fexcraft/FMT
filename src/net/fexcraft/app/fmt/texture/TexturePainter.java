@@ -35,10 +35,10 @@ public class TexturePainter {
 		return SECONDARY.toByteArray();
 	}
 
-	public static void updateColor(Integer value, boolean primary){
+	public static void updateColor(Integer value, boolean primary, boolean upd_plt){
 		if(primary) PRIMARY.packed = value;
 		else SECONDARY.packed = value;
-		UpdateHandler.update(new PainterColor(value, primary));
+		UpdateHandler.update(new PainterColor(value, primary, upd_plt));
 	}
 	
 	public static enum Selection {
