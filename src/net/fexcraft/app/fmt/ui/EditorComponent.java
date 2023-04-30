@@ -11,7 +11,6 @@ import org.liquidengine.legui.event.CursorEnterEvent;
 import org.liquidengine.legui.listener.CursorEnterEventListener;
 import org.liquidengine.legui.style.Style.DisplayType;
 
-import net.fexcraft.app.fmt.update.UpdateHandler.UpdateHolder;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.components.*;
 import net.fexcraft.app.fmt.utils.Translator;
@@ -68,7 +67,7 @@ public class EditorComponent extends Component {
 		if(!resizeable) size.getStyle().setDisplay(DisplayType.NONE);
 	}
 
-	private void toggleIcons(){
+	protected void toggleIcons(){
 		boolean bool = label.isHovered();
 		if(!bool){
 			if(size.isHovered()) bool = true;
@@ -87,7 +86,10 @@ public class EditorComponent extends Component {
 			mdw.getStyle().setDisplay(bool || index >= editor.components.size() - 1 ? DisplayType.NONE : DisplayType.MANUAL);
 			rem.getStyle().setDisplay(bool ? DisplayType.NONE : DisplayType.MANUAL);
 		}
+		toggleIconSpace(editor.comp_adj_mode);
 	}
+
+	protected void toggleIconSpace(boolean bool){}
 
 	protected void minimize(Boolean bool){
 		this.minimized = bool == null ? !minimized : bool;
@@ -148,7 +150,8 @@ public class EditorComponent extends Component {
 		REGISTRY.put("painter.tools", PainterTools.class);
 		REGISTRY.put("arrow.mode", ArrowMode.class);
 		REGISTRY.put("polygon.texuv", UVComponent.class);
-		REGISTRY.put("painter.palette", PainterPalette.class);
+		REGISTRY.put("painter.palette.gradient", PainterPaletteGradient.class);
+		REGISTRY.put("painter.palette.spectrum", PainterPaletteSpectrum.class);
 	}
 
 	public EditorComponent load(JsonMap map){
