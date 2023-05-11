@@ -7,6 +7,7 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.time.LocalDate;
@@ -17,6 +18,7 @@ import java.util.Date;
 import java.util.Timer;
 
 import net.fexcraft.app.fmt.ui.UVViewer;
+import net.fexcraft.lib.script.Script;
 import org.joml.Vector2i;
 import org.joml.Vector4f;
 import org.liquidengine.legui.animation.AnimatorProvider;
@@ -128,9 +130,8 @@ public class FMT {
 	    //
 		Settings.load();
 		Settings.apply(INSTANCE);
-		//Binding binding = new Binding();
-		//GroovyScriptEngine engine = new GroovyScriptEngine("./scripts/");
-		//engine.run("test.script", binding);
+		Script script = new Script(new FileInputStream("./scripts/test.script"), "test");
+		Logging.log(script.print());
 		try{
 			INSTANCE.run();
 		}
