@@ -1,10 +1,9 @@
-class Test {
+// overriding/filling-in the default root craft script values
+bln test0 = false
+int test1 = 10
+flt test2 = 1.1
+str test3 = "test"
 
-    String status() {
-        def status = "OK"
-        return status + (2 + 2);
-    }
-}
-
-Test test = new Test();
-println test.status();
+act init(obj context)
+	print(test3)
+;;
