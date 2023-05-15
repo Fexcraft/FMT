@@ -20,6 +20,7 @@ import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.event.WindowSizeEvent;
 import org.liquidengine.legui.image.BufferedImage;
 import org.liquidengine.legui.listener.MouseClickEventListener;
+import org.liquidengine.legui.style.Style;
 import org.liquidengine.legui.style.Style.DisplayType;
 
 import net.fexcraft.app.fmt.FMTB;
@@ -333,6 +334,17 @@ public class UserInterfaceUtils {
 			save();
 		}
 		
+	}
+
+	public static void applyBorderless(Component com){
+		Settings.THEME_CHANGE_LISTENER.add(cons -> {
+			com.getStyle().setBorderRadius(0);
+		});
+	}
+
+	public static void applyBorderless(Style style){
+		style.setBorderRadius(0);
+		style.setBorder(null);
 	}
 
 }

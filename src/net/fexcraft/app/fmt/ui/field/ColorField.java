@@ -30,7 +30,9 @@ public class ColorField extends TextInput implements Field {
 	private Integer value = null;
 
 	public ColorField(Component root, String field, int x, int y, int w, int h){
-		super("0xffffff", x, y, root == null ? w : w - 40, h); fieldid = field; UserInterfaceUtils.setupHoverCheck(this);
+		super("0xffffff", x, y, root == null ? w : w - 40, h); fieldid = field;
+		UserInterfaceUtils.setupHoverCheck(this);
+		UserInterfaceUtils.applyBorderless(this);
 		addTextInputContentChangeEventListener(event -> {
 			UserInterfaceUtils.validateColorString(event); value = null;
 		});
@@ -59,7 +61,10 @@ public class ColorField extends TextInput implements Field {
 	}
 	
 	public ColorField(Component root, Setting setting, int x, int y, int w, int h){
-		super(setting.toString(), x, y, root == null ? w : w - 40, h); getStyle().setFontSize(20f); UserInterfaceUtils.setupHoverCheck(this);
+		super(setting.toString(), x, y, root == null ? w : w - 40, h);
+		getStyle().setFontSize(20f);
+		UserInterfaceUtils.setupHoverCheck(this);
+		UserInterfaceUtils.applyBorderless(this);
 		addTextInputContentChangeEventListener(event -> {
 			UserInterfaceUtils.validateColorString(event); value = null;
 		});
@@ -84,7 +89,10 @@ public class ColorField extends TextInput implements Field {
 	}
 	
 	public ColorField(Component root, BiConsumer<Integer, Boolean> update, int x, int y, int w, int h){
-		super("#ffffff", x, y, root == null ? w : w - 40, h); getStyle().setFontSize(20f); UserInterfaceUtils.setupHoverCheck(this);
+		super("#ffffff", x, y, root == null ? w : w - 40, h);
+		getStyle().setFontSize(20f);
+		UserInterfaceUtils.setupHoverCheck(this);
+		UserInterfaceUtils.applyBorderless(this);
 		addTextInputContentChangeEventListener(event -> {
 			UserInterfaceUtils.validateColorString(event); value = null;
 		});

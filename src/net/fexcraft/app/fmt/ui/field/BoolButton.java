@@ -17,6 +17,7 @@ public class BoolButton extends Button implements Field {
 
 	public BoolButton(String id, int x, int y, int w, int h){
 		super("false", x, y, w, h);
+		UserInterfaceUtils.applyBorderless(this);
 		this.fieldid = id;
 		Settings.THEME_CHANGE_LISTENER.add(bool -> this.getStyle().setBorderRadius(0f));
 		UserInterfaceUtils.setupHoverCheck(this);
@@ -30,6 +31,7 @@ public class BoolButton extends Button implements Field {
 
 	public BoolButton(Setting setting, int x, int y, int w, int h){
 		super(setting.getBooleanValue() + "", x, y, w, h);
+		UserInterfaceUtils.applyBorderless(this);
 		Settings.THEME_CHANGE_LISTENER.add(bool -> this.getStyle().setBorderRadius(0f));
 		UserInterfaceUtils.setupHoverCheck(this);
 		this.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)event -> {

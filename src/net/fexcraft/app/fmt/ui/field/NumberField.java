@@ -28,11 +28,17 @@ public class NumberField extends TextInput implements Field {
 	static { updateRoundingDigits(); }
 
 	public NumberField(int x, int y, int w, int h){
-		super("0", x, y, w, h); getStyle().setFontSize(20f); UserInterfaceUtils.setupHoverCheck(this);
+		super("0", x, y, w, h);
+		getStyle().setFontSize(20f);
+		UserInterfaceUtils.setupHoverCheck(this);
+		UserInterfaceUtils.applyBorderless(this);
 	}
 	
 	public NumberField(Setting setting, int x, int y, int w, int h){
-		super(setting.toString(), x, y, w, h); getStyle().setFontSize(20f); UserInterfaceUtils.setupHoverCheck(this);
+		super(setting.toString(), x, y, w, h);
+		getStyle().setFontSize(20f);
+		UserInterfaceUtils.setupHoverCheck(this);
+		UserInterfaceUtils.applyBorderless(this);
 		getListenerMap().addListener(FocusEvent.class, (FocusEventListener)listener -> {
 			if(!listener.isFocused()){ setting.validateAndApply(getTextState().getText()); }
 		});
