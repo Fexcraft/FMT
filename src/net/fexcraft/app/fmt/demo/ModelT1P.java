@@ -2,14 +2,13 @@ package net.fexcraft.app.fmt.demo;
 
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.RGB;
-import net.fexcraft.lib.tmt.ModelBase;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 
 /**
  * @author Ferdinand Calo' (FEX___96)
 **/
-public class ModelT1P extends ModelBase {
+public class ModelT1P {
 	
 	public static final ModelT1P INSTANCE = new ModelT1P();
 	public static RGB COLOR = new RGB(RGB.RED);
@@ -1208,8 +1207,6 @@ public class ModelT1P extends ModelBase {
 
         body_colored_primary[62].addShapeBox(0F, 0F, 0F, 19, 8, 1, 0F, 0F, 0F, 0F, -2F, 0F, 0F, -2F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F); // Box 619
         body_colored_primary[62].setRotationPoint(22F, -19F, 22F);
-
-        translate(0F, 0F, 0F);
         //
         for(ModelRendererTurbo turbo : body) turbo.textured = true;
         for(ModelRendererTurbo turbo : body_door_close_colored_primary) turbo.textured = true;
@@ -1218,8 +1215,7 @@ public class ModelT1P extends ModelBase {
     }
     
     //private ModelCompound bodyLines;
-    
-    @Override
+
     public void render(){
     	render(body);
     	COLOR.glColorApply();
@@ -1238,16 +1234,6 @@ public class ModelT1P extends ModelBase {
 
 	public void render(ModelRendererTurbo[] model){
 		for(ModelRendererTurbo turbo : model) turbo.render();
-	}
-
-	@Override
-	public void translate(float x, float y, float z){
-		//
-	}
-
-	@Override
-	public void rotate(float x, float y, float z){
-		//
 	}
 
 }
