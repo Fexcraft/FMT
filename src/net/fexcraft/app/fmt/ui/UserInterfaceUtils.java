@@ -339,12 +339,15 @@ public class UserInterfaceUtils {
 	public static void applyBorderless(Component com){
 		Settings.THEME_CHANGE_LISTENER.add(cons -> {
 			com.getStyle().setBorderRadius(0);
+			//com.getStyle().setBorder(null);
 		});
 	}
 
 	public static void applyBorderless(Style style){
-		style.setBorderRadius(0);
-		style.setBorder(null);
+		Settings.THEME_CHANGE_LISTENER.add(cons -> {
+			style.setBorderRadius(0);
+			//style.setBorder(null);
+		});
 	}
 
 }
