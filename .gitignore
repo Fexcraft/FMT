@@ -80,3 +80,7 @@ FMT.xml
 libs/pom.xml
 FMT.bat
 MANIFEST.MF
+*.bin
+*.properties
+gradlew
+gradlew.bat
