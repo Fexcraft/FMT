@@ -18,7 +18,9 @@ import java.util.Date;
 import java.util.Timer;
 
 import net.fexcraft.app.fmt.ui.UVViewer;
+import net.fexcraft.lib.scr.ScriptParser;
 import net.fexcraft.lib.script.Script;
+import net.fexcraft.lib.script.elm.FltElm;
 import org.joml.Vector2i;
 import org.joml.Vector4f;
 import org.liquidengine.legui.animation.AnimatorProvider;
@@ -96,7 +98,8 @@ public class FMT {
 	private static String title;
 	//
 	public static final ITimer timer = new ITimer();
-	public float delta, accumulator, interval = 1f / 30f, alpha;
+	public float delta, accumulator, interval = 1f / 30f;
+	public FltElm alpha = new FltElm(0f);
 	private static boolean CLOSE;
 	public static GGR CAM;
 	public static Label pos, rot, fps, poly, info, bar;
@@ -114,6 +117,8 @@ public class FMT {
 	public static Model MODEL;
 	public static Field SELFIELD;
 	public static Workspace WORKSPACE;
+	//
+	public static Script SCRIPT;
 	
 	public static void main(String... args) throws Exception {
 		log("==================================================");
@@ -130,8 +135,11 @@ public class FMT {
 	    //
 		Settings.load();
 		Settings.apply(INSTANCE);
-		Script script = new Script(new FileInputStream("./scripts/test.script"), "test");
-		Logging.log(script.print());
+		//SCRIPT = new Script(new FileInputStream("./scripts/test.script"), "test");
+		//Logging.log(SCRIPT.print());
+		net.fexcraft.lib.scr.Script scr = ScriptParser.parse(new FileInputStream("./scripts/test1.script"));
+		//Logging.log(scr);
+		//System.exit(0);
 		try{
 			INSTANCE.run();
 		}
@@ -309,7 +317,8 @@ public class FMT {
 				info.getTextState().setText(SELFIELD == null ? "none" : SELFIELD.polyval() == null ? SELFIELD.setting() == null ? "other" : "setting:" + SELFIELD.setting().id : SELFIELD.polyval().toString());
 				poly.getTextState().setText(MODEL.selected().isEmpty() ? "none" : MODEL.first_selected().name());
 			}
-			render(vao, alpha = accumulator / interval);
+			alpha.scr_set(accumulator / interval);
+			render(vao, alpha);
 			//
 			adjustLabels();
 			ImageHandler.updateText();
@@ -352,7 +361,7 @@ public class FMT {
 		}
 	}
 
-	private void render(int vao, float alpha){
+	private void render(int vao, FltElm alpha){
 		//glClearColor(0.5f, 0.5f, 0.5f, 0.01f);
 		CONTEXT.updateGlfwWindow();
 		Vector2i size = CONTEXT.getFramebufferSize();
@@ -408,7 +417,7 @@ public class FMT {
             centermarker2.render();
 		}
 		if(Arrows.MODE.active()) Arrows.render(DrawMode.RGBCOLOR); 
-		MODEL.render();
+		MODEL.render(alpha);
 	}
 	
 	public static final Polyhedron<GLObject> center_cube = new Polyhedron<GLObject>().importMRT(new BoxBuilder(new ModelRendererTurbo(null, 0, 0, 16, 16))
