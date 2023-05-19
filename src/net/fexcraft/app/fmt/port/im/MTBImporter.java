@@ -1,7 +1,7 @@
 package net.fexcraft.app.fmt.port.im;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.update.UpdateEvent;
+import net.fexcraft.app.fmt.polygon.Vector3F;
 import net.fexcraft.app.fmt.update.UpdateEvent.ModelTexGroup;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.polygon.Box;
@@ -13,7 +13,6 @@ import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.ui.FileChooser;
 import net.fexcraft.lib.common.utils.ZipUtil;
-import org.joml.Vector3f;
 
 import java.io.*;
 import java.util.Arrays;
@@ -107,27 +106,27 @@ public class MTBImporter implements Importer {
                         case "Shapebox":{
                             Shapebox sbox = new Shapebox(model);
                             polygon = sbox;
-                            sbox.cor0 = new Vector3f(getFloatFromString(parts[20]), getFloatFromString(parts[28]), getFloatFromString(parts[36]));
-                            sbox.cor1 = new Vector3f(getFloatFromString(parts[21]), getFloatFromString(parts[29]), getFloatFromString(parts[37]));
-                            sbox.cor2 = new Vector3f(getFloatFromString(parts[22]), getFloatFromString(parts[30]), getFloatFromString(parts[38]));
-                            sbox.cor3 = new Vector3f(getFloatFromString(parts[23]), getFloatFromString(parts[31]), getFloatFromString(parts[39]));
-                            sbox.cor4 = new Vector3f(getFloatFromString(parts[24]), getFloatFromString(parts[32]), getFloatFromString(parts[40]));
-                            sbox.cor5 = new Vector3f(getFloatFromString(parts[25]), getFloatFromString(parts[33]), getFloatFromString(parts[41]));
-                            sbox.cor6 = new Vector3f(getFloatFromString(parts[26]), getFloatFromString(parts[34]), getFloatFromString(parts[42]));
-                            sbox.cor7 = new Vector3f(getFloatFromString(parts[27]), getFloatFromString(parts[35]), getFloatFromString(parts[43]));
+                            sbox.cor0 = new Vector3F(getFloatFromString(parts[20]), getFloatFromString(parts[28]), getFloatFromString(parts[36]));
+                            sbox.cor1 = new Vector3F(getFloatFromString(parts[21]), getFloatFromString(parts[29]), getFloatFromString(parts[37]));
+                            sbox.cor2 = new Vector3F(getFloatFromString(parts[22]), getFloatFromString(parts[30]), getFloatFromString(parts[38]));
+                            sbox.cor3 = new Vector3F(getFloatFromString(parts[23]), getFloatFromString(parts[31]), getFloatFromString(parts[39]));
+                            sbox.cor4 = new Vector3F(getFloatFromString(parts[24]), getFloatFromString(parts[32]), getFloatFromString(parts[40]));
+                            sbox.cor5 = new Vector3F(getFloatFromString(parts[25]), getFloatFromString(parts[33]), getFloatFromString(parts[41]));
+                            sbox.cor6 = new Vector3F(getFloatFromString(parts[26]), getFloatFromString(parts[34]), getFloatFromString(parts[42]));
+                            sbox.cor7 = new Vector3F(getFloatFromString(parts[27]), getFloatFromString(parts[35]), getFloatFromString(parts[43]));
                             break;
                         }
                     }
                     if(polygon == null) continue;
                     //
                     polygon.name(parts[3]);
-                    polygon.size = new Vector3f(getFloatFromString(parts[9]), getFloatFromString(parts[10]), getFloatFromString(parts[11]));
-                    polygon.off = new Vector3f(getFloatFromString(parts[15]), getFloatFromString(parts[16]), getFloatFromString(parts[17]));
-                    polygon.pos = new Vector3f(getFloatFromString(parts[6]), getFloatFromString(parts[7]), getFloatFromString(parts[8]));
+                    polygon.size = new Vector3F(getFloatFromString(parts[9]), getFloatFromString(parts[10]), getFloatFromString(parts[11]));
+                    polygon.off = new Vector3F(getFloatFromString(parts[15]), getFloatFromString(parts[16]), getFloatFromString(parts[17]));
+                    polygon.pos = new Vector3F(getFloatFromString(parts[6]), getFloatFromString(parts[7]), getFloatFromString(parts[8]));
                     polygon.textureX = Integer.parseInt(parts[18]);
                     polygon.textureY = Integer.parseInt(parts[19]);
                     //
-                    polygon.rot = new Vector3f(getFloatFromString(parts[12]), getFloatFromString(parts[13]), getFloatFromString(parts[14]));
+                    polygon.rot = new Vector3F(getFloatFromString(parts[12]), getFloatFromString(parts[13]), getFloatFromString(parts[14]));
                     polygon.rot.z = -polygon.rot.z;
                     //
                     if(model.get("group" + parts[4]) == null){
