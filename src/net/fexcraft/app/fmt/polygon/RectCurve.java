@@ -10,6 +10,7 @@ import static net.fexcraft.app.fmt.utils.JsonUtil.setVector;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import net.fexcraft.lib.script.elm.FltElm;
 import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.update.PolyVal;
@@ -308,7 +309,7 @@ public class RectCurve extends Polygon {
 	}
 	
 	@Override
-	public void render(){
+	public void render(FltElm alpha){
 		if(PolyRenderer.mode().lines()){
 			DrawMode mode = PolyRenderer.mode();
 			PolyRenderer.mode(DrawMode.RGBCOLOR);
