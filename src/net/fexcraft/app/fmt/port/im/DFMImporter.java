@@ -4,12 +4,15 @@ import net.fexcraft.app.fmt.polygon.Box;
 import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.polygon.Shapebox;
+import net.fexcraft.app.fmt.polygon.Vector3F;
 import net.fexcraft.app.fmt.settings.Setting;
 import net.fexcraft.app.fmt.ui.FileChooser;
-import org.joml.Vector3f;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -191,8 +194,8 @@ public class DFMImporter implements Importer {
         }
     }
 
-    private Vector3f newVec3f(String string1, String string2, String string3){
-        return new Vector3f(parseF(string1), parseF(string2), parseF(string3));
+    private Vector3F newVec3f(String string1, String string2, String string3){
+        return new Vector3F(parseF(string1), parseF(string2), parseF(string3));
     }
 
     private static final class TemporaryPolygon {
