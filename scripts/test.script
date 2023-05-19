@@ -1,9 +1,12 @@
-// overriding/filling-in the default root craft script values
 bln test0 = false
 int test1 = 10
 flt test2 = 1.1
 str test3 = "test"
+flt val = 0.001
 
-act init(obj context)
-	print(test3)
+act render(obj poly, flt alpha)
+    flt v
+    v = val * alpha
+    poly.pos.x -= v
+    print(v)
 ;;
