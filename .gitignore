@@ -89,3 +89,4 @@ editors.fmt
 gradle/
 gradlew
 gradlew.bat
+scripts/test*.script
