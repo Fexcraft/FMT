@@ -8,6 +8,9 @@ import static net.fexcraft.app.fmt.utils.Logging.log;
 import net.fexcraft.app.fmt.ui.UVViewer;
 import net.fexcraft.app.fmt.update.UpdateEvent.PolygonAdded;
 import net.fexcraft.app.fmt.update.UpdateEvent.PolygonRenamed;
+import net.fexcraft.lib.script.ScrBlock;
+import net.fexcraft.lib.script.ScrElm;
+import net.fexcraft.lib.script.elm.FltElm;
 import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.FMT;
@@ -30,7 +33,7 @@ import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.frl.Polyhedron;
 import net.fexcraft.lib.frl.gen.Generator;
 
-public abstract class Polygon {
+public abstract class Polygon implements ScrElm {
 
 	public static final int startIdx = 7;
 	public static int polyIdx = startIdx;
@@ -39,7 +42,7 @@ public abstract class Polygon {
 	private Group group;
 	private String name;
 	public int textureX = -1, textureY = -1;
-	public Vector3f pos, off, rot;
+	public Vector3F pos, off, rot;
 	public int colorIdx;
 	public int[] colorIds;
 	public boolean visible;
@@ -50,9 +53,9 @@ public abstract class Polygon {
 
 	public Polygon(Model model){
 		this.model = model == null ? FMT.MODEL : model;
-		pos = new Vector3f();
-		off = new Vector3f();
-		rot = new Vector3f();
+		pos = new Vector3F(this, 0, 0, 0);
+		off = new Vector3F();
+		rot = new Vector3F();
 		cuv = new UVMap(this);
 		visible = true;
 	}
@@ -61,6 +64,7 @@ public abstract class Polygon {
 		this.model = model == null ? FMT.MODEL : model;
 		name = obj.get("name", null);
 		pos = getVector(obj, "pos_%s", 0f);
+		pos.polygon = this;
 		off = getVector(obj, "off_%s", 0f);
 		rot = getVector(obj, "rot_%s", 0f);
 		cuv = new UVMap(this);
@@ -245,10 +249,11 @@ public abstract class Polygon {
 	protected static int c_gre1 = gre1.packed, c_gre0 = gre0.packed;
 
 	public abstract RGB getFaceColor(int idx);
-	
+
 	public abstract Face getFaceByColor(int color);
 
-	public void render(){
+	public void render(FltElm alpha){
+		FMT.SCRIPT.act("render").process(this, alpha);
 		glm.render();
 	}
 
@@ -467,7 +472,7 @@ public abstract class Polygon {
 		}
 		return true;
 	}
-	
+
 	private void paint(Texture tex, float[][] ends, byte[] bs, boolean detached){
 		float scale_x = tex.getWidth() / (glm.glObj.grouptex ? group().texSizeX : model().texSizeX);
 		float scale_y = tex.getHeight() / (glm.glObj.grouptex ? group().texSizeY : model().texSizeY);
@@ -484,6 +489,19 @@ public abstract class Polygon {
 				else continue;
 			}
 		}
+	}
+
+	@Override
+	public ScrElm scr_get(ScrBlock block, String target){
+		switch(target){
+			case "pos": return pos;
+		}
+		return NULL;
+	}
+
+	@Override
+	public boolean overrides(){
+		return true;
 	}
 
 }
