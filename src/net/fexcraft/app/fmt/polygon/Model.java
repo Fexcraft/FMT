@@ -21,8 +21,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
-import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateEvent.*;
+import net.fexcraft.lib.script.elm.FltElm;
 import org.joml.Vector3f;
 import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.component.Dialog;
@@ -131,12 +131,12 @@ public class Model {
 		if(texgroup != null) texgroup.texture.bind();
 	}
 
-	public void render(){
+	public void render(FltElm alpha){
 		if(!visible) return;
 		DrawMode mode = DrawMode.textured(texgroup != null);
 		for(Group group : groups){
-			group.render(mode);
-			if(Settings.LINES.value) group.render(DrawMode.LINES);
+			group.render(mode, alpha);
+			if(Settings.LINES.value) group.render(DrawMode.LINES, alpha);
 		}
 		if(Settings.LINES.value && Settings.POLYMARKER.value && isLastSelectedCornerMarked()) CornerUtil.renderCorners();
 	}
