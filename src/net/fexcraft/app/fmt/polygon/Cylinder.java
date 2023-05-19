@@ -23,7 +23,8 @@ import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public class Cylinder extends Polygon {
 	
-	public float radius = 2, radius2, length = 1, base = 1, top = 1;
+	public float radius = 2, radius2 = 0, radius3 = 0, radius4 = 0;
+	public float length = 1, base = 1, top = 1;
 	public int segments = 8, seglimit, direction = ModelRendererTurbo.MR_TOP;
 	public Vector3f topoff = new Vector3f(), toprot = new Vector3f();
 	public boolean[] bools = new boolean[6];
@@ -39,6 +40,8 @@ public class Cylinder extends Polygon {
 		super(model, obj);
 		radius = obj.get("radius", radius);
 		radius2 = obj.get("radius2", radius2);
+		radius3 = obj.get("radius3", radius3);
+		radius4 = obj.get("radius4", radius4);
 		length = obj.get("length", length);
 		segments = obj.get("segments", segments);
 		seglimit = obj.get("seglimit", seglimit);
@@ -68,6 +71,8 @@ public class Cylinder extends Polygon {
 		JsonMap map = super.save(export);
 		map.add("radius", radius);
 		map.add("radius2", radius2);
+		map.add("radius3", radius3);
+		map.add("radius4", radius4);
 		map.add("length", length);
 		map.add("segments", segments);
 		map.add("seglimit", seglimit);
@@ -104,6 +109,8 @@ public class Cylinder extends Polygon {
 			.set("z", off.z)
 			.set("radius", radius)
 			.set("radius2", radius2)
+			.set("radius3", radius3 == 0f ? radius : radius3)
+			.set("radius4", radius4 == 0f ? radius2 : radius4)
 			.set("length", length)
 			.set("axis_dir", AxisDir.values()[direction])
 			.set("segments", segments)
@@ -170,8 +177,8 @@ public class Cylinder extends Polygon {
 	
 	public float getValue(PolygonValue polyval){
 		switch(polyval.val()){
-			case RADIUS: return radius;
-			case RADIUS2: return radius2;
+			case RADIUS: return polyval.axe().x() ? radius : radius3;
+			case RADIUS2: return polyval.axe().x() ? radius2 : radius4;
 			case LENGTH: return length;
 			case SEGMENTS: return segments;
 			case SEG_LIMIT: return seglimit;
@@ -191,8 +198,16 @@ public class Cylinder extends Polygon {
 
 	public void setValue(PolygonValue polyval, float value){
 		switch(polyval.val()){
-			case RADIUS: radius = value; break;
-			case RADIUS2: radius2 = value; break;
+			case RADIUS:{
+				if(polyval.axe().x()) radius = value;
+				else radius3 = value;
+				break;
+			}
+			case RADIUS2:{
+				if(polyval.axe().x()) radius2 = value;
+				else radius4 = value;
+				break;
+			}
 			case LENGTH: length = value; break;
 			case SEGMENTS: segments = (int)value; break;
 			case SEG_LIMIT: seglimit = (int)value; break;
@@ -225,6 +240,8 @@ public class Cylinder extends Polygon {
 		Cylinder cyl = (Cylinder)poly;
 		cyl.radius = radius;
 		cyl.radius2 = radius2;
+		cyl.radius3 = radius3;
+		cyl.radius4 = radius4;
 		cyl.length = length;
 		cyl.segments = segments;
 		cyl.seglimit = seglimit;

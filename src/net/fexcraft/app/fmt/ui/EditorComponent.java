@@ -15,11 +15,13 @@ import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.components.*;
 import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.app.json.JsonMap;
+import org.lwjgl.system.CallbackI.S;
 
 public class EditorComponent extends Component {
 
 	public static final float F20 = 8, F21 = 154f, F2S = 138;
 	public static final float F30 = 7.5f, F31 = 105f, F32 = 202.5f, F3S = 90;
+	public static final float F40 = 6f, F41 = 77f, F42 = 148f, F43 = 219, F4S = 65;
 	public static final float F60 = 6, F61 = 55, F62 = 104, F63 = 153, F64 = 202, F65 = 251, F6S = 43;
 	public static final float L5 = 5f, LW = Editor.CWIDTH - (L5 * 2);
 	public static final int HEIGHT = 24;
