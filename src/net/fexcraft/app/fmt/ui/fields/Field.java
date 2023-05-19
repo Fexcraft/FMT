@@ -108,7 +108,7 @@ public interface Field {
 		});
 		updcom.add(GroupSelected.class, event -> {
 			if(event.prevselected() < 0) return;
-			else if(event.selected() == 1 || (event.prevselected() == 0 && event.selected() == 0)){
+			else if(event.selected() == 1 || (event.prevselected() == 0 && event.selected() == 0 && FMT.MODEL.first_selected() != null)){
 				field.apply(FMT.MODEL.first_selected().getValue(val));
 			}
 			else if(event.selected() == 0) field.apply(0);
