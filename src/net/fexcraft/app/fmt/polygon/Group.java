@@ -4,9 +4,9 @@ import static net.fexcraft.app.fmt.update.UpdateHandler.update;
 
 import java.util.ArrayList;
 
-import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateEvent.GroupRenamed;
 import net.fexcraft.app.fmt.update.UpdateEvent.PolygonRemoved;
+import net.fexcraft.lib.script.elm.FltElm;
 import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.update.UpdateHandler;
@@ -75,21 +75,21 @@ public class Group extends ArrayList<Polygon> {
 		else model.bindtex();
 	}
 
-	public void render(DrawMode mode){
+	public void render(DrawMode mode, FltElm alpha){
 		if(!visible) return;
 		bindtex();
 		if(mode == DrawMode.LINES){
 			PolyRenderer.mode(selected ? DrawMode.SELLINES : DrawMode.LINES);
 			for(Polygon poly : this){
 				if(!selected && poly.selected) PolyRenderer.mode(DrawMode.SELLINES);
-				poly.render();
+				poly.render(alpha);
 				if(poly.selected && !selected) PolyRenderer.mode(DrawMode.LINES);
 			}
 		}
 		else{
 			PolyRenderer.mode(mode);
 			for(Polygon poly : this){
-				if(poly.visible) poly.render();
+				if(poly.visible) poly.render(alpha);
 			}
 		}
 	}
