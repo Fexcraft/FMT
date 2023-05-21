@@ -43,6 +43,7 @@ public class GeneralEditor extends EditorBase {
 	public static BoolButton cyl5_x, cyl5_y, cyl5_z, cyl6_x;
 	public static NumberField cyl6_y, cyl6_z;
 	public static NumberField cyl7_x, cyl7_y, cyl7_z;
+	public static NumberField cyl8_x, cyl8_y;
 	public static NumberField[] corner_x, corner_y, corner_z;
 	public static NumberField[][] texrect_a = new NumberField[6][8], texrect_b = new NumberField[6][4];
 	public static ColorField marker_color;
@@ -210,17 +211,19 @@ public class GeneralEditor extends EditorBase {
 		pass = -20;
 		//
 		EditorWidget cylinder = new EditorWidget(this, translate("editor.general.cylinder"), 0, 0, 0, 0);
-		cylinder.getContainer().add(new Label(translate("editor.general.cylinder.radius_length"), 3, pass += 24, 290, 20));
-		cylinder.getContainer().add(cyl0_x = new NumberField(4, pass += 24, 90, 20).setup("cyl0x", 0.5f, Integer.MAX_VALUE, Settings.decimal_sizes()));
-		cylinder.getContainer().add(cyl0_y = new NumberField(102, pass, 90, 20).setup("cyl0y", 1, Integer.MAX_VALUE, Settings.decimal_sizes()));
-		cylinder.getContainer().add(cyl0_z = new NumberField(200, pass, 90, 20).setup("cyl0z", 0, Integer.MAX_VALUE, true));
+		cylinder.getContainer().add(new Label(translate("editor.general.cylinder.radius"), 3, pass += 24, 290, 20));
+		cylinder.getContainer().add(cyl0_x = new NumberField(4, pass += 24, 65, 20).setup("cyl0x", 0.5f, Integer.MAX_VALUE, Settings.decimal_sizes()));
+		cylinder.getContainer().add(cyl8_x = new NumberField(78, pass, 65, 20).setup("cyl8x", 0, Integer.MAX_VALUE, Settings.decimal_sizes()));
+		cylinder.getContainer().add(cyl0_z = new NumberField(151, pass, 65, 20).setup("cyl0z", 1, Integer.MAX_VALUE, true));
+		cylinder.getContainer().add(cyl8_y = new NumberField(224, pass, 65, 20).setup("cyl8y", 0, Integer.MAX_VALUE, true));
+		cylinder.getContainer().add(new Label(translate("editor.general.cylinder.length_scale"), 3, pass += 24, 290, 20));
+		cylinder.getContainer().add(cyl0_y = new NumberField(4, pass += 24, 90, 20).setup("cyl0y", 1, Integer.MAX_VALUE, Settings.decimal_sizes()));
+		cylinder.getContainer().add(cyl2_x = new NumberField(102, pass, 90, 20).setup("cyl2x", 0, Integer.MAX_VALUE, true));
+		cylinder.getContainer().add(cyl2_y = new NumberField(200, pass, 90, 20).setup("cyl2y", 0, Integer.MAX_VALUE, true));
 		cylinder.getContainer().add(new Label(translate("editor.general.cylinder.segments_direction"), 3, pass += 24, 290, 20));
 		cylinder.getContainer().add(cyl1_x = new NumberField(4, pass += 24, 90, 20).setup("cyl1x", 3, Integer.MAX_VALUE, false));
 		cylinder.getContainer().add(cyl1_y = new NumberField(102, pass, 90, 20).setup("cyl1y", 0, 5, false));
 		cylinder.getContainer().add(cyl1_z = new NumberField(200, pass, 90, 20).setup("cyl1z", 0, Integer.MAX_VALUE, false));
-		cylinder.getContainer().add(new Label(translate("editor.general.cylinder.scale"), 3, pass += 24, 290, 20));
-		cylinder.getContainer().add(cyl2_x = new NumberField(4, pass += 24, 90, 20).setup("cyl2x", 0, Integer.MAX_VALUE, true));
-		cylinder.getContainer().add(cyl2_y = new NumberField(102, pass, 90, 20).setup("cyl2y", 0, Integer.MAX_VALUE, true));
 		cylinder.getContainer().add(new Label(translate("editor.general.cylinder.top_offset"), 3, pass += 24, 290, 20));
 		cylinder.getContainer().add(cyl3_x = new NumberField(4, pass += 24, 90, 20).setup("cyl3x", Integer.MIN_VALUE, Integer.MAX_VALUE, true));
 		cylinder.getContainer().add(cyl3_y = new NumberField(102, pass, 90, 20).setup("cyl3y", Integer.MIN_VALUE, Integer.MAX_VALUE, true));

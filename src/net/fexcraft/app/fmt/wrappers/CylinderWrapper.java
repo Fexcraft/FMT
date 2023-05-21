@@ -13,7 +13,7 @@ import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public class CylinderWrapper extends PolygonWrapper {
 	
-	public float radius = 2, radius2, length = 2, base = 1, top = 1;
+	public float radius = 2, radius2, radius3, radius4, length = 2, base = 1, top = 1;
 	public int segments = 8, seglimit, direction = ModelRendererTurbo.MR_TOP;
 	public Vec3f topoff = new Vec3f(0, 0, 0), toprot = new Vec3f(0, 0, 0);
 	public boolean[] bools = new boolean[6];
@@ -28,20 +28,29 @@ public class CylinderWrapper extends PolygonWrapper {
 	@Override
 	protected PolygonWrapper createClone(GroupCompound compound){
 		CylinderWrapper wrapper = new CylinderWrapper(compound);
-		wrapper.radius = radius; wrapper.radius2 = radius2;
-		wrapper.length = length; wrapper.base = base; wrapper.top = top;
-		wrapper.segments = segments; wrapper.direction = direction;
-		wrapper.seglimit = seglimit; wrapper.topoff = new Vec3f(topoff);
+		wrapper.radius = radius;
+		wrapper.radius2 = radius2;
+		wrapper.radius3 = radius4;
+		wrapper.radius3 = radius4;
+		wrapper.length = length;
+		wrapper.base = base;
+		wrapper.top = top;
+		wrapper.segments = segments;
+		wrapper.direction = direction;
+		wrapper.seglimit = seglimit;
+		wrapper.topoff = new Vec3f(topoff);
 		wrapper.bools = new boolean[]{ bools[0], bools[1], bools[2], bools[3], bools[4], bools[5] };
-		wrapper.radial = radial; wrapper.seg_width = seg_width; wrapper.seg_height = seg_height;
+		wrapper.radial = radial;
+		wrapper.seg_width = seg_width;
+		wrapper.seg_height = seg_height;
 		return wrapper;
 	}
 	
 	protected ModelRendererTurbo newMRT(){
 		ModelRendererTurbo turbo = new ModelRendererTurbo(null, textureX(), textureY(), compound.tx(getTurboList()), compound.ty(getTurboList()));
-		if(radius2 != 0f || (seglimit > 0 && seglimit < segments) || radial || usesTopRotation() || cuv.anyCustom()){
+		if(radius2 != 0f || (seglimit > 0 && seglimit < segments) || radial || usesTopRotation() || cuv.anyCustom() || radius3 != radius){
 			CylinderBuilder builder = turbo.newCylinderBuilder().setPosition(off.x, off.y, off.z)
-				.setRadius(radius, radius2).setLength(length).setSegments(segments, seglimit).setScale(base, top)
+				.setRadius(radius, radius3, radius2, radius4).setLength(length).setSegments(segments, seglimit).setScale(base, top)
 				.setDirection(direction).setTopOffset(topoff).removePolygons(bools);
 			if(cuv.anyCustom()){
 				for(UVCoords coord : cuv.values()){
@@ -83,6 +92,7 @@ public class CylinderWrapper extends PolygonWrapper {
 			case "cyl5": return x ? (bools[2] ? 1 : 0) : y ? (bools[3] ? 1 : 0) : 0;
 			case "cyl6": return x ? (radial ? 1 : 0) : y ? seg_width : z ? seg_height : 0;
 			case "cyl7": return x ? toprot.x : y ? toprot.y : z ? toprot.z : 0;
+			case "cyl8": return x ? radius3 : y ? radius4 : 0;
 			default: return super.getFloat(id, x, y, z);
 		}
 	}
@@ -143,6 +153,10 @@ public class CylinderWrapper extends PolygonWrapper {
 				if(y){ toprot.y = value; return true; }
 				if(z){ toprot.z = value; return true; }
 			}
+			case "cyl8":{
+				if(x){ radius3 = value; return true; }
+				if(y){ radius4 = value; return true; }
+			}
 			default: return false;
 		}
 	}
@@ -153,6 +167,8 @@ public class CylinderWrapper extends PolygonWrapper {
 		if(radius2 != 0f){
 			obj.addProperty("radius2", radius2);
 		}
+		if(radius3 != radius) obj.addProperty("radius3", radius3);
+		if(radius4 != radius2) obj.addProperty("radius4", radius4);
 		obj.addProperty("length", length);
 		obj.addProperty("segments", segments);
 		if(seglimit != 0){

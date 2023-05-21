@@ -55,6 +55,8 @@ public class JsonToFMT {
 	//cyl
 	public static final String[] radius = new String[]{"radius", "rad", "r"};
 	public static final String[] radius2 = new String[]{"radius2", "rad2", "r2"};
+	public static final String[] radius3 = new String[]{"radius3", "rad3", "r3"};
+	public static final String[] radius4 = new String[]{"radius4", "rad4", "r4"};
 	public static final String[] length = new String[]{"length", "len", "l"};
 	public static final String[] segments = new String[]{"segments", "seg", "sg"};
 	public static final String[] seglimit = new String[]{"segment_limit", "segments_limit", "seglimit", "seg_limit", "sgl"};
@@ -141,6 +143,8 @@ public class JsonToFMT {
 				CylinderWrapper cylinder = new CylinderWrapper(compound);
 				cylinder.radius = get(radius, obj, 1f);
 				cylinder.radius2 = get(radius2, obj, 0f);
+				cylinder.radius3 = get(radius3, obj, cylinder.radius);
+				cylinder.radius4 = get(radius4, obj, cylinder.radius2);
 				cylinder.length = get(length, obj, 1f);
 				cylinder.segments = get(segments, obj, 16);
 				cylinder.seglimit = get(seglimit, obj, cylinder.segments);

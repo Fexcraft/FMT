@@ -482,6 +482,7 @@ public class GroupCompound {
 			GeneralEditor.cyl5_x.apply(0); GeneralEditor.cyl5_y.apply(0);
 			GeneralEditor.cyl6_x.apply(0); GeneralEditor.cyl6_y.apply(0); GeneralEditor.cyl6_z.apply(0);
 			GeneralEditor.cyl7_x.apply(0); GeneralEditor.cyl7_y.apply(0); GeneralEditor.cyl7_z.apply(0);
+			GeneralEditor.cyl8_x.apply(0); GeneralEditor.cyl8_y.apply(0);
 		}
 		else{
 			GeneralEditor.cyl0_x.apply(poly.getFloat("cyl0", true, false, false));
@@ -508,6 +509,9 @@ public class GroupCompound {
 			GeneralEditor.cyl7_x.apply(poly.getFloat("cyl7", true, false, false));
 			GeneralEditor.cyl7_y.apply(poly.getFloat("cyl7", false, true, false));
 			GeneralEditor.cyl7_z.apply(poly.getFloat("cyl7", false, false, true));
+			//
+			GeneralEditor.cyl8_x.apply(poly.getFloat("cyl8", true, false, false));
+			GeneralEditor.cyl8_y.apply(poly.getFloat("cyl8", false, true, false));
 		}
 		UVEditor.polygon_name.getTextState().setText(poly == null ? FMTB.NO_POLYGON_SELECTED : poly.name == null ? "unnamed" : poly.name);
 		UVEditor.refreshEntries(poly, null);
