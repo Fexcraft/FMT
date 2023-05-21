@@ -122,3 +122,39 @@ sourceSets {
         }
     }
  }
+
+tasks.register('mainJar', Jar) {
+    manifest {
+        attributes 'Title': "Fex's Modelling Toolbox",
+                'Version': version,
+                'Main-Class': 'net.fexcraft.app.fmt.FMTB',
+                'Created-By': "Ferdinand Calo' (FEX___96)",
+                "Class-Path": ". " + (configurations.runtimeClasspath.collect { "lib/" + it.getName() }.join(' '))
+    }
+    from(zipTree("${destinationDir}/${archiveName}")) {
+        include 'net/fexcraft/app/fmt/'
+    }
+    from('src/') {
+        include 'log4j2.xml'
+    }
+    baseName = "FMT"
+    version = ""
+}
+
+tasks.register('copyForUpload') {
+    copy {
+        from configurations.runtimeClasspath
+        into "upload/lib"
+    }
+    copy {
+        from "build/libs/FMT.jar"
+        into "upload/"
+    }
+    copy {
+        from "resources/"
+        into "upload/resources"
+    }
+}
+
+build.finalizedBy(mainJar)
+build.finalizedBy(copyForUpload)
