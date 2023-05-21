@@ -222,11 +222,20 @@ public abstract class FVTMFormatBase extends ExImPorter {
 								cyl.base, cyl.top, cyl.direction, cyl.seg_width, cyl.seg_height));
 						}
 						else{
-							shape.append(format(".newCylinderBuilder()\n" + tab3 + ".setPosition(%s, %s, %s).setRadius(%s, %s).setLength(%s).setSegments(%s, %s)" + 
-								".setScale(%s, %s).setDirection(%s)\n" + tab3 + ".setTopOffset(%s)" + toprot, topoff, 
-								wrapper.off.x, wrapper.off.y, wrapper.off.z,
-								cyl.radius, cyl.radius2, cyl.length, cyl.segments, cyl.seglimit,
-								cyl.base, cyl.top, cyl.direction));
+							if((cyl.radius3 != 0 && cyl.radius3 != cyl.radius) || (cyl.radius4 != 0 && cyl.radius4 != cyl.radius)){
+								shape.append(format(".newCylinderBuilder()\n" + tab3 + ".setPosition(%s, %s, %s).setRadius(%s, %s, %s, %s).setLength(%s).setSegments(%s, %s)" +
+									".setScale(%s, %s).setDirection(%s)\n" + tab3 + ".setTopOffset(%s)" + toprot, topoff,
+									wrapper.off.x, wrapper.off.y, wrapper.off.z,
+									cyl.radius, cyl.radius3, cyl.radius2, cyl.radius4, cyl.length, cyl.segments, cyl.seglimit,
+									cyl.base, cyl.top, cyl.direction));
+							}
+							else{
+								shape.append(format(".newCylinderBuilder()\n" + tab3 + ".setPosition(%s, %s, %s).setRadius(%s, %s).setLength(%s).setSegments(%s, %s)" +
+									".setScale(%s, %s).setDirection(%s)\n" + tab3 + ".setTopOffset(%s)" + toprot, topoff,
+									wrapper.off.x, wrapper.off.y, wrapper.off.z,
+									cyl.radius, cyl.radius2, cyl.length, cyl.segments, cyl.seglimit,
+									cyl.base, cyl.top, cyl.direction));
+							}
 						}
 						if(cyl.anySidesOff()){
 							String off = new String();
