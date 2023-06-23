@@ -32,7 +32,7 @@ public class GGR {
 
 	public float movemod = 1;
     public float maxVR = Static.rad90 - Static.rad5;
-    public Vector3f pos, initial;
+    public Vector3f pos;
     //
     public boolean w_down, s_down, d_down, a_down, r_down, f_down, space_down, shift_down;
     public boolean left_alt_down, left_control_down, right_alt_down, right_control_down;
@@ -41,16 +41,17 @@ public class GGR {
 	private static int def_view, def_proj;
 	private static Matrix4f view, projection;
 	private float fov = 45f;
-	public float hor, hordef, ver, verdef;
+	public float hor, ver;
 	private Vector3f dir = new Vector3f(), right = new Vector3f();
 	public static double[] cursor_x = { 0 }, cursor_y = { 0 };
     
-    public GGR(float x, float y, float z, float h, float v){
-        pos = new Vector3f(x, y, z);
-        initial = new Vector3f(pos);
-        hor = hordef = h;
-        ver = verdef = v;
-        //
+    public GGR(){
+		boolean bool = FMT.MODEL.orient.rect();
+		float y = bool ? 75 : -75;
+		float z = bool ? 75 : -75;
+		pos = new Vector3f(75, y, z);
+		hor = bool ? -Static.rad135 : -Static.rad45;
+		ver = bool ? -Static.rad30 : Static.rad30;
 		view = new Matrix4f().lookAt(new Vector3f(4, 3, 3), new Vector3f(0, 0, 0), new Vector3f(0, 1, 0));
 		perspective(45);
     }
@@ -62,7 +63,7 @@ public class GGR {
             (float)Math.cos(ver) * (float)Math.cos(hor)
         );
         right = new Vector3f(
-				(float)Math.sin(hor - 3.14f / 2.0f),
+			(float)Math.sin(hor - 3.14f / 2.0f),
             0,
             (float)Math.cos(hor - 3.14f / 2.0f)
         );
@@ -70,7 +71,7 @@ public class GGR {
         view = new Matrix4f().lookAt(
             pos,
             new Vector3f(pos).add(dir),
-            /*new Vector3f(0, 1, 0)*/up
+            FMT.MODEL.orient.rect() ? up.mul(-1) : up
         );
         FMT.pos.getTextState().setText(format(pos.x) + ", " + format(pos.y) + ", " + format(pos.z));
         FMT.rot.getTextState().setText(format(Math.toDegrees(hor)) + " / " + format(Math.toDegrees(ver)) + " : " + (int)fov);
@@ -94,8 +95,14 @@ public class GGR {
 
     public void pollInput(float delta){
 		if(grabbed && cursor_moved0){
-			hor += (posx - oposx) * Settings.MOUSE_SENSIVITY.value * delta * 0.005;
-			ver += (posy - oposy) * Settings.MOUSE_SENSIVITY.value * delta * 0.005;
+			if(FMT.MODEL.orient.rect()){
+				hor -= (posx - oposx) * Settings.MOUSE_SENSIVITY.value * delta * 0.005;
+				ver -= (posy - oposy) * Settings.MOUSE_SENSIVITY.value * delta * 0.005;
+			}
+			else{
+				hor += (posx - oposx) * Settings.MOUSE_SENSIVITY.value * delta * 0.005;
+				ver += (posy - oposy) * Settings.MOUSE_SENSIVITY.value * delta * 0.005;
+			}
             ver = Math.max(-maxVR, Math.min(maxVR, ver));
             cursor_moved0 = false;
 		}
@@ -227,18 +234,21 @@ public class GGR {
         boolean speedm = f_down;
         boolean up   = space_down;
         boolean down = shift_down;
-        float nspeed;
+        float nspeed, fbs;
         if(speedp) nspeed = Settings.MOVE_SPEED.value * 5;
         else if(speedm) nspeed = Settings.MOVE_SPEED.value / 2;
         else nspeed = Settings.MOVE_SPEED.value;
-        nspeed *= delta; if(movemod != 1f) nspeed *= movemod;
+        nspeed *= delta;
+		if(movemod != 1f) nspeed *= movemod;
+		fbs = nspeed;
+		if(FMT.MODEL.orient.rect()) nspeed = -nspeed;
         if(up) pos.y -= nspeed;
         if(down) pos.y += nspeed;
         if(back){
-			pos.sub(new Vector3f(dir).mul(nspeed, 0, nspeed));
+			pos.sub(new Vector3f(dir).mul(fbs, 0, fbs));
         }
         if(front){
-			pos.add(new Vector3f(dir).mul(nspeed, 0, nspeed));
+			pos.add(new Vector3f(dir).mul(fbs, 0, fbs));
         }
         if(left){
 			pos.add(new Vector3f(this.right).mul(nspeed, 0, nspeed));
@@ -273,17 +283,15 @@ public class GGR {
 	}
 
 	public void reset(){
-		pos = new Vector3f(initial);
-		hor = hordef;
-		ver = verdef;
+		boolean bool = FMT.MODEL.orient.rect();
+		float y = bool ? 75 : -75;
+		float z = bool ? 75 : -75;
+		pos = new Vector3f(75, y, z);
+		hor = bool ? -Static.rad135 : -Static.rad45;
+		ver = bool ? -Static.rad30 : Static.rad30;
 		movemod = 1f;
 		w_down = s_down = a_down = d_down = false;
 		space_down = shift_down = false;
-	}
-
-	public void resetRot(){
-		hor = hordef;
-		ver = verdef;
 	}
 
 	public float fov(){
