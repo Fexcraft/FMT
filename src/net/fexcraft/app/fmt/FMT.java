@@ -137,7 +137,7 @@ public class FMT {
 		Settings.apply(INSTANCE);
 		//SCRIPT = new Script(new FileInputStream("./scripts/test.script"), "test");
 		//Logging.log(SCRIPT.print());
-		net.fexcraft.lib.scr.Script scr = ScriptParser.parse(new FileInputStream("./scripts/test1.script"));
+		//net.fexcraft.lib.scr.Script scr = ScriptParser.parse(new FileInputStream("./scripts/test1.script"));
 		//Logging.log(scr);
 		//System.exit(0);
 		try{
@@ -170,7 +170,8 @@ public class FMT {
 		glfwShowWindow(window);
 		glfwFocusWindow(window);
 		//
-		CAM = new GGR(75, -75, -75, -Static.rad45, Static.rad30);
+		MODEL = new Model(null, "Unnamed Model");
+		CAM = new GGR();
 		AxisRotator.setDefImpl(Axis3DL.class);
 		Settings.applyTheme();
 		FRAME = new Frame(WIDTH, HEIGHT);
@@ -245,8 +246,6 @@ public class FMT {
 		RENDERER = new NvgRenderer();
 		RENDERER.initialize();
 		TextureManager.load();
-		//FMT.MODEL = new Model(new File("./saves/dodici.fmtb"), null).load();
-		FMT.MODEL = new Model(null, "Unnamed Model");
 		FMT.WORKSPACE = new Workspace();
 		FMT.updateTitle();
 		//TODO load previous model
