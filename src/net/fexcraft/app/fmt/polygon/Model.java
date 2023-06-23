@@ -65,7 +65,7 @@ public class Model {
 	private ArrayList<Polygon> selected = new ArrayList<>();
 	public LinkedHashMap<String, String> export_values = new LinkedHashMap<>();
 	public LinkedHashMap<String, ArrayList<String>> export_listed_values = new LinkedHashMap<>();
-	public ModelOrientation orient = ModelOrientation.CLASSIC_VEHICLE;
+	public ModelOrientation orient = ModelOrientation.FVTM4_DEFAULT;
 	public ModelFormat format = ModelFormat.UNIVERSAL;
 	public Vector3f pos = new Vector3f();
 	public Vector3f rot = new Vector3f();
