@@ -10,6 +10,7 @@ import static net.fexcraft.app.fmt.utils.JsonUtil.setVector;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import net.fexcraft.app.json.JsonValue;
 import net.fexcraft.lib.script.elm.FltElm;
 import org.joml.Vector3f;
 
@@ -22,7 +23,6 @@ import net.fexcraft.app.fmt.polygon.uv.NoFace;
 import net.fexcraft.app.fmt.utils.Axis3DL;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
-import net.fexcraft.app.json.JsonObject;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.frl.Polyhedron;
@@ -96,7 +96,7 @@ public class RectCurve extends Polygon {
 			return new Vector3f[]{ cor0, cor1, cor2, cor3 };
 		}
 
-		public JsonObject<?> save(){
+		public JsonMap save(){
 			JsonMap map = new JsonMap();
 			map.add("width", size.x);
 			map.add("height", size.y);
