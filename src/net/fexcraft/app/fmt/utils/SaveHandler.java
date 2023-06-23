@@ -551,7 +551,7 @@ public class SaveHandler {
         	for(ModelOrientation orient : ModelOrientation.values()){
         		box0.addElement(orient.name());
         	}
-        	box0.setSelected(0, true);
+			box0.setSelected(ModelOrientation.FVTM4_DEFAULT.ordinal(), true);
         	dialog.getContainer().add(box0);
         	Label label2 = new Label(Translator.translate("saveload.new.target_format"), 10, 120, width - 20, 20);
         	dialog.getContainer().add(label2);
