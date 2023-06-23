@@ -11,6 +11,7 @@ import java.util.List;
 
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateEvent.EditorCreated;
+import net.fexcraft.app.json.JsonValue;
 import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.Dialog;
@@ -38,7 +39,6 @@ import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.fmt.utils.Translator.Translations;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
-import net.fexcraft.app.json.JsonObject;
 
 public class Editor extends Component {
 	
@@ -167,7 +167,7 @@ public class Editor extends Component {
 		this(key, obj.get("name", "Nameless Editor"), false, obj.get("alignment", true));
 		if(obj.has("components")){
 			JsonArray array = obj.getArray("components");
-			for(JsonObject<?> elm : array.elements()){
+			for(JsonValue<?> elm : array.elements()){
 				if(elm.isMap()){
 					Class<? extends EditorComponent> com = EditorComponent.REGISTRY.get(elm.asMap().get("id").string_value());
 					if(com != null) this.addComponent(com.getConstructor().newInstance().load(elm.asMap()));
