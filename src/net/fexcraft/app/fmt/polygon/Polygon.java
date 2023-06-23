@@ -253,7 +253,7 @@ public abstract class Polygon implements ScrElm {
 	public abstract Face getFaceByColor(int color);
 
 	public void render(FltElm alpha){
-		FMT.SCRIPT.act("render").process(this, alpha);
+		//FMT.SCRIPT.act("render").process(this, alpha);
 		glm.render();
 	}
 
