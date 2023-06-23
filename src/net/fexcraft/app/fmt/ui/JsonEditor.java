@@ -3,24 +3,20 @@ package net.fexcraft.app.fmt.ui;
 import java.io.File;
 import java.util.Map;
 
-import com.google.gson.JsonElement;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.fields.BoolButton;
 import net.fexcraft.app.fmt.ui.fields.ColorField;
 import net.fexcraft.app.fmt.ui.fields.RunButton;
-import net.fexcraft.app.fmt.ui.fields.TextField;
-import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
-import net.fexcraft.app.json.JsonObject;
+import net.fexcraft.app.json.JsonValue;
 import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.Dialog;
 import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.ScrollablePanel;
 import org.liquidengine.legui.component.TextInput;
-import org.liquidengine.legui.component.misc.listener.widget.WidgetResizeButtonDragListener;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.input.Mouse;
 import org.liquidengine.legui.listener.MouseClickEventListener;
@@ -56,7 +52,7 @@ public class JsonEditor extends Dialog {
 
     private void fill(Component container, JsonMap map){
         container.removeIf(com -> com instanceof Resizeable);
-        for(Map.Entry<String, JsonObject<?>> entry : map.entries()){
+        for(Map.Entry<String, JsonValue<?>> entry : map.entries()){
             Runnable run = () -> {
               JsonEditorMenu.show(this, map, entry.getKey(), entry.getValue());
             };
@@ -108,7 +104,7 @@ public class JsonEditor extends Dialog {
             label.getListenerMap().addListener(MouseClickEvent.class, listener);
             getListenerMap().addListener(MouseClickEvent.class, listener);
             this.map = map;
-            for(Map.Entry<String, JsonObject<?>> entry : map.entries()){
+            for(Map.Entry<String, JsonValue<?>> entry : map.entries()){
                 Runnable ran = () -> {
                     JsonEditorMenu.show(INST, map, entry.getKey(), entry.getValue());
                 };
@@ -164,7 +160,7 @@ public class JsonEditor extends Dialog {
             this.array = arr;
             for(int i = 0; i < array.size(); i++){
                 String idx = i + "";
-                JsonObject elm = array.get(i);
+                JsonValue elm = array.get(i);
                 Runnable ran = () -> {
                     JsonEditorMenu.show(INST, array, idx, elm);
                 };
@@ -198,12 +194,12 @@ public class JsonEditor extends Dialog {
 
     public static class JElmCom extends Component implements Resizeable {
 
-        public JsonObject<?> elm;
+        public JsonValue<?> elm;
         public String key;
         public Label label;
         public TextInput input;
 
-        public JElmCom(String key, JsonObject<?> elm, Runnable run){
+        public JElmCom(String key, JsonValue<?> elm, Runnable run){
             add(label = new Label(this.key = key, 10, 0, 200, 30));
             MouseClickEventListener listener = lis -> {
                 if(lis.getAction() == MouseClickEvent.MouseClickAction.CLICK && lis.getButton() == Mouse.MouseButton.MOUSE_BUTTON_RIGHT){
@@ -214,20 +210,20 @@ public class JsonEditor extends Dialog {
             getListenerMap().addListener(MouseClickEvent.class, listener);
             this.elm = elm;
             if(elm.string_value().equals("true") || elm.string_value().equals("false")){
-                add(new BoolButton(220, 2, 300, 26, elm.bool(), bool -> ((JsonObject<Boolean>)elm).value(bool)));
+                add(new BoolButton(220, 2, 300, 26, elm.bool(), bool -> ((JsonValue<Boolean>)elm).value(bool)));
             }
             else if(elm.string_value().startsWith("#") && elm.string_value().length() == 7){
                 add(new ColorField(this, (color, bool) -> {
-                    ((JsonObject<String>)elm).value("#" + Integer.toHexString(color));
+                    ((JsonValue<String>)elm).value("#" + Integer.toHexString(color));
                 }, 220, 2, 300, 26, null, false).apply(Integer.parseInt(elm.string_value().replace("#", ""), 16)));
             }
             else{
                 add(input = new TextInput(elm.string_value(), 220, 2, 300, 26));
                 input.addTextInputContentChangeEventListener(event -> {
                     if(elm.isNumber()){
-                        ((JsonObject<Number>)elm).value(Float.parseFloat(event.getNewValue()));
+                        ((JsonValue<Number>)elm).value(Float.parseFloat(event.getNewValue()));
                     }
-                    else ((JsonObject<String>)elm).value(event.getNewValue());
+                    else ((JsonValue<String>)elm).value(event.getNewValue());
                 });
             }
         }
