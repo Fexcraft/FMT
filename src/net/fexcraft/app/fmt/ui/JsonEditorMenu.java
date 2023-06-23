@@ -16,7 +16,7 @@ import net.fexcraft.app.fmt.ui.fields.TextField;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
-import net.fexcraft.app.json.JsonObject;
+import net.fexcraft.app.json.JsonValue;
 import org.joml.Vector2f;
 import org.liquidengine.legui.component.*;
 import org.liquidengine.legui.event.MouseClickEvent;
@@ -27,7 +27,7 @@ public class JsonEditorMenu {
 	private static MenuLayer layer;
 	private static JsonEditor jsoneditor;
 	private static String idxkey;
-	private static JsonObject root, elm;
+	private static JsonValue root, elm;
 
 	static {
 		ArrayList<Component> components = new ArrayList<>();
@@ -53,7 +53,7 @@ public class JsonEditorMenu {
 						keys.addAll(root.asMap().value.keySet());
 						int idx = keys.indexOf(idxkey);
 						keys.add(idx, key);
-						HashMap<String, JsonObject> map = new HashMap();
+						HashMap<String, JsonValue> map = new HashMap();
 						map.putAll(root.asMap().value);
 						map.put(key, nelm);
 						root.asMap().value.clear();
@@ -79,7 +79,7 @@ public class JsonEditorMenu {
 						int idx = keys.indexOf(idxkey);
 						if(idx >= keys.size() - 1) keys.add(key);
 						else keys.add(idx + 1, key);
-						HashMap<String, JsonObject> map = new HashMap();
+						HashMap<String, JsonValue> map = new HashMap();
 						map.putAll(root.asMap().value);
 						map.put(key, nelm);
 						root.asMap().value.clear();
@@ -106,7 +106,7 @@ public class JsonEditorMenu {
 				ArrayList<String> keys = new ArrayList<>();
 				keys.addAll(root.asMap().value.keySet());
 				int idx = keys.indexOf(idxkey);
-				HashMap<String, JsonObject> map = new HashMap();
+				HashMap<String, JsonValue> map = new HashMap();
 				map.putAll(root.asMap().value);
 				map.remove(idxkey);
 				map.put(nkey, elm);
@@ -149,7 +149,7 @@ public class JsonEditorMenu {
 		};
 	}
 
-	public static void show(JsonEditor editor, JsonObject map, String key, JsonObject value){
+	public static void show(JsonEditor editor, JsonValue map, String key, JsonValue value){
 		jsoneditor = editor;
 		root = map;
 		idxkey = key;
@@ -158,7 +158,7 @@ public class JsonEditorMenu {
 		layer.show();
 	}
 
-	private static void pickType(boolean askkey, BiConsumer<String, JsonObject<?>> cons){
+	private static void pickType(boolean askkey, BiConsumer<String, JsonValue<?>> cons){
 		float width = 400, height = askkey ? 180 : 120;
 		Dialog dialog = new Dialog(translate("toolbar.jsoneditormenu.picktype.title"), width, height);
 		Settings.applyComponentTheme(dialog.getContainer());
@@ -194,16 +194,16 @@ public class JsonEditorMenu {
 					cons.accept(key[0], new JsonArray());
 				}
 				else if(str.contains("Number")){
-					cons.accept(key[0], new JsonObject<Float>(0f));
+					cons.accept(key[0], new JsonValue<Float>(0f));
 				}
 				else if(str.contains("Boolean")){
-					cons.accept(key[0], new JsonObject<Boolean>(false));
+					cons.accept(key[0], new JsonValue<Boolean>(false));
 				}
 				else if(str.contains("Color")){
-					cons.accept(key[0], new JsonObject<String>("#ffffff"));
+					cons.accept(key[0], new JsonValue<String>("#ffffff"));
 				}
 				else if(str.contains("String")){
-					cons.accept(key[0], new JsonObject<String>(""));
+					cons.accept(key[0], new JsonValue<String>(""));
 				}
 				dialog.close();
 			}
