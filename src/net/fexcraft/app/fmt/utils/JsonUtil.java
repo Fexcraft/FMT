@@ -16,12 +16,12 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 import net.fexcraft.app.fmt.polygon.Vector3F;
+import net.fexcraft.app.json.JsonValue;
 import org.joml.Vector3f;
 
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
-import net.fexcraft.app.json.JsonObject;
 import net.fexcraft.lib.common.math.Time;
 
 /**
@@ -46,14 +46,14 @@ public class JsonUtil {
 		if(vec.z != 0f) obj.add(format(format, "z"), vec.z);
 	}
 
-	public static JsonObject<?> toJson(Object val){
-		if(val instanceof Double) return new JsonObject<Float>((float)val);
-		if(val instanceof Float) return new JsonObject<Float>((float)val);
-		if(val instanceof Long) return new JsonObject<Long>((long)val);
-		if(val instanceof Integer) return new JsonObject<Integer>((int)val);
-		if(val instanceof Boolean) return new JsonObject<Boolean>((boolean)val);
+	public static JsonValue<?> toJson(Object val){
+		if(val instanceof Double) return new JsonValue<Float>((float)val);
+		if(val instanceof Float) return new JsonValue<Float>((float)val);
+		if(val instanceof Long) return new JsonValue<Long>((long)val);
+		if(val instanceof Integer) return new JsonValue<Integer>((int)val);
+		if(val instanceof Boolean) return new JsonValue<Boolean>((boolean)val);
 		//
-		return new JsonObject<String>((String)val);
+		return new JsonValue<String>((String)val);
 	}
 	
 
