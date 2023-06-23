@@ -80,6 +80,7 @@ public class ModelGeneral extends EditorComponent {
 			FMT.MODEL.orient = ModelOrientation.valueOf(listener.getNewValue());
 			UpdateHandler.update(new ModelOrientEvent(FMT.MODEL, FMT.MODEL.orient));
 		});
+		orient.setVisibleCount(8);
 		updcom.add(ModelLoad.class, event -> orient.setSelected(FMT.MODEL.orient.name(), true));
 		this.add(orient);
 	}
