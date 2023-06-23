@@ -6,16 +6,14 @@ import java.util.ArrayList;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.Icon;
-import net.fexcraft.app.fmt.ui.JsonEditor;
 import net.fexcraft.app.fmt.ui.fields.BoolButton;
 import net.fexcraft.app.fmt.ui.fields.ColorField;
 import net.fexcraft.app.fmt.ui.fields.RunButton;
-import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
-import net.fexcraft.app.json.JsonObject;
+import net.fexcraft.app.json.JsonValue;
 import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.ScrollablePanel;
@@ -23,7 +21,6 @@ import org.liquidengine.legui.component.SelectBox;
 import org.liquidengine.legui.component.TextInput;
 import org.liquidengine.legui.component.Widget;
 import org.liquidengine.legui.component.event.textinput.TextInputContentChangeEvent;
-import org.lwjgl.system.CallbackI;
 
 public class FVTMConfigEditor extends Widget {
 
@@ -75,7 +72,7 @@ public class FVTMConfigEditor extends Widget {
         panel.getContainer().setSize(pwidth, height_);
     }
 
-    private JsonObject get(JsonMap map, ConfigEntry entry){
+    private JsonValue get(JsonMap map, ConfigEntry entry){
         if(map.has(entry.name)) return map.get(entry.name);
         if(map.has(entry.alt)) return map.get(entry.alt);
         return null;
@@ -88,7 +85,7 @@ public class FVTMConfigEditor extends Widget {
         private static String[] xyz = { "x", "y", "z" };
         private ArrayList<EntryComponent> coms = new ArrayList<>();
 
-        public EntryComponent(ConfigEntry entry, JsonObject root, Object idxkey, JsonObject obj, Boolean container){
+        public EntryComponent(ConfigEntry entry, JsonValue root, Object idxkey, JsonValue obj, Boolean container){
             add(label = new Label((entry.name == null ? idxkey : entry.name) + (entry.required ? "*" : ""), 30, 0, 200, 30));
             if(container != null){
                 if(container){
@@ -167,9 +164,9 @@ public class FVTMConfigEditor extends Widget {
                     input.addTextInputContentChangeEventListener(event -> {
                         if(obj == null){
                             if(root.isMap()){
-                                root.asMap().add(fik.toString(), new JsonObject<>(get(event, entry.type)));
+                                root.asMap().add(fik.toString(), new JsonValue<>(get(event, entry.type)));
                             }
-                            else root.asArray().value.set(((int)fik) + j, new JsonObject<>(get(event, entry.type)));
+                            else root.asArray().value.set(((int)fik) + j, new JsonValue<>(get(event, entry.type)));
                         }
                         else obj.value(get(event, entry.type));
                     });
@@ -180,7 +177,7 @@ public class FVTMConfigEditor extends Widget {
                     String col = "#" + Integer.toHexString(color);
                     if(obj == null){
                         if(root.isMap()) root.asMap().add(idxkey.toString(), col);
-                        else root.asArray().value.set((int)idxkey, new JsonObject<String>(col));
+                        else root.asArray().value.set((int)idxkey, new JsonValue<String>(col));
                     }
                     else obj.value(col);
                 }, 220, 2, 300, 26, null, false).apply(obj == null ? entry.defi : Integer.parseInt(obj.string_value().replace("#", ""), 16)));
@@ -189,7 +186,7 @@ public class FVTMConfigEditor extends Widget {
                 add(new BoolButton(220, 2, 300, 26, obj == null ? entry.defb : obj.bool(), bool -> {
                     if(obj == null){
                         if(root.isMap()) root.asMap().add(idxkey.toString(), bool);
-                        else root.asArray().value.set((int)idxkey, new JsonObject<Boolean>(bool));
+                        else root.asArray().value.set((int)idxkey, new JsonValue<Boolean>(bool));
                     }
                     else obj.value(bool);
                 }));
@@ -201,9 +198,9 @@ public class FVTMConfigEditor extends Widget {
                 box.addSelectBoxChangeSelectionEventListener(lis -> {
                     if(obj == null){
                         if(root.isMap()){
-                            root.asMap().add(idxkey.toString(), new JsonObject<>(lis.getNewValue()));
+                            root.asMap().add(idxkey.toString(), new JsonValue<>(lis.getNewValue()));
                         }
-                        else root.asArray().value.set((int)idxkey, new JsonObject<>(lis.getNewValue()));
+                        else root.asArray().value.set((int)idxkey, new JsonValue<>(lis.getNewValue()));
                     }
                     else obj.value(lis.getNewValue());
                 });
@@ -215,9 +212,9 @@ public class FVTMConfigEditor extends Widget {
                 input.addTextInputContentChangeEventListener(event -> {
                     if(obj == null){
                         if(root.isMap()){
-                            root.asMap().add(idxkey.toString(), new JsonObject<>(get(event, entry.type)));
+                            root.asMap().add(idxkey.toString(), new JsonValue<>(get(event, entry.type)));
                         }
-                        else root.asArray().value.set((int)idxkey, new JsonObject<>(get(event, entry.type)));
+                        else root.asArray().value.set((int)idxkey, new JsonValue<>(get(event, entry.type)));
                     }
                     else obj.value(get(event, entry.type));
                 });
