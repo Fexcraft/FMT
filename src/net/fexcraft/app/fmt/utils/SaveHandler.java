@@ -48,7 +48,7 @@ import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonHandler.PrintOption;
 import net.fexcraft.app.json.JsonMap;
-import net.fexcraft.app.json.JsonObject;
+import net.fexcraft.app.json.JsonValue;
 
 public class SaveHandler {
 	
@@ -131,11 +131,11 @@ public class SaveHandler {
 		int format = obj.getInteger("format", 2);
 		if(format == 1){
 			JsonMap jmod = obj.getMap("model");
-			for(Entry<String, JsonObject<?>> entry : jmod.entries()){
+			for(Entry<String, JsonValue<?>> entry : jmod.entries()){
 				try{
 					Group group = new Group(model, entry.getKey());
 					JsonArray array = entry.getValue().asArray();
-					for(JsonObject<?> elm : array.elements()){
+					for(JsonValue<?> elm : array.elements()){
 						group.add(Polygon.from(model, elm.asMap(), format));
 					}
 					model.addGroup(group);
