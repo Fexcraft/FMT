@@ -22,6 +22,7 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import net.fexcraft.app.fmt.update.UpdateEvent.*;
+import net.fexcraft.app.json.JsonValue;
 import net.fexcraft.lib.script.elm.FltElm;
 import org.joml.Vector3f;
 import org.liquidengine.legui.component.Button;
@@ -49,7 +50,6 @@ import net.fexcraft.app.fmt.utils.SaveHandler;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
-import net.fexcraft.app.json.JsonObject;
 
 /**
  * 
@@ -420,7 +420,7 @@ public class Model {
 				}
 				case "grouped-clipboard":{
 					Runnable run = () -> {
-						for(Entry<String, JsonObject<?>> group : map.get("groups").asMap().value.entrySet()){
+						for(Entry<String, JsonValue<?>> group : map.get("groups").asMap().value.entrySet()){
 							String groupto = external ? model + "-" + group.getKey() + Settings.PASTED_GROUP.value : group.getKey() + "-cb";
 							group.getValue().asArray().value.forEach(poly -> {
 								add(groupto, Polygon.from(this, poly.asMap(), format));
@@ -429,7 +429,7 @@ public class Model {
 					};
 					if(external){
 						int polygons = 0;
-						for(JsonObject<?> array : map.get("groups").asMap().value.values()){
+						for(JsonValue<?> array : map.get("groups").asMap().value.values()){
 							polygons += array.asArray().size();
 						}
 						GenericDialog.showYN("model.clipboard.paste_external_grouped", run, null,
