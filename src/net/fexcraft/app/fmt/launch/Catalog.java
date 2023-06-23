@@ -13,7 +13,7 @@ import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonHandler.PrintOption;
 import net.fexcraft.app.json.JsonMap;
-import net.fexcraft.app.json.JsonObject;
+import net.fexcraft.app.json.JsonValue;
 
 /**
  * 
@@ -78,7 +78,7 @@ public class Catalog {
 		private long date;
 		private boolean override = true, remove;
 		
-		public Resource(JsonObject<?> obj){
+		public Resource(JsonValue<?> obj){
 			if(obj.isArray()){
 				JsonArray array = obj.asArray();
 				id = array.get(0).value();
