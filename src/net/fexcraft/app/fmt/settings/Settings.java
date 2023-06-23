@@ -18,6 +18,7 @@ import java.util.Map.Entry;
 
 import net.fexcraft.app.fmt.launch.Catalog;
 import net.fexcraft.app.fmt.port.im.ImportManager;
+import net.fexcraft.app.json.JsonValue;
 import org.joml.Vector4f;
 import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.component.Component;
@@ -48,7 +49,6 @@ import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonHandler.PrintOption;
 import net.fexcraft.app.json.JsonMap;
-import net.fexcraft.app.json.JsonObject;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.TexturedPolygon;
 import net.fexcraft.lib.common.math.Time;
@@ -63,17 +63,65 @@ public class Settings {
 	public static long UPDATE_FOR_FILES_FOUND = 0, LAST_CATALOG_RELOAD;
 	public static ArrayList<File> RECENT = new ArrayList<File>();
 	public static File NO_FILE_DOTS = new File("...");
-	public static Setting<Integer> WINDOW_WIDTH, WINDOW_HEIGHT, ROUNDING_DIGITS, BACKUP_INTERVAL, GIF_DELAY_TIME, GIF_ROT_PASS;
-	public static Setting<Boolean> DISCORD_RPC, DISCORD_HIDE, DISCORD_RESET_ON_NEW, FULLSCREEN, NO_RANDOM_TITLE;
-	public static Setting<Boolean> VSYNC, HVSYNC, TRIANGULATION_Q, TRIANGULATION_L, INTERNAL_CHOOSER;
-	public static Setting<Boolean> DEMO, FLOOR, CUBE, CMARKER, LINES, POLYMARKER, ADD_TO_LAST, SPHERE_MARKER;
-	public static Setting<Float> MOUSE_SENSIVITY, MOVE_SPEED, SCROLL_SPEED, LIGHT_AMBIENT, LIGHT_DIFFUSE, LIGHT_POSX, LIGHT_POSY, LIGHT_POSZ;
-	public static Setting<String> LANGUAGE, POLYGON_SUFFIX, GROUP_SUFFIX, COPIED_POLYGON, PASTED_GROUP;
-	public static Setting<Boolean> ASK_POLYGON_REMOVAL, ASK_GROUP_REMOVAL, ASK_TEXTURE_GROUP_REMOVAL, OPEN_FOLDER_AFTER_SAVE, OPEN_FOLDER_AFTER_IMG;
-	public static Setting<Boolean> SHOW_WELCOME, SHOW_UPDATE, SELECT_COPIED, SELECT_NEW, SHOW_BOTTOMBAR, GIF_LOOP, HIDE_UI_FOR_IMAGE;
-	public static Setting<Boolean> HIDE_MENU_AFTER_POLYGON, LOG_UPDATES, LIGHTING_ON, NUMBERFIELD_BUTTONS;
-	public static Setting<Float> ZOOM_LEVEL, ARROW_SENSIVITY;
-	public static RGBSetting BACKGROUND, SELECTION_LINES, BOTTOM_INFO_BAR_COLOR, LIGHT_COLOR;
+	public static Setting<Integer> WINDOW_WIDTH;
+	public static Setting<Integer> WINDOW_HEIGHT;
+	public static Setting<Integer> ROUNDING_DIGITS;
+	public static Setting<Integer> BACKUP_INTERVAL;
+	public static Setting<Integer> GIF_DELAY_TIME;
+	public static Setting<Integer> GIF_ROT_PASS;
+	public static Setting<Boolean> DISCORD_RPC;
+	public static Setting<Boolean> DISCORD_HIDE;
+	public static Setting<Boolean> DISCORD_RESET_ON_NEW;
+	public static Setting<Boolean> FULLSCREEN;
+	public static Setting<Boolean> NO_RANDOM_TITLE;
+	public static Setting<Boolean> VSYNC;
+	public static Setting<Boolean> HVSYNC;
+	public static Setting<Boolean> TRIANGULATION_Q;
+	public static Setting<Boolean> TRIANGULATION_L;
+	public static Setting<Boolean> INTERNAL_CHOOSER;
+	public static Setting<Boolean> DEMO;
+	public static Setting<Boolean> FLOOR;
+	public static Setting<Boolean> CUBE;
+	public static Setting<Boolean> CMARKER;
+	public static Setting<Boolean> LINES;
+	public static Setting<Boolean> POLYMARKER;
+	public static Setting<Boolean> ADD_TO_LAST;
+	public static Setting<Boolean> SPHERE_MARKER;
+	public static Setting<Float> MOUSE_SENSIVITY;
+	public static Setting<Float> MOVE_SPEED;
+	public static Setting<Float> SCROLL_SPEED;
+	public static Setting<Float> LIGHT_AMBIENT;
+	public static Setting<Float> LIGHT_DIFFUSE;
+	public static Setting<Float> LIGHT_POSX;
+	public static Setting<Float> LIGHT_POSY;
+	public static Setting<Float> LIGHT_POSZ;
+	public static Setting<String> LANGUAGE;
+	public static Setting<String> POLYGON_SUFFIX;
+	public static Setting<String> GROUP_SUFFIX;
+	public static Setting<String> COPIED_POLYGON;
+	public static Setting<String> PASTED_GROUP;
+	public static Setting<Boolean> ASK_POLYGON_REMOVAL;
+	public static Setting<Boolean> ASK_GROUP_REMOVAL;
+	public static Setting<Boolean> ASK_TEXTURE_GROUP_REMOVAL;
+	public static Setting<Boolean> OPEN_FOLDER_AFTER_SAVE;
+	public static Setting<Boolean> OPEN_FOLDER_AFTER_IMG;
+	public static Setting<Boolean> SHOW_WELCOME;
+	public static Setting<Boolean> SHOW_UPDATE;
+	public static Setting<Boolean> SELECT_COPIED;
+	public static Setting<Boolean> SELECT_NEW;
+	public static Setting<Boolean> SHOW_BOTTOMBAR;
+	public static Setting<Boolean> GIF_LOOP;
+	public static Setting<Boolean> HIDE_UI_FOR_IMAGE;
+	public static Setting<Boolean> HIDE_MENU_AFTER_POLYGON;
+	public static Setting<Boolean> LOG_UPDATES;
+	public static Setting<Boolean> LIGHTING_ON;
+	public static Setting<Boolean> NUMBERFIELD_BUTTONS;
+	public static Setting<Float> ZOOM_LEVEL;
+	public static Setting<Float> ARROW_SENSIVITY;
+	public static RGBSetting BACKGROUND;
+	public static RGBSetting SELECTION_LINES;
+	public static RGBSetting BOTTOM_INFO_BAR_COLOR;
+	public static RGBSetting LIGHT_COLOR;
 	//
 	public static Setting<String> WORKSPACE_NAME;
 	public static Setting<String> WORKSPACE_ROOT;
@@ -90,9 +138,16 @@ public class Settings {
 	public static RGBSetting THEME_TEXT;
 	public static RGBSetting THEME_BUTTON;
 	public static Setting<String> THEME_FONT;
-	public static RGBSetting POLYGON_NORMAL, POLYGON_SELECTED, POLYGON_INVISIBLE, POLYGON_INV_SEL;
-	public static RGBSetting GROUP_NORMAL, GROUP_SELECTED, GROUP_INVISIBLE, GROUP_INV_SEL;
-	public static RGBSetting TEXTURE_GROUP, TEXTURE_OPTION;
+	public static RGBSetting POLYGON_NORMAL;
+	public static RGBSetting POLYGON_SELECTED;
+	public static RGBSetting POLYGON_INVISIBLE;
+	public static RGBSetting POLYGON_INV_SEL;
+	public static RGBSetting GROUP_NORMAL;
+	public static RGBSetting GROUP_SELECTED;
+	public static RGBSetting GROUP_INVISIBLE;
+	public static RGBSetting GROUP_INV_SEL;
+	public static RGBSetting TEXTURE_GROUP;
+	public static RGBSetting TEXTURE_OPTION;
 	//
 	public static String GENERAL = "general";
 	public static String GRAPHIC = "graphic";
@@ -356,7 +411,7 @@ public class Settings {
 		JsonMap obj = JsonHandler.parse(new File("./editors.fmt"));
 		if(obj == null || obj.empty()) loadDefaultEditors();
 		else{
-			for(Entry<String, JsonObject<?>> entry : obj.entries()){
+			for(Entry<String, JsonValue<?>> entry : obj.entries()){
 				try{
 					new Editor(entry.getKey(), entry.getValue().asMap());
 				}
@@ -423,7 +478,7 @@ public class Settings {
 			}
 			else if(obj.has("blocked_versions")){
 				JsonArray array = obj.getArray("blocked_versions");
-				for(JsonObject<?> elm : array.elements()){
+				for(JsonValue<?> elm : array.elements()){
 					if(elm.string_value().equals(FMT.VERSION)){
 						Logging.log("Blocked version detected, causing panic.");
 						System.exit(2); System.exit(2); System.exit(2); System.exit(2);
