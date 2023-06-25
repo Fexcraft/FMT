@@ -5,6 +5,7 @@ import static net.fexcraft.app.fmt.utils.JsonUtil.setVector;
 
 import java.util.ArrayList;
 
+import net.fexcraft.app.fmt.FMT;
 import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
@@ -33,7 +34,7 @@ public class Cylinder extends Polygon {
 	
 	public Cylinder(Model model){
 		super(model);
-		pos.y = -1;
+		if(!FMT.MODEL.orient.rect()) pos.y = -1;
 	}
 
 	protected Cylinder(Model model, JsonMap obj, int format){
