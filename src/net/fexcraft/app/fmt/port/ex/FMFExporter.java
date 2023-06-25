@@ -15,6 +15,7 @@ import java.util.Map.Entry;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.GLObject;
+import net.fexcraft.app.fmt.utils.Axis3DL;
 import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
@@ -45,10 +46,12 @@ public class FMFExporter implements Exporter {
 	private static final int PP = 1, PR = 2, PF = 3, PT = 4, PL = 6, PM = 7, PDF = 8, PDU = 9, PCU = 10;
 	private static final int PBS = 16, PBC = 17;
 	private static final int PCRL = 16, PCD = 17, PCSG = 18, PCSL = 19, PCTO = 20, PCTR = 21, PCRT = 22, PCSO = 23;
+	private static Axis3DL axe = new Axis3DL();
 
 	public FMFExporter(JsonMap map){
 		settings.add(new Setting<>("modeldata", true, "exporter-fmf"));
 		settings.add(new Setting<>("flip", false, "exporter-fmf"));
+		axe.setAngles(180, 180, 0);
 	}
 
 	@Override
@@ -104,17 +107,23 @@ public class FMFExporter implements Exporter {
 				write(stream, 2, group.id);
 				for(Polygon polygon : group){
 					if(!valid(polygon.getShape())) continue;
-					boolean isbox = polygon.getShape().isInConversionGroup("rect");
+					boolean isbox = polygon instanceof Box;
 					boolean o = flip || (!isbox && !polygon.getShape().isCylinder());
 					stream.write(o ? 3 : isbox ? 1 : 2);
 					if(polygon.name(true) != null){
 						write(stream, PM, polygon.name());
 					}
 					if(nn(polygon.pos)){
-						writeVector(stream, PP, polygon.pos);
+						if(flip){
+							writeVector(stream, PP, axe.getRelativeVector(polygon.pos));
+						}
+						else writeVector(stream, PP, polygon.pos);
 					}
 					if(nn(polygon.rot)){
-						writeVector(stream, PR, polygon.rot);
+						if(flip){
+							writeFloats(stream, PR, polygon.rot.x, -polygon.rot.y, -polygon.rot.z);
+						}
+						else writeVector(stream, PR, polygon.rot);
 					}
 					if(!o && nn(polygon.off)){
 						writeVector(stream, PF, polygon.off);
@@ -179,12 +188,15 @@ public class FMFExporter implements Exporter {
 						Polyhedron<GLObject> poly = polygon.glm;
 						for(net.fexcraft.lib.frl.Polygon p : poly.polygons){
 							for(Vertex vertex : p.vertices){
-								writeFloats(stream, PF, vertex.vector.x, vertex.vector.y, vertex.vector.z);
+								if(flip){
+									Vec3f vec = axe.get(vertex.vector);
+									writeFloats(stream, PF, vec.x, vec.y, vec.z);
+								}
+								else writeFloats(stream, PF, vertex.vector.x, vertex.vector.y, vertex.vector.z);
 								//writeFloats(stream, 5, vertex.norm.x, vertex.norm.y, vertex.norm.z);
 								writeFloats(stream, PT, vertex.u, vertex.v);
 							}
 							stream.write(PDF);
-							stream.write(p.vertices.length);
 							//writeIntegers(stream, PDF, p.vertices.length);
 						}
 					}
