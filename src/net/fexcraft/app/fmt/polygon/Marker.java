@@ -82,13 +82,14 @@ public class Marker extends Polygon {
 		DrawMode mode = PolyRenderer.mode();
 		PolyRenderer.mode(DrawMode.RGBCOLOR);
 		glm.render();
-		PolyRenderer.mode(mode);
+		PolyRenderer.mode(DrawMode.TEXTURED);
 		if(biped && !PolyRenderer.mode().lines()){
 			String tex = TextureManager.getBound();
 			TextureManager.bind("mark");
 			model.render();
 			TextureManager.bind(tex);
 		}
+		PolyRenderer.mode(mode);
 		//super.render();
 	}
 	
