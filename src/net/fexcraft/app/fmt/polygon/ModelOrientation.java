@@ -1,11 +1,11 @@
 package net.fexcraft.app.fmt.polygon;
 
 public enum ModelOrientation {
-	
-	FVTM3_DEFAULT(10, "floor_vehicle"),
-	FVTM3_BLOCK(0.125f, "floor_block"),
+
 	FVTM4_DEFAULT(-0.125f, "floor_vehicle"),
-	FVTM4_BLOCK(-0.125f, "floor_block");
+	FVTM4_BLOCK(-0.125f, "floor_block"),
+	FVTM3_DEFAULT(10, "floor_vehicle"),
+	FVTM3_BLOCK(0.125f, "floor_block");
 	
 	public final float floor_height;
 	public final String floor_texture;
@@ -16,7 +16,7 @@ public enum ModelOrientation {
 	}
 
 	public static ModelOrientation fromString(String string){
-		if(string == null) return FVTM4_DEFAULT;
+		if(string == null) return FVTM3_DEFAULT;//probably old model file
 		string = string.toUpperCase();
 		for(ModelOrientation orient : values()){
 			if(orient.name().equals(string)) return orient;
@@ -25,7 +25,7 @@ public enum ModelOrientation {
 	}
 
 	public boolean rect(){
-		return ordinal() > 1;
+		return ordinal() < 2;
 	}
 
 }
