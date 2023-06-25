@@ -9,9 +9,17 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.polygon.GLObject;
+import net.fexcraft.app.fmt.utils.Logging;
+import net.fexcraft.lib.common.math.RGB;
+import net.fexcraft.lib.common.math.Vec3f;
+import net.fexcraft.lib.frl.Polyhedron;
+import net.fexcraft.lib.frl.Vertex;
 import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.polygon.Box;
@@ -40,6 +48,7 @@ public class FMFExporter implements Exporter {
 
 	public FMFExporter(JsonMap map){
 		settings.add(new Setting<>("modeldata", true, "exporter-fmf"));
+		settings.add(new Setting<>("flip", false, "exporter-fmf"));
 	}
 
 	@Override
@@ -64,6 +73,7 @@ public class FMFExporter implements Exporter {
 
 	@Override
 	public List<Setting<?>> settings(){
+		settings.get(1).value(!FMT.MODEL.orient.rect());
 		return settings;
 	}
 
@@ -75,6 +85,7 @@ public class FMFExporter implements Exporter {
 	@Override
 	public String export(Model model, File file, List<Group> groups){
 		FileOutputStream stream = null;
+		boolean flip = settings.get(1).value();
 		try{
 			stream = new FileOutputStream(file);
 			stream.write(new byte[]{ 6, 13, 6, 1 });
@@ -93,8 +104,9 @@ public class FMFExporter implements Exporter {
 				write(stream, 2, group.id);
 				for(Polygon polygon : group){
 					if(!valid(polygon.getShape())) continue;
-					boolean isbox = !polygon.getShape().isCylinder();
-					stream.write(isbox ? 1 : 2);
+					boolean isbox = polygon.getShape().isInConversionGroup("rect");
+					boolean o = flip || (!isbox && !polygon.getShape().isCylinder());
+					stream.write(o ? 3 : isbox ? 1 : 2);
 					if(polygon.name(true) != null){
 						write(stream, PM, polygon.name());
 					}
@@ -104,64 +116,79 @@ public class FMFExporter implements Exporter {
 					if(nn(polygon.rot)){
 						writeVector(stream, PR, polygon.rot);
 					}
-					if(nn(polygon.off)){
+					if(!o && nn(polygon.off)){
 						writeVector(stream, PF, polygon.off);
 					}
-					if(polygon.textureX >= 0 || polygon.textureY >= 0){
+					if(!o && (polygon.textureX >= 0 || polygon.textureY >= 0)){
 						writeIntegers(stream, PT, polygon.textureX, polygon.textureY);
 					}
-					if(group.color != null){
+					if(group.color.packed != RGB.WHITE.packed){
 						writeIntegers(stream, PL, group.color.packed);
 					}
-					if(isbox){
-						Box box = (Box)polygon;
-						if(nn(box.size)){
-							writeVector(stream, PBS, box.size);
-						}
-						if(box.anySidesOff()){
-							writeBooleans(stream, PDF, box.sides);
-						}
-						if(polygon instanceof Shapebox){
-							Vector3f[] corners = ((Shapebox)polygon).corners();
-							for(int i = 0; i < corners.length; i++){
-								if(nn(corners[i])){
-									stream.write(PBC);
-									writeVector(stream, i, corners[i]);
+					if(!flip){
+						if(isbox){
+							Box box = (Box)polygon;
+							if(nn(box.size)){
+								writeVector(stream, PBS, box.size);
+							}
+							if(box.anySidesOff()){
+								writeBooleans(stream, PDF, box.sides);
+							}
+							if(polygon instanceof Shapebox){
+								Vector3f[] corners = ((Shapebox)polygon).corners();
+								for(int i = 0; i < corners.length; i++){
+									if(nn(corners[i])){
+										stream.write(PBC);
+										writeVector(stream, i, corners[i]);
+									}
 								}
 							}
 						}
+						else if(polygon.getShape().isCylinder()){
+							Cylinder cyl = (Cylinder)polygon;
+							if(cyl.radius > 0 || cyl.radius2 > 0 || cyl.length > 0){
+								writeFloats(stream, PCRL, cyl.radius, cyl.radius2, cyl.length);
+							}
+							if(cyl.direction >= 0){
+								writeIntegers(stream, PCD, cyl.direction);
+							}
+							if(cyl.segments > 2 || cyl.seglimit > 0){
+								writeIntegers(stream, PCSG, cyl.segments, cyl.seglimit);
+							}
+							if(cyl.base != 1f || cyl.top != 1f){
+								writeFloats(stream, PCSL, cyl.base, cyl.top);
+							}
+							if(nn(cyl.topoff)){
+								writeVector(stream, PCTO, cyl.topoff);
+							}
+							if(nn(cyl.toprot)){
+								writeVector(stream, PCTR, cyl.toprot);
+							}
+							if(cyl.anySidesOff()){
+								writeBooleans(stream, PDF, cyl.bools);
+							}
+							if(cyl.seg_width > 0f || cyl.seg_height > 0f){
+								writeFloats(stream, PCRT, cyl.seg_width, cyl.seg_height);
+							}
+							if(cyl.seg_off != 0f){
+								writeFloats(stream, PCSO, cyl.seg_off);
+							}
+						}
 					}
-					else{
-						Cylinder cyl = (Cylinder)polygon;
-						if(cyl.radius > 0 || cyl.radius2 > 0 || cyl.length > 0){
-							writeFloats(stream, PCRL, cyl.radius, cyl.radius2, cyl.length);
-						}
-						if(cyl.direction >= 0){
-							writeIntegers(stream, PCD, cyl.direction);
-						}
-						if(cyl.segments > 2 || cyl.seglimit > 0){
-							writeIntegers(stream, PCSG, cyl.segments, cyl.seglimit);
-						}
-						if(cyl.base != 1f || cyl.top != 1f){
-							writeFloats(stream, PCSL, cyl.base, cyl.top);
-						}
-						if(nn(cyl.topoff)){
-							writeVector(stream, PCTO, cyl.topoff);
-						}
-						if(nn(cyl.toprot)){
-							writeVector(stream, PCTR, cyl.toprot);
-						}
-						if(cyl.anySidesOff()){
-							writeBooleans(stream, PDF, cyl.bools);
-						}
-						if(cyl.seg_width > 0f || cyl.seg_height > 0f){
-							writeFloats(stream, PCRT, cyl.seg_width, cyl.seg_height);
-						}
-						if(cyl.seg_off != 0f){
-							writeFloats(stream, PCSO, cyl.seg_off);
+					if(o){
+						Polyhedron<GLObject> poly = polygon.glm;
+						for(net.fexcraft.lib.frl.Polygon p : poly.polygons){
+							for(Vertex vertex : p.vertices){
+								writeFloats(stream, PF, vertex.vector.x, vertex.vector.y, vertex.vector.z);
+								//writeFloats(stream, 5, vertex.norm.x, vertex.norm.y, vertex.norm.z);
+								writeFloats(stream, PT, vertex.u, vertex.v);
+							}
+							stream.write(PDF);
+							stream.write(p.vertices.length);
+							//writeIntegers(stream, PDF, p.vertices.length);
 						}
 					}
-					if(polygon.cuv.any()){
+					if(!o && polygon.cuv.any()){
 						boolean[] detached = new boolean[6];
 						for(int i = 0; i < detached.length; i++){
 							UVCoords coord = polygon.cuv.get((isbox ? BoxFace.values() : CylFace.values())[i]);
@@ -230,7 +257,7 @@ public class FMFExporter implements Exporter {
 	}
 
 	private boolean valid(Shape shape){
-		return shape.isBox() || shape.isShapebox() || shape.isCylinder();
+		return !shape.isMarker() && !shape.isBoundingBox();//shape.isBox() || shape.isShapebox() || shape.isCylinder();
 	}
 
 	private boolean nn(Vector3f vec){
