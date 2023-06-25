@@ -2,6 +2,7 @@ package net.fexcraft.app.fmt.polygon;
 
 import java.util.ArrayList;
 
+import net.fexcraft.app.fmt.FMT;
 import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
@@ -21,7 +22,7 @@ public class Box extends Polygon {
 	
 	public Box(Model model){
 		super(model);
-		pos.y = -1;
+		if(!FMT.MODEL.orient.rect()) pos.y = -1;
 	}
 
 	protected Box(Model model, JsonMap obj){
