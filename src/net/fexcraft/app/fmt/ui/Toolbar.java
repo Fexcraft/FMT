@@ -97,7 +97,10 @@ public class Toolbar extends Panel {
 			new MenuButton(7, "utils.screenshot", () -> ImageHandler.takeScreenshot(false)),
 			new MenuButton(8, "utils.uv_viewer", () -> UVViewer.addIfAbsent()),
 			new MenuButton(9, "utils.rescale", () -> FMT.MODEL.rescale()),
-			new MenuButton(10, "utils.font_util", () -> FontUtils.open())
+			new MenuButton(10, "utils.font_util", () -> FontUtils.open()),
+			new ToolbarMenu(-11, "utils.converters",
+					new MenuButton(0, "utils.converter.itemmodeltexjson", () -> ConverterUtils.runIMTJ())
+			)
 		));
 		this.add(new ToolbarMenu(2, "editors",
 			new MenuButton(0, "editors.new")
