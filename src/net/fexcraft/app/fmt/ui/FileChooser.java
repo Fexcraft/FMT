@@ -66,6 +66,15 @@ public class FileChooser {
     		else task.accept(null);
         }
 	}
+
+	public static void chooseDir(String title, String root, Consumer<File> task){
+		if(!root.endsWith("/")) root += "/";
+		if(INTERNAL_CHOOSER.value){
+			GenericDialog.showOK("not-available-yet", null, null);
+			return;
+		}
+		task.accept(new File(TinyFileDialogs.tinyfd_selectFolderDialog(title, root)));
+	}
 	
 	private static void openInternalChooser(String title, String root, FileType type, boolean save, Consumer<File> task){
 		Dialog dialog = new Dialog(Translator.translate("filechooser.title"), 500, INTERNAL_HEIGHT + (save ? 30 : 0));
