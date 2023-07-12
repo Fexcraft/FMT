@@ -27,24 +27,43 @@ public class ConverterUtils {
 	public static void runIMTJ(){
 		FileChooser.chooseDir(Translator.translate("utils.converter.itemmodeltexjson.title"), "./", folder -> {
 			if(folder == null) return;
-			for(File file : folder.listFiles()){
-				try{
-					Logging.log("Patching " + file);
-					JsonMap map = JsonHandler.parse(file);
-					if(map.has("textures")){
-						map.getMap("textures").value.values().forEach(json -> {
-							if(json.isValue()){
-								((JsonValue<String>)json).value(json.string_value().replace(":items/", ":item/"));
-							}
-						});
-					}
-					JsonHandler.print(file, map, PrintOption.DEFAULT);
-				}
-				catch(Exception e){
-					e.printStackTrace();
-				}
-			}
+			search(folder);
 		});
+	}
+
+	private static void search(File folder){
+		for(File file : folder.listFiles()){
+			if(file.isDirectory()){
+				search(file);
+				continue;
+			}
+			try{
+				Logging.log("Patching " + file);
+				JsonMap map = JsonHandler.parse(file);
+				if(map.has("textures")){
+					map.getMap("textures").value.values().forEach(json -> {
+						if(json.isValue()){
+							String str = json.string_value();
+							if(str.startsWith("items/")){
+								str = str.replace("items/", "item/");
+							}
+							else if(str.startsWith("blocks/")){
+								str = str.replace("blocks/", "block/");
+							}
+							else{
+								str = str.replace(":items/", ":item/");
+								str = str.replace(":blocks/", ":block/");
+							}
+							((JsonValue<String>)json).value(str);
+						}
+					});
+				}
+				JsonHandler.print(file, map, PrintOption.DEFAULT);
+			}
+			catch(Exception e){
+				e.printStackTrace();
+			}
+		}
 	}
 
 }
