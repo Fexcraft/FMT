@@ -408,7 +408,7 @@ public class FMT {
 		if(Settings.FLOOR.value){
 			TextureManager.bind(MODEL.orient.floor_texture);
 			floor.posY = MODEL.orient.floor_height;
-			(MODEL.orient == ModelOrientation.FVTM4_DEFAULT ? floor0 : floor).render();
+			(MODEL.orient.rect() ? floor0 : floor).render();
 		}
 		if(Settings.DEMO.value){
 			TextureManager.bind("t1p");
