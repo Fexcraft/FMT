@@ -40,6 +40,7 @@ public class ImportManager {
 		addImporter(new MTBImporter());
 		addImporter(new DFMImporter());
 		addImporter(new FVTM_OLD_Importer());
+		addImporter(new ObjImporter());
 	}
 	
 	private static void addImporter(Importer importer){
