@@ -5,7 +5,7 @@ public enum ModelOrientation {
 	FVTM4_DEFAULT(-0.125f, "floor_vehicle"),
 	FVTM4_BLOCK(-0.125f, "floor_block"),
 	FVTM3_DEFAULT(10, "floor_vehicle_old"),
-	FVTM3_BLOCK(0.125f, "floor_block");
+	FVTM3_BLOCK(0.125f, "floor_block_old");
 	
 	public final float floor_height;
 	public final String floor_texture;
