@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.Timer;
 
 import net.fexcraft.app.fmt.ui.UVViewer;
+import net.fexcraft.lib.frl.GLO;
 import net.fexcraft.lib.scr.ScriptParser;
 import net.fexcraft.lib.script.Script;
 import net.fexcraft.lib.script.elm.FltElm;
@@ -119,6 +120,9 @@ public class FMT {
 	public static Workspace WORKSPACE;
 	//
 	public static Script SCRIPT;
+	static{
+		GLO.SUPPLIER = () -> new GLObject();
+	}
 	
 	public static void main(String... args) throws Exception {
 		log("==================================================");
