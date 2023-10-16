@@ -17,6 +17,7 @@ import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.Timer;
 
+import net.fexcraft.app.fmt.polygon.ModelOrientation;
 import net.fexcraft.app.fmt.ui.UVViewer;
 import net.fexcraft.lib.frl.GLO;
 import net.fexcraft.lib.scr.ScriptParser;
@@ -407,7 +408,7 @@ public class FMT {
 		if(Settings.FLOOR.value){
 			TextureManager.bind(MODEL.orient.floor_texture);
 			floor.posY = MODEL.orient.floor_height;
-			floor.render();
+			(MODEL.orient == ModelOrientation.FVTM4_DEFAULT ? floor0 : floor).render();
 		}
 		if(Settings.DEMO.value){
 			TextureManager.bind("t1p");
@@ -428,7 +429,11 @@ public class FMT {
 	public static final Polyhedron<GLObject> floor = new Polyhedron<GLObject>().importMRT(new BoxBuilder(new ModelRendererTurbo(null, 0, 0, 512, 512))
 		.setSize(512, 0, 512).setOffset(-256, 0, -256).removePolygons(0, 1, 4, 5)
 		.setPolygonUV(2, new float[]{ 512, 0, 512, 512, 0, 512, 0, 0 })
-		.setPolygonUV(3, new float[]{ 512, 0, 512, 512, 0, 512, 0, 0 }).build(), false, 1f).setGlObj(new GLObject());;
+		.setPolygonUV(3, new float[]{ 512, 0, 512, 512, 0, 512, 0, 0 }).build(), false, 1f).setGlObj(new GLObject());
+	public static final Polyhedron<GLObject> floor0 = new Polyhedron<GLObject>().importMRT(new BoxBuilder(new ModelRendererTurbo(null, 0, 0, 512, 512))
+		.setSize(512, 0, 512).setOffset(-256, 0, -256).removePolygons(0, 1, 4, 5)
+		.setPolygonUV(2, new float[]{ 0, 512, 0, 0, 512, 0, 512, 512})
+		.setPolygonUV(3, new float[]{ 512, 512, 512, 0, 0, 0,  0, 512 }).build(), false, 1f).setGlObj(new GLObject());;
 	private static final Polyhedron<GLObject> centermarker0 = new Generator<GLObject>(null, Generator.Type.CUBOID)
 		.set("x", -.125f).set("y", -256f).set("z", -.125f).set("width", .25f).set("height", 512f).set("depth", .25f).make().setGlObj(new GLObject());
 	private static final Polyhedron<GLObject> centermarker1 = new Generator<GLObject>(null, Generator.Type.CUBOID)
