@@ -46,12 +46,14 @@ public class FMFExporter implements Exporter {
 	private static final int PP = 1, PR = 2, PF = 3, PT = 4, PL = 6, PM = 7, PDF = 8, PDU = 9, PCU = 10;
 	private static final int PBS = 16, PBC = 17;
 	private static final int PCRL = 16, PCD = 17, PCSG = 18, PCSL = 19, PCTO = 20, PCTR = 21, PCRT = 22, PCSO = 23;
-	private static Axis3DL axe = new Axis3DL();
+	private static Axis3DL axe0 = new Axis3DL();
+	private static Axis3DL axe1 = new Axis3DL();
 
 	public FMFExporter(JsonMap map){
 		settings.add(new Setting<>("modeldata", true, "exporter-fmf"));
 		settings.add(new Setting<>("flip", false, "exporter-fmf"));
-		axe.setAngles(180, 180, 0);
+		axe0.setAngles(180, 180, 0);
+		axe1.setAngles(90, 0, 0);
 	}
 
 	@Override
@@ -115,7 +117,7 @@ public class FMFExporter implements Exporter {
 					}
 					if(nn(polygon.pos)){
 						if(flip){
-							writeVector(stream, PP, axe.getRelativeVector(polygon.pos));
+							writeVector(stream, PP, axe1.getRelativeVector(axe0.getRelativeVector(polygon.pos)));
 						}
 						else writeVector(stream, PP, polygon.pos);
 					}
@@ -189,7 +191,7 @@ public class FMFExporter implements Exporter {
 						for(net.fexcraft.lib.frl.Polygon p : poly.polygons){
 							for(Vertex vertex : p.vertices){
 								if(flip){
-									Vec3f vec = axe.get(vertex.vector);
+									Vec3f vec = axe1.get(axe0.get(vertex.vector));
 									writeFloats(stream, PF, vec.x, vec.y, vec.z);
 								}
 								else writeFloats(stream, PF, vertex.vector.x, vertex.vector.y, vertex.vector.z);
