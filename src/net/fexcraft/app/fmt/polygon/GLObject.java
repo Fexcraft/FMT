@@ -1,6 +1,8 @@
 package net.fexcraft.app.fmt.polygon;
 
-public class GLObject {
+import net.fexcraft.lib.frl.GLO;
+
+public class GLObject extends GLO<GLObject> {
 
 	public float[] pickercolor, polycolor, linecolor;
 	public Polygon polygon;
