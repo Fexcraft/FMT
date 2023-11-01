@@ -93,6 +93,7 @@ public class Settings {
 	public static Setting<Boolean> ADD_TO_LAST;
 	public static Setting<Boolean> SPHERE_MARKER;
 	public static Setting<Boolean> SHOW_QUICK_ADD;
+	public static Setting<Boolean> AUTO_SHOW_COMPONENTS;
 	public static Setting<Float> MOUSE_SENSIVITY;
 	public static Setting<Float> MOVE_SPEED;
 	public static Setting<Float> SCROLL_SPEED;
@@ -252,6 +253,7 @@ public class Settings {
 		ARROW_SENSIVITY = new Setting<>("arrow_sensivity", 8f, CONTROL, obj).minmax(0.001f, 100f);
 		NUMBERFIELD_BUTTONS = new Setting<>("numberfield_buttons", false, GENERAL, obj);
 		SHOW_QUICK_ADD = new Setting<>("show_quick_add", true, GENERAL, obj);
+		AUTO_SHOW_COMPONENTS = new Setting<>("auto_show_components", true, GENERAL, obj);
 		//
 		WORKSPACE_NAME = new Setting<>("name", "FMT Workspace", WORKSPACE, obj);
 		WORKSPACE_ROOT = new Setting<>("root", "/workspace/", WORKSPACE, obj);
