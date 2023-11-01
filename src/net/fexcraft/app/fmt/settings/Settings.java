@@ -17,7 +17,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import net.fexcraft.app.fmt.launch.Catalog;
+import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.port.im.ImportManager;
+import net.fexcraft.app.fmt.ui.editors.GroupEditor;
+import net.fexcraft.app.fmt.ui.editors.ModelEditor;
+import net.fexcraft.app.fmt.ui.editors.PolygonEditor;
+import net.fexcraft.app.fmt.ui.editors.TextureEditor;
 import net.fexcraft.app.json.JsonValue;
 import org.joml.Vector4f;
 import org.liquidengine.legui.component.Button;
@@ -87,6 +92,7 @@ public class Settings {
 	public static Setting<Boolean> POLYMARKER;
 	public static Setting<Boolean> ADD_TO_LAST;
 	public static Setting<Boolean> SPHERE_MARKER;
+	public static Setting<Boolean> SHOW_QUICK_ADD;
 	public static Setting<Float> MOUSE_SENSIVITY;
 	public static Setting<Float> MOVE_SPEED;
 	public static Setting<Float> SCROLL_SPEED;
@@ -245,6 +251,7 @@ public class Settings {
 		ZOOM_LEVEL = new Setting<>("zoom_by", 10f, CONTROL, obj).minmax(0.001f, 160f);
 		ARROW_SENSIVITY = new Setting<>("arrow_sensivity", 8f, CONTROL, obj).minmax(0.001f, 100f);
 		NUMBERFIELD_BUTTONS = new Setting<>("numberfield_buttons", false, GENERAL, obj);
+		SHOW_QUICK_ADD = new Setting<>("show_quick_add", true, GENERAL, obj);
 		//
 		WORKSPACE_NAME = new Setting<>("name", "FMT Workspace", WORKSPACE, obj);
 		WORKSPACE_ROOT = new Setting<>("root", "/workspace/", WORKSPACE, obj);
@@ -314,7 +321,7 @@ public class Settings {
 		JsonHandler.print(new File("./settings.json"), obj, PrintOption.SPACED);
 		//
 		JsonMap editors = new JsonMap();
-		for(Editor editor : Editor.EDITORLIST){
+		for(Editor editor : Editor.EDITORS.values()){
 			if(editor.tree) continue;
 			editors.add(editor.id, editor.save());
 		}
@@ -408,50 +415,13 @@ public class Settings {
 	}
 
 	public static void loadEditors(){
-		JsonMap obj = JsonHandler.parse(new File("./editors.fmt"));
-		if(obj == null || obj.empty()) loadDefaultEditors();
-		else{
-			for(Entry<String, JsonValue<?>> entry : obj.entries()){
-				try{
-					new Editor(entry.getKey(), entry.getValue().asMap());
-				}
-				catch(InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e){
-					e.printStackTrace();
-				}
-			}
-		}
-		new PolygonTree(null, false);
-		new TextureTree(null, false);
-		//Editor.EDITORS.get("polygon_tree").show();
-	}
-
-	private static void loadDefaultEditors(){
-		Editor editor = new Editor("polygon_editor", "Polygon Editor", false, true);
-		//editor.addComponent(new FolderComponent(500));
-		editor.addComponent(new QuickAdd());
-		editor.addComponent(new MultiplierComponent());
-		editor.addComponent(new PolygonGeneral());
-		editor.addComponent(new BoxComponent());
-		editor.addComponent(new ShapeboxComponent());
-		editor.addComponent(new CylinderComponentFull());
-		editor.addComponent(new CurveComponent());
-		editor.addComponent(new MarkerComponent());
-		editor = new Editor("group_editor", "Group Editor", false, true);
-		editor.addComponent(new QuickAdd());
-		editor.addComponent(new MultiplierComponent());
-		editor.addComponent(new GroupGeneral());
-		editor = new Editor("model_editor", "Model Editor", false, true);
-		editor.addComponent(new QuickAdd());
-		editor.addComponent(new MultiplierComponent());
-		editor.addComponent(new ModelGeneral());
-		editor.addComponent(new ModelExports());
-		editor = new Editor("painter", "Painting Utils", false, true);
-		editor.addComponent(new CurrentColor());
-		editor.addComponent(new PainterPaletteGradient(true));
-		editor.addComponent(new PainterPaletteSpectrum(true));
-		editor.addComponent(new PainterTools());
-		//
-		Editor.EDITORS.get("polygon_editor").show();
+		JsonMap map = JsonHandler.parse(new File("./editors.fmt"));
+		Editor.POLYGON_EDITOR = new PolygonEditor();
+		Editor.GROUP_EDITOR = new GroupEditor();
+		Editor.MODEL_EDITOR = new ModelEditor();
+		Editor.TEXTURE_EDITOR = new TextureEditor();
+		Editor.POLYGON_TREE = new PolygonTree();
+		Editor.TEXTURE_TREE = new TextureTree();
 	}
 
 	public static void register(String group, String id, Setting<?> setting){
