@@ -51,11 +51,10 @@ public class TexGroupComponent extends EditorComponent {
 		label.getSize().add(4, 0);
 		label.getStyle().setPaddingLeft(new Length<Float>(5f, LengthType.PIXEL));
 		Settings.applyBorderless(label);
-		this.add(new OptionLabel(this, 0, "texture.group.rename", () -> openRenameDialog()));
-		this.add(new OptionLabel(this, 1, "texture.group.resize", () -> openResizeDialog()));
-		this.add(new OptionLabel(this, 2, "texture.group.generate", () -> generate()));
-		this.add(new OptionLabel(this, 3, "texture.group.select", () -> openSelectDialog()));
-		pin.setImage(new StbBackedLoadableImage("./resources/textures/icons/component/edit.png"));
+		add(new OptionLabel(this, 0, "texture.group.rename", () -> openRenameDialog()));
+		add(new OptionLabel(this, 1, "texture.group.resize", () -> openResizeDialog()));
+		add(new OptionLabel(this, 2, "texture.group.generate", () -> generate()));
+		add(new OptionLabel(this, 3, "texture.group.select", () -> openSelectDialog()));
 	}
 
 	private void openSelectDialog(){
