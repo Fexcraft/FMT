@@ -25,8 +25,15 @@ toolbar.file.donate=Donate!
 toolbar.file.exit=Exit
 ## Editors
 toolbar.editors=Editors
-toolbar.editors.new=Add new Editor
+toolbar.editors.polygon=Polygon Editor
+toolbar.editors.group=Group Editor
+toolbar.editors.model=Model Editor
+toolbar.editors.texture=Painting Utils
+toolbar.editors.uv=UV Editor
+toolbar.editors.preview=Preview Editor
 toolbar.trees=Trees
+toolbar.trees.polygon=Polygons
+toolbar.trees.texture=Textures
 ## Polygons
 toolbar.polygons=Polygons
 toolbar.polygons.add_box=Add Box
@@ -372,6 +379,7 @@ setting.general.ask_texture_group_removal=Ask on Tex-Group Removal
 setting.general.hide_menu_after_polygon=Hide Menus after Poly. Add?
 setting.general.log_updates=Log update events?
 setting.general.numberfield_buttons=+/- on Editor Numberfields
+setting.general.show_quick_add=Show Quick Add Com.
 setting.graphic.vsync=Normal V-Sync (60fps~)
 setting.graphic.vsync/2=Half V-Sync (30fps~)
 setting.graphic.window_width=Default Window Width
