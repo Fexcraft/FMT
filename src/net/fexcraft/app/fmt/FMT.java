@@ -183,7 +183,7 @@ public class FMT {
 		FRAME.getContainer().add(TOOLBAR = new Toolbar());
 		EditorComponent.registerComponents();
 		Settings.loadEditors();
-		for(Editor editor : Editor.EDITORLIST) FRAME.getContainer().add(editor);
+		for(Editor editor : Editor.EDITORS.values()) FRAME.getContainer().add(editor);
 		FRAME.getContainer().add(pos = new Label("test", 0, 32, 200, 20));
 		FRAME.getContainer().add(rot = new Label("test", 0, 54, 200, 20));
 		FRAME.getContainer().add(fps = new Label("test", 0, 76, 200, 20));
@@ -233,7 +233,7 @@ public class FMT {
 			public void invoke(long window, int width, int height){
 				HEIGHT = height;
 				TOOLBAR.setSize(WIDTH = width, TOOLBAR.getSize().y);
-				Editor.EDITORLIST.forEach(editor -> editor.align());
+				Editor.EDITORS.values().forEach(editor -> editor.align());
 				ToolbarMenu.MENUS.forEach((key, menu) -> menu.layer.hide());
 				Picker.resetBuffer(true);
 			}
@@ -348,7 +348,7 @@ public class FMT {
 	}
 
 	private void adjustLabels(){
-		int xoff = Editor.LEFT == null ? 5 : 320;
+		int xoff = Editor.VISIBLE_EDITOR == null ? 5 : 320;
 		pos.setPosition(xoff, pos.getPosition().y);
 		rot.setPosition(xoff, rot.getPosition().y);
 		fps.setPosition(xoff, fps.getPosition().y);
