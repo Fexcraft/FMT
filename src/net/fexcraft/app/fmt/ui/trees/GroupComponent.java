@@ -89,7 +89,7 @@ public class GroupComponent extends EditorComponent {
 	}
 
 	@Override
-	protected void minimize(Boolean bool){
+	public void minimize(Boolean bool){
 		super.minimize(bool);
 		group.minimized = minimized;
 	}
