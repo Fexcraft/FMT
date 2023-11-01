@@ -125,9 +125,4 @@ public class PainterPaletteSpectrum extends EditorComponent {
 
 	}
 
-	@Override
-	protected void toggleIconSpace(boolean bool){
-		button.getStyle().setDisplay(bool ? DisplayType.NONE : DisplayType.MANUAL);
-	}
-
 }
