@@ -58,12 +58,34 @@ public class KeyCompound {
 		keys.add(new KeyFunction("zoom_in", GLFW_KEY_Z, (action) -> onRelease(action, () -> FMT.CAM.toggleZoom())));
 		keys.add(new KeyFunction("pick_face", GLFW_KEY_I, (action) -> onRelease(action, () -> Picker.pick(Picker.PickType.FACE, Picker.PickTask.RESELECT, true))));
 		//
-		for(int i = 1; i < 10; i++){ final int j = i - 1;
-			keys.add(new KeyFunction("toggle_editor_" + i, GLFW_KEY_0 + i, action -> {
-				if(GGR.isOverUI()) return;
-				if(action == GLFW_RELEASE) Editor.toggle(j, GGR.isAltDown());
-			}));
-		}
+		keys.add(new KeyFunction("toggle_editor_1", GLFW_KEY_1, action -> {
+			if(GGR.isOverUI()) return;
+			if(action == GLFW_RELEASE) Editor.POLYGON_EDITOR.show();
+		}));
+		keys.add(new KeyFunction("toggle_editor_2", GLFW_KEY_2, action -> {
+			if(GGR.isOverUI()) return;
+			if(action == GLFW_RELEASE) Editor.GROUP_EDITOR.show();
+		}));
+		keys.add(new KeyFunction("toggle_editor_3", GLFW_KEY_3, action -> {
+			if(GGR.isOverUI()) return;
+			if(action == GLFW_RELEASE) Editor.MODEL_EDITOR.show();
+		}));
+		keys.add(new KeyFunction("toggle_editor_4", GLFW_KEY_4, action -> {
+			if(GGR.isOverUI()) return;
+			if(action == GLFW_RELEASE) Editor.TEXTURE_EDITOR.show();
+		}));
+		keys.add(new KeyFunction("toggle_editor_5", GLFW_KEY_5, action -> {
+			if(GGR.isOverUI()) return;
+			if(action == GLFW_RELEASE) Editor.UV_EDITOR.show();
+		}));
+		keys.add(new KeyFunction("toggle_editor_6", GLFW_KEY_6, action -> {
+			if(GGR.isOverUI()) return;
+			if(action == GLFW_RELEASE) Editor.UV_EDITOR.show();
+		}));
+		keys.add(new KeyFunction("toggle_editor_7", GLFW_KEY_7, action -> {
+			if(GGR.isOverUI()) return;
+			if(action == GLFW_RELEASE) Editor.PREVIEW_EDITOR.show();
+		}));
 		//
 		keys.add(new KeyFunction("camera_rotate_left",  GLFW_KEY_LEFT,  action -> { if(!GGR.isOverUI()) FMT.CAM.hor -= Static.rad5; }));
 		keys.add(new KeyFunction("camera_rotate_right", GLFW_KEY_RIGHT, action -> { if(!GGR.isOverUI()) FMT.CAM.hor += Static.rad5; }));
