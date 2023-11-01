@@ -9,8 +9,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import net.fexcraft.app.fmt.update.UpdateEvent;
-import net.fexcraft.app.fmt.update.UpdateEvent.EditorCreated;
+import net.fexcraft.app.fmt.ui.SettingsDialog.SPVSL;
 import net.fexcraft.app.json.JsonValue;
 import org.liquidengine.legui.component.Button;
 import org.liquidengine.legui.component.Component;
@@ -44,104 +43,53 @@ public class Editor extends Component {
 	
 	public static final List<String> TREES = Arrays.asList("polygon_tree", "texture_tree");
 	public static final HashMap<String, Editor> EDITORS = new HashMap<>();
-	public static final ArrayList<Editor> EDITORLIST = new ArrayList<>();
+	public static Editor POLYGON_EDITOR;
+	public static Editor GROUP_EDITOR;
+	public static Editor MODEL_EDITOR;
+	public static Editor TEXTURE_EDITOR;
+	public static Editor UV_EDITOR;
+	public static Editor PREVIEW_EDITOR;
+	public static Editor POLYGON_TREE;
+	public static Editor TEXTURE_TREE;
 	public static float RATE = 1f;
-	public static Editor LEFT = null, RIGHT = null;
+	public static Editor VISIBLE_EDITOR = null;
+	public static Editor VISIBLE_TREE = null;
 	public ArrayList<EditorComponent> components = new ArrayList<>();
 	private ScrollablePanel scrollable;
-	private Icon rem, set, add, adj, sid;
 	private Icon[] trees;
 	private Label label;
 	public static int CWIDTH = 300, WIDTH = 310, LABEL = 30;
-	public boolean alignment, comp_adj_mode, tree;
+	public boolean comp_adj_mode, tree;
 	public final String id;
 	public String name;
 	
-	public Editor(String id, String name, boolean tree, boolean left){
+	public Editor(String id, String name, boolean tree){
 		Settings.applyBorderless(this);
 		this.setFocusable(false);
 		EDITORS.put(this.id = id, this);
-		EDITORLIST.add(this);
-		alignment = left;
 		this.tree = tree;
 		add(scrollable = new ScrollablePanel(0, topSpace(), WIDTH, getSize().y));
 		scrollable.getViewport().getListenerMap().removeAllListeners(ScrollEvent.class);
 		scrollable.getViewport().getListenerMap().addListener(ScrollEvent.class, new SPVSL());
 		Settings.applyBorderlessScrollable(scrollable, true);
 		add(label = new Label(this.name = name, 5, 0, CWIDTH - 10, LABEL));
-		CursorEnterEventListener lis = l -> toggleIcons();
-		label.getListenerMap().addListener(CursorEnterEvent.class, lis);
 		label.getStyle().setFontSize(30f);
-		if(!tree){
-			add(rem = new Icon((byte)10, "./resources/textures/icons/component/remove.png", () -> {}).addTooltip("editor.remove", alignment));
-			add(adj = new Icon((byte)30, "./resources/textures/icons/component/adjust.png", () -> comp_adj_mode = !comp_adj_mode).addTooltip("editor.adjust_components", alignment));
-			add(add = new Icon((byte)40, "./resources/textures/icons/component/add.png", () -> addComponentDialog(this)).addTooltip("editor.add_component", alignment));
-		}
-		add(set = new Icon((byte)(tree ? 10 : 20), "./resources/textures/icons/component/edit.png", () -> rename()).addTooltip("editor.rename", alignment));
-		add(sid = new Icon((byte)(tree ? 20 : 50), "./resources/textures/icons/component/side.png", () -> changeSide()).addTooltip("editor.change_side", alignment));
-		if(!tree){
-			rem.getListenerMap().addListener(CursorEnterEvent.class, lis);
-			add.getListenerMap().addListener(CursorEnterEvent.class, lis);
-			adj.getListenerMap().addListener(CursorEnterEvent.class, lis);
-			rem.getStyle().setDisplay(DisplayType.NONE);
-			add.getStyle().setDisplay(DisplayType.NONE);
-			adj.getStyle().setDisplay(DisplayType.NONE);
-		}
-		set.getListenerMap().addListener(CursorEnterEvent.class, lis);
-		sid.getListenerMap().addListener(CursorEnterEvent.class, lis);
-		set.getStyle().setDisplay(DisplayType.NONE);
-		sid.getStyle().setDisplay(DisplayType.NONE);
 		align();
 		hide();
-		UpdateHandler.update(new EditorCreated(this));
 	}
 
 	protected float topSpace(){
 		return LABEL;
 	}
-
-	protected DisplayType toggleIcons(){
-		boolean bool = label.isHovered() || set.isHovered() || sid.isHovered();
-		if(!bool && !tree) bool = rem.isHovered() || add.isHovered() || adj.isHovered();
-		if(!bool && trees != null) for(Icon icon : trees) if(icon.isHovered()) bool = true;
-		DisplayType type = bool ? DisplayType.MANUAL : DisplayType.NONE;
-		if(!tree){
-			rem.getStyle().setDisplay(type);
-			add.getStyle().setDisplay(type);
-			adj.getStyle().setDisplay(type);
-		}
-		set.getStyle().setDisplay(type);
-		sid.getStyle().setDisplay(type);
-		if(trees != null) for(Icon icon : trees) icon.getStyle().setDisplay(type);
-		return type;
-	}
 	
 	protected void addTreeIcons(int i){
 		byte idx = 20, t = 0;
 		trees = new Icon[3];
-		if(i != 0) add(trees[t++] = new Icon(idx += 10, "./resources/textures/icons/tree/polygon.png", () -> Editor.show("polygon_tree")).addTooltip("editor.tree.polygon", alignment));
-		if(i != 1) add(trees[t++] = new Icon(idx += 10, "./resources/textures/icons/tree/helper.png", () -> Editor.show("helper_tree")).addTooltip("editor.tree.helper", alignment));
-		if(i != 2) add(trees[t++] = new Icon(idx += 10, "./resources/textures/icons/tree/textures.png", () -> Editor.show("texture_tree")).addTooltip("editor.tree.texture", alignment));
-		if(i != 3) add(trees[t++] = new Icon(idx += 10, "./resources/textures/icons/tree/fvtm.png", () -> Editor.show("fvtm_tree")).addTooltip("editor.tree.animation", alignment));
+		if(i != 0) add(trees[t++] = new Icon(idx += 10, "./resources/textures/icons/tree/polygon.png", () -> Editor.show("polygon_tree")).addTooltip("editor.tree.polygon", false));
+		if(i != 1) add(trees[t++] = new Icon(idx += 10, "./resources/textures/icons/tree/helper.png", () -> Editor.show("helper_tree")).addTooltip("editor.tree.helper", false));
+		if(i != 2) add(trees[t++] = new Icon(idx += 10, "./resources/textures/icons/tree/textures.png", () -> Editor.show("texture_tree")).addTooltip("editor.tree.texture", false));
+		if(i != 3) add(trees[t++] = new Icon(idx += 10, "./resources/textures/icons/tree/fvtm.png", () -> Editor.show("fvtm_tree")).addTooltip("editor.tree.animation", false));
 		if(trees != null) for(Icon icon : trees) icon.getStyle().setDisplay(DisplayType.NONE);
-	}
-
-	private void changeSide(){
-		Editor other = get(!alignment);
-		if(other != null){
-			other.alignment = alignment;
-			other.align();
-		}
-		alignment = !alignment;
-		this.align();
-		if(alignment){
-			LEFT = this;
-			RIGHT = other;
-		}
-		else {
-			LEFT = other;
-			RIGHT = this;
-		}
 	}
 
 	private void rename(){
@@ -164,7 +112,7 @@ public class Editor extends Component {
 
 	@SuppressWarnings("unlikely-arg-type")
 	public Editor(String key, JsonMap obj) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-		this(key, obj.get("name", "Nameless Editor"), false, obj.get("alignment", true));
+		this(key, obj.get("name", "Nameless Editor"), false);
 		if(obj.has("components")){
 			JsonArray array = obj.getArray("components");
 			for(JsonValue<?> elm : array.elements()){
@@ -182,7 +130,7 @@ public class Editor extends Component {
 	}
 
 	public void align(){
-		setPosition(alignment ? 0 : FMT.WIDTH - WIDTH, ToolbarMenu.HEIGHT);
+		setPosition(!tree ? 0 : FMT.WIDTH - WIDTH, ToolbarMenu.HEIGHT);
 		setSize(WIDTH, FMT.HEIGHT - ToolbarMenu.HEIGHT);
 		scrollable.setSize(WIDTH, getSize().y - topSpace());
 		scrollable.setHorizontalScrollBarVisible(false);
@@ -203,16 +151,21 @@ public class Editor extends Component {
 
 	public void hide(){
 		getStyle().setDisplay(DisplayType.NONE);
-		if(LEFT == this) LEFT = null;
-		if(RIGHT == this) RIGHT = null;
+		if(VISIBLE_EDITOR == this) VISIBLE_EDITOR = null;
+		if(VISIBLE_TREE == this) VISIBLE_TREE = null;
 	}
 	
 	public void show(){
-		for(Editor editor : EDITORLIST) if(editor.alignment == alignment) editor.hide();
+		if(tree){
+			if(VISIBLE_TREE != null) VISIBLE_TREE.hide();
+			VISIBLE_TREE = this;
+		}
+		else{
+			if(VISIBLE_EDITOR != null) VISIBLE_EDITOR.hide();
+			VISIBLE_EDITOR = this;
+		}
 		getStyle().setDisplay(DisplayType.MANUAL);
-		this.setEnabled(true);
-		if(alignment) LEFT = this;
-		else RIGHT = this;
+		setEnabled(true);
 	}
 	
 	public void toggle(){
@@ -327,18 +280,15 @@ public class Editor extends Component {
 		return null;
 	}
 
-	private static Editor get(boolean alignment){
-		for(Editor editor : EDITORS.values()){
-			if(editor.alignment == alignment && editor.isVisible()) return editor;
-		}
-		return null;
-	}
-
 	public static void show(String id){
 		Editor editor = EDITORS.get(id);
 		if(editor == null) return;
-		Editor other = get(editor.alignment);
-		if(other != null) other.hide();
+		if(editor.tree){
+			if(VISIBLE_TREE != null) VISIBLE_TREE.hide();
+		}
+		else{
+			if(VISIBLE_EDITOR != null) VISIBLE_EDITOR.hide();
+		}
 		editor.show();
 	}
 	
@@ -355,7 +305,6 @@ public class Editor extends Component {
 	public JsonMap save(){
 		JsonMap map = new JsonMap();
 		map.add("name", name);
-		map.add("alignment", alignment);
 		map.add("shown", this.getStyle().getDisplay() != DisplayType.NONE);
 		if(components.size() > 0){
 			JsonArray array = new JsonArray();
@@ -367,23 +316,6 @@ public class Editor extends Component {
 			map.add("components", array);
 		}
 		return map;
-	}
-
-	public static void toggle(int idx, boolean sub){
-		if(idx >= EDITORLIST.size()) return;
-		if(sub){
-			Editor edit = Editor.LEFT == null ? Editor.RIGHT  : Editor.LEFT;
-			int i = 0;
-			for(EditorComponent com : edit.components){
-				if(!com.size.isVisible()) continue;
-				if(i == idx){
-					com.minimize(null);
-					break;
-				}
-				else i++;
-			}
-		}
-		else EDITORLIST.get(idx).toggle();
 	}
 	
 }
