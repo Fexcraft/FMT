@@ -3,8 +3,6 @@ package net.fexcraft.app.fmt.ui;
 import java.util.ArrayList;
 
 import net.fexcraft.app.fmt.port.im.ImportManager;
-import net.fexcraft.app.fmt.update.UpdateEvent.EditorCreated;
-import net.fexcraft.app.fmt.update.UpdateEvent.EditorRemoved;
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
 import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.Panel;
@@ -103,22 +101,17 @@ public class Toolbar extends Panel {
 			)
 		));
 		this.add(new ToolbarMenu(2, "editors",
-			new MenuButton(0, "editors.new")
+			new MenuButton(0, "editors.polygon", () -> Editor.POLYGON_EDITOR.toggle()),
+			new MenuButton(1, "editors.group", () -> Editor.GROUP_EDITOR.toggle()),
+			new MenuButton(2, "editors.model", () -> Editor.MODEL_EDITOR.toggle()),
+			new MenuButton(3, "editors.texture", () -> Editor.TEXTURE_EDITOR.toggle()),
+			new MenuButton(4, "editors.uv", () -> Editor.UV_EDITOR.toggle()),
+			new MenuButton(5, "editors.preview", () -> Editor.PREVIEW_EDITOR.toggle())
 		));
-		updcom.get(EditorCreated.class).add(event -> {
-			Editor editor = event.editor();
-			ToolbarMenu menu = ToolbarMenu.MENUS.get(editor.tree ? "trees" : "editors");
-			MenuButton button = new MenuButton(menu.components.size(), editor.id, editor.name);
-			button.addListener(() -> editor.toggle());
-			menu.components.add(button);
-			menu.layer.regComponent(button);
-			menu.layer.refreshSize();
-		});
-		updcom.get(EditorRemoved.class).add(event -> {
-			if(event.editor().tree) return;
-			//TODO
-		});
-		this.add(new ToolbarMenu(3, "trees"));
+		this.add(new ToolbarMenu(3, "trees",
+			new MenuButton(0, "trees.polygon", () -> Editor.POLYGON_TREE.toggle()),
+			new MenuButton(1, "trees.texture", () -> Editor.TEXTURE_TREE.toggle())
+		));
 		this.add(new ToolbarMenu(4, "polygons",
 			new MenuButton(0, "polygons.add_box", () -> QuickAdd.addBox()),
 			new MenuButton(1, "polygons.add_shapebox", () -> QuickAdd.addShapebox()),
