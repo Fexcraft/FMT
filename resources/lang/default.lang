@@ -380,6 +380,7 @@ setting.general.hide_menu_after_polygon=Hide Menus after Poly. Add?
 setting.general.log_updates=Log update events?
 setting.general.numberfield_buttons=+/- on Editor Numberfields
 setting.general.show_quick_add=Show Quick Add Com.
+setting.general.auto_show_components=Auto Show Com.
 setting.graphic.vsync=Normal V-Sync (60fps~)
 setting.graphic.vsync/2=Half V-Sync (30fps~)
 setting.graphic.window_width=Default Window Width
