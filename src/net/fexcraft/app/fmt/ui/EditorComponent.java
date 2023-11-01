@@ -54,9 +54,9 @@ public class EditorComponent extends Component {
 		if(!resizeable) size.getStyle().setDisplay(DisplayType.NONE);
 	}
 
-	protected void minimize(Boolean bool){
+	public void minimize(Boolean bool){
 		this.minimized = bool == null ? !minimized : bool;
-		setSize(getSize().x, minimized ? HEIGHT : fullheight);
+		setSize(getSize().x, minimized ? Settings.AUTO_SHOW_COMPONENTS.value ? 0 : HEIGHT : fullheight);
 		if(editor != null) editor.alignComponents();
 	}
 
