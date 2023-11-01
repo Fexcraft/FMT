@@ -182,8 +182,8 @@ public class GGR {
 		if(FMT.FRAME.getLayers().size() > 0) return true;
 		glfwGetCursorPos(FMT.INSTANCE.window, cursor_x, cursor_y);
 		if(cursor_y[0] < FMT.TOOLBAR.getSize().y) return true;
-		if(Editor.LEFT != null && cursor_x[0] < Editor.WIDTH) return true;
-		if(Editor.RIGHT != null && cursor_x[0] > FMT.WIDTH - Editor.WIDTH) return true;
+		if(Editor.VISIBLE_EDITOR != null && cursor_x[0] < Editor.WIDTH) return true;
+		if(Editor.VISIBLE_TREE != null && cursor_x[0] > FMT.WIDTH - Editor.WIDTH) return true;
 		for(FVTMConfigEditor editor : FVTMConfigEditor.EDITORS){
 			if(cursor_x[0] >= editor.getPosition().x && cursor_x[0] <= editor.getPosition().x + editor.width){
 				if(cursor_y[0] >= editor.getPosition().y && cursor_y[0] <= editor.getPosition().y + editor.height) return true;
