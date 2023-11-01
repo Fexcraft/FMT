@@ -31,10 +31,9 @@ public class EditorComponent extends Component {
 	public static final LinkedHashMap<String, Class<? extends EditorComponent>> REGISTRY = new LinkedHashMap<>();
 	public static final String LANG_PREFIX = "editor.component.";
 	protected UpdateCompound updcom = new UpdateCompound();
-	private ArrayList<Icon> icons = new ArrayList<>();
 	protected boolean minimized, unpinned, tree;
 	protected Label label;
-	protected Icon size, mup, mdw, pin, rem;
+	protected Icon size;
 	protected int uid, fullheight, row;
 	public Editor editor;
 	protected String id;
@@ -52,46 +51,8 @@ public class EditorComponent extends Component {
 		Settings.applyComponentTheme(this);
 		byte[] order = (this.tree = tree) ? orderT : orderE;
 		add(size = new Icon(order[0], "./resources/textures/icons/component/" + (tree ? "minimize" : "size") + ".png", () -> minimize(null)));
-		add(pin = new Icon(order[1], "./resources/textures/icons/component/" + (tree ? "visible" : "pin") + ".png", () -> pin()));
-		add(mup = new Icon(order[2], "./resources/textures/icons/component/move_up.png", () -> move(-1)));
-		add(mdw = new Icon(order[3], "./resources/textures/icons/component/move_down.png", () -> move(1)));
-		add(rem = new Icon(order[4], "./resources/textures/icons/component/remove.png", () -> rem()));
-		icons.add(pin);
-		icons.add(mup);
-		icons.add(mdw);
-		icons.add(rem);
-		CursorEnterEventListener listener = l -> toggleIcons();
-		label.getListenerMap().addListener(CursorEnterEvent.class, listener);
-		for(Icon icon : icons){
-			icon.getListenerMap().addListener(CursorEnterEvent.class, listener);
-			icon.getStyle().setDisplay(DisplayType.NONE);
-		}
 		if(!resizeable) size.getStyle().setDisplay(DisplayType.NONE);
 	}
-
-	protected void toggleIcons(){
-		boolean bool = label.isHovered();
-		if(!bool){
-			if(size.isHovered()) bool = true;
-			else if((editor.comp_adj_mode || tree) && (pin.isHovered() || mup.isHovered() || mdw.isHovered() || rem.isHovered())) bool = true;
-		}
-		if(!bool){
-			pin.getStyle().setDisplay(DisplayType.NONE);
-			mup.getStyle().setDisplay(DisplayType.NONE);
-			mdw.getStyle().setDisplay(DisplayType.NONE);
-			rem.getStyle().setDisplay(DisplayType.NONE);
-		}
-		else{
-			bool = (!editor.comp_adj_mode || unpinned) && !tree;
-			pin.getStyle().setDisplay(bool ? DisplayType.NONE : DisplayType.MANUAL);
-			mup.getStyle().setDisplay(bool || index <= 0 ? DisplayType.NONE : DisplayType.MANUAL);
-			mdw.getStyle().setDisplay(bool || index >= editor.components.size() - 1 ? DisplayType.NONE : DisplayType.MANUAL);
-			rem.getStyle().setDisplay(bool ? DisplayType.NONE : DisplayType.MANUAL);
-		}
-		toggleIconSpace(editor.comp_adj_mode);
-	}
-
-	protected void toggleIconSpace(boolean bool){}
 
 	protected void minimize(Boolean bool){
 		this.minimized = bool == null ? !minimized : bool;
