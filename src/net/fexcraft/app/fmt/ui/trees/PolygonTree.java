@@ -17,18 +17,14 @@ public class PolygonTree extends Editor {
 	
 	private static UpdateCompound updcom = new UpdateCompound();
 
-	public PolygonTree(String name, boolean alignment){
-		super(TREES.get(0), name == null ? "Polygon Tree" : name, true, alignment);
+	public PolygonTree(){
+		super(TREES.get(0), "Polygon Tree", true);
 		this.addTreeIcons(0);
 		updcom.add(GroupAdded.class, event -> addGroup(event.group()));
 		updcom.add(GroupRemoved.class, event -> remGroup(event.group()));
 		updcom.add(ModelLoad.class, event -> resizeGroups(event.model()));
 		updcom.add(ModelUnload.class, event -> removeGroups(event.model()));
 		UpdateHandler.register(updcom);
-	}
-
-	public PolygonTree(String key, JsonMap obj){
-		this(obj.get("name", "Polygon Tree"), obj.get("alignment", true));
 	}
 	
 	@Override
