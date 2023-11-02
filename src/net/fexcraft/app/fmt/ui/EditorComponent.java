@@ -22,7 +22,6 @@ public class EditorComponent extends Component {
 	public static final float F60 = 6, F61 = 55, F62 = 104, F63 = 153, F64 = 202, F65 = 251, F6S = 43;
 	public static final float L5 = 5f, LW = Editor.CWIDTH - (L5 * 2);
 	public static final int HEIGHT = 24;
-	private static final byte[] orderT = { 1, 2, 4, 5, 3 }, orderE = { 1, 2, 3, 4, 5 };
 	//
 	public static final HashMap<Integer, EditorComponent> COMPONENTS = new HashMap<>();
 	public static final LinkedHashMap<String, Class<? extends EditorComponent>> REGISTRY = new LinkedHashMap<>();
@@ -46,8 +45,7 @@ public class EditorComponent extends Component {
 		add(label = new Label(Translator.translate(LANG_PREFIX + (id = key) + ".name"), 4, 0, 296, 24));
 		label.getStyle().setFontSize(22f);
 		Settings.applyComponentTheme(this);
-		byte[] order = (this.tree = tree) ? orderT : orderE;
-		add(size = new Icon(order[0], "./resources/textures/icons/component/" + (tree ? "minimize" : "size") + ".png", () -> minimize(null)));
+		add(size = new Icon((byte)1, "./resources/textures/icons/component/" + (tree ? "minimize" : "size") + ".png", () -> minimize(null)));
 		if(!resizeable) size.getStyle().setDisplay(DisplayType.NONE);
 	}
 
