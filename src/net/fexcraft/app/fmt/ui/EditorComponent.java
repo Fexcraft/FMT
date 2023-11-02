@@ -1,21 +1,18 @@
 package net.fexcraft.app.fmt.ui;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+import net.fexcraft.app.fmt.ui.editors.PolygonEditor;
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
 import org.liquidengine.legui.component.Component;
 import org.liquidengine.legui.component.Label;
-import org.liquidengine.legui.event.CursorEnterEvent;
-import org.liquidengine.legui.listener.CursorEnterEventListener;
 import org.liquidengine.legui.style.Style.DisplayType;
 
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.components.*;
 import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.app.json.JsonMap;
-import org.lwjgl.system.CallbackI.S;
 
 public class EditorComponent extends Component {
 
@@ -56,7 +53,7 @@ public class EditorComponent extends Component {
 
 	public void minimize(Boolean bool){
 		this.minimized = bool == null ? !minimized : bool;
-		setSize(getSize().x, minimized ? Settings.AUTO_SHOW_COMPONENTS.value ? 0 : HEIGHT : fullheight);
+		setSize(getSize().x, minimized ? PolygonEditor.shrink(this) ? 0 : HEIGHT : fullheight);
 		if(editor != null) editor.alignComponents();
 	}
 
@@ -92,8 +89,8 @@ public class EditorComponent extends Component {
 
 	public static void registerComponents(){
 		REGISTRY.put("polygon.quick", QuickAdd.class);
-		REGISTRY.put("polygon.general", PolygonGeneral.class);
-		REGISTRY.put("polygon.general.box", PolygonAndBox.class);
+		REGISTRY.put("polygon.general", PolygonSorting.class);
+		REGISTRY.put("polygon.general.box", PolygonAttributes.class);
 		REGISTRY.put("polygon.box", BoxComponent.class);
 		REGISTRY.put("polygon.shapebox", ShapeboxComponent.class);
 		REGISTRY.put("polygon.cylinder.all", CylinderComponentFull.class);
