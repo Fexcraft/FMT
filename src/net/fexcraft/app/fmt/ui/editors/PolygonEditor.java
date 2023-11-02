@@ -7,12 +7,10 @@ import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.ui.EditorComponent;
-import net.fexcraft.app.fmt.ui.UIUtils;
 import net.fexcraft.app.fmt.ui.components.*;
 import net.fexcraft.app.fmt.update.UpdateEvent.PolygonSelected;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
-import net.fexcraft.app.json.JsonMap;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -25,7 +23,8 @@ public class PolygonEditor extends Editor {
 		super("polygon_editor", "Polygon Editor", false);
 		//if(Settings.SHOW_QUICK_ADD.value) addComponent(new QuickAdd());
 		addComponent(new MultiplierComponent());
-		addComponent(new PolygonAndBox());
+		addComponent(new PolygonSorting());
+		addComponent(new PolygonAttributes());
 		addComponent(SHAPEBOX = new ShapeboxComponent());
 		addComponent(CYLINDER = new CylinderComponentFull());
 		addComponent(CURVE = new CurveComponent());
@@ -55,6 +54,10 @@ public class PolygonEditor extends Editor {
 			});
 			UpdateHandler.register(com);
 		}
+	}
+
+	public static boolean shrink(EditorComponent com){
+		return com == SHAPEBOX || com == CYLINDER || com == CURVE || com == MARKER;
 	}
 
 }
