@@ -110,25 +110,6 @@ public class Editor extends Component {
 		dialog.show(FMT.FRAME);
 	}
 
-	@SuppressWarnings("unlikely-arg-type")
-	public Editor(String key, JsonMap obj) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-		this(key, obj.get("name", "Nameless Editor"), false);
-		if(obj.has("components")){
-			JsonArray array = obj.getArray("components");
-			for(JsonValue<?> elm : array.elements()){
-				if(elm.isMap()){
-					Class<? extends EditorComponent> com = EditorComponent.REGISTRY.get(elm.asMap().get("id").string_value());
-					if(com != null) this.addComponent(com.getConstructor().newInstance().load(elm.asMap()));
-				}
-				else{
-					Class<? extends EditorComponent> com = EditorComponent.REGISTRY.get(elm.string_value());
-					if(com != null) this.addComponent(com.getConstructor().newInstance());
-				}
-			}
-		}
-		if(obj.getBoolean("shown", false)) this.show();
-	}
-
 	public void align(){
 		setPosition(!tree ? 0 : FMT.WIDTH - WIDTH, ToolbarMenu.HEIGHT);
 		setSize(WIDTH, FMT.HEIGHT - ToolbarMenu.HEIGHT);
@@ -201,76 +182,6 @@ public class Editor extends Component {
 		}
 		scrollable.getContainer().addAll(components);
 		alignComponents();
-	}
-	
-	private static String selected_component;
-	private static TextArea dialog_area;
-	private static Dialog dialog;
-	
-	public static void addComponentDialog(Editor edfrom){
-		if(dialog != null){
-			dialog.close();
-			dialog = null;
-		}
-		dialog_area = null;
-		selected_component = null;
-		String[] strs = new String[EditorComponent.REGISTRY.size()];
-		int idx = 0;
-		for(String str : EditorComponent.REGISTRY.keySet()){
-			strs[idx++] = "editor.component." + str + ".name";
-		}
-		Translations trs = translate(strs);
-		float dialog_width = 620, scrollable_width = trs.longest + 4 < 300 - 10 ? 300 - 10 : trs.longest + 4;
-		Dialog dialog = new Dialog(translate("editor.component.add_dialog.title"), dialog_width, 300);
-		ScrollablePanel panel = new ScrollablePanel(5, 5, scrollable_width, 270);
-		panel.getContainer().setSize(scrollable_width, trs.results.length * 22);
-		for(int i = 0; i < strs.length; i++){
-			Label label = new Label(trs.results[i], 0, i * 22, scrollable_width, 22);
-			int j = i;
-			label.getListenerMap().addListener(MouseClickEvent.class, listener -> {
-				selected_component = strs[j].substring("editor.component.".length(), strs[j].length() - 5);
-				dialog_area.getTextState().setText(translate("editor.component." + selected_component + ".desc"));
-			});
-			Settings.applyBorderless(label.getStyle());
-			Settings.applyBorderless(label.getPressedStyle());
-			label.getFocusedStyle().getBackground().setColor(FMT.rgba(127, 127, 127, 1f));
-			panel.getContainer().add(label);
-		}
-		Settings.applyBorderless(panel);
-		Settings.applyBorderless(panel.getContainer());
-		panel.setFocusable(false);
-		dialog.getContainer().add(panel);
-		dialog.getContainer().add(dialog_area = new TextArea(scrollable_width + 10, 5, dialog_width - (scrollable_width + 15), 170));
-		dialog_area.getTextAreaField().setTextState(new ALBTextState(dialog_area.getSize().x - 15));
-		dialog_area.getTextAreaField().getTextState().setEditable(false);
-		dialog_area.getTextAreaField().getStyle().setHorizontalAlign(HorizontalAlign.LEFT);
-		dialog_area.getTextAreaField().getStyle().setVerticalAlign(VerticalAlign.TOP);
-		dialog_area.setHorizontalScrollBarVisible(false);
-		dialog.getContainer().add(new Label(translate("editor.component.add_dialog.select"), scrollable_width + 10, 185, dialog_width - (scrollable_width + 15), 25));
-		SelectBox<String> box = new SelectBox<>(scrollable_width + 10, 210, dialog_width - (scrollable_width + 15), 25);
-		for(Editor editor : EDITORS.values()){
-			if(editor.tree) continue;
-			box.addElement(editor.name);
-		}
-		box.setSelected(edfrom.name, true);
-		dialog.getContainer().add(box);
-		Button button = new Button(translate("editor.component.add_dialog.confirm"), scrollable_width + 10, 245, dialog_width - (scrollable_width + 15), 25);
-		button.getListenerMap().addListener(MouseClickEvent.class, listener -> {
-			if(listener.getButton() != MouseButton.MOUSE_BUTTON_LEFT || listener.getAction() != MouseClickAction.CLICK) return;
-			try{
-				Editor editor = byName(box.getSelection());
-				if(editor == null || selected_component == null) return;
-				editor.addComponent(EditorComponent.REGISTRY.get(selected_component).getDeclaredConstructor().newInstance());
-				dialog.close();
-			}
-			catch(Exception e){
-				Logging.log(e);
-			}
-		});
-		dialog.getContainer().add(button);
-		dialog.setResizable(false);
-		dialog.getTitleTextState().getTextWidth();
-		dialog.show(FMT.FRAME);
 	}
 
 	private static Editor byName(String name){
