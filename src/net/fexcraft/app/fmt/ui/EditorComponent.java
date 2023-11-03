@@ -24,7 +24,6 @@ public class EditorComponent extends Component {
 	public static final int HEIGHT = 24;
 	//
 	public static final HashMap<Integer, EditorComponent> COMPONENTS = new HashMap<>();
-	public static final LinkedHashMap<String, Class<? extends EditorComponent>> REGISTRY = new LinkedHashMap<>();
 	public static final String LANG_PREFIX = "editor.component.";
 	protected UpdateCompound updcom = new UpdateCompound();
 	protected boolean minimized, unpinned, tree;
@@ -85,39 +84,16 @@ public class EditorComponent extends Component {
 		return row;
 	}
 
-	public static void registerComponents(){
-		REGISTRY.put("polygon.quick", QuickAdd.class);
-		REGISTRY.put("polygon.general", PolygonSorting.class);
-		REGISTRY.put("polygon.general.box", PolygonAttributes.class);
-		REGISTRY.put("polygon.box", BoxComponent.class);
-		REGISTRY.put("polygon.shapebox", ShapeboxComponent.class);
-		REGISTRY.put("polygon.cylinder.all", CylinderComponentFull.class);
-		REGISTRY.put("polygon.cylinder.basic", CylinderComponentBasic.class);
-		REGISTRY.put("polygon.cylinder.simple", CylinderComponentSimple.class);
-		REGISTRY.put("polygon.curve", CurveComponent.class);
-		REGISTRY.put("polygon.marker", MarkerComponent.class);
-		REGISTRY.put("polygon.fliptools", FlipTools.class);
-		REGISTRY.put("group.general", GroupGeneral.class);
-		REGISTRY.put("model.general", ModelGeneral.class);
-		REGISTRY.put("model.export_values", ModelExports.class);
-		REGISTRY.put("multiplier", MultiplierComponent.class);
-		REGISTRY.put("folder.small", FolderComponent.Small.class);
-		REGISTRY.put("folder.medium", FolderComponent.Medium.class);
-		REGISTRY.put("folder.large", FolderComponent.Large.class);
-		REGISTRY.put("painter.current", CurrentColor.class);
-		REGISTRY.put("painter.tools", PainterTools.class);
-		REGISTRY.put("arrow.mode", ArrowMode.class);
-		REGISTRY.put("polygon.texuv", UVComponent.class);
-		REGISTRY.put("painter.palette.gradient", PainterPaletteGradient.class);
-		REGISTRY.put("painter.palette.spectrum", PainterPaletteSpectrum.class);
-	}
-
 	public EditorComponent load(JsonMap map){
 		return this;
 	}
 
 	public JsonMap save(){
 		return null;
+	}
+
+	public boolean minimized(){
+		return minimized;
 	}
 
 }
