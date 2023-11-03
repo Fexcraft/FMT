@@ -386,6 +386,10 @@ public class Settings {
 		com.getStyle().getBackground().setColor(col, col, col, 1);
 	}
 
+	public static void applyMenuTheme(Component... coms){
+		for(Component com : coms) applyMenuTheme(com);
+	}
+
 	public static void applyComponentTheme(Component com){
 		com.getStyle().setBorderRadius(0);
 		com.getStyle().setBorder(null);
