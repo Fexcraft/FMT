@@ -65,6 +65,8 @@ public class Model {
 	private ArrayList<Polygon> selected = new ArrayList<>();
 	public LinkedHashMap<String, String> export_values = new LinkedHashMap<>();
 	public LinkedHashMap<String, ArrayList<String>> export_listed_values = new LinkedHashMap<>();
+	public ArrayList<ArrayList<String>> export_group_presets = new ArrayList<>();
+	public ArrayList<String> export_group_preset_keys = new ArrayList<>();
 	public ModelOrientation orient = ModelOrientation.FVTM4_DEFAULT;
 	public ModelFormat format = ModelFormat.UNIVERSAL;
 	public Vector3f pos = new Vector3f();
@@ -625,4 +627,10 @@ public class Model {
 		return "Model([" + name + "], " + groups.size() + ")";
 	}
 
+	public String getGroupPreset(int idx){
+		if(export_group_preset_keys.size() == 0) return "new_preset";
+		if(idx < 0) return getGroupPreset(export_group_preset_keys.size() - 1);
+		if(idx >= export_group_preset_keys.size()) return getGroupPreset(0);
+		return export_group_preset_keys.get(idx);
+	}
 }
