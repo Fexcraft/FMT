@@ -91,12 +91,12 @@ public class ExportManager {
 	}
 
 	private static void showGroupSelectionDialog(Exporter exporter){
-		Dialog dialog = new Dialog(translate("export.choose.groups"), 400, 400);
+		Dialog dialog = new Dialog(translate("export.choose.groups"), 400, 440);
 		dialog.setResizable(false);
 		Settings.applyComponentTheme(dialog.getContainer());
-		GroupSelectionPanel panel = new GroupSelectionPanel(10, 10, 380, 320);
+		GroupSelectionPanel panel = new GroupSelectionPanel(10, 10, 380, 360);
 		dialog.getContainer().add(panel);
-		dialog.getContainer().add(new RunButton("dialog.button.continue", 10, 340, 100, 30, () -> {
+		dialog.getContainer().add(new RunButton("dialog.button.continue", 10, 380, 100, 30, () -> {
 			dialog.close();
 			showFileChooserDialog(exporter, panel.getSelectedGroups());
 		}));
