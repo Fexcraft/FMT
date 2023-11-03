@@ -181,7 +181,6 @@ public class FMT {
 		Settings.applyTheme();
 		FRAME = new Frame(WIDTH, HEIGHT);
 		FRAME.getContainer().add(TOOLBAR = new Toolbar());
-		EditorComponent.registerComponents();
 		Settings.loadEditors();
 		for(Editor editor : Editor.EDITORS.values()) FRAME.getContainer().add(editor);
 		FRAME.getContainer().add(pos = new Label("test", 0, 32, 200, 20));
