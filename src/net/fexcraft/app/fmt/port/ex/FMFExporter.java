@@ -51,8 +51,7 @@ public class FMFExporter implements Exporter {
 
 	public FMFExporter(JsonMap map){
 		settings.add(new Setting<>("modeldata", true, "exporter-fmf"));
-		settings.add(new Setting<>("flip", false, "exporter-fmf"));
-		axe0.setAngles(180, 180, 0);
+		axe0.setAngles(0, 180, 0);
 		axe1.setAngles(90, 0, 0);
 	}
 
@@ -78,7 +77,6 @@ public class FMFExporter implements Exporter {
 
 	@Override
 	public List<Setting<?>> settings(){
-		settings.get(1).value(!FMT.MODEL.orient.rect());
 		return settings;
 	}
 
@@ -90,7 +88,7 @@ public class FMFExporter implements Exporter {
 	@Override
 	public String export(Model model, File file, List<Group> groups){
 		FileOutputStream stream = null;
-		boolean flip = settings.get(1).value();
+		boolean flip = !FMT.MODEL.orient.rect();
 		try{
 			stream = new FileOutputStream(file);
 			stream.write(new byte[]{ 6, 13, 6, 1 });
@@ -123,7 +121,7 @@ public class FMFExporter implements Exporter {
 					}
 					if(nn(polygon.rot)){
 						if(flip){
-							writeFloats(stream, PR, polygon.rot.x, -polygon.rot.y, -polygon.rot.z);
+							writeFloats(stream, PR, -polygon.rot.z, -polygon.rot.y, -polygon.rot.x);
 						}
 						else writeVector(stream, PR, polygon.rot);
 					}
