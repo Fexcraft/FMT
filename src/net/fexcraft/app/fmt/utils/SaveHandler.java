@@ -112,25 +112,25 @@ public class SaveHandler {
 	}
 
 	@SuppressWarnings("unused")
-	public static Model load(Model model, File from, JsonMap obj, boolean preview, boolean sub){
-		model.name = obj.get("name", "Unnamed Model");
-		model.texSizeX = obj.get("texture_size_x", 256);
-		model.texSizeY = obj.get("texture_size_y", 256);
-		model.opacity = obj.get("opacity", 1f);
-		model.scale = new Vector3f(obj.getFloat("scale", 1f));
-		model.orient = ModelOrientation.fromString(obj.getString("orientation", null));
-		model.format = ModelFormat.fromString(obj.getString("target_format", null));
-		if(obj.has("creators")){
-			obj.getArrayElements("creators").forEach(elm -> {
+	public static Model load(Model model, File from, JsonMap map, boolean preview, boolean sub){
+		model.name = map.get("name", "Unnamed Model");
+		model.texSizeX = map.get("texture_size_x", 256);
+		model.texSizeY = map.get("texture_size_y", 256);
+		model.opacity = map.get("opacity", 1f);
+		model.scale = new Vector3f(map.getFloat("scale", 1f));
+		model.orient = ModelOrientation.fromString(map.getString("orientation", null));
+		model.format = ModelFormat.fromString(map.getString("target_format", null));
+		if(map.has("creators")){
+			map.getArrayElements("creators").forEach(elm -> {
 				String auth = elm.string_value();
 				boolean bool = auth.startsWith("!");
 				if(bool) auth = auth.substring(1);
 				model.addAuthor(auth, bool);
 			});
 		}
-		int format = obj.getInteger("format", 2);
+		int format = map.getInteger("format", 2);
 		if(format == 1){
-			JsonMap jmod = obj.getMap("model");
+			JsonMap jmod = map.getMap("model");
 			for(Entry<String, JsonValue<?>> entry : jmod.entries()){
 				try{
 					Group group = new Group(model, entry.getKey());
@@ -146,18 +146,18 @@ public class SaveHandler {
 			}
 			return model;
 		}
-		if(obj.has("textures") && !preview){
-			obj.getArrayElements("textures").forEach(elm -> TextureManager.addGroup(new TextureGroup(elm.string_value())));
+		if(map.has("textures") && !preview){
+			map.getArrayElements("textures").forEach(elm -> TextureManager.addGroup(new TextureGroup(elm.string_value())));
 		}
-		if(obj.has("texture_group")){
+		if(map.has("texture_group")){
 			if(preview){
-				model.texhelper = obj.get("texture_group").string_value();
+				model.texhelper = map.get("texture_group").string_value();
 			}
 			else{
-				model.texgroup = TextureManager.getGroup(obj.get("texture_group").string_value());
+				model.texgroup = TextureManager.getGroup(map.get("texture_group").string_value());
 			}
 		}
-		JsonMap groups = obj.getMap("groups");
+		JsonMap groups = map.getMap("groups");
 		groups.entries().forEach(entry -> {
 			try{
 				Group group = new Group(model, entry.getKey());
@@ -190,7 +190,7 @@ public class SaveHandler {
 							group.add(Polygon.from(model, elm.asMap(), format));
 						}
 						catch(Exception e){
-							log(JsonHandler.toString(obj, PrintOption.SPACED));
+							log(JsonHandler.toString(map, PrintOption.SPACED));
 							log(e);
 						}
 					});
@@ -203,18 +203,18 @@ public class SaveHandler {
 			}
 		});
 		if(!preview){
-			if(obj.has("camera_pos")){
-				JsonArray pos = obj.getArray("camera_pos");
+			if(map.has("camera_pos")){
+				JsonArray pos = map.getArray("camera_pos");
 				FMT.CAM.pos.x = pos.get(0).float_value();
 				FMT.CAM.pos.y = pos.get(1).float_value();
 				FMT.CAM.pos.z = pos.get(2).float_value();
 			}
-			FMT.CAM.hor = obj.get("camera_horizontal", FMT.CAM.hor);
-			FMT.CAM.ver = obj.get("camera_vertical", FMT.CAM.ver);
+			FMT.CAM.hor = map.get("camera_horizontal", FMT.CAM.hor);
+			FMT.CAM.ver = map.get("camera_vertical", FMT.CAM.ver);
 			//FMT.CAM.fov(Jsoniser.get(obj, "camera_fov", FMT.CAM.fov()));
 		}
-		if(obj.has("helpers")){
-			obj.getArrayElements("helpers").forEach(elm -> {
+		if(map.has("helpers")){
+			map.getArrayElements("helpers").forEach(elm -> {
 				try{
 					JsonMap jsn = elm.asMap();
 					File file = new File(jsn.get("path").string_value());
@@ -244,7 +244,7 @@ public class SaveHandler {
 						helper.pos = new Vector3f(jsn.get("pos_x").float_value(), jsn.get("pos_y").float_value(), jsn.get("pos_z").float_value());
 					}
 					else if(jsn.has("pos")){
-						JsonArray pos = obj.getArray("pos");
+						JsonArray pos = map.getArray("pos");
 						helper.pos.x = pos.get(0).float_value();
 						helper.pos.y = pos.get(1).float_value();
 						helper.pos.z = pos.get(2).float_value();
@@ -253,7 +253,7 @@ public class SaveHandler {
 						helper.rot = new Vector3f(jsn.get("rot_x").float_value(), jsn.get("rot_y").float_value(), jsn.get("rot_z").float_value());
 					}
 					else if(jsn.has("rot")){
-						JsonArray pos = obj.getArray("rot");
+						JsonArray pos = map.getArray("rot");
 						helper.rot.x = pos.get(0).float_value();
 						helper.rot.y = pos.get(1).float_value();
 						helper.rot.z = pos.get(2).float_value();
@@ -278,17 +278,23 @@ public class SaveHandler {
 				}
 			});
 		}
-		if(obj.has("export_values")){
-			obj.getMap("export_values").entries().forEach(entry -> {
+		if(map.has("export_values")){
+			map.getMap("export_values").entries().forEach(entry -> {
 				model.export_values.put(entry.getKey(), entry.getValue().string_value());
 			});
 		}
-		if(obj.has("export_array_values")){
-			obj.getMap("export_array_values").entries().forEach(entry -> {
+		if(map.has("export_array_values")){
+			map.getMap("export_array_values").entries().forEach(entry -> {
 				model.export_listed_values.put(entry.getKey(), new ArrayList<>());
 				entry.getValue().asArray().elements().forEach(elm -> {
 					model.export_listed_values.get(entry.getKey()).add(elm.string_value());
 				});
+			});
+		}
+		if(map.has("export_group_presets")){
+			map.getMap("export_group_presets").entries().forEach(entry -> {
+				model.export_group_preset_keys.add(entry.getKey());
+				model.export_group_presets.add(entry.getValue().asArray().toStringList());
 			});
 		}
 		model.recompile();
@@ -362,15 +368,15 @@ public class SaveHandler {
 	
 	public static JsonMap modelToJTMT(Model root, boolean export){
 		Model model = root == null ? FMT.MODEL : root;
-		JsonMap obj = new JsonMap();
-		obj.add("format", FORMAT);
-		obj.add("name", model.name);
-		obj.add("texture_size_x", model.texSizeX);
-		obj.add("texture_size_y", model.texSizeY);
-		obj.add("orientation", model.orient.name().toLowerCase());
-		obj.add("target_format", model.format.name().toLowerCase());
-		if(!export && model.opacity < 1f) obj.add("opacity", model.opacity);
-		if(model.scale != null && model.scale.x != 1f) obj.add("scale", model.scale.x);
+		JsonMap map = new JsonMap();
+		map.add("format", FORMAT);
+		map.add("name", model.name);
+		map.add("texture_size_x", model.texSizeX);
+		map.add("texture_size_y", model.texSizeY);
+		map.add("orientation", model.orient.name().toLowerCase());
+		map.add("target_format", model.format.name().toLowerCase());
+		if(!export && model.opacity < 1f) map.add("opacity", model.opacity);
+		if(model.scale != null && model.scale.x != 1f) map.add("scale", model.scale.x);
 		JsonArray creators = new JsonArray();
 		if(model.getAuthors().isEmpty()){
 			//TODO add to creators if logged in
@@ -382,16 +388,16 @@ public class SaveHandler {
 				creators.add(name);
 			}
 		}
-		obj.add("creators", creators);
-		obj.add("type", "jtmt");
+		map.add("creators", creators);
+		map.add("type", "jtmt");
 		if(TextureManager.anyGroupsLoaded()){
 			JsonArray textures = new JsonArray();
 			for(TextureGroup group : TextureManager.getGroups()){
 				textures.add(group.name);
 			}
-			obj.add("textures", textures);
+			map.add("textures", textures);
 		}
-		if(model.texgroup != null) obj.add("texture_group", model.texgroup.name);
+		if(model.texgroup != null) map.add("texture_group", model.texgroup.name);
 		JsonMap modobj = new JsonMap();
 		for(Group group : model.groups()){
 			JsonMap grobj = new JsonMap();
@@ -422,15 +428,15 @@ public class SaveHandler {
 			grobj.add("polygons", array);
 			modobj.add(group.id, grobj);
 		}
-		obj.add("groups", modobj);
+		map.add("groups", modobj);
 		if(!export){
 			JsonArray array = new JsonArray();
 			array.add(FMT.CAM.pos.x);
 			array.add(FMT.CAM.pos.y);
 			array.add(FMT.CAM.pos.z);
-			obj.add("camera_pos", array);
-			obj.add("camera_horizontal", FMT.CAM.hor);
-			obj.add("camera_vertical", FMT.CAM.ver);
+			map.add("camera_pos", array);
+			map.add("camera_horizontal", FMT.CAM.hor);
+			map.add("camera_vertical", FMT.CAM.ver);
 		}
 		if(!PreviewHandler.getLoaded().isEmpty() && !export){
 			JsonArray array = new JsonArray();
@@ -470,23 +476,33 @@ public class SaveHandler {
 				jsn.add("visible", premod.visible);
 				array.add(jsn);
 			}
-			obj.add("helpers", array);
+			map.add("helpers", array);
 		}
-		if(!export && model.export_values.size() > 0){
-			obj.addMap("export_values");
-			model.export_values.entrySet().forEach(entry -> {
-				obj.getMap("export_values").add(entry.getKey(), entry.getValue());
-			});
+		if(!export){
+			if(model.export_values.size() > 0){
+				map.addMap("export_values");
+				model.export_values.entrySet().forEach(entry -> {
+					map.getMap("export_values").add(entry.getKey(), entry.getValue());
+				});
+			}
+			if(model.export_listed_values.size() > 0){
+				map.addMap("export_array_values");
+				model.export_listed_values.entrySet().forEach(entry -> {
+					JsonArray array = new JsonArray();
+					entry.getValue().forEach(elm -> array.add(elm));
+					map.getMap("export_array_values").add(entry.getKey(), array);
+				});
+			}
+			if(model.export_group_presets.size() > 0){
+				map.addMap("export_group_presets");
+				for(int i = 0; i < model.export_group_preset_keys.size(); i++){
+					JsonArray array = new JsonArray();
+					model.export_group_presets.get(i).forEach(str -> array.add(str));
+					map.getMap("export_group_presets").add(model.export_group_preset_keys.get(i), array);
+				}
+			}
 		}
-		if(!export && model.export_listed_values.size() > 0){
-			obj.addMap("export_array_values");
-			model.export_listed_values.entrySet().forEach(entry -> {
-				JsonArray array = new JsonArray();
-				entry.getValue().forEach(elm -> array.add(elm));
-				obj.getMap("export_array_values").add(entry.getKey(), array);
-			});
-		}
-		return obj;
+		return map;
 	}
 
 	public static void openDialog(File file){
