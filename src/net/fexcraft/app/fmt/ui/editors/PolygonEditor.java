@@ -17,27 +17,37 @@ import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
  */
 public class PolygonEditor extends Editor {
 
-	public static EditorComponent SHAPEBOX, CYLINDER, CURVE, MARKER;
+	public static EditorComponent BOXON, BOXOFF, SHAPEBOX, CYLINDER, CURVE, MARKER;
 
 	public PolygonEditor(){
 		super("polygon_editor", "Polygon Editor", false);
 		//if(Settings.SHOW_QUICK_ADD.value) addComponent(new QuickAdd());
 		addComponent(new MultiplierComponent());
 		addComponent(new PolygonSorting());
-		addComponent(new PolygonAttributes());
+		addComponent(BOXON = new PolygonAttributes(true));
+		addComponent(BOXOFF = new PolygonAttributes(false));
 		addComponent(SHAPEBOX = new ShapeboxComponent());
 		addComponent(CYLINDER = new CylinderComponentFull());
 		addComponent(CURVE = new CurveComponent());
 		addComponent(MARKER = new MarkerComponent());
+		BOXOFF.minimize(true);
 		UpdateCompound com = new UpdateCompound();
 		if(Settings.AUTO_SHOW_COMPONENTS.value){
 			com.add(PolygonSelected.class, con -> {
+				BOXON.minimize(true);
+				BOXOFF.minimize(true);
 				SHAPEBOX.minimize(true);
 				CYLINDER.minimize(true);
 				CURVE.minimize(true);
 				MARKER.minimize(true);
 				ArrayList<Polygon> polys = FMT.MODEL.selected();
 				for(Polygon poly : polys){
+					if(poly.getShape().isRectagular()){
+						BOXON.minimize(false);
+					}
+					else{
+						BOXOFF.minimize(false);
+					}
 					if(poly.getShape().isShapebox()){
 						SHAPEBOX.minimize(false);
 					}
@@ -51,13 +61,14 @@ public class PolygonEditor extends Editor {
 						MARKER.minimize(false);
 					}
 				}
+				if(!BOXON.minimized() && !BOXOFF.minimized()) BOXOFF.minimize(true);
 			});
 			UpdateHandler.register(com);
 		}
 	}
 
 	public static boolean shrink(EditorComponent com){
-		return com == SHAPEBOX || com == CYLINDER || com == CURVE || com == MARKER;
+		return com == BOXON || com == BOXOFF || com == SHAPEBOX || com == CYLINDER || com == CURVE || com == MARKER;
 	}
 
 }
