@@ -141,7 +141,7 @@ tasks.register('mainJar', Jar) {
 	manifest {
 		attributes 'Title': "Fex's Modelling Toolbox",
 				'Version': version,
-				'Main-Class': mainClassName,
+				'Main-Class': 'net.fexcraft.app.fmt.FMT',
 				'Created-By': "Ferdinand Calo' (FEX___96)",
 				"Class-Path": ". " + (configurations.runtimeClasspath.collect { "lib/" + it.getName() }.join(' '))
 	}
@@ -155,6 +155,32 @@ tasks.register('mainJar', Jar) {
 		include 'log4j2.xml'
 	}
 	baseName = "FMT"
+	version = ""
+}
+
+tasks.register('fullJar', Jar) {
+	mainClassName = "com.company.application.Main"
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+	manifest {
+		attributes 'Title': "Fex's Modelling Toolbox",
+				'Version': version,
+				'Main-Class': 'net.fexcraft.app.fmt.FMT',
+				'Created-By': "Ferdinand Calo' (FEX___96)",
+				'Multi-Release': true
+	}
+	from(zipTree("${destinationDir}/${archiveName}")){
+		include 'net/fexcraft/app/fmt/launch/'
+		include 'net/fexcraft/app/fmt/'
+		include 'net/fexcraft/app/json/'
+		include 'net/fexcraft/lib/'
+	}
+	from {
+		configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+	}
+	from('src/') {
+		include 'log4j2.xml'
+	}
+	baseName = "FMTI"
 	version = ""
 }
 
@@ -180,6 +206,10 @@ tasks.register('copyForUpload') {
 	}
 	copy {
 		from "build/libs/FMT.jar"
+		into "upload/"
+	}
+	copy {
+		from "build/libs/FMTI.jar"
 		into "upload/"
 	}
 	copy {
@@ -227,6 +257,7 @@ tasks.register('compileCatalog') {
 }
 
 build.finalizedBy(mainJar)
+build.finalizedBy(fullJar)
 build.finalizedBy(launcherJar)
 build.finalizedBy(copyForUpload)
 build.finalizedBy(compileCatalog)
