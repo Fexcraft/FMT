@@ -39,6 +39,7 @@ public class GroupSelectionPanel extends Panel {
 		}).addTooltip("group_sel_panel.load_preset"));
 		add(new Icon(0, 20, 0, width - 105, 10, "./resources/textures/icons/toolbar/save.png", () -> {
 			String str = field.getTextState().getText();
+			if(str.equals("new_preset")) return;
 			int idx = FMT.MODEL.export_group_preset_keys.indexOf(str);
 			if(idx < 0){
 				FMT.MODEL.export_group_preset_keys.add(str);
