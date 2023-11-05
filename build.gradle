@@ -158,7 +158,7 @@ tasks.register('mainJar', Jar) {
 	version = ""
 }
 
-tasks.register('fullJar', Jar) {
+/*tasks.register('fullJar', Jar) {
 	mainClassName = "com.company.application.Main"
 	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 	manifest {
@@ -182,7 +182,7 @@ tasks.register('fullJar', Jar) {
 	}
 	baseName = "FMTI"
 	version = ""
-}
+}*/
 
 tasks.register('launcherJar', Jar) {
 	manifest {
@@ -257,7 +257,7 @@ tasks.register('compileCatalog') {
 }
 
 build.finalizedBy(mainJar)
-build.finalizedBy(fullJar)
+if(hasProperty("fullJar")) build.finalizedBy(fullJar)
 build.finalizedBy(launcherJar)
 build.finalizedBy(copyForUpload)
 build.finalizedBy(compileCatalog)
