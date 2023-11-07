@@ -88,7 +88,10 @@ public class Toolbar extends Panel {
 				new MenuButton(8, "utils.flip_tools.pos_z_left_right", () -> {
 					FMT.MODEL.flipShapeboxes(null, 0);
 					FMT.MODEL.flipBoxPosition(null, 2);
-				})
+				})/*,
+				new MenuButton(9, "utils.flip_tools.rotate90", () -> {
+					FMT.MODEL.rotate90();
+				})*/
 			),
 			new MenuButton(5, "utils.reset_camera", () -> { FMT.CAM.reset(); }),
 			new MenuButton(6, "utils.create_gif", () -> ImageHandler.createGif()),
