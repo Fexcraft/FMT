@@ -39,7 +39,8 @@ public class GroupComponent extends EditorComponent {
 		super(group.id, group.isEmpty() ? HEIGHT : HEIGHT + group.size() * PH + 4, true, true);
 		label.getTextState().setText((this.group = group).id);
 		this.genFullheight();
-		add(visible = new Icon((byte)2, "./resources/textures/icons/component/visible.png", () -> group.visible = !group.visible));
+		add(visible = new Icon((byte)2, "./resources/textures/icons/component/visible.png", () -> pin()));
+		add(visible = new Icon((byte)3, "./resources/textures/icons/component/remove.png", () -> FMT.MODEL.remGroup(group)));
 		updcom.add(GroupRenamed.class, event -> { if(event.group() == group) label.getTextState().setText(group.id); });
 		updcom.add(PolygonAdded.class, event -> { if(event.group() == group) addPolygon(event.polygon(), true); });
 		updcom.add(PolygonRenamed.class, event -> { if(event.polygon().group() == group) renamePolygon(event.polygon()); });
