@@ -62,6 +62,7 @@ public class PolygonEditor extends Editor {
 					}
 				}
 				if(!BOXON.minimized() && !BOXOFF.minimized()) BOXOFF.minimize(true);
+				if(BOXON.minimized() && BOXOFF.minimized()) BOXOFF.minimize(false);
 			});
 			UpdateHandler.register(com);
 		}
