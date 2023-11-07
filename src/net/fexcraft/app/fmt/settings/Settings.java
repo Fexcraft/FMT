@@ -23,6 +23,7 @@ import net.fexcraft.app.fmt.ui.editors.GroupEditor;
 import net.fexcraft.app.fmt.ui.editors.ModelEditor;
 import net.fexcraft.app.fmt.ui.editors.PolygonEditor;
 import net.fexcraft.app.fmt.ui.editors.TextureEditor;
+import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.json.JsonValue;
 import org.joml.Vector4f;
 import org.liquidengine.legui.component.Button;
@@ -292,6 +293,13 @@ public class Settings {
 		}//TODO load plugin settings ?
 		//
 		if(!SEL_THEME.value.equals("custom")) DARKTHEME.value = SEL_THEME.value.contains("dark");
+		//
+		if(obj.has("last_model")){
+			FMT.MODEL = new Model(new File(obj.get("last_model").string_value()), "Loaded Model");
+		}
+		else{
+			FMT.MODEL = new Model(null, "Unnamed Model");
+		}
 	}
 	
 	public static void apply(FMT fmt){
@@ -320,6 +328,9 @@ public class Settings {
 			recent.add(file.toString().replace("\\", "\\\\"));
 		}
 		if(recent.size() > 0) obj.add("recent_files", recent);
+		if(FMT.MODEL.file != null){
+			obj.add("last_model", FMT.MODEL.file.toPath().toString());
+		}
 		JsonHandler.print(new File("./settings.json"), obj, PrintOption.SPACED);
 		//
 		JsonMap editors = new JsonMap();
