@@ -1,5 +1,6 @@
 package net.fexcraft.app.fmt.polygon;
 
+import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.demo.ModelMark;
 import net.fexcraft.app.fmt.polygon.PolyRenderer.DrawMode;
@@ -85,7 +86,7 @@ public class Marker extends Polygon {
 		PolyRenderer.mode(DrawMode.TEXTURED);
 		if(biped && !PolyRenderer.mode().lines()){
 			String tex = TextureManager.getBound();
-			TextureManager.bind("mark");
+			TextureManager.bind(FMT.MODEL.orient.rect() ? "marker" : "mark");
 			model.render();
 			TextureManager.bind(tex);
 		}
