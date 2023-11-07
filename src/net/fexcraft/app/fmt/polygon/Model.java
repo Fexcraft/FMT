@@ -633,4 +633,55 @@ public class Model {
 		if(idx >= export_group_preset_keys.size()) return getGroupPreset(0);
 		return export_group_preset_keys.get(idx);
 	}
+
+	public void rotate90(){
+		ArrayList<Polygon> polis = selection_copy();
+		for(Polygon poly : polis){
+			Vector3f vec = new Vector3f(poly.pos);
+			poly.pos.x = -vec.z;
+			poly.pos.z = -vec.x;
+			vec = new Vector3f(poly.rot);
+			poly.rot.x = vec.z;
+			poly.rot.z = vec.x;
+			if(poly instanceof Box){
+				Box box = (Box)poly;
+				vec = new Vector3f(box.size);
+				box.size.x = vec.z;
+				box.size.z = vec.x;
+				box.off.x = -vec.z;
+				box.off.z = -vec.x;
+			}
+			if(poly instanceof Cylinder){
+				Cylinder cyl = (Cylinder)poly;
+				if(cyl.direction < 4){
+					if(cyl.direction > 1){
+						cyl.direction -= 2;
+						cyl.off.z -= cyl.length;
+					}
+					else{
+						cyl.direction += 2;
+						cyl.off.x -= cyl.length;
+					}
+				}
+			}
+			if(poly instanceof Shapebox){
+				Shapebox box = (Shapebox)poly;
+				Vector3f[] arr = new Vector3f[8];
+				Vector3f[] org = box.corners();
+				for(int i = 0; i < 8; i++){
+					arr[i] = new Vector3f(org[i]);
+				}
+				box.cor0.set(arr[2]);
+				box.cor1.set(arr[1]);
+				box.cor2.set(arr[0]);
+				box.cor3.set(arr[3]);
+				box.cor4.set(arr[6]);
+				box.cor5.set(arr[5]);
+				box.cor6.set(arr[4]);
+				box.cor7.set(arr[7]);
+			}
+			poly.recompile();
+		}
+	}
+
 }
