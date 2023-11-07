@@ -175,7 +175,6 @@ public class FMT {
 		glfwShowWindow(window);
 		glfwFocusWindow(window);
 		//
-		MODEL = new Model(null, "Unnamed Model");
 		CAM = new GGR();
 		AxisRotator.setDefImpl(Axis3DL.class);
 		Settings.applyTheme();
@@ -252,7 +251,7 @@ public class FMT {
 		TextureManager.load();
 		FMT.WORKSPACE = new Workspace();
 		FMT.updateTitle();
-		//TODO load previous model
+		if(FMT.MODEL.file != null) FMT.MODEL.load();
 		Settings.checkForUpdatesAndLogin();
 		KeyCompound.init();
 		//
