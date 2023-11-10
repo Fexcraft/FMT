@@ -145,7 +145,7 @@ tasks.register('mainJar', Jar) {
 				'Created-By': "Ferdinand Calo' (FEX___96)",
 				"Class-Path": ". " + (configurations.runtimeClasspath.collect { "lib/" + it.getName() }.join(' '))
 	}
-	from(zipTree("${destinationDir}/${archiveName}")) {
+	from(zipTree("${destinationDirectory}/${archiveFileName}")) {
 		include 'net/fexcraft/app/fmt/launch/'
 		include 'net/fexcraft/app/fmt/'
 		include 'net/fexcraft/app/json/'
@@ -154,7 +154,7 @@ tasks.register('mainJar', Jar) {
 	from('src/') {
 		include 'log4j2.xml'
 	}
-	baseName = "FMT"
+	archiveBaseName = "FMT"
 	version = ""
 }
 
@@ -168,7 +168,7 @@ tasks.register('mainJar', Jar) {
 				'Created-By': "Ferdinand Calo' (FEX___96)",
 				'Multi-Release': true
 	}
-	from(zipTree("${destinationDir}/${archiveName}")){
+	from(zipTree("${destinationDirectory}/${archiveFileName}")){
 		include 'net/fexcraft/app/fmt/launch/'
 		include 'net/fexcraft/app/fmt/'
 		include 'net/fexcraft/app/json/'
@@ -180,7 +180,7 @@ tasks.register('mainJar', Jar) {
 	from('src/') {
 		include 'log4j2.xml'
 	}
-	baseName = "FMTI"
+	archiveBaseName = "FMTI"
 	version = ""
 }*/
 
@@ -191,11 +191,11 @@ tasks.register('launcherJar', Jar) {
 				'Main-Class': 'net.fexcraft.app.fmt.launch.Launcher',
 				'Created-By': "Ferdinand Calo' (FEX___96)"
 	}
-	from(zipTree("${destinationDir}/${archiveName}")) {
+	from(zipTree("${destinationDirectory}/${archiveFileName}")) {
 		include 'net/fexcraft/app/fmt/launch/'
 		include 'net/fexcraft/app/json/'
 	}
-	baseName = "FMT_Launcher"
+	archiveBaseName = "FMT_Launcher"
 	version = ""
 }
 
