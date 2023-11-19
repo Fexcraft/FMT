@@ -26,8 +26,8 @@ public class SessionHandler {
 		JsonMap map = JsonHandler.parse(file);
 		sessionid = map.getString("session", null);
 		encrypt = map.getBoolean("encrypt", false);
-		pass = map.getString("pass", "testuser");
-		usermail = map.getString("mail", "testuser@fexcraft.net");
+		pass = map.getString("pass", "blank");
+		usermail = map.getString("mail", "user@fexcraft.net");
 		userid = map.getString("userid", "-1");
 		username = map.getString("username", defusername);
 		if(!file.exists()) JsonHandler.print(file, map, PrintOption.FLAT);
