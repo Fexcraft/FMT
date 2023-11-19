@@ -7,10 +7,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-import org.liquidengine.legui.component.Button;
-import org.liquidengine.legui.component.Dialog;
-import org.liquidengine.legui.component.Label;
-import org.liquidengine.legui.component.ScrollablePanel;
+import net.fexcraft.app.fmt.ui.fields.RunButton;
+import org.liquidengine.legui.component.*;
 import org.liquidengine.legui.component.optional.align.HorizontalAlign;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.listener.MouseClickEventListener;
@@ -77,12 +75,13 @@ public class FileChooser {
 	}
 	
 	private static void openInternalChooser(String title, String root, FileType type, boolean save, Consumer<File> task){
-		Dialog dialog = new Dialog(Translator.translate("filechooser.title"), 500, INTERNAL_HEIGHT + (save ? 30 : 0));
+		int width = 600, lwidth = width - 220, rwidth = 200;
+		Dialog dialog = new Dialog(Translator.translate("filechooser.title"), width, INTERNAL_HEIGHT + (save ? 30 : 0));
 		Settings.applyComponentTheme(dialog.getContainer());
-        Label label = new Label(title, 10, 10, 480, 20);
+        Label label = new Label(title, 10, 10, lwidth, 20);
         File rootfile = new File(root);
         if(!rootfile.exists()) rootfile.mkdirs();
-		Button rootbutton = new Button(rootfile.getAbsolutePath(), 10, 40, 480, 20);
+		Button rootbutton = new Button(rootfile.getAbsolutePath(), 10, 40, lwidth, 20);
 		rootbutton.getStyle().setBorderRadius(0);
 		rootbutton.getStyle().setHorizontalAlign(HorizontalAlign.LEFT);
 		rootbutton.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
@@ -93,7 +92,11 @@ public class FileChooser {
         		}
         	}
 		});
-		ScrollablePanel panel = new ScrollablePanel(10, 70, 480, INTERNAL_HEIGHT - 100);
+		Tooltip tip = new Tooltip(rootfile.getAbsolutePath());
+		tip.setSize(600, 40);
+		tip.setPosition(0, 20);
+		rootbutton.setTooltip(tip);
+		ScrollablePanel panel = new ScrollablePanel(10, 70, lwidth, INTERNAL_HEIGHT - 100);
         panel.setHorizontalScrollBarVisible(false);
 		ArrayList<File> filtered = new ArrayList<>();
 		if(rootfile.listFiles() != null){
@@ -126,7 +129,7 @@ public class FileChooser {
 		panel.getContainer().setSize(panel.getSize().x, size < panel.getSize().y ? panel.getSize().y : size);
 		for(int i = 0; i < filtered.size(); i++){
 			File file = filtered.get(i);
-			Button filebutton = new Button(file.getName() + (file.isDirectory() ? "/" : ""), 5, 1 + i * 22, 470, 20);
+			Button filebutton = new Button(file.getName() + (file.isDirectory() ? "/" : ""), 5, 1 + i * 22, lwidth - 10, 20);
 			filebutton.getStyle().setBorderRadius(0);
 			filebutton.getStyle().getBorder().setEnabled(false);
 			filebutton.getStyle().setHorizontalAlign(HorizontalAlign.LEFT);
@@ -143,9 +146,47 @@ public class FileChooser {
 			});
 			panel.getContainer().add(filebutton);
 		}
+		//
+		dialog.getContainer().add(new Label(Translator.translate("filechooser.bookmarks"), width - rwidth, 50, rwidth - 60, 20));
+		dialog.getContainer().add(new RunButton("dialog.button.add", width - 60, 50, 50, 20, () -> {
+			dialog.close();
+			Settings.BOOKMARKS.add(rootfile);
+			openInternalChooser(title, rootfile.getAbsolutePath(), type, save, task);
+		}));
+		ScrollablePanel marks = new ScrollablePanel(width - rwidth, 70, rwidth - 10, INTERNAL_HEIGHT - 100);
+		panel.setHorizontalScrollBarVisible(false);
+		int rsize = Settings.BOOKMARKS.size() * 22;
+		marks.getContainer().setSize(marks.getSize().x - 10, rsize < marks.getSize().y ? marks.getSize().y : rsize);
+		for(int i = 0; i < Settings.BOOKMARKS.size(); i++){
+			File file = Settings.BOOKMARKS.get(i);
+			Button filebutton = new Button(file.getName(), 5, 1 + i * 22, marks.getSize().x - 28, 20);
+			filebutton.getStyle().setBorderRadius(0);
+			filebutton.getStyle().getBorder().setEnabled(false);
+			filebutton.getStyle().setHorizontalAlign(HorizontalAlign.LEFT);
+			filebutton.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
+				if(CLICK == e.getAction()){
+					dialog.close();
+					openInternalChooser(title, file.getAbsolutePath(), type, save, task);
+				}
+			});
+			tip = new Tooltip(file.getAbsolutePath());
+			tip.setSize(400, 40);
+			tip.setPosition(0, 20);
+			filebutton.setTooltip(tip);
+			marks.getContainer().add(filebutton);
+			int idx = i;
+			marks.getContainer().add(new Icon(0, 16, 0, (int)(marks.getSize().x - 26), 3 + i * 22, "./resources/textures/icons/component/remove.png", () -> {
+				dialog.close();
+				Settings.BOOKMARKS.remove(idx);
+				openInternalChooser(title, file.getAbsolutePath(), type, save, task);
+			}));
+		}
+		//marks.setHorizontalScrollBarVisible(false);
+		dialog.getContainer().add(marks);
+		//
 		if(save){
-			TextField input = new TextField(Translator.translate("filechooser.enter_name"), 10, INTERNAL_HEIGHT - 20, 390, 20);
-			Button select = new Button(Translator.translate("dialog.button.select"), 410, INTERNAL_HEIGHT - 20, 80, 20);
+			TextField input = new TextField(Translator.translate("filechooser.enter_name"), 10, INTERNAL_HEIGHT - 20, lwidth - 100, 20);
+			Button select = new Button(Translator.translate("dialog.button.select"), lwidth - 80, INTERNAL_HEIGHT - 20, 80, 20);
 			select.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
 	        	if(CLICK == e.getAction() && input.getTextState().getText().length() > 0){
         			dialog.close();
