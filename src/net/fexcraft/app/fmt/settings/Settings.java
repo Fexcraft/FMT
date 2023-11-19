@@ -23,7 +23,8 @@ import net.fexcraft.app.fmt.ui.editors.GroupEditor;
 import net.fexcraft.app.fmt.ui.editors.ModelEditor;
 import net.fexcraft.app.fmt.ui.editors.PolygonEditor;
 import net.fexcraft.app.fmt.ui.editors.TextureEditor;
-import net.fexcraft.app.fmt.utils.GGR;
+import net.fexcraft.app.fmt.ui.fields.RunButton;
+import net.fexcraft.app.fmt.utils.*;
 import net.fexcraft.app.json.JsonValue;
 import org.joml.Vector4f;
 import org.liquidengine.legui.component.Button;
@@ -48,9 +49,6 @@ import net.fexcraft.app.fmt.ui.components.*;
 import net.fexcraft.app.fmt.ui.fields.NumberField;
 import net.fexcraft.app.fmt.ui.trees.PolygonTree;
 import net.fexcraft.app.fmt.ui.trees.TextureTree;
-import net.fexcraft.app.fmt.utils.Logging;
-import net.fexcraft.app.fmt.utils.SaveHandler;
-import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonHandler.PrintOption;
@@ -483,8 +481,8 @@ public class Settings {
 				}
 				LAST_CATALOG_RELOAD = Time.getDate();
 			}
-			showWelcome(true);
 			SessionHandler.checkIfLoggedIn(true, true);
+			showWelcome(true);
 		});
 		thread.setName("UPCK");
 		thread.start();
@@ -497,7 +495,7 @@ public class Settings {
 			if(!SHOW_UPDATE.value && update) update = false;
 		}
 		float width = 300;
-		Dialog dialog = new Dialog(translate("welcome.title"), width, update ? 140 : 110);
+		Dialog dialog = new Dialog(translate("welcome.title"), width, 140);
 		if(update){
 			dialog.getContainer().add(new Label(translate("welcome.update.available"), 10, 10, width - 20, 20));
 			dialog.getContainer().add(new Label(format("welcome.update.files"), 10, 35, width - 20, 20));
@@ -515,11 +513,16 @@ public class Settings {
 			dialog.getContainer().add(button2);
 		}
 		else if(welcome){
-			dialog.getContainer().add(new Label(translate("welcome.normal.greeting_" + "guest"), 10, 10, width - 20, 20));//TODO session handler
+			if(SessionHandler.isLoggedIn()){
+				dialog.getContainer().add(new Label(Translator.format("welcome.normal.greeting_logged", SessionHandler.getUserName()), 10, 10, width - 20, 20));//TODO session handler
+			}
+			else{
+				dialog.getContainer().add(new Label(translate("welcome.normal.greeting_guest"), 10, 10, width - 20, 20));//TODO session handler
+			}
 			dialog.getContainer().add(new Label(format("welcome.normal.version", FMT.VERSION), 10, 35, width - 20, 20));
-			Button button = new Button(translate("dialog.button.close"), width - 90, 60, 80, 20);
-            button.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> { if(CLICK == e.getAction()) dialog.close(); });
-			dialog.getContainer().add(button);
+			dialog.getContainer().add(new RunButton("dialog.button.close", 210, 90, 80, 20, () -> dialog.close()));
+			dialog.getContainer().add(new RunButton("dialog.button.load", 110, 90, 80, 20, () -> SaveHandler.openDialog(null)));
+			dialog.getContainer().add(new RunButton("dialog.button.new", 10, 90, 80, 20, () -> SaveHandler.newDialog()));
 		}
 		applyComponentTheme(dialog.getContainer());
 		dialog.show(FMT.FRAME);
