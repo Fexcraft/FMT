@@ -2,16 +2,17 @@
 _This description is still for v2, will be updated once v3 is out._
 
 # Fex's Modelling Toolbox
-A Tool to create Models basing on the "TMT" (updated and maintained version of Fex/FCL) Library.
+A Tool to create polygon/3d-shape based models.
 
 It is able to import:
 - `mtb` - SMP Toolbox Save Files
 - `jtmt` - JTMT JSON Format Models
-- `java` - FlansMod Format Java Models (**currently not public**)
+- `java` - FlansMod Format Java Models
 - `vox` - "MagicaVoxel" Format Files (see [VOXtoFMT](https://github.com/Fexcraft/VOXtoFMT))
 
 And export to:
 - `jtmt` - JTMT JSON Format Models
+- `fmf` - Fex's Model Format (for FVTM)
 - `java`
   - Java Models for **FVTM** (Fex's Vehicle and Transportation Mod)
   - Java Models for **TrainsInMotion** following the FVTM standard.
@@ -19,7 +20,6 @@ And export to:
     (box, shapebox and basic cylinders using existing MRT methods,    
     everything else using a legacy-mode converter)
 - `obj` - valid **Wavefront OBJ** Models
-- `tsiv` - small util for **MTS/IV** rotation points
 - `png` - **PNG** files - template or textured
 - `txt` - **Marker** list exporter
 - and more to come!
