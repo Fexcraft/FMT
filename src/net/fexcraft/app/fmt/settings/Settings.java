@@ -66,6 +66,7 @@ public class Settings {
 	public static boolean FOUND_UPDATE, UPDATECHECK_FAILED;
 	public static long UPDATE_FOR_FILES_FOUND = 0, LAST_CATALOG_RELOAD;
 	public static ArrayList<File> RECENT = new ArrayList<File>();
+	public static ArrayList<File> BOOKMARKS = new ArrayList<File>();
 	public static File NO_FILE_DOTS = new File("...");
 	public static Setting<Integer> WINDOW_WIDTH;
 	public static Setting<Integer> WINDOW_HEIGHT;
@@ -170,17 +171,22 @@ public class Settings {
 	
 	public static void load(){
 		var file = new File("./settings.json");
-		var obj = file.exists() ? JsonHandler.parse(file) : new JsonMap();
-		if(obj.has("format") && obj.get("format").integer_value() != FORMAT) obj = new JsonMap();
-		if(obj.has("last_catalog_reload")) LAST_CATALOG_RELOAD = obj.get("last_catalog_reload").long_value();
-		if(obj.has("recent_files")){
-			JsonArray array = obj.getArray("recent_files");
+		var map = file.exists() ? JsonHandler.parse(file) : new JsonMap();
+		if(map.has("format") && map.get("format").integer_value() != FORMAT) map = new JsonMap();
+		if(map.has("last_catalog_reload")) LAST_CATALOG_RELOAD = map.get("last_catalog_reload").long_value();
+		if(map.has("recent_files")){
+			JsonArray array = map.getArray("recent_files");
 			for(int i = 0; i < 10; i++){
 				if(i >= array.size()) RECENT.add(new File("..."));
 				else RECENT.add(new File(array.get(i).string_value()));
 			}
 		}
 		else for(int i = 0; i < 10; i++) RECENT.add(NO_FILE_DOTS);
+		if(map.has("filechooser_bookmarks")){
+			map.getArray("filechooser_bookmarks").value.forEach(val -> {
+				BOOKMARKS.add(new File(val.string_value()));
+			});
+		}
 		//
 		SETTINGS.put(GENERAL, new LinkedHashMap<>());
 		SETTINGS.put(GRAPHIC, new LinkedHashMap<>());
@@ -193,107 +199,107 @@ public class Settings {
 		SETTINGS.put(IMAGE, new LinkedHashMap<>());
 		SETTINGS.put(THEME, new LinkedHashMap<>());
 		//
-		VSYNC = new Setting<>("vsync", true, GRAPHIC, obj);
-		HVSYNC = new Setting<>("vsync/2", false, GRAPHIC, obj);
-		DISCORD_RPC = new Setting<>("enabled", true, DISCORD, obj);
-		DISCORD_HIDE = new Setting<>("hidden_mode", false, DISCORD, obj);
-		DISCORD_RESET_ON_NEW = new Setting<>("reset_on_new", false, DISCORD, obj);
-		WINDOW_WIDTH = new Setting<>("window_width", 1280, GRAPHIC, obj);
-		WINDOW_HEIGHT = new Setting<>("window_height", 720, GRAPHIC, obj);
-		MOUSE_SENSIVITY = new Setting<>("mouse_sensivity", 2f, CONTROL, obj);
-		MOVE_SPEED = new Setting<>("movement_speed", 20f, CONTROL, obj);
-		SCROLL_SPEED = new Setting<>("scroll_speed", 1f, CONTROL, obj);
-		TRIANGULATION_Q = new Setting<>("triangulated_quads", true, GRAPHIC, obj);
-		TRIANGULATION_L = new Setting<>("triangulated_lines", false, GRAPHIC, obj);
-		LANGUAGE = new Setting<>("language", "null", GENERAL, obj);
-		INTERNAL_CHOOSER = new Setting<>("internal_filechooser", false, GENERAL, obj);
-		ROUNDING_DIGITS = new Setting<>("rounding_digits", 4, GENERAL, obj).minmax(0, 10).consumer(con -> NumberField.updateRoundingDigits());
-		DEMO = new Setting<>("demo_model", false, SPACE3D, obj);
-		FLOOR = new Setting<>("floor", true, SPACE3D, obj);
-		CUBE = new Setting<>("center_cube", true, SPACE3D, obj);
-		CMARKER = new Setting<>("center_marker", true, SPACE3D, obj);
-		LINES = new Setting<>("lines", true, SPACE3D, obj);
-		POLYMARKER = new Setting<>("polygon_marker", true, SPACE3D, obj);
-		ADD_TO_LAST = new Setting<>("add_to_last", false, GENERAL, obj);
-		FULLSCREEN = new Setting<>("fullscreen", false, GRAPHIC, obj);
-		POLYGON_SUFFIX = new Setting<>("polygon_duplicate_suffix", "_%s", NAMING, obj);
-		GROUP_SUFFIX = new Setting<>("group_duplicate_suffix", "_%s", NAMING, obj);
-		ASK_GROUP_REMOVAL = new Setting<>("ask_group_removal", true, GENERAL, obj);
-		ASK_POLYGON_REMOVAL = new Setting<>("ask_polygon_removal", false, GENERAL, obj);
-		OPEN_FOLDER_AFTER_SAVE = new Setting<>("open_folder_after_save", true, GENERAL, obj);
-		SHOW_WELCOME = new Setting<>("show_welcome", true, GENERAL, obj);
-		SHOW_UPDATE = new Setting<>("show_update", true, GENERAL, obj);
-		SPHERE_MARKER = new Setting<>("sphere_marker", false, SPACE3D, obj);
-		BACKUP_INTERVAL = new Setting<>("backup_interval", 5, GENERAL, obj);
-		COPIED_POLYGON = new Setting<>("copied_polygon", "%s_cp", NAMING, obj);
-		SELECT_COPIED = new Setting<>("select_copied", true, GENERAL, obj);
-		SELECT_NEW = new Setting<>("select_new", true, GENERAL, obj);
-		PASTED_GROUP = new Setting<>("pasted_group_suffix", "-cb", NAMING, obj);
-		SHOW_BOTTOMBAR = new Setting<>("show_bottom_bar", true, GENERAL, obj);
-		OPEN_FOLDER_AFTER_IMG = new Setting<>("open_folder_after_image", true, IMAGE, obj);
-		GIF_DELAY_TIME = new Setting<>("gif_delay_time", 100, IMAGE, obj);
-		GIF_LOOP = new Setting<>("gif_loop", true, IMAGE, obj);
-		GIF_ROT_PASS = new Setting<>("gif_rotation_passes", 36, IMAGE, obj);
-		HIDE_UI_FOR_IMAGE = new Setting<>("hide_ui_for_image", true, IMAGE, obj);
-		BACKGROUND = new RGBSetting("background", new RGB(0x7f7f7f), SPACE3D, obj);
-		NO_RANDOM_TITLE = new Setting<>("no_random_title", false, IMAGE, obj);
-		SELECTION_LINES = new RGBSetting("selection_lines", new RGB(0xffff00), SPACE3D, obj);
-		ASK_TEXTURE_GROUP_REMOVAL = new Setting<>("ask_texture_group_removal", true, GENERAL, obj);
-		HIDE_MENU_AFTER_POLYGON = new Setting<>("hide_menu_after_polygon", true, GENERAL, obj);
-		LOG_UPDATES = new Setting<>("log_updates", false, GENERAL, obj);
-		LIGHTING_ON = new Setting<>("enabled", false, LIGHTING, obj);
-		LIGHT_AMBIENT = new Setting<>("ambient", 0.5f, LIGHTING, obj).minmax(0f, 1f);
-		LIGHT_DIFFUSE = new Setting<>("diffuse", 1f, LIGHTING, obj).minmax(0f, 1f);
-		LIGHT_COLOR = new RGBSetting("color", RGB.WHITE.copy(), LIGHTING, obj);
-		LIGHT_POSX = new Setting<>("pos_x", 600f, LIGHTING, obj);
-		LIGHT_POSY = new Setting<>("pos_y", -600f, LIGHTING, obj);
-		LIGHT_POSZ = new Setting<>("pos_z", -600f, LIGHTING, obj);
-		ZOOM_LEVEL = new Setting<>("zoom_by", 10f, CONTROL, obj).minmax(0.001f, 160f);
-		ARROW_SENSIVITY = new Setting<>("arrow_sensivity", 8f, CONTROL, obj).minmax(0.001f, 100f);
-		NUMBERFIELD_BUTTONS = new Setting<>("numberfield_buttons", false, GENERAL, obj);
-		SHOW_QUICK_ADD = new Setting<>("show_quick_add", true, GENERAL, obj);
-		AUTO_SHOW_COMPONENTS = new Setting<>("auto_show_components", true, GENERAL, obj);
+		VSYNC = new Setting<>("vsync", true, GRAPHIC, map);
+		HVSYNC = new Setting<>("vsync/2", false, GRAPHIC, map);
+		DISCORD_RPC = new Setting<>("enabled", true, DISCORD, map);
+		DISCORD_HIDE = new Setting<>("hidden_mode", false, DISCORD, map);
+		DISCORD_RESET_ON_NEW = new Setting<>("reset_on_new", false, DISCORD, map);
+		WINDOW_WIDTH = new Setting<>("window_width", 1280, GRAPHIC, map);
+		WINDOW_HEIGHT = new Setting<>("window_height", 720, GRAPHIC, map);
+		MOUSE_SENSIVITY = new Setting<>("mouse_sensivity", 2f, CONTROL, map);
+		MOVE_SPEED = new Setting<>("movement_speed", 20f, CONTROL, map);
+		SCROLL_SPEED = new Setting<>("scroll_speed", 1f, CONTROL, map);
+		TRIANGULATION_Q = new Setting<>("triangulated_quads", true, GRAPHIC, map);
+		TRIANGULATION_L = new Setting<>("triangulated_lines", false, GRAPHIC, map);
+		LANGUAGE = new Setting<>("language", "null", GENERAL, map);
+		INTERNAL_CHOOSER = new Setting<>("internal_filechooser", false, GENERAL, map);
+		ROUNDING_DIGITS = new Setting<>("rounding_digits", 4, GENERAL, map).minmax(0, 10).consumer(con -> NumberField.updateRoundingDigits());
+		DEMO = new Setting<>("demo_model", false, SPACE3D, map);
+		FLOOR = new Setting<>("floor", true, SPACE3D, map);
+		CUBE = new Setting<>("center_cube", true, SPACE3D, map);
+		CMARKER = new Setting<>("center_marker", true, SPACE3D, map);
+		LINES = new Setting<>("lines", true, SPACE3D, map);
+		POLYMARKER = new Setting<>("polygon_marker", true, SPACE3D, map);
+		ADD_TO_LAST = new Setting<>("add_to_last", false, GENERAL, map);
+		FULLSCREEN = new Setting<>("fullscreen", false, GRAPHIC, map);
+		POLYGON_SUFFIX = new Setting<>("polygon_duplicate_suffix", "_%s", NAMING, map);
+		GROUP_SUFFIX = new Setting<>("group_duplicate_suffix", "_%s", NAMING, map);
+		ASK_GROUP_REMOVAL = new Setting<>("ask_group_removal", true, GENERAL, map);
+		ASK_POLYGON_REMOVAL = new Setting<>("ask_polygon_removal", false, GENERAL, map);
+		OPEN_FOLDER_AFTER_SAVE = new Setting<>("open_folder_after_save", true, GENERAL, map);
+		SHOW_WELCOME = new Setting<>("show_welcome", true, GENERAL, map);
+		SHOW_UPDATE = new Setting<>("show_update", true, GENERAL, map);
+		SPHERE_MARKER = new Setting<>("sphere_marker", false, SPACE3D, map);
+		BACKUP_INTERVAL = new Setting<>("backup_interval", 5, GENERAL, map);
+		COPIED_POLYGON = new Setting<>("copied_polygon", "%s_cp", NAMING, map);
+		SELECT_COPIED = new Setting<>("select_copied", true, GENERAL, map);
+		SELECT_NEW = new Setting<>("select_new", true, GENERAL, map);
+		PASTED_GROUP = new Setting<>("pasted_group_suffix", "-cb", NAMING, map);
+		SHOW_BOTTOMBAR = new Setting<>("show_bottom_bar", true, GENERAL, map);
+		OPEN_FOLDER_AFTER_IMG = new Setting<>("open_folder_after_image", true, IMAGE, map);
+		GIF_DELAY_TIME = new Setting<>("gif_delay_time", 100, IMAGE, map);
+		GIF_LOOP = new Setting<>("gif_loop", true, IMAGE, map);
+		GIF_ROT_PASS = new Setting<>("gif_rotation_passes", 36, IMAGE, map);
+		HIDE_UI_FOR_IMAGE = new Setting<>("hide_ui_for_image", true, IMAGE, map);
+		BACKGROUND = new RGBSetting("background", new RGB(0x7f7f7f), SPACE3D, map);
+		NO_RANDOM_TITLE = new Setting<>("no_random_title", false, IMAGE, map);
+		SELECTION_LINES = new RGBSetting("selection_lines", new RGB(0xffff00), SPACE3D, map);
+		ASK_TEXTURE_GROUP_REMOVAL = new Setting<>("ask_texture_group_removal", true, GENERAL, map);
+		HIDE_MENU_AFTER_POLYGON = new Setting<>("hide_menu_after_polygon", true, GENERAL, map);
+		LOG_UPDATES = new Setting<>("log_updates", false, GENERAL, map);
+		LIGHTING_ON = new Setting<>("enabled", false, LIGHTING, map);
+		LIGHT_AMBIENT = new Setting<>("ambient", 0.5f, LIGHTING, map).minmax(0f, 1f);
+		LIGHT_DIFFUSE = new Setting<>("diffuse", 1f, LIGHTING, map).minmax(0f, 1f);
+		LIGHT_COLOR = new RGBSetting("color", RGB.WHITE.copy(), LIGHTING, map);
+		LIGHT_POSX = new Setting<>("pos_x", 600f, LIGHTING, map);
+		LIGHT_POSY = new Setting<>("pos_y", -600f, LIGHTING, map);
+		LIGHT_POSZ = new Setting<>("pos_z", -600f, LIGHTING, map);
+		ZOOM_LEVEL = new Setting<>("zoom_by", 10f, CONTROL, map).minmax(0.001f, 160f);
+		ARROW_SENSIVITY = new Setting<>("arrow_sensivity", 8f, CONTROL, map).minmax(0.001f, 100f);
+		NUMBERFIELD_BUTTONS = new Setting<>("numberfield_buttons", false, GENERAL, map);
+		SHOW_QUICK_ADD = new Setting<>("show_quick_add", true, GENERAL, map);
+		AUTO_SHOW_COMPONENTS = new Setting<>("auto_show_components", true, GENERAL, map);
 		//
-		WORKSPACE_NAME = new Setting<>("name", "FMT Workspace", WORKSPACE, obj);
-		WORKSPACE_ROOT = new Setting<>("root", "/workspace/", WORKSPACE, obj);
+		WORKSPACE_NAME = new Setting<>("name", "FMT Workspace", WORKSPACE, map);
+		WORKSPACE_ROOT = new Setting<>("root", "/workspace/", WORKSPACE, map);
 		//
-		SEL_THEME = new StringArraySetting("selected_theme", "light", THEME, obj, "light", "dark", "custom");
-		DARKTHEME = new Setting<>("is_dark", false, THEME, obj);
-		THEME_BACKGROUND = new RGBSetting("background", new RGB(0x212121), THEME, obj);
-		THEME_BORDER = new RGBSetting("border", new RGB(0x616161), THEME, obj);
-		THEME_SLIDER = new RGBSetting("slider", new RGB(0x616161), THEME, obj);
-		THEME_STROKE = new RGBSetting("stroke", new RGB(0x0277BD), THEME, obj);
-		THEME_ALLOW = new RGBSetting("allow", new RGB(0x1B5E20), THEME, obj);
-		THEME_DENY = new RGBSetting("deny", new RGB(0xBD1C1C), THEME, obj);
-		THEME_SHADOW = new RGBSetting("shadow", new RGB(0x0), THEME, obj);
+		SEL_THEME = new StringArraySetting("selected_theme", "light", THEME, map, "light", "dark", "custom");
+		DARKTHEME = new Setting<>("is_dark", false, THEME, map);
+		THEME_BACKGROUND = new RGBSetting("background", new RGB(0x212121), THEME, map);
+		THEME_BORDER = new RGBSetting("border", new RGB(0x616161), THEME, map);
+		THEME_SLIDER = new RGBSetting("slider", new RGB(0x616161), THEME, map);
+		THEME_STROKE = new RGBSetting("stroke", new RGB(0x0277BD), THEME, map);
+		THEME_ALLOW = new RGBSetting("allow", new RGB(0x1B5E20), THEME, map);
+		THEME_DENY = new RGBSetting("deny", new RGB(0xBD1C1C), THEME, map);
+		THEME_SHADOW = new RGBSetting("shadow", new RGB(0x0), THEME, map);
 		THEME_TEXT = new RGBSetting("text", new RGB(0xCCCCCC), THEME);
-		THEME_BUTTON = new RGBSetting("button", new RGB(0x212121), THEME, obj);
-		THEME_FONT = new StringArraySetting("font", FONT, THEME, obj, FontRegistry.ENTYPO, FontRegistry.ROBOTO_LIGHT, FontRegistry.ROBOTO_BOLD, FontRegistry.ROBOTO_REGULAR);
-		POLYGON_NORMAL = new RGBSetting("component_polygon_normal", new RGB(38, 127, 0), THEME, obj);
-		GROUP_NORMAL = new RGBSetting("component_group_normal", new RGB(0, 74, 127), THEME, obj);
-		POLYGON_SELECTED = new RGBSetting("component_polygon_selected", new RGB(219, 156, 46), THEME, obj);
-		GROUP_SELECTED = new RGBSetting("component_group_selected", new RGB(191, 128, 50), THEME, obj);
-		POLYGON_INVISIBLE = new RGBSetting("component_polygon_invisible", new RGB(126, 196, 96), THEME, obj);
-		GROUP_INVISIBLE = new RGBSetting("component_group_invisible", new RGB(67, 142, 196), THEME, obj);
-		POLYGON_INV_SEL = new RGBSetting("component_polygon_invis_sel", new RGB(250, 202, 117), THEME, obj);
-		GROUP_INV_SEL = new RGBSetting("component_group_invis_sel", new RGB(232, 158, 67), THEME, obj);
-		BOTTOM_INFO_BAR_COLOR = new RGBSetting("bottom_infobar_color", new RGB(200, 200, 200), THEME, obj);
-		TEXTURE_GROUP = new RGBSetting("component_texture_group", new RGB(0, 74, 127), THEME, obj);
-		TEXTURE_OPTION = new RGBSetting("component_texture_group_option", new RGB(0, 74, 127), THEME, obj);
+		THEME_BUTTON = new RGBSetting("button", new RGB(0x212121), THEME, map);
+		THEME_FONT = new StringArraySetting("font", FONT, THEME, map, FontRegistry.ENTYPO, FontRegistry.ROBOTO_LIGHT, FontRegistry.ROBOTO_BOLD, FontRegistry.ROBOTO_REGULAR);
+		POLYGON_NORMAL = new RGBSetting("component_polygon_normal", new RGB(38, 127, 0), THEME, map);
+		GROUP_NORMAL = new RGBSetting("component_group_normal", new RGB(0, 74, 127), THEME, map);
+		POLYGON_SELECTED = new RGBSetting("component_polygon_selected", new RGB(219, 156, 46), THEME, map);
+		GROUP_SELECTED = new RGBSetting("component_group_selected", new RGB(191, 128, 50), THEME, map);
+		POLYGON_INVISIBLE = new RGBSetting("component_polygon_invisible", new RGB(126, 196, 96), THEME, map);
+		GROUP_INVISIBLE = new RGBSetting("component_group_invisible", new RGB(67, 142, 196), THEME, map);
+		POLYGON_INV_SEL = new RGBSetting("component_polygon_invis_sel", new RGB(250, 202, 117), THEME, map);
+		GROUP_INV_SEL = new RGBSetting("component_group_invis_sel", new RGB(232, 158, 67), THEME, map);
+		BOTTOM_INFO_BAR_COLOR = new RGBSetting("bottom_infobar_color", new RGB(200, 200, 200), THEME, map);
+		TEXTURE_GROUP = new RGBSetting("component_texture_group", new RGB(0, 74, 127), THEME, map);
+		TEXTURE_OPTION = new RGBSetting("component_texture_group_option", new RGB(0, 74, 127), THEME, map);
 		//
-		ExportManager.init(obj);
-		ImportManager.init(obj);
+		ExportManager.init(map);
+		ImportManager.init(map);
 		//
 		for(Map.Entry<String, Map<String, Setting<?>>> entry : SETTINGS.entrySet()){
-			if(!obj.has(entry.getKey())) continue;
-			JsonMap def = obj.getMap(entry.getKey());
+			if(!map.has(entry.getKey())) continue;
+			JsonMap def = map.getMap(entry.getKey());
 			for(Setting<?> setting : entry.getValue().values()) setting.load(def);
 		}//TODO load plugin settings ?
 		//
 		if(!SEL_THEME.value.equals("custom")) DARKTHEME.value = SEL_THEME.value.contains("dark");
 		//
-		if(obj.has("last_model")){
-			FMT.MODEL = new Model(new File(obj.get("last_model").string_value()), "Loaded Model");
+		if(map.has("last_model")){
+			FMT.MODEL = new Model(new File(map.get("last_model").string_value()), "Loaded Model");
 		}
 		else{
 			FMT.MODEL = new Model(null, "Unnamed Model");
@@ -308,28 +314,33 @@ public class Settings {
 	}
 	
 	public static void save(){
-		JsonMap obj = new JsonMap();
-		obj.add("format", FORMAT);
+		JsonMap map = new JsonMap();
+		map.add("format", FORMAT);
 		//
 		SETTINGS.entrySet().forEach(entry -> {
 			JsonMap jsn = new JsonMap();
 			entry.getValue().values().forEach(setting -> setting.save(jsn));
-			obj.add(entry.getKey(), jsn);
+			map.add(entry.getKey(), jsn);
 		});
 		//
-		obj.add("last_catalog_reload", LAST_CATALOG_RELOAD);
-		obj.add("last_fmt_version", FMT.VERSION);
-		obj.add("last_fmt_exit", Time.getAsString(Time.getDate()));
+		map.add("last_catalog_reload", LAST_CATALOG_RELOAD);
+		map.add("last_fmt_version", FMT.VERSION);
+		map.add("last_fmt_exit", Time.getAsString(Time.getDate()));
 		JsonArray recent = new JsonArray();
 		for(File file : RECENT){
 			if(NO_FILE_DOTS.equals(file)) continue;
 			recent.add(file.toString().replace("\\", "\\\\"));
 		}
-		if(recent.size() > 0) obj.add("recent_files", recent);
-		if(FMT.MODEL.file != null){
-			obj.add("last_model", FMT.MODEL.file.toPath().toString());
+		if(recent.size() > 0) map.add("recent_files", recent);
+		JsonArray bookmarks = new JsonArray();
+		for(File file : BOOKMARKS){
+			bookmarks.add(file.toString().replace("\\", "\\\\"));
 		}
-		JsonHandler.print(new File("./settings.json"), obj, PrintOption.SPACED);
+		map.add("filechooser_bookmarks", bookmarks);
+		if(FMT.MODEL.file != null){
+			map.add("last_model", FMT.MODEL.file.toPath().toString());
+		}
+		JsonHandler.print(new File("./settings.json"), map, PrintOption.SPACED);
 		//
 		JsonMap editors = new JsonMap();
 		for(Editor editor : Editor.EDITORS.values()){
