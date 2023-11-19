@@ -204,8 +204,8 @@ public class Settings {
 		DISCORD_RPC = new Setting<>("enabled", true, DISCORD, map);
 		DISCORD_HIDE = new Setting<>("hidden_mode", false, DISCORD, map);
 		DISCORD_RESET_ON_NEW = new Setting<>("reset_on_new", false, DISCORD, map);
-		WINDOW_WIDTH = new Setting<>("window_width", 1280, GRAPHIC, map);
-		WINDOW_HEIGHT = new Setting<>("window_height", 720, GRAPHIC, map);
+		WINDOW_WIDTH = new Setting<>("window_width", 1024, GRAPHIC, map);
+		WINDOW_HEIGHT = new Setting<>("window_height", 576, GRAPHIC, map);
 		MOUSE_SENSIVITY = new Setting<>("mouse_sensivity", 2f, CONTROL, map);
 		MOVE_SPEED = new Setting<>("movement_speed", 20f, CONTROL, map);
 		SCROLL_SPEED = new Setting<>("scroll_speed", 1f, CONTROL, map);
