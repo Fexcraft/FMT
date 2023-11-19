@@ -1,12 +1,12 @@
 package net.fexcraft.app.fmt.ui.fields;
 
-import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
+import static com.spinyowl.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
 import java.util.function.Consumer;
 
-import org.liquidengine.legui.component.Button;
-import org.liquidengine.legui.event.MouseClickEvent;
-import org.liquidengine.legui.listener.MouseClickEventListener;
+import com.spinyowl.legui.component.Button;
+import com.spinyowl.legui.event.MouseClickEvent;
+import com.spinyowl.legui.listener.MouseClickEventListener;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;

@@ -8,17 +8,17 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
-import org.liquidengine.legui.component.Button;
-import org.liquidengine.legui.component.Component;
-import org.liquidengine.legui.component.Dialog;
-import org.liquidengine.legui.component.Label;
-import org.liquidengine.legui.component.Panel;
-import org.liquidengine.legui.component.ScrollablePanel;
-import org.liquidengine.legui.component.SelectBox.SelectBoxLayer;
-import org.liquidengine.legui.component.misc.listener.scrollablepanel.ScrollablePanelViewportScrollListener;
-import org.liquidengine.legui.component.optional.align.HorizontalAlign;
-import org.liquidengine.legui.event.MouseClickEvent;
-import org.liquidengine.legui.event.ScrollEvent;
+import com.spinyowl.legui.component.Button;
+import com.spinyowl.legui.component.Component;
+import com.spinyowl.legui.component.Dialog;
+import com.spinyowl.legui.component.Label;
+import com.spinyowl.legui.component.Panel;
+import com.spinyowl.legui.component.ScrollablePanel;
+import com.spinyowl.legui.component.SelectBox.SelectBoxLayer;
+import com.spinyowl.legui.component.misc.listener.scrollablepanel.ScrollablePanelViewportScrollListener;
+import com.spinyowl.legui.component.optional.align.HorizontalAlign;
+import com.spinyowl.legui.event.MouseClickEvent;
+import com.spinyowl.legui.event.ScrollEvent;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.update.UpdateHandler;

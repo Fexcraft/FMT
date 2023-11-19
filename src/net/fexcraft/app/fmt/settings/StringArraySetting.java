@@ -1,8 +1,8 @@
 package net.fexcraft.app.fmt.settings;
 
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
-import org.liquidengine.legui.component.Component;
-import org.liquidengine.legui.component.SelectBox;
+import com.spinyowl.legui.component.Component;
+import com.spinyowl.legui.component.SelectBox;
 
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateHolder;
 import net.fexcraft.app.json.JsonMap;

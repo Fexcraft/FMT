@@ -5,9 +5,9 @@ import static net.fexcraft.app.fmt.utils.Translator.translate;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.ui.fields.RunButton;
-import org.liquidengine.legui.component.Label;
-import org.liquidengine.legui.component.Panel;
-import org.liquidengine.legui.component.SelectBox;
+import com.spinyowl.legui.component.Label;
+import com.spinyowl.legui.component.Panel;
+import com.spinyowl.legui.component.SelectBox;
 
 import net.fexcraft.app.fmt.update.PolyVal;
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;

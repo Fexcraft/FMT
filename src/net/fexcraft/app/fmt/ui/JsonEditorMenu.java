@@ -6,7 +6,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static net.fexcraft.app.fmt.utils.Translator.translate;
-import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
+import static com.spinyowl.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
@@ -18,9 +18,9 @@ import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.app.json.JsonValue;
 import org.joml.Vector2f;
-import org.liquidengine.legui.component.*;
-import org.liquidengine.legui.event.MouseClickEvent;
-import org.liquidengine.legui.listener.MouseClickEventListener;
+import com.spinyowl.legui.component.*;
+import com.spinyowl.legui.event.MouseClickEvent;
+import com.spinyowl.legui.listener.MouseClickEventListener;
 
 public class JsonEditorMenu {
 	

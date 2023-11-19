@@ -1,4 +1,5 @@
 import org.gradle.internal.os.OperatingSystem
+
 import java.text.SimpleDateFormat
 
 group 'net.fexcraft.app.fmt'
@@ -7,26 +8,26 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'application'
 
-project.ext.lwjglVersion = "3.2.3"
+project.ext.lwjglVersion = "3.3.3"
 project.ext.jomlVersion = "1.9.23"
 
-switch(OperatingSystem.current()){
-	case OperatingSystem.LINUX:
-		def osArch = System.getProperty("os.arch")
-		project.ext.lwjglNatives = osArch.startsWith("arm") || osArch.startsWith("aarch64")
-			? "natives-linux-${osArch.contains("64") || osArch.startsWith("armv8") ? "arm64" : "arm32"}"
-			: "natives-linux"
-		break
-	case OperatingSystem.MAC_OS:
-		project.ext.lwjglNatives = "natives-macos"
-		break
-	case OperatingSystem.WINDOWS:
-		project.ext.lwjglNatives = System.getProperty("os.arch").contains("64") ? "natives-windows" : "natives-windows-x86"
-		break
+switch (OperatingSystem.current()) {
+    case OperatingSystem.LINUX:
+        def osArch = System.getProperty("os.arch")
+        project.ext.lwjglNatives = osArch.startsWith("arm") || osArch.startsWith("aarch64")
+                ? "natives-linux-${osArch.contains("64") || osArch.startsWith("armv8") ? "arm64" : "arm32"}"
+                : "natives-linux"
+        break
+    case OperatingSystem.MAC_OS:
+        project.ext.lwjglNatives = "natives-macos"
+        break
+    case OperatingSystem.WINDOWS:
+        project.ext.lwjglNatives = System.getProperty("os.arch").contains("64") ? "natives-windows" : "natives-windows-x86"
+        break
 }
 version = "3.0.0"
 new File(projectDir, '/src/net/fexcraft/app/fmt/FMT.java').find { line ->
-    if(line.contains('String VERSION')){
+    if (line.contains('String VERSION')) {
         version = line.substring(line.indexOf('"') + 1).replace('";', '')
         return true
     }
@@ -37,34 +38,38 @@ targetCompatibility = 17
 compileJava.options.encoding = 'UTF-8'
 
 //@formatter:off
-def log4j_version = '2.12.4'
-def commons_version = '3.4'
-def commons_collections = '4.3'
-def guava_version = '30.0-jre'
+def log4j_version = '2.21.1'
+def commons_version = '3.13.0'
+def commons_collections = '4.4'
+def guava_version = '32.1.2-jre'
 def gson_version = '2.8.9'
-def legui_version = '3.3.1'
+def legui_version = '4.2.0'
 
-def joml_version = "1.9.25"//"-SNAPSHOT"
-def lwjgl_version = "3.2.3"//'3.2.4-SNAPSHOT'
-def le_cbchain = '1.0.0'
-def le_util = '1.0.0'
+def joml_version = "1.10.5"//"-SNAPSHOT"
+def lwjgl_version = "3.3.3"//'3.2.4-SNAPSHOT'
+def le_cbchain = '1.0.2'
 //@formatter:on
 
 //Make this project as a Gradle project
 eclipse.project {
-  	natures 'org.springsource.ide.eclipse.gradle.core.nature'
+    natures 'org.springsource.ide.eclipse.gradle.core.nature'
 }
 
 repositories {
     jcenter()
     mavenCentral()
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-    maven { url "https://raw.githubusercontent.com/SpinyOwl/repo/releases" }
+    maven { url "https://raw.github.com/SpinyOwl/repo/releases" }
+
 }
 
 dependencies {
+//	implementation fileTree(dir: 'libs', include: '*.jar')
+
     // https://mvnrepository.com/artifact/org.reflections/reflections
-    implementation group: 'org.reflections', name: 'reflections', version: '0.9.11'
+    implementation group: 'org.reflections', name: 'reflections', version: '0.10.2'
+// https://mvnrepository.com/artifact/commons-io/commons-io
+    implementation 'commons-io:commons-io:2.15.0'
 
     //@formatter:off
     implementation group: "org.joml", name: "joml", version: joml_version, changing: true
@@ -74,9 +79,8 @@ dependencies {
     implementation group: 'com.google.guava', name: 'guava', version: guava_version, changing: false
     implementation group: 'com.google.code.gson', name: 'gson', version: gson_version, changing: false
 
-    implementation group: 'org.liquidengine', name: 'cbchain', version: le_cbchain, changing: true
-    implementation group: 'org.liquidengine', name: 'leutil', version: le_util, changing: true
-	implementation group: 'org.liquidengine', name: 'legui', version: legui_version, changing: true
+    implementation group: 'com.spinyowl', name: 'cbchain', version: le_cbchain, changing: true
+	implementation group: 'com.spinyowl', name: 'legui', version: legui_version, changing: true
 
     implementation group: 'org.lwjgl', name: 'lwjgl-stb', version: lwjgl_version, changing: true
     runtimeOnly group: 'org.lwjgl', name: 'lwjgl-stb', version: lwjgl_version, changing: true, classifier: 'natives-windows'
@@ -125,37 +129,37 @@ sourceSets {
     main {
         java {
             srcDirs "src"
-			srcDirs "../Json/src"
-			srcDirs "../FCLN/src"
+            srcDirs "../Json/src"
+            srcDirs "../FCLN/src"
         }
         resources {
-        	srcDirs 'resources'
-        	srcDirs 'scripts'
+            srcDirs 'resources'
+            srcDirs 'scripts'
         }
     }
 }
- 
+
 mainClassName = 'net.fexcraft.app.fmt.FMT'
 
 tasks.register('mainJar', Jar) {
-	manifest {
-		attributes 'Title': "Fex's Modelling Toolbox",
-				'Version': version,
-				'Main-Class': 'net.fexcraft.app.fmt.FMT',
-				'Created-By': "Ferdinand Calo' (FEX___96)",
-				"Class-Path": ". " + (configurations.runtimeClasspath.collect { "lib/" + it.getName() }.join(' '))
-	}
-	from(zipTree("${destinationDirectory}/${archiveFileName}")) {
-		include 'net/fexcraft/app/fmt/launch/'
-		include 'net/fexcraft/app/fmt/'
-		include 'net/fexcraft/app/json/'
-		include 'net/fexcraft/lib/'
-	}
-	from('src/') {
-		include 'log4j2.xml'
-	}
-	archiveBaseName = "FMT"
-	version = ""
+    manifest {
+        attributes 'Title': "Fex's Modelling Toolbox",
+                'Version': version,
+                'Main-Class': 'net.fexcraft.app.fmt.FMT',
+                'Created-By': "Ferdinand Calo' (FEX___96)",
+                "Class-Path": ". " + (configurations.runtimeClasspath.collect { "lib/" + it.getName() }.join(' '))
+    }
+    from(zipTree("${destinationDirectory}/${archiveFileName}")) {
+        include 'net/fexcraft/app/fmt/launch/'
+        include 'net/fexcraft/app/fmt/'
+        include 'net/fexcraft/app/json/'
+        include 'net/fexcraft/lib/'
+    }
+    from('src/') {
+        include 'log4j2.xml'
+    }
+    archiveBaseName = "FMT"
+    version = ""
 }
 
 /*tasks.register('fullJar', Jar) {
@@ -185,79 +189,79 @@ tasks.register('mainJar', Jar) {
 }*/
 
 tasks.register('launcherJar', Jar) {
-	manifest {
-		attributes 'Title': "Fex's Modelling Toolbox Launcher/Updater",
-				'Version': version,
-				'Main-Class': 'net.fexcraft.app.fmt.launch.Launcher',
-				'Created-By': "Ferdinand Calo' (FEX___96)"
-	}
-	from(zipTree("${destinationDirectory}/${archiveFileName}")) {
-		include 'net/fexcraft/app/fmt/launch/'
-		include 'net/fexcraft/app/json/'
-	}
-	archiveBaseName = "FMT_Launcher"
-	version = ""
+    manifest {
+        attributes 'Title': "Fex's Modelling Toolbox Launcher/Updater",
+                'Version': version,
+                'Main-Class': 'net.fexcraft.app.fmt.launch.Launcher',
+                'Created-By': "Ferdinand Calo' (FEX___96)"
+    }
+    from(zipTree("${destinationDirectory}/${archiveFileName}")) {
+        include 'net/fexcraft/app/fmt/launch/'
+        include 'net/fexcraft/app/json/'
+    }
+    archiveBaseName = "FMT_Launcher"
+    version = ""
 }
 
 tasks.register('copyForUpload') {
-	copy {
-		from configurations.runtimeClasspath
-		into "upload/lib"
-	}
-	copy {
-		from "build/libs/FMT.jar"
-		into "upload/"
-	}
-	copy {
-		from "build/libs/FMTI.jar"
-		into "upload/"
-	}
-	copy {
-		from "build/libs/FMT_Launcher.jar"
-		into "upload/"
-	}
-	copy {
-		from "resources/"
-		into "upload/resources"
-	}
-	copy {
-		from "scripts/"
-		into "upload/scripts"
-	}
+    copy {
+        from configurations.runtimeClasspath
+        into "upload/lib"
+    }
+    copy {
+        from "build/libs/FMT.jar"
+        into "upload/"
+    }
+    copy {
+        from "build/libs/FMTI.jar"
+        into "upload/"
+    }
+    copy {
+        from "build/libs/FMT_Launcher.jar"
+        into "upload/"
+    }
+    copy {
+        from "resources/"
+        into "upload/resources"
+    }
+    copy {
+        from "scripts/"
+        into "upload/scripts"
+    }
 }
 
-String[] res_types = [ "resources/", "scripts/" ]
+String[] res_types = ["resources/", "scripts/"]
 
 tasks.register('compileCatalog') {
-	String catalog_fmt = '{\n\t"file_root": "http://fexcraft.net/files/app_data/fmt/",\n\t"files": [\n'
-	String path, restype
-	sourceSets.main.resources.each {
-		path = it.getPath()
-		path = path.replace("\\", "/")
-		for (String type : res_types) {
-			if (path.contains(type)) {
-				restype = type
-				break
-			}
-		}
-		path = path.substring(path.indexOf(restype))
-		catalog_fmt += '\t\t[ "' + path + '", ' + it.lastModified() + ' ],\n'
-	}
-	configurations.runtimeClasspath.each {
-		path = it.getPath().replace("\\", "/")
-		path = "lib" + path.substring(path.lastIndexOf("/"))
-		catalog_fmt += '\t\t[ "' + path + '", ' + it.lastModified() + ', true ],\n'
-	}
-	catalog_fmt += '\t\t[ "FMT.jar", ' + new File(projectDir, "/upload/FMT.jar").lastModified() + ', true, false ]\n'
-	catalog_fmt += '\t],\n'
-	catalog_fmt += '\t"last_catalog_update": "' + new SimpleDateFormat("HH:mm:ss dd.MMM.yyyy z").format(new Date()) + '"\n'
-	catalog_fmt += '}\n'
-	new File(projectDir, "upload/catalog.fmt").text = catalog_fmt
-	new File(projectDir, "catalog.fmt").text = catalog_fmt
+    String catalog_fmt = '{\n\t"file_root": "http://fexcraft.net/files/app_data/fmt/",\n\t"files": [\n'
+    String path, restype
+    sourceSets.main.resources.each {
+        path = it.getPath()
+        path = path.replace("\\", "/")
+        for (String type : res_types) {
+            if (path.contains(type)) {
+                restype = type
+                break
+            }
+        }
+        path = path.substring(path.indexOf(restype))
+        catalog_fmt += '\t\t[ "' + path + '", ' + it.lastModified() + ' ],\n'
+    }
+    configurations.runtimeClasspath.each {
+        path = it.getPath().replace("\\", "/")
+        path = "lib" + path.substring(path.lastIndexOf("/"))
+        catalog_fmt += '\t\t[ "' + path + '", ' + it.lastModified() + ', true ],\n'
+    }
+    catalog_fmt += '\t\t[ "FMT.jar", ' + new File(projectDir, "/upload/FMT.jar").lastModified() + ', true, false ]\n'
+    catalog_fmt += '\t],\n'
+    catalog_fmt += '\t"last_catalog_update": "' + new SimpleDateFormat("HH:mm:ss dd.MMM.yyyy z").format(new Date()) + '"\n'
+    catalog_fmt += '}\n'
+    new File(projectDir, "upload/catalog.fmt").text = catalog_fmt
+    new File(projectDir, "catalog.fmt").text = catalog_fmt
 }
 
 build.finalizedBy(mainJar)
-if(hasProperty("fullJar")) build.finalizedBy(fullJar)
+if (hasProperty("fullJar")) build.finalizedBy(fullJar)
 build.finalizedBy(launcherJar)
 build.finalizedBy(copyForUpload)
 build.finalizedBy(compileCatalog)

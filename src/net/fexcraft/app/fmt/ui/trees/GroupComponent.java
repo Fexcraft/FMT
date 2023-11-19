@@ -6,14 +6,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import net.fexcraft.app.fmt.update.UpdateEvent.*;
-import org.liquidengine.legui.component.Label;
-import org.liquidengine.legui.event.CursorEnterEvent;
-import org.liquidengine.legui.event.MouseClickEvent;
-import org.liquidengine.legui.event.MouseClickEvent.MouseClickAction;
-import org.liquidengine.legui.input.Mouse.MouseButton;
-import org.liquidengine.legui.listener.CursorEnterEventListener;
-import org.liquidengine.legui.listener.MouseClickEventListener;
-import org.liquidengine.legui.style.Style.DisplayType;
+import com.spinyowl.legui.component.Label;
+import com.spinyowl.legui.event.CursorEnterEvent;
+import com.spinyowl.legui.event.MouseClickEvent;
+import com.spinyowl.legui.event.MouseClickEvent.MouseClickAction;
+import com.spinyowl.legui.input.Mouse.MouseButton;
+import com.spinyowl.legui.listener.CursorEnterEventListener;
+import com.spinyowl.legui.listener.MouseClickEventListener;
+import com.spinyowl.legui.style.Style.DisplayType;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.update.UpdateHandler;
@@ -26,7 +26,7 @@ import net.fexcraft.app.fmt.ui.GenericDialog;
 import net.fexcraft.app.fmt.ui.Icon;
 import net.fexcraft.app.fmt.ui.UIUtils;
 import net.fexcraft.app.fmt.utils.Logging;
-import org.liquidengine.legui.style.color.ColorConstants;
+import com.spinyowl.legui.style.color.ColorConstants;
 
 public class GroupComponent extends EditorComponent {
 

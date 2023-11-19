@@ -1,15 +1,17 @@
 package net.fexcraft.app.fmt.ui.components;
 
 import static net.fexcraft.app.fmt.utils.Translator.translate;
-import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
+import static com.spinyowl.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
+import com.spinyowl.legui.image.Image;
+import com.spinyowl.legui.image.loader.ImageLoader;
 import net.fexcraft.app.fmt.update.UpdateEvent.PainterColor;
 import net.fexcraft.app.fmt.update.UpdateEvent.PainterTool;
 import net.fexcraft.app.fmt.update.UpdateEvent.PickMode;
-import org.liquidengine.legui.component.ImageView;
-import org.liquidengine.legui.component.Label;
-import org.liquidengine.legui.event.MouseClickEvent;
-import org.liquidengine.legui.image.StbBackedLoadableImage;
+import com.spinyowl.legui.component.ImageView;
+import com.spinyowl.legui.component.Label;
+import com.spinyowl.legui.event.MouseClickEvent;
+import com.spinyowl.legui.image.StbBackedLoadableImage;
 
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TexturePainter;
@@ -25,8 +27,8 @@ import net.fexcraft.app.fmt.utils.Picker.PickType;
 public class CurrentColor extends EditorComponent {
 	
 	private static String palette_png = "./resources/textures/icons/painter/palette.png";
-	private static StbBackedLoadableImage picker_png = new StbBackedLoadableImage("./resources/textures/icons/painter/picker.png");
-	private static StbBackedLoadableImage picker_act = new StbBackedLoadableImage("./resources/textures/icons/painter/picker_active.png");
+	private static Image picker_png = ImageLoader.loadImage("./resources/textures/icons/painter/picker.png");
+	private static Image picker_act = ImageLoader.loadImage("./resources/textures/icons/painter/picker_active.png");
 	private ColorField field1, field2;
 	private ColorPickerIcon icon1, icon2;
 	private RunButton tool;

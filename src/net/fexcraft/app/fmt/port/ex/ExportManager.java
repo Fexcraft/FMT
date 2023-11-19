@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.liquidengine.legui.component.Dialog;
-import org.liquidengine.legui.component.Label;
-import org.liquidengine.legui.component.SelectBox;
+import com.spinyowl.legui.component.Dialog;
+import com.spinyowl.legui.component.Label;
+import com.spinyowl.legui.component.SelectBox;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.Group;

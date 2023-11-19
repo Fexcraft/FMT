@@ -3,7 +3,7 @@ package net.fexcraft.app.fmt.settings;
 import java.util.function.Consumer;
 
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
-import org.liquidengine.legui.component.Component;
+import com.spinyowl.legui.component.Component;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateHolder;

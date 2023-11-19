@@ -8,7 +8,7 @@ import net.fexcraft.app.fmt.ui.ToolbarMenu.MenuLayer;
 import net.fexcraft.app.fmt.ui.components.FolderComponent;
 import net.fexcraft.app.fmt.utils.GGR;
 import org.joml.Vector2f;
-import org.liquidengine.legui.component.Component;
+import com.spinyowl.legui.component.Component;
 
 public class FileEditMenu {
 	

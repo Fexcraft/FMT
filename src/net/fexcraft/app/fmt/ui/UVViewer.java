@@ -1,13 +1,14 @@
 package net.fexcraft.app.fmt.ui;
 
 import static net.fexcraft.app.fmt.utils.Translator.translate;
-import static org.liquidengine.legui.system.renderer.nvg.util.NvgRenderUtils.createScissor;
-import static org.liquidengine.legui.system.renderer.nvg.util.NvgRenderUtils.resetScissor;
+import static com.spinyowl.legui.system.renderer.nvg.util.NvgRenderUtils.createScissor;
+import static com.spinyowl.legui.system.renderer.nvg.util.NvgRenderUtils.resetScissor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
 
+import com.spinyowl.legui.image.loader.ImageLoader;
 import net.fexcraft.app.fmt.polygon.uv.UVCoords;
 import net.fexcraft.app.fmt.update.UpdateEvent.*;
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
@@ -15,14 +16,14 @@ import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.fmt.utils.Picker;
 import net.fexcraft.lib.common.math.RGB;
 import org.joml.Vector2f;
-import org.liquidengine.legui.component.*;
-import org.liquidengine.legui.component.event.component.ChangeSizeEvent;
-import org.liquidengine.legui.event.MouseClickEvent;
-import org.liquidengine.legui.image.StbBackedLoadableImage;
-import org.liquidengine.legui.style.Style;
-import org.liquidengine.legui.style.border.SimpleLineBorder;
-import org.liquidengine.legui.system.context.Context;
-import org.liquidengine.legui.system.renderer.nvg.component.NvgDefaultComponentRenderer;
+import com.spinyowl.legui.component.*;
+import com.spinyowl.legui.component.event.component.ChangeSizeEvent;
+import com.spinyowl.legui.event.MouseClickEvent;
+import com.spinyowl.legui.image.StbBackedLoadableImage;
+import com.spinyowl.legui.style.Style;
+import com.spinyowl.legui.style.border.SimpleLineBorder;
+import com.spinyowl.legui.system.context.Context;
+import com.spinyowl.legui.system.renderer.nvg.component.NvgDefaultComponentRenderer;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.Group;
@@ -249,7 +250,7 @@ public class UVViewer extends Widget {
                 TextureGroup group = TextureManager.getGroup(seltex);
                 if(group == null || group.texture == null) return;
                 UIUtils.show(image);
-                image.setImage(new StbBackedLoadableImage(group.texture.getFile().toPath().toString()));
+                image.setImage(ImageLoader.loadImage(group.texture.getFile().toPath().toString()));
                 image.setSize(getSize());
             }
             else{

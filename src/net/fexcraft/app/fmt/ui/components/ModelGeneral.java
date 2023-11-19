@@ -4,8 +4,8 @@ import static net.fexcraft.app.fmt.utils.Translator.translate;
 
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateEvent.*;
-import org.liquidengine.legui.component.Label;
-import org.liquidengine.legui.component.SelectBox;
+import com.spinyowl.legui.component.Label;
+import com.spinyowl.legui.component.SelectBox;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.update.UpdateHandler;

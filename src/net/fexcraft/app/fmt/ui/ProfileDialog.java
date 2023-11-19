@@ -1,18 +1,19 @@
 package net.fexcraft.app.fmt.ui;
 
 import static net.fexcraft.app.fmt.utils.Translator.translate;
-import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
+import static com.spinyowl.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
-import org.liquidengine.legui.component.Button;
-import org.liquidengine.legui.component.CheckBox;
-import org.liquidengine.legui.component.Component;
-import org.liquidengine.legui.component.Dialog;
-import org.liquidengine.legui.component.ImageView;
-import org.liquidengine.legui.component.Label;
-import org.liquidengine.legui.component.PasswordInput;
-import org.liquidengine.legui.event.MouseClickEvent;
-import org.liquidengine.legui.image.StbBackedLoadableImage;
-import org.liquidengine.legui.listener.MouseClickEventListener;
+import com.spinyowl.legui.component.Button;
+import com.spinyowl.legui.component.CheckBox;
+import com.spinyowl.legui.component.Component;
+import com.spinyowl.legui.component.Dialog;
+import com.spinyowl.legui.component.ImageView;
+import com.spinyowl.legui.component.Label;
+import com.spinyowl.legui.component.PasswordInput;
+import com.spinyowl.legui.event.MouseClickEvent;
+import com.spinyowl.legui.image.StbBackedLoadableImage;
+import com.spinyowl.legui.image.loader.ImageLoader;
+import com.spinyowl.legui.listener.MouseClickEventListener;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
@@ -63,7 +64,7 @@ public class ProfileDialog {
 		}
 		//
 		ImageView view = new ImageView();
-		view.setImage(new StbBackedLoadableImage("./resources/textures/icon.png"));
+		view.setImage(ImageLoader.loadImage("./resources/textures/icon.png"));
 		view.setPosition(550 - 10 - 120, 10);
 		view.setSize(120, 120);
 		Settings.applyBorderless(view);

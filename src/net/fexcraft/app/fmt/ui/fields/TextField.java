@@ -2,7 +2,7 @@ package net.fexcraft.app.fmt.ui.fields;
 
 import java.util.function.Consumer;
 
-import org.liquidengine.legui.component.TextInput;
+import com.spinyowl.legui.component.TextInput;
 
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.settings.Setting;

@@ -1,7 +1,7 @@
 package net.fexcraft.app.fmt.ui;
 
-import org.liquidengine.legui.component.Label;
-import org.liquidengine.legui.component.optional.align.HorizontalAlign;
+import com.spinyowl.legui.component.Label;
+import com.spinyowl.legui.component.optional.align.HorizontalAlign;
 
 public class CenteredLabel extends Label {
 

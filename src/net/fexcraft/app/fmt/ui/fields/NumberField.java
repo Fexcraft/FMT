@@ -13,11 +13,11 @@ import java.util.function.Consumer;
 
 import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
-import org.liquidengine.legui.component.TextInput;
-import org.liquidengine.legui.event.FocusEvent;
-import org.liquidengine.legui.event.KeyEvent;
-import org.liquidengine.legui.listener.FocusEventListener;
-import org.liquidengine.legui.listener.KeyEventListener;
+import com.spinyowl.legui.component.TextInput;
+import com.spinyowl.legui.event.FocusEvent;
+import com.spinyowl.legui.event.KeyEvent;
+import com.spinyowl.legui.listener.FocusEventListener;
+import com.spinyowl.legui.listener.KeyEventListener;
 import org.lwjgl.glfw.GLFW;
 
 import net.fexcraft.app.fmt.FMT;

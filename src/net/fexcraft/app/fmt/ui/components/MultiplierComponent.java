@@ -4,10 +4,10 @@ import static net.fexcraft.app.fmt.utils.Translator.translate;
 
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateEvent.EditorRate;
-import org.liquidengine.legui.component.Slider;
-import org.liquidengine.legui.component.Tooltip;
-import org.liquidengine.legui.component.event.slider.SliderChangeValueEventListener;
-import org.liquidengine.legui.component.optional.align.HorizontalAlign;
+import com.spinyowl.legui.component.Slider;
+import com.spinyowl.legui.component.Tooltip;
+import com.spinyowl.legui.component.event.slider.SliderChangeValueEventListener;
+import com.spinyowl.legui.component.optional.align.HorizontalAlign;
 
 import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.ui.Editor;

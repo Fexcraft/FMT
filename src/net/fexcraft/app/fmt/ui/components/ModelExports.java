@@ -1,19 +1,19 @@
 package net.fexcraft.app.fmt.ui.components;
 
 import static net.fexcraft.app.fmt.utils.Translator.translate;
-import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
+import static com.spinyowl.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
 import java.util.ArrayList;
 import java.util.Map.Entry;
 
 import net.fexcraft.app.fmt.update.UpdateEvent.ModelExportValue;
 import net.fexcraft.app.fmt.update.UpdateEvent.ModelLoad;
-import org.liquidengine.legui.component.Button;
-import org.liquidengine.legui.component.Dialog;
-import org.liquidengine.legui.component.Label;
-import org.liquidengine.legui.component.SelectBox;
-import org.liquidengine.legui.event.MouseClickEvent;
-import org.liquidengine.legui.listener.MouseClickEventListener;
+import com.spinyowl.legui.component.Button;
+import com.spinyowl.legui.component.Dialog;
+import com.spinyowl.legui.component.Label;
+import com.spinyowl.legui.component.SelectBox;
+import com.spinyowl.legui.event.MouseClickEvent;
+import com.spinyowl.legui.listener.MouseClickEventListener;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.update.UpdateHandler;

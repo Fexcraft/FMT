@@ -2,7 +2,7 @@ package net.fexcraft.app.fmt.ui;
 
 import static net.fexcraft.app.fmt.utils.FontSizeUtil.getWidth;
 
-import org.liquidengine.legui.component.optional.TextState;
+import com.spinyowl.legui.component.optional.TextState;
 
 public class ALBTextState extends TextState {
 	

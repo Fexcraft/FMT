@@ -1,19 +1,17 @@
 package net.fexcraft.app.fmt.ui;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import net.fexcraft.app.fmt.ui.fields.TextField;
-import org.liquidengine.legui.component.CheckBox;
-import org.liquidengine.legui.component.Label;
-import org.liquidengine.legui.component.Panel;
-import org.liquidengine.legui.component.ScrollablePanel;
-
+import com.spinyowl.legui.component.CheckBox;
+import com.spinyowl.legui.component.Label;
+import com.spinyowl.legui.component.Panel;
+import com.spinyowl.legui.component.ScrollablePanel;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.fields.RunButton;
-import org.lwjgl.system.CallbackI.S;
+import net.fexcraft.app.fmt.ui.fields.TextField;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class GroupSelectionPanel extends Panel {
 	

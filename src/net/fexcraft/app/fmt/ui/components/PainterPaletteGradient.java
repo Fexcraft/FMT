@@ -13,11 +13,11 @@ import net.fexcraft.app.fmt.update.UpdateEvent.PainterColor;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.RGB;
 import org.joml.Vector4f;
-import org.liquidengine.legui.component.Component;
-import org.liquidengine.legui.event.MouseClickEvent;
-import org.liquidengine.legui.event.MouseClickEvent.MouseClickAction;
-import org.liquidengine.legui.input.Mouse.MouseButton;
-import org.liquidengine.legui.style.Style.DisplayType;
+import com.spinyowl.legui.component.Component;
+import com.spinyowl.legui.event.MouseClickEvent;
+import com.spinyowl.legui.event.MouseClickEvent.MouseClickAction;
+import com.spinyowl.legui.input.Mouse.MouseButton;
+import com.spinyowl.legui.style.Style.DisplayType;
 
 public class PainterPaletteGradient extends EditorComponent {
 

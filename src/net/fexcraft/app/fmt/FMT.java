@@ -1,60 +1,20 @@
 package net.fexcraft.app.fmt;
 
-import static net.fexcraft.app.fmt.utils.Logging.log;
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL30.glBindVertexArray;
-import static org.lwjgl.opengl.GL30.glGenVertexArrays;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneOffset;
-import java.util.Date;
-import java.util.Timer;
-
-import net.fexcraft.app.fmt.polygon.ModelOrientation;
-import net.fexcraft.app.fmt.ui.UVViewer;
-import net.fexcraft.lib.frl.GLO;
-import net.fexcraft.lib.scr.ScriptParser;
-import net.fexcraft.lib.script.Script;
-import net.fexcraft.lib.script.elm.FltElm;
-import org.joml.Vector2i;
-import org.joml.Vector4f;
-import org.liquidengine.legui.animation.AnimatorProvider;
-import org.liquidengine.legui.component.Frame;
-import org.liquidengine.legui.component.Label;
-import org.liquidengine.legui.listener.processor.EventProcessorProvider;
-import org.liquidengine.legui.style.color.ColorConstants;
-import org.liquidengine.legui.style.font.FontRegistry;
-import org.liquidengine.legui.system.context.CallbackKeeper;
-import org.liquidengine.legui.system.context.Context;
-import org.liquidengine.legui.system.context.DefaultCallbackKeeper;
-import org.liquidengine.legui.system.handler.processor.SystemEventProcessor;
-import org.liquidengine.legui.system.handler.processor.SystemEventProcessorImpl;
-import org.liquidengine.legui.system.layout.LayoutManager;
-import org.liquidengine.legui.system.renderer.Renderer;
-import org.liquidengine.legui.system.renderer.RendererProvider;
-import org.liquidengine.legui.system.renderer.nvg.NvgRenderer;
-import org.lwjgl.glfw.GLFWCursorPosCallback;
-import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
-import org.lwjgl.glfw.GLFWImage;
-import org.lwjgl.glfw.GLFWKeyCallback;
-import org.lwjgl.glfw.GLFWMouseButtonCallback;
-import org.lwjgl.glfw.GLFWScrollCallback;
-import org.lwjgl.glfw.GLFWWindowCloseCallback;
-import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.stb.STBImage;
-import org.lwjgl.system.Configuration;
-import org.lwjgl.system.MemoryStack;
-import org.lwjgl.system.MemoryUtil;
-
+import com.spinyowl.legui.animation.AnimatorProvider;
+import com.spinyowl.legui.component.Frame;
+import com.spinyowl.legui.component.Label;
+import com.spinyowl.legui.listener.processor.EventProcessorProvider;
+import com.spinyowl.legui.style.color.ColorConstants;
+import com.spinyowl.legui.style.font.FontRegistry;
+import com.spinyowl.legui.system.context.CallbackKeeper;
+import com.spinyowl.legui.system.context.Context;
+import com.spinyowl.legui.system.context.DefaultCallbackKeeper;
+import com.spinyowl.legui.system.handler.processor.SystemEventProcessor;
+import com.spinyowl.legui.system.handler.processor.SystemEventProcessorImpl;
+import com.spinyowl.legui.system.layout.LayoutManager;
+import com.spinyowl.legui.system.renderer.Renderer;
+import com.spinyowl.legui.system.renderer.RendererProvider;
+import com.spinyowl.legui.system.renderer.nvg.NvgRenderer;
 import net.arikia.dev.drpc.DiscordEventHandlers;
 import net.arikia.dev.drpc.DiscordRPC;
 import net.fexcraft.app.fmt.demo.ModelT1P;
@@ -68,9 +28,9 @@ import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.texture.TexturePainter;
 import net.fexcraft.app.fmt.texture.TextureUpdate;
 import net.fexcraft.app.fmt.ui.Editor;
-import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.ui.Toolbar;
 import net.fexcraft.app.fmt.ui.ToolbarMenu;
+import net.fexcraft.app.fmt.ui.UVViewer;
 import net.fexcraft.app.fmt.ui.fields.Field;
 import net.fexcraft.app.fmt.utils.*;
 import net.fexcraft.app.fmt.workspace.Workspace;
@@ -78,10 +38,38 @@ import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.AxisRotator;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Time;
+import net.fexcraft.lib.frl.GLO;
 import net.fexcraft.lib.frl.Polyhedron;
 import net.fexcraft.lib.frl.gen.Generator;
+import net.fexcraft.lib.script.Script;
+import net.fexcraft.lib.script.elm.FltElm;
 import net.fexcraft.lib.tmt.BoxBuilder;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
+import org.joml.Vector2i;
+import org.joml.Vector4f;
+import org.lwjgl.glfw.*;
+import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.stb.STBImage;
+import org.lwjgl.system.Configuration;
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
+
+import java.io.File;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
+import java.util.Date;
+import java.util.Timer;
+
+import static net.fexcraft.app.fmt.utils.Logging.log;
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL30.glBindVertexArray;
+import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -124,7 +112,9 @@ public class FMT {
 	static{
 		GLO.SUPPLIER = () -> new GLObject();
 	}
-	
+
+	private SystemEventProcessor sys_event_processor;
+
 	public static void main(String... args) throws Exception {
 		log("==================================================");
 		log("Starting FMT " + VERSION + "!");
@@ -190,7 +180,8 @@ public class FMT {
 		FRAME.getContainer().add(bar = new Label("test", 0, 0, 500, 20));
 		bar.getStyle().setTextColor(rgba(Settings.BOTTOM_INFO_BAR_COLOR.value));
 		FRAME.getComponentLayer().setFocusable(false);
-		CONTEXT = new Context(window);
+		sys_event_processor = new SystemEventProcessorImpl();
+		CONTEXT = new Context(window, sys_event_processor);
 		//
 		IMG_FRAME = new Frame(WIDTH, HEIGHT);
 		IMG_FRAME.getContainer().add(img_line0 = new Label("", 20, 20, 500, 20));
@@ -243,7 +234,6 @@ public class FMT {
 				else SELFIELD.scroll(yoffset);
 			}
 		});
-		SystemEventProcessor sys_event_processor = new SystemEventProcessorImpl();
 		SystemEventProcessor.addDefaultCallbacks(keeper, sys_event_processor);
 		RendererProvider.getInstance().addComponentRenderer(UVViewer.UvElm.class, new UVViewer.UvElmRenderer());
 		RENDERER = new NvgRenderer();

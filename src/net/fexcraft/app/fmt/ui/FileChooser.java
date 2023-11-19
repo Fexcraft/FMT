@@ -1,17 +1,17 @@
 package net.fexcraft.app.fmt.ui;
 
 import static net.fexcraft.app.fmt.settings.Settings.INTERNAL_CHOOSER;
-import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
+import static com.spinyowl.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
 import net.fexcraft.app.fmt.ui.fields.RunButton;
-import org.liquidengine.legui.component.*;
-import org.liquidengine.legui.component.optional.align.HorizontalAlign;
-import org.liquidengine.legui.event.MouseClickEvent;
-import org.liquidengine.legui.listener.MouseClickEventListener;
+import com.spinyowl.legui.component.*;
+import com.spinyowl.legui.component.optional.align.HorizontalAlign;
+import com.spinyowl.legui.event.MouseClickEvent;
+import com.spinyowl.legui.listener.MouseClickEventListener;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.util.tinyfd.TinyFileDialogs;
@@ -131,7 +131,7 @@ public class FileChooser {
 			File file = filtered.get(i);
 			Button filebutton = new Button(file.getName() + (file.isDirectory() ? "/" : ""), 5, 1 + i * 22, lwidth - 10, 20);
 			filebutton.getStyle().setBorderRadius(0);
-			filebutton.getStyle().getBorder().setEnabled(false);
+			filebutton.getStyle().setBorder(null);
 			filebutton.getStyle().setHorizontalAlign(HorizontalAlign.LEFT);
 			filebutton.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
 	        	if(CLICK == e.getAction()){
@@ -161,7 +161,7 @@ public class FileChooser {
 			File file = Settings.BOOKMARKS.get(i);
 			Button filebutton = new Button(file.getName(), 5, 1 + i * 22, marks.getSize().x - 28, 20);
 			filebutton.getStyle().setBorderRadius(0);
-			filebutton.getStyle().getBorder().setEnabled(false);
+			filebutton.getStyle().setBorder(null);
 			filebutton.getStyle().setHorizontalAlign(HorizontalAlign.LEFT);
 			filebutton.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
 				if(CLICK == e.getAction()){

@@ -3,7 +3,7 @@ package net.fexcraft.app.fmt.ui;
 import java.util.ArrayList;
 
 import org.joml.Vector2f;
-import org.liquidengine.legui.component.Component;
+import com.spinyowl.legui.component.Component;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.ui.ToolbarMenu.MenuButton;

@@ -1,6 +1,6 @@
 package net.fexcraft.app.fmt.ui;
 
-import org.liquidengine.legui.component.Panel;
+import com.spinyowl.legui.component.Panel;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.lib.common.math.RGB;

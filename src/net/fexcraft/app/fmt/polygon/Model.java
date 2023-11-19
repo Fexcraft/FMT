@@ -4,7 +4,7 @@ import static net.fexcraft.app.fmt.update.UpdateHandler.update;
 import static net.fexcraft.app.fmt.settings.Settings.ASK_POLYGON_REMOVAL;
 import static net.fexcraft.app.fmt.ui.fields.NumberField.round;
 import static net.fexcraft.app.fmt.utils.Translator.translate;
-import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
+import static com.spinyowl.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -25,10 +25,10 @@ import net.fexcraft.app.fmt.update.UpdateEvent.*;
 import net.fexcraft.app.json.JsonValue;
 import net.fexcraft.lib.script.elm.FltElm;
 import org.joml.Vector3f;
-import org.liquidengine.legui.component.Button;
-import org.liquidengine.legui.component.Dialog;
-import org.liquidengine.legui.component.Label;
-import org.liquidengine.legui.event.MouseClickEvent;
+import com.spinyowl.legui.component.Button;
+import com.spinyowl.legui.component.Dialog;
+import com.spinyowl.legui.component.Label;
+import com.spinyowl.legui.event.MouseClickEvent;
 
 import com.google.common.collect.ImmutableMap;
 

@@ -12,14 +12,14 @@ import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.app.json.JsonValue;
-import org.liquidengine.legui.component.Component;
-import org.liquidengine.legui.component.Dialog;
-import org.liquidengine.legui.component.Label;
-import org.liquidengine.legui.component.ScrollablePanel;
-import org.liquidengine.legui.component.TextInput;
-import org.liquidengine.legui.event.MouseClickEvent;
-import org.liquidengine.legui.input.Mouse;
-import org.liquidengine.legui.listener.MouseClickEventListener;
+import com.spinyowl.legui.component.Component;
+import com.spinyowl.legui.component.Dialog;
+import com.spinyowl.legui.component.Label;
+import com.spinyowl.legui.component.ScrollablePanel;
+import com.spinyowl.legui.component.TextInput;
+import com.spinyowl.legui.event.MouseClickEvent;
+import com.spinyowl.legui.input.Mouse;
+import com.spinyowl.legui.listener.MouseClickEventListener;
 
 public class JsonEditor extends Dialog {
 

@@ -9,8 +9,8 @@ import net.fexcraft.app.fmt.update.UpdateEvent.GroupSelected;
 import net.fexcraft.app.fmt.update.UpdateEvent.TexGroupAdded;
 import net.fexcraft.app.fmt.update.UpdateEvent.TexGroupRemoved;
 import net.fexcraft.app.fmt.update.UpdateEvent.TexGroupRenamed;
-import org.liquidengine.legui.component.Label;
-import org.liquidengine.legui.component.SelectBox;
+import com.spinyowl.legui.component.Label;
+import com.spinyowl.legui.component.SelectBox;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.Group;

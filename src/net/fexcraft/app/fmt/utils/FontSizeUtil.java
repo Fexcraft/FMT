@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
-import org.liquidengine.legui.util.IOUtil;
+import com.spinyowl.legui.util.IOUtil;
 import org.lwjgl.stb.STBTTFontinfo;
 import org.lwjgl.system.MemoryStack;
 

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import net.fexcraft.app.fmt.port.im.ImportManager;
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
-import org.liquidengine.legui.component.Component;
-import org.liquidengine.legui.component.Panel;
+import com.spinyowl.legui.component.Component;
+import com.spinyowl.legui.component.Panel;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.update.UpdateHandler;

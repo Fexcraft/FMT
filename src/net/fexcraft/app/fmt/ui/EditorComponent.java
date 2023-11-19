@@ -5,9 +5,9 @@ import java.util.LinkedHashMap;
 
 import net.fexcraft.app.fmt.ui.editors.PolygonEditor;
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
-import org.liquidengine.legui.component.Component;
-import org.liquidengine.legui.component.Label;
-import org.liquidengine.legui.style.Style.DisplayType;
+import com.spinyowl.legui.component.Component;
+import com.spinyowl.legui.component.Label;
+import com.spinyowl.legui.style.Style.DisplayType;
 
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.components.*;

@@ -1,23 +1,24 @@
 package net.fexcraft.app.fmt.ui.fields;
 
 import static net.fexcraft.app.fmt.utils.Logging.log;
-import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
+import static com.spinyowl.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
 import java.nio.ByteBuffer;
 import java.util.function.BiConsumer;
 
-import org.liquidengine.legui.component.Button;
-import org.liquidengine.legui.component.Component;
-import org.liquidengine.legui.component.ImageView;
-import org.liquidengine.legui.component.Panel;
-import org.liquidengine.legui.component.TextInput;
-import org.liquidengine.legui.event.FocusEvent;
-import org.liquidengine.legui.event.KeyEvent;
-import org.liquidengine.legui.event.MouseClickEvent;
-import org.liquidengine.legui.image.StbBackedLoadableImage;
-import org.liquidengine.legui.input.Mouse.MouseButton;
-import org.liquidengine.legui.listener.FocusEventListener;
-import org.liquidengine.legui.listener.KeyEventListener;
+import com.spinyowl.legui.component.Button;
+import com.spinyowl.legui.component.Component;
+import com.spinyowl.legui.component.ImageView;
+import com.spinyowl.legui.component.Panel;
+import com.spinyowl.legui.component.TextInput;
+import com.spinyowl.legui.event.FocusEvent;
+import com.spinyowl.legui.event.KeyEvent;
+import com.spinyowl.legui.event.MouseClickEvent;
+import com.spinyowl.legui.image.StbBackedLoadableImage;
+import com.spinyowl.legui.image.loader.ImageLoader;
+import com.spinyowl.legui.input.Mouse.MouseButton;
+import com.spinyowl.legui.listener.FocusEventListener;
+import com.spinyowl.legui.listener.KeyEventListener;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.util.tinyfd.TinyFileDialogs;
@@ -152,7 +153,7 @@ public class ColorField extends TextInput implements Field {
 				root.add(button);
 			}
 			else{
-				ImageView img = new ImageView(new StbBackedLoadableImage(icon));
+				ImageView img = new ImageView(ImageLoader.loadImage(icon));
 				img.setPosition(x + w - 35, y);
 				img.setSize(h, h);
 				img.getListenerMap().addListener(MouseClickEvent.class, event -> {

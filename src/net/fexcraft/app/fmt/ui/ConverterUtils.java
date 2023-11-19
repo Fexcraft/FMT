@@ -1,7 +1,7 @@
 package net.fexcraft.app.fmt.ui;
 
 import static net.fexcraft.app.fmt.utils.Translator.translate;
-import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
+import static com.spinyowl.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
 import java.io.File;
 
@@ -14,10 +14,10 @@ import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonHandler.PrintOption;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.app.json.JsonValue;
-import org.liquidengine.legui.component.Button;
-import org.liquidengine.legui.component.Dialog;
-import org.liquidengine.legui.component.Label;
-import org.liquidengine.legui.event.MouseClickEvent;
+import com.spinyowl.legui.component.Button;
+import com.spinyowl.legui.component.Dialog;
+import com.spinyowl.legui.component.Label;
+import com.spinyowl.legui.event.MouseClickEvent;
 
 /**
  * @author Ferdinand Calo' (FEX___96)

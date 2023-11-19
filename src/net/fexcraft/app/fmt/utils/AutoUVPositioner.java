@@ -9,15 +9,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
-import org.liquidengine.legui.component.Button;
-import org.liquidengine.legui.component.CheckBox;
-import org.liquidengine.legui.component.Dialog;
-import org.liquidengine.legui.component.Label;
-import org.liquidengine.legui.component.ProgressBar;
-import org.liquidengine.legui.component.SelectBox;
-import org.liquidengine.legui.event.MouseClickEvent;
-import org.liquidengine.legui.event.MouseClickEvent.MouseClickAction;
-import org.liquidengine.legui.listener.MouseClickEventListener;
+import com.spinyowl.legui.component.Button;
+import com.spinyowl.legui.component.CheckBox;
+import com.spinyowl.legui.component.Dialog;
+import com.spinyowl.legui.component.Label;
+import com.spinyowl.legui.component.ProgressBar;
+import com.spinyowl.legui.component.SelectBox;
+import com.spinyowl.legui.event.MouseClickEvent;
+import com.spinyowl.legui.event.MouseClickEvent.MouseClickAction;
+import com.spinyowl.legui.listener.MouseClickEventListener;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.Group;

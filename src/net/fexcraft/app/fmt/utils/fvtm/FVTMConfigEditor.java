@@ -14,13 +14,13 @@ import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.app.json.JsonValue;
-import org.liquidengine.legui.component.Component;
-import org.liquidengine.legui.component.Label;
-import org.liquidengine.legui.component.ScrollablePanel;
-import org.liquidengine.legui.component.SelectBox;
-import org.liquidengine.legui.component.TextInput;
-import org.liquidengine.legui.component.Widget;
-import org.liquidengine.legui.component.event.textinput.TextInputContentChangeEvent;
+import com.spinyowl.legui.component.Component;
+import com.spinyowl.legui.component.Label;
+import com.spinyowl.legui.component.ScrollablePanel;
+import com.spinyowl.legui.component.SelectBox;
+import com.spinyowl.legui.component.TextInput;
+import com.spinyowl.legui.component.Widget;
+import com.spinyowl.legui.component.event.textinput.TextInputContentChangeEvent;
 
 public class FVTMConfigEditor extends Widget {
 

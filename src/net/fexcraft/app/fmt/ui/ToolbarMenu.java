@@ -1,7 +1,7 @@
 package net.fexcraft.app.fmt.ui;
 
-import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
-import static org.liquidengine.legui.input.Mouse.MouseButton.MOUSE_BUTTON_LEFT;
+import static com.spinyowl.legui.event.MouseClickEvent.MouseClickAction.CLICK;
+import static com.spinyowl.legui.input.Mouse.MouseButton.MOUSE_BUTTON_LEFT;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,14 +9,14 @@ import java.util.HashMap;
 import java.util.function.Consumer;
 
 import org.joml.Vector2f;
-import org.liquidengine.legui.component.Component;
-import org.liquidengine.legui.component.Label;
-import org.liquidengine.legui.component.Layer;
-import org.liquidengine.legui.component.Panel;
-import org.liquidengine.legui.event.CursorEnterEvent;
-import org.liquidengine.legui.event.MouseClickEvent;
-import org.liquidengine.legui.listener.CursorEnterEventListener;
-import org.liquidengine.legui.listener.MouseClickEventListener;
+import com.spinyowl.legui.component.Component;
+import com.spinyowl.legui.component.Label;
+import com.spinyowl.legui.component.Layer;
+import com.spinyowl.legui.component.Panel;
+import com.spinyowl.legui.event.CursorEnterEvent;
+import com.spinyowl.legui.event.MouseClickEvent;
+import com.spinyowl.legui.listener.CursorEnterEventListener;
+import com.spinyowl.legui.listener.MouseClickEventListener;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;

@@ -1,9 +1,9 @@
 package net.fexcraft.app.fmt.ui.fields;
 
-import org.liquidengine.legui.component.Button;
-import org.liquidengine.legui.event.MouseClickEvent;
-import org.liquidengine.legui.event.MouseClickEvent.MouseClickAction;
-import org.liquidengine.legui.input.Mouse.MouseButton;
+import com.spinyowl.legui.component.Button;
+import com.spinyowl.legui.event.MouseClickEvent;
+import com.spinyowl.legui.event.MouseClickEvent.MouseClickAction;
+import com.spinyowl.legui.input.Mouse.MouseButton;
 
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.utils.Translator;

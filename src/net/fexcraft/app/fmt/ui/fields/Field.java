@@ -1,6 +1,6 @@
 package net.fexcraft.app.fmt.ui.fields;
 
-import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
+import static com.spinyowl.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
 import java.util.function.Consumer;
 
@@ -9,16 +9,16 @@ import net.fexcraft.app.fmt.update.UpdateEvent.GroupSelected;
 import net.fexcraft.app.fmt.update.UpdateEvent.PolygonSelected;
 import net.fexcraft.app.fmt.update.UpdateEvent.PolygonValueEvent;
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
-import org.liquidengine.legui.component.Component;
-import org.liquidengine.legui.component.event.textinput.TextInputContentChangeEvent;
-import org.liquidengine.legui.event.CursorEnterEvent;
-import org.liquidengine.legui.event.FocusEvent;
-import org.liquidengine.legui.event.KeyEvent;
-import org.liquidengine.legui.event.MouseClickEvent;
-import org.liquidengine.legui.event.MouseClickEvent.MouseClickAction;
-import org.liquidengine.legui.input.Mouse.MouseButton;
-import org.liquidengine.legui.listener.FocusEventListener;
-import org.liquidengine.legui.listener.KeyEventListener;
+import com.spinyowl.legui.component.Component;
+import com.spinyowl.legui.component.event.textinput.TextInputContentChangeEvent;
+import com.spinyowl.legui.event.CursorEnterEvent;
+import com.spinyowl.legui.event.FocusEvent;
+import com.spinyowl.legui.event.KeyEvent;
+import com.spinyowl.legui.event.MouseClickEvent;
+import com.spinyowl.legui.event.MouseClickEvent.MouseClickAction;
+import com.spinyowl.legui.input.Mouse.MouseButton;
+import com.spinyowl.legui.listener.FocusEventListener;
+import com.spinyowl.legui.listener.KeyEventListener;
 import org.lwjgl.glfw.GLFW;
 
 import net.fexcraft.app.fmt.FMT;

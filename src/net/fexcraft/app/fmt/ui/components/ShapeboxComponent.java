@@ -2,7 +2,7 @@ package net.fexcraft.app.fmt.ui.components;
 
 import static net.fexcraft.app.fmt.utils.Translator.translate;
 
-import org.liquidengine.legui.component.Label;
+import com.spinyowl.legui.component.Label;
 
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.update.PolyVal.ValAxe;

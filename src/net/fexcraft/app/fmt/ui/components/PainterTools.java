@@ -2,7 +2,7 @@ package net.fexcraft.app.fmt.ui.components;
 
 import static net.fexcraft.app.fmt.utils.Translator.translate;
 
-import org.liquidengine.legui.component.Label;
+import com.spinyowl.legui.component.Label;
 
 import net.fexcraft.app.fmt.texture.TexturePainter;
 import net.fexcraft.app.fmt.texture.TexturePainter.Selection;

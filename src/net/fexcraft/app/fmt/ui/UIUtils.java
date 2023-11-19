@@ -1,7 +1,7 @@
 package net.fexcraft.app.fmt.ui;
 
-import org.liquidengine.legui.component.Component;
-import org.liquidengine.legui.style.Style.DisplayType;
+import com.spinyowl.legui.component.Component;
+import com.spinyowl.legui.style.Style.DisplayType;
 
 public class UIUtils {
 

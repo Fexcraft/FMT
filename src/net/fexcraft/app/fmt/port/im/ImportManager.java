@@ -14,9 +14,9 @@ import net.fexcraft.app.fmt.ui.SettingsDialog;
 import net.fexcraft.app.fmt.ui.fields.RunButton;
 import net.fexcraft.app.fmt.utils.DiscordUtil;
 import net.fexcraft.app.json.JsonMap;
-import org.liquidengine.legui.component.Dialog;
-import org.liquidengine.legui.component.Label;
-import org.liquidengine.legui.component.SelectBox;
+import com.spinyowl.legui.component.Dialog;
+import com.spinyowl.legui.component.Label;
+import com.spinyowl.legui.component.SelectBox;
 
 import java.util.ArrayList;
 import java.util.Collections;

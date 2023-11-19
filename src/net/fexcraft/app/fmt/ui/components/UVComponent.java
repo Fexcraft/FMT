@@ -24,10 +24,10 @@ import net.fexcraft.app.fmt.update.UpdateEvent.PolygonSelected;
 import net.fexcraft.app.fmt.update.UpdateEvent.PolygonUVType;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.utils.Logging;
-import org.liquidengine.legui.component.Component;
-import org.liquidengine.legui.component.Label;
-import org.liquidengine.legui.component.SelectBox;
-import org.liquidengine.legui.style.border.SimpleLineBorder;
+import com.spinyowl.legui.component.Component;
+import com.spinyowl.legui.component.Label;
+import com.spinyowl.legui.component.SelectBox;
+import com.spinyowl.legui.style.border.SimpleLineBorder;
 
 public class UVComponent extends EditorComponent {
 

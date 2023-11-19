@@ -3,7 +3,7 @@ package net.fexcraft.app.fmt.utils;
 import static net.fexcraft.app.fmt.update.UpdateHandler.update;
 import static net.fexcraft.app.fmt.ui.GenericDialog.showOK;
 import static net.fexcraft.app.fmt.utils.Logging.log;
-import static org.liquidengine.legui.event.MouseClickEvent.MouseClickAction.CLICK;
+import static com.spinyowl.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -24,12 +24,12 @@ import net.fexcraft.app.fmt.update.UpdateEvent.ModelLoad;
 import net.fexcraft.app.fmt.update.UpdateEvent.ModelUnload;
 import org.apache.commons.io.IOUtils;
 import org.joml.Vector3f;
-import org.liquidengine.legui.component.Button;
-import org.liquidengine.legui.component.Dialog;
-import org.liquidengine.legui.component.Label;
-import org.liquidengine.legui.component.SelectBox;
-import org.liquidengine.legui.event.MouseClickEvent;
-import org.liquidengine.legui.listener.MouseClickEventListener;
+import com.spinyowl.legui.component.Button;
+import com.spinyowl.legui.component.Dialog;
+import com.spinyowl.legui.component.Label;
+import com.spinyowl.legui.component.SelectBox;
+import com.spinyowl.legui.event.MouseClickEvent;
+import com.spinyowl.legui.listener.MouseClickEventListener;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.update.UpdateHandler;

@@ -33,7 +33,7 @@ public class Logging {
 	}
 	
 	public static void log(Throwable e){
-		if(e.getCause() != null) log(e.getCause());
+		log(e.getCause() == null ? "null" : e.getCause());
 		log((String)null, e);
 	}
 	
