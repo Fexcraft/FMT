@@ -307,6 +307,7 @@ dialog.button.load=Load
 dialog.button.skip=Skip
 dialog.button.exit=Exit
 dialog.button.new=New
+dialog.button.add=Add
 dialog.button.yes=Yes
 dialog.button.no=No
 dialog.button.ok=Ok
@@ -540,6 +541,7 @@ importer.dfm.no_agreement=You have not confirmed to act according to the source 
 # Other
 filechooser.title=FMT Internal File Chooser/Selector
 filechooser.enter_name=enter custom filename here
+filechooser.bookmarks=Bookmarks:
 polygon.unnamed=unnamed %s
 model.delete.remove_selected_polygons=Remove ALL selected polygons? Total:
 model.clipboard.paste_external=Are you sure to paste these polygons?
