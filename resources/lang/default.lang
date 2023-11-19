@@ -306,6 +306,7 @@ dialog.button.save=Save
 dialog.button.load=Load
 dialog.button.skip=Skip
 dialog.button.exit=Exit
+dialog.button.new=New
 dialog.button.yes=Yes
 dialog.button.no=No
 dialog.button.ok=Ok
