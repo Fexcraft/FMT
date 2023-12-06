@@ -39,6 +39,7 @@ public class ExportManager {
 		addExporter(new FVTMExporter());
 		addExporter(new TiMExporter());
 		addExporter(new AABBExporter());
+		addExporter(new ObjExporter());
 	}
 	
 	private static void addExporter(Exporter exporter){
