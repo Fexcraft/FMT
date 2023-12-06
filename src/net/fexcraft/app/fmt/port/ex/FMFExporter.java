@@ -1,6 +1,7 @@
 package net.fexcraft.app.fmt.port.ex;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static net.fexcraft.app.fmt.ui.FileChooser.TYPE_FMF;
 import static net.fexcraft.app.fmt.utils.Logging.log;
 
 import java.io.File;
@@ -40,7 +41,6 @@ import net.fexcraft.app.json.JsonMap;
 public class FMFExporter implements Exporter {
 	
 	private static final List<String> categories = Arrays.asList("model");
-	public static FileType TYPE_FMF = new FileType("Fex's Model Format", "*.fmf");
 	private static final ArrayList<Setting<?>> settings = new ArrayList<>();
 	//from fvtm
 	private static final int PP = 1, PR = 2, PF = 3, PT = 4, PL = 6, PM = 7, PDF = 8, PDU = 9, PCU = 10;
