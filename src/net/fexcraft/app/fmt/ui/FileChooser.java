@@ -33,6 +33,8 @@ public class FileChooser {
 	public static FileType TYPE_FMTB = new FileType("FMT Save File", "*.fmtb");
 	public static FileType TYPE_JSON = new FileType("JSON", "*.json");
 	public static FileType TYPE_JARZIP = new FileType("Jar/Zip Archive", "*.jar", "*.zip");
+	public static FileType TYPE_FMF = new FileType("Fex's Model Format", "*.fmf");
+	public static FileType TYPE_OBJ = new FileType("Wavefront Object (obj)", "*.obj");
 	public static final int INTERNAL_HEIGHT = 500;
 	
 	public static void chooseFile(String title, String root, FileType type, boolean save, Consumer<File> task){
