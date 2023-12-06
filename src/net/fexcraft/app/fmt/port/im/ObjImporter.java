@@ -18,9 +18,10 @@ import net.fexcraft.lib.common.math.TexturedPolygon;
 import net.fexcraft.lib.common.utils.ObjParser;
 import net.fexcraft.lib.common.utils.ObjParser.ObjModel;
 
+import static net.fexcraft.app.fmt.ui.FileChooser.TYPE_OBJ;
+
 public class ObjImporter implements Importer {
 
-	public static FileChooser.FileType TYPE_OBJ = new FileChooser.FileType("Wavefront Object (obj)", "*.obj");
 	private static final List<String> categories = Arrays.asList("model");
 
 	@Override
