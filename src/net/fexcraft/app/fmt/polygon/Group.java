@@ -111,9 +111,13 @@ public class Group extends ArrayList<Polygon> {
 		UpdateHandler.update(new GroupRenamed(this, name));
 	}
 
-    public String exportId(){
+	public String exportId(){
+		return exportId(false);
+	}
+
+    public String exportId(boolean an){
 		String str = id.trim().replace(" ", "_").replaceAll("[^a-zA-Z0-9 _]", "");
-		return str.charAt(0) >= '0' && str.charAt(0) <= '9' ? "g" + str : str;
+		return an || !(str.charAt(0) >= '0' && str.charAt(0) <= '9') ? str : "g" + str;
     }
 
 	@Override
