@@ -109,6 +109,7 @@ public class ObjExporter implements Exporter {
         if(!settings.g("groups_as_objects").bool()){
             buffer.append("o " + model.name + "\n\n");
         }
+        boolean cyl;
         int index = 1;
         IndexVertex[] vertix = null;
         TreeMap<IndexVertex, Integer> indices = new TreeMap<>();
@@ -120,6 +121,7 @@ public class ObjExporter implements Exporter {
             if(doindex) indices.clear();
             for(Polygon poly : group){
                 if(poly.getShape().isMarker() || poly.getShape().isBoundingBox()) continue;
+                cyl = poly.getShape().isCylinder();
                 if(naming && poly.name(true) != null){
                     buffer.append("# ID: " + poly.name() + "\n");
                 }
@@ -140,7 +142,7 @@ public class ObjExporter implements Exporter {
                         vrot.y *= scale;
                         vrot.z *= scale;
                         vertix[i] = new IndexVertex(vrot, vert.u, vert.v);
-                        if(!doindex || !indices.containsKey(vertix[i])){
+                        if(!doindex || cyl || !indices.containsKey(vertix[i])){
                             buffer.append("v " + vertix[i].x + " " + vertix[i].y + " " + vertix[i].z + "\n");
                             float u = flipu ? -vert.u + 1f : vert.u;
                             float v = flipv ? -vert.v + 1f : vert.v;
@@ -150,7 +152,7 @@ public class ObjExporter implements Exporter {
                     buffer.append("f");
                     for(int i = 0; i < vertix.length; i++){
                         int vert = index + i;
-                        if(doindex){
+                        if(doindex && !cyl){
                             if(indices.containsKey(vertix[i])){
                                 vert = indices.get(vertix[i]);
                             }
@@ -162,7 +164,7 @@ public class ObjExporter implements Exporter {
                         buffer.append(" " + vert + "/" + vert);
                     }
                     buffer.append("\n\n");
-                    if(!doindex) index += vertix.length;
+                    if(!doindex || cyl) index += vertix.length;
                 }
             }
             buffer.append("\n");
