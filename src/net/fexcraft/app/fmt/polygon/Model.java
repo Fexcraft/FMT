@@ -62,6 +62,7 @@ public class Model {
 	//
 	private LinkedHashMap<String, Boolean> authors = new LinkedHashMap<>();
 	private ArrayList<Group> groups = new ArrayList<>();
+	private ArrayList<Pivot> pivots = new ArrayList<>();
 	private ArrayList<Polygon> selected = new ArrayList<>();
 	public LinkedHashMap<String, String> export_values = new LinkedHashMap<>();
 	public LinkedHashMap<String, ArrayList<String>> export_listed_values = new LinkedHashMap<>();
