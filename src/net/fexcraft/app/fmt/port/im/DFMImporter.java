@@ -96,7 +96,7 @@ public class DFMImporter implements Importer {
                     }
                     Matcher matcher = groupdef.matcher(line);
                     if(matcher.matches()){
-                        model.addGroup(matcher.group(1));
+                        model.addGroup(null, matcher.group(1));
                         continue;
                     }
                     matcher = creator.matcher(line);
@@ -140,7 +140,7 @@ public class DFMImporter implements Importer {
                         poly.polygon.name(poly.name);
                         poly.polygon.textureX = poly.u;
                         poly.polygon.textureY = poly.v;
-                        model.add(poly.group, poly.polygon);
+                        model.add(null, poly.group, poly.polygon);
                         continue;
                     }
                     matcher = rotpoint.matcher(line);

@@ -21,7 +21,7 @@ public class PolygonEditor extends Editor {
 
 	public PolygonEditor(){
 		super("polygon_editor", "Polygon Editor", false);
-		//if(Settings.SHOW_QUICK_ADD.value) addComponent(new QuickAdd());
+		if(Settings.SHOW_QUICK_ADD.value) addComponent(new QuickAdd());
 		addComponent(new MultiplierComponent());
 		addComponent(new PolygonSorting());
 		addComponent(BOXON = new PolygonAttributes(true));

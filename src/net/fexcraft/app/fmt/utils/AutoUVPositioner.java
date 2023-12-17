@@ -49,7 +49,7 @@ public class AutoUVPositioner {
 		Label label1 = new Label(translate("texture_autopos.reset" + suffix + ".group"), 10, 40, width / 20, 20);
 		SelectBox<String> texture = new SelectBox<>(10 + width / 2, 40, width / 2, 20);
 		texture.addElement("all-groups");
-		for(Group group : FMT.MODEL.groups()) texture.addElement(group.id);
+		for(Group group : FMT.MODEL.allgroups()) texture.addElement(group.id);
 		texture.addSelectBoxChangeSelectionEventListener(listener -> {
 			if(listener.getNewValue().equals("all-groups")) resetsel = null;
 			else resetsel = FMT.MODEL.get(listener.getNewValue());
@@ -76,13 +76,13 @@ public class AutoUVPositioner {
 			}
 			else{
 				if(cUV){
-					FMT.MODEL.groups().forEach(group -> group.forEach(poly -> {
+					FMT.MODEL.allgroups().forEach(group -> group.forEach(poly -> {
 						//TODO reset cuv
 						poly.recompile();
 					}));
 				}
 				else{
-					FMT.MODEL.groups().forEach(group -> group.forEach(poly -> {
+					FMT.MODEL.allgroups().forEach(group -> group.forEach(poly -> {
 						poly.textureX = -1;
 						poly.textureY = -1;
 						poly.recompile();
@@ -107,7 +107,7 @@ public class AutoUVPositioner {
 		Label label1 = new Label(translate("texture_autopos.autopos.group"), 10, 40, width / 20, 20);
 		SelectBox<String> texture = new SelectBox<>(10 + width / 2, 40, width / 2, 20);
 		texture.addElement("all-groups");
-		for(Group group : FMT.MODEL.groups()) texture.addElement(group.id);
+		for(Group group : FMT.MODEL.allgroups()) texture.addElement(group.id);
 		texture.addSelectBoxChangeSelectionEventListener(listener -> {
 			if(listener.getNewValue().equals("all-groups")) selected = null;
 			else selected = FMT.MODEL.get(listener.getNewValue());
@@ -324,7 +324,7 @@ public class AutoUVPositioner {
 	private static ArrayList<CoordContainer> getSortedList(boolean all){
 		ArrayList<CoordContainer> list = new ArrayList<>();
 		if(selected == null){
-			for(Group group : FMT.MODEL.groups()){
+			for(Group group : FMT.MODEL.allgroups()){
 				addAll(list, group);
 			}
 		}

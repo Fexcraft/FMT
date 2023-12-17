@@ -73,7 +73,7 @@ public class Editor extends Component {
 		scrollable.getViewport().getListenerMap().addListener(ScrollEvent.class, new SPVSL());
 		Settings.applyBorderlessScrollable(scrollable, true);
 		add(label = new Label(this.name = name, 5, 0, CWIDTH - 10, LABEL));
-		label.getStyle().setFontSize(30f);
+		label.getStyle().setFontSize(26f);
 		align();
 		hide();
 	}

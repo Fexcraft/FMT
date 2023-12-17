@@ -77,11 +77,11 @@ public class GroupSelectionPanel extends Panel {
 		Settings.applyMenuTheme(field, sel_button, des_button);
 		this.add(sel_button);
 		this.add(des_button);
-		int i = 0, gh = FMT.MODEL.groups().size() * 25;
+		int i = 0, gh = FMT.MODEL.allgroups().size() * 25;
 		ScrollablePanel panel = new ScrollablePanel(10, 80, width - 20, height - 90);
 		panel.setHorizontalScrollBarVisible(false);
 		panel.getContainer().setSize(width, gh < panel.getSize().y ? panel.getSize().y : gh);
-		for(Group group : FMT.MODEL.groups()){
+		for(Group group : FMT.MODEL.allgroups()){
 			CheckBox box = new CheckBox("", 10, (i * 25) + 2.5f, width - 20, 20);
 			Label label = new Label(group.id, 30, (i++ * 25) + 2.5f, width - 20, 20);
 			Settings.applyBorderless(box);

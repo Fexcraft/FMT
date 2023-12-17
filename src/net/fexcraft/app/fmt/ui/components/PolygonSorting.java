@@ -112,11 +112,11 @@ public class PolygonSorting extends EditorComponent {
 
 	private void updateSelectBox(){
 		while(box.getElements().size() > 0) box.removeElement(0);
-		if(FMT.MODEL == null || FMT.MODEL.groups().isEmpty()){
+		if(FMT.MODEL == null || FMT.MODEL.allgroups().isEmpty()){
 			box.addElement(NOGROUPS);
 			return;
 		}
-		for(Group group : FMT.MODEL.groups()){
+		for(Group group : FMT.MODEL.allgroups()){
 			box.addElement(group.id);
 		}
 	}

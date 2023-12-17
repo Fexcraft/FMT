@@ -104,7 +104,7 @@ public class TexGroupComponent extends EditorComponent {
 
 	private void generate(){
 		group.texture.clear(null);
-    	FMT.MODEL.groups().forEach(elm -> {
+    	FMT.MODEL.allgroups().forEach(elm -> {
     		if(elm.texgroup == null || elm.texgroup == group){
         		elm.forEach(poly -> poly.paintTex(group.texture, null));
     		}
@@ -121,7 +121,7 @@ public class TexGroupComponent extends EditorComponent {
 		dialog.getContainer().add(new Label(translate("editor.tree.texture.resize_group.from"), 10, 10, 140, 20));
 		SelectBox<String> from = new SelectBox<String>(150, 10, 220, 20);
 		from.addElement("model");
-		for(Group list : FMT.MODEL.groups()){
+		for(Group list : FMT.MODEL.allgroups()){
 			from.addElement("/ " + list.id);
 		}
 		from.setSelected(0, true);

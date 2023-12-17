@@ -30,7 +30,7 @@ public class ObjImporter implements Importer {
 			ObjModel omodel = new ObjParser(new FileInputStream(file)).readComments(false).readModel(true).parse();
 			ArrayList<String> list = new ArrayList<>(omodel.polygons.keySet());
 			for(Entry<String, ArrayList<TexturedPolygon>> entry : omodel.polygons.entrySet()){
-				model.add(entry.getKey(), new ObjView(model, entry.getValue()));
+				model.add(null, entry.getKey(), new ObjView(model, entry.getValue()));
 			}
 		}
 		catch(FileNotFoundException e){

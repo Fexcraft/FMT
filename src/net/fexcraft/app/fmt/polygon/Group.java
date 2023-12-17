@@ -26,11 +26,13 @@ public class Group extends ArrayList<Polygon> {
 	public Vector3f pos = new Vector3f();
 	public Vector3f rot = new Vector3f();
 	public boolean joined_polygons;
+	public String pivot;
 	//
 
-	public Group(Model model, String key){
+	public Group(Model model, String key, String pid){
 		this.model = model;
 		this.id = key;
+		pivot = pid;
 	}
 	
 	@Override

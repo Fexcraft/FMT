@@ -130,7 +130,7 @@ public class MTBImporter implements Importer {
                     polygon.rot.z = -polygon.rot.z;
                     //
                     if(model.get("group" + parts[4]) == null){
-                        model.addGroup("group" + parts[4]);
+                        model.addGroup(null, "group" + parts[4]);
                     }
                     model.get("group" + parts[4]).add(polygon);
                 }

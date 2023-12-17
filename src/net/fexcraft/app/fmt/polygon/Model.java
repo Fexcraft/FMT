@@ -61,7 +61,7 @@ public class Model {
 	public static long SELECTED_POLYGONS;
 	//
 	private LinkedHashMap<String, Boolean> authors = new LinkedHashMap<>();
-	private ArrayList<Group> groups = new ArrayList<>();
+	private ArrayList<Group> allgroups = new ArrayList<>();
 	private ArrayList<Pivot> pivots = new ArrayList<>();
 	private ArrayList<Polygon> selected = new ArrayList<>();
 	public LinkedHashMap<String, String> export_values = new LinkedHashMap<>();
@@ -84,6 +84,7 @@ public class Model {
 	public Model(File file, String name){
 		this.file = file;
 		this.name = name;
+		pivots.add(new Pivot("root", true));
 	}
 	
 	/** For now just for FMTB files. */
@@ -109,7 +110,7 @@ public class Model {
 
 	public long count(boolean selected){
 		long am = 0;
-		for(Group group : groups){
+		for(Group group : allgroups){
 			if(selected && !group.selected){
 				for(Polygon poly : group){
 					if(poly.selected) am++;
@@ -125,7 +126,7 @@ public class Model {
 	}
 
 	public void recompile(){
-		for(Group group : groups){
+		for(Group group : allgroups){
 			group.recompile();
 		}
 	}
@@ -137,56 +138,76 @@ public class Model {
 	public void render(FltElm alpha){
 		if(!visible) return;
 		DrawMode mode = DrawMode.textured(texgroup != null);
-		for(Group group : groups){
-			group.render(mode, alpha);
-			if(Settings.LINES.value) group.render(DrawMode.LINES, alpha);
+		for(Pivot pivot : pivots){
+			PolyRenderer.PIVOT = pivot;
+			for(Group group : pivot.groups){
+				group.render(mode, alpha);
+				if(Settings.LINES.value) group.render(DrawMode.LINES, alpha);
+			}
 		}
+		PolyRenderer.PIVOT = null;
 		if(Settings.LINES.value && Settings.POLYMARKER.value && isLastSelectedCornerMarked()) CornerUtil.renderCorners();
 	}
 
 	public void renderPicking(){
 		if(!visible) return;
-		for(Group group : groups){
-			group.renderPicking();
+		for(Pivot pivot : pivots){
+			PolyRenderer.PIVOT = pivot;
+			for(Group group : pivot.groups){
+				group.renderPicking();
+			}
 		}
 	}
 
-	public void add(String groupid, Polygon poly){
+	public void add(String pid, String gid, Polygon poly){
 		Group group = null;
-		if(groupid == null){
-			if(groups.size() == 0) addGroup(group = new Group(this, "group0"));
-			else group = groups.get(Settings.ADD_TO_LAST.value ? groups.size() - 1 : 0);
+		if(gid == null){
+			if(allgroups.size() == 0) addGroup(pid, group = new Group(this, "group0", pid));
+			else group = allgroups.get(Settings.ADD_TO_LAST.value ? allgroups.size() - 1 : 0);
 		}
 		else{
-			group = get(groupid);
-			if(group == null) addGroup(group = new Group(this, groupid));
+			group = get(gid);
+			if(group == null) addGroup(pid, group = new Group(this, gid, pid));
 		}
 		group.add(poly);
 		if(Settings.SELECT_NEW.value) select(poly);
 	}
 
 	public Group get(String string){
-		for(Group group : groups) if(group.id.equals(string)) return group;
+		for(Group group : allgroups) if(group.id.equals(string)) return group;
 		return null;
+	}
+
+	public Pivot getP(String id){
+		if(id == null) return pivots.get(0);
+		for(Pivot pivot : pivots) if(pivot.id.equals(id)) return pivot;
+		return pivots.get(0);
 	}
 
 	public boolean contains(String group){
 		return get(group) != null;
 	}
 
-	public void addGroup(String name){
-		Group group = new Group(this, name);
-		groups.add(group);
+	public void addGroup(String pid, String name){
+		Pivot pivot = getP(pid);
+		Group group = new Group(this, name, pid);
+		pivot.groups.add(group);
+		allgroups.add(group);
 		update(new GroupAdded(this, group));
 	}
 
-	public void addGroup(Group group){
-		groups.add(group);
+	public void addGroup(String pid, Group group){
+		Pivot pivot = getP(pid);
+		group.pivot = pid;
+		pivot.groups.add(group);
+		allgroups.add(group);
 		update(new GroupAdded(this, group));
 	}
 	
 	public void remGroup(int i){
-		Group group = groups.remove(i);
+		Group group = allgroups.remove(i);
+		Pivot pivot = getP(group.pivot);
+		pivot.groups.remove(group);
 		update(new GroupRemoved(this, group));
 	}
 	
@@ -197,13 +218,18 @@ public class Model {
 	}
 	
 	public void remGroup(Group group){
-		if(groups.remove(group)){
+		if(allgroups.remove(group)){
+			getP(group.pivot).groups.remove(group);
 			update(new GroupRemoved(this, group));
 		}
 	}
 	
-	public ArrayList<Group> groups(){
-		return groups;
+	public ArrayList<Group> allgroups(){
+		return allgroups;
+	}
+
+	public ArrayList<Pivot> pivots(){
+		return pivots;
 	}
 
 	public ArrayList<Polygon> selected(){
@@ -222,14 +248,14 @@ public class Model {
 
 	public ArrayList<Group> selected_groups(){
 		ArrayList<Group> groups = new ArrayList<>();
-		for(Group group : this.groups){
+		for(Group group : allgroups){
 			if(group.selected) groups.add(group);
 		}
 		return groups;
 	}
 
 	public Group first_selected_group(){
-		for(Group group : this.groups){
+		for(Group group : allgroups){
 			if(group.selected) return group;
 		}
 		return null;
@@ -290,7 +316,7 @@ public class Model {
 	}
 
 	private void clear_selection(){
-		for(Group group : groups){
+		for(Group group : allgroups){
 			if(group.selected) select(group);
 		}
 		for(Polygon poly : selected){
@@ -336,14 +362,18 @@ public class Model {
 
 	public int totalPolygons(){
 		int am = 0;
-		for(Group group : groups){
+		for(Group group : allgroups){
 			am += group.size();
 		}
 		return am;
 	}
 
 	public int totalGroups(){
-		return groups.size();
+		return allgroups.size();
+	}
+
+	public int totalPivots(){
+		return pivots.size();
 	}
 
 	public void copySelected(){
@@ -353,7 +383,7 @@ public class Model {
 		for(Polygon poly : selected){
 			Polygon newpoly = poly.copy(null);
 			if(bool) copied.add(newpoly);
-			this.add("clipboard", newpoly);
+			this.add(null, "clipboard", newpoly);
 		}
 		if(bool){
 			clear_selection();
@@ -408,7 +438,7 @@ public class Model {
 					String groupto = external ? model + Settings.PASTED_GROUP.value : "clipboard";
 					Runnable run = () -> {
 						map.get("polygons").asArray().value.forEach(elm -> {
-							add(groupto, Polygon.from(this, elm.asMap(), format));
+							add(null, groupto, Polygon.from(this, elm.asMap(), format));
 						});
 					};
 					if(external){
@@ -426,7 +456,7 @@ public class Model {
 						for(Entry<String, JsonValue<?>> group : map.get("groups").asMap().value.entrySet()){
 							String groupto = external ? model + "-" + group.getKey() + Settings.PASTED_GROUP.value : group.getKey() + "-cb";
 							group.getValue().asArray().value.forEach(poly -> {
-								add(groupto, Polygon.from(this, poly.asMap(), format));
+								add(null, groupto, Polygon.from(this, poly.asMap(), format));
 							});
 						}
 					};
@@ -625,7 +655,7 @@ public class Model {
 
 	@Override
 	public String toString(){
-		return "Model([" + name + "], " + groups.size() + ")";
+		return "Model([" + name + "], " + pivots.size() + "/" + allgroups.size() + ")";
 	}
 
 	public String getGroupPreset(int idx){
@@ -685,4 +715,7 @@ public class Model {
 		}
 	}
 
+	public void addPivot(Pivot pivot){
+		pivots.add(pivot);
+	}
 }

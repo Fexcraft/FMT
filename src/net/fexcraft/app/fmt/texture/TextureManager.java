@@ -228,7 +228,7 @@ public class TextureManager {
 			GenericDialog.showOK("texture.manager", null, null, "texture.group_in_use_model", "#texgroup:" + texgroup.name);
 			return;
 		}
-		for(Group group : FMT.MODEL.groups()){
+		for(Group group : FMT.MODEL.allgroups()){
 			if(group.texgroup == texgroup){
 				GenericDialog.showOK("texture.manager", null, null, "texture.group_in_use_group", "#group:" + group.id, "#texgroup:" + texgroup.name);
 				return;

@@ -61,7 +61,7 @@ public class AABBExporter implements Exporter {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("{\n\t\"AABBs\":{\n");
 		boolean[] first = { true };
-		for(Group group : model.groups()){
+		for(Group group : model.allgroups()){
 			for(Polygon poli : group){
 				if(poli instanceof StructBox){
 					StructBox box = (StructBox)poli;

@@ -19,6 +19,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
+import net.fexcraft.app.fmt.polygon.*;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateEvent.ModelLoad;
 import net.fexcraft.app.fmt.update.UpdateEvent.ModelUnload;
@@ -33,11 +34,6 @@ import com.spinyowl.legui.listener.MouseClickEventListener;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.update.UpdateHandler;
-import net.fexcraft.app.fmt.polygon.Group;
-import net.fexcraft.app.fmt.polygon.Model;
-import net.fexcraft.app.fmt.polygon.ModelFormat;
-import net.fexcraft.app.fmt.polygon.ModelOrientation;
-import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.texture.TextureManager;
@@ -133,12 +129,12 @@ public class SaveHandler {
 			JsonMap jmod = map.getMap("model");
 			for(Entry<String, JsonValue<?>> entry : jmod.entries()){
 				try{
-					Group group = new Group(model, entry.getKey());
+					Group group = new Group(model, entry.getKey(), null);
 					JsonArray array = entry.getValue().asArray();
 					for(JsonValue<?> elm : array.elements()){
 						group.add(Polygon.from(model, elm.asMap(), format));
 					}
-					model.addGroup(group);
+					model.addGroup(null, group);
 				}
 				catch(Exception e){
 					log(e);
@@ -157,10 +153,16 @@ public class SaveHandler {
 				model.texgroup = TextureManager.getGroup(map.get("texture_group").string_value());
 			}
 		}
+		JsonMap pivots = map.getMap("pivots");
+		model.pivots().clear();
+		pivots.entries().forEach(entry -> {
+			model.addPivot(new Pivot(entry.getKey(), entry.getValue().asMap()));
+		});
+		if(model.pivots().isEmpty()) model.addPivot(new Pivot("root", true));
 		JsonMap groups = map.getMap("groups");
 		groups.entries().forEach(entry -> {
 			try{
-				Group group = new Group(model, entry.getKey());
+				Group group = new Group(model, entry.getKey(), null);
 				JsonMap jsn = entry.getValue().asMap();
 				group.minimized = jsn.getBoolean("minimized", false);
 				group.selected = jsn.getBoolean("selected", false);
@@ -168,6 +170,7 @@ public class SaveHandler {
 				if(jsn.has("color") && jsn.get("color").isNumber()){
 					group.color.packed = jsn.get("color").integer_value();
 				}
+				group.pivot = jsn.getString("pivot", null);
 				if(jsn.has("texture_group")){
 					if(preview){
 						group.texhelper = jsn.get("texture_group").string_value();
@@ -195,7 +198,7 @@ public class SaveHandler {
 						}
 					});
 				}
-				model.addGroup(group);
+				model.addGroup(group.pivot, group);
 				//TODO load animations
 			}
 			catch(Throwable thr){
@@ -398,8 +401,13 @@ public class SaveHandler {
 			map.add("textures", textures);
 		}
 		if(model.texgroup != null) map.add("texture_group", model.texgroup.name);
+		JsonMap pivots = new JsonMap();
+		for(Pivot pivot : model.pivots()){
+			pivots.add(pivot.id, pivot.save());
+		}
+		map.add("pivots", pivots);
 		JsonMap modobj = new JsonMap();
-		for(Group group : model.groups()){
+		for(Group group : model.allgroups()){
 			JsonMap grobj = new JsonMap();
 			JsonArray array = new JsonArray();
 			if(!export){
@@ -422,6 +430,7 @@ public class SaveHandler {
 				//TODO animations
 			}
 			grobj.add("name", group.id);
+			if(group.pivot != null) grobj.add("pivot", group.pivot);
 			for(Polygon polygon : group){
 				array.add(polygon.save(export));
 			}
@@ -463,9 +472,9 @@ public class SaveHandler {
 				if(premod.opacity < 1f){
 					jsn.add("opacity", premod.opacity);
 				}
-				if(premod.groups().size() > 1){
+				if(premod.allgroups().size() > 1){
 					JsonArray invisible = new JsonArray();
-					for(Group list : premod.groups()){
+					for(Group list : premod.allgroups()){
 						if(!list.visible) invisible.add(list.id);
 					}
 					if(invisible.size() > 0){
@@ -522,7 +531,7 @@ public class SaveHandler {
 				FMT.MODEL.load();
 			}
 		};
-		if(FMT.MODEL.groups().isEmpty()){
+		if(FMT.MODEL.allgroups().isEmpty()){
 			run.run();
 			return;
 		}
@@ -601,7 +610,7 @@ public class SaveHandler {
             //
 	        dialog.show(FMT.FRAME);
 		};
-		if(!FMT.MODEL.groups().isEmpty()){
+		if(!FMT.MODEL.allgroups().isEmpty()){
 			shouldSaveDialog(run);
 		}
 		else run.run();

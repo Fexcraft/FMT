@@ -163,7 +163,7 @@ public class UVViewer extends Widget {
             setFocusable(false);
             add(image = new ImageView());
             UIUtils.hide(image);
-            for(Group group : FMT.MODEL.groups()) for(Polygon polygon : group) addElm(polygon, false);
+            for(Group group : FMT.MODEL.allgroups()) for(Polygon polygon : group) addElm(polygon, false);
             updcom.add(PolygonAdded.class, e -> addElm(e.polygon(), true));
             updcom.add(PolygonRemoved.class, e -> remElm(e.polygon()));
             updcom.add(PolygonValueEvent.class, e -> {

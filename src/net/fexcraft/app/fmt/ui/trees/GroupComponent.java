@@ -5,6 +5,7 @@ import static net.fexcraft.app.fmt.settings.Settings.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import net.fexcraft.app.fmt.polygon.Pivot;
 import net.fexcraft.app.fmt.update.UpdateEvent.*;
 import com.spinyowl.legui.component.Label;
 import com.spinyowl.legui.event.CursorEnterEvent;
@@ -143,8 +144,9 @@ public class GroupComponent extends EditorComponent {
 	protected boolean move(int dir){
 		if(super.move(dir)){
 			try{
-				int index = FMT.MODEL.groups().indexOf(group);
-				Collections.swap(FMT.MODEL.groups(), index, index + dir);
+				Pivot pivot = FMT.MODEL.getP(group.pivot);
+				int index = pivot.groups.indexOf(group);
+				Collections.swap(pivot.groups, index, index + dir);
 			}
 			catch(Exception e){
 				Logging.log(e);

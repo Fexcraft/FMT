@@ -52,7 +52,7 @@ public class PolygonTree extends Editor {
 	}
 
 	private void removeGroups(Model model){
-		for(Group group : model.groups()) remGroup(group);
+		for(Group group : model.allgroups()) remGroup(group);
 	}
 
 }

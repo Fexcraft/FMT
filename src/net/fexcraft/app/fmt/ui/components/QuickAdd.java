@@ -29,34 +29,34 @@ public class QuickAdd extends EditorComponent {
 	}
 
 	public static void addBox(){
-		FMT.MODEL.add(null, new Box(null));
+		FMT.MODEL.add(null, null, new Box(null));
 		hideMenu();
 	}
 
 	public static void addShapebox(){
-		FMT.MODEL.add(null, new Shapebox(null));
+		FMT.MODEL.add(null, null, new Shapebox(null));
 		hideMenu();
 	}
 
 	public static void addScructBox(){
-		FMT.MODEL.add(null, new StructBox(null));
+		FMT.MODEL.add(null, null, new StructBox(null));
 		hideMenu();
 	}
 
 	public static void addGroup(){
-		String name = "group" + FMT.MODEL.groups().size();
+		String name = "group" + FMT.MODEL.allgroups().size();
 		while(FMT.MODEL.contains(name)) name += "0";
-		FMT.MODEL.addGroup(name);
+		FMT.MODEL.addGroup(null, name);
 		hideMenu();
 	}
 
 	public static void addCylinder(){
-		FMT.MODEL.add(null, new Cylinder(null));
+		FMT.MODEL.add(null, null, new Cylinder(null));
 		hideMenu();
 	}
 
 	public static void addMarker(){
-		FMT.MODEL.add(null, new Marker(null));
+		FMT.MODEL.add(null, null, new Marker(null));
 		hideMenu();
 	}
 
@@ -69,7 +69,7 @@ public class QuickAdd extends EditorComponent {
 			
 		}
 		else{
-			FMT.MODEL.add(null, new RectCurve(null));
+			FMT.MODEL.add(null, null, new RectCurve(null));
 		}
 		hideMenu();
 	}

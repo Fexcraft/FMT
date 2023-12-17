@@ -78,7 +78,7 @@ public class PNGExporter implements Exporter {
 		}
 		else{
 			image = new Texture("png_exporter_cache", group.texture.getWidth(), group.texture.getHeight());
-			model.groups().forEach(elm -> {
+			model.allgroups().forEach(elm -> {
 				if(model.texgroup == group || elm.texgroup == group){
 					elm.forEach(poly -> poly.paintTex(image, null));
 				}

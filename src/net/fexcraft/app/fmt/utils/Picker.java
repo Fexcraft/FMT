@@ -123,7 +123,7 @@ public class Picker {
 				Arrows.DIR = Arrows.MODE == Arrows.ArrowMode.SIZE ? false : pick % 2 == 0;
 				return;
 			}
-			for(Group group : FMT.MODEL.groups()){
+			for(Group group : FMT.MODEL.allgroups()){
 				if(polygon != null) break;
 				for(Polygon poly : group){
 					if(poly.colorIdx == pick){

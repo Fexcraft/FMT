@@ -42,7 +42,7 @@ public class EditorComponent extends Component {
 		while(COMPONENTS.containsKey(uid)) uid++;
 		setSize(Editor.CWIDTH, fullheight = fullHeight > 0 ? fullHeight : HEIGHT * 2);
 		add(label = new Label(Translator.translate(LANG_PREFIX + (id = key) + ".name"), 4, 0, 296, 24));
-		label.getStyle().setFontSize(22f);
+		label.getStyle().setFontSize(18f);
 		Settings.applyComponentTheme(this);
 		add(size = new Icon((byte)1, "./resources/textures/icons/component/" + (tree ? "minimize" : "size") + ".png", () -> minimize(null)));
 		if(!resizeable) size.getStyle().setDisplay(DisplayType.NONE);

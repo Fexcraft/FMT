@@ -74,12 +74,12 @@ public class FVTM_OLD_Importer implements Importer {
                     model.addAuthor(line.split("\\\"")[1], true);
                 }
                 if(line.startsWith("TurboList")){
-                    if(poly != null && group != null) model.add(group, poly);
-                    model.addGroup(group = line.split(" ")[1]);
+                    if(poly != null && group != null) model.add(null, group, poly);
+                    model.addGroup(null, group = line.split(" ")[1]);
                     continue;
                 }
                 if(line.contains("new ModelRendererTurbo")){
-                    if(poly != null) model.add(group, poly);
+                    if(poly != null) model.add(null, group, poly);
                     if(line.contains("addBox")){
                         Box box = new Box(model);
                         vals = line.substring(line.lastIndexOf("(") + 1, line.lastIndexOf(")")).split(",");
@@ -166,7 +166,7 @@ public class FVTM_OLD_Importer implements Importer {
                     poly.rot.z = pf(vals[2]);
                 }
             }
-            if(poly != null) model.add(group, poly);
+            if(poly != null) model.add(null, group, poly);
         }
         catch(Exception e){
             e.printStackTrace();
