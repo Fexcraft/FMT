@@ -2,6 +2,7 @@ package net.fexcraft.app.fmt.update;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.function.Consumer;
 
 import net.fexcraft.app.fmt.settings.Settings;
@@ -14,11 +15,11 @@ import net.fexcraft.app.fmt.utils.Logging;
  */
 public class UpdateHandler {
 
-	public static final HashMap<Class<?>, ArrayList<UpdateHolder>> HOLDERS = new HashMap<>();
+	public static final HashMap<Class<?>, ConcurrentLinkedDeque<UpdateHolder>> HOLDERS = new HashMap<>();
 
 	public static void register(UpdateCompound root){
 		for(Class<?> event : root.holders.keySet()){
-			if(!HOLDERS.containsKey(event)) HOLDERS.put(event, new ArrayList<>());
+			if(!HOLDERS.containsKey(event)) HOLDERS.put(event, new ConcurrentLinkedDeque<>());
 			HOLDERS.get(event).add(root.holders.get(event));
 		}
 	}

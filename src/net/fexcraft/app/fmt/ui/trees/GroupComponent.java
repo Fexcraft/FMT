@@ -33,7 +33,7 @@ public class GroupComponent extends EditorComponent {
 
 	private static final int PH = 20, PHS = 21;
 	private ArrayList<PolygonLabel> polygons = new ArrayList<>();
-	protected Icon visible;
+	protected Icon visible, remove;
 	private Group group;
 	
 	public GroupComponent(Group group){
@@ -41,7 +41,7 @@ public class GroupComponent extends EditorComponent {
 		label.getTextState().setText((this.group = group).id);
 		this.genFullheight();
 		add(visible = new Icon((byte)2, "./resources/textures/icons/component/visible.png", () -> pin()));
-		add(visible = new Icon((byte)3, "./resources/textures/icons/component/remove.png", () -> FMT.MODEL.remGroup(group)));
+		add(remove = new Icon((byte)3, "./resources/textures/icons/component/remove.png", () -> FMT.MODEL.remGroup(group)));
 		updcom.add(GroupRenamed.class, event -> { if(event.group() == group) label.getTextState().setText(group.id); });
 		updcom.add(PolygonAdded.class, event -> { if(event.group() == group) addPolygon(event.polygon(), true); });
 		updcom.add(PolygonRenamed.class, event -> { if(event.polygon().group() == group) renamePolygon(event.polygon()); });

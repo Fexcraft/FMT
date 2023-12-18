@@ -13,13 +13,16 @@ import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.json.JsonMap;
 
+/**
+ * @author Ferdinand Calo' (FEX___96)
+ */
 public class PolygonTree extends Editor {
 	
 	private static UpdateCompound updcom = new UpdateCompound();
 
 	public PolygonTree(){
-		super(TREES.get(0), "Polygon Tree", true);
-		this.addTreeIcons(0);
+		super(Trees.POLYGON.id, "Polygon Tree", true);
+		addTreeIcons(Trees.POLYGON);
 		updcom.add(GroupAdded.class, event -> addGroup(event.group()));
 		updcom.add(GroupRemoved.class, event -> remGroup(event.group()));
 		updcom.add(ModelLoad.class, event -> resizeGroups(event.model()));

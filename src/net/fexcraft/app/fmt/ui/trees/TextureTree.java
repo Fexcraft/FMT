@@ -13,13 +13,16 @@ import net.fexcraft.app.fmt.ui.fields.RunButton;
 import net.fexcraft.app.fmt.utils.AutoUVPositioner;
 import net.fexcraft.app.json.JsonMap;
 
+/**
+ * @author Ferdinand Calo' (FEX___96)
+ */
 public class TextureTree extends Editor {
 	
 	private static UpdateCompound updcom = new UpdateCompound();
 
 	public TextureTree(){
-		super(TREES.get(1), "Texture Tree", true);
-		this.addTreeIcons(2);
+		super(Trees.TEXTURE.id, "Texture Tree", true);
+		addTreeIcons(Trees.TEXTURE);
 		updcom.add(TexGroupAdded.class, event -> addTexGroup(event.group()));
 		updcom.add(TexGroupRemoved.class, event -> remTexGroup(event.group()));
 		UpdateHandler.register(updcom);

@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import net.fexcraft.app.fmt.ui.SettingsDialog.SPVSL;
+import net.fexcraft.app.fmt.ui.trees.Trees;
 import net.fexcraft.app.json.JsonValue;
 import com.spinyowl.legui.component.Button;
 import com.spinyowl.legui.component.Component;
@@ -39,9 +40,11 @@ import net.fexcraft.app.fmt.utils.Translator.Translations;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
 
+/**
+ * @author Ferdinand Calo' (FEX___96)
+ */
 public class Editor extends Component {
-	
-	public static final List<String> TREES = Arrays.asList("polygon_tree", "texture_tree");
+
 	public static final HashMap<String, Editor> EDITORS = new HashMap<>();
 	public static Editor POLYGON_EDITOR;
 	public static Editor GROUP_EDITOR;
@@ -50,6 +53,7 @@ public class Editor extends Component {
 	public static Editor UV_EDITOR;
 	public static Editor PREVIEW_EDITOR;
 	public static Editor POLYGON_TREE;
+	public static Editor PIVOT_TREE;
 	public static Editor TEXTURE_TREE;
 	public static float RATE = 1f;
 	public static Editor VISIBLE_EDITOR = null;
@@ -82,13 +86,14 @@ public class Editor extends Component {
 		return LABEL;
 	}
 	
-	protected void addTreeIcons(int i){
+	protected void addTreeIcons(Trees type){
 		byte idx = 20, t = 0;
-		trees = new Icon[3];
-		if(i != 0) add(trees[t++] = new Icon(idx += 10, "./resources/textures/icons/tree/polygon.png", () -> Editor.show("polygon_tree")).addTooltip("editor.tree.polygon", false));
-		if(i != 1) add(trees[t++] = new Icon(idx += 10, "./resources/textures/icons/tree/helper.png", () -> Editor.show("helper_tree")).addTooltip("editor.tree.helper", false));
-		if(i != 2) add(trees[t++] = new Icon(idx += 10, "./resources/textures/icons/tree/textures.png", () -> Editor.show("texture_tree")).addTooltip("editor.tree.texture", false));
-		if(i != 3) add(trees[t++] = new Icon(idx += 10, "./resources/textures/icons/tree/fvtm.png", () -> Editor.show("fvtm_tree")).addTooltip("editor.tree.animation", false));
+		trees = new Icon[4];
+		if(type != Trees.POLYGON) add(trees[t++] = new Icon(idx += 10, "./resources/textures/icons/tree/polygon.png", () -> Editor.show(type.id)).addTooltip("editor.tree.polygon", false));
+		if(type != Trees.PIVOT) add(trees[t++] = new Icon(idx += 10, "./resources/textures/icons/tree/pivot.png", () -> Editor.show(type.id)).addTooltip("editor.tree.pivot", false));
+		if(type != Trees.HELPER) add(trees[t++] = new Icon(idx += 10, "./resources/textures/icons/tree/helper.png", () -> Editor.show(type.id)).addTooltip("editor.tree.helper", false));
+		if(type != Trees.TEXTURE) add(trees[t++] = new Icon(idx += 10, "./resources/textures/icons/tree/textures.png", () -> Editor.show(type.id)).addTooltip("editor.tree.texture", false));
+		if(type != Trees.ANIMATION) add(trees[t++] = new Icon(idx += 10, "./resources/textures/icons/tree/fvtm.png", () -> Editor.show(type.id)).addTooltip("editor.tree.animation", false));
 		if(trees != null) for(Icon icon : trees) icon.getStyle().setDisplay(DisplayType.NONE);
 	}
 

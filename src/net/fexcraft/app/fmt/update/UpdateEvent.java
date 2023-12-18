@@ -1,9 +1,6 @@
 package net.fexcraft.app.fmt.update;
 
-import net.fexcraft.app.fmt.polygon.Group;
-import net.fexcraft.app.fmt.polygon.Model;
-import net.fexcraft.app.fmt.polygon.ModelOrientation;
-import net.fexcraft.app.fmt.polygon.Polygon;
+import net.fexcraft.app.fmt.polygon.*;
 import net.fexcraft.app.fmt.polygon.uv.Face;
 import net.fexcraft.app.fmt.polygon.uv.UVType;
 import net.fexcraft.app.fmt.texture.TextureGroup;
@@ -30,6 +27,11 @@ public class UpdateEvent {
     public static record GroupRemoved(Model model, Group group){};
     public static record GroupSelected(Group group, int prevselected, int selected){};
     public static record GroupVisibility(Group group, boolean visible){};
+
+    public static record PivotAdded(Model model, Pivot pivot){};
+    public static record PivotRenamed(Pivot pivot, String name){};
+    public static record PivotRemoved(Model model, Pivot pivot){};
+    public static record PivotVisibility(Pivot pivot, boolean visible){};
 
     public static record ModelAuthor(Model model, String name){};
     public static record ModelLoad(Model model){};

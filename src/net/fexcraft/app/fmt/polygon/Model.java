@@ -86,7 +86,7 @@ public class Model {
 		this.name = name;
 		pivots.add(new Pivot("root", true));
 	}
-	
+
 	/** For now just for FMTB files. */
 	public Model load(){
 		SaveHandler.open(this, file);
@@ -181,7 +181,7 @@ public class Model {
 	public Pivot getP(String id){
 		if(id == null) return pivots.get(0);
 		for(Pivot pivot : pivots) if(pivot.id.equals(id)) return pivot;
-		return pivots.get(0);
+		return getRootPivot();
 	}
 
 	public boolean contains(String group){
@@ -223,7 +223,23 @@ public class Model {
 			update(new GroupRemoved(this, group));
 		}
 	}
-	
+
+	public void remPivot(Pivot pivot){
+		if(pivot.root) return;
+		pivots.remove(pivot);
+		Pivot root = getRootPivot();
+		String rid = root == null ? null : root.id;
+		pivot.groups.forEach(group -> {
+			group.pivot = rid;
+		});
+		update(new PivotRemoved(this, pivot));
+	}
+
+	public Pivot getRootPivot(){
+		for(Pivot pivot : pivots) if(pivot.root) return pivot;
+		return null;
+	}
+
 	public ArrayList<Group> allgroups(){
 		return allgroups;
 	}

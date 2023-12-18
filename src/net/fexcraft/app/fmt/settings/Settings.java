@@ -24,6 +24,7 @@ import net.fexcraft.app.fmt.ui.editors.ModelEditor;
 import net.fexcraft.app.fmt.ui.editors.PolygonEditor;
 import net.fexcraft.app.fmt.ui.editors.TextureEditor;
 import net.fexcraft.app.fmt.ui.fields.RunButton;
+import net.fexcraft.app.fmt.ui.trees.PivotTree;
 import net.fexcraft.app.fmt.utils.*;
 import net.fexcraft.app.json.JsonValue;
 import org.joml.Vector4f;
@@ -447,6 +448,7 @@ public class Settings {
 		Editor.MODEL_EDITOR = new ModelEditor();
 		Editor.TEXTURE_EDITOR = new TextureEditor();
 		Editor.POLYGON_TREE = new PolygonTree();
+		Editor.PIVOT_TREE = new PivotTree();
 		Editor.TEXTURE_TREE = new TextureTree();
 	}
 

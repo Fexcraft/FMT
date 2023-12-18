@@ -33,6 +33,7 @@ toolbar.editors.uv=UV Editor
 toolbar.editors.preview=Preview Editor
 toolbar.trees=Trees
 toolbar.trees.polygon=Polygons
+toolbar.trees.pivot=Pivots
 toolbar.trees.texture=Textures
 ## Polygons
 toolbar.polygons=Polygons
@@ -106,6 +107,7 @@ editor.rename=Rename Editor
 editor.remove=Remove Editor
 editor.change_side=Change Side/Alignment
 editor.tree.polygon=Polygon Tree
+editor.tree.pivot=Pivot Tree
 editor.tree.helper=Helper Tree
 editor.tree.texture=Texture Tree
 editor.tree.texture.add_group=Add Group
