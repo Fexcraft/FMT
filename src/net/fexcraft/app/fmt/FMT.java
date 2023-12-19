@@ -404,9 +404,9 @@ public class FMT {
 		}
 		if(Settings.CMARKER.value){
 			PolyRenderer.mode(DrawMode.RGBCOLOR);
-            centermarker0.render();
-            centermarker1.render();
-            centermarker2.render();
+			centermarker0.render();
+			centermarker1.render();
+			centermarker2.render();
 		}
 		if(Arrows.MODE.active()) Arrows.render(DrawMode.RGBCOLOR); 
 		MODEL.render(alpha);
@@ -421,7 +421,7 @@ public class FMT {
 	public static final Polyhedron<GLObject> floor0 = new Polyhedron<GLObject>().importMRT(new BoxBuilder(new ModelRendererTurbo(null, 0, 0, 512, 512))
 		.setSize(512, 0, 512).setOffset(-256, 0, -256).removePolygons(0, 1, 4, 5)
 		.setPolygonUV(2, new float[]{ 0, 512, 0, 0, 512, 0, 512, 512})
-		.setPolygonUV(3, new float[]{ 512, 512, 512, 0, 0, 0,  0, 512 }).build(), false, 1f).setGlObj(new GLObject());;
+		.setPolygonUV(3, new float[]{ 512, 512, 512, 0, 0, 0,  0, 512 }).build(), false, 1f).setGlObj(new GLObject());
 	private static final Polyhedron<GLObject> centermarker0 = new Generator<GLObject>(null, Generator.Type.CUBOID)
 		.set("x", -.125f).set("y", -256f).set("z", -.125f).set("width", .25f).set("height", 512f).set("depth", .25f).make().setGlObj(new GLObject());
 	private static final Polyhedron<GLObject> centermarker1 = new Generator<GLObject>(null, Generator.Type.CUBOID)
