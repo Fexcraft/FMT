@@ -72,6 +72,12 @@ public class PivotComponent extends EditorComponent {
 				}
 			}
 		});
+		updcom.add(PivotChanged.class, event -> {
+			removeGroup(event.group());
+			if(pivot == event.pivot()){
+				addGroup(event.group(), true);
+			}
+		});
 		this.getListenerMap().addListener(MouseClickEvent.class, listener);
 		label.getListenerMap().addListener(MouseClickEvent.class, listener);
 	}
