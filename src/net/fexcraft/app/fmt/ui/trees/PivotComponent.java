@@ -59,16 +59,16 @@ public class PivotComponent extends EditorComponent {
 			}
 		});
 		updcom.add(GroupVisibility.class, event -> {
-			if(pivot.groups.contains(event.group())) return;
-			for(GroupLabel poly : groups){
-				if(poly.group == event.group()) poly.update_color();
+			if(!pivot.groups.contains(event.group())) return;
+			for(GroupLabel group : groups){
+				if(group.group == event.group()) group.update_color();
 			}
 		});
 		updcom.add(GroupSelected.class, event -> {
 			if(pivot.groups.contains(event.group())){
 				update_color();
-				for(GroupLabel poly : groups){
-					poly.update_color();
+				for(GroupLabel group : groups){
+					group.update_color();
 				}
 			}
 		});
