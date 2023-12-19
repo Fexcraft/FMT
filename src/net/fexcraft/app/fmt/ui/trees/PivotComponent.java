@@ -46,10 +46,11 @@ public class PivotComponent extends EditorComponent {
 		//if(!group.visible) UIUtils.hide(this);
 		MouseClickEventListener listener = lis -> {
 			if(lis.getAction() == MouseClickAction.CLICK && lis.getButton() == MouseButton.MOUSE_BUTTON_LEFT){
-				//FMT.MODEL.select(pivot);
+				FMT.MODEL.select(pivot);
 				update_color();
 			}
 		};
+		updcom.add(PivotSelected.class, event -> update_color());
 		updcom.add(PivotVisibility.class, event -> {
 			if(event.pivot() == pivot){
 				update_color();
@@ -222,7 +223,7 @@ public class PivotComponent extends EditorComponent {
 
 	public void update_color(){
 		label.getStyle().setTextColor(ColorConstants.lightGray());
-		this.getStyle().getBackground().setColor(FMT.rgba((pivot.visible ? GROUP_NORMAL : GROUP_INVISIBLE).value));
+		this.getStyle().getBackground().setColor(FMT.rgba((pivot == FMT.MODEL.sel_pivot ? pivot.visible ? GROUP_SELECTED : GROUP_INV_SEL : pivot.visible ? GROUP_NORMAL : GROUP_INVISIBLE).value));
 	}
 
 }
