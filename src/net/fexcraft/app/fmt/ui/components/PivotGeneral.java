@@ -56,33 +56,33 @@ public class PivotGeneral extends EditorComponent {
 		add(new Label(translate(LANG_PREFIX + genid + ".pos16"), L5, row(1), LW, HEIGHT));
 		add(pos16x = new NumberField(this, F30, row(1), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, cons -> {
 			if(FMT.MODEL.sel_pivot == null) return;
-			FMT.MODEL.sel_pivot.pos.x = cons.value() * 0.0625f;
+			FMT.MODEL.sel_pivot.pos.x = cons.value();
 			updateFields();
 		}));
 		add(pos16y = new NumberField(this, F31, row(0), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, cons -> {
 			if(FMT.MODEL.sel_pivot == null) return;
-			FMT.MODEL.sel_pivot.pos.y = cons.value() * 0.0625f;
+			FMT.MODEL.sel_pivot.pos.y = cons.value();
 			updateFields();
 		}));
 		add(pos16z = new NumberField(this, F32, row(0), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, cons -> {
 			if(FMT.MODEL.sel_pivot == null) return;
-			FMT.MODEL.sel_pivot.pos.z = cons.value() * 0.0625f;
+			FMT.MODEL.sel_pivot.pos.z = cons.value();
 			updateFields();
 		}));
 		add(new Label(translate(LANG_PREFIX + genid + ".pos"), L5, row(1), LW, HEIGHT));
 		add(posx = new NumberField(this, F30, row(1), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, cons -> {
 			if(FMT.MODEL.sel_pivot == null) return;
-			FMT.MODEL.sel_pivot.pos.x = cons.value();
+			FMT.MODEL.sel_pivot.pos.x = cons.value() * 16;
 			updateFields();
 		}));
 		add(posy = new NumberField(this, F31, row(0), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, cons -> {
 			if(FMT.MODEL.sel_pivot == null) return;
-			FMT.MODEL.sel_pivot.pos.y = cons.value();
+			FMT.MODEL.sel_pivot.pos.y = cons.value() * 16;
 			updateFields();
 		}));
 		add(posz = new NumberField(this, F32, row(0), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, cons -> {
 			if(FMT.MODEL.sel_pivot == null) return;
-			FMT.MODEL.sel_pivot.pos.z = cons.value();
+			FMT.MODEL.sel_pivot.pos.z = cons.value() * 16;
 			updateFields();
 		}));
 		add(new Label(translate(LANG_PREFIX + genid + ".rot"), L5, row(1), LW, HEIGHT));
@@ -121,12 +121,12 @@ public class PivotGeneral extends EditorComponent {
 			rotz.apply(0);
 		}
 		else{
-			pos16x.apply(FMT.MODEL.sel_pivot.pos.x * 16);
-			pos16y.apply(FMT.MODEL.sel_pivot.pos.y * 16);
-			pos16z.apply(FMT.MODEL.sel_pivot.pos.z * 16);
-			posx.apply(FMT.MODEL.sel_pivot.pos.x);
-			posy.apply(FMT.MODEL.sel_pivot.pos.y);
-			posz.apply(FMT.MODEL.sel_pivot.pos.z);
+			pos16x.apply(FMT.MODEL.sel_pivot.pos.x);
+			pos16y.apply(FMT.MODEL.sel_pivot.pos.y);
+			pos16z.apply(FMT.MODEL.sel_pivot.pos.z);
+			posx.apply(FMT.MODEL.sel_pivot.pos.x * 0.0625f);
+			posy.apply(FMT.MODEL.sel_pivot.pos.y * 0.0625f);
+			posz.apply(FMT.MODEL.sel_pivot.pos.z * 0.0625f);
 			rotx.apply(FMT.MODEL.sel_pivot.rot.x);
 			roty.apply(FMT.MODEL.sel_pivot.rot.y);
 			rotz.apply(FMT.MODEL.sel_pivot.rot.z);
