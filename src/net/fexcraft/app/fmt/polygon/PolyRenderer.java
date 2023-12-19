@@ -56,10 +56,18 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 		}
 		matrix = new Matrix4f().identity();
 		if(ImageHandler.ROT != null) matrix.rotate(ImageHandler.ROT, GIF_AXIS);
-		matrix.translate(new Vector3f(poly.posX, poly.posY, poly.posZ));
-		if(poly.rotY != 0f) matrix.rotate((float)Math.toRadians(poly.rotY), axis_y);
-		if(poly.rotZ != 0f) matrix.rotate((float)Math.toRadians(poly.rotZ), axis_z);
-		if(poly.rotX != 0f) matrix.rotate((float)Math.toRadians(poly.rotX), axis_x);
+		if(PIVOT == null){
+			matrix.translate(new Vector3f(poly.posX, poly.posY, poly.posZ));
+			if(poly.rotY != 0f) matrix.rotate((float)Math.toRadians(poly.rotY), axis_y);
+			if(poly.rotZ != 0f) matrix.rotate((float)Math.toRadians(poly.rotZ), axis_z);
+			if(poly.rotX != 0f) matrix.rotate((float)Math.toRadians(poly.rotX), axis_x);
+		}
+		else{
+			matrix.translate(new Vector3f(PIVOT.pos.x + poly.posX, PIVOT.pos.y + poly.posY, PIVOT.pos.z + poly.posZ));
+			if(poly.rotY != 0f) matrix.rotate((float)Math.toRadians(poly.rotY), axis_y);
+			if(poly.rotZ != 0f) matrix.rotate((float)Math.toRadians(poly.rotZ), axis_z);
+			if(poly.rotX != 0f) matrix.rotate((float)Math.toRadians(poly.rotX), axis_x);
+		}
 		glUniformMatrix4fv(getUniform("model"), false, matrix.get(new float[16]));
 		glUniform4fv(getUniform("line_color"), MODE == DrawMode.LINES ? glo.linecolor : MODE == DrawMode.SELLINES ? SELCOLOR : EMPTY);
 		glUniform4fv(getUniform("poly_color"), MODE.picker() ? glo.pickercolor : MODE.color() ? glo.polycolor : EMPTY);
