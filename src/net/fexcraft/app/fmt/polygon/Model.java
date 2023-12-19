@@ -23,6 +23,9 @@ import java.util.stream.Collectors;
 
 import net.fexcraft.app.fmt.update.UpdateEvent.*;
 import net.fexcraft.app.json.JsonValue;
+import net.fexcraft.lib.common.math.RGB;
+import net.fexcraft.lib.frl.Polyhedron;
+import net.fexcraft.lib.frl.gen.Generator;
 import net.fexcraft.lib.script.elm.FltElm;
 import org.joml.Vector3f;
 import com.spinyowl.legui.component.Button;
@@ -136,11 +139,36 @@ public class Model {
 		if(texgroup != null) texgroup.texture.bind();
 	}
 
+	/*public static final Polyhedron<GLObject> centermarker0 = new Generator<GLObject>(null, Generator.Type.CUBOID)
+			.set("x", -.125f).set("y", -16f).set("z", -.125f).set("width", .125f).set("height", 32f).set("depth", .125f).make().setGlObj(new GLObject());
+	public static final Polyhedron<GLObject> centermarker1 = new Generator<GLObject>(null, Generator.Type.CUBOID)
+			.set("x", -16f).set("y", -.125f).set("z", -.125f).set("width", 32f).set("height", .125f).set("depth", .125f).make().setGlObj(new GLObject());
+	public static final Polyhedron<GLObject> centermarker2 = new Generator<GLObject>(null, Generator.Type.CUBOID)
+			.set("x", -.125f).set("y", -.125f).set("z", -16f).set("width", .125f).set("height", .125f).set("depth", 32f).make().setGlObj(new GLObject());*/
+
+	private static final Polyhedron<GLObject> centermarker0 = new Generator<GLObject>(null, Generator.Type.CUBOID)
+			.set("x", -.125f).set("y", -8f).set("z", -.125f).set("width", .25f).set("height", 16f).set("depth", .25f).make().setGlObj(new GLObject());
+	private static final Polyhedron<GLObject> centermarker1 = new Generator<GLObject>(null, Generator.Type.CUBOID)
+			.set("x", -8f).set("y", -.125f).set("z", -.125f).set("width", 16f).set("height", .25f).set("depth", .25f).make().setGlObj(new GLObject());
+	private static final Polyhedron<GLObject> centermarker2 = new Generator<GLObject>(null, Generator.Type.CUBOID)
+			.set("x", -.125f).set("y", -.125f).set("z", -8f).set("width", .25f).set("height", .25f).set("depth", 16f).make().setGlObj(new GLObject());
+	static {
+		centermarker0.glObj.polycolor = RGB.GREEN.toFloatArray();
+		centermarker1.glObj.polycolor = RGB.RED.toFloatArray();
+		centermarker2.glObj.polycolor = RGB.BLUE.toFloatArray();
+	}
+
 	public void render(FltElm alpha){
 		if(!visible) return;
 		DrawMode mode = DrawMode.textured(texgroup != null);
 		for(Pivot pivot : pivots){
 			PolyRenderer.PIVOT = pivot;
+			if(Settings.CMARKER.value){
+				PolyRenderer.mode(DrawMode.RGBCOLOR);
+				centermarker0.render();
+				centermarker1.render();
+				centermarker2.render();
+			}
 			for(Group group : pivot.groups){
 				group.render(mode, alpha);
 				if(Settings.LINES.value) group.render(DrawMode.LINES, alpha);
