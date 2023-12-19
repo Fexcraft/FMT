@@ -28,7 +28,7 @@ public class PivotComponent extends EditorComponent {
 
 	private static final int PH = 20, PHS = 21;
 	private ArrayList<GroupLabel> groups = new ArrayList<>();
-	protected Icon visible, remove;
+	protected Icon visible, remove, edit;
 	private Pivot pivot;
 
 	public PivotComponent(Pivot pivot){
@@ -37,6 +37,7 @@ public class PivotComponent extends EditorComponent {
 		this.genFullheight();
 		add(visible = new Icon((byte)2, "./resources/textures/icons/component/visible.png", () -> pin()));
 		add(remove = new Icon((byte)3, "./resources/textures/icons/component/remove.png", () -> FMT.MODEL.remPivot(pivot)));
+		add(edit = new Icon((byte)4, "./resources/textures/icons/component/edit.png", () -> Editor.show("pivot_editor")));
 		updcom.add(PivotRenamed.class, event -> { if(event.pivot() == pivot) label.getTextState().setText(pivot.id); });
 		updcom.add(GroupAdded.class, event -> { if(pivot.isin(event.group())) addGroup(event.group(), true); });
 		updcom.add(GroupRenamed.class, event -> { if(pivot.isin(event.group())) renameGroup(event.group()); });
@@ -81,6 +82,18 @@ public class PivotComponent extends EditorComponent {
 		});
 		this.getListenerMap().addListener(MouseClickEvent.class, listener);
 		label.getListenerMap().addListener(MouseClickEvent.class, listener);
+		//
+		CursorEnterEventListener clis = lis -> {
+			DisplayType type = label.isHovered() || visible.isHovered() || remove.isHovered() || edit.isHovered() ? DisplayType.MANUAL : DisplayType.NONE;
+			visible.getStyle().setDisplay(type);
+			remove.getStyle().setDisplay(type);
+			edit.getStyle().setDisplay(type);
+		};
+		label.getListenerMap().addListener(CursorEnterEvent.class, clis);
+		remove.getListenerMap().addListener(CursorEnterEvent.class, clis);
+		visible.getListenerMap().addListener(CursorEnterEvent.class, clis);
+		edit.getListenerMap().addListener(CursorEnterEvent.class, clis);
+		UIUtils.hide(remove, visible, edit);
 	}
 
 	private int genFullheight(){
@@ -178,20 +191,26 @@ public class PivotComponent extends EditorComponent {
 				//update_color();
 				UpdateHandler.update(new GroupVisibility(group, group.visible));
 			});
+			Icon edit = new Icon(0, 16, 4, Editor.CWIDTH - 46, 2, "./resources/textures/icons/component/edit.png", () -> {
+				Editor.show("group_editor");
+			});
 			CursorEnterEventListener listener = lis -> {
-				DisplayType type = this.isHovered() || visi.isHovered() ? DisplayType.MANUAL : DisplayType.NONE;
+				DisplayType type = this.isHovered() || visi.isHovered() || edit.isHovered() ? DisplayType.MANUAL : DisplayType.NONE;
 				visi.getStyle().setDisplay(type);
+				edit.getStyle().setDisplay(type);
 			};
 			this.getListenerMap().addListener(CursorEnterEvent.class, listener);
 			visi.getListenerMap().addListener(CursorEnterEvent.class, listener);
+			edit.getListenerMap().addListener(CursorEnterEvent.class, listener);
 			this.getListenerMap().addListener(MouseClickEvent.class, lis -> {
 				if(lis.getAction() == MouseClickAction.CLICK && lis.getButton() == MouseButton.MOUSE_BUTTON_LEFT){
 					group.model.select(group);
 					update_color();
 				}
 			});
-			UIUtils.hide(visi);
-			this.add(visi);
+			UIUtils.hide(visi, edit);
+			add(visi);
+			add(edit);
 		}
 		
 		public GroupLabel group(Group group){
