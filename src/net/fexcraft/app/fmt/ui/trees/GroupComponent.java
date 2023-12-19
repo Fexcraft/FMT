@@ -33,7 +33,7 @@ public class GroupComponent extends EditorComponent {
 
 	private static final int PH = 20, PHS = 21;
 	private ArrayList<PolygonLabel> polygons = new ArrayList<>();
-	protected Icon visible, remove;
+	protected Icon visible, remove, edit;
 	private Group group;
 	
 	public GroupComponent(Group group){
@@ -42,6 +42,7 @@ public class GroupComponent extends EditorComponent {
 		this.genFullheight();
 		add(visible = new Icon((byte)2, "./resources/textures/icons/component/visible.png", () -> pin()));
 		add(remove = new Icon((byte)3, "./resources/textures/icons/component/remove.png", () -> FMT.MODEL.remGroup(group)));
+		add(edit = new Icon((byte)4, "./resources/textures/icons/component/edit.png", () -> Editor.show("group_editor")));
 		updcom.add(GroupRenamed.class, event -> { if(event.group() == group) label.getTextState().setText(group.id); });
 		updcom.add(PolygonAdded.class, event -> { if(event.group() == group) addPolygon(event.polygon(), true); });
 		updcom.add(PolygonRenamed.class, event -> { if(event.polygon().group() == group) renamePolygon(event.polygon()); });
@@ -85,6 +86,18 @@ public class GroupComponent extends EditorComponent {
 		});
 		this.getListenerMap().addListener(MouseClickEvent.class, listener);
 		label.getListenerMap().addListener(MouseClickEvent.class, listener);
+		//
+		CursorEnterEventListener clis = lis -> {
+			DisplayType type = label.isHovered() || visible.isHovered() || remove.isHovered() || edit.isHovered() ? DisplayType.MANUAL : DisplayType.NONE;
+			visible.getStyle().setDisplay(type);
+			remove.getStyle().setDisplay(type);
+			edit.getStyle().setDisplay(type);
+		};
+		label.getListenerMap().addListener(CursorEnterEvent.class, clis);
+		remove.getListenerMap().addListener(CursorEnterEvent.class, clis);
+		visible.getListenerMap().addListener(CursorEnterEvent.class, clis);
+		edit.getListenerMap().addListener(CursorEnterEvent.class, clis);
+		UIUtils.hide(remove, visible, edit);
 	}
 
 	private int genFullheight(){
@@ -178,7 +191,7 @@ public class GroupComponent extends EditorComponent {
 		public PolygonLabel(GroupComponent com){
 			Settings.applyBorderless(this);
 			setSize(Editor.CWIDTH - 8, PH);
-			Icon icon = new Icon(0, 16, 4, Editor.CWIDTH - 26, 2, "./resources/textures/icons/component/remove.png", () -> {
+			Icon remo = new Icon(0, 16, 4, Editor.CWIDTH - 26, 2, "./resources/textures/icons/component/remove.png", () -> {
 				if(ASK_POLYGON_REMOVAL.value){
 					GenericDialog.showOC(null, () -> com.group.remove(polygon), null, "editor.component.group.polygon.remove", com.group.id + ":" + polygon.name());
 				}
@@ -189,23 +202,29 @@ public class GroupComponent extends EditorComponent {
 				//update_color();
 				UpdateHandler.update(new PolygonVisibility(polygon, polygon.visible));
 			});
+			Icon edit = new Icon(0, 16, 4, Editor.CWIDTH - 66, 2, "./resources/textures/icons/component/edit.png", () -> {
+				Editor.show("polygon_editor");
+			});
 			CursorEnterEventListener listener = lis -> {
-				DisplayType type = this.isHovered() || icon.isHovered() || visi.isHovered() ? DisplayType.MANUAL : DisplayType.NONE;
-				icon.getStyle().setDisplay(type);
+				DisplayType type = this.isHovered() || remo.isHovered() || visi.isHovered() || edit.isHovered() ? DisplayType.MANUAL : DisplayType.NONE;
+				remo.getStyle().setDisplay(type);
 				visi.getStyle().setDisplay(type);
+				edit.getStyle().setDisplay(type);
 			};
 			this.getListenerMap().addListener(CursorEnterEvent.class, listener);
-			icon.getListenerMap().addListener(CursorEnterEvent.class, listener);
+			remo.getListenerMap().addListener(CursorEnterEvent.class, listener);
 			visi.getListenerMap().addListener(CursorEnterEvent.class, listener);
+			edit.getListenerMap().addListener(CursorEnterEvent.class, listener);
 			this.getListenerMap().addListener(MouseClickEvent.class, lis -> {
 				if(lis.getAction() == MouseClickAction.CLICK && lis.getButton() == MouseButton.MOUSE_BUTTON_LEFT){
 					polygon.group().model.select(polygon);
 					update_color();
 				}
 			});
-			UIUtils.hide(icon, visi);
-			this.add(icon);
-			this.add(visi);
+			UIUtils.hide(remo, visi, edit);
+			add(remo);
+			add(visi);
+			add(edit);
 		}
 		
 		public PolygonLabel polygon(Polygon poly){
