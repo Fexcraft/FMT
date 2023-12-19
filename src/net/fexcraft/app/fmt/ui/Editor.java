@@ -48,6 +48,7 @@ public class Editor extends Component {
 	public static final HashMap<String, Editor> EDITORS = new HashMap<>();
 	public static Editor POLYGON_EDITOR;
 	public static Editor GROUP_EDITOR;
+	public static Editor PIVOT_EDITOR;
 	public static Editor MODEL_EDITOR;
 	public static Editor TEXTURE_EDITOR;
 	public static Editor UV_EDITOR;
