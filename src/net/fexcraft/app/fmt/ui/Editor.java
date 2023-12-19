@@ -87,14 +87,14 @@ public class Editor extends Component {
 	}
 	
 	protected void addTreeIcons(Trees type){
-		byte idx = 20, t = 0;
+		byte idx = 0, t = 0;
 		trees = new Icon[4];
-		if(type != Trees.POLYGON) add(trees[t++] = new Icon(idx += 10, "./resources/textures/icons/tree/polygon.png", () -> Editor.show(type.id)).addTooltip("editor.tree.polygon", false));
-		if(type != Trees.PIVOT) add(trees[t++] = new Icon(idx += 10, "./resources/textures/icons/tree/pivot.png", () -> Editor.show(type.id)).addTooltip("editor.tree.pivot", false));
-		if(type != Trees.HELPER) add(trees[t++] = new Icon(idx += 10, "./resources/textures/icons/tree/helper.png", () -> Editor.show(type.id)).addTooltip("editor.tree.helper", false));
-		if(type != Trees.TEXTURE) add(trees[t++] = new Icon(idx += 10, "./resources/textures/icons/tree/textures.png", () -> Editor.show(type.id)).addTooltip("editor.tree.texture", false));
-		if(type != Trees.ANIMATION) add(trees[t++] = new Icon(idx += 10, "./resources/textures/icons/tree/fvtm.png", () -> Editor.show(type.id)).addTooltip("editor.tree.animation", false));
-		if(trees != null) for(Icon icon : trees) icon.getStyle().setDisplay(DisplayType.NONE);
+		if(type != Trees.POLYGON) add(trees[t++] = new Icon(idx += 10, "./resources/textures/icons/tree/polygon.png", () -> Editor.show(Trees.POLYGON.id)).addTooltip("editor.tree.polygon", false));
+		if(type != Trees.PIVOT) add(trees[t++] = new Icon(idx += 10, "./resources/textures/icons/tree/pivot.png", () -> Editor.show(Trees.PIVOT.id)).addTooltip("editor.tree.pivot", false));
+		if(type != Trees.HELPER) add(trees[t++] = new Icon(idx += 10, "./resources/textures/icons/tree/helper.png", () -> Editor.show(Trees.HELPER.id)).addTooltip("editor.tree.helper", false));
+		if(type != Trees.TEXTURE) add(trees[t++] = new Icon(idx += 10, "./resources/textures/icons/tree/textures.png", () -> Editor.show(Trees.TEXTURE.id)).addTooltip("editor.tree.texture", false));
+		if(type != Trees.ANIMATION) add(trees[t++] = new Icon(idx += 10, "./resources/textures/icons/tree/fvtm.png", () -> Editor.show(Trees.ANIMATION.id)).addTooltip("editor.tree.animation", false));
+		//if(trees != null) for(Icon icon : trees) icon.getStyle().setDisplay(DisplayType.NONE);
 	}
 
 	private void rename(){
