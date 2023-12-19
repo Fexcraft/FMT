@@ -35,8 +35,7 @@ public class Pivot {
 
     public JsonMap save(){
         JsonMap map = new JsonMap();
-
-
+        map.add("root", root);
         return map;
     }
 
