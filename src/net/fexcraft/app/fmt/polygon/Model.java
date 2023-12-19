@@ -73,6 +73,7 @@ public class Model {
 	public Vector3f pos = new Vector3f();
 	public Vector3f rot = new Vector3f();
 	public TextureGroup texgroup = null;
+	public Pivot sel_pivot = null;
 	public String texhelper;
 	public int texSizeX = 256, texSizeY = 256;
 	public boolean visible = true, subhelper;
@@ -734,4 +735,10 @@ public class Model {
 	public void addPivot(Pivot pivot){
 		pivots.add(pivot);
 	}
+
+	public void select(Pivot pivot){
+		sel_pivot = sel_pivot == pivot ? null : pivot;
+		UpdateHandler.update(new PivotSelected(this, pivot));
+	}
+
 }
