@@ -39,7 +39,7 @@ public class Icon extends ImageView {
             index /= 10;
             yoff = 4;
         }
-        this.setPosition(Editor.CWIDTH - (index * 23), yoff);
+        this.setPosition(Editor.CWIDTH - (index * 25), yoff);
         this.setSize(22, 22);
         this.getListenerMap().addListener(MouseClickEvent.class, listener);
         Settings.applyBorderless(getStyle());
