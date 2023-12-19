@@ -68,15 +68,15 @@ public class KeyCompound {
 		}));
 		keys.add(new KeyFunction("toggle_editor_3", GLFW_KEY_3, action -> {
 			if(GGR.isOverUI()) return;
-			if(action == GLFW_RELEASE) Editor.MODEL_EDITOR.show();
+			if(action == GLFW_RELEASE) Editor.PIVOT_EDITOR.show();
 		}));
 		keys.add(new KeyFunction("toggle_editor_4", GLFW_KEY_4, action -> {
 			if(GGR.isOverUI()) return;
-			if(action == GLFW_RELEASE) Editor.TEXTURE_EDITOR.show();
+			if(action == GLFW_RELEASE) Editor.MODEL_EDITOR.show();
 		}));
 		keys.add(new KeyFunction("toggle_editor_5", GLFW_KEY_5, action -> {
 			if(GGR.isOverUI()) return;
-			if(action == GLFW_RELEASE) Editor.UV_EDITOR.show();
+			if(action == GLFW_RELEASE) Editor.TEXTURE_EDITOR.show();
 		}));
 		keys.add(new KeyFunction("toggle_editor_6", GLFW_KEY_6, action -> {
 			if(GGR.isOverUI()) return;
