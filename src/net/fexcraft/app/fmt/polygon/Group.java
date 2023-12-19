@@ -32,7 +32,7 @@ public class Group extends ArrayList<Polygon> {
 	public Group(Model model, String key, String pid){
 		this.model = model;
 		this.id = key;
-		pivot = pid;
+		pivot = pid == null ? model.getRootPivot().id : pid;
 	}
 	
 	@Override
