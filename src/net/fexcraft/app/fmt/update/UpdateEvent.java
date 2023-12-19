@@ -32,6 +32,7 @@ public class UpdateEvent {
     public static record PivotRenamed(Pivot pivot, String name){};
     public static record PivotRemoved(Model model, Pivot pivot){};
     public static record PivotChanged(Group group, Pivot pivot){};
+    public static record PivotSelected(Model model, Pivot pivot){};
     public static record PivotVisibility(Pivot pivot, boolean visible){};
 
     public static record ModelAuthor(Model model, String name){};
