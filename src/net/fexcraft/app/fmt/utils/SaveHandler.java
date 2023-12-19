@@ -159,10 +159,11 @@ public class SaveHandler {
 			model.addPivot(new Pivot(entry.getKey(), entry.getValue().asMap()));
 		});
 		if(model.pivots().isEmpty()) model.addPivot(new Pivot("root", true));
+		Pivot rootp = model.getRootPivot();
 		JsonMap groups = map.getMap("groups");
 		groups.entries().forEach(entry -> {
 			try{
-				Group group = new Group(model, entry.getKey(), null);
+				Group group = new Group(model, entry.getKey(), rootp.id);
 				JsonMap jsn = entry.getValue().asMap();
 				group.minimized = jsn.getBoolean("minimized", false);
 				group.selected = jsn.getBoolean("selected", false);
@@ -170,7 +171,7 @@ public class SaveHandler {
 				if(jsn.has("color") && jsn.get("color").isNumber()){
 					group.color.packed = jsn.get("color").integer_value();
 				}
-				group.pivot = jsn.getString("pivot", null);
+				group.pivot = jsn.getString("pivot", rootp.id);
 				if(jsn.has("texture_group")){
 					if(preview){
 						group.texhelper = jsn.get("texture_group").string_value();
