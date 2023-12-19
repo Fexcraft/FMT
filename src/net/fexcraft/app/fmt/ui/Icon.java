@@ -2,6 +2,7 @@ package net.fexcraft.app.fmt.ui;
 
 import com.spinyowl.legui.component.ImageView;
 import com.spinyowl.legui.component.Tooltip;
+import com.spinyowl.legui.component.optional.align.HorizontalAlign;
 import com.spinyowl.legui.event.MouseClickEvent;
 import com.spinyowl.legui.image.loader.ImageLoader;
 import com.spinyowl.legui.listener.MouseClickEventListener;
@@ -71,8 +72,9 @@ public class Icon extends ImageView {
 
     public Icon addTooltip(String string, boolean alignment) {
         Tooltip tip = new Tooltip(Translator.translate(string));
-        tip.setSize(FontSizeUtil.getWidth(tip.getTextState().getText()) + 8, 24);
+        tip.setSize(FontSizeUtil.getWidth(tip.getTextState().getText()) * 2, 24);
         tip.getStyle().setPadding(2f);
+        tip.getStyle().setHorizontalAlign(HorizontalAlign.CENTER);
         tip.setPosition(alignment ? getSize().x : -tip.getSize().x, (getSize().y - 24) / 2);
         tip.getStyle().setBorderRadius(0f);
         this.setTooltip(tip);
