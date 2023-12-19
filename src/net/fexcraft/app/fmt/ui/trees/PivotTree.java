@@ -4,13 +4,20 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.polygon.Pivot;
+import net.fexcraft.app.fmt.texture.TextureGroup;
+import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.ui.EditorComponent;
+import net.fexcraft.app.fmt.ui.GenericDialog;
+import net.fexcraft.app.fmt.ui.fields.RunButton;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateEvent.*;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
+import net.fexcraft.app.fmt.utils.AutoUVPositioner;
 import net.fexcraft.app.fmt.utils.Logging;
+
+import java.io.File;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -30,9 +37,30 @@ public class PivotTree extends Editor {
 		updcom.add(PivotRemoved.class, event -> remPivot(event.pivot()));
 		updcom.add(ModelLoad.class, event -> resizePivots(event.model()));
 		updcom.add(ModelUnload.class, event -> removePivots(event.model()));
+		add(new RunButton("editor.tree.pivot.add", 10, 30, 135, 24, () -> createPivot(), false));
 		UpdateHandler.register(updcom);
 	}
-	
+
+	private void createPivot(){
+		String name = "pivot";
+		if(hasPivot(name)){
+			int i = 0;
+			while(hasPivot(name + i)) i++;
+			name += i;
+		}
+		Pivot pivot = new Pivot(name);
+		FMT.MODEL.pivots().add(pivot);
+		UpdateHandler.update(new PivotAdded(FMT.MODEL, pivot));
+		GenericDialog.showOK("editor.tree.pivot", null, null, "editor.tree.pivot.added", "#" + pivot.id);
+	}
+
+	private boolean hasPivot(String name){
+		for(Pivot pivot : FMT.MODEL.pivots()){
+			if(pivot.id.equals(name)) return true;
+		}
+		return false;
+	}
+
 	@Override
 	protected float topSpace(){
 		return 60f;
