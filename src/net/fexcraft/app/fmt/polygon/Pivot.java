@@ -18,6 +18,7 @@ public class Pivot {
     public boolean visible = true;
     public Vector3f pos = new Vector3f();
     public Vector3f rot = new Vector3f();
+    public Pivot parent;
     public String id;
 
     public Pivot(String id, boolean root){
