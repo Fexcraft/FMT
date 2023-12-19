@@ -228,6 +228,7 @@ editor.component.polygon.texuv.viewer=Open UV/Texture Viewer
 editor.component.group.general.name=Group Settings
 editor.component.group.general.desc=General group settings.
 editor.component.group.general.name/id=Name / Id
+editor.component.group.general.pivot=Pivot
 editor.component.group.general.tex_size=Texture Size
 editor.component.group.general.tex_group=Texture Group
 editor.component.model.general.name=Model Settings
