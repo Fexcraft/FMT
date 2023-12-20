@@ -47,7 +47,8 @@ public class PivotGeneral extends EditorComponent {
 		pivots.addSelectBoxChangeSelectionEventListener(listener -> {
 			Pivot sel = FMT.MODEL.sel_pivot;
 			if(sel == null || sel.root) return;
-			sel.parent = FMT.MODEL.getP(listener.getNewValue());
+			sel.parent(FMT.MODEL.getP(listener.getNewValue()));
+			FMT.MODEL.rerootpivots();
 		});
 		pivots.setVisibleCount(6);
 		refreshPivotEntries();
@@ -103,7 +104,7 @@ public class PivotGeneral extends EditorComponent {
 		}));
 		updcom.add(PivotSelected.class, e -> {
 			name.getTextState().setText(e.pivot().id);
-			pivots.setSelected(e.pivot().root || e.pivot().parent == null ? e.model().getRootPivot().id : e.pivot().parent.id, true);
+			pivots.setSelected(e.pivot().root ? e.model().getRootPivot().id : e.pivot().parent().id, true);
 			updateFields();
 		});
 	}
