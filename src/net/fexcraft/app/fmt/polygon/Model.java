@@ -162,7 +162,7 @@ public class Model {
 		if(!visible) return;
 		DrawMode mode = DrawMode.textured(texgroup != null);
 		for(Pivot pivot : pivots){
-			PolyRenderer.PIVOT = pivot;
+			PolyRenderer.setPivot(pivot);
 			if(Settings.CMARKER.value){
 				PolyRenderer.mode(DrawMode.RGBCOLOR);
 				centermarker0.render();
@@ -174,17 +174,18 @@ public class Model {
 				if(Settings.LINES.value) group.render(DrawMode.LINES, alpha);
 			}
 		}
-		PolyRenderer.PIVOT = null;
+		PolyRenderer.setPivot(null);
 		if(Settings.LINES.value && Settings.POLYMARKER.value && isLastSelectedCornerMarked()) CornerUtil.renderCorners();
 	}
 
 	public void renderPicking(){
 		if(!visible) return;
 		for(Pivot pivot : pivots){
-			PolyRenderer.PIVOT = pivot;
+			PolyRenderer.setPivot(pivot);
 			for(Group group : pivot.groups){
 				group.renderPicking();
 			}
+			PolyRenderer.setPivot(null);
 		}
 	}
 
