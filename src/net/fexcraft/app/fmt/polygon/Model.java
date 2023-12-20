@@ -769,4 +769,8 @@ public class Model {
 		UpdateHandler.update(new PivotSelected(this, pivot));
 	}
 
+	public void rerootpivots(){
+		for(Pivot pivot : pivots) pivot.reroot();
+	}
+
 }
