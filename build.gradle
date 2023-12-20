@@ -149,21 +149,21 @@ tasks.register('mainJar', Jar) {
                 'Created-By': "Ferdinand Calo' (FEX___96)",
                 "Class-Path": ". " + (configurations.runtimeClasspath.collect { "lib/" + it.getName() }.join(' '))
     }
-    from(zipTree("${destinationDirectory}/${archiveFileName}")) {
-        include 'net/fexcraft/app/fmt/launch/'
+    from(sourceSets.main.output){
+        exclude 'net/fexcraft/app/fmt/launch/'
         include 'net/fexcraft/app/fmt/'
         include 'net/fexcraft/app/json/'
         include 'net/fexcraft/lib/'
+        include 'log4j2.xml'
     }
-    from('src/') {
+    from('src/'){
         include 'log4j2.xml'
     }
     archiveBaseName = "FMT"
     version = ""
 }
 
-/*tasks.register('fullJar', Jar) {
-	mainClassName = "com.company.application.Main"
+tasks.register('fullJar', Jar) {
 	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 	manifest {
 		attributes 'Title': "Fex's Modelling Toolbox",
@@ -172,7 +172,7 @@ tasks.register('mainJar', Jar) {
 				'Created-By': "Ferdinand Calo' (FEX___96)",
 				'Multi-Release': true
 	}
-	from(zipTree("${destinationDirectory}/${archiveFileName}")){
+	from(sourceSets.main.output){
 		include 'net/fexcraft/app/fmt/launch/'
 		include 'net/fexcraft/app/fmt/'
 		include 'net/fexcraft/app/json/'
@@ -186,7 +186,7 @@ tasks.register('mainJar', Jar) {
 	}
 	archiveBaseName = "FMTI"
 	version = ""
-}*/
+}
 
 tasks.register('launcherJar', Jar) {
     manifest {
@@ -195,7 +195,7 @@ tasks.register('launcherJar', Jar) {
                 'Main-Class': 'net.fexcraft.app.fmt.launch.Launcher',
                 'Created-By': "Ferdinand Calo' (FEX___96)"
     }
-    from(zipTree("${destinationDirectory}/${archiveFileName}")) {
+    from(sourceSets.main.output) {
         include 'net/fexcraft/app/fmt/launch/'
         include 'net/fexcraft/app/json/'
     }
@@ -261,7 +261,7 @@ tasks.register('compileCatalog') {
 }
 
 build.finalizedBy(mainJar)
-if (hasProperty("fullJar")) build.finalizedBy(fullJar)
+build.finalizedBy(fullJar)
 build.finalizedBy(launcherJar)
 build.finalizedBy(copyForUpload)
 build.finalizedBy(compileCatalog)
