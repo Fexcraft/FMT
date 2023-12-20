@@ -82,7 +82,7 @@ public class Pivot {
         roots.clear();
         if(root) return;
         Pivot pivot = this;
-        while(pivot.parent != null){
+        while(pivot.parent != null && !roots.contains(pivot.parent)){
             pivot = pivot.parent;
             roots.add(0, pivot);
         }
