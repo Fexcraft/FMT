@@ -19,6 +19,8 @@ import static org.lwjgl.opengl.GL20.glUniform4fv;
 import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
 import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 
+import net.fexcraft.app.fmt.utils.Axis3DL;
+import net.fexcraft.app.fmt.utils.Logging;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -30,6 +32,8 @@ import net.fexcraft.lib.frl.ColoredVertex;
 import net.fexcraft.lib.frl.Polygon;
 import net.fexcraft.lib.frl.Polyhedron;
 import net.fexcraft.lib.frl.Vertex;
+
+import java.util.ArrayList;
 
 public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 
@@ -63,7 +67,19 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 			if(poly.rotX != 0f) matrix.rotate((float)Math.toRadians(poly.rotX), axis_x);
 		}
 		else{
-			matrix.translate(new Vector3f(PIVOT.pos.x + poly.posX, PIVOT.pos.y + poly.posY, PIVOT.pos.z + poly.posZ));
+			for(Pivot pivot : PIVOT.roots){
+				matrix.translate(pivot.pos);
+				if(pivot.rot.y != 0f) matrix.rotate((float)Math.toRadians(pivot.rot.y), axis_y);
+				if(pivot.rot.z != 0f) matrix.rotate((float)Math.toRadians(pivot.rot.z), axis_z);
+				if(pivot.rot.x != 0f) matrix.rotate((float)Math.toRadians(pivot.rot.x), axis_x);
+			}
+
+			matrix.translate(PIVOT.pos);
+			if(PIVOT.rot.y != 0f) matrix.rotate((float)Math.toRadians(PIVOT.rot.y), axis_y);
+			if(PIVOT.rot.z != 0f) matrix.rotate((float)Math.toRadians(PIVOT.rot.z), axis_z);
+			if(PIVOT.rot.x != 0f) matrix.rotate((float)Math.toRadians(PIVOT.rot.x), axis_x);
+
+			matrix.translate(new Vector3f(poly.posX, poly.posY, poly.posZ));
 			if(poly.rotY != 0f) matrix.rotate((float)Math.toRadians(poly.rotY), axis_y);
 			if(poly.rotZ != 0f) matrix.rotate((float)Math.toRadians(poly.rotZ), axis_z);
 			if(poly.rotX != 0f) matrix.rotate((float)Math.toRadians(poly.rotX), axis_x);
