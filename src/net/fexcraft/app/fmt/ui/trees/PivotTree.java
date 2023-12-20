@@ -36,7 +36,7 @@ public class PivotTree extends Editor {
 		});
 		updcom.add(PivotRemoved.class, event -> remPivot(event.pivot()));
 		updcom.add(ModelLoad.class, event -> resizePivots(event.model()));
-		updcom.add(ModelUnload.class, event -> removePivots(null));
+		updcom.add(ModelUnload.class, event -> removePivots(event.model()));
 		add(new RunButton("editor.tree.pivot.add", 10, 30, 135, 24, () -> createPivot(), false));
 		UpdateHandler.register(updcom);
 	}
