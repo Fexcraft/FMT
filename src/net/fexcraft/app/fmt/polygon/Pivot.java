@@ -3,6 +3,7 @@ package net.fexcraft.app.fmt.polygon;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
+import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ public class Pivot {
     public final boolean root;
     public ArrayList<Group> groups = new ArrayList<>();
     public ArrayList<Pivot> roots = new ArrayList<>();
+    public Matrix4f matrix;
     public boolean minimized;
     public boolean visible = true;
     public Vector3f pos = new Vector3f();
