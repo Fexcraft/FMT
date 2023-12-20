@@ -160,6 +160,12 @@ public class SaveHandler {
 		});
 		if(model.pivots().isEmpty()) model.addPivot(new Pivot("root", true));
 		Pivot rootp = model.getRootPivot();
+		for(Pivot pivot : model.pivots()){
+			if(pivot.root) continue;
+			if(pivot.parentid == null) pivot.parent(rootp, false);
+			else pivot.parent(model.getP(pivot.parentid), false);
+		}
+		model.rerootpivots();
 		JsonMap groups = map.getMap("groups");
 		groups.entries().forEach(entry -> {
 			try{
