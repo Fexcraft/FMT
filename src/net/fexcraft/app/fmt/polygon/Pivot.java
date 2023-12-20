@@ -1,6 +1,6 @@
 package net.fexcraft.app.fmt.polygon;
 
-import net.fexcraft.app.fmt.utils.Logging;
+import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
 import org.joml.Vector3f;
@@ -14,11 +14,13 @@ public class Pivot {
 
     public final boolean root;
     public ArrayList<Group> groups = new ArrayList<>();
+    public ArrayList<Pivot> roots = new ArrayList<>();
     public boolean minimized;
     public boolean visible = true;
     public Vector3f pos = new Vector3f();
     public Vector3f rot = new Vector3f();
-    public Pivot parent;
+    private Pivot parent;
+    public String parentid;
     public String id;
 
     public Pivot(String id, boolean root){
@@ -28,6 +30,7 @@ public class Pivot {
 
     public Pivot(String id){
         this(id, false);
+        parent = FMT.MODEL.getRootPivot();
     }
 
     public Pivot(String key, JsonMap map){
@@ -47,6 +50,7 @@ public class Pivot {
         }
         visible = map.getBoolean("visible", true);
         minimized = map.getBoolean("minimized", false);
+        parentid = map.getString("parent", null);
     }
 
     public JsonMap save(){
@@ -56,12 +60,36 @@ public class Pivot {
         map.add("rot", new JsonArray(rot.x, rot.y, rot.z));
         map.add("visible", visible);
         map.add("minimized", minimized);
+        if(parent != null) map.add("parent", parent.id);
         return map;
     }
 
     public boolean isin(Group group){
         if(group.pivot == null) return root;
         return id.equals(group.pivot);
+    }
+
+    public void parent(Pivot p){
+        parent(p, true);
+    }
+
+    public void parent(Pivot p, boolean rr){
+        parent = p;
+        if(rr) reroot();
+    }
+
+    public void reroot(){
+        roots.clear();
+        if(root) return;
+        Pivot pivot = this;
+        while(pivot.parent != null){
+            pivot = pivot.parent;
+            roots.add(0, pivot);
+        }
+    }
+
+    public Pivot parent(){
+        return parent;
     }
 
 }
