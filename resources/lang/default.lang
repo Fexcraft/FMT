@@ -480,6 +480,7 @@ setting.exporter-obj.scale=Model Scale
 setting.exporter-obj.index_vertices=Index Vertices?
 setting.exporter-obj.groups_as_objects=Define groups as objects?
 setting.exporter-tim.package=Java Package
+setting.exporter-pivot.as=Export Pivots as...
 setting.importer-dfm.agreement=I respect Model Copyright
 setting.importer-dfm.degree_based=Model uses Degrees
 
