@@ -65,9 +65,9 @@ public class PivotExporter implements Exporter {
 				for(Pivot pivot : model.pivots()){
 					if(pivot.root) continue;
 					JsonArray array = new JsonArray.Flat();
-					array.add(model.orient.rect() ? pivot.pos.x : -pivot.pos.z);
-					array.add(model.orient.rect() ? pivot.pos.y : -pivot.pos.y);
-					array.add(model.orient.rect() ? pivot.pos.z : -pivot.pos.x);
+					array.add((model.orient.rect() ? pivot.pos.x : -pivot.pos.z) * .0625f);
+					array.add((model.orient.rect() ? pivot.pos.y : -pivot.pos.y) * .0625f);
+					array.add((model.orient.rect() ? pivot.pos.z : -pivot.pos.x) * .0625f);
 					array.add(pivot.id);
 					array.add(0.25f);
 					if(pivot.rot.x != 0f || pivot.rot.y != 0f || pivot.rot.z != 0f){
@@ -86,9 +86,9 @@ public class PivotExporter implements Exporter {
 					if(pivot.root) continue;
 					JsonMap sp = new JsonMap();
 					JsonArray array = new JsonArray.Flat();
-					array.add(model.orient.rect() ? pivot.pos.x : -pivot.pos.z);
-					array.add(model.orient.rect() ? pivot.pos.y : -pivot.pos.y);
-					array.add(model.orient.rect() ? pivot.pos.z : -pivot.pos.x);
+					array.add((model.orient.rect() ? pivot.pos.x : -pivot.pos.z) * .0625f);
+					array.add((model.orient.rect() ? pivot.pos.y : -pivot.pos.y) * .0625f);
+					array.add((model.orient.rect() ? pivot.pos.z : -pivot.pos.x) * .0625f);
 					sp.add("pos", array);
 					sp.add("parent", pivot.parent().root ? "vehicle" : pivot.parent().id);
 					if(pivot.rot.y != 0f) sp.add("yaw", pivot.rot.y);
