@@ -40,6 +40,7 @@ public class ExportManager {
 		addExporter(new TiMExporter());
 		addExporter(new AABBExporter());
 		addExporter(new ObjExporter());
+		addExporter(new PivotExporter());
 	}
 	
 	private static void addExporter(Exporter exporter){
