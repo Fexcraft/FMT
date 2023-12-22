@@ -41,6 +41,7 @@ public class ExportManager {
 		addExporter(new AABBExporter());
 		addExporter(new ObjExporter());
 		addExporter(new PivotExporter());
+		addExporter(new MarkerAsPartSlotExporter());
 	}
 	
 	private static void addExporter(Exporter exporter){
