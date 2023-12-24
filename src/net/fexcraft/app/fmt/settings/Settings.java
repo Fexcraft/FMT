@@ -445,6 +445,7 @@ public class Settings {
 		Editor.PIVOT_EDITOR = new PivotEditor();
 		Editor.MODEL_EDITOR = new ModelEditor();
 		Editor.TEXTURE_EDITOR = new TextureEditor();
+		Editor.UV_EDITOR = new UVEditor();
 		Editor.POLYGON_TREE = new PolygonTree();
 		Editor.PIVOT_TREE = new PivotTree();
 		Editor.TEXTURE_TREE = new TextureTree();
