@@ -1,10 +1,15 @@
+requires test
+
 bln test0 = false
 int test1 = 10
 flt test2 = 1.1
 str test3 = "test"
 flt val = 0.001
+map map0 = hash
+map map1 = tree
+lst list0
 
-act render(obj poly, flt alpha)
+act render(poly, alpha)
     flt v
     v = val * alpha
     poly.pos.x -= v
