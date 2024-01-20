@@ -41,6 +41,7 @@ import net.fexcraft.lib.common.math.Time;
 import net.fexcraft.lib.frl.GLO;
 import net.fexcraft.lib.frl.Polyhedron;
 import net.fexcraft.lib.frl.gen.Generator;
+import net.fexcraft.lib.scr.ScriptParser;
 import net.fexcraft.lib.script.Script;
 import net.fexcraft.lib.script.elm.FltElm;
 import net.fexcraft.lib.tmt.BoxBuilder;
@@ -56,6 +57,7 @@ import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.time.LocalDate;
@@ -132,8 +134,8 @@ public class FMT {
 		Settings.apply(INSTANCE);
 		//SCRIPT = new Script(new FileInputStream("./scripts/test.script"), "test");
 		//Logging.log(SCRIPT.print());
-		//net.fexcraft.lib.scr.Script scr = ScriptParser.parse(new FileInputStream("./scripts/test1.script"));
-		//Logging.log(scr);
+		//net.fexcraft.lib.scr.Script scr = ScriptParser.parse("test", new FileInputStream("./scripts/test.script"));
+		//Logging.log(scr.toString());
 		//System.exit(0);
 		try{
 			INSTANCE.run();
