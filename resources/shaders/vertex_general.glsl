@@ -28,9 +28,9 @@ void main(){
 	    uv = uv_in;
 	    color = color_in;
     }
+	light = light_in;
     if(lighting){
 	    normal = vec3(model * vec4(position, 1)) + normal_in;
-	    light = light_in;
     	fragpos = vec3(model * vec4(position, 1));
     }
 }
