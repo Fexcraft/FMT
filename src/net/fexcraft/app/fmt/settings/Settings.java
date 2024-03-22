@@ -86,6 +86,7 @@ public class Settings {
 	public static Setting<Boolean> FLOOR;
 	public static Setting<Boolean> CUBE;
 	public static Setting<Boolean> CMARKER;
+	public static Setting<Boolean> PMARKER;
 	public static Setting<Boolean> LINES;
 	public static Setting<Boolean> POLYMARKER;
 	public static Setting<Boolean> ADD_TO_LAST;
@@ -216,6 +217,7 @@ public class Settings {
 		FLOOR = new Setting<>("floor", true, SPACE3D, map);
 		CUBE = new Setting<>("center_cube", true, SPACE3D, map);
 		CMARKER = new Setting<>("center_marker", true, SPACE3D, map);
+		PMARKER = new Setting<>("pivot_marker", true, SPACE3D, map);
 		LINES = new Setting<>("lines", true, SPACE3D, map);
 		POLYMARKER = new Setting<>("polygon_marker", true, SPACE3D, map);
 		ADD_TO_LAST = new Setting<>("add_to_last", false, GENERAL, map);
