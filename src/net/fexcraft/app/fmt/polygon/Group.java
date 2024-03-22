@@ -3,7 +3,9 @@ package net.fexcraft.app.fmt.polygon;
 import static net.fexcraft.app.fmt.update.UpdateHandler.update;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import net.fexcraft.app.fmt.animation.Animation;
 import net.fexcraft.app.fmt.update.UpdateEvent.GroupRenamed;
 import net.fexcraft.app.fmt.update.UpdateEvent.PolygonRemoved;
 import net.fexcraft.lib.script.elm.FltElm;
@@ -19,6 +21,7 @@ public class Group extends ArrayList<Polygon> {
 	public String id;
 	public final Model model;
 	public boolean minimized, selected, visible = true;
+	public List<Animation> animations = new ArrayList<>();
 	public RGB color = RGB.WHITE.copy();
 	public TextureGroup texgroup = null;
 	public String texhelper;
@@ -80,6 +83,7 @@ public class Group extends ArrayList<Polygon> {
 	public void render(DrawMode mode, FltElm alpha){
 		if(!visible) return;
 		bindtex();
+		for(Animation animation : animations) animation.pre(this, mode, alpha);
 		if(mode == DrawMode.LINES){
 			PolyRenderer.mode(selected ? DrawMode.SELLINES : DrawMode.LINES);
 			for(Polygon poly : this){
@@ -94,6 +98,7 @@ public class Group extends ArrayList<Polygon> {
 				if(poly.visible) poly.render(alpha);
 			}
 		}
+		for(Animation animation : animations) animation.pst(this, mode, alpha);
 	}
 
 	public void renderPicking(){
