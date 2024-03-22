@@ -19,6 +19,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
+import net.fexcraft.app.fmt.animation.Animation;
 import net.fexcraft.app.fmt.polygon.*;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateEvent.ModelLoad;
@@ -107,7 +108,6 @@ public class SaveHandler {
 		}
 	}
 
-	@SuppressWarnings("unused")
 	public static Model load(Model model, File from, JsonMap map, boolean preview, boolean sub){
 		model.name = map.get("name", "Unnamed Model");
 		model.texSizeX = map.get("texture_size_x", 256);
@@ -205,8 +205,13 @@ public class SaveHandler {
 						}
 					});
 				}
+				if(jsn.has("animations")){
+					jsn.getArrayElements("animations").forEach(elm -> {
+						Animation ani = Animation.load(elm.asMap());
+						if(ani != null) group.animations.add(ani);
+					});
+				}
 				model.addGroup(group.pivot, group);
-				//TODO load animations
 			}
 			catch(Throwable thr){
 				log(thr);
@@ -434,7 +439,14 @@ public class SaveHandler {
 					grobj.add("texture_size_x", group.texSizeX);
 					grobj.add("texture_size_y", group.texSizeY);
 				}
-				//TODO animations
+				if(group.animations.size() > 0){
+					JsonArray anim = new JsonArray();
+					for(Animation ani : group.animations){
+						JsonMap jm = ani.save();
+						if(jm != null) anim.add(jm);
+					}
+					grobj.add("animations", anim);
+				}
 			}
 			grobj.add("name", group.id);
 			if(group.pivot != null) grobj.add("pivot", group.pivot);
