@@ -163,7 +163,7 @@ public class Model {
 		DrawMode mode = DrawMode.textured(texgroup != null);
 		for(Pivot pivot : pivots){
 			PolyRenderer.setPivot(pivot);
-			if(Settings.CMARKER.value){
+			if(Settings.PMARKER.value){
 				PolyRenderer.mode(DrawMode.RGBCOLOR);
 				centermarker0.render();
 				centermarker1.render();
