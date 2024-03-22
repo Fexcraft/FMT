@@ -412,6 +412,7 @@ setting.space3d.demo_model=Demo Model
 setting.space3d.floor=Floor
 setting.space3d.center_cube=Center Cube
 setting.space3d.center_marker=Center Marker
+setting.space3d.pivot_marker=Pivot Markers
 setting.space3d.lines=(Polygon) Lines
 setting.space3d.polygon_marker=Polygon Marker
 setting.space3d.sphere_marker=Spherical Markers
