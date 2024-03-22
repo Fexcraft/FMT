@@ -106,7 +106,7 @@ public class KeyCompound {
 		keys.add(new KeyFunction("toggle_floor", GLFW_KEY_F2, action -> { if(action == GLFW_RELEASE) Settings.FLOOR.toggle(); }));
 		keys.add(new KeyFunction("toggle_lines", GLFW_KEY_F3, action -> { if(action == GLFW_RELEASE) Settings.LINES.toggle(); }));
 		keys.add(new KeyFunction("toggle_cube", GLFW_KEY_F4, action -> { if(action == GLFW_RELEASE) Settings.CUBE.toggle(); }));
-		keys.add(new KeyFunction("toggle_demo", GLFW_KEY_F5, action -> { if(action == GLFW_RELEASE) Settings.DEMO.toggle(); }));
+		keys.add(new KeyFunction("toggle_pivot_marker", GLFW_KEY_F5, action -> { if(action == GLFW_RELEASE) Settings.PMARKER.toggle(); }));
 		keys.add(new KeyFunction("toggle_polygon_marker", GLFW_KEY_F6, action -> { if(action == GLFW_RELEASE) Settings.POLYMARKER.toggle(); }));
 		keys.add(new KeyFunction("toggle_center_marker", GLFW_KEY_F7, action -> { if(action == GLFW_RELEASE) Settings.CMARKER.toggle(); }));
 		keys.add(new KeyFunction("toggle_lighting", GLFW_KEY_F8, action -> { if(action == GLFW_RELEASE) Logging.bar("Toggled lighting " + (Settings.LIGHTING_ON.toggle() ? "on" : "off") + ".", true); }));//TODO
