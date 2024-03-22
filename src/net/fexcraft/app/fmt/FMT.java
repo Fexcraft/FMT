@@ -17,6 +17,7 @@ import com.spinyowl.legui.system.renderer.RendererProvider;
 import com.spinyowl.legui.system.renderer.nvg.NvgRenderer;
 import net.arikia.dev.drpc.DiscordEventHandlers;
 import net.arikia.dev.drpc.DiscordRPC;
+import net.fexcraft.app.fmt.animation.Animation;
 import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.polygon.Arrows;
 import net.fexcraft.app.fmt.polygon.GLObject;
@@ -241,6 +242,7 @@ public class FMT {
 		RENDERER = new NvgRenderer();
 		RENDERER.initialize();
 		TextureManager.load();
+		Animation.init();
 		FMT.WORKSPACE = new Workspace();
 		FMT.updateTitle();
 		if(FMT.MODEL.file != null) FMT.MODEL.load();
