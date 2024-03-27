@@ -225,7 +225,7 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 	
 	public static enum DrawMode {
 		
-		TEXTURED, UNTEXTURED, RGBCOLOR, PICKER, PICKER_FACE, SELLINES, LINES;
+		TEXTURED, UNTEXTURED, RGBCOLOR, PICKER, PICKER_FACE, SELLINES, LINES, UI, UI_LINES;
 		
 		public boolean lines(){
 			return this == LINES || this == SELLINES;
@@ -237,6 +237,10 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 
 		boolean face_picker(){
 			return this == PICKER_FACE;
+		}
+
+		boolean ui(){
+			return this == UI || this == UI_LINES;
 		}
 
 		boolean color(){
