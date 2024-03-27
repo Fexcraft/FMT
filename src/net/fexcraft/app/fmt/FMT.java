@@ -318,7 +318,7 @@ public class FMT {
 			//
 			adjustLabels();
 			ImageHandler.updateText();
-			RENDERER.render(ImageHandler.shouldHide() ? IMG_FRAME : FRAME, CONTEXT);
+			//RENDERER.render(ImageHandler.shouldHide() ? IMG_FRAME : FRAME, CONTEXT);
 			timer.updateFPS();
 			glfwPollEvents();
 			glfwSwapBuffers(window);
@@ -367,7 +367,6 @@ public class FMT {
 		glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 	    //
 		ShaderManager.GENERAL.use();
-		CAM.apply();
 		glBindVertexArray(vao);
 		TextureManager.bind("null");
 		if(Picker.TYPE.polygon()){
@@ -391,6 +390,9 @@ public class FMT {
 		}
 		glClearColor(background[0], background[1], background[2], 1);
 	    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		CAM.ortho(8);
+		MODEL.render(alpha);
+		CAM.apply();
 	    PolyRenderer.mode(DrawMode.TEXTURED);
 		PolyRenderer.updateLightState();
 		if(Settings.CUBE.value){
