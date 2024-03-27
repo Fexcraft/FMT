@@ -78,9 +78,9 @@ public class GGR {
         perspective(fov);
         ShaderManager.applyUniforms(prog -> {
 			prog.use();
-			def_view = glGetUniformLocation(ShaderManager.GENERAL.program(), "view");
+			def_view = glGetUniformLocation(prog.program(), "view");
 			glUniformMatrix4fv(def_view, false, view.get(new float[16]));
-			def_proj = glGetUniformLocation(ShaderManager.GENERAL.program(), "projection");
+			def_proj = glGetUniformLocation(prog.program(), "projection");
 			glUniformMatrix4fv(def_proj, false, projection.get(new float[16]));
         });
     }
@@ -91,6 +91,16 @@ public class GGR {
 
 	public void perspective(float degree_fov){
 		projection = new Matrix4f().perspective(Static.rad1 * fov, (float)FMT.WIDTH / FMT.HEIGHT, 0.1f, 1024f);
+	}
+
+	public void ortho(float scale){
+		ShaderManager.applyUniforms(prog -> {
+			prog.use();
+			def_view = glGetUniformLocation(prog.program(), "view");
+			glUniformMatrix4fv(def_view, false, new Matrix4f().identity().get(new float[16]));
+			def_proj = glGetUniformLocation(prog.program(), "projection");
+			glUniformMatrix4fv(def_proj, false, new Matrix4f().ortho(0, FMT.WIDTH / scale, FMT.HEIGHT / scale, 0, -1, 1).get(new float[16]));
+        });
 	}
 
     public void pollInput(float delta){
