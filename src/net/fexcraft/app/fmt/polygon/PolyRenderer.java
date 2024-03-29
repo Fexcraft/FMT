@@ -21,6 +21,7 @@ import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 import net.fexcraft.app.fmt.utils.Axis3DL;
 import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.fmt.utils.ShaderManager;
+import net.fexcraft.lib.common.math.RGB;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -54,7 +55,7 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 		if(poly.recompile || glo.gpu[0].glid == null){
 			compile(poly, glo, glo.gpu[0], false);
 			compile(poly, glo, glo.gpu[1], true);
-			glo.linecolor = LINECOLOR;
+			if(!MODE.ui() || glo.linecolor == null) glo.linecolor = LINECOLOR;
 			if(glo.polycolor == null) glo.polycolor = EMPTY;
 			if(glo.pickercolor == null) glo.pickercolor = EMPTY;
 			poly.recompile = false;
