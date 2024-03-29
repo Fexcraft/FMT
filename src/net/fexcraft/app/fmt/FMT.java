@@ -19,6 +19,7 @@ import net.arikia.dev.drpc.DiscordEventHandlers;
 import net.arikia.dev.drpc.DiscordRPC;
 import net.fexcraft.app.fmt.animation.Animation;
 import net.fexcraft.app.fmt.demo.ModelT1P;
+import net.fexcraft.app.fmt.nui.FMTInterface;
 import net.fexcraft.app.fmt.polygon.Arrows;
 import net.fexcraft.app.fmt.polygon.GLObject;
 import net.fexcraft.app.fmt.polygon.Model;
@@ -103,6 +104,8 @@ public class FMT {
 	public long window;
 	//
 	public static float[] background;
+	public static FMTInterface UI;
+	//
 	public static Frame FRAME, IMG_FRAME;
 	public static Context CONTEXT;
 	public static Renderer RENDERER;
@@ -171,6 +174,7 @@ public class FMT {
 		CAM = new GGR();
 		AxisRotator.setDefImpl(Axis3DL.class);
 		Settings.applyTheme();
+		UI = new FMTInterface();
 		FRAME = new Frame(WIDTH, HEIGHT);
 		FRAME.getContainer().add(TOOLBAR = new Toolbar());
 		Settings.loadEditors();
@@ -390,8 +394,11 @@ public class FMT {
 		}
 		glClearColor(background[0], background[1], background[2], 1);
 	    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		CAM.ortho(8);
-		MODEL.render(alpha);
+		CAM.ortho(1);
+	    PolyRenderer.mode(DrawMode.UI_LINES);
+		UI.render();
+	    PolyRenderer.mode(DrawMode.UI);
+		UI.render();
 		CAM.apply();
 	    PolyRenderer.mode(DrawMode.TEXTURED);
 		PolyRenderer.updateLightState();
