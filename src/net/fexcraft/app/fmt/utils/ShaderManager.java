@@ -8,11 +8,13 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
 
+import net.fexcraft.app.fmt.polygon.PolyRenderer;
 import org.apache.commons.io.FileUtils;
 
 public class ShaderManager {
 	
 	public static ShaderProgram GENERAL;
+	public static ShaderProgram UI;
 
 	public static int load(String string, int type) throws IOException {
 		return load(new File(string), type);
@@ -27,6 +29,7 @@ public class ShaderManager {
 
 	public static void loadPrograms() throws IOException {
 		GENERAL = loadProgram("general");
+		UI = loadProgram("ui");
 	}
 
 	private static ShaderProgram loadProgram(String id) throws IOException {
@@ -67,6 +70,7 @@ public class ShaderManager {
 		}
 
 		public void use(){
+			PolyRenderer.program = this;
 			glUseProgram(prog);
 		}
 
@@ -87,15 +91,15 @@ public class ShaderManager {
 		public int program(){
 			return prog;
 		}
-		
-	}
 
-	public static void applyUniforms(Consumer<ShaderProgram> cons){
-		cons.accept(GENERAL);
-	}
+		public void applyUniforms(Consumer<ShaderProgram> cons){
+			cons.accept(this);
+		}
 
-	public static int getUniform(String string){
-		return glGetUniformLocation(ShaderManager.GENERAL.program(), string);
+		public int getUniform(String string){
+			return glGetUniformLocation(prog, string);
+		}
+
 	}
 
 }
