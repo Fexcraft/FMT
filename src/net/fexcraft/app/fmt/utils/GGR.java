@@ -76,7 +76,7 @@ public class GGR {
         FMT.pos.getTextState().setText(format(pos.x) + ", " + format(pos.y) + ", " + format(pos.z));
         FMT.rot.getTextState().setText(format(Math.toDegrees(hor)) + " / " + format(Math.toDegrees(ver)) + " : " + (int)fov);
         perspective(fov);
-        ShaderManager.applyUniforms(prog -> {
+        ShaderManager.GENERAL.applyUniforms(prog -> {
 			prog.use();
 			def_view = glGetUniformLocation(prog.program(), "view");
 			glUniformMatrix4fv(def_view, false, view.get(new float[16]));
@@ -94,7 +94,7 @@ public class GGR {
 	}
 
 	public void ortho(float scale){
-		ShaderManager.applyUniforms(prog -> {
+		ShaderManager.UI.applyUniforms(prog -> {
 			prog.use();
 			def_view = glGetUniformLocation(prog.program(), "view");
 			glUniformMatrix4fv(def_view, false, new Matrix4f().identity().get(new float[16]));
