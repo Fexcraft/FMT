@@ -1,40 +1,22 @@
 package net.fexcraft.app.fmt.polygon;
 
-import static net.fexcraft.app.fmt.settings.Settings.TRIANGULATION_L;
-import static org.lwjgl.opengl.GL11.GL_FLOAT;
-import static org.lwjgl.opengl.GL11.GL_LINES;
-import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
-import static org.lwjgl.opengl.GL11.glDrawArrays;
-import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
-import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
-import static org.lwjgl.opengl.GL15.glBindBuffer;
-import static org.lwjgl.opengl.GL15.glBufferData;
-import static org.lwjgl.opengl.GL15.glDeleteBuffers;
-import static org.lwjgl.opengl.GL15.glGenBuffers;
-import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
-import static org.lwjgl.opengl.GL20.glUniform1f;
-import static org.lwjgl.opengl.GL20.glUniform3fv;
-import static org.lwjgl.opengl.GL20.glUniform4fv;
-import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
-import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
-
-import net.fexcraft.app.fmt.utils.Axis3DL;
-import net.fexcraft.app.fmt.utils.Logging;
-import net.fexcraft.app.fmt.utils.ShaderManager;
-import net.fexcraft.lib.common.math.RGB;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
-
 import net.fexcraft.app.fmt.polygon.GLObject.GPUData;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.utils.ImageHandler;
+import net.fexcraft.app.fmt.utils.ShaderManager;
 import net.fexcraft.lib.common.math.Vec3f;
+import net.fexcraft.lib.common.utils.Print;
 import net.fexcraft.lib.frl.ColoredVertex;
 import net.fexcraft.lib.frl.Polygon;
 import net.fexcraft.lib.frl.Polyhedron;
 import net.fexcraft.lib.frl.Vertex;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
-import java.util.ArrayList;
+import static net.fexcraft.app.fmt.settings.Settings.TRIANGULATION_L;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL20.*;
 
 public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 
@@ -55,7 +37,10 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 		if(poly.recompile || glo.gpu[0].glid == null){
 			compile(poly, glo, glo.gpu[0], false);
 			compile(poly, glo, glo.gpu[1], true);
-			if(!MODE.ui() || glo.linecolor == null) glo.linecolor = LINECOLOR;
+			if(MODE.ui()){
+				if(MODE.ui_lines() && glo.linecolor == null) return;
+			}
+			else if(glo.linecolor == null) glo.linecolor = LINECOLOR;
 			if(glo.polycolor == null) glo.polycolor = EMPTY;
 			if(glo.pickercolor == null) glo.pickercolor = EMPTY;
 			poly.recompile = false;
@@ -144,7 +129,13 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 
 	private void compile(Polyhedron<GLObject> poli, GLObject glo, GPUData obj, boolean lines){
     	for(net.fexcraft.lib.frl.Polygon polygon : poli.polygons){
-    		obj.size += polygon.vertices.length == 4 ? lines ? 8 : 6 : lines ? 6 : 3;
+			if(polygon.vertices.length <= 4){
+				obj.size += polygon.vertices.length == 4 ? lines ? 8 : 6 : lines ? 6 : 3;
+			}
+    		else{
+				if(lines) obj.size += polygon.vertices.length * 2;
+				else obj.size += (polygon.vertices.length - 2) * 3;
+			}
     	}
     	obj. verts = new float[obj.size * 3];
     	if(!lines){
@@ -158,7 +149,7 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 		int ver = 0, uv = 0, nor = 0, lig = 0, col = 0;
     	for(int i = 0; i < poli.polygons.size(); i++){
     		Polygon poly = poli.polygons.get(i);
-    		int[] order = poly.vertices.length == 4 ? lines && !TRIANGULATION_L.value ? orderql : orderqn : lines ? ordertl : ordertn;
+    		int[] order = poly.vertices.length == 4 ? lines && !TRIANGULATION_L.value ? orderql : orderqn : poly.vertices.length == 3 ? lines ? ordertl : ordertn : genOrder(poly.vertices.length, lines);
         	Vec3f vec0 = new Vec3f(poly.vertices[1].vector.sub(poly.vertices[0].vector));
 	        Vec3f vec1 = new Vec3f(poly.vertices[1].vector.sub(poly.vertices[2].vector));
 	        Vec3f vec2 = vec1.cross(vec0).normalize();
@@ -218,6 +209,27 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 		glBufferData(GL_ARRAY_BUFFER, obj.colors, GL_STATIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, obj.lightss = glGenBuffers());
 		glBufferData(GL_ARRAY_BUFFER, obj.lights, GL_STATIC_DRAW);
+	}
+
+	private int[] genOrder(int length, boolean lines){
+		int[] order = new int[lines ? length * 2 : (length - 2) * 3];
+		int j = 0;
+		if(lines){
+			for(int i = 0; i < length - 1; i++){
+				order[j++] = i;
+				order[j++] = i + 1;
+			}
+			order[j++] = length - 1;
+			order[j] = 0;
+		}
+		else{
+			for(int i = 2; i < length; i++){
+				order[j++] = 0;
+				order[j++] = i - 1;
+				order[j++] = i;
+			}
+		}
+		return order;
 	}
 
 	@Override
