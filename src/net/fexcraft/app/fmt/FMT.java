@@ -174,7 +174,6 @@ public class FMT {
 		CAM = new GGR();
 		AxisRotator.setDefImpl(Axis3DL.class);
 		Settings.applyTheme();
-		UI = new FMTInterface();
 		FRAME = new Frame(WIDTH, HEIGHT);
 		FRAME.getContainer().add(TOOLBAR = new Toolbar());
 		Settings.loadEditors();
@@ -246,6 +245,7 @@ public class FMT {
 		RENDERER = new NvgRenderer();
 		RENDERER.initialize();
 		TextureManager.load();
+		UI = new FMTInterface();
 		Animation.init();
 		FMT.WORKSPACE = new Workspace();
 		FMT.updateTitle();
@@ -395,8 +395,6 @@ public class FMT {
 		glClearColor(background[0], background[1], background[2], 1);
 	    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		CAM.ortho(1);
-	    PolyRenderer.mode(DrawMode.UI_LINES);
-		UI.render();
 	    PolyRenderer.mode(DrawMode.UI);
 		UI.render();
 		CAM.apply();
