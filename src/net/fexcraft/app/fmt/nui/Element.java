@@ -113,9 +113,15 @@ public class Element {
 		Renderer.RENDERER.delete(hedron);
 	}
 
-	public  Element pos(int x, int y){
+	public Element pos(int x, int y){
 		x(x);
 		y(y);
+		return this;
+	}
+
+	public Element posa(int x, int y){
+		xa(x);
+		ya(y);
 		return this;
 	}
 
@@ -195,8 +201,13 @@ public class Element {
 
 	public void add(Element elm){
 		if(elements == null) elements = new ArrayList<>();
-		elements.add(elm.zidx(z + 1).recompile());
-		elm.root = this;
+		elements.add(elm.root(this).recompile());
+	}
+
+	public Element root(Element elm){
+		elm.root = elm;
+		elm.z = elm.z + 1;
+		return this;
 	}
 
 	public void hovered(boolean bool){
