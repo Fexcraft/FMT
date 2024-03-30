@@ -12,6 +12,7 @@ import net.fexcraft.lib.frl.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -21,9 +22,11 @@ public class Element {
 	public static int elmIdx = 7;
 	public int colorIdx = 0;
 	public Polyhedron<GLObject> hedron;
+	public Runnable onclick;
 	public List<Element> elements;
 	public Element root;
 	public String texture;
+	public String tooltip;
 	public boolean visible;
 	public boolean hovered;
 	public boolean rounded;
@@ -134,6 +137,16 @@ public class Element {
 		return this;
 	}
 
+	public Element onclick(Runnable cons){
+		onclick = cons;
+		return this;
+	}
+
+	public Element tooltip(String ttip){
+		tooltip = ttip;
+		return this;
+	}
+
 	public Element zidx(int idx){
 		z = idx;
 		return this;
@@ -167,7 +180,7 @@ public class Element {
 	}
 
 	public void click(){
-		Logging.log(this);
+		if(onclick != null) onclick.run();
 	}
 
 }
