@@ -2,8 +2,10 @@ package net.fexcraft.app.fmt.utils;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.List;
 import java.util.function.Consumer;
 
+import net.fexcraft.app.fmt.nui.Element;
 import net.fexcraft.app.fmt.polygon.uv.Face;
 import net.fexcraft.app.fmt.polygon.uv.NoFace;
 import net.fexcraft.app.fmt.update.UpdateEvent;
@@ -39,7 +41,7 @@ public class Picker {
 	
 	public static enum PickType {
 		
-		NONE, POLYGON, FACE, COLOR1, COLOR2;
+		NONE, POLYGON, FACE, COLOR1, COLOR2, UI;
 		
 		public boolean pick(){
 			return this != NONE;
@@ -61,7 +63,7 @@ public class Picker {
 	
 	public static enum PickTask {
 		
-		NONE, SELECT, RESELECT, PAINT1, PAINT2, FUNCTION;
+		NONE, SELECT, RESELECT, PAINT1, PAINT2, FUNCTION, HOVER;
 		
 		public boolean pick(){
 			return this != NONE;
@@ -114,6 +116,21 @@ public class Picker {
 				selected_face = polygon.getFaceByColor(face);
 				UpdateHandler.update(new UpdateEvent.PickFace(polygon, selected_face));
 			}
+		}
+		else if(TYPE == PickType.UI){
+			int pick = getPick();
+			if(pick <= 0 || pick > Element.elmIdx) return;
+			Element elm = getElm(FMT.UI.elements, pick);
+			if(elm == null){
+				if(TASK.select()) pick(PickType.POLYGON, PickTask.SELECT, offcenter);
+			}
+			else if(TASK == PickTask.HOVER){
+				elm.hovered(true);
+			}
+			else if(TASK.select()){
+				elm.click();
+			}
+			reset();
 		}
 		else{
 			int pick = getPick();
@@ -174,6 +191,16 @@ public class Picker {
 	
 	public static void setConsumer(Consumer<Polygon> cons){
 		consumer = cons;
+	}
+
+	public static Element getElm(List<Element> elms, int color){
+		if(elms == null) return null;
+		for(Element elm : elms){
+			if(elm.colorIdx == color) return elm;
+			Element e = getElm(elm.elements, color);
+			if(e != null) return e;
+		}
+		return null;
 	}
 
 }
