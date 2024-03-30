@@ -245,7 +245,7 @@ public class FMT {
 		RENDERER = new NvgRenderer();
 		RENDERER.initialize();
 		TextureManager.load();
-		//UI = new FMTInterface();
+		if(Settings.TESTING.value) UI = new FMTInterface();
 		Animation.init();
 		FMT.WORKSPACE = new Workspace();
 		FMT.updateTitle();
@@ -322,15 +322,17 @@ public class FMT {
 			//
 			adjustLabels();
 			ImageHandler.updateText();
-			RENDERER.render(ImageHandler.shouldHide() ? IMG_FRAME : FRAME, CONTEXT);
+			if(!Settings.TESTING.value) RENDERER.render(ImageHandler.shouldHide() ? IMG_FRAME : FRAME, CONTEXT);
 			timer.updateFPS();
 			glfwPollEvents();
 			glfwSwapBuffers(window);
-			sys_event_processor.processEvents(FRAME, CONTEXT);
-			EventProcessorProvider.getInstance().processEvents();
-			LayoutManager.getInstance().layout(FRAME);
-			AnimatorProvider.getAnimator().runAnimations();
-			ImageHandler.processTask();
+			if(!Settings.TESTING.value){
+				sys_event_processor.processEvents(FRAME, CONTEXT);
+				EventProcessorProvider.getInstance().processEvents();
+				LayoutManager.getInstance().layout(FRAME);
+				AnimatorProvider.getAnimator().runAnimations();
+				ImageHandler.processTask();
+			}
 			timer.update();
 		}
 		DiscordRPC.discordShutdown();
@@ -392,11 +394,25 @@ public class FMT {
 			}
 		    Picker.reset();
 		}
-		glClearColor(background[0], background[1], background[2], 1);
-	    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		//CAM.ortho(1);
-	    //PolyRenderer.mode(DrawMode.UI);
-		//UI.render();
+		if(Settings.TESTING.value){
+			if(Picker.TASK == Picker.PickTask.NONE){
+				Picker.pick(Picker.PickType.UI, Picker.PickTask.HOVER, true);
+			}
+			CAM.ortho(1);
+			glClearColor(1, 1, 1, 1);
+		    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			PolyRenderer.mode(DrawMode.PICKER);
+			UI.render(Picker.TASK);
+			Picker.process();
+			glClearColor(background[0], background[1], background[2], 1);
+	    	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	    	PolyRenderer.mode(DrawMode.UI);
+			UI.render(null);
+		}
+		else{
+			glClearColor(background[0], background[1], background[2], 1);
+	    	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		}
 		CAM.apply();
 	    PolyRenderer.mode(DrawMode.TEXTURED);
 		PolyRenderer.updateLightState();
