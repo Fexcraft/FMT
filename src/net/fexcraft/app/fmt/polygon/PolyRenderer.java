@@ -1,45 +1,29 @@
 package net.fexcraft.app.fmt.polygon;
 
-import static net.fexcraft.app.fmt.settings.Settings.TRIANGULATION_L;
-import static net.fexcraft.app.fmt.utils.ShaderManager.getUniform;
-import static org.lwjgl.opengl.GL11.GL_FLOAT;
-import static org.lwjgl.opengl.GL11.GL_LINES;
-import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
-import static org.lwjgl.opengl.GL11.glDrawArrays;
-import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
-import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
-import static org.lwjgl.opengl.GL15.glBindBuffer;
-import static org.lwjgl.opengl.GL15.glBufferData;
-import static org.lwjgl.opengl.GL15.glDeleteBuffers;
-import static org.lwjgl.opengl.GL15.glGenBuffers;
-import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
-import static org.lwjgl.opengl.GL20.glUniform1f;
-import static org.lwjgl.opengl.GL20.glUniform3fv;
-import static org.lwjgl.opengl.GL20.glUniform4fv;
-import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
-import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
-
-import net.fexcraft.app.fmt.utils.Axis3DL;
-import net.fexcraft.app.fmt.utils.Logging;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
-
 import net.fexcraft.app.fmt.polygon.GLObject.GPUData;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.utils.ImageHandler;
+import net.fexcraft.app.fmt.utils.ShaderManager;
 import net.fexcraft.lib.common.math.Vec3f;
+import net.fexcraft.lib.common.utils.Print;
 import net.fexcraft.lib.frl.ColoredVertex;
 import net.fexcraft.lib.frl.Polygon;
 import net.fexcraft.lib.frl.Polyhedron;
 import net.fexcraft.lib.frl.Vertex;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
-import java.util.ArrayList;
+import static net.fexcraft.app.fmt.settings.Settings.TRIANGULATION_L;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL20.*;
 
 public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 
     private static Pivot PIVOT = null;
     private static Matrix4f matrix = new Matrix4f();
 	private static DrawMode MODE = DrawMode.TEXTURED;
+	public static ShaderManager.ShaderProgram program;
 	public static final float[] LINECOLOR = { 0, 0, 0, 1}, EMPTY = { 0, 0, 0, 0 }, SELCOLOR = { 1, 1, 0, 1 };
 	private static final Vector3f GIF_AXIS = new Vector3f(0, 1, 0);
 	private boolean lines;
@@ -53,7 +37,10 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 		if(poly.recompile || glo.gpu[0].glid == null){
 			compile(poly, glo, glo.gpu[0], false);
 			compile(poly, glo, glo.gpu[1], true);
-			glo.linecolor = LINECOLOR;
+			if(MODE.ui()){
+				if(MODE.ui_lines() && glo.linecolor == null) return;
+			}
+			else if(glo.linecolor == null) glo.linecolor = LINECOLOR;
 			if(glo.polycolor == null) glo.polycolor = EMPTY;
 			if(glo.pickercolor == null) glo.pickercolor = EMPTY;
 			poly.recompile = false;
@@ -70,10 +57,17 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 		if(poly.rotZ != 0f) matrix.rotate((float)Math.toRadians(poly.rotZ), axis_z);
 		if(poly.rotX != 0f) matrix.rotate((float)Math.toRadians(poly.rotX), axis_x);
 		//
-		glUniformMatrix4fv(getUniform("model"), false, matrix.get(new float[16]));
-		glUniform4fv(getUniform("line_color"), MODE == DrawMode.LINES ? glo.linecolor : MODE == DrawMode.SELLINES ? SELCOLOR : EMPTY);
-		glUniform4fv(getUniform("poly_color"), MODE.picker() ? glo.pickercolor : MODE.color() ? glo.polycolor : EMPTY);
-		glUniform1f(getUniform("textured"), MODE.textured() ? 1 : 0);
+		glUniformMatrix4fv(program.getUniform("model"), false, matrix.get(new float[16]));
+		if(MODE.ui()){
+			glUniform4fv(program.getUniform("line_color"), MODE.ui_lines() ? glo.linecolor : EMPTY);
+			glUniform4fv(program.getUniform("poly_color"), MODE.picker() ? glo.pickercolor : !glo.textured ? glo.polycolor : EMPTY);
+			glUniform1f(program.getUniform("textured"), glo.textured ? 1 : 0);
+		}
+		else{
+			glUniform4fv(program.getUniform("line_color"), MODE.lines() ? glo.linecolor : MODE == DrawMode.SELLINES ? SELCOLOR : EMPTY);
+			glUniform4fv(program.getUniform("poly_color"), MODE.picker() ? glo.pickercolor : MODE.color() ? glo.polycolor : EMPTY);
+			glUniform1f(program.getUniform("textured"), MODE.textured() ? 1 : 0);
+		}
 		//
         glEnableVertexAttribArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, glo.gpu[index].glid);
@@ -117,24 +111,31 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 	}
 	
 	public static void updateLightState(){
-		glUniform1f(getUniform("lighting"), Settings.LIGHTING_ON.value && MODE.lighting() ? 1 : 0);
-		glUniform3fv(getUniform("lightcolor"), Settings.LIGHT_COLOR.value.toFloatArray());
-		glUniform3fv(getUniform("lightpos"), new float[]{ Settings.LIGHT_POSX.value, Settings.LIGHT_POSY.value, Settings.LIGHT_POSZ.value });
-		glUniform1f(getUniform("ambient"), Settings.LIGHT_AMBIENT.value);
-		glUniform1f(getUniform("diffuse"), Settings.LIGHT_DIFFUSE.value);
+		glUniform1f(program.getUniform("lighting"), Settings.LIGHTING_ON.value && MODE.lighting() ? 1 : 0);
+		glUniform3fv(program.getUniform("lightcolor"), Settings.LIGHT_COLOR.value.toFloatArray());
+		glUniform3fv(program.getUniform("lightpos"), new float[]{ Settings.LIGHT_POSX.value, Settings.LIGHT_POSY.value, Settings.LIGHT_POSZ.value });
+		glUniform1f(program.getUniform("ambient"), Settings.LIGHT_AMBIENT.value);
+		glUniform1f(program.getUniform("diffuse"), Settings.LIGHT_DIFFUSE.value);
 	}
     
     public static final Vector3f axis_x = new Vector3f(1, 0, 0);
     public static final Vector3f axis_y = new Vector3f(0, 1, 0);
     public static final Vector3f axis_z = new Vector3f(0, 0, 1);
 
-    private static final int[] order2 = { 0, 1, 0, 3, 2, 1, 2, 3  };
-    private static final int[] order1 = { 0, 1, 2, 3, 0, 2 };
-    private static final int[] order0 = { 0, 1, 2 };
+    private static final int[] orderql = { 0, 1, 0, 3, 2, 1, 2, 3  };
+    private static final int[] orderqn = { 0, 1, 2, 3, 0, 2 };
+    private static final int[] ordertn = { 0, 1, 2 };
+    private static final int[] ordertl = { 0, 1, 0, 2, 1, 2 };
 
 	private void compile(Polyhedron<GLObject> poli, GLObject glo, GPUData obj, boolean lines){
     	for(net.fexcraft.lib.frl.Polygon polygon : poli.polygons){
-    		obj.size += polygon.vertices.length == 4 ? lines ? 8 : 6 : 3;
+			if(polygon.vertices.length <= 4){
+				obj.size += polygon.vertices.length == 4 ? lines ? 8 : 6 : lines ? 6 : 3;
+			}
+    		else{
+				if(lines) obj.size += polygon.vertices.length * 2;
+				else obj.size += (polygon.vertices.length - 2) * 3;
+			}
     	}
     	obj. verts = new float[obj.size * 3];
     	if(!lines){
@@ -148,7 +149,7 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 		int ver = 0, uv = 0, nor = 0, lig = 0, col = 0;
     	for(int i = 0; i < poli.polygons.size(); i++){
     		Polygon poly = poli.polygons.get(i);
-    		int[] order = poly.vertices.length == 4 ? lines && !TRIANGULATION_L.value ? order2 : order1 : order0;
+    		int[] order = poly.vertices.length == 4 ? lines && !TRIANGULATION_L.value ? orderql : orderqn : poly.vertices.length == 3 ? lines ? ordertl : ordertn : genOrder(poly.vertices.length, lines);
         	Vec3f vec0 = new Vec3f(poly.vertices[1].vector.sub(poly.vertices[0].vector));
 	        Vec3f vec1 = new Vec3f(poly.vertices[1].vector.sub(poly.vertices[2].vector));
 	        Vec3f vec2 = vec1.cross(vec0).normalize();
@@ -210,6 +211,27 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 		glBufferData(GL_ARRAY_BUFFER, obj.lights, GL_STATIC_DRAW);
 	}
 
+	private int[] genOrder(int length, boolean lines){
+		int[] order = new int[lines ? length * 2 : (length - 2) * 3];
+		int j = 0;
+		if(lines){
+			for(int i = 0; i < length - 1; i++){
+				order[j++] = i;
+				order[j++] = i + 1;
+			}
+			order[j++] = length - 1;
+			order[j] = 0;
+		}
+		else{
+			for(int i = 2; i < length; i++){
+				order[j++] = 0;
+				order[j++] = i - 1;
+				order[j++] = i;
+			}
+		}
+		return order;
+	}
+
 	@Override
 	public void delete(Polyhedron<GLObject> poly){
 		for(int i = 0; i < 2; i++){
@@ -225,21 +247,29 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 	
 	public static enum DrawMode {
 		
-		TEXTURED, UNTEXTURED, RGBCOLOR, PICKER, PICKER_FACE, SELLINES, LINES;
+		TEXTURED, UNTEXTURED, RGBCOLOR, PICKER, PICKER_FACE, SELLINES, LINES, UI, UI_LINES;
 		
 		public boolean lines(){
-			return this == LINES || this == SELLINES;
+			return this == LINES || this == SELLINES || this == UI_LINES;
 		}
 
-		boolean picker(){
+		public boolean picker(){
 			return this == PICKER;
 		}
 
-		boolean face_picker(){
+		public boolean face_picker(){
 			return this == PICKER_FACE;
 		}
 
-		boolean color(){
+		public boolean ui(){
+			return this == UI || this == UI_LINES;
+		}
+
+		public boolean ui_lines(){
+			return this == UI_LINES;
+		}
+
+		public boolean color(){
 			return this == RGBCOLOR;
 		}
 
@@ -254,7 +284,7 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 		public boolean textured(){
 			return this == TEXTURED && this != PICKER_FACE;
 		}
-		
+
 	}
 
 	public static void mode(DrawMode mode){
