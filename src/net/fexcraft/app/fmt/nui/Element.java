@@ -33,6 +33,8 @@ public class Element {
 	public boolean hoverable;
 	public boolean border;
 	public RGB linecolor = RGB.WHITE;
+	private float x;
+	private float y;
 	public int z;
 	public float w;
 	public float h;
@@ -72,19 +74,39 @@ public class Element {
 	}
 
 	public float x(){
-		return hedron.posX;
+		return x;
 	}
 
 	public float y(){
-		return hedron.posY;
+		return y;
+	}
+
+	public float gx(){
+		return root == null ? x : root.gx() + x;
+	}
+
+	public float gy(){
+		return root == null ? y : root.gy() + y;
 	}
 
 	public void x(float nx){
-		hedron.posX = nx;
+		x = nx;
+		hedron.posX = gx();
 	}
 
 	public void y(float ny){
-		hedron.posY = ny;
+		y = ny;
+		hedron.posY = gy();
+	}
+
+	public void xa(float nx){
+		x += nx;
+		hedron.posX = gx();
+	}
+
+	public void ya(float ny){
+		y += ny;
+		hedron.posY = gy();
 	}
 
 	public void delete(){
@@ -92,8 +114,8 @@ public class Element {
 	}
 
 	public  Element pos(int x, int y){
-		hedron.posX = x;
-		hedron.posY = y;
+		x(x);
+		y(y);
 		return this;
 	}
 
@@ -109,7 +131,7 @@ public class Element {
 		return this;
 	}
 
-	public  Element size(int x, int y){
+	public  Element size(float x, float y){
 		w = x;
 		h = y;
 		return this;
@@ -164,14 +186,17 @@ public class Element {
 		}
 		if(picker != Picker.PickTask.HOVER || hoverable) hedron.render();
 		if(elements != null) for(Element elm : elements) elm.render(picker);
+	}
+
+	public void update(){
+		if(elements != null) for(Element elm : elements) elm.update();
 		hovered(false);
 	}
 
 	public void add(Element elm){
 		if(elements == null) elements = new ArrayList<>();
-		elm.x(elm.x() + x());
-		elm.y(elm.y() + y());
 		elements.add(elm.zidx(z + 1).recompile());
+		elm.root = this;
 	}
 
 	public void hovered(boolean bool){
