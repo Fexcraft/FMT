@@ -175,11 +175,6 @@ public class Element {
 		return this;
 	}
 
-	public Element zidx(int idx){
-		z = idx;
-		return this;
-	}
-
 	public void render(Picker.PickTask picker){
 		if(!visible) return;
 		if(picker == null){
@@ -205,8 +200,8 @@ public class Element {
 	}
 
 	public Element root(Element elm){
-		elm.root = elm;
-		elm.z = elm.z + 1;
+		root = elm;
+		z = elm.z + 1;
 		return this;
 	}
 
