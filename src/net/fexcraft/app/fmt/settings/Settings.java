@@ -129,6 +129,7 @@ public class Settings {
 	public static RGBSetting BOTTOM_INFO_BAR_COLOR;
 	public static RGBSetting LIGHT_COLOR;
 	//
+	public static Setting<Boolean> TESTING;
 	public static Setting<String> WORKSPACE_NAME;
 	public static Setting<String> WORKSPACE_ROOT;
 	//
@@ -260,6 +261,7 @@ public class Settings {
 		SHOW_QUICK_ADD = new Setting<>("show_quick_add", true, GENERAL, map);
 		AUTO_SHOW_COMPONENTS = new Setting<>("auto_show_components", true, GENERAL, map);
 		//
+		TESTING = new Setting<>("testing", false, GENERAL, map);
 		WORKSPACE_NAME = new Setting<>("name", "FMT Workspace", WORKSPACE, map);
 		WORKSPACE_ROOT = new Setting<>("root", "/workspace/", WORKSPACE, map);
 		//
