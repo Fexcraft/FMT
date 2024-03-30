@@ -99,7 +99,7 @@ public class GGR {
 			def_view = glGetUniformLocation(prog.program(), "view");
 			glUniformMatrix4fv(def_view, false, new Matrix4f().identity().get(new float[16]));
 			def_proj = glGetUniformLocation(prog.program(), "projection");
-			glUniformMatrix4fv(def_proj, false, new Matrix4f().ortho(0, FMT.WIDTH / scale, FMT.HEIGHT / scale, 0, -1, 1).get(new float[16]));
+			glUniformMatrix4fv(def_proj, false, new Matrix4f().ortho(0, FMT.WIDTH / scale, FMT.HEIGHT / scale, 0, -1000, 1000).get(new float[16]));
         });
 	}
 
