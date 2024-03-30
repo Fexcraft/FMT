@@ -309,6 +309,7 @@ public class FMT {
 			//accumulator += (delta = timer.getDelta());
 			while(accumulator >= interval){
 				//TODO "logic"
+				if(Settings.TESTING.value) UI.update();
 				ToolbarMenu.checkHide();
 				timer.updateUPS();
 				accumulator -= interval;
