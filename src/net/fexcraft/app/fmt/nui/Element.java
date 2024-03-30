@@ -149,8 +149,7 @@ public class Element {
 			}
 			if(texture != null) TextureManager.bind(texture);
 		}
-		if(picker == Picker.PickTask.HOVER && !hoverable) return;
-		hedron.render();
+		if(picker != Picker.PickTask.HOVER || hoverable) hedron.render();
 		if(elements != null) for(Element elm : elements) elm.render(picker);
 		hovered(false);
 	}
