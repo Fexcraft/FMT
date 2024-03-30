@@ -1,9 +1,12 @@
 package net.fexcraft.app.fmt.nui;
 
+import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.GLObject;
 import net.fexcraft.app.fmt.polygon.PolyRenderer;
 import net.fexcraft.app.fmt.polygon.PolyRenderer.DrawMode;
 import net.fexcraft.app.fmt.texture.TextureManager;
+import net.fexcraft.app.fmt.utils.Logging;
+import net.fexcraft.app.fmt.utils.Picker;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.frl.*;
 
@@ -15,13 +18,18 @@ import java.util.List;
  */
 public class Element {
 
-	public static int colorIdx = 0;
 	public static int elmIdx = 7;
+	public int colorIdx = 0;
 	public Polyhedron<GLObject> hedron;
 	public List<Element> elements;
 	public Element root;
 	public String texture;
+	public boolean visible;
+	public boolean hovered;
 	public boolean rounded;
+	public boolean hoverable;
+	public boolean border;
+	public RGB linecolor = RGB.WHITE;
 	public int z;
 	public float w;
 	public float h;
@@ -29,6 +37,7 @@ public class Element {
 	public Element(){
 		hedron = new Polyhedron<>();
 		hedron.setGlObj(new GLObject());
+		visible = true;
 	}
 
 	public Element recompile(){
@@ -109,7 +118,9 @@ public class Element {
 	}
 
 	public Element linecolor(RGB color){
+		linecolor = color;
 		hedron.glObj.linecolor = color.toFloatArray();
+		border = true;
 		return this;
 	}
 
@@ -118,20 +129,30 @@ public class Element {
 		return this;
 	}
 
+	public Element hoverable(boolean bool){
+		hoverable = bool;
+		return this;
+	}
+
 	public Element zidx(int idx){
 		z = idx;
 		return this;
 	}
 
-	public void render(){
-		if(hedron.glObj.linecolor != null){
-			PolyRenderer.mode(DrawMode.LINES);
-			hedron.render();
-			PolyRenderer.mode(DrawMode.UI);
+	public void render(Picker.PickTask picker){
+		if(!visible) return;
+		if(picker == null){
+			if(hedron.glObj.linecolor != null){
+				PolyRenderer.mode(DrawMode.LINES);
+				hedron.render();
+				PolyRenderer.mode(DrawMode.UI);
+			}
+			if(texture != null) TextureManager.bind(texture);
 		}
-		if(texture != null) TextureManager.bind(texture);
+		if(picker == Picker.PickTask.HOVER && !hoverable) return;
 		hedron.render();
-		if(elements != null) for(Element elm : elements) elm.render();
+		if(elements != null) for(Element elm : elements) elm.render(picker);
+		hovered(false);
 	}
 
 	public void add(Element elm){
@@ -139,6 +160,15 @@ public class Element {
 		elm.x(elm.x() + x());
 		elm.y(elm.y() + y());
 		elements.add(elm.zidx(z + 1).recompile());
+	}
+
+	public void hovered(boolean bool){
+		hovered = bool;
+		hedron.glObj.linecolor = bool ? PolyRenderer.SELCOLOR : border ? linecolor.toFloatArray() : null;
+	}
+
+	public void click(){
+		Logging.log(this);
 	}
 
 }
