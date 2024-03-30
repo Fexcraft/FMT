@@ -17,7 +17,9 @@ import java.util.ArrayList;
  */
 public class FMTInterface extends Element {
 
+	public static RGB lightgray = new RGB(0x757575);
 	public static Element toolbar;
+	public static Element menu_file;
 
 	public FMTInterface(){
 		super();
@@ -46,8 +48,13 @@ public class FMTInterface extends Element {
 			.texture("icons/toolbar/new").hoverable(true)
 			.onclick(() -> SaveHandler.newDialog())
 			.tooltip("toolbar.icon.new"));
-		toolbar.add(new Element().pos(0, 40).size(100, 200).color(RGB.BLUE).linecolor(new RGB(256, 256, 0)).rounded(true));
-		toolbar.add(new Element().pos(200, 40).size(500, 100).color(RGB.GREEN).linecolor(RGB.BLACK).rounded(true));
+		toolbar.add(menu_file = new Menu().pos(208, 2).size(200, 30).hoverable(true).color(lightgray));
+		menu_file.add(new Element().hoverable(true).color(RGB.random()));
+		menu_file.add(new Element().hoverable(true).color(RGB.random()));
+		menu_file.add(new Element().hoverable(true).color(RGB.random()));
+		menu_file.add(new Element().hoverable(true).color(RGB.random()));
+		//toolbar.add(new Element().pos(10, 40).size(100, 200).color(RGB.BLUE).linecolor(new RGB(256, 256, 0)).rounded(true));
+		//toolbar.add(new Element().pos(200, 40).size(500, 100).color(RGB.GREEN).linecolor(RGB.BLACK).rounded(true));
 	}
 
 	@Override
