@@ -137,13 +137,14 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
     public static final Vector3f axis_y = new Vector3f(0, 1, 0);
     public static final Vector3f axis_z = new Vector3f(0, 0, 1);
 
-    private static final int[] order2 = { 0, 1, 0, 3, 2, 1, 2, 3  };
-    private static final int[] order1 = { 0, 1, 2, 3, 0, 2 };
-    private static final int[] order0 = { 0, 1, 2 };
+    private static final int[] orderql = { 0, 1, 0, 3, 2, 1, 2, 3  };
+    private static final int[] orderqn = { 0, 1, 2, 3, 0, 2 };
+    private static final int[] ordertn = { 0, 1, 2 };
+    private static final int[] ordertl = { 0, 1, 0, 2, 1, 2 };
 
 	private void compile(Polyhedron<GLObject> poli, GLObject glo, GPUData obj, boolean lines){
     	for(net.fexcraft.lib.frl.Polygon polygon : poli.polygons){
-    		obj.size += polygon.vertices.length == 4 ? lines ? 8 : 6 : 3;
+    		obj.size += polygon.vertices.length == 4 ? lines ? 8 : 6 : lines ? 6 : 3;
     	}
     	obj. verts = new float[obj.size * 3];
     	if(!lines){
@@ -157,7 +158,7 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 		int ver = 0, uv = 0, nor = 0, lig = 0, col = 0;
     	for(int i = 0; i < poli.polygons.size(); i++){
     		Polygon poly = poli.polygons.get(i);
-    		int[] order = poly.vertices.length == 4 ? lines && !TRIANGULATION_L.value ? order2 : order1 : order0;
+    		int[] order = poly.vertices.length == 4 ? lines && !TRIANGULATION_L.value ? orderql : orderqn : lines ? ordertl : ordertn;
         	Vec3f vec0 = new Vec3f(poly.vertices[1].vector.sub(poly.vertices[0].vector));
 	        Vec3f vec1 = new Vec3f(poly.vertices[1].vector.sub(poly.vertices[2].vector));
 	        Vec3f vec2 = vec1.cross(vec0).normalize();
