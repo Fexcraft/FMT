@@ -4,9 +4,7 @@ import net.fexcraft.app.fmt.polygon.GLObject;
 import net.fexcraft.app.fmt.polygon.PolyRenderer;
 import net.fexcraft.app.fmt.polygon.uv.BoxFace;
 import net.fexcraft.lib.common.math.RGB;
-import net.fexcraft.lib.frl.GLO;
-import net.fexcraft.lib.frl.Polyhedron;
-import net.fexcraft.lib.frl.Renderer;
+import net.fexcraft.lib.frl.*;
 import net.fexcraft.lib.frl.gen.Generator;
 
 import java.util.ArrayList;
@@ -36,12 +34,12 @@ public class Element {
 		hedron.clear();
 		if(hedron.glObj.pickercolor == null) hedron.glObj.pickercolor = new RGB(colorIdx == 0 ? colorIdx = elmIdx++ : colorIdx).toFloatArray();
 		hedron.glObj.textured = texture != null;
-		Generator<GLObject> gen = new Generator<GLObject>(hedron, 1, 1)
-			.set("type", Generator.Type.CUBOID)
-			.set("x", 0f).set("y", 0f).set("z", 0f)
-			.set("width", w).set("height", h).set("depth", 0f);
-		gen.removePolygon(0, 1, 2, 3, 5);
-		gen.make();
+		hedron.polygons.add(new Polygon(new Vertex[]{
+			new Vertex(w, 0, 0),
+			new Vertex(0, 0, 0),
+			new Vertex(0, h, 0),
+			new Vertex(w, h, 0)
+		}));
 		return this;
 	}
 
