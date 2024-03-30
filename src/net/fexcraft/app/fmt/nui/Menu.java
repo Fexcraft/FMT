@@ -20,8 +20,9 @@ public class Menu extends Element {
 		elm.visible = false;
 		elm.size(w - 2, h);
 		super.add(elm);
-		elm.x(x());
+		elm.pos(1, 0);
 		elm.z -= 2;
+		elm.recompile();
 	}
 
 	@Override
@@ -43,8 +44,14 @@ public class Menu extends Element {
 			}
 			if(ran > 0) ran--;
 		}
-		if(ran >= 30 && !hovered) open = false;
+		if(ran >= 30 && !hoveredx()) open = false;
 		super.update();
+	}
+
+	public boolean hoveredx(){
+		if(hovered) return true;
+		for(Element elm : elements) if(elm.hovered) return true;
+		return false;
 	}
 
 }
