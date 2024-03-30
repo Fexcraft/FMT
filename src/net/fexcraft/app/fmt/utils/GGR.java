@@ -141,12 +141,12 @@ public class GGR {
 				if(Arrows.SEL > 0){
 					Arrows.SEL = 0;
 				}
-				else if(!isOverUI()){
+				else if(Settings.TESTING.value || !isOverUI()){
 					if(TexturePainter.TOOL.active()){
 						Picker.pick(TexturePainter.SELMODE.getPickType(), PickTask.PAINT1, true);
 					}
 					else if(Picker.TYPE.color()) Picker.process();
-					else Picker.pick(PickType.POLYGON, PickTask.SELECT, true);
+					else Picker.pick(Settings.TESTING.value ? PickType.UI : PickType.POLYGON, PickTask.SELECT, true);
 				}
 				left_down = false;
 			}
