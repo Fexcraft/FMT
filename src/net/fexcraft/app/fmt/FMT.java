@@ -245,7 +245,7 @@ public class FMT {
 		RENDERER = new NvgRenderer();
 		RENDERER.initialize();
 		TextureManager.load();
-		UI = new FMTInterface();
+		//UI = new FMTInterface();
 		Animation.init();
 		FMT.WORKSPACE = new Workspace();
 		FMT.updateTitle();
@@ -322,7 +322,7 @@ public class FMT {
 			//
 			adjustLabels();
 			ImageHandler.updateText();
-			//RENDERER.render(ImageHandler.shouldHide() ? IMG_FRAME : FRAME, CONTEXT);
+			RENDERER.render(ImageHandler.shouldHide() ? IMG_FRAME : FRAME, CONTEXT);
 			timer.updateFPS();
 			glfwPollEvents();
 			glfwSwapBuffers(window);
@@ -394,9 +394,9 @@ public class FMT {
 		}
 		glClearColor(background[0], background[1], background[2], 1);
 	    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		CAM.ortho(1);
-	    PolyRenderer.mode(DrawMode.UI);
-		UI.render();
+		//CAM.ortho(1);
+	    //PolyRenderer.mode(DrawMode.UI);
+		//UI.render();
 		CAM.apply();
 	    PolyRenderer.mode(DrawMode.TEXTURED);
 		PolyRenderer.updateLightState();
