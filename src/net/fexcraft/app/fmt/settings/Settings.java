@@ -59,6 +59,7 @@ public class Settings {
 	
 	public static final int FORMAT = 2;
 	public static final float FONT_SIZE = 16f;
+	public static final int FONT_SIZEN = 20;
 	public static final String FONT = FontRegistry.ROBOTO_BOLD;
 	public static final String FONT_PATH = "com/spinyowl/legui/style/font/Roboto-Bold.ttf";
 	public static boolean FOUND_UPDATE, UPDATECHECK_FAILED;
