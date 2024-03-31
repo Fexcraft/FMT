@@ -48,11 +48,11 @@ public class FMTInterface extends Element {
 			.texture("icons/toolbar/new").hoverable(true)
 			.onclick(() -> SaveHandler.newDialog())
 			.tooltip("toolbar.icon.new"));
-		toolbar.add(menu_file = new Menu().pos(208, 3).size(200, 30).hoverable(true).color(lightgray));
-		menu_file.add(new Element().hoverable(true).color(RGB.random()));
-		menu_file.add(new Element().hoverable(true).color(RGB.random()));
-		menu_file.add(new Element().hoverable(true).color(RGB.random()));
-		menu_file.add(new Element().hoverable(true).color(RGB.random()));
+		toolbar.add(menu_file = new Menu().text("Test Text").pos(208, 3).size(200, 30).color(lightgray));
+		menu_file.add(new Element().text("entry 0").color(RGB.random()));
+		menu_file.add(new Element().text("entry 1").color(RGB.random()));
+		menu_file.add(new Element().text("entry 2").color(RGB.random()));
+		menu_file.add(new Element().text("entry 3").color(RGB.random()));
 		//toolbar.add(new Element().pos(10, 40).size(100, 200).color(RGB.BLUE).linecolor(new RGB(256, 256, 0)).rounded(true));
 		//toolbar.add(new Element().pos(200, 40).size(500, 100).color(RGB.GREEN).linecolor(RGB.BLACK).rounded(true));
 	}
