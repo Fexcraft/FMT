@@ -33,7 +33,7 @@ public class Menu extends Element {
 
 	@Override
 	public void update(){
-		if(hovered) open = true;
+		if(hoveredx()) open = true;
 		if(open){
 			for(int i = 0; i < elements.size(); i++){
 				if(ran >= 30) continue;
@@ -50,7 +50,7 @@ public class Menu extends Element {
 			}
 			if(ran > 0) ran--;
 		}
-		if(ran >= 30 && !hoveredx()) open = false;
+		if(!hoveredx()) open = false;
 		super.update();
 	}
 
