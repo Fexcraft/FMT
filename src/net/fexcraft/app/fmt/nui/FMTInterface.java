@@ -48,7 +48,7 @@ public class FMTInterface extends Element {
 			.texture("icons/toolbar/new").hoverable(true)
 			.onclick(() -> SaveHandler.newDialog())
 			.tooltip("toolbar.icon.new"));
-		toolbar.add(menu_file = new Menu().pos(208, 2).size(200, 30).hoverable(true).color(lightgray));
+		toolbar.add(menu_file = new Menu().pos(208, 3).size(200, 30).hoverable(true).color(lightgray));
 		menu_file.add(new Element().hoverable(true).color(RGB.random()));
 		menu_file.add(new Element().hoverable(true).color(RGB.random()));
 		menu_file.add(new Element().hoverable(true).color(RGB.random()));
