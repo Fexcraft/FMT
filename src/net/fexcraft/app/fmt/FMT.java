@@ -20,6 +20,7 @@ import net.arikia.dev.drpc.DiscordRPC;
 import net.fexcraft.app.fmt.animation.Animation;
 import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.nui.FMTInterface;
+import net.fexcraft.app.fmt.nui.FontRenderer;
 import net.fexcraft.app.fmt.polygon.Arrows;
 import net.fexcraft.app.fmt.polygon.GLObject;
 import net.fexcraft.app.fmt.polygon.Model;
@@ -245,7 +246,10 @@ public class FMT {
 		RENDERER = new NvgRenderer();
 		RENDERER.initialize();
 		TextureManager.load();
-		if(Settings.TESTING.value) UI = new FMTInterface();
+		if(Settings.TESTING.value){
+			FontRenderer.init();
+			UI = new FMTInterface();
+		}
 		Animation.init();
 		FMT.WORKSPACE = new Workspace();
 		FMT.updateTitle();
