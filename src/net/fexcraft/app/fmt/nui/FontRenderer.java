@@ -221,6 +221,7 @@ public class FontRenderer {
 		if(str.length() == 0) return;
 		float px = 0;
 		float py = 0;
+		float max = text.root.w - 10;
 		for(int i = 0; i < str.length(); i++){
 			char c = str.charAt(i);
 			if(c == '\n'){
@@ -230,6 +231,7 @@ public class FontRenderer {
 			}
 			if(c == '\r') continue;
 			Glyph g = getGlyph(type, c);
+			if(text.cut && px + g.width >= max) break;
 			float tw = 1f / type.width;
 			float th = 1f / type.height;
 			float tx = tw * g.x;
