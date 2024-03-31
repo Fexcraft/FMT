@@ -8,6 +8,11 @@ public class Menu extends Element {
 	private boolean open;
 	private int ran;
 
+	public Menu(){
+		super();
+		hoverable = true;
+	}
+
 	@Override
 	public Element root(Element elm){
 		super.root(elm);
@@ -18,6 +23,7 @@ public class Menu extends Element {
 	@Override
 	public void add(Element elm){
 		elm.visible = false;
+		elm.hoverable = true;
 		elm.size(w - 2, h);
 		super.add(elm);
 		elm.pos(1, 0);
