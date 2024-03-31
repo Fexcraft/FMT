@@ -96,43 +96,47 @@ public class Element {
 		x = nx;
 		hedron.posX = gx();
 		if(text != null) postext();
+		if(elements != null) for(Element elm : elements) elm.xa(0);
 	}
 
 	public void y(float ny){
 		y = ny;
 		hedron.posY = gy();
 		if(text != null) postext();
+		if(elements != null) for(Element elm : elements) elm.ya(0);
 	}
 
 	public void xa(float nx){
 		x += nx;
 		hedron.posX = gx();
 		if(text != null) postext();
+		if(elements != null) for(Element elm : elements) elm.xa(0);
 	}
 
 	public void ya(float ny){
 		y += ny;
 		hedron.posY = gy();
 		if(text != null) postext();
+		if(elements != null) for(Element elm : elements) elm.ya(0);
 	}
 
 	public void delete(){
 		Renderer.RENDERER.delete(hedron);
 	}
 
-	public Element pos(int x, int y){
+	public Element pos(float x, float y){
 		x(x);
 		y(y);
 		return this;
 	}
 
-	public Element posa(int x, int y){
+	public Element posa(float x, float y){
 		xa(x);
 		ya(y);
 		return this;
 	}
 
-	public Element uv(int x, int y){
+	public Element uv(float x, float y){
 		hedron.texU = x;
 		hedron.texV = y;
 		return this;
