@@ -5,6 +5,7 @@ import net.fexcraft.app.fmt.polygon.PolyRenderer;
 import net.fexcraft.app.fmt.polygon.PolyRenderer.DrawMode;
 import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.utils.Picker;
+import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.frl.Polygon;
 import net.fexcraft.lib.frl.Polyhedron;
@@ -187,6 +188,10 @@ public class Element {
 		return this;
 	}
 
+	public Element translate(String ntext){
+		return text(Translator.translate(ntext));
+	}
+
 	public void postext(){
 		text.hedron.posX = hedron.posX;
 		text.hedron.posY = hedron.posY;
@@ -202,10 +207,10 @@ public class Element {
 				hedron.render();
 				PolyRenderer.mode(DrawMode.UI);
 			}
+			if(text != null) text.render();
 			if(texture != null) TextureManager.bind(texture);
 		}
 		if(picker != Picker.PickTask.HOVER || hoverable) hedron.render();
-		if(text != null) text.render();
 		if(elements != null) for(Element elm : elements) elm.render(picker);
 	}
 
