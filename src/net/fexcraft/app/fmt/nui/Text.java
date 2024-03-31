@@ -29,7 +29,7 @@ public class Text {
 	public void recompile(){
 		hedron.recompile = true;
 		hedron.clear();
-		if(hedron.glObj.pickercolor == null) hedron.glObj.pickercolor = root.hedron.glObj.pickercolor;
+		//if(hedron.glObj.pickercolor == null) hedron.glObj.pickercolor = root.hedron.glObj.pickercolor;
 		hedron.glObj.textured = true;
 		FontRenderer.compile(this, text, font, color);
 		w = FontRenderer.getWidth(text, font);
