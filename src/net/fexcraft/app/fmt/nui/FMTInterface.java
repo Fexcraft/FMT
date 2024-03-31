@@ -25,6 +25,7 @@ public class FMTInterface extends Element {
 	public static RGB g85 = new RGB(0x858585);
 	public static Element toolbar;
 	public static Element menu_file;
+	public static Element menu_recent;
 
 	public FMTInterface(){
 		super();
@@ -49,14 +50,20 @@ public class FMTInterface extends Element {
 			.texture("icons/toolbar/open").hoverable(true)
 			.onclick(() -> SaveHandler.openDialog(null))
 			.tooltip("toolbar.icon.open"));
-		toolbar.add(new Element().pos(174, 2).size(32, 32)
+		toolbar.add(new Element().pos(172, 2).size(32, 32)
 			.texture("icons/toolbar/new").hoverable(true)
 			.onclick(() -> SaveHandler.newDialog())
 			.tooltip("toolbar.icon.new"));
 		toolbar.add(menu_file = new Menu().translate("toolbar.file").pos(208, 3).size(200, 30).color(g75));
 		menu_file.add(new Element().translate("toolbar.file.new").color(g85).onclick(() -> SaveHandler.newDialog()));
 		menu_file.add(new Element().translate("toolbar.file.open").color(g85).onclick(() -> SaveHandler.openDialog(null)));
-		menu_file.add(new Element().translate("toolbar.file.recent").color(g85));
+		menu_file.add(menu_recent = new Menu().onhover(menu -> {
+			for(int i = 0; i < 10; i++) menu.elements.get(i).text(Settings.RECENT.get(i).getName().replace(".fmtb", ""));
+		}).translate("toolbar.file.recent").color(g85));
+		for(int i = 0; i < 10; i++){
+			int j = i;
+			menu_recent.add(new Element().translate("file.recent.none").color(g85).onclick(() -> Settings.openRecent(j)));
+		}
 		menu_file.add(new Element().translate("toolbar.file.save").color(g85).onclick(() -> SaveHandler.saveDialogByState(null)));
 		menu_file.add(new Element().translate("toolbar.file.save_as").color(g85).onclick(() -> SaveHandler.saveAsDialog(null)));
 		menu_file.add(new Element().translate("toolbar.file.import").color(g85).onclick(() -> ImportManager._import()));
