@@ -210,6 +210,12 @@ public class Element {
 		hedron.glObj.linecolor = bool ? PolyRenderer.SELCOLOR : border ? linecolor.toFloatArray() : null;
 	}
 
+	public boolean hoveredx(){
+		if(hovered) return true;
+		if(elements != null) for(Element elm : elements) if(elm.hoveredx()) return true;
+		return false;
+	}
+
 	public void click(){
 		if(onclick != null) onclick.run();
 	}
