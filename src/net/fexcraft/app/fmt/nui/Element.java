@@ -1,18 +1,18 @@
 package net.fexcraft.app.fmt.nui;
 
-import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.GLObject;
 import net.fexcraft.app.fmt.polygon.PolyRenderer;
 import net.fexcraft.app.fmt.polygon.PolyRenderer.DrawMode;
 import net.fexcraft.app.fmt.texture.TextureManager;
-import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.fmt.utils.Picker;
 import net.fexcraft.lib.common.math.RGB;
-import net.fexcraft.lib.frl.*;
+import net.fexcraft.lib.frl.Polygon;
+import net.fexcraft.lib.frl.Polyhedron;
+import net.fexcraft.lib.frl.Renderer;
+import net.fexcraft.lib.frl.Vertex;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -33,9 +33,10 @@ public class Element {
 	public boolean hoverable;
 	public boolean border;
 	public RGB linecolor = RGB.WHITE;
+	public Text text;
 	private float x;
 	private float y;
-	public int z;
+	public float z;
 	public float w;
 	public float h;
 
@@ -70,6 +71,7 @@ public class Element {
 				new Vertex(w, h, z).uv(1, 1)
 			}));
 		}
+		if(text != null) text.recompile();
 		return this;
 	}
 
@@ -92,21 +94,25 @@ public class Element {
 	public void x(float nx){
 		x = nx;
 		hedron.posX = gx();
+		if(text != null) postext();
 	}
 
 	public void y(float ny){
 		y = ny;
 		hedron.posY = gy();
+		if(text != null) postext();
 	}
 
 	public void xa(float nx){
 		x += nx;
 		hedron.posX = gx();
+		if(text != null) postext();
 	}
 
 	public void ya(float ny){
 		y += ny;
 		hedron.posY = gy();
+		if(text != null) postext();
 	}
 
 	public void delete(){
@@ -125,19 +131,19 @@ public class Element {
 		return this;
 	}
 
-	public  Element uv(int x, int y){
+	public Element uv(int x, int y){
 		hedron.texU = x;
 		hedron.texV = y;
 		return this;
 	}
 
-	public  Element texture(String newtex){
+	public Element texture(String newtex){
 		TextureManager.load(newtex, true);
 		texture = newtex;
 		return this;
 	}
 
-	public  Element size(float x, float y){
+	public Element size(float x, float y){
 		w = x;
 		h = y;
 		return this;
@@ -175,17 +181,31 @@ public class Element {
 		return this;
 	}
 
+	public Element text(String ntext){
+		if(text == null) text = new Text(this);
+		text.text(ntext);
+		return this;
+	}
+
+	public void postext(){
+		text.hedron.posX = hedron.posX;
+		text.hedron.posY = hedron.posY;
+		text.hedron.posX += text.centered ? (w - text.w) * 0.5 : 5;
+		text.hedron.posY += (h - text.h) * 0.5;
+	}
+
 	public void render(Picker.PickTask picker){
 		if(!visible) return;
 		if(picker == null){
 			if(hedron.glObj.linecolor != null){
-				PolyRenderer.mode(DrawMode.LINES);
+				PolyRenderer.mode(DrawMode.UI_LINES);
 				hedron.render();
 				PolyRenderer.mode(DrawMode.UI);
 			}
 			if(texture != null) TextureManager.bind(texture);
 		}
 		if(picker != Picker.PickTask.HOVER || hoverable) hedron.render();
+		if(text != null) text.render();
 		if(elements != null) for(Element elm : elements) elm.render(picker);
 	}
 
