@@ -48,10 +48,4 @@ public class Menu extends Element {
 		super.update();
 	}
 
-	public boolean hoveredx(){
-		if(hovered) return true;
-		for(Element elm : elements) if(elm.hovered) return true;
-		return false;
-	}
-
 }
