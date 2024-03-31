@@ -10,6 +10,7 @@ uniform mat4 projection;
 uniform vec4 line_color;
 uniform vec4 poly_color;
 uniform bool textured;
+uniform bool tinted;
 
 out vec4 color;
 out vec2 uv;
