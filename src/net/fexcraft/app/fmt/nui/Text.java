@@ -16,6 +16,7 @@ public class Text {
 	public FontRenderer.FontType font = FontRenderer.FontType.PLAIN;
 	public RGB color = RGB.BLACK;
 	public boolean centered;
+	public boolean cut = true;
 	private String text;
 	public int w;
 	public int h;
@@ -31,10 +32,10 @@ public class Text {
 		hedron.clear();
 		//if(hedron.glObj.pickercolor == null) hedron.glObj.pickercolor = root.hedron.glObj.pickercolor;
 		hedron.glObj.textured = true;
-		FontRenderer.compile(this, text, font, color);
 		w = FontRenderer.getWidth(text, font);
 		h = FontRenderer.getHeight(text, font);
 		root.postext();
+		FontRenderer.compile(this, text, font, color);
 	}
 
 	public void render(){
