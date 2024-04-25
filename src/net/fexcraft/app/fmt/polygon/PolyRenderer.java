@@ -64,7 +64,7 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 			glUniform1f(program.getUniform("tinted"), MODE.ui_text() ? 1 : 0);
 		}
 		else{
-			glUniform4fv(program.getUniform("line_color"), MODE.lines() ? glo.linecolor : MODE == DrawMode.SELLINES ? SELCOLOR : EMPTY);
+			glUniform4fv(program.getUniform("line_color"), MODE.lines() ? MODE == DrawMode.SELLINES ? SELCOLOR : glo.linecolor : EMPTY);
 			glUniform4fv(program.getUniform("poly_color"), MODE.picker() ? glo.pickercolor : MODE.color() ? glo.polycolor : EMPTY);
 			glUniform1f(program.getUniform("textured"), MODE.textured() ? 1 : 0);
 		}
