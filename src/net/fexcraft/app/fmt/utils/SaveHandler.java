@@ -156,7 +156,9 @@ public class SaveHandler {
 		JsonMap pivots = map.getMap("pivots");
 		model.pivots().clear();
 		pivots.entries().forEach(entry -> {
-			model.addPivot(new Pivot(entry.getKey(), entry.getValue().asMap()));
+			if(entry.getValue().isMap()){
+				model.addPivot(new Pivot(entry.getKey(), entry.getValue().asMap()));
+			}
 		});
 		if(model.pivots().isEmpty()) model.addPivot(new Pivot("root", true));
 		Pivot rootp = model.getRootPivot();
