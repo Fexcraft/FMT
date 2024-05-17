@@ -47,15 +47,15 @@ Other features
   
 ## Some Preview Images
 ### Create detailed models and texture them.
-![IMG0](https://cdn.discordapp.com/attachments/365628561819697162/706167477960179723/javaw_2020-05-02_17-31-23.png)
+![IMG0](http://fexcraft.net/files/app_data/fmt-page/javaw_2020-05-02_17-31-23.png)
 ### Apply basic per-group animations and preview them.
-![IMG1](https://cdn.discordapp.com/attachments/365628561819697162/706167493751865364/javaw_2020-05-02_17-32-03.png)
+![IMG1](http://fexcraft.net/files/app_data/fmt-page/javaw_2020-05-02_17-32-03.png)
 ### "Unlimited" groups and polygons.
-![IMG2](https://cdn.discordapp.com/attachments/365628561819697162/706167508197179492/javaw_2020-05-02_17-32-38.png)
+![IMG2](http://fexcraft.net/files/app_data/fmt-page/javaw_2020-05-02_17-32-38.png)
 ### Load in additional "helper/preview" models, as many you may need.
-![IMG3](https://cdn.discordapp.com/attachments/365628561819697162/706167518489739314/javaw_2020-05-02_17-34-09.png)
+![IMG3](http://fexcraft.net/files/app_data/fmt-page/javaw_2020-05-02_17-34-09.png)
 ### Work with multiple textures at once, one per model or per any group.
-![IMG4](https://cdn.discordapp.com/attachments/365628561819697162/706167535476801666/javaw_2020-05-02_17-35-10.png)
+![IMG4](http://fexcraft.net/files/app_data/fmt-page/javaw_2020-05-02_17-35-10.png)
 
 
 
