@@ -44,6 +44,10 @@ public class UpdateEvent {
     public static record ModelOrientEvent(Model model, ModelOrientation orientation){};
     public static record ModelExportValue(Model model, String name, String value, boolean list){};
 
+    public static record HelperLoad(Model model){}
+    public static record HelperUnload(Model model){}
+    public static record HelperRenamed(Model model){}
+
     public static record TexGroupAdded(TextureGroup group){};
     public static record TexGroupRenamed(TextureGroup group, String oldname, String newname){};
     public static record TexGroupRemoved(TextureGroup group){};
