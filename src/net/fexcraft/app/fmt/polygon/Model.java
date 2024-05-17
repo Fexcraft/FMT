@@ -93,7 +93,7 @@ public class Model {
 
 	/** For now just for FMTB files. */
 	public Model load(){
-		SaveHandler.open(this, file);
+		SaveHandler.open(this, file, false);
 		update(new ModelLoad(this));
 		if(FMT.MODEL == this) FMT.updateTitle();
 		return this;
