@@ -173,8 +173,8 @@ public class PivotComponent extends EditorComponent {
 	
 	@Override
 	public void rem(){
-		if(ASK_GROUP_REMOVAL.value){
-			GenericDialog.showOC(null, () -> FMT.MODEL.remPivot(pivot), null, "editor.component.group.group.remove", pivot.id);
+		if(ASK_PIVOT_REMOVAL.value){
+			GenericDialog.showOC(null, () -> FMT.MODEL.remPivot(pivot), null, "editor.component.pivot.pivot.remove", pivot.id);
 		}
 		else FMT.MODEL.remPivot(pivot);
 	}
