@@ -220,7 +220,14 @@ public class FileChooser {
 			this.name = name;
 			this.extensions = extensions;
 		}
-		
+
+		public boolean supports(File file){
+			for(String str : extensions){
+				if(file.getName().endsWith(str.replace("*", ""))) return true;
+			}
+			return false;
+		}
+
 	}
 
 }
