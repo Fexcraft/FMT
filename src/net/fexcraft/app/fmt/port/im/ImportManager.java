@@ -18,6 +18,7 @@ import com.spinyowl.legui.component.Dialog;
 import com.spinyowl.legui.component.Label;
 import com.spinyowl.legui.component.SelectBox;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -112,6 +113,15 @@ public class ImportManager {
 			}
 			else run.run();
 		});
+	}
+
+	public static Importer getImporterFor(File file){
+		for(Importer imp : IMPORTERS){
+			if(imp.extensions().supports(file)){
+				return imp;
+			}
+		}
+		return null;
 	}
 
 }
