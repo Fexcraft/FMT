@@ -227,6 +227,7 @@ public class FMT {
 		keeper.getChainFramebufferSizeCallback().add(new GLFWFramebufferSizeCallback(){
 			@Override
 			public void invoke(long window, int width, int height){
+				log("Resizing from " + WIDTH + "/" + HEIGHT + " to " + width + "/" + height + ".");
 				HEIGHT = height;
 				TOOLBAR.setSize(WIDTH = width, TOOLBAR.getSize().y);
 				Editor.EDITORS.values().forEach(editor -> editor.align());
