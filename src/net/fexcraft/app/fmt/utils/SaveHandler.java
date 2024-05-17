@@ -21,6 +21,8 @@ import java.util.zip.ZipOutputStream;
 
 import net.fexcraft.app.fmt.animation.Animation;
 import net.fexcraft.app.fmt.polygon.*;
+import net.fexcraft.app.fmt.port.im.ImportManager;
+import net.fexcraft.app.fmt.port.im.Importer;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateEvent.ModelLoad;
 import net.fexcraft.app.fmt.update.UpdateEvent.ModelUnload;
@@ -51,22 +53,22 @@ public class SaveHandler {
 	
 	public static int FORMAT = 4;
 
-	public static void open(Model model, File file){
+	public static void open(Model model, File file, boolean preview){
 		if(file == null || !file.exists()){
 			showOK("saveload.title", null, null, "saveload.open.nofile");
 			return;
 		}
 		try{
-			Settings.addRecentFile(file);
+			if(!preview) Settings.addRecentFile(file);
 			TextureManager.clearGroups();
 			ZipFile zip = new ZipFile(file);
 			zip.stream().forEach(elm -> {
 				if(elm.getName().equals("model.jtmt")){
 					try{
-						PreviewHandler.clear();
-						FMT.MODEL = load(model, file, JsonHandler.parse(zip.getInputStream(elm)), false, false);
-						FMT.MODEL.recompile();
-						Model.SELECTED_POLYGONS = FMT.MODEL.count(true);
+						if(!preview) PreviewHandler.clear();
+						load(model, file, JsonHandler.parse(zip.getInputStream(elm)), false, false);
+						model.recompile();
+						if(!preview) Model.SELECTED_POLYGONS = FMT.MODEL.count(true);
 					}
 					catch(IOException e){
 						log(e);
@@ -74,12 +76,12 @@ public class SaveHandler {
 				}
 				else if(elm.getName().equals("texture.png")){
 					try{ //loads in old texture files
-						if(FMT.MODEL.texgroup == null){
-							TextureManager.addGroup(FMT.MODEL.texgroup = new TextureGroup("default"));
+						if(model.texgroup == null){
+							TextureManager.addGroup(model.texgroup = new TextureGroup("default"));
 						}
 						TextureManager.loadFromStream(zip.getInputStream(elm), "group-default", false, true);
-						FMT.MODEL.texgroup.reAssignTexture();
-						FMT.MODEL.recompile();
+						model.texgroup.reAssignTexture();
+						model.recompile();
 					}
 					catch(IOException e){
 						log(e);
@@ -97,8 +99,9 @@ public class SaveHandler {
 				}
 			});
 			zip.close();
-			FMT.MODEL.file = file;
-			update(new ModelLoad(FMT.MODEL));
+			model.file = file;
+			if(preview) return;
+			update(new ModelLoad(model));
 			DiscordUtil.update(Settings.DISCORD_RESET_ON_NEW.value);
 		}
 		catch(Exception e){
@@ -244,8 +247,7 @@ public class SaveHandler {
 						helper = PreviewHandler.loadFMTB(file);
 					}
 					else{
-						//TODO find importer
-						Object porter = null;
+						Importer porter = ImportManager.getImporterFor(file);
 						if(porter == null){
 							log("ERROR: Could not find importer for helper/preview '" + file.getPath() + "'!");
 							return;
@@ -282,10 +284,10 @@ public class SaveHandler {
 						helper.scale = new Vector3f(jsn.get("scale").float_value());
 					}
 					if(jsn.has("invisible")){
-						/*List<String> list = JsonUtil.getGson().fromJson(jsn.get("invisible").toString(), type);
-						for(Group turbogroup : helper.groups()){
-							turbogroup.visible = !list.contains(turbogroup.id);
-						}*///TODO
+						ArrayList<String> list = jsn.getArray("invisible").toStringList();
+						for(Group group : helper.allgroups()){
+							group.visible = !list.contains(group.id);
+						}
 					}
 					helper.visible = jsn.get("visible", true);
 					helper.subhelper = sub;
