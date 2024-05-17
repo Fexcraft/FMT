@@ -442,6 +442,9 @@ public class FMT {
 		}
 		if(Arrows.MODE.active()) Arrows.render(DrawMode.RGBCOLOR); 
 		MODEL.render(alpha);
+		for(Model model : PreviewHandler.getLoaded()){
+			if(model.visible) model.render(alpha);
+		}
 	}
 	
 	public static final Polyhedron<GLObject> center_cube = new Polyhedron<GLObject>().importMRT(new BoxBuilder(new ModelRendererTurbo(null, 0, 0, 16, 16))
