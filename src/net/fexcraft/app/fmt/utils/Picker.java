@@ -168,7 +168,7 @@ public class Picker {
 
 	private static int getPick(){
 		int x, y;
-		byte[] picked = new byte[3];
+		byte[] picked = new byte[4];
 		if(offcenter){
 			x = GGR.mousePosX();
 			y = -(GGR.mousePosY() - FMT.HEIGHT);
@@ -177,12 +177,12 @@ public class Picker {
 			x = FMT.WIDTH / 2;
 			y = FMT.HEIGHT / 2;
 		}
-		buffer.get((x + y * FMT.WIDTH) * 3, picked);
+		buffer.get((x + y * FMT.WIDTH) * 4, picked);
 		return ByteUtils.getRGB(picked);
 	}
 
 	private static void fillBuffer(){
-		GL11.glReadPixels(0, 0, FMT.WIDTH, FMT.HEIGHT, GL11.GL_RGB, GL11.GL_UNSIGNED_BYTE, buffer);
+		GL11.glReadPixels(0, 0, FMT.WIDTH, FMT.HEIGHT, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
 	}
 
 	public static Polygon polygon(){
