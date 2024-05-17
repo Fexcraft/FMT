@@ -36,6 +36,7 @@ toolbar.trees=Trees
 toolbar.trees.polygon=Polygons
 toolbar.trees.pivot=Pivots
 toolbar.trees.texture=Textures
+toolbar.trees.helper=Helper/Previews
 ## Polygons
 toolbar.polygons=Polygons
 toolbar.polygons.add_box=Add Box
@@ -77,6 +78,9 @@ toolbar.utils.converters=Converter Utils
 toolbar.utils.converter.itemmodeltexjson=Item Model Texture Loc
 ##
 toolbar.helpers=Helper/Previews
+toolbar.helpers.add_frame=Add Image
+toolbar.helpers.add_fmtb=Add FMT Model
+toolbar.helpers.add_import=Add Imported
 toolbar.exit=Exit
 ## Selected Polygon Right-Click Menu
 toolbar.polyselmenu.hide=Hide/Show
