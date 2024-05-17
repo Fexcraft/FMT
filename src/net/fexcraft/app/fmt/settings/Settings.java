@@ -21,6 +21,7 @@ import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.port.im.ImportManager;
 import net.fexcraft.app.fmt.ui.editors.*;
 import net.fexcraft.app.fmt.ui.fields.RunButton;
+import net.fexcraft.app.fmt.ui.trees.HelperTree;
 import net.fexcraft.app.fmt.ui.trees.PivotTree;
 import net.fexcraft.app.fmt.utils.*;
 import net.fexcraft.app.json.JsonValue;
@@ -109,6 +110,8 @@ public class Settings {
 	public static Setting<String> PASTED_GROUP;
 	public static Setting<Boolean> ASK_POLYGON_REMOVAL;
 	public static Setting<Boolean> ASK_GROUP_REMOVAL;
+	public static Setting<Boolean> ASK_PIVOT_REMOVAL;
+	public static Setting<Boolean> ASK_HELPER_REMOVAL;
 	public static Setting<Boolean> ASK_TEXTURE_GROUP_REMOVAL;
 	public static Setting<Boolean> OPEN_FOLDER_AFTER_SAVE;
 	public static Setting<Boolean> OPEN_FOLDER_AFTER_IMG;
@@ -228,6 +231,8 @@ public class Settings {
 		GROUP_SUFFIX = new Setting<>("group_duplicate_suffix", "_%s", NAMING, map);
 		ASK_GROUP_REMOVAL = new Setting<>("ask_group_removal", true, GENERAL, map);
 		ASK_POLYGON_REMOVAL = new Setting<>("ask_polygon_removal", false, GENERAL, map);
+		ASK_PIVOT_REMOVAL = new Setting<>("ask_pivot_removal", false, GENERAL, map);
+		ASK_HELPER_REMOVAL = new Setting<>("ask_helper_removal", false, GENERAL, map);
 		OPEN_FOLDER_AFTER_SAVE = new Setting<>("open_folder_after_save", true, GENERAL, map);
 		SHOW_WELCOME = new Setting<>("show_welcome", true, GENERAL, map);
 		SHOW_UPDATE = new Setting<>("show_update", true, GENERAL, map);
@@ -454,6 +459,7 @@ public class Settings {
 		Editor.POLYGON_TREE = new PolygonTree();
 		Editor.PIVOT_TREE = new PivotTree();
 		Editor.TEXTURE_TREE = new TextureTree();
+		Editor.PREVIEW_TREE = new HelperTree();
 	}
 
 	public static void register(String group, String id, Setting<?> setting){
