@@ -79,7 +79,9 @@ public class Model {
 	public Pivot sel_pivot = null;
 	public String texhelper;
 	public int texSizeX = 256, texSizeY = 256;
-	public boolean visible = true, subhelper;
+	public boolean visible = true;
+	public boolean helper;
+	public boolean subhelper;
 	public float opacity = 1f;
 	public Vector3f scale;
 	public String name;
@@ -223,7 +225,7 @@ public class Model {
 		Group group = new Group(this, name, pid);
 		pivot.groups.add(group);
 		allgroups.add(group);
-		update(new GroupAdded(this, group));
+		if(!helper) update(new GroupAdded(this, group));
 	}
 
 	public void addGroup(String pid, Group group){
@@ -231,7 +233,7 @@ public class Model {
 		group.pivot = pid;
 		pivot.groups.add(group);
 		allgroups.add(group);
-		update(new GroupAdded(this, group));
+		if(!helper) update(new GroupAdded(this, group));
 	}
 	
 	public void remGroup(int i){
