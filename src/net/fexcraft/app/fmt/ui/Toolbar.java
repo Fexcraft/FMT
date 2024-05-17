@@ -15,7 +15,11 @@ import net.fexcraft.app.fmt.ui.ToolbarMenu.MenuButton;
 import net.fexcraft.app.fmt.ui.components.QuickAdd;
 import net.fexcraft.app.fmt.utils.FontUtils;
 import net.fexcraft.app.fmt.utils.ImageHandler;
+import net.fexcraft.app.fmt.utils.PreviewHandler;
 import net.fexcraft.app.fmt.utils.SaveHandler;
+
+import static net.fexcraft.app.fmt.ui.FileChooser.TYPE_FMTB;
+import static net.fexcraft.app.fmt.ui.FileChooser.TYPE_IMG;
 
 public class Toolbar extends Panel {
 	
@@ -115,7 +119,8 @@ public class Toolbar extends Panel {
 		this.add(new ToolbarMenu(3, "trees",
 			new MenuButton(0, "trees.polygon", () -> Editor.POLYGON_TREE.toggle()),
 			new MenuButton(1, "trees.pivot", () -> Editor.PIVOT_TREE.toggle()),
-			new MenuButton(2, "trees.texture", () -> Editor.TEXTURE_TREE.toggle())
+			new MenuButton(2, "trees.texture", () -> Editor.TEXTURE_TREE.toggle()),
+			new MenuButton(3, "trees.helper", () -> Editor.PREVIEW_EDITOR.toggle())
 		));
 		this.add(new ToolbarMenu(4, "polygons",
 			new MenuButton(0, "polygons.add_box", () -> QuickAdd.addBox()),
@@ -129,7 +134,15 @@ public class Toolbar extends Panel {
 			new MenuButton(8, "polygons.add_object"),
 			new MenuButton(9, "polygons.add_voxel")
 		));
-		this.add(new ToolbarMenu(5, "helpers"));
+		this.add(new ToolbarMenu(5, "helpers",
+			new MenuButton(0, "helpers.add_frame", () -> FileChooser.chooseFile("...", ".", TYPE_IMG, false, file -> {
+				PreviewHandler.loadFrame(file);
+			})),
+			new MenuButton(1, "helpers.add_fmtb", () -> FileChooser.chooseFile("...", ".", TYPE_FMTB, false, file -> {
+				PreviewHandler.loadFMTB(file);
+			})),
+			new MenuButton(2, "helpers.add_import", () -> {})
+		));
 		this.add(new ToolbarMenu(6, "exit", () -> FMT.close(0)));
 		UpdateHandler.register(updcom);
 	}
