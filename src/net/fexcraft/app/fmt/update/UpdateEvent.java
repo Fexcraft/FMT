@@ -46,7 +46,7 @@ public class UpdateEvent {
 
     public static record HelperAdded(Model model){}
     public static record HelperRemoved(Model model){}
-    public static record HelperRenamed(Model model){}
+    public static record HelperRenamed(Model model, String newname){}
     public static record HelperChanged(Model model){}
     public static record HelperSelected(Model model){}
     public static record HelperVisiblity(Model model, boolean visible){}
