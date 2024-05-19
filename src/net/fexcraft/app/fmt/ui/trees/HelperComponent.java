@@ -41,7 +41,7 @@ public class HelperComponent extends EditorComponent {
 		this.genFullheight();
 		add(visible = new Icon((byte)2, "./resources/textures/icons/component/visible.png", () -> pin()));
 		add(remove = new Icon((byte)3, "./resources/textures/icons/component/remove.png", () -> PreviewHandler.remove(model)));
-		add(edit = new Icon((byte)4, "./resources/textures/icons/component/edit.png", () -> Editor.show("pivot_editor")));
+		add(edit = new Icon((byte)4, "./resources/textures/icons/component/edit.png", () -> Editor.show("helper_editor")));
 		updcom.add(HelperRenamed.class, event -> { if(event.model() == model) label.getTextState().setText(model.name); });
 		model.allgroups().forEach(group -> addGroup(group, false));
 		resize();
@@ -75,8 +75,8 @@ public class HelperComponent extends EditorComponent {
 				}
 			}
 		});
-		updcom.add(HelperChanged.class, event -> {
-			//
+		updcom.add(HelperRenamed.class, event -> {
+			label.getTextState().setText(event.newname());
 		});
 		this.getListenerMap().addListener(MouseClickEvent.class, listener);
 		label.getListenerMap().addListener(MouseClickEvent.class, listener);
