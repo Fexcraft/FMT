@@ -27,6 +27,7 @@ import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.frl.Polyhedron;
 import net.fexcraft.lib.frl.gen.Generator;
 import net.fexcraft.lib.script.elm.FltElm;
+import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import com.spinyowl.legui.component.Button;
 import com.spinyowl.legui.component.Dialog;
@@ -73,6 +74,7 @@ public class Model {
 	public ArrayList<String> export_group_preset_keys = new ArrayList<>();
 	public ModelOrientation orient = ModelOrientation.FVTM4_DEFAULT;
 	public ModelFormat format = ModelFormat.UNIVERSAL;
+	public Matrix4f matrix;
 	public Vector3f pos = new Vector3f();
 	public Vector3f rot = new Vector3f();
 	public TextureGroup texgroup = null;
