@@ -134,16 +134,7 @@ public class Toolbar extends Panel {
 			new MenuButton(8, "polygons.add_object"),
 			new MenuButton(9, "polygons.add_voxel")
 		));
-		this.add(new ToolbarMenu(5, "helpers",
-			new MenuButton(0, "helpers.add_frame", () -> FileChooser.chooseFile("...", ".", TYPE_IMG, false, file -> {
-				PreviewHandler.loadFrame(file);
-			})),
-			new MenuButton(1, "helpers.add_fmtb", () -> FileChooser.chooseFile("...", ".", TYPE_FMTB, false, file -> {
-				PreviewHandler.loadFMTB(file);
-			})),
-			new MenuButton(2, "helpers.add_import", () -> {})
-		));
-		this.add(new ToolbarMenu(6, "exit", () -> FMT.close(0)));
+		this.add(new ToolbarMenu(5, "exit", () -> FMT.close(0)));
 		UpdateHandler.register(updcom);
 	}
 
