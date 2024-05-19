@@ -20,6 +20,7 @@ import static org.lwjgl.opengl.GL20.*;
 public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 
     private static Pivot PIVOT = null;
+	private static Model HELPER = null;
     private static Matrix4f matrix = new Matrix4f();
 	private static DrawMode MODE = DrawMode.TEXTURED;
 	public static ShaderManager.ShaderProgram program;
@@ -44,9 +45,12 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 			if(glo.pickercolor == null) glo.pickercolor = EMPTY;
 			poly.recompile = false;
 		}
-		if(PIVOT == null){
+		if(PIVOT == null && HELPER == null){
 			matrix = new Matrix4f().identity();
 			if(ImageHandler.ROT != null) matrix.rotate(ImageHandler.ROT, GIF_AXIS);
+		}
+		else if(HELPER != null){
+			matrix = HELPER.matrix.get(new Matrix4f());
 		}
 		else{
 			matrix = PIVOT.matrix.get(new Matrix4f());
@@ -91,6 +95,17 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
         if(poly.sub != null){
             for(Polyhedron<GLObject> sub : poly.sub) sub.render();
         }
+	}
+
+	public static void setHelper(Model model){
+		HELPER = model;
+		if(HELPER == null) return;
+		Matrix4f matrix = HELPER.matrix = new Matrix4f().identity();
+		if(ImageHandler.ROT != null) matrix.rotate(ImageHandler.ROT, GIF_AXIS);
+		matrix.translate(HELPER.pos);
+		if(HELPER.rot.y != 0f) matrix.rotate((float)Math.toRadians(HELPER.rot.y), axis_y);
+		if(HELPER.rot.z != 0f) matrix.rotate((float)Math.toRadians(HELPER.rot.z), axis_z);
+		if(HELPER.rot.x != 0f) matrix.rotate((float)Math.toRadians(HELPER.rot.x), axis_x);
 	}
 
 	public static void setPivot(Pivot npivot){
