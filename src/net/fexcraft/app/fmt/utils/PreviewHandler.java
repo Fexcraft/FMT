@@ -60,7 +60,8 @@ public class PreviewHandler {
 	}
 
 	public static void select(Model model){
-		SELECTED = model;
+		SELECTED = SELECTED == model ? null : model;
+		UpdateHandler.update(new UpdateEvent.HelperSelected(SELECTED));
 	}
 
 }
