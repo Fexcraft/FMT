@@ -77,10 +77,6 @@ toolbar.utils.font_util=Font Util
 toolbar.utils.converters=Converter Utils
 toolbar.utils.converter.itemmodeltexjson=Item Model Texture Loc
 ##
-toolbar.helpers=Helper/Previews
-toolbar.helpers.add_frame=Add Image
-toolbar.helpers.add_fmtb=Add FMT Model
-toolbar.helpers.add_import=Add Imported
 toolbar.exit=Exit
 ## Selected Polygon Right-Click Menu
 toolbar.polyselmenu.hide=Hide/Show
@@ -116,6 +112,10 @@ editor.tree.pivot=Pivot Tree
 editor.tree.pivot.add=Add Pivot
 editor.tree.pivot.added=New Pivot Added
 editor.tree.helper=Helper Tree
+editor.tree.helper.add_image=Add Image
+editor.tree.helper.add_fmtb=Add FMT Model
+editor.tree.helper.add_import=Add Imported
+editor.tree.helper.clear=Clear All
 editor.tree.texture=Texture Tree
 editor.tree.texture.add_group=Add Group
 editor.tree.texture.auto_pos=Auto-Pos
