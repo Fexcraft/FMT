@@ -66,7 +66,7 @@ public class SaveHandler {
 				if(elm.getName().equals("model.jtmt")){
 					try{
 						if(!preview) PreviewHandler.clear();
-						load(model, file, JsonHandler.parse(zip.getInputStream(elm)), false, false);
+						load(model, file, JsonHandler.parse(zip.getInputStream(elm)), preview, false);
 						model.recompile();
 						if(!preview) Model.SELECTED_POLYGONS = FMT.MODEL.count(true);
 					}
