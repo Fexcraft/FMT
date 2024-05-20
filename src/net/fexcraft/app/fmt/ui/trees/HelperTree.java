@@ -64,7 +64,7 @@ public class HelperTree extends Editor {
 	}
 
 	private void resizeHelpers(){
-		components.forEach(com -> ((PivotComponent)com).resize());
+		components.forEach(com -> ((HelperComponent)com).resize());
 	}
 
 	private void removeHelpers(){
