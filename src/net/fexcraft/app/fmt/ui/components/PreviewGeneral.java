@@ -98,7 +98,7 @@ public class PreviewGeneral extends EditorComponent {
 			rotz.apply(0);
 		}
 		else{
-			name.getTextState().setText(model.name);
+			name.getTextState().setText(model.name.substring(model.name.indexOf("/") + 1));
 			pos16x.apply(model.pos.x);
 			pos16y.apply(model.pos.y);
 			pos16z.apply(model.pos.z);
@@ -115,8 +115,8 @@ public class PreviewGeneral extends EditorComponent {
 	private void rename(String name){
 		Model selected = PreviewHandler.SELECTED;
 		if(selected == null) return;
-		selected.name = name;
-		UpdateHandler.update(new HelperRenamed(selected, name));
+		selected.name = selected.name.substring(0, selected.name.indexOf("/") + 1) + name;
+		UpdateHandler.update(new HelperRenamed(selected, selected.name));
 	}
 
 }
