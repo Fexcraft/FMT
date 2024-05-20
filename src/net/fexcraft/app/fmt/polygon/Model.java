@@ -14,13 +14,11 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.update.UpdateEvent.*;
 import net.fexcraft.app.json.JsonValue;
 import net.fexcraft.lib.common.math.RGB;
@@ -87,12 +85,14 @@ public class Model {
 	public float opacity = 1f;
 	public Vector3f scale;
 	public String name;
+	public UUID uuid;
 	public File file;
 	
 	public Model(File file, String name){
 		this.file = file;
 		this.name = name;
 		pivots.add(new Pivot("root", true));
+		uuid = UUID.randomUUID();
 	}
 
 	/** For now just for FMTB files. */
@@ -141,6 +141,7 @@ public class Model {
 
 	public void bindtex(){
 		if(texgroup != null) texgroup.texture.bind();
+		else if(texhelper != null) TextureManager.bind(texhelper);
 	}
 
 	/*public static final Polyhedron<GLObject> centermarker0 = new Generator<GLObject>(null, Generator.Type.CUBOID)
@@ -164,7 +165,7 @@ public class Model {
 
 	public void render(FltElm alpha){
 		if(!visible) return;
-		DrawMode mode = DrawMode.textured(texgroup != null);
+		DrawMode mode = DrawMode.textured(texgroup != null || texhelper != null);
 		for(Pivot pivot : pivots){
 			PolyRenderer.setPivot(pivot);
 			if(Settings.PMARKER.value){
