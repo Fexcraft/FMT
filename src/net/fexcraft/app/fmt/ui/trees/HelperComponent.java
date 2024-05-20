@@ -75,9 +75,6 @@ public class HelperComponent extends EditorComponent {
 				}
 			}
 		});
-		updcom.add(HelperRenamed.class, event -> {
-			label.getTextState().setText(event.newname());
-		});
 		this.getListenerMap().addListener(MouseClickEvent.class, listener);
 		label.getListenerMap().addListener(MouseClickEvent.class, listener);
 		//
