@@ -32,6 +32,14 @@ public class TextureManager {
 	private static Texture texture;
 
 	public static void load(){
+		File temp = new File("./temp");
+		if(temp.exists()){
+			for(File file : temp.listFiles()){
+				if(file.isFile() && file.getName().endsWith(".png")){
+					file.delete();
+				}
+			}
+		}
 		TEXTURES.clear();
 		GROUPS.clear();
 		String name;
