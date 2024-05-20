@@ -23,7 +23,6 @@ import net.fexcraft.app.fmt.animation.Animation;
 import net.fexcraft.app.fmt.polygon.*;
 import net.fexcraft.app.fmt.port.im.ImportManager;
 import net.fexcraft.app.fmt.port.im.Importer;
-import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateEvent.ModelLoad;
 import net.fexcraft.app.fmt.update.UpdateEvent.ModelUnload;
 import org.apache.commons.io.IOUtils;
@@ -59,8 +58,10 @@ public class SaveHandler {
 			return;
 		}
 		try{
-			if(!preview) Settings.addRecentFile(file);
-			TextureManager.clearGroups();
+			if(!preview){
+				Settings.addRecentFile(file);
+				TextureManager.clearGroups();
+			}
 			ZipFile zip = new ZipFile(file);
 			zip.stream().forEach(elm -> {
 				if(elm.getName().equals("model.jtmt")){
@@ -76,11 +77,15 @@ public class SaveHandler {
 				}
 				else if(elm.getName().equals("texture.png")){
 					try{ //loads in old texture files
-						if(model.texgroup == null){
-							TextureManager.addGroup(model.texgroup = new TextureGroup("default"));
+						if(preview){
+							if(model.texhelper == null) model.texhelper = model.uuid + "-default";
+							TextureManager.loadFromStream(zip.getInputStream(elm), model.uuid + "-default", false, true);
 						}
-						TextureManager.loadFromStream(zip.getInputStream(elm), "group-default", false, true);
-						model.texgroup.reAssignTexture();
+						else{
+							if(model.texgroup == null) TextureManager.addGroup(model.texgroup = new TextureGroup("default"));
+							TextureManager.loadFromStream(zip.getInputStream(elm), "group-default", false, true);
+						}
+						if(!preview) model.texgroup.reAssignTexture();
 						model.recompile();
 					}
 					catch(IOException e){
@@ -90,8 +95,13 @@ public class SaveHandler {
 				else if(elm.getName().startsWith("texture-")){
 					try{
 						String group = elm.getName().substring(elm.getName().indexOf("-") + 1).replace(".png", "");
-						TextureManager.loadFromStream(zip.getInputStream(elm), "group-" + group, false, true);
-						TextureManager.getGroup(group).reAssignTexture();
+						if(preview){
+							TextureManager.loadFromStream(zip.getInputStream(elm), model.uuid + "-" + group, false, true);
+						}
+						else{
+							TextureManager.loadFromStream(zip.getInputStream(elm), "group-" + group, false, true);
+							TextureManager.getGroup(group).reAssignTexture();
+						}
 					}
 					catch(IOException e){
 						log(e);
@@ -146,11 +156,13 @@ public class SaveHandler {
 			return model;
 		}
 		if(map.has("textures") && !preview){
-			map.getArrayElements("textures").forEach(elm -> TextureManager.addGroup(new TextureGroup(elm.string_value())));
+			map.getArrayElements("textures").forEach(elm -> {
+				TextureManager.addGroup(new TextureGroup(elm.string_value()));
+			});
 		}
 		if(map.has("texture_group")){
 			if(preview){
-				model.texhelper = map.get("texture_group").string_value();
+				model.texhelper = model.uuid + "-" + map.get("texture_group").string_value();
 			}
 			else{
 				model.texgroup = TextureManager.getGroup(map.get("texture_group").string_value());
@@ -185,7 +197,7 @@ public class SaveHandler {
 				group.pivot = jsn.getString("pivot", rootp.id);
 				if(jsn.has("texture_group")){
 					if(preview){
-						group.texhelper = jsn.get("texture_group").string_value();
+						group.texhelper = model.uuid + "-" + jsn.get("texture_group").string_value();
 					}
 					else{
 						group.texgroup = TextureManager.getGroup(jsn.get("texture_group").string_value());
