@@ -21,9 +21,10 @@ public class PreviewHandler {
 	}
 
 	public static Model loadFMTB(File file){
-		Model model = new Model(null, "fmtb/" + file.getName().substring(0, file.getName().lastIndexOf(".")));
+		Model model = new Model(null, "");
 		model.helper = true;
 		SaveHandler.open(model, file, true);
+		if(!model.name.startsWith("fmtb/")) model.name = "fmtb/" + model.name;
 		add(model);
 		return model;
 	}
