@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.fexcraft.app.fmt.animation.Animation;
+import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.update.UpdateEvent.GroupRenamed;
 import net.fexcraft.app.fmt.update.UpdateEvent.PolygonRemoved;
 import net.fexcraft.lib.script.elm.FltElm;
@@ -77,6 +78,7 @@ public class Group extends ArrayList<Polygon> {
 
 	private void bindtex(){
 		if(texgroup != null) texgroup.texture.bind();
+		else if(texhelper != null) TextureManager.bind(texhelper);
 		else model.bindtex();
 	}
 
