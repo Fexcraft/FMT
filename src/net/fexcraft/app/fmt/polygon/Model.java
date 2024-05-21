@@ -360,7 +360,7 @@ public class Model {
 		int old = selected.size();
 		if(!resel && polygon.selected) polygon.selected = !selected.remove(polygon);
 		else{
-			if(!GGR.isAltDown()) clear_selection();
+			if(!resel && !GGR.isAltDown()) clear_selection();
 			polygon.selected = selected.add(polygon);
 		}
 		update(new PolygonSelected(polygon, old, selected.size()));
@@ -438,7 +438,7 @@ public class Model {
 		}
 		if(bool){
 			clear_selection();
-			copied.forEach(poly -> select(poly));
+			copied.forEach(poly -> select(poly, true));
 		}
 	}
 
