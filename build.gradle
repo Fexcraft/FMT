@@ -1,5 +1,4 @@
 import org.gradle.internal.os.OperatingSystem
-
 import java.text.SimpleDateFormat
 
 group 'net.fexcraft.app.fmt'
@@ -56,11 +55,10 @@ eclipse.project {
 }
 
 repositories {
-    jcenter()
     mavenCentral()
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
     maven { url "https://raw.github.com/SpinyOwl/repo/releases" }
-
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -120,9 +118,11 @@ dependencies {
     //implementation group: 'org.codehaus.groovy', name: 'groovy-all', version: '3.0.7', changing: true
     //runtimeOnly group: 'org.codehaus.groovy', name: 'groovy-all', version: '3.0.7', changing: true
     
-    implementation files('libs/discord-rpc.jar', 'libs/VOXtoFMT-1.jar')
+    implementation files('libs/VOXtoFMT-1.jar')
     //@formatter:on
     //testCompile group: 'junit', name: 'junit', version: '4.11'
+
+    implementation 'com.github.JnCrMx:discord-game-sdk4j:java-impl-SNAPSHOT'
 }
 
 sourceSets {
@@ -255,6 +255,7 @@ tasks.register('compileCatalog') {
     catalog_fmt += '\t\t[ "FMT.jar", ' + new File(projectDir, "/upload/FMT.jar").lastModified() + ', true, false ]\n'
     catalog_fmt += '\t],\n'
     catalog_fmt += '\t"last_catalog_update": "' + new SimpleDateFormat("HH:mm:ss dd.MMM.yyyy z").format(new Date()) + '"\n'
+    catalog_fmt += '\t"fmt_version": "' + new SimpleDateFormat("3.yyD.HHmm").format(new Date()) + '"\n'
     catalog_fmt += '}\n'
     new File(projectDir, "upload/catalog.fmt").text = catalog_fmt
     new File(projectDir, "catalog.fmt").text = catalog_fmt
