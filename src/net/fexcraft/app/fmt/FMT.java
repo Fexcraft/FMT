@@ -82,7 +82,7 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 public class FMT {
 
 	public static String VERSION = "3.0.0";
-	public static final String TITLE = getCurrentTitle();
+	public static String TITLE;
 	//
 	public static final FMT INSTANCE = new FMT();
 	public static int WIDTH, HEIGHT, EXIT_CODE = 0;
@@ -127,6 +127,7 @@ public class FMT {
 		catch(Exception e){
 			e.printStackTrace();
 		}
+		TITLE = getCurrentTitle();
 		log("==================================================");
 		log("Starting FMT " + VERSION + "!");
         System.setProperty("joml.nounsafe", Boolean.TRUE.toString());
