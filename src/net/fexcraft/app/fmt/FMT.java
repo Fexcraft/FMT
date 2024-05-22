@@ -15,8 +15,6 @@ import com.spinyowl.legui.system.layout.LayoutManager;
 import com.spinyowl.legui.system.renderer.Renderer;
 import com.spinyowl.legui.system.renderer.RendererProvider;
 import com.spinyowl.legui.system.renderer.nvg.NvgRenderer;
-import net.arikia.dev.drpc.DiscordEventHandlers;
-import net.arikia.dev.drpc.DiscordRPC;
 import net.fexcraft.app.fmt.animation.Animation;
 import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.nui.FMTInterface;
@@ -37,6 +35,8 @@ import net.fexcraft.app.fmt.ui.UVViewer;
 import net.fexcraft.app.fmt.ui.fields.Field;
 import net.fexcraft.app.fmt.utils.*;
 import net.fexcraft.app.fmt.workspace.Workspace;
+import net.fexcraft.app.json.JsonHandler;
+import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.AxisRotator;
 import net.fexcraft.lib.common.math.RGB;
@@ -44,7 +44,6 @@ import net.fexcraft.lib.common.math.Time;
 import net.fexcraft.lib.frl.GLO;
 import net.fexcraft.lib.frl.Polyhedron;
 import net.fexcraft.lib.frl.gen.Generator;
-import net.fexcraft.lib.scr.ScriptParser;
 import net.fexcraft.lib.script.Script;
 import net.fexcraft.lib.script.elm.FltElm;
 import net.fexcraft.lib.tmt.BoxBuilder;
@@ -60,7 +59,6 @@ import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.time.LocalDate;
@@ -83,9 +81,8 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
  * */
 public class FMT {
 
-	public static final String VERSION = "3.0.0";
+	public static String VERSION = "3.0.0";
 	public static final String TITLE = getCurrentTitle();
-	public static final String CLID = "587016218196574209";
 	//
 	public static final FMT INSTANCE = new FMT();
 	public static int WIDTH, HEIGHT, EXIT_CODE = 0;
@@ -123,6 +120,13 @@ public class FMT {
 	private SystemEventProcessor sys_event_processor;
 
 	public static void main(String... args) throws Exception {
+		try{
+			JsonMap cat = JsonHandler.parse(new File("./catalog.fmt")).asMap();
+			if(cat.has("fmt_version")) VERSION = cat.get("fmt_version").string_value();
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
 		log("==================================================");
 		log("Starting FMT " + VERSION + "!");
         System.setProperty("joml.nounsafe", Boolean.TRUE.toString());
@@ -269,37 +273,7 @@ public class FMT {
 			(TEXUP_TIMER = new Timer("TEXUPD")).schedule(new TextureUpdate(), Time.SEC_MS, Time.SEC_MS / 2);
 		}
 		//
-		if(Settings.DISCORD_RPC.value){
-			DiscordEventHandlers.Builder handler = new DiscordEventHandlers.Builder();
-			handler.setReadyEventHandler(new DiscordUtil.ReadyEventHandler());
-			handler.setErroredEventHandler(new DiscordUtil.ErroredEventHandler());
-			handler.setDisconnectedEventHandler(new DiscordUtil.DisconectedEventHandler());
-			handler.setJoinGameEventHandler(new DiscordUtil.JoinGameEventHandler());
-			handler.setJoinRequestEventHandler(new DiscordUtil.JoinRequestEventHandler());
-			handler.setSpectateGameEventHandler(new DiscordUtil.SpectateGameEventHandler());
-			DiscordRPC.discordInitialize(CLID, handler.build(), true);
-			DiscordRPC.discordRunCallbacks();
-			DiscordUtil.update(true);
-			Runtime.getRuntime().addShutdownHook(new Thread(){
-				@Override
-				public void run(){
-					DiscordRPC.discordShutdown();
-				}
-			});
-			DiscordUtil.DISCORD_THREAD = new Thread(() -> {
-				while(!CLOSE){
-					DiscordRPC.discordRunCallbacks();
-					try{
-						Thread.sleep(100);
-					}
-					catch(InterruptedException e){
-						e.printStackTrace();
-					}
-				}
-			});
-			DiscordUtil.DISCORD_THREAD.setName("DRPC");
-			DiscordUtil.DISCORD_THREAD.start();
-		}
+		if(Settings.DISCORD_RPC.value) DiscordUtil.start();
 		//
 		vsync();
 		ShaderManager.loadPrograms();
@@ -341,7 +315,6 @@ public class FMT {
 			}
 			timer.update();
 		}
-		DiscordRPC.discordShutdown();
 		RENDERER.destroy();
 		glfwDestroyWindow(window);
 		glfwTerminate();
