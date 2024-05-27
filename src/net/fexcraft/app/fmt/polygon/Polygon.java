@@ -8,6 +8,7 @@ import static net.fexcraft.app.fmt.utils.Logging.log;
 import net.fexcraft.app.fmt.ui.UVViewer;
 import net.fexcraft.app.fmt.update.UpdateEvent.PolygonAdded;
 import net.fexcraft.app.fmt.update.UpdateEvent.PolygonRenamed;
+import net.fexcraft.lib.frl.Vertex;
 import net.fexcraft.lib.script.ScrBlock;
 import net.fexcraft.lib.script.ScrElm;
 import net.fexcraft.lib.script.elm.FltElm;
@@ -33,11 +34,17 @@ import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.frl.Polyhedron;
 import net.fexcraft.lib.frl.gen.Generator;
 
+import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
+
 public abstract class Polygon implements ScrElm {
 
+	public static final ConcurrentHashMap<Vertex, Integer> vertcolors = new ConcurrentHashMap<>();
 	public static final int startIdx = 7;
 	public static int polyIdx = startIdx;
+	public static int vertIdx = startIdx;
 	public Polyhedron<GLObject> glm = new Polyhedron<GLObject>().setGlObj(new GLObject());
+	public ArrayList<VertexOffset> vertices = new ArrayList<VertexOffset>();
 	private Model model;
 	private Group group;
 	private String name;
@@ -217,7 +224,11 @@ public abstract class Polygon implements ScrElm {
 
 	public void recompile(){
 		glm.recompile = true;
+		for(net.fexcraft.lib.frl.Polygon poly : glm.polygons){
+			for(Vertex vertex : poly.vertices) vertcolors.remove(vertex);
+		}
 		glm.clear();
+		for(VertexOffset off : vertices) off.vertex = null;
 		if(glm.glObj.pickercolor == null) glm.glObj.pickercolor = new RGB(colorIdx == 0 ? colorIdx = polyIdx++ : colorIdx).toFloatArray();
 		glm.glObj.polygon = this;
 		glm.glObj.textured = textureX > 0 && textureY > 0;
@@ -233,6 +244,17 @@ public abstract class Polygon implements ScrElm {
 			glm.rot(rot.x, rot.y, rot.z);
 		}
 		getGenerator().make();
+		int idx = 0;
+		for(net.fexcraft.lib.frl.Polygon poly : glm.polygons){
+			for(Vertex vertex : poly.vertices){
+				if(vertices.contains(vertex)) continue;
+				if(vertices.size() <= idx) vertices.add(new VertexOffset(vertex));
+				else vertices.get(idx).set(vertex);
+				vertcolors.put(vertex, vertIdx++);
+				idx++;
+			}
+		}
+		for(VertexOffset off : vertices) off.apply(this) ;
 	}
 
 	protected abstract Generator<GLObject> getGenerator();
