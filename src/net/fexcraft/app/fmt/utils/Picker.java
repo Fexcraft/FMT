@@ -31,7 +31,7 @@ public class Picker {
 
 	public static void resetBuffer(boolean resize){
 		if(resize){
-			buffer = ByteBuffer.allocateDirect(FMT.WIDTH * FMT.HEIGHT * 4);
+			buffer = ByteBuffer.allocateDirect(FMT.FRAME_WIDTH * FMT.FRAME_HEIGHT * 4);
 			buffer.order(ByteOrder.nativeOrder());
 		}
 		if(!filled) return;
@@ -175,18 +175,18 @@ public class Picker {
 		byte[] picked = new byte[4];
 		if(offcenter){
 			x = GGR.mousePosX();
-			y = -(GGR.mousePosY() - FMT.HEIGHT);
+			y = -(GGR.mousePosY() - FMT.FRAME_HEIGHT);
 		}
 		else{
-			x = FMT.WIDTH / 2;
-			y = FMT.HEIGHT / 2;
+			x = FMT.FRAME_WIDTH / 2;
+			y = FMT.FRAME_HEIGHT / 2;
 		}
-		buffer.get((x + y * FMT.WIDTH) * 4, picked);
+		buffer.get((x + y * FMT.FRAME_WIDTH) * 4, picked);
 		return ByteUtils.getRGB(picked);
 	}
 
 	private static void fillBuffer(){
-		GL11.glReadPixels(0, 0, FMT.WIDTH, FMT.HEIGHT, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
+		GL11.glReadPixels(0, 0, FMT.FRAME_WIDTH, FMT.FRAME_HEIGHT, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
 	}
 
 	public static Polygon polygon(){
