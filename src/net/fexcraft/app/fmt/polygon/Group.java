@@ -109,6 +109,13 @@ public class Group extends ArrayList<Polygon> {
 			if(poly.visible) poly.renderPicking();
 		}
 	}
+
+	public void renderVertexPicking(){
+		if(!visible) return;
+		for(Polygon poly : this){
+			if(poly.visible) poly.renderPicking();
+		}
+	}
 	
 	@Override
 	public boolean equals(Object other){
