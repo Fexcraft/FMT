@@ -194,6 +194,17 @@ public class Model {
 		}
 	}
 
+	public void renderVertexPicking(){
+		if(!visible) return;
+		for(Pivot pivot : pivots){
+			PolyRenderer.setPivot(pivot);
+			for(Group group : pivot.groups){
+				group.renderVertexPicking();
+			}
+			PolyRenderer.setPivot(null);
+		}
+	}
+
 	public void add(String pid, String gid, Polygon poly){
 		Group group = null;
 		if(gid == null){
