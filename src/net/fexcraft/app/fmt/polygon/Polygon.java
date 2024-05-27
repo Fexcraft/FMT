@@ -283,6 +283,10 @@ public abstract class Polygon implements ScrElm {
 		glm.render();
 	}
 
+	public void renderVertexPicking(){
+		glm.render();
+	}
+
 	public float getValue(PolygonValue polyval){
 		switch(polyval.val()){
 			case POS: return getVectorValue(pos, polyval.axe());
