@@ -86,6 +86,8 @@ public class FMT {
 	//
 	public static final FMT INSTANCE = new FMT();
 	public static int WIDTH, HEIGHT, EXIT_CODE = 0;
+	public static int FRAME_WIDTH;
+	public static int FRAME_HEIGHT;
 	public static Timer BACKUP_TIMER, TEXUP_TIMER;
 	private static String title;
 	//
@@ -232,12 +234,8 @@ public class FMT {
 		keeper.getChainFramebufferSizeCallback().add(new GLFWFramebufferSizeCallback(){
 			@Override
 			public void invoke(long window, int width, int height){
-				log("Resizing from " + WIDTH + "/" + HEIGHT + " to " + width + "/" + height + ".");
-				HEIGHT = height;
-				TOOLBAR.setSize(WIDTH = width, TOOLBAR.getSize().y);
-				Editor.EDITORS.values().forEach(editor -> editor.align());
-				ToolbarMenu.MENUS.forEach((key, menu) -> menu.layer.hide());
-				Picker.resetBuffer(true);
+				CONTEXT.updateGlfwWindow();
+				resize();
 			}
 		});
 		keeper.getChainScrollCallback().add(new GLFWScrollCallback(){
@@ -284,7 +282,10 @@ public class FMT {
 		glDepthFunc(GL_LESS);
 		Picker.resetBuffer(true);
 		//
+		CONTEXT.updateGlfwWindow();
+		resize();
 		while(!glfwWindowShouldClose(window)){
+			FRAME.getContainer().setSize(WIDTH, HEIGHT);
 			CAM.pollInput(accumulator += (delta = timer.getDelta()));
 			//accumulator += (delta = timer.getDelta());
 			while(accumulator >= interval){
@@ -323,6 +324,19 @@ public class FMT {
 		SessionHandler.save();
 		//TODO other saves
 		System.exit(EXIT_CODE);
+	}
+
+	private void resize(){
+		int width = (int)(CONTEXT.getFramebufferSize().x * (1f / CONTEXT.getScale().x));
+		int height = (int)(CONTEXT.getFramebufferSize().y * (1f / CONTEXT.getScale().y));
+		FRAME_WIDTH = CONTEXT.getFramebufferSize().x;
+		FRAME_HEIGHT = CONTEXT.getFramebufferSize().y;
+		log("Resizing Window to " + width + "/" + height + " (" + FRAME_WIDTH + "/" + FRAME_HEIGHT + " scaled at " + (1f / CONTEXT.getScale().x) + "/" + (1f / CONTEXT.getScale().y) + ").");
+		HEIGHT = height;
+		TOOLBAR.setSize(WIDTH = width, TOOLBAR.getSize().y);
+		Editor.EDITORS.values().forEach(editor -> editor.align());
+		ToolbarMenu.MENUS.forEach((key, menu) -> menu.layer.hide());
+		Picker.resetBuffer(true);
 	}
 
 	private void adjustLabels(){
@@ -373,6 +387,14 @@ public class FMT {
 				}
 			}
 		    Picker.reset();
+		}
+		if(Picker.TYPE.vertex()){
+			glClearColor(1, 1, 1, 1);
+		    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			PolyRenderer.mode(DrawMode.PICKER);
+			MODEL.renderVertexPicking();
+			Picker.process();
+			Picker.reset();
 		}
 		if(Settings.TESTING.value){
 			if(Picker.TASK == Picker.PickTask.NONE){
