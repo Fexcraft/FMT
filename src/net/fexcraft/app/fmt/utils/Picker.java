@@ -41,7 +41,7 @@ public class Picker {
 	
 	public static enum PickType {
 		
-		NONE, POLYGON, FACE, COLOR1, COLOR2, UI;
+		NONE, VERTEX, FACE, POLYGON, COLOR1, COLOR2, UI;
 		
 		public boolean pick(){
 			return this != NONE;
@@ -53,6 +53,10 @@ public class Picker {
 
 		public boolean face(){
 			return this == FACE;
+		}
+
+		public boolean vertex(){
+			return this == VERTEX;
 		}
 		
 		public boolean color(){
