@@ -281,7 +281,6 @@ public abstract class Polygon implements ScrElm {
 	public void render(FltElm alpha){
 		//FMT.SCRIPT.act("render").process(this, alpha);
 		glm.render();
-		renderVertexPicking();
 	}
 
 	public void renderPicking(){
@@ -291,8 +290,6 @@ public abstract class Polygon implements ScrElm {
 	private static Axis3DL axe = new Axis3DL();
 
 	public void renderVertexPicking(){
-		PolyRenderer.DrawMode old = PolyRenderer.mode();
-		PolyRenderer.mode(PolyRenderer.DrawMode.RGBCOLOR);
 		for(int i = 0; i < vertices.size(); i++){
 			axe.setAngles(-rot.y, -rot.z, -rot.x);
 			Vec3f vector = axe.getRelativeVector(vertices.get(i).vertex.vector);
@@ -301,7 +298,6 @@ public abstract class Polygon implements ScrElm {
 			ROT_MARKER_SMALL.rot(rot.x, rot.y, rot.z);
 			ROT_MARKER_SMALL.render();
 		}
-		PolyRenderer.mode(old);
 	}
 
 	public float getValue(PolygonValue polyval){
