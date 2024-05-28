@@ -789,7 +789,7 @@ public class Model {
 	}
 
 	public void select(VertexOffset off){
-		if(!GGR.isControlDown()) selected_verts.clear();
+		if(!GGR.isAltDown()) selected_verts.clear();
 		selected_verts.add(off);
 		Logging.bar("Currently selected vertices: " + selected_verts.size());
 	}
