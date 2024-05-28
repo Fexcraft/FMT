@@ -145,7 +145,7 @@ public class Picker {
 			VertexOffset off = VertexOffset.getPicked(pick);
 			if(off == null) return;
 			if(TASK.select()){
-			FMT.MODEL.select(off);
+				FMT.MODEL.select(off);
 			}
 			else if(TASK.function()){
 				vert_consumer.accept(off);
