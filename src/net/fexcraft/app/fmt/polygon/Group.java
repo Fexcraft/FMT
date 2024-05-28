@@ -113,7 +113,7 @@ public class Group extends ArrayList<Polygon> {
 	public void renderVertexPicking(){
 		if(!visible) return;
 		for(Polygon poly : this){
-			if(poly.visible) poly.renderPicking();
+			if(poly.visible) poly.renderVertexPicking();
 		}
 	}
 	
