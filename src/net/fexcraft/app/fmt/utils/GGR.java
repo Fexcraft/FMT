@@ -146,7 +146,7 @@ public class GGR {
 						Picker.pick(TexturePainter.SELMODE.getPickType(), PickTask.PAINT1, true);
 					}
 					else if(Picker.TYPE.color()) Picker.process();
-					else Picker.pick(Settings.TESTING.value ? PickType.UI : PickType.POLYGON, PickTask.SELECT, true);
+					else Picker.pick(Settings.TESTING.value ? PickType.UI : Selector.TYPE, PickTask.SELECT, true);
 				}
 				left_down = false;
 			}
