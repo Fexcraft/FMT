@@ -276,6 +276,10 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 			return this == PICKER_FACE;
 		}
 
+		public boolean vertex_picker(){
+			return this == PICKER_FACE;
+		}
+
 		public boolean ui(){
 			return this == UI || this == UI_LINES || this == UI_TEXT;
 		}
