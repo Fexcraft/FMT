@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import net.fexcraft.app.fmt.nui.Element;
+import net.fexcraft.app.fmt.polygon.VertexOffset;
 import net.fexcraft.app.fmt.polygon.uv.Face;
 import net.fexcraft.app.fmt.polygon.uv.NoFace;
 import net.fexcraft.app.fmt.update.UpdateEvent;
@@ -27,6 +28,7 @@ public class Picker {
 	private static boolean filled, offcenter;
 	private static Polygon polygon;
 	private static Consumer<Polygon> consumer;
+	private static Consumer<VertexOffset> vert_consumer;
 	public static Face selected_face = NoFace.NONE;
 
 	public static void resetBuffer(boolean resize){
@@ -136,9 +138,23 @@ public class Picker {
 			}
 			reset();
 		}
+		else if(TYPE.vertex()){
+			int pick = getPick();
+			Logging.bar("picked: " + pick);
+			if(pick < Polygon.startIdx) return;
+			VertexOffset off = VertexOffset.getPicked(pick);
+			if(off == null) return;
+			if(TASK.select()){
+			FMT.MODEL.select(off);
+			}
+			else if(TASK.function()){
+				vert_consumer.accept(off);
+				vert_consumer = null;
+			}
+		}
 		else{
 			int pick = getPick();
-			Logging.bar("dir: " + pick);
+			Logging.bar("picked: " + pick);
 			if(pick > 0 && pick < Polygon.startIdx){
 				Arrows.SEL = pick;
 				Arrows.DIR = Arrows.MODE == Arrows.ArrowMode.SIZE ? false : pick % 2 == 0;
