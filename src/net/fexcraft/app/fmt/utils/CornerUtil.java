@@ -13,8 +13,8 @@ import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public class CornerUtil {
 
-	protected static final Polyhedron<GLObject> ROT_MARKER_NORMAL = new Polyhedron<GLObject>().importMRT(new ModelRendererTurbo(null, 0, 0, 16, 16).addBox(-.25f, -.25f, -.25f, .5f, .5f, .5f), false, 1f);
-	protected static final Polyhedron<GLObject> ROT_MARKER_SMALL = new Polyhedron<GLObject>().importMRT(new ModelRendererTurbo(null, 0, 0, 16, 16).addBox(-.2f, -.2f, -.2f, .4f, .4f, .4f), false, 1f);
+	public static final Polyhedron<GLObject> ROT_MARKER_NORMAL = new Polyhedron<GLObject>().importMRT(new ModelRendererTurbo(null, 0, 0, 16, 16).addBox(-.25f, -.25f, -.25f, .5f, .5f, .5f), false, 1f);
+	public static final Polyhedron<GLObject> ROT_MARKER_SMALL = new Polyhedron<GLObject>().importMRT(new ModelRendererTurbo(null, 0, 0, 16, 16).addBox(-.2f, -.2f, -.2f, .4f, .4f, .4f), false, 1f);
 	private static Polyhedron<GLObject>[] CORNER_MARKER = new Polyhedron[8];
 	public static RGB[] CORNER_COLOURS = new RGB[]{
 		new RGB(255, 255, 0), new RGB(255, 0, 0), new RGB(0, 127, 255), new RGB(255, 0, 127),
