@@ -1,6 +1,7 @@
 package net.fexcraft.app.fmt.polygon;
 
 import static net.fexcraft.app.fmt.update.UpdateHandler.update;
+import static net.fexcraft.app.fmt.utils.CornerUtil.ROT_MARKER_SMALL;
 import static net.fexcraft.app.fmt.utils.JsonUtil.getVector;
 import static net.fexcraft.app.fmt.utils.JsonUtil.setVector;
 import static net.fexcraft.app.fmt.utils.Logging.log;
@@ -8,6 +9,8 @@ import static net.fexcraft.app.fmt.utils.Logging.log;
 import net.fexcraft.app.fmt.ui.UVViewer;
 import net.fexcraft.app.fmt.update.UpdateEvent.PolygonAdded;
 import net.fexcraft.app.fmt.update.UpdateEvent.PolygonRenamed;
+import net.fexcraft.app.fmt.utils.Axis3DL;
+import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.frl.Vertex;
 import net.fexcraft.lib.script.ScrBlock;
 import net.fexcraft.lib.script.ScrElm;
@@ -250,6 +253,7 @@ public abstract class Polygon implements ScrElm {
 				if(vertices.contains(vertex)) continue;
 				if(vertices.size() <= idx) vertices.add(new VertexOffset(vertex));
 				else vertices.get(idx).set(vertex);
+				vertices.get(idx).color = new RGB(vertIdx).toFloatArray();
 				vertcolors.put(vertex, vertIdx++);
 				idx++;
 			}
@@ -277,14 +281,27 @@ public abstract class Polygon implements ScrElm {
 	public void render(FltElm alpha){
 		//FMT.SCRIPT.act("render").process(this, alpha);
 		glm.render();
+		renderVertexPicking();
 	}
 
 	public void renderPicking(){
 		glm.render();
 	}
 
+	private static Axis3DL axe = new Axis3DL();
+
 	public void renderVertexPicking(){
-		glm.render();
+		PolyRenderer.DrawMode old = PolyRenderer.mode();
+		PolyRenderer.mode(PolyRenderer.DrawMode.RGBCOLOR);
+		for(int i = 0; i < vertices.size(); i++){
+			axe.setAngles(-rot.y, -rot.z, -rot.x);
+			Vec3f vector = axe.getRelativeVector(vertices.get(i).vertex.vector);
+			ROT_MARKER_SMALL.glObj.polycolor = vertices.get(i).color;
+			ROT_MARKER_SMALL.pos(vector.x + pos.x, vector.y + pos.y, vector.z + pos.z);
+			ROT_MARKER_SMALL.rot(rot.x, rot.y, rot.z);
+			ROT_MARKER_SMALL.render();
+		}
+		PolyRenderer.mode(old);
 	}
 
 	public float getValue(PolygonValue polyval){
