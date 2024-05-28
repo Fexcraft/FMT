@@ -23,6 +23,11 @@ toolbar.file.export=Export >>
 toolbar.file.settings=Settings
 toolbar.file.donate=Donate!
 toolbar.file.exit=Exit
+## Selection
+toolbar.selection=Selection
+toolbar.selection.polygon=Sel. Polygons
+toolbar.selection.face=Sel. Faces
+toolbar.selection.vertex=Sel. Vertices
 ## Editors
 toolbar.editors=Editors
 toolbar.editors.polygon=Polygon Editor
