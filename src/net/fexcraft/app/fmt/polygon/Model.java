@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.update.UpdateEvent.*;
+import net.fexcraft.app.fmt.utils.*;
 import net.fexcraft.app.json.JsonValue;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.frl.Polyhedron;
@@ -45,10 +46,6 @@ import net.fexcraft.app.fmt.ui.GenericDialog;
 import net.fexcraft.app.fmt.ui.GroupSelectionPanel;
 import net.fexcraft.app.fmt.ui.fields.Field;
 import net.fexcraft.app.fmt.ui.fields.NumberField;
-import net.fexcraft.app.fmt.utils.CornerUtil;
-import net.fexcraft.app.fmt.utils.GGR;
-import net.fexcraft.app.fmt.utils.Logging;
-import net.fexcraft.app.fmt.utils.SaveHandler;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
@@ -66,6 +63,7 @@ public class Model {
 	private ArrayList<Group> allgroups = new ArrayList<>();
 	private ArrayList<Pivot> pivots = new ArrayList<>();
 	private ArrayList<Polygon> selected = new ArrayList<>();
+	private ArrayList<VertexOffset> selected_verts = new ArrayList<>();
 	public LinkedHashMap<String, String> export_values = new LinkedHashMap<>();
 	public LinkedHashMap<String, ArrayList<String>> export_listed_values = new LinkedHashMap<>();
 	public ArrayList<ArrayList<String>> export_group_presets = new ArrayList<>();
@@ -788,6 +786,12 @@ public class Model {
 
 	public void rerootpivots(){
 		for(Pivot pivot : pivots) pivot.reroot();
+	}
+
+	public void select(VertexOffset off){
+		if(!GGR.isControlDown()) selected_verts.clear();
+		selected_verts.add(off);
+		Logging.bar("Currently selected vertices: " + selected_verts.size());
 	}
 
 }
