@@ -13,13 +13,7 @@ import net.fexcraft.app.fmt.port.ex.ExportManager;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.ToolbarMenu.MenuButton;
 import net.fexcraft.app.fmt.ui.components.QuickAdd;
-import net.fexcraft.app.fmt.utils.FontUtils;
-import net.fexcraft.app.fmt.utils.ImageHandler;
-import net.fexcraft.app.fmt.utils.PreviewHandler;
-import net.fexcraft.app.fmt.utils.SaveHandler;
-
-import static net.fexcraft.app.fmt.ui.FileChooser.TYPE_FMTB;
-import static net.fexcraft.app.fmt.ui.FileChooser.TYPE_IMG;
+import net.fexcraft.app.fmt.utils.*;
 
 public class Toolbar extends Panel {
 	
@@ -107,7 +101,12 @@ public class Toolbar extends Panel {
 					new MenuButton(0, "utils.converter.itemmodeltexjson", () -> ConverterUtils.runIMTJ())
 			)
 		));
-		this.add(new ToolbarMenu(2, "editors",
+		this.add(new ToolbarMenu(2, "selection",
+			new MenuButton(0, "selection.polygon", () -> Selector.set(Picker.PickType.POLYGON)),
+			new MenuButton(1, "selection.face", () -> Selector.set(Picker.PickType.FACE)),
+			new MenuButton(2, "selection.vertex", () -> Selector.set(Picker.PickType.VERTEX))
+		));
+		this.add(new ToolbarMenu(3, "editors",
 			new MenuButton(0, "editors.polygon", () -> Editor.POLYGON_EDITOR.toggle()),
 			new MenuButton(1, "editors.group", () -> Editor.GROUP_EDITOR.toggle()),
 			new MenuButton(2, "editors.pivot", () -> Editor.PIVOT_EDITOR.toggle()),
@@ -116,13 +115,13 @@ public class Toolbar extends Panel {
 			new MenuButton(5, "editors.uv", () -> Editor.UV_EDITOR.toggle()),
 			new MenuButton(6, "editors.preview", () -> Editor.PREVIEW_EDITOR.toggle())
 		));
-		this.add(new ToolbarMenu(3, "trees",
+		this.add(new ToolbarMenu(4, "trees",
 			new MenuButton(0, "trees.polygon", () -> Editor.POLYGON_TREE.toggle()),
 			new MenuButton(1, "trees.pivot", () -> Editor.PIVOT_TREE.toggle()),
 			new MenuButton(2, "trees.texture", () -> Editor.TEXTURE_TREE.toggle()),
 			new MenuButton(3, "trees.helper", () -> Editor.PREVIEW_TREE.toggle())
 		));
-		this.add(new ToolbarMenu(4, "polygons",
+		this.add(new ToolbarMenu(5, "polygons",
 			new MenuButton(0, "polygons.add_box", () -> QuickAdd.addBox()),
 			new MenuButton(1, "polygons.add_shapebox", () -> QuickAdd.addShapebox()),
 			new MenuButton(2, "polygons.add_cylinder", () -> QuickAdd.addCylinder()),
@@ -134,7 +133,7 @@ public class Toolbar extends Panel {
 			new MenuButton(8, "polygons.add_object"),
 			new MenuButton(9, "polygons.add_voxel")
 		));
-		this.add(new ToolbarMenu(5, "exit", () -> FMT.close(0)));
+		this.add(new ToolbarMenu(6, "exit", () -> FMT.close(0)));
 		UpdateHandler.register(updcom);
 	}
 
