@@ -122,7 +122,7 @@ dependencies {
     //@formatter:on
     //testCompile group: 'junit', name: 'junit', version: '4.11'
 
-    implementation 'com.github.JnCrMx:discord-game-sdk4j:java-impl-SNAPSHOT'
+    implementation 'com.github.JnCrMx:discord-game-sdk4j:master-SNAPSHOT'
 }
 
 sourceSets {
