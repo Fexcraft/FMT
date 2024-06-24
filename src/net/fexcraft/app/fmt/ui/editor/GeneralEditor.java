@@ -214,7 +214,7 @@ public class GeneralEditor extends EditorBase {
 		cylinder.getContainer().add(new Label(translate("editor.general.cylinder.radius"), 3, pass += 24, 290, 20));
 		cylinder.getContainer().add(cyl0_x = new NumberField(4, pass += 24, 65, 20).setup("cyl0x", 0.5f, Integer.MAX_VALUE, Settings.decimal_sizes()));
 		cylinder.getContainer().add(cyl8_x = new NumberField(78, pass, 65, 20).setup("cyl8x", 0, Integer.MAX_VALUE, Settings.decimal_sizes()));
-		cylinder.getContainer().add(cyl0_z = new NumberField(151, pass, 65, 20).setup("cyl0z", 1, Integer.MAX_VALUE, true));
+		cylinder.getContainer().add(cyl0_z = new NumberField(151, pass, 65, 20).setup("cyl0z", 0, Integer.MAX_VALUE, true));
 		cylinder.getContainer().add(cyl8_y = new NumberField(224, pass, 65, 20).setup("cyl8y", 0, Integer.MAX_VALUE, true));
 		cylinder.getContainer().add(new Label(translate("editor.general.cylinder.length_scale"), 3, pass += 24, 290, 20));
 		cylinder.getContainer().add(cyl0_y = new NumberField(4, pass += 24, 90, 20).setup("cyl0y", 1, Integer.MAX_VALUE, Settings.decimal_sizes()));
