@@ -90,3 +90,4 @@ gradle/
 gradlew
 gradlew.bat
 scripts/test*.script
+test/*
