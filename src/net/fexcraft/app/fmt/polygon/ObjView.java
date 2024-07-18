@@ -52,7 +52,7 @@ public class ObjView extends Polygon {
 
 	@Override
 	public Shape getShape(){
-		return Shape.MARKER;
+		return Shape.OBJECT;
 	}
 
 	@Override
