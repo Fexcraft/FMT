@@ -269,7 +269,12 @@ public class Settings {
 		//
 		TESTING = new Setting<>("testing", false, GENERAL, map);
 		WORKSPACE_NAME = new Setting<>("name", "FMT Workspace", WORKSPACE, map);
-		WORKSPACE_ROOT = new Setting<>("root", "/workspace/", WORKSPACE, map);
+		WORKSPACE_ROOT = new Setting<>("root", "/workspace/", WORKSPACE, map){
+			@Override
+			public boolean basicstr(){
+				return false;
+			}
+		};
 		//
 		SEL_THEME = new StringArraySetting("selected_theme", "light", THEME, map, "light", "dark", "custom");
 		DARKTHEME = new Setting<>("is_dark", false, THEME, map);
