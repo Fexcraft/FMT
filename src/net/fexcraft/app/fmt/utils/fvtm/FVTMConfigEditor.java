@@ -54,12 +54,10 @@ public class FVTMConfigEditor extends Widget {
         }));
         getContainer().add(new RunButton("dialog.button.close", width - 110, height - 50, 100, 24, () -> {
             FMT.FRAME.getContainer().remove(this);
-            EDITORS.remove(this);
         }));
         fill();
-        addWidgetCloseEventListener(lis -> EDITORS.remove(this));
         FMT.FRAME.getContainer().add(this);
-        EDITORS.add(this);
+        show();
     }
 
     private void fill(){
