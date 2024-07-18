@@ -117,4 +117,8 @@ public class Setting<TYPE> {
 		if(FMT.WORKSPACE != null && group.equals("workspace")) FMT.WORKSPACE.update(this);
 	}
 
+	public boolean basicstr(){
+		return true;
+	}
+
 }
