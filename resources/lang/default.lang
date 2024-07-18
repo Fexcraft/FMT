@@ -82,6 +82,7 @@ toolbar.utils.font_util=Font Util
 toolbar.utils.converters=Converter Utils
 toolbar.utils.converter.itemmodeltexjson=Item Model Texture Loc
 ##
+toolbar.workspace=Workspace
 toolbar.exit=Exit
 ## Selected Polygon Right-Click Menu
 toolbar.polyselmenu.hide=Hide/Show
