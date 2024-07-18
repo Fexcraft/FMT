@@ -6,6 +6,7 @@ import com.spinyowl.legui.component.event.component.ChangeSizeEvent;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.fields.RunButton;
+import net.fexcraft.app.fmt.utils.Logging;
 import org.joml.Vector2f;
 
 import java.io.File;
@@ -69,17 +70,47 @@ public class WorkspaceViewer extends Widget {
 		new Thread("FolderViewGenerator"){
 			@Override
 			public void run(){
+				Logging.log("Reloading Workspace");
 				panel.getContainer().removeAll(rootfolders);
 				rootfolders.clear();
-				addFolder(folder, null, 0);
+				findPacks();
+				//addFolder(folder, null, 0);
 				resize();
 				panel.getVerticalScrollBar().setScrollStep(0f);
 			}
 		}.start();
 	}
 
-	private int addFolder(File folder, DirComponent root, int rrow){
+	private void findPacks(){
+		File assets;
+		for(File fold : folder.listFiles()){
+			if(!fold.isDirectory()) continue;
+			if(!(assets = new File(fold, "assets")).exists()) continue;
+			FvtmPack pack = null;
+			for(File sub : assets.listFiles()){
+				if(!sub.isDirectory()) continue;
+				if(!new File(sub, "addonpack.fvtm").exists()) continue;
+				pack = new FvtmPack(ViewerFileType.FVTM_FOLDER, this, null, fold, sub.getName());
+			}
+			if(pack == null) continue;
+			Logging.log("Found pack with id '" + pack.id + "'.");
+			rootfolders.add(pack);
+			panel.getContainer().add(pack);
+			for(File file : fold.listFiles()){
+				addFolder(file, pack, pack, 0);
+			}
+			for(FvtmType ft : FvtmType.values()){
+				if(pack.content.get(ft).size() > 0){
+					Logging.log("  "  + ft.name().toLowerCase() + "s: " + pack.content.get(ft).size());
+				}
+			}
+			Logging.log("  textures: " + pack.textures.size());
+		}
+	}
+
+	private int addFolder(File folder, FvtmPack pack, DirComponent root, int rrow){
 		if(!folder.isDirectory()) return rrow;
+		if(folder.getName().startsWith(".")) return rrow;
 		DirComponent com = null;
 		if(folder.listFiles().length == 0){
 			com = new DirComponent(ViewerFileType.EMPTY_FOLDER, this, root, folder, rrow);
@@ -88,16 +119,22 @@ public class WorkspaceViewer extends Widget {
 			com = new DirComponent(ViewerFileType.NORMAL_FOLDER, this, root, folder,  rrow);
 			int row = 1;
 			for(File file : folder.listFiles()){
-				if(file.isDirectory()) row += addFolder(file, com, row);
+				if(file.isDirectory()) row += addFolder(file, pack, com, row);
 			}
 			for(File file : folder.listFiles()){
 				if(!file.isDirectory()){
-					ViewerFileType type = ViewerFileType.fromFile(file);
+					Object tipo = ViewerFileType.fromFile(file);
+					boolean ext = tipo instanceof  ViewerFileType == false;
+					ViewerFileType type = (ViewerFileType)(ext ? ((Object[])tipo)[0] : tipo);
 					if(type == ViewerFileType.FILE) continue;
-					if(type == ViewerFileType.FVTM_FILE){
-						root.root.updateIcon(ViewerFileType.FVTM_FOLDER, this);
+					DirComponent dircom = new DirComponent(type, this, root, file, row++);
+					if(ext){
+						pack.content.get((FvtmType)((Object[])tipo)[1]).add(dircom);
 					}
-					com.addSub(new DirComponent(type, this, root, file, row++));
+					if(type == ViewerFileType.PNG){
+						pack.textures.add(dircom);
+					}
+					com.addSub(dircom);
 				}
 			}
 		}
