@@ -3,6 +3,7 @@ package net.fexcraft.app.fmt.ui;
 import java.util.ArrayList;
 
 import net.fexcraft.app.fmt.port.im.ImportManager;
+import net.fexcraft.app.fmt.ui.workspace.WorkspaceViewer;
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
 import com.spinyowl.legui.component.Component;
 import com.spinyowl.legui.component.Panel;
@@ -133,7 +134,8 @@ public class Toolbar extends Panel {
 			new MenuButton(8, "polygons.add_object"),
 			new MenuButton(9, "polygons.add_voxel")
 		));
-		this.add(new ToolbarMenu(6, "exit", () -> FMT.close(0)));
+		this.add(new ToolbarMenu(6, "workspace", () -> WorkspaceViewer.show0()));
+		this.add(new ToolbarMenu(7, "exit", () -> FMT.close(0)));
 		UpdateHandler.register(updcom);
 	}
 
