@@ -22,7 +22,7 @@ public class TextField extends TextInput {
 		Settings.applyMenuTheme(this);
 		Settings.applyGrayText(this);
 		//Field.setupHoverCheck(this);
-		this.addTextInputContentChangeEventListener(event -> setting.validate(true, Field.validateString(event, true)));
+		this.addTextInputContentChangeEventListener(event -> setting.validate(true, Field.validateString(event, setting.basicstr())));
 	}
 
 	public TextField(String string, float x, float y, float w, float h, boolean basic){
