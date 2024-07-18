@@ -25,10 +25,12 @@ public class DirComponent extends Component {
 	protected DirComponent root;
 	private Label label;
 	private Icon icon;
+	protected File file;
 
 	public DirComponent(ViewerFileType type, WorkspaceViewer folcom, DirComponent root, File file, int row){
 		this.type = type;
 		this.root = root;
+		this.file = file;
 		add(label = new Label(WorkspaceViewer.ROWHEIGHT + 2, 0, 5, WorkspaceViewer.ROWHEIGHT));
 		label.getTextState().setText(file.getName());
 		Settings.applyBorderless(label);
