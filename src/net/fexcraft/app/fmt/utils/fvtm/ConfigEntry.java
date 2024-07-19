@@ -10,12 +10,19 @@ public class ConfigEntry {
     public static final ConfigEntry EMPTY = ConfigEntry.of(EntryType.OBJECT);
     public static final ConfigEntry TEXT = ConfigEntry.of(EntryType.TEXT);
 
-    public String name, def, alt;
+    public String name;
+    public String def;
+    public String alt;
     public EntryType type;
-    public boolean required, def_ok;
+    public boolean required;
+    public boolean def_ok;
     public ArrayList<ConfigEntry> subs;
-    public int defi, mini, maxi;
-    public float deff, minf, maxf;
+    public int defi;
+    public int mini;
+    public int maxi;
+    public float deff;
+    public float minf;
+    public float maxf;
     public String[] enums;
     public boolean defb;
 
