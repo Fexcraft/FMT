@@ -24,7 +24,7 @@ import com.spinyowl.legui.component.event.textinput.TextInputContentChangeEvent;
 
 public class FVTMConfigEditor extends Widget {
 
-    public static ArrayList<FVTMConfigEditor> EDITORS = new ArrayList<>();
+    public static ArrayList<FVTMConfigEditor> INSTANCES = new ArrayList<>();
 
     private ScrollablePanel panel;
     private Reference ref;
@@ -54,9 +54,11 @@ public class FVTMConfigEditor extends Widget {
         }));
         getContainer().add(new RunButton("dialog.button.close", width - 110, height - 50, 100, 24, () -> {
             FMT.FRAME.getContainer().remove(this);
+            INSTANCES.remove(this);
         }));
         fill();
         FMT.FRAME.getContainer().add(this);
+        INSTANCES.add(this);
         show();
     }
 
