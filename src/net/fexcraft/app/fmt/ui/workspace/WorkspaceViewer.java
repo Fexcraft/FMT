@@ -1,5 +1,6 @@
 package net.fexcraft.app.fmt.ui.workspace;
 
+import com.spinyowl.legui.component.Label;
 import com.spinyowl.legui.component.ScrollablePanel;
 import com.spinyowl.legui.component.Widget;
 import com.spinyowl.legui.component.event.component.ChangeSizeEvent;
@@ -79,6 +80,7 @@ public class WorkspaceViewer extends Widget {
 			public void run(){
 				Logging.log("Reloading Workspace");
 				packspanel.getContainer().removeAll(rootfolders);
+				infopanel.getContainer().clearChildComponents();
 				rootfolders.clear();
 				findPacks();
 				//addFolder(folder, null, 0);
