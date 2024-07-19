@@ -1,8 +1,10 @@
 package net.fexcraft.app.fmt.ui;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Map;
 
+import com.spinyowl.legui.component.*;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.fields.BoolButton;
@@ -12,17 +14,13 @@ import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.app.json.JsonValue;
-import com.spinyowl.legui.component.Component;
-import com.spinyowl.legui.component.Dialog;
-import com.spinyowl.legui.component.Label;
-import com.spinyowl.legui.component.ScrollablePanel;
-import com.spinyowl.legui.component.TextInput;
 import com.spinyowl.legui.event.MouseClickEvent;
 import com.spinyowl.legui.input.Mouse;
 import com.spinyowl.legui.listener.MouseClickEventListener;
 
-public class JsonEditor extends Dialog {
+public class JsonEditor extends Widget {
 
+    public static ArrayList<JsonEditor> INSTANCES = new ArrayList<>();
     private static File file;
     private static JsonMap map;
     private static ScrollablePanel panel;
@@ -44,10 +42,14 @@ public class JsonEditor extends Dialog {
             JsonHandler.print(file, map, JsonHandler.PrintOption.DEFAULT);
         }));
         getContainer().add(new RunButton("dialog.button.close", 590, 420, 100, 24, () -> {
-            close();
+            FMT.FRAME.getContainer().remove(this);
+            INSTANCES.remove(this);
         }));
+        addWidgetCloseEventListener(lis -> INSTANCES.remove(this));
         resize();
-        this.show(FMT.FRAME);
+        FMT.FRAME.getContainer().add(this);
+        INSTANCES.add(this);
+        show();
     }
 
     private void fill(Component container, JsonMap map){
@@ -89,7 +91,8 @@ public class JsonEditor extends Dialog {
         public Label label;
 
         public JMapCom(String key, JsonMap map, Runnable run){
-            add(label = new Label("{} " + (this.key = key), 10, 0, 200, 30));
+            add(label = new Label(this.key = key, 30, 0, 200, 30));
+            add(new Icon(0, 20, 0, 5, 5, "./resources/textures/icons/configeditor/object_kv.png", () -> {}).addTooltip("JSON Object/Map"));
             label.getListenerMap().addListener(MouseClickEvent.class, lis -> {
                 if(lis.getAction() == MouseClickEvent.MouseClickAction.CLICK && lis.getButton() == Mouse.MouseButton.MOUSE_BUTTON_LEFT){
                     minimized = !minimized;
@@ -143,7 +146,8 @@ public class JsonEditor extends Dialog {
         public Label label;
 
         public JArrCom(String key, JsonArray arr, Runnable run){
-            add(label = new Label("[] " + (this.key = key), 10, 0, 200, 30));
+            add(label = new Label(this.key = key, 30, 0, 200, 30));
+            add(new Icon(0, 20, 0, 5, 5, "./resources/textures/icons/configeditor/array_s.png", () -> {}).addTooltip("JSON Array"));
             label.getListenerMap().addListener(MouseClickEvent.class, lis -> {
                 if(lis.getAction() == MouseClickEvent.MouseClickAction.CLICK && lis.getButton() == Mouse.MouseButton.MOUSE_BUTTON_LEFT){
                     minimized = !minimized;
