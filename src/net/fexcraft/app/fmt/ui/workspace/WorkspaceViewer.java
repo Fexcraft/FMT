@@ -20,25 +20,29 @@ public class WorkspaceViewer extends Widget {
 	public static WorkspaceViewer viewer;
 	public static final int ROWHEIGHT = 30;
 	public ArrayList<DirComponent> rootfolders = new ArrayList<DirComponent>();
-	public ScrollablePanel panel;
+	public ScrollablePanel packspanel;
+	public ScrollablePanel infopanel;
 	public RunButton button;
 	public File folder;
 	public int scrollableheight;
 
 	public WorkspaceViewer(){
 		super(Settings.WORKSPACE_NAME.value);
-		setSize(300, 500);
+		setSize(620, 500);
 		getContainer().setSize(getSize());
 		setResizable(true);
 		setPosition(20, 20);
-		panel = new ScrollablePanel();
-		panel.setPosition(0, 30);
-		panel.setSize(getSize().sub(0, 30));
+		packspanel = new ScrollablePanel();
+		packspanel.setPosition(0, 30);
+		packspanel.setSize(310, getSize().y - 30);
+		infopanel = new ScrollablePanel();
+		infopanel.setPosition(310, 30);
+		infopanel.setSize(310, getSize().y - 30);
 		getListenerMap().addListener(ChangeSizeEvent.class, event -> {
 			Vector2f vec = new Vector2f();
 			event.getNewSize().get(vec);
-			if(vec.x < 300){
-				setSize(300, vec.y);
+			if(vec.x < 620){
+				setSize(620, vec.y);
 				return;
 			}
 			if(vec.y < 300){
@@ -46,13 +50,16 @@ public class WorkspaceViewer extends Widget {
 				return;
 			}
 			getContainer().setSize(vec);
-			panel.setSize(vec.sub(0, 30));
+			packspanel.setSize(310, getSize().y - 30);
+			infopanel.setSize(vec.x - 310, getSize().y - 30);
 			button.setPosition(vec.x - 110, 5);
 			resize();
 		});
-		Settings.applyBorderless(panel);
-		getContainer().add(panel);
-		getContainer().add(button = new RunButton("refresh", 300 - 110, 5, 100, 20, () -> genView()));
+		Settings.applyBorderless(packspanel);
+		Settings.applyBorderless(infopanel);
+		getContainer().add(packspanel);
+		getContainer().add(infopanel);
+		getContainer().add(button = new RunButton("refresh", getSize().x - 110, 5, 100, 20, () -> genView()));
 		folder = new File(Settings.WORKSPACE_ROOT.value);
 		if(!folder.exists()) folder.mkdirs();
 		genView();
@@ -71,12 +78,12 @@ public class WorkspaceViewer extends Widget {
 			@Override
 			public void run(){
 				Logging.log("Reloading Workspace");
-				panel.getContainer().removeAll(rootfolders);
+				packspanel.getContainer().removeAll(rootfolders);
 				rootfolders.clear();
 				findPacks();
 				//addFolder(folder, null, 0);
 				resize();
-				panel.getVerticalScrollBar().setScrollStep(0f);
+				packspanel.getVerticalScrollBar().setScrollStep(0f);
 			}
 		}.start();
 	}
@@ -95,7 +102,7 @@ public class WorkspaceViewer extends Widget {
 			if(pack == null) continue;
 			Logging.log("Found pack with id '" + pack.id + "'.");
 			rootfolders.add(pack);
-			panel.getContainer().add(pack);
+			packspanel.getContainer().add(pack);
 			for(File file : fold.listFiles()){
 				addFolder(file, pack, pack, 0);
 			}
@@ -140,7 +147,7 @@ public class WorkspaceViewer extends Widget {
 		}
 		if(root == null){
 			rootfolders.add(com);
-			panel.getContainer().add(com);
+			packspanel.getContainer().add(com);
 		}
 		else root.addSub(com);
 		return folder.list().length;
@@ -156,7 +163,8 @@ public class WorkspaceViewer extends Widget {
 		for(DirComponent com : rootfolders){
 			scrollableheight += com.fullsize();
 		}
-		panel.getContainer().setSize(viewer.getSize().x, scrollableheight < height ? height : scrollableheight);
+		packspanel.getContainer().setSize(310, scrollableheight < height ? height : scrollableheight);
+		infopanel.getContainer().setSize(viewer.getSize().x - 310, viewer.getSize().y - 30);
 	}
 
 }
