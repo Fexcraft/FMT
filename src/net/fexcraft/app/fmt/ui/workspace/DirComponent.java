@@ -62,7 +62,7 @@ public class DirComponent extends Component {
 					}
 				}
 				else if(listener.getButton() == Mouse.MouseButton.MOUSE_BUTTON_RIGHT){
-					//
+					FileEditMenu.show(this, file);
 				}
 			}
 		});
@@ -91,7 +91,7 @@ public class DirComponent extends Component {
 				com.getStyle().setDisplay(Style.DisplayType.NONE);
 			}
 		}
-		getSize().set(WorkspaceViewer.viewer.getSize().x - getPosition().x, size);
+		getSize().set(300, size);
 		return (int)getSize().y;
 	}
 
