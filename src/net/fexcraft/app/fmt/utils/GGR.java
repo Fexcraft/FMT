@@ -11,7 +11,10 @@ import static org.lwjgl.glfw.GLFW.glfwSetInputMode;
 import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
 
+import com.spinyowl.legui.component.Component;
+import net.fexcraft.app.fmt.ui.JsonEditor;
 import net.fexcraft.app.fmt.ui.UVViewer;
+import net.fexcraft.app.fmt.ui.workspace.WorkspaceViewer;
 import net.fexcraft.app.fmt.utils.fvtm.FVTMConfigEditor;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -194,15 +197,24 @@ public class GGR {
 		if(cursor_y[0] < FMT.TOOLBAR.getSize().y) return true;
 		if(Editor.VISIBLE_EDITOR != null && cursor_x[0] < Editor.WIDTH) return true;
 		if(Editor.VISIBLE_TREE != null && cursor_x[0] > FMT.WIDTH - Editor.WIDTH) return true;
-		for(FVTMConfigEditor editor : FVTMConfigEditor.EDITORS){
-			if(cursor_x[0] >= editor.getPosition().x && cursor_x[0] <= editor.getPosition().x + editor.width){
-				if(cursor_y[0] >= editor.getPosition().y && cursor_y[0] <= editor.getPosition().y + editor.height) return true;
-			}
+		if(WorkspaceViewer.viewer != null && overComponent(WorkspaceViewer.viewer)) return true;
+		for(FVTMConfigEditor editor : FVTMConfigEditor.INSTANCES){
+			if(overComponent(editor)) return true;
+		}
+		for(JsonEditor editor : JsonEditor.INSTANCES){
+			if(overComponent(editor)) return true;
 		}
 		if(UVViewer.visible()){
 			if(cursor_x[0] >= UVViewer.pos().x && cursor_x[0] <= UVViewer.pos().x + UVViewer.size().x){
 				if(cursor_y[0] >= UVViewer.pos().y && cursor_y[0] <= UVViewer.pos().y + UVViewer.size().y) return true;
 			}
+		}
+		return false;
+	}
+
+	private static boolean overComponent(Component comp){
+		if(cursor_x[0] >= comp.getPosition().x && cursor_x[0] <= comp.getPosition().x + comp.getSize().x){
+			if(cursor_y[0] >= comp.getPosition().y && cursor_y[0] <= comp.getPosition().y + comp.getSize().y) return true;
 		}
 		return false;
 	}
