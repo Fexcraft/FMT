@@ -18,7 +18,10 @@ public class VehicleConfigReference implements Reference {
 		entries.add(of("Addon", PACKID).required());
 		entries.add(of("ID", TEXT).required());
 		entries.add(of("Name", TEXT).def("Unnamed Block", true));
-		entries.add(of("Description", ARRAY_SIMPLE));
+		entries.add(of("Description", ARRAY_SIMPLE).add(of(TEXT).def("description entry", true)));
+		entries.add(of("Model", MODELLOC));
+		entries.add(of("ModelData", SEPARATE));
+		entries.add(of("Textures", ARRAY_SIMPLE).add(of(TEXLOC)).alt("Texture"));
 	}
 
 	@Override
