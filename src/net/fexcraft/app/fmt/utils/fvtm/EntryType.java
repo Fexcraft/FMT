@@ -15,6 +15,7 @@ public enum EntryType {
     OBJECT,
     ARRAY_SIMPLE,
     OBJECT_KEY_VAL,
+    SEPARATE,
     ENUM,
 
     POSITION,
@@ -62,4 +63,9 @@ public enum EntryType {
         }
         return "unknown";
     }
+
+    public boolean select(){
+        return this == PACKID || this == TEXLOC || this == MODELLOC || this == POSITION || this == ROTATION;
+    }
+
 }
