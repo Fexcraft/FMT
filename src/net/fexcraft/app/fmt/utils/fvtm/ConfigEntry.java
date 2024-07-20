@@ -4,6 +4,10 @@ import java.util.ArrayList;
 
 import net.fexcraft.app.fmt.polygon.uv.UVCoords;
 import net.fexcraft.app.fmt.utils.Logging;
+import net.fexcraft.app.json.FJson;
+import net.fexcraft.app.json.JsonArray;
+import net.fexcraft.app.json.JsonMap;
+import net.fexcraft.app.json.JsonValue;
 
 public class ConfigEntry {
 
@@ -105,10 +109,46 @@ public class ConfigEntry {
         return this;
     }
 
-    public String typedef(){
-        if(type == EntryType.INTEGER) return "" + defi;
-        if(type == EntryType.DECIMAL) return "" + deff;
-        return def;
+    public JsonValue gendef(){
+        switch(type){
+			case TEXT, PACKID, TEXLOC, MODELLOC -> {
+                return new JsonValue<>(def);
+			}
+			case INTEGER -> {
+                return new JsonValue<>(defi);
+			}
+			case DECIMAL -> {
+                return new JsonValue<>(deff);
+			}
+			case BOOLEAN -> {
+                return new JsonValue<>(defb);
+			}
+			case COLOR -> {
+                return new JsonValue<>(defi);
+			}
+			case ARRAY -> {
+                return new JsonArray();
+			}
+			case OBJECT -> {
+                return new JsonMap();
+			}
+			case ARRAY_SIMPLE -> {
+                return new JsonArray();
+			}
+			case OBJECT_KEY_VAL -> {
+                return new JsonArray();
+			}
+			case ENUM -> {
+                return new JsonValue<>(enums[0]);
+			}
+			case POSITION -> {
+                return null;
+			}
+			case ROTATION -> {
+                return null;
+			}
+		}
+        return new JsonValue<>(def);
     }
 
 }
