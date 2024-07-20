@@ -20,7 +20,7 @@ public class WorkspaceViewer extends Widget {
 
 	public static WorkspaceViewer viewer;
 	public static final int ROWHEIGHT = 30;
-	public ArrayList<DirComponent> rootfolders = new ArrayList<DirComponent>();
+	public ArrayList<FvtmPack> rootfolders = new ArrayList<FvtmPack>();
 	public ScrollablePanel packspanel;
 	public ScrollablePanel infopanel;
 	public RunButton button;
@@ -147,11 +147,7 @@ public class WorkspaceViewer extends Widget {
 				}
 			}
 		}
-		if(root == null){
-			rootfolders.add(com);
-			packspanel.getContainer().add(com);
-		}
-		else root.addSub(com);
+		root.addSub(com);
 		return folder.list().length;
 	}
 
