@@ -3,6 +3,7 @@ package net.fexcraft.app.fmt.utils.fvtm;
 import java.io.File;
 import java.util.ArrayList;
 
+import com.spinyowl.legui.component.Component;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.fields.RunButton;
@@ -61,13 +62,20 @@ public class FVTMConfigEditor extends Widget {
     }
 
     private void fill(){
-        height_ = 0;
         for(ConfigEntry entry : ref.getEntries()){
-            EntryComponent com = new EntryComponent(entry, map, entry.name, get(map, entry), null);
-            height_ += com.gen(0);
-            panel.getContainer().add(com);
+            panel.getContainer().add(new EntryComponent(this, null, entry, map, entry.name, get(map, entry), null));
+        }
+        resize();
+    }
+
+    public void resize(){
+        height_ = 0;
+        for(Component com : panel.getContainer().getChildComponents()){
+            if(com instanceof EntryComponent == false) continue;
+            height_ += ((EntryComponent)com).gen(0);
         }
         panel.getContainer().setSize(pwidth, height_);
+
     }
 
     private JsonValue get(JsonMap map, ConfigEntry entry){
