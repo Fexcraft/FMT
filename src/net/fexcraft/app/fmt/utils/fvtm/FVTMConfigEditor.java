@@ -35,7 +35,11 @@ public class FVTMConfigEditor extends Widget {
         String[] dots = file.getName().split("\\.");
         switch(dots[dots.length - 1]){
             case "block":{
-                ref = new BlockConfigReference();
+                ref = BlockConfigReference.INSTANCE;
+                break;
+            }
+            case "vehicle":{
+                ref = VehicleConfigReference.INSTANCE;
                 break;
             }
             default: return;
