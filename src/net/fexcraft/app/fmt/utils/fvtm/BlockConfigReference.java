@@ -16,7 +16,7 @@ public class BlockConfigReference implements Reference {
 
     public BlockConfigReference(){
         entries.add(of("Addon", PACKID).required());
-        entries.add(of("RegistryName", TEXT).required());
+        entries.add(of("ID", TEXT).required());
         entries.add(of("Name", TEXT).def("Unnamed Block", true));
         entries.add(of("Description", ARRAY_SIMPLE));
         entries.add(of("Textures", ARRAY_SIMPLE).add(of(TEXLOC)).alt("Texture"));
