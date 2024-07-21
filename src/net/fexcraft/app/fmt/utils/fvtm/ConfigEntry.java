@@ -8,8 +8,8 @@ import net.fexcraft.app.json.JsonValue;
 
 public class ConfigEntry {
 
-    public static final ConfigEntry EMPTY = ConfigEntry.of(EntryType.OBJECT);
-    public static final ConfigEntry TEXT = ConfigEntry.of(EntryType.TEXT);
+    public static final ConfigEntry SUB_ENTRY = ConfigEntry.of(EntryType.OBJECT_SUB);
+    public static final ConfigEntry TEXT_ENTRY = ConfigEntry.of(EntryType.TEXT);
 
     public String name;
     public String def;
@@ -57,6 +57,10 @@ public class ConfigEntry {
         def_ok = ok;
         return this;
     }
+
+	protected ConfigEntry def(String def){
+		return def(def, true);
+	}
 
     protected ConfigEntry required(){
         required = true;
@@ -132,29 +136,19 @@ public class ConfigEntry {
 			case COLOR -> {
                 return new JsonValue<>(def);
 			}
-			case ARRAY -> {
-                return new JsonArray();
+			case ARRAY, ARRAY_SUB, ARRAY_SIMPLE -> {
+				return new JsonArray();
 			}
-			case OBJECT -> {
+			case OBJECT, OBJECT_SUB, OBJECT_KEY_VAL -> {
                 return new JsonMap();
-			}
-			case ARRAY_SIMPLE -> {
-                return new JsonArray();
-			}
-			case OBJECT_KEY_VAL -> {
-                return new JsonArray();
 			}
 			case ENUM -> {
                 return new JsonValue<>(enums[0]);
 			}
-			case POSITION -> {
-                return null;
-			}
-			case ROTATION -> {
-                return null;
+			case VECTOR -> {
+                return new JsonArray.Flat(0, 0, 0);
 			}
 		}
         return new JsonValue<>(def);
     }
-
 }
