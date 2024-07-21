@@ -4,10 +4,7 @@ import static net.fexcraft.app.fmt.utils.fvtm.ConfigEntry.of;
 import static net.fexcraft.app.fmt.utils.fvtm.EntryType.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 public class BlockConfigReference implements Reference {
 
@@ -18,7 +15,7 @@ public class BlockConfigReference implements Reference {
         entries.add(of("Addon", PACKID).required());
         entries.add(of("ID", TEXT).required());
         entries.add(of("Name", TEXT).def("Unnamed Block", true));
-        entries.add(of("Description", ARRAY_SIMPLE));
+        entries.add(of("Description", ARRAY_SIMPLE).add(of(TEXT)));
         entries.add(of("Textures", ARRAY_SIMPLE).add(of(TEXLOC)).alt("Texture"));
         entries.add(of("Colors", OBJECT_KEY_VAL).add(of(COLOR)));
         entries.add(of("MaxItemStackSize", INTEGER).limit(64, 0, 64));
@@ -26,7 +23,7 @@ public class BlockConfigReference implements Reference {
         entries.add(of("OreDictionary", TEXT));
         entries.add(of("Model", MODELLOC));
         entries.add(of("AABBs", OBJECT_KEY_VAL).add(of(TEXT)).add(of(ARRAY).size(6).add(of(TEXT), of(INTEGER), of(INTEGER), of(INTEGER), of(INTEGER), of(INTEGER))));
-        entries.add(of("BlockType", ENUM).enums(BLOCK_TYPES).def("GENERIC_SIMPLE", true));
+        entries.add(of("BlockType", ENUM).enums(BLOCK_TYPES));
         entries.add(of("Material", TEXT).def("ROCK", true));//TODO
         entries.add(of("MapColor", TEXT).def("STONE", true));//TODO
         entries.add(of("Hardness", DECIMAL).limit(0f, 1f));
@@ -58,7 +55,7 @@ public class BlockConfigReference implements Reference {
         return entries;
     }
 
-    public static String[] BLOCK_TYPES = {
+    public String[] BLOCK_TYPES = {
             "GENERIC_4ROT", "GENERIC_4X4ROT", "GENERIC_16ROT",
             "GENERIC_SIMPLE",
             "GENERIC_2VAR", "GENERIC_3VAR", "GENERIC_4VAR", "GENERIC_5VAR",
