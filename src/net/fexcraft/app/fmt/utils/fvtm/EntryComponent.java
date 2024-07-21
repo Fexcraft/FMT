@@ -105,9 +105,9 @@ public class EntryComponent extends Component {
 						break;
 					}
 					case TEXLOC:{
-						Dialog dialog = new Dialog("Select a Texture.", 240, 110);
-						SelectBox<String> texbox = new SelectBox<>(10, 50, 220, 30);
-						SelectBox<String> packbox = new SelectBox<>(10, 10, 220, 30);
+						Dialog dialog = new Dialog("Select a Texture.", 440, 110);
+						SelectBox<String> texbox = new SelectBox<>(10, 50, 420, 30);
+						SelectBox<String> packbox = new SelectBox<>(10, 10, 420, 30);
 						packbox.setVisibleCount(8);
 						packbox.setSelected("(no pack selected)", true);
 						for(FvtmPack pack : WorkspaceViewer.viewer.rootfolders){
