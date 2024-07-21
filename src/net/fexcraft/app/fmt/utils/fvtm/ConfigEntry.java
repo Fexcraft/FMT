@@ -130,7 +130,7 @@ public class ConfigEntry {
                 return new JsonValue<>(defb);
 			}
 			case COLOR -> {
-                return new JsonValue<>(defi);
+                return new JsonValue<>(def);
 			}
 			case ARRAY -> {
                 return new JsonArray();
