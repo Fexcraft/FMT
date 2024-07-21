@@ -2,9 +2,6 @@ package net.fexcraft.app.fmt.utils.fvtm;
 
 import java.util.ArrayList;
 
-import net.fexcraft.app.fmt.polygon.uv.UVCoords;
-import net.fexcraft.app.fmt.utils.Logging;
-import net.fexcraft.app.json.FJson;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.app.json.JsonValue;
