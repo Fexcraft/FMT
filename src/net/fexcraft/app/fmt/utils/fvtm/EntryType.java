@@ -12,19 +12,56 @@ public enum EntryType {
     COLOR,
 
     ARRAY,
+    ARRAY_SUB,
     OBJECT,
+    OBJECT_SUB,
     ARRAY_SIMPLE,
     OBJECT_KEY_VAL,
     SEPARATE,
     ENUM,
-
-    POSITION,
-    ROTATION,
+    VECTOR,
 
     ;
 
+    static{
+        ARRAY.sethassub().setarr();
+        ARRAY_SUB.sethassub().setarr().setsub();
+        ARRAY_SIMPLE.sethassub().setarr();
+        //
+        OBJECT.sethassub().setmap();
+        OBJECT_SUB.sethassub().setmap().setsub();
+        OBJECT_KEY_VAL.sethassub().setmap();
+    }
+
+    private boolean has_sub = false;
+    private boolean is_sub = false;
+    private boolean is_map = false;
+    private boolean is_arr = false;
+
+    private EntryType setsub(){
+        is_sub = true;
+        return this;
+    }
+
+    private EntryType setmap(){
+        is_map = true;
+        return this;
+    }
+
+    private EntryType sethassub(){
+        has_sub = true;
+        return this;
+    }
+
+    private EntryType setarr(){
+        is_arr = true;
+        return this;
+    }
+
+    //
+
     public boolean subs(){
-        return this == ARRAY || this == OBJECT || this == ARRAY_SIMPLE || this == OBJECT_KEY_VAL;
+        return has_sub;
     }
 
     public boolean bool(){
@@ -39,8 +76,8 @@ public enum EntryType {
         return this == COLOR;
     }
 
-    public boolean trio(){
-        return this == POSITION || this == ROTATION;
+    public boolean vector(){
+        return this == VECTOR;
     }
 
     public String icon(){
@@ -55,21 +92,29 @@ public enum EntryType {
             case COLOR: return "color";
             case ARRAY: return "array";
             case OBJECT: return "object";
+            case OBJECT_SUB: return "object";
             case ARRAY_SIMPLE: return "array_s";
             case OBJECT_KEY_VAL: return "object_kv";
             case ENUM: return "enum";
-            case POSITION: return "array_s";
-            case ROTATION: return "array_s";
+            case VECTOR: return "array_s";
         }
         return "unknown";
     }
 
     public boolean select(){
-        return this == PACKID || this == TEXLOC || this == MODELLOC || this == POSITION || this == ROTATION;
+        return this == PACKID || this == TEXLOC || this == MODELLOC || this == VECTOR;
     }
 
 	public boolean map(){
-        return this == OBJECT || this == OBJECT_KEY_VAL;
+        return is_map;
 	}
+
+    public boolean subtype(){
+        return is_sub;
+    }
+
+    public boolean array(){
+        return is_arr;
+    }
 
 }
