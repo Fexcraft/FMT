@@ -11,6 +11,7 @@ public class FvtmPack extends DirComponent {
 
 	public final HashMap<FvtmType, ArrayList<DirComponent>> content = new HashMap<>();
 	public final ArrayList<DirComponent> textures = new ArrayList<>();
+	public final ArrayList<DirComponent> models = new ArrayList<>();
 	public final String id;
 
 	public FvtmPack(ViewerFileType type, WorkspaceViewer folcom, DirComponent root, File file, String id){
