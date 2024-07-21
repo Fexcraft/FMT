@@ -32,7 +32,9 @@ public class FileEditMenu {
 			layer.hide();
 		}));
 		components.add(new MenuButton(2, "fileeditmenu.copy", () -> {
-			File nf = new File(file.getParentFile(), file.getName() + "0");
+			String name = file.getName();
+			name = name.substring(0, name.lastIndexOf(".")) + "0" + name.substring(name.lastIndexOf("."), name.length());
+			File nf = new File(file.getParentFile(), name);
 			try{
 				FileUtils.copyFile(file, nf);
 			}
