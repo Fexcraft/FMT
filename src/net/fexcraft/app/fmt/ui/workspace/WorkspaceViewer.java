@@ -143,6 +143,9 @@ public class WorkspaceViewer extends Widget {
 					if(type == ViewerFileType.PNG){
 						pack.textures.add(dircom);
 					}
+					if(type.model()){
+						pack.models.add(dircom);
+					}
 					com.addSub(dircom);
 				}
 			}
