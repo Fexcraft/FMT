@@ -68,4 +68,8 @@ public enum EntryType {
         return this == PACKID || this == TEXLOC || this == MODELLOC || this == POSITION || this == ROTATION;
     }
 
+	public boolean map(){
+        return this == OBJECT || this == OBJECT_KEY_VAL;
+	}
+
 }
