@@ -84,22 +84,40 @@ public class EntryComponent extends Component {
 						break;
 					}
 					case MODELLOC:{
-						Dialog dialog = new Dialog("Select a Model.", 240, 70);
-						SelectBox<String> box = new SelectBox<>(10, 10, 220, 30);
-						box.setVisibleCount(8);
-						box.addElement("(no model)");
+						Dialog dialog = new Dialog("Select a Model.", 440, 110);
+						SelectBox<String> packbox = new SelectBox<>(10, 10, 420, 30);
+						SelectBox<String> modbox = new SelectBox<>(10, 50, 420, 30);
+						packbox.setVisibleCount(8);
+						packbox.setSelected("(no pack selected)", true);
 						for(FvtmPack pack : WorkspaceViewer.viewer.rootfolders){
-							box.addElement(pack.id);
-							//
+							packbox.addElement(pack.id);
 						}
-						box.addSelectBoxChangeSelectionEventListener(lis -> {
+						packbox.addSelectBoxChangeSelectionEventListener(lis -> {
+							while(modbox.getElements().size() > 0) modbox.removeElement(0);
+							modbox.addElement("(no model)");
+							for(FvtmPack pack : WorkspaceViewer.viewer.rootfolders){
+								if(!pack.id.equals(lis.getNewValue())) continue;
+								for(DirComponent com : pack.models){
+									String path = com.file.getPath();
+									String pid = path.substring(path.indexOf("/assets/") + 8, path.indexOf("/models"));
+									path = path.substring(path.indexOf("/models/") + 1);
+									modbox.addElement(pid + ":" + path);
+								}
+							}
+						});
+						dialog.getContainer().add(packbox);
+						//
+						modbox.setVisibleCount(8);
+						modbox.addElement("(select a pack)");
+						modbox.addSelectBoxChangeSelectionEventListener(lis -> {
 							String val = lis.getNewValue();
+							if(val.equals("select a pack")) return;
 							if(val.equals("(no model)")) val = "null";
 							input.getTextState().setText(val);
 							obj.value(val);
 							dialog.close();
 						});
-						dialog.getContainer().add(box);
+						dialog.getContainer().add(modbox);
 						dialog.setResizable(false);
 						dialog.show(FMT.FRAME);
 						break;
