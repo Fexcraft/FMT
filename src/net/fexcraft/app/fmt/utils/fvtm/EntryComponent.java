@@ -2,9 +2,8 @@ package net.fexcraft.app.fmt.utils.fvtm;
 
 import com.spinyowl.legui.component.*;
 import com.spinyowl.legui.component.event.textinput.TextInputContentChangeEvent;
+import com.spinyowl.legui.event.MouseClickEvent;
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.ui.Editor;
-import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.ui.Icon;
 import net.fexcraft.app.fmt.ui.fields.BoolButton;
 import net.fexcraft.app.fmt.ui.fields.ColorField;
@@ -20,6 +19,10 @@ import net.fexcraft.app.json.JsonValue;
 
 import java.util.ArrayList;
 
+import static com.spinyowl.legui.event.MouseClickEvent.MouseClickAction.CLICK;
+import static com.spinyowl.legui.input.Mouse.MouseButton.MOUSE_BUTTON_LEFT;
+import static net.fexcraft.app.fmt.utils.fvtm.ConfigEntry.SUB_ENTRY;
+
 /**
  * @author Ferdinand Calo' (FEX___96)
  */
@@ -27,6 +30,7 @@ public class EntryComponent extends Component {
 
 	private Label label;
 	public TextInput input;
+	public boolean minimized = false;
 	private static String[] xyz = { "x", "y", "z" };
 	private ArrayList<EntryComponent> coms = new ArrayList<>();
 	private FVTMConfigEditor editor;
@@ -36,29 +40,28 @@ public class EntryComponent extends Component {
 	private JsonValue obj;
 	private Object key;
 
-	public EntryComponent(FVTMConfigEditor confeditor, EntryComponent rootcom, ConfigEntry entry, JsonValue root, Object idxkey, JsonValue obj, Boolean container){
+	public EntryComponent(FVTMConfigEditor confeditor, EntryComponent rootcom, ConfigEntry entry, JsonValue root, Object idxkey, JsonValue obj){
 		editor = confeditor;
 		this.entry = entry;
 		this.root = root;
 		this.obj = obj;
 		rcom = rootcom;
 		key = idxkey;
-		add(label = new Label((entry.name == null ? idxkey : entry.name) + (entry.required ? "*" : ""), 30, 0, 200, 30));
-		if(container != null){
-			if(container){
-				add(input = new TextInput(idxkey.toString(), 220, 2, 300, 26));
-				add(new Icon(0, 20, 0, 530, 5, "./resources/textures/icons/configeditor/confirm.png", () -> {
-
-				}).addTooltip("rename"));
+		add(label = new Label((entry.name == null ? idxkey : entry.name) + (entry.required ? "*" : ""), 30, 5, 200, 30));
+		label.getListenerMap().addListener(MouseClickEvent.class, event -> {
+			if(event.getAction() == CLICK && event.getButton() == MOUSE_BUTTON_LEFT){
+				minimized = !minimized;
+				editor.resize();
 			}
-			return;
-		}
-		add(new Icon(0, 20, 0, 5, 5, "./resources/textures/icons/configeditor/" + entry.type.icon() + ".png", () -> {
-
+		});
+		add(new Icon(0, 20, 0, 5, 10, "./resources/textures/icons/configeditor/" + entry.type.icon() + ".png", () -> {
+			minimized = !minimized;
+			editor.resize();
 		}).addTooltip(entry.type.icon()));
 		if(rcom != null){
-			add(new Icon(0, 20, 0, 525 + (entry.type.select() || rcom.entry.type.map() ? 25 : 0), 5, "./resources/textures/icons/configeditor/remove.png", () -> {
-				if(rcom.entry.type.subs()){
+			boolean edit = rcom.entry.type.map() && !rcom.entry.type.subtype();
+			add(new Icon(0, 20, 0, 525 + (entry.type.select() || edit ? 25 : 0), 10, "./resources/textures/icons/configeditor/remove.png", () -> {
+				if(rcom.entry.type.subs() && !rcom.entry.type.subtype()){
 					if(root.isMap()) root.asMap().rem((String)idxkey);
 					else root.asArray().rem((int)idxkey);
 					rcom.gensubs();
@@ -67,8 +70,8 @@ public class EntryComponent extends Component {
 					input.getTextState().setText(entry.gendef().string_value());
 				}
 			}).addTooltip("remove/reset"));
-			if(rcom.entry.type.map()){
-				add(new Icon(0, 20, 0, 525, 5, "./resources/textures/icons/configeditor/rename.png", () -> {
+			if(edit){
+				add(new Icon(0, 20, 0, 525, 10, "./resources/textures/icons/configeditor/rename.png", () -> {
 					Dialog dialog = new Dialog("Enter new name.", 440, 110);
 					TextField field = new TextField(idxkey.toString(), 10, 10, 420, 30, true);
 					dialog.getContainer().add(field);
@@ -85,7 +88,7 @@ public class EntryComponent extends Component {
 			}
 		}
 		if(entry.type.select()){
-			add(new Icon(0, 20, 0, 525, 5, "./resources/textures/icons/configeditor/select.png", () -> {
+			add(new Icon(0, 20, 0, 525, 10, "./resources/textures/icons/configeditor/select.png", () -> {
 				switch(entry.type){
 					case PACKID: {
 						Dialog dialog = new Dialog("Select a pack.", 440, 70);
@@ -190,10 +193,10 @@ public class EntryComponent extends Component {
 		if(entry.type.subs()){
 			gensubs();
 		}
-		else if(entry.type.trio()){
+		else if(entry.type.vector()){
 			Object ik = idxkey;
 			for(int i = 0; i < 3; i++){
-				add(input = new TextInput(obj == null ? entry.def : obj.string_value(), 220 + (i * 100), 2, 90, 26));
+				add(input = new TextInput(obj == null ? entry.def : obj.string_value(), 220 + (i * 100), 7, 90, 26));
 				if(root.isMap()){
 					ik = idxkey == null ? xyz[i] : idxkey.toString() + "_" + xyz[i];
 				}
@@ -218,10 +221,10 @@ public class EntryComponent extends Component {
 					else root.asArray().value.set((int)idxkey, new JsonValue(col));
 				}
 				else obj.value(col);
-			}, 220, 2, 300, 26, null, false).apply(obj == null ? entry.defi : Integer.parseInt(obj.string_value().replace("#", ""), 16)));
+			}, 220, 7, 300, 26, null, false).apply(obj == null ? entry.defi : Integer.parseInt(obj.string_value().replace("#", ""), 16)));
 		}
 		else if(entry.type.bool()){
-			add(new BoolButton(220, 2, 300, 26, obj == null ? entry.defb : obj.bool(), bool -> {
+			add(new BoolButton(220, 7, 300, 26, obj == null ? entry.defb : obj.bool(), bool -> {
 				if(obj == null){
 					if(root.isMap()) root.asMap().add(idxkey.toString(), bool);
 					else root.asArray().value.set((int)idxkey, new JsonValue<Boolean>(bool));
@@ -230,7 +233,7 @@ public class EntryComponent extends Component {
 			}));
 		}
 		else if(entry.type == EntryType.ENUM){
-			SelectBox<String> box = new SelectBox<>(220, 2, 300, 26);
+			SelectBox<String> box = new SelectBox<>(220, 7, 300, 26);
 			box.setVisibleCount(8);
 			for(String en : entry.enums) box.addElement(en);
 			box.addSelectBoxChangeSelectionEventListener(lis -> {
@@ -246,13 +249,17 @@ public class EntryComponent extends Component {
 			add(box);
 		}
 		else{//text
-			add(input = new TextInput(obj == null ? entry.gendef().string_value() : obj.string_value(), 220, 2, 300, 26));
+			add(input = new TextInput(obj == null ? entry.gendef().string_value() : obj.string_value(), 220, 7, 300, 26));
 			input.addTextInputContentChangeEventListener(event -> {
 				if(obj == null){
-					if(root.isMap()){
-						root.asMap().add(idxkey.toString(), new JsonValue<>(get(event, entry.type)));
+					if(notDefault(event, entry)){
+						Object o = get(event, entry.type);
+						if(root.isMap()){
+							if((o.equals("null") || o.equals("")) && entry.type == EntryType.TEXT) root.asMap().rem(idxkey.toString());
+							else root.asMap().add(idxkey.toString(), new JsonValue<>(o));
+						}
+						else root.asArray().value.set((int)idxkey, new JsonValue<>(o));
 					}
-					else root.asArray().value.set((int)idxkey, new JsonValue<>(get(event, entry.type)));
 				}
 				else obj.value(get(event, entry.type));
 			});
@@ -262,11 +269,11 @@ public class EntryComponent extends Component {
 	private void gensubs(){
 		coms.clear();
 		removeIf(com -> com instanceof EntryComponent);
-		if(entry.type == EntryType.ARRAY){
+		if(entry.type == EntryType.ARRAY && entry.subs != null){
 			if(obj != null){
 				JsonArray arr = obj.isArray() ? obj.asArray() : new JsonArray();
 				for(int i = 0; i < arr.size(); i++){
-					EntryComponent con = new EntryComponent(editor, this, ConfigEntry.EMPTY, arr, i + "", null, false);
+					EntryComponent con = new EntryComponent(editor, this, entry.subs.get(0), arr, i + "", null);
 					//
 					addsub(con);
 				}
@@ -274,52 +281,67 @@ public class EntryComponent extends Component {
 		}
 		else if(entry.type == EntryType.ARRAY_SIMPLE){
 			JsonArray arr = obj == null || !obj.isArray() ? null : obj.asArray();
-			if(arr == null){
+			if(arr == null && obj != null){
 				root.asMap().add(key.toString(), arr = new JsonArray());
-				if(obj != null) arr.add(obj);
+				arr.add(obj);
 				obj = arr;
 			}
-			for(int i = 0; i < arr.size(); i++){
-				addsub(new EntryComponent(editor, this, entry.subs.get(0), arr, i, arr.get(i), null));
+			if(arr != null){
+				for(int i = 0; i < arr.size(); i++){
+					addsub(new EntryComponent(editor, this, entry.subs.get(0), arr, i, arr.get(i)));
+				}
 			}
 		}
-		else if(entry.type == EntryType.OBJECT){
-			if(obj != null){
-				obj.asMap().entries().forEach(e -> {
-					EntryComponent con = new EntryComponent(editor, this, ConfigEntry.EMPTY, obj.asMap(), e.getKey(), null, true);
-					//
-					addsub(con);
-				});
-			}
+		else if(entry.type == EntryType.OBJECT && entry.subs != null){
+			if(obj == null) root.asMap().add(entry.name, obj = new JsonMap());
+			JsonMap map = obj.asMap();
+			map.entries().forEach(e -> {
+				EntryComponent sub = new EntryComponent(editor, this, SUB_ENTRY, map, e.getKey(), null);
+				addsub(sub);
+				for(ConfigEntry conf : entry.subs){
+					JsonMap sup = e.getValue().asMap();
+					sub.addsub(new EntryComponent(editor, sub, conf, sup, conf.name, sup.get(conf.name)));
+				}
+			});
 		}
 		else if(entry.type == EntryType.OBJECT_KEY_VAL){
 			if(obj != null){
 				obj.asMap().entries().forEach(e -> {
-					addsub(new EntryComponent(editor, this, entry.subs.get(0), obj.asMap(), e.getKey(), e.getValue(), null));
+					addsub(new EntryComponent(editor, this, entry.subs.get(0), obj.asMap(), e.getKey(), e.getValue()));
 				});
 			}
 		}
-		add(new Icon(0, 20, 0, 220, 5, "./resources/textures/icons/configeditor/add.png", () -> {
-			if(entry.type == EntryType.ARRAY){
-				//
-			}
-			else if(entry.type == EntryType.ARRAY_SIMPLE){
-				JsonArray arr = root.asMap().getArray(key.toString());
-				arr.add(entry.subs.get(0).gendef());
-				addsub(new EntryComponent(editor, this, entry.subs.get(0), arr, arr.size() - 1, arr.get(arr.size() - 1), null));
-				editor.resize();
-			}
-			else if(entry.type == EntryType.OBJECT){
-				//
-			}
-			else if(entry.type == EntryType.OBJECT_KEY_VAL){
-				JsonMap map = root.asMap().getMap(key.toString());
-				String nkey = "entry" + map.entries().size();
-				map.add(nkey, entry.subs.get(0).gendef());
-				addsub(new EntryComponent(editor, this, entry.subs.get(0), map, nkey, map.get(nkey), null));
-				editor.resize();
-			}
-		}));
+		if(entry.type != EntryType.OBJECT_SUB){
+			add(new Icon(0, 20, 0, 220, 10, "./resources/textures/icons/configeditor/add.png", () -> {
+				if(entry.type == EntryType.ARRAY){
+					//
+				}
+				else if(entry.type == EntryType.ARRAY_SIMPLE){
+					JsonArray arr = root.asMap().getArray(key.toString());
+					arr.add(entry.subs.get(0).gendef());
+					addsub(new EntryComponent(editor, this, entry.subs.get(0), arr, arr.size() - 1, arr.get(arr.size() - 1)));
+					editor.resize();
+				}
+				else if(entry.type == EntryType.OBJECT){
+					JsonMap map = root.asMap().getMap(key.toString());
+					JsonMap sup = new JsonMap();
+					String nkey = "entry" + map.entries().size();
+					map.add(nkey, sup);
+					EntryComponent sub = new EntryComponent(editor, this, SUB_ENTRY, map, nkey, null);
+					addsub(sub);
+					for(ConfigEntry conf : entry.subs){
+						sub.addsub(new EntryComponent(editor, sub, conf, sup, conf.name, sup.get(conf.name)));
+					}
+				}
+				else if(entry.type == EntryType.OBJECT_KEY_VAL){
+					JsonMap map = root.asMap().getMap(key.toString());
+					String nkey = "entry" + map.entries().size();
+					map.add(nkey, entry.subs.get(0).gendef());
+					addsub(new EntryComponent(editor, this, entry.subs.get(0), map, nkey, map.get(nkey)));
+					editor.resize();
+				}
+			}));
+		}
 		editor.resize();
 	}
 
@@ -331,18 +353,34 @@ public class EntryComponent extends Component {
 		return event.getNewValue();
 	}
 
+	private boolean notDefault(TextInputContentChangeEvent event, ConfigEntry entry){
+		if(entry.type.numer()){
+			if(entry.type == EntryType.INTEGER){
+				int i = Integer.parseInt(event.getNewValue());
+				if(i == entry.defi) return false;
+			}
+			else{
+				float f = Float.parseFloat(event.getNewValue());
+				if(f == entry.deff) return false;
+			}
+		}
+		return !event.getNewValue().equals(entry.def);
+	}
+
 	private void addsub(EntryComponent com){
 		coms.add(com);
 		add(com);
 	}
 
 	public int gen(int height){
-		setPosition(height == 0 ? 0 : 30, height == 0 ? FVTMConfigEditor.height_ : height);
-		int h = label == null ? 0 : 30;
-		for(EntryComponent sub : coms){
-			h += sub.gen(h);
+		setPosition(height == 0 ? 0 : 30, height == 0 ? FVTMConfigEditor.height_ : height + 5);
+		int h = 30;
+		if(!minimized){
+			for(EntryComponent sub : coms){
+				h += sub.gen(h);
+			}
+			h += 10;
 		}
-		if(h > (label == null ? 0 : 30)) h += 10;
 		setSize(FVTMConfigEditor.pwidth, h);
 		return h;
 	}
