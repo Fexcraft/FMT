@@ -111,8 +111,17 @@ public class ConfigEntry {
 
     public JsonValue gendef(){
         switch(type){
-			case TEXT, PACKID, TEXLOC, MODELLOC -> {
+			case TEXT -> {
                 return new JsonValue<>(def);
+			}
+			case PACKID -> {
+				return new JsonValue<>("gep");
+			}
+			case TEXLOC -> {
+				return new JsonValue<>("fvtm:textures/entity/null.png");
+			}
+			case MODELLOC -> {
+				return new JsonValue<>("null");
 			}
 			case INTEGER -> {
                 return new JsonValue<>(defi);
