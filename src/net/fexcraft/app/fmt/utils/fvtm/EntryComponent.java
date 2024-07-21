@@ -8,11 +8,14 @@ import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.ui.Icon;
 import net.fexcraft.app.fmt.ui.fields.BoolButton;
 import net.fexcraft.app.fmt.ui.fields.ColorField;
+import net.fexcraft.app.fmt.ui.fields.RunButton;
+import net.fexcraft.app.fmt.ui.fields.TextField;
 import net.fexcraft.app.fmt.ui.workspace.DirComponent;
 import net.fexcraft.app.fmt.ui.workspace.FvtmPack;
 import net.fexcraft.app.fmt.ui.workspace.WorkspaceViewer;
 import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.json.JsonArray;
+import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.app.json.JsonValue;
 
 import java.util.ArrayList;
@@ -54,7 +57,7 @@ public class EntryComponent extends Component {
 
 		}).addTooltip(entry.type.icon()));
 		if(rcom != null){
-			add(new Icon(0, 20, 0, 525 + (entry.type.select() ? 25 : 0), 5, "./resources/textures/icons/configeditor/remove.png", () -> {
+			add(new Icon(0, 20, 0, 525 + (entry.type.select() || rcom.entry.type.map() ? 25 : 0), 5, "./resources/textures/icons/configeditor/remove.png", () -> {
 				if(rcom.entry.type.subs()){
 					if(root.isMap()) root.asMap().rem((String)idxkey);
 					else root.asArray().rem((int)idxkey);
@@ -64,13 +67,29 @@ public class EntryComponent extends Component {
 					input.getTextState().setText(entry.gendef().string_value());
 				}
 			}).addTooltip("remove/reset"));
+			if(rcom.entry.type.map()){
+				add(new Icon(0, 20, 0, 525, 5, "./resources/textures/icons/configeditor/rename.png", () -> {
+					Dialog dialog = new Dialog("Enter new name.", 440, 110);
+					TextField field = new TextField(idxkey.toString(), 10, 10, 420, 30, true);
+					dialog.getContainer().add(field);
+					dialog.getContainer().add(new RunButton("dialog.button.confirm", 10, 50, 200, 30, () -> {
+						JsonValue value = root.asMap().get(key.toString());
+						root.asMap().rem(key.toString());
+						root.asMap().add(field.getTextState().getText(), value);
+						dialog.close();
+						rcom.gensubs();
+					}));
+					dialog.setResizable(false);
+					dialog.show(FMT.FRAME);
+				}).addTooltip("rename key"));
+			}
 		}
 		if(entry.type.select()){
 			add(new Icon(0, 20, 0, 525, 5, "./resources/textures/icons/configeditor/select.png", () -> {
 				switch(entry.type){
 					case PACKID: {
-						Dialog dialog = new Dialog("Select a pack.", 240, 70);
-						SelectBox<String> box = new SelectBox<>(10, 10, 220, 30);
+						Dialog dialog = new Dialog("Select a pack.", 440, 70);
+						SelectBox<String> box = new SelectBox<>(10, 10, 420, 30);
 						box.setVisibleCount(8);
 						for(FvtmPack pack : WorkspaceViewer.viewer.rootfolders) box.addElement(pack.id);
 						box.addSelectBoxChangeSelectionEventListener(lis -> {
@@ -196,7 +215,7 @@ public class EntryComponent extends Component {
 				String col = "#" + Integer.toHexString(color);
 				if(obj == null){
 					if(root.isMap()) root.asMap().add(idxkey.toString(), col);
-					else root.asArray().value.set((int)idxkey, new JsonValue<String>(col));
+					else root.asArray().value.set((int)idxkey, new JsonValue(col));
 				}
 				else obj.value(col);
 			}, 220, 2, 300, 26, null, false).apply(obj == null ? entry.defi : Integer.parseInt(obj.string_value().replace("#", ""), 16)));
@@ -294,7 +313,11 @@ public class EntryComponent extends Component {
 				//
 			}
 			else if(entry.type == EntryType.OBJECT_KEY_VAL){
-				//
+				JsonMap map = root.asMap().getMap(key.toString());
+				String nkey = "entry" + map.entries().size();
+				map.add(nkey, entry.subs.get(0).gendef());
+				addsub(new EntryComponent(editor, this, entry.subs.get(0), map, nkey, map.get(nkey), null));
+				editor.resize();
 			}
 		}));
 		editor.resize();
