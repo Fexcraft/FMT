@@ -8,8 +8,10 @@ import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.ui.Icon;
 import net.fexcraft.app.fmt.ui.fields.BoolButton;
 import net.fexcraft.app.fmt.ui.fields.ColorField;
+import net.fexcraft.app.fmt.ui.workspace.DirComponent;
 import net.fexcraft.app.fmt.ui.workspace.FvtmPack;
 import net.fexcraft.app.fmt.ui.workspace.WorkspaceViewer;
+import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonValue;
 
@@ -103,22 +105,44 @@ public class EntryComponent extends Component {
 						break;
 					}
 					case TEXLOC:{
-						Dialog dialog = new Dialog("Select a Texture.", 240, 70);
-						SelectBox<String> box = new SelectBox<>(10, 10, 220, 30);
-						box.setVisibleCount(8);
-						box.addElement("(no texture)");
+						Dialog dialog = new Dialog("Select a Texture.", 240, 110);
+						SelectBox<String> texbox = new SelectBox<>(10, 50, 220, 30);
+						SelectBox<String> packbox = new SelectBox<>(10, 10, 220, 30);
+						packbox.setVisibleCount(8);
+						packbox.setSelected("(no pack selected)", true);
 						for(FvtmPack pack : WorkspaceViewer.viewer.rootfolders){
-							box.addElement(pack.id);
-							//
+							packbox.addElement(pack.id);
 						}
-						box.addSelectBoxChangeSelectionEventListener(lis -> {
+						packbox.addSelectBoxChangeSelectionEventListener(lis -> {
+							while(texbox.getElements().size() > 0) texbox.removeElement(0);
+							texbox.addElement("(no texture)");
+							for(FvtmPack pack : WorkspaceViewer.viewer.rootfolders){
+								if(!pack.id.equals(lis.getNewValue())) continue;
+								for(DirComponent com : pack.textures){
+									String path = com.file.getPath();
+									String pid = path.substring(path.indexOf("/assets/") + 8, path.indexOf("/textures"));
+									path = path.substring(path.indexOf("/textures/") + 1);
+									texbox.addElement(pid + ":" + path);
+								}
+							}
+						});
+						dialog.getContainer().add(packbox);
+						//
+						texbox.setVisibleCount(8);
+						texbox.addElement("(select a pack)");
+						texbox.addSelectBoxChangeSelectionEventListener(lis -> {
 							String val = lis.getNewValue();
-							if(val.equals("(no texture)")) val = "No Texture;fvtm:textures/entity/null.png";
+							if(val.equals("select a pack")) return;
+							if(val.equals("(no texture)")) val = "fvtm:textures/entity/null.png";
+							String prefix = obj.string_value();
+							if(prefix.contains(";")) prefix = prefix.split(";")[0];
+							else prefix = null;
+							val = prefix + ";" + val;
 							input.getTextState().setText(val);
 							obj.value(val);
 							dialog.close();
 						});
-						dialog.getContainer().add(box);
+						dialog.getContainer().add(texbox);
 						dialog.setResizable(false);
 						dialog.show(FMT.FRAME);
 						break;
