@@ -25,7 +25,7 @@ public class DirComponent extends Component {
 	protected DirComponent root;
 	private Label label;
 	private Icon icon;
-	protected File file;
+	public final File file;
 
 	public DirComponent(ViewerFileType type, WorkspaceViewer folcom, DirComponent root, File file, int row){
 		this.type = type;
