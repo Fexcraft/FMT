@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import com.spinyowl.legui.component.Component;
+import com.spinyowl.legui.component.event.component.ChangeSizeEvent;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.fields.RunButton;
@@ -13,6 +14,7 @@ import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.app.json.JsonValue;
 import com.spinyowl.legui.component.ScrollablePanel;
 import com.spinyowl.legui.component.Widget;
+import org.joml.Vector2f;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -47,14 +49,27 @@ public class FVTMConfigEditor extends Widget {
         }
         map = JsonHandler.parse(file);
         Settings.applyComponentTheme(getContainer());
-        getContainer().add(panel = new ScrollablePanel(10, 20, width - 20, height - 80));
-        getContainer().add(new RunButton("dialog.button.save", width - 220, height - 50, 100, 24, () -> {
+        getContainer().add(panel = new ScrollablePanel(10, 40, width - 20, height - 70));
+        getContainer().add(new RunButton("dialog.button.save", width - 220, 10, 100, 24, () -> {
             JsonHandler.print(file, map, JsonHandler.PrintOption.DEFAULT);
         }));
-        getContainer().add(new RunButton("dialog.button.close", width - 110, height - 50, 100, 24, () -> {
+        getContainer().add(new RunButton("dialog.button.close", width - 110, 10, 100, 24, () -> {
             FMT.FRAME.getContainer().remove(this);
             INSTANCES.remove(this);
         }));
+        getListenerMap().addListener(ChangeSizeEvent.class, event -> {
+            Vector2f vec = new Vector2f();
+            event.getNewSize().get(vec);
+            if(vec.x < width){
+                setSize(width, vec.y);
+                return;
+            }
+            if(vec.y < height){
+                setSize(vec.x, height);
+                return;
+            }
+            panel.setSize(vec.x - 20, vec.y - 70);
+        });
         fill();
         FMT.FRAME.getContainer().add(this);
         INSTANCES.add(this);
@@ -63,7 +78,7 @@ public class FVTMConfigEditor extends Widget {
 
     private void fill(){
         for(ConfigEntry entry : ref.getEntries()){
-            panel.getContainer().add(new EntryComponent(this, null, entry, map, entry.name, get(map, entry), null));
+            panel.getContainer().add(new EntryComponent(this, null, entry, map, entry.name, get(map, entry)));
         }
         resize();
     }
