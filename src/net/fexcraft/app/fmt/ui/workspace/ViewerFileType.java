@@ -99,4 +99,8 @@ public enum ViewerFileType {
 		return FILE;
 	}
 
+	public boolean model(){
+		return this == FMF || this == OBJ;
+	}
+
 }
