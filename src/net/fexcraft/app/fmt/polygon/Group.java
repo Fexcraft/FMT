@@ -141,4 +141,11 @@ public class Group extends ArrayList<Polygon> {
 		return "Group([" + id + "], " + size() + (selected ? ", selected" : "") + ")";
 	}
 
+	public Polygon get(String str){
+		for(Polygon poly : this){
+			if(poly.name(true) != null && poly.name(true).equals(str)) return poly;
+		}
+		return null;
+	}
+
 }
