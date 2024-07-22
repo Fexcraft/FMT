@@ -4,6 +4,9 @@ import com.spinyowl.legui.component.*;
 import com.spinyowl.legui.component.event.textinput.TextInputContentChangeEvent;
 import com.spinyowl.legui.event.MouseClickEvent;
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.polygon.Group;
+import net.fexcraft.app.fmt.polygon.Pivot;
+import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.ui.Icon;
 import net.fexcraft.app.fmt.ui.fields.BoolButton;
 import net.fexcraft.app.fmt.ui.fields.ColorField;
@@ -16,12 +19,14 @@ import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.app.json.JsonValue;
+import net.fexcraft.lib.common.math.Vec3f;
 
 import java.util.ArrayList;
 
 import static com.spinyowl.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 import static com.spinyowl.legui.input.Mouse.MouseButton.MOUSE_BUTTON_LEFT;
 import static net.fexcraft.app.fmt.utils.fvtm.ConfigEntry.SUB_ENTRY;
+import static net.fexcraft.app.fmt.utils.fvtm.FVTMConfigEditor.getEV;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -29,7 +34,7 @@ import static net.fexcraft.app.fmt.utils.fvtm.ConfigEntry.SUB_ENTRY;
 public class EntryComponent extends Component {
 
 	private Label label;
-	public TextInput input;
+	public TextInput[] input = new TextInput[1];
 	public boolean minimized = false;
 	private static String[] xyz = { "x", "y", "z" };
 	private ArrayList<EntryComponent> coms = new ArrayList<>();
@@ -40,11 +45,11 @@ public class EntryComponent extends Component {
 	private JsonValue obj;
 	private Object key;
 
-	public EntryComponent(FVTMConfigEditor confeditor, EntryComponent rootcom, ConfigEntry entry, JsonValue root, Object idxkey, JsonValue obj){
+	public EntryComponent(FVTMConfigEditor confeditor, EntryComponent rootcom, ConfigEntry entry, JsonValue root, Object idxkey, JsonValue jval){
 		editor = confeditor;
 		this.entry = entry;
 		this.root = root;
-		this.obj = obj;
+		this.obj = jval;
 		rcom = rootcom;
 		key = idxkey;
 		add(label = new Label((entry.name == null ? idxkey : entry.name) + (entry.required ? "*" : ""), 30, 5, 200, 30));
@@ -67,7 +72,7 @@ public class EntryComponent extends Component {
 					rcom.gensubs();
 				}
 				else{
-					input.getTextState().setText(entry.gendef().string_value());
+					input[0].getTextState().setText(entry.gendef().string_value());
 				}
 			}).addTooltip("remove/reset"));
 			if(edit){
@@ -96,7 +101,7 @@ public class EntryComponent extends Component {
 						box.setVisibleCount(8);
 						for(FvtmPack pack : WorkspaceViewer.viewer.rootfolders) box.addElement(pack.id);
 						box.addSelectBoxChangeSelectionEventListener(lis -> {
-							input.getTextState().setText(lis.getNewValue());
+							input[0].getTextState().setText(lis.getNewValue());
 							obj.value(lis.getNewValue());
 							dialog.close();
 						});
@@ -135,7 +140,7 @@ public class EntryComponent extends Component {
 							String val = lis.getNewValue();
 							if(val.equals("select a pack")) return;
 							if(val.equals("(no model)")) val = "null";
-							input.getTextState().setText(val);
+							input[0].getTextState().setText(val);
 							obj.value(val);
 							dialog.close();
 						});
@@ -178,11 +183,98 @@ public class EntryComponent extends Component {
 							if(prefix.contains(";")) prefix = prefix.split(";")[0];
 							else prefix = null;
 							val = prefix + ";" + val;
-							input.getTextState().setText(val);
+							input[0].getTextState().setText(val);
 							obj.value(val);
 							dialog.close();
 						});
 						dialog.getContainer().add(texbox);
+						dialog.setResizable(false);
+						dialog.show(FMT.FRAME);
+						break;
+					}
+					case VECTOR_MAP:
+					case VECTOR_ARRAY: {
+						Dialog dialog = new Dialog("Select a Vector.", 440, 110);
+						SelectBox<String> vecbox = new SelectBox<>(10, 50, 420, 30);
+						SelectBox<String> typebox = new SelectBox<>(10, 10, 420, 30);
+						typebox.setVisibleCount(8);
+						typebox.setSelected("(please select a type)", true);
+						typebox.addElement("marker");
+						typebox.addElement("pivot");
+						typebox.addSelectBoxChangeSelectionEventListener(lis -> {
+							while(vecbox.getElements().size() > 0) vecbox.removeElement(0);
+							vecbox.addElement("null");
+							if(lis.getNewValue().equals("marker")){
+								for(Group group : FMT.MODEL.allgroups()){
+									for(Polygon poly : group){
+										if(!poly.getShape().isMarker()) continue;
+										if(poly.name(true) == null) continue;
+										vecbox.addElement(group.id + "/" + poly.name());
+									}
+								}
+							}
+							else{
+								for(Pivot pivot : FMT.MODEL.pivots()){
+									vecbox.addElement(pivot.parentid + "/" + pivot.id);
+								}
+							}
+						});
+						dialog.getContainer().add(typebox);
+						//
+						vecbox.setVisibleCount(8);
+						vecbox.addElement("(select a type)");
+						vecbox.addSelectBoxChangeSelectionEventListener(lis -> {
+							String val = lis.getNewValue();
+							if(val.equals("select a type")) return;
+							if(val.equals("null")){
+								input[0].getTextState().setText("0");
+								input[1].getTextState().setText("0");
+								input[2].getTextState().setText("0");
+								obj.asArray().set(0, new JsonValue<>(0f));
+								obj.asArray().set(1, new JsonValue<>(0f));
+								obj.asArray().set(2, new JsonValue<>(0f));
+								dialog.close();
+								return;
+							}
+							String type = typebox.getSelection();
+							Vec3f vec = new Vec3f();
+							if(type.equals("marker")){
+								String[] str = val.split("/");
+								Group group = FMT.MODEL.get(str[0]);
+								Polygon poly = group.get(str[1]);
+								if(FMT.MODEL.orient.rect()){
+									vec.x = poly.pos.x * .0625f;
+									vec.y = poly.pos.y * .0625f;
+									vec.z = poly.pos.z * .0625f;
+								}
+								else{
+									vec.x = -poly.pos.z * .0625f;
+									vec.y = -poly.pos.y * .0625f;
+									vec.z = -poly.pos.x * .0625f;
+								}
+							}
+							else{
+								Pivot pivot = FMT.MODEL.getP(val.split("/")[1]);
+								if(FMT.MODEL.orient.rect()){
+									vec.x = pivot.pos.x * .0625f;
+									vec.y = pivot.pos.y * .0625f;
+									vec.z = pivot.pos.z * .0625f;
+								}
+								else{
+									vec.x = -pivot.pos.z * .0625f;
+									vec.y = -pivot.pos.y * .0625f;
+									vec.z = -pivot.pos.x * .0625f;
+								}
+							}
+							input[0].getTextState().setText(vec.x + "");
+							input[1].getTextState().setText(vec.y + "");
+							input[2].getTextState().setText(vec.z + "");
+							obj.asArray().set(0, new JsonValue<>(vec.x));
+							obj.asArray().set(1, new JsonValue<>(vec.y));
+							obj.asArray().set(2, new JsonValue<>(vec.z));
+							dialog.close();
+						});
+						dialog.getContainer().add(vecbox);
 						dialog.setResizable(false);
 						dialog.show(FMT.FRAME);
 						break;
@@ -194,23 +286,38 @@ public class EntryComponent extends Component {
 			gensubs();
 		}
 		else if(entry.type.vector()){
-			Object ik = idxkey;
-			for(int i = 0; i < 3; i++){
-				add(input = new TextInput(obj == null ? entry.def : obj.string_value(), 220 + (i * 100), 7, 90, 26));
+			input = new TextInput[3];
+			Object ik = key;
+			if(obj == null){
+				obj = new JsonArray.Flat();
 				if(root.isMap()){
-					ik = idxkey == null ? xyz[i] : idxkey.toString() + "_" + xyz[i];
+					root.asMap().add(key.toString(), obj);
 				}
+				else root.asArray().value.set(((int)key), obj);
+			}
+			for(int i = 0; i < 3; i++){
 				int j = i;
-				Object fik = ik;
-				input.addTextInputContentChangeEventListener(event -> {
-					if(obj == null){
-						if(root.isMap()){
-							root.asMap().add(fik.toString(), new JsonValue<>(get(event, entry.type)));
-						}
-						else root.asArray().value.set(((int)fik) + j, new JsonValue<>(get(event, entry.type)));
+				if(entry.type == EntryType.VECTOR_MAP){
+					if(root.isMap()){
+						ik = key == null ? xyz[i] : key + "_" + xyz[i];
 					}
-					else obj.value(get(event, entry.type));
-				});
+					Object fik = ik;
+					input[i].addTextInputContentChangeEventListener(event -> {
+						if(obj == null){
+							if(root.isMap()){
+								root.asMap().add(fik.toString(), new JsonValue<>(get(event, entry.type)));
+							}
+							else root.asArray().value.set(((int)fik) + j, new JsonValue<>(get(event, entry.type)));
+						}
+						else obj.value(get(event, entry.type));
+					});
+				}
+				else{
+					add(input[i] = new TextInput(obj.asArray().get(i).string_value(), 220 + (i * 100), 7, 90, 26));
+					input[i].addTextInputContentChangeEventListener(event -> {
+						obj.asArray().set(j, new JsonValue<>(get(event, entry.type)));
+					});
+				}
 			}
 		}
 		else if(entry.type.color()){
@@ -249,8 +356,8 @@ public class EntryComponent extends Component {
 			add(box);
 		}
 		else{//text
-			add(input = new TextInput(obj == null ? entry.gendef().string_value() : obj.string_value(), 220, 7, 300, 26));
-			input.addTextInputContentChangeEventListener(event -> {
+			add(input[0] = new TextInput(obj == null ? entry.gendef().string_value() : obj.string_value(), 220, 7, 300, 26));
+			input[0].addTextInputContentChangeEventListener(event -> {
 				if(obj == null){
 					if(notDefault(event, entry)){
 						Object o = get(event, entry.type);
@@ -296,11 +403,11 @@ public class EntryComponent extends Component {
 			if(obj == null) root.asMap().add(entry.name, obj = new JsonMap());
 			JsonMap map = obj.asMap();
 			map.entries().forEach(e -> {
-				EntryComponent sub = new EntryComponent(editor, this, SUB_ENTRY, map, e.getKey(), null);
+				JsonMap sup = e.getValue().asMap();
+				EntryComponent sub = new EntryComponent(editor, this, SUB_ENTRY, sup, e.getKey(), null);
 				addsub(sub);
 				for(ConfigEntry conf : entry.subs){
-					JsonMap sup = e.getValue().asMap();
-					sub.addsub(new EntryComponent(editor, sub, conf, sup, conf.name, sup.get(conf.name)));
+					sub.addsub(new EntryComponent(editor, sub, conf, sup, conf.name, getEV(sup, conf)));
 				}
 			});
 		}
@@ -346,7 +453,7 @@ public class EntryComponent extends Component {
 	}
 
 	private Object get(TextInputContentChangeEvent event, EntryType type){
-		if(type.numer()){
+		if(type.numer() || type.vector()){
 			return type == EntryType.INTEGER ? Integer.parseInt(event.getNewValue()) : Float.parseFloat(event.getNewValue());
 		}
 		//TODO validation for special types
@@ -374,12 +481,11 @@ public class EntryComponent extends Component {
 
 	public int gen(int height){
 		setPosition(height == 0 ? 0 : 30, height == 0 ? FVTMConfigEditor.height_ : height + 5);
-		int h = 30;
+		int h = 40;
 		if(!minimized){
 			for(EntryComponent sub : coms){
 				h += sub.gen(h);
 			}
-			h += 10;
 		}
 		setSize(FVTMConfigEditor.pwidth, h);
 		return h;
