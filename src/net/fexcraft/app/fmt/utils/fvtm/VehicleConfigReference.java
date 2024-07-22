@@ -46,7 +46,22 @@ public class VehicleConfigReference implements Reference {
 			of("keys", OBJECT_KEY_VAL).add(of(TEXT)),
 			of("mod-dep", ARRAY_SIMPLE).add(of(TEXT))
 		));
-		entries.add(of("WheelPositions", OBJECT));
+		entries.add(of("WheelPositions", OBJECT).add(
+			of("pos", VECTOR_ARRAY),
+			of("mirror", BOOLEAN),
+			of("hubsize", DECIMAL).limit(0, 0, 16),
+			of("max_radius", DECIMAL).alt("radius").limit(0.75f, 0.0625f),
+			of("min_wheel_radius", DECIMAL).alt("radius").limit(0.25f, 0.0625f),
+			of("min_tire_radius", DECIMAL).alt("radius").limit(0.5f, 0.0625f),
+			of("max_width", DECIMAL).alt("width").limit(0.75f, 0.0625f),
+			of("min_wheel_width", DECIMAL).alt("width").limit(0.25f, 0.0625f),
+			of("min_tire_width", DECIMAL).alt("width").limit(0.25f, 0.0625f),
+			of("steering", BOOLEAN),
+			of("required", BOOLEAN),
+			of("relative", BOOLEAN),
+			of("powered", TEXT),
+			of("braking", BOOLEAN)
+		));
 		entries.add(of("SimplePhysics", OBJECT));
 		entries.add(of("Trailer", BOOLEAN).def(false));
 		entries.add(of("Wagon", BOOLEAN).def(false));
