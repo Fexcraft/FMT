@@ -78,7 +78,7 @@ public class FVTMConfigEditor extends Widget {
 
     private void fill(){
         for(ConfigEntry entry : ref.getEntries()){
-            panel.getContainer().add(new EntryComponent(this, null, entry, map, entry.name, get(map, entry)));
+            panel.getContainer().add(new EntryComponent(this, null, entry, map, entry.name, getEV(map, entry)));
         }
         resize();
     }
@@ -93,7 +93,7 @@ public class FVTMConfigEditor extends Widget {
 
     }
 
-    private JsonValue get(JsonMap map, ConfigEntry entry){
+    protected static JsonValue getEV(JsonMap map, ConfigEntry entry){
         if(map.has(entry.name)) return map.get(entry.name);
         if(map.has(entry.alt)) return map.get(entry.alt);
         return null;
