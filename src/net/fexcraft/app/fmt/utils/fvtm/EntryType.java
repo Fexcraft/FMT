@@ -19,7 +19,8 @@ public enum EntryType {
     OBJECT_KEY_VAL,
     SEPARATE,
     ENUM,
-    VECTOR,
+    VECTOR_MAP,
+    VECTOR_ARRAY,
 
     ;
 
@@ -77,7 +78,7 @@ public enum EntryType {
     }
 
     public boolean vector(){
-        return this == VECTOR;
+        return this == VECTOR_MAP || this == VECTOR_ARRAY;
     }
 
     public String icon(){
@@ -96,13 +97,14 @@ public enum EntryType {
             case ARRAY_SIMPLE: return "array_s";
             case OBJECT_KEY_VAL: return "object_kv";
             case ENUM: return "enum";
-            case VECTOR: return "array_s";
+            case VECTOR_ARRAY: return "array_s";
+            case VECTOR_MAP: return "object_kv";
         }
         return "unknown";
     }
 
     public boolean select(){
-        return this == PACKID || this == TEXLOC || this == MODELLOC || this == VECTOR;
+        return this == PACKID || this == TEXLOC || this == MODELLOC || this.vector();
     }
 
 	public boolean map(){
