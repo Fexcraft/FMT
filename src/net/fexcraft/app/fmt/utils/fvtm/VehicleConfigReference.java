@@ -62,7 +62,16 @@ public class VehicleConfigReference implements Reference {
 			of("powered", TEXT),
 			of("braking", BOOLEAN)
 		));
-		entries.add(of("SimplePhysics", OBJECT));
+		entries.add(of("SimplePhysics", OBJECT_KEY_VAL).static_(true).add(
+			of("MaxPositiveThrottle", DECIMAL).limit(1f, 0f),
+			of("MaxNegativeThrottle", DECIMAL).limit(1f, 0f),
+			of("TurnLeftModifier", DECIMAL).limit(1f, 0f),
+			of("TurnRightModifier", DECIMAL).limit(1f, 0f),
+			of("WheelStepHeight", DECIMAL).limit(1f, 0f),
+			of("WheelSpringStrength", DECIMAL).limit(0.5f, 0f),
+			of("Bouyancy", DECIMAL).limit(0.25f, 0f),
+			of("TrailerAdjustmentAxe", INTEGER).limit(1, 0)
+		));
 		entries.add(of("Trailer", BOOLEAN).def(false));
 		entries.add(of("Wagon", BOOLEAN).def(false));
 		entries.add(of("Tracked", BOOLEAN).def(false));
