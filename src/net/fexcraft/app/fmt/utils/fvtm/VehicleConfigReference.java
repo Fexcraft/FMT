@@ -76,8 +76,25 @@ public class VehicleConfigReference implements Reference {
 		entries.add(of("Wagon", BOOLEAN).def(false));
 		entries.add(of("Tracked", BOOLEAN).def(false));
 		entries.add(of("CouplerRange", DECIMAL).limit(1f, 0.01f, 4f));
-		entries.add(of("InstalledParts", OBJECT));
-		entries.add(of("SwivelPoints", OBJECT));
+		entries.add(of("InstalledParts", OBJECT_KEY_VAL).add(of(TEXT)));
+		entries.add(of("SwivelPoints", OBJECT).add(
+			of("pos", VECTOR_ARRAY),
+			of("parent", TEXT).def("vehicle"),
+			of("yaw", DECIMAL).limit(0, -180, 180),
+			of("pitch", DECIMAL).limit(0, -180, 180),
+			of("roll", DECIMAL).limit(0, -180, 180),
+			of("movers", ARRAY).add(
+				of(OBJECT).add(
+					of("attribute", TEXT).required(),
+					of("var", TEXT).def("x"),
+					of("speed", DECIMAL).limit(1f, 0f),
+					of("min", DECIMAL).limit(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE),
+					of("max", DECIMAL).limit(Integer.MAX_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE),
+					of("def", DECIMAL).limit(1f, Integer.MIN_VALUE, Integer.MAX_VALUE),
+					of("loop", BOOLEAN)
+				)
+			)
+		));
 		entries.add(of("Sounds", OBJECT));
 		entries.add(of("LiftingPoints", OBJECT));
 		entries.add(of("PartSlots", OBJECT));
