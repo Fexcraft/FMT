@@ -26,6 +26,7 @@ public class ConfigEntry {
     public float maxf;
     public String[] enums;
     public boolean defb;
+	public boolean static_;
 
     public ConfigEntry(){}
 
@@ -110,6 +111,11 @@ public class ConfigEntry {
         return this;
     }
 
+	public ConfigEntry static_(boolean bool){
+		static_ = bool;
+		return this;
+	}
+
     public JsonValue gendef(){
         switch(type){
 			case TEXT -> {
@@ -154,4 +160,5 @@ public class ConfigEntry {
 		}
         return new JsonValue<>(def);
     }
+
 }
