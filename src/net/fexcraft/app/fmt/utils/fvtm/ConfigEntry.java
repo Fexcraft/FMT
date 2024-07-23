@@ -8,7 +8,8 @@ import net.fexcraft.app.json.JsonValue;
 
 public class ConfigEntry {
 
-    public static final ConfigEntry SUB_ENTRY = ConfigEntry.of(EntryType.OBJECT_SUB);
+    public static final ConfigEntry OBJ_SUB_ENTRY = ConfigEntry.of(EntryType.OBJECT_SUB);
+	public static final ConfigEntry ARR_SUB_ENTRY = ConfigEntry.of(EntryType.ARRAY_SUB);
     public static final ConfigEntry TEXT_ENTRY = ConfigEntry.of(EntryType.TEXT);
 
     public String name;
@@ -160,5 +161,9 @@ public class ConfigEntry {
 		}
         return new JsonValue<>(def);
     }
+
+	public SubKey key(){
+		return new SubKey(name);
+	}
 
 }
