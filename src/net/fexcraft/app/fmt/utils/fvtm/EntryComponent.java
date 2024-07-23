@@ -64,7 +64,7 @@ public class EntryComponent extends Component {
 			editor.resize();
 		}).addTooltip(entry.type.icon()));
 		if(rcom != null){
-			boolean edit = rcom.entry.type.map() && !rcom.entry.type.subtype();
+			boolean edit = rcom.entry.type.map() && !rcom.entry.type.subtype() && !rcom.entry.static_;
 			add(new Icon(0, 20, 0, 525 + (entry.type.select() || edit ? 25 : 0), 10, "./resources/textures/icons/configeditor/remove.png", () -> {
 				if(rcom.entry.type.subs() && !rcom.entry.type.subtype()){
 					if(root.isMap()) root.asMap().rem((String)idxkey);
@@ -412,13 +412,23 @@ public class EntryComponent extends Component {
 			});
 		}
 		else if(entry.type == EntryType.OBJECT_KEY_VAL){
-			if(obj != null){
-				obj.asMap().entries().forEach(e -> {
-					addsub(new EntryComponent(editor, this, entry.subs.get(0), obj.asMap(), e.getKey(), e.getValue()));
-				});
+			if(entry.static_){
+				if(obj == null){
+					if(root.isMap()) root.asMap().add(entry.name, obj = new JsonMap());
+				}
+				for(ConfigEntry conf : entry.subs){
+					addsub(new EntryComponent(editor, this, conf, obj.asMap(), conf.name, getEV(obj.asMap(), conf)));
+				}
+			}
+			else{
+				if(obj != null){
+					obj.asMap().entries().forEach(e -> {
+						addsub(new EntryComponent(editor, this, entry.subs.get(0), obj.asMap(), e.getKey(), e.getValue()));
+					});
+				}
 			}
 		}
-		if(entry.type != EntryType.OBJECT_SUB){
+		if(entry.type != EntryType.OBJECT_SUB && !entry.static_){
 			add(new Icon(0, 20, 0, 220, 10, "./resources/textures/icons/configeditor/add.png", () -> {
 				if(entry.type == EntryType.ARRAY){
 					//
@@ -481,12 +491,13 @@ public class EntryComponent extends Component {
 
 	public int gen(int height){
 		setPosition(height == 0 ? 0 : 30, height == 0 ? FVTMConfigEditor.height_ : height + 5);
-		int h = 40;
+		int h = 30;
 		if(!minimized){
 			for(EntryComponent sub : coms){
 				h += sub.gen(h);
 			}
 		}
+		h += 10;
 		setSize(FVTMConfigEditor.pwidth, h);
 		return h;
 	}
