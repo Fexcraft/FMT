@@ -78,7 +78,7 @@ public class FVTMConfigEditor extends Widget {
 
     private void fill(){
         for(ConfigEntry entry : ref.getEntries()){
-            panel.getContainer().add(new EntryComponent(this, null, entry, map, entry.name, getEV(map, entry)));
+            panel.getContainer().add(new EntryComponent(this, null, entry, entry.key(), getEV(map, entry)));
         }
         resize();
     }
