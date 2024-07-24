@@ -12,7 +12,6 @@ public enum EntryType {
     COLOR,
 
     ARRAY,
-    ARRAY_SUB,
     OBJECT,
     OBJECT_SUB,
     ARRAY_SIMPLE,
@@ -26,7 +25,6 @@ public enum EntryType {
 
     static{
         ARRAY.sethassub().setarr();
-        ARRAY_SUB.sethassub().setarr().setsub();
         ARRAY_SIMPLE.sethassub().setarr();
         //
         OBJECT.sethassub().setmap();
