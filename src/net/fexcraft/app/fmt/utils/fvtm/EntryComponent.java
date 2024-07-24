@@ -15,6 +15,7 @@ import net.fexcraft.app.fmt.ui.fields.TextField;
 import net.fexcraft.app.fmt.ui.workspace.DirComponent;
 import net.fexcraft.app.fmt.ui.workspace.FvtmPack;
 import net.fexcraft.app.fmt.ui.workspace.WorkspaceViewer;
+import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.app.json.JsonValue;
@@ -72,7 +73,12 @@ public class EntryComponent extends Component {
 					root.gensubs();
 				}
 				else{
-					if(input[0] != null) input[0].getTextState().setText(entry.gendef().string_value());
+					if(entry.type.vector()){
+						input[0].getTextState().setText(0 + "");
+						input[1].getTextState().setText(0 + "");
+						input[2].getTextState().setText(0 + "");
+					}
+					else if(input[0] != null) input[0].getTextState().setText(entry.gendef().string_value());
 				}
 			}).addTooltip("remove/reset"));
 			if(edit){
@@ -437,7 +443,11 @@ public class EntryComponent extends Component {
 			if(val == null) root.val.asMap().add(entry.name, val = new JsonMap());
 			JsonMap map = val.asMap();
 			map.entries().forEach(e -> {
-				JsonMap sup = e.getValue().asMap();
+				JsonMap sup;
+				if(!e.getValue().isMap()){
+					sup = entry.converter.apply(e.getValue()).asMap();
+				}
+				else sup = e.getValue().asMap();
 				EntryComponent sub = new EntryComponent(editor, this, OBJ_SUB_ENTRY, new SubKey(e.getKey()), null);
 				addsub(sub);
 				for(ConfigEntry conf : entry.subs){
@@ -504,7 +514,13 @@ public class EntryComponent extends Component {
 
 	private Object get(TextInputContentChangeEvent event, EntryType type){
 		if(type.numer() || type.vector()){
-			return type == EntryType.INTEGER ? Integer.parseInt(event.getNewValue()) : Float.parseFloat(event.getNewValue());
+			try{
+				return type == EntryType.INTEGER ? Integer.parseInt(event.getNewValue()) : Float.parseFloat(event.getNewValue());
+			}
+			catch(Exception e){
+				e.printStackTrace();
+				return type == EntryType.INTEGER ? 0 : 0f;
+			}
 		}
 		//TODO validation for special types
 		return event.getNewValue();
