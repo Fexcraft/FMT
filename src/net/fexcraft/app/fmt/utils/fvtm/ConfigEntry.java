@@ -9,7 +9,6 @@ import net.fexcraft.app.json.JsonValue;
 public class ConfigEntry {
 
     public static final ConfigEntry OBJ_SUB_ENTRY = ConfigEntry.of(EntryType.OBJECT_SUB);
-	public static final ConfigEntry ARR_SUB_ENTRY = ConfigEntry.of(EntryType.ARRAY_SUB);
     public static final ConfigEntry TEXT_ENTRY = ConfigEntry.of(EntryType.TEXT);
 
     public String name;
@@ -143,7 +142,7 @@ public class ConfigEntry {
 			case COLOR -> {
                 return new JsonValue<>(def);
 			}
-			case ARRAY, ARRAY_SUB, ARRAY_SIMPLE -> {
+			case ARRAY, ARRAY_SIMPLE -> {
 				return new JsonArray();
 			}
 			case OBJECT, OBJECT_SUB, OBJECT_KEY_VAL -> {
