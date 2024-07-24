@@ -406,9 +406,6 @@ public class EntryComponent extends Component {
 	}
 
 	private void gensubs(){
-		if(entry.type.subtype()){
-			return;
-		}
 		coms.clear();
 		removeIf(com -> com instanceof EntryComponent);
 		if(entry.type == EntryType.ARRAY && entry.subs != null){
@@ -418,10 +415,8 @@ public class EntryComponent extends Component {
 			}
 			JsonArray arr = val.asArray();
 			for(int i = 0; i < arr.size(); i++){
-				EntryComponent sub = new EntryComponent(editor, this, ARR_SUB_ENTRY, new SubKey(i), null);
-				addsub(sub);
 				for(ConfigEntry conf : entry.subs){
-					sub.addsub(new EntryComponent(editor, sub, conf, conf.key(), arr.get(i)));
+					addsub(new EntryComponent(editor, this, conf, new SubKey(i), arr.get(i)));
 				}
 			}
 		}
@@ -470,16 +465,21 @@ public class EntryComponent extends Component {
 		if(!entry.type.subtype() && !entry.static_){
 			add(new Icon(0, 20, 0, 220, 10, "./resources/textures/icons/configeditor/add.png", () -> {
 				if(entry.type == EntryType.ARRAY){
-					//
+					JsonMap sup = new JsonMap();
+					for(ConfigEntry conf : entry.subs){
+						addsub(new EntryComponent(editor, this, conf, new SubKey(val.asArray().size()), sup.get(conf.name)));
+					}
+					val.asArray().add(sup);
+					editor.resize();
 				}
 				else if(entry.type == EntryType.ARRAY_SIMPLE){
-					JsonArray arr = root.val.asMap().getArray(key.key);
+					JsonArray arr = val.asArray();
 					arr.add(entry.subs.get(0).gendef());
 					addsub(new EntryComponent(editor, this, entry.subs.get(0), new SubKey(arr.size() - 1), arr.get(arr.size() - 1)));
 					editor.resize();
 				}
 				else if(entry.type == EntryType.OBJECT){
-					JsonMap map = root.val.asMap().getMap(key.key);
+					JsonMap map = val.asMap();
 					JsonMap sup = new JsonMap();
 					String nkey = "entry" + map.entries().size();
 					map.add(nkey, sup);
@@ -491,7 +491,7 @@ public class EntryComponent extends Component {
 					editor.resize();
 				}
 				else if(entry.type == EntryType.OBJECT_KEY_VAL){
-					JsonMap map = root.val.asMap().getMap(key.key);
+					JsonMap map = val.asMap();
 					String nkey = "entry" + map.entries().size();
 					map.add(nkey, entry.subs.get(0).gendef());
 					addsub(new EntryComponent(editor, this, entry.subs.get(0), new SubKey(nkey), map.get(nkey)));
