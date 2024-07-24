@@ -84,7 +84,7 @@ public class VehicleConfigReference implements Reference {
 			of("pitch", DECIMAL).limit(0, -180, 180),
 			of("roll", DECIMAL).limit(0, -180, 180),
 			of("movers", ARRAY).add(
-				of(OBJECT).add(
+				of(OBJECT_KEY_VAL).static_(true).add(
 					of("attribute", TEXT).required(),
 					of("var", TEXT).def("x"),
 					of("speed", DECIMAL).limit(1f, 0f),
