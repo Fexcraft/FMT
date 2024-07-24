@@ -1,5 +1,9 @@
 package net.fexcraft.app.fmt.utils.fvtm;
 
+import net.fexcraft.app.json.JsonArray;
+import net.fexcraft.app.json.JsonMap;
+import net.fexcraft.app.json.JsonValue;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,12 +103,24 @@ public class VehicleConfigReference implements Reference {
 			of("volume", DECIMAL).limit(1, 0),
 			of("pitch", DECIMAL).limit(1, 0)
 		));
-		entries.add(of("LiftingPoints", OBJECT).add(
+		entries.add(of("LiftingPoints", OBJECT).conv(val -> {
+			JsonMap map = new JsonMap();
+			JsonArray arr = val.asArray();
+			map.add("pos", new JsonArray(arr.get(0).float_value(), arr.get(1).float_value(), arr.get(2).float_value()));
+			if(arr.size() > 3) map.add("pair", arr.get(3));
+			if(arr.size() > 4) map.add("offset", arr.get(4));
+			return map;
+		}).add(
 			of("pos", VECTOR_ARRAY).required(),
 			of("pair", TEXT),
 			of("offset", DECIMAL)
 		));
-		entries.add(of("PartSlots", OBJECT));
+		entries.add(of("PartSlots", OBJECT).conv(val -> {
+
+			return new JsonMap();
+		}).add(
+
+		));
 		entries.add(of("Catalog", OBJECT));
 		entries.add(of("InteractZones", OBJECT));
 
