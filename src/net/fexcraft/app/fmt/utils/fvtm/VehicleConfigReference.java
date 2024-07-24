@@ -95,8 +95,15 @@ public class VehicleConfigReference implements Reference {
 				)
 			)
 		));
-		entries.add(of("Sounds", OBJECT));
-		entries.add(of("LiftingPoints", OBJECT));
+		entries.add(of("Sounds", OBJECT).add(
+			of("volume", DECIMAL).limit(1, 0),
+			of("pitch", DECIMAL).limit(1, 0)
+		));
+		entries.add(of("LiftingPoints", OBJECT).add(
+			of("pos", VECTOR_ARRAY).required(),
+			of("pair", TEXT),
+			of("offset", DECIMAL)
+		));
 		entries.add(of("PartSlots", OBJECT));
 		entries.add(of("Catalog", OBJECT));
 		entries.add(of("InteractZones", OBJECT));
