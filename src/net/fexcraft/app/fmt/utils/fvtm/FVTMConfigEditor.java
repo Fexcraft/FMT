@@ -8,6 +8,7 @@ import com.spinyowl.legui.component.event.component.ChangeSizeEvent;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.fields.RunButton;
+import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
@@ -23,6 +24,7 @@ public class FVTMConfigEditor extends Widget {
 
     public static ArrayList<FVTMConfigEditor> INSTANCES = new ArrayList<>();
 
+    private EntryComponent root;
     private ScrollablePanel panel;
     private Reference ref;
     private JsonMap map;
@@ -77,8 +79,15 @@ public class FVTMConfigEditor extends Widget {
     }
 
     private void fill(){
+        root = new EntryComponent(this, null, ConfigEntry.TEXT_ENTRY, null, map);
         for(ConfigEntry entry : ref.getEntries()){
-            panel.getContainer().add(new EntryComponent(this, null, entry, entry.key(), getEV(map, entry)));
+            try{
+                panel.getContainer().add(new EntryComponent(this, root, entry, entry.key(), getEV(map, entry)));
+            }
+            catch(Exception e){
+                Logging.log(entry.name + " " + entry.type + " " + entry.key() + " " + map.get(entry.name));
+                e.printStackTrace();
+            }
         }
         resize();
     }
