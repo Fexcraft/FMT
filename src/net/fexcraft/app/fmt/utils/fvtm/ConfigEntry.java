@@ -1,6 +1,7 @@
 package net.fexcraft.app.fmt.utils.fvtm;
 
 import java.util.ArrayList;
+import java.util.function.Function;
 
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
@@ -27,6 +28,7 @@ public class ConfigEntry {
     public String[] enums;
     public boolean defb;
 	public boolean static_;
+	public Function<JsonValue, JsonValue> converter;
 
     public ConfigEntry(){}
 
@@ -163,6 +165,11 @@ public class ConfigEntry {
 
 	public SubKey key(){
 		return new SubKey(name);
+	}
+
+	public ConfigEntry conv(Function<JsonValue, JsonValue> func){
+		converter = func;
+		return this;
 	}
 
 }
