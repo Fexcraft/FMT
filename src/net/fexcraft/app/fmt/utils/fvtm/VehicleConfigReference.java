@@ -86,7 +86,7 @@ public class VehicleConfigReference implements Reference {
 			of("movers", ARRAY).add(
 				of(OBJECT_KEY_VAL).static_(true).add(
 					of("attribute", TEXT).required(),
-					of("var", TEXT).def("x"),
+					of("var", ENUM).enums(spvars),
 					of("speed", DECIMAL).limit(1f, 0f),
 					of("min", DECIMAL).limit(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE),
 					of("max", DECIMAL).limit(Integer.MAX_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE),
@@ -110,5 +110,6 @@ public class VehicleConfigReference implements Reference {
 
 	public String[] vehtypes = new String[]{ "LAND", "WATER", "AIR", "RAIL", "HELI", "SPACE" };
 	public String[] attrtypes = new String[]{ "float", "integer", "boolean", "tristate", "string", "vector" };
+	public String[] spvars = new String[]{ "x", "y", "z", "yaw", "pitch", "roll" };
 
 }
