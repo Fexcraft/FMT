@@ -442,18 +442,20 @@ public class EntryComponent extends Component {
 		else if(entry.type == EntryType.OBJECT && entry.subs != null){
 			if(val == null) root.val.asMap().add(entry.name, val = new JsonMap());
 			JsonMap map = val.asMap();
-			map.entries().forEach(e -> {
+			for(String key : map.value.keySet()){
+				JsonValue v = map.get(key);
 				JsonMap sup;
-				if(!e.getValue().isMap()){
-					sup = entry.converter.apply(e.getValue()).asMap();
+				if(!v.isMap()){
+					sup = entry.converter.apply(v).asMap();
+					map.add(key, sup);
 				}
-				else sup = e.getValue().asMap();
-				EntryComponent sub = new EntryComponent(editor, this, OBJ_SUB_ENTRY, new SubKey(e.getKey()), null);
+				else sup = v.asMap();
+				EntryComponent sub = new EntryComponent(editor, this, OBJ_SUB_ENTRY, new SubKey(key), null);
 				addsub(sub);
 				for(ConfigEntry conf : entry.subs){
 					sub.addsub(new EntryComponent(editor, sub, conf, conf.key(), getEV(sup, conf)));
 				}
-			});
+			}
 		}
 		else if(entry.type == EntryType.OBJECT_KEY_VAL){
 			if(entry.static_){
