@@ -17,6 +17,7 @@ import net.fexcraft.app.fmt.ui.workspace.FvtmPack;
 import net.fexcraft.app.fmt.ui.workspace.WorkspaceViewer;
 import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.json.JsonArray;
+import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.app.json.JsonValue;
 import net.fexcraft.lib.common.math.Vec3f;
@@ -49,10 +50,7 @@ public class EntryComponent extends Component {
 		entry = confentry;
 		root = rootcom;
 		key = subkey;
-		if(jval == null && entry.type.subs()){
-			jval = entry.gendef();
-		}
-		val = jval;
+		val = jval == null ? entry.gendef() : jval;
 		add(label = new Label((entry.name == null ? key : entry.name) + (entry.required ? "*" : ""), 30, 5, 200, 30));
 		label.getListenerMap().addListener(MouseClickEvent.class, event -> {
 			if(event.getAction() == CLICK && event.getButton() == MOUSE_BUTTON_LEFT){
@@ -120,6 +118,24 @@ public class EntryComponent extends Component {
 			root.val.asArray().add(val);
 		}
 		if(root.entry.type.subs()) root.gensubs();
+	}
+
+	private void fillIfMissing(){
+		fillIfMissing(true);
+	}
+
+	private void fillIfMissing(boolean check){
+		if(check && root != null) root.fillIfMissing(false);
+		if(root.val.isMap()){
+			if(!root.val.asMap().has(key.key)){
+				root.val.asMap().add(key.key, val);
+			}
+		}
+		else{
+			if(!root.val.asArray().contains(val)){
+				root.val.asArray().add(val);
+			}
+		}
 	}
 
 	private void addsel(){
@@ -299,6 +315,7 @@ public class EntryComponent extends Component {
 						input[0].getTextState().setText(vec.x + "");
 						input[1].getTextState().setText(vec.y + "");
 						input[2].getTextState().setText(vec.z + "");
+						fillIfMissing();
 						this.val.asArray().set(0, new JsonValue<>(vec.x));
 						this.val.asArray().set(1, new JsonValue<>(vec.y));
 						this.val.asArray().set(2, new JsonValue<>(vec.z));
@@ -342,17 +359,10 @@ public class EntryComponent extends Component {
 					});
 				}
 				else{
-					if(val == null){
-						if(root.val.isMap()) root.val.asMap().add(key.key, val = entry.gendef());
-						else root.val.asArray().set(key.idx, val = entry.gendef());
-					}
-					else if(val.asArray().empty()){
-						val.asArray().add(0);
-						val.asArray().add(0);
-						val.asArray().add(0);
-					}
+					while(val.asArray().size() < 3) val.asArray().add(0);
 					add(input[i] = new TextInput(val.asArray().get(i).string_value(), 220 + (i * 100), 7, 90, 26));
 					input[i].addTextInputContentChangeEventListener(event -> {
+						fillIfMissing();
 						val.asArray().set(j, new JsonValue<>(get(event, entry.type)));
 					});
 				}
@@ -360,21 +370,14 @@ public class EntryComponent extends Component {
 		}
 		else if(entry.type.color()){
 			add(new ColorField(this, (color, bool) -> {
-				String col = "#" + Integer.toHexString(color);
-				if(val == null){
-					if(root.val.isMap()) root.val.asMap().add(key.key, col);
-					else root.val.asArray().value.set(key.idx, new JsonValue(col));
-				}
-				else val.value(col);
+				fillIfMissing();
+				val.value("#" + Integer.toHexString(color));
 			}, 220, 7, 300, 26, null, false).apply(val == null ? entry.defi : Integer.parseInt(val.string_value().replace("#", ""), 16)));
 		}
 		else if(entry.type.bool()){
 			add(new BoolButton(220, 7, 300, 26, val == null ? entry.defb : val.bool(), bool -> {
-				if(val == null){
-					if(root.val.isMap()) root.val.asMap().add(key.key, bool);
-					else root.val.asArray().value.set(key.idx, new JsonValue<Boolean>(bool));
-				}
-				else val.value(bool);
+				fillIfMissing();
+				val.value(bool);
 			}));
 		}
 		else if(entry.type == EntryType.ENUM){
@@ -382,13 +385,8 @@ public class EntryComponent extends Component {
 			box.setVisibleCount(8);
 			for(String en : entry.enums) box.addElement(en);
 			box.addSelectBoxChangeSelectionEventListener(lis -> {
-				if(val == null){
-					if(root.val.isMap()){
-						root.val.asMap().add(key.key, new JsonValue<>(lis.getNewValue()));
-					}
-					else root.val.asArray().value.set(key.idx, new JsonValue<>(lis.getNewValue()));
-				}
-				else val.value(lis.getNewValue());
+				fillIfMissing();
+				val.value(lis.getNewValue());
 			});
 			if(val != null) box.setSelected(val.string_value(), true);
 			add(box);
@@ -396,17 +394,15 @@ public class EntryComponent extends Component {
 		else{//text
 			add(input[0] = new TextInput(val == null ? entry.gendef().string_value() : val.string_value(), 220, 7, 300, 26));
 			input[0].addTextInputContentChangeEventListener(event -> {
-				if(val == null){
-					if(notDefault(event, entry)){
-						Object o = get(event, entry.type);
-						if(root.val.isMap()){
-							if((o.equals("null") || o.equals("")) && entry.type == EntryType.TEXT) root.val.asMap().rem(key.key);
-							else root.val.asMap().add(key.key, new JsonValue<>(o));
-						}
-						else root.val.asArray().value.set(key.idx, new JsonValue<>(o));
+				if(notDefault(event, entry)){
+					Object o = get(event, entry.type);
+					if(root.val.isMap() && (o.equals("null") || o.equals("")) && entry.type == EntryType.TEXT){
+						root.val.asMap().rem(key.key);
+						return;
 					}
 				}
-				else val.value(get(event, entry.type));
+				fillIfMissing();
+				val.value(get(event, entry.type));
 			});
 		}
 	}
@@ -428,9 +424,9 @@ public class EntryComponent extends Component {
 		}
 		else if(entry.type == EntryType.ARRAY_SIMPLE){
 			JsonArray arr = val == null || !val.isArray() ? null : val.asArray();
-			if(arr == null && val != null){
+			if(arr == null){
 				root.val.asMap().add(key.key, arr = new JsonArray());
-				arr.add(val);
+				if(val != null) arr.add(val);
 				val = arr;
 			}
 			if(arr != null){
@@ -450,7 +446,7 @@ public class EntryComponent extends Component {
 					map.add(key, sup);
 				}
 				else sup = v.asMap();
-				EntryComponent sub = new EntryComponent(editor, this, OBJ_SUB_ENTRY, new SubKey(key), null);
+				EntryComponent sub = new EntryComponent(editor, this, OBJ_SUB_ENTRY, new SubKey(key), sup);
 				addsub(sub);
 				for(ConfigEntry conf : entry.subs){
 					sub.addsub(new EntryComponent(editor, sub, conf, conf.key(), getEV(sup, conf)));
@@ -485,6 +481,7 @@ public class EntryComponent extends Component {
 					editor.resize();
 				}
 				else if(entry.type == EntryType.ARRAY_SIMPLE){
+					fillIfMissing();
 					JsonArray arr = val.asArray();
 					arr.add(entry.subs.get(0).gendef());
 					addsub(new EntryComponent(editor, this, entry.subs.get(0), new SubKey(arr.size() - 1), arr.get(arr.size() - 1)));
@@ -495,14 +492,15 @@ public class EntryComponent extends Component {
 					JsonMap sup = new JsonMap();
 					String nkey = "entry" + map.entries().size();
 					map.add(nkey, sup);
-					EntryComponent sub = new EntryComponent(editor, this, OBJ_SUB_ENTRY, new SubKey(nkey), null);
+					EntryComponent sub = new EntryComponent(editor, this, OBJ_SUB_ENTRY, new SubKey(nkey), sup);
 					addsub(sub);
 					for(ConfigEntry conf : entry.subs){
-						sub.addsub(new EntryComponent(editor, sub, conf, conf.key(), sup.get(conf.name)));
+						sub.addsub(new EntryComponent(editor, sub, conf, conf.key(), getEV(sup, conf)));
 					}
 					editor.resize();
 				}
 				else if(entry.type == EntryType.OBJECT_KEY_VAL){
+					fillIfMissing();
 					JsonMap map = val.asMap();
 					String nkey = "entry" + map.entries().size();
 					map.add(nkey, entry.subs.get(0).gendef());
@@ -530,13 +528,19 @@ public class EntryComponent extends Component {
 
 	private boolean notDefault(TextInputContentChangeEvent event, ConfigEntry entry){
 		if(entry.type.numer()){
-			if(entry.type == EntryType.INTEGER){
-				int i = Integer.parseInt(event.getNewValue());
-				if(i == entry.defi) return false;
+			try{
+				if(entry.type == EntryType.INTEGER){
+					int i = Integer.parseInt(event.getNewValue());
+					if(i == entry.defi) return false;
+				}
+				else{
+					float f = Float.parseFloat(event.getNewValue());
+					if(f == entry.deff) return false;
+				}
 			}
-			else{
-				float f = Float.parseFloat(event.getNewValue());
-				if(f == entry.deff) return false;
+			catch(Exception e){
+				e.printStackTrace();
+				return false;
 			}
 		}
 		return !event.getNewValue().equals(entry.def);
