@@ -446,7 +446,7 @@ public class EntryComponent extends Component {
 				JsonValue v = map.get(key);
 				JsonMap sup;
 				if(!v.isMap()){
-					sup = entry.converter.apply(v).asMap();
+					sup = entry.converter.apply(key, v).asMap();
 					map.add(key, sup);
 				}
 				else sup = v.asMap();
