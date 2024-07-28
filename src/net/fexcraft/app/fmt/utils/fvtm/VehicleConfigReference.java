@@ -129,10 +129,28 @@ public class VehicleConfigReference implements Reference {
 			of("type", TEXT),
 			of("radius", DECIMAL).limit(0.25f, 0.0625f),
 			of("rot", VECTOR_ARRAY),
-			of("point", TEXT).def("default")
+			of("point", TEXT).def("vehicle")
 		));
-		entries.add(of("Catalog", OBJECT));
-		entries.add(of("InteractZones", OBJECT));
+		entries.add(of("Catalog", OBJECT).add(
+			of("name", TEXT).def("Catalog Entry Name"),
+			of("parts", OBJECT_KEY_VAL).add(of(TEXT).def("pack-id:part-id")),
+			of("recipe", ARRAY_SIMPLE).add(of(TEXT).def("pack-id:item-id")),
+			of("colors", OBJECT_KEY_VAL).add(of(COLOR)),
+			of("scale", DECIMAL).limit(1, 0.01f)
+		));
+		entries.add(of("InteractZones", OBJECT).conv((key, val) -> {
+			JsonMap map = new JsonMap();
+			JsonArray arr = val.asArray();
+			if(arr.size() > 0) map.add("pos", new JsonArray(arr.get(0).float_value(), arr.get(1).float_value(), arr.get(2).float_value()));
+			if(arr.size() > 3) map.add("range", arr.get(3).float_value());
+			if(arr.size() > 4) map.add("point", arr.get(4).string_value());
+			return map;
+		}).add(
+			of("pos", VECTOR_ARRAY),
+			of("range", DECIMAL).limit(4, 1),
+			of("point", TEXT).def("vehicle")
+			//of("mode", ENUM).enums("none", "set", "expand")
+		));
 
 	}
 
