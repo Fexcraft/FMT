@@ -103,7 +103,7 @@ public class VehicleConfigReference implements Reference {
 			of("volume", DECIMAL).limit(1, 0),
 			of("pitch", DECIMAL).limit(1, 0)
 		));
-		entries.add(of("LiftingPoints", OBJECT).conv(val -> {
+		entries.add(of("LiftingPoints", OBJECT).conv((key, val) -> {
 			JsonMap map = new JsonMap();
 			JsonArray arr = val.asArray();
 			map.add("pos", new JsonArray(arr.get(0).float_value(), arr.get(1).float_value(), arr.get(2).float_value()));
@@ -115,11 +115,21 @@ public class VehicleConfigReference implements Reference {
 			of("pair", TEXT),
 			of("offset", DECIMAL)
 		));
-		entries.add(of("PartSlots", OBJECT).conv(val -> {
-
-			return new JsonMap();
+		entries.add(of("PartSlots", OBJECT).conv((key, val) -> {
+			JsonMap map = new JsonMap();
+			JsonArray arr = val.asArray();
+			if(arr.size() > 0) map.add("pos", new JsonArray(arr.get(0).float_value(), arr.get(1).float_value(), arr.get(2).float_value()));
+			if(arr.size() > 3) map.add("type", arr.get(3).string_value());
+			if(arr.size() > 4) map.add("radius", arr.get(4).float_value());
+			if(arr.size() > 5) map.add("rot", arr.get(5).copy());
+			if(arr.size() > 6) map.add("point", arr.get(6));
+			return map;
 		}).add(
-
+			of("pos", VECTOR_ARRAY),
+			of("type", TEXT),
+			of("radius", DECIMAL).limit(0.25f, 0.0625f),
+			of("rot", VECTOR_ARRAY),
+			of("point", TEXT).def("default")
 		));
 		entries.add(of("Catalog", OBJECT));
 		entries.add(of("InteractZones", OBJECT));
