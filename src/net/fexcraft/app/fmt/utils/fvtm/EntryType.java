@@ -102,7 +102,7 @@ public enum EntryType {
     }
 
     public boolean select(){
-        return this == PACKID || this == TEXLOC || this == MODELLOC || this.vector();
+        return this == PACKID || this == TEXLOC || this == MODELLOC || this.vector() || this == SEPARATE;
     }
 
 	public boolean map(){
