@@ -15,9 +15,7 @@ import net.fexcraft.app.fmt.ui.fields.TextField;
 import net.fexcraft.app.fmt.ui.workspace.DirComponent;
 import net.fexcraft.app.fmt.ui.workspace.FvtmPack;
 import net.fexcraft.app.fmt.ui.workspace.WorkspaceViewer;
-import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.json.JsonArray;
-import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.app.json.JsonValue;
 import net.fexcraft.lib.common.math.Vec3f;
@@ -64,21 +62,23 @@ public class EntryComponent extends Component {
 		}).addTooltip(entry.type.icon()));
 		if(root != null){
 			boolean edit = root.entry.type.map() && !root.entry.type.subtype() && !root.entry.static_;
-			add(new Icon(0, 20, 0, 525 + (entry.type.select() || edit ? 25 : 0), 10, "./resources/textures/icons/configeditor/remove.png", () -> {
-				if(root.entry.type.subs() && !root.entry.type.subtype()){
-					if(root.val.isMap()) root.val.asMap().rem(key.key);
-					else root.val.asArray().rem(key.idx);
-					root.gensubs();
-				}
-				else{
-					if(entry.type.vector()){
-						input[0].getTextState().setText(0 + "");
-						input[1].getTextState().setText(0 + "");
-						input[2].getTextState().setText(0 + "");
+			if(entry.type != EntryType.SEPARATE){
+				add(new Icon(0, 20, 0, 525 + (entry.type.select() || edit ? 25 : 0), 10, "./resources/textures/icons/configeditor/remove.png", () -> {
+					if(root.entry.type.subs() && !root.entry.type.subtype()){
+						if(root.val.isMap()) root.val.asMap().rem(key.key);
+						else root.val.asArray().rem(key.idx);
+						root.gensubs();
 					}
-					else if(input[0] != null) input[0].getTextState().setText(entry.gendef().string_value());
-				}
-			}).addTooltip("remove/reset"));
+					else{
+						if(entry.type.vector()){
+							input[0].getTextState().setText(0 + "");
+							input[1].getTextState().setText(0 + "");
+							input[2].getTextState().setText(0 + "");
+						}
+						else if(input[0] != null) input[0].getTextState().setText(entry.gendef().string_value());
+					}
+				}).addTooltip("remove/reset"));
+			}
 			if(edit){
 				add(new Icon(0, 20, 0, 525, 10, "./resources/textures/icons/configeditor/rename.png", () -> {
 					Dialog dialog = new Dialog("Enter new name.", 440, 110);
@@ -125,6 +125,7 @@ public class EntryComponent extends Component {
 	}
 
 	private void fillIfMissing(boolean check){
+		if(root == null) return;
 		if(check && root != null) root.fillIfMissing(false);
 		if(root.val.isMap()){
 			if(!root.val.asMap().has(key.key)){
@@ -326,6 +327,10 @@ public class EntryComponent extends Component {
 					dialog.show(FMT.FRAME);
 					break;
 				}
+				case SEPARATE:{
+					new FVTMConfigEditor(editor.file, "modeldata");
+					break;
+				}
 			}
 		}).addTooltip("select"));
 	}
@@ -391,6 +396,7 @@ public class EntryComponent extends Component {
 			if(val != null) box.setSelected(val.string_value(), true);
 			add(box);
 		}
+		else if(entry.type == EntryType.SEPARATE){}
 		else{//text
 			add(input[0] = new TextInput(val == null ? entry.gendef().string_value() : val.string_value(), 220, 7, 300, 26));
 			input[0].addTextInputContentChangeEventListener(event -> {
