@@ -27,18 +27,23 @@ public class FVTMConfigEditor extends Widget {
     private EntryComponent root;
     private ScrollablePanel panel;
     private Reference ref;
+    private JsonMap rmap;
     private JsonMap map;
-    private File file;
+    protected File file;
 
     public static int width = 700, height = 500, pwidth = 1000;
     protected static int height_;
 
-    public FVTMConfigEditor(File file){
-        getTitleTextState().setText(Translator.translate("fvtmeditor.title") + " - " + file.getName());
+    public FVTMConfigEditor(File file, String type){
+        getTitleTextState().setText(Translator.translate("fvtmeditor.title") + " - " + file.getName() + (type == null ? "" : " / " + type));
         setSize(width, height);
         setPosition(FMT.WIDTH / 2 - (width / 2), FMT.HEIGHT / 2 - (height / 2));
-        String[] dots = file.getName().split("\\.");
-        switch(dots[dots.length - 1]){
+        if(type == null){
+            String[] dots = file.getName().split("\\.");
+            type = dots[dots.length - 1];
+        }
+        this.file = file;
+        switch(type){
             case "block":{
                 ref = BlockConfigReference.INSTANCE;
                 break;
@@ -47,13 +52,22 @@ public class FVTMConfigEditor extends Widget {
                 ref = VehicleConfigReference.INSTANCE;
                 break;
             }
+            case "modeldata":{
+                ref = ModelDataReference.INSTANCE;
+                break;
+            }
             default: return;
         }
-        map = JsonHandler.parse(file);
+        rmap = JsonHandler.parse(file);
+        if(type.equals("modeldata")){
+            if(!rmap.has("ModelData")) rmap.addMap("ModelData");
+            map = rmap.getMap("ModelData");
+        }
+        else map = rmap;
         Settings.applyComponentTheme(getContainer());
         getContainer().add(panel = new ScrollablePanel(10, 40, width - 20, height - 70));
         getContainer().add(new RunButton("dialog.button.save", width - 220, 10, 100, 24, () -> {
-            JsonHandler.print(file, map, JsonHandler.PrintOption.DEFAULT);
+            JsonHandler.print(file, rmap, JsonHandler.PrintOption.DEFAULT);
         }));
         getContainer().add(new RunButton("dialog.button.close", width - 110, 10, 100, 24, () -> {
             FMT.FRAME.getContainer().remove(this);
