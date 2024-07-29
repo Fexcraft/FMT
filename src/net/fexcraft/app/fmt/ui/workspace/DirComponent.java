@@ -49,7 +49,7 @@ public class DirComponent extends Component {
 								break;
 							}
 							case FVTM_CONFIG:{
-								new FVTMConfigEditor(file);
+								new FVTMConfigEditor(file, null);
 								break;
 							}
 							case JSON:{
