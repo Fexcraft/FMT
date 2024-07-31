@@ -83,7 +83,7 @@ public class WorkspaceViewer extends Widget {
 			cmd = Settings.M20RCMD.value.replace("{JAVA}", Settings.JAVA17_PATH.value + "/bin/java");
 		}
 		try{
-			Process pr = Runtime.getRuntime().exec(new String[]{ cmd }, new String[0], new File(bool ? Settings.M12PATH.value : Settings.M20PATH.value));
+			Process pr = Runtime.getRuntime().exec(cmd.split(" "), new String[0], new File(bool ? Settings.M12PATH.value : Settings.M20PATH.value));
 			new Thread(() -> {
 				Logging.log("=================");
 				Logging.log("RUN CMD LOG START");
