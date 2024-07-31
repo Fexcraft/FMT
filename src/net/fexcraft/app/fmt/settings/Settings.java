@@ -136,6 +136,12 @@ public class Settings {
 	public static Setting<Boolean> TESTING;
 	public static Setting<String> WORKSPACE_NAME;
 	public static Setting<String> WORKSPACE_ROOT;
+	public static Setting<String> JAVA8_PATH;
+	public static Setting<String> JAVA17_PATH;
+	public static Setting<String> M12PATH;
+	public static Setting<String> M20PATH;
+	public static Setting<String> M12RCMD;
+	public static Setting<String> M20RCMD;
 	//
 	public static Setting<String> SEL_THEME;
 	public static Setting<Boolean> DARKTHEME;
@@ -269,7 +275,43 @@ public class Settings {
 		//
 		TESTING = new Setting<>("testing", false, GENERAL, map);
 		WORKSPACE_NAME = new Setting<>("name", "FMT Workspace", WORKSPACE, map);
-		WORKSPACE_ROOT = new Setting<>("root", "/workspace/", WORKSPACE, map){
+		WORKSPACE_ROOT = new Setting<>("root", "./workspace/", WORKSPACE, map){
+			@Override
+			public boolean basicstr(){
+				return false;
+			}
+		};
+		JAVA8_PATH = new Setting<>("java8", "/java/install/path/", WORKSPACE, map){
+			@Override
+			public boolean basicstr(){
+				return false;
+			}
+		};
+		JAVA17_PATH = new Setting<>("java17", "/java/install/path/", WORKSPACE, map){
+			@Override
+			public boolean basicstr(){
+				return false;
+			}
+		};
+		M12PATH = new Setting<>("m12path", "/install/path", WORKSPACE, map){
+			@Override
+			public boolean basicstr(){
+				return false;
+			}
+		};
+		M20PATH = new Setting<>("m20path", "/install/path/", WORKSPACE, map){
+			@Override
+			public boolean basicstr(){
+				return false;
+			}
+		};
+		M12RCMD = new Setting<>("m12run", "{JAVA} -jar client.jar", WORKSPACE, map){
+			@Override
+			public boolean basicstr(){
+				return false;
+			}
+		};
+		M20RCMD = new Setting<>("m20run", "{JAVA} -jar client.jar", WORKSPACE, map){
 			@Override
 			public boolean basicstr(){
 				return false;
