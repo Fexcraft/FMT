@@ -86,10 +86,10 @@ public class ObjView extends Polygon {
 	
 	@Override
 	public void render(FltElm alpha){
-		DrawMode mode = PolyRenderer.mode();
-		PolyRenderer.mode(DrawMode.RGBCOLOR);
+		//DrawMode mode = PolyRenderer.mode();
+		//PolyRenderer.mode(DrawMode.RGBCOLOR);
 		glm.render();
-		PolyRenderer.mode(mode);
+		//PolyRenderer.mode(mode);
 	}
 	
 	@Override
