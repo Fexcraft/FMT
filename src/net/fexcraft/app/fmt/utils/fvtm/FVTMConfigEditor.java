@@ -82,7 +82,7 @@ public class FVTMConfigEditor extends Widget {
     private Reference getReference(String type){
         switch(type){
             case "vehicle": return VehicleConfigReference.INSTANCE;
-            case "part": return null;
+            case "part": return PartConfigReference.INSTANCE;
             case "material": return MaterialConfigReference.INSTANCE;
             case "consumable": return ConsumableConfigReference.INSTANCE;
             case "fuel": return null;
