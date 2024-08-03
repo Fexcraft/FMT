@@ -234,6 +234,8 @@ public class GGR {
 	public void scrollCallback(long window, double xoffset, double yoffset){
 		if(isOverUI()) return;
 		double s = yoffset * Settings.SCROLL_SPEED.value;
+		if(r_down) s *= 10;
+		if(f_down) s *= 0.1;
         pos.x += s * Math.sin(hor);
         pos.y += s * Math.sin(ver);
         pos.z += s * Math.cos(hor);
