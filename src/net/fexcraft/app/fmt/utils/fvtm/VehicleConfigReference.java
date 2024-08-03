@@ -36,20 +36,7 @@ public class VehicleConfigReference implements Reference {
 		entries.add(of("MaxKeys", INTEGER).limit(5, 1, 16));
 		entries.add(of("ImpactWrench", INTEGER).limit(0, 0, 8));
 		entries.add(of("KeyType", TEXT).def("gep:key", true));
-		entries.add(of("Attributes", OBJECT).add(
-			of("type", ENUM).enums(attrtypes),
-			of("min", INTEGER).limit(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE),
-			of("max", INTEGER).limit(Integer.MAX_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE),
-			of("access", ARRAY_SIMPLE).add(of(TEXT)),
-			of("target", TEXT).def("vehicle"),
-			of("group", TEXT).def(""),
-			of("perm", TEXT).def(""),
-			of("sync", BOOLEAN).def(false),
-			of("editable", BOOLEAN).def(true),
-			of("icons", OBJECT_KEY_VAL).add(of(TEXT)),
-			of("keys", OBJECT_KEY_VAL).add(of(TEXT)),
-			of("mod-dep", ARRAY_SIMPLE).add(of(TEXT))
-		));
+		addAttrsEntry(entries);
 		entries.add(of("WheelPositions", OBJECT).add(
 			of("pos", VECTOR_ARRAY),
 			of("mirror", BOOLEAN),
@@ -81,24 +68,7 @@ public class VehicleConfigReference implements Reference {
 		entries.add(of("Tracked", BOOLEAN).def(false));
 		entries.add(of("CouplerRange", DECIMAL).limit(1f, 0.01f, 4f));
 		entries.add(of("InstalledParts", OBJECT_KEY_VAL).add(of(TEXT)));
-		entries.add(of("SwivelPoints", OBJECT).add(
-			of("pos", VECTOR_ARRAY),
-			of("parent", TEXT).def("vehicle"),
-			of("yaw", DECIMAL).limit(0, -180, 180),
-			of("pitch", DECIMAL).limit(0, -180, 180),
-			of("roll", DECIMAL).limit(0, -180, 180),
-			of("movers", ARRAY).add(
-				of(OBJECT_KEY_VAL).static_(true).add(
-					of("attribute", TEXT).required(),
-					of("var", ENUM).enums(spvars),
-					of("speed", DECIMAL).limit(1f, 0f),
-					of("min", DECIMAL).limit(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE),
-					of("max", DECIMAL).limit(Integer.MAX_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE),
-					of("def", DECIMAL).limit(1f, Integer.MIN_VALUE, Integer.MAX_VALUE),
-					of("loop", BOOLEAN)
-				)
-			)
-		));
+		addPointsEntry(entries);
 		entries.add(of("Sounds", OBJECT).add(
 			of("volume", DECIMAL).limit(1, 0),
 			of("pitch", DECIMAL).limit(1, 0)
@@ -154,13 +124,51 @@ public class VehicleConfigReference implements Reference {
 
 	}
 
+	public static void addAttrsEntry(ArrayList entries){
+		entries.add(of("Attributes", OBJECT).add(
+			of("type", ENUM).enums(attrtypes),
+			of("min", INTEGER).limit(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE),
+			of("max", INTEGER).limit(Integer.MAX_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE),
+			of("access", ARRAY_SIMPLE).add(of(TEXT)),
+			of("target", TEXT).def("vehicle"),
+			of("group", TEXT).def(""),
+			of("perm", TEXT).def(""),
+			of("sync", BOOLEAN).def(false),
+			of("editable", BOOLEAN).def(true),
+			of("icons", OBJECT_KEY_VAL).add(of(TEXT)),
+			of("keys", OBJECT_KEY_VAL).add(of(TEXT)),
+			of("mod-dep", ARRAY_SIMPLE).add(of(TEXT))
+		));
+	}
+
+	public static void addPointsEntry(ArrayList entries){
+		entries.add(of("SwivelPoints", OBJECT).add(
+			of("pos", VECTOR_ARRAY),
+			of("parent", TEXT).def("vehicle"),
+			of("yaw", DECIMAL).limit(0, -180, 180),
+			of("pitch", DECIMAL).limit(0, -180, 180),
+			of("roll", DECIMAL).limit(0, -180, 180),
+			of("movers", ARRAY).add(
+				of(OBJECT_KEY_VAL).static_(true).add(
+					of("attribute", TEXT).required(),
+					of("var", ENUM).enums(spvars),
+					of("speed", DECIMAL).limit(1f, 0f),
+					of("min", DECIMAL).limit(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE),
+					of("max", DECIMAL).limit(Integer.MAX_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE),
+					of("def", DECIMAL).limit(1f, Integer.MIN_VALUE, Integer.MAX_VALUE),
+					of("loop", BOOLEAN)
+				)
+			)
+		));
+	}
+
 	@Override
 	public List<ConfigEntry> getEntries() {
 		return entries;
 	}
 
-	public String[] vehtypes = new String[]{ "LAND", "WATER", "AIR", "RAIL", "HELI", "SPACE" };
-	public String[] attrtypes = new String[]{ "float", "integer", "boolean", "tristate", "string", "vector" };
-	public String[] spvars = new String[]{ "x", "y", "z", "yaw", "pitch", "roll" };
+	public static String[] vehtypes = new String[]{ "LAND", "WATER", "AIR", "RAIL", "HELI", "SPACE" };
+	public static String[] attrtypes = new String[]{ "float", "integer", "boolean", "tristate", "string", "vector" };
+	public static String[] spvars = new String[]{ "x", "y", "z", "yaw", "pitch", "roll" };
 
 }
