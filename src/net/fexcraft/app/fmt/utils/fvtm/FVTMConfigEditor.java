@@ -43,21 +43,8 @@ public class FVTMConfigEditor extends Widget {
             type = dots[dots.length - 1];
         }
         this.file = file;
-        switch(type){
-            case "block":{
-                ref = BlockConfigReference.INSTANCE;
-                break;
-            }
-            case "vehicle":{
-                ref = VehicleConfigReference.INSTANCE;
-                break;
-            }
-            case "modeldata":{
-                ref = ModelDataReference.INSTANCE;
-                break;
-            }
-            default: return;
-        }
+        ref = getReference(type);
+        if(ref == null) return;
         rmap = JsonHandler.parse(file);
         if(type.equals("modeldata")){
             if(!rmap.has("ModelData")) rmap.addMap("ModelData");
@@ -90,6 +77,25 @@ public class FVTMConfigEditor extends Widget {
         FMT.FRAME.getContainer().add(this);
         INSTANCES.add(this);
         show();
+    }
+
+    private Reference getReference(String type){
+        switch(type){
+            case "vehicle": return VehicleConfigReference.INSTANCE;
+            case "part": return null;
+            case "material": return MaterialConfigReference.INSTANCE;
+            case "consumable": return ConsumableConfigReference.INSTANCE;
+            case "fuel": return null;
+            case "block": return BlockConfigReference.INSTANCE;
+            case "wire": return null;
+            case "wiredeco": return null;
+            case "deco": return null;
+            case "railgauge": return null;
+            case "cloth": return null;
+            //
+            case "modeldata": return ModelDataReference.INSTANCE;
+            default: return null;
+        }
     }
 
     private void fill(){
