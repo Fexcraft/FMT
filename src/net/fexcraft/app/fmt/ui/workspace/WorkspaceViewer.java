@@ -3,25 +3,38 @@ package net.fexcraft.app.fmt.ui.workspace;
 import com.google.common.io.Files;
 import com.spinyowl.legui.component.*;
 import com.spinyowl.legui.component.event.component.ChangeSizeEvent;
+import com.spinyowl.legui.style.Background;
+import com.spinyowl.legui.style.Style;
+import com.spinyowl.legui.style.border.SimpleLineBorder;
+import com.spinyowl.legui.style.color.ColorConstants;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
+import net.fexcraft.app.fmt.ui.FileChooser;
 import net.fexcraft.app.fmt.ui.fields.RunButton;
 import net.fexcraft.app.fmt.ui.fields.TextField;
+import net.fexcraft.app.fmt.utils.ByteUtils;
 import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
 import org.joml.Vector2f;
+import org.lwjgl.opengl.GL11;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
+
+import static com.spinyowl.legui.style.color.ColorConstants.TRANSPARENT;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -154,21 +167,20 @@ public class WorkspaceViewer extends Widget {
 				dialog.show(FMT.FRAME);
 			});
 		}));
-		int idx = 0;
-		for(String str : types){
-			infopanel.getContainer().add(new RunButton("Create new " + str, 10, 100 + (idx++ * 40), ip_button_width, 30, () -> {
-				selectPackDialog(pack -> {
-					String strl = str.toLowerCase();
-					String strs = strl + (str.endsWith("th") ? "es" : "s");
-					Dialog dialog = new Dialog(str + " Creation Settings", 420, 190);
-					dialog.getContainer().add(new Label(str + " Name:", 10, 10, 400, 30));
-					TextField name = new TextField(strl + " name", 10, 40, 400, 30);
+		infopanel.getContainer().add(new RunButton("Create new Content", 10, 100, ip_button_width, 30, () -> {
+			selectPackDialog(pack -> {
+				selectContentTypeDialog(type -> {
+					String typeL = type.toLowerCase();
+					String typeS = typeL + (type.endsWith("th") ? "es" : "s");
+					Dialog dialog = new Dialog(type + " Creation Settings", 420, 190);
+					dialog.getContainer().add(new Label(type + " Name:", 10, 10, 400, 30));
+					TextField name = new TextField(typeL + " name", 10, 40, 400, 30);
 					dialog.getContainer().add(name);
-					dialog.getContainer().add(new Label(str + " ID:", 10, 70, 400, 30));
-					TextField pid = new TextField(strl + "_id", 10, 100, 400, 30);
+					dialog.getContainer().add(new Label(type + " ID:", 10, 70, 400, 30));
+					TextField pid = new TextField(typeL + "_id", 10, 100, 400, 30);
 					dialog.getContainer().add(pid);
 					dialog.getContainer().add(new RunButton("dialog.button.confirm", 310, 140, 100, 20, () -> {
-						File file = new File(pack.file, "/assets/" + pack.id + "/config/" + strs + "/" + name.getTextState().getText() + "." + strl);
+						File file = new File(pack.file, "/assets/" + pack.id + "/config/" + typeS + "/" + name.getTextState().getText() + "." + typeL);
 						if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
 						String pkid = pid.getTextState().getText();
 						JsonMap map = new JsonMap();
@@ -196,9 +208,72 @@ public class WorkspaceViewer extends Widget {
 					dialog.setResizable(false);
 					dialog.show(FMT.FRAME);
 				});
-			}));
-		}
+			});
+		}));
+		infopanel.getContainer().add(new RunButton("Create Icon from View", 10, 140, ip_button_width, 30, () -> {
+			selectPackDialog(pack -> {
+				Widget widget = new Widget(FMT.WIDTH / 2f - 128, FMT.HEIGHT / 2f - 149, 256, 296);
+				widget.getTitleTextState().setText("Center the model inside.");
+				widget.getStyle().setBorder(new SimpleLineBorder(FMT.rgba(0xffff00), 2));
+				widget.getContainer().getStyle().getBackground().setColor(ColorConstants.transparent());
+				Logging.log(widget.getTitle().getSize());
+				widget.getContainer().add(new RunButton("dialog.button.save", 0, 256, 256, 20, () -> {
+					ByteBuffer buffer = ByteBuffer.allocateDirect(256 * 256 * 4);
+					buffer.order(ByteOrder.nativeOrder());
+					GL11.glReadPixels(FMT.WIDTH / 2 - 128, FMT.HEIGHT / 2 - 128, 256, 256, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
+					FMT.FRAME.getContainer().remove(widget);
+					FileChooser.chooseFile("Choose a Save Location", new File(pack.file, "/assets/" + pack.id + "/textures/").toPath().toString(), FileChooser.TYPE_PNG, true, file -> {
+						if(file == null) return;
+						BufferedImage img = new BufferedImage(256, 256, BufferedImage.TYPE_INT_ARGB);
+						byte[] arr0 = new byte[4];
+						byte[] arr1 = new byte[4];
+						int col;
+						for(int x = 0; x < 256; x++){
+							for(int y = 0; y < 256; y++){
+								int yy = 255 - y;
+								buffer.get((x + yy * 256) * 4, arr0);
+								col = ByteUtils.getRGB(arr0);
+								arr1[0] = arr0[3];
+								arr1[1] = arr0[0];
+								arr1[2] = arr0[1];
+								arr1[3] = arr0[2];
+								img.setRGB(x, y, col == Settings.BACKGROUND.value.packed ? 0x00000000 : ByteBuffer.wrap(arr1).getInt());
+							}
+						}
+						try{
+							ImageIO.write(img, "PNG", file);
+							genView();
+						}
+						catch(IOException e){
+							Logging.log(e);
+						}
+					});
+				}));
+				widget.getStyle().getBackground().setColor(ColorConstants.transparent());
+				widget.setResizable(false);
+				widget.setMinimizable(false);
+				widget.setDraggable(false);
+				FMT.FRAME.getContainer().add(widget);
+				widget.show();
+			});
+		}));
 		genView();
+	}
+
+	private void selectContentTypeDialog(Consumer<String> cons){
+		Dialog dialog = new Dialog("Please select a ContentType.", 320, 70);
+		SelectBox<String> select = new SelectBox<>(10, 10, 300, 30);
+		for(String str : types){
+			select.addElement(str);
+		}
+		select.addSelectBoxChangeSelectionEventListener(event -> {
+			dialog.close();
+			cons.accept(event.getNewValue());
+		});
+		select.setVisibleCount(8);
+		dialog.getContainer().add(select);
+		dialog.setResizable(false);
+		dialog.show(FMT.FRAME);
 	}
 
 	private void selectPackDialog(Consumer<FvtmPack> cons){
