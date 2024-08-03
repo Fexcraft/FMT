@@ -1,5 +1,6 @@
 package net.fexcraft.app.fmt.ui.workspace;
 
+import com.google.common.io.Files;
 import com.spinyowl.legui.component.*;
 import com.spinyowl.legui.component.event.component.ChangeSizeEvent;
 import net.fexcraft.app.fmt.FMT;
@@ -27,6 +28,9 @@ import java.util.function.Consumer;
  */
 public class WorkspaceViewer extends Widget {
 
+	public static final String[] types = new String[]{
+		"Vehicle", "Part", "Material", "Consumable", "Fuel", "Block", "Wire", "Deco", "RailGauge", "Cloth"
+	};
 	public static WorkspaceViewer viewer;
 	public static final int ROWHEIGHT = 30;
 	public ArrayList<FvtmPack> rootfolders = new ArrayList<FvtmPack>();
@@ -37,34 +41,40 @@ public class WorkspaceViewer extends Widget {
 	public RunButton run20;
 	public File folder;
 	public int scrollableheight;
+	private int wv_height = 500;
+	private int wv_width = 620;
+	private int ip_height = 600;
+	private int ip_width = 310;
+	private int ip_button_width = 280;
 
 	public WorkspaceViewer(){
 		super(Settings.WORKSPACE_NAME.value);
-		setSize(620, 500);
+		setSize(wv_width, wv_height);
 		getContainer().setSize(getSize());
 		setResizable(true);
 		setPosition(20, 20);
 		packspanel = new ScrollablePanel();
 		packspanel.setPosition(0, 30);
-		packspanel.setSize(310, getSize().y - 30);
+		packspanel.setSize(ip_width, getSize().y - 30);
 		infopanel = new ScrollablePanel();
-		infopanel.setPosition(310, 30);
-		infopanel.setSize(310, getSize().y - 30);
+		infopanel.setPosition(ip_width, 30);
+		infopanel.setSize(ip_width, getSize().y - 30);
+		infopanel.getContainer().setSize(ip_width, ip_height);
 		getListenerMap().addListener(ChangeSizeEvent.class, event -> {
 			Vector2f vec = new Vector2f();
 			event.getNewSize().get(vec);
-			if(vec.x < 620){
-				setSize(620, vec.y);
+			if(vec.x < wv_width){
+				setSize(wv_width, vec.y);
 				return;
 			}
-			if(vec.y < 300){
-				setSize(vec.x, 300);
+			if(vec.y < wv_height){
+				setSize(vec.x, wv_height);
 				return;
 			}
 			getContainer().setSize(vec);
-			packspanel.setSize(vec.x - 310, getSize().y - 30);
-			infopanel.setSize(310, getSize().y - 30);
-			infopanel.setPosition(vec.x - 310, 30);
+			packspanel.setSize(vec.x - ip_width, getSize().y - 30);
+			infopanel.setPosition(vec.x - ip_width, 30);
+			infopanel.setSize(ip_width, getSize().y - 30);
 			refresh.setPosition(vec.x - 110, 5);
 			run12.setPosition(vec.x - 220, 5);
 			run20.setPosition(vec.x - 330, 5);
@@ -80,8 +90,8 @@ public class WorkspaceViewer extends Widget {
 		//
 		folder = new File(Settings.WORKSPACE_ROOT.value);
 		if(!folder.exists()) folder.mkdirs();
-		infopanel.setVerticalScrollBarVisible(false);
-		infopanel.getContainer().add(new RunButton("Create a new Pack", 10, 10, 290, 30, () -> {
+		infopanel.setHorizontalScrollBarVisible(false);
+		infopanel.getContainer().add(new RunButton("Create a new Pack", 10, 10, ip_button_width, 30, () -> {
 			Dialog dialog = new Dialog("Pack Creation Settings", 420, 190);
 			dialog.getContainer().add(new Label("Pack Name:", 10, 10, 400, 30));
 			TextField name = new TextField("pack name", 10, 40, 400, 30);
@@ -108,7 +118,7 @@ public class WorkspaceViewer extends Widget {
 			dialog.setResizable(false);
 			dialog.show(FMT.FRAME);
 		}));
-		infopanel.getContainer().add(new RunButton("Generate Config/Asset Directories", 10, 50, 290, 30, () -> {
+		infopanel.getContainer().add(new RunButton("Generate Config/Asset Directories", 10, 50, ip_button_width, 30, () -> {
 			selectPackDialog(pack -> {
 				Dialog dialog = new Dialog("Please select Config Types.", 320, 250);
 				HashMap<String, CheckBox> map = new HashMap<>();
@@ -116,6 +126,7 @@ public class WorkspaceViewer extends Widget {
 				map.put("parts", new CheckBox("parts", 10, 30, 300, 20));
 				map.put("materials", new CheckBox("materials", 10, 50, 300, 20));
 				map.put("consumables", new CheckBox("consumables", 10, 70, 300, 20));
+				map.put("fuels", new CheckBox("fuels", 10, 70, 300, 20));
 				map.put("blocks", new CheckBox("blocks", 10, 90, 300, 20));
 				map.put("wires", new CheckBox("wires", 10, 110, 300, 20));
 				map.put("decos", new CheckBox("decos", 10, 130, 300, 20));
@@ -143,6 +154,50 @@ public class WorkspaceViewer extends Widget {
 				dialog.show(FMT.FRAME);
 			});
 		}));
+		int idx = 0;
+		for(String str : types){
+			infopanel.getContainer().add(new RunButton("Create new " + str, 10, 100 + (idx++ * 40), ip_button_width, 30, () -> {
+				selectPackDialog(pack -> {
+					String strl = str.toLowerCase();
+					String strs = strl + (str.endsWith("th") ? "es" : "s");
+					Dialog dialog = new Dialog(str + " Creation Settings", 420, 190);
+					dialog.getContainer().add(new Label(str + " Name:", 10, 10, 400, 30));
+					TextField name = new TextField(strl + " name", 10, 40, 400, 30);
+					dialog.getContainer().add(name);
+					dialog.getContainer().add(new Label(str + " ID:", 10, 70, 400, 30));
+					TextField pid = new TextField(strl + "_id", 10, 100, 400, 30);
+					dialog.getContainer().add(pid);
+					dialog.getContainer().add(new RunButton("dialog.button.confirm", 310, 140, 100, 20, () -> {
+						File file = new File(pack.file, "/assets/" + pack.id + "/config/" + strs + "/" + name.getTextState().getText() + "." + strl);
+						if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
+						String pkid = pid.getTextState().getText();
+						JsonMap map = new JsonMap();
+						map.add("ID", pid.getTextState().getText());
+						map.add("Name", name.getTextState().getText());
+						map.add("Addon", pack.id);
+						JsonHandler.print(file, map, JsonHandler.PrintOption.DEFAULT);
+						file = new File(pack.file, "/assets/" + pack.id + "/textures/item/" + pkid + ".png");
+						if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
+						try{
+							Files.copy(new File("./resources/textures/icons/configeditor/rename.png"), file);
+						}
+						catch(Exception e){
+							Logging.log(e);
+						}
+						file = new File(pack.file, "/assets/" + pack.id + "/models/item/" + pkid + ".json");
+						if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
+						map = new JsonMap();
+						map.add("parent", "item/generated");
+						map.add("textures", new JsonMap("layer0", pack.id + ":item/" + pkid));
+						JsonHandler.print(file, map, JsonHandler.PrintOption.DEFAULT);
+						dialog.close();
+						genView();
+					}));
+					dialog.setResizable(false);
+					dialog.show(FMT.FRAME);
+				});
+			}));
+		}
 		genView();
 	}
 
@@ -301,7 +356,7 @@ public class WorkspaceViewer extends Widget {
 			scrollableheight += com.fullsize();
 		}
 		packspanel.getContainer().setSize(packspanel.getSize().x, scrollableheight < height ? height : scrollableheight);
-		infopanel.getContainer().setSize(310, viewer.getSize().y - 30);
+		infopanel.getContainer().setSize(ip_width, ip_height > getSize().y - 30 ? ip_height : getSize().y - 30);
 	}
 
 }
