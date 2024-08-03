@@ -22,7 +22,7 @@ public class VehicleConfigReference implements Reference {
 	public VehicleConfigReference(){
 		entries.add(of("Addon", PACKID).required());
 		entries.add(of("ID", TEXT).required());
-		entries.add(of("Name", TEXT).def("Unnamed Block", true));
+		entries.add(of("Name", TEXT).def("Unnamed Vehicle", true));
 		entries.add(of("CreativeTab", TEXT).def("default", true));
 		entries.add(of("Description", ARRAY_SIMPLE).add(of(TEXT).def("description entry", true)));
 		entries.add(of("Categories", ARRAY_SIMPLE).alt("Category").add(TEXT_ENTRY));
