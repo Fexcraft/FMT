@@ -70,33 +70,37 @@ public enum ViewerFileType {
 						return FMF;
 					//
 					case "block":
-						return file.getParentFile().getName().equals("blocks") ? new Object[]{ FVTM_CONFIG, FvtmType.BLOCK } : JSON;
+						return parentOrGrandEquals(file, "blocks") ? new Object[]{ FVTM_CONFIG, FvtmType.BLOCK } : JSON;
 					case "multiblock":
-						return file.getParentFile().getName().equals("blocks") ? new Object[]{ FVTM_CONFIG, FvtmType.MULTIBLOCK } : JSON;
+						return parentOrGrandEquals(file, "blocks") ? new Object[]{ FVTM_CONFIG, FvtmType.MULTIBLOCK } : JSON;
 					case "cloth":
-						return file.getParentFile().getName().equals("clothes") ? new Object[]{ FVTM_CONFIG, FvtmType.CLOTH } : JSON;
+						return parentOrGrandEquals(file, "clothes") ? new Object[]{ FVTM_CONFIG, FvtmType.CLOTH } : JSON;
 					case "container":
-						return file.getParentFile().getName().equals("containers") ? new Object[]{ FVTM_CONFIG, FvtmType.CONTAINER } : JSON;
+						return parentOrGrandEquals(file, "containers") ? new Object[]{ FVTM_CONFIG, FvtmType.CONTAINER } : JSON;
 					case "material":
-						return file.getParentFile().getName().equals("materials") ? new Object[]{ FVTM_CONFIG, FvtmType.MATERIAL } : JSON;
+						return parentOrGrandEquals(file, "materials") ? new Object[]{ FVTM_CONFIG, FvtmType.MATERIAL } : JSON;
 					case "vehicle":
-						return file.getParentFile().getName().equals("vehicles") ? new Object[]{ FVTM_CONFIG, FvtmType.VEHICLE } : JSON;
+						return parentOrGrandEquals(file, "vehicles") ? new Object[]{ FVTM_CONFIG, FvtmType.VEHICLE } : JSON;
 					case "part":
-						return file.getParentFile().getName().equals("parts") ? new Object[]{ FVTM_CONFIG, FvtmType.PART } : JSON;
+						return parentOrGrandEquals(file, "parts") ? new Object[]{ FVTM_CONFIG, FvtmType.PART } : JSON;
 					case "gauge":
-						return file.getParentFile().getName().equals("railgauges") ? new Object[]{ FVTM_CONFIG, FvtmType.RAILGAUGE } : JSON;
+						return parentOrGrandEquals(file, "railgauges") ? new Object[]{ FVTM_CONFIG, FvtmType.RAILGAUGE } : JSON;
 					case "wire":
-						return file.getParentFile().getName().equals("wires") ? new Object[]{ FVTM_CONFIG, FvtmType.WIRE } : JSON;
+						return parentOrGrandEquals(file, "wires") ? new Object[]{ FVTM_CONFIG, FvtmType.WIRE } : JSON;
 					case "consumable":
-						return file.getParentFile().getName().equals("consumables") ? new Object[]{ FVTM_CONFIG, FvtmType.CONSUMABLE } : JSON;
+						return parentOrGrandEquals(file, "consumables") ? new Object[]{ FVTM_CONFIG, FvtmType.CONSUMABLE } : JSON;
 					case "fuel":
-						return file.getParentFile().getName().equals("fuels") ? new Object[]{ FVTM_CONFIG, FvtmType.FUEL } : JSON;
+						return parentOrGrandEquals(file, "fuels") ? new Object[]{ FVTM_CONFIG, FvtmType.FUEL } : JSON;
 					default:
 						break;
 				}
 			}
 		}
 		return FILE;
+	}
+
+	private static boolean parentOrGrandEquals(File file, String str){
+		return file.getParentFile().getName().equals(str) || file.getParentFile().getParentFile().getName().equals(str);
 	}
 
 	public boolean model(){
