@@ -35,11 +35,11 @@ public class KeyCompound {
 		keys.add(new KeyFunction("move_down", GLFW_KEY_LEFT_SHIFT, (action) -> FMT.CAM.shift_down = parseKeyAction(action)));
 		keys.add(new KeyFunction("move_speed+", GLFW_KEY_R, (action) -> {
 			FMT.CAM.r_down = parseKeyAction(action);
-			Logging.bar("5x speed key pressed", false, 1);
+			Logging.bar("Speed multiplier key pressed.", false, 1);
 		}));
 		keys.add(new KeyFunction("move_speed-", GLFW_KEY_F, (action) -> {
 			FMT.CAM.f_down = parseKeyAction(action);
-			Logging.bar("2/ speed key pressed", false, 1);
+			Logging.bar("Speed divider key pressed.", false, 1);
 		}));
 		keys.add(new KeyFunction("move_speed*", GLFW_KEY_Y, (action) -> {
 			if(GGR.isOverUI() || action != GLFW_RELEASE) return;
