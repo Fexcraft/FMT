@@ -9,10 +9,9 @@ import static net.fexcraft.app.fmt.utils.fvtm.EntryType.*;
 /**
  * @author Ferdinand Calo' (FEX___96)
  */
-public class MaterialConfigReference implements Reference {
+public class MaterialConfigReference extends ConfigReference {
 
 	public static MaterialConfigReference INSTANCE = new MaterialConfigReference();
-	private ArrayList entries = new ArrayList();
 
 	public MaterialConfigReference(){
 		entries.add(of("Addon", PACKID).required());
@@ -33,11 +32,6 @@ public class MaterialConfigReference implements Reference {
 		entries.add(of("FuelType", TEXT));
 		entries.add(of("FuelGroup", TEXT));
 		entries.add(of("ImpactWrench", INTEGER).limit(-1, -1, 8));
-	}
-
-	@Override
-	public List<ConfigEntry> getEntries() {
-		return entries;
 	}
 
 }
