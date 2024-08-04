@@ -1,7 +1,6 @@
 package net.fexcraft.app.fmt.utils.fvtm;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static net.fexcraft.app.fmt.utils.fvtm.ConfigEntry.TEXT_ENTRY;
 import static net.fexcraft.app.fmt.utils.fvtm.ConfigEntry.of;
@@ -10,10 +9,16 @@ import static net.fexcraft.app.fmt.utils.fvtm.EntryType.*;
 /**
  * @author Ferdinand Calo' (FEX___96)
  */
-public class PartConfigReference implements Reference {
+public class PartConfigReference extends ConfigReference {
 
+	public static String[] installhandlers = new String[]{ "default", "wheel", "bogie", "tire" };
+	public static String[] partfunctions = new String[]{
+		"fvtm:wheel", "fvtm:wheel_positions", "fvtm:seats", "fvtm:engine",
+		"fvtm:inventory", "fvtm:container", "fvtm:bogie", "fvtm:part_slots",
+		"fvtm:connector", "fvtm:color", "fvtm:tire", "fvtm:transmission",
+		"fvtm:particle_emitter", "fvtm:interact_zone"
+	};
 	public static PartConfigReference INSTANCE = new PartConfigReference();
-	private ArrayList entries = new ArrayList();
 
 	public PartConfigReference(){
 		entries.add(of("Addon", PACKID).required());
@@ -26,10 +31,10 @@ public class PartConfigReference implements Reference {
 		entries.add(of("Textures", ARRAY_SIMPLE).add(of(TEXLOC)).alt("Texture"));
 		entries.add(of("ItemTexture", TEXLOC));
 		entries.add(of("Category", ARRAY_SIMPLE).add(TEXT_ENTRY));
-		entries.add(of("Installation", SEPARATE));
+		entries.add(of("Installation", ENUM_SEPARATE).enums(installhandlers).add(of("Handler", STATIC)));
 		VehicleConfigReference.addAttrsEntry(entries);
 		entries.add(of("AttributeModifiers", OBJECT_KEY_VAL).add(TEXT_ENTRY));
-		entries.add(of("Functions", SEPARATE));
+		entries.add(of("Functions", SEPARATE).add(of(ENUM_SEPARATE).enums(partfunctions).add(of("id", STATIC))));
 		VehicleConfigReference.addPointsEntry(entries);
 		entries.add(of("Sounds", OBJECT).add(
 			of("volume", DECIMAL).limit(1, 0),
@@ -37,12 +42,5 @@ public class PartConfigReference implements Reference {
 		));
 		entries.add(of("Disable3DItemModel", BOOLEAN).def(false));
 	}
-
-	@Override
-	public List<ConfigEntry> getEntries() {
-		return entries;
-	}
-
-	public static String[] installhandlers = new String[]{ "default", "wheel", "bogie", "tire" };
 
 }
