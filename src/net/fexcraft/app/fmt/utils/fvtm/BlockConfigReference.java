@@ -6,10 +6,9 @@ import static net.fexcraft.app.fmt.utils.fvtm.EntryType.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BlockConfigReference implements Reference {
+public class BlockConfigReference extends ConfigReference {
 
     public static BlockConfigReference INSTANCE = new BlockConfigReference();
-    private ArrayList entries = new ArrayList();
 
     public BlockConfigReference(){
         entries.add(of("Addon", PACKID).required());
@@ -48,11 +47,6 @@ public class BlockConfigReference implements Reference {
         entries.add(of("MultiSubBlock", BOOLEAN).def(false));
         entries.add(of("HasBlockEntity", BOOLEAN).def(false));
         entries.add(of("WireRelay", OBJECT));//TODO
-    }
-
-    @Override
-    public List<ConfigEntry> getEntries() {
-        return entries;
     }
 
     public String[] BLOCK_TYPES = {
