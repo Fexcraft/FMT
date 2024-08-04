@@ -2,10 +2,8 @@ package net.fexcraft.app.fmt.utils.fvtm;
 
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
-import net.fexcraft.app.json.JsonValue;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static net.fexcraft.app.fmt.utils.fvtm.ConfigEntry.TEXT_ENTRY;
 import static net.fexcraft.app.fmt.utils.fvtm.ConfigEntry.of;
@@ -14,10 +12,13 @@ import static net.fexcraft.app.fmt.utils.fvtm.EntryType.*;
 /**
  * @author Ferdinand Calo' (FEX___96)
  */
-public class VehicleConfigReference implements Reference {
+public class VehicleConfigReference extends ConfigReference {
 
+	public static String[] vehtypes = new String[]{ "LAND", "WATER", "AIR", "RAIL", "HELI", "SPACE" };
+	public static String[] attrtypes = new String[]{ "float", "integer", "boolean", "tristate", "string", "vector" };
+	public static String[] spvars = new String[]{ "x", "y", "z", "yaw", "pitch", "roll" };
+	//
 	public static VehicleConfigReference INSTANCE = new VehicleConfigReference();
-	private ArrayList entries = new ArrayList();
 
 	public VehicleConfigReference(){
 		entries.add(of("Addon", PACKID).required());
@@ -161,14 +162,5 @@ public class VehicleConfigReference implements Reference {
 			)
 		));
 	}
-
-	@Override
-	public List<ConfigEntry> getEntries() {
-		return entries;
-	}
-
-	public static String[] vehtypes = new String[]{ "LAND", "WATER", "AIR", "RAIL", "HELI", "SPACE" };
-	public static String[] attrtypes = new String[]{ "float", "integer", "boolean", "tristate", "string", "vector" };
-	public static String[] spvars = new String[]{ "x", "y", "z", "yaw", "pitch", "roll" };
 
 }
