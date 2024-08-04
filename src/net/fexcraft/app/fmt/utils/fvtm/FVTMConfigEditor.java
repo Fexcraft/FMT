@@ -40,10 +40,10 @@ public class FVTMConfigEditor extends Widget {
 	protected static int height_;
 
 	public FVTMConfigEditor(File file, String type){
-		this(null, file, type, null, null);
+		this(null, file, type, null, null, null);
 	}
 
-	public FVTMConfigEditor(FVTMConfigEditor rootedit, File file, String type, ConfigEntry entry, JsonValue val){
+	public FVTMConfigEditor(FVTMConfigEditor rootedit, File file, String type, String key, ConfigEntry entry, JsonValue val){
 		rooteditor = rootedit;
 		this.entry = entry;
 		refval = val;
@@ -56,7 +56,7 @@ public class FVTMConfigEditor extends Widget {
 		}
 		this.type = type;
 		this.file = file;
-		ref = getReference(type, entry, val);
+		ref = getReference(type, key, entry, val);
 		if(ref == null) return;
 		remap();
 		Settings.applyComponentTheme(getContainer());
@@ -111,7 +111,7 @@ public class FVTMConfigEditor extends Widget {
 		if(rooteditor != null) rooteditor.refill();
 	}
 
-	private ConfigReference getReference(String type, ConfigEntry entry, JsonValue val){
+	private ConfigReference getReference(String type, String key, ConfigEntry entry, JsonValue val){
 		type = type.toLowerCase();
 		switch(type){
 			case "vehicle":
@@ -149,8 +149,13 @@ public class FVTMConfigEditor extends Widget {
 				}
 				return null;
 			}
-			default:
+			case "functions":{
+				switch(key){
+
+				}
 				return null;
+			}
+			default: return null;
 		}
 	}
 
