@@ -34,7 +34,7 @@ public class PartConfigReference extends ConfigReference {
 		entries.add(of("Installation", ENUM_SEPARATE).enums(installhandlers).add(of("Handler", STATIC)));
 		VehicleConfigReference.addAttrsEntry(entries);
 		entries.add(of("AttributeModifiers", OBJECT_KEY_VAL).add(TEXT_ENTRY));
-		entries.add(of("Functions", SEPARATE).add(of(ENUM_SEPARATE).enums(partfunctions).add(of("id", STATIC))));
+		entries.add(of("Functions", OBJECT_KEY_VAL).add(of(ENUM_SEPARATE).enums(partfunctions)));
 		VehicleConfigReference.addPointsEntry(entries);
 		entries.add(of("Sounds", OBJECT).add(
 			of("volume", DECIMAL).limit(1, 0),
