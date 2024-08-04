@@ -154,6 +154,9 @@ public class ConfigEntry {
 			case ENUM -> {
                 return new JsonValue<>(enums[0]);
 			}
+			case ENUM_SEPARATE -> {
+				return new JsonValue<>(enums[0]);
+			}
 			case VECTOR_ARRAY -> {
 				return new JsonArray.Flat(0, 0, 0);
 			}
