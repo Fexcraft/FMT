@@ -15,6 +15,7 @@ import net.fexcraft.app.fmt.ui.fields.TextField;
 import net.fexcraft.app.fmt.ui.workspace.DirComponent;
 import net.fexcraft.app.fmt.ui.workspace.FvtmPack;
 import net.fexcraft.app.fmt.ui.workspace.WorkspaceViewer;
+import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.app.json.JsonValue;
@@ -62,7 +63,7 @@ public class EntryComponent extends Component {
 		}).addTooltip(entry.type.icon()));
 		if(root != null){
 			boolean edit = root.entry.type.map() && !root.entry.type.subtype() && !root.entry.static_;
-			if(entry.type != EntryType.SEPARATE){
+			if(!entry.type.separate() && !entry.type.static_()){
 				add(new Icon(0, 20, 0, 525 + (entry.type.select() || edit ? 25 : 0), 10, "./resources/textures/icons/configeditor/remove.png", () -> {
 					if(root.entry.type.subs() && !root.entry.type.subtype()){
 						if(root.val.isMap()) root.val.asMap().rem(key.key);
@@ -82,7 +83,7 @@ public class EntryComponent extends Component {
 			if(edit){
 				add(new Icon(0, 20, 0, 525, 10, "./resources/textures/icons/configeditor/rename.png", () -> {
 					Dialog dialog = new Dialog("Enter new name.", 440, 110);
-					TextField field = new TextField(key.key, 10, 10, 420, 30, true);
+					TextField field = new TextField(key.key, 10, 10, 420, 30, false);
 					dialog.getContainer().add(field);
 					dialog.getContainer().add(new RunButton("dialog.button.confirm", 10, 50, 200, 30, () -> {
 						if(root.val.isMap() && root.entry.type.subs() && !root.entry.type.subtype()){
@@ -327,8 +328,10 @@ public class EntryComponent extends Component {
 					dialog.show(FMT.FRAME);
 					break;
 				}
+				case ENUM_SEPARATE:
 				case SEPARATE:{
-					new FVTMConfigEditor(editor.file, "modeldata");
+					editor.save();
+					new FVTMConfigEditor(editor, editor.file, entry.name, entry, val);
 					break;
 				}
 			}
@@ -385,31 +388,43 @@ public class EntryComponent extends Component {
 				val.value(bool);
 			}));
 		}
-		else if(entry.type == EntryType.ENUM){
+		else if(entry.type.enumerate()){
 			SelectBox<String> box = new SelectBox<>(220, 7, 300, 26);
 			box.setVisibleCount(8);
 			for(String en : entry.enums) box.addElement(en);
 			box.addSelectBoxChangeSelectionEventListener(lis -> {
 				fillIfMissing();
-				val.value(lis.getNewValue());
+				if(entry.type.separate() && val.isMap()){
+					val.asMap().add(entry.subs.get(0).name, lis.getNewValue());
+				}
+				else val.value(lis.getNewValue());
 			});
-			if(val != null) box.setSelected(val.string_value(), true);
-			add(box);
-		}
-		else if(entry.type == EntryType.SEPARATE){}
-		else{//text
-			add(input[0] = new TextInput(val == null ? entry.gendef().string_value() : val.string_value(), 220, 7, 300, 26));
-			input[0].addTextInputContentChangeEventListener(event -> {
-				if(notDefault(event, entry)){
-					Object o = get(event, entry.type);
-					if(root.val.isMap() && (o.equals("null") || o.equals("")) && entry.type == EntryType.TEXT){
-						root.val.asMap().rem(key.key);
-						return;
+			if(val != null){
+				if(entry.type.separate() && val.isMap()){
+					if(val.asMap().has(entry.subs.get(0).name)){
+						box.setSelected(val.asMap().get(entry.subs.get(0).name).string_value(), true);
 					}
 				}
-				fillIfMissing();
-				val.value(get(event, entry.type));
-			});
+				else box.setSelected(val.string_value(), true);
+			}
+			add(box);
+		}
+		else if(!entry.type.separate()){//text
+			add(input[0] = new TextInput(val == null ? entry.gendef().string_value() : val.string_value(), 220, 7, 300, 26));
+			if(!entry.type.static_()){
+				input[0].addTextInputContentChangeEventListener(event -> {
+					if(notDefault(event, entry)){
+						Object o = get(event, entry.type);
+						if(root.val.isMap() && (o.equals("null") || o.equals("")) && entry.type == EntryType.TEXT){
+							root.val.asMap().rem(key.key);
+							return;
+						}
+					}
+					fillIfMissing();
+					val.value(get(event, entry.type));
+				});
+			}
+			else input[0].setEditable(false);
 		}
 	}
 
