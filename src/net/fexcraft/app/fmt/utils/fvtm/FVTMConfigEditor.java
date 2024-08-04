@@ -150,10 +150,7 @@ public class FVTMConfigEditor extends Widget {
 				return null;
 			}
 			case "functions":{
-				switch(key){
-
-				}
-				return null;
+				return PartFunctionConfigReference.REFERENCES.get(key);
 			}
 			default: return null;
 		}
