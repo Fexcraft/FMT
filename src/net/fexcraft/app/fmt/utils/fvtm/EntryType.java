@@ -18,8 +18,10 @@ public enum EntryType {
     OBJECT_KEY_VAL,
     SEPARATE,
     ENUM,
+    ENUM_SEPARATE,
     VECTOR_MAP,
     VECTOR_ARRAY,
+    STATIC
 
     ;
 
@@ -94,7 +96,8 @@ public enum EntryType {
             case OBJECT_SUB: return "object";
             case ARRAY_SIMPLE: return "array_s";
             case OBJECT_KEY_VAL: return "object_kv";
-            case ENUM: return "enum";
+            case ENUM:
+            case ENUM_SEPARATE: return "enum";
             case VECTOR_ARRAY: return "array_s";
             case VECTOR_MAP: return "object_kv";
         }
@@ -102,7 +105,7 @@ public enum EntryType {
     }
 
     public boolean select(){
-        return this == PACKID || this == TEXLOC || this == MODELLOC || this.vector() || this == SEPARATE;
+        return this == PACKID || this == TEXLOC || this == MODELLOC || this.vector() || separate();
     }
 
 	public boolean map(){
@@ -115,6 +118,18 @@ public enum EntryType {
 
     public boolean array(){
         return is_arr;
+    }
+
+    public boolean separate(){
+        return this == SEPARATE || this == ENUM_SEPARATE;
+    }
+
+    public boolean enumerate(){
+        return this == ENUM || this == ENUM_SEPARATE;
+    }
+
+    public boolean static_(){
+        return this == STATIC;
     }
 
 }
