@@ -331,7 +331,7 @@ public class EntryComponent extends Component {
 				case ENUM_SEPARATE:
 				case SEPARATE:{
 					editor.save();
-					new FVTMConfigEditor(editor, editor.file, entry.name, entry, val);
+					new FVTMConfigEditor(editor, editor.file, root.entry.type.map() ? root.entry.name : entry.name, key.key, entry, val);
 					break;
 				}
 			}
@@ -395,13 +395,21 @@ public class EntryComponent extends Component {
 			box.addSelectBoxChangeSelectionEventListener(lis -> {
 				fillIfMissing();
 				if(entry.type.separate() && val.isMap()){
-					val.asMap().add(entry.subs.get(0).name, lis.getNewValue());
+					if(root.entry.type.map()){
+						val = root.val.asMap().rem(key.key);
+						root.val.asMap().add(lis.getNewValue(), val);
+						root.gensubs();
+					}
+					else val.asMap().add(entry.subs.get(0).name, lis.getNewValue());
 				}
 				else val.value(lis.getNewValue());
 			});
 			if(val != null){
 				if(entry.type.separate() && val.isMap()){
-					if(val.asMap().has(entry.subs.get(0).name)){
+					if(root.entry.type.map()){
+						box.setSelected(key.key, true);
+					}
+					else if(val.asMap().has(entry.subs.get(0).name)){
 						box.setSelected(val.asMap().get(entry.subs.get(0).name).string_value(), true);
 					}
 				}
@@ -523,10 +531,21 @@ public class EntryComponent extends Component {
 				else if(entry.type == EntryType.OBJECT_KEY_VAL){
 					fillIfMissing();
 					JsonMap map = val.asMap();
-					String nkey = "entry" + map.entries().size();
-					map.add(nkey, entry.subs.get(0).gendef());
-					addsub(new EntryComponent(editor, this, entry.subs.get(0), new SubKey(nkey), map.get(nkey)));
-					editor.resize();
+					String nkey = null;
+					if(entry.subs.get(0).type.separate()){
+						for(String str : entry.subs.get(0).enums){
+							if(!map.has(str)){
+								nkey = str;
+								break;
+							}
+						}
+					}
+					else nkey = "entry" + map.entries().size();
+					if(nkey != null){
+						map.add(nkey, new JsonMap());
+						addsub(new EntryComponent(editor, this, entry.subs.get(0), new SubKey(nkey), map.get(nkey)));
+						editor.resize();
+					}
 				}
 			}));
 		}
