@@ -9,10 +9,9 @@ import static net.fexcraft.app.fmt.utils.fvtm.EntryType.*;
 /**
  * @author Ferdinand Calo' (FEX___96)
  */
-public class ConsumableConfigReference implements Reference {
+public class ConsumableConfigReference extends ConfigReference {
 
 	public static ConsumableConfigReference INSTANCE = new ConsumableConfigReference();
-	private ArrayList entries = new ArrayList();
 
 	public ConsumableConfigReference(){
 		entries.add(of("Addon", PACKID).required());
@@ -31,11 +30,6 @@ public class ConsumableConfigReference implements Reference {
 		entries.add(of("WolfFood", BOOLEAN));
 		entries.add(of("Drinkable", BOOLEAN));
 		entries.add(of("AlwaysEdible", BOOLEAN));
-	}
-
-	@Override
-	public List<ConfigEntry> getEntries() {
-		return entries;
 	}
 
 }
