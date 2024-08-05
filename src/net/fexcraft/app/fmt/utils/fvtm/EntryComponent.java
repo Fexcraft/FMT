@@ -542,7 +542,7 @@ public class EntryComponent extends Component {
 					}
 					else nkey = "entry" + map.entries().size();
 					if(nkey != null){
-						map.add(nkey, new JsonMap());
+						map.add(nkey, entry.subs.isEmpty() || entry.subs.get(0).type.separate() ? new JsonMap() : entry.subs.get(0).gendef());
 						addsub(new EntryComponent(editor, this, entry.subs.get(0), new SubKey(nkey), map.get(nkey)));
 						editor.resize();
 					}
