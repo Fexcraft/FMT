@@ -12,12 +12,7 @@ import static net.fexcraft.app.fmt.utils.fvtm.EntryType.*;
  */
 public class ModelDataReference extends ConfigReference {
 
-	public static String[] vehtypes = new String[]{ "LAND", "WATER", "AIR", "RAIL", "HELI", "SPACE" };
-	public static String[] attrtypes = new String[]{ "float", "integer", "boolean", "tristate", "string", "vector" };
-	public static String[] spvars = new String[]{ "x", "y", "z", "yaw", "pitch", "roll" };
-	//
 	public static ModelDataReference INSTANCE = new ModelDataReference();
-	private ArrayList entries = new ArrayList();
 
 	public ModelDataReference(){
 		entries.add(of("Authors", ARRAY_SIMPLE).alt("Creators").add(TEXT_ENTRY));
@@ -29,6 +24,11 @@ public class ModelDataReference extends ConfigReference {
 		entries.add(of("Include", ARRAY_SIMPLE).add(TEXT_ENTRY));
 		entries.add(of("Pivots", ARRAY_SIMPLE).add(TEXT_ENTRY));
 		entries.add(of("Offset", ARRAY_SIMPLE).add(TEXT_ENTRY));
+		entries.add(of("FlipU", BOOLEAN).def(false));
+		entries.add(of("FlipV", BOOLEAN).def(false));
+		entries.add(of("FlipAxes", BOOLEAN).def(false));
+		entries.add(of("FlipFaces", BOOLEAN).def(false));
+		entries.add(of("SkipNormals", BOOLEAN).def(false));
 	}
 
 }
