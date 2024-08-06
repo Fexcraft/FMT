@@ -189,6 +189,7 @@ public class EntryComponent extends Component {
 						if(val.equals("select a pack")) return;
 						if(val.equals("(no model)")) val = "null";
 						input[0].getTextState().setText(val);
+						fillIfMissing();
 						this.val.value(val);
 						dialog.close();
 					});
