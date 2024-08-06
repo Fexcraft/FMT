@@ -213,6 +213,7 @@ public class EntryComponent extends Component {
 							if(!pack.id.equals(lis.getNewValue())) continue;
 							for(DirComponent com : pack.textures){
 								String path = com.file.getPath();
+								if(!path.contains("/textures")) continue;
 								String pid = path.substring(path.indexOf("/assets/") + 8, path.indexOf("/textures"));
 								path = path.substring(path.indexOf("/textures/") + 1);
 								texbox.addElement(pid + ":" + path);
