@@ -173,7 +173,11 @@ public class EntryComponent extends Component {
 						for(FvtmPack pack : WorkspaceViewer.viewer.rootfolders){
 							if(!pack.id.equals(lis.getNewValue())) continue;
 							for(DirComponent com : pack.models){
-								String path = com.file.getPath();
+								String path = com.file.getPath().replace("\\", "/");
+								if(!path.contains("/models")){
+									Logging.log("invalid model path: " + path);
+									continue;
+								}
 								String pid = path.substring(path.indexOf("/assets/") + 8, path.indexOf("/models"));
 								path = path.substring(path.indexOf("/models/") + 1);
 								modbox.addElement(pid + ":" + path);
@@ -213,8 +217,11 @@ public class EntryComponent extends Component {
 						for(FvtmPack pack : WorkspaceViewer.viewer.rootfolders){
 							if(!pack.id.equals(lis.getNewValue())) continue;
 							for(DirComponent com : pack.textures){
-								String path = com.file.getPath();
-								if(!path.contains("/textures")) continue;
+								String path = com.file.getPath().replace("\\", "/");
+								if(!path.contains("/textures")){
+									Logging.log("invalid texture path: " + path);
+									continue;
+								}
 								String pid = path.substring(path.indexOf("/assets/") + 8, path.indexOf("/textures"));
 								path = path.substring(path.indexOf("/textures/") + 1);
 								texbox.addElement(pid + ":" + path);
