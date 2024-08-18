@@ -17,21 +17,21 @@ public class Logging {
 	}
 	
 	public static void log(Object obj){
-		//LOGGER_MAIN.log(Level.INFO, obj);
-		System.out.println(obj);
+		LOGGER_MAIN.log(Level.INFO, obj);
+		//System.out.println(obj);
 	}
 	
 	public static void log(Iterable<?> it){
 		for(Object obj : it) log(obj);
 	}
-	
+
 	public static void log(Level lvl, Object... log){
 		for(Object obj : log) log(lvl, obj);
 	}
-	
+
 	public static void log(Level lvl, Object obj){
-		//LOGGER_MAIN.log(lvl, obj);
-		System.out.println(lvl + " | " + obj);
+		LOGGER_MAIN.log(lvl, obj);
+		//System.out.println(lvl + " | " + obj);
 	}
 	
 	public static void log(Throwable e){
@@ -40,7 +40,7 @@ public class Logging {
 	}
 	
 	public static void log(String errorinfo, Throwable e){
-		/*LOGGER_MAIN.log(Level.INFO, "ERROR: " + e.getLocalizedMessage());
+		LOGGER_MAIN.log(Level.INFO, "ERROR: " + e.getLocalizedMessage());
 		if(errorinfo != null) LOGGER_MAIN.log(Level.INFO, "INFO: " + errorinfo);
 		//LOGGER_MAIN.log(Level.INFO, "ERROR: " + e.getMessage());
 		for(StackTraceElement trace : e.getStackTrace()){
@@ -61,10 +61,10 @@ public class Logging {
 				StringSelection sel = new StringSelection(string);
 				cp.setContents(sel, sel);
 			}, str).setResizable(true);*/
-		/*}
+		}
 		catch(Exception ex){
 			ex.printStackTrace();
-		}*/
+		}
 		e.printStackTrace();
 	}
 	
