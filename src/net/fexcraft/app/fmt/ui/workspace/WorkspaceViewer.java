@@ -139,12 +139,12 @@ public class WorkspaceViewer extends Widget {
 				map.put("parts", new CheckBox("parts", 10, 30, 300, 20));
 				map.put("materials", new CheckBox("materials", 10, 50, 300, 20));
 				map.put("consumables", new CheckBox("consumables", 10, 70, 300, 20));
-				map.put("fuels", new CheckBox("fuels", 10, 70, 300, 20));
-				map.put("blocks", new CheckBox("blocks", 10, 90, 300, 20));
-				map.put("wires", new CheckBox("wires", 10, 110, 300, 20));
-				map.put("decos", new CheckBox("decos", 10, 130, 300, 20));
-				map.put("railgauges", new CheckBox("rail gauges", 10, 150, 300, 20));
-				map.put("clothes", new CheckBox("clothes", 10, 170, 300, 20));
+				map.put("fuels", new CheckBox("fuels", 10, 90, 300, 20));
+				map.put("blocks", new CheckBox("blocks", 10, 110, 300, 20));
+				map.put("wires", new CheckBox("wires", 10, 130, 300, 20));
+				map.put("decos", new CheckBox("decos", 10, 150, 300, 20));
+				map.put("railgauges", new CheckBox("rail gauges", 10, 170, 300, 20));
+				map.put("clothes", new CheckBox("clothes", 10, 190, 300, 20));
 				for(CheckBox box : map.values()){
 					box.getStyle().setPadding(0, 0, 0, 5);
 				}
