@@ -3,8 +3,6 @@ package net.fexcraft.app.fmt.ui.workspace;
 import com.google.common.io.Files;
 import com.spinyowl.legui.component.*;
 import com.spinyowl.legui.component.event.component.ChangeSizeEvent;
-import com.spinyowl.legui.style.Background;
-import com.spinyowl.legui.style.Style;
 import com.spinyowl.legui.style.border.SimpleLineBorder;
 import com.spinyowl.legui.style.color.ColorConstants;
 import net.fexcraft.app.fmt.FMT;
@@ -33,8 +31,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
-
-import static com.spinyowl.legui.style.color.ColorConstants.TRANSPARENT;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -133,7 +129,7 @@ public class WorkspaceViewer extends Widget {
 		}));
 		infopanel.getContainer().add(new RunButton("Generate Config/Asset Directories", 10, 50, ip_button_width, 30, () -> {
 			selectPackDialog(pack -> {
-				Dialog dialog = new Dialog("Please select Config Types.", 320, 250);
+				Dialog dialog = new Dialog("Please select Config Types.", 320, 270);
 				HashMap<String, CheckBox> map = new HashMap<>();
 				map.put("vehicles", new CheckBox("vehicles", 10, 10, 300, 20));
 				map.put("parts", new CheckBox("parts", 10, 30, 300, 20));
@@ -149,7 +145,7 @@ public class WorkspaceViewer extends Widget {
 					box.getStyle().setPadding(0, 0, 0, 5);
 				}
 				dialog.getContainer().addAll(map.values());
-				dialog.getContainer().add(new RunButton("dialog.button.confirm", 10, 200, 100, 20, () -> {
+				dialog.getContainer().add(new RunButton("dialog.button.confirm", 10, 220, 100, 20, () -> {
 					dialog.close();
 					File fl;
 					for(Map.Entry<String, CheckBox> entry : map.entrySet()){
@@ -345,6 +341,8 @@ public class WorkspaceViewer extends Widget {
 			@Override
 			public void run(){
 				Logging.log("Reloading Workspace");
+				refresh.setEnabled(false);
+				refresh.getTextState().setText("reloading...");
 				packspanel.getContainer().removeAll(rootfolders);
 				//infopanel.getContainer().clearChildComponents();
 				rootfolders.clear();
@@ -352,6 +350,8 @@ public class WorkspaceViewer extends Widget {
 				//addFolder(folder, null, 0);
 				resize();
 				packspanel.getVerticalScrollBar().setScrollStep(0f);
+				refresh.setEnabled(true);
+				refresh.getTextState().setText("Refresh");
 			}
 		}.start();
 	}
