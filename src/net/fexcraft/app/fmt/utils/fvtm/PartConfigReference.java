@@ -41,6 +41,7 @@ public class PartConfigReference extends ConfigReference {
 			of("pitch", DECIMAL).limit(1, 0)
 		));
 		entries.add(of("Disable3DItemModel", BOOLEAN).def(false));
+		entries.add(of("Events", ARRAY).add(TEXT_ENTRY));
 	}
 
 }
