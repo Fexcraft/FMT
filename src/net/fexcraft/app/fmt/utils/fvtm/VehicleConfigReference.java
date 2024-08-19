@@ -122,7 +122,21 @@ public class VehicleConfigReference extends ConfigReference {
 			of("point", TEXT).def("vehicle")
 			//of("mode", ENUM).enums("none", "set", "expand")
 		));
-
+		entries.add(of("Events", ARRAY).add(TEXT_ENTRY));
+		entries.add(of("DefaultSeats", OBJECT).add(
+			of("pos", VECTOR_ARRAY),
+			of("driver", BOOLEAN),
+			of("min_yaw", DECIMAL).limit(-90f, -180, 180),
+			of("max_yaw", DECIMAL).limit(90f, -180, 180),
+			of("min_pitch", DECIMAL).limit(-80f, -180, 180),
+			of("max_pitch", DECIMAL).limit(80f, -180, 180),
+			of("def_yaw", DECIMAL).limit(0f, -180, 180),
+			of("def_pitch", DECIMAL).limit(0f, -180, 180),
+			of("sitting", BOOLEAN).def(true),
+			of("swivel_point", TEXT).def("vehicle"),
+			of("scale", DECIMAL).limit(1f, 0.06725f, 128f),
+			of("filter", ARRAY_SIMPLE).add(TEXT_ENTRY)
+		));
 	}
 
 	public static void addAttrsEntry(ArrayList entries){
