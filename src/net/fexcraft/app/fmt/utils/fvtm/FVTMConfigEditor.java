@@ -131,7 +131,7 @@ public class FVTMConfigEditor extends Widget {
 			case "wiredeco":
 				return null;
 			case "deco":
-				return null;
+				return DecorationConfigReference.INSTANCE;
 			case "railgauge":
 				return null;
 			case "cloth":
