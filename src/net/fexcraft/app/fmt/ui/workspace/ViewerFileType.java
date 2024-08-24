@@ -85,8 +85,12 @@ public enum ViewerFileType {
 						return parentOrGrandEquals(file, "parts") ? new Object[]{ FVTM_CONFIG, FvtmType.PART } : JSON;
 					case "gauge":
 						return parentOrGrandEquals(file, "railgauges") ? new Object[]{ FVTM_CONFIG, FvtmType.RAILGAUGE } : JSON;
+					case "deco":
+						return parentOrGrandEquals(file, "decos") ? new Object[]{ FVTM_CONFIG, FvtmType.DECORATION } : JSON;
 					case "wire":
 						return parentOrGrandEquals(file, "wires") ? new Object[]{ FVTM_CONFIG, FvtmType.WIRE } : JSON;
+					case "wiredeco":
+						return parentOrGrandEquals(file, "wires") ? new Object[]{ FVTM_CONFIG, FvtmType.WIRE_DECO } : JSON;
 					case "consumable":
 						return parentOrGrandEquals(file, "consumables") ? new Object[]{ FVTM_CONFIG, FvtmType.CONSUMABLE } : JSON;
 					case "fuel":
