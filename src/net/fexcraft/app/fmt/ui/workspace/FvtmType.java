@@ -10,8 +10,10 @@ public enum FvtmType {
 	MULTIBLOCK,
 	CONTAINER,
 	RAILGAUGE,
+	DECORATION,
 	CLOTH,
 	FUEL,
-	WIRE
+	WIRE,
+	WIRE_DECO
 
 }
