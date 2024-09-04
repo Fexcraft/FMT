@@ -73,6 +73,7 @@ public class Model {
 	public Matrix4f matrix;
 	public Vector3f pos = new Vector3f();
 	public Vector3f rot = new Vector3f();
+	public Vector3f scl = new Vector3f(1, 1, 1);
 	public TextureGroup texgroup = null;
 	public Pivot sel_pivot = null;
 	public String texhelper;
