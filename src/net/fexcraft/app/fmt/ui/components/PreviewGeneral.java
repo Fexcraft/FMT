@@ -25,6 +25,7 @@ public class PreviewGeneral extends EditorComponent {
 	protected NumberField pos16x, pos16y, pos16z;
 	protected NumberField posx, posy, posz;
 	protected NumberField rotx, roty, rotz;
+	protected NumberField sclx, scly, sclz;
 	private TextField name;
 
 	public PreviewGeneral(){
@@ -80,6 +81,22 @@ public class PreviewGeneral extends EditorComponent {
 			PreviewHandler.SELECTED.rot.z = cons.value();
 			updateFields();
 		}));
+		add(new Label(translate(LANG_PREFIX + genid + ".scale"), L5, row(1), LW, HEIGHT));
+		add(sclx = new NumberField(this, F30, row(1), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, cons -> {
+			if(PreviewHandler.SELECTED == null) return;
+			PreviewHandler.SELECTED.scl.x = cons.value();
+			updateFields();
+		}));
+		add(scly = new NumberField(this, F31, row(0), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, cons -> {
+			if(PreviewHandler.SELECTED == null) return;
+			PreviewHandler.SELECTED.scl.y = cons.value();
+			updateFields();
+		}));
+		add(sclz = new NumberField(this, F32, row(0), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, cons -> {
+			if(PreviewHandler.SELECTED == null) return;
+			PreviewHandler.SELECTED.scl.z = cons.value();
+			updateFields();
+		}));
 		updcom.add(HelperSelected.class, e -> updateFields());
 	}
 
@@ -96,6 +113,9 @@ public class PreviewGeneral extends EditorComponent {
 			rotx.apply(0);
 			roty.apply(0);
 			rotz.apply(0);
+			sclx.apply(0);
+			scly.apply(0);
+			sclz.apply(0);
 		}
 		else{
 			name.getTextState().setText(model.name.substring(model.name.indexOf("/") + 1));
@@ -108,6 +128,9 @@ public class PreviewGeneral extends EditorComponent {
 			rotx.apply(model.rot.x);
 			roty.apply(model.rot.y);
 			rotz.apply(model.rot.z);
+			sclx.apply(model.scl.x);
+			scly.apply(model.scl.y);
+			sclz.apply(model.scl.z);
 		}
 		UpdateHandler.update(new HelperChanged(model));
 	}
