@@ -50,7 +50,7 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 			if(ImageHandler.ROT != null) matrix.rotate(ImageHandler.ROT, GIF_AXIS);
 		}
 		else if(HELPER != null){
-			matrix = HELPER.matrix.get(new Matrix4f());
+			matrix = HELPER.matrix.get(new Matrix4f()).scale(HELPER.scl.x, HELPER.scl.y, HELPER.scl.z);
 		}
 		else{
 			matrix = PIVOT.matrix.get(new Matrix4f());
