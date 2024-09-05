@@ -20,7 +20,10 @@ public class EditorComponent extends Component {
 	public static final float F30 = 7.5f, F31 = 105f, F32 = 202.5f, F3S = 90;
 	public static final float F40 = 8f, F41 = 79f, F42 = 150f, F43 = 221, F4S = 65;
 	public static final float F60 = 6, F61 = 55, F62 = 104, F63 = 153, F64 = 202, F65 = 251, F6S = 43;
-	public static final float L5 = 5f, LW = Editor.CWIDTH - (L5 * 2);
+	public static final float L5 = 5f;
+	public static final float LW = Editor.CWIDTH - (L5 * 2);
+	public static final float LWI = LW - 20;
+	public static final float LPI = Editor.CWIDTH - 24;
 	public static final int HEIGHT = 24;
 	//
 	public static final HashMap<Integer, EditorComponent> COMPONENTS = new HashMap<>();
