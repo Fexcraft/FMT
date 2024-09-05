@@ -17,7 +17,7 @@ public class Marker extends Polygon {
 
 	private ModelMark model = new ModelMark();
 	public static float size = 0.5f, hs = 0.25f;
-	public int angle = -90;
+	public int angle = FMT.MODEL.orient.rect() ? 0 : -90;
 	public boolean biped, detached;
 	public float biped_scale = 1, scale = 1;
 	public RGB rgb = RGB.WHITE.copy();
