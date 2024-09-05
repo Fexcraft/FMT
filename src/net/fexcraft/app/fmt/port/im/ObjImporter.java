@@ -28,7 +28,7 @@ public class ObjImporter implements Importer {
 	public String _import(Model model, File file){
 		try{
 			ObjModel omodel = new ObjParser(new FileInputStream(file)).readComments(false).readModel(true).parse();
-			ArrayList<String> list = new ArrayList<>(omodel.polygons.keySet());
+			//ArrayList<String> list = new ArrayList<>(omodel.polygons.keySet());
 			for(Entry<String, ArrayList<TexturedPolygon>> entry : omodel.polygons.entrySet()){
 				model.add(null, entry.getKey(), new ObjView(model, entry.getValue()));
 			}
