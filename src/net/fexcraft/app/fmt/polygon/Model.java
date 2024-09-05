@@ -476,7 +476,7 @@ public class Model {
 		}
 		Clipboard cp = Toolkit.getDefaultToolkit().getSystemClipboard();
 		StringSelection sel = new StringSelection(map.toString());
-		cp.setContents(sel, sel);
+		cp.setContents(sel, new StringSelection("fmt_poly"));
 	}
 
 	public void pasteFromClipboard(){
@@ -487,7 +487,7 @@ public class Model {
 			String str = data.getTransferData(DataFlavor.stringFlavor).toString();
 			if(!str.startsWith("{")) return;
 			JsonMap map = JsonHandler.parse(str, true).asMap();
-			if(!map.has("origin") && !map.get("origin").string_value().contains("fmt")) return;
+			if(map.has("origin") && !map.get("origin").string_value().contains("fmt")) return;
 			if(!map.has("type") || !map.has("model")) return;
 			int format = map.getInteger("format", SaveHandler.FORMAT);
 			this.clear_selection();
