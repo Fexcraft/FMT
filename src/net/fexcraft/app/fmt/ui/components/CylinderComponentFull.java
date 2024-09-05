@@ -14,7 +14,7 @@ import net.fexcraft.app.fmt.ui.fields.NumberField;
 public class CylinderComponentFull extends EditorComponent {
 	
 	public CylinderComponentFull(){
-		super("polygon.cylinder.all", 380, false, true);
+		super("polygon.cylinder.all", 430, false, true);
 		String id = "polygon.cylinder";
 		this.add(new Label(translate(LANG_PREFIX + id + ".radius"), F20, row(1), LW, HEIGHT));
 		this.add(new Label(translate(LANG_PREFIX + id + ".radius2"), F21, row(0), LW, HEIGHT));
