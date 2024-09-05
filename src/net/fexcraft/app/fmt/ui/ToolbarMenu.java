@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
+import net.fexcraft.app.fmt.utils.Logging;
 import org.joml.Vector2f;
 import com.spinyowl.legui.component.Component;
 import com.spinyowl.legui.component.Label;
@@ -22,12 +23,13 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.Translator;
+import org.joml.Vector4f;
 
 public class ToolbarMenu extends Panel {
 	
 	public static final ArrayList<MenuLayer> ACTIVE = new ArrayList<>();
 	public static final HashMap<String, ToolbarMenu> MENUS = new HashMap<>();
-	public static final int WIDTH = 120, HEIGHT = 30;
+	public static final int WIDTH = 140, HEIGHT = 30;
 	protected ArrayList<Component> components = new ArrayList<>();
 	public MenuLayer layer;
 	private Label label;
@@ -80,6 +82,7 @@ public class ToolbarMenu extends Panel {
 		private boolean shown;
 		private Vector2f pos;
 		private String root;
+		private float width;
 
         public MenuLayer(ToolbarMenu menu, Vector2f pos, Collection<Component> comps, String rootid){
     		Settings.applyBorderless(this);
@@ -92,12 +95,22 @@ public class ToolbarMenu extends Panel {
             root = rootid;
     		barmenu = menu;
             this.pos = pos;
+			width = WIDTH;
             refreshSize();
             this.setPosition(pos.add(0, HEIGHT, new Vector2f()));
         	for(Component com : components){
         		regComponent(com);
         	}
         }
+
+		public MenuLayer expand(float nwidth){
+			width += nwidth;
+			for(Component com : components){
+				if(com instanceof MenuButton) ((MenuButton)com).expand(nwidth);
+			}
+			refreshSize();
+			return this;
+		}
 
 		protected void regComponent(Component com){
         	/*CursorEnterEventListener listener = lis -> {
@@ -113,7 +126,7 @@ public class ToolbarMenu extends Panel {
 		}
 
 		protected void refreshSize(){
-			this.setSize(WIDTH + (root == null ? 0 : 1), components.size() * (HEIGHT + 1));
+			this.setSize(width + (root == null ? 0 : 1), components.size() * (HEIGHT + 1));
 		}
 
 		private boolean anyComponentHovered(Collection<Component> components){
@@ -177,7 +190,7 @@ public class ToolbarMenu extends Panel {
         
 	}
 	
-	public static class MenuButton extends Panel {
+	public static class MenuButton extends Component {
 		
 		protected Label label;
 		protected String key;
@@ -226,6 +239,11 @@ public class ToolbarMenu extends Panel {
 
 		public Label getLabel(){
 			return label;
+		}
+
+		public MenuButton expand(float val){
+			setSize(getSize().x + val, getSize().y);
+			return this;
 		}
 		
 	}
