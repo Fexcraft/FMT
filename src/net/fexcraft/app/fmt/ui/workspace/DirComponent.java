@@ -44,16 +44,18 @@ public class DirComponent extends Component {
 					}
 					else if(type.editable){
 						switch(type){
-							case FVTM_FILE:{
-								new JsonEditor(file);
-								break;
-							}
 							case FVTM_CONFIG:{
 								new FVTMConfigEditor(file, null);
 								break;
 							}
+							case FVTM_FILE:
 							case JSON:{
 								new JsonEditor(file);
+								break;
+							}
+							case TOML:
+							case OBJ:{
+								WorkspaceViewer.open(file);
 								break;
 							}
 							default:
