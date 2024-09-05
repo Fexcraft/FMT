@@ -142,6 +142,7 @@ public class Settings {
 	public static Setting<String> M20PATH;
 	public static Setting<String> M12RCMD;
 	public static Setting<String> M20RCMD;
+	public static Setting<String> TEXT_EDITOR;
 	//
 	public static Setting<String> SEL_THEME;
 	public static Setting<Boolean> DARKTHEME;
@@ -312,6 +313,12 @@ public class Settings {
 			}
 		};
 		M20RCMD = new Setting<>("m20run", "{JAVA} -jar client.jar", WORKSPACE, map){
+			@Override
+			public boolean basicstr(){
+				return false;
+			}
+		};
+		TEXT_EDITOR = new Setting<>("text_editor", "/usr/bin/mousepad %s", WORKSPACE, map){
 			@Override
 			public boolean basicstr(){
 				return false;
