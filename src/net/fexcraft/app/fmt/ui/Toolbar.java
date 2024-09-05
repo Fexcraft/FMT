@@ -54,11 +54,12 @@ public class Toolbar extends Panel {
 			}),
 			new MenuButton(3, "file.save", () -> SaveHandler.saveDialogByState(null)),
 			new MenuButton(4, "file.save_as", () -> SaveHandler.saveAsDialog(null)),
-			new MenuButton(5, "file.import", () -> ImportManager._import()),
-			new MenuButton(6, "file.export", () -> ExportManager.export()),
-			new MenuButton(7, "file.settings", () -> SettingsDialog.open()),
-			new MenuButton(8, "file.donate", () -> FMT.openLink("https://fexcraft.net/donate")),
-			new MenuButton(9, "file.exit", () -> FMT.close(0))
+			new MenuButton(5, "file.import", ImportManager::_import),
+			new MenuButton(6, "file.export", ExportManager::export),
+			new MenuButton(7, "file.settings", SettingsDialog::open),
+			new MenuButton(8, "workspace", WorkspaceViewer::show0),
+			new MenuButton(9, "file.donate", () -> FMT.openLink("https://fexcraft.net/donate")),
+			new MenuButton(10, "file.exit", () -> FMT.close(0))
 		));
 		this.add(new ToolbarMenu(1, "utils",
 			new MenuButton(0, "utils.copy_selected", () -> FMT.MODEL.copySelected()),
