@@ -21,7 +21,7 @@ toolbar.file.save_as=Save as..
 toolbar.file.import=Import <<
 toolbar.file.export=Export >>
 toolbar.file.settings=Settings
-toolbar.file.donate=Donate!
+toolbar.file.donate=Support FMT Dev!
 toolbar.file.exit=Exit
 ## Selection
 toolbar.selection=Selection
