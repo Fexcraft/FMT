@@ -16,7 +16,11 @@ public class PreviewHandler {
 	public static Model SELECTED = null;
 
 	public static Model loadFrame(File file){
-		// TODO Auto-generated method stub
+		Model model = new Model(null, "");
+		model.helper = true;
+		model.name = "frame/" + model.name;
+		//
+		add(model);
 		return null;
 	}
 
@@ -31,6 +35,9 @@ public class PreviewHandler {
 
 	public static Model load(File file, Importer porter, JsonMap map){
 		Model model = new Model(null, map.getString("name", file.getName()));
+		model.helper = true;
+		model.file = file;
+		if(!model.name.startsWith("import/")) model.name = "import/" + model.name;
 		porter._import(model, file);
 		add(model);
 		return model;
