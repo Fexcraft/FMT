@@ -32,7 +32,11 @@ public enum PolyVal {
 			this.val = val;
 			this.axe = axe;
 		}
-		
+
+		public static PolygonValue of(PolyVal val, ValAxe axe){
+			return new PolygonValue(val, axe);
+		}
+
 		@Override
 		public boolean equals(Object other){
 			if(other instanceof PolygonValue){
