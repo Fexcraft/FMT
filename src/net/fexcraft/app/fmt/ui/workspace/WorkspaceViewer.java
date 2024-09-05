@@ -328,6 +328,30 @@ public class WorkspaceViewer extends Widget {
 		}
 	}
 
+	public static void open(File file){
+		String cmd = Settings.TEXT_EDITOR.value.formatted(file.getPath());
+		try{
+			Process pr = Runtime.getRuntime().exec(cmd.split(" "), null, file.getParentFile());
+			new Thread(() -> {
+				Logging.log("Opening external editor for file: " + file);
+				BufferedReader input = new BufferedReader(new InputStreamReader(pr.getInputStream()));
+				String line = null;
+				try{
+					while((line = input.readLine()) != null) Logging.log(line);
+				}
+				catch(IOException e){
+					Logging.log(e);
+				}
+				Logging.log("=================");
+			}).start();
+		}
+		catch(IOException e){
+			Logging.log(e);
+			Logging.log("Opening external editor failed.");
+			Logging.log("=================");
+		}
+	}
+
 	public static void show0(){
 		if(viewer == null){
 			viewer = new WorkspaceViewer();
