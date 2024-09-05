@@ -13,9 +13,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
+import static net.fexcraft.app.fmt.ui.FileChooser.TYPE_JAVA;
+
 public class FVTM_OLD_Importer implements Importer {
 
-    public static FileChooser.FileType TYPE_OLD_JAVA = new FileChooser.FileType("Old FVTM Java Model", "*.*");
     private static final List<String> categories = Arrays.asList("model");
 
     @Override
@@ -30,7 +31,7 @@ public class FVTM_OLD_Importer implements Importer {
 
     @Override
     public FileChooser.FileType extensions() {
-        return TYPE_OLD_JAVA;
+        return TYPE_JAVA;
     }
 
     @Override
