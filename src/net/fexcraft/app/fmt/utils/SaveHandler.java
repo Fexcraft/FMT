@@ -126,7 +126,11 @@ public class SaveHandler {
 		model.texSizeX = map.get("texture_size_x", 256);
 		model.texSizeY = map.get("texture_size_y", 256);
 		model.opacity = map.get("opacity", 1f);
-		model.scale = new Vector3f(map.getFloat("scale", 1f));
+		if(map.has("scale") && map.get("scale").isArray()){
+			JsonArray arr = map.getArray("scale");
+			model.scl = new Vector3f(arr.get(0).float_value(), arr.get(1).float_value(), arr.get(2).float_value());
+		}
+		else model.scl = new Vector3f(map.getFloat("scale", 1));
 		model.orient = ModelOrientation.fromString(map.getString("orientation", null));
 		model.format = ModelFormat.fromString(map.getString("target_format", null));
 		if(map.has("creators")){
@@ -290,10 +294,10 @@ public class SaveHandler {
 						helper.rot.z = pos.get(2).float_value();
 					}
 					if(jsn.has("scale_x")){
-						helper.scale = new Vector3f(jsn.get("scale_x").float_value(), jsn.get("scale_y").float_value(), jsn.get("scale_z").float_value());
+						helper.scl = new Vector3f(jsn.get("scale_x").float_value(), jsn.get("scale_y").float_value(), jsn.get("scale_z").float_value());
 					}
 					else if(jsn.has("scale")){
-						helper.scale = new Vector3f(jsn.get("scale").float_value());
+						helper.scl = new Vector3f(jsn.get("scale").float_value());
 					}
 					if(jsn.has("invisible")){
 						ArrayList<String> list = jsn.getArray("invisible").toStringList();
@@ -407,7 +411,9 @@ public class SaveHandler {
 		map.add("orientation", model.orient.name().toLowerCase());
 		map.add("target_format", model.format.name().toLowerCase());
 		if(!export && model.opacity < 1f) map.add("opacity", model.opacity);
-		if(model.scale != null && model.scale.x != 1f) map.add("scale", model.scale.x);
+		if(model.scl.x != 1f || model.scl.y != 1f || model.scl.z != 1f){
+			map.add("scale", new JsonArray(model.scl.x, model.scl.y, model.scl.z));
+		}
 		JsonArray creators = new JsonArray();
 		if(model.getAuthors().isEmpty()){
 			//TODO add to creators if logged in
@@ -499,10 +505,10 @@ public class SaveHandler {
 					jsn.add("pos_y", premod.pos.y);
 					jsn.add("pos_z", premod.pos.z);
 				}
-				if(premod.scale != null){
-					jsn.add("scale_x", premod.scale.x);
-					jsn.add("scale_y", premod.scale.y);
-					jsn.add("scale_z", premod.scale.z);
+				if(premod.scl.x != 1f || premod.scl.y != 1f || premod.scl.z != 1f){
+					jsn.add("scale_x", premod.scl.x);
+					jsn.add("scale_y", premod.scl.y);
+					jsn.add("scale_z", premod.scl.z);
 				}
 				if(premod.opacity < 1f){
 					jsn.add("opacity", premod.opacity);
