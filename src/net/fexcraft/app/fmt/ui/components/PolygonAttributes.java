@@ -4,6 +4,7 @@ import static net.fexcraft.app.fmt.utils.Translator.translate;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.ui.EditorComponent;
+import net.fexcraft.app.fmt.ui.PosCopyIcon;
 import net.fexcraft.app.fmt.ui.fields.RunButton;
 import com.spinyowl.legui.component.Label;
 import com.spinyowl.legui.component.Panel;
@@ -32,11 +33,13 @@ public class PolygonAttributes extends EditorComponent {
 		super(genid, box ? 330 : 230, false, true);
 		if(box) addBoxSize();
 		//
-		add(new Label(translate(LANG_PREFIX + genid + ".pos"), L5, row(1), LW, HEIGHT));
+		add(new Label(translate(LANG_PREFIX + genid + ".pos"), L5, row(1), LWI, HEIGHT));
+		add(new PosCopyIcon(LPI, row(0) + 4, PolyVal.POS));
 		add(new NumberField(this, F30, row(1), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.POS, ValAxe.X)));
 		add(new NumberField(this, F31, row(0), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.POS, ValAxe.Y)));
 		add(new NumberField(this, F32, row(0), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.POS, ValAxe.Z)));
-		add(new Label(translate(LANG_PREFIX + genid + ".off"), L5, row(1), LW, HEIGHT));
+		add(new Label(translate(LANG_PREFIX + genid + ".off"), L5, row(1), LWI, HEIGHT));
+		add(new PosCopyIcon(LPI, row(0) + 4, PolyVal.OFF));
 		add(new NumberField(this, F30, row(1), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.OFF, ValAxe.X)));
 		add(new NumberField(this, F31, row(0), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.OFF, ValAxe.Y)));
 		add(new NumberField(this, F32, row(0), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.OFF, ValAxe.Z)));
