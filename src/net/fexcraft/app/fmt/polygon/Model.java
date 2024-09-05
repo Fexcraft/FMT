@@ -82,7 +82,6 @@ public class Model {
 	public boolean helper;
 	public boolean subhelper;
 	public float opacity = 1f;
-	public Vector3f scale;
 	public String name;
 	public UUID uuid;
 	public File file;
@@ -215,7 +214,7 @@ public class Model {
 			if(group == null) addGroup(pid, group = new Group(this, gid, pid));
 		}
 		group.add(poly);
-		if(Settings.SELECT_NEW.value) select(poly);
+		if(!helper && Settings.SELECT_NEW.value) select(poly);
 	}
 
 	public Group get(String string){
@@ -401,7 +400,7 @@ public class Model {
 			selected.addAll(group);
 			group.selected = true;
 		}
-		update(new GroupSelected(group, old, selected.size()));
+		if(!helper) update(new GroupSelected(group, old, selected.size()));
 	}
 
 	public void delsel(){
