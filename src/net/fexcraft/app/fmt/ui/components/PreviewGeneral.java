@@ -7,8 +7,10 @@ import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.polygon.Pivot;
 import net.fexcraft.app.fmt.ui.EditorComponent;
+import net.fexcraft.app.fmt.ui.PosCopyIcon;
 import net.fexcraft.app.fmt.ui.fields.NumberField;
 import net.fexcraft.app.fmt.ui.fields.TextField;
+import net.fexcraft.app.fmt.update.PolyVal;
 import net.fexcraft.app.fmt.update.UpdateEvent.*;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.utils.PreviewHandler;
@@ -33,7 +35,8 @@ public class PreviewGeneral extends EditorComponent {
 		this.add(new Label(translate(LANG_PREFIX + genid + ".name/id"), L5, row(1), LW, HEIGHT));
 		this.add(name = new TextField(NOHELPERSEL, L5, row(1), LW, HEIGHT, false).accept(con -> rename(con)));
 		//
-		add(new Label(translate(LANG_PREFIX + genid + ".pos16"), L5, row(1), LW, HEIGHT));
+		add(new Label(translate(LANG_PREFIX + genid + ".pos16"), L5, row(1), LWI, HEIGHT));
+		add(new PosCopyIcon(LPI, row(0) + 4, () -> new float[]{ pos16x.value() * .0625f, pos16y.value() * .0625f, pos16z.value() * .0625f }));
 		add(pos16x = new NumberField(this, F30, row(1), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, cons -> {
 			if(PreviewHandler.SELECTED == null) return;
 			PreviewHandler.SELECTED.pos.x = cons.value();
@@ -49,7 +52,8 @@ public class PreviewGeneral extends EditorComponent {
 			PreviewHandler.SELECTED.pos.z = cons.value();
 			updateFields();
 		}));
-		add(new Label(translate(LANG_PREFIX + genid + ".pos"), L5, row(1), LW, HEIGHT));
+		add(new Label(translate(LANG_PREFIX + genid + ".pos"), L5, row(1), LWI, HEIGHT));
+		add(new PosCopyIcon(LPI, row(0) + 4, () -> new float[]{ posx.value() * .0625f, posy.value() * .0625f, posz.value() * .0625f }));
 		add(posx = new NumberField(this, F30, row(1), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, cons -> {
 			if(PreviewHandler.SELECTED == null) return;
 			PreviewHandler.SELECTED.pos.x = cons.value() * 16;
@@ -81,7 +85,8 @@ public class PreviewGeneral extends EditorComponent {
 			PreviewHandler.SELECTED.rot.z = cons.value();
 			updateFields();
 		}));
-		add(new Label(translate(LANG_PREFIX + genid + ".scale"), L5, row(1), LW, HEIGHT));
+		add(new Label(translate(LANG_PREFIX + genid + ".scale"), L5, row(1), LWI, HEIGHT));
+		add(new PosCopyIcon(LPI, row(0) + 4, () -> new float[]{ sclx.value() * .0625f, scly.value() * .0625f, sclz.value() * .0625f }));
 		add(sclx = new NumberField(this, F30, row(1), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, cons -> {
 			if(PreviewHandler.SELECTED == null) return;
 			PreviewHandler.SELECTED.scl.x = cons.value();
