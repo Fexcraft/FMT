@@ -17,8 +17,8 @@ public enum ViewerFileType {
 	JSON(false, true),
 	TOML(false, true),
 	FMF(false, false),
-	OBJ(false, false),
-	PNG(false, false),
+	OBJ(false, true),
+	PNG(false, true),
 	;
 
 	public final boolean editable, directory;
