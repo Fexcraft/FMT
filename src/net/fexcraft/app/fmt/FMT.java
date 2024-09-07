@@ -144,6 +144,7 @@ public class FMT {
 	    //
 		Settings.load();
 		Settings.apply(INSTANCE);
+		//Converter.run();
 		//SCRIPT = new Script(new FileInputStream("./scripts/test.script"), "test");
 		//Logging.log(SCRIPT.print());
 		//net.fexcraft.lib.scr.Script scr = ScriptParser.parse("test", new FileInputStream("./scripts/test.script"));
