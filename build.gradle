@@ -130,7 +130,7 @@ sourceSets {
         java {
             srcDirs "src"
             srcDirs "../Json/src"
-            srcDirs "../FCLN/src"
+            srcDirs "../FCL/common/src"
         }
         resources {
             srcDirs 'resources'
