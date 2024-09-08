@@ -1,4 +1,4 @@
-package net.fexcraft.app.fmt;
+package net.fexcraft.app.fmt.utils.fvtm;
 
 import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.json.JsonArray;
@@ -11,6 +11,9 @@ import java.util.Map;
 
 import static net.fexcraft.lib.common.Static.sixteenth;
 
+/**
+ * @author Ferdinand Calo' (FEX___96)
+ */
 public class Converter {
 
 	private static final File ROOT = new File(".");
@@ -132,6 +135,7 @@ public class Converter {
 			if(map.has("LiftingPoints")){
 				JsonMap poi = map.getMap("LiftingPoints");
 				for(Map.Entry<String, JsonValue<?>> po : poi.entries()){
+					if(!po.getValue().isArray()) continue;
 					JsonArray pe = po.getValue().asArray();
 					float x = pe.get(0).float_value();
 					float y = pe.get(1).float_value();
