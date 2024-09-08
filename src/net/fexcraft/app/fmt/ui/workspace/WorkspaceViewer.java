@@ -21,10 +21,7 @@ import org.lwjgl.opengl.GL11;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
@@ -103,24 +100,55 @@ public class WorkspaceViewer extends Widget {
 		infopanel.getContainer().add(new RunButton("Create a new Pack", 10, 10, ip_button_width, 30, () -> {
 			Dialog dialog = new Dialog("Pack Creation Settings", 420, 190);
 			dialog.getContainer().add(new Label("Pack Name:", 10, 10, 400, 30));
-			TextField name = new TextField("pack name", 10, 40, 400, 30);
+			TextField name = new TextField("pack_name", 10, 40, 400, 30);
 			dialog.getContainer().add(name);
 			dialog.getContainer().add(new Label("Pack ID:", 10, 70, 400, 30));
 			TextField pid = new TextField("pack_id", 10, 100, 400, 30);
 			dialog.getContainer().add(pid);
 			dialog.getContainer().add(new RunButton("dialog.button.confirm", 310, 140, 100, 20, () -> {
 				File folder = new File(Settings.WORKSPACE_ROOT.value);
-				File pkfd = new File(folder, name.getTextState().getText() + "/assets/" + pid.getTextState().getText() + "/");
+				String nam = name.getTextState().getText().replace(" ", "");
+				File pr = new File(folder, nam + "/");
+				File pkfd = new File(pr, "/assets/" + pid.getTextState().getText() + "/");
 				pkfd.mkdirs();
+				//
 				JsonMap map = new JsonMap();
 				map.add("ID", pid.getTextState().getText());
-				map.add("Name", name.getTextState().getText());
+				map.add("Name", nam);
 				map.add("Version", "1.0.0");
 				map.add("License", "All Rights Reserved");
 				map.add("Dependencies", new JsonArray("gep"));
 				map.add("Authors", SessionHandler.isLoggedIn() ? new JsonArray(SessionHandler.getUserName()) : new JsonArray());
 				map.add("#info", "File generated via FMT.");
 				JsonHandler.print(new File(pkfd, "addonpack.fvtm"), map, JsonHandler.PrintOption.DEFAULT);
+				//
+				map = new JsonMap();
+				map.add("pack", new JsonMap("description", "Pack Resources", "pack_format", 3));
+				JsonHandler.print(new File(pr, "/pack.mcmeta"), map, JsonHandler.PrintOption.DEFAULT);
+				//
+				try{
+					File fl = new File(pr, "/META-INF/mods.toml");
+					fl.getParentFile().mkdirs();
+					FileWriter writer = new FileWriter(fl);
+					writer.write("modLoader=\"javafml\"\n");
+					writer.write("loaderVersion=\"[47,)\"\n");
+					writer.write("license=\"All Rights Reserved\"\n");
+					writer.write("issueTrackerURL=\"https://enter.your.url/here\"\n");
+					writer.write("[[mods]]\n");
+					writer.write("modId=\"fvtm\"\n");
+					writer.write("version=\"1.0.0\"\n");
+					writer.write("displayName=\"" + nam + "\"\n");
+					writer.write("displayURL=\"https://fexcraft.net/wiki/mod/fvtm\"\n");
+					writer.write("credits=\"Generated using FMT\" #optional\n");
+					writer.write("authors=\"YourNameHere\"\n");
+					writer.write("displayTest=\"IGNORE_ALL_VERSION\"\n\n");
+					writer.write("description='''A pack for FVTM'''\n");
+					writer.flush();
+					writer.close();
+				}
+				catch(IOException e){
+					e.printStackTrace();
+				}
 				dialog.close();
 				genView();
 			}));
