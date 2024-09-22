@@ -182,6 +182,11 @@ public class FVTMConfigEditor extends Widget {
 			if(com instanceof EntryComponent == false) continue;
 			height_ += ((EntryComponent)com).gen(0);
 		}
+		height_ = 0;
+		for(Component com : panel.getContainer().getChildComponents()){
+			if(com instanceof EntryComponent == false) continue;
+			height_ += ((EntryComponent)com).fullheight();
+		}
 		panel.getContainer().setSize(pwidth, height_);
 
 	}
