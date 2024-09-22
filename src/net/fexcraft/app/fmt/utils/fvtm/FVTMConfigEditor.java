@@ -99,7 +99,7 @@ public class FVTMConfigEditor extends Widget {
 				}
 			}
 			if(!solved){
-				if(!rmap.has(type)) rmap.addMap(type);
+				if(!rmap.has(type) || !rmap.get(type).isMap()) rmap.addMap(type);
 				map = rmap.getMap(type);
 			}
 		}
