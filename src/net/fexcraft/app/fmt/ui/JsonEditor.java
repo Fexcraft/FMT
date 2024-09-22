@@ -75,6 +75,10 @@ public class JsonEditor extends Widget {
         panel.getContainer().getChildComponents().forEach(com -> {
             if(com instanceof Resizeable) height += ((Resizeable)com).resize(0);
         });
+        height = 0;
+        panel.getContainer().getChildComponents().forEach(com -> {
+            if(com instanceof Resizeable) height += ((Resizeable)com).fullheight();
+        });
         panel.getContainer().setSize(width, height < panel.getSize().y - 10 ? panel.getSize().y - 10 : height);
     }
 
@@ -136,6 +140,19 @@ public class JsonEditor extends Widget {
             setSize(width - getPosition().x, h);
             return h;
         }
+
+        @Override
+        public int fullheight(){
+            int h = 30;
+            boolean c = false;
+            for(Component com : getChildComponents()){
+                if(com instanceof Resizeable){
+                    h += ((Resizeable)com).fullheight();
+                    c = true;
+                }
+            }
+            return h + (c ? 5 : 0);
+        }
     }
 
     public static class JArrCom extends Component implements Resizeable {
@@ -194,6 +211,19 @@ public class JsonEditor extends Widget {
             return h;
         }
 
+        @Override
+        public int fullheight(){
+            int h = 30;
+            boolean c = false;
+            for(Component com : getChildComponents()){
+                if(com instanceof Resizeable){
+                    h += ((Resizeable)com).fullheight();
+                    c = true;
+                }
+            }
+            return h + (c ? 5 : 0);
+        }
+
     }
 
     public static class JElmCom extends Component implements Resizeable {
@@ -239,11 +269,18 @@ public class JsonEditor extends Widget {
             return 30;
         }
 
+        @Override
+        public int fullheight(){
+            return 30;
+        }
+
     }
 
     private static interface Resizeable {
 
         public int resize(int ph);
+
+        public int fullheight();
 
     }
 
