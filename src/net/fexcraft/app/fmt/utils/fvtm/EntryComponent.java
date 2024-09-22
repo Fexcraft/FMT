@@ -612,4 +612,11 @@ public class EntryComponent extends Component {
 		setSize(FVTMConfigEditor.pwidth, h);
 		return h;
 	}
+
+	public int fullheight(){
+		int h = 40;
+		for(EntryComponent sub : coms) h += sub.fullheight();
+		return h;
+	}
+
 }
