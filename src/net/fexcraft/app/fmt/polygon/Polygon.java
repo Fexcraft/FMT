@@ -248,9 +248,10 @@ public abstract class Polygon implements ScrElm {
 		}
 		getGenerator().make();
 		int idx = 0;
+		int total = 0;
 		for(net.fexcraft.lib.frl.Polygon poly : glm.polygons){
 			for(Vertex vertex : poly.vertices){
-				if(vertices.contains(vertex)) continue;
+				total += poly.vertices.length;
 				if(vertices.size() <= idx) vertices.add(new VertexOffset(vertex));
 				else vertices.get(idx).set(vertex);
 				vertices.get(idx).color = new RGB(vertIdx).toFloatArray();
@@ -258,7 +259,8 @@ public abstract class Polygon implements ScrElm {
 				idx++;
 			}
 		}
-		for(VertexOffset off : vertices) off.apply(this) ;
+		while(vertices.size() > total) vertices.remove(vertices.size() - 1);
+		for(VertexOffset off : vertices) off.apply(this);
 	}
 
 	protected abstract Generator<GLObject> getGenerator();
