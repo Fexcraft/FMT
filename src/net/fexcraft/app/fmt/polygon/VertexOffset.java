@@ -30,6 +30,7 @@ public class VertexOffset {
 	}
 
 	public void apply(Polygon polygon){
+		if(vertex == null) return;
 		vertex.vector = org.add(off.x, off.y, off.z);
 		float su = polygon.glm.glObj.grouptex ? polygon.group().texSizeX : polygon.model().texSizeX;
 		float sv = polygon.glm.glObj.grouptex ? polygon.group().texSizeY : polygon.model().texSizeY;
