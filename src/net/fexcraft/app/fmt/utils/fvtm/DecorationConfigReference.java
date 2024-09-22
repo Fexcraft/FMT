@@ -20,6 +20,7 @@ public class DecorationConfigReference extends ConfigReference {
 		entries.add(of("Model", MODELLOC));
 		entries.add(of("ModelData", SEPARATE));
 		entries.add(of("Textures", ARRAY_SIMPLE).add(of(TEXLOC)).alt("Texture"));
+		entries.add(of("RandomTexture", BOOLEAN));
 		entries.add(of("ColorChannels", OBJECT_KEY_VAL).add(of(COLOR).def("#fdfdfd", true)));
 		entries.add(of("ItemTexture", TEXLOC));
 		entries.add(of("Disable3DItemModel", BOOLEAN).def(false));
