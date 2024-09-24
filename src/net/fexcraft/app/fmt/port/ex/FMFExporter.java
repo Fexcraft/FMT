@@ -108,7 +108,7 @@ public class FMFExporter implements Exporter {
 				for(Polygon polygon : group){
 					if(!valid(polygon.getShape())) continue;
 					boolean isbox = polygon instanceof Box;
-					boolean o = flip || (!isbox && !polygon.getShape().isCylinder());
+					boolean o = flip || (!isbox);// && !polygon.getShape().isCylinder());
 					stream.write(o ? 3 : isbox ? 1 : 2);
 					if(polygon.name(true) != null){
 						write(stream, PM, polygon.name());
@@ -153,7 +153,7 @@ public class FMFExporter implements Exporter {
 								}
 							}
 						}
-						else if(polygon.getShape().isCylinder()){
+						/*else if(polygon.getShape().isCylinder()){
 							Cylinder cyl = (Cylinder)polygon;
 							if(cyl.radius > 0 || cyl.radius2 > 0 || cyl.length > 0){
 								writeFloats(stream, PCRL, cyl.radius, cyl.radius2, cyl.length);
@@ -182,7 +182,7 @@ public class FMFExporter implements Exporter {
 							if(cyl.seg_off != 0f){
 								writeFloats(stream, PCSO, cyl.seg_off);
 							}
-						}
+						}*/
 					}
 					if(o){
 						Polyhedron<GLObject> poly = polygon.glm;
