@@ -10,13 +10,11 @@ import static org.lwjgl.glfw.GLFW.glfwGetVideoMode;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowMonitor;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
-import net.fexcraft.app.fmt.launch.Catalog;
+import net.fexcraft.app.fmt.updater.Catalog;
 import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.port.im.ImportManager;
 import net.fexcraft.app.fmt.ui.editors.*;
@@ -44,7 +42,6 @@ import org.lwjgl.system.MemoryUtil;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.port.ex.ExportManager;
 import net.fexcraft.app.fmt.ui.Editor;
-import net.fexcraft.app.fmt.ui.components.*;
 import net.fexcraft.app.fmt.ui.fields.NumberField;
 import net.fexcraft.app.fmt.ui.trees.PolygonTree;
 import net.fexcraft.app.fmt.ui.trees.TextureTree;
