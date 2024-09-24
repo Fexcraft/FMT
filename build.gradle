@@ -150,7 +150,7 @@ tasks.register('mainJar', Jar) {
                 "Class-Path": ". " + (configurations.runtimeClasspath.collect { "lib/" + it.getName() }.join(' '))
     }
     from(sourceSets.main.output){
-        exclude 'net/fexcraft/app/fmt/launch/'
+        exclude 'net/fexcraft/app/fmt/updater/'
         include 'net/fexcraft/app/fmt/'
         include 'net/fexcraft/app/json/'
         include 'net/fexcraft/lib/'
@@ -190,16 +190,16 @@ tasks.register('fullJar', Jar) {
 
 tasks.register('launcherJar', Jar) {
     manifest {
-        attributes 'Title': "Fex's Modelling Toolbox Launcher/Updater",
+        attributes 'Title': "Fex's Modelling Toolbox Updater",
                 'Version': version,
-                'Main-Class': 'net.fexcraft.app.fmt.launch.Launcher',
+                'Main-Class': 'net.fexcraft.app.fmt.updater.Updater',
                 'Created-By': "Ferdinand Calo' (FEX___96)"
     }
     from(sourceSets.main.output) {
-        include 'net/fexcraft/app/fmt/launch/'
+        include 'net/fexcraft/app/fmt/updater/'
         include 'net/fexcraft/app/json/'
     }
-    archiveBaseName = "FMT_Launcher"
+    archiveBaseName = "FMT_Updater"
     version = ""
 }
 
@@ -217,7 +217,7 @@ tasks.register('copyForUpload') {
         into "upload/"
     }
     copy {
-        from "build/libs/FMT_Launcher.jar"
+        from "build/libs/FMT_Updater.jar"
         into "upload/"
     }
     copy {
