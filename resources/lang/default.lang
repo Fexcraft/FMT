@@ -419,6 +419,7 @@ setting.general.show_quick_add=Show Quick Add Com.
 setting.general.auto_show_components=Auto Show Com.
 setting.graphic.vsync=Normal V-Sync (60fps~)
 setting.graphic.vsync/2=Half V-Sync (30fps~)
+setting.graphic.vsync/4=Quarter V-Sync (15fps~)
 setting.graphic.window_width=Default Window Width
 setting.graphic.window_height=Default Window Height
 setting.graphic.triangulated_quads=Triangulated Quads
