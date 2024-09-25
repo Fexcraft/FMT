@@ -76,8 +76,9 @@ public class Settings {
 	public static Setting<Boolean> DISCORD_RESET_ON_NEW;
 	public static Setting<Boolean> FULLSCREEN;
 	public static Setting<Boolean> NO_RANDOM_TITLE;
-	public static Setting<Boolean> VSYNC;
+	public static Setting<Boolean> FVSYNC;
 	public static Setting<Boolean> HVSYNC;
+	public static Setting<Boolean> QVSYNC;
 	public static Setting<Boolean> TRIANGULATION_Q;
 	public static Setting<Boolean> TRIANGULATION_L;
 	public static Setting<Boolean> INTERNAL_CHOOSER;
@@ -207,8 +208,9 @@ public class Settings {
 		SETTINGS.put(IMAGE, new LinkedHashMap<>());
 		SETTINGS.put(THEME, new LinkedHashMap<>());
 		//
-		VSYNC = new Setting<>("vsync", true, GRAPHIC, map);
+		FVSYNC = new Setting<>("vsync", true, GRAPHIC, map);
 		HVSYNC = new Setting<>("vsync/2", false, GRAPHIC, map);
+		QVSYNC = new Setting<>("vsync/4", false, GRAPHIC, map);
 		DISCORD_RPC = new Setting<>("enabled", true, DISCORD, map);
 		DISCORD_HIDE = new Setting<>("hidden_mode", false, DISCORD, map);
 		DISCORD_RESET_ON_NEW = new Setting<>("reset_on_new", false, DISCORD, map);
