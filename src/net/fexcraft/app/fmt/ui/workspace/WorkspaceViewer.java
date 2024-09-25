@@ -13,6 +13,7 @@ import net.fexcraft.app.fmt.ui.fields.TextField;
 import net.fexcraft.app.fmt.utils.ByteUtils;
 import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.fmt.utils.SessionHandler;
+import net.fexcraft.app.fmt.utils.fvtm.LangCache;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
@@ -149,6 +150,34 @@ public class WorkspaceViewer extends Widget {
 				catch(IOException e){
 					e.printStackTrace();
 				}
+				//
+				try{
+					File fl = new File(pr, "/META-INF/mods.toml");
+					fl.getParentFile().mkdirs();
+					FileWriter writer = new FileWriter(fl);
+					writer.write("modLoader=\"javafml\"\n");
+					writer.write("loaderVersion=\"[47,)\"\n");
+					writer.write("license=\"All Rights Reserved\"\n");
+					writer.write("issueTrackerURL=\"https://enter.your.url/here\"\n");
+					writer.write("[[mods]]\n");
+					writer.write("modId=\"fvtm\"\n");
+					writer.write("version=\"1.0.0\"\n");
+					writer.write("displayName=\"" + nam + "\"\n");
+					writer.write("displayURL=\"https://fexcraft.net/wiki/mod/fvtm\"\n");
+					writer.write("credits=\"Generated using FMT\" #optional\n");
+					writer.write("authors=\"YourNameHere\"\n");
+					writer.write("displayTest=\"IGNORE_ALL_VERSION\"\n\n");
+					writer.write("description='''A pack for FVTM'''\n");
+					writer.flush();
+					writer.close();
+				}
+				catch(IOException e){
+					e.printStackTrace();
+				}
+				//
+				LangCache.genLangJson(new File(pr, "/assets/" + pid.getTextState().getText() + "/lang/en_us.json"));
+				LangCache.genLangFile(new File(pr, "/assets/" + pid.getTextState().getText() + "/lang/en_us.lang"));
+				//
 				dialog.close();
 				genView();
 			}));
@@ -225,6 +254,7 @@ public class WorkspaceViewer extends Widget {
 						map = new JsonMap();
 						map.add("parent", "item/generated");
 						map.add("textures", new JsonMap("layer0", pack.id + ":item/" + pkid));
+						pack.lang.fill(pkid, name.getTextState().getText());
 						JsonHandler.print(file, map, JsonHandler.PrintOption.DEFAULT);
 						dialog.close();
 						genView();
