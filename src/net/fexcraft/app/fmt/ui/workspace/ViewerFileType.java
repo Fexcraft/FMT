@@ -16,6 +16,7 @@ public enum ViewerFileType {
 	FMTB(false, false),
 	JSON(false, true),
 	TOML(false, true),
+	LANG(false, true),
 	FMF(false, false),
 	OBJ(false, true),
 	PNG(false, true),
@@ -42,6 +43,8 @@ public enum ViewerFileType {
 				return "file_fvtmcfg";
 			case JSON:
 				return "file_json";
+			case LANG:
+				return "file_lang";
 			case FILE:
 			default:
 				return "file";
@@ -60,6 +63,8 @@ public enum ViewerFileType {
 						return JSON;
 					case "toml":
 						return TOML;
+					case "lang":
+						return LANG;
 					case "fmtb":
 						return FMTB;
 					case "png":
