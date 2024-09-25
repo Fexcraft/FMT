@@ -53,6 +53,7 @@ public class DirComponent extends Component {
 								new JsonEditor(file);
 								break;
 							}
+							case LANG:
 							case TOML:
 							case OBJ:{
 								WorkspaceViewer.open(file);
