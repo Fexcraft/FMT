@@ -538,8 +538,14 @@ public class FMT {
     }
 
 	public static void vsync(){
-		log(String.format("Updating Vsync State [%s]", (Settings.VSYNC.value ? "+" : "-") + (Settings.VSYNC.value && Settings.HVSYNC.value ? "+" : "-")));
-		glfwSwapInterval(Settings.VSYNC.value ? Settings.HVSYNC.value ? 2 : 1 : 0);
+		char a = Settings.FVSYNC.value ? '+' : '-';
+		char b = Settings.HVSYNC.value ? '+' : '-';
+		char c = Settings.QVSYNC.value ? '+' : '-';
+		log(String.format("Updating Vsync State [%s]", a + b + c));
+		int in = Settings.FVSYNC.value ? 1 : 0;
+		if(in > 0 && Settings.HVSYNC.value) in = 2;
+		if(in > 0 && Settings.QVSYNC.value) in = 4;
+		glfwSwapInterval(in);
 	}
 
 	public static void icon(long window){
