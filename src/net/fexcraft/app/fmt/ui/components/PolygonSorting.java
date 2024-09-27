@@ -73,7 +73,7 @@ public class PolygonSorting extends EditorComponent {
 		});
 		box.setSize(LW, HEIGHT);
 		box.setPosition(L5, row(1));
-		box.setVisibleCount(8);
+		box.setVisibleCount(32);
 		Settings.applyBorderless(box);
 		Settings.applyBorderless(box.getSelectionButton());
 		Settings.applyBorderless(box.getExpandButton());
