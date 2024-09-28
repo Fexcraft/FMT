@@ -38,7 +38,7 @@ public class LangCache {
 				String l = line.substring(0, line.indexOf("="));
 				if(l.startsWith("item.")){
 					l = l.substring(5, l.length() - 5).replace(":", ".");
-					entries.put(l, new LangEntry(line.substring(line.indexOf("=")), true));
+					entries.put(l, new LangEntry(line.substring(line.indexOf("=") + 1), true));
 				}
 				else{
 					entries.put(l, new LangEntry(line.substring(l.length() + 1), false));
