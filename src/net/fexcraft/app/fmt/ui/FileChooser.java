@@ -35,6 +35,7 @@ public class FileChooser {
 	public static FileType TYPE_JARZIP = new FileType("Jar/Zip Archive", "*.jar", "*.zip");
 	public static FileType TYPE_FMF = new FileType("Fex's Model Format", "*.fmf");
 	public static FileType TYPE_OBJ = new FileType("Wavefront Object (obj)", "*.obj");
+	public static FileType TYPE_BBM = new FileType("BlockBench Model", "*.bbmodel");
 	public static FileType TYPE_JAVA = new FileChooser.FileType("Java Model", "*.java");
 	public static FileType TYPE_ANY = new FileType("Any", "*.*");
 	public static final int INTERNAL_HEIGHT = 500;
