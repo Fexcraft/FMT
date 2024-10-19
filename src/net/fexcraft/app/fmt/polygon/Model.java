@@ -794,4 +794,11 @@ public class Model {
 		Logging.bar("Currently selected vertices: " + selected_verts.size());
 	}
 
+	public boolean hasGroup(String name){
+		for(Group group : allgroups){
+			if(group.id.equals(name)) return true;
+		}
+		return false;
+	}
+
 }
