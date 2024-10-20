@@ -38,20 +38,34 @@ public class BBMImporter implements Importer {
 				if(elm.getString("type", "cube").equals("cube")){
 					poly = new Box(model);
 					float[] frm = elm.getArray("from").toFloatArray();
+					float[] to = elm.getArray("to").toFloatArray();
 					poly.pos.x = frm[0];
 					poly.pos.y = frm[1];
 					poly.pos.z = frm[2];
-					float[] to = elm.getArray("to").toFloatArray();
 					Box box = (Box)poly;
 					box.size.x = to[0] - frm[0];
 					box.size.y = to[1] - frm[1];
 					box.size.z = to[2] - frm[2];
+					poly.pos.x -= box.size.x * 0.5;
+					poly.pos.y += box.size.y * 0.5;
+					poly.pos.z -= box.size.z * 0.5;
+					poly.off.x += box.size.x * 0.5;
+					poly.off.y -= box.size.y * 0.5;
+					poly.off.z += box.size.z * 0.5;
 				}
 				else continue;
 				float[] org = elm.getArray("origin").toFloatArray();
 				//poly.pos.x = org[0];
 				//poly.pos.y = org[1];
 				//poly.pos.z = org[2];
+				poly.pos.x -= 8;
+				poly.pos.z -= 8;
+				if(elm.has("rotation")){
+					float[] rot = elm.getArray("rotation").toFloatArray();
+					poly.rot.x = rot[0];
+					poly.rot.y = rot[1];
+					poly.rot.z = rot[2];
+				}
 				poly.name(elm.getString("name", null));
 				if(elm.has("uv_offset")){
 					int[] uvo = elm.getArray("uv_offset").toIntegerArray();
