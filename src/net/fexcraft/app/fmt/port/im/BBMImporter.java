@@ -1,6 +1,9 @@
 package net.fexcraft.app.fmt.port.im;
 
 import net.fexcraft.app.fmt.polygon.*;
+import net.fexcraft.app.fmt.polygon.uv.BoxFace;
+import net.fexcraft.app.fmt.polygon.uv.UVCoords;
+import net.fexcraft.app.fmt.polygon.uv.UVType;
 import net.fexcraft.app.fmt.settings.Setting;
 import net.fexcraft.app.fmt.ui.FileChooser;
 import net.fexcraft.app.json.JsonArray;
@@ -71,6 +74,52 @@ public class BBMImporter implements Importer {
 					int[] uvo = elm.getArray("uv_offset").toIntegerArray();
 					poly.textureX = uvo[0];
 					poly.textureY = uvo[1];
+				}
+				else{
+					poly.textureX = poly.textureY = 0;
+				}
+				if(elm.has("faces")){
+					for(Map.Entry<String, JsonValue<?>> entry : elm.getMap("faces").entries()){
+						if(!entry.getValue().asMap().has("uv")) continue;
+						BoxFace face = BoxFace.TOP;
+						switch(entry.getKey()){
+							case "north":
+								face = BoxFace.LEFT;
+								break;
+							case "south":
+								face = BoxFace.RIGHT;
+								break;
+							case "west":
+								face = BoxFace.FRONT;
+								break;
+							case "east":
+								face = BoxFace.BACK;
+								break;
+							case "down":
+								face = BoxFace.TOP;
+								break;
+							case "up":
+							default:
+								face = BoxFace.DOWN;
+								break;
+						}
+						JsonArray uv = entry.getValue().asMap().getArray("uv");
+						UVCoords uvc = poly.cuv.get(face);
+						if(uvc == null) continue;
+						uvc.set(UVType.OFFSET_ENDS);
+						if(face.index() == 2 || face.index() == 3){
+							uvc.value()[0] = uv.get(0).float_value();
+							uvc.value()[1] = uv.get(1).float_value();
+							uvc.value()[2] = uv.get(2).float_value();
+							uvc.value()[3] = uv.get(3).float_value();
+						}
+						else{
+							uvc.value()[0] = uv.get(2).float_value();
+							uvc.value()[1] = uv.get(3).float_value();
+							uvc.value()[2] = uv.get(0).float_value();
+							uvc.value()[3] = uv.get(1).float_value();
+						}
+					}
 				}
 				polis.put(elm.get("uuid").string_value(), poly);
 			}
