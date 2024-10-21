@@ -29,6 +29,8 @@ public class BBMImporter implements Importer {
 	public String _import(Model model, File file){
 		try{
 			JsonMap map = JsonHandler.parse(file);
+			String type = map.getMap("meta").getString("model_format", "java_block");
+			boolean modent = type.equals("modded_entity");
 			model.name = map.getString("name", model.name);
 			JsonMap res = map.getMap("resolution");
 			model.texSizeX = res.getInteger("width", 16);
@@ -61,8 +63,10 @@ public class BBMImporter implements Importer {
 				//poly.pos.x = org[0];
 				//poly.pos.y = org[1];
 				//poly.pos.z = org[2];
-				poly.pos.x -= 8;
-				poly.pos.z -= 8;
+				if(!modent){
+					poly.pos.x -= 8;
+					poly.pos.z -= 8;
+				}
 				if(elm.has("rotation")){
 					float[] rot = elm.getArray("rotation").toFloatArray();
 					poly.rot.x = rot[0];
