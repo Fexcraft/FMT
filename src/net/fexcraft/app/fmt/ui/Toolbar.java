@@ -100,7 +100,8 @@ public class Toolbar extends Panel {
 			new MenuButton(9, "utils.rescale", () -> FMT.MODEL.rescale()),
 			new MenuButton(10, "utils.font_util", () -> FontUtils.open()),
 			new ToolbarMenu(-11, "utils.converters",
-					new MenuButton(0, "utils.converter.itemmodeltexjson", () -> ConverterUtils.runIMTJ())
+					new MenuButton(0, "utils.converter.itemmodeltexjson", () -> ConverterUtils.runIMTJ()),
+					new MenuButton(1, "Extract Materials", () -> ConverterUtils.exModelData())
 			)
 		));
 		this.add(new ToolbarMenu(2, "selection",
