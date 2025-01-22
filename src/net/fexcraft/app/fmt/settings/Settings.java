@@ -501,21 +501,6 @@ public class Settings {
 		applyBorderless(scrollable.getHorizontalScrollBar());
 	}
 
-	public static void loadEditors(){
-		//JsonMap map = JsonHandler.parse(new File("./editors.fmt"));
-		Editor.POLYGON_EDITOR = new PolygonEditor();
-		Editor.GROUP_EDITOR = new GroupEditor();
-		Editor.PIVOT_EDITOR = new PivotEditor();
-		Editor.MODEL_EDITOR = new ModelEditor();
-		Editor.TEXTURE_EDITOR = new TextureEditor();
-		Editor.UV_EDITOR = new UVEditor();
-		Editor.PREVIEW_EDITOR = new PreviewEditor();
-		Editor.POLYGON_TREE = new PolygonTree();
-		Editor.PIVOT_TREE = new PivotTree();
-		Editor.TEXTURE_TREE = new TextureTree();
-		Editor.PREVIEW_TREE = new HelperTree();
-	}
-
 	public static void register(String group, String id, Setting<?> setting){
 		if(!SETTINGS.containsKey(group)) SETTINGS.put(group, new LinkedHashMap<>());
 		SETTINGS.get(group).put(id, setting);
