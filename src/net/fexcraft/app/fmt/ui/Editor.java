@@ -10,7 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import net.fexcraft.app.fmt.ui.SettingsDialog.SPVSL;
-import net.fexcraft.app.fmt.ui.trees.Trees;
+import net.fexcraft.app.fmt.ui.editors.*;
+import net.fexcraft.app.fmt.ui.trees.*;
 import net.fexcraft.app.json.JsonValue;
 import com.spinyowl.legui.component.Button;
 import com.spinyowl.legui.component.Component;
@@ -58,6 +59,7 @@ public class Editor extends Component {
 	public static Editor TEXTURE_TREE;
 	public static Editor PREVIEW_TREE;
 	public static float RATE = 1f;
+	public static MultiplierPanel MULTIPLIER;
 	public static Editor VISIBLE_EDITOR = null;
 	public static Editor VISIBLE_TREE = null;
 	public ArrayList<EditorComponent> components = new ArrayList<>();
@@ -81,7 +83,6 @@ public class Editor extends Component {
 		add(label = new Label(this.name = name, 5, 0, CWIDTH - 10, LABEL));
 		label.getStyle().setFontSize(26f);
 		align();
-		hide();
 	}
 
 	protected float topSpace(){
@@ -141,6 +142,7 @@ public class Editor extends Component {
 		getStyle().setDisplay(DisplayType.NONE);
 		if(VISIBLE_EDITOR == this) VISIBLE_EDITOR = null;
 		if(VISIBLE_TREE == this) VISIBLE_TREE = null;
+		if(VISIBLE_EDITOR == null) UIUtils.hide(MULTIPLIER);
 	}
 	
 	public void show(){
@@ -151,6 +153,7 @@ public class Editor extends Component {
 		else{
 			if(VISIBLE_EDITOR != null) VISIBLE_EDITOR.hide();
 			VISIBLE_EDITOR = this;
+			UIUtils.show(MULTIPLIER);
 		}
 		getStyle().setDisplay(DisplayType.MANUAL);
 		setEnabled(true);
@@ -234,6 +237,27 @@ public class Editor extends Component {
 			map.add("components", array);
 		}
 		return map;
+	}
+
+	public static void loadEditors(){
+		Editor.POLYGON_EDITOR = new PolygonEditor();
+		Editor.GROUP_EDITOR = new GroupEditor();
+		Editor.PIVOT_EDITOR = new PivotEditor();
+		Editor.MODEL_EDITOR = new ModelEditor();
+		Editor.TEXTURE_EDITOR = new TextureEditor();
+		Editor.UV_EDITOR = new UVEditor();
+		Editor.PREVIEW_EDITOR = new PreviewEditor();
+		Editor.POLYGON_TREE = new PolygonTree();
+		Editor.PIVOT_TREE = new PivotTree();
+		Editor.TEXTURE_TREE = new TextureTree();
+		Editor.PREVIEW_TREE = new HelperTree();
+		Editor.MULTIPLIER = new MultiplierPanel();
+		//
+		FMT.FRAME.getContainer().add(Editor.MULTIPLIER);
+		for(Editor editor : Editor.EDITORS.values()){
+			FMT.FRAME.getContainer().add(editor);
+			editor.hide();
+		}
 	}
 	
 }
