@@ -185,8 +185,7 @@ public class FMT {
 		Settings.applyTheme();
 		FRAME = new Frame(WIDTH, HEIGHT);
 		FRAME.getContainer().add(TOOLBAR = new Toolbar());
-		Settings.loadEditors();
-		for(Editor editor : Editor.EDITORS.values()) FRAME.getContainer().add(editor);
+		Editor.loadEditors();
 		FRAME.getContainer().add(pos = new Label("test", 0, 32, 200, 20));
 		FRAME.getContainer().add(rot = new Label("test", 0, 54, 200, 20));
 		FRAME.getContainer().add(fps = new Label("test", 0, 76, 200, 20));
@@ -342,11 +341,12 @@ public class FMT {
 
 	private void adjustLabels(){
 		int xoff = Editor.VISIBLE_EDITOR == null ? 5 : 320;
-		pos.setPosition(xoff, pos.getPosition().y);
-		rot.setPosition(xoff, rot.getPosition().y);
-		fps.setPosition(xoff, fps.getPosition().y);
-		poly.setPosition(xoff, poly.getPosition().y);
-		info.setPosition(xoff, info.getPosition().y);
+		int yoff = 1;
+		pos.setPosition(xoff, HEIGHT - yoff++ * 22);
+		rot.setPosition(xoff, HEIGHT - yoff++ * 22);
+		fps.setPosition(xoff, HEIGHT - yoff++ * 22);
+		poly.setPosition(xoff, HEIGHT - yoff++ * 22);
+		info.setPosition(xoff, HEIGHT - yoff++ * 22);
 		if(!Settings.SHOW_BOTTOMBAR.value) return;
 		if(bar_timer == 0 || Time.getDate() >= bar_timer){
 			bar_timer = 0;
