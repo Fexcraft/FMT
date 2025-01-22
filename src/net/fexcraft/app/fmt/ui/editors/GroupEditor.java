@@ -1,5 +1,6 @@
 package net.fexcraft.app.fmt.ui.editors;
 
+import com.spinyowl.legui.component.Panel;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.ui.components.*;
@@ -13,7 +14,6 @@ public class GroupEditor extends Editor {
 	public GroupEditor(){
 		super("group_editor", "Group Editor", false);
 		if(Settings.SHOW_QUICK_ADD.value) addComponent(new QuickAdd());
-		addComponent(new MultiplierComponent());
 		addComponent(new GroupGeneral());
 	}
 
