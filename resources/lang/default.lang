@@ -145,8 +145,6 @@ editor.component.group.polygon.remove=Remove polygon? This can not be undone.
 editor.component.add_dialog.title=Select a new Component and target Editor
 editor.component.add_dialog.select=Select target Editor
 editor.component.add_dialog.confirm=Add Component
-editor.component.multiplier.name=Multiplier
-editor.component.multiplier.desc=Multiplier
 editor.component.polygon.quick.name=Quick Add
 editor.component.polygon.quick.desc=Component including buttons for quickly adding new Polygons.
 editor.component.polygon.quick.add_box=Add Box
@@ -315,6 +313,8 @@ editor.component.helper.general.pos16=Position (16x)
 editor.component.helper.general.pos=Position
 editor.component.helper.general.rot=Rotation
 editor.component.helper.general.scale=Scale
+//
+editor.component.multiplier=Multiplier
 
 # UV Vieweer
 uvviewer.title=UV Viewer
