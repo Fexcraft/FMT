@@ -1,6 +1,3 @@
-# PLEASE NOTE
-_This description is still for v2, will be updated once v3 is out._
-
 # Fex's Modelling Toolbox
 A Tool to create polygon/3d-shape based models.
 
@@ -9,6 +6,7 @@ It is able to import:
 - `jtmt` - JTMT JSON Format Models
 - `java` - FlansMod Format Java Models
 - `vox` - "MagicaVoxel" Format Files (see [VOXtoFMT](https://github.com/Fexcraft/VOXtoFMT))
+- `bbmodel` - Blockbench block models 
 
 And export to:
 - `jtmt` - JTMT JSON Format Models
@@ -22,10 +20,10 @@ And export to:
 - `obj` - valid **Wavefront OBJ** Models
 - `png` - **PNG** files - template or textured
 - `txt` - **Marker** list exporter
-- and more to come!
+- and more
 
 Other features
-- internal texture editor (beta)
+- internal texture editor
 - auto texture positioner
 - unlimited groups*
 - unlimited polygons*
@@ -36,11 +34,10 @@ Other features
   - cylinders
     - hollow cylinders
     - top offset and rotation
-  - texrect a/b (experimental)
-  - simple quads (experimental)
+    - segments, limit, rotation 
   - markers
     - "biped" display
-  - and maybe in the future more
+  - more planned 
 - unlimited* amount of loadable helper models or (img)frames
 - in-editor texture uv preview, adjustment and customisation
 - and more..
@@ -65,17 +62,30 @@ Libraries are under their respective licenses, some may have license notices bun
 and in case not, google shall help you.   
 FCL is licensed under http://fexcraft.net/license?id=mods (till/if it's respective standalone license is written)
 
-## Installation
+## Installation (v2)
 - Windows / Linux     
   Take the zip file from https://github.com/Fexcraft/FMT-Standalone/releases    
   And unpack it into an own folder, done. Now just run the FMT jar file.    
 - Mac     
   Check out TurboDefender's instructions [here](https://gist.github.com/RishiMenon2004/4343dc7debbd44379a8f43e930bd3218)!
 
-### Java Version (important)
-FMT was compiled under Java 8, in some cases people reported FMT not working on Java 9+.    
-Please try running first under Java 8 if you have it installed.
-Otherwise try Java 15+, recently it was reported that FMT works again under Java 15+.
+### Installation (v3)
+> Warning:
+> - FMT3 is still in development and various issues may occur during installation/usage.
+> - FMT3 save files may not be completely compatible with FMT2 save files.
+> - Please make backups before using files from FMT2.
+1. Download the [FMT Updater](https://fexcraft.net/files/app_data/fmt/FMT_Updater.jar)
+2. Put it into an own folder.
+3. Run the Updater.
+4. Refresh the Catalog (do this each time you want to search for updates).
+5. Click on "Update" (if there is an update available)
+
+6. Once FMT has downloaded (or updated) you can run the FMT.jar directly
+
+### Known Issues/Requirements
+- FMT 2 does not work on Java version from 9 to 14, it does work on version 8 or 15 and up.
+- FMT 3 will work on Java 17 and newer, if you have a Java 8 installation and want to keep it untouched/intact, try [this video](https://youtu.be/oSDV-xjE7YU), it shows how to have a secondary Java installation for FMT or similar.
+- FMT 3 works only on 64bit (x86_64) system a this moment because that's the default LWJGL natives shipped with it.
 
 ## Discord
 [https://discord.gg/J5c2zJ7uU9](https://discord.gg/J5c2zJ7uU9)
