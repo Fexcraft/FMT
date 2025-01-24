@@ -492,39 +492,45 @@ public class SaveHandler {
 			JsonArray array = new JsonArray();
 			for(Model premod : PreviewHandler.getLoaded()){
 				if(premod.subhelper) continue;
-				JsonMap jsn = new JsonMap();
-				jsn.add("name", premod.name);
-				jsn.add("texture", premod.texhelper);
-				if(premod.rot != null){
-					jsn.add("rot_x", premod.rot.x);
-					jsn.add("rot_y", premod.rot.y);
-					jsn.add("rot_z", premod.rot.z);
-				}
-				if(premod.pos != null){
-					jsn.add("pos_x", premod.pos.x);
-					jsn.add("pos_y", premod.pos.y);
-					jsn.add("pos_z", premod.pos.z);
-				}
-				if(premod.scl.x != 1f || premod.scl.y != 1f || premod.scl.z != 1f){
-					jsn.add("scale_x", premod.scl.x);
-					jsn.add("scale_y", premod.scl.y);
-					jsn.add("scale_z", premod.scl.z);
-				}
-				if(premod.opacity < 1f){
-					jsn.add("opacity", premod.opacity);
-				}
-				if(premod.allgroups().size() > 1){
-					JsonArray invisible = new JsonArray();
-					for(Group list : premod.allgroups()){
-						if(!list.visible) invisible.add(list.id);
+				if(premod.file == null) continue;
+				try{
+					JsonMap jsn = new JsonMap();
+					jsn.add("name", premod.name);
+					jsn.add("texture", premod.texhelper);
+					if(premod.rot != null){
+						jsn.add("rot_x", premod.rot.x);
+						jsn.add("rot_y", premod.rot.y);
+						jsn.add("rot_z", premod.rot.z);
 					}
-					if(invisible.size() > 0){
-						jsn.add("invisible", invisible);
+					if(premod.pos != null){
+						jsn.add("pos_x", premod.pos.x);
+						jsn.add("pos_y", premod.pos.y);
+						jsn.add("pos_z", premod.pos.z);
 					}
+					if(premod.scl.x != 1f || premod.scl.y != 1f || premod.scl.z != 1f){
+						jsn.add("scale_x", premod.scl.x);
+						jsn.add("scale_y", premod.scl.y);
+						jsn.add("scale_z", premod.scl.z);
+					}
+					if(premod.opacity < 1f){
+						jsn.add("opacity", premod.opacity);
+					}
+					if(premod.allgroups().size() > 1){
+						JsonArray invisible = new JsonArray();
+						for(Group list : premod.allgroups()){
+							if(!list.visible) invisible.add(list.id);
+						}
+						if(invisible.size() > 0){
+							jsn.add("invisible", invisible);
+						}
+					}
+					jsn.add("path", premod.file.toPath().toString());
+					jsn.add("visible", premod.visible);
+					array.add(jsn);
 				}
-				jsn.add("path", premod.file.toPath().toString());
-				jsn.add("visible", premod.visible);
-				array.add(jsn);
+				catch(Exception e){
+					e.printStackTrace();
+				}
 			}
 			map.add("helpers", array);
 		}
