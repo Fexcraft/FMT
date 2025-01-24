@@ -59,7 +59,6 @@ public class Editor extends Component {
 	public static Editor TEXTURE_TREE;
 	public static Editor PREVIEW_TREE;
 	public static float RATE = 1f;
-	public static MultiplierPanel MULTIPLIER;
 	public static Editor VISIBLE_EDITOR = null;
 	public static Editor VISIBLE_TREE = null;
 	public ArrayList<EditorComponent> components = new ArrayList<>();
@@ -142,7 +141,7 @@ public class Editor extends Component {
 		getStyle().setDisplay(DisplayType.NONE);
 		if(VISIBLE_EDITOR == this) VISIBLE_EDITOR = null;
 		if(VISIBLE_TREE == this) VISIBLE_TREE = null;
-		if(VISIBLE_EDITOR == null) UIUtils.hide(MULTIPLIER);
+		if(VISIBLE_EDITOR == null) EditorPanel.hideAll();
 	}
 	
 	public void show(){
@@ -153,7 +152,7 @@ public class Editor extends Component {
 		else{
 			if(VISIBLE_EDITOR != null) VISIBLE_EDITOR.hide();
 			VISIBLE_EDITOR = this;
-			UIUtils.show(MULTIPLIER);
+			EditorPanel.showAll();
 		}
 		getStyle().setDisplay(DisplayType.MANUAL);
 		setEnabled(true);
@@ -251,9 +250,11 @@ public class Editor extends Component {
 		Editor.PIVOT_TREE = new PivotTree();
 		Editor.TEXTURE_TREE = new TextureTree();
 		Editor.PREVIEW_TREE = new HelperTree();
-		Editor.MULTIPLIER = new MultiplierPanel();
+		EditorPanel.load();
 		//
-		FMT.FRAME.getContainer().add(Editor.MULTIPLIER);
+		for(EditorPanel panel : EditorPanel.PANELS){
+			FMT.FRAME.getContainer().add(panel);
+		}
 		for(Editor editor : Editor.EDITORS.values()){
 			FMT.FRAME.getContainer().add(editor);
 			editor.hide();
