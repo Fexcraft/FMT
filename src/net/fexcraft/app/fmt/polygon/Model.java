@@ -819,12 +819,12 @@ public class Model {
 		return false;
 	}
 
-	public void swap(Group group, int i){
+	public void swap(Group group, int i, boolean update){
 		int idx = allgroups.indexOf(group);
 		if(idx == 0 && i < 0) return;
 		if(idx >= allgroups.size() - 1 && i > 0) return;
 		Collections.swap(allgroups, idx, idx + i);
-		Editor.POLYGON_TREE.reAddGroups();
+		if(update) Editor.POLYGON_TREE.reAddGroups();
 	}
 
 }
