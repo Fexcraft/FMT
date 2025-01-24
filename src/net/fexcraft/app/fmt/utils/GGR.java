@@ -12,9 +12,11 @@ import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
 
 import com.spinyowl.legui.component.Component;
+import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.ui.JsonEditor;
 import net.fexcraft.app.fmt.ui.UVViewer;
 import net.fexcraft.app.fmt.ui.editors.EditorPanel;
+import net.fexcraft.app.fmt.ui.trees.PolygonTree;
 import net.fexcraft.app.fmt.ui.workspace.WorkspaceViewer;
 import net.fexcraft.app.fmt.utils.fvtm.FVTMConfigEditor;
 import org.joml.Matrix4f;
@@ -30,6 +32,8 @@ import net.fexcraft.app.fmt.ui.fields.NumberField;
 import net.fexcraft.app.fmt.utils.Picker.PickTask;
 import net.fexcraft.app.fmt.utils.Picker.PickType;
 import net.fexcraft.lib.common.Static;
+
+import java.util.ArrayList;
 
 /** CCR */
 public class GGR {
@@ -236,7 +240,25 @@ public class GGR {
 	}
 
 	public void scrollCallback(long window, double xoffset, double yoffset){
-		if(isOverUI()) return;
+		if(isOverUI()){
+			if(Editor.VISIBLE_TREE != Editor.POLYGON_TREE || cursor_x[0] < FMT.WIDTH - Editor.WIDTH) return;
+			if(!PolygonTree.SORT_MODE) return;
+			ArrayList<Group> groups = FMT.MODEL.selected_groups();
+			if(groups.isEmpty()) return;
+			int dir = yoffset > 0 ? -1 : 1;
+			if(dir > 0){
+				for(int i = groups.size() - 1; i >= 0; i--){
+					FMT.MODEL.swap(groups.get(i), dir, false);
+				}
+			}
+			else{
+				for(Group group : groups){
+					FMT.MODEL.swap(group, dir, false);
+				}
+			}
+			Editor.POLYGON_TREE.reAddGroups();
+			return;
+		}
 		double s = yoffset * Settings.SCROLL_SPEED.value;
 		if(r_down) s *= 10;
 		if(f_down) s *= 0.1;
