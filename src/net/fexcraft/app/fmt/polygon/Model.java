@@ -19,6 +19,8 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import net.fexcraft.app.fmt.texture.TextureManager;
+import net.fexcraft.app.fmt.ui.Editor;
+import net.fexcraft.app.fmt.ui.trees.PolygonTree;
 import net.fexcraft.app.fmt.update.UpdateEvent.*;
 import net.fexcraft.app.fmt.utils.*;
 import net.fexcraft.app.json.JsonValue;
@@ -428,6 +430,22 @@ public class Model {
 		return am;
 	}
 
+	public String totals(){
+		int po = 0;
+		int fa = 0;
+		int vt = 0;
+		for(Group group : allgroups){
+			for(Polygon polygon : group){
+				po++;
+				fa += polygon.glm.polygons.size();
+				for(net.fexcraft.lib.frl.Polygon poly : polygon.glm.polygons){
+					vt += poly.vertices.length;
+				}
+			}
+		}
+		return po + " / " + fa + " / " + vt;
+	}
+
 	public int totalGroups(){
 		return allgroups.size();
 	}
@@ -799,6 +817,14 @@ public class Model {
 			if(group.id.equals(name)) return true;
 		}
 		return false;
+	}
+
+	public void swap(Group group, int i){
+		int idx = allgroups.indexOf(group);
+		if(idx == 0 && i < 0) return;
+		if(idx >= allgroups.size() - 1 && i > 1) return;
+		Collections.swap(allgroups, idx, idx + i);
+		Editor.POLYGON_TREE.reAddGroups();
 	}
 
 }
