@@ -5,6 +5,8 @@ import static net.fexcraft.app.fmt.utils.Translator.translate;
 
 import java.util.ArrayList;
 
+import net.fexcraft.app.fmt.ui.fields.RunButton;
+import net.fexcraft.app.fmt.ui.panels.QuickAddPanel;
 import net.fexcraft.app.fmt.update.UpdateEvent.GroupAdded;
 import net.fexcraft.app.fmt.update.UpdateEvent.GroupRemoved;
 import net.fexcraft.app.fmt.update.UpdateEvent.GroupRenamed;
@@ -71,7 +73,7 @@ public class PolygonSorting extends EditorComponent {
 				group.add(poly);
 			});
 		});
-		box.setSize(LW, HEIGHT);
+		box.setSize(LW - 30, HEIGHT);
 		box.setPosition(L5, row(1));
 		box.setVisibleCount(32);
 		Settings.applyBorderless(box);
@@ -80,6 +82,8 @@ public class PolygonSorting extends EditorComponent {
 		Settings.applyBorderlessScrollable(box.getSelectionListPanel(), false);
 		updateSelectBox();
 		this.add(box);
+		add(new RunButton("+", L5 + LW - 25, row(0), HEIGHT, HEIGHT, () -> QuickAddPanel.addGroup())
+			.addTooltip("toolbar.polygons.add_group"));
 		this.add(new Label(translate(LANG_PREFIX + genid + ".shape_type"), L5, row(1), LW, HEIGHT));
 		type.addSelectBoxChangeSelectionEventListener(listener -> {
 			Shape shape = Shape.get(listener.getNewValue());
