@@ -14,6 +14,7 @@ import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
 import com.spinyowl.legui.component.Component;
 import net.fexcraft.app.fmt.ui.JsonEditor;
 import net.fexcraft.app.fmt.ui.UVViewer;
+import net.fexcraft.app.fmt.ui.editors.EditorPanel;
 import net.fexcraft.app.fmt.ui.workspace.WorkspaceViewer;
 import net.fexcraft.app.fmt.utils.fvtm.FVTMConfigEditor;
 import org.joml.Matrix4f;
@@ -195,7 +196,10 @@ public class GGR {
 		if(FMT.FRAME.getLayers().size() > 0) return true;
 		glfwGetCursorPos(FMT.INSTANCE.window, cursor_x, cursor_y);
 		if(cursor_y[0] < FMT.TOOLBAR.getSize().y) return true;
-		if(Editor.VISIBLE_EDITOR != null && cursor_x[0] < Editor.WIDTH) return true;
+		if(Editor.VISIBLE_EDITOR != null){
+			if(cursor_x[0] < Editor.WIDTH) return true;
+			if(EditorPanel.isOverPanel(cursor_x[0], cursor_y[0])) return true;
+		}
 		if(Editor.VISIBLE_TREE != null && cursor_x[0] > FMT.WIDTH - Editor.WIDTH) return true;
 		if(WorkspaceViewer.viewer != null && overComponent(WorkspaceViewer.viewer)) return true;
 		for(FVTMConfigEditor editor : FVTMConfigEditor.INSTANCES){
