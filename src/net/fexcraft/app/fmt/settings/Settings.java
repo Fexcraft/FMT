@@ -91,7 +91,6 @@ public class Settings {
 	public static Setting<Boolean> POLYMARKER;
 	public static Setting<Boolean> ADD_TO_LAST;
 	public static Setting<Boolean> SPHERE_MARKER;
-	public static Setting<Boolean> SHOW_QUICK_ADD;
 	public static Setting<Boolean> AUTO_SHOW_COMPONENTS;
 	public static Setting<Float> MOUSE_SENSIVITY;
 	public static Setting<Float> MOVE_SPEED;
@@ -270,7 +269,6 @@ public class Settings {
 		ZOOM_LEVEL = new Setting<>("zoom_by", 10f, CONTROL, map).minmax(0.001f, 160f);
 		ARROW_SENSIVITY = new Setting<>("arrow_sensivity", 8f, CONTROL, map).minmax(0.001f, 100f);
 		NUMBERFIELD_BUTTONS = new Setting<>("numberfield_buttons", false, GENERAL, map);
-		SHOW_QUICK_ADD = new Setting<>("show_quick_add", true, GENERAL, map);
 		AUTO_SHOW_COMPONENTS = new Setting<>("auto_show_components", true, GENERAL, map);
 		//
 		TESTING = new Setting<>("testing", false, GENERAL, map);
