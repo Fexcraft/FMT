@@ -340,12 +340,13 @@ public class SaveHandler {
 		save(model, file, run, false, true);
 	}
 
-	public static void save(Model model, File file, Runnable run, boolean backup, boolean open){
+	public static boolean save(Model model, File file, Runnable run, boolean backup, boolean open){
 		file = file == null ? model.file : file;
 		if(file == null){
 			GenericDialog.showOC(null, () -> { if(run != null) run.run(); }, null, "saveload.save.nofile");
-			return;
+			return false;
 		}
+		boolean noerror = true;
 		try{
 			FileOutputStream fileout = new FileOutputStream(file);
 			ZipOutputStream zipout = new ZipOutputStream(fileout);
@@ -368,6 +369,7 @@ public class SaveHandler {
 					}
 					catch(Exception e){
 						log(e);
+						noerror = false;
 					}
 				}
 			}
@@ -397,8 +399,10 @@ public class SaveHandler {
 		}
 		catch(Exception e){
 			log(e);
+			noerror = false;
 		}
 		if(run != null) run.run();
+		return noerror;
 	}
 	
 	public static JsonMap modelToJTMT(Model root, boolean export){
