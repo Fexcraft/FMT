@@ -1,6 +1,9 @@
 package net.fexcraft.app.fmt.ui.fields;
 
 import com.spinyowl.legui.component.Button;
+import com.spinyowl.legui.component.Component;
+import com.spinyowl.legui.component.Tooltip;
+import com.spinyowl.legui.component.optional.align.HorizontalAlign;
 import com.spinyowl.legui.event.MouseClickEvent;
 import com.spinyowl.legui.event.MouseClickEvent.MouseClickAction;
 import com.spinyowl.legui.input.Mouse.MouseButton;
@@ -8,6 +11,8 @@ import com.spinyowl.legui.input.Mouse.MouseButton;
 import com.spinyowl.legui.style.border.SimpleLineBorder;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
+import net.fexcraft.app.fmt.ui.Icon;
+import net.fexcraft.app.fmt.utils.FontSizeUtil;
 import net.fexcraft.app.fmt.utils.Translator;
 import org.joml.Vector4f;
 
@@ -30,6 +35,21 @@ public class RunButton extends Button {
 	
 	public RunButton(String str, float x, float y, float w, float h, Runnable run){
 		this(str, x, y, w, h, run, true);
+	}
+
+	public RunButton addTooltip(String string, boolean alignment){
+		Tooltip tip = new Tooltip(Translator.translate(string));
+		tip.setSize(FontSizeUtil.getWidth(tip.getTextState().getText()) * 2, 24);
+		tip.getStyle().setPadding(2f);
+		tip.getStyle().setHorizontalAlign(HorizontalAlign.CENTER);
+		tip.setPosition(alignment ? getSize().x : -tip.getSize().x, (getSize().y - 24) / 2);
+		tip.getStyle().setBorderRadius(0f);
+		setTooltip(tip);
+		return this;
+	}
+
+	public RunButton addTooltip(String string) {
+		return addTooltip(string, true);
 	}
 
 }
