@@ -21,7 +21,7 @@ public class PreviewHandler {
 		model.name = "frame/" + model.name;
 		//
 		add(model);
-		return null;
+		return model;
 	}
 
 	public static Model loadFMTB(File file){
