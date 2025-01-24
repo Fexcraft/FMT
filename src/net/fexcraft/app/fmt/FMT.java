@@ -33,6 +33,7 @@ import net.fexcraft.app.fmt.ui.Toolbar;
 import net.fexcraft.app.fmt.ui.ToolbarMenu;
 import net.fexcraft.app.fmt.ui.UVViewer;
 import net.fexcraft.app.fmt.ui.fields.Field;
+import net.fexcraft.app.fmt.ui.trees.PolygonTree;
 import net.fexcraft.app.fmt.utils.*;
 import net.fexcraft.app.fmt.workspace.Workspace;
 import net.fexcraft.app.json.JsonHandler;
@@ -356,6 +357,7 @@ public class FMT {
 		else{
 			bar.setPosition((WIDTH / 2) - (FontSizeUtil.getWidth(bar.getTextState().getText()) / 2), HEIGHT - 20);
 		}
+		PolygonTree.polygons.getTextState().setText("Polygons: " + FMT.MODEL.totals());
 	}
 
 	private void render(int vao, FltElm alpha){
