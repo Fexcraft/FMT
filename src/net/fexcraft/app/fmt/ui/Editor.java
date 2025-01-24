@@ -54,7 +54,7 @@ public class Editor extends Component {
 	public static Editor TEXTURE_EDITOR;
 	public static Editor UV_EDITOR;
 	public static Editor PREVIEW_EDITOR;
-	public static Editor POLYGON_TREE;
+	public static PolygonTree POLYGON_TREE;
 	public static Editor PIVOT_TREE;
 	public static Editor TEXTURE_TREE;
 	public static Editor PREVIEW_TREE;
