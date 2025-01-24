@@ -1,41 +1,32 @@
-package net.fexcraft.app.fmt.ui.editors;
+package net.fexcraft.app.fmt.ui.panels;
 
-import com.spinyowl.legui.component.Panel;
 import com.spinyowl.legui.component.Slider;
 import com.spinyowl.legui.component.Tooltip;
 import com.spinyowl.legui.component.event.slider.SliderChangeValueEventListener;
 import com.spinyowl.legui.component.optional.align.HorizontalAlign;
-import com.spinyowl.legui.event.MouseClickEvent;
-import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.Editor;
-import net.fexcraft.app.fmt.ui.Icon;
+import net.fexcraft.app.fmt.ui.editors.EditorPanel;
 import net.fexcraft.app.fmt.ui.fields.NumberField;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.lib.common.Static;
 
-import static com.spinyowl.legui.event.MouseClickEvent.MouseClickAction.CLICK;
-import static net.fexcraft.app.fmt.ui.EditorComponent.F31;
-import static net.fexcraft.app.fmt.ui.EditorComponent.HEIGHT;
 import static net.fexcraft.app.fmt.utils.Translator.translate;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
  */
-public class MultiplierPanel extends Panel {
+public class MultiplierPanel extends EditorPanel {
 
-	private UpdateHandler.UpdateCompound updcom = new UpdateHandler.UpdateCompound();
-	private static int SIZE = 30;
 	private NumberField field;
-	private boolean expanded;
 
 	public MultiplierPanel(){
-		super(Editor.WIDTH, SIZE * 2, SIZE, SIZE);
-		Settings.applyBorderless(this);
-		add(new Icon(0, SIZE, 0, 0, 0, "./resources/textures/icons/multiplier.png", () -> expand())
-			.addTooltip(translate("editor.component.multiplier")));
+		super("multiplier", "multiplier", "editor.component.multiplier");
+		setPosition(Editor.WIDTH, I_SIZE * 2);
+		ex_x = 330;
+		ex_y = 60;
 		//
-		add(field = new NumberField(updcom, SIZE + 5, 12, 90, HEIGHT){
+		add(field = new NumberField(updcom, I_SIZE + 5, 15, 90, 30){
 			@Override
 			public void scroll(double scroll){
 				apply(test(value(), scroll > 0, Editor.RATE == 0f ? 1 : scroll > 0 ? Editor.RATE : Editor.RATE / 2f));
@@ -49,12 +40,12 @@ public class MultiplierPanel extends Panel {
 			}
 		}).apply(Editor.RATE));
 		updcom.add(UpdateEvent.EditorRate.class, event -> field.apply(event.rate()));
-		UpdateHandler.register(updcom);
 		//
 		String[] arr = new String[]{ "normal", "sixteenth", "decimal"};
 		int off = 0, am = 0;
 		for(String string : arr){
-			Slider slider = new Slider(130, 4 + off, 190, 14);
+			Slider slider = new Slider(130, 3 + off, 190, 17);
+			off += 17;
 			switch(string){
 				case "normal":{
 					slider.setMinValue(1);
@@ -95,21 +86,6 @@ public class MultiplierPanel extends Panel {
 			});
 			slider.setTooltip(tooltip);
 			super.add(slider);
-			off += 15;
-		}
-	}
-
-	private void expand(){
-		expand(!expanded);
-	}
-
-	private void expand(boolean bool){
-		expanded = bool;
-		if(bool){
-			setSize(330, 50);
-		}
-		else{
-			setSize(SIZE, SIZE);
 		}
 	}
 
