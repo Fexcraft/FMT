@@ -11,7 +11,6 @@ public class UVEditor extends Editor {
 
 	public UVEditor(){
 		super("uv_editor", "UV Editor", false);
-		if(Settings.SHOW_QUICK_ADD.value) addComponent(new QuickAdd());
 		addComponent(new UVComponent());
 	}
 
