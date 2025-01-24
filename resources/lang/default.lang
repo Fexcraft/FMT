@@ -119,6 +119,7 @@ editor.rename=Rename Editor
 editor.remove=Remove Editor
 editor.change_side=Change Side/Alignment
 editor.tree.polygon=Polygon Tree
+editor.tree.polygon.sort=Sort
 editor.tree.pivot=Pivot Tree
 editor.tree.pivot.add=Add Pivot
 editor.tree.pivot.added=New Pivot Added
