@@ -822,7 +822,7 @@ public class Model {
 	public void swap(Group group, int i){
 		int idx = allgroups.indexOf(group);
 		if(idx == 0 && i < 0) return;
-		if(idx >= allgroups.size() - 1 && i > 1) return;
+		if(idx >= allgroups.size() - 1 && i > 0) return;
 		Collections.swap(allgroups, idx, idx + i);
 		Editor.POLYGON_TREE.reAddGroups();
 	}
