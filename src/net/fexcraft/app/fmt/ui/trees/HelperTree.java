@@ -34,12 +34,15 @@ public class HelperTree extends Editor {
 		updcom.add(ModelUnload.class, event -> removeHelpers());
 		UpdateHandler.register(updcom);
 		this.add(new RunButton("editor.tree.helper.add_image", 10, 30, 135, 24, () -> FileChooser.chooseFile("...", ".", TYPE_IMG, false, file -> {
+			if(file == null) return;
 			PreviewHandler.loadFrame(file);
 		}), false));
 		this.add(new RunButton("editor.tree.helper.add_fmtb", 155, 30, 135, 24, () -> FileChooser.chooseFile("...", "./saves", TYPE_FMTB, false, file -> {
+			if(file == null) return;
 			PreviewHandler.loadFMTB(file);
 		}), false));
 		this.add(new RunButton("editor.tree.helper.add_import", 10, 60, 135, 24, () -> FileChooser.chooseFile("...", ".", TYPE_ANY, false, file -> {
+			if(file == null) return;
 			if(file.getName().endsWith(".")) file = new File(file.toString().substring(0, file.toString().length() - 1));
 			Importer porter = ImportManager.getImporterFor(file);
 			if(porter == null){
