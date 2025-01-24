@@ -11,6 +11,7 @@ import java.util.TimerTask;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.ui.GenericDialog;
+import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.lib.common.math.Time;
 
 /**
@@ -28,7 +29,10 @@ public class BackupHandler extends TimerTask {
 			bar("Saving backup... [" + str + "];", true, 10);
 			File file = new File("./backups/(" + str + ") " + FMT.MODEL.name + ".fmtb");
 			if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
-			SaveHandler.save(FMT.MODEL, file, null, true, false);
+			if(!SaveHandler.save(FMT.MODEL, file, null, true, false)){
+				GenericDialog.showOK("saveload.title", null, null, "saveload.backup.failure");
+				JsonHandler.print(new File("./backups/(" + str + ") " + FMT.MODEL.name + ".json"), SaveHandler.modelToJTMT(FMT.MODEL, false));
+			}
 		}
 		catch(Exception e){
 			GenericDialog.showOK("saveload.title", null, null, "saveload.backup.failure");
