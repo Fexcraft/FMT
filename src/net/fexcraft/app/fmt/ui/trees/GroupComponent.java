@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import net.fexcraft.app.fmt.polygon.Pivot;
+import net.fexcraft.app.fmt.texture.TextureManager;
+import net.fexcraft.app.fmt.ui.fields.RunButton;
 import net.fexcraft.app.fmt.update.UpdateEvent.*;
 import com.spinyowl.legui.component.Label;
 import com.spinyowl.legui.event.CursorEnterEvent;
@@ -33,7 +35,11 @@ public class GroupComponent extends EditorComponent {
 
 	private static final int PH = 20, PHS = 21;
 	private ArrayList<PolygonLabel> polygons = new ArrayList<>();
-	protected Icon visible, remove, edit;
+	protected Icon visible;
+	protected Icon remove;
+	protected Icon edit;
+	protected Icon sort_up;
+	protected Icon sort_dw;
 	private Group group;
 	
 	public GroupComponent(Group group){
@@ -43,6 +49,8 @@ public class GroupComponent extends EditorComponent {
 		add(visible = new Icon((byte)2, "./resources/textures/icons/component/visible.png", () -> pin()));
 		add(remove = new Icon((byte)3, "./resources/textures/icons/component/remove.png", () -> FMT.MODEL.remGroup(group)));
 		add(edit = new Icon((byte)4, "./resources/textures/icons/component/edit.png", () -> Editor.show("group_editor")));
+		add(sort_dw = new Icon((byte)5, "./resources/textures/icons/component/move_down.png", () -> FMT.MODEL.swap(group, 1)));
+		add(sort_up = new Icon((byte)6, "./resources/textures/icons/component/move_up.png", () -> FMT.MODEL.swap(group, -1)));
 		updcom.add(GroupRenamed.class, event -> { if(event.group() == group) label.getTextState().setText(group.id); });
 		updcom.add(PolygonAdded.class, event -> { if(event.group() == group) addPolygon(event.polygon(), true); });
 		updcom.add(PolygonRenamed.class, event -> { if(event.polygon().group() == group) renamePolygon(event.polygon()); });
@@ -98,6 +106,7 @@ public class GroupComponent extends EditorComponent {
 		visible.getListenerMap().addListener(CursorEnterEvent.class, clis);
 		edit.getListenerMap().addListener(CursorEnterEvent.class, clis);
 		UIUtils.hide(remove, visible, edit);
+		if(!PolygonTree.SORT_MODE) UIUtils.hide(sort_up, sort_dw);
 	}
 
 	private int genFullheight(){
