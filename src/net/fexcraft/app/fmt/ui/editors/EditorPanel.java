@@ -4,6 +4,7 @@ import com.spinyowl.legui.component.Component;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.Icon;
 import net.fexcraft.app.fmt.ui.UIUtils;
+import net.fexcraft.app.fmt.ui.panels.FlipToolsPanel;
 import net.fexcraft.app.fmt.ui.panels.MultiplierPanel;
 import net.fexcraft.app.fmt.ui.panels.QuickAddPanel;
 import net.fexcraft.app.fmt.update.UpdateHandler;
@@ -39,6 +40,7 @@ public class EditorPanel extends Component {
 	public static void load(){
 		PANELS.add(new MultiplierPanel());
 		PANELS.add(new QuickAddPanel());
+		PANELS.add(new FlipToolsPanel());
 	}
 
 	private void expand(){
