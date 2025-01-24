@@ -1,5 +1,8 @@
 package net.fexcraft.app.fmt.ui.panels;
 
+import com.google.common.io.Files;
+import com.spinyowl.legui.component.Dialog;
+import com.spinyowl.legui.component.Label;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.*;
 import net.fexcraft.app.fmt.settings.Settings;
@@ -8,6 +11,13 @@ import net.fexcraft.app.fmt.ui.Icon;
 import net.fexcraft.app.fmt.ui.ToolbarMenu;
 import net.fexcraft.app.fmt.ui.editors.EditorPanel;
 import net.fexcraft.app.fmt.ui.fields.NumberField;
+import net.fexcraft.app.fmt.ui.fields.RunButton;
+import net.fexcraft.app.fmt.ui.fields.TextField;
+import net.fexcraft.app.fmt.utils.Logging;
+import net.fexcraft.app.json.JsonHandler;
+import net.fexcraft.app.json.JsonMap;
+
+import java.io.File;
 
 import static net.fexcraft.app.fmt.ui.EditorComponent.HEIGHT;
 import static net.fexcraft.app.fmt.utils.Translator.translate;
@@ -53,10 +63,19 @@ public class QuickAddPanel extends EditorPanel {
 	}
 
 	public static void addGroup(){
-		String name = "group" + FMT.MODEL.allgroups().size();
-		while(FMT.MODEL.contains(name)) name += "0";
-		FMT.MODEL.addGroup(null, name);
+		String gn = "group" + FMT.MODEL.allgroups().size();
+		while(FMT.MODEL.contains(gn)) gn += "0";
 		hideMenu();
+		Dialog dialog = new Dialog(translate("group_add.dialog"), 420, 120);
+		dialog.getContainer().add(new Label(translate("group_add.dialog.name"), 10, 5, 400, 20));
+		TextField name = new TextField(gn, 10, 30, 400, 30, false);
+		dialog.getContainer().add(name);
+		dialog.getContainer().add(new RunButton("dialog.button.confirm", 310, 70, 100, 20, () -> {
+			FMT.MODEL.addGroup(null, name.getTextState().getText());
+			dialog.close();
+		}));
+		dialog.setResizable(false);
+		dialog.show(FMT.FRAME);
 	}
 
 	public static void addCylinder(){
