@@ -3,6 +3,7 @@ package net.fexcraft.app.fmt.ui;
 import java.util.ArrayList;
 
 import net.fexcraft.app.fmt.port.im.ImportManager;
+import net.fexcraft.app.fmt.ui.panels.QuickAddPanel;
 import net.fexcraft.app.fmt.ui.workspace.WorkspaceViewer;
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
 import com.spinyowl.legui.component.Component;
@@ -13,7 +14,6 @@ import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.port.ex.ExportManager;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.ToolbarMenu.MenuButton;
-import net.fexcraft.app.fmt.ui.components.QuickAdd;
 import net.fexcraft.app.fmt.utils.*;
 
 public class Toolbar extends Panel {
@@ -125,14 +125,14 @@ public class Toolbar extends Panel {
 			new MenuButton(3, "trees.helper", () -> Editor.PREVIEW_TREE.toggle())
 		));
 		this.add(new ToolbarMenu(5, "polygons",
-			new MenuButton(0, "polygons.add_box", () -> QuickAdd.addBox()),
-			new MenuButton(1, "polygons.add_shapebox", () -> QuickAdd.addShapebox()),
-			new MenuButton(2, "polygons.add_cylinder", () -> QuickAdd.addCylinder()),
-			new MenuButton(3, "polygons.add_marker", () -> QuickAdd.addMarker()),
-			new MenuButton(4, "polygons.add_group", () -> QuickAdd.addGroup()),
-			new MenuButton(5, "polygons.add_boundingbox", () -> QuickAdd.addScructBox()),
-			new MenuButton(6, "polygons.add_rect_curve", () -> QuickAdd.addCurve(false)),
-			new MenuButton(7, "polygons.add_cyl_curve", () -> QuickAdd.addCurve(true)),
+			new MenuButton(0, "polygons.add_box", () -> QuickAddPanel.addBox()),
+			new MenuButton(1, "polygons.add_shapebox", () -> QuickAddPanel.addShapebox()),
+			new MenuButton(2, "polygons.add_cylinder", () -> QuickAddPanel.addCylinder()),
+			new MenuButton(3, "polygons.add_marker", () -> QuickAddPanel.addMarker()),
+			new MenuButton(4, "polygons.add_group", () -> QuickAddPanel.addGroup()),
+			new MenuButton(5, "polygons.add_boundingbox", () -> QuickAddPanel.addScructBox()),
+			new MenuButton(6, "polygons.add_rect_curve", () -> QuickAddPanel.addCurve(false)),
+			new MenuButton(7, "polygons.add_cyl_curve", () -> QuickAddPanel.addCurve(true)),
 			new MenuButton(8, "polygons.add_object"),
 			new MenuButton(9, "polygons.add_voxel")
 		));
