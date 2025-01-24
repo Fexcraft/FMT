@@ -74,6 +74,7 @@ public class QuickAddPanel extends EditorPanel {
 			FMT.MODEL.addGroup(null, name.getTextState().getText());
 			dialog.close();
 		}));
+		dialog.getContainer().add(new RunButton("dialog.button.cancel", 200, 70, 100, 20, () -> dialog.close()));
 		dialog.setResizable(false);
 		dialog.show(FMT.FRAME);
 	}
