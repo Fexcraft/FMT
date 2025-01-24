@@ -6,10 +6,14 @@ import static org.lwjgl.glfw.GLFW.*;
 import java.io.File;
 import java.util.ArrayList;
 
+import com.spinyowl.legui.component.Component;
+import com.spinyowl.legui.component.Dialog;
+import com.spinyowl.legui.component.Layer;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.Arrows;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.Editor;
+import net.fexcraft.app.fmt.ui.fields.RunButton;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonHandler.PrintOption;
 import net.fexcraft.app.json.JsonMap;
@@ -136,6 +140,42 @@ public class KeyCompound {
 				FMT.MODEL.pasteFromClipboard();
 			}
 		}).set_ctrl());
+		keys.add(new KeyFunction("confirm", GLFW_KEY_ENTER, (action) -> {
+			if(action == GLFW_PRESS) processDialog(true);
+		}));
+		keys.add(new KeyFunction("cancel", GLFW_KEY_ESCAPE, (action) -> {
+			if(action == GLFW_PRESS) processDialog(false);
+		}));
+	}
+
+	private static void processDialog(boolean confirm){
+		Dialog.DialogLayer dia = null;
+		for(Layer layer : FMT.FRAME.getLayers()){
+			if(layer instanceof Dialog.DialogLayer){
+				dia = (Dialog.DialogLayer)layer;
+				break;
+			}
+		}
+		if(dia == null) return;
+		Dialog dialog = null;
+		for(Component comp : dia.getChildComponents()){
+			if(comp instanceof Dialog){
+				dialog = (Dialog)comp;
+				break;
+			}
+		}
+		if(dialog == null) return;
+		RunButton button;
+		for(Component comp : dialog.getContainer().getChildComponents()){
+			if(comp instanceof RunButton == false) continue;
+			button = (RunButton)comp;
+			if(button.confirm && confirm){
+				button.run.run();
+			}
+			if(button.cancel && !confirm){
+				button.run.run();
+			}
+		}
 	}
 
 	private static void onRelease(int action, Runnable run){
