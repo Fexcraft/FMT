@@ -13,7 +13,6 @@ public class GroupEditor extends Editor {
 
 	public GroupEditor(){
 		super("group_editor", "Group Editor", false);
-		if(Settings.SHOW_QUICK_ADD.value) addComponent(new QuickAdd());
 		addComponent(new GroupGeneral());
 	}
 
