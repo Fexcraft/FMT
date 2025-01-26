@@ -179,8 +179,8 @@ public class Model {
 				if(Settings.LINES.value) group.render(DrawMode.LINES, alpha);
 			}
 		}
-		PolyRenderer.setPivot(null);
 		if(Settings.LINES.value && Settings.POLYMARKER.value && isLastSelectedCornerMarked()) CornerUtil.renderCorners();
+		PolyRenderer.setPivot(null);
 	}
 
 	public void renderPicking(){
