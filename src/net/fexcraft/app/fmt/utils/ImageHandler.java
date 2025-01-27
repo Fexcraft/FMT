@@ -41,6 +41,7 @@ public class ImageHandler {
 	}
 	private static Task CURRENT = Task.NONE;
 	private static int WAIT;
+	private static int WAIT_ = 5;
 	private static int pass;
 	public static Float ROT;
 
@@ -51,7 +52,7 @@ public class ImageHandler {
 	public static void takeScreenshot(boolean fromKey){
 		if(CURRENT == Task.NONE){
 			CURRENT = fromKey || !Settings.OPEN_FOLDER_AFTER_IMG.value ? Task.SCREENSHOT : Task.SCREENSHOT_OPEN;
-			WAIT = 2;
+			WAIT = WAIT_;
 			return;
 		}
 		BufferedImage image = displayToImage();
@@ -74,7 +75,7 @@ public class ImageHandler {
 	public static void createGif(){
 		if(CURRENT == Task.NONE){
 			CURRENT = Task.GIF;
-			WAIT = 2;
+			WAIT = WAIT_;
 			return;
 		}
 		if(meta == null){
