@@ -108,7 +108,7 @@ public class FMFExporter implements Exporter {
 					axe2.setAngles(-piv.rot.y, -piv.rot.z, -piv.rot.x);
 					stream.write(3);
 					write(stream, PM, group.id);
-					writeVector(stream, PP, piv.pos);
+					writeVector(stream, PP, piv.pos.mul(16));
 					writeVector(stream, PR, piv.rot);
 					for(Polygon polygon : group){
 						if(!valid(polygon.getShape())) continue;
