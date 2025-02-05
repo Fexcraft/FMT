@@ -1,12 +1,12 @@
 package net.fexcraft.app.fmt.utils;
 
-import de.jcm.discordgamesdk.Core;
+/*import de.jcm.discordgamesdk.Core;
 import de.jcm.discordgamesdk.CreateParams;
 import de.jcm.discordgamesdk.LogLevel;
 import de.jcm.discordgamesdk.activity.Activity;
 import de.jcm.discordgamesdk.activity.ActivityButton;
 import de.jcm.discordgamesdk.activity.ActivityButtonsMode;
-import de.jcm.discordgamesdk.activity.ActivityType;
+import de.jcm.discordgamesdk.activity.ActivityType;*/
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.lib.common.math.Time;
@@ -18,11 +18,11 @@ import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
 /** Using https://github.com/JnCrMx/discord-game-sdk4j */
 public class DiscordUtil {
 
-	public static Core CORE;
-	public static long starttime;
+	/*public static Core CORE;
+	public static long starttime;*/
 
 	public static void update(boolean updatetime){
-		if(updatetime) starttime = Time.getDate();
+		/*if(updatetime) starttime = Time.getDate();
 		if(CORE == null) return;
 		try{
 			Activity activity = new Activity();
@@ -44,11 +44,11 @@ public class DiscordUtil {
 		}
 		catch(Throwable e){
 			e.printStackTrace();
-		}
+		}*/
 	}
 
 	public static void start(){
-		new Thread(() -> {
+		/*new Thread(() -> {
 			CreateParams params = new CreateParams();
 			params.setClientID(587016218196574209L);
 			params.setFlags(CreateParams.getDefaultFlags());
@@ -69,7 +69,7 @@ public class DiscordUtil {
 			catch(Throwable e){
 				e.printStackTrace();
 			}
-		}).start();
+		}).start();*/
 	}
 
 }
