@@ -1,10 +1,12 @@
 package net.fexcraft.app.fmt.ui.components;
 
 import static net.fexcraft.app.fmt.settings.Settings.POLYGON_SUFFIX;
+import static net.fexcraft.app.fmt.update.UpdateHandler.update;
 import static net.fexcraft.app.fmt.utils.Translator.translate;
 
 import java.util.ArrayList;
 
+import net.fexcraft.app.fmt.polygon.*;
 import net.fexcraft.app.fmt.ui.fields.RunButton;
 import net.fexcraft.app.fmt.ui.panels.QuickAddPanel;
 import net.fexcraft.app.fmt.update.UpdateEvent.GroupAdded;
@@ -15,9 +17,6 @@ import com.spinyowl.legui.component.Label;
 import com.spinyowl.legui.component.SelectBox;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.polygon.Group;
-import net.fexcraft.app.fmt.polygon.Polygon;
-import net.fexcraft.app.fmt.polygon.Shape;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.ui.fields.NumberField;
@@ -98,7 +97,7 @@ public class PolygonSorting extends EditorComponent {
 				}
 			}
 		});
-		type.setSize(LW, HEIGHT);
+		type.setSize(LW - 60, HEIGHT);
 		type.setPosition(L5, row(1));
 		type.setVisibleCount(8);
 		Settings.applyBorderless(type);
@@ -106,6 +105,40 @@ public class PolygonSorting extends EditorComponent {
 		Settings.applyBorderless(type.getExpandButton());
 		Settings.applyBorderlessScrollable(type.getSelectionListPanel(), false);
 		updateTypeBox();
+		add(new RunButton("Rc", L5 + LW - 55, row(0), HEIGHT, HEIGHT, () -> {
+			ArrayList<Polygon> polis = FMT.MODEL.selected();
+			for(Polygon poly : polis){
+				if(!poly.getShape().isShapebox()) continue;
+				Shapebox box = (Shapebox)poly;
+				box.cor0 = new Vector3F();
+				box.cor1 = new Vector3F();
+				box.cor2 = new Vector3F();
+				box.cor3 = new Vector3F();
+				box.cor4 = new Vector3F();
+				box.cor5 = new Vector3F();
+				box.cor6 = new Vector3F();
+				box.cor7 = new Vector3F();
+				box.recompile();
+			}
+			update(new PolygonSelected(polis.get(0), polis.size(), polis.size()));
+
+		}).addTooltip("editor.component.polygon.sorting.reset_corners"));
+		add(new RunButton("Rd", L5 + LW - 25, row(0), HEIGHT, HEIGHT, () -> {
+			ArrayList<Polygon> polis = FMT.MODEL.selected();
+			float v;
+			for(Polygon poly : polis){
+				if(!poly.getShape().isRectagular()) continue;
+				Box box = (Box)poly;
+				v = box.size.x;
+				box.size.x = (int)box.size.x + ((v % 1f >= 0.5) ? 1 : 0);
+				v = box.size.y;
+				box.size.y = (int)box.size.y + ((v % 1f >= 0.5) ? 1 : 0);
+				v = box.size.z;
+				box.size.z = (int)box.size.z + ((v % 1f >= 0.5) ? 1 : 0);
+				box.recompile();
+			}
+			update(new PolygonSelected(polis.get(0), polis.size(), polis.size()));
+		}).addTooltip("editor.component.polygon.sorting.reset_size"));
 		this.add(type);
 	}
 
