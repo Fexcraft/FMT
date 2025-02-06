@@ -90,6 +90,10 @@ public class KeyCompound {
 			if(GGR.isOverUI()) return;
 			if(action == GLFW_RELEASE) Editor.PREVIEW_EDITOR.show();
 		}));
+		keys.add(new KeyFunction("toggle_editor_8", GLFW_KEY_8, action -> {
+			if(GGR.isOverUI()) return;
+			if(action == GLFW_RELEASE) Editor.CONFIG_EDITOR.show();
+		}));
 		//
 		keys.add(new KeyFunction("camera_rotate_left",  GLFW_KEY_LEFT,  action -> { if(!GGR.isOverUI()) FMT.CAM.hor -= Static.rad5; }));
 		keys.add(new KeyFunction("camera_rotate_right", GLFW_KEY_RIGHT, action -> { if(!GGR.isOverUI()) FMT.CAM.hor += Static.rad5; }));
