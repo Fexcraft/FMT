@@ -492,6 +492,7 @@ setting.lighting.pos_x=Light Pos X
 setting.lighting.pos_y=Light Pos Y
 setting.lighting.pos_z=Light Pos Z
 setting.exporter-fmf.modeldata=Include ModelData?
+setting.exporter-fmf.group_as_single_polygon=Group as Single Polygon
 setting.exporter-png.textured=Export Textured?
 setting.exporter-png.group=Texture Group
 setting.exporter-fvtm-format.extended_form=Extended Form
