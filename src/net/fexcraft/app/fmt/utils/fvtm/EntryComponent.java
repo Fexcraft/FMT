@@ -1,6 +1,7 @@
 package net.fexcraft.app.fmt.utils.fvtm;
 
 import com.spinyowl.legui.component.*;
+import com.spinyowl.legui.component.event.selectbox.SelectBoxChangeSelectionEvent;
 import com.spinyowl.legui.component.event.textinput.TextInputContentChangeEvent;
 import com.spinyowl.legui.event.MouseClickEvent;
 import net.fexcraft.app.fmt.FMT;
@@ -251,38 +252,22 @@ public class EntryComponent extends Component {
 				}
 				case VECTOR_MAP:
 				case VECTOR_ARRAY: {
-					Dialog dialog = new Dialog("Select a Vector.", 440, 110);
-					SelectBox<String> vecbox = new SelectBox<>(10, 50, 420, 30);
-					SelectBox<String> typebox = new SelectBox<>(10, 10, 420, 30);
+					int width = 440;
+					Dialog dialog = new Dialog("Select a Vector.", width, 110);
+					SelectBox<String> vecbox = new SelectBox<>(10, 50, width - 80, 30);
+					SelectBox<String> typebox = new SelectBox<>(10, 10, width - 80, 30);
 					typebox.setVisibleCount(8);
-					typebox.setSelected("(please select a type)", true);
 					typebox.addElement("marker");
 					typebox.addElement("pivot");
-					typebox.addSelectBoxChangeSelectionEventListener(lis -> {
-						while(vecbox.getElements().size() > 0) vecbox.removeElement(0);
-						vecbox.addElement("null");
-						if(lis.getNewValue().equals("marker")){
-							for(Group group : FMT.MODEL.allgroups()){
-								for(Polygon poly : group){
-									if(!poly.getShape().isMarker()) continue;
-									if(poly.name(true) == null) continue;
-									vecbox.addElement(group.id + "/" + poly.name());
-								}
-							}
-						}
-						else{
-							for(Pivot pivot : FMT.MODEL.pivots()){
-								vecbox.addElement(pivot.parentid + "/" + pivot.id);
-							}
-						}
-					});
+					typebox.setSelected("marker", true);
+					typebox.addSelectBoxChangeSelectionEventListener(lis -> updateVecBox(lis.getNewValue(), vecbox));
+					dialog.getContainer().add(new Icon(20,width - 60, 15, typebox, true, () -> updateVecBox(typebox.getSelection(), vecbox)));
+					dialog.getContainer().add(new Icon(20,width - 30, 15, typebox, false, () -> updateVecBox(typebox.getSelection(), vecbox)));
 					dialog.getContainer().add(typebox);
 					//
 					vecbox.setVisibleCount(8);
-					vecbox.addElement("(select a type)");
 					vecbox.addSelectBoxChangeSelectionEventListener(lis -> {
 						String val = lis.getNewValue();
-						if(val.equals("select a type")) return;
 						if(val.equals("null")){
 							input[0].getTextState().setText("0");
 							input[1].getTextState().setText("0");
@@ -332,7 +317,10 @@ public class EntryComponent extends Component {
 						this.val.asArray().set(2, new JsonValue<>(vec.z));
 						dialog.close();
 					});
+					updateVecBox("marker", vecbox);
 					dialog.getContainer().add(vecbox);
+					dialog.getContainer().add(new Icon(20, width - 60, 55, vecbox, true, null));
+					dialog.getContainer().add(new Icon(20, width - 30, 55, vecbox, false, null));
 					dialog.setResizable(false);
 					dialog.show(FMT.FRAME);
 					break;
@@ -345,6 +333,25 @@ public class EntryComponent extends Component {
 				}
 			}
 		}).addTooltip("select"));
+	}
+
+	private void updateVecBox(String val, SelectBox<String> vecbox){
+		while(vecbox.getElements().size() > 0) vecbox.removeElement(0);
+		vecbox.addElement("null");
+		if(val.equals("marker")){
+			for(Group group : FMT.MODEL.allgroups()){
+				for(Polygon poly : group){
+					if(!poly.getShape().isMarker()) continue;
+					if(poly.name(true) == null) continue;
+					vecbox.addElement(group.id + "/" + poly.name());
+				}
+			}
+		}
+		else{
+			for(Pivot pivot : FMT.MODEL.pivots()){
+				vecbox.addElement(pivot.parentid + "/" + pivot.id);
+			}
+		}
 	}
 
 	private void geninput(){
