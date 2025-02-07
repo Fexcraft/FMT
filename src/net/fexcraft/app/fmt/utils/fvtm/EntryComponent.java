@@ -253,7 +253,7 @@ public class EntryComponent extends Component {
 				case VECTOR_MAP:
 				case VECTOR_ARRAY: {
 					int width = 440;
-					Dialog dialog = new Dialog("Select a Vector.", width, 110);
+					Dialog dialog = new Dialog("Select a Vector.", width, 140);
 					SelectBox<String> vecbox = new SelectBox<>(10, 50, width - 80, 30);
 					SelectBox<String> typebox = new SelectBox<>(10, 10, width - 80, 30);
 					typebox.setVisibleCount(8);
@@ -266,61 +266,12 @@ public class EntryComponent extends Component {
 					dialog.getContainer().add(typebox);
 					//
 					vecbox.setVisibleCount(8);
-					vecbox.addSelectBoxChangeSelectionEventListener(lis -> {
-						String val = lis.getNewValue();
-						if(val.equals("null")){
-							input[0].getTextState().setText("0");
-							input[1].getTextState().setText("0");
-							input[2].getTextState().setText("0");
-							this.val.asArray().set(0, new JsonValue<>(0f));
-							this.val.asArray().set(1, new JsonValue<>(0f));
-							this.val.asArray().set(2, new JsonValue<>(0f));
-							dialog.close();
-							return;
-						}
-						String type = typebox.getSelection();
-						Vec3f vec = new Vec3f();
-						if(type.equals("marker")){
-							String[] str = val.split("/");
-							Group group = FMT.MODEL.get(str[0]);
-							Polygon poly = group.get(str[1]);
-							if(FMT.MODEL.orient.rect()){
-								vec.x = poly.pos.x * .0625f;
-								vec.y = poly.pos.y * .0625f;
-								vec.z = poly.pos.z * .0625f;
-							}
-							else{
-								vec.x = -poly.pos.z * .0625f;
-								vec.y = -poly.pos.y * .0625f;
-								vec.z = -poly.pos.x * .0625f;
-							}
-						}
-						else{
-							Pivot pivot = FMT.MODEL.getP(val.split("/")[1]);
-							if(FMT.MODEL.orient.rect()){
-								vec.x = pivot.pos.x * .0625f;
-								vec.y = pivot.pos.y * .0625f;
-								vec.z = pivot.pos.z * .0625f;
-							}
-							else{
-								vec.x = -pivot.pos.z * .0625f;
-								vec.y = -pivot.pos.y * .0625f;
-								vec.z = -pivot.pos.x * .0625f;
-							}
-						}
-						input[0].getTextState().setText(vec.x + "");
-						input[1].getTextState().setText(vec.y + "");
-						input[2].getTextState().setText(vec.z + "");
-						fillIfMissing();
-						this.val.asArray().set(0, new JsonValue<>(vec.x));
-						this.val.asArray().set(1, new JsonValue<>(vec.y));
-						this.val.asArray().set(2, new JsonValue<>(vec.z));
-						dialog.close();
-					});
+					vecbox.addSelectBoxChangeSelectionEventListener(lis -> confirmVecBox(lis.getNewValue(), typebox, vecbox, dialog));
 					updateVecBox("marker", vecbox);
 					dialog.getContainer().add(vecbox);
 					dialog.getContainer().add(new Icon(20, width - 60, 55, vecbox, true, null));
 					dialog.getContainer().add(new Icon(20, width - 30, 55, vecbox, false, null));
+					dialog.getContainer().add(new RunButton("dialog.button.select", width - 110, 90, 100, 20, () -> confirmVecBox(vecbox.getSelection(), typebox, vecbox, dialog)));
 					dialog.setResizable(false);
 					dialog.show(FMT.FRAME);
 					break;
@@ -333,6 +284,57 @@ public class EntryComponent extends Component {
 				}
 			}
 		}).addTooltip("select"));
+	}
+
+	private void confirmVecBox(String val, SelectBox<String> typebox, SelectBox<String> vecbox, Dialog dialog){
+		if(val.equals("null")){
+			input[0].getTextState().setText("0");
+			input[1].getTextState().setText("0");
+			input[2].getTextState().setText("0");
+			this.val.asArray().set(0, new JsonValue<>(0f));
+			this.val.asArray().set(1, new JsonValue<>(0f));
+			this.val.asArray().set(2, new JsonValue<>(0f));
+			dialog.close();
+			return;
+		}
+		String type = typebox.getSelection();
+		Vec3f vec = new Vec3f();
+		if(type.equals("marker")){
+			String[] str = val.split("/");
+			Group group = FMT.MODEL.get(str[0]);
+			Polygon poly = group.get(str[1]);
+			if(FMT.MODEL.orient.rect()){
+				vec.x = poly.pos.x * .0625f;
+				vec.y = poly.pos.y * .0625f;
+				vec.z = poly.pos.z * .0625f;
+			}
+			else{
+				vec.x = -poly.pos.z * .0625f;
+				vec.y = -poly.pos.y * .0625f;
+				vec.z = -poly.pos.x * .0625f;
+			}
+		}
+		else{
+			Pivot pivot = FMT.MODEL.getP(val.split("/")[1]);
+			if(FMT.MODEL.orient.rect()){
+				vec.x = pivot.pos.x * .0625f;
+				vec.y = pivot.pos.y * .0625f;
+				vec.z = pivot.pos.z * .0625f;
+			}
+			else{
+				vec.x = -pivot.pos.z * .0625f;
+				vec.y = -pivot.pos.y * .0625f;
+				vec.z = -pivot.pos.x * .0625f;
+			}
+		}
+		input[0].getTextState().setText(vec.x + "");
+		input[1].getTextState().setText(vec.y + "");
+		input[2].getTextState().setText(vec.z + "");
+		fillIfMissing();
+		this.val.asArray().set(0, new JsonValue<>(vec.x));
+		this.val.asArray().set(1, new JsonValue<>(vec.y));
+		this.val.asArray().set(2, new JsonValue<>(vec.z));
+		dialog.close();
 	}
 
 	private void updateVecBox(String val, SelectBox<String> vecbox){
