@@ -510,6 +510,7 @@ public class EntryComponent extends Component {
 		}
 		if(!entry.type.subtype() && !entry.static_){
 			add(new Icon(0, 20, 0, 220, 10, "./resources/textures/icons/configeditor/add.png", () -> {
+				fillIfMissing();
 				if(entry.type == EntryType.ARRAY){
 					JsonMap sup = new JsonMap();
 					for(ConfigEntry conf : entry.subs){
@@ -519,7 +520,6 @@ public class EntryComponent extends Component {
 					editor.resize();
 				}
 				else if(entry.type == EntryType.ARRAY_SIMPLE){
-					fillIfMissing();
 					JsonArray arr = val.asArray();
 					arr.add(entry.subs.get(0).gendef());
 					addsub(new EntryComponent(editor, this, entry.subs.get(0), new SubKey(arr.size() - 1), arr.get(arr.size() - 1)));
@@ -538,7 +538,6 @@ public class EntryComponent extends Component {
 					editor.resize();
 				}
 				else if(entry.type == EntryType.OBJECT_KEY_VAL){
-					fillIfMissing();
 					JsonMap map = val.asMap();
 					String nkey = null;
 					if(entry.subs.get(0).type.separate()){
