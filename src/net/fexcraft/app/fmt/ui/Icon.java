@@ -1,6 +1,7 @@
 package net.fexcraft.app.fmt.ui;
 
 import com.spinyowl.legui.component.ImageView;
+import com.spinyowl.legui.component.SelectBox;
 import com.spinyowl.legui.component.Tooltip;
 import com.spinyowl.legui.component.optional.align.HorizontalAlign;
 import com.spinyowl.legui.event.MouseClickEvent;
@@ -83,6 +84,19 @@ public class Icon extends ImageView {
 
     public Icon addTooltip(String string) {
         return addTooltip(string, true);
+    }
+
+    public Icon(int size, int x, int y, SelectBox<String> box, boolean left, Runnable run){
+        this(0, size, 0, x, y, "./resources/textures/icons/component/move_" + (left ? "left" : "right") + ".png", () -> {
+            int idx = box.getElementIndex(box.getSelection());
+            if(left){
+                box.setSelected(idx <= 0 ? box.getElements().size() - 1 : idx - 1, true);
+            }
+            else{
+                box.setSelected(idx >= box.getElements().size() - 1? 0 : idx + 1, true);
+            }
+            if(run != null) run.run();
+        });
     }
 
 }
