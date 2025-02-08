@@ -161,6 +161,10 @@ public class Settings {
 	public static RGBSetting GROUP_SELECTED;
 	public static RGBSetting GROUP_INVISIBLE;
 	public static RGBSetting GROUP_INV_SEL;
+	public static RGBSetting PIVOT_NORMAL;
+	public static RGBSetting PIVOT_SELECTED;
+	public static RGBSetting PIVOT_INVISIBLE;
+	public static RGBSetting PIVOT_INV_SEL;
 	public static RGBSetting TEXTURE_GROUP;
 	public static RGBSetting TEXTURE_OPTION;
 	//
@@ -335,13 +339,17 @@ public class Settings {
 		THEME_BUTTON = new RGBSetting("button", new RGB(0x212121), THEME, map);
 		THEME_FONT = new StringArraySetting("font", FONT, THEME, map, FontRegistry.ENTYPO, FontRegistry.ROBOTO_LIGHT, FontRegistry.ROBOTO_BOLD, FontRegistry.ROBOTO_REGULAR);
 		POLYGON_NORMAL = new RGBSetting("component_polygon_normal", new RGB(38, 127, 0), THEME, map);
-		GROUP_NORMAL = new RGBSetting("component_group_normal", new RGB(0, 74, 127), THEME, map);
 		POLYGON_SELECTED = new RGBSetting("component_polygon_selected", new RGB(219, 156, 46), THEME, map);
-		GROUP_SELECTED = new RGBSetting("component_group_selected", new RGB(191, 128, 50), THEME, map);
 		POLYGON_INVISIBLE = new RGBSetting("component_polygon_invisible", new RGB(126, 196, 96), THEME, map);
-		GROUP_INVISIBLE = new RGBSetting("component_group_invisible", new RGB(67, 142, 196), THEME, map);
 		POLYGON_INV_SEL = new RGBSetting("component_polygon_invis_sel", new RGB(250, 202, 117), THEME, map);
+		GROUP_NORMAL = new RGBSetting("component_group_normal", new RGB(0, 74, 127), THEME, map);
+		GROUP_SELECTED = new RGBSetting("component_group_selected", new RGB(191, 128, 50), THEME, map);
+		GROUP_INVISIBLE = new RGBSetting("component_group_invisible", new RGB(67, 142, 196), THEME, map);
 		GROUP_INV_SEL = new RGBSetting("component_group_invis_sel", new RGB(232, 158, 67), THEME, map);
+		PIVOT_NORMAL = new RGBSetting("component_pivot_normal", new RGB(5, 158, 127), THEME, map);
+		PIVOT_SELECTED = new RGBSetting("component_pivot_selected", new RGB(219, 213, 31), THEME, map);
+		PIVOT_INVISIBLE = new RGBSetting("component_pivot_invisible", new RGB(123, 158, 151), THEME, map);
+		PIVOT_INV_SEL = new RGBSetting("component_pivot_invis_sel", new RGB(209, 205, 100), THEME, map);
 		BOTTOM_INFO_BAR_COLOR = new RGBSetting("bottom_infobar_color", new RGB(200, 200, 200), THEME, map);
 		TEXTURE_GROUP = new RGBSetting("component_texture_group", new RGB(0, 74, 127), THEME, map);
 		TEXTURE_OPTION = new RGBSetting("component_texture_group_option", new RGB(0, 74, 127), THEME, map);
