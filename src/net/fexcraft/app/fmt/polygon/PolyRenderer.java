@@ -57,8 +57,8 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 		}
 		matrix.translate(new Vector3f(poly.posX, poly.posY, poly.posZ));
 		if(poly.rotY != 0f) matrix.rotate((float)Math.toRadians(poly.rotY), axis_y);
-		if(poly.rotZ != 0f) matrix.rotate((float)Math.toRadians(poly.rotZ), axis_z);
 		if(poly.rotX != 0f) matrix.rotate((float)Math.toRadians(poly.rotX), axis_x);
+		if(poly.rotZ != 0f) matrix.rotate((float)Math.toRadians(poly.rotZ), axis_z);
 		//
 		glUniformMatrix4fv(program.getUniform("model"), false, matrix.get(new float[16]));
 		if(MODE.ui()){
@@ -104,8 +104,8 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 		if(ImageHandler.ROT != null) matrix.rotate(ImageHandler.ROT, GIF_AXIS);
 		matrix.translate(HELPER.pos);
 		if(HELPER.rot.y != 0f) matrix.rotate((float)Math.toRadians(HELPER.rot.y), axis_y);
-		if(HELPER.rot.z != 0f) matrix.rotate((float)Math.toRadians(HELPER.rot.z), axis_z);
 		if(HELPER.rot.x != 0f) matrix.rotate((float)Math.toRadians(HELPER.rot.x), axis_x);
+		if(HELPER.rot.z != 0f) matrix.rotate((float)Math.toRadians(HELPER.rot.z), axis_z);
 	}
 
 	public static void setPivot(Pivot npivot){
@@ -116,13 +116,13 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 		for(Pivot pivot : PIVOT.roots){
 			matrix.translate(pivot.pos);
 			if(pivot.rot.y != 0f) matrix.rotate((float)Math.toRadians(pivot.rot.y), axis_y);
-			if(pivot.rot.z != 0f) matrix.rotate((float)Math.toRadians(pivot.rot.z), axis_z);
 			if(pivot.rot.x != 0f) matrix.rotate((float)Math.toRadians(pivot.rot.x), axis_x);
+			if(pivot.rot.z != 0f) matrix.rotate((float)Math.toRadians(pivot.rot.z), axis_z);
 		}
 		matrix.translate(PIVOT.pos);
 		if(PIVOT.rot.y != 0f) matrix.rotate((float)Math.toRadians(PIVOT.rot.y), axis_y);
-		if(PIVOT.rot.z != 0f) matrix.rotate((float)Math.toRadians(PIVOT.rot.z), axis_z);
 		if(PIVOT.rot.x != 0f) matrix.rotate((float)Math.toRadians(PIVOT.rot.x), axis_x);
+		if(PIVOT.rot.z != 0f) matrix.rotate((float)Math.toRadians(PIVOT.rot.z), axis_z);
 	}
 	
 	public static void updateLightState(){
