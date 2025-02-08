@@ -102,10 +102,10 @@ public class FMFExporter implements Exporter {
 				if(group.stream().filter(poly -> valid(poly.getShape())).count() == 0) continue;
 				write(stream, 2, group.id);
 				if(sing){
-					Axis3DL axe2 = new Axis3DL();
+					//Axis3DL axe2 = new Axis3DL();
 					Axis3DL rot = new Axis3DL();
 					Pivot piv = model.getP(group.pivot);
-					axe2.setAngles(-piv.rot.y, -piv.rot.z, -piv.rot.x);
+					//axe2.setAngles(-piv.rot.y, -piv.rot.z, -piv.rot.x);
 					stream.write(3);
 					write(stream, PM, group.id);
 					writeVector(stream, PP, piv.pos);
@@ -116,7 +116,7 @@ public class FMFExporter implements Exporter {
 						rot.setAngles(-polygon.rot.y, -polygon.rot.z, -polygon.rot.x);
 						for(net.fexcraft.lib.frl.Polygon p : poly.polygons){
 							for(Vertex vertex : p.vertices){
-								Vec3f vec = axe2.get(rot.get(vertex.vector).add(poly.posX, poly.posY, poly.posZ));
+								Vec3f vec = /*axe2.get(*/rot.get(vertex.vector).add(poly.posX, poly.posY, poly.posZ);//);
 								writeFloats(stream, PF, vec.x, vec.y, vec.z);
 								writeFloats(stream, PT, vertex.u, vertex.v);
 							}
