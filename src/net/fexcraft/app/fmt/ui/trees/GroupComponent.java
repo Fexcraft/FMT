@@ -35,6 +35,7 @@ public class GroupComponent extends EditorComponent {
 
 	private static final int PH = 20, PHS = 21;
 	private ArrayList<PolygonLabel> polygons = new ArrayList<>();
+	private PivotComponent root;
 	protected Icon visible;
 	protected Icon remove;
 	protected Icon edit;
@@ -109,6 +110,11 @@ public class GroupComponent extends EditorComponent {
 		if(!PolygonTree.SORT_MODE) UIUtils.hide(sort_up, sort_dw);
 	}
 
+	public GroupComponent(Group group, PivotComponent picom){
+		this(group);
+		root = picom;
+	}
+
 	private int genFullheight(){
 		return fullheight = group.isEmpty() ? HEIGHT : HEIGHT + group.size() * PHS + 4;
 	}
@@ -117,6 +123,9 @@ public class GroupComponent extends EditorComponent {
 	public void minimize(Boolean bool){
 		super.minimize(bool);
 		group.minimized = minimized;
+		if(root != null){
+			root.resize();
+		}
 	}
 
 	private void addPolygon(Polygon polygon, boolean resort){
@@ -132,6 +141,10 @@ public class GroupComponent extends EditorComponent {
 	protected void resize(){
 		setSize(Editor.CWIDTH, genFullheight());
 		minimize(group.minimized);
+		resort();
+	}
+
+	protected void resort(){
 		for(int i = 0; i < polygons.size(); i++){
 			polygons.get(i).sortin(i);
 		}
