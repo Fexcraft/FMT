@@ -27,7 +27,7 @@ import static net.fexcraft.app.fmt.settings.Settings.*;
 public class PivotComponent extends EditorComponent {
 
 	private static final int PH = 20, PHS = 21;
-	private ArrayList<GroupLabel> groups = new ArrayList<>();
+	private ArrayList<GroupComponent> groups = new ArrayList<>();
 	protected Icon visible, remove, edit;
 	private Pivot pivot;
 
@@ -40,7 +40,7 @@ public class PivotComponent extends EditorComponent {
 		add(edit = new Icon((byte)4, "./resources/textures/icons/component/edit.png", () -> Editor.show("pivot_editor")));
 		updcom.add(PivotRenamed.class, event -> { if(event.pivot() == pivot) label.getTextState().setText(pivot.id); });
 		updcom.add(GroupAdded.class, event -> { if(pivot.isin(event.group())) addGroup(event.group(), true); });
-		updcom.add(GroupRenamed.class, event -> { if(pivot.isin(event.group())) renameGroup(event.group()); });
+		//updcom.add(GroupRenamed.class, event -> { if(pivot.isin(event.group())) renameGroup(event.group()); });
 		updcom.add(GroupRemoved.class, event -> { if(pivot.isin(event.group())) removeGroup(event.group()); });
 		//pivot.groups.forEach(group -> addGroup(group, false));
 		update_color();
@@ -55,21 +55,21 @@ public class PivotComponent extends EditorComponent {
 		updcom.add(PivotVisibility.class, event -> {
 			if(event.pivot() == pivot){
 				update_color();
-				for(GroupLabel group : groups){
+				for(GroupComponent group : groups){
 					group.update_color();
 				}
 			}
 		});
 		updcom.add(GroupVisibility.class, event -> {
 			if(!pivot.groups.contains(event.group())) return;
-			for(GroupLabel group : groups){
-				if(group.group == event.group()) group.update_color();
+			for(GroupComponent group : groups){
+				if(group.group() == event.group()) group.update_color();
 			}
 		});
 		updcom.add(GroupSelected.class, event -> {
 			if(pivot.groups.contains(event.group())){
 				update_color();
-				for(GroupLabel group : groups){
+				for(GroupComponent group : groups){
 					group.update_color();
 				}
 			}
@@ -97,7 +97,14 @@ public class PivotComponent extends EditorComponent {
 	}
 
 	private int genFullheight(){
-		return fullheight = pivot.groups.isEmpty() ? HEIGHT : HEIGHT + pivot.groups.size() * PHS + 4;
+		fullheight = HEIGHT;
+		if(pivot.groups.isEmpty()) return fullheight;
+		for(GroupComponent group : groups){
+			group.setPosition(2, fullheight);
+			group.resort();
+			fullheight += group.getSize().y;
+		}
+		return fullheight += 4;
 	}
 
 	@Override
@@ -107,35 +114,37 @@ public class PivotComponent extends EditorComponent {
 	}
 
 	protected void addGroup(Group group, boolean resort){
-		GroupLabel label = new GroupLabel(this).group(group).update_name().update_color();
+		/*GroupLabel label = new GroupLabel(this).group(group).update_name().update_color();
 		this.add(label);
-		groups.add(label);
+		groups.add(label);*/
+		GroupComponent comp = new GroupComponent(group, this);
+		add(comp);
+		groups.add(comp);
+		comp.minimize(true);
+		UpdateHandler.register(comp.getUpdCom());
 		if(resort){
 			resize();
 			minimize(minimized);
 		}
 	}
-	
+
 	protected void resize(){
 		setSize(Editor.CWIDTH, genFullheight());
 		minimize(pivot.minimized);
-		for(int i = 0; i < groups.size(); i++){
-			groups.get(i).sortin(i);
-		}
 	}
 
-	private void renameGroup(Group group){
-		for(GroupLabel label : groups){
-			if(label.group == group){
+	/*private void renameGroup(Group group){
+		for(GroupComponent label : groups){
+			if(label.group() == group){
 				label.update_name();
 				break;
 			}
 		}
-	}
+	}*/
 
 	private void removeGroup(Group group){
-		for(GroupLabel label : groups){
-			if(label.group == group){
+		for(GroupComponent label : groups){
+			if(label.group() == group){
 				groups.remove(label);
 				remove(label);
 				break;
@@ -241,8 +250,8 @@ public class PivotComponent extends EditorComponent {
 	}
 
 	public void update_color(){
-		label.getStyle().setTextColor(ColorConstants.lightGray());
-		this.getStyle().getBackground().setColor(FMT.rgba((pivot == FMT.MODEL.sel_pivot ? pivot.visible ? GROUP_SELECTED : GROUP_INV_SEL : pivot.visible ? GROUP_NORMAL : GROUP_INVISIBLE).value));
+		label.getStyle().setTextColor(pivot == FMT.MODEL.sel_pivot ? ColorConstants.darkGray() : ColorConstants.lightGray());
+		this.getStyle().getBackground().setColor(FMT.rgba((pivot == FMT.MODEL.sel_pivot ? pivot.visible ? PIVOT_SELECTED : PIVOT_INV_SEL : pivot.visible ? PIVOT_NORMAL : PIVOT_INVISIBLE).value));
 	}
 
 }
