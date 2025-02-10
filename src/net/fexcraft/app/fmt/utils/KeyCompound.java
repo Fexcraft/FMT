@@ -12,7 +12,9 @@ import com.spinyowl.legui.component.Layer;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.Arrows;
 import net.fexcraft.app.fmt.settings.Settings;
+import net.fexcraft.app.fmt.texture.TexturePainter;
 import net.fexcraft.app.fmt.ui.Editor;
+import net.fexcraft.app.fmt.ui.components.CurrentColor;
 import net.fexcraft.app.fmt.ui.fields.RunButton;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonHandler.PrintOption;
@@ -60,6 +62,7 @@ public class KeyCompound {
 			}
 		}));
 		keys.add(new KeyFunction("zoom_in", GLFW_KEY_Z, (action) -> onRelease(action, () -> FMT.CAM.toggleZoom())));
+		keys.add(new KeyFunction("painter_channel", GLFW_KEY_X, (action) -> onRelease(action, () -> TexturePainter.swapActive(1))));
 		keys.add(new KeyFunction("pick_face", GLFW_KEY_I, (action) -> onRelease(action, () -> Picker.pick(Picker.PickType.FACE, Picker.PickTask.RESELECT, true))));
 		//
 		keys.add(new KeyFunction("toggle_editor_1", GLFW_KEY_1, action -> {
