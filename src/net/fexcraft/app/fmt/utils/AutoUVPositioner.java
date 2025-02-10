@@ -189,10 +189,10 @@ public class AutoUVPositioner {
 								corcon.polygon.paintTex(texture, null);
 							}
 							else if(corcon.exclude){
-								corcon.polygon.paintTex(texture, null, false, corcon.coords, false, null);
+								corcon.polygon.paintTex(texture, null, corcon.coords, false, null);
 							}
 							else{
-								corcon.polygon.paintTex(texture, null, false, corcon.coords, true, corcon.face.index());
+								corcon.polygon.paintTex(texture, null, corcon.coords, true, corcon.face.index());
 							}
 							Thread.sleep(10);
 							continue;
@@ -250,7 +250,7 @@ public class AutoUVPositioner {
 										}
 										coords.set(type).value(arr);
 										float[][] newarr = corcon.polygon.newUV(true, false)[corcon.face.index()];
-										corcon.polygon.paintTex(texture, null, false, new float[][][]{ newarr }, true, corcon.face.index());
+										corcon.polygon.paintTex(texture, null, new float[][][]{ newarr }, true, corcon.face.index());
 									}
 									pass = true;
 									Thread.sleep(10);
