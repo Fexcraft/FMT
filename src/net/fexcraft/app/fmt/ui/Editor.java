@@ -2,16 +2,14 @@ package net.fexcraft.app.fmt.ui;
 
 import static net.fexcraft.app.fmt.utils.Translator.translate;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import net.fexcraft.app.fmt.ui.SettingsDialog.SPVSL;
 import net.fexcraft.app.fmt.ui.editors.*;
 import net.fexcraft.app.fmt.ui.trees.*;
+import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonValue;
 import com.spinyowl.legui.component.Button;
 import com.spinyowl.legui.component.Component;
@@ -223,18 +221,27 @@ public class Editor extends Component {
 	    
 	}
 
+	public static void saveAll(){
+		JsonMap editors = new JsonMap();
+		for(Editor editor : EDITORS.values()){
+			if(editor.tree) continue;
+			editors.add(editor.id, editor.save());
+		}
+		JsonHandler.print(new File("./editors.fmt"), editors, JsonHandler.PrintOption.SPACED);
+	}
+
 	public JsonMap save(){
 		JsonMap map = new JsonMap();
 		map.add("name", name);
 		map.add("shown", this.getStyle().getDisplay() != DisplayType.NONE);
 		if(components.size() > 0){
-			JsonArray array = new JsonArray();
+			JsonMap comp = new JsonMap();
 			for(EditorComponent component : components){
 				JsonMap com = component.save();
-				if(com != null) array.add(com);
-				else array.add(component.id);
+				if(com == null) continue;
+				comp.add(component.id, com);
 			}
-			map.add("components", array);
+			map.add("components", comp);
 		}
 		return map;
 	}
@@ -253,6 +260,16 @@ public class Editor extends Component {
 		Editor.TEXTURE_TREE = new TextureTree();
 		Editor.PREVIEW_TREE = new HelperTree();
 		EditorPanel.load();
+		//
+		JsonMap edmap = JsonHandler.parse(new File("./editors.fmt"));
+		for(Map.Entry<String, JsonValue<?>> entry : edmap.entries()){
+			Editor ed = EDITORS.get(entry.getKey());
+			if(ed == null || !entry.getValue().isMap()) continue;
+			JsonMap cmap = entry.getValue().asMap();
+			for(EditorComponent component : ed.components){
+				if(cmap.has(component.id)) component.load(cmap.getMap(component.id));
+			}
+		}
 		//
 		for(EditorPanel panel : EditorPanel.PANELS){
 			FMT.FRAME.getContainer().add(panel);
