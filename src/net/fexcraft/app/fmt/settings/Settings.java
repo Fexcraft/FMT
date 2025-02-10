@@ -409,12 +409,7 @@ public class Settings {
 		}
 		JsonHandler.print(new File("./settings.json"), map, PrintOption.SPACED);
 		//
-		JsonMap editors = new JsonMap();
-		for(Editor editor : Editor.EDITORS.values()){
-			if(editor.tree) continue;
-			editors.add(editor.id, editor.save());
-		}
-		JsonHandler.print(new File("./editors.fmt"), editors, PrintOption.SPACED);
+		Editor.saveAll();
 	}
 
 	public static void applyTheme(){
