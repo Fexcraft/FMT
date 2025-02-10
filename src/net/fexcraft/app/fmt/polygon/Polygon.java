@@ -465,14 +465,10 @@ public abstract class Polygon implements ScrElm {
 	}
 
 	public boolean paintTex(Texture tex, Integer face){
-		return paintTex(tex, face, true, null, false, null);
+		return paintTex(tex, face, null, false, null);
 	}
 
-	public boolean paintTex(Texture tex, Integer face, boolean primary){
-		return paintTex(tex, face, primary, null, false, null);
-	}
-
-	public boolean paintTex(Texture tex, Integer face, boolean primary, float[][][] coords, boolean detached, Integer sface){
+	public boolean paintTex(Texture tex, Integer face, float[][][] coords, boolean detached, Integer sface){
 		if(coords == null) coords = newUV(true, false);
 		if(coords == null || coords.length == 0){
 			return false;
@@ -485,7 +481,7 @@ public abstract class Polygon implements ScrElm {
 					log("error: requested single-face paint, but provided no coordinates");
 					return false;
 				}
-				byte[] color = (negative ? TexturePainter.getCurrentColor(primary) : getFaceColor(sface).toByteArray());
+				byte[] color = (negative ? TexturePainter.getCurrentColor() : getFaceColor(sface).toByteArray());
 				paint(tex, ends, color, detached);
 			}
 			else{
@@ -496,7 +492,7 @@ public abstract class Polygon implements ScrElm {
 						log("paint data for face " + coord.side().id() + " not found, skipping");
 						continue;
 					}
-					byte[] color = (negative ? TexturePainter.getCurrentColor(primary) : getFaceColor(coord.side().index()).toByteArray());
+					byte[] color = (negative ? TexturePainter.getCurrentColor() : getFaceColor(coord.side().index()).toByteArray());
 					paint(tex, ends, color, coord.detached());
 				}
 			}
@@ -505,7 +501,7 @@ public abstract class Polygon implements ScrElm {
 			if(getShape().isTexturable()){
 				float[][] ends = coords[face];
 				if(ends == null || ends.length == 0) return false;
-				paint(tex, ends, TexturePainter.getCurrentColor(primary), cuv.get(getUVFaces()[face]).detached());
+				paint(tex, ends, TexturePainter.getCurrentColor(), cuv.get(getUVFaces()[face]).detached());
 			}
 			else{
 				log("There is no known way of how to handle texture burning of '" + getShape().name() + "'!");
