@@ -43,7 +43,7 @@ public class Picker {
 	
 	public static enum PickType {
 		
-		NONE, VERTEX, FACE, POLYGON, COLOR1, COLOR2, UI;
+		NONE, VERTEX, FACE, POLYGON, COLOR, UI;
 		
 		public boolean pick(){
 			return this != NONE;
@@ -60,9 +60,9 @@ public class Picker {
 		public boolean vertex(){
 			return this == VERTEX;
 		}
-		
+
 		public boolean color(){
-			return this == COLOR1 || this == COLOR2;
+			return this == COLOR;
 		}
 		
 	}
@@ -111,7 +111,7 @@ public class Picker {
 	public static void process(){
 		if(!filled) fillBuffer();
 		if(TYPE.color()){
-			TexturePainter.updateColor(getPick(), TYPE == PickType.COLOR1, true);
+			TexturePainter.updateColor(getPick(), TexturePainter.ACTIVE, true);
 		}
 		else if(TYPE.face() && polygon != null){
 			int face = getPick();
