@@ -264,8 +264,8 @@ public class Editor extends Component {
 		JsonMap edmap = JsonHandler.parse(new File("./editors.fmt"));
 		for(Map.Entry<String, JsonValue<?>> entry : edmap.entries()){
 			Editor ed = EDITORS.get(entry.getKey());
-			if(ed == null || !entry.getValue().isMap()) continue;
-			JsonMap cmap = entry.getValue().asMap();
+			if(ed == null || !entry.getValue().isMap() || !entry.getValue().asMap().has("components")) continue;
+			JsonMap cmap = entry.getValue().asMap().getMap("components");
 			for(EditorComponent component : ed.components){
 				if(cmap.has(component.id)) component.load(cmap.getMap(component.id));
 			}
