@@ -1,5 +1,6 @@
 package net.fexcraft.app.fmt.ui.components;
 
+import static net.fexcraft.app.fmt.texture.TexturePainter.swapActive;
 import static net.fexcraft.app.fmt.utils.Translator.translate;
 import static com.spinyowl.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
@@ -83,13 +84,6 @@ public class CurrentColor extends EditorComponent {
 		row += 5;
 		add(tool = new RunButton(translate(LANG_PREFIX + id + ".active_tool"), L5, row(1), LW, HEIGHT, () -> TexturePainter.setTool(Tool.NONE)));
 		updateToolButton();
-	}
-
-	private void swapActive(int i){
-		int c = TexturePainter.ACTIVE + i;
-		if(c < 0) c = TexturePainter.CHANNELS.length - 1;
-		if(c >= TexturePainter.CHANNELS.length) c = 0;
-		UpdateHandler.update(new PainterChannel(TexturePainter.ACTIVE = c));
 	}
 
 	private void updateToolButton(){
