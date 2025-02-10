@@ -69,7 +69,7 @@ public class Picker {
 	
 	public static enum PickTask {
 		
-		NONE, SELECT, RESELECT, PAINT1, PAINT2, FUNCTION, HOVER;
+		NONE, SELECT, RESELECT, PAINT, FUNCTION, HOVER;
 		
 		public boolean pick(){
 			return this != NONE;
@@ -80,7 +80,7 @@ public class Picker {
 		}
 
 		public boolean paint(){
-			return this == PAINT1 || this == PAINT2;
+			return this == PAINT;
 		}
 
 		boolean function(){
@@ -116,7 +116,7 @@ public class Picker {
 		else if(TYPE.face() && polygon != null){
 			int face = getPick();
 			if(TASK.paint()){
-				TexturePainter.paint(TASK == PickTask.PAINT1, polygon, face);
+				TexturePainter.paint(polygon, face);
 			}
 			else{
 				selected_face = polygon.getFaceByColor(face);
@@ -176,7 +176,7 @@ public class Picker {
 				}
 				else if(TASK.paint()){
 					if(TexturePainter.SELMODE.getPickType() == PickType.FACE) return;
-					TexturePainter.paint(TASK == PickTask.PAINT1, polygon, -1);
+					TexturePainter.paint(polygon, -1);
 				}
 				else if(TASK.function()){
 					consumer.accept(polygon);
