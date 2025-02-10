@@ -11,9 +11,7 @@ public class TextureEditor extends Editor {
 	public TextureEditor(){
 		super("painter", "Painting Utils", false);
 		addComponent(new CurrentColor());
-		addComponent(new PainterPaletteGradient(true));
-		addComponent(new PainterPaletteSpectrum(true));
-		addComponent(new PainterPaletteCustom());
+		addComponent(new PainterPalette());
 		addComponent(new PainterTools());
 	}
 
