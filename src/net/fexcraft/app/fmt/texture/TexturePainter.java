@@ -5,8 +5,6 @@ import static net.fexcraft.app.fmt.utils.Translator.translate;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.polygon.uv.Face;
-import net.fexcraft.app.fmt.ui.components.PainterTools;
-import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateEvent.PainterColor;
 import net.fexcraft.app.fmt.update.UpdateEvent.PainterTool;
 import net.fexcraft.app.fmt.update.UpdateHandler;
@@ -21,24 +19,19 @@ import net.fexcraft.lib.common.math.RGB;
  */
 public class TexturePainter {
 	
-	public static final RGB PRIMARY = RGB.BLACK.copy();
-	public static final RGB SECONDARY = RGB.WHITE.copy();
+	public static RGB[] CHANNELS;
 	public static final RGB ERASER = new RGB(0, 0, 0).setAlpha(0);
 	public static Selection SELMODE = Selection.NONE;
 	public static Tool TOOL = Tool.NONE;
+	public static int ACTIVE = 0;
 
-	public static byte[] getPrimaryColor(){
-		return PRIMARY.toByteArray();
-	}
-	
-	public static byte[] getSecondaryColor(){
-		return SECONDARY.toByteArray();
+	public static byte[] getColor(){
+		return CHANNELS[ACTIVE].toByteArray();
 	}
 
-	public static void updateColor(Integer value, boolean primary, boolean upd_plt){
-		if(primary) PRIMARY.packed = value;
-		else SECONDARY.packed = value;
-		UpdateHandler.update(new PainterColor(value, primary, upd_plt));
+	public static void updateColor(int value, int channel, boolean upd_plt){
+		CHANNELS[channel].packed = value;
+		UpdateHandler.update(new PainterColor(value, channel, upd_plt));
 	}
 	
 	public static enum Selection {
@@ -126,8 +119,8 @@ public class TexturePainter {
 	}
 
 	public static byte[] getCurrentColor(boolean primary){
-		byte[] b = (TOOL == Tool.ERASER ? ERASER : primary ? PRIMARY : SECONDARY).toByteArray();
-		float a = (TOOL == Tool.ERASER ? ERASER : primary ? PRIMARY : SECONDARY).alpha;
+		byte[] b = (TOOL == Tool.ERASER ? ERASER : CHANNELS[ACTIVE]).toByteArray();
+		float a = (TOOL == Tool.ERASER ? ERASER : CHANNELS[ACTIVE]).alpha;
 		return new byte[]{ b[0], b[1], b[2], (byte)(Math.floor(a >= 1.0f ? 255 : a * 256.0f) - 128) };
 	}
 
