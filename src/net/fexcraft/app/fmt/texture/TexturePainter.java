@@ -5,6 +5,7 @@ import static net.fexcraft.app.fmt.utils.Translator.translate;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.polygon.uv.Face;
+import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateEvent.PainterColor;
 import net.fexcraft.app.fmt.update.UpdateEvent.PainterTool;
 import net.fexcraft.app.fmt.update.UpdateHandler;
@@ -89,7 +90,7 @@ public class TexturePainter {
 		UpdateHandler.update(new PainterTool(TOOL, sel));
 	}
 
-	public static void paint(boolean primary, Polygon polygon, int face){
+	public static void paint(Polygon polygon, int face){
 		Group group = Picker.polygon().group();
 		TextureGroup tex = group.texgroup == null ? group.model.texgroup : group.texgroup;
 		if(tex == null) return;
@@ -98,17 +99,17 @@ public class TexturePainter {
 				int x = face / tex.painter.getHeight();
 				int y = face % tex.painter.getHeight();
 				if(x < 0 || y < 0 || x >= tex.texture.getWidth() || y >= tex.texture.getHeight()) return;
-				tex.texture.set(x, y, getCurrentColor(primary));
+				tex.texture.set(x, y, getCurrentColor());
 				break;
 			case FACE:
-				polygon.paintTex(tex.texture, polygon.getFaceByColor(face).index(), primary);
+				polygon.paintTex(tex.texture, polygon.getFaceByColor(face).index());
 				break;
 			case POLYGON:
-				for(Face f : polygon.getUVFaces()) polygon.paintTex(tex.texture, f.index(), primary);
+				for(Face f : polygon.getUVFaces()) polygon.paintTex(tex.texture, f.index());
 				break;
 			case GROUP:
 				group.forEach(poly -> {
-					for(Face f : poly.getUVFaces()) poly.paintTex(tex.texture, f.index(), primary);
+					for(Face f : poly.getUVFaces()) poly.paintTex(tex.texture, f.index());
 				});
 				break;
 			case NONE:
@@ -118,7 +119,7 @@ public class TexturePainter {
 		tex.texture.rebind();
 	}
 
-	public static byte[] getCurrentColor(boolean primary){
+	public static byte[] getCurrentColor(){
 		byte[] b = (TOOL == Tool.ERASER ? ERASER : CHANNELS[ACTIVE]).toByteArray();
 		float a = (TOOL == Tool.ERASER ? ERASER : CHANNELS[ACTIVE]).alpha;
 		return new byte[]{ b[0], b[1], b[2], (byte)(Math.floor(a >= 1.0f ? 255 : a * 256.0f) - 128) };
@@ -130,6 +131,13 @@ public class TexturePainter {
 		if(tex == null) return false;
 		TextureManager.bind(tex.painter);
 		return true;
+	}
+
+	public static void swapActive(int i){
+		int c = TexturePainter.ACTIVE + i;
+		if(c < 0) c = TexturePainter.CHANNELS.length - 1;
+		if(c >= TexturePainter.CHANNELS.length) c = 0;
+		UpdateHandler.update(new UpdateEvent.PainterChannel(TexturePainter.ACTIVE = c));
 	}
 
 }
