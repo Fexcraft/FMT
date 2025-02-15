@@ -34,6 +34,7 @@ public class ExportManager {
 		EXPORTERS.clear();
 		CATEGORIES.clear();
 		addExporter(new FMFExporter(map));
+		addExporter(new BObjExporter(map));
 		addExporter(new PNGExporter(map));
 		addExporter(new ModelDataExporter());
 		addExporter(new FVTMExporter());
