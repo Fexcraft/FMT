@@ -10,7 +10,6 @@ import static net.fexcraft.app.fmt.utils.JsonUtil.setVector;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import net.fexcraft.app.json.JsonValue;
 import net.fexcraft.lib.script.elm.FltElm;
 import org.joml.Vector3f;
 
@@ -35,13 +34,17 @@ public class RectCurve extends Polygon {
 	public Polyhedron<GLObject> gll = new Polyhedron<GLObject>().setGlObj(new GLObject());
 	public Polyhedron<GLObject> glp = new Polyhedron<GLObject>().setGlObj(new GLObject());
 	public static PolyVal[] CORNERS = { CORNER_0, CORNER_1, CORNER_2, CORNER_3 };
-	public ArrayList<RectSegment> segments = new ArrayList<>();
+	public ArrayList<Plane> planes = new ArrayList<>();
 	public ArrayList<Point> points = new ArrayList<>();
-	public int active_point = 0, active_segment = 0;
-	public boolean side_top, side_bot, dirloc, showline = true;
+	public int active_point = 0;
+	public int active_segment = 0;
+	public boolean side_top;
+	public boolean side_bot;
+	public boolean dirloc;
+	public boolean showline = true;
 	public Path path;
 	
-	public static class RectSegment {
+	public static class Plane {
 
 		public Vector3f size = new Vector3f(1);
 		public Vector3f offset = new Vector3f(0);
@@ -49,7 +52,7 @@ public class RectCurve extends Polygon {
 		public Vector3f cor0, cor1, cor2, cor3;//, rot;
 		public float location, rot;
 		
-		public RectSegment(float loc){
+		public Plane(float loc){
 			cor0 = new Vector3f();
 			cor1 = new Vector3f();
 			cor2 = new Vector3f();
@@ -58,7 +61,7 @@ public class RectCurve extends Polygon {
 			location = loc;
 		}
 		
-		public RectSegment(RectSegment seg, boolean loc){
+		public Plane(Plane seg, boolean loc){
 			cor0 = new Vector3f(seg.cor0);
 			cor1 = new Vector3f(seg.cor1);
 			cor2 = new Vector3f(seg.cor2);
@@ -71,7 +74,7 @@ public class RectCurve extends Polygon {
 			sides = Arrays.copyOf(seg.sides, 4);
 		}
 		
-		public RectSegment(JsonMap map){
+		public Plane(JsonMap map){
 			size.x = map.get("width", 1f);
 			size.y = map.get("height", 1f);
 			size.z = map.get("depth", 1f);
@@ -154,8 +157,8 @@ public class RectCurve extends Polygon {
 		points.add(new Point(pos.x, pos.y, pos.z));
 		points.add(new Point(pos.x + 1, pos.y, pos.z));
 		compath();
-		segments.add(new RectSegment(0));
-		segments.add(new RectSegment(1));
+		planes.add(new Plane(0));
+		planes.add(new Plane(1));
 	}
 
 	public RectCurve(Model model, JsonMap obj){
@@ -165,10 +168,10 @@ public class RectCurve extends Polygon {
 			JsonArray array = elm.asArray();
 			this.points.add(new Point(getVector(array, 0), array.get(3).integer_value()));
 		});
-		JsonArray segs = obj.getArray("segments");
-		segs.value.forEach(elm -> {
-			segments.add(new RectSegment(elm.asMap()));
-		});
+		JsonArray segs = null;
+		if(obj.has("segments")) segs = obj.getArray("segments");
+		if(obj.has("planes")) segs = obj.getArray("planes");
+		if(segs != null) segs.value.forEach(elm -> planes.add(new Plane(elm.asMap())));
 		dirloc = obj.getBoolean("litloc", dirloc);
 		showline = obj.getBoolean("line", showline);
 		compath();
@@ -188,10 +191,10 @@ public class RectCurve extends Polygon {
 		});
 		map.add("points", points);
 		JsonArray segs = new JsonArray();
-		segments.forEach(segment -> {
+		planes.forEach(segment -> {
 			segs.add(segment.save());
 		});
-		map.add("segments", segs);
+		map.add("planes", segs);
 		map.add("litloc", dirloc);
 		map.add("line", showline);
 		return map;
@@ -250,24 +253,25 @@ public class RectCurve extends Polygon {
 		//
 		Axis3DL axe = new Axis3DL();
 		Vec3f loff = new Vec3f(off.x, off.y, off.z);
-		axe.set(loff, path.getVectorPosition(0.001f, false).sub(vpos));
+		//axe.set(loff, path.getVectorPosition(0.001f, false).sub(vpos));
 		Vec3f tr, tl, br, bl, ntr, ntl, nbr, nbl, coff;
-		RectSegment seg = segments.get(0);
+		Plane seg = planes.get(0);
 		float loc = 0;
-		tr = ntr = loff;
-		tl = ntl = loff.add(axe.get(0, 0, seg.size.z));
-		bl = nbl = loff.add(axe.get(0, seg.size.y, seg.size.z));
-		br = nbr = loff.add(axe.get(0, seg.size.y, 0));
+		tr = loff;
+		tl = loff.add(axe.get(0, 0, seg.size.z));
+		bl = loff.add(axe.get(0, seg.size.y, seg.size.z));
+		br = loff.add(axe.get(0, seg.size.y, 0));
 		if(!side_top){
 			glm.polygons.add(new net.fexcraft.lib.frl.Polygon(new Vertex[]{
 				new Vertex(tr), new Vertex(tl), new Vertex(bl), new Vertex(br)
 			}));
 		}
-		for(int i = 0; i < segments.size(); i++){
-			seg = segments.get(i);
-			loc = dirloc ? seg.location >= 1f ? path.length % 1f == 0f ? path.length : path.length - 0.1f : path.length * seg.location : seg.location;
+		float dif = dirloc ? path.length / (planes.size() - 1) : 1f / (planes.size() - 1);
+		for(int i = 1; i < planes.size(); i++){
+			seg = planes.get(i);
+			loc = dirloc ? seg.location : path.length * seg.location;
 			coff = path.getVectorPosition(loc, false).sub(vpos);
-			axe.set(path.getVectorPosition(loc - 0.001f, false).sub(vpos), coff);
+			axe.set(path.getVectorPosition(loc - dif, false).sub(vpos), coff);
 			axe.add(seg.rot, 0, 0);
 			ntr = coff.add(axe.get(seg.offset.x, seg.offset.y, seg.offset.z));
 			ntl = coff.add(axe.get(seg.offset.x, seg.offset.y, seg.offset.z + seg.size.z));
@@ -320,7 +324,7 @@ public class RectCurve extends Polygon {
 		glm.render();
 	}
 
-	private void compath(){
+	public void compath(){
 		Vec3f[] arr = new Vec3f[points.size()];
 		int idx = 0;
 		for(Point point : points) arr[idx++] = point.toVec3f(pos);
@@ -334,33 +338,33 @@ public class RectCurve extends Polygon {
 				else return super.getValue(polyval);
 			}
 			case OFF: {
-				if(active_segment > 0) return getVectorValue(segments.get(active_segment).offset, polyval.axe());
+				if(active_segment > 0) return getVectorValue(planes.get(active_segment).offset, polyval.axe());
 				else return super.getValue(polyval);
 			}
 			/*case ROT: {
 				if(active_segment > 0) return getVectorValue(segments.get(active_segment).rot, polyval.axe());
 				else return super.getValue(polyval);
 			}*/
-			case SIZE: return getVectorValue(segments.get(active_segment).size, polyval.axe());
+			case SIZE: return getVectorValue(planes.get(active_segment).size, polyval.axe());
 			case SIDES:{
 				int idx = polyval.axe().ordinal();
 				if(idx == 2) return side_top ? 1 : 0;
 				if(idx == 3) return side_bot ? 1 : 0;
-				return getIndexValue(segments.get(active_segment).sides, idx > 1 ? idx - 2 : idx);
+				return getIndexValue(planes.get(active_segment).sides, idx > 1 ? idx - 2 : idx);
 			}
-			case CORNER_0: return getVectorValue(segments.get(active_segment).cor0, polyval.axe());
-			case CORNER_1: return getVectorValue(segments.get(active_segment).cor1, polyval.axe());
-			case CORNER_2: return getVectorValue(segments.get(active_segment).cor2, polyval.axe());
-			case CORNER_3: return getVectorValue(segments.get(active_segment).cor3, polyval.axe());
+			case CORNER_0: return getVectorValue(planes.get(active_segment).cor0, polyval.axe());
+			case CORNER_1: return getVectorValue(planes.get(active_segment).cor1, polyval.axe());
+			case CORNER_2: return getVectorValue(planes.get(active_segment).cor2, polyval.axe());
+			case CORNER_3: return getVectorValue(planes.get(active_segment).cor3, polyval.axe());
 			case COLOR: return points.get(active_point).color.packed;
 			case CUR_ACTIVE_POINT: return active_point;
 			case CUR_ACTIVE_SEGMENT: return active_segment;
 			case CUR_POINTS: return points.size();
-			case CUR_SEGMENTS: return segments.size();
+			case CUR_SEGMENTS: return planes.size();
 			case CUR_LENGTH: return path.length;
-			case SEG_ROT: return segments.get(active_segment).rot;
-			case SEG_LOC: return segments.get(active_segment).location;
-			case SEG_LOC_LIT: return dirloc ? 1 : 0;
+			case PLANE_ROT: return planes.get(active_segment).rot;
+			case PLANE_LOC: return planes.get(active_segment).location;
+			case PLANE_LOC_LIT: return dirloc ? 1 : 0;
 			case RADIAL: return showline ? 1 : 0;
 			default: return super.getValue(polyval);
 		}
@@ -376,7 +380,7 @@ public class RectCurve extends Polygon {
 			}
 			case OFF:{
 				if(active_segment == 0) super.setValue(polyval, value);
-				setVectorValue(segments.get(active_segment).offset, polyval.axe(), value);
+				setVectorValue(planes.get(active_segment).offset, polyval.axe(), value);
 				break;
 			}
 			/*case ROT:{
@@ -384,18 +388,18 @@ public class RectCurve extends Polygon {
 				setVectorValue(segments.get(active_segment).rot, polyval.axe(), value);
 				break;
 			}*/
-			case SIZE: setVectorValue(segments.get(active_segment).size, polyval.axe(), value); break;
+			case SIZE: setVectorValue(planes.get(active_segment).size, polyval.axe(), value); break;
 			case SIDES:{
 				int idx = polyval.axe().ordinal();
 				if(idx == 2) side_top = value > 0.5f;
 				else if(idx == 2) side_bot = value > 0.5f;
-				else setIndexValue(segments.get(active_segment).sides, idx > 1 ? idx - 2 : idx, value);
+				else setIndexValue(planes.get(active_segment).sides, idx > 1 ? idx - 2 : idx, value);
 				break;
 			}
-			case CORNER_0: setVectorValue(segments.get(active_segment).cor0, polyval.axe(), value); break;
-			case CORNER_1: setVectorValue(segments.get(active_segment).cor1, polyval.axe(), value); break;
-			case CORNER_2: setVectorValue(segments.get(active_segment).cor2, polyval.axe(), value); break;
-			case CORNER_3: setVectorValue(segments.get(active_segment).cor3, polyval.axe(), value); break;
+			case CORNER_0: setVectorValue(planes.get(active_segment).cor0, polyval.axe(), value); break;
+			case CORNER_1: setVectorValue(planes.get(active_segment).cor1, polyval.axe(), value); break;
+			case CORNER_2: setVectorValue(planes.get(active_segment).cor2, polyval.axe(), value); break;
+			case CORNER_3: setVectorValue(planes.get(active_segment).cor3, polyval.axe(), value); break;
 			case COLOR: points.get(active_point).color.packed = (int)value; break;
 			case CUR_ACTIVE_POINT:{
 				if(value < 0) value = 0;
@@ -405,7 +409,7 @@ public class RectCurve extends Polygon {
 			}
 			case CUR_ACTIVE_SEGMENT:{
 				if(value < 0) value = 0;
-				if(value >= segments.size()) value = segments.size() - 1;
+				if(value >= planes.size()) value = planes.size() - 1;
 				active_segment = (int)value;
 				break;
 			}
@@ -425,18 +429,18 @@ public class RectCurve extends Polygon {
 			case CUR_SEGMENTS:{
 				int val = (int)value;
 				if(value < 2) value = 2;
-				if(value > segments.size()) value = segments.size() - 1;
-				if(val == segments.size()) break;
-				if(val < segments.size()){
-					while(segments.size() > val) segments.remove(segments.size() - 1);
-					if(active_segment >= segments.size()) active_segment = segments.size() - 1;
+				if(value > planes.size()) value = planes.size() - 1;
+				if(val == planes.size()) break;
+				if(val < planes.size()){
+					while(planes.size() > val) planes.remove(planes.size() - 1);
+					if(active_segment >= planes.size()) active_segment = planes.size() - 1;
 				}
-				if(val > segments.size()) while(segments.size() < val) segments.add(new RectSegment(segments.get(segments.size() - 1), dirloc));
+				if(val > planes.size()) while(planes.size() < val) planes.add(new Plane(planes.get(planes.size() - 1), dirloc));
 				break;
 			}
-			case SEG_ROT: segments.get(active_segment).rot = value; break;
-			case SEG_LOC: segments.get(active_segment).location = value; break;
-			case SEG_LOC_LIT: dirloc = value > 0; break;
+			case PLANE_ROT: planes.get(active_segment).rot = value; break;
+			case PLANE_LOC: planes.get(active_segment).location = value; break;
+			case PLANE_LOC_LIT: dirloc = value > 0; break;
 			case RADIAL: showline = value > 0; break;
 			default: super.setValue(polyval, value);
 		}
