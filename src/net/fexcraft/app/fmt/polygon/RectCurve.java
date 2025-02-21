@@ -218,11 +218,13 @@ public class RectCurve extends Polygon {
 				glp.sub.add(poly);
 			}
 		}
+		Axis3DL axe = new Axis3DL();
 		for(int i = 0; i < points.size(); i++){
 			Polyhedron<GLObject> poly = glp.sub.get(i);
 			poly.glObj.polycolor = points.get(i).color.toFloatArray();
-			Vector3f vec = i == 0 ? pos : new Vector3f(pos).add(points.get(i).vector);
+			Vector3f vec = i == 0 ? pos : new Vector3f(points.get(i).vector).add(pos);
 			poly.pos(vec.x, vec.y, vec.z);
+			poly.rot(rot.x, rot.y, rot.z);
 			Marker.getMarkerGenerator(poly, 1).make();
 		}
 		Vec3f vpos = new Vec3f(pos.x, pos.y, pos.z);
@@ -246,27 +248,29 @@ public class RectCurve extends Polygon {
 				});
 				gll.polygons.add(poly);
 				gll.glObj.polycolor = points.get(0).color.toFloatArray();
+				gll.rot(rot.x, rot.y, rot.z);
 				gll.pos(pos.x, pos.y, pos.z);
 				las = vec;
 			}
 		}
 		//
-		Axis3DL axe = new Axis3DL();
-		Vec3f loff = new Vec3f(off.x, off.y, off.z);
-		//axe.set(loff, path.getVectorPosition(0.001f, false).sub(vpos));
-		Vec3f tr, tl, br, bl, ntr, ntl, nbr, nbl, coff;
+		axe.setAngles(0, 0, 0);
 		Plane seg = planes.get(0);
-		float loc = 0;
-		tr = loff;
-		tl = loff.add(axe.get(0, 0, seg.size.z));
-		bl = loff.add(axe.get(0, seg.size.y, seg.size.z));
-		br = loff.add(axe.get(0, seg.size.y, 0));
+		Vec3f tr, tl, br, bl, ntr, ntl, nbr, nbl;
+		float dif = dirloc ? path.length / (planes.size() - 1) : 1f / (planes.size() - 1);
+		Vec3f coff = path.getVectorPosition(0, false).sub(vpos);
+		axe.set(coff, path.getVectorPosition(dif, false).sub(vpos));
+		axe.add(seg.rot, 0, 0);
+		float loc;
+		tr = coff.add(axe.get(off.x, off.y, off.z));
+		tl = coff.add(axe.get(off.x, off.y, off.z + seg.size.z));
+		bl = coff.add(axe.get(off.x, off.y + seg.size.y, off.z + seg.size.z));
+		br = coff.add(axe.get(off.x, off.y + seg.size.y, off.z));
 		if(!side_top){
 			glm.polygons.add(new net.fexcraft.lib.frl.Polygon(new Vertex[]{
 				new Vertex(tr), new Vertex(tl), new Vertex(bl), new Vertex(br)
 			}));
 		}
-		float dif = dirloc ? path.length / (planes.size() - 1) : 1f / (planes.size() - 1);
 		for(int i = 1; i < planes.size(); i++){
 			seg = planes.get(i);
 			loc = dirloc ? seg.location : path.length * seg.location;
