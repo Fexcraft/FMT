@@ -453,7 +453,17 @@ public class RectCurve extends Polygon {
 
 	@Override
 	protected Polygon copyInternal(Polygon poly){
-		//TODO 
+		RectCurve curv = (RectCurve)poly;
+		curv.dirloc = dirloc;
+		curv.showline = showline;
+		curv.points.clear();
+		for(Point point : points){
+			curv.points.add(new Point(new Vector3f(point.vector), point.color.packed));
+		}
+		curv.planes.clear();
+		for(Plane plane : planes){
+			curv.planes.add(new Plane(plane.save()));
+		}
 		return poly;
 	}
 
