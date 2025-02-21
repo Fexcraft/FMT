@@ -39,12 +39,16 @@ public class PolygonEditor extends Editor {
 				CURVE.minimize(true);
 				MARKER.minimize(true);
 				ArrayList<Polygon> polys = FMT.MODEL.selected();
+				boolean curv = true;
 				for(Polygon poly : polys){
-					if(poly.getShape().isRectagular()){
-						BOXON.minimize(false);
-					}
-					else{
-						BOXOFF.minimize(false);
+					if(!poly.getShape().isCurve()) curv = false;
+					if(!curv){
+						if(!poly.getShape().isRectagular()){
+							BOXON.minimize(false);
+						}
+						else{
+							BOXOFF.minimize(false);
+						}
 					}
 					if(poly.getShape().isShapebox()){
 						SHAPEBOX.minimize(false);
@@ -59,8 +63,10 @@ public class PolygonEditor extends Editor {
 						MARKER.minimize(false);
 					}
 				}
-				if(!BOXON.minimized() && !BOXOFF.minimized()) BOXOFF.minimize(true);
-				if(BOXON.minimized() && BOXOFF.minimized()) BOXOFF.minimize(false);
+				if(!curv){
+					if(!BOXON.minimized() && !BOXOFF.minimized()) BOXOFF.minimize(true);
+					if(BOXON.minimized() && BOXOFF.minimized()) BOXOFF.minimize(false);
+				}
 			});
 			UpdateHandler.register(com);
 		}
