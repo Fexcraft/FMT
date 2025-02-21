@@ -33,7 +33,7 @@ public class CurveComponent extends EditorComponent {
 		add(new NumberField(this, F31, row(0), F3S, HEIGHT).setup(-180, 180, true, new PolygonValue(PolyVal.ROT, ValAxe.Y)));
 		add(new NumberField(this, F32, row(0), F3S, HEIGHT).setup(-180, 180, true, new PolygonValue(PolyVal.ROT, ValAxe.Z)));
 		//points
-		row += 10;
+		row += 20;
 		add(new Label(translate(LANG_PREFIX + id + ".points"), L5, row(1), LW, HEIGHT));
 		add(new NumberField(this, F20, row(1), F2S, HEIGHT).setup(2, 50, false, new PolygonValue(PolyVal.CUR_POINTS, ValAxe.N)).index());
 		add(new NumberField(this, F21, row(0), F2S, HEIGHT).setup(0, Integer.MAX_VALUE, false, new PolygonValue(PolyVal.CUR_ACTIVE_POINT, ValAxe.N)).index());
@@ -44,10 +44,14 @@ public class CurveComponent extends EditorComponent {
 		add(new NumberField(this, F31, row(0), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.POS, ValAxe.Y)));
 		add(new NumberField(this, F32, row(0), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.POS, ValAxe.Z)));
 		//segments
-		row += 10;
+		row += 20;
 		add(new Label(translate(LANG_PREFIX + id + ".planes"), L5, row(1), LW, HEIGHT));
 		add(new NumberField(this, F20, row(1), F2S, HEIGHT).setup(2, 50, false, new PolygonValue(PolyVal.CUR_SEGMENTS, ValAxe.N)).index());
 		add(new NumberField(this, F21, row(0), F2S, HEIGHT).setup(0, Integer.MAX_VALUE, false, new PolygonValue(PolyVal.CUR_ACTIVE_SEGMENT, ValAxe.N)).index());
+		//seg size
+		add(new Label(translate(LANG_PREFIX + genid + ".plane_size"), L5, row(1), LW, HEIGHT));
+		add(new NumberField(this, F20, row(1), F2S, HEIGHT).setup(0, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.SIZE, ValAxe.Y)));
+		add(new NumberField(this, F21, row(0), F2S, HEIGHT).setup(0, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.SIZE, ValAxe.Z)));
 		//seg pos
 		add(new Label(translate(LANG_PREFIX + id + ".plane_loc"), L5, row(1), LW, HEIGHT));
 		add(new NumberField(this, F40, row(1), F4S, HEIGHT).setup(-360, 360, true, new PolygonValue(PolyVal.PLANE_ROT, ValAxe.Y)));
@@ -75,7 +79,7 @@ public class CurveComponent extends EditorComponent {
 		add(new NumberField(this, F31, row(0), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.OFF, ValAxe.Y)));
 		add(new NumberField(this, F32, row(0), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.OFF, ValAxe.Z)));
 		//curve
-		row += 10;
+		row += 20;
 		add(new Label(translate(LANG_PREFIX + id + ".length"), L5, row(1), LW, HEIGHT));
 		add(new NumberField(this, F20, row(1), F2S, HEIGHT).setup(0, 360, false, new PolygonValue(PolyVal.CUR_LENGTH, ValAxe.N)));
 		add(new BoolButton(this, F21, row(0), F2S, HEIGHT, new PolygonValue(PolyVal.RADIAL, ValAxe.N)));
