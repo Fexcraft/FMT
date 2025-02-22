@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.utils;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.List;
@@ -11,6 +13,7 @@ import net.fexcraft.app.fmt.polygon.uv.Face;
 import net.fexcraft.app.fmt.polygon.uv.NoFace;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateEvent.PickMode;
+import net.fexcraft.lib.common.math.Time;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMT;
@@ -20,12 +23,16 @@ import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.texture.TexturePainter;
 
+import javax.imageio.ImageIO;
+
+import static net.fexcraft.app.fmt.utils.Logging.log;
+
 public class Picker {
 	
 	public static PickType TYPE = PickType.NONE;
 	public static PickTask TASK = PickTask.NONE;
 	private static ByteBuffer buffer;
-	private static boolean filled, offcenter;
+	private static boolean offcenter;
 	private static Polygon polygon;
 	private static Consumer<Polygon> consumer;
 	private static Consumer<VertexOffset> vert_consumer;
@@ -36,9 +43,6 @@ public class Picker {
 			buffer = ByteBuffer.allocateDirect(FMT.FRAME_WIDTH * FMT.FRAME_HEIGHT * 4);
 			buffer.order(ByteOrder.nativeOrder());
 		}
-		if(!filled) return;
-		buffer.clear();
-		filled = false;
 	}
 	
 	public static enum PickType {
@@ -109,7 +113,7 @@ public class Picker {
 	}
 
 	public static void process(){
-		if(!filled) fillBuffer();
+		fillBuffer();
 		if(TYPE.color()){
 			TexturePainter.updateColor(getPick(), TexturePainter.ACTIVE, true);
 		}
