@@ -511,21 +511,28 @@ public abstract class Polygon implements ScrElm {
 	}
 
 	private void paint(Texture tex, float[][] ends, byte[] bs, boolean detached){
-		float scale_x = tex.getWidth() / (glm.glObj.grouptex ? group().texSizeX : model().texSizeX);
-		float scale_y = tex.getHeight() / (glm.glObj.grouptex ? group().texSizeY : model().texSizeY);
+		float scale_x = paintScale(tex, true);
+		float scale_y = paintScale(tex, false);
 		float tx = detached ? 0 : textureX;
 		float ty = detached ? 0 : textureY;
 		float[][] ands = { { ends[0][0] * scale_x, ends[0][1] * scale_y }, { ends[1][0] * scale_x, ends[1][1] * scale_y } };
 		float texx = tx * scale_x, texy = ty * scale_y;
 		for(float x = ands[0][0]; x < ands[1][0]; x += .5f){
 			for(float y = ands[0][1]; y < ands[1][1]; y += .5f){
+				Logging.log((x + texx) + " " + (y + texy));
 				int xa = (int)(x + texx), ya = (int)(y + texy);
+				Logging.log(xa + " " + ya);
 				if(xa >= 0 && xa < tex.getWidth() && ya >= 0 && ya < tex.getHeight()){
 					tex.set(xa, ya, bs);
 				}
 				else continue;
 			}
 		}
+	}
+
+	protected float paintScale(Texture tex, boolean x){
+		return x ? (float)tex.getWidth() / (glm.glObj.grouptex ? group().texSizeX : model().texSizeX)
+			: (float)tex.getHeight() / (glm.glObj.grouptex ? group().texSizeY : model().texSizeY);
 	}
 
 	@Override
