@@ -26,13 +26,18 @@ public class CurveComponent extends EditorComponent {
 	protected static final String genid = "polygon.curve";
 	private static PolygonValue PLANELOC = new PolygonValue(PolyVal.PLANE_LOC, ValAxe.N);
 	private static PolygonValue PLANELIT = new PolygonValue(PolyVal.PLANE_LOC_LIT, ValAxe.N);
+	private NumberField TX, TY;
 	
 	public CurveComponent(){
-		super(genid, 580, false, true);
+		super(genid, 620, false, true);
 		add(new Label(translate(LANG_PREFIX + genid + ".rot"), L5, row(1), LW, HEIGHT));
 		add(new NumberField(this, F30, row(1), F3S, HEIGHT).setup(-180, 180, true, new PolygonValue(PolyVal.ROT, ValAxe.X)));
 		add(new NumberField(this, F31, row(0), F3S, HEIGHT).setup(-180, 180, true, new PolygonValue(PolyVal.ROT, ValAxe.Y)));
 		add(new NumberField(this, F32, row(0), F3S, HEIGHT).setup(-180, 180, true, new PolygonValue(PolyVal.ROT, ValAxe.Z)));
+		add(new Label(translate(LANG_PREFIX + genid + ".tex"), L5, row(1), LW, HEIGHT));
+		add(TX = new NumberField(this, F30, row(1), F3S, HEIGHT).setup(-1, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.TEX, ValAxe.X)));
+		add(TY = new NumberField(this, F31, row(0), F3S, HEIGHT).setup(-1, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.TEX, ValAxe.Y)));
+		add(new RunButton(LANG_PREFIX + genid + ".tex_reset", F32, row(0), F3S, HEIGHT, () -> resetUV()));
 		add(new Label(translate(LANG_PREFIX + id + ".length"), L5, row(1), LW, HEIGHT));
 		add(new NumberField(this, F20, row(1), F2S, HEIGHT).setup(0, 360, false, new PolygonValue(PolyVal.CUR_LENGTH, ValAxe.N)));
 		add(new BoolButton(this, F21, row(0), F2S, HEIGHT, new PolygonValue(PolyVal.RADIAL, ValAxe.N)));
@@ -88,6 +93,11 @@ public class CurveComponent extends EditorComponent {
 		add(new NumberField(this, F30, row(1), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.OFF, ValAxe.X)));
 		add(new NumberField(this, F31, row(0), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.OFF, ValAxe.Y)));
 		add(new NumberField(this, F32, row(0), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.OFF, ValAxe.Z)));
+	}
+
+	private void resetUV(){
+		FMT.MODEL.updateValue(TX.polyval(), TX.apply(-1), 0);
+		FMT.MODEL.updateValue(TY.polyval(), TY.apply(-1), 0);
 	}
 
 }
