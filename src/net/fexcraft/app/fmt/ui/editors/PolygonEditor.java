@@ -59,7 +59,7 @@ public class PolygonEditor extends Editor {
 					if(poly.getShape().isCurve()){
 						CURVE.minimize(false);
 					}
-					if(poly.getShape().isMarker() || poly.getShape().isCurve()){
+					if(poly.getShape().isMarker()){
 						MARKER.minimize(false);
 					}
 				}
