@@ -499,6 +499,7 @@ public abstract class Polygon implements ScrElm {
 		}
 		else{
 			if(getShape().isTexturable()){
+				if(face >= coords.length) return false;
 				float[][] ends = coords[face];
 				if(ends == null || ends.length == 0) return false;
 				paint(tex, ends, TexturePainter.getCurrentColor(), cuv.get(getUVFaces()[face]).detached());
@@ -519,9 +520,7 @@ public abstract class Polygon implements ScrElm {
 		float texx = tx * scale_x, texy = ty * scale_y;
 		for(float x = ands[0][0]; x < ands[1][0]; x += .5f){
 			for(float y = ands[0][1]; y < ands[1][1]; y += .5f){
-				Logging.log((x + texx) + " " + (y + texy));
 				int xa = (int)(x + texx), ya = (int)(y + texy);
-				Logging.log(xa + " " + ya);
 				if(xa >= 0 && xa < tex.getWidth() && ya >= 0 && ya < tex.getHeight()){
 					tex.set(xa, ya, bs);
 				}
