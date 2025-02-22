@@ -9,17 +9,18 @@ import static net.fexcraft.app.fmt.utils.JsonUtil.setVector;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Locale;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.polygon.uv.*;
+import net.fexcraft.app.fmt.texture.Texture;
+import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.lib.script.elm.FltElm;
 import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.update.PolyVal;
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.polygon.PolyRenderer.DrawMode;
-import net.fexcraft.app.fmt.polygon.uv.BoxFace;
-import net.fexcraft.app.fmt.polygon.uv.Face;
-import net.fexcraft.app.fmt.polygon.uv.NoFace;
 import net.fexcraft.app.fmt.utils.Axis3DL;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
@@ -35,6 +36,15 @@ public class RectCurve extends Polygon {
 	public Polyhedron<GLObject> gll = new Polyhedron<GLObject>().setGlObj(new GLObject());
 	public Polyhedron<GLObject> glp = new Polyhedron<GLObject>().setGlObj(new GLObject());
 	public static PolyVal[] CORNERS = { CORNER_0, CORNER_1, CORNER_2, CORNER_3 };
+	public static ArrayList<RGB> cols = new ArrayList<>();
+	public static ArrayList<VarFace> vars = new ArrayList<>();
+	static{
+		cols.add(blu1);
+		cols.add(blu0);
+		vars.add(new VarFace(0, blu1.packed));
+		vars.add(new VarFace(1, blu0.packed));
+	}
+	public static Face[] faces;
 	public ArrayList<Plane> planes = new ArrayList<>();
 	public ArrayList<Point> points = new ArrayList<>();
 	public int active_point = 0;
@@ -332,6 +342,23 @@ public class RectCurve extends Polygon {
 				new Vertex(bl, tx + seg.size.z * tw, seg.size.y * th)
 			}));
 		}
+		while(glm.polygons.size() > cols.size()){
+			int o = (cols.size() - 2) / 4;
+			Logging.log(cols.size() + " " + o);
+			vars.add(new VarFace(cols.size(), gre1.packed + o));
+			vars.add(new VarFace(cols.size() + 1, gre0.packed + o + 1));
+			vars.add(new VarFace(cols.size() + 2, red1.packed + o + 2));
+			vars.add(new VarFace(cols.size() + 3, red0.packed + o + 3));
+			cols.add(new RGB(gre1.packed + o));
+			cols.add(new RGB(gre0.packed + o + 1));
+			cols.add(new RGB(red1.packed + o + 2));
+			cols.add(new RGB(red0.packed + o + 3));
+		}
+		faces = new Face[glm.polygons.size()];
+		for(int i = 0; i < faces.length; i++){
+			faces[i] = vars.get(i);
+			if(!cuv.containsKey(faces[i].id())) cuv.put(faces[i].id(), new UVCoords(this, faces[i], null));
+		}
 		return new Generator<>(glm);
 	}
 	
@@ -500,32 +527,45 @@ public class RectCurve extends Polygon {
 
 	@Override
 	public Face[] getUVFaces(){
-		return BoxFace.values();
+		return faces;
+	}
+
+	@Override
+	public boolean isValidUVFace(String str){
+		return str.startsWith("var-");
 	}
 
 	@Override
 	public RGB getFaceColor(int idx){
-		if(idx == 0) return blu1;
-		if(idx == glm.polygons.size() - 1) return blu0;
-		idx = (idx - 1) % 4;;
-		switch(idx){
-			case 0: return gre1;
-			case 1: return gre0;
-			case 2: return red1;
-			case 3: return red0;
-		}
-		return RGB.GREEN;
+		if(idx == 0) return cols.get(0);
+		if(idx == glm.polygons.size() - 1) return cols.get(1);
+		return cols.get(idx + 1);
 	}
 
 	@Override
 	public Face getFaceByColor(int color){
-		//
+		for(VarFace var : vars){
+			if(var.color == color) return var;
+		}
 		return NoFace.NONE;
 	}
 
 	@Override
 	public float[][][] newUV(boolean with_offsets, boolean exclude_detached){
-		return new float[0][][];
+		float[][][] uvs = new float[glm.polygons.size()][][];
+		for(int i = 0; i < glm.polygons.size(); i++){
+			net.fexcraft.lib.frl.Polygon poly = glm.polygons.get(i);
+			uvs[i > 0 ? i == glm.polygons.size() - 1 ? 1 : i + 1 : 0] = new float[][]{
+				new float[]{ poly.vertices[1].u, poly.vertices[1].v },
+				new float[]{ poly.vertices[3].u, poly.vertices[3].v },
+			};
+		}
+		return uvs;
+	}
+
+	@Override
+	protected float paintScale(Texture tex, boolean x){
+		 return x ? tex.getWidth() : tex.getHeight();
 	}
 
 }
