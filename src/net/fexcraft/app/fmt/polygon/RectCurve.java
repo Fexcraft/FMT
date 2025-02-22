@@ -395,6 +395,8 @@ public class RectCurve extends Polygon {
 			case CUR_POINTS: return points.size();
 			case CUR_PLANES: return planes.size();
 			case CUR_LENGTH: return path.length;
+			case CUR_AMOUNT: return 1;
+			case CUR_ACTIVE: return 0;
 			case PLANE_ROT: return planes.get(active_segment).rot;
 			case PLANE_LOC: return planes.get(active_segment).location;
 			case PLANE_LOC_LIT: return dirloc ? 1 : 0;
