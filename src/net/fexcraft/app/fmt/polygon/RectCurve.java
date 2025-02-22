@@ -391,9 +391,9 @@ public class RectCurve extends Polygon {
 			case CORNER_3: return getVectorValue(planes.get(active_segment).cor3, polyval.axe());
 			case COLOR: return points.get(active_point).color.packed;
 			case CUR_ACTIVE_POINT: return active_point;
-			case CUR_ACTIVE_SEGMENT: return active_segment;
+			case CUR_ACTIVE_PLANES: return active_segment;
 			case CUR_POINTS: return points.size();
-			case CUR_SEGMENTS: return planes.size();
+			case CUR_PLANES: return planes.size();
 			case CUR_LENGTH: return path.length;
 			case PLANE_ROT: return planes.get(active_segment).rot;
 			case PLANE_LOC: return planes.get(active_segment).location;
@@ -440,7 +440,7 @@ public class RectCurve extends Polygon {
 				active_point = (int)value;
 				break;
 			}
-			case CUR_ACTIVE_SEGMENT:{
+			case CUR_ACTIVE_PLANES:{
 				if(value < 0) value = 0;
 				if(value >= planes.size()) value = planes.size() - 1;
 				active_segment = (int)value;
@@ -459,7 +459,7 @@ public class RectCurve extends Polygon {
 				compath();
 				break;
 			}
-			case CUR_SEGMENTS:{
+			case CUR_PLANES:{
 				int val = (int)value;
 				if(value < 2) value = 2;
 				if(value > planes.size()) value = planes.size() - 1;
