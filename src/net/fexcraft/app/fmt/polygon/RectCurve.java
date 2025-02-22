@@ -10,6 +10,7 @@ import static net.fexcraft.app.fmt.utils.JsonUtil.setVector;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.lib.script.elm.FltElm;
 import org.joml.Vector3f;
 
@@ -262,14 +263,22 @@ public class RectCurve extends Polygon {
 		axe.set(coff, path.getVectorPosition(dif, false).sub(vpos));
 		axe.add(seg.rot, 0, 0);
 		float loc;
+		float tw = 1f / (group().texgroup == null ? FMT.MODEL.texSizeX : group().texSizeX);
+		float th = 1f / (group().texgroup == null ? FMT.MODEL.texSizeY : group().texSizeY);
+		float tx = 0;
+		float ty = 0;
 		tr = coff.add(axe.get(off.x, off.y, off.z));
 		tl = coff.add(axe.get(off.x, off.y, off.z + seg.size.z));
 		bl = coff.add(axe.get(off.x, off.y + seg.size.y, off.z + seg.size.z));
 		br = coff.add(axe.get(off.x, off.y + seg.size.y, off.z));
 		if(!side_top){
 			glm.polygons.add(new net.fexcraft.lib.frl.Polygon(new Vertex[]{
-				new Vertex(tr), new Vertex(tl), new Vertex(bl), new Vertex(br)
+				new Vertex(tr, seg.size.z * tw, 0),
+				new Vertex(tl, 0,  0),
+				new Vertex(bl, 0, seg.size.y * th),
+				new Vertex(br, seg.size.z * tw, seg.size.y * th)
 			}));
+			tx += seg.size.z * tw;
 		}
 		for(int i = 1; i < planes.size(); i++){
 			seg = planes.get(i);
@@ -277,22 +286,39 @@ public class RectCurve extends Polygon {
 			coff = path.getVectorPosition(loc, false).sub(vpos);
 			axe.set(path.getVectorPosition(loc - dif, false).sub(vpos), coff);
 			axe.add(seg.rot, 0, 0);
+			ty = 0;
 			ntr = coff.add(axe.get(seg.offset.x, seg.offset.y, seg.offset.z));
 			ntl = coff.add(axe.get(seg.offset.x, seg.offset.y, seg.offset.z + seg.size.z));
 			nbl = coff.add(axe.get(seg.offset.x, seg.offset.y + seg.size.y, seg.offset.z + seg.size.z));
 			nbr = coff.add(axe.get(seg.offset.x, seg.offset.y + seg.size.y, seg.offset.z));
 			glm.polygons.add(new net.fexcraft.lib.frl.Polygon(new Vertex[]{
-				new Vertex(ntr), new Vertex(tr), new Vertex(br), new Vertex(nbr)
+				new Vertex(ntr, tx + seg.size.z * tw, ty),
+				new Vertex(tr, tx, ty),
+				new Vertex(br, tx, ty + seg.size.y * th),
+				new Vertex(nbr, tx + seg.size.z * tw, ty + seg.size.y * th)
 			}));
+			ty += seg.size.y * th;
 			glm.polygons.add(new net.fexcraft.lib.frl.Polygon(new Vertex[]{
-				new Vertex(ntl), new Vertex(nbl), new Vertex(bl), new Vertex(tl)
+				new Vertex(ntl, tx + seg.size.z * tw, ty),
+				new Vertex(nbl, tx, ty),
+				new Vertex(bl, tx, ty + seg.size.y * th),
+				new Vertex(tl, tx + seg.size.z * tw, ty + seg.size.y * th)
 			}));
+			ty += seg.size.y * th;
 			glm.polygons.add(new net.fexcraft.lib.frl.Polygon(new Vertex[]{
-				new Vertex(tr), new Vertex(ntr), new Vertex(ntl), new Vertex(tl)
+				new Vertex(tr, tx + seg.size.z * tw, ty),
+				new Vertex(ntr, tx, ty),
+				new Vertex(ntl, tx, ty + seg.size.y * th),
+				new Vertex(tl, tx + seg.size.z * tw, ty + seg.size.y * th)
 			}));
+			ty += seg.size.y * th;
 			glm.polygons.add(new net.fexcraft.lib.frl.Polygon(new Vertex[]{
-				new Vertex(nbl), new Vertex(nbr), new Vertex(br), new Vertex(bl)
+				new Vertex(nbl, tx + seg.size.z * tw, ty),
+				new Vertex(nbr, tx, ty),
+				new Vertex(br, tx, ty + seg.size.y * th),
+				new Vertex(bl, tx + seg.size.z * tw, ty + seg.size.y * th)
 			}));
+			tx += seg.size.z * tw;
 			tr = ntr;
 			tl = ntl;
 			br = nbr;
@@ -300,7 +326,10 @@ public class RectCurve extends Polygon {
 		}
 		if(!side_bot){
 			glm.polygons.add(new net.fexcraft.lib.frl.Polygon(new Vertex[]{
-				new Vertex(tl), new Vertex(tr), new Vertex(br), new Vertex(bl)
+				new Vertex(tl, tx + seg.size.z * tw, 0),
+				new Vertex(tr, tx,  0),
+				new Vertex(br, tx, seg.size.y * th),
+				new Vertex(bl, tx + seg.size.z * tw, seg.size.y * th)
 			}));
 		}
 		return new Generator<>(glm);
