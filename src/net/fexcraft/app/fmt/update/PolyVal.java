@@ -18,7 +18,7 @@ public enum PolyVal {
 	CUV, CUV_START, CUV_END, CUV_TL, CUV_TR, CUV_BL, CUV_BR,
 	
 	/* Curve */
-	CUR_SEGMENTS, CUR_POINTS, CUR_ACTIVE_POINT, CUR_ACTIVE_SEGMENT, PLANE_ROT, PLANE_LOC, PLANE_LOC_LIT, CUR_LENGTH
+	CUR_AMOUNT, CUR_PLANES, CUR_POINTS, CUR_ACTIVE, CUR_ACTIVE_POINT, CUR_ACTIVE_PLANES, PLANE_ROT, PLANE_LOC, PLANE_LOC_LIT, CUR_LENGTH
 	
 	/* */
 	;
@@ -60,7 +60,7 @@ public enum PolyVal {
 		}
 
 		public boolean doesUpdateMoreFields(){
-			return val == CUR_ACTIVE_POINT || val == CUR_ACTIVE_SEGMENT || val == CUR_POINTS || val == CUR_SEGMENTS;
+			return val.ordinal() >= CUR_AMOUNT.ordinal();
 		}
 		
 	}
