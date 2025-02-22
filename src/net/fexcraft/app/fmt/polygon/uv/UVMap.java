@@ -31,7 +31,10 @@ public class UVMap extends TreeMap<String, UVCoords> {
 	}
 
 	public void copyTo(Polygon poly){
-		entrySet().forEach(entry -> poly.cuv.get(entry.getKey()).copy(entry.getValue()));
+		entrySet().forEach(entry -> {
+			UVCoords coords = poly.cuv.get(entry.getKey());
+			if(coords != null) coords.copy(entry.getValue());
+		});
 	}
 
 	public boolean anyDetached(){
