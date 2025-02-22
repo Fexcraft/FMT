@@ -276,7 +276,9 @@ public class RectCurve extends Polygon {
 		float loc;
 		float tw = 1f / (group().texgroup == null ? FMT.MODEL.texSizeX : group().texSizeX);
 		float th = 1f / (group().texgroup == null ? FMT.MODEL.texSizeY : group().texSizeY);
-		float tx = 0;
+		float rx = tw * textureX;
+		float ry = tw * textureY;
+		float tx = rx;
 		float ty = 0;
 		float sx = 0;
 		float sy = 0;
@@ -288,10 +290,10 @@ public class RectCurve extends Polygon {
 		br = coff.add(axe.get(off.x, off.y + seg0.size.y, off.z));
 		if(!side_top){
 			glm.polygons.add(new net.fexcraft.lib.frl.Polygon(new Vertex[]{
-				new Vertex(tr, seg0.size.z * tw, 0),
-				new Vertex(tl, 0,  0),
-				new Vertex(bl, 0, seg0.size.y * th),
-				new Vertex(br, seg0.size.z * tw, seg0.size.y * th)
+				new Vertex(tr, rx + seg0.size.z * tw, ry),
+				new Vertex(tl, rx,  ry),
+				new Vertex(bl, rx, ry + seg0.size.y * th),
+				new Vertex(br, rx + seg0.size.z * tw, ry + seg0.size.y * th)
 			}));
 			tx += seg0.size.z * tw;
 		}
@@ -302,7 +304,7 @@ public class RectCurve extends Polygon {
 			coff = path.getVectorPosition(loc, false).sub(vpos);
 			axe.set(path.getVectorPosition(loc - dif, false).sub(vpos), coff);
 			axe.add(seg0.rot, 0, 0);
-			ty = 0;
+			ty = ry;
 			sx = Math.max(seg0.size.z, seg_.size.z);
 			sy = Math.max(seg0.size.y, seg_.size.y);
 			sx0 = 0;//seg_.size.z < seg0.size.z ? (seg0.size.z - seg_.size.z) * .5f * tw : 0;
@@ -346,10 +348,10 @@ public class RectCurve extends Polygon {
 		}
 		if(!side_bot){
 			glm.polygons.add(new net.fexcraft.lib.frl.Polygon(new Vertex[]{
-				new Vertex(tl, tx + sx * tw, 0),
-				new Vertex(tr, tx,  0),
-				new Vertex(br, tx, sy * th),
-				new Vertex(bl, tx + sx * tw, sy * th)
+				new Vertex(tl, tx + sx * tw, ry),
+				new Vertex(tr, tx,  ry),
+				new Vertex(br, tx, ry + sy * th),
+				new Vertex(bl, tx + sx * tw, ry + sy * th)
 			}));
 		}
 		while(glm.polygons.size() > cols.size()){
