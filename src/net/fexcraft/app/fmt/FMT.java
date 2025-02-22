@@ -318,12 +318,12 @@ public class FMT {
 			}
 			timer.update();
 		}
-		RENDERER.destroy();
-		glfwDestroyWindow(window);
-		glfwTerminate();
 		Settings.save();
 		SessionHandler.save();
 		//TODO other saves
+		RENDERER.destroy();
+		glfwDestroyWindow(window);
+		glfwTerminate();
 		System.exit(EXIT_CODE);
 	}
 
@@ -363,8 +363,7 @@ public class FMT {
 	private void render(int vao, FltElm alpha){
 		//glClearColor(0.5f, 0.5f, 0.5f, 0.01f);
 		CONTEXT.updateGlfwWindow();
-		Vector2i size = CONTEXT.getFramebufferSize();
-		glViewport(0, 0, size.x, size.y);
+		glViewport(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
@@ -375,8 +374,9 @@ public class FMT {
 		if(Picker.TYPE.polygon()){
 			glClearColor(1, 1, 1, 1);
 		    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			PolyRenderer.mode(DrawMode.PICKER);
-			if(Arrows.MODE.active()) Arrows.render(DrawMode.PICKER); 
+			//if(Arrows.MODE.active()) Arrows.render(DrawMode.PICKER);
 			MODEL.renderPicking();
 			Picker.process();
 			if(Picker.TYPE.face()){
