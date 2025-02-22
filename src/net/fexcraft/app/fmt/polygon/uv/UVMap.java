@@ -10,6 +10,10 @@ public class UVMap extends TreeMap<String, UVCoords> {
 
 	public UVMap(Polygon polygon){
 		poly = polygon;
+		if(polygon.getUVFaces() == null){
+			put(NoFace.NONE.id(), new UVCoords(polygon, NoFace.NONE, null));
+			return;
+		}
 		for(Face face : polygon.getUVFaces()){
 			put(face.id(), new UVCoords(polygon, face, null));
 		}
