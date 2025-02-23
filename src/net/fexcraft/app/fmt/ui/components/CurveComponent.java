@@ -41,8 +41,9 @@ public class CurveComponent extends EditorComponent {
 		add(TY = new NumberField(this, F31, row(0), F3S, HEIGHT).setup(-1, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.TEX, ValAxe.Y)));
 		add(new RunButton(LANG_PREFIX + genid + ".tex_reset", F32, row(0), F3S, HEIGHT, () -> resetUV()));
 		add(new Label(translate(LANG_PREFIX + id + ".length"), L5, row(1), LW, HEIGHT));
-		add(new NumberField(this, F20, row(1), F2S, HEIGHT).setup(0, 360, false, new PolygonValue(PolyVal.CUR_LENGTH, ValAxe.N)));
-		add(new BoolButton(this, F21, row(0), F2S, HEIGHT, new PolygonValue(PolyVal.RADIAL, ValAxe.N)));
+		add(new NumberField(this, F30, row(1), F3S, HEIGHT).setup(0, 360, false, new PolygonValue(PolyVal.CUR_LENGTH, ValAxe.N)));
+		add(new BoolButton(this, F31, row(0), F3S, HEIGHT, new PolygonValue(PolyVal.RADIAL, ValAxe.N)));
+		add(new BoolButton(this, F32, row(0), F3S, HEIGHT, new PolygonValue(PolyVal.DIRECTION, ValAxe.N)));
 		add(new Label(translate(LANG_PREFIX + id + ".active"), L5, row(1), LW, HEIGHT));
 		add(new NumberField(this, F20, row(1), F2S, HEIGHT).setup(2, 50, false, new PolygonValue(PolyVal.CUR_AMOUNT, ValAxe.N)).index());
 		add(new NumberField(this, F21, row(0), F2S, HEIGHT).setup(0, Integer.MAX_VALUE, false, new PolygonValue(PolyVal.CUR_ACTIVE, ValAxe.N)).index());
@@ -85,7 +86,7 @@ public class CurveComponent extends EditorComponent {
 				for(int i = 0; i < cu.planes.size(); i++){
 					cu.planes.get(i).location = loc * i;//(i + 1);
 				}
-				cu.compilePath(curv.pos);
+				cu.compilePath();
 				curv.recompile();
 				update(new UpdateEvent.PolygonValueEvent(poly, PLANELOC, true));
 				update(new UpdateEvent.PolygonValueEvent(poly, PLANELIT, true));
