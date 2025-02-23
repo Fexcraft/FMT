@@ -55,6 +55,7 @@ toolbar.polygons.add_group=Add Group
 toolbar.polygons.add_voxel=Add Voxel
 toolbar.polygons.add_rect_curve=Add Rect. Curve
 toolbar.polygons.add_cyl_curve=Add Cyl. Curve
+toolbar.polygons.add_mesh_curve=Add Mesh Curve
 ## Utils 
 toolbar.utils=Utilities
 toolbar.utils.copy_selected=Copy Selected
@@ -203,7 +204,7 @@ editor.component.polygon.curve.name=Curve Settings
 editor.component.polygon.curve.rot=Rotation
 editor.component.polygon.curve.tex=Texture UV / Reset
 editor.component.polygon.curve.tex_reset=Reset Root UV
-editor.component.polygon.curve.length=Curve Length / Show Line
+editor.component.polygon.curve.length=Curve Length / Line / Flip
 editor.component.polygon.curve.active=Curves / Active Curve (0 index)
 editor.component.polygon.curve.points=Points / Active Point (0 index)
 editor.component.polygon.curve.pos=Point Position
