@@ -2,6 +2,7 @@ package net.fexcraft.app.fmt.ui;
 
 import java.util.ArrayList;
 
+import net.fexcraft.app.fmt.polygon.Shape;
 import net.fexcraft.app.fmt.port.im.ImportManager;
 import net.fexcraft.app.fmt.ui.panels.QuickAddPanel;
 import net.fexcraft.app.fmt.ui.workspace.WorkspaceViewer;
@@ -132,10 +133,10 @@ public class Toolbar extends Panel {
 			new MenuButton(3, "polygons.add_marker", () -> QuickAddPanel.addMarker()),
 			new MenuButton(4, "polygons.add_group", () -> QuickAddPanel.addGroup()),
 			new MenuButton(5, "polygons.add_boundingbox", () -> QuickAddPanel.addScructBox()),
-			new MenuButton(6, "polygons.add_rect_curve", () -> QuickAddPanel.addCurve(false)),
-			new MenuButton(7, "polygons.add_cyl_curve", () -> QuickAddPanel.addCurve(true)),
-			new MenuButton(8, "polygons.add_object"),
-			new MenuButton(9, "polygons.add_voxel")
+			new MenuButton(6, "polygons.add_rect_curve", () -> QuickAddPanel.addCurve(Shape.RECT_CURVE)),
+			new MenuButton(7, "polygons.add_cyl_curve", () -> QuickAddPanel.addCurve(Shape.CYL_CURVE)),
+			new MenuButton(8, "polygons.add_mesh_curve", () -> QuickAddPanel.addCurve(Shape.MESH_CURVE)),
+			new MenuButton(9, "polygons.add_object")
 		));
 		this.add(new ToolbarMenu(6, "workspace", () -> WorkspaceViewer.show0()));
 		this.add(new ToolbarMenu(7, "exit", () -> FMT.close(0)));
