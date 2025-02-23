@@ -213,6 +213,8 @@ public class RectCurve extends CurvePolygon {
 	public float getValue(PolygonValue polyval){
 		Curve cu = act_curve();
 		switch(polyval.val()){
+			case CUR_AMOUNT: return 1;
+			case CUR_ACTIVE: return 0;
 			case SIDES:{
 				int idx = polyval.axe().ordinal();
 				if(idx == 2) return side_top ? 1 : 0;
@@ -230,7 +232,7 @@ public class RectCurve extends CurvePolygon {
 			case SIDES:{
 				int idx = polyval.axe().ordinal();
 				if(idx == 2) side_top = value > 0.5f;
-				else if(idx == 2) side_bot = value > 0.5f;
+				else if(idx == 3) side_bot = value > 0.5f;
 				else setIndexValue(cu.planes.get(cu.active_segment).sides, idx > 1 ? idx - 2 : idx, value);
 				break;
 			}
