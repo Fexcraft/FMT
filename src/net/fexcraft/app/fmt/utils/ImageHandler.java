@@ -165,6 +165,19 @@ public class ImageHandler {
 		return image;
 	}
 
+	public static void testScreenshot(){
+		BufferedImage image = displayToImage();
+		try{
+			String name = BackupHandler.getSimpleDateFormat(true).format(Time.getDate());
+			File file = new File("./tests/" + name + ".png");
+			if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
+			ImageIO.write(image, "png", file);
+		}
+		catch(Exception e){
+			log(e);
+		}
+	}
+
 	private static void reset(){
 		meta = null;
 		currgif = null;
