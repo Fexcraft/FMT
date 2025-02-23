@@ -93,9 +93,12 @@ public class QuickAddPanel extends EditorPanel {
 		if(Settings.HIDE_MENU_AFTER_POLYGON.value) ToolbarMenu.hideAll();
 	}
 
-	public static void addCurve(boolean cyl){
-		if(cyl){
+	public static void addCurve(Shape sha){
+		if(sha.is(Shape.CYL_CURVE)){
 
+		}
+		else if(sha.is(Shape.MESH_CURVE)){
+			FMT.MODEL.add(null, null, new CurvedMesh(null));
 		}
 		else{
 			FMT.MODEL.add(null, null, new RectCurve(null));
