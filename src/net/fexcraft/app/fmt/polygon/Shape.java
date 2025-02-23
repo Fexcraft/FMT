@@ -10,8 +10,9 @@ public enum Shape {
 	MARKER("marker", "rect"),
 	VOXEL("voxel"),
 	BOUNDING_BOX("rect"),
-	RECT_CURVE("rect"),
-	CYL_CURVE("cylinder");
+	RECT_CURVE("rect", "curve"),
+	CYL_CURVE("cylinder"),
+	MESH_CURVE("mesh", "curve");
 	
 	private String[] conversion_groups;
 	
@@ -56,7 +57,7 @@ public enum Shape {
 	}
 	
 	public boolean isCurve(){
-		return this == RECT_CURVE || this == CYL_CURVE;
+		return this == RECT_CURVE || this == CYL_CURVE || this == MESH_CURVE;
 	}
 	
 	public boolean is(Shape type){
@@ -79,6 +80,7 @@ public enum Shape {
 			case "bounding_box": return BOUNDING_BOX;
 			case "cyl_curve": return CYL_CURVE;
 			case "rect_curve": return RECT_CURVE;
+			case "mesh_curve": return MESH_CURVE;
 			default: return null;
 		}
 	}
