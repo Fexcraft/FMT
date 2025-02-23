@@ -8,6 +8,7 @@ import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.app.json.JsonValue;
 import net.fexcraft.lib.frl.Polyhedron;
 import net.fexcraft.lib.script.elm.FltElm;
+import org.joml.Vector3f;
 
 import java.util.ArrayList;
 
@@ -25,31 +26,35 @@ public abstract class CurvePolygon extends Polygon {
 
 	public CurvePolygon(Model model){
 		super(model);
-		curves.add(new Curve());
-		Curve cu = act_curve();
-		cu.points.add(new CurvePoint(pos.x, pos.y, pos.z));
-		cu.points.add(new CurvePoint(pos.x + 1, pos.y, pos.z));
-		cu.compilePath(pos);
-		cu.planes.add(new CurvePlane(0));
-		cu.planes.add(new CurvePlane(1));
+		addDefCurve(pos);
 	}
 
 	public CurvePolygon(Model model, JsonMap obj){
 		super(model, obj);
 		parseCurves(obj);
-		act_curve().compilePath(pos);
+		for(Curve cu : curves) cu.compilePath();
 		showline = obj.getBoolean("line", showline);
 	}
 
-	private void parseCurves(JsonMap obj){
+	protected void addDefCurve(Vector3f pos){
+		curves.add(new Curve(this));
+		Curve cu = last_curve();
+		cu.points.add(new CurvePoint(pos.x, pos.y, pos.z));
+		cu.points.add(new CurvePoint(pos.x + 1, pos.y, pos.z));
+		cu.compilePath();
+		cu.planes.add(new CurvePlane(0));
+		cu.planes.add(new CurvePlane(1));
+	}
+
+	protected void parseCurves(JsonMap obj){
 		if(obj.has("curves")){
 			for(JsonValue<?> jsn : obj.getArray("curves").value){
-				curves.add(new Curve());
+				curves.add(new Curve(this));
 				curves.get(curves.size() - 1).parse(jsn.asMap());
 			}
 		}
 		else{
-			curves.add(new Curve());
+			curves.add(new Curve(this));
 			curves.get(0).parse(obj);
 		}
 	}
@@ -67,16 +72,20 @@ public abstract class CurvePolygon extends Polygon {
 		return curves.get(active);
 	}
 
+	public Curve last_curve(){
+		return curves.get(curves.size() - 1);
+	}
+
 	@Override
 	public float getValue(PolyVal.PolygonValue polyval){
 		Curve cu = act_curve();
 		switch(polyval.val()){
 			case POS: {
-				if(cu.active_point > 0) return getVectorValue(cu.points.get(cu.active_point).vector, polyval.axe());
+				if(active > 0 || cu.active_point > 0) return getVectorValue(cu.points.get(cu.active_point).vector, polyval.axe());
 				else return super.getValue(polyval);
 			}
 			case OFF: {
-				if(cu.active_segment > 0) return getVectorValue(cu.planes.get(cu.active_segment).offset, polyval.axe());
+				if(active > 0 || cu.active_segment > 0) return getVectorValue(cu.planes.get(cu.active_segment).offset, polyval.axe());
 				else return super.getValue(polyval);
 			}
 			case SIZE: return getVectorValue(cu.planes.get(cu.active_segment).size, polyval.axe());
@@ -90,8 +99,8 @@ public abstract class CurvePolygon extends Polygon {
 			case CUR_POINTS: return cu.points.size();
 			case CUR_PLANES: return cu.planes.size();
 			case CUR_LENGTH: return cu.path.length;
-			case CUR_AMOUNT: return 1;
-			case CUR_ACTIVE: return 0;
+			case CUR_AMOUNT: return curves.size();
+			case CUR_ACTIVE: return active;
 			case PLANE_ROT: return cu.planes.get(cu.active_segment).rot;
 			case PLANE_LOC: return cu.planes.get(cu.active_segment).location;
 			case PLANE_LOC_LIT: return cu.litloc ? 1 : 0;
@@ -105,13 +114,13 @@ public abstract class CurvePolygon extends Polygon {
 		Curve cu = act_curve();
 		switch(polyval.val()){
 			case POS:{
-				if(cu.active_point == 0) super.setValue(polyval, value);
+				if(cu.active_point == 0 && active == 0) super.setValue(polyval, value);
 				else setVectorValue(cu.points.get(cu.active_point).vector, polyval.axe(), value);
-				cu.compilePath(pos);
+				compileAllPaths();
 				break;
 			}
 			case OFF:{
-				if(cu.active_segment == 0) super.setValue(polyval, value);
+				if(active == 0 && cu.active_segment == 0) super.setValue(polyval, value);
 				setVectorValue(cu.planes.get(cu.active_segment).offset, polyval.axe(), value);
 				break;
 			}
@@ -135,22 +144,18 @@ public abstract class CurvePolygon extends Polygon {
 			}
 			case CUR_POINTS:{
 				int val = (int)value;
-				if(value < 2) value = 2;
-				if(value > cu.points.size()) value = cu.points.size() - 1;
-				if(val == cu.points.size()) break;
+				if(val < 2) val = 2;
 				if(val < cu.points.size()){
 					while(cu.points.size() > val) cu.points.remove(cu.points.size() - 1);
 					if(cu.active_point >= cu.points.size()) cu.active_point = cu.points.size() - 1;
 				}
 				if(val > cu.points.size()) while(cu.points.size() < val) cu.points.add(new CurvePoint(cu.points.get(cu.points.size() - 1)));
-				cu.compilePath(pos);
+				compileAllPaths();
 				break;
 			}
 			case CUR_PLANES:{
 				int val = (int)value;
-				if(value < 2) value = 2;
-				if(value > cu.planes.size()) value = cu.planes.size() - 1;
-				if(val == cu.planes.size()) break;
+				if(val < 2) val = 2;
 				if(val < cu.planes.size()){
 					while(cu.planes.size() > val) cu.planes.remove(cu.planes.size() - 1);
 					if(cu.active_segment >= cu.planes.size()) cu.active_segment = cu.planes.size() - 1;
@@ -167,13 +172,19 @@ public abstract class CurvePolygon extends Polygon {
 		this.recompile();
 	}
 
+	private void compileAllPaths(){
+		for(Curve cu : curves) cu.compilePath();
+	}
+
 	@Override
 	protected Polygon copyInternal(Polygon poly){
 		CurvePolygon curv = (CurvePolygon)poly;
+		curv.curves.clear();
 		for(Curve cu : curves){
-			curv.curves.add(cu.copy());
+			curv.curves.add(cu.copy(curv));
 		}
-		showline = showline;
+		curv.showline = showline;
+		curv.compileAllPaths();
 		return poly;
 	}
 
@@ -192,7 +203,7 @@ public abstract class CurvePolygon extends Polygon {
 		if(PolyRenderer.mode().lines()){
 			PolyRenderer.DrawMode mode = PolyRenderer.mode();
 			PolyRenderer.mode(PolyRenderer.DrawMode.RGBCOLOR);
-			glp.render();
+			if(selected || group().selected) glp.render();
 			if(showline) gll.render();
 			PolyRenderer.mode(mode);
 		}
