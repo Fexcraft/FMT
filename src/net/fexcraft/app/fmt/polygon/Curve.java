@@ -3,6 +3,7 @@ package net.fexcraft.app.fmt.polygon;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.Vec3f;
+import net.fexcraft.lib.frl.Polygon;
 import net.fexcraft.lib.frl.gen.Path;
 import org.joml.Vector3f;
 
@@ -20,7 +21,12 @@ public class Curve {
 	public int active_point = 0;
 	public int active_segment = 0;
 	public boolean litloc;
+	public CurvePolygon polygon;
 	public Path path;
+
+	public Curve(CurvePolygon poly){
+		polygon = poly;
+	}
 
 	public void parse(JsonMap map){
 		JsonArray points = map.getArray("points");
@@ -54,15 +60,20 @@ public class Curve {
 		return map;
 	}
 
-	public void compilePath(Vector3f pos){
+	public void compilePath(){
 		Vec3f[] arr = new Vec3f[points.size()];
 		int idx = 0;
-		for(CurvePoint point : points) arr[idx++] = point.toVec3f(pos);
+		for(CurvePoint point : points) arr[idx++] = point.toVec3f(polygon.pos);
 		path = new Path(arr);
 	}
 
-	public Curve copy(){
-		Curve cu = new Curve();
+	public Curve compilePathRet(){
+		compilePath();
+		return this;
+	}
+
+	public Curve copy(CurvePolygon poly){
+		Curve cu = new Curve(poly);
 		cu.litloc = litloc;
 		cu.points.clear();
 		for(CurvePoint point : points){
