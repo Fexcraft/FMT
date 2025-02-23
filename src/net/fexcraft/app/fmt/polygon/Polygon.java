@@ -184,6 +184,7 @@ public abstract class Polygon implements ScrElm {
 			case VOXEL:
 				break;
 			case RECT_CURVE: return new RectCurve(model, obj);
+			case MESH_CURVE: return new CurvedMesh(model, obj);
 			default: return null;
 		}
 		return null;
@@ -203,6 +204,7 @@ public abstract class Polygon implements ScrElm {
 			case VOXEL:
 				break;
 			case RECT_CURVE: return new RectCurve(model);
+			case MESH_CURVE: return new CurvedMesh(model);
 			default: return null;
 		}
 		return null;
