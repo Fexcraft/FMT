@@ -361,8 +361,8 @@ public class FMT {
 
 	private void render(int vao, FltElm alpha){
 		//glClearColor(0.5f, 0.5f, 0.5f, 0.01f);
-		CONTEXT.updateGlfwWindow();
 		glViewport(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
+		CONTEXT.updateGlfwWindow();
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
