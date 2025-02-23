@@ -281,7 +281,6 @@ public class FMT {
 		int vao = glGenVertexArrays();
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
-		Picker.resetBuffer(true);
 		//
 		CONTEXT.updateGlfwWindow();
 		resize();
