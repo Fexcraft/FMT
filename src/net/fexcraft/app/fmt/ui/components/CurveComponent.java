@@ -6,6 +6,8 @@ import static net.fexcraft.app.fmt.utils.Translator.translate;
 import com.spinyowl.legui.component.Label;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.polygon.Curve;
+import net.fexcraft.app.fmt.polygon.CurvePolygon;
 import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.polygon.RectCurve;
 import net.fexcraft.app.fmt.ui.PosCopyIcon;
@@ -75,13 +77,15 @@ public class CurveComponent extends EditorComponent {
 		add(new RunButton("R-Auto", F43, row(0), F4S, HEIGHT, () -> {
 			ArrayList<Polygon> sel = FMT.MODEL.selected();
 			for(Polygon poly : sel){
-				if(!(poly instanceof RectCurve curv)) continue;
-				int size = curv.planes.size() - 1;
-				float loc = curv.dirloc ? curv.path.length / size : 1f / size;
-				for(int i = 0; i < curv.planes.size(); i++){
-					curv.planes.get(i).location = loc * i;//(i + 1);
+				if(!poly.getShape().isCurve()) continue;
+				CurvePolygon curv = (CurvePolygon)poly;
+				Curve cu = curv.act_curve();
+				int size = cu.planes.size() - 1;
+				float loc = cu.litloc ? cu.path.length / size : 1f / size;
+				for(int i = 0; i < cu.planes.size(); i++){
+					cu.planes.get(i).location = loc * i;//(i + 1);
 				}
-				curv.compath();
+				cu.compilePath(curv.pos);
 				curv.recompile();
 				update(new UpdateEvent.PolygonValueEvent(poly, PLANELOC, true));
 				update(new UpdateEvent.PolygonValueEvent(poly, PLANELIT, true));
