@@ -43,7 +43,7 @@ public class PolygonEditor extends Editor {
 				for(Polygon poly : polys){
 					if(!poly.getShape().isCurve()) curv = false;
 					if(!curv){
-						if(!poly.getShape().isRectagular()){
+						if(poly.getShape().isRectagular()){
 							BOXON.minimize(false);
 						}
 						else{
