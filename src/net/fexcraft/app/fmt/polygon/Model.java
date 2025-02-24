@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 
 import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.ui.Editor;
-import net.fexcraft.app.fmt.ui.trees.PolygonTree;
 import net.fexcraft.app.fmt.update.UpdateEvent.*;
 import net.fexcraft.app.fmt.utils.*;
 import net.fexcraft.app.json.JsonValue;
@@ -561,60 +560,88 @@ public class Model {
 		}
 	}
 
-	public void flipShapeboxes(Collection<Polygon> collection, int axe){
-		Collection<Polygon> polygons = collection != null ? collection : selection_copy().stream().filter(pre -> pre.getShape().isShapebox()).collect(Collectors.toList());
+	public void flipPolygons(Collection<Polygon> collection, int axe){
+		Collection<Polygon> polygons = collection != null ? collection : selection_copy();
 		for(Polygon polygon : polygons){
-			if(polygon instanceof Shapebox == false) continue;
-			Vector3f[] copy = new Vector3f[8];
-			Shapebox shapebox = (Shapebox)polygon;
-			copy[0] = shapebox.cor0;
-			copy[1] = shapebox.cor1;
-			copy[2] = shapebox.cor2;
-			copy[3] = shapebox.cor3;
-			copy[4] = shapebox.cor4;
-			copy[5] = shapebox.cor5;
-			copy[6] = shapebox.cor6;
-			copy[7] = shapebox.cor7;
-			switch(axe){
-				case 0:{
-					shapebox.cor0 = copy[3];
-					shapebox.cor1 = copy[2];
-					shapebox.cor2 = copy[1];
-					shapebox.cor3 = copy[0];
-					shapebox.cor4 = copy[7];
-					shapebox.cor5 = copy[6];
-					shapebox.cor6 = copy[5];
-					shapebox.cor7 = copy[4];
-					break;
+			if(polygon instanceof Shapebox) flipShapebox((Shapebox)polygon, axe);
+			if(polygon instanceof CurvePolygon){
+				CurvePolygon mesh = (CurvePolygon)polygon;
+				mesh.flip = !mesh.flip;
+				for(int c = 0; c < mesh.curves.size(); c++){
+					Curve cu = mesh.curves.get(c);
+					for(int p = 0; p < cu.points.size(); p++){
+						if(c == 0 && p == 0) continue;
+						CurvePoint point = cu.points.get(p);
+						switch(axe){
+							case 0:{//z
+								point.vector.z = -point.vector.z;
+								break;
+							}
+							case 1:{//y
+								point.vector.y = -point.vector.y;
+								break;
+							}
+							case 2:{//x
+								point.vector.x = -point.vector.x;
+								break;
+							}
+						}
+					}
 				}
-				case 1:{
-					shapebox.cor0 = copy[4];
-					shapebox.cor1 = copy[5];
-					shapebox.cor2 = copy[6];
-					shapebox.cor3 = copy[7];
-					shapebox.cor4 = copy[0];
-					shapebox.cor5 = copy[1];
-					shapebox.cor6 = copy[2];
-					shapebox.cor7 = copy[3];
-					break;
-				}
-				case 2:{
-					shapebox.cor0 = copy[1];
-					shapebox.cor1 = copy[0];
-					shapebox.cor2 = copy[3];
-					shapebox.cor3 = copy[2];
-					shapebox.cor4 = copy[5];
-					shapebox.cor5 = copy[4];
-					shapebox.cor6 = copy[7];
-					shapebox.cor7 = copy[6];
-					break;
-				}
+				mesh.compileAllPaths();
+				mesh.recompile();
 			}
-			shapebox.recompile();
-			continue;
 		}
 		//TODO update event/s
-		return;
+	}
+
+	private void flipShapebox(Shapebox polygon, int axe){
+		Vector3f[] copy = new Vector3f[8];
+		Shapebox shapebox = (Shapebox)polygon;
+		copy[0] = shapebox.cor0;
+		copy[1] = shapebox.cor1;
+		copy[2] = shapebox.cor2;
+		copy[3] = shapebox.cor3;
+		copy[4] = shapebox.cor4;
+		copy[5] = shapebox.cor5;
+		copy[6] = shapebox.cor6;
+		copy[7] = shapebox.cor7;
+		switch(axe){
+			case 0:{
+				shapebox.cor0 = copy[3];
+				shapebox.cor1 = copy[2];
+				shapebox.cor2 = copy[1];
+				shapebox.cor3 = copy[0];
+				shapebox.cor4 = copy[7];
+				shapebox.cor5 = copy[6];
+				shapebox.cor6 = copy[5];
+				shapebox.cor7 = copy[4];
+				break;
+			}
+			case 1:{
+				shapebox.cor0 = copy[4];
+				shapebox.cor1 = copy[5];
+				shapebox.cor2 = copy[6];
+				shapebox.cor3 = copy[7];
+				shapebox.cor4 = copy[0];
+				shapebox.cor5 = copy[1];
+				shapebox.cor6 = copy[2];
+				shapebox.cor7 = copy[3];
+				break;
+			}
+			case 2:{
+				shapebox.cor0 = copy[1];
+				shapebox.cor1 = copy[0];
+				shapebox.cor2 = copy[3];
+				shapebox.cor3 = copy[2];
+				shapebox.cor4 = copy[5];
+				shapebox.cor5 = copy[4];
+				shapebox.cor6 = copy[7];
+				shapebox.cor7 = copy[6];
+				break;
+			}
+		}
+		shapebox.recompile();
 	}
 
 	public void flipBoxPosition(Collection<Polygon> collection, int axe){
