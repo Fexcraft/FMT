@@ -54,25 +54,19 @@ public class RectCurve extends CurvePolygon {
 	@Override
 	protected Generator<GLObject> getGenerator(){
 		if(glp.sub == null) glp.sub = new ArrayList<>();
+		for(Polyhedron<GLObject> sub : glp.sub) PolyRenderer.RENDERER.delete(sub);
+		glp.sub.clear();
 		Curve cu = act_curve();
-		if(glp.sub.size() != cu.points.size()){
-			while(glp.sub.size() > cu.points.size()){
-				PolyRenderer.RENDERER.delete(glp.sub.remove(glp.sub.size() - 1));
-			}
-			while(glp.sub.size() < cu.points.size()){
-				Polyhedron<GLObject> poly = new Polyhedron<>();
-				poly.setGlObj(new GLObject());
-				glp.sub.add(poly);
-			}
-		}
 		Axis3DL axe = new Axis3DL();
 		for(int i = 0; i < cu.points.size(); i++){
-			Polyhedron<GLObject> poly = glp.sub.get(i);
+			Polyhedron<GLObject> poly = new Polyhedron<>();
+			poly.setGlObj(new GLObject());
 			poly.glObj.polycolor = cu.points.get(i).color.toFloatArray();
 			Vector3f vec = i == 0 ? pos : new Vector3f(cu.points.get(i).vector).add(pos);
 			poly.pos(vec.x, vec.y, vec.z);
 			poly.rot(rot.x, rot.y, rot.z);
-			Marker.getMarkerGenerator(poly, 1).make();
+			Marker.getMarkerGenerator(poly, mscale).make();
+			glp.sub.add(poly);
 		}
 		Vec3f vpos = new Vec3f(pos.x, pos.y, pos.z);
 		if(showline){
