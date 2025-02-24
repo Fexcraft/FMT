@@ -60,7 +60,8 @@ public class CurveComponent extends EditorComponent {
 		add(new NumberField(this, F32, row(0), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.POS, ValAxe.Z)));
 		//point color
 		add(new Label(translate(LANG_PREFIX + id + ".color"), L5, row(1), LW, HEIGHT));
-		add(new ColorField(this, F20, row(1), LW, HEIGHT, new PolygonValue(PolyVal.COLOR, ValAxe.N)));
+		add(new ColorField(this, F20, row(1), F2S, HEIGHT, new PolygonValue(PolyVal.COLOR, ValAxe.N)));
+		add(new NumberField(this, F21, row(0), F2S, HEIGHT).setup(0, 16, true, new PolygonValue(PolyVal.SCALE, ValAxe.N)));
 		//segments
 		row += 20;
 		add(new Label(translate(LANG_PREFIX + id + ".planes"), L5, row(1), LW, HEIGHT));
