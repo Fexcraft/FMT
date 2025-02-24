@@ -54,31 +54,20 @@ public class CurvedMesh extends CurvePolygon {
 		Axis3DL axe0 = new Axis3DL();
 		Axis3DL axe1 = new Axis3DL();
 		if(subs == null) subs = new ArrayList<>();
-		int subsize = 0;
+		for(Polyhedron<GLObject> sub : subs) PolyRenderer.RENDERER.delete(sub);
+		subs.clear();
 		for(int c = 0; c < curves.size(); c++){
 			Curve cu = curves.get(c);
-			subsize += cu.points.size();
-			if(subs.size() != subsize){
-				while(subs.size() > subsize){
-					PolyRenderer.RENDERER.delete(subs.remove(subs.size() - 1));
-				}
-				while(subs.size() < subsize){
-					Polyhedron<GLObject> poly = new Polyhedron<>();
-					poly.setGlObj(new GLObject());
-					subs.add(poly);
-				}
-			}
-			subsize -= cu.points.size();
-			for(int i = subsize; i < subsize + cu.points.size(); i++){
-				int j = i - subsize;
-				Polyhedron<GLObject> poly = subs.get(i);
-				poly.glObj.polycolor = cu.points.get(j).color.toFloatArray();
-				Vector3f vec = c == 0 && i == 0 ? pos : new Vector3f(cu.points.get(j).vector).add(pos);
+			for(int i = 0; i < cu.points.size(); i++){
+				Polyhedron<GLObject> poly = new Polyhedron<>();
+				poly.setGlObj(new GLObject());
+				poly.glObj.polycolor = cu.points.get(i).color.toFloatArray();
+				Vector3f vec = c == 0 && i == 0 ? pos : new Vector3f(cu.points.get(i).vector).add(pos);
 				poly.pos(vec.x, vec.y, vec.z);
 				poly.rot(rot.x, rot.y, rot.z);
-				Marker.getMarkerGenerator(poly, 1).make();
+				Marker.getMarkerGenerator(poly, mscale).make();
+				subs.add(poly);
 			}
-			subsize += cu.points.size();
 			Vec3f vpos = new Vec3f(pos.x, pos.y, pos.z);
 			if(showline){
 				Vec3f las = cu.path.start.sub(vpos);
