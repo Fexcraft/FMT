@@ -172,7 +172,7 @@ public abstract class CurvePolygon extends Polygon {
 		this.recompile();
 	}
 
-	private void compileAllPaths(){
+	public void compileAllPaths(){
 		for(Curve cu : curves) cu.compilePath();
 	}
 
