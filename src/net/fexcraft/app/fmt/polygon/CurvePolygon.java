@@ -21,6 +21,7 @@ public abstract class CurvePolygon extends Polygon {
 	public Polyhedron<GLObject> glp = new Polyhedron<GLObject>().setGlObj(new GLObject());
 	public ArrayList<Curve> curves = new ArrayList<>();
 	public boolean showline = false;
+	public float mscale = 1;
 	public int active;
 	public Face[] faces;
 
@@ -34,6 +35,7 @@ public abstract class CurvePolygon extends Polygon {
 		parseCurves(obj);
 		for(Curve cu : curves) cu.compilePath();
 		showline = obj.getBoolean("line", showline);
+		mscale = obj.getFloat("marker_scale", 1f);
 	}
 
 	protected void addDefCurve(Vector3f pos){
@@ -65,6 +67,8 @@ public abstract class CurvePolygon extends Polygon {
 		JsonArray curvs = new JsonArray();
 		for(Curve curve : curves) curvs.add(curve.save());
 		map.add("curves", curvs);
+		map.add("line", showline);
+		if(mscale != 1f) map.add("marker_scale", mscale);
 		return map;
 	}
 
@@ -105,6 +109,7 @@ public abstract class CurvePolygon extends Polygon {
 			case PLANE_LOC: return cu.planes.get(cu.active_segment).location;
 			case PLANE_LOC_LIT: return cu.litloc ? 1 : 0;
 			case RADIAL: return showline ? 1 : 0;
+			case SCALE: return mscale;
 			default: return super.getValue(polyval);
 		}
 	}
@@ -167,6 +172,7 @@ public abstract class CurvePolygon extends Polygon {
 			case PLANE_LOC: cu.planes.get(cu.active_segment).location = value; break;
 			case PLANE_LOC_LIT: cu.litloc = value > 0; break;
 			case RADIAL: showline = value > 0; break;
+			case SCALE: mscale = value < 0 ? 0 : value > 16 ? 16 : value; break;
 			default: super.setValue(polyval, value);
 		}
 		this.recompile();
@@ -184,6 +190,7 @@ public abstract class CurvePolygon extends Polygon {
 			curv.curves.add(cu.copy(curv));
 		}
 		curv.showline = showline;
+		curv.mscale = mscale;
 		curv.compileAllPaths();
 		return poly;
 	}
