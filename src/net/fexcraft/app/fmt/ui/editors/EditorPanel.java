@@ -5,6 +5,7 @@ import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.Icon;
 import net.fexcraft.app.fmt.ui.UIUtils;
 import net.fexcraft.app.fmt.ui.panels.FlipToolsPanel;
+import net.fexcraft.app.fmt.ui.panels.MarkerPanel;
 import net.fexcraft.app.fmt.ui.panels.MultiplierPanel;
 import net.fexcraft.app.fmt.ui.panels.QuickAddPanel;
 import net.fexcraft.app.fmt.update.UpdateHandler;
@@ -41,11 +42,12 @@ public class EditorPanel extends Component {
 		PANELS.add(new MultiplierPanel());
 		PANELS.add(new QuickAddPanel());
 		PANELS.add(new FlipToolsPanel());
+		PANELS.add(new MarkerPanel());
 	}
 
 	private void expand(){
 		expand(!expanded);
-		for(EditorPanel panel : PANELS) if(panel != this) panel.expand(false);
+		//for(EditorPanel panel : PANELS) if(panel != this) panel.expand(false);
 	}
 
 	private void expand(boolean bool){
