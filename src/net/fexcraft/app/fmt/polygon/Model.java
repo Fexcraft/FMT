@@ -178,7 +178,7 @@ public class Model {
 				if(Settings.LINES.value) group.render(DrawMode.LINES, alpha);
 			}
 		}
-		if(Settings.LINES.value && Settings.POLYMARKER.value && isLastSelectedCornerMarked()) CornerUtil.renderCorners();
+		if(Settings.LINES.value && Settings.POLYMARKER.value && isLastSelectedCornerMarked() && Selector.showCorners()) CornerUtil.renderCorners();
 		PolyRenderer.setPivot(null);
 	}
 
@@ -834,7 +834,7 @@ public class Model {
 	}
 
 	public void select(VertexOffset off){
-		if(!GGR.isAltDown()) selected_verts.clear();
+		//if(!GGR.isAltDown()) selected_verts.clear();
 		selected_verts.add(off);
 		Logging.bar("Currently selected vertices: " + selected_verts.size());
 	}
@@ -852,6 +852,10 @@ public class Model {
 		if(idx >= allgroups.size() - 1 && i > 0) return;
 		Collections.swap(allgroups, idx, idx + i);
 		if(update) Editor.POLYGON_TREE.reAddGroups();
+	}
+
+	public ArrayList<VertexOffset> getSelectedVerts(){
+		return selected_verts;
 	}
 
 }
