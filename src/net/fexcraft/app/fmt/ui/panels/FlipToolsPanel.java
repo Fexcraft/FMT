@@ -15,7 +15,7 @@ public class FlipToolsPanel extends EditorPanel {
 
 	public FlipToolsPanel(){
 		super("fliptools", "fliptools", "editor.component.fliptools");
-		setPosition(Editor.WIDTH, I_SIZE * 4);
+		setPosition(Editor.WIDTH, I_SIZE * 5);
 		ex_x = 310;
 		ex_y = 30;
 		//
