@@ -441,6 +441,10 @@ public class FMT {
 		}
 		if(Arrows.MODE.active()) Arrows.render(DrawMode.RGBCOLOR); 
 		MODEL.render(alpha);
+		if(Selector.TYPE == Picker.PickType.VERTEX && Selector.SHOW_VERTICES){
+			PolyRenderer.mode(DrawMode.RGBCOLOR);
+			MODEL.renderVertexPicking();
+		}
 		for(Model model : PreviewHandler.getLoaded()){
 			if(!model.visible) continue;
 			PolyRenderer.setHelper(model);
