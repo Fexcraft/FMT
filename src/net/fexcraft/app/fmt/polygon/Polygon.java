@@ -38,6 +38,7 @@ import net.fexcraft.lib.frl.Polyhedron;
 import net.fexcraft.lib.frl.gen.Generator;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class Polygon implements ScrElm {
@@ -251,8 +252,11 @@ public abstract class Polygon implements ScrElm {
 		getGenerator().make();
 		int idx = 0;
 		int total = 0;
+		ArrayList<Vec3f> vecs = new ArrayList<>();
 		for(net.fexcraft.lib.frl.Polygon poly : glm.polygons){
 			for(Vertex vertex : poly.vertices){
+				if(vecs.contains(vertex.vector)) continue;
+				vecs.add(vertex.vector);
 				total += poly.vertices.length;
 				if(vertices.size() <= idx) vertices.add(new VertexOffset(vertex));
 				else vertices.get(idx).set(vertex);
