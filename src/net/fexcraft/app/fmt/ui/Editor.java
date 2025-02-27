@@ -58,6 +58,7 @@ public class Editor extends Component {
 	public static Editor TEXTURE_TREE;
 	public static Editor PREVIEW_TREE;
 	public static float RATE = 1f;
+	public static float MARKER_SCALE = 1f;
 	public static Editor VISIBLE_EDITOR = null;
 	public static Editor VISIBLE_TREE = null;
 	public ArrayList<EditorComponent> components = new ArrayList<>();
