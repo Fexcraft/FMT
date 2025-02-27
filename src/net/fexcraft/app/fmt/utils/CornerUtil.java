@@ -35,7 +35,7 @@ public class CornerUtil {
 			}
 		}
 		ROT_MARKER_NORMAL = new Polyhedron<GLObject>().importMRT(new ModelRendererTurbo(null, 0, 0, 16, 16).addBox(-.25f, -.25f, -.25f, .5f, .5f, .5f), false, Editor.MARKER_SCALE);
-		ROT_MARKER_SMALL = new Polyhedron<GLObject>().importMRT(new ModelRendererTurbo(null, 0, 0, 16, 16).addBox(-.2f, -.2f, -.2f, .4f, .4f, .4f), false, Editor.MARKER_SCALE);
+		ROT_MARKER_SMALL = new Polyhedron<GLObject>().importMRT(new ModelRendererTurbo(null, 0, 0, 16, 16).addBox(-.2f, -.2f, -.2f, .4f, .4f, .4f), false, Editor.MARKER_SCALE * 0.5f);
 		for(int i = 0; i < 8; i++){
 			CORNER_MARKER[i] = new Polyhedron<GLObject>().importMRT(new ModelRendererTurbo(null, 0, 0, 16, 16).addBox(-.25f, -.25f, -.25f, .5f, .5f, .5f), false, Editor.MARKER_SCALE);
 			CORNER_MARKER[i].setGlObj(new GLObject()).glObj.polycolor = CORNER_COLOURS[i].toFloatArray();
