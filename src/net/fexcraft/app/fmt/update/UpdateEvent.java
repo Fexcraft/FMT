@@ -56,6 +56,7 @@ public class UpdateEvent {
     public static record TexGroupRemoved(TextureGroup group){};
 
     public static record EditorRate(float rate){};
+    public static record MarkerScale(float scale){};
 
     public static record WorkspaceName(String oldname, String newname){};
     public static record WorkspaceRoot(File oldroot, File newroot){};
