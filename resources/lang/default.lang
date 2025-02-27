@@ -317,6 +317,9 @@ editor.component.config.general.open_json=Open JSON File
 editor.component.config.general.run_utils=Run Utils
 //
 editor.component.multiplier=Multiplier
+editor.component.multiplicator.value=Rate:
+editor.component.marker_scale=(Corner) Marker Scale
+editor.component.marker_scale.value=Scale:
 editor.component.quick=Quick Add
 editor.component.quick.add_box=Add Box
 editor.component.quick.add_shapebox=Add Shapebox
