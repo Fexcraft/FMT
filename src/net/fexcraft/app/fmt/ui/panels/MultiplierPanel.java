@@ -73,14 +73,14 @@ public class MultiplierPanel extends EditorPanel {
 				}
 			}
 			final Tooltip tooltip = new Tooltip();
-			tooltip.setSize(110, 28);
+			tooltip.setSize(150, 28);
 			tooltip.setPosition(slider.getSize().x + 10, 0);
 			tooltip.getStyle().setHorizontalAlign(HorizontalAlign.CENTER);
 			final String amo = "%." + am + "f";
-			tooltip.getTextState().setText(translate("editor.multiplicator.value") + " " + String.format(amo, slider.getValue()));
+			tooltip.getTextState().setText(translate("editor.component.multiplicator.value") + " " + String.format(amo, slider.getValue()));
 			slider.addSliderChangeValueEventListener((SliderChangeValueEventListener)event -> {
 				String formatted = String.format(amo, event.getNewValue());
-				tooltip.getTextState().setText(translate("editor.multiplicator.value") + " " + formatted);
+				tooltip.getTextState().setText(translate("editor.component.multiplicator.value") + " " + formatted);
 				field.apply(event.getNewValue());
 				field.update().accept(field);
 			});
