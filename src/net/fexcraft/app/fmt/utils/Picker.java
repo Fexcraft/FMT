@@ -155,6 +155,7 @@ public class Picker {
 				vert_consumer.accept(off);
 				vert_consumer = null;
 			}
+			Selector.set(PickType.POLYGON);
 		}
 		else{
 			int pick = getPick();
