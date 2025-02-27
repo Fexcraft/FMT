@@ -82,12 +82,7 @@ public class Toolbar extends Panel {
 					new MenuButton(1, "Extract Materials", () -> ConverterUtils.exModelData())
 			)
 		));
-		this.add(new ToolbarMenu(2, "selection",
-			new MenuButton(0, "selection.polygon", () -> Selector.set(Picker.PickType.POLYGON)),
-			new MenuButton(1, "selection.face", () -> Selector.set(Picker.PickType.FACE)),
-			new MenuButton(2, "selection.vertex", () -> Selector.set(Picker.PickType.VERTEX))
-		));
-		this.add(new ToolbarMenu(3, "editors",
+		this.add(new ToolbarMenu(2, "editors",
 			new MenuButton(0, "editors.polygon", () -> Editor.POLYGON_EDITOR.toggle()),
 			new MenuButton(1, "editors.group", () -> Editor.GROUP_EDITOR.toggle()),
 			new MenuButton(2, "editors.pivot", () -> Editor.PIVOT_EDITOR.toggle()),
@@ -97,13 +92,13 @@ public class Toolbar extends Panel {
 			new MenuButton(6, "editors.preview", () -> Editor.PREVIEW_EDITOR.toggle()),
 			new MenuButton(7, "editors.config", () -> Editor.CONFIG_EDITOR.toggle())
 		));
-		this.add(new ToolbarMenu(4, "trees",
+		this.add(new ToolbarMenu(3, "trees",
 			new MenuButton(0, "trees.polygon", () -> Editor.POLYGON_TREE.toggle()),
 			new MenuButton(1, "trees.pivot", () -> Editor.PIVOT_TREE.toggle()),
 			new MenuButton(2, "trees.texture", () -> Editor.TEXTURE_TREE.toggle()),
 			new MenuButton(3, "trees.helper", () -> Editor.PREVIEW_TREE.toggle())
 		));
-		this.add(new ToolbarMenu(5, "polygons",
+		this.add(new ToolbarMenu(4, "polygons",
 			new MenuButton(0, "polygons.add_box", () -> QuickAddPanel.addBox()),
 			new MenuButton(1, "polygons.add_shapebox", () -> QuickAddPanel.addShapebox()),
 			new MenuButton(2, "polygons.add_cylinder", () -> QuickAddPanel.addCylinder()),
@@ -115,8 +110,8 @@ public class Toolbar extends Panel {
 			new MenuButton(8, "polygons.add_mesh_curve", () -> QuickAddPanel.addCurve(Shape.MESH_CURVE)),
 			new MenuButton(9, "polygons.add_object")
 		));
-		this.add(new ToolbarMenu(6, "workspace", () -> WorkspaceViewer.show0()));
-		this.add(new ToolbarMenu(7, "exit", () -> FMT.close(0)));
+		this.add(new ToolbarMenu(5, "workspace", () -> WorkspaceViewer.show0()));
+		this.add(new ToolbarMenu(6, "exit", () -> FMT.close(0)));
 		UpdateHandler.register(updcom);
 	}
 
