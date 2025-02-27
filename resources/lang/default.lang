@@ -23,11 +23,6 @@ toolbar.file.export=Export >>
 toolbar.file.settings=Settings
 toolbar.file.donate=Support FMT Dev!
 toolbar.file.exit=Exit
-## Selection
-toolbar.selection=Selection
-toolbar.selection.polygon=Sel. Polygons
-toolbar.selection.face=Sel. Faces
-toolbar.selection.vertex=Sel. Vertices
 ## Editors
 toolbar.editors=Editors
 toolbar.editors.polygon=Polygon Editor
@@ -330,6 +325,12 @@ editor.component.fliptools.flip_posz=Flip Position [Z]
 editor.component.fliptools.flip_posx_fb=Flip Position [X] and Corners [X Axis]
 editor.component.fliptools.flip_posy_ud=Flip Position [Y] and Corners [Y Axis]
 editor.component.fliptools.flip_posz_lr=Flip Position [Z] and Corners [Z Axis]
+editor.component.selector=Selection Mode / Utils
+editor.component.selector.polygon=Select Polygons
+editor.component.selector.face=Select Faces (WIP)
+editor.component.selector.vertex=Select Vertices
+editor.component.selector.visibility=Show/Hide Vertices
+editor.component.selector.move=Move first (ShapeBox) selected vertex towards second (any) selected Vertex.
 
 # UV Vieweer
 uvviewer.title=UV Viewer
