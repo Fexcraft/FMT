@@ -13,6 +13,7 @@ public class VertexOffset {
 
 	public Vertex vertex;
 	public float[] color;
+	public Polygon polygon;
 	public Vector3F off = new Vector3F();
 	public Vec3f org;
 	public float ou, ov;
@@ -29,8 +30,9 @@ public class VertexOffset {
 		ov = vert.v;
 	}
 
-	public void apply(Polygon polygon){
+	public void apply(Polygon poly){
 		if(vertex == null) return;
+		polygon = poly;
 		vertex.vector = org.add(off.x, off.y, off.z);
 		float su = polygon.glm.glObj.grouptex ? polygon.group().texSizeX : polygon.model().texSizeX;
 		float sv = polygon.glm.glObj.grouptex ? polygon.group().texSizeY : polygon.model().texSizeY;
