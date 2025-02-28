@@ -15,6 +15,7 @@ import org.joml.Vector3f;
 
 import java.util.ArrayList;
 
+import static net.fexcraft.app.fmt.polygon.Vertoff.VOType.CURVE;
 import static net.fexcraft.app.fmt.update.PolyVal.*;
 
 /**
@@ -49,13 +50,14 @@ public class CurvedMesh extends CurvePolygon {
 	}
 
 	@Override
-	protected Generator<GLObject> getGenerator(){
+	protected void generate(){
 		ArrayList<Polyhedron<GLObject>> subs = glp.sub;
 		Axis3DL axe0 = new Axis3DL();
 		Axis3DL axe1 = new Axis3DL();
 		if(subs == null) subs = new ArrayList<>();
 		for(Polyhedron<GLObject> sub : subs) PolyRenderer.RENDERER.delete(sub);
 		subs.clear();
+		vertoffs.clear();
 		for(int c = 0; c < curves.size(); c++){
 			Curve cu = curves.get(c);
 			for(int i = 0; i < cu.points.size(); i++){
@@ -99,6 +101,7 @@ public class CurvedMesh extends CurvePolygon {
 			if(c >= curves.size() - 1) break;
 			Curve cn = curves.get(c + 1);
 			//
+			int voi = 0;
 			axe0.setAngles(0, 0, 0);
 			axe1.setAngles(0, 0, 0);
 			CurvePlane seg0 = cu.planes.get(0);
@@ -115,6 +118,8 @@ public class CurvedMesh extends CurvePolygon {
 			float loc1;
 			vr = coff.add(axe0.get(off.x, off.y, off.z));
 			vl = noff.add(axe1.get(off.x, off.y, off.z));
+			getVO(CURVE, voi++, c).apply(this, vr);
+			getVO(CURVE, voi++, c).apply(this, vl);
 			for(int i = 1; i < cu.planes.size(); i++){
 				seg0 = cu.planes.get(i);
 				loc0 = cu.path.length * seg0.location;
@@ -127,6 +132,8 @@ public class CurvedMesh extends CurvePolygon {
 				axe1.add(seg0.rot, 0, 0);
 				nr = coff.add(axe0.get(seg0.offset.x, seg0.offset.y, seg0.offset.z));
 				nl = noff.add(axe1.get(seg0.offset.x, seg0.offset.y, seg0.offset.z));
+				getVO(CURVE, voi++, c).apply(this, nr);
+				getVO(CURVE, voi++, c).apply(this, nl);
 				if(flip){
 					glm.polygons.add(new net.fexcraft.lib.frl.Polygon(new Vertex[]{
 						new Vertex(vl, 0, 0),
@@ -157,7 +164,6 @@ public class CurvedMesh extends CurvePolygon {
 			}
 		}
 		glp.sub = subs;
-		return new Generator<>(glm);
 	}
 
 	@Override
