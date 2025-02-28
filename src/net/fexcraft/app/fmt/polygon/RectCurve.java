@@ -52,7 +52,7 @@ public class RectCurve extends CurvePolygon {
 	}
 
 	@Override
-	protected Generator<GLObject> getGenerator(){
+	protected void generate(){
 		if(glp.sub == null) glp.sub = new ArrayList<>();
 		for(Polyhedron<GLObject> sub : glp.sub) PolyRenderer.RENDERER.delete(sub);
 		glp.sub.clear();
@@ -200,7 +200,6 @@ public class RectCurve extends CurvePolygon {
 			faces[i] = vars.get(i);
 			if(!cuv.containsKey(faces[i].id())) cuv.put(faces[i].id(), new UVCoords(this, faces[i], null));
 		}
-		return new Generator<>(glm);
 	}
 
 	@Override
