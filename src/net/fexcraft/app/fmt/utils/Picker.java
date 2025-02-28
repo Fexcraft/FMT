@@ -1,19 +1,16 @@
 package net.fexcraft.app.fmt.utils;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.List;
 import java.util.function.Consumer;
 
 import net.fexcraft.app.fmt.nui.Element;
-import net.fexcraft.app.fmt.polygon.VertexOffset;
+import net.fexcraft.app.fmt.polygon.Vertoff;
 import net.fexcraft.app.fmt.polygon.uv.Face;
 import net.fexcraft.app.fmt.polygon.uv.NoFace;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateEvent.PickMode;
-import net.fexcraft.lib.common.math.Time;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMT;
@@ -22,8 +19,6 @@ import net.fexcraft.app.fmt.polygon.Arrows;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.texture.TexturePainter;
-
-import javax.imageio.ImageIO;
 
 import static net.fexcraft.app.fmt.utils.Logging.log;
 
@@ -35,7 +30,7 @@ public class Picker {
 	private static boolean offcenter;
 	private static Polygon polygon;
 	private static Consumer<Polygon> consumer;
-	private static Consumer<VertexOffset> vert_consumer;
+	private static Consumer<Vertoff> vert_consumer;
 	public static Face selected_face = NoFace.NONE;
 
 	public static void resetBuffer(boolean resize){
@@ -146,7 +141,7 @@ public class Picker {
 			int pick = getPick();
 			Logging.bar("picked: " + pick);
 			if(pick < Polygon.startIdx) return;
-			VertexOffset off = VertexOffset.getPicked(pick);
+			Vertoff off = Vertoff.getPicked(pick);
 			if(off == null) return;
 			if(TASK.select()){
 				FMT.MODEL.select(off);
