@@ -9,6 +9,7 @@ import net.fexcraft.app.fmt.animation.Animation;
 import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.update.UpdateEvent.GroupRenamed;
 import net.fexcraft.app.fmt.update.UpdateEvent.PolygonRemoved;
+import net.fexcraft.app.fmt.utils.Selector;
 import net.fexcraft.lib.script.elm.FltElm;
 import org.joml.Vector3f;
 
@@ -29,7 +30,6 @@ public class Group extends ArrayList<Polygon> {
 	public int texSizeX = 256, texSizeY = 256;
 	public Vector3f pos = new Vector3f();
 	public Vector3f rot = new Vector3f();
-	public boolean joined_polygons;
 	public String pivot;
 	//
 
@@ -110,10 +110,10 @@ public class Group extends ArrayList<Polygon> {
 		}
 	}
 
-	public void renderVertexPicking(){
+	public void renderVertexPicking(boolean preview){
 		if(!visible) return;
 		for(Polygon poly : this){
-			if(poly.visible && poly.selected) poly.renderVertexPicking();
+			if(poly.visible && (!preview || poly.selected)) poly.renderVertexPicking();
 		}
 	}
 	
