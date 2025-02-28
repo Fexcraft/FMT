@@ -1,7 +1,10 @@
 package net.fexcraft.app.fmt.polygon;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.lib.common.Static;
+import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.frl.Vertex;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Map;
 
@@ -10,39 +13,33 @@ import java.util.Map;
  */
 public class Vertoff {
 
-	public VOKey key;
+	//public VOKey key;
 	public float[] color;
 	public Polygon polygon;
+	public Vec3f cache = new Vec3f();
 	public Vector3F off = new Vector3F();
-	public float u, v;
 
-	public Vertoff(VOKey vkey){
+	/*public Vertoff(VOKey vkey){
 		key = vkey;
+	}*/
+
+	public void apply(Polygon poly, float[] v){
+		cache.x = poly.pos.x + (v[0] += off.x);
+		cache.y = poly.pos.y + (v[1] += off.y);
+		cache.z = poly.pos.z + (v[2] += off.y);
 	}
 
-	public void apply(Polygon poly, Vertex vertex){
-		if(vertex == null) return;
-		polygon = poly;
-		vertex.vector = vertex.vector.add(off.x, off.y, off.z);
-		float su = polygon.glm.glObj.grouptex ? polygon.group().texSizeX : polygon.model().texSizeX;
-		float sv = polygon.glm.glObj.grouptex ? polygon.group().texSizeY : polygon.model().texSizeY;
-		vertex.u += u / su;
-		vertex.v += v / sv;
+	public void apply(Polygon poly, Vec3f v){
+		cache.x = poly.pos.x + (v.x += off.x);
+		cache.y = poly.pos.y + (v.y += off.y);
+		cache.z = poly.pos.z + (v.z += off.y);
 	}
 
-	public static Vertoff getPicked(int pick){
-		Vertex vert = null;
-		for(Map.Entry<Vertex, Integer> entry : Polygon.vertcolors.entrySet()){
-			if(entry.getValue() != pick) continue;
-			vert = entry.getKey();
-			break;
-		}
-		if(vert == null) return null;
-		for(Group group : FMT.MODEL.allgroups()){
-			for(Polygon poly : group){
-				for(Vertoff off : poly.vertices.values()){
-					//TODO if(off.vertex == vert) return off;
-				}
+	public static Pair<Polygon, VOKey> getPicked(int pick){
+		VOKey key = null;
+		for(Map.Entry<Pair<Polygon, VOKey>, Integer> entry : Polygon.vertcolors.entrySet()){
+			if(entry.getValue() == pick){
+				return entry.getKey();
 			}
 		}
 		return null;
