@@ -64,7 +64,7 @@ public class Model {
 	private ArrayList<Group> allgroups = new ArrayList<>();
 	private ArrayList<Pivot> pivots = new ArrayList<>();
 	private ArrayList<Polygon> selected = new ArrayList<>();
-	private ArrayList<VertexOffset> selected_verts = new ArrayList<>();
+	private ArrayList<Vertoff> selected_verts = new ArrayList<>();
 	public LinkedHashMap<String, String> export_values = new LinkedHashMap<>();
 	public LinkedHashMap<String, ArrayList<String>> export_listed_values = new LinkedHashMap<>();
 	public ArrayList<ArrayList<String>> export_group_presets = new ArrayList<>();
@@ -833,7 +833,7 @@ public class Model {
 		for(Pivot pivot : pivots) pivot.reroot();
 	}
 
-	public void select(VertexOffset off){
+	public void select(Vertoff off){
 		//if(!GGR.isAltDown()) selected_verts.clear();
 		selected_verts.add(off);
 		Logging.bar("Currently selected vertices: " + selected_verts.size());
@@ -854,7 +854,7 @@ public class Model {
 		if(update) Editor.POLYGON_TREE.reAddGroups();
 	}
 
-	public ArrayList<VertexOffset> getSelectedVerts(){
+	public ArrayList<Vertoff> getSelectedVerts(){
 		return selected_verts;
 	}
 
