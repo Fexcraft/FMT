@@ -1,7 +1,7 @@
 package net.fexcraft.app.fmt.utils;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.polygon.VertexOffset;
+import net.fexcraft.app.fmt.polygon.Vertoff;
 import net.fexcraft.app.fmt.utils.Picker.PickType;
 
 /**
@@ -22,8 +22,8 @@ public class Selector {
 
 	public static void move(){
 		if(FMT.MODEL.getSelectedVerts().size() < 2) return;
-		VertexOffset vert0 = FMT.MODEL.getSelectedVerts().get(0);
-		VertexOffset vert1 = FMT.MODEL.getSelectedVerts().get(0);
+		Vertoff vert0 = FMT.MODEL.getSelectedVerts().get(0);
+		Vertoff vert1 = FMT.MODEL.getSelectedVerts().get(0);
 		if(!vert0.polygon.getShape().isShapebox()) return;
 
 		FMT.MODEL.getSelectedVerts().clear();
