@@ -6,6 +6,7 @@ import static net.fexcraft.app.fmt.utils.JsonUtil.getVector;
 import static net.fexcraft.app.fmt.utils.JsonUtil.setVector;
 import static net.fexcraft.app.fmt.utils.Logging.log;
 
+import net.fexcraft.app.fmt.polygon.Vertoff.VOKey;
 import net.fexcraft.app.fmt.ui.UVViewer;
 import net.fexcraft.app.fmt.update.UpdateEvent.PolygonAdded;
 import net.fexcraft.app.fmt.update.UpdateEvent.PolygonRenamed;
@@ -48,7 +49,7 @@ public abstract class Polygon implements ScrElm {
 	public static int polyIdx = startIdx;
 	public static int vertIdx = startIdx;
 	public Polyhedron<GLObject> glm = new Polyhedron<GLObject>().setGlObj(new GLObject());
-	public ArrayList<VertexOffset> vertices = new ArrayList<VertexOffset>();
+	public HashMap<VOKey, Vertoff> vertices = new HashMap<>();
 	private Model model;
 	private Group group;
 	private String name;
@@ -234,7 +235,7 @@ public abstract class Polygon implements ScrElm {
 			for(Vertex vertex : poly.vertices) vertcolors.remove(vertex);
 		}
 		glm.clear();
-		for(VertexOffset off : vertices) off.vertex = null;
+		//TODO for(Vertoff off : vertices) off.vertex = null;
 		if(glm.glObj.pickercolor == null) glm.glObj.pickercolor = new RGB(colorIdx == 0 ? colorIdx = polyIdx++ : colorIdx).toFloatArray();
 		glm.glObj.polygon = this;
 		glm.glObj.textured = textureX > 0 && textureY > 0;
@@ -250,7 +251,7 @@ public abstract class Polygon implements ScrElm {
 			glm.rot(rot.x, rot.y, rot.z);
 		}
 		getGenerator().make();
-		int idx = 0;
+		/*int idx = 0;
 		int total = 0;
 		ArrayList<Vec3f> vecs = new ArrayList<>();
 		for(net.fexcraft.lib.frl.Polygon poly : glm.polygons){
@@ -258,7 +259,7 @@ public abstract class Polygon implements ScrElm {
 				if(vecs.contains(vertex.vector)) continue;
 				vecs.add(vertex.vector);
 				total += poly.vertices.length;
-				if(vertices.size() <= idx) vertices.add(new VertexOffset(vertex));
+				if(vertices.size() <= idx) vertices.add(new Vertoff(vertex));
 				else vertices.get(idx).set(vertex);
 				vertices.get(idx).color = new RGB(vertIdx).toFloatArray();
 				vertcolors.put(vertex, vertIdx++);
@@ -266,7 +267,7 @@ public abstract class Polygon implements ScrElm {
 			}
 		}
 		while(vertices.size() > total) vertices.remove(vertices.size() - 1);
-		for(VertexOffset off : vertices) off.apply(this);
+		for(Vertoff off : vertices) off.apply(this);*///TODO
 	}
 
 	protected abstract Generator<GLObject> getGenerator();
@@ -300,11 +301,11 @@ public abstract class Polygon implements ScrElm {
 	public void renderVertexPicking(){
 		for(int i = 0; i < vertices.size(); i++){
 			axe.setAngles(-rot.y, -rot.z, -rot.x);
-			Vec3f vector = axe.getRelativeVector(vertices.get(i).vertex.vector);
+			/*Vec3f vector = axe.getRelativeVector(vertices.get(i).vertex.vector);
 			ROT_MARKER_SMALL.glObj.polycolor = vertices.get(i).color;
 			ROT_MARKER_SMALL.pos(vector.x + pos.x, vector.y + pos.y, vector.z + pos.z);
 			ROT_MARKER_SMALL.rot(rot.x, rot.y, rot.z);
-			ROT_MARKER_SMALL.render();
+			ROT_MARKER_SMALL.render();*///TODO
 		}
 	}
 
