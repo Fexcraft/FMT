@@ -1,5 +1,6 @@
 package net.fexcraft.app.fmt.polygon;
 
+import static net.fexcraft.app.fmt.polygon.Vertoff.VOType.BOX_CORNER;
 import static net.fexcraft.app.fmt.update.UpdateHandler.update;
 import static net.fexcraft.app.fmt.utils.CornerUtil.ROT_MARKER_SMALL;
 import static net.fexcraft.app.fmt.utils.JsonUtil.getVector;
@@ -7,6 +8,7 @@ import static net.fexcraft.app.fmt.utils.JsonUtil.setVector;
 import static net.fexcraft.app.fmt.utils.Logging.log;
 
 import net.fexcraft.app.fmt.polygon.Vertoff.VOKey;
+import net.fexcraft.app.fmt.polygon.Vertoff.VOType;
 import net.fexcraft.app.fmt.ui.UVViewer;
 import net.fexcraft.app.fmt.update.UpdateEvent.PolygonAdded;
 import net.fexcraft.app.fmt.update.UpdateEvent.PolygonRenamed;
@@ -16,6 +18,7 @@ import net.fexcraft.lib.frl.Vertex;
 import net.fexcraft.lib.script.ScrBlock;
 import net.fexcraft.lib.script.ScrElm;
 import net.fexcraft.lib.script.elm.FltElm;
+import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.FMT;
@@ -36,20 +39,28 @@ import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.frl.Polyhedron;
-import net.fexcraft.lib.frl.gen.Generator;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class Polygon implements ScrElm {
 
-	public static final ConcurrentHashMap<Vertex, Integer> vertcolors = new ConcurrentHashMap<>();
+	public static final ConcurrentHashMap<Pair<Polygon, VOKey>, Integer> vertcolors = new ConcurrentHashMap<>();
+	public static final VOKey VO_0 = new VOKey(BOX_CORNER, 0, 0);
+	public static final VOKey VO_1 = new VOKey(BOX_CORNER, 1, 0);
+	public static final VOKey VO_2 = new VOKey(BOX_CORNER, 2, 0);
+	public static final VOKey VO_3 = new VOKey(BOX_CORNER, 3, 0);
+	public static final VOKey VO_4 = new VOKey(BOX_CORNER, 4, 0);
+	public static final VOKey VO_5 = new VOKey(BOX_CORNER, 5, 0);
+	public static final VOKey VO_6 = new VOKey(BOX_CORNER, 6, 0);
+	public static final VOKey VO_7 = new VOKey(BOX_CORNER, 7, 0);
+	public static Axis3DL vo_axe = new Axis3DL();
 	public static final int startIdx = 7;
 	public static int polyIdx = startIdx;
 	public static int vertIdx = startIdx;
 	public Polyhedron<GLObject> glm = new Polyhedron<GLObject>().setGlObj(new GLObject());
-	public HashMap<VOKey, Vertoff> vertices = new HashMap<>();
+	public HashMap<VOKey, Vertoff> vertoffs = new HashMap<>();
 	private Model model;
 	private Group group;
 	private String name;
@@ -235,42 +246,26 @@ public abstract class Polygon implements ScrElm {
 			for(Vertex vertex : poly.vertices) vertcolors.remove(vertex);
 		}
 		glm.clear();
-		//TODO for(Vertoff off : vertices) off.vertex = null;
 		if(glm.glObj.pickercolor == null) glm.glObj.pickercolor = new RGB(colorIdx == 0 ? colorIdx = polyIdx++ : colorIdx).toFloatArray();
 		glm.glObj.polygon = this;
 		glm.glObj.textured = textureX > 0 && textureY > 0;
 		glm.texU = textureX;
 		glm.texV = textureY;
 		glm.glObj.grouptex = group.texgroup != null;
-		if(group.joined_polygons){
-			glm.pos(group.pos.x, group.pos.y, group.pos.z);
-			glm.rot(group.rot.x + rot.x, group.rot.y + rot.y, group.rot.z + rot.z);
-		}
-		else{
-			glm.pos(pos.x, pos.y, pos.z);
-			glm.rot(rot.x, rot.y, rot.z);
-		}
-		getGenerator().make();
-		/*int idx = 0;
-		int total = 0;
-		ArrayList<Vec3f> vecs = new ArrayList<>();
-		for(net.fexcraft.lib.frl.Polygon poly : glm.polygons){
-			for(Vertex vertex : poly.vertices){
-				if(vecs.contains(vertex.vector)) continue;
-				vecs.add(vertex.vector);
-				total += poly.vertices.length;
-				if(vertices.size() <= idx) vertices.add(new Vertoff(vertex));
-				else vertices.get(idx).set(vertex);
-				vertices.get(idx).color = new RGB(vertIdx).toFloatArray();
-				vertcolors.put(vertex, vertIdx++);
-				idx++;
+		glm.pos(pos.x, pos.y, pos.z);
+		glm.rot(rot.x, rot.y, rot.z);
+		generate();
+		for(Map.Entry<VOKey, Vertoff> entry : vertoffs.entrySet()){
+			if(entry.getValue().color == null){
+				entry.getValue().color = new RGB(vertIdx).toFloatArray();
+				vertcolors.put(Pair.of(this, entry.getKey()), vertIdx++);
+				vo_axe.setAngles(-rot.y, -rot.z, -rot.x);
+				entry.getValue().cache = vo_axe.getRelativeVector(entry.getValue().cache);
 			}
 		}
-		while(vertices.size() > total) vertices.remove(vertices.size() - 1);
-		for(Vertoff off : vertices) off.apply(this);*///TODO
 	}
 
-	protected abstract Generator<GLObject> getGenerator();
+	protected abstract void generate();
 
 	protected static RGB red1 = new RGB(138,  65,  92);//new RGB(255, 127, 175);
 	protected static RGB gre1 = new RGB( 92, 138,  65);//new RGB(175, 255, 127);
@@ -296,16 +291,12 @@ public abstract class Polygon implements ScrElm {
 		glm.render();
 	}
 
-	private static Axis3DL axe = new Axis3DL();
-
 	public void renderVertexPicking(){
-		for(int i = 0; i < vertices.size(); i++){
-			axe.setAngles(-rot.y, -rot.z, -rot.x);
-			/*Vec3f vector = axe.getRelativeVector(vertices.get(i).vertex.vector);
-			ROT_MARKER_SMALL.glObj.polycolor = vertices.get(i).color;
-			ROT_MARKER_SMALL.pos(vector.x + pos.x, vector.y + pos.y, vector.z + pos.z);
+		for(Vertoff vo : vertoffs.values()){
+			ROT_MARKER_SMALL.glObj.polycolor = vo.color;
+			ROT_MARKER_SMALL.pos(vo.cache.x, vo.cache.y, vo.cache.z);
 			ROT_MARKER_SMALL.rot(rot.x, rot.y, rot.z);
-			ROT_MARKER_SMALL.render();*///TODO
+			ROT_MARKER_SMALL.render();
 		}
 	}
 
@@ -541,6 +532,24 @@ public abstract class Polygon implements ScrElm {
 	protected float paintScale(Texture tex, boolean x){
 		return x ? (float)tex.getWidth() / (glm.glObj.grouptex ? group().texSizeX : model().texSizeX)
 			: (float)tex.getHeight() / (glm.glObj.grouptex ? group().texSizeY : model().texSizeY);
+	}
+
+	/** Gets a VertexOffset if present, returns null if missing. */
+	public Vertoff getVO(int prim, int sec){
+		for(VOKey key : vertoffs.keySet()){
+			if(key.vertix() == prim && key.secondary() == sec) return vertoffs.get(key);
+		}
+		return null;
+	}
+
+	/** Gets a VertexOffset if present, puts a new one in if missing. */
+	public Vertoff getVO(VOType type, int prim, int sec){
+		for(VOKey key : vertoffs.keySet()){
+			if(key.vertix() == prim && key.secondary() == sec) return vertoffs.get(key);
+		}
+		VOKey key = new VOKey(type, prim, sec);
+		vertoffs.put(key, new Vertoff());
+		return vertoffs.get(key);
 	}
 
 	@Override
