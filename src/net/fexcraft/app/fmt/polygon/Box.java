@@ -3,6 +3,7 @@ package net.fexcraft.app.fmt.polygon;
 import java.util.ArrayList;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.lib.frl.Vertex;
 import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
@@ -23,6 +24,7 @@ public class Box extends Polygon {
 	public Box(Model model){
 		super(model);
 		if(!FMT.MODEL.orient.rect()) pos.y = -1;
+		fillVertoffs();
 	}
 
 	protected Box(Model model, JsonMap obj){
@@ -37,6 +39,7 @@ public class Box extends Polygon {
 				sides[i] = array.get(i).value();
 			}
 		}
+		fillVertoffs();
 	}
 	
 	@Override
@@ -60,28 +63,20 @@ public class Box extends Polygon {
 		return Shape.BOX;
 	}
 
+	private void fillVertoffs(){
+		vertoffs.put(VO_0, new Vertoff());
+		vertoffs.put(VO_1, new Vertoff());
+		vertoffs.put(VO_2, new Vertoff());
+		vertoffs.put(VO_3, new Vertoff());
+		vertoffs.put(VO_4, new Vertoff());
+		vertoffs.put(VO_5, new Vertoff());
+		vertoffs.put(VO_6, new Vertoff());
+		vertoffs.put(VO_7, new Vertoff());
+	}
+
 	@Override
-	protected Generator<GLObject> getGenerator(){
-		Generator<GLObject> gen = new Generator<GLObject>(glm, glm.glObj.grouptex ? group().texSizeX : model().texSizeX, glm.glObj.grouptex ? group().texSizeY : model().texSizeY)
-			.set("type", Generator.Type.CUBOID)
-			.set("x", off.x)
-			.set("y", off.y)
-			.set("z", off.z)
-			.set("width", size.x)
-			.set("height", size.y)
-			.set("depth", size.z);
-		for(int i = 0; i < sides.length; i++) if(sides[i]) gen.removePolygon(i);
-		if(cuv.any()){
-			ArrayList<Integer> list = new ArrayList<>();
-			ArrayList<float[]> uv = new ArrayList<>();
-			for(int i = 0; i < 6; i++){
-				if(cuv.get(BoxFace.values()[i]).detached()) list.add(i);
-				uv.add(cuv.get(BoxFace.values()[i]).value());
-			}
-			gen.set("detached_uv", list);
-			gen.set("uv", uv);
-		}
-		return gen;
+	protected void generate(){
+		Generators.genBox(this);
 	}
 
 	@Override
