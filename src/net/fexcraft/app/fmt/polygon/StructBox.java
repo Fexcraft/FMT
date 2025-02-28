@@ -38,8 +38,7 @@ public class StructBox extends Box {
 	}
 
 	@Override
-	protected Generator<GLObject> getGenerator(){
-		Generator<GLObject> gen = super.getGenerator();
+	protected void generate(){
 		float s = 0.125f, m = 0.125f / 8;
 		if(size.x < 1) size.x = 1;
 		if(size.y < 1) size.y = 1;
@@ -110,7 +109,7 @@ public class StructBox extends Box {
 				.set("width", size.x).set("height", s).set("depth", s).make();
 		//
 		glm.glObj.polycolor = rgb.toFloatArray();
-		return new Generator<>(glm, 1, 1);
+		glm.texU = glm.texV = 1;
 	}
 
 	@Override
