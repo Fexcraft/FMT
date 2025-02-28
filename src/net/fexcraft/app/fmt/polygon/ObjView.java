@@ -56,22 +56,17 @@ public class ObjView extends Polygon {
 	}
 
 	@Override
-	protected Generator<GLObject> getGenerator(){
-		return new Generator<GLObject>(glm, 1, 1){
-			@Override
-			public Polyhedron<GLObject> make(){
-				for(TexturedPolygon poli : polis){
-					net.fexcraft.lib.frl.Polygon gon = new net.fexcraft.lib.frl.Polygon(poli.getVertices().length);
-					for(int i = 0; i < gon.vertices.length; i++){
-						gon.vertices[i] = new Vertex(poli.getVertices()[i].vector);
-						gon.vertices[i].u = poli.getVertices()[i].textureX;
-						gon.vertices[i].v = poli.getVertices()[i].textureY;
-					}
-					poly.polygons.add(gon);
-				}
-				return poly;
+	protected void generate(){
+		glm.texU = glm.texV = 1;
+		for(TexturedPolygon poli : polis){
+			net.fexcraft.lib.frl.Polygon gon = new net.fexcraft.lib.frl.Polygon(poli.getVertices().length);
+			for(int i = 0; i < gon.vertices.length; i++){
+				gon.vertices[i] = new Vertex(poli.getVertices()[i].vector);
+				gon.vertices[i].u = poli.getVertices()[i].textureX;
+				gon.vertices[i].v = poli.getVertices()[i].textureY;
 			}
-		};
+			glm.polygons.add(gon);
+		}
 	}
 
 	@Override
