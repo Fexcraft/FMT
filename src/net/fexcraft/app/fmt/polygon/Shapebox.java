@@ -77,19 +77,8 @@ public class Shapebox extends Box {
 	}
 
 	@Override
-	protected Generator<GLObject> getGenerator(){
-		Generator<GLObject> gen = super.getGenerator();
-		ArrayList<Vec3f> list = new ArrayList<>();
-		list.add(new Vec3f(cor0.x, cor0.y, cor0.z));
-		list.add(new Vec3f(cor1.x, cor1.y, cor1.z));
-		list.add(new Vec3f(cor2.x, cor2.y, cor2.z));
-		list.add(new Vec3f(cor3.x, cor3.y, cor3.z));
-		list.add(new Vec3f(cor4.x, cor4.y, cor4.z));
-		list.add(new Vec3f(cor5.x, cor5.y, cor5.z));
-		list.add(new Vec3f(cor6.x, cor6.y, cor6.z));
-		list.add(new Vec3f(cor7.x, cor7.y, cor7.z));
-		gen.set("corners", list);
-		return gen;
+	protected void generate(){
+		Generators.genBox(this);
 	}
 	
 	public float getValue(PolygonValue polyval){
