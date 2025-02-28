@@ -18,8 +18,14 @@ public class CornerUtil {
 	public static Polyhedron<GLObject> ROT_MARKER_SMALL;
 	private static Polyhedron<GLObject>[] CORNER_MARKER = new Polyhedron[8];
 	public static RGB[] CORNER_COLOURS = new RGB[]{
-		new RGB(255, 255, 0), new RGB(255, 0, 0), new RGB(0, 127, 255), new RGB(255, 0, 127),
-		new RGB(0, 255, 0), new RGB(0, 0, 255), new RGB(0, 127, 0), new RGB(127, 0, 255)
+		new RGB(255, 255, 0),//yellow
+		new RGB(255, 0, 0),//red
+		new RGB(0, 127, 255),//cyan
+		new RGB(255, 0, 127),//magenta
+		new RGB(0, 255, 0),//green
+		new RGB(0, 0, 255),//blue
+		new RGB(0, 127, 0),//dark green
+		new RGB(127, 0, 255)//purple
 	};
 	private static Axis3DL axe = new Axis3DL();
 	static{
