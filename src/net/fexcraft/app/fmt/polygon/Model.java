@@ -27,6 +27,7 @@ import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.frl.Polyhedron;
 import net.fexcraft.lib.frl.gen.Generator;
 import net.fexcraft.lib.script.elm.FltElm;
+import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import com.spinyowl.legui.component.Button;
@@ -64,7 +65,7 @@ public class Model {
 	private ArrayList<Group> allgroups = new ArrayList<>();
 	private ArrayList<Pivot> pivots = new ArrayList<>();
 	private ArrayList<Polygon> selected = new ArrayList<>();
-	private ArrayList<Vertoff> selected_verts = new ArrayList<>();
+	private ArrayList<Pair<Polygon, Vertoff.VOKey>> selected_verts = new ArrayList<Pair<Polygon, Vertoff.VOKey>>();
 	public LinkedHashMap<String, String> export_values = new LinkedHashMap<>();
 	public LinkedHashMap<String, ArrayList<String>> export_listed_values = new LinkedHashMap<>();
 	public ArrayList<ArrayList<String>> export_group_presets = new ArrayList<>();
@@ -193,12 +194,12 @@ public class Model {
 		}
 	}
 
-	public void renderVertexPicking(){
+	public void renderVertexPicking(boolean preview){
 		if(!visible) return;
 		for(Pivot pivot : pivots){
 			PolyRenderer.setPivot(pivot);
 			for(Group group : pivot.groups){
-				group.renderVertexPicking();
+				group.renderVertexPicking(preview);
 			}
 			PolyRenderer.setPivot(null);
 		}
@@ -833,7 +834,7 @@ public class Model {
 		for(Pivot pivot : pivots) pivot.reroot();
 	}
 
-	public void select(Vertoff off){
+	public void select(Pair<Polygon, Vertoff.VOKey> off){
 		//if(!GGR.isAltDown()) selected_verts.clear();
 		selected_verts.add(off);
 		Logging.bar("Currently selected vertices: " + selected_verts.size());
@@ -854,7 +855,7 @@ public class Model {
 		if(update) Editor.POLYGON_TREE.reAddGroups();
 	}
 
-	public ArrayList<Vertoff> getSelectedVerts(){
+	public ArrayList<Pair<Polygon, Vertoff.VOKey>> getSelectedVerts(){
 		return selected_verts;
 	}
 
