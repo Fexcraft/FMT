@@ -194,12 +194,12 @@ public class Model {
 		}
 	}
 
-	public void renderVertexPicking(boolean preview){
+	public void renderVertexPicking(){
 		if(!visible) return;
 		for(Pivot pivot : pivots){
 			PolyRenderer.setPivot(pivot);
 			for(Group group : pivot.groups){
-				group.renderVertexPicking(preview);
+				group.renderVertexPicking();
 			}
 			PolyRenderer.setPivot(null);
 		}
@@ -837,6 +837,7 @@ public class Model {
 	public void select(Pair<Polygon, Vertoff.VOKey> off){
 		//if(!GGR.isAltDown()) selected_verts.clear();
 		selected_verts.add(off);
+		UpdateHandler.update(new VertexSelected(off, selected_verts.size()));
 		Logging.bar("Currently selected vertices: " + selected_verts.size());
 	}
 
@@ -857,6 +858,11 @@ public class Model {
 
 	public ArrayList<Pair<Polygon, Vertoff.VOKey>> getSelectedVerts(){
 		return selected_verts;
+	}
+
+	public void clearSelectedVerts(){
+		selected_verts.clear();
+		UpdateHandler.update(new VertexSelected(null, 0));
 	}
 
 }
