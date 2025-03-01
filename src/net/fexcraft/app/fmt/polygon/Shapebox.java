@@ -13,6 +13,7 @@ import static net.fexcraft.app.fmt.utils.JsonUtil.setVector;
 
 import java.util.ArrayList;
 
+import net.fexcraft.app.fmt.polygon.Vertoff.VOKey;
 import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.update.PolyVal;
@@ -127,6 +128,18 @@ public class Shapebox extends Box {
 
 	public Vector3f[] corners(){
 		return new Vector3f[]{ cor0, cor1, cor2, cor3, cor4, cor5, cor6, cor7 };
+	}
+
+	public Vector3f getCorner(VOKey key){
+		if(key == VO_0) return cor0;
+		if(key == VO_1) return cor1;
+		if(key == VO_2) return cor2;
+		if(key == VO_3) return cor3;
+		if(key == VO_4) return cor4;
+		if(key == VO_5) return cor5;
+		if(key == VO_6) return cor6;
+		if(key == VO_7) return cor7;
+		return null;
 	}
 
 }
