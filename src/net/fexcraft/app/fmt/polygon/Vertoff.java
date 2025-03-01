@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.polygon;
 
+import net.fexcraft.app.json.JsonArray;
+import net.fexcraft.app.json.JsonValue;
 import net.fexcraft.lib.common.math.Vec3f;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -10,15 +12,18 @@ import java.util.Map;
  */
 public class Vertoff {
 
-	//public VOKey key;
 	public float[] color;
 	public Polygon polygon;
 	public Vec3f cache = new Vec3f();
 	public Vector3F off = new Vector3F();
 
-	/*public Vertoff(VOKey vkey){
-		key = vkey;
-	}*/
+	public Vertoff(){}
+
+	public Vertoff(JsonValue<?> value){
+		off.x = value.asArray().get(0).float_value();
+		off.y = value.asArray().get(1).float_value();
+		off.z = value.asArray().get(2).float_value();
+	}
 
 	public void apply(Polygon poly, float[] v){
 		cache.x = poly.pos.x + (v[0] += off.x);
@@ -42,6 +47,14 @@ public class Vertoff {
 		return null;
 	}
 
+	public JsonArray save(){
+		return new JsonArray(off.x, off.y, off.z);
+	}
+
+	public boolean isNull(){
+		return off.x == 0f && off.y == 0f && off.z == 0f;
+	}
+
 	public static record VOKey(VOType type, int vertix, int secondary){
 
 		@Override
@@ -54,6 +67,12 @@ public class Vertoff {
 			if(o instanceof VOKey == false) return false;
 			VOKey vo = (VOKey)o;
 			return type == vo.type && vertix == vo.vertix && secondary == vo.secondary;
+		}
+
+		public static VOKey parse(String key){
+			String[] split = key.split("/");
+			VOType type = VOType.valueOf(split[0]);
+			return new VOKey(type, Integer.parseInt(split[1]), Integer.parseInt(split[2]));
 		}
 
 	}
