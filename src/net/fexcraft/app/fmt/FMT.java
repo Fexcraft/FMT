@@ -4,6 +4,7 @@ import com.spinyowl.legui.animation.AnimatorProvider;
 import com.spinyowl.legui.component.Frame;
 import com.spinyowl.legui.component.Label;
 import com.spinyowl.legui.listener.processor.EventProcessorProvider;
+import com.spinyowl.legui.style.Background;
 import com.spinyowl.legui.style.color.ColorConstants;
 import com.spinyowl.legui.style.font.FontRegistry;
 import com.spinyowl.legui.system.context.CallbackKeeper;
@@ -97,8 +98,14 @@ public class FMT {
 	public FltElm alpha = new FltElm(0f);
 	private static boolean CLOSE;
 	public static GGR CAM;
-	public static Label pos, rot, fps, poly, info, bar;
-	public static Label img_line0, img_line1;
+	public static Label pos;
+	public static Label rot;
+	public static Label fps;
+	public static Label poly;
+	public static Label info;
+	public static Label bar;
+	public static Label img_line0;
+	public static Label img_line1;
 	public static long bar_timer;
 	//
 	@SuppressWarnings("unused") private GLFWErrorCallback errorCallback;
@@ -192,8 +199,9 @@ public class FMT {
 		FRAME.getContainer().add(fps = new Label("test", 0, 76, 200, 20));
 		FRAME.getContainer().add(poly = new Label("test", 0, 98, 200, 20));
 		FRAME.getContainer().add(info = new Label("test", 0, 120, 200, 20));
-		FRAME.getContainer().add(bar = new Label("test", 0, 0, 500, 20));
+		FRAME.getContainer().add(bar = new Label("test", 0, 0, 500, 25));
 		bar.getStyle().setTextColor(rgba(Settings.BOTTOM_INFO_BAR_COLOR.value));
+		bar.getStyle().setFontSize(bar.getSize().y);
 		FRAME.getComponentLayer().setFocusable(false);
 		sys_event_processor = new SystemEventProcessorImpl();
 		CONTEXT = new Context(window, sys_event_processor);
@@ -350,11 +358,11 @@ public class FMT {
 		if(!Settings.SHOW_BOTTOMBAR.value) return;
 		if(bar_timer == 0 || Time.getDate() >= bar_timer){
 			bar_timer = 0;
-			bar.setPosition(0, HEIGHT + 20);
+			bar.setPosition(0, HEIGHT + bar.getSize().y);
 			bar.getTextState().setText("");
 		}
 		else{
-			bar.setPosition((WIDTH / 2) - (FontSizeUtil.getWidth(bar.getTextState().getText()) / 2), HEIGHT - 20);
+			bar.setPosition((WIDTH / 2) - (FontSizeUtil.getWidth(bar.getTextState().getText()) / 2), HEIGHT - bar.getSize().y);
 		}
 		PolygonTree.polygons.getTextState().setText("Polygons: " + FMT.MODEL.totals());
 	}
@@ -394,7 +402,7 @@ public class FMT {
 			glClearColor(1, 1, 1, 1);
 		    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			PolyRenderer.mode(DrawMode.RGBCOLOR);
-			MODEL.renderVertexPicking(false);
+			MODEL.renderVertexPicking();
 			Picker.process();
 			Picker.reset();
 		}
@@ -441,9 +449,9 @@ public class FMT {
 		}
 		if(Arrows.MODE.active()) Arrows.render(DrawMode.RGBCOLOR); 
 		MODEL.render(alpha);
-		if(Selector.TYPE == Picker.PickType.VERTEX && Selector.SHOW_VERTICES){
+		if(Selector.TYPE == Picker.PickType.VERTEX || Selector.SHOW_VERTICES){
 			PolyRenderer.mode(DrawMode.RGBCOLOR);
-			MODEL.renderVertexPicking(true);
+			MODEL.renderVertexPicking();
 		}
 		for(Model model : PreviewHandler.getLoaded()){
 			if(!model.visible) continue;
