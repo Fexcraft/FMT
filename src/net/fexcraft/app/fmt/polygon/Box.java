@@ -64,14 +64,14 @@ public class Box extends Polygon {
 	}
 
 	private void fillVertoffs(){
-		vertoffs.put(VO_0, new Vertoff());
-		vertoffs.put(VO_1, new Vertoff());
-		vertoffs.put(VO_2, new Vertoff());
-		vertoffs.put(VO_3, new Vertoff());
-		vertoffs.put(VO_4, new Vertoff());
-		vertoffs.put(VO_5, new Vertoff());
-		vertoffs.put(VO_6, new Vertoff());
-		vertoffs.put(VO_7, new Vertoff());
+		vertoffs.putIfAbsent(VO_0, new Vertoff());
+		vertoffs.putIfAbsent(VO_1, new Vertoff());
+		vertoffs.putIfAbsent(VO_2, new Vertoff());
+		vertoffs.putIfAbsent(VO_3, new Vertoff());
+		vertoffs.putIfAbsent(VO_4, new Vertoff());
+		vertoffs.putIfAbsent(VO_5, new Vertoff());
+		vertoffs.putIfAbsent(VO_6, new Vertoff());
+		vertoffs.putIfAbsent(VO_7, new Vertoff());
 	}
 
 	@Override
