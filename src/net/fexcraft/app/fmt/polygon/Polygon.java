@@ -14,6 +14,7 @@ import net.fexcraft.app.fmt.ui.UVViewer;
 import net.fexcraft.app.fmt.update.UpdateEvent.PolygonAdded;
 import net.fexcraft.app.fmt.update.UpdateEvent.PolygonRenamed;
 import net.fexcraft.app.fmt.utils.Axis3DL;
+import net.fexcraft.app.json.JsonValue;
 import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.frl.Vertex;
 import net.fexcraft.lib.script.ScrBlock;
@@ -110,6 +111,13 @@ public abstract class Polygon implements ScrElm {
 				}
 			});
 		}
+		if(obj.has("vo")){
+			JsonMap vo = obj.getMap("vo");
+			for(Map.Entry<String, JsonValue<?>> entry : vo.entries()){
+				VOKey key = VOKey.parse(entry.getKey());
+				vertoffs.put(key, new Vertoff(entry.getValue()));
+			}
+		}
 	}
 
 	public JsonMap save(boolean export){
@@ -137,6 +145,11 @@ public abstract class Polygon implements ScrElm {
 			});
 			obj.add("cuv", cap);
 		}
+		JsonMap vo = new JsonMap();
+		for(Map.Entry<VOKey, Vertoff> entry : vertoffs.entrySet()){
+			if(!entry.getValue().isNull()) vo.add(entry.getKey().toString(), entry.getValue().save());
+		}
+		if(!vo.empty()) obj.add("vo", vo);
 		if(!export){
 			obj.add("visible", visible);
 		}
@@ -549,6 +562,7 @@ public abstract class Polygon implements ScrElm {
 			if(key.vertix() == prim && key.secondary() == sec) return vertoffs.get(key);
 		}
 		VOKey key = new VOKey(type, prim, sec);
+		Logging.log(key);
 		vertoffs.put(key, new Vertoff());
 		return vertoffs.get(key);
 	}
