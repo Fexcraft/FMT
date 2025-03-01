@@ -19,6 +19,7 @@ public class VertoffComponent extends EditorComponent {
 
 	private TextField key;
 	private NumberField sel;
+	private NumberField ox, oy, oz;
 
 	public VertoffComponent(){
 		super("vertex", 140, false, true);
@@ -27,13 +28,24 @@ public class VertoffComponent extends EditorComponent {
 		add(key = new TextField("", F20, row(1), F2S, HEIGHT));
 		add(sel = new NumberField(this, F21, row(0), F2S, HEIGHT).setup(0, Integer.MAX_VALUE, false, cons -> {}));
 		add(new Label(translate(LANG_PREFIX + id + ".offset"), L5, row(1), LW, HEIGHT));
-		add(new NumberField(this, F30, row(1), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, cons -> apply(cons.value(), ValAxe.X)));
-		add(new NumberField(this, F31, row(0), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, cons -> apply(cons.value(), ValAxe.Y)));
-		add(new NumberField(this, F32, row(0), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, cons -> apply(cons.value(), ValAxe.Z)));
+		add(ox = new NumberField(this, F30, row(1), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, cons -> apply(cons.value(), ValAxe.X)));
+		add(oy = new NumberField(this, F31, row(0), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, cons -> apply(cons.value(), ValAxe.Y)));
+		add(oz = new NumberField(this, F32, row(0), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, cons -> apply(cons.value(), ValAxe.Z)));
 		updcom.add(VertexSelected.class, e -> {
 			sel.apply(e.selected());
-			if(e.selected() <= 0) key.getTextState().setText("");
-			else key.getTextState().setText(e.pair().getRight().toString());
+			if(e.selected() <= 0){
+				key.getTextState().setText("");
+				ox.apply(0);
+				oy.apply(0);
+				oz.apply(0);
+			}
+			else{
+				Vertoff vo = e.pair().getLeft().vertoffs.get(e.pair().getRight());
+				key.getTextState().setText(e.pair().getRight().toString());
+				ox.apply(vo.off.x);
+				oy.apply(vo.off.y);
+				oz.apply(vo.off.z);
+			}
 		});
 	}
 
