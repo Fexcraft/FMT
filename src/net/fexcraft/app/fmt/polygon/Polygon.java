@@ -2,6 +2,7 @@ package net.fexcraft.app.fmt.polygon;
 
 import static net.fexcraft.app.fmt.polygon.Vertoff.VOType.BOX_CORNER;
 import static net.fexcraft.app.fmt.update.UpdateHandler.update;
+import static net.fexcraft.app.fmt.utils.CornerUtil.ROT_MARKER_NORMAL;
 import static net.fexcraft.app.fmt.utils.CornerUtil.ROT_MARKER_SMALL;
 import static net.fexcraft.app.fmt.utils.JsonUtil.getVector;
 import static net.fexcraft.app.fmt.utils.JsonUtil.setVector;
@@ -293,10 +294,10 @@ public abstract class Polygon implements ScrElm {
 
 	public void renderVertexPicking(){
 		for(Vertoff vo : vertoffs.values()){
-			ROT_MARKER_SMALL.glObj.polycolor = vo.color;
-			ROT_MARKER_SMALL.pos(vo.cache.x, vo.cache.y, vo.cache.z);
-			ROT_MARKER_SMALL.rot(rot.x, rot.y, rot.z);
-			ROT_MARKER_SMALL.render();
+			ROT_MARKER_NORMAL.glObj.polycolor = vo.color;
+			ROT_MARKER_NORMAL.pos(vo.cache.x, vo.cache.y, vo.cache.z);
+			ROT_MARKER_NORMAL.rot(rot.x, rot.y, rot.z);
+			ROT_MARKER_NORMAL.render();
 		}
 	}
 
