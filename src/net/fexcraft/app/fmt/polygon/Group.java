@@ -110,10 +110,10 @@ public class Group extends ArrayList<Polygon> {
 		}
 	}
 
-	public void renderVertexPicking(boolean preview){
+	public void renderVertexPicking(){
 		if(!visible) return;
 		for(Polygon poly : this){
-			if(poly.visible && (!preview || poly.selected)) poly.renderVertexPicking();
+			if(poly.visible && poly.selected) poly.renderVertexPicking();
 		}
 	}
 	
