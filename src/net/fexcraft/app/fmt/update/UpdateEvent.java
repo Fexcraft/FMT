@@ -1,6 +1,7 @@
 package net.fexcraft.app.fmt.update;
 
 import net.fexcraft.app.fmt.polygon.*;
+import net.fexcraft.app.fmt.polygon.Vertoff.VOKey;
 import net.fexcraft.app.fmt.polygon.uv.Face;
 import net.fexcraft.app.fmt.polygon.uv.UVType;
 import net.fexcraft.app.fmt.texture.TextureGroup;
@@ -9,6 +10,7 @@ import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.utils.Picker.PickTask;
 import net.fexcraft.app.fmt.utils.Picker.PickType;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.File;
 
@@ -66,5 +68,7 @@ public class UpdateEvent {
     public static record PainterChannel(int channel){};
     public static record PickMode(PickType type, PickTask task, boolean offcenter){};
     public static record PickFace(Polygon polygon, Face face){};
+
+    public static record VertexSelected(Pair<Polygon, VOKey> pair, int selected){};
 
 }
