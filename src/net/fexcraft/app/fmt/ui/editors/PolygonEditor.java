@@ -8,7 +8,9 @@ import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.ui.components.*;
+import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateEvent.PolygonSelected;
+import net.fexcraft.app.fmt.update.UpdateEvent.VertexSelected;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
 
@@ -17,11 +19,12 @@ import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
  */
 public class PolygonEditor extends Editor {
 
-	public static EditorComponent BOXON, BOXOFF, SHAPEBOX, CYLINDER, CURVE, MARKER;
+	public static EditorComponent BOXON, BOXOFF, SHAPEBOX, CYLINDER, CURVE, MARKER, VERTOFF;
 
 	public PolygonEditor(){
 		super("polygon_editor", "Polygon Editor", false);
 		addComponent(new PolygonSorting());
+		addComponent(VERTOFF = new VertoffComponent());
 		addComponent(BOXON = new PolygonAttributes(true));
 		addComponent(BOXOFF = new PolygonAttributes(false));
 		addComponent(SHAPEBOX = new ShapeboxComponent());
@@ -29,8 +32,12 @@ public class PolygonEditor extends Editor {
 		addComponent(CURVE = new CurveComponent());
 		addComponent(MARKER = new MarkerComponent());
 		BOXOFF.minimize(true);
+		VERTOFF.minimize(true);
 		UpdateCompound com = new UpdateCompound();
 		if(Settings.AUTO_SHOW_COMPONENTS.value){
+			com.add(VertexSelected.class, con -> {
+				VERTOFF.minimize(con.selected() <= 0);
+			});
 			com.add(PolygonSelected.class, con -> {
 				BOXON.minimize(true);
 				BOXOFF.minimize(true);
@@ -73,7 +80,7 @@ public class PolygonEditor extends Editor {
 	}
 
 	public static boolean shrink(EditorComponent com){
-		return com == BOXON || com == BOXOFF || com == SHAPEBOX || com == CYLINDER || com == CURVE || com == MARKER;
+		return com == BOXON || com == BOXOFF || com == SHAPEBOX || com == CYLINDER || com == CURVE || com == MARKER || com == VERTOFF;
 	}
 
 }
