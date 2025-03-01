@@ -5,6 +5,7 @@ import net.fexcraft.app.fmt.polygon.uv.NoFace;
 import net.fexcraft.app.fmt.polygon.uv.UVCoords;
 import net.fexcraft.app.fmt.polygon.uv.VarFace;
 import net.fexcraft.app.fmt.utils.Axis3DL;
+import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
@@ -57,7 +58,6 @@ public class CurvedMesh extends CurvePolygon {
 		if(subs == null) subs = new ArrayList<>();
 		for(Polyhedron<GLObject> sub : subs) PolyRenderer.RENDERER.delete(sub);
 		subs.clear();
-		vertoffs.clear();
 		for(int c = 0; c < curves.size(); c++){
 			Curve cu = curves.get(c);
 			for(int i = 0; i < cu.points.size(); i++){
@@ -118,8 +118,8 @@ public class CurvedMesh extends CurvePolygon {
 			float loc1;
 			vr = coff.add(axe0.get(off.x, off.y, off.z));
 			vl = noff.add(axe1.get(off.x, off.y, off.z));
-			getVO(CURVE, voi++, c).apply(this, vr);
-			getVO(CURVE, voi++, c).apply(this, vl);
+			getVO(CURVE, voi, c).apply(this, vr);
+			getVO(CURVE, voi++, c + 1).apply(this, vl);
 			for(int i = 1; i < cu.planes.size(); i++){
 				seg0 = cu.planes.get(i);
 				loc0 = cu.path.length * seg0.location;
@@ -132,8 +132,8 @@ public class CurvedMesh extends CurvePolygon {
 				axe1.add(seg0.rot, 0, 0);
 				nr = coff.add(axe0.get(seg0.offset.x, seg0.offset.y, seg0.offset.z));
 				nl = noff.add(axe1.get(seg0.offset.x, seg0.offset.y, seg0.offset.z));
-				getVO(CURVE, voi++, c).apply(this, nr);
-				getVO(CURVE, voi++, c).apply(this, nl);
+				getVO(CURVE, voi, c).apply(this, nr);
+				getVO(CURVE, voi++, c + 1).apply(this, nl);
 				if(flip){
 					glm.polygons.add(new net.fexcraft.lib.frl.Polygon(new Vertex[]{
 						new Vertex(vl, 0, 0),
