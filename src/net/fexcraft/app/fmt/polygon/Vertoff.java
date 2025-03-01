@@ -1,9 +1,6 @@
 package net.fexcraft.app.fmt.polygon;
 
-import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.Vec3f;
-import net.fexcraft.lib.frl.Vertex;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Map;
@@ -26,13 +23,13 @@ public class Vertoff {
 	public void apply(Polygon poly, float[] v){
 		cache.x = poly.pos.x + (v[0] += off.x);
 		cache.y = poly.pos.y + (v[1] += off.y);
-		cache.z = poly.pos.z + (v[2] += off.y);
+		cache.z = poly.pos.z + (v[2] += off.z);
 	}
 
 	public void apply(Polygon poly, Vec3f v){
 		cache.x = poly.pos.x + (v.x += off.x);
 		cache.y = poly.pos.y + (v.y += off.y);
-		cache.z = poly.pos.z + (v.z += off.y);
+		cache.z = poly.pos.z + (v.z += off.z);
 	}
 
 	public static Pair<Polygon, VOKey> getPicked(int pick){
@@ -46,6 +43,11 @@ public class Vertoff {
 	}
 
 	public static record VOKey(VOType type, int vertix, int secondary){
+
+		@Override
+		public String toString(){
+			return type +"/" + vertix + "/" + secondary;
+		}
 
 		@Override
 		public boolean equals(Object o){
