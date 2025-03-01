@@ -300,6 +300,9 @@ editor.component.config.general.icon_from_view=Create Icon from View
 editor.component.config.general.file_utils=File Utils
 editor.component.config.general.open_json=Open JSON File
 editor.component.config.general.run_utils=Run Utils
+editor.component.vertex.name=Vertex Adjustment
+editor.component.vertex.index=Index / Selected Total
+editor.component.vertex.offset=Offset
 //
 editor.component.multiplier=Multiplier
 editor.component.multiplicator.value=Rate:
@@ -330,6 +333,7 @@ editor.component.selector.polygon=Select Polygons
 editor.component.selector.face=Select Faces (WIP)
 editor.component.selector.vertex=Select Vertices
 editor.component.selector.visibility=Show/Hide Vertices
+editor.component.selector.clear=Clear Selection
 editor.component.selector.move=Move first (ShapeBox) selected vertex towards second (any) selected Vertex.
 
 # UV Vieweer
