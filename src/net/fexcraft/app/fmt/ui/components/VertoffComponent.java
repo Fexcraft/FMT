@@ -23,8 +23,7 @@ public class VertoffComponent extends EditorComponent {
 
 	public VertoffComponent(){
 		super("vertex", 140, false, true);
-		add(new Label(translate(LANG_PREFIX + id + ".index"), L5, row(1), LWI, HEIGHT));
-		add(new PosCopyIcon(LPI, row(0) + 4, PolyVal.OFF));
+		add(new Label(translate(LANG_PREFIX + id + ".index"), L5, row(1), LW, HEIGHT));
 		add(key = new TextField("", F20, row(1), F2S, HEIGHT));
 		add(sel = new NumberField(this, F21, row(0), F2S, HEIGHT).setup(0, Integer.MAX_VALUE, false, cons -> {}));
 		add(new Label(translate(LANG_PREFIX + id + ".offset"), L5, row(1), LW, HEIGHT));
