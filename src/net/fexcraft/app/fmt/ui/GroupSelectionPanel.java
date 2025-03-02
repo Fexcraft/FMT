@@ -9,9 +9,11 @@ import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.fields.RunButton;
 import net.fexcraft.app.fmt.ui.fields.TextField;
+import net.fexcraft.app.fmt.utils.Logging;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class GroupSelectionPanel extends Panel {
 	
@@ -74,11 +76,25 @@ public class GroupSelectionPanel extends Panel {
 		RunButton des_button = new RunButton("group_sel_panel.deselect_all", hw + 5, 50, hw - 15, 20, () -> {
 			boxes.values().forEach(val -> val.setChecked(false));
 		});
-		Settings.applyMenuTheme(field, sel_button, des_button);
+		RunButton vis_button = new RunButton("group_sel_panel.select_visible", 10, 80, hw - 15, 20, () -> {
+			for(Map.Entry<String, CheckBox> entry : boxes.entrySet()){
+				Group group = FMT.MODEL.get(entry.getKey());
+				entry.getValue().setChecked(group != null && group.visible);
+			}
+		});
+		RunButton ssg_button = new RunButton("group_sel_panel.select_selected", hw + 5, 80, hw - 15, 20, () -> {
+			for(Map.Entry<String, CheckBox> entry : boxes.entrySet()){
+				Group group = FMT.MODEL.get(entry.getKey());
+				entry.getValue().setChecked(group != null && group.selected);
+			}
+		});
+		Settings.applyMenuTheme(field, sel_button, des_button, vis_button, ssg_button);
 		this.add(sel_button);
 		this.add(des_button);
+		this.add(vis_button);
+		this.add(ssg_button);
 		int i = 0, gh = FMT.MODEL.allgroups().size() * 25;
-		ScrollablePanel panel = new ScrollablePanel(10, 80, width - 20, height - 90);
+		ScrollablePanel panel = new ScrollablePanel(10, 110, width - 20, height - 120);
 		panel.setHorizontalScrollBarVisible(false);
 		panel.getContainer().setSize(width, gh < panel.getSize().y ? panel.getSize().y : gh);
 		for(Group group : FMT.MODEL.allgroups()){
