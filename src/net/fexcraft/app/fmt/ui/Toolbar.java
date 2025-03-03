@@ -2,6 +2,7 @@ package net.fexcraft.app.fmt.ui;
 
 import java.util.ArrayList;
 
+import net.fexcraft.app.fmt.env.PackDevEnv;
 import net.fexcraft.app.fmt.polygon.Shape;
 import net.fexcraft.app.fmt.port.im.ImportManager;
 import net.fexcraft.app.fmt.ui.panels.QuickAddPanel;
@@ -111,7 +112,8 @@ public class Toolbar extends Panel {
 			new MenuButton(9, "polygons.add_object")
 		));
 		this.add(new ToolbarMenu(5, "workspace", () -> WorkspaceViewer.show0()));
-		this.add(new ToolbarMenu(6, "exit", () -> FMT.close(0)));
+		this.add(new ToolbarMenu(6, "prototype", () -> PackDevEnv.toggle()));
+		this.add(new ToolbarMenu(7, "exit", () -> FMT.close(0)));
 		UpdateHandler.register(updcom);
 	}
 
