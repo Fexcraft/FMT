@@ -9,6 +9,8 @@ import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.utils.Logging;
 import org.joml.Vector2f;
 
+import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -52,7 +54,36 @@ public class PackDevEnv extends Widget {
 			getContainer().setSize(vec);
 			filespanel.setSize(fp_width, getSize().y - tb_height);
 		});
+		fillFilesPanel();
 		startWatch();
+	}
+
+	private void fillFilesPanel(){
+		new Thread("Workspace File Tree Loader"){
+			@Override
+			public void run(){
+				try{
+					File root = new File(Settings.WORKSPACE_ROOT.value);
+					File[] arr = root.listFiles(File::isDirectory);
+					File assets;
+					File fvtm;
+					for(File file : arr){
+						fvtm = null;
+						assets = new File(file, "assets");
+						if(!assets.exists() || !assets.isDirectory()) continue;
+						for(File afol : assets.listFiles(File::isDirectory)){
+							fvtm = new File(afol, "addonpack.fvtm");
+							if(fvtm.exists()) break;
+						}
+						if(fvtm == null) continue;
+						Logging.log(fvtm.toPath().toString());
+					}
+				}
+				catch(Exception e){
+					e.printStackTrace();
+				}
+			}
+		}.start();
 	}
 
 	public static void toggle(){
