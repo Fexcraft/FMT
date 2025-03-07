@@ -10,10 +10,11 @@ import net.fexcraft.app.fmt.utils.Logging;
 import org.joml.Vector2f;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -26,7 +27,9 @@ public class PackDevEnv extends Widget {
 	public static int def_height = 480;
 	public static int tb_height = 30;
 	public static int fp_width = 250;
-	private ScrollablePanel filespanel;
+	public static int fe_height = 30;
+	private static List<FileViewEntry> entries = new ArrayList<>();
+	protected ScrollablePanel filespanel;
 
 	public PackDevEnv(){
 		super(Settings.WORKSPACE_NAME.value);
@@ -76,6 +79,7 @@ public class PackDevEnv extends Widget {
 							if(fvtm.exists()) break;
 						}
 						if(fvtm == null) continue;
+						addEntry(new FvtmPackEntry(INSTANCE, file, assets, fvtm));
 						Logging.log(fvtm.toPath().toString());
 					}
 				}
@@ -84,6 +88,19 @@ public class PackDevEnv extends Widget {
 				}
 			}
 		}.start();
+	}
+
+	private void addEntry(FileViewEntry entry){
+		entries.add(entry);
+		filespanel.getContainer().add(entry);
+		updateFileView();
+	}
+
+	private void updateFileView(){
+		int buf = 0;
+		for(FileViewEntry entry : entries){
+			buf += entry.updateDisplay(buf);
+		}
 	}
 
 	public static void toggle(){
