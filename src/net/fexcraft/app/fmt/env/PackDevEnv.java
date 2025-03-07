@@ -101,6 +101,7 @@ public class PackDevEnv extends Widget {
 		for(FileViewEntry entry : entries){
 			buf += entry.updateDisplay(buf);
 		}
+		filespanel.getContainer().setSize(fp_width, buf);
 	}
 
 	public static void toggle(){
