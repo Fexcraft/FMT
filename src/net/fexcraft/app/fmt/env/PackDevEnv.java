@@ -15,12 +15,17 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
  */
 public class PackDevEnv extends Widget {
 
+	public static ConcurrentHashMap<Path, FileViewEntry> WATCHED = new ConcurrentHashMap<>();
+	public static WatchService SERV;
 	public static PackDevEnv INSTANCE;
 	public static Thread WATCH;
 	public static int def_width = 600;
@@ -57,8 +62,23 @@ public class PackDevEnv extends Widget {
 			getContainer().setSize(vec);
 			filespanel.setSize(fp_width, getSize().y - tb_height);
 		});
+		try{
+			SERV = FileSystems.getDefault().newWatchService();
+		}
+		catch(IOException e){
+			e.printStackTrace();
+		}
 		fillFilesPanel();
 		startWatch();
+	}
+
+	public static void addWatch(FileViewEntry entry){
+		try{
+			entry.path.register(SERV, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE, StandardWatchEventKinds.ENTRY_MODIFY);
+		}
+		catch(IOException e){
+			e.printStackTrace();
+		}
 	}
 
 	private void fillFilesPanel(){
@@ -78,9 +98,8 @@ public class PackDevEnv extends Widget {
 							fvtm = new File(afol, "addonpack.fvtm");
 							if(fvtm.exists()) break;
 						}
-						if(fvtm == null) continue;
+						if(fvtm == null || !fvtm.exists()) continue;
 						addEntry(new FvtmPackEntry(INSTANCE, file, assets, fvtm));
-						Logging.log(fvtm.toPath().toString());
 					}
 				}
 				catch(Exception e){
@@ -90,9 +109,15 @@ public class PackDevEnv extends Widget {
 		}.start();
 	}
 
-	private void addEntry(FileViewEntry entry){
+	public void addEntry(FileViewEntry entry){
 		entries.add(entry);
 		filespanel.getContainer().add(entry);
+		updateFileView();
+	}
+
+	public void remEntry(FileViewEntry entry){
+		entries.remove(entry);
+		filespanel.getContainer().remove(entry);
 		updateFileView();
 	}
 
@@ -116,22 +141,20 @@ public class PackDevEnv extends Widget {
 
 	private void startWatch(){
 		if(WATCH != null) return;
-		WATCH = new Thread("Workspace Watch Service"){
+		WATCH = new Thread("PackEnv Watch Service"){
 			@Override
 			public void run(){
-				WatchService serv;
 				try{
-					serv = FileSystems.getDefault().newWatchService();
 					Path path = Paths.get(Settings.WORKSPACE_ROOT.value);
 					Logging.log("Starting to watch files in " + path.toString());
-					path.register(serv, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE, StandardWatchEventKinds.ENTRY_MODIFY);
-					Files.walkFileTree(path, new SimpleFileVisitor<Path>(){
+					path.register(SERV, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE, StandardWatchEventKinds.ENTRY_MODIFY);
+					/*Files.walkFileTree(path, new SimpleFileVisitor<Path>(){
 						@Override
 						public FileVisitResult preVisitDirectory(Path p, BasicFileAttributes a)throws IOException{
 							if(p != null && a != null) p.register(serv, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE, StandardWatchEventKinds.ENTRY_MODIFY);
 							return FileVisitResult.CONTINUE;
 						}
-					});
+					});*/
 				}
 				catch(IOException e){
 					throw new RuntimeException(e);
@@ -140,18 +163,10 @@ public class PackDevEnv extends Widget {
 				Path path;
 				while(true){
 					try{
-						key = serv.take();
+						key = SERV.take();
 						for(WatchEvent<?> event : key.pollEvents()){
 							path = (Path)event.context();
-							if(event.kind() == StandardWatchEventKinds.ENTRY_CREATE){
-
-							}
-							else if(event.kind() == StandardWatchEventKinds.ENTRY_DELETE){
-
-							}
-							else if(event.kind() == StandardWatchEventKinds.ENTRY_MODIFY){
-
-							}
+							//
 						}
 						key.reset();
 					}
@@ -162,6 +177,13 @@ public class PackDevEnv extends Widget {
 			}
 		};
 		WATCH.start();
+	}
+
+	private String weName(WatchEvent.Kind<?> kind){
+		if(kind == StandardWatchEventKinds.ENTRY_MODIFY) return "MODIFY";
+		if(kind == StandardWatchEventKinds.ENTRY_DELETE) return "DELETE";
+		if(kind == StandardWatchEventKinds.ENTRY_CREATE) return "CREATE";
+		return "UNKNOWN";
 	}
 
 }
