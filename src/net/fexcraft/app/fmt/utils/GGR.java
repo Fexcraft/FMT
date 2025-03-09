@@ -13,6 +13,7 @@ import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
 
 import com.spinyowl.legui.component.Component;
 import com.spinyowl.legui.style.Style;
+import net.fexcraft.app.fmt.env.PackDevEnv;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.ui.JsonEditor;
 import net.fexcraft.app.fmt.ui.UVViewer;
@@ -204,6 +205,7 @@ public class GGR {
 		}
 		if(Editor.VISIBLE_TREE != null && cursor_x[0] > FMT.WIDTH - Editor.WIDTH) return true;
 		if(WorkspaceViewer.viewer != null && WorkspaceViewer.viewer.getStyle().getDisplay() != Style.DisplayType.NONE && overComponent(WorkspaceViewer.viewer)) return true;
+		if(PackDevEnv.INSTANCE != null && PackDevEnv.INSTANCE.getStyle().getDisplay() != Style.DisplayType.NONE && overComponent(PackDevEnv.INSTANCE)) return true;
 		for(FVTMConfigEditor editor : FVTMConfigEditor.INSTANCES){
 			if(overComponent(editor)) return true;
 		}
