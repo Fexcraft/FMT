@@ -29,7 +29,6 @@ public class FileViewEntry extends Component {
 		path = fil.toPath().toAbsolutePath();
 		add(label = new Label(file.getName(), fe_height + 5, 5, fp_width - 30, 20));
 		addIcon();
-		if(file.isDirectory()) PackDevEnv.addWatch(this);
 	}
 
 	protected void addIcon(){
