@@ -6,18 +6,19 @@ import com.spinyowl.legui.component.event.component.ChangeSizeEvent;
 import com.spinyowl.legui.style.Style;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
-import net.fexcraft.app.fmt.utils.Logging;
+import net.fexcraft.app.json.JsonHandler;
+import net.fexcraft.app.json.JsonMap;
+import net.fexcraft.app.json.JsonValue;
 import org.apache.commons.io.monitor.FileAlterationListener;
 import org.apache.commons.io.monitor.FileAlterationMonitor;
 import org.apache.commons.io.monitor.FileAlterationObserver;
 import org.joml.Vector2f;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -31,12 +32,14 @@ public class PackDevEnv extends Widget {
 	public static int tb_height = 30;
 	public static int fp_width = 250;
 	public static int fe_height = 30;
+	public static int fe_offset = 10;
 	private static ConcurrentLinkedQueue<FileViewEntry> entries = new ConcurrentLinkedQueue<>();
 	protected static File envroot;
 	protected ScrollablePanel filespanel;
 
 	public PackDevEnv(){
 		super(Settings.WORKSPACE_NAME.value);
+		INSTANCE = this;
 		setSize(def_width, def_height);
 		getContainer().setSize(getSize());
 		setResizable(true);
@@ -64,6 +67,43 @@ public class PackDevEnv extends Widget {
 		envroot = new File(Settings.WORKSPACE_ROOT.value);;
 		fillFilesPanel();
 		startFileMonitor();
+		load();
+	}
+
+	public static List<File> getSorted(File[] files, boolean only_vis){
+		ArrayList<File> list = new ArrayList<>();
+		ArrayList<File> dirs = new ArrayList<>();
+		for(File file : files){
+			if(only_vis && file.isHidden()) continue;
+			if(file.isDirectory()) dirs.add(file);
+			else list.add(file);
+		}
+		list.sort(Comparator.comparing(File::getName));
+		dirs.sort(Comparator.comparing(File::getName));
+		dirs.addAll(list);
+		return dirs;
+	}
+
+	public static void load(){
+		JsonMap map = JsonHandler.parse(new File("./pack_env.fmt"));
+		if(map.empty()) return;
+		JsonMap files = map.getMap("files");
+		for(Map.Entry<String, JsonValue<?>> entry : files.entries()){
+			FileViewEntry fe = INSTANCE.getEntry(entry.getKey());
+			if(fe != null) fe.load(entry.getValue().asMap());
+		}
+		INSTANCE.updateFileView();
+	}
+
+	public static void save(){
+		JsonMap map = new JsonMap();
+		JsonMap files = new JsonMap();
+		for(FileViewEntry entry : entries){
+			JsonMap mep = entry.save();
+			if(mep.not_empty()) files.add(entry.file.getName(), mep);
+		}
+		if(!files.empty()) map.add("files", files);
+		if(!map.empty()) JsonHandler.print(new File("./pack_env.fmt"), map);
 	}
 
 	private void fillFilesPanel(){
@@ -71,9 +111,10 @@ public class PackDevEnv extends Widget {
 			@Override
 			public void run(){
 				try{
-					File[] arr = envroot.listFiles();
+					List<File> list = getSorted(envroot.listFiles(), true);
 					File[] ret;
-					for(File file : arr){
+					for(File file : list){
+						if(file.isHidden()) continue;
 						ret = isPack(file);
 						if(ret != null) addEntry(new FvtmPackEntry(INSTANCE, file, ret[0], ret[1]));
 						else addEntry(new FileViewEntry(INSTANCE, file));
@@ -110,16 +151,23 @@ public class PackDevEnv extends Widget {
 		updateFileView();
 	}
 
-	private void updateFileView(){
+	public FileViewEntry getEntry(String filename){
+		for(FileViewEntry entry : entries){
+			if(entry.file.getName().equals(filename)) return entry;
+		}
+		return null;
+	}
+
+	protected void updateFileView(){
 		int buf = 0;
 		for(FileViewEntry entry : entries){
-			buf += entry.updateDisplay(buf);
+			buf += entry.updateDisplay(0, buf);
 		}
 		filespanel.getContainer().setSize(fp_width, buf);
 	}
 
 	public static void toggle(){
-		if(INSTANCE == null) FMT.FRAME.getContainer().add(INSTANCE = new PackDevEnv());
+		if(INSTANCE == null) FMT.FRAME.getContainer().add(new PackDevEnv());
 		else if(visible()) INSTANCE.hide();
 		else INSTANCE.show();
 	}
@@ -152,6 +200,7 @@ public class PackDevEnv extends Widget {
 
 		@Override
 		public void onDirectoryCreate(File file){
+			if(file.isHidden()) return;
 			if(file.getParentFile().equals(envroot)){
 				File[] ret = isPack(file);
 				if(ret != null) INSTANCE.addEntry(new FvtmPackEntry(INSTANCE, file, ret[0], ret[1]));
@@ -166,6 +215,13 @@ public class PackDevEnv extends Widget {
 
 		@Override
 		public void onDirectoryDelete(File file){
+			if(!removed(file)) return;
+			for(FileViewEntry entry : entries){
+				if(entry.onFileEvent(file, FileEvent.DIR_DELETE)) break;
+			}
+		}
+
+		private boolean removed(File file){
 			FileViewEntry rem = null;
 			for(FileViewEntry entry : entries){
 				if(file.equals(entry.file)){
@@ -173,12 +229,11 @@ public class PackDevEnv extends Widget {
 					break;
 				}
 			}
-			if(rem != null) INSTANCE.remEntry(rem);
-			else{
-				for(FileViewEntry entry : entries){
-					if(entry.onFileEvent(file, FileEvent.DIR_DELETE)) break;
-				}
+			if(rem != null){
+				INSTANCE.remEntry(rem);
+				return true;
 			}
+			return false;
 		}
 
 		@Override
@@ -190,6 +245,7 @@ public class PackDevEnv extends Widget {
 
 		@Override
 		public void onFileCreate(File file){
+			if(file.isHidden()) return;
 			for(FileViewEntry entry : entries){
 				if(entry.onFileEvent(file, FileEvent.FILE_CREATE)) break;
 			}
@@ -197,6 +253,7 @@ public class PackDevEnv extends Widget {
 
 		@Override
 		public void onFileDelete(File file){
+			if(removed(file)) return;
 			for(FileViewEntry entry : entries){
 				if(entry.onFileEvent(file, FileEvent.FILE_DELETE)) break;
 			}
