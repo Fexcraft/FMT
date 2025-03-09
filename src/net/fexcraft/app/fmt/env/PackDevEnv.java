@@ -7,17 +7,17 @@ import com.spinyowl.legui.style.Style;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.utils.Logging;
+import org.apache.commons.io.monitor.FileAlterationListener;
+import org.apache.commons.io.monitor.FileAlterationMonitor;
+import org.apache.commons.io.monitor.FileAlterationObserver;
 import org.joml.Vector2f;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -25,9 +25,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class PackDevEnv extends Widget {
 
 	public static ConcurrentHashMap<Path, FileViewEntry> WATCHED = new ConcurrentHashMap<>();
-	public static WatchService SERV;
 	public static PackDevEnv INSTANCE;
-	public static Thread WATCH;
 	public static int def_width = 600;
 	public static int def_height = 480;
 	public static int tb_height = 30;
@@ -62,27 +60,12 @@ public class PackDevEnv extends Widget {
 			getContainer().setSize(vec);
 			filespanel.setSize(fp_width, getSize().y - tb_height);
 		});
-		try{
-			SERV = FileSystems.getDefault().newWatchService();
-		}
-		catch(IOException e){
-			e.printStackTrace();
-		}
 		fillFilesPanel();
-		startWatch();
-	}
-
-	public static void addWatch(FileViewEntry entry){
-		try{
-			entry.path.register(SERV, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE, StandardWatchEventKinds.ENTRY_MODIFY);
-		}
-		catch(IOException e){
-			e.printStackTrace();
-		}
+		startFileMonitor();
 	}
 
 	private void fillFilesPanel(){
-		new Thread("Workspace File Tree Loader"){
+		new Thread("PackEnv File Tree Loader"){
 			@Override
 			public void run(){
 				try{
@@ -139,51 +122,61 @@ public class PackDevEnv extends Widget {
 		return INSTANCE.getStyle().getDisplay() != Style.DisplayType.NONE;
 	}
 
-	private void startWatch(){
-		if(WATCH != null) return;
-		WATCH = new Thread("PackEnv Watch Service"){
-			@Override
-			public void run(){
-				try{
-					Path path = Paths.get(Settings.WORKSPACE_ROOT.value);
-					Logging.log("Starting to watch files in " + path.toString());
-					path.register(SERV, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE, StandardWatchEventKinds.ENTRY_MODIFY);
-					/*Files.walkFileTree(path, new SimpleFileVisitor<Path>(){
-						@Override
-						public FileVisitResult preVisitDirectory(Path p, BasicFileAttributes a)throws IOException{
-							if(p != null && a != null) p.register(serv, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE, StandardWatchEventKinds.ENTRY_MODIFY);
-							return FileVisitResult.CONTINUE;
-						}
-					});*/
-				}
-				catch(IOException e){
-					throw new RuntimeException(e);
-				}
-				WatchKey key;
-				Path path;
-				while(true){
-					try{
-						key = SERV.take();
-						for(WatchEvent<?> event : key.pollEvents()){
-							path = (Path)event.context();
-							//
-						}
-						key.reset();
-					}
-					catch(Exception e){
-						e.printStackTrace();
-					}
-				}
-			}
-		};
-		WATCH.start();
+	private void startFileMonitor(){
+		FileAlterationMonitor monitor = new FileAlterationMonitor(5000l);
+		FileAlterationObserver obs = new FileAlterationObserver(Settings.WORKSPACE_ROOT.value);
+		obs.addListener(new FileChangeListener());
+		monitor.addObserver(obs);
+		try{
+			monitor.start();
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 
-	private String weName(WatchEvent.Kind<?> kind){
-		if(kind == StandardWatchEventKinds.ENTRY_MODIFY) return "MODIFY";
-		if(kind == StandardWatchEventKinds.ENTRY_DELETE) return "DELETE";
-		if(kind == StandardWatchEventKinds.ENTRY_CREATE) return "CREATE";
-		return "UNKNOWN";
+	public static class FileChangeListener implements FileAlterationListener {
+
+		@Override
+		public void onDirectoryChange(File file){
+			//
+		}
+
+		@Override
+		public void onDirectoryCreate(File file){
+			//
+		}
+
+		@Override
+		public void onDirectoryDelete(File file){
+			//
+		}
+
+		@Override
+		public void onFileChange(File file){
+			//
+		}
+
+		@Override
+		public void onFileCreate(File file){
+			//
+		}
+
+		@Override
+		public void onFileDelete(File file){
+			//
+		}
+
+		@Override
+		public void onStart(FileAlterationObserver obs){
+			//
+		}
+
+		@Override
+		public void onStop(FileAlterationObserver obs){
+			//
+		}
+
 	}
 
 }
