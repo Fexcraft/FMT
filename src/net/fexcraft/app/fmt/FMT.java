@@ -18,6 +18,7 @@ import com.spinyowl.legui.system.renderer.RendererProvider;
 import com.spinyowl.legui.system.renderer.nvg.NvgRenderer;
 import net.fexcraft.app.fmt.animation.Animation;
 import net.fexcraft.app.fmt.demo.ModelT1P;
+import net.fexcraft.app.fmt.env.PackDevEnv;
 import net.fexcraft.app.fmt.nui.FMTInterface;
 import net.fexcraft.app.fmt.nui.FontRenderer;
 import net.fexcraft.app.fmt.polygon.Arrows;
@@ -327,6 +328,7 @@ public class FMT {
 		}
 		Settings.save();
 		SessionHandler.save();
+		PackDevEnv.save();
 		//TODO other saves
 		RENDERER.destroy();
 		glfwDestroyWindow(window);
