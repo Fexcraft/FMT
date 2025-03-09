@@ -21,7 +21,7 @@ public class FvtmPackEntry extends FileViewEntry {
 
 	@Override
 	protected void addIcon(){
-		add(icon = new Icon(0, fe_height, 0, 0, 0, ICON_LOC.formatted("folder_fvtmpack"), () -> {}));
+		add(icon = new Icon(0, fe_height, 0, 0, 0, ICON_LOC.formatted("folder_fvtmpack"), () -> maximize()));
 	}
 
 }
