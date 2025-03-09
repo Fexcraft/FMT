@@ -18,20 +18,21 @@ import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
  */
 public class PackDevEnv extends Widget {
 
-	public static ConcurrentHashMap<Path, FileViewEntry> WATCHED = new ConcurrentHashMap<>();
 	public static PackDevEnv INSTANCE;
 	public static int def_width = 600;
 	public static int def_height = 480;
 	public static int tb_height = 30;
 	public static int fp_width = 250;
 	public static int fe_height = 30;
-	private static List<FileViewEntry> entries = new ArrayList<>();
+	private static ConcurrentLinkedQueue<FileViewEntry> entries = new ConcurrentLinkedQueue<>();
+	protected static File envroot;
 	protected ScrollablePanel filespanel;
 
 	public PackDevEnv(){
@@ -60,6 +61,7 @@ public class PackDevEnv extends Widget {
 			getContainer().setSize(vec);
 			filespanel.setSize(fp_width, getSize().y - tb_height);
 		});
+		envroot = new File(Settings.WORKSPACE_ROOT.value);;
 		fillFilesPanel();
 		startFileMonitor();
 	}
@@ -69,20 +71,12 @@ public class PackDevEnv extends Widget {
 			@Override
 			public void run(){
 				try{
-					File root = new File(Settings.WORKSPACE_ROOT.value);
-					File[] arr = root.listFiles(File::isDirectory);
-					File assets;
-					File fvtm;
+					File[] arr = envroot.listFiles();
+					File[] ret;
 					for(File file : arr){
-						fvtm = null;
-						assets = new File(file, "assets");
-						if(!assets.exists() || !assets.isDirectory()) continue;
-						for(File afol : assets.listFiles(File::isDirectory)){
-							fvtm = new File(afol, "addonpack.fvtm");
-							if(fvtm.exists()) break;
-						}
-						if(fvtm == null || !fvtm.exists()) continue;
-						addEntry(new FvtmPackEntry(INSTANCE, file, assets, fvtm));
+						ret = isPack(file);
+						if(ret != null) addEntry(new FvtmPackEntry(INSTANCE, file, ret[0], ret[1]));
+						else addEntry(new FileViewEntry(INSTANCE, file));
 					}
 				}
 				catch(Exception e){
@@ -90,6 +84,18 @@ public class PackDevEnv extends Widget {
 				}
 			}
 		}.start();
+	}
+
+	public static File[] isPack(File file){
+		File fvtm = null;
+		File assets = new File(file, "assets");
+		if(!assets.exists() || !assets.isDirectory()) return null;
+		for(File afol : assets.listFiles(File::isDirectory)){
+			fvtm = new File(afol, "addonpack.fvtm");
+			if(fvtm.exists()) break;
+		}
+		if(fvtm == null || !fvtm.exists()) return null;
+		return new File[]{ assets, fvtm };
 	}
 
 	public void addEntry(FileViewEntry entry){
@@ -124,7 +130,7 @@ public class PackDevEnv extends Widget {
 
 	private void startFileMonitor(){
 		FileAlterationMonitor monitor = new FileAlterationMonitor(5000l);
-		FileAlterationObserver obs = new FileAlterationObserver(Settings.WORKSPACE_ROOT.value);
+		FileAlterationObserver obs = new FileAlterationObserver(envroot);
 		obs.addListener(new FileChangeListener());
 		monitor.addObserver(obs);
 		try{
@@ -139,32 +145,61 @@ public class PackDevEnv extends Widget {
 
 		@Override
 		public void onDirectoryChange(File file){
-			//
+			for(FileViewEntry entry : entries){
+				if(entry.onFileEvent(file, FileEvent.FILE_CHANGE)) break;
+			}
 		}
 
 		@Override
 		public void onDirectoryCreate(File file){
-			//
+			if(file.getParentFile().equals(envroot)){
+				File[] ret = isPack(file);
+				if(ret != null) INSTANCE.addEntry(new FvtmPackEntry(INSTANCE, file, ret[0], ret[1]));
+				else INSTANCE.addEntry(new FileViewEntry(INSTANCE, file));
+			}
+			else{
+				for(FileViewEntry entry : entries){
+					if(entry.onFileEvent(file, FileEvent.DIR_CREATE)) break;
+				}
+			}
 		}
 
 		@Override
 		public void onDirectoryDelete(File file){
-			//
+			FileViewEntry rem = null;
+			for(FileViewEntry entry : entries){
+				if(file.equals(entry.file)){
+					rem = entry;
+					break;
+				}
+			}
+			if(rem != null) INSTANCE.remEntry(rem);
+			else{
+				for(FileViewEntry entry : entries){
+					if(entry.onFileEvent(file, FileEvent.DIR_DELETE)) break;
+				}
+			}
 		}
 
 		@Override
 		public void onFileChange(File file){
-			//
+			for(FileViewEntry entry : entries){
+				if(entry.onFileEvent(file, FileEvent.FILE_CHANGE)) break;
+			}
 		}
 
 		@Override
 		public void onFileCreate(File file){
-			//
+			for(FileViewEntry entry : entries){
+				if(entry.onFileEvent(file, FileEvent.FILE_CREATE)) break;
+			}
 		}
 
 		@Override
 		public void onFileDelete(File file){
-			//
+			for(FileViewEntry entry : entries){
+				if(entry.onFileEvent(file, FileEvent.FILE_DELETE)) break;
+			}
 		}
 
 		@Override
