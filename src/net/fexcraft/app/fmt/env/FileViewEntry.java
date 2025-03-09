@@ -6,6 +6,7 @@ import net.fexcraft.app.fmt.ui.Icon;
 import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.app.json.JsonValue;
+import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -30,7 +31,7 @@ public class FileViewEntry extends Component {
 	protected Icon icon;
 
 	public FileViewEntry(PackDevEnv env, File fil){
-		setSize(fp_width - 10 - fe_offset, fe_height);
+		setSize(fp_inner, fe_height);
 		setPosition(0, fe_height);
 		root = env;
 		file = fil;
@@ -68,8 +69,32 @@ public class FileViewEntry extends Component {
 	}
 
 	protected void addIcon(){
-		String loc = String.format(ICON_LOC, file.isDirectory() ? file.listFiles().length == 0 ? "folder_empty" : "folder" : "file");
+		String loc = String.format(ICON_LOC, file.isDirectory() ? file.listFiles().length == 0 ? "folder_empty" : "folder" : fromSuffix());
 		add(icon = new Icon(0, fe_height, 0, 0, 0, loc, () -> maximize()));
+	}
+
+	private Object fromSuffix(){
+		String fix = FilenameUtils.getExtension(file.getName());
+		switch(fix){
+			case "fmtb": return "file_fmtb";
+			case "fvtm": return "file_fvtmaddonpack";
+			case "json": return "file_json";
+			case "lang": return "file_lang";
+			case "vehicle":
+			case "part":
+			case "material":
+			case "block":
+			case "multiblock":
+			case "consumable":
+			case "fuel":
+			case "wire":
+			case "wiredeco":
+			case "deco":
+			case "cloth":
+			case "gauge":
+			case "container": return "file_fvtmcfg";
+			default: return "file";
+		}
 	}
 
 	public void maximize(){
@@ -85,7 +110,7 @@ public class FileViewEntry extends Component {
 				h += entry.updateDisplay(fe_offset, h);
 			}
 		}
-		setSize(fp_width - 10 - off, h);
+		setSize(500, h);
 		return h;
 	}
 
