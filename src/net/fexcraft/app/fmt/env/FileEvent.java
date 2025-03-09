@@ -5,11 +5,20 @@ package net.fexcraft.app.fmt.env;
  */
 public enum FileEvent {
 
-	DIR_CREATE,
-	DIR_DELETE,
-	DIR_CHANGE,
-	FILE_CREATE,
-	FILE_DELETE,
-	FILE_CHANGE
+	CREATE,
+	DELETE,
+	CHANGE;
+
+	public boolean create(){
+		return this == CREATE;
+	}
+
+	public boolean delete(){
+		return this == DELETE;
+	}
+
+	public boolean change(){
+		return this == CHANGE;
+	}
 
 }
