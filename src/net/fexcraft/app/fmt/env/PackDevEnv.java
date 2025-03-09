@@ -6,6 +6,7 @@ import com.spinyowl.legui.component.event.component.ChangeSizeEvent;
 import com.spinyowl.legui.style.Style;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
+import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.app.json.JsonValue;
@@ -36,6 +37,7 @@ public class PackDevEnv extends Widget {
 	private static ConcurrentLinkedQueue<FileViewEntry> entries = new ConcurrentLinkedQueue<>();
 	protected static File envroot;
 	protected ScrollablePanel filespanel;
+	protected boolean loaded;
 
 	public PackDevEnv(){
 		super(Settings.WORKSPACE_NAME.value);
@@ -92,6 +94,7 @@ public class PackDevEnv extends Widget {
 			FileViewEntry fe = INSTANCE.getEntry(entry.getKey());
 			if(fe != null) fe.load(entry.getValue().asMap());
 		}
+		INSTANCE.loaded = true;
 		INSTANCE.updateFileView();
 	}
 
@@ -159,6 +162,7 @@ public class PackDevEnv extends Widget {
 	}
 
 	protected void updateFileView(){
+		if(!loaded) return;
 		int buf = 0;
 		for(FileViewEntry entry : entries){
 			buf += entry.updateDisplay(0, buf);
@@ -194,7 +198,10 @@ public class PackDevEnv extends Widget {
 		@Override
 		public void onDirectoryChange(File file){
 			for(FileViewEntry entry : entries){
-				if(entry.onFileEvent(file, FileEvent.FILE_CHANGE)) break;
+				if(entry.onFileEvent(file, FileEvent.CHANGE)){
+					INSTANCE.updateFileView();
+					break;
+				}
 			}
 		}
 
@@ -208,7 +215,10 @@ public class PackDevEnv extends Widget {
 			}
 			else{
 				for(FileViewEntry entry : entries){
-					if(entry.onFileEvent(file, FileEvent.DIR_CREATE)) break;
+					if(entry.onFileEvent(file, FileEvent.CREATE)){
+						INSTANCE.updateFileView();
+						break;
+					}
 				}
 			}
 		}
@@ -217,7 +227,10 @@ public class PackDevEnv extends Widget {
 		public void onDirectoryDelete(File file){
 			if(!removed(file)) return;
 			for(FileViewEntry entry : entries){
-				if(entry.onFileEvent(file, FileEvent.DIR_DELETE)) break;
+				if(entry.onFileEvent(file, FileEvent.DELETE)){
+					INSTANCE.updateFileView();
+					break;
+				}
 			}
 		}
 
@@ -239,7 +252,10 @@ public class PackDevEnv extends Widget {
 		@Override
 		public void onFileChange(File file){
 			for(FileViewEntry entry : entries){
-				if(entry.onFileEvent(file, FileEvent.FILE_CHANGE)) break;
+				if(entry.onFileEvent(file, FileEvent.CHANGE)){
+					INSTANCE.updateFileView();
+					break;
+				}
 			}
 		}
 
@@ -247,7 +263,10 @@ public class PackDevEnv extends Widget {
 		public void onFileCreate(File file){
 			if(file.isHidden()) return;
 			for(FileViewEntry entry : entries){
-				if(entry.onFileEvent(file, FileEvent.FILE_CREATE)) break;
+				if(entry.onFileEvent(file, FileEvent.CREATE)){
+					INSTANCE.updateFileView();
+					break;
+				}
 			}
 		}
 
@@ -255,7 +274,10 @@ public class PackDevEnv extends Widget {
 		public void onFileDelete(File file){
 			if(removed(file)) return;
 			for(FileViewEntry entry : entries){
-				if(entry.onFileEvent(file, FileEvent.FILE_DELETE)) break;
+				if(entry.onFileEvent(file, FileEvent.DELETE)){
+					INSTANCE.updateFileView();
+					break;
+				}
 			}
 		}
 
