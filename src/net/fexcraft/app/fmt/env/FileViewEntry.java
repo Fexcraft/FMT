@@ -6,6 +6,7 @@ import net.fexcraft.app.fmt.ui.Icon;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static net.fexcraft.app.fmt.env.PackDevEnv.fe_height;
 import static net.fexcraft.app.fmt.env.PackDevEnv.fp_width;
@@ -16,6 +17,7 @@ import static net.fexcraft.app.fmt.env.PackDevEnv.fp_width;
 public class FileViewEntry extends Component {
 
 	protected static String ICON_LOC = "./resources/textures/icons/filetree/%s.png";
+	protected ConcurrentLinkedQueue<FileViewEntry> sub = new ConcurrentLinkedQueue<>();
 	protected PackDevEnv root;
 	protected Label label;
 	protected File file;
@@ -32,13 +34,18 @@ public class FileViewEntry extends Component {
 	}
 
 	protected void addIcon(){
-		String loc = String.format(ICON_LOC, file.isDirectory() && file.listFiles().length == 0 ? "folder_empty" : "folder");
+		String loc = String.format(ICON_LOC, file.isDirectory() ? file.listFiles().length == 0 ? "folder_empty" : "folder" : "file");
 		add(icon = new Icon(0, fe_height, 0, 0, 0, loc, () -> {}));
 	}
 
 	public int updateDisplay(int buf){
 		setPosition(0, buf);
 		return fe_height;
+	}
+
+	public boolean onFileEvent(File file, FileEvent event){
+		for(FileViewEntry entry : sub) if(entry.onFileEvent(file, event)) return true;
+		return false;
 	}
 
 }
