@@ -28,10 +28,12 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class PackDevEnv extends Widget {
 
 	public static PackDevEnv INSTANCE;
-	public static int def_width = 600;
+	public static int def_width = 800;
 	public static int def_height = 480;
 	public static int tb_height = 30;
-	public static int fp_width = 250;
+	public static int fp_width = 300;
+	public static int fp_scroll = 20;
+	public static int fp_inner = 500;
 	public static int fe_height = 30;
 	public static int fe_offset = 10;
 	private static ConcurrentLinkedQueue<FileViewEntry> entries = new ConcurrentLinkedQueue<>();
@@ -47,10 +49,9 @@ public class PackDevEnv extends Widget {
 		setResizable(true);
 		setPosition(40, 40);
 		filespanel = new ScrollablePanel();
-		filespanel.setPosition(0, tb_height);
-		filespanel.setSize(fp_width, def_height);
-		filespanel.getContainer().setSize(fp_width - 10, def_height);
-		filespanel.getStyle().setDisplay(Style.DisplayType.FLEX);
+		filespanel.setPosition(0, 0);
+		filespanel.setSize(fp_width, def_height - fp_scroll);
+		filespanel.getContainer().setSize(fp_inner, def_height - fp_scroll);
 		getContainer().add(filespanel);
 		getListenerMap().addListener(ChangeSizeEvent.class, event -> {
 			Vector2f vec = new Vector2f();
@@ -64,9 +65,9 @@ public class PackDevEnv extends Widget {
 				return;
 			}
 			getContainer().setSize(vec);
-			filespanel.setSize(fp_width, getSize().y - tb_height);
+			filespanel.setSize(fp_width, getSize().y - fp_scroll);
 		});
-		envroot = new File(Settings.WORKSPACE_ROOT.value);;
+		envroot = new File(Settings.WORKSPACE_ROOT.value);
 		fillFilesPanel();
 		startFileMonitor();
 		load();
@@ -167,7 +168,7 @@ public class PackDevEnv extends Widget {
 		for(FileViewEntry entry : entries){
 			buf += entry.updateDisplay(0, buf);
 		}
-		filespanel.getContainer().setSize(fp_width, buf);
+		filespanel.getContainer().setSize(fp_inner, buf);
 	}
 
 	public static void toggle(){
