@@ -2,6 +2,7 @@ package net.fexcraft.app.fmt.env;
 
 import com.spinyowl.legui.component.Component;
 import com.spinyowl.legui.component.Label;
+import com.spinyowl.legui.event.MouseClickEvent;
 import net.fexcraft.app.fmt.ui.Icon;
 import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.json.JsonMap;
@@ -11,8 +12,9 @@ import org.apache.commons.io.FilenameUtils;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
+import static com.spinyowl.legui.event.MouseClickEvent.MouseClickAction.CLICK;
+import static com.spinyowl.legui.input.Mouse.MouseButton.MOUSE_BUTTON_LEFT;
 import static net.fexcraft.app.fmt.env.PackDevEnv.*;
 
 /**
@@ -20,7 +22,7 @@ import static net.fexcraft.app.fmt.env.PackDevEnv.*;
  */
 public class FileViewEntry extends Component {
 
-	protected static String ICON_LOC = "./resources/textures/icons/filetree/%s.png";
+	public static String ICON_LOC = "./resources/textures/icons/filetree/%s.png";
 	protected ArrayList<FileViewEntry> sub = new ArrayList<>();
 	protected FileViewEntry parent;
 	protected PackDevEnv root;
@@ -36,6 +38,14 @@ public class FileViewEntry extends Component {
 		root = env;
 		file = fil;
 		add(label = new Label(file.getName(), fe_height + 5, 5, fp_width - 30, 20));
+		label.getListenerMap().addListener(MouseClickEvent.class, event -> {
+			if(event.getAction() == CLICK){
+				if(event.getButton() == MOUSE_BUTTON_LEFT){
+					if(file.isDirectory()) return;
+					root.addTab(this);
+				}
+			}
+		});
 		addIcon();
 		if(file.isDirectory()){
 			List<File> files = PackDevEnv.getSorted(file.listFiles(), true);
@@ -69,8 +79,7 @@ public class FileViewEntry extends Component {
 	}
 
 	protected void addIcon(){
-		String loc = String.format(ICON_LOC, file.isDirectory() ? file.listFiles().length == 0 ? "folder_empty" : "folder" : fromSuffix());
-		add(icon = new Icon(0, fe_height, 0, 0, 0, loc, () -> maximize()));
+		add(icon = new Icon(0, fe_height, 0, 0, 0, getIconLoc(), () -> maximize()));
 	}
 
 	private Object fromSuffix(){
@@ -169,6 +178,10 @@ public class FileViewEntry extends Component {
 		}
 		if(!files.empty()) map.add("files", files);
 		return map;
+	}
+
+	public String getIconLoc(){
+		return String.format(ICON_LOC, file.isDirectory() ? file.listFiles().length == 0 ? "folder_empty" : "folder" : fromSuffix());
 	}
 
 }
