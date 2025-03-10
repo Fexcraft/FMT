@@ -35,6 +35,7 @@ public class PackDevEnv extends Widget {
 	public static int fp_inner = 500;
 	public static int fe_height = 30;
 	public static int fe_offset = 10;
+	public static int spacer = 5;
 	private static ConcurrentLinkedQueue<FileViewEntry> entries = new ConcurrentLinkedQueue<>();
 	private static ConcurrentLinkedQueue<EnvTab> tabs = new ConcurrentLinkedQueue<>();
 	protected static File envroot;
@@ -48,6 +49,7 @@ public class PackDevEnv extends Widget {
 		INSTANCE = this;
 		setSize(def_width, def_height);
 		getContainer().setSize(getSize());
+		Settings.applyComponentTheme(getContainer());
 		setResizable(true);
 		setPosition(40, 40);
 		filespanel = new ScrollablePanel();
@@ -56,9 +58,9 @@ public class PackDevEnv extends Widget {
 		filespanel.getContainer().setSize(fp_inner, def_height - fp_scroll);
 		getContainer().add(filespanel);
 		tabspanel = new ScrollablePanel();
-		tabspanel.setPosition(fp_width, 0);
-		tabspanel.setSize(def_width - fp_width, tb_height);
-		tabspanel.getContainer().setSize(def_width - fp_width, tb_height);
+		tabspanel.setPosition(fp_width + spacer, 0);
+		tabspanel.setSize(def_width - fp_width - spacer, tb_height);
+		tabspanel.getContainer().setSize(def_width - fp_width - spacer, tb_height);
 		tabspanel.setVerticalScrollBarVisible(false);
 		getContainer().add(tabspanel);
 		getListenerMap().addListener(ChangeSizeEvent.class, event -> {
@@ -74,9 +76,10 @@ public class PackDevEnv extends Widget {
 			}
 			getContainer().setSize(vec);
 			filespanel.setSize(fp_width, getSize().y - fp_scroll);
-			tabspanel.setSize(vec.x - fp_width, tb_height);
+			tabspanel.setSize(vec.x - fp_width - spacer, tb_height);
 			if(content != null){
-				content.setSize(vec.x - fp_width, vec.y - tb_height);
+				content.setSize(vec.x - fp_width - spacer, vec.y - tb_height);
+				content.onResize();
 			}
 		});
 		envroot = new File(Settings.WORKSPACE_ROOT.value);
@@ -247,8 +250,9 @@ public class PackDevEnv extends Widget {
 		if(content != null) getContainer().remove(content);
 		content = con;
 		if(content != null){
-			content.setPosition(fp_width, tb_height);
-			content.setSize(getContainer().getSize().x - fp_width, getContainer().getSize().y - tb_height);
+			content.setPosition(fp_width + spacer, tb_height);
+			content.setSize(getContainer().getSize().x - fp_width - spacer, getContainer().getSize().y - tb_height);
+			content.onResize();
 			getContainer().add(content);
 		}
 	}
