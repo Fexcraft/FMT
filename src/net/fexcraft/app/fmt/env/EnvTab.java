@@ -3,6 +3,7 @@ package net.fexcraft.app.fmt.env;
 import com.spinyowl.legui.component.Component;
 import com.spinyowl.legui.component.Label;
 import com.spinyowl.legui.event.MouseClickEvent;
+import net.fexcraft.app.fmt.env.con.JsonContent;
 import net.fexcraft.app.fmt.ui.Icon;
 
 import static com.spinyowl.legui.event.MouseClickEvent.MouseClickAction.CLICK;
@@ -28,7 +29,7 @@ public class EnvTab extends Component {
 				entry.root.setContent(content);
 			}
 		});
-		content = null;
+		content = new JsonContent(entry.file);
 	}
 
 	public int updateDisplay(int buf){
