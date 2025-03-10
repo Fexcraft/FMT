@@ -39,6 +39,7 @@ public class PackDevEnv extends Widget {
 	private static ConcurrentLinkedQueue<FileViewEntry> entries = new ConcurrentLinkedQueue<>();
 	protected static File envroot;
 	protected ScrollablePanel filespanel;
+	protected ScrollablePanel tabspanel;
 	protected boolean loaded;
 
 	public PackDevEnv(){
@@ -53,6 +54,12 @@ public class PackDevEnv extends Widget {
 		filespanel.setSize(fp_width, def_height - fp_scroll);
 		filespanel.getContainer().setSize(fp_inner, def_height - fp_scroll);
 		getContainer().add(filespanel);
+		tabspanel = new ScrollablePanel();
+		tabspanel.setPosition(fp_width, 0);
+		tabspanel.setSize(def_width - fp_width, tb_height);
+		tabspanel.getContainer().setSize(def_width - fp_width, tb_height);
+		tabspanel.setVerticalScrollBarVisible(false);
+		getContainer().add(tabspanel);
 		getListenerMap().addListener(ChangeSizeEvent.class, event -> {
 			Vector2f vec = new Vector2f();
 			event.getNewSize().get(vec);
@@ -66,6 +73,7 @@ public class PackDevEnv extends Widget {
 			}
 			getContainer().setSize(vec);
 			filespanel.setSize(fp_width, getSize().y - fp_scroll);
+			tabspanel.setSize(vec.x - fp_width, tb_height);
 		});
 		envroot = new File(Settings.WORKSPACE_ROOT.value);
 		fillFilesPanel();
