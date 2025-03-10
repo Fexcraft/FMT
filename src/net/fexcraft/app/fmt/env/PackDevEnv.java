@@ -6,7 +6,6 @@ import com.spinyowl.legui.component.event.component.ChangeSizeEvent;
 import com.spinyowl.legui.style.Style;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
-import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.app.json.JsonValue;
@@ -30,16 +29,18 @@ public class PackDevEnv extends Widget {
 	public static PackDevEnv INSTANCE;
 	public static int def_width = 800;
 	public static int def_height = 480;
-	public static int tb_height = 30;
+	public static int tb_height = 40;
 	public static int fp_width = 300;
 	public static int fp_scroll = 20;
 	public static int fp_inner = 500;
 	public static int fe_height = 30;
 	public static int fe_offset = 10;
 	private static ConcurrentLinkedQueue<FileViewEntry> entries = new ConcurrentLinkedQueue<>();
+	private static ConcurrentLinkedQueue<EnvTab> tabs = new ConcurrentLinkedQueue<>();
 	protected static File envroot;
 	protected ScrollablePanel filespanel;
 	protected ScrollablePanel tabspanel;
+	protected EnvContent content;
 	protected boolean loaded;
 
 	public PackDevEnv(){
@@ -74,6 +75,9 @@ public class PackDevEnv extends Widget {
 			getContainer().setSize(vec);
 			filespanel.setSize(fp_width, getSize().y - fp_scroll);
 			tabspanel.setSize(vec.x - fp_width, tb_height);
+			if(content != null){
+				content.setSize(vec.x - fp_width, vec.y - tb_height);
+			}
 		});
 		envroot = new File(Settings.WORKSPACE_ROOT.value);
 		fillFilesPanel();
@@ -105,6 +109,7 @@ public class PackDevEnv extends Widget {
 		}
 		INSTANCE.loaded = true;
 		INSTANCE.updateFileView();
+		INSTANCE.updateTabView();
 	}
 
 	public static void save(){
@@ -200,6 +205,61 @@ public class PackDevEnv extends Widget {
 		catch(Exception e){
 			e.printStackTrace();
 		}
+	}
+
+	public void addTab(FileViewEntry entry){
+		EnvTab tab = getTab(entry);
+		if(tab == null){
+			tab = new EnvTab(entry);
+			tabs.add(tab);
+			tabspanel.getContainer().add(tab);
+			setContent(tab.getContent());
+		}
+		updateTabView();
+	}
+
+	public void remTab(FileViewEntry entry){
+		EnvTab tab = getTab(entry);
+		if(tab != null){
+			tabs.remove(tab);
+			tabspanel.getContainer().remove(tab);
+			if(content != null && content.tab == tab){
+				getContainer().remove(content);
+				if(tabs.isEmpty()){
+					setContent(null);
+				}
+				else{
+					setContent(tabs.peek().getContent());
+				}
+			}
+		}
+		updateTabView();
+	}
+
+	public EnvTab getTab(FileViewEntry entry){
+		for(EnvTab tab : tabs){
+			if(tab.entry == entry) return tab;
+		}
+		return null;
+	}
+
+	public void setContent(EnvContent con){
+		if(content != null) getContainer().remove(content);
+		content = con;
+		if(content != null){
+			content.setPosition(fp_width, tb_height);
+			content.setSize(getContainer().getSize().x - fp_width, getContainer().getSize().y - tb_height);
+			getContainer().add(content);
+		}
+	}
+
+	public void updateTabView(){
+		if(!loaded) return;
+		int buf = 0;
+		for(EnvTab tab : tabs){
+			buf += tab.updateDisplay(buf);
+		}
+		tabspanel.getContainer().setSize(buf, tb_height);
 	}
 
 	public static class FileChangeListener implements FileAlterationListener {
