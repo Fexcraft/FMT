@@ -9,6 +9,10 @@ public class EnvContent extends Component {
 
 	public EnvTab tab;
 
+	public EnvContent(EnvTab teb){
+		tab = teb;
+	}
+
 	public void onResize(){}
 
 }
