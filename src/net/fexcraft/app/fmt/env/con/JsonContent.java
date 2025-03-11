@@ -5,6 +5,7 @@ import com.spinyowl.legui.event.MouseClickEvent;
 import com.spinyowl.legui.input.Mouse;
 import com.spinyowl.legui.listener.MouseClickEventListener;
 import net.fexcraft.app.fmt.env.EnvContent;
+import net.fexcraft.app.fmt.env.EnvTab;
 import net.fexcraft.app.fmt.ui.Icon;
 import net.fexcraft.app.fmt.ui.fields.BoolButton;
 import net.fexcraft.app.fmt.ui.fields.ColorField;
@@ -26,7 +27,8 @@ public class JsonContent extends EnvContent {
     private int width = 1000;
     private int height;
 
-    public JsonContent(File file){
+    public JsonContent(EnvTab tab, File file){
+        super(tab);
         map = JsonHandler.parse(file);
         add(panel = new ScrollablePanel());
         fill(panel.getContainer(), map);
