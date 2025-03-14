@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.ui.trees;
 
+import com.spinyowl.legui.component.Dialog;
+import com.spinyowl.legui.component.Label;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Model;
@@ -10,6 +12,7 @@ import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.ui.GenericDialog;
 import net.fexcraft.app.fmt.ui.fields.RunButton;
+import net.fexcraft.app.fmt.ui.fields.TextField;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateEvent.*;
 import net.fexcraft.app.fmt.update.UpdateHandler;
@@ -18,6 +21,8 @@ import net.fexcraft.app.fmt.utils.AutoUVPositioner;
 import net.fexcraft.app.fmt.utils.Logging;
 
 import java.io.File;
+
+import static net.fexcraft.app.fmt.utils.Translator.translate;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -42,16 +47,27 @@ public class PivotTree extends Editor {
 	}
 
 	private void createPivot(){
-		String name = "pivot";
-		if(hasPivot(name)){
+		String pn = "pivot";
+		if(hasPivot(pn)){
 			int i = 0;
-			while(hasPivot(name + i)) i++;
-			name += i;
+			while(hasPivot(pn + i)) i++;
+			pn += i;
 		}
-		Pivot pivot = new Pivot(name);
-		FMT.MODEL.pivots().add(pivot);
-		UpdateHandler.update(new PivotAdded(FMT.MODEL, pivot));
-		GenericDialog.showOK("editor.tree.pivot", null, null, "editor.tree.pivot.added", "#" + pivot.id);
+		Dialog dialog = new Dialog(translate("pivot_add.dialog"), 420, 120);
+		dialog.getContainer().add(new Label(translate("pivot_add.dialog.name"), 10, 5, 400, 20));
+		TextField name = new TextField(pn, 10, 30, 400, 30, false);
+		dialog.getContainer().add(name);
+		dialog.getContainer().add(new RunButton("dialog.button.confirm", 310, 70, 100, 20, () -> {
+			Pivot pivot = new Pivot(name.getTextState().getText());
+			FMT.MODEL.pivots().add(pivot);
+			UpdateHandler.update(new PivotAdded(FMT.MODEL, pivot));
+			GenericDialog.showOK("editor.tree.pivot", null, null, "editor.tree.pivot.added", "#" + pivot.id);
+			dialog.close();
+		}));
+		dialog.getContainer().add(new RunButton("dialog.button.cancel", 200, 70, 100, 20, () -> dialog.close()));
+		dialog.setResizable(false);
+		dialog.show(FMT.FRAME);
+		//
 	}
 
 	private boolean hasPivot(String name){
