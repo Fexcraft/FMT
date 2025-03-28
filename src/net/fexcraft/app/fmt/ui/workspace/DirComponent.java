@@ -94,7 +94,7 @@ public class DirComponent extends Component {
 				com.getStyle().setDisplay(Style.DisplayType.NONE);
 			}
 		}
-		getSize().set(WorkspaceViewer.viewer.packspanel.getSize().x, size);
+		getSize().set(WorkspaceViewer.viewer().packspanel.getSize().x, size);
 		return (int)getSize().y;
 	}
 
