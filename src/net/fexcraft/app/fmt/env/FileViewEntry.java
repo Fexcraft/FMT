@@ -101,6 +101,7 @@ public class FileViewEntry extends Component {
 			case "deco":
 			case "cloth":
 			case "gauge":
+			case "sign":
 			case "container": return "file_fvtmcfg";
 			default: return "file";
 		}
