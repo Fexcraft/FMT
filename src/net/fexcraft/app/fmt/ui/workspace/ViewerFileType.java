@@ -100,6 +100,8 @@ public enum ViewerFileType {
 						return parentOrGrandEquals(file, "consumables") ? new Object[]{ FVTM_CONFIG, FvtmType.CONSUMABLE } : JSON;
 					case "fuel":
 						return parentOrGrandEquals(file, "fuels") ? new Object[]{ FVTM_CONFIG, FvtmType.FUEL } : JSON;
+					case "sign":
+						return parentOrGrandEquals(file, "signs") ? new Object[]{ FVTM_CONFIG, FvtmType.SIGN } : JSON;
 					default:
 						break;
 				}
