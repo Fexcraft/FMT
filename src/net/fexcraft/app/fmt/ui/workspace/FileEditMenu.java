@@ -41,12 +41,12 @@ public class FileEditMenu {
 			catch(IOException e){
 				Logging.log(e);
 			}
-			WorkspaceViewer.viewer.genView();
+			WorkspaceViewer.viewer().genView();
 			layer.hide();
 		}));
 		components.add(new MenuButton(3, "fileeditmenu.delete", () -> {
 			file.delete();
-			WorkspaceViewer.viewer.genView();
+			WorkspaceViewer.viewer().genView();
 			layer.hide();
 		}));
 		layer = new MenuLayer(null, new Vector2f((float)GGR.posx, (float)GGR.posy), components, null){
