@@ -148,7 +148,7 @@ public class EntryComponent extends Component {
 					Dialog dialog = new Dialog("Select a pack.", 440, 70);
 					SelectBox<String> box = new SelectBox<>(10, 10, 420, 30);
 					box.setVisibleCount(8);
-					for(FvtmPack pack : WorkspaceViewer.viewer.rootfolders) box.addElement(pack.id);
+					for(FvtmPack pack : WorkspaceViewer.viewer().rootfolders) box.addElement(pack.id);
 					box.addSelectBoxChangeSelectionEventListener(lis -> {
 						input[0].getTextState().setText(lis.getNewValue());
 						val.value(lis.getNewValue());
@@ -165,13 +165,13 @@ public class EntryComponent extends Component {
 					SelectBox<String> modbox = new SelectBox<>(10, 50, 420, 30);
 					packbox.setVisibleCount(8);
 					packbox.setSelected("(no pack selected)", true);
-					for(FvtmPack pack : WorkspaceViewer.viewer.rootfolders){
+					for(FvtmPack pack : WorkspaceViewer.viewer().rootfolders){
 						packbox.addElement(pack.id);
 					}
 					packbox.addSelectBoxChangeSelectionEventListener(lis -> {
 						while(modbox.getElements().size() > 0) modbox.removeElement(0);
 						modbox.addElement("(no model)");
-						for(FvtmPack pack : WorkspaceViewer.viewer.rootfolders){
+						for(FvtmPack pack : WorkspaceViewer.viewer().rootfolders){
 							if(!pack.id.equals(lis.getNewValue())) continue;
 							for(DirComponent com : pack.models){
 								String path = com.file.getPath().replace("\\", "/");
@@ -209,13 +209,13 @@ public class EntryComponent extends Component {
 					SelectBox<String> packbox = new SelectBox<>(10, 10, 420, 30);
 					packbox.setVisibleCount(8);
 					packbox.setSelected("(no pack selected)", true);
-					for(FvtmPack pack : WorkspaceViewer.viewer.rootfolders){
+					for(FvtmPack pack : WorkspaceViewer.viewer().rootfolders){
 						packbox.addElement(pack.id);
 					}
 					packbox.addSelectBoxChangeSelectionEventListener(lis -> {
 						while(texbox.getElements().size() > 0) texbox.removeElement(0);
 						texbox.addElement("(no texture)");
-						for(FvtmPack pack : WorkspaceViewer.viewer.rootfolders){
+						for(FvtmPack pack : WorkspaceViewer.viewer().rootfolders){
 							if(!pack.id.equals(lis.getNewValue())) continue;
 							for(DirComponent com : pack.textures){
 								String path = com.file.getPath().replace("\\", "/");
