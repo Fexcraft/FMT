@@ -37,7 +37,7 @@ import java.util.function.Consumer;
 public class WorkspaceViewer extends Widget {
 
 	public static final String[] types = new String[]{
-		"Vehicle", "Part", "Material", "Consumable", "Fuel", "Block", "Wire", "Deco", "RailGauge", "Cloth"
+		"Vehicle", "Part", "Material", "Consumable", "Fuel", "Block", "Wire", "Deco", "RailGauge", "Cloth", "Sign"
 	};
 	public static WorkspaceViewer viewer;
 	public static final int ROWHEIGHT = 30;
@@ -76,11 +76,11 @@ public class WorkspaceViewer extends Widget {
 		});
 		Settings.applyBorderless(packspanel);
 		getContainer().add(packspanel);
-		getContainer().add(refresh = new RunButton("Refresh", getSize().x - 110, 5, 100, 20, () -> genView()));
+		getContainer().add(refresh = new RunButton("Refresh", getSize().x - 110, 5, 100, 20, () -> genView(false)));
 		//
 		folder = new File(Settings.WORKSPACE_ROOT.value);
 		if(!folder.exists()) folder.mkdirs();
-		genView();
+		genView(true);
 	}
 
 	public void selectContentTypeDialog(Consumer<String> cons){
@@ -188,27 +188,30 @@ public class WorkspaceViewer extends Widget {
 	}
 
 	public void genView(){
-		new Thread("FolderViewGenerator"){
-			@Override
-			public void run(){
-				Logging.log("Reloading Workspace");
-				refresh.setEnabled(false);
-				refresh.getTextState().setText("reloading...");
-				packspanel.getContainer().removeAll(rootfolders);
-				//infopanel.getContainer().clearChildComponents();
-				rootfolders.clear();
-				findPacks();
-				//addFolder(folder, null, 0);
-				resize();
-				packspanel.getVerticalScrollBar().setScrollStep(0f);
-				refresh.setEnabled(true);
-				refresh.getTextState().setText("Refresh");
-			}
-		}.start();
+		genView(false);
+	}
+
+	private void genView(boolean initial){
+		if(initial) findPacks();
+		new Thread(() -> {
+			Logging.log("Reloading Workspace");
+			refresh.setEnabled(false);
+			refresh.getTextState().setText("reloading...");
+			//packspanel.getContainer().removeAll(rootfolders);
+			//infopanel.getContainer().clearChildComponents();
+			//rootfolders.clear();
+			findPacks();
+			//addFolder(folder, null, 0);
+			resize();
+			packspanel.getVerticalScrollBar().setScrollStep(0f);
+			refresh.setEnabled(true);
+			refresh.getTextState().setText("Refresh");
+		}, "FolderViewGenerator").start();
 	}
 
 	private void findPacks(){
 		File assets;
+		ArrayList<FvtmPack> npacks = new ArrayList<>();
 		for(File fold : folder.listFiles()){
 			if(!fold.isDirectory()) continue;
 			if(!(assets = new File(fold, "assets")).exists()) continue;
@@ -220,8 +223,7 @@ public class WorkspaceViewer extends Widget {
 			}
 			if(pack == null) continue;
 			Logging.log("Found pack with id '" + pack.id + "'.");
-			rootfolders.add(pack);
-			packspanel.getContainer().add(pack);
+			npacks.add(pack);
 			for(File file : fold.listFiles()){
 				addFolder(file, pack, pack, 0);
 			}
@@ -231,6 +233,12 @@ public class WorkspaceViewer extends Widget {
 				}
 			}
 			Logging.log("  textures: " + pack.textures.size());
+		}
+		rootfolders.clear();
+		packspanel.getContainer().removeAll(rootfolders);
+		for(FvtmPack pack : npacks){
+			rootfolders.add(pack);
+			packspanel.getContainer().add(pack);
 		}
 	}
 
@@ -282,6 +290,14 @@ public class WorkspaceViewer extends Widget {
 			scrollableheight += com.fullsize();
 		}
 		packspanel.getContainer().setSize(packspanel.getSize().x, scrollableheight < height ? height : scrollableheight);
+	}
+
+	public static WorkspaceViewer viewer(){
+		if(viewer == null){
+			viewer = new WorkspaceViewer();
+			FMT.FRAME.getContainer().add(viewer);
+		}
+		return viewer;
 	}
 
 }
