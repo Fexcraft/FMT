@@ -132,6 +132,8 @@ public class FVTMConfigEditor extends Widget {
 				return null;
 			case "deco":
 				return DecorationConfigReference.INSTANCE;
+			case "sign":
+				return SignConfigReference.INSTANCE;
 			case "railgauge":
 				return null;
 			case "cloth":
