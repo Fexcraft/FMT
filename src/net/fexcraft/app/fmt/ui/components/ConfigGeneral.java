@@ -8,23 +8,17 @@ import com.spinyowl.legui.component.Widget;
 import com.spinyowl.legui.style.border.SimpleLineBorder;
 import com.spinyowl.legui.style.color.ColorConstants;
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.ui.FileChooser;
+import net.fexcraft.app.fmt.ui.GenericDialog;
 import net.fexcraft.app.fmt.ui.JsonEditor;
-import net.fexcraft.app.fmt.ui.PosCopyIcon;
-import net.fexcraft.app.fmt.ui.fields.NumberField;
 import net.fexcraft.app.fmt.ui.fields.RunButton;
 import net.fexcraft.app.fmt.ui.fields.TextField;
+import net.fexcraft.app.fmt.ui.workspace.DirComponent;
 import net.fexcraft.app.fmt.ui.workspace.WorkspaceViewer;
-import net.fexcraft.app.fmt.update.UpdateEvent.HelperChanged;
-import net.fexcraft.app.fmt.update.UpdateEvent.HelperRenamed;
-import net.fexcraft.app.fmt.update.UpdateEvent.HelperSelected;
-import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.utils.ByteUtils;
 import net.fexcraft.app.fmt.utils.Logging;
-import net.fexcraft.app.fmt.utils.PreviewHandler;
 import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.app.fmt.utils.fvtm.LangCache;
 import net.fexcraft.app.json.JsonArray;
@@ -39,6 +33,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,10 +47,11 @@ public class ConfigGeneral extends EditorComponent {
 	protected static final String genid = "config.general";
 
 	public ConfigGeneral(){
-		super(genid, 340, false, true);
+		super(genid, 360, false, true);
 		add(new Label(translate(LANG_PREFIX + genid + ".pack_utils"), L5, row(1), LW, HEIGHT));
 		add(new RunButton("editor.component.config.general.pack_new", L5, row(1), LW, HEIGHT, ConfigGeneral::createNewPack));
 		add(new RunButton("editor.component.config.general.gen_asset_dirs", L5, row(1), LW, HEIGHT, ConfigGeneral::genAssetDirs));
+		add(new RunButton("editor.component.config.general.gen_icons", L5, row(1), LW, HEIGHT, ConfigGeneral::genIconsInPack));
 		add(new RunButton("editor.component.config.general.content_new", L5, row(1), LW, HEIGHT, ConfigGeneral::createNewContent));
 		add(new RunButton("editor.component.config.general.icon_from_view", L5, row(1), LW, HEIGHT, ConfigGeneral::createNewIcon));
 		add(new Label(translate(LANG_PREFIX + genid + ".file_utils"), L5, row(2), LW, HEIGHT));
@@ -147,14 +143,14 @@ public class ConfigGeneral extends EditorComponent {
 			LangCache.genLangFile(new File(pr, "/assets/" + pid.getTextState().getText() + "/lang/en_us.lang"));
 			//
 			dialog.close();
-			WorkspaceViewer.viewer.genView();
+			WorkspaceViewer.viewer().genView();
 		}));
 		dialog.setResizable(false);
 		dialog.show(FMT.FRAME);
 	}
 
 	public static void genAssetDirs(){
-		WorkspaceViewer.viewer.selectPackDialog(pack -> {
+		WorkspaceViewer.viewer().selectPackDialog(pack -> {
 			Dialog dialog = new Dialog("Please select Config Types.", 320, 270);
 			HashMap<String, CheckBox> map = new HashMap<>();
 			map.put("vehicles", new CheckBox("vehicles", 10, 10, 300, 20));
@@ -167,6 +163,7 @@ public class ConfigGeneral extends EditorComponent {
 			map.put("decos", new CheckBox("decos", 10, 150, 300, 20));
 			map.put("railgauges", new CheckBox("rail gauges", 10, 170, 300, 20));
 			map.put("clothes", new CheckBox("clothes", 10, 190, 300, 20));
+			map.put("signs", new CheckBox("signs", 10, 190, 300, 20));
 			for(CheckBox box : map.values()){
 				box.getStyle().setPadding(0, 0, 0, 5);
 			}
@@ -183,16 +180,60 @@ public class ConfigGeneral extends EditorComponent {
 					fl = new File(pack.file, "/assets/" + pack.id + "/models/" + entry.getKey().substring(0, entry.getKey().length() - 1));
 					fl.mkdirs();
 				}
-				WorkspaceViewer.viewer.genView();
+				WorkspaceViewer.viewer().genView();
 			}));
 			dialog.setResizable(false);
 			dialog.show(FMT.FRAME);
 		});
 	}
 
+	public static void genIconsInPack(){
+		WorkspaceViewer.viewer().selectPackDialog(pack -> {
+			for(ArrayList<DirComponent> list : pack.content.values()){
+				for(DirComponent dir : list){
+					JsonMap map = JsonHandler.parse(dir.file);
+					String cid = map.getString("ID", map.getString("RegistryName", null));
+					if(cid == null) return;
+					if(cid.contains(":")) cid = cid.split(":")[1];
+					pack.lang.fill(cid, map.getString("Name", "Unnamed Content"));
+					File file = new File(pack.file, "/assets/" + pack.id + "/models/item/" + cid + ".json");
+					if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
+					if(!file.exists()){
+						map = new JsonMap();
+						map.add("parent", "item/generated");
+						map.add("textures", new JsonMap("layer0", pack.id + ":item/" + cid));
+						JsonHandler.print(file, map, JsonHandler.PrintOption.DEFAULT);
+					}
+					file = new File(pack.file, "/assets/" + pack.id + "/items/" + cid + ".json");
+					if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
+					if(!file.exists()){
+						map = new JsonMap();
+						JsonMap mod = new JsonMap();
+						mod.add("type", "minecraft:model");
+						mod.add("model", pack.id + ":item/" + cid);
+						map.add("model", mod);
+						JsonHandler.print(file, map, JsonHandler.PrintOption.DEFAULT);
+					}
+					file = new File(pack.file, "/assets/" + pack.id + "/textures/item/" + cid + ".png");
+					if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
+					if(!file.exists()){
+						try{
+							Files.copy(new File("./resources/textures/icons/configeditor/rename.png"), file);
+						}
+						catch(Exception e){
+							Logging.log(e);
+						}
+					}
+				}
+			}
+			WorkspaceViewer.viewer().genView();
+			GenericDialog.showOK(null, null, null, "editor.component.config.general.gen_icons.complete");
+		});
+	}
+
 	public static void createNewContent(){
-		WorkspaceViewer.viewer.selectPackDialog(pack -> {
-			WorkspaceViewer.viewer.selectContentTypeDialog(type -> {
+		WorkspaceViewer.viewer().selectPackDialog(pack -> {
+			WorkspaceViewer.viewer().selectContentTypeDialog(type -> {
 				String typeL = type.toLowerCase();
 				String typeS = typeL + (type.endsWith("th") ? "es" : "s");
 				Dialog dialog = new Dialog(type + " Creation Settings", 420, 190);
@@ -226,8 +267,16 @@ public class ConfigGeneral extends EditorComponent {
 					map.add("textures", new JsonMap("layer0", pack.id + ":item/" + pkid));
 					pack.lang.fill(pkid, name.getTextState().getText());
 					JsonHandler.print(file, map, JsonHandler.PrintOption.DEFAULT);
+					file = new File(pack.file, "/assets/" + pack.id + "/items/" + pkid + ".json");
+					if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
+					map = new JsonMap();
+					JsonMap mod = new JsonMap();
+					mod.add("type", "minecraft:model");
+					mod.add("model", pack.id + ":item/" + pkid);
+					map.add("model", mod);
+					JsonHandler.print(file, map, JsonHandler.PrintOption.DEFAULT);
 					dialog.close();
-					WorkspaceViewer.viewer.genView();
+					WorkspaceViewer.viewer().genView();
 				}));
 				dialog.setResizable(false);
 				dialog.show(FMT.FRAME);
@@ -236,7 +285,7 @@ public class ConfigGeneral extends EditorComponent {
 	}
 
 	public static void createNewIcon(){
-		WorkspaceViewer.viewer.selectPackDialog(pack -> {
+		WorkspaceViewer.viewer().selectPackDialog(pack -> {
 			Widget widget = new Widget(FMT.WIDTH / 2f - 128, FMT.HEIGHT / 2f - 149, 256, 296);
 			widget.getTitleTextState().setText("Center the model inside.");
 			widget.getStyle().setBorder(new SimpleLineBorder(FMT.rgba(0xffff00), 2));
@@ -267,7 +316,7 @@ public class ConfigGeneral extends EditorComponent {
 					}
 					try{
 						ImageIO.write(img, "PNG", file);
-						WorkspaceViewer.viewer.genView();
+						WorkspaceViewer.viewer().genView();
 					}
 					catch(IOException e){
 						Logging.log(e);
