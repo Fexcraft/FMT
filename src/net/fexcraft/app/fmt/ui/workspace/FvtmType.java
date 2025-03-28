@@ -14,6 +14,7 @@ public enum FvtmType {
 	CLOTH,
 	FUEL,
 	WIRE,
-	WIRE_DECO
+	WIRE_DECO,
+	SIGN
 
 }
