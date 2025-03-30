@@ -259,7 +259,32 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
     		}
 		}
 	}
-	
+
+	@Override
+	public void push(){
+
+	}
+
+	@Override
+	public void pop(){
+
+	}
+
+	@Override
+	public void translate(double x, double y, double z){
+
+	}
+
+	@Override
+	public void rotate(float deg, int x, int y, int z){
+
+	}
+
+	@Override
+	public void scale(double x, double y, double z){
+
+	}
+
 	public static enum DrawMode {
 		
 		TEXTURED, UNTEXTURED, RGBCOLOR, PICKER, PICKER_FACE, SELLINES, LINES, UI, UI_LINES, UI_TEXT;
