@@ -93,3 +93,4 @@ scripts/test*.script
 test/*
 /tests
 pack_env.fmt
+/workspace
