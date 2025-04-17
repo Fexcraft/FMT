@@ -24,6 +24,7 @@ import net.fexcraft.app.fmt.utils.fvtm.LangCache;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
+import net.fexcraft.lib.common.utils.Formatter;
 import org.lwjgl.opengl.GL11;
 
 import javax.imageio.ImageIO;
@@ -33,9 +34,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static net.fexcraft.app.fmt.utils.Translator.translate;
 
@@ -47,7 +46,7 @@ public class ConfigGeneral extends EditorComponent {
 	protected static final String genid = "config.general";
 
 	public ConfigGeneral(){
-		super(genid, 360, false, true);
+		super(genid, 400, false, true);
 		add(new Label(translate(LANG_PREFIX + genid + ".pack_utils"), L5, row(1), LW, HEIGHT));
 		add(new RunButton("editor.component.config.general.pack_new", L5, row(1), LW, HEIGHT, ConfigGeneral::createNewPack));
 		add(new RunButton("editor.component.config.general.gen_asset_dirs", L5, row(1), LW, HEIGHT, ConfigGeneral::genAssetDirs));
@@ -56,6 +55,7 @@ public class ConfigGeneral extends EditorComponent {
 		add(new RunButton("editor.component.config.general.icon_from_view", L5, row(1), LW, HEIGHT, ConfigGeneral::createNewIcon));
 		add(new Label(translate(LANG_PREFIX + genid + ".file_utils"), L5, row(2), LW, HEIGHT));
 		add(new RunButton("editor.component.config.general.open_json", L5, row(1), LW, HEIGHT, ConfigGeneral::openJson));
+		add(new RunButton("editor.component.config.general.mirror_lang", L5, row(1), LW, HEIGHT, ConfigGeneral::mirrorLang));
 		add(new Label(translate(LANG_PREFIX + genid + ".run_utils"), L5, row(2), LW, HEIGHT));
 		add(new RunButton("Run 1.12", L5, row(1), LW, HEIGHT, () -> WorkspaceViewer.run(true)));
 		add(new RunButton("Run 1.2+", L5, row(1), LW, HEIGHT, () -> WorkspaceViewer.run(false)));
@@ -336,6 +336,43 @@ public class ConfigGeneral extends EditorComponent {
 		FileChooser.chooseFile("Choose a JSON file.", Settings.WORKSPACE_ROOT.value, FileChooser.TYPE_JSON, false, file -> {
 			try{
 				if(file != null && file.exists()) new JsonEditor(file);
+			}
+			catch(Exception e){
+				e.printStackTrace();
+			}
+		});
+	}
+
+	private static void mirrorLang(){
+		FileChooser.chooseFile("Choose a lang file.", Settings.WORKSPACE_ROOT.value, FileChooser.TYPE_ANY, false, file -> {
+			try{
+				LinkedHashMap<String, LangCache.LangEntry> entries = new LinkedHashMap<>();
+				Scanner scanner = new Scanner(file);
+				String line;
+				while(scanner.hasNextLine()){
+					line = scanner.nextLine();
+					if(!line.contains("=")){
+						entries.put(line, new LangCache.LangEntry(null, false));
+						continue;
+					}
+					String l = line.substring(0, line.indexOf("="));
+					if(l.startsWith("item.")){
+						l = l.substring(5, l.length() - 5).replace(":", ".");
+						entries.put(l, new LangCache.LangEntry(line.substring(line.indexOf("=") + 1), true));
+					}
+					else{
+						entries.put(l, new LangCache.LangEntry(line.substring(l.length() + 1), false));
+					}
+				}
+				scanner.close();
+				JsonMap map = new JsonMap();
+				for(Map.Entry<String, LangCache.LangEntry> entry : entries.entrySet()){
+					if(entry.getValue().item()) map.add("item." + entry.getKey(), Formatter.format(entry.getValue().name()));
+					else if(entry.getValue().name() != null) map.add(entry.getKey(), Formatter.format(entry.getValue().name()));
+				}
+				File json = new File(file.getParentFile(), file.getName().substring(0, file.getName().indexOf(".")) + ".json");
+				if(json.exists()) Files.copy(json, new File(json.getParentFile(), json.getName() + ".bkp"));
+				JsonHandler.print(json, map, JsonHandler.PrintOption.SPACED);
 			}
 			catch(Exception e){
 				e.printStackTrace();
