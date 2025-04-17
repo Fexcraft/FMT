@@ -57,6 +57,10 @@ public class FileChooser {
     		if(save) string = TinyFileDialogs.tinyfd_saveFileDialog(title, root, buffer, type.name);
     		else string = TinyFileDialogs.tinyfd_openFileDialog(title, root, buffer, type.name, false);
     		if(string != null && string.trim().length() > 0){
+				if(type == TYPE_ANY){
+					task.accept(new File(string));
+					return;
+				}
     			boolean ends = false;
     			for(int i = 0; i < type.extensions.length; i++){
     				if(string.endsWith(type.extensions[i].replace("*", ""))){
