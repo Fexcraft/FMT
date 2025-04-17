@@ -114,6 +114,6 @@ public class LangCache {
 		}
 	}
 
-	private record LangEntry(String name, boolean item){}
+	public record LangEntry(String name, boolean item){}
 
 }
