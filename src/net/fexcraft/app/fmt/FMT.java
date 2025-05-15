@@ -89,8 +89,6 @@ public class FMT {
 	//
 	public static final FMT INSTANCE = new FMT();
 	public static int WIDTH, HEIGHT, EXIT_CODE = 0;
-	public static int FRAME_WIDTH;
-	public static int FRAME_HEIGHT;
 	public static Timer BACKUP_TIMER, TEXUP_TIMER;
 	private static String title;
 	//
@@ -339,9 +337,9 @@ public class FMT {
 	private void resize(){
 		int width = (int)(CONTEXT.getFramebufferSize().x * (1f / CONTEXT.getScale().x));
 		int height = (int)(CONTEXT.getFramebufferSize().y * (1f / CONTEXT.getScale().y));
-		FRAME_WIDTH = CONTEXT.getFramebufferSize().x;
-		FRAME_HEIGHT = CONTEXT.getFramebufferSize().y;
-		log("Resizing Window to " + width + "/" + height + " (" + FRAME_WIDTH + "/" + FRAME_HEIGHT + " scaled at " + (1f / CONTEXT.getScale().x) + "/" + (1f / CONTEXT.getScale().y) + ").");
+		WIDTH = CONTEXT.getFramebufferSize().x;
+		HEIGHT = CONTEXT.getFramebufferSize().y;
+		log("Resizing Window to " + width + "/" + height + " (" + WIDTH + "/" + HEIGHT + " scaled at " + (1f / CONTEXT.getScale().x) + "/" + (1f / CONTEXT.getScale().y) + ").");
 		HEIGHT = height;
 		TOOLBAR.setSize(WIDTH = width, TOOLBAR.getSize().y);
 		Editor.EDITORS.forEach(editor -> editor.align());
@@ -371,7 +369,7 @@ public class FMT {
 
 	private void render(int vao, FltElm alpha){
 		//glClearColor(0.5f, 0.5f, 0.5f, 0.01f);
-		glViewport(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
+		glViewport(0, 0, WIDTH, HEIGHT);
 		CONTEXT.updateGlfwWindow();
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_BLEND);
