@@ -4,11 +4,13 @@ import net.fexcraft.app.fmt.polygon.GLObject.GPUData;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.utils.ImageHandler;
 import net.fexcraft.app.fmt.utils.ShaderManager;
+import net.fexcraft.lib.common.math.V3D;
 import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.frl.ColoredVertex;
 import net.fexcraft.lib.frl.Polygon;
 import net.fexcraft.lib.frl.Polyhedron;
 import net.fexcraft.lib.frl.Vertex;
+import net.fexcraft.mod.uni.IDL;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -282,6 +284,21 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 
 	@Override
 	public void scale(double x, double y, double z){
+
+	}
+
+	@Override
+	public void bind(IDL tex){
+
+	}
+
+	@Override
+	public void color(int rgb){
+
+	}
+
+	@Override
+	public void light(V3D pos){
 
 	}
 
