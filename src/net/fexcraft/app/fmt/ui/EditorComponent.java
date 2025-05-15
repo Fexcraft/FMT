@@ -23,6 +23,7 @@ public class EditorComponent extends Component {
 	public static final float L5 = 5f;
 	public static final float LW = Editor.CWIDTH - (L5 * 2);
 	public static final float LWI = LW - 20;
+	public static final float LWS = LW - 10;
 	public static final float LPI = Editor.CWIDTH - 24;
 	public static final int HEIGHT = 24;
 	//
@@ -32,7 +33,10 @@ public class EditorComponent extends Component {
 	protected boolean minimized, unpinned, tree;
 	protected Label label;
 	protected Icon size;
-	protected int uid, fullheight, row;
+	protected int uid;
+	protected int fullheight;
+	protected int minheight = HEIGHT;
+	protected int row;
 	public Editor editor;
 	protected String id;
 	public int index;
@@ -53,7 +57,7 @@ public class EditorComponent extends Component {
 
 	public void minimize(Boolean bool){
 		this.minimized = bool == null ? !minimized : bool;
-		setSize(getSize().x, minimized ? PolygonEditor.shrink(this) ? 0 : HEIGHT : fullheight);
+		setSize(getSize().x, minimized ? PolygonEditor.shrink(this) ? 0 : minheight : fullheight);
 		if(editor != null) editor.alignComponents();
 	}
 
