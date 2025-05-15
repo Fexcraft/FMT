@@ -1,13 +1,19 @@
 package net.fexcraft.app.fmt.ui.trees;
 
 import static net.fexcraft.app.fmt.settings.Settings.*;
+import static net.fexcraft.app.fmt.update.UpdateHandler.update;
+import static net.fexcraft.app.fmt.utils.Translator.translate;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
-import net.fexcraft.app.fmt.polygon.Pivot;
+import com.spinyowl.legui.component.Panel;
+import com.spinyowl.legui.component.SelectBox;
+import net.fexcraft.app.fmt.polygon.*;
 import net.fexcraft.app.fmt.texture.TextureManager;
+import net.fexcraft.app.fmt.ui.components.GroupGeneral;
 import net.fexcraft.app.fmt.ui.fields.RunButton;
+import net.fexcraft.app.fmt.ui.fields.TextField;
 import net.fexcraft.app.fmt.update.UpdateEvent.*;
 import com.spinyowl.legui.component.Label;
 import com.spinyowl.legui.event.CursorEnterEvent;
@@ -20,8 +26,6 @@ import com.spinyowl.legui.style.Style.DisplayType;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.update.UpdateHandler;
-import net.fexcraft.app.fmt.polygon.Group;
-import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.ui.EditorComponent;
@@ -34,6 +38,7 @@ import com.spinyowl.legui.style.color.ColorConstants;
 public class GroupComponent extends EditorComponent {
 
 	private static final int PH = 20, PHS = 21;
+	private static final int EMS = 120;
 	private ArrayList<PolygonLabel> polygons = new ArrayList<>();
 	private PivotComponent root;
 	protected Icon visible;
@@ -42,6 +47,11 @@ public class GroupComponent extends EditorComponent {
 	protected Icon sort_up;
 	protected Icon sort_dw;
 	private Group group;
+	//
+	private boolean editmode;
+	private Panel editpanel;
+	private TextField name;
+	private SelectBox<String> pivots = new SelectBox<>();
 	
 	public GroupComponent(Group group){
 		super(group.id, group.isEmpty() ? HEIGHT : HEIGHT + group.size() * PH + 4, true, true);
@@ -49,7 +59,7 @@ public class GroupComponent extends EditorComponent {
 		this.genFullheight();
 		add(visible = new Icon((byte)2, "./resources/textures/icons/component/visible.png", () -> pin()));
 		add(remove = new Icon((byte)3, "./resources/textures/icons/component/remove.png", () -> FMT.MODEL.remGroup(group)));
-		add(edit = new Icon((byte)4, "./resources/textures/icons/component/edit.png", () -> Editor.show("group_editor")));
+		add(edit = new Icon((byte)4, "./resources/textures/icons/component/edit.png", () -> toggleEditMode()));
 		add(sort_dw = new Icon((byte)5, "./resources/textures/icons/component/move_down.png", () -> FMT.MODEL.swap(group, 1, true)));
 		add(sort_up = new Icon((byte)6, "./resources/textures/icons/component/move_up.png", () -> FMT.MODEL.swap(group, -1, true)));
 		updcom.add(GroupRenamed.class, event -> { if(event.group() == group) label.getTextState().setText(group.id); });
@@ -106,6 +116,7 @@ public class GroupComponent extends EditorComponent {
 		remove.getListenerMap().addListener(CursorEnterEvent.class, clis);
 		visible.getListenerMap().addListener(CursorEnterEvent.class, clis);
 		edit.getListenerMap().addListener(CursorEnterEvent.class, clis);
+		//
 		UIUtils.hide(remove, visible, edit);
 		if(!PolygonTree.SORT_MODE) UIUtils.hide(sort_up, sort_dw);
 	}
@@ -115,8 +126,19 @@ public class GroupComponent extends EditorComponent {
 		root = picom;
 	}
 
+	private void toggleEditMode(){
+		editmode = !editmode;
+		if(editmode && editpanel == null){
+			initEditPanel();
+		}
+		UIUtils.show(editmode, editpanel);
+		resize();
+		editor.alignComponents();
+	}
+
 	private int genFullheight(){
-		return fullheight = group.isEmpty() ? HEIGHT : HEIGHT + group.size() * PHS + 4;
+		minheight = editmode ? HEIGHT + EMS : HEIGHT;
+		return fullheight = (group.isEmpty() ? HEIGHT : HEIGHT + group.size() * PHS + 4) + (editmode ? EMS : 0);
 	}
 
 	@Override
@@ -145,8 +167,9 @@ public class GroupComponent extends EditorComponent {
 	}
 
 	protected void resort(){
+		int off = editmode ? EMS : 0;
 		for(int i = 0; i < polygons.size(); i++){
-			polygons.get(i).sortin(i);
+			polygons.get(i).sortin(i, off);
 		}
 	}
 
@@ -269,8 +292,8 @@ public class GroupComponent extends EditorComponent {
 			return this;
 		}
 		
-		public PolygonLabel sortin(int index){
-			setPosition(5, HEIGHT + 2 + (index * PHS));
+		public PolygonLabel sortin(int index, int offset){
+			setPosition(5, HEIGHT + 2 + (index * PHS) + offset);
 			return this;
 		}
 		
@@ -279,6 +302,63 @@ public class GroupComponent extends EditorComponent {
 	public void update_color(){
 		label.getStyle().setTextColor(group.selected ? ColorConstants.darkGray() : ColorConstants.lightGray());
 		this.getStyle().getBackground().setColor(FMT.rgba((group.selected ? group.visible ? GROUP_SELECTED : GROUP_INV_SEL : group.visible ? GROUP_NORMAL : GROUP_INVISIBLE).value));
+	}
+
+	private void initEditPanel(){
+		editpanel = new Panel(5, HEIGHT + 5, LW, EMS - 10);
+		editpanel.add(new Label(translate(LANG_PREFIX + "group.general.name/id"), L5, row(0), LWS, HEIGHT));
+		editpanel.add(name = new TextField(group.id, L5, row(1), LWS - 30, HEIGHT, false));
+		editpanel.add(new RunButton(">>", L5 + LWS - 25, row(0), HEIGHT, HEIGHT, this::rename));
+		updcom.add(GroupRenamed.class, e -> {
+			if(e.group().equals(group)) label.getTextState().setText(group.id);
+		});
+		//
+		editpanel.add(new Label(translate(LANG_PREFIX + "group.general.pivot"), L5, row(1), LWS, HEIGHT));
+		editpanel.add(pivots);
+		pivots.setPosition(L5, row(1));
+		pivots.setSize(LWS, HEIGHT);
+		updcom.add(ModelLoad.class, event -> refreshPivotEntries());
+		updcom.add(PivotAdded.class, event -> refreshPivotEntries());
+		updcom.add(PivotRenamed.class, event -> refreshPivotEntries());
+		updcom.add(PivotRemoved.class, event -> refreshPivotEntries());
+		pivots.addSelectBoxChangeSelectionEventListener(lis -> {
+			ArrayList<Group> groups = FMT.MODEL.selected_groups();
+			if(!groups.contains(group)){
+				if(groups.size() > 0) return;
+				groups.add(0, group);
+			}
+			Pivot pivot = FMT.MODEL.getP(lis.getNewValue());
+			for(Group gr : groups){
+				Pivot old = FMT.MODEL.getP(gr.pivot);
+				if(old != null) old.groups.remove(gr);
+				gr.pivot = pivot.id;
+				pivot.groups.add(gr);
+				UpdateHandler.update(new PivotChanged(gr, pivot));
+			}
+		});
+		pivots.setVisibleCount(6);
+		refreshPivotEntries();
+		//
+		add(editpanel);
+	}
+
+	private void rename(){
+		String string = name.getTextState().getText();
+		ArrayList<Group> groups = FMT.MODEL.selected_groups();
+		if(groups.size() > 1 && groups.contains(group)){
+			for(int i = 0; i < groups.size(); i++){
+				groups.get(i).reid(string + String.format(GROUP_SUFFIX.value, i));
+			}
+		}
+		else group.reid(string);
+	}
+
+	private void refreshPivotEntries(){
+		while(pivots.getElements().size() > 0) pivots.removeElement(0);
+		for(Pivot pivot : FMT.MODEL.pivots()){
+			pivots.addElement(pivot.id);
+		}
+		pivots.setSelected(group.pivot, true);
 	}
 
 }
