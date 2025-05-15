@@ -150,7 +150,7 @@ public class ImageHandler {
 	}
 
 	public static BufferedImage displayToImage(){
-		int width = FMT.FRAME_WIDTH, height = FMT.FRAME_HEIGHT;
+		int width = FMT.WIDTH, height = FMT.HEIGHT;
 		ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * 4);
 		GL11.glReadPixels(0, 0, width, height, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
 		//
