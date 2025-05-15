@@ -379,8 +379,8 @@ public class Settings {
 	}
 	
 	public static void apply(FMT fmt){
-		FMT.WIDTH = FMT.FRAME_WIDTH = WINDOW_WIDTH.value;
-		FMT.HEIGHT = FMT.FRAME_HEIGHT = WINDOW_HEIGHT.value;
+		FMT.WIDTH = WINDOW_WIDTH.value;
+		FMT.HEIGHT = WINDOW_HEIGHT.value;
 		TexturedPolygon.TRIANGULATED_QUADS = TRIANGULATION_Q.value;
 		refresh();
 	}
