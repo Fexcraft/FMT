@@ -344,7 +344,7 @@ public class FMT {
 		log("Resizing Window to " + width + "/" + height + " (" + FRAME_WIDTH + "/" + FRAME_HEIGHT + " scaled at " + (1f / CONTEXT.getScale().x) + "/" + (1f / CONTEXT.getScale().y) + ").");
 		HEIGHT = height;
 		TOOLBAR.setSize(WIDTH = width, TOOLBAR.getSize().y);
-		Editor.EDITORS.values().forEach(editor -> editor.align());
+		Editor.EDITORS.forEach(editor -> editor.align());
 		ToolbarMenu.MENUS.forEach((key, menu) -> menu.layer.hide());
 		Picker.resetBuffer(true);
 	}
