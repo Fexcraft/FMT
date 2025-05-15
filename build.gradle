@@ -124,6 +124,8 @@ dependencies {
     //testCompile group: 'junit', name: 'junit', version: '4.11'
 
     //implementation 'com.github.JnCrMx:discord-game-sdk4j:master-SNAPSHOT'
+
+    implementation group: 'io.netty', name: 'netty-all', version: '4.1.116.Final'
 }
 
 sourceSets {
@@ -132,9 +134,9 @@ sourceSets {
             srcDirs "src"
             srcDirs "../Json/src"
             srcDirs "../FCL/common/src"
-            exclude "net/fexcraft/mod/fcl/**"
-            exclude "net/fexcraft/mod/uni/packet/**"
-            exclude "net/fexcraft/mod/uni/Fcl*"
+            //exclude "net/fexcraft/mod/fcl/**"
+            //exclude "net/fexcraft/mod/uni/packet/**"
+            //exclude "net/fexcraft/mod/uni/fcl*"
         }
         resources {
             srcDirs 'resources'
