@@ -85,13 +85,13 @@ public class Toolbar extends Panel {
 		));
 		this.add(new ToolbarMenu(2, "editors",
 			new MenuButton(0, "editors.polygon", () -> Editor.POLYGON_EDITOR.toggle()),
-			new MenuButton(1, "editors.group", () -> Editor.GROUP_EDITOR.toggle()),
-			new MenuButton(2, "editors.pivot", () -> Editor.PIVOT_EDITOR.toggle()),
-			new MenuButton(3, "editors.model", () -> Editor.MODEL_EDITOR.toggle()),
-			new MenuButton(4, "editors.texture", () -> Editor.TEXTURE_EDITOR.toggle()),
-			new MenuButton(5, "editors.uv", () -> Editor.UV_EDITOR.toggle()),
-			new MenuButton(6, "editors.preview", () -> Editor.PREVIEW_EDITOR.toggle()),
-			new MenuButton(7, "editors.config", () -> Editor.CONFIG_EDITOR.toggle())
+			//new MenuButton(1, "editors.group", () -> Editor.GROUP_EDITOR.toggle()),
+			new MenuButton(1, "editors.pivot", () -> Editor.PIVOT_EDITOR.toggle()),
+			new MenuButton(2, "editors.model", () -> Editor.MODEL_EDITOR.toggle()),
+			new MenuButton(3, "editors.texture", () -> Editor.TEXTURE_EDITOR.toggle()),
+			new MenuButton(4, "editors.uv", () -> Editor.UV_EDITOR.toggle()),
+			new MenuButton(5, "editors.preview", () -> Editor.PREVIEW_EDITOR.toggle()),
+			new MenuButton(6, "editors.config", () -> Editor.CONFIG_EDITOR.toggle())
 		));
 		this.add(new ToolbarMenu(3, "trees",
 			new MenuButton(0, "trees.polygon", () -> Editor.POLYGON_TREE.toggle()),
