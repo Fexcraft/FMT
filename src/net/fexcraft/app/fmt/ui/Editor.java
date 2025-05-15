@@ -194,15 +194,15 @@ public class Editor extends Component {
 		alignComponents();
 	}
 
-	private static Editor byName(String name){
+	private static Editor byId(String name){
 		for(Editor editor : EDITORS){
-			if(editor.name.equals(name)) return editor;
+			if(editor.id.equals(name)) return editor;
 		}
 		return null;
 	}
 
 	public static void show(String id){
-		Editor editor = byName(id);
+		Editor editor = byId(id);
 		if(editor == null) return;
 		if(editor.tree){
 			if(VISIBLE_TREE != null) VISIBLE_TREE.hide();
@@ -265,7 +265,7 @@ public class Editor extends Component {
 		//
 		JsonMap edmap = JsonHandler.parse(new File("./editors.fmt"));
 		for(Map.Entry<String, JsonValue<?>> entry : edmap.entries()){
-			Editor ed = byName(entry.getKey());
+			Editor ed = byId(entry.getKey());
 			if(ed == null || !entry.getValue().isMap()) continue;
 			JsonMap emap = entry.getValue().asMap();
 			if(!emap.has("components") || !emap.get("components").isMap()) continue;;
