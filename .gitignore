@@ -94,3 +94,4 @@ test/*
 /tests
 pack_env.fmt
 /workspace
+/src/net/fexcraft/app/pro
