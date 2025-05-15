@@ -44,9 +44,9 @@ import net.fexcraft.app.json.JsonMap;
  */
 public class Editor extends Component {
 
-	public static final HashMap<String, Editor> EDITORS = new HashMap<>();
+	public static final ArrayList<Editor> EDITORS = new ArrayList<>();
 	public static Editor POLYGON_EDITOR;
-	public static Editor GROUP_EDITOR;
+	//public static Editor GROUP_EDITOR;
 	public static Editor PIVOT_EDITOR;
 	public static Editor MODEL_EDITOR;
 	public static Editor TEXTURE_EDITOR;
@@ -73,7 +73,8 @@ public class Editor extends Component {
 	public Editor(String id, String name, boolean tree){
 		Settings.applyBorderless(this);
 		this.setFocusable(false);
-		EDITORS.put(this.id = id, this);
+		this.id = id;
+		EDITORS.add(this);
 		this.tree = tree;
 		add(scrollable = new ScrollablePanel(0, topSpace(), WIDTH, getSize().y));
 		scrollable.getViewport().getListenerMap().removeAllListeners(ScrollEvent.class);
@@ -129,7 +130,7 @@ public class Editor extends Component {
 	}
 	
 	public void alignComponents(){
-		int passed = 0;
+		float passed = 0;
 		for(EditorComponent com : components){
 			com.setPosition(0, passed);
 			passed += com.getSize().y + 2;
@@ -194,14 +195,14 @@ public class Editor extends Component {
 	}
 
 	private static Editor byName(String name){
-		for(Editor editor : EDITORS.values()){
+		for(Editor editor : EDITORS){
 			if(editor.name.equals(name)) return editor;
 		}
 		return null;
 	}
 
 	public static void show(String id){
-		Editor editor = EDITORS.get(id);
+		Editor editor = byName(id);
 		if(editor == null) return;
 		if(editor.tree){
 			if(VISIBLE_TREE != null) VISIBLE_TREE.hide();
@@ -224,7 +225,7 @@ public class Editor extends Component {
 
 	public static void saveAll(){
 		JsonMap editors = new JsonMap();
-		for(Editor editor : EDITORS.values()){
+		for(Editor editor : EDITORS){
 			if(editor.tree) continue;
 			editors.add(editor.id, editor.save());
 		}
@@ -249,7 +250,7 @@ public class Editor extends Component {
 
 	public static void loadEditors(){
 		Editor.POLYGON_EDITOR = new PolygonEditor();
-		Editor.GROUP_EDITOR = new GroupEditor();
+		//Editor.GROUP_EDITOR = new GroupEditor();
 		Editor.PIVOT_EDITOR = new PivotEditor();
 		Editor.MODEL_EDITOR = new ModelEditor();
 		Editor.TEXTURE_EDITOR = new TextureEditor();
@@ -264,7 +265,7 @@ public class Editor extends Component {
 		//
 		JsonMap edmap = JsonHandler.parse(new File("./editors.fmt"));
 		for(Map.Entry<String, JsonValue<?>> entry : edmap.entries()){
-			Editor ed = EDITORS.get(entry.getKey());
+			Editor ed = byName(entry.getKey());
 			if(ed == null || !entry.getValue().isMap()) continue;
 			JsonMap emap = entry.getValue().asMap();
 			if(!emap.has("components") || !emap.get("components").isMap()) continue;;
@@ -277,7 +278,7 @@ public class Editor extends Component {
 		for(EditorPanel panel : EditorPanel.PANELS){
 			FMT.FRAME.getContainer().add(panel);
 		}
-		for(Editor editor : Editor.EDITORS.values()){
+		for(Editor editor : Editor.EDITORS){
 			FMT.FRAME.getContainer().add(editor);
 			editor.hide();
 		}
