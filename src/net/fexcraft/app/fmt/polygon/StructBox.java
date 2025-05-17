@@ -43,66 +43,66 @@ public class StructBox extends Box {
 		if(size.x < 1) size.x = 1;
 		if(size.y < 1) size.y = 1;
 		if(size.z < 1) size.z = 1;
-		new Generator<GLObject>(glm, 1, 1).set("type", Generator.Type.CUBOID)
+		new Generator<>(glm, 1, 1).set("type", Generator.Type.CUBOID)
 				.set("x", off.x - m)
 				.set("y", off.y - m)
 				.set("z", off.z - m)
 				.set("width", size.x).set("height", s).set("depth", s).make();
-		new Generator<GLObject>(glm, 1, 1).set("type", Generator.Type.CUBOID)
+		new Generator<>(glm, 1, 1).set("type", Generator.Type.CUBOID)
 				.set("x", off.x - m)
 				.set("y", off.y - m)
 				.set("z", off.z - m)
 				.set("width", s).set("height", size.y).set("depth", s).make();
-		new Generator<GLObject>(glm, 1, 1).set("type", Generator.Type.CUBOID)
+		new Generator<>(glm, 1, 1).set("type", Generator.Type.CUBOID)
 				.set("x", off.x - m)
 				.set("y", off.y - m)
 				.set("z", off.z - m)
 				.set("width", s).set("height", s).set("depth", size.z).make();
 		//
-		new Generator<GLObject>(glm, 1, 1).set("type", Generator.Type.CUBOID)
+		new Generator<>(glm, 1, 1).set("type", Generator.Type.CUBOID)
 				.set("x", off.x - m)
 				.set("y", off.y + m + size.y - s)
 				.set("z", off.z - m)
 				.set("width", size.x).set("height", s).set("depth", s).make();
-		new Generator<GLObject>(glm, 1, 1).set("type", Generator.Type.CUBOID)
+		new Generator<>(glm, 1, 1).set("type", Generator.Type.CUBOID)
 				.set("x", off.x - m)
 				.set("y", off.y + m + size.y - s)
 				.set("z", off.z - m)
 				.set("width", s).set("height", s).set("depth", size.z).make();
 		//
-		new Generator<GLObject>(glm, 1, 1).set("type", Generator.Type.CUBOID)
+		new Generator<>(glm, 1, 1).set("type", Generator.Type.CUBOID)
 				.set("x", off.x + m + size.x - s)
 				.set("y", off.y - m + 0f)
 				.set("z", off.z + m + size.z - s)
-				.set("width", s).set("height", off.y + size.y).set("depth", s).make();
-		new Generator<GLObject>(glm, 1, 1).set("type", Generator.Type.CUBOID)
+				.set("width", s).set("height", size.y).set("depth", s).make();
+		new Generator<>(glm, 1, 1).set("type", Generator.Type.CUBOID)
 				.set("x", off.x - m + 0f)
-				.set("y", off.z - m + 0f)
+				.set("y", off.y - m + 0f)
 				.set("z", off.z + m + size.z - s)
-				.set("width", s).set("height", off.y + size.y).set("depth", s).make();
-		new Generator<GLObject>(glm, 1, 1).set("type", Generator.Type.CUBOID)
+				.set("width", s).set("height", size.y).set("depth", s).make();
+		new Generator<>(glm, 1, 1).set("type", Generator.Type.CUBOID)
 				.set("x", off.x + m + size.x - s)
 				.set("y", off.y - m + 0f)
 				.set("z", off.z - m + 0f)
-				.set("width", s).set("height", off.y + size.y).set("depth", s).make();
+				.set("width", s).set("height", size.y).set("depth", s).make();
 		//
-		new Generator<GLObject>(glm, 1, 1).set("type", Generator.Type.CUBOID)
+		new Generator<>(glm, 1, 1).set("type", Generator.Type.CUBOID)
 				.set("x", off.x + m + size.x - s)
 				.set("y", off.y - m + 0f)
 				.set("z", off.z - m + 0f)
 				.set("width", s).set("height", s).set("depth", size.z).make();
-		new Generator<GLObject>(glm, 1, 1).set("type", Generator.Type.CUBOID)
+		new Generator<>(glm, 1, 1).set("type", Generator.Type.CUBOID)
 				.set("x", off.x + m + size.x - s)
 				.set("y", off.y + m + size.y - s)
 				.set("z", off.z - m + 0f)
 				.set("width", s).set("height", s).set("depth", size.z).make();
 		//
-		new Generator<GLObject>(glm, 1, 1).set("type", Generator.Type.CUBOID)
+		new Generator<>(glm, 1, 1).set("type", Generator.Type.CUBOID)
 				.set("x", off.x - m + 0f)
 				.set("y", off.y - m + 0f)
 				.set("z", off.z + m + size.z - s)
 				.set("width", size.x).set("height", s).set("depth", s).make();
-		new Generator<GLObject>(glm, 1, 1).set("type", Generator.Type.CUBOID)
+		new Generator<>(glm, 1, 1).set("type", Generator.Type.CUBOID)
 				.set("x", off.x - m + 0f)
 				.set("y", off.y + m + size.y - s)
 				.set("z", off.z + m + size.z - s)
