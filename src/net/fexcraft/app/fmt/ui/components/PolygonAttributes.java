@@ -1,13 +1,16 @@
 package net.fexcraft.app.fmt.ui.components;
 
+import static net.fexcraft.app.fmt.FMT.MODEL;
+import static net.fexcraft.app.fmt.update.PolyVal.PolygonValue.of;
 import static net.fexcraft.app.fmt.utils.Translator.translate;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.ui.EditorComponent;
+import net.fexcraft.app.fmt.ui.Icon;
 import net.fexcraft.app.fmt.ui.PosCopyIcon;
 import net.fexcraft.app.fmt.ui.fields.RunButton;
 import com.spinyowl.legui.component.Label;
-import com.spinyowl.legui.component.Panel;
 import com.spinyowl.legui.component.SelectBox;
 
 import net.fexcraft.app.fmt.update.PolyVal;
@@ -23,9 +26,9 @@ import net.fexcraft.app.fmt.ui.fields.TextField;
 public class PolygonAttributes extends EditorComponent {
 	
 	private SelectBox<String> box = new SelectBox<>(), type = new SelectBox<>();
-	private static final String NOGROUPS = "< no groups >";
-	private static final String NOPOLYSEL = "< no polygon selected >";
 	protected static final String genid = "polygon.general";
+	public static NumberField OFFX, OFFY, OFFZ;
+	public static NumberField SIZX, SIZY, SIZZ;
 	private TextField name;
 	private NumberField TX, TY;
 
@@ -38,11 +41,20 @@ public class PolygonAttributes extends EditorComponent {
 		add(new NumberField(this, F30, row(1), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.POS, ValAxe.X)));
 		add(new NumberField(this, F31, row(0), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.POS, ValAxe.Y)));
 		add(new NumberField(this, F32, row(0), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.POS, ValAxe.Z)));
-		add(new Label(translate(LANG_PREFIX + genid + ".off"), L5, row(1), LWI, HEIGHT));
+		add(new Label(translate(LANG_PREFIX + genid + ".off"), L5, row(1), LWI - 30, HEIGHT));
 		add(new PosCopyIcon(LPI, row(0) + 4, PolyVal.OFF));
-		add(new NumberField(this, F30, row(1), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.OFF, ValAxe.X)));
-		add(new NumberField(this, F31, row(0), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.OFF, ValAxe.Y)));
-		add(new NumberField(this, F32, row(0), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.OFF, ValAxe.Z)));
+		add(new Icon(0, 16, 0, (int)(LPI - 24), row(0) + 4, "./resources/textures/icons/polygon/marker.png", () -> {
+			if(MODEL.selected().isEmpty()) return;
+			float[] arr = new float[3];
+			for(Polygon polygon : MODEL.selected()){
+				FMT.MODEL.updateValue(OFFX.polyval(), null, polygon.getValue(SIZX.polyval()) * -0.5f, true);
+				FMT.MODEL.updateValue(OFFY.polyval(), null, polygon.getValue(SIZY.polyval()) * -0.5f, true);
+				FMT.MODEL.updateValue(OFFZ.polyval(), null, polygon.getValue(SIZZ.polyval()) * -0.5f, true);
+			}
+		}));
+		add(OFFX = new NumberField(this, F30, row(1), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.OFF, ValAxe.X)));
+		add(OFFY = new NumberField(this, F31, row(0), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.OFF, ValAxe.Y)));
+		add(OFFZ = new NumberField(this, F32, row(0), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.OFF, ValAxe.Z)));
 		add(new Label(translate(LANG_PREFIX + genid + ".rot"), L5, row(1), LW, HEIGHT));
 		add(new NumberField(this, F30, row(1), F3S, HEIGHT).setup(-180, 180, true, new PolygonValue(PolyVal.ROT, ValAxe.X)));
 		add(new NumberField(this, F31, row(0), F3S, HEIGHT).setup(-180, 180, true, new PolygonValue(PolyVal.ROT, ValAxe.Y)));
@@ -58,9 +70,9 @@ public class PolygonAttributes extends EditorComponent {
 	private void addBoxSize(){
 		add(new Label(translate(LANG_PREFIX + genid + ".box_size"), L5, row(1), LWI, HEIGHT));
 		add(new PosCopyIcon(LPI, row(0) + 4, PolyVal.SIZE));
-		add(new NumberField(this, F30, row(1), F3S, HEIGHT).setup(0, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.SIZE, ValAxe.X)));
-		add(new NumberField(this, F31, row(0), F3S, HEIGHT).setup(0, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.SIZE, ValAxe.Y)));
-		add(new NumberField(this, F32, row(0), F3S, HEIGHT).setup(0, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.SIZE, ValAxe.Z)));
+		add(SIZX = new NumberField(this, F30, row(1), F3S, HEIGHT).setup(0, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.SIZE, ValAxe.X)));
+		add(SIZY = new NumberField(this, F31, row(0), F3S, HEIGHT).setup(0, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.SIZE, ValAxe.Y)));
+		add(SIZZ = new NumberField(this, F32, row(0), F3S, HEIGHT).setup(0, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.SIZE, ValAxe.Z)));
 	}
 
 	private void addBoxExtra(){
