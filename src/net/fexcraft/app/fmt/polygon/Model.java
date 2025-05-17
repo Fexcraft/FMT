@@ -342,17 +342,21 @@ public class Model {
 	}
 
 	public void updateValue(PolygonValue value, Field field, float alt){
+		updateValue(value, field, alt, false);
+	}
+
+	public void updateValue(PolygonValue value, Field field, float alt, boolean set){
 		if(selected.isEmpty()){
 			if(field != null) field.value();
 			return;
 		}
 		Polygon poly = selected.get(0);
 		float oval = poly.getValue(value);
-		float fval = field == null ? oval + alt : field.value();
+		float fval = field == null ? set ? alt : oval + alt : field.value();
 		poly.setValue(value, round(fval));
 		update(new PolygonValueEvent(poly, value, true));
 		if(value.doesUpdateMoreFields()) update(new PolygonSelected(poly, selected.size(), selected.size()));
-		if(selected.size() > 1){
+		if(!set && selected.size() > 1){
 			float diff = poly.getValue(value) - oval;
 			diff = round(diff);
 			for(int i = 1; i < selected.size(); i++){
