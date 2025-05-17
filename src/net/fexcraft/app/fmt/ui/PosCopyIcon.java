@@ -45,7 +45,7 @@ public class PosCopyIcon extends ImageView {
             arr[0] = poly.getValue(of(val, PolyVal.ValAxe.X));
             arr[1] = poly.getValue(of(val, PolyVal.ValAxe.Y));
             arr[2] = poly.getValue(of(val, PolyVal.ValAxe.Z));
-            if(FMT.MODEL.orient.rect()){
+            if(FMT.MODEL.orient.rect() || val == PolyVal.SIZE){
                 arr[0] *= .0625f;
                 arr[1] *= .0625f;
                 arr[2] *= .0625f;
