@@ -56,7 +56,8 @@ public class PolygonAttributes extends EditorComponent {
 	}
 
 	private void addBoxSize(){
-		add(new Label(translate(LANG_PREFIX + genid + ".box_size"), L5, row(1), LW, HEIGHT));
+		add(new Label(translate(LANG_PREFIX + genid + ".box_size"), L5, row(1), LWI, HEIGHT));
+		add(new PosCopyIcon(LPI, row(0) + 4, PolyVal.SIZE));
 		add(new NumberField(this, F30, row(1), F3S, HEIGHT).setup(0, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.SIZE, ValAxe.X)));
 		add(new NumberField(this, F31, row(0), F3S, HEIGHT).setup(0, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.SIZE, ValAxe.Y)));
 		add(new NumberField(this, F32, row(0), F3S, HEIGHT).setup(0, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.SIZE, ValAxe.Z)));
