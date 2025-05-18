@@ -45,7 +45,6 @@ public class PolygonAttributes extends EditorComponent {
 		add(new PosCopyIcon(LPI, row(0) + 4, PolyVal.OFF));
 		add(new Icon(0, 16, 0, (int)(LPI - 24), row(0) + 4, "./resources/textures/icons/polygon/marker.png", () -> {
 			if(MODEL.selected().isEmpty()) return;
-			float[] arr = new float[3];
 			for(Polygon polygon : MODEL.selected()){
 				FMT.MODEL.updateValue(OFFX.polyval(), null, polygon.getValue(SIZX.polyval()) * -0.5f, true);
 				FMT.MODEL.updateValue(OFFY.polyval(), null, polygon.getValue(SIZY.polyval()) * -0.5f, true);
