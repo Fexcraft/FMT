@@ -135,7 +135,8 @@ public class VehicleConfigReference extends ConfigReference {
 			of("sitting", BOOLEAN).def(true),
 			of("swivel_point", TEXT).def("vehicle"),
 			of("scale", DECIMAL).limit(1f, 0.06725f, 128f),
-			of("filter", ARRAY_SIMPLE).add(TEXT_ENTRY)
+			of("filter", ARRAY_SIMPLE).add(TEXT_ENTRY),
+			of("dismount", VECTOR_ARRAY)
 		));
 	}
 
