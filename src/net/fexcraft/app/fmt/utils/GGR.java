@@ -12,7 +12,12 @@ import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
 
 import com.spinyowl.legui.component.Component;
+import com.spinyowl.legui.component.Label;
+import com.spinyowl.legui.component.Panel;
+import com.spinyowl.legui.style.Background;
 import com.spinyowl.legui.style.Style;
+import com.spinyowl.legui.style.border.SimpleLineBorder;
+import com.spinyowl.legui.style.color.ColorConstants;
 import net.fexcraft.app.fmt.env.PackDevEnv;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.ui.JsonEditor;
@@ -140,12 +145,19 @@ public class GGR {
     }
 
     public static double posx, posy, oposx = -1, oposy = -1;
-    public static boolean right_down, left_down, scroll_down, grabbed, cursor_moved0, cursor_moved1;
+    public static boolean right_down;
+	public static boolean left_down;
+	public static boolean scroll_down;
+	public static boolean grabbed;
+	public static boolean cursor_moved0;
+	public static boolean cursor_moved1;
+	public static long left_timer;
 
 	public void mouseCallback(long window, int button, int action, int mods){
         if(button == 0){
 			if(action == GLFW_PRESS){
 				left_down = true;
+				left_timer = 0;
 			}
 			else if(action == GLFW_RELEASE){
 				if(Arrows.SEL > 0){
@@ -193,6 +205,35 @@ public class GGR {
 				scroll_down = false;
 			}
         }
+	}
+
+	private Panel panel;
+	private double cx, cy;
+
+	public void update(){
+		if(left_down){
+			if(left_timer == 0){
+				cx = posx;
+				cy = posy;
+			}
+			if(left_timer > 5){
+				if(panel == null){
+					panel = new Panel((float)cx, (float)cy, 100, 100);
+					panel.getStyle().getBackground().setColor(ColorConstants.transparent());
+					panel.getStyle().setBorder(new SimpleLineBorder(FMT.rgba(Settings.SELECTION_LINES.value), 1));
+					FMT.FRAME.getContainer().add(panel);
+				}
+				panel.setPosition((float)(cx < posx ? posx : cx), (float)(cy < posy ? posy : cy));
+				panel.setSize((float)(cx < posx ? cx - posx : posx - cx), (float)(cy < posy ? cy - posy : posy - cy));
+			}
+			left_timer++;
+		}
+		else{
+			if(panel != null){
+				FMT.FRAME.getContainer().remove(panel);
+				panel = null;
+			}
+		}
 	}
 
 	public static boolean isOverUI(){
