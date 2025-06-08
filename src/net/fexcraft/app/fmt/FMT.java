@@ -297,6 +297,7 @@ public class FMT {
 			//accumulator += (delta = timer.getDelta());
 			while(accumulator >= interval){
 				//TODO "logic"
+				CAM.update();
 				if(Settings.TESTING.value) UI.update();
 				ToolbarMenu.checkHide();
 				timer.updateUPS();
