@@ -2,10 +2,12 @@ package net.fexcraft.app.fmt.utils;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+import com.spinyowl.legui.component.Panel;
 import net.fexcraft.app.fmt.nui.Element;
 import net.fexcraft.app.fmt.polygon.Vertoff;
 import net.fexcraft.app.fmt.polygon.Vertoff.VOKey;
@@ -71,14 +73,18 @@ public class Picker {
 	
 	public static enum PickTask {
 		
-		NONE, SELECT, RESELECT, PAINT, FUNCTION, HOVER;
+		NONE, SELECT, RESELECT, MULTISELECT, PAINT, FUNCTION, HOVER;
 		
 		public boolean pick(){
 			return this != NONE;
 		}
 
 		public boolean select(){
-			return this == SELECT || this == RESELECT;
+			return this == SELECT || this == RESELECT || this == MULTISELECT;
+		}
+
+		public boolean multisel(){
+			return this == MULTISELECT;
 		}
 
 		public boolean paint(){
@@ -156,6 +162,10 @@ public class Picker {
 			Selector.set(PickType.POLYGON);
 		}
 		else{
+			if(TASK.multisel()){
+				multipick();
+				return;
+			}
 			int pick = getPick();
 			Logging.bar("picked: " + pick);
 			if(pick > 0 && pick < Polygon.startIdx){
@@ -189,14 +199,32 @@ public class Picker {
 		}
 	}
 
-	private static int getPick(){
-		int x, y;
-		byte[] picked = new byte[4];
-		if(offcenter){
-			x = GGR.mousePosX();
-			y = -(GGR.mousePosY() - FMT.HEIGHT);
+	private static void multipick(){
+		ArrayList<Integer> picks = new ArrayList<>();
+		int pick;
+		for(float x = 0; x < FMT.CAM.getSelSiz().x; x++){
+			for(float y = 0; y < FMT.CAM.getSelSiz().y; y++){
+				pick = getPick((int)(FMT.CAM.getSelPos().x + x), -((int)(FMT.CAM.getSelPos().y + y) - FMT.HEIGHT), false);
+				if(!picks.contains(pick)) picks.add(pick);
+			}
 		}
-		else{
+		Logging.bar("picked: " + picks.size() + "x");
+		for(Group group : FMT.MODEL.allgroups()){
+			for(Polygon poly : group){
+				if(picks.contains(poly.colorIdx)){
+					poly.group().model.select(poly, false);
+				}
+			}
+		}
+	}
+
+	private static int getPick(){
+		return getPick(GGR.mousePosX(), -(GGR.mousePosY() - FMT.HEIGHT), !offcenter);
+	}
+
+	private static int getPick(int x, int y, boolean center){
+		byte[] picked = new byte[4];
+		if(center){
 			x = FMT.WIDTH / 2;
 			y = FMT.HEIGHT / 2;
 		}
