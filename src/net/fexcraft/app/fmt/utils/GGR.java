@@ -12,9 +12,7 @@ import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
 
 import com.spinyowl.legui.component.Component;
-import com.spinyowl.legui.component.Label;
 import com.spinyowl.legui.component.Panel;
-import com.spinyowl.legui.style.Background;
 import com.spinyowl.legui.style.Style;
 import com.spinyowl.legui.style.border.SimpleLineBorder;
 import com.spinyowl.legui.style.color.ColorConstants;
@@ -27,6 +25,7 @@ import net.fexcraft.app.fmt.ui.trees.PolygonTree;
 import net.fexcraft.app.fmt.ui.workspace.WorkspaceViewer;
 import net.fexcraft.app.fmt.utils.fvtm.FVTMConfigEditor;
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.FMT;
@@ -163,6 +162,11 @@ public class GGR {
 				if(Arrows.SEL > 0){
 					Arrows.SEL = 0;
 				}
+				else if(sel_panel != null){
+					sp_pos = sel_panel.getPosition();
+					sp_size = sel_panel.getSize();
+					Picker.pick(PickType.POLYGON, PickTask.MULTISELECT, true);
+				}
 				else if(Settings.TESTING.value || !isOverUI()){
 					if(TexturePainter.TOOL.active()){
 						Picker.pick(TexturePainter.SELMODE.getPickType(), PickTask.PAINT, true);
@@ -207,31 +211,41 @@ public class GGR {
         }
 	}
 
-	private Panel panel;
+	private Panel sel_panel;
+	private Vector2f sp_pos, sp_size;
 	private double cx, cy;
+
+	public Vector2f getSelPos(){
+		return sp_pos;
+	}
+
+	public Vector2f getSelSiz(){
+		return sp_size;
+	}
 
 	public void update(){
 		if(left_down){
+			if(isOverUI()) return;
 			if(left_timer == 0){
 				cx = posx;
 				cy = posy;
 			}
 			if(left_timer > 5){
-				if(panel == null){
-					panel = new Panel((float)cx, (float)cy, 100, 100);
-					panel.getStyle().getBackground().setColor(ColorConstants.transparent());
-					panel.getStyle().setBorder(new SimpleLineBorder(FMT.rgba(Settings.SELECTION_LINES.value), 1));
-					FMT.FRAME.getContainer().add(panel);
+				if(sel_panel == null){
+					sel_panel = new Panel((float)cx, (float)cy, 100, 100);
+					sel_panel.getStyle().getBackground().setColor(ColorConstants.transparent());
+					sel_panel.getStyle().setBorder(new SimpleLineBorder(FMT.rgba(Settings.SELECTION_LINES.value), 1));
+					FMT.FRAME.getContainer().add(sel_panel);
 				}
-				panel.setPosition((float)(cx < posx ? posx : cx), (float)(cy < posy ? posy : cy));
-				panel.setSize((float)(cx < posx ? cx - posx : posx - cx), (float)(cy < posy ? cy - posy : posy - cy));
+				sel_panel.setPosition((float)(cx < posx ? cx : posx), (float)(cy < posy ? cy : posy));
+				sel_panel.setSize((float)(cx < posx ? posx - cx : cx - posx), (float)(cy < posy ? posy - cy : cy - posy));
 			}
 			left_timer++;
 		}
 		else{
-			if(panel != null){
-				FMT.FRAME.getContainer().remove(panel);
-				panel = null;
+			if(sel_panel != null){
+				FMT.FRAME.getContainer().remove(sel_panel);
+				sel_panel = null;
 			}
 		}
 	}
