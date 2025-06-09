@@ -43,6 +43,8 @@ public class ExportManager {
 		addExporter(new ObjExporter());
 		addExporter(new PivotExporter());
 		addExporter(new MarkerAsPartSlotExporter());
+		addExporter(new MarkerAsSeatConfExporter());
+		addExporter(new FvtmBoundingBoxExporter());
 	}
 	
 	private static void addExporter(Exporter exporter){
