@@ -6,22 +6,24 @@ import net.fexcraft.app.fmt.polygon.Marker;
 import net.fexcraft.lib.frl.Polyhedron;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class ModelMark {
 	
 	private Polyhedron<GLObject>[] poly = new Polyhedron[6];
+	private Polyhedron<GLObject> mmark = new Polyhedron();
 	private static float shrink = 1.875f * 0.5f;
 	
 	public void fill(Marker mark){
 		if(poly[0] == null){
 			for(int i = 0; i < poly.length; i++){
 				poly[i] = new Polyhedron<>();
-				poly[i].setGlObj(new GLObject());
 			}
 		}
 		for(int i = 0; i < poly.length; i++){
 			poly[i].recompile = true;
 			poly[i].clear();
-			poly[i].rotY = 0;
 			poly[i].pos(0, 0, 0);
 		}
 		float s = mark.biped_scale * shrink;
@@ -41,16 +43,16 @@ public class ModelMark {
 			poly[4].importMRT(new ModelRendererTurbo(null, 4, 4, 64, 64).setTextureOffset( 0, 16).addBox(-4,     0,    -4, 4, 12, 4).setRotationPoint(0, 2 * s, 0).setRotationAngle(-83, 14.5f, 0), false, s);
 			poly[5].importMRT(new ModelRendererTurbo(null, 4, 4, 64, 64).setTextureOffset(16, 48).addBox( 0,     0,    -4, 4, 12, 4).setRotationPoint(0, 2 * s, 0).setRotationAngle(-83, -14.5f, 0), false, s);
 		}
-		for(Polyhedron<GLObject> hed : poly){
-			hed.posX += mark.pos.x;
-			hed.posY += mark.pos.y;
-			hed.posZ += mark.pos.z;
-			hed.rotY += mark.angle;
-		}
+		mmark.sub = new ArrayList<>();
+		mmark.sub.addAll(Arrays.asList(poly));
+		mmark.posX = mark.pos.x;
+		mmark.posY = mark.pos.y;
+		mmark.posZ = mark.pos.z;
+		mmark.rotY = mark.angle;
 	}
 
 	public void render(){
-		for(Polyhedron<GLObject> hed : poly) hed.render();
+		mmark.render();
 	}
 
 }
