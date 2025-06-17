@@ -28,6 +28,7 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 	public static ShaderManager.ShaderProgram program;
 	public static final float[] LINECOLOR = { 0, 0, 0, 1}, EMPTY = { 0, 0, 0, 0 }, SELCOLOR = { 1, 1, 0, 1 };
 	private static final Vector3f GIF_AXIS = new Vector3f(0, 1, 0);
+	private boolean subpoly;
 	private boolean lines;
 	private GLObject glo;
 
@@ -47,15 +48,17 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 			if(glo.pickercolor == null) glo.pickercolor = EMPTY;
 			poly.recompile = false;
 		}
-		if(PIVOT == null && HELPER == null){
-			matrix = new Matrix4f().identity();
-			if(ImageHandler.ROT != null) matrix.rotate(ImageHandler.ROT, GIF_AXIS);
-		}
-		else if(HELPER != null){
-			matrix = HELPER.matrix.get(new Matrix4f()).scale(HELPER.scl.x, HELPER.scl.y, HELPER.scl.z);
-		}
-		else{
-			matrix = PIVOT.matrix.get(new Matrix4f());
+		if(!subpoly){
+			if(PIVOT == null && HELPER == null){
+				matrix = new Matrix4f().identity();
+				if(ImageHandler.ROT != null) matrix.rotate(ImageHandler.ROT, GIF_AXIS);
+			}
+			else if(HELPER != null){
+				matrix = HELPER.matrix.get(new Matrix4f()).scale(HELPER.scl.x, HELPER.scl.y, HELPER.scl.z);
+			}
+			else{
+				matrix = PIVOT.matrix.get(new Matrix4f());
+			}
 		}
 		matrix.translate(new Vector3f(poly.posX, poly.posY, poly.posZ));
 		if(poly.rotY != 0f) matrix.rotate((float)Math.toRadians(poly.rotY), axis_y);
@@ -95,7 +98,13 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 		glDrawArrays(lines ? GL_LINES : GL_TRIANGLES, 0, glo.gpu[index].size);
 		//
         if(poly.sub != null){
-            for(Polyhedron<GLObject> sub : poly.sub) sub.render();
+			subpoly = true;
+			Matrix4f ref = matrix;
+            for(Polyhedron<GLObject> sub : poly.sub){
+				matrix = new Matrix4f().set(ref);
+				sub.render();
+			}
+			subpoly = false;
         }
 	}
 
@@ -279,6 +288,11 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 
 	@Override
 	public void rotate(float deg, int x, int y, int z){
+
+	}
+
+	@Override
+	public void rotate(double deg, int x, int y, int z){
 
 	}
 
