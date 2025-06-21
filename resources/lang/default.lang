@@ -300,6 +300,7 @@ editor.component.config.general.gen_icons=Generate missing Icon/Jsons
 editor.component.config.general.gen_icons.complete=Generation of Missing Icons/Jsons complete.
 editor.component.config.general.content_new=Create new Content
 editor.component.config.general.icon_from_view=Create Icon from View
+editor.component.config.general.road_assets=Generate Road Assets/Jsons
 editor.component.config.general.file_utils=File Utils
 editor.component.config.general.open_json=Open JSON File
 editor.component.config.general.mirror_lang=Mirror .lang to .json
