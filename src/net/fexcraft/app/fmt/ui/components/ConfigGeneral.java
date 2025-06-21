@@ -46,13 +46,14 @@ public class ConfigGeneral extends EditorComponent {
 	protected static final String genid = "config.general";
 
 	public ConfigGeneral(){
-		super(genid, 400, false, true);
+		super(genid, 430, false, true);
 		add(new Label(translate(LANG_PREFIX + genid + ".pack_utils"), L5, row(1), LW, HEIGHT));
 		add(new RunButton("editor.component.config.general.pack_new", L5, row(1), LW, HEIGHT, ConfigGeneral::createNewPack));
 		add(new RunButton("editor.component.config.general.gen_asset_dirs", L5, row(1), LW, HEIGHT, ConfigGeneral::genAssetDirs));
 		add(new RunButton("editor.component.config.general.gen_icons", L5, row(1), LW, HEIGHT, ConfigGeneral::genIconsInPack));
 		add(new RunButton("editor.component.config.general.content_new", L5, row(1), LW, HEIGHT, ConfigGeneral::createNewContent));
 		add(new RunButton("editor.component.config.general.icon_from_view", L5, row(1), LW, HEIGHT, ConfigGeneral::createNewIcon));
+		add(new RunButton("editor.component.config.general.road_assets", L5, row(1), LW, HEIGHT, ConfigGeneral::genRoadAssets));
 		add(new Label(translate(LANG_PREFIX + genid + ".file_utils"), L5, row(2), LW, HEIGHT));
 		add(new RunButton("editor.component.config.general.open_json", L5, row(1), LW, HEIGHT, ConfigGeneral::openJson));
 		add(new RunButton("editor.component.config.general.mirror_lang", L5, row(1), LW, HEIGHT, ConfigGeneral::mirrorLang));
@@ -329,6 +330,12 @@ public class ConfigGeneral extends EditorComponent {
 			widget.setDraggable(false);
 			FMT.FRAME.getContainer().add(widget);
 			widget.show();
+		});
+	}
+
+	public static void genRoadAssets(){
+		WorkspaceViewer.viewer().selectPackDialog(pack -> {
+
 		});
 	}
 
