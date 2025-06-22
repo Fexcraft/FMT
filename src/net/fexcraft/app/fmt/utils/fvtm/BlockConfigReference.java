@@ -56,7 +56,7 @@ public class BlockConfigReference extends ConfigReference {
             "GENERIC_6VAR", "GENERIC_7VAR", "GENERIC_8VAR", "GENERIC_9VAR",
             "GENERIC_10VAR", "GENERIC_11VAR", "GENERIC_12VAR", "GENERIC_13VAR",
             "GENERIC_14VAR", "GENERIC_15VAR", "GENERIC_16VAR",
-            "GENERIC_ROAD, GENERIC_POST_LIKE",
+            "GENERIC_ROAD", "GENERIC_POST_LIKE",
             "MULTIBLOCK_4ROT",
             "SIGNAL_4ROT", "SIGNAL_16ROT",
             "FORK2_SWITCH_4ROT", "FORK3_SWITCH_4ROT", "DOUBLE_SWITCH_4ROT"
