@@ -335,7 +335,67 @@ public class ConfigGeneral extends EditorComponent {
 
 	public static void genRoadAssets(){
 		WorkspaceViewer.viewer().selectPackDialog(pack -> {
-
+			Dialog dialog = new Dialog("Road Block Assets Generator Settings", 420, 260);
+			dialog.getContainer().add(new Label("Block ID", 10, 10, 400, 30));
+			TextField rid = new TextField("road", 10, 40, 400, 30);
+			dialog.getContainer().add(rid);
+			dialog.getContainer().add(new Label("Block Name", 10, 70, 400, 30));
+			TextField bnm = new TextField("Road", 10, 100, 400, 30);
+			dialog.getContainer().add(bnm);
+			dialog.getContainer().add(new Label("Texture Adress", 10, 130, 400, 30));
+			TextField tid = new TextField(pack.id + ":block/road", 10, 160, 400, 30);
+			dialog.getContainer().add(tid);
+			dialog.getContainer().add(new RunButton("dialog.button.confirm", 310, 200, 100, 20, () -> {
+				String roadid = rid.getTextState().getText().trim();
+				File file = new File(pack.file, "/assets/" + pack.id + "/blockstates/" + roadid + ".json");
+				if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
+				JsonMap map = new JsonMap();
+				JsonMap vars = new JsonMap();
+				for(int i = 0; i < 16; i++){
+					JsonArray mods = new JsonArray();
+					mods.add(new JsonMap("model", pack.id + ":" + roadid + "_" + i));
+					mods.add(new JsonMap("model", pack.id + ":" + roadid + "_" + i, "y", 90));
+					mods.add(new JsonMap("model", pack.id + ":" + roadid + "_" + i, "y", 180));
+					mods.add(new JsonMap("model", pack.id + ":" + roadid + "_" + i, "y", 270));
+					vars.add("height=" + i, mods);
+				}
+				map.add("variants", vars);
+				JsonHandler.print(file, map);
+				//
+				String name = bnm.getTextState().getText().trim();
+				String texid = tid.getTextState().getText();
+				for(int i = 0; i < 16; i++){
+					file = new File(pack.file, "/assets/" + pack.id + "/blockstates/" + roadid + "_" + i + ".json");
+					if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
+					map = new JsonMap();
+					vars = new JsonMap();
+					JsonArray mods = new JsonArray();
+					mods.add(new JsonMap("model", pack.id + ":block/" + roadid + "_" + i));
+					mods.add(new JsonMap("model", pack.id + ":block/" + roadid + "_" + i, "y", 90));
+					mods.add(new JsonMap("model", pack.id + ":block/" + roadid + "_" + i, "y", 180));
+					mods.add(new JsonMap("model", pack.id + ":block/" + roadid + "_" + i, "y", 270));
+					vars.add("", mods);
+					map.add("variants", vars);
+					JsonHandler.print(file, map);
+					//
+					file = new File(pack.file, "/assets/" + pack.id + "/models/item/" + roadid + "_" + i + ".json");
+					if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
+					map = new JsonMap();
+					map.add("parent", pack.id + ":block/" + roadid + "_" + i);
+					JsonHandler.print(file, map);
+					//
+					file = new File(pack.file, "/assets/" + pack.id + "/models/block/" + roadid + "_" + i + ".json");
+					if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
+					map = new JsonMap();
+					map.add("parent", "fvtm:block/asphalt_" + i);
+					map.add("textures", new JsonMap("particle", texid, "texture", texid));
+					JsonHandler.print(file, map);
+				}
+				dialog.close();
+				WorkspaceViewer.viewer().genView();
+			}));
+			dialog.setResizable(false);
+			dialog.show(FMT.FRAME);
 		});
 	}
 
