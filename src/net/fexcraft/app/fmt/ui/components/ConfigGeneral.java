@@ -390,6 +390,15 @@ public class ConfigGeneral extends EditorComponent {
 					map.add("parent", "fvtm:block/asphalt_" + i);
 					map.add("textures", new JsonMap("particle", texid, "texture", texid));
 					JsonHandler.print(file, map);
+					//
+					file = new File(pack.file, "/assets/" + pack.id + "/items/" + roadid + "_" + i + ".json");
+					if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
+					map = new JsonMap();
+					JsonMap mod = new JsonMap();
+					mod.add("type", "minecraft:model");
+					mod.add("model", pack.id + ":item/" + roadid + "_" + i);
+					map.add("model", mod);
+					JsonHandler.print(file, map, JsonHandler.PrintOption.DEFAULT);
 				}
 				dialog.close();
 				WorkspaceViewer.viewer().genView();
