@@ -26,7 +26,6 @@ import net.fexcraft.app.json.JsonValue;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.frl.Polyhedron;
 import net.fexcraft.lib.frl.gen.Generator;
-import net.fexcraft.lib.script.elm.FltElm;
 import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -163,7 +162,7 @@ public class Model {
 		centermarker2.glObj.polycolor = RGB.BLUE.toFloatArray();
 	}
 
-	public void render(FltElm alpha){
+	public void render(float alpha){
 		if(!visible) return;
 		DrawMode mode = DrawMode.textured(texgroup != null || texhelper != null);
 		for(Pivot pivot : pivots){
