@@ -3,7 +3,6 @@ package net.fexcraft.app.fmt.polygon;
 import static net.fexcraft.app.fmt.polygon.Vertoff.VOType.BOX_CORNER;
 import static net.fexcraft.app.fmt.update.UpdateHandler.update;
 import static net.fexcraft.app.fmt.utils.CornerUtil.ROT_MARKER_NORMAL;
-import static net.fexcraft.app.fmt.utils.CornerUtil.ROT_MARKER_SMALL;
 import static net.fexcraft.app.fmt.utils.JsonUtil.getVector;
 import static net.fexcraft.app.fmt.utils.JsonUtil.setVector;
 import static net.fexcraft.app.fmt.utils.Logging.log;
@@ -15,11 +14,7 @@ import net.fexcraft.app.fmt.update.UpdateEvent.PolygonAdded;
 import net.fexcraft.app.fmt.update.UpdateEvent.PolygonRenamed;
 import net.fexcraft.app.fmt.utils.Axis3DL;
 import net.fexcraft.app.json.JsonValue;
-import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.frl.Vertex;
-import net.fexcraft.lib.script.ScrBlock;
-import net.fexcraft.lib.script.ScrElm;
-import net.fexcraft.lib.script.elm.FltElm;
 import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Vector3f;
 
@@ -46,7 +41,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class Polygon implements ScrElm {
+public abstract class Polygon {
 
 	public static final ConcurrentHashMap<Pair<Polygon, VOKey>, Integer> vertcolors = new ConcurrentHashMap<>();
 	public static final VOKey VO_0 = new VOKey(BOX_CORNER, 0, 0);
@@ -296,7 +291,7 @@ public abstract class Polygon implements ScrElm {
 
 	public abstract Face getFaceByColor(int color);
 
-	public void render(FltElm alpha){
+	public void render(float alpha){
 		//FMT.SCRIPT.act("render").process(this, alpha);
 		glm.render();
 	}
@@ -565,19 +560,6 @@ public abstract class Polygon implements ScrElm {
 		Logging.log(key);
 		vertoffs.put(key, new Vertoff());
 		return vertoffs.get(key);
-	}
-
-	@Override
-	public ScrElm scr_get(ScrBlock block, String target){
-		switch(target){
-			case "pos": return pos;
-		}
-		return NULL;
-	}
-
-	@Override
-	public boolean overrides(){
-		return true;
 	}
 
 }
