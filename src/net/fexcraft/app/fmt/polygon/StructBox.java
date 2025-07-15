@@ -1,14 +1,12 @@
 package net.fexcraft.app.fmt.polygon;
 
 import static net.fexcraft.app.fmt.update.PolyVal.*;
-import static net.fexcraft.app.fmt.utils.JsonUtil.getVector;
 
 import net.fexcraft.app.fmt.polygon.uv.Face;
 import net.fexcraft.app.fmt.polygon.uv.NoFace;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.frl.gen.Generator;
-import net.fexcraft.lib.script.elm.FltElm;
 
 public class StructBox extends Box {
 
@@ -123,7 +121,7 @@ public class StructBox extends Box {
 	}
 
 	@Override
-	public void render(FltElm alpha){
+	public void render(float alpha){
 		if(PolyRenderer.mode().lines()) return;
 		PolyRenderer.DrawMode mode = PolyRenderer.mode();
 		PolyRenderer.mode(PolyRenderer.DrawMode.RGBCOLOR);
