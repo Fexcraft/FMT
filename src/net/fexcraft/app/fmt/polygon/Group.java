@@ -9,8 +9,6 @@ import net.fexcraft.app.fmt.animation.Animation;
 import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.update.UpdateEvent.GroupRenamed;
 import net.fexcraft.app.fmt.update.UpdateEvent.PolygonRemoved;
-import net.fexcraft.app.fmt.utils.Selector;
-import net.fexcraft.lib.script.elm.FltElm;
 import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.update.UpdateHandler;
@@ -82,7 +80,7 @@ public class Group extends ArrayList<Polygon> {
 		else model.bindtex();
 	}
 
-	public void render(DrawMode mode, FltElm alpha){
+	public void render(DrawMode mode, float alpha){
 		if(!visible) return;
 		bindtex();
 		for(Animation animation : animations) animation.pre(this, mode, alpha);
