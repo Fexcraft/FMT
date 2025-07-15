@@ -4,7 +4,6 @@ import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.PolyRenderer;
 import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.json.JsonMap;
-import net.fexcraft.lib.script.elm.FltElm;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -52,7 +51,7 @@ public class Translator extends Animation {
 	}
 
 	@Override
-	public void pre(Group group, PolyRenderer.DrawMode mode, FltElm alpha){
+	public void pre(Group group, PolyRenderer.DrawMode mode, float alpha){
 		for(Polygon poly : group){
 			poly.pos.x += x;
 			poly.pos.y += y;
@@ -61,7 +60,7 @@ public class Translator extends Animation {
 	}
 
 	@Override
-	public void pst(Group group, PolyRenderer.DrawMode mode, FltElm alpha){
+	public void pst(Group group, PolyRenderer.DrawMode mode, float alpha){
 		for(Polygon poly : group){
 			poly.pos.x -= x;
 			poly.pos.y -= y;
