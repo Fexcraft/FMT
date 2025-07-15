@@ -856,7 +856,10 @@ public class Model {
 		if(idx == 0 && i < 0) return;
 		if(idx >= allgroups.size() - 1 && i > 0) return;
 		Collections.swap(allgroups, idx, idx + i);
-		if(update) Editor.POLYGON_TREE.reAddGroups();
+		if(update){
+			Editor.POLYGON_TREE.reAddGroups();
+			Editor.ANIM_TREE.reAddGroups();
+		}
 	}
 
 	public ArrayList<Pair<Polygon, Vertoff.VOKey>> getSelectedVerts(){
