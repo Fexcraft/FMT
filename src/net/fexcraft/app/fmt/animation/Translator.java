@@ -69,6 +69,11 @@ public class Translator extends Animation {
 	}
 
 	@Override
+	public String id(){
+		return "fvtm:translator";
+	}
+
+	@Override
 	public String[] keys(){
 		return keys;
 	}
