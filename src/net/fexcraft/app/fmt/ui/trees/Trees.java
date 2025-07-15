@@ -6,7 +6,7 @@ public enum Trees {
     PIVOT(null),
     HELPER(null),
     TEXTURE(null),
-    ANIMATION("fvtm");
+    ANIMATION(null);
 
     public String id;
 
