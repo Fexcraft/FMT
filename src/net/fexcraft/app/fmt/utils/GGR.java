@@ -312,6 +312,7 @@ public class GGR {
 				}
 			}
 			Editor.POLYGON_TREE.reAddGroups();
+			Editor.ANIM_TREE.reAddGroups();
 			return;
 		}
 		double s = yoffset * Settings.SCROLL_SPEED.value;
