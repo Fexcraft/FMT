@@ -38,6 +38,7 @@ toolbar.trees.polygon=Polygons
 toolbar.trees.pivot=Pivots
 toolbar.trees.texture=Textures
 toolbar.trees.helper=Helper/Previews
+toolbar.trees.anim=Animations
 ## Polygons
 toolbar.polygons=Polygons
 toolbar.polygons.add_box=Add Box
