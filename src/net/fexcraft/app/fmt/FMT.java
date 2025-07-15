@@ -47,8 +47,6 @@ import net.fexcraft.lib.common.math.Time;
 import net.fexcraft.lib.frl.GLO;
 import net.fexcraft.lib.frl.Polyhedron;
 import net.fexcraft.lib.frl.gen.Generator;
-import net.fexcraft.lib.script.Script;
-import net.fexcraft.lib.script.elm.FltElm;
 import net.fexcraft.lib.tmt.BoxBuilder;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 import org.joml.Vector2i;
@@ -94,7 +92,7 @@ public class FMT {
 	//
 	public static final ITimer timer = new ITimer();
 	public float delta, accumulator, interval = 1f / 30f;
-	public FltElm alpha = new FltElm(0f);
+	public float alpha = 0f;
 	private static boolean CLOSE;
 	public static GGR CAM;
 	public static Label pos;
@@ -121,7 +119,6 @@ public class FMT {
 	public static Field SELFIELD;
 	public static Workspace WORKSPACE;
 	//
-	public static Script SCRIPT;
 	static{
 		GLO.SUPPLIER = () -> new GLObject();
 	}
@@ -307,7 +304,7 @@ public class FMT {
 				info.getTextState().setText(SELFIELD == null ? "none" : SELFIELD.polyval() == null ? SELFIELD.setting() == null ? "other" : "setting:" + SELFIELD.setting().id : SELFIELD.polyval().toString());
 				poly.getTextState().setText(MODEL.selected().isEmpty() ? "none" : MODEL.first_selected().name());
 			}
-			alpha.scr_set(accumulator / interval);
+			alpha = accumulator / interval;
 			render(vao, alpha);
 			//
 			adjustLabels();
@@ -368,7 +365,7 @@ public class FMT {
 		PolygonTree.polygons.getTextState().setText("Polygons: " + FMT.MODEL.totals());
 	}
 
-	private void render(int vao, FltElm alpha){
+	private void render(int vao, float alpha){
 		//glClearColor(0.5f, 0.5f, 0.5f, 0.01f);
 		glViewport(0, 0, WIDTH, HEIGHT);
 		CONTEXT.updateGlfwWindow();
