@@ -57,6 +57,7 @@ public class Editor extends Component {
 	public static Editor PIVOT_TREE;
 	public static Editor TEXTURE_TREE;
 	public static Editor PREVIEW_TREE;
+	public static Editor ANIM_TREE;
 	public static float RATE = 1f;
 	public static float MARKER_SCALE = 1f;
 	public static Editor VISIBLE_EDITOR = null;
@@ -261,6 +262,7 @@ public class Editor extends Component {
 		Editor.PIVOT_TREE = new PivotTree();
 		Editor.TEXTURE_TREE = new TextureTree();
 		Editor.PREVIEW_TREE = new HelperTree();
+		Editor.ANIM_TREE = new AnimTree();
 		EditorPanel.load();
 		//
 		JsonMap edmap = JsonHandler.parse(new File("./editors.fmt"));
