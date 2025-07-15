@@ -14,6 +14,8 @@ public abstract class Animation {
 
 	public static HashMap<String, Animation> ANIMATIONS = new LinkedHashMap<>();
 	protected static String[] NOKEYS = new String[0];
+	//
+	public boolean enabled;
 
 	public static void init(){
 		ANIMATIONS.put("translator", new Translator());
@@ -31,6 +33,8 @@ public abstract class Animation {
 	public abstract void pre(Group group, DrawMode mode, float alpha);
 
 	public abstract void pst(Group group, DrawMode mode, float alpha);
+
+	public abstract String id();
 
 	public abstract String[] keys();
 
