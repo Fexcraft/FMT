@@ -2,24 +2,13 @@ package net.fexcraft.app.fmt.polygon;
 
 import java.util.ArrayList;
 
-import net.fexcraft.app.fmt.demo.ModelMark;
-import net.fexcraft.app.fmt.polygon.PolyRenderer.DrawMode;
 import net.fexcraft.app.fmt.polygon.uv.Face;
 import net.fexcraft.app.fmt.polygon.uv.NoFace;
-import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.TexturedPolygon;
-import net.fexcraft.lib.frl.GLO;
-import net.fexcraft.lib.frl.Polyhedron;
 import net.fexcraft.lib.frl.Vertex;
-import net.fexcraft.lib.frl.gen.Generator;
-import net.fexcraft.lib.frl.gen.Generator_Cuboid;
-import net.fexcraft.lib.frl.gen.Generator_Cylinder;
-import net.fexcraft.lib.frl.gen.ValueMap;
-import net.fexcraft.lib.script.elm.FltElm;
-import org.lwjgl.opengl.GL;
 
 public class ObjView extends Polygon {
 
@@ -80,7 +69,7 @@ public class ObjView extends Polygon {
 	}
 	
 	@Override
-	public void render(FltElm alpha){
+	public void render(float alpha){
 		//DrawMode mode = PolyRenderer.mode();
 		//PolyRenderer.mode(DrawMode.RGBCOLOR);
 		glm.render();
