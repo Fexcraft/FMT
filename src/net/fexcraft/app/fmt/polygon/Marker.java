@@ -11,7 +11,6 @@ import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.frl.Polyhedron;
 import net.fexcraft.lib.frl.gen.Generator;
-import net.fexcraft.lib.script.elm.FltElm;
 
 public class Marker extends Polygon {
 
@@ -78,7 +77,7 @@ public class Marker extends Polygon {
 	}
 	
 	@Override
-	public void render(FltElm alpha){
+	public void render(float alpha){
 		DrawMode mode = PolyRenderer.mode();
 		PolyRenderer.mode(DrawMode.RGBCOLOR);
 		glm.render();
