@@ -3,7 +3,6 @@ package net.fexcraft.app.fmt.animation;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.PolyRenderer.DrawMode;
 import net.fexcraft.app.json.JsonMap;
-import net.fexcraft.lib.script.elm.FltElm;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -29,9 +28,9 @@ public abstract class Animation {
 
 	public abstract JsonMap save();
 
-	public abstract void pre(Group group, DrawMode mode, FltElm alpha);
+	public abstract void pre(Group group, DrawMode mode, float alpha);
 
-	public abstract void pst(Group group, DrawMode mode, FltElm alpha);
+	public abstract void pst(Group group, DrawMode mode, float alpha);
 
 	public abstract String[] keys();
 
