@@ -7,7 +7,6 @@ import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.app.json.JsonValue;
 import net.fexcraft.lib.frl.Polyhedron;
-import net.fexcraft.lib.script.elm.FltElm;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
@@ -206,7 +205,7 @@ public abstract class CurvePolygon extends Polygon {
 	}
 
 	@Override
-	public void render(FltElm alpha){
+	public void render(float alpha){
 		if(PolyRenderer.mode().lines()){
 			PolyRenderer.DrawMode mode = PolyRenderer.mode();
 			PolyRenderer.mode(PolyRenderer.DrawMode.RGBCOLOR);
