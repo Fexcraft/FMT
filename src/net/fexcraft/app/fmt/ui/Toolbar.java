@@ -97,7 +97,8 @@ public class Toolbar extends Panel {
 			new MenuButton(0, "trees.polygon", () -> Editor.POLYGON_TREE.toggle()),
 			new MenuButton(1, "trees.pivot", () -> Editor.PIVOT_TREE.toggle()),
 			new MenuButton(2, "trees.texture", () -> Editor.TEXTURE_TREE.toggle()),
-			new MenuButton(3, "trees.helper", () -> Editor.PREVIEW_TREE.toggle())
+			new MenuButton(3, "trees.helper", () -> Editor.PREVIEW_TREE.toggle()),
+			new MenuButton(4, "trees.anim", () -> Editor.ANIM_TREE.toggle())
 		));
 		this.add(new ToolbarMenu(4, "polygons",
 			new MenuButton(0, "polygons.add_box", () -> QuickAddPanel.addBox()),
