@@ -1,6 +1,8 @@
 package net.fexcraft.app.fmt.ui.trees;
 
+import com.spinyowl.legui.component.Dialog;
 import com.spinyowl.legui.component.Label;
+import com.spinyowl.legui.component.SelectBox;
 import com.spinyowl.legui.event.CursorEnterEvent;
 import com.spinyowl.legui.event.MouseClickEvent;
 import com.spinyowl.legui.event.MouseClickEvent.MouseClickAction;
@@ -16,6 +18,7 @@ import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.*;
 import net.fexcraft.app.fmt.update.UpdateEvent.*;
 import net.fexcraft.app.fmt.update.UpdateHandler;
+import net.fexcraft.app.fmt.utils.fvtm.FvtmTypes;
 
 import java.util.ArrayList;
 
@@ -29,21 +32,22 @@ public class AnimComponent extends EditorComponent {
 	private static final int PH = 20, PHS = 21;
 	private static final int EMS = 120;
 	private ArrayList<AnimationLabel> animations = new ArrayList<>();
-	private PivotComponent root;
 	protected Icon visible;
 	protected Icon remove;
 	protected Icon sort_up;
 	protected Icon sort_dw;
+	protected Icon add;
 	private Group group;
 
 	public AnimComponent(Group group){
 		super(group.id, group.isEmpty() ? HEIGHT : HEIGHT + group.animations.size() * PH + 4, true, true);
 		label.getTextState().setText((this.group = group).id);
 		this.genFullheight();
-		add(visible = new Icon((byte)2, "./resources/textures/icons/component/visible.png", () -> pin()));
-		add(remove = new Icon((byte)3, "./resources/textures/icons/component/remove.png", () -> FMT.MODEL.remGroup(group)));
-		add(sort_dw = new Icon((byte)4, "./resources/textures/icons/component/move_down.png", () -> FMT.MODEL.swap(group, 1, true)));
-		add(sort_up = new Icon((byte)5, "./resources/textures/icons/component/move_up.png", () -> FMT.MODEL.swap(group, -1, true)));
+		add(add = new Icon((byte)2, "./resources/textures/icons/component/add.png", this::openAdd));
+		add(visible = new Icon((byte)3, "./resources/textures/icons/component/visible.png", this::pin));
+		add(remove = new Icon((byte)4, "./resources/textures/icons/component/remove.png", () -> FMT.MODEL.remGroup(group)));
+		add(sort_dw = new Icon((byte)5, "./resources/textures/icons/component/move_down.png", () -> FMT.MODEL.swap(group, 1, true)));
+		add(sort_up = new Icon((byte)6, "./resources/textures/icons/component/move_up.png", () -> FMT.MODEL.swap(group, -1, true)));
 		updcom.add(GroupRenamed.class, event -> { if(event.group() == group) label.getTextState().setText(group.id); });
 		group.animations.forEach(anim -> addAnimation(anim, false));
 		update_color();
@@ -73,15 +77,17 @@ public class AnimComponent extends EditorComponent {
 		label.getListenerMap().addListener(MouseClickEvent.class, listener);
 		//
 		CursorEnterEventListener clis = lis -> {
-			DisplayType type = label.isHovered() || visible.isHovered() || remove.isHovered() ? DisplayType.MANUAL : DisplayType.NONE;
+			DisplayType type = label.isHovered() || add.isHovered() || visible.isHovered() || remove.isHovered() ? DisplayType.MANUAL : DisplayType.NONE;
 			visible.getStyle().setDisplay(type);
 			remove.getStyle().setDisplay(type);
+			add.getStyle().setDisplay(type);
 		};
 		label.getListenerMap().addListener(CursorEnterEvent.class, clis);
 		remove.getListenerMap().addListener(CursorEnterEvent.class, clis);
 		visible.getListenerMap().addListener(CursorEnterEvent.class, clis);
+		add.getListenerMap().addListener(CursorEnterEvent.class, clis);
 		//
-		UIUtils.hide(remove, visible);
+		UIUtils.hide(remove, visible, add);
 		if(!PolygonTree.SORT_MODE) UIUtils.hide(sort_up, sort_dw);
 	}
 
@@ -93,9 +99,21 @@ public class AnimComponent extends EditorComponent {
 	public void minimize(Boolean bool){
 		super.minimize(bool);
 		group.minimized = minimized;
-		if(root != null){
-			root.resize();
+	}
+
+	public void openAdd(){
+		Dialog dialog = new Dialog("Select an Animation", 420, 70);
+		SelectBox<String> select = new SelectBox<>(10, 10, 400, 30);
+		for(FvtmTypes.ProgRef str : FvtmTypes.PROGRAMS){
+			select.addElement(str.name());
 		}
+		select.addSelectBoxChangeSelectionEventListener(event -> {
+			dialog.close();
+		});
+		select.setVisibleCount(8);
+		dialog.getContainer().add(select);
+		dialog.setResizable(false);
+		dialog.show(FMT.FRAME);
 	}
 
 	private void addAnimation(Animation anim, boolean resort){
