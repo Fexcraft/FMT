@@ -1,5 +1,8 @@
 package net.fexcraft.app.fmt.utils.fvtm;
 
+import net.fexcraft.app.fmt.animation.AnimRef;
+import net.fexcraft.app.fmt.animation.Animation;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -53,9 +56,27 @@ public class FvtmTypes {
 	}
 
 	private static void addProg(String... arr){
-		PROGRAMS.add(new ProgRef(arr[0], arr[1], arr[2], Arrays.copyOfRange(arr, 3, arr.length)));
+		addProg(new AnimRef(arr[2]), arr);
 	}
 
-	public static record ProgRef(String cat, String name, String id, String... args){}
+	private static void addProg(Animation anim, String... arr){
+		PROGRAMS.add(new ProgRef(arr[0], arr[1], arr[2], anim, Arrays.copyOfRange(arr, 3, arr.length)));
+	}
+
+	public static ProgRef getProgRef(String id){
+		for(ProgRef prog : PROGRAMS){
+			if(prog.id.equals(id)) return prog;
+		}
+		return null;
+	}
+
+	public static record ProgRef(String cat, String name, String id, Animation anim, String... args){
+
+		@Override
+		public String toString(){
+			return name;
+		}
+
+	}
 
 }
