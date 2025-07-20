@@ -16,11 +16,14 @@ import net.fexcraft.app.fmt.animation.Animation;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.*;
+import net.fexcraft.app.fmt.ui.fields.RunButton;
 import net.fexcraft.app.fmt.update.UpdateEvent.*;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.utils.fvtm.FvtmTypes;
+import net.fexcraft.app.json.JsonMap;
 
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 import static net.fexcraft.app.fmt.settings.Settings.*;
 
@@ -33,7 +36,7 @@ public class AnimComponent extends EditorComponent {
 	private static final int EMS = 120;
 	private ArrayList<AnimationLabel> animations = new ArrayList<>();
 	protected Icon visible;
-	protected Icon remove;
+	//protected Icon remove;
 	protected Icon sort_up;
 	protected Icon sort_dw;
 	protected Icon add;
@@ -45,10 +48,16 @@ public class AnimComponent extends EditorComponent {
 		this.genFullheight();
 		add(add = new Icon((byte)2, "./resources/textures/icons/component/add.png", this::openAdd));
 		add(visible = new Icon((byte)3, "./resources/textures/icons/component/visible.png", this::pin));
-		add(remove = new Icon((byte)4, "./resources/textures/icons/component/remove.png", () -> FMT.MODEL.remGroup(group)));
-		add(sort_dw = new Icon((byte)5, "./resources/textures/icons/component/move_down.png", () -> FMT.MODEL.swap(group, 1, true)));
-		add(sort_up = new Icon((byte)6, "./resources/textures/icons/component/move_up.png", () -> FMT.MODEL.swap(group, -1, true)));
+		//add(remove = new Icon((byte)4, "./resources/textures/icons/component/remove.png", () -> FMT.MODEL.remGroup(group)));
+		add(sort_dw = new Icon((byte)4, "./resources/textures/icons/component/move_down.png", () -> FMT.MODEL.swap(group, 1, true)));
+		add(sort_up = new Icon((byte)5, "./resources/textures/icons/component/move_up.png", () -> FMT.MODEL.swap(group, -1, true)));
 		updcom.add(GroupRenamed.class, event -> { if(event.group() == group) label.getTextState().setText(group.id); });
+		updcom.add(GroupAnimationAdded.class, event -> {
+			if(event.group() == group) addAnimation(event.anim(), true);
+		});
+		updcom.add(GroupAnimationRemoved.class, event -> {
+			if(event.group() == group) removeAnimation(event.anim());
+		});
 		group.animations.forEach(anim -> addAnimation(anim, false));
 		update_color();
 		MouseClickEventListener listener = lis -> {
@@ -77,17 +86,17 @@ public class AnimComponent extends EditorComponent {
 		label.getListenerMap().addListener(MouseClickEvent.class, listener);
 		//
 		CursorEnterEventListener clis = lis -> {
-			DisplayType type = label.isHovered() || add.isHovered() || visible.isHovered() || remove.isHovered() ? DisplayType.MANUAL : DisplayType.NONE;
+			DisplayType type = label.isHovered() || add.isHovered() || visible.isHovered() /*|| remove.isHovered()*/ ? DisplayType.MANUAL : DisplayType.NONE;
 			visible.getStyle().setDisplay(type);
-			remove.getStyle().setDisplay(type);
+			//remove.getStyle().setDisplay(type);
 			add.getStyle().setDisplay(type);
 		};
 		label.getListenerMap().addListener(CursorEnterEvent.class, clis);
-		remove.getListenerMap().addListener(CursorEnterEvent.class, clis);
+		//remove.getListenerMap().addListener(CursorEnterEvent.class, clis);
 		visible.getListenerMap().addListener(CursorEnterEvent.class, clis);
 		add.getListenerMap().addListener(CursorEnterEvent.class, clis);
 		//
-		UIUtils.hide(remove, visible, add);
+		UIUtils.hide(/*remove,*/ visible, add);
 		if(!PolygonTree.SORT_MODE) UIUtils.hide(sort_up, sort_dw);
 	}
 
@@ -102,16 +111,40 @@ public class AnimComponent extends EditorComponent {
 	}
 
 	public void openAdd(){
-		Dialog dialog = new Dialog("Select an Animation", 420, 70);
-		SelectBox<String> select = new SelectBox<>(10, 10, 400, 30);
-		for(FvtmTypes.ProgRef str : FvtmTypes.PROGRAMS){
-			select.addElement(str.name());
+		int width = 400;
+		Dialog dialog = new Dialog("Animation Chooser", width + 20, 200);
+		dialog.getContainer().add(new Label("Animation Category", 10, 10, width, 30));
+		SelectBox<String> cats = new SelectBox<>(10, 40, width, 30);
+		for(String str : FvtmTypes.PROGRAM_CATS){
+			cats.addElement(str);
 		}
-		select.addSelectBoxChangeSelectionEventListener(event -> {
-			dialog.close();
+		dialog.getContainer().add(new Label("Animation Type", 10, 70, width, 30));
+		SelectElm<FvtmTypes.ProgRef> progs = new SelectElm<>(10, 100, width, 30);
+		cats.addSelectBoxChangeSelectionEventListener(event -> {
+			progs.clearElements();
+			for(FvtmTypes.ProgRef ref : FvtmTypes.PROGRAMS.stream().filter(r -> r.cat().equals(event.getNewValue())).toList()){
+				progs.addElement(ref);
+			}
 		});
-		select.setVisibleCount(8);
-		dialog.getContainer().add(select);
+		cats.setVisibleCount(12);
+		progs.setVisibleCount(12);
+		dialog.getContainer().add(cats);
+		dialog.getContainer().add(progs);
+		dialog.getContainer().add(new RunButton("dialog.button.confirm", 10, 140, 100, 30, () -> {
+			FvtmTypes.ProgRef ref = progs.getSelection();
+			if(ref == null) return;
+			dialog.close();
+			Consumer<JsonMap> cons = map -> {
+				Animation anim = ref.anim().create(map);
+				group.animations.add(anim);
+				if(group.animations.size() == 1) minimize(false);
+				UpdateHandler.update(new GroupAnimationAdded(group, anim));
+			};
+			if(ref.args().length > 0){
+
+			}
+			else cons.accept(new JsonMap());
+		}, false));
 		dialog.setResizable(false);
 		dialog.show(FMT.FRAME);
 	}
@@ -176,7 +209,7 @@ public class AnimComponent extends EditorComponent {
 			Settings.applyBorderless(this);
 			setSize(Editor.CWIDTH - 8, PH);
 			Icon remo = new Icon(0, 16, 4, Editor.CWIDTH - 26, 2, "./resources/textures/icons/component/remove.png", () -> {
-				com.group.remove(anim);
+				if(com.group.animations.remove(anim)) UpdateHandler.update(new GroupAnimationRemoved(com.group, anim));
 			});
 			Icon visi = new Icon(0, 16, 4, Editor.CWIDTH - 46, 2, "./resources/textures/icons/component/visible.png", () -> {
 				anim.enabled = !anim.enabled;
@@ -216,7 +249,7 @@ public class AnimComponent extends EditorComponent {
 		}
 		
 		public AnimationLabel update_color(){
-			getStyle().setTextColor(anim.enabled ? ColorConstants.darkGray() : ColorConstants.lightGray());
+			getStyle().setTextColor(anim.enabled ? ColorConstants.lightGray() : ColorConstants.darkGray());
 			getStyle().getBackground().setColor(FMT.rgba((anim.enabled ? POLYGON_NORMAL : POLYGON_INVISIBLE).value));
 			return this;
 		}
