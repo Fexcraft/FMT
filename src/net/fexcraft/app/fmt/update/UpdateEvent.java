@@ -1,5 +1,6 @@
 package net.fexcraft.app.fmt.update;
 
+import net.fexcraft.app.fmt.animation.Animation;
 import net.fexcraft.app.fmt.polygon.*;
 import net.fexcraft.app.fmt.polygon.Vertoff.VOKey;
 import net.fexcraft.app.fmt.polygon.uv.Face;
@@ -29,6 +30,8 @@ public class UpdateEvent {
     public static record GroupRemoved(Model model, Group group){};
     public static record GroupSelected(Group group, int prevselected, int selected){};
     public static record GroupVisibility(Group group, boolean visible){};
+    public static record GroupAnimationAdded(Group group, Animation anim){};
+    public static record GroupAnimationRemoved(Group group, Animation anim){};
 
     public static record PivotAdded(Model model, Pivot pivot){};
     public static record PivotRenamed(Pivot pivot, String name){};
