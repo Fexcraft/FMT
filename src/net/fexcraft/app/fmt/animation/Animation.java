@@ -2,6 +2,7 @@ package net.fexcraft.app.fmt.animation;
 
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.PolyRenderer.DrawMode;
+import net.fexcraft.app.fmt.utils.fvtm.FvtmTypes;
 import net.fexcraft.app.json.JsonMap;
 
 import java.util.HashMap;
@@ -15,15 +16,21 @@ public abstract class Animation {
 	public static HashMap<String, Animation> ANIMATIONS = new LinkedHashMap<>();
 	protected static String[] NOKEYS = new String[0];
 	//
-	public boolean enabled;
+	public boolean enabled = true;
 
 	public static void init(){
+		ANIMATIONS.put("ref", new AnimRef("fmt:reference"));
 		ANIMATIONS.put("translator", new Translator());
 	}
 
 	public static Animation load(JsonMap map){
-		Animation anim = ANIMATIONS.get(map.getString("id", null));
-		return anim == null ? null : anim.create(map);
+		String id = map.getString("id", null);
+		if(id == null) return null;
+		Animation anim = ANIMATIONS.containsKey(id) ? ANIMATIONS.get(id) : FvtmTypes.getProgRef(id).anim();
+		if(anim == null) return null;
+		anim = anim.create(map);
+		anim.enabled = map.getBoolean("enabled", true);
+		return anim;
 	}
 
 	public abstract Animation create(JsonMap map);
