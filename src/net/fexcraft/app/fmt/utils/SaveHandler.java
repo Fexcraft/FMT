@@ -469,7 +469,11 @@ public class SaveHandler {
 					JsonArray anim = new JsonArray();
 					for(Animation ani : group.animations){
 						JsonMap jm = ani.save();
-						if(jm != null) anim.add(jm);
+						if(jm != null){
+							jm.add("id", ani.id());
+							jm.add("enabled", ani.enabled);
+							anim.add(jm);
+						}
 					}
 					grobj.add("animations", anim);
 				}
