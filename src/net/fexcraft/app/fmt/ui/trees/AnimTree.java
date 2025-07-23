@@ -5,6 +5,7 @@ import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.ui.EditorComponent;
+import net.fexcraft.app.fmt.ui.trees.AnimComponent.AnimationLabel;
 import net.fexcraft.app.fmt.update.UpdateEvent.*;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
@@ -15,6 +16,7 @@ import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
 public class AnimTree extends Editor {
 
 	private static UpdateCompound updcom = new UpdateCompound();
+	public static AnimationLabel SELECTED;
 
 	public AnimTree(){
 		super(Trees.ANIMATION.id, "Animation Tree", true);
@@ -24,6 +26,14 @@ public class AnimTree extends Editor {
 		updcom.add(ModelLoad.class, event -> resizeGroups(event.model()));
 		updcom.add(ModelUnload.class, event -> removeGroups(event.model()));
 		UpdateHandler.register(updcom);
+	}
+
+	public static void select(AnimationLabel anim){
+		AnimationLabel old = SELECTED;
+		SELECTED = SELECTED == anim ? null : anim;
+		if(old != null) old.update_color();
+		if(anim != null) anim.update_color();
+		Editor.ANIM_EDITOR.refreshAnimData();
 	}
 
 	@Override
