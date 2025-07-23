@@ -2,6 +2,8 @@ package net.fexcraft.app.fmt.utils.fvtm;
 
 import net.fexcraft.app.fmt.animation.AnimRef;
 import net.fexcraft.app.fmt.animation.Animation;
+import net.fexcraft.app.fmt.animation.AttrTranslator;
+import net.fexcraft.app.fmt.animation.Translator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,6 +23,9 @@ public class FvtmTypes {
 		String fvtm_s = "FVTM Signs";
 		String misc = "FVTM Misc";
 		PROGRAM_CATS = new String[]{ general, fvtm_l, fvtm_a, fvtm_r, misc };
+		//
+		addProg(new Translator(), general, "Translator", "fvtm:translator");
+ 		//
 		addProg(fvtm_l, "Glow/Light", "fvtm:glow");
 		addProg(fvtm_l, "Vehicle Lights", "fvtm:lights");
 		addProg(fvtm_l, "Vehicle Lights - Front", "fvtm:front_lights");
@@ -46,8 +51,10 @@ public class FvtmTypes {
 		addProg(fvtm_r, "Bogie/Truck Auto-Rotation (Front)", "fvtm:bogie_front");
 		addProg(fvtm_r, "Bogie/Truck Auto-Rotation (Rear)", "fvtm:bogie_rear");
 		//
+		addProg(new AttrTranslator(), fvtm_a, "Attr. Translator", "fvtm:attribute_translator",
+			"attribute:s", "bool-type:b", "min:f", "max:f", "step:f", "axe:i:0:2");
 		addProg(fvtm_a, "Attr. Lights", "fvtm:attribute_lights", "attribute:s");
-		addProg(fvtm_a, "Attr. Lights - Signal/Emergency", "fvtm:attribute_signal_lights", "attribute:s", "channel:i:0:0:3");
+		addProg(fvtm_a, "Attr. Lights - Signal/Emergency", "fvtm:attribute_signal_lights", "attribute:s", "channel:i:0:3");
 		//
 		addProg(fvtm_s, "Sign Base", "fvtm:sign_base");
 		//
