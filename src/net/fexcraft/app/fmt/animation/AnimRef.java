@@ -42,11 +42,6 @@ public class AnimRef extends Animation {
 	}
 
 	@Override
-	public String[] keys(){
-		return new String[0];
-	}
-
-	@Override
 	public Object get(String str){
 		return null;
 	}
