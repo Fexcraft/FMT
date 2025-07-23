@@ -287,5 +287,12 @@ public class Editor extends Component {
 			editor.hide();
 		}
 	}
+
+	public void clearComponents(){
+		ArrayList<EditorComponent> com = new ArrayList<>(components);
+		for(EditorComponent component : com){
+			removeComponent(component);
+		}
+	}
 	
 }
