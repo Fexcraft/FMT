@@ -140,10 +140,8 @@ public class AnimComponent extends EditorComponent {
 				if(group.animations.size() == 1) minimize(false);
 				UpdateHandler.update(new GroupAnimationAdded(group, anim));
 			};
-			if(ref.args().length > 0){
-
-			}
-			else cons.accept(new JsonMap());
+			/*if(ref.args().length > 0){}
+			else*/ cons.accept(new JsonMap());
 		}, false));
 		dialog.setResizable(false);
 		dialog.show(FMT.FRAME);
