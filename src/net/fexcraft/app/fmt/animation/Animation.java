@@ -43,8 +43,6 @@ public abstract class Animation {
 
 	public abstract String id();
 
-	public abstract String[] keys();
-
 	public abstract Object get(String str);
 
 	public abstract void set(String str, Object val);
