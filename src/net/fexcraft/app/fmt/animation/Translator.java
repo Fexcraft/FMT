@@ -74,11 +74,6 @@ public class Translator extends Animation {
 	}
 
 	@Override
-	public String[] keys(){
-		return keys;
-	}
-
-	@Override
 	public Object get(String str){
 		switch(str){
 			case "x": return x;
