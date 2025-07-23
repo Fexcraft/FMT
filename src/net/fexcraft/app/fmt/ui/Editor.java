@@ -53,6 +53,7 @@ public class Editor extends Component {
 	public static Editor UV_EDITOR;
 	public static Editor PREVIEW_EDITOR;
 	public static ConfigEditor CONFIG_EDITOR;
+	public static AnimationEditor ANIM_EDITOR;
 	public static PolygonTree POLYGON_TREE;
 	public static Editor PIVOT_TREE;
 	public static Editor TEXTURE_TREE;
@@ -258,6 +259,7 @@ public class Editor extends Component {
 		Editor.UV_EDITOR = new UVEditor();
 		Editor.PREVIEW_EDITOR = new PreviewEditor();
 		Editor.CONFIG_EDITOR = new ConfigEditor();
+		Editor.ANIM_EDITOR = new AnimationEditor();
 		Editor.POLYGON_TREE = new PolygonTree();
 		Editor.PIVOT_TREE = new PivotTree();
 		Editor.TEXTURE_TREE = new TextureTree();
