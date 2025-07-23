@@ -214,7 +214,8 @@ public class AnimComponent extends EditorComponent {
 				update_color();
 			});
 			Icon edit = new Icon(0, 16, 4, Editor.CWIDTH - 66, 2, "./resources/textures/icons/component/edit.png", () -> {
-				//TODO
+				Editor.ANIM_EDITOR.show();
+				AnimTree.select(this);
 			});
 			CursorEnterEventListener listener = lis -> {
 				DisplayType type = this.isHovered() || remo.isHovered() || visi.isHovered() || edit.isHovered() ? DisplayType.MANUAL : DisplayType.NONE;
@@ -226,6 +227,11 @@ public class AnimComponent extends EditorComponent {
 			remo.getListenerMap().addListener(CursorEnterEvent.class, listener);
 			visi.getListenerMap().addListener(CursorEnterEvent.class, listener);
 			edit.getListenerMap().addListener(CursorEnterEvent.class, listener);
+			this.getListenerMap().addListener(MouseClickEvent.class, lis -> {
+				if(lis.getAction() == MouseClickAction.CLICK && lis.getButton() == MouseButton.MOUSE_BUTTON_LEFT){
+					AnimTree.select(this);
+				}
+			});
 			UIUtils.hide(remo, visi, edit);
 			add(remo);
 			add(visi);
@@ -248,7 +254,7 @@ public class AnimComponent extends EditorComponent {
 		
 		public AnimationLabel update_color(){
 			getStyle().setTextColor(anim.enabled ? ColorConstants.lightGray() : ColorConstants.darkGray());
-			getStyle().getBackground().setColor(FMT.rgba((anim.enabled ? POLYGON_NORMAL : POLYGON_INVISIBLE).value));
+			getStyle().getBackground().setColor(FMT.rgba((anim.enabled ? AnimTree.SELECTED == this ? POLYGON_SELECTED : POLYGON_NORMAL : AnimTree.SELECTED == this ? POLYGON_INV_SEL : POLYGON_INVISIBLE).value));
 			return this;
 		}
 		
