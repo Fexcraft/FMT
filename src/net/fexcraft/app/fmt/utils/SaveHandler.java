@@ -497,7 +497,7 @@ public class SaveHandler {
 		if(!export){
 			JsonMap attrs = new JsonMap();
 			for(Entry<String, VehAttr> attr : model.vehattrs.entrySet()){
-				map.add(attr.getKey(), attr.getValue().save());
+				attrs.add(attr.getKey(), attr.getValue().save());
 			}
 			map.add("variables", attrs);
 			//
