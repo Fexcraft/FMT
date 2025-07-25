@@ -22,6 +22,7 @@ import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.update.UpdateEvent.*;
 import net.fexcraft.app.fmt.utils.*;
+import net.fexcraft.app.fmt.utils.fvtm.VehAttr;
 import net.fexcraft.app.json.JsonValue;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.frl.Polyhedron;
@@ -69,6 +70,7 @@ public class Model {
 	public LinkedHashMap<String, ArrayList<String>> export_listed_values = new LinkedHashMap<>();
 	public ArrayList<ArrayList<String>> export_group_presets = new ArrayList<>();
 	public ArrayList<String> export_group_preset_keys = new ArrayList<>();
+	public LinkedHashMap<String, VehAttr> vehattrs = new LinkedHashMap<>();
 	public ModelOrientation orient = ModelOrientation.FVTM4_DEFAULT;
 	public ModelFormat format = ModelFormat.UNIVERSAL;
 	public Matrix4f matrix;
