@@ -37,6 +37,8 @@ public abstract class Animation {
 
 	public abstract JsonMap save();
 
+	public abstract void update();
+
 	public abstract void pre(Group group, DrawMode mode, float alpha);
 
 	public abstract void pst(Group group, DrawMode mode, float alpha);
