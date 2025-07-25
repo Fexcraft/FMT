@@ -18,6 +18,7 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import net.fexcraft.app.fmt.animation.Animation;
 import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.update.UpdateEvent.*;
@@ -881,5 +882,12 @@ public class Model {
 		return (T)FMT.MODEL.vehattrs.get(key).value;
 	}
 
+	public void updateAnimations(){
+		for(Group group : allgroups){
+			for(Animation anim : group.animations){
+				anim.update();
+			}
+		}
+	}
 
 }
