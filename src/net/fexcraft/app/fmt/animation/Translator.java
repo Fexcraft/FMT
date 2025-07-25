@@ -53,18 +53,18 @@ public class Translator extends Animation {
 	@Override
 	public void pre(Group group, PolyRenderer.DrawMode mode, float alpha){
 		for(Polygon poly : group){
-			poly.pos.x += x;
-			poly.pos.y += y;
-			poly.pos.z += z;
+			poly.glm.posX += x;
+			poly.glm.posY += y;
+			poly.glm.posZ += z;
 		}
 	}
 
 	@Override
 	public void pst(Group group, PolyRenderer.DrawMode mode, float alpha){
 		for(Polygon poly : group){
-			poly.pos.x -= x;
-			poly.pos.y -= y;
-			poly.pos.z -= z;
+			poly.glm.posX -= x;
+			poly.glm.posY -= y;
+			poly.glm.posZ -= z;
 		}
 	}
 
