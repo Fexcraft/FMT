@@ -92,7 +92,8 @@ public class Toolbar extends Panel {
 			new MenuButton(4, "editors.uv", () -> Editor.UV_EDITOR.toggle()),
 			new MenuButton(5, "editors.preview", () -> Editor.PREVIEW_EDITOR.toggle()),
 			new MenuButton(6, "editors.config", () -> Editor.CONFIG_EDITOR.toggle()),
-			new MenuButton(7, "editors.anim", () -> Editor.ANIM_EDITOR.toggle())
+			new MenuButton(7, "editors.anim", () -> Editor.ANIM_EDITOR.toggle()),
+			new MenuButton(8, "editors.var", () -> Editor.VAR_EDITOR.toggle())
 		));
 		this.add(new ToolbarMenu(3, "trees",
 			new MenuButton(0, "trees.polygon", () -> Editor.POLYGON_TREE.toggle()),
