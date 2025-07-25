@@ -83,7 +83,7 @@ public class Group extends ArrayList<Polygon> {
 	public void render(DrawMode mode, float alpha){
 		if(!visible) return;
 		bindtex();
-		for(Animation animation : animations) animation.pre(this, mode, alpha);
+		for(Animation animation : animations) if(animation.enabled) animation.pre(this, mode, alpha);
 		if(mode == DrawMode.LINES){
 			PolyRenderer.mode(selected ? DrawMode.SELLINES : DrawMode.LINES);
 			for(Polygon poly : this){
@@ -98,7 +98,7 @@ public class Group extends ArrayList<Polygon> {
 				if(poly.visible) poly.render(alpha);
 			}
 		}
-		for(Animation animation : animations) animation.pst(this, mode, alpha);
+		for(Animation animation : animations) if(animation.enabled) animation.pst(this, mode, alpha);
 	}
 
 	public void renderPicking(){
