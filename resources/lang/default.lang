@@ -34,6 +34,7 @@ toolbar.editors.uv=UV Editor
 toolbar.editors.preview=Preview Editor
 toolbar.editors.config=Config Editor
 toolbar.editors.anim=Animation Editor
+toolbar.editors.var=Var./Attr. Editor
 toolbar.trees=Trees
 toolbar.trees.polygon=Polygons
 toolbar.trees.pivot=Pivots
