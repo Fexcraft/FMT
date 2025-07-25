@@ -2,6 +2,7 @@ package net.fexcraft.app.fmt.ui.editors;
 
 import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.ui.Editor;
+import net.fexcraft.app.fmt.ui.components.AttrComponent;
 import net.fexcraft.app.fmt.ui.components.DynAttrComponent;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateHandler;
@@ -24,6 +25,7 @@ public class VariableEditor extends Editor {
 
 	public void refreshVarData(Model model){
 		clearComponents();
+		addComponent(new AttrComponent());
 		for(Map.Entry<String, VehAttr> entry : model.vehattrs.entrySet()){
 			addComponent(new DynAttrComponent(entry.getKey(), entry.getValue()));
 		}
