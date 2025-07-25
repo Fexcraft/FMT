@@ -873,4 +873,13 @@ public class Model {
 		UpdateHandler.update(new VertexSelected(null, 0));
 	}
 
+	public static VehAttr getAttr(String key){
+		return FMT.MODEL.vehattrs.get(key);
+	}
+
+	public static <T> T getAttrVal(String key, Class<T> clazz){
+		return (T)FMT.MODEL.vehattrs.get(key).value;
+	}
+
+
 }
