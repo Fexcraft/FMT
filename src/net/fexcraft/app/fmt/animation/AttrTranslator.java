@@ -17,7 +17,9 @@ public class AttrTranslator extends Animation {
 	public float min = -16;
 	public float max = 16;
 	public float step = 0.1f;
+	public float ocur;
 	public float curr;
+	public float icur;
 	public boolean booltype = true;
 	public String attr;
 
@@ -46,7 +48,8 @@ public class AttrTranslator extends Animation {
 	}
 
 	@Override
-	public void pre(Group group, PolyRenderer.DrawMode mode, float alpha){
+	public void update(){
+		ocur = curr;
 		if(FMT.MODEL.vehattrs.containsKey(attr)){
 			try{
 				if(booltype){
@@ -62,7 +65,11 @@ public class AttrTranslator extends Animation {
 				Logging.bar(e.getMessage());
 			}
 		}
-		//
+	}
+
+	@Override
+	public void pre(Group group, PolyRenderer.DrawMode mode, float alpha){
+		icur = ocur + (curr - ocur) * alpha;
 		if(axe == 0) for(Polygon poly : group) poly.glm.posX += curr;
 		else if(axe == 1) for(Polygon poly : group) poly.glm.posY += curr;
 		else if(axe == 2) for(Polygon poly : group) poly.glm.posZ += curr;
