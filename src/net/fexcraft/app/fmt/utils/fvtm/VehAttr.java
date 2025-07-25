@@ -11,6 +11,11 @@ public class VehAttr {
 	public Object value;
 	public Type type;
 
+	public VehAttr(Type typ, Object val){
+		type = typ;
+		value = val;
+	}
+
 	public VehAttr(JsonMap map){
 		type = Type.valueOf(map.getString("type", "string").toUpperCase());
 		switch(type){
@@ -31,7 +36,7 @@ public class VehAttr {
 
 	public static enum Type {
 
-		STRING, BOOL, INT, FLOAT, LONG
+		STRING, BOOL, INT, FLOAT, LONG, TRISTATE
 
 	}
 
