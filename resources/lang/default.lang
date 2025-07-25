@@ -311,7 +311,14 @@ editor.component.config.general.run_utils=Run Utils
 editor.component.vertex.name=Vertex Adjustment
 editor.component.vertex.index=Index / Selected Total
 editor.component.vertex.offset=Offset
-//
+editor.component.variable.name=Add new Variable/Attribute
+editor.component.variable.add.boolean=Add new Boolean Type Var
+editor.component.variable.add.tristate=Add new TriState Type Var
+editor.component.variable.add.string=Add new String/Text Type Var
+editor.component.variable.add.integer=Add new Integer (full number) Type Var
+editor.component.variable.add.float=Add new Float (decimal number) Type Var
+editor.component.variable.add.long=Add new Long (Java Long Number) Type Var
+
 editor.component.multiplier=Multiplier
 editor.component.multiplicator.value=Rate:
 editor.component.marker_scale=(Corner) Marker Scale
@@ -636,6 +643,8 @@ group_add.dialog=Add new Group
 group_add.dialog.name=New Group's name/id:
 pivot_add.dialog=Add new Pivot
 pivot_add.dialog.name=New Pivot's id:
+variable_add.dialog=Add new Variable/Attribute
+variable_add.dialog.name=New Variable/Attribute's id:
 model.delete.remove_selected_polygons=Remove ALL selected polygons? Total:
 model.clipboard.paste_external=Are you sure to paste these polygons?
 model.clipboard.paste_external_grouped=Are you sure to paste these groups and polygons?
