@@ -25,6 +25,7 @@ import net.fexcraft.app.fmt.port.im.ImportManager;
 import net.fexcraft.app.fmt.port.im.Importer;
 import net.fexcraft.app.fmt.update.UpdateEvent.ModelLoad;
 import net.fexcraft.app.fmt.update.UpdateEvent.ModelUnload;
+import net.fexcraft.app.fmt.utils.fvtm.VehAttr;
 import org.apache.commons.io.IOUtils;
 import org.joml.Vector3f;
 import com.spinyowl.legui.component.Button;
@@ -239,6 +240,12 @@ public class SaveHandler {
 			}
 		});
 		if(!preview){
+			if(map.has("variables")){
+				JsonMap attrs = map.getMap("variables");
+				for(Entry<String, JsonValue<?>> entry : attrs.entries()){
+					model.vehattrs.put(entry.getKey(), new VehAttr(entry.getValue().asMap()));
+				}
+			}
 			if(map.has("camera_pos")){
 				JsonArray pos = map.getArray("camera_pos");
 				FMT.CAM.pos.x = pos.get(0).float_value();
@@ -488,6 +495,12 @@ public class SaveHandler {
 		}
 		map.add("groups", modobj);
 		if(!export){
+			JsonMap attrs = new JsonMap();
+			for(Entry<String, VehAttr> attr : model.vehattrs.entrySet()){
+				map.add(attr.getKey(), attr.getValue().save());
+			}
+			map.add("variables", attrs);
+			//
 			JsonArray array = new JsonArray();
 			array.add(FMT.CAM.pos.x);
 			array.add(FMT.CAM.pos.y);
