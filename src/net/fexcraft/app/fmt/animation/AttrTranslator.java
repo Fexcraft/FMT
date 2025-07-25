@@ -1,8 +1,11 @@
 package net.fexcraft.app.fmt.animation;
 
+import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.Group;
+import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.polygon.PolyRenderer;
 import net.fexcraft.app.fmt.polygon.Polygon;
+import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.json.JsonMap;
 
 /**
@@ -44,20 +47,32 @@ public class AttrTranslator extends Animation {
 
 	@Override
 	public void pre(Group group, PolyRenderer.DrawMode mode, float alpha){
-		curr = booltype ? (true ? curr + step : curr - step) : 0;//TODO
-		if(curr > max) curr = max;
-		if(curr < min) curr = min;
+		if(FMT.MODEL.vehattrs.containsKey(attr)){
+			try{
+				if(booltype){
+					curr += Model.getAttrVal(attr, boolean.class) ? step : -step;
+				}
+				else{
+					curr = Model.getAttrVal(attr, Number.class).floatValue();
+				}
+				if(curr > max) curr = max;
+				if(curr < min) curr = min;
+			}
+			catch(Exception e){
+				Logging.bar(e.getMessage());
+			}
+		}
 		//
-		if(axe == 0) for(Polygon poly : group) poly.pos.x += curr;
-		else if(axe == 1) for(Polygon poly : group) poly.pos.y += curr;
-		else if(axe == 2) for(Polygon poly : group) poly.pos.z += curr;
+		if(axe == 0) for(Polygon poly : group) poly.glm.posX += curr;
+		else if(axe == 1) for(Polygon poly : group) poly.glm.posY += curr;
+		else if(axe == 2) for(Polygon poly : group) poly.glm.posZ += curr;
 	}
 
 	@Override
 	public void pst(Group group, PolyRenderer.DrawMode mode, float alpha){
-		if(axe == 0) for(Polygon poly : group) poly.pos.x -= curr;
-		else if(axe == 1) for(Polygon poly : group) poly.pos.y -= curr;
-		else if(axe == 2) for(Polygon poly : group) poly.pos.z -= curr;
+		if(axe == 0) for(Polygon poly : group) poly.glm.posX -= curr;
+		else if(axe == 1) for(Polygon poly : group) poly.glm.posY -= curr;
+		else if(axe == 2) for(Polygon poly : group) poly.glm.posZ -= curr;
 	}
 
 	@Override
@@ -84,7 +99,7 @@ public class AttrTranslator extends Animation {
 			case "min": min = (float)val; break;
 			case "max": max = (float)val; break;
 			case "axe":{
-				int ax = (int)val;
+				int ax = (int)(float)val;
 				if(ax < 0) ax = 0;
 				if(ax > 2) ax = 2;
 				axe = ax;
