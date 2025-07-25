@@ -1,9 +1,6 @@
 package net.fexcraft.app.fmt.utils.fvtm;
 
-import net.fexcraft.app.fmt.animation.AnimRef;
-import net.fexcraft.app.fmt.animation.Animation;
-import net.fexcraft.app.fmt.animation.AttrTranslator;
-import net.fexcraft.app.fmt.animation.Translator;
+import net.fexcraft.app.fmt.animation.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,6 +50,8 @@ public class FvtmTypes {
 		//
 		addProg(new AttrTranslator(), fvtm_a, "Attr. Translator", "fvtm:attribute_translator",
 			"attribute:s", "bool-type:b", "min:f", "max:f", "step:f", "axe:i:0:2");
+		addProg(new AttrRotator(), fvtm_a, "Attr. Rotator", "fvtm:attribute_rotator",
+			"attribute:s", "bool-type:b", "min:f:-180:180", "max:f:-180:180", "step:f", "axe:i:0:2", "def-rot:f:-180:180");
 		addProg(fvtm_a, "Attr. Lights", "fvtm:attribute_lights", "attribute:s");
 		addProg(fvtm_a, "Attr. Lights - Signal/Emergency", "fvtm:attribute_signal_lights", "attribute:s", "channel:i:0:3");
 		//
