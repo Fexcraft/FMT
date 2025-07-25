@@ -27,6 +27,11 @@ public class AnimRef extends Animation {
 	}
 
 	@Override
+	public void update(){
+
+	}
+
+	@Override
 	public void pre(Group group, PolyRenderer.DrawMode mode, float alpha){
 
 	}
