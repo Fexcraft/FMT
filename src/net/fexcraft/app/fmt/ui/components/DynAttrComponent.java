@@ -1,6 +1,9 @@
 package net.fexcraft.app.fmt.ui.components;
 
+import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.ui.EditorComponent;
+import net.fexcraft.app.fmt.ui.Icon;
 import net.fexcraft.app.fmt.ui.fields.*;
 import net.fexcraft.app.fmt.utils.fvtm.VehAttr;
 
@@ -12,6 +15,10 @@ public class DynAttrComponent extends EditorComponent {
 	public DynAttrComponent(String key, VehAttr attr){
 		super("variable.dynamic", 60, false, true);
 		label.getTextState().setText(key);
+		add(new Icon((byte)2, "./resources/textures/icons/component/remove.png", () -> {
+			FMT.MODEL.vehattrs.remove(key);
+			Editor.VAR_EDITOR.refreshVarData(FMT.MODEL);
+		}));
 		switch(attr.type){
 			case STRING:{
 				add(new TextField(attr.value.toString(), L5, row(1), LW, HEIGHT, false).accept(text -> {
