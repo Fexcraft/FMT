@@ -28,13 +28,13 @@ public class AttrComponent extends EditorComponent {
 			openNewAttrDialog(() -> new VehAttr(VehAttr.Type.BOOL, false));
 		}).addTooltip("editor.component.variable.add.boolean"));
 		add(new Icon(0, 24, 0, 70, row(0), "./resources/textures/icons/configeditor/integer.png", () -> {
-			openNewAttrDialog(() -> new VehAttr(VehAttr.Type.INT, false));
+			openNewAttrDialog(() -> new VehAttr(VehAttr.Type.INT, 0));
 		}).addTooltip("editor.component.variable.add.integer"));
 		add(new Icon(0, 24, 0, 100, row(0), "./resources/textures/icons/configeditor/float.png", () -> {
-			openNewAttrDialog(() -> new VehAttr(VehAttr.Type.FLOAT, false));
+			openNewAttrDialog(() -> new VehAttr(VehAttr.Type.FLOAT, 0f));
 		}).addTooltip("editor.component.variable.add.float"));
 		add(new Icon(0, 24, 0, 130, row(0), "./resources/textures/icons/configeditor/integer.png", () -> {
-			openNewAttrDialog(() -> new VehAttr(VehAttr.Type.LONG, false));
+			openNewAttrDialog(() -> new VehAttr(VehAttr.Type.LONG, 0l));
 		}).addTooltip("editor.component.variable.add.long"));
 		add(new Icon(0, 24, 0, 160, row(0), "./resources/textures/icons/configeditor/bool.png", () -> {
 			openNewAttrDialog(() -> new VehAttr(VehAttr.Type.TRISTATE, false));
