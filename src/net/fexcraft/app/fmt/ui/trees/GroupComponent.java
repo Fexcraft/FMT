@@ -1,7 +1,6 @@
 package net.fexcraft.app.fmt.ui.trees;
 
 import static net.fexcraft.app.fmt.settings.Settings.*;
-import static net.fexcraft.app.fmt.update.UpdateHandler.update;
 import static net.fexcraft.app.fmt.utils.Translator.translate;
 
 import java.util.ArrayList;
@@ -10,8 +9,6 @@ import java.util.Collections;
 import com.spinyowl.legui.component.Panel;
 import com.spinyowl.legui.component.SelectBox;
 import net.fexcraft.app.fmt.polygon.*;
-import net.fexcraft.app.fmt.texture.TextureManager;
-import net.fexcraft.app.fmt.ui.components.GroupGeneral;
 import net.fexcraft.app.fmt.ui.fields.RunButton;
 import net.fexcraft.app.fmt.ui.fields.TextField;
 import net.fexcraft.app.fmt.update.UpdateEvent.*;
@@ -53,15 +50,16 @@ public class GroupComponent extends EditorComponent {
 	private TextField name;
 	private SelectBox<String> pivots = new SelectBox<>();
 	
-	public GroupComponent(Group group){
-		super(group.id, group.isEmpty() ? HEIGHT : HEIGHT + group.size() * PH + 4, true, true);
+	public GroupComponent(Group group, PivotComponent picom){
+		super(group.id, picom == null ? 0 : 4, group.isEmpty() ? HEIGHT : HEIGHT + group.size() * PH + 4, true, true);
+		root = picom;
 		label.getTextState().setText((this.group = group).id);
 		this.genFullheight();
-		add(visible = new Icon((byte)2, "./resources/textures/icons/component/visible.png", () -> pin()));
-		add(remove = new Icon((byte)3, "./resources/textures/icons/component/remove.png", () -> FMT.MODEL.remGroup(group)));
-		add(edit = new Icon((byte)4, "./resources/textures/icons/component/edit.png", () -> toggleEditMode()));
-		add(sort_dw = new Icon((byte)5, "./resources/textures/icons/component/move_down.png", () -> FMT.MODEL.swap(group, 1, true)));
-		add(sort_up = new Icon((byte)6, "./resources/textures/icons/component/move_up.png", () -> FMT.MODEL.swap(group, -1, true)));
+		add(visible = new Icon(this, 2, "./resources/textures/icons/component/visible.png", () -> pin()));
+		add(remove = new Icon(this, 3, "./resources/textures/icons/component/remove.png", () -> FMT.MODEL.remGroup(group)));
+		add(edit = new Icon(this, 4, "./resources/textures/icons/component/edit.png", () -> toggleEditMode()));
+		add(sort_dw = new Icon(this, 5, "./resources/textures/icons/component/move_down.png", () -> FMT.MODEL.swap(group, 1, true)));
+		add(sort_up = new Icon(this, 6, "./resources/textures/icons/component/move_up.png", () -> FMT.MODEL.swap(group, -1, true)));
 		updcom.add(GroupRenamed.class, event -> { if(event.group() == group) label.getTextState().setText(group.id); });
 		updcom.add(PolygonAdded.class, event -> { if(event.group() == group) addPolygon(event.polygon(), true); });
 		updcom.add(PolygonRenamed.class, event -> { if(event.polygon().group() == group) renamePolygon(event.polygon()); });
@@ -121,11 +119,6 @@ public class GroupComponent extends EditorComponent {
 		if(!PolygonTree.SORT_MODE) UIUtils.hide(sort_up, sort_dw);
 	}
 
-	public GroupComponent(Group group, PivotComponent picom){
-		this(group);
-		root = picom;
-	}
-
 	private void toggleEditMode(){
 		editmode = !editmode;
 		if(editmode && editpanel == null){
@@ -133,7 +126,7 @@ public class GroupComponent extends EditorComponent {
 		}
 		UIUtils.show(editmode, editpanel);
 		resize();
-		editor.alignComponents();
+		(root == null ? editor : root.editor).alignComponents();
 	}
 
 	private int genFullheight(){
@@ -235,7 +228,7 @@ public class GroupComponent extends EditorComponent {
 
 		public PolygonLabel(GroupComponent com){
 			Settings.applyBorderless(this);
-			setSize(Editor.CWIDTH - 8, PH);
+			setSize(com.getSize().x - 8, PH);
 			Icon remo = new Icon(0, 16, 4, Editor.CWIDTH - 26, 2, "./resources/textures/icons/component/remove.png", () -> {
 				if(ASK_POLYGON_REMOVAL.value){
 					GenericDialog.showOC(null, () -> com.group.remove(polygon), null, "editor.component.group.polygon.remove", com.group.id + ":" + polygon.name());
