@@ -15,7 +15,7 @@ public class DynAttrComponent extends EditorComponent {
 	public DynAttrComponent(String key, VehAttr attr){
 		super("variable.dynamic", 60, false, true);
 		label.getTextState().setText(key);
-		add(new Icon((byte)2, "./resources/textures/icons/component/remove.png", () -> {
+		add(new Icon(this, 2, "./resources/textures/icons/component/remove.png", () -> {
 			FMT.MODEL.vehattrs.remove(key);
 			Editor.VAR_EDITOR.refreshVarData(FMT.MODEL);
 		}));
