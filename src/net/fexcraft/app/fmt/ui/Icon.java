@@ -1,5 +1,6 @@
 package net.fexcraft.app.fmt.ui;
 
+import com.spinyowl.legui.component.Component;
 import com.spinyowl.legui.component.ImageView;
 import com.spinyowl.legui.component.SelectBox;
 import com.spinyowl.legui.component.Tooltip;
@@ -33,14 +34,14 @@ public class Icon extends ImageView {
         });
     }
 
-    public Icon(byte index, String adress, MouseClickEventListener listener) {
+    public Icon(Component root, int index, String adress, MouseClickEventListener listener) {
         super(ImageLoader.loadImage(adress));
         int yoff = 1;
         if (index >= 10) {
             index /= 10;
             yoff = 4;
         }
-        this.setPosition(Editor.CWIDTH - (index * 25), yoff);
+        this.setPosition(root.getSize().x - (index * 25), yoff);
         this.setSize(22, 22);
         this.getListenerMap().addListener(MouseClickEvent.class, listener);
         Settings.applyBorderless(getStyle());
@@ -48,8 +49,8 @@ public class Icon extends ImageView {
         this.setFocusable(true);
     }
 
-    public Icon(byte index, String adress, Runnable run) {
-        this(index, adress, event -> {
+    public Icon(Component root, int index, String adress, Runnable run) {
+        this(root, index, adress, event -> {
             if (event.getAction() == CLICK && event.getButton() == MOUSE_BUTTON_LEFT) run.run();
         });
     }
