@@ -1,7 +1,6 @@
 package net.fexcraft.app.fmt.ui;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 
 import net.fexcraft.app.fmt.ui.editors.PolygonEditor;
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
@@ -10,7 +9,6 @@ import com.spinyowl.legui.component.Label;
 import com.spinyowl.legui.style.Style.DisplayType;
 
 import net.fexcraft.app.fmt.settings.Settings;
-import net.fexcraft.app.fmt.ui.components.*;
 import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.app.json.JsonMap;
 
@@ -42,16 +40,20 @@ public class EditorComponent extends Component {
 	public int index;
 	
 	public EditorComponent(String key){
-		this(key, 0, false, true);
+		this(key, 0, 0, false, true);
+	}
+
+	public EditorComponent(String key, int fullHeight, boolean tree, boolean resizeable){
+		this(key, 0, fullHeight, tree, resizeable);
 	}
 	
-	public EditorComponent(String key, int fullHeight, boolean tree, boolean resizeable){
+	public EditorComponent(String key, int subwidth, int fullHeight, boolean tree, boolean resizeable){
 		while(COMPONENTS.containsKey(uid)) uid++;
-		setSize(Editor.CWIDTH, fullheight = fullHeight > 0 ? fullHeight : HEIGHT * 2);
+		setSize(Editor.CWIDTH - subwidth, fullheight = fullHeight > 0 ? fullHeight : HEIGHT * 2);
 		add(label = new Label(Translator.translate(LANG_PREFIX + (id = key) + ".name"), 4, 0, 296, 24));
 		label.getStyle().setFontSize(18f);
 		Settings.applyComponentTheme(this);
-		add(size = new Icon((byte)1, "./resources/textures/icons/component/" + (tree ? "minimize" : "size") + ".png", () -> minimize(null)));
+		add(size = new Icon(this, 1, "./resources/textures/icons/component/" + (tree ? "minimize" : "size") + ".png", () -> minimize(null)));
 		if(!resizeable) size.getStyle().setDisplay(DisplayType.NONE);
 	}
 
