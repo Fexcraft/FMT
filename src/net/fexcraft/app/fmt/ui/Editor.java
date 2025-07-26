@@ -3,10 +3,8 @@ package net.fexcraft.app.fmt.ui;
 import static net.fexcraft.app.fmt.utils.Translator.translate;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
-import net.fexcraft.app.fmt.ui.SettingsDialog.SPVSL;
 import net.fexcraft.app.fmt.ui.editors.*;
 import net.fexcraft.app.fmt.ui.trees.*;
 import net.fexcraft.app.json.JsonHandler;
@@ -16,17 +14,11 @@ import com.spinyowl.legui.component.Component;
 import com.spinyowl.legui.component.Dialog;
 import com.spinyowl.legui.component.Label;
 import com.spinyowl.legui.component.ScrollablePanel;
-import com.spinyowl.legui.component.SelectBox;
-import com.spinyowl.legui.component.TextArea;
 import com.spinyowl.legui.component.misc.listener.scrollablepanel.ScrollablePanelViewportScrollListener;
-import com.spinyowl.legui.component.optional.align.HorizontalAlign;
-import com.spinyowl.legui.component.optional.align.VerticalAlign;
-import com.spinyowl.legui.event.CursorEnterEvent;
 import com.spinyowl.legui.event.MouseClickEvent;
 import com.spinyowl.legui.event.MouseClickEvent.MouseClickAction;
 import com.spinyowl.legui.event.ScrollEvent;
 import com.spinyowl.legui.input.Mouse.MouseButton;
-import com.spinyowl.legui.listener.CursorEnterEventListener;
 import com.spinyowl.legui.style.Border;
 import com.spinyowl.legui.style.Style.DisplayType;
 
@@ -34,9 +26,6 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.fields.TextField;
-import net.fexcraft.app.fmt.utils.Logging;
-import net.fexcraft.app.fmt.utils.Translator.Translations;
-import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
 
 /**
@@ -95,11 +84,11 @@ public class Editor extends Component {
 	protected void addTreeIcons(Trees type){
 		byte idx = 0, t = 0;
 		trees = new Icon[4];
-		if(type != Trees.POLYGON) add(trees[t++] = new Icon(idx += 10, "./resources/textures/icons/tree/polygon.png", () -> Editor.show(Trees.POLYGON.id)).addTooltip("editor.tree.polygon", false));
-		if(type != Trees.PIVOT) add(trees[t++] = new Icon(idx += 10, "./resources/textures/icons/tree/pivot.png", () -> Editor.show(Trees.PIVOT.id)).addTooltip("editor.tree.pivot", false));
-		if(type != Trees.HELPER) add(trees[t++] = new Icon(idx += 10, "./resources/textures/icons/tree/helper.png", () -> Editor.show(Trees.HELPER.id)).addTooltip("editor.tree.helper", false));
-		if(type != Trees.TEXTURE) add(trees[t++] = new Icon(idx += 10, "./resources/textures/icons/tree/textures.png", () -> Editor.show(Trees.TEXTURE.id)).addTooltip("editor.tree.texture", false));
-		if(type != Trees.ANIMATION) add(trees[t++] = new Icon(idx += 10, "./resources/textures/icons/tree/fvtm.png", () -> Editor.show(Trees.ANIMATION.id)).addTooltip("editor.tree.animation", false));
+		if(type != Trees.POLYGON) add(trees[t++] = new Icon(this, idx += 10, "./resources/textures/icons/tree/polygon.png", () -> Editor.show(Trees.POLYGON.id)).addTooltip("editor.tree.polygon", false));
+		if(type != Trees.PIVOT) add(trees[t++] = new Icon(this, idx += 10, "./resources/textures/icons/tree/pivot.png", () -> Editor.show(Trees.PIVOT.id)).addTooltip("editor.tree.pivot", false));
+		if(type != Trees.HELPER) add(trees[t++] = new Icon(this, idx += 10, "./resources/textures/icons/tree/helper.png", () -> Editor.show(Trees.HELPER.id)).addTooltip("editor.tree.helper", false));
+		if(type != Trees.TEXTURE) add(trees[t++] = new Icon(this, idx += 10, "./resources/textures/icons/tree/textures.png", () -> Editor.show(Trees.TEXTURE.id)).addTooltip("editor.tree.texture", false));
+		if(type != Trees.ANIMATION) add(trees[t++] = new Icon(this, idx += 10, "./resources/textures/icons/tree/fvtm.png", () -> Editor.show(Trees.ANIMATION.id)).addTooltip("editor.tree.animation", false));
 		//if(trees != null) for(Icon icon : trees) icon.getStyle().setDisplay(DisplayType.NONE);
 	}
 
