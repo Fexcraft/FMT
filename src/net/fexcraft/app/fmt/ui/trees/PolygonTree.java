@@ -46,7 +46,7 @@ public class PolygonTree extends Editor {
 	}
 
 	private void addGroup(Group group){
-		this.addComponent(new GroupComponent(group));
+		this.addComponent(new GroupComponent(group, null));
 	}
 	
 	private void remGroup(Group group){
