@@ -46,11 +46,11 @@ public class AnimComponent extends EditorComponent {
 		super(group.id, group.isEmpty() ? HEIGHT : HEIGHT + group.animations.size() * PH + 4, true, true);
 		label.getTextState().setText((this.group = group).id);
 		this.genFullheight();
-		add(add = new Icon((byte)2, "./resources/textures/icons/component/add.png", this::openAdd));
-		add(visible = new Icon((byte)3, "./resources/textures/icons/component/visible.png", this::pin));
-		//add(remove = new Icon((byte)4, "./resources/textures/icons/component/remove.png", () -> FMT.MODEL.remGroup(group)));
-		add(sort_dw = new Icon((byte)4, "./resources/textures/icons/component/move_down.png", () -> FMT.MODEL.swap(group, 1, true)));
-		add(sort_up = new Icon((byte)5, "./resources/textures/icons/component/move_up.png", () -> FMT.MODEL.swap(group, -1, true)));
+		add(add = new Icon(this, 2, "./resources/textures/icons/component/add.png", this::openAdd));
+		add(visible = new Icon(this, 3, "./resources/textures/icons/component/visible.png", this::pin));
+		//add(remove = new Icon(4, "./resources/textures/icons/component/remove.png", () -> FMT.MODEL.remGroup(group)));
+		add(sort_dw = new Icon(this, 4, "./resources/textures/icons/component/move_down.png", () -> FMT.MODEL.swap(group, 1, true)));
+		add(sort_up = new Icon(this, 5, "./resources/textures/icons/component/move_up.png", () -> FMT.MODEL.swap(group, -1, true)));
 		updcom.add(GroupRenamed.class, event -> { if(event.group() == group) label.getTextState().setText(group.id); });
 		updcom.add(GroupAnimationAdded.class, event -> {
 			if(event.group() == group) addAnimation(event.anim(), true);
