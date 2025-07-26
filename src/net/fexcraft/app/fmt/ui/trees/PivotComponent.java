@@ -1,6 +1,5 @@
 package net.fexcraft.app.fmt.ui.trees;
 
-import com.spinyowl.legui.component.Label;
 import com.spinyowl.legui.event.CursorEnterEvent;
 import com.spinyowl.legui.event.MouseClickEvent;
 import com.spinyowl.legui.event.MouseClickEvent.MouseClickAction;
@@ -12,8 +11,6 @@ import com.spinyowl.legui.style.color.ColorConstants;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Pivot;
-import net.fexcraft.app.fmt.polygon.Polygon;
-import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.*;
 import net.fexcraft.app.fmt.update.UpdateEvent.*;
 import net.fexcraft.app.fmt.update.UpdateHandler;
@@ -35,9 +32,9 @@ public class PivotComponent extends EditorComponent {
 		super(pivot.id, pivot.groups.isEmpty() ? HEIGHT : HEIGHT + pivot.groups.size() * PH + 4, true, true);
 		label.getTextState().setText((this.pivot = pivot).id);
 		this.genFullheight();
-		add(visible = new Icon((byte)2, "./resources/textures/icons/component/visible.png", () -> pin()));
-		add(remove = new Icon((byte)3, "./resources/textures/icons/component/remove.png", () -> FMT.MODEL.remPivot(pivot)));
-		add(edit = new Icon((byte)4, "./resources/textures/icons/component/edit.png", () -> Editor.show("pivot_editor")));
+		add(visible = new Icon(this, 2, "./resources/textures/icons/component/visible.png", () -> pin()));
+		add(remove = new Icon(this, 3, "./resources/textures/icons/component/remove.png", () -> FMT.MODEL.remPivot(pivot)));
+		add(edit = new Icon(this, 4, "./resources/textures/icons/component/edit.png", () -> Editor.show("pivot_editor")));
 		updcom.add(PivotRenamed.class, event -> { if(event.pivot() == pivot) label.getTextState().setText(pivot.id); });
 		updcom.add(GroupAdded.class, event -> { if(pivot.isin(event.group())) addGroup(event.group(), true); });
 		//updcom.add(GroupRenamed.class, event -> { if(pivot.isin(event.group())) renameGroup(event.group()); });
@@ -99,12 +96,13 @@ public class PivotComponent extends EditorComponent {
 	private int genFullheight(){
 		fullheight = HEIGHT;
 		if(pivot.groups.isEmpty()) return fullheight;
+		fullheight += 2;
 		for(GroupComponent group : groups){
 			group.setPosition(2, fullheight);
 			group.resort();
-			fullheight += group.getSize().y;
+			fullheight += group.getSize().y + 2;
 		}
-		return fullheight += 4;
+		return fullheight += 2;
 	}
 
 	@Override
@@ -114,9 +112,6 @@ public class PivotComponent extends EditorComponent {
 	}
 
 	protected void addGroup(Group group, boolean resort){
-		/*GroupLabel label = new GroupLabel(this).group(group).update_name().update_color();
-		this.add(label);
-		groups.add(label);*/
 		GroupComponent comp = new GroupComponent(group, this);
 		add(comp);
 		groups.add(comp);
@@ -132,15 +127,6 @@ public class PivotComponent extends EditorComponent {
 		setSize(Editor.CWIDTH, genFullheight());
 		minimize(pivot.minimized);
 	}
-
-	/*private void renameGroup(Group group){
-		for(GroupComponent label : groups){
-			if(label.group() == group){
-				label.update_name();
-				break;
-			}
-		}
-	}*/
 
 	private void removeGroup(Group group){
 		for(GroupComponent label : groups){
@@ -186,67 +172,6 @@ public class PivotComponent extends EditorComponent {
 			GenericDialog.showOC(null, () -> FMT.MODEL.remPivot(pivot), null, "editor.component.pivot.pivot.remove", pivot.id);
 		}
 		else FMT.MODEL.remPivot(pivot);
-	}
-	
-	public static class GroupLabel extends Label {
-		
-		private Group group;
-
-		public GroupLabel(PivotComponent com){
-			Settings.applyBorderless(this);
-			setSize(Editor.CWIDTH - 8, PH);
-			Icon visi = new Icon(0, 16, 4, Editor.CWIDTH - 26, 2, "./resources/textures/icons/component/visible.png", () -> {
-				group.visible = !group.visible;
-				//update_color();
-				UpdateHandler.update(new GroupVisibility(group, group.visible));
-			});
-			Icon edit = new Icon(0, 16, 4, Editor.CWIDTH - 46, 2, "./resources/textures/icons/component/edit.png", () -> {
-				Editor.show("group_editor");
-			});
-			CursorEnterEventListener listener = lis -> {
-				DisplayType type = this.isHovered() || visi.isHovered() || edit.isHovered() ? DisplayType.MANUAL : DisplayType.NONE;
-				visi.getStyle().setDisplay(type);
-				edit.getStyle().setDisplay(type);
-			};
-			this.getListenerMap().addListener(CursorEnterEvent.class, listener);
-			visi.getListenerMap().addListener(CursorEnterEvent.class, listener);
-			edit.getListenerMap().addListener(CursorEnterEvent.class, listener);
-			this.getListenerMap().addListener(MouseClickEvent.class, lis -> {
-				if(lis.getAction() == MouseClickAction.CLICK && lis.getButton() == MouseButton.MOUSE_BUTTON_LEFT){
-					group.model.select(group);
-					update_color();
-				}
-			});
-			UIUtils.hide(visi, edit);
-			add(visi);
-			add(edit);
-		}
-		
-		public GroupLabel group(Group group){
-			this.group = group;
-			return this;
-		}
-		
-		public Group group(){
-			return group;
-		}
-		
-		public GroupLabel update_name(){
-			this.getTextState().setText(" " + group.id);
-			return this;
-		}
-		
-		public GroupLabel update_color(){
-			getStyle().setTextColor(group.selected ? ColorConstants.darkGray() : ColorConstants.lightGray());
-			getStyle().getBackground().setColor(FMT.rgba((group.selected ? group.visible ? POLYGON_SELECTED : POLYGON_INV_SEL : group.visible ? POLYGON_NORMAL : POLYGON_INVISIBLE).value));
-			return this;
-		}
-		
-		public GroupLabel sortin(int index){
-			setPosition(5, HEIGHT + 2 + (index * PHS));
-			return this;
-		}
-		
 	}
 
 	public void update_color(){
