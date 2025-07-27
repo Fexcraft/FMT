@@ -47,9 +47,9 @@ public class EditorComponent extends Component {
 		this(key, 0, fullHeight, tree, resizeable);
 	}
 	
-	public EditorComponent(String key, int subwidth, int fullHeight, boolean tree, boolean resizeable){
+	public EditorComponent(String key, int width, int fullHeight, boolean tree, boolean resizeable){
 		while(COMPONENTS.containsKey(uid)) uid++;
-		setSize(Editor.CWIDTH - subwidth, fullheight = fullHeight > 0 ? fullHeight : HEIGHT * 2);
+		setSize(width == 0 ? Editor.CWIDTH : width, fullheight = fullHeight > 0 ? fullHeight : HEIGHT * 2);
 		add(label = new Label(Translator.translate(LANG_PREFIX + (id = key) + ".name"), 4, 0, 296, 24));
 		label.getStyle().setFontSize(18f);
 		Settings.applyComponentTheme(this);
