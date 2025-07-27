@@ -51,7 +51,7 @@ public class GroupComponent extends EditorComponent {
 	private SelectBox<String> pivots = new SelectBox<>();
 	
 	public GroupComponent(Group group, PivotComponent picom){
-		super(group.id, picom == null ? 0 : 4, group.isEmpty() ? HEIGHT : HEIGHT + group.size() * PH + 4, true, true);
+		super(group.id, picom == null ? 0 : (int)picom.getSize().x - 4, group.isEmpty() ? HEIGHT : HEIGHT + group.size() * PH + 4, true, true);
 		root = picom;
 		label.getTextState().setText((this.group = group).id);
 		this.genFullheight();
