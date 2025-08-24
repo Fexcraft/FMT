@@ -7,6 +7,7 @@ import net.fexcraft.app.fmt.ui.fields.ColorField;
 import net.fexcraft.app.fmt.ui.fields.NumberField;
 import net.fexcraft.app.fmt.ui.fields.TextField;
 import net.fexcraft.app.fmt.utils.fvtm.FvtmTypes;
+import net.fexcraft.lib.common.math.V3D;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -38,6 +39,18 @@ public class DynAnimComponent extends EditorComponent {
 				add(new NumberField(this, L5, row(1), LW, HEIGHT).setup(min, max, args[1].equals("f"), cons -> {
 					anim.set(args[0], cons.value());
 				}).apply(((Number)anim.get(args[0])).floatValue()));
+				break;
+			}
+			case "v":{
+				add(new NumberField(this, F30, row(1), F3S, HEIGHT).setup(min, max, true, cons -> {
+					anim.set(args[0] + ".x", cons.value());
+				}).apply((float)((V3D)anim.get(args[0])).x));
+				add(new NumberField(this, F31, row(0), F3S, HEIGHT).setup(min, max, true, cons -> {
+					anim.set(args[0] + ".y", cons.value());
+				}).apply((float)((V3D)anim.get(args[0])).y));
+				add(new NumberField(this, F32, row(0), F3S, HEIGHT).setup(min, max, true, cons -> {
+					anim.set(args[0] + ".z", cons.value());
+				}).apply((float)((V3D)anim.get(args[0])).z));
 				break;
 			}
 			case "c":{
