@@ -59,6 +59,7 @@ public class FvtmTypes {
 		//
 		addProg(misc, "Category Specific Visiblity", "fvtm:category_specific", "category:s");
 		addProg(misc, "RGB/Color Channel", "fvtm:rgb_channel");
+		addProg(new PointTowards(), misc, "Point Towards", "fvtm:point_towards", "target_pivot:s", "axe:i:0:2", "offset:v", "target:v");
 	}
 
 	private static void addProg(String... arr){
