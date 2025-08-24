@@ -1,8 +1,10 @@
 package net.fexcraft.app.fmt.polygon;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.utils.Axis3DL;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
+import net.fexcraft.lib.common.math.V3D;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -93,5 +95,12 @@ public class Pivot {
     public Pivot parent(){
         return parent;
     }
+
+	public V3D getVec(V3D off){
+		Axis3DL axe = new Axis3DL();
+		axe.setAngles(-rot.y, -rot.z, -rot.x);
+		off = axe.get(off).add(pos.x, pos.y, pos.z);
+		return parent != null ? parent.getVec(off) : off;
+	}
 
 }
