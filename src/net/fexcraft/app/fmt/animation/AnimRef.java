@@ -23,7 +23,9 @@ public class AnimRef extends Animation {
 
 	@Override
 	public JsonMap save(){
-		return new JsonMap();
+		JsonMap map = new JsonMap();
+		map.add("id", id);
+		return map;
 	}
 
 	@Override
