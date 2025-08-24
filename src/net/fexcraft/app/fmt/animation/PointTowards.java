@@ -18,6 +18,7 @@ public class PointTowards extends Animation {
 	public String tarpiv;
 	public V3D off = new V3D();
 	public V3D tar = new V3D();
+	public float addang;
 	private float angle;
 	private V3D here;
 	private V3D ther;
@@ -39,6 +40,7 @@ public class PointTowards extends Animation {
 		}
 		ani.offpiv = map.getString("offpiv", null);
 		ani.tarpiv = map.getString("tarpiv", null);
+		ani.addang = map.getFloat("angle", addang);
 		ani.axe = map.getInteger("axe", axe);
 		return ani;
 	}
@@ -57,8 +59,9 @@ public class PointTowards extends Animation {
 		arr.add(tar.y);
 		arr.add(tar.z);
 		map.add("tar", arr);
-		map.add("axe", axe);
 		if(tarpiv != null) map.add("tarpiv", tarpiv);
+		map.add("axe", axe);
+		map.add("angle", addang);
 		return map;
 	}
 
@@ -78,17 +81,17 @@ public class PointTowards extends Animation {
 		}
 		switch(axe){
 			case 0:{
-				angle = 0;
+				angle = addang;
 				for(Polygon poly : group) poly.glm.rotX += angle;
 				break;
 			}
 			case 1:{
-				angle = 0;
+				angle = addang;
 				for(Polygon poly : group) poly.glm.rotY += angle;
 				break;
 			}
 			case 2:{
-				angle = (float)Static.toDegrees(Math.atan2(ther.y - here.y, ther.x - here.x)) + 90;
+				angle = (float)Static.toDegrees(Math.atan2(ther.y - here.y, ther.x - here.x)) + addang;
 				for(Polygon poly : group) poly.glm.rotZ += angle;
 				break;
 			}
@@ -122,6 +125,7 @@ public class PointTowards extends Animation {
 			case "axe": return axe;
 			case "offset_pivot": return offpiv;
 			case "target_pivot": return tarpiv;
+			case "add_angle": return addang;
 		}
 		return null;
 	}
@@ -144,6 +148,7 @@ public class PointTowards extends Animation {
 			}
 			case "offset_pivot": offpiv = val.toString(); break;
 			case "target_pivot": tarpiv = val.toString(); break;
+			case "add_angle": addang = (float)val; break;
 		}
 	}
 
