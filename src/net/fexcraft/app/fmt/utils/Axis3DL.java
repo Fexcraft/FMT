@@ -1,5 +1,6 @@
 package net.fexcraft.app.fmt.utils;
 
+import net.fexcraft.lib.common.math.V3D;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -33,6 +34,14 @@ public class Axis3DL implements AxisRotator {
         return new Vector3f(mat.m00(), mat.m10(), mat.m20());
     }
 
+	public V3D getRelativeVector(V3D vec){
+		Matrix4f mat = new Matrix4f(); mat.m00((float)vec.x); mat.m10((float)vec.y); mat.m20((float)vec.z);
+		mat.rotate(roll  * 3.14159265F / 180f, new Vector3f(1F, 0F, 0F), mat);
+		mat.rotate(pitch * 3.14159265F / 180f, new Vector3f(0F, 0F, 1F), mat);
+		mat.rotate(yaw   * 3.14159265F / 180f, new Vector3f(0F, 1F, 0F), mat);
+		return new V3D(mat.m00(), mat.m10(), mat.m20());
+	}
+
     private final void convertMatrixToAngles(){
         yaw = (float)(Math.atan2(matrix.m20(), matrix.m00()) * 180F / 3.14159265F);
         pitch = (float)(Math.atan2(-matrix.m10(), Math.sqrt(matrix.m12() * matrix.m12() + matrix.m11() * matrix.m11())) * 180F / 3.14159265F);
@@ -59,6 +68,10 @@ public class Axis3DL implements AxisRotator {
 	}
 
 	public Vec3f get(Vec3f v){
+		return getRelativeVector(v);
+	}
+
+	public V3D get(V3D v){
 		return getRelativeVector(v);
 	}
 
