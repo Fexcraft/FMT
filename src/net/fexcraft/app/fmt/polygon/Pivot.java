@@ -18,6 +18,8 @@ public class Pivot {
     public final boolean root;
     public ArrayList<Group> groups = new ArrayList<>();
     public ArrayList<Pivot> roots = new ArrayList<>();
+	public String[] pos_attr = new String[]{ "", "", "" };
+	public String[] rot_attr = new String[]{ "", "", "" };
     public Matrix4f matrix;
     public boolean minimized;
     public boolean visible = true;
@@ -52,6 +54,18 @@ public class Pivot {
             rot.y = arot.get(1).float_value();
             rot.z = arot.get(2).float_value();
         }
+		if(map.has("pos_attr")){
+			JsonArray pa = map.getArray("pos_attr");
+			pos_attr[0] = pa.get(0).string_value();
+			pos_attr[1] = pa.get(1).string_value();
+			pos_attr[2] = pa.get(2).string_value();
+		}
+		if(map.has("rot_attr")){
+			JsonArray ra = map.getArray("rot_attr");
+			rot_attr[0] = ra.get(0).string_value();
+			rot_attr[1] = ra.get(1).string_value();
+			rot_attr[2] = ra.get(2).string_value();
+		}
         visible = map.getBoolean("visible", true);
         minimized = map.getBoolean("minimized", false);
         parentid = map.getString("parent", null);
@@ -65,6 +79,12 @@ public class Pivot {
         map.add("visible", visible);
         map.add("minimized", minimized);
         if(parent != null) map.add("parent", parent.id);
+		JsonArray arr = new JsonArray();
+		for(String s : pos_attr) arr.add(s);
+		map.add("pos_attr", arr);
+		arr = new JsonArray();
+		for(String s : rot_attr) arr.add(s);
+		map.add("rot_attr", arr);
         return map;
     }
 
