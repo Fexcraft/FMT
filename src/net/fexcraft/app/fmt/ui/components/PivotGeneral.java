@@ -30,10 +30,12 @@ public class PivotGeneral extends EditorComponent {
 	protected NumberField pos16x, pos16y, pos16z;
 	protected NumberField posx, posy, posz;
 	protected NumberField rotx, roty, rotz;
+	protected TextField[] pos = new TextField[3];
+	protected TextField[] rot = new TextField[3];
 	private TextField name;
 
 	public PivotGeneral(){
-		super(genid, 300, false, true);
+		super(genid, 530, false, true);
 		this.add(new Label(translate(LANG_PREFIX + genid + ".name/id"), L5, row(1), LW, HEIGHT));
 		this.add(name = new TextField(NOPIVOTSEL, L5, row(1), LW, HEIGHT, false).accept(con -> rename(con)));
 		//
@@ -107,6 +109,20 @@ public class PivotGeneral extends EditorComponent {
 			pivots.setSelected(e.pivot().root ? e.model().getRootPivot().id : e.pivot().parent().id, true);
 			updateFields();
 		});
+		//
+		this.add(new Label(translate(LANG_PREFIX + genid + ".pos_attr"), L5, row(2), LW, HEIGHT));
+		this.add(pos[0] = new TextField("", L5, row(1), LW, HEIGHT, false).accept(con -> linkPivotAttr(con, true, 0)));
+		this.add(pos[1] = new TextField("", L5, row(1), LW, HEIGHT, false).accept(con -> linkPivotAttr(con, true, 1)));
+		this.add(pos[2] = new TextField("", L5, row(1), LW, HEIGHT, false).accept(con -> linkPivotAttr(con, true, 2)));
+		this.add(new Label(translate(LANG_PREFIX + genid + ".rot_attr"), L5, row(2), LW, HEIGHT));
+		this.add(rot[0] = new TextField("", L5, row(1), LW, HEIGHT, false).accept(con -> linkPivotAttr(con, false, 0)));
+		this.add(rot[1] = new TextField("", L5, row(1), LW, HEIGHT, false).accept(con -> linkPivotAttr(con, false, 1)));
+		this.add(rot[2] = new TextField("", L5, row(1), LW, HEIGHT, false).accept(con -> linkPivotAttr(con, false, 2)));
+	}
+
+	private void linkPivotAttr(String con, boolean pos, int axe){
+		if(FMT.MODEL.sel_pivot == null) return;
+		(pos ? FMT.MODEL.sel_pivot.pos_attr : FMT.MODEL.sel_pivot.rot_attr)[axe] = con;
 	}
 
 	private void updateFields(){
@@ -120,6 +136,8 @@ public class PivotGeneral extends EditorComponent {
 			rotx.apply(0);
 			roty.apply(0);
 			rotz.apply(0);
+			for(TextField tf : pos) tf.getTextState().setText("");
+			for(TextField tf : rot) tf.getTextState().setText("");
 		}
 		else{
 			pos16x.apply(FMT.MODEL.sel_pivot.pos.x);
@@ -131,6 +149,8 @@ public class PivotGeneral extends EditorComponent {
 			rotx.apply(FMT.MODEL.sel_pivot.rot.x);
 			roty.apply(FMT.MODEL.sel_pivot.rot.y);
 			rotz.apply(FMT.MODEL.sel_pivot.rot.z);
+			for(int i = 0; i < pos.length; i++) pos[i].getTextState().setText(FMT.MODEL.sel_pivot.pos_attr[i]);
+			for(int i = 0; i < rot.length; i++) rot[i].getTextState().setText(FMT.MODEL.sel_pivot.rot_attr[i]);
 		}
 	}
 
