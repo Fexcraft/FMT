@@ -131,6 +131,7 @@ public class Settings {
 	public static RGBSetting BOTTOM_INFO_BAR_COLOR;
 	public static RGBSetting LIGHT_COLOR;
 	public static Setting<Integer> PAINTER_CHANNELS;
+	public static Setting<Boolean> ANIMATE;
 	//
 	public static Setting<Boolean> TESTING;
 	public static Setting<String> WORKSPACE_NAME;
@@ -277,6 +278,7 @@ public class Settings {
 		NUMBERFIELD_BUTTONS = new Setting<>("numberfield_buttons", false, GENERAL, map);
 		AUTO_SHOW_COMPONENTS = new Setting<>("auto_show_components", true, GENERAL, map);
 		PAINTER_CHANNELS = new Setting<>("painter_channels", 2, GENERAL, map);
+		ANIMATE = new Setting<>("animate", true, SPACE3D, map);
 		//
 		TESTING = new Setting<>("testing", false, GENERAL, map);
 		WORKSPACE_NAME = new Setting<>("name", "FMT Workspace", WORKSPACE, map);
