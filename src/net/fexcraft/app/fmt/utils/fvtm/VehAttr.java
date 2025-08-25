@@ -36,7 +36,11 @@ public class VehAttr {
 
 	public static enum Type {
 
-		STRING, BOOL, INT, FLOAT, LONG, TRISTATE
+		STRING, BOOL, INT, FLOAT, LONG, TRISTATE;
+
+		public boolean number(){
+			return this == INT || this == FLOAT || this == LONG;
+		}
 
 	}
 
