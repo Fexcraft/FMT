@@ -295,7 +295,7 @@ public class FMT {
 			while(accumulator >= interval){
 				//TODO "logic"
 				CAM.update();
-				FMT.MODEL.updateAnimations();
+				if(Settings.ANIMATE.value) FMT.MODEL.updateAnimations();
 				if(Settings.TESTING.value) UI.update();
 				ToolbarMenu.checkHide();
 				timer.updateUPS();
