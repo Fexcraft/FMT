@@ -883,6 +883,29 @@ public class Model {
 	}
 
 	public void updateAnimations(){
+		VehAttr attr;
+		for(Pivot pivot : pivots){
+			for(int i = 0; i < pivot.pos_attr.length; i++){
+				if(pivot.pos_attr[i].length() < 1) continue;
+				attr = getAttr(pivot.pos_attr[i]);
+				if(attr == null || !attr.type.number()) continue;
+				switch(i){
+					case 0: pivot.pos.x = ((Number)attr.value).floatValue(); break;
+					case 1: pivot.pos.y = ((Number)attr.value).floatValue(); break;
+					case 2: pivot.pos.z = ((Number)attr.value).floatValue(); break;
+				}
+			}
+			for(int i = 0; i < pivot.rot_attr.length; i++){
+				if(pivot.rot_attr[i].length() < 1) continue;
+				attr = getAttr(pivot.rot_attr[i]);
+				if(attr == null || !attr.type.number()) continue;
+				switch(i){
+					case 0: pivot.rot.x = ((Number)attr.value).floatValue(); break;
+					case 1: pivot.rot.y = ((Number)attr.value).floatValue(); break;
+					case 2: pivot.rot.z = ((Number)attr.value).floatValue(); break;
+				}
+			}
+		}
 		for(Group group : allgroups){
 			for(Animation anim : group.animations){
 				anim.update();
