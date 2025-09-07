@@ -86,7 +86,7 @@ public class PointTowards extends Animation {
 				break;
 			}
 			case 1:{
-				angle = addang;
+				angle = (float)-Static.toDegrees(Math.atan2(ther.z - here.z, ther.x - here.x)) + addang;
 				for(Polygon poly : group) poly.glm.rotY += angle;
 				break;
 			}
