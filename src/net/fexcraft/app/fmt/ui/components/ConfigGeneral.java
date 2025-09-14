@@ -152,7 +152,8 @@ public class ConfigGeneral extends EditorComponent {
 
 	public static void genAssetDirs(){
 		WorkspaceViewer.viewer().selectPackDialog(pack -> {
-			Dialog dialog = new Dialog("Please select Config Types.", 320, 270);
+			int height = 300;
+			Dialog dialog = new Dialog("Please select Config Types.", 320, height);
 			HashMap<String, CheckBox> map = new HashMap<>();
 			map.put("vehicles", new CheckBox("vehicles", 10, 10, 300, 20));
 			map.put("parts", new CheckBox("parts", 10, 30, 300, 20));
@@ -164,12 +165,12 @@ public class ConfigGeneral extends EditorComponent {
 			map.put("decos", new CheckBox("decos", 10, 150, 300, 20));
 			map.put("railgauges", new CheckBox("rail gauges", 10, 170, 300, 20));
 			map.put("clothes", new CheckBox("clothes", 10, 190, 300, 20));
-			map.put("signs", new CheckBox("signs", 10, 190, 300, 20));
+			map.put("signs", new CheckBox("signs", 10, 210, 300, 20));
 			for(CheckBox box : map.values()){
 				box.getStyle().setPadding(0, 0, 0, 5);
 			}
 			dialog.getContainer().addAll(map.values());
-			dialog.getContainer().add(new RunButton("dialog.button.confirm", 10, 220, 100, 20, () -> {
+			dialog.getContainer().add(new RunButton("dialog.button.confirm", 10, height - 50, 100, 20, () -> {
 				dialog.close();
 				File fl;
 				for(Map.Entry<String, CheckBox> entry : map.entrySet()){
