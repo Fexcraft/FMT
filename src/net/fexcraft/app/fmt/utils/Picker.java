@@ -228,7 +228,9 @@ public class Picker {
 			x = FMT.WIDTH / 2;
 			y = FMT.HEIGHT / 2;
 		}
-		buffer.get((x + y * FMT.WIDTH) * 4, picked);
+		x = (x + y * FMT.WIDTH) * 4;
+		if(x < 0 || x >= buffer.capacity()) return 0xffffffff;
+		buffer.get(x, picked);
 		return ByteUtils.getRGB(picked);
 	}
 
