@@ -45,8 +45,8 @@ public class Text {
 		PolyRenderer.mode(PolyRenderer.DrawMode.UI);
 	}
 
-	public Text text(String ntext){
-		text = ntext;
+	public Text text(Object ntext){
+		text = ntext + "";
 		recompile();
 		return this;
 	}
