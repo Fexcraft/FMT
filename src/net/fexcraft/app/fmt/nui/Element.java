@@ -211,10 +211,10 @@ public class Element {
 				hedron.render();
 				PolyRenderer.mode(DrawMode.UI);
 			}
-			if(text != null) text.render();
 			if(texture != null) TextureManager.bind(texture);
 		}
 		if(picker != Picker.PickTask.HOVER || hoverable) hedron.render();
+		if(text != null && picker == null) text.render();
 		if(elements != null) for(Element elm : elements) elm.render(picker);
 	}
 
