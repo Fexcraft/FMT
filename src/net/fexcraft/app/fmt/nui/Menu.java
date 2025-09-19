@@ -10,7 +10,6 @@ public class Menu extends Element {
 	private Consumer<Menu> onhover;
 	private boolean vertical;
 	private boolean open;
-	private int ran;
 
 	public Menu(){
 		super();
@@ -31,41 +30,21 @@ public class Menu extends Element {
 		elm.hoverable = true;
 		elm.size(w - 2, h);
 		super.add(elm);
-		elm.pos(1 + (vertical ? 0 : w), vertical ? 0 : (elements.size() - 1) * 30);
-		elm.z -= 2;
+		elm.pos(1 + (vertical ? 0 : w), (elements.size() - (vertical ? 0 : 1)) * 30);
+		elm.z += 2;
 		elm.recompile();
 	}
 
 	@Override
 	public void update(){
-		if(hoveredx()) open = true;
-		if(open){
-			if(vertical){
-				for(int i = 0; i < elements.size(); i++){
-					if(ran >= 10) continue;
-					elements.get(i).visible = true;
-					elements.get(i).ya((i + 1) * 3);
-				}
-				if(ran < 10) ran++;
-			}
-			else{
-				for(Element elm : elements) elm.visible = true;
-			}
+		if(hoveredx() && !open){
+			open = true;
+			for(Element elm : elements) elm.visible = open;
 		}
-		else{
-			if(vertical){
-				for(int i = 0; i < elements.size(); i++){
-					if(ran <= 0) continue;
-					elements.get(i).visible = elements.get(i).y() > 0;
-					elements.get(i).ya((-i - 1) * 3);
-				}
-				if(ran > 0) ran--;
-			}
-			else{
-				for(Element elm : elements) elm.visible = false;
-			}
+		if(!hoveredx() && open){
+			open = false;
+			for(Element elm : elements) elm.visible = open;
 		}
-		if(!hoveredx()) open = false;
 		super.update();
 	}
 
