@@ -344,6 +344,7 @@ public class FMT {
 		Editor.EDITORS.forEach(editor -> editor.align());
 		ToolbarMenu.MENUS.forEach((key, menu) -> menu.layer.hide());
 		Picker.resetBuffer(true);
+		UI.onResize();
 	}
 
 	private void adjustLabels(){
