@@ -186,7 +186,7 @@ public class Element {
 		return this;
 	}
 
-	public Element text(String ntext){
+	public Element text(Object ntext){
 		if(text == null) text = new Text(this);
 		text.text(ntext);
 		return this;
@@ -221,6 +221,10 @@ public class Element {
 	public void update(){
 		if(elements != null) for(Element elm : elements) elm.update();
 		hovered(false);
+	}
+
+	public void onResize(){
+
 	}
 
 	public void add(Element elm){
