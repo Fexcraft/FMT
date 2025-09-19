@@ -17,6 +17,7 @@ import net.fexcraft.lib.common.math.RGB;
 public class FMTInterface extends Element {
 
 	private static UpdateHandler.UpdateCompound updcom = new UpdateHandler.UpdateCompound();
+	public static final int TOOLBAR_HEIGHT = 35;
 	public static RGB col_75 = new RGB(0x757575);
 	public static RGB col_85 = new RGB(0x858585);
 	public static RGB col_cd = new RGB(0xcdcdcd);
@@ -28,7 +29,7 @@ public class FMTInterface extends Element {
 
 	public FMTInterface(){
 		super();
-		add(toolbar = new Element().pos(0, 0).size(FMT.WIDTH, 35).color(col_cd));
+		add(toolbar = new Element().pos(0, 0).size(FMT.WIDTH, TOOLBAR_HEIGHT).color(col_cd));
 		toolbar.add(new Element().pos(2, 2).size(32, 32)
 			.texture("icons/toolbar/info").hoverable(true)
 			.onclick(() -> FMT.openLink("https://fexcraft.net/wiki/app/fmt"))
