@@ -4,6 +4,7 @@ import net.fexcraft.app.fmt.polygon.GLObject;
 import net.fexcraft.app.fmt.polygon.PolyRenderer;
 import net.fexcraft.app.fmt.polygon.PolyRenderer.DrawMode;
 import net.fexcraft.app.fmt.texture.TextureManager;
+import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.Picker;
 import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.lib.common.math.RGB;
@@ -14,6 +15,7 @@ import net.fexcraft.lib.frl.Vertex;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -23,11 +25,11 @@ public class Element {
 	public static int elmIdx = 7;
 	public int colorIdx = 0;
 	public Polyhedron<GLObject> hedron;
-	public Runnable onclick;
+	public Consumer<ClickInfo> onclick;
 	public List<Element> elements;
 	public Element root;
+	public Element hint;
 	public String texture;
-	public String tooltip;
 	public boolean visible;
 	public boolean hovered;
 	public boolean rounded;
@@ -180,13 +182,18 @@ public class Element {
 		return this;
 	}
 
-	public Element onclick(Runnable cons){
+	public Element onclick(Consumer<ClickInfo> cons){
 		onclick = cons;
 		return this;
 	}
 
-	public Element tooltip(String ttip){
-		tooltip = ttip;
+	public Element hint(String hinttext){
+		if(hint == null){
+			hint = new Hint();
+			hint.init(hinttext);
+			hoverable = true;
+		}
+		hint.text(hinttext);
 		return this;
 	}
 
@@ -220,6 +227,7 @@ public class Element {
 		if(picker != Picker.PickTask.HOVER || hoverable) hedron.render();
 		if(text != null && picker == null) text.render();
 		if(elements != null) for(Element elm : elements) elm.render(picker);
+		if(hint != null && picker == null && hovered) hint.pos(GGR.mousePosX() + 10, GGR.mousePosY()).render(picker);
 	}
 
 	public void update(){
@@ -244,7 +252,7 @@ public class Element {
 
 	public Element root(Element elm){
 		root = elm;
-		z = elm.z + 1;
+		z += elm.z + 1;
 		return this;
 	}
 
@@ -259,13 +267,26 @@ public class Element {
 		return false;
 	}
 
-	public void click(){
-		if(onclick != null) onclick.run();
+	public void click(int x, int y){
+		if(onclick != null) onclick.accept(new ClickInfo(x, y, (int)(x - gx()), (int)(y - gy())));
+	}
+
+	public void click(ClickInfo info){
+		if(onclick != null) onclick.accept(info);
 	}
 
 	protected Element hide(){
 		visible = false;
 		return this;
 	}
+
+	protected Element zi(){
+		z++;
+		return this;
+	}
+
+	public static record ClickInfo(int cx, int cy, int lx, int ly){}
+
+	public static record HoverInfo(int cx, int cy, int lx, int ly){}
 
 }
