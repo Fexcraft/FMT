@@ -24,6 +24,14 @@ public class UpdateHandler {
 		}
 	}
 
+	/** Only for cases where the compound will be cached or the object calling it is never removed. */
+	public static UpdateCompound register(Consumer<UpdateCompound> cons){
+		UpdateCompound updcom = new UpdateCompound();
+		cons.accept(updcom);
+		register(updcom);
+		return updcom;
+	}
+
 	public static <E> void update(E event){
 		if(Settings.LOG_UPDATES.value){
 			Logging.log(event.toString());
