@@ -37,6 +37,7 @@ public class Picker {
 	private static Consumer<Polygon> consumer;
 	private static BiConsumer<Polygon, VOKey> vert_consumer;
 	public static Face selected_face = NoFace.NONE;
+	public static Element LAST_HOVER;
 
 	public static void resetBuffer(boolean resize){
 		if(resize){
@@ -140,6 +141,7 @@ public class Picker {
 			}
 			else if(TASK == PickTask.HOVER){
 				elm.hovered(true);
+				LAST_HOVER = elm;
 			}
 			else if(TASK.select()){
 				elm.click(GGR.mousePosX(), GGR.mousePosY());
