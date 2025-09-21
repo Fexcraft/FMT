@@ -6,7 +6,6 @@ import net.fexcraft.app.fmt.port.im.ImportManager;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.ProfileDialog;
 import net.fexcraft.app.fmt.ui.SettingsDialog;
-import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.utils.Picker;
 import net.fexcraft.app.fmt.utils.SaveHandler;
 import net.fexcraft.lib.common.math.RGB;
@@ -16,7 +15,6 @@ import net.fexcraft.lib.common.math.RGB;
  */
 public class FMTInterface extends Element {
 
-	private static UpdateHandler.UpdateCompound updcom = new UpdateHandler.UpdateCompound();
 	public static final int TOOLBAR_HEIGHT = 35;
 	public static RGB col_75 = new RGB(0x757575);
 	public static RGB col_85 = new RGB(0x858585);
@@ -32,44 +30,44 @@ public class FMTInterface extends Element {
 		add(toolbar = new Element().pos(0, 0).size(FMT.WIDTH, TOOLBAR_HEIGHT).color(col_cd));
 		toolbar.add(new Element().pos(2, 2).size(32, 32)
 			.texture("icons/toolbar/info").hoverable(true)
-			.onclick(() -> FMT.openLink("https://fexcraft.net/wiki/app/fmt"))
-			.tooltip("toolbar.icon.info"));
+			.onclick(ci -> FMT.openLink("https://fexcraft.net/wiki/app/fmt"))
+			.hint("toolbar.icon.info"));
 		toolbar.add(new Element().pos(36, 2).size(32, 32)
 			.texture("icons/toolbar/settings").hoverable(true)
-			.onclick(() -> SettingsDialog.open())
-			.tooltip("toolbar.icon.settings"));
+			.onclick(ci -> SettingsDialog.open())
+			.hint("toolbar.icon.settings"));
 		toolbar.add(new Element().pos(70, 2).size(32, 32)
 			.texture("icons/toolbar/profile").hoverable(true)
-			.onclick(() -> ProfileDialog.open())
-			.tooltip("toolbar.icon.profile"));
+			.onclick(ci -> ProfileDialog.open())
+			.hint("toolbar.icon.profile"));
 		toolbar.add(new Element().pos(104, 2).size(32, 32)
 			.texture("icons/toolbar/save").hoverable(true)
-			.onclick(() -> SaveHandler.save(FMT.MODEL, null, null, false, false))
-			.tooltip("toolbar.icon.save"));
+			.onclick(ci -> SaveHandler.save(FMT.MODEL, null, null, false, false))
+			.hint("toolbar.icon.save"));
 		toolbar.add(new Element().pos(138, 2).size(32, 32)
 			.texture("icons/toolbar/open").hoverable(true)
-			.onclick(() -> SaveHandler.openDialog(null))
-			.tooltip("toolbar.icon.open"));
+			.onclick(ci -> SaveHandler.openDialog(null))
+			.hint("toolbar.icon.open"));
 		toolbar.add(new Element().pos(172, 2).size(32, 32)
 			.texture("icons/toolbar/new").hoverable(true)
-			.onclick(() -> SaveHandler.newDialog())
-			.tooltip("toolbar.icon.new"));
+			.onclick(ci -> SaveHandler.newDialog())
+			.hint("toolbar.icon.new"));
 		toolbar.add(menu_file = new Menu().translate("toolbar.file").pos(208, 3).size(200, 30).color(col_75));
-		menu_file.add(new Element().translate("toolbar.file.new").color(col_85).onclick(() -> SaveHandler.newDialog()));
-		menu_file.add(new Element().translate("toolbar.file.open").color(col_85).onclick(() -> SaveHandler.openDialog(null)));
+		menu_file.add(new Element().translate("toolbar.file.new").color(col_85).onclick(ci -> SaveHandler.newDialog()));
+		menu_file.add(new Element().translate("toolbar.file.open").color(col_85).onclick(ci -> SaveHandler.openDialog(null)));
 		menu_file.add(menu_recent = new Menu().onhover(menu -> {
 			for(int i = 0; i < 10; i++) menu.elements.get(i).text(Settings.RECENT.get(i).getName().replace(".fmtb", ""));
 		}).translate("toolbar.file.recent").color(col_85));
 		for(int i = 0; i < 10; i++){
 			int j = i;
-			menu_recent.add(new Element().translate("file.recent.none").color(col_85).onclick(() -> Settings.openRecent(j)));
+			menu_recent.add(new Element().translate("file.recent.none").color(col_85).onclick(ci -> Settings.openRecent(j)));
 		}
-		menu_file.add(new Element().translate("toolbar.file.save").color(col_85).onclick(() -> SaveHandler.saveDialogByState(null)));
-		menu_file.add(new Element().translate("toolbar.file.save_as").color(col_85).onclick(() -> SaveHandler.saveAsDialog(null)));
-		menu_file.add(new Element().translate("toolbar.file.import").color(col_85).onclick(() -> ImportManager._import()));
-		menu_file.add(new Element().translate("toolbar.file.export").color(col_85).onclick(() -> ExportManager.export()));
-		menu_file.add(new Element().translate("toolbar.file.donate").color(col_85).onclick(() -> FMT.openLink("https://fexcraft.net/donate")));
-		menu_file.add(new Element().translate("toolbar.file.exit").color(col_85).onclick(() -> FMT.close(0)));
+		menu_file.add(new Element().translate("toolbar.file.save").color(col_85).onclick(ci -> SaveHandler.saveDialogByState(null)));
+		menu_file.add(new Element().translate("toolbar.file.save_as").color(col_85).onclick(ci -> SaveHandler.saveAsDialog(null)));
+		menu_file.add(new Element().translate("toolbar.file.import").color(col_85).onclick(ci -> ImportManager._import()));
+		menu_file.add(new Element().translate("toolbar.file.export").color(col_85).onclick(ci -> ExportManager.export()));
+		menu_file.add(new Element().translate("toolbar.file.donate").color(col_85).onclick(ci -> FMT.openLink("https://fexcraft.net/donate")));
+		menu_file.add(new Element().translate("toolbar.file.exit").color(col_85).onclick(ci -> FMT.close(0)));
 		//toolbar.add(new Element().pos(10, 40).size(100, 200).color(RGB.BLUE).linecolor(new RGB(256, 256, 0)).rounded(true));
 		//toolbar.add(new Element().pos(200, 40).size(500, 100).color(RGB.GREEN).linecolor(RGB.BLACK).rounded(true));
 		add((editor = new EditorRoot()).root(this).color(col_cd));
