@@ -142,7 +142,7 @@ public class Picker {
 				elm.hovered(true);
 			}
 			else if(TASK.select()){
-				elm.click();
+				elm.click(GGR.mousePosX(), GGR.mousePosY());
 			}
 			reset();
 		}
