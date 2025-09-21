@@ -18,7 +18,7 @@ public class EditorSidePanel extends Element {
 	public EditorSidePanel(){
 		super();
 		pos(EDITOR_WIDTH, 0);
-		size(34, 64);
+		size(34, 200);
 		color(col_cd);
 	}
 
@@ -50,6 +50,7 @@ public class EditorSidePanel extends Element {
 		public void toggle(){
 			expanded = !expanded;
 			size(expanded ? ew : 32, expanded ? eh : 32);
+			border = expanded;
 			recompile();
 		}
 
@@ -61,7 +62,7 @@ public class EditorSidePanel extends Element {
 		private Element text;
 
 		public Multiplier(int x, int y){
-			super(x, y, 380, 80);
+			super(x, y, 380, 88);
 		}
 
 		@Override
