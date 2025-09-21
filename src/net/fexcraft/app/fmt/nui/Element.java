@@ -26,6 +26,7 @@ public class Element {
 	public int colorIdx = 0;
 	public Polyhedron<GLObject> hedron;
 	public Consumer<ClickInfo> onclick;
+	public Consumer<ScrollInfo> onscroll;
 	public List<Element> elements;
 	public Element root;
 	public Element hint;
@@ -187,6 +188,11 @@ public class Element {
 		return this;
 	}
 
+	public Element onscroll(Consumer<ScrollInfo> cons){
+		onscroll = cons;
+		return this;
+	}
+
 	public Element hint(String hinttext){
 		if(hint == null){
 			hint = new Hint();
@@ -275,6 +281,14 @@ public class Element {
 		if(onclick != null) onclick.accept(info);
 	}
 
+	public void scroll(double x, double y){
+		if(onscroll != null) onscroll.accept(new ScrollInfo((int)x, (int)y, (int)(x - gx()), (int)(y - gy())));
+	}
+
+	public void scroll(ScrollInfo info){
+		if(onscroll != null) onscroll.accept(info);
+	}
+
 	protected Element hide(){
 		visible = false;
 		return this;
@@ -287,6 +301,6 @@ public class Element {
 
 	public static record ClickInfo(int cx, int cy, int lx, int ly){}
 
-	public static record HoverInfo(int cx, int cy, int lx, int ly){}
+	public static record ScrollInfo(int sx, int sy, int lx, int ly){}
 
 }
