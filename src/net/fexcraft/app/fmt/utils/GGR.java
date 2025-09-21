@@ -252,6 +252,7 @@ public class GGR {
 
 	public static boolean isOverUI(){
 		if(FMT.FRAME.getLayers().size() > 0) return true;
+		if(Picker.LAST_HOVER != null) return true;
 		glfwGetCursorPos(FMT.INSTANCE.window, cursor_x, cursor_y);
 		if(cursor_y[0] < FMT.TOOLBAR.getSize().y) return true;
 		if(Editor.VISIBLE_EDITOR != null){
@@ -295,6 +296,11 @@ public class GGR {
 	}
 
 	public void scrollCallback(long window, double xoffset, double yoffset){
+		if(Picker.LAST_HOVER != null){
+			Picker.LAST_HOVER.scroll(xoffset, yoffset);
+			Picker.LAST_HOVER = null;
+			return;
+		}
 		if(isOverUI()){
 			if(Editor.VISIBLE_TREE != Editor.POLYGON_TREE || cursor_x[0] < FMT.WIDTH - Editor.WIDTH) return;
 			if(!PolygonTree.SORT_MODE) return;
