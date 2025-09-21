@@ -7,6 +7,14 @@ import java.util.function.Consumer;
  */
 public class SelectorBar extends Element {
 
+	private float wid;
+	private float min;
+	private float max;
+	private float inc;
+	private float wdv;
+	private int steps;
+	private Consumer<Float> cons;
+
 	public SelectorBar(){
 		super();
 	}
@@ -23,24 +31,35 @@ public class SelectorBar extends Element {
 	 */
 	@Override
 	public void init(Object... args){
-		float wid = ((Number)args[0]).floatValue();
-		float min = ((Number)args[1]).floatValue();
-		float max = ((Number)args[2]).floatValue();
-		float inc = ((Number)args[3]).floatValue();
-		int steps = (int)(max / inc) - 1;
-		float wdv = (wid - 16) / steps;
-		Consumer<Float> cons = (Consumer<Float>)args[5];
-		add(new Element().size(16, 16).texture("ui/arrow_left").pos(0, 0));
-		add(new Element().size(16, 16).texture("ui/arrow_right").pos(4 + wid + 16, 0));
-		add(new Element().size(wid, 16).texture("ui/selector_bar").pos(18, 0));
-		add(new Element().size(8, 16).texture("ui/selector_bar_selector").pos(14, 0).zi());
-		elements.get(2).onclick = ci -> {
-			float per = ci.lx() / wid;
-			int cen = (int)(per * steps) + (per + 0.05 >= 1 ? 1 : 0);
-			elements.get(3).pos(cen * wdv + 20, 0);
-			cons.accept(cen * inc + min);
-		};
+		wid = ((Number)args[0]).floatValue() - 16;
+		min = ((Number)args[1]).floatValue();
+		max = ((Number)args[2]).floatValue();
+		inc = ((Number)args[3]).floatValue();
+		steps = (int)(max / inc) - 1;
+		wdv = wid / steps;
+		cons = (Consumer<Float>)args[5];
+		add(new Element().size(16, 16).texture("ui/arrow_left").pos(0, 0)
+			.onclick(ci -> select(elements.get(3).x() - 16 - wdv - 1)));
+		add(new Element().size(16, 16).texture("ui/arrow_right").pos(4 + wid + 32, 0)
+			.onclick(ci -> select(elements.get(3).x() - 16 + wdv + 1)));
+		add(new Element().size(wid + 16, 16).texture("ui/selector_bar").pos(18, 0));
+		add(new Element().size(8, 16).texture("ui/selector_bar_selector").pos(20, 0).zi());
+		elements.get(2).onclick(ci -> {
+			select(ci.lx());
+		}).onscroll(si -> {
+			select(elements.get(3).x() - 16 + (si.sy() > 0 ? wdv + 1 : -wdv - 1));
+		});
 		elements.get(2).hint(args[4].toString());
+	}
+
+	private void select(float lx){
+		float per = lx / wid;
+		if(per < 0) per = 0;
+		if(per > 1) per = 1;
+		int cen = (int)(per * steps) + (per + 0.05 >= 1 ? 1 : 0);
+		if(cen >= steps) cen = steps;
+		elements.get(3).pos(cen * wdv + 20, 0);
+		cons.accept(cen * inc + min);
 	}
 
 }
