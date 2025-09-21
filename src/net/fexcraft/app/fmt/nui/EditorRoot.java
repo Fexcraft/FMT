@@ -1,7 +1,6 @@
 package net.fexcraft.app.fmt.nui;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.utils.Logging;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -13,6 +12,11 @@ public class EditorRoot extends Element {
 	public EditorRoot(){
 		super();
 		onResize();
+	}
+
+	@Override
+	public void init(Object... args){
+		add(new EditorSidePanel());
 	}
 
 	@Override
