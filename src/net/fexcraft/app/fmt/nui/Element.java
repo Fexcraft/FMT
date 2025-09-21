@@ -47,6 +47,10 @@ public class Element {
 		visible = true;
 	}
 
+	public void init(Object... args){
+
+	}
+
 	public Element recompile(){
 		hedron.recompile = true;
 		hedron.clear();
@@ -228,8 +232,14 @@ public class Element {
 	}
 
 	public void add(Element elm){
+		add(elm, new Object[0]);
+	}
+
+	public void add(Element elm, Object... args){
 		if(elements == null) elements = new ArrayList<>();
-		elements.add(elm.root(this).recompile());
+		elements.add(elm.root(this));
+		elm.init(args);
+		elm.recompile();
 	}
 
 	public Element root(Element elm){
@@ -251,6 +261,11 @@ public class Element {
 
 	public void click(){
 		if(onclick != null) onclick.run();
+	}
+
+	protected Element hide(){
+		visible = false;
+		return this;
 	}
 
 }
