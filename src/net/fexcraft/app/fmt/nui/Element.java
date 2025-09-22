@@ -59,6 +59,8 @@ public class Element {
 		hedron.clear();
 		if(hedron.glObj.pickercolor == null) hedron.glObj.pickercolor = new RGB(colorIdx == 0 ? colorIdx = elmIdx++ : colorIdx).toFloatArray();
 		hedron.glObj.textured = texture != null;
+		hedron.posX = gx();
+		hedron.posY = gy();
 		if(rounded){
 			hedron.polygons.add(new Polygon(new Vertex[]{
 				new Vertex(5, 0, z),
