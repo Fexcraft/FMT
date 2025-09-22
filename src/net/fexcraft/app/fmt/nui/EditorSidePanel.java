@@ -69,12 +69,16 @@ public class EditorSidePanel extends Element {
 		public void init(Object... args){
 			super.init(args);
 			linecolor(RGB.BLACK);
-			add(text = new Element().size(80, 30).pos(38, 20).color(col_75).text("0").hide());
+			add(text = new Element().size(80, 30).pos(38, 28).color(col_75).text(Editor.RATE).onscroll(si -> {
+				float er = Editor.RATE;
+				if(si.sy() > 0) er *= 2;
+				else er /= 2;
+				if(er > 1024) er = 1024;
+				if(er < 0.001) er = 0.001f;
+				UpdateHandler.update(new UpdateEvent.EditorRate(Editor.RATE = er));
+			}).hoverable(true).hide());
 			Consumer<Float> mul = m -> {
-				if(Editor.RATE != m){
-					Editor.RATE = m;
-					UpdateHandler.update(new UpdateEvent.EditorRate(Editor.RATE));
-				}
+				if(Editor.RATE != m) UpdateHandler.update(new UpdateEvent.EditorRate(Editor.RATE = m));
 			};
 			add((bars[0] = new SelectorBar()).pos(130, 10).hide(), 200, 1, 16, 1, "1 - 16", mul);
 			add((bars[1] = new SelectorBar()).pos(130, 35).hide(), 200, 0.0625, 1, 0.0625, "0.0625 - 1", mul);
