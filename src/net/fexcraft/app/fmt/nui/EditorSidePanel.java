@@ -7,7 +7,6 @@ import net.fexcraft.lib.common.math.RGB;
 
 import java.util.function.Consumer;
 
-import static net.fexcraft.app.fmt.nui.EditorRoot.EDITOR_WIDTH;
 import static net.fexcraft.app.fmt.nui.FMTInterface.*;
 
 /**
@@ -17,8 +16,8 @@ public class EditorSidePanel extends Element {
 
 	public EditorSidePanel(){
 		super();
-		pos(EDITOR_WIDTH, 0);
-		size(34, 200);
+		pos(EDITOR_WIDTH, TOOLBAR_HEIGHT);
+		size(32, 200);
 		color(col_cd);
 	}
 
@@ -40,6 +39,7 @@ public class EditorSidePanel extends Element {
 			ew = w;
 			eh = h;
 			expanded = false;
+			hoverable = true;
 		}
 
 		@Override
@@ -50,6 +50,7 @@ public class EditorSidePanel extends Element {
 		public void toggle(){
 			expanded = !expanded;
 			size(expanded ? ew : 32, expanded ? eh : 32);
+			linecolor(RGB.BLACK);
 			border = expanded;
 			recompile();
 		}
@@ -68,7 +69,6 @@ public class EditorSidePanel extends Element {
 		@Override
 		public void init(Object... args){
 			super.init(args);
-			linecolor(RGB.BLACK);
 			add(text = new Element().size(80, 30).pos(38, 28).color(col_75).text(Editor.RATE).onscroll(si -> {
 				float er = Editor.RATE;
 				if(si.sy() > 0) er *= 2;
