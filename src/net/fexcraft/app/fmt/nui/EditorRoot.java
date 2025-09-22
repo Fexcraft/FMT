@@ -2,12 +2,12 @@ package net.fexcraft.app.fmt.nui;
 
 import net.fexcraft.app.fmt.FMT;
 
+import static net.fexcraft.app.fmt.nui.FMTInterface.EDITOR_WIDTH;
+
 /**
  * @author Ferdinand Calo' (FEX___96)
  */
 public class EditorRoot extends Element {
-
-	public static int EDITOR_WIDTH = 300;
 
 	public EditorRoot(){
 		super();
@@ -21,8 +21,11 @@ public class EditorRoot extends Element {
 
 	@Override
 	public void onResize(){
-		size(EDITOR_WIDTH, FMT.HEIGHT - FMTInterface.TOOLBAR_HEIGHT);
-		pos(0, FMTInterface.TOOLBAR_HEIGHT);
+		size(EDITOR_WIDTH, FMT.HEIGHT);
+	}
+
+	public void toggle(){
+		visible = !visible;
 	}
 
 }
