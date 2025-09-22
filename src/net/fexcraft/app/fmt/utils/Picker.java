@@ -137,6 +137,7 @@ public class Picker {
 			if(pick <= 0 || pick > Element.elmIdx) return;
 			Element elm = getElm(FMT.UI.elements, pick);
 			if(elm == null){
+				LAST_HOVER = null;
 				if(TASK.select()) pick(PickType.POLYGON, PickTask.SELECT, offcenter);
 			}
 			else if(TASK == PickTask.HOVER){
