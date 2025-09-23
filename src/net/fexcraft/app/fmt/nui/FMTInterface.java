@@ -12,7 +12,7 @@ import net.fexcraft.lib.common.math.RGB;
  */
 public class FMTInterface extends Element {
 
-	public static final int TOOLBAR_HEIGHT = 35;
+	public static final int TOOLBAR_HEIGHT = 40;
 	public static final int EDITOR_WIDTH = 300;
 	public static RGB col_75 = new RGB(0x757575);
 	public static RGB col_85 = new RGB(0x858585);
@@ -22,38 +22,44 @@ public class FMTInterface extends Element {
 
 	public FMTInterface(){
 		super();
-		add(toolbar = new Element().pos(0, 0).size(EDITOR_WIDTH, TOOLBAR_HEIGHT).color(col_cd));
+		add(toolbar = new Element(){
+			@Override
+			public void onResize(){
+				pos((FMT.WIDTH - EDITOR_WIDTH) * 0.5f, FMT.HEIGHT - TOOLBAR_HEIGHT);
+			}
+		}.pos((FMT.WIDTH - EDITOR_WIDTH) * 0.5f, FMT.HEIGHT - TOOLBAR_HEIGHT).size(EDITOR_WIDTH, TOOLBAR_HEIGHT).color(col_cd));
 		int iinc = 37;
-		int buff = 4;
-		toolbar.add(new Element().pos(2, 2).size(32, 32)
+		int buff = -iinc + 4;
+		int yo = 4;
+		toolbar.add(new Element().pos(buff += iinc, yo).size(32, 32)
 			.texture("icons/toolbar/info").hoverable(true)
 			.onclick(ci -> FMT.openLink("https://fexcraft.net/wiki/app/fmt"))
 			.hint("toolbar.icon.info"));
-		toolbar.add(new Element().pos(buff += iinc, 2).size(32, 32)
+		toolbar.add(new Element().pos(buff += iinc, yo).size(32, 32)
 			.texture("icons/toolbar/settings").hoverable(true)
 			.onclick(ci -> SettingsDialog.open())
 			.hint("toolbar.icon.settings"));
-		toolbar.add(new Element().pos(buff += iinc, 2).size(32, 32)
+		toolbar.add(new Element().pos(buff += iinc, yo).size(32, 32)
 			.texture("icons/toolbar/profile").hoverable(true)
 			.onclick(ci -> ProfileDialog.open())
 			.hint("toolbar.icon.profile"));
-		toolbar.add(new Element().pos(buff += iinc, 2).size(32, 32)
+		toolbar.add(new Element().pos(buff += iinc, yo).size(32, 32)
 			.texture("icons/toolbar/save").hoverable(true)
 			.onclick(ci -> SaveHandler.save(FMT.MODEL, null, null, false, false))
 			.hint("toolbar.icon.save"));
-		toolbar.add(new Element().pos(buff += iinc, 2).size(32, 32)
+		toolbar.add(new Element().pos(buff += iinc, yo).size(32, 32)
 			.texture("icons/toolbar/open").hoverable(true)
 			.onclick(ci -> SaveHandler.openDialog(null))
 			.hint("toolbar.icon.open"));
-		toolbar.add(new Element().pos(buff += iinc, 2).size(32, 32)
+		toolbar.add(new Element().pos(buff += iinc, yo).size(32, 32)
 			.texture("icons/toolbar/new").hoverable(true)
 			.onclick(ci -> SaveHandler.newDialog())
 			.hint("toolbar.icon.new"));
-		toolbar.add(new Element().pos(buff += iinc, 2).size(32, 32)
+		toolbar.add(new Element().pos(buff += iinc, yo).size(32, 32)
 			.texture("icons/toolbar/editor").hoverable(true)
 			.onclick(ci -> editor.toggle())
 			.hint("toolbar.icon.editor"));
-		toolbar.add(new Element().pos(buff += iinc, 2).size(32, 32)
+		toolbar.add(new Element().pos(buff += iinc, yo).size(32, 32)
 			.texture("icons/toolbar/tree").hoverable(true)
 			.onclick(ci -> {})
 			.hint("toolbar.icon.tree"));
