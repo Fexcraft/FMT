@@ -1,5 +1,6 @@
 package net.fexcraft.app.fmt.nui;
 
+import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.GLObject;
 import net.fexcraft.app.fmt.polygon.PolyRenderer;
 import net.fexcraft.app.fmt.polygon.PolyRenderer.DrawMode;
@@ -16,6 +17,8 @@ import net.fexcraft.lib.frl.Vertex;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+
+import static net.fexcraft.app.fmt.nui.FMTInterface.TOOLBAR_HEIGHT;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -235,7 +238,9 @@ public class Element {
 		if(picker != Picker.PickTask.HOVER || hoverable) hedron.render();
 		if(text != null && picker == null) text.render();
 		if(elements != null) for(Element elm : elements) elm.render(picker);
-		if(hint != null && picker == null && hovered) hint.pos(GGR.mousePosX() + 10, GGR.mousePosY()).render(picker);
+		if(hint != null && picker == null && hovered){
+			hint.pos(GGR.mousePosX() + 10, GGR.mousePosY() + (GGR.mousePosY() > FMT.HEIGHT - TOOLBAR_HEIGHT ? -30 : 0)).render(picker);
+		}
 	}
 
 	public void update(){
