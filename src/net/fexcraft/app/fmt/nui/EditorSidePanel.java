@@ -16,7 +16,7 @@ public class EditorSidePanel extends Element {
 
 	public EditorSidePanel(){
 		super();
-		pos(EDITOR_WIDTH, TOOLBAR_HEIGHT);
+		pos(EDITOR_WIDTH, 0);
 		size(32, 200);
 		color(col_cd);
 	}
