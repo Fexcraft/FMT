@@ -301,6 +301,11 @@ public class Element {
 		return this;
 	}
 
+	protected Element show(){
+		visible = true;
+		return this;
+	}
+
 	protected Element zi(){
 		z++;
 		return this;
