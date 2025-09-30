@@ -26,7 +26,11 @@ public abstract class Animation {
 	public static Animation load(JsonMap map){
 		String id = map.getString("id", null);
 		if(id == null) return null;
-		Animation anim = ANIMATIONS.containsKey(id) ? ANIMATIONS.get(id) : FvtmTypes.getProgRef(id).anim();
+		Animation anim = ANIMATIONS.containsKey(id) ? ANIMATIONS.get(id) : null;
+		if(anim == null){
+			var ref = FvtmTypes.getProgRef(id);
+			if(ref != null) anim = ref.anim();
+		}
 		if(anim == null) return null;
 		anim = anim.create(map);
 		anim.enabled = map.getBoolean("enabled", true);
