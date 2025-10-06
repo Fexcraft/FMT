@@ -8,6 +8,7 @@ import net.fexcraft.app.fmt.polygon.Pivot;
 import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.ui.EditorComponent;
+import net.fexcraft.app.fmt.ui.fields.BoolButton;
 import net.fexcraft.app.fmt.ui.fields.NumberField;
 import net.fexcraft.app.fmt.ui.fields.TextField;
 import net.fexcraft.app.fmt.update.PolyVal;
@@ -32,10 +33,11 @@ public class PivotGeneral extends EditorComponent {
 	protected NumberField rotx, roty, rotz;
 	protected TextField[] pos = new TextField[3];
 	protected TextField[] rot = new TextField[3];
+	protected BoolButton rrot;
 	private TextField name;
 
 	public PivotGeneral(){
-		super(genid, 530, false, true);
+		super(genid, 610, false, true);
 		this.add(new Label(translate(LANG_PREFIX + genid + ".name/id"), L5, row(1), LW, HEIGHT));
 		this.add(name = new TextField(NOPIVOTSEL, L5, row(1), LW, HEIGHT, false).accept(con -> rename(con)));
 		//
@@ -118,6 +120,11 @@ public class PivotGeneral extends EditorComponent {
 		this.add(rot[0] = new TextField("", L5, row(1), LW, HEIGHT, false).accept(con -> linkPivotAttr(con, false, 0)));
 		this.add(rot[1] = new TextField("", L5, row(1), LW, HEIGHT, false).accept(con -> linkPivotAttr(con, false, 1)));
 		this.add(rot[2] = new TextField("", L5, row(1), LW, HEIGHT, false).accept(con -> linkPivotAttr(con, false, 2)));
+		this.add(new Label(translate(LANG_PREFIX + genid + ".root_rot"), L5, row(2), LW, HEIGHT));
+		this.add(rrot = new BoolButton(L5, row(1), LW, HEIGHT, true, con -> {
+			if(FMT.MODEL.sel_pivot == null) return;
+			FMT.MODEL.sel_pivot.root_rot = !FMT.MODEL.sel_pivot.root_rot;
+		}));
 	}
 
 	private void linkPivotAttr(String con, boolean pos, int axe){
@@ -138,6 +145,7 @@ public class PivotGeneral extends EditorComponent {
 			rotz.apply(0);
 			for(TextField tf : pos) tf.getTextState().setText("");
 			for(TextField tf : rot) tf.getTextState().setText("");
+			rrot.apply(0);
 		}
 		else{
 			pos16x.apply(FMT.MODEL.sel_pivot.pos.x);
@@ -151,6 +159,7 @@ public class PivotGeneral extends EditorComponent {
 			rotz.apply(FMT.MODEL.sel_pivot.rot.z);
 			for(int i = 0; i < pos.length; i++) pos[i].getTextState().setText(FMT.MODEL.sel_pivot.pos_attr[i]);
 			for(int i = 0; i < rot.length; i++) rot[i].getTextState().setText(FMT.MODEL.sel_pivot.rot_attr[i]);
+			rrot.apply(FMT.MODEL.sel_pivot.root_rot ? 1 : 0);
 		}
 	}
 
