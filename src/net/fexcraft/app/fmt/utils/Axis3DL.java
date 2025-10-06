@@ -50,9 +50,9 @@ public class Axis3DL implements AxisRotator {
 
     private final void convertToMatrix(boolean rad){
         matrix = new Matrix4f();
-        matrix.rotate((float)(rad ? roll : roll * 3.14159265F / 180F), new Vector3f(1F, 0F, 0F));
-        matrix.rotate((float)(rad ? pitch : pitch * 3.14159265F / 180F), new Vector3f(0F, 0F, 1F));
-        matrix.rotate((float)(rad ? yaw : yaw * 3.14159265F / 180F), new Vector3f(0F, 1F, 0F));
+        matrix.rotate(rad ? roll : roll * 3.14159265F / 180F, new Vector3f(1F, 0F, 0F));
+        matrix.rotate(rad ? pitch : pitch * 3.14159265F / 180F, new Vector3f(0F, 0F, 1F));
+        matrix.rotate(rad ? yaw : yaw * 3.14159265F / 180F, new Vector3f(0F, 1F, 0F));
         convertMatrixToAngles();
     }
 
