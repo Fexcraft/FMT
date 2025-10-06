@@ -124,13 +124,19 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 		if(PIVOT == null) return;
 		Matrix4f matrix = PIVOT.matrix = new Matrix4f().identity();
 		if(ImageHandler.ROT != null) matrix.rotate(ImageHandler.ROT, GIF_AXIS);
-		for(Pivot pivot : PIVOT.roots){
-			matrix.translate(pivot.pos);
-			if(pivot.rot.y != 0f) matrix.rotate((float)Math.toRadians(pivot.rot.y), axis_y);
-			if(pivot.rot.x != 0f) matrix.rotate((float)Math.toRadians(pivot.rot.x), axis_x);
-			if(pivot.rot.z != 0f) matrix.rotate((float)Math.toRadians(pivot.rot.z), axis_z);
+		if(PIVOT.root_rot){
+			for(Pivot pivot : PIVOT.roots){
+				matrix.translate(pivot.pos);
+				if(pivot.rot.y != 0f) matrix.rotate((float)Math.toRadians(pivot.rot.y), axis_y);
+				if(pivot.rot.x != 0f) matrix.rotate((float)Math.toRadians(pivot.rot.x), axis_x);
+				if(pivot.rot.z != 0f) matrix.rotate((float)Math.toRadians(pivot.rot.z), axis_z);
+			}
+			matrix.translate(PIVOT.pos);
 		}
-		matrix.translate(PIVOT.pos);
+		else{
+			V3D trs = PIVOT.getVec(V3D.NULL);
+			matrix.translate((float)trs.x, (float)trs.y, (float)trs.z);
+		}
 		if(PIVOT.rot.y != 0f) matrix.rotate((float)Math.toRadians(PIVOT.rot.y), axis_y);
 		if(PIVOT.rot.x != 0f) matrix.rotate((float)Math.toRadians(PIVOT.rot.x), axis_x);
 		if(PIVOT.rot.z != 0f) matrix.rotate((float)Math.toRadians(PIVOT.rot.z), axis_z);
