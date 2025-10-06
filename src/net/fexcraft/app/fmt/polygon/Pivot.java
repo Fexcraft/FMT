@@ -23,6 +23,7 @@ public class Pivot {
     public Matrix4f matrix;
     public boolean minimized;
     public boolean visible = true;
+	public boolean root_rot = true;
     public Vector3f pos = new Vector3f();
     public Vector3f rot = new Vector3f();
     private Pivot parent;
@@ -69,6 +70,7 @@ public class Pivot {
         visible = map.getBoolean("visible", true);
         minimized = map.getBoolean("minimized", false);
         parentid = map.getString("parent", null);
+		root_rot = map.getBoolean("root_rot", true);
     }
 
     public JsonMap save(){
@@ -85,6 +87,7 @@ public class Pivot {
 		arr = new JsonArray();
 		for(String s : rot_attr) arr.add(s);
 		map.add("rot_attr", arr);
+		map.add("root_rot", root_rot);
         return map;
     }
 
