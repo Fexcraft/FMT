@@ -85,8 +85,10 @@ public class PointPivotTowards extends Animation {
 		if(offp == null || tarp == null) return;
 		here = offp.getVec(off);
 		ther = tarp.getVec(tar).sub(here);
-		offp.rot.y = (float)(Static.toDegrees(Math.atan2(ther.x, ther.z)) + ang.y);
-		offp.rot.z = (float)(Static.toDegrees(Math.atan2(ther.y, Math.sqrt(ther.x * ther.x + ther.z * ther.z))) + ang.z);
+		offp.rot.y = (float)(Static.toDegrees(-Math.atan2(ther.z, ther.x)) + ang.y);
+		offp.rot.z = (float)(Static.toDegrees(Math.atan2(Math.sqrt(ther.x * ther.x + ther.z * ther.z), -ther.y)) + ang.z);
+		//ther = offp.getVec(off.add(0, 0, 1)).sub(here);
+		//offp.rot.x = (float)(Static.toDegrees(-Math.atan2(ther.y, Math.sqrt(ther.x * ther.x + ther.z * ther.z))) + ang.x);
 	}
 
 	@Override
