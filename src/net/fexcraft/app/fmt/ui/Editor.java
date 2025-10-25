@@ -34,6 +34,7 @@ import net.fexcraft.app.json.JsonMap;
 public class Editor extends Component {
 
 	public static final ArrayList<Editor> EDITORS = new ArrayList<>();
+	public static final ArrayList<Editor> TREES = new ArrayList<>();
 	public static Editor POLYGON_EDITOR;
 	//public static Editor GROUP_EDITOR;
 	public static Editor PIVOT_EDITOR;
@@ -68,6 +69,7 @@ public class Editor extends Component {
 		this.id = id;
 		EDITORS.add(this);
 		this.tree = tree;
+		if(tree) TREES.add(this);
 		add(scrollable = new ScrollablePanel(0, topSpace(), WIDTH, getSize().y));
 		scrollable.getViewport().getListenerMap().removeAllListeners(ScrollEvent.class);
 		scrollable.getViewport().getListenerMap().addListener(ScrollEvent.class, new SPVSL());
