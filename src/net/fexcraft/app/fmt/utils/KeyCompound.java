@@ -61,6 +61,21 @@ public class KeyCompound {
 				Logging.bar("Speed decreased to " + (FMT.CAM.movemod * 100) + "%", true);
 			}
 		}));
+		keys.add(new KeyFunction("toggle_tree", GLFW_KEY_P, (action) -> {
+			if(GGR.isOverUI() || action != GLFW_RELEASE) return;
+			if(Editor.VISIBLE_TREE == null){
+				Editor.POLYGON_TREE.show();
+			}
+			else{
+				int idx = Editor.TREES.indexOf(Editor.VISIBLE_TREE) + 1;
+				if(idx >= Editor.TREES.size()){
+					Editor.VISIBLE_TREE.hide();
+				}
+				else{
+					Editor.TREES.get(idx).show();
+				}
+			}
+		}));
 		keys.add(new KeyFunction("zoom_in", GLFW_KEY_Z, (action) -> onRelease(action, () -> FMT.CAM.toggleZoom())));
 		keys.add(new KeyFunction("painter_channel", GLFW_KEY_X, (action) -> onRelease(action, () -> TexturePainter.swapActive(1))));
 		keys.add(new KeyFunction("pick_face", GLFW_KEY_I, (action) -> onRelease(action, () -> Picker.pick(Picker.PickType.FACE, Picker.PickTask.RESELECT, true))));
