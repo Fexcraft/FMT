@@ -126,4 +126,10 @@ public class Pivot {
 		return parent != null ? parent.getVec(off) : off;
 	}
 
+	public V3D getPosOnBranch(V3D off){
+		if(off == null) off = new V3D();
+		off = off.add(pos.x, pos.y, pos.z);
+		return parent != null ? parent.getVec(off) : off;
+	}
+
 }
