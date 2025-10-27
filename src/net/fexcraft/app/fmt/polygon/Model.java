@@ -232,6 +232,12 @@ public class Model {
 		return getRootPivot();
 	}
 
+	public Pivot getPN(String id){
+		if(id == null) return null;
+		for(Pivot pivot : pivots) if(pivot.id.equals(id)) return pivot;
+		return null;
+	}
+
 	public boolean contains(String group){
 		return get(group) != null;
 	}
