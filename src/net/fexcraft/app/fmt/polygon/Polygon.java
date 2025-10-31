@@ -12,8 +12,8 @@ import net.fexcraft.app.fmt.polygon.Vertoff.VOType;
 import net.fexcraft.app.fmt.ui.UVViewer;
 import net.fexcraft.app.fmt.update.UpdateEvent.PolygonAdded;
 import net.fexcraft.app.fmt.update.UpdateEvent.PolygonRenamed;
-import net.fexcraft.app.fmt.utils.Axis3DL;
 import net.fexcraft.app.json.JsonValue;
+import net.fexcraft.lib.common.math.M4DW;
 import net.fexcraft.lib.frl.Vertex;
 import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Vector3f;
@@ -52,7 +52,7 @@ public abstract class Polygon {
 	public static final VOKey VO_5 = new VOKey(BOX_CORNER, 5, 0);
 	public static final VOKey VO_6 = new VOKey(BOX_CORNER, 6, 0);
 	public static final VOKey VO_7 = new VOKey(BOX_CORNER, 7, 0);
-	public static Axis3DL vo_axe = new Axis3DL();
+	public static M4DW vo_axe = M4DW.create();
 	public static final int startIdx = 7;
 	public static int polyIdx = startIdx;
 	public static int vertIdx = startIdx;
@@ -268,8 +268,8 @@ public abstract class Polygon {
 			if(entry.getValue().color == null){
 				entry.getValue().color = new RGB(vertIdx).toFloatArray();
 				vertcolors.put(Pair.of(this, entry.getKey()), vertIdx++);
-				vo_axe.setAngles(-rot.y, -rot.z, -rot.x);
-				entry.getValue().cache = vo_axe.getRelativeVector(entry.getValue().cache);
+				vo_axe.setDegrees(-rot.y, -rot.z, -rot.x);
+				entry.getValue().cache = vo_axe.rotate(entry.getValue().cache);
 			}
 		}
 	}
