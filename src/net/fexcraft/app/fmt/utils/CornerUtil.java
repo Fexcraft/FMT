@@ -1,6 +1,9 @@
 package net.fexcraft.app.fmt.utils;
 
 import net.fexcraft.app.fmt.ui.Editor;
+import net.fexcraft.lib.common.math.M4DW;
+import net.fexcraft.lib.common.math.MV3D;
+import net.fexcraft.lib.common.math.V3D;
 import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.FMT;
@@ -27,7 +30,7 @@ public class CornerUtil {
 		new RGB(0, 127, 0),//dark green
 		new RGB(127, 0, 255)//purple
 	};
-	private static Axis3DL axe = new Axis3DL();
+	private static M4DW axe = M4DW.create();
 	static{
 		compile();
 	}
@@ -56,28 +59,28 @@ public class CornerUtil {
 		for(int i = 0; i < CORNER_MARKER.length; i++){
 			ROT_MARKER_SMALL.pos(box.pos.x, box.pos.y, box.pos.z);
 			ROT_MARKER_SMALL.render();
-			axe.setAngles(-box.rot.y, -box.rot.z, -box.rot.x);
-			Vector3f vector = null;
+			axe.setDegrees(-box.rot.y, -box.rot.z, -box.rot.x);
+			V3D vec = new MV3D();
 			for(int j = 0; j < CORNER_MARKER.length; j++){
-				vector = axe.getRelativeVector(corneroffset(box, j).add(box.off));
-				CORNER_MARKER[j].pos(vector.x + box.pos.x, vector.y + box.pos.y, vector.z + box.pos.z);
+				vec = axe.rotate(corneroffset(vec, box, j).add(box.off.x, box.off.y, box.off.z), vec);
+				CORNER_MARKER[j].pos(vec.x + box.pos.x, vec.y + box.pos.y, vec.z + box.pos.z);
 				CORNER_MARKER[j].rot(box.rot.x, box.rot.y, box.rot.z);
 				CORNER_MARKER[j].render();
 			}
 		}
 	}
 
-	private static Vector3f corneroffset(Shapebox box, int index){
+	private static V3D corneroffset(V3D vec, Shapebox box, int index){
 		switch(index){
-			case 0: return new Vector3f(-box.cor0.x, -box.cor0.y, -box.cor0.z);
-			case 1: return new Vector3f( box.cor1.x + box.size.x, -box.cor1.y, -box.cor1.z);
-			case 2: return new Vector3f( box.cor2.x + box.size.x, -box.cor2.y,  box.cor2.z + box.size.z);
-			case 3: return new Vector3f(-box.cor3.x, -box.cor3.y,  box.cor3.z + box.size.z);
-			case 4: return new Vector3f(-box.cor4.x,  box.cor4.y + box.size.y, -box.cor4.z);
-			case 5: return new Vector3f( box.cor5.x + box.size.x,  box.cor5.y + box.size.y, -box.cor5.z);
-			case 6: return new Vector3f( box.cor6.x + box.size.x,  box.cor6.y + box.size.y,  box.cor6.z + box.size.z);
-			case 7: return new Vector3f(-box.cor7.x,  box.cor7.y + box.size.y,  box.cor7.z + box.size.z);
-			default: return null;
+			case 0: return vec.set(-box.cor0.x, -box.cor0.y, -box.cor0.z);
+			case 1: return vec.set( box.cor1.x + box.size.x, -box.cor1.y, -box.cor1.z);
+			case 2: return vec.set( box.cor2.x + box.size.x, -box.cor2.y,  box.cor2.z + box.size.z);
+			case 3: return vec.set(-box.cor3.x, -box.cor3.y,  box.cor3.z + box.size.z);
+			case 4: return vec.set(-box.cor4.x,  box.cor4.y + box.size.y, -box.cor4.z);
+			case 5: return vec.set( box.cor5.x + box.size.x,  box.cor5.y + box.size.y, -box.cor5.z);
+			case 6: return vec.set( box.cor6.x + box.size.x,  box.cor6.y + box.size.y,  box.cor6.z + box.size.z);
+			case 7: return vec.set(-box.cor7.x,  box.cor7.y + box.size.y,  box.cor7.z + box.size.z);
+			default: return vec;
 		}
 	}
 
