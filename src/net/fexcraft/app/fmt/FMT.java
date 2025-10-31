@@ -66,6 +66,7 @@ import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.Timer;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static net.fexcraft.app.fmt.utils.Logging.log;
 import static org.lwjgl.glfw.GLFW.*;
@@ -120,6 +121,7 @@ public class FMT {
 	static{
 		GLO.SUPPLIER = () -> new GLObject();
 	}
+	public static ConcurrentLinkedQueue<Runnable> RUN_QUEUE = new ConcurrentLinkedQueue<>();
 
 	private SystemEventProcessor sys_event_processor;
 
@@ -291,6 +293,7 @@ public class FMT {
 			CAM.pollInput(accumulator += (delta = timer.getDelta()));
 			//accumulator += (delta = timer.getDelta());
 			while(accumulator >= interval){
+				while(RUN_QUEUE.peek() != null) RUN_QUEUE.poll().run();
 				//TODO "logic"
 				CAM.update();
 				if(Settings.ANIMATE.value) FMT.MODEL.updateAnimations();
