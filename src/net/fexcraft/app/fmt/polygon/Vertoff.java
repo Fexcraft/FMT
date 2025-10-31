@@ -2,6 +2,7 @@ package net.fexcraft.app.fmt.polygon;
 
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonValue;
+import net.fexcraft.lib.common.math.V3D;
 import net.fexcraft.lib.common.math.Vec3f;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -14,7 +15,7 @@ public class Vertoff {
 
 	public float[] color;
 	public Polygon polygon;
-	public Vec3f cache = new Vec3f();
+	public V3D cache = new V3D();
 	public Vector3F off = new Vector3F();
 
 	public Vertoff(){}
