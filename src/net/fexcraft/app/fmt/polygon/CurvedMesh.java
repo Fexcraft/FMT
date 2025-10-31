@@ -4,14 +4,13 @@ import net.fexcraft.app.fmt.polygon.uv.Face;
 import net.fexcraft.app.fmt.polygon.uv.NoFace;
 import net.fexcraft.app.fmt.polygon.uv.UVCoords;
 import net.fexcraft.app.fmt.polygon.uv.VarFace;
-import net.fexcraft.app.fmt.utils.Axis3DL;
-import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.json.JsonMap;
+import net.fexcraft.lib.common.math.M4DW;
 import net.fexcraft.lib.common.math.RGB;
+import net.fexcraft.lib.common.math.V3D;
 import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.frl.Polyhedron;
 import net.fexcraft.lib.frl.Vertex;
-import net.fexcraft.lib.frl.gen.Generator;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
@@ -53,8 +52,8 @@ public class CurvedMesh extends CurvePolygon {
 	@Override
 	protected void generate(){
 		ArrayList<Polyhedron<GLObject>> subs = glp.sub;
-		Axis3DL axe0 = new Axis3DL();
-		Axis3DL axe1 = new Axis3DL();
+		M4DW axe0 = M4DW.create();
+		M4DW axe1 = M4DW.create();
 		if(subs == null) subs = new ArrayList<>();
 		for(Polyhedron<GLObject> sub : subs) PolyRenderer.RENDERER.delete(sub);
 		subs.clear();
@@ -70,12 +69,12 @@ public class CurvedMesh extends CurvePolygon {
 				Marker.getMarkerGenerator(poly, mscale).make();
 				subs.add(poly);
 			}
-			Vec3f vpos = new Vec3f(pos.x, pos.y, pos.z);
+			V3D vpos = new V3D(pos.x, pos.y, pos.z);
 			if(showline){
-				Vec3f las = cu.path.start.sub(vpos);
-				float by = cu.path.length / cu.points.size() * 0.25f;
+				V3D las = cu.path.start.sub(vpos);
+				double by = cu.path.length / cu.points.size() * 0.25f;
 				for(int i = 0; i < cu.points.size() * 4; i++){
-					Vec3f vec = cu.path.getVectorPosition(by * i + by, false).sub(vpos);
+					V3D vec = cu.path.getVectorPosition(by * i + by, false).sub(vpos);
 					var poly = new net.fexcraft.lib.frl.Polygon(new Vertex[]{
 						new Vertex(las.add(0, 0.05f, 0)),
 						new Vertex(vec.add(0, 0.05f, 0)),
@@ -102,38 +101,38 @@ public class CurvedMesh extends CurvePolygon {
 			Curve cn = curves.get(c + 1);
 			//
 			int voi = 0;
-			axe0.setAngles(0, 0, 0);
-			axe1.setAngles(0, 0, 0);
+			axe0.setRadians(0, 0, 0);
+			axe1.setRadians(0, 0, 0);
 			CurvePlane seg0 = cu.planes.get(0);
-			Vec3f vr, vl, nr, nl;
+			V3D vr, vl, nr, nl;
 			float dif0 = 1f / (cu.planes.size() - 1);
 			float dif1 = 1f / (cn.planes.size() - 1);
-			Vec3f coff = cu.path.getVectorPosition(0, false).sub(vpos);
-			Vec3f noff = cn.path.getVectorPosition(0, false).sub(vpos);
-			axe0.set(coff, cu.path.getVectorPosition(dif0, false).sub(vpos));
-			axe0.add(seg0.rot, 0, 0);
-			axe1.set(noff, cn.path.getVectorPosition(dif1, false).sub(vpos));
-			axe1.add(seg0.rot, 0, 0);
-			float loc0;
-			float loc1;
-			vr = coff.add(axe0.get(off.x, off.y, off.z));
-			vl = noff.add(axe1.get(off.x, off.y, off.z));
-			getVO(CURVE, voi, c).apply(this, vr);
-			getVO(CURVE, voi++, c + 1).apply(this, vl);
+			V3D coff = cu.path.getVectorPosition(0, false).sub(vpos);
+			V3D noff = cn.path.getVectorPosition(0, false).sub(vpos);
+			axe0.pointing(coff, cu.path.getVectorPosition(dif0, false).sub(vpos));
+			axe0.addDegrees(seg0.rot, 0, 0);
+			axe1.pointing(noff, cn.path.getVectorPosition(dif1, false).sub(vpos));
+			axe1.addDegrees(seg0.rot, 0, 0);
+			double loc0;
+			double loc1;
+			vr = coff.add(axe0.rotate(off.x, off.y, off.z));
+			vl = noff.add(axe1.rotate(off.x, off.y, off.z));
+			getVO(CURVE, voi, c).apply(this, vr.toFloatArray());
+			getVO(CURVE, voi++, c + 1).apply(this, vl.toFloatArray());
 			for(int i = 1; i < cu.planes.size(); i++){
 				seg0 = cu.planes.get(i);
 				loc0 = cu.path.length * seg0.location;
 				loc1 = cn.path.length * seg0.location;
 				coff = cu.path.getVectorPosition(loc0, false).sub(vpos);
 				noff = cn.path.getVectorPosition(loc1, false).sub(vpos);
-				axe0.set(cu.path.getVectorPosition(loc0 - dif0, false).sub(vpos), coff);
-				axe0.add(seg0.rot, 0, 0);
-				axe1.set(cn.path.getVectorPosition(loc1 - dif1, false).sub(vpos), noff);
-				axe1.add(seg0.rot, 0, 0);
-				nr = coff.add(axe0.get(seg0.offset.x, seg0.offset.y, seg0.offset.z));
-				nl = noff.add(axe1.get(seg0.offset.x, seg0.offset.y, seg0.offset.z));
-				getVO(CURVE, voi, c).apply(this, nr);
-				getVO(CURVE, voi++, c + 1).apply(this, nl);
+				axe0.pointing(cu.path.getVectorPosition(loc0 - dif0, false).sub(vpos), coff);
+				axe0.addDegrees(seg0.rot, 0, 0);
+				axe1.pointing(cn.path.getVectorPosition(loc1 - dif1, false).sub(vpos), noff);
+				axe1.addDegrees(seg0.rot, 0, 0);
+				nr = coff.add(axe0.rotate(seg0.offset.x, seg0.offset.y, seg0.offset.z));
+				nl = noff.add(axe1.rotate(seg0.offset.x, seg0.offset.y, seg0.offset.z));
+				getVO(CURVE, voi, c).apply(this, nr.toFloatArray());
+				getVO(CURVE, voi++, c + 1).apply(this, nl.toFloatArray());
 				if(flip){
 					glm.polygons.add(new net.fexcraft.lib.frl.Polygon(new Vertex[]{
 						new Vertex(vl, 0, 0),
