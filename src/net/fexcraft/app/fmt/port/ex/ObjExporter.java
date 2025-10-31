@@ -7,9 +7,9 @@ import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.settings.Setting;
 import net.fexcraft.app.fmt.ui.FileChooser;
-import net.fexcraft.app.fmt.utils.Axis3DL;
 import net.fexcraft.app.fmt.utils.Logging;
-import net.fexcraft.lib.common.math.Vec3f;
+import net.fexcraft.lib.common.math.M4DW;
+import net.fexcraft.lib.common.math.V3D;
 import net.fexcraft.lib.frl.Polyhedron;
 import net.fexcraft.lib.frl.Vertex;
 import org.jetbrains.annotations.NotNull;
@@ -98,13 +98,13 @@ public class ObjExporter implements Exporter {
         buffer.append("# Model Name: " + model.name + "\n\n");
         buffer.append("# TextureWidth: " + model.texSizeX + "\n");
         buffer.append("# TextureHeight: " + model.texSizeY + "\n\n");
-        Axis3DL rot, rotg = null;
+        M4DW rot, rotg = null;
         if(rotate){
             float yaw = settings.g("rotate_y").value();
             float pit = settings.g("rotate_z").value();
             float rol = settings.g("rotate_x").value();
-            rotg = new Axis3DL();
-            rotg.setAngles(yaw, pit, rol);
+            rotg = M4DW.create();
+            rotg.setDegrees(yaw, pit, rol);
         }
         if(!settings.g("groups_as_objects").bool()){
             buffer.append("o " + model.name + "\n\n");
@@ -117,7 +117,7 @@ public class ObjExporter implements Exporter {
             buffer.append("# Group Name: " + group.id + "\n");
             buffer.append(gpfx + " " + group.exportId(true) + "\n");
             buffer.append("usemtl fmt_material\n\n");
-            rot = new Axis3DL();
+            rot = M4DW.create();
             if(doindex) indices.clear();
             for(Polygon poly : group){
                 if(poly.getShape().isMarker() || poly.getShape().isBoundingBox()) continue;
@@ -125,18 +125,18 @@ public class ObjExporter implements Exporter {
                 if(naming && poly.name(true) != null){
                     buffer.append("# ID: " + poly.name() + "\n");
                 }
-                rot.setAngles(-poly.rot.y, -poly.rot.z, -poly.rot.x);
+                rot.setDegrees(-poly.rot.y, -poly.rot.z, -poly.rot.x);
                 Polyhedron<GLObject> hed = poly.glm;
                 for(net.fexcraft.lib.frl.Polygon poli : hed.polygons){
                     vertix = new IndexVertex[poli.vertices.length];
                     for(int i = 0; i < vertix.length; i++){
                         Vertex vert = poli.vertices[i];
-                        Vec3f vrot = rot.get(vert.vector);
+                        V3D vrot = rot.rotate(vert.vector.x, vert.vector.y, vert.vector.z);
                         vrot.x += poly.pos.x;
                         vrot.y += poly.pos.y;
                         vrot.z += poly.pos.z;
                         if(rotate){
-                            vrot = rotg.get(vrot);
+                            rotg.rotate(vrot, vrot);
                         }
                         vrot.x *= scale;
                         vrot.y *= scale;
@@ -187,10 +187,10 @@ public class ObjExporter implements Exporter {
 
         private float x, y, z, u, v;
 
-        public IndexVertex(Vec3f vert, float u, float v){
-            x = vert.x;
-            y = vert.y;
-            z = vert.z;
+        public IndexVertex(V3D vert, float u, float v){
+            x = (float)vert.x;
+            y = (float)vert.y;
+            z = (float)vert.z;
             this.u = u;
             this.v = v;
         }
