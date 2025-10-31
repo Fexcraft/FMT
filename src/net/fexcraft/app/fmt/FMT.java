@@ -40,7 +40,7 @@ import net.fexcraft.app.fmt.workspace.Workspace;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.Static;
-import net.fexcraft.lib.common.math.AxisRotator;
+import net.fexcraft.lib.common.math.M4DW;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Time;
 import net.fexcraft.lib.frl.GLO;
@@ -146,6 +146,7 @@ public class FMT {
 		Configuration.SHARED_LIBRARY_EXTRACT_DIRECTORY.set("./lib/natives");
 		Configuration.SHARED_LIBRARY_EXTRACT_PATH.set("./lib/natives");
 	    //
+		M4DW.SUPPLIER = M4DImpl::new;
 		Settings.load();
 		Settings.apply(INSTANCE);
 		//Converter.run();
@@ -185,7 +186,6 @@ public class FMT {
 		glfwFocusWindow(window);
 		//
 		CAM = new GGR();
-		AxisRotator.setDefImpl(Axis3DL.class);
 		Settings.applyTheme();
 		FRAME = new Frame(WIDTH, HEIGHT);
 		FRAME.getContainer().add(TOOLBAR = new Toolbar());
