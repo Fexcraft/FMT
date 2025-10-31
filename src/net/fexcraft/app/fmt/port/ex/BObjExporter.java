@@ -1,15 +1,13 @@
 package net.fexcraft.app.fmt.port.ex;
 
-import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.*;
 import net.fexcraft.app.fmt.settings.Setting;
 import net.fexcraft.app.fmt.ui.FileChooser.FileType;
-import net.fexcraft.app.fmt.utils.Axis3DL;
-import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.json.JsonMap;
-import net.fexcraft.lib.common.math.Vec3f;
+import net.fexcraft.lib.common.math.M4DW;
+import net.fexcraft.lib.common.math.MV3D;
+import net.fexcraft.lib.common.math.V3D;
 import net.fexcraft.lib.frl.Polyhedron;
-import net.fexcraft.lib.frl.Vertex;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
@@ -24,7 +22,6 @@ import java.util.List;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static net.fexcraft.app.fmt.ui.FileChooser.TYPE_BOB;
-import static net.fexcraft.app.fmt.ui.FileChooser.TYPE_FMF;
 import static net.fexcraft.app.fmt.utils.Logging.log;
 
 /**
@@ -48,7 +45,7 @@ public class BObjExporter implements Exporter {
 	private static final int UV = 5;
 	private static final int NORMAL = 6;
 	private static final int FACE = 7;
-	private ArrayList<Vec3f> vecs = new ArrayList<>();
+	private ArrayList<V3D> vecs = new ArrayList<>();
 	private ArrayList<Vector2f> uvs = new ArrayList<>();
 
 	public BObjExporter(JsonMap map){
@@ -105,7 +102,7 @@ public class BObjExporter implements Exporter {
 				if(group.stream().filter(poly -> valid(poly.getShape())).count() == 0) continue;
 				write(stream, GROUP, group.id);
 				if(sing){
-					Axis3DL rot = new Axis3DL();
+					M4DW rot = M4DW.create();
 					Pivot piv = model.getP(group.pivot);
 					stream.write(OBJECT);
 					write(stream, NAME, group.id);
@@ -114,7 +111,7 @@ public class BObjExporter implements Exporter {
 					for(Polygon polygon : group){
 						if(!valid(polygon.getShape())) continue;
 						Polyhedron<GLObject> poly = polygon.glm;
-						rot.setAngles(-polygon.rot.y, -polygon.rot.z, -polygon.rot.x);
+						rot.setDegrees(-polygon.rot.y, -polygon.rot.z, -polygon.rot.x);
 						fillPoly(stream, poly, rot);
 					}
 					stream.write(END);
@@ -158,17 +155,18 @@ public class BObjExporter implements Exporter {
 		return "export.complete";
 	}
 
-	private void fillPoly(FileOutputStream stream, Polyhedron<GLObject> poly, Axis3DL rot) throws IOException {
+	private void fillPoly(FileOutputStream stream, Polyhedron<GLObject> poly, M4DW rot) throws IOException {
 		int len;
 		for(net.fexcraft.lib.frl.Polygon p : poly.polygons){
 			len = p.vertices.length;
 			int[] ids = new int[len + len + 1];
 			ids[0] = len;
 			for(int v = 0; v < len; v++){
-				Vec3f vec = rot == null ? p.vertices[v].vector : rot.get(p.vertices[v].vector).add(poly.posX, poly.posY, poly.posZ);
+				V3D vec = new MV3D(p.vertices[v].vector.x, p.vertices[v].vector.y, p.vertices[v].vector.z);
+				if(rot != null) rot.rotate(vec, vec).add(poly.posX, poly.posY, poly.posZ);
 				ids[v + 1] = vecs.indexOf(vec);
 				if(ids[v + 1] < 0){
-					writeFloats(stream, VECTOR, vec.x, vec.y, vec.z);
+					writeFloats(stream, VECTOR, (float)vec.x, (float)vec.y, (float)vec.z);
 					ids[v + 1] = vecs.size();
 					vecs.add(vec);
 				}
