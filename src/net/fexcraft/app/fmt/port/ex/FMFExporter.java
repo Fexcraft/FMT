@@ -11,16 +11,12 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.*;
-import net.fexcraft.app.fmt.utils.Axis3DL;
-import net.fexcraft.app.fmt.utils.Logging;
-import net.fexcraft.lib.common.math.RGB;
-import net.fexcraft.lib.common.math.Vec3f;
+import net.fexcraft.lib.common.math.*;
 import net.fexcraft.lib.frl.Polyhedron;
 import net.fexcraft.lib.frl.Vertex;
 import org.joml.Vector3f;
@@ -40,14 +36,14 @@ public class FMFExporter implements Exporter {
 	private static final int PP = 1, PR = 2, PF = 3, PT = 4, PL = 6, PM = 7, PDF = 8, PDU = 9, PCU = 10;
 	private static final int PBS = 16, PBC = 17;
 	private static final int PCRL = 16, PCD = 17, PCSG = 18, PCSL = 19, PCTO = 20, PCTR = 21, PCRT = 22, PCSO = 23;
-	private static Axis3DL axe0 = new Axis3DL();
-	private static Axis3DL axe1 = new Axis3DL();
+	private static M4DW axe0 = M4DW.create();
+	private static M4DW axe1 = M4DW.create();
 
 	public FMFExporter(JsonMap map){
 		settings.add(new Setting<>("modeldata", true, "exporter-fmf"));
 		settings.add(new Setting<>("group_as_single_polygon", true, "exporter-fmf"));
-		axe0.setAngles(0, 180, 0);
-		axe1.setAngles(90, 0, 0);
+		axe0.setDegrees(0, 180, 0);
+		axe1.setDegrees(90, 0, 0);
 	}
 
 	@Override
@@ -102,10 +98,8 @@ public class FMFExporter implements Exporter {
 				if(group.stream().filter(poly -> valid(poly.getShape())).count() == 0) continue;
 				write(stream, 2, group.id);
 				if(sing){
-					//Axis3DL axe2 = new Axis3DL();
-					Axis3DL rot = new Axis3DL();
+					M4DW rot = M4DW.create();
 					Pivot piv = model.getP(group.pivot);
-					//axe2.setAngles(-piv.rot.y, -piv.rot.z, -piv.rot.x);
 					stream.write(3);
 					write(stream, PM, group.id);
 					writeVector(stream, PP, piv.pos);
@@ -113,11 +107,12 @@ public class FMFExporter implements Exporter {
 					for(Polygon polygon : group){
 						if(!valid(polygon.getShape())) continue;
 						Polyhedron<GLObject> poly = polygon.glm;
-						rot.setAngles(-polygon.rot.y, -polygon.rot.z, -polygon.rot.x);
+						rot.setDegrees(-polygon.rot.y, -polygon.rot.z, -polygon.rot.x);
 						for(net.fexcraft.lib.frl.Polygon p : poly.polygons){
 							for(Vertex vertex : p.vertices){
-								Vec3f vec = /*axe2.get(*/rot.get(vertex.vector).add(poly.posX, poly.posY, poly.posZ);//);
-								writeFloats(stream, PF, vec.x, vec.y, vec.z);
+								V3D vec = rot.rotate(vertex.vector.x, vertex.vector.y, vertex.vector.z, new MV3D())
+									.add(poly.posX, poly.posY, poly.posZ);
+								writeFloats(stream, PF, (float)vec.x, (float)vec.y, (float)vec.z);
 								writeFloats(stream, PT, vertex.u, vertex.v);
 							}
 							stream.write(PDF);
@@ -183,7 +178,7 @@ public class FMFExporter implements Exporter {
 			}
 			if(nn(polygon.pos)){
 				if(flip){
-					writeVector(stream, PP, axe1.getRelativeVector(axe0.getRelativeVector(polygon.pos)));
+					writeVector(stream, PP, axe1.rotate(axe0.rotate(polygon.pos.x, polygon.pos.y, polygon.pos.z, new MV3D())));
 				}
 				else writeVector(stream, PP, polygon.pos);
 			}
@@ -257,8 +252,8 @@ public class FMFExporter implements Exporter {
 				for(net.fexcraft.lib.frl.Polygon p : poly.polygons){
 					for(Vertex vertex : p.vertices){
 						if(flip){
-							Vec3f vec = axe1.get(axe0.get(vertex.vector));
-							writeFloats(stream, PF, vec.x, vec.y, vec.z);
+							V3D vec = axe1.rotate(axe0.rotate(vertex.vector.x, vertex.vector.y, vertex.vector.z, new MV3D()));
+							writeFloats(stream, PF, (float)vec.x, (float)vec.y, (float)vec.z);
 						}
 						else writeFloats(stream, PF, vertex.vector.x, vertex.vector.y, vertex.vector.z);
 						//writeFloats(stream, 5, vertex.norm.x, vertex.norm.y, vertex.norm.z);
@@ -312,6 +307,12 @@ public class FMFExporter implements Exporter {
 
 	private void writeVector(OutputStream stream, int code, Vector3f vec) throws IOException {
 		byte[] bytes = ByteBuffer.allocate(12).putFloat(vec.x).putFloat(vec.y).putFloat(vec.z).array();
+		stream.write(code);
+		stream.write(bytes);
+	}
+
+	private void writeVector(OutputStream stream, int code, V3D vec) throws IOException {
+		byte[] bytes = ByteBuffer.allocate(12).putFloat((float)vec.x).putFloat((float)vec.y).putFloat((float)vec.z).array();
 		stream.write(code);
 		stream.write(bytes);
 	}
