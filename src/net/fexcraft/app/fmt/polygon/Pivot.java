@@ -1,9 +1,9 @@
 package net.fexcraft.app.fmt.polygon;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.utils.Axis3DL;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
+import net.fexcraft.lib.common.math.M4DW;
 import net.fexcraft.lib.common.math.V3D;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -27,6 +27,7 @@ public class Pivot {
     public Vector3f pos = new Vector3f();
     public Vector3f rot = new Vector3f();
     private Pivot parent;
+	private M4DW rotmat;
     public String parentid;
     public String id;
 
@@ -120,9 +121,9 @@ public class Pivot {
     }
 
 	public V3D getVec(V3D off){
-		Axis3DL axe = new Axis3DL();
-		axe.setAngles(-rot.y, -rot.z, -rot.x);
-		off = axe.get(off).add(pos.x, pos.y, pos.z);
+		if(rotmat == null) rotmat = M4DW.create();
+		rotmat.setDegrees(-rot.y, -rot.z, -rot.x);
+		off = rotmat.rotate(off).add(pos.x, pos.y, pos.z);
 		return parent != null ? parent.getVec(off) : off;
 	}
 
