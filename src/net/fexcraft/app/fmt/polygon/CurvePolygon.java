@@ -101,11 +101,11 @@ public abstract class CurvePolygon extends Polygon {
 			case CUR_ACTIVE_PLANES: return cu.active_segment;
 			case CUR_POINTS: return cu.points.size();
 			case CUR_PLANES: return cu.planes.size();
-			case CUR_LENGTH: return cu.path.length;
+			case CUR_LENGTH: return (float)cu.path.length;
 			case CUR_AMOUNT: return curves.size();
 			case CUR_ACTIVE: return active;
-			case PLANE_ROT: return cu.planes.get(cu.active_segment).rot;
-			case PLANE_LOC: return cu.planes.get(cu.active_segment).location;
+			case PLANE_ROT: return (float)cu.planes.get(cu.active_segment).rot;
+			case PLANE_LOC: return (float)cu.planes.get(cu.active_segment).location;
 			case PLANE_LOC_LIT: return cu.litloc ? 1 : 0;
 			case RADIAL: return showline ? 1 : 0;
 			case SCALE: return mscale;
