@@ -5,8 +5,9 @@ import net.fexcraft.app.fmt.polygon.Pivot;
 import net.fexcraft.app.fmt.polygon.PolyRenderer;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
-import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.V3D;
+
+import static java.lang.Math.toDegrees;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -76,8 +77,8 @@ public class ZHydraulics extends Animation {
 		if(loc == null || tow == null) return;
 		here = loc.getPosOnBranch(loff);
 		ther = tow.getPosOnBranch(toff).sub(here);
-		loc.rot.y = (float)(Static.toDegrees(-Math.atan2(ther.z, ther.x)));
-		loc.rot.z = (float)(Static.toDegrees(Math.atan2(Math.sqrt(ther.x * ther.x + ther.z * ther.z), -ther.y)) + ang);
+		loc.rot.y = (float)(toDegrees(-Math.atan2(ther.z, ther.x)));
+		loc.rot.z = (float)(toDegrees(Math.atan2(Math.sqrt(ther.x * ther.x + ther.z * ther.z), -ther.y)) + ang);
 	}
 
 	@Override
