@@ -4,25 +4,21 @@ import static net.fexcraft.app.fmt.update.PolyVal.CORNER_0;
 import static net.fexcraft.app.fmt.update.PolyVal.CORNER_1;
 import static net.fexcraft.app.fmt.update.PolyVal.CORNER_2;
 import static net.fexcraft.app.fmt.update.PolyVal.CORNER_3;
-import static net.fexcraft.app.fmt.utils.JsonUtil.getVector;
 
 import java.util.ArrayList;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.uv.*;
-import net.fexcraft.app.fmt.texture.Texture;
+import net.fexcraft.lib.common.math.M4DW;
+import net.fexcraft.lib.common.math.V3D;
 import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.update.PolyVal;
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
-import net.fexcraft.app.fmt.utils.Axis3DL;
-import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.RGB;
-import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.frl.Polyhedron;
 import net.fexcraft.lib.frl.Vertex;
-import net.fexcraft.lib.frl.gen.Generator;
 
 public class RectCurve extends CurvePolygon {
 
@@ -57,7 +53,7 @@ public class RectCurve extends CurvePolygon {
 		for(Polyhedron<GLObject> sub : glp.sub) PolyRenderer.RENDERER.delete(sub);
 		glp.sub.clear();
 		Curve cu = act_curve();
-		Axis3DL axe = new Axis3DL();
+		M4DW axe = M4DW.create();
 		for(int i = 0; i < cu.points.size(); i++){
 			Polyhedron<GLObject> poly = new Polyhedron<>();
 			poly.setGlObj(new GLObject());
@@ -68,12 +64,12 @@ public class RectCurve extends CurvePolygon {
 			Marker.getMarkerGenerator(poly, mscale).make();
 			glp.sub.add(poly);
 		}
-		Vec3f vpos = new Vec3f(pos.x, pos.y, pos.z);
+		V3D vpos = new V3D(pos.x, pos.y, pos.z);
 		if(showline){
-			Vec3f las = cu.path.start.sub(vpos);
-			float by = cu.path.length / cu.points.size() * 0.25f;
+			V3D las = cu.path.start.sub(vpos);
+			double by = cu.path.length / cu.points.size() * 0.25f;
 			for(int i = 0; i < cu.points.size() * 4; i++){
-				Vec3f vec = cu.path.getVectorPosition(by * i + by, false).sub(vpos);
+				V3D vec = cu.path.getVectorPosition(by * i + by, false).sub(vpos);
 				var poly = new net.fexcraft.lib.frl.Polygon(new Vertex[]{
 					new Vertex(las.add(0, 0.05f, 0)),
 					new Vertex(vec.add(0, 0.05f, 0)),
@@ -95,15 +91,15 @@ public class RectCurve extends CurvePolygon {
 			}
 		}
 		//
-		axe.setAngles(0, 0, 0);
+		axe.setRadians(0, 0, 0);
 		CurvePlane seg0 = cu.planes.get(0);
 		CurvePlane seg_;
-		Vec3f tr, tl, br, bl, ntr, ntl, nbr, nbl;
-		float dif = cu.litloc ? cu.path.length / (cu.planes.size() - 1) : 1f / (cu.planes.size() - 1);
-		Vec3f coff = cu.path.getVectorPosition(0, false).sub(vpos);
-		axe.set(coff, cu.path.getVectorPosition(dif, false).sub(vpos));
-		axe.add(seg0.rot, 0, 0);
-		float loc;
+		V3D tr, tl, br, bl, ntr, ntl, nbr, nbl;
+		double dif = cu.litloc ? cu.path.length / (cu.planes.size() - 1) : 1f / (cu.planes.size() - 1);
+		V3D coff = cu.path.getVectorPosition(0, false).sub(vpos);
+		axe.pointing(coff, cu.path.getVectorPosition(dif, false).sub(vpos));
+		axe.addDegrees(seg0.rot, 0, 0);
+		double loc;
 		float tw = 1f / (group().texgroup == null ? FMT.MODEL.texSizeX : group().texSizeX);
 		float th = 1f / (group().texgroup == null ? FMT.MODEL.texSizeY : group().texSizeY);
 		float rx = tw * textureX;
@@ -114,10 +110,10 @@ public class RectCurve extends CurvePolygon {
 		float sy = 0;
 		float sx0 = 0;
 		float sx1 = 0;
-		tr = coff.add(axe.get(off.x, off.y, off.z));
-		tl = coff.add(axe.get(off.x, off.y, off.z + seg0.size.z));
-		bl = coff.add(axe.get(off.x, off.y + seg0.size.y, off.z + seg0.size.z));
-		br = coff.add(axe.get(off.x, off.y + seg0.size.y, off.z));
+		tr = coff.add(axe.rotate(off.x, off.y, off.z));
+		tl = coff.add(axe.rotate(off.x, off.y, off.z + seg0.size.z));
+		bl = coff.add(axe.rotate(off.x, off.y + seg0.size.y, off.z + seg0.size.z));
+		br = coff.add(axe.rotate(off.x, off.y + seg0.size.y, off.z));
 		if(!side_top){
 			glm.polygons.add(new net.fexcraft.lib.frl.Polygon(new Vertex[]{
 				new Vertex(tr, rx + seg0.size.z * tw, ry),
@@ -132,17 +128,17 @@ public class RectCurve extends CurvePolygon {
 			seg_ = cu.planes.get(i - 1);
 			loc = cu.litloc ? seg0.location : cu.path.length * seg0.location;
 			coff = cu.path.getVectorPosition(loc, false).sub(vpos);
-			axe.set(cu.path.getVectorPosition(loc - dif, false).sub(vpos), coff);
-			axe.add(seg0.rot, 0, 0);
+			axe.pointing(cu.path.getVectorPosition(loc - dif, false).sub(vpos), coff);
+			axe.addDegrees(seg0.rot, 0, 0);
 			ty = ry;
 			sx = Math.max(seg0.size.z, seg_.size.z);
 			sy = Math.max(seg0.size.y, seg_.size.y);
 			sx0 = 0;//seg_.size.z < seg0.size.z ? (seg0.size.z - seg_.size.z) * .5f * tw : 0;
 			sx1 = 0;//seg0.size.z < sx ? (sx - seg0.size.z) * .5f * tw : 0;
-			ntr = coff.add(axe.get(seg0.offset.x, seg0.offset.y, seg0.offset.z));
-			ntl = coff.add(axe.get(seg0.offset.x, seg0.offset.y, seg0.offset.z + seg0.size.z));
-			nbl = coff.add(axe.get(seg0.offset.x, seg0.offset.y + seg0.size.y, seg0.offset.z + seg0.size.z));
-			nbr = coff.add(axe.get(seg0.offset.x, seg0.offset.y + seg0.size.y, seg0.offset.z));
+			ntr = coff.add(axe.rotate(seg0.offset.x, seg0.offset.y, seg0.offset.z));
+			ntl = coff.add(axe.rotate(seg0.offset.x, seg0.offset.y, seg0.offset.z + seg0.size.z));
+			nbl = coff.add(axe.rotate(seg0.offset.x, seg0.offset.y + seg0.size.y, seg0.offset.z + seg0.size.z));
+			nbr = coff.add(axe.rotate(seg0.offset.x, seg0.offset.y + seg0.size.y, seg0.offset.z));
 			glm.polygons.add(new net.fexcraft.lib.frl.Polygon(new Vertex[]{
 				new Vertex(ntr, tx + sx * tw, sx1 + ty),
 				new Vertex(tr, tx, sx0 + ty),
