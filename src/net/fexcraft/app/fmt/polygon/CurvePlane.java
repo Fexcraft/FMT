@@ -18,7 +18,7 @@ public class CurvePlane {
 	public Vector3f offset = new Vector3f(0);
 	public boolean[] sides = new boolean[4];
 	public Vector3f cor0, cor1, cor2, cor3;//, rot;
-	public float location, rot;
+	public double location, rot;
 
 	public CurvePlane(float loc){
 		cor0 = new Vector3f();
