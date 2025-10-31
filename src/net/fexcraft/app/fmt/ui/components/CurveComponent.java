@@ -83,7 +83,7 @@ public class CurveComponent extends EditorComponent {
 				CurvePolygon curv = (CurvePolygon)poly;
 				Curve cu = curv.act_curve();
 				int size = cu.planes.size() - 1;
-				float loc = cu.litloc ? cu.path.length / size : 1f / size;
+				double loc = cu.litloc ? cu.path.length / size : 1f / size;
 				for(int i = 0; i < cu.planes.size(); i++){
 					cu.planes.get(i).location = loc * i;//(i + 1);
 				}
