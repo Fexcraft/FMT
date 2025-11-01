@@ -93,6 +93,7 @@ public class Settings {
 	public static Setting<Boolean> ADD_TO_LAST;
 	public static Setting<Boolean> SPHERE_MARKER;
 	public static Setting<Boolean> AUTO_SHOW_COMPONENTS;
+	public static Setting<Boolean> NO_CLIPBOARD;
 	public static Setting<Float> MOUSE_SENSIVITY;
 	public static Setting<Float> MOVE_SPEED;
 	public static Setting<Float> SCROLL_SPEED;
@@ -238,6 +239,7 @@ public class Settings {
 		LINES = new Setting<>("lines", true, SPACE3D, map);
 		POLYMARKER = new Setting<>("polygon_marker", true, SPACE3D, map);
 		ADD_TO_LAST = new Setting<>("add_to_last", false, GENERAL, map);
+		NO_CLIPBOARD = new Setting<>("no_clipboard", false, GENERAL, map);
 		FULLSCREEN = new Setting<>("fullscreen", false, GRAPHIC, map);
 		POLYGON_SUFFIX = new Setting<>("polygon_duplicate_suffix", "_%s", NAMING, map);
 		GROUP_SUFFIX = new Setting<>("group_duplicate_suffix", "_%s", NAMING, map);
