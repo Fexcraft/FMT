@@ -470,10 +470,11 @@ public class Model {
 		ArrayList<Polygon> selected = selection_copy();
 		var bool = Settings.SELECT_COPIED.value;
 		ArrayList<Polygon> copied = new ArrayList<>();
+		String gid = Settings.NO_CLIPBOARD.bool() ? selected.get(0).group().id : "clipboard";
 		for(Polygon poly : selected){
 			Polygon newpoly = poly.copy(null);
 			if(bool) copied.add(newpoly);
-			this.add(null, "clipboard", newpoly);
+			this.add(null, gid, newpoly);
 		}
 		if(bool){
 			clear_selection();
