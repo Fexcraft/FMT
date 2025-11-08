@@ -3,7 +3,6 @@ import org.gradle.internal.os.OperatingSystem
 group 'net.fexcraft.app.fmt'
 
 apply plugin: 'java'
-apply plugin: 'eclipse'
 
 project.ext.lwjglVersion = "3.2.3"
 project.ext.jomlVersion = "1.9.23"
@@ -42,13 +41,7 @@ def le_cbchain = '1.0.0'
 def le_util = '1.0.0'
 //@formatter:on
 
-//Make this project as a Gradle project
-eclipse.project {
-  	natures 'org.springsource.ide.eclipse.gradle.core.nature'
-}
-
 repositories {
-    jcenter()
     mavenCentral()
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
     maven { url "https://raw.githubusercontent.com/SpinyOwl/repo/snapshots" }
@@ -57,10 +50,10 @@ repositories {
 
 dependencies {
     // https://mvnrepository.com/artifact/org.reflections/reflections
-    implementation group: 'org.reflections', name: 'reflections', version: '0.9.11'
+    //implementation group: 'org.reflections', name: 'reflections', version: '0.9.11'
 
     //@formatter:off
-    implementation group: "org.joml", name: "joml", version: joml_version, changing: true
+    /*implementation group: "org.joml", name: "joml", version: joml_version, changing: true
     implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: log4j_version, changing: false
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: commons_version, changing: false
     implementation group: 'org.apache.commons', name: 'commons-collections4', version: commons_collections, changing: false
@@ -104,10 +97,14 @@ dependencies {
     implementation group: 'org.lwjgl', name: 'lwjgl-tinyfd', version: lwjgl_version, changing: true
     runtimeOnly group: 'org.lwjgl', name: 'lwjgl-tinyfd', version: lwjgl_version, changing: true, classifier: 'natives-windows'
     runtimeOnly group: 'org.lwjgl', name: 'lwjgl-tinyfd', version: lwjgl_version, changing: true, classifier: 'natives-linux'
-    runtimeOnly group: 'org.lwjgl', name: 'lwjgl-tinyfd', version: lwjgl_version, changing: true, classifier: 'natives-macos'
+    runtimeOnly group: 'org.lwjgl', name: 'lwjgl-tinyfd', version: lwjgl_version, changing: true, classifier: 'natives-macos'*/
 
-    implementation files('libs/discord-rpc.jar', 'libs/VOXtoFMT-1.jar')
-    implementation files('libs/FCL-1.12.81b.jar')
+    File libs = new File("libs-3.2.4S/");
+    for(File lib : libs.listFiles()){
+        implementation files(lib.getPath())
+    }
+    implementation files('libs/VOXtoFMT-1.jar')
+    implementation files('libs/FCL-12.105.jar')
     //@formatter:on
     testImplementation group: 'junit', name: 'junit', version: '4.13.1'
 }
@@ -131,13 +128,13 @@ tasks.register('mainJar', Jar) {
                 'Created-By': "Ferdinand Calo' (FEX___96)",
                 "Class-Path": ". " + (configurations.runtimeClasspath.collect { "lib/" + it.getName() }.join(' '))
     }
-    from(zipTree("${destinationDir}/${archiveName}")) {
+    from(zipTree("${destinationDirectory}/FMT")) {
         include 'net/fexcraft/app/fmt/'
     }
     from('src/') {
         include 'log4j2.xml'
     }
-    baseName = "FMT"
+    archiveBaseName = "FMT"
     version = ""
 }
 
