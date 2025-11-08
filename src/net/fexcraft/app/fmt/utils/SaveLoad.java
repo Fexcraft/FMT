@@ -106,7 +106,6 @@ public class SaveLoad {
 			zip.close();
 			FMTB.MODEL.file = file;
 			if(updatetree[0]) Trees.textures.reOrderGroups();
-			DiscordUtil.update(Settings.discordrpc_resettimeronnewmodel());
 		}
 		catch(Exception e){
 			log(e);
@@ -634,8 +633,13 @@ public class SaveLoad {
 			}
 		}
 		if(obj.has("pivots")){
-			for(Entry<String, JsonElement> entry : obj.get("pivots").getAsJsonObject().entrySet()){
-				compound.pivots.put(entry.getKey(), new SwivelPointLite(null).load(entry.getValue().getAsJsonArray()));
+			try{
+				for(Entry<String, JsonElement> entry : obj.get("pivots").getAsJsonObject().entrySet()){
+					compound.pivots.put(entry.getKey(), new SwivelPointLite(null).load(entry.getValue().getAsJsonArray()));
+				}
+			}
+			catch(Exception e){
+				e.printStackTrace();
 			}
 			compound.relinkPivots();
 		}
