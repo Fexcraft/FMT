@@ -44,7 +44,6 @@ import net.fexcraft.app.fmt.utils.texture.TextureManager;
 import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 import net.fexcraft.lib.common.math.Vec3f;
-import net.fexcraft.lib.mc.utils.Static;
 
 public class TreeGroup extends Panel {
 
@@ -81,7 +80,7 @@ public class TreeGroup extends Panel {
 		list = group;
 		updateColor();
 		animations = flag;
-		if(!flag) Static.halt(0);
+		if(!flag) System.exit(0);
 		this.add(new TreeIcon((int)getSize().x - 42, 0, "group_visible", () -> {
 			list.visible = !list.visible;
 			updateColor();
