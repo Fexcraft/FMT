@@ -128,7 +128,7 @@ tasks.register('mainJar', Jar) {
                 'Created-By': "Ferdinand Calo' (FEX___96)",
                 "Class-Path": ". " + (configurations.runtimeClasspath.collect { "lib/" + it.getName() }.join(' '))
     }
-    from(zipTree("${destinationDirectory}/FMT")) {
+    from('build/classes/java/main/') {
         include 'net/fexcraft/app/fmt/'
     }
     from('src/') {
