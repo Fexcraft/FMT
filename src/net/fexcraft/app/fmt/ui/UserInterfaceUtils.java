@@ -135,10 +135,10 @@ public class UserInterfaceUtils {
 				long l = 0, ll = 0;
 				for(TurboList list : FMTB.MODEL.getGroups()){
 					for(PolygonWrapper wrapper : list){
-						l += jdk.nashorn.internal.ir.debug.ObjectSizeCalculator.getObjectSize(wrapper.getTurboObject(0));
+						l += 0;//jdk.nashorn.internal.ir.debug.ObjectSizeCalculator.getObjectSize(wrapper.getTurboObject(0));
 					}
 				}
-				ll = jdk.nashorn.internal.ir.debug.ObjectSizeCalculator.getObjectSize(FMTB.MODEL);
+				ll = 0;//jdk.nashorn.internal.ir.debug.ObjectSizeCalculator.getObjectSize(FMTB.MODEL);
                 Dialog dialog = new Dialog("Results:", 300, 100);
                 Label label = new Label("Size (MC / Editor): " + Settings.byteCountToString(l, true) + " // " + Settings.byteCountToString(ll, true), 10, 10, 200, 20);
                 Button okbutton = new Button("ok", 10, 50, 50, 20);
