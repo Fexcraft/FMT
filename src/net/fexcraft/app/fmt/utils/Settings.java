@@ -19,8 +19,7 @@ import net.fexcraft.lib.common.math.Time;
 
 public class Settings {
 	
-	private static Setting floor, lines, demo, cube, polygon_marker, lighting, cullface,
-		discordrpc, discordrpc_sm, discordrpc_rtonm, numberfieldarrows, preview_colorpicker;
+	private static Setting floor, lines, demo, cube, polygon_marker, lighting, cullface, numberfieldarrows, preview_colorpicker;
 	public static Setting movespeed, mouse_sensivity, internal_cursor, vsync, vsynchalf, debug;
 	public static Setting darktheme, no_scroll_fields, old_rotation, center_marker, animate;
 	public static Setting orbital_camera, oc_center_on_part, internal_filechooser;
@@ -44,12 +43,6 @@ public class Settings {
 	public static boolean cullface(){ return cullface.getValue(); }
 	
 	public static boolean animate(){ return animate.getValue(); }
-
-	public static boolean discordrpc(){ return discordrpc.getValue(); }
-	
-	public static boolean discordrpc_showmodel(){ return discordrpc_sm.getValue(); }
-	
-	public static boolean discordrpc_resettimeronnewmodel(){ return discordrpc_rtonm.getValue(); }
 
 	public static boolean numberfieldarrows(){ return numberfieldarrows.getValue(); }
 
@@ -235,9 +228,6 @@ public class Settings {
 		lighting = SETTINGS.get("lighting");
 		cullface = SETTINGS.get("cullface");
 		animate = SETTINGS.get("animate");
-		discordrpc = SETTINGS.get("discord_rpc-enabled");
-		discordrpc_sm = SETTINGS.get("discord_rpc-show_model");
-		discordrpc_rtonm = SETTINGS.get("discord_rpc-reset_timer_on_new_model");
 		numberfieldarrows = SETTINGS.get("numberfield_arrows");
 		preview_colorpicker = SETTINGS.get("preview_colorpicker");
 		movespeed = SETTINGS.get("camera_movespeed");
