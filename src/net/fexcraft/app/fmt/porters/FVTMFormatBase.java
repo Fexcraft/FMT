@@ -63,7 +63,9 @@ public abstract class FVTMFormatBase extends ExImPorter {
 		pergroupinit = settings.get("per_group_init").getBooleanValue();
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(getTopCommentLine());
-		if(settings.get("per_group_init").getBooleanValue()) buffer.append("//Using PER-GROUP-INIT mode with limit '" + settings.get("max_pg_init_count").getValue() + "'!\n");
+		if(settings.get("per_group_init").getBooleanValue()){
+			buffer.append("//Using PER-GROUP-INIT mode with limit '" + settings.get("max_pg_init_count").getValue() + "'!\n");
+		}
 		buffer.append(getPackageLine());
 		appendImports(buffer);
 		buffer.append("/** This file was exported via the " + getTitle() + " of<br>\n");
@@ -82,7 +84,8 @@ public abstract class FVTMFormatBase extends ExImPorter {
 		buffer.append(tab2 + "super();\n\t\ttextureX = " + compound.tx(null) + ";\n\t\ttextureY = " + compound.ty(null) + ";\n");
 		for(String cr : compound.getAuthors()){
 			buffer.append(tab2 + "addToCreators(\"" + cr + "\");\n");//TODO add "uuid" of logged in users if available;
-		} buffer.append(tab2 + "//\n");
+		}
+		buffer.append(tab2 + "//\n");
 		if(pergroupinit){
 			int count = settings.get("max_pg_init_count").getValue();
 			for(TurboList list : groups){
@@ -98,7 +101,8 @@ public abstract class FVTMFormatBase extends ExImPorter {
 			//
 			for(TurboList list : groups){
 				if(list.size() > count){
-					int subs = list.size() / count; if(list.size() % count != 0) subs++;
+					int subs = list.size() / count;
+					if(list.size() % count != 0) subs++;
 					for(int i = 0; i < subs; i++){
 						buffer.append(tab + "private final void initGroup_" + list.exportID() + i + "(){\n");
 						int j = i * count, k = (i + 1) * count;
