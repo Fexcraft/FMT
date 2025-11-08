@@ -66,8 +66,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import net.arikia.dev.drpc.DiscordEventHandlers;
-import net.arikia.dev.drpc.DiscordRPC;
 import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.porters.PorterManager;
 import net.fexcraft.app.fmt.ui.MenuButton;
@@ -98,7 +96,7 @@ import net.fexcraft.lib.tmt.ModelRendererTurbo;
  * */
 public class FMTB {
 
-	public static final String VERSION = "2.7.5";
+	public static final String VERSION = "2.7.6";
 	public static final String deftitle = "[FPS:%s] Fexcraft Modelling Toolbox " + VERSION + " - %s";
 	public static final String CLID = "587016218196574209";
 	//
@@ -108,7 +106,6 @@ public class FMTB {
 	private static FMTB INSTANCE;
 	public static GroupCompound MODEL = new GroupCompound(null);
 	public static Timer BACKUP_TIMER, TEX_UPDATE_TIMER;
-	private static int disk_update;
 	public static String NO_POLYGON_SELECTED, NO_PREVIEW_SELECTED;
 	//
 	public static final ST_Timer timer = new ST_Timer();
@@ -151,7 +148,10 @@ public class FMTB {
 
 	public static final FMTB get(){ return INSTANCE; }
 	
-	public FMTB setTitle(String string){ title = string; DiscordUtil.update(false); return this; }
+	public FMTB setTitle(String string){
+		title = string;
+		return this;
+	}
 	
 	public void run() throws InterruptedException, IOException, NoSuchMethodException, ScriptException{
 		TextureManager.init();
@@ -328,24 +328,6 @@ public class FMTB {
 			(TEX_UPDATE_TIMER = new Timer("tex-update")).schedule(new TextureUpdate(), Time.SEC_MS, Time.SEC_MS / 2);
 		}
 		//
-		if(Settings.discordrpc()){
-			DiscordEventHandlers.Builder handler = new DiscordEventHandlers.Builder();
-			handler.setReadyEventHandler(new DiscordUtil.ReadyEventHandler());
-			handler.setErroredEventHandler(new DiscordUtil.ErroredEventHandler());
-			handler.setDisconnectedEventHandler(new DiscordUtil.DisconectedEventHandler());
-			handler.setJoinGameEventHandler(new DiscordUtil.JoinGameEventHandler());
-			handler.setJoinRequestEventHandler(new DiscordUtil.JoinRequestEventHandler());
-			handler.setSpectateGameEventHandler(new DiscordUtil.SpectateGameEventHandler());
-			DiscordRPC.discordInitialize(CLID, handler.build(), true);
-			DiscordRPC.discordRunCallbacks();
-			DiscordUtil.update(true);
-			Runtime.getRuntime().addShutdownHook(new Thread(){
-				@Override
-				public void run(){
-					DiscordRPC.discordShutdown();
-				}
-			});
-		}
 		updateVsync();
 		//
 		while(!close){
@@ -371,13 +353,8 @@ public class FMTB {
 			LayoutManager.getInstance().layout(frame);
 			AnimatorProvider.getAnimator().runAnimations();
 			timer.update();
-			if(Settings.discordrpc()) if(++disk_update > 60000){
-				DiscordRPC.discordRunCallbacks();
-				disk_update = 0;
-			}
 			// Thread.sleep(50);
 		}
-		DiscordRPC.discordShutdown();
 		renderer.destroy();
 		glfwDestroyWindow(window);
 		glfwTerminate();
