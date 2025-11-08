@@ -300,7 +300,7 @@ public class FMFExporter extends ExImPorter {
 
 	@Override
 	public List<Setting> getSettings(boolean export){
-		return nosettings;
+		return settings;
 	}
 
 	@Override
