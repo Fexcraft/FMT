@@ -14,7 +14,7 @@ public class SelectorPanel extends EditorPanel {
 
 	public SelectorPanel(){
 		super("selector", "selmode", "editor.component.selector");
-		setPosition(Editor.WIDTH, I_SIZE * 7);
+		setPos(6);
 		ex_x = 240;
 		ex_y = 30;
 		//
