@@ -20,7 +20,7 @@ public class Pivot {
     public ArrayList<Pivot> roots = new ArrayList<>();
 	public String[] pos_attr = new String[]{ "", "", "" };
 	public String[] rot_attr = new String[]{ "", "", "" };
-    public Matrix4f matrix;
+    public Matrix4f matrix = new Matrix4f();
     public boolean minimized;
     public boolean visible = true;
 	public boolean root_rot = true;
