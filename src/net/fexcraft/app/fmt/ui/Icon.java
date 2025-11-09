@@ -19,9 +19,9 @@ public class Icon extends ImageView {
 
     public Icon(int index, String adress, MouseClickEventListener listener) {
         super(ImageLoader.loadImage(adress));
-        this.setPosition(1 + (index * 29), 1);
+        this.setPosition(2 + (index * (ToolbarMenu.HEIGHT + 2)), 1);
         this.setFocusable(false);
-        this.setSize(28, 28);
+        this.setSize(ToolbarMenu.HEIGHT - 2, ToolbarMenu.HEIGHT - 2);
         this.getListenerMap().addListener(MouseClickEvent.class, listener);
         Settings.applyBorderless(getStyle());
         Settings.applyBorderless(getFocusedStyle());
