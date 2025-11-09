@@ -23,7 +23,8 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 
     private static Pivot PIVOT = null;
 	private static Model HELPER = null;
-    private static Matrix4f matrix = new Matrix4f();
+    private static Matrix4f matrix0 = new Matrix4f();
+	private static Matrix4f matrix1 = new Matrix4f();
 	private static DrawMode MODE = DrawMode.TEXTURED;
 	public static ShaderManager.ShaderProgram program;
 	public static final float[] LINECOLOR = { 0, 0, 0, 1}, EMPTY = { 0, 0, 0, 0 }, SELCOLOR = { 1, 1, 0, 1 };
@@ -31,10 +32,21 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 	private boolean subpoly;
 	private boolean lines;
 	private GLObject glo;
+	//
+	private int uni_model = -1;
+	private int uni_line_color;
+	private int uni_poly_color;
+	private int uni_textured;
 
 	@Override
 	public void render(Polyhedron<GLObject> poly){
 		if(!poly.visible) return;
+		if(uni_model < 0){
+			uni_model = program.getUniform("model");
+			uni_line_color = program.getUniform("line_color");
+			uni_poly_color = program.getUniform("poly_color");
+			uni_textured = program.getUniform("textured");
+		}
 		int index = (lines = MODE.lines()) ? 1 : 0;
 		glo = poly.glObj;
 		if(poly.recompile || glo.gpu[0].glid == null){
@@ -50,33 +62,33 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 		}
 		if(!subpoly){
 			if(PIVOT == null && HELPER == null){
-				matrix = new Matrix4f().identity();
-				if(ImageHandler.ROT != null) matrix.rotate(ImageHandler.ROT, GIF_AXIS);
+				matrix0.identity();
+				if(ImageHandler.ROT != null) matrix0.rotate(ImageHandler.ROT, GIF_AXIS);
 			}
 			else if(HELPER != null){
-				matrix = HELPER.matrix.get(new Matrix4f()).scale(HELPER.scl.x, HELPER.scl.y, HELPER.scl.z);
+				HELPER.matrix.get(matrix0).scale(HELPER.scl.x, HELPER.scl.y, HELPER.scl.z);
 			}
 			else{
-				matrix = PIVOT.matrix.get(new Matrix4f());
+				PIVOT.matrix.get(matrix0);
 			}
 		}
-		matrix.translate(new Vector3f(poly.posX, poly.posY, poly.posZ));
-		if(poly.rotY != 0f) matrix.rotate((float)Math.toRadians(poly.rotY), axis_y);
-		if(poly.rotX != 0f) matrix.rotate((float)Math.toRadians(poly.rotX), axis_x);
-		if(poly.rotZ != 0f) matrix.rotate((float)Math.toRadians(poly.rotZ), axis_z);
+		matrix0.translate(poly.posX, poly.posY, poly.posZ);
+		if(poly.rotY != 0f) matrix0.rotate((float)Math.toRadians(poly.rotY), axis_y);
+		if(poly.rotX != 0f) matrix0.rotate((float)Math.toRadians(poly.rotX), axis_x);
+		if(poly.rotZ != 0f) matrix0.rotate((float)Math.toRadians(poly.rotZ), axis_z);
 		//
-		glUniformMatrix4fv(program.getUniform("model"), false, matrix.get(new float[16]));
-		if(MODE.ui()){
+		glUniformMatrix4fv(uni_model, false, matrix0.get(new float[16]));
+		/*if(MODE.ui()){
 			glUniform4fv(program.getUniform("line_color"), MODE.ui_lines() ? glo.linecolor : EMPTY);
 			glUniform4fv(program.getUniform("poly_color"), MODE.picker() ? glo.pickercolor : !glo.textured ? glo.polycolor : EMPTY);
 			glUniform1f(program.getUniform("textured"), glo.textured ? 1 : 0);
 			glUniform1f(program.getUniform("tinted"), MODE.ui_text() ? 1 : 0);
 		}
-		else{
-			glUniform4fv(program.getUniform("line_color"), MODE.lines() ? MODE == DrawMode.SELLINES ? SELCOLOR : glo.linecolor : EMPTY);
-			glUniform4fv(program.getUniform("poly_color"), MODE.picker() ? glo.pickercolor : MODE.color() ? glo.polycolor : EMPTY);
-			glUniform1f(program.getUniform("textured"), MODE.textured() ? 1 : 0);
-		}
+		else{*/
+			glUniform4fv(uni_line_color, MODE.lines() ? MODE == DrawMode.SELLINES ? SELCOLOR : glo.linecolor : EMPTY);
+			glUniform4fv(uni_poly_color, MODE.picker() ? glo.pickercolor : MODE.color() ? glo.polycolor : EMPTY);
+			glUniform1f(uni_textured, MODE.textured() ? 1 : 0);
+		//}
 		//
         glEnableVertexAttribArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, glo.gpu[index].glid);
@@ -99,9 +111,9 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 		//
         if(poly.sub != null){
 			subpoly = true;
-			Matrix4f ref = matrix;
+			matrix1.set(matrix0);
             for(Polyhedron<GLObject> sub : poly.sub){
-				matrix = new Matrix4f().set(ref);
+				matrix0.set(matrix1);
 				sub.render();
 			}
 			subpoly = false;
@@ -122,7 +134,7 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 	public static void setPivot(Pivot npivot){
 		PIVOT = npivot;
 		if(PIVOT == null) return;
-		Matrix4f matrix = PIVOT.matrix = new Matrix4f().identity();
+		Matrix4f matrix = PIVOT.matrix.identity();
 		if(ImageHandler.ROT != null) matrix.rotate(ImageHandler.ROT, GIF_AXIS);
 		if(PIVOT.root_rot){
 			for(Pivot pivot : PIVOT.roots){
