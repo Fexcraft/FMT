@@ -2,7 +2,9 @@ package net.fexcraft.app.fmt.ui.editors;
 
 import com.spinyowl.legui.component.Component;
 import net.fexcraft.app.fmt.settings.Settings;
+import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.ui.Icon;
+import net.fexcraft.app.fmt.ui.ToolbarMenu;
 import net.fexcraft.app.fmt.ui.UIUtils;
 import net.fexcraft.app.fmt.ui.panels.*;
 import net.fexcraft.app.fmt.update.UpdateHandler;
@@ -30,12 +32,17 @@ public class EditorPanel extends Component {
 		lang_prefix = "editor.component." + id;
 		setSize(I_SIZE, I_SIZE);
 		Settings.applyComponentTheme(this);
-		add(new Icon(0, I_SIZE, 0, 0, 0, "./resources/textures/icons/" + icon + ".png", () -> expand())
+		add(new Icon(0, I_SIZE, 0, 0, 0, "./resources/textures/icons/panels/" + icon + ".png", () -> expand())
 			.addTooltip(translate(tooltip)));
 		UpdateHandler.register(updcom);
 	}
 
+	public void setPos(int idx){
+		setPosition(Editor.WIDTH, ToolbarMenu.HEIGHT + idx * 30);
+	}
+
 	public static void load(){
+		PANELS.add(new EditorsPanel());
 		PANELS.add(new MultiplierPanel());
 		PANELS.add(new QuickAddPanel());
 		PANELS.add(new FlipToolsPanel());
