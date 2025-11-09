@@ -22,7 +22,7 @@ public class MultiplierPanel extends EditorPanel {
 
 	public MultiplierPanel(){
 		super("multiplier", "multiplier", "editor.component.multiplier");
-		setPosition(Editor.WIDTH, I_SIZE * 2);
+		setPos(1);
 		ex_x = 330;
 		ex_y = 60;
 		//
