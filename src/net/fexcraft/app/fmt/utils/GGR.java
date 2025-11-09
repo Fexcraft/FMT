@@ -8,7 +8,6 @@ import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 import static org.lwjgl.glfw.GLFW.GLFW_REPEAT;
 import static org.lwjgl.glfw.GLFW.glfwGetCursorPos;
 import static org.lwjgl.glfw.GLFW.glfwSetInputMode;
-import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
 
 import com.spinyowl.legui.component.Component;
@@ -23,6 +22,7 @@ import net.fexcraft.app.fmt.ui.UVViewer;
 import net.fexcraft.app.fmt.ui.editors.EditorPanel;
 import net.fexcraft.app.fmt.ui.trees.PolygonTree;
 import net.fexcraft.app.fmt.ui.workspace.WorkspaceViewer;
+import net.fexcraft.app.fmt.utils.ShaderManager.Uniform;
 import net.fexcraft.app.fmt.utils.fvtm.FVTMConfigEditor;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
@@ -92,9 +92,9 @@ public class GGR {
         perspective(fov);
         ShaderManager.GENERAL.applyUniforms(prog -> {
 			prog.use();
-			def_view = glGetUniformLocation(prog.program(), "view");
+			def_view = prog.getUniform(Uniform.VIEW);
 			glUniformMatrix4fv(def_view, false, view.get(new float[16]));
-			def_proj = glGetUniformLocation(prog.program(), "projection");
+			def_proj = prog.getUniform(Uniform.PROJECTION);
 			glUniformMatrix4fv(def_proj, false, projection.get(new float[16]));
         });
     }
@@ -110,9 +110,9 @@ public class GGR {
 	public void ortho(float scale){
 		ShaderManager.UI.applyUniforms(prog -> {
 			prog.use();
-			def_view = glGetUniformLocation(prog.program(), "view");
+			def_view = prog.getUniform(Uniform.VIEW);
 			glUniformMatrix4fv(def_view, false, new Matrix4f().identity().get(new float[16]));
-			def_proj = glGetUniformLocation(prog.program(), "projection");
+			def_proj = prog.getUniform(Uniform.PROJECTION);
 			glUniformMatrix4fv(def_proj, false, new Matrix4f().ortho(0, FMT.WIDTH / scale, FMT.HEIGHT / scale, 0, -1000, 1000).get(new float[16]));
         });
 	}
