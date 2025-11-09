@@ -8,7 +8,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
-import net.fexcraft.app.fmt.utils.Logging;
 import org.joml.Vector2f;
 import com.spinyowl.legui.component.Component;
 import com.spinyowl.legui.component.Label;
@@ -23,19 +22,18 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.Translator;
-import org.joml.Vector4f;
 
 public class ToolbarMenu extends Panel {
 	
 	public static final ArrayList<MenuLayer> ACTIVE = new ArrayList<>();
 	public static final HashMap<String, ToolbarMenu> MENUS = new HashMap<>();
-	public static final int WIDTH = 140, HEIGHT = 30;
+	public static final int WIDTH = 140, HEIGHT = 36;
 	protected ArrayList<Component> components = new ArrayList<>();
 	public MenuLayer layer;
 	private Label label;
 	
 	public ToolbarMenu(int index, String id, Component... comps){
-		super(index < 0 ? 0 : indexWidth(index), index < 0 ? 1 + -index * 31 : 0, WIDTH, HEIGHT);
+		super(index < 0 ? 0 : indexWidth(index), index < 0 ? 1 + -index * (HEIGHT + 1) : 0, WIDTH, HEIGHT);
 		this.add(label = new Label(Translator.translate("toolbar." + id), 4, 0, WIDTH - 4, HEIGHT));
 		Settings.applyMenuTheme(this);
 		MENUS.put(id, this);
@@ -56,7 +54,7 @@ public class ToolbarMenu extends Panel {
 	}
 
 	private static int indexWidth(int index){
-		return 176 + (index * (WIDTH + 1));
+		return Toolbar.ICON_OFFSET * (HEIGHT + 2) + 4 + (index * (WIDTH + 1));
 	}
 
 	public ToolbarMenu(int index, String id, Runnable run){
@@ -196,7 +194,7 @@ public class ToolbarMenu extends Panel {
 		protected String key;
 
 		public MenuButton(int index){
-			super(0, 1 + index * 31, WIDTH, HEIGHT);
+			super(0, 1 + index * (HEIGHT + 1), WIDTH, HEIGHT);
 		}
 
 		public MenuButton(int index, String key){
