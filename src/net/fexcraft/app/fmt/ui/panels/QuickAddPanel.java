@@ -31,7 +31,7 @@ public class QuickAddPanel extends EditorPanel {
 
 	public QuickAddPanel(){
 		super("quick", "quick_add", "editor.component.quick");
-		setPosition(Editor.WIDTH, I_SIZE * 4);
+		setPos(3);
 		ex_x = 310;
 		ex_y = 30;
 		//
