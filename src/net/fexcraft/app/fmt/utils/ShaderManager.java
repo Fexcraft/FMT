@@ -60,10 +60,12 @@ public class ShaderManager {
 	}
 	
 	public static class ShaderProgram {
-		
+
+		private int[] uniforms = new int[Uniform.values().length];
 		private final int vert, frag, prog;
 		
 		public ShaderProgram(int prog2, int vert2, int frag2){
+			for(int i = 0; i < uniforms.length; i++) uniforms[i] = -1;
 			prog = prog2;
 			vert = vert2;
 			frag = frag2;
@@ -96,9 +98,31 @@ public class ShaderManager {
 			cons.accept(this);
 		}
 
-		public int getUniform(String string){
-			return glGetUniformLocation(prog, string);
+		public int getUniform(Uniform uniform){
+			if(uniforms[uniform.ordinal()] < 0){
+				uniforms[uniform.ordinal()] = glGetUniformLocation(prog, uniform.name().toLowerCase());
+			}
+			return uniforms[uniform.ordinal()];
 		}
+
+	}
+
+	public static enum Uniform {
+
+		VIEW,
+		PROJECTION,
+
+		MODEL,
+		LINE_COLOR,
+		POLY_COLOR,
+		TEXTURED,
+		TINTED,
+
+		LIGHTING,
+		LIGHTCOLOR,
+		LIGHTPOS,
+		AMBIENT,
+		DIFFUSE
 
 	}
 
