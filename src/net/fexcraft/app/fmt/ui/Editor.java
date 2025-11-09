@@ -158,6 +158,16 @@ public class Editor extends Component {
 		else hide();
 	}
 
+	public static void toggleEditors(){
+		if(VISIBLE_EDITOR == null) POLYGON_EDITOR.show();
+		else VISIBLE_EDITOR.hide();
+	}
+
+	public static void toggleTrees(){
+		if(VISIBLE_TREE == null) POLYGON_TREE.show();
+		else VISIBLE_TREE.hide();
+	}
+
 	public void addComponent(EditorComponent com){
 		com.index = components.size();
 		com.editor = this;
