@@ -24,7 +24,7 @@ public class MarkerPanel extends EditorPanel {
 
 	public MarkerPanel(){
 		super("marker_scale", "marker_scale", "editor.component.marker_scale");
-		setPosition(Editor.WIDTH, I_SIZE * 6);
+		setPos(5);
 		ex_x = 330;
 		ex_y = 30;
 		//
