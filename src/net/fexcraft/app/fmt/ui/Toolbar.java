@@ -22,18 +22,22 @@ public class Toolbar extends Panel {
 	
 	public static final Runnable NOTHING = () -> {};
 	private UpdateCompound updcom = new UpdateCompound();
+	public static int ICON_OFFSET = 8;
 
 	public Toolbar(){
-		super(0, 0, FMT.WIDTH, 30);
+		super(0, 0, FMT.WIDTH, ToolbarMenu.HEIGHT);
 		this.setFocusable(false);
 		Settings.applyBorderless(this);
 		this.add(new Icon(0, "./resources/textures/icons/toolbar/info.png", () -> FMT.openLink("https://fexcraft.net/wiki/app/fmt")).addTooltip("toolbar.icon.info"));
-		this.add(new Icon(1, "./resources/textures/icons/toolbar/settings.png", () -> SettingsDialog.open()).addTooltip("toolbar.icon.settings"));
-		this.add(new Icon(2, "./resources/textures/icons/toolbar/profile.png", () -> ProfileDialog.open()).addTooltip("toolbar.icon.profile"));
-		this.add(new Icon(3, "./resources/textures/icons/toolbar/save.png", () -> SaveHandler.save(FMT.MODEL, null, null, false, false)).addTooltip("toolbar.icon.save"));
-		this.add(new Icon(4, "./resources/textures/icons/toolbar/open.png", () -> SaveHandler.openDialog(null)).addTooltip("toolbar.icon.open"));
-		this.add(new Icon(5, "./resources/textures/icons/toolbar/new.png", () -> SaveHandler.newDialog()).addTooltip("toolbar.icon.new"));
-		this.add(new ToolbarMenu(0, "file",
+		this.add(new Icon(1, "./resources/textures/icons/toolbar/profile.png", () -> ProfileDialog.open()).addTooltip("toolbar.icon.profile"));
+		this.add(new Icon(2, "./resources/textures/icons/toolbar/save.png", () -> SaveHandler.save(FMT.MODEL, null, null, false, false)).addTooltip("toolbar.icon.save"));
+		this.add(new Icon(3, "./resources/textures/icons/toolbar/open.png", () -> SaveHandler.openDialog(null)).addTooltip("toolbar.icon.open"));
+		this.add(new Icon(4, "./resources/textures/icons/toolbar/new.png", () -> SaveHandler.newDialog()).addTooltip("toolbar.icon.new"));
+		this.add(new Icon(5, "./resources/textures/icons/toolbar/settings.png", () -> SettingsDialog.open()).addTooltip("toolbar.icon.settings"));
+		this.add(new Icon(6, "./resources/textures/icons/toolbar/editor.png", () -> Editor.toggleEditors()).addTooltip("toolbar.icon.editor"));
+		this.add(new Icon(7, "./resources/textures/icons/toolbar/tree.png", () -> Editor.toggleTrees()).addTooltip("toolbar.icon.tree"));
+		int mid = 0;
+		this.add(new ToolbarMenu(mid++, "file",
 			new MenuButton(0, "file.new", () -> SaveHandler.newDialog()),
 			new MenuButton(1, "file.open", () -> SaveHandler.openDialog(null)),
 			new ToolbarMenu(-2, "file.recent",
@@ -63,7 +67,7 @@ public class Toolbar extends Panel {
 			new MenuButton(9, "file.donate", () -> FMT.openLink("https://fexcraft.net/donate")),
 			new MenuButton(10, "file.exit", () -> FMT.close(0))
 		));
-		this.add(new ToolbarMenu(1, "utils",
+		this.add(new ToolbarMenu(mid++, "utils",
 			new MenuButton(0, "utils.copy_selected", () -> FMT.MODEL.copySelected()),
 			new ToolbarMenu(-1, "utils.clipboard",
 				new MenuButton(0, "utils.clipboard.copy", () -> FMT.MODEL.copyToClipboard(false)),
@@ -83,7 +87,7 @@ public class Toolbar extends Panel {
 					new MenuButton(1, "Extract Materials", () -> ConverterUtils.exModelData())
 			)
 		));
-		this.add(new ToolbarMenu(2, "editors",
+		/*this.add(new ToolbarMenu(mid++, "editors",
 			new MenuButton(0, "editors.polygon", () -> Editor.POLYGON_EDITOR.toggle()),
 			//new MenuButton(1, "editors.group", () -> Editor.GROUP_EDITOR.toggle()),
 			new MenuButton(1, "editors.pivot", () -> Editor.PIVOT_EDITOR.toggle()),
@@ -94,15 +98,15 @@ public class Toolbar extends Panel {
 			new MenuButton(6, "editors.config", () -> Editor.CONFIG_EDITOR.toggle()),
 			new MenuButton(7, "editors.anim", () -> Editor.ANIM_EDITOR.toggle()),
 			new MenuButton(8, "editors.var", () -> Editor.VAR_EDITOR.toggle())
-		));
-		this.add(new ToolbarMenu(3, "trees",
+		));*/
+		/*this.add(new ToolbarMenu(mid++, "trees",
 			new MenuButton(0, "trees.polygon", () -> Editor.POLYGON_TREE.toggle()),
 			new MenuButton(1, "trees.pivot", () -> Editor.PIVOT_TREE.toggle()),
 			new MenuButton(2, "trees.texture", () -> Editor.TEXTURE_TREE.toggle()),
 			new MenuButton(3, "trees.helper", () -> Editor.PREVIEW_TREE.toggle()),
 			new MenuButton(4, "trees.anim", () -> Editor.ANIM_TREE.toggle())
-		));
-		this.add(new ToolbarMenu(4, "polygons",
+		));*/
+		this.add(new ToolbarMenu(mid++, "polygons",
 			new MenuButton(0, "polygons.add_box", () -> QuickAddPanel.addBox()),
 			new MenuButton(1, "polygons.add_shapebox", () -> QuickAddPanel.addShapebox()),
 			new MenuButton(2, "polygons.add_cylinder", () -> QuickAddPanel.addCylinder()),
@@ -114,9 +118,9 @@ public class Toolbar extends Panel {
 			new MenuButton(8, "polygons.add_mesh_curve", () -> QuickAddPanel.addCurve(Shape.MESH_CURVE)),
 			new MenuButton(9, "polygons.add_object")
 		));
-		this.add(new ToolbarMenu(5, "workspace", () -> WorkspaceViewer.show0()));
-		this.add(new ToolbarMenu(6, "prototype", () -> PackDevEnv.toggle()));
-		this.add(new ToolbarMenu(7, "exit", () -> FMT.close(0)));
+		this.add(new ToolbarMenu(mid++, "workspace", () -> WorkspaceViewer.show0()));
+		this.add(new ToolbarMenu(mid++, "prototype", () -> PackDevEnv.toggle()));
+		this.add(new ToolbarMenu(mid++, "exit", () -> FMT.close(0)));
 		UpdateHandler.register(updcom);
 	}
 
