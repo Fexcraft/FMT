@@ -4,6 +4,7 @@ import net.fexcraft.app.fmt.polygon.GLObject.GPUData;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.utils.ImageHandler;
 import net.fexcraft.app.fmt.utils.ShaderManager;
+import net.fexcraft.app.fmt.utils.ShaderManager.Uniform;
 import net.fexcraft.lib.common.math.V3D;
 import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.frl.ColoredVertex;
@@ -33,20 +34,10 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 	private boolean lines;
 	private GLObject glo;
 	//
-	private int uni_model = -1;
-	private int uni_line_color;
-	private int uni_poly_color;
-	private int uni_textured;
 
 	@Override
 	public void render(Polyhedron<GLObject> poly){
 		if(!poly.visible) return;
-		if(uni_model < 0){
-			uni_model = program.getUniform("model");
-			uni_line_color = program.getUniform("line_color");
-			uni_poly_color = program.getUniform("poly_color");
-			uni_textured = program.getUniform("textured");
-		}
 		int index = (lines = MODE.lines()) ? 1 : 0;
 		glo = poly.glObj;
 		if(poly.recompile || glo.gpu[0].glid == null){
@@ -77,35 +68,35 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 		if(poly.rotX != 0f) matrix0.rotate((float)Math.toRadians(poly.rotX), axis_x);
 		if(poly.rotZ != 0f) matrix0.rotate((float)Math.toRadians(poly.rotZ), axis_z);
 		//
-		glUniformMatrix4fv(uni_model, false, matrix0.get(new float[16]));
-		/*if(MODE.ui()){
-			glUniform4fv(program.getUniform("line_color"), MODE.ui_lines() ? glo.linecolor : EMPTY);
-			glUniform4fv(program.getUniform("poly_color"), MODE.picker() ? glo.pickercolor : !glo.textured ? glo.polycolor : EMPTY);
-			glUniform1f(program.getUniform("textured"), glo.textured ? 1 : 0);
-			glUniform1f(program.getUniform("tinted"), MODE.ui_text() ? 1 : 0);
+		glUniformMatrix4fv(program.getUniform(Uniform.MODEL), false, matrix0.get(new float[16]));
+		if(MODE.ui()){
+			glUniform4fv(program.getUniform(Uniform.LINE_COLOR), MODE.ui_lines() ? glo.linecolor : EMPTY);
+			glUniform4fv(program.getUniform(Uniform.POLY_COLOR), MODE.picker() ? glo.pickercolor : !glo.textured ? glo.polycolor : EMPTY);
+			glUniform1f(program.getUniform(Uniform.TEXTURED), glo.textured ? 1 : 0);
+			glUniform1f(program.getUniform(Uniform.TINTED), MODE.ui_text() ? 1 : 0);
 		}
-		else{*/
-			glUniform4fv(uni_line_color, MODE.lines() ? MODE == DrawMode.SELLINES ? SELCOLOR : glo.linecolor : EMPTY);
-			glUniform4fv(uni_poly_color, MODE.picker() ? glo.pickercolor : MODE.color() ? glo.polycolor : EMPTY);
-			glUniform1f(uni_textured, MODE.textured() ? 1 : 0);
-		//}
+		else{
+			glUniform4fv(program.getUniform(Uniform.LINE_COLOR), MODE.lines() ? MODE == DrawMode.SELLINES ? SELCOLOR : glo.linecolor : EMPTY);
+			glUniform4fv(program.getUniform(Uniform.POLY_COLOR), MODE.picker() ? glo.pickercolor : MODE.color() ? glo.polycolor : EMPTY);
+			glUniform1f(program.getUniform(Uniform.TEXTURED), MODE.textured() ? 1 : 0);
+		}
 		//
         glEnableVertexAttribArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, glo.gpu[index].glid);
-        glVertexAttribPointer(0, 3, GL_FLOAT, false, 3 * 4, 0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, false, 12, 0);
         if(!lines){
     		glEnableVertexAttribArray(1);
     		glBindBuffer(GL_ARRAY_BUFFER, glo.gpu[index].colorss);
-    		glVertexAttribPointer(1, 4, GL_FLOAT, false, 4 * 4, 0);
+    		glVertexAttribPointer(1, 4, GL_FLOAT, false, 16, 0);
     		glEnableVertexAttribArray(2);
     		glBindBuffer(GL_ARRAY_BUFFER, glo.gpu[index].uvss);
-    		glVertexAttribPointer(2, 2, GL_FLOAT, false, 2 * 4, 0);
+    		glVertexAttribPointer(2, 2, GL_FLOAT, false, 8, 0);
     		glEnableVertexAttribArray(3);
     		glBindBuffer(GL_ARRAY_BUFFER, glo.gpu[index].normss);
-    		glVertexAttribPointer(3, 3, GL_FLOAT, false, 3 * 4, 0);
+    		glVertexAttribPointer(3, 3, GL_FLOAT, false, 12, 0);
     		glEnableVertexAttribArray(4);
     		glBindBuffer(GL_ARRAY_BUFFER, glo.gpu[index].lightss);
-    		glVertexAttribPointer(4, 1, GL_FLOAT, false, 1 * 4, 0);
+    		glVertexAttribPointer(4, 1, GL_FLOAT, false, 4, 0);
         }
 		glDrawArrays(lines ? GL_LINES : GL_TRIANGLES, 0, glo.gpu[index].size);
 		//
@@ -155,11 +146,11 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 	}
 	
 	public static void updateLightState(){
-		glUniform1f(program.getUniform("lighting"), Settings.LIGHTING_ON.value && MODE.lighting() ? 1 : 0);
-		glUniform3fv(program.getUniform("lightcolor"), Settings.LIGHT_COLOR.value.toFloatArray());
-		glUniform3fv(program.getUniform("lightpos"), new float[]{ Settings.LIGHT_POSX.value, Settings.LIGHT_POSY.value, Settings.LIGHT_POSZ.value });
-		glUniform1f(program.getUniform("ambient"), Settings.LIGHT_AMBIENT.value);
-		glUniform1f(program.getUniform("diffuse"), Settings.LIGHT_DIFFUSE.value);
+		glUniform1f(program.getUniform(Uniform.LIGHTING), Settings.LIGHTING_ON.value && MODE.lighting() ? 1 : 0);
+		glUniform3fv(program.getUniform(Uniform.LIGHTCOLOR), Settings.LIGHT_COLOR.value.toFloatArray());
+		glUniform3fv(program.getUniform(Uniform.LIGHTPOS), new float[]{ Settings.LIGHT_POSX.value, Settings.LIGHT_POSY.value, Settings.LIGHT_POSZ.value });
+		glUniform1f(program.getUniform(Uniform.AMBIENT), Settings.LIGHT_AMBIENT.value);
+		glUniform1f(program.getUniform(Uniform.DIFFUSE), Settings.LIGHT_DIFFUSE.value);
 	}
     
     public static final Vector3f axis_x = new Vector3f(1, 0, 0);
