@@ -2,6 +2,7 @@ package net.fexcraft.app.fmt.utils;
 
 import net.fexcraft.lib.common.math.M4DW;
 import net.fexcraft.lib.common.math.V3D;
+import net.fexcraft.lib.common.math.Vec3f;
 import org.joml.Matrix4d;
 import org.joml.Vector3d;
 
@@ -33,6 +34,11 @@ public class M4DImpl extends M4DW {
 	@Override
 	protected V3D fill(V3D vec){
 		return vec.set(matrix.m00(), matrix.m10(), matrix.m20());
+	}
+
+	@Override
+	protected Vec3f fill(Vec3f vec){
+		return vec.set((float)matrix.m00(), (float)matrix.m10(), (float)matrix.m20());
 	}
 
 	@Override
