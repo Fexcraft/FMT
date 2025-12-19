@@ -6,6 +6,7 @@ import static net.fexcraft.app.fmt.utils.JsonUtil.setVector;
 import java.util.ArrayList;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.lib.common.math.M4DW;
 import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
@@ -15,7 +16,6 @@ import net.fexcraft.app.fmt.polygon.uv.NoFace;
 import net.fexcraft.app.fmt.polygon.uv.UVCoords;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
-import net.fexcraft.lib.common.math.AxisRotator;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.frl.gen.AxisDir;
@@ -123,9 +123,9 @@ public class Cylinder extends Polygon {
 			gen.set("top_offset", new Vec3f(topoff.x, topoff.y, topoff.z));
 		}
 		if(toprot.x != 0f || toprot.y != 0f || toprot.z != 0f){
-			AxisRotator axe = AxisRotator.newDefInstance();
-			axe.setAngles(toprot.x, toprot.y, toprot.z);
-			gen.set("top_rot", axe);
+			M4DW mat = M4DW.create();
+			mat.setDegrees(toprot.x, toprot.y, toprot.z);
+			gen.set("top_rot", mat);
 		}
 		if(radial){
 			gen.set("radial", true);
