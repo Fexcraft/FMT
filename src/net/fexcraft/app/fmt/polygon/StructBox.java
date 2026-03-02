@@ -7,6 +7,7 @@ import net.fexcraft.app.fmt.polygon.uv.NoFace;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.frl.gen.Generator;
+import net.fexcraft.lib.frl.gen.Generator.Values;
 
 public class StructBox extends Box {
 
@@ -41,70 +42,70 @@ public class StructBox extends Box {
 		if(size.x < 1) size.x = 1;
 		if(size.y < 1) size.y = 1;
 		if(size.z < 1) size.z = 1;
-		new Generator<>(glm, 1, 1).set("type", Generator.Type.CUBOID)
-				.set("x", off.x - m)
-				.set("y", off.y - m)
-				.set("z", off.z - m)
-				.set("width", size.x).set("height", s).set("depth", s).make();
-		new Generator<>(glm, 1, 1).set("type", Generator.Type.CUBOID)
-				.set("x", off.x - m)
-				.set("y", off.y - m)
-				.set("z", off.z - m)
-				.set("width", s).set("height", size.y).set("depth", s).make();
-		new Generator<>(glm, 1, 1).set("type", Generator.Type.CUBOID)
-				.set("x", off.x - m)
-				.set("y", off.y - m)
-				.set("z", off.z - m)
-				.set("width", s).set("height", s).set("depth", size.z).make();
+		new Generator<>(glm, 1, 1).set(Values.TYPE, Generator.Type.CUBOID)
+				.set(Values.OFF_X, off.x - m)
+				.set(Values.OFF_Y, off.y - m)
+				.set(Values.OFF_Z, off.z - m)
+				.set(Values.WIDTH, size.x).set(Values.HEIGHT, s).set(Values.DEPTH, s).make();
+		new Generator<>(glm, 1, 1).set(Values.TYPE, Generator.Type.CUBOID)
+				.set(Values.OFF_X, off.x - m)
+				.set(Values.OFF_Y, off.y - m)
+				.set(Values.OFF_Z, off.z - m)
+				.set(Values.WIDTH, s).set(Values.HEIGHT, size.y).set(Values.DEPTH, s).make();
+		new Generator<>(glm, 1, 1).set(Values.TYPE, Generator.Type.CUBOID)
+				.set(Values.OFF_X, off.x - m)
+				.set(Values.OFF_Y, off.y - m)
+				.set(Values.OFF_Z, off.z - m)
+				.set(Values.WIDTH, s).set(Values.HEIGHT, s).set(Values.DEPTH, size.z).make();
 		//
-		new Generator<>(glm, 1, 1).set("type", Generator.Type.CUBOID)
-				.set("x", off.x - m)
-				.set("y", off.y + m + size.y - s)
-				.set("z", off.z - m)
-				.set("width", size.x).set("height", s).set("depth", s).make();
-		new Generator<>(glm, 1, 1).set("type", Generator.Type.CUBOID)
-				.set("x", off.x - m)
-				.set("y", off.y + m + size.y - s)
-				.set("z", off.z - m)
-				.set("width", s).set("height", s).set("depth", size.z).make();
+		new Generator<>(glm, 1, 1).set(Values.TYPE, Generator.Type.CUBOID)
+				.set(Values.OFF_X, off.x - m)
+				.set(Values.OFF_Y, off.y + m + size.y - s)
+				.set(Values.OFF_Z, off.z - m)
+				.set(Values.WIDTH, size.x).set(Values.HEIGHT, s).set(Values.DEPTH, s).make();
+		new Generator<>(glm, 1, 1).set(Values.TYPE, Generator.Type.CUBOID)
+				.set(Values.OFF_X, off.x - m)
+				.set(Values.OFF_Y, off.y + m + size.y - s)
+				.set(Values.OFF_Z, off.z - m)
+				.set(Values.WIDTH, s).set(Values.HEIGHT, s).set(Values.DEPTH, size.z).make();
 		//
-		new Generator<>(glm, 1, 1).set("type", Generator.Type.CUBOID)
-				.set("x", off.x + m + size.x - s)
-				.set("y", off.y - m + 0f)
-				.set("z", off.z + m + size.z - s)
-				.set("width", s).set("height", size.y).set("depth", s).make();
-		new Generator<>(glm, 1, 1).set("type", Generator.Type.CUBOID)
-				.set("x", off.x - m + 0f)
-				.set("y", off.y - m + 0f)
-				.set("z", off.z + m + size.z - s)
-				.set("width", s).set("height", size.y).set("depth", s).make();
-		new Generator<>(glm, 1, 1).set("type", Generator.Type.CUBOID)
-				.set("x", off.x + m + size.x - s)
-				.set("y", off.y - m + 0f)
-				.set("z", off.z - m + 0f)
-				.set("width", s).set("height", size.y).set("depth", s).make();
+		new Generator<>(glm, 1, 1).set(Values.TYPE, Generator.Type.CUBOID)
+				.set(Values.OFF_X, off.x + m + size.x - s)
+				.set(Values.OFF_Y, off.y - m + 0f)
+				.set(Values.OFF_Z, off.z + m + size.z - s)
+				.set(Values.WIDTH, s).set(Values.HEIGHT, size.y).set(Values.DEPTH, s).make();
+		new Generator<>(glm, 1, 1).set(Values.TYPE, Generator.Type.CUBOID)
+				.set(Values.OFF_X, off.x - m + 0f)
+				.set(Values.OFF_Y, off.y - m + 0f)
+				.set(Values.OFF_Z, off.z + m + size.z - s)
+				.set(Values.WIDTH, s).set(Values.HEIGHT, size.y).set(Values.DEPTH, s).make();
+		new Generator<>(glm, 1, 1).set(Values.TYPE, Generator.Type.CUBOID)
+				.set(Values.OFF_X, off.x + m + size.x - s)
+				.set(Values.OFF_Y, off.y - m + 0f)
+				.set(Values.OFF_Z, off.z - m + 0f)
+				.set(Values.WIDTH, s).set(Values.HEIGHT, size.y).set(Values.DEPTH, s).make();
 		//
-		new Generator<>(glm, 1, 1).set("type", Generator.Type.CUBOID)
-				.set("x", off.x + m + size.x - s)
-				.set("y", off.y - m + 0f)
-				.set("z", off.z - m + 0f)
-				.set("width", s).set("height", s).set("depth", size.z).make();
-		new Generator<>(glm, 1, 1).set("type", Generator.Type.CUBOID)
-				.set("x", off.x + m + size.x - s)
-				.set("y", off.y + m + size.y - s)
-				.set("z", off.z - m + 0f)
-				.set("width", s).set("height", s).set("depth", size.z).make();
+		new Generator<>(glm, 1, 1).set(Values.TYPE, Generator.Type.CUBOID)
+				.set(Values.OFF_X, off.x + m + size.x - s)
+				.set(Values.OFF_Y, off.y - m + 0f)
+				.set(Values.OFF_Z, off.z - m + 0f)
+				.set(Values.WIDTH, s).set(Values.HEIGHT, s).set(Values.DEPTH, size.z).make();
+		new Generator<>(glm, 1, 1).set(Values.TYPE, Generator.Type.CUBOID)
+				.set(Values.OFF_X, off.x + m + size.x - s)
+				.set(Values.OFF_Y, off.y + m + size.y - s)
+				.set(Values.OFF_Z, off.z - m + 0f)
+				.set(Values.WIDTH, s).set(Values.HEIGHT, s).set(Values.DEPTH, size.z).make();
 		//
-		new Generator<>(glm, 1, 1).set("type", Generator.Type.CUBOID)
-				.set("x", off.x - m + 0f)
-				.set("y", off.y - m + 0f)
-				.set("z", off.z + m + size.z - s)
-				.set("width", size.x).set("height", s).set("depth", s).make();
-		new Generator<>(glm, 1, 1).set("type", Generator.Type.CUBOID)
-				.set("x", off.x - m + 0f)
-				.set("y", off.y + m + size.y - s)
-				.set("z", off.z + m + size.z - s)
-				.set("width", size.x).set("height", s).set("depth", s).make();
+		new Generator<>(glm, 1, 1).set(Values.TYPE, Generator.Type.CUBOID)
+				.set(Values.OFF_X, off.x - m + 0f)
+				.set(Values.OFF_Y, off.y - m + 0f)
+				.set(Values.OFF_Z, off.z + m + size.z - s)
+				.set(Values.WIDTH, size.x).set(Values.HEIGHT, s).set(Values.DEPTH, s).make();
+		new Generator<>(glm, 1, 1).set(Values.TYPE, Generator.Type.CUBOID)
+				.set(Values.OFF_X, off.x - m + 0f)
+				.set(Values.OFF_Y, off.y + m + size.y - s)
+				.set(Values.OFF_Z, off.z + m + size.z - s)
+				.set(Values.WIDTH, size.x).set(Values.HEIGHT, s).set(Values.DEPTH, s).make();
 		//
 		glm.glObj.polycolor = rgb.toFloatArray();
 		glm.texU = glm.texV = 1;
