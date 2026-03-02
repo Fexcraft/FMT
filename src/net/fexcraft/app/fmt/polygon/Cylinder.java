@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.lib.common.math.M4DW;
+import net.fexcraft.lib.frl.gen.Generator.Values;
 import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
@@ -104,33 +105,33 @@ public class Cylinder extends Polygon {
 	@Override
 	protected void generate(){
 		Generator<GLObject> gen = new Generator<GLObject>(glm, glm.glObj.grouptex ? group().texSizeX : model().texSizeX, glm.glObj.grouptex ? group().texSizeY : model().texSizeY)
-			.set("type", Generator.Type.CYLINDER)
-			.set("x", off.x)
-			.set("y", off.y)
-			.set("z", off.z)
-			.set("radius", radius)
-			.set("radius2", radius2)
-			.set("radius3", radius3 == 0f ? radius : radius3)
-			.set("radius4", radius4 == 0f ? radius2 : radius4)
-			.set("length", length)
-			.set("axis_dir", AxisDir.values()[direction])
-			.set("segments", segments)
-			.set("seg_limit", seglimit)
-			.set("base_scale", base)
-			.set("top_scale", top)
-			.set("seg_off", seg_off);
+			.set(Values.TYPE, Generator.Type.CYLINDER)
+			.set(Values.OFF_X, off.x)
+			.set(Values.OFF_Y, off.y)
+			.set(Values.OFF_Z, off.z)
+			.set(Values.RADIUS1, radius)
+			.set(Values.RADIUS2, radius2)
+			.set(Values.RADIUS3, radius3 == 0f ? radius : radius3)
+			.set(Values.RADIUS4, radius4 == 0f ? radius2 : radius4)
+			.set(Values.LENGTH, length)
+			.set(Values.AXIS_DIR, AxisDir.values()[direction])
+			.set(Values.SEGMENTS, segments)
+			.set(Values.SEG_LIMIT, seglimit)
+			.set(Values.BASE_SCALE, base)
+			.set(Values.TOP_SCALE, top)
+			.set(Values.SEG_OFFSET, seg_off);
 		if(topoff.x != 0f || topoff.y != 0f || topoff.z != 0f){
-			gen.set("top_offset", new Vec3f(topoff.x, topoff.y, topoff.z));
+			gen.set(Values.TOP_OFFSET, new Vec3f(topoff.x, topoff.y, topoff.z));
 		}
 		if(toprot.x != 0f || toprot.y != 0f || toprot.z != 0f){
 			M4DW mat = M4DW.create();
 			mat.setDegrees(toprot.x, toprot.y, toprot.z);
-			gen.set("top_rot", mat);
+			gen.set(Values.TOP_ROTATION, mat);
 		}
 		if(radial){
-			gen.set("radial", true);
-			gen.set("seg_width", seg_width);
-			gen.set("seg_height", seg_height);
+			gen.set(Values.RADIAL, true);
+			gen.set(Values.SEG_WIDTH, seg_width);
+			gen.set(Values.SEG_HEIGHT, seg_height);
 		}
 		for(int i = 0; i < bools.length; i++) if(bools[i]) gen.removePolygon(i);
 		if(cuv.any()){
@@ -140,10 +141,10 @@ public class Cylinder extends Polygon {
 				if(cuv.get(CylFace.values()[i]).detached()) list.add(i);
 				uv.add(cuv.get(CylFace.values()[i]).value());
 			}
-			gen.set("detached_uv", list);
-			gen.set("uv", uv);
+			gen.set(Values.DETACHED_UV, list);
+			gen.set(Values.UV, uv);
 		}
-		gen.set("ordered", true);
+		gen.set(Values.ORDERED, true);
 		gen.make();
 	}
 
