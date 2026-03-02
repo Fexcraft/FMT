@@ -28,6 +28,7 @@ import net.fexcraft.app.json.JsonValue;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.frl.Polyhedron;
 import net.fexcraft.lib.frl.gen.Generator;
+import net.fexcraft.lib.frl.gen.Generator.Values;
 import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -154,11 +155,11 @@ public class Model {
 			.set("x", -.125f).set("y", -.125f).set("z", -16f).set("width", .125f).set("height", .125f).set("depth", 32f).make().setGlObj(new GLObject());*/
 
 	private static final Polyhedron<GLObject> centermarker0 = new Generator<GLObject>(null, Generator.Type.CUBOID)
-			.set("x", -.125f).set("y", -8f).set("z", -.125f).set("width", .25f).set("height", 16f).set("depth", .25f).make().setGlObj(new GLObject());
+			.set(Values.OFF_X, -.125f).set(Values.OFF_Y, -8f).set(Values.OFF_Z, -.125f).set(Values.WIDTH, .25f).set(Values.HEIGHT, 16f).set(Values.DEPTH, .25f).make().setGlObj(new GLObject());
 	private static final Polyhedron<GLObject> centermarker1 = new Generator<GLObject>(null, Generator.Type.CUBOID)
-			.set("x", -8f).set("y", -.125f).set("z", -.125f).set("width", 16f).set("height", .25f).set("depth", .25f).make().setGlObj(new GLObject());
+			.set(Values.OFF_X, -8f).set(Values.OFF_Y, -.125f).set(Values.OFF_Z, -.125f).set(Values.WIDTH, 16f).set(Values.HEIGHT, .25f).set(Values.DEPTH, .25f).make().setGlObj(new GLObject());
 	private static final Polyhedron<GLObject> centermarker2 = new Generator<GLObject>(null, Generator.Type.CUBOID)
-			.set("x", -.125f).set("y", -.125f).set("z", -8f).set("width", .25f).set("height", .25f).set("depth", 16f).make().setGlObj(new GLObject());
+			.set(Values.OFF_X, -.125f).set(Values.OFF_Y, -.125f).set(Values.OFF_Z, -8f).set(Values.WIDTH, .25f).set(Values.HEIGHT, .25f).set(Values.DEPTH, 16f).make().setGlObj(new GLObject());
 	static {
 		centermarker0.glObj.polycolor = RGB.GREEN.toFloatArray();
 		centermarker1.glObj.polycolor = RGB.RED.toFloatArray();
