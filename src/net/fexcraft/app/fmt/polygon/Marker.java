@@ -11,6 +11,7 @@ import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.frl.Polyhedron;
 import net.fexcraft.lib.frl.gen.Generator;
+import net.fexcraft.lib.frl.gen.Generator.Values;
 
 public class Marker extends Polygon {
 
@@ -63,7 +64,7 @@ public class Marker extends Polygon {
 
 	public static Generator<GLObject> getMarkerGenerator(Polyhedron<GLObject> glm, float scale){
 		float hs = Marker.hs * scale, size = Marker.size * scale;
-		return new Generator<GLObject>(glm, 1, 1).set("type", Generator.Type.CUBOID).set("x", -hs).set("y", -hs).set("z", -hs).set("width", size).set("height", size).set("depth", size);
+		return new Generator<GLObject>(glm, 1, 1).set(Values.TYPE, Generator.Type.CUBOID).set(Values.OFF_X, -hs).set(Values.OFF_Y, -hs).set(Values.OFF_Z, -hs).set(Values.WIDTH, size).set(Values.HEIGHT, size).set(Values.DEPTH, size);
 	}
 
 	@Override
