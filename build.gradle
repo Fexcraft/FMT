@@ -37,14 +37,14 @@ targetCompatibility = 17
 compileJava.options.encoding = 'UTF-8'
 
 //@formatter:off
-def log4j_version = '2.21.1'
-def commons_version = '3.13.0'
+def log4j_version = '2.25.3'
+def commons_version = '3.18.0'
 def commons_collections = '4.4'
 def guava_version = '32.1.2-jre'
 def gson_version = '2.8.9'
 def legui_version = '4.2.0'
 
-def joml_version = "1.10.5"//"-SNAPSHOT"
+def joml_version = "1.10.5"
 def lwjgl_version = "3.4.1"
 def le_cbchain = '1.0.2'
 //@formatter:on
@@ -125,7 +125,7 @@ dependencies {
 
     //implementation 'com.github.JnCrMx:discord-game-sdk4j:master-SNAPSHOT'
 
-    implementation group: 'io.netty', name: 'netty-all', version: '4.1.116.Final'
+    implementation group: 'io.netty', name: 'netty-all', version: '4.2.5.Final'
 }
 
 sourceSets {
