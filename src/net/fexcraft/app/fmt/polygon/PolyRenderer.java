@@ -24,6 +24,7 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 
     private static Pivot PIVOT = null;
 	private static Model HELPER = null;
+	public static float SCALE = 1f;
     private static Matrix4f matrix0 = new Matrix4f();
 	private static Matrix4f matrix1 = new Matrix4f();
 	private static DrawMode MODE = DrawMode.TEXTURED;
@@ -63,6 +64,7 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 				PIVOT.matrix.get(matrix0);
 			}
 		}
+		if(SCALE != 1f) matrix0.scale(SCALE);
 		matrix0.translate(poly.posX, poly.posY, poly.posZ);
 		if(poly.rotY != 0f) matrix0.rotate((float)Math.toRadians(poly.rotY), axis_y);
 		if(poly.rotX != 0f) matrix0.rotate((float)Math.toRadians(poly.rotX), axis_x);
