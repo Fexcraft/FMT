@@ -103,6 +103,8 @@ public class Settings {
 	public static Setting<Boolean> AUTO_SHOW_COMPONENTS = new Setting<>("auto_show_components", true, GENERAL);
 	public static Setting<Integer> PAINTER_CHANNELS = new Setting<>("painter_channels", 2, GENERAL);
 	public static Setting<Boolean> TESTING = new Setting<>("testing", false, GENERAL);
+	//Interface
+	public static Setting<Float> UI_SCALE = new Setting<>("scale", 1f, INTERFACE);
 	//Graphic
 	public static Setting<Integer> DEF_WIDTH = new Setting<>("window_width", 1024, GRAPHIC);
 	public static Setting<Integer> DEF_HEIGHT = new Setting<>("window_height", 576, GRAPHIC);
@@ -280,6 +282,8 @@ public class Settings {
 	public static void apply(FMT fmt){
 		FMT.WIDTH = DEF_WIDTH.value;
 		FMT.HEIGHT = DEF_HEIGHT.value;
+		FMT.SCALED_WIDTH = FMT.WIDTH / UI_SCALE.value;
+		FMT.SCALED_HEIGHT = FMT.HEIGHT / UI_SCALE.value;
 		TexturedPolygon.TRIANGULATED_QUADS = TRIANGULATION_Q.value;
 		refresh();
 	}
