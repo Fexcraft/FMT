@@ -18,10 +18,7 @@ import net.fexcraft.app.fmt.texture.TexturePainter;
 import net.fexcraft.app.fmt.updater.Catalog;
 import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.port.im.ImportManager;
-import net.fexcraft.app.fmt.ui.editors.*;
 import net.fexcraft.app.fmt.ui.fields.RunButton;
-import net.fexcraft.app.fmt.ui.trees.HelperTree;
-import net.fexcraft.app.fmt.ui.trees.PivotTree;
 import net.fexcraft.app.fmt.utils.*;
 import net.fexcraft.app.json.JsonValue;
 import org.joml.Vector4f;
@@ -44,8 +41,6 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.port.ex.ExportManager;
 import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.ui.fields.NumberField;
-import net.fexcraft.app.fmt.ui.trees.PolygonTree;
-import net.fexcraft.app.fmt.ui.trees.TextureTree;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonHandler.PrintOption;
@@ -61,119 +56,18 @@ public class Settings {
 	public static final int FONT_SIZEN = 20;
 	public static final String FONT = FontRegistry.ROBOTO_BOLD;
 	public static final String FONT_PATH = "com/spinyowl/legui/style/font/Roboto-Bold.ttf";
-	public static boolean FOUND_UPDATE, UPDATECHECK_FAILED;
-	public static long UPDATE_FOR_FILES_FOUND = 0, LAST_CATALOG_RELOAD;
+	public static boolean FOUND_UPDATE;
+	public static boolean UPDATECHECK_FAILED;
+	public static long UPDATE_FOR_FILES_FOUND = 0;
+	public static long LAST_CATALOG_RELOAD;
 	public static ArrayList<File> RECENT = new ArrayList<File>();
 	public static ArrayList<File> BOOKMARKS = new ArrayList<File>();
 	public static File NO_FILE_DOTS = new File("...");
-	public static Setting<Integer> WINDOW_WIDTH;
-	public static Setting<Integer> WINDOW_HEIGHT;
-	public static Setting<Integer> ROUNDING_DIGITS;
-	public static Setting<Integer> BACKUP_INTERVAL;
-	public static Setting<Integer> GIF_DELAY_TIME;
-	public static Setting<Integer> GIF_ROT_PASS;
-	public static Setting<Boolean> DISCORD_RPC;
-	public static Setting<Boolean> DISCORD_HIDE;
-	public static Setting<Boolean> DISCORD_RESET_ON_NEW;
-	public static Setting<Boolean> FULLSCREEN;
-	public static Setting<Boolean> NO_RANDOM_TITLE;
-	public static Setting<Boolean> FVSYNC;
-	public static Setting<Boolean> HVSYNC;
-	public static Setting<Boolean> QVSYNC;
-	public static Setting<Boolean> TRIANGULATION_Q;
-	public static Setting<Boolean> TRIANGULATION_L;
-	public static Setting<Boolean> INTERNAL_CHOOSER;
-	public static Setting<Boolean> DEMO;
-	public static Setting<Boolean> FLOOR;
-	public static Setting<Boolean> CUBE;
-	public static Setting<Boolean> CMARKER;
-	public static Setting<Boolean> PMARKER;
-	public static Setting<Boolean> LINES;
-	public static Setting<Boolean> POLYMARKER;
-	public static Setting<Boolean> ADD_TO_LAST;
-	public static Setting<Boolean> SPHERE_MARKER;
-	public static Setting<Boolean> AUTO_SHOW_COMPONENTS;
-	public static Setting<Boolean> NO_CLIPBOARD;
-	public static Setting<Float> MOUSE_SENSIVITY;
-	public static Setting<Float> MOVE_SPEED;
-	public static Setting<Float> SCROLL_SPEED;
-	public static Setting<Float> LIGHT_AMBIENT;
-	public static Setting<Float> LIGHT_DIFFUSE;
-	public static Setting<Float> LIGHT_POSX;
-	public static Setting<Float> LIGHT_POSY;
-	public static Setting<Float> LIGHT_POSZ;
-	public static Setting<String> LANGUAGE;
-	public static Setting<String> POLYGON_SUFFIX;
-	public static Setting<String> GROUP_SUFFIX;
-	public static Setting<String> COPIED_POLYGON;
-	public static Setting<String> PASTED_GROUP;
-	public static Setting<Boolean> ASK_POLYGON_REMOVAL;
-	public static Setting<Boolean> ASK_GROUP_REMOVAL;
-	public static Setting<Boolean> ASK_PIVOT_REMOVAL;
-	public static Setting<Boolean> ASK_HELPER_REMOVAL;
-	public static Setting<Boolean> ASK_TEXTURE_GROUP_REMOVAL;
-	public static Setting<Boolean> OPEN_FOLDER_AFTER_SAVE;
-	public static Setting<Boolean> OPEN_FOLDER_AFTER_IMG;
-	public static Setting<Boolean> SHOW_WELCOME;
-	public static Setting<Boolean> SHOW_UPDATE;
-	public static Setting<Boolean> SELECT_COPIED;
-	public static Setting<Boolean> SELECT_NEW;
-	public static Setting<Boolean> SHOW_BOTTOMBAR;
-	public static Setting<Boolean> GIF_LOOP;
-	public static Setting<Boolean> HIDE_UI_FOR_IMAGE;
-	public static Setting<Boolean> HIDE_MENU_AFTER_POLYGON;
-	public static Setting<Boolean> LOG_UPDATES;
-	public static Setting<Boolean> LIGHTING_ON;
-	public static Setting<Boolean> NUMBERFIELD_BUTTONS;
-	public static Setting<Float> ZOOM_LEVEL;
-	public static Setting<Float> ARROW_SENSIVITY;
-	public static RGBSetting BACKGROUND;
-	public static RGBSetting SELECTION_LINES;
-	public static RGBSetting BOTTOM_INFO_BAR_COLOR;
-	public static RGBSetting LIGHT_COLOR;
-	public static Setting<Integer> PAINTER_CHANNELS;
-	public static Setting<Boolean> ANIMATE;
 	//
-	public static Setting<Boolean> TESTING;
-	public static Setting<String> WORKSPACE_NAME;
-	public static Setting<String> WORKSPACE_ROOT;
-	public static Setting<String> JAVA8_PATH;
-	public static Setting<String> JAVA17_PATH;
-	public static Setting<String> M12PATH;
-	public static Setting<String> M20PATH;
-	public static Setting<String> M12RCMD;
-	public static Setting<String> M20RCMD;
-	public static Setting<String> TEXT_EDITOR;
-	//
-	public static Setting<String> SEL_THEME;
-	public static Setting<Boolean> DARKTHEME;
-	public static RGBSetting THEME_BACKGROUND;
-	public static RGBSetting THEME_BORDER;
-	public static RGBSetting THEME_SLIDER;
-	public static RGBSetting THEME_STROKE;
-	public static RGBSetting THEME_ALLOW;
-	public static RGBSetting THEME_DENY;
-	public static RGBSetting THEME_SHADOW;
-	public static RGBSetting THEME_TEXT;
-	public static RGBSetting THEME_BUTTON;
-	public static Setting<String> THEME_FONT;
-	public static RGBSetting POLYGON_NORMAL;
-	public static RGBSetting POLYGON_SELECTED;
-	public static RGBSetting POLYGON_INVISIBLE;
-	public static RGBSetting POLYGON_INV_SEL;
-	public static RGBSetting GROUP_NORMAL;
-	public static RGBSetting GROUP_SELECTED;
-	public static RGBSetting GROUP_INVISIBLE;
-	public static RGBSetting GROUP_INV_SEL;
-	public static RGBSetting PIVOT_NORMAL;
-	public static RGBSetting PIVOT_SELECTED;
-	public static RGBSetting PIVOT_INVISIBLE;
-	public static RGBSetting PIVOT_INV_SEL;
-	public static RGBSetting TEXTURE_GROUP;
-	public static RGBSetting TEXTURE_OPTION;
-	//
+	public static Map<String, Map<String, Setting<?>>> SETTINGS = new LinkedHashMap<>();
 	public static String GENERAL = "general";
 	public static String GRAPHIC = "graphic";
+	public static String INTERFACE = "interface";
 	public static String DISCORD = "discord";
 	public static String CONTROL = "control";
 	public static String SPACE3D = "space3d";
@@ -182,8 +76,161 @@ public class Settings {
 	public static String THEME = "theme";
 	public static String WORKSPACE = "workspace";
 	public static String LIGHTING = "lighting";
-	//
-	public static Map<String, Map<String, Setting<?>>> SETTINGS = new LinkedHashMap<>();
+ 	//General
+	public static Setting<String> LANGUAGE = new Setting<>("language", "null", GENERAL);
+	public static Setting<Boolean> INTERNAL_CHOOSER = new Setting<>("internal_filechooser", false, GENERAL);
+	public static Setting<Integer> ROUNDING_DIGITS = new Setting<>("rounding_digits", 4, GENERAL)
+		.minmax(0, 10).consumer(con -> NumberField.updateRoundingDigits());
+	public static Setting<Boolean> ADD_TO_LAST = new Setting<>("add_to_last", false, GENERAL);
+	public static Setting<Boolean> NO_CLIPBOARD = new Setting<>("no_clipboard", false, GENERAL);
+	public static Setting<Boolean> ASK_POLYGON_REMOVAL = new Setting<>("ask_polygon_removal", false, GENERAL);
+	public static Setting<Boolean> ASK_GROUP_REMOVAL = new Setting<>("ask_group_removal", true, GENERAL);
+	public static Setting<Boolean> ASK_PIVOT_REMOVAL = new Setting<>("ask_pivot_removal", false, GENERAL);
+	public static Setting<Boolean> ASK_HELPER_REMOVAL = new Setting<>("ask_helper_removal", false, GENERAL);
+	public static Setting<Boolean> ASK_TEXTURE_GROUP_REMOVAL = new Setting<>("ask_texture_group_removal", true, GENERAL);
+	public static Setting<Boolean> OPEN_FOLDER_AFTER_SAVE = new Setting<>("open_folder_after_save", true, GENERAL);
+	public static Setting<Boolean> OPEN_FOLDER_AFTER_IMG = new Setting<>("open_folder_after_image", true, IMAGE);
+	public static Setting<Boolean> SHOW_WELCOME = new Setting<>("show_welcome", true, GENERAL);
+	public static Setting<Boolean> SHOW_UPDATE = new Setting<>("show_update", true, GENERAL);
+	public static Setting<Integer> BACKUP_INTERVAL = new Setting<>("backup_interval", 5, GENERAL);
+	public static Setting<Boolean> SELECT_COPIED = new Setting<>("select_copied", true, GENERAL);
+	public static Setting<Boolean> SELECT_NEW = new Setting<>("select_new", true, GENERAL);
+	public static Setting<Boolean> SHOW_BOTTOMBAR = new Setting<>("show_bottom_bar", true, GENERAL);
+	public static Setting<Boolean> NO_RANDOM_TITLE = new Setting<>("no_random_title", false, GENERAL);
+	public static Setting<Boolean> LOG_UPDATES = new Setting<>("log_updates", false, GENERAL);
+	public static Setting<Boolean> HIDE_MENU_AFTER_POLYGON = new Setting<>("hide_menu_after_polygon", true, GENERAL);
+	public static Setting<Boolean> NUMBERFIELD_BUTTONS = new Setting<>("numberfield_buttons", false, GENERAL);
+	public static Setting<Boolean> AUTO_SHOW_COMPONENTS = new Setting<>("auto_show_components", true, GENERAL);
+	public static Setting<Integer> PAINTER_CHANNELS = new Setting<>("painter_channels", 2, GENERAL);
+	public static Setting<Boolean> TESTING = new Setting<>("testing", false, GENERAL);
+	//Graphic
+	public static Setting<Integer> DEF_WIDTH = new Setting<>("window_width", 1024, GRAPHIC);
+	public static Setting<Integer> DEF_HEIGHT = new Setting<>("window_height", 576, GRAPHIC);
+	public static Setting<Boolean> FVSYNC = new Setting<>("vsync", true, GRAPHIC);
+	public static Setting<Boolean> HVSYNC = new Setting<>("vsync/2", false, GRAPHIC);
+	public static Setting<Boolean> QVSYNC = new Setting<>("vsync/4", false, GRAPHIC);
+	public static Setting<Boolean> TRIANGULATION_Q = new Setting<>("triangulated_quads", true, GRAPHIC);
+	public static Setting<Boolean> TRIANGULATION_L = new Setting<>("triangulated_lines", false, GRAPHIC);
+	public static Setting<Boolean> FULLSCREEN = new Setting<>("fullscreen", false, GRAPHIC);
+	//Lighting
+	public static Setting<Boolean> LIGHTING_ON = new Setting<>("enabled", false, LIGHTING);
+	public static Setting<Float> LIGHT_AMBIENT = new Setting<>("ambient", 0.5f, LIGHTING).minmax(0f, 1f);
+	public static Setting<Float> LIGHT_DIFFUSE = new Setting<>("diffuse", 1f, LIGHTING).minmax(0f, 1f);
+	public static RGBSetting LIGHT_COLOR = new RGBSetting("color", RGB.WHITE.copy(), LIGHTING);
+	public static Setting<Float> LIGHT_POSX = new Setting<>("pos_x", 600f, LIGHTING);
+	public static Setting<Float> LIGHT_POSY = new Setting<>("pos_y", -600f, LIGHTING);
+	public static Setting<Float> LIGHT_POSZ = new Setting<>("pos_z", -600f, LIGHTING);
+	//Control
+	public static Setting<Float> MOUSE_SENSIVITY = new Setting<>("mouse_sensitivity", 2f, CONTROL);
+	public static Setting<Float> MOVE_SPEED = new Setting<>("movement_speed", 20f, CONTROL);
+	public static Setting<Float> SCROLL_SPEED = new Setting<>("scroll_speed", 1f, CONTROL);
+	public static Setting<Float> ZOOM_LEVEL = new Setting<>("zoom_by", 10f, CONTROL).minmax(0.001f, 160f);
+	public static Setting<Float> ARROW_SENSIVITY = new Setting<>("arrow_sensivity", 8f, CONTROL).minmax(0.001f, 100f);
+	//Space3D
+	public static Setting<Boolean> DEMO = new Setting<>("demo_model", false, SPACE3D);
+	public static Setting<Boolean> FLOOR = new Setting<>("floor", true, SPACE3D);
+	public static Setting<Boolean> CUBE = new Setting<>("center_cube", true, SPACE3D);
+	public static Setting<Boolean> CMARKER = new Setting<>("center_marker", true, SPACE3D);
+	public static Setting<Boolean> PMARKER = new Setting<>("pivot_marker", true, SPACE3D);
+	public static Setting<Boolean> LINES = new Setting<>("lines", true, SPACE3D);
+	public static Setting<Boolean> POLYMARKER = new Setting<>("polygon_marker", true, SPACE3D);
+	public static Setting<Boolean> SPHERE_MARKER = new Setting<>("sphere_marker", false, SPACE3D);
+	public static RGBSetting BACKGROUND = new RGBSetting("background", new RGB(0x7f7f7f), SPACE3D);
+	public static RGBSetting SELECTION_LINES = new RGBSetting("selection_lines", new RGB(0xffff00), SPACE3D);
+	public static Setting<Boolean> ANIMATE = new Setting<>("animate", true, SPACE3D);
+	//Naming
+	public static Setting<String> POLYGON_SUFFIX = new Setting<>("polygon_duplicate_suffix", "_%s", NAMING);
+	public static Setting<String> GROUP_SUFFIX = new Setting<>("group_duplicate_suffix", "_%s", NAMING);
+	public static Setting<String> COPIED_POLYGON = new Setting<>("copied_polygon", "%s_cp", NAMING);
+	public static Setting<String> PASTED_GROUP = new Setting<>("pasted_group_suffix", "-cb", NAMING);
+	//Image
+	public static Setting<Integer> GIF_DELAY_TIME = new Setting<>("gif_delay_time", 100, IMAGE);
+	public static Setting<Boolean> GIF_LOOP = new Setting<>("gif_loop", true, IMAGE);
+	public static Setting<Integer> GIF_ROT_PASS = new Setting<>("gif_rotation_passes", 36, IMAGE);
+	public static Setting<Boolean> HIDE_UI_FOR_IMAGE = new Setting<>("hide_ui_for_image", true, IMAGE);
+	//Workspace
+	public static Setting<String> WORKSPACE_NAME = new Setting<>("name", "FMT Workspace", WORKSPACE);
+	public static Setting<String> WORKSPACE_ROOT = new Setting<>("root", "./workspace/", WORKSPACE){
+		@Override
+		public boolean basicstr(){
+			return false;
+		}
+	};
+	public static Setting<String> JAVA8_PATH = new Setting<>("java8", "/java/install/path/", WORKSPACE){
+		@Override
+		public boolean basicstr(){
+			return false;
+		}
+	};
+	public static Setting<String> JAVA17_PATH = new Setting<>("java17", "/java/install/path/", WORKSPACE){
+		@Override
+		public boolean basicstr(){
+			return false;
+		}
+	};
+	public static Setting<String> M12PATH = new Setting<>("m12path", "/install/path", WORKSPACE){
+		@Override
+		public boolean basicstr(){
+			return false;
+		}
+	};
+	public static Setting<String> M20PATH = new Setting<>("m20path", "/install/path/", WORKSPACE){
+		@Override
+		public boolean basicstr(){
+			return false;
+		}
+	};
+	public static Setting<String> M12RCMD = new Setting<>("m12run", "{JAVA} -jar client.jar", WORKSPACE){
+		@Override
+		public boolean basicstr(){
+			return false;
+		}
+	};
+	public static Setting<String> M20RCMD = new Setting<>("m20run", "{JAVA} -jar client.jar", WORKSPACE){
+		@Override
+		public boolean basicstr(){
+			return false;
+		}
+	};
+	public static Setting<String> TEXT_EDITOR = new Setting<>("text_editor", "/usr/bin/mousepad %s", WORKSPACE){
+		@Override
+		public boolean basicstr(){
+			return false;
+		}
+	};
+	//Theme
+
+	public static Setting<String> SEL_THEME = new StringArraySetting("selected_theme", "light", THEME, "light", "dark", "custom");
+	public static Setting<Boolean> DARKTHEME = new Setting<>("is_dark", false, THEME);
+	public static RGBSetting THEME_BACKGROUND = new RGBSetting("background", new RGB(0x212121), THEME);
+	public static RGBSetting THEME_BORDER = new RGBSetting("border", new RGB(0x616161), THEME);
+	public static RGBSetting THEME_SLIDER = new RGBSetting("slider", new RGB(0x616161), THEME);
+	public static RGBSetting THEME_STROKE = new RGBSetting("stroke", new RGB(0x0277BD), THEME);
+	public static RGBSetting THEME_ALLOW = new RGBSetting("allow", new RGB(0x1B5E20), THEME);
+	public static RGBSetting THEME_DENY = new RGBSetting("deny", new RGB(0xBD1C1C), THEME);
+	public static RGBSetting THEME_SHADOW = new RGBSetting("shadow", new RGB(0x0), THEME);
+	public static RGBSetting THEME_TEXT = new RGBSetting("text", new RGB(0xCCCCCC), THEME);
+	public static RGBSetting THEME_BUTTON = new RGBSetting("button", new RGB(0x212121), THEME);
+	public static Setting<String> THEME_FONT = new StringArraySetting("font", FONT, THEME, FontRegistry.ENTYPO, FontRegistry.ROBOTO_LIGHT, FontRegistry.ROBOTO_BOLD, FontRegistry.ROBOTO_REGULAR);
+	public static RGBSetting POLYGON_NORMAL = new RGBSetting("component_polygon_normal", new RGB(38, 127, 0), THEME);
+	public static RGBSetting POLYGON_SELECTED = new RGBSetting("component_polygon_selected", new RGB(219, 156, 46), THEME);
+	public static RGBSetting POLYGON_INVISIBLE = new RGBSetting("component_polygon_invisible", new RGB(126, 196, 96), THEME);
+	public static RGBSetting POLYGON_INV_SEL = new RGBSetting("component_polygon_invis_sel", new RGB(250, 202, 117), THEME);
+	public static RGBSetting GROUP_NORMAL = new RGBSetting("component_group_normal", new RGB(0, 74, 127), THEME);
+	public static RGBSetting GROUP_SELECTED = new RGBSetting("component_group_selected", new RGB(191, 128, 50), THEME);
+	public static RGBSetting GROUP_INVISIBLE = new RGBSetting("component_group_invisible", new RGB(67, 142, 196), THEME);
+	public static RGBSetting GROUP_INV_SEL = new RGBSetting("component_group_invis_sel", new RGB(232, 158, 67), THEME);
+	public static RGBSetting PIVOT_NORMAL = new RGBSetting("component_pivot_normal", new RGB(5, 158, 127), THEME);
+	public static RGBSetting PIVOT_SELECTED = new RGBSetting("component_pivot_selected", new RGB(219, 213, 31), THEME);
+	public static RGBSetting PIVOT_INVISIBLE = new RGBSetting("component_pivot_invisible", new RGB(123, 158, 151), THEME);
+	public static RGBSetting PIVOT_INV_SEL = new RGBSetting("component_pivot_invis_sel", new RGB(209, 205, 100), THEME);
+	public static RGBSetting TEXTURE_GROUP = new RGBSetting("bottom_infobar_color", new RGB(200, 200, 200), THEME);
+	public static RGBSetting TEXTURE_OPTION = new RGBSetting("component_texture_group", new RGB(0, 74, 127), THEME);
+	public static RGBSetting BOTTOM_INFO_BAR_COLOR = new RGBSetting("component_texture_group_option", new RGB(0, 74, 127), THEME);
+	//Discord
+	public static Setting<Boolean> DISCORD_RPC = new Setting<>("enabled", false, DISCORD);
+	public static Setting<Boolean> DISCORD_HIDE = new Setting<>("hidden_mode", false, DISCORD);
+	public static Setting<Boolean> DISCORD_RESET_ON_NEW = new Setting<>("reset_on_new", false, DISCORD);
 	
 	public static void load(){
 		var file = new File("./settings.json");
@@ -204,162 +251,10 @@ public class Settings {
 			});
 		}
 		//
-		SETTINGS.put(GENERAL, new LinkedHashMap<>());
-		SETTINGS.put(GRAPHIC, new LinkedHashMap<>());
-		SETTINGS.put(LIGHTING, new LinkedHashMap<>());
-		SETTINGS.put(CONTROL, new LinkedHashMap<>());
-		SETTINGS.put(SPACE3D, new LinkedHashMap<>());
-		SETTINGS.put(WORKSPACE, new LinkedHashMap<>());
-		SETTINGS.put(DISCORD, new LinkedHashMap<>());
-		SETTINGS.put(NAMING, new LinkedHashMap<>());
-		SETTINGS.put(IMAGE, new LinkedHashMap<>());
-		SETTINGS.put(THEME, new LinkedHashMap<>());
-		//
-		FVSYNC = new Setting<>("vsync", true, GRAPHIC, map);
-		HVSYNC = new Setting<>("vsync/2", false, GRAPHIC, map);
-		QVSYNC = new Setting<>("vsync/4", false, GRAPHIC, map);
-		DISCORD_RPC = new Setting<>("enabled", true, DISCORD, map);
-		DISCORD_HIDE = new Setting<>("hidden_mode", false, DISCORD, map);
-		DISCORD_RESET_ON_NEW = new Setting<>("reset_on_new", false, DISCORD, map);
-		WINDOW_WIDTH = new Setting<>("window_width", 1024, GRAPHIC, map);
-		WINDOW_HEIGHT = new Setting<>("window_height", 576, GRAPHIC, map);
-		MOUSE_SENSIVITY = new Setting<>("mouse_sensivity", 2f, CONTROL, map);
-		MOVE_SPEED = new Setting<>("movement_speed", 20f, CONTROL, map);
-		SCROLL_SPEED = new Setting<>("scroll_speed", 1f, CONTROL, map);
-		TRIANGULATION_Q = new Setting<>("triangulated_quads", true, GRAPHIC, map);
-		TRIANGULATION_L = new Setting<>("triangulated_lines", false, GRAPHIC, map);
-		LANGUAGE = new Setting<>("language", "null", GENERAL, map);
-		INTERNAL_CHOOSER = new Setting<>("internal_filechooser", false, GENERAL, map);
-		ROUNDING_DIGITS = new Setting<>("rounding_digits", 4, GENERAL, map).minmax(0, 10).consumer(con -> NumberField.updateRoundingDigits());
-		DEMO = new Setting<>("demo_model", false, SPACE3D, map);
-		FLOOR = new Setting<>("floor", true, SPACE3D, map);
-		CUBE = new Setting<>("center_cube", true, SPACE3D, map);
-		CMARKER = new Setting<>("center_marker", true, SPACE3D, map);
-		PMARKER = new Setting<>("pivot_marker", true, SPACE3D, map);
-		LINES = new Setting<>("lines", true, SPACE3D, map);
-		POLYMARKER = new Setting<>("polygon_marker", true, SPACE3D, map);
-		ADD_TO_LAST = new Setting<>("add_to_last", false, GENERAL, map);
-		NO_CLIPBOARD = new Setting<>("no_clipboard", false, GENERAL, map);
-		FULLSCREEN = new Setting<>("fullscreen", false, GRAPHIC, map);
-		POLYGON_SUFFIX = new Setting<>("polygon_duplicate_suffix", "_%s", NAMING, map);
-		GROUP_SUFFIX = new Setting<>("group_duplicate_suffix", "_%s", NAMING, map);
-		ASK_GROUP_REMOVAL = new Setting<>("ask_group_removal", true, GENERAL, map);
-		ASK_POLYGON_REMOVAL = new Setting<>("ask_polygon_removal", false, GENERAL, map);
-		ASK_PIVOT_REMOVAL = new Setting<>("ask_pivot_removal", false, GENERAL, map);
-		ASK_HELPER_REMOVAL = new Setting<>("ask_helper_removal", false, GENERAL, map);
-		OPEN_FOLDER_AFTER_SAVE = new Setting<>("open_folder_after_save", true, GENERAL, map);
-		SHOW_WELCOME = new Setting<>("show_welcome", true, GENERAL, map);
-		SHOW_UPDATE = new Setting<>("show_update", true, GENERAL, map);
-		SPHERE_MARKER = new Setting<>("sphere_marker", false, SPACE3D, map);
-		BACKUP_INTERVAL = new Setting<>("backup_interval", 5, GENERAL, map);
-		COPIED_POLYGON = new Setting<>("copied_polygon", "%s_cp", NAMING, map);
-		SELECT_COPIED = new Setting<>("select_copied", true, GENERAL, map);
-		SELECT_NEW = new Setting<>("select_new", true, GENERAL, map);
-		PASTED_GROUP = new Setting<>("pasted_group_suffix", "-cb", NAMING, map);
-		SHOW_BOTTOMBAR = new Setting<>("show_bottom_bar", true, GENERAL, map);
-		OPEN_FOLDER_AFTER_IMG = new Setting<>("open_folder_after_image", true, IMAGE, map);
-		GIF_DELAY_TIME = new Setting<>("gif_delay_time", 100, IMAGE, map);
-		GIF_LOOP = new Setting<>("gif_loop", true, IMAGE, map);
-		GIF_ROT_PASS = new Setting<>("gif_rotation_passes", 36, IMAGE, map);
-		HIDE_UI_FOR_IMAGE = new Setting<>("hide_ui_for_image", true, IMAGE, map);
-		BACKGROUND = new RGBSetting("background", new RGB(0x7f7f7f), SPACE3D, map);
-		NO_RANDOM_TITLE = new Setting<>("no_random_title", false, IMAGE, map);
-		SELECTION_LINES = new RGBSetting("selection_lines", new RGB(0xffff00), SPACE3D, map);
-		ASK_TEXTURE_GROUP_REMOVAL = new Setting<>("ask_texture_group_removal", true, GENERAL, map);
-		HIDE_MENU_AFTER_POLYGON = new Setting<>("hide_menu_after_polygon", true, GENERAL, map);
-		LOG_UPDATES = new Setting<>("log_updates", false, GENERAL, map);
-		LIGHTING_ON = new Setting<>("enabled", false, LIGHTING, map);
-		LIGHT_AMBIENT = new Setting<>("ambient", 0.5f, LIGHTING, map).minmax(0f, 1f);
-		LIGHT_DIFFUSE = new Setting<>("diffuse", 1f, LIGHTING, map).minmax(0f, 1f);
-		LIGHT_COLOR = new RGBSetting("color", RGB.WHITE.copy(), LIGHTING, map);
-		LIGHT_POSX = new Setting<>("pos_x", 600f, LIGHTING, map);
-		LIGHT_POSY = new Setting<>("pos_y", -600f, LIGHTING, map);
-		LIGHT_POSZ = new Setting<>("pos_z", -600f, LIGHTING, map);
-		ZOOM_LEVEL = new Setting<>("zoom_by", 10f, CONTROL, map).minmax(0.001f, 160f);
-		ARROW_SENSIVITY = new Setting<>("arrow_sensivity", 8f, CONTROL, map).minmax(0.001f, 100f);
-		NUMBERFIELD_BUTTONS = new Setting<>("numberfield_buttons", false, GENERAL, map);
-		AUTO_SHOW_COMPONENTS = new Setting<>("auto_show_components", true, GENERAL, map);
-		PAINTER_CHANNELS = new Setting<>("painter_channels", 2, GENERAL, map);
-		ANIMATE = new Setting<>("animate", true, SPACE3D, map);
-		//
-		TESTING = new Setting<>("testing", false, GENERAL, map);
-		WORKSPACE_NAME = new Setting<>("name", "FMT Workspace", WORKSPACE, map);
-		WORKSPACE_ROOT = new Setting<>("root", "./workspace/", WORKSPACE, map){
-			@Override
-			public boolean basicstr(){
-				return false;
-			}
-		};
-		JAVA8_PATH = new Setting<>("java8", "/java/install/path/", WORKSPACE, map){
-			@Override
-			public boolean basicstr(){
-				return false;
-			}
-		};
-		JAVA17_PATH = new Setting<>("java17", "/java/install/path/", WORKSPACE, map){
-			@Override
-			public boolean basicstr(){
-				return false;
-			}
-		};
-		M12PATH = new Setting<>("m12path", "/install/path", WORKSPACE, map){
-			@Override
-			public boolean basicstr(){
-				return false;
-			}
-		};
-		M20PATH = new Setting<>("m20path", "/install/path/", WORKSPACE, map){
-			@Override
-			public boolean basicstr(){
-				return false;
-			}
-		};
-		M12RCMD = new Setting<>("m12run", "{JAVA} -jar client.jar", WORKSPACE, map){
-			@Override
-			public boolean basicstr(){
-				return false;
-			}
-		};
-		M20RCMD = new Setting<>("m20run", "{JAVA} -jar client.jar", WORKSPACE, map){
-			@Override
-			public boolean basicstr(){
-				return false;
-			}
-		};
-		TEXT_EDITOR = new Setting<>("text_editor", "/usr/bin/mousepad %s", WORKSPACE, map){
-			@Override
-			public boolean basicstr(){
-				return false;
-			}
-		};
-		//
-		SEL_THEME = new StringArraySetting("selected_theme", "light", THEME, map, "light", "dark", "custom");
-		DARKTHEME = new Setting<>("is_dark", false, THEME, map);
-		THEME_BACKGROUND = new RGBSetting("background", new RGB(0x212121), THEME, map);
-		THEME_BORDER = new RGBSetting("border", new RGB(0x616161), THEME, map);
-		THEME_SLIDER = new RGBSetting("slider", new RGB(0x616161), THEME, map);
-		THEME_STROKE = new RGBSetting("stroke", new RGB(0x0277BD), THEME, map);
-		THEME_ALLOW = new RGBSetting("allow", new RGB(0x1B5E20), THEME, map);
-		THEME_DENY = new RGBSetting("deny", new RGB(0xBD1C1C), THEME, map);
-		THEME_SHADOW = new RGBSetting("shadow", new RGB(0x0), THEME, map);
-		THEME_TEXT = new RGBSetting("text", new RGB(0xCCCCCC), THEME);
-		THEME_BUTTON = new RGBSetting("button", new RGB(0x212121), THEME, map);
-		THEME_FONT = new StringArraySetting("font", FONT, THEME, map, FontRegistry.ENTYPO, FontRegistry.ROBOTO_LIGHT, FontRegistry.ROBOTO_BOLD, FontRegistry.ROBOTO_REGULAR);
-		POLYGON_NORMAL = new RGBSetting("component_polygon_normal", new RGB(38, 127, 0), THEME, map);
-		POLYGON_SELECTED = new RGBSetting("component_polygon_selected", new RGB(219, 156, 46), THEME, map);
-		POLYGON_INVISIBLE = new RGBSetting("component_polygon_invisible", new RGB(126, 196, 96), THEME, map);
-		POLYGON_INV_SEL = new RGBSetting("component_polygon_invis_sel", new RGB(250, 202, 117), THEME, map);
-		GROUP_NORMAL = new RGBSetting("component_group_normal", new RGB(0, 74, 127), THEME, map);
-		GROUP_SELECTED = new RGBSetting("component_group_selected", new RGB(191, 128, 50), THEME, map);
-		GROUP_INVISIBLE = new RGBSetting("component_group_invisible", new RGB(67, 142, 196), THEME, map);
-		GROUP_INV_SEL = new RGBSetting("component_group_invis_sel", new RGB(232, 158, 67), THEME, map);
-		PIVOT_NORMAL = new RGBSetting("component_pivot_normal", new RGB(5, 158, 127), THEME, map);
-		PIVOT_SELECTED = new RGBSetting("component_pivot_selected", new RGB(219, 213, 31), THEME, map);
-		PIVOT_INVISIBLE = new RGBSetting("component_pivot_invisible", new RGB(123, 158, 151), THEME, map);
-		PIVOT_INV_SEL = new RGBSetting("component_pivot_invis_sel", new RGB(209, 205, 100), THEME, map);
-		BOTTOM_INFO_BAR_COLOR = new RGBSetting("bottom_infobar_color", new RGB(200, 200, 200), THEME, map);
-		TEXTURE_GROUP = new RGBSetting("component_texture_group", new RGB(0, 74, 127), THEME, map);
-		TEXTURE_OPTION = new RGBSetting("component_texture_group_option", new RGB(0, 74, 127), THEME, map);
+		for(Map.Entry<String, Map<String, Setting<?>>> group : SETTINGS.entrySet()){
+			JsonMap gmap = map.has(group.getKey()) ? map.getMap(group.getKey()) : new JsonMap();
+			for(Setting<?> set : group.getValue().values()) set.load(gmap);
+		}
 		//
 		ExportManager.init(map);
 		ImportManager.init(map);
@@ -383,8 +278,8 @@ public class Settings {
 	}
 	
 	public static void apply(FMT fmt){
-		FMT.WIDTH = WINDOW_WIDTH.value;
-		FMT.HEIGHT = WINDOW_HEIGHT.value;
+		FMT.WIDTH = DEF_WIDTH.value;
+		FMT.HEIGHT = DEF_HEIGHT.value;
 		TexturedPolygon.TRIANGULATED_QUADS = TRIANGULATION_Q.value;
 		refresh();
 	}
@@ -520,8 +415,8 @@ public class Settings {
 		boolean bool = toggle ? FULLSCREEN.toggle() : FULLSCREEN.value;
 		long moni = glfwGetPrimaryMonitor();
 		GLFWVidMode mode = glfwGetVideoMode(moni);
-		int width = bool ? mode.width() : Settings.WINDOW_WIDTH.value;
-		int height = bool ? mode.height() : Settings.WINDOW_HEIGHT.value;
+		int width = bool ? mode.width() : Settings.DEF_WIDTH.value;
+		int height = bool ? mode.height() : Settings.DEF_HEIGHT.value;
 		int x = bool ? 0 : 100, y = bool ? 0 : 100;
 		glfwSetWindowMonitor(FMT.INSTANCE.window, bool ? moni : MemoryUtil.NULL, x, y, width, height, GLFW_DONT_CARE);
 	}
