@@ -243,14 +243,15 @@ public class Element {
 		}
 	}
 
-	public void update(){
-		if(elements != null) for(Element elm : elements) elm.update();
+	public void update0(){
+		update();
+		if(elements != null) for(Element elm : elements) elm.update0();
 		hovered(false);
 	}
 
-	public void onResize(){
+	public void update(){}
 
-	}
+	public void onResize(){}
 
 	public void add(Element elm){
 		add(elm, new Object[0]);
