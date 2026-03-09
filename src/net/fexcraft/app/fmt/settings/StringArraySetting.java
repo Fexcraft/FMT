@@ -15,11 +15,6 @@ public class StringArraySetting extends Setting<String> {
 		super(id, def, group);
 		this.vals = vals;
 	}
-	
-	public StringArraySetting(String id, String def, String group, JsonMap obj, String... vals){
-		super(id, def, group, obj);
-		this.vals = vals;
-	}
 
 	@Override
 	public void validate(boolean apply, String string){
