@@ -13,21 +13,28 @@ import net.fexcraft.lib.common.math.RGB;
 public class FMTInterface extends Element {
 
 	public static final int TOOLBAR_HEIGHT = 40;
+	public static final int TOOLBAR_WIDTH = 300;
 	public static final int EDITOR_WIDTH = 300;
 	public static RGB col_75 = new RGB(0x757575);
 	public static RGB col_85 = new RGB(0x858585);
 	public static RGB col_cd = new RGB(0xcdcdcd);
 	public static Element toolbar;
+	public static Element statusbar;
 	public static EditorRoot editor;
 
 	public FMTInterface(){
 		super();
-		add(toolbar = new Element(){
+		add(toolbar = new Element().size(TOOLBAR_WIDTH, TOOLBAR_HEIGHT).color(col_cd));
+		add(statusbar = new Element(){
 			@Override
 			public void onResize(){
-				pos((FMT.WIDTH - EDITOR_WIDTH) * 0.5f, FMT.HEIGHT - TOOLBAR_HEIGHT);
+				size(FMT.SCALED_WIDTH - TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
+				pos(TOOLBAR_WIDTH, 0);
 			}
-		}.pos((FMT.WIDTH - EDITOR_WIDTH) * 0.5f, FMT.HEIGHT - TOOLBAR_HEIGHT).size(EDITOR_WIDTH, TOOLBAR_HEIGHT).color(col_cd));
+		}.size(FMT.SCALED_WIDTH - TOOLBAR_WIDTH, TOOLBAR_HEIGHT)
+			.pos(TOOLBAR_WIDTH, 0).color(col_cd)
+			.text("...")
+		);
 		int iinc = 37;
 		int buff = -iinc + 4;
 		int yo = 4;
@@ -81,7 +88,7 @@ public class FMTInterface extends Element {
 		menu_file.add(new Element().translate("toolbar.file.exit").color(col_85).onclick(ci -> FMT.close(0)));*/
 		//toolbar.add(new Element().pos(10, 40).size(100, 200).color(RGB.BLUE).linecolor(new RGB(256, 256, 0)).rounded(true));
 		//toolbar.add(new Element().pos(200, 40).size(500, 100).color(RGB.GREEN).linecolor(RGB.BLACK).rounded(true));
-		add((editor = new EditorRoot()).root(this).color(col_cd));
+		add((editor = new EditorRoot()).pos(0, TOOLBAR_HEIGHT).root(this).color(col_cd));
 	}
 
 	@Override
@@ -91,8 +98,7 @@ public class FMTInterface extends Element {
 
 	@Override
 	public void update(){
-		
-		super.update();
+		statusbar.text("FPS: " + FMT.timer.getFPS());
 	}
 
 	@Override
