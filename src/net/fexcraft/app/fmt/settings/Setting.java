@@ -30,12 +30,6 @@ public class Setting<TYPE> {
 		if(group != null) Settings.register(group, id, this);
 	}
 	
-	public Setting(String id, TYPE def, String group, JsonMap obj){
-		this(id, def, group);
-		load(obj.getMap(group));
-		//Settings.register(group, id, this);
-	}
-	
 	public void load(JsonMap obj){
 		value = obj.get(id, _default);
 	}
