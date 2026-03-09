@@ -45,7 +45,6 @@ public class Menu extends Element {
 			open = false;
 			for(Element elm : elements) elm.visible = open;
 		}
-		super.update();
 	}
 
 	@Override
