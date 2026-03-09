@@ -17,42 +17,71 @@ public class EditorSidePanel extends Element {
 	public EditorSidePanel(){
 		super();
 		pos(EDITOR_WIDTH, 0);
-		size(32, 200);
+		size(40, 200);
 		color(col_cd);
 	}
 
 	@Override
 	public void init(Object... args){
-		add(new Multiplier(0, 0), "icons/multiplier");
+		add(new EditorList(0, 0), "icons/panels/editors");
+		add(new Multiplier(0, 42), "icons/panels/multiplier");
 	}
 
 	public static class Panel extends Element {
 
+		protected Element icon;
 		protected boolean expanded;
 		protected int ew, eh;
 
 		public Panel(int x, int y, int w, int h){
 			super();
 			pos(x, y);
-			size(32, 32);
 			color(col_cd);
-			ew = w;
-			eh = h;
+			size(w, h);
+			hedron.visible = false;
 			expanded = false;
 			hoverable = true;
 		}
 
 		@Override
 		public void init(Object... args){
-			add(new Element().size(32, 32).texture(args[0].toString()).onclick(ci -> toggle()));
+			add(icon = new Element().pos(4, 4).size(32, 32).texture(args[0].toString()).onclick(ci -> toggle()));
 		}
 
 		public void toggle(){
 			expanded = !expanded;
-			size(expanded ? ew : 32, expanded ? eh : 32);
+			hedron.visible = expanded;
 			linecolor(RGB.BLACK);
 			border = expanded;
-			recompile();
+		}
+
+	}
+
+	public static class EditorList extends Panel {
+
+		public EditorList(int x, int y){
+			super(x, y, 330, 40);
+		}
+
+		@Override
+		public void init(Object... args){
+			super.init(args);
+			int iinc = 35, buff = -iinc + 40, yo = 4;
+			for(EditorRoot.EditorMode mode : EditorRoot.EditorMode.values()){
+				add(new Element().pos(buff += iinc, yo).size(32, 32)
+					.texture("icons/editor/" + mode.name().toLowerCase()).hoverable(true)
+					.onclick(ci -> EditorRoot.setMode(mode))
+					.hint("editor.mode." + mode.name().toLowerCase()).hide());
+			}
+		}
+
+		@Override
+		public void toggle(){
+			super.toggle();
+			for(Element elm : elements){
+				if(elm == icon) continue;
+				elm.visible = expanded;
+			}
 		}
 
 	}
