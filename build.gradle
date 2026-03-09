@@ -7,7 +7,20 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'application'
 
-project.ext.lwjglVersion = "3.3.3"
+//@formatter:off
+def log4j_version = '2.25.3'
+def commons_version = '3.18.0'
+def commons_collections = '4.4'
+def guava_version = '32.1.2-jre'
+def gson_version = '2.8.9'
+def legui_version = '4.2.0'
+
+def joml_version = "1.10.5"
+def lwjgl_version = "3.4.1"
+def le_cbchain = '1.0.2'
+//@formatter:on
+
+project.ext.lwjglVersion = lwjgl_version
 project.ext.jomlVersion = "1.9.23"
 
 switch (OperatingSystem.current()) {
@@ -35,19 +48,6 @@ new File(projectDir, '/src/net/fexcraft/app/fmt/FMT.java').find { line ->
 sourceCompatibility = 17
 targetCompatibility = 17
 compileJava.options.encoding = 'UTF-8'
-
-//@formatter:off
-def log4j_version = '2.25.3'
-def commons_version = '3.18.0'
-def commons_collections = '4.4'
-def guava_version = '32.1.2-jre'
-def gson_version = '2.8.9'
-def legui_version = '4.2.0'
-
-def joml_version = "1.10.5"
-def lwjgl_version = "3.4.1"
-def le_cbchain = '1.0.2'
-//@formatter:on
 
 //Make this project as a Gradle project
 eclipse.project {
