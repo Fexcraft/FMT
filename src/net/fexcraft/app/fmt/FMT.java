@@ -86,7 +86,11 @@ public class FMT {
 	public static String TITLE;
 	//
 	public static final FMT INSTANCE = new FMT();
-	public static int WIDTH, HEIGHT, EXIT_CODE = 0;
+	public static int WIDTH;
+	public static int HEIGHT;
+	public static float SCALED_WIDTH;
+	public static float SCALED_HEIGHT;
+	public static int EXIT_CODE = 0;
 	public static Timer BACKUP_TIMER, TEXUP_TIMER;
 	private static String title;
 	//
@@ -298,7 +302,9 @@ public class FMT {
 				//TODO "logic"
 				CAM.update();
 				if(Settings.ANIMATE.value) FMT.MODEL.updateAnimations();
-				if(Settings.TESTING.value) UI.update();
+				if(Settings.TESTING.value){
+					UI.update0();
+				}
 				ToolbarMenu.checkHide();
 				timer.updateUPS();
 				accumulator -= interval;
@@ -340,6 +346,8 @@ public class FMT {
 		int height = (int)(CONTEXT.getFramebufferSize().y * (1f / CONTEXT.getScale().y));
 		WIDTH = CONTEXT.getFramebufferSize().x;
 		HEIGHT = CONTEXT.getFramebufferSize().y;
+		SCALED_WIDTH = WIDTH / Settings.UI_SCALE.value;
+		SCALED_HEIGHT = HEIGHT / Settings.UI_SCALE.value;
 		log("Resizing Window to " + width + "/" + height + " (" + WIDTH + "/" + HEIGHT + " scaled at " + (1f / CONTEXT.getScale().x) + "/" + (1f / CONTEXT.getScale().y) + ").");
 		HEIGHT = height;
 		TOOLBAR.setSize(WIDTH = width, TOOLBAR.getSize().y);
@@ -409,6 +417,7 @@ public class FMT {
 			Picker.reset();
 		}
 		if(Settings.TESTING.value){
+			PolyRenderer.SCALE = Settings.UI_SCALE.value;
 			if(Picker.TASK == Picker.PickTask.NONE){
 				Picker.pick(Picker.PickType.UI, Picker.PickTask.HOVER, true);
 			}
@@ -422,6 +431,7 @@ public class FMT {
 	    	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	    	PolyRenderer.mode(DrawMode.UI);
 			UI.render(null);
+			PolyRenderer.SCALE = 1f;
 		}
 		else{
 			glClearColor(background[0], background[1], background[2], 1);
