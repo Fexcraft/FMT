@@ -1,6 +1,7 @@
 package net.fexcraft.app.fmt.nui;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.nui.editor.EditorRoot;
 import net.fexcraft.app.fmt.ui.ProfileDialog;
 import net.fexcraft.app.fmt.ui.SettingsDialog;
 import net.fexcraft.app.fmt.utils.Picker;
@@ -15,8 +16,10 @@ public class FMTInterface extends Element {
 	public static final int TOOLBAR_HEIGHT = 40;
 	public static final int TOOLBAR_WIDTH = 300;
 	public static final int EDITOR_WIDTH = 300;
+	public static final int EDITOR_CONTENT = EDITOR_WIDTH - 10;
 	public static RGB col_75 = new RGB(0x757575);
 	public static RGB col_85 = new RGB(0x858585);
+	public static RGB col_bd = new RGB(0xbdbdbd);
 	public static RGB col_cd = new RGB(0xcdcdcd);
 	public static Element toolbar;
 	public static Element statusbar;
@@ -88,7 +91,7 @@ public class FMTInterface extends Element {
 		menu_file.add(new Element().translate("toolbar.file.exit").color(col_85).onclick(ci -> FMT.close(0)));*/
 		//toolbar.add(new Element().pos(10, 40).size(100, 200).color(RGB.BLUE).linecolor(new RGB(256, 256, 0)).rounded(true));
 		//toolbar.add(new Element().pos(200, 40).size(500, 100).color(RGB.GREEN).linecolor(RGB.BLACK).rounded(true));
-		add((editor = new EditorRoot()).pos(0, TOOLBAR_HEIGHT).root(this).color(col_cd));
+		add((editor = new EditorRoot()));
 	}
 
 	@Override
