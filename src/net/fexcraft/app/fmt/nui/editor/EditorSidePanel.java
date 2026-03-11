@@ -1,5 +1,7 @@
-package net.fexcraft.app.fmt.nui;
+package net.fexcraft.app.fmt.nui.editor;
 
+import net.fexcraft.app.fmt.nui.Element;
+import net.fexcraft.app.fmt.nui.SelectorBar;
 import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateHandler;
