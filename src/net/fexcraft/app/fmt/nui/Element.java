@@ -297,12 +297,12 @@ public class Element {
 		if(onscroll != null) onscroll.accept(info);
 	}
 
-	protected Element hide(){
+	public Element hide(){
 		visible = false;
 		return this;
 	}
 
-	protected Element show(){
+	public Element show(){
 		visible = true;
 		return this;
 	}
