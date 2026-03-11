@@ -1,8 +1,6 @@
 package net.fexcraft.app.fmt.nui.editor;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.nui.EditorSidePanel;
-import net.fexcraft.app.fmt.nui.EditorTab;
 import net.fexcraft.app.fmt.nui.Element;
 
 import static net.fexcraft.app.fmt.nui.FMTInterface.*;
