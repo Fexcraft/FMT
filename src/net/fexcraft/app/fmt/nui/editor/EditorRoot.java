@@ -1,8 +1,11 @@
-package net.fexcraft.app.fmt.nui;
+package net.fexcraft.app.fmt.nui.editor;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.nui.EditorSidePanel;
+import net.fexcraft.app.fmt.nui.EditorTab;
+import net.fexcraft.app.fmt.nui.Element;
 
-import static net.fexcraft.app.fmt.nui.FMTInterface.EDITOR_WIDTH;
+import static net.fexcraft.app.fmt.nui.FMTInterface.*;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -13,6 +16,8 @@ public class EditorRoot extends Element {
 
 	public EditorRoot(){
 		super();
+		pos(0, TOOLBAR_HEIGHT);
+		color(col_cd);
 		onResize();
 	}
 
@@ -21,6 +26,7 @@ public class EditorRoot extends Element {
 		for(int i = 0; i < EditorMode.values().length; i++){
 			add(EDITORS[i] = new EditorTab(EditorMode.values()[i]));
 		}
+		setMode(EditorMode.POLYGON);
 		add(new EditorSidePanel());
 	}
 
