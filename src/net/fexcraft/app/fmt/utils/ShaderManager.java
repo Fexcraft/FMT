@@ -116,7 +116,7 @@ public class ShaderManager {
 		LINE_COLOR,
 		POLY_COLOR,
 		TEXTURED,
-		TINTED,
+		//TINTED,
 
 		LIGHTING,
 		LIGHTCOLOR,
