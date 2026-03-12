@@ -53,8 +53,7 @@ public class EditorSidePanel extends Element {
 		public void toggle(){
 			expanded = !expanded;
 			hedron.visible = expanded;
-			linecolor(RGB.BLACK);
-			border = expanded;
+			border(expanded ? RGB.BLACK : null);
 		}
 
 	}
