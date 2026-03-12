@@ -73,9 +73,9 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 		glUniformMatrix4fv(program.getUniform(Uniform.MODEL), false, matrix0.get(new float[16]));
 		if(MODE.ui()){
 			glUniform4fv(program.getUniform(Uniform.LINE_COLOR), MODE.ui_lines() ? glo.linecolor : EMPTY);
-			glUniform4fv(program.getUniform(Uniform.POLY_COLOR), MODE.picker() ? glo.pickercolor : !glo.textured ? glo.polycolor : EMPTY);
-			glUniform1f(program.getUniform(Uniform.TEXTURED), glo.textured ? 1 : 0);
-			glUniform1f(program.getUniform(Uniform.TINTED), MODE.ui_text() ? 1 : 0);
+			glUniform4fv(program.getUniform(Uniform.POLY_COLOR), MODE.picker() ? glo.pickercolor : /*!glo.textured ?*/ glo.polycolor /*: EMPTY*/);
+			glUniform1f(program.getUniform(Uniform.TEXTURED), !MODE.picker() && glo.textured ? 1 : 0);
+			//glUniform1f(program.getUniform(Uniform.TINTED), MODE.ui_tinted() ? 1 : 0);
 		}
 		else{
 			glUniform4fv(program.getUniform(Uniform.LINE_COLOR), MODE.lines() ? MODE == DrawMode.SELLINES ? SELCOLOR : glo.linecolor : EMPTY);
@@ -329,7 +329,16 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 
 	public static enum DrawMode {
 		
-		TEXTURED, UNTEXTURED, RGBCOLOR, PICKER, PICKER_FACE, SELLINES, LINES, UI, UI_LINES, UI_TEXT;
+		TEXTURED,
+		UNTEXTURED,
+		RGBCOLOR,
+		PICKER,
+		PICKER_FACE,
+		SELLINES,
+		LINES,
+		UI,
+		UI_LINES,
+		;
 		
 		public boolean lines(){
 			return this == LINES || this == SELLINES || this == UI_LINES;
@@ -348,15 +357,11 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 		}
 
 		public boolean ui(){
-			return this == UI || this == UI_LINES || this == UI_TEXT;
+			return this == UI || this == UI_LINES;
 		}
 
 		public boolean ui_lines(){
 			return this == UI_LINES;
-		}
-
-		public boolean ui_text(){
-			return this == UI_TEXT;
 		}
 
 		public boolean color(){
