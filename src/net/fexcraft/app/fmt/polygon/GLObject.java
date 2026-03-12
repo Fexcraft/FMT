@@ -4,7 +4,9 @@ import net.fexcraft.lib.frl.GLO;
 
 public class GLObject extends GLO<GLObject> {
 
-	public float[] pickercolor, polycolor, linecolor;
+	public float[] pickercolor;
+	public float[] polycolor;
+	public float[] linecolor;
 	public Polygon polygon;
 	public boolean textured;
 	public boolean grouptex;
