@@ -42,7 +42,7 @@ public class EditorSidePanel extends Element {
 			size(w, h);
 			hedron.visible = false;
 			expanded = false;
-			hoverable = true;
+			//hoverable = true;
 		}
 
 		@Override
