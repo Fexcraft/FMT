@@ -39,7 +39,9 @@ public class Element {
 	public boolean rounded;
 	public boolean hoverable;
 	public boolean border;
-	public RGB linecolor = RGB.WHITE;
+	public RGB linecolor = RGB.BLACK;
+	public RGB col_def = RGB.WHITE;
+	public RGB col_hov = new RGB(0xdede00);
 	public Text text;
 	private float x;
 	private float y;
@@ -167,7 +169,8 @@ public class Element {
 	}
 
 	public Element color(RGB color){
-		hedron.glObj.polycolor = color.toFloatArray();
+		col_def = color;
+		hedron.glObj.polycolor = col_def.toFloatArray();
 		return this;
 	}
 
@@ -272,7 +275,10 @@ public class Element {
 
 	public void hovered(boolean bool){
 		hovered = bool;
-		hedron.glObj.linecolor = bool ? PolyRenderer.SELCOLOR : border ? linecolor.toFloatArray() : null;
+		if(hoverable){
+			hedron.glObj.linecolor = bool ? PolyRenderer.SELCOLOR : border ? linecolor.toFloatArray() : null;
+			hedron.glObj.polycolor = (bool ? col_hov : col_def).toFloatArray();
+		}
 	}
 
 	public boolean hoveredx(){
