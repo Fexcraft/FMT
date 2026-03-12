@@ -40,9 +40,9 @@ public class Text {
 
 	public void render(){
 		TextureManager.bind("font/" + font);
-		PolyRenderer.mode(PolyRenderer.DrawMode.UI_TEXT);
+		//PolyRenderer.mode(PolyRenderer.DrawMode.UI_TINTED);
 		hedron.render();
-		PolyRenderer.mode(PolyRenderer.DrawMode.UI);
+		//PolyRenderer.mode(PolyRenderer.DrawMode.UI);
 	}
 
 	public Text text(Object ntext){
