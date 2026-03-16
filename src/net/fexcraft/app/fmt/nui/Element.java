@@ -25,6 +25,7 @@ import static net.fexcraft.app.fmt.nui.FMTInterface.TOOLBAR_HEIGHT;
  */
 public class Element {
 
+	public static Element SELECTED;
 	public static int elmIdx = 7;
 	public int colorIdx = 0;
 	public Polyhedron<GLObject> hedron;
@@ -38,9 +39,11 @@ public class Element {
 	public boolean hovered;
 	public boolean rounded;
 	public boolean hoverable;
+	public boolean selectable;
 	private RGB border;
 	public RGB col_def = RGB.WHITE;
 	public RGB col_hov = new RGB(0xdede00);
+	public RGB col_sel = new RGB(0x27ee00);
 	public Text text;
 	private float x;
 	private float y;
@@ -279,8 +282,12 @@ public class Element {
 			if(border != null){
 				hedron.glObj.linecolor = bool ? PolyRenderer.SELCOLOR : border.toFloatArray();
 			}
-			hedron.glObj.polycolor = (bool ? col_hov : col_def).toFloatArray();
+			update_polycolor();
 		}
+	}
+
+	protected void update_polycolor(){
+		hedron.glObj.polycolor = (selected() ? col_sel : hovered ? col_hov : col_def).toFloatArray();
 	}
 
 	public boolean hoveredx(){
@@ -291,10 +298,12 @@ public class Element {
 
 	public void click(int x, int y){
 		if(onclick != null) onclick.accept(new ClickInfo(x, y, (int)(x - gx()), (int)(y - gy())));
+		else if(selectable) select(this);
 	}
 
 	public void click(ClickInfo info){
 		if(onclick != null) onclick.accept(info);
+		else if(selectable) select(this);
 	}
 
 	public void scroll(double x, double y){
@@ -303,6 +312,37 @@ public class Element {
 
 	public void scroll(ScrollInfo info){
 		if(onscroll != null) onscroll.accept(info);
+	}
+
+	public boolean selected(){
+		return this == SELECTED;
+	}
+
+	public static void select(Element elm){
+		if(SELECTED != null){
+			SELECTED.onDeselect(elm);
+			SELECTED.update_polycolor();
+		}
+		SELECTED = elm == SELECTED ? null : elm;
+		if(SELECTED == null) return;
+		SELECTED.onSelect();
+		SELECTED.update_polycolor();
+	}
+
+	protected void onSelect(){
+
+	}
+
+	protected void onDeselect(Element current){
+
+	}
+
+	public boolean isField(){
+		return this instanceof Field;
+	}
+
+	public static boolean isSelectedAField(){
+		return SELECTED != null && SELECTED.isField();
 	}
 
 	public Element hide(){
