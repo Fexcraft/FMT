@@ -51,6 +51,10 @@ public class Text {
 		return this;
 	}
 
+	public String text(){
+		return text;
+	}
+
 	public Text centered(boolean bool){
 		centered = bool;
 		root.postext();
