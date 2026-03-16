@@ -2,6 +2,8 @@ package net.fexcraft.app.fmt.nui.editor;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.nui.Element;
+import net.fexcraft.app.fmt.nui.Field;
+import net.fexcraft.app.fmt.nui.editor.EditorRoot.EditorMode;
 
 import static net.fexcraft.app.fmt.nui.FMTInterface.*;
 
@@ -11,9 +13,11 @@ import static net.fexcraft.app.fmt.nui.FMTInterface.*;
 public class EditorTab extends Element {
 
 	public final String lang_prefix;
-	public final EditorRoot.EditorMode mode;
+	public final EditorMode mode;
+	//
+	public static float FF = EDITOR_CONTENT;
 
-	public EditorTab(EditorRoot.EditorMode emode){
+	public EditorTab(EditorMode emode){
 		super();
 		mode = emode;
 		lang_prefix = "editor." + emode.name().toLowerCase() + ".";
@@ -21,22 +25,11 @@ public class EditorTab extends Element {
 		onResize();
 	}
 
-	@Override
-	public void init(Object... objs){
+	public static EditorTab create(EditorMode mode){
 		switch(mode){
-			case POLYGON -> initPolygonEditor();
-			case MODEL -> {}
-			case PIVOT -> {}
-			case TEXTURE -> {}
-			case PAINTER -> {}
-			case PREVIEW -> {}
-			case VARIABLE -> {}
-			case ANIMATION -> {}
+			case POLYGON: return new PolygonEditorTab();
 		}
-	}
-
-	private void initPolygonEditor(){
-		add(new Element().pos(5, 5).text(lang_prefix + "name").color(col_bd).size(EDITOR_CONTENT, 30));
+		return new EditorTab(mode);
 	}
 
 	@Override
