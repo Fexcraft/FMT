@@ -22,7 +22,7 @@ public class EditorRoot extends Element {
 	@Override
 	public void init(Object... args){
 		for(int i = 0; i < EditorMode.values().length; i++){
-			add(EDITORS[i] = new EditorTab(EditorMode.values()[i]));
+			add(EDITORS[i] = EditorTab.create(EditorMode.values()[i]));
 		}
 		setMode(EditorMode.POLYGON);
 		add(new EditorSidePanel());
