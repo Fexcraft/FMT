@@ -16,6 +16,7 @@ import com.spinyowl.legui.style.Style;
 import com.spinyowl.legui.style.border.SimpleLineBorder;
 import com.spinyowl.legui.style.color.ColorConstants;
 import net.fexcraft.app.fmt.env.PackDevEnv;
+import net.fexcraft.app.fmt.nui.Element;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.ui.JsonEditor;
 import net.fexcraft.app.fmt.ui.UVViewer;
@@ -253,6 +254,7 @@ public class GGR {
 	public static boolean isOverUI(){
 		if(FMT.FRAME.getLayers().size() > 0) return true;
 		if(Picker.LAST_HOVER != null) return true;
+		if(Element.isSelectedAField()) return true;
 		glfwGetCursorPos(FMT.INSTANCE.window, cursor_x, cursor_y);
 		if(cursor_y[0] < FMT.TOOLBAR.getSize().y) return true;
 		if(Editor.VISIBLE_EDITOR != null){
