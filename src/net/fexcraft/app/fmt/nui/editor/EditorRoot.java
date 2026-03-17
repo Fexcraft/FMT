@@ -2,6 +2,8 @@ package net.fexcraft.app.fmt.nui.editor;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.nui.Element;
+import net.fexcraft.app.fmt.update.UpdateHandler;
+import net.fexcraft.app.fmt.utils.Translator;
 
 import static net.fexcraft.app.fmt.nui.FMTInterface.*;
 
@@ -21,8 +23,10 @@ public class EditorRoot extends Element {
 
 	@Override
 	public void init(Object... args){
+		EditorTab.NOPOLYSEL = Translator.translate("editor.info.no_polygon_selected");
 		for(int i = 0; i < EditorMode.values().length; i++){
 			add(EDITORS[i] = EditorTab.create(EditorMode.values()[i]));
+			UpdateHandler.register(EDITORS[i].updcom);
 		}
 		setMode(EditorMode.POLYGON);
 		add(new EditorSidePanel());
