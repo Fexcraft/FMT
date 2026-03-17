@@ -64,7 +64,11 @@ public class Text {
 	}
 
 	public void color(RGB col){
-		color = col;
+		color(col.packed);
+	}
+
+	public void color(int col){
+		color.packed = col;
 		if(hedron.polygons.size() > 0){
 			for(Polygon polygon : hedron.polygons){
 				polygon.color(color);
