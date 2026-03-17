@@ -5,6 +5,7 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Consumer;
 
+import static net.fexcraft.app.fmt.nui.editor.EditorTab.FS;
 import static org.lwjgl.glfw.GLFW.*;
 
 /**
@@ -12,7 +13,6 @@ import static org.lwjgl.glfw.GLFW.*;
  */
 public class Field extends Element {
 
-	private static int field_size = 26;
 	public final FieldType type;
 	public Consumer<String> consumer;
 	public String previous;
@@ -21,7 +21,7 @@ public class Field extends Element {
 	public Field(FieldType ftype, float width){
 		super();
 		type = ftype;
-		size(width - field_size, field_size);
+		size(width - FS, FS);
 		hoverable = true;
 		selectable = true;
 		color(0xa6b3b3);
@@ -35,8 +35,8 @@ public class Field extends Element {
 	@Override
 	public void init(Object... args){
 		text("");
-		add(reset = new Element().color(RGB.RED).size(type.text() ? field_size : 5, field_size).pos(w, 0).text("X")
-			.onclick(info -> reset_text()));
+		add(reset = new Element().color(0xf02c00).size(type.text() ? FS : 5, FS).pos(w, 0).text("X")
+			.text_centered(true).hoverable(true).onclick(info -> reset_text()));
 		reset.hide();
 	}
 
