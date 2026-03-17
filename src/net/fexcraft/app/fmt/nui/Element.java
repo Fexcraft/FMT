@@ -37,14 +37,14 @@ public class Element {
 	public String texture;
 	public boolean visible;
 	public boolean hovered;
-	public boolean rounded;
 	public boolean hoverable;
 	public boolean selectable;
 	private RGB border;
-	public RGB col_def = RGB.WHITE;
+	public RGB col_def = RGB.WHITE.copy();
 	public RGB col_hov = new RGB(0xdede00);
 	public RGB col_sel = new RGB(0x27ee00);
 	public Text text;
+	private ElmShape shape = ElmShape.RECTANGLE;
 	private float x;
 	private float y;
 	public float z;
@@ -68,29 +68,37 @@ public class Element {
 		hedron.glObj.textured = texture != null;
 		hedron.posX = gx();
 		hedron.posY = gy();
-		if(rounded){
-			hedron.polygons.add(new Polygon(new Vertex[]{
-				new Vertex(5, 0, z),
-				new Vertex(0, 5, z),
-				new Vertex(0, h - 5, z),
-				new Vertex(5, h, z),
-				new Vertex(w - 5, h, z),
-				new Vertex(w, h - 5, z),
-				new Vertex(w, 5, z),
-				new Vertex(w - 5, 0, z)
-			}));
-		}
-		else{
-			hedron.polygons.add(new Polygon(new Vertex[]{
-				new Vertex(w, 0, z).uv(1, 0),
-				new Vertex(0, 0, z).uv(0, 0),
-				new Vertex(0, h, z).uv(0, 1),
-				new Vertex(w, h, z).uv(1, 1)
-			}));
+		switch(shape){
+			case RECTANGLE -> {
+				hedron.polygons.add(new Polygon(new Vertex[]{
+					new Vertex(w, 0, z).uv(1, 0),
+					new Vertex(0, 0, z).uv(0, 0),
+					new Vertex(0, h, z).uv(0, 1),
+					new Vertex(w, h, z).uv(1, 1)
+				}));
+			}
+			case RECT_ROUNDED -> {
+				hedron.polygons.add(new Polygon(new Vertex[]{
+					new Vertex(5, 0, z),
+					new Vertex(0, 5, z),
+					new Vertex(0, h - 5, z),
+					new Vertex(5, h, z),
+					new Vertex(w - 5, h, z),
+					new Vertex(w, h - 5, z),
+					new Vertex(w, 5, z),
+					new Vertex(w - 5, 0, z)
+				}));
+			}
+			case CUSTOM -> {
+				genShape();
+			}
+			case NONE -> {}
 		}
 		if(text != null) text.recompile();
 		return this;
 	}
+
+	protected void genShape(){}
 
 	public float x(){
 		return x;
@@ -170,6 +178,12 @@ public class Element {
 		return this;
 	}
 
+	public Element color(int color){
+		col_def.packed = color;
+		hedron.glObj.polycolor = col_def.toFloatArray();
+		return this;
+	}
+
 	public Element color(RGB color){
 		col_def = color;
 		hedron.glObj.polycolor = col_def.toFloatArray();
@@ -184,8 +198,8 @@ public class Element {
 		return this;
 	}
 
-	public Element rounded(boolean bool){
-		rounded = bool;
+	public Element shape(ElmShape nshape){
+		shape = nshape;
 		return this;
 	}
 
@@ -241,7 +255,7 @@ public class Element {
 			}
 			if(texture != null) TextureManager.bind(texture);
 		}
-		if(picker != Picker.PickTask.HOVER || hoverable) hedron.render();
+		/*if(picker != Picker.PickTask.HOVER || hoverable)*/ hedron.render();
 		if(text != null && picker == null) text.render();
 		if(elements != null) for(Element elm : elements) elm.render(picker);
 		if(hint != null && picker == null && hovered){
@@ -360,8 +374,23 @@ public class Element {
 		return this;
 	}
 
+	public Element text_scale(float s){
+		if(text == null) return this;
+		text.scale = s;
+		return this;
+	}
+
 	public static record ClickInfo(int cx, int cy, int lx, int ly){}
 
 	public static record ScrollInfo(int sx, int sy, int lx, int ly){}
+
+	public static enum ElmShape{
+
+		RECTANGLE,
+		RECT_ROUNDED,
+		CUSTOM,
+		NONE
+
+	}
 
 }
