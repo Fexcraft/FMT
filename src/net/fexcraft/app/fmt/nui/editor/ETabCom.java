@@ -15,7 +15,7 @@ public class ETabCom extends Element {
 		border(col_85);
 		size(EDITOR_CONTENT, (int)args[1]);
 		add(new Element().translate(args[0].toString()).color(col_85).size(EDITOR_CONTENT, 30));
-		elements.get(0).text.color(RGB.WHITE);
+		elements.get(0).text.color(col_cd);
 	}
 
 }
