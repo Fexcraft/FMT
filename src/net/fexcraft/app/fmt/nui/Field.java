@@ -1,10 +1,10 @@
 package net.fexcraft.app.fmt.nui;
 
+import net.fexcraft.lib.common.math.RGB;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Consumer;
 
-import static net.fexcraft.app.fmt.nui.FMTInterface.col_bd;
 import static org.lwjgl.glfw.GLFW.*;
 
 /**
@@ -12,45 +12,54 @@ import static org.lwjgl.glfw.GLFW.*;
  */
 public class Field extends Element {
 
+	private static int field_size = 26;
+	public final FieldType type;
 	public Consumer<String> consumer;
 	public String previous;
-	public boolean hidden;
+	private Element reset;
 
-	public Field(float width){
+	public Field(FieldType ftype, float width){
 		super();
-		size(width, 26);
+		type = ftype;
+		size(width - field_size, field_size);
 		hoverable = true;
 		selectable = true;
-		color(col_bd);
+		color(0xa6b3b3);
 	}
 
-	public Field(float width, Consumer<String> cons){
-		this(width);
+	public Field(FieldType type, float width, Consumer<String> cons){
+		this(type, width);
 		consumer = cons;
 	}
 
 	@Override
 	public void init(Object... args){
 		text("");
-		//add(new Element().color(RGB.BLACK).size(2, 20).pos(w - 2, 5));
+		add(reset = new Element().color(RGB.RED).size(type.text() ? field_size : 5, field_size).pos(w, 0).text("X")
+			.onclick(info -> reset_text()));
+		reset.hide();
 	}
 
 	@Override
 	public Element text(Object ntext){
-		super.text(ntext).recompile();
-		if(elements != null){
-			elements.get(0).pos(text.w > w ? w - 2 : text.w + 6, 5);
-		}
+		super.text(ntext);
+
 		return this;
 	}
 
 	@Override
 	protected void onSelect(){
 		previous = text.text();
+		reset.show();
 	}
 
 	@Override
 	protected void onDeselect(Element current){
+		reset_text();
+		reset.hide();
+	}
+
+	public void reset_text(){
 		text(previous);
 	}
 
@@ -74,6 +83,18 @@ public class Field extends Element {
 			text(text.text() + kn);
 		}
 		return true;
+	}
+
+	public static enum FieldType {
+
+		TEXT,
+		FLOAT,
+		INT;
+
+		public boolean text(){
+			return this == TEXT;
+		}
+
 	}
 
 }
