@@ -18,6 +18,7 @@ public class Text {
 	public boolean centered;
 	public boolean cut = true;
 	private String text;
+	public float scale = 1f;
 	public int w;
 	public int h;
 
