@@ -22,7 +22,7 @@ public class Hint extends Element {
 	public Element text(Object ntext){
 		w = FontRenderer.getWidth(ntext.toString(), FontRenderer.FontType.PLAIN) + 16;
 		h = FontRenderer.getHeight(ntext.toString(), FontRenderer.FontType.PLAIN) + 4;
-		rounded = true;
+		shape(ElmShape.RECT_ROUNDED);
 		return super.text(ntext).recompile();
 	}
 
