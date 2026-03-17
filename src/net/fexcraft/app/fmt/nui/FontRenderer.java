@@ -236,12 +236,14 @@ public class FontRenderer {
 			float th = 1f / type.height;
 			float tx = tw * g.x;
 			float ty = th * g.y;
-			text.hedron.polygons.add(new Polygon(new Vertex[]{
+			Polygon poly = new Polygon(new Vertex[]{
 				new Vertex(px + g.width, py, text.root.z + 0.5f).uv(tx + (g.width * tw), ty),
 				new Vertex(px, py, text.root.z + 0.5f).uv(tx, ty),
 				new Vertex(px, py + g.height, text.root.z + 0.5f).uv(tx, ty + (g.height * th)),
 				new Vertex(px + g.width, py + g.height, text.root.z + 0.5f).uv(tx + (g.width * tw), ty + (g.height * th)),
-			}).color(color));
+			}).color(color);
+			poly.rescale(text.scale);
+			text.hedron.polygons.add(poly);
 			px += g.width;
 		}
 	}
