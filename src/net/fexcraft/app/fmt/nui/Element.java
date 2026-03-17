@@ -42,7 +42,7 @@ public class Element {
 	private RGB border;
 	public RGB col_def = RGB.WHITE.copy();
 	public RGB col_hov = new RGB(0xdede00);
-	public RGB col_sel = new RGB(0x27ee00);
+	public RGB col_sel = new RGB(0x43f0ae);
 	public Text text;
 	private ElmShape shape = ElmShape.RECTANGLE;
 	private float x;
@@ -245,6 +245,22 @@ public class Element {
 		text.hedron.posY += (h - text.h) * 0.5;
 	}
 
+	public Element text_scale(float s){
+		if(text == null) return this;
+		text.scale = s;
+		return this;
+	}
+
+	public Element text_centered(boolean bool){
+		if(text != null) text.centered(bool);
+		return this;
+	}
+
+	public Element text_color(int col){
+		if(text != null) text.color(col);
+		return this;
+	}
+
 	public void render(Picker.PickTask picker){
 		if(!visible) return;
 		if(picker == null){
@@ -374,10 +390,15 @@ public class Element {
 		return this;
 	}
 
-	public Element text_scale(float s){
-		if(text == null) return this;
-		text.scale = s;
-		return this;
+	protected void clearElements(boolean del){
+		if(elements != null){
+			for(Element element : elements){
+				element.clearElements(false);
+				element.delete();
+			}
+			elements.clear();
+		}
+		if(del) delete();
 	}
 
 	public static record ClickInfo(int cx, int cy, int lx, int ly){}
