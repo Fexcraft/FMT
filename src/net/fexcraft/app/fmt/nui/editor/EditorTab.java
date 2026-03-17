@@ -2,8 +2,8 @@ package net.fexcraft.app.fmt.nui.editor;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.nui.Element;
-import net.fexcraft.app.fmt.nui.Field;
 import net.fexcraft.app.fmt.nui.editor.EditorRoot.EditorMode;
+import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
 
 import static net.fexcraft.app.fmt.nui.FMTInterface.*;
 
@@ -15,7 +15,10 @@ public class EditorTab extends Element {
 	public final String lang_prefix;
 	public final EditorMode mode;
 	//
-	public static float FF = EDITOR_CONTENT;
+	public static String NOPOLYSEL;
+	public static float FF = EDITOR_CONTENT - 10;
+	//
+	protected UpdateCompound updcom = new UpdateCompound();
 
 	public EditorTab(EditorMode emode){
 		super();
