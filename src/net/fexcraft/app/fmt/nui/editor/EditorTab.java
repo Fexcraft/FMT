@@ -17,8 +17,11 @@ public class EditorTab extends Element {
 	//
 	public static String NOPOLYSEL;
 	public static float FF = EDITOR_CONTENT - 10;
+	public static float FO = 5;
+	public static float FS = 26;
 	//
 	protected UpdateCompound updcom = new UpdateCompound();
+	private int next_y_elm_pos = 0;
 
 	public EditorTab(EditorMode emode){
 		super();
@@ -39,6 +42,11 @@ public class EditorTab extends Element {
 	public void onResize(){
 		super.onResize();
 		size(EDITOR_WIDTH, FMT.SCALED_HEIGHT - TOOLBAR_HEIGHT);
+	}
+
+	public int next_y_pos(int inc){
+		if(inc < 0) return next_y_elm_pos = 30;
+		return next_y_elm_pos += inc * 30;
 	}
 
 }
