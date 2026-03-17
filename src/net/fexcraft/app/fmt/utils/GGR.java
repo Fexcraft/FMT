@@ -168,12 +168,15 @@ public class GGR {
 					sp_size = sel_panel.getSize();
 					Picker.pick(PickType.POLYGON, PickTask.MULTISELECT, true);
 				}
-				else if(Settings.TESTING.value || !isOverUI()){
+				else if(!isOverUI()){
 					if(TexturePainter.TOOL.active()){
 						Picker.pick(TexturePainter.SELMODE.getPickType(), PickTask.PAINT, true);
 					}
 					else if(Picker.TYPE.color()) Picker.process();
-					else Picker.pick(Settings.TESTING.value ? PickType.UI : Selector.TYPE, PickTask.SELECT, true);
+					else Picker.pick(Selector.TYPE, PickTask.SELECT, true);
+				}
+				else if(Settings.TESTING.value){
+					Picker.pick(PickType.UI, PickTask.SELECT, true);
 				}
 				left_down = false;
 			}
