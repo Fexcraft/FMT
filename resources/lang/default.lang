@@ -105,6 +105,22 @@ toolbar.poscopymenu.str_comma=Copy with Comma | 0, 0, 0
 toolbar.poscopymenu.json_arr=Copy as Json Array | [ 0, 0, 0 ]
 toolbar.poscopymenu.json_map=Copy as Json Obj | { "x": 0, ... }
 
+# Editor / NUI
+editor.mode.polygon=Polygon Editor
+editor.mode.model=Model Settings
+editor.mode.pivot=Pivot Editor
+editor.mode.texture=UV Editor
+editor.mode.painter=Painter
+editor.mode.preview=Preview/Helper Editor
+editor.mode.variable=Variable Editor
+editor.mode.animation=Animation Editor
+editor.polygon.sorting=Name / Group / Type +
+editor.polygon.name=Polygon Name
+editor.polygon.group=Polygon Group
+editor.polygon.type=Polygon Type
+editor.polygon.sorting.reset_corners=Resets all Shapebox corners.
+editor.polygon.sorting.reset_size=Rounds size to full numbers.
+
 # Editor
 editor.add_component=Add Editor Component
 editor.adjust_components=Adjust Components (Sort, Remove)
