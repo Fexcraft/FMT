@@ -327,11 +327,13 @@ public class Element {
 	}
 
 	public void click(int x, int y){
+		if(!selected()) select(null);
 		if(onclick != null) onclick.accept(new ClickInfo(x, y, (int)(x - gx()), (int)(y - gy())));
 		else if(selectable) select(this);
 	}
 
 	public void click(ClickInfo info){
+		if(!selected()) select(null);
 		if(onclick != null) onclick.accept(info);
 		else if(selectable) select(this);
 	}
@@ -399,6 +401,11 @@ public class Element {
 			elements.clear();
 		}
 		if(del) delete();
+	}
+
+	public Element lastElement(){
+		if(elements == null || elements.isEmpty()) return null;
+		return elements.get(elements.size() - 1);
 	}
 
 	public static record ClickInfo(int cx, int cy, int lx, int ly){}
