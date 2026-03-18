@@ -327,13 +327,13 @@ public class Element {
 	}
 
 	public void click(int x, int y){
-		if(!selected()) select(null);
+		if(!selected() && !root.selected()) select(null);
 		if(onclick != null) onclick.accept(new ClickInfo(x, y, (int)(x - gx()), (int)(y - gy())));
 		else if(selectable) select(this);
 	}
 
 	public void click(ClickInfo info){
-		if(!selected()) select(null);
+		if(!selected() && !root.selected()) select(null);
 		if(onclick != null) onclick.accept(info);
 		else if(selectable) select(this);
 	}
