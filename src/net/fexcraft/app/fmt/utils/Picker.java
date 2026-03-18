@@ -134,7 +134,10 @@ public class Picker {
 		}
 		else if(TYPE == PickType.UI){
 			int pick = getPick();
-			if(pick <= 0 || pick > Element.elmIdx) return;
+			if(pick <= 0 || pick > Element.elmIdx){
+				LAST_HOVER = null;
+				return;
+			}
 			Element elm = getElm(FMT.UI.elements, pick);
 			if(elm == null){
 				LAST_HOVER = null;
