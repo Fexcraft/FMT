@@ -63,7 +63,7 @@ public class Element {
 
 	public Element recompile(){
 		hedron.recompile = true;
-		hedron.clear();
+		hedron.polygons.clear();
 		if(hedron.glObj.pickercolor == null) hedron.glObj.pickercolor = new RGB(colorIdx == 0 ? colorIdx = elmIdx++ : colorIdx).toFloatArray();
 		hedron.glObj.textured = texture != null;
 		hedron.posX = gx();
