@@ -36,10 +36,12 @@ public class Field extends Element {
 	public void init(Object... args){
 		text("");
 		add(clear = new Element().color(0xffe600).size(type.text() ? FS : 5, FS).pos(w, 0).text("C")
-			.text_centered(true).hoverable(true).onclick(info -> clear_text()));
+			.text_centered(true).hoverable(true).onclick(info -> clear_text())
+			.hint("editor.info.field_clear"));
 		clear.hide();
 		add(reset = new Element().color(0xf02c00).size(type.text() ? FS : 5, FS).pos(w + FS, 0).text("R")
-			.text_centered(true).hoverable(true).onclick(info -> reset_text()));
+			.text_centered(true).hoverable(true).onclick(info -> reset_text())
+			.hint("editor.info.field_reset"));
 		reset.hide();
 	}
 
