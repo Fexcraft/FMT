@@ -114,6 +114,7 @@ editor.mode.painter=Painter
 editor.mode.preview=Preview/Helper Editor
 editor.mode.variable=Variable Editor
 editor.mode.animation=Animation Editor
+editor.info.no_polygon_selected=< no polygon selected >
 editor.polygon.sorting=Name / Group / Type +
 editor.polygon.name=Polygon Name
 editor.polygon.group=Polygon Group
