@@ -224,7 +224,7 @@ public class Element {
 			hint.init(hinttext);
 			hoverable = true;
 		}
-		hint.text(hinttext);
+		hint.translate(hinttext);
 		return this;
 	}
 
