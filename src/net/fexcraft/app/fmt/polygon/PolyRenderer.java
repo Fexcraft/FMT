@@ -225,7 +225,7 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
     			obj.lights[lig++] = 1;
     		}
         }
-    	if(obj.glid != null){
+    	/*if(obj.glid != null){
     		glDeleteBuffers(obj.glid);
     		if(!lines){
         		glDeleteBuffers(obj.uvss);
@@ -233,18 +233,27 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
         		glDeleteBuffers(obj.colorss);
         		glDeleteBuffers(obj.lightss);
     		}
-    	}
+    	}*/
+		if(obj.glid == null){
+			obj.glid = glGenBuffers();
+			if(!lines){
+				obj.uvss = glGenBuffers();
+				obj.normss = glGenBuffers();
+				obj.colorss = glGenBuffers();
+				obj.lightss = glGenBuffers();
+			}
+		}
 		//
-		glBindBuffer(GL_ARRAY_BUFFER, obj.glid = glGenBuffers());
+		glBindBuffer(GL_ARRAY_BUFFER, obj.glid);
 		glBufferData(GL_ARRAY_BUFFER, obj.verts, GL_STATIC_DRAW);
 		if(lines) return;
-		glBindBuffer(GL_ARRAY_BUFFER, obj.uvss = glGenBuffers());
+		glBindBuffer(GL_ARRAY_BUFFER, obj.uvss);
 		glBufferData(GL_ARRAY_BUFFER, obj.uvs, GL_STATIC_DRAW);
-		glBindBuffer(GL_ARRAY_BUFFER, obj.normss = glGenBuffers());
+		glBindBuffer(GL_ARRAY_BUFFER, obj.normss);
 		glBufferData(GL_ARRAY_BUFFER, obj.norms, GL_STATIC_DRAW);
-		glBindBuffer(GL_ARRAY_BUFFER, obj.colorss = glGenBuffers());
+		glBindBuffer(GL_ARRAY_BUFFER, obj.colorss);
 		glBufferData(GL_ARRAY_BUFFER, obj.colors, GL_STATIC_DRAW);
-		glBindBuffer(GL_ARRAY_BUFFER, obj.lightss = glGenBuffers());
+		glBindBuffer(GL_ARRAY_BUFFER, obj.lightss);
 		glBufferData(GL_ARRAY_BUFFER, obj.lights, GL_STATIC_DRAW);
 	}
 
