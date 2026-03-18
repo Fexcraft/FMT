@@ -42,28 +42,11 @@ public class DropList extends Element {
 			}));
 		add(drop = new Element().color(col_bd).border(col_85).pos(0, FS));
 		drop.hide();
-		onclick(info -> {
-			if(drop.visible){
-				drop.hide();
-				drop.clearElements(false);
-			}
-			else{
-				drop.size(w + FS * 3, entries.size() * FS);
-				drop.recompile();
-				int idx = 0;
-				for(Pair<String, Object> entry : entries){
-					drop.add(new TextElm(0, idx++ * FS, drop.w, entry.getLeft(), col_bd)
-						.onclick(ci -> {
-							selectEntry(entry.getLeft());
-							drop.hide();
-							drop.clearElements(false);
-							//TODO setting if should apply on click
-							//TODO setting if should close dropdown
-						}));
-				}
-				drop.show();
-			}
-		});
+	}
+
+	public void drop_hide_clear(){
+		drop.hide();
+		drop.clearElements(false);
 	}
 
 	public DropList onchange(BiConsumer<String, Object> cons){
@@ -109,6 +92,28 @@ public class DropList extends Element {
 		else{
 			text(entries.get(current).getLeft());
 		}
+	}
+
+	@Override
+	public void onSelect(){
+		drop.size(w + FS * 3, entries.size() * FS);
+		drop.recompile();
+		int idx = 0;
+		for(Pair<String, Object> entry : entries){
+			drop.add(new TextElm(0, idx++ * FS, drop.w, entry.getLeft(), col_bd)
+				.onclick(ci -> {
+					selectEntry(entry.getLeft());
+					drop_hide_clear();
+					//TODO setting if should apply on click
+					//TODO setting if should close dropdown
+				}));
+		}
+		drop.show();
+	}
+
+	@Override
+	protected void onDeselect(Element current){
+		drop_hide_clear();
 	}
 
 }
