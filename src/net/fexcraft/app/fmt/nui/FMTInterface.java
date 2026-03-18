@@ -4,6 +4,8 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.nui.editor.EditorRoot;
 import net.fexcraft.app.fmt.ui.ProfileDialog;
 import net.fexcraft.app.fmt.ui.SettingsDialog;
+import net.fexcraft.app.fmt.update.UpdateEvent;
+import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.utils.Picker;
 import net.fexcraft.app.fmt.utils.SaveHandler;
 import net.fexcraft.lib.common.math.RGB;
@@ -24,6 +26,7 @@ public class FMTInterface extends Element {
 	public static Element toolbar;
 	public static Element statusbar;
 	public static EditorRoot editor;
+	private UpdateHandler.UpdateCompound updcom = new UpdateHandler.UpdateCompound();
 
 	public FMTInterface(){
 		super();
@@ -92,6 +95,13 @@ public class FMTInterface extends Element {
 		//toolbar.add(new Element().pos(10, 40).size(100, 200).color(RGB.BLUE).linecolor(new RGB(256, 256, 0)).rounded(true));
 		//toolbar.add(new Element().pos(200, 40).size(500, 100).color(RGB.GREEN).linecolor(RGB.BLACK).rounded(true));
 		add((editor = new EditorRoot()));
+		//
+		updcom.add(UpdateEvent.PolygonSelected.class, e -> {
+			if(Element.SELECTED instanceof DropList){
+				Element.select(null);
+			}
+		});
+		UpdateHandler.register(updcom);
 	}
 
 	@Override
