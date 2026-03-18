@@ -1,6 +1,5 @@
 package net.fexcraft.app.fmt.nui;
 
-import net.fexcraft.lib.common.math.RGB;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Consumer;
@@ -16,12 +15,13 @@ public class Field extends Element {
 	public final FieldType type;
 	public Consumer<String> consumer;
 	public String previous;
+	private Element clear;
 	private Element reset;
 
 	public Field(FieldType ftype, float width){
 		super();
 		type = ftype;
-		size(width - FS, FS);
+		size(width - FS - FS, FS);
 		hoverable = true;
 		selectable = true;
 		color(0xa6b3b3);
@@ -35,7 +35,10 @@ public class Field extends Element {
 	@Override
 	public void init(Object... args){
 		text("");
-		add(reset = new Element().color(0xf02c00).size(type.text() ? FS : 5, FS).pos(w, 0).text("X")
+		add(clear = new Element().color(0xffe600).size(type.text() ? FS : 5, FS).pos(w, 0).text("C")
+			.text_centered(true).hoverable(true).onclick(info -> clear_text()));
+		clear.hide();
+		add(reset = new Element().color(0xf02c00).size(type.text() ? FS : 5, FS).pos(w + FS, 0).text("R")
 			.text_centered(true).hoverable(true).onclick(info -> reset_text()));
 		reset.hide();
 	}
@@ -50,13 +53,19 @@ public class Field extends Element {
 	@Override
 	protected void onSelect(){
 		previous = text.text();
+		clear.show();
 		reset.show();
 	}
 
 	@Override
 	protected void onDeselect(Element current){
 		reset_text();
+		clear.hide();
 		reset.hide();
+	}
+
+	public void clear_text(){
+		text(type == FieldType.TEXT ? "" : "0");
 	}
 
 	public void reset_text(){
