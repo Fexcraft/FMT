@@ -13,6 +13,7 @@ import static net.fexcraft.app.fmt.nui.FMTInterface.*;
 public class EditorRoot extends Element {
 
 	public static EditorTab[] EDITORS = new EditorTab[EditorMode.values().length];
+	public static String NOPOLYSEL;
 
 	public EditorRoot(){
 		super();
@@ -23,7 +24,7 @@ public class EditorRoot extends Element {
 
 	@Override
 	public void init(Object... args){
-		EditorTab.NOPOLYSEL = Translator.translate("editor.info.no_polygon_selected");
+		NOPOLYSEL = Translator.translate("editor.info.no_polygon_selected");
 		for(int i = 0; i < EditorMode.values().length; i++){
 			add(EDITORS[i] = EditorTab.create(EditorMode.values()[i]));
 			UpdateHandler.register(EDITORS[i].updcom);
