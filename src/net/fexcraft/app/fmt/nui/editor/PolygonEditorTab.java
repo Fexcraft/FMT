@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 import static net.fexcraft.app.fmt.nui.FMTInterface.col_bd;
 import static net.fexcraft.app.fmt.nui.Field.FieldType.TEXT;
+import static net.fexcraft.app.fmt.nui.editor.EditorRoot.NOPOLYSEL;
 import static net.fexcraft.app.fmt.settings.Settings.POLYGON_SUFFIX;
 
 /**
@@ -36,6 +37,7 @@ public class PolygonEditorTab extends EditorTab {
 		add((sorting = new ETabCom()).pos(5, 5), lang_prefix + "sorting", 220);
 		sorting.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "name").text_scale(0.9f));
 		sorting.add((name = new Field(TEXT, FF, str -> rename(str))).pos(FO, next_y_pos(1)));
+		sorting.lastElement().text(NOPOLYSEL);
 		updcom.add(UpdateEvent.GroupAdded.class, event -> updateLists());
 		updcom.add(UpdateEvent.GroupRemoved.class, event -> updateLists());
 		updcom.add(UpdateEvent.GroupRenamed.class, event -> updateLists());
