@@ -1,7 +1,6 @@
 package net.fexcraft.app.fmt.nui;
 
 import net.fexcraft.app.fmt.polygon.GLObject;
-import net.fexcraft.app.fmt.polygon.PolyRenderer;
 import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.frl.Polygon;
