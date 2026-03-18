@@ -15,7 +15,6 @@ public class EditorTab extends Element {
 	public final String lang_prefix;
 	public final EditorMode mode;
 	//
-	public static String NOPOLYSEL;
 	public static float FF = EDITOR_CONTENT - 10;
 	public static float FO = 5;
 	public static float FS = 26;
