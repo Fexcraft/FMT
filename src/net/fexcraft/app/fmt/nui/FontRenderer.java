@@ -221,7 +221,7 @@ public class FontRenderer {
 		if(str.length() == 0) return;
 		float px = 0;
 		float py = 0;
-		float max = text.root.w - 10;
+		float max = text.root.w * (1f / text.scale) - 10;
 		for(int i = 0; i < str.length(); i++){
 			char c = str.charAt(i);
 			if(c == '\n'){
