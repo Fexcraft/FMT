@@ -303,7 +303,6 @@ public class GGR {
 	public void scrollCallback(long window, double xoffset, double yoffset){
 		if(Picker.LAST_HOVER != null){
 			Picker.LAST_HOVER.scroll(xoffset, yoffset);
-			Picker.LAST_HOVER = null;
 			return;
 		}
 		if(isOverUI()){
