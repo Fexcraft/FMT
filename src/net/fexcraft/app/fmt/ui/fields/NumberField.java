@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.ui.fields;
 
+import static net.fexcraft.app.fmt.nui.Field.df;
+import static net.fexcraft.app.fmt.nui.Field.nf;
 import static net.fexcraft.app.fmt.settings.Settings.ROUNDING_DIGITS;
 import static net.fexcraft.app.fmt.utils.Logging.log;
 
@@ -29,11 +31,6 @@ import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.utils.Logging;
 
 public class NumberField extends TextInput implements Field {
-
-	private static NumberFormat nf;
-	private static DecimalFormat df;
-
-	static { updateRoundingDigits(); }
 
 	private Setting<?> setting;
 
@@ -169,17 +166,6 @@ public class NumberField extends TextInput implements Field {
 		return update;
 	}
 
-	public static void updateRoundingDigits(){
-		nf = NumberFormat.getInstance(Locale.US);
-		nf.setMaximumFractionDigits(ROUNDING_DIGITS.value);
-		String str = "#.";
-		for(int i = 0; i < nf.getMaximumFractionDigits(); i++){
-			str += "#";
-		}
-		df = new DecimalFormat(str, new DecimalFormatSymbols(Locale.US));
-		df.setRoundingMode(RoundingMode.HALF_EVEN);
-	}
-
 	public NumberField floatbased(boolean bool){
 		this.floatfield = bool;
 		return this;
@@ -197,15 +183,6 @@ public class NumberField extends TextInput implements Field {
 	@Override
 	public Setting<?> setting(){
 		return setting;
-	}
-
-	public static float round(float flat){
-		try{
-			return nf.parse(df.format(flat)).floatValue();
-		} catch(ParseException e){
-			Logging.log(e);
-			return flat;
-		}
 	}
 
 	public void updateValue(Polygon poly){
