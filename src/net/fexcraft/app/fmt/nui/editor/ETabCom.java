@@ -33,6 +33,7 @@ public class ETabCom extends Element {
 			elements.get(i).hide();
 		}
 		recompile();
+		((EditorTab)root).reorderComponents();
 		return this;
 	}
 
@@ -44,6 +45,7 @@ public class ETabCom extends Element {
 			elements.get(i).show();
 		}
 		recompile();
+		((EditorTab)root).reorderComponents();
 		return this;
 	}
 
