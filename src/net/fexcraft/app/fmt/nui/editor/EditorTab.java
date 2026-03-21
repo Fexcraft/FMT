@@ -23,6 +23,14 @@ public class EditorTab extends Element {
 	public static float F31 = 100;//3-row 2nd field offset
 	public static float F32 = 195;//3-row 3rd field offset
 	//
+	public static float F6S = 40;//6-row field width
+	public static float F60 = 5;
+	public static float F61 = 53;
+	public static float F62 = 101;
+	public static float F63 = 149;
+	public static float F64 = 197;
+	public static float F65 = 245;
+	//
 	public static float FS = 26;//field height
 	//
 	protected UpdateCompound updcom = new UpdateCompound();
