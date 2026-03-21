@@ -1,10 +1,7 @@
 package net.fexcraft.app.fmt.nui.editor;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.nui.DropList;
-import net.fexcraft.app.fmt.nui.Element;
-import net.fexcraft.app.fmt.nui.Field;
-import net.fexcraft.app.fmt.nui.TextElm;
+import net.fexcraft.app.fmt.nui.*;
 import net.fexcraft.app.fmt.polygon.*;
 import net.fexcraft.app.fmt.update.PolyVal;
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
@@ -122,7 +119,7 @@ public class PolygonEditorTab extends EditorTab {
 				UpdateHandler.update(new PolygonSelected(polis.get(0), polis.size(), polis.size()));
 			}).hint(lang_prefix + "sorting.reset_size"));
 		//
-		add((general = new ETabCom()), lang_prefix + "general", 340);
+		add((general = new ETabCom()), lang_prefix + "general", 400);
 		general.add(new TextElm(0, next_y_pos(-1), FF).translate(lang_prefix + "general.box_size"));
 		general.add(new PosCopyButton(0, next_y_pos(0), PolyVal.SIZE));
 		general.add((siz_x = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.SIZE, PolyVal.ValAxe.X))).min_range(0).pos(F30, next_y_pos(1)));
@@ -162,6 +159,13 @@ public class PolygonEditorTab extends EditorTab {
 				FMT.MODEL.updateValue(tex_x.polyval(), tex_x.set(-1), 0);
 				FMT.MODEL.updateValue(tex_y.polyval(), tex_y.set(-1), 0);
 			}));
+		general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.box_faces"));
+		general.add(new BoolElm(F60, next_y_pos(1), F6S).set(new PolygonValue(PolyVal.SIDES, PolyVal.ValAxe.X), updcom));
+		general.add(new BoolElm(F61, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.SIDES, PolyVal.ValAxe.Y), updcom));
+		general.add(new BoolElm(F62, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.SIDES, PolyVal.ValAxe.Z), updcom));
+		general.add(new BoolElm(F63, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.SIDES, PolyVal.ValAxe.X2), updcom));
+		general.add(new BoolElm(F64, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.SIDES, PolyVal.ValAxe.Y2), updcom));
+		general.add(new BoolElm(F65, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.SIDES, PolyVal.ValAxe.Z2), updcom));
 	}
 
 	private void updateLists(){
