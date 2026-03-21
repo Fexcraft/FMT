@@ -23,7 +23,7 @@ public class PolygonEditor extends Editor {
 
 	public PolygonEditor(){
 		super("polygon_editor", "Polygon Editor", false);
-		addComponent(new PolygonSorting());
+		//addComponent(new PolygonSorting());
 		addComponent(VERTOFF = new VertoffComponent());
 		addComponent(BOXON = new PolygonAttributes(true));
 		addComponent(BOXOFF = new PolygonAttributes(false));
