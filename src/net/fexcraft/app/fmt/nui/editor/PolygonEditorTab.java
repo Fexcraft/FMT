@@ -6,14 +6,18 @@ import net.fexcraft.app.fmt.nui.Element;
 import net.fexcraft.app.fmt.nui.Field;
 import net.fexcraft.app.fmt.nui.TextElm;
 import net.fexcraft.app.fmt.polygon.*;
+import net.fexcraft.app.fmt.update.PolyVal;
+import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateEvent.PolygonSelected;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 
 import java.util.ArrayList;
 
+import static net.fexcraft.app.fmt.FMT.MODEL;
 import static net.fexcraft.app.fmt.nui.FMTInterface.col_bd;
 import static net.fexcraft.app.fmt.nui.Field.FieldType.TEXT;
+import static net.fexcraft.app.fmt.nui.Field.col_field;
 import static net.fexcraft.app.fmt.nui.editor.EditorRoot.NOPOLYSEL;
 import static net.fexcraft.app.fmt.settings.Settings.POLYGON_SUFFIX;
 
@@ -23,10 +27,14 @@ import static net.fexcraft.app.fmt.settings.Settings.POLYGON_SUFFIX;
 public class PolygonEditorTab extends EditorTab {
 
 	public ETabCom sorting;
+	public ETabCom general;
 	public Field name;
 	public DropList group;
 	public DropList polytype;
 	public Field pos_x, pos_y, pos_z;
+	public Field off_x, off_y, off_z;
+	public Field siz_x, siz_y, siz_z;
+	public Field tex_x, tex_y;
 
 	public PolygonEditorTab(){
 		super(EditorRoot.EditorMode.POLYGON);
@@ -34,8 +42,8 @@ public class PolygonEditorTab extends EditorTab {
 
 	@Override
 	public void init(Object... objs){
-		add((sorting = new ETabCom()).pos(5, 5), lang_prefix + "sorting", 220);
-		sorting.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "name").text_scale(0.9f));
+		add((sorting = new ETabCom()), lang_prefix + "sorting", 220);
+		sorting.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "sorting.name"));
 		sorting.add((name = new Field(TEXT, FF, str -> rename(str))).pos(FO, next_y_pos(1)));
 		sorting.lastElement().text(NOPOLYSEL);
 		updcom.add(UpdateEvent.GroupAdded.class, event -> updateLists());
@@ -54,7 +62,7 @@ public class PolygonEditorTab extends EditorTab {
 				polytype.selectEntry(FMT.MODEL.first_selected().getShape().getName());
 			}
 		});
-		sorting.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "group").text_scale(0.9f));
+		sorting.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "sorting.group"));
 		sorting.add((group = new DropList(FF).onchange((key, val) -> {
 			Group ng = (Group)val;
 			FMT.MODEL.selection_copy().forEach(poly -> {
@@ -62,7 +70,7 @@ public class PolygonEditorTab extends EditorTab {
 				ng.add(poly);
 			});
 		})).pos(FO, next_y_pos(1)));
-		sorting.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "type").text_scale(0.9f));
+		sorting.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "sorting.type"));
 		sorting.add((polytype = new DropList(FF - (FS + 5) * 2).onchange((key, val) -> {
 			Shape shape = (Shape)val;
 			ArrayList<Polygon> polis = FMT.MODEL.selected();
@@ -113,6 +121,47 @@ public class PolygonEditorTab extends EditorTab {
 				}
 				UpdateHandler.update(new PolygonSelected(polis.get(0), polis.size(), polis.size()));
 			}).hint(lang_prefix + "sorting.reset_size"));
+		//
+		add((general = new ETabCom()), lang_prefix + "general", 340);
+		general.add(new TextElm(0, next_y_pos(-1), FF).translate(lang_prefix + "general.box_size"));
+		general.add(new PosCopyButton(0, next_y_pos(0), PolyVal.SIZE));
+		general.add((siz_x = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.SIZE, PolyVal.ValAxe.X))).min_range(0).pos(F30, next_y_pos(1)));
+		general.add((siz_y = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.SIZE, PolyVal.ValAxe.Y))).min_range(0).pos(F31, next_y_pos(0)));
+		general.add((siz_z = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.SIZE, PolyVal.ValAxe.Z))).min_range(0).pos(F32, next_y_pos(0)));
+		general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.position"));
+		general.add(new PosCopyButton(0, next_y_pos(0), PolyVal.POS));
+		general.add((pos_x = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.POS, PolyVal.ValAxe.X))).pos(F30, next_y_pos(1)));
+		general.add((pos_y = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.POS, PolyVal.ValAxe.Y))).pos(F31, next_y_pos(0)));
+		general.add((pos_z = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.POS, PolyVal.ValAxe.Z))).pos(F32, next_y_pos(0)));
+		general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.offset"));
+		general.add(new PosCopyButton(0, next_y_pos(0), PolyVal.OFF));
+		general.add(new SideButton(1, next_y_pos(0), "icons/polygon/marker").hint("editor.polygon.general.offset.center_box")
+			.onclick(ci -> {
+				if(MODEL.selected().isEmpty()) return;
+				for(Polygon polygon : MODEL.selected()){
+					FMT.MODEL.updateValue(off_x.polyval(), null, polygon.getValue(siz_x.polyval()) * -0.5f, true);
+					FMT.MODEL.updateValue(off_y.polyval(), null, polygon.getValue(siz_y.polyval()) * -0.5f, true);
+					FMT.MODEL.updateValue(off_z.polyval(), null, polygon.getValue(siz_z.polyval()) * -0.5f, true);
+				}
+			}));
+		general.add((off_x = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.OFF, PolyVal.ValAxe.X))).pos(F30, next_y_pos(1)));
+		general.add((off_y = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.OFF, PolyVal.ValAxe.Y))).pos(F31, next_y_pos(0)));
+		general.add((off_z = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.OFF, PolyVal.ValAxe.Z))).pos(F32, next_y_pos(0)));
+		general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.rotation"));
+		general.add((new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.ROT, PolyVal.ValAxe.X))).range(-180, 180).pos(F30, next_y_pos(1)));
+		general.add((new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.ROT, PolyVal.ValAxe.Y))).range(-180, 180).pos(F31, next_y_pos(0)));
+		general.add((new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.ROT, PolyVal.ValAxe.Z))).range(-180, 180).pos(F32, next_y_pos(0)));
+		general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.texture"));
+		general.add((tex_x = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.TEX, PolyVal.ValAxe.X))).pos(F30, next_y_pos(1)));
+		general.add((tex_y = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.TEX, PolyVal.ValAxe.Y))).pos(F31, next_y_pos(0)));
+		general.add(new Element().size(F3S, FS).pos(F32, next_y_pos(0)).color(col_field)
+			.translate(lang_prefix + "general.texture.reset")
+			.hint(lang_prefix + "general.texture.reset_hint")
+			.text_centered(true).text_autoscale()
+			.onclick(ci -> {
+				FMT.MODEL.updateValue(tex_x.polyval(), tex_x.set(-1), 0);
+				FMT.MODEL.updateValue(tex_y.polyval(), tex_y.set(-1), 0);
+			}));
 	}
 
 	private void updateLists(){
