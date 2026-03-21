@@ -1,8 +1,8 @@
 package net.fexcraft.app.fmt.polygon;
 
+import static net.fexcraft.app.fmt.nui.Field.round;
 import static net.fexcraft.app.fmt.update.UpdateHandler.update;
 import static net.fexcraft.app.fmt.settings.Settings.ASK_POLYGON_REMOVAL;
-import static net.fexcraft.app.fmt.ui.fields.NumberField.round;
 import static net.fexcraft.app.fmt.utils.Translator.translate;
 import static com.spinyowl.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
@@ -48,7 +48,6 @@ import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.ui.EditorComponent;
 import net.fexcraft.app.fmt.ui.GenericDialog;
 import net.fexcraft.app.fmt.ui.GroupSelectionPanel;
-import net.fexcraft.app.fmt.ui.fields.Field;
 import net.fexcraft.app.fmt.ui.fields.NumberField;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
@@ -350,18 +349,24 @@ public class Model {
 		return selected.size() > 0 && selected.get(selected.size() - 1) instanceof Shapebox;
 	}
 
-	public void updateValue(PolygonValue value, Field field, float alt){
+	@Deprecated
+	public void updateValue(PolygonValue value, Object field, float alt){}
+
+	@Deprecated
+	public void updateValue(PolygonValue value, Object field, float alt, boolean set){}
+
+	public void updateValue(PolygonValue value, net.fexcraft.app.fmt.nui.Field field, float alt){
 		updateValue(value, field, alt, false);
 	}
 
-	public void updateValue(PolygonValue value, Field field, float alt, boolean set){
+	public void updateValue(PolygonValue value, net.fexcraft.app.fmt.nui.Field field, float alt, boolean set){
 		if(selected.isEmpty()){
-			if(field != null) field.value();
+			if(field != null) field.clear_text();
 			return;
 		}
 		Polygon poly = selected.get(0);
 		float oval = poly.getValue(value);
-		float fval = field == null ? set ? alt : oval + alt : field.value();
+		float fval = field == null ? set ? alt : oval + alt : field.parse_float();
 		poly.setValue(value, round(fval));
 		update(new PolygonValueEvent(poly, value, true));
 		if(value.doesUpdateMoreFields()) update(new PolygonSelected(poly, selected.size(), selected.size()));
