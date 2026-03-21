@@ -16,8 +16,14 @@ public class EditorTab extends Element {
 	public final EditorMode mode;
 	//
 	public static float FF = EDITOR_CONTENT - 10;
-	public static float FO = 5;
-	public static float FS = 26;
+	public static float FO = 5;//field offset
+	//
+	public static float F3S = 90;//3-row field width
+	public static float F30 = 5;//3-row 1st field offset
+	public static float F31 = 100;//3-row 2nd field offset
+	public static float F32 = 195;//3-row 3rd field offset
+	//
+	public static float FS = 26;//field height
 	//
 	protected UpdateCompound updcom = new UpdateCompound();
 	private int next_y_elm_pos = 0;
@@ -46,6 +52,17 @@ public class EditorTab extends Element {
 	public int next_y_pos(int inc){
 		if(inc < 0) return next_y_elm_pos = 30;
 		return next_y_elm_pos += inc * 30;
+	}
+
+	public void reorderComponents(){
+		if(elements == null) return;
+		int incr = 5;
+		for(Element elm : elements){
+			if(elm instanceof ETabCom){
+				elm.pos(5, incr);
+				incr += elm.h + 5;
+			}
+		}
 	}
 
 }
