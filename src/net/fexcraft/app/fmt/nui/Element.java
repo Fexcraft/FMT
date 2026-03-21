@@ -261,6 +261,11 @@ public class Element {
 		return this;
 	}
 
+	public Element text_autoscale(){
+		if(text != null) text.autoscale = true;
+		return this;
+	}
+
 	public void render(Picker.PickTask picker){
 		if(!visible) return;
 		if(picker == null){
@@ -406,6 +411,11 @@ public class Element {
 	public Element lastElement(){
 		if(elements == null || elements.isEmpty()) return null;
 		return elements.get(elements.size() - 1);
+	}
+
+	public void toggleVisibility(){
+		if(visible) hide();
+		else show();
 	}
 
 	public static record ClickInfo(int cx, int cy, int lx, int ly){}
