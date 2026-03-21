@@ -133,10 +133,11 @@ editor.polygon.general.box_size=Measurements (x/y/z)
 editor.polygon.general.position=Position / Anchor (x/y/z)
 editor.polygon.general.offset=Offset (x/y/z)
 editor.polygon.general.offset.center_box=Center Box
-editor.polygon.general.rotation=Center Box
+editor.polygon.general.rotation=Rotation
 editor.polygon.general.texture=Texture UV
 editor.polygon.general.texture.reset=Reset UV
 editor.polygon.general.texture.reset_hint=Sets the UV value to the default -1, -1
+editor.polygon.general.box_faces=Box Face Toggle
 
 # Editor
 editor.add_component=Add Editor Component
