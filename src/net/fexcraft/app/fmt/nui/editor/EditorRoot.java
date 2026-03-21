@@ -27,6 +27,7 @@ public class EditorRoot extends Element {
 		NOPOLYSEL = Translator.translate("editor.info.no_polygon_selected");
 		for(int i = 0; i < EditorMode.values().length; i++){
 			add(EDITORS[i] = EditorTab.create(EditorMode.values()[i]));
+			EDITORS[i].reorderComponents();
 			UpdateHandler.register(EDITORS[i].updcom);
 		}
 		setMode(EditorMode.POLYGON);
