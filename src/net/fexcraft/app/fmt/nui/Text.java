@@ -15,6 +15,7 @@ public class Text {
 	public Polyhedron<GLObject> hedron;
 	public FontRenderer.FontType font = FontRenderer.FontType.PLAIN;
 	public RGB color = RGB.BLACK.copy();
+	public boolean autoscale;
 	public boolean centered;
 	public boolean cut = true;
 	private String text;
@@ -33,8 +34,16 @@ public class Text {
 		hedron.polygons.clear();
 		//if(hedron.glObj.pickercolor == null) hedron.glObj.pickercolor = root.hedron.glObj.pickercolor;
 		hedron.glObj.textured = true;
-		w = FontRenderer.getWidth(text, font) * scale;
-		h = FontRenderer.getHeight(text, font) * scale;
+		if(autoscale){
+			w = FontRenderer.getWidth(text, font);
+			scale = (root.w - 10) < w ? (root.w - 10) / w : 1;
+			w *= scale;
+			h = FontRenderer.getHeight(text, font) * scale;
+		}
+		else{
+			w = FontRenderer.getWidth(text, font) * scale;
+			h = FontRenderer.getHeight(text, font) * scale;
+		}
 		root.postext();
 		FontRenderer.compile(this, text, font, color);
 	}
