@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import net.fexcraft.app.fmt.nui.Field;
 import net.fexcraft.app.fmt.texture.TexturePainter;
 import net.fexcraft.app.fmt.updater.Catalog;
 import net.fexcraft.app.fmt.polygon.Model;
@@ -80,7 +81,7 @@ public class Settings {
 	public static Setting<String> LANGUAGE = new Setting<>("language", "null", GENERAL);
 	public static Setting<Boolean> INTERNAL_CHOOSER = new Setting<>("internal_filechooser", false, GENERAL);
 	public static Setting<Integer> ROUNDING_DIGITS = new Setting<>("rounding_digits", 4, GENERAL)
-		.minmax(0, 10).consumer(con -> NumberField.updateRoundingDigits());
+		.minmax(0, 10).consumer(con -> Field.updateRoundingDigits());
 	public static Setting<Boolean> ADD_TO_LAST = new Setting<>("add_to_last", false, GENERAL);
 	public static Setting<Boolean> NO_CLIPBOARD = new Setting<>("no_clipboard", false, GENERAL);
 	public static Setting<Boolean> ASK_POLYGON_REMOVAL = new Setting<>("ask_polygon_removal", false, GENERAL);
