@@ -157,7 +157,7 @@ public class ModelExports extends EditorComponent {
         });
         dialog.getContainer().add(button1);
         //
-        dialog.show(FMT.FRAME);
+        //dialog.show(FMT.FRAME);
 	}
 
 	private void addListDialog(){
@@ -189,7 +189,7 @@ public class ModelExports extends EditorComponent {
         });
         dialog.getContainer().add(button1);
         //
-        dialog.show(FMT.FRAME);
+        //dialog.show(FMT.FRAME);
 	}
 
 }
