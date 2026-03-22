@@ -68,6 +68,7 @@ public class EditorTab extends Element {
 		for(Element elm : elements){
 			if(elm instanceof ETabCom){
 				elm.pos(5, incr);
+				if(!elm.visible) continue;
 				incr += elm.h + 5;
 			}
 		}
