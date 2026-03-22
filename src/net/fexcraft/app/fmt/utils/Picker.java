@@ -37,7 +37,6 @@ public class Picker {
 	private static Consumer<Polygon> consumer;
 	private static BiConsumer<Polygon, VOKey> vert_consumer;
 	public static Face selected_face = NoFace.NONE;
-	public static Element LAST_HOVER;
 
 	public static void resetBuffer(boolean resize){
 		if(resize){
@@ -48,7 +47,7 @@ public class Picker {
 	
 	public static enum PickType {
 		
-		NONE, VERTEX, FACE, POLYGON, COLOR, UI;
+		NONE, VERTEX, FACE, POLYGON, COLOR;//, UI;
 		
 		public boolean pick(){
 			return this != NONE;
@@ -132,7 +131,7 @@ public class Picker {
 				UpdateHandler.update(new UpdateEvent.PickFace(polygon, selected_face));
 			}
 		}
-		else if(TYPE == PickType.UI){
+		/*else if(TYPE == PickType.UI){
 			int pick = getPick();
 			if(pick <= 0 || pick > Element.elmIdx){
 				LAST_HOVER = null;
@@ -151,7 +150,7 @@ public class Picker {
 				elm.click(GGR.mousePosX(), GGR.mousePosY());
 			}
 			reset();
-		}
+		}*/
 		else if(TYPE.vertex()){
 			int pick = getPick();
 			Logging.bar("picked: " + pick);
@@ -252,7 +251,7 @@ public class Picker {
 		consumer = cons;
 	}
 
-	public static Element getElm(List<Element> elms, int color){
+	/*public static Element getElm(List<Element> elms, int color){
 		if(elms == null) return null;
 		for(Element elm : elms){
 			if(elm.colorIdx == color) return elm;
@@ -260,6 +259,6 @@ public class Picker {
 			if(e != null) return e;
 		}
 		return null;
-	}
+	}*/
 
 }
