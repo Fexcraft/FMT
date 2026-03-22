@@ -25,13 +25,13 @@ public class PolygonEditor extends Editor {
 		super("polygon_editor", "Polygon Editor", false);
 		//addComponent(new PolygonSorting());
 		addComponent(VERTOFF = new VertoffComponent());
-		addComponent(BOXON = new PolygonAttributes(true));
-		addComponent(BOXOFF = new PolygonAttributes(false));
+		//addComponent(BOXON = new PolygonAttributes(true));
+		//addComponent(BOXOFF = new PolygonAttributes(false));
 		addComponent(SHAPEBOX = new ShapeboxComponent());
 		addComponent(CYLINDER = new CylinderComponentFull());
 		addComponent(CURVE = new CurveComponent());
 		addComponent(MARKER = new MarkerComponent());
-		BOXOFF.minimize(true);
+		//BOXOFF.minimize(true);
 		VERTOFF.minimize(true);
 		UpdateCompound com = new UpdateCompound();
 		if(Settings.AUTO_SHOW_COMPONENTS.value){
