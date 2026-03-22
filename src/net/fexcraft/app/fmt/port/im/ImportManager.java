@@ -87,7 +87,7 @@ public class ImportManager {
 			if(importer == null) return;
 			showFileChooserDialog(importer, Collections.EMPTY_LIST);
 		}));
-		dialog.show(FMT.FRAME);
+		//dialog.show(FMT.FRAME);
 	}
 
 	private static void showFileChooserDialog(Importer importer, List<Group> groups){
