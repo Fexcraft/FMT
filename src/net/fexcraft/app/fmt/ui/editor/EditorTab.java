@@ -2,6 +2,7 @@ package net.fexcraft.app.fmt.ui.editor;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.ui.Element;
+import net.fexcraft.app.fmt.ui.Scrollable;
 import net.fexcraft.app.fmt.ui.editor.EditorRoot.EditorMode;
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
 
@@ -34,6 +35,7 @@ public class EditorTab extends Element {
 	public static float FS = 26;//field height
 	//
 	protected UpdateCompound updcom = new UpdateCompound();
+	protected Scrollable container;
 	private int next_y_elm_pos = 0;
 
 	public EditorTab(EditorMode emode){
@@ -41,7 +43,7 @@ public class EditorTab extends Element {
 		mode = emode;
 		lang_prefix = "editor." + emode.name().toLowerCase() + ".";
 		color(col_cd);
-		onResize();
+		resize();
 	}
 
 	public static EditorTab create(EditorMode mode){
@@ -52,9 +54,16 @@ public class EditorTab extends Element {
 	}
 
 	@Override
+	public void init(Object... args){
+		add((container = new Scrollable()));
+		container.updateSize(w, h);
+	}
+
+	@Override
 	public void onResize(){
-		super.onResize();
 		size(EDITOR_WIDTH, FMT.SCALED_HEIGHT - TOOLBAR_HEIGHT);
+		if(container == null) return;
+		container.updateSize(w, h);
 	}
 
 	public int next_y_pos(int inc){
@@ -63,15 +72,7 @@ public class EditorTab extends Element {
 	}
 
 	public void reorderComponents(){
-		if(elements == null) return;
-		int incr = 5;
-		for(Element elm : elements){
-			if(elm instanceof ETabCom){
-				elm.pos(5, incr);
-				if(!elm.visible) continue;
-				incr += elm.h + 5;
-			}
-		}
+		container.updateBar();
 	}
 
 }
