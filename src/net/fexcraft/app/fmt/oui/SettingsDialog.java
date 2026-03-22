@@ -86,7 +86,7 @@ public class SettingsDialog {
 				if(!hlist) Settings.refresh();
 			});
 		}
-		dialog.show(FMT.FRAME);
+		//dialog.show(FMT.FRAME);
 	}
 	
 	private static void addSinglePanel(List<Setting<?>> list, String catid, UpdateCompound updcom, int width, int height, Runnable run){
@@ -181,8 +181,8 @@ public class SettingsDialog {
 		
 	    @Override
 	    public void process(@SuppressWarnings("rawtypes") ScrollEvent event){
-	    	if(FMT.SELFIELD != null || FMT.FRAME.getAllLayers().stream().filter(l -> l instanceof SelectBoxLayer).count() > 0) return;
-	    	else super.process(event);
+	    	/*if(FMT.SELFIELD != null || FMT.FRAME.getAllLayers().stream().filter(l -> l instanceof SelectBoxLayer).count() > 0) return;
+	    	else*/ super.process(event);
 	    }
 	    
 	}
