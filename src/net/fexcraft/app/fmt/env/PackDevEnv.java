@@ -188,7 +188,7 @@ public class PackDevEnv extends Widget {
 	}
 
 	public static void toggle(){
-		if(INSTANCE == null) FMT.FRAME.getContainer().add(new PackDevEnv());
+		if(INSTANCE == null) {}//FMT.FRAME.getContainer().add(new PackDevEnv());
 		else if(visible()) INSTANCE.hide();
 		else INSTANCE.show();
 	}
