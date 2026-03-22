@@ -8,6 +8,7 @@ import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateEvent.PolygonSelected;
 import net.fexcraft.app.fmt.update.UpdateHandler;
+import net.fexcraft.app.fmt.utils.CornerUtil;
 
 import java.util.ArrayList;
 
@@ -130,9 +131,20 @@ public class PolygonEditorTab extends EditorTab {
 		addGeneralElements(general_box, true);
 		general.visible = false;
 		//
+		add((shapebox = new ETabCom()), lang_prefix + "shapebox", 520);
+		for(int i = 0; i < 8; i++){
+			shapebox.add(new Element().pos(5, next_y_pos(i == 0 ? -1 : 1) + 5).size(20, 20).border(0xffffff).color(CornerUtil.CORNER_COLOURS[i]));
+			shapebox.add(new TextElm(25, next_y_pos(0), FF - 20).translate(lang_prefix + "shapebox.corner", i));
+			PolyVal val = PolyVal.values()[PolyVal.CORNER_0.ordinal() + i];
+			shapebox.add((pos_x = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(val, PolyVal.ValAxe.X))).pos(F30, next_y_pos(1)));
+			shapebox.add((pos_y = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(val, PolyVal.ValAxe.Y))).pos(F31, next_y_pos(0)));
+			shapebox.add((pos_z = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(val, PolyVal.ValAxe.Z))).pos(F32, next_y_pos(0)));
+		}
+		//
 		updcom.add(PolygonSelected.class, con -> {
 			general.visible = false;
 			general_box.visible = false;
+			shapebox.visible = false;
 			ArrayList<Polygon> polys = FMT.MODEL.selected();
 			boolean curv = true;
 			for(Polygon poly : polys){
@@ -146,7 +158,7 @@ public class PolygonEditorTab extends EditorTab {
 					}
 				}
 				if(poly.getShape().isShapebox()){
-					//shapebox.visible = true;
+					shapebox.visible = true;
 				}
 				if(poly.getShape().isCylinder()){
 					//cylinder.visible = true;
