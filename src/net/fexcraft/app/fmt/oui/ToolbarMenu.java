@@ -142,7 +142,7 @@ public class ToolbarMenu extends Panel {
 			if(consumer != null) consumer.accept(this);
 			hideAll(root == null);
 			if(root != null) offset();
-			FMT.FRAME.addLayer(this);
+			//FMT.FRAME.addLayer(this);
 			ACTIVE.add(this);
 			timeout = 30;
 			shown = true;
@@ -169,7 +169,7 @@ public class ToolbarMenu extends Panel {
 
 		public void hide(){
 			if(shown){
-				FMT.FRAME.removeLayer(this);
+				//FMT.FRAME.removeLayer(this);
 				shown = false;
 			}
 			if(root != null){
