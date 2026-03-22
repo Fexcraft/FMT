@@ -214,7 +214,7 @@ public class JsonEditorMenu {
 			if(CLICK == e.getAction()) dialog.close();
 		});
 		dialog.getContainer().add(button1);
-		dialog.show(FMT.FRAME);
+		//dialog.show(FMT.FRAME);
 	}
 
 	private static void rename(String curr, Consumer<String> cons){
@@ -241,7 +241,7 @@ public class JsonEditorMenu {
 			if(CLICK == e.getAction()) dialog.close();
 		});
 		dialog.getContainer().add(button1);
-		dialog.show(FMT.FRAME);
+		//dialog.show(FMT.FRAME);
 	}
 
 }
