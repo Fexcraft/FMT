@@ -26,8 +26,9 @@ import static net.fexcraft.app.fmt.nui.FMTInterface.TOOLBAR_HEIGHT;
 public class Element {
 
 	public static Element SELECTED;
-	public static int elmIdx = 7;
-	public int colorIdx = 0;
+	public static Element HOVERED;
+	//public static int elmIdx = 7;
+	//public int colorIdx = 0;
 	public Polyhedron<GLObject> hedron;
 	public Consumer<ClickInfo> onclick;
 	public Consumer<ScrollInfo> onscroll;
@@ -64,7 +65,7 @@ public class Element {
 	public Element recompile(){
 		hedron.recompile = true;
 		hedron.polygons.clear();
-		if(hedron.glObj.pickercolor == null) hedron.glObj.pickercolor = new RGB(colorIdx == 0 ? colorIdx = elmIdx++ : colorIdx).toFloatArray();
+		//if(hedron.glObj.pickercolor == null) hedron.glObj.pickercolor = new RGB(colorIdx == 0 ? colorIdx = elmIdx++ : colorIdx).toFloatArray();
 		hedron.glObj.textured = texture != null;
 		hedron.posX = gx();
 		hedron.posY = gy();
@@ -416,6 +417,19 @@ public class Element {
 	public void toggleVisibility(){
 		if(visible) hide();
 		else show();
+	}
+
+	public Element getElmAt(double x, double y){
+		if(!visible) return null;
+		Element ret;
+		if(elements != null){
+			for(Element elm : elements){
+				ret = elm.getElmAt(x, y);
+				if(ret != null) return ret;
+			}
+		}
+		if(x >= hedron.posX && x <= hedron.posX + w && y >= hedron.posY && y <= hedron.posY + h) return this;
+		return null;
 	}
 
 	public static record ClickInfo(int cx, int cy, int lx, int ly){}
