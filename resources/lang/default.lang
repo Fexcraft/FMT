@@ -138,6 +138,8 @@ editor.polygon.general.texture=Texture UV
 editor.polygon.general.texture.reset=Reset UV
 editor.polygon.general.texture.reset_hint=Sets the UV value to the default -1, -1
 editor.polygon.general.box_faces=Box Face Toggle
+editor.polygon.shapebox=Shapebox Corners
+editor.polygon.shapebox.corner=Corner %s
 
 # Editor
 editor.add_component=Add Editor Component
