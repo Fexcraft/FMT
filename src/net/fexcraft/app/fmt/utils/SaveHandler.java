@@ -676,7 +676,7 @@ public class SaveHandler {
             });
             dialog.getContainer().add(button1);
             //
-	        dialog.show(FMT.FRAME);
+	        //dialog.show(FMT.FRAME);
 		};
 		if(!FMT.MODEL.allgroups().isEmpty()){
 			shouldSaveDialog(run);
