@@ -147,7 +147,7 @@ public class ConfigGeneral extends EditorComponent {
 			WorkspaceViewer.viewer().genView();
 		}));
 		dialog.setResizable(false);
-		dialog.show(FMT.FRAME);
+		//dialog.show(FMT.FRAME);
 	}
 
 	public static void genAssetDirs(){
@@ -185,7 +185,7 @@ public class ConfigGeneral extends EditorComponent {
 				WorkspaceViewer.viewer().genView();
 			}));
 			dialog.setResizable(false);
-			dialog.show(FMT.FRAME);
+			//dialog.show(FMT.FRAME);
 		});
 	}
 
@@ -281,7 +281,7 @@ public class ConfigGeneral extends EditorComponent {
 					WorkspaceViewer.viewer().genView();
 				}));
 				dialog.setResizable(false);
-				dialog.show(FMT.FRAME);
+				//dialog.show(FMT.FRAME);
 			});
 		});
 	}
@@ -297,7 +297,7 @@ public class ConfigGeneral extends EditorComponent {
 				ByteBuffer buffer = ByteBuffer.allocateDirect(256 * 256 * 4);
 				buffer.order(ByteOrder.nativeOrder());
 				GL11.glReadPixels(FMT.WIDTH / 2 - 128, FMT.HEIGHT / 2 - 128, 256, 256, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
-				FMT.FRAME.getContainer().remove(widget);
+				//FMT.FRAME.getContainer().remove(widget);
 				FileChooser.chooseFile("Choose a Save Location", new File(pack.file, "/assets/" + pack.id + "/textures/").toPath().toString(), FileChooser.TYPE_PNG, true, file -> {
 					if(file == null) return;
 					BufferedImage img = new BufferedImage(256, 256, BufferedImage.TYPE_INT_ARGB);
@@ -329,7 +329,7 @@ public class ConfigGeneral extends EditorComponent {
 			widget.setResizable(false);
 			widget.setMinimizable(false);
 			widget.setDraggable(false);
-			FMT.FRAME.getContainer().add(widget);
+			//FMT.FRAME.getContainer().add(widget);
 			widget.show();
 		});
 	}
@@ -405,7 +405,7 @@ public class ConfigGeneral extends EditorComponent {
 				WorkspaceViewer.viewer().genView();
 			}));
 			dialog.setResizable(false);
-			dialog.show(FMT.FRAME);
+			//dialog.show(FMT.FRAME);
 		});
 	}
 
