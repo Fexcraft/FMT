@@ -305,6 +305,12 @@ public class Element {
 
 	public void update(){}
 
+	public void resize(){
+		onResize();
+		if(elements == null) return;
+		for(Element elm : elements) elm.resize();
+	}
+
 	public void onResize(){}
 
 	public void add(Element elm){
