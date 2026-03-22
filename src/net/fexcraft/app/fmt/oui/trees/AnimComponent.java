@@ -144,7 +144,7 @@ public class AnimComponent extends EditorComponent {
 			else*/ cons.accept(new JsonMap());
 		}, false));
 		dialog.setResizable(false);
-		dialog.show(FMT.FRAME);
+		//dialog.show(FMT.FRAME);
 	}
 
 	private void addAnimation(Animation anim, boolean resort){
