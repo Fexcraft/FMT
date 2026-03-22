@@ -63,7 +63,7 @@ public class FVTMConfigEditor extends Widget {
 		getContainer().add(panel = new ScrollablePanel(10, 40, width - 20, height - 70));
 		getContainer().add(new RunButton("dialog.button.save", width - 220, 10, 100, 24, () -> save()));
 		getContainer().add(new RunButton("dialog.button.close", width - 110, 10, 100, 24, () -> {
-			FMT.FRAME.getContainer().remove(this);
+			//FMT.FRAME.getContainer().remove(this);
 			INSTANCES.remove(this);
 		}));
 		getListenerMap().addListener(ChangeSizeEvent.class, event -> {
@@ -80,7 +80,7 @@ public class FVTMConfigEditor extends Widget {
 			panel.setSize(vec.x - 20, vec.y - 70);
 		});
 		fill();
-		FMT.FRAME.getContainer().add(this);
+		//FMT.FRAME.getContainer().add(this);
 		INSTANCES.add(this);
 		show();
 	}
