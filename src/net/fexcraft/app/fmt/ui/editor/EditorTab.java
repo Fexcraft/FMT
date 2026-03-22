@@ -19,10 +19,20 @@ public class EditorTab extends Element {
 	public static float FF = EDITOR_CONTENT - 10;
 	public static float FO = 5;//field offset
 	//
+	public static float F2S = 137;//2-row field width
+	public static float F20 = 5;//
+	public static float F21 = 148;//
+	//
 	public static float F3S = 90;//3-row field width
 	public static float F30 = 5;//3-row 1st field offset
 	public static float F31 = 100;//3-row 2nd field offset
 	public static float F32 = 195;//3-row 3rd field offset
+	//
+	public static float F4S = 64;//4-row field width
+	public static float F40 = 5;//
+	public static float F41 = 77;//
+	public static float F42 = 149;//
+	public static float F43 = 221;//
 	//
 	public static float F6S = 40;//6-row field width
 	public static float F60 = 5;
