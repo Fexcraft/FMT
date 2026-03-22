@@ -30,9 +30,7 @@ public class KeyCompound {
 	public static final String FORMAT = "2.0";
 	
 	public static void process(long window, int key, int scancode, int action, int mods){
-		if(Settings.TESTING.value){
-			if(Element.isSelectedAField() && ((Field)Element.SELECTED).onInput(key, scancode, action, mods)) return;
-		}
+		if(Element.isSelectedAField() && ((Field)Element.SELECTED).onInput(key, scancode, action, mods)) return;
 		for(KeyFunction function : keys) if(function.id == key) function.run.run(action);
 	}
 	
