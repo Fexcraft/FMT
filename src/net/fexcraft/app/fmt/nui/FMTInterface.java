@@ -114,6 +114,11 @@ public class FMTInterface extends Element {
 		statusbar.text("FPS: " + FMT.timer.getFPS());
 	}
 
+	public void click(double x, double y){
+		Element elm = getElmAt(x, y);
+		if(elm != null) elm.click((int)x, (int)y);
+	}
+
 	@Override
 	public Element recompile(){
 		//
