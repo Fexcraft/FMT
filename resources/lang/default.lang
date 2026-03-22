@@ -140,6 +140,18 @@ editor.polygon.general.texture.reset_hint=Sets the UV value to the default -1, -
 editor.polygon.general.box_faces=Box Face Toggle
 editor.polygon.shapebox=Shapebox Corners
 editor.polygon.shapebox.corner=Corner %s
+editor.polygon.cylinder=Cylinder Attributes
+editor.polygon.cylinder.radius_outer=Outer-radius
+editor.polygon.cylinder.radius_inner=Inner-radius
+editor.polygon.cylinder.length=Length
+editor.polygon.cylinder.direction=Direction
+editor.polygon.cylinder.segments=Segments / Limit / Seg.Rot.
+editor.polygon.cylinder.base_scale=Base Scale
+editor.polygon.cylinder.top_scale=Top Scale
+editor.polygon.cylinder.top_offset=Top Offset
+editor.polygon.cylinder.top_rotation=Top Rotation
+editor.polygon.cylinder.radial=Radial Tex / Seg. UV-(W/H)
+editor.polygon.cylinder.faces=Faces Toggle
 
 # Editor
 editor.add_component=Add Editor Component
