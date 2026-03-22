@@ -42,6 +42,7 @@ public class DropList extends Element {
 			}));
 		add(drop = new Element().color(col_bd).border(col_85).pos(0, FS));
 		drop.hide();
+		onscroll(si -> change_selection(si.sy() < 0 ? 1 : -1));
 	}
 
 	public void drop_hide_clear(){
