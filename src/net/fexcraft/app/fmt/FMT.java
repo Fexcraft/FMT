@@ -1,17 +1,6 @@
 package net.fexcraft.app.fmt;
 
-import com.spinyowl.legui.component.Frame;
 import com.spinyowl.legui.component.Label;
-import com.spinyowl.legui.style.color.ColorConstants;
-import com.spinyowl.legui.style.font.FontRegistry;
-import com.spinyowl.legui.system.context.CallbackKeeper;
-import com.spinyowl.legui.system.context.Context;
-import com.spinyowl.legui.system.context.DefaultCallbackKeeper;
-import com.spinyowl.legui.system.handler.processor.SystemEventProcessor;
-import com.spinyowl.legui.system.handler.processor.SystemEventProcessorImpl;
-import com.spinyowl.legui.system.renderer.Renderer;
-import com.spinyowl.legui.system.renderer.RendererProvider;
-import com.spinyowl.legui.system.renderer.nvg.NvgRenderer;
 import net.fexcraft.app.fmt.animation.Animation;
 import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.env.PackDevEnv;
@@ -26,12 +15,6 @@ import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.texture.TexturePainter;
 import net.fexcraft.app.fmt.texture.TextureUpdate;
-import net.fexcraft.app.fmt.oui.Editor;
-import net.fexcraft.app.fmt.oui.Toolbar;
-import net.fexcraft.app.fmt.oui.ToolbarMenu;
-import net.fexcraft.app.fmt.oui.UVViewer;
-import net.fexcraft.app.fmt.oui.fields.Field;
-import net.fexcraft.app.fmt.oui.trees.PolygonTree;
 import net.fexcraft.app.fmt.utils.*;
 import net.fexcraft.app.fmt.workspace.Workspace;
 import net.fexcraft.app.json.JsonHandler;
@@ -101,31 +84,28 @@ public class FMT {
 	public static Label fps;
 	public static Label poly;
 	public static Label info;
-	public static Label bar;
 	public static Label img_line0;
 	public static Label img_line1;
-	public static long bar_timer;
 	//
-	@SuppressWarnings("unused") private GLFWErrorCallback errorCallback;
+	private GLFWErrorCallback errorCallback;
+	private GLFWKeyCallback keyCallback;
+	private GLFWCursorPosCallback cursorCallback;
+	private GLFWMouseButtonCallback mouseCallback;
+	private GLFWWindowCloseCallback closeCallback;
+	private GLFWFramebufferSizeCallback framebufferCallback;
+	private GLFWScrollCallback scrollCallback;
 	public long window;
 	//
 	public static float[] background;
 	public static FMTInterface UI;
 	//
-	public static Frame FRAME, IMG_FRAME;
-	public static Context CONTEXT;
-	public static Renderer RENDERER;
-	public static Toolbar TOOLBAR;
 	public static Model MODEL;
-	public static Field SELFIELD;
 	public static Workspace WORKSPACE;
 	//
 	static{
 		GLO.SUPPLIER = () -> new GLObject();
 	}
 	public static ConcurrentLinkedQueue<Runnable> RUN_QUEUE = new ConcurrentLinkedQueue<>();
-
-	private SystemEventProcessor sys_event_processor;
 
 	public static void main(String... args) throws Exception {
 		try{
@@ -189,73 +169,42 @@ public class FMT {
 		//
 		CAM = new GGR();
 		Settings.applyTheme();
-		FRAME = new Frame(WIDTH, HEIGHT);
-		FRAME.getContainer().add(TOOLBAR = new Toolbar());
-		Editor.loadEditors();
-		FRAME.getContainer().add(pos = new Label("test", 0, 32, 200, 20));
-		FRAME.getContainer().add(rot = new Label("test", 0, 54, 200, 20));
-		FRAME.getContainer().add(fps = new Label("test", 0, 76, 200, 20));
-		FRAME.getContainer().add(poly = new Label("test", 0, 98, 200, 20));
-		FRAME.getContainer().add(info = new Label("test", 0, 120, 200, 20));
-		FRAME.getContainer().add(bar = new Label("test", 0, 0, 500, 25));
-		bar.getStyle().setTextColor(rgba(Settings.BOTTOM_INFO_BAR_COLOR.value));
-		bar.getStyle().setFontSize(bar.getSize().y);
-		FRAME.getComponentLayer().setFocusable(false);
-		sys_event_processor = new SystemEventProcessorImpl();
-		CONTEXT = new Context(window, sys_event_processor);
-		//
-		IMG_FRAME = new Frame(WIDTH, HEIGHT);
-		IMG_FRAME.getContainer().add(img_line0 = new Label("", 20, 20, 500, 20));
-		img_line0.getStyle().getBackground().setColor(ColorConstants.transparent());
-		img_line0.getStyle().setFont(FontRegistry.ROBOTO_BOLD);
-		IMG_FRAME.getContainer().add(img_line1 = new Label("", 20, 40, 500, 20));
-		img_line1.getStyle().getBackground().setColor(ColorConstants.transparent());
-		img_line1.getStyle().setFont(FontRegistry.ROBOTO_BOLD);
-		//
-		CallbackKeeper keeper = new DefaultCallbackKeeper();
-		CallbackKeeper.registerCallbacks(window, keeper);
-		keeper.getChainKeyCallback().add(new GLFWKeyCallback(){
+		glfwSetKeyCallback(window, keyCallback = new GLFWKeyCallback(){
 			@Override
 			public void invoke(long window, int key, int scancode, int action, int mods){
-				KeyCompound.process(window, key, scancode, action, mods);
+			KeyCompound.process(window, key, scancode, action, mods);
 			}
 		});
-		keeper.getChainCursorPosCallback().add(new GLFWCursorPosCallback(){
+		glfwSetCursorPosCallback(window, cursorCallback = new GLFWCursorPosCallback(){
 			@Override
 			public void invoke(long window, double xpos, double ypos){
-				CAM.cursorPosCallback(window, xpos, ypos);
+			CAM.cursorPosCallback(window, xpos, ypos);
 			}
 		});
-		keeper.getChainMouseButtonCallback().add(new GLFWMouseButtonCallback(){
+		glfwSetMouseButtonCallback(window, mouseCallback = new GLFWMouseButtonCallback(){
 			@Override
 			public void invoke(long window, int button, int action, int mods){
-				CAM.mouseCallback(window, button, action, mods);
+			CAM.mouseCallback(window, button, action, mods);
 			}
 		});
-		keeper.getChainWindowCloseCallback().add(new GLFWWindowCloseCallback(){
+		glfwSetWindowCloseCallback(window, closeCallback = new GLFWWindowCloseCallback(){
 			@Override
 			public void invoke(long window){
 				//
 			}
 		});
-		keeper.getChainFramebufferSizeCallback().add(new GLFWFramebufferSizeCallback(){
+		glfwSetFramebufferSizeCallback(window, framebufferCallback = new GLFWFramebufferSizeCallback(){
 			@Override
 			public void invoke(long window, int width, int height){
-				CONTEXT.updateGlfwWindow();
-				resize();
+			resize();
 			}
 		});
-		keeper.getChainScrollCallback().add(new GLFWScrollCallback(){
+		glfwSetScrollCallback(window, scrollCallback = new GLFWScrollCallback(){
 			@Override
 			public void invoke(long window, double xoffset, double yoffset){
-				if(SELFIELD == null) CAM.scrollCallback(window, xoffset, yoffset);
-				else SELFIELD.scroll(yoffset);
+			CAM.scrollCallback(window, xoffset, yoffset);
 			}
 		});
-		SystemEventProcessor.addDefaultCallbacks(keeper, sys_event_processor);
-		RendererProvider.getInstance().addComponentRenderer(UVViewer.UvElm.class, new UVViewer.UvElmRenderer());
-		RENDERER = new NvgRenderer();
-		RENDERER.initialize();
 		TextureManager.load();
 		FontRenderer.init();
 		UI = new FMTInterface();
@@ -286,10 +235,8 @@ public class FMT {
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
 		//
-		CONTEXT.updateGlfwWindow();
 		resize();
 		while(!glfwWindowShouldClose(window)){
-			FRAME.getContainer().setSize(WIDTH, HEIGHT);
 			CAM.pollInput(accumulator += (delta = timer.getDelta()));
 			//accumulator += (delta = timer.getDelta());
 			while(accumulator >= interval){
@@ -298,13 +245,12 @@ public class FMT {
 				CAM.update();
 				if(Settings.ANIMATE.value) FMT.MODEL.updateAnimations();
 				UI.update0();
-				ToolbarMenu.checkHide();
 				timer.updateUPS();
 				accumulator -= interval;
 				//Trees.updateCounters();
-				fps.getTextState().setText(timer.getFPS() + "");
-				info.getTextState().setText(SELFIELD == null ? "none" : SELFIELD.polyval() == null ? SELFIELD.setting() == null ? "other" : "setting:" + SELFIELD.setting().id : SELFIELD.polyval().toString());
-				poly.getTextState().setText(MODEL.selected().isEmpty() ? "none" : MODEL.first_selected().name());
+				//fps.getTextState().setText(timer.getFPS() + "");
+				//info.getTextState().setText(SELFIELD == null ? "none" : SELFIELD.polyval() == null ? SELFIELD.setting() == null ? "other" : "setting:" + SELFIELD.setting().id : SELFIELD.polyval().toString());
+				//poly.getTextState().setText(MODEL.selected().isEmpty() ? "none" : MODEL.first_selected().name());
 			}
 			alpha = accumulator / interval;
 			render(vao, alpha);
@@ -328,30 +274,32 @@ public class FMT {
 		SessionHandler.save();
 		PackDevEnv.save();
 		//TODO other saves
-		RENDERER.destroy();
 		glfwDestroyWindow(window);
 		glfwTerminate();
 		System.exit(EXIT_CODE);
 	}
 
 	private void resize(){
-		int width = (int)(CONTEXT.getFramebufferSize().x * (1f / CONTEXT.getScale().x));
-		int height = (int)(CONTEXT.getFramebufferSize().y * (1f / CONTEXT.getScale().y));
-		WIDTH = CONTEXT.getFramebufferSize().x;
-		HEIGHT = CONTEXT.getFramebufferSize().y;
+		int[] wa = { 0 }, ha = { 0 };
+		glfwGetFramebufferSize(window, wa, ha);
+		int width = wa[0];
+		int height = ha[0];
+		WIDTH = width;
+		HEIGHT = height;
 		SCALED_WIDTH = WIDTH / Settings.UI_SCALE.value;
 		SCALED_HEIGHT = HEIGHT / Settings.UI_SCALE.value;
-		log("Resizing Window to " + width + "/" + height + " (" + WIDTH + "/" + HEIGHT + " scaled at " + (1f / CONTEXT.getScale().x) + "/" + (1f / CONTEXT.getScale().y) + ").");
+		log("Resizing Window to " + width + "/" + height + " (" + WIDTH + "/" + HEIGHT + " scaled at " + (1f / Settings.UI_SCALE.value) + ").");
 		HEIGHT = height;
-		TOOLBAR.setSize(WIDTH = width, TOOLBAR.getSize().y);
-		Editor.EDITORS.forEach(editor -> editor.align());
-		ToolbarMenu.MENUS.forEach((key, menu) -> menu.layer.hide());
+		//TOOLBAR.setSize(WIDTH = width, TOOLBAR.getSize().y);
+		//Editor.EDITORS.forEach(editor -> editor.align());
+		//ToolbarMenu.MENUS.forEach((key, menu) -> menu.layer.hide());
 		Picker.resetBuffer(true);
-		if(UI != null) UI.onResize();
+		if(UI != null) UI.resize();
 	}
 
 	private void adjustLabels(){
-		int xoff = Editor.VISIBLE_EDITOR == null ? 5 : 320;
+		return;//TODO
+		/*int xoff = Editor.VISIBLE_EDITOR == null ? 5 : 320;
 		int yoff = 1;
 		pos.setPosition(xoff, HEIGHT - yoff++ * 22);
 		rot.setPosition(xoff, HEIGHT - yoff++ * 22);
@@ -367,13 +315,12 @@ public class FMT {
 		else{
 			bar.setPosition((WIDTH / 2) - (FontSizeUtil.getWidth(bar.getTextState().getText()) / 2), HEIGHT - bar.getSize().y);
 		}
-		PolygonTree.polygons.getTextState().setText("Polygons: " + FMT.MODEL.totals());
+		PolygonTree.polygons.getTextState().setText("Polygons: " + FMT.MODEL.totals());*/
 	}
 
 	private void render(int vao, float alpha){
 		//glClearColor(0.5f, 0.5f, 0.5f, 0.01f);
 		glViewport(0, 0, WIDTH, HEIGHT);
-		CONTEXT.updateGlfwWindow();
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
