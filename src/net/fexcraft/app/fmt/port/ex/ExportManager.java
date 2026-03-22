@@ -93,7 +93,7 @@ public class ExportManager {
 			}
 			else showGroupSelectionDialog(exporter);
 		}));
-		dialog.show(FMT.FRAME);
+		//dialog.show(FMT.FRAME);
 	}
 
 	private static void showGroupSelectionDialog(Exporter exporter){
@@ -106,7 +106,7 @@ public class ExportManager {
 			dialog.close();
 			showFileChooserDialog(exporter, panel.getSelectedGroups());
 		}));
-		dialog.show(FMT.FRAME);
+		//dialog.show(FMT.FRAME);
 	}
 
 	private static void showFileChooserDialog(Exporter exporter, List<Group> groups){
