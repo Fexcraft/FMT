@@ -146,6 +146,12 @@ public class Field extends Element {
 		return this;
 	}
 
+	public Element deg_range(){
+		min_val = -180;
+		max_val = 180;
+		return this;
+	}
+
 	public float parse_float(){
 		String str = text.text().replaceAll("[^0-9\\.\\-]", "");
 		if(str.isEmpty()) str = "0";
