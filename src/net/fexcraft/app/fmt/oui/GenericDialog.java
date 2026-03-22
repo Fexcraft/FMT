@@ -52,7 +52,7 @@ public class GenericDialog {
             });
             dialog.getContainer().add(button1);
         }
-        dialog.show(FMT.FRAME);
+        //dialog.show(FMT.FRAME);
         return dialog;
 	}
 	
