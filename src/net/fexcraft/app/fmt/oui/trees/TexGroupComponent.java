@@ -98,7 +98,7 @@ public class TexGroupComponent extends EditorComponent {
         });
         dialog.getContainer().add(button1);
         //
-        dialog.show(FMT.FRAME);
+        //dialog.show(FMT.FRAME);
 	}
 
 	private void generate(){
@@ -161,7 +161,7 @@ public class TexGroupComponent extends EditorComponent {
 			}
         });
         dialog.getContainer().add(button0);
-		dialog.show(FMT.FRAME);
+		//dialog.show(FMT.FRAME);
 	}
 
 	private int genFullheight(){
