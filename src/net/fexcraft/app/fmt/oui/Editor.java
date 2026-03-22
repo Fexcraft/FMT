@@ -109,7 +109,7 @@ public class Editor extends Component {
 		dialog.getContainer().add(button);
 		dialog.setResizable(false);
 		dialog.getTitleTextState().getTextWidth();
-		dialog.show(FMT.FRAME);
+		//dialog.show(FMT.FRAME);
 	}
 
 	public void align(){
@@ -221,8 +221,8 @@ public class Editor extends Component {
 		
 	    @Override
 	    public void process(@SuppressWarnings("rawtypes") ScrollEvent event){
-	    	if(FMT.SELFIELD != null || FMT.FRAME.getLayers().size() > 0) return;
-	    	else super.process(event);
+	    	/*if(FMT.SELFIELD != null || FMT.FRAME.getLayers().size() > 0) return;
+	    	else*/ super.process(event);
 	    }
 	    
 	}
@@ -283,10 +283,10 @@ public class Editor extends Component {
 		}
 		//
 		for(EditorPanel panel : EditorPanel.PANELS){
-			FMT.FRAME.getContainer().add(panel);
+			//FMT.FRAME.getContainer().add(panel);
 		}
 		for(Editor editor : Editor.EDITORS){
-			FMT.FRAME.getContainer().add(editor);
+			//FMT.FRAME.getContainer().add(editor);
 			editor.hide();
 		}
 	}
