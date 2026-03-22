@@ -150,12 +150,12 @@ public class KeyCompound {
 
 	private static void processDialog(boolean confirm){
 		Dialog.DialogLayer dia = null;
-		for(Layer layer : FMT.FRAME.getLayers()){
+		/*for(Layer layer : FMT.FRAME.getLayers()){
 			if(layer instanceof Dialog.DialogLayer){
 				dia = (Dialog.DialogLayer)layer;
 				break;
 			}
-		}
+		}*/
 		if(dia == null) return;
 		Dialog dialog = null;
 		for(Component comp : dia.getChildComponents()){
