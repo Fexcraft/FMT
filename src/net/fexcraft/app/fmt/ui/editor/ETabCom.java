@@ -9,7 +9,7 @@ import static net.fexcraft.app.fmt.ui.FMTInterface.*;
  */
 public class ETabCom extends Element {
 
-	private boolean minimized = false;
+	protected boolean minimized = false;
 	private int fullheight;
 
 	@Override
@@ -37,8 +37,14 @@ public class ETabCom extends Element {
 		return this;
 	}
 
+	public void hideFully(){
+		visible = false;
+		hide();
+	}
+
 	@Override
 	public Element show(){
+		visible = true;
 		minimized = false;
 		size(EDITOR_CONTENT, fullheight);
 		for(int i = 1; i < elements.size(); i++){
