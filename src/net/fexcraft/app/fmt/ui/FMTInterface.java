@@ -9,6 +9,7 @@ import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.utils.Picker;
 import net.fexcraft.app.fmt.utils.SaveHandler;
 import net.fexcraft.lib.common.math.RGB;
+import net.fexcraft.lib.common.math.Time;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -17,8 +18,8 @@ public class FMTInterface extends Element {
 
 	public static final int TOOLBAR_HEIGHT = 40;
 	public static final int TOOLBAR_WIDTH = 300;
-	public static final int EDITOR_WIDTH = 300;
-	public static final int EDITOR_CONTENT = EDITOR_WIDTH - 10;
+	public static final int EDITOR_WIDTH = 320;
+	public static final int EDITOR_CONTENT = EDITOR_WIDTH - 30;
 	public static RGB col_75 = new RGB(0x757575);
 	public static RGB col_85 = new RGB(0x858585);
 	public static RGB col_bd = new RGB(0xbdbdbd);
@@ -26,6 +27,8 @@ public class FMTInterface extends Element {
 	public static Element toolbar;
 	public static Element statusbar;
 	public static EditorRoot editor;
+	private static Long bar_timer;
+	private static String bar_text;
 	private UpdateHandler.UpdateCompound updcom = new UpdateHandler.UpdateCompound();
 
 	public FMTInterface(){
@@ -41,6 +44,8 @@ public class FMTInterface extends Element {
 			.pos(TOOLBAR_WIDTH, 0).color(col_cd)
 			.text("...")
 		);
+		toolbar.z += 100;
+		toolbar.recompile();
 		int iinc = 37;
 		int buff = -iinc + 4;
 		int yo = 4;
@@ -111,7 +116,11 @@ public class FMTInterface extends Element {
 
 	@Override
 	public void update(){
-		statusbar.text("FPS: " + FMT.timer.getFPS());
+		if(bar_timer != null && Time.getDate() > bar_timer){
+			bar_timer = null;
+			bar_text = null;
+		}
+		statusbar.text("FPS: " + FMT.timer.getFPS() + (bar_text == null ? "" : " | " + bar_text));
 	}
 
 	public void click(double x, double y){
@@ -130,9 +139,9 @@ public class FMTInterface extends Element {
 		//
 	}
 
-	@Override
-	public void onResize(){
-		for(Element elm : elements) elm.onResize();
+	public static void bar(String string, int secs){
+		bar_timer = Time.getDate() + Time.SEC_MS * secs;
+		bar_text = string;
 	}
 
 }
