@@ -15,6 +15,7 @@ import static net.fexcraft.app.fmt.ui.editor.EditorTab.FS;
 public class BoolElm extends Element {
 
 	private static String[] tex40 = new String[]{ "ui/bool_40_false", "ui/bool_40_true" };
+	private static int COL_TRUE = 0x38baf3, COL_FALSE = 0xf5a723;
 	private Supplier<Boolean> supplier;
 	private PolygonValue polyval;
 	private String[] texar;
@@ -25,30 +26,20 @@ public class BoolElm extends Element {
 		if(w == 40){
 			texar = tex40;
 		}
+		else{
+			text("");
+			text_centered(true);
+		}
 	}
 
 	public BoolElm set(PolygonValue val, UpdateCompound updcom){
 		polyval = val;
 		updcom.add(UpdateEvent.PolygonValueEvent.class, event -> {
 			if(!event.first()) return;
-			if(event.value().equals(val)){
-				texture(texar[event.polygon().getValue(val) > 0 ? 1 : 0]);
-			}
+			updtexcol();
 		});
-		updcom.add(UpdateEvent.PolygonSelected.class, event -> {
-			if(event.prevselected() < 0) return;
-			else if(event.selected() == 1 || (event.prevselected() == 0 && event.selected() == 0)){
-				texture(texar[FMT.MODEL.first_selected().getValue(val) > 0 ? 1 : 0]);
-			}
-			else if(event.selected() == 0) texture(texar[0]);
-		});
-		updcom.add(UpdateEvent.GroupSelected.class, event -> {
-			if(event.prevselected() < 0) return;
-			else if(event.selected() == 1 || (event.prevselected() == 0 && event.selected() == 0 && FMT.MODEL.first_selected() != null)){
-				texture(texar[FMT.MODEL.first_selected().getValue(val) > 0 ? 1 : 0]);
-			}
-			else if(event.selected() == 0) texture(texar[0]);
-		});
+		updcom.add(UpdateEvent.PolygonSelected.class, event -> updtexcol());
+		updcom.add(UpdateEvent.GroupSelected.class, event -> updtexcol());
 		onclick(ci -> toggleBool(null));
 		onscroll(si -> toggleBool(si.sy() > 0));
 		return this;
@@ -56,7 +47,22 @@ public class BoolElm extends Element {
 
 	@Override
 	public void init(Object... args){
-		texture(texar[bool() ? 1 : 0]);
+		updtexcol();
+	}
+
+	public void updtexcol(){
+		updtexcol(null);
+	}
+
+	public void updtexcol(Boolean b){
+		b = b == null ? bool() : b;
+		if(texar != null){
+			texture(texar[b ? 1 : 0]);
+		}
+		else{
+			color(b ? COL_TRUE : COL_FALSE);
+			text(b);
+		}
 	}
 
 	public boolean bool(){
@@ -72,7 +78,7 @@ public class BoolElm extends Element {
 
 	private void toggleBool(Boolean input){
 		int bool = (input == null ? !bool() : input) ? 1 : 0;
-		texture(texar[bool]);
+		updtexcol(bool > 0);
 		FMT.MODEL.updateValue(polyval, (Field)null, bool, true);
 	}
 
