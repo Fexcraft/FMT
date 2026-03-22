@@ -192,9 +192,17 @@ public class Element {
 	}
 
 	public Element border(RGB color){
-		border = color;
+		return border(color == null ? -1 : color.packed);
+	}
+
+	public Element border(int color){
+		if(color < 0) border = null;
+		else if(border == null){
+			border = new RGB();
+			border.packed = color;
+		}
 		if(border != null){
-			hedron.glObj.linecolor = color.toFloatArray();
+			hedron.glObj.linecolor = border.toFloatArray();
 		}
 		return this;
 	}
@@ -237,6 +245,10 @@ public class Element {
 
 	public Element translate(String ntext){
 		return text(Translator.translate(ntext));
+	}
+
+	public Element translate(String ntext, Object... format){
+		return text(Translator.format(ntext, format));
 	}
 
 	public void postext(){
