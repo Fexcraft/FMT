@@ -32,50 +32,6 @@ public class PolygonEditor extends Editor {
 		addComponent(MARKER = new MarkerComponent());
 		//BOXOFF.minimize(true);
 		VERTOFF.minimize(true);
-		UpdateCompound com = new UpdateCompound();
-		if(Settings.AUTO_SHOW_COMPONENTS.value){
-			com.add(VertexSelected.class, con -> {
-				VERTOFF.minimize(con.selected() <= 0);
-			});
-			com.add(PolygonSelected.class, con -> {
-				BOXON.minimize(true);
-				BOXOFF.minimize(true);
-				SHAPEBOX.minimize(true);
-				CYLINDER.minimize(true);
-				CURVE.minimize(true);
-				MARKER.minimize(true);
-				ArrayList<Polygon> polys = FMT.MODEL.selected();
-				boolean curv = true;
-				for(Polygon poly : polys){
-					if(!poly.getShape().isCurve()) curv = false;
-					if(!curv){
-						if(poly.getShape().isRectagular()){
-							BOXON.minimize(false);
-						}
-						else{
-							BOXOFF.minimize(false);
-						}
-					}
-					if(poly.getShape().isShapebox()){
-						SHAPEBOX.minimize(false);
-					}
-					if(poly.getShape().isCylinder()){
-						CYLINDER.minimize(false);
-					}
-					if(poly.getShape().isCurve()){
-						CURVE.minimize(false);
-					}
-					if(poly.getShape().isMarker() || poly.getShape().isBoundingBox()){
-						MARKER.minimize(false);
-					}
-				}
-				if(!curv){
-					if(!BOXON.minimized() && !BOXOFF.minimized()) BOXOFF.minimize(true);
-					if(BOXON.minimized() && BOXOFF.minimized()) BOXOFF.minimize(false);
-				}
-			});
-			UpdateHandler.register(com);
-		}
 	}
 
 	public static boolean shrink(EditorComponent com){
