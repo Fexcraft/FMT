@@ -100,7 +100,7 @@ public class Settings {
 	public static Setting<Boolean> LOG_UPDATES = new Setting<>("log_updates", false, GENERAL);
 	public static Setting<Boolean> HIDE_MENU_AFTER_POLYGON = new Setting<>("hide_menu_after_polygon", true, GENERAL);
 	public static Setting<Boolean> NUMBERFIELD_BUTTONS = new Setting<>("numberfield_buttons", false, GENERAL);
-	public static Setting<Boolean> AUTO_SHOW_COMPONENTS = new Setting<>("auto_show_components", true, GENERAL);
+	//public static Setting<Boolean> AUTO_SHOW_COMPONENTS = new Setting<>("auto_show_components", true, GENERAL);
 	public static Setting<Integer> PAINTER_CHANNELS = new Setting<>("painter_channels", 2, GENERAL);
 	//public static Setting<Boolean> TESTING = new Setting<>("testing", false, GENERAL);
 	//Interface
