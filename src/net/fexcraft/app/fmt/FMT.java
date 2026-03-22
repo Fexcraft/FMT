@@ -18,6 +18,7 @@ import com.spinyowl.legui.system.renderer.nvg.NvgRenderer;
 import net.fexcraft.app.fmt.animation.Animation;
 import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.env.PackDevEnv;
+import net.fexcraft.app.fmt.nui.Element;
 import net.fexcraft.app.fmt.nui.FMTInterface;
 import net.fexcraft.app.fmt.nui.FontRenderer;
 import net.fexcraft.app.fmt.polygon.Arrows;
@@ -260,10 +261,8 @@ public class FMT {
 		RENDERER = new NvgRenderer();
 		RENDERER.initialize();
 		TextureManager.load();
-		if(Settings.TESTING.value){
-			FontRenderer.init();
-			UI = new FMTInterface();
-		}
+		FontRenderer.init();
+		UI = new FMTInterface();
 		Animation.init();
 		FMT.WORKSPACE = new Workspace();
 		FMT.updateTitle();
@@ -302,9 +301,7 @@ public class FMT {
 				//TODO "logic"
 				CAM.update();
 				if(Settings.ANIMATE.value) FMT.MODEL.updateAnimations();
-				if(Settings.TESTING.value){
-					UI.update0();
-				}
+				UI.update0();
 				ToolbarMenu.checkHide();
 				timer.updateUPS();
 				accumulator -= interval;
@@ -318,17 +315,17 @@ public class FMT {
 			//
 			adjustLabels();
 			ImageHandler.updateText();
-			if(!Settings.TESTING.value) RENDERER.render(ImageHandler.shouldHide() ? IMG_FRAME : FRAME, CONTEXT);
+			//if(!Settings.TESTING.value) RENDERER.render(ImageHandler.shouldHide() ? IMG_FRAME : FRAME, CONTEXT);
 			timer.updateFPS();
 			glfwPollEvents();
 			glfwSwapBuffers(window);
-			if(!Settings.TESTING.value){
+			/*if(!Settings.TESTING.value){
 				sys_event_processor.processEvents(FRAME, CONTEXT);
 				EventProcessorProvider.getInstance().processEvents();
 				LayoutManager.getInstance().layout(FRAME);
 				AnimatorProvider.getAnimator().runAnimations();
 				ImageHandler.processTask();
-			}
+			}*/
 			timer.update();
 		}
 		Settings.save();
@@ -416,27 +413,28 @@ public class FMT {
 			Picker.process();
 			Picker.reset();
 		}
-		if(Settings.TESTING.value){
+		//if(Settings.TESTING.value){
 			PolyRenderer.SCALE = Settings.UI_SCALE.value;
-			if(Picker.TASK == Picker.PickTask.NONE){
+			/*if(Picker.TASK == Picker.PickTask.NONE){
 				Picker.pick(Picker.PickType.UI, Picker.PickTask.HOVER, true);
-			}
+			}*/
 			CAM.ortho(1);
-			glClearColor(1, 1, 1, 1);
+			/*glClearColor(1, 1, 1, 1);
 		    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			PolyRenderer.mode(DrawMode.PICKER);
 			UI.render(Picker.TASK);
-			Picker.process();
+			Picker.process();*/
+			GGR.updateHoveredElement();
 			glClearColor(background[0], background[1], background[2], 1);
 	    	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	    	PolyRenderer.mode(DrawMode.UI);
 			UI.render(null);
 			PolyRenderer.SCALE = 1f;
-		}
-		else{
-			glClearColor(background[0], background[1], background[2], 1);
-	    	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		}
+		//}
+		//else{
+		//	glClearColor(background[0], background[1], background[2], 1);
+	    //	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		//}
 		CAM.apply();
 	    PolyRenderer.mode(DrawMode.TEXTURED);
 		PolyRenderer.updateLightState();
