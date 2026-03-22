@@ -96,7 +96,7 @@ public class AutoUVPositioner {
 		dialog.getContainer().add(label1);
 		dialog.getContainer().add(texture);
 		dialog.getContainer().add(button);
-		dialog.show(FMT.FRAME);
+		//dialog.show(FMT.FRAME);
 	}
 
 	public static void runAutoPos(){
@@ -142,7 +142,7 @@ public class AutoUVPositioner {
 		dialog.getContainer().add(checkbox1);
 		dialog.getContainer().add(checkbox2);
 		dialog.getContainer().add(button);
-		dialog.show(FMT.FRAME);
+		//dialog.show(FMT.FRAME);
 		return;
 	}
 
@@ -395,7 +395,7 @@ public class AutoUVPositioner {
 			progressbar = new ProgressBar(10, 40, 380, 10);
 			progressbar.setValue(0);
 			dialog.getContainer().add(progressbar);
-			dialog.show(FMT.FRAME);
+			//dialog.show(FMT.FRAME);
 		}
 
 		public void close(){
