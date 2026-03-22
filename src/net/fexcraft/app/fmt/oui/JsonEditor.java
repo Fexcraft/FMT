@@ -42,12 +42,12 @@ public class JsonEditor extends Widget {
             JsonHandler.print(file, map, JsonHandler.PrintOption.DEFAULT);
         }));
         getContainer().add(new RunButton("dialog.button.close", 590, 420, 100, 24, () -> {
-            FMT.FRAME.getContainer().remove(this);
+            //FMT.FRAME.getContainer().remove(this);
             INSTANCES.remove(this);
         }));
         addWidgetCloseEventListener(lis -> INSTANCES.remove(this));
         resize();
-        FMT.FRAME.getContainer().add(this);
+        //FMT.FRAME.getContainer().add(this);
         INSTANCES.add(this);
         show();
     }
