@@ -29,7 +29,7 @@ public class ShaderManager {
 
 	public static void loadPrograms() throws IOException {
 		GENERAL = loadProgram("general");
-		UI = loadProgram("oui");
+		UI = loadProgram("ui");
 	}
 
 	private static ShaderProgram loadProgram(String id) throws IOException {
