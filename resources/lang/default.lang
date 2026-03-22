@@ -150,7 +150,7 @@ editor.polygon.cylinder.base_scale=Base Scale
 editor.polygon.cylinder.top_scale=Top Scale
 editor.polygon.cylinder.top_offset=Top Offset
 editor.polygon.cylinder.top_rotation=Top Rotation
-editor.polygon.cylinder.radial=Radial Tex / Seg. UV-(W/H)
+editor.polygon.cylinder.radial=Radial Tex / Seg. UV (W/H)
 editor.polygon.cylinder.faces=Faces Toggle
 
 # Editor
