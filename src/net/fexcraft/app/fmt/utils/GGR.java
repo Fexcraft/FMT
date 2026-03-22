@@ -88,8 +88,8 @@ public class GGR {
             new Vector3f(pos).add(dir),
             FMT.MODEL.orient.rect() ? up.mul(-1) : up
         );
-        FMT.pos.getTextState().setText(format(pos.x) + ", " + format(pos.y) + ", " + format(pos.z));
-        FMT.rot.getTextState().setText(format(Math.toDegrees(hor)) + " / " + format(Math.toDegrees(ver)) + " : " + (int)fov);
+        //FMT.pos.getTextState().setText(format(pos.x) + ", " + format(pos.y) + ", " + format(pos.z));
+        //FMT.rot.getTextState().setText(format(Math.toDegrees(hor)) + " / " + format(Math.toDegrees(ver)) + " : " + (int)fov);
         perspective(fov);
         ShaderManager.GENERAL.applyUniforms(prog -> {
 			prog.use();
@@ -253,8 +253,8 @@ public class GGR {
 				if(sel_panel == null){
 					sel_panel = new Panel((float)cx, (float)cy, 100, 100);
 					sel_panel.getStyle().getBackground().setColor(ColorConstants.transparent());
-					sel_panel.getStyle().setBorder(new SimpleLineBorder(FMT.rgba(Settings.SELECTION_LINES.value), 1));
-					FMT.FRAME.getContainer().add(sel_panel);
+					//sel_panel.getStyle().setBorder(new SimpleLineBorder(FMT.rgba(Settings.SELECTION_LINES.value), 1));
+					//FMT.FRAME.getContainer().add(sel_panel);
 				}
 				sel_panel.setPosition((float)(cx < posx ? cx : posx), (float)(cy < posy ? cy : posy));
 				sel_panel.setSize((float)(cx < posx ? posx - cx : cx - posx), (float)(cy < posy ? posy - cy : cy - posy));
@@ -263,22 +263,15 @@ public class GGR {
 		}
 		else{
 			if(sel_panel != null){
-				FMT.FRAME.getContainer().remove(sel_panel);
+				//FMT.FRAME.getContainer().remove(sel_panel);
 				sel_panel = null;
 			}
 		}
 	}
 
 	public static boolean isOverUI(){
-		if(FMT.FRAME.getLayers().size() > 0) return true;
 		if(Element.HOVERED != null || Element.isSelectedAField()) return true;
 		glfwGetCursorPos(FMT.INSTANCE.window, cursor_x, cursor_y);
-		if(cursor_y[0] < FMT.TOOLBAR.getSize().y) return true;
-		if(Editor.VISIBLE_EDITOR != null){
-			if(cursor_x[0] < Editor.WIDTH) return true;
-			if(EditorPanel.isOverPanel(cursor_x[0], cursor_y[0])) return true;
-		}
-		if(Editor.VISIBLE_TREE != null && cursor_x[0] > FMT.WIDTH - Editor.WIDTH) return true;
 		if(WorkspaceViewer.viewer != null && WorkspaceViewer.viewer.getStyle().getDisplay() != Style.DisplayType.NONE && overComponent(WorkspaceViewer.viewer)) return true;
 		if(PackDevEnv.INSTANCE != null && PackDevEnv.INSTANCE.getStyle().getDisplay() != Style.DisplayType.NONE && overComponent(PackDevEnv.INSTANCE)) return true;
 		for(FVTMConfigEditor editor : FVTMConfigEditor.INSTANCES){
@@ -353,7 +346,7 @@ public class GGR {
 	}
 
 	public void processCameraInput(float delta){
-		if(FMT.CONTEXT.getFocusedGui() != null){
+		if(Element.HOVERED != null){
 			w_down = s_down = d_down = a_down = r_down = f_down = space_down = shift_down = false;
 		}
         boolean front = w_down;
