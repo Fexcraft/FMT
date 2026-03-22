@@ -1,6 +1,6 @@
 package net.fexcraft.app.fmt.env;
 
-import net.fexcraft.app.fmt.ui.Icon;
+import net.fexcraft.app.fmt.oui.Icon;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
 

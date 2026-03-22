@@ -1,0 +1,92 @@
+package net.fexcraft.app.fmt.oui.editors;
+
+import com.spinyowl.legui.component.Component;
+import net.fexcraft.app.fmt.settings.Settings;
+import net.fexcraft.app.fmt.oui.Editor;
+import net.fexcraft.app.fmt.oui.Icon;
+import net.fexcraft.app.fmt.oui.ToolbarMenu;
+import net.fexcraft.app.fmt.oui.UIUtils;
+import net.fexcraft.app.fmt.oui.panels.*;
+import net.fexcraft.app.fmt.update.UpdateHandler;
+import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
+
+import java.util.ArrayList;
+
+import static net.fexcraft.app.fmt.utils.Translator.translate;
+
+/**
+ * @author Ferdinand Calo' (FEX___96)
+ */
+public class EditorPanel extends Component {
+
+	public static ArrayList<EditorPanel> PANELS = new ArrayList<>();
+	protected static int I_SIZE = 30;
+	//
+	protected String lang_prefix;
+	protected UpdateCompound updcom = new UpdateCompound();
+	protected boolean expanded;
+	protected int ex_x;
+	protected int ex_y;
+
+	public EditorPanel(String id, String icon, String tooltip){
+		lang_prefix = "editor.component." + id;
+		setSize(I_SIZE, I_SIZE);
+		Settings.applyComponentTheme(this);
+		add(new Icon(0, I_SIZE, 0, 0, 0, "./resources/textures/icons/panels/" + icon + ".png", () -> expand())
+			.addTooltip(translate(tooltip)));
+		UpdateHandler.register(updcom);
+	}
+
+	public void setPos(int idx){
+		setPosition(Editor.WIDTH, ToolbarMenu.HEIGHT + idx * 30);
+	}
+
+	public static void load(){
+		PANELS.add(new EditorsPanel());
+		PANELS.add(new MultiplierPanel());
+		PANELS.add(new QuickAddPanel());
+		PANELS.add(new FlipToolsPanel());
+		PANELS.add(new MarkerPanel());
+		PANELS.add(new SelectorPanel());
+	}
+
+	private void expand(){
+		expand(!expanded);
+		//for(EditorPanel panel : PANELS) if(panel != this) panel.expand(false);
+	}
+
+	private void expand(boolean bool){
+		expanded = bool;
+		if(bool){
+			setSize(ex_x, ex_y);
+		}
+		else{
+			setSize(I_SIZE, I_SIZE);
+		}
+	}
+
+	public static void hideAll(){
+		for(EditorPanel panel : PANELS) UIUtils.hide(panel);
+	}
+
+	public static void showAll(){
+		for(EditorPanel panel : PANELS) UIUtils.show(panel);
+	}
+
+	public static boolean isOverPanel(double x, double y){
+		for(EditorPanel panel : PANELS){
+			if(panel.expanded){
+				if(x >= panel.getPosition().x && x <= panel.getPosition().x + panel.ex_x
+					&& y >= panel.getPosition().y && y <= panel.getPosition().y + panel.ex_y)
+					return true;
+			}
+			else{
+				if(x >= panel.getPosition().x && x <= panel.getPosition().x + I_SIZE
+					&& y >= panel.getPosition().y && y <= panel.getPosition().y + I_SIZE)
+					return true;
+			}
+		}
+		return false;
+	}
+
+}

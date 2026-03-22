@@ -27,7 +27,7 @@ import net.fexcraft.app.fmt.polygon.uv.UVCoords;
 import net.fexcraft.app.fmt.polygon.uv.UVType;
 import net.fexcraft.app.fmt.texture.Texture;
 import net.fexcraft.app.fmt.texture.TextureManager;
-import net.fexcraft.app.fmt.ui.GenericDialog;
+import net.fexcraft.app.fmt.oui.GenericDialog;
 import net.fexcraft.lib.common.math.RGB;
 
 public class AutoUVPositioner {

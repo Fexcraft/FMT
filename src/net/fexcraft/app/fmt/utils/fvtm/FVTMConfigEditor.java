@@ -7,7 +7,7 @@ import com.spinyowl.legui.component.Component;
 import com.spinyowl.legui.component.event.component.ChangeSizeEvent;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
-import net.fexcraft.app.fmt.ui.fields.RunButton;
+import net.fexcraft.app.fmt.oui.fields.RunButton;
 import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.app.json.JsonHandler;

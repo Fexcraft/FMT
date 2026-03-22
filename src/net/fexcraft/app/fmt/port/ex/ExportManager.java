@@ -13,11 +13,11 @@ import com.spinyowl.legui.component.SelectBox;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.settings.Settings;
-import net.fexcraft.app.fmt.ui.FileChooser;
-import net.fexcraft.app.fmt.ui.GenericDialog;
-import net.fexcraft.app.fmt.ui.GroupSelectionPanel;
-import net.fexcraft.app.fmt.ui.SettingsDialog;
-import net.fexcraft.app.fmt.ui.fields.RunButton;
+import net.fexcraft.app.fmt.oui.FileChooser;
+import net.fexcraft.app.fmt.oui.GenericDialog;
+import net.fexcraft.app.fmt.oui.GroupSelectionPanel;
+import net.fexcraft.app.fmt.oui.SettingsDialog;
+import net.fexcraft.app.fmt.oui.fields.RunButton;
 import net.fexcraft.app.json.JsonMap;
 
 /**

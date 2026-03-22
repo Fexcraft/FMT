@@ -2,7 +2,7 @@ package net.fexcraft.app.fmt.port.ex;
 
 import net.fexcraft.app.fmt.polygon.*;
 import net.fexcraft.app.fmt.settings.Setting;
-import net.fexcraft.app.fmt.ui.FileChooser.FileType;
+import net.fexcraft.app.fmt.oui.FileChooser.FileType;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.M4DW;
 import net.fexcraft.lib.common.math.MV3D;
@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static net.fexcraft.app.fmt.ui.FileChooser.TYPE_BOB;
+import static net.fexcraft.app.fmt.oui.FileChooser.TYPE_BOB;
 import static net.fexcraft.app.fmt.utils.Logging.log;
 
 /**

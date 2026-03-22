@@ -3,12 +3,9 @@ package net.fexcraft.app.fmt.utils;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import com.spinyowl.legui.component.Panel;
-import net.fexcraft.app.fmt.nui.Element;
 import net.fexcraft.app.fmt.polygon.Vertoff;
 import net.fexcraft.app.fmt.polygon.Vertoff.VOKey;
 import net.fexcraft.app.fmt.polygon.uv.Face;

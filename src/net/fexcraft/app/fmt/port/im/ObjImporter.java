@@ -7,18 +7,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.polygon.ObjView;
 import net.fexcraft.app.fmt.settings.Setting;
-import net.fexcraft.app.fmt.ui.FileChooser;
+import net.fexcraft.app.fmt.oui.FileChooser;
 import net.fexcraft.lib.common.math.TexturedPolygon;
 import net.fexcraft.lib.common.utils.ObjParser;
 import net.fexcraft.lib.common.utils.ObjParser.ObjModel;
 
-import static net.fexcraft.app.fmt.ui.FileChooser.TYPE_OBJ;
+import static net.fexcraft.app.fmt.oui.FileChooser.TYPE_OBJ;
 
 public class ObjImporter implements Importer {
 

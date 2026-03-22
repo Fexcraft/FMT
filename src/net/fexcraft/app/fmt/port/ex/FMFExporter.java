@@ -1,7 +1,7 @@
 package net.fexcraft.app.fmt.port.ex;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static net.fexcraft.app.fmt.ui.FileChooser.TYPE_FMF;
+import static net.fexcraft.app.fmt.oui.FileChooser.TYPE_FMF;
 import static net.fexcraft.app.fmt.utils.Logging.log;
 
 import java.io.File;
@@ -25,7 +25,7 @@ import net.fexcraft.app.fmt.polygon.uv.BoxFace;
 import net.fexcraft.app.fmt.polygon.uv.CylFace;
 import net.fexcraft.app.fmt.polygon.uv.UVCoords;
 import net.fexcraft.app.fmt.settings.Setting;
-import net.fexcraft.app.fmt.ui.FileChooser.FileType;
+import net.fexcraft.app.fmt.oui.FileChooser.FileType;
 import net.fexcraft.app.json.JsonMap;
 
 public class FMFExporter implements Exporter {

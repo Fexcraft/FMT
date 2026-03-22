@@ -9,7 +9,7 @@ import static net.fexcraft.app.fmt.utils.Logging.log;
 
 import net.fexcraft.app.fmt.polygon.Vertoff.VOKey;
 import net.fexcraft.app.fmt.polygon.Vertoff.VOType;
-import net.fexcraft.app.fmt.ui.UVViewer;
+import net.fexcraft.app.fmt.oui.UVViewer;
 import net.fexcraft.app.fmt.update.UpdateEvent.PolygonAdded;
 import net.fexcraft.app.fmt.update.UpdateEvent.PolygonRenamed;
 import net.fexcraft.app.json.JsonValue;

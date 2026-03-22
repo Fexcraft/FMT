@@ -1,6 +1,6 @@
 package net.fexcraft.app.fmt.utils.fvtm;
 
-import net.fexcraft.app.fmt.ui.workspace.FvtmPack;
+import net.fexcraft.app.fmt.oui.workspace.FvtmPack;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.app.json.JsonValue;

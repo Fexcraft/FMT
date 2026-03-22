@@ -6,7 +6,7 @@ import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.polygon.Shapebox;
 import net.fexcraft.app.fmt.polygon.Vector3F;
 import net.fexcraft.app.fmt.settings.Setting;
-import net.fexcraft.app.fmt.ui.FileChooser;
+import net.fexcraft.app.fmt.oui.FileChooser;
 
 import java.io.File;
 import java.util.ArrayList;

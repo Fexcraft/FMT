@@ -3,7 +3,7 @@ package net.fexcraft.app.fmt.env;
 import com.spinyowl.legui.component.Component;
 import com.spinyowl.legui.component.Label;
 import com.spinyowl.legui.event.MouseClickEvent;
-import net.fexcraft.app.fmt.ui.Icon;
+import net.fexcraft.app.fmt.oui.Icon;
 import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.app.json.JsonValue;

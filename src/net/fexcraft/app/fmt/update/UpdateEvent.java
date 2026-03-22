@@ -7,7 +7,6 @@ import net.fexcraft.app.fmt.polygon.uv.Face;
 import net.fexcraft.app.fmt.polygon.uv.UVType;
 import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.texture.TexturePainter;
-import net.fexcraft.app.fmt.ui.Editor;
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.utils.Picker.PickTask;
 import net.fexcraft.app.fmt.utils.Picker.PickType;

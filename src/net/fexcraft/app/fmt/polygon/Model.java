@@ -1,6 +1,6 @@
 package net.fexcraft.app.fmt.polygon;
 
-import static net.fexcraft.app.fmt.nui.Field.round;
+import static net.fexcraft.app.fmt.ui.Field.round;
 import static net.fexcraft.app.fmt.update.UpdateHandler.update;
 import static net.fexcraft.app.fmt.settings.Settings.ASK_POLYGON_REMOVAL;
 import static net.fexcraft.app.fmt.utils.Translator.translate;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 import net.fexcraft.app.fmt.animation.Animation;
 import net.fexcraft.app.fmt.texture.TextureManager;
-import net.fexcraft.app.fmt.ui.Editor;
+import net.fexcraft.app.fmt.oui.Editor;
 import net.fexcraft.app.fmt.update.UpdateEvent.*;
 import net.fexcraft.app.fmt.utils.*;
 import net.fexcraft.app.fmt.utils.fvtm.VehAttr;
@@ -45,10 +45,10 @@ import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.polygon.PolyRenderer.DrawMode;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TextureGroup;
-import net.fexcraft.app.fmt.ui.EditorComponent;
-import net.fexcraft.app.fmt.ui.GenericDialog;
-import net.fexcraft.app.fmt.ui.GroupSelectionPanel;
-import net.fexcraft.app.fmt.ui.fields.NumberField;
+import net.fexcraft.app.fmt.oui.EditorComponent;
+import net.fexcraft.app.fmt.oui.GenericDialog;
+import net.fexcraft.app.fmt.oui.GroupSelectionPanel;
+import net.fexcraft.app.fmt.oui.fields.NumberField;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
@@ -355,11 +355,11 @@ public class Model {
 	@Deprecated
 	public void updateValue(PolygonValue value, Object field, float alt, boolean set){}
 
-	public void updateValue(PolygonValue value, net.fexcraft.app.fmt.nui.Field field, float alt){
+	public void updateValue(PolygonValue value, net.fexcraft.app.fmt.ui.Field field, float alt){
 		updateValue(value, field, alt, false);
 	}
 
-	public void updateValue(PolygonValue value, net.fexcraft.app.fmt.nui.Field field, float alt, boolean set){
+	public void updateValue(PolygonValue value, net.fexcraft.app.fmt.ui.Field field, float alt, boolean set){
 		if(selected.isEmpty()){
 			if(field != null) field.clear_text();
 			return;

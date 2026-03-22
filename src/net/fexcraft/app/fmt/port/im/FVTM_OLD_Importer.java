@@ -2,8 +2,7 @@ package net.fexcraft.app.fmt.port.im;
 
 import net.fexcraft.app.fmt.polygon.*;
 import net.fexcraft.app.fmt.settings.Setting;
-import net.fexcraft.app.fmt.ui.FileChooser;
-import net.fexcraft.app.fmt.utils.Logging;
+import net.fexcraft.app.fmt.oui.FileChooser;
 import net.fexcraft.app.fmt.utils.SessionHandler;
 import org.joml.Vector3f;
 
@@ -13,7 +12,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
-import static net.fexcraft.app.fmt.ui.FileChooser.TYPE_JAVA;
+import static net.fexcraft.app.fmt.oui.FileChooser.TYPE_JAVA;
 
 public class FVTM_OLD_Importer implements Importer {
 

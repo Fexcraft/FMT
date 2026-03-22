@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.TimerTask;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.ui.GenericDialog;
+import net.fexcraft.app.fmt.oui.GenericDialog;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.lib.common.math.Time;
 

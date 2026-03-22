@@ -14,7 +14,7 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.*;
 import net.fexcraft.app.fmt.polygon.uv.UVCoords;
 import net.fexcraft.app.fmt.settings.Setting;
-import net.fexcraft.app.fmt.ui.FileChooser.FileType;
+import net.fexcraft.app.fmt.oui.FileChooser.FileType;
 
 /**
  * 

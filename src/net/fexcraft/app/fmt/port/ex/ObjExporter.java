@@ -6,7 +6,7 @@ import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.settings.Setting;
-import net.fexcraft.app.fmt.ui.FileChooser;
+import net.fexcraft.app.fmt.oui.FileChooser;
 import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.lib.common.math.M4DW;
 import net.fexcraft.lib.common.math.V3D;
@@ -20,7 +20,7 @@ import java.io.FileWriter;
 import java.time.Year;
 import java.util.*;
 
-import static net.fexcraft.app.fmt.ui.FileChooser.TYPE_OBJ;
+import static net.fexcraft.app.fmt.oui.FileChooser.TYPE_OBJ;
 
 /**
  * @author Ferdinand Calo' (FEX___96)

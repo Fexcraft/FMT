@@ -11,7 +11,7 @@ import net.fexcraft.app.fmt.settings.Setting;
 import net.fexcraft.app.fmt.texture.Texture;
 import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.texture.TextureManager;
-import net.fexcraft.app.fmt.ui.FileChooser;
+import net.fexcraft.app.fmt.oui.FileChooser;
 import net.fexcraft.lib.common.utils.ZipUtil;
 
 import java.io.*;

@@ -1,9 +1,8 @@
 package net.fexcraft.app.fmt.port.im;
 
-import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.settings.Setting;
-import net.fexcraft.app.fmt.ui.FileChooser.FileType;
+import net.fexcraft.app.fmt.oui.FileChooser.FileType;
 
 import java.io.File;
 import java.util.List;

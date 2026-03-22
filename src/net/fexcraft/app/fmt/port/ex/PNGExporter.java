@@ -1,6 +1,6 @@
 package net.fexcraft.app.fmt.port.ex;
 
-import static net.fexcraft.app.fmt.ui.FileChooser.TYPE_PNG;
+import static net.fexcraft.app.fmt.oui.FileChooser.TYPE_PNG;
 import static net.fexcraft.app.fmt.utils.Logging.log;
 
 import java.io.File;
@@ -17,7 +17,7 @@ import net.fexcraft.app.fmt.settings.StringArraySetting;
 import net.fexcraft.app.fmt.texture.Texture;
 import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.texture.TextureManager;
-import net.fexcraft.app.fmt.ui.FileChooser.FileType;
+import net.fexcraft.app.fmt.oui.FileChooser.FileType;
 import net.fexcraft.app.json.JsonMap;
 
 public class PNGExporter implements Exporter {

@@ -5,7 +5,7 @@ import com.spinyowl.legui.component.Label;
 import com.spinyowl.legui.event.CursorEnterEvent;
 import com.spinyowl.legui.event.MouseClickEvent;
 import net.fexcraft.app.fmt.env.con.JsonContent;
-import net.fexcraft.app.fmt.ui.Icon;
+import net.fexcraft.app.fmt.oui.Icon;
 
 import static com.spinyowl.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 import static com.spinyowl.legui.input.Mouse.MouseButton.MOUSE_BUTTON_LEFT;

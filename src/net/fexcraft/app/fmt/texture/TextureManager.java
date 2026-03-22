@@ -9,7 +9,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
-import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateEvent.TexGroupAdded;
 import net.fexcraft.app.fmt.update.UpdateEvent.TexGroupRemoved;
 import org.lwjgl.stb.STBImageWrite;
@@ -17,7 +16,7 @@ import org.lwjgl.stb.STBImageWrite;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.polygon.Group;
-import net.fexcraft.app.fmt.ui.GenericDialog;
+import net.fexcraft.app.fmt.oui.GenericDialog;
 
 /**
  * @author Ferdinand Calo' (FEX___96)

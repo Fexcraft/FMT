@@ -1,7 +1,7 @@
 package net.fexcraft.app.fmt.utils;
 
 import static net.fexcraft.app.fmt.update.UpdateHandler.update;
-import static net.fexcraft.app.fmt.ui.GenericDialog.showOK;
+import static net.fexcraft.app.fmt.oui.GenericDialog.showOK;
 import static net.fexcraft.app.fmt.utils.Logging.log;
 import static com.spinyowl.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
@@ -40,9 +40,9 @@ import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.texture.TextureManager;
-import net.fexcraft.app.fmt.ui.FileChooser;
-import net.fexcraft.app.fmt.ui.GenericDialog;
-import net.fexcraft.app.fmt.ui.fields.TextField;
+import net.fexcraft.app.fmt.oui.FileChooser;
+import net.fexcraft.app.fmt.oui.GenericDialog;
+import net.fexcraft.app.fmt.oui.fields.TextField;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonHandler.PrintOption;

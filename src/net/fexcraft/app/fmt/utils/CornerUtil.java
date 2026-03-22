@@ -1,10 +1,9 @@
 package net.fexcraft.app.fmt.utils;
 
-import net.fexcraft.app.fmt.ui.Editor;
+import net.fexcraft.app.fmt.oui.Editor;
 import net.fexcraft.lib.common.math.M4DW;
 import net.fexcraft.lib.common.math.MV3D;
 import net.fexcraft.lib.common.math.V3D;
-import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.GLObject;
