@@ -24,7 +24,12 @@ import static net.fexcraft.app.fmt.settings.Settings.POLYGON_SUFFIX;
 public class PolygonEditorTab extends EditorTab {
 
 	public ETabCom sorting;
+	public ETabCom general_box;
 	public ETabCom general;
+	public ETabCom shapebox;
+	public ETabCom cylinder;
+	public ETabCom curve;
+	public ETabCom marker;
 	public Field name;
 	public DropList group;
 	public DropList polytype;
@@ -119,13 +124,57 @@ public class PolygonEditorTab extends EditorTab {
 				UpdateHandler.update(new PolygonSelected(polis.get(0), polis.size(), polis.size()));
 			}).hint(lang_prefix + "sorting.reset_size"));
 		//
-		add((general = new ETabCom()), lang_prefix + "general", 400);
-		general.add(new TextElm(0, next_y_pos(-1), FF - 20).translate(lang_prefix + "general.box_size"));
-		general.add(new PosCopyButton(0, next_y_pos(0), PolyVal.SIZE));
-		general.add((siz_x = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.SIZE, PolyVal.ValAxe.X))).min_range(0).pos(F30, next_y_pos(1)));
-		general.add((siz_y = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.SIZE, PolyVal.ValAxe.Y))).min_range(0).pos(F31, next_y_pos(0)));
-		general.add((siz_z = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.SIZE, PolyVal.ValAxe.Z))).min_range(0).pos(F32, next_y_pos(0)));
-		general.add(new TextElm(0, next_y_pos(1), FF - 20).translate(lang_prefix + "general.position"));
+		add((general = new ETabCom()), lang_prefix + "general", 280);
+		addGeneralElements(general, false);
+		add((general_box = new ETabCom()), lang_prefix + "general", 400);
+		addGeneralElements(general_box, true);
+		general.hideFully();
+		//
+		updcom.add(PolygonSelected.class, con -> {
+			general.hideFully();
+			general_box.hideFully();
+			ArrayList<Polygon> polys = FMT.MODEL.selected();
+			boolean curv = true;
+			for(Polygon poly : polys){
+				if(!poly.getShape().isCurve()) curv = false;
+				if(!curv){
+					if(poly.getShape().isRectagular()){
+						general_box.show();
+					}
+					else{
+						general.show();
+					}
+				}
+				if(poly.getShape().isShapebox()){
+					//shapebox.show();
+				}
+				if(poly.getShape().isCylinder()){
+					//cylinder.show();
+				}
+				if(poly.getShape().isCurve()){
+					//curve.show();
+				}
+				if(poly.getShape().isMarker() || poly.getShape().isBoundingBox()){
+					//marker.show();
+				}
+			}
+			if(!curv){
+				if(!general_box.minimized && !general.minimized) general.hideFully();
+				if(general_box.minimized && general.minimized) general.show();
+			}
+			reorderComponents();
+		});
+	}
+
+	private void addGeneralElements(ETabCom general, boolean box){
+		if(box){
+			general.add(new TextElm(0, next_y_pos(-1), FF - 20).translate(lang_prefix + "general.box_size"));
+			general.add(new PosCopyButton(0, next_y_pos(0), PolyVal.SIZE));
+			general.add((siz_x = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.SIZE, PolyVal.ValAxe.X))).min_range(0).pos(F30, next_y_pos(1)));
+			general.add((siz_y = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.SIZE, PolyVal.ValAxe.Y))).min_range(0).pos(F31, next_y_pos(0)));
+			general.add((siz_z = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.SIZE, PolyVal.ValAxe.Z))).min_range(0).pos(F32, next_y_pos(0)));
+		}
+		general.add(new TextElm(0, next_y_pos(box ? 1 : -1), FF - 20).translate(lang_prefix + "general.position"));
 		general.add(new PosCopyButton(0, next_y_pos(0), PolyVal.POS));
 		general.add((pos_x = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.POS, PolyVal.ValAxe.X))).pos(F30, next_y_pos(1)));
 		general.add((pos_y = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.POS, PolyVal.ValAxe.Y))).pos(F31, next_y_pos(0)));
@@ -159,13 +208,15 @@ public class PolygonEditorTab extends EditorTab {
 				FMT.MODEL.updateValue(tex_x.polyval(), tex_x.set(-1), 0);
 				FMT.MODEL.updateValue(tex_y.polyval(), tex_y.set(-1), 0);
 			}));
-		general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.box_faces"));
-		general.add(new BoolElm(F60, next_y_pos(1), F6S).set(new PolygonValue(PolyVal.SIDES, PolyVal.ValAxe.X), updcom));
-		general.add(new BoolElm(F61, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.SIDES, PolyVal.ValAxe.Y), updcom));
-		general.add(new BoolElm(F62, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.SIDES, PolyVal.ValAxe.Z), updcom));
-		general.add(new BoolElm(F63, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.SIDES, PolyVal.ValAxe.X2), updcom));
-		general.add(new BoolElm(F64, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.SIDES, PolyVal.ValAxe.Y2), updcom));
-		general.add(new BoolElm(F65, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.SIDES, PolyVal.ValAxe.Z2), updcom));
+		if(box){
+			general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.box_faces"));
+			general.add(new BoolElm(F60, next_y_pos(1), F6S).set(new PolygonValue(PolyVal.SIDES, PolyVal.ValAxe.X), updcom));
+			general.add(new BoolElm(F61, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.SIDES, PolyVal.ValAxe.Y), updcom));
+			general.add(new BoolElm(F62, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.SIDES, PolyVal.ValAxe.Z), updcom));
+			general.add(new BoolElm(F63, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.SIDES, PolyVal.ValAxe.X2), updcom));
+			general.add(new BoolElm(F64, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.SIDES, PolyVal.ValAxe.Y2), updcom));
+			general.add(new BoolElm(F65, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.SIDES, PolyVal.ValAxe.Z2), updcom));
+		}
 	}
 
 	private void updateLists(){
