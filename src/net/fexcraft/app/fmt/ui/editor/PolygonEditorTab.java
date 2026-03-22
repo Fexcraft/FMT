@@ -128,39 +128,39 @@ public class PolygonEditorTab extends EditorTab {
 		addGeneralElements(general, false);
 		add((general_box = new ETabCom()), lang_prefix + "general", 400);
 		addGeneralElements(general_box, true);
-		general.hideFully();
+		general.visible = false;
 		//
 		updcom.add(PolygonSelected.class, con -> {
-			general.hideFully();
-			general_box.hideFully();
+			general.visible = false;
+			general_box.visible = false;
 			ArrayList<Polygon> polys = FMT.MODEL.selected();
 			boolean curv = true;
 			for(Polygon poly : polys){
 				if(!poly.getShape().isCurve()) curv = false;
 				if(!curv){
 					if(poly.getShape().isRectagular()){
-						general_box.show();
+						general_box.visible = true;
 					}
 					else{
-						general.show();
+						general.visible = true;
 					}
 				}
 				if(poly.getShape().isShapebox()){
-					//shapebox.show();
+					//shapebox.visible = true;
 				}
 				if(poly.getShape().isCylinder()){
-					//cylinder.show();
+					//cylinder.visible = true;
 				}
 				if(poly.getShape().isCurve()){
-					//curve.show();
+					//curve.visible = true;
 				}
 				if(poly.getShape().isMarker() || poly.getShape().isBoundingBox()){
-					//marker.show();
+					//marker.visible = true;
 				}
 			}
 			if(!curv){
-				if(!general_box.minimized && !general.minimized) general.hideFully();
-				if(general_box.minimized && general.minimized) general.show();
+				if(!general_box.visible && !general.visible) general.visible = true;
+				if(general_box.visible && general.visible) general.visible = false;
 			}
 			reorderComponents();
 		});
