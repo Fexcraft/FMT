@@ -95,7 +95,6 @@ public class Settings {
 	public static Setting<Integer> BACKUP_INTERVAL = new Setting<>("backup_interval", 5, GENERAL);
 	public static Setting<Boolean> SELECT_COPIED = new Setting<>("select_copied", true, GENERAL);
 	public static Setting<Boolean> SELECT_NEW = new Setting<>("select_new", true, GENERAL);
-	public static Setting<Boolean> SHOW_BOTTOMBAR = new Setting<>("show_bottom_bar", true, GENERAL);
 	public static Setting<Boolean> NO_RANDOM_TITLE = new Setting<>("no_random_title", false, GENERAL);
 	public static Setting<Boolean> LOG_UPDATES = new Setting<>("log_updates", false, GENERAL);
 	public static Setting<Boolean> HIDE_MENU_AFTER_POLYGON = new Setting<>("hide_menu_after_polygon", true, GENERAL);
@@ -365,7 +364,6 @@ public class Settings {
 				break;
 			}
 		}
-		if(FMT.FRAME != null) Themes.getDefaultTheme().applyAll(FMT.FRAME);
 	}
 	
 	public static void applyMenuTheme(Component com){
@@ -496,7 +494,7 @@ public class Settings {
 			dialog.getContainer().add(new RunButton("dialog.button.new", 10, 90, 80, 20, () -> SaveHandler.newDialog()));
 		}
 		applyComponentTheme(dialog.getContainer());
-		dialog.show(FMT.FRAME);
+		//dialog.show(FMT.FRAME);
 	}
 
 	public static void addRecentFile(File file){
