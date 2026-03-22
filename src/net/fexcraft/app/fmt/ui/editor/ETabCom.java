@@ -37,14 +37,8 @@ public class ETabCom extends Element {
 		return this;
 	}
 
-	public void hideFully(){
-		visible = false;
-		hide();
-	}
-
 	@Override
 	public Element show(){
-		visible = true;
 		minimized = false;
 		size(EDITOR_CONTENT, fullheight);
 		for(int i = 1; i < elements.size(); i++){
