@@ -9,8 +9,6 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.Curve;
 import net.fexcraft.app.fmt.polygon.CurvePolygon;
 import net.fexcraft.app.fmt.polygon.Polygon;
-import net.fexcraft.app.fmt.polygon.RectCurve;
-import net.fexcraft.app.fmt.ui.PosCopyIcon;
 import net.fexcraft.app.fmt.ui.fields.ColorField;
 import net.fexcraft.app.fmt.ui.fields.RunButton;
 import net.fexcraft.app.fmt.update.PolyVal;
@@ -54,7 +52,7 @@ public class CurveComponent extends EditorComponent {
 		add(new NumberField(this, F21, row(0), F2S, HEIGHT).setup(0, Integer.MAX_VALUE, false, new PolygonValue(PolyVal.CUR_ACTIVE_POINT, ValAxe.N)).index());
 		//point pos
 		add(new Label(translate(LANG_PREFIX + genid + ".pos"), L5, row(1), LWI, HEIGHT));
-		add(new PosCopyIcon(LPI, row(0) + 4, PolyVal.POS));
+		//add(new PosCopyIcon(LPI, row(0) + 4, PolyVal.POS));
 		add(new NumberField(this, F30, row(1), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.POS, ValAxe.X)));
 		add(new NumberField(this, F31, row(0), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.POS, ValAxe.Y)));
 		add(new NumberField(this, F32, row(0), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.POS, ValAxe.Z)));
@@ -95,7 +93,7 @@ public class CurveComponent extends EditorComponent {
 		}).addTooltip("editor.component.polygon.curve.plane_loc_reset"));
 		//seg offset
 		add(new Label(translate(LANG_PREFIX + genid + ".off"), L5, row(1), LWI, HEIGHT));
-		add(new PosCopyIcon(LPI, row(0) + 4, PolyVal.OFF));
+		//add(new PosCopyIcon(LPI, row(0) + 4, PolyVal.OFF));
 		add(new NumberField(this, F30, row(1), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.OFF, ValAxe.X)));
 		add(new NumberField(this, F31, row(0), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.OFF, ValAxe.Y)));
 		add(new NumberField(this, F32, row(0), F3S, HEIGHT).setup(Integer.MIN_VALUE, Integer.MAX_VALUE, true, new PolygonValue(PolyVal.OFF, ValAxe.Z)));
