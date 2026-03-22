@@ -216,7 +216,7 @@ public class FileChooser {
 		dialog.getContainer().add(panel);
 		dialog.getContainer().add(rootbutton);
 		dialog.getContainer().add(label);
-		dialog.show(FMT.FRAME);
+		//dialog.show(FMT.FRAME);
 	}
 
 	public static class FileType {
