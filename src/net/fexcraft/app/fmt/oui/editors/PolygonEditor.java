@@ -26,7 +26,7 @@ public class PolygonEditor extends Editor {
 		addComponent(VERTOFF = new VertoffComponent());
 		//addComponent(BOXON = new PolygonAttributes(true));
 		//addComponent(BOXOFF = new PolygonAttributes(false));
-		addComponent(SHAPEBOX = new ShapeboxComponent());
+		//addComponent(SHAPEBOX = new ShapeboxComponent());
 		addComponent(CYLINDER = new CylinderComponentFull());
 		addComponent(CURVE = new CurveComponent());
 		addComponent(MARKER = new MarkerComponent());
