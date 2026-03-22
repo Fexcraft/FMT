@@ -729,7 +729,7 @@ public class Model {
 		dialog.getContainer().add(button1);
 		dialog.setSize(width, height);
 		dialog.setResizable(false);
-		dialog.show(FMT.FRAME);
+		//dialog.show(FMT.FRAME);
 	}
 
 	public void rescale0(ArrayList<Group> selected, float scale){
