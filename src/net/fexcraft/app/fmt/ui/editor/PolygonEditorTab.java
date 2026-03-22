@@ -45,7 +45,8 @@ public class PolygonEditorTab extends EditorTab {
 
 	@Override
 	public void init(Object... objs){
-		add((sorting = new ETabCom()), lang_prefix + "sorting", 220);
+		super.init(objs);
+		container.add((sorting = new ETabCom()), lang_prefix + "sorting", 220);
 		sorting.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "sorting.name"));
 		sorting.add((name = new Field(TEXT, FF, str -> rename(str))).pos(FO, next_y_pos(1)));
 		sorting.lastElement().text(NOPOLYSEL);
@@ -125,13 +126,13 @@ public class PolygonEditorTab extends EditorTab {
 				UpdateHandler.update(new PolygonSelected(polis.get(0), polis.size(), polis.size()));
 			}).hint(lang_prefix + "sorting.reset_size"));
 		//
-		add((general = new ETabCom()), lang_prefix + "general", 280);
+		container.add((general = new ETabCom()), lang_prefix + "general", 280);
 		addGeneralElements(general, false);
-		add((general_box = new ETabCom()), lang_prefix + "general", 400);
+		container.add((general_box = new ETabCom()), lang_prefix + "general", 400);
 		addGeneralElements(general_box, true);
 		general.visible = false;
 		//
-		add((shapebox = new ETabCom()), lang_prefix + "shapebox", 520);
+		container.add((shapebox = new ETabCom()), lang_prefix + "shapebox", 520);
 		for(int i = 0; i < 8; i++){
 			shapebox.add(new Element().pos(5, next_y_pos(i == 0 ? -1 : 1) + 5).size(20, 20).border(0xffffff).color(CornerUtil.CORNER_COLOURS[i]));
 			shapebox.add(new TextElm(25, next_y_pos(0), FF - 20).translate(lang_prefix + "shapebox.corner", i));
