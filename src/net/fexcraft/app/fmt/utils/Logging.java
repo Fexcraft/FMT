@@ -1,5 +1,6 @@
 package net.fexcraft.app.fmt.utils;
 
+import net.fexcraft.app.fmt.ui.FMTInterface;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
@@ -68,20 +69,17 @@ public class Logging {
 		e.printStackTrace();
 	}
 	
-	public static void bar(String string){
-		bar(string, false, 3);
+	public static void bar(Object text){
+		bar(text, false, 3);
 	}
 	
-	public static void bar(String string, boolean log){
-		bar(string, log, 3);
+	public static void bar(Object text, boolean log){
+		bar(text, log, 3);
 	}
 	
-	public static void bar(String string, boolean log, int secs){
-		if(Settings.SHOW_BOTTOMBAR.value){
-			FMT.bar.getTextState().setText(string);
-			FMT.bar_timer = Time.getDate() + Time.SEC_MS * secs;
-		}
-		if(log) log(string);
+	public static void bar(Object text, boolean log, int secs){
+		FMTInterface.bar(text + "", secs);
+		if(log) log(text);
 	}
 
 }
