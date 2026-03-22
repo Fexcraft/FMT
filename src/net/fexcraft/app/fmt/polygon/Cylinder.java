@@ -179,8 +179,8 @@ public class Cylinder extends Polygon {
 	
 	public float getValue(PolygonValue polyval){
 		switch(polyval.val()){
-			case RADIUS: return polyval.axe().x() ? radius : radius3;
-			case RADIUS2: return polyval.axe().x() ? radius2 : radius4;
+			case RADIUS_O: return polyval.axe().x() ? radius : radius3;
+			case RADIUS_I: return polyval.axe().x() ? radius2 : radius4;
 			case LENGTH: return length;
 			case SEGMENTS: return segments;
 			case SEG_LIMIT: return seglimit;
@@ -200,12 +200,12 @@ public class Cylinder extends Polygon {
 
 	public void setValue(PolygonValue polyval, float value){
 		switch(polyval.val()){
-			case RADIUS:{
+			case RADIUS_O:{
 				if(polyval.axe().x()) radius = value;
 				else radius3 = value;
 				break;
 			}
-			case RADIUS2:{
+			case RADIUS_I:{
 				if(polyval.axe().x()) radius2 = value;
 				else radius4 = value;
 				break;
