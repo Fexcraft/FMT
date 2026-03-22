@@ -46,13 +46,13 @@ public interface Field {
 	//
 	
 	public static void setupHoverCheck(Component component){
-		component.getListenerMap().addListener(CursorEnterEvent.class, listener -> {
+		/*component.getListenerMap().addListener(CursorEnterEvent.class, listener -> {
 			if(listener.isEntered()) FMT.SELFIELD = (Field)component;
 			else if(FMT.SELFIELD == component) FMT.SELFIELD = null;
 		});
 		component.getListenerMap().addListener(MouseClickEvent.class, listener -> {
 			if(listener.getAction() == CLICK) FMT.SELFIELD = (Field)component;
-		});
+		});*/
 	}
 	
 	public static final String STRING_VALIDATOR_EXTENDED = "[^A-Za-z0-9,\\.\\-_ \\(\\)\\[\\]\\{\\}\\&\\%\\$\\#\\@\\!\\?\\;\\:\\+\\=\\*\\^\\\"\\'\\>\\<\\\\\\/\\~\\`\\|]";
