@@ -120,17 +120,17 @@ public class PolygonEditorTab extends EditorTab {
 			}).hint(lang_prefix + "sorting.reset_size"));
 		//
 		add((general = new ETabCom()), lang_prefix + "general", 400);
-		general.add(new TextElm(0, next_y_pos(-1), FF).translate(lang_prefix + "general.box_size"));
+		general.add(new TextElm(0, next_y_pos(-1), FF - 20).translate(lang_prefix + "general.box_size"));
 		general.add(new PosCopyButton(0, next_y_pos(0), PolyVal.SIZE));
 		general.add((siz_x = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.SIZE, PolyVal.ValAxe.X))).min_range(0).pos(F30, next_y_pos(1)));
 		general.add((siz_y = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.SIZE, PolyVal.ValAxe.Y))).min_range(0).pos(F31, next_y_pos(0)));
 		general.add((siz_z = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.SIZE, PolyVal.ValAxe.Z))).min_range(0).pos(F32, next_y_pos(0)));
-		general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.position"));
+		general.add(new TextElm(0, next_y_pos(1), FF - 20).translate(lang_prefix + "general.position"));
 		general.add(new PosCopyButton(0, next_y_pos(0), PolyVal.POS));
 		general.add((pos_x = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.POS, PolyVal.ValAxe.X))).pos(F30, next_y_pos(1)));
 		general.add((pos_y = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.POS, PolyVal.ValAxe.Y))).pos(F31, next_y_pos(0)));
 		general.add((pos_z = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.POS, PolyVal.ValAxe.Z))).pos(F32, next_y_pos(0)));
-		general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.offset"));
+		general.add(new TextElm(0, next_y_pos(1), FF - 45).translate(lang_prefix + "general.offset"));
 		general.add(new PosCopyButton(0, next_y_pos(0), PolyVal.OFF));
 		general.add(new SideButton(1, next_y_pos(0), "icons/polygon/marker").hint("editor.polygon.general.offset.center_box")
 			.onclick(ci -> {
