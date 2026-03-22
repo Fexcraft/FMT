@@ -77,7 +77,7 @@ public class WorkspaceViewer extends Widget {
 		select.setVisibleCount(8);
 		dialog.getContainer().add(select);
 		dialog.setResizable(false);
-		dialog.show(FMT.FRAME);
+		//dialog.show(FMT.FRAME);
 	}
 
 	public void selectPackDialog(Consumer<FvtmPack> cons){
@@ -94,7 +94,7 @@ public class WorkspaceViewer extends Widget {
 		select.setVisibleCount(8);
 		dialog.getContainer().add(select);
 		dialog.setResizable(false);
-		dialog.show(FMT.FRAME);
+		//dialog.show(FMT.FRAME);
 	}
 
 	private FvtmPack getPack(String id){
@@ -163,7 +163,7 @@ public class WorkspaceViewer extends Widget {
 	public static void show0(){
 		if(viewer == null){
 			viewer = new WorkspaceViewer();
-			FMT.FRAME.getContainer().add(viewer);
+			//FMT.FRAME.getContainer().add(viewer);
 		}
 		viewer.show();
 	}
@@ -276,7 +276,7 @@ public class WorkspaceViewer extends Widget {
 	public static WorkspaceViewer viewer(){
 		if(viewer == null){
 			viewer = new WorkspaceViewer();
-			FMT.FRAME.getContainer().add(viewer);
+			//FMT.FRAME.getContainer().add(viewer);
 		}
 		return viewer;
 	}
