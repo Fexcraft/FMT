@@ -71,7 +71,7 @@ public class GGR {
 		perspective(45);
     }
 
-    public void apply(){
+	public void apply(){
         dir = new Vector3f(
             (float)Math.cos(ver) * (float)Math.sin(hor),
             (float)Math.sin(ver),
@@ -175,8 +175,11 @@ public class GGR {
 					else if(Picker.TYPE.color()) Picker.process();
 					else Picker.pick(Selector.TYPE, PickTask.SELECT, true);
 				}
-				else if(Settings.TESTING.value){
+				/*else if(Settings.TESTING.value){
 					Picker.pick(PickType.UI, PickTask.SELECT, true);
+				}*/
+				else{
+					FMT.UI.click(posx, posy);
 				}
 				left_down = false;
 			}
@@ -213,6 +216,18 @@ public class GGR {
 				scroll_down = false;
 			}
         }
+	}
+
+	public static void updateHoveredElement(){
+		Element hov = FMT.UI.getElmAt(posx, posy);
+		if(hov == null){
+			Element.HOVERED = null;
+		}
+		else{
+			if(Element.HOVERED != null) Element.HOVERED.hovered(false);
+			hov.hovered(true);
+			Element.HOVERED = hov;
+		}
 	}
 
 	private Panel sel_panel;
@@ -256,8 +271,7 @@ public class GGR {
 
 	public static boolean isOverUI(){
 		if(FMT.FRAME.getLayers().size() > 0) return true;
-		if(Picker.LAST_HOVER != null) return true;
-		if(Element.isSelectedAField()) return true;
+		if(Element.HOVERED != null || Element.isSelectedAField()) return true;
 		glfwGetCursorPos(FMT.INSTANCE.window, cursor_x, cursor_y);
 		if(cursor_y[0] < FMT.TOOLBAR.getSize().y) return true;
 		if(Editor.VISIBLE_EDITOR != null){
@@ -301,8 +315,8 @@ public class GGR {
 	}
 
 	public void scrollCallback(long window, double xoffset, double yoffset){
-		if(Picker.LAST_HOVER != null){
-			Picker.LAST_HOVER.scroll(xoffset, yoffset);
+		if(Element.HOVERED != null){
+			Element.HOVERED.scroll(xoffset, yoffset);
 			return;
 		}
 		if(isOverUI()){
