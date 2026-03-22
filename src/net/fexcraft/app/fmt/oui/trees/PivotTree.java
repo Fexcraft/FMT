@@ -58,7 +58,7 @@ public class PivotTree extends Editor {
 		}));
 		dialog.getContainer().add(new RunButton("dialog.button.cancel", 200, 70, 100, 20, () -> dialog.close()));
 		dialog.setResizable(false);
-		dialog.show(FMT.FRAME);
+		//dialog.show(FMT.FRAME);
 		//
 	}
 
