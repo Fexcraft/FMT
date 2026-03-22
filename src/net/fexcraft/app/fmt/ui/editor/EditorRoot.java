@@ -19,7 +19,7 @@ public class EditorRoot extends Element {
 		super();
 		pos(0, TOOLBAR_HEIGHT);
 		color(col_cd);
-		onResize();
+		resize();
 	}
 
 	@Override
