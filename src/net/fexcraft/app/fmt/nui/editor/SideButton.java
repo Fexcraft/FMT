@@ -12,6 +12,7 @@ public class SideButton extends Element {
 	public SideButton(int idx, int y, String texture){
 		pos(FF - 15 - (idx * 25), y + 5);
 		size(20, 20);
+		hoverable = true;
 		texture(texture);
 	}
 
