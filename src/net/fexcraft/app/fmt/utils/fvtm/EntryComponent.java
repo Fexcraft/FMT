@@ -99,7 +99,7 @@ public class EntryComponent extends Component {
 						dialog.close();
 					}));
 					dialog.setResizable(false);
-					dialog.show(FMT.FRAME);
+					//dialog.show(FMT.FRAME);
 				}).addTooltip("rename key"));
 			}
 		}
@@ -155,7 +155,7 @@ public class EntryComponent extends Component {
 					});
 					dialog.getContainer().add(box);
 					dialog.setResizable(false);
-					dialog.show(FMT.FRAME);
+					//dialog.show(FMT.FRAME);
 					break;
 				}
 				case MODELLOC:{
@@ -199,7 +199,7 @@ public class EntryComponent extends Component {
 					});
 					dialog.getContainer().add(modbox);
 					dialog.setResizable(false);
-					dialog.show(FMT.FRAME);
+					//dialog.show(FMT.FRAME);
 					break;
 				}
 				case TEXLOC:{
@@ -246,7 +246,7 @@ public class EntryComponent extends Component {
 					});
 					dialog.getContainer().add(texbox);
 					dialog.setResizable(false);
-					dialog.show(FMT.FRAME);
+					//dialog.show(FMT.FRAME);
 					break;
 				}
 				case VECTOR_MAP:
@@ -272,7 +272,7 @@ public class EntryComponent extends Component {
 					dialog.getContainer().add(new Icon(20, width - 30, 55, vecbox, false, null));
 					dialog.getContainer().add(new RunButton("dialog.button.select", width - 110, 90, 100, 20, () -> confirmVecBox(vecbox.getSelection(), typebox, vecbox, dialog)));
 					dialog.setResizable(false);
-					dialog.show(FMT.FRAME);
+					//dialog.show(FMT.FRAME);
 					break;
 				}
 				case ENUM_SEPARATE:
