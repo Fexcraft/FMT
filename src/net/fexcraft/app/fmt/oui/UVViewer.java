@@ -91,7 +91,7 @@ public class UVViewer extends Widget {
             INSTANCE = null;
         });
         UpdateHandler.register(updcom);
-        FMT.FRAME.getContainer().add(this);
+        //FMT.FRAME.getContainer().add(this);
         show();
     }
 
