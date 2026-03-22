@@ -69,7 +69,7 @@ public class ProfileDialog {
 		Settings.applyBorderless(view);
 		dialog.getContainer().add(view);
 		//
-		dialog.show(FMT.FRAME);
+		//dialog.show(FMT.FRAME);
 	}
 
 	private static void openLogin(){
@@ -124,7 +124,7 @@ public class ProfileDialog {
 		});
 		dialog.getContainer().add(button2);
 		//
-		dialog.show(FMT.FRAME);
+		//dialog.show(FMT.FRAME);
 	}
 
 }
