@@ -14,7 +14,7 @@ import static net.fexcraft.app.fmt.ui.editor.EditorTab.FS;
  */
 public class BoolElm extends Element {
 
-	private static String[] tex40 = new String[]{ "oui/bool_40_false", "oui/bool_40_true" };
+	private static String[] tex40 = new String[]{ "ui/bool_40_false", "ui/bool_40_true" };
 	private Supplier<Boolean> supplier;
 	private PolygonValue polyval;
 	private String[] texar;
