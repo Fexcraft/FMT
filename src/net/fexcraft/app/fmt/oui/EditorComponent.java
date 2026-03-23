@@ -2,7 +2,6 @@ package net.fexcraft.app.fmt.oui;
 
 import java.util.HashMap;
 
-import net.fexcraft.app.fmt.oui.editors.PolygonEditor;
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
 import com.spinyowl.legui.component.Component;
 import com.spinyowl.legui.component.Label;
@@ -59,7 +58,7 @@ public class EditorComponent extends Component {
 
 	public void minimize(Boolean bool){
 		this.minimized = bool == null ? !minimized : bool;
-		setSize(getSize().x, minimized ? PolygonEditor.shrink(this) ? 0 : minheight : fullheight);
+		setSize(getSize().x, minimized ? /*PolygonEditor.shrink(this) ? 0 :*/ minheight : fullheight);
 		if(editor != null) editor.alignComponents();
 	}
 
