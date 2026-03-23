@@ -82,4 +82,8 @@ public class BoolElm extends Element {
 		FMT.MODEL.updateValue(polyval, (Field)null, bool, true);
 	}
 
+	public PolygonValue polyval(){
+		return polyval;
+	}
+
 }
