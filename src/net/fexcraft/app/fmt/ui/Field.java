@@ -7,8 +7,11 @@ import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
 import net.fexcraft.app.fmt.utils.Logging;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.util.tinyfd.TinyFileDialogs;
 
 import java.math.RoundingMode;
+import java.nio.ByteBuffer;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
@@ -32,10 +35,11 @@ public class Field extends Element {
 	public static int col_field = 0xa6b3b3;
 
 	public final FieldType type;
-	public Consumer<String> consumer;
+	public Consumer<Field> consumer;
 	public String previous;
 	private Element clear;
 	private Element reset;
+	private Element color;
 	private float min_val = Integer.MIN_VALUE;
 	private float max_val = Integer.MAX_VALUE;
 	private PolygonValue polyval;
@@ -43,13 +47,13 @@ public class Field extends Element {
 	public Field(FieldType ftype, float width){
 		super();
 		type = ftype;
-		size(width - (type.text() ? FS * 2 : 10), FS);
+		size(type.width(width), FS);
 		hoverable = true;
 		selectable = true;
 		color(col_field);
 	}
 
-	public Field(FieldType type, float width, Consumer<String> cons){
+	public Field(FieldType type, float width, Consumer<Field> cons){
 		this(type, width);
 		consumer = cons;
 	}
@@ -60,20 +64,20 @@ public class Field extends Element {
 		updcom.add(UpdateEvent.PolygonValueEvent.class, event -> {
 			if(!event.first()) return;
 			if(event.value().equals(val)){
-				text(event.polygon().getValue(val));
+				text(type_format(event.polygon().getValue(val)));
 			}
 		});
 		updcom.add(UpdateEvent.PolygonSelected.class, event -> {
 			if(event.prevselected() < 0) return;
 			else if(event.selected() == 1 || (event.prevselected() == 0 && event.selected() == 0)){
-				text(FMT.MODEL.first_selected().getValue(val));
+				text(type_format(FMT.MODEL.first_selected().getValue(val)));
 			}
 			else if(event.selected() == 0) text(0);
 		});
 		updcom.add(UpdateEvent.GroupSelected.class, event -> {
 			if(event.prevselected() < 0) return;
 			else if(event.selected() == 1 || (event.prevselected() == 0 && event.selected() == 0 && FMT.MODEL.first_selected() != null)){
-				text(FMT.MODEL.first_selected().getValue(val));
+				text(type_format(FMT.MODEL.first_selected().getValue(val)));
 			}
 			else if(event.selected() == 0) text(0);
 		});
@@ -82,7 +86,7 @@ public class Field extends Element {
 		};
 		onscroll(si -> {
 			float flat = scroll(si.sy() > 0 ? Editor.RATE : -Editor.RATE);
-			text(flat);
+			text(type_format(flat));
 			previous = text.text();
 			FMT.MODEL.updateValue(val, this, 0);
 		});
@@ -102,6 +106,19 @@ public class Field extends Element {
 		if(type.text()){
 			clear.text("C");
 			reset.text("R");
+		}
+		if(type.color()){
+			add(color = new Element().color(0x000000).size(20, 20).pos(w + 13, 3));
+			add(new Element().color(col_field).size(FS, FS).pos(w + 10 + FS, 0)
+				.text("CP").text_autoscale().onclick(ci -> {
+					try(MemoryStack stack = MemoryStack.stackPush()) {
+						ByteBuffer color = stack.malloc(3);
+						String result = TinyFileDialogs.tinyfd_colorChooser("Choose a Color", "#" + text.text(), null, color);
+						if(result == null) return;
+						text(result);
+						FMT.MODEL.updateValue(polyval(), this, 0);
+					}
+				}).hint("editor.info.colorpicker"));
 		}
 		reset.hide();
 	}
@@ -152,7 +169,12 @@ public class Field extends Element {
 		return this;
 	}
 
+	public String get_text(){
+		return text.text();
+	}
+
 	public float parse_float(){
+		if(type.color()) return parse_int();
 		String str = text.text().replaceAll("[^0-9\\.\\-]", "");
 		if(str.isEmpty()) str = "0";
 		if(str.endsWith(".")) str += "0";
@@ -163,10 +185,17 @@ public class Field extends Element {
 	}
 
 	public float parse_int(){
-		String str = text.text().replaceAll("[^0-9\\.\\-]", "");
-		if(str.isEmpty()) str = "0";
-		if(str.endsWith(".")) str.replace(".", "");
-		int res = Integer.parseInt(str);
+		int res;
+		if(type.color()){
+			String str = text.text().replaceAll("[^0-9a-f]", "");
+			res = Integer.parseInt(str, 16);
+		}
+		else{
+			String str = text.text().replaceAll("[^0-9\\.\\-]", "");
+			if(str.isEmpty()) str = "0";
+			if(str.endsWith(".")) str = str.replace(".", "");
+			res = Integer.parseInt(str);
+		}
 		if(res < min_val) res = (int)min_val;
 		if(res > max_val) res = (int)max_val;
 		return res;
@@ -201,7 +230,7 @@ public class Field extends Element {
 		}
 		if(action != GLFW_RELEASE) return true;
 		if(key == GLFW_KEY_ENTER || key == GLFW_KEY_KP_ENTER){
-			if(consumer != null) consumer.accept(text.text());
+			if(consumer != null) consumer.accept(this);
 			previous = text.text();
 			return true;
 		}
@@ -220,6 +249,12 @@ public class Field extends Element {
 			}
 			if(key == GLFW_KEY_SPACE){
 				text(txt + " ");
+			}
+		}
+		else if(type.color()){
+			if((key >= GLFW_KEY_0 && key <= GLFW_KEY_9) || (key >= GLFW_KEY_A && key <= GLFW_KEY_F)){
+				String kn = GLFW.glfwGetKeyName(key, code);
+				text(txt + kn);
 			}
 		}
 		else{
@@ -252,11 +287,20 @@ public class Field extends Element {
 		return polyval;
 	}
 
+	private Object type_format(float value){
+		if(type.color()){
+			color.color((int)value);
+			return Integer.toHexString(color.col_def.packed);
+		}
+		return value;
+	}
+
 	public static enum FieldType {
 
 		TEXT,
 		FLOAT,
-		INT;
+		INT,
+		COLOR;
 
 		public boolean text(){
 			return this == TEXT;
@@ -268,6 +312,20 @@ public class Field extends Element {
 
 		public boolean integer(){
 			return this == INT;
+		}
+
+		public boolean color(){
+			return this == COLOR;
+		}
+
+		public float width(float width){
+			switch(this){
+				case TEXT: return width - FS - FS;
+				case FLOAT:
+				case INT: return width - 10;
+				case COLOR: return width - FS - FS - 10;
+			}
+			return width;
 		}
 
 	}
