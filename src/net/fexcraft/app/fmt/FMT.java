@@ -79,13 +79,6 @@ public class FMT {
 	public float alpha = 0f;
 	private static boolean CLOSE;
 	public static GGR CAM;
-	public static Label pos;
-	public static Label rot;
-	public static Label fps;
-	public static Label poly;
-	public static Label info;
-	public static Label img_line0;
-	public static Label img_line1;
 	//
 	private GLFWErrorCallback errorCallback;
 	private GLFWKeyCallback keyCallback;
@@ -131,12 +124,6 @@ public class FMT {
 		M4DW.SUPPLIER = M4DImpl::new;
 		Settings.load();
 		Settings.apply(INSTANCE);
-		//Converter.run();
-		//SCRIPT = new Script(new FileInputStream("./scripts/test.script"), "test");
-		//Logging.log(SCRIPT.print());
-		//net.fexcraft.lib.scr.Script scr = ScriptParser.parse("test", new FileInputStream("./scripts/test.script"));
-		//Logging.log(scr.toString());
-		//System.exit(0);
 		try{
 			INSTANCE.run();
 		}
@@ -255,19 +242,11 @@ public class FMT {
 			alpha = accumulator / interval;
 			render(vao, alpha);
 			//
-			adjustLabels();
 			ImageHandler.updateText();
-			//if(!Settings.TESTING.value) RENDERER.render(ImageHandler.shouldHide() ? IMG_FRAME : FRAME, CONTEXT);
 			timer.updateFPS();
 			glfwPollEvents();
 			glfwSwapBuffers(window);
-			/*if(!Settings.TESTING.value){
-				sys_event_processor.processEvents(FRAME, CONTEXT);
-				EventProcessorProvider.getInstance().processEvents();
-				LayoutManager.getInstance().layout(FRAME);
-				AnimatorProvider.getAnimator().runAnimations();
-				ImageHandler.processTask();
-			}*/
+			//ImageHandler.processTask();
 			timer.update();
 		}
 		Settings.save();
@@ -290,32 +269,8 @@ public class FMT {
 		SCALED_HEIGHT = HEIGHT / Settings.UI_SCALE.value;
 		log("Resizing Window to " + width + "/" + height + " (" + WIDTH + "/" + HEIGHT + " scaled at " + (1f / Settings.UI_SCALE.value) + ").");
 		HEIGHT = height;
-		//TOOLBAR.setSize(WIDTH = width, TOOLBAR.getSize().y);
-		//Editor.EDITORS.forEach(editor -> editor.align());
-		//ToolbarMenu.MENUS.forEach((key, menu) -> menu.layer.hide());
 		Picker.resetBuffer(true);
 		if(UI != null) UI.resize();
-	}
-
-	private void adjustLabels(){
-		return;//TODO
-		/*int xoff = Editor.VISIBLE_EDITOR == null ? 5 : 320;
-		int yoff = 1;
-		pos.setPosition(xoff, HEIGHT - yoff++ * 22);
-		rot.setPosition(xoff, HEIGHT - yoff++ * 22);
-		fps.setPosition(xoff, HEIGHT - yoff++ * 22);
-		poly.setPosition(xoff, HEIGHT - yoff++ * 22);
-		info.setPosition(xoff, HEIGHT - yoff++ * 22);
-		if(!Settings.SHOW_BOTTOMBAR.value) return;
-		if(bar_timer == 0 || Time.getDate() >= bar_timer){
-			bar_timer = 0;
-			bar.setPosition(0, HEIGHT + bar.getSize().y);
-			bar.getTextState().setText("");
-		}
-		else{
-			bar.setPosition((WIDTH / 2) - (FontSizeUtil.getWidth(bar.getTextState().getText()) / 2), HEIGHT - bar.getSize().y);
-		}
-		PolygonTree.polygons.getTextState().setText("Polygons: " + FMT.MODEL.totals());*/
 	}
 
 	private void render(int vao, float alpha){
@@ -333,7 +288,6 @@ public class FMT {
 		    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			PolyRenderer.mode(DrawMode.PICKER);
-			//if(Arrows.MODE.active()) Arrows.render(DrawMode.PICKER);
 			MODEL.renderPicking();
 			Picker.process();
 			if(Picker.TYPE.face()){
