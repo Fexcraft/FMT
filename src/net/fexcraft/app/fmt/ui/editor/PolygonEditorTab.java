@@ -11,6 +11,7 @@ import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateEvent.PolygonSelected;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.utils.CornerUtil;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 
@@ -33,6 +34,7 @@ public class PolygonEditorTab extends EditorTab {
 	public ETabCom cylinder;
 	public ETabCom curve;
 	public ETabCom marker;
+	public ETabCom vertex;
 	public Field name;
 	public DropList group;
 	public DropList polytype;
@@ -41,6 +43,8 @@ public class PolygonEditorTab extends EditorTab {
 	public Field siz_x, siz_y, siz_z;
 	public Field tex_x, tex_y;
 	public Field plane_loc;
+	public Field vert_key, vert_sel;
+	public Field vert_x, vert_y, vert_z;
 	public BoolElm plane_lit;
 
 	public PolygonEditorTab(){
@@ -113,6 +117,15 @@ public class PolygonEditorTab extends EditorTab {
 				}
 				UpdateHandler.update(new PolygonSelected(polis.get(0), polis.size(), polis.size()));
 			}).hint(lang_prefix + "sorting.reset_size"));
+		//
+		container.add((vertex = new ETabCom()), lang_prefix + "vertex", 160);
+		vertex.add(new TextElm(0, next_y_pos(-1), FF).translate(lang_prefix + "vertex.index"));
+		vertex.add((vert_key = new Field(INFO, F2S, field -> {})).deg_range().pos(F20, next_y_pos(1)));
+		vertex.add((vert_sel = new Field(INFO, F2S, field -> {})).deg_range().pos(F21, next_y_pos(0)));
+		vertex.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "vertex.offset"));
+		vertex.add((vert_x = new Field(INFO, F3S, field -> applyVertOff(field.parse_float(), ValAxe.X))).deg_range().pos(F30, next_y_pos(1)));
+		vertex.add((vert_y = new Field(INFO, F3S, field -> applyVertOff(field.parse_float(), ValAxe.Y))).deg_range().pos(F31, next_y_pos(0)));
+		vertex.add((vert_z = new Field(INFO, F3S, field -> applyVertOff(field.parse_float(), ValAxe.Z))).deg_range().pos(F32, next_y_pos(0)));
 		//
 		container.add((general = new ETabCom()), lang_prefix + "general", 280);
 		addGeneralElements(general, false);
@@ -272,6 +285,7 @@ public class PolygonEditorTab extends EditorTab {
 			shapebox.visible = false;
 			cylinder.visible = false;
 			marker.visible = false;
+			vertex.visible = false;
 			ArrayList<Polygon> polys = FMT.MODEL.selected();
 			boolean curv = true;
 			for(Polygon poly : polys){
@@ -302,6 +316,22 @@ public class PolygonEditorTab extends EditorTab {
 				if(general_box.visible && general.visible) general.visible = false;
 			}
 			reorderComponents();
+		});
+		updcom.add(UpdateEvent.VertexSelected.class, e -> {
+			vert_sel.text(e.selected());
+			if(e.selected() <= 0){
+				vert_key.text("");
+				vert_x.text(0);
+				vert_y.text(0);
+				vert_z.text(0);
+			}
+			else{
+				Vertoff vo = e.pair().getLeft().vertoffs.get(e.pair().getRight());
+				vert_key.text(e.pair().getRight().toString());
+				vert_x.text(vo.off.x);
+				vert_y.text(vo.off.y);
+				vert_z.text(vo.off.z);
+			}
 		});
 	}
 
@@ -392,6 +422,18 @@ public class PolygonEditorTab extends EditorTab {
 				polis.get(i).name(str + String.format(POLYGON_SUFFIX.value, i));
 			}
 		}
+	}
+
+	private void applyVertOff(float v, ValAxe a){
+		if(FMT.MODEL.getSelectedVerts().isEmpty()) return;
+		Pair<Polygon, Vertoff.VOKey> pair = FMT.MODEL.getSelectedVerts().get(0);
+		Vertoff vo = pair.getLeft().vertoffs.get(pair.getRight());
+		switch(a){
+			case X -> vo.off.x = v;
+			case Y -> vo.off.y = v;
+			case Z -> vo.off.z = v;
+		}
+		pair.getLeft().recompile();
 	}
 
 }
