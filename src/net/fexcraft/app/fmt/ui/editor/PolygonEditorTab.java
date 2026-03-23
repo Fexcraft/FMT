@@ -5,6 +5,7 @@ import net.fexcraft.app.fmt.ui.*;
 import net.fexcraft.app.fmt.polygon.*;
 import net.fexcraft.app.fmt.update.PolyVal;
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
+import net.fexcraft.app.fmt.update.PolyVal.ValAxe;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateEvent.PolygonSelected;
 import net.fexcraft.app.fmt.update.UpdateHandler;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 
 import static net.fexcraft.app.fmt.FMT.MODEL;
 import static net.fexcraft.app.fmt.ui.FMTInterface.col_bd;
+import static net.fexcraft.app.fmt.ui.Field.FieldType.COLOR;
 import static net.fexcraft.app.fmt.ui.Field.FieldType.TEXT;
 import static net.fexcraft.app.fmt.ui.Field.col_field;
 import static net.fexcraft.app.fmt.ui.editor.EditorRoot.NOPOLYSEL;
@@ -48,7 +50,7 @@ public class PolygonEditorTab extends EditorTab {
 		super.init(objs);
 		container.add((sorting = new ETabCom()), lang_prefix + "sorting", 220);
 		sorting.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "sorting.name"));
-		sorting.add((name = new Field(TEXT, FF, str -> rename(str))).pos(FO, next_y_pos(1)));
+		sorting.add((name = new Field(TEXT, FF, field -> rename(field.get_text()))).pos(FO, next_y_pos(1)));
 		sorting.lastElement().text(NOPOLYSEL);
 		sorting.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "sorting.group"));
 		sorting.add((group = new DropList(FF).onchange((key, val) -> {
@@ -121,49 +123,60 @@ public class PolygonEditorTab extends EditorTab {
 			shapebox.add(new Element().pos(5, next_y_pos(i == 0 ? -1 : 1) + 5).size(20, 20).border(0xffffff).color(CornerUtil.CORNER_COLOURS[i]));
 			shapebox.add(new TextElm(25, next_y_pos(0), FF - 20).translate(lang_prefix + "shapebox.corner", i));
 			PolyVal val = PolyVal.values()[PolyVal.CORNER_0.ordinal() + i];
-			shapebox.add((pos_x = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(val, PolyVal.ValAxe.X))).pos(F30, next_y_pos(1)));
-			shapebox.add((pos_y = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(val, PolyVal.ValAxe.Y))).pos(F31, next_y_pos(0)));
-			shapebox.add((pos_z = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(val, PolyVal.ValAxe.Z))).pos(F32, next_y_pos(0)));
+			shapebox.add((pos_x = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(val, ValAxe.X))).pos(F30, next_y_pos(1)));
+			shapebox.add((pos_y = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(val, ValAxe.Y))).pos(F31, next_y_pos(0)));
+			shapebox.add((pos_z = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(val, ValAxe.Z))).pos(F32, next_y_pos(0)));
 		}
 		//
 		container.add((cylinder = new ETabCom()), lang_prefix + "cylinder", 520);
 		cylinder.add(new TextElm(F20, next_y_pos(-1), F2S).translate(lang_prefix + "cylinder.radius_outer"));
 		cylinder.add(new TextElm(F21, next_y_pos(0), F2S).translate(lang_prefix + "cylinder.radius_inner"));
-		cylinder.add((new Field(Field.FieldType.FLOAT, F4S, updcom, new PolygonValue(PolyVal.RADIUS_O, PolyVal.ValAxe.X)).min_range(0.5f)).pos(F40, next_y_pos(1)));
-		cylinder.add((new Field(Field.FieldType.FLOAT, F4S, updcom, new PolygonValue(PolyVal.RADIUS_O, PolyVal.ValAxe.Y)).min_range(0.0f)).pos(F41, next_y_pos(0)));
-		cylinder.add((new Field(Field.FieldType.FLOAT, F4S, updcom, new PolygonValue(PolyVal.RADIUS_I, PolyVal.ValAxe.X)).min_range(0.0f)).pos(F42, next_y_pos(0)));
-		cylinder.add((new Field(Field.FieldType.FLOAT, F4S, updcom, new PolygonValue(PolyVal.RADIUS_I, PolyVal.ValAxe.Y)).min_range(0.0f)).pos(F43, next_y_pos(0)));
+		cylinder.add((new Field(Field.FieldType.FLOAT, F4S, updcom, new PolygonValue(PolyVal.RADIUS_O, ValAxe.X)).min_range(0.5f)).pos(F40, next_y_pos(1)));
+		cylinder.add((new Field(Field.FieldType.FLOAT, F4S, updcom, new PolygonValue(PolyVal.RADIUS_O, ValAxe.Y)).min_range(0.0f)).pos(F41, next_y_pos(0)));
+		cylinder.add((new Field(Field.FieldType.FLOAT, F4S, updcom, new PolygonValue(PolyVal.RADIUS_I, ValAxe.X)).min_range(0.0f)).pos(F42, next_y_pos(0)));
+		cylinder.add((new Field(Field.FieldType.FLOAT, F4S, updcom, new PolygonValue(PolyVal.RADIUS_I, ValAxe.Y)).min_range(0.0f)).pos(F43, next_y_pos(0)));
 		cylinder.add(new TextElm(F20, next_y_pos(1), F2S).translate(lang_prefix + "cylinder.length"));
 		cylinder.add(new TextElm(F21, next_y_pos(0), F2S).translate(lang_prefix + "cylinder.direction"));
-		cylinder.add((new Field(Field.FieldType.FLOAT, F2S, updcom, new PolygonValue(PolyVal.LENGTH, PolyVal.ValAxe.N)).min_range(0.5f)).pos(F20, next_y_pos(1)));
-		cylinder.add((new Field(Field.FieldType.INT, F2S, updcom, new PolygonValue(PolyVal.DIRECTION, PolyVal.ValAxe.N)).range(0, 5)).pos(F21, next_y_pos(0)));
+		cylinder.add((new Field(Field.FieldType.FLOAT, F2S, updcom, new PolygonValue(PolyVal.LENGTH, ValAxe.N)).min_range(0.5f)).pos(F20, next_y_pos(1)));
+		cylinder.add((new Field(Field.FieldType.INT, F2S, updcom, new PolygonValue(PolyVal.DIRECTION, ValAxe.N)).range(0, 5)).pos(F21, next_y_pos(0)));
 		cylinder.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "cylinder.segments"));
-		cylinder.add((new Field(Field.FieldType.INT, F3S, updcom, new PolygonValue(PolyVal.SEGMENTS, PolyVal.ValAxe.N)).range(3, 360)).pos(F30, next_y_pos(1)));
-		cylinder.add((new Field(Field.FieldType.INT, F3S, updcom, new PolygonValue(PolyVal.SEG_LIMIT, PolyVal.ValAxe.N)).range(0, 360)).pos(F31, next_y_pos(0)));
-		cylinder.add((new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.SEG_OFF, PolyVal.ValAxe.N)).deg_range()).pos(F32, next_y_pos(0)));
+		cylinder.add((new Field(Field.FieldType.INT, F3S, updcom, new PolygonValue(PolyVal.SEGMENTS, ValAxe.N)).range(3, 360)).pos(F30, next_y_pos(1)));
+		cylinder.add((new Field(Field.FieldType.INT, F3S, updcom, new PolygonValue(PolyVal.SEG_LIMIT, ValAxe.N)).range(0, 360)).pos(F31, next_y_pos(0)));
+		cylinder.add((new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.SEG_OFF, ValAxe.N)).deg_range()).pos(F32, next_y_pos(0)));
 		cylinder.add(new TextElm(F20, next_y_pos(1), F2S).translate(lang_prefix + "cylinder.base_scale"));
 		cylinder.add(new TextElm(F21, next_y_pos(0), F2S).translate(lang_prefix + "cylinder.top_scale"));
-		cylinder.add((new Field(Field.FieldType.FLOAT, F2S, updcom, new PolygonValue(PolyVal.BASE_SCALE, PolyVal.ValAxe.N)).min_range(0)).pos(F20, next_y_pos(1)));
-		cylinder.add((new Field(Field.FieldType.INT, F2S, updcom, new PolygonValue(PolyVal.TOP_SCALE, PolyVal.ValAxe.N)).min_range(0)).pos(F21, next_y_pos(0)));
+		cylinder.add((new Field(Field.FieldType.FLOAT, F2S, updcom, new PolygonValue(PolyVal.BASE_SCALE, ValAxe.N)).min_range(0)).pos(F20, next_y_pos(1)));
+		cylinder.add((new Field(Field.FieldType.INT, F2S, updcom, new PolygonValue(PolyVal.TOP_SCALE, ValAxe.N)).min_range(0)).pos(F21, next_y_pos(0)));
 		cylinder.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "cylinder.top_offset"));
-		cylinder.add((new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.TOP_OFF, PolyVal.ValAxe.X))).pos(F30, next_y_pos(1)));
-		cylinder.add((new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.TOP_OFF, PolyVal.ValAxe.Y))).pos(F31, next_y_pos(0)));
-		cylinder.add((new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.TOP_OFF, PolyVal.ValAxe.Z))).pos(F32, next_y_pos(0)));
+		cylinder.add((new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.TOP_OFF, ValAxe.X))).pos(F30, next_y_pos(1)));
+		cylinder.add((new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.TOP_OFF, ValAxe.Y))).pos(F31, next_y_pos(0)));
+		cylinder.add((new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.TOP_OFF, ValAxe.Z))).pos(F32, next_y_pos(0)));
 		cylinder.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "cylinder.top_rotation"));
-		cylinder.add((new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.TOP_ROT, PolyVal.ValAxe.X)).deg_range()).pos(F30, next_y_pos(1)));
-		cylinder.add((new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.TOP_ROT, PolyVal.ValAxe.Y)).deg_range()).pos(F31, next_y_pos(0)));
-		cylinder.add((new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.TOP_ROT, PolyVal.ValAxe.Z)).deg_range()).pos(F32, next_y_pos(0)));
+		cylinder.add((new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.TOP_ROT, ValAxe.X)).deg_range()).pos(F30, next_y_pos(1)));
+		cylinder.add((new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.TOP_ROT, ValAxe.Y)).deg_range()).pos(F31, next_y_pos(0)));
+		cylinder.add((new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.TOP_ROT, ValAxe.Z)).deg_range()).pos(F32, next_y_pos(0)));
 		cylinder.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "cylinder.faces"));
-		cylinder.add(new BoolElm(F60, next_y_pos(1), F6S).set(new PolygonValue(PolyVal.SIDES, PolyVal.ValAxe.X), updcom));
-		cylinder.add(new BoolElm(F61, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.SIDES, PolyVal.ValAxe.Y), updcom));
-		cylinder.add(new BoolElm(F62, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.SIDES, PolyVal.ValAxe.Z), updcom));
-		cylinder.add(new BoolElm(F63, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.SIDES, PolyVal.ValAxe.X2), updcom));
-		cylinder.add(new BoolElm(F64, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.SIDES, PolyVal.ValAxe.Y2), updcom));
-		cylinder.add(new BoolElm(F65, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.SIDES, PolyVal.ValAxe.Z2), updcom));
+		cylinder.add(new BoolElm(F60, next_y_pos(1), F6S).set(new PolygonValue(PolyVal.SIDES, ValAxe.X), updcom));
+		cylinder.add(new BoolElm(F61, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.SIDES, ValAxe.Y), updcom));
+		cylinder.add(new BoolElm(F62, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.SIDES, ValAxe.Z), updcom));
+		cylinder.add(new BoolElm(F63, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.SIDES, ValAxe.X2), updcom));
+		cylinder.add(new BoolElm(F64, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.SIDES, ValAxe.Y2), updcom));
+		cylinder.add(new BoolElm(F65, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.SIDES, ValAxe.Z2), updcom));
 		cylinder.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "cylinder.radial"));
-		cylinder.add((new BoolElm(F30, next_y_pos(1), F3S).set(new PolygonValue(PolyVal.RADIAL, PolyVal.ValAxe.N),updcom)));
-		cylinder.add((new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.SEG_WIDTH, PolyVal.ValAxe.N))).pos(F31, next_y_pos(0)));
-		cylinder.add((new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.SEG_HEIGHT, PolyVal.ValAxe.N))).pos(F32, next_y_pos(0)));
+		cylinder.add((new BoolElm(F30, next_y_pos(1), F3S).set(new PolygonValue(PolyVal.RADIAL, ValAxe.N), updcom)));
+		cylinder.add((new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.SEG_WIDTH, ValAxe.N))).pos(F31, next_y_pos(0)));
+		cylinder.add((new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.SEG_HEIGHT, ValAxe.N))).pos(F32, next_y_pos(0)));
+		//
+		container.add((marker = new ETabCom()), lang_prefix + "marker", 220);
+		marker.add(new TextElm(0, next_y_pos(-1), FF).translate(lang_prefix + "marker.color"));
+		marker.add((new Field(COLOR, FF, updcom, new PolygonValue(PolyVal.COLOR, ValAxe.N))).pos(FO, next_y_pos(1)));
+		marker.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "marker.scale"));
+		marker.add((new Field(Field.FieldType.FLOAT, F2S, updcom, new PolygonValue(PolyVal.SCALE, ValAxe.N)).range(-256, 256)).pos(F20, next_y_pos(1)));
+		marker.add((new BoolElm(F21, next_y_pos(0), F2S).set(new PolygonValue(PolyVal.DETACHED, ValAxe.N), updcom)));
+		marker.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "marker.seat"));
+		marker.add((new BoolElm(F30, next_y_pos(1), F3S).set(new PolygonValue(PolyVal.BIPED, ValAxe.N), updcom)));
+		marker.add((new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.BIPED_ANGLE, ValAxe.N)).deg_range()).pos(F31, next_y_pos(0)));
+		marker.add((new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.BIPED_SCALE, ValAxe.N)).range(-128, 128)).pos(F32, next_y_pos(0)));
 		//
 		updcom.add(UpdateEvent.GroupAdded.class, event -> updateLists());
 		updcom.add(UpdateEvent.GroupRemoved.class, event -> updateLists());
@@ -186,6 +199,7 @@ public class PolygonEditorTab extends EditorTab {
 			general_box.visible = false;
 			shapebox.visible = false;
 			cylinder.visible = false;
+			marker.visible = false;
 			ArrayList<Polygon> polys = FMT.MODEL.selected();
 			boolean curv = true;
 			for(Polygon poly : polys){
@@ -208,7 +222,7 @@ public class PolygonEditorTab extends EditorTab {
 					//curve.visible = true;
 				}
 				if(poly.getShape().isMarker() || poly.getShape().isBoundingBox()){
-					//marker.visible = true;
+					marker.visible = true;
 				}
 			}
 			if(!curv){
@@ -223,15 +237,15 @@ public class PolygonEditorTab extends EditorTab {
 		if(box){
 			general.add(new TextElm(0, next_y_pos(-1), FF - 20).translate(lang_prefix + "general.box_size"));
 			general.add(new PosCopyButton(0, next_y_pos(0), PolyVal.SIZE));
-			general.add((siz_x = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.SIZE, PolyVal.ValAxe.X))).min_range(0).pos(F30, next_y_pos(1)));
-			general.add((siz_y = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.SIZE, PolyVal.ValAxe.Y))).min_range(0).pos(F31, next_y_pos(0)));
-			general.add((siz_z = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.SIZE, PolyVal.ValAxe.Z))).min_range(0).pos(F32, next_y_pos(0)));
+			general.add((siz_x = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.SIZE, ValAxe.X))).min_range(0).pos(F30, next_y_pos(1)));
+			general.add((siz_y = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.SIZE, ValAxe.Y))).min_range(0).pos(F31, next_y_pos(0)));
+			general.add((siz_z = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.SIZE, ValAxe.Z))).min_range(0).pos(F32, next_y_pos(0)));
 		}
 		general.add(new TextElm(0, next_y_pos(box ? 1 : -1), FF - 20).translate(lang_prefix + "general.position"));
 		general.add(new PosCopyButton(0, next_y_pos(0), PolyVal.POS));
-		general.add((pos_x = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.POS, PolyVal.ValAxe.X))).pos(F30, next_y_pos(1)));
-		general.add((pos_y = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.POS, PolyVal.ValAxe.Y))).pos(F31, next_y_pos(0)));
-		general.add((pos_z = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.POS, PolyVal.ValAxe.Z))).pos(F32, next_y_pos(0)));
+		general.add((pos_x = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.POS, ValAxe.X))).pos(F30, next_y_pos(1)));
+		general.add((pos_y = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.POS, ValAxe.Y))).pos(F31, next_y_pos(0)));
+		general.add((pos_z = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.POS, ValAxe.Z))).pos(F32, next_y_pos(0)));
 		general.add(new TextElm(0, next_y_pos(1), FF - 45).translate(lang_prefix + "general.offset"));
 		general.add(new PosCopyButton(0, next_y_pos(0), PolyVal.OFF));
 		general.add(new SideButton(1, next_y_pos(0), "icons/polygon/marker").hint("editor.polygon.general.offset.center_box")
@@ -243,16 +257,16 @@ public class PolygonEditorTab extends EditorTab {
 					FMT.MODEL.updateValue(off_z.polyval(), null, polygon.getValue(siz_z.polyval()) * -0.5f, true);
 				}
 			}));
-		general.add((off_x = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.OFF, PolyVal.ValAxe.X))).pos(F30, next_y_pos(1)));
-		general.add((off_y = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.OFF, PolyVal.ValAxe.Y))).pos(F31, next_y_pos(0)));
-		general.add((off_z = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.OFF, PolyVal.ValAxe.Z))).pos(F32, next_y_pos(0)));
+		general.add((off_x = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.OFF, ValAxe.X))).pos(F30, next_y_pos(1)));
+		general.add((off_y = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.OFF, ValAxe.Y))).pos(F31, next_y_pos(0)));
+		general.add((off_z = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.OFF, ValAxe.Z))).pos(F32, next_y_pos(0)));
 		general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.rotation"));
-		general.add((new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.ROT, PolyVal.ValAxe.X))).deg_range().pos(F30, next_y_pos(1)));
-		general.add((new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.ROT, PolyVal.ValAxe.Y))).deg_range().pos(F31, next_y_pos(0)));
-		general.add((new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.ROT, PolyVal.ValAxe.Z))).deg_range().pos(F32, next_y_pos(0)));
+		general.add((new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.ROT, ValAxe.X))).deg_range().pos(F30, next_y_pos(1)));
+		general.add((new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.ROT, ValAxe.Y))).deg_range().pos(F31, next_y_pos(0)));
+		general.add((new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.ROT, ValAxe.Z))).deg_range().pos(F32, next_y_pos(0)));
 		general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.texture"));
-		general.add((tex_x = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.TEX, PolyVal.ValAxe.X))).pos(F30, next_y_pos(1)));
-		general.add((tex_y = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.TEX, PolyVal.ValAxe.Y))).pos(F31, next_y_pos(0)));
+		general.add((tex_x = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.TEX, ValAxe.X))).pos(F30, next_y_pos(1)));
+		general.add((tex_y = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.TEX, ValAxe.Y))).pos(F31, next_y_pos(0)));
 		general.add(new Element().size(F3S, FS).pos(F32, next_y_pos(0)).color(col_field)
 			.translate(lang_prefix + "general.texture.reset")
 			.hint(lang_prefix + "general.texture.reset_hint")
@@ -263,12 +277,12 @@ public class PolygonEditorTab extends EditorTab {
 			}));
 		if(box){
 			general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.box_faces"));
-			general.add(new BoolElm(F60, next_y_pos(1), F6S).set(new PolygonValue(PolyVal.SIDES, PolyVal.ValAxe.X), updcom));
-			general.add(new BoolElm(F61, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.SIDES, PolyVal.ValAxe.Y), updcom));
-			general.add(new BoolElm(F62, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.SIDES, PolyVal.ValAxe.Z), updcom));
-			general.add(new BoolElm(F63, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.SIDES, PolyVal.ValAxe.X2), updcom));
-			general.add(new BoolElm(F64, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.SIDES, PolyVal.ValAxe.Y2), updcom));
-			general.add(new BoolElm(F65, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.SIDES, PolyVal.ValAxe.Z2), updcom));
+			general.add(new BoolElm(F60, next_y_pos(1), F6S).set(new PolygonValue(PolyVal.SIDES, ValAxe.X), updcom));
+			general.add(new BoolElm(F61, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.SIDES, ValAxe.Y), updcom));
+			general.add(new BoolElm(F62, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.SIDES, ValAxe.Z), updcom));
+			general.add(new BoolElm(F63, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.SIDES, ValAxe.X2), updcom));
+			general.add(new BoolElm(F64, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.SIDES, ValAxe.Y2), updcom));
+			general.add(new BoolElm(F65, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.SIDES, ValAxe.Z2), updcom));
 		}
 	}
 
