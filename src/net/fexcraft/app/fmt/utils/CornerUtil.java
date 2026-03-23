@@ -36,10 +36,10 @@ public class CornerUtil {
 
 	public static void compile(){
 		if(ROT_MARKER_NORMAL != null){
-			PolyRenderer.RENDERER.delete(ROT_MARKER_NORMAL);
-			PolyRenderer.RENDERER.delete(ROT_MARKER_SMALL);
+			ROT_MARKER_NORMAL.delete();
+			ROT_MARKER_SMALL.delete();
 			for(Polyhedron<GLObject> poly : CORNER_MARKER){
-				PolyRenderer.RENDERER.delete(poly);
+				poly.delete();
 			}
 		}
 		ROT_MARKER_NORMAL = new Polyhedron<GLObject>().importMRT(new ModelRendererTurbo(null, 0, 0, 16, 16).addBox(-.25f, -.25f, -.25f, .5f, .5f, .5f), false, Editor.MARKER_SCALE);
