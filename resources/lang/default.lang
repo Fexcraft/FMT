@@ -152,6 +152,9 @@ editor.polygon.curve.literal=Plane Literal Location
 editor.polygon.curve.reset=R-Auto
 editor.polygon.curve.reset_hint=Spaces all planes equally.
 editor.polygon.curve.offset=Plane Offset
+editor.polygon.vertex=Vertex Adjustment
+editor.polygon.vertex.index=Index / Selection Total
+editor.polygon.vertex.offset=Offset
 
 
 # Editor Old
@@ -265,14 +268,6 @@ editor.component.painter.palette.custom=Custom
 editor.component.painter.palette.model=Model
 editor.component.painter.palette.save_custom=Save to Custom Palette
 editor.component.painter.palette.picker=Pick color from Modelspace
-editor.component.arrow.mode.name=Arrow Mode
-editor.component.arrow.mode.desc=Component to set current Arrow Mode
-editor.component.arrow.mode.none=None / Disabled
-editor.component.arrow.mode.pos=Position
-editor.component.arrow.mode.off=Offset
-editor.component.arrow.mode.rot=Rotation
-editor.component.arrow.mode.size=Size / Measurements
-editor.component.arrow.mode.shape=Shape / Corners
 editor.component.helper.general.name=Preview General
 editor.component.helper.general.name/id=Helper Name/ID
 editor.component.helper.general.pos16=Position (16x)
@@ -292,9 +287,6 @@ editor.component.config.general.file_utils=File Utils
 editor.component.config.general.open_json=Open JSON File
 editor.component.config.general.mirror_lang=Mirror .lang to .json
 editor.component.config.general.run_utils=Run Utils
-editor.component.vertex.name=Vertex Adjustment
-editor.component.vertex.index=Index / Selected Total
-editor.component.vertex.offset=Offset
 editor.component.variable.name=Add new Variable/Attribute
 editor.component.variable.add.boolean=Add new Boolean Type Var
 editor.component.variable.add.tristate=Add new TriState Type Var
