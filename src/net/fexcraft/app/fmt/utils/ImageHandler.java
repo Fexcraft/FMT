@@ -208,7 +208,7 @@ public class ImageHandler {
 	public static void updateText(){
 		if(CURRENT == Task.NONE) return;
 		String title = Settings.NO_RANDOM_TITLE.value ? "FMT - Fex's Modelling Toolbox " + FMT.VERSION + " - " + SessionHandler.getLicenseName() : FMT.getTitle(SessionHandler.getLicenseName());
-		FMT.img_line0.getTextState().setText(title);
+		/*FMT.img_line0.getTextState().setText(title);
 		if(FMT.MODEL.getAuthors().size() == 0){
 			FMT.img_line1.getTextState().setText(FMT.MODEL.name + " - " + (SessionHandler.isLoggedIn() ? SessionHandler.getUserName() : "Guest User"));
 		}
@@ -235,7 +235,7 @@ public class ImageHandler {
 			else{
 				FMT.img_line1.getTextState().setText(FMT.MODEL.name + " - " + String.format("(logged:%s)", SessionHandler.getUserName()));
 			}
-		}
+		}*/
 	}
 
 }
