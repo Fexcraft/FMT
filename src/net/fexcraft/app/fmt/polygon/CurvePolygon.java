@@ -98,7 +98,7 @@ public abstract class CurvePolygon extends Polygon {
 			case CORNER_3: return getVectorValue(cu.planes.get(cu.active_segment).cor3, polyval.axe());
 			case COLOR: return cu.points.get(cu.active_point).color.packed;
 			case CUR_ACTIVE_POINT: return cu.active_point;
-			case CUR_ACTIVE_PLANES: return cu.active_segment;
+			case CUR_ACTIVE_PLANE: return cu.active_segment;
 			case CUR_POINTS: return cu.points.size();
 			case CUR_PLANES: return cu.planes.size();
 			case CUR_LENGTH: return (float)cu.path.length;
@@ -140,7 +140,7 @@ public abstract class CurvePolygon extends Polygon {
 				cu.active_point = (int)value;
 				break;
 			}
-			case CUR_ACTIVE_PLANES:{
+			case CUR_ACTIVE_PLANE:{
 				if(value < 0) value = 0;
 				if(value >= cu.planes.size()) value = cu.planes.size() - 1;
 				cu.active_segment = (int)value;
