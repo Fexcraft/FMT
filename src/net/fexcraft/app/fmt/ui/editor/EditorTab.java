@@ -76,9 +76,9 @@ public class EditorTab extends Element {
 		container.updateSize(w, h);
 	}
 
-	public int next_y_pos(int inc){
+	public int next_y_pos(float inc){
 		if(inc < 0) return next_y_elm_pos = 30;
-		return next_y_elm_pos += inc * 30;
+		return next_y_elm_pos += (int)(inc * 30);
 	}
 
 	public void reorderComponents(){
