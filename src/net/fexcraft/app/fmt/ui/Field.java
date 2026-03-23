@@ -96,13 +96,16 @@ public class Field extends Element {
 	public void init(Object... args){
 		text(type.text() ? "" : "0");
 		text.autoscale = true;
-		add(clear = new Element().color(0xffe600).size(type.text() ? FS : 5, FS).pos(w, 0)
-			.text_centered(true).hoverable(true).onclick(info -> clear_text())
-			.hint("editor.info.field_clear"));
-		clear.hide();
-		add(reset = new Element().color(0xf02c00).size(type.text() ? FS : 5, FS).pos(w + (type.text() ? FS : 5), 0)
-			.text_centered(true).hoverable(true).onclick(info -> reset_text())
-			.hint("editor.info.field_reset"));
+		if(!type.info()){
+			add(clear = new Element().color(0xffe600).size(type.text() ? FS : 5, FS).pos(w, 0)
+				.text_centered(true).hoverable(true).onclick(info -> clear_text())
+				.hint("editor.info.field_clear"));
+			clear.hide();
+			add(reset = new Element().color(0xf02c00).size(type.text() ? FS : 5, FS).pos(w + (type.text() ? FS : 5), 0)
+				.text_centered(true).hoverable(true).onclick(info -> reset_text())
+				.hint("editor.info.field_reset"));
+			reset.hide();
+		}
 		if(type.text()){
 			clear.text("C");
 			reset.text("R");
@@ -120,7 +123,6 @@ public class Field extends Element {
 					}
 				}).hint("editor.info.colorpicker"));
 		}
-		reset.hide();
 	}
 
 	@Override
@@ -132,6 +134,7 @@ public class Field extends Element {
 	@Override
 	protected void onSelect(){
 		previous = text.text();
+		if(type.info()) return;
 		clear.show();
 		reset.show();
 	}
@@ -139,6 +142,7 @@ public class Field extends Element {
 	@Override
 	protected void onDeselect(Element current){
 		reset_text();
+		if(type.info()) return;
 		clear.hide();
 		reset.hide();
 	}
@@ -257,7 +261,7 @@ public class Field extends Element {
 				text(txt + kn);
 			}
 		}
-		else{
+		else if(type.integer() || type.decimal()){
 			if(key >= GLFW_KEY_0 && key <= GLFW_KEY_9){
 				int n = key - GLFW_KEY_0;
 				if(txt.equals("0")) text(txt.substring(1) + n);
@@ -300,7 +304,8 @@ public class Field extends Element {
 		TEXT,
 		FLOAT,
 		INT,
-		COLOR;
+		COLOR,
+		INFO;
 
 		public boolean text(){
 			return this == TEXT;
@@ -318,12 +323,17 @@ public class Field extends Element {
 			return this == COLOR;
 		}
 
+		public boolean info(){
+			return this == INFO;
+		}
+
 		public float width(float width){
 			switch(this){
 				case TEXT: return width - FS - FS;
 				case FLOAT:
 				case INT: return width - 10;
 				case COLOR: return width - FS - FS - 10;
+				case INFO: return width;
 			}
 			return width;
 		}
