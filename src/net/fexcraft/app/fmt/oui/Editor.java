@@ -253,7 +253,7 @@ public class Editor extends Component {
 	}
 
 	public static void loadEditors(){
-		Editor.POLYGON_EDITOR = new PolygonEditor();
+		//Editor.POLYGON_EDITOR = new PolygonEditor();
 		//Editor.GROUP_EDITOR = new GroupEditor();
 		Editor.PIVOT_EDITOR = new PivotEditor();
 		Editor.MODEL_EDITOR = new ModelEditor();
