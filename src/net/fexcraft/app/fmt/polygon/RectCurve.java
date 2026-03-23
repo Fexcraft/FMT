@@ -50,7 +50,7 @@ public class RectCurve extends CurvePolygon {
 	@Override
 	protected void generate(){
 		if(glp.sub == null) glp.sub = new ArrayList<>();
-		for(Polyhedron<GLObject> sub : glp.sub) PolyRenderer.RENDERER.delete(sub);
+		for(Polyhedron<GLObject> sub : glp.sub) sub.delete();
 		glp.sub.clear();
 		Curve cu = act_curve();
 		M4DW axe = M4DW.create();
