@@ -146,7 +146,7 @@ public class Element {
 	}
 
 	public void delete(){
-		Renderer.RENDERER.delete(hedron);
+		hedron.delete();
 	}
 
 	public Element pos(float x, float y){
