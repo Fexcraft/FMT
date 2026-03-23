@@ -29,7 +29,7 @@ public class PolygonEditor extends Editor {
 		//addComponent(SHAPEBOX = new ShapeboxComponent());
 		//addComponent(CYLINDER = new CylinderComponentFull());
 		addComponent(CURVE = new CurveComponent());
-		addComponent(MARKER = new MarkerComponent());
+		//addComponent(MARKER = new MarkerComponent());
 		//BOXOFF.minimize(true);
 		VERTOFF.minimize(true);
 	}
