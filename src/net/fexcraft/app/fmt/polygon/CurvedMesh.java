@@ -55,7 +55,7 @@ public class CurvedMesh extends CurvePolygon {
 		M4DW axe0 = M4DW.create();
 		M4DW axe1 = M4DW.create();
 		if(subs == null) subs = new ArrayList<>();
-		for(Polyhedron<GLObject> sub : subs) PolyRenderer.RENDERER.delete(sub);
+		for(Polyhedron<GLObject> sub : subs) sub.delete();
 		subs.clear();
 		for(int c = 0; c < curves.size(); c++){
 			Curve cu = curves.get(c);
