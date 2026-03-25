@@ -19,10 +19,12 @@ public class Scrollable extends Element {
 	private Element up;
 	private Element dw;
 	private float scrolled;
+	private int top;
 	public float ih;
 
-	public Scrollable(boolean onleft){
+	public Scrollable(boolean onleft, int topoff){
 		left = onleft;
+		top = topoff;
 	}
 
 	@Override
@@ -48,7 +50,8 @@ public class Scrollable extends Element {
 	}
 
 	public void updateSize(float width, float height){
-		size(width, height);
+		size(width, height - top);
+		pos(0, top);
 		updateBar();
 	}
 
