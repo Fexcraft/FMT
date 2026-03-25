@@ -39,10 +39,10 @@ public class FMTInterface extends Element {
 		add(statusbar = new Element(){
 			@Override
 			public void onResize(){
-				size(FMT.SCALED_WIDTH - TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
+				size(FMT.SCALED_WIDTH - TOOLBAR_WIDTH - EDITOR_WIDTH, TOOLBAR_HEIGHT);
 				pos(TOOLBAR_WIDTH, 0);
 			}
-		}.size(FMT.SCALED_WIDTH - TOOLBAR_WIDTH, TOOLBAR_HEIGHT)
+		}.size(FMT.SCALED_WIDTH - TOOLBAR_WIDTH - EDITOR_WIDTH, TOOLBAR_HEIGHT)
 			.pos(TOOLBAR_WIDTH, 0).color(col_cd)
 			.text("...")
 		);
