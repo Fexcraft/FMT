@@ -13,15 +13,12 @@ import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
 import com.spinyowl.legui.component.Component;
 import com.spinyowl.legui.component.Panel;
 import com.spinyowl.legui.style.Style;
-import com.spinyowl.legui.style.border.SimpleLineBorder;
 import com.spinyowl.legui.style.color.ColorConstants;
 import net.fexcraft.app.fmt.env.PackDevEnv;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.oui.JsonEditor;
 import net.fexcraft.app.fmt.oui.UVViewer;
-import net.fexcraft.app.fmt.oui.editors.EditorPanel;
-import net.fexcraft.app.fmt.oui.trees.PolygonTree;
 import net.fexcraft.app.fmt.oui.workspace.WorkspaceViewer;
 import net.fexcraft.app.fmt.utils.ShaderManager.Uniform;
 import net.fexcraft.app.fmt.utils.fvtm.FVTMConfigEditor;
@@ -314,7 +311,7 @@ public class GGR {
 		}
 		if(isOverUI()){
 			if(Editor.VISIBLE_TREE != Editor.POLYGON_TREE || cursor_x[0] < FMT.WIDTH - Editor.WIDTH) return;
-			if(!PolygonTree.SORT_MODE) return;
+			/*if(!PolygonTree.SORT_MODE) return;
 			ArrayList<Group> groups = FMT.MODEL.selected_groups();
 			if(groups.isEmpty()) return;
 			int dir = yoffset > 0 ? -1 : 1;
@@ -329,7 +326,7 @@ public class GGR {
 				}
 			}
 			Editor.POLYGON_TREE.reAddGroups();
-			Editor.ANIM_TREE.reAddGroups();
+			Editor.ANIM_TREE.reAddGroups();*/
 			return;
 		}
 		double s = yoffset * Settings.SCROLL_SPEED.value;
