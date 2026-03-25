@@ -97,7 +97,6 @@ public class AnimComponent extends EditorComponent {
 		add.getListenerMap().addListener(CursorEnterEvent.class, clis);
 		//
 		UIUtils.hide(/*remove,*/ visible, add);
-		if(!PolygonTree.SORT_MODE) UIUtils.hide(sort_up, sort_dw);
 	}
 
 	private int genFullheight(){
