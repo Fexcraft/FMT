@@ -17,6 +17,7 @@ import net.fexcraft.lib.frl.Vertex;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import static net.fexcraft.app.fmt.ui.FMTInterface.TOOLBAR_HEIGHT;
 
@@ -456,6 +457,17 @@ public class Element {
 		}
 		if(x >= pickpos[0] && x <= pickpos[2] && y >= pickpos[1] && y <= pickpos[3]) return this;
 		return null;
+	}
+
+	public void remElmIf(Predicate<Element> pre){
+		if(elements == null) return;
+		elements.removeIf(elm -> {
+			if(pre.test(elm)){
+				elm.delete();
+				return true;
+			}
+			return false;
+		});
 	}
 
 	public static record ClickInfo(int cx, int cy, int lx, int ly){}
