@@ -2,6 +2,7 @@ package net.fexcraft.app.fmt.ui.tree;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.Group;
+import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.update.UpdateEvent;
@@ -23,7 +24,7 @@ public class GroupCom extends TTabCom {
 
 	@Override
 	public void init(Object... args){
-		super.init(group.id, group.size() * 30);
+		super.init(group.id, group.size() * 30 + 35);
 		label.onclick(ci -> {
 			FMT.MODEL.select(group);
 			updateLabelColor();
@@ -38,6 +39,20 @@ public class GroupCom extends TTabCom {
 			}
 			else FMT.MODEL.remGroup(group);
 		}).hint("tree.polygon.group.remove"));
+		group.forEach(poly -> add(new PolygonCom(poly)));
+		orderComponents();
+	}
+
+	private void orderComponents(){
+		int idx = 0;
+		fullheight = group.size() * 30 + 35;
+		for(Element elm : elements){
+			if(elm instanceof PolygonCom poly){
+				poly.pos(5, 32 + idx * 30);
+				idx++;
+			}
+		}
+		recompile();
 	}
 
 	protected void updateLabelColor(){
@@ -45,4 +60,21 @@ public class GroupCom extends TTabCom {
 		label.text_color((group.selected ? col_85 : col_cd).packed);
 	}
 
+	public void addPolygon(Polygon poly){
+		add(new PolygonCom(poly));
+		orderComponents();
+	}
+
+	public void remPolygon(Polygon poly){
+		elements.removeIf(elm -> elm instanceof PolygonCom com && com.polygon == poly);
+		orderComponents();
+	}
+
+
+	public PolygonCom getPolyCom(Polygon poly){
+		for(Element elm : elements){
+			if(elm instanceof PolygonCom com && com.polygon == poly) return com;
+		}
+		return null;
+	}
 }
