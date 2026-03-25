@@ -4,6 +4,7 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.ui.editor.EditorRoot;
 import net.fexcraft.app.fmt.oui.ProfileDialog;
 import net.fexcraft.app.fmt.oui.SettingsDialog;
+import net.fexcraft.app.fmt.ui.tree.TreeRoot;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.utils.Picker;
@@ -27,6 +28,7 @@ public class FMTInterface extends Element {
 	public static Element toolbar;
 	public static Element statusbar;
 	public static EditorRoot editor;
+	public static TreeRoot tree;
 	private static Long bar_timer;
 	private static String bar_text;
 	private UpdateHandler.UpdateCompound updcom = new UpdateHandler.UpdateCompound();
@@ -79,7 +81,7 @@ public class FMTInterface extends Element {
 			.hint("toolbar.icon.editor"));
 		toolbar.add(new Element().pos(buff += iinc, yo).size(32, 32)
 			.texture("icons/toolbar/tree").hoverable(true)
-			.onclick(ci -> {})
+			.onclick(ci -> tree.toggle())
 			.hint("toolbar.icon.tree"));
 		/*toolbar.add(menu_file = new Menu().translate("toolbar.file").pos(208, 3).size(200, 30).color(col_75));
 		menu_file.add(new Element().translate("toolbar.file.new").color(col_85).onclick(ci -> SaveHandler.newDialog()));
@@ -100,6 +102,7 @@ public class FMTInterface extends Element {
 		//toolbar.add(new Element().pos(10, 40).size(100, 200).color(RGB.BLUE).linecolor(new RGB(256, 256, 0)).rounded(true));
 		//toolbar.add(new Element().pos(200, 40).size(500, 100).color(RGB.GREEN).linecolor(RGB.BLACK).rounded(true));
 		add((editor = new EditorRoot()));
+		add((tree = new TreeRoot()));
 		//
 		updcom.add(UpdateEvent.PolygonSelected.class, e -> {
 			if(Element.SELECTED instanceof DropList){
