@@ -288,6 +288,7 @@ public class Element {
 
 	public void render(Picker.PickTask picker){
 		if(!visible) return;
+		if(pickpos[0] > FMT.SCALED_WIDTH || pickpos[1] > FMT.SCALED_HEIGHT || pickpos[2] < 0 || pickpos[3] < 0) return;
 		if(picker == null){
 			if(border != null){
 				PolyRenderer.mode(DrawMode.UI_LINES);
