@@ -46,6 +46,7 @@ public class Element {
 	public RGB col_sel = new RGB(0x43f0ae);
 	public Text text;
 	private ElmShape shape = ElmShape.RECTANGLE;
+	public float[] pickpos = new float[4];
 	private float x;
 	private float y;
 	public float z;
@@ -67,8 +68,10 @@ public class Element {
 		hedron.polygons.clear();
 		//if(hedron.glObj.pickercolor == null) hedron.glObj.pickercolor = new RGB(colorIdx == 0 ? colorIdx = elmIdx++ : colorIdx).toFloatArray();
 		hedron.glObj.textured = texture != null;
-		hedron.posX = gx();
-		hedron.posY = gy();
+		pickpos[0] = hedron.posX = gx();
+		pickpos[1] = hedron.posY = gy();
+		pickpos[2] = pickpos[0] + w;
+		pickpos[3] = pickpos[1] + h;
 		switch(shape){
 			case RECTANGLE -> {
 				hedron.polygons.add(new Polygon(new Vertex[]{
@@ -119,28 +122,32 @@ public class Element {
 
 	public void x(float nx){
 		x = nx;
-		hedron.posX = gx();
+		pickpos[0] = hedron.posX = gx();
+		pickpos[2] = pickpos[0] + w;
 		if(text != null) postext();
 		if(elements != null) for(Element elm : elements) elm.xa(0);
 	}
 
 	public void y(float ny){
 		y = ny;
-		hedron.posY = gy();
+		pickpos[1] = hedron.posY = gy();
+		pickpos[3] = pickpos[1] + h;
 		if(text != null) postext();
 		if(elements != null) for(Element elm : elements) elm.ya(0);
 	}
 
 	public void xa(float nx){
 		x += nx;
-		hedron.posX = gx();
+		pickpos[0] = hedron.posX = gx();
+		pickpos[2] = pickpos[0] + w;
 		if(text != null) postext();
 		if(elements != null) for(Element elm : elements) elm.xa(0);
 	}
 
 	public void ya(float ny){
 		y += ny;
-		hedron.posY = gy();
+		pickpos[1] = hedron.posY = gy();
+		pickpos[3] = pickpos[1] + h;
 		if(text != null) postext();
 		if(elements != null) for(Element elm : elements) elm.ya(0);
 	}
@@ -446,7 +453,7 @@ public class Element {
 				if(ret != null) return ret;
 			}
 		}
-		if(x >= hedron.posX && x <= hedron.posX + w && y >= hedron.posY && y <= hedron.posY + h) return this;
+		if(x >= pickpos[0] && x <= pickpos[2] && y >= pickpos[1] && y <= pickpos[3]) return this;
 		return null;
 	}
 
