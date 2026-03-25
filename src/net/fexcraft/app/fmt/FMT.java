@@ -15,6 +15,7 @@ import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.texture.TexturePainter;
 import net.fexcraft.app.fmt.texture.TextureUpdate;
+import net.fexcraft.app.fmt.ui.tree.TreeRoot;
 import net.fexcraft.app.fmt.utils.*;
 import net.fexcraft.app.fmt.workspace.Workspace;
 import net.fexcraft.app.json.JsonHandler;
@@ -234,7 +235,7 @@ public class FMT {
 				UI.update0();
 				timer.updateUPS();
 				accumulator -= interval;
-				//Trees.updateCounters();
+				TreeRoot.updateCounters();
 				//fps.getTextState().setText(timer.getFPS() + "");
 				//info.getTextState().setText(SELFIELD == null ? "none" : SELFIELD.polyval() == null ? SELFIELD.setting() == null ? "other" : "setting:" + SELFIELD.setting().id : SELFIELD.polyval().toString());
 				//poly.getTextState().setText(MODEL.selected().isEmpty() ? "none" : MODEL.first_selected().name());
