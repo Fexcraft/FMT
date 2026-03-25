@@ -11,7 +11,7 @@ public class TTabCom extends Element {
 
 	protected boolean minimized = false;
 	protected Element label;
-	private int fullheight;
+	protected int fullheight;
 
 	@Override
 	public void init(Object... args){
