@@ -50,4 +50,6 @@ public class TreeTab extends Element {
 
 	public void updateCounter(){}
 
+	public void reinsertComponents(){}
+
 }
