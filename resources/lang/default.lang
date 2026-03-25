@@ -162,6 +162,8 @@ tree.mode.texture=Texture Tree
 tree.mode.preview=Helper/Preview Tree
 tree.mode.animation=Animation Tree
 tree.info.polygon_count=Polygons: %s
+tree.polygon.group.visible=Toggle Visibility
+tree.polygon.group.remove=Remove Group
 
 
 # Editor Old
