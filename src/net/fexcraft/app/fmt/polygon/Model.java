@@ -20,7 +20,8 @@ import java.util.stream.Collectors;
 
 import net.fexcraft.app.fmt.animation.Animation;
 import net.fexcraft.app.fmt.texture.TextureManager;
-import net.fexcraft.app.fmt.oui.Editor;
+import net.fexcraft.app.fmt.ui.tree.TreeRoot;
+import net.fexcraft.app.fmt.ui.tree.TreeRoot.TreeMode;
 import net.fexcraft.app.fmt.update.UpdateEvent.*;
 import net.fexcraft.app.fmt.utils.*;
 import net.fexcraft.app.fmt.utils.fvtm.VehAttr;
@@ -873,8 +874,8 @@ public class Model {
 		if(idx >= allgroups.size() - 1 && i > 0) return;
 		Collections.swap(allgroups, idx, idx + i);
 		if(update){
-			Editor.POLYGON_TREE.reAddGroups();
-			Editor.ANIM_TREE.reAddGroups();
+			TreeRoot.TREES[TreeMode.POLYGON.ordinal()].reinsertComponents();
+			TreeRoot.TREES[TreeMode.ANIMATION.ordinal()].reinsertComponents();
 		}
 	}
 
