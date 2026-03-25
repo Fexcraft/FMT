@@ -26,20 +26,20 @@ public class TreeTab extends Element {
 
 	public static TreeTab create(TreeMode mode){
 		switch(mode){
-			//case POLYGON: return new PolygonTreeTab();
+			case POLYGON: return new PolygonTreeTab();
 		}
 		return new TreeTab(mode);
 	}
 
 	@Override
 	public void init(Object... args){
-		add((container = new Scrollable(false)));
+		add((container = new Scrollable(false, TOOLBAR_HEIGHT + (int)args[0])));
 		container.updateSize(w, h);
 	}
 
 	@Override
 	public void onResize(){
-		size(EDITOR_WIDTH, FMT.SCALED_HEIGHT - TOOLBAR_HEIGHT);
+		size(EDITOR_WIDTH, FMT.SCALED_HEIGHT);
 		if(container == null) return;
 		container.updateSize(w, h);
 	}
@@ -47,5 +47,7 @@ public class TreeTab extends Element {
 	public void reorderComponents(){
 		container.updateBar();
 	}
+
+	public void updateCounter(){}
 
 }
