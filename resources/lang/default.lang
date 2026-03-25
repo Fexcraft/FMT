@@ -156,6 +156,13 @@ editor.polygon.vertex=Vertex Adjustment
 editor.polygon.vertex.index=Index / Selection Total
 editor.polygon.vertex.offset=Offset
 
+# Tree
+tree.mode.polygon=Polygon Tree
+tree.mode.texture=Texture Tree
+tree.mode.preview=Helper/Preview Tree
+tree.mode.animation=Animation Tree
+tree.info.polygon_count=Polygons: %s
+
 
 # Editor Old
 editor.add_component=Add Editor Component
