@@ -1,6 +1,7 @@
 package net.fexcraft.app.fmt.ui;
 
 import net.fexcraft.app.fmt.ui.editor.ETabCom;
+import net.fexcraft.app.fmt.ui.tree.TTabCom;
 import net.fexcraft.app.fmt.utils.Logging;
 
 import java.util.function.Consumer;
@@ -59,7 +60,7 @@ public class Scrollable extends Element {
 		if(elements == null) return;
 		ih = 5;
 		for(Element elm : elements){
-			if(elm instanceof ETabCom){
+			if(elm instanceof ETabCom || elm instanceof TTabCom){
 				if(!elm.visible) continue;
 				ih += elm.h + 5;
 			}
@@ -76,10 +77,15 @@ public class Scrollable extends Element {
 		dw.pos(left ? w - SCROLLBAR_WIDTH : 5 , h - 16);
 		recompile();
 		bh = ih < h ? 0 : (h - ih) * scrolled;
-		int incr = 5;
+		float incr = 5;
 		for(Element elm : elements){
 			if(elm instanceof ETabCom){
 				elm.pos(5, incr + bh);
+				if(!elm.visible) continue;
+				incr += elm.h + 5;
+			}
+			if(elm instanceof TTabCom){
+				elm.pos(SCROLLBAR_WIDTH + 5, incr + bh);
 				if(!elm.visible) continue;
 				incr += elm.h + 5;
 			}
