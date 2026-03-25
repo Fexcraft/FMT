@@ -32,7 +32,27 @@ public class PolygonTreeTab extends TreeTab {
 		updcom.add(UpdateEvent.GroupRemoved.class, event -> removeGroup(event.group()));
 		updcom.add(UpdateEvent.ModelLoad.class, event -> reorderComponents());
 		updcom.add(UpdateEvent.ModelUnload.class, event -> removeGroups());
-		updcom.add(UpdateEvent.GroupSelected.class, event -> onGroupSelected());
+		updcom.add(UpdateEvent.GroupRenamed.class, event -> {
+			for(Element elm : container.elements){
+				if(elm instanceof GroupCom com && com.group == event.group()){
+					com.label.text(event.group().id);
+				}
+			}
+		});
+		updcom.add(UpdateEvent.GroupSelected.class, event -> {
+			for(Element elm : container.elements){
+				if(elm instanceof GroupCom com){
+					com.updateLabelColor();
+				}
+			}
+		});
+		updcom.add(UpdateEvent.GroupVisibility.class, event -> {
+			for(Element elm : container.elements){
+				if(elm instanceof GroupCom com && com.group == event.group()){
+					com.updateLabelColor();
+				}
+			}
+		});
 	}
 
 	private void addGroup(Group group){
@@ -48,14 +68,6 @@ public class PolygonTreeTab extends TreeTab {
 	private void removeGroups(){
 		container.elements.removeIf(e -> e instanceof GroupCom);
 		reorderComponents();
-	}
-
-	private void onGroupSelected(){
-		for(Element elm : container.elements){
-			if(elm instanceof GroupCom com){
-				com.updateLabelColor();
-			}
-		}
 	}
 
 	@Override
