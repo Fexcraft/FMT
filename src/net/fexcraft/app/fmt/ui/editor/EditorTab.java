@@ -65,7 +65,7 @@ public class EditorTab extends Element {
 
 	@Override
 	public void init(Object... args){
-		add((container = new Scrollable(true)));
+		add((container = new Scrollable(true, 0)));
 		container.updateSize(w, h);
 	}
 
