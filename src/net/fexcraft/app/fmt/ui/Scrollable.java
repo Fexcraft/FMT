@@ -14,13 +14,16 @@ import static net.fexcraft.app.fmt.ui.FMTInterface.col_cd;
 public class Scrollable extends Element {
 
 	public static int SCROLLBAR_WIDTH = 20;
+	private boolean left;
 	private Element bar;
 	private Element up;
 	private Element dw;
 	private float scrolled;
 	public float ih;
 
-	public Scrollable(){}
+	public Scrollable(boolean onleft){
+		left = onleft;
+	}
 
 	@Override
 	public void init(Object... args){
@@ -64,10 +67,10 @@ public class Scrollable extends Element {
 		if(bh > m) bh = m;
 		if(bh < 40) bh = 40;
 		float p = (m - bh) * scrolled;
-		bar.pos(w - SCROLLBAR_WIDTH, 16 + p);
+		bar.pos(left ? w - SCROLLBAR_WIDTH : 5, 16 + p);
 		bar.size(16, bh).recompile();
-		up.pos(w - SCROLLBAR_WIDTH, 0);
-		dw.pos(w - SCROLLBAR_WIDTH, h - 16);
+		up.pos(left ? w - SCROLLBAR_WIDTH : 5, 0);
+		dw.pos(left ? w - SCROLLBAR_WIDTH : 5 , h - 16);
 		recompile();
 		bh = ih < h ? 0 : (h - ih) * scrolled;
 		int incr = 5;
