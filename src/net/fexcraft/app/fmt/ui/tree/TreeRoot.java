@@ -25,6 +25,8 @@ public class TreeRoot extends Element {
 		for(TreeMode mode : TreeMode.values()){
 			add(new Element().pos(5 + mode.ordinal() * 35, 5 ).size(30, 30).texture("icons/tree/" + mode.name().toLowerCase())
 				.onclick(ci -> setMode(mode)).hint("tree.mode." + mode.name().toLowerCase()));
+			lastElement().z += 100;
+			lastElement().recompile();
 		}
 		for(int i = 0; i < TreeMode.values().length; i++){
 			add(TREES[i] = TreeTab.create(TreeMode.values()[i]), 0);
