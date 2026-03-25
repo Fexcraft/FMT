@@ -2,6 +2,7 @@ package net.fexcraft.app.fmt.ui.tree;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.Group;
+import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.utils.Translator;
@@ -53,6 +54,29 @@ public class PolygonTreeTab extends TreeTab {
 				}
 			}
 		});
+		updcom.add(UpdateEvent.PolygonAdded.class, event -> {
+			GroupCom com = getGroupCom(event.group());
+			if(com != null) com.addPolygon(event.polygon());
+		});
+		updcom.add(UpdateEvent.PolygonRenamed.class, event -> getPolyCom(event.polygon()).text(event.polygon().name()));
+		updcom.add(UpdateEvent.PolygonRemoved.class, event -> getGroupCom(event.group()).remPolygon(event.polygon()));
+		updcom.add(UpdateEvent.PolygonSelected.class, event -> getPolyCom(event.polygon()).updateLabelColor());
+		updcom.add(UpdateEvent.PolygonVisibility.class, event -> getPolyCom(event.polygon()).updateLabelColor());
+	}
+
+	private GroupCom getGroupCom(Group group){
+		for(Element elm : container.elements){
+			if(elm instanceof GroupCom com && com.group == group) return com;
+		}
+		return null;
+	}
+
+	private PolygonCom getPolyCom(Polygon poly){
+		GroupCom com = getGroupCom(poly.group());
+		if(com != null){
+			return com.getPolyCom(poly);
+		}
+		return null;
 	}
 
 	private void addGroup(Group group){
@@ -61,12 +85,21 @@ public class PolygonTreeTab extends TreeTab {
 	}
 
 	private void removeGroup(Group group){
-		container.elements.removeIf(e -> e instanceof GroupCom && ((GroupCom)e).group == group);
+		container.remElmIf(e -> e instanceof GroupCom && ((GroupCom)e).group == group);
 		reorderComponents();
 	}
 
 	private void removeGroups(){
-		container.elements.removeIf(e -> e instanceof GroupCom);
+		container.remElmIf(e -> e instanceof GroupCom);
+		reorderComponents();
+	}
+
+	@Override
+	public void reinsertComponents(){
+		container.remElmIf(e -> e instanceof GroupCom);
+		for(Group group : FMT.MODEL.allgroups()){
+			container.add(new GroupCom(group));
+		}
 		reorderComponents();
 	}
 
