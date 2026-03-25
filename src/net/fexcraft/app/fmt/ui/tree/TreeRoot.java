@@ -22,8 +22,12 @@ public class TreeRoot extends Element {
 
 	@Override
 	public void init(Object... args){
+		for(TreeMode mode : TreeMode.values()){
+			add(new Element().pos(5 + mode.ordinal() * 35, 5 ).size(30, 30).texture("icons/tree/" + mode.name().toLowerCase())
+				.onclick(ci -> setMode(mode)).hint("tree.mode." + mode.name().toLowerCase()));
+		}
 		for(int i = 0; i < TreeMode.values().length; i++){
-			add(TREES[i] = TreeTab.create(TreeMode.values()[i]));
+			add(TREES[i] = TreeTab.create(TreeMode.values()[i]), 0);
 			TREES[i].reorderComponents();
 			UpdateHandler.register(TREES[i].updcom);
 		}
@@ -37,12 +41,18 @@ public class TreeRoot extends Element {
 
 	@Override
 	public void onResize(){
-		pos(FMT.SCALED_WIDTH - EDITOR_WIDTH, TOOLBAR_HEIGHT);
+		pos(FMT.SCALED_WIDTH - EDITOR_WIDTH, 0);
 		size(EDITOR_WIDTH, FMT.HEIGHT);
 	}
 
 	public void toggle(){
 		visible = !visible;
+	}
+
+	public static void updateCounters(){
+		for(TreeTab tree : TREES){
+			tree.updateCounter();
+		}
 	}
 
 	public static enum TreeMode {
