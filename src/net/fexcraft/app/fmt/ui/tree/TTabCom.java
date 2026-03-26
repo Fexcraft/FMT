@@ -9,50 +9,41 @@ import static net.fexcraft.app.fmt.ui.FMTInterface.*;
  */
 public class TTabCom extends Element {
 
-	protected boolean minimized = false;
-	protected Element label;
-	protected int fullheight;
+	public Element container;
+	public int fullheight;
 
 	@Override
 	public void init(Object... args){
-		border(col_85);
-		size(EDITOR_CONTENT, fullheight = (int)args[1]);
-		add(label = new Element().translate(args[0].toString()).size(EDITOR_CONTENT, 30));
-		label.add(new Element().hoverable(true).texture("icons/component/minimize").size(28, 28).pos(EDITOR_CONTENT - 29, 1).onclick(ci -> {
-			if(minimized) show();
-			else hide();
-		}));
-		updateLabelColor();
+		size((int)args[1], 30);
+		translate(args[0].toString());
+		add(new Element().hoverable(true).texture("icons/component/minimize").size(28, 28).pos((int)args[1] - 30, 1)
+			.onclick(ci -> {
+				if(container.visible) hide(); else show();
+			}));
+		add(container = new Element().size(EDITOR_CONTENT, 30).pos(0, 30).border(col_85));
+		updateTextColor();
 	}
 
 	@Override
 	public Element hide(){
-		minimized = true;
-		size(EDITOR_CONTENT, 30);
-		for(int i = 1; i < elements.size(); i++){
-			elements.get(i).hide();
-		}
-		updateLabelColor();
-		recompile();
-		((TreeTab)root.root).reorderComponents();
+		container.hide();
+		updateTextColor();
+		orderComponents();
 		return this;
 	}
 
 	@Override
 	public Element show(){
-		minimized = false;
-		size(EDITOR_CONTENT, fullheight);
-		for(int i = 1; i < elements.size(); i++){
-			elements.get(i).show();
-		}
-		updateLabelColor();
-		recompile();
-		((TreeTab)root.root).reorderComponents();
+		container.show();
+		updateTextColor();
+		orderComponents();
 		return this;
 	}
 
-	protected void updateLabelColor(){
-		label.color(0xffffff);
+	protected void updateTextColor(){
+		color(0xffffff);
 	}
+
+	protected void orderComponents(){}
 
 }
