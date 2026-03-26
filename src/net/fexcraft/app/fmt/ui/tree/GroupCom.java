@@ -24,57 +24,60 @@ public class GroupCom extends TTabCom {
 
 	@Override
 	public void init(Object... args){
-		super.init(group.id, group.size() * 30 + 35);
-		label.onclick(ci -> {
+		super.init(group.id, EDITOR_CONTENT - 5);
+		onclick(ci -> {
 			FMT.MODEL.select(group);
-			updateLabelColor();
+			updateTextColor();
 		});
-		label.add(new Element().hoverable(true).texture("icons/component/visible").size(28, 28).pos(EDITOR_CONTENT - 30 * 2, 1).onclick(ci -> {
+		add(new Element().hoverable(true).texture("icons/component/visible").size(28, 28).pos(EDITOR_CONTENT - 35 * 2, 1).onclick(ci -> {
 			group.visible = !group.visible;
 			UpdateHandler.update(new UpdateEvent.GroupVisibility(group, group.visible));
 		}).hint("tree.polygon.group.visible"));
-		label.add(new Element().hoverable(true).texture("icons/component/remove").size(28, 28).pos(EDITOR_CONTENT - 30 * 3, 1).onclick(ci -> {
+		add(new Element().hoverable(true).texture("icons/component/remove").size(28, 28).pos(EDITOR_CONTENT - 35 * 3, 1).onclick(ci -> {
 			if(ASK_GROUP_REMOVAL.value){
 				//TODO
 			}
 			else FMT.MODEL.remGroup(group);
 		}).hint("tree.polygon.group.remove"));
-		group.forEach(poly -> add(new PolygonCom(poly)));
+		group.forEach(poly -> container.add(new PolygonCom(poly)));
 		orderComponents();
 	}
 
-	private void orderComponents(){
-		int idx = 0;
-		fullheight = group.size() * 30 + 35;
-		for(Element elm : elements){
-			if(elm instanceof PolygonCom poly){
-				poly.pos(5, 32 + idx * 30);
-				idx++;
-			}
+	protected void orderComponents(){
+		if(container.elements == null) return;
+		fullheight = 5;
+		PolygonCom com;
+		for(Element elm : container.elements){
+			com = (PolygonCom)elm;
+			com.pos(5, fullheight);
+			fullheight += 30;
 		}
-		recompile();
+		container.size(w, fullheight += 5);
+		container.recompile();
+		((TTabCom)root.root).orderComponents();
 	}
 
-	protected void updateLabelColor(){
-		label.color((group.visible ? group.selected ? Settings.GROUP_SELECTED : Settings.GROUP_NORMAL : group.selected ? Settings.GROUP_INV_SEL : Settings.GROUP_INVISIBLE).value);
-		label.text_color((group.selected ? col_85 : col_cd).packed);
+	protected void updateTextColor(){
+		color((group.visible ? group.selected ? Settings.GROUP_SELECTED : Settings.GROUP_NORMAL : group.selected ? Settings.GROUP_INV_SEL : Settings.GROUP_INVISIBLE).value);
+		text_color((group.selected ? col_85 : col_cd).packed);
 	}
 
 	public void addPolygon(Polygon poly){
-		add(new PolygonCom(poly));
+		container.add(new PolygonCom(poly));
 		orderComponents();
 	}
 
 	public void remPolygon(Polygon poly){
-		elements.removeIf(elm -> elm instanceof PolygonCom com && com.polygon == poly);
+		container.remElmIf(elm -> elm instanceof PolygonCom com && com.polygon == poly);
 		orderComponents();
 	}
 
 
 	public PolygonCom getPolyCom(Polygon poly){
-		for(Element elm : elements){
+		for(Element elm : container.elements){
 			if(elm instanceof PolygonCom com && com.polygon == poly) return com;
 		}
 		return null;
 	}
+
 }
