@@ -2,6 +2,7 @@ package net.fexcraft.app.fmt.ui.tree;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.Group;
+import net.fexcraft.app.fmt.polygon.Pivot;
 import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.update.UpdateEvent;
@@ -29,30 +30,49 @@ public class PolygonTreeTab extends TreeTab {
 		add(totals = new Element().pos(5, TOOLBAR_HEIGHT).size(FF, 30).translate(TOTALS_FORMAT, "...").text_autoscale());
 		lastElement().z += 100;
 		lastElement().recompile();
-		updcom.add(UpdateEvent.GroupAdded.class, event -> addGroup(event.group()));
-		updcom.add(UpdateEvent.GroupRemoved.class, event -> removeGroup(event.group()));
-		updcom.add(UpdateEvent.ModelLoad.class, event -> reorderComponents());
-		updcom.add(UpdateEvent.ModelUnload.class, event -> removeGroups());
-		updcom.add(UpdateEvent.GroupRenamed.class, event -> {
+		updcom.add(UpdateEvent.PivotAdded.class, event -> addPivot(event.pivot()));
+		updcom.add(UpdateEvent.PivotRemoved.class, event -> remPivot(event.pivot()));
+		updcom.add(UpdateEvent.PivotRenamed.class, event -> {
 			for(Element elm : container.elements){
-				if(elm instanceof GroupCom com && com.group == event.group()){
-					com.label.text(event.group().id);
+				if(elm instanceof PivotCom com && com.pivot == event.pivot()){
+					com.text(event.pivot().id);
 				}
 			}
 		});
+		updcom.add(UpdateEvent.PivotSelected.class, event -> {
+			for(Element elm : container.elements){
+				if(elm instanceof PivotCom com){
+					com.updateTextColor();
+				}
+			}
+		});
+		updcom.add(UpdateEvent.PivotVisibility.class, event -> {
+			for(Element elm : container.elements){
+				if(elm instanceof PivotCom com && com.pivot == event.pivot()){
+					com.updateTextColor();
+				}
+			}
+		});
+		updcom.add(UpdateEvent.GroupAdded.class, event -> addGroup(event.group()));
+		updcom.add(UpdateEvent.GroupRemoved.class, event -> remGroup(event.group()));
+		updcom.add(UpdateEvent.ModelLoad.class, event -> reinsertComponents());
+		updcom.add(UpdateEvent.ModelUnload.class, event -> removeGroups());
+		updcom.add(UpdateEvent.GroupRenamed.class, event -> {
+			GroupCom com = getGroupCom(event.group());
+			if(com != null) com.text(event.group().id);
+		});
 		updcom.add(UpdateEvent.GroupSelected.class, event -> {
 			for(Element elm : container.elements){
-				if(elm instanceof GroupCom com){
-					com.updateLabelColor();
+				if(elm instanceof PivotCom com){
+					for(Element ge : com.container.elements){
+						((GroupCom)ge).updateTextColor();
+					}
 				}
 			}
 		});
 		updcom.add(UpdateEvent.GroupVisibility.class, event -> {
-			for(Element elm : container.elements){
-				if(elm instanceof GroupCom com && com.group == event.group()){
-					com.updateLabelColor();
-				}
-			}
+			GroupCom com = getGroupCom(event.group());
+			if(com != null) com.updateTextColor();
 		});
 		updcom.add(UpdateEvent.PolygonAdded.class, event -> {
 			GroupCom com = getGroupCom(event.group());
@@ -64,29 +84,39 @@ public class PolygonTreeTab extends TreeTab {
 		updcom.add(UpdateEvent.PolygonVisibility.class, event -> getPolyCom(event.polygon()).updateLabelColor());
 	}
 
-	private GroupCom getGroupCom(Group group){
+	private PivotCom getPivotCom(Pivot pivot){
 		for(Element elm : container.elements){
-			if(elm instanceof GroupCom com && com.group == group) return com;
+			if(elm instanceof PivotCom com && com.pivot == pivot) return com;
 		}
 		return null;
+	}
+
+	private GroupCom getGroupCom(Group group){
+		PivotCom com = getPivotCom(FMT.MODEL.getP(group.pivot));
+		return com == null ? null : com.getGroupCom(group);
 	}
 
 	private PolygonCom getPolyCom(Polygon poly){
 		GroupCom com = getGroupCom(poly.group());
-		if(com != null){
-			return com.getPolyCom(poly);
-		}
-		return null;
+		return com == null ? null : com.getPolyCom(poly);
+	}
+
+	private void addPivot(Pivot pivot){
+		container.add(new PivotCom(pivot));
+		reorderComponents();
+	}
+
+	private void remPivot(Pivot pivot){
+		container.remElmIf(e -> e instanceof PivotCom com && com.pivot == pivot);
+		reorderComponents();
 	}
 
 	private void addGroup(Group group){
-		container.add(new GroupCom(group));
-		reorderComponents();
+		getPivotCom(FMT.MODEL.getP(group.pivot)).addGroup(group);
 	}
 
-	private void removeGroup(Group group){
-		container.remElmIf(e -> e instanceof GroupCom && ((GroupCom)e).group == group);
-		reorderComponents();
+	private void remGroup(Group group){
+		getPivotCom(FMT.MODEL.getP(group.pivot)).remGroup(group);
 	}
 
 	private void removeGroups(){
@@ -96,9 +126,9 @@ public class PolygonTreeTab extends TreeTab {
 
 	@Override
 	public void reinsertComponents(){
-		container.remElmIf(e -> e instanceof GroupCom);
-		for(Group group : FMT.MODEL.allgroups()){
-			container.add(new GroupCom(group));
+		container.remElmIf(e -> e instanceof PivotCom);
+		for(Pivot pivot : FMT.MODEL.pivots()){
+			container.add(new PivotCom(pivot));
 		}
 		reorderComponents();
 	}
