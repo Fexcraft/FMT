@@ -60,9 +60,12 @@ public class Scrollable extends Element {
 		if(elements == null) return;
 		ih = 5;
 		for(Element elm : elements){
-			if(elm instanceof ETabCom || elm instanceof TTabCom){
-				if(!elm.visible) continue;
+			if(!elm.visible) continue;
+			if(elm instanceof ETabCom){
 				ih += elm.h + 5;
+			}
+			if(elm instanceof TTabCom com){
+				ih += com.h + (com.container.visible ? com.container.h : 0) + 5;
 			}
 		}
 		//
@@ -84,10 +87,10 @@ public class Scrollable extends Element {
 				if(!elm.visible) continue;
 				incr += elm.h + 5;
 			}
-			if(elm instanceof TTabCom){
-				elm.pos(SCROLLBAR_WIDTH + 5, incr + bh);
+			if(elm instanceof TTabCom com){
+				com.pos(SCROLLBAR_WIDTH + 5, incr + bh);
 				if(!elm.visible) continue;
-				incr += elm.h + 5;
+				incr += com.h + (com.container.visible ? com.container.h : 0) + 5;
 			}
 		}
 	}
