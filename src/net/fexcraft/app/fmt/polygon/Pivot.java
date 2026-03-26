@@ -133,4 +133,8 @@ public class Pivot {
 		return parent != null ? parent.getVec(off) : off;
 	}
 
+	public boolean selected(){
+		return FMT.MODEL.sel_pivot == this;
+	}
+
 }
