@@ -20,10 +20,10 @@ public class Scrollable extends Element {
 	private Element up;
 	private Element dw;
 	private float scrolled;
-	private int top;
+	private float top;
 	public float ih;
 
-	public Scrollable(boolean onleft, int topoff){
+	public Scrollable(boolean onleft, float topoff){
 		left = onleft;
 		top = topoff;
 	}
