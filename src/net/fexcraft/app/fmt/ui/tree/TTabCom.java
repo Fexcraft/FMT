@@ -17,7 +17,7 @@ public class TTabCom extends Element {
 		checkpickpos = false;
 		size((int)args[1], 30);
 		translate(args[0].toString());
-		add(new Element().hoverable(true).texture("icons/component/minimize").size(28, 28).pos((int)args[1] - 30, 1)
+		add(new Element().hoverable(true).texture("icons/component/size").size(28, 28).pos((int)args[1] - 30, 1)
 			.onclick(ci -> {
 				if(container.visible) hide(); else show();
 			}));
