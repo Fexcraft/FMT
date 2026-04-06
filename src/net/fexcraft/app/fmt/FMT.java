@@ -311,28 +311,16 @@ public class FMT {
 			Picker.process();
 			Picker.reset();
 		}
-		//if(Settings.TESTING.value){
-			PolyRenderer.SCALE = Settings.UI_SCALE.value;
-			/*if(Picker.TASK == Picker.PickTask.NONE){
-				Picker.pick(Picker.PickType.UI, Picker.PickTask.HOVER, true);
-			}*/
-			CAM.ortho(1);
-			/*glClearColor(1, 1, 1, 1);
-		    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			PolyRenderer.mode(DrawMode.PICKER);
-			UI.render(Picker.TASK);
-			Picker.process();*/
-			GGR.updateHoveredElement();
-			glClearColor(background[0], background[1], background[2], 1);
-	    	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	    	PolyRenderer.mode(DrawMode.UI);
-			UI.render(null);
-			PolyRenderer.SCALE = 1f;
-		//}
-		//else{
-		//	glClearColor(background[0], background[1], background[2], 1);
-	    //	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		//}
+		//
+		PolyRenderer.SCALE = Settings.UI_SCALE.value;
+		GGR.updateHoveredElement();
+		CAM.ortho(1);
+		glClearColor(background[0], background[1], background[2], 1);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		PolyRenderer.mode(DrawMode.UI);
+		UI.render();
+		PolyRenderer.SCALE = 1f;
+		//
 		CAM.apply();
 	    PolyRenderer.mode(DrawMode.TEXTURED);
 		PolyRenderer.updateLightState();
