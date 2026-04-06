@@ -113,8 +113,8 @@ public class FMTInterface extends Element {
 	}
 
 	@Override
-	public void render(Picker.PickTask picker){
-		for(Element elm : elements) elm.render(picker);
+	public void render(){
+		for(Element elm : elements) elm.render();
 	}
 
 	@Override
