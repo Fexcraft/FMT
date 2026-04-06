@@ -1,6 +1,7 @@
 package net.fexcraft.app.fmt.ui.editor;
 
 import net.fexcraft.app.fmt.ui.Element;
+import net.fexcraft.app.fmt.ui.Field;
 import net.fexcraft.app.fmt.ui.SelectorBar;
 import net.fexcraft.app.fmt.oui.Editor;
 import net.fexcraft.app.fmt.update.UpdateEvent;
@@ -99,14 +100,14 @@ public class EditorSidePanel extends Element {
 		@Override
 		public void init(Object... args){
 			super.init(args);
-			add(text = new Element().size(80, 30).pos(38, 28).color(col_75).text(Editor.RATE).onscroll(si -> {
+			add(text = new Field(Field.FieldType.FLOAT, 80).pos(38, 28).onscroll(si -> {
 				float er = Editor.RATE;
 				if(si.sy() > 0) er *= 2;
 				else er /= 2;
 				if(er > 1024) er = 1024;
 				if(er < 0.001) er = 0.001f;
 				UpdateHandler.update(new UpdateEvent.EditorRate(Editor.RATE = er));
-			}).hoverable(true).hide());
+			}).text(Editor.RATE).hoverable(true).hide());
 			Consumer<Float> mul = m -> {
 				if(Editor.RATE != m) UpdateHandler.update(new UpdateEvent.EditorRate(Editor.RATE = m));
 			};
