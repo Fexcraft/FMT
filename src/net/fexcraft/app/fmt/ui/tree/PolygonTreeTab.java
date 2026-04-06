@@ -27,9 +27,7 @@ public class PolygonTreeTab extends TreeTab {
 	public void init(Object... objs){
 		super.init(30);
 		TOTALS_FORMAT = Translator.translate("tree.info.polygon_count");
-		add(totals = new Element().pos(5, TOOLBAR_HEIGHT).size(FF, 30).translate(TOTALS_FORMAT, "...").text_autoscale());
-		lastElement().z += 100;
-		lastElement().recompile();
+		over.add(totals = new Element().pos(5, 0).size(FF, 30).translate(TOTALS_FORMAT, "...").text_autoscale());
 		updcom.add(UpdateEvent.PivotAdded.class, event -> addPivot(event.pivot()));
 		updcom.add(UpdateEvent.PivotRemoved.class, event -> remPivot(event.pivot()));
 		updcom.add(UpdateEvent.PivotRenamed.class, event -> {
