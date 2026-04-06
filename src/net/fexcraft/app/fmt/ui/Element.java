@@ -11,7 +11,6 @@ import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.frl.Polygon;
 import net.fexcraft.lib.frl.Polyhedron;
-import net.fexcraft.lib.frl.Renderer;
 import net.fexcraft.lib.frl.Vertex;
 
 import java.util.ArrayList;
@@ -48,6 +47,7 @@ public class Element {
 	public Text text;
 	private ElmShape shape = ElmShape.RECTANGLE;
 	public float[] pickpos = new float[4];
+	public boolean checkpickpos = true;
 	private float x;
 	private float y;
 	public float z;
@@ -287,22 +287,22 @@ public class Element {
 		return this;
 	}
 
-	public void render(Picker.PickTask picker){
+	public void render(){
 		if(!visible) return;
-		if(pickpos[0] > FMT.SCALED_WIDTH || pickpos[1] > FMT.SCALED_HEIGHT || pickpos[2] < 0 || pickpos[3] < 0) return;
-		if(picker == null){
-			if(border != null){
-				PolyRenderer.mode(DrawMode.UI_LINES);
-				hedron.render();
-				PolyRenderer.mode(DrawMode.UI);
-			}
-			if(texture != null) TextureManager.bind(texture);
+		if(checkpickpos){
+			if(pickpos[0] > FMT.SCALED_WIDTH || pickpos[1] > FMT.SCALED_HEIGHT || pickpos[2] < 0 || pickpos[3] < 0) return;
 		}
-		/*if(picker != Picker.PickTask.HOVER || hoverable)*/ hedron.render();
-		if(text != null && picker == null) text.render();
-		if(elements != null) for(Element elm : elements) elm.render(picker);
-		if(hint != null && picker == null && hovered){
-			hint.pos(GGR.mousePosX() + 10, GGR.mousePosY() + (GGR.mousePosY() > FMT.HEIGHT - TOOLBAR_HEIGHT ? -30 : 0)).render(picker);
+		if(border != null){
+			PolyRenderer.mode(DrawMode.UI_LINES);
+			hedron.render();
+			PolyRenderer.mode(DrawMode.UI);
+		}
+		if(texture != null) TextureManager.bind(texture);
+		hedron.render();
+		if(text != null) text.render();
+		if(elements != null) for(Element elm : elements) elm.render();
+		if(hint != null && hovered){
+			hint.pos(GGR.mousePosX() + 10, GGR.mousePosY() + (GGR.mousePosY() > FMT.HEIGHT - TOOLBAR_HEIGHT ? -30 : 0)).render();
 		}
 	}
 
