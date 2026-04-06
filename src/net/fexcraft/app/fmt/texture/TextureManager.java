@@ -60,6 +60,7 @@ public class TextureManager {
 	}
 
 	public static void load(String string, Boolean rooted){
+		if(TEXTURES.containsKey(string)) return;
 		if(rooted == null) rooted = true;
 		File file = new File(rooted ? String.format("./resources/textures/%s.png", string) : string + ".png");
 		TEXTURES.put(string, new Texture(string, file));
