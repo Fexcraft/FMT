@@ -38,12 +38,12 @@ public class SelectorBar extends Element {
 		steps = (int)(max / inc) - 1;
 		wdv = wid / steps;
 		cons = (Consumer<Float>)args[5];
-		add(new Element().size(16, 16).texture("oui/arrow_left").pos(0, 0)
+		add(new Element().size(16, 16).texture("ui/arrow_left").pos(0, 0)
 			.onclick(ci -> select(elements.get(3).x() - 16 - wdv - 1)));
-		add(new Element().size(16, 16).texture("oui/arrow_right").pos(4 + wid + 32, 0)
+		add(new Element().size(16, 16).texture("ui/arrow_right").pos(4 + wid + 32, 0)
 			.onclick(ci -> select(elements.get(3).x() - 16 + wdv + 1)));
-		add(new Element().size(wid + 16, 16).texture("oui/selector_bar").pos(18, 0));
-		add(new Element().size(8, 16).texture("oui/selector_bar_selector").pos(20, 0).zi());
+		add(new Element().size(wid + 16, 16).texture("ui/selector_bar").pos(18, 0));
+		add(new Element().size(8, 16).texture("ui/selector_bar_selector").pos(20, 0).zi());
 		elements.get(2).onclick(ci -> {
 			select(ci.lx());
 		}).onscroll(si -> {
