@@ -557,7 +557,7 @@ public abstract class Polygon {
 			if(key.vertix() == prim && key.secondary() == sec) return vertoffs.get(key);
 		}
 		VOKey key = new VOKey(type, prim, sec);
-		Logging.log(key);
+		//Logging.log(key);
 		vertoffs.put(key, new Vertoff());
 		return vertoffs.get(key);
 	}
