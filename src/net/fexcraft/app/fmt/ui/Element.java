@@ -6,7 +6,6 @@ import net.fexcraft.app.fmt.polygon.PolyRenderer;
 import net.fexcraft.app.fmt.polygon.PolyRenderer.DrawMode;
 import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.utils.GGR;
-import net.fexcraft.app.fmt.utils.Picker;
 import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.frl.Polygon;
@@ -27,8 +26,6 @@ public class Element {
 
 	public static Element SELECTED;
 	public static Element HOVERED;
-	//public static int elmIdx = 7;
-	//public int colorIdx = 0;
 	public Polyhedron<GLObject> hedron;
 	public Consumer<ClickInfo> onclick;
 	public Consumer<ScrollInfo> onscroll;
@@ -67,7 +64,6 @@ public class Element {
 	public Element recompile(){
 		hedron.recompile = true;
 		hedron.polygons.clear();
-		//if(hedron.glObj.pickercolor == null) hedron.glObj.pickercolor = new RGB(colorIdx == 0 ? colorIdx = elmIdx++ : colorIdx).toFloatArray();
 		hedron.glObj.textured = texture != null;
 		pickpos[0] = hedron.posX = gx();
 		pickpos[1] = hedron.posY = gy();
