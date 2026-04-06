@@ -32,16 +32,29 @@ public class PivotCom extends TTabCom {
 		add(new Element().hoverable(true).texture("icons/component/visible").size(28, 28).pos(EDITOR_CONTENT - 30 * 2, 1).onclick(ci -> {
 			pivot.visible = !pivot.visible;
 			UpdateHandler.update(new UpdateEvent.PivotVisibility(pivot, pivot.visible));
-		}).hint("tree.polygon.pivot.visible"));
+		}).hint("tree.polygon.pivot.visible").hide());
 		if(!pivot.root){
 			add(new Element().hoverable(true).texture("icons/component/remove").size(28, 28).pos(EDITOR_CONTENT - 30 * 3, 1).onclick(ci -> {
 				if(ASK_PIVOT_REMOVAL.value){
 					//TODO
 				}
 				else FMT.MODEL.remPivot(pivot);
-			}).hint("tree.polygon.pivot.remove"));
+			}).hint("tree.polygon.pivot.remove").hide());
 		}
 		pivot.groups.forEach(group -> container.add(new GroupCom(group)));
+	}
+
+	@Override
+	public void hovered(boolean bool){
+		super.hovered(bool);
+		if(bool){
+			elements.get(2).show();
+			if(!pivot.root) elements.get(3).show();
+		}
+		else{
+			elements.get(2).hide();
+			if(!pivot.root) elements.get(3).hide();
+		}
 	}
 
 	protected void orderComponents(){
