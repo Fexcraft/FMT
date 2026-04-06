@@ -32,15 +32,28 @@ public class GroupCom extends TTabCom {
 		add(new Element().hoverable(true).texture("icons/component/visible").size(28, 28).pos(EDITOR_CONTENT - 35 * 2, 1).onclick(ci -> {
 			group.visible = !group.visible;
 			UpdateHandler.update(new UpdateEvent.GroupVisibility(group, group.visible));
-		}).hint("tree.polygon.group.visible"));
+		}).hint("tree.polygon.group.visible").hide());
 		add(new Element().hoverable(true).texture("icons/component/remove").size(28, 28).pos(EDITOR_CONTENT - 35 * 3, 1).onclick(ci -> {
 			if(ASK_GROUP_REMOVAL.value){
 				//TODO
 			}
 			else FMT.MODEL.remGroup(group);
-		}).hint("tree.polygon.group.remove"));
+		}).hint("tree.polygon.group.remove").hide());
 		group.forEach(poly -> container.add(new PolygonCom(poly)));
 		orderComponents();
+	}
+
+	@Override
+	public void hovered(boolean bool){
+		super.hovered(bool);
+		if(bool){
+			elements.get(2).show();
+			elements.get(3).show();
+		}
+		else{
+			elements.get(2).hide();
+			elements.get(3).hide();
+		}
 	}
 
 	protected void orderComponents(){
