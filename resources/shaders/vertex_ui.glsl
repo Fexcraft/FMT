@@ -20,8 +20,8 @@ void main(){
     mat4 mvp = projection * view * model;
     gl_Position = mvp * vec4(position, 1.0);
     
-    if(line_color.a == 0 && poly_color.a == 0){
+    //if(line_color.a == 0){
 	    uv = uv_in;
 	    color = color_in;
-    }
+    //}
 }
