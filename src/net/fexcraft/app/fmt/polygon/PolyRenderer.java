@@ -73,8 +73,8 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 		glUniformMatrix4fv(program.getUniform(Uniform.MODEL), false, matrix0.get(new float[16]));
 		if(MODE.ui()){
 			glUniform4fv(program.getUniform(Uniform.LINE_COLOR), MODE.ui_lines() ? glo.linecolor : EMPTY);
-			glUniform4fv(program.getUniform(Uniform.POLY_COLOR), MODE.picker() ? glo.pickercolor : /*!glo.textured ?*/ glo.polycolor /*: EMPTY*/);
-			glUniform1f(program.getUniform(Uniform.TEXTURED), !MODE.picker() && glo.textured ? 1 : 0);
+			glUniform4fv(program.getUniform(Uniform.POLY_COLOR), glo.polycolor);
+			glUniform1f(program.getUniform(Uniform.TEXTURED), glo.textured ? 1 : 0);
 			//glUniform1f(program.getUniform(Uniform.TINTED), MODE.ui_tinted() ? 1 : 0);
 		}
 		else{
@@ -313,6 +313,16 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 
 	@Override
 	public void rotate(double deg, int x, int y, int z){
+
+	}
+
+	@Override
+	public void rotateRad(float rad, int x, int y, int z){
+
+	}
+
+	@Override
+	public void rotateRad(double rad, int x, int y, int z){
 
 	}
 
