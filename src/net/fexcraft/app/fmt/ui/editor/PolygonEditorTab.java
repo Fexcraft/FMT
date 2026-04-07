@@ -274,9 +274,9 @@ public class PolygonEditorTab extends EditorTab {
 				name.text(NOPOLYSEL);
 			}
 			else if(event.selected() == 1 || (event.prevselected() == 0 && event.selected() > 0)){
-				group.selectEntry(FMT.MODEL.first_selected().group().id);
+				group.selectKey(FMT.MODEL.first_selected().group().id);
 				name.text(event.polygon().name());
-				polytype.selectEntry(FMT.MODEL.first_selected().getShape().getName());
+				polytype.selectKey(FMT.MODEL.first_selected().getShape().getName());
 			}
 		});
 		updcom.add(PolygonSelected.class, con -> {
