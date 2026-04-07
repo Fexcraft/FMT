@@ -62,7 +62,7 @@ public class EditorSidePanel extends Element {
 	public static class EditorList extends Panel {
 
 		public EditorList(int x, int y){
-			super(x, y, 330, 40);
+			super(x, y, 360, 40);
 		}
 
 		@Override
