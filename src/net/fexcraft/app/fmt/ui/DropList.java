@@ -12,10 +12,10 @@ import static net.fexcraft.app.fmt.ui.editor.EditorTab.FS;
 /**
  * @author Ferdinand Calo' (FEX___96)
  */
-public class DropList extends Element {
+public class DropList<V> extends Element {
 
-	private ArrayList<Pair<String, Object>> entries = new ArrayList<>();
-	private BiConsumer<String, Object> consumer;
+	private ArrayList<Pair<String, V>> entries = new ArrayList<>();
+	private BiConsumer<String, V> consumer;
 	private int current = 0;
 	private Element drop;
 
@@ -37,7 +37,7 @@ public class DropList extends Element {
 		add(new Element().color(0x62b4e3).size(FS, FS).pos(w + FS + FS, 0).text("O")
 			.text_centered(true).hoverable(true).onclick(info -> {
 				if(entries.isEmpty() || consumer == null) return;
-				Pair<String, Object> kv = entries.get(current);
+				Pair<String, V> kv = entries.get(current);
 				consumer.accept(kv.getLeft(), kv.getRight());
 			}));
 		add(drop = new Element().color(col_bd).border(col_85).pos(0, FS));
@@ -50,7 +50,7 @@ public class DropList extends Element {
 		drop.clearElements(false);
 	}
 
-	public DropList onchange(BiConsumer<String, Object> cons){
+	public DropList<V> onchange(BiConsumer<String, V> cons){
 		consumer = cons;
 		return this;
 	}
@@ -63,7 +63,7 @@ public class DropList extends Element {
 		update_text();
 	}
 
-	public void addEntry(String key, Object val){
+	public void addEntry(String key, V val){
 		entries.add(Pair.of(key, val));
 	}
 
@@ -77,10 +77,19 @@ public class DropList extends Element {
 		update_text();
 	}
 
-	public void selectEntry(String key){
+	public void selectKey(String key){
 		int idx = 0;
-		for(Pair<String, Object> entry : entries){
+		for(Pair<String, V> entry : entries){
 			if(entry.getLeft().equals(key)) break;
+			idx++;
+		}
+		selectEntry(idx);
+	}
+
+	public void selectValue(V val){
+		int idx = 0;
+		for(Pair<String, V> entry : entries){
+			if(entry.getRight().equals(val)) break;
 			idx++;
 		}
 		selectEntry(idx);
@@ -100,10 +109,10 @@ public class DropList extends Element {
 		drop.size(w + FS * 3, entries.size() * FS);
 		drop.recompile();
 		int idx = 0;
-		for(Pair<String, Object> entry : entries){
+		for(Pair<String, V> entry : entries){
 			drop.add(new TextElm(0, idx++ * FS, drop.w, entry.getLeft(), col_bd)
 				.onclick(ci -> {
-					selectEntry(entry.getLeft());
+					selectKey(entry.getLeft());
 					drop_hide_clear();
 					//TODO setting if should apply on click
 					//TODO setting if should close dropdown
