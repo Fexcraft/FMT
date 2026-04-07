@@ -155,6 +155,11 @@ editor.polygon.curve.offset=Plane Offset
 editor.polygon.vertex=Vertex Adjustment
 editor.polygon.vertex.index=Index / Selection Total
 editor.polygon.vertex.offset=Offset
+editor.model.general=Model Attributes
+editor.model.general.name=Name
+editor.model.general.texture_size=Texture Size
+editor.model.general.texture_group=Texture Group
+editor.model.general.orientation=Orientation & Floor
 
 # Tree
 tree.mode.polygon=Polygon Tree
