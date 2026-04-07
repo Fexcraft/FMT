@@ -14,6 +14,8 @@ public class EditorRoot extends Element {
 
 	public static EditorTab[] EDITORS = new EditorTab[EditorMode.values().length];
 	public static String NOPOLYSEL;
+	public static String NOGROUPSEL;
+	public static String NOPIVOTSEL;
 
 	public EditorRoot(){
 		super();
@@ -25,6 +27,8 @@ public class EditorRoot extends Element {
 	@Override
 	public void init(Object... args){
 		NOPOLYSEL = Translator.translate("editor.info.no_polygon_selected");
+		NOGROUPSEL = Translator.translate("editor.info.no_group_selected");
+		NOPIVOTSEL = Translator.translate("editor.info.no_pivot_selected");
 		for(int i = 0; i < EditorMode.values().length; i++){
 			add(EDITORS[i] = EditorTab.create(EditorMode.values()[i]));
 			EDITORS[i].reorderComponents();
@@ -50,7 +54,7 @@ public class EditorRoot extends Element {
 
 	public static enum EditorMode {
 
-		POLYGON, MODEL, PIVOT, TEXTURE, PAINTER, PREVIEW, VARIABLE, ANIMATION
+		POLYGON, GROUP, PIVOT, MODEL, TEXTURE, PAINTER, PREVIEW, VARIABLE, ANIMATION
 
 	}
 
