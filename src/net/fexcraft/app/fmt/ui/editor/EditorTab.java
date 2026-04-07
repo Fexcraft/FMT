@@ -59,6 +59,7 @@ public class EditorTab extends Element {
 	public static EditorTab create(EditorMode mode){
 		switch(mode){
 			case POLYGON: return new PolygonEditorTab();
+			case GROUP: return new GroupEditorTab();
 			case MODEL: return new ModelEditorTab();
 		}
 		return new EditorTab(mode);
