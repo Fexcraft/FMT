@@ -89,7 +89,7 @@ public class GroupEditorTab extends EditorTab {
 				if(old != null) old.groups.remove(gr);
 				gr.pivot = pivot.id;
 				pivot.groups.add(gr);
-				UpdateHandler.update(new UpdateEvent.PivotChanged(gr, pivot));
+				UpdateHandler.update(new UpdateEvent.PivotChanged(gr, old, pivot));
 			}
 		})).pos(FO, next_y_pos(1)));
 		//
