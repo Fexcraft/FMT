@@ -217,11 +217,11 @@ public class GGR {
 
 	public static void updateHoveredElement(){
 		Element hov = FMT.UI.getElmAt(posx, posy);
+		if(Element.HOVERED != null && Element.HOVERED != hov) Element.HOVERED.hovered(false);
 		if(hov == null){
 			Element.HOVERED = null;
 		}
 		else{
-			if(Element.HOVERED != null) Element.HOVERED.hovered(false);
 			hov.hovered(true);
 			Element.HOVERED = hov;
 		}
