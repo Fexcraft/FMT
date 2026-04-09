@@ -53,6 +53,13 @@ public class PolygonTreeTab extends TreeTab {
 		});
 		updcom.add(UpdateEvent.GroupAdded.class, event -> addGroup(event.group()));
 		updcom.add(UpdateEvent.GroupRemoved.class, event -> remGroup(event.group()));
+		updcom.add(UpdateEvent.PivotChanged.class, event -> {
+			PivotCom pc = getPivotCom(event.old_pivot());
+			boolean v = pc.getGroupCom(event.group()).container.visible;
+			pc.remGroup(event.group());
+			addGroup(event.group());
+			if(!v) getGroupCom(event.group()).hide();
+		});
 		updcom.add(UpdateEvent.ModelLoad.class, event -> reinsertComponents());
 		updcom.add(UpdateEvent.ModelUnload.class, event -> removeGroups());
 		updcom.add(UpdateEvent.GroupRenamed.class, event -> {
