@@ -26,66 +26,52 @@ public class EditorSidePanel extends Element {
 
 	@Override
 	public void init(Object... args){
-		add(new EditorList(0, 0), "icons/panels/editors");
-		add(new Multiplier(0, 42), "icons/panels/multiplier");
+		add(new EditorList(),0, 0, "icons/panels/editors");
+		add(new Multiplier(),0, 42, "icons/panels/multiplier");
 	}
 
 	public static class Panel extends Element {
 
-		protected Element icon;
+		protected Element container;
 		protected boolean expanded;
 		protected int ew, eh;
 
-		public Panel(int x, int y, int w, int h){
+		public Panel(){
 			super();
-			pos(x, y);
-			color(col_cd);
-			size(w, h);
-			hedron.visible = false;
-			expanded = false;
-			//hoverable = true;
+			size(32, 32);
+			onclick(ci -> toggle());
+			hoverable = true;
 		}
 
 		@Override
 		public void init(Object... args){
-			add(icon = new Element().pos(4, 4).size(32, 32).texture(args[0].toString()).onclick(ci -> toggle()));
+			add(container = new Element().pos(w + 4, -4).size(ew, eh).color(col_cd).border(RGB.BLACK).hide());
+			pos((int)args[0] + 4, (int)args[1] + 4);
+			texture(args[2].toString());
 		}
 
 		public void toggle(){
 			expanded = !expanded;
-			hedron.visible = expanded;
-			border(expanded ? RGB.BLACK : null);
+			container.visible = expanded;
 		}
 
 	}
 
 	public static class EditorList extends Panel {
 
-		public EditorList(int x, int y){
-			super(x, y, 360, 40);
-		}
-
 		@Override
 		public void init(Object... args){
+			ew = 325;
+			eh = 40;
 			super.init(args);
-			int iinc = 35, buff = -iinc + 40, yo = 4;
+			int iinc = 35, buff = -iinc + 5, yo = 4;
 			for(EditorRoot.EditorMode mode : EditorRoot.EditorMode.values()){
-				add(new Element().pos(buff += iinc, yo).size(32, 32)
+				container.add(new Element().pos(buff += iinc, yo).size(32, 32)
 					.texture("icons/editor/" + mode.name().toLowerCase()).hoverable(true)
 					.onclick(ci -> EditorRoot.setMode(mode))
-					.hint("editor.mode." + mode.name().toLowerCase()).hide());
+					.hint("editor.mode." + mode.name().toLowerCase()));
 			}
 		}
-
-		@Override
-		public void toggle(){
-			super.toggle();
-			for(Element elm : elements){
-				if(elm == icon) continue;
-				elm.visible = expanded;
-			}
-		}
-
 	}
 
 	public static class Multiplier extends Panel {
@@ -93,14 +79,12 @@ public class EditorSidePanel extends Element {
 		private SelectorBar[] bars = new SelectorBar[3];
 		private Element text;
 
-		public Multiplier(int x, int y){
-			super(x, y, 380, 88);
-		}
-
 		@Override
 		public void init(Object... args){
+			ew = 330;
+			eh = 88;
 			super.init(args);
-			add(text = new Field(Field.FieldType.FLOAT, 80).pos(38, 28).onscroll(si -> {
+			container.add(text = new Field(Field.FieldType.FLOAT, 90).pos(5, 28).onscroll(si -> {
 				float er = Editor.RATE;
 				if(si.sy() > 0) er *= 2;
 				else er /= 2;
@@ -111,9 +95,9 @@ public class EditorSidePanel extends Element {
 			Consumer<Float> mul = m -> {
 				if(Editor.RATE != m) UpdateHandler.update(new UpdateEvent.EditorRate(Editor.RATE = m));
 			};
-			add((bars[0] = new SelectorBar()).pos(130, 10).hide(), 200, 1, 16, 1, "1 - 16", mul);
-			add((bars[1] = new SelectorBar()).pos(130, 35).hide(), 200, 0.0625, 1, 0.0625, "0.0625 - 1", mul);
-			add((bars[2] = new SelectorBar()).pos(130, 60).hide(), 200, 0.1, 1, 0.1, "0.1 - 1", mul);
+			container.add((bars[0] = new SelectorBar()).pos(90, 10).hide(), 200, 1, 16, 1, "1 - 16", mul);
+			container.add((bars[1] = new SelectorBar()).pos(90, 35).hide(), 200, 0.0625, 1, 0.0625, "0.0625 - 1", mul);
+			container.add((bars[2] = new SelectorBar()).pos(90, 60).hide(), 200, 0.1, 1, 0.1, "0.1 - 1", mul);
 			UpdateHandler.register(com -> {
 				com.add(UpdateEvent.EditorRate.class, e -> text.text(e.rate()));
 			});
@@ -122,8 +106,8 @@ public class EditorSidePanel extends Element {
 		@Override
 		public void toggle(){
 			super.toggle();
-			text.visible = expanded;
-			for(SelectorBar bar : bars) bar.visible = expanded;
+			text.visible = container.visible;
+			for(SelectorBar bar : bars) bar.visible = container.visible;
 		}
 
 	}
