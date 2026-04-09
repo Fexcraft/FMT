@@ -305,7 +305,7 @@ public class Element {
 	public void update0(){
 		update();
 		if(elements != null) for(Element elm : elements) elm.update0();
-		hovered(false);
+		//hovered(false);
 	}
 
 	public void update(){}
