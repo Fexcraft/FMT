@@ -42,9 +42,9 @@ public class EditorPanel extends Component {
 	}
 
 	public static void load(){
-		PANELS.add(new EditorsPanel());
-		PANELS.add(new MultiplierPanel());
-		PANELS.add(new QuickAddPanel());
+		//PANELS.add(new EditorsPanel());
+		//PANELS.add(new MultiplierPanel());
+		//PANELS.add(new QuickAddPanel());
 		PANELS.add(new FlipToolsPanel());
 		PANELS.add(new MarkerPanel());
 		PANELS.add(new SelectorPanel());
