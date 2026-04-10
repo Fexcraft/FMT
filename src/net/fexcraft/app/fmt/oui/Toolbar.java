@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import net.fexcraft.app.fmt.env.PackDevEnv;
 import net.fexcraft.app.fmt.polygon.Shape;
 import net.fexcraft.app.fmt.port.im.ImportManager;
-import net.fexcraft.app.fmt.oui.panels.QuickAddPanel;
 import net.fexcraft.app.fmt.oui.workspace.WorkspaceViewer;
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
 import com.spinyowl.legui.component.Component;
@@ -106,7 +105,7 @@ public class Toolbar extends Panel {
 			new MenuButton(3, "trees.helper", () -> Editor.PREVIEW_TREE.toggle()),
 			new MenuButton(4, "trees.anim", () -> Editor.ANIM_TREE.toggle())
 		));*/
-		this.add(new ToolbarMenu(mid++, "polygons",
+		/*this.add(new ToolbarMenu(mid++, "polygons",
 			new MenuButton(0, "polygons.add_box", () -> QuickAddPanel.addBox()),
 			new MenuButton(1, "polygons.add_shapebox", () -> QuickAddPanel.addShapebox()),
 			new MenuButton(2, "polygons.add_cylinder", () -> QuickAddPanel.addCylinder()),
@@ -117,7 +116,7 @@ public class Toolbar extends Panel {
 			new MenuButton(7, "polygons.add_cyl_curve", () -> QuickAddPanel.addCurve(Shape.CYL_CURVE)),
 			new MenuButton(8, "polygons.add_mesh_curve", () -> QuickAddPanel.addCurve(Shape.MESH_CURVE)),
 			new MenuButton(9, "polygons.add_object")
-		));
+		));*/
 		this.add(new ToolbarMenu(mid++, "workspace", () -> WorkspaceViewer.show0()));
 		this.add(new ToolbarMenu(mid++, "prototype", () -> PackDevEnv.toggle()));
 		this.add(new ToolbarMenu(mid++, "exit", () -> FMT.close(0)));
