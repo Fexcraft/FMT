@@ -18,7 +18,7 @@ public class TextElm extends Element {
 		shape(ElmShape.NONE);
 		pos(x, y);
 		size(w, FS);
-		text(text);
+		translate(text);
 	}
 
 	public TextElm(float x, float y, float w, String text, RGB col){
