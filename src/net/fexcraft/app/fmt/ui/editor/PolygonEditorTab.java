@@ -58,7 +58,9 @@ public class PolygonEditorTab extends EditorTab {
 		sorting.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "sorting.name"));
 		sorting.add((name = new Field(TEXT, FF, field -> rename(field.get_text()))).pos(FO, next_y_pos(1)));
 		sorting.lastElement().text(NOPOLYSEL);
-		sorting.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "sorting.group"));
+		sorting.add(new TextElm(0, next_y_pos(1), FF - 20).translate(lang_prefix + "sorting.group"));
+		sorting.add(new SideButton(0, next_y_pos(0), "icons/configeditor/add").hint("editor.polygon.sorting.add_group")
+			.onclick(ci -> EditorSidePanel.AddPolygon.addGroup()));
 		sorting.add((group = new DropList(FF).onchange((key, val) -> {
 			Group ng = (Group)val;
 			FMT.MODEL.selection_copy().forEach(poly -> {
