@@ -97,6 +97,18 @@ editor.mode.painter=Painter
 editor.mode.preview=Preview/Helper Editor
 editor.mode.variable=Variable Editor
 editor.mode.animation=Animation Editor
+editor.panel.mode=Editor Mode
+editor.panel.multiplier=Multiplier
+editor.panel.add=Add
+editor.panel.add.box=Add Box
+editor.panel.add.shapebox=Add Shapebox
+editor.panel.add.cylinder=Add Cylinder
+editor.panel.add.struct=Add Struct/Bounding Box
+editor.panel.add.object=Add Object
+editor.panel.add.marker=Add Marker
+editor.panel.add.voxel=Add Voxel
+editor.panel.add.group=Add Group
+editor.panel.add.copy=Copy Selected
 editor.info.no_polygon_selected=[no-polygon-selected]
 editor.info.no_group_selected=[no-group-selected]
 editor.info.no_pivot_selected=[no-pivot-selected]
@@ -111,6 +123,7 @@ editor.info.colorpicker=Color Picker (may crash)
 editor.polygon.sorting=Name / Group / Type +
 editor.polygon.sorting.name=Polygon Name
 editor.polygon.sorting.group=Polygon Group
+editor.polygon.sorting.add_group=Add Group
 editor.polygon.sorting.type=Polygon Type
 editor.polygon.sorting.reset_corners=Resets all Shapebox corners.
 editor.polygon.sorting.reset_size=Rounds size to full numbers.
@@ -182,6 +195,30 @@ tree.polygon.group.remove=Remove Group
 tree.polygon.polygon.visible=Toggle Visibility
 tree.polygon.polygon.remove=Remove Polygon
 
+# Add Group Dialog
+dialog.add_group.title=Add new Group
+dialog.add_group.name=Group Name
+dialog.add_group.pivot=Group Pivot
+
+# Generic Dialog
+dialog.title.default=Generic Dialog
+dialog.button.continue=Continue
+dialog.button.confirm=Confirm
+dialog.button.cancel=Cancel
+dialog.button.select=Select
+dialog.button.close=Close
+dialog.button.open=Open
+dialog.button.save=Save
+dialog.button.load=Load
+dialog.button.skip=Skip
+dialog.button.exit=Exit
+dialog.button.new=New
+dialog.button.add=Add
+dialog.button.yes=Yes
+dialog.button.no=No
+dialog.button.ok=Ok
+dialog.button.enable=Enable
+dialog.button.disable=Disable
 
 # Editor Old
 editor.add_component=Add Editor Component
@@ -372,26 +409,6 @@ uvviewer.button.zoom_out=Zoom Out
 
 # FVTM Config Editor
 fvtmeditor.title=FVTM Config Editor
-
-# Generic Dialogs
-dialog.title.default=Generic Dialog
-dialog.button.continue=Continue
-dialog.button.confirm=Confirm
-dialog.button.cancel=Cancel
-dialog.button.select=Select
-dialog.button.close=Close
-dialog.button.open=Open
-dialog.button.save=Save
-dialog.button.load=Load
-dialog.button.skip=Skip
-dialog.button.exit=Exit
-dialog.button.new=New
-dialog.button.add=Add
-dialog.button.yes=Yes
-dialog.button.no=No
-dialog.button.ok=Ok
-dialog.button.enable=Enable
-dialog.button.disable=Disable
 
 # Save/Load
 saveload.title=FMTB Save Handler
