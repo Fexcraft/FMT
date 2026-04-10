@@ -20,7 +20,7 @@ public class EditorSidePanel extends Element {
 	public EditorSidePanel(){
 		super();
 		pos(EDITOR_WIDTH, 0);
-		size(40, 200);
+		size(40, 250);
 		color(col_cd);
 	}
 
@@ -30,6 +30,8 @@ public class EditorSidePanel extends Element {
 		add(new AddPolygon(),0, yo += inc, "icons/panels/quick_add");
 		add(new EditorList(),0, yo += inc, "icons/panels/editors");
 		add(new Multiplier(),0, yo += inc, "icons/panels/multiplier");
+		yo += inc;
+		add(new FlipTools(),0, yo += inc, "icons/panels/fliptools");
 	}
 
 	public static class Panel extends Element {
@@ -141,6 +143,64 @@ public class EditorSidePanel extends Element {
 
 	}
 
+	public static class FlipTools extends Panel {
+
+		@Override
+		public void init(Object... args){
+			ew = 325;
+			eh = 40;
+			super.init(args);
+			hint("editor.panel.flip");
+			int iinc = 35, buff = -iinc + 5, yo = 4;
+			container.add(new Element().pos(buff += iinc, yo).size(32, 32)
+				.texture("icons/polygon/flip_lr").hint("editor.panel.flip.cor_x")
+				.onclick(ci -> FMT.MODEL.flipPolygons(null, 0))
+			);
+			container.add(new Element().pos(buff += iinc, yo).size(32, 32)
+				.texture("icons/polygon/flip_ud").hint("editor.panel.flip.cor_y")
+				.onclick(ci -> FMT.MODEL.flipPolygons(null, 1))
+			);
+			container.add(new Element().pos(buff += iinc, yo).size(32, 32)
+				.texture("icons/polygon/flip_fb").hint("editor.panel.flip.cor_z")
+				.onclick(ci -> FMT.MODEL.flipPolygons(null, 2))
+			);
+			container.add(new Element().pos(buff += iinc, yo).size(32, 32)
+				.texture("icons/polygon/flip_posx").hint("editor.panel.flip.pos_x")
+				.onclick(ci -> FMT.MODEL.flipBoxPosition(null, 0))
+			);
+			container.add(new Element().pos(buff += iinc, yo).size(32, 32)
+				.texture("icons/polygon/flip_posy").hint("editor.panel.flip.pos_y")
+				.onclick(ci -> FMT.MODEL.flipBoxPosition(null, 1))
+			);
+			container.add(new Element().pos(buff += iinc, yo).size(32, 32)
+				.texture("icons/polygon/flip_posz").hint("editor.panel.flip.pos_z")
+				.onclick(ci -> FMT.MODEL.flipBoxPosition(null, 2))
+			);
+			container.add(new Element().pos(buff += iinc, yo).size(32, 32)
+				.texture("icons/polygon/flip_posx_fb").hint("editor.panel.flip.cor_z_pos_x")
+				.onclick(ci -> {
+					FMT.MODEL.flipPolygons(null, 2);
+					FMT.MODEL.flipBoxPosition(null, 0);
+				})
+			);
+			container.add(new Element().pos(buff += iinc, yo).size(32, 32)
+				.texture("icons/polygon/flip_posy_ud").hint("editor.panel.flip.cor_y_pos_y")
+				.onclick(ci -> {
+					FMT.MODEL.flipPolygons(null, 1);
+					FMT.MODEL.flipBoxPosition(null, 1);
+				})
+			);
+			container.add(new Element().pos(buff += iinc, yo).size(32, 32)
+				.texture("icons/polygon/flip_posz_lr").hint("editor.panel.flip.cor_x_pos_z")
+				.onclick(ci -> {
+					FMT.MODEL.flipPolygons(null, 0);
+					FMT.MODEL.flipBoxPosition(null, 2);
+				})
+			);
+		}
+
+	}
+
 	public static class Multiplier extends Panel {
 
 		private SelectorBar[] bars = new SelectorBar[3];
@@ -149,7 +209,7 @@ public class EditorSidePanel extends Element {
 		@Override
 		public void init(Object... args){
 			ew = 330;
-			eh = 88;
+			eh = 80;
 			super.init(args);
 			hint("editor.panel.multiplier");
 			container.add(text = new Field(Field.FieldType.FLOAT, 90).pos(5, 28).onscroll(si -> {
