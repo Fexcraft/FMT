@@ -6,6 +6,9 @@ import net.fexcraft.app.fmt.ui.*;
 import net.fexcraft.app.fmt.oui.Editor;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateHandler;
+import net.fexcraft.app.fmt.utils.CornerUtil;
+import net.fexcraft.app.fmt.utils.Picker;
+import net.fexcraft.app.fmt.utils.Selector;
 import net.fexcraft.lib.common.math.RGB;
 
 import java.util.function.Consumer;
@@ -20,7 +23,7 @@ public class EditorSidePanel extends Element {
 	public EditorSidePanel(){
 		super();
 		pos(EDITOR_WIDTH, 0);
-		size(40, 250);
+		size(40, 294);
 		color(col_cd);
 	}
 
@@ -32,6 +35,8 @@ public class EditorSidePanel extends Element {
 		add(new Multiplier(),0, yo += inc, "icons/panels/multiplier");
 		yo += inc;
 		add(new FlipTools(),0, yo += inc, "icons/panels/fliptools");
+		add(new MarkerScale(),0, yo += inc, "icons/panels/marker_scale");
+		add(new Selection(),0, yo += inc, "icons/panels/selmode");
 	}
 
 	public static class Panel extends Element {
@@ -219,23 +224,83 @@ public class EditorSidePanel extends Element {
 				if(er > 1024) er = 1024;
 				if(er < 0.001) er = 0.001f;
 				UpdateHandler.update(new UpdateEvent.EditorRate(Editor.RATE = er));
-			}).text(Editor.RATE).hoverable(true).hide());
+			}).text(Editor.RATE).hoverable(true));
 			Consumer<Float> mul = m -> {
 				if(Editor.RATE != m) UpdateHandler.update(new UpdateEvent.EditorRate(Editor.RATE = m));
 			};
-			container.add((bars[0] = new SelectorBar()).pos(90, 10).hide(), 200, 1, 16, 1, "1 - 16", mul);
-			container.add((bars[1] = new SelectorBar()).pos(90, 35).hide(), 200, 0.0625, 1, 0.0625, "0.0625 - 1", mul);
-			container.add((bars[2] = new SelectorBar()).pos(90, 60).hide(), 200, 0.1, 1, 0.1, "0.1 - 1", mul);
+			container.add((bars[0] = new SelectorBar()).pos(90, 10), 200, 1, 16, 1, "1 - 16", mul);
+			container.add((bars[1] = new SelectorBar()).pos(90, 35), 200, 0.0625, 1, 0.0625, "0.0625 - 1", mul);
+			container.add((bars[2] = new SelectorBar()).pos(90, 60), 200, 0.1, 1, 0.1, "0.1 - 1", mul);
 			UpdateHandler.register(com -> {
 				com.add(UpdateEvent.EditorRate.class, e -> text.text(e.rate()));
 			});
 		}
 
+	}
+
+	public static class MarkerScale extends Panel {
+
 		@Override
-		public void toggle(){
-			super.toggle();
-			text.visible = container.visible;
-			for(SelectorBar bar : bars) bar.visible = container.visible;
+		public void init(Object... args){
+			ew = 325;
+			eh = 40;
+			super.init(args);
+			hint("editor.panel.marker_scale");
+			Field field;
+			container.add((field = new Field(Field.FieldType.FLOAT, 85)).pos(5, 6).onscroll(si -> {
+				Editor.MARKER_SCALE = Editor.MARKER_SCALE == 0f ? 1 : si.sy() > 0 ? Editor.MARKER_SCALE * 2 : Editor.MARKER_SCALE / 2f;
+				CornerUtil.compile();
+				UpdateHandler.update(new UpdateEvent.MarkerScale(Editor.MARKER_SCALE));
+			}).text(Editor.RATE).hoverable(true));
+			Consumer<Float> cons = m -> {
+				if(Editor.MARKER_SCALE != m){
+					Editor.MARKER_SCALE = m;
+					CornerUtil.compile();
+					UpdateHandler.update(new UpdateEvent.MarkerScale(Editor.MARKER_SCALE));
+				}
+			};
+			SelectorBar bar;
+			container.add((bar = new SelectorBar()).pos(85, 10), 200, 0.1f, 1, 0.1f, "0.1 - 1", cons);
+			UpdateHandler.register(com -> {
+				com.add(UpdateEvent.MarkerScale.class, e -> field.text(e.scale()));
+			});
+		}
+
+	}
+
+	public static class Selection extends Panel {
+
+		@Override
+		public void init(Object... args){
+			ew = 285;
+			eh = 40;
+			super.init(args);
+			hint("editor.panel.selection");
+			int iinc = 35, buff = -iinc + 5, yo = 4;
+			container.add(new Element().pos(buff += iinc, yo).size(32, 32)
+				.texture("icons/painter/polygon").hint("editor.panel.selection.polygon")
+				.onclick(ci -> Selector.set(Picker.PickType.POLYGON))
+			);
+			container.add(new Element().pos(buff += iinc, yo).size(32, 32)
+				.texture("icons/painter/face").hint("editor.panel.selection.face")
+				.onclick(ci -> Selector.set(Picker.PickType.FACE))
+			);
+			container.add(new Element().pos(buff += iinc, yo).size(32, 32)
+				.texture("icons/painter/pixel").hint("editor.panel.selection.vertex")
+				.onclick(ci -> Selector.set(Picker.PickType.VERTEX))
+			);
+			container.add(new Element().pos(buff += iinc * 2, yo).size(32, 32)
+				.texture("icons/component/visible").hint("editor.panel.selection.visibility")
+				.onclick(ci -> Selector.SHOW_VERTICES = !Selector.SHOW_VERTICES)
+			);
+			container.add(new Element().pos(buff += iinc, yo).size(32, 32)
+				.texture("icons/component/remove").hint("editor.panel.selection.clear")
+				.onclick(ci -> FMT.MODEL.clearSelectedVerts())
+			);
+			container.add(new Element().pos(buff += iinc * 2, yo).size(32, 32)
+				.texture("icons/component/move_right").hint("editor.panel.selection.util_move")
+				.onclick(ci -> Selector.move())
+			);
 		}
 
 	}
