@@ -1,8 +1,8 @@
 package net.fexcraft.app.fmt.ui.editor;
 
-import net.fexcraft.app.fmt.ui.Element;
-import net.fexcraft.app.fmt.ui.Field;
-import net.fexcraft.app.fmt.ui.SelectorBar;
+import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.polygon.*;
+import net.fexcraft.app.fmt.ui.*;
 import net.fexcraft.app.fmt.oui.Editor;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateHandler;
@@ -26,8 +26,10 @@ public class EditorSidePanel extends Element {
 
 	@Override
 	public void init(Object... args){
-		add(new EditorList(),0, 0, "icons/panels/editors");
-		add(new Multiplier(),0, 42, "icons/panels/multiplier");
+		int inc = 42, yo = -inc;
+		add(new AddPolygon(),0, yo += inc, "icons/panels/quick_add");
+		add(new EditorList(),0, yo += inc, "icons/panels/editors");
+		add(new Multiplier(),0, yo += inc, "icons/panels/multiplier");
 	}
 
 	public static class Panel extends Element {
@@ -64,6 +66,7 @@ public class EditorSidePanel extends Element {
 			ew = 325;
 			eh = 40;
 			super.init(args);
+			hint("editor.panel.mode");
 			int iinc = 35, buff = -iinc + 5, yo = 4;
 			for(EditorRoot.EditorMode mode : EditorRoot.EditorMode.values()){
 				container.add(new Element().pos(buff += iinc, yo).size(32, 32)
@@ -72,6 +75,70 @@ public class EditorSidePanel extends Element {
 					.hint("editor.mode." + mode.name().toLowerCase()));
 			}
 		}
+	}
+
+	public static class AddPolygon extends Panel {
+
+		@Override
+		public void init(Object... args){
+			ew = 325;
+			eh = 40;
+			super.init(args);
+			hint("editor.panel.add");
+			int iinc = 35, buff = -iinc + 5, yo = 4;
+			container.add(new Element().pos(buff += iinc, yo).size(32, 32)
+				.texture("icons/polygon/box").hint("editor.panel.add.box")
+				.onclick(ci -> FMT.MODEL.add(null, null, new Box(null)))
+			);
+			container.add(new Element().pos(buff += iinc, yo).size(32, 32)
+				.texture("icons/polygon/shapebox").hint("editor.panel.add.shapebox")
+				.onclick(ci -> FMT.MODEL.add(null, null, new Shapebox(null)))
+			);
+			container.add(new Element().pos(buff += iinc, yo).size(32, 32)
+				.texture("icons/polygon/cylinder").hint("editor.panel.add.cylinder")
+				.onclick(ci -> FMT.MODEL.add(null, null, new Cylinder(null)))
+			);
+			container.add(new Element().pos(buff += iinc, yo).size(32, 32)
+				.texture("icons/polygon/boundingbox").hint("editor.panel.add.struct")
+				.onclick(ci -> FMT.MODEL.add(null, null, new StructBox(null)))
+			);
+			container.add(new Element().pos(buff += iinc, yo).size(32, 32)
+				.texture("icons/polygon/object").hint("editor.panel.add.object")
+				.onclick(ci -> {})
+			);
+			container.add(new Element().pos(buff += iinc, yo).size(32, 32)
+				.texture("icons/polygon/marker").hint("editor.panel.add.marker")
+				.onclick(ci -> FMT.MODEL.add(null, null, new Marker(null)))
+			);
+			container.add(new Element().pos(buff += iinc, yo).size(32, 32)
+				.texture("icons/polygon/group").hint("editor.panel.add.group")
+				.onclick(ci -> addGroup())
+			);
+			container.add(new Element().pos(buff += iinc, yo).size(32, 32)
+				.texture("icons/polygon/voxel").hint("editor.panel.add.voxel")
+				.onclick(ci -> {})
+			);
+			container.add(new Element().pos(buff += iinc, yo).size(32, 32)
+				.texture("icons/polygon/copy_sel").hint("editor.panel.add.copy")
+				.onclick(ci -> {})
+			);
+		}
+
+		public static void addGroup(){
+			Dialog dia = FMT.UI.createDialog(400, 180, "dialog.add_group.title");
+			dia.container.add(new TextElm(10, 10, 380, "dialog.add_group.name"));
+			Field field = new Field(Field.FieldType.TEXT, 380);
+			dia.container.add(field.pos(10, 40));
+			field.text("group" + FMT.MODEL.totalGroups());
+			dia.container.add(new TextElm(10, 70, 380, "dialog.add_group.pivot"));
+			DropList<Pivot> list = new DropList<>(380);
+			dia.container.add(list.pos(10, 100));
+			for(Pivot pivot : FMT.MODEL.pivots()) list.addEntry(pivot.id, pivot);
+			list.selectEntry(0);
+			dia.consumer(d -> FMT.MODEL.addGroup(list.getSelKey(), field.get_text()), null);
+			dia.buttons(100, Dialog.DialogButton.ADD);
+		}
+
 	}
 
 	public static class Multiplier extends Panel {
@@ -84,6 +151,7 @@ public class EditorSidePanel extends Element {
 			ew = 330;
 			eh = 88;
 			super.init(args);
+			hint("editor.panel.multiplier");
 			container.add(text = new Field(Field.FieldType.FLOAT, 90).pos(5, 28).onscroll(si -> {
 				float er = Editor.RATE;
 				if(si.sy() > 0) er *= 2;
