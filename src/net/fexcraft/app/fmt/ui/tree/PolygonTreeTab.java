@@ -85,8 +85,8 @@ public class PolygonTreeTab extends TreeTab {
 		});
 		updcom.add(UpdateEvent.PolygonRenamed.class, event -> getPolyCom(event.polygon()).text(event.polygon().name()));
 		updcom.add(UpdateEvent.PolygonRemoved.class, event -> getGroupCom(event.group()).remPolygon(event.polygon()));
-		updcom.add(UpdateEvent.PolygonSelected.class, event -> getPolyCom(event.polygon()).updateLabelColor());
-		updcom.add(UpdateEvent.PolygonVisibility.class, event -> getPolyCom(event.polygon()).updateLabelColor());
+		updcom.add(UpdateEvent.PolygonSelected.class, event -> updatePolyLabel(event.polygon()));
+		updcom.add(UpdateEvent.PolygonVisibility.class, event -> updatePolyLabel(event.polygon()));
 	}
 
 	private PivotCom getPivotCom(Pivot pivot){
@@ -102,8 +102,14 @@ public class PolygonTreeTab extends TreeTab {
 	}
 
 	private PolygonCom getPolyCom(Polygon poly){
+		if(poly.group() == null) return null;
 		GroupCom com = getGroupCom(poly.group());
 		return com == null ? null : com.getPolyCom(poly);
+	}
+
+	private void updatePolyLabel(Polygon poly) {
+		PolygonCom com = getPolyCom(poly);
+		if(com != null) com.updateLabelColor();
 	}
 
 	private void addPivot(Pivot pivot){
