@@ -119,7 +119,14 @@ editor.panel.flip.pos_z=Positions on Z
 editor.panel.flip.cor_x_pos_z=Cor X / Pos Z
 editor.panel.flip.cor_y_pos_y=Cor Y / Pos Y
 editor.panel.flip.cor_z_pos_x=Cor Z / Pos X
-
+editor.panel.marker_scale=Marker Scale
+editor.panel.selection=Selection Mode / Utils
+editor.panel.selection.polygon=Select Polygons
+editor.panel.selection.face=Select Faces (WIP)
+editor.panel.selection.vertex=Select Vertices
+editor.panel.selection.visibility=Show/Hide Vertices
+editor.panel.selection.clear=Clear Selection
+editor.panel.selection.util_move=Move first (ShapeBox) selected vertex towards second (any) selected Vertex.
 editor.info.no_polygon_selected=[no-polygon-selected]
 editor.info.no_group_selected=[no-group-selected]
 editor.info.no_pivot_selected=[no-pivot-selected]
@@ -368,16 +375,6 @@ editor.component.variable.add.string=Add new String/Text Type Var
 editor.component.variable.add.integer=Add new Integer (full number) Type Var
 editor.component.variable.add.float=Add new Float (decimal number) Type Var
 editor.component.variable.add.long=Add new Long (Java Long Number) Type Var
-
-editor.component.marker_scale=(Corner) Marker Scale
-editor.component.marker_scale.value=Scale:
-editor.component.selector=Selection Mode / Utils
-editor.component.selector.polygon=Select Polygons
-editor.component.selector.face=Select Faces (WIP)
-editor.component.selector.vertex=Select Vertices
-editor.component.selector.visibility=Show/Hide Vertices
-editor.component.selector.clear=Clear Selection
-editor.component.selector.move=Move first (ShapeBox) selected vertex towards second (any) selected Vertex.
 
 # UV Vieweer
 uvviewer.title=UV Viewer
