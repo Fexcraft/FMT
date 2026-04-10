@@ -136,7 +136,7 @@ public class Editor extends Component {
 		getStyle().setDisplay(DisplayType.NONE);
 		if(VISIBLE_EDITOR == this) VISIBLE_EDITOR = null;
 		if(VISIBLE_TREE == this) VISIBLE_TREE = null;
-		if(VISIBLE_EDITOR == null) EditorPanel.hideAll();
+		//if(VISIBLE_EDITOR == null) EditorPanel.hideAll();
 	}
 	
 	public void show(){
@@ -147,7 +147,7 @@ public class Editor extends Component {
 		else{
 			if(VISIBLE_EDITOR != null) VISIBLE_EDITOR.hide();
 			VISIBLE_EDITOR = this;
-			EditorPanel.showAll();
+			//EditorPanel.showAll();
 		}
 		getStyle().setDisplay(DisplayType.MANUAL);
 		setEnabled(true);
@@ -266,7 +266,7 @@ public class Editor extends Component {
 		Editor.TEXTURE_TREE = new TextureTree();
 		Editor.PREVIEW_TREE = new HelperTree();
 		Editor.ANIM_TREE = new AnimTree();
-		EditorPanel.load();
+		//EditorPanel.load();
 		//
 		JsonMap edmap = JsonHandler.parse(new File("./editors.fmt"));
 		for(Map.Entry<String, JsonValue<?>> entry : edmap.entries()){
@@ -280,9 +280,9 @@ public class Editor extends Component {
 			}
 		}
 		//
-		for(EditorPanel panel : EditorPanel.PANELS){
+		/*for(EditorPanel panel : EditorPanel.PANELS){
 			//FMT.FRAME.getContainer().add(panel);
-		}
+		}*/
 		for(Editor editor : Editor.EDITORS){
 			//FMT.FRAME.getContainer().add(editor);
 			editor.hide();
