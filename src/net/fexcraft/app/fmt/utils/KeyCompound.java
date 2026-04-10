@@ -149,33 +149,9 @@ public class KeyCompound {
 	}
 
 	private static void processDialog(boolean confirm){
-		Dialog.DialogLayer dia = null;
-		/*for(Layer layer : FMT.FRAME.getLayers()){
-			if(layer instanceof Dialog.DialogLayer){
-				dia = (Dialog.DialogLayer)layer;
-				break;
-			}
-		}*/
-		if(dia == null) return;
-		Dialog dialog = null;
-		for(Component comp : dia.getChildComponents()){
-			if(comp instanceof Dialog){
-				dialog = (Dialog)comp;
-				break;
-			}
-		}
-		if(dialog == null) return;
-		RunButton button;
-		for(Component comp : dialog.getContainer().getChildComponents()){
-			if(comp instanceof RunButton == false) continue;
-			button = (RunButton)comp;
-			if(button.confirm && confirm){
-				button.run.run();
-			}
-			if(button.cancel && !confirm){
-				button.run.run();
-			}
-		}
+		if(FMT.UI.DIALOG == null) return;
+		if(confirm) FMT.UI.DIALOG.onConfirm();
+		else FMT.UI.DIALOG.onCancel();
 	}
 
 	private static void onRelease(int action, Runnable run){
