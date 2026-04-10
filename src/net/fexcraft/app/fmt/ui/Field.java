@@ -46,6 +46,8 @@ public class Field extends Element {
 
 	public Field(FieldType ftype, float width){
 		super();
+		text("");
+		text_pos(5, -2);
 		type = ftype;
 		size(type.width(width), FS);
 		hoverable = true;
