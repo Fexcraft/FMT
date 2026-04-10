@@ -7,7 +7,6 @@ import net.fexcraft.app.fmt.oui.SettingsDialog;
 import net.fexcraft.app.fmt.ui.tree.TreeRoot;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateHandler;
-import net.fexcraft.app.fmt.utils.Picker;
 import net.fexcraft.app.fmt.utils.SaveHandler;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Time;
@@ -25,6 +24,7 @@ public class FMTInterface extends Element {
 	public static RGB col_85 = new RGB(0x858585);
 	public static RGB col_bd = new RGB(0xbdbdbd);
 	public static RGB col_cd = new RGB(0xcdcdcd);
+	public static Dialog DIALOG;
 	public static Element toolbar;
 	public static Element statusbar;
 	public static EditorRoot editor;
@@ -145,6 +145,13 @@ public class FMTInterface extends Element {
 	public static void bar(String string, int secs){
 		bar_timer = Time.getDate() + Time.SEC_MS * secs;
 		bar_text = string;
+	}
+
+	public Dialog createDialog(int w, int h, String title){
+		if(DIALOG != null) DIALOG.close();
+		DIALOG = new Dialog(w, h);
+		add(0, DIALOG, title);
+		return DIALOG;
 	}
 
 }
