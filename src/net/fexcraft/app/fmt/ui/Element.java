@@ -258,8 +258,14 @@ public class Element {
 	public void postext(){
 		text.hedron.posX = hedron.posX;
 		text.hedron.posY = hedron.posY;
-		text.hedron.posX += text.centered ? (w - text.w) * 0.5 : 5;
-		text.hedron.posY += (h - text.h) * 0.5;
+		text.hedron.posX += text.centered ? (w - text.w) * 0.5f : text.x;
+		text.hedron.posY += text.centered ? (h - text.h) * 0.5f : text.y;
+	}
+
+	public void text_pos(int x, int y){
+		text.x = x;
+		text.y = y;
+		postext();
 	}
 
 	public Element text_scale(float s){
@@ -325,6 +331,13 @@ public class Element {
 	public void add(Element elm, Object... args){
 		if(elements == null) elements = new ArrayList<>();
 		elements.add(elm.root(this));
+		elm.init(args);
+		elm.recompile();
+	}
+
+	public void add(int idx, Element elm, Object... args){
+		if(elements == null) elements = new ArrayList<>();
+		elements.add(idx, elm.root(this));
 		elm.init(args);
 		elm.recompile();
 	}
@@ -453,6 +466,12 @@ public class Element {
 		}
 		if(x >= pickpos[0] && x <= pickpos[2] && y >= pickpos[1] && y <= pickpos[3]) return this;
 		return null;
+	}
+
+	public void remElm(Element elm){
+		if(elements == null || elm == null) return;
+		elements.remove(elm);
+		elm.delete();
 	}
 
 	public void remElmIf(Predicate<Element> pre){
