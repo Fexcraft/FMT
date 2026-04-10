@@ -104,6 +104,14 @@ public class DropList<V> extends Element {
 		}
 	}
 
+	public String getSelKey(){
+		return entries.get(current).getLeft();
+	}
+
+	public V getSelVal(){
+		return entries.get(current).getRight();
+	}
+
 	@Override
 	public void onSelect(){
 		drop.size(w + FS * 3, entries.size() * FS);
