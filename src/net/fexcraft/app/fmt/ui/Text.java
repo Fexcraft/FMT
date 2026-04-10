@@ -22,6 +22,8 @@ public class Text {
 	public float scale = 1f;
 	public float w;
 	public float h;
+	public float x = 5;
+	public float y = 0;
 
 	public Text(Element elm){
 		hedron = new Polyhedron<>();
