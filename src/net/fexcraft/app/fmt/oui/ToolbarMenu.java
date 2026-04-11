@@ -18,7 +18,6 @@ import com.spinyowl.legui.event.MouseClickEvent;
 import com.spinyowl.legui.listener.CursorEnterEventListener;
 import com.spinyowl.legui.listener.MouseClickEventListener;
 
-import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.Translator;
@@ -28,6 +27,7 @@ public class ToolbarMenu extends Panel {
 	public static final ArrayList<MenuLayer> ACTIVE = new ArrayList<>();
 	public static final HashMap<String, ToolbarMenu> MENUS = new HashMap<>();
 	public static final int WIDTH = 140, HEIGHT = 36;
+	public static int ICON_OFFSET = 8;
 	protected ArrayList<Component> components = new ArrayList<>();
 	public MenuLayer layer;
 	private Label label;
@@ -54,7 +54,7 @@ public class ToolbarMenu extends Panel {
 	}
 
 	private static int indexWidth(int index){
-		return Toolbar.ICON_OFFSET * (HEIGHT + 2) + 4 + (index * (WIDTH + 1));
+		return ICON_OFFSET * (HEIGHT + 2) + 4 + (index * (WIDTH + 1));
 	}
 
 	public ToolbarMenu(int index, String id, Runnable run){
