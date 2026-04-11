@@ -1,6 +1,9 @@
 package net.fexcraft.app.fmt.ui;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.port.ex.ExportManager;
+import net.fexcraft.app.fmt.port.im.ImportManager;
+import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.editor.EditorRoot;
 import net.fexcraft.app.fmt.oui.ProfileDialog;
 import net.fexcraft.app.fmt.oui.SettingsDialog;
@@ -20,6 +23,7 @@ public class FMTInterface extends Element {
 	public static final int TOOLBAR_WIDTH = 300;
 	public static final int EDITOR_WIDTH = 320;
 	public static final int EDITOR_CONTENT = EDITOR_WIDTH - 30;
+	public static final int MENU_WIDTH = 202;
 	public static RGB col_75 = new RGB(0x757575);
 	public static RGB col_85 = new RGB(0x858585);
 	public static RGB col_bd = new RGB(0xbdbdbd);
@@ -29,6 +33,7 @@ public class FMTInterface extends Element {
 	public static Element statusbar;
 	public static EditorRoot editor;
 	public static TreeRoot tree;
+	public static Menu recent;
 	private static Long bar_timer;
 	private static String bar_text;
 	private UpdateHandler.UpdateCompound updcom = new UpdateHandler.UpdateCompound();
@@ -51,9 +56,17 @@ public class FMTInterface extends Element {
 		int iinc = 37;
 		int buff = -iinc + 4;
 		int yo = 4;
-		toolbar.add(new Element().pos(buff += iinc, yo).size(32, 32)
+		toolbar.add(new Element(){
+				@Override
+				public void init(Object... args){
+					Menu menu = new Menu(MENU_WIDTH);
+					add(menu.pos(0, 32));
+					menu.addEntry("toolbar.info.wiki", ci -> FMT.openLink("https://fexcraft.net/wiki/app/fmt"));
+					menu.addEntry("toolbar.info.donate", ci -> FMT.openLink("https://fexcraft.net/donate"));
+					onclick(ci -> menu.toggleVisibility());
+				}
+			}.pos(buff += iinc, yo).size(32, 32)
 			.texture("icons/toolbar/info").hoverable(true)
-			.onclick(ci -> FMT.openLink("https://fexcraft.net/wiki/app/fmt"))
 			.hint("toolbar.icon.info"));
 		toolbar.add(new Element().pos(buff += iinc, yo).size(32, 32)
 			.texture("icons/toolbar/settings").hoverable(true)
@@ -63,13 +76,42 @@ public class FMTInterface extends Element {
 			.texture("icons/toolbar/profile").hoverable(true)
 			.onclick(ci -> ProfileDialog.open())
 			.hint("toolbar.icon.profile"));
-		toolbar.add(new Element().pos(buff += iinc, yo).size(32, 32)
+		toolbar.add(new Element(){
+				@Override
+				public void init(Object... args){
+					Menu menu = new Menu(MENU_WIDTH);
+					add(menu.pos(0, 32));
+					menu.addEntry("toolbar.file.save", ci -> SaveHandler.saveDialogByState(null));
+					menu.addEntry("toolbar.file.save_as", ci -> SaveHandler.saveAsDialog(null));
+					menu.addEntry("toolbar.file.export", ci -> ExportManager.export());
+					onclick(ci -> {
+						if(ci.button() == 0) menu.toggleVisibility();
+						else if(ci.button() == 1) SaveHandler.save(FMT.MODEL, null, null, false, false);
+					});
+				}
+			}.pos(buff += iinc, yo).size(32, 32)
 			.texture("icons/toolbar/save").hoverable(true)
-			.onclick(ci -> SaveHandler.save(FMT.MODEL, null, null, false, false))
 			.hint("toolbar.icon.save"));
-		toolbar.add(new Element().pos(buff += iinc, yo).size(32, 32)
+		toolbar.add(new Element(){
+				@Override
+				public void init(Object... args){
+					Menu menu = new Menu(MENU_WIDTH);
+					add(menu.pos(0, 32));
+					menu.addEntry("toolbar.file.open", ci -> SaveHandler.openDialog(null));
+					menu.addEntry("toolbar.file.recent", ci -> recent.show(), false);
+					menu.addEntry("toolbar.file.import", ci -> ImportManager._import());
+					menu.add(recent = new Menu(MENU_WIDTH));
+					for(int i = 0; i < 10; i++){
+						int idx = i;
+						recent.addEntry(Settings.RECENT.get(i).getName(), ci -> Settings.openRecent(idx));
+					}
+					onclick(ci -> {
+						if(ci.button() == 0) menu.toggleVisibility();
+						else if(ci.button() == 1) SaveHandler.openDialog(null);
+					});
+				}
+			}.pos(buff += iinc, yo).size(32, 32)
 			.texture("icons/toolbar/open").hoverable(true)
-			.onclick(ci -> SaveHandler.openDialog(null))
 			.hint("toolbar.icon.open"));
 		toolbar.add(new Element().pos(buff += iinc, yo).size(32, 32)
 			.texture("icons/toolbar/new").hoverable(true)
@@ -126,9 +168,9 @@ public class FMTInterface extends Element {
 		statusbar.text("FPS: " + FMT.timer.getFPS() + (bar_text == null ? "" : " | " + bar_text));
 	}
 
-	public void click(double x, double y){
+	public void click(double x, double y, int b){
 		Element elm = getElmAt(x, y);
-		if(elm != null) elm.click((int)x, (int)y);
+		if(elm != null) elm.click((int)x, (int)y, b);
 	}
 
 	@Override
