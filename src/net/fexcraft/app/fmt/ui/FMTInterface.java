@@ -9,7 +9,6 @@ import net.fexcraft.app.fmt.port.im.ImportManager;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.editor.EditorRoot;
 import net.fexcraft.app.fmt.oui.ProfileDialog;
-import net.fexcraft.app.fmt.oui.SettingsDialog;
 import net.fexcraft.app.fmt.ui.tree.TreeRoot;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateHandler;
@@ -33,6 +32,7 @@ public class FMTInterface extends Element {
 	public static RGB col_85 = new RGB(0x858585);
 	public static RGB col_bd = new RGB(0xbdbdbd);
 	public static RGB col_cd = new RGB(0xcdcdcd);
+	public static SettingsUI settings;
 	public static Dialog DIALOG;
 	public static Element toolbar;
 	public static Element statusbar;
@@ -94,11 +94,11 @@ public class FMTInterface extends Element {
 					Menu conv = menu.addEntry("toolbar.utils.converters", new Menu(MENU_WIDTH * 1.5f));
 					conv.addEntry("Item Model Texture Location", ci -> ConverterUtils.runIMTJ());
 					conv.addEntry("Extract Materials / FVTM Obj", ci -> ConverterUtils.exModelData());
-					menu.addEntry("toolbar.utils.settings", ci -> SettingsDialog.open());
+					menu.addEntry("toolbar.utils.settings", ci -> settings.show());
 					menu.addEntry("toolbar.utils.controls", ci -> {});
 					onclick(ci -> {
 						if(ci.button() == 0) menu.toggleVisibility();
-						else if(ci.button() == 1) SettingsDialog.open();
+						else if(ci.button() == 1) settings.show();
 					});
 				}
 			}.pos(buff += iinc, yo).size(32, 32)
@@ -157,6 +157,7 @@ public class FMTInterface extends Element {
 			.onclick(ci -> tree.toggle())
 			.hint("toolbar.icon.tree"));
 		//
+		add((settings = new SettingsUI()).hide());
 		add((editor = new EditorRoot()));
 		add((tree = new TreeRoot()));
 		//
