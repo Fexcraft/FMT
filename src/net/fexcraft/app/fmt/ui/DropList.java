@@ -17,7 +17,7 @@ public class DropList<V> extends Element {
 	private ArrayList<Pair<String, V>> entries = new ArrayList<>();
 	private BiConsumer<String, V> consumer;
 	private int current = 0;
-	private Element drop;
+	protected Element drop;
 
 	public DropList(float width){
 		super();
