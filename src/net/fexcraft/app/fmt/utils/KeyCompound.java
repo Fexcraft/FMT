@@ -6,9 +6,6 @@ import static org.lwjgl.glfw.GLFW.*;
 import java.io.File;
 import java.util.ArrayList;
 
-import com.spinyowl.legui.component.Component;
-import com.spinyowl.legui.component.Dialog;
-import com.spinyowl.legui.component.Layer;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.Field;
@@ -16,7 +13,8 @@ import net.fexcraft.app.fmt.polygon.Arrows;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TexturePainter;
 import net.fexcraft.app.fmt.oui.Editor;
-import net.fexcraft.app.fmt.oui.fields.RunButton;
+import net.fexcraft.app.fmt.ui.editor.EditorRoot;
+import net.fexcraft.app.fmt.ui.editor.EditorRoot.EditorMode;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonHandler.PrintOption;
 import net.fexcraft.app.json.JsonMap;
@@ -83,11 +81,11 @@ public class KeyCompound {
 		keys.add(new KeyFunction("pick_face", GLFW_KEY_I, (action) -> onRelease(action, () -> Picker.pick(Picker.PickType.FACE, Picker.PickTask.RESELECT, true))));
 		//
 		for(int i = 0; i < 9; i++){
-			if(i >= Editor.EDITORS.size()) break;
+			if(i >= EditorMode.values().length) break;
 			int idx = i;
 			keys.add(new KeyFunction("toggle_editor_" + i, GLFW_KEY_1 + i, action -> {
 				if(GGR.isOverUI()) return;
-				if(action == GLFW_RELEASE) Editor.EDITORS.get(idx).show();
+				if(action == GLFW_RELEASE) EditorRoot.setMode(EditorMode.values()[idx]);
 			}));
 		}
 		//
