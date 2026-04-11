@@ -84,7 +84,8 @@ public class SettingsUI extends Element {
 			checkpickpos = false;
 			checkinroot = true;
 			Setting<?> setting = (Setting<?>)args[2];
-			add(new TextElm(0, 0, 300, "setting." + args[0] + "." + args[1]).text_autoscale());
+			add(new TextElm(0, 0, 300, "setting." + args[0] + "." + args[1])
+				.text_autoscale().hint(args[0] + " / " + args[1]));
 		}
 
 	}
