@@ -1,6 +1,5 @@
 package net.fexcraft.app.fmt;
 
-import com.spinyowl.legui.component.Label;
 import net.fexcraft.app.fmt.animation.Animation;
 import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.env.PackDevEnv;
@@ -58,8 +57,8 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
- * 
- * All rights reserved &copy; 2021 fexcraft.net
+ *
+ * All rights reserved &copy; 2026
  * */
 public class FMT {
 
