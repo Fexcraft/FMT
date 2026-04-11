@@ -4,14 +4,17 @@
 
 # Toolbar
 ## Icons
-toolbar.icon.info=FMT Wiki
-toolbar.icon.settings=Settings
+toolbar.icon.info=FMT Info
+toolbar.icon.settings=Settings and Utils
 toolbar.icon.profile=Fexcraft Profile
-toolbar.icon.save=Save Model
-toolbar.icon.open=Open Model
+toolbar.icon.save=Saving (right-click for quick save)
+toolbar.icon.open=Loading (right-click for quick open)
 toolbar.icon.new=New Model
 toolbar.icon.editor=Toggle Editor
 toolbar.icon.tree=Toggle Tree View
+## Info
+toolbar.info.wiki=FMT Wiki
+toolbar.info.donate=Support FMT Dev!
 ## File
 toolbar.file=File
 toolbar.file.new=New
@@ -22,22 +25,7 @@ toolbar.file.save=Save
 toolbar.file.save_as=Save as..
 toolbar.file.import=Import <<
 toolbar.file.export=Export >>
-toolbar.file.settings=Settings
-toolbar.file.donate=Support FMT Dev!
 toolbar.file.exit=Exit
-## Polygons
-toolbar.polygons=Polygons
-toolbar.polygons.add_box=Add Box
-toolbar.polygons.add_shapebox=Add Shapebox
-toolbar.polygons.add_cylinder=Add Cylinder
-toolbar.polygons.add_boundingbox=Add BB/Collbox
-toolbar.polygons.add_object=Add Object
-toolbar.polygons.add_marker=Add Marker
-toolbar.polygons.add_group=Add Group
-toolbar.polygons.add_voxel=Add Voxel
-toolbar.polygons.add_rect_curve=Add Rect. Curve
-toolbar.polygons.add_cyl_curve=Add Cyl. Curve
-toolbar.polygons.add_mesh_curve=Add Mesh Curve
 ## Utils 
 toolbar.utils=Utilities
 toolbar.utils.copy_selected=Copy Selected
