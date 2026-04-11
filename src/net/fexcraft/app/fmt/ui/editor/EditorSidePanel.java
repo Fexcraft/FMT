@@ -127,7 +127,7 @@ public class EditorSidePanel extends Element {
 			);
 			container.add(new Element().pos(buff += iinc, yo).size(32, 32)
 				.texture("icons/polygon/copy_sel").hint("editor.panel.add.copy")
-				.onclick(ci -> {})
+				.onclick(ci -> FMT.MODEL.copySelected())
 			);
 		}
 
