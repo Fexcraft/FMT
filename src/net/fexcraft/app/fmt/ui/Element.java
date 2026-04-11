@@ -26,6 +26,7 @@ public class Element {
 
 	public static Element SELECTED;
 	public static Element HOVERED;
+	public static double HOVER_TIMER;
 	public Polyhedron<GLObject> hedron;
 	public Consumer<ClickInfo> onclick;
 	public Consumer<ScrollInfo> onscroll;
@@ -303,7 +304,7 @@ public class Element {
 		hedron.render();
 		if(text != null) text.render();
 		if(elements != null) for(Element elm : elements) elm.render();
-		if(hint != null && hovered){
+		if(hint != null && hovered && HOVER_TIMER >= 1){
 			hint.pos(GGR.mousePosX() + 10, GGR.mousePosY() + (GGR.mousePosY() > FMT.HEIGHT - TOOLBAR_HEIGHT ? -30 : 0)).render();
 		}
 	}
@@ -368,9 +369,9 @@ public class Element {
 		return false;
 	}
 
-	public void click(int x, int y){
+	public void click(int x, int y, int b){
 		if(!selected() && !root.selected()) select(null);
-		if(onclick != null) onclick.accept(new ClickInfo(x, y, (int)(x - gx()), (int)(y - gy())));
+		if(onclick != null) onclick.accept(new ClickInfo(x, y, (int)(x - gx()), (int)(y - gy()), b));
 		else if(selectable) select(this);
 	}
 
@@ -485,7 +486,11 @@ public class Element {
 		});
 	}
 
-	public static record ClickInfo(int cx, int cy, int lx, int ly){}
+	public int elms_size(){
+		return elements == null ? 0 : elements.size();
+	}
+
+	public static record ClickInfo(int cx, int cy, int lx, int ly, int button){}
 
 	public static record ScrollInfo(int sx, int sy, int lx, int ly){}
 
