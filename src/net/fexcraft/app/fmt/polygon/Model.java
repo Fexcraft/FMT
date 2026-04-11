@@ -475,6 +475,7 @@ public class Model {
 
 	public void copySelected(){
 		ArrayList<Polygon> selected = selection_copy();
+		if(selected.isEmpty()) return;
 		var bool = Settings.SELECT_COPIED.value;
 		ArrayList<Polygon> copied = new ArrayList<>();
 		String gid = Settings.NO_CLIPBOARD.bool() ? selected.get(0).group().id : "clipboard";
