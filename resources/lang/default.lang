@@ -40,9 +40,11 @@ toolbar.utils.create_gif=Create GIF
 toolbar.utils.screenshot=Screenshot
 toolbar.utils.uv_viewer=UV Viewer
 toolbar.utils.rescale=ReScale Util
-toolbar.utils.font_util=Font Util
+toolbar.utils.font_util=3D Font Util
 toolbar.utils.converters=Converter Utils
-toolbar.utils.converter.itemmodeltexjson=Item Model Texture Loc
+toolbar.utils.workspace=Workspace
+toolbar.utils.settings=Settings
+toolbar.utils.controls=Controls
 ##
 toolbar.workspace=Workspace
 toolbar.prototype=<- Prototype
