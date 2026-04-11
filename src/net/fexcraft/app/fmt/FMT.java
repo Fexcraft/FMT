@@ -75,7 +75,9 @@ public class FMT {
 	private static String title;
 	//
 	public static final ITimer timer = new ITimer();
-	public float delta, accumulator, interval = 1f / 30f;
+	public static float delta;
+	public float accumulator;
+	public float interval = 1f / 30f;
 	public float alpha = 0f;
 	private static boolean CLOSE;
 	public static GGR CAM;
