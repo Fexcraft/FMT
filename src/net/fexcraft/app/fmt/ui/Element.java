@@ -46,6 +46,7 @@ public class Element {
 	private ElmShape shape = ElmShape.RECTANGLE;
 	public float[] pickpos = new float[4];
 	public boolean checkpickpos = true;
+	public boolean checkinroot = false;
 	private float x;
 	private float y;
 	public float z;
@@ -295,6 +296,9 @@ public class Element {
 		if(checkpickpos){
 			if(pickpos[0] > FMT.SCALED_WIDTH || pickpos[1] > FMT.SCALED_HEIGHT || pickpos[2] < 0 || pickpos[3] < 0) return;
 		}
+		if(checkinroot){
+			if(pickpos[0] < root.pickpos[0] || pickpos[1] < root.pickpos[1] || pickpos[2] > root.pickpos[2] || pickpos[3] > root.pickpos[3]) return;
+		}
 		if(border != null){
 			PolyRenderer.mode(DrawMode.UI_LINES);
 			hedron.render();
@@ -472,14 +476,14 @@ public class Element {
 	public void remElm(Element elm){
 		if(elements == null || elm == null) return;
 		elements.remove(elm);
-		elm.delete();
+		elm.clearElements(true);
 	}
 
 	public void remElmIf(Predicate<Element> pre){
 		if(elements == null) return;
 		elements.removeIf(elm -> {
 			if(pre.test(elm)){
-				elm.delete();
+				elm.clearElements(true);
 				return true;
 			}
 			return false;
