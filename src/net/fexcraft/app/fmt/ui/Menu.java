@@ -14,7 +14,7 @@ public class Menu extends Element {
 
 	private boolean open;
 
-	public Menu(int width){
+	public Menu(float width){
 		super();
 		border(RGB.BLACK);
 		color(col_cd);
@@ -22,30 +22,40 @@ public class Menu extends Element {
 		hide();
 	}
 
-	@Override
-	public Element root(Element elm){
-		super.root(elm);
-		if(elm instanceof Menu) pos(elm.w, y());
-		return this;
-	}
-
-
 	public void addEntry(String text, Consumer<ClickInfo> cons){
-		addEntry(text, cons, true);
+		add(new Element().pos(1, 1 + countEntries() * 30).size(w - 2, 29).onclick(ci -> {
+			if(cons != null) cons.accept(ci);
+			hide();
+		}).translate(text).color(col_bd).hoverable(true));
+		size(w, 2 + countEntries() * 30);
+		recompile();
 	}
 
-	public void addEntry(String text, Consumer<ClickInfo> cons, boolean close){
-		add(new Element().pos(1, 1 + elms_size() * 30).size(w - 2, 30).onclick(ci -> {
-			if(cons != null) cons.accept(ci);
-			if(close) hide();
-		}).translate(text).color(col_bd).hoverable(true));
-		size(w, 2 + elms_size() * 30);
+	public Menu addEntry(String text, Menu menu){
+		Element elm = new Element().pos(1, 1 + countEntries() * 30).size(w - 2, 29).onclick(ci -> {
+			menu.toggleVisibility();
+		}).translate(text).color(col_bd).hoverable(true);
+		add(elm);
+		if(menu != null){
+			elm.add(menu.pos(elm.w, 0));
+		}
+		size(w, 2 + countEntries() * 30);
 		recompile();
+		return menu;
+	}
+
+	private int countEntries(){
+		if(elements == null) return 0;
+		int entries = 0;
+		for(Element elm : elements){
+			if(elm instanceof Menu) continue;
+			entries++;
+		}
+		return entries;
 	}
 
 	@Override
 	public void update(){
-		if(root.hoveredx() && open) show();
 		if(!root.hoveredx() && open) hide();
 	}
 
