@@ -67,6 +67,9 @@ public class Scrollable extends Element {
 			if(elm instanceof TTabCom com){
 				ih += com.h + (com.container.visible ? com.container.h : 0) + 5;
 			}
+			if(elm instanceof SettingsUI.SettingBlock){
+				ih += elm.h + 5;
+			}
 		}
 		//
 		float m = h - 32;
@@ -91,6 +94,10 @@ public class Scrollable extends Element {
 				com.pos(SCROLLBAR_WIDTH + 5, incr + bh);
 				if(!elm.visible) continue;
 				incr += com.h + (com.container.visible ? com.container.h : 0) + 5;
+			}
+			if(elm instanceof SettingsUI.SettingBlock){
+				elm.pos(5, incr + bh);
+				incr += elm.h + 5;
 			}
 		}
 	}
