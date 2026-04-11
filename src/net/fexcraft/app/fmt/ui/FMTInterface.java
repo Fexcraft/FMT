@@ -1,6 +1,9 @@
 package net.fexcraft.app.fmt.ui;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.oui.ConverterUtils;
+import net.fexcraft.app.fmt.oui.UVViewer;
+import net.fexcraft.app.fmt.oui.workspace.WorkspaceViewer;
 import net.fexcraft.app.fmt.port.ex.ExportManager;
 import net.fexcraft.app.fmt.port.im.ImportManager;
 import net.fexcraft.app.fmt.settings.Settings;
@@ -10,6 +13,8 @@ import net.fexcraft.app.fmt.oui.SettingsDialog;
 import net.fexcraft.app.fmt.ui.tree.TreeRoot;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateHandler;
+import net.fexcraft.app.fmt.utils.FontUtils;
+import net.fexcraft.app.fmt.utils.ImageHandler;
 import net.fexcraft.app.fmt.utils.SaveHandler;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Time;
@@ -63,14 +68,41 @@ public class FMTInterface extends Element {
 					add(menu.pos(0, 32));
 					menu.addEntry("toolbar.info.wiki", ci -> FMT.openLink("https://fexcraft.net/wiki/app/fmt"));
 					menu.addEntry("toolbar.info.donate", ci -> FMT.openLink("https://fexcraft.net/donate"));
+					menu.addEntry("toolbar.file.exit", ci -> FMT.close(0));
 					onclick(ci -> menu.toggleVisibility());
 				}
 			}.pos(buff += iinc, yo).size(32, 32)
 			.texture("icons/toolbar/info").hoverable(true)
 			.hint("toolbar.icon.info"));
-		toolbar.add(new Element().pos(buff += iinc, yo).size(32, 32)
+		toolbar.add(new Element(){
+				@Override
+				public void init(Object... args){
+					Menu menu = new Menu(MENU_WIDTH);
+					add(menu.pos(0, 32));
+					menu.addEntry("toolbar.utils.copy_selected", ci -> FMT.MODEL.copySelected());
+					Menu clipboard = menu.addEntry("toolbar.utils.clipboard", new Menu(MENU_WIDTH));
+					clipboard.addEntry("toolbar.utils.clipboard.copy", ci -> FMT.MODEL.copyToClipboard(false));
+					clipboard.addEntry("toolbar.utils.clipboard.paste", ci -> FMT.MODEL.pasteFromClipboard());
+					clipboard.addEntry("toolbar.utils.clipboard.copy_grouped", ci -> FMT.MODEL.copyToClipboard(true));
+					menu.addEntry("toolbar.utils.workspace", ci -> WorkspaceViewer.show0());
+					menu.addEntry("toolbar.utils.reset_camera", ci -> FMT.CAM.reset());
+					menu.addEntry("toolbar.utils.create_gif", ci -> ImageHandler.createGif());
+					menu.addEntry("toolbar.utils.screenshot", ci -> ImageHandler.takeScreenshot(false));
+					menu.addEntry("toolbar.utils.uv_viewer", ci -> UVViewer.addIfAbsent());
+					menu.addEntry("toolbar.utils.rescale", ci -> FMT.MODEL.rescale());
+					menu.addEntry("toolbar.utils.font_util", ci -> FontUtils.open());
+					Menu conv = menu.addEntry("toolbar.utils.converters", new Menu(MENU_WIDTH * 1.5f));
+					conv.addEntry("Item Model Texture Location", ci -> ConverterUtils.runIMTJ());
+					conv.addEntry("Extract Materials / FVTM Obj", ci -> ConverterUtils.exModelData());
+					menu.addEntry("toolbar.utils.settings", ci -> SettingsDialog.open());
+					menu.addEntry("toolbar.utils.controls", ci -> {});
+					onclick(ci -> {
+						if(ci.button() == 0) menu.toggleVisibility();
+						else if(ci.button() == 1) SettingsDialog.open();
+					});
+				}
+			}.pos(buff += iinc, yo).size(32, 32)
 			.texture("icons/toolbar/settings").hoverable(true)
-			.onclick(ci -> SettingsDialog.open())
 			.hint("toolbar.icon.settings"));
 		toolbar.add(new Element().pos(buff += iinc, yo).size(32, 32)
 			.texture("icons/toolbar/profile").hoverable(true)
@@ -98,9 +130,8 @@ public class FMTInterface extends Element {
 					Menu menu = new Menu(MENU_WIDTH);
 					add(menu.pos(0, 32));
 					menu.addEntry("toolbar.file.open", ci -> SaveHandler.openDialog(null));
-					menu.addEntry("toolbar.file.recent", ci -> recent.show(), false);
+					recent = menu.addEntry("toolbar.file.recent", new Menu(MENU_WIDTH));
 					menu.addEntry("toolbar.file.import", ci -> ImportManager._import());
-					menu.add(recent = new Menu(MENU_WIDTH));
 					for(int i = 0; i < 10; i++){
 						int idx = i;
 						recent.addEntry(Settings.RECENT.get(i).getName(), ci -> Settings.openRecent(idx));
