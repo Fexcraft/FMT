@@ -16,7 +16,6 @@ import com.spinyowl.legui.style.Style;
 import com.spinyowl.legui.style.color.ColorConstants;
 import net.fexcraft.app.fmt.env.PackDevEnv;
 import net.fexcraft.app.fmt.ui.Element;
-import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.oui.JsonEditor;
 import net.fexcraft.app.fmt.oui.UVViewer;
 import net.fexcraft.app.fmt.oui.workspace.WorkspaceViewer;
@@ -36,8 +35,6 @@ import net.fexcraft.app.fmt.oui.fields.NumberField;
 import net.fexcraft.app.fmt.utils.Picker.PickTask;
 import net.fexcraft.app.fmt.utils.Picker.PickType;
 import net.fexcraft.lib.common.Static;
-
-import java.util.ArrayList;
 
 /** CCR */
 public class GGR {
@@ -157,10 +154,10 @@ public class GGR {
 				left_timer = 0;
 			}
 			else if(action == GLFW_RELEASE){
-				if(Arrows.SEL > 0){
+				/*if(Arrows.SEL > 0){
 					Arrows.SEL = 0;
 				}
-				else if(sel_panel != null){
+				else*/ if(sel_panel != null){
 					sp_pos = sel_panel.getPosition();
 					sp_size = sel_panel.getSize();
 					Picker.pick(PickType.POLYGON, PickTask.MULTISELECT, true);
@@ -172,20 +169,17 @@ public class GGR {
 					else if(Picker.TYPE.color()) Picker.process();
 					else Picker.pick(Selector.TYPE, PickTask.SELECT, true);
 				}
-				/*else if(Settings.TESTING.value){
-					Picker.pick(PickType.UI, PickTask.SELECT, true);
-				}*/
 				else{
-					FMT.UI.click(posx, posy);
+					FMT.UI.click(posx, posy, 0);
 				}
 				left_down = false;
 			}
         }
         else if(button == 1){
-			if(Arrows.SEL > 0){
+			/*if(Arrows.SEL > 0){
 				if(action == GLFW_RELEASE) Arrows.DIR = !Arrows.DIR;
 				return;
-			}
+			}*/
 			if(isControlDown()){
 				if(action == GLFW_PRESS) return;
 				PolySelMenu.show();
@@ -199,6 +193,7 @@ public class GGR {
 				right_down = true;
 			}
 			else if(action == GLFW_RELEASE){
+				if(isOverUI()) FMT.UI.click(posx, posy, 1);
 				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 				right_down = false;
 				grabbed = false;
@@ -217,9 +212,14 @@ public class GGR {
 
 	public static void updateHoveredElement(){
 		Element hov = FMT.UI.getElmAt(posx, posy);
-		if(Element.HOVERED != null && Element.HOVERED != hov) Element.HOVERED.hovered(false);
+		Element.HOVER_TIMER += FMT.delta;
+		if(Element.HOVERED != null && Element.HOVERED != hov){
+			Element.HOVERED.hovered(false);
+			Element.HOVER_TIMER = 0;
+		}
 		if(hov == null){
 			Element.HOVERED = null;
+			Element.HOVER_TIMER = 0;
 		}
 		else{
 			hov.hovered(true);
