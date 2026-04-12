@@ -22,7 +22,7 @@ public class PivotExporter implements Exporter {
 	private static final ExSetList settings = new ExSetList();
 
 	public PivotExporter(){
-		settings.add(new StringArraySetting("as", "partslots", "exporter-pivot", "partslots", "swivelpoints"));
+		settings.add(new StringArraySetting("as", "partslots", "exporter-fvtm-pivot", "partslots", "swivelpoints"));
 	}
 
 	@Override
@@ -43,11 +43,6 @@ public class PivotExporter implements Exporter {
 	@Override
 	public List<String> categories(){
 		return categories;
-	}
-
-	@Override
-	public List<Setting<?>> settings(){
-		return settings;
 	}
 
 	@Override
