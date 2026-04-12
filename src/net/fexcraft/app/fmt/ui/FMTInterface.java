@@ -157,7 +157,7 @@ public class FMTInterface extends Element {
 			.onclick(ci -> tree.toggle())
 			.hint("toolbar.icon.tree"));
 		//
-		add((settings = new SettingsUI()).hide());
+		add(0, (settings = new SettingsUI()).hide());
 		add((editor = new EditorRoot()));
 		add((tree = new TreeRoot()));
 		//
