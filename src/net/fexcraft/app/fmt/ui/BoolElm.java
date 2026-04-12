@@ -5,6 +5,7 @@ import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
 
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static net.fexcraft.app.fmt.ui.editor.EditorTab.FS;
@@ -42,6 +43,21 @@ public class BoolElm extends Element {
 		updcom.add(UpdateEvent.GroupSelected.class, event -> updtexcol());
 		onclick(ci -> toggleBool(null));
 		onscroll(si -> toggleBool(si.sy() > 0));
+		return this;
+	}
+
+	public BoolElm set(Supplier<Boolean> supp, Consumer<Boolean> onupd){
+		supplier = supp;
+		onclick(ci -> {
+			boolean bool = !bool();
+			updtexcol(bool);
+			onupd.accept(bool);
+		});
+		onscroll(si -> {
+			boolean bool = si.sy() > 0;
+			updtexcol(bool);
+			onupd.accept(bool);
+		});
 		return this;
 	}
 
