@@ -39,11 +39,6 @@ public class FVTM_OLD_Importer implements Importer {
     }
 
     @Override
-    public List<Setting<?>> settings() {
-        return Collections.emptyList();
-    }
-
-    @Override
     public String _import(Model model, File file) {
         if(!SessionHandler.getUserId().equals("1")) return "invalid";
         Scanner scanner = null;
