@@ -99,7 +99,7 @@ public class SettingsDialog {
 			Settings.applyBorderless(label);
 			label.getStyle().setHorizontalAlign(HorizontalAlign.RIGHT);
 			panel.getContainer().add(label);
-			Component comp = setting.createField(panel.getContainer(), updcom, 215, j[0] * 30 + 5, w[0] - 250, 25);
+			Component comp = null;//setting.createField(panel.getContainer(), updcom, 215, j[0] * 30 + 5, w[0] - 250, 25);
 			if(comp != null) panel.getContainer().add(comp);
 			else {
 				label = new Label(translate("settings.no_field_found"), 215, j[0] * 30 + 5, w[0] - 250, 25);
@@ -135,7 +135,7 @@ public class SettingsDialog {
 			Settings.applyBorderless(label);
 			label.getStyle().setHorizontalAlign(HorizontalAlign.RIGHT);
 			panel.getContainer().add(label);
-			Component comp = setting.createField(panel.getContainer(), updcom, 215, j[0] * 30 + 5, w[0] - 360, 25);
+			Component comp = null;//setting.createField(panel.getContainer(), updcom, 215, j[0] * 30 + 5, w[0] - 360, 25);
 			if(comp != null) panel.getContainer().add(comp);
 			else {
 				label = new Label(translate("settings.no_field_found"), 215, j[0] * 30 + 5, w[0] - 360, 25);
