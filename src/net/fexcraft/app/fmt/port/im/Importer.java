@@ -22,8 +22,6 @@ public interface Importer {
 	
 	public List<String> categories();
 	
-	public List<Setting<?>> settings();
-	
 	public String _import(Model model, File file);
 
 }
