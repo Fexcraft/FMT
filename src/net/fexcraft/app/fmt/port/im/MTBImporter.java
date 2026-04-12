@@ -53,11 +53,6 @@ public class MTBImporter implements Importer {
         return categories;
     }
 
-    @Override
-    public List<Setting<?>> settings() {
-        return Collections.emptyList();
-    }
-
     /**
      * @author EternalBlueFlame, FEX___96
      */
