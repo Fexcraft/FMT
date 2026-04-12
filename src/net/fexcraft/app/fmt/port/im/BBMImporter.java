@@ -175,9 +175,4 @@ public class BBMImporter implements Importer {
 		return categories;
 	}
 
-	@Override
-	public List<Setting<?>> settings() {
-		return Collections.emptyList();
-	}
-
 }
