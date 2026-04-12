@@ -399,7 +399,7 @@ saveload.backup.failure=Error/s while saving backup, please check the log.
 # Welcome/Update Dialog
 welcome.title=Welcome to FMT!
 welcome.update.available=An update is available!
-welcome.update.files=(Use the launcher to download.)
+welcome.update.files=(Use the updater to download.)
 welcome.update.select=Do you wish to update?
 welcome.normal.greeting_logged=Welcome back %s!
 welcome.normal.greeting_guest=Have a nice time using FMT!
