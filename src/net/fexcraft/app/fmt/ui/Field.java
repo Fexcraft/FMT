@@ -94,6 +94,11 @@ public class Field extends Element {
 		});
 	}
 
+	public Field consumer(Consumer<Field> cons){
+		consumer = cons;
+		return this;
+	}
+
 	@Override
 	public void init(Object... args){
 		text(type.text() ? "" : "0");
@@ -116,12 +121,15 @@ public class Field extends Element {
 			add(color = new Element().color(0x000000).size(20, 20).pos(w + 13, 3));
 			add(new Element().color(col_field).size(FS, FS).pos(w + 10 + FS, 0)
 				.text("CP").text_autoscale().onclick(ci -> {
-					try(MemoryStack stack = MemoryStack.stackPush()) {
+					try(MemoryStack stack = MemoryStack.stackPush()){
 						ByteBuffer color = stack.malloc(3);
 						String result = TinyFileDialogs.tinyfd_colorChooser("Choose a Color", "#" + text.text(), null, color);
 						if(result == null) return;
 						text(result);
-						FMT.MODEL.updateValue(polyval(), this, 0);
+						consumer.accept(this);
+					}
+					catch(Exception e){
+						e.printStackTrace();
 					}
 				}).hint("editor.info.colorpicker"));
 		}
@@ -237,6 +245,7 @@ public class Field extends Element {
 		if(action != GLFW_RELEASE) return true;
 		if(key == GLFW_KEY_ENTER || key == GLFW_KEY_KP_ENTER){
 			if(consumer != null) consumer.accept(this);
+			if(polyval == null && type == FieldType.COLOR) color.color((int)parse_int());
 			previous = text.text();
 			return true;
 		}
@@ -293,7 +302,7 @@ public class Field extends Element {
 		return polyval;
 	}
 
-	private Object type_format(float value){
+	public Object type_format(float value){
 		if(type.color()){
 			color.color((int)value);
 			return Integer.toHexString(color.col_def.packed);
