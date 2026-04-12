@@ -16,8 +16,8 @@ import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.oui.FileChooser;
 import net.fexcraft.app.fmt.oui.GenericDialog;
 import net.fexcraft.app.fmt.oui.GroupSelectionPanel;
-import net.fexcraft.app.fmt.oui.SettingsDialog;
 import net.fexcraft.app.fmt.oui.fields.RunButton;
+import net.fexcraft.app.fmt.ui.FMTInterface;
 import net.fexcraft.app.json.JsonMap;
 
 /**
@@ -37,8 +37,6 @@ public class ExportManager {
 		addExporter(new BObjExporter(map));
 		addExporter(new PNGExporter(map));
 		addExporter(new ModelDataExporter());
-		addExporter(new FVTMExporter());
-		addExporter(new TiMExporter());
 		addExporter(new AABBExporter());
 		addExporter(new ObjExporter());
 		addExporter(new PivotExporter());
@@ -116,8 +114,9 @@ public class ExportManager {
 				return;
 			}
 			Runnable run = () -> GenericDialog.showOK("export.result", null, null, exporter.export(FMT.MODEL, file, groups));
-			if(exporter.settings().size() > 0){
-				SettingsDialog.open("export.settings.dialog", exporter.settings(), exporter.id(), run);
+			if(Settings.SETTINGS.containsKey("exporter-" + exporter.id())){
+				exporter.initSettings();
+				FMTInterface.settings.show("exporter-" + exporter.id());
 			}
 			else run.run();
 		});
