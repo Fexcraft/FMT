@@ -64,7 +64,7 @@ public class Editor extends Component {
 	public String name;
 	
 	public Editor(String id, String name, boolean tree){
-		Settings.applyBorderless(this);
+		//Settings.applyBorderless(this);
 		this.setFocusable(false);
 		this.id = id;
 		EDITORS.add(this);
@@ -73,7 +73,7 @@ public class Editor extends Component {
 		add(scrollable = new ScrollablePanel(0, topSpace(), WIDTH, getSize().y));
 		scrollable.getViewport().getListenerMap().removeAllListeners(ScrollEvent.class);
 		scrollable.getViewport().getListenerMap().addListener(ScrollEvent.class, new SPVSL());
-		Settings.applyBorderlessScrollable(scrollable, true);
+		//Settings.applyBorderlessScrollable(scrollable, true);
 		add(label = new Label(this.name = name, 5, 0, CWIDTH - 10, LABEL));
 		label.getStyle().setFontSize(26f);
 		align();

@@ -22,19 +22,6 @@ import net.fexcraft.app.fmt.port.im.ImportManager;
 import net.fexcraft.app.fmt.oui.fields.RunButton;
 import net.fexcraft.app.fmt.utils.*;
 import net.fexcraft.app.json.JsonValue;
-import org.joml.Vector4f;
-import com.spinyowl.legui.component.Button;
-import com.spinyowl.legui.component.Component;
-import com.spinyowl.legui.component.Dialog;
-import com.spinyowl.legui.component.Label;
-import com.spinyowl.legui.component.ScrollablePanel;
-import com.spinyowl.legui.event.MouseClickEvent;
-import com.spinyowl.legui.listener.MouseClickEventListener;
-import com.spinyowl.legui.style.Style;
-import com.spinyowl.legui.style.color.ColorConstants;
-import com.spinyowl.legui.style.font.FontRegistry;
-import com.spinyowl.legui.theme.Themes;
-import com.spinyowl.legui.theme.colored.FlatColoredTheme;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryUtil;
 
@@ -54,8 +41,6 @@ public class Settings {
 	public static final int FORMAT = 2;
 	public static final float FONT_SIZE = 16f;
 	public static final int FONT_SIZEN = 20;
-	public static final String FONT = FontRegistry.ROBOTO_BOLD;
-	public static final String FONT_PATH = "com/spinyowl/legui/style/font/Roboto-Bold.ttf";
 	public static boolean FOUND_UPDATE;
 	public static boolean UPDATECHECK_FAILED;
 	public static long UPDATE_FOR_FILES_FOUND = 0;
@@ -73,7 +58,6 @@ public class Settings {
 	public static String SPACE3D = "space3d";
 	public static String NAMING = "naming";
 	public static String IMAGE = "image";
-	public static String THEME = "theme";
 	public static String WORKSPACE = "workspace";
 	public static String LIGHTING = "lighting";
  	//General
@@ -103,6 +87,20 @@ public class Settings {
 	//public static Setting<Boolean> TESTING = new Setting<>("testing", false, GENERAL);
 	//Interface
 	public static Setting<Float> UI_SCALE = new Setting<>("scale", 1f, INTERFACE);
+	public static RGBSetting POLYGON_NORMAL = new RGBSetting("polygon_normal", new RGB(38, 127, 0), INTERFACE);
+	public static RGBSetting POLYGON_SELECTED = new RGBSetting("polygon_selected", new RGB(219, 156, 46), INTERFACE);
+	public static RGBSetting POLYGON_INVISIBLE = new RGBSetting("polygon_invisible", new RGB(126, 196, 96), INTERFACE);
+	public static RGBSetting POLYGON_INV_SEL = new RGBSetting("polygon_invis_sel", new RGB(250, 202, 117), INTERFACE);
+	public static RGBSetting GROUP_NORMAL = new RGBSetting("group_normal", new RGB(0, 74, 127), INTERFACE);
+	public static RGBSetting GROUP_SELECTED = new RGBSetting("group_selected", new RGB(191, 128, 50), INTERFACE);
+	public static RGBSetting GROUP_INVISIBLE = new RGBSetting("group_invisible", new RGB(67, 142, 196), INTERFACE);
+	public static RGBSetting GROUP_INV_SEL = new RGBSetting("group_invis_sel", new RGB(232, 158, 67), INTERFACE);
+	public static RGBSetting PIVOT_NORMAL = new RGBSetting("pivot_normal", new RGB(5, 158, 127), INTERFACE);
+	public static RGBSetting PIVOT_SELECTED = new RGBSetting("pivot_selected", new RGB(219, 213, 31), INTERFACE);
+	public static RGBSetting PIVOT_INVISIBLE = new RGBSetting("pivot_invisible", new RGB(123, 158, 151), INTERFACE);
+	public static RGBSetting PIVOT_INV_SEL = new RGBSetting("pivot_invis_sel", new RGB(209, 205, 100), INTERFACE);
+	public static RGBSetting TEXTURE_GROUP = new RGBSetting("texture_group", new RGB(200, 200, 200), INTERFACE);
+	public static RGBSetting TEXTURE_OPTION = new RGBSetting("texture_option", new RGB(0, 74, 127), INTERFACE);
 	//Graphic
 	public static Setting<Integer> DEF_WIDTH = new Setting<>("window_width", 1024, GRAPHIC);
 	public static Setting<Integer> DEF_HEIGHT = new Setting<>("window_height", 576, GRAPHIC);
@@ -198,35 +196,6 @@ public class Settings {
 			return false;
 		}
 	};
-	//Theme
-
-	public static Setting<String> SEL_THEME = new StringArraySetting("selected_theme", "light", THEME, "light", "dark", "custom");
-	public static Setting<Boolean> DARKTHEME = new Setting<>("is_dark", false, THEME);
-	public static RGBSetting THEME_BACKGROUND = new RGBSetting("background", new RGB(0x212121), THEME);
-	public static RGBSetting THEME_BORDER = new RGBSetting("border", new RGB(0x616161), THEME);
-	public static RGBSetting THEME_SLIDER = new RGBSetting("slider", new RGB(0x616161), THEME);
-	public static RGBSetting THEME_STROKE = new RGBSetting("stroke", new RGB(0x0277BD), THEME);
-	public static RGBSetting THEME_ALLOW = new RGBSetting("allow", new RGB(0x1B5E20), THEME);
-	public static RGBSetting THEME_DENY = new RGBSetting("deny", new RGB(0xBD1C1C), THEME);
-	public static RGBSetting THEME_SHADOW = new RGBSetting("shadow", new RGB(0x0), THEME);
-	public static RGBSetting THEME_TEXT = new RGBSetting("text", new RGB(0xCCCCCC), THEME);
-	public static RGBSetting THEME_BUTTON = new RGBSetting("button", new RGB(0x212121), THEME);
-	public static Setting<String> THEME_FONT = new StringArraySetting("font", FONT, THEME, FontRegistry.ENTYPO, FontRegistry.ROBOTO_LIGHT, FontRegistry.ROBOTO_BOLD, FontRegistry.ROBOTO_REGULAR);
-	public static RGBSetting POLYGON_NORMAL = new RGBSetting("component_polygon_normal", new RGB(38, 127, 0), THEME);
-	public static RGBSetting POLYGON_SELECTED = new RGBSetting("component_polygon_selected", new RGB(219, 156, 46), THEME);
-	public static RGBSetting POLYGON_INVISIBLE = new RGBSetting("component_polygon_invisible", new RGB(126, 196, 96), THEME);
-	public static RGBSetting POLYGON_INV_SEL = new RGBSetting("component_polygon_invis_sel", new RGB(250, 202, 117), THEME);
-	public static RGBSetting GROUP_NORMAL = new RGBSetting("component_group_normal", new RGB(0, 74, 127), THEME);
-	public static RGBSetting GROUP_SELECTED = new RGBSetting("component_group_selected", new RGB(191, 128, 50), THEME);
-	public static RGBSetting GROUP_INVISIBLE = new RGBSetting("component_group_invisible", new RGB(67, 142, 196), THEME);
-	public static RGBSetting GROUP_INV_SEL = new RGBSetting("component_group_invis_sel", new RGB(232, 158, 67), THEME);
-	public static RGBSetting PIVOT_NORMAL = new RGBSetting("component_pivot_normal", new RGB(5, 158, 127), THEME);
-	public static RGBSetting PIVOT_SELECTED = new RGBSetting("component_pivot_selected", new RGB(219, 213, 31), THEME);
-	public static RGBSetting PIVOT_INVISIBLE = new RGBSetting("component_pivot_invisible", new RGB(123, 158, 151), THEME);
-	public static RGBSetting PIVOT_INV_SEL = new RGBSetting("component_pivot_invis_sel", new RGB(209, 205, 100), THEME);
-	public static RGBSetting TEXTURE_GROUP = new RGBSetting("bottom_infobar_color", new RGB(200, 200, 200), THEME);
-	public static RGBSetting TEXTURE_OPTION = new RGBSetting("component_texture_group", new RGB(0, 74, 127), THEME);
-	public static RGBSetting BOTTOM_INFO_BAR_COLOR = new RGBSetting("component_texture_group_option", new RGB(0, 74, 127), THEME);
 	//Discord
 	public static Setting<Boolean> DISCORD_RPC = new Setting<>("enabled", false, DISCORD);
 	public static Setting<Boolean> DISCORD_HIDE = new Setting<>("hidden_mode", false, DISCORD);
@@ -266,8 +235,6 @@ public class Settings {
 			JsonMap def = map.getMap(entry.getKey());
 			for(Setting<?> setting : entry.getValue().values()) setting.load(def);
 		}//TODO load plugin settings ?
-		//
-		if(!SEL_THEME.value.equals("custom")) DARKTHEME.value = SEL_THEME.value.contains("dark");
 		//
 		if(map.has("last_model")){
 			FMT.MODEL = new Model(new File(map.get("last_model").string_value()), "Loaded Model");
@@ -316,95 +283,6 @@ public class Settings {
 		JsonHandler.print(new File("./settings.json"), map, PrintOption.SPACED);
 		//
 		Editor.saveAll();
-	}
-
-	public static void applyTheme(){
-		switch(SEL_THEME.value){
-			case "custom":{
-				Themes.setDefaultTheme(new FlatColoredTheme(
-					rgba(THEME_BACKGROUND.value),
-					rgba(THEME_BORDER.value),
-					rgba(THEME_SLIDER.value),
-					rgba(THEME_STROKE.value),
-					rgba(THEME_ALLOW.value),
-					rgba(THEME_DENY.value),
-					ColorConstants.transparent(),//TODO
-					rgba(THEME_TEXT.value),
-					FONT, FONT_SIZE
-				));
-				break;
-			}
-			case "dark":{
-				Themes.setDefaultTheme(new FlatColoredTheme(
-					rgba(33, 33, 33, 1),
-					rgba(97, 97, 97, 1),
-					rgba(97, 97, 97, 1),
-					rgba(2, 119, 189, 1),
-					rgba(27, 94, 32, 1),
-					rgba(183, 28, 28, 1),
-					ColorConstants.transparent(),
-					ColorConstants.lightGray(),
-					FONT, FONT_SIZE
-				));
-				break;
-			}
-			case "light":{
-				Themes.setDefaultTheme(new FlatColoredTheme(
-					rgba(245, 245, 245, 1),
-					rgba(176, 190, 197, 1),
-					rgba(176, 190, 197, 1),
-					rgba(100, 181, 246, 1),
-					rgba(165, 214, 167, 1),
-					rgba(239, 154, 154, 1),
-					ColorConstants.transparent(),
-					ColorConstants.darkGray(),
-					FONT, FONT_SIZE
-				));
-				break;
-			}
-		}
-	}
-	
-	public static void applyMenuTheme(Component com){
-		com.getStyle().setBorderRadius(0);
-		com.getStyle().setBorder(null);
-		float col = DARKTHEME.value ? 0.25f : 0.75f;
-		com.getStyle().setTextColor(DARKTHEME.value ? ColorConstants.lightGray() : ColorConstants.darkGray());
-		com.getStyle().getBackground().setColor(col, col, col, 1);
-	}
-
-	public static void applyMenuTheme(Component... coms){
-		for(Component com : coms) applyMenuTheme(com);
-	}
-
-	public static void applyComponentTheme(Component com){
-		com.getStyle().setBorderRadius(0);
-		com.getStyle().setBorder(null);
-		float col = DARKTHEME.value ? 0.1875f : 0.8125f;
-		com.getStyle().setTextColor(DARKTHEME.value ? ColorConstants.lightGray() : ColorConstants.darkGray());
-		com.getStyle().getBackground().setColor(col, col, col, 1);
-	}
-	
-	public static void applyBorderless(Component com){
-		com.getStyle().setBorderRadius(0);
-		com.getStyle().setBorder(null);
-	}
-	
-	public static void applyBorderless(Style style){
-		style.setBorderRadius(0);
-		style.setBorder(null);
-	}
-
-	public static void applyGrayText(Component com){
-		com.getStyle().setTextColor(DARKTHEME.value ? new Vector4f(.65f, .65f, .65f, 1f) : new Vector4f(.35f, .35f, .35f, 1f));
-	}
-
-	public static void applyBorderlessScrollable(ScrollablePanel scrollable, boolean nell){
-		if(nell) applyBorderless(scrollable);
-		else scrollable.getStyle().setBorderRadius(0);
-		scrollable.getContainer().getStyle().setBorderRadius(0);
-		applyBorderless(scrollable.getVerticalScrollBar());
-		applyBorderless(scrollable.getHorizontalScrollBar());
 	}
 
 	public static void register(String group, String id, Setting<?> setting){
@@ -463,7 +341,7 @@ public class Settings {
 			if(!SHOW_UPDATE.value && update) update = false;
 		}
 		float width = 300;
-		Dialog dialog = new Dialog(translate("welcome.title"), width, 140);
+		/*Dialog dialog = new Dialog(translate("welcome.title"), width, 140);
 		if(update){
 			dialog.getContainer().add(new Label(translate("welcome.update.available"), 10, 10, width - 20, 20));
 			dialog.getContainer().add(new Label(format("welcome.update.files"), 10, 35, width - 20, 20));
@@ -492,7 +370,7 @@ public class Settings {
 			dialog.getContainer().add(new RunButton("dialog.button.load", 110, 90, 80, 20, () -> SaveHandler.openDialog(null)));
 			dialog.getContainer().add(new RunButton("dialog.button.new", 10, 90, 80, 20, () -> SaveHandler.newDialog()));
 		}
-		applyComponentTheme(dialog.getContainer());
+		applyComponentTheme(dialog.getContainer());*/
 		//dialog.show(FMT.FRAME);
 	}
 

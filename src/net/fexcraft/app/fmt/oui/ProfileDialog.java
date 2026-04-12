@@ -66,7 +66,7 @@ public class ProfileDialog {
 		view.setImage(ImageLoader.loadImage("./resources/textures/icon.png"));
 		view.setPosition(550 - 10 - 120, 10);
 		view.setSize(120, 120);
-		Settings.applyBorderless(view);
+		//Settings.applyBorderless(view);
 		dialog.getContainer().add(view);
 		//
 		//dialog.show(FMT.FRAME);
@@ -85,8 +85,8 @@ public class ProfileDialog {
 		PasswordInput passinput = new PasswordInput(SessionHandler.shouldEncrypt() ? "" : SessionHandler.getPassWord(), 10, 85, 380, 20);
 		passinput.addTextInputContentChangeEventListener(event -> SessionHandler.updatePassword(event.getNewValue()));
 		dialog.getContainer().add(passinput);
-		Settings.applyMenuTheme(mail);
-		Settings.applyMenuTheme(passinput);
+		//Settings.applyMenuTheme(mail);
+		//Settings.applyMenuTheme(passinput);
 		CheckBox checkbox0 = new CheckBox(10, 115, 380, 20);
 		checkbox0.getStyle().setPadding(5f, 10f, 5f, 5f);
 		checkbox0.setChecked(SessionHandler.shouldEncrypt());

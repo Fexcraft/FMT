@@ -33,8 +33,8 @@ public class DirComponent extends Component {
 		this.file = file;
 		add(label = new Label(WorkspaceViewer.ROWHEIGHT + 2, 0, 5, WorkspaceViewer.ROWHEIGHT));
 		label.getTextState().setText(file.getName());
-		Settings.applyBorderless(label);
-		Settings.applyBorderless(this);
+		//Settings.applyBorderless(label);
+		//Settings.applyBorderless(this);
 		getListenerMap().addListener(MouseClickEvent.class, listener -> {
 			if(listener.getAction() == MouseClickEvent.MouseClickAction.CLICK){
 				if(listener.getButton() == Mouse.MouseButton.MOUSE_BUTTON_LEFT){

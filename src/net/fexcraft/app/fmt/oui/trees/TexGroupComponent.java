@@ -49,7 +49,7 @@ public class TexGroupComponent extends EditorComponent {
 		label.getPosition().set(0, 0);
 		label.getSize().add(4, 0);
 		label.getStyle().setPaddingLeft(new Length<Float>(5f, LengthType.PIXEL));
-		Settings.applyBorderless(label);
+		//Settings.applyBorderless(label);
 		add(new OptionLabel(this, 0, "texture.group.rename", () -> openRenameDialog()));
 		add(new OptionLabel(this, 1, "texture.group.resize", () -> openResizeDialog()));
 		add(new OptionLabel(this, 2, "texture.group.generate", () -> generate()));
@@ -71,7 +71,7 @@ public class TexGroupComponent extends EditorComponent {
 	private void openRenameDialog(){
 		float width = 400;
         Dialog dialog = new Dialog(translate("editor.tree.texture.rename_group.title"), width, 130);
-        Settings.applyComponentTheme(dialog.getContainer());
+        //Settings.applyComponentTheme(dialog.getContainer());
         dialog.setResizable(true);
     	Label label0 = new Label(translate("editor.tree.texture.rename_group.desc"), 10, 10, width - 20, 20);
     	dialog.getContainer().add(label0);
@@ -214,7 +214,7 @@ public class TexGroupComponent extends EditorComponent {
 			this.getStyle().setTextColor(ColorConstants.lightGray());
 			this.getStyle().getBackground().setColor(FMT.rgba(Settings.TEXTURE_OPTION.value));
 			this.getStyle().setPaddingLeft(new Length<Float>(5f, LengthType.PIXEL));
-			Settings.applyBorderless(this);
+			//Settings.applyBorderless(this);
 			setPosition(4, index * 21 + 26);
 			setSize(Editor.CWIDTH - 8, PH);
 	        getListenerMap().addListener(MouseClickEvent.class, e -> {

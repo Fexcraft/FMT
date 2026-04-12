@@ -54,7 +54,7 @@ public class ImportManager {
 	public static void _import(){
 		Dialog dialog = new Dialog(translate("import.choose.dialog"), 400, 190);
 		dialog.setResizable(false);
-		Settings.applyComponentTheme(dialog.getContainer());
+		//Settings.applyComponentTheme(dialog.getContainer());
 		dialog.getContainer().add(new Label(translate("import.choose.category"), 10, 10, 380, 25));
 		SelectBox<String> selcat = new SelectBox<>(10, 35, 380, 25);
 		for(String cat : CATEGORIES){

@@ -87,7 +87,7 @@ public class FileChooser {
 	private static void openInternalChooser(String title, String root, FileType type, boolean save, Consumer<File> task){
 		int width = 600, lwidth = width - 220, rwidth = 200;
 		Dialog dialog = new Dialog(Translator.translate("filechooser.title"), width, INTERNAL_HEIGHT + (save ? 30 : 0));
-		Settings.applyComponentTheme(dialog.getContainer());
+		//Settings.applyComponentTheme(dialog.getContainer());
         Label label = new Label(title, 10, 10, lwidth, 20);
         File rootfile = new File(root);
         if(!rootfile.exists()) rootfile.mkdirs();

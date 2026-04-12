@@ -13,8 +13,6 @@ import net.fexcraft.app.fmt.utils.FontSizeUtil;
 import net.fexcraft.app.fmt.utils.Translator;
 import org.joml.Vector4f;
 
-import static net.fexcraft.app.fmt.settings.Settings.DARKTHEME;
-
 public class RunButton extends Button {
 
 	public Runnable run;
@@ -23,12 +21,12 @@ public class RunButton extends Button {
 
 	public RunButton(String str, float x, float y, float w, float h, Runnable run, boolean borderless){
 		super(Translator.translate(str), x, y, w, h);
-		if(borderless) Settings.applyBorderless(this);
+		/*if(borderless) Settings.applyBorderless(this);
 		else{
 			getStyle().setBorderRadius(4);
 			getStyle().setBorder(new SimpleLineBorder(DARKTHEME.value ? new Vector4f(.65f, .65f, .65f, 1f) : new Vector4f(.35f, .35f, .35f, 1f), 1f));
 		}
-		Settings.applyGrayText(this);
+		Settings.applyGrayText(this);*/
 		this.getListenerMap().addListener(MouseClickEvent.class, l -> {
 			if(l.getAction() == MouseClickAction.CLICK && l.getButton() == MouseButton.MOUSE_BUTTON_LEFT) run.run();
 		});

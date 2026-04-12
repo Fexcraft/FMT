@@ -49,7 +49,7 @@ public class PackDevEnv extends Widget {
 		INSTANCE = this;
 		setSize(def_width, def_height);
 		getContainer().setSize(getSize());
-		Settings.applyComponentTheme(getContainer());
+		//Settings.applyComponentTheme(getContainer());
 		setResizable(true);
 		setPosition(40, 40);
 		filespanel = new ScrollablePanel();

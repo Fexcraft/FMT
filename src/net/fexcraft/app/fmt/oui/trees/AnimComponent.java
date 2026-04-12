@@ -203,7 +203,7 @@ public class AnimComponent extends EditorComponent {
 		private Animation anim;
 
 		public AnimationLabel(AnimComponent com){
-			Settings.applyBorderless(this);
+			//Settings.applyBorderless(this);
 			setSize(Editor.CWIDTH - 8, PH);
 			Icon remo = new Icon(0, 16, 4, Editor.CWIDTH - 26, 2, "./resources/textures/icons/component/remove.png", () -> {
 				if(com.group.animations.remove(anim)) UpdateHandler.update(new GroupAnimationRemoved(com.group, anim));

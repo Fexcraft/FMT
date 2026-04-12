@@ -12,23 +12,23 @@ public class TextField extends TextInput {
 
 	public TextField(String string, float x, float y, float w, float h){
 		super(string, x, y, w, h);
-		Settings.applyBorderless(this);
-		Settings.applyGrayText(this);
+		//Settings.applyBorderless(this);
+		//Settings.applyGrayText(this);
 		//Field.setupHoverCheck(this);
 	}
 
 	public TextField(Setting<String> setting, float x, float y, float w, float h){
 		this(setting.value.toString(), x, y, w, h);
-		Settings.applyMenuTheme(this);
-		Settings.applyGrayText(this);
+		//Settings.applyMenuTheme(this);
+		//Settings.applyGrayText(this);
 		//Field.setupHoverCheck(this);
 		this.addTextInputContentChangeEventListener(event -> setting.validate(true, Field.validateString(event, setting.basicstr())));
 	}
 
 	public TextField(String string, float x, float y, float w, float h, boolean basic){
 		this(string, x, y, w, h);
-		Settings.applyBorderless(this);
-		Settings.applyGrayText(this);
+		//Settings.applyBorderless(this);
+		//Settings.applyGrayText(this);
 		//Field.setupHoverCheck(this);
 		this.addTextInputContentChangeEventListener(event -> Field.validateString(event, basic));
 	}

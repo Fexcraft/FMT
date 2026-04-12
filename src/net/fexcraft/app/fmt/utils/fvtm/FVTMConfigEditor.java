@@ -59,7 +59,7 @@ public class FVTMConfigEditor extends Widget {
 		ref = getReference(type, key, entry, val);
 		if(ref == null) return;
 		remap();
-		Settings.applyComponentTheme(getContainer());
+		//Settings.applyComponentTheme(getContainer());
 		getContainer().add(panel = new ScrollablePanel(10, 40, width - 20, height - 70));
 		getContainer().add(new RunButton("dialog.button.save", width - 220, 10, 100, 24, () -> save()));
 		getContainer().add(new RunButton("dialog.button.close", width - 110, 10, 100, 24, () -> {

@@ -45,7 +45,7 @@ public class UVViewer extends Widget {
         int width = 552, height = 599;
         setSize(width, height);
         setPosition(FMT.WIDTH / 2 - width / 2, FMT.HEIGHT / 2 - height / 2);
-        Settings.applyComponentTheme(getContainer());
+        //Settings.applyComponentTheme(getContainer());
         UpdateCompound updcom = new UpdateCompound();
         Component con = getContainer();
         //
@@ -135,7 +135,7 @@ public class UVViewer extends Widget {
             setSize(w, h);
             setPosition(x, y);
             getStyle().setBorderRadius(8);
-            Settings.applyComponentTheme(this);
+            //Settings.applyComponentTheme(this);
             getStyle().setBorder(new SimpleLineBorder(FMT.rgba(0x2ea4e8), 2));
             setFocusable(false);
         }

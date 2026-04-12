@@ -22,16 +22,16 @@ public class BoolButton extends Button implements Field {
 	public BoolButton(EditorComponent comp, float x, float y, float w, float h, PolygonValue val){
 		super("false", x, y, w, h);
 		this.poly_value = val;
-		Settings.applyBorderless(this);
-		Settings.applyGrayText(this);
+		//Settings.applyBorderless(this);
+		//Settings.applyGrayText(this);
 		Field.setupHoverCheck(this);
 		Field.setupUpdatesAndListeners(this, comp.getUpdCom(), val);
 	}
 
 	public BoolButton(Setting<Boolean> setting, float x, float y, float w, float h){
 		super(setting.value + "", x, y, w, h);
-		Settings.applyMenuTheme(this);
-		Settings.applyGrayText(this);
+		//Settings.applyMenuTheme(this);
+		//Settings.applyGrayText(this);
 		Field.setupHoverCheck(this);
 		this.setting = setting;
 		this.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)event -> {
@@ -45,8 +45,8 @@ public class BoolButton extends Button implements Field {
 
 	public BoolButton(float x, float y, float w, float h, boolean def, Consumer<Boolean> cons){
 		super(def + "", x, y, w, h);
-		Settings.applyMenuTheme(this);
-		Settings.applyGrayText(this);
+		//Settings.applyMenuTheme(this);
+		//Settings.applyGrayText(this);
 		Field.setupHoverCheck(this);
 		this.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)event -> {
 			if(event.getAction() == CLICK){

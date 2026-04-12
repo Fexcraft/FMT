@@ -55,7 +55,7 @@ public class WorkspaceViewer extends Widget {
 			refresh.setPosition(vec.x - 110, 5);
 			resize();
 		});
-		Settings.applyBorderless(packspanel);
+		//Settings.applyBorderless(packspanel);
 		getContainer().add(packspanel);
 		getContainer().add(refresh = new RunButton("Refresh", getSize().x - 110, 5, 100, 20, () -> genView(false)));
 		//

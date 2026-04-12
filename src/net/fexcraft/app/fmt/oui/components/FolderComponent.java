@@ -47,7 +47,7 @@ public class FolderComponent extends EditorComponent {
 		panel = new ScrollablePanel(5, 30, Editor.CWIDTH - 10, fullheight - 65);
 		//panel.setVerticalScrollBarVisible(false);
 		panel.getContainer().setSize(height, scrollableheight = fullheight - 65);
-		Settings.applyBorderless(panel);
+		//Settings.applyBorderless(panel);
 		this.add(panel);
 		if(!folder.exists()) folder.mkdirs();
 		genView();
@@ -128,8 +128,8 @@ public class FolderComponent extends EditorComponent {
 			this.root = root;
 			add(label = new Label(ROWHEIGHT + 2, 0, LW, ROWHEIGHT));
 			label.getTextState().setText(file.getName());
-			Settings.applyBorderless(label);
-			Settings.applyBorderless(this);
+			//Settings.applyBorderless(label);
+			//Settings.applyBorderless(this);
 			label.getListenerMap().addListener(MouseClickEvent.class, listener -> {
 				if(listener.getAction() == MouseClickAction.CLICK){
 					if(listener.getButton() == MouseButton.MOUSE_BUTTON_LEFT){

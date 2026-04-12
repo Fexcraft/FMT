@@ -697,7 +697,7 @@ public class Model {
 	public void rescale(){
 		int width = 420, height = 410;
 		Dialog dialog = new Dialog(translate("model.rescale.dialog"), width, 0);
-		Settings.applyComponentTheme(dialog.getContainer());
+		//Settings.applyComponentTheme(dialog.getContainer());
 		dialog.getContainer().add(new Label(translate("model.rescale.scale"), 10, 10, width - 20, 20));
 		NumberField input = new NumberField((EditorComponent)null, 10, 30, width - 20, 20);
 		float[] scale = { 1 };

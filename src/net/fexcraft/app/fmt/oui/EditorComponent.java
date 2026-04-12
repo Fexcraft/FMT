@@ -51,7 +51,7 @@ public class EditorComponent extends Component {
 		setSize(width == 0 ? Editor.CWIDTH : width, fullheight = fullHeight > 0 ? fullHeight : HEIGHT * 2);
 		add(label = new Label(Translator.translate(LANG_PREFIX + (id = key) + ".name"), 4, 0, 296, 24));
 		label.getStyle().setFontSize(18f);
-		Settings.applyComponentTheme(this);
+		//Settings.applyComponentTheme(this);
 		add(size = new Icon(this, 1, "./resources/textures/icons/component/" + (tree ? "minimize" : "size") + ".png", () -> minimize(null)));
 		if(!resizeable) size.getStyle().setDisplay(DisplayType.NONE);
 	}

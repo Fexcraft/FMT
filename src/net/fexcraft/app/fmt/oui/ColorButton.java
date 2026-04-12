@@ -15,7 +15,7 @@ public class ColorButton extends Component {
 	public ColorButton(EditorComponent root, int x, int y, int w, int h){
 		setPosition(x, y);
 		setSize(w, h);
-		Settings.applyBorderless(this);
+		//Settings.applyBorderless(this);
 		getListenerMap().addListener(MouseClickEvent.class, e -> {
 			if(e.getButton() == Mouse.MouseButton.MOUSE_BUTTON_LEFT && e.getAction() == MouseClickEvent.MouseClickAction.CLICK){
 				TexturePainter.updateColor(value, TexturePainter.ACTIVE, true);

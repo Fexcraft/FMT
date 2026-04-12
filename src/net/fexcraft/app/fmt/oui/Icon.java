@@ -23,8 +23,8 @@ public class Icon extends ImageView {
         this.setFocusable(false);
         this.setSize(ToolbarMenu.HEIGHT - 2, ToolbarMenu.HEIGHT - 2);
         this.getListenerMap().addListener(MouseClickEvent.class, listener);
-        Settings.applyBorderless(getStyle());
-        Settings.applyBorderless(getFocusedStyle());
+        //Settings.applyBorderless(getStyle());
+        //Settings.applyBorderless(getFocusedStyle());
         this.setFocusable(true);
     }
 
@@ -44,8 +44,8 @@ public class Icon extends ImageView {
         this.setPosition(root.getSize().x - (index * 25), yoff);
         this.setSize(22, 22);
         this.getListenerMap().addListener(MouseClickEvent.class, listener);
-        Settings.applyBorderless(getStyle());
-        Settings.applyBorderless(getFocusedStyle());
+        //Settings.applyBorderless(getStyle());
+        //Settings.applyBorderless(getFocusedStyle());
         this.setFocusable(true);
     }
 
@@ -61,8 +61,8 @@ public class Icon extends ImageView {
         this.setFocusable(false);
         this.setSize(size, size);
         this.getListenerMap().addListener(MouseClickEvent.class, listener);
-        Settings.applyBorderless(getStyle());
-        Settings.applyBorderless(getFocusedStyle());
+        //Settings.applyBorderless(getStyle());
+        //Settings.applyBorderless(getFocusedStyle());
         this.setFocusable(true);
     }
 

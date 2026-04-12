@@ -126,7 +126,7 @@ public class ModelExports extends EditorComponent {
 	private void addEntryDialog(){
 		float width = 400;
         Dialog dialog = new Dialog(Translator.translate("editor.component.model.export_values.add_entry.dialog"), width, 170);
-        Settings.applyComponentTheme(dialog.getContainer());
+        //Settings.applyComponentTheme(dialog.getContainer());
         dialog.setResizable(true);
     	Label label0 = new Label(Translator.translate("editor.component.model.export_values.add_entry.name"), 10, 10, width - 20, 20);
     	dialog.getContainer().add(label0);
@@ -163,7 +163,7 @@ public class ModelExports extends EditorComponent {
 	private void addListDialog(){
 		float width = 400;
         Dialog dialog = new Dialog(Translator.translate("editor.component.model.export_values.add_list.dialog"), width, 130);
-        Settings.applyComponentTheme(dialog.getContainer());
+        //Settings.applyComponentTheme(dialog.getContainer());
         dialog.setResizable(true);
     	Label label0 = new Label(Translator.translate("editor.component.model.export_values.add_list.name"), 10, 10, width - 20, 20);
     	dialog.getContainer().add(label0);

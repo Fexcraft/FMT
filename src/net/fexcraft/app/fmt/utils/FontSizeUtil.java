@@ -24,7 +24,7 @@ public final class FontSizeUtil {
     private static void loadFontInfo(){
     	ByteBuffer type = null;
         try{
-            type = IOUtil.resourceToByteBuffer(Settings.FONT_PATH);
+            type = IOUtil.resourceToByteBuffer("com/spinyowl/legui/style/font/Roboto-Bold.ttf");
         }
         catch(IOException e){
             throw new RuntimeException(e);

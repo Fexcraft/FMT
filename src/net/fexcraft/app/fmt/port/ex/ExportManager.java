@@ -55,7 +55,7 @@ public class ExportManager {
 	public static void export(){
 		Dialog dialog = new Dialog(translate("export.choose.dialog"), 400, 190);
 		dialog.setResizable(false);
-		Settings.applyComponentTheme(dialog.getContainer());
+		//Settings.applyComponentTheme(dialog.getContainer());
 		dialog.getContainer().add(new Label(translate("export.choose.category"), 10, 10, 380, 25));
 		SelectBox<String> selcat = new SelectBox<>(10, 35, 380, 25);
 		for(String cat : CATEGORIES){
@@ -97,7 +97,7 @@ public class ExportManager {
 	private static void showGroupSelectionDialog(Exporter exporter){
 		Dialog dialog = new Dialog(translate("export.choose.groups"), 400, 440);
 		dialog.setResizable(false);
-		Settings.applyComponentTheme(dialog.getContainer());
+		//Settings.applyComponentTheme(dialog.getContainer());
 		GroupSelectionPanel panel = new GroupSelectionPanel(10, 10, 380, 360);
 		dialog.getContainer().add(panel);
 		dialog.getContainer().add(new RunButton("dialog.button.continue", 10, 380, 100, 30, () -> {

@@ -157,7 +157,6 @@ public class FMT {
 		glfwFocusWindow(window);
 		//
 		CAM = new GGR();
-		Settings.applyTheme();
 		glfwSetKeyCallback(window, keyCallback = new GLFWKeyCallback(){
 			@Override
 			public void invoke(long window, int key, int scancode, int action, int mods){

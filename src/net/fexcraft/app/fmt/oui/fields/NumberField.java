@@ -30,8 +30,8 @@ public class NumberField extends TextInput implements Field {
 
 	public NumberField(UpdateCompound updcom, float x, float y, float w, float h){
 		super("0", x, y, w, h);
-		Settings.applyBorderless(this);
-		Settings.applyGrayText(this);
+		//Settings.applyBorderless(this);
+		//Settings.applyGrayText(this);
 		Field.setupHoverCheck(this);
 		this.updcom = updcom;
 	}
@@ -50,8 +50,8 @@ public class NumberField extends TextInput implements Field {
 
 	public NumberField(Setting<?> setting, float x, float y, float w, float h){
 		super(setting.value.toString(), x, y, w, h);
-		Settings.applyMenuTheme(this);
-		Settings.applyGrayText(this);
+		//Settings.applyMenuTheme(this);
+		//Settings.applyGrayText(this);
 		Field.setupHoverCheck(this);
 		getListenerMap().addListener(FocusEvent.class, listener -> {
 			if(!listener.isFocused()){

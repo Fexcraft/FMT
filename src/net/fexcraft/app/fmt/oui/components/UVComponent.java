@@ -229,7 +229,7 @@ public class UVComponent extends EditorComponent {
 			setSize(w, h);
 			setPosition(x, y);
 			getStyle().setBorderRadius(8);
-			Settings.applyComponentTheme(this);
+			//Settings.applyComponentTheme(this);
 			getStyle().setBorder(new SimpleLineBorder(FMT.rgba(0x2ea4e8), 2));
 			setFocusable(false);
 		}

@@ -35,7 +35,7 @@ public class ToolbarMenu extends Panel {
 	public ToolbarMenu(int index, String id, Component... comps){
 		super(index < 0 ? 0 : indexWidth(index), index < 0 ? 1 + -index * (HEIGHT + 1) : 0, WIDTH, HEIGHT);
 		this.add(label = new Label(Translator.translate("toolbar." + id), 4, 0, WIDTH - 4, HEIGHT));
-		Settings.applyMenuTheme(this);
+		//Settings.applyMenuTheme(this);
 		MENUS.put(id, this);
 		for(int i = 0; i < comps.length; i++) components.add(comps[i]);
 		layer = new MenuLayer(this, this.getPosition(), components, index < 0 ? id.substring(0, id.lastIndexOf('.')) : null);
@@ -83,8 +83,8 @@ public class ToolbarMenu extends Panel {
 		private float width;
 
         public MenuLayer(ToolbarMenu menu, Vector2f pos, Collection<Component> comps, String rootid){
-    		Settings.applyBorderless(this);
-			float w = Settings.DARKTHEME.value ? 0 : 1;
+    		//Settings.applyBorderless(this);
+			float w = 0;//Settings.DARKTHEME.value ? 0 : 1;
 			this.getStyle().getBackground().setColor(w, w, w, 1);
             setEventReceivable(true);
             setEventPassable(true);
@@ -118,7 +118,7 @@ public class ToolbarMenu extends Panel {
     		if(com.getChildComponents().size() > 0){
     			com.getChildComponents().get(0).getListenerMap().addListener(CursorEnterEvent.class, listener);
     		}*/
-    		Settings.applyMenuTheme(com);
+    		//Settings.applyMenuTheme(com);
     		if(root != null) com.getPosition().x += 1;
     		this.add(com);
 		}

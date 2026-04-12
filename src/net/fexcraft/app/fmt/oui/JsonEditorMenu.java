@@ -161,7 +161,7 @@ public class JsonEditorMenu {
 	private static void pickType(boolean askkey, BiConsumer<String, JsonValue<?>> cons){
 		float width = 400, height = askkey ? 180 : 120;
 		Dialog dialog = new Dialog(translate("toolbar.jsoneditormenu.picktype.title"), width, height);
-		Settings.applyComponentTheme(dialog.getContainer());
+		//Settings.applyComponentTheme(dialog.getContainer());
 		dialog.setResizable(true);
 		dialog.getContainer().add(new Label(translate("toolbar.jsoneditormenu.picktype.desc"), 10, 10, width - 20, 20));
 		SelectBox<String> box = new SelectBox<>(10, 35, width - 20, 20);
@@ -220,7 +220,7 @@ public class JsonEditorMenu {
 	private static void rename(String curr, Consumer<String> cons){
 		float width = 400, height = 120;
 		Dialog dialog = new Dialog(translate("toolbar.jsoneditormenu.rename.title"), width, height);
-		Settings.applyComponentTheme(dialog.getContainer());
+		//Settings.applyComponentTheme(dialog.getContainer());
 		dialog.setResizable(true);
 		dialog.getContainer().add(new Label(translate("toolbar.jsoneditormenu.picktype.desc"), 10, 10, width - 20, 20));
 		String[] nkey = { curr };

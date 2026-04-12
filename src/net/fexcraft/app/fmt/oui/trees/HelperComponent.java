@@ -155,7 +155,7 @@ public class HelperComponent extends EditorComponent {
 		private Group group;
 
 		public GroupLabel(HelperComponent com){
-			Settings.applyBorderless(this);
+			//Settings.applyBorderless(this);
 			setSize(Editor.CWIDTH - 8, PH);
 			Icon visi = new Icon(0, 16, 4, Editor.CWIDTH - 26, 2, "./resources/textures/icons/component/visible.png", () -> {
 				group.visible = !group.visible;

@@ -87,7 +87,7 @@ public class GroupSelectionPanel extends Panel {
 				entry.getValue().setChecked(group != null && group.selected);
 			}
 		});
-		Settings.applyMenuTheme(field, sel_button, des_button, vis_button, ssg_button);
+		//Settings.applyMenuTheme(field, sel_button, des_button, vis_button, ssg_button);
 		this.add(sel_button);
 		this.add(des_button);
 		this.add(vis_button);
@@ -99,16 +99,16 @@ public class GroupSelectionPanel extends Panel {
 		for(Group group : FMT.MODEL.allgroups()){
 			CheckBox box = new CheckBox("", 10, (i * 25) + 2.5f, width - 20, 20);
 			Label label = new Label(group.id, 30, (i++ * 25) + 2.5f, width - 20, 20);
-			Settings.applyBorderless(box);
+			//Settings.applyBorderless(box);
 			panel.getContainer().add(box);
-			Settings.applyBorderless(label);
+			//Settings.applyBorderless(label);
 			panel.getContainer().add(label);
 			boxes.put(group.id, box);
 			box.setChecked(true);
 		}
 		this.add(panel);
-		Settings.applyBorderless(this);
-		Settings.applyBorderless(panel);
+		//Settings.applyBorderless(this);
+		//Settings.applyBorderless(panel);
 	}
 
 	private void updateSelectedGroups(String id){

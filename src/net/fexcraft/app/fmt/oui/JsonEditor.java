@@ -34,7 +34,7 @@ public class JsonEditor extends Widget {
         setResizable(false);
         setSize(700, 470);
         INST = this;
-        Settings.applyComponentTheme(getContainer());
+        //Settings.applyComponentTheme(getContainer());
         getContainer().add(panel = new ScrollablePanel(10, 10, 680, 400));
         fill(panel.getContainer(), map);
         panel.getContainer().setSize(width = 1000, 400);
