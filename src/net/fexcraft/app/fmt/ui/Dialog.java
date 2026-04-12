@@ -74,8 +74,8 @@ public class Dialog extends Element {
 		}
 	}
 
-	public void addText(int row, String text){
-		container.add(new TextElm(5, 5 + row * 30, container.w - 10, text).text_autoscale());
+	public void addText(int row, String text, Object... format){
+		container.add(new TextElm(5, 5 + row * 30, container.w - 10, text, format).text_autoscale());
 	}
 
 	public void addRowElm(int row, Element elm){
