@@ -13,12 +13,12 @@ public class TextElm extends Element {
 		this(x, y, w, "");
 	}
 
-	public TextElm(float x, float y, float w, String text){
+	public TextElm(float x, float y, float w, String text, Object... format){
 		super();
 		shape(ElmShape.NONE);
 		pos(x, y);
 		size(w, FS);
-		translate(text);
+		translate(text, format);
 	}
 
 	public TextElm(float x, float y, float w, String text, RGB col){
