@@ -67,11 +67,6 @@ public class FMFExporter implements Exporter {
 	}
 
 	@Override
-	public List<Setting<?>> settings(){
-		return settings;
-	}
-
-	@Override
 	public boolean nogroups(){
 		return false;
 	}
@@ -80,7 +75,7 @@ public class FMFExporter implements Exporter {
 	public String export(Model model, File file, List<Group> groups){
 		FileOutputStream stream = null;
 		boolean flip = !FMT.MODEL.orient.rect();
-		boolean sing = settings().get(1).bool();
+		boolean sing = settings.get(1).bool();
 		try{
 			stream = new FileOutputStream(file);
 			stream.write(new byte[]{ 6, 13, 6, 1 });
