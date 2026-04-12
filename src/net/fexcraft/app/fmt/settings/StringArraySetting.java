@@ -1,12 +1,5 @@
 package net.fexcraft.app.fmt.settings;
 
-import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
-import com.spinyowl.legui.component.Component;
-import com.spinyowl.legui.component.SelectBox;
-
-import net.fexcraft.app.fmt.update.UpdateHandler.UpdateHolder;
-import net.fexcraft.app.json.JsonMap;
-
 public class StringArraySetting extends Setting<String> {
 	
 	protected String[] vals;
@@ -21,18 +14,12 @@ public class StringArraySetting extends Setting<String> {
 		//TODO
 	}
 
-	@Override
-	public Component createField(Component root, UpdateCompound updcom, int x, int y, int w, int h){
-		SelectBox<String> box = new SelectBox<>(x, y, w, h);
-		for(String str : vals) box.addElement(str);
-		box.addSelectBoxChangeSelectionEventListener(lis -> value(lis.getNewValue()));
-		Settings.applyMenuTheme(box);
-		box.setSelected(value, true);
-		return box;
-	}
-
 	public void setElms(String[] array){
 		vals = array;
+	}
+
+	public String[] vals(){
+		return vals;
 	}
 
 }
