@@ -64,11 +64,6 @@ public class ObjExporter implements Exporter {
     }
 
     @Override
-    public List<Setting<?>> settings(){
-        return settings;
-    }
-
-    @Override
     public boolean nogroups(){
         return false;
     }
