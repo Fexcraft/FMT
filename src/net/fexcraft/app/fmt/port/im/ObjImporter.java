@@ -58,9 +58,4 @@ public class ObjImporter implements Importer {
 		return categories;
 	}
 
-	@Override
-	public List<Setting<?>> settings() {
-		return Collections.emptyList();
-	}
-
 }
