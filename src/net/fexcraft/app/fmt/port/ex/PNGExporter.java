@@ -52,11 +52,10 @@ public class PNGExporter implements Exporter {
 	}
 
 	@Override
-	public List<Setting<?>> settings(){
+	public void initSettings(){
 		String[] names = TextureManager.getGroupNames();
 		settings.get(1).value(names.length == 0 ? "none" : names[0]);
 		((StringArraySetting)settings.get(1)).setElms(names.length == 0 ? new String[]{ "none" } : names);
-		return settings;
 	}
 
 	@Override
