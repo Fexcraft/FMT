@@ -21,6 +21,8 @@ public class SettingsUI extends Element {
 	private static float HEIGHT = 500;
 	public DropList<String> category;
 	public LinkedHashMap<String, Scrollable> containers = new LinkedHashMap<>();
+	public Runnable run;
+	private Element icon;
 
 	public SettingsUI(){
 		super();
@@ -35,11 +37,15 @@ public class SettingsUI extends Element {
 	public void init(Object... args){
 		add(new Element().size(w - 31, 30).color(col_bd)
 			.translate("settings.dialog.title").text_autoscale());
-		add(new Element().size(30, 30).pos(w - 31, 0).texture("icons/component/remove")
+		add(icon = new Element().size(30, 30).pos(w - 31, 0).texture("icons/component/remove")
 			.hoverable(true).onclick(ci -> {
 				Element.select(null);
 				Settings.refresh();
 				hide();
+				if(run != null){
+					run.run();
+					run = null;
+				}
 			}));
 		add((category = new DropList<>(w - 10)).pos(5, 40));
 		category.drop.z += 100;
@@ -59,7 +65,7 @@ public class SettingsUI extends Element {
 		Scrollable con = new Scrollable(true, 80);
 		containers.put(key, con);
 		add(con.pos(0, 90));
-		con.updateSize(w, h - 30);
+		con.updateSize(w - 1, h - 30);
 		for(Map.Entry<String, Setting<?>> entry : Settings.SETTINGS.get(key).entrySet()){
 			con.add(new SettingBlock(), key, entry.getKey(), entry.getValue());
 		}
@@ -70,7 +76,16 @@ public class SettingsUI extends Element {
 	@Override
 	public Element show(){
 		pos((FMT.SCALED_WIDTH - WIDTH) * 0.5f, (FMT.SCALED_HEIGHT - HEIGHT) * 0.5f);
+		icon.texture("icons/component/remove");
 		return super.show();
+	}
+
+	public void show(String tidx){
+		show();
+		icon.texture("icons/component/move_right");
+		category.selectValue(tidx);
+		for(Scrollable scr : containers.values()) scr.hide();
+		containers.get(tidx).show();
 	}
 
 	public static class SettingBlock extends Element {
