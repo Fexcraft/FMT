@@ -3,7 +3,6 @@ package net.fexcraft.app.fmt.utils;
 import static net.fexcraft.app.fmt.update.UpdateHandler.update;
 import static net.fexcraft.app.fmt.oui.GenericDialog.showOK;
 import static net.fexcraft.app.fmt.utils.Logging.log;
-import static com.spinyowl.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -23,17 +22,14 @@ import net.fexcraft.app.fmt.animation.Animation;
 import net.fexcraft.app.fmt.polygon.*;
 import net.fexcraft.app.fmt.port.im.ImportManager;
 import net.fexcraft.app.fmt.port.im.Importer;
+import net.fexcraft.app.fmt.ui.Dialog;
+import net.fexcraft.app.fmt.ui.DropList;
+import net.fexcraft.app.fmt.ui.Field;
 import net.fexcraft.app.fmt.update.UpdateEvent.ModelLoad;
 import net.fexcraft.app.fmt.update.UpdateEvent.ModelUnload;
 import net.fexcraft.app.fmt.utils.fvtm.VehAttr;
 import org.apache.commons.io.IOUtils;
 import org.joml.Vector3f;
-import com.spinyowl.legui.component.Button;
-import com.spinyowl.legui.component.Dialog;
-import com.spinyowl.legui.component.Label;
-import com.spinyowl.legui.component.SelectBox;
-import com.spinyowl.legui.event.MouseClickEvent;
-import com.spinyowl.legui.listener.MouseClickEventListener;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.update.UpdateHandler;
@@ -42,7 +38,6 @@ import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.oui.FileChooser;
 import net.fexcraft.app.fmt.oui.GenericDialog;
-import net.fexcraft.app.fmt.oui.fields.TextField;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonHandler.PrintOption;
@@ -607,7 +602,10 @@ public class SaveHandler {
 	}
 
 	private static void shouldSaveDialog(Runnable run){
-		GenericDialog.showYN("saveload.title", () -> saveDialogByState(run), () -> run.run(), "saveload.should_save");
+		Dialog dia = FMT.UI.createDialog(500, 80, "saveload.title");
+		dia.addText(0, "saveload.should_save");
+		dia.consumer(d -> saveDialogByState(run), d -> run.run());
+		dia.buttons(100, Dialog.DialogButton.YES, Dialog.DialogButton.NO);
 	}
 
 	public static void saveDialogByState(Runnable run){
@@ -616,9 +614,11 @@ public class SaveHandler {
 	}
 
 	public static void saveDialog(File file, Runnable run){
-		GenericDialog.showCC("saveload.title", () -> {
-			save(FMT.MODEL, file, run);
-		}, null, "saveload.confirm_save", "#" + (file == null ? FMT.MODEL.file : file));
+		Dialog dia = FMT.UI.createDialog(500, 120, "saveload.title");
+		dia.addText(0, "saveload.confirm_save");
+		dia.addText(1, "#" + (file == null ? FMT.MODEL.file : file));
+		dia.consumer(d -> save(FMT.MODEL, file, run), null);
+		dia.buttons(100, Dialog.DialogButton.CONFIRM, Dialog.DialogButton.CANCEL);
 	}
 
 	public static void saveAsDialog(Runnable run){
@@ -630,53 +630,35 @@ public class SaveHandler {
 	
 	public static void newDialog(){
 		Runnable run = () -> {
-			float width = 400;
-	        Dialog dialog = new Dialog(Translator.translate("saveload.new"), width, 230);
-	        Settings.applyComponentTheme(dialog.getContainer());
-	        dialog.setResizable(true);
-        	Label label0 = new Label(Translator.translate("saveload.new.name"), 10, 10, width - 20, 20);
-        	dialog.getContainer().add(label0);
-        	TextField field = new TextField("Unnamed Model", 10, 35, width - 20, 20);
-        	dialog.getContainer().add(field);
-        	Label label1 = new Label(Translator.translate("saveload.new.orientation"), 10, 65, width - 20, 20);
-        	dialog.getContainer().add(label1);
-        	SelectBox<String> box0 = new SelectBox<>(10, 90, width - 20, 20);
-        	for(ModelOrientation orient : ModelOrientation.values()){
-        		box0.addElement(orient.name());
-        	}
-			box0.setSelected(ModelOrientation.FVTM4_DEFAULT.ordinal(), true);
-        	dialog.getContainer().add(box0);
-        	Label label2 = new Label(Translator.translate("saveload.new.target_format"), 10, 120, width - 20, 20);
-        	dialog.getContainer().add(label2);
-        	SelectBox<String> box1 = new SelectBox<>(10, 145, width - 20, 20);
-        	for(ModelFormat format : ModelFormat.values()){
-        		box1.addElement(format.name);
-        	}
-        	box1.setSelected(0, true);
-        	dialog.getContainer().add(box1);
-        	//
-            Button button0 = new Button(Translator.translate("dialog.button.confirm"), 10, 180, 100, 20);
-            button0.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
-            	if(CLICK == e.getAction()){
-        			UpdateHandler.update(new ModelUnload(FMT.MODEL));
-        			FMT.MODEL = new Model(null, field.getTextState().getText());
-        			FMT.MODEL.orient = ModelOrientation.valueOf(box0.getSelection());
-        			FMT.MODEL.format = ModelFormat.fromName(box1.getSelection());
-        			FMT.updateTitle();
-        			DiscordUtil.update(Settings.DISCORD_RESET_ON_NEW.value);
-        			UpdateHandler.update(new ModelLoad(FMT.MODEL));
-            		dialog.close();
-            	}
-            });
-            dialog.getContainer().add(button0);
-            //
-            Button button1 = new Button(Translator.translate("dialog.button.cancel"), 120, 180, 100, 20);
-            button1.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
-            	if(CLICK == e.getAction()) dialog.close();
-            });
-            dialog.getContainer().add(button1);
-            //
-	        //dialog.show(FMT.FRAME);
+			int width = 400;
+			Field name;
+			DropList<ModelOrientation> orient;
+			DropList<ModelFormat> format;
+			//
+			Dialog dia = FMT.UI.createDialog(width, 240, "saveload.new");
+			dia.addText(0, "saveload.new.name");
+			dia.addRowElm(1, name = new Field(Field.FieldType.TEXT, width - 10));
+			dia.addText(2, "saveload.new.orientation");
+			dia.addRowElm(3, orient = new DropList<>(width - 10));
+			dia.addText(4, "saveload.new.target_format");
+			dia.addRowElm(5, format = new DropList<>(width - 10));
+			//
+			name.text("Unnamed Model");
+			for(ModelOrientation val : ModelOrientation.values()) orient.addEntry(val.name(), val);
+			for(ModelFormat val : ModelFormat.values()) format.addEntry(val.name(), val);
+			orient.selectEntry(0);
+			format.selectEntry(0);
+			//
+			dia.buttons(100, Dialog.DialogButton.CONFIRM, Dialog.DialogButton.CANCEL);
+			dia.consumer(d -> {
+				UpdateHandler.update(new ModelUnload(FMT.MODEL));
+				FMT.MODEL = new Model(null, name.get_text());
+				FMT.MODEL.orient = orient.getSelVal();
+				FMT.MODEL.format = format.getSelVal();
+				FMT.updateTitle();
+				DiscordUtil.update(Settings.DISCORD_RESET_ON_NEW.value);
+				UpdateHandler.update(new ModelLoad(FMT.MODEL));
+			}, null);
 		};
 		if(!FMT.MODEL.allgroups().isEmpty()){
 			shouldSaveDialog(run);
