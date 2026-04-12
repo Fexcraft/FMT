@@ -49,7 +49,7 @@ public class BObjExporter implements Exporter {
 	private ArrayList<Vector2f> uvs = new ArrayList<>();
 
 	public BObjExporter(JsonMap map){
-		settings.add(new Setting<>("group_as_single_polygon", true, "exporter-fmf"));
+		settings.add(new Setting<>("group_as_single_polygon", true, "exporter-bob"));
 	}
 
 	@Override
@@ -73,11 +73,6 @@ public class BObjExporter implements Exporter {
 	}
 
 	@Override
-	public List<Setting<?>> settings(){
-		return settings;
-	}
-
-	@Override
 	public boolean nogroups(){
 		return false;
 	}
@@ -85,7 +80,7 @@ public class BObjExporter implements Exporter {
 	@Override
 	public String export(Model model, File file, List<Group> groups){
 		FileOutputStream stream = null;
-		boolean sing = settings().get(0).bool();
+		boolean sing = settings.get(0).bool();
 		vecs.clear();
 		uvs.clear();
 		try{
