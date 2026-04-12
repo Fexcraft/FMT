@@ -22,8 +22,8 @@ public interface Exporter {
 	public FileType extensions();
 	
 	public List<String> categories();
-	
-	public List<Setting<?>> settings();
+
+	public default void initSettings(){}
 	
 	public boolean nogroups();
 	
