@@ -1,9 +1,5 @@
 package net.fexcraft.app.fmt.settings;
 
-import static net.fexcraft.app.fmt.FMT.rgba;
-import static net.fexcraft.app.fmt.utils.Translator.format;
-import static net.fexcraft.app.fmt.utils.Translator.translate;
-import static com.spinyowl.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 import static org.lwjgl.glfw.GLFW.GLFW_DONT_CARE;
 import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
 import static org.lwjgl.glfw.GLFW.glfwGetVideoMode;
@@ -14,14 +10,14 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import net.fexcraft.app.fmt.ui.Dialog;
+import net.fexcraft.app.fmt.ui.Dialog.DialogButton;
 import net.fexcraft.app.fmt.ui.Field;
 import net.fexcraft.app.fmt.texture.TexturePainter;
 import net.fexcraft.app.fmt.updater.Catalog;
 import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.port.im.ImportManager;
-import net.fexcraft.app.fmt.oui.fields.RunButton;
 import net.fexcraft.app.fmt.utils.*;
-import net.fexcraft.app.json.JsonValue;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryUtil;
 
@@ -42,8 +38,6 @@ public class Settings {
 	public static final float FONT_SIZE = 16f;
 	public static final int FONT_SIZEN = 20;
 	public static boolean FOUND_UPDATE;
-	public static boolean UPDATECHECK_FAILED;
-	public static long UPDATE_FOR_FILES_FOUND = 0;
 	public static long LAST_CATALOG_RELOAD;
 	public static ArrayList<File> RECENT = new ArrayList<File>();
 	public static ArrayList<File> BOOKMARKS = new ArrayList<File>();
@@ -302,20 +296,6 @@ public class Settings {
 
 	public static void checkForUpdatesAndLogin(){
 		Thread thread = new Thread(() -> {
-			JsonMap obj = JsonHandler.parseURL("http://fexcraft.net/minecraft/fcl/request", "mode=requestdata&modid=fmt");
-			if(obj == null){
-				Logging.log("Couldn't fetch latest version.");
-				UPDATECHECK_FAILED = true;
-			}
-			else if(obj.has("blocked_versions")){
-				JsonArray array = obj.getArray("blocked_versions");
-				for(JsonValue<?> elm : array.elements()){
-					if(elm.string_value().equals(FMT.VERSION)){
-						Logging.log("Blocked version detected, causing panic.");
-						System.exit(2); System.exit(2); System.exit(2); System.exit(2);
-					}
-				}
-			}
 			if(LAST_CATALOG_RELOAD + (Time.MIN_MS * 720) < Time.getDate()){
 				Logging.log("Starting catalog update.");
 				Catalog.fetch(false);
@@ -328,7 +308,7 @@ public class Settings {
 				LAST_CATALOG_RELOAD = Time.getDate();
 			}
 			SessionHandler.checkIfLoggedIn(true, true);
-			showWelcome(true);
+			FMT.queue(() -> showWelcome(true));
 		});
 		thread.setName("UPCK");
 		thread.start();
@@ -340,38 +320,25 @@ public class Settings {
 			if(!SHOW_WELCOME.value && (!update || !SHOW_UPDATE.value)) return;
 			if(!SHOW_UPDATE.value && update) update = false;
 		}
-		float width = 300;
-		/*Dialog dialog = new Dialog(translate("welcome.title"), width, 140);
+		Dialog dia = FMT.UI.createDialog(360, 140, "welcome.title");
 		if(update){
-			dialog.getContainer().add(new Label(translate("welcome.update.available"), 10, 10, width - 20, 20));
-			dialog.getContainer().add(new Label(format("welcome.update.files"), 10, 35, width - 20, 20));
-			dialog.getContainer().add(new Label(translate("welcome.update.select"), 10, 60, width - 20, 20));
-			Button button0 = new Button(translate("dialog.button.yes"), 10, 90, 80, 20);
-            button0.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
-            	if(CLICK == e.getAction()){
-            		dialog.close();
-            		FMT.close(10);
-            	}
-            });
-			dialog.getContainer().add(button0);
-			Button button2 = new Button(translate("dialog.button.close"), 100, 90, 80, 20);
-            button2.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> { if(CLICK == e.getAction()) dialog.close(); });
-			dialog.getContainer().add(button2);
+			dia.addText(0, "welcome.update.available");
+			dia.addText(1, "welcome.update.files");
+			dia.addText(2, "welcome.update.select");
+			dia.consumer(d -> FMT.close(10), null);
+			dia.buttons(100, DialogButton.YES, DialogButton.CLOSE);
 		}
 		else if(welcome){
 			if(SessionHandler.isLoggedIn()){
-				dialog.getContainer().add(new Label(Translator.format("welcome.normal.greeting_logged", SessionHandler.getUserName()), 10, 10, width - 20, 20));//TODO session handler
+				dia.addText(0, "welcome.normal.greeting_logged", SessionHandler.getUserName());
 			}
 			else{
-				dialog.getContainer().add(new Label(translate("welcome.normal.greeting_guest"), 10, 10, width - 20, 20));//TODO session handler
+				dia.addText(0, "welcome.normal.greeting_guest");
 			}
-			dialog.getContainer().add(new Label(format("welcome.normal.version", FMT.VERSION), 10, 35, width - 20, 20));
-			dialog.getContainer().add(new RunButton("dialog.button.close", 210, 90, 80, 20, () -> dialog.close()));
-			dialog.getContainer().add(new RunButton("dialog.button.load", 110, 90, 80, 20, () -> SaveHandler.openDialog(null)));
-			dialog.getContainer().add(new RunButton("dialog.button.new", 10, 90, 80, 20, () -> SaveHandler.newDialog()));
+			dia.addText(1, "welcome.normal.version", FMT.VERSION);
+			dia.consumer(d -> SaveHandler.newDialog(), d -> SaveHandler.openDialog(null));
+			dia.buttons(80, DialogButton.NEW, DialogButton.LOAD, DialogButton.CLOSE);
 		}
-		applyComponentTheme(dialog.getContainer());*/
-		//dialog.show(FMT.FRAME);
 	}
 
 	public static void addRecentFile(File file){
