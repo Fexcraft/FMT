@@ -28,8 +28,8 @@ public class DFMImporter implements Importer {
     private static final ArrayList<Setting<?>> settings = new ArrayList<>();
 
     public DFMImporter(){
-        settings.add(new Setting("agreement", false, "importer-dfm"));
-        settings.add(new Setting("degree_based", false, "importer-dfm"));
+        settings.add(new Setting("agreement", false, "importer-" + id()));
+        settings.add(new Setting("degree_based", false, "importer-" + id()));
     }
 
     @Override
@@ -50,11 +50,6 @@ public class DFMImporter implements Importer {
     @Override
     public List<String> categories() {
         return categories;
-    }
-
-    @Override
-    public List<Setting<?>> settings() {
-        return settings;
     }
 
     /**
