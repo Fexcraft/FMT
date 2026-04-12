@@ -480,4 +480,8 @@ public class FMT {
 		return INSTANCE.window;
 	}
 
+	public static void queue(Runnable run){
+		RUN_QUEUE.add(run);
+	}
+
 }
