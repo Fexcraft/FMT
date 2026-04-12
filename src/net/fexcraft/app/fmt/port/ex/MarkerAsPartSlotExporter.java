@@ -43,11 +43,6 @@ public class MarkerAsPartSlotExporter implements Exporter {
 	}
 
 	@Override
-	public List<Setting<?>> settings(){
-		return Collections.EMPTY_LIST;
-	}
-
-	@Override
 	public boolean nogroups(){
 		return false;
 	}
