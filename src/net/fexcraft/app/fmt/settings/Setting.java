@@ -2,24 +2,16 @@ package net.fexcraft.app.fmt.settings;
 
 import java.util.function.Consumer;
 
-import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
-import com.spinyowl.legui.component.Component;
-
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.PolyRenderer;
-import net.fexcraft.app.fmt.oui.fields.BoolButton;
-import net.fexcraft.app.fmt.oui.fields.ColorField;
-import net.fexcraft.app.fmt.oui.fields.NumberField;
-import net.fexcraft.app.fmt.oui.fields.TextField.TextFieldField;
 import net.fexcraft.app.fmt.utils.JsonUtil;
 import net.fexcraft.app.json.JsonMap;
-import net.fexcraft.lib.common.math.RGB;
 
 public class Setting<TYPE> {
 	
 	public final String id, group;
 	public TYPE _default, value;
-	protected TYPE min, max;
+	public TYPE min, max;
 	protected Consumer<?> cons;
 	
 	public Setting(String id, TYPE def, String group){
@@ -73,28 +65,6 @@ public class Setting<TYPE> {
 	public Setting<TYPE> consumer(Consumer<?> cons){
 		this.cons = cons;
 		return this;
-	}
-
-	public Component createField(Component root, UpdateCompound updcom, int x, int y, int w, int h){
-		if(value instanceof Boolean){
-			return new BoolButton((Setting<Boolean>)this, x, y, w, h);
-		}
-		if(value instanceof RGB){
-			return new ColorField(root, (Setting<RGB>)this, x, y, w, h);
-		}
-		if(value instanceof String){
-			return new TextFieldField((Setting<String>)this, x, y, w, h).accept((Consumer<String>)cons);
-		}
-		boolean flt = value instanceof Float;
-		if(flt || value instanceof Integer){
-			float min = this.min == null ? Integer.MIN_VALUE : flt ? (float)this.min : (int)this.min;
-			float max = this.max == null ? Integer.MAX_VALUE : flt ? (float)this.max : (int)this.max;
-			return new NumberField(this, x, y, w, h).setup(min, max, value instanceof Float, field -> {
-				value = value instanceof Float ? (TYPE)(Object)field.value() : (TYPE)(Object)(int)field.value();
-				if(cons != null) ((Consumer<NumberField>)cons).accept(field);
-			});
-		}
-		return null;
 	}
 
 	public void refresh(){
