@@ -15,8 +15,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static net.fexcraft.app.fmt.FMT.MODEL;
-import static net.fexcraft.app.fmt.ui.FMTInterface.col_bd;
-import static net.fexcraft.app.fmt.ui.FMTInterface.col_cd;
+import static net.fexcraft.app.fmt.settings.Settings.GENERIC_BACKGROUND_0;
+import static net.fexcraft.app.fmt.settings.Settings.GENERIC_BACKGROUND_1;
 import static net.fexcraft.app.fmt.ui.editor.EditorTab.FF;
 import static net.fexcraft.app.fmt.update.PolyVal.PolygonValue.of;
 
@@ -66,30 +66,30 @@ public class PosCopyButton extends Element {
 	protected void onSelect(){
 		if(elements == null){
 			menu = new Element();
-			add(menu.size(220, 170).pos(w, 0).color(col_cd).border(RGB.BLACK));
+			add(menu.size(220, 170).pos(w, 0).color(GENERIC_BACKGROUND_0.value).border(RGB.BLACK));
 			menu.add(new Element().size(200, 30).pos(10, 10).hoverable(true)
-				.translate("editor.info.poly_value_copy.spaced").color(col_bd).border(RGB.BLACK)
+				.translate("editor.info.poly_value_copy.spaced").color(GENERIC_BACKGROUND_1.value).border(RGB.BLACK)
 				.onclick(ci -> {
 					float[] arr = supplier.get();
 					setCP(v(arr[0]) + " " + v(arr[1]) + " " + v(arr[2]));
 					menu.hide();
 				}));
 			menu.add(new Element().size(200, 30).pos(10, 50).hoverable(true)
-				.translate("editor.info.poly_value_copy.comma").color(col_bd).border(RGB.BLACK)
+				.translate("editor.info.poly_value_copy.comma").color(GENERIC_BACKGROUND_1.value).border(RGB.BLACK)
 				.onclick(ci -> {
 					float[] arr = supplier.get();
 					setCP(v(arr[0]) + ", " + v(arr[1]) + ", " + v(arr[2]));
 					menu.hide();
 				}));
 			menu.add(new Element().size(200, 30).pos(10, 90).hoverable(true)
-				.translate("editor.info.poly_value_copy.json_array").color(col_bd).border(RGB.BLACK)
+				.translate("editor.info.poly_value_copy.json_array").color(GENERIC_BACKGROUND_1.value).border(RGB.BLACK)
 				.onclick(ci -> {
 					float[] arr = supplier.get();
 					setCP("[ " + v(arr[0]) + ", " + v(arr[1]) + ", " + v(arr[2]) + " ]");
 					menu.hide();
 				}));
 			menu.add(new Element().size(200, 30).pos(10, 130).hoverable(true)
-				.translate("editor.info.poly_value_copy.json_map").color(col_bd).border(RGB.BLACK)
+				.translate("editor.info.poly_value_copy.json_map").color(GENERIC_BACKGROUND_1.value).border(RGB.BLACK)
 				.onclick(ci -> {
 					float[] arr = supplier.get();
 					JsonMap map = new JsonMap();
