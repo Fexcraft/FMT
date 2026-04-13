@@ -18,6 +18,8 @@ import net.fexcraft.app.fmt.utils.SaveHandler;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.Time;
 
+import static net.fexcraft.app.fmt.settings.Settings.*;
+
 /**
  * @author Ferdinand Calo' (FEX___96)
  */
@@ -28,10 +30,9 @@ public class FMTInterface extends Element {
 	public static final int EDITOR_WIDTH = 320;
 	public static final int EDITOR_CONTENT = EDITOR_WIDTH - 30;
 	public static final int MENU_WIDTH = 202;
-	public static RGB col_75 = new RGB(0x757575);
-	public static RGB col_85 = new RGB(0x858585);
-	public static RGB col_bd = new RGB(0xbdbdbd);
-	public static RGB col_cd = new RGB(0xcdcdcd);
+	public static RGB col_cd = GENERIC_BACKGROUND_0.value;
+	public static RGB col_bd = GENERIC_BACKGROUND_1.value;
+	public static RGB col_85 = GENERIC_BACKGROUND_2.value;
 	public static SettingsUI settings;
 	public static Dialog DIALOG;
 	public static Element toolbar;
