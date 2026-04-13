@@ -10,7 +10,7 @@ import net.fexcraft.lib.common.math.RGB;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static net.fexcraft.app.fmt.ui.FMTInterface.*;
+import static net.fexcraft.app.fmt.settings.Settings.*;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -29,13 +29,13 @@ public class SettingsUI extends Element {
 		pos((FMT.SCALED_WIDTH - WIDTH) * 0.5f, (FMT.SCALED_HEIGHT - HEIGHT) * 0.5f);
 		size(WIDTH, HEIGHT + 30);
 		z += 200;
-		color(col_cd);
+		color(GENERIC_BACKGROUND_0.value);
 		border(RGB.BLACK);
 	}
 
 	@Override
 	public void init(Object... args){
-		add(new Element().size(w - 31, 30).color(col_bd)
+		add(new Element().size(w - 31, 30).color(GENERIC_BACKGROUND_1.value)
 			.translate("settings.dialog.title").text_autoscale());
 		add(icon = new Element().size(30, 30).pos(w - 31, 0).texture("icons/component/remove")
 			.hoverable(true).onclick(ci -> {
@@ -97,7 +97,7 @@ public class SettingsUI extends Element {
 		@Override
 		public void init(Object... args){
 			size(WIDTH - 30, 30);
-			border(col_85);
+			border(GENERIC_BACKGROUND_2.value);
 			checkpickpos = false;
 			checkinroot = true;
 			Setting<?> setting = (Setting<?>)args[2];
