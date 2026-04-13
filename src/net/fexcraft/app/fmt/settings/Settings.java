@@ -67,7 +67,6 @@ public class Settings {
 	public static Setting<Boolean> ASK_HELPER_REMOVAL = new Setting<>("ask_helper_removal", false, GENERAL);
 	public static Setting<Boolean> ASK_TEXTURE_GROUP_REMOVAL = new Setting<>("ask_texture_group_removal", true, GENERAL);
 	public static Setting<Boolean> OPEN_FOLDER_AFTER_SAVE = new Setting<>("open_folder_after_save", true, GENERAL);
-	public static Setting<Boolean> OPEN_FOLDER_AFTER_IMG = new Setting<>("open_folder_after_image", true, IMAGE);
 	public static Setting<Boolean> SHOW_WELCOME = new Setting<>("show_welcome", true, GENERAL);
 	public static Setting<Boolean> SHOW_UPDATE = new Setting<>("show_update", true, GENERAL);
 	public static Setting<Integer> BACKUP_INTERVAL = new Setting<>("backup_interval", 5, GENERAL);
@@ -75,7 +74,6 @@ public class Settings {
 	public static Setting<Boolean> SELECT_NEW = new Setting<>("select_new", true, GENERAL);
 	public static Setting<Boolean> NO_RANDOM_TITLE = new Setting<>("no_random_title", false, GENERAL);
 	public static Setting<Boolean> LOG_UPDATES = new Setting<>("log_updates", false, GENERAL);
-	public static Setting<Boolean> HIDE_MENU_AFTER_POLYGON = new Setting<>("hide_menu_after_polygon", true, GENERAL);
 	public static Setting<Boolean> NUMBERFIELD_BUTTONS = new Setting<>("numberfield_buttons", false, GENERAL);
 	public static Setting<Integer> PAINTER_CHANNELS = new Setting<>("painter_channels", 2, GENERAL);
 	//public static Setting<Boolean> TESTING = new Setting<>("testing", false, GENERAL);
@@ -123,11 +121,10 @@ public class Settings {
 	public static Setting<Float> LIGHT_POSY = new Setting<>("pos_y", -600f, LIGHTING);
 	public static Setting<Float> LIGHT_POSZ = new Setting<>("pos_z", -600f, LIGHTING);
 	//Control
-	public static Setting<Float> MOUSE_SENSIVITY = new Setting<>("mouse_sensitivity", 2f, CONTROL);
+	public static Setting<Float> MOUSE_SENSITIVITY = new Setting<>("mouse_sensitivity", 2f, CONTROL);
 	public static Setting<Float> MOVE_SPEED = new Setting<>("movement_speed", 20f, CONTROL);
 	public static Setting<Float> SCROLL_SPEED = new Setting<>("scroll_speed", 1f, CONTROL);
 	public static Setting<Float> ZOOM_LEVEL = new Setting<>("zoom_by", 10f, CONTROL).minmax(0.001f, 160f);
-	public static Setting<Float> ARROW_SENSIVITY = new Setting<>("arrow_sensivity", 8f, CONTROL).minmax(0.001f, 100f);
 	//Space3D
 	public static Setting<Boolean> DEMO = new Setting<>("demo_model", false, SPACE3D);
 	public static Setting<Boolean> FLOOR = new Setting<>("floor", true, SPACE3D);
@@ -150,6 +147,7 @@ public class Settings {
 	public static Setting<Boolean> GIF_LOOP = new Setting<>("gif_loop", true, IMAGE);
 	public static Setting<Integer> GIF_ROT_PASS = new Setting<>("gif_rotation_passes", 36, IMAGE);
 	public static Setting<Boolean> HIDE_UI_FOR_IMAGE = new Setting<>("hide_ui_for_image", true, IMAGE);
+	public static Setting<Boolean> OPEN_FOLDER_AFTER_IMG = new Setting<>("open_folder_after_image", true, IMAGE);
 	//Workspace
 	public static Setting<String> WORKSPACE_NAME = new Setting<>("name", "FMT Workspace", WORKSPACE);
 	public static Setting<String> WORKSPACE_ROOT = new Setting<>("root", "./workspace/", WORKSPACE){
