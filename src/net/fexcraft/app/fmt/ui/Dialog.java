@@ -5,8 +5,7 @@ import net.fexcraft.lib.common.math.RGB;
 
 import java.util.function.Consumer;
 
-import static net.fexcraft.app.fmt.ui.FMTInterface.*;
-import static net.fexcraft.app.fmt.ui.Field.col_field;
+import static net.fexcraft.app.fmt.settings.Settings.*;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -24,13 +23,13 @@ public class Dialog extends Element {
 		z += 200;
 		pos((FMT.SCALED_WIDTH - width) * 0.5f, (FMT.SCALED_HEIGHT - height) * 0.5f);
 		size(width, height + 30);
-		color(col_cd);
+		color(GENERIC_BACKGROUND_0.value);
 		border(RGB.BLACK);
 	}
 
 	@Override
 	public void init(Object... args){
-		add(title = new Element().size(w - 31, 30).color(col_bd)
+		add(title = new Element().size(w - 31, 30).color(GENERIC_BACKGROUND_1.value)
 			.translate(args.length > 0 ? args[0].toString() : "dialog.title.default").text_autoscale());
 		add(new Element().size(30, 30).pos(w - 31, 0).texture("icons/component/remove")
 			.hoverable(true).onclick(ci -> close()));
@@ -63,7 +62,7 @@ public class Dialog extends Element {
 	public void buttons(int bw, DialogButton... buttons){
 		for(int i = 0; i < buttons.length; i++){
 			int idx = i;
-			container.add(new Element().shape(ElmShape.RECT_ROUNDED).color(col_field).translate("dialog.button." + buttons[i].name().toLowerCase())
+			container.add(new Element().shape(ElmShape.RECT_ROUNDED).color(GENERIC_FIELD.value).translate("dialog.button." + buttons[i].name().toLowerCase())
 				.pos(w - (bw + 10 + (bw + 10) * i), container.h - 40).size(bw, 30).text_centered(true).hoverable(true)
 				.onclick(ci -> {
 					if(idx == 0) onConfirm();
