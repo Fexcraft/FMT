@@ -7,7 +7,7 @@ import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 
-import static net.fexcraft.app.fmt.settings.Settings.ASK_POLYGON_REMOVAL;
+import static net.fexcraft.app.fmt.settings.Settings.*;
 import static net.fexcraft.app.fmt.ui.FMTInterface.*;
 
 /**
@@ -57,7 +57,7 @@ public class PolygonCom extends Element {
 
 	protected void updateLabelColor(){
 		color((polygon.visible ? polygon.selected ? Settings.POLYGON_SELECTED : Settings.POLYGON_NORMAL : polygon.selected ? Settings.POLYGON_INV_SEL : Settings.POLYGON_INVISIBLE).value);
-		text_color((polygon.selected ? col_85 : col_cd).packed);
+		text_color((polygon.selected ? GENERIC_TEXT_1 : GENERIC_TEXT_2).value.packed);
 	}
 
 }
