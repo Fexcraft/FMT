@@ -89,6 +89,8 @@ public class Settings {
 	public static RGBSetting GENERIC_TEXT_0 = new RGBSetting("text_0", 0x0, INTERFACE);
 	public static RGBSetting GENERIC_TEXT_1 = new RGBSetting("text_1", 0xffffff, INTERFACE);
 	public static RGBSetting GENERIC_TEXT_2 = new RGBSetting("text_2", 0xcdcdcd, INTERFACE);
+	public static RGBSetting GENERIC_FIELD = new RGBSetting("field", 0xa6b3b3, INTERFACE);
+	public static RGBSetting DROPLIST_CONFIRM = new RGBSetting("list_entry_confirm", 0x62b4e3, INTERFACE);
 	public static RGBSetting POLYGON_NORMAL = new RGBSetting("polygon_normal", new RGB(38, 127, 0), INTERFACE);
 	public static RGBSetting POLYGON_SELECTED = new RGBSetting("polygon_selected", new RGB(219, 156, 46), INTERFACE);
 	public static RGBSetting POLYGON_INVISIBLE = new RGBSetting("polygon_invisible", new RGB(126, 196, 96), INTERFACE);
