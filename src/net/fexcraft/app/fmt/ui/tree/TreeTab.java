@@ -6,6 +6,7 @@ import net.fexcraft.app.fmt.ui.Scrollable;
 import net.fexcraft.app.fmt.ui.tree.TreeRoot.TreeMode;
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
 
+import static net.fexcraft.app.fmt.settings.Settings.GENERIC_BACKGROUND_0;
 import static net.fexcraft.app.fmt.ui.FMTInterface.*;
 
 /**
@@ -21,7 +22,7 @@ public class TreeTab extends Element {
 	public TreeTab(TreeMode emode){
 		super();
 		mode = emode;
-		color(col_cd);
+		color(GENERIC_BACKGROUND_0.value);
 		resize();
 	}
 
@@ -34,7 +35,7 @@ public class TreeTab extends Element {
 
 	@Override
 	public void init(Object... args){
-		add(over = new Element().pos(0, TOOLBAR_HEIGHT).size(EDITOR_WIDTH, (int)args[0]).color(col_cd));
+		add(over = new Element().pos(0, TOOLBAR_HEIGHT).size(EDITOR_WIDTH, (int)args[0]).color(GENERIC_BACKGROUND_0.value));
 		over.z += 100;
 		over.recompile();
 		add((container = new Scrollable(false, TOOLBAR_HEIGHT + over.h)));
