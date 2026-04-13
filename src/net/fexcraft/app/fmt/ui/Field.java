@@ -19,6 +19,7 @@ import java.text.ParseException;
 import java.util.Locale;
 import java.util.function.Consumer;
 
+import static net.fexcraft.app.fmt.settings.Settings.GENERIC_FIELD;
 import static net.fexcraft.app.fmt.ui.editor.EditorTab.FS;
 import static net.fexcraft.app.fmt.settings.Settings.ROUNDING_DIGITS;
 import static net.fexcraft.app.fmt.utils.Logging.log;
@@ -32,7 +33,6 @@ public class Field extends Element {
 	public static NumberFormat nf;
 	public static DecimalFormat df;
 	static { updateRoundingDigits(); }
-	public static int col_field = 0xa6b3b3;
 
 	public final FieldType type;
 	public Consumer<Field> consumer;
@@ -52,7 +52,7 @@ public class Field extends Element {
 		size(type.width(width), FS);
 		hoverable = true;
 		selectable = true;
-		color(col_field);
+		color(GENERIC_FIELD.value);
 	}
 
 	public Field(FieldType type, float width, Consumer<Field> cons){
@@ -119,7 +119,7 @@ public class Field extends Element {
 		}
 		if(type.color()){
 			add(color = new Element().color(0x000000).size(20, 20).pos(w + 13, 3));
-			add(new Element().color(col_field).size(FS, FS).pos(w + 10 + FS, 0)
+			add(new Element().color(GENERIC_FIELD.value).size(FS, FS).pos(w + 10 + FS, 0)
 				.text("CP").text_autoscale().onclick(ci -> {
 					try(MemoryStack stack = MemoryStack.stackPush()){
 						ByteBuffer color = stack.malloc(3);
