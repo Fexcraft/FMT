@@ -34,7 +34,7 @@ public class DFMImporter implements Importer {
 
     @Override
     public String id() {
-        return "dfm_java";
+        return "dfm-java";
     }
 
     @Override
