@@ -6,6 +6,8 @@ import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.frl.Polygon;
 import net.fexcraft.lib.frl.Polyhedron;
 
+import static net.fexcraft.app.fmt.settings.Settings.GENERIC_TEXT_0;
+
 /**
  * @author Ferdinand Calo' (FEX___96)
  */
@@ -14,7 +16,7 @@ public class Text {
 	public final Element root;
 	public Polyhedron<GLObject> hedron;
 	public FontRenderer.FontType font = FontRenderer.FontType.PLAIN;
-	public RGB color = RGB.BLACK.copy();
+	public RGB color = GENERIC_TEXT_0.value.copy();
 	public boolean autoscale;
 	public boolean centered;
 	public boolean cut = true;
@@ -83,6 +85,7 @@ public class Text {
 			for(Polygon polygon : hedron.polygons){
 				polygon.color(color);
 			}
+			hedron.recompile = true;
 		}
 	}
 
