@@ -4,6 +4,7 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 
+import static net.fexcraft.app.fmt.settings.Settings.GENERIC_BACKGROUND_0;
 import static net.fexcraft.app.fmt.ui.FMTInterface.*;
 
 /**
@@ -17,13 +18,13 @@ public class TreeRoot extends Element {
 	public TreeRoot(){
 		super();
 		pos(FMT.SCALED_WIDTH - EDITOR_WIDTH, TOOLBAR_HEIGHT);
-		color(col_cd);
+		color(GENERIC_BACKGROUND_0.value);
 		resize();
 	}
 
 	@Override
 	public void init(Object... args){
-		add(over = new Element().size(EDITOR_WIDTH, TOOLBAR_HEIGHT).color(col_cd));
+		add(over = new Element().size(EDITOR_WIDTH, TOOLBAR_HEIGHT).color(GENERIC_BACKGROUND_0.value));
 		over.z += 100;
 		over.recompile();
 		for(TreeMode mode : TreeMode.values()){
