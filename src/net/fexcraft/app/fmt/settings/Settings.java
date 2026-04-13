@@ -81,6 +81,14 @@ public class Settings {
 	//public static Setting<Boolean> TESTING = new Setting<>("testing", false, GENERAL);
 	//Interface
 	public static Setting<Float> UI_SCALE = new Setting<>("scale", 1f, INTERFACE);
+	public static RGBSetting GENERIC_BACKGROUND_0 = new RGBSetting("background_0", 0xcdcdcd, INTERFACE);
+	public static RGBSetting GENERIC_BACKGROUND_1 = new RGBSetting("background_1", 0xbdbdbd, INTERFACE);
+	public static RGBSetting GENERIC_BACKGROUND_2 = new RGBSetting("background_2", 0x858585, INTERFACE);
+	public static RGBSetting GENERIC_HOVER = new RGBSetting("hover", 0xdede00, INTERFACE);
+	public static RGBSetting GENERIC_SELECTED = new RGBSetting("selected", 0x43f0ae, INTERFACE);
+	public static RGBSetting GENERIC_TEXT_0 = new RGBSetting("text_0", 0x0, INTERFACE);
+	public static RGBSetting GENERIC_TEXT_1 = new RGBSetting("text_1", 0xffffff, INTERFACE);
+	public static RGBSetting GENERIC_TEXT_2 = new RGBSetting("text_2", 0xcdcdcd, INTERFACE);
 	public static RGBSetting POLYGON_NORMAL = new RGBSetting("polygon_normal", new RGB(38, 127, 0), INTERFACE);
 	public static RGBSetting POLYGON_SELECTED = new RGBSetting("polygon_selected", new RGB(219, 156, 46), INTERFACE);
 	public static RGBSetting POLYGON_INVISIBLE = new RGBSetting("polygon_invisible", new RGB(126, 196, 96), INTERFACE);
