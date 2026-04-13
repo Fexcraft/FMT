@@ -4,8 +4,8 @@ import net.fexcraft.lib.common.math.RGB;
 
 import java.util.function.Consumer;
 
-import static net.fexcraft.app.fmt.ui.FMTInterface.col_bd;
-import static net.fexcraft.app.fmt.ui.FMTInterface.col_cd;
+import static net.fexcraft.app.fmt.settings.Settings.GENERIC_BACKGROUND_0;
+import static net.fexcraft.app.fmt.settings.Settings.GENERIC_BACKGROUND_1;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -17,7 +17,7 @@ public class Menu extends Element {
 	public Menu(float width){
 		super();
 		border(RGB.BLACK);
-		color(col_cd);
+		color(GENERIC_BACKGROUND_0.value);
 		size(width, 2);
 		hide();
 	}
@@ -26,7 +26,7 @@ public class Menu extends Element {
 		add(new Element().pos(1, 1 + countEntries() * 30).size(w - 2, 29).onclick(ci -> {
 			if(cons != null) cons.accept(ci);
 			hide();
-		}).translate(text).color(col_bd).hoverable(true));
+		}).translate(text).color(GENERIC_BACKGROUND_1.value).hoverable(true));
 		size(w, 2 + countEntries() * 30);
 		recompile();
 	}
@@ -34,7 +34,7 @@ public class Menu extends Element {
 	public Menu addEntry(String text, Menu menu){
 		Element elm = new Element().pos(1, 1 + countEntries() * 30).size(w - 2, 29).onclick(ci -> {
 			menu.toggleVisibility();
-		}).translate(text).color(col_bd).hoverable(true);
+		}).translate(text).color(GENERIC_BACKGROUND_1.value).hoverable(true);
 		add(elm);
 		if(menu != null){
 			elm.add(menu.pos(elm.w, 0));
