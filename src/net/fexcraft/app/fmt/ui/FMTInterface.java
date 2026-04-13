@@ -30,9 +30,6 @@ public class FMTInterface extends Element {
 	public static final int EDITOR_WIDTH = 320;
 	public static final int EDITOR_CONTENT = EDITOR_WIDTH - 30;
 	public static final int MENU_WIDTH = 202;
-	public static RGB col_cd = GENERIC_BACKGROUND_0.value;
-	public static RGB col_bd = GENERIC_BACKGROUND_1.value;
-	public static RGB col_85 = GENERIC_BACKGROUND_2.value;
 	public static SettingsUI settings;
 	public static Dialog DIALOG;
 	public static Element toolbar;
@@ -46,7 +43,7 @@ public class FMTInterface extends Element {
 
 	public FMTInterface(){
 		super();
-		add(toolbar = new Element().size(TOOLBAR_WIDTH, TOOLBAR_HEIGHT).color(col_cd));
+		add(toolbar = new Element().size(TOOLBAR_WIDTH, TOOLBAR_HEIGHT).color(GENERIC_BACKGROUND_0.value));
 		add(statusbar = new Element(){
 			@Override
 			public void onResize(){
@@ -54,7 +51,7 @@ public class FMTInterface extends Element {
 				pos(TOOLBAR_WIDTH, 0);
 			}
 		}.size(FMT.SCALED_WIDTH - TOOLBAR_WIDTH - EDITOR_WIDTH, TOOLBAR_HEIGHT)
-			.pos(TOOLBAR_WIDTH, 0).color(col_cd)
+			.pos(TOOLBAR_WIDTH, 0).color(GENERIC_BACKGROUND_0.value)
 			.text("...")
 		);
 		toolbar.z += 100;
