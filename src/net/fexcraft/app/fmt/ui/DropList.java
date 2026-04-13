@@ -5,8 +5,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.util.ArrayList;
 import java.util.function.BiConsumer;
 
-import static net.fexcraft.app.fmt.ui.FMTInterface.col_85;
-import static net.fexcraft.app.fmt.ui.FMTInterface.col_bd;
+import static net.fexcraft.app.fmt.settings.Settings.*;
 import static net.fexcraft.app.fmt.ui.editor.EditorTab.FS;
 
 /**
@@ -24,23 +23,23 @@ public class DropList<V> extends Element {
 		size(width - FS * 3, FS);
 		hoverable = true;
 		selectable = true;
-		color(0xa6b3b3);
+		color(GENERIC_FIELD.value);
 	}
 
 	@Override
 	public void init(Object... args){
 		text("");
-		add(new Element().color(col_bd).size(FS, FS).pos(w, 0).text("<")
+		add(new Element().color(GENERIC_BACKGROUND_1.value).size(FS, FS).pos(w, 0).text("<")
 			.text_centered(true).hoverable(true).onclick(info -> change_selection(-1)));
-		add(new Element().color(col_bd).size(FS, FS).pos(w + FS, 0).text(">")
+		add(new Element().color(GENERIC_BACKGROUND_1.value).size(FS, FS).pos(w + FS, 0).text(">")
 			.text_centered(true).hoverable(true).onclick(info -> change_selection(1)));
-		add(new Element().color(0x62b4e3).size(FS, FS).pos(w + FS + FS, 0).text("O")
+		add(new Element().color(DROPLIST_CONFIRM.value).size(FS, FS).pos(w + FS + FS, 0).text("O")
 			.text_centered(true).hoverable(true).onclick(info -> {
 				if(entries.isEmpty() || consumer == null) return;
 				Pair<String, V> kv = entries.get(current);
 				consumer.accept(kv.getLeft(), kv.getRight());
 			}));
-		add(drop = new Element().color(col_bd).border(col_85).pos(0, FS));
+		add(drop = new Element().color(GENERIC_BACKGROUND_1.value).border(GENERIC_BACKGROUND_2.value).pos(0, FS));
 		drop.hide();
 		onscroll(si -> change_selection(si.sy() < 0 ? 1 : -1));
 	}
@@ -118,7 +117,7 @@ public class DropList<V> extends Element {
 		drop.recompile();
 		int idx = 0;
 		for(Pair<String, V> entry : entries){
-			drop.add(new TextElm(0, idx++ * FS, drop.w, entry.getLeft(), col_bd)
+			drop.add(new TextElm(0, idx++ * FS, drop.w, entry.getLeft(), GENERIC_BACKGROUND_1.value)
 				.onclick(ci -> {
 					selectKey(entry.getLeft());
 					drop_hide_clear();
