@@ -6,8 +6,8 @@ import net.fexcraft.app.fmt.utils.Logging;
 
 import java.util.function.Consumer;
 
-import static net.fexcraft.app.fmt.ui.FMTInterface.col_85;
-import static net.fexcraft.app.fmt.ui.FMTInterface.col_cd;
+import static net.fexcraft.app.fmt.settings.Settings.GENERIC_BACKGROUND_0;
+import static net.fexcraft.app.fmt.settings.Settings.GENERIC_BACKGROUND_2;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -30,8 +30,8 @@ public class Scrollable extends Element {
 
 	@Override
 	public void init(Object... args){
-		color(col_cd);
-		add(bar = new Element().size(16, 16).color(col_85).hoverable(true).shape(ElmShape.RECT_ROUNDED));
+		color(GENERIC_BACKGROUND_0.value);
+		add(bar = new Element().size(16, 16).color(GENERIC_BACKGROUND_2.value).hoverable(true).shape(ElmShape.RECT_ROUNDED));
 		add(up = new Element().size(16, 16).texture("ui/arrow_up").hoverable(true).onclick(ci -> modScrolled(-1)));
 		add(dw = new Element().size(16, 16).texture("ui/arrow_down").hoverable(true).onclick(ci -> modScrolled(1)));
 		Consumer<ScrollInfo> cons = si -> modScrolled(-si.sy());
