@@ -8,7 +8,7 @@ import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 
-import static net.fexcraft.app.fmt.settings.Settings.ASK_PIVOT_REMOVAL;
+import static net.fexcraft.app.fmt.settings.Settings.*;
 import static net.fexcraft.app.fmt.ui.FMTInterface.*;
 
 /**
@@ -74,7 +74,7 @@ public class PivotCom extends TTabCom {
 	protected void updateTextColor(){
 		boolean sel = pivot.selected();
 		color((pivot.visible ? sel ? Settings.PIVOT_SELECTED : Settings.PIVOT_NORMAL : sel ? Settings.PIVOT_INV_SEL : Settings.PIVOT_INVISIBLE).value);
-		text_color((sel ? col_85 : col_cd).packed);
+		text_color((sel ? GENERIC_TEXT_1 : GENERIC_TEXT_2).value.packed);
 	}
 
 	public void addGroup(Group group){
