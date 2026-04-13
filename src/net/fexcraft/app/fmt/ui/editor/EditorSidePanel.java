@@ -13,6 +13,7 @@ import net.fexcraft.lib.common.math.RGB;
 
 import java.util.function.Consumer;
 
+import static net.fexcraft.app.fmt.settings.Settings.GENERIC_BACKGROUND_0;
 import static net.fexcraft.app.fmt.ui.FMTInterface.*;
 
 /**
@@ -24,7 +25,7 @@ public class EditorSidePanel extends Element {
 		super();
 		pos(EDITOR_WIDTH, 0);
 		size(40, 294);
-		color(col_cd);
+		color(GENERIC_BACKGROUND_0.value);
 	}
 
 	@Override
@@ -54,7 +55,7 @@ public class EditorSidePanel extends Element {
 
 		@Override
 		public void init(Object... args){
-			add(container = new Element().pos(w + 4, -4).size(ew, eh).color(col_cd).border(RGB.BLACK).hide());
+			add(container = new Element().pos(w + 4, -4).size(ew, eh).color(GENERIC_BACKGROUND_0.value).border(RGB.BLACK).hide());
 			pos((int)args[0] + 4, (int)args[1] + 4);
 			texture(args[2].toString());
 		}
