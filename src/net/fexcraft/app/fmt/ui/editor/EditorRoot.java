@@ -5,6 +5,7 @@ import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.utils.Translator;
 
+import static net.fexcraft.app.fmt.settings.Settings.GENERIC_BACKGROUND_0;
 import static net.fexcraft.app.fmt.ui.FMTInterface.*;
 
 /**
@@ -20,7 +21,7 @@ public class EditorRoot extends Element {
 	public EditorRoot(){
 		super();
 		pos(0, TOOLBAR_HEIGHT);
-		color(col_cd);
+		color(GENERIC_BACKGROUND_0.value);
 		resize();
 	}
 
