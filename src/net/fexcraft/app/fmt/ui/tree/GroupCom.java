@@ -8,7 +8,7 @@ import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 
-import static net.fexcraft.app.fmt.settings.Settings.ASK_GROUP_REMOVAL;
+import static net.fexcraft.app.fmt.settings.Settings.*;
 import static net.fexcraft.app.fmt.ui.FMTInterface.*;
 
 /**
@@ -72,7 +72,7 @@ public class GroupCom extends TTabCom {
 
 	protected void updateTextColor(){
 		color((group.visible ? group.selected ? Settings.GROUP_SELECTED : Settings.GROUP_NORMAL : group.selected ? Settings.GROUP_INV_SEL : Settings.GROUP_INVISIBLE).value);
-		text_color((group.selected ? col_85 : col_cd).packed);
+		text_color((group.selected ? GENERIC_TEXT_1 : GENERIC_TEXT_2).value.packed);
 	}
 
 	public void addPolygon(Polygon poly){
