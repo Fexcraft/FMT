@@ -115,12 +115,12 @@ public class GGR {
     public void pollInput(float delta){
 		if(grabbed && cursor_moved0){
 			if(FMT.MODEL.orient.rect()){
-				hor -= (posx - oposx) * Settings.MOUSE_SENSIVITY.value * delta * 0.005;
-				ver -= (posy - oposy) * Settings.MOUSE_SENSIVITY.value * delta * 0.005;
+				hor -= (posx - oposx) * Settings.MOUSE_SENSITIVITY.value * delta * 0.005;
+				ver -= (posy - oposy) * Settings.MOUSE_SENSITIVITY.value * delta * 0.005;
 			}
 			else{
-				hor += (posx - oposx) * Settings.MOUSE_SENSIVITY.value * delta * 0.005;
-				ver += (posy - oposy) * Settings.MOUSE_SENSIVITY.value * delta * 0.005;
+				hor += (posx - oposx) * Settings.MOUSE_SENSITIVITY.value * delta * 0.005;
+				ver += (posy - oposy) * Settings.MOUSE_SENSITIVITY.value * delta * 0.005;
 			}
             ver = Math.max(-maxVR, Math.min(maxVR, ver));
             cursor_moved0 = false;
@@ -129,12 +129,12 @@ public class GGR {
 			pos.x += (posx - oposx) * 0.001;
 			pos.y += (posy - oposy) * 0.001;
 		}
-		else if(Arrows.SEL > 0 && cursor_moved0){
+		/*else if(Arrows.SEL > 0 && cursor_moved0){
 			float f0 = (float)(posx - oposx) * Settings.ARROW_SENSIVITY.value * delta;
 			float f1 = (float)(posy - oposy) * Settings.ARROW_SENSIVITY.value * delta;
 			Arrows.process(Math.abs((f0 + f1) * 0.5f));
             cursor_moved0 = false;
-		}
+		}*/
         processCameraInput(delta);
     }
 
