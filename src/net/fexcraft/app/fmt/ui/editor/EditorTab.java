@@ -6,6 +6,7 @@ import net.fexcraft.app.fmt.ui.Scrollable;
 import net.fexcraft.app.fmt.ui.editor.EditorRoot.EditorMode;
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
 
+import static net.fexcraft.app.fmt.settings.Settings.GENERIC_BACKGROUND_0;
 import static net.fexcraft.app.fmt.ui.FMTInterface.*;
 
 /**
@@ -52,7 +53,7 @@ public class EditorTab extends Element {
 		super();
 		mode = emode;
 		lang_prefix = "editor." + emode.name().toLowerCase() + ".";
-		color(col_cd);
+		color(GENERIC_BACKGROUND_0.value);
 		resize();
 	}
 
