@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+import static net.fexcraft.app.fmt.settings.Settings.GENERIC_HOVER;
+import static net.fexcraft.app.fmt.settings.Settings.GENERIC_SELECTED;
 import static net.fexcraft.app.fmt.ui.FMTInterface.TOOLBAR_HEIGHT;
 
 /**
@@ -40,8 +42,8 @@ public class Element {
 	public boolean selectable;
 	private RGB border;
 	public RGB col_def = RGB.WHITE.copy();
-	public RGB col_hov = new RGB(0xdede00);
-	public RGB col_sel = new RGB(0x43f0ae);
+	public RGB col_hov = GENERIC_HOVER.value.copy();
+	public RGB col_sel = GENERIC_SELECTED.value.copy();
 	public Text text;
 	private ElmShape shape = ElmShape.RECTANGLE;
 	public float[] pickpos = new float[4];
