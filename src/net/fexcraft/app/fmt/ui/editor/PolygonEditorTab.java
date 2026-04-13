@@ -16,11 +16,9 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.util.ArrayList;
 
 import static net.fexcraft.app.fmt.FMT.MODEL;
-import static net.fexcraft.app.fmt.ui.FMTInterface.col_bd;
+import static net.fexcraft.app.fmt.settings.Settings.*;
 import static net.fexcraft.app.fmt.ui.Field.FieldType.*;
-import static net.fexcraft.app.fmt.ui.Field.col_field;
 import static net.fexcraft.app.fmt.ui.editor.EditorRoot.NOPOLYSEL;
-import static net.fexcraft.app.fmt.settings.Settings.POLYGON_SUFFIX;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -81,7 +79,7 @@ public class PolygonEditorTab extends EditorTab {
 				}
 			}
 		})).pos(FO, next_y_pos(1)));
-		sorting.add(new Element().color(col_bd).size(FS, FS).pos(FF - FS - FS, next_y_pos(0)).text("Rc")
+		sorting.add(new Element().color(GENERIC_BACKGROUND_1.value).size(FS, FS).pos(FF - FS - FS, next_y_pos(0)).text("Rc")
 			.text_centered(true).text_scale(0.75f).hoverable(true).onclick(info -> {
 				ArrayList<Polygon> polis = FMT.MODEL.selected();
 				if(polis.isEmpty()) return;
@@ -101,7 +99,7 @@ public class PolygonEditorTab extends EditorTab {
 				UpdateHandler.update(new PolygonSelected(polis.get(0), polis.size(), polis.size()));
 			})
 			.hint(lang_prefix + "sorting.reset_corners"));
-		sorting.add(new Element().color(col_bd).size(FS, FS).pos(FF - FS + 5, next_y_pos(0)).text("Rd")
+		sorting.add(new Element().color(GENERIC_BACKGROUND_1.value).size(FS, FS).pos(FF - FS + 5, next_y_pos(0)).text("Rd")
 			.text_centered(true).text_scale(0.75f).hoverable(true).onclick(info -> {
 				ArrayList<Polygon> polis = FMT.MODEL.selected();
 				if(polis.isEmpty()) return;
@@ -192,7 +190,7 @@ public class PolygonEditorTab extends EditorTab {
 		curve.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.texture"));
 		curve.add((tex_x = new Field(FLOAT, F3S, updcom, new PolygonValue(PolyVal.TEX, ValAxe.X))).pos(F30, next_y_pos(1)));
 		curve.add((tex_y = new Field(FLOAT, F3S, updcom, new PolygonValue(PolyVal.TEX, ValAxe.Y))).pos(F31, next_y_pos(0)));
-		curve.add(new Element().size(F3S, FS).pos(F32, next_y_pos(0)).color(col_field)
+		curve.add(new Element().size(F3S, FS).pos(F32, next_y_pos(0)).color(GENERIC_FIELD.value)
 			.translate(lang_prefix + "general.texture.reset")
 			.hint(lang_prefix + "general.texture.reset_hint")
 			.text_centered(true).text_autoscale()
@@ -232,7 +230,7 @@ public class PolygonEditorTab extends EditorTab {
 		curve.add((plane_loc = new Field(FLOAT, F2S, updcom, new PolygonValue(PolyVal.PLANE_LOC))).min_range(0).pos(F21, next_y_pos(0)));
 		curve.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "curve.literal"));
 		curve.add((plane_lit = new BoolElm(F20, next_y_pos(1), F2S).set(new PolygonValue(PolyVal.PLANE_LOC_LIT), updcom)));
-		curve.add(new Element().size(F2S, FS).pos(F21, next_y_pos(0)).color(col_field)
+		curve.add(new Element().size(F2S, FS).pos(F21, next_y_pos(0)).color(GENERIC_FIELD.value)
 			.translate(lang_prefix + "curve.reset")
 			.hint(lang_prefix + "curve.reset_hint")
 			.text_centered(true).text_autoscale()
@@ -371,7 +369,7 @@ public class PolygonEditorTab extends EditorTab {
 		general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.texture"));
 		general.add((tex_x = new Field(FLOAT, F3S, updcom, new PolygonValue(PolyVal.TEX, ValAxe.X))).pos(F30, next_y_pos(1)));
 		general.add((tex_y = new Field(FLOAT, F3S, updcom, new PolygonValue(PolyVal.TEX, ValAxe.Y))).pos(F31, next_y_pos(0)));
-		general.add(new Element().size(F3S, FS).pos(F32, next_y_pos(0)).color(col_field)
+		general.add(new Element().size(F3S, FS).pos(F32, next_y_pos(0)).color(GENERIC_FIELD.value)
 			.translate(lang_prefix + "general.texture.reset")
 			.hint(lang_prefix + "general.texture.reset_hint")
 			.text_centered(true).text_autoscale()
