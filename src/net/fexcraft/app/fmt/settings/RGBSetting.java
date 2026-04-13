@@ -9,6 +9,10 @@ public class RGBSetting extends Setting<RGB> {
 	public RGBSetting(String id, RGB def, String group){
 		super(id, def, group);
 	}
+
+	public RGBSetting(String id, int def, String group){
+		super(id, new RGB(def), group);
+	}
 	
 	@Override
 	public void load(JsonMap obj){
