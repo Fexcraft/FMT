@@ -1,28 +1,21 @@
 package net.fexcraft.app.fmt.port.im;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.ui.Dialog;
+import net.fexcraft.app.fmt.ui.DropList;
 import net.fexcraft.app.fmt.ui.FMTInterface;
 import net.fexcraft.app.fmt.update.UpdateEvent.ModelLoad;
 import net.fexcraft.app.fmt.update.UpdateEvent.ModelUnload;
 import net.fexcraft.app.fmt.update.UpdateHandler;
-import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.oui.FileChooser;
 import net.fexcraft.app.fmt.oui.GenericDialog;
-import net.fexcraft.app.fmt.oui.fields.RunButton;
 import net.fexcraft.app.fmt.utils.DiscordUtil;
 import net.fexcraft.app.json.JsonMap;
-import com.spinyowl.legui.component.Dialog;
-import com.spinyowl.legui.component.Label;
-import com.spinyowl.legui.component.SelectBox;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import static net.fexcraft.app.fmt.utils.Translator.translate;
 
 /**
  * 
@@ -52,48 +45,40 @@ public class ImportManager {
 	}
 	
 	public static void _import(){
-		Dialog dialog = new Dialog(translate("import.choose.dialog"), 400, 190);
-		dialog.setResizable(false);
-		//Settings.applyComponentTheme(dialog.getContainer());
-		dialog.getContainer().add(new Label(translate("import.choose.category"), 10, 10, 380, 25));
-		SelectBox<String> selcat = new SelectBox<>(10, 35, 380, 25);
-		for(String cat : CATEGORIES){
-			selcat.addElement(cat);
-		}
-		selcat.setSelected(0, true);
-		selcat.setVisibleCount(6);
-		dialog.getContainer().add(selcat);
-		dialog.getContainer().add(new Label(translate("import.choose.importer"), 10, 70, 380, 25));
-		SelectBox<String> select = new SelectBox<>(10, 95, 380, 25);
-		select.setVisibleCount(6);
+		Dialog dia = FMT.UI.createDialog(400, 180, "import.choose.dialog");
+		DropList<String> cat = new DropList<>(390);
+		DropList<Importer> imp = new DropList<>(390);
+		dia.addText(0, "import.choose.category");
+		dia.addRowElm(1, cat);
+		for(String c : CATEGORIES) cat.addEntry(c, c);
+		cat.selectEntry(0);
+		dia.addText(2, "import.choose.importer");
+		dia.addRowElm(3, imp);
 		String fircat = CATEGORIES.get(0);
 		for(Importer importer : IMPORTERS){
-			if(importer.categories().contains(fircat)) select.addElement(importer.name());
+			if(importer.categories().contains(fircat)) imp.addEntry(importer.name(), importer);
 		}
-		dialog.getContainer().add(select);
-		selcat.addSelectBoxChangeSelectionEventListener(lis -> {
-			while(select.getElements().size() > 0) select.removeElement(0);
+		imp.selectEntry(0);
+		cat.onchange((key, val) -> {
+			imp.clear();
 			for(Importer importer : IMPORTERS){
-				if(importer.categories().contains(lis.getNewValue())) select.addElement(importer.name());
+				if(importer.categories().contains(key)) imp.addEntry(importer.name(), importer);
 			}
+			imp.selectEntry(0);
 		});
-		dialog.getContainer().add(new RunButton("dialog.button.continue", 10, 135, 100, 25, () -> {
-			dialog.close();
-			Importer importer = null;
-			String sel = select.getSelection();
-			for(Importer im : IMPORTERS){
-				if(im.name().equals(sel)) importer = im;
-			}
-			if(importer == null) return;
-			showFileChooserDialog(importer, Collections.EMPTY_LIST);
-		}));
-		//dialog.show(FMT.FRAME);
+		dia.consumer(d -> {
+			Importer importer = imp.getSelVal();
+			showFileChooserDialog(importer);
+		}, null);
+		dia.buttons(100, Dialog.DialogButton.CONTINUE);
 	}
 
-	private static void showFileChooserDialog(Importer importer, List<Group> groups){
+	private static void showFileChooserDialog(Importer importer){
 		FileChooser.chooseFile("import.choose.file", "", importer.extensions(), false, file -> {
 			if(file == null){
-				GenericDialog.showYN(null, () -> showFileChooserDialog(importer, groups), null, "import.choose.nofile");
+				Dialog dia = FMT.UI.createDialog(400, 50, "import.choose.nofile");
+				dia.buttons(100, Dialog.DialogButton.YES, Dialog.DialogButton.NO);
+				dia.consumer(d -> showFileChooserDialog(importer), null);
 				return;
 			}
 			Runnable run = () -> {
