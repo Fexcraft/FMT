@@ -83,7 +83,10 @@ public class PolygonTreeTab extends TreeTab {
 			GroupCom com = getGroupCom(event.group());
 			if(com != null) com.addPolygon(event.polygon());
 		});
-		updcom.add(UpdateEvent.PolygonRenamed.class, event -> getPolyCom(event.polygon()).text(event.polygon().name()));
+		updcom.add(UpdateEvent.PolygonRenamed.class, event -> {
+			PolygonCom com = getPolyCom(event.polygon());
+			if(com != null) com.text(event.polygon().name());
+		});
 		updcom.add(UpdateEvent.PolygonRemoved.class, event -> getGroupCom(event.group()).remPolygon(event.polygon()));
 		updcom.add(UpdateEvent.PolygonSelected.class, event -> updatePolyLabel(event.polygon()));
 		updcom.add(UpdateEvent.PolygonVisibility.class, event -> updatePolyLabel(event.polygon()));
