@@ -5,6 +5,7 @@ import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Pivot;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.Element;
+import net.fexcraft.app.fmt.ui.HidingElm;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 
@@ -29,12 +30,12 @@ public class PivotCom extends TTabCom {
 			FMT.MODEL.select(pivot);
 			updateTextColor();
 		});
-		add(new Element().hoverable(true).texture("icons/component/visible").size(28, 28).pos(EDITOR_CONTENT - 30 * 2, 1).onclick(ci -> {
+		add(new HidingElm().hoverable(true).texture("icons/component/visible").size(28, 28).pos(EDITOR_CONTENT - 30 * 2, 1).onclick(ci -> {
 			pivot.visible = !pivot.visible;
 			UpdateHandler.update(new UpdateEvent.PivotVisibility(pivot, pivot.visible));
 		}).hint("tree.polygon.pivot.visible").hide());
 		if(!pivot.root){
-			add(new Element().hoverable(true).texture("icons/component/remove").size(28, 28).pos(EDITOR_CONTENT - 30 * 3, 1).onclick(ci -> {
+			add(new HidingElm().hoverable(true).texture("icons/component/remove").size(28, 28).pos(EDITOR_CONTENT - 30 * 3, 1).onclick(ci -> {
 				if(ASK_PIVOT_REMOVAL.value){
 					//TODO
 				}
@@ -42,19 +43,6 @@ public class PivotCom extends TTabCom {
 			}).hint("tree.polygon.pivot.remove").hide());
 		}
 		pivot.groups.forEach(group -> container.add(new GroupCom(group)));
-	}
-
-	@Override
-	public void hovered(boolean bool){
-		super.hovered(bool);
-		if(bool){
-			elements.get(2).show();
-			if(!pivot.root) elements.get(3).show();
-		}
-		else{
-			elements.get(2).hide();
-			if(!pivot.root) elements.get(3).hide();
-		}
 	}
 
 	protected void orderComponents(){
