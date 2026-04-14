@@ -4,13 +4,13 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.DropList;
 import net.fexcraft.app.fmt.ui.FMTInterface;
+import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.update.UpdateEvent.ModelLoad;
 import net.fexcraft.app.fmt.update.UpdateEvent.ModelUnload;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.oui.FileChooser;
-import net.fexcraft.app.fmt.oui.GenericDialog;
 import net.fexcraft.app.fmt.utils.DiscordUtil;
 import net.fexcraft.app.json.JsonMap;
 
@@ -45,9 +45,9 @@ public class ImportManager {
 	}
 	
 	public static void _import(){
-		Dialog dia = FMT.UI.createDialog(400, 180, "import.choose.dialog");
-		DropList<String> cat = new DropList<>(390);
-		DropList<Importer> imp = new DropList<>(390);
+		Dialog dia = FMT.UI.createDialog(500, 180, "import.choose.dialog");
+		DropList<String> cat = new DropList<>(490);
+		DropList<Importer> imp = new DropList<>(490);
 		dia.addText(0, "import.choose.category");
 		dia.addRowElm(1, cat);
 		for(String c : CATEGORIES) cat.addEntry(c, c);
@@ -88,13 +88,16 @@ public class ImportManager {
 				FMT.MODEL.orient = old.orient;
 				FMT.MODEL.format = old.format;
 				DiscordUtil.update(Settings.DISCORD_RESET_ON_NEW.value);
-				GenericDialog.showOK("import.result", null, null, importer._import(FMT.MODEL, file));
+				String res = importer._import(FMT.MODEL, file);
+				Dialog dia = FMT.UI.createDialog(FontRenderer.getWidth(res, FontRenderer.FontType.PLAIN) * 3 + 30, 100, "import.result");
+				dia.addText(0, res);
+				dia.buttons(100, Dialog.DialogButton.OK);
 				FMT.updateTitle();
 				UpdateHandler.update(new ModelLoad(FMT.MODEL));
 				FMT.MODEL.recompile();
 			};
 			if(Settings.SETTINGS.containsKey("importer-" + importer.id())){
-				FMTInterface.settings.show("importer-" + importer.id());
+				FMTInterface.settings.show("importer-" + importer.id(), run);
 			}
 			else run.run();
 		});
