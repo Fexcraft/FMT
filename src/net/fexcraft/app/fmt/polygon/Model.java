@@ -95,6 +95,7 @@ public class Model {
 		this.file = file;
 		this.name = name;
 		pivots.add(new Pivot("root", true));
+		update(new PivotAdded(this, pivots.get(0)));
 		uuid = UUID.randomUUID();
 	}
 
