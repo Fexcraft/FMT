@@ -80,8 +80,9 @@ public class SettingsUI extends Element {
 		return super.show();
 	}
 
-	public void show(String tidx){
+	public void show(String tidx, Runnable r){
 		show();
+		run = r;
 		icon.texture("icons/component/move_right");
 		category.selectValue(tidx);
 		for(Scrollable scr : containers.values()) scr.hide();
