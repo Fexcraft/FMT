@@ -116,7 +116,7 @@ public class ExportManager {
 			Runnable run = () -> GenericDialog.showOK("export.result", null, null, exporter.export(FMT.MODEL, file, groups));
 			if(Settings.SETTINGS.containsKey("exporter-" + exporter.id())){
 				exporter.initSettings();
-				FMTInterface.settings.show("exporter-" + exporter.id());
+				FMTInterface.settings.show("exporter-" + exporter.id(), run);
 			}
 			else run.run();
 		});
