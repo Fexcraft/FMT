@@ -193,7 +193,7 @@ public class AnimComponent extends EditorComponent {
 	@Override
 	public void rem(){
 		if(ASK_GROUP_REMOVAL.value){
-			GenericDialog.showOC(null, () -> FMT.MODEL.remGroup(group), null, "editor.component.group.group.remove", group.id);
+			//TODO GenericDialog.showOC(null, () -> FMT.MODEL.remGroup(group), null, "editor.component.group.group.remove", group.id);
 		}
 		else FMT.MODEL.remGroup(group);
 	}
