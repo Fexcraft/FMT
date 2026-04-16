@@ -54,12 +54,13 @@ public class Dialog extends Element {
 		close();
 	}
 
-	public void consumer(Consumer<Dialog> co, Consumer<Dialog> ca){
+	public Dialog consumer(Consumer<Dialog> co, Consumer<Dialog> ca){
 		on_confirm = co;
 		on_cancel = ca;
+		return this;
 	}
 
-	public void buttons(int bw, DialogButton... buttons){
+	public Dialog buttons(int bw, DialogButton... buttons){
 		for(int i = 0; i < buttons.length; i++){
 			int idx = i;
 			container.add(new Element().shape(ElmShape.RECT_ROUNDED).color(GENERIC_FIELD.value).translate("dialog.button." + buttons[i].name().toLowerCase())
@@ -71,14 +72,17 @@ public class Dialog extends Element {
 				})
 			);
 		}
+		return this;
 	}
 
-	public void addText(int row, String text, Object... format){
+	public Dialog addText(int row, String text, Object... format){
 		container.add(new TextElm(5, 5 + row * 30, container.w - 10, text, format).text_autoscale());
+		return this;
 	}
 
-	public void addRowElm(int row, Element elm, Object... init){
+	public Dialog addRowElm(int row, Element elm, Object... init){
 		container.add(elm.pos(5, 5 + row * 30), init);
+		return this;
 	}
 
 	public static enum DialogButton {
