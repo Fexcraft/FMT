@@ -99,8 +99,7 @@ public class SettingsUI extends Element {
 		public void init(Object... args){
 			size(WIDTH - 30, 30);
 			border(GENERIC_BACKGROUND_2.value);
-			checkpickpos = false;
-			checkinroot = true;
+			check_mode(CheckMode.IN_ROOT);
 			Setting<?> setting = (Setting<?>)args[2];
 			add(new TextElm(0, 0, 310, "setting." + args[0] + "." + args[1])
 				.text_autoscale().hint(args[0] + " / " + args[1]));
