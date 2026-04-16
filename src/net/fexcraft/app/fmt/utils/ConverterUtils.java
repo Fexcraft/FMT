@@ -1,6 +1,4 @@
-package net.fexcraft.app.fmt.oui;
-
-import static net.fexcraft.app.fmt.utils.Translator.translate;
+package net.fexcraft.app.fmt.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,8 +6,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Map;
 
-import net.fexcraft.app.fmt.utils.Logging;
-import net.fexcraft.app.fmt.utils.Translator;
+import net.fexcraft.app.fmt.oui.FileChooser;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonHandler.PrintOption;
 import net.fexcraft.app.json.JsonMap;
