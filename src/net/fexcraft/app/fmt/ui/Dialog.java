@@ -31,7 +31,7 @@ public class Dialog extends Element {
 	public void init(Object... args){
 		add(title = new Element().size(w - 31, 30).color(GENERIC_BACKGROUND_1.value)
 			.translate(args.length > 0 ? args[0].toString() : "dialog.title.default").text_autoscale());
-		add(new Element().size(30, 30).pos(w - 31, 0).texture("icons/component/remove")
+		add(new Element().size(30, 30).pos(w - 31, 0).texture("icons/component/exit")
 			.hoverable(true).onclick(ci -> close()));
 		add(container = new Element().size(w, h - 30).pos(0, 30));
 	}
