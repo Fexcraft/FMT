@@ -1,7 +1,6 @@
 package net.fexcraft.app.fmt;
 
 import net.fexcraft.app.fmt.animation.Animation;
-import net.fexcraft.app.fmt.demo.ModelT1P;
 import net.fexcraft.app.fmt.env.PackDevEnv;
 import net.fexcraft.app.fmt.ui.FMTInterface;
 import net.fexcraft.app.fmt.ui.FontRenderer;
@@ -334,8 +333,7 @@ public class FMT {
 			(MODEL.orient.rect() ? floor0 : floor).render();
 		}
 		if(Settings.DEMO.value){
-			TextureManager.bind("t1p");
-			ModelT1P.INSTANCE.render();
+			//
 		}
 		if(Settings.CMARKER.value){
 			PolyRenderer.mode(DrawMode.RGBCOLOR);
