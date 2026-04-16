@@ -18,7 +18,10 @@ public class TextElm extends Element {
 		shape(ElmShape.NONE);
 		pos(x, y);
 		size(w, FS);
-		translate(text, format);
+		if(text.startsWith("#")){
+			text(String.format(text.substring(1), format));
+		}
+		else translate(text, format);
 	}
 
 	public TextElm(float x, float y, float w, String text, RGB col){
