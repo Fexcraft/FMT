@@ -78,7 +78,7 @@ public class FileChooser {
 	public static void chooseDir(String title, String root, Consumer<File> task){
 		if(!root.endsWith("/")) root += "/";
 		if(INTERNAL_CHOOSER.value){
-			GenericDialog.showOK("not-available-yet", null, null);
+			//TODO GenericDialog.showOK("not-available-yet", null, null);
 			return;
 		}
 		task.accept(new File(TinyFileDialogs.tinyfd_selectFolderDialog(title, root)));
