@@ -9,6 +9,10 @@ import net.fexcraft.app.fmt.ui.*;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 
+import java.util.ArrayList;
+import java.util.Map;
+
+import static net.fexcraft.app.fmt.settings.Settings.GENERIC_BACKGROUND_1;
 import static net.fexcraft.app.fmt.settings.Settings.GENERIC_FIELD;
 import static net.fexcraft.app.fmt.ui.Field.FieldType.TEXT;
 
@@ -68,10 +72,20 @@ public class ModelEditorTab extends EditorTab {
 			.translate("dialog.button.open").text_centered(true).hoverable(true)
 			.onclick(ci -> ExportManager.showGroupSelectionDialog(null)));
 		//
+		container.add((exports = new ETabCom()), lang_prefix + "export", 300);
+		exports.add(new TextElm(FO, next_y_pos(-1) + 2, FF, lang_prefix + "export.add_value", GENERIC_FIELD.value)
+			.hoverable(true).onclick(ci -> {}));
+		exports.add(new TextElm(FO, next_y_pos(1), FF, lang_prefix + "export.add_array_value", GENERIC_FIELD.value)
+			.hoverable(true).onclick(ci -> {}));
+		Scrollable scroll = new Scrollable(true, 90);
+		exports.add(scroll.pos(5, next_y_pos(1)));
+		scroll.updateSize(FF + 5, 290);
+		//
 		updcom.add(UpdateEvent.ModelLoad.class, event -> updateFields());
 		updcom.add(UpdateEvent.TexGroupAdded.class, event -> refreshTexGroups());
 		updcom.add(UpdateEvent.TexGroupRenamed.class, event -> refreshTexGroups());
 		updcom.add(UpdateEvent.TexGroupRemoved.class, event -> refreshTexGroups());
+		updcom.add(UpdateEvent.ModelExportValue.class, event -> refreshExportValues(scroll));
 	}
 
 	private void updateFields(){
@@ -90,6 +104,19 @@ public class ModelEditorTab extends EditorTab {
 		}
 		if(FMT.MODEL == null || FMT.MODEL.texgroup == null) texg.selectEntry(0);
 		else texg.selectKey(FMT.MODEL.texgroup.name);
+	}
+
+	private void refreshExportValues(Scrollable scroll){
+		scroll.remElmIf(elm -> elm instanceof TextElm);
+		for(Map.Entry<String, String> entry : FMT.MODEL.export_values.entrySet()){
+			scroll.add(new TextElm(5, 0, scroll.w - 30, "[V] " + entry.getKey(), GENERIC_BACKGROUND_1.value)
+				.check_mode(CheckMode.IN_ROOT).onclick(ci -> {}));
+		}
+		for(Map.Entry<String, ArrayList<String>> entry : FMT.MODEL.export_listed_values.entrySet()){
+			scroll.add(new TextElm(5, 0, scroll.w - 30, "[A] " + entry.getKey(), GENERIC_BACKGROUND_1.value)
+				.check_mode(CheckMode.IN_ROOT).onclick(ci -> {}));
+		}
+		scroll.updateBar();
 	}
 
 }
