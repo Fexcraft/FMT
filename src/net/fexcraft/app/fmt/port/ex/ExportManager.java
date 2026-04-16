@@ -91,16 +91,15 @@ public class ExportManager {
 	private static void showFileChooserDialog(Exporter exporter, List<Group> groups){
 		FileChooser.chooseFile("export.choose.file", "", exporter.extensions(), true, file -> {
 			if(file == null){
-				Dialog dia = FMT.UI.createDialog(400, 50, "export.choose.nofile");
-				dia.buttons(100, Dialog.DialogButton.YES, Dialog.DialogButton.NO);
-				dia.consumer(d -> showFileChooserDialog(exporter, groups), null);
+				FMT.UI.createDialog(400, 50, "export.choose.nofile")
+					.buttons(100, Dialog.DialogButton.YES, Dialog.DialogButton.NO)
+					.consumer(d -> showFileChooserDialog(exporter, groups), null);
 				return;
 			}
 			Runnable run = () -> {
 				String res = exporter.export(FMT.MODEL, file, groups);
-				Dialog dia = FMT.UI.createDialog(FontRenderer.getWidth(res, FontRenderer.FontType.PLAIN) * 3 + 30, 100, "export.result");
-				dia.addText(0, res);
-				dia.buttons(100, Dialog.DialogButton.OK);
+				FMT.UI.createDialog(FontRenderer.getWidth(res, FontRenderer.FontType.PLAIN) * 3 + 30, 100, "export.result")
+					.addText(0, res).buttons(100, Dialog.DialogButton.OK);
 			};
 			if(Settings.SETTINGS.containsKey("exporter-" + exporter.id())){
 				exporter.initSettings();
