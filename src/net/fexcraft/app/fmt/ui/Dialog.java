@@ -77,8 +77,8 @@ public class Dialog extends Element {
 		container.add(new TextElm(5, 5 + row * 30, container.w - 10, text, format).text_autoscale());
 	}
 
-	public void addRowElm(int row, Element elm){
-		container.add(elm.pos(5, 5 + row * 30));
+	public void addRowElm(int row, Element elm, Object... init){
+		container.add(elm.pos(5, 5 + row * 30), init);
 	}
 
 	public static enum DialogButton {
