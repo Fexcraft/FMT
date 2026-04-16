@@ -29,6 +29,7 @@ public class TextElm extends Element {
 		shape(ElmShape.RECTANGLE);
 		hoverable(true);
 		color(col);
+		text_pos(5, -2);
 	}
 
 }
