@@ -193,6 +193,9 @@ editor.model.general.export_groups=Export Group Presets
 editor.model.export=Export Values / ModelData
 editor.model.export.add_value=Add Entry
 editor.model.export.add_array_value=Add Array/List Entry
+editor.model.export.create_entry=Export Entry Editor
+editor.model.export.entry_name=Name/Key
+editor.model.export.entry_value=Value
 
 # Tree
 tree.mode.polygon=Polygon Tree
