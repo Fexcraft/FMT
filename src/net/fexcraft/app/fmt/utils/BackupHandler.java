@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.TimerTask;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.oui.GenericDialog;
+import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.lib.common.math.Time;
 
@@ -30,12 +30,16 @@ public class BackupHandler extends TimerTask {
 			File file = new File("./backups/(" + str + ") " + FMT.MODEL.name + ".fmtb");
 			if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
 			if(!SaveHandler.save(FMT.MODEL, file, null, true, false)){
-				GenericDialog.showOK("saveload.title", null, null, "saveload.backup.failure");
+				FMT.UI.createDialog(500, 80, "saveload.title")
+					.addText(0, "saveload.backup.failure")
+					.buttons(100, Dialog.DialogButton.OK);
 				JsonHandler.print(new File("./backups/(" + str + ") " + FMT.MODEL.name + ".json"), SaveHandler.modelToJTMT(FMT.MODEL, false));
 			}
 		}
 		catch(Exception e){
-			GenericDialog.showOK("saveload.title", null, null, "saveload.backup.failure");
+			FMT.UI.createDialog(500, 80, "saveload.title")
+				.addText(0, "saveload.backup.failure")
+				.buttons(100, Dialog.DialogButton.OK);
 			e.printStackTrace();
 			Logging.log(e);
 		}
