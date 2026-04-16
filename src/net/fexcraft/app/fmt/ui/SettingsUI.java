@@ -76,7 +76,7 @@ public class SettingsUI extends Element {
 	@Override
 	public Element show(){
 		pos((FMT.SCALED_WIDTH - WIDTH) * 0.5f, (FMT.SCALED_HEIGHT - HEIGHT) * 0.5f);
-		icon.texture("icons/component/remove");
+		icon.texture("icons/component/exit");
 		return super.show();
 	}
 
