@@ -145,7 +145,7 @@ public class HelperComponent extends EditorComponent {
 	@Override
 	public void rem(){
 		if(ASK_HELPER_REMOVAL.value){
-			GenericDialog.showOC(null, () -> PreviewHandler.remove(model), null, "editor.component.helper.remove", model.name);
+			//TODO GenericDialog.showOC(null, () -> PreviewHandler.remove(model), null, "editor.component.helper.remove", model.name);
 		}
 		else PreviewHandler.remove(model);
 	}
