@@ -8,10 +8,7 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.oui.FileChooser;
-import net.fexcraft.app.fmt.ui.Dialog;
-import net.fexcraft.app.fmt.ui.DropList;
-import net.fexcraft.app.fmt.ui.FMTInterface;
-import net.fexcraft.app.fmt.ui.FontRenderer;
+import net.fexcraft.app.fmt.ui.*;
 import net.fexcraft.app.json.JsonMap;
 
 /**
@@ -80,14 +77,15 @@ public class ExportManager {
 		dia.buttons(100, Dialog.DialogButton.CONTINUE);
 	}
 
-	private static void showGroupSelectionDialog(Exporter exporter){
-		Dialog dia = FMT.UI.createDialog(500, 400, "export.choose.groups");
-		dia.addText(0, "//TODO");
-		dia.addText(1, "group selection panel");
+	public static void showGroupSelectionDialog(Exporter exporter){
+		Dialog dia = FMT.UI.createDialog(500, 500, "export.choose.groups");
+		GroupSelector selector = new GroupSelector();
+		dia.addRowElm(0, selector, 490);
 		dia.consumer(d -> {
-			showFileChooserDialog(exporter, FMT.MODEL.allgroups());//TODO panel selected groups
+			if(exporter == null) return;
+			showFileChooserDialog(exporter, selector.getSelected());
 		}, null);
-		dia.buttons(100, Dialog.DialogButton.CONTINUE);
+		dia.buttons(100, exporter == null ? Dialog.DialogButton.OK : Dialog.DialogButton.CONTINUE);
 	}
 
 	private static void showFileChooserDialog(Exporter exporter, List<Group> groups){
