@@ -29,7 +29,6 @@ import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.oui.Editor;
 import net.fexcraft.app.fmt.oui.EditorComponent;
 import net.fexcraft.app.fmt.oui.FileChooser;
-import net.fexcraft.app.fmt.oui.GenericDialog;
 import net.fexcraft.app.fmt.oui.fields.TextField;
 import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.fmt.utils.Translator;
@@ -83,7 +82,7 @@ public class TexGroupComponent extends EditorComponent {
         	if(CLICK == e.getAction()){
         		String newname = field.getTextState().getText();
         		if(TextureManager.getGroup(newname) != null){
-        			GenericDialog.showOK(null, null, null, "editor.tree.texture.rename_group.duplicate");
+        			//TODO GenericDialog.showOK(null, null, null, "editor.tree.texture.rename_group.duplicate");
         			return;
         		}
     			UpdateHandler.update(new TexGroupRenamed(group, group.name, group.name = newname));
@@ -202,7 +201,7 @@ public class TexGroupComponent extends EditorComponent {
 	@Override
 	public void rem(){
 		if(ASK_TEXTURE_GROUP_REMOVAL.value){
-			GenericDialog.showCC("texture.manager", () -> TextureManager.remGroup(group), null, "texture.remove_group", group.name);
+			//TODO GenericDialog.showCC("texture.manager", () -> TextureManager.remGroup(group), null, "texture.remove_group", group.name);
 		}
 		else TextureManager.remGroup(group);
 	}
