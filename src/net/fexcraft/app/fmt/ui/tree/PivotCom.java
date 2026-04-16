@@ -4,8 +4,10 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Pivot;
 import net.fexcraft.app.fmt.settings.Settings;
+import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.HidingElm;
+import net.fexcraft.app.fmt.ui.editor.EditorRoot;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 
@@ -30,18 +32,25 @@ public class PivotCom extends TTabCom {
 			FMT.MODEL.select(pivot);
 			updateTextColor();
 		});
-		add(new HidingElm().hoverable(true).texture("icons/component/visible").size(28, 28).pos(EDITOR_CONTENT - 30 * 2, 1).onclick(ci -> {
+		add(new HidingElm().hoverable(true).texture("icons/component/visible").size(28, 28).pos(EDITOR_CONTENT - 32 * 2, 1).onclick(ci -> {
 			pivot.visible = !pivot.visible;
 			UpdateHandler.update(new UpdateEvent.PivotVisibility(pivot, pivot.visible));
 		}).hint("tree.polygon.pivot.visible").hide());
 		if(!pivot.root){
-			add(new HidingElm().hoverable(true).texture("icons/component/remove").size(28, 28).pos(EDITOR_CONTENT - 30 * 3, 1).onclick(ci -> {
+			add(new HidingElm().hoverable(true).texture("icons/component/remove").size(28, 28).pos(EDITOR_CONTENT - 32 * 3, 1).onclick(ci -> {
 				if(ASK_PIVOT_REMOVAL.value){
-					//TODO
+					FMT.UI.createDialog(500, 120, "tree.mode.polygon")
+						.addText(0, "tree.polygon.pivot.removal")
+						.addText(1, pivot.id + " (" + pivot.groups.size() + " groups)")
+						.consumer(d -> FMT.MODEL.remPivot(pivot), null)
+						.buttons(100, Dialog.DialogButton.CONFIRM, Dialog.DialogButton.CANCEL);
 				}
 				else FMT.MODEL.remPivot(pivot);
 			}).hint("tree.polygon.pivot.remove").hide());
 		}
+		add(new HidingElm().hoverable(true).texture("icons/component/edit").size(28, 28).pos(EDITOR_CONTENT - 32 * 4, 1).onclick(ci -> {
+			EditorRoot.setMode(EditorRoot.EditorMode.PIVOT);
+		}).hint("tree.polygon.pivot.editor").hide());
 		pivot.groups.forEach(group -> container.add(new GroupCom(group)));
 	}
 
