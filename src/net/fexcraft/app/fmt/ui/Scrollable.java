@@ -61,14 +61,19 @@ public class Scrollable extends Element {
 		ih = 5;
 		for(Element elm : elements){
 			if(!elm.visible) continue;
+			if(elm == bar || elm == up || elm == dw) continue;
 			if(elm instanceof ETabCom){
 				ih += elm.h + 5;
 			}
-			if(elm instanceof TTabCom com){
+			else if(elm instanceof TTabCom com){
 				ih += com.h + (com.container.visible ? com.container.h : 0) + 5;
 			}
-			if(elm instanceof SettingsUI.SettingBlock){
+			else if(elm instanceof SettingsUI.SettingBlock){
 				ih += elm.h + 5;
+			}
+			else{
+				if(elm.x() > 5) continue;
+				ih += elm.h;
 			}
 		}
 		//
@@ -85,19 +90,25 @@ public class Scrollable extends Element {
 		bh = ih < h ? 0 : (h - ih) * scrolled;
 		float incr = 5;
 		for(Element elm : elements){
+			if(elm == bar || elm == up || elm == dw) continue;
 			if(elm instanceof ETabCom){
 				elm.pos(5, incr + bh);
 				if(!elm.visible) continue;
 				incr += elm.h + 5;
 			}
-			if(elm instanceof TTabCom com){
+			else if(elm instanceof TTabCom com){
 				com.pos(SCROLLBAR_WIDTH + 5, incr + bh);
 				if(!elm.visible) continue;
 				incr += com.h + (com.container.visible ? com.container.h : 0) + 5;
 			}
-			if(elm instanceof SettingsUI.SettingBlock){
+			else if(elm instanceof SettingsUI.SettingBlock){
 				elm.pos(5, incr + bh);
 				incr += elm.h + 5;
+			}
+			else{
+				elm.pos(elm.x(), incr + bh);
+				if(elm.x() > 5) continue;
+				incr += elm.h;
 			}
 		}
 	}
