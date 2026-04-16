@@ -52,16 +52,10 @@ public class GroupSelector extends Element {
 				String nkey = field.get_text();
 				if(nkey.length() < 1) return;
 				int idx = FMT.MODEL.export_group_preset_keys.indexOf(sel);
-				if(idx >= 0){
-					FMT.MODEL.export_group_preset_keys.remove(idx);
-					ArrayList<String> groups = FMT.MODEL.export_group_presets.remove(idx);
-					FMT.MODEL.export_group_preset_keys.add(nkey);
-					FMT.MODEL.export_group_presets.add(groups);
-				}
-				else{
-					FMT.MODEL.export_group_preset_keys.add(nkey);
-					FMT.MODEL.export_group_presets.add(getSelectedIds());
-				}
+				FMT.MODEL.export_group_preset_keys.remove(idx);
+				FMT.MODEL.export_group_presets.remove(idx);
+				FMT.MODEL.export_group_preset_keys.add(nkey);
+				FMT.MODEL.export_group_presets.add(getSelectedIds());
 				redrop(drop, field, nkey);
 			}));
 		add(new Element().pos(half - 32, 0).texture("icons/component/remove").size(32, 32)
