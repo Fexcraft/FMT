@@ -4,8 +4,10 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.settings.Settings;
+import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.HidingElm;
+import net.fexcraft.app.fmt.ui.editor.EditorRoot;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 
@@ -30,16 +32,23 @@ public class GroupCom extends TTabCom {
 			FMT.MODEL.select(group);
 			updateTextColor();
 		});
-		add(new HidingElm().hoverable(true).texture("icons/component/visible").size(28, 28).pos(EDITOR_CONTENT - 35 * 2, 1).onclick(ci -> {
+		add(new HidingElm().hoverable(true).texture("icons/component/visible").size(28, 28).pos(EDITOR_CONTENT - 32 * 2, 1).onclick(ci -> {
 			group.visible = !group.visible;
 			UpdateHandler.update(new UpdateEvent.GroupVisibility(group, group.visible));
 		}).hint("tree.polygon.group.visible").hide());
-		add(new HidingElm().hoverable(true).texture("icons/component/remove").size(28, 28).pos(EDITOR_CONTENT - 35 * 3, 1).onclick(ci -> {
+		add(new HidingElm().hoverable(true).texture("icons/component/remove").size(28, 28).pos(EDITOR_CONTENT - 32 * 3, 1).onclick(ci -> {
 			if(ASK_GROUP_REMOVAL.value){
-				//TODO
+				FMT.UI.createDialog(500, 120, "tree.mode.polygon")
+					.addText(0, "tree.polygon.group.removal")
+					.addText(1, group.id + " (" + group.size() + " polygons)")
+					.consumer(d -> FMT.MODEL.remGroup(group), null)
+					.buttons(100, Dialog.DialogButton.CONFIRM, Dialog.DialogButton.CANCEL);
 			}
 			else FMT.MODEL.remGroup(group);
 		}).hint("tree.polygon.group.remove").hide());
+		add(new HidingElm().hoverable(true).texture("icons/component/edit").size(28, 28).pos(EDITOR_CONTENT - 32 * 4, 1).onclick(ci -> {
+			EditorRoot.setMode(EditorRoot.EditorMode.GROUP);
+		}).hint("tree.polygon.group.editor").hide());
 		group.forEach(poly -> container.add(new PolygonCom(poly)));
 		orderComponents();
 	}
