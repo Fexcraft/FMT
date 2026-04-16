@@ -36,9 +36,7 @@ public class Editor extends Component {
 	public static final ArrayList<Editor> EDITORS = new ArrayList<>();
 	public static final ArrayList<Editor> TREES = new ArrayList<>();
 	public static Editor POLYGON_EDITOR;
-	//public static Editor GROUP_EDITOR;
 	public static Editor PIVOT_EDITOR;
-	public static Editor MODEL_EDITOR;
 	public static Editor TEXTURE_EDITOR;
 	public static Editor UV_EDITOR;
 	public static Editor PREVIEW_EDITOR;
@@ -256,7 +254,7 @@ public class Editor extends Component {
 		//Editor.POLYGON_EDITOR = new PolygonEditor();
 		//Editor.GROUP_EDITOR = new GroupEditor();
 		Editor.PIVOT_EDITOR = new PivotEditor();
-		Editor.MODEL_EDITOR = new ModelEditor();
+		//Editor.MODEL_EDITOR = new ModelEditor();
 		Editor.TEXTURE_EDITOR = new TextureEditor();
 		Editor.UV_EDITOR = new UVEditor();
 		Editor.PREVIEW_EDITOR = new PreviewEditor();
