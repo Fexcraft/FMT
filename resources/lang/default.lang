@@ -199,10 +199,16 @@ tree.mode.animation=Animation Tree
 tree.info.polygon_count=Polygons: %s
 tree.polygon.pivot.visible=Toggle Visibility
 tree.polygon.pivot.remove=Remove Pivot
+tree.polygon.pivot.editor=Pivot Editor
+tree.polygon.pivot.removal=Are you sure you want to remove this Pivot?
 tree.polygon.group.visible=Toggle Visibility
 tree.polygon.group.remove=Remove Group
+tree.polygon.group.editor=Group Editor
+tree.polygon.group.removal=Are you sure you want to remove this Group?
 tree.polygon.polygon.visible=Toggle Visibility
 tree.polygon.polygon.remove=Remove Polygon
+tree.polygon.polygon.editor=Polygon Editor
+tree.polygon.polygon.removal=Are you sure you want to remove this Polygon?
 
 # Add Group Dialog
 dialog.add_group.title=Add new Group
