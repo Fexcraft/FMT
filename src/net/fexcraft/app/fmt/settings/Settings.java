@@ -12,6 +12,7 @@ import java.util.Map;
 
 import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.Dialog.DialogButton;
+import net.fexcraft.app.fmt.ui.FMTInterface;
 import net.fexcraft.app.fmt.ui.Field;
 import net.fexcraft.app.fmt.texture.TexturePainter;
 import net.fexcraft.app.fmt.updater.Catalog;
@@ -362,6 +363,9 @@ public class Settings {
 			RECENT.add(0, file);
 		}
 		while(RECENT.size() > 10) RECENT.remove(RECENT.size() - 1);
+		for(int i = 0; i < 10; i++){
+			FMTInterface.recent.elements.get(i).text(RECENT.get(i).getName());
+		}
 	}
 
 	public static void openRecent(int index){
