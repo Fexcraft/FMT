@@ -1,7 +1,6 @@
 package net.fexcraft.app.fmt.utils;
 
 import static net.fexcraft.app.fmt.update.UpdateHandler.update;
-import static net.fexcraft.app.fmt.oui.GenericDialog.showOK;
 import static net.fexcraft.app.fmt.utils.Logging.log;
 
 import java.io.ByteArrayInputStream;
@@ -49,7 +48,8 @@ public class SaveHandler {
 
 	public static void open(Model model, File file, boolean preview){
 		if(file == null || !file.exists()){
-			FMT.UI.createDialog(400, 50, "saveload.open.nofile").buttons(100, Dialog.DialogButton.OK);
+			FMT.UI.createDialog(400, 80, "saveload.title")
+				.addText(0, "saveload.open.nofile").buttons(100, Dialog.DialogButton.OK);
 			return;
 		}
 		try{
@@ -111,7 +111,8 @@ public class SaveHandler {
 		}
 		catch(Exception e){
 			log(e);
-			showOK("saveload.title", null, null, "saveload.open.errors");
+			FMT.UI.createDialog(400, 80, "saveload.title")
+				.addText(0, "saveload.open.errors").buttons(100, Dialog.DialogButton.OK);
 			return;
 		}
 	}
@@ -344,7 +345,8 @@ public class SaveHandler {
 	public static boolean save(Model model, File file, Runnable run, boolean backup, boolean open){
 		file = file == null ? model.file : file;
 		if(file == null){
-			FMT.UI.createDialog(400, 50, "saveload.save.nofile")
+			FMT.UI.createDialog(500, 80, "saveload.title")
+				.addText(0, "saveload.save.nofile")
 				.buttons(100, Dialog.DialogButton.OPEN, Dialog.DialogButton.CANCEL)
 				.consumer(d -> { if(run != null) run.run(); }, null);
 			return false;
