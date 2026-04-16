@@ -37,7 +37,6 @@ import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.oui.FileChooser;
-import net.fexcraft.app.fmt.oui.GenericDialog;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonHandler.PrintOption;
@@ -50,7 +49,7 @@ public class SaveHandler {
 
 	public static void open(Model model, File file, boolean preview){
 		if(file == null || !file.exists()){
-			showOK("saveload.title", null, null, "saveload.open.nofile");
+			FMT.UI.createDialog(400, 50, "saveload.open.nofile").buttons(100, Dialog.DialogButton.OK);
 			return;
 		}
 		try{
@@ -345,7 +344,9 @@ public class SaveHandler {
 	public static boolean save(Model model, File file, Runnable run, boolean backup, boolean open){
 		file = file == null ? model.file : file;
 		if(file == null){
-			GenericDialog.showOC(null, () -> { if(run != null) run.run(); }, null, "saveload.save.nofile");
+			FMT.UI.createDialog(400, 50, "saveload.save.nofile")
+				.buttons(100, Dialog.DialogButton.OPEN, Dialog.DialogButton.CANCEL)
+				.consumer(d -> { if(run != null) run.run(); }, null);
 			return false;
 		}
 		boolean noerror = true;
