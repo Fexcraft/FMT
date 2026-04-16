@@ -100,7 +100,7 @@ public class ProfileDialog {
 				dialog.close();
 				SessionHandler.encrypt();
 				SessionHandler.tryLogin(resp -> {
-					GenericDialog.show("loginbox.title", "dialog.button.ok", SessionHandler.isLoggedIn() ? null : "profile.button.retry", null, () -> openLogin(), resp);
+					//TODO GenericDialog.show("loginbox.title", "dialog.button.ok", SessionHandler.isLoggedIn() ? null : "profile.button.retry", null, () -> openLogin(), resp);
 					SessionHandler.save();
 				});
 			}
