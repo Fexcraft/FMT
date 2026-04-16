@@ -11,7 +11,6 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.oui.EditorComponent;
 import net.fexcraft.app.fmt.oui.FileChooser;
-import net.fexcraft.app.fmt.oui.GenericDialog;
 import net.fexcraft.app.fmt.oui.JsonEditor;
 import net.fexcraft.app.fmt.oui.fields.RunButton;
 import net.fexcraft.app.fmt.oui.fields.TextField;
@@ -229,7 +228,7 @@ public class ConfigGeneral extends EditorComponent {
 				}
 			}
 			WorkspaceViewer.viewer().genView();
-			GenericDialog.showOK(null, null, null, "editor.component.config.general.gen_icons.complete");
+			//TODO GenericDialog.showOK(null, null, null, "editor.component.config.general.gen_icons.complete");
 		});
 	}
 
