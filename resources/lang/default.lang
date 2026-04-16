@@ -189,6 +189,7 @@ editor.model.general.name=Name
 editor.model.general.texture_size=Texture Size
 editor.model.general.texture_group=Texture Group
 editor.model.general.orientation=Orientation & Floor
+editor.model.general.export_groups=Export Group Presets
 
 # Tree
 tree.mode.polygon=Polygon Tree
