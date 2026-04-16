@@ -9,8 +9,6 @@ import net.fexcraft.app.fmt.polygon.uv.Face;
 import net.fexcraft.app.fmt.polygon.uv.NoFace;
 import net.fexcraft.app.fmt.polygon.uv.UVCoords;
 import net.fexcraft.app.fmt.polygon.uv.UVType;
-import net.fexcraft.app.fmt.settings.Settings;
-import net.fexcraft.app.fmt.oui.CenteredLabel;
 import net.fexcraft.app.fmt.oui.EditorComponent;
 import net.fexcraft.app.fmt.oui.UIUtils;
 import net.fexcraft.app.fmt.oui.UVViewer;
@@ -157,7 +155,7 @@ public class UVComponent extends EditorComponent {
 			fields[i] = new UVViewer.UVFields(3, r, w, 20);
 			if(i == 0){
 				fields[i].setSize(w, 40);
-				fields[i].add(new CenteredLabel(translate(LANG_PREFIX + id + ".type.automatic"), 7, 10, 270, 20));
+				fields[i].add(new /*Centered*/Label(translate(LANG_PREFIX + id + ".type.automatic"), 7, 10, 270, 20));
 			}
 			else if(i == 1){
 				fields[i].setSize(w, 70);
