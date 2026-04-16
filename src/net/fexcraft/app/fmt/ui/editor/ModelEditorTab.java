@@ -74,26 +74,27 @@ public class ModelEditorTab extends EditorTab {
 		//
 		container.add((exports = new ETabCom()), lang_prefix + "export", 300);
 		exports.add(new TextElm(FO, next_y_pos(-1) + 2, FF, lang_prefix + "export.add_value", GENERIC_FIELD.value)
-			.hoverable(true).onclick(ci -> {}));
+			.hoverable(true).onclick(ci -> openExportEntryEditor("new entry", "entry value")));
 		exports.add(new TextElm(FO, next_y_pos(1), FF, lang_prefix + "export.add_array_value", GENERIC_FIELD.value)
 			.hoverable(true).onclick(ci -> {}));
 		Scrollable scroll = new Scrollable(true, 90);
 		exports.add(scroll.pos(5, next_y_pos(1)));
 		scroll.updateSize(FF + 5, 290);
 		//
-		updcom.add(UpdateEvent.ModelLoad.class, event -> updateFields());
+		updcom.add(UpdateEvent.ModelLoad.class, event -> updateFields(scroll));
 		updcom.add(UpdateEvent.TexGroupAdded.class, event -> refreshTexGroups());
 		updcom.add(UpdateEvent.TexGroupRenamed.class, event -> refreshTexGroups());
 		updcom.add(UpdateEvent.TexGroupRemoved.class, event -> refreshTexGroups());
 		updcom.add(UpdateEvent.ModelExportValue.class, event -> refreshExportValues(scroll));
 	}
 
-	private void updateFields(){
+	private void updateFields(Scrollable scroll){
 		name.text(FMT.MODEL.name);
 		texx.selectKey(FMT.MODEL.texSizeX + "");
 		texy.selectKey(FMT.MODEL.texSizeY + "");
 		orient.selectValue(FMT.MODEL.orient);
 		refreshTexGroups();
+		refreshExportValues(scroll);
 	}
 
 	private void refreshTexGroups(){
@@ -110,13 +111,40 @@ public class ModelEditorTab extends EditorTab {
 		scroll.remElmIf(elm -> elm instanceof TextElm);
 		for(Map.Entry<String, String> entry : FMT.MODEL.export_values.entrySet()){
 			scroll.add(new TextElm(5, 0, scroll.w - 30, "[V] " + entry.getKey(), GENERIC_BACKGROUND_1.value)
-				.check_mode(CheckMode.IN_ROOT).onclick(ci -> {}));
+				.check_mode(CheckMode.IN_ROOT).onclick(ci -> openExportEntryEditor(entry.getKey(), entry.getValue())));
+			scroll.lastElement().add(new HidingElm().pos(scroll.lastElement().w - FS, 0).size(FS, FS)
+				.texture("icons/component/remove").hoverable(true).onclick(ci -> {
+					FMT.MODEL.export_values.remove(entry.getKey());
+					UpdateHandler.update(new UpdateEvent.ModelExportValue(FMT.MODEL, entry.getKey(), entry.getValue(), false));
+				}));
 		}
 		for(Map.Entry<String, ArrayList<String>> entry : FMT.MODEL.export_listed_values.entrySet()){
 			scroll.add(new TextElm(5, 0, scroll.w - 30, "[A] " + entry.getKey(), GENERIC_BACKGROUND_1.value)
 				.check_mode(CheckMode.IN_ROOT).onclick(ci -> {}));
+			scroll.lastElement().add(new HidingElm().pos(scroll.lastElement().w - FS, 0).size(FS, FS)
+				.texture("icons/component/remove").hoverable(true).onclick(ci -> {
+					FMT.MODEL.export_listed_values.remove(entry.getKey());
+					UpdateHandler.update(new UpdateEvent.ModelExportValue(FMT.MODEL, entry.getKey(), null, true));
+				}));
 		}
 		scroll.updateBar();
+	}
+
+	private void openExportEntryEditor(String key, String val){
+		Field name = new Field(TEXT, 390);
+		Field value = new Field(TEXT, 390);
+		FMT.UI.createDialog(400, 200, lang_prefix + "export.create_entry")
+			.addText(0, "editor.model.export.entry_name")
+			.addRowElm(1, name)
+			.addText(2, "editor.model.export.entry_value")
+			.addRowElm(3, value)
+			.consumer(d -> {
+				FMT.MODEL.export_values.put(name.get_text(), value.get_text());
+				UpdateHandler.update(new UpdateEvent.ModelExportValue(FMT.MODEL, name.get_text(), value.get_text(), false));
+			}, null)
+			.buttons(100, Dialog.DialogButton.ADD, Dialog.DialogButton.CANCEL);
+		name.text(key);
+		value.text(val);
 	}
 
 }
