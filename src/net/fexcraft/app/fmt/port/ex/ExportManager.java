@@ -78,7 +78,7 @@ public class ExportManager {
 	}
 
 	public static void showGroupSelectionDialog(Exporter exporter){
-		Dialog dia = FMT.UI.createDialog(500, 500, "export.choose.groups");
+		Dialog dia = FMT.UI.createDialog(500, 560, "export.choose.groups");
 		GroupSelector selector = new GroupSelector();
 		dia.addRowElm(0, selector, 490);
 		dia.consumer(d -> {
