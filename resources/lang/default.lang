@@ -633,6 +633,16 @@ import.errors=Error, see console output.
 importer.mtb.stream_null=Model Entry not found in file.
 importer.dfm.no_agreement=You have not confirmed to act according to the source model's license / author's will.
 
+# Group Selection Panel
+group_sel_panel.select_all=Select ALL
+group_sel_panel.deselect_all=Deselect ALL
+group_sel_panel.select_visible=Select Visible Groups
+group_sel_panel.select_selected=Select Selected Groups
+group_sel_panel.select_preset=Select Preset
+group_sel_panel.name_preset=Name Preset
+group_sel_panel.save_preset=Save/Update Selection Preset
+group_sel_panel.remove_preset=Remove Selection Preset
+
 # Other
 filechooser.title=FMT Internal File Chooser/Selector
 filechooser.enter_name=enter custom filename here
@@ -653,13 +663,4 @@ model.rescale.groups=Groups to rescale:
 model.rescale.warning0=WARNING! THIS CAN NOT BE UNDONE!
 model.rescale.warning1=This can cause decimal boxes and cylinders.
 model.rescale.warning2=Using decimal-size polygons is NOT advised.
-group_sel_panel.select_all=Select ALL
-group_sel_panel.deselect_all=Deselect ALL
-group_sel_panel.select_visible=Select Visible Groups
-group_sel_panel.select_selected=Select Selected Groups
-group_sel_panel.load_preset=Load Selection Preset
-group_sel_panel.save_preset=Save/Update Selection Preset
-group_sel_panel.remove_preset=Remove Selection Preset
-group_sel_panel.prev_preset=Previous Selection Preset
-group_sel_panel.next_preset=Next/New Selection Preset
 utils.converter.itemmodeltexjson.title=Item Model Texture Json Renamer
