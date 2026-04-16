@@ -47,8 +47,7 @@ public class Element {
 	public Text text;
 	private ElmShape shape = ElmShape.RECTANGLE;
 	public float[] pickpos = new float[4];
-	public boolean checkpickpos = true;
-	public boolean checkinroot = false;
+	public CheckMode check_mode = CheckMode.IN_WINDOW;
 	private float x;
 	private float y;
 	public float z;
@@ -295,12 +294,7 @@ public class Element {
 
 	public void render(){
 		if(!visible) return;
-		if(checkpickpos){
-			if(pickpos[0] > FMT.SCALED_WIDTH || pickpos[1] > FMT.SCALED_HEIGHT || pickpos[2] < 0 || pickpos[3] < 0) return;
-		}
-		if(checkinroot){
-			if(pickpos[0] < root.pickpos[0] || pickpos[1] < root.pickpos[1] || pickpos[2] > root.pickpos[2] || pickpos[3] > root.pickpos[3]) return;
-		}
+		if(check_mode_fail()) return;
 		if(border != null){
 			PolyRenderer.mode(DrawMode.UI_LINES);
 			hedron.render();
@@ -313,6 +307,16 @@ public class Element {
 		if(hint != null && hovered && HOVER_TIMER >= 1){
 			hint.pos(GGR.mousePosX() + 10, GGR.mousePosY() + (GGR.mousePosY() > FMT.HEIGHT - TOOLBAR_HEIGHT ? -30 : 0)).render();
 		}
+	}
+
+	private boolean check_mode_fail(){
+		if(check_mode == CheckMode.IN_WINDOW){
+			if(pickpos[0] > FMT.SCALED_WIDTH || pickpos[1] > FMT.SCALED_HEIGHT || pickpos[2] < 0 || pickpos[3] < 0) return true;
+		}
+		else if(check_mode == CheckMode.IN_ROOT){
+			if(pickpos[0] < root.pickpos[0] || pickpos[1] < root.pickpos[1] || pickpos[2] > root.pickpos[2] || pickpos[3] > root.pickpos[3]) return true;
+		}
+		return false;
 	}
 
 	public void update0(){
@@ -373,6 +377,11 @@ public class Element {
 		if(hovered) return true;
 		if(elements != null) for(Element elm : elements) if(elm.hoveredx()) return true;
 		return false;
+	}
+
+	public Element check_mode(CheckMode mode){
+		check_mode = mode;
+		return this;
 	}
 
 	public void click(int x, int y, int b){
@@ -464,6 +473,7 @@ public class Element {
 
 	public Element getElmAt(double x, double y){
 		if(!visible) return null;
+		if(check_mode_fail()) return null;
 		Element ret;
 		if(elements != null){
 			for(Element elm : elements){
@@ -500,12 +510,18 @@ public class Element {
 
 	public static record ScrollInfo(int sx, int sy, int lx, int ly){}
 
-	public static enum ElmShape{
+	public static enum ElmShape {
 
 		RECTANGLE,
 		RECT_ROUNDED,
 		CUSTOM,
 		NONE
+
+	}
+
+	public static enum CheckMode {
+
+		IN_WINDOW, IN_ROOT, NONE
 
 	}
 
