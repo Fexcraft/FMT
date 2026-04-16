@@ -76,9 +76,9 @@ public class ImportManager {
 	private static void showFileChooserDialog(Importer importer){
 		FileChooser.chooseFile("import.choose.file", "", importer.extensions(), false, file -> {
 			if(file == null){
-				Dialog dia = FMT.UI.createDialog(400, 50, "import.choose.nofile");
-				dia.buttons(100, Dialog.DialogButton.YES, Dialog.DialogButton.NO);
-				dia.consumer(d -> showFileChooserDialog(importer), null);
+				FMT.UI.createDialog(400, 50, "import.choose.nofile")
+					.buttons(100, Dialog.DialogButton.YES, Dialog.DialogButton.NO)
+					.consumer(d -> showFileChooserDialog(importer), null);
 				return;
 			}
 			Runnable run = () -> {
