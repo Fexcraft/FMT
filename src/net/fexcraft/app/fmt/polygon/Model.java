@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 import net.fexcraft.app.fmt.animation.Animation;
 import net.fexcraft.app.fmt.texture.TextureManager;
+import net.fexcraft.app.fmt.ui.Dialog.DialogButton;
 import net.fexcraft.app.fmt.ui.tree.TreeRoot;
 import net.fexcraft.app.fmt.ui.tree.TreeRoot.TreeMode;
 import net.fexcraft.app.fmt.update.UpdateEvent.*;
@@ -47,8 +48,6 @@ import net.fexcraft.app.fmt.polygon.PolyRenderer.DrawMode;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.oui.EditorComponent;
-import net.fexcraft.app.fmt.oui.GenericDialog;
-import net.fexcraft.app.fmt.oui.GroupSelectionPanel;
 import net.fexcraft.app.fmt.oui.fields.NumberField;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
@@ -429,7 +428,10 @@ public class Model {
 		ArrayList<Polygon> selected = selection_copy();
 		Runnable rem = () -> selected.removeIf(poly -> poly.group().remove(poly));
 		if(ASK_POLYGON_REMOVAL.value){
-			GenericDialog.showOC(null, rem, null, "model.delete.remove_selected_polygons", selected.size() + "");
+			FMT.UI.createDialog(500, 80, "model.dialog")
+				.addText(0, "model.selected_polygon_removal", selected.size())
+				.consumer(d -> rem.run(), null)
+				.buttons(100, DialogButton.CONFIRM, DialogButton.CANCEL);
 		}
 		else rem.run();
 	}
@@ -542,11 +544,13 @@ public class Model {
 						});
 					};
 					if(external){
-						GenericDialog.showYN("model.clipboard.paste_external", run, null,
-							"#ORIGIN: " + map.get("origin").string_value() + " " + map.getString("version", ""),
-							"#MODEL: " + model,
-							"#POLYGONS: " + map.get("polygons").asArray().size()
-						);
+						FMT.UI.createDialog(500, 180, "model.dialog")
+							.addText(0, "model.clipboard.paste_external")
+							.addText(1, "#ORIGIN: " + map.get("origin").string_value() + " " + map.getString("version", ""))
+							.addText(2, "#MODEL: " + model)
+							.addText(3, "#POLYGONS: " + map.get("polygons").asArray().size())
+							.consumer(d -> run.run(), null)
+							.buttons(100, DialogButton.YES, DialogButton.NO);
 					}
 					else run.run();
 					return;
@@ -565,12 +569,14 @@ public class Model {
 						for(JsonValue<?> array : map.get("groups").asMap().value.values()){
 							polygons += array.asArray().size();
 						}
-						GenericDialog.showYN("model.clipboard.paste_external_grouped", run, null,
-							"#ORIGIN: " + map.get("origin").string_value() + " " + map.getString("version", ""),
-							"#MODEL: " + model,
-							"#GROUPS: " + map.get("groups").asMap().size(),
-							"#POLYGONS: " + polygons
-						);
+						FMT.UI.createDialog(500, 200, "model.dialog")
+							.addText(0, "model.clipboard.paste_external_grouped")
+							.addText(1, "#ORIGIN: " + map.get("origin").string_value() + " " + map.getString("version", ""))
+							.addText(2, "#MODEL: " + model)
+							.addText(3, "#GROUPS: " + map.get("groups").asMap().size())
+							.addText(4, "#POLYGONS: " + polygons)
+							.consumer(d -> run.run(), null)
+							.buttons(100, DialogButton.YES, DialogButton.NO);
 					}
 					else run.run();
 					return;
@@ -708,8 +714,8 @@ public class Model {
 		input.apply(scale[0]);
 		dialog.getContainer().add(input);
 		dialog.getContainer().add(new Label(translate("model.rescale.groups"), 10, 60, width - 20, 20));
-		GroupSelectionPanel panel = new GroupSelectionPanel(10, 80, width - 20, 200);
-		dialog.getContainer().add(panel);
+		//TODO GroupSelectionPanel panel = new GroupSelectionPanel(10, 80, width - 20, 200);
+		//TODO dialog.getContainer().add(panel);
 		Label label = null;
 		dialog.getContainer().add(label = new Label(translate("model.rescale.warning0"), 10, 290, width - 20, 20));
 		label.getStyle().setFont("roboto-bold");
@@ -720,7 +726,7 @@ public class Model {
 		Button button0 = new Button(translate("dialog.button.confirm"), 10, 360, 100, 20);
 		button0.getListenerMap().addListener(MouseClickEvent.class, lis -> {
 			if(lis.getAction() == CLICK){
-				rescale0(panel.getSelectedGroups(), scale[0]);
+				//TODO rescale0(panel.getSelectedGroups(), scale[0]);
 				dialog.close();
 			}
 		});
