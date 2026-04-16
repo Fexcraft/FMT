@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
+import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.update.UpdateEvent.TexGroupAdded;
 import net.fexcraft.app.fmt.update.UpdateEvent.TexGroupRemoved;
 import org.lwjgl.stb.STBImageWrite;
@@ -16,7 +17,6 @@ import org.lwjgl.stb.STBImageWrite;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.polygon.Group;
-import net.fexcraft.app.fmt.oui.GenericDialog;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -226,19 +226,31 @@ public class TextureManager {
 		}
 		TextureGroup group = new TextureGroup(name, new File("./temp/"));
 		addGroup(group);
-		if(show) GenericDialog.showOK("texture.manager", null, null, "texture.added_group", "#" + group.name);
+		if(show){
+			FMT.UI.createDialog(300, 120, "texture.manager")
+				.addText(0, "texture.added_group")
+				.addText(1, "#" + group.name)
+				.buttons(100, Dialog.DialogButton.OK);
+		}
 		return group;
 	}
 
 	public static void remGroup(TextureGroup texgroup){
 		if(texgroup == null) return;
 		if(texgroup == FMT.MODEL.texgroup){
-			GenericDialog.showOK("texture.manager", null, null, "texture.group_in_use_model", "#texgroup:" + texgroup.name);
+			FMT.UI.createDialog(400, 120, "texture.manager")
+				.addText(0, "texture.group_in_use_model")
+				.addText(1, "#texgroup: " + texgroup.name)
+				.buttons(100, Dialog.DialogButton.OK);
 			return;
 		}
 		for(Group group : FMT.MODEL.allgroups()){
 			if(group.texgroup == texgroup){
-				GenericDialog.showOK("texture.manager", null, null, "texture.group_in_use_group", "#group:" + group.id, "#texgroup:" + texgroup.name);
+				FMT.UI.createDialog(400, 140, "texture.manager")
+					.addText(0, "texture.group_in_use_group")
+					.addText(1, "#group:" + group.id)
+					.addText(2, "#texgroup:" + texgroup.name)
+					.buttons(100, Dialog.DialogButton.OK);
 				return;
 			}
 		}
