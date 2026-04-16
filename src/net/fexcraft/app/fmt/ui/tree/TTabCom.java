@@ -15,7 +15,7 @@ public class TTabCom extends Element {
 
 	@Override
 	public void init(Object... args){
-		checkpickpos = false;
+		check_mode(CheckMode.NONE);
 		size((int)args[1], 30);
 		translate(args[0].toString());
 		add(new Element().hoverable(true).texture("icons/component/size").size(28, 28).pos((int)args[1] - 30, 1)
