@@ -27,7 +27,6 @@ import net.fexcraft.app.fmt.polygon.uv.UVCoords;
 import net.fexcraft.app.fmt.polygon.uv.UVType;
 import net.fexcraft.app.fmt.texture.Texture;
 import net.fexcraft.app.fmt.texture.TextureManager;
-import net.fexcraft.app.fmt.oui.GenericDialog;
 import net.fexcraft.lib.common.math.RGB;
 
 public class AutoUVPositioner {
@@ -90,7 +89,7 @@ public class AutoUVPositioner {
 				}
 			}
 			dialog.close();
-			GenericDialog.showOK(null, null, null, "texture_autopos.reset" + suffix + ".done");
+			//TODO GenericDialog.showOK(null, null, null, "texture_autopos.reset" + suffix + ".done");
 		});
 		dialog.getContainer().add(label0);
 		dialog.getContainer().add(label1);
@@ -267,7 +266,7 @@ public class AutoUVPositioner {
 					}
 				}
 				if(dialog != null) dialog.close();
-				GenericDialog.showOK("texture_autopos.autopos.title", () -> FMT.MODEL.recompile(), null, "texture_autopos.autopos.complete");
+				//TODO GenericDialog.showOK("texture_autopos.autopos.title", () -> FMT.MODEL.recompile(), null, "texture_autopos.autopos.complete");
 				last = (HALT = (list = null) == null) ? -1 : 0;
 				texture = null;
 				log("STOPPING AUTOPOS THREAD");
