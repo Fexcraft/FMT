@@ -2,12 +2,14 @@ package net.fexcraft.app.fmt.ui.editor;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.*;
+import net.fexcraft.app.fmt.port.ex.ExportManager;
 import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.ui.*;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 
+import static net.fexcraft.app.fmt.settings.Settings.GENERIC_FIELD;
 import static net.fexcraft.app.fmt.ui.Field.FieldType.TEXT;
 
 /**
@@ -30,7 +32,7 @@ public class ModelEditorTab extends EditorTab {
 	@Override
 	public void init(Object... objs){
 		super.init(objs);
-		container.add((general = new ETabCom()), lang_prefix + "general", 280);
+		container.add((general = new ETabCom()), lang_prefix + "general", 340);
 		general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.name"));
 		general.add((name = new Field(TEXT, FF, field -> FMT.MODEL.name(field.get_text()))).pos(FO, next_y_pos(1)));
 		general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.texture_size"));
@@ -61,6 +63,10 @@ public class ModelEditorTab extends EditorTab {
 		for(ModelOrientation mo : ModelOrientation.values()){
 			orient.addEntry(mo.name(), mo);
 		}
+		general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.export_groups"));
+		general.add(new Element().color(GENERIC_FIELD.value).pos(FO, next_y_pos(1)).size(FF, FS)
+			.translate("dialog.button.open").text_centered(true).hoverable(true)
+			.onclick(ci -> ExportManager.showGroupSelectionDialog(null)));
 		//
 		updcom.add(UpdateEvent.ModelLoad.class, event -> updateFields());
 		updcom.add(UpdateEvent.TexGroupAdded.class, event -> refreshTexGroups());
