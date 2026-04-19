@@ -46,7 +46,7 @@ public class GroupSelector extends Element {
 			updateMarkers();
 		});
 		//
-		add(new Element().pos(w - 32, 0).texture("icons/toolbar/save").size(32, 32)
+		add(new Element().pos(w - 33, 0).texture("icons/toolbar/save").size(32, 32)
 			.hint("group_sel_panel.save_preset").onclick(ci -> {
 				String sel = drop.getSelKey();
 				String nkey = field.get_text();
@@ -72,7 +72,7 @@ public class GroupSelector extends Element {
 		scroll = new Scrollable(true, 80);
 		add(scroll.pos(0, 40));
 		scroll.color(GENERIC_BACKGROUND_1.value);
-		scroll.updateSize(w, h - 80);
+		scroll.updateSize(w - 1, h - 80);
 		for(Group group : FMT.MODEL.allgroups()){
 			scroll.add(new TextElm(5, 0, w - 30, group.id).check_mode(CheckMode.IN_ROOT)
 				.shape(ElmShape.RECTANGLE).color(GENERIC_BACKGROUND_0.value).hoverable(true));
