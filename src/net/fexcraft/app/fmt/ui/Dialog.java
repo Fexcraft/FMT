@@ -75,12 +75,12 @@ public class Dialog extends Element {
 		return this;
 	}
 
-	public Dialog addText(int row, String text, Object... format){
+	public Dialog addText(float row, String text, Object... format){
 		container.add(new TextElm(5, 5 + row * 30, container.w - 10, text, format).text_autoscale());
 		return this;
 	}
 
-	public Dialog addRowElm(int row, Element elm, Object... init){
+	public Dialog addRowElm(float row, Element elm, Object... init){
 		container.add(elm.pos(5, 5 + row * 30), init);
 		return this;
 	}
