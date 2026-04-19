@@ -1,10 +1,9 @@
 package net.fexcraft.app.fmt.polygon;
 
+import static net.fexcraft.app.fmt.settings.Settings.GENERIC_BACKGROUND_2;
 import static net.fexcraft.app.fmt.ui.Field.round;
 import static net.fexcraft.app.fmt.update.UpdateHandler.update;
 import static net.fexcraft.app.fmt.settings.Settings.ASK_POLYGON_REMOVAL;
-import static net.fexcraft.app.fmt.utils.Translator.translate;
-import static com.spinyowl.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -20,7 +19,10 @@ import java.util.stream.Collectors;
 
 import net.fexcraft.app.fmt.animation.Animation;
 import net.fexcraft.app.fmt.texture.TextureManager;
+import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.Dialog.DialogButton;
+import net.fexcraft.app.fmt.ui.Field;
+import net.fexcraft.app.fmt.ui.GroupSelector;
 import net.fexcraft.app.fmt.ui.tree.TreeRoot;
 import net.fexcraft.app.fmt.ui.tree.TreeRoot.TreeMode;
 import net.fexcraft.app.fmt.update.UpdateEvent.*;
@@ -34,10 +36,6 @@ import net.fexcraft.lib.frl.gen.Generator.Values;
 import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import com.spinyowl.legui.component.Button;
-import com.spinyowl.legui.component.Dialog;
-import com.spinyowl.legui.component.Label;
-import com.spinyowl.legui.event.MouseClickEvent;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -47,8 +45,6 @@ import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.polygon.PolyRenderer.DrawMode;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TextureGroup;
-import net.fexcraft.app.fmt.oui.EditorComponent;
-import net.fexcraft.app.fmt.oui.fields.NumberField;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
@@ -702,46 +698,24 @@ public class Model {
 	}
 
 	public void rescale(){
-		int width = 420, height = 410;
-		Dialog dialog = new Dialog(translate("model.rescale.dialog"), width, 0);
-		//Settings.applyComponentTheme(dialog.getContainer());
-		dialog.getContainer().add(new Label(translate("model.rescale.scale"), 10, 10, width - 20, 20));
-		NumberField input = new NumberField((EditorComponent)null, 10, 30, width - 20, 20);
-		float[] scale = { 1 };
-		input.setup(0.001f, 16, true, field -> {
-			scale[0] = field.value();
-		});
-		input.apply(scale[0]);
-		dialog.getContainer().add(input);
-		dialog.getContainer().add(new Label(translate("model.rescale.groups"), 10, 60, width - 20, 20));
-		//TODO GroupSelectionPanel panel = new GroupSelectionPanel(10, 80, width - 20, 200);
-		//TODO dialog.getContainer().add(panel);
-		Label label = null;
-		dialog.getContainer().add(label = new Label(translate("model.rescale.warning0"), 10, 290, width - 20, 20));
-		label.getStyle().setFont("roboto-bold");
-		dialog.getContainer().add(label = new Label(translate("model.rescale.warning1"), 10, 310, width - 20, 20));
-		label.getStyle().setFont("roboto-bold");
-		dialog.getContainer().add(label = new Label(translate("model.rescale.warning2"), 10, 330, width - 20, 20));
-		label.getStyle().setFont("roboto-bold");
-		Button button0 = new Button(translate("dialog.button.confirm"), 10, 360, 100, 20);
-		button0.getListenerMap().addListener(MouseClickEvent.class, lis -> {
-			if(lis.getAction() == CLICK){
-				//TODO rescale0(panel.getSelectedGroups(), scale[0]);
-				dialog.close();
-			}
-		});
-		dialog.getContainer().add(button0);
-		Button button1 = new Button(translate("dialog.button.cancel"), 120, 360, 100, 20);
-		button1.getListenerMap().addListener(MouseClickEvent.class, lis -> {
-			if(lis.getAction() == CLICK) dialog.close();
-		});
-		dialog.getContainer().add(button1);
-		dialog.setSize(width, height);
-		dialog.setResizable(false);
-		//dialog.show(FMT.FRAME);
+		int width = 500, height = 700;
+		Dialog dia = FMT.UI.createDialog(width, height, "model.rescale.dialog");
+		dia.addText(0, "model.rescale.scale");
+		Field scale = new Field(Field.FieldType.FLOAT, width - 10).range(0.001f, 16);
+		dia.addRowElm(1, scale);
+		scale.set(1);
+		dia.addText(2, "model.rescale.warning0");
+		dia.addText(3, "model.rescale.warning1");
+		GroupSelector selector = new GroupSelector();
+		selector.border(GENERIC_BACKGROUND_2.value);
+		dia.addRowElm(4.5f, selector, width - 10);
+		dia.consumer(d -> {
+			rescale0(selector.getSelected(), scale.parse_float());
+		}, null);
+		dia.buttons(100, DialogButton.CONFIRM, DialogButton.CANCEL);
 	}
 
-	public void rescale0(ArrayList<Group> selected, float scale){
+	public void rescale0(List<Group> selected, float scale){
 		for(Group group : selected){
 			ArrayList<Polygon> boxes = (ArrayList<Polygon>)group.stream().filter(wrapper -> wrapper.getShape() == Shape.BOX).collect(Collectors.toList());
 			group.removeAll(boxes);
