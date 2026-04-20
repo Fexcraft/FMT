@@ -8,7 +8,6 @@ import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.utils.Translator;
 
-import static net.fexcraft.app.fmt.ui.FMTInterface.TOOLBAR_HEIGHT;
 import static net.fexcraft.app.fmt.ui.editor.EditorTab.FF;
 
 /**
