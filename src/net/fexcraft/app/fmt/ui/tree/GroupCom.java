@@ -51,6 +51,12 @@ public class GroupCom extends TTabCom {
 		}).hint("tree.polygon.group.editor").hide());
 		group.forEach(poly -> container.add(new PolygonCom(poly)));
 		orderComponents();
+		if(group.minimized) hide();
+	}
+
+	@Override
+	protected void minimized_changed(){
+		group.minimized = !container.visible;
 	}
 
 	protected void orderComponents(){
@@ -81,7 +87,6 @@ public class GroupCom extends TTabCom {
 		container.remElmIf(elm -> elm instanceof PolygonCom com && com.polygon == poly);
 		orderComponents();
 	}
-
 
 	public PolygonCom getPolyCom(Polygon poly){
 		for(Element elm : container.elements){
