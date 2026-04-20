@@ -177,7 +177,7 @@ public class Field extends Element {
 		return this;
 	}
 
-	public Element deg_range(){
+	public Field deg_range(){
 		min_val = -180;
 		max_val = 180;
 		return this;
