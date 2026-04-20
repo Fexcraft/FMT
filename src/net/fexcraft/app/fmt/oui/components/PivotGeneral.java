@@ -165,13 +165,13 @@ public class PivotGeneral extends EditorComponent {
 	}
 
 	private void refreshPivotEntries(){
-		while(pivots.getElements().size() > 0) pivots.removeElement(0);
+		/*while(pivots.getElements().size() > 0) pivots.removeElement(0);
 		for(Pivot pivot : FMT.MODEL.pivots()){
 			pivots.addElement(pivot.id);
 		}
 		Group group = FMT.MODEL.first_selected_group();
 		if(group == null) pivots.setSelected(0, true);
-		else pivots.setSelected(group.pivot, true);
+		else pivots.setSelected(group.pivot, true);*/
 	}
 
 }
