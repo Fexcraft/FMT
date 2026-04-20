@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 import net.fexcraft.app.fmt.settings.Settings;
+import net.fexcraft.app.fmt.ui.FontRenderer;
 
 public class Translator {
 	
@@ -74,7 +75,7 @@ public class Translator {
 		float[] len = new float[strs.length];
 		for(int i = 0; i < res.length; i++){
 			res[i] = translate(strs[i]);
-			len[i] = FontSizeUtil.getWidth(res[i]);
+			len[i] = FontRenderer.getWidth(res[i], FontRenderer.FontType.PLAIN);
 		}
 		return new Translations(res, len);
 	}
