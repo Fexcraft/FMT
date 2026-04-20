@@ -7,11 +7,7 @@ import com.spinyowl.legui.event.MouseClickEvent;
 import com.spinyowl.legui.event.MouseClickEvent.MouseClickAction;
 import com.spinyowl.legui.input.Mouse.MouseButton;
 
-import com.spinyowl.legui.style.border.SimpleLineBorder;
-import net.fexcraft.app.fmt.settings.Settings;
-import net.fexcraft.app.fmt.utils.FontSizeUtil;
 import net.fexcraft.app.fmt.utils.Translator;
-import org.joml.Vector4f;
 
 public class RunButton extends Button {
 

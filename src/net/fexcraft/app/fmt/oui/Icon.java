@@ -8,8 +8,6 @@ import com.spinyowl.legui.component.optional.align.HorizontalAlign;
 import com.spinyowl.legui.event.MouseClickEvent;
 import com.spinyowl.legui.image.loader.ImageLoader;
 import com.spinyowl.legui.listener.MouseClickEventListener;
-import net.fexcraft.app.fmt.settings.Settings;
-import net.fexcraft.app.fmt.utils.FontSizeUtil;
 import net.fexcraft.app.fmt.utils.Translator;
 
 import static com.spinyowl.legui.event.MouseClickEvent.MouseClickAction.CLICK;
