@@ -61,6 +61,7 @@ public class EditorTab extends Element {
 		switch(mode){
 			case POLYGON: return new PolygonEditorTab();
 			case GROUP: return new GroupEditorTab();
+			case PIVOT: return new PivotEditorTab();
 			case MODEL: return new ModelEditorTab();
 		}
 		return new EditorTab(mode);
