@@ -21,10 +21,13 @@ public class TTabCom extends Element {
 		add(new Element().hoverable(true).texture("icons/component/size").size(28, 28).pos((int)args[1] - 30, 1)
 			.onclick(ci -> {
 				if(container.visible) hide(); else show();
+				minimized_changed();
 			}));
 		add(container = new Element().size(EDITOR_CONTENT, 30).pos(0, 30).border(GENERIC_BACKGROUND_2.value));
 		updateTextColor();
 	}
+
+	protected void minimized_changed(){}
 
 	@Override
 	public Element hide(){
