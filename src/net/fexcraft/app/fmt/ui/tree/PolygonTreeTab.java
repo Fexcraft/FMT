@@ -68,6 +68,7 @@ public class PolygonTreeTab extends TreeTab {
 		updcom.add(UpdateEvent.GroupSelected.class, event -> {
 			for(Element elm : container.elements){
 				if(elm instanceof PivotCom com){
+					if(com.elements == null) continue;
 					for(Element ge : com.container.elements){
 						((GroupCom)ge).updateTextColor();
 					}
