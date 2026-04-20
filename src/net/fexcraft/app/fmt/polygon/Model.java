@@ -825,6 +825,7 @@ public class Model {
 
 	public void addPivot(Pivot pivot){
 		pivots.add(pivot);
+		update(new PivotAdded(this, pivot));
 	}
 
 	public void select(Pivot pivot){
