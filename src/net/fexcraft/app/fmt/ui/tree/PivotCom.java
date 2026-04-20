@@ -52,6 +52,12 @@ public class PivotCom extends TTabCom {
 			EditorRoot.setMode(EditorRoot.EditorMode.PIVOT);
 		}).hint("tree.polygon.pivot.editor").hide());
 		pivot.groups.forEach(group -> container.add(new GroupCom(group)));
+		if(pivot.minimized) hide();
+	}
+
+	@Override
+	protected void minimized_changed(){
+		pivot.minimized = !container.visible;
 	}
 
 	protected void orderComponents(){
@@ -85,6 +91,7 @@ public class PivotCom extends TTabCom {
 	}
 
 	public GroupCom getGroupCom(Group group){
+		if(container.elements == null) return null;
 		for(Element elm : container.elements){
 			if(elm instanceof GroupCom com && com.group == group) return com;
 		}
