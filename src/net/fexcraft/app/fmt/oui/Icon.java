@@ -72,7 +72,7 @@ public class Icon extends ImageView {
 
     public Icon addTooltip(String string, boolean alignment) {
         Tooltip tip = new Tooltip(Translator.translate(string));
-        tip.setSize(FontSizeUtil.getWidth(tip.getTextState().getText()) * 2, 24);
+        //tip.setSize(FontSizeUtil.getWidth(tip.getTextState().getText()) * 2, 24);
         tip.getStyle().setPadding(2f);
         tip.getStyle().setHorizontalAlign(HorizontalAlign.CENTER);
         tip.setPosition(alignment ? getSize().x : -tip.getSize().x, (getSize().y - 24) / 2);
