@@ -11,6 +11,8 @@ import net.fexcraft.app.fmt.update.UpdateEvent.PainterTool;
 import net.fexcraft.app.fmt.update.UpdateEvent.PickMode;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.utils.Picker;
+import net.fexcraft.app.json.JsonArray;
+import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.RGB;
 
 import static net.fexcraft.app.fmt.settings.Settings.GENERIC_BACKGROUND_2;
@@ -43,7 +45,7 @@ public class PainterEditorTab extends EditorTab {
 	@Override
 	public void init(Object... objs){
 		super.init(objs);
-		container.add((current = new ETabCom()), lang_prefix + "current", 160 + Settings.PAINTER_CHANNELS.value * 30);
+		container.add((current = new ETabCom("current")), lang_prefix + "current", 160 + Settings.PAINTER_CHANNELS.value * 30);
 		current.add(new TextElm(FO, next_y_pos(1), FF).translate(lang_prefix + "current.channels"));
 		for(int i = 0; i < Settings.PAINTER_CHANNELS.value; i++){
 			int idx = i;
@@ -63,7 +65,7 @@ public class PainterEditorTab extends EditorTab {
 		);
 		current.add(act_col = new Element().pos(FF - 100, next_y_pos(0)).size(30, 30).border(GENERIC_BACKGROUND_2.value));
 		current.add(new Element().pos(FF - 65, next_y_pos(0) - 1).size(32, 32).texture("icons/toolbar/save")
-			.hint(lang_prefix + "current.save_channel").onclick(ci -> saveToPalette()));
+			.hint(lang_prefix + "current.save_channel").onclick(ci -> addToPalette()));
 		current.add(picker = new Element().pos(FF - 30, next_y_pos(0) - 1).size(32, 32).texture("icons/painter/picker")
 			.hint(lang_prefix + "current.color_picker").onclick(ci -> {
 				if(Picker.TYPE == Picker.PickType.COLOR) Picker.reset();
@@ -72,7 +74,7 @@ public class PainterEditorTab extends EditorTab {
 		current.add(act_tool = new Element().pos(FO, next_y_pos(1.5f)).size(FF, 30).color(GENERIC_FIELD.value)
 			.hint(lang_prefix + "current.tool_reset").onclick(ci -> TexturePainter.setTool(TexturePainter.Tool.NONE)));
 		//
-		container.add((palette = new ETabCom()), lang_prefix + "palette", 300);
+		container.add((palette = new ETabCom("palette")), lang_prefix + "palette", 300);
 		palette.add(new TextElm(FO, next_y_pos(-1), FF).translate(lang_prefix + "palette.gradient"));
 		int yo = next_y_pos(1);
 		for(int x = 0; x < palette_columns; x++){
@@ -132,7 +134,7 @@ public class PainterEditorTab extends EditorTab {
 		for(int y = 0; y < 2; y++){
 			for(int x = 0; x < palette_columns; x++){
 				int idx = x + y * palette_columns;
-				palette.add(custom[idx] = new Element().pos(FO + x * 10, y * 10 + yo).size(10, 10).color(RGB.random())
+				palette.add(custom[idx] = new Element().pos(FO + x * 10, y * 10 + yo).size(10, 10).color(0xffffff)
 					.onclick(ci -> TexturePainter.updateColor(custom[idx].col_def.packed, TexturePainter.ACTIVE, ci.button() == 0)));
 			}
 		}
@@ -146,6 +148,7 @@ public class PainterEditorTab extends EditorTab {
 		});
 		updcom.add(PainterChannel.class, event -> {
 			updateActiveChannel();
+			refreshPalette(null, true);
 		});
 		updcom.add(PainterTool.class, event -> {
 			updateActiveTool();
@@ -188,8 +191,33 @@ public class PainterEditorTab extends EditorTab {
 		}
 	}
 
-	private void saveToPalette(){
-
+	private void addToPalette(){
+		for(int i = custom.length - 1; i > 0; i--){
+			custom[i].color(custom[i - 1].col_def);
+		}
+		custom[0].color(TexturePainter.CHANNELS[TexturePainter.ACTIVE]);
 	}
 
+	@Override
+	public void load(JsonMap map){
+		super.load(map);
+		JsonArray arr = map.getArray("custom");
+		if(arr == null || arr.empty()) return;
+		for(int i = 0; i < custom.length; i++){
+			if(i >= arr.size()) break;
+			custom[i].color(Integer.parseInt(arr.get(i).string_value(), 16));
+		}
+	}
+
+	@Override
+	public JsonMap save(){
+		JsonMap map = super.save();
+		JsonArray arr = new JsonArray();
+		for(Element elm : custom){
+			if(elm.col_def.packed == RGB.WHITE.packed) continue;
+			arr.add(Field.to6HexString(elm.col_def.packed));
+		}
+		map.add("custom", arr);
+		return map;
+	}
 }
