@@ -126,12 +126,12 @@ public class Field extends Element {
 		if(type.color()){
 			add(color = new Element().color(0x000000).size(20, 20).pos(w + 13, 3));
 			add(new Element().color(GENERIC_FIELD.value).size(FS, FS).pos(w + 10 + FS, 0)
-				.text("CP").text_autoscale().onclick(ci -> {
+				.texture("icons/painter/palette").text_autoscale().onclick(ci -> {
 					try(MemoryStack stack = MemoryStack.stackPush()){
 						ByteBuffer color = stack.malloc(3);
 						String result = TinyFileDialogs.tinyfd_colorChooser("Choose a Color", "#" + text.text(), null, color);
 						if(result == null) return;
-						text(result);
+						set(Integer.parseInt(result.replace("#", ""), 16));
 						consumer.accept(this);
 					}
 					catch(Exception e){
@@ -204,7 +204,7 @@ public class Field extends Element {
 		return res;
 	}
 
-	public float parse_int(){
+	public int parse_int(){
 		int res;
 		if(type.color()){
 			String str = text.text().replaceAll("[^0-9a-f]", "");
@@ -236,7 +236,7 @@ public class Field extends Element {
 	}
 
 	public Field set(float val){
-		text(val);
+		text(type_format(val));
 		return this;
 	}
 
@@ -251,7 +251,7 @@ public class Field extends Element {
 		if(action != GLFW_RELEASE) return true;
 		if(key == GLFW_KEY_ENTER || key == GLFW_KEY_KP_ENTER){
 			if(consumer != null) consumer.accept(this);
-			if(polyval == null && type == FieldType.COLOR) color.color((int)parse_int());
+			if(polyval == null && type == FieldType.COLOR) color.color(parse_int());
 			previous = text.text();
 			return true;
 		}
@@ -311,7 +311,9 @@ public class Field extends Element {
 	public Object type_format(float value){
 		if(type.color()){
 			color.color((int)value);
-			return Integer.toHexString(color.col_def.packed);
+			String hex = Integer.toHexString(color.col_def.packed);
+			while(hex.length() < 6) hex = "0" + hex;
+			return hex;
 		}
 		return value;
 	}
