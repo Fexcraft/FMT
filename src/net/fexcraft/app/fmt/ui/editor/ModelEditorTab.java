@@ -36,7 +36,7 @@ public class ModelEditorTab extends EditorTab {
 	@Override
 	public void init(Object... objs){
 		super.init(objs);
-		container.add((general = new ETabCom()), lang_prefix + "general", 340);
+		container.add((general = new ETabCom("general")), lang_prefix + "general", 340);
 		general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.name"));
 		general.add((name = new Field(TEXT, FF, field -> FMT.MODEL.name(field.get_text()))).pos(FO, next_y_pos(1)));
 		general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.texture_size"));
@@ -72,7 +72,7 @@ public class ModelEditorTab extends EditorTab {
 			.translate("dialog.button.open").text_centered(true).hoverable(true)
 			.onclick(ci -> ExportManager.showGroupSelectionDialog(null)));
 		//
-		container.add((exports = new ETabCom()), lang_prefix + "export", 300);
+		container.add((exports = new ETabCom("export")), lang_prefix + "export", 300);
 		exports.add(new TextElm(FO, next_y_pos(-1) + 2, FF, lang_prefix + "export.add_value", GENERIC_FIELD.value)
 			.hoverable(true).onclick(ci -> openExportEntryEditor("new entry", "entry value")));
 		exports.add(new TextElm(FO, next_y_pos(1), FF, lang_prefix + "export.add_array_value", GENERIC_FIELD.value)
