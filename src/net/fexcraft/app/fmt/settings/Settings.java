@@ -15,6 +15,7 @@ import net.fexcraft.app.fmt.ui.Dialog.DialogButton;
 import net.fexcraft.app.fmt.ui.FMTInterface;
 import net.fexcraft.app.fmt.ui.Field;
 import net.fexcraft.app.fmt.texture.TexturePainter;
+import net.fexcraft.app.fmt.ui.editor.EditorRoot;
 import net.fexcraft.app.fmt.updater.Catalog;
 import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.port.im.ImportManager;
@@ -24,7 +25,6 @@ import org.lwjgl.system.MemoryUtil;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.port.ex.ExportManager;
-import net.fexcraft.app.fmt.oui.Editor;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonHandler.PrintOption;
@@ -285,7 +285,7 @@ public class Settings {
 		}
 		JsonHandler.print(new File("./settings.json"), map, PrintOption.SPACED);
 		//
-		Editor.saveAll();
+		EditorRoot.save();
 	}
 
 	public static void register(String group, String id, Setting<?> setting){
