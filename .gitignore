@@ -86,6 +86,7 @@ build/
 upload/
 launch.fmt
 editors.fmt
+editor_data.fmt
 gradle/
 gradlew
 gradlew.bat
