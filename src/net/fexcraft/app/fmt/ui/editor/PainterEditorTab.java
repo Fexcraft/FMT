@@ -2,6 +2,8 @@ package net.fexcraft.app.fmt.ui.editor;
 
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TexturePainter;
+import net.fexcraft.app.fmt.texture.TexturePainter.Selection;
+import net.fexcraft.app.fmt.texture.TexturePainter.Tool;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.Field;
 import net.fexcraft.app.fmt.ui.TextElm;
@@ -72,7 +74,7 @@ public class PainterEditorTab extends EditorTab {
 				else Picker.pick(Picker.PickType.COLOR, Picker.PickTask.NONE, true);
 			}));
 		current.add(act_tool = new Element().pos(FO, next_y_pos(1.5f)).size(FF, 30).color(GENERIC_FIELD.value)
-			.hint(lang_prefix + "current.tool_reset").onclick(ci -> TexturePainter.setTool(TexturePainter.Tool.NONE)));
+			.hint(lang_prefix + "current.tool_reset").onclick(ci -> TexturePainter.setTool(Tool.NONE)));
 		//
 		container.add((palette = new ETabCom("palette")), lang_prefix + "palette", 300);
 		palette.add(new TextElm(FO, next_y_pos(-1), FF).translate(lang_prefix + "palette.gradient"));
@@ -138,7 +140,26 @@ public class PainterEditorTab extends EditorTab {
 					.onclick(ci -> TexturePainter.updateColor(custom[idx].col_def.packed, TexturePainter.ACTIVE, ci.button() == 0)));
 			}
 		}
- 		//
+		//
+		container.add((tools = new ETabCom("tools")), lang_prefix + "tools", 160);
+		tools.add(new TextElm(FO, next_y_pos(-1), FF).translate(lang_prefix + "tools.selection"));
+		yo = next_y_pos(1);
+		int idx = 0;
+		for(Selection sel : Selection.values()){
+			if(sel == Selection.NONE) continue;
+			tools.add(new Element().pos(FO + idx++ * 35, yo).size(32, 32).texture("icons/painter/" + sel.name().toLowerCase())
+				.hint(lang_prefix + "tools." + sel.name().toLowerCase())
+				.onclick(ci -> TexturePainter.setSelection(sel)));
+		}
+		tools.add(new TextElm(FO, next_y_pos(1), FF).translate(lang_prefix + "tools.mode"));
+		yo = next_y_pos(1);
+		idx = 0;
+		for(Tool tool : Tool.values()){
+			tools.add(new Element().pos(FO + idx++ * 35, yo).size(32, 32).texture("icons/painter/" + tool.name().toLowerCase())
+				.hint(lang_prefix + "tools." + tool.name().toLowerCase())
+				.onclick(ci -> TexturePainter.setTool(tool)));
+		}
+		//
 		updcom.add(PainterColor.class, event -> {
 			updateActiveChannel();
 			refreshPalette(event.value(), event.upd_plt());
@@ -220,4 +241,5 @@ public class PainterEditorTab extends EditorTab {
 		map.add("custom", arr);
 		return map;
 	}
+
 }
