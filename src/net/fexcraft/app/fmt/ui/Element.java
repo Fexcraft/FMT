@@ -17,8 +17,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-import static net.fexcraft.app.fmt.settings.Settings.GENERIC_HOVER;
-import static net.fexcraft.app.fmt.settings.Settings.GENERIC_SELECTED;
+import static net.fexcraft.app.fmt.settings.Settings.*;
 import static net.fexcraft.app.fmt.ui.FMTInterface.TOOLBAR_HEIGHT;
 
 /**
@@ -304,7 +303,7 @@ public class Element {
 		hedron.render();
 		if(text != null) text.render();
 		if(elements != null) for(Element elm : elements) elm.render();
-		if(hint != null && hovered && HOVER_TIMER >= 1){
+		if(hint != null && hovered && HOVER_TIMER >= HOVER_HINT_TIME.value){
 			hint.pos(GGR.mousePosX() + 10, GGR.mousePosY() + (GGR.mousePosY() > FMT.HEIGHT - TOOLBAR_HEIGHT ? -30 : 0)).render();
 		}
 	}
