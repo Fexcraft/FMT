@@ -13,6 +13,11 @@ public class ETabCom extends Element {
 
 	protected boolean minimized = false;
 	private int fullheight;
+	protected String id;
+
+	public ETabCom(String id){
+		this.id = id;
+	}
 
 	@Override
 	public void init(Object... args){
