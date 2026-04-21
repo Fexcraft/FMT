@@ -206,6 +206,10 @@ editor.model.export.add_array_value=Add Array/List Entry
 editor.model.export.create_entry=Export Entry Editor
 editor.model.export.entry_name=Name/Key
 editor.model.export.entry_value=Value
+editor.painter.current=Current Painter Values
+editor.painter.current.channels=Channels
+editor.painter.current.select_channel=Set channel as active.
+editor.painter.current.active_channel=Selected Channel: %s
 
 # Tree
 tree.mode.polygon=Polygon Tree
