@@ -193,7 +193,7 @@ public class Element {
 	}
 
 	public Element color(RGB color){
-		col_def = color;
+		col_def.packed = color.packed;
 		hedron.glObj.polycolor = col_def.toFloatArray();
 		return this;
 	}
