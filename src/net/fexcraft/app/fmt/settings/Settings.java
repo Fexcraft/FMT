@@ -80,6 +80,7 @@ public class Settings {
 	//public static Setting<Boolean> TESTING = new Setting<>("testing", false, GENERAL);
 	//Interface
 	public static Setting<Float> UI_SCALE = new Setting<>("scale", 1f, INTERFACE);
+	public static Setting<Float> HOVER_HINT_TIME = new Setting<>("hover_hint_time", 1f, INTERFACE).minmax(0.1f, 20f);
 	public static RGBSetting GENERIC_BACKGROUND_0 = new RGBSetting("background_0", 0xcdcdcd, INTERFACE);
 	public static RGBSetting GENERIC_BACKGROUND_1 = new RGBSetting("background_1", 0xbdbdbd, INTERFACE);
 	public static RGBSetting GENERIC_BACKGROUND_2 = new RGBSetting("background_2", 0x858585, INTERFACE);
