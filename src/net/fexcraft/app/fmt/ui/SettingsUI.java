@@ -111,7 +111,7 @@ public class SettingsUI extends Element {
 			}
 			if(setting.value instanceof RGB rgb){
 				Field field = new Field(Field.FieldType.COLOR, 300).consumer(fld -> {
-					rgb.packed = (int)fld.parse_int();
+					rgb.packed = fld.parse_int();
 					setting.refresh();
 				});
 				add(field.pos(315, 2));
