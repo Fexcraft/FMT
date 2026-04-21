@@ -311,11 +311,15 @@ public class Field extends Element {
 	public Object type_format(float value){
 		if(type.color()){
 			color.color((int)value);
-			String hex = Integer.toHexString(color.col_def.packed);
-			while(hex.length() < 6) hex = "0" + hex;
-			return hex;
+			return to6HexString(color.col_def.packed);
 		}
 		return value;
+	}
+
+	public static String to6HexString(int col){
+		String hex = Integer.toHexString(col);
+		while(hex.length() < 6) hex = "0" + hex;
+		return hex;
 	}
 
 	public static enum FieldType {
