@@ -1,5 +1,6 @@
 package net.fexcraft.app.fmt.settings;
 
+import net.fexcraft.app.fmt.ui.Field;
 import net.fexcraft.app.fmt.utils.JsonUtil;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.RGB;
@@ -16,7 +17,13 @@ public class RGBSetting extends Setting<RGB> {
 	
 	@Override
 	public void load(JsonMap obj){
-		value.packed = obj.get(id, _default.packed);
+		try{
+			value.packed = Integer.parseInt(obj.get(id).string_value(), 16);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+			value = _default;
+		}
 	}
 	
 	@Override
@@ -27,7 +34,7 @@ public class RGBSetting extends Setting<RGB> {
 	
 	@Override
 	public void save(JsonMap obj){
-		obj.add(id, JsonUtil.toJson(value.packed));
+		obj.add(id, Field.to6HexString(value.packed));
 	}
 
 	@Override
