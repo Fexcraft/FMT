@@ -57,7 +57,7 @@ public class Field extends Element {
 
 	public Field(FieldType type, float width, Consumer<Field> cons){
 		this(type, width);
-		consumer = cons;
+		consumer(cons);
 	}
 
 	public Field(FieldType type, float width, UpdateCompound updcom, PolygonValue val){
@@ -96,6 +96,12 @@ public class Field extends Element {
 
 	public Field consumer(Consumer<Field> cons){
 		consumer = cons;
+		onscroll(si -> {
+			float flat = scroll(si.sy() > 0 ? Editor.RATE : -Editor.RATE);
+			text(type_format(flat));
+			previous = text.text();
+			consumer.accept(this);
+		});
 		return this;
 	}
 
