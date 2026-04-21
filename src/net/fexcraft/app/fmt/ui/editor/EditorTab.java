@@ -65,6 +65,7 @@ public class EditorTab extends Element {
 			case PIVOT: return new PivotEditorTab();
 			case MODEL: return new ModelEditorTab();
 			case PAINTER: return new PainterEditorTab();
+			case PREVIEW: return new PreviewEditorTab();
 		}
 		return new EditorTab(mode);
 	}
