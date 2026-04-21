@@ -431,6 +431,7 @@ setting.general.numberfield_buttons=+/- on Editor Numberfields
 setting.general.painter_channels=Painter Color Channels
 # Settings / Interface
 setting.interface.scale=Interface Scaling
+setting.interface.hover_hint_time=Time until hover hints show.
 setting.interface.background_0=Background Color #0
 setting.interface.background_1=Background Color #1
 setting.interface.background_2=Background Color #2
