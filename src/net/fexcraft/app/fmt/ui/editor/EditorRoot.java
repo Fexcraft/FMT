@@ -4,6 +4,10 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.utils.Translator;
+import net.fexcraft.app.json.JsonHandler;
+import net.fexcraft.app.json.JsonMap;
+
+import java.io.File;
 
 import static net.fexcraft.app.fmt.settings.Settings.GENERIC_BACKGROUND_0;
 import static net.fexcraft.app.fmt.ui.FMTInterface.*;
@@ -37,6 +41,25 @@ public class EditorRoot extends Element {
 		}
 		setMode(EditorMode.POLYGON);
 		add(new EditorSidePanel());
+		load();
+	}
+
+	private void load(){
+		JsonMap map = JsonHandler.parse(new File("./editor_data.fmt"));
+		for(EditorTab tab : EDITORS){
+			if(!map.has(tab.mode.name().toLowerCase())) continue;
+			tab.load(map.getMap(tab.mode.name().toLowerCase()));
+		}
+	}
+
+	public static void save(){
+		JsonMap map = new JsonMap();
+		for(EditorTab tab : EDITORS){
+			JsonMap save = tab.save();
+			if(save == null && save.empty()) continue;
+			map.add(tab.mode.name().toLowerCase(), save);
+		}
+		JsonHandler.print(new File("./editor_data.fmt"), map);
 	}
 
 	public static void setMode(EditorMode mode){
