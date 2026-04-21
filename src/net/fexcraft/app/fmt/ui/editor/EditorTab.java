@@ -5,6 +5,7 @@ import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.Scrollable;
 import net.fexcraft.app.fmt.ui.editor.EditorRoot.EditorMode;
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
+import net.fexcraft.app.json.JsonMap;
 
 import static net.fexcraft.app.fmt.settings.Settings.GENERIC_BACKGROUND_0;
 import static net.fexcraft.app.fmt.ui.FMTInterface.*;
@@ -88,6 +89,31 @@ public class EditorTab extends Element {
 
 	public void reorderComponents(){
 		container.updateBar();
+	}
+
+	public void load(JsonMap map){
+		if(map.has("minimized")){
+			JsonMap min = map.getMap("minimized");
+			for(Element elm : container.elements){
+				if(elm instanceof ETabCom com){
+					com.minimized = min.getBoolean(com.id, false);
+					if(com.minimized) com.hide();
+					else com.show();
+				}
+			}
+		}
+	}
+
+	public JsonMap save(){
+		JsonMap map = new JsonMap();
+		JsonMap min = new JsonMap();
+		for(Element elm : container.elements){
+			if(elm instanceof ETabCom com){
+				min.add(com.id, com.minimized);
+			}
+		}
+		if(min.not_empty()) map.add("minimized", min);
+		return map;
 	}
 
 }
