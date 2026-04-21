@@ -37,7 +37,7 @@ public class PivotEditorTab extends EditorTab {
 	@Override
 	public void init(Object... objs){
 		super.init(objs);
-		container.add((general = new ETabCom()), lang_prefix + "general", 410);
+		container.add((general = new ETabCom("general")), lang_prefix + "general", 410);
 		general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.id"));
 		general.add((name = new Field(TEXT, FF, field -> {
 			if(FMT.MODEL.sel_pivot == null) return;
@@ -103,7 +103,7 @@ public class PivotEditorTab extends EditorTab {
 			}
 		));
 		//
-		container.add((attrlinks = new ETabCom()), lang_prefix + "attr_links", 280);
+		container.add((attrlinks = new ETabCom("attr_links")), lang_prefix + "attr_links", 280);
 		attrlinks.add(new TextElm(0, next_y_pos(-1), FF).translate(lang_prefix + "attr_links.pos"));
 		attrlinks.add((pos_attr[0] = new Field(TEXT, FF, field -> linkAttr(field.get_text(), "pos", 0))).pos(FO, next_y_pos(1)));
 		attrlinks.add((pos_attr[1] = new Field(TEXT, FF, field -> linkAttr(field.get_text(), "pos", 1))).pos(FO, next_y_pos(1)));
