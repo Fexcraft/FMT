@@ -266,7 +266,7 @@ public class Editor extends Component {
 		Editor.ANIM_TREE = new AnimTree();
 		//EditorPanel.load();
 		//
-		JsonMap edmap = JsonHandler.parse(new File("./editors.fmt"));
+		/*JsonMap edmap = JsonHandler.parse(new File("./editors.fmt"));
 		for(Map.Entry<String, JsonValue<?>> entry : edmap.entries()){
 			Editor ed = byId(entry.getKey());
 			if(ed == null || !entry.getValue().isMap()) continue;
@@ -276,7 +276,7 @@ public class Editor extends Component {
 			for(EditorComponent component : ed.components){
 				if(cmap.has(component.id)) component.load(cmap.getMap(component.id));
 			}
-		}
+		}*/
 		//
 		/*for(EditorPanel panel : EditorPanel.PANELS){
 			//FMT.FRAME.getContainer().add(panel);
