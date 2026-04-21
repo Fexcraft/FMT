@@ -209,7 +209,12 @@ editor.model.export.entry_value=Value
 editor.painter.current=Current Painter Values
 editor.painter.current.channels=Channels
 editor.painter.current.select_channel=Set channel as active.
-editor.painter.current.active_channel=Selected Channel: %s
+editor.painter.current.active_channel=Sel. Channel: %s
+editor.painter.current.change_channel=Click or scroll to change channel.
+editor.painter.current.save_channel=Save channel color to custom palette.
+editor.painter.current.color_picker=Pick a color from model space.
+editor.painter.current.active_tool=Active Tool: %s
+editor.painter.current.tool_reset=Click to reset active tool.
 
 # Tree
 tree.mode.polygon=Polygon Tree
