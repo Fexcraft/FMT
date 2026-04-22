@@ -256,7 +256,7 @@ public class Editor extends Component {
 		//Editor.PIVOT_EDITOR = new PivotEditor();
 		//Editor.MODEL_EDITOR = new ModelEditor();
 		//Editor.TEXTURE_EDITOR = new TextureEditor();
-		Editor.UV_EDITOR = new UVEditor();
+		//Editor.UV_EDITOR = new UVEditor();
 		//Editor.PREVIEW_EDITOR = new PreviewEditor();
 		Editor.CONFIG_EDITOR = new ConfigEditor();
 		Editor.ANIM_EDITOR = new AnimationEditor();
