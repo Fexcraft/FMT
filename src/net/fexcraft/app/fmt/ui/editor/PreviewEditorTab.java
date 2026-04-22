@@ -9,7 +9,7 @@ import net.fexcraft.app.fmt.utils.PreviewHandler;
 
 import static net.fexcraft.app.fmt.ui.Field.FieldType.FLOAT;
 import static net.fexcraft.app.fmt.ui.Field.FieldType.TEXT;
-import static net.fexcraft.app.fmt.ui.editor.EditorRoot.NOPIVOTSEL;
+import static net.fexcraft.app.fmt.ui.editor.EditorRoot.NOPREVIEWSEL;
 import static net.fexcraft.lib.common.Static.sixteenth;
 
 /**
@@ -104,7 +104,7 @@ public class PreviewEditorTab extends EditorTab {
 
 	private void updateFields(){
 		if(PreviewHandler.SELECTED == null){
-			name.text(NOPIVOTSEL);
+			name.text(NOPREVIEWSEL);
 			pos16x.set(0);
 			pos16y.set(0);
 			pos16z.set(0);
