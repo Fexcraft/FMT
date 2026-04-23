@@ -29,6 +29,7 @@ public class TreeTab extends Element {
 	public static TreeTab create(TreeMode mode){
 		switch(mode){
 			case POLYGON: return new PolygonTreeTab();
+			case PREVIEW: return new HelperTreeTab();
 		}
 		return new TreeTab(mode);
 	}
