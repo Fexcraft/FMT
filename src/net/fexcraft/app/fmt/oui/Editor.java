@@ -262,7 +262,7 @@ public class Editor extends Component {
 		Editor.ANIM_EDITOR = new AnimationEditor();
 		Editor.VAR_EDITOR = new VariableEditor();
 		Editor.TEXTURE_TREE = new TextureTree();
-		Editor.PREVIEW_TREE = new HelperTree();
+		//Editor.PREVIEW_TREE = new HelperTree();
 		Editor.ANIM_TREE = new AnimTree();
 		//EditorPanel.load();
 		//
