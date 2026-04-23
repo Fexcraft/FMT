@@ -272,6 +272,7 @@ tree.mode.texture=Texture Tree
 tree.mode.preview=Helper/Preview Tree
 tree.mode.animation=Animation Tree
 tree.info.polygon_count=Polygons: %s
+tree.info.preview_loaded=Loaded: %s
 tree.polygon.pivot.visible=Toggle Visibility
 tree.polygon.pivot.remove=Remove Pivot
 tree.polygon.pivot.editor=Pivot Editor
@@ -284,6 +285,14 @@ tree.polygon.polygon.visible=Toggle Visibility
 tree.polygon.polygon.remove=Remove Polygon
 tree.polygon.polygon.editor=Polygon Editor
 tree.polygon.polygon.removal=Are you sure you want to remove this Polygon?
+tree.preview.visible=Toggle Visibility
+tree.preview.remove=Remove Helper/Preview
+tree.preview.editor=Preview Editor
+tree.preview.removal=Are you sure you want to remove this Helper?
+tree.preview.load_fmtb=Load .fmtb
+tree.preview.load_image=Load Image
+tree.preview.import=Import
+tree.preview.clear=Unload All
 
 # Add Group Dialog
 dialog.add_group.title=Add new Group
