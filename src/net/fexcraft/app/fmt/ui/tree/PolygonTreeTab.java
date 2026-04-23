@@ -60,7 +60,7 @@ public class PolygonTreeTab extends TreeTab {
 			if(!v) getGroupCom(event.group()).hide();
 		});
 		updcom.add(UpdateEvent.ModelLoad.class, event -> reinsertComponents());
-		updcom.add(UpdateEvent.ModelUnload.class, event -> removeGroups());
+		updcom.add(UpdateEvent.ModelUnload.class, event -> removePivots());
 		updcom.add(UpdateEvent.GroupRenamed.class, event -> {
 			GroupCom com = getGroupCom(event.group());
 			if(com != null) com.text(event.group().id);
@@ -133,8 +133,8 @@ public class PolygonTreeTab extends TreeTab {
 		getPivotCom(FMT.MODEL.getP(group.pivot)).remGroup(group);
 	}
 
-	private void removeGroups(){
-		container.remElmIf(e -> e instanceof GroupCom);
+	private void removePivots(){
+		container.remElmIf(e -> e instanceof PivotCom);
 		reorderComponents();
 	}
 
