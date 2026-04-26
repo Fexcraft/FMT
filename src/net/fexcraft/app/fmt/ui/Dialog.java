@@ -80,6 +80,17 @@ public class Dialog extends Element {
 		return this;
 	}
 
+	public Dialog addBoldText(float row, String text, Object... format){
+		container.add(new TextElm(5, 5 + row * 30, container.w - 10, text, format).text_autoscale().text_font(FontRenderer.FontType.BOLD));
+		return this;
+	}
+
+	public Dialog addCheck(float row, BoolElm elm, String text, Object... format){
+		container.add(new TextElm(5, 5 + row * 30, container.w - 10 - 50, text, format).text_autoscale());
+		container.add(elm.pos(5 + container.w - 55, 5 + row * 30));
+		return this;
+	}
+
 	public Dialog addRowElm(float row, Element elm, Object... init){
 		container.add(elm.pos(5, 5 + row * 30), init);
 		return this;
