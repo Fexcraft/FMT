@@ -87,7 +87,7 @@ public class Dialog extends Element {
 
 	public static enum DialogButton {
 		CONFIRM, CANCEL, CONTINUE, SELECT,
-		CLOSE, OPEN, SAVE, LOAD, SKIP, EXIT,
+		CLOSE, OPEN, SAVE, LOAD, SKIP, EXIT, RETRY,
 		NEW, ADD, YES, NO, OK, ENABLE, DISABLE
 	}
 
