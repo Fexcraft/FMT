@@ -21,6 +21,10 @@ public class BoolElm extends Element {
 	private PolygonValue polyval;
 	private String[] texar;
 
+	public BoolElm(){
+		this(0, 0, 40);
+	}
+
 	public BoolElm(float x, float y, float w){
 		pos(x, y);
 		size(w, FS);
