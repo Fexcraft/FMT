@@ -291,6 +291,11 @@ public class Element {
 		return this;
 	}
 
+	public Element text_font(FontRenderer.FontType type){
+		if(text != null) text.font = type;
+		return this;
+	}
+
 	public void render(){
 		if(!visible) return;
 		if(check_mode_fail()) return;
