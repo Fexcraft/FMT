@@ -588,15 +588,6 @@ texture_autopos.reset_type.dialog=Texture UV Type Resetter
 texture_autopos.reset_type.info=This resets the polygon UV mapping types!
 texture_autopos.reset_type.group=Group to process: 
 texture_autopos.reset_type.done=Texture UV types reset successfully.
-texture_autopos.autopos.dialog=Texture Auto Positioner
-texture_autopos.autopos.info=This process may mark FMT as not responding.
-texture_autopos.autopos.group=Group to process: 
-texture_autopos.autopos.savespace=Use save-space mode? (this may reduce readability)
-texture_autopos.autopos.process_all=Only process polygons with no texture pos?
-texture_autopos.autopos.detach_all=Detach faces from polygons? (CAN ONLY BE UNDODE MANUALLY!)
-texture_autopos.autopos.start=Start
-texture_autopos.autopos.processing=Processing: %s:%s
-texture_autopos.autopos.complete=Auto texture positioning Complete!
 texture.painter.selection.pixel=Pixel
 texture.painter.selection.face=Face
 texture.painter.selection.polygon=Polygon
@@ -607,6 +598,16 @@ texture.painter.tool.bucket=Bucket
 texture.painter.tool.brush=Brush
 texture.painter.tool.eraser=Eraser
 texture.painter.tool.none=none
+
+# Texture Auto-Pos Util
+texture_pos.auto.title=Texture Auto Positioner
+texture_pos.auto.warning=This process may mark FMT as not responding.
+texture_pos.auto.texture_group=All groups linked to the selected TexGroup will be processed.
+texture_pos.auto.savespace=Use save-space mode? (no empty spaces between uv)
+texture_pos.auto.process_all=Only process polygons with no texture pos? (-1,-1)
+texture_pos.auto.detach_all=Detach faces from polygons? (Can only be undone manually!)
+texture_pos.auto.processing=Processing: %s:%s
+texture_pos.auto.complete=Auto texture positioning Complete!
 
 # Exporters
 export.choose.dialog=Exporter Chooser
