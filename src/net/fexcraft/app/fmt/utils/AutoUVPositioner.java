@@ -1,23 +1,14 @@
 package net.fexcraft.app.fmt.utils;
 
+import static net.fexcraft.app.fmt.settings.Settings.*;
+import static net.fexcraft.app.fmt.ui.editor.EditorTab.FS;
 import static net.fexcraft.app.fmt.utils.Logging.log;
-import static net.fexcraft.app.fmt.utils.Translator.format;
-import static net.fexcraft.app.fmt.utils.Translator.translate;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
-
-import com.spinyowl.legui.component.Button;
-import com.spinyowl.legui.component.CheckBox;
-import com.spinyowl.legui.component.Dialog;
-import com.spinyowl.legui.component.Label;
-import com.spinyowl.legui.component.ProgressBar;
-import com.spinyowl.legui.component.SelectBox;
-import com.spinyowl.legui.event.MouseClickEvent;
-import com.spinyowl.legui.event.MouseClickEvent.MouseClickAction;
-import com.spinyowl.legui.listener.MouseClickEventListener;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.Group;
@@ -26,15 +17,20 @@ import net.fexcraft.app.fmt.polygon.uv.Face;
 import net.fexcraft.app.fmt.polygon.uv.UVCoords;
 import net.fexcraft.app.fmt.polygon.uv.UVType;
 import net.fexcraft.app.fmt.texture.Texture;
+import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.texture.TextureManager;
+import net.fexcraft.app.fmt.ui.BoolElm;
+import net.fexcraft.app.fmt.ui.Dialog.DialogButton;
+import net.fexcraft.app.fmt.ui.DropList;
+import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.lib.common.math.RGB;
 
 public class AutoUVPositioner {
 
 	public static boolean HALT = true, ALL, SAVESPACE, DETACH;
 	private static ArrayList<CoordContainer> list;
-	private static Group selected, resetsel;
-	private static ProgressDialog dialog;
+	private static Group resetsel;
+	private static net.fexcraft.app.fmt.ui.Dialog dialog;
 	private static Texture texture;
 	private static int last;
 
@@ -42,7 +38,7 @@ public class AutoUVPositioner {
 		int width = 440;
 		resetsel = null;
 		String suffix = cUV ? "_type" : "";
-		Dialog dialog = new Dialog(translate("texture_autopos.reset" + suffix + ".dialog"), width + 20, 180);
+		/*Dialog dialog = new Dialog(translate("texture_autopos.reset" + suffix + ".dialog"), width + 20, 180);
 		Label label0 = new Label(translate("texture_autopos.reset" + suffix + ".info"), 10, 10, width, 20);
 		label0.getStyle().setFont("roboto-bold");
 		Label label1 = new Label(translate("texture_autopos.reset" + suffix + ".group"), 10, 40, width / 20, 20);
@@ -94,70 +90,51 @@ public class AutoUVPositioner {
 		dialog.getContainer().add(label0);
 		dialog.getContainer().add(label1);
 		dialog.getContainer().add(texture);
-		dialog.getContainer().add(button);
+		dialog.getContainer().add(button);*/
 		//dialog.show(FMT.FRAME);
 	}
 
 	public static void runAutoPos(){
-		int width = 540;
-		Dialog dialog = new Dialog(translate("texture_autopos.autopos.dialog"), width + 20, 210);
-		Label label0 = new Label(translate("texture_autopos.autopos.info"), 10, 10, width, 20);
-		label0.getStyle().setFont("roboto-bold");
-		Label label1 = new Label(translate("texture_autopos.autopos.group"), 10, 40, width / 20, 20);
-		SelectBox<String> texture = new SelectBox<>(10 + width / 2, 40, width / 2, 20);
-		texture.addElement("all-groups");
-		for(Group group : FMT.MODEL.allgroups()) texture.addElement(group.id);
-		texture.addSelectBoxChangeSelectionEventListener(listener -> {
-			if(listener.getNewValue().equals("all-groups")) selected = null;
-			else selected = FMT.MODEL.get(listener.getNewValue());
-		});
-		texture.setSelected(0, true);
-		texture.setVisibleCount(6);
-		CheckBox checkbox0 = new CheckBox(10, 70, width, 20);
-		checkbox0.getStyle().setPadding(5f, 10f, 5f, 5f);
-		checkbox0.setChecked(SAVESPACE);
-		checkbox0.addCheckBoxChangeValueListener(listener -> SAVESPACE = listener.getNewValue());
-		checkbox0.getTextState().setText(translate("texture_autopos.autopos.savespace"));
-		CheckBox checkbox1 = new CheckBox(10, 100, width, 20);
-		checkbox1.getStyle().setPadding(5f, 10f, 5f, 5f);
-		checkbox1.setChecked(!ALL);
-		checkbox1.addCheckBoxChangeValueListener(listener -> ALL = !listener.getNewValue());
-		checkbox1.getTextState().setText(translate("texture_autopos.autopos.process_all"));
-		CheckBox checkbox2 = new CheckBox(10, 130, width, 20);
-		checkbox2.getStyle().setPadding(5f, 10f, 5f, 5f);
-		checkbox2.setChecked(DETACH);
-		checkbox2.addCheckBoxChangeValueListener(listener -> DETACH = listener.getNewValue());
-		checkbox2.getTextState().setText(translate("texture_autopos.autopos.detach_all"));
-		Button button = new Button(translate("texture_autopos.autopos.start"), 10, 160, 100, 20);
-		button.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)e -> {
-			if(e.getAction() != MouseClickAction.CLICK) return;
-			startAutoPos();
-			dialog.close();
-		});
-		dialog.getContainer().add(label0);
-		dialog.getContainer().add(label1);
-		dialog.getContainer().add(texture);
-		dialog.getContainer().add(checkbox0);
-		dialog.getContainer().add(checkbox1);
-		dialog.getContainer().add(checkbox2);
-		dialog.getContainer().add(button);
-		//dialog.show(FMT.FRAME);
-		return;
+		int width = 640;
+		int height = 270;
+		DropList<TextureGroup> tex = new DropList<>(width);
+		BoolElm save = new BoolElm();
+		BoolElm pall = new BoolElm();
+		BoolElm deta = new BoolElm();
+		FMT.UI.createDialog(width + 20, height, "texture_pos.auto.title")
+			.addBoldText(0, "texture_pos.auto.warning")
+			.addText(1.5f, "texture_pos.auto.texture_group")
+			.addRowElm(2.5f, tex, width)
+			.addCheck(4, save, "texture_pos.auto.savespace")
+			.addCheck(5, pall, "texture_pos.auto.process_all")
+			.addCheck(6, deta, "texture_pos.auto.detach_all")
+			.consumer(d -> startAutoPos(tex.getSelVal()), null)
+			.buttons(200, DialogButton.CONTINUE, DialogButton.CANCEL);
+		save.set(() -> SAVESPACE, b -> SAVESPACE = b);
+		pall.set(() -> !ALL, b -> ALL = !b);
+		deta.set(() -> DETACH, b -> DETACH = b);
+		if(TextureManager.getGroups().isEmpty()) TextureManager.addGroup(null, false);
+		for(TextureGroup group : TextureManager.getGroups()){
+			tex.addEntry(group.name, group);
+		}
+		tex.selectEntry(0);
 	}
 
-	private static void startAutoPos(){
+	private static void startAutoPos(TextureGroup texgroup){
 		new Thread("AutoPosThread"){
 			@Override
 			public void run(){
 				log("STARTING AUTOPOS THREAD");
 				HALT = false;
-				final int sizex = selected == null ? FMT.MODEL.texSizeX : selected.texSizeX;
-				final int sizey = selected == null ? FMT.MODEL.texSizeY : selected.texSizeY;
+				boolean selmod = texgroup == FMT.MODEL.texgroup;
+				List<Group> selected = FMT.MODEL.allgroups().stream().filter(g -> g.texgroup == texgroup || (g.texgroup == null && selmod)).toList();
+				final int sizex = selmod ? FMT.MODEL.texSizeX : selected.get(0).texSizeX;
+				final int sizey = selmod ? FMT.MODEL.texSizeY : selected.get(0).texSizeY;
 				log("Setting size to " + sizex + "x, " + sizey + "y.");
-				log("Group selected: " + (selected == null ? "none" : selected.id));
+				log("TexGroup selected: " + texgroup.name);
 				log("All-Polygons is set to '" + ALL + "' and Save-Space is set to '" + SAVESPACE + "'. Detach is set to '" + DETACH + "'.");
 				if(list == null){
-					list = getSortedList(ALL);
+					list = getSortedList(selected, ALL);
 					last = 0;
 					if((texture = TextureManager.get("auto-pos-temp", true)) != null){
 						texture.getImage().rewind();
@@ -176,7 +153,8 @@ public class AutoUVPositioner {
 					try{
 						CoordContainer corcon = list.get(last);
 						last++;
-						showPercentDialog(corcon.polygon.group().id, corcon.name(), getPercent(last, list.size()));
+						final float percent = (last * 100f) / list.size();
+						FMT.queue(() -> showPercentDialog(corcon.polygon.group().id, corcon.name(), percent));
 						if(corcon.coords == null || corcon.coords.length == 0){
 							log("skipping [" + corcon.polygon.group().id + ":" + corcon.name() + "] (missing texture definition)");
 							continue;
@@ -265,8 +243,12 @@ public class AutoUVPositioner {
 						log(e);
 					}
 				}
-				if(dialog != null) dialog.close();
-				//TODO GenericDialog.showOK("texture_autopos.autopos.title", () -> FMT.MODEL.recompile(), null, "texture_autopos.autopos.complete");
+				FMT.queue(() -> {
+					FMT.UI.createDialog(400, 80, "texture_pos.auto.title")
+						.addText(0, "texture_pos.auto.complete")
+						.consumer(d -> FMT.MODEL.recompile(), null)
+						.buttons(100, DialogButton.OK);
+				});
 				last = (HALT = (list = null) == null) ? -1 : 0;
 				texture = null;
 				log("STOPPING AUTOPOS THREAD");
@@ -275,10 +257,16 @@ public class AutoUVPositioner {
 		}.start();
 	}
 
-	private static void showPercentDialog(String group, String polygon, int percent){
-		if(dialog == null) dialog = new ProgressDialog();
-		dialog.progressbar.setValue(percent);
-		dialog.label.getTextState().setText(format("texture_autopos.autopos.processing", group, polygon));
+	private static void showPercentDialog(String group, String polygon, float percent){
+		if(dialog == null ){
+			dialog = FMT.UI.createDialog(510, 80, "texture_pos.auto.title")
+				.addText(0, "texture_pos.auto.processing", "", "")
+				.addRowElm(1, new Element().size(501, FS).color(GENERIC_BACKGROUND_0.value).border(GENERIC_BACKGROUND_2.value));
+			dialog.container.lastElement().add(new Element().color(POLYGON_NORMAL.value).size(1, 1));
+			dialog.on_close = d -> dialog = null;
+		}
+		dialog.container.elements.get(0).translate("texture_pos.auto.processing", group, polygon);
+		dialog.container.elements.get(1).elements.get(0).size(percent * 5, FS).recompile();
 	}
 
 	private static boolean check(float[][][] texpos, int xx, int yy){
@@ -320,16 +308,9 @@ public class AutoUVPositioner {
 		return true;
 	}
 
-	private static ArrayList<CoordContainer> getSortedList(boolean all){
+	private static ArrayList<CoordContainer> getSortedList(List<Group> selected, boolean all){
 		ArrayList<CoordContainer> list = new ArrayList<>();
-		if(selected == null){
-			for(Group group : FMT.MODEL.allgroups()){
-				addAll(list, group);
-			}
-		}
-		else{
-			addAll(list, selected);
-		}
+		for(Group group : selected) addAll(list, group);
 		list.sort(new java.util.Comparator<CoordContainer>(){
 			@Override
 			public int compare(CoordContainer left, CoordContainer righ){
@@ -374,34 +355,6 @@ public class AutoUVPositioner {
 				list.add(new CoordContainer(polygon, false));
 			}
 		}
-	}
-
-	private static int getPercent(int i, int all){
-		return (i * 100) / all;
-	}
-
-	public static class ProgressDialog extends Dialog {
-
-		private ProgressBar progressbar;
-		private Label label;
-
-		public ProgressDialog(){
-			super(translate("texture_autopos.autopos.dialog"), 400, 90);
-			label = new Label(format("texture_autopos.autopos.processing", 0, "initializing"), 10, 10, 340, 20);
-			dialog = this;
-			dialog.setResizable(false);
-			dialog.getContainer().add(label);
-			progressbar = new ProgressBar(10, 40, 380, 10);
-			progressbar.setValue(0);
-			dialog.getContainer().add(progressbar);
-			//dialog.show(FMT.FRAME);
-		}
-
-		public void close(){
-			super.close();
-			dialog = null;
-		}
-
 	}
 	
 	public static class CoordContainer {
