@@ -104,9 +104,9 @@ public class HelperTreeTab extends TreeTab {
 
 	@Override
 	public void reinsertComponents(){
-		container.remElmIf(e -> e instanceof PivotCom);
-		for(Pivot pivot : FMT.MODEL.pivots()){
-			container.add(new PivotCom(pivot));
+		container.remElmIf(e -> e instanceof HelperCom);
+		for(Model model : PreviewHandler.getLoaded()){
+			container.add(new HelperCom(model));
 		}
 		reorderComponents();
 	}
