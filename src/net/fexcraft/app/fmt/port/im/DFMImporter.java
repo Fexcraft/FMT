@@ -82,11 +82,11 @@ public class DFMImporter implements Importer {
                         continue;
                     }
                     if(line.startsWith("int textureX")){
-                        model.texSizeX = parseI(line.split(" ")[3]);
+                        model.texgroup.width = parseI(line.split(" ")[3]);
                         continue;
                     }
                     if(line.startsWith("int textureY")){
-                        model.texSizeY = parseI(line.split(" ")[3]);
+                        model.texgroup.height = parseI(line.split(" ")[3]);
                         continue;
                     }
                     Matcher matcher = groupdef.matcher(line);
