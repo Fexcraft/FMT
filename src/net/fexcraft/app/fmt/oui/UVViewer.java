@@ -186,7 +186,7 @@ public class UVViewer extends Widget {
                 }
             });
             updcom.add(ModelLoad.class, e ->  resize());
-            updcom.add(ModelTextureSize.class, e ->  resize());
+            updcom.add(TexGroupSize.class, e ->  resize());
             root = panel;
             resize();
         }
