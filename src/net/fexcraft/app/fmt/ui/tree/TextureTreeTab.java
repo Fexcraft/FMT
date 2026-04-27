@@ -44,6 +44,10 @@ public class TextureTreeTab extends TreeTab {
 		updcom.add(UpdateEvent.ModelUnload.class, event -> removeGroups());
 		updcom.add(UpdateEvent.TexGroupAdded.class, event -> addTexGroup(event.group()));
 		updcom.add(UpdateEvent.TexGroupRemoved.class, event -> remTexGroup(event.group()));
+		updcom.add(UpdateEvent.TexGroupSize.class, event -> {
+			TexGroupCom com = getTexGroupCom(event.group());
+			if(com != null) com.updateTexSize();
+		});
 		updcom.add(UpdateEvent.TexGroupRenamed.class, event -> {
 			TexGroupCom com = getTexGroupCom(event.group());
 			if(com != null) com.updateTextColor();
@@ -81,6 +85,16 @@ public class TextureTreeTab extends TreeTab {
 			container.add(new TexGroupCom(group));
 		}
 		reorderComponents();
+	}
+
+	@Override
+	public void reorderComponents(){
+		super.reorderComponents();
+		for(Element elm : container.elements){
+			if(elm instanceof TexGroupCom com){
+				com.updateTexSize();
+			}
+		}
 	}
 
 	@Override
