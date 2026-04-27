@@ -100,8 +100,8 @@ public class RectCurve extends CurvePolygon {
 		axe.pointing(coff, cu.path.getVectorPosition(dif, false).sub(vpos));
 		axe.addDegrees(seg0.rot, 0, 0);
 		double loc;
-		float tw = 1f / (group().texgroup == null ? FMT.MODEL.texSizeX : group().texSizeX);
-		float th = 1f / (group().texgroup == null ? FMT.MODEL.texSizeY : group().texSizeY);
+		float tw = 1f / (group().texgroup == null ? FMT.MODEL.texgroup.width : group().texgroup.width);
+		float th = 1f / (group().texgroup == null ? FMT.MODEL.texgroup.height : group().texgroup.height);
 		float rx = tw * textureX;
 		float ry = tw * textureY;
 		float tx = rx;
