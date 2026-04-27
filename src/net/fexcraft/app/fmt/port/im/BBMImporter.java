@@ -33,8 +33,8 @@ public class BBMImporter implements Importer {
 			boolean modent = type.equals("modded_entity");
 			model.name = map.getString("name", model.name);
 			JsonMap res = map.getMap("resolution");
-			model.texSizeX = res.getInteger("width", 16);
-			model.texSizeY = res.getInteger("height", 16);
+			model.texgroup.width = res.getInteger("width", 16);
+			model.texgroup.height = res.getInteger("height", 16);
 			JsonArray elms = map.getArray("elements");
 			LinkedHashMap<String, Polygon> polis = new LinkedHashMap<>();
 			for(JsonValue<?> jsn : elms.value){
