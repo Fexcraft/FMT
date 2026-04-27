@@ -4,16 +4,25 @@ import static net.fexcraft.app.fmt.utils.Logging.log;
 
 import java.io.File;
 
+import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.RGB;
 
 public class TextureGroup {
 	
 	public Texture texture;
 	public Texture painter;
+	public int width = 256;
+	public int height = 256;
 	public String name;
 
 	public TextureGroup(String id){
 		name = id;
+	}
+
+	public TextureGroup(String id, JsonMap map){
+		this(id);
+		width = map.getInteger("width", width);
+		height = map.getInteger("height", height);
 	}
 	
 	public TextureGroup(String id, File root){
@@ -31,7 +40,7 @@ public class TextureGroup {
 		if(!root.exists()) root.mkdirs();
 		File file = new File(root, "group-" + name + ".png");
 		if(!file.exists()){
-			Texture texture = new Texture(texid, 256, 256);
+			Texture texture = new Texture(texid, width, height);
 			log("Generated blank texgroup texture.");
 			texture.setFile(file);
 			TextureManager.putTexture(texid, texture);
@@ -62,6 +71,13 @@ public class TextureGroup {
 		}
 		painter.save();
 		painter.rebind();
+	}
+
+	public JsonMap save(){
+		JsonMap map = new JsonMap();
+		map.add("width", width);
+		map.add("height", height);
+		return map;
 	}
 
 }
