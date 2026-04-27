@@ -79,10 +79,10 @@ public class MTBImporter implements Importer {
                 String[] parts = s.split("\\u007C");
                 parts[0] = parts[0].trim();
                 if(parts[0].equals("TexSizeX")){
-                    model.texSizeX = Integer.parseInt(parts[1].trim());
+                    model.texgroup.width = Integer.parseInt(parts[1].trim());
                 }
                 else if(parts[0].equals("TexSizeY")){
-                    model.texSizeY = Integer.parseInt(parts[1].trim());
+                    model.texgroup.height = Integer.parseInt(parts[1].trim());
                 }
                 //
                 else if(parts[0].equals("ModelAuthor") && parts.length > 1){
