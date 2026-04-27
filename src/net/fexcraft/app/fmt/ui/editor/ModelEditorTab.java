@@ -24,8 +24,9 @@ public class ModelEditorTab extends EditorTab {
 	public ETabCom general;
 	public ETabCom exports;
 	private Field name;
-	private DropList<Integer> texx;
-	private DropList<Integer> texy;
+	private BoolElm rtex;
+	//private DropList<Integer> texx;
+	//private DropList<Integer> texy;
 	private DropList<String> texg;
 	private DropList<ModelOrientation> orient;
 
@@ -39,8 +40,10 @@ public class ModelEditorTab extends EditorTab {
 		container.add((general = new ETabCom("general")), lang_prefix + "general", 340);
 		general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.name"));
 		general.add((name = new Field(TEXT, FF, field -> FMT.MODEL.name(field.get_text()))).pos(FO, next_y_pos(1)));
-		general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.texture_size"));
-		general.add((texx = new DropList<Integer>(F2S).onchange((key, val) -> {
+		general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.render_textured"));
+		general.add(rtex = new BoolElm(FO, next_y_pos(1), FF)
+			.set(() -> FMT.MODEL.render_textured, b -> FMT.MODEL.render_textured = b));
+		/*general.add((texx = new DropList<Integer>(F2S).onchange((key, val) -> {
 			FMT.MODEL.texSizeX = val;
 			FMT.MODEL.recompile();
 			UpdateHandler.update(new UpdateEvent.ModelTextureSize(FMT.MODEL, FMT.MODEL.texSizeX, FMT.MODEL.texSizeY));
@@ -49,11 +52,11 @@ public class ModelEditorTab extends EditorTab {
 			FMT.MODEL.texSizeY = val;
 			FMT.MODEL.recompile();
 			UpdateHandler.update(new UpdateEvent.ModelTextureSize(FMT.MODEL, FMT.MODEL.texSizeX, FMT.MODEL.texSizeY));
-		})).pos(F21, next_y_pos(0)));
-		for(int res : TextureManager.RESOLUTIONS){
+		})).pos(F21, next_y_pos(0)));*/
+		/*for(int res : TextureManager.RESOLUTIONS){
 			texx.addEntry(res > 2000 ? res / 1024 + "K" : res + "", res);
 			texy.addEntry(res > 2000 ? res / 1024 + "K" : res + "", res);
-		}
+		}*/
 		general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.texture_group"));
 		general.add((texg = new DropList<String>(FF).onchange((key, val) -> {
 			FMT.MODEL.texgroup = TextureManager.getGroup(val);
@@ -90,8 +93,9 @@ public class ModelEditorTab extends EditorTab {
 
 	private void updateFields(Scrollable scroll){
 		name.text(FMT.MODEL.name);
-		texx.selectKey(FMT.MODEL.texSizeX + "");
-		texy.selectKey(FMT.MODEL.texSizeY + "");
+		//texx.selectKey(FMT.MODEL.texSizeX + "");
+		//texy.selectKey(FMT.MODEL.texSizeY + "");
+		rtex.updtexcol();
 		orient.selectValue(FMT.MODEL.orient);
 		refreshTexGroups();
 		refreshExportValues(scroll);
@@ -99,7 +103,6 @@ public class ModelEditorTab extends EditorTab {
 
 	private void refreshTexGroups(){
 		texg.clear();
-		texg.addEntry("none", null);
 		for(TextureGroup group : TextureManager.getGroups()){
 			texg.addEntry(group.name, group.name);
 		}
