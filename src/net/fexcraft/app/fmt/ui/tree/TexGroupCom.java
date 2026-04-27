@@ -13,7 +13,7 @@ import net.fexcraft.app.fmt.utils.Translator;
 
 import static net.fexcraft.app.fmt.settings.Settings.*;
 import static net.fexcraft.app.fmt.ui.FMTInterface.EDITOR_CONTENT;
-import static net.fexcraft.app.fmt.ui.editor.EditorTab.FF;
+import static net.fexcraft.app.fmt.ui.editor.EditorTab.*;
 import static net.fexcraft.app.fmt.utils.Logging.log;
 
 /**
@@ -22,6 +22,8 @@ import static net.fexcraft.app.fmt.utils.Logging.log;
 public class TexGroupCom extends TTabCom {
 
 	protected TextureGroup group;
+	protected DropList<Integer> texx;
+	protected DropList<Integer> texy;
 
 	public TexGroupCom(TextureGroup group){
 		this.group = group;
@@ -44,13 +46,33 @@ public class TexGroupCom extends TTabCom {
 			}
 			else TextureManager.remGroup(group);
 		}).hint("tree.texture.group_remove").hide());
-		container.add(new Element().size(FF, 30).pos(5, 5).translate("tree.texture.group_rename")
+		int inc = -30;
+		//
+		container.add(new TextElm(5, inc += 30, FF, "tree.texture.group_size"));
+		container.add((texx = new DropList<Integer>(F2S).onchange((key, val) -> {
+			group.width = val;
+			FMT.MODEL.recompile();
+			UpdateHandler.update(new UpdateEvent.TexGroupSize(group));
+		})).pos(F20, inc += 30));
+		container.add((texy = new DropList<Integer>(F2S).onchange((key, val) -> {
+			group.height = val;
+			FMT.MODEL.recompile();
+			UpdateHandler.update(new UpdateEvent.TexGroupSize(group));
+		})).pos(F21, inc));
+		for(int res : TextureManager.RESOLUTIONS){
+			texx.addEntry(res > 2000 ? res / 1024 + "K" : res + "", res);
+			texy.addEntry(res > 2000 ? res / 1024 + "K" : res + "", res);
+		}
+		texx.selectValue(group.width);
+		texy.selectValue(group.height);
+		//
+		container.add(new Element().size(FF, 30).pos(5, inc += 35).translate("tree.texture.group_rename")
 			.onclick(ci -> renameGroup(group.name)).hoverable(true).color(GROUP_NORMAL.value).text_color(GENERIC_TEXT_2.value.packed));
-		container.add(new Element().size(FF, 30).pos(5, 40).translate("tree.texture.group_resize")
+		container.add(new Element().size(FF, 30).pos(5, inc += 35).translate("tree.texture.group_resize")
 			.onclick(ci -> resizeGroup()).hoverable(true).color(GROUP_NORMAL.value).text_color(GENERIC_TEXT_2.value.packed));
-		container.add(new Element().size(FF, 30).pos(5, 75).translate("tree.texture.group_generate")
+		container.add(new Element().size(FF, 30).pos(5, inc += 35).translate("tree.texture.group_generate")
 			.onclick(ci -> generateGroup()).hoverable(true).color(GROUP_NORMAL.value).text_color(GENERIC_TEXT_2.value.packed));
-		container.add(new Element().size(FF, 30).pos(5, 110).translate("tree.texture.group_select")
+		container.add(new Element().size(FF, 30).pos(5, inc).translate("tree.texture.group_select")
 			.onclick(ci -> selectGroup()).hoverable(true).color(GROUP_NORMAL.value).text_color(GENERIC_TEXT_2.value.packed));
 		orderComponents();
 	}
@@ -77,20 +99,15 @@ public class TexGroupCom extends TTabCom {
 	}
 
 	private void resizeGroup(){
-		final DropList<String> from = new DropList<>(480);
 		final DropList<Integer> scale = new DropList<>(480);
-		FMT.UI.createDialog(500, 180, "tree.texture.resize.title")
-			.addText(0, "tree.texture.resize.copy_from")
-			.addRowElm(1, from)
-			.addText(2, "tree.texture.resize.upscale")
-			.addRowElm(3, scale)
+		FMT.UI.createDialog(500, 120, "tree.texture.resize.title")
+			.addText(0, "tree.texture.resize.upscale")
+			.addRowElm(1, scale)
 			.consumer(d -> {
 				try{
-					boolean model = from.getSelVal().equals("model");
-					Group mg = model ? null : FMT.MODEL.get(from.getSelVal().substring(6));
 					int scl = scale.getSelVal();
-					int x = model ? FMT.MODEL.texgroup.width : mg.texgroup.width, ox = x;
-					int y = model ? FMT.MODEL.texgroup.height : mg.texgroup.height, oy = y;
+					int x = group.width, ox = x;
+					int y = group.height, oy = y;
 					while(scl > 0){
 						x *= 2;
 						y *= 2;
@@ -107,15 +124,10 @@ public class TexGroupCom extends TTabCom {
 				}
 			}, null)
 			.buttons(100, Dialog.DialogButton.CONFIRM, Dialog.DialogButton.CANCEL);
-		from.addEntry(Translator.translate("tree.texture.resize.copy_from.model"), "model");
-		for(Group mg : FMT.MODEL.allgroups()){
-			from.addEntry(Translator.format("tree.texture.resize.copy_from.group", mg.id), "group-" + mg.id);
-		}
 		scale.addEntry(Translator.translate("tree.texture.resize.upscale.0"), 0);
 		scale.addEntry(Translator.translate("tree.texture.resize.upscale.1"), 1);
 		scale.addEntry(Translator.translate("tree.texture.resize.upscale.2"), 2);
 		scale.addEntry(Translator.translate("tree.texture.resize.upscale.3"), 3);
-		from.selectEntry(0);
 		scale.selectEntry(0);
 	}
 
@@ -147,7 +159,7 @@ public class TexGroupCom extends TTabCom {
 	@Override
 	protected void orderComponents(){
 		if(container.elements == null) return;
-		fullheight = 145;
+		fullheight = 205;
 		container.size(w, fullheight);
 		container.recompile();
 		((TreeTab)root.root).reorderComponents();
@@ -157,6 +169,12 @@ public class TexGroupCom extends TTabCom {
 		text(group.name);
 		color(PIVOT_NORMAL.value);
 		text_color(GENERIC_TEXT_2.value.packed);
+	}
+
+	protected void updateTexSize(){
+		if(texx == null) return;
+		texx.selectValue(group.width);
+		texy.selectValue(group.height);
 	}
 
 }
