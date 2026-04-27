@@ -58,11 +58,11 @@ public class FVTM_OLD_Importer implements Importer {
                     continue;
                 }
                 if(line.contains("textureX = ")){
-                    model.texSizeX = Integer.parseInt(line.substring(line.indexOf("=") + 2, line.indexOf(";")));
+                    model.texgroup.width = Integer.parseInt(line.substring(line.indexOf("=") + 2, line.indexOf(";")));
                     continue;
                 }
                 if(line.contains("textureY = ")){
-                    model.texSizeY = Integer.parseInt(line.substring(line.indexOf("=") + 2, line.indexOf(";")));
+                    model.texgroup.height = Integer.parseInt(line.substring(line.indexOf("=") + 2, line.indexOf(";")));
                     continue;
                 }
                 if(line.contains("addToCreators")){
