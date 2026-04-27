@@ -92,7 +92,7 @@ public class BObjExporter implements Exporter {
 			for(String str : model.getAuthors().keySet()){
 				write(stream, AUTHOR, str);
 			}
-			writeIntegers(stream, TEXSIZE, model.texSizeX, model.texSizeY);
+			writeIntegers(stream, TEXSIZE, model.texgroup.width, model.texgroup.height);
 			for(Group group : groups){
 				if(group.stream().filter(poly -> valid(poly.getShape())).count() == 0) continue;
 				write(stream, GROUP, group.id);
