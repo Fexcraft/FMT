@@ -128,8 +128,8 @@ public class AutoUVPositioner {
 				HALT = false;
 				boolean selmod = texgroup == FMT.MODEL.texgroup;
 				List<Group> selected = FMT.MODEL.allgroups().stream().filter(g -> g.texgroup == texgroup || (g.texgroup == null && selmod)).toList();
-				final int sizex = selmod ? FMT.MODEL.texSizeX : selected.get(0).texSizeX;
-				final int sizey = selmod ? FMT.MODEL.texSizeY : selected.get(0).texSizeY;
+				final int sizex = texgroup.width;
+				final int sizey = texgroup.height;
 				log("Setting size to " + sizex + "x, " + sizey + "y.");
 				log("TexGroup selected: " + texgroup.name);
 				log("All-Polygons is set to '" + ALL + "' and Save-Space is set to '" + SAVESPACE + "'. Detach is set to '" + DETACH + "'.");
