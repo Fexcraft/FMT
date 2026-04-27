@@ -26,7 +26,7 @@ public class Group extends ArrayList<Polygon> {
 	public RGB color = RGB.WHITE.copy();
 	public TextureGroup texgroup = null;
 	public String texhelper;
-	public int texSizeX = 256, texSizeY = 256;
+	//public int texSizeX = 256, texSizeY = 256;
 	public Vector3f pos = new Vector3f();
 	public Vector3f rot = new Vector3f();
 	public String pivot;
