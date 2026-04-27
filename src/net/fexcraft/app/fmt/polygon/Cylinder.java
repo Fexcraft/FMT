@@ -104,7 +104,9 @@ public class Cylinder extends Polygon {
 
 	@Override
 	protected void generate(){
-		Generator<GLObject> gen = new Generator<GLObject>(glm, glm.glObj.grouptex ? group().texSizeX : model().texSizeX, glm.glObj.grouptex ? group().texSizeY : model().texSizeY)
+		Generator<GLObject> gen = new Generator<>(glm,
+			glm.glObj.grouptex ? group().texgroup.width : model().texgroup.width,
+			glm.glObj.grouptex ? group().texgroup.height : model().texgroup.height)
 			.set(Values.TYPE, Generator.Type.CYLINDER)
 			.set(Values.OFF_X, off.x)
 			.set(Values.OFF_Y, off.y)
