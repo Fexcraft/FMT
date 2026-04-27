@@ -77,7 +77,7 @@ public class SaveHandler {
 							TextureManager.loadFromStream(zip.getInputStream(elm), model.uuid + "-default", false, true);
 						}
 						else{
-							if(model.texgroup == null) TextureManager.addGroup(model.texgroup = new TextureGroup("default"));
+							TextureManager.addGroup(model.texgroup = new TextureGroup("default"));
 							TextureManager.loadFromStream(zip.getInputStream(elm), "group-default", false, true);
 						}
 						if(!preview) model.texgroup.reAssignTexture();
@@ -105,6 +105,9 @@ public class SaveHandler {
 			});
 			zip.close();
 			model.file = file;
+			if(!preview && model.texgroup == null){
+				model.texgroup = TextureManager.getOrCreateDefault();
+			}
 			if(preview) return;
 			update(new ModelLoad(model));
 			DiscordUtil.update(Settings.DISCORD_RESET_ON_NEW.value);
@@ -119,8 +122,8 @@ public class SaveHandler {
 
 	public static Model load(Model model, File from, JsonMap map, boolean preview, boolean sub){
 		model.name = map.get("name", "Unnamed Model");
-		model.texSizeX = map.get("texture_size_x", 256);
-		model.texSizeY = map.get("texture_size_y", 256);
+		int texSizeX = map.get("texture_size_x", -1);
+		int texSizeY = map.get("texture_size_y", -1);
 		model.opacity = map.get("opacity", 1f);
 		if(map.has("scale") && map.get("scale").isArray()){
 			JsonArray arr = map.getArray("scale");
@@ -156,9 +159,16 @@ public class SaveHandler {
 			return model;
 		}
 		if(map.has("textures") && !preview){
-			map.getArrayElements("textures").forEach(elm -> {
-				TextureManager.addGroup(new TextureGroup(elm.string_value()));
-			});
+			if(map.get("textures").isArray()){//old format
+				map.getArrayElements("textures").forEach(elm -> {
+					TextureManager.addGroup(new TextureGroup(elm.string_value()));
+				});
+			}
+			else{
+				for(Entry<String, JsonValue<?>> tex : map.getMap("textures").entries()){
+					TextureManager.addGroup(new TextureGroup(tex.getKey(), tex.getValue().asMap()));
+				}
+			}
 		}
 		if(map.has("texture_group")){
 			if(preview){
@@ -166,8 +176,13 @@ public class SaveHandler {
 			}
 			else{
 				model.texgroup = TextureManager.getGroup(map.get("texture_group").string_value());
+				if(texSizeX > 0) model.texgroup.width = texSizeX;
+				if(texSizeY > 0) model.texgroup.height = texSizeY;
 			}
+			model.render_textured = map.getBoolean("render_textured", true);
 		}
+		if(!preview && model.texgroup == null) model.texgroup = TextureManager.getOrCreateDefault();
+		//
 		JsonMap pivots = map.getMap("pivots");
 		model.pivots().clear();
 		pivots.entries().forEach(entry -> {
@@ -201,8 +216,8 @@ public class SaveHandler {
 					}
 					else{
 						group.texgroup = TextureManager.getGroup(jsn.get("texture_group").string_value());
-						group.texSizeX = jsn.get("texture_size_x").integer_value();
-						group.texSizeY = jsn.get("texture_size_y").integer_value();
+						group.texgroup.width = jsn.get("texture_size_x").integer_value();
+						group.texgroup.height = jsn.get("texture_size_y").integer_value();
 					}
 				}
 				if(jsn.has("offset")){
@@ -415,8 +430,8 @@ public class SaveHandler {
 		JsonMap map = new JsonMap();
 		map.add("format", FORMAT);
 		map.add("name", model.name);
-		map.add("texture_size_x", model.texSizeX);
-		map.add("texture_size_y", model.texSizeY);
+		//map.add("texture_size_x", model.texSizeX);
+		//map.add("texture_size_y", model.texSizeY);
 		map.add("orientation", model.orient.name().toLowerCase());
 		map.add("target_format", model.format.name().toLowerCase());
 		if(!export && model.opacity < 1f) map.add("opacity", model.opacity);
@@ -437,13 +452,14 @@ public class SaveHandler {
 		map.add("creators", creators);
 		map.add("type", "jtmt");
 		if(TextureManager.anyGroupsLoaded()){
-			JsonArray textures = new JsonArray();
+			JsonMap textures = new JsonMap();
 			for(TextureGroup group : TextureManager.getGroups()){
-				textures.add(group.name);
+				textures.add(group.name, group.save());
 			}
 			map.add("textures", textures);
 		}
-		if(model.texgroup != null) map.add("texture_group", model.texgroup.name);
+		map.add("texture_group", model.texgroup.name);
+		map.add("render_textured", model.render_textured);
 		JsonMap pivots = new JsonMap();
 		for(Pivot pivot : model.pivots()){
 			pivots.add(pivot.id, pivot.save());
@@ -467,8 +483,8 @@ public class SaveHandler {
 				grobj.add("selected", group.selected);
 				if(group.texgroup != null){
 					grobj.add("texture_group", group.texgroup.name);
-					grobj.add("texture_size_x", group.texSizeX);
-					grobj.add("texture_size_y", group.texSizeY);
+					//grobj.add("texture_size_x", group.texSizeX);
+					//grobj.add("texture_size_y", group.texSizeY);
 				}
 				if(group.animations.size() > 0){
 					JsonArray anim = new JsonArray();
@@ -655,6 +671,7 @@ public class SaveHandler {
 			dia.buttons(100, Dialog.DialogButton.CONFIRM, Dialog.DialogButton.CANCEL);
 			dia.consumer(d -> {
 				UpdateHandler.update(new ModelUnload(FMT.MODEL));
+				TextureManager.clearGroups();
 				FMT.MODEL = new Model(null, name.get_text());
 				FMT.MODEL.orient = orient.getSelVal();
 				FMT.MODEL.format = format.getSelVal();
