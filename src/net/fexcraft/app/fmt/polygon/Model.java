@@ -74,10 +74,10 @@ public class Model {
 	public Vector3f pos = new Vector3f();
 	public Vector3f rot = new Vector3f();
 	public Vector3f scl = new Vector3f(1, 1, 1);
+	public boolean render_textured;
 	public TextureGroup texgroup = null;
 	public Pivot sel_pivot = null;
 	public String texhelper;
-	public int texSizeX = 256, texSizeY = 256;
 	public boolean visible = true;
 	public boolean helper;
 	public boolean subhelper;
@@ -92,6 +92,7 @@ public class Model {
 		pivots.add(new Pivot("root", true));
 		update(new PivotAdded(this, pivots.get(0)));
 		uuid = UUID.randomUUID();
+		if(file == null) texgroup = TextureManager.getOrCreateDefault();
 	}
 
 	/** For now just for FMTB files. */
@@ -164,7 +165,7 @@ public class Model {
 
 	public void render(float alpha){
 		if(!visible) return;
-		DrawMode mode = DrawMode.textured(texgroup != null || texhelper != null);
+		DrawMode mode = DrawMode.textured(render_textured || texhelper != null);
 		for(Pivot pivot : pivots){
 			PolyRenderer.setPivot(pivot);
 			if(Settings.PMARKER.value){
