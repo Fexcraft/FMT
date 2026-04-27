@@ -41,8 +41,8 @@ public class Generators {
 			if(face.detached()) deuv[i] = true;
 			uv.add(face.value());
 		}
-		float texw = poly.glm.glObj.grouptex ? poly.group().texSizeX : poly.model().texSizeX;
-		float texh = poly.glm.glObj.grouptex ? poly.group().texSizeY : poly.model().texSizeY;
+		float texw = poly.glm.glObj.grouptex ? poly.group().texgroup.width : poly.model().texgroup.width;
+		float texh = poly.glm.glObj.grouptex ? poly.group().texgroup.height : poly.model().texgroup.height;
 		if(shaped){
 			Shapebox box = (Shapebox)poly;
 			Vec3f c0 = new Vec3f(box.cor0.x, box.cor0.y, box.cor0.z);
