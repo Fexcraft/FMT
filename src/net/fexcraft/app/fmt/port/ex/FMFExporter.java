@@ -86,8 +86,8 @@ public class FMFExporter implements Exporter {
 				write(stream, 4, str);
 			}
 			stream.write(3);
-			stream.write(putInt(model.texSizeX));
-			stream.write(putInt(model.texSizeY));
+			stream.write(putInt(model.texgroup.width));
+			stream.write(putInt(model.texgroup.height));
 			stream.write(0);
 			for(Group group : groups){
 				if(group.stream().filter(poly -> valid(poly.getShape())).count() == 0) continue;
