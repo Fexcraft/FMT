@@ -25,8 +25,8 @@ public class GroupEditorTab extends EditorTab {
 
 	public ETabCom general;
 	private Field name;
-	private DropList<Integer> texx;
-	private DropList<Integer> texy;
+	//private DropList<Integer> texx;
+	//private DropList<Integer> texy;
 	private DropList<String> texg;
 	private DropList<Pivot> pivots;
 
@@ -37,7 +37,7 @@ public class GroupEditorTab extends EditorTab {
 	@Override
 	public void init(Object... objs){
 		super.init(objs);
-		container.add((general = new ETabCom("general")), lang_prefix + "general", 280);
+		container.add((general = new ETabCom("general")), lang_prefix + "general", 220);
 		general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.name"));
 		general.add((name = new Field(TEXT, FF, field -> {
 			ArrayList<Group> groups = FMT.MODEL.selected_groups();
@@ -54,7 +54,7 @@ public class GroupEditorTab extends EditorTab {
 				}
 			}
 		})).pos(FO, next_y_pos(1)));
-		general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.texture_size"));
+		/*general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.texture_size"));
 		general.add((texx = new DropList<Integer>(F2S).onchange((key, val) -> {
 			ArrayList<Group> groups = FMT.MODEL.selected_groups();
 			for(Group group : groups){
@@ -72,7 +72,7 @@ public class GroupEditorTab extends EditorTab {
 		for(int res : TextureManager.RESOLUTIONS){
 			texx.addEntry(res > 2000 ? res / 1024 + "K" : res + "", res);
 			texy.addEntry(res > 2000 ? res / 1024 + "K" : res + "", res);
-		}
+		}*/
 		general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.texture_group"));
 		general.add((texg = new DropList<String>(FF).onchange((key, val) -> {
 			ArrayList<Group> groups = FMT.MODEL.selected_groups();
@@ -112,13 +112,13 @@ public class GroupEditorTab extends EditorTab {
 		Group group = FMT.MODEL.first_selected_group();
 		if(group == null){
 			name.text(NOGROUPSEL);
-			texx.selectEntry(0);
-			texy.selectEntry(0);
+			//texx.selectEntry(0);
+			//texy.selectEntry(0);
 		}
 		else{
 			name.text(group.id);
-			texx.selectKey(group.texSizeX + "");
-			texy.selectKey(group.texSizeY + "");
+			//texx.selectKey(group.texSizeX + "");
+			//texy.selectKey(group.texSizeY + "");
 		}
 		refreshTexGroups(group, false);
 		refreshPivots(group, false);
