@@ -519,8 +519,8 @@ public abstract class Polygon {
 	}
 
 	private void paint(Texture tex, float[][] ends, byte[] bs, boolean detached){
-		float tsx = (float)tex.getWidth() / (glm.glObj.grouptex ? group().texSizeX : model().texSizeX);
-		float tsy = (float)tex.getHeight() / (glm.glObj.grouptex ? group().texSizeY : model().texSizeY);
+		float tsx = (float)tex.getWidth() / (glm.glObj.grouptex ? group().texgroup.width : model().texgroup.width);
+		float tsy = (float)tex.getHeight() / (glm.glObj.grouptex ? group().texgroup.height : model().texgroup.height);
 		float scale_x = paintScale(tex, true);
 		float scale_y = paintScale(tex, false);
 		float tx = detached ? 0 : textureX;
@@ -539,8 +539,8 @@ public abstract class Polygon {
 	}
 
 	protected float paintScale(Texture tex, boolean x){
-		return x ? (float)tex.getWidth() / (glm.glObj.grouptex ? group().texSizeX : model().texSizeX)
-			: (float)tex.getHeight() / (glm.glObj.grouptex ? group().texSizeY : model().texSizeY);
+		return x ? (float)tex.getWidth() / (glm.glObj.grouptex ? group().texgroup.width : model().texgroup.width)
+			: (float)tex.getHeight() / (glm.glObj.grouptex ? group().texgroup.height : model().texgroup.height);
 	}
 
 	/** Gets a VertexOffset if present, returns null if missing. */
