@@ -264,4 +264,9 @@ public class TextureManager {
 		return list.toArray(new String[0]);
 	}
 
+	public static TextureGroup getOrCreateDefault(){
+		if(getGroups().isEmpty()) return addGroup("default", false);
+		else return getGroups().get(0);
+	}
+
 }
