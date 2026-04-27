@@ -89,8 +89,8 @@ public class TexGroupCom extends TTabCom {
 					boolean model = from.getSelVal().equals("model");
 					Group mg = model ? null : FMT.MODEL.get(from.getSelVal().substring(6));
 					int scl = scale.getSelVal();
-					int x = model ? FMT.MODEL.texSizeX : mg.texSizeX, ox = x;
-					int y = model ? FMT.MODEL.texSizeY : mg.texSizeY, oy = y;
+					int x = model ? FMT.MODEL.texgroup.width : mg.texgroup.width, ox = x;
+					int y = model ? FMT.MODEL.texgroup.height : mg.texgroup.height, oy = y;
 					while(scl > 0){
 						x *= 2;
 						y *= 2;
