@@ -91,8 +91,8 @@ public class ObjExporter implements Exporter {
             buffer.append("# Creator: Empty/FMT\n");
         }
         buffer.append("# Model Name: " + model.name + "\n\n");
-        buffer.append("# TextureWidth: " + model.texSizeX + "\n");
-        buffer.append("# TextureHeight: " + model.texSizeY + "\n\n");
+        buffer.append("# TextureWidth: " + model.texgroup.width + "\n");
+        buffer.append("# TextureHeight: " + model.texgroup.height + "\n\n");
         M4DW rot, rotg = null;
         if(rotate){
             float yaw = settings.g("rotate_y").value();
