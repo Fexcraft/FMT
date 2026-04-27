@@ -192,7 +192,8 @@ public class UVViewer extends Widget {
         }
 
         private void resize(){
-            int x = FMT.MODEL.texSizeX * zoom, y = FMT.MODEL.texSizeY * zoom;
+            int x = FMT.MODEL.texgroup.width * zoom;
+            int y = FMT.MODEL.texgroup.height * zoom;
             setSize(x, y);
             image.setSize(x, y);
             root.getContainer().setSize(x, y);
