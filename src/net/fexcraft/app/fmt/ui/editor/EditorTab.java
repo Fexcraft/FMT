@@ -48,7 +48,7 @@ public class EditorTab extends Element {
 	//
 	protected UpdateCompound updcom = new UpdateCompound();
 	protected Scrollable container;
-	private int next_y_elm_pos = 0;
+	protected int next_y_elm_pos = 0;
 
 	public EditorTab(EditorMode emode){
 		super();
@@ -67,6 +67,8 @@ public class EditorTab extends Element {
 			case TEXTURE: return new UVEditorTab();
 			case PAINTER: return new PainterEditorTab();
 			case PREVIEW: return new PreviewEditorTab();
+			case VARIABLE:
+			case ANIMATION: return new AnimationEditorTab();
 		}
 		return new EditorTab(mode);
 	}
