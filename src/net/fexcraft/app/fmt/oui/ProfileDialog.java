@@ -14,9 +14,6 @@ import com.spinyowl.legui.event.MouseClickEvent;
 import com.spinyowl.legui.image.loader.ImageLoader;
 import com.spinyowl.legui.listener.MouseClickEventListener;
 
-import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.settings.Settings;
-import net.fexcraft.app.fmt.oui.fields.TextField;
 import net.fexcraft.app.fmt.utils.SessionHandler;
 
 /**
@@ -80,7 +77,7 @@ public class ProfileDialog {
 		Dialog dialog = new Dialog(translate("loginbox.title"), 400, 200);
 		dialog.setResizable(false);
 		dialog.getContainer().add(new Label(translate("loginbox.e_mail"), 10, 5, 380, 20));
-		dialog.getContainer().add(mail = new TextField(SessionHandler.getUserMail(), 10, 30, 380, 20).accept(newval -> SessionHandler.updateUserMail(newval)));
+		//TODO dialog.getContainer().add(mail = new TextField(SessionHandler.getUserMail(), 10, 30, 380, 20).accept(newval -> SessionHandler.updateUserMail(newval)));
 		dialog.getContainer().add(new Label(translate("loginbox.password"), 10, 60, 380, 20));
 		PasswordInput passinput = new PasswordInput(SessionHandler.shouldEncrypt() ? "" : SessionHandler.getPassWord(), 10, 85, 380, 20);
 		passinput.addTextInputContentChangeEventListener(event -> SessionHandler.updatePassword(event.getNewValue()));
