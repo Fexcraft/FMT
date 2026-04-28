@@ -29,7 +29,6 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TexturePainter;
 import net.fexcraft.app.fmt.oui.Editor;
-import net.fexcraft.app.fmt.oui.PolySelMenu;
 import net.fexcraft.app.fmt.oui.fields.NumberField;
 import net.fexcraft.app.fmt.utils.Picker.PickTask;
 import net.fexcraft.app.fmt.utils.Picker.PickType;
@@ -178,7 +177,7 @@ public class GGR {
         else if(button == 1){
 			if(isControlDown()){
 				if(action == GLFW_PRESS) return;
-				PolySelMenu.show();
+				//PolySelMenu.show();
 				return;
 			}
 			if(action == GLFW_PRESS){
