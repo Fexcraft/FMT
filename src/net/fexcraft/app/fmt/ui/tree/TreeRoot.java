@@ -24,9 +24,7 @@ public class TreeRoot extends Element {
 
 	@Override
 	public void init(Object... args){
-		add(over = new Element().size(EDITOR_WIDTH, TOOLBAR_HEIGHT).color(GENERIC_BACKGROUND_0.value));
-		over.z += 100;
-		over.recompile();
+		add(over = new Element().size(EDITOR_WIDTH, TOOLBAR_HEIGHT).color(GENERIC_BACKGROUND_0.value).zi(100));
 		for(TreeMode mode : TreeMode.values()){
 			over.add(new Element().pos(5 + mode.ordinal() * 35, 5 ).size(30, 30).texture("icons/tree/" + mode.name().toLowerCase())
 				.onclick(ci -> setMode(mode)).hint("tree.mode." + mode.name().toLowerCase()));
