@@ -60,13 +60,14 @@ public class GroupCom extends TTabCom {
 	}
 
 	protected void orderComponents(){
-		if(container.elements == null) return;
-		fullheight = 5;
-		PolygonCom com;
-		for(Element elm : container.elements){
-			com = (PolygonCom)elm;
-			com.pos(5, fullheight);
-			fullheight += 30;
+		fullheight = container.visible ? 5 : 0;
+		if(container.elements != null){
+			PolygonCom com;
+			for(Element elm : container.elements){
+				com = (PolygonCom)elm;
+				com.pos(5, fullheight);
+				fullheight += 30;
+			}
 		}
 		container.size(w, fullheight += 5);
 		container.recompile();
