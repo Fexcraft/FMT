@@ -7,7 +7,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-import net.fexcraft.app.fmt.oui.fields.RunButton;
 import com.spinyowl.legui.component.*;
 import com.spinyowl.legui.component.optional.align.HorizontalAlign;
 import com.spinyowl.legui.event.MouseClickEvent;
@@ -16,9 +15,7 @@ import org.lwjgl.PointerBuffer;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.util.tinyfd.TinyFileDialogs;
 
-import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
-import net.fexcraft.app.fmt.oui.fields.TextField;
 import net.fexcraft.app.fmt.utils.Translator;
 
 /**
@@ -158,11 +155,11 @@ public class FileChooser {
 		}
 		//
 		dialog.getContainer().add(new Label(Translator.translate("filechooser.bookmarks"), width - rwidth, 50, rwidth - 60, 20));
-		dialog.getContainer().add(new RunButton("dialog.button.add", width - 60, 50, 50, 20, () -> {
+		/*dialog.getContainer().add(new RunButton("dialog.button.add", width - 60, 50, 50, 20, () -> {
 			dialog.close();
 			Settings.BOOKMARKS.add(rootfile);
 			openInternalChooser(title, rootfile.getAbsolutePath(), type, save, task);
-		}));
+		}));*///TODO
 		ScrollablePanel marks = new ScrollablePanel(width - rwidth, 70, rwidth - 10, INTERNAL_HEIGHT - 100);
 		panel.setHorizontalScrollBarVisible(false);
 		int rsize = Settings.BOOKMARKS.size() * 22;
@@ -195,7 +192,7 @@ public class FileChooser {
 		dialog.getContainer().add(marks);
 		//
 		if(save){
-			TextField input = new TextField(Translator.translate("filechooser.enter_name"), 10, INTERNAL_HEIGHT - 20, lwidth - 100, 20);
+			/*TextField input = new TextField(Translator.translate("filechooser.enter_name"), 10, INTERNAL_HEIGHT - 20, lwidth - 100, 20);
 			Button select = new Button(Translator.translate("dialog.button.select"), lwidth - 80, INTERNAL_HEIGHT - 20, 80, 20);
 			select.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
 	        	if(CLICK == e.getAction() && input.getTextState().getText().length() > 0){
@@ -210,7 +207,7 @@ public class FileChooser {
 	        	}
 			});
 			dialog.getContainer().add(select);
-			dialog.getContainer().add(input);
+			dialog.getContainer().add(input);*///TODO
 		}
 		dialog.setResizable(false);
 		dialog.getContainer().add(panel);
