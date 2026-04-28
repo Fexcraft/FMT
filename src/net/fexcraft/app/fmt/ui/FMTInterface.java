@@ -239,6 +239,8 @@ public class FMTInterface extends Element {
 		int idx = FRAMES.indexOf(frame);
 		if(idx < 0) return;
 		Collections.swap(FRAMES, idx, FRAMES.size() - 1);
+		elements.remove(frame);
+		elements.add(0, frame);
 		resortFrames();
 	}
 
