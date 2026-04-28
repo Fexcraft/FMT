@@ -67,6 +67,7 @@ public class Settings {
 	public static Setting<Boolean> ASK_PIVOT_REMOVAL = new Setting<>("ask_pivot_removal", false, GENERAL);
 	public static Setting<Boolean> ASK_HELPER_REMOVAL = new Setting<>("ask_helper_removal", false, GENERAL);
 	public static Setting<Boolean> ASK_TEXTURE_GROUP_REMOVAL = new Setting<>("ask_texture_group_removal", true, GENERAL);
+	public static Setting<Boolean> ASK_ANIMATION_REMOVAL = new Setting<>("ask_animation_removal", true, GENERAL);
 	public static Setting<Boolean> OPEN_FOLDER_AFTER_SAVE = new Setting<>("open_folder_after_save", true, GENERAL);
 	public static Setting<Boolean> SHOW_WELCOME = new Setting<>("show_welcome", true, GENERAL);
 	public static Setting<Boolean> SHOW_UPDATE = new Setting<>("show_update", true, GENERAL);
