@@ -18,7 +18,6 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import static net.fexcraft.app.fmt.settings.Settings.*;
-import static net.fexcraft.app.fmt.ui.FMTInterface.TOOLBAR_HEIGHT;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -49,7 +48,7 @@ public class Element {
 	public CheckMode check_mode = CheckMode.IN_WINDOW;
 	private float x;
 	private float y;
-	public float z;
+	public float zoff;
 	public float w;
 	public float h;
 
@@ -63,6 +62,13 @@ public class Element {
 
 	}
 
+	public Element rRecompile(){
+		recompile();
+		if(elements == null) return this;
+		for(Element elm : elements) elm.rRecompile();
+		return this;
+	}
+
 	public Element recompile(){
 		hedron.recompile = true;
 		hedron.polygons.clear();
@@ -71,6 +77,7 @@ public class Element {
 		pickpos[1] = hedron.posY = gy();
 		pickpos[2] = pickpos[0] + w;
 		pickpos[3] = pickpos[1] + h;
+		float z = z();
 		switch(shape){
 			case RECTANGLE -> {
 				hedron.polygons.add(new Polygon(new Vertex[]{
@@ -309,7 +316,9 @@ public class Element {
 		if(text != null) text.render();
 		if(elements != null) for(Element elm : elements) elm.render();
 		if(hint != null && hovered && HOVER_TIMER >= HOVER_HINT_TIME.value){
-			hint.pos(GGR.mousePosX() + 10, GGR.mousePosY() + (GGR.mousePosY() > FMT.HEIGHT - TOOLBAR_HEIGHT ? -30 : 0)).render();
+			float x = GGR.xCursorUI() + hint.w + 5 > FMT.SCALED_WIDTH ? GGR.xCursorUI() - hint.w - 5 : GGR.xCursorUI() + 5;
+			float y = GGR.yCursorUI() + hint.h > FMT.SCALED_HEIGHT ? FMT.SCALED_HEIGHT - hint.h - 5 : GGR.yCursorUI() + 5;
+			hint.pos(x, y).render();
 		}
 	}
 
@@ -359,7 +368,7 @@ public class Element {
 
 	public Element root(Element elm){
 		root = elm;
-		z += elm.z + 1;
+		zoff++;
 		return this;
 	}
 
@@ -408,6 +417,10 @@ public class Element {
 		if(onscroll != null) onscroll.accept(info);
 	}
 
+	public void onDrag(float xdiff, float ydiff){
+		if(root != null) root.onDrag(xdiff, ydiff);
+	}
+
 	public boolean selected(){
 		return this == SELECTED;
 	}
@@ -449,8 +462,18 @@ public class Element {
 		return this;
 	}
 
-	protected Element zi(){
-		z++;
+	protected float z(){
+		if(root == null) return zoff;
+		return root.z() + zoff;
+	}
+
+	public Element zi(){
+		zoff++;
+		return this;
+	}
+
+	public Element zi(float f){
+		zoff += f;
 		return this;
 	}
 
