@@ -2,9 +2,7 @@ package net.fexcraft.app.fmt.oui.workspace;
 
 import com.spinyowl.legui.component.*;
 import com.spinyowl.legui.component.event.component.ChangeSizeEvent;
-import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
-import net.fexcraft.app.fmt.oui.fields.RunButton;
 import net.fexcraft.app.fmt.utils.Logging;
 import org.joml.Vector2f;
 
@@ -24,7 +22,7 @@ public class WorkspaceViewer extends Widget {
 	public static final int ROWHEIGHT = 30;
 	public ArrayList<FvtmPack> rootfolders = new ArrayList<FvtmPack>();
 	public ScrollablePanel packspanel;
-	public RunButton refresh;
+	//public RunButton refresh;
 	public File folder;
 	public int scrollableheight;
 	private int wv_height = 500;
@@ -52,12 +50,12 @@ public class WorkspaceViewer extends Widget {
 			}
 			getContainer().setSize(vec);
 			packspanel.setSize(vec.x, getSize().y - 30);
-			refresh.setPosition(vec.x - 110, 5);
+			//refresh.setPosition(vec.x - 110, 5);
 			resize();
 		});
 		//Settings.applyBorderless(packspanel);
 		getContainer().add(packspanel);
-		getContainer().add(refresh = new RunButton("Refresh", getSize().x - 110, 5, 100, 20, () -> genView(false)));
+		//getContainer().add(refresh = new RunButton("Refresh", getSize().x - 110, 5, 100, 20, () -> genView(false)));
 		//
 		folder = new File(Settings.WORKSPACE_ROOT.value);
 		if(!folder.exists()) folder.mkdirs();
@@ -176,8 +174,8 @@ public class WorkspaceViewer extends Widget {
 		if(initial) findPacks();
 		new Thread(() -> {
 			Logging.log("Reloading Workspace");
-			refresh.setEnabled(false);
-			refresh.getTextState().setText("reloading...");
+			/*refresh.setEnabled(false);
+			refresh.getTextState().setText("reloading...");*/
 			//packspanel.getContainer().removeAll(rootfolders);
 			//infopanel.getContainer().clearChildComponents();
 			//rootfolders.clear();
@@ -185,8 +183,8 @@ public class WorkspaceViewer extends Widget {
 			//addFolder(folder, null, 0);
 			resize();
 			packspanel.getVerticalScrollBar().setScrollStep(0f);
-			refresh.setEnabled(true);
-			refresh.getTextState().setText("Refresh");
+			/*refresh.setEnabled(true);
+			refresh.getTextState().setText("Refresh");*/
 		}, "FolderViewGenerator").start();
 	}
 
