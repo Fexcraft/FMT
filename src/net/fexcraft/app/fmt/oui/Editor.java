@@ -9,7 +9,6 @@ import com.spinyowl.legui.input.Mouse.MouseButton;
 import com.spinyowl.legui.style.Border;
 import com.spinyowl.legui.style.Style.DisplayType;
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.oui.editors.ConfigEditor;
 import net.fexcraft.app.fmt.oui.fields.TextField;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.json.JsonHandler;
@@ -33,7 +32,7 @@ public class Editor extends Component {
 	public static Editor TEXTURE_EDITOR;
 	public static Editor UV_EDITOR;
 	public static Editor PREVIEW_EDITOR;
-	public static ConfigEditor CONFIG_EDITOR;
+	public static Editor CONFIG_EDITOR;
 	public static Editor ANIM_EDITOR;
 	public static Editor VAR_EDITOR;
 	public static float RATE = 1f;
@@ -230,7 +229,7 @@ public class Editor extends Component {
 		//Editor.TEXTURE_EDITOR = new TextureEditor();
 		//Editor.UV_EDITOR = new UVEditor();
 		//Editor.PREVIEW_EDITOR = new PreviewEditor();
-		Editor.CONFIG_EDITOR = new ConfigEditor();
+		//Editor.CONFIG_EDITOR = new ConfigEditor();
 		//Editor.ANIM_EDITOR = new AnimationEditor();
 		//Editor.VAR_EDITOR = new VariableEditor();
 		//Editor.TEXTURE_TREE = new TextureTree();
