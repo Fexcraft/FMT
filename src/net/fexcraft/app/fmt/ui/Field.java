@@ -1,7 +1,7 @@
 package net.fexcraft.app.fmt.ui;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.oui.Editor;
+import net.fexcraft.app.fmt.ui.editor.EditorRoot;
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
@@ -87,7 +87,7 @@ public class Field extends Element {
 			FMT.MODEL.updateValue(val, this, 0);
 		};
 		onscroll(si -> {
-			float flat = scroll(si.sy() > 0 ? Editor.RATE : -Editor.RATE);
+			float flat = scroll(si.sy() > 0 ? EditorRoot.RATE : -EditorRoot.RATE);
 			text(type_format(flat));
 			previous = text.text();
 			FMT.MODEL.updateValue(val, this, 0);
@@ -97,7 +97,7 @@ public class Field extends Element {
 	public Field consumer(Consumer<Field> cons){
 		consumer = cons;
 		onscroll(si -> {
-			float flat = scroll(si.sy() > 0 ? Editor.RATE : -Editor.RATE);
+			float flat = scroll(si.sy() > 0 ? EditorRoot.RATE : -EditorRoot.RATE);
 			text(type_format(flat));
 			previous = text.text();
 			consumer.accept(this);
