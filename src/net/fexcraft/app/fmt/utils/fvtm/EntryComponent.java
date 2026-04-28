@@ -8,10 +8,6 @@ import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Pivot;
 import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.oui.Icon;
-import net.fexcraft.app.fmt.oui.fields.BoolButton;
-import net.fexcraft.app.fmt.oui.fields.ColorField;
-import net.fexcraft.app.fmt.oui.fields.RunButton;
-import net.fexcraft.app.fmt.oui.fields.TextField;
 import net.fexcraft.app.fmt.oui.workspace.DirComponent;
 import net.fexcraft.app.fmt.oui.workspace.FvtmPack;
 import net.fexcraft.app.fmt.oui.workspace.WorkspaceViewer;
@@ -83,7 +79,7 @@ public class EntryComponent extends Component {
 			if(edit){
 				add(new Icon(0, 20, 0, 525, 10, "./resources/textures/icons/configeditor/rename.png", () -> {
 					Dialog dialog = new Dialog("Enter new name.", 440, 110);
-					TextField field = new TextField(key.key, 10, 10, 420, 30, false);
+					/*TextField field = new TextField(key.key, 10, 10, 420, 30, false);
 					dialog.getContainer().add(field);
 					dialog.getContainer().add(new RunButton("dialog.button.confirm", 10, 50, 200, 30, () -> {
 						if(root.val.isMap() && root.entry.type.subs() && !root.entry.type.subtype()){
@@ -97,7 +93,7 @@ public class EntryComponent extends Component {
 							updateVal();
 						}
 						dialog.close();
-					}));
+					}));*///TODO
 					dialog.setResizable(false);
 					//dialog.show(FMT.FRAME);
 				}).addTooltip("rename key"));
@@ -270,7 +266,7 @@ public class EntryComponent extends Component {
 					dialog.getContainer().add(vecbox);
 					dialog.getContainer().add(new Icon(20, width - 60, 55, vecbox, true, null));
 					dialog.getContainer().add(new Icon(20, width - 30, 55, vecbox, false, null));
-					dialog.getContainer().add(new RunButton("dialog.button.select", width - 110, 90, 100, 20, () -> confirmVecBox(vecbox.getSelection(), typebox, vecbox, dialog)));
+					//TODO dialog.getContainer().add(new RunButton("dialog.button.select", width - 110, 90, 100, 20, () -> confirmVecBox(vecbox.getSelection(), typebox, vecbox, dialog)));
 					dialog.setResizable(false);
 					//dialog.show(FMT.FRAME);
 					break;
@@ -393,7 +389,7 @@ public class EntryComponent extends Component {
 				}
 			}
 		}
-		else if(entry.type.color()){
+		/*else if(entry.type.color()){
 			add(new ColorField(this, (color, bool) -> {
 				fillIfMissing();
 				val.value("#" + Integer.toHexString(color));
@@ -404,7 +400,7 @@ public class EntryComponent extends Component {
 				fillIfMissing();
 				val.value(bool);
 			}));
-		}
+		}*///TODO
 		else if(entry.type.enumerate()){
 			SelectBox<String> box = new SelectBox<>(220, 7, 300, 26);
 			box.setVisibleCount(8);
