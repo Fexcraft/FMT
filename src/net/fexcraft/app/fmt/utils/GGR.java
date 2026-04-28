@@ -26,7 +26,6 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.polygon.Arrows;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TexturePainter;
 import net.fexcraft.app.fmt.oui.Editor;
@@ -115,36 +114,39 @@ public class GGR {
     public void pollInput(float delta){
 		if(grabbed && cursor_moved0){
 			if(FMT.MODEL.orient.rect()){
-				hor -= (posx - oposx) * Settings.MOUSE_SENSITIVITY.value * delta * 0.005;
-				ver -= (posy - oposy) * Settings.MOUSE_SENSITIVITY.value * delta * 0.005;
+				hor -= apos_x * Settings.MOUSE_SENSITIVITY.value * delta * 0.005;
+				ver -= apos_y * Settings.MOUSE_SENSITIVITY.value * delta * 0.005;
 			}
 			else{
-				hor += (posx - oposx) * Settings.MOUSE_SENSITIVITY.value * delta * 0.005;
-				ver += (posy - oposy) * Settings.MOUSE_SENSITIVITY.value * delta * 0.005;
+				hor += apos_x * Settings.MOUSE_SENSITIVITY.value * delta * 0.005;
+				ver += apos_y * Settings.MOUSE_SENSITIVITY.value * delta * 0.005;
 			}
             ver = Math.max(-maxVR, Math.min(maxVR, ver));
             cursor_moved0 = false;
+			apos_x = apos_y = 0;
 		}
 		else if(scroll_down){
-			pos.x += (posx - oposx) * 0.001;
-			pos.y += (posy - oposy) * 0.001;
+			pos.x += apos_x * 0.001;
+			pos.y += apos_y * 0.001;
 		}
-		/*else if(Arrows.SEL > 0 && cursor_moved0){
-			float f0 = (float)(posx - oposx) * Settings.ARROW_SENSIVITY.value * delta;
-			float f1 = (float)(posy - oposy) * Settings.ARROW_SENSIVITY.value * delta;
-			Arrows.process(Math.abs((f0 + f1) * 0.5f));
-            cursor_moved0 = false;
-		}*/
+		if(left_down && Element.HOVERED != null && cursor_moved0){
+			Element.HOVERED.onDrag((float)apos_x, (float)apos_y);
+			cursor_moved0 = false;
+			apos_x = apos_y = 0;
+		}
         processCameraInput(delta);
     }
 
-    public static double posx, posy, oposx = -1, oposy = -1;
+	public static double cpos_x, cpos_y;//current cursor pos
+	public static double opos_x = -1, opos_y = -1;//old cursor pos
+	public static double apos_x, apos_y;//accumulator
+	public static double spos_x, spos_y;//selection start pos
     public static boolean right_down;
 	public static boolean left_down;
 	public static boolean scroll_down;
 	public static boolean grabbed;
 	public static boolean cursor_moved0;
-	public static boolean cursor_moved1;
+	//public static boolean cursor_moved1;
 	public static long left_timer;
 
 	public void mouseCallback(long window, int button, int action, int mods){
@@ -152,12 +154,10 @@ public class GGR {
 			if(action == GLFW_PRESS){
 				left_down = true;
 				left_timer = 0;
+				apos_x = apos_y = 0;
 			}
 			else if(action == GLFW_RELEASE){
-				/*if(Arrows.SEL > 0){
-					Arrows.SEL = 0;
-				}
-				else*/ if(sel_panel != null){
+				if(sel_panel != null){
 					sp_pos = sel_panel.getPosition();
 					sp_size = sel_panel.getSize();
 					Picker.pick(PickType.POLYGON, PickTask.MULTISELECT, true);
@@ -170,16 +170,12 @@ public class GGR {
 					else Picker.pick(Selector.TYPE, PickTask.SELECT, true);
 				}
 				else{
-					FMT.UI.click(posx, posy, 0);
+					FMT.UI.click(cpos_x, cpos_y, 0);
 				}
 				left_down = false;
 			}
         }
         else if(button == 1){
-			/*if(Arrows.SEL > 0){
-				if(action == GLFW_RELEASE) Arrows.DIR = !Arrows.DIR;
-				return;
-			}*/
 			if(isControlDown()){
 				if(action == GLFW_PRESS) return;
 				PolySelMenu.show();
@@ -189,20 +185,22 @@ public class GGR {
 				if(!isOverUI()){
 					glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 					grabbed = true;
+					apos_x = apos_y = 0;
 				}
 				right_down = true;
 			}
 			else if(action == GLFW_RELEASE){
-				if(isOverUI()) FMT.UI.click(posx, posy, 1);
+				if(isOverUI()) FMT.UI.click(cpos_x, cpos_y, 1);
 				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 				right_down = false;
 				grabbed = false;
-				cursor_moved1 = false;
+				//cursor_moved1 = false;
 			}
         }
         if(button == 2){
 			if(action == GLFW_PRESS){
 				scroll_down = true;
+				apos_x = apos_y = 0;
 			}
 			else if(action == GLFW_RELEASE){
 				scroll_down = false;
@@ -211,7 +209,7 @@ public class GGR {
 	}
 
 	public static void updateHoveredElement(){
-		Element hov = FMT.UI.getElmAt(posx, posy);
+		Element hov = FMT.UI.getElmAt(cpos_x, cpos_y);
 		Element.HOVER_TIMER += FMT.delta;
 		if(Element.HOVERED != null && Element.HOVERED != hov){
 			Element.HOVERED.hovered(false);
@@ -229,7 +227,6 @@ public class GGR {
 
 	private Panel sel_panel;
 	private Vector2f sp_pos, sp_size;
-	private double cx, cy;
 
 	public Vector2f getSelPos(){
 		return sp_pos;
@@ -243,18 +240,18 @@ public class GGR {
 		if(left_down){
 			if(isOverUI()) return;
 			if(left_timer == 0){
-				cx = posx;
-				cy = posy;
+				spos_x = cpos_x;
+				spos_y = cpos_y;
 			}
 			if(left_timer > 5){
 				if(sel_panel == null){
-					sel_panel = new Panel((float)cx, (float)cy, 100, 100);
+					sel_panel = new Panel((float)spos_x, (float)spos_y, 100, 100);
 					sel_panel.getStyle().getBackground().setColor(ColorConstants.transparent());
 					//sel_panel.getStyle().setBorder(new SimpleLineBorder(FMT.rgba(Settings.SELECTION_LINES.value), 1));
 					//FMT.FRAME.getContainer().add(sel_panel);
 				}
-				sel_panel.setPosition((float)(cx < posx ? cx : posx), (float)(cy < posy ? cy : posy));
-				sel_panel.setSize((float)(cx < posx ? posx - cx : cx - posx), (float)(cy < posy ? posy - cy : cy - posy));
+				sel_panel.setPosition((float)(spos_x < cpos_x ? spos_x : cpos_x), (float)(spos_y < cpos_y ? spos_y : cpos_y));
+				sel_panel.setSize((float)(spos_x < cpos_x ? cpos_x - spos_x : spos_x - cpos_x), (float)(spos_y < cpos_y ? cpos_y - spos_y : spos_y - cpos_y));
 			}
 			left_timer++;
 		}
@@ -293,15 +290,17 @@ public class GGR {
 	}
 
 	public void cursorPosCallback(long window, double xpos, double ypos){
-		if(oposx == -1 || oposy == -1){
-			oposx = xpos;
-			oposy = posy;
+		if(opos_x == -1){
+			opos_x = xpos;
+			opos_y = ypos;
 		}
-		oposx = posx;
-		oposy = posy;
-		posx = xpos;
-		posy = ypos;
-		cursor_moved0 = cursor_moved1 = oposx != posx || oposy != posy;
+		opos_x = cpos_x;
+		opos_y = cpos_y;
+		apos_x += xpos - cpos_x;
+		apos_y += ypos - cpos_y;
+		cpos_x = xpos;
+		cpos_y = ypos;
+		cursor_moved0 = /*cursor_moved1 =*/ opos_x != cpos_x || opos_y != cpos_y;
 	}
 
 	public void scrollCallback(long window, double xoffset, double yoffset){
@@ -394,12 +393,20 @@ public class GGR {
 		return action == GLFW_RELEASE ? false : action == GLFW_PRESS || action == GLFW_REPEAT;
 	}
 
-	public static int mousePosX(){
-		return (int)posx;
+	public static int xCursor(){
+		return (int)cpos_x;
 	}
 
-	public static int mousePosY(){
-		return (int)posy;
+	public static int yCursor(){
+		return (int)cpos_y;
+	}
+
+	public static float xCursorUI(){
+		return (float)(cpos_x / Settings.UI_SCALE.value);
+	}
+
+	public static float yCursorUI(){
+		return (float)(cpos_y / Settings.UI_SCALE.value);
 	}
 
 	public void reset(){
