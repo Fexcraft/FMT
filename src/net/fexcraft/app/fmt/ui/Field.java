@@ -221,6 +221,15 @@ public class Field extends Element {
 		return res;
 	}
 
+	public long parse_long(){
+		long res;
+		String str = text.text().replaceAll("[^0-9\\.\\-]", "");
+		if(str.isEmpty()) str = "0";
+		if(str.endsWith(".")) str = str.replace(".", "");
+		res = Long.parseLong(str);
+		return res;
+	}
+
 	private float scroll(float rate){
 		float flat = parse_float();
 		flat += rate;
