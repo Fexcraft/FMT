@@ -10,7 +10,7 @@ import static net.fexcraft.app.fmt.settings.Settings.*;
 /**
  * @author Ferdinand Calo' (FEX___96)
  */
-public class Dialog extends Element {
+public class Dialog extends Frame {
 
 	public Element title;
 	public Element container;
@@ -20,7 +20,6 @@ public class Dialog extends Element {
 
 	public Dialog(int width, int height){
 		super();
-		z += 200;
 		pos((FMT.SCALED_WIDTH - width) * 0.5f, (FMT.SCALED_HEIGHT - height) * 0.5f);
 		size(width, height + 30);
 		color(GENERIC_BACKGROUND_0.value);
@@ -30,6 +29,7 @@ public class Dialog extends Element {
 	@Override
 	public void init(Object... args){
 		add(title = new Element().size(w - 31, 30).color(GENERIC_BACKGROUND_1.value)
+			.onclick(ci -> FMT.UI.setFrameOnTop(this))
 			.translate(args.length > 0 ? args[0].toString() : "dialog.title.default").text_autoscale());
 		add(new Element().size(30, 30).pos(w - 31, 0).texture("icons/component/exit")
 			.hoverable(true).onclick(ci -> close()));
@@ -94,6 +94,12 @@ public class Dialog extends Element {
 	public Dialog addRowElm(float row, Element elm, Object... init){
 		container.add(elm.pos(5, 5 + row * 30), init);
 		return this;
+	}
+
+	@Override
+	public void onDrag(float xdiff, float ydiff){
+		xa(xdiff);
+		ya(ydiff);
 	}
 
 	public static enum DialogButton {
