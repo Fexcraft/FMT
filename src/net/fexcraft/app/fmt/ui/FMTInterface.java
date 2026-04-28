@@ -12,6 +12,7 @@ import net.fexcraft.app.fmt.ui.tree.TreeRoot;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.utils.*;
+import net.fexcraft.app.fmt.workspace.Workspace;
 import net.fexcraft.lib.common.math.Time;
 
 import java.util.ArrayList;
@@ -80,7 +81,7 @@ public class FMTInterface extends Element {
 					clipboard.addEntry("toolbar.utils.clipboard.copy", ci -> FMT.MODEL.copyToClipboard(false));
 					clipboard.addEntry("toolbar.utils.clipboard.paste", ci -> FMT.MODEL.pasteFromClipboard());
 					clipboard.addEntry("toolbar.utils.clipboard.copy_grouped", ci -> FMT.MODEL.copyToClipboard(true));
-					menu.addEntry("toolbar.utils.workspace", ci -> WorkspaceViewer.show0());
+					menu.addEntry("toolbar.utils.workspace", ci -> FMT.WORKSPACE.show());
 					menu.addEntry("toolbar.utils.reset_camera", ci -> FMT.CAM.reset());
 					menu.addEntry("toolbar.utils.create_gif", ci -> ImageHandler.createGif());
 					menu.addEntry("toolbar.utils.screenshot", ci -> ImageHandler.takeScreenshot(false));
@@ -154,6 +155,7 @@ public class FMTInterface extends Element {
 			.hint("toolbar.icon.tree"));
 		//
 		add((settings = new SettingsUI()).hide());
+		add((FMT.WORKSPACE = new Workspace()).hide());
 		add((editor = new EditorRoot()));
 		add((tree = new TreeRoot()));
 		//
