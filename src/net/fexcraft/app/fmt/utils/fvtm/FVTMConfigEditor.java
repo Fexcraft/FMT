@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import com.spinyowl.legui.component.Component;
 import com.spinyowl.legui.component.event.component.ChangeSizeEvent;
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.settings.Settings;
-import net.fexcraft.app.fmt.oui.fields.RunButton;
 import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.fmt.utils.Translator;
 import net.fexcraft.app.json.JsonHandler;
@@ -61,11 +59,11 @@ public class FVTMConfigEditor extends Widget {
 		remap();
 		//Settings.applyComponentTheme(getContainer());
 		getContainer().add(panel = new ScrollablePanel(10, 40, width - 20, height - 70));
-		getContainer().add(new RunButton("dialog.button.save", width - 220, 10, 100, 24, () -> save()));
+		/*getContainer().add(new RunButton("dialog.button.save", width - 220, 10, 100, 24, () -> save()));
 		getContainer().add(new RunButton("dialog.button.close", width - 110, 10, 100, 24, () -> {
 			//FMT.FRAME.getContainer().remove(this);
 			INSTANCES.remove(this);
-		}));
+		}));*///TODO
 		getListenerMap().addListener(ChangeSizeEvent.class, event -> {
 			Vector2f vec = new Vector2f();
 			event.getNewSize().get(vec);
