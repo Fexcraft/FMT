@@ -4,7 +4,6 @@ import net.fexcraft.app.fmt.animation.Animation;
 import net.fexcraft.app.fmt.env.PackDevEnv;
 import net.fexcraft.app.fmt.ui.FMTInterface;
 import net.fexcraft.app.fmt.ui.FontRenderer;
-import net.fexcraft.app.fmt.polygon.Arrows;
 import net.fexcraft.app.fmt.polygon.GLObject;
 import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.polygon.PolyRenderer;
@@ -341,7 +340,6 @@ public class FMT {
 			centermarker1.render();
 			centermarker2.render();
 		}
-		if(Arrows.MODE.active()) Arrows.render(DrawMode.RGBCOLOR); 
 		MODEL.render(alpha);
 		if(Selector.TYPE == Picker.PickType.VERTEX || Selector.SHOW_VERTICES){
 			PolyRenderer.mode(DrawMode.RGBCOLOR);
