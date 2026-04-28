@@ -9,7 +9,6 @@ import com.spinyowl.legui.style.border.SimpleLineBorder;
 import com.spinyowl.legui.style.color.ColorConstants;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
-import net.fexcraft.app.fmt.oui.EditorComponent;
 import net.fexcraft.app.fmt.oui.FileChooser;
 import net.fexcraft.app.fmt.oui.JsonEditor;
 import net.fexcraft.app.fmt.oui.fields.RunButton;
@@ -35,32 +34,10 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.*;
 
-import static net.fexcraft.app.fmt.utils.Translator.translate;
-
 /**
  * @author Ferdinand Calo' (FEX___96)
  */
-public class ConfigGeneral extends EditorComponent {
-
-	protected static final String genid = "config.general";
-
-	public ConfigGeneral(){
-		super(genid, 430, false, true);
-		add(new Label(translate(LANG_PREFIX + genid + ".pack_utils"), L5, row(1), LW, HEIGHT));
-		add(new RunButton("editor.component.config.general.pack_new", L5, row(1), LW, HEIGHT, ConfigGeneral::createNewPack));
-		add(new RunButton("editor.component.config.general.gen_asset_dirs", L5, row(1), LW, HEIGHT, ConfigGeneral::genAssetDirs));
-		add(new RunButton("editor.component.config.general.gen_icons", L5, row(1), LW, HEIGHT, ConfigGeneral::genIconsInPack));
-		add(new RunButton("editor.component.config.general.content_new", L5, row(1), LW, HEIGHT, ConfigGeneral::createNewContent));
-		add(new RunButton("editor.component.config.general.icon_from_view", L5, row(1), LW, HEIGHT, ConfigGeneral::createNewIcon));
-		add(new RunButton("editor.component.config.general.road_assets", L5, row(1), LW, HEIGHT, ConfigGeneral::genRoadAssets));
-		add(new Label(translate(LANG_PREFIX + genid + ".file_utils"), L5, row(2), LW, HEIGHT));
-		add(new RunButton("editor.component.config.general.open_json", L5, row(1), LW, HEIGHT, ConfigGeneral::openJson));
-		add(new RunButton("editor.component.config.general.mirror_lang", L5, row(1), LW, HEIGHT, ConfigGeneral::mirrorLang));
-		add(new Label(translate(LANG_PREFIX + genid + ".run_utils"), L5, row(2), LW, HEIGHT));
-		add(new RunButton("Run 1.12", L5, row(1), LW, HEIGHT, () -> WorkspaceViewer.run(true)));
-		add(new RunButton("Run 1.2+", L5, row(1), LW, HEIGHT, () -> WorkspaceViewer.run(false)));
-
-	}
+public class ConfigGeneral {
 
 	public static void createNewPack(){
 		Dialog dialog = new Dialog("Pack Creation Settings", 420, 190);
@@ -408,7 +385,7 @@ public class ConfigGeneral extends EditorComponent {
 		});
 	}
 
-	private static void openJson(){
+	public static void openJson(){
 		FileChooser.chooseFile("Choose a JSON file.", Settings.WORKSPACE_ROOT.value, FileChooser.TYPE_JSON, false, file -> {
 			try{
 				if(file != null && file.exists()) new JsonEditor(file);
@@ -419,7 +396,7 @@ public class ConfigGeneral extends EditorComponent {
 		});
 	}
 
-	private static void mirrorLang(){
+	public static void mirrorLang(){
 		FileChooser.chooseFile("Choose a lang file.", Settings.WORKSPACE_ROOT.value, FileChooser.TYPE_ANY, false, file -> {
 			try{
 				LinkedHashMap<String, LangCache.LangEntry> entries = new LinkedHashMap<>();
