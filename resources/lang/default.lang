@@ -386,6 +386,11 @@ uvviewer.button.texture=Toggle Texture
 uvviewer.button.zoom_in=Zoom In
 uvviewer.button.zoom_out=Zoom Out
 
+# Config Utils
+utils.config.create_pack=New Pack Creator
+utils.config.create_pack.name=Pack Name
+utils.config.create_pack.id=Pack ID ("modid")
+
 # FVTM Config Editor
 fvtmeditor.title=FVTM Config Editor
 
