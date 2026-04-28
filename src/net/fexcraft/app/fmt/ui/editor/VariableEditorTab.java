@@ -12,7 +12,7 @@ import static net.fexcraft.app.fmt.settings.Settings.*;
 import static net.fexcraft.app.fmt.ui.Field.FieldType.*;
 import static net.fexcraft.app.fmt.ui.Field.FieldType.FLOAT;
 import static net.fexcraft.app.fmt.ui.Field.FieldType.INT;
-import static net.fexcraft.app.fmt.ui.editor.EditorRoot.NOANIMATIONSEL;
+import static net.fexcraft.app.fmt.ui.editor.EditorRoot.NOVARIABLES;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -76,7 +76,7 @@ public class VariableEditorTab extends EditorTab {
 		next_y_elm_pos = 0;
 		if(FMT.MODEL.vehattrs.isEmpty()){
 			container.add(com, "editor.variable.general", 65);
-			com.add(new TextElm(FO, next_y_pos(1), FF, NOANIMATIONSEL));
+			com.add(new TextElm(FO, next_y_pos(1), FF, NOVARIABLES));
 			return;
 		}
 		Field field;
