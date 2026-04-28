@@ -88,7 +88,7 @@ public class EditorRoot extends Element {
 
 	public static enum EditorMode {
 
-		POLYGON, GROUP, PIVOT, MODEL, TEXTURE, PAINTER, PREVIEW, VARIABLE, ANIMATION
+		POLYGON, GROUP, PIVOT, MODEL, TEXTURE, PAINTER, PREVIEW, VARIABLE, ANIMATION, CONFIG
 
 	}
 
