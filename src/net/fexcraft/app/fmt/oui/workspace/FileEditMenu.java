@@ -49,7 +49,7 @@ public class FileEditMenu {
 			WorkspaceViewer.viewer().genView();
 			layer.hide();
 		}));
-		layer = new MenuLayer(null, new Vector2f((float)GGR.posx, (float)GGR.posy), components, null){
+		layer = new MenuLayer(null, new Vector2f((float)GGR.xCursor(), (float)GGR.yCursor()), components, null){
 			@Override
 			public boolean timed(){
 				return true;
@@ -60,7 +60,7 @@ public class FileEditMenu {
 	public static void show(DirComponent com, File fl){
 		dircom = dircom;
 		file = fl;
-		layer.setPosition((float)GGR.posx, (float)GGR.posy);
+		layer.setPosition((float)GGR.xCursor(), (float)GGR.yCursor());
 		layer.show();
 	}
 
