@@ -28,8 +28,6 @@ import org.joml.Vector3f;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TexturePainter;
-import net.fexcraft.app.fmt.oui.Editor;
-import net.fexcraft.app.fmt.oui.fields.NumberField;
 import net.fexcraft.app.fmt.utils.Picker.PickTask;
 import net.fexcraft.app.fmt.utils.Picker.PickType;
 import net.fexcraft.lib.common.Static;
@@ -410,10 +408,6 @@ public class GGR {
 
 	public void fov(float fov){
 		this.fov = fov;
-	}
-
-	private String format(double n){
-		return NumberField.getFormat().format(n);
 	}
     
 }
