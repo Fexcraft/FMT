@@ -66,7 +66,11 @@ public class EditorRoot extends Element {
 
 	public static void setMode(EditorMode mode){
 		for(EditorTab editor : EDITORS) editor.hide();
-		EDITORS[mode.ordinal()].show();
+		if(mode == null) editor.visible = false;
+		else{
+			EDITORS[mode.ordinal()].show();
+			editor.visible = true;
+		}
 	}
 
 	@Override
