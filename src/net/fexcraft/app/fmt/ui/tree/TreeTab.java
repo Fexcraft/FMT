@@ -37,9 +37,7 @@ public class TreeTab extends Element {
 
 	@Override
 	public void init(Object... args){
-		add(over = new Element().pos(0, TOOLBAR_HEIGHT).size(EDITOR_WIDTH, (int)args[0]).color(GENERIC_BACKGROUND_0.value));
-		over.z += 100;
-		over.recompile();
+		add(over = new Element().pos(0, TOOLBAR_HEIGHT).size(EDITOR_WIDTH, (int)args[0]).color(GENERIC_BACKGROUND_0.value).zi(100));
 		add((container = new Scrollable(false, TOOLBAR_HEIGHT + over.h)));
 		container.updateSize(w, h);
 	}
