@@ -12,9 +12,10 @@ import net.fexcraft.app.fmt.ui.Field;
 import net.fexcraft.app.fmt.polygon.Arrows;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TexturePainter;
-import net.fexcraft.app.fmt.oui.Editor;
 import net.fexcraft.app.fmt.ui.editor.EditorRoot;
 import net.fexcraft.app.fmt.ui.editor.EditorRoot.EditorMode;
+import net.fexcraft.app.fmt.ui.tree.TreeRoot;
+import net.fexcraft.app.fmt.ui.tree.TreeRoot.TreeMode;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonHandler.PrintOption;
 import net.fexcraft.app.json.JsonMap;
@@ -63,18 +64,12 @@ public class KeyCompound {
 		}));
 		keys.add(new KeyFunction("toggle_tree", GLFW_KEY_P, (action) -> {
 			if(GGR.isOverUI() || action != GLFW_RELEASE) return;
-			if(Editor.VISIBLE_TREE == null){
-				Editor.POLYGON_TREE.show();
+			int vis = -1;
+			for(int i = 0; i < TreeRoot.TREES.length; i++){
+				if(TreeRoot.TREES[i].visible) vis = i;
 			}
-			else{
-				int idx = Editor.TREES.indexOf(Editor.VISIBLE_TREE) + 1;
-				if(idx >= Editor.TREES.size()){
-					Editor.VISIBLE_TREE.hide();
-				}
-				else{
-					Editor.TREES.get(idx).show();
-				}
-			}
+			if(++vis >= TreeRoot.TREES.length) TreeRoot.setMode(null);
+			else TreeRoot.setMode(TreeMode.values()[vis]);
 		}));
 		keys.add(new KeyFunction("zoom_in", GLFW_KEY_Z, (action) -> onRelease(action, () -> FMT.CAM.toggleZoom())));
 		keys.add(new KeyFunction("painter_channel", GLFW_KEY_X, (action) -> onRelease(action, () -> TexturePainter.swapActive(1))));
@@ -88,6 +83,10 @@ public class KeyCompound {
 				if(action == GLFW_RELEASE) EditorRoot.setMode(EditorMode.values()[idx]);
 			}));
 		}
+		keys.add(new KeyFunction("hide_editor", GLFW_KEY_0, action -> {
+			if(GGR.isOverUI()) return;
+			if(action == GLFW_RELEASE) EditorRoot.setMode(null);
+		}));
 		//
 		keys.add(new KeyFunction("camera_rotate_left",  GLFW_KEY_LEFT,  action -> { if(!GGR.isOverUI()) FMT.CAM.hor -= Static.rad5; }));
 		keys.add(new KeyFunction("camera_rotate_right", GLFW_KEY_RIGHT, action -> { if(!GGR.isOverUI()) FMT.CAM.hor += Static.rad5; }));
