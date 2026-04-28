@@ -67,6 +67,7 @@ public class Workspace extends Frame {
 			pos((FMT.SCALED_WIDTH - w) * 0.5f, (FMT.SCALED_HEIGHT - h) * 0.5f);
 			reloadPacks();
 		}
+		FMT.UI.setFrameOnTop(this);
 		return super.show();
 	}
 
