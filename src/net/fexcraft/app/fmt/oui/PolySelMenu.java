@@ -39,7 +39,7 @@ public class PolySelMenu {
 			FMT.MODEL.delsel();
 			layer.hide();
 		}));
-		layer = new MenuLayer(null, new Vector2f((float)GGR.posx, (float)GGR.posy), components, null){
+		layer = new MenuLayer(null, new Vector2f((float)GGR.xCursor(), (float)GGR.yCursor()), components, null){
 			@Override
 			public boolean timed(){
 				return true;
@@ -48,7 +48,7 @@ public class PolySelMenu {
 	}
 
 	public static void show(){
-		layer.setPosition((float)GGR.posx, (float)GGR.posy);
+		layer.setPosition((float)GGR.xCursor(), (float)GGR.yCursor());
 		layer.show();
 	}
 
