@@ -13,7 +13,7 @@ public class Hint extends Element {
 
 	@Override
 	public void init(Object... args){
-		z = 999;
+		zoff = 200;
 		color(RGB.WHITE);
 		text(args[0].toString());
 	}
