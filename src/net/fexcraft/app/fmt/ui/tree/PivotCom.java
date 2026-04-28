@@ -61,13 +61,14 @@ public class PivotCom extends TTabCom {
 	}
 
 	protected void orderComponents(){
-		if(container.elements == null) return;
-		fullheight = 5;
-		GroupCom com;
-		for(Element elm : container.elements){
-			com = (GroupCom)elm;
-			com.pos(5, fullheight);
-			fullheight += com.container.visible ? com.fullheight + 35 : 35;
+		fullheight = container.visible ? 5 : 0;
+		if(container.elements != null){
+			GroupCom com;
+			for(Element elm : container.elements){
+				com = (GroupCom)elm;
+				com.pos(5, fullheight);
+				fullheight += com.container.visible ? com.fullheight + 35 : 35;
+			}
 		}
 		container.size(w, fullheight);
 		container.recompile();
