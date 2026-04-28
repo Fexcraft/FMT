@@ -236,11 +236,12 @@ public class FontRenderer {
 			float th = 1f / type.height;
 			float tx = tw * g.x;
 			float ty = th * g.y;
+			float z = text.root.z() + 0.5f;
 			text.hedron.polygons.add(new Polygon(new Vertex[]{
-				new Vertex((px + g.width) * text.scale, py * text.scale, text.root.z + 0.5f).uv(tx + (g.width * tw), ty),
-				new Vertex(px * text.scale, py * text.scale, text.root.z + 0.5f).uv(tx, ty),
-				new Vertex(px * text.scale, (py + g.height) * text.scale, text.root.z + 0.5f).uv(tx, ty + (g.height * th)),
-				new Vertex((px + g.width) * text.scale, (py + g.height) * text.scale, text.root.z + 0.5f).uv(tx + (g.width * tw), ty + (g.height * th)),
+				new Vertex((px + g.width) * text.scale, py * text.scale, z).uv(tx + (g.width * tw), ty),
+				new Vertex(px * text.scale, py * text.scale, z).uv(tx, ty),
+				new Vertex(px * text.scale, (py + g.height) * text.scale, z).uv(tx, ty + (g.height * th)),
+				new Vertex((px + g.width) * text.scale, (py + g.height) * text.scale, z).uv(tx + (g.width * tw), ty + (g.height * th)),
 			}).color(color));
 			px += g.width;
 		}
