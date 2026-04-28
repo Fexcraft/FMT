@@ -3,6 +3,7 @@ package net.fexcraft.app.fmt.ui.editor;
 import net.fexcraft.app.fmt.oui.components.ConfigGeneral;
 import net.fexcraft.app.fmt.oui.workspace.WorkspaceViewer;
 import net.fexcraft.app.fmt.ui.*;
+import net.fexcraft.app.fmt.workspace.ConfigUtils;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -22,7 +23,7 @@ public class ConfigEditorTab extends EditorTab {
 		super.init(objs);
 		next_y_elm_pos = 5;
 		container.add(pack_utils = new ETabCom("pack_utils"), "editor.config.pack_utils", 220);
-		pack_utils.add(new RunElm(FO, next_y_pos(1), FF, "editor.config.pack_utils.pack_new", ci -> ConfigGeneral.createNewPack()));
+		pack_utils.add(new RunElm(FO, next_y_pos(1), FF, "editor.config.pack_utils.pack_new", ci -> ConfigUtils.createNewFvtmPack()));
 		pack_utils.add(new RunElm(FO, next_y_pos(1), FF, "editor.config.pack_utils.gen_asset_dirs", ci -> ConfigGeneral.genAssetDirs()));
 		pack_utils.add(new RunElm(FO, next_y_pos(1), FF, "editor.config.pack_utils.gen_icons", ci -> ConfigGeneral.genIconsInPack()));
 		pack_utils.add(new RunElm(FO, next_y_pos(1), FF, "editor.config.pack_utils.content_new", ci -> ConfigGeneral.createNewContent()));
