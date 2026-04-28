@@ -35,6 +35,9 @@ public class Workspace {
 			UpdateHandler.update(new WorkspaceRoot(oroot, root_folder));
 		}
 	}
-	
+
+	public void reloadPacks(){
+
+	}
 
 }
