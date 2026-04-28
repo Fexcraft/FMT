@@ -100,6 +100,7 @@ public class ConfigUtils {
 				LangCache.genLangFile(new File(pr, "/assets/" + pid + "/lang/en_us.lang"));
 				//
 				FMT.WORKSPACE.reloadPacks();
+				FMT.WORKSPACE.show();
 			}, null)
 			.buttons(100, Dialog.DialogButton.CONTINUE);
 	}
