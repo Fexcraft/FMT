@@ -37,6 +37,7 @@ public class AnimationTreeTab extends TreeTab {
 		updcom.add(UpdateEvent.GroupAnimationRemoved.class, event -> {
 			AGroupCom com = getGroupCom(event.group());
 			if(com != null) com.remAnim(event.anim());
+			if(event.anim() == SELECTED.animation) selAnim(null);
 		});
 		updcom.add(UpdateEvent.ModelLoad.class, event -> reorderComponents());
 		updcom.add(UpdateEvent.ModelUnload.class, event -> removeGroups());
@@ -85,7 +86,12 @@ public class AnimationTreeTab extends TreeTab {
 		SELECTED = SELECTED == com ? null : com;
 		if(old != null) old.updateLabelColor();
 		if(com != null) com.updateLabelColor();
-		UpdateHandler.update(new UpdateEvent.GroupAnimationSelected(((AGroupCom)com.root.root).group, com.animation));
+		if(SELECTED != null){
+			UpdateHandler.update(new UpdateEvent.GroupAnimationSelected(((AGroupCom)com.root.root).group, com.animation));
+		}
+		else{
+			UpdateHandler.update(new UpdateEvent.GroupAnimationSelected(null, null));
+		}
 	}
 
 }
