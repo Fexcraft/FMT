@@ -7,8 +7,6 @@ import com.spinyowl.legui.listener.MouseClickEventListener;
 import net.fexcraft.app.fmt.env.EnvContent;
 import net.fexcraft.app.fmt.env.EnvTab;
 import net.fexcraft.app.fmt.oui.Icon;
-import net.fexcraft.app.fmt.oui.fields.BoolButton;
-import net.fexcraft.app.fmt.oui.fields.ColorField;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
@@ -225,7 +223,7 @@ public class JsonContent extends EnvContent {
             label.getListenerMap().addListener(MouseClickEvent.class, listener);
             getListenerMap().addListener(MouseClickEvent.class, listener);
             this.elm = elm;
-            if(elm.string_value().equals("true") || elm.string_value().equals("false")){
+           /* if(elm.string_value().equals("true") || elm.string_value().equals("false")){
                 add(new BoolButton(220, 2, 300, 26, elm.bool(), bool -> ((JsonValue<Boolean>)elm).value(bool)));
             }
             else if(elm.string_value().startsWith("#") && elm.string_value().length() == 7){
@@ -241,7 +239,7 @@ public class JsonContent extends EnvContent {
                     }
                     else ((JsonValue<String>)elm).value(event.getNewValue());
                 });
-            }
+            }*///TODO
         }
 
         @Override
