@@ -1,6 +1,6 @@
 package net.fexcraft.app.fmt.utils;
 
-import net.fexcraft.app.fmt.oui.Editor;
+import net.fexcraft.app.fmt.ui.editor.EditorRoot;
 import net.fexcraft.lib.common.math.M4DW;
 import net.fexcraft.lib.common.math.MV3D;
 import net.fexcraft.lib.common.math.V3D;
@@ -42,10 +42,10 @@ public class CornerUtil {
 				poly.delete();
 			}
 		}
-		ROT_MARKER_NORMAL = new Polyhedron<GLObject>().importMRT(new ModelRendererTurbo(null, 0, 0, 16, 16).addBox(-.25f, -.25f, -.25f, .5f, .5f, .5f), false, Editor.MARKER_SCALE);
-		ROT_MARKER_SMALL = new Polyhedron<GLObject>().importMRT(new ModelRendererTurbo(null, 0, 0, 16, 16).addBox(-.2f, -.2f, -.2f, .4f, .4f, .4f), false, Editor.MARKER_SCALE * 0.5f);
+		ROT_MARKER_NORMAL = new Polyhedron<GLObject>().importMRT(new ModelRendererTurbo(null, 0, 0, 16, 16).addBox(-.25f, -.25f, -.25f, .5f, .5f, .5f), false, EditorRoot.MARKER_SCALE);
+		ROT_MARKER_SMALL = new Polyhedron<GLObject>().importMRT(new ModelRendererTurbo(null, 0, 0, 16, 16).addBox(-.2f, -.2f, -.2f, .4f, .4f, .4f), false, EditorRoot.MARKER_SCALE * 0.5f);
 		for(int i = 0; i < 8; i++){
-			CORNER_MARKER[i] = new Polyhedron<GLObject>().importMRT(new ModelRendererTurbo(null, 0, 0, 16, 16).addBox(-.25f, -.25f, -.25f, .5f, .5f, .5f), false, Editor.MARKER_SCALE);
+			CORNER_MARKER[i] = new Polyhedron<GLObject>().importMRT(new ModelRendererTurbo(null, 0, 0, 16, 16).addBox(-.25f, -.25f, -.25f, .5f, .5f, .5f), false, EditorRoot.MARKER_SCALE);
 			CORNER_MARKER[i].setGlObj(new GLObject()).glObj.polycolor = CORNER_COLOURS[i].toFloatArray();
 		}
 		ROT_MARKER_NORMAL.setGlObj(new GLObject()).glObj.polycolor = RGB.GREEN.toFloatArray();
