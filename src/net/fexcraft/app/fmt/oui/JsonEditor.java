@@ -5,11 +5,6 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import com.spinyowl.legui.component.*;
-import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.settings.Settings;
-import net.fexcraft.app.fmt.oui.fields.BoolButton;
-import net.fexcraft.app.fmt.oui.fields.ColorField;
-import net.fexcraft.app.fmt.oui.fields.RunButton;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
@@ -38,13 +33,13 @@ public class JsonEditor extends Widget {
         getContainer().add(panel = new ScrollablePanel(10, 10, 680, 400));
         fill(panel.getContainer(), map);
         panel.getContainer().setSize(width = 1000, 400);
-        getContainer().add(new RunButton("dialog.button.save", 480, 420, 100, 24, () -> {
+        /*getContainer().add(new RunButton("dialog.button.save", 480, 420, 100, 24, () -> {
             JsonHandler.print(file, map, JsonHandler.PrintOption.DEFAULT);
         }));
         getContainer().add(new RunButton("dialog.button.close", 590, 420, 100, 24, () -> {
             //FMT.FRAME.getContainer().remove(this);
             INSTANCES.remove(this);
-        }));
+        }));*///TODO
         addWidgetCloseEventListener(lis -> INSTANCES.remove(this));
         resize();
         //FMT.FRAME.getContainer().add(this);
@@ -243,7 +238,7 @@ public class JsonEditor extends Widget {
             label.getListenerMap().addListener(MouseClickEvent.class, listener);
             getListenerMap().addListener(MouseClickEvent.class, listener);
             this.elm = elm;
-            if(elm.string_value().equals("true") || elm.string_value().equals("false")){
+            /*if(elm.string_value().equals("true") || elm.string_value().equals("false")){
                 add(new BoolButton(220, 2, 300, 26, elm.bool(), bool -> ((JsonValue<Boolean>)elm).value(bool)));
             }
             else if(elm.string_value().startsWith("#") && elm.string_value().length() == 7){
@@ -259,7 +254,7 @@ public class JsonEditor extends Widget {
                     }
                     else ((JsonValue<String>)elm).value(event.getNewValue());
                 });
-            }
+            }*///TODO
         }
 
         @Override
