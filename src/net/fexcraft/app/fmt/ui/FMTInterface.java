@@ -11,11 +11,11 @@ import net.fexcraft.app.fmt.oui.ProfileDialog;
 import net.fexcraft.app.fmt.ui.tree.TreeRoot;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateHandler;
-import net.fexcraft.app.fmt.utils.ConverterUtils;
-import net.fexcraft.app.fmt.utils.FontUtils;
-import net.fexcraft.app.fmt.utils.ImageHandler;
-import net.fexcraft.app.fmt.utils.SaveHandler;
+import net.fexcraft.app.fmt.utils.*;
 import net.fexcraft.lib.common.math.Time;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 import static net.fexcraft.app.fmt.settings.Settings.*;
 
@@ -29,6 +29,7 @@ public class FMTInterface extends Element {
 	public static final int EDITOR_WIDTH = 320;
 	public static final int EDITOR_CONTENT = EDITOR_WIDTH - 30;
 	public static final int MENU_WIDTH = 202;
+	public static ArrayList<Frame> FRAMES = new ArrayList<>();
 	public static SettingsUI settings;
 	public static Dialog DIALOG;
 	public static Element toolbar;
@@ -42,7 +43,7 @@ public class FMTInterface extends Element {
 
 	public FMTInterface(){
 		super();
-		add(toolbar = new Element().size(TOOLBAR_WIDTH, TOOLBAR_HEIGHT).color(GENERIC_BACKGROUND_0.value));
+		add(toolbar = new Element().size(TOOLBAR_WIDTH, TOOLBAR_HEIGHT).color(GENERIC_BACKGROUND_0.value).zi(100));
 		add(statusbar = new Element(){
 			@Override
 			public void onResize(){
@@ -53,8 +54,6 @@ public class FMTInterface extends Element {
 			.pos(TOOLBAR_WIDTH, 0).color(GENERIC_BACKGROUND_0.value)
 			.text("...")
 		);
-		toolbar.z += 100;
-		toolbar.recompile();
 		int iinc = 37;
 		int buff = -iinc + 4;
 		int yo = 4;
@@ -154,7 +153,7 @@ public class FMTInterface extends Element {
 			.onclick(ci -> tree.toggle())
 			.hint("toolbar.icon.tree"));
 		//
-		add(0, (settings = new SettingsUI()).hide());
+		add((settings = new SettingsUI()).hide());
 		add((editor = new EditorRoot()));
 		add((tree = new TreeRoot()));
 		//
@@ -204,8 +203,41 @@ public class FMTInterface extends Element {
 	public Dialog createDialog(int w, int h, String title){
 		if(DIALOG != null) DIALOG.close();
 		DIALOG = new Dialog(w, h);
-		add(0, DIALOG, title);
+		add(DIALOG, title);
 		return DIALOG;
+	}
+
+	@Override
+	public void remElm(Element elm){
+		super.remElm(elm);
+		if(elm instanceof Frame){
+			FRAMES.remove(elm);
+			resortFrames();
+		}
+	}
+
+	@Override
+	public void add(Element elm, Object... args){
+		if(elm instanceof Frame frm){
+			FRAMES.add(frm);
+			resortFrames();
+			super.add(0, frm, args);
+		}
+		else super.add(elm, args);
+	}
+
+	private void resortFrames(){
+		for(int i = 0; i < FRAMES.size(); i++){
+			FRAMES.get(i).zoff = i * 20 + 200;
+			FRAMES.get(i).rRecompile();
+		}
+	}
+
+	public void setFrameOnTop(Frame frame){
+		int idx = FRAMES.indexOf(frame);
+		if(idx < 0) return;
+		Collections.swap(FRAMES, idx, FRAMES.size() - 1);
+		resortFrames();
 	}
 
 }
