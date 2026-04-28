@@ -225,6 +225,7 @@ public class FMT {
 		resize();
 		while(!glfwWindowShouldClose(window)){
 			CAM.pollInput(accumulator += (delta = timer.getDelta()));
+			GGR.updateHoveredElement();
 			//accumulator += (delta = timer.getDelta());
 			while(accumulator >= interval){
 				while(RUN_QUEUE.peek() != null) RUN_QUEUE.poll().run();
@@ -312,7 +313,6 @@ public class FMT {
 		}
 		//
 		PolyRenderer.SCALE = Settings.UI_SCALE.value;
-		GGR.updateHoveredElement();
 		CAM.ortho(1);
 		glClearColor(background[0], background[1], background[2], 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
