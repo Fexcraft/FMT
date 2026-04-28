@@ -1,19 +1,6 @@
 package net.fexcraft.app.fmt.oui;
 
-import static net.fexcraft.app.fmt.utils.Translator.translate;
-
-import java.io.File;
-import java.util.*;
-
-import net.fexcraft.app.fmt.oui.editors.*;
-import net.fexcraft.app.fmt.oui.trees.*;
-import net.fexcraft.app.json.JsonHandler;
-import net.fexcraft.app.json.JsonValue;
-import com.spinyowl.legui.component.Button;
-import com.spinyowl.legui.component.Component;
-import com.spinyowl.legui.component.Dialog;
-import com.spinyowl.legui.component.Label;
-import com.spinyowl.legui.component.ScrollablePanel;
+import com.spinyowl.legui.component.*;
 import com.spinyowl.legui.component.misc.listener.scrollablepanel.ScrollablePanelViewportScrollListener;
 import com.spinyowl.legui.event.MouseClickEvent;
 import com.spinyowl.legui.event.MouseClickEvent.MouseClickAction;
@@ -21,12 +8,19 @@ import com.spinyowl.legui.event.ScrollEvent;
 import com.spinyowl.legui.input.Mouse.MouseButton;
 import com.spinyowl.legui.style.Border;
 import com.spinyowl.legui.style.Style.DisplayType;
-
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.update.UpdateHandler;
-import net.fexcraft.app.fmt.settings.Settings;
+import net.fexcraft.app.fmt.oui.editors.ConfigEditor;
+import net.fexcraft.app.fmt.oui.editors.VariableEditor;
 import net.fexcraft.app.fmt.oui.fields.TextField;
+import net.fexcraft.app.fmt.update.UpdateHandler;
+import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+
+import static net.fexcraft.app.fmt.utils.Translator.translate;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -41,13 +35,8 @@ public class Editor extends Component {
 	public static Editor UV_EDITOR;
 	public static Editor PREVIEW_EDITOR;
 	public static ConfigEditor CONFIG_EDITOR;
-	public static AnimationEditor ANIM_EDITOR;
+	public static Editor ANIM_EDITOR;
 	public static VariableEditor VAR_EDITOR;
-	public static Editor POLYGON_TREE;
-	public static Editor PIVOT_TREE;
-	public static Editor TEXTURE_TREE;
-	public static Editor PREVIEW_TREE;
-	public static AnimTree ANIM_TREE;
 	public static float RATE = 1f;
 	public static float MARKER_SCALE = 1f;
 	public static Editor VISIBLE_EDITOR = null;
@@ -79,17 +68,6 @@ public class Editor extends Component {
 
 	protected float topSpace(){
 		return LABEL;
-	}
-	
-	protected void addTreeIcons(Trees type){
-		byte idx = 0, t = 0;
-		trees = new Icon[4];
-		if(type != Trees.POLYGON) add(trees[t++] = new Icon(this, idx += 10, "./resources/textures/icons/tree/polygon.png", () -> Editor.show(Trees.POLYGON.id)).addTooltip("editor.tree.polygon", false));
-		if(type != Trees.PIVOT) add(trees[t++] = new Icon(this, idx += 10, "./resources/textures/icons/tree/pivot.png", () -> Editor.show(Trees.PIVOT.id)).addTooltip("editor.tree.pivot", false));
-		if(type != Trees.HELPER) add(trees[t++] = new Icon(this, idx += 10, "./resources/textures/icons/tree/helper.png", () -> Editor.show(Trees.HELPER.id)).addTooltip("editor.tree.helper", false));
-		if(type != Trees.TEXTURE) add(trees[t++] = new Icon(this, idx += 10, "./resources/textures/icons/tree/textures.png", () -> Editor.show(Trees.TEXTURE.id)).addTooltip("editor.tree.texture", false));
-		if(type != Trees.ANIMATION) add(trees[t++] = new Icon(this, idx += 10, "./resources/textures/icons/tree/fvtm.png", () -> Editor.show(Trees.ANIMATION.id)).addTooltip("editor.tree.animation", false));
-		//if(trees != null) for(Icon icon : trees) icon.getStyle().setDisplay(DisplayType.NONE);
 	}
 
 	private void rename(){
@@ -159,11 +137,6 @@ public class Editor extends Component {
 	public static void toggleEditors(){
 		if(VISIBLE_EDITOR == null) POLYGON_EDITOR.show();
 		else VISIBLE_EDITOR.hide();
-	}
-
-	public static void toggleTrees(){
-		if(VISIBLE_TREE == null) POLYGON_TREE.show();
-		else VISIBLE_TREE.hide();
 	}
 
 	public void addComponent(EditorComponent com){
@@ -259,11 +232,11 @@ public class Editor extends Component {
 		//Editor.UV_EDITOR = new UVEditor();
 		//Editor.PREVIEW_EDITOR = new PreviewEditor();
 		Editor.CONFIG_EDITOR = new ConfigEditor();
-		Editor.ANIM_EDITOR = new AnimationEditor();
+		//Editor.ANIM_EDITOR = new AnimationEditor();
 		Editor.VAR_EDITOR = new VariableEditor();
 		//Editor.TEXTURE_TREE = new TextureTree();
 		//Editor.PREVIEW_TREE = new HelperTree();
-		Editor.ANIM_TREE = new AnimTree();
+		//Editor.ANIM_TREE = new AnimTree();
 		//EditorPanel.load();
 		//
 		/*JsonMap edmap = JsonHandler.parse(new File("./editors.fmt"));
