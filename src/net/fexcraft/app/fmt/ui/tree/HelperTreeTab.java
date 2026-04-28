@@ -1,9 +1,7 @@
 package net.fexcraft.app.fmt.ui.tree;
 
-import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.oui.FileChooser;
 import net.fexcraft.app.fmt.polygon.Model;
-import net.fexcraft.app.fmt.polygon.Pivot;
 import net.fexcraft.app.fmt.port.im.ImportManager;
 import net.fexcraft.app.fmt.port.im.Importer;
 import net.fexcraft.app.fmt.ui.Element;
@@ -14,7 +12,6 @@ import net.fexcraft.app.json.JsonMap;
 
 import java.io.File;
 
-import static net.fexcraft.app.fmt.oui.EditorComponent.F2S;
 import static net.fexcraft.app.fmt.oui.FileChooser.*;
 import static net.fexcraft.app.fmt.settings.Settings.GENERIC_FIELD;
 import static net.fexcraft.app.fmt.ui.editor.EditorTab.*;
