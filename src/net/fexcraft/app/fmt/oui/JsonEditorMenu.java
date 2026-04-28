@@ -8,7 +8,6 @@ import java.util.function.Consumer;
 import static net.fexcraft.app.fmt.utils.Translator.translate;
 import static com.spinyowl.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 
-import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.oui.ToolbarMenu.MenuButton;
 import net.fexcraft.app.fmt.oui.ToolbarMenu.MenuLayer;
@@ -141,7 +140,7 @@ public class JsonEditorMenu {
 			}
 			layer.hide();
 		}));
-		layer = new MenuLayer(null, new Vector2f((float)GGR.posx, (float)GGR.posy), components, null){
+		layer = new MenuLayer(null, new Vector2f((float)GGR.xCursor(), (float)GGR.yCursor()), components, null){
 			@Override
 			public boolean timed(){
 				return true;
@@ -154,7 +153,7 @@ public class JsonEditorMenu {
 		root = map;
 		idxkey = key;
 		elm = value;
-		layer.setPosition((float)GGR.posx, (float)GGR.posy);
+		layer.setPosition((float)GGR.xCursor(), (float)GGR.yCursor());
 		layer.show();
 	}
 
