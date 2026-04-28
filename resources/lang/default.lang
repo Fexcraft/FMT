@@ -391,6 +391,9 @@ utils.config.create_pack=New Pack Creator
 utils.config.create_pack.name=Pack Name
 utils.config.create_pack.id=Pack ID ("modid")
 
+# Workspace
+workspace.title=%s
+
 # FVTM Config Editor
 fvtmeditor.title=FVTM Config Editor
 
