@@ -56,13 +56,14 @@ public class HelperCom extends TTabCom {
 
 	@Override
 	protected void orderComponents(){
-		if(container.elements == null) return;
-		fullheight = 5;
-		HGroupCom com;
-		for(Element elm : container.elements){
-			com = (HGroupCom)elm;
-			com.pos(5, fullheight);
-			fullheight += 35;
+		fullheight = container.visible ? 5 : 0;
+		if(container.elements != null){
+			HGroupCom com;
+			for(Element elm : container.elements){
+				com = (HGroupCom)elm;
+				com.pos(5, fullheight);
+				fullheight += 35;
+			}
 		}
 		container.size(w, fullheight);
 		container.recompile();
