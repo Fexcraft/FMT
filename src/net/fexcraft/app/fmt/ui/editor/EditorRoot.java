@@ -24,6 +24,8 @@ public class EditorRoot extends Element {
 	public static String NOPREVIEWSEL;
 	public static String NOANIMATIONSEL;
 	public static String NOVARIABLES;
+	public static float MARKER_SCALE = 1f;
+	public static float RATE = 1f;
 
 	public EditorRoot(){
 		super();
