@@ -15,7 +15,7 @@ import static net.fexcraft.app.fmt.settings.Settings.*;
 /**
  * @author Ferdinand Calo' (FEX___96)
  */
-public class SettingsUI extends Element {
+public class SettingsUI extends Frame {
 
 	private static float WIDTH = 650;
 	private static float HEIGHT = 500;
@@ -28,7 +28,6 @@ public class SettingsUI extends Element {
 		super();
 		pos((FMT.SCALED_WIDTH - WIDTH) * 0.5f, (FMT.SCALED_HEIGHT - HEIGHT) * 0.5f);
 		size(WIDTH, HEIGHT + 30);
-		z += 200;
 		color(GENERIC_BACKGROUND_0.value);
 		border(RGB.BLACK);
 	}
@@ -36,6 +35,7 @@ public class SettingsUI extends Element {
 	@Override
 	public void init(Object... args){
 		add(new Element().size(w - 31, 30).color(GENERIC_BACKGROUND_1.value)
+			.onclick(ci -> FMT.UI.setFrameOnTop(this))
 			.translate("settings.dialog.title").text_autoscale());
 		add(icon = new Element().size(30, 30).pos(w - 31, 0).texture("icons/component/remove")
 			.hoverable(true).onclick(ci -> {
@@ -47,8 +47,7 @@ public class SettingsUI extends Element {
 					run = null;
 				}
 			}));
-		add((category = new DropList<>(w - 10)).pos(5, 40));
-		category.drop.z += 100;
+		add((category = new DropList<>(w - 10)).pos(5, 40).zi(10));
 		for(String key : Settings.SETTINGS.keySet()){
 			category.addEntry(Translator.translate("settings.category." + key), key);
 			fillCategory(key);
@@ -77,6 +76,7 @@ public class SettingsUI extends Element {
 	public Element show(){
 		pos((FMT.SCALED_WIDTH - WIDTH) * 0.5f, (FMT.SCALED_HEIGHT - HEIGHT) * 0.5f);
 		icon.texture("icons/component/exit");
+		FMT.UI.setFrameOnTop(this);
 		return super.show();
 	}
 
