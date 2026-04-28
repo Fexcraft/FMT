@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.spinyowl.legui.image.loader.ImageLoader;
+import com.spinyowl.legui.style.Style;
 import net.fexcraft.app.fmt.polygon.uv.UVCoords;
 import net.fexcraft.app.fmt.update.UpdateEvent.*;
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
@@ -158,7 +159,7 @@ public class UVViewer extends Widget {
             //getStyle().setBorder(new SimpleLineBorder(ColorConstants.black(), 3));
             setFocusable(false);
             add(image = new ImageView());
-            UIUtils.hide(image);
+            image.getStyle().setDisplay(Style.DisplayType.NONE);
             for(Group group : FMT.MODEL.allgroups()) for(Polygon polygon : group) addElm(polygon, false);
             updcom.add(PolygonAdded.class, e -> addElm(e.polygon(), true));
             updcom.add(PolygonRemoved.class, e -> remElm(e.polygon()));
@@ -246,12 +247,12 @@ public class UVViewer extends Widget {
             if(texture){
                 TextureGroup group = TextureManager.getGroup(seltex);
                 if(group == null || group.texture == null) return;
-                UIUtils.show(image);
+                image.getStyle().setDisplay(Style.DisplayType.MANUAL);
                 image.setImage(ImageLoader.loadImage(group.texture.getFile().toPath().toString()));
                 image.setSize(getSize());
             }
             else{
-                UIUtils.hide(image);
+                image.getStyle().setDisplay(Style.DisplayType.NONE);
             }
         }
 
