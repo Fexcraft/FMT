@@ -2,6 +2,7 @@ package net.fexcraft.app.fmt.ui.tree;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.ui.Element;
+import net.fexcraft.app.fmt.ui.FMTInterface;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 
 import static net.fexcraft.app.fmt.settings.Settings.GENERIC_BACKGROUND_0;
@@ -39,7 +40,11 @@ public class TreeRoot extends Element {
 
 	public static void setMode(TreeMode mode){
 		for(TreeTab editor : TREES) editor.hide();
-		TREES[mode.ordinal()].show();
+		if(mode == null) tree.visible = false;
+		else{
+			TREES[mode.ordinal()].show();
+			tree.visible = true;
+		}
 	}
 
 	@Override
