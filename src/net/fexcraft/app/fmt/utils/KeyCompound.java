@@ -110,7 +110,7 @@ public class KeyCompound {
 		keys.add(new KeyFunction("screenshot", GLFW_KEY_F12, action -> { if(action == GLFW_RELEASE) ImageHandler.takeScreenshot(); }));
 		//
 		keys.add(new KeyFunction("delete", GLFW_KEY_DELETE, action -> { if(action == GLFW_RELEASE) FMT.MODEL.delsel(); }));
-		//keys.add(new KeyFunction("raypick", GLFW_KEY_T, action -> { if(action == GLFW_RELEASE) RayCoastAway.doTest(true, null, false); }));
+		keys.add(new KeyFunction("workspace", GLFW_KEY_T, action -> { if(action == GLFW_RELEASE) FMT.WORKSPACE.show(); }));
 		keys.add(new KeyFunction("left_control", GLFW_KEY_LEFT_CONTROL, (action) -> FMT.CAM.left_control_down = parseKeyAction(action)));
 		keys.add(new KeyFunction("left_alt", GLFW_KEY_LEFT_ALT, (action) -> FMT.CAM.left_alt_down = parseKeyAction(action)));
 		keys.add(new KeyFunction("right_control", GLFW_KEY_RIGHT_CONTROL, (action) -> FMT.CAM.right_control_down = parseKeyAction(action)));
