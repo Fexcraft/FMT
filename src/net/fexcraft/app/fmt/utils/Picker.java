@@ -221,7 +221,7 @@ public class Picker {
 	}
 
 	private static int getPick(){
-		return getPick(GGR.mousePosX(), -(GGR.mousePosY() - FMT.HEIGHT), !offcenter);
+		return getPick(GGR.xCursor(), -(GGR.yCursor() - FMT.HEIGHT), !offcenter);
 	}
 
 	private static int getPick(int x, int y, boolean center){
