@@ -11,8 +11,7 @@ import net.fexcraft.app.fmt.ui.editor.EditorRoot;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 
-import static net.fexcraft.app.fmt.settings.Settings.ASK_ANIMATION_REMOVAL;
-import static net.fexcraft.app.fmt.settings.Settings.GENERIC_TEXT_2;
+import static net.fexcraft.app.fmt.settings.Settings.*;
 import static net.fexcraft.app.fmt.ui.FMTInterface.EDITOR_CONTENT;
 
 /**
@@ -55,8 +54,9 @@ public class AnimationCom extends Element {
 	}
 
 	protected void updateLabelColor(){
-		color((animation.enabled ? Settings.POLYGON_NORMAL : Settings.POLYGON_INVISIBLE).value);
-		text_color(GENERIC_TEXT_2.value.packed);
+		boolean sel = AnimationTreeTab.SELECTED == this;
+		color((animation.enabled ? sel ? Settings.POLYGON_SELECTED : Settings.POLYGON_NORMAL : sel ? Settings.POLYGON_INV_SEL : Settings.POLYGON_INVISIBLE).value);
+		text_color((sel ? GENERIC_TEXT_1 : GENERIC_TEXT_2).value.packed);
 	}
 
 }
