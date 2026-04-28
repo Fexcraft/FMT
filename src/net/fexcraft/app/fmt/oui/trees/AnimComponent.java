@@ -96,7 +96,8 @@ public class AnimComponent extends EditorComponent {
 		visible.getListenerMap().addListener(CursorEnterEvent.class, clis);
 		add.getListenerMap().addListener(CursorEnterEvent.class, clis);
 		//
-		UIUtils.hide(/*remove,*/ visible, add);
+		visible.getStyle().setDisplay(DisplayType.NONE);
+		add.getStyle().setDisplay(DisplayType.NONE);
 	}
 
 	private int genFullheight(){
@@ -231,7 +232,9 @@ public class AnimComponent extends EditorComponent {
 					AnimTree.select(this);
 				}
 			});
-			UIUtils.hide(remo, visi, edit);
+			remo.getStyle().setDisplay(DisplayType.NONE);
+			visi.getStyle().setDisplay(DisplayType.NONE);
+			edit.getStyle().setDisplay(DisplayType.NONE);
 			add(remo);
 			add(visi);
 			add(edit);
