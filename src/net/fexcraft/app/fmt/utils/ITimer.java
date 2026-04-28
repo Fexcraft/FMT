@@ -23,10 +23,6 @@
  */
 package net.fexcraft.app.fmt.utils;
 
-import org.lwjgl.glfw.GLFW;
-
-import net.fexcraft.app.fmt.FMT;
-
 /**
  * The timer class is used for calculating delta time and also FPS and UPS calculation.
  * Note by Fex: downgraded to lwjgl2.
@@ -119,7 +115,7 @@ public class ITimer {
 				GLFW.glfwSetWindowTitle(FMTB.window, String.format(FMTB.deftitle0, FMTB.getTitle()));
         	}
         	else{*/
-        		GLFW.glfwSetWindowTitle(FMT.INSTANCE.window, FMT.getTitle(null));
+        		//GLFW.glfwSetWindowTitle(FMT.INSTANCE.window, FMT.getTitle(null));
         	/*}*/
         }
     }
