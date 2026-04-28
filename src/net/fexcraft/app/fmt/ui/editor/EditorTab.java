@@ -67,7 +67,7 @@ public class EditorTab extends Element {
 			case TEXTURE: return new UVEditorTab();
 			case PAINTER: return new PainterEditorTab();
 			case PREVIEW: return new PreviewEditorTab();
-			case VARIABLE:
+			case VARIABLE: return new VariableEditorTab();
 			case ANIMATION: return new AnimationEditorTab();
 		}
 		return new EditorTab(mode);
