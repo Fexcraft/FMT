@@ -3,7 +3,6 @@ package net.fexcraft.app.fmt.ui.editor;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.*;
 import net.fexcraft.app.fmt.ui.*;
-import net.fexcraft.app.fmt.oui.Editor;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.utils.CornerUtil;
@@ -219,15 +218,15 @@ public class EditorSidePanel extends Element {
 			super.init(args);
 			hint("editor.panel.multiplier");
 			container.add(text = new Field(Field.FieldType.FLOAT, 90).pos(5, 28).onscroll(si -> {
-				float er = Editor.RATE;
+				float er = EditorRoot.RATE;
 				if(si.sy() > 0) er *= 2;
 				else er /= 2;
 				if(er > 1024) er = 1024;
 				if(er < 0.001) er = 0.001f;
-				UpdateHandler.update(new UpdateEvent.EditorRate(Editor.RATE = er));
-			}).text(Editor.RATE).hoverable(true));
+				UpdateHandler.update(new UpdateEvent.EditorRate(EditorRoot.RATE = er));
+			}).text(EditorRoot.RATE).hoverable(true));
 			Consumer<Float> mul = m -> {
-				if(Editor.RATE != m) UpdateHandler.update(new UpdateEvent.EditorRate(Editor.RATE = m));
+				if(EditorRoot.RATE != m) UpdateHandler.update(new UpdateEvent.EditorRate(EditorRoot.RATE = m));
 			};
 			container.add((bars[0] = new SelectorBar()).pos(90, 10), 200, 1, 16, 1, "1 - 16", mul);
 			container.add((bars[1] = new SelectorBar()).pos(90, 35), 200, 0.0625, 1, 0.0625, "0.0625 - 1", mul);
@@ -249,15 +248,15 @@ public class EditorSidePanel extends Element {
 			hint("editor.panel.marker_scale");
 			Field field;
 			container.add((field = new Field(Field.FieldType.FLOAT, 85)).pos(5, 6).onscroll(si -> {
-				Editor.MARKER_SCALE = Editor.MARKER_SCALE == 0f ? 1 : si.sy() > 0 ? Editor.MARKER_SCALE * 2 : Editor.MARKER_SCALE / 2f;
+				EditorRoot.MARKER_SCALE = EditorRoot.MARKER_SCALE == 0f ? 1 : si.sy() > 0 ? EditorRoot.MARKER_SCALE * 2 : EditorRoot.MARKER_SCALE / 2f;
 				CornerUtil.compile();
-				UpdateHandler.update(new UpdateEvent.MarkerScale(Editor.MARKER_SCALE));
-			}).text(Editor.RATE).hoverable(true));
+				UpdateHandler.update(new UpdateEvent.MarkerScale(EditorRoot.MARKER_SCALE));
+			}).text(EditorRoot.RATE).hoverable(true));
 			Consumer<Float> cons = m -> {
-				if(Editor.MARKER_SCALE != m){
-					Editor.MARKER_SCALE = m;
+				if(EditorRoot.MARKER_SCALE != m){
+					EditorRoot.MARKER_SCALE = m;
 					CornerUtil.compile();
-					UpdateHandler.update(new UpdateEvent.MarkerScale(Editor.MARKER_SCALE));
+					UpdateHandler.update(new UpdateEvent.MarkerScale(EditorRoot.MARKER_SCALE));
 				}
 			};
 			SelectorBar bar;
