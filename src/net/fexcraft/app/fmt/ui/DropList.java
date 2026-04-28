@@ -34,11 +34,7 @@ public class DropList<V> extends Element {
 		add(new Element().color(GENERIC_BACKGROUND_1.value).size(FS, FS).pos(w + FS, 0).text(">")
 			.text_centered(true).hoverable(true).onclick(info -> change_selection(1)));
 		add(new Element().color(DROPLIST_CONFIRM.value).size(FS, FS).pos(w + FS + FS, 0).text("O")
-			.text_centered(true).hoverable(true).onclick(info -> {
-				if(entries.isEmpty() || consumer == null) return;
-				Pair<String, V> kv = entries.get(current);
-				consumer.accept(kv.getLeft(), kv.getRight());
-			}));
+			.text_centered(true).hoverable(true).onclick(info -> applyChange()));
 		add(drop = new Element().color(GENERIC_BACKGROUND_1.value).border(GENERIC_BACKGROUND_2.value).pos(0, FS));
 		drop.hide();
 		onscroll(si -> change_selection(si.sy() < 0 ? 1 : -1));
@@ -131,6 +127,16 @@ public class DropList<V> extends Element {
 	@Override
 	protected void onDeselect(Element current){
 		drop_hide_clear();
+	}
+
+	public boolean noEntries(){
+		return entries.isEmpty();
+	}
+
+	public void applyChange(){
+		if(entries.isEmpty() || consumer == null) return;
+		Pair<String, V> kv = entries.get(current);
+		consumer.accept(kv.getLeft(), kv.getRight());
 	}
 
 }
