@@ -195,7 +195,6 @@ public class FMT {
 		FontRenderer.init();
 		UI = new FMTInterface();
 		Animation.init();
-		FMT.WORKSPACE = new Workspace();
 		FMT.updateTitle();
 		if(FMT.MODEL.file != null) FMT.MODEL.load();
 		Settings.checkForUpdatesAndLogin();
