@@ -314,6 +314,14 @@ tree.preview.load_fmtb=Load .fmtb
 tree.preview.load_image=Load Image
 tree.preview.import=Import
 tree.preview.clear=Unload All
+tree.animation.add=Add Animation
+tree.animation.enabled=Toggle On/Off
+tree.animation.remove=Remove Animation
+tree.animation.removal=Are you sure you want to remove this Animation?
+tree.animation.editor=Animation Editor
+tree.animation.add.title=Animation Selector
+tree.animation.add.category=Animation Category
+tree.animation.add.type=Animation Type
 
 # Add Group Dialog
 dialog.add_group.title=Add new Group
@@ -432,6 +440,7 @@ setting.general.ask_polygon_removal=Ask on Polygon Removal
 setting.general.ask_group_removal=Ask on Group Removal
 setting.general.ask_pivot_removal=Ask on Pivot Removal
 setting.general.ask_texture_group_removal=Ask on Tex-Group Removal
+setting.general.ask_animation_removal=Ask on Animation Removal
 setting.general.ask_helper_removal=Ask on Helper/Preview Removal
 setting.general.open_folder_after_save=Open Folder after Save
 setting.general.show_welcome=Show Welcome Message
