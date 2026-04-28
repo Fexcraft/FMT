@@ -71,7 +71,7 @@ public class EditorSidePanel extends Element {
 
 		@Override
 		public void init(Object... args){
-			ew = 325;
+			ew = 360;
 			eh = 40;
 			super.init(args);
 			hint("editor.panel.mode");
