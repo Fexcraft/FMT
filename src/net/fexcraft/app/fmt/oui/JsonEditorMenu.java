@@ -11,7 +11,6 @@ import static com.spinyowl.legui.event.MouseClickEvent.MouseClickAction.CLICK;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.oui.ToolbarMenu.MenuButton;
 import net.fexcraft.app.fmt.oui.ToolbarMenu.MenuLayer;
-import net.fexcraft.app.fmt.oui.fields.TextField;
 import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
@@ -172,7 +171,7 @@ public class JsonEditorMenu {
 		box.addElement("HEX Color (String)");
 		box.setVisibleCount(box.getElements().size());
 		dialog.getContainer().add(box);
-		TextField field = null;
+		/*TextField field = null;
 		String[] key = { "" };
 		if(askkey){
 			dialog.getContainer().add(new Label(translate("toolbar.jsoneditormenu.picktype.desc"), 10, 60, width - 20, 20));
@@ -207,7 +206,7 @@ public class JsonEditorMenu {
 				dialog.close();
 			}
 		});
-		dialog.getContainer().add(button0);
+		dialog.getContainer().add(button0);*///TODO
 		Button button1 = new Button(translate("dialog.button.cancel"), 120, height - 50, 100, 20);
 		button1.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
 			if(CLICK == e.getAction()) dialog.close();
@@ -223,10 +222,10 @@ public class JsonEditorMenu {
 		dialog.setResizable(true);
 		dialog.getContainer().add(new Label(translate("toolbar.jsoneditormenu.picktype.desc"), 10, 10, width - 20, 20));
 		String[] nkey = { curr };
-		TextField field = new TextField(curr, 10, 35, width - 20, 20).accept(text -> {
+		/*TextField field = new TextField(curr, 10, 35, width - 20, 20).accept(text -> {
 			nkey[0] = text;
 		});
-		dialog.getContainer().add(field);;
+		dialog.getContainer().add(field);*///TODO
 		Button button0 = new Button(translate("dialog.button.confirm"), 10, height - 50, 100, 20);
 		button0.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener) e -> {
 			if(CLICK == e.getAction()){
