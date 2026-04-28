@@ -69,6 +69,7 @@ public class EditorTab extends Element {
 			case PREVIEW: return new PreviewEditorTab();
 			case VARIABLE: return new VariableEditorTab();
 			case ANIMATION: return new AnimationEditorTab();
+			case CONFIG: return new ConfigEditorTab();
 		}
 		return new EditorTab(mode);
 	}
