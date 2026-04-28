@@ -31,6 +31,7 @@ public class TreeTab extends Element {
 			case POLYGON: return new PolygonTreeTab();
 			case TEXTURE: return new TextureTreeTab();
 			case PREVIEW: return new HelperTreeTab();
+			case ANIMATION: return new AnimationTreeTab();
 		}
 		return new TreeTab(mode);
 	}
