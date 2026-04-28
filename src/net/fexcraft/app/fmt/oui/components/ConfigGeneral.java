@@ -1,37 +1,18 @@
 package net.fexcraft.app.fmt.oui.components;
 
 import com.google.common.io.Files;
-import com.spinyowl.legui.component.CheckBox;
-import com.spinyowl.legui.component.Dialog;
-import com.spinyowl.legui.component.Label;
-import com.spinyowl.legui.component.Widget;
-import com.spinyowl.legui.style.border.SimpleLineBorder;
-import com.spinyowl.legui.style.color.ColorConstants;
-import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.oui.FileChooser;
 import net.fexcraft.app.fmt.oui.JsonEditor;
-import net.fexcraft.app.fmt.oui.fields.RunButton;
-import net.fexcraft.app.fmt.oui.fields.TextField;
 import net.fexcraft.app.fmt.oui.workspace.DirComponent;
 import net.fexcraft.app.fmt.oui.workspace.WorkspaceViewer;
-import net.fexcraft.app.fmt.utils.ByteUtils;
 import net.fexcraft.app.fmt.utils.Logging;
-import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.app.fmt.utils.fvtm.LangCache;
-import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.utils.Formatter;
-import org.lwjgl.opengl.GL11;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.*;
 
 /**
@@ -40,7 +21,7 @@ import java.util.*;
 public class ConfigGeneral {
 
 	public static void createNewPack(){
-		Dialog dialog = new Dialog("Pack Creation Settings", 420, 190);
+		/*Dialog dialog = new Dialog("Pack Creation Settings", 420, 190);
 		dialog.getContainer().add(new Label("Pack Name:", 10, 10, 400, 30));
 		TextField name = new TextField("pack_name", 10, 40, 400, 30);
 		dialog.getContainer().add(name);
@@ -123,11 +104,11 @@ public class ConfigGeneral {
 			WorkspaceViewer.viewer().genView();
 		}));
 		dialog.setResizable(false);
-		//dialog.show(FMT.FRAME);
+		//dialog.show(FMT.FRAME);*/
 	}
 
 	public static void genAssetDirs(){
-		WorkspaceViewer.viewer().selectPackDialog(pack -> {
+		/*WorkspaceViewer.viewer().selectPackDialog(pack -> {
 			int height = 300;
 			Dialog dialog = new Dialog("Please select Config Types.", 320, height);
 			HashMap<String, CheckBox> map = new HashMap<>();
@@ -162,7 +143,7 @@ public class ConfigGeneral {
 			}));
 			dialog.setResizable(false);
 			//dialog.show(FMT.FRAME);
-		});
+		});*/
 	}
 
 	public static void genIconsInPack(){
@@ -210,7 +191,7 @@ public class ConfigGeneral {
 	}
 
 	public static void createNewContent(){
-		WorkspaceViewer.viewer().selectPackDialog(pack -> {
+		/*WorkspaceViewer.viewer().selectPackDialog(pack -> {
 			WorkspaceViewer.viewer().selectContentTypeDialog(type -> {
 				String typeL = type.toLowerCase();
 				String typeS = typeL + (type.endsWith("th") ? "es" : "s");
@@ -259,11 +240,11 @@ public class ConfigGeneral {
 				dialog.setResizable(false);
 				//dialog.show(FMT.FRAME);
 			});
-		});
+		});*/
 	}
 
 	public static void createNewIcon(){
-		WorkspaceViewer.viewer().selectPackDialog(pack -> {
+		/*WorkspaceViewer.viewer().selectPackDialog(pack -> {
 			Widget widget = new Widget(FMT.WIDTH / 2f - 128, FMT.HEIGHT / 2f - 149, 256, 296);
 			widget.getTitleTextState().setText("Center the model inside.");
 			widget.getStyle().setBorder(new SimpleLineBorder(FMT.rgba(0xffff00), 2));
@@ -307,11 +288,11 @@ public class ConfigGeneral {
 			widget.setDraggable(false);
 			//FMT.FRAME.getContainer().add(widget);
 			widget.show();
-		});
+		});*/
 	}
 
 	public static void genRoadAssets(){
-		WorkspaceViewer.viewer().selectPackDialog(pack -> {
+		/*WorkspaceViewer.viewer().selectPackDialog(pack -> {
 			Dialog dialog = new Dialog("Road Block Assets Generator Settings", 420, 260);
 			dialog.getContainer().add(new Label("Block ID", 10, 10, 400, 30));
 			TextField rid = new TextField("road", 10, 40, 400, 30);
@@ -382,7 +363,7 @@ public class ConfigGeneral {
 			}));
 			dialog.setResizable(false);
 			//dialog.show(FMT.FRAME);
-		});
+		});*/
 	}
 
 	public static void openJson(){
