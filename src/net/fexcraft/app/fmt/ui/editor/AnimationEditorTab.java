@@ -56,7 +56,7 @@ public class AnimationEditorTab extends EditorTab {
 			switch(args[1]){
 				case "s":{
 					com.add((field = new Field(TEXT, FF)).consumer(f -> {
-						anim.set(args[0], text);
+						anim.set(args[0], f.get_text());
 					}).pos(FO, next_y_pos(1)));
 					field.text(anim.get(args[0]));
 					break;
