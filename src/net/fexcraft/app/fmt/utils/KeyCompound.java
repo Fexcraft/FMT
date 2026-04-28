@@ -83,9 +83,9 @@ public class KeyCompound {
 				if(action == GLFW_RELEASE) EditorRoot.setMode(EditorMode.values()[idx]);
 			}));
 		}
-		keys.add(new KeyFunction("hide_editor", GLFW_KEY_0, action -> {
+		keys.add(new KeyFunction("toggle_editor_0", GLFW_KEY_0, action -> {
 			if(GGR.isOverUI()) return;
-			if(action == GLFW_RELEASE) EditorRoot.setMode(null);
+			if(action == GLFW_RELEASE) EditorRoot.setMode(EditorMode.CONFIG);
 		}));
 		//
 		keys.add(new KeyFunction("camera_rotate_left",  GLFW_KEY_LEFT,  action -> { if(!GGR.isOverUI()) FMT.CAM.hor -= Static.rad5; }));
