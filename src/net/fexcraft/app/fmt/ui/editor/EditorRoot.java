@@ -23,6 +23,7 @@ public class EditorRoot extends Element {
 	public static String NOPIVOTSEL;
 	public static String NOPREVIEWSEL;
 	public static String NOANIMATIONSEL;
+	public static String NOVARIABLES;
 
 	public EditorRoot(){
 		super();
@@ -38,6 +39,7 @@ public class EditorRoot extends Element {
 		NOPIVOTSEL = Translator.translate("editor.info.no_pivot_selected");
 		NOPREVIEWSEL = Translator.translate("editor.info.no_preview_selected");
 		NOANIMATIONSEL = Translator.translate("editor.info.no_animation_selected");
+		NOVARIABLES = Translator.translate("editor.info.no_variable_added");
 		for(int i = 0; i < EditorMode.values().length; i++){
 			add(EDITORS[i] = EditorTab.create(EditorMode.values()[i]));
 			EDITORS[i].reorderComponents();
