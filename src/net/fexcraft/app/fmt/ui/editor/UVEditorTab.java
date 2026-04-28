@@ -1,9 +1,7 @@
 package net.fexcraft.app.fmt.ui.editor;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.oui.UIUtils;
 import net.fexcraft.app.fmt.oui.UVViewer;
-import net.fexcraft.app.fmt.oui.fields.NumberField;
 import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.polygon.uv.Face;
 import net.fexcraft.app.fmt.polygon.uv.NoFace;
@@ -18,7 +16,6 @@ import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 
-import static net.fexcraft.app.fmt.oui.UVViewer.SELECTED;
 import static net.fexcraft.app.fmt.settings.Settings.GENERIC_FIELD;
 
 /**
