@@ -1,6 +1,8 @@
 package net.fexcraft.app.fmt.oui.workspace;
 
 import net.fexcraft.app.fmt.utils.fvtm.LangCache;
+import net.fexcraft.app.fmt.workspace.FvtmType;
+import net.fexcraft.app.fmt.workspace.VFileType;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -17,7 +19,7 @@ public class FvtmPack extends DirComponent {
 	public final LangCache lang;
 	public final String id;
 
-	public FvtmPack(ViewerFileType type, WorkspaceViewer folcom, DirComponent root, File file, String id){
+	public FvtmPack(VFileType type, WorkspaceViewer folcom, DirComponent root, File file, String id){
 		super(type, folcom, root, file, 0);
 		for(FvtmType ft : FvtmType.values()){
 			content.put(ft, new ArrayList<>());
