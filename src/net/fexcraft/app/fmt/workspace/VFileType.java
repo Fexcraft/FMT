@@ -53,6 +53,9 @@ public enum VFileType {
 	}
 
 	public static Object fromFile(File file){
+		if(file.isDirectory()){
+			return file.listFiles().length == 0 ? EMPTY_FOLDER : NORMAL_FOLDER;
+		}
 		if(file.getName().equals("addonpack.fvtm")) return FVTM_FILE;
 		String name = file.getName();
 		if(name.contains(".")){
