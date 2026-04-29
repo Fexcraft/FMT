@@ -3,6 +3,7 @@ package net.fexcraft.app.fmt.ui;
 import net.fexcraft.app.fmt.ui.editor.ETabCom;
 import net.fexcraft.app.fmt.ui.tree.TTabCom;
 import net.fexcraft.app.fmt.utils.Logging;
+import net.fexcraft.app.fmt.workspace.DirElm;
 
 import java.util.function.Consumer;
 
@@ -71,6 +72,10 @@ public class Scrollable extends Element {
 			else if(elm instanceof SettingsUI.SettingBlock){
 				ih += elm.h + 5;
 			}
+			else if(elm instanceof DirElm dir){
+				dir.updateContainer();
+				ih += elm.h + 5 + (dir.container.visible ? dir.container.h : 0);
+			}
 			else{
 				if(elm.x() > 5) continue;
 				ih += elm.h;
@@ -104,6 +109,10 @@ public class Scrollable extends Element {
 			else if(elm instanceof SettingsUI.SettingBlock){
 				elm.pos(5, incr + bh);
 				incr += elm.h + 5;
+			}
+			else if(elm instanceof DirElm dir){
+				elm.pos(5, incr + bh);
+				incr += elm.h + 5 + (dir.container.visible ? dir.container.h : 0);
 			}
 			else{
 				elm.pos(elm.x(), incr + bh);
