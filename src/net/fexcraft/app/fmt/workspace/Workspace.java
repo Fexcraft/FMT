@@ -1,6 +1,7 @@
 package net.fexcraft.app.fmt.workspace;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.ui.Element;
@@ -11,6 +12,7 @@ import net.fexcraft.app.fmt.update.UpdateEvent.WorkspaceRoot;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.settings.Setting;
 import net.fexcraft.app.fmt.settings.Settings;
+import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.lib.common.math.RGB;
 
 import static net.fexcraft.app.fmt.settings.Settings.*;
@@ -20,8 +22,11 @@ import static net.fexcraft.app.fmt.settings.Settings.*;
  */
 public class Workspace extends Frame {
 
+	public static int FILES_PANEL_WIDTH = 400;
+	public static int FILES_PANEL_DIR = FILES_PANEL_WIDTH - 30;
+	private ArrayList<FvtmPackElm> fvtm_packs = new ArrayList<>();
+	protected Scrollable packs;
 	private boolean loaded;
-	private Scrollable packs;
 	public String name;
 	public File root_folder;
 	
@@ -41,7 +46,7 @@ public class Workspace extends Frame {
 			.translate("workspace.title", name).text_autoscale());
 		add(new Element().size(30, 30).pos(w - 31, 0).texture("icons/component/exit")
 			.hoverable(true).onclick(ci -> hide()));
-		add((packs = new Scrollable(true, 30)).size(400, h - 31).pos(0, 31));
+		add((packs = new Scrollable(true, 30)).size(FILES_PANEL_WIDTH, h - 31).pos(0, 31));
 		packs.border(RGB.BLACK);
 		packs.updateBar();
 	}
@@ -72,7 +77,35 @@ public class Workspace extends Frame {
 	}
 
 	public void reloadPacks(){
-
+		Thread thread = new Thread(null, () -> {
+			File assets;
+			ArrayList<FvtmPackElm> found = new ArrayList<>();
+			for(File fold : root_folder.listFiles()){
+				if(!fold.isDirectory()) continue;
+				if(!(assets = new File(fold, "assets")).exists()) continue;
+				FvtmPackElm pack = null;
+				for(File sub : assets.listFiles()){
+					if(!sub.isDirectory()) continue;
+					if(!new File(sub, "addonpack.fvtm").exists()) continue;
+					pack = new FvtmPackElm(fold, sub.getName());
+				}
+				if(pack == null) continue;
+				Logging.log("Found pack with id '" + pack.id + "'.");
+				found.add(pack);
+			}
+			FMT.queue(() -> {
+				packs.remElmIf(elm -> elm instanceof DirElm);
+				for(FvtmPackElm pack : found){
+					FMT.queue(() -> {
+						packs.add(pack);
+						fvtm_packs.add(pack);
+					});
+				}
+				FMT.queue(() -> packs.updateBar());
+			});
+		});
+		thread.setName("Workspace Pack Finder");
+		thread.start();
 	}
 
 }
