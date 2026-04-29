@@ -4,6 +4,8 @@ import com.spinyowl.legui.component.*;
 import com.spinyowl.legui.component.event.component.ChangeSizeEvent;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.utils.Logging;
+import net.fexcraft.app.fmt.workspace.FvtmType;
+import net.fexcraft.app.fmt.workspace.VFileType;
 import org.joml.Vector2f;
 
 import java.io.*;
@@ -198,7 +200,7 @@ public class WorkspaceViewer extends Widget {
 			for(File sub : assets.listFiles()){
 				if(!sub.isDirectory()) continue;
 				if(!new File(sub, "addonpack.fvtm").exists()) continue;
-				pack = new FvtmPack(ViewerFileType.FVTM_FOLDER, this, null, fold, sub.getName());
+				pack = new FvtmPack(VFileType.FVTM_FOLDER, this, null, fold, sub.getName());
 			}
 			if(pack == null) continue;
 			Logging.log("Found pack with id '" + pack.id + "'.");
@@ -226,25 +228,25 @@ public class WorkspaceViewer extends Widget {
 		if(folder.getName().startsWith(".")) return rrow;
 		DirComponent com = null;
 		if(folder.listFiles().length == 0){
-			com = new DirComponent(ViewerFileType.EMPTY_FOLDER, this, root, folder, rrow);
+			com = new DirComponent(VFileType.EMPTY_FOLDER, this, root, folder, rrow);
 		}
 		else{
-			com = new DirComponent(ViewerFileType.NORMAL_FOLDER, this, root, folder,  rrow);
+			com = new DirComponent(VFileType.NORMAL_FOLDER, this, root, folder,  rrow);
 			int row = 1;
 			for(File file : folder.listFiles()){
 				if(file.isDirectory()) row += addFolder(file, pack, com, row);
 			}
 			for(File file : folder.listFiles()){
 				if(!file.isDirectory()){
-					Object tipo = ViewerFileType.fromFile(file);
-					boolean ext = tipo instanceof  ViewerFileType == false;
-					ViewerFileType type = (ViewerFileType)(ext ? ((Object[])tipo)[0] : tipo);
-					if(type == ViewerFileType.FILE) continue;
+					Object tipo = VFileType.fromFile(file);
+					boolean ext = tipo instanceof VFileType == false;
+					VFileType type = (VFileType)(ext ? ((Object[])tipo)[0] : tipo);
+					if(type == VFileType.FILE) continue;
 					DirComponent dircom = new DirComponent(type, this, root, file, row++);
 					if(ext){
 						pack.content.get((FvtmType)((Object[])tipo)[1]).add(dircom);
 					}
-					if(type == ViewerFileType.PNG){
+					if(type == VFileType.PNG){
 						pack.textures.add(dircom);
 					}
 					if(type.model()){
