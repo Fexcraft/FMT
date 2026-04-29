@@ -21,7 +21,7 @@ public class FileElm extends Element {
 		this.type = (VFileType)(type instanceof VFileType ? type : ((Object[])type)[0]);
 		this.file = file;
 		text(file.getName());
-		text_pos(40, 0);
+		text_pos(35, 0);
 		text_autoscale();
 		color(GENERIC_BACKGROUND_1.value);
 		hoverable(true);
