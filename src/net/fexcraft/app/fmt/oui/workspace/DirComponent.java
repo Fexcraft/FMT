@@ -5,10 +5,10 @@ import com.spinyowl.legui.component.Label;
 import com.spinyowl.legui.event.MouseClickEvent;
 import com.spinyowl.legui.input.Mouse;
 import com.spinyowl.legui.style.Style;
-import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.oui.Icon;
 import net.fexcraft.app.fmt.oui.JsonEditor;
 import net.fexcraft.app.fmt.utils.fvtm.FVTMConfigEditor;
+import net.fexcraft.app.fmt.workspace.VFileType;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -21,13 +21,13 @@ public class DirComponent extends Component {
 	public static final int xoff = 10;
 	private ArrayList<DirComponent> subcom = new ArrayList<>();
 	private boolean expanded = false;
-	private ViewerFileType type;
+	private VFileType type;
 	protected DirComponent root;
 	private Label label;
 	private Icon icon;
 	public final File file;
 
-	public DirComponent(ViewerFileType type, WorkspaceViewer folcom, DirComponent root, File file, int row){
+	public DirComponent(VFileType type, WorkspaceViewer folcom, DirComponent root, File file, int row){
 		this.type = type;
 		this.root = root;
 		this.file = file;
@@ -65,7 +65,7 @@ public class DirComponent extends Component {
 					}
 				}
 				else if(listener.getButton() == Mouse.MouseButton.MOUSE_BUTTON_RIGHT){
-					FileEditMenu.show(this, file);
+					//FileEditMenu.show(this, file);
 				}
 			}
 		});
@@ -106,7 +106,7 @@ public class DirComponent extends Component {
 		return size;
 	}
 
-	public void updateIcon(ViewerFileType type, WorkspaceViewer folcom){
+	public void updateIcon(VFileType type, WorkspaceViewer folcom){
 		this.type = type;
 		this.remove(icon);
 		this.add(icon = new Icon(0, 32, 0, 0, -1, "./resources/textures/icons/filetree/" + type.filename() + ".png", () -> {
