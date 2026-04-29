@@ -45,6 +45,7 @@ public class Element {
 	public Text text;
 	private ElmShape shape = ElmShape.RECTANGLE;
 	public float[] pickpos = new float[4];
+	public Element pickposroot;
 	public CheckMode check_mode = CheckMode.IN_WINDOW;
 	private float x;
 	private float y;
@@ -329,6 +330,10 @@ public class Element {
 		else if(check_mode == CheckMode.IN_ROOT){
 			if(pickpos[0] < root.pickpos[0] || pickpos[1] < root.pickpos[1] || pickpos[2] > root.pickpos[2] || pickpos[3] > root.pickpos[3]) return true;
 		}
+		else if(check_mode == CheckMode.IN_SPECIFIC){
+			if(pickpos[0] < pickposroot.pickpos[0] || pickpos[1] < pickposroot.pickpos[1]
+				|| pickpos[2] > pickposroot.pickpos[2] || pickpos[3] > pickposroot.pickpos[3]) return true;
+		}
 		return false;
 	}
 
@@ -548,7 +553,7 @@ public class Element {
 
 	public static enum CheckMode {
 
-		IN_WINDOW, IN_ROOT, NONE
+		IN_WINDOW, IN_ROOT, IN_SPECIFIC, NONE
 
 	}
 
