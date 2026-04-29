@@ -40,7 +40,7 @@ public class Text {
 		hedron.glObj.textured = true;
 		if(autoscale){
 			w = FontRenderer.getWidth(text, font);
-			scale = (root.w - 10) < w ? (root.w - 10) / w : 1;
+			scale = (root.w - 5 - x) < w ? (root.w - 5 - x) / w : 1;
 			w *= scale;
 			h = FontRenderer.getHeight(text, font) * scale;
 		}
