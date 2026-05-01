@@ -60,6 +60,21 @@ public class Dialog extends Frame {
 		return this;
 	}
 
+	public Dialog set_confirm(Consumer<Dialog> co){
+		on_confirm = co;
+		return this;
+	}
+
+	public Dialog set_cancel(Consumer<Dialog> co){
+		on_cancel = co;
+		return this;
+	}
+
+	public Dialog set_close(Consumer<Dialog> co){
+		on_close = co;
+		return this;
+	}
+
 	public Dialog buttons(int bw, DialogButton... buttons){
 		for(int i = 0; i < buttons.length; i++){
 			int idx = i;
