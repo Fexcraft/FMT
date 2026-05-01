@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.workspace;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import java.io.File;
 
 /**
@@ -24,10 +26,12 @@ public enum VFileType {
 	;
 
 	public final boolean editable, directory;
+	public final Pair<VFileType, FvtmType> pair;
 
 	VFileType(boolean dir, boolean edit){
 		editable = edit;
 		directory = dir;
+		pair = Pair.of(this, null);
 	}
 
 	public String filename(){
@@ -52,11 +56,11 @@ public enum VFileType {
 		}
 	}
 
-	public static Object fromFile(File file){
+	public static Pair<VFileType, FvtmType> fromFile(File file){
 		if(file.isDirectory()){
-			return file.listFiles().length == 0 ? EMPTY_FOLDER : NORMAL_FOLDER;
+			return (file.listFiles().length == 0 ? EMPTY_FOLDER : NORMAL_FOLDER).pair;
 		}
-		if(file.getName().equals("addonpack.fvtm")) return FVTM_FILE;
+		if(file.getName().equals("addonpack.fvtm")) return FVTM_FILE.pair;
 		String name = file.getName();
 		if(name.contains(".")){
 			String[] split = name.split("\\.");
@@ -64,57 +68,57 @@ public enum VFileType {
 				String suffix = split[split.length - 1];
 				switch(suffix){
 					case "json":
-						return JSON;
+						return JSON.pair;
 					case "toml":
-						return TOML;
+						return TOML.pair;
 					case "lang":
-						return LANG;
+						return LANG.pair;
 					case "fmtb":
-						return FMTB;
+						return FMTB.pair;
 					case "png":
-						return PNG;
+						return PNG.pair;
 					case "obj":
-						return OBJ;
+						return OBJ.pair;
 					case "fmf":
-						return FMF;
+						return FMF.pair;
 					case "beo":
 					case "bob":
-						return BOB;
+						return BOB.pair;
 					//
 					case "block":
-						return parentOrGrandEquals(file, "blocks") ? new Object[]{ FVTM_CONFIG, FvtmType.BLOCK } : JSON;
+						return parentOrGrandEquals(file, "blocks") ? FvtmType.BLOCK.pair : JSON.pair;
 					case "multiblock":
-						return parentOrGrandEquals(file, "blocks") ? new Object[]{ FVTM_CONFIG, FvtmType.MULTIBLOCK } : JSON;
+						return parentOrGrandEquals(file, "blocks") ? FvtmType.MULTIBLOCK.pair : JSON.pair;
 					case "cloth":
-						return parentOrGrandEquals(file, "clothes") ? new Object[]{ FVTM_CONFIG, FvtmType.CLOTH } : JSON;
+						return parentOrGrandEquals(file, "clothes") ? FvtmType.CLOTH.pair : JSON.pair;
 					case "container":
-						return parentOrGrandEquals(file, "containers") ? new Object[]{ FVTM_CONFIG, FvtmType.CONTAINER } : JSON;
+						return parentOrGrandEquals(file, "containers") ? FvtmType.CONTAINER.pair : JSON.pair;
 					case "material":
-						return parentOrGrandEquals(file, "materials") ? new Object[]{ FVTM_CONFIG, FvtmType.MATERIAL } : JSON;
+						return parentOrGrandEquals(file, "materials") ? FvtmType.MATERIAL.pair : JSON.pair;
 					case "vehicle":
-						return parentOrGrandEquals(file, "vehicles") ? new Object[]{ FVTM_CONFIG, FvtmType.VEHICLE } : JSON;
+						return parentOrGrandEquals(file, "vehicles") ? FvtmType.VEHICLE.pair : JSON.pair;
 					case "part":
-						return parentOrGrandEquals(file, "parts") ? new Object[]{ FVTM_CONFIG, FvtmType.PART } : JSON;
+						return parentOrGrandEquals(file, "parts") ? FvtmType.PART.pair : JSON.pair;
 					case "gauge":
-						return parentOrGrandEquals(file, "railgauges") ? new Object[]{ FVTM_CONFIG, FvtmType.RAILGAUGE } : JSON;
+						return parentOrGrandEquals(file, "railgauges") ? FvtmType.RAILGAUGE.pair : JSON.pair;
 					case "deco":
-						return parentOrGrandEquals(file, "decos") ? new Object[]{ FVTM_CONFIG, FvtmType.DECORATION } : JSON;
+						return parentOrGrandEquals(file, "decos") ? FvtmType.DECORATION.pair : JSON.pair;
 					case "wire":
-						return parentOrGrandEquals(file, "wires") ? new Object[]{ FVTM_CONFIG, FvtmType.WIRE } : JSON;
+						return parentOrGrandEquals(file, "wires") ? FvtmType.WIRE.pair : JSON.pair;
 					case "wiredeco":
-						return parentOrGrandEquals(file, "wires") ? new Object[]{ FVTM_CONFIG, FvtmType.WIRE_DECO } : JSON;
+						return parentOrGrandEquals(file, "wires") ? FvtmType.WIRE_DECO.pair : JSON.pair;
 					case "consumable":
-						return parentOrGrandEquals(file, "consumables") ? new Object[]{ FVTM_CONFIG, FvtmType.CONSUMABLE } : JSON;
+						return parentOrGrandEquals(file, "consumables") ? FvtmType.CONSUMABLE.pair : JSON.pair;
 					case "fuel":
-						return parentOrGrandEquals(file, "fuels") ? new Object[]{ FVTM_CONFIG, FvtmType.FUEL } : JSON;
+						return parentOrGrandEquals(file, "fuels") ? FvtmType.FUEL.pair : JSON.pair;
 					case "sign":
-						return parentOrGrandEquals(file, "signs") ? new Object[]{ FVTM_CONFIG, FvtmType.SIGN } : JSON;
+						return parentOrGrandEquals(file, "signs") ? FvtmType.SIGN.pair : JSON.pair;
 					default:
 						break;
 				}
 			}
 		}
-		return FILE;
+		return FILE.pair;
 	}
 
 	private static boolean parentOrGrandEquals(File file, String str){
