@@ -80,10 +80,10 @@ public class FileChooser extends Frame {
 			.text(root.toString()).color(GENERIC_FIELD.value));
 		fillFileView();
 		fillBookmarks();
-		add(new RunElm(w - 210, h - 35, 100, "dialog.button.cancel", ci -> FMT.UI.remElm(this))
+		add(new RunElm(w - 210, h - 35, 100, "dialog.button.cancel", ci -> close())
 			.text_centered(true).size(100, 30));
 		add(new RunElm(w - 105, h - 35, 100, "dialog.button." + (save ? "save" : "open"), ci -> {
-			FMT.UI.remElm(this);
+			close();
 			if(save){
 				String name = selected.get_filename();
 				boolean suf = false;
@@ -164,6 +164,11 @@ public class FileChooser extends Frame {
 				}));
 		}
 		fileview.updateBar();
+	}
+
+	private void close(){
+		FMT.UI.remElm(this);
+		instance = null;
 	}
 
 	public static void choose(String title, File root, FileType type, boolean save, Consumer<File> cons){
