@@ -14,6 +14,7 @@ public class DirElm extends FileElm {
 
 	public DirElm(VFileType type, File file){
 		super(type, file);
+		render_sub_even_if_invisible = true;
 		onclick(ci -> {
 			container.visible = !container.visible;
 			FMT.WORKSPACE.packs.updateBar();
