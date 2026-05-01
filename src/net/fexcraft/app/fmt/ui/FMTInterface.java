@@ -6,7 +6,6 @@ import net.fexcraft.app.fmt.port.ex.ExportManager;
 import net.fexcraft.app.fmt.port.im.ImportManager;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.editor.EditorRoot;
-import net.fexcraft.app.fmt.oui.ProfileDialog;
 import net.fexcraft.app.fmt.ui.tree.TreeRoot;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateHandler;
@@ -102,7 +101,7 @@ public class FMTInterface extends Element {
 			.hint("toolbar.icon.settings"));
 		toolbar.add(new Element().pos(buff += iinc, yo).size(32, 32)
 			.texture("icons/toolbar/profile").hoverable(true)
-			.onclick(ci -> ProfileDialog.open())
+			.onclick(ci -> ProfileInfo.open())
 			.hint("toolbar.icon.profile"));
 		toolbar.add(new Element(){
 				@Override
