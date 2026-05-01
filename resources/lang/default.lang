@@ -287,11 +287,20 @@ editor.config.pack_utils.gen_asset_dirs.select=Select Types to generate folders 
 editor.config.pack_utils.gen_icons=Generate missing Icon/Jsons
 editor.config.pack_utils.gen_icons.complete=Generation of Missing Icons/Jsons complete.
 editor.config.pack_utils.content_new=Create new Content
+editor.config.pack_utils.content_new.name=Name:
+editor.config.pack_utils.content_new.id=ID:
 editor.config.pack_utils.icon_from_view=Create Icon from View
+editor.config.pack_utils.icon_from_view.choose=Choose a save location.
 editor.config.pack_utils.road_assets=Generate Road Assets/Jsons
+editor.config.pack_utils.road_assets.title=Road Block Assets Generator Settings
+editor.config.pack_utils.road_assets.block_id=Block ID
+editor.config.pack_utils.road_assets.block_name=Block Name
+editor.config.pack_utils.road_assets.texture=Texture Address
 editor.config.file_utils=File Utils
 editor.config.file_utils.open_json=Open JSON File
+editor.config.file_utils.open_json.choose=Chose a JSON File.
 editor.config.file_utils.mirror_lang=Mirror .lang to .json
+editor.config.file_utils.mirror_lang.choose=Choose a lang File.
 editor.config.run_utils=Run Utils
 
 # Tree
