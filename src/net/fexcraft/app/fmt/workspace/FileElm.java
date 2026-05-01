@@ -1,7 +1,9 @@
 package net.fexcraft.app.fmt.workspace;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.oui.JsonEditor;
 import net.fexcraft.app.fmt.ui.Element;
+import net.fexcraft.app.fmt.utils.fvtm.FVTMConfigEditor;
 
 import java.io.File;
 
@@ -16,9 +18,9 @@ public class FileElm extends Element {
 	protected VFileType type;
 	public final File file;
 
-	public FileElm(Object type, File file){
+	public FileElm(VFileType type, File file){
 		super();
-		this.type = (VFileType)(type instanceof VFileType ? type : ((Object[])type)[0]);
+		this.type = type;
 		this.file = file;
 		text(file.getName());
 		text_pos(35, 0);
@@ -26,6 +28,30 @@ public class FileElm extends Element {
 		color(GENERIC_BACKGROUND_1.value);
 		hoverable(true);
 		pos(5, 0);
+		onclick(ci -> {
+			if(ci.button() == 0){
+				switch(type){
+					case FVTM_CONFIG:{
+						new FVTMConfigEditor(file, null);
+						break;
+					}
+					case FVTM_FILE:
+					case JSON:{
+						new JsonEditor(file);
+						break;
+					}
+					case LANG:
+					case TOML:
+					case OBJ:{
+						Workspace.open(file);
+						break;
+					}
+				}
+			}
+			else if(ci.button() == 1){
+				//TODO r-menu
+			}
+		});
 	}
 
 	@Override
