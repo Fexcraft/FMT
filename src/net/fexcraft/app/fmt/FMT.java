@@ -1,7 +1,6 @@
 package net.fexcraft.app.fmt;
 
 import net.fexcraft.app.fmt.animation.Animation;
-import net.fexcraft.app.fmt.env.PackDevEnv;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.FMTInterface;
 import net.fexcraft.app.fmt.ui.Field;
@@ -263,7 +262,6 @@ public class FMT {
 		}
 		Settings.save();
 		SessionHandler.save();
-		PackDevEnv.save();
 		//TODO other saves
 		glfwDestroyWindow(window);
 		glfwTerminate();
