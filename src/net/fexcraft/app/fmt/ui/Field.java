@@ -46,9 +46,9 @@ public class Field extends Element {
 
 	public Field(FieldType ftype, float width){
 		super();
+		type = ftype;
 		text("");
 		text_pos(5, -2);
-		type = ftype;
 		size(type.width(width), FS);
 		hoverable = true;
 		selectable = true;
@@ -107,7 +107,7 @@ public class Field extends Element {
 
 	@Override
 	public void init(Object... args){
-		text(type.text() || type.info() ? "" : "0");
+		text(type.number() ? "0" : "");
 		text.autoscale = true;
 		if(!type.info()){
 			add(clear = new Element().color(0xffe600).size(type.text() ? FS : 5, FS).pos(w, 0)
@@ -142,12 +142,6 @@ public class Field extends Element {
 	}
 
 	@Override
-	public Element text(Object ntext){
-		super.text(ntext);
-		return this;
-	}
-
-	@Override
 	protected void onSelect(){
 		previous = text.text();
 		if(type.info()) return;
@@ -164,7 +158,7 @@ public class Field extends Element {
 	}
 
 	public void clear_text(){
-		text(type == FieldType.TEXT ? "" : "0");
+		text(type.number() ? "0" : "");
 	}
 
 	public void reset_text(){
@@ -203,6 +197,10 @@ public class Field extends Element {
 
 	public String get_filename(){
 		return text.text().replaceAll("[^0-9_a-zA-Z \\(\\)-]", "").trim();
+	}
+
+	public String get_pass(){
+		return get_text();
 	}
 
 	public float parse_float(){
@@ -277,7 +275,7 @@ public class Field extends Element {
 		String txt = text.text();
 		if(key == GLFW_KEY_BACKSPACE){
 			if(!txt.isEmpty()){
-				text(txt.substring(0, txt.length() - 1));
+				backspace(txt);
 			}
 			return;
 		}
@@ -322,6 +320,10 @@ public class Field extends Element {
 		}
 	}
 
+	protected void backspace(String txt){
+		text(txt.substring(0, txt.length() - 1));
+	}
+
 	public void onCharInput(int cha){
 		if(!type.text()) return;
 		text.text(text.text() + new String(Character.toChars(cha)));
@@ -351,10 +353,11 @@ public class Field extends Element {
 		FLOAT,
 		INT,
 		COLOR,
-		INFO;
+		INFO,
+		PASS;
 
 		public boolean text(){
-			return this == TEXT;
+			return this == TEXT || this == PASS;
 		}
 
 		public boolean decimal(){
@@ -373,6 +376,14 @@ public class Field extends Element {
 			return this == INFO;
 		}
 
+		public boolean pass(){
+			return this == PASS;
+		}
+
+		public boolean number(){
+			return this == INT || this == FLOAT || this == COLOR;
+		}
+
 		public float width(float width){
 			switch(this){
 				case TEXT: return width - FS - FS;
@@ -380,10 +391,10 @@ public class Field extends Element {
 				case INT: return width - 10;
 				case COLOR: return width - FS - FS - 10;
 				case INFO: return width;
+				case PASS: return width - FS - FS;
 			}
 			return width;
 		}
-
 	}
 
 	public static void updateRoundingDigits(){
