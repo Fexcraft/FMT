@@ -386,6 +386,9 @@ dialog.button.ok=Ok
 dialog.button.enable=Enable
 dialog.button.disable=Disable
 dialog.button.retry=Retry
+dialog.button.login=Login
+dialog.button.logout=Logout
+dialog.button.register=Register
 
 # UV Vieweer
 uvviewer.title=UV Viewer
@@ -592,17 +595,14 @@ setting.importer-dfm-java.degree_based=Model uses Degrees
 
 # Profile / Login Dialog
 profile.title=Profile Overview
-profile.username=Username:
-profile.userid=User ID:
-profile.license=License:
-profile.button.login=Login
-profile.button.logout=Logout
-profile.button.register=Register
-profile.button.retry=Retry
-loginbox.title=Login / Session Dialog
-loginbox.e_mail=E-Mail / User
-loginbox.password=Password
-loginbox.encrypt=Encrypt Password Locally?
+profile.username=Username: %s
+profile.userid=User ID: %s
+profile.license=License: %s
+profile.login.title=Login / Session
+profile.login.mail=E-Mail / User
+profile.login.password=Password
+profile.login.info=Password is automatically remembered for auto-relogin.
+profile.login.encrypt=Encrypt Password Locally? (Base64)
 
 # Texture
 texture.manager=Texture Manager
