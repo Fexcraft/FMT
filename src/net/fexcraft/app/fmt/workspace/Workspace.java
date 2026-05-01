@@ -2,8 +2,11 @@ package net.fexcraft.app.fmt.workspace;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.ui.Dialog.DialogButton;
+import net.fexcraft.app.fmt.ui.DropList;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.Frame;
 import net.fexcraft.app.fmt.ui.Scrollable;
@@ -69,16 +72,18 @@ public class Workspace extends Frame {
 
 	@Override
 	public Element show(){
-		if(!loaded){
-			loaded = true;
-			pos((FMT.SCALED_WIDTH - w) * 0.5f, (FMT.SCALED_HEIGHT - h) * 0.5f);
-			reloadPacks();
-		}
+		if(!loaded) load(null);
 		FMT.UI.setFrameOnTop(this);
 		return super.show();
 	}
 
-	public void reloadPacks(){
+	private void load(Runnable run){
+		loaded = true;
+		pos((FMT.SCALED_WIDTH - w) * 0.5f, (FMT.SCALED_HEIGHT - h) * 0.5f);
+		reloadPacks(run);
+	}
+
+	public void reloadPacks(Runnable run){
 		Thread thread = new Thread(null, () -> {
 			File assets;
 			ArrayList<FvtmPackElm> found = new ArrayList<>();
@@ -99,15 +104,48 @@ public class Workspace extends Frame {
 				packs.remElmIf(elm -> elm instanceof DirElm);
 				for(FvtmPackElm pack : found){
 					FMT.queue(() -> {
-						packs.add(pack);
+						packs.add(pack, pack);
 						fvtm_packs.add(pack);
 					});
 				}
-				FMT.queue(() -> packs.updateBar());
+				FMT.queue(() -> {
+					packs.updateBar();
+					if(run != null) run.run();
+				});
 			});
 		});
 		thread.setName("Workspace Pack Finder");
 		thread.start();
+	}
+
+	public void selectContentType(Consumer<FvtmType> cons){
+		DropList<FvtmType> list = new DropList<>(490);
+		FMT.UI.createDialog(500, 120, "workspace.content_utils")
+			.addText(0, "workspace.select_content_type")
+			.addRowElm(1, list)
+			.consumer(d -> cons.accept(list.getSelVal()), null)
+			.buttons(100, DialogButton.CONTINUE);
+		for(FvtmType type : FvtmType.values()){
+			list.addEntry(type._name, type);
+		}
+		list.selectEntry(0);
+	}
+
+	public void selectPack(Consumer<FvtmPackElm> cons){
+		if(!loaded){
+			load(() -> selectPack(cons));
+			return;
+		}
+		DropList<FvtmPackElm> list = new DropList<>(490);
+		FMT.UI.createDialog(500, 120, "workspace.content_utils")
+			.addText(0, "workspace.select_pack")
+			.addRowElm(1, list)
+			.consumer(d -> cons.accept(list.getSelVal()), null)
+			.buttons(100, DialogButton.CONTINUE);
+		for(FvtmPackElm pack : fvtm_packs){
+			list.addEntry(pack.id, pack);
+		}
+		list.selectEntry(0);
 	}
 
 }
