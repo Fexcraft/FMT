@@ -1,6 +1,9 @@
 package net.fexcraft.app.fmt.workspace;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
@@ -146,6 +149,62 @@ public class Workspace extends Frame {
 			list.addEntry(pack.id, pack);
 		}
 		list.selectEntry(0);
+	}
+
+	public static void run(boolean v12){
+		String cmd;
+		if(v12){
+			cmd = Settings.M12RCMD.value.replace("{JAVA}", Settings.JAVA8_PATH.value + "/bin/java");
+		}
+		else{
+			cmd = Settings.M20RCMD.value.replace("{JAVA}", Settings.JAVA17_PATH.value + "/bin/java");
+		}
+		try{
+			Process pr = Runtime.getRuntime().exec(cmd.split(" "), null, new File(v12 ? Settings.M12PATH.value : Settings.M20PATH.value));
+			new Thread(() -> {
+				Logging.log("=================");
+				Logging.log("RUN CMD LOG START");
+				BufferedReader input = new BufferedReader(new InputStreamReader(pr.getInputStream()));
+				String line = null;
+				try{
+					while((line = input.readLine()) != null) Logging.log(line);
+				}
+				catch(IOException e){
+					Logging.log(e);
+				}
+				Logging.log("RUN CMD LOG END");
+				Logging.log("=================");
+			}).start();
+		}
+		catch(IOException e){
+			Logging.log(e);
+			Logging.log("RUN FAILED");
+			Logging.log("=================");
+		}
+	}
+
+	public static void open(File file){
+		String cmd = Settings.TEXT_EDITOR.value.formatted(file.getPath());
+		try{
+			Process pr = Runtime.getRuntime().exec(cmd.split(" "), null, file.getParentFile());
+			new Thread(() -> {
+				Logging.log("Opening external editor for file: " + file);
+				BufferedReader input = new BufferedReader(new InputStreamReader(pr.getInputStream()));
+				String line = null;
+				try{
+					while((line = input.readLine()) != null) Logging.log(line);
+				}
+				catch(IOException e){
+					Logging.log(e);
+				}
+				Logging.log("=================");
+			}).start();
+		}
+		catch(IOException e){
+			Logging.log(e);
+			Logging.log("Opening external editor failed.");
+			Logging.log("=================");
+		}
 	}
 
 }
