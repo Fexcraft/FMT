@@ -1,16 +1,12 @@
 package net.fexcraft.app.fmt.ui.editor;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.oui.UVViewer;
+import net.fexcraft.app.fmt.ui.*;
 import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.polygon.uv.Face;
 import net.fexcraft.app.fmt.polygon.uv.NoFace;
 import net.fexcraft.app.fmt.polygon.uv.UVCoords;
 import net.fexcraft.app.fmt.polygon.uv.UVType;
-import net.fexcraft.app.fmt.ui.DropList;
-import net.fexcraft.app.fmt.ui.Element;
-import net.fexcraft.app.fmt.ui.Field;
-import net.fexcraft.app.fmt.ui.TextElm;
 import net.fexcraft.app.fmt.update.PolyVal;
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.update.UpdateEvent;
@@ -57,7 +53,7 @@ public class UVEditorTab extends EditorTab {
 		}
 		type.onchange(this::updateUVType);
 		general.add(new Element().pos(FO, next_y_pos(1.25f)).size(FF, FS).color(GENERIC_FIELD.value)
-			.onclick(ci -> UVViewer.addIfAbsent()).translate(lang_prefix + "general.viewer").text_centered(true).hoverable(true));
+			.onclick(ci -> FMTInterface.uvviewer.show()).translate(lang_prefix + "general.viewer").text_centered(true).hoverable(true));
 		//
 		for(int idx = 0; idx < UVType.values().length; idx++){
 			UVType val = UVType.values()[idx];
