@@ -1,7 +1,6 @@
 package net.fexcraft.app.fmt.ui;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.oui.UVViewer;
 import net.fexcraft.app.fmt.port.ex.ExportManager;
 import net.fexcraft.app.fmt.port.im.ImportManager;
 import net.fexcraft.app.fmt.settings.Settings;
@@ -30,6 +29,7 @@ public class FMTInterface extends Element {
 	public static final int MENU_WIDTH = 202;
 	public static ArrayList<Frame> FRAMES = new ArrayList<>();
 	public static SettingsUI settings;
+	public static UVViewer uvviewer;
 	public static Dialog DIALOG;
 	public static Element toolbar;
 	public static Element statusbar;
@@ -83,7 +83,7 @@ public class FMTInterface extends Element {
 					menu.addEntry("toolbar.utils.reset_camera", ci -> FMT.CAM.reset());
 					menu.addEntry("toolbar.utils.create_gif", ci -> ImageHandler.createGif());
 					menu.addEntry("toolbar.utils.screenshot", ci -> ImageHandler.takeScreenshot(false));
-					menu.addEntry("toolbar.utils.uv_viewer", ci -> UVViewer.addIfAbsent());
+					menu.addEntry("toolbar.utils.uv_viewer", ci -> uvviewer.show());
 					menu.addEntry("toolbar.utils.rescale", ci -> FMT.MODEL.rescale());
 					menu.addEntry("toolbar.utils.font_util", ci -> FontUtils.open());
 					Menu conv = menu.addEntry("toolbar.utils.converters", new Menu(MENU_WIDTH * 1.5f));
@@ -152,6 +152,7 @@ public class FMTInterface extends Element {
 			.onclick(ci -> tree.toggle())
 			.hint("toolbar.icon.tree"));
 		//
+		add((uvviewer = new UVViewer()).hide());
 		add((settings = new SettingsUI()).hide());
 		add((FMT.WORKSPACE = new Workspace()).hide());
 		add((editor = new EditorRoot()));
