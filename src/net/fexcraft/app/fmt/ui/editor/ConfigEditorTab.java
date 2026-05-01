@@ -24,8 +24,8 @@ public class ConfigEditorTab extends EditorTab {
 		next_y_elm_pos = 5;
 		container.add(pack_utils = new ETabCom("pack_utils"), "editor.config.pack_utils", 220);
 		pack_utils.add(new RunElm(FO, next_y_pos(1), FF, "editor.config.pack_utils.pack_new", ci -> ConfigUtils.createNewFvtmPack()));
-		pack_utils.add(new RunElm(FO, next_y_pos(1), FF, "editor.config.pack_utils.gen_asset_dirs", ci -> ConfigGeneral.genAssetDirs()));
-		pack_utils.add(new RunElm(FO, next_y_pos(1), FF, "editor.config.pack_utils.gen_icons", ci -> ConfigGeneral.genIconsInPack()));
+		pack_utils.add(new RunElm(FO, next_y_pos(1), FF, "editor.config.pack_utils.gen_asset_dirs", ci -> ConfigUtils.genAssetDirs()));
+		pack_utils.add(new RunElm(FO, next_y_pos(1), FF, "editor.config.pack_utils.gen_icons", ci -> ConfigUtils.genIconsInPack()));
 		pack_utils.add(new RunElm(FO, next_y_pos(1), FF, "editor.config.pack_utils.content_new", ci -> ConfigGeneral.createNewContent()));
 		pack_utils.add(new RunElm(FO, next_y_pos(1), FF, "editor.config.pack_utils.icon_from_view", ci -> ConfigGeneral.createNewIcon()));
 		pack_utils.add(new RunElm(FO, next_y_pos(1), FF, "editor.config.pack_utils.road_assets", ci -> ConfigGeneral.genRoadAssets()));
