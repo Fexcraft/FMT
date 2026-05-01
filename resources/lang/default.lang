@@ -283,6 +283,7 @@ editor.variable.removal=Are you sure you want to remove this Variable?
 editor.config.pack_utils=Pack Utils
 editor.config.pack_utils.pack_new=Create a new FVTM Pack
 editor.config.pack_utils.gen_asset_dirs=Generate Asset Directories
+editor.config.pack_utils.gen_asset_dirs.select=Select Types to generate folders for:
 editor.config.pack_utils.gen_icons=Generate missing Icon/Jsons
 editor.config.pack_utils.gen_icons.complete=Generation of Missing Icons/Jsons complete.
 editor.config.pack_utils.content_new=Create new Content
@@ -393,6 +394,9 @@ utils.config.create_pack.id=Pack ID ("modid")
 
 # Workspace
 workspace.title=%s
+workspace.content_utils=Content Utils
+workspace.select_content_type=Please select a Content Type:
+workspace.select_pack=Please select a Pack:
 
 # FVTM Config Editor
 fvtmeditor.title=FVTM Config Editor
