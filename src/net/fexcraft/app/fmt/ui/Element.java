@@ -15,6 +15,7 @@ import net.fexcraft.lib.frl.Vertex;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import static net.fexcraft.app.fmt.settings.Settings.*;
@@ -45,8 +46,8 @@ public class Element {
 	public Text text;
 	private ElmShape shape = ElmShape.RECTANGLE;
 	public float[] pickpos = new float[4];
-	public Element pickposroot;
 	public CheckMode check_mode = CheckMode.IN_WINDOW;
+	public boolean render_sub_even_if_invisible = false;
 	private float x;
 	private float y;
 	public float zoff;
@@ -305,8 +306,10 @@ public class Element {
 	}
 
 	public void render(){
-		if(!visible) return;
-		if(check_mode_fail()) return;
+		if(!visible || check_mode_fail()){
+			if(render_sub_even_if_invisible) if(elements != null) for(Element elm : elements) elm.render();
+			return;
+		}
 		if(border != null){
 			PolyRenderer.mode(DrawMode.UI_LINES);
 			hedron.render();
@@ -324,17 +327,7 @@ public class Element {
 	}
 
 	private boolean check_mode_fail(){
-		if(check_mode == CheckMode.IN_WINDOW){
-			if(pickpos[0] > FMT.SCALED_WIDTH || pickpos[1] > FMT.SCALED_HEIGHT || pickpos[2] < 0 || pickpos[3] < 0) return true;
-		}
-		else if(check_mode == CheckMode.IN_ROOT){
-			if(pickpos[0] < root.pickpos[0] || pickpos[1] < root.pickpos[1] || pickpos[2] > root.pickpos[2] || pickpos[3] > root.pickpos[3]) return true;
-		}
-		else if(check_mode == CheckMode.IN_SPECIFIC){
-			if(pickpos[0] < pickposroot.pickpos[0] || pickpos[1] < pickposroot.pickpos[1]
-				|| pickpos[2] > pickposroot.pickpos[2] || pickpos[3] > pickposroot.pickpos[3]) return true;
-		}
-		return false;
+		return check_mode.fail(this);
 	}
 
 	public void update0(){
@@ -552,9 +545,22 @@ public class Element {
 
 	}
 
-	public static enum CheckMode {
+	public static record CheckMode(Function<Element, Boolean> func){
 
-		IN_WINDOW, IN_ROOT, IN_SPECIFIC, NONE
+		public static CheckMode IN_WINDOW =
+			new CheckMode(elm -> elm.pickpos[0] > FMT.SCALED_WIDTH || elm.pickpos[1] > FMT.SCALED_HEIGHT || elm.pickpos[2] < 0 || elm.pickpos[3] < 0);
+		public static CheckMode IN_ROOT =
+			new CheckMode(elm -> elm.pickpos[0] < elm.root.pickpos[0] || elm.pickpos[1] < elm.root.pickpos[1] || elm.pickpos[2] > elm.root.pickpos[2] || elm.pickpos[3] > elm.root.pickpos[3]);
+		public static CheckMode NONE = new CheckMode(e -> true);
+
+		public boolean fail(Element elm){
+			return func.apply(elm);
+		}
+
+		public static CheckMode gen(Element root){
+			return new CheckMode(elm -> elm.pickpos[0] < root.pickpos[0] || elm.pickpos[1] < root.pickpos[1]
+				|| elm.pickpos[2] > root.pickpos[2] || elm.pickpos[3] > root.pickpos[3]);
+		}
 
 	}
 
