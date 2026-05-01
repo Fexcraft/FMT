@@ -85,6 +85,13 @@ public class Dialog extends Frame {
 		return this;
 	}
 
+	public BoolElm addBoolText(float row, String text, Object... format){
+		container.add(new TextElm(5, 5 + row * 30, container.w - 50, text, format).text_autoscale());
+		BoolElm elm = new BoolElm(container.w - 45, 5 + row * 30, 40);
+		container.add(elm);
+		return elm;
+	}
+
 	public Dialog addCheck(float row, BoolElm elm, String text, Object... format){
 		container.add(new TextElm(5, 5 + row * 30, container.w - 10 - 50, text, format).text_autoscale());
 		container.add(elm.pos(5 + container.w - 55, 5 + row * 30));
