@@ -163,8 +163,8 @@ public class SessionHandler {
 		FMT.openLink("https://fexcraft.net/register");
 	}
 
-	public static boolean toggleEncrypt(){
-		return encrypt = !encrypt;
+	public static boolean toggleEncrypt(Boolean bool){
+		return bool == null ? (encrypt = !encrypt) : (encrypt = bool);
 	}
 
 	public static void updatePassword(String newValue){
