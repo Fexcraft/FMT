@@ -4,6 +4,7 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.ui.Element;
 
 import java.io.File;
+import java.util.Arrays;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -40,7 +41,15 @@ public class DirElm extends FileElm {
 		super.init(args);
 		add(container = new Element().pos(0, h).hide());
 		if(!file.isDirectory()) return;
-		for(File fl : file.listFiles()){
+		File[] files = file.listFiles();
+		if(files == null || files.length == 0) return;
+		Arrays.sort(files, (a, b) -> {
+			if(a.isDirectory() && !b.isDirectory()) return -1;
+			if(b.isDirectory() && !a.isDirectory()) return 1;
+			return a.getName().toLowerCase().compareTo(b.getName().toLowerCase());
+		});
+		for(File fl : files){
+			if(fl.getName().startsWith(".")) continue;
 			var type = VFileType.fromFile(fl);
 			if(!fl.isDirectory()){
 				VFileType typ = type.getLeft();
