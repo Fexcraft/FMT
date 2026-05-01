@@ -126,7 +126,8 @@ public class Dialog extends Frame {
 
 	public static enum DialogButton {
 		CONFIRM, CANCEL, CONTINUE, SELECT,
-		CLOSE, OPEN, SAVE, LOAD, SKIP, EXIT, RETRY,
+		CLOSE, OPEN, SAVE, LOAD, SKIP, EXIT,
+		RETRY, LOGIN, LOGOUT, REGISTER,
 		NEW, ADD, YES, NO, OK, ENABLE, DISABLE
 	}
 
