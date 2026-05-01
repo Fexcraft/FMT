@@ -40,7 +40,7 @@ public class DirComponent extends Component {
 				if(listener.getButton() == Mouse.MouseButton.MOUSE_BUTTON_LEFT){
 					if(type.directory){
 						expanded = !expanded;
-						folcom.resize();
+						//folcom.resize();
 					}
 					else if(type.editable){
 						switch(type){
@@ -111,7 +111,7 @@ public class DirComponent extends Component {
 		this.remove(icon);
 		this.add(icon = new Icon(0, 32, 0, 0, -1, "./resources/textures/icons/filetree/" + type.filename() + ".png", () -> {
 			expanded = !expanded;
-			folcom.resize();
+			//folcom.resize();
 		}));
 	}
 
