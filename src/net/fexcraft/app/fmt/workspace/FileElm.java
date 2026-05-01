@@ -14,7 +14,7 @@ import static net.fexcraft.app.fmt.workspace.Workspace.FILES_PANEL_DIR;
 public class FileElm extends Element {
 
 	protected VFileType type;
-	protected File file;
+	public final File file;
 
 	public FileElm(Object type, File file){
 		super();
