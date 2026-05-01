@@ -6,20 +6,13 @@ import static org.lwjgl.glfw.GLFW.GLFW_CURSOR_NORMAL;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 import static org.lwjgl.glfw.GLFW.GLFW_REPEAT;
-import static org.lwjgl.glfw.GLFW.glfwGetCursorPos;
 import static org.lwjgl.glfw.GLFW.glfwSetInputMode;
 import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
 
-import com.spinyowl.legui.component.Component;
 import com.spinyowl.legui.component.Panel;
-import com.spinyowl.legui.style.Style;
 import com.spinyowl.legui.style.color.ColorConstants;
-import net.fexcraft.app.fmt.env.PackDevEnv;
 import net.fexcraft.app.fmt.ui.Element;
-import net.fexcraft.app.fmt.oui.JsonEditor;
-import net.fexcraft.app.fmt.oui.UVViewer;
 import net.fexcraft.app.fmt.utils.ShaderManager.Uniform;
-import net.fexcraft.app.fmt.utils.fvtm.FVTMConfigEditor;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -47,7 +40,6 @@ public class GGR {
 	private float fov = 45f;
 	public float hor, ver;
 	private Vector3f dir = new Vector3f(), right = new Vector3f();
-	public static double[] cursor_x = { 0 }, cursor_y = { 0 };
     
     public GGR(){
 		boolean bool = FMT.MODEL.orient.rect();
@@ -260,28 +252,7 @@ public class GGR {
 	}
 
 	public static boolean isOverUI(){
-		if(Element.HOVERED != null || Element.isSelectedAField()) return true;
-		glfwGetCursorPos(FMT.INSTANCE.window, cursor_x, cursor_y);
-		if(PackDevEnv.INSTANCE != null && PackDevEnv.INSTANCE.getStyle().getDisplay() != Style.DisplayType.NONE && overComponent(PackDevEnv.INSTANCE)) return true;
-		for(FVTMConfigEditor editor : FVTMConfigEditor.INSTANCES){
-			if(overComponent(editor)) return true;
-		}
-		for(JsonEditor editor : JsonEditor.INSTANCES){
-			if(overComponent(editor)) return true;
-		}
-		if(UVViewer.visible()){
-			if(cursor_x[0] >= UVViewer.pos().x && cursor_x[0] <= UVViewer.pos().x + UVViewer.size().x){
-				if(cursor_y[0] >= UVViewer.pos().y && cursor_y[0] <= UVViewer.pos().y + UVViewer.size().y) return true;
-			}
-		}
-		return false;
-	}
-
-	private static boolean overComponent(Component comp){
-		if(cursor_x[0] >= comp.getPosition().x && cursor_x[0] <= comp.getPosition().x + comp.getSize().x){
-			if(cursor_y[0] >= comp.getPosition().y && cursor_y[0] <= comp.getPosition().y + comp.getSize().y) return true;
-		}
-		return false;
+		return Element.HOVERED != null || Element.isSelectedAField();
 	}
 
 	public void cursorPosCallback(long window, double xpos, double ypos){
