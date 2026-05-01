@@ -249,29 +249,26 @@ public class Field extends Element {
 		return this;
 	}
 
-	public boolean onInput(int key, int code, int action, int mods){
-		if(key == GLFW_KEY_LEFT_SHIFT || key == GLFW_KEY_RIGHT_SHIFT){
-			return false;
-		}
+	public void onKeyInput(int key, int code, int action, int mods){
 		if(key == GLFW_KEY_ESCAPE){
 			select(null);
-			return false;
+			return;
 		}
-		if(action != GLFW_RELEASE) return true;
+		if(action != GLFW_RELEASE) return;
 		if(key == GLFW_KEY_ENTER || key == GLFW_KEY_KP_ENTER){
 			if(consumer != null) consumer.accept(this);
 			if(polyval == null && type == FieldType.COLOR) color.color(parse_int());
 			previous = text.text();
-			return true;
+			return;
 		}
 		String txt = text.text();
 		if(key == GLFW_KEY_BACKSPACE){
 			if(!txt.isEmpty()){
 				text(txt.substring(0, txt.length() - 1));
 			}
-			return true;
+			return;
 		}
-		if(type.text()){
+		/*if(type.text()){
 			if(key >= GLFW_KEY_APOSTROPHE && key <= GLFW_KEY_GRAVE_ACCENT){
 				String kn = GLFW.glfwGetKeyName(key, code);
 				if(kn == null) kn = "";
@@ -281,7 +278,7 @@ public class Field extends Element {
 				text(txt + " ");
 			}
 		}
-		else if(type.color()){
+		else*/ if(type.color()){
 			if((key >= GLFW_KEY_0 && key <= GLFW_KEY_9) || (key >= GLFW_KEY_A && key <= GLFW_KEY_F)){
 				String kn = GLFW.glfwGetKeyName(key, code);
 				text(txt + kn);
@@ -310,7 +307,11 @@ public class Field extends Element {
 				}
 			}
 		}
-		return true;
+	}
+
+	public void onCharInput(int cha){
+		if(!type.text()) return;
+		text.text(text.text() + new String(Character.toChars(cha)));
 	}
 
 	public PolygonValue polyval(){
