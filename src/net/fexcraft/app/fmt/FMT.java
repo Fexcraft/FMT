@@ -2,7 +2,9 @@ package net.fexcraft.app.fmt;
 
 import net.fexcraft.app.fmt.animation.Animation;
 import net.fexcraft.app.fmt.env.PackDevEnv;
+import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.FMTInterface;
+import net.fexcraft.app.fmt.ui.Field;
 import net.fexcraft.app.fmt.ui.FontRenderer;
 import net.fexcraft.app.fmt.polygon.GLObject;
 import net.fexcraft.app.fmt.polygon.Model;
@@ -82,6 +84,7 @@ public class FMT {
 	//
 	private GLFWErrorCallback errorCallback;
 	private GLFWKeyCallback keyCallback;
+	private GLFWCharCallback charCallback;
 	private GLFWCursorPosCallback cursorCallback;
 	private GLFWMouseButtonCallback mouseCallback;
 	private GLFWWindowCloseCallback closeCallback;
@@ -158,7 +161,17 @@ public class FMT {
 		glfwSetKeyCallback(window, keyCallback = new GLFWKeyCallback(){
 			@Override
 			public void invoke(long window, int key, int scancode, int action, int mods){
-			KeyCompound.process(window, key, scancode, action, mods);
+				if(Element.isSelectedAField()){
+					((Field)Element.SELECTED).onKeyInput(key, scancode, action, mods);
+					return;
+				}
+				KeyCompound.process(key, scancode, action, mods);
+			}
+		});
+		glfwSetCharCallback(window, charCallback = new GLFWCharCallback() {
+			@Override
+			public void invoke(long window, int codepoint){
+				if(Element.isSelectedAField()) ((Field)Element.SELECTED).onCharInput(codepoint);
 			}
 		});
 		glfwSetCursorPosCallback(window, cursorCallback = new GLFWCursorPosCallback(){
