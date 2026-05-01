@@ -18,7 +18,6 @@ import net.fexcraft.app.fmt.env.PackDevEnv;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.oui.JsonEditor;
 import net.fexcraft.app.fmt.oui.UVViewer;
-import net.fexcraft.app.fmt.oui.workspace.WorkspaceViewer;
 import net.fexcraft.app.fmt.utils.ShaderManager.Uniform;
 import net.fexcraft.app.fmt.utils.fvtm.FVTMConfigEditor;
 import org.joml.Matrix4f;
@@ -263,7 +262,6 @@ public class GGR {
 	public static boolean isOverUI(){
 		if(Element.HOVERED != null || Element.isSelectedAField()) return true;
 		glfwGetCursorPos(FMT.INSTANCE.window, cursor_x, cursor_y);
-		if(WorkspaceViewer.viewer != null && WorkspaceViewer.viewer.getStyle().getDisplay() != Style.DisplayType.NONE && overComponent(WorkspaceViewer.viewer)) return true;
 		if(PackDevEnv.INSTANCE != null && PackDevEnv.INSTANCE.getStyle().getDisplay() != Style.DisplayType.NONE && overComponent(PackDevEnv.INSTANCE)) return true;
 		for(FVTMConfigEditor editor : FVTMConfigEditor.INSTANCES){
 			if(overComponent(editor)) return true;
