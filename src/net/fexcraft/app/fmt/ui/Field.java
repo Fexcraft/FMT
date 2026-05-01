@@ -190,7 +190,15 @@ public class Field extends Element {
 	}
 
 	public String get_text(){
-		return text.text();
+		return text.text().trim();
+	}
+
+	public String get_az09_(){
+		return text.text().replaceAll("[^0-9_a-z]", "").trim();
+	}
+
+	public String get_azAZ09_(){
+		return text.text().replaceAll("[^0-9_a-zA-Z]", "").trim();
 	}
 
 	public float parse_float(){
