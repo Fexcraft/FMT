@@ -1,6 +1,6 @@
 package net.fexcraft.app.fmt.utils.fvtm;
 
-import net.fexcraft.app.fmt.oui.workspace.FvtmPack;
+import net.fexcraft.app.fmt.workspace.FvtmPackElm;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.app.json.JsonValue;
@@ -17,11 +17,11 @@ import java.util.Scanner;
 public class LangCache {
 
 	public LinkedHashMap<String, LangEntry> entries = new LinkedHashMap<>();
-	public final FvtmPack pack;
+	public final FvtmPackElm pack;
 	public File lang;
 	public File json;
 
-	public LangCache(FvtmPack pack){
+	public LangCache(FvtmPackElm pack){
 		this.pack = pack;
 		json = new File(pack.file, "/assets/" + pack.id + "/lang/en_us.json");
 		lang = new File(pack.file, "/assets/" + pack.id + "/lang/en_us.lang");
