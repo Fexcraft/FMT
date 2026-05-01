@@ -42,7 +42,26 @@ public class DirElm extends FileElm {
 		if(!file.isDirectory()) return;
 		for(File fl : file.listFiles()){
 			var type = VFileType.fromFile(fl);
-			container.add(fl.isDirectory() ? new DirElm((VFileType)type, fl) : new FileElm(type, fl));
+			if(!fl.isDirectory()){
+				VFileType typ = type.getLeft();
+				FileElm nelm = new FileElm(typ, fl);
+				if(typ != VFileType.FILE){
+					FvtmPackElm pack = (FvtmPackElm)args[0];
+					if(type.getRight() != null){
+						pack.content.get(type.getRight()).add(nelm);
+					}
+					if(typ == VFileType.PNG){
+						pack.textures.add(nelm);
+					}
+					if(typ.model()){
+						pack.models.add(nelm);
+					}
+				}
+				container.add(nelm, args);
+			}
+			else{
+				container.add(new DirElm(type.getLeft(), fl), args);
+			}
 		}
 		updateContainer();
 	}
