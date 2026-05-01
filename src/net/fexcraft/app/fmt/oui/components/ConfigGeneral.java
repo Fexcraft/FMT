@@ -4,9 +4,6 @@ import com.google.common.io.Files;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.oui.FileChooser;
 import net.fexcraft.app.fmt.oui.JsonEditor;
-import net.fexcraft.app.fmt.oui.workspace.DirComponent;
-import net.fexcraft.app.fmt.oui.workspace.WorkspaceViewer;
-import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.fmt.utils.fvtm.LangCache;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
@@ -19,89 +16,6 @@ import java.util.*;
  * @author Ferdinand Calo' (FEX___96)
  */
 public class ConfigGeneral {
-
-	public static void genAssetDirs(){
-		/*WorkspaceViewer.viewer().selectPackDialog(pack -> {
-			int height = 300;
-			Dialog dialog = new Dialog("Please select Config Types.", 320, height);
-			HashMap<String, CheckBox> map = new HashMap<>();
-			map.put("vehicles", new CheckBox("vehicles", 10, 10, 300, 20));
-			map.put("parts", new CheckBox("parts", 10, 30, 300, 20));
-			map.put("materials", new CheckBox("materials", 10, 50, 300, 20));
-			map.put("consumables", new CheckBox("consumables", 10, 70, 300, 20));
-			map.put("fuels", new CheckBox("fuels", 10, 90, 300, 20));
-			map.put("blocks", new CheckBox("blocks", 10, 110, 300, 20));
-			map.put("wires", new CheckBox("wires", 10, 130, 300, 20));
-			map.put("decos", new CheckBox("decos", 10, 150, 300, 20));
-			map.put("railgauges", new CheckBox("rail gauges", 10, 170, 300, 20));
-			map.put("clothes", new CheckBox("clothes", 10, 190, 300, 20));
-			map.put("signs", new CheckBox("signs", 10, 210, 300, 20));
-			for(CheckBox box : map.values()){
-				box.getStyle().setPadding(0, 0, 0, 5);
-			}
-			dialog.getContainer().addAll(map.values());
-			dialog.getContainer().add(new RunButton("dialog.button.confirm", 10, height - 50, 100, 20, () -> {
-				dialog.close();
-				File fl;
-				for(Map.Entry<String, CheckBox> entry : map.entrySet()){
-					if(!entry.getValue().isChecked()) continue;
-					fl = new File(pack.file, "/assets/" + pack.id + "/config/" + entry.getKey());
-					fl.mkdirs();
-					fl = new File(pack.file, "/assets/" + pack.id + "/textures/" + entry.getKey().substring(0, entry.getKey().length() - 1));
-					fl.mkdirs();
-					fl = new File(pack.file, "/assets/" + pack.id + "/models/" + entry.getKey().substring(0, entry.getKey().length() - 1));
-					fl.mkdirs();
-				}
-				WorkspaceViewer.viewer().genView();
-			}));
-			dialog.setResizable(false);
-			//dialog.show(FMT.FRAME);
-		});*/
-	}
-
-	public static void genIconsInPack(){
-		WorkspaceViewer.viewer().selectPackDialog(pack -> {
-			for(ArrayList<DirComponent> list : pack.content.values()){
-				for(DirComponent dir : list){
-					JsonMap map = JsonHandler.parse(dir.file);
-					String cid = map.getString("ID", map.getString("RegistryName", null));
-					if(cid == null) return;
-					if(cid.contains(":")) cid = cid.split(":")[1];
-					pack.lang.fill(cid, map.getString("Name", "Unnamed Content"));
-					File file = new File(pack.file, "/assets/" + pack.id + "/models/item/" + cid + ".json");
-					if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
-					if(!file.exists()){
-						map = new JsonMap();
-						map.add("parent", "item/generated");
-						map.add("textures", new JsonMap("layer0", pack.id + ":item/" + cid));
-						JsonHandler.print(file, map, JsonHandler.PrintOption.DEFAULT);
-					}
-					file = new File(pack.file, "/assets/" + pack.id + "/items/" + cid + ".json");
-					if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
-					if(!file.exists()){
-						map = new JsonMap();
-						JsonMap mod = new JsonMap();
-						mod.add("type", "minecraft:model");
-						mod.add("model", pack.id + ":item/" + cid);
-						map.add("model", mod);
-						JsonHandler.print(file, map, JsonHandler.PrintOption.DEFAULT);
-					}
-					file = new File(pack.file, "/assets/" + pack.id + "/textures/item/" + cid + ".png");
-					if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
-					if(!file.exists()){
-						try{
-							Files.copy(new File("./resources/textures/icons/configeditor/rename.png"), file);
-						}
-						catch(Exception e){
-							Logging.log(e);
-						}
-					}
-				}
-			}
-			WorkspaceViewer.viewer().genView();
-			//TODO GenericDialog.showOK(null, null, null, "editor.component.config.general.gen_icons.complete");
-		});
-	}
 
 	public static void createNewContent(){
 		/*WorkspaceViewer.viewer().selectPackDialog(pack -> {
