@@ -8,9 +8,6 @@ import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Pivot;
 import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.oui.Icon;
-import net.fexcraft.app.fmt.oui.workspace.DirComponent;
-import net.fexcraft.app.fmt.oui.workspace.FvtmPack;
-import net.fexcraft.app.fmt.oui.workspace.WorkspaceViewer;
 import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
@@ -143,7 +140,7 @@ public class EntryComponent extends Component {
 					Dialog dialog = new Dialog("Select a pack.", 440, 70);
 					SelectBox<String> box = new SelectBox<>(10, 10, 420, 30);
 					box.setVisibleCount(8);
-					for(FvtmPack pack : WorkspaceViewer.viewer().rootfolders) box.addElement(pack.id);
+					//TODO for(FvtmPack pack : WorkspaceViewer.viewer().rootfolders) box.addElement(pack.id);
 					box.addSelectBoxChangeSelectionEventListener(lis -> {
 						input[0].getTextState().setText(lis.getNewValue());
 						val.value(lis.getNewValue());
@@ -160,7 +157,7 @@ public class EntryComponent extends Component {
 					SelectBox<String> modbox = new SelectBox<>(10, 50, 420, 30);
 					packbox.setVisibleCount(8);
 					packbox.setSelected("(no pack selected)", true);
-					for(FvtmPack pack : WorkspaceViewer.viewer().rootfolders){
+					/*for(FvtmPack pack : WorkspaceViewer.viewer().rootfolders){
 						packbox.addElement(pack.id);
 					}
 					packbox.addSelectBoxChangeSelectionEventListener(lis -> {
@@ -179,7 +176,7 @@ public class EntryComponent extends Component {
 								modbox.addElement(pid + ":" + path);
 							}
 						}
-					});
+					});*///TODO
 					dialog.getContainer().add(packbox);
 					//
 					modbox.setVisibleCount(8);
@@ -204,7 +201,7 @@ public class EntryComponent extends Component {
 					SelectBox<String> packbox = new SelectBox<>(10, 10, 420, 30);
 					packbox.setVisibleCount(8);
 					packbox.setSelected("(no pack selected)", true);
-					for(FvtmPack pack : WorkspaceViewer.viewer().rootfolders){
+					/*for(FvtmPack pack : WorkspaceViewer.viewer().rootfolders){
 						packbox.addElement(pack.id);
 					}
 					packbox.addSelectBoxChangeSelectionEventListener(lis -> {
@@ -223,7 +220,7 @@ public class EntryComponent extends Component {
 								texbox.addElement(pid + ":" + path);
 							}
 						}
-					});
+					});*///TODO
 					dialog.getContainer().add(packbox);
 					//
 					texbox.setVisibleCount(8);
