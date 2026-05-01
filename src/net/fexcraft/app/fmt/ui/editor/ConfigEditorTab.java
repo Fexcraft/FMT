@@ -1,10 +1,10 @@
 package net.fexcraft.app.fmt.ui.editor;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.oui.workspace.WorkspaceViewer;
 import net.fexcraft.app.fmt.ui.*;
 import net.fexcraft.app.fmt.workspace.ConfigUtils;
 import net.fexcraft.app.fmt.workspace.IconFrameFrame;
+import net.fexcraft.app.fmt.workspace.Workspace;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -39,8 +39,8 @@ public class ConfigEditorTab extends EditorTab {
 		//
 		next_y_elm_pos = 5;
 		container.add(run_utils = new ETabCom("run_utils"), "editor.config.run_utils", 100);
-		run_utils.add(new RunElm(FO, next_y_pos(1), FF, "Run 1.12", ci -> WorkspaceViewer.run(true)));
-		run_utils.add(new RunElm(FO, next_y_pos(1), FF, "Run 1.20+", ci -> WorkspaceViewer.run(false)));
+		run_utils.add(new RunElm(FO, next_y_pos(1), FF, "Run 1.12", ci -> Workspace.run(true)));
+		run_utils.add(new RunElm(FO, next_y_pos(1), FF, "Run 1.20+", ci -> Workspace.run(false)));
 
 	}
 
