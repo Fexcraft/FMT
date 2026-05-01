@@ -26,6 +26,7 @@ public class Workspace extends Frame {
 	public static int FILES_PANEL_DIR = FILES_PANEL_WIDTH - 30;
 	private ArrayList<FvtmPackElm> fvtm_packs = new ArrayList<>();
 	protected Scrollable packs;
+	protected CheckMode cm_in_packs;
 	private boolean loaded;
 	public String name;
 	public File root_folder;
@@ -49,6 +50,7 @@ public class Workspace extends Frame {
 		add((packs = new Scrollable(true, 30)).size(FILES_PANEL_WIDTH, h - 31).pos(0, 31));
 		packs.border(RGB.BLACK);
 		packs.updateBar();
+		cm_in_packs = CheckMode.gen(packs);
 	}
 
 	public void update(Setting<?> setting){
