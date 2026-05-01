@@ -431,11 +431,12 @@ public class Element {
 	}
 
 	public static void select(Element elm){
-		if(SELECTED != null){
-			SELECTED.onDeselect(elm);
-			SELECTED.update_polycolor();
+		Element osel = SELECTED;
+		SELECTED = elm == osel ? null : elm;
+		if(osel != null){
+			osel.onDeselect(elm);
+			osel.update_polycolor();
 		}
-		SELECTED = elm == SELECTED ? null : elm;
 		if(SELECTED == null) return;
 		SELECTED.onSelect();
 		SELECTED.update_polycolor();
