@@ -4,22 +4,16 @@ import com.spinyowl.legui.component.*;
 import com.spinyowl.legui.component.event.component.ChangeSizeEvent;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.utils.Logging;
-import net.fexcraft.app.fmt.workspace.FvtmType;
-import net.fexcraft.app.fmt.workspace.VFileType;
 import org.joml.Vector2f;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.function.Consumer;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
  */
 public class WorkspaceViewer extends Widget {
 
-	public static final String[] types = new String[]{
-		"Vehicle", "Part", "Material", "Consumable", "Fuel", "Block", "Wire", "Deco", "RailGauge", "Cloth", "Sign"
-	};
 	public static WorkspaceViewer viewer;
 	public static final int ROWHEIGHT = 30;
 	public ArrayList<FvtmPack> rootfolders = new ArrayList<FvtmPack>();
@@ -53,7 +47,7 @@ public class WorkspaceViewer extends Widget {
 			getContainer().setSize(vec);
 			packspanel.setSize(vec.x, getSize().y - 30);
 			//refresh.setPosition(vec.x - 110, 5);
-			resize();
+			//resize();
 		});
 		//Settings.applyBorderless(packspanel);
 		getContainer().add(packspanel);
@@ -61,47 +55,7 @@ public class WorkspaceViewer extends Widget {
 		//
 		folder = new File(Settings.WORKSPACE_ROOT.value);
 		if(!folder.exists()) folder.mkdirs();
-		genView(true);
-	}
-
-	public void selectContentTypeDialog(Consumer<String> cons){
-		Dialog dialog = new Dialog("Please select a ContentType.", 320, 70);
-		SelectBox<String> select = new SelectBox<>(10, 10, 300, 30);
-		for(String str : types){
-			select.addElement(str);
-		}
-		select.addSelectBoxChangeSelectionEventListener(event -> {
-			dialog.close();
-			cons.accept(event.getNewValue());
-		});
-		select.setVisibleCount(8);
-		dialog.getContainer().add(select);
-		dialog.setResizable(false);
-		//dialog.show(FMT.FRAME);
-	}
-
-	public void selectPackDialog(Consumer<FvtmPack> cons){
-		Dialog dialog = new Dialog("Please select a pack.", 320, 70);
-		SelectBox<String> select = new SelectBox<>(10, 10, 300, 30);
-		for(FvtmPack pack : rootfolders){
-			select.addElement(pack.id);
-		}
-		select.addSelectBoxChangeSelectionEventListener(event -> {
-			dialog.close();
-			FvtmPack pack = getPack(event.getNewValue());
-			if(pack != null) cons.accept(pack);
-		});
-		select.setVisibleCount(8);
-		dialog.getContainer().add(select);
-		dialog.setResizable(false);
-		//dialog.show(FMT.FRAME);
-	}
-
-	private FvtmPack getPack(String id){
-		for(FvtmPack pack : rootfolders){
-			if(pack.id.equals(id)) return pack;
-		}
-		return null;
+		//genView(true);
 	}
 
 	public static void run(boolean bool){
@@ -166,111 +120,6 @@ public class WorkspaceViewer extends Widget {
 			//FMT.FRAME.getContainer().add(viewer);
 		}
 		viewer.show();
-	}
-
-	public void genView(){
-		genView(false);
-	}
-
-	private void genView(boolean initial){
-		if(initial) findPacks();
-		new Thread(() -> {
-			Logging.log("Reloading Workspace");
-			/*refresh.setEnabled(false);
-			refresh.getTextState().setText("reloading...");*/
-			//packspanel.getContainer().removeAll(rootfolders);
-			//infopanel.getContainer().clearChildComponents();
-			//rootfolders.clear();
-			findPacks();
-			//addFolder(folder, null, 0);
-			resize();
-			packspanel.getVerticalScrollBar().setScrollStep(0f);
-			/*refresh.setEnabled(true);
-			refresh.getTextState().setText("Refresh");*/
-		}, "FolderViewGenerator").start();
-	}
-
-	private void findPacks(){
-		File assets;
-		ArrayList<FvtmPack> npacks = new ArrayList<>();
-		for(File fold : folder.listFiles()){
-			if(!fold.isDirectory()) continue;
-			if(!(assets = new File(fold, "assets")).exists()) continue;
-			FvtmPack pack = null;
-			for(File sub : assets.listFiles()){
-				if(!sub.isDirectory()) continue;
-				if(!new File(sub, "addonpack.fvtm").exists()) continue;
-				pack = new FvtmPack(VFileType.FVTM_FOLDER, this, null, fold, sub.getName());
-			}
-			if(pack == null) continue;
-			Logging.log("Found pack with id '" + pack.id + "'.");
-			npacks.add(pack);
-			for(File file : fold.listFiles()){
-				addFolder(file, pack, pack, 0);
-			}
-			for(FvtmType ft : FvtmType.values()){
-				if(pack.content.get(ft).size() > 0){
-					Logging.log("  "  + ft.name().toLowerCase() + "s: " + pack.content.get(ft).size());
-				}
-			}
-			Logging.log("  textures: " + pack.textures.size());
-		}
-		rootfolders.clear();
-		packspanel.getContainer().removeAll(rootfolders);
-		for(FvtmPack pack : npacks){
-			rootfolders.add(pack);
-			packspanel.getContainer().add(pack);
-		}
-	}
-
-	private int addFolder(File folder, FvtmPack pack, DirComponent root, int rrow){
-		if(!folder.isDirectory()) return rrow;
-		if(folder.getName().startsWith(".")) return rrow;
-		DirComponent com = null;
-		if(folder.listFiles().length == 0){
-			com = new DirComponent(VFileType.EMPTY_FOLDER, this, root, folder, rrow);
-		}
-		else{
-			com = new DirComponent(VFileType.NORMAL_FOLDER, this, root, folder,  rrow);
-			int row = 1;
-			for(File file : folder.listFiles()){
-				if(file.isDirectory()) row += addFolder(file, pack, com, row);
-			}
-			for(File file : folder.listFiles()){
-				if(!file.isDirectory()){
-					Object tipo = VFileType.fromFile(file);
-					boolean ext = tipo instanceof VFileType == false;
-					VFileType type = (VFileType)(ext ? ((Object[])tipo)[0] : tipo);
-					if(type == VFileType.FILE) continue;
-					DirComponent dircom = new DirComponent(type, this, root, file, row++);
-					if(ext){
-						pack.content.get((FvtmType)((Object[])tipo)[1]).add(dircom);
-					}
-					if(type == VFileType.PNG){
-						pack.textures.add(dircom);
-					}
-					if(type.model()){
-						pack.models.add(dircom);
-					}
-					com.addSub(dircom);
-				}
-			}
-		}
-		root.addSub(com);
-		return folder.list().length;
-	}
-
-	protected void resize(){
-		float height = viewer.getSize().y - 30;
-		scrollableheight = 0;
-		for(DirComponent com : rootfolders){
-			scrollableheight += com.resize(scrollableheight, true);
-		}
-		scrollableheight = 0;
-		for(DirComponent com : rootfolders){
-			scrollableheight += com.fullsize();
-		}
-		packspanel.getContainer().setSize(packspanel.getSize().x, scrollableheight < height ? height : scrollableheight);
 	}
 
 	public static WorkspaceViewer viewer(){
