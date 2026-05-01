@@ -2,6 +2,9 @@ package net.fexcraft.app.fmt.workspace;
 
 import com.google.common.io.Files;
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.oui.FileChooser;
+import net.fexcraft.app.fmt.oui.JsonEditor;
+import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.BoolElm;
 import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.Dialog.DialogButton;
@@ -12,13 +15,12 @@ import net.fexcraft.app.fmt.utils.fvtm.LangCache;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
+import net.fexcraft.lib.common.utils.Formatter;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -185,6 +187,177 @@ public class ConfigUtils {
 				.addText(0, "editor.config.pack_utils.gen_icons.complete")
 				.buttons(100, DialogButton.OK);
 			FMT.WORKSPACE.reloadPacks(null);
+		});
+	}
+
+	public static void createNewContent(){
+		FMT.WORKSPACE.selectPack(pack -> {
+			FMT.WORKSPACE.selectContentType(type -> {
+				Field conam = new Field(Field.FieldType.TEXT, 490);
+				Field conid = new Field(Field.FieldType.TEXT, 490);
+				FMT.UI.createDialog(500, 180, "workspace.content_utils")
+					.addText(0, "editor.config.pack_utils.content_new.name")
+					.addRowElm(1, conam)
+					.addText(2, "editor.config.pack_utils.content_new.id")
+					.addRowElm(3, conid)
+					.consumer(d -> {
+						String name = conam.get_text();
+						File file = new File(pack.file, "/assets/" + pack.id + "/config/" + type.folder + "/" + name + "." + type.suffix);
+						if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
+						String cid = conid.get_az09_();
+						JsonMap map = new JsonMap();
+						map.add("ID", cid);
+						map.add("Name", name);
+						map.add("Addon", pack.id);
+						JsonHandler.print(file, map, JsonHandler.PrintOption.DEFAULT);
+						file = new File(pack.file, "/assets/" + pack.id + "/textures/item/" + cid + ".png");
+						if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
+						try{
+							Files.copy(new File("./resources/textures/icons/configeditor/rename.png"), file);
+						}
+						catch(Exception e){
+							Logging.log(e);
+						}
+						file = new File(pack.file, "/assets/" + pack.id + "/models/item/" + cid + ".json");
+						if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
+						map = new JsonMap();
+						map.add("parent", "item/generated");
+						map.add("textures", new JsonMap("layer0", pack.id + ":item/" + cid));
+						pack.lang.fill(cid, conam.get_text());
+						JsonHandler.print(file, map, JsonHandler.PrintOption.DEFAULT);
+						file = new File(pack.file, "/assets/" + pack.id + "/items/" + cid + ".json");
+						if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
+						map = new JsonMap();
+						JsonMap mod = new JsonMap();
+						mod.add("type", "minecraft:model");
+						mod.add("model", pack.id + ":item/" + cid);
+						map.add("model", mod);
+						JsonHandler.print(file, map, JsonHandler.PrintOption.DEFAULT);
+						FMT.WORKSPACE.reloadPacks(null);
+					}, null)
+					.buttons(100, DialogButton.CONFIRM, DialogButton.CANCEL);
+			});
+		});
+	}
+
+	public static void genRoadAssets(){
+		FMT.WORKSPACE.selectPack(pack -> {
+			Field bid = new Field(Field.FieldType.TEXT, 490);
+			Field bnm = new Field(Field.FieldType.TEXT, 490);
+			Field tex = new Field(Field.FieldType.TEXT, 490);
+			FMT.UI.createDialog(500, 240, "editor.config.pack_utils.road_assets.title")
+				.addText(0, "editor.config.pack_utils.road_assets.block_id")
+				.addRowElm(1, bid)
+				.addText(2, "editor.config.pack_utils.road_assets.block_name")
+				.addRowElm(3, bnm)
+				.addText(4, "editor.config.pack_utils.road_assets.texture")
+				.addRowElm(5, tex)
+				.set_confirm(d -> {
+					String roadid = bid.get_az09_();
+					File file = new File(pack.file, "/assets/" + pack.id + "/blockstates/" + roadid + ".json");
+					if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
+					JsonMap map = new JsonMap();
+					JsonMap vars = new JsonMap();
+					for(int i = 0; i < 16; i++){
+						JsonArray mods = new JsonArray();
+						mods.add(new JsonMap("model", pack.id + ":" + roadid + "_" + i));
+						mods.add(new JsonMap("model", pack.id + ":" + roadid + "_" + i, "y", 90));
+						mods.add(new JsonMap("model", pack.id + ":" + roadid + "_" + i, "y", 180));
+						mods.add(new JsonMap("model", pack.id + ":" + roadid + "_" + i, "y", 270));
+						vars.add("height=" + i, mods);
+					}
+					map.add("variants", vars);
+					JsonHandler.print(file, map);
+					//
+					String name = bnm.get_text();
+					String tid = tex.get_text();
+					for(int i = 0; i < 16; i++){
+						file = new File(pack.file, "/assets/" + pack.id + "/blockstates/" + roadid + "_" + i + ".json");
+						if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
+						map = new JsonMap();
+						vars = new JsonMap();
+						JsonArray mods = new JsonArray();
+						mods.add(new JsonMap("model", pack.id + ":block/" + roadid + "_" + i));
+						mods.add(new JsonMap("model", pack.id + ":block/" + roadid + "_" + i, "y", 90));
+						mods.add(new JsonMap("model", pack.id + ":block/" + roadid + "_" + i, "y", 180));
+						mods.add(new JsonMap("model", pack.id + ":block/" + roadid + "_" + i, "y", 270));
+						vars.add("", mods);
+						map.add("variants", vars);
+						JsonHandler.print(file, map);
+						//
+						file = new File(pack.file, "/assets/" + pack.id + "/models/item/" + roadid + "_" + i + ".json");
+						if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
+						map = new JsonMap();
+						map.add("parent", pack.id + ":block/" + roadid + "_" + i);
+						JsonHandler.print(file, map);
+						//
+						file = new File(pack.file, "/assets/" + pack.id + "/models/block/" + roadid + "_" + i + ".json");
+						if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
+						map = new JsonMap();
+						map.add("parent", "fvtm:block/asphalt_" + i);
+						map.add("textures", new JsonMap("particle", tid, "texture", tid));
+						JsonHandler.print(file, map);
+						//
+						file = new File(pack.file, "/assets/" + pack.id + "/items/" + roadid + "_" + i + ".json");
+						if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
+						map = new JsonMap();
+						JsonMap mod = new JsonMap();
+						mod.add("type", "minecraft:model");
+						mod.add("model", pack.id + ":item/" + roadid + "_" + i);
+						map.add("model", mod);
+						JsonHandler.print(file, map, JsonHandler.PrintOption.DEFAULT);
+					}
+					FMT.WORKSPACE.reloadPacks(null);
+				})
+				.buttons(100, DialogButton.CONFIRM, DialogButton.CANCEL);
+		});
+	}
+
+	public static void openJson(){
+		FileChooser.chooseFile("editor.config.file_utils.open_json.choose", Settings.WORKSPACE_ROOT.value, FileChooser.TYPE_JSON, false, file -> {
+			try{
+				if(file != null && file.exists()) new JsonEditor(file);
+			}
+			catch(Exception e){
+				e.printStackTrace();
+			}
+		});
+	}
+
+	public static void mirrorLang(){
+		FileChooser.chooseFile("editor.config.file_utils.mirror_lang.choose", Settings.WORKSPACE_ROOT.value, FileChooser.TYPE_ANY, false, file -> {
+			try{
+				LinkedHashMap<String, LangCache.LangEntry> entries = new LinkedHashMap<>();
+				Scanner scanner = new Scanner(file);
+				String line;
+				while(scanner.hasNextLine()){
+					line = scanner.nextLine();
+					if(!line.contains("=")){
+						entries.put(line, new LangCache.LangEntry(null, false));
+						continue;
+					}
+					String l = line.substring(0, line.indexOf("="));
+					if(l.startsWith("item.")){
+						l = l.substring(5, l.length() - 5).replace(":", ".");
+						entries.put(l, new LangCache.LangEntry(line.substring(line.indexOf("=") + 1), true));
+					}
+					else{
+						entries.put(l, new LangCache.LangEntry(line.substring(l.length() + 1), false));
+					}
+				}
+				scanner.close();
+				JsonMap map = new JsonMap();
+				for(Map.Entry<String, LangCache.LangEntry> entry : entries.entrySet()){
+					if(entry.getValue().item()) map.add("item." + entry.getKey(), net.fexcraft.lib.common.utils.Formatter.format(entry.getValue().name()));
+					else if(entry.getValue().name() != null) map.add(entry.getKey(), Formatter.format(entry.getValue().name()));
+				}
+				File json = new File(file.getParentFile(), file.getName().substring(0, file.getName().indexOf(".")) + ".json");
+				if(json.exists()) Files.copy(json, new File(json.getParentFile(), json.getName() + ".bkp"));
+				JsonHandler.print(json, map, JsonHandler.PrintOption.SPACED);
+			}
+			catch(Exception e){
+				e.printStackTrace();
+			}
 		});
 	}
 
