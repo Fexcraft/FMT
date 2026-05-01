@@ -16,7 +16,7 @@ public class FvtmPack extends DirComponent {
 	public final HashMap<FvtmType, ArrayList<DirComponent>> content = new HashMap<>();
 	public final ArrayList<DirComponent> textures = new ArrayList<>();
 	public final ArrayList<DirComponent> models = new ArrayList<>();
-	public final LangCache lang;
+	public LangCache lang;
 	public final String id;
 
 	public FvtmPack(VFileType type, WorkspaceViewer folcom, DirComponent root, File file, String id){
@@ -25,7 +25,7 @@ public class FvtmPack extends DirComponent {
 			content.put(ft, new ArrayList<>());
 		}
 		this.id = id;
-		lang = new LangCache(this);
+		//lang = new LangCache(this);
 	}
 
 }
