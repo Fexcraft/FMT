@@ -78,7 +78,7 @@ public class Scrollable extends Element {
 			}
 			else{
 				if(elm.x() > 5) continue;
-				ih += elm.h;
+				ih += elm.h + 2;
 			}
 		}
 		//
@@ -117,9 +117,13 @@ public class Scrollable extends Element {
 			else{
 				elm.pos(elm.x(), incr + bh);
 				if(elm.x() > 5) continue;
-				incr += elm.h;
+				incr += elm.h + 2;
 			}
 		}
+	}
+
+	public void clear(){
+		remElmIf(elm -> elm != bar && elm != up && elm != dw);
 	}
 
 }

@@ -2,7 +2,7 @@ package net.fexcraft.app.fmt.ui.tree;
 
 import com.google.common.io.Files;
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.oui.FileChooser;
+import net.fexcraft.app.fmt.ui.FileChooser;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.texture.TextureManager;
@@ -145,7 +145,7 @@ public class TexGroupCom extends TTabCom {
 	}
 
 	private void selectGroup(){
-		FileChooser.chooseFile(Translator.translate("tree.texture.select.title"), "./", FileChooser.TYPE_IMG, false, file -> {
+		FileChooser.choose(Translator.translate("tree.texture.select.title"), null, FileChooser.TYPE_IMG, false, file -> {
 			if(file == null) return;
 			try{
 				Files.copy(file, group.texture.getFile());

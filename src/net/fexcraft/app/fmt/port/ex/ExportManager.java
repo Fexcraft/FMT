@@ -7,7 +7,6 @@ import java.util.List;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.settings.Settings;
-import net.fexcraft.app.fmt.oui.FileChooser;
 import net.fexcraft.app.fmt.ui.*;
 import net.fexcraft.app.json.JsonMap;
 
@@ -89,7 +88,7 @@ public class ExportManager {
 	}
 
 	private static void showFileChooserDialog(Exporter exporter, List<Group> groups){
-		FileChooser.chooseFile("export.choose.file", "", exporter.extensions(), true, file -> {
+		FileChooser.choose("export.choose.file", FMT.WORKSPACE.root_folder, exporter.extensions(), true, file -> {
 			if(file == null){
 				FMT.UI.createDialog(400, 50, "export.choose.nofile")
 					.buttons(100, Dialog.DialogButton.YES, Dialog.DialogButton.NO)

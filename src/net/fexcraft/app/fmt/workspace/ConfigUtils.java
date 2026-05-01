@@ -2,13 +2,13 @@ package net.fexcraft.app.fmt.workspace;
 
 import com.google.common.io.Files;
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.oui.FileChooser;
 import net.fexcraft.app.fmt.oui.JsonEditor;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.BoolElm;
 import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.Dialog.DialogButton;
 import net.fexcraft.app.fmt.ui.Field;
+import net.fexcraft.app.fmt.ui.FileChooser;
 import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.app.fmt.utils.fvtm.LangCache;
@@ -314,7 +314,7 @@ public class ConfigUtils {
 	}
 
 	public static void openJson(){
-		FileChooser.chooseFile("editor.config.file_utils.open_json.choose", Settings.WORKSPACE_ROOT.value, FileChooser.TYPE_JSON, false, file -> {
+		FileChooser.choose("editor.config.file_utils.open_json.choose", FMT.WORKSPACE.root_folder, FileChooser.TYPE_JSON, false, file -> {
 			try{
 				if(file != null && file.exists()) new JsonEditor(file);
 			}
@@ -325,7 +325,7 @@ public class ConfigUtils {
 	}
 
 	public static void mirrorLang(){
-		FileChooser.chooseFile("editor.config.file_utils.mirror_lang.choose", Settings.WORKSPACE_ROOT.value, FileChooser.TYPE_ANY, false, file -> {
+		FileChooser.choose("editor.config.file_utils.mirror_lang.choose", FMT.WORKSPACE.root_folder, FileChooser.TYPE_ANY, false, file -> {
 			try{
 				LinkedHashMap<String, LangCache.LangEntry> entries = new LinkedHashMap<>();
 				Scanner scanner = new Scanner(file);

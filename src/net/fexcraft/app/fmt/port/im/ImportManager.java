@@ -1,16 +1,12 @@
 package net.fexcraft.app.fmt.port.im;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.ui.Dialog;
-import net.fexcraft.app.fmt.ui.DropList;
-import net.fexcraft.app.fmt.ui.FMTInterface;
-import net.fexcraft.app.fmt.ui.FontRenderer;
+import net.fexcraft.app.fmt.ui.*;
 import net.fexcraft.app.fmt.update.UpdateEvent.ModelLoad;
 import net.fexcraft.app.fmt.update.UpdateEvent.ModelUnload;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.settings.Settings;
-import net.fexcraft.app.fmt.oui.FileChooser;
 import net.fexcraft.app.fmt.utils.DiscordUtil;
 import net.fexcraft.app.json.JsonMap;
 
@@ -74,7 +70,7 @@ public class ImportManager {
 	}
 
 	private static void showFileChooserDialog(Importer importer){
-		FileChooser.chooseFile("import.choose.file", "", importer.extensions(), false, file -> {
+		FileChooser.choose("import.choose.file", FMT.WORKSPACE.root_folder, importer.extensions(), false, file -> {
 			if(file == null){
 				FMT.UI.createDialog(400, 50, "import.choose.nofile")
 					.buttons(100, Dialog.DialogButton.YES, Dialog.DialogButton.NO)

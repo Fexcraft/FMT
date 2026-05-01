@@ -35,7 +35,7 @@ import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.texture.TextureManager;
-import net.fexcraft.app.fmt.oui.FileChooser;
+import net.fexcraft.app.fmt.ui.FileChooser;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonHandler.PrintOption;
@@ -599,7 +599,7 @@ public class SaveHandler {
 	public static void openDialog(File file){
 		Runnable run = () -> {
 			if(file == null){
-				FileChooser.chooseFile(Translator.translate("saveload.open"), "./saves", FileChooser.TYPE_FMTB, false, task -> {
+				FileChooser.choose(Translator.translate("saveload.open"), new File("./saves"), FileChooser.TYPE_FMTB, false, task -> {
 					UpdateHandler.update(new ModelUnload(FMT.MODEL));
 					FMT.MODEL = new Model(task, null);
 					Settings.addRecentFile(task);
@@ -641,7 +641,7 @@ public class SaveHandler {
 	}
 
 	public static void saveAsDialog(Runnable run){
-		FileChooser.chooseFile(Translator.translate("saveload.save"), "./saves", FileChooser.TYPE_FMTB, true, task -> {
+		FileChooser.choose(Translator.translate("saveload.save"), new File("./saves"), FileChooser.TYPE_FMTB, true, task -> {
 			FMT.MODEL.file = task;
 			saveDialog(task, run);
 		});

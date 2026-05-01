@@ -107,7 +107,7 @@ public class Field extends Element {
 
 	@Override
 	public void init(Object... args){
-		text(type.text() ? "" : "0");
+		text(type.text() || type.info() ? "" : "0");
 		text.autoscale = true;
 		if(!type.info()){
 			add(clear = new Element().color(0xffe600).size(type.text() ? FS : 5, FS).pos(w, 0)
@@ -157,7 +157,7 @@ public class Field extends Element {
 
 	@Override
 	protected void onDeselect(Element current){
-		reset_text();
+		//reset_text();
 		if(type.info()) return;
 		clear.hide();
 		reset.hide();
@@ -199,6 +199,10 @@ public class Field extends Element {
 
 	public String get_azAZ09_(){
 		return text.text().replaceAll("[^0-9_a-zA-Z]", "").trim();
+	}
+
+	public String get_filename(){
+		return text.text().replaceAll("[^0-9_a-zA-Z \\(\\)-]", "").trim();
 	}
 
 	public float parse_float(){
@@ -262,6 +266,7 @@ public class Field extends Element {
 			select(null);
 			return;
 		}
+		if(type.info()) return;
 		if(action != GLFW_RELEASE) return;
 		if(key == GLFW_KEY_ENTER || key == GLFW_KEY_KP_ENTER){
 			if(consumer != null) consumer.accept(this);

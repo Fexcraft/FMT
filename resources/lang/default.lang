@@ -691,8 +691,8 @@ model.rescale.warning0=WARNING! RESCALING CAN NOT BE UNDONE!
 model.rescale.warning1=Rescaling can cause decimal boxes and cylinders.
 
 # Other
-filechooser.title=FMT Internal File Chooser/Selector
-filechooser.enter_name=enter custom filename here
 filechooser.bookmarks=Bookmarks:
+filechooser.save_bookmark=Save to Bookmarks
+filechooser.remove_bookmark=Remove Bookmark
 polygon.unnamed=unnamed %s
 utils.converter.itemmodeltexjson.title=Item Model Texture Json Renamer

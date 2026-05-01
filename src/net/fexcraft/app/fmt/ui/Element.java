@@ -107,6 +107,7 @@ public class Element {
 			case NONE -> {}
 		}
 		if(text != null) text.recompile();
+		if(hint != null) hint.recompile();
 		return this;
 	}
 
@@ -245,6 +246,7 @@ public class Element {
 	public Element hint(String hinttext){
 		if(hint == null){
 			hint = new Hint();
+			hint.root(this);
 			hint.init(hinttext);
 			hoverable = true;
 		}
@@ -322,7 +324,7 @@ public class Element {
 		if(hint != null && hovered && HOVER_TIMER >= HOVER_HINT_TIME.value){
 			float x = GGR.xCursorUI() + hint.w + 5 > FMT.SCALED_WIDTH ? GGR.xCursorUI() - hint.w - 5 : GGR.xCursorUI() + 5;
 			float y = GGR.yCursorUI() + hint.h > FMT.SCALED_HEIGHT ? FMT.SCALED_HEIGHT - hint.h - 5 : GGR.yCursorUI() + 5;
-			hint.pos(x, y).render();
+			hint.pos(x - hedron.posX, y - hedron.posY).render();
 		}
 	}
 

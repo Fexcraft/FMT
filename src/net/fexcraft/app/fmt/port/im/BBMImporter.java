@@ -4,8 +4,7 @@ import net.fexcraft.app.fmt.polygon.*;
 import net.fexcraft.app.fmt.polygon.uv.BoxFace;
 import net.fexcraft.app.fmt.polygon.uv.UVCoords;
 import net.fexcraft.app.fmt.polygon.uv.UVType;
-import net.fexcraft.app.fmt.settings.Setting;
-import net.fexcraft.app.fmt.oui.FileChooser;
+import net.fexcraft.app.fmt.ui.FileChooser;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
@@ -14,7 +13,7 @@ import net.fexcraft.app.json.JsonValue;
 import java.io.File;
 import java.util.*;
 
-import static net.fexcraft.app.fmt.oui.FileChooser.TYPE_BBM;
+import static net.fexcraft.app.fmt.ui.FileChooser.TYPE_BBM;
 
 /**
  * BlockBench Model file format importer

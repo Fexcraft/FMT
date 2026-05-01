@@ -2,7 +2,6 @@ package net.fexcraft.app.fmt.ui;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.oui.UVViewer;
-import net.fexcraft.app.fmt.oui.workspace.WorkspaceViewer;
 import net.fexcraft.app.fmt.port.ex.ExportManager;
 import net.fexcraft.app.fmt.port.im.ImportManager;
 import net.fexcraft.app.fmt.settings.Settings;

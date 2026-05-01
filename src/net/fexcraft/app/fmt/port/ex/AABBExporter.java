@@ -5,16 +5,14 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.polygon.StructBox;
-import net.fexcraft.app.fmt.settings.Setting;
-import net.fexcraft.app.fmt.oui.FileChooser;
-import net.fexcraft.app.fmt.oui.FileChooser.FileType;
+import net.fexcraft.app.fmt.ui.FileChooser;
+import net.fexcraft.app.fmt.ui.FileChooser.FileType;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.lib.common.Static;
 import org.joml.Vector3f;

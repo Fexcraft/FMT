@@ -1,10 +1,10 @@
 package net.fexcraft.app.fmt.ui.tree;
 
-import net.fexcraft.app.fmt.oui.FileChooser;
 import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.port.im.ImportManager;
 import net.fexcraft.app.fmt.port.im.Importer;
 import net.fexcraft.app.fmt.ui.Element;
+import net.fexcraft.app.fmt.ui.FileChooser;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.utils.PreviewHandler;
 import net.fexcraft.app.fmt.utils.Translator;
@@ -12,7 +12,7 @@ import net.fexcraft.app.json.JsonMap;
 
 import java.io.File;
 
-import static net.fexcraft.app.fmt.oui.FileChooser.*;
+import static net.fexcraft.app.fmt.ui.FileChooser.*;
 import static net.fexcraft.app.fmt.settings.Settings.GENERIC_FIELD;
 import static net.fexcraft.app.fmt.ui.editor.EditorTab.*;
 import static net.fexcraft.app.fmt.utils.Logging.log;
@@ -35,19 +35,19 @@ public class HelperTreeTab extends TreeTab {
 		TOTALS_FORMAT = Translator.translate("tree.info.preview_loaded");
 		over.add(totals = new Element().pos(5, 0).size(FF, FS).translate(TOTALS_FORMAT, "...").text_autoscale());
 		over.add(new Element().pos(F20 + 15, 28).size(F2S, FS).color(GENERIC_FIELD.value).hoverable(true).onclick(ci -> {
-			FileChooser.chooseFile("...", "./saves", TYPE_FMTB, false, file -> {
+			FileChooser.choose("...", null, TYPE_FMTB, false, file -> {
 				if(file == null) return;
 				PreviewHandler.loadFMTB(file);
 			});
 		}).translate("tree.preview.load_fmtb").text_centered(true));
 		over.add(new Element().pos(F21 + 15, 28).size(F2S, FS).color(GENERIC_FIELD.value).hoverable(true).onclick(ci -> {
-			FileChooser.chooseFile("...", ".", TYPE_IMG, false, file -> {
+			FileChooser.choose("...", null, TYPE_IMG, false, file -> {
 				if(file == null) return;
 				PreviewHandler.loadFrame(file);
 			});
 		}).translate("tree.preview.load_image").text_centered(true));
 		over.add(new Element().pos(F20 + 15, 60).size(F2S, FS).color(GENERIC_FIELD.value).hoverable(true).onclick(ci -> {
-			FileChooser.chooseFile("...", ".", TYPE_ANY, false, file -> {
+			FileChooser.choose("...", null, TYPE_ANY, false, file -> {
 				if(file == null) return;
 				if(file.getName().endsWith(".")) file = new File(file.toString().substring(0, file.toString().length() - 1));
 				Importer porter = ImportManager.getImporterFor(file);

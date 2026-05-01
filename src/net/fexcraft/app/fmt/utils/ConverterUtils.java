@@ -6,7 +6,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Map;
 
-import net.fexcraft.app.fmt.oui.FileChooser;
+import net.fexcraft.app.fmt.ui.FileChooser;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonHandler.PrintOption;
 import net.fexcraft.app.json.JsonMap;
@@ -22,7 +22,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 public class ConverterUtils {
 
 	public static void runIMTJ(){
-		FileChooser.chooseDir(Translator.translate("utils.converter.itemmodeltexjson.title"), "./", folder -> {
+		FileChooser.chooseFolder(Translator.translate("utils.converter.itemmodeltexjson.title"), null, folder -> {
 			if(folder == null) return;
 			search(folder);
 		});
@@ -64,7 +64,7 @@ public class ConverterUtils {
 	}
 
 	public static void exModelData(){
-		FileChooser.chooseDir(Translator.translate("Extract ModelData from FVTM Obj Models"), "./", folder -> {
+		FileChooser.chooseFolder(Translator.translate("Extract ModelData from FVTM Obj Models"), null, folder -> {
 			if(folder == null) return;
 			extractModelData(folder);
 		});

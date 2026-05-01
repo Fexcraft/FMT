@@ -7,16 +7,14 @@ import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.polygon.Box;
 import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.polygon.Shapebox;
-import net.fexcraft.app.fmt.settings.Setting;
 import net.fexcraft.app.fmt.texture.Texture;
 import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.texture.TextureManager;
-import net.fexcraft.app.fmt.oui.FileChooser;
+import net.fexcraft.app.fmt.ui.FileChooser;
 import net.fexcraft.lib.common.utils.ZipUtil;
 
 import java.io.*;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.stream.Collectors;

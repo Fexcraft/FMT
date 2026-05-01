@@ -1,7 +1,7 @@
 package net.fexcraft.app.fmt.workspace;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.oui.FileChooser;
+import net.fexcraft.app.fmt.ui.FileChooser;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.Frame;
 import net.fexcraft.app.fmt.ui.RunElm;
@@ -33,7 +33,7 @@ public class IconFrameFrame extends Frame {
 			FMT.UI.remElm(this);
 			FMT.queue(() -> {
 				FvtmPackElm pack = (FvtmPackElm)args[0];
-				FileChooser.chooseFile("editor.config.pack_utils.icon_from_view.choose", new File(pack.file, "/assets/" + pack.id + "/textures/").toPath().toString(), FileChooser.TYPE_PNG, true, this::saveInto);
+				FileChooser.choose("editor.config.pack_utils.icon_from_view.choose", new File(pack.file, "/assets/" + pack.id + "/textures/"), FileChooser.TYPE_PNG, true, this::saveInto);
 			});
 		}).text_centered(true));
 	}

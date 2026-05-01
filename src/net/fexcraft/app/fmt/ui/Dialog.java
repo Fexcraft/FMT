@@ -30,7 +30,7 @@ public class Dialog extends Frame {
 	public void init(Object... args){
 		add(title = new Element().size(w - 31, 30).color(GENERIC_BACKGROUND_1.value)
 			.onclick(ci -> FMT.UI.setFrameOnTop(this))
-			.translate(args.length > 0 ? args[0].toString() : "dialog.title.default").text_autoscale());
+			.translate(args.length > 0 && args[0] != null ? args[0].toString() : "dialog.title.default").text_autoscale());
 		add(new Element().size(30, 30).pos(w - 31, 0).texture("icons/component/exit")
 			.hoverable(true).onclick(ci -> close()));
 		add(container = new Element().size(w, h - 30).pos(0, 30));
