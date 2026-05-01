@@ -30,10 +30,10 @@ public class FileElm extends Element {
 
 	@Override
 	public void init(Object... args){
-		check_mode(CheckMode.IN_SPECIFIC);
-		pickposroot = FMT.WORKSPACE.packs;
+		check_mode(FMT.WORKSPACE.cm_in_packs);
 		size(root.root instanceof DirElm ? root.root.w - 5 : FILES_PANEL_DIR, 30);
-		add(new Element().pos(-1, -1).size(32, 32).texture("icons/filetree/" + type.filename()));
+		add(new Element().pos(-1, -1).size(32, 32).texture("icons/filetree/" + type.filename())
+			.check_mode(FMT.WORKSPACE.cm_in_packs));
 	}
 
 }
