@@ -1,7 +1,6 @@
 package net.fexcraft.app.fmt.workspace;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.oui.JsonEditor;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.utils.fvtm.FVTMConfigEditor;
 
@@ -37,13 +36,14 @@ public class FileElm extends Element {
 					}
 					case FVTM_FILE:
 					case JSON:{
+						FMT.WORKSPACE.open(file, JsonEditor::new);
 						new JsonEditor(file);
 						break;
 					}
 					case LANG:
 					case TOML:
 					case OBJ:{
-						Workspace.open(file);
+						Workspace.openExternal(file);
 						break;
 					}
 				}
