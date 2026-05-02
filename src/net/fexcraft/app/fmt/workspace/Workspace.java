@@ -94,7 +94,7 @@ public class Workspace extends Frame {
 		files_open.add(opened_files = new Scrollable(true, 0));
 		opened_files.updateSize(400, 400);
 		opened_files.pos(files_open.w - 440, 30);
-		opened_files.border(RGB.BLACK).hide();
+		opened_files.border(RGB.BLACK).zi(200).hide();
 	}
 
 	public void update(Setting<?> setting){
