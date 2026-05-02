@@ -2,8 +2,6 @@ package net.fexcraft.app.fmt.workspace;
 
 import com.google.common.io.Files;
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.oui.JsonEditor;
-import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.BoolElm;
 import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.Dialog.DialogButton;
@@ -316,7 +314,7 @@ public class ConfigUtils {
 	public static void openJson(){
 		FileChooser.choose("editor.config.file_utils.open_json.choose", FMT.WORKSPACE.root_folder, FileChooser.TYPE_JSON, false, file -> {
 			try{
-				if(file != null && file.exists()) new JsonEditor(file);
+				if(file != null && file.exists()) FMT.WORKSPACE.open(file, JsonEditor::new);
 			}
 			catch(Exception e){
 				e.printStackTrace();
