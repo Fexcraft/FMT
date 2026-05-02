@@ -409,6 +409,13 @@ workspace.title=%s
 workspace.content_utils=Content Utils
 workspace.select_content_type=Please select a Content Type:
 workspace.select_pack=Please select a Pack:
+workspace.file_editor.none_open=No File Editors open.
+workspace.file_editor.list=Show Opened Files
+workspace.file_editor.external=Open in External Editor
+workspace.file_editor.save=Save File
+workspace.file_editor.prev=Previous File
+workspace.file_editor.next=Next File
+workspace.file_editor.close=Close File
 
 # FVTM Config Editor
 fvtmeditor.title=FVTM Config Editor
