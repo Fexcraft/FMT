@@ -65,9 +65,9 @@ public class JsonEditor extends WFileEditor {
 		public void init(Object... args){
 			shape(ElmShape.NONE);
 			size(root instanceof JsonElm ? root.w - 10 : root.w - 35, 30);
-			pos(root instanceof  JsonElm ? 10 : 0, 0);
+			pos(root instanceof  JsonElm ? 10 : 5, 0);
 			Element icon = new Element().pos(0, 0).size(30, 30);
-			float FW = w * 0.6f - 70f, FWO = FW + 70f, TW = w * 0.4f - 35;
+			float FW = w * 0.6f - 65f, FWO = FW + 65f, TW = w * 0.4f - 35;
 			add(new TextElm(35, 2, TW, key == null ? idx + "" : key, GENERIC_BACKGROUND_1.value).text_autoscale());
 			add(new HidingElm().pos(w - 30, 0).size(30, 30).texture("icons/configeditor/remove")
 				.onclick(ci -> {
