@@ -13,7 +13,7 @@ import static net.fexcraft.app.fmt.settings.Settings.GENERIC_FIELD;
  */
 public class WFileEditor extends Element {
 
-	private Scrollable container;
+	protected Scrollable container;
 	protected File file;
 
 	public WFileEditor(File file){
