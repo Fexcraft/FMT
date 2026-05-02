@@ -277,6 +277,7 @@ public class Workspace extends Frame {
 	}
 
 	protected void closeActive(){
+		remElm(file_editor);
 		if(file_editors.size() < 2){
 			file_editor = null;
 			file_editors.clear();
