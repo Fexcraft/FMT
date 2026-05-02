@@ -223,7 +223,7 @@ public class Field extends Element {
 		else{
 			String str = text.text().replaceAll("[^0-9\\.\\-]", "");
 			if(str.isEmpty()) str = "0";
-			if(str.endsWith(".")) str = str.replace(".", "");
+			if(str.contains(".")) str = str.substring(0, str.indexOf("."));
 			res = Integer.parseInt(str);
 		}
 		if(res < min_val) res = (int)min_val;
