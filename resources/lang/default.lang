@@ -59,18 +59,6 @@ toolbar.fileeditmenu.asjson=Open as JSON
 toolbar.fileeditmenu.rename=Rename
 toolbar.fileeditmenu.copy=Copy
 toolbar.fileeditmenu.delete=Delete
-## Json Editor Right-Click Menu
-toolbar.jsoneditormenu.insert=Insert
-toolbar.jsoneditormenu.add_before=Add Before
-toolbar.jsoneditormenu.add_after=Add After
-toolbar.jsoneditormenu.rename=Rename
-toolbar.jsoneditormenu.copy=Copy
-toolbar.jsoneditormenu.delete=Delete
-toolbar.jsoneditormenu.picktype.title=Pick JSON Type
-toolbar.jsoneditormenu.picktype.desc=Pick the type of the JSON element you wish to add.
-toolbar.jsoneditormenu.picktype.key=Enter the Key value for the new JSON element.
-toolbar.jsoneditormenu.picktype.rename=Enter new element Key/Name
-toolbar.jsoneditormenu.picktype.desc=Enter a new name for the selected JSON element.
 ## Pos Copy Menu
 toolbar.poscopymenu.str_spaced=Copy Spaced | 0 0 0
 toolbar.poscopymenu.str_comma=Copy with Comma | 0, 0, 0
@@ -416,6 +404,11 @@ workspace.file_editor.save=Save File
 workspace.file_editor.prev=Previous File
 workspace.file_editor.next=Next File
 workspace.file_editor.close=Close File
+
+# Json Editor
+workspace.jsoneditor.remove=Remove
+workspace.jsoneditor.rename=Rename
+workspace.jsoneditor.add=Add Entry
 
 # FVTM Config Editor
 fvtmeditor.title=FVTM Config Editor
