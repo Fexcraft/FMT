@@ -172,6 +172,16 @@ public class FMTInterface extends Element {
 	}
 
 	@Override
+	public void update0(){
+		update();
+		if(elements == null) return;
+		for(Element elm : elements){
+			if(elm instanceof Frame && !elm.visible) continue;
+			elm.update0();
+		}
+	}
+
+	@Override
 	public void update(){
 		if(bar_timer != null && Time.getDate() > bar_timer){
 			bar_timer = null;
