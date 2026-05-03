@@ -1,6 +1,9 @@
 package net.fexcraft.app.fmt.workspace;
 
+import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.ui.*;
+import net.fexcraft.app.fmt.ui.Dialog.DialogButton;
+import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.app.json.JsonValue;
@@ -9,26 +12,26 @@ import java.io.File;
 import java.util.Map;
 
 import static net.fexcraft.app.fmt.settings.Settings.GENERIC_BACKGROUND_1;
-import static net.fexcraft.app.fmt.ui.editor.EditorTab.FS;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
  */
 public class JsonEditor extends WFileEditor {
 
-
+	private CheckMode je_checkmode;
 	private JsonMap map;
 
 	public JsonEditor(File file){
 		super(file);
 		map = JsonHandler.parse(file).asMap();
+		je_checkmode = CheckMode.gen(this);
 	}
 
 	@Override
 	public void init(Object... args){
 		super.init(args);
 		for(Map.Entry<String, JsonValue<?>> entry : map.entries()){
-			container.add(new JsonElm(entry.getKey(), entry.getValue()));
+			container.add(new JsonElm(entry.getKey(), entry.getValue()), je_checkmode);
 		}
 		container.updateBar();
 	}
@@ -64,12 +67,13 @@ public class JsonEditor extends WFileEditor {
 		@Override
 		public void init(Object... args){
 			shape(ElmShape.NONE);
+			check_mode((CheckMode)args[0]);
 			size(root instanceof JsonElm ? root.w - 10 : root.w - 35, 30);
 			pos(root instanceof  JsonElm ? 10 : 5, 0);
-			Element icon = new Element().pos(0, 0).size(30, 30);
+			Element icon = new Element().pos(0, 0).size(30, 30).check_mode(check_mode);
 			float FW = w * 0.6f - 65f, FWO = FW + 65f, TW = w * 0.4f - 35;
-			add(new TextElm(35, 2, TW, key == null ? idx + "" : key, GENERIC_BACKGROUND_1.value).text_autoscale());
-			add(new HidingElm().pos(w - 30, 0).size(30, 30).texture("icons/configeditor/remove")
+			add(new TextElm(35, 2, TW, key == null ? idx + "" : key, GENERIC_BACKGROUND_1.value).text_autoscale().check_mode(check_mode));
+			add(new HidingElm().pos(w - 30, 0).size(30, 30).texture("icons/configeditor/remove").check_mode(check_mode)
 				.onclick(ci -> {
 					JsonElm jr = root instanceof JsonElm elm ? elm : null;
 					if(key != null){
@@ -93,33 +97,44 @@ public class JsonEditor extends WFileEditor {
 					}
 				}).hint("workspace.jsoneditor.remove"));
 			if(key != null){
-				add(new HidingElm().pos(w - 60, 0).size(30, 30).texture("icons/configeditor/rename")
+				add(new HidingElm().pos(w - 60, 0).size(30, 30).texture("icons/configeditor/rename").check_mode(check_mode)
 					.onclick(ci -> {
 						//TODO
 					}).hint("workspace.jsoneditor.rename"));
 			}
 			if(value.isMap()){
+				render_sub_even_if_invisible = true;
 				icon.texture("icons/configeditor/object");
-				add(new Element().pos(w - 120, 0).size(30, 30).texture("icons/configeditor/add")
+				add(new Element().pos(w - 120, 0).size(30, 30).texture("icons/configeditor/add").check_mode(check_mode)
 					.onclick(ci -> {
 						//TODO
 					}).hint("workspace.jsoneditor.add"));
 				for(Map.Entry<String, JsonValue<?>> entry : value.asMap().entries()){
-					add(new JsonElm(entry.getKey(), entry.getValue()));
+					add(new JsonElm(entry.getKey(), entry.getValue()), check_mode);
 				}
 			}
 			else if(value.isArray()){
+				render_sub_even_if_invisible = true;
 				icon.texture("icons/configeditor/array");
-				add(new Element().pos(w - 120, 0).size(30, 30).texture("icons/configeditor/add")
+				add(new Element().pos(w - 120, 0).size(30, 30).texture("icons/configeditor/add").check_mode(check_mode)
 					.onclick(ci -> {
-
+						DropList<String> list = new DropList<>(490);
+						FMT.UI.createDialog(500, 120, "workspace.jsoneditor")
+							.addText(0, "workspace.jsoneditor.add.type")
+							.addRowElm(1, list)
+							.set_confirm(d -> {
+								value.asArray().add(fromJsonTypeDrop(list));
+								fillArray();
+								resort();
+							}).buttons(100, DialogButton.ADD);
+						fillJsonTypeDrop(list);
 					}).hint("workspace.jsoneditor.add"));
 				fillArray();
 			}
 			else if(value.isBoolean()){
 				icon.texture("icons/configeditor/bool");
-				BoolElm elm = new BoolElm();
-				add(elm.pos(w - FWO, 2).size(FW, FS));
+				BoolElm elm = new BoolElm(w - FWO, 2, FW);
+				add(elm.check_mode(check_mode));
 				elm.set(() -> value.bool(), b -> value.value(b));
 				elm.updtexcol();
 			}
@@ -127,21 +142,21 @@ public class JsonEditor extends WFileEditor {
 				boolean flat = value.value instanceof Float || value.value instanceof Double;
 				icon.texture("icons/configeditor/" + (flat ? "float" : "integer"));
 				Field field = new Field(flat ? Field.FieldType.FLOAT : Field.FieldType.INT, FW);
-				add(field.pos(w - FWO, 2));
+				add(field.pos(w - FWO, 2).check_mode(check_mode));
 				field.text(value.value);
 				field.consumer(f -> value.value(flat ? f.parse_float() : f.parse_int()));
 			}
 			else if(value.string_value().length() > 6 && value.string_value().startsWith("#")){
 				icon.texture("icons/configeditor/color");
-				Field field = new Field(Field.FieldType.TEXT, FW);
-				add(field.pos(w - FWO, 2));
+				Field field = new Field(Field.FieldType.COLOR, FW);
+				add(field.pos(w - FWO, 2).check_mode(check_mode));
 				field.set(Integer.parseInt(value.string_value().substring(1), 16));
 				field.consumer(f -> value.value("#" + field.get_text()));
 			}
 			else{
 				icon.texture("icons/configeditor/text");
 				Field field = new Field(Field.FieldType.TEXT, FW);
-				add(field.pos(w - FWO, 2));
+				add(field.pos(w - FWO, 2).check_mode(check_mode));
 				field.text(value.value);
 				field.consumer(f -> value.value(field.get_text()));
 			}
@@ -149,22 +164,45 @@ public class JsonEditor extends WFileEditor {
 			resort();
 		}
 
+		private JsonValue fromJsonTypeDrop(DropList<String> list){
+			switch(list.getSelVal()){
+				case "map": return new JsonMap();
+				case "array": return new JsonArray();
+				case "int": return new JsonValue<>(0);
+				case "float": return new JsonValue<>(0f);
+				case "bool": return new JsonValue<>(false);
+				case "color": return new JsonValue<>("#ffffff");
+				case "string":
+				default: return new JsonValue<>("empty");
+			}
+		}
+
+		private void fillJsonTypeDrop(DropList<String> list){
+			list.addEntry("Object (Map)", "map");
+			list.addEntry("Array (List)", "array");
+			list.addEntry("String (Text)", "string");
+			list.addEntry("Integer (Full Number)", "int");
+			list.addEntry("Float (Decimal Number)", "float");
+			list.addEntry("Boolean (true/false)", "bool");
+			list.addEntry("Color (#hex)", "color");
+			list.selectEntry(0);
+		}
+
 		private void fillArray(){
 			remElmIf(elm -> elm instanceof JsonElm);
 			for(int i = 0; i < value.asArray().value.size(); i++){
-				add(new JsonElm(i, value.asArray().get(i)));
+				add(new JsonElm(i, value.asArray().get(i)), check_mode);
 			}
 		}
 
 		private void resort(){
-			int s = 35;
+			float s = 35;
 			for(Element elm : elements){
 				if(elm instanceof JsonElm){
 					elm.pos(elm.x(), s);
-					s += 35;
+					s += elm.h + 5;
 				}
 			}
-			if(s == 35) s = 30;
 			size(w, s).recompile();
 			//
 			if(root instanceof JsonElm) ((JsonElm)root).resort();
