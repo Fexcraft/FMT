@@ -21,7 +21,7 @@ public class Scrollable extends Element {
 	private Element up;
 	private Element dw;
 	private float scrolled;
-	private float top;
+	public float top;
 	public float ih;
 
 	public Scrollable(boolean onleft, float topoff){
