@@ -7,8 +7,6 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Pivot;
 import net.fexcraft.app.fmt.polygon.Polygon;
-import net.fexcraft.app.fmt.oui.Icon;
-import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.app.json.JsonValue;
@@ -50,14 +48,14 @@ public class EntryComponent extends Component {
 				editor.resize();
 			}
 		});
-		add(new Icon(0, 20, 0, 5, 10, "./resources/textures/icons/configeditor/" + entry.type.icon() + ".png", () -> {
+		/*add(new Icon(0, 20, 0, 5, 10, "./resources/textures/icons/configeditor/" + entry.type.icon() + ".png", () -> {
 			minimized = !minimized;
 			editor.resize();
-		}).addTooltip(entry.type.icon()));
+		}).addTooltip(entry.type.icon()));*/
 		if(root != null){
 			boolean edit = root.entry.type.map() && !root.entry.type.subtype() && !root.entry.static_;
 			if(!entry.type.separate() && !entry.type.static_()){
-				add(new Icon(0, 20, 0, 525 + (entry.type.select() || edit ? 25 : 0), 10, "./resources/textures/icons/configeditor/remove.png", () -> {
+				/*add(new Icon(0, 20, 0, 525 + (entry.type.select() || edit ? 25 : 0), 10, "./resources/textures/icons/configeditor/remove.png", () -> {
 					if(root.entry.type.subs() && !root.entry.type.subtype()){
 						if(root.val.isMap()) root.val.asMap().rem(key.key);
 						else root.val.asArray().rem(key.idx);
@@ -71,12 +69,12 @@ public class EntryComponent extends Component {
 						}
 						else if(input[0] != null) input[0].getTextState().setText(entry.gendef().string_value());
 					}
-				}).addTooltip("remove/reset"));
+				}).addTooltip("remove/reset"));*/
 			}
 			if(edit){
-				add(new Icon(0, 20, 0, 525, 10, "./resources/textures/icons/configeditor/rename.png", () -> {
+				/*add(new Icon(0, 20, 0, 525, 10, "./resources/textures/icons/configeditor/rename.png", () -> {
 					Dialog dialog = new Dialog("Enter new name.", 440, 110);
-					/*TextField field = new TextField(key.key, 10, 10, 420, 30, false);
+					TextField field = new TextField(key.key, 10, 10, 420, 30, false);
 					dialog.getContainer().add(field);
 					dialog.getContainer().add(new RunButton("dialog.button.confirm", 10, 50, 200, 30, () -> {
 						if(root.val.isMap() && root.entry.type.subs() && !root.entry.type.subtype()){
@@ -90,10 +88,10 @@ public class EntryComponent extends Component {
 							updateVal();
 						}
 						dialog.close();
-					}));*///TODO
+					}));
 					dialog.setResizable(false);
 					//dialog.show(FMT.FRAME);
-				}).addTooltip("rename key"));
+				}).addTooltip("rename key"));*/
 			}
 		}
 		if(entry.type.select()) addsel();
@@ -134,7 +132,7 @@ public class EntryComponent extends Component {
 	}
 
 	private void addsel(){
-		add(new Icon(0, 20, 0, 525, 10, "./resources/textures/icons/configeditor/select.png", () -> {
+		/*add(new Icon(0, 20, 0, 525, 10, "./resources/textures/icons/configeditor/select.png", () -> {
 			switch(entry.type){
 				case PACKID: {
 					Dialog dialog = new Dialog("Select a pack.", 440, 70);
@@ -157,7 +155,7 @@ public class EntryComponent extends Component {
 					SelectBox<String> modbox = new SelectBox<>(10, 50, 420, 30);
 					packbox.setVisibleCount(8);
 					packbox.setSelected("(no pack selected)", true);
-					/*for(FvtmPack pack : WorkspaceViewer.viewer().rootfolders){
+					*//*for(FvtmPack pack : WorkspaceViewer.viewer().rootfolders){
 						packbox.addElement(pack.id);
 					}
 					packbox.addSelectBoxChangeSelectionEventListener(lis -> {
@@ -176,7 +174,7 @@ public class EntryComponent extends Component {
 								modbox.addElement(pid + ":" + path);
 							}
 						}
-					});*///TODO
+					});*//*//TODO
 					dialog.getContainer().add(packbox);
 					//
 					modbox.setVisibleCount(8);
@@ -201,7 +199,7 @@ public class EntryComponent extends Component {
 					SelectBox<String> packbox = new SelectBox<>(10, 10, 420, 30);
 					packbox.setVisibleCount(8);
 					packbox.setSelected("(no pack selected)", true);
-					/*for(FvtmPack pack : WorkspaceViewer.viewer().rootfolders){
+					*//*for(FvtmPack pack : WorkspaceViewer.viewer().rootfolders){
 						packbox.addElement(pack.id);
 					}
 					packbox.addSelectBoxChangeSelectionEventListener(lis -> {
@@ -220,7 +218,7 @@ public class EntryComponent extends Component {
 								texbox.addElement(pid + ":" + path);
 							}
 						}
-					});*///TODO
+					});*//*//TODO
 					dialog.getContainer().add(packbox);
 					//
 					texbox.setVisibleCount(8);
@@ -253,16 +251,16 @@ public class EntryComponent extends Component {
 					typebox.addElement("pivot");
 					typebox.setSelected("marker", true);
 					typebox.addSelectBoxChangeSelectionEventListener(lis -> updateVecBox(lis.getNewValue(), vecbox));
-					dialog.getContainer().add(new Icon(20,width - 60, 15, typebox, true, () -> updateVecBox(typebox.getSelection(), vecbox)));
-					dialog.getContainer().add(new Icon(20,width - 30, 15, typebox, false, () -> updateVecBox(typebox.getSelection(), vecbox)));
+					//dialog.getContainer().add(new Icon(20,width - 60, 15, typebox, true, () -> updateVecBox(typebox.getSelection(), vecbox)));
+					//dialog.getContainer().add(new Icon(20,width - 30, 15, typebox, false, () -> updateVecBox(typebox.getSelection(), vecbox)));
 					dialog.getContainer().add(typebox);
 					//
 					vecbox.setVisibleCount(8);
 					vecbox.addSelectBoxChangeSelectionEventListener(lis -> confirmVecBox(lis.getNewValue(), typebox, vecbox, dialog));
 					updateVecBox("marker", vecbox);
 					dialog.getContainer().add(vecbox);
-					dialog.getContainer().add(new Icon(20, width - 60, 55, vecbox, true, null));
-					dialog.getContainer().add(new Icon(20, width - 30, 55, vecbox, false, null));
+					//dialog.getContainer().add(new Icon(20, width - 60, 55, vecbox, true, null));
+					//dialog.getContainer().add(new Icon(20, width - 30, 55, vecbox, false, null));
 					//TODO dialog.getContainer().add(new RunButton("dialog.button.select", width - 110, 90, 100, 20, () -> confirmVecBox(vecbox.getSelection(), typebox, vecbox, dialog)));
 					dialog.setResizable(false);
 					//dialog.show(FMT.FRAME);
@@ -275,7 +273,7 @@ public class EntryComponent extends Component {
 					break;
 				}
 			}
-		}).addTooltip("select"));
+		}).addTooltip("select"));*/
 	}
 
 	private void confirmVecBox(String val, SelectBox<String> typebox, SelectBox<String> vecbox, Dialog dialog){
@@ -510,7 +508,7 @@ public class EntryComponent extends Component {
 			}
 		}
 		if(!entry.type.subtype() && !entry.static_){
-			add(new Icon(0, 20, 0, 220, 10, "./resources/textures/icons/configeditor/add.png", () -> {
+			/*add(new Icon(0, 20, 0, 220, 10, "./resources/textures/icons/configeditor/add.png", () -> {
 				fillIfMissing();
 				if(entry.type == EntryType.ARRAY){
 					JsonMap sup = new JsonMap();
@@ -556,7 +554,7 @@ public class EntryComponent extends Component {
 						editor.resize();
 					}
 				}
-			}));
+			}));*/
 		}
 		editor.resize();
 	}
