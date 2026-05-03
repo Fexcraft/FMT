@@ -407,6 +407,7 @@ workspace.file_editor.close=Close File
 
 # Json Editor
 workspace.jsoneditor=Json Editor
+workspace.jsoneditor.insert=Insert
 workspace.jsoneditor.remove=Remove
 workspace.jsoneditor.rename=Rename
 workspace.jsoneditor.rename.field=Enter new Key
