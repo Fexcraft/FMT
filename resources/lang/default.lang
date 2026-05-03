@@ -406,9 +406,11 @@ workspace.file_editor.next=Next File
 workspace.file_editor.close=Close File
 
 # Json Editor
+workspace.jsoneditor=Json Editor
 workspace.jsoneditor.remove=Remove
 workspace.jsoneditor.rename=Rename
 workspace.jsoneditor.add=Add Entry
+workspace.jsoneditor.add.type=JSON Value Type:
 
 # FVTM Config Editor
 fvtmeditor.title=FVTM Config Editor
