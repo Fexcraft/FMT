@@ -24,16 +24,34 @@ public class JsonEditor extends WFileEditor {
 	public JsonEditor(File file){
 		super(file);
 		map = JsonHandler.parse(file).asMap();
-		je_checkmode = CheckMode.gen(this);
 	}
 
 	@Override
 	public void init(Object... args){
 		super.init(args);
+		container.top = 30;
+		container.updateSize(container.w, container.h);
+		je_checkmode = CheckMode.gen(container);
 		for(Map.Entry<String, JsonValue<?>> entry : map.entries()){
 			container.add(new JsonElm(entry.getKey(), entry.getValue()), je_checkmode);
 		}
 		container.updateBar();
+		add(new RunElm(w - 110, 2, 100, "workspace.jsoneditor.insert", ci -> {
+			Field field = new Field(Field.FieldType.TEXT, 490);
+			DropList<String> list = new DropList<>(490);
+			FMT.UI.createDialog(500, 180, "workspace.jsoneditor")
+				.addText(0, "workspace.jsoneditor.add.key")
+				.addRowElm(1, field)
+				.addText(2, "workspace.jsoneditor.add.type")
+				.addRowElm(3, list)
+				.set_confirm(d -> {
+					String key = field.get_text();
+					map.add(key, fromJsonTypeDrop(list));
+					container.add(new JsonElm(key, map.get(key)), je_checkmode);
+					container.updateBar();
+				}).buttons(100, DialogButton.ADD);
+			fillJsonTypeDrop(list);
+		}).text_centered(true));
 	}
 
 	@Override
@@ -212,30 +230,6 @@ public class JsonEditor extends WFileEditor {
 			resort();
 		}
 
-		private JsonValue fromJsonTypeDrop(DropList<String> list){
-			switch(list.getSelVal()){
-				case "map": return new JsonMap();
-				case "array": return new JsonArray();
-				case "int": return new JsonValue<>(0);
-				case "float": return new JsonValue<>(0f);
-				case "bool": return new JsonValue<>(false);
-				case "color": return new JsonValue<>("#ffffff");
-				case "string":
-				default: return new JsonValue<>("empty");
-			}
-		}
-
-		private void fillJsonTypeDrop(DropList<String> list){
-			list.addEntry("Object (Map)", "map");
-			list.addEntry("Array (List)", "array");
-			list.addEntry("String (Text)", "string");
-			list.addEntry("Integer (Full Number)", "int");
-			list.addEntry("Float (Decimal Number)", "float");
-			list.addEntry("Boolean (true/false)", "bool");
-			list.addEntry("Color (#hex)", "color");
-			list.selectEntry(0);
-		}
-
 		private void fillMap(){
 			remElmIf(elm -> elm instanceof JsonElm);
 			for(Map.Entry<String, JsonValue<?>> entry : value.asMap().entries()){
@@ -264,6 +258,30 @@ public class JsonEditor extends WFileEditor {
 			else ((Scrollable)root).updateBar();
 		}
 
+	}
+
+	private static JsonValue fromJsonTypeDrop(DropList<String> list){
+		switch(list.getSelVal()){
+			case "map": return new JsonMap();
+			case "array": return new JsonArray();
+			case "int": return new JsonValue<>(0);
+			case "float": return new JsonValue<>(0f);
+			case "bool": return new JsonValue<>(false);
+			case "color": return new JsonValue<>("#ffffff");
+			case "string":
+			default: return new JsonValue<>("empty");
+		}
+	}
+
+	private static void fillJsonTypeDrop(DropList<String> list){
+		list.addEntry("Object (Map)", "map");
+		list.addEntry("Array (List)", "array");
+		list.addEntry("String (Text)", "string");
+		list.addEntry("Integer (Full Number)", "int");
+		list.addEntry("Float (Decimal Number)", "float");
+		list.addEntry("Boolean (true/false)", "bool");
+		list.addEntry("Color (#hex)", "color");
+		list.selectEntry(0);
 	}
 
 }
