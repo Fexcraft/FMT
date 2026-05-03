@@ -99,7 +99,33 @@ public class JsonEditor extends WFileEditor {
 			if(key != null){
 				add(new HidingElm().pos(w - 60, 0).size(30, 30).texture("icons/configeditor/rename").check_mode(check_mode)
 					.onclick(ci -> {
-						//TODO
+						Field field = new Field(Field.FieldType.TEXT, 490);
+						FMT.UI.createDialog(500, 130, "workspace.jsoneditor")
+							.addText(0, "workspace.jsoneditor.rename.field")
+							.addRowElm(1, field)
+							.set_confirm(d -> {
+								JsonElm jr = root instanceof JsonElm ? (JsonElm)root : null;
+								String nkey = field.get_text();
+								if(jr == null){
+									JsonEditor editor = (JsonEditor)root.root;
+									JsonValue val = editor.map.rem(key);
+									editor.container.remElm(this);
+									if(val != null){
+										editor.map.add(nkey, val);
+										editor.container.add(new JsonElm(nkey, val), check_mode);
+									}
+									editor.container.updateBar();
+								}
+								else{
+									JsonValue val = jr.value.asMap().rem(key);
+									if(val != null){
+										jr.value.asMap().add(field.get_text(), val);
+										jr.fillMap();
+									}
+									jr.resort();
+								}
+							}).buttons(100, DialogButton.CONFIRM);
+						field.text(key);
 					}).hint("workspace.jsoneditor.rename"));
 			}
 			if(value.isMap()){
@@ -107,11 +133,27 @@ public class JsonEditor extends WFileEditor {
 				icon.texture("icons/configeditor/object");
 				add(new Element().pos(w - 120, 0).size(30, 30).texture("icons/configeditor/add").check_mode(check_mode)
 					.onclick(ci -> {
-						//TODO
+						Field field = new Field(Field.FieldType.TEXT, 490);
+						DropList<String> list = new DropList<>(490);
+						FMT.UI.createDialog(500, 180, "workspace.jsoneditor")
+							.addText(0, "workspace.jsoneditor.add.key")
+							.addRowElm(1, field)
+							.addText(2, "workspace.jsoneditor.add.type")
+							.addRowElm(3, list)
+							.set_confirm(d -> {
+								value.asMap().add(field.get_text(), fromJsonTypeDrop(list));
+								fillMap();
+								resort();
+							}).buttons(100, DialogButton.ADD);
+						fillJsonTypeDrop(list);
 					}).hint("workspace.jsoneditor.add"));
-				for(Map.Entry<String, JsonValue<?>> entry : value.asMap().entries()){
-					add(new JsonElm(entry.getKey(), entry.getValue()), check_mode);
-				}
+				add(new HidingElm().pos(w - 90, 0).size(30, 30).texture("icons/component/remove").check_mode(check_mode)
+					.onclick(ci -> {
+						value.asMap().value.clear();
+						fillMap();
+						resort();
+					}).hint("workspace.jsoneditor.clear"));
+				fillMap();
 			}
 			else if(value.isArray()){
 				render_sub_even_if_invisible = true;
@@ -129,6 +171,12 @@ public class JsonEditor extends WFileEditor {
 							}).buttons(100, DialogButton.ADD);
 						fillJsonTypeDrop(list);
 					}).hint("workspace.jsoneditor.add"));
+				add(new HidingElm().pos(w - 90, 0).size(30, 30).texture("icons/component/remove").check_mode(check_mode)
+					.onclick(ci -> {
+						value.asArray().value.clear();
+						fillArray();
+						resort();
+					}).hint("workspace.jsoneditor.clear"));
 				fillArray();
 			}
 			else if(value.isBoolean()){
@@ -186,6 +234,13 @@ public class JsonEditor extends WFileEditor {
 			list.addEntry("Boolean (true/false)", "bool");
 			list.addEntry("Color (#hex)", "color");
 			list.selectEntry(0);
+		}
+
+		private void fillMap(){
+			remElmIf(elm -> elm instanceof JsonElm);
+			for(Map.Entry<String, JsonValue<?>> entry : value.asMap().entries()){
+				add(new JsonElm(entry.getKey(), entry.getValue()), check_mode);
+			}
 		}
 
 		private void fillArray(){
