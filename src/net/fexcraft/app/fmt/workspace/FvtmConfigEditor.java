@@ -3,6 +3,7 @@ package net.fexcraft.app.fmt.workspace;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.ui.*;
 import net.fexcraft.app.fmt.ui.Dialog.DialogButton;
+import net.fexcraft.app.fmt.ui.Field.FieldType;
 import net.fexcraft.app.fmt.utils.fvtm.*;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
@@ -18,6 +19,7 @@ import static net.fexcraft.app.fmt.settings.Settings.GENERIC_BACKGROUND_2;
  */
 public class FvtmConfigEditor extends WFileEditor {
 
+	private static String[] xyz = { "x", "y", "z" };
 	private ConfigReference ref;
 	private CheckMode checkmode;
 	private FvtmType type;
@@ -151,7 +153,7 @@ public class FvtmConfigEditor extends WFileEditor {
 				if(edit){
 					add(new HidingElm().pos(w - 60, 0).size(30, 30).texture("icons/component/rename").check_mode(check_mode)
 						.onclick(ci -> {
-							Field field = new Field(Field.FieldType.TEXT, 490);
+							Field field = new Field(FieldType.TEXT, 490);
 							FMT.UI.createDialog(500, 120, "workspace.configeditor")
 								.addText(0, "workspace.configeditor.rename.field")
 								.addRowElm(1, field)
@@ -175,15 +177,114 @@ public class FvtmConfigEditor extends WFileEditor {
 			if(entry.type.subs()){
 				if(!entry.type.subtype()) refill();
 			}
-			else addField();
+			else addField(ren, ral, FW, FWO);
 		}
 
 		private void addSelector(){
 
 		}
 
-		private void addField(){
+		private void addField(ConfigEntry ren, JsonValue ral, float FW, float FWO){
+			if(entry.type.vector()){
+				input = new Field[3];
+				for(int v = 0; v < 3; v++){
+					int iv = v;
+					input[v] = new Field(FieldType.FLOAT, FW * 0.33f);
+					add(input[v].pos(w - FWO * (0.33f * (v + 1)), 2).check_mode(check_mode));
+					if(entry.type == EntryType.VECTOR_MAP){
+						if(ral.asMap().has(xyz[iv])) input[v].set(ral.asMap().get(xyz[iv]).float_value());
+						input[v].consumer(f -> ral.asMap().add(xyz[iv], f.parse_float()));
+					}
+					else{
+						while(value.asArray().size() < v) value.asArray().add(0f);
+						input[v].set(value.asArray().get(v).float_value());
+						input[v].consumer(f -> {
+							fillMissing();
+							value.asArray().set(iv, value = new JsonValue(f.parse_float()));
+						});
+					}
+				}
+			}
+			else if(entry.type.color()){
+				input = new Field[1];
+				input[0] = new Field(FieldType.COLOR, FW);
+				add(input[0].pos(w - FWO, 2).check_mode(check_mode));
+				input[0].set(Integer.parseInt(value.string_value().substring(1), 16));
+				input[0].consumer(f -> {
+					fillMissing();
+					value.value("#" + input[0].get_text());
+				});
+			}
+			else if(entry.type.bool()){
+				BoolElm elm = new BoolElm(w - FWO, 2, FW);
+				add(elm.check_mode(check_mode));
+				elm.set(() -> value.bool(), b -> {
+					fillMissing();
+					value.value(b);
+				});
+				elm.updtexcol();
+			}
+			else if(entry.type.enumerate()){
+				DropList<String> list = new DropList<>(FW);
+				add(list.pos(w - FWO, 2).check_mode(check_mode));
+				for(String en : entry.enums) list.addEntry(en, en);
+				list.onchange((key, val) -> {
+					fillMissing();
+					if(entry.type.separate() && value.isMap()){
+						if(ren.type.map()){
+							value = ral.asMap().rem(entry.key().key);
+							ral.asMap().add(key, value);
+							root_refill();
+						}
+						else value.asMap().add(entry.subs.get(0).name, key);
+					}
+					else value.value(key);
+				});
+				if(entry.type.separate() && value.isMap()){
+					if(ren.type.map()){
+						list.selectKey(entry.key().key);
+					}
+					else if(value.asMap().has(entry.subs.get(0).name)){
+						list.selectKey(value.asMap().get(entry.subs.get(0).name).string_value());
+					}
+				}
+				else list.selectKey(value.string_value());
+			}
+			else if(!entry.type.separate()){//text
+				input = new Field[1];
+				input[0] = new Field(entry.type.toFieldType(), FW);
+				add(input[0].pos(w - FWO, 2).check_mode(check_mode));
+				input[0].text(value.string_value());
+				input[0].consumer(f -> value.value(input[0].get_text()));
+				input[0].consumer(f -> {
+					fillMissing();
+					if(entry.type == EntryType.INTEGER) value.value(f.parse_int());
+					else if(entry.type == EntryType.DECIMAL) value.value(f.parse_float());
+					else value.value(f.get_text());
+				});
+			}
+		}
 
+		private void fillMissing(){
+			fillMissing(true);
+		}
+
+		private void fillMissing(boolean check){
+			if(root instanceof EntryElmCon == false) return;
+			JsonValue ral = ((EntryElm)root.root).value;
+			if(check){
+				((EntryElm)root.root).fillMissing();
+			}
+			if(ral.isMap()){
+				if(!ral.asMap().has(entry.key().key)){
+					ral.asMap().add(entry.key().key, value);
+				}
+			}
+			else{
+				if(!ral.asArray().contains(value)){
+					ral.asArray().add(value);
+				}
+			}
 		}
 
 		private void refill(){
