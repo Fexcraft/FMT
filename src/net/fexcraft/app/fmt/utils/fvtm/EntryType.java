@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.utils.fvtm;
 
+import net.fexcraft.app.fmt.ui.Field.FieldType;
+
 public enum EntryType {
 
     TEXT,
@@ -131,5 +133,12 @@ public enum EntryType {
     public boolean static_(){
         return this == STATIC;
     }
+
+	public FieldType toFieldType(){
+        if(static_()) return FieldType.INFO;
+        if(this == INTEGER) return FieldType.INT;
+        if(this == DECIMAL) return FieldType.FLOAT;
+		return FieldType.TEXT;
+	}
 
 }
