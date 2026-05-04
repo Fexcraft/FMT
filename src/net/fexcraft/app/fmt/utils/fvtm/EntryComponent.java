@@ -2,7 +2,6 @@ package net.fexcraft.app.fmt.utils.fvtm;
 
 import com.spinyowl.legui.component.*;
 import com.spinyowl.legui.component.event.textinput.TextInputContentChangeEvent;
-import com.spinyowl.legui.event.MouseClickEvent;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Pivot;
@@ -14,8 +13,6 @@ import net.fexcraft.lib.common.math.Vec3f;
 
 import java.util.ArrayList;
 
-import static com.spinyowl.legui.event.MouseClickEvent.MouseClickAction.CLICK;
-import static com.spinyowl.legui.input.Mouse.MouseButton.MOUSE_BUTTON_LEFT;
 import static net.fexcraft.app.fmt.utils.fvtm.ConfigEntry.*;
 import static net.fexcraft.app.fmt.utils.fvtm.FVTMConfigEditor.getEV;
 
@@ -24,7 +21,6 @@ import static net.fexcraft.app.fmt.utils.fvtm.FVTMConfigEditor.getEV;
  */
 public class EntryComponent extends Component {
 
-	private Label label;
 	public TextInput[] input = new TextInput[1];
 	public boolean minimized = false;
 	private static String[] xyz = { "x", "y", "z" };
@@ -40,76 +36,6 @@ public class EntryComponent extends Component {
 		entry = confentry;
 		root = rootcom;
 		key = subkey;
-		val = jval == null ? entry.gendef() : jval;
-		add(label = new Label((entry.name == null ? key : entry.name) + (entry.required ? "*" : ""), 30, 5, 200, 30));
-		label.getListenerMap().addListener(MouseClickEvent.class, event -> {
-			if(event.getAction() == CLICK && event.getButton() == MOUSE_BUTTON_LEFT){
-				minimized = !minimized;
-				editor.resize();
-			}
-		});
-		/*add(new Icon(0, 20, 0, 5, 10, "./resources/textures/icons/configeditor/" + entry.type.icon() + ".png", () -> {
-			minimized = !minimized;
-			editor.resize();
-		}).addTooltip(entry.type.icon()));*/
-		if(root != null){
-			boolean edit = root.entry.type.map() && !root.entry.type.subtype() && !root.entry.static_;
-			if(!entry.type.separate() && !entry.type.static_()){
-				/*add(new Icon(0, 20, 0, 525 + (entry.type.select() || edit ? 25 : 0), 10, "./resources/textures/icons/configeditor/remove.png", () -> {
-					if(root.entry.type.subs() && !root.entry.type.subtype()){
-						if(root.val.isMap()) root.val.asMap().rem(key.key);
-						else root.val.asArray().rem(key.idx);
-						root.gensubs();
-					}
-					else{
-						if(entry.type.vector()){
-							input[0].getTextState().setText(0 + "");
-							input[1].getTextState().setText(0 + "");
-							input[2].getTextState().setText(0 + "");
-						}
-						else if(input[0] != null) input[0].getTextState().setText(entry.gendef().string_value());
-					}
-				}).addTooltip("remove/reset"));*/
-			}
-			if(edit){
-				/*add(new Icon(0, 20, 0, 525, 10, "./resources/textures/icons/configeditor/rename.png", () -> {
-					Dialog dialog = new Dialog("Enter new name.", 440, 110);
-					TextField field = new TextField(key.key, 10, 10, 420, 30, false);
-					dialog.getContainer().add(field);
-					dialog.getContainer().add(new RunButton("dialog.button.confirm", 10, 50, 200, 30, () -> {
-						if(root.val.isMap() && root.entry.type.subs() && !root.entry.type.subtype()){
-							JsonValue value = root.val.asMap().get(key.key);
-							root.val.asMap().rem(key.key);
-							root.val.asMap().add(field.getTextState().getText(), value);
-							root.gensubs();
-						}
-						else{
-							val = new JsonValue(input[0].getTextState().getText());
-							updateVal();
-						}
-						dialog.close();
-					}));
-					dialog.setResizable(false);
-					//dialog.show(FMT.FRAME);
-				}).addTooltip("rename key"));*/
-			}
-		}
-		if(entry.type.select()) addsel();
-		if(entry.type.subs()){
-			if(!entry.type.subtype()) gensubs();
-		}
-		else geninput();
-	}
-
-	private void updateVal(){
-		if(root.val.isMap()){
-			root.val.asMap().add(key.key, val);
-		}
-		else{
-			root.val.asArray().rem(val);
-			root.val.asArray().add(val);
-		}
-		if(root.entry.type.subs()) root.gensubs();
 	}
 
 	private void fillIfMissing(){
