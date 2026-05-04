@@ -1,6 +1,9 @@
 package net.fexcraft.app.fmt.workspace;
 
+import net.fexcraft.app.fmt.utils.Logging;
 import org.apache.commons.lang3.tuple.Pair;
+
+import java.io.File;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -31,6 +34,14 @@ public enum FvtmType {
 		this._name = _name;
 		this.folder = folder;
 		this.suffix = suffix;
+	}
+
+	public static FvtmType fromFile(File file){
+		String name = file.getName().substring(file.getName().lastIndexOf(".") + 1);
+		for(FvtmType type : values()){
+			if(type.suffix.equals(name)) return type;
+		}
+		return DECORATION;
 	}
 
 }
