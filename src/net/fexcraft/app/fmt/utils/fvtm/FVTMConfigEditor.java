@@ -54,7 +54,7 @@ public class FVTMConfigEditor extends Widget {
 		}
 		this.type = type;
 		this.file = file;
-		ref = getReference(type, key, entry, val);
+		//ref = getReference(type, key, entry, val);
 		if(ref == null) return;
 		remap();
 		//Settings.applyComponentTheme(getContainer());
@@ -107,53 +107,6 @@ public class FVTMConfigEditor extends Widget {
 	protected void save(){
 		JsonHandler.print(file, rmap, JsonHandler.PrintOption.DEFAULT);
 		if(rooteditor != null) rooteditor.refill();
-	}
-
-	private ConfigReference getReference(String type, String key, ConfigEntry entry, JsonValue val){
-		type = type.toLowerCase();
-		switch(type){
-			case "vehicle":
-				return VehicleConfigReference.INSTANCE;
-			case "part":
-				return PartConfigReference.INSTANCE;
-			case "material":
-				return MaterialConfigReference.INSTANCE;
-			case "consumable":
-				return ConsumableConfigReference.INSTANCE;
-			case "fuel":
-				return null;
-			case "block":
-				return BlockConfigReference.INSTANCE;
-			case "wire":
-				return null;
-			case "wiredeco":
-				return null;
-			case "deco":
-				return DecorationConfigReference.INSTANCE;
-			case "sign":
-				return SignConfigReference.INSTANCE;
-			case "railgauge":
-				return null;
-			case "cloth":
-				return null;
-			//
-			case "modeldata":
-				return ModelDataReference.INSTANCE;
-			case "installation":{
-				String sub = val.isMap() ? val.asMap().getString(entry.subs.get(0).name, entry.enums[0]) : val.string_value();
-				switch(sub){
-					case "default": return PartInstallConfigReference.DEFAULT;
-					case "wheel": return PartInstallConfigReference.WHEEL;
-					case "tire": return PartInstallConfigReference.TIRE;
-					case "bogie": return PartInstallConfigReference.BOGIE;
-				}
-				return null;
-			}
-			case "functions":{
-				return PartFunctionConfigReference.REFERENCES.get(key);
-			}
-			default: return null;
-		}
 	}
 
 	protected void refill(){
