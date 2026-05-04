@@ -1,6 +1,5 @@
 package net.fexcraft.app.fmt.workspace;
 
-import net.fexcraft.app.fmt.utils.Logging;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.File;
