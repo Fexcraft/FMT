@@ -1,7 +1,6 @@
 package net.fexcraft.app.fmt.utils.fvtm;
 
 import com.spinyowl.legui.component.*;
-import com.spinyowl.legui.component.event.textinput.TextInputContentChangeEvent;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Pivot;
@@ -272,104 +271,6 @@ public class EntryComponent extends Component {
 		}
 	}
 
-	private void geninput(){
-		if(entry.type.vector()){
-			input = new TextInput[3];
-			Object ik = key;
-			if(val == null){
-				val = new JsonArray.Flat();
-				if(root.val.isMap()){
-					root.val.asMap().add(key.key, val);
-				}
-				else root.val.asArray().value.set(key.idx, val);
-			}
-			for(int i = 0; i < 3; i++){
-				int j = i;
-				if(entry.type == EntryType.VECTOR_MAP){
-					if(root.val.isMap()){
-						ik = key == null ? xyz[i] : key + "_" + xyz[i];
-					}
-					Object fik = ik;
-					input[i].addTextInputContentChangeEventListener(event -> {
-						if(val == null){
-							if(root.val.isMap()){
-								root.val.asMap().add(fik.toString(), new JsonValue<>(get(event, entry.type)));
-							}
-							else root.val.asArray().value.set(((int)fik) + j, new JsonValue<>(get(event, entry.type)));
-						}
-						else val.value(get(event, entry.type));
-					});
-				}
-				else{
-					while(val.asArray().size() < 3) val.asArray().add(0);
-					add(input[i] = new TextInput(val.asArray().get(i).string_value(), 220 + (i * 100), 7, 90, 26));
-					input[i].addTextInputContentChangeEventListener(event -> {
-						fillIfMissing();
-						val.asArray().set(j, new JsonValue<>(get(event, entry.type)));
-					});
-				}
-			}
-		}
-		/*else if(entry.type.color()){
-			add(new ColorField(this, (color, bool) -> {
-				fillIfMissing();
-				val.value("#" + Integer.toHexString(color));
-			}, 220, 7, 300, 26, null, false).apply(val == null ? entry.defi : Integer.parseInt(val.string_value().replace("#", ""), 16)));
-		}
-		else if(entry.type.bool()){
-			add(new BoolButton(220, 7, 300, 26, val == null ? entry.defb : val.bool(), bool -> {
-				fillIfMissing();
-				val.value(bool);
-			}));
-		}*///TODO
-		else if(entry.type.enumerate()){
-			SelectBox<String> box = new SelectBox<>(220, 7, 300, 26);
-			box.setVisibleCount(8);
-			for(String en : entry.enums) box.addElement(en);
-			box.addSelectBoxChangeSelectionEventListener(lis -> {
-				fillIfMissing();
-				if(entry.type.separate() && val.isMap()){
-					if(root.entry.type.map()){
-						val = root.val.asMap().rem(key.key);
-						root.val.asMap().add(lis.getNewValue(), val);
-						root.gensubs();
-					}
-					else val.asMap().add(entry.subs.get(0).name, lis.getNewValue());
-				}
-				else val.value(lis.getNewValue());
-			});
-			if(val != null){
-				if(entry.type.separate() && val.isMap()){
-					if(root.entry.type.map()){
-						box.setSelected(key.key, true);
-					}
-					else if(val.asMap().has(entry.subs.get(0).name)){
-						box.setSelected(val.asMap().get(entry.subs.get(0).name).string_value(), true);
-					}
-				}
-				else box.setSelected(val.string_value(), true);
-			}
-			add(box);
-		}
-		else if(!entry.type.separate()){//text
-			add(input[0] = new TextInput(val == null ? entry.gendef().string_value() : val.string_value(), 220, 7, 300, 26));
-			if(!entry.type.static_()){
-				input[0].addTextInputContentChangeEventListener(event -> {
-					if(notDefault(event, entry)){
-						Object o = get(event, entry.type);
-						if(root.val.isMap() && (o.equals("null") || o.equals("")) && entry.type == EntryType.TEXT){
-							root.val.asMap().rem(key.key);
-							return;
-						}
-					}
-					fillIfMissing();
-					val.value(get(event, entry.type));
-				});
-			}
-			else input[0].setEditable(false);
-		}
-	}
-
 	private void gensubs(){
 		coms.clear();
 		removeIf(com -> com instanceof EntryComponent);
@@ -483,40 +384,6 @@ public class EntryComponent extends Component {
 			}));*/
 		}
 		editor.resize();
-	}
-
-	private Object get(TextInputContentChangeEvent event, EntryType type){
-		if(type.numer() || type.vector()){
-			try{
-				return type == EntryType.INTEGER ? Integer.parseInt(event.getNewValue()) : Float.parseFloat(event.getNewValue());
-			}
-			catch(Exception e){
-				e.printStackTrace();
-				return type == EntryType.INTEGER ? 0 : 0f;
-			}
-		}
-		//TODO validation for special types
-		return event.getNewValue();
-	}
-
-	private boolean notDefault(TextInputContentChangeEvent event, ConfigEntry entry){
-		if(entry.type.numer()){
-			try{
-				if(entry.type == EntryType.INTEGER){
-					int i = Integer.parseInt(event.getNewValue());
-					if(i == entry.defi) return false;
-				}
-				else{
-					float f = Float.parseFloat(event.getNewValue());
-					if(f == entry.deff) return false;
-				}
-			}
-			catch(Exception e){
-				e.printStackTrace();
-				return false;
-			}
-		}
-		return !event.getNewValue().equals(entry.def);
 	}
 
 	private void addsub(EntryComponent com){
