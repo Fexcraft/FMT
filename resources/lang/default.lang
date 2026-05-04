@@ -417,7 +417,10 @@ workspace.jsoneditor.add.key=Entry Key
 workspace.jsoneditor.add.type=JSON Value Type:
 
 # FVTM Config Editor
-fvtmeditor.title=FVTM Config Editor
+workspace.configeditor=FVTM Config Editor
+workspace.configeditor.remove=Remove/Reset
+workspace.configeditor.rename=Rename
+workspace.configeditor.rename.field=Enter new Name
 
 # Save/Load
 saveload.title=FMTB Save Handler
