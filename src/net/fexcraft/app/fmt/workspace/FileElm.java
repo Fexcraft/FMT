@@ -2,7 +2,6 @@ package net.fexcraft.app.fmt.workspace;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.ui.Element;
-import net.fexcraft.app.fmt.utils.fvtm.FVTMConfigEditor;
 
 import java.io.File;
 
@@ -31,13 +30,12 @@ public class FileElm extends Element {
 			if(ci.button() == 0){
 				switch(type){
 					case FVTM_CONFIG:{
-						new FVTMConfigEditor(file, null);
+						FMT.WORKSPACE.open(file, FvtmConfigEditor::new);
 						break;
 					}
 					case FVTM_FILE:
 					case JSON:{
 						FMT.WORKSPACE.open(file, JsonEditor::new);
-						new JsonEditor(file);
 						break;
 					}
 					case LANG:
