@@ -203,12 +203,12 @@ public class Picker {
 	private static void multipick(){
 		ArrayList<Integer> picks = new ArrayList<>();
 		int pick;
-		for(float x = 0; x < FMT.CAM.getSelSiz().x; x++){
+		/*for(float x = 0; x < FMT.CAM.getSelSiz().x; x++){
 			for(float y = 0; y < FMT.CAM.getSelSiz().y; y++){
 				pick = getPick((int)(FMT.CAM.getSelPos().x + x), -((int)(FMT.CAM.getSelPos().y + y) - FMT.HEIGHT), false);
 				if(!picks.contains(pick)) picks.add(pick);
 			}
-		}
+		}*///TODO
 		Logging.bar("picked: " + picks.size() + "x");
 		for(Group group : FMT.MODEL.allgroups()){
 			for(Polygon poly : group){
