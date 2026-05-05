@@ -9,8 +9,6 @@ import static org.lwjgl.glfw.GLFW.GLFW_REPEAT;
 import static org.lwjgl.glfw.GLFW.glfwSetInputMode;
 import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
 
-import com.spinyowl.legui.component.Panel;
-import com.spinyowl.legui.style.color.ColorConstants;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.utils.ShaderManager.Uniform;
 import org.joml.Matrix4f;
@@ -21,7 +19,6 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TexturePainter;
 import net.fexcraft.app.fmt.utils.Picker.PickTask;
-import net.fexcraft.app.fmt.utils.Picker.PickType;
 import net.fexcraft.lib.common.Static;
 
 /** CCR */
@@ -145,12 +142,12 @@ public class GGR {
 				apos_x = apos_y = 0;
 			}
 			else if(action == GLFW_RELEASE){
-				if(sel_panel != null){
+				/*if(sel_panel != null){
 					sp_pos = sel_panel.getPosition();
 					sp_size = sel_panel.getSize();
 					Picker.pick(PickType.POLYGON, PickTask.MULTISELECT, true);
-				}
-				else if(!isOverUI()){
+				}//TODO
+				else*/ if(!isOverUI()){
 					if(TexturePainter.TOOL.active()){
 						Picker.pick(TexturePainter.SELMODE.getPickType(), PickTask.PAINT, true);
 					}
@@ -213,16 +210,16 @@ public class GGR {
 		}
 	}
 
-	private Panel sel_panel;
-	private Vector2f sp_pos, sp_size;
+	//private Panel sel_panel;
+	//private Vector2f sp_pos, sp_size;
 
-	public Vector2f getSelPos(){
+	/*public Vector2f getSelPos(){
 		return sp_pos;
 	}
 
 	public Vector2f getSelSiz(){
 		return sp_size;
-	}
+	}*/
 
 	public void update(){
 		if(left_down){
@@ -232,22 +229,23 @@ public class GGR {
 				spos_y = cpos_y;
 			}
 			if(left_timer > 5){
-				if(sel_panel == null){
+				/*if(sel_panel == null){
 					sel_panel = new Panel((float)spos_x, (float)spos_y, 100, 100);
 					sel_panel.getStyle().getBackground().setColor(ColorConstants.transparent());
 					//sel_panel.getStyle().setBorder(new SimpleLineBorder(FMT.rgba(Settings.SELECTION_LINES.value), 1));
 					//FMT.FRAME.getContainer().add(sel_panel);
 				}
 				sel_panel.setPosition((float)(spos_x < cpos_x ? spos_x : cpos_x), (float)(spos_y < cpos_y ? spos_y : cpos_y));
-				sel_panel.setSize((float)(spos_x < cpos_x ? cpos_x - spos_x : spos_x - cpos_x), (float)(spos_y < cpos_y ? cpos_y - spos_y : spos_y - cpos_y));
+				sel_panel.setSize((float)(spos_x < cpos_x ? cpos_x - spos_x : spos_x - cpos_x), (float)(spos_y < cpos_y ? cpos_y - spos_y : spos_y - cpos_y));*/
+				//TODO
 			}
 			left_timer++;
 		}
 		else{
-			if(sel_panel != null){
+			/*if(sel_panel != null){
 				//FMT.FRAME.getContainer().remove(sel_panel);
 				sel_panel = null;
-			}
+			}*/
 		}
 	}
 
