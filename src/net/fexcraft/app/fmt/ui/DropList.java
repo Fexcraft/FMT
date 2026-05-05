@@ -62,6 +62,10 @@ public class DropList<V> extends Element {
 		entries.add(Pair.of(key, val));
 	}
 
+	public void addEntry(String kv){
+		entries.add(Pair.of(kv, (V)kv));
+	}
+
 	public void clear(){
 		entries.clear();
 		text("");
