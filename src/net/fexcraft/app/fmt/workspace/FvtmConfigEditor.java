@@ -9,15 +9,17 @@ import net.fexcraft.app.fmt.ui.Dialog.DialogButton;
 import net.fexcraft.app.fmt.ui.Field.FieldType;
 import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.fmt.utils.fvtm.*;
+import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.app.json.JsonValue;
 import net.fexcraft.lib.common.math.Vec3f;
 
 import java.io.File;
+import java.util.LinkedHashSet;
 
 import static net.fexcraft.app.fmt.settings.Settings.GENERIC_BACKGROUND_1;
-import static net.fexcraft.app.fmt.settings.Settings.GENERIC_BACKGROUND_2;
+import static net.fexcraft.app.fmt.utils.fvtm.ConfigEntry.OBJ_SUB_ENTRY;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -56,7 +58,7 @@ public class FvtmConfigEditor extends WFileEditor {
 			JsonValue val = null;
 			if(map.has(entry.name)) val = map.get(entry.name);
 			if(val == null && map.has(entry.alt)) val = map.get(entry.alt);
-			container.add(new EntryElm(entry, val), this);
+			container.add(new EntryElm(entry, entry.key(), val), this);
 		}
 		container.updateBar();
 	}
@@ -105,21 +107,27 @@ public class FvtmConfigEditor extends WFileEditor {
 
 	public static class EntryElm extends Element {
 
+		private FvtmConfigEditor editor;
 		private EntryElmCon container;
 		private ConfigEntry entry;
 		private JsonValue value;
+		private SubKey skey;
+		private boolean wn;
 		private Field[] input;
 
-		public EntryElm(ConfigEntry entry, JsonValue val){
+		public EntryElm(ConfigEntry entry, SubKey key, JsonValue val){
 			super();
 			this.entry = entry;
-			value = val == null ? entry.gendef() : val;
+			skey = key;
+			wn = val == null;
+			value = wn ? entry.gendef() : val;
+			render_sub_even_if_invisible = true;
 		}
 
 		@Override
 		public void init(Object... args){
 			shape(ElmShape.NONE);
-			FvtmConfigEditor editor = (FvtmConfigEditor)args[0];
+			editor = (FvtmConfigEditor)args[0];
 			check_mode(editor.checkmode);
 			boolean incon = root instanceof EntryElmCon;
 			size(incon ? root.w - 10 : root.w - 35, 30);
@@ -127,11 +135,11 @@ public class FvtmConfigEditor extends WFileEditor {
 			add(new Element().size(30, 30).check_mode(check_mode)
 				.texture("icons/configeditor/" + entry.type.icon()));
 			float FW = w * 0.6f - 65f, FWO = FW + 65f, TW = w * 0.4f - 35;
-			add(new TextElm(35, 2, TW, entry.name + (entry.required ? "*" : ""), GENERIC_BACKGROUND_1.value)
-				.text_autoscale().check_mode(check_mode).onclick(ci -> toggleContainer(editor, null)));
+			add(new TextElm(35, 2, TW, (entry.name == null ? skey.key : entry.name) + (entry.required ? "*" : ""), GENERIC_BACKGROUND_1.value)
+				.text_autoscale().check_mode(check_mode).onclick(ci -> toggleContainer(null)));
 			if(entry.type.subs()){
 				add(container = new EntryElmCon());
-				toggleContainer(editor, true);
+				updateSize();
 			}
 			ConfigEntry ren = incon ? ((EntryElm)root.root).entry : ConfigEntry.TEXT_ENTRY;
 			JsonValue ral = incon ? ((EntryElm)root.root).value : ((FvtmConfigEditor)root.root).map;
@@ -141,8 +149,8 @@ public class FvtmConfigEditor extends WFileEditor {
 					add(new HidingElm().pos(w - 30, 0).size(30, 30).texture("icons/component/remove").check_mode(check_mode)
 						.onclick(ci -> {
 							if(ren.type.subs() && !ren.type.subtype()){
-								if(ral.isMap()) ral.asMap().rem(entry.key().key);
-								else ral.asArray().rem(entry.key().idx);
+								if(ral.isMap()) ral.asMap().rem(skey.key);
+								else ral.asArray().rem(skey.idx);
 								root_refill();
 							}
 							else{
@@ -160,7 +168,7 @@ public class FvtmConfigEditor extends WFileEditor {
 				if(edit){
 					FW = w * 0.6f - 95f;
 					FWO = FW + 95f;
-					add(new HidingElm().pos(w - 60, 0).size(30, 30).texture("icons/component/rename").check_mode(check_mode)
+					add(new HidingElm().pos(w - 60, 0).size(30, 30).texture("icons/configeditor/rename").check_mode(check_mode)
 						.onclick(ci -> {
 							Field field = new Field(FieldType.TEXT, 490);
 							FMT.UI.createDialog(500, 120, "workspace.configeditor")
@@ -168,8 +176,8 @@ public class FvtmConfigEditor extends WFileEditor {
 								.addRowElm(1, field)
 								.set_confirm(d -> {
 									if(ral.isMap() && ren.type.subs() && !ren.type.subtype()){
-										JsonValue value = ral.asMap().get(entry.key().key);
-										ral.asMap().rem(entry.key().key);
+										JsonValue value = ral.asMap().get(skey.key);
+										ral.asMap().rem(skey.key);
 										ral.asMap().add(field.get_text(), value);
 										root_refill();
 									}
@@ -178,7 +186,7 @@ public class FvtmConfigEditor extends WFileEditor {
 										updateValue(ren, ral);
 									}
 								}).buttons(100, DialogButton.CONFIRM);
-							field.text(entry.key().key);
+							field.text(skey.key);
 						}).hint("workspace.configeditor.rename"));
 				}
 			}
@@ -270,7 +278,7 @@ public class FvtmConfigEditor extends WFileEditor {
 										DropList<Pivot> vlist = new DropList<>(490);
 										FMT.UI.createDialog(500, 120, "workspace.configeditor")
 											.addText(0, "workspace.configeditor.select.pivot")
-											.addRowElm(1, vtype)
+											.addRowElm(1, vlist)
 											.set_confirm(di -> {
 												Vec3f vec = new Vec3f();
 												Pivot pivot = vlist.getSelVal();
@@ -298,7 +306,7 @@ public class FvtmConfigEditor extends WFileEditor {
 										DropList<Polygon> vlist = new DropList<>(490);
 										FMT.UI.createDialog(500, 120, "workspace.configeditor")
 											.addText(0, "workspace.configeditor.select.marker")
-											.addRowElm(1, vtype)
+											.addRowElm(1, vlist)
 											.set_confirm(di -> {
 												Vec3f vec = new Vec3f();
 												Polygon poly = vlist.getSelVal();
@@ -389,7 +397,7 @@ public class FvtmConfigEditor extends WFileEditor {
 					fillMissing();
 					if(entry.type.separate() && value.isMap()){
 						if(ren.type.map()){
-							value = ral.asMap().rem(entry.key().key);
+							value = ral.asMap().rem(skey.key);
 							ral.asMap().add(key, value);
 							root_refill();
 						}
@@ -399,7 +407,7 @@ public class FvtmConfigEditor extends WFileEditor {
 				});
 				if(entry.type.separate() && value.isMap()){
 					if(ren.type.map()){
-						list.selectKey(entry.key().key);
+						list.selectKey(skey.key);
 					}
 					else if(value.asMap().has(entry.subs.get(0).name)){
 						list.selectKey(value.asMap().get(entry.subs.get(0).name).string_value());
@@ -433,8 +441,8 @@ public class FvtmConfigEditor extends WFileEditor {
 				((EntryElm)root.root).fillMissing();
 			}
 			if(ral.isMap()){
-				if(!ral.asMap().has(entry.key().key)){
-					ral.asMap().add(entry.key().key, value);
+				if(!ral.asMap().has(skey.key)){
+					ral.asMap().add(skey.key, value);
 				}
 			}
 			else{
@@ -447,15 +455,141 @@ public class FvtmConfigEditor extends WFileEditor {
 		private void refill(){
 			if(container == null) return;
 			container.remElmIf(EntryElm.class::isInstance);
+			boolean incon = root instanceof EntryElmCon;
+			ConfigEntry ren = incon ? ((EntryElm)root.root).entry : ConfigEntry.TEXT_ENTRY;
+			JsonValue ral = incon ? ((EntryElm)root.root).value : ((FvtmConfigEditor)root.root).map;
+			if(entry.type == EntryType.ARRAY && entry.subs != null){
+				if(wn){
+					if(ral.isMap()) ral.asMap().add(skey.key, value);
+					else ral.asArray().set(skey.idx, value);
+					wn = false;
+				}
+				JsonArray arr = value.asArray();
+				for(int i = 0; i < arr.size(); i++){
+					for(ConfigEntry conf : entry.subs){
+						container.add(new EntryElm(conf, new SubKey(i), arr.get(i)), editor);
+					}
+				}
+			}
+			else if(entry.type == EntryType.ARRAY_SIMPLE){
+				JsonArray arr = wn || !value.isArray() ? null : value.asArray();
+				if(arr == null){
+					ral.asMap().add(skey.key, arr = new JsonArray());
+					if(value != null) arr.add(value);
+					value = arr;
+					wn = false;
+				}
+				if(arr != null){
+					for(int i = 0; i < arr.size(); i++){
+						container.add(new EntryElm(entry.subs.get(0), new SubKey(i), arr.get(i)), editor);
+					}
+				}
+			}
+			else if(entry.type == EntryType.OBJECT && entry.subs != null){
+				if(wn){
+					ral.asMap().add(entry.name, value);
+					wn = false;
+				}
+				JsonMap map = value.asMap();
+				LinkedHashSet<String> keys = new LinkedHashSet<>(map.value.keySet());
+				for(String key : keys){
+					JsonValue v = map.get(key);
+					JsonMap sup;
+					if(!v.isMap()){
+						sup = entry.converter.apply(key, v).asMap();
+						map.add(key, sup);
+					}
+					else sup = v.asMap();
+					EntryElm sub = new EntryElm(OBJ_SUB_ENTRY, new SubKey(key), sup);
+					container.add(sub, editor);
+					for(ConfigEntry conf : entry.subs){
+						sub.container.add(new EntryElm(conf, conf.key(), get(sup, conf)), editor);
+					}
+				}
+			}
+			else if(entry.type == EntryType.OBJECT_KEY_VAL){
+				if(entry.static_){
+					if(wn){
+						if(ral.isMap()) ral.asMap().add(entry.name, value);
+						wn = false;
+					}
+					for(ConfigEntry conf : entry.subs){
+						container.add(new EntryElm(conf, conf.key(), get(value.asMap(), conf)), editor);
+					}
+				}
+				else{
+					value.asMap().entries().forEach(e -> {
+						container.add(new EntryElm(entry.subs.get(0), new SubKey(e.getKey()), e.getValue()), editor);
+					});
+				}
+			}
+			updateSize();
+			if(!entry.type.subtype() && !entry.static_){
+				add(new Element().pos(w - 120, 0).size(30, 30).texture("icons/configeditor/add").check_mode(check_mode)
+					.onclick(ci -> {
+						fillMissing();
+						if(entry.type == EntryType.ARRAY){
+							JsonMap sup = new JsonMap();
+							for(ConfigEntry conf : entry.subs){
+								container.add(new EntryElm(conf, new SubKey(value.asArray().size()), sup.get(conf.name)), editor);
+							}
+							value.asArray().add(sup);
+							root_refill();
+						}
+						else if(entry.type == EntryType.ARRAY_SIMPLE){
+							JsonArray arr = value.asArray();
+							arr.add(entry.subs.get(0).gendef());
+							container.add(new EntryElm(entry.subs.get(0), new SubKey(arr.size() - 1), arr.get(arr.size() - 1)), editor);
+							root_refill();
+						}
+						else if(entry.type == EntryType.OBJECT){
+							JsonMap map = value.asMap();
+							JsonMap sup = new JsonMap();
+							String nkey = "entry" + map.entries().size();
+							map.add(nkey, sup);
+							EntryElm sub = new EntryElm(OBJ_SUB_ENTRY, new SubKey(nkey), sup);
+							container.add(sub, editor);
+							for(ConfigEntry conf : entry.subs){
+								sub.container.add(new EntryElm(conf, conf.key(), get(sup, conf)), editor);
+							}
+							root_refill();
+						}
+						else if(entry.type == EntryType.OBJECT_KEY_VAL){
+							JsonMap map = value.asMap();
+							String nkey = null;
+							if(entry.subs.get(0).type.separate()){
+								for(String str : entry.subs.get(0).enums){
+									if(!map.has(str)){
+										nkey = str;
+										break;
+									}
+								}
+							}
+							else nkey = "entry" + map.entries().size();
+							if(nkey != null){
+								map.add(nkey, entry.subs.isEmpty() || entry.subs.get(0).type.separate() ? new JsonMap() : entry.subs.get(0).gendef());
+								container.add(new EntryElm(entry.subs.get(0), new SubKey(nkey), map.get(nkey)), editor);
+								root_refill();
+							}
+						}
+					}).hint("workspace.configeditor.add"));
+			}
+		}
+
+		private JsonValue get(JsonMap map, ConfigEntry conf){
+			if(map.has(entry.name)) return map.get(entry.name);
+			if(map.has(entry.alt)) return map.get(entry.alt);
+			return null;
 		}
 
 		private void root_refill(){
-			((EntryElm)root.root).refill();
+			if(root instanceof EntryElmCon) ((EntryElm)root.root).refill();
+			else editor.fill();
 		}
 
 		private void updateValue(ConfigEntry ren, JsonValue ral){
 			if(ral.isMap()){
-				ral.asMap().add(entry.key().key, value);
+				ral.asMap().add(skey.key, value);
 			}
 			else{
 				ral.asArray().rem(value);
@@ -464,22 +598,44 @@ public class FvtmConfigEditor extends WFileEditor {
 			if(ren.type.subs()) root_refill();
 		}
 
-		private void toggleContainer(FvtmConfigEditor editor, Boolean state){
+		private void toggleContainer(Boolean state){
 			if(container == null) return;
 			if(state == null) container.toggleVisibility();
 			else container.visible = state;
-			size(w, container.visible ? container.h + 30 : 30);
-			editor.container.updateBar();
+			updateSize();
+		}
+
+		private void updateSize(){
+			if(container == null) return;
+			container.updateElmAndSize();
+			if(root instanceof EntryElmCon) ((EntryElm)root.root).updateSize();
+			else editor.container.updateBar();
 		}
 
 	}
 
 	public static class EntryElmCon extends Element {
 
-		public EntryElmCon(){
-			border(GENERIC_BACKGROUND_2.value);
-			size(w, 0);
+		@Override
+		public void init(Object... args){
+			size(root.w, 0);
 			pos(0, 30);
+			render_sub_even_if_invisible = true;
+		}
+
+		public void updateElmAndSize(){
+			if(elements == null){
+				size(w, 0);
+				return;
+			}
+			float buff = 2.5f;
+			for(Element elm : elements){
+				elm.pos(elm.x(), buff);
+				if(elm instanceof EntryElm ee && ee.container != null) ee.container.updateElmAndSize();
+				buff += elm.h;
+			}
+			size(w, buff + 2.5f);
+			root.size(w, visible ? h + 30 : 30);
 		}
 
 	}
