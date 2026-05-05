@@ -1,13 +1,18 @@
 package net.fexcraft.app.fmt.workspace;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.polygon.Group;
+import net.fexcraft.app.fmt.polygon.Pivot;
+import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.ui.*;
 import net.fexcraft.app.fmt.ui.Dialog.DialogButton;
 import net.fexcraft.app.fmt.ui.Field.FieldType;
+import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.fmt.utils.fvtm.*;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.app.json.JsonValue;
+import net.fexcraft.lib.common.math.Vec3f;
 
 import java.io.File;
 
@@ -130,7 +135,7 @@ public class FvtmConfigEditor extends WFileEditor {
 			}
 			ConfigEntry ren = incon ? ((EntryElm)root.root).entry : ConfigEntry.TEXT_ENTRY;
 			JsonValue ral = incon ? ((EntryElm)root.root).value : ((FvtmConfigEditor)root.root).map;
-			if(incon){
+			//if(incon){
 				boolean edit = ren.type.map() && !ren.type.subtype() && !ren.type.static_();
 				if(!ren.type.separate() && !ren.type.static_()){
 					add(new HidingElm().pos(w - 30, 0).size(30, 30).texture("icons/component/remove").check_mode(check_mode)
@@ -146,11 +151,15 @@ public class FvtmConfigEditor extends WFileEditor {
 									input[1].clear_text();
 									input[2].clear_text();
 								}
-								else if(input[0] != null) input[0].text(entry.gendef().string_value());
+								else if(input != null && input.length > 0){
+									input[0].text(entry.gendef().string_value());
+								}
 							}
 						}).hint("workspace.configeditor.remove"));
-				}
+				//}
 				if(edit){
+					FW = w * 0.6f - 95f;
+					FWO = FW + 95f;
 					add(new HidingElm().pos(w - 60, 0).size(30, 30).texture("icons/component/rename").check_mode(check_mode)
 						.onclick(ci -> {
 							Field field = new Field(FieldType.TEXT, 490);
@@ -173,15 +182,163 @@ public class FvtmConfigEditor extends WFileEditor {
 						}).hint("workspace.configeditor.rename"));
 				}
 			}
-			if(entry.type.select()) addSelector();
+			if(entry.type.select()) addSelector(edit);
 			if(entry.type.subs()){
 				if(!entry.type.subtype()) refill();
 			}
 			else addField(ren, ral, FW, FWO);
 		}
 
-		private void addSelector(){
-
+		private void addSelector(boolean edit){
+			add(new Element().pos(w - (edit ? 90 : 60), 0).size(30, 30).texture("icons/configeditor/select").check_mode(check_mode)
+				.onclick(ci -> {
+					switch(entry.type){
+						case PACKID:{
+							FMT.WORKSPACE.selectPack(pack -> {
+								value.value(pack.id);
+								input[0].text(value.string_value());
+							});
+							return;
+						}
+						case MODELLOC:{
+							FMT.WORKSPACE.selectPack(pack -> {
+								DropList<String> list = new DropList<>(490);
+								FMT.UI.createDialog(500, 120, "workspace.configeditor")
+									.addText(0, "workspace.configeditor.select.model")
+									.addRowElm(1, list)
+									.set_confirm(d -> {
+										String val = list.getSelVal();
+										if(val == null) val = "null";
+										value.value(val);
+										input[0].text(value.string_value());
+										fillMissing();
+									})
+									.buttons(100, DialogButton.SELECT);
+								for(FileElm com : pack.models){
+									String path = com.file.getPath().replace("\\", "/");
+									if(!path.contains("/models")){
+										Logging.log("invalid model path: " + path);
+										continue;
+									}
+									String pid = path.substring(path.indexOf("/assets/") + 8, path.indexOf("/models"));
+									path = path.substring(path.indexOf("/models/") + 1);
+									list.addEntry(pid + ":" + path);
+								}
+								list.selectEntry(0);
+							}, pack -> pack.models.size() > 0);
+							return;
+						}
+						case TEXLOC:{
+							FMT.WORKSPACE.selectPack(pack -> {
+								DropList<String> list = new DropList<>(490);
+								FMT.UI.createDialog(500, 120, "workspace.configeditor")
+									.addText(0, "workspace.configeditor.select.texture")
+									.addRowElm(1, list)
+									.set_confirm(d -> {
+										String val = list.getSelVal();
+										if(val == null) val = "fvtm:textures/entity/null.png";
+										String prefix = value.string_value();
+										if(prefix.contains(";")) prefix = prefix.split(";")[0];
+										else prefix = null;
+										val = prefix + ";" + val;
+										value.value(val);
+										input[0].text(value.string_value());
+									})
+									.buttons(100, DialogButton.SELECT);
+								for(FileElm com : pack.textures){
+									String path = com.file.getPath().replace("\\", "/");
+									if(!path.contains("/textures")){
+										Logging.log("invalid texture path: " + path);
+										continue;
+									}
+									String pid = path.substring(path.indexOf("/assets/") + 8, path.indexOf("/textures"));
+									path = path.substring(path.indexOf("/textures/") + 1);
+									list.addEntry(pid + ":" + path);
+								}
+								list.selectEntry(0);
+							}, pack -> pack.textures.size() > 0);
+							return;
+						}
+						case VECTOR_MAP:
+						case VECTOR_ARRAY:{
+							DropList<String> vtype = new DropList<>(490);
+							FMT.UI.createDialog(500, 120, "workspace.configeditor")
+								.addText(0, "workspace.configeditor.select.vector_source")
+								.addRowElm(1, vtype)
+								.set_confirm(d -> {
+									if(vtype.getSelVal().equals("pivot")){
+										DropList<Pivot> vlist = new DropList<>(490);
+										FMT.UI.createDialog(500, 120, "workspace.configeditor")
+											.addText(0, "workspace.configeditor.select.pivot")
+											.addRowElm(1, vtype)
+											.set_confirm(di -> {
+												Vec3f vec = new Vec3f();
+												Pivot pivot = vlist.getSelVal();
+												if(FMT.MODEL.orient.rect()){
+													vec.x = pivot.pos.x * .0625f;
+													vec.y = pivot.pos.y * .0625f;
+													vec.z = pivot.pos.z * .0625f;
+												}
+												else{
+													vec.x = -pivot.pos.z * .0625f;
+													vec.y = -pivot.pos.y * .0625f;
+													vec.z = -pivot.pos.x * .0625f;
+												}
+												input[0].set(vec.x).consumer.accept(input[0]);
+												input[1].set(vec.y).consumer.accept(input[1]);
+												input[2].set(vec.z).consumer.accept(input[2]);
+											})
+											.buttons(100, DialogButton.SELECT);
+										for(Pivot pivot : FMT.MODEL.pivots()){
+											vlist.addEntry(pivot.parentid + " / " + pivot.id, pivot);
+										}
+										vlist.selectEntry(0);
+									}
+									else if(vtype.getSelVal().equals("marker")){
+										DropList<Polygon> vlist = new DropList<>(490);
+										FMT.UI.createDialog(500, 120, "workspace.configeditor")
+											.addText(0, "workspace.configeditor.select.marker")
+											.addRowElm(1, vtype)
+											.set_confirm(di -> {
+												Vec3f vec = new Vec3f();
+												Polygon poly = vlist.getSelVal();
+												if(FMT.MODEL.orient.rect()){
+													vec.x = poly.pos.x * .0625f;
+													vec.y = poly.pos.y * .0625f;
+													vec.z = poly.pos.z * .0625f;
+												}
+												else{
+													vec.x = -poly.pos.z * .0625f;
+													vec.y = -poly.pos.y * .0625f;
+													vec.z = -poly.pos.x * .0625f;
+												}
+												input[0].set(vec.x).consumer.accept(input[0]);
+												input[1].set(vec.y).consumer.accept(input[1]);
+												input[2].set(vec.z).consumer.accept(input[2]);
+											})
+											.buttons(100, DialogButton.SELECT);
+										for(Group group : FMT.MODEL.allgroups()){
+											for(Polygon poly : group){
+												if(!poly.getShape().isMarker()) continue;
+												if(poly.name(true) == null) continue;
+												vlist.addEntry(group.id + "/" + poly.name(), poly);
+											}
+										}
+										vlist.selectEntry(0);
+									}
+								})
+								.buttons(100, DialogButton.CONTINUE);
+							vtype.addEntry("pivot");
+							vtype.addEntry("marker");
+							vtype.selectEntry(1);
+							return;
+						}
+						case ENUM_SEPARATE:
+						case SEPARATE:{
+							return;
+						}
+					}
+				}).hint("workspace.configeditor.select"));
 		}
 
 		private void addField(ConfigEntry ren, JsonValue ral, float FW, float FWO){
