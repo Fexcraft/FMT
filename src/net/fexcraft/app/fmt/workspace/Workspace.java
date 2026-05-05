@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.ui.Dialog.DialogButton;
@@ -32,7 +33,7 @@ public class Workspace extends Frame {
 
 	public static int FILES_PANEL_WIDTH = 400;
 	public static int FILES_PANEL_DIR = FILES_PANEL_WIDTH - 30;
-	private ArrayList<FvtmPackElm> fvtm_packs = new ArrayList<>();
+	protected ArrayList<FvtmPackElm> fvtm_packs = new ArrayList<>();
 	private ArrayList<WFileEditor> file_editors = new ArrayList<>();
 	private WFileEditor file_editor;
 	protected Scrollable opened_files;
@@ -173,6 +174,10 @@ public class Workspace extends Frame {
 	}
 
 	public void selectPack(Consumer<FvtmPackElm> cons){
+		selectPack(cons, null);
+	}
+
+	public void selectPack(Consumer<FvtmPackElm> cons, Predicate<FvtmPackElm> cond){
 		if(!loaded){
 			load(() -> selectPack(cons));
 			return;
@@ -183,8 +188,15 @@ public class Workspace extends Frame {
 			.addRowElm(1, list)
 			.consumer(d -> cons.accept(list.getSelVal()), null)
 			.buttons(100, DialogButton.CONTINUE);
-		for(FvtmPackElm pack : fvtm_packs){
-			list.addEntry(pack.id, pack);
+		if(cond != null){
+			for(FvtmPackElm pack : fvtm_packs){
+				if(cond.test(pack)) list.addEntry(pack.name, pack);
+			}
+		}
+		else{
+			for(FvtmPackElm pack : fvtm_packs){
+				list.addEntry(pack.name, pack);
+			}
 		}
 		list.selectEntry(0);
 	}
