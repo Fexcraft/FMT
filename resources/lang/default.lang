@@ -427,6 +427,7 @@ workspace.configeditor.select.texture=Select a Texture
 workspace.configeditor.select.vector_source=Select Source Type
 workspace.configeditor.select.pivot=Select a Pivot
 workspace.configeditor.select.marker=Select a Marker
+workspace.configeditor.add=Add Entry
 
 # Save/Load
 saveload.title=FMTB Save Handler
