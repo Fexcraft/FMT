@@ -12,7 +12,6 @@ import net.fexcraft.lib.common.math.M4DW;
 import net.fexcraft.lib.common.math.V3D;
 import net.fexcraft.lib.frl.Polyhedron;
 import net.fexcraft.lib.frl.Vertex;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -198,7 +197,7 @@ public class ObjExporter implements Exporter {
         }
 
         @Override
-        public int compareTo(@NotNull IndexVertex o){
+        public int compareTo(IndexVertex o){
             if(x < o.x) return -1;
             if(x > o.x) return 1;
             if(y < o.y) return -1;
