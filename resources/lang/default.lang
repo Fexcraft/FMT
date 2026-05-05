@@ -395,8 +395,8 @@ utils.config.create_pack.id=Pack ID ("modid")
 # Workspace
 workspace.title=%s
 workspace.content_utils=Content Utils
-workspace.select_content_type=Please select a Content Type:
-workspace.select_pack=Please select a Pack:
+workspace.select_content_type=Select a Content Type:
+workspace.select_pack=Select a Pack:
 workspace.file_editor.none_open=No File Editors open.
 workspace.file_editor.list=Show Opened Files
 workspace.file_editor.external=Open in External Editor
@@ -421,6 +421,12 @@ workspace.configeditor=FVTM Config Editor
 workspace.configeditor.remove=Remove/Reset
 workspace.configeditor.rename=Rename
 workspace.configeditor.rename.field=Enter new Name
+workspace.configeditor.select=Select
+workspace.configeditor.select.model=Select a Model
+workspace.configeditor.select.texture=Select a Texture
+workspace.configeditor.select.vector_source=Select Source Type
+workspace.configeditor.select.pivot=Select a Pivot
+workspace.configeditor.select.marker=Select a Marker
 
 # Save/Load
 saveload.title=FMTB Save Handler
