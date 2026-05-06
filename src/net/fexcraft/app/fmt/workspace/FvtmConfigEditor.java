@@ -112,15 +112,13 @@ public class FvtmConfigEditor extends WFileEditor {
 		private ConfigEntry entry;
 		private JsonValue value;
 		private SubKey skey;
-		private boolean wn;
 		private Field[] input;
 
 		public EntryElm(ConfigEntry entry, SubKey key, JsonValue val){
 			super();
 			this.entry = entry;
 			skey = key;
-			wn = val == null;
-			value = wn ? entry.gendef() : val;
+			value = val;
 			render_sub_even_if_invisible = true;
 		}
 
@@ -361,6 +359,7 @@ public class FvtmConfigEditor extends WFileEditor {
 						input[v].consumer(f -> ral.asMap().add(xyz[iv], f.parse_float()));
 					}
 					else{
+						if(value == null) value = entry.gendef();
 						while(value.asArray().size() < v) value.asArray().add(0f);
 						input[v].set(value.asArray().get(v).float_value());
 						input[v].consumer(f -> {
@@ -374,7 +373,9 @@ public class FvtmConfigEditor extends WFileEditor {
 				input = new Field[1];
 				input[0] = new Field(FieldType.COLOR, FW);
 				add(input[0].pos(w - FWO, 2).check_mode(check_mode));
-				input[0].set(Integer.parseInt(value.string_value().substring(1), 16));
+				if(value != null){
+					input[0].set(Integer.parseInt(value.string_value().substring(1), 16));
+				}
 				input[0].consumer(f -> {
 					fillMissing();
 					value.value("#" + input[0].get_text());
@@ -383,7 +384,7 @@ public class FvtmConfigEditor extends WFileEditor {
 			else if(entry.type.bool()){
 				BoolElm elm = new BoolElm(w - FWO, 2, FW);
 				add(elm.check_mode(check_mode));
-				elm.set(() -> value.bool(), b -> {
+				elm.set(() -> value == null ? false : value.bool(), b -> {
 					fillMissing();
 					value.value(b);
 				});
@@ -413,14 +414,14 @@ public class FvtmConfigEditor extends WFileEditor {
 						list.selectKey(value.asMap().get(entry.subs.get(0).name).string_value());
 					}
 				}
-				else list.selectKey(value.string_value());
+				else if(value != null) list.selectKey(value.string_value());
+				else list.selectEntry(0);
 			}
 			else if(!entry.type.separate()){//text
 				input = new Field[1];
 				input[0] = new Field(entry.type.toFieldType(), FW);
 				add(input[0].pos(w - FWO, 2).check_mode(check_mode));
-				input[0].text(value.string_value());
-				input[0].consumer(f -> value.value(input[0].get_text()));
+				if(value != null) input[0].text(value.string_value());
 				input[0].consumer(f -> {
 					fillMissing();
 					if(entry.type == EntryType.INTEGER) value.value(f.parse_int());
@@ -435,11 +436,12 @@ public class FvtmConfigEditor extends WFileEditor {
 		}
 
 		private void fillMissing(boolean check){
-			if(root instanceof EntryElmCon == false) return;
-			JsonValue ral = ((EntryElm)root.root).value;
-			if(check){
+			boolean incon = root instanceof EntryElmCon;
+			JsonValue ral = incon ? ((EntryElm)root.root).value : ((FvtmConfigEditor)root.root).map;
+			if(check && incon){
 				((EntryElm)root.root).fillMissing();
 			}
+			if(value == null) value = entry.gendef();
 			if(ral.isMap()){
 				if(!ral.asMap().has(skey.key)){
 					ral.asMap().add(skey.key, value);
@@ -456,13 +458,11 @@ public class FvtmConfigEditor extends WFileEditor {
 			if(container == null) return;
 			container.remElmIf(EntryElm.class::isInstance);
 			boolean incon = root instanceof EntryElmCon;
-			ConfigEntry ren = incon ? ((EntryElm)root.root).entry : ConfigEntry.TEXT_ENTRY;
 			JsonValue ral = incon ? ((EntryElm)root.root).value : ((FvtmConfigEditor)root.root).map;
 			if(entry.type == EntryType.ARRAY && entry.subs != null){
-				if(wn){
-					if(ral.isMap()) ral.asMap().add(skey.key, value);
-					else ral.asArray().set(skey.idx, value);
-					wn = false;
+				if(value == null){
+					if(ral.isMap()) ral.asMap().add(skey.key, value = entry.gendef());
+					else ral.asArray().set(skey.idx, value = entry.gendef());
 				}
 				JsonArray arr = value.asArray();
 				for(int i = 0; i < arr.size(); i++){
@@ -472,12 +472,11 @@ public class FvtmConfigEditor extends WFileEditor {
 				}
 			}
 			else if(entry.type == EntryType.ARRAY_SIMPLE){
-				JsonArray arr = wn || !value.isArray() ? null : value.asArray();
+				JsonArray arr = value == null || !value.isArray() ? null : value.asArray();
 				if(arr == null){
 					ral.asMap().add(skey.key, arr = new JsonArray());
 					if(value != null) arr.add(value);
 					value = arr;
-					wn = false;
 				}
 				if(arr != null){
 					for(int i = 0; i < arr.size(); i++){
@@ -486,9 +485,8 @@ public class FvtmConfigEditor extends WFileEditor {
 				}
 			}
 			else if(entry.type == EntryType.OBJECT && entry.subs != null){
-				if(wn){
-					ral.asMap().add(entry.name, value);
-					wn = false;
+				if(value == null){
+					ral.asMap().add(entry.name, value = entry.gendef());
 				}
 				JsonMap map = value.asMap();
 				LinkedHashSet<String> keys = new LinkedHashSet<>(map.value.keySet());
@@ -508,11 +506,10 @@ public class FvtmConfigEditor extends WFileEditor {
 				}
 			}
 			else if(entry.type == EntryType.OBJECT_KEY_VAL){
+				if(value == null){
+					if(ral.isMap()) ral.asMap().add(entry.name, value = entry.gendef());
+				}
 				if(entry.static_){
-					if(wn){
-						if(ral.isMap()) ral.asMap().add(entry.name, value);
-						wn = false;
-					}
 					for(ConfigEntry conf : entry.subs){
 						container.add(new EntryElm(conf, conf.key(), get(value.asMap(), conf)), editor);
 					}
@@ -577,8 +574,8 @@ public class FvtmConfigEditor extends WFileEditor {
 		}
 
 		private JsonValue get(JsonMap map, ConfigEntry conf){
-			if(map.has(entry.name)) return map.get(entry.name);
-			if(map.has(entry.alt)) return map.get(entry.alt);
+			if(map.has(conf.name)) return map.get(conf.name);
+			if(map.has(conf.alt)) return map.get(conf.alt);
 			return null;
 		}
 
@@ -602,6 +599,7 @@ public class FvtmConfigEditor extends WFileEditor {
 			if(container == null) return;
 			if(state == null) container.toggleVisibility();
 			else container.visible = state;
+			container.render_sub_even_if_invisible = container.visible;
 			updateSize();
 		}
 
@@ -620,7 +618,6 @@ public class FvtmConfigEditor extends WFileEditor {
 		public void init(Object... args){
 			size(root.w, 0);
 			pos(0, 30);
-			render_sub_even_if_invisible = true;
 		}
 
 		public void updateElmAndSize(){
