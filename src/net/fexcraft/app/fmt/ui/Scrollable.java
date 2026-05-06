@@ -47,7 +47,7 @@ public class Scrollable extends Element {
 		scrolled += (h / ih) * 0.25f * dir;
 		if(scrolled < 0) scrolled = 0;
 		if(scrolled > 1) scrolled = 1;
-		Logging.bar(scrolled);
+		//Logging.bar(scrolled);
 		updateBar();
 	}
 
