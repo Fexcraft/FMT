@@ -96,12 +96,14 @@ public class Field extends Element {
 
 	public Field consumer(Consumer<Field> cons){
 		consumer = cons;
-		onscroll(si -> {
-			float flat = scroll(si.sy() > 0 ? EditorRoot.RATE : -EditorRoot.RATE);
-			text(type_format(flat));
-			previous = text.text();
-			consumer.accept(this);
-		});
+		if(type.number()){
+			onscroll(si -> {
+				float flat = scroll(si.sy() > 0 ? EditorRoot.RATE : -EditorRoot.RATE);
+				text(type_format(flat));
+				previous = text.text();
+				consumer.accept(this);
+			});
+		}
 		return this;
 	}
 
