@@ -20,6 +20,7 @@ import java.util.LinkedHashSet;
 
 import static net.fexcraft.app.fmt.settings.Settings.GENERIC_BACKGROUND_1;
 import static net.fexcraft.app.fmt.utils.fvtm.ConfigEntry.OBJ_SUB_ENTRY;
+import static net.fexcraft.app.fmt.utils.fvtm.ConfigEntry.TEXT_ENTRY;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -113,12 +114,14 @@ public class FvtmConfigEditor extends WFileEditor {
 		private JsonValue value;
 		private SubKey skey;
 		private Field[] input;
+		private boolean wn;
 
 		public EntryElm(ConfigEntry entry, SubKey key, JsonValue val){
 			super();
 			this.entry = entry;
 			skey = key;
-			value = val;
+			wn = val == null;
+			value = wn ? entry.gendef() : val;
 			render_sub_even_if_invisible = true;
 		}
 
@@ -359,12 +362,11 @@ public class FvtmConfigEditor extends WFileEditor {
 						input[v].consumer(f -> ral.asMap().add(xyz[iv], f.parse_float()));
 					}
 					else{
-						if(value == null) value = entry.gendef();
 						while(value.asArray().size() < v) value.asArray().add(0f);
 						input[v].set(value.asArray().get(v).float_value());
 						input[v].consumer(f -> {
+							value.asArray().set(iv, new JsonValue(f.parse_float()));
 							fillMissing();
-							value.asArray().set(iv, value = new JsonValue(f.parse_float()));
 						});
 					}
 				}
@@ -377,16 +379,16 @@ public class FvtmConfigEditor extends WFileEditor {
 					input[0].set(Integer.parseInt(value.string_value().substring(1), 16));
 				}
 				input[0].consumer(f -> {
-					fillMissing();
 					value.value("#" + input[0].get_text());
+					fillMissing();
 				});
 			}
 			else if(entry.type.bool()){
 				BoolElm elm = new BoolElm(w - FWO, 2, FW);
 				add(elm.check_mode(check_mode));
-				elm.set(() -> value == null ? false : value.bool(), b -> {
-					fillMissing();
+				elm.set(() -> value.bool(), b -> {
 					value.value(b);
+					fillMissing();
 				});
 				elm.updtexcol();
 			}
@@ -395,7 +397,6 @@ public class FvtmConfigEditor extends WFileEditor {
 				add(list.pos(w - FWO, 2).check_mode(check_mode));
 				for(String en : entry.enums) list.addEntry(en, en);
 				list.onchange((key, val) -> {
-					fillMissing();
 					if(entry.type.separate() && value.isMap()){
 						if(ren.type.map()){
 							value = ral.asMap().rem(skey.key);
@@ -405,6 +406,7 @@ public class FvtmConfigEditor extends WFileEditor {
 						else value.asMap().add(entry.subs.get(0).name, key);
 					}
 					else value.value(key);
+					fillMissing();
 				});
 				if(entry.type.separate() && value.isMap()){
 					if(ren.type.map()){
@@ -423,10 +425,10 @@ public class FvtmConfigEditor extends WFileEditor {
 				add(input[0].pos(w - FWO, 2).check_mode(check_mode));
 				if(value != null) input[0].text(value.string_value());
 				input[0].consumer(f -> {
-					fillMissing();
 					if(entry.type == EntryType.INTEGER) value.value(f.parse_int());
 					else if(entry.type == EntryType.DECIMAL) value.value(f.parse_float());
 					else value.value(f.get_text());
+					fillMissing();
 				});
 			}
 		}
@@ -438,18 +440,25 @@ public class FvtmConfigEditor extends WFileEditor {
 		private void fillMissing(boolean check){
 			boolean incon = root instanceof EntryElmCon;
 			JsonValue ral = incon ? ((EntryElm)root.root).value : ((FvtmConfigEditor)root.root).map;
+			ConfigEntry ren = incon ? ((EntryElm)root.root).entry : TEXT_ENTRY;
 			if(check && incon){
 				((EntryElm)root.root).fillMissing();
 			}
-			if(value == null) value = entry.gendef();
 			if(ral.isMap()){
 				if(!ral.asMap().has(skey.key)){
 					ral.asMap().add(skey.key, value);
 				}
 			}
 			else{
-				if(!ral.asArray().contains(value)){
-					ral.asArray().add(value);
+				if(ren.type == EntryType.ARRAY){
+					if(!ral.asArray().contains(value)){
+						ral.asArray().set(skey.idx, value);
+					}
+				}
+				else{
+					if(!ral.asArray().contains(value)){
+						ral.asArray().add(value);
+					}
 				}
 			}
 		}
@@ -460,10 +469,10 @@ public class FvtmConfigEditor extends WFileEditor {
 			boolean incon = root instanceof EntryElmCon;
 			JsonValue ral = incon ? ((EntryElm)root.root).value : ((FvtmConfigEditor)root.root).map;
 			if(entry.type == EntryType.ARRAY && entry.subs != null){
-				if(value == null){
+				/*if(value == null){
 					if(ral.isMap()) ral.asMap().add(skey.key, value = entry.gendef());
 					else ral.asArray().set(skey.idx, value = entry.gendef());
-				}
+				}*/
 				JsonArray arr = value.asArray();
 				for(int i = 0; i < arr.size(); i++){
 					for(ConfigEntry conf : entry.subs){
@@ -472,7 +481,7 @@ public class FvtmConfigEditor extends WFileEditor {
 				}
 			}
 			else if(entry.type == EntryType.ARRAY_SIMPLE){
-				JsonArray arr = value == null || !value.isArray() ? null : value.asArray();
+				JsonArray arr = !value.isArray() ? null : value.asArray();
 				if(arr == null){
 					ral.asMap().add(skey.key, arr = new JsonArray());
 					if(value != null) arr.add(value);
@@ -485,9 +494,9 @@ public class FvtmConfigEditor extends WFileEditor {
 				}
 			}
 			else if(entry.type == EntryType.OBJECT && entry.subs != null){
-				if(value == null){
+				/*if(value == null){
 					ral.asMap().add(entry.name, value = entry.gendef());
-				}
+				}*/
 				JsonMap map = value.asMap();
 				LinkedHashSet<String> keys = new LinkedHashSet<>(map.value.keySet());
 				for(String key : keys){
@@ -506,9 +515,9 @@ public class FvtmConfigEditor extends WFileEditor {
 				}
 			}
 			else if(entry.type == EntryType.OBJECT_KEY_VAL){
-				if(value == null){
+				/*if(value == null){
 					if(ral.isMap()) ral.asMap().add(entry.name, value = entry.gendef());
-				}
+				}*/
 				if(entry.static_){
 					for(ConfigEntry conf : entry.subs){
 						container.add(new EntryElm(conf, conf.key(), get(value.asMap(), conf)), editor);
@@ -524,20 +533,19 @@ public class FvtmConfigEditor extends WFileEditor {
 			if(!entry.type.subtype() && !entry.static_){
 				add(new Element().pos(w - 120, 0).size(30, 30).texture("icons/configeditor/add").check_mode(check_mode)
 					.onclick(ci -> {
-						fillMissing();
 						if(entry.type == EntryType.ARRAY){
 							JsonMap sup = new JsonMap();
 							for(ConfigEntry conf : entry.subs){
 								container.add(new EntryElm(conf, new SubKey(value.asArray().size()), sup.get(conf.name)), editor);
 							}
 							value.asArray().add(sup);
-							root_refill();
+							updateSize();
 						}
 						else if(entry.type == EntryType.ARRAY_SIMPLE){
 							JsonArray arr = value.asArray();
 							arr.add(entry.subs.get(0).gendef());
 							container.add(new EntryElm(entry.subs.get(0), new SubKey(arr.size() - 1), arr.get(arr.size() - 1)), editor);
-							root_refill();
+							updateSize();
 						}
 						else if(entry.type == EntryType.OBJECT){
 							JsonMap map = value.asMap();
@@ -549,7 +557,7 @@ public class FvtmConfigEditor extends WFileEditor {
 							for(ConfigEntry conf : entry.subs){
 								sub.container.add(new EntryElm(conf, conf.key(), get(sup, conf)), editor);
 							}
-							root_refill();
+							updateSize();
 						}
 						else if(entry.type == EntryType.OBJECT_KEY_VAL){
 							JsonMap map = value.asMap();
@@ -566,9 +574,10 @@ public class FvtmConfigEditor extends WFileEditor {
 							if(nkey != null){
 								map.add(nkey, entry.subs.isEmpty() || entry.subs.get(0).type.separate() ? new JsonMap() : entry.subs.get(0).gendef());
 								container.add(new EntryElm(entry.subs.get(0), new SubKey(nkey), map.get(nkey)), editor);
-								root_refill();
+								updateSize();
 							}
 						}
+						fillMissing();
 					}).hint("workspace.configeditor.add"));
 			}
 		}
@@ -581,7 +590,7 @@ public class FvtmConfigEditor extends WFileEditor {
 
 		private void root_refill(){
 			if(root instanceof EntryElmCon) ((EntryElm)root.root).refill();
-			else editor.fill();
+			//else editor.fill();
 		}
 
 		private void updateValue(ConfigEntry ren, JsonValue ral){
