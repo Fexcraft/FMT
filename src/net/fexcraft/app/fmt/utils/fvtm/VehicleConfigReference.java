@@ -105,7 +105,7 @@ public class VehicleConfigReference extends ConfigReference {
 		entries.add(of("Catalog", OBJECT).add(
 			of("name", TEXT).def("Catalog Entry Name"),
 			of("parts", OBJECT_KEY_VAL).add(of(TEXT).def("pack-id:part-id")),
-			of("recipe", ARRAY_SIMPLE).add(of(TEXT).def("pack-id:item-id")),
+			of("recipe", ARRAY).add(of(OBJECT_KEY_VAL).add(TEXT_ENTRY)),
 			of("colors", OBJECT_KEY_VAL).add(of(COLOR)),
 			of("scale", DECIMAL).limit(1, 0.01f)
 		));
