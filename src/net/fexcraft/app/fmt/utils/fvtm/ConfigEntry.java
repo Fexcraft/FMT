@@ -176,4 +176,9 @@ public class ConfigEntry {
 		return this;
 	}
 
+	@Override
+	public String toString(){
+		return key().key + "-" + name + "-" + type;
+	}
+
 }
