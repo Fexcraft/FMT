@@ -72,7 +72,7 @@ public class TexGroupCom extends TTabCom {
 			.onclick(ci -> resizeGroup()).hoverable(true).color(GROUP_NORMAL.value).text_color(GENERIC_TEXT_2.value.packed));
 		container.add(new Element().size(FF, 30).pos(5, inc += 35).translate("tree.texture.group_generate")
 			.onclick(ci -> generateGroup()).hoverable(true).color(GROUP_NORMAL.value).text_color(GENERIC_TEXT_2.value.packed));
-		container.add(new Element().size(FF, 30).pos(5, inc).translate("tree.texture.group_select")
+		container.add(new Element().size(FF, 30).pos(5, inc += 35).translate("tree.texture.group_select")
 			.onclick(ci -> selectGroup()).hoverable(true).color(GROUP_NORMAL.value).text_color(GENERIC_TEXT_2.value.packed));
 		orderComponents();
 	}
