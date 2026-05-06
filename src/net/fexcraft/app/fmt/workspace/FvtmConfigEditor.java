@@ -112,6 +112,7 @@ public class FvtmConfigEditor extends WFileEditor {
 		private EntryElmCon container;
 		private ConfigEntry entry;
 		private JsonValue value;
+		private Element counter;
 		private SubKey skey;
 		private Field[] input;
 		private boolean wn;
@@ -140,6 +141,7 @@ public class FvtmConfigEditor extends WFileEditor {
 				.text_autoscale().check_mode(check_mode).onclick(ci -> toggleContainer(null)));
 			if(entry.type.subs()){
 				add(container = new EntryElmCon());
+				add(counter = new TextElm(w * 0.4f, 2, w * 0.25f).check_mode(check_mode));
 				updateSize();
 			}
 			ConfigEntry ren = incon ? ((EntryElm)root.root).entry : ConfigEntry.TEXT_ENTRY;
@@ -615,6 +617,7 @@ public class FvtmConfigEditor extends WFileEditor {
 		private void updateSize(){
 			if(container == null) return;
 			container.updateElmAndSize();
+			counter.text(value == null ? "n" : value.isMap() ? value.asMap().size() : value.asArray().size());
 			if(root instanceof EntryElmCon) ((EntryElm)root.root).updateSize();
 			else editor.container.updateBar();
 		}
