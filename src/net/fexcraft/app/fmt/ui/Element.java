@@ -500,8 +500,9 @@ public class Element {
 	}
 
 	public Element getElmAt(double x, double y){
-		if(!visible) return null;
-		if(check_mode_fail()) return null;
+		if(!visible || check_mode_fail()){
+			if(!render_sub_even_if_invisible || elements == null) return null;
+		}
 		Element ret;
 		if(elements != null){
 			for(Element elm : elements){
