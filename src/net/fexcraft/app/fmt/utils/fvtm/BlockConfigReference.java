@@ -21,6 +21,7 @@ public class BlockConfigReference extends ConfigReference {
         entries.add(of("ItemBurnTime", INTEGER).limit(0, 0));
         entries.add(of("OreDictionary", TEXT));
         entries.add(of("Model", MODELLOC));
+        entries.add(of("ModelData", SEPARATE).static_(true).of(ModelDataReference.INSTANCE));
         entries.add(of("AABBs", OBJECT_KEY_VAL).add(of(TEXT)).add(of(ARRAY).size(6).add(of(TEXT), of(INTEGER), of(INTEGER), of(INTEGER), of(INTEGER), of(INTEGER))));
         entries.add(of("BlockType", ENUM).enums(BLOCK_TYPES));
         entries.add(of("Material", TEXT).def("ROCK", true));//TODO
