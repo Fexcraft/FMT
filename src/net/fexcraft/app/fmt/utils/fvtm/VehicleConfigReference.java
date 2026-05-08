@@ -28,7 +28,7 @@ public class VehicleConfigReference extends ConfigReference {
 		entries.add(of("Description", ARRAY_SIMPLE).add(of(TEXT).def("description entry", true)));
 		entries.add(of("Categories", ARRAY_SIMPLE).alt("Category").add(TEXT_ENTRY));
 		entries.add(of("Model", MODELLOC));
-		entries.add(of("ModelData", SEPARATE));
+		entries.add(of("ModelData", SEPARATE).static_(true).of(ModelDataReference.INSTANCE));
 		entries.add(of("Textures", ARRAY_SIMPLE).add(of(TEXLOC)).alt("Texture"));
 		entries.add(of("ColorChannels", OBJECT_KEY_VAL).add(of(COLOR).def("#fdfdfd", true)));
 		entries.add(of("ItemTexture", TEXLOC));
