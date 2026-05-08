@@ -20,6 +20,7 @@ public class ConfigEntry {
     public boolean required;
     public boolean def_ok;
     public ArrayList<ConfigEntry> subs;
+	public ConfigReference separate;
     public int defi;
     public int mini;
     public int maxi;
@@ -179,6 +180,11 @@ public class ConfigEntry {
 	@Override
 	public String toString(){
 		return key().key + "-" + name + "-" + type;
+	}
+
+	public ConfigEntry of(ConfigReference ref){
+		separate = ref;
+		return this;
 	}
 
 }
