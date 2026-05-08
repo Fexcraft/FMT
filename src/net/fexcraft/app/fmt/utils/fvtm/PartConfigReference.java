@@ -27,7 +27,7 @@ public class PartConfigReference extends ConfigReference {
 		entries.add(of("CreativeTab", TEXT).def("default", true));
 		entries.add(of("Description", ARRAY_SIMPLE).add(of(TEXT).def("description entry", true)));
 		entries.add(of("Model", MODELLOC));
-		entries.add(of("ModelData", SEPARATE));
+		entries.add(of("ModelData", SEPARATE).static_(true).of(ModelDataReference.INSTANCE));
 		entries.add(of("Textures", ARRAY_SIMPLE).add(of(TEXLOC)).alt("Texture"));
 		entries.add(of("ItemTexture", TEXLOC));
 		entries.add(of("Category", ARRAY_SIMPLE).add(TEXT_ENTRY));
