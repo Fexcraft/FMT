@@ -77,25 +77,6 @@ public class FvtmConfigEditor extends WFileEditor {
 		return null;
 	}
 
-	private ConfigReference getSubRef(String type, String arg){
-		switch(type){
-			case "modeldata": return ModelDataReference.INSTANCE;
-			case "installation":{
-				switch(arg){
-					case "default": return PartInstallConfigReference.DEFAULT;
-					case "wheel": return PartInstallConfigReference.WHEEL;
-					case "tire": return PartInstallConfigReference.TIRE;
-					case "bogie": return PartInstallConfigReference.BOGIE;
-				}
-				return null;
-			}
-			case "functions":{
-				return PartFunctionConfigReference.REFERENCES.get(arg);
-			}
-		}
-		return null;
-	}
-
 	@Override
 	protected String get_editor_name(){
 		return "Fvtm Config Editor";
@@ -141,7 +122,9 @@ public class FvtmConfigEditor extends WFileEditor {
 				.text_autoscale().check_mode(check_mode).onclick(ci -> toggleContainer(null)));
 			if(entry.type.subs()){
 				add(container = new EntryElmCon());
-				add(counter = new TextElm(w * 0.4f, 2, w * 0.25f).check_mode(check_mode));
+				if(!entry.type.enumerate()){
+					add(counter = new TextElm(w * 0.4f, 2, w * 0.25f).check_mode(check_mode));
+				}
 				updateSize();
 			}
 			ConfigEntry ren = incon ? ((EntryElm)root.root).entry : ConfigEntry.TEXT_ENTRY;
@@ -197,7 +180,9 @@ public class FvtmConfigEditor extends WFileEditor {
 			if(entry.type.subs()){
 				if(!entry.type.subtype()) refill();
 			}
-			else addField(ren, ral, FW, FWO);
+			if(!entry.type.subs() || entry.type.enumerate()){
+				addField(ren, ral, FW, FWO);
+			}
 		}
 
 		private void addSelector(boolean edit){
@@ -395,6 +380,7 @@ public class FvtmConfigEditor extends WFileEditor {
 				elm.updtexcol();
 			}
 			else if(entry.type.enumerate()){
+				if(entry.type.separate()) FW -= 30;
 				DropList<String> list = new DropList<>(FW);
 				add(list.pos(w - FWO, 2).check_mode(check_mode));
 				for(String en : entry.enums) list.addEntry(en, en);
@@ -403,9 +389,9 @@ public class FvtmConfigEditor extends WFileEditor {
 						if(ren.type.map()){
 							value = ral.asMap().rem(skey.key);
 							ral.asMap().add(key, value);
-							root_refill();
 						}
 						else value.asMap().add(entry.subs.get(0).name, key);
+						root_refill();
 					}
 					else value.value(key);
 					fillMissing();
@@ -469,6 +455,7 @@ public class FvtmConfigEditor extends WFileEditor {
 			if(container == null) return;
 			container.remElmIf(EntryElm.class::isInstance);
 			boolean incon = root instanceof EntryElmCon;
+			ConfigEntry ren = incon ? ((EntryElm)root.root).entry : ConfigEntry.TEXT_ENTRY;
 			JsonValue ral = incon ? ((EntryElm)root.root).value : ((FvtmConfigEditor)root.root).map;
 			if(entry.type == EntryType.ARRAY && entry.subs != null){
 				/*if(value == null){
@@ -528,6 +515,29 @@ public class FvtmConfigEditor extends WFileEditor {
 					});
 				}
 			}
+			else if(entry.type == EntryType.ENUM_SEPARATE && entry.sep_enums != null){
+				String key = ren.type == EntryType.OBJECT_KEY_VAL ? skey.key : null;
+				if(key == null){//EntryType.OBJECT
+					if(value == null) key = entry.def;
+					else if(!value.isMap()) key = value.string_value();
+					else key = value.asMap().getString(entry.subs.get(0).key().key, entry.def);
+				}
+				ConfigReference ref = entry.sep_enums.get(key);
+				if(ref.entries.size() > 0 && ref.entries.get(0).type == EntryType.OBJECT){
+					value.asMap().entries().forEach(e -> {
+						EntryElm sub = new EntryElm(OBJ_SUB_ENTRY, new SubKey(e.getKey()), e.getValue());
+						container.add(sub, editor);
+						for(ConfigEntry conf : ref.entries.get(0).subs){
+							sub.container.add(new EntryElm(conf, conf.key(), get(e.getValue().asMap(), conf)), editor);
+						}
+					});
+				}
+				else{
+					for(ConfigEntry conf : ref.entries){
+						container.add(new EntryElm(conf, conf.key(), value.isMap() ? get(value.asMap(), conf) : null), editor);
+					}
+				}
+			}
 			else if(entry.type == EntryType.OBJECT_KEY_VAL){
 				/*if(value == null){
 					if(ral.isMap()) ral.asMap().add(entry.name, value = entry.gendef());
@@ -544,7 +554,7 @@ public class FvtmConfigEditor extends WFileEditor {
 				}
 			}
 			updateSize();
-			if(!entry.type.subtype() && !entry.static_){
+			if(!entry.type.subtype() && !entry.static_ && entry.type != EntryType.SEPARATE){
 				add(new Element().pos(w - 120, 0).size(30, 30).texture("icons/configeditor/add").check_mode(check_mode)
 					.onclick(ci -> {
 						if(entry.type == EntryType.ARRAY){
@@ -604,6 +614,7 @@ public class FvtmConfigEditor extends WFileEditor {
 
 		private void root_refill(){
 			if(root instanceof EntryElmCon) ((EntryElm)root.root).refill();
+			else refill();
 			//else editor.fill();
 		}
 
@@ -629,7 +640,9 @@ public class FvtmConfigEditor extends WFileEditor {
 		private void updateSize(){
 			if(container == null) return;
 			container.updateElmAndSize();
-			counter.text(value == null ? "n" : value.isMap() ? value.asMap().size() : value.asArray().size());
+			if(counter != null){
+				counter.text(value == null ? "n" : value.isMap() ? value.asMap().size() : value.isArray() ? value.asArray().size() : 0);
+			}
 			if(root instanceof EntryElmCon) ((EntryElm)root.root).updateSize();
 			else editor.container.updateBar();
 		}
