@@ -516,6 +516,18 @@ public class FvtmConfigEditor extends WFileEditor {
 					}
 				}
 			}
+			else if(entry.type == EntryType.SEPARATE && entry.separate.entries != null){
+				if(entry.static_){
+					for(ConfigEntry conf : entry.separate.entries){
+						container.add(new EntryElm(conf, conf.key(), get(value.asMap(), conf)), editor);
+					}
+				}
+				else{
+					value.asMap().entries().forEach(e -> {
+						container.add(new EntryElm(entry.separate.entries.get(0), new SubKey(e.getKey()), e.getValue()), editor);
+					});
+				}
+			}
 			else if(entry.type == EntryType.OBJECT_KEY_VAL){
 				/*if(value == null){
 					if(ral.isMap()) ral.asMap().add(entry.name, value = entry.gendef());
