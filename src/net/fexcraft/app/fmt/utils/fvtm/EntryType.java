@@ -34,6 +34,7 @@ public enum EntryType {
         OBJECT.sethassub().setmap();
         OBJECT_SUB.sethassub().setmap().setsub();
         OBJECT_KEY_VAL.sethassub().setmap();
+        SEPARATE.sethassub().setmap();
     }
 
     private boolean has_sub = false;
@@ -107,7 +108,7 @@ public enum EntryType {
     }
 
     public boolean select(){
-        return this == PACKID || this == TEXLOC || this == MODELLOC || this.vector() || separate();
+        return this == PACKID || this == TEXLOC || this == MODELLOC || this.vector();
     }
 
 	public boolean map(){
