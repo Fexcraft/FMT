@@ -34,7 +34,9 @@ public enum EntryType {
         OBJECT.sethassub().setmap();
         OBJECT_SUB.sethassub().setmap().setsub();
         OBJECT_KEY_VAL.sethassub().setmap();
+        //
         SEPARATE.sethassub().setmap();
+        ENUM_SEPARATE.sethassub().setmap();
     }
 
     private boolean has_sub = false;
