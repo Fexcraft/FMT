@@ -17,7 +17,7 @@ public class SignConfigReference extends ConfigReference {
 		entries.add(of("CreativeTab", TEXT).def("default", true));
 		entries.add(of("Description", ARRAY_SIMPLE).add(of(TEXT).def("description entry", true)));
 		entries.add(of("Model", MODELLOC));
-		entries.add(of("ModelData", SEPARATE));
+		entries.add(of("ModelData", SEPARATE).static_(true).of(ModelDataReference.INSTANCE));
 		entries.add(of("Textures", ARRAY_SIMPLE).add(of(TEXLOC)).alt("Texture"));
 		entries.add(of("Base", BOOLEAN).def(false));
 		entries.add(of("Text", BOOLEAN).def(false));
