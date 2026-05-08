@@ -1,8 +1,9 @@
 package net.fexcraft.app.fmt.utils.fvtm;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
@@ -20,6 +21,7 @@ public class ConfigEntry {
     public boolean required;
     public boolean def_ok;
     public ArrayList<ConfigEntry> subs;
+	public Map<String, ConfigReference> sep_enums;
 	public ConfigReference separate;
     public int defi;
     public int mini;
@@ -105,8 +107,19 @@ public class ConfigEntry {
         return this;
     }
 
-    public ConfigEntry enums(String... values){
-        enums = values;
+	public ConfigEntry enums(Collection<String> values){
+		enums = values.toArray(new String[0]);
+		return this;
+	}
+
+	public ConfigEntry enums(String... values){
+		enums = values;
+		return this;
+	}
+
+    public ConfigEntry refs(Map<String, ConfigReference> values){
+		enums = values.keySet().toArray(new String[0]);
+        sep_enums = values;
         return this;
     }
 
