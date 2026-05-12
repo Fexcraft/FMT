@@ -28,7 +28,7 @@ public class TextureTreeTab extends TreeTab {
 		TOTALS_FORMAT = Translator.translate("tree.info.textures_groups");
 		over.add(totals = new Element().pos(20, 0).size(FF, FS).translate(TOTALS_FORMAT, "...").text_autoscale());
 		over.add(new Element().pos(FO + 20, 28).size(FF, FS).color(GENERIC_FIELD.value).hoverable(true).onclick(ci -> {
-			TextureManager.addGroup(null, true);
+			TextureManager.addGroup((String)null, true);
 		}).translate("tree.texture.add_group").text_centered(true));
 		over.add(new Element().pos(FO + 20, 60).size(FF, FS).color(GENERIC_FIELD.value).hoverable(true).onclick(ci -> {
 			AutoUVPositioner.runAutoPos();
