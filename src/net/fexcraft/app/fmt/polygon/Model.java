@@ -77,7 +77,6 @@ public class Model {
 	public boolean render_textured;
 	public TextureGroup texgroup = null;
 	public Pivot sel_pivot = null;
-	public String texhelper;
 	public boolean visible = true;
 	public boolean helper;
 	public boolean subhelper;
@@ -140,8 +139,7 @@ public class Model {
 	}
 
 	public void bindtex(){
-		if(texgroup != null) texgroup.texture.bind();
-		else if(texhelper != null) TextureManager.bind(texhelper);
+		if(texgroup.texture != null) texgroup.texture.bind();
 	}
 
 	/*public static final Polyhedron<GLObject> centermarker0 = new Generator<GLObject>(null, Generator.Type.CUBOID)
@@ -165,7 +163,7 @@ public class Model {
 
 	public void render(float alpha){
 		if(!visible) return;
-		DrawMode mode = DrawMode.textured(render_textured || texhelper != null);
+		DrawMode mode = DrawMode.textured(render_textured);
 		for(Pivot pivot : pivots){
 			PolyRenderer.setPivot(pivot);
 			if(Settings.PMARKER.value){
