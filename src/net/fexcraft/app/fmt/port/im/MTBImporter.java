@@ -151,8 +151,8 @@ public class MTBImporter implements Importer {
                             }
                         }
                         if(!empty){
-                            TextureManager.addGroup(new TextureGroup("default"));
-                            model.texgroup = TextureManager.getGroup("default");
+                            TextureManager.addGroup(new TextureGroup("group-default"), false);
+                            model.texgroup = TextureManager.getGroup("group-default");
                             model.texgroup.reAssignTexture();
                             UpdateHandler.update(new ModelTexGroup(FMT.MODEL, FMT.MODEL.texgroup));
                         }
