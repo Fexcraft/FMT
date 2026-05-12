@@ -183,8 +183,8 @@ public class TextureManager {
 	
 	// GROUPS
 
-	public static TextureGroup getGroup(String id){
-		for(TextureGroup group : GROUPS) if(group.name.equals(id)) return group;
+	public static TextureGroup getGroup(String type, String id){
+		for(TextureGroup group : GROUPS) if(group.type.equals(type) && group.name.equals(id)) return group;
 		return null;
 	}
 
@@ -225,7 +225,7 @@ public class TextureManager {
 			while(hasGroup(name + i)) i++;
 			name += i;
 		}
-		TextureGroup group = new TextureGroup(name, new File("./temp/"));
+		TextureGroup group = new TextureGroup("group", name, new File("./temp/"));
 		addGroup(group, false);
 		if(show){
 			FMT.UI.createDialog(300, 120, "texture.manager")
