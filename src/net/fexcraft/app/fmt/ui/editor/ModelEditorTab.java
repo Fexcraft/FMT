@@ -27,7 +27,7 @@ public class ModelEditorTab extends EditorTab {
 	private BoolElm rtex;
 	//private DropList<Integer> texx;
 	//private DropList<Integer> texy;
-	private DropList<String> texg;
+	private DropList<TextureGroup> texg;
 	private DropList<ModelOrientation> orient;
 
 	public ModelEditorTab(){
@@ -58,8 +58,8 @@ public class ModelEditorTab extends EditorTab {
 			texy.addEntry(res > 2000 ? res / 1024 + "K" : res + "", res);
 		}*/
 		general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.texture_group"));
-		general.add((texg = new DropList<String>(FF).onchange((key, val) -> {
-			FMT.MODEL.texgroup = TextureManager.getGroup(val);
+		general.add((texg = new DropList<TextureGroup>(FF).onchange((key, val) -> {
+			FMT.MODEL.texgroup = val;
 			UpdateHandler.update(new UpdateEvent.ModelTexGroup(FMT.MODEL, FMT.MODEL.texgroup));
 		})).pos(FO, next_y_pos(1)));
 		general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.orientation"));
@@ -104,7 +104,7 @@ public class ModelEditorTab extends EditorTab {
 	private void refreshTexGroups(){
 		texg.clear();
 		for(TextureGroup group : TextureManager.getGroups()){
-			texg.addEntry(group.name, group.name);
+			texg.addEntry(group.name, group);
 		}
 		if(FMT.MODEL == null || FMT.MODEL.texgroup == null) texg.selectEntry(0);
 		else texg.selectKey(FMT.MODEL.texgroup.name);
