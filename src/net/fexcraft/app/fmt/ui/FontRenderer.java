@@ -103,7 +103,7 @@ public class FontRenderer {
 			}
 		}
 		g.dispose();
-		File file = new File("./resources/textures/font/" + type + ".png");
+		File file = new File("./temp/font/" + type + ".png");
 		if(!file.exists()){
 			file.getParentFile().mkdirs();
 			Logging.log("Font Type " + type + " Image not found, saving a new one.");
