@@ -23,7 +23,7 @@ public class ConfigEditorTab extends EditorTab {
 	public void init(Object... objs){
 		super.init(objs);
 		next_y_elm_pos = 5;
-		container.add(pack_utils = new ETabCom("pack_utils"), "editor.config.pack_utils", 220);
+		container.add(pack_utils = new ETabCom("pack_utils"), "editor.config.pack_utils", 260);
 		pack_utils.add(new RunElm(FO, next_y_pos(1), FF, "editor.config.pack_utils.pack_new", ci -> ConfigUtils.createNewFvtmPack()));
 		pack_utils.add(new RunElm(FO, next_y_pos(1), FF, "editor.config.pack_utils.gen_asset_dirs", ci -> ConfigUtils.genAssetDirs()));
 		pack_utils.add(new RunElm(FO, next_y_pos(1), FF, "editor.config.pack_utils.gen_icons", ci -> ConfigUtils.genIconsInPack()));
@@ -31,6 +31,7 @@ public class ConfigEditorTab extends EditorTab {
 		pack_utils.add(new RunElm(FO, next_y_pos(1), FF, "editor.config.pack_utils.icon_from_view",
 			ci -> FMT.WORKSPACE.selectPack(pack -> FMT.UI.add(new IconFrameFrame(), pack))));
 		pack_utils.add(new RunElm(FO, next_y_pos(1), FF, "editor.config.pack_utils.road_assets", ci -> ConfigUtils.genRoadAssets()));
+		pack_utils.add(new RunElm(FO, next_y_pos(1.5f), FF, "editor.config.pack_utils.release", ci -> ConfigUtils.createRelease()));
 		//
 		next_y_elm_pos = 5;
 		container.add(file_utils = new ETabCom("file_utils"), "editor.config.file_utils", 100);
