@@ -15,13 +15,13 @@ public class TextureUpdate extends TimerTask {
 		for(TextureGroup group : TextureManager.getGroups()){
 			try{
 				if(group.texture == null || group.texture.getFile() == null){
-					log("TEXGROUP '" + group.name + "' HAS NO FILE OR TEXTURE LINKED YET.");
+					log("TEXGROUP '" + group.typeid() + "' HAS NO FILE OR TEXTURE LINKED YET.");
 					continue;
 				}
 				if(group.texture.getFile().lastModified() > group.texture.lastedit){
 					group.texture.lastedit = group.texture.getFile().lastModified();
 					group.texture.reload();
-					log("Changes detected, reloading texture group '" + group.name + "'.");
+					log("Changes detected, reloading texture group '" + group.typeid() + "'.");
 				}
 			}
 			catch(Exception e){
