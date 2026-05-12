@@ -68,7 +68,7 @@ public class PNGExporter implements Exporter {
 		image = null;
 		boolean textured = settings.get(0).value();
 		String grid = settings.get(1).value();
-		TextureGroup group = grid.equals("none") ? null : TextureManager.getGroup(grid);
+		TextureGroup group = grid.equals("none") ? null : TextureManager.getGroup("group", grid);
 		if(group == null){
 			return "exporter.png.group_not_found";
 		}
