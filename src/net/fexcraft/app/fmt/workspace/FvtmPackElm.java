@@ -17,9 +17,11 @@ public class FvtmPackElm extends DirElm {
 	public final HashMap<FvtmType, List<FileElm>> content = new HashMap<>();
 	public final List<FileElm> textures = new ArrayList<>();
 	public final List<FileElm> models = new ArrayList<>();
+	public final File addon_file;
 	public final LangCache lang;
 	public final String name;
 	public final String id;
+	public String version;
 
 	public FvtmPackElm(File file, String id){
 		super(VFileType.FVTM_FOLDER, file);
@@ -28,8 +30,10 @@ public class FvtmPackElm extends DirElm {
 			content.put(val, new ArrayList<>());
 		}
 		lang = new LangCache(this);
-		JsonMap map = JsonHandler.parse(new File(file, "assets/" + id + "/addonpack.fvtm")).asMap();
+		addon_file = new File(file, "assets/" + id + "/addonpack.fvtm");
+		JsonMap map = JsonHandler.parse(addon_file).asMap();
 		name = map.get("Name", id);
+		version = map.get("Version", "1.0.0");
 	}
 
 }
