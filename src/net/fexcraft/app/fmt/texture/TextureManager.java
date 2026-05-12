@@ -205,14 +205,15 @@ public class TextureManager {
 		return GROUPS;
 	}
 
-	public static void addGroup(TextureGroup group){
+	public static void addGroup(TextureGroup group, boolean helper){
 		GROUPS.add(group);
-		UpdateHandler.update(new TexGroupAdded(group));
+		group.helper = helper;
+		if(!helper) UpdateHandler.update(new TexGroupAdded(group));
 	}
 
 	public static void clearGroups(){
 		for(TextureGroup group : GROUPS){
-			UpdateHandler.update(new TexGroupRemoved(group));
+			if(!group.helper) UpdateHandler.update(new TexGroupRemoved(group));
 		}
 		GROUPS.clear();
 	}
@@ -225,7 +226,7 @@ public class TextureManager {
 			name += i;
 		}
 		TextureGroup group = new TextureGroup(name, new File("./temp/"));
-		addGroup(group);
+		addGroup(group, false);
 		if(show){
 			FMT.UI.createDialog(300, 120, "texture.manager")
 				.addText(0, "texture.added_group")
