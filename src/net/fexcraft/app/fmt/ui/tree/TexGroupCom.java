@@ -84,7 +84,7 @@ public class TexGroupCom extends TTabCom {
 			.addRowElm(1, field)
 			.consumer(d -> {
 				String name = field.get_text();
-				if(TextureManager.getGroup(name) != null){
+				if(TextureManager.getGroup("group", name) != null){
 					FMT.UI.createDialog(500, 120, "tree.texture.rename.title")
 						.addText(0, "tree.texture.rename.duplicate")
 						.addText(1, name)
