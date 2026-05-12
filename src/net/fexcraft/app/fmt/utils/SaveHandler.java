@@ -1,6 +1,7 @@
 package net.fexcraft.app.fmt.utils;
 
 import static net.fexcraft.app.fmt.update.UpdateHandler.update;
+import static net.fexcraft.app.fmt.utils.Logging.bar;
 import static net.fexcraft.app.fmt.utils.Logging.log;
 
 import java.io.ByteArrayInputStream;
@@ -410,7 +411,9 @@ public class SaveHandler {
 			fileout.close();
 			if(!backup){
 				if(file != null){
-					log("Saved model as FMTB " + (arr.length > 1 ? " with texture." : "."));
+					String str = Translator.translate(arr.length > 1 ? "saveload.info.saved_textured" : "saveload.info.saved");
+					log(str);
+					bar(str);
 				}
 				if(Settings.OPEN_FOLDER_AFTER_SAVE.value && open && file.getParentFile() != null){
 					FMT.openLink(file.getParentFile().getAbsolutePath());
