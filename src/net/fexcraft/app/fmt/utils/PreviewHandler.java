@@ -16,7 +16,7 @@ public class PreviewHandler {
 	public static Model SELECTED = null;
 
 	public static Model loadFrame(File file){
-		Model model = new Model(null, "");
+		Model model = new Model(file, "");
 		model.helper = true;
 		model.name = "frame/" + model.name;
 		//
@@ -25,7 +25,7 @@ public class PreviewHandler {
 	}
 
 	public static Model loadFMTB(File file){
-		Model model = new Model(null, "");
+		Model model = new Model(file, "");
 		model.helper = true;
 		SaveHandler.open(model, file, true);
 		if(!model.name.startsWith("fmtb/")) model.name = "fmtb/" + model.name;
@@ -34,9 +34,8 @@ public class PreviewHandler {
 	}
 
 	public static Model load(File file, Importer porter, JsonMap map){
-		Model model = new Model(null, map.getString("name", file.getName()));
+		Model model = new Model(file, map.getString("name", file.getName()));
 		model.helper = true;
-		model.file = file;
 		if(!model.name.startsWith("import/")) model.name = "import/" + model.name;
 		porter._import(model, file);
 		add(model);
