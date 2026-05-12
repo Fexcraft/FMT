@@ -73,9 +73,8 @@ public class SaveHandler {
 				}
 				else if(elm.getName().equals("texture.png")){
 					try{ //loads in old texture files
-						String gid = preview ? model.uuid + "-default" : "group-default";
-						TextureManager.addGroup(model.texgroup = new TextureGroup(gid), preview);
-						TextureManager.loadFromStream(zip.getInputStream(elm), gid, false, true);
+						TextureManager.addGroup(model.texgroup = new TextureGroup(preview ? model.uuid.toString() : "group", "default"), preview);
+						TextureManager.loadFromStream(zip.getInputStream(elm), model.texgroup.typeid(), false, true);
 						model.texgroup.reAssignTexture();
 						model.recompile();
 					}
@@ -86,9 +85,8 @@ public class SaveHandler {
 				else if(elm.getName().startsWith("texture-")){
 					try{
 						String group = elm.getName().substring(elm.getName().indexOf("-") + 1).replace(".png", "");
-						group = preview ? model.uuid + "-" + group : "group-" + group;
-						TextureManager.loadFromStream(zip.getInputStream(elm), group, false, true);
-						TextureManager.getGroup(group).reAssignTexture();
+						TextureManager.loadFromStream(zip.getInputStream(elm), (preview ? model.uuid + "-" : "group-") + group, false, true);
+						TextureManager.getGroup(preview ? model.uuid.toString() : "group", group).reAssignTexture();
 					}
 					catch(IOException e){
 						log(e);
@@ -151,25 +149,20 @@ public class SaveHandler {
 			return model;
 		}
 		if(map.has("textures")){
-			String pref = preview ? model.uuid + "-" : "group-";
+			String type = preview ? model.uuid.toString() : "group";
 			if(map.get("textures").isArray()){//old format
 				map.getArrayElements("textures").forEach(elm -> {
-					TextureManager.addGroup(new TextureGroup(pref + elm.string_value()), preview);
+					TextureManager.addGroup(new TextureGroup(type, elm.string_value()), preview);
 				});
 			}
 			else{
 				for(Entry<String, JsonValue<?>> tex : map.getMap("textures").entries()){
-					TextureManager.addGroup(new TextureGroup(pref + tex.getKey(), tex.getValue().asMap()), preview);
+					TextureManager.addGroup(new TextureGroup(type, tex.getKey(), tex.getValue().asMap()), preview);
 				}
 			}
 		}
 		if(map.has("texture_group")){
-			if(preview){
-				model.texgroup = TextureManager.getGroup(model.uuid + "-" + map.get("texture_group").string_value());
-			}
-			else{
-				model.texgroup = TextureManager.getGroup("group-" + map.get("texture_group").string_value());
-			}
+			model.texgroup = TextureManager.getGroup(preview ? model.uuid.toString() : "group", map.get("texture_group").string_value());
 			if(texSizeX > 0) model.texgroup.width = texSizeX;
 			if(texSizeY > 0) model.texgroup.height = texSizeY;
 			model.render_textured = map.getBoolean("render_textured", true);
@@ -208,7 +201,7 @@ public class SaveHandler {
 						group.texhelper = model.uuid + "-" + jsn.get("texture_group").string_value();
 					}
 					else{
-						group.texgroup = TextureManager.getGroup(jsn.get("texture_group").string_value());
+						group.texgroup = TextureManager.getGroup("group", jsn.get("texture_group").string_value());
 						group.texgroup.width = jsn.get("texture_size_x").integer_value();
 						group.texgroup.height = jsn.get("texture_size_y").integer_value();
 					}
