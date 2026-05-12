@@ -14,11 +14,17 @@ import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.utils.Formatter;
+import org.apache.commons.io.FileUtils;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -55,53 +61,8 @@ public class ConfigUtils {
 				map.add("pack", new JsonMap("description", "Pack Resources", "pack_format", 3));
 				JsonHandler.print(new File(pr, "/pack.mcmeta"), map, JsonHandler.PrintOption.DEFAULT);
 				//
-				map = new JsonMap();
-				map.add("schemaVersion", 1);
-				map.add("id", pid);
-				map.add("version", "1.0.0");
-				map.add("name", nam);
-				map.add("description", "A pack for FVTM");
-				map.add("authors", SessionHandler.isLoggedIn() ? new JsonArray(SessionHandler.getUserName()) : new JsonArray());
-				map.add("contact", new JsonMap(
-					"homepage", "https://fexcraft.net/",
-					"sources", "https://github.com/Fexcraft/FMT"));
-				map.add("license", "ARR");
-				map.add("environment", "*");
-				map.add("entrypoints", new JsonMap());
-				map.add("mixins", new JsonArray());
-				map.add("depends", new JsonMap(
-					"fabricloader", "*",
-					"minecraft", "*",
-					"java", "*",
-					"fabric-api", "*",
-					"fvtm", "*",
-					"fcl", "*"
-				));
-				JsonHandler.print(new File(pr, "/fabric.mod.json"), map, JsonHandler.PrintOption.DEFAULT);
-				//
-				try{
-					File fl = new File(pr, "/META-INF/mods.toml");
-					fl.getParentFile().mkdirs();
-					FileWriter writer = new FileWriter(fl);
-					writer.write("modLoader=\"javafml\"\n");
-					writer.write("loaderVersion=\"[47,)\"\n");
-					writer.write("license=\"All Rights Reserved\"\n");
-					writer.write("issueTrackerURL=\"https://enter.your.url/here\"\n");
-					writer.write("[[mods]]\n");
-					writer.write("modId=\"fvtm\"\n");
-					writer.write("version=\"1.0.0\"\n");
-					writer.write("displayName=\"" + nam + "\"\n");
-					writer.write("displayURL=\"https://fexcraft.net/wiki/mod/fvtm\"\n");
-					writer.write("credits=\"Generated using FMT\" #optional\n");
-					writer.write("authors=\"YourNameHere\"\n");
-					writer.write("displayTest=\"IGNORE_ALL_VERSION\"\n\n");
-					writer.write("description='''A pack for FVTM'''\n");
-					writer.flush();
-					writer.close();
-				}
-				catch(IOException e){
-					e.printStackTrace();
-				}
+				addFabricInfoIfMissing(pr, pid, nam);
+				add20InfoIfMissing(pr, nam);
 				//
 				LangCache.genLangJson(new File(pr, "/assets/" + pid + "/lang/en_us.json"));
 				LangCache.genLangFile(new File(pr, "/assets/" + pid + "/lang/en_us.lang"));
@@ -357,6 +318,143 @@ public class ConfigUtils {
 				e.printStackTrace();
 			}
 		});
+	}
+
+	public static void createRelease(){
+		FMT.WORKSPACE.selectPack(pack -> {
+			Field pkver = new Field(Field.FieldType.TEXT, 490);
+			FMT.UI.createDialog(500, 120, "editor.config.pack_utils.release")
+				.addText(0, "editor.config.pack_utils.release.version")
+				.addRowElm(1, pkver)
+				.set_confirm(d -> {
+					pack.version = pkver.get_text();
+					add20InfoIfMissing(pack.file, pack.name);
+					addFabricInfoIfMissing(pack.file, pack.id, pack.name);
+					//
+					JsonMap map = JsonHandler.parse(pack.addon_file);
+					map.get("Version").value(pack.version);
+					JsonHandler.print(pack.addon_file, map);
+					//
+					File file = new File(pack.file, "/fabric.mod.json");
+					map = JsonHandler.parse(file);
+					map.get("version").value(pack.version);
+					JsonHandler.print(file, map);
+					//
+					file = new File(pack.file, "/META-INF/mods.toml");
+					try{
+						String str = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+						str = str.replaceAll("version=\".*\"", "version=\"" + pack.version + "\"");
+						FileUtils.writeStringToFile(file, str, StandardCharsets.UTF_8);
+					}
+					catch(IOException e){
+						e.printStackTrace();
+					}
+					//
+					File rel = new File(pack.file, "release/");
+					if(!rel.exists()) rel.mkdirs();
+					//
+					file = new File(rel, pack.id + "-" + pack.version + "-fabric.jar");
+					try{
+						ZipOutputStream stream = includeGeneralFiles(pack, file);
+						includeFile(stream, new File(pack.file, "fabric.mod.json"), null);
+						stream.close();
+					}
+					catch(Exception e){
+						e.printStackTrace();
+					}
+					//
+					file = new File(rel, pack.id + "-" + pack.version + ".jar");
+					try{
+						ZipOutputStream stream = includeGeneralFiles(pack, file);
+						includeFile(stream, new File(pack.file, "META-INF/mods.toml"), "META-INF/mods.toml");
+						stream.close();
+					}
+					catch(Exception e){
+						e.printStackTrace();
+					}
+					FMT.openLink(rel.getAbsoluteFile().getAbsolutePath());
+				}).buttons(100, DialogButton.CONFIRM, DialogButton.CANCEL);
+			pkver.text(pack.version);
+		});
+	}
+
+	private static ZipOutputStream includeGeneralFiles(FvtmPackElm pack, File file) throws IOException {
+		ZipOutputStream stream = new ZipOutputStream(new FileOutputStream(file));
+		Path root = pack.file.toPath();
+		java.nio.file.Files.walkFileTree(root, new SimpleFileVisitor<>(){
+			@Override
+			public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
+				Path rel = root.relativize(path);
+				if(!rel.startsWith("assets")) return FileVisitResult.CONTINUE;
+				stream.putNextEntry(new ZipEntry(rel.toString()));
+				java.nio.file.Files.copy(path, stream);
+				stream.closeEntry();
+				return FileVisitResult.CONTINUE;
+			}
+		});
+		includeFile(stream, new File(pack.file, "pack.mcmeta"), null);
+		return stream;
+	}
+
+	private static void includeFile(ZipOutputStream stream, File file, String path) throws IOException {
+		stream.putNextEntry(new ZipEntry(path == null ? file.getName() : path));
+		java.nio.file.Files.copy(file.toPath(), stream);
+		stream.closeEntry();
+	}
+
+	private static void addFabricInfoIfMissing(File pack, String id, String name){
+		File file = new File(pack, "/fabric.mod.json");
+		if(file.exists()) return;
+		JsonMap map = new JsonMap();
+		map.add("schemaVersion", 1);
+		map.add("id", id);
+		map.add("version", "1.0.0");
+		map.add("name", name);
+		map.add("description", "A pack for FVTM");
+		map.add("authors", SessionHandler.isLoggedIn() ? new JsonArray(SessionHandler.getUserName()) : new JsonArray());
+		map.add("contact", new JsonMap(
+			"homepage", "https://fexcraft.net/",
+			"sources", "https://github.com/Fexcraft/FMT"));
+		map.add("license", "ARR");
+		map.add("environment", "*");
+		map.add("entrypoints", new JsonMap());
+		map.add("mixins", new JsonArray());
+		map.add("depends", new JsonMap(
+			"fabricloader", "*",
+			"minecraft", "*",
+			"java", "*",
+			"fabric-api", "*",
+			"fvtm", "*",
+			"fcl", "*"
+		));
+		JsonHandler.print(file, map, JsonHandler.PrintOption.DEFAULT);
+	}
+
+	private static void add20InfoIfMissing(File pack, String name){
+		try{
+			File fl = new File(pack, "/META-INF/mods.toml");
+			if(fl.exists()) return;
+			fl.getParentFile().mkdirs();
+			FileWriter writer = new FileWriter(fl);
+			writer.write("modLoader=\"javafml\"\n");
+			writer.write("loaderVersion=\"[47,)\"\n");
+			writer.write("license=\"All Rights Reserved\"\n");
+			writer.write("issueTrackerURL=\"https://enter.your.url/here\"\n");
+			writer.write("[[mods]]\n");
+			writer.write("modId=\"fvtm\"\n");
+			writer.write("version=\"1.0.0\"\n");
+			writer.write("displayName=\"" + name + "\"\n");
+			writer.write("displayURL=\"https://fexcraft.net/wiki/mod/fvtm\"\n");
+			writer.write("credits=\"Generated using FMT\" #optional\n");
+			writer.write("authors=\"YourNameHere\"\n");
+			writer.write("displayTest=\"IGNORE_ALL_VERSION\"\n\n");
+			writer.write("description='''A pack for FVTM'''\n");
+			writer.flush();
+			writer.close();
+		}
+		catch(IOException e){
+			e.printStackTrace();
+		}
 	}
 
 }
