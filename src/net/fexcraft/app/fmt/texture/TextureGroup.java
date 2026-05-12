@@ -11,6 +11,7 @@ public class TextureGroup {
 	
 	public Texture texture;
 	public Texture painter;
+	public boolean helper;
 	public int width = 256;
 	public int height = 256;
 	public String name;
@@ -32,13 +33,13 @@ public class TextureGroup {
 	}
 
 	public void reAssignTexture(){
-		texture = TextureManager.get("group-" + name, false);
+		texture = TextureManager.get(name, false);
 		genPainterTex();
 	}
 
 	public void loadTexture(String texid, File root){
 		if(!root.exists()) root.mkdirs();
-		File file = new File(root, "group-" + name + ".png");
+		File file = new File(root, name + ".png");
 		if(!file.exists()){
 			Texture texture = new Texture(texid, width, height);
 			log("Generated blank texgroup texture.");
@@ -54,9 +55,9 @@ public class TextureGroup {
 	}
 
 	public void genPainterTex(){
-		painter = TextureManager.get("pt-group-" + name, true);
+		painter = TextureManager.get("pt-" + name, true);
 		if(painter == null){
-			painter = TextureManager.createTexture("pt-group-" + name, texture.getWidth(), texture.getHeight());
+			painter = TextureManager.createTexture("pt-" + name, texture.getWidth(), texture.getHeight());
 			painter.setFile(new File("./temp/" + painter.name + ".png"));
 		}
 		else{
@@ -78,6 +79,11 @@ public class TextureGroup {
 		map.add("width", width);
 		map.add("height", height);
 		return map;
+	}
+
+	@Override
+	public String toString(){
+		return name + "-" + width + "x" + height;
 	}
 
 }
