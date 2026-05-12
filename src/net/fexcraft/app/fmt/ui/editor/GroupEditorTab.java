@@ -27,7 +27,7 @@ public class GroupEditorTab extends EditorTab {
 	private Field name;
 	//private DropList<Integer> texx;
 	//private DropList<Integer> texy;
-	private DropList<String> texg;
+	private DropList<TextureGroup> texg;
 	private DropList<Pivot> pivots;
 
 	public GroupEditorTab(){
@@ -74,10 +74,10 @@ public class GroupEditorTab extends EditorTab {
 			texy.addEntry(res > 2000 ? res / 1024 + "K" : res + "", res);
 		}*/
 		general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.texture_group"));
-		general.add((texg = new DropList<String>(FF).onchange((key, val) -> {
+		general.add((texg = new DropList<TextureGroup>(FF).onchange((key, val) -> {
 			ArrayList<Group> groups = FMT.MODEL.selected_groups();
 			for(Group group : groups){
-				group.texgroup = TextureManager.getGroup(val);
+				group.texgroup = val;
 			}
 		})).pos(FO, next_y_pos(1)));
 		general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.pivot"));
@@ -128,7 +128,7 @@ public class GroupEditorTab extends EditorTab {
 		texg.clear();
 		texg.addEntry("none", null);
 		for(TextureGroup tg : TextureManager.getGroups()){
-			texg.addEntry(tg.name, tg.name);
+			texg.addEntry(tg.name, tg);
 		}
 		if(ck) group = FMT.MODEL.first_selected_group();
 		if(group == null || group.texgroup == null) texg.selectEntry(0);
