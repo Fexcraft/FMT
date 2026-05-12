@@ -448,6 +448,8 @@ saveload.new.name=Model Name
 saveload.new.orientation=Orientation
 saveload.new.target_format=Target Format
 saveload.backup.failure=Error/s while saving backup, please check the log.
+saveload.info.saved=Saved model as FMTB.
+saveload.info.saved_textured=Saved model as FMTB with texture.
 
 # Welcome/Update Dialog
 welcome.title=Welcome to FMT!
