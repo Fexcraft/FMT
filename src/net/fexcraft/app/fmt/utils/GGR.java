@@ -194,7 +194,7 @@ public class GGR {
 	}
 
 	public static void updateHoveredElement(){
-		Element hov = FMT.UI.getElmAt(cpos_x, cpos_y);
+		Element hov = grabbed ? null : FMT.UI.getElmAt(cpos_x, cpos_y);
 		Element.HOVER_TIMER += FMT.delta;
 		if(Element.HOVERED != null && Element.HOVERED != hov){
 			Element.HOVERED.hovered(false);
@@ -270,10 +270,6 @@ public class GGR {
 	public void scrollCallback(long window, double xoffset, double yoffset){
 		if(Element.HOVERED != null){
 			Element.HOVERED.scroll(xoffset, yoffset);
-			return;
-		}
-		if(isOverUI()){
-			//TODO Tree Group Sorting
 			return;
 		}
 		double s = yoffset * Settings.SCROLL_SPEED.value;
