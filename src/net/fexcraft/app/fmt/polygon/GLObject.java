@@ -2,7 +2,7 @@ package net.fexcraft.app.fmt.polygon;
 
 import net.fexcraft.lib.frl.GLO;
 
-public class GLObject extends GLO<GLObject> {
+public class GLObject extends GLO {
 
 	public float[] pickercolor;
 	public float[] polycolor;
