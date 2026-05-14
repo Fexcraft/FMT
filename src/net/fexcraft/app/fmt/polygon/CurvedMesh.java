@@ -51,18 +51,17 @@ public class CurvedMesh extends CurvePolygon {
 
 	@Override
 	protected void generate(){
-		ArrayList<Polyhedron<GLObject>> subs = glp.sub;
+		ArrayList<Polyhedron> subs = glp.sub;
 		M4DW axe0 = M4DW.create();
 		M4DW axe1 = M4DW.create();
 		if(subs == null) subs = new ArrayList<>();
-		for(Polyhedron<GLObject> sub : subs) sub.delete();
+		for(Polyhedron sub : subs) sub.delete();
 		subs.clear();
 		for(int c = 0; c < curves.size(); c++){
 			Curve cu = curves.get(c);
 			for(int i = 0; i < cu.points.size(); i++){
-				Polyhedron<GLObject> poly = new Polyhedron<>();
-				poly.setGlObj(new GLObject());
-				poly.glObj.polycolor = cu.points.get(i).color.toFloatArray();
+				Polyhedron poly = new Polyhedron();
+				poly.glObj(GLObject.class).polycolor = cu.points.get(i).color.toFloatArray();
 				Vector3f vec = c == 0 && i == 0 ? pos : new Vector3f(cu.points.get(i).vector).add(pos);
 				poly.pos(vec.x, vec.y, vec.z);
 				poly.rot(rot.x, rot.y, rot.z);
@@ -89,7 +88,7 @@ public class CurvedMesh extends CurvePolygon {
 						new Vertex(vec.add(0, -.05f, 0))
 					});
 					gll.polygons.add(poly);
-					gll.glObj.polycolor = cu.points.get(0).color.toFloatArray();
+					gll.glObj(GLObject.class).polycolor = cu.points.get(0).color.toFloatArray();
 					gll.rot(rot.x, rot.y, rot.z);
 					Vector3f pov = new Vector3f(pos);
 					if(c > 0) pov.add(cu.points.get(0).vector);
