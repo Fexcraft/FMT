@@ -120,7 +120,7 @@ public class ObjExporter implements Exporter {
                     buffer.append("# ID: " + poly.name() + "\n");
                 }
                 rot.setDegrees(-poly.rot.y, -poly.rot.z, -poly.rot.x);
-                Polyhedron<GLObject> hed = poly.glm;
+                Polyhedron hed = poly.glm;
                 for(net.fexcraft.lib.frl.Polygon poli : hed.polygons){
                     vertix = new IndexVertex[poli.vertices.length];
                     for(int i = 0; i < vertix.length; i++){
