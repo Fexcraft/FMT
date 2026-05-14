@@ -105,7 +105,7 @@ public class BObjExporter implements Exporter {
 					writeVector(stream, ROTATION, piv.rot);
 					for(Polygon polygon : group){
 						if(!valid(polygon.getShape())) continue;
-						Polyhedron<GLObject> poly = polygon.glm;
+						Polyhedron poly = polygon.glm;
 						rot.setDegrees(-polygon.rot.y, -polygon.rot.z, -polygon.rot.x);
 						fillPoly(stream, poly, rot);
 					}
@@ -150,7 +150,7 @@ public class BObjExporter implements Exporter {
 		return "export.complete";
 	}
 
-	private void fillPoly(FileOutputStream stream, Polyhedron<GLObject> poly, M4DW rot) throws IOException {
+	private void fillPoly(FileOutputStream stream, Polyhedron poly, M4DW rot) throws IOException {
 		int len;
 		for(net.fexcraft.lib.frl.Polygon p : poly.polygons){
 			len = p.vertices.length;
