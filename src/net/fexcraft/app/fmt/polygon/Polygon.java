@@ -56,7 +56,7 @@ public abstract class Polygon {
 	public static final int startIdx = 7;
 	public static int polyIdx = startIdx;
 	public static int vertIdx = startIdx;
-	public Polyhedron<GLObject> glm = new Polyhedron<GLObject>().setGlObj(new GLObject());
+	public Polyhedron glm = new Polyhedron();
 	public HashMap<VOKey, Vertoff> vertoffs = new HashMap<>();
 	private Model model;
 	private Group group;
@@ -255,12 +255,13 @@ public abstract class Polygon {
 			for(Vertex vertex : poly.vertices) vertcolors.remove(vertex);
 		}
 		glm.clear();
-		if(glm.glObj.pickercolor == null) glm.glObj.pickercolor = new RGB(colorIdx == 0 ? colorIdx = polyIdx++ : colorIdx).toFloatArray();
-		glm.glObj.polygon = this;
-		glm.glObj.textured = textureX > 0 && textureY > 0;
+		GLObject glo = glm.glObj();
+		if(glo.pickercolor == null) glo.pickercolor = new RGB(colorIdx == 0 ? colorIdx = polyIdx++ : colorIdx).toFloatArray();
+		glo.polygon = this;
+		glo.textured = textureX > 0 && textureY > 0;
 		glm.texU = textureX;
 		glm.texV = textureY;
-		glm.glObj.grouptex = group.texgroup != null;
+		glo.grouptex = group.texgroup != null;
 		glm.pos(pos.x, pos.y, pos.z);
 		glm.rot(rot.x, rot.y, rot.z);
 		generate();
@@ -302,7 +303,7 @@ public abstract class Polygon {
 
 	public void renderVertexPicking(){
 		for(Vertoff vo : vertoffs.values()){
-			ROT_MARKER_NORMAL.glObj.polycolor = vo.color;
+			ROT_MARKER_NORMAL.glObj(GLObject.class).polycolor = vo.color;
 			ROT_MARKER_NORMAL.pos(vo.cache.x, vo.cache.y, vo.cache.z);
 			ROT_MARKER_NORMAL.rot(rot.x, rot.y, rot.z);
 			ROT_MARKER_NORMAL.render();
@@ -519,8 +520,8 @@ public abstract class Polygon {
 	}
 
 	private void paint(Texture tex, float[][] ends, byte[] bs, boolean detached){
-		float tsx = (float)tex.getWidth() / (glm.glObj.grouptex ? group().texgroup.width : model().texgroup.width);
-		float tsy = (float)tex.getHeight() / (glm.glObj.grouptex ? group().texgroup.height : model().texgroup.height);
+		float tsx = (float)tex.getWidth() / (glm.glObj(GLObject.class).grouptex ? group().texgroup.width : model().texgroup.width);
+		float tsy = (float)tex.getHeight() / (glm.glObj(GLObject.class).grouptex ? group().texgroup.height : model().texgroup.height);
 		float scale_x = paintScale(tex, true);
 		float scale_y = paintScale(tex, false);
 		float tx = detached ? 0 : textureX;
@@ -539,8 +540,8 @@ public abstract class Polygon {
 	}
 
 	protected float paintScale(Texture tex, boolean x){
-		return x ? (float)tex.getWidth() / (glm.glObj.grouptex ? group().texgroup.width : model().texgroup.width)
-			: (float)tex.getHeight() / (glm.glObj.grouptex ? group().texgroup.height : model().texgroup.height);
+		return x ? (float)tex.getWidth() / (glm.glObj(GLObject.class).grouptex ? group().texgroup.width : model().texgroup.width)
+			: (float)tex.getHeight() / (glm.glObj(GLObject.class).grouptex ? group().texgroup.height : model().texgroup.height);
 	}
 
 	/** Gets a VertexOffset if present, returns null if missing. */
