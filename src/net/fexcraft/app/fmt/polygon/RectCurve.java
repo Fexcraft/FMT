@@ -50,14 +50,13 @@ public class RectCurve extends CurvePolygon {
 	@Override
 	protected void generate(){
 		if(glp.sub == null) glp.sub = new ArrayList<>();
-		for(Polyhedron<GLObject> sub : glp.sub) sub.delete();
+		for(Polyhedron sub : glp.sub) sub.delete();
 		glp.sub.clear();
 		Curve cu = act_curve();
 		M4DW axe = M4DW.create();
 		for(int i = 0; i < cu.points.size(); i++){
-			Polyhedron<GLObject> poly = new Polyhedron<>();
-			poly.setGlObj(new GLObject());
-			poly.glObj.polycolor = cu.points.get(i).color.toFloatArray();
+			Polyhedron poly = new Polyhedron();
+			poly.glObj(GLObject.class).polycolor = cu.points.get(i).color.toFloatArray();
 			Vector3f vec = i == 0 ? pos : new Vector3f(cu.points.get(i).vector).add(pos);
 			poly.pos(vec.x, vec.y, vec.z);
 			poly.rot(rot.x, rot.y, rot.z);
@@ -84,7 +83,7 @@ public class RectCurve extends CurvePolygon {
 					new Vertex(vec.add(0, -.05f, 0))
 				});
 				gll.polygons.add(poly);
-				gll.glObj.polycolor = cu.points.get(0).color.toFloatArray();
+				gll.glObj(GLObject.class).polycolor = cu.points.get(0).color.toFloatArray();
 				gll.rot(rot.x, rot.y, rot.z);
 				gll.pos(pos.x, pos.y, pos.z);
 				las = vec;
