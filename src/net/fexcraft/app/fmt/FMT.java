@@ -363,26 +363,26 @@ public class FMT {
 		PolyRenderer.setHelper(null);
 	}
 	
-	public static final Polyhedron<GLObject> center_cube = new Polyhedron<GLObject>().importMRT(new BoxBuilder(new ModelRendererTurbo(null, 0, 0, 16, 16))
-		.setSize(16, 16, 16).setOffset(-8, 0, -8).build(), false, 1f).setGlObj(new GLObject());;
-	public static final Polyhedron<GLObject> floor = new Polyhedron<GLObject>().importMRT(new BoxBuilder(new ModelRendererTurbo(null, 0, 0, 512, 512))
+	public static final Polyhedron center_cube = new Polyhedron().importMRT(new BoxBuilder(new ModelRendererTurbo(null, 0, 0, 16, 16))
+		.setSize(16, 16, 16).setOffset(-8, 0, -8).build(), false, 1f);
+	public static final Polyhedron floor = new Polyhedron().importMRT(new BoxBuilder(new ModelRendererTurbo(null, 0, 0, 512, 512))
 		.setSize(512, 0, 512).setOffset(-256, 0, -256).removePolygons(0, 1, 4, 5)
 		.setPolygonUV(2, new float[]{ 512, 0, 512, 512, 0, 512, 0, 0 })
-		.setPolygonUV(3, new float[]{ 512, 0, 512, 512, 0, 512, 0, 0 }).build(), false, 1f).setGlObj(new GLObject());
-	public static final Polyhedron<GLObject> floor0 = new Polyhedron<GLObject>().importMRT(new BoxBuilder(new ModelRendererTurbo(null, 0, 0, 512, 512))
+		.setPolygonUV(3, new float[]{ 512, 0, 512, 512, 0, 512, 0, 0 }).build(), false, 1f);
+	public static final Polyhedron floor0 = new Polyhedron().importMRT(new BoxBuilder(new ModelRendererTurbo(null, 0, 0, 512, 512))
 		.setSize(512, 0, 512).setOffset(-256, 0, -256).removePolygons(0, 1, 4, 5)
 		.setPolygonUV(2, new float[]{ 0, 512, 0, 0, 512, 0, 512, 512})
-		.setPolygonUV(3, new float[]{ 512, 512, 512, 0, 0, 0,  0, 512 }).build(), false, 1f).setGlObj(new GLObject());
-	private static final Polyhedron<GLObject> centermarker0 = new Generator<GLObject>(null, Generator.Type.CUBOID)
-		.set(Values.OFF_X, -.125f).set(Values.OFF_Y, -256f).set(Values.OFF_Z, -.125f).set(Values.WIDTH, .25f).set(Values.HEIGHT, 512f).set(Values.DEPTH, .25f).make().setGlObj(new GLObject());
-	private static final Polyhedron<GLObject> centermarker1 = new Generator<GLObject>(null, Generator.Type.CUBOID)
-		.set(Values.OFF_X, -256f).set(Values.OFF_Y, -.125f).set(Values.OFF_Z, -.125f).set(Values.WIDTH, 512f).set(Values.HEIGHT, .25f).set(Values.DEPTH, .25f).make().setGlObj(new GLObject());
-	private static final Polyhedron<GLObject> centermarker2 = new Generator<GLObject>(null, Generator.Type.CUBOID)
-		.set(Values.OFF_X, -.125f).set(Values.OFF_Y, -.125f).set(Values.OFF_Z, -256f).set(Values.WIDTH, .25f).set(Values.HEIGHT, .25f).set(Values.DEPTH, 512f).make().setGlObj(new GLObject());
+		.setPolygonUV(3, new float[]{ 512, 512, 512, 0, 0, 0,  0, 512 }).build(), false, 1f);
+	private static final Polyhedron centermarker0 = new Generator(null, Generator.Type.CUBOID)
+		.set(Values.OFF_X, -.125f).set(Values.OFF_Y, -256f).set(Values.OFF_Z, -.125f).set(Values.WIDTH, .25f).set(Values.HEIGHT, 512f).set(Values.DEPTH, .25f).make();
+	private static final Polyhedron centermarker1 = new Generator(null, Generator.Type.CUBOID)
+		.set(Values.OFF_X, -256f).set(Values.OFF_Y, -.125f).set(Values.OFF_Z, -.125f).set(Values.WIDTH, 512f).set(Values.HEIGHT, .25f).set(Values.DEPTH, .25f).make();
+	private static final Polyhedron centermarker2 = new Generator(null, Generator.Type.CUBOID)
+		.set(Values.OFF_X, -.125f).set(Values.OFF_Y, -.125f).set(Values.OFF_Z, -256f).set(Values.WIDTH, .25f).set(Values.HEIGHT, .25f).set(Values.DEPTH, 512f).make();
 	static {
-		centermarker0.glObj.polycolor = RGB.GREEN.toFloatArray();
-		centermarker1.glObj.polycolor = RGB.RED.toFloatArray();
-		centermarker2.glObj.polycolor = RGB.BLUE.toFloatArray();
+		centermarker0.glObj(GLObject.class).polycolor = RGB.GREEN.toFloatArray();
+		centermarker1.glObj(GLObject.class).polycolor = RGB.RED.toFloatArray();
+		centermarker2.glObj(GLObject.class).polycolor = RGB.BLUE.toFloatArray();
 	}
 	
 	public static final String getCurrentTitle(){
