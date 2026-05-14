@@ -1,7 +1,6 @@
 package net.fexcraft.app.fmt.demo;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.polygon.GLObject;
 import net.fexcraft.app.fmt.polygon.Marker;
 import net.fexcraft.lib.frl.Polyhedron;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
@@ -11,14 +10,14 @@ import java.util.Arrays;
 
 public class ModelMark {
 	
-	private Polyhedron<GLObject>[] poly = new Polyhedron[6];
-	private Polyhedron<GLObject> mmark = new Polyhedron();
+	private Polyhedron[] poly = new Polyhedron[6];
+	private Polyhedron mmark = new Polyhedron();
 	private static float shrink = 1.875f * 0.5f;
 	
 	public void fill(Marker mark){
 		if(poly[0] == null){
 			for(int i = 0; i < poly.length; i++){
-				poly[i] = new Polyhedron<>();
+				poly[i] = new Polyhedron();
 			}
 		}
 		for(int i = 0; i < poly.length; i++){
