@@ -59,12 +59,12 @@ public class Marker extends Polygon {
 	@Override
 	protected void generate(){
 		getMarkerGenerator(glm, scale).make();
-		glm.glObj.polycolor = rgb.toFloatArray();
+		glm.glObj(GLObject.class).polycolor = rgb.toFloatArray();
 	}
 
-	public static Generator<GLObject> getMarkerGenerator(Polyhedron<GLObject> glm, float scale){
+	public static Generator getMarkerGenerator(Polyhedron glm, float scale){
 		float hs = Marker.hs * scale, size = Marker.size * scale;
-		return new Generator<GLObject>(glm, 1, 1).set(Values.TYPE, Generator.Type.CUBOID).set(Values.OFF_X, -hs).set(Values.OFF_Y, -hs).set(Values.OFF_Z, -hs).set(Values.WIDTH, size).set(Values.HEIGHT, size).set(Values.DEPTH, size);
+		return new Generator(glm, 1, 1).set(Values.TYPE, Generator.Type.CUBOID).set(Values.OFF_X, -hs).set(Values.OFF_Y, -hs).set(Values.OFF_Z, -hs).set(Values.WIDTH, size).set(Values.HEIGHT, size).set(Values.DEPTH, size);
 	}
 
 	@Override
