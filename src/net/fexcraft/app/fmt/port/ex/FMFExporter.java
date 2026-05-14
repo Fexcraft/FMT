@@ -101,7 +101,7 @@ public class FMFExporter implements Exporter {
 					writeVector(stream, PR, piv.rot);
 					for(Polygon polygon : group){
 						if(!valid(polygon.getShape())) continue;
-						Polyhedron<GLObject> poly = polygon.glm;
+						Polyhedron poly = polygon.glm;
 						rot.setDegrees(-polygon.rot.y, -polygon.rot.z, -polygon.rot.x);
 						for(net.fexcraft.lib.frl.Polygon p : poly.polygons){
 							for(Vertex vertex : p.vertices){
@@ -243,7 +243,7 @@ public class FMFExporter implements Exporter {
 				}*/
 			}
 			if(o){
-				Polyhedron<GLObject> poly = polygon.glm;
+				Polyhedron poly = polygon.glm;
 				for(net.fexcraft.lib.frl.Polygon p : poly.polygons){
 					for(Vertex vertex : p.vertices){
 						if(flip){
