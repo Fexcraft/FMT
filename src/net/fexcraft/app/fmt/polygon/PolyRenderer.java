@@ -1,5 +1,6 @@
 package net.fexcraft.app.fmt.polygon;
 
+import net.fexcraft.app.fmt.polygon.GLObject;
 import net.fexcraft.app.fmt.polygon.GLObject.GPUData;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.utils.ImageHandler;
@@ -7,10 +8,8 @@ import net.fexcraft.app.fmt.utils.ShaderManager;
 import net.fexcraft.app.fmt.utils.ShaderManager.Uniform;
 import net.fexcraft.lib.common.math.V3D;
 import net.fexcraft.lib.common.math.Vec3f;
-import net.fexcraft.lib.frl.ColoredVertex;
+import net.fexcraft.lib.frl.*;
 import net.fexcraft.lib.frl.Polygon;
-import net.fexcraft.lib.frl.Polyhedron;
-import net.fexcraft.lib.frl.Vertex;
 import net.fexcraft.mod.uni.IDL;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -20,7 +19,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 
-public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
+public class PolyRenderer extends Renderer {
 
     private static Pivot PIVOT = null;
 	private static Model HELPER = null;
@@ -37,10 +36,10 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 	//
 
 	@Override
-	public void render(Polyhedron<GLObject> poly){
+	public void render(Polyhedron poly){
 		if(!poly.visible) return;
 		int index = (lines = MODE.lines()) ? 1 : 0;
-		glo = poly.glObj;
+		glo = poly.glObj();
 		if(poly.recompile || glo.gpu[0].glid == null){
 			compile(poly, glo, glo.gpu[0], false);
 			compile(poly, glo, glo.gpu[1], true);
@@ -105,7 +104,7 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
         if(poly.sub != null){
 			subpoly = true;
 			matrix1.set(matrix0);
-            for(Polyhedron<GLObject> sub : poly.sub){
+            for(Polyhedron sub : poly.sub){
 				matrix0.set(matrix1);
 				sub.render();
 			}
@@ -164,7 +163,7 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
     private static final int[] ordertn = { 0, 1, 2 };
     private static final int[] ordertl = { 0, 1, 0, 2, 1, 2 };
 
-	private void compile(Polyhedron<GLObject> poli, GLObject glo, GPUData obj, boolean lines){
+	private void compile(Polyhedron poli, GLObject glo, GPUData obj, boolean lines){
     	for(net.fexcraft.lib.frl.Polygon polygon : poli.polygons){
 			if(polygon.vertices.length <= 4){
 				obj.size += polygon.vertices.length == 4 ? lines ? 8 : 6 : lines ? 6 : 3;
@@ -279,14 +278,15 @@ public class PolyRenderer extends net.fexcraft.lib.frl.Renderer<GLObject> {
 	}
 
 	@Override
-	public void delete(Polyhedron<GLObject> poly){
+	public void delete(Polyhedron poly){
+		GLObject glo = poly.glObj();
 		for(int i = 0; i < 2; i++){
-    		if(poly.glObj.gpu[i].glid != null) glDeleteBuffers(poly.glObj.gpu[i].glid);
+    		if(glo.gpu[i].glid != null) glDeleteBuffers(glo.gpu[i].glid);
     		if(i == 0){
-        		glDeleteBuffers(poly.glObj.gpu[i].uvss);
-        		glDeleteBuffers(poly.glObj.gpu[i].normss);
-        		glDeleteBuffers(poly.glObj.gpu[i].colorss);
-        		glDeleteBuffers(poly.glObj.gpu[i].lightss);
+        		glDeleteBuffers(glo.gpu[i].uvss);
+        		glDeleteBuffers(glo.gpu[i].normss);
+        		glDeleteBuffers(glo.gpu[i].colorss);
+        		glDeleteBuffers(glo.gpu[i].lightss);
     		}
 		}
 	}
