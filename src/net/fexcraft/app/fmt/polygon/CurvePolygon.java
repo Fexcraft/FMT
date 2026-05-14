@@ -16,8 +16,8 @@ import java.util.ArrayList;
  */
 public abstract class CurvePolygon extends Polygon {
 
-	public Polyhedron<GLObject> gll = new Polyhedron<GLObject>().setGlObj(new GLObject());
-	public Polyhedron<GLObject> glp = new Polyhedron<GLObject>().setGlObj(new GLObject());
+	public Polyhedron gll = new Polyhedron();
+	public Polyhedron glp = new Polyhedron();
 	public ArrayList<Curve> curves = new ArrayList<>();
 	public boolean showline = false;
 	public float mscale = 1;
