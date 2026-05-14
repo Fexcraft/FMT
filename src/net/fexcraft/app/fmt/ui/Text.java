@@ -14,7 +14,7 @@ import static net.fexcraft.app.fmt.settings.Settings.GENERIC_TEXT_0;
 public class Text {
 
 	public final Element root;
-	public Polyhedron<GLObject> hedron;
+	public Polyhedron hedron;
 	public FontRenderer.FontType font = FontRenderer.FontType.PLAIN;
 	public RGB color = GENERIC_TEXT_0.value.copy();
 	public boolean autoscale;
@@ -28,8 +28,7 @@ public class Text {
 	public float y = 0;
 
 	public Text(Element elm){
-		hedron = new Polyhedron<>();
-		hedron.setGlObj(new GLObject());
+		hedron = new Polyhedron();
 		root = elm;
 	}
 
@@ -37,7 +36,7 @@ public class Text {
 		hedron.recompile = true;
 		hedron.polygons.clear();
 		//if(hedron.glObj.pickercolor == null) hedron.glObj.pickercolor = root.hedron.glObj.pickercolor;
-		hedron.glObj.textured = true;
+		hedron.glObj(GLObject.class).textured = true;
 		if(autoscale){
 			w = FontRenderer.getWidth(text, font);
 			scale = (root.w - 5 - x) < w ? (root.w - 5 - x) / w : 1;
