@@ -28,7 +28,7 @@ public class Element {
 	public static Element SELECTED;
 	public static Element HOVERED;
 	public static double HOVER_TIMER;
-	public Polyhedron<GLObject> hedron;
+	public Polyhedron hedron;
 	public Consumer<ClickInfo> onclick;
 	public Consumer<ScrollInfo> onscroll;
 	public List<Element> elements;
@@ -55,8 +55,7 @@ public class Element {
 	public float h;
 
 	public Element(){
-		hedron = new Polyhedron<>();
-		hedron.setGlObj(new GLObject());
+		hedron = new Polyhedron();
 		visible = true;
 	}
 
@@ -74,7 +73,7 @@ public class Element {
 	public Element recompile(){
 		hedron.recompile = true;
 		hedron.polygons.clear();
-		hedron.glObj.textured = texture != null;
+		hedron.glObj(GLObject.class).textured = texture != null;
 		pickpos[0] = hedron.posX = gx();
 		pickpos[1] = hedron.posY = gy();
 		pickpos[2] = pickpos[0] + w;
@@ -197,13 +196,13 @@ public class Element {
 
 	public Element color(int color){
 		col_def.packed = color;
-		hedron.glObj.polycolor = col_def.toFloatArray();
+		hedron.glObj(GLObject.class).polycolor = col_def.toFloatArray();
 		return this;
 	}
 
 	public Element color(RGB color){
 		col_def.packed = color.packed;
-		hedron.glObj.polycolor = col_def.toFloatArray();
+		hedron.glObj(GLObject.class).polycolor = col_def.toFloatArray();
 		return this;
 	}
 
@@ -218,7 +217,7 @@ public class Element {
 			border.packed = color;
 		}
 		if(border != null){
-			hedron.glObj.linecolor = border.toFloatArray();
+			hedron.glObj(GLObject.class).linecolor = border.toFloatArray();
 		}
 		return this;
 	}
@@ -376,14 +375,14 @@ public class Element {
 		hovered = bool;
 		if(hoverable){
 			if(border != null){
-				hedron.glObj.linecolor = bool ? PolyRenderer.SELCOLOR : border.toFloatArray();
+				hedron.glObj(GLObject.class).linecolor = bool ? PolyRenderer.SELCOLOR : border.toFloatArray();
 			}
 			update_polycolor();
 		}
 	}
 
 	protected void update_polycolor(){
-		hedron.glObj.polycolor = (selected() ? col_sel : hovered ? col_hov : col_def).toFloatArray();
+		hedron.glObj(GLObject.class).polycolor = (selected() ? col_sel : hovered ? col_hov : col_def).toFloatArray();
 	}
 
 	public boolean hoveredx(){
