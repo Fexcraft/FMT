@@ -410,6 +410,7 @@ public class Element {
 
 	public void scroll(double x, double y){
 		if(onscroll != null) onscroll.accept(new ScrollInfo((int)x, (int)y, (int)(x - gx()), (int)(y - gy())));
+		else if(root != null) root.scroll(x, y);
 	}
 
 	public void scroll(ScrollInfo info){
