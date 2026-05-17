@@ -202,8 +202,6 @@ public class SaveHandler {
 					}
 					else{
 						group.texgroup = TextureManager.getGroup("group", jsn.get("texture_group").string_value());
-						group.texgroup.width = jsn.get("texture_size_x").integer_value();
-						group.texgroup.height = jsn.get("texture_size_y").integer_value();
 					}
 				}
 				if(jsn.has("offset")){
