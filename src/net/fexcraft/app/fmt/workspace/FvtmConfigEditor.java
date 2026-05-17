@@ -505,6 +505,7 @@ public class FvtmConfigEditor extends WFileEditor {
 			}
 			else if(entry.type == EntryType.SEPARATE && entry.separate.entries != null){
 				if(entry.static_){
+					if(!value.isMap()) value = new JsonMap();
 					for(ConfigEntry conf : entry.separate.entries){
 						container.add(new EntryElm(conf, conf.key(), get(value.asMap(), conf)), editor);
 					}
