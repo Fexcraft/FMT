@@ -13,6 +13,7 @@ import net.fexcraft.app.fmt.utils.fvtm.LangCache;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
+import net.fexcraft.app.json.JsonValue;
 import net.fexcraft.lib.common.utils.Formatter;
 import org.apache.commons.io.FileUtils;
 
@@ -54,7 +55,7 @@ public class ConfigUtils {
 				map.add("License", "All Rights Reserved");
 				map.add("Dependencies", new JsonArray("gep"));
 				map.add("Authors", SessionHandler.isLoggedIn() ? new JsonArray(SessionHandler.getUserName()) : new JsonArray());
-				map.add("#info", "File generated via FMT.");
+				map.add("#info", "File created via FMT.");
 				JsonHandler.print(new File(pkfd, "addonpack.fvtm"), map, JsonHandler.PrintOption.DEFAULT);
 				//
 				map = new JsonMap();
@@ -63,6 +64,7 @@ public class ConfigUtils {
 				//
 				addFabricInfoIfMissing(pr, pid, nam);
 				add20InfoIfMissing(pr, nam);
+				add12InfoIfMissing(pr, pid, nam);
 				//
 				LangCache.genLangJson(new File(pr, "/assets/" + pid + "/lang/en_us.json"));
 				LangCache.genLangFile(new File(pr, "/assets/" + pid + "/lang/en_us.lang"));
@@ -328,6 +330,7 @@ public class ConfigUtils {
 				.addRowElm(1, pkver)
 				.set_confirm(d -> {
 					pack.version = pkver.get_text();
+					add12InfoIfMissing(pack.file, pack.id, pack.name);
 					add20InfoIfMissing(pack.file, pack.name);
 					addFabricInfoIfMissing(pack.file, pack.id, pack.name);
 					//
@@ -335,7 +338,12 @@ public class ConfigUtils {
 					map.get("Version").value(pack.version);
 					JsonHandler.print(pack.addon_file, map);
 					//
-					File file = new File(pack.file, "/fabric.mod.json");
+					File file = new File(pack.file, "/mcmod.info");
+					map = JsonHandler.parse(file, false).asArray().getMap(0);
+					map.get("version").value(pack.version);
+					JsonHandler.print(file, new JsonArray(map));
+					//
+					file = new File(pack.file, "/fabric.mod.json");
 					map = JsonHandler.parse(file);
 					map.get("version").value(pack.version);
 					JsonHandler.print(file, map);
@@ -367,6 +375,7 @@ public class ConfigUtils {
 					try{
 						ZipOutputStream stream = includeGeneralFiles(pack, file);
 						includeFile(stream, new File(pack.file, "META-INF/mods.toml"), "META-INF/mods.toml");
+						includeFile(stream, new File(pack.file, "mcmod.info"), null);
 						stream.close();
 					}
 					catch(Exception e){
@@ -420,14 +429,37 @@ public class ConfigUtils {
 		map.add("entrypoints", new JsonMap());
 		map.add("mixins", new JsonArray());
 		map.add("depends", new JsonMap(
-			"fabricloader", "*",
-			"minecraft", "*",
-			"java", "*",
+			"fabricloader", ">=0.18.5",
+			"minecraft", ">=26.1",
+			"java", ">=25",
 			"fabric-api", "*",
 			"fvtm", "*",
 			"fcl", "*"
 		));
 		JsonHandler.print(file, map, JsonHandler.PrintOption.DEFAULT);
+	}
+
+	private static void add12InfoIfMissing(File pack, String id, String name){
+		try{
+			File fl = new File(pack, "/mcmod.info");
+			if(fl.exists()) return;
+			JsonMap map = new JsonMap();
+			map.add("modid", id);
+			map.add("name", name);
+			map.add("description", "A pack for FVTM");
+			map.add("version", "1.0.0");
+			map.add("mcversion", "*");
+			map.add("url", "https://fexcraft.net/wiki/mod/fvtm");
+			map.add("authorList", new JsonArray.Flat("YourNameHere"));
+			map.add("credits", "Created using FMT");
+			map.add("logoFile", "");
+			map.add("screenshots", new JsonArray());
+			map.add("dependencies", new JsonArray("fcl", "fvtm"));
+			JsonHandler.print(fl, new JsonArray(map));
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 
 	private static void add20InfoIfMissing(File pack, String name){
@@ -445,10 +477,16 @@ public class ConfigUtils {
 			writer.write("version=\"1.0.0\"\n");
 			writer.write("displayName=\"" + name + "\"\n");
 			writer.write("displayURL=\"https://fexcraft.net/wiki/mod/fvtm\"\n");
-			writer.write("credits=\"Generated using FMT\" #optional\n");
+			writer.write("credits=\"Created using FMT\" #optional\n");
 			writer.write("authors=\"YourNameHere\"\n");
 			writer.write("displayTest=\"IGNORE_ALL_VERSION\"\n\n");
 			writer.write("description='''A pack for FVTM'''\n");
+			writer.write("[[dependencies.fvtm]]\n");
+			writer.write("modId=\"minecraft\"\n");
+			writer.write("mandatory=true\n");
+			writer.write("versionRange=\"[1.12.2],[1.20.1]\"\n");
+			writer.write("ordering=\"NONE\"\n");
+			writer.write("side=\"BOTH\"\n");
 			writer.flush();
 			writer.close();
 		}
