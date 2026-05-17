@@ -126,7 +126,7 @@ public enum VFileType {
 	}
 
 	public boolean model(){
-		return this == FMF || this == OBJ;
+		return this == FMF || this == BOB || this == OBJ;
 	}
 
 }
