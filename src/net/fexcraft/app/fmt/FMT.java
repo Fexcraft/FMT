@@ -73,6 +73,7 @@ public class FMT {
 	public static Timer BACKUP_TIMER, TEXUP_TIMER;
 	private static String title;
 	//
+	public static boolean SLOWDOWN = false;
 	public static final ITimer timer = new ITimer();
 	public static float delta;
 	public float accumulator;
@@ -89,6 +90,7 @@ public class FMT {
 	private GLFWWindowCloseCallback closeCallback;
 	private GLFWFramebufferSizeCallback framebufferCallback;
 	private GLFWScrollCallback scrollCallback;
+	private GLFWWindowIconifyCallback minimizeCallback;
 	public long window;
 	//
 	public static float[] background;
@@ -138,7 +140,12 @@ public class FMT {
 	public void run() throws Exception{
 		Translator.init();
 		timer.init();
-		glfwSetErrorCallback(errorCallback = GLFWErrorCallback.createPrint(System.err));
+		glfwSetErrorCallback(errorCallback = new GLFWErrorCallback() {
+			@Override
+			public void invoke(int error, long description){
+				log("GL ERROR: " + error + " " + getDescription(description));
+			}
+		});
 		if(!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW.");
 		glfwWindowHint(GLFW_RESIZABLE, GL11.GL_TRUE);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -203,6 +210,12 @@ public class FMT {
 			CAM.scrollCallback(window, xoffset, yoffset);
 			}
 		});
+		glfwSetWindowIconifyCallback(window, minimizeCallback = new GLFWWindowIconifyCallback(){
+			@Override
+			public void invoke(long window, boolean iconified){
+				slowDown(iconified);
+			}
+		});
 		TextureManager.load();
 		FontRenderer.init();
 		UI = new FMTInterface();
@@ -251,10 +264,12 @@ public class FMT {
 				//poly.getTextState().setText(MODEL.selected().isEmpty() ? "none" : MODEL.first_selected().name());
 			}
 			alpha = accumulator / interval;
-			render(vao, alpha);
+			if(!SLOWDOWN){
+				render(vao, alpha);
+				ImageHandler.updateText();
+				timer.updateFPS();
+			}
 			//
-			ImageHandler.updateText();
-			timer.updateFPS();
 			glfwPollEvents();
 			glfwSwapBuffers(window);
 			//ImageHandler.processTask();
@@ -266,6 +281,11 @@ public class FMT {
 		glfwDestroyWindow(window);
 		glfwTerminate();
 		System.exit(EXIT_CODE);
+	}
+
+	private void slowDown(boolean bool){
+		SLOWDOWN = bool;
+		interval = bool ? 1f : 1f / 30;
 	}
 
 	private void resize(){
