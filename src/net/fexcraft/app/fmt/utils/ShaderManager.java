@@ -56,7 +56,7 @@ public class ShaderManager {
 
 	private static void log(String string, String info){
 		if(info.length() == 0) return;
-		System.err.println(string + ": " + info);
+		Logging.log(string + ": " + info);
 	}
 	
 	public static class ShaderProgram {
