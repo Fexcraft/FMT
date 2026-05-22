@@ -94,10 +94,6 @@ public class ShaderManager {
 			return prog;
 		}
 
-		public void applyUniforms(Consumer<ShaderProgram> cons){
-			cons.accept(this);
-		}
-
 		public int getUniform(Uniform uniform){
 			if(uniforms[uniform.ordinal()] < 0){
 				uniforms[uniform.ordinal()] = glGetUniformLocation(prog, uniform.name().toLowerCase());
