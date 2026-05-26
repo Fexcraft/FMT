@@ -7,6 +7,7 @@ import net.fexcraft.app.fmt.polygon.uv.Face;
 import net.fexcraft.app.fmt.polygon.uv.UVType;
 import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.texture.TexturePainter;
+import net.fexcraft.app.fmt.ui.Field;
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.utils.Picker.PickTask;
 import net.fexcraft.app.fmt.utils.Picker.PickType;
@@ -40,6 +41,7 @@ public class UpdateEvent {
     public static record PivotRemoved(Model model, Pivot pivot){};
     public static record PivotSelected(Model model, Pivot pivot){};
     public static record PivotVisibility(Pivot pivot, boolean visible){};
+    public static record PivotValueUpdated(Pivot pivot, Field from){};
 
     public static record ModelAuthor(Model model, String name){};
     public static record ModelLoad(Model model){};
