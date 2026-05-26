@@ -52,7 +52,7 @@ public class PolygonTreeTab extends TreeTab {
 		});
 		updcom.add(UpdateEvent.GroupAdded.class, event -> addGroup(event.group()));
 		updcom.add(UpdateEvent.GroupRemoved.class, event -> remGroup(event.group()));
-		updcom.add(UpdateEvent.PivotChanged.class, event -> {
+		updcom.add(UpdateEvent.GroupPivotChanged.class, event -> {
 			PivotCom pc = getPivotCom(event.old_pivot());
 			boolean v = pc.getGroupCom(event.group()).container.visible;
 			pc.remGroup(event.group());
