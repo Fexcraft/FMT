@@ -122,9 +122,13 @@ public class EditorSidePanel extends Element {
 				.onclick(ci -> addGroup())
 			);
 			container.add(new Element().pos(buff += iinc, yo).size(32, 32)
+				.texture("icons/polygon/pivot").hint("editor.panel.add.pivot")
+				.onclick(ci -> addPivot())
+			);
+			/*container.add(new Element().pos(buff += iinc, yo).size(32, 32)
 				.texture("icons/polygon/voxel").hint("editor.panel.add.voxel")
 				.onclick(ci -> {})
-			);
+			);*/
 			container.add(new Element().pos(buff += iinc, yo).size(32, 32)
 				.texture("icons/polygon/copy_sel").hint("editor.panel.add.copy")
 				.onclick(ci -> FMT.MODEL.copySelected())
@@ -143,6 +147,25 @@ public class EditorSidePanel extends Element {
 			for(Pivot pivot : FMT.MODEL.pivots()) list.addEntry(pivot.id, pivot);
 			list.selectEntry(0);
 			dia.consumer(d -> FMT.MODEL.addGroup(list.getSelKey(), field.get_text()), null);
+			dia.buttons(100, Dialog.DialogButton.ADD);
+		}
+
+		public static void addPivot(){
+			Dialog dia = FMT.UI.createDialog(400, 180, "dialog.add_pivot.title");
+			dia.container.add(new TextElm(10, 10, 380, "dialog.add_pivot.name"));
+			Field field = new Field(Field.FieldType.TEXT, 380);
+			dia.container.add(field.pos(10, 40));
+			field.text("pivot" + FMT.MODEL.totalPivots());
+			dia.container.add(new TextElm(10, 70, 380, "dialog.add_pivot.root"));
+			DropList<Pivot> list = new DropList<>(380);
+			dia.container.add(list.pos(10, 100));
+			for(Pivot pivot : FMT.MODEL.pivots()) list.addEntry(pivot.id, pivot);
+			list.selectEntry(0);
+			dia.consumer(d -> {
+				Pivot pivot = new Pivot(field.get_text());
+				pivot.parent(list.getSelVal());
+				FMT.MODEL.addPivot(pivot);
+			}, null);
 			dia.buttons(100, Dialog.DialogButton.ADD);
 		}
 
