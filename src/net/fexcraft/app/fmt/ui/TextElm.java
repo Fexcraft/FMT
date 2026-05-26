@@ -32,4 +32,18 @@ public class TextElm extends Element {
 		text_pos(5, -2);
 	}
 
+	public static class BottomInfoText extends TextElm {
+
+		public BottomInfoText(float x, float y, float w){
+			super(x, y, w);
+			visible = false;
+		}
+
+		@Override
+		public void render(){
+			if(text != null) text.render();
+		}
+
+	}
+
 }
