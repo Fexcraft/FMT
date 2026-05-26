@@ -4,6 +4,7 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.port.ex.ExportManager;
 import net.fexcraft.app.fmt.port.im.ImportManager;
 import net.fexcraft.app.fmt.settings.Settings;
+import net.fexcraft.app.fmt.ui.TextElm.BottomInfoText;
 import net.fexcraft.app.fmt.ui.editor.EditorRoot;
 import net.fexcraft.app.fmt.ui.tree.TreeRoot;
 import net.fexcraft.app.fmt.update.UpdateEvent;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import static net.fexcraft.app.fmt.settings.Settings.*;
+import static net.fexcraft.app.fmt.ui.editor.EditorTab.FS;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -36,6 +38,11 @@ public class FMTInterface extends Element {
 	public static EditorRoot editor;
 	public static TreeRoot tree;
 	public static Menu recent;
+	public static BottomInfoText info_fps;
+	public static BottomInfoText info_position;
+	public static BottomInfoText info_rotation;
+	public static BottomInfoText info_selected;
+	public static BottomInfoText info_field;
 	private static Long bar_timer;
 	private static String bar_text;
 	private UpdateHandler.UpdateCompound updcom = new UpdateHandler.UpdateCompound();
@@ -50,9 +57,8 @@ public class FMTInterface extends Element {
 				pos(TOOLBAR_WIDTH, 0);
 			}
 		}.size(FMT.SCALED_WIDTH - TOOLBAR_WIDTH - EDITOR_WIDTH, TOOLBAR_HEIGHT)
-			.pos(TOOLBAR_WIDTH, 0).color(GENERIC_BACKGROUND_0.value)
-			.text("...")
-		);
+			.pos(TOOLBAR_WIDTH, 0).color(GENERIC_BACKGROUND_0.value).text("..."));
+		statusbar.text_pos(5, 5);
 		int iinc = 37;
 		int buff = -iinc + 4;
 		int yo = 4;
@@ -157,6 +163,12 @@ public class FMTInterface extends Element {
 		add((FMT.WORKSPACE = new Workspace()).hide());
 		add((editor = new EditorRoot()));
 		add((tree = new TreeRoot()));
+		add(info_fps = new BottomInfoText(0, 0, 1000));
+		add(info_position = new BottomInfoText(0, 0, 1000));
+		add(info_rotation = new BottomInfoText(0, 0, 1000));
+		add(info_selected = new BottomInfoText(0, 0, 1000));
+		add(info_field = new BottomInfoText(0, 0, 1000));
+		positionInfoText();
 		//
 		updcom.add(UpdateEvent.PolygonSelected.class, e -> {
 			if(Element.SELECTED instanceof DropList){
@@ -164,6 +176,21 @@ public class FMTInterface extends Element {
 			}
 		});
 		UpdateHandler.register(updcom);
+	}
+
+	public void positionInfoText(){
+		float x = editor.visible ? editor.w + 5 : 5;
+		float off = 5.2f;
+		info_field.pos(x, FMT.SCALED_HEIGHT - FS * off--).text_color(INFO_TEXT_COLOR.value.packed);
+		info_fps.pos(x, FMT.SCALED_HEIGHT - FS * off--).text_color(INFO_TEXT_COLOR.value.packed);
+		info_rotation.pos(x, FMT.SCALED_HEIGHT - FS * off--).text_color(INFO_TEXT_COLOR.value.packed);
+		info_position.pos(x, FMT.SCALED_HEIGHT - FS * off--).text_color(INFO_TEXT_COLOR.value.packed);
+		info_selected.pos(x, FMT.SCALED_HEIGHT - FS * off).text_color(INFO_TEXT_COLOR.value.packed);
+	}
+
+	@Override
+	public void onResize(){
+		positionInfoText();
 	}
 
 	@Override
@@ -187,7 +214,58 @@ public class FMTInterface extends Element {
 			bar_timer = null;
 			bar_text = null;
 		}
-		statusbar.text("FPS: " + FMT.timer.getFPS() + (bar_text == null ? "" : " | " + bar_text));
+		info_fps.text("f/s: " + FMT.timer.getFPS());
+		info_position.text("pos: " + FMT.CAM.pos.x + ", " + FMT.CAM.pos.y + ", " + FMT.CAM.pos.z);
+		info_rotation.text("h/v: " + FMT.CAM.hor + ", " + FMT.CAM.ver);
+		info_selected.text(genSelText());
+		info_field.text(genFieldText());
+		statusbar.text((bar_text == null ? "" : bar_text));
+	}
+
+	private Object genSelText(){
+		StringBuilder str = new StringBuilder("sel: " + Selector.TYPE._short);
+		if(FMT.MODEL.sel_pivot != null){
+			str.append(" / r: ").append(FMT.MODEL.sel_pivot.id);
+		}
+		if(FMT.MODEL.selected_groups().size() > 0){
+			if(str.length() > 0) str.append(" / ");
+			if(FMT.MODEL.selected_groups().size() == 1) str.append("g: ").append(FMT.MODEL.selected_groups().get(0).id);
+			else str.append("g: (").append(FMT.MODEL.selected_groups().size()).append(")");
+		}
+		if(FMT.MODEL.selected().size() > 0){
+			if(str.length() > 0) str.append(" / ");
+			if(FMT.MODEL.selected().size() == 1) str.append("p: ").append(FMT.MODEL.selected().get(0).name());
+			else str.append("p: (").append(FMT.MODEL.selected().size()).append(")");
+		}
+		if(FMT.MODEL.getSelectedVerts().size() > 0){
+			if(str.length() > 0) str.append(" / ");
+			if(FMT.MODEL.getSelectedVerts().size() == 1) str.append("v: ").append(FMT.MODEL.getSelectedVerts().get(0).getRight().type());
+			else str.append("v: (").append(FMT.MODEL.getSelectedVerts().size()).append(")");
+		}
+		return str.toString();
+	}
+
+	private Object genFieldText(){
+		StringBuilder str = new StringBuilder();
+		if(SELECTED instanceof Field field){
+			if(field.polyval() != null) str.append(field.polyval());
+		}
+		if(SELECTED instanceof BoolElm bool){
+			if(bool.polyval() != null) str.append(bool.polyval());
+		}
+		if(HOVERED instanceof Field field){
+			if(field.polyval() != null){
+				if(str.length() > 0) str.append(" | ");
+				str.append("h: ").append(field.polyval());
+			}
+		}
+		if(HOVERED instanceof BoolElm bool){
+			if(bool.polyval() != null){
+				if(str.length() > 0) str.append(" | ");
+				str.append("h: ").append(bool.polyval());
+			}
+		}
+		return str.toString();
 	}
 
 	public void click(double x, double y, int b){
