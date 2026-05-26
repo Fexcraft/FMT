@@ -166,7 +166,7 @@ public class Model {
 		DrawMode mode = DrawMode.textured(render_textured);
 		for(Pivot pivot : pivots){
 			PolyRenderer.setPivot(pivot);
-			if(Settings.PMARKER.value){
+			if(Settings.PMARKER.value && pivot.visible){
 				PolyRenderer.mode(DrawMode.RGBCOLOR);
 				centermarker0.render();
 				centermarker1.render();
