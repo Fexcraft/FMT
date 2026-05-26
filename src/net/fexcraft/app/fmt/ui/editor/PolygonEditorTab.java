@@ -284,6 +284,7 @@ public class PolygonEditorTab extends EditorTab {
 			general_box.visible = false;
 			shapebox.visible = false;
 			cylinder.visible = false;
+			curve.visible = false;
 			marker.visible = false;
 			vertex.visible = false;
 			ArrayList<Polygon> polys = FMT.MODEL.selected();
