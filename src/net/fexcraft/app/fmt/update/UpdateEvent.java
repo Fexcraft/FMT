@@ -29,6 +29,7 @@ public class UpdateEvent {
     public static record GroupRemoved(Model model, Group group){};
     public static record GroupSelected(Group group, int prevselected, int selected){};
     public static record GroupVisibility(Group group, boolean visible){};
+    public static record GroupPivotChanged(Group group, Pivot old_pivot, Pivot pivot){};
 
     public static record GroupAnimationAdded(Group group, Animation anim){};
     public static record GroupAnimationRemoved(Group group, Animation anim){};
@@ -37,7 +38,6 @@ public class UpdateEvent {
     public static record PivotAdded(Model model, Pivot pivot){};
     public static record PivotRenamed(Pivot pivot, String name){};
     public static record PivotRemoved(Model model, Pivot pivot){};
-    public static record PivotChanged(Group group, Pivot old_pivot, Pivot pivot){};
     public static record PivotSelected(Model model, Pivot pivot){};
     public static record PivotVisibility(Pivot pivot, boolean visible){};
 
