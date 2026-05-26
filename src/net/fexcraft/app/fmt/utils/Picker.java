@@ -43,8 +43,14 @@ public class Picker {
 	
 	public static enum PickType {
 		
-		NONE, VERTEX, FACE, POLYGON, COLOR;//, UI;
-		
+		NONE("none"), VERTEX("vert"), FACE("face"), POLYGON("poly"), COLOR("col");//, UI;
+
+		public String _short;
+
+		PickType(String str){
+			_short = str;
+		}
+
 		public boolean pick(){
 			return this != NONE;
 		}
@@ -64,7 +70,7 @@ public class Picker {
 		public boolean color(){
 			return this == COLOR;
 		}
-		
+
 	}
 	
 	public static enum PickTask {
