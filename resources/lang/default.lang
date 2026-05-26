@@ -85,6 +85,7 @@ editor.panel.add.cylinder=Add Cylinder
 editor.panel.add.struct=Add Struct/Bounding Box
 editor.panel.add.object=Add Object
 editor.panel.add.marker=Add Marker
+editor.panel.add.pivot=Add Pivot
 editor.panel.add.voxel=Add Voxel
 editor.panel.add.group=Add Group
 editor.panel.add.copy=Copy Selected
@@ -355,6 +356,11 @@ tree.animation.add.type=Animation Type
 dialog.add_group.title=Add new Group
 dialog.add_group.name=Group Name
 dialog.add_group.pivot=Group Pivot
+
+# Add Pivot Dialog
+dialog.add_pivot.title=Add new Pivot
+dialog.add_pivot.name=Pivot ID/Name
+dialog.add_pivot.root=Root Pivot
 
 # Generic Dialog
 dialog.title.default=Generic Dialog
