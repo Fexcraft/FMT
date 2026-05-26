@@ -86,6 +86,7 @@ public class EditorRoot extends Element {
 
 	public void toggle(){
 		visible = !visible;
+		FMT.UI.positionInfoText();
 	}
 
 	public static enum EditorMode {
