@@ -56,42 +56,51 @@ public class PivotEditorTab extends EditorTab {
 		general.add((pos16x = new Field(FLOAT, F3S).consumer(field -> {
 			if(FMT.MODEL.sel_pivot == null) return;
 			FMT.MODEL.sel_pivot.pos.x = field.parse_float();
+			UpdateHandler.update(new UpdateEvent.PivotValueUpdated(FMT.MODEL.sel_pivot, field));
 		})).pos(F30, next_y_pos(1)));
 		general.add((pos16y = new Field(FLOAT, F3S).consumer(field -> {
 			if(FMT.MODEL.sel_pivot == null) return;
 			FMT.MODEL.sel_pivot.pos.y = field.parse_float();
+			UpdateHandler.update(new UpdateEvent.PivotValueUpdated(FMT.MODEL.sel_pivot, field));
 		})).pos(F31, next_y_pos(0)));
 		general.add((pos16z = new Field(FLOAT, F3S).consumer(field -> {
 			if(FMT.MODEL.sel_pivot == null) return;
 			FMT.MODEL.sel_pivot.pos.z = field.parse_float();
+			UpdateHandler.update(new UpdateEvent.PivotValueUpdated(FMT.MODEL.sel_pivot, field));
 		})).pos(F32, next_y_pos(0)));
 		//
 		general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.pos"));
 		general.add((posx = new Field(FLOAT, F3S).consumer(field -> {
 			if(FMT.MODEL.sel_pivot == null) return;
 			FMT.MODEL.sel_pivot.pos.x = field.parse_float() * 16;
+			UpdateHandler.update(new UpdateEvent.PivotValueUpdated(FMT.MODEL.sel_pivot, field));
 		})).pos(F30, next_y_pos(1)));
 		general.add((posy = new Field(FLOAT, F3S).consumer(field -> {
 			if(FMT.MODEL.sel_pivot == null) return;
 			FMT.MODEL.sel_pivot.pos.y = field.parse_float() * 16;
+			UpdateHandler.update(new UpdateEvent.PivotValueUpdated(FMT.MODEL.sel_pivot, field));
 		})).pos(F31, next_y_pos(0)));
 		general.add((posz = new Field(FLOAT, F3S).consumer(field -> {
 			if(FMT.MODEL.sel_pivot == null) return;
 			FMT.MODEL.sel_pivot.pos.z = field.parse_float() * 16;
+			UpdateHandler.update(new UpdateEvent.PivotValueUpdated(FMT.MODEL.sel_pivot, field));
 		})).pos(F32, next_y_pos(0)));
 		//
 		general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.rot"));
 		general.add((rotx = new Field(FLOAT, F3S).deg_range().consumer(field -> {
 			if(FMT.MODEL.sel_pivot == null) return;
 			FMT.MODEL.sel_pivot.rot.x = field.parse_float();
+			UpdateHandler.update(new UpdateEvent.PivotValueUpdated(FMT.MODEL.sel_pivot, field));
 		})).pos(F30, next_y_pos(1)));
 		general.add((roty = new Field(FLOAT, F3S).deg_range().consumer(field -> {
 			if(FMT.MODEL.sel_pivot == null) return;
 			FMT.MODEL.sel_pivot.rot.y = field.parse_float();
+			UpdateHandler.update(new UpdateEvent.PivotValueUpdated(FMT.MODEL.sel_pivot, field));
 		})).pos(F31, next_y_pos(0)));
 		general.add((rotz = new Field(FLOAT, F3S).deg_range().consumer(field -> {
 			if(FMT.MODEL.sel_pivot == null) return;
 			FMT.MODEL.sel_pivot.rot.z = field.parse_float();
+			UpdateHandler.update(new UpdateEvent.PivotValueUpdated(FMT.MODEL.sel_pivot, field));
 		})).pos(F32, next_y_pos(0)));
 		//
 		general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.root_rot"));
@@ -118,6 +127,7 @@ public class PivotEditorTab extends EditorTab {
 		updcom.add(UpdateEvent.PivotRenamed.class, event -> updateFields());
 		updcom.add(UpdateEvent.PivotRemoved.class, event -> updateFields());
 		updcom.add(UpdateEvent.PivotSelected.class, e -> updateFields());
+		updcom.add(UpdateEvent.PivotValueUpdated.class, e -> updatePVFields(e.from()));
 		updateFields();
 	}
 
@@ -156,6 +166,20 @@ public class PivotEditorTab extends EditorTab {
 			}
 		}
 		rootrot.updtexcol();
+	}
+
+	private void updatePVFields(Field field){
+		Pivot piv = FMT.MODEL.sel_pivot;
+		if(piv == null) return;
+		if(field != pos16x) pos16x.set(piv.pos.x);
+		if(field != pos16y) pos16y.set(piv.pos.y);
+		if(field != pos16z) pos16z.set(piv.pos.z);
+		if(field != posx) posx.set(piv.pos.x * sixteenth);
+		if(field != posy) posy.set(piv.pos.y * sixteenth);
+		if(field != posz) posz.set(piv.pos.z * sixteenth);
+		if(field != rotx) rotx.set(piv.rot.x);
+		if(field != roty) roty.set(piv.rot.y);
+		if(field != rotz) rotz.set(piv.rot.z);
 	}
 
 	private void refreshPivots(Pivot except){
