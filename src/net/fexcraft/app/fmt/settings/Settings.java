@@ -83,6 +83,7 @@ public class Settings {
 	//Interface
 	public static Setting<Float> UI_SCALE = new Setting<>("scale", 1f, INTERFACE);
 	public static Setting<Float> HOVER_HINT_TIME = new Setting<>("hover_hint_time", 1f, INTERFACE).minmax(0.1f, 20f);
+	public static RGBSetting INFO_TEXT_COLOR = new RGBSetting("info_text_color", new RGB(0x000000), INTERFACE);
 	public static RGBSetting GENERIC_BACKGROUND_0 = new RGBSetting("background_0", 0xcdcdcd, INTERFACE);
 	public static RGBSetting GENERIC_BACKGROUND_1 = new RGBSetting("background_1", 0xbdbdbd, INTERFACE);
 	public static RGBSetting GENERIC_BACKGROUND_2 = new RGBSetting("background_2", 0x858585, INTERFACE);
