@@ -244,6 +244,8 @@ public class FMT {
 		int vao = glGenVertexArrays();
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
+		glEnable(GL_CULL_FACE);
+		glEnable(GL_BLEND);
 		//
 		resize();
 		while(!glfwWindowShouldClose(window)){
@@ -306,9 +308,6 @@ public class FMT {
 	private void render(int vao, float alpha){
 		//glClearColor(0.5f, 0.5f, 0.5f, 0.01f);
 		glViewport(0, 0, WIDTH, HEIGHT);
-		glEnable(GL_CULL_FACE);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 	    //
 		ShaderManager.GENERAL.use();
 		glBindVertexArray(vao);
@@ -346,7 +345,9 @@ public class FMT {
 		glClearColor(background[0], background[1], background[2], 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		PolyRenderer.mode(DrawMode.UI);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		UI.render();
+		glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 		PolyRenderer.SCALE = 1f;
 		//
 		CAM.apply();
