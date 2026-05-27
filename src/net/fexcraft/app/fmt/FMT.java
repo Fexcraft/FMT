@@ -244,7 +244,7 @@ public class FMT {
 		int vao = glGenVertexArrays();
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
-		glEnable(GL_CULL_FACE);
+		if(Settings.CULL_FACE.value) glEnable(GL_CULL_FACE);
 		glEnable(GL_BLEND);
 		//
 		resize();
