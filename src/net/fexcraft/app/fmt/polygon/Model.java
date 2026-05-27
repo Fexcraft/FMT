@@ -909,4 +909,15 @@ public class Model {
 		}
 	}
 
+	public void askAndRemove(Polygon polygon){
+		if(ASK_POLYGON_REMOVAL.value){
+			FMT.UI.createDialog(500, 120, "tree.mode.polygon")
+				.addText(0, "tree.polygon.polygon.removal")
+				.addText(1, polygon.name() + " (" + polygon.getShape() + ")")
+				.consumer(d -> polygon.group().remove(polygon), null)
+				.buttons(100, Dialog.DialogButton.CONFIRM, Dialog.DialogButton.CANCEL);
+		}
+		else polygon.group().remove(polygon);
+	}
+
 }
