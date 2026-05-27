@@ -17,7 +17,11 @@ import static net.fexcraft.app.fmt.ui.editor.EditorTab.FF;
  */
 public class PolygonTreeTab extends TreeTab {
 
-	private static PolygonValue[] TRACKED = new PolygonValue[]{ CurvePolyCom.CUR_ACTIVE, CurvePolyCom.CUR_ACT_PNT, CurvePolyCom.CUR_ACT_PLN };
+	private static PolygonValue[] TRACKED = new PolygonValue[]{
+		CurvePolyCom.CUR_AMOUNT, CurvePolyCom.CUR_ACTIVE, CurvePolyCom.COLOR,
+		CurvePolyCom.CUR_AMT_PNT, CurvePolyCom.CUR_ACT_PNT,
+		CurvePolyCom.CUR_AMT_PLN, CurvePolyCom.CUR_ACT_PLN
+	};
 	public static String TOTALS_FORMAT;
 	public Element totals;
 
@@ -94,7 +98,11 @@ public class PolygonTreeTab extends TreeTab {
 			for(PolygonValue val : TRACKED){
 				if(val == event.value()){
 					GroupComSubElm com = getPolyCom(event.polygon());
-					if(com != null) com.refresh();
+					if(com != null){
+						float c = com.height();
+						com.refresh();
+						if(c != com.height()) getGroupCom(event.polygon().group()).orderComponents();
+					}
 					return;
 				}
 			}
