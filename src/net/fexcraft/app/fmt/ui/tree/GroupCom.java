@@ -1,6 +1,7 @@
 package net.fexcraft.app.fmt.ui.tree;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.polygon.CurvePolygon;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.settings.Settings;
@@ -49,7 +50,7 @@ public class GroupCom extends TTabCom {
 		add(new HidingElm().hoverable(true).texture("icons/component/edit").size(28, 28).pos(EDITOR_CONTENT - 32 * 4, 1).onclick(ci -> {
 			EditorRoot.setMode(EditorRoot.EditorMode.GROUP);
 		}).hint("tree.polygon.group.editor").hide());
-		group.forEach(poly -> container.add(new PolygonCom(poly)));
+		group.forEach(poly -> container.add(genNew(poly)));
 		orderComponents();
 		if(group.minimized) hide();
 	}
@@ -62,11 +63,10 @@ public class GroupCom extends TTabCom {
 	protected void orderComponents(){
 		fullheight = container.visible ? 5 : 0;
 		if(container.elements != null){
-			PolygonCom com;
 			for(Element elm : container.elements){
-				com = (PolygonCom)elm;
-				com.pos(5, fullheight);
-				fullheight += 30;
+				elm.pos(5, fullheight);
+				((GroupComSubElm)elm).refresh();
+				fullheight += ((GroupComSubElm)elm).height() + 2;
 			}
 		}
 		container.size(w, fullheight += 5);
@@ -80,8 +80,13 @@ public class GroupCom extends TTabCom {
 	}
 
 	public void addPolygon(Polygon poly){
-		container.add(new PolygonCom(poly));
+		container.add(genNew(poly));
 		orderComponents();
+	}
+
+	public Element genNew(Polygon poly){
+		if(poly instanceof CurvePolygon) return new CurvePolyCom(poly);
+		return new PolygonCom(poly);
 	}
 
 	public void remPolygon(Polygon poly){
@@ -89,11 +94,23 @@ public class GroupCom extends TTabCom {
 		orderComponents();
 	}
 
-	public PolygonCom getPolyCom(Polygon poly){
+	public GroupComSubElm getPolyCom(Polygon poly){
 		for(Element elm : container.elements){
-			if(elm instanceof PolygonCom com && com.polygon == poly) return com;
+			if(elm instanceof GroupComSubElm com && com.polygon() == poly) return com;
 		}
 		return null;
+	}
+
+	public static interface GroupComSubElm {
+
+		public Polygon polygon();
+
+		public void refresh();
+
+		public float height();
+
+		public void updateLabelColor();
+
 	}
 
 }
