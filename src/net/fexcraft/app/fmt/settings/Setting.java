@@ -7,6 +7,8 @@ import net.fexcraft.app.fmt.polygon.PolyRenderer;
 import net.fexcraft.app.fmt.utils.JsonUtil;
 import net.fexcraft.app.json.JsonMap;
 
+import static org.lwjgl.opengl.GL11.*;
+
 public class Setting<TYPE> {
 	
 	public final String id, group;
@@ -80,6 +82,12 @@ public class Setting<TYPE> {
 		if(id.equals("info_text_color")){
 			if(FMT.UI == null) return;
 			FMT.UI.positionInfoText();
+		}
+		if(id.equals("cull_face")){
+			FMT.queue(() -> {
+				if(bool()) glEnable(GL_CULL_FACE);
+				else glDisable(GL_CULL_FACE);
+			});
 		}
 		if(FMT.WORKSPACE != null && group.equals("workspace")) FMT.WORKSPACE.update(this);
 	}
