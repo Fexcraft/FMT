@@ -20,7 +20,9 @@ public class PolygonTreeTab extends TreeTab {
 	private static PolygonValue[] TRACKED = new PolygonValue[]{
 		CurvePolyCom.CUR_AMOUNT, CurvePolyCom.CUR_ACTIVE, CurvePolyCom.COLOR,
 		CurvePolyCom.CUR_AMT_PNT, CurvePolyCom.CUR_ACT_PNT,
-		CurvePolyCom.CUR_AMT_PLN, CurvePolyCom.CUR_ACT_PLN
+		CurvePolyCom.CUR_AMT_PLN, CurvePolyCom.CUR_ACT_PLN,
+		ObjPolyCom.VERTICES, ObjPolyCom.VERT_ACT,
+		ObjPolyCom.OBJ_FACES, ObjPolyCom.OBJ_FACE_ACT
 	};
 	public static String TOTALS_FORMAT;
 	public Element totals;
