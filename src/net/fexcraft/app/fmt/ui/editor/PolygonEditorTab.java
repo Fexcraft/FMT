@@ -182,7 +182,7 @@ public class PolygonEditorTab extends EditorTab {
 		cylinder.add((new Field(FLOAT, F3S, updcom, new PolygonValue(PolyVal.SEG_WIDTH))).pos(F31, next_y_pos(0)));
 		cylinder.add((new Field(FLOAT, F3S, updcom, new PolygonValue(PolyVal.SEG_HEIGHT))).pos(F32, next_y_pos(0)));
 		//
-		container.add((curve = new ETabCom("curve")), lang_prefix + "curve", 800);
+		container.add((curve = new ETabCom("curve")), lang_prefix + "curve", 620);
 		curve.add(new TextElm(0, next_y_pos(-1), FF).translate(lang_prefix + "general.rotation"));
 		curve.add((new Field(FLOAT, F3S, updcom, new PolygonValue(PolyVal.ROT, ValAxe.X))).deg_range().pos(F30, next_y_pos(1)));
 		curve.add((new Field(FLOAT, F3S, updcom, new PolygonValue(PolyVal.ROT, ValAxe.Y))).deg_range().pos(F31, next_y_pos(0)));
@@ -202,23 +202,14 @@ public class PolygonEditorTab extends EditorTab {
 		curve.add((new Field(INFO, F3S, updcom, new PolygonValue(PolyVal.CUR_LENGTH))).range(0, 360).pos(F30, next_y_pos(1)));
 		curve.add((new BoolElm(F31, next_y_pos(0), F3S).set(new PolygonValue(PolyVal.RADIAL), updcom)));
 		curve.add((new BoolElm(F32, next_y_pos(0), F3S).set(new PolygonValue(PolyVal.DIRECTION), updcom)));
-		curve.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "curve.active"));
-		curve.add((new Field(INT, F2S, updcom, new PolygonValue(PolyVal.CUR_AMOUNT))).range(2, 50).pos(F20, next_y_pos(1)));
-		curve.add((new Field(INT, F2S, updcom, new PolygonValue(PolyVal.CUR_ACTIVE))).min_range(0).pos(F21, next_y_pos(0)));
-		curve.add(new TextElm(0, next_y_pos(1.5f), FF).translate(lang_prefix + "curve.points"));
-		curve.add((new Field(INT, F2S, updcom, new PolygonValue(PolyVal.CUR_POINTS))).range(2, 50).pos(F20, next_y_pos(1)));
-		curve.add((new Field(INT, F2S, updcom, new PolygonValue(PolyVal.CUR_ACTIVE_POINT))).min_range(0).pos(F21, next_y_pos(0)));
-		curve.add(new TextElm(0, next_y_pos(1), FF - 20).translate(lang_prefix + "curve.position"));
+		curve.add(new TextElm(0, next_y_pos(1.5f), FF - 20).translate(lang_prefix + "curve.position"));
 		curve.add((new Field(FLOAT, F3S, updcom, new PolygonValue(PolyVal.POS, ValAxe.X))).pos(F30, next_y_pos(1)));
 		curve.add((new Field(FLOAT, F3S, updcom, new PolygonValue(PolyVal.POS, ValAxe.Y))).pos(F31, next_y_pos(0)));
 		curve.add((new Field(FLOAT, F3S, updcom, new PolygonValue(PolyVal.POS, ValAxe.Z))).pos(F32, next_y_pos(0)));
 		curve.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "curve.color"));
 		curve.add((new Field(COLOR, F2S, updcom, new PolygonValue(PolyVal.COLOR))).pos(F20, next_y_pos(1)));
 		curve.add((new Field(FLOAT, F2S, updcom, new PolygonValue(PolyVal.SCALE))).range(-16, 16).pos(F21, next_y_pos(0)));
-		curve.add(new TextElm(0, next_y_pos(1.5f), FF).translate(lang_prefix + "curve.planes"));
-		curve.add((new Field(INT, F2S, updcom, new PolygonValue(PolyVal.CUR_PLANES))).range(2, 50).pos(F20, next_y_pos(1)));
-		curve.add((new Field(INT, F2S, updcom, new PolygonValue(PolyVal.CUR_ACTIVE_PLANE))).min_range(0).pos(F21, next_y_pos(0)));
-		curve.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "curve.size"));
+		curve.add(new TextElm(0, next_y_pos(1.5f), FF).translate(lang_prefix + "curve.size"));
 		curve.add((new Field(FLOAT, F2S, updcom, new PolygonValue(PolyVal.SIZE, ValAxe.Y))).min_range(0).pos(F20, next_y_pos(1)));
 		curve.add((new Field(FLOAT, F2S, updcom, new PolygonValue(PolyVal.SIZE, ValAxe.Z))).min_range(0).pos(F21, next_y_pos(0)));
 		curve.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "curve.offset"));
