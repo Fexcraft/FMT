@@ -116,6 +116,7 @@ public class Settings {
 	public static Setting<Boolean> QVSYNC = new Setting<>("vsync/4", false, GRAPHIC);
 	public static Setting<Boolean> TRIANGULATION_Q = new Setting<>("triangulated_quads", true, GRAPHIC);
 	public static Setting<Boolean> TRIANGULATION_L = new Setting<>("triangulated_lines", false, GRAPHIC);
+	public static Setting<Boolean> CULL_FACE = new Setting<>("cull_face", true, GRAPHIC);
 	public static Setting<Boolean> FULLSCREEN = new Setting<>("fullscreen", false, GRAPHIC);
 	//Lighting
 	public static Setting<Boolean> LIGHTING_ON = new Setting<>("enabled", false, LIGHTING);
