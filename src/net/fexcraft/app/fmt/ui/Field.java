@@ -48,7 +48,7 @@ public class Field extends Element {
 		super();
 		type = ftype;
 		text("");
-		text_pos(5, -2);
+		defTextPos();
 		size(type.width(width), FS);
 		hoverable = true;
 		selectable = true;
