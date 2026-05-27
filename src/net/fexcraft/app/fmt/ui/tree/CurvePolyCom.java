@@ -11,6 +11,10 @@ import net.fexcraft.app.fmt.update.PolyVal;
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateHandler;
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.util.tinyfd.TinyFileDialogs;
+
+import java.nio.ByteBuffer;
 
 import static net.fexcraft.app.fmt.settings.Settings.*;
 import static net.fexcraft.app.fmt.ui.FMTInterface.EDITOR_CONTENT;
@@ -21,9 +25,13 @@ import static net.fexcraft.app.fmt.ui.editor.EditorTab.FS;
  */
 public class CurvePolyCom extends TTabCom implements GroupCom.GroupComSubElm {
 
+	public static PolygonValue CUR_AMOUNT = new PolygonValue(PolyVal.CUR_AMOUNT);
 	public static PolygonValue CUR_ACTIVE = new PolygonValue(PolyVal.CUR_ACTIVE);
+	public static PolygonValue CUR_AMT_PNT = new PolygonValue(PolyVal.CUR_POINTS);
 	public static PolygonValue CUR_ACT_PNT = new PolygonValue(PolyVal.CUR_ACTIVE_POINT);
+	public static PolygonValue CUR_AMT_PLN = new PolygonValue(PolyVal.CUR_PLANES);
 	public static PolygonValue CUR_ACT_PLN = new PolygonValue(PolyVal.CUR_ACTIVE_PLANE);
+	public static PolygonValue COLOR = new PolygonValue(PolyVal.COLOR);
 	protected CurvePolygon polygon;
 
 	public CurvePolyCom(Polygon poly){
@@ -82,19 +90,54 @@ public class CurvePolyCom extends TTabCom implements GroupCom.GroupComSubElm {
 				.onclick(ci -> {
 					if(polygon.selected) FMT.MODEL.updateValue(CUR_ACTIVE, null, ic, true);
 				}));
+			container.lastElement().add(new HidingElm().hoverable(true)
+				.texture("icons/component/add").size(24, 24).pos(container.lastElement().w - 54, 1)
+				.onclick(ci -> {
+					if(polygon.selected) FMT.MODEL.updateValue(CUR_AMT_PNT, null, polygon.act_curve().points.size() + 1, true);
+				})
+				.hint("tree.polygon.curve.add_point").hide());
+			container.lastElement().add(new HidingElm().hoverable(true)
+				.texture("icons/component/add").size(24, 24).pos(container.lastElement().w - 26, 1)
+				.onclick(ci -> {
+					if(polygon.selected) FMT.MODEL.updateValue(CUR_AMT_PLN, null, polygon.act_curve().planes.size() + 1, true);
+				})
+				.hint("tree.polygon.curve.add_plane").hide());
 			size += 28;
 			for(int i = 0; i < cur.points.size(); i++){
 				boolean ap = ac && cur.active_point == i;
 				int pi = i;
 				container.add(new Element().pos(2, size).size(FS, FS)
-					.color(cur.points.get(i).color));//TODO open color-picker on click
+					.color(cur.points.get(i).color).onclick(ci -> {
+						if(!polygon.selected) return;
+						try(MemoryStack stack = MemoryStack.stackPush()){
+							ByteBuffer color = stack.malloc(3);
+							String result = TinyFileDialogs.tinyfd_colorChooser("Choose a Color", "#" + Integer.toHexString(cur.points.get(pi).color.packed), null, color);
+							if(result == null) return;
+							if(polygon.act_curve() != cur){
+								FMT.MODEL.updateValue(CUR_ACTIVE, null, ic, true);
+							}
+							if(cur.active_point != pi){
+								FMT.MODEL.updateValue(CUR_ACT_PNT, null, pi, true);
+							}
+							FMT.MODEL.updateValue(COLOR, null, Integer.parseInt(result.replace("#", ""), 16), true);
+						}
+						catch(Exception e){
+							e.printStackTrace();
+						}
+					}));
 				container.add(new Element().pos(30, size).size(EDITOR_CONTENT - 45, FS)
 					.text("point " + pi).defTextPos()
 					.text_color(GENERIC_TEXT_0.value.packed)
 					.color(ap ? POLYGON_INV_SEL.value : GENERIC_BACKGROUND_0.value)
 					.onclick(ci -> {
-						if(polygon.selected) FMT.MODEL.updateValue(CUR_ACT_PNT, null, pi, true);
+						if(polygon.selected && ac) FMT.MODEL.updateValue(CUR_ACT_PNT, null, pi, true);
 					}));
+				container.lastElement().add(new HidingElm().hoverable(true)
+					.texture("icons/component/remove").size(24, 24).pos(container.lastElement().w - 26, 1)
+					.onclick(ci -> {
+						if(polygon.selected && ac) polygon.removePoint(pi);
+					})
+					.hint("tree.polygon.curve.remove_point").hide());
 				size += 28;
 			}
 			for(int i = 0; i < cur.planes.size(); i++){
@@ -105,8 +148,14 @@ public class CurvePolyCom extends TTabCom implements GroupCom.GroupComSubElm {
 					.text_color(GENERIC_TEXT_0.value.packed)
 					.color(ap ? POLYGON_INV_SEL.value : GENERIC_BACKGROUND_0.value)
 					.onclick(ci -> {
-						if(polygon.selected) FMT.MODEL.updateValue(CUR_ACT_PLN, null, pi, true);
+						if(polygon.selected && ac) FMT.MODEL.updateValue(CUR_ACT_PLN, null, pi, true);
 					}));
+				container.lastElement().add(new HidingElm().hoverable(true)
+					.texture("icons/component/remove").size(24, 24).pos(container.lastElement().w - 26, 1)
+					.onclick(ci -> {
+						if(polygon.selected && ac) polygon.removePlane(pi);
+					})
+					.hint("tree.polygon.curve.remove_plane").hide());
 				size += 28;
 			}
 			c++;
