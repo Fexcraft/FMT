@@ -5,6 +5,8 @@ import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Pivot;
 import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.ui.Element;
+import net.fexcraft.app.fmt.ui.tree.GroupCom.GroupComSubElm;
+import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.utils.Translator;
 
@@ -15,6 +17,7 @@ import static net.fexcraft.app.fmt.ui.editor.EditorTab.FF;
  */
 public class PolygonTreeTab extends TreeTab {
 
+	private static PolygonValue[] TRACKED = new PolygonValue[]{ CurvePolyCom.CUR_ACTIVE, CurvePolyCom.CUR_ACT_PNT, CurvePolyCom.CUR_ACT_PLN };
 	public static String TOTALS_FORMAT;
 	public Element totals;
 
@@ -84,8 +87,17 @@ public class PolygonTreeTab extends TreeTab {
 			if(com != null) com.addPolygon(event.polygon());
 		});
 		updcom.add(UpdateEvent.PolygonRenamed.class, event -> {
-			PolygonCom com = getPolyCom(event.polygon());
-			if(com != null) com.text(event.polygon().name());
+			GroupComSubElm com = getPolyCom(event.polygon());
+			if(com != null) ((Element)com).text(event.polygon().name());
+		});
+		updcom.add(UpdateEvent.PolygonValueEvent.class, event -> {
+			for(PolygonValue val : TRACKED){
+				if(val == event.value()){
+					GroupComSubElm com = getPolyCom(event.polygon());
+					if(com != null) com.refresh();
+					return;
+				}
+			}
 		});
 		updcom.add(UpdateEvent.PolygonRemoved.class, event -> getGroupCom(event.group()).remPolygon(event.polygon()));
 		updcom.add(UpdateEvent.PolygonSelected.class, event -> updatePolyLabel(event.polygon()));
@@ -104,14 +116,14 @@ public class PolygonTreeTab extends TreeTab {
 		return com == null ? null : com.getGroupCom(group);
 	}
 
-	private PolygonCom getPolyCom(Polygon poly){
+	private GroupComSubElm getPolyCom(Polygon poly){
 		if(poly.group() == null) return null;
 		GroupCom com = getGroupCom(poly.group());
 		return com == null ? null : com.getPolyCom(poly);
 	}
 
 	private void updatePolyLabel(Polygon poly) {
-		PolygonCom com = getPolyCom(poly);
+		GroupComSubElm com = getPolyCom(poly);
 		if(com != null) com.updateLabelColor();
 	}
 
