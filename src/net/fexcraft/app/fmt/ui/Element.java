@@ -280,6 +280,13 @@ public class Element {
 		postext();
 	}
 
+	public Element defTextPos(){
+		text.x = 5;
+		text.y = -2;
+		postext();
+		return this;
+	}
+
 	public Element text_scale(float s){
 		if(text == null) return this;
 		text.scale = s;
@@ -478,7 +485,7 @@ public class Element {
 		return this;
 	}
 
-	protected void clearElements(boolean del){
+	public void clearElements(boolean del){
 		if(elements != null){
 			for(Element element : elements){
 				element.clearElements(false);
