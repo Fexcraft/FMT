@@ -11,7 +11,7 @@ import static net.fexcraft.app.fmt.ui.FMTInterface.*;
 public class TTabCom extends Element {
 
 	public Element container;
-	public int fullheight;
+	public float fullheight;
 
 	@Override
 	public void init(Object... args){
