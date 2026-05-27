@@ -1,8 +1,11 @@
 package net.fexcraft.app.fmt.polygon;
 
+import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.uv.Face;
 import net.fexcraft.app.fmt.texture.Texture;
+import net.fexcraft.app.fmt.ui.tree.CurvePolyCom;
 import net.fexcraft.app.fmt.update.PolyVal;
+import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.app.json.JsonValue;
@@ -10,6 +13,8 @@ import net.fexcraft.lib.frl.Polyhedron;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
+
+import static net.fexcraft.app.fmt.update.UpdateHandler.update;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -229,6 +234,31 @@ public abstract class CurvePolygon extends Polygon {
 	@Override
 	protected float paintScale(Texture tex, boolean x){
 		return x ? tex.getWidth() : tex.getHeight();
+	}
+
+	public void removePoint(int val){
+		Curve cu = act_curve();
+		if(cu.points.size() <= 2) return;
+		if(val < 0 || val >= cu.points.size()) return;
+		if(val == cu.active_point) cu.active_point = val > 0 ? val - 1 : 0;
+		else if(val < cu.active_point) cu.active_point--;
+		cu.points.remove(val);
+		compileAllPaths();
+		recompile();
+		update(new UpdateEvent.PolygonValueEvent(this, CurvePolyCom.CUR_AMT_PNT, true));
+		update(new UpdateEvent.PolygonSelected(this, FMT.MODEL.selected().size(), FMT.MODEL.selected().size()));
+	}
+
+	public void removePlane(int val){
+		Curve cu = act_curve();
+		if(cu.planes.size() <= 2) return;
+		if(val < 0 || val >= cu.planes.size()) return;
+		if(val == cu.active_segment) cu.active_segment = val > 0 ? val - 1 : 0;
+		else if(val < cu.active_segment) cu.active_segment--;
+		cu.planes.remove(val);
+		recompile();
+		update(new UpdateEvent.PolygonValueEvent(this, CurvePolyCom.CUR_AMT_PLN, true));
+		update(new UpdateEvent.PolygonSelected(this, FMT.MODEL.selected().size(), FMT.MODEL.selected().size()));
 	}
 
 }
