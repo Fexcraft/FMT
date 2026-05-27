@@ -16,7 +16,7 @@ public class RunElm extends Element {
 		onclick(cons);
 		translate(text);
 		color(GENERIC_FIELD.value);
-		text_pos(5, -2);
+		defTextPos();
 		hoverable = true;
 	}
 
