@@ -111,7 +111,7 @@ public class EditorSidePanel extends Element {
 			);
 			container.add(new Element().pos(buff += iinc, yo).size(32, 32)
 				.texture("icons/polygon/object").hint("editor.panel.add.object")
-				.onclick(ci -> {})
+				.onclick(ci -> FMT.MODEL.add(null, null, new PolyObject(null)))
 			);
 			container.add(new Element().pos(buff += iinc, yo).size(32, 32)
 				.texture("icons/polygon/marker").hint("editor.panel.add.marker")
