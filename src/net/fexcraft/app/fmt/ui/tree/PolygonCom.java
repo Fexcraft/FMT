@@ -16,7 +16,7 @@ import static net.fexcraft.app.fmt.ui.FMTInterface.*;
 /**
  * @author Ferdinand Calo' (FEX___96)
  */
-public class PolygonCom extends Element {
+public class PolygonCom extends Element implements GroupCom.GroupComSubElm {
 
 	protected Polygon polygon;
 
@@ -52,9 +52,23 @@ public class PolygonCom extends Element {
 		updateLabelColor();
 	}
 
-	protected void updateLabelColor(){
+	@Override
+	public void updateLabelColor(){
 		color((polygon.visible ? polygon.selected ? Settings.POLYGON_SELECTED : Settings.POLYGON_NORMAL : polygon.selected ? Settings.POLYGON_INV_SEL : Settings.POLYGON_INVISIBLE).value);
 		text_color((polygon.selected ? GENERIC_TEXT_1 : GENERIC_TEXT_2).value.packed);
+	}
+
+	@Override
+	public Polygon polygon(){
+		return polygon;
+	}
+
+	@Override
+	public void refresh(){}
+
+	@Override
+	public float height(){
+		return h;
 	}
 
 }
