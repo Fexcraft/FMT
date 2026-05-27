@@ -38,6 +38,12 @@ public class Vertoff {
 		cache.z = poly.pos.z + (v.z += off.z);
 	}
 
+	public void apply(Polygon poly){
+		cache.x = poly.pos.x + off.x;
+		cache.y = poly.pos.y + off.y;
+		cache.z = poly.pos.z + off.z;
+	}
+
 	public static Pair<Polygon, VOKey> getPicked(int pick){
 		VOKey key = null;
 		for(Map.Entry<Pair<Polygon, VOKey>, Integer> entry : Polygon.vertcolors.entrySet()){
@@ -84,6 +90,7 @@ public class Vertoff {
 		CYL_INNER,
 		CYL_OUTER,
 		CURVE,
+		OBJECT
 		;
 
 	}
