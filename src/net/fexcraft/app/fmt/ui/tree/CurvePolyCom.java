@@ -49,19 +49,10 @@ public class CurvePolyCom extends TTabCom implements GroupCom.GroupComSubElm {
 			polygon.visible = !polygon.visible;
 			UpdateHandler.update(new UpdateEvent.PolygonVisibility(polygon, polygon.visible));
 		}).hint("tree.polygon.polygon.visible").hide());
-		add(new HidingElm().hoverable(true).texture("icons/component/remove").size(26, 26).pos(EDITOR_CONTENT - 34 * 3, 1).onclick(ci -> {
-			if(ASK_POLYGON_REMOVAL.value){
-				FMT.UI.createDialog(500, 120, "tree.mode.polygon")
-					.addText(0, "tree.polygon.polygon.removal")
-					.addText(1, polygon.name() + " (" + polygon.getShape() + ")")
-					.consumer(d -> polygon.group().remove(polygon), null)
-					.buttons(100, Dialog.DialogButton.CONFIRM, Dialog.DialogButton.CANCEL);
-			}
-			else polygon.group().remove(polygon);
-		}).hint("tree.polygon.polygon.remove").hide());
-		add(new HidingElm().hoverable(true).texture("icons/component/edit").size(26, 26).pos(EDITOR_CONTENT - 34 * 4, 1).onclick(ci -> {
-			EditorRoot.setMode(EditorRoot.EditorMode.POLYGON);
-		}).hint("tree.polygon.polygon.editor").hide());
+		add(new HidingElm().hoverable(true).texture("icons/component/remove").size(26, 26).pos(EDITOR_CONTENT - 34 * 3, 1)
+			.onclick(ci -> FMT.MODEL.askAndRemove(polygon)).hint("tree.polygon.polygon.remove").hide());
+		add(new HidingElm().hoverable(true).texture("icons/component/edit").size(26, 26).pos(EDITOR_CONTENT - 34 * 4, 1)
+			.onclick(ci -> EditorRoot.setMode(EditorRoot.EditorMode.POLYGON)).hint("tree.polygon.polygon.editor").hide());
 		updateLabelColor();
 		container.hide();
 	}
@@ -167,12 +158,6 @@ public class CurvePolyCom extends TTabCom implements GroupCom.GroupComSubElm {
 	@Override
 	public float height(){
 		return h + (container.visible ? container.h : 0);
-	}
-
-	@Override
-	public void updateLabelColor(){
-		color((polygon.visible ? polygon.selected ? Settings.POLYGON_SELECTED : Settings.POLYGON_NORMAL : polygon.selected ? Settings.POLYGON_INV_SEL : Settings.POLYGON_INVISIBLE).value);
-		text_color((polygon.selected ? GENERIC_TEXT_1 : GENERIC_TEXT_2).value.packed);
 	}
 
 	@Override
