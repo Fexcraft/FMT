@@ -3,6 +3,7 @@ package net.fexcraft.app.fmt.ui.tree;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.CurvePolygon;
 import net.fexcraft.app.fmt.polygon.Group;
+import net.fexcraft.app.fmt.polygon.PolyObject;
 import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.Dialog;
@@ -86,6 +87,7 @@ public class GroupCom extends TTabCom {
 
 	public Element genNew(Polygon poly){
 		if(poly instanceof CurvePolygon) return new CurvePolyCom(poly);
+		if(poly instanceof PolyObject) return new ObjPolyCom(poly);
 		return new PolygonCom(poly);
 	}
 
@@ -109,7 +111,10 @@ public class GroupCom extends TTabCom {
 
 		public float height();
 
-		public void updateLabelColor();
+		public default void updateLabelColor(){
+			((Element)this).color((polygon().visible ? polygon().selected ? Settings.POLYGON_SELECTED : Settings.POLYGON_NORMAL : polygon().selected ? Settings.POLYGON_INV_SEL : Settings.POLYGON_INVISIBLE).value);
+			((Element)this).text_color((polygon().selected ? GENERIC_TEXT_1 : GENERIC_TEXT_2).value.packed);
+		}
 
 	}
 
