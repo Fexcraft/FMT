@@ -123,9 +123,9 @@ public class PolygonEditorTab extends EditorTab {
 		vertex.add((vert_key = new Field(INFO, F2S, field -> {})).deg_range().pos(F20, next_y_pos(1)));
 		vertex.add((vert_sel = new Field(INFO, F2S, field -> {})).deg_range().pos(F21, next_y_pos(0)));
 		vertex.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "vertex.offset"));
-		vertex.add((vert_x = new Field(INFO, F3S, field -> applyVertOff(field.parse_float(), ValAxe.X))).deg_range().pos(F30, next_y_pos(1)));
-		vertex.add((vert_y = new Field(INFO, F3S, field -> applyVertOff(field.parse_float(), ValAxe.Y))).deg_range().pos(F31, next_y_pos(0)));
-		vertex.add((vert_z = new Field(INFO, F3S, field -> applyVertOff(field.parse_float(), ValAxe.Z))).deg_range().pos(F32, next_y_pos(0)));
+		vertex.add((vert_x = new Field(FLOAT, F3S, field -> applyVertOff(field.parse_float(), ValAxe.X))).deg_range().pos(F30, next_y_pos(1)));
+		vertex.add((vert_y = new Field(FLOAT, F3S, field -> applyVertOff(field.parse_float(), ValAxe.Y))).deg_range().pos(F31, next_y_pos(0)));
+		vertex.add((vert_z = new Field(FLOAT, F3S, field -> applyVertOff(field.parse_float(), ValAxe.Z))).deg_range().pos(F32, next_y_pos(0)));
 		//
 		container.add((general = new ETabCom("general")), lang_prefix + "general", 280);
 		addGeneralElements(general, false);
@@ -310,6 +310,7 @@ public class PolygonEditorTab extends EditorTab {
 			reorderComponents();
 		});
 		updcom.add(UpdateEvent.VertexSelected.class, e -> {
+			vertex.visible = e.selected() > 0;
 			vert_sel.text(e.selected());
 			if(e.selected() <= 0){
 				vert_key.text("");
@@ -324,6 +325,7 @@ public class PolygonEditorTab extends EditorTab {
 				vert_y.text(vo.off.y);
 				vert_z.text(vo.off.z);
 			}
+			reorderComponents();
 		});
 	}
 
