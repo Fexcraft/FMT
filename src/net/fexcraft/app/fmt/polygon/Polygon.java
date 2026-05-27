@@ -198,8 +198,7 @@ public abstract class Polygon {
 			case BOX: return new Box(model, obj);
 			case CYLINDER: return new Cylinder(model, obj, format);
 			case MARKER: return new Marker(model, obj);
-			case OBJECT:
-				break;
+			case OBJECT: return new PolyObject(model, obj);
 			case SHAPEBOX: return new Shapebox(model, obj);
 			case SPHERE:
 				break;
@@ -218,8 +217,7 @@ public abstract class Polygon {
 			case BOX: return new Box(model);
 			case CYLINDER: return new Cylinder(model);
 			case MARKER: return new Marker(model);
-			case OBJECT:
-				break;
+			case OBJECT: return new PolyObject(model);
 			case SHAPEBOX: return new Shapebox(model);
 			case SPHERE:
 				break;
