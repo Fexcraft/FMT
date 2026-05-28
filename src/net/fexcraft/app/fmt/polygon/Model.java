@@ -192,12 +192,12 @@ public class Model {
 		}
 	}
 
-	public void renderVertexPicking(){
+	public void renderVertices(boolean picker){
 		if(!visible) return;
 		for(Pivot pivot : pivots){
 			PolyRenderer.setPivot(pivot);
 			for(Group group : pivot.groups){
-				group.renderVertexPicking();
+				group.renderVertices(picker);
 			}
 			PolyRenderer.setPivot(null);
 		}
