@@ -9,11 +9,17 @@ import net.fexcraft.app.fmt.update.PolyVal;
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateHandler;
+import net.fexcraft.lib.common.math.RGB;
 import org.apache.commons.lang3.tuple.Pair;
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.util.tinyfd.TinyFileDialogs;
+
+import java.nio.ByteBuffer;
 
 import static net.fexcraft.app.fmt.settings.Settings.*;
 import static net.fexcraft.app.fmt.ui.FMTInterface.EDITOR_CONTENT;
 import static net.fexcraft.app.fmt.ui.editor.EditorTab.FS;
+import static net.fexcraft.app.fmt.ui.tree.CurvePolyCom.COLOR;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -66,7 +72,24 @@ public class ObjPolyCom extends TTabCom implements GroupCom.GroupComSubElm {
 		for(int v = 0; v < polygon.vectors.size(); v++){
 			boolean av = polygon.selvec == v;
 			int vi = v;
-			container.add(new Element().pos(2, size).size(EDITOR_CONTENT - 14, FS)
+			container.add(new Element().pos(2, size).size(FS, FS)
+				.color(polygon.vertoffs.get(polygon.vectors.get(vi)).color).onclick(ci -> {
+					if(!polygon.selected) return;
+					try(MemoryStack stack = MemoryStack.stackPush()){
+						ByteBuffer color = stack.malloc(3);
+						String result = TinyFileDialogs.tinyfd_colorChooser("Choose a Color", "#" + Integer.toHexString(polygon.vertoffs.get(polygon.vectors.get(vi)).color), null, color);
+						if(result == null) return;
+						if(polygon.selvec != vi) FMT.MODEL.updateValue(VERT_ACT, null, vi, true);
+						int col = Integer.parseInt(result.replace("#", ""), 16);
+						polygon.vertoffs.get(polygon.vectors.get(vi)).color = col;
+						polygon.vertoffs.get(polygon.vectors.get(vi)).arr_color = new RGB(col).toFloatArray();
+						FMT.MODEL.updateValue(COLOR, null, col, true);
+					}
+					catch(Exception e){
+						e.printStackTrace();
+					}
+				}));
+			container.add(new Element().pos(30, size).size(EDITOR_CONTENT - 45, FS)
 				.text("vector " + v).defTextPos()
 				.text_color(GENERIC_TEXT_0.value.packed)
 				.color(av ? POLYGON_INV_SEL.value : GENERIC_BACKGROUND_1.value)
