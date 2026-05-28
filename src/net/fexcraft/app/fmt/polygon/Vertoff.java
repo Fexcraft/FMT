@@ -2,6 +2,7 @@ package net.fexcraft.app.fmt.polygon;
 
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonValue;
+import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.V3D;
 import net.fexcraft.lib.common.math.Vec3f;
 import org.apache.commons.lang3.tuple.Pair;
@@ -13,7 +14,9 @@ import java.util.Map;
  */
 public class Vertoff {
 
-	public float[] color;
+	public float[] pick_color;
+	public float[] arr_color = new float[]{ 1, 1, 1, 1 };
+	public int color = 0xffffff;
 	public Polygon polygon;
 	public V3D cache = new V3D();
 	public Vector3F off = new Vector3F();
@@ -24,6 +27,8 @@ public class Vertoff {
 		off.x = value.asArray().get(0).float_value();
 		off.y = value.asArray().get(1).float_value();
 		off.z = value.asArray().get(2).float_value();
+		color = value.asArray().size() > 3 ? Integer.parseInt(value.asArray().get(3).string_value(), 16) : 0xffffff;
+		arr_color = new RGB(color).toFloatArray();
 	}
 
 	public void apply(Polygon poly, float[] v){
@@ -55,7 +60,9 @@ public class Vertoff {
 	}
 
 	public JsonArray save(){
-		return new JsonArray(off.x, off.y, off.z);
+		JsonArray arr = new JsonArray.Flat(off.x, off.y, off.z);
+		if(color != 0xffffff) arr.add(Integer.toHexString(color));
+		return arr;
 	}
 
 	public boolean isNull(){
