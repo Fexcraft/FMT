@@ -264,8 +264,8 @@ public abstract class Polygon {
 		glm.rot(rot.x, rot.y, rot.z);
 		generate();
 		for(Map.Entry<VOKey, Vertoff> entry : vertoffs.entrySet()){
-			if(entry.getValue().color == null){
-				entry.getValue().color = new RGB(vertIdx).toFloatArray();
+			if(entry.getValue().pick_color == null){
+				entry.getValue().pick_color = new RGB(vertIdx).toFloatArray();
 				vertcolors.put(Pair.of(this, entry.getKey()), vertIdx++);
 				vo_axe.setDegrees(-rot.y, -rot.z, -rot.x);
 				entry.getValue().cache = vo_axe.rotate(entry.getValue().cache);
@@ -299,9 +299,9 @@ public abstract class Polygon {
 		glm.render();
 	}
 
-	public void renderVertexPicking(){
+	public void renderVertOffs(boolean picker){
 		for(Vertoff vo : vertoffs.values()){
-			ROT_MARKER_NORMAL.glObj(GLObject.class).polycolor = vo.color;
+			ROT_MARKER_NORMAL.glObj(GLObject.class).polycolor = picker ? vo.pick_color : vo.arr_color;
 			ROT_MARKER_NORMAL.pos(vo.cache.x, vo.cache.y, vo.cache.z);
 			ROT_MARKER_NORMAL.rot(rot.x, rot.y, rot.z);
 			ROT_MARKER_NORMAL.render();
