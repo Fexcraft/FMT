@@ -335,7 +335,7 @@ public class FMT {
 			glClearColor(1, 1, 1, 1);
 		    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			PolyRenderer.mode(DrawMode.RGBCOLOR);
-			MODEL.renderVertexPicking();
+			MODEL.renderVertices(true);
 			Picker.process();
 			Picker.reset();
 		}
@@ -374,7 +374,7 @@ public class FMT {
 		MODEL.render(alpha);
 		if(Selector.TYPE == Picker.PickType.VERTEX || Selector.SHOW_VERTICES){
 			PolyRenderer.mode(DrawMode.RGBCOLOR);
-			MODEL.renderVertexPicking();
+			MODEL.renderVertices(false);
 		}
 		for(Model model : PreviewHandler.getLoaded()){
 			if(!model.visible) continue;
