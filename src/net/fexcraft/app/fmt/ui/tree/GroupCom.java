@@ -92,7 +92,7 @@ public class GroupCom extends TTabCom {
 	}
 
 	public void remPolygon(Polygon poly){
-		container.remElmIf(elm -> elm instanceof PolygonCom com && com.polygon == poly);
+		container.remElmIf(elm -> elm instanceof GroupComSubElm com && com.polygon() == poly);
 		orderComponents();
 	}
 
