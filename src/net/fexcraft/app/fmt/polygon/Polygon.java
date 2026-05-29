@@ -142,7 +142,7 @@ public abstract class Polygon {
 		}
 		JsonMap vo = new JsonMap();
 		for(Map.Entry<VOKey, Vertoff> entry : vertoffs.entrySet()){
-			if(!entry.getValue().isNull()) vo.add(entry.getKey().toString(), entry.getValue().save());
+			if(getShape().isObject() || !entry.getValue().isNull()) vo.add(entry.getKey().toString(), entry.getValue().save());
 		}
 		if(!vo.empty()) obj.add("vo", vo);
 		if(!export){
