@@ -2,7 +2,9 @@ package net.fexcraft.app.fmt.polygon;
 
 import net.fexcraft.app.fmt.polygon.uv.Face;
 import net.fexcraft.app.fmt.polygon.uv.NoFace;
+import net.fexcraft.app.fmt.ui.tree.ObjPolyCom;
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
+import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.app.json.JsonValue;
@@ -12,6 +14,8 @@ import net.fexcraft.lib.frl.Vertex;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+
+import static net.fexcraft.app.fmt.update.UpdateHandler.update;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -51,7 +55,7 @@ public class PolyObject extends Polygon {
 		int size = map.getInteger("vectors", 0);
 		for(int i = 0; i < size; i++) vectors.add(getVOKey(i));
 		for(Vertoff.VOKey vok : vectors){
-			vertoffs.putIfAbsent(vok, new Vertoff());
+			vertoffs.computeIfAbsent(vok, v -> new Vertoff());
 		}
 		faces.clear();
 		if(map.has("faces")){
@@ -84,13 +88,14 @@ public class PolyObject extends Polygon {
 
 	@Override
 	protected void generate(){
+		for(Vertoff.VOKey vok : vectors){
+			vertoffs.get(vok).apply(this);
+		}
 		for(ObjFace face : faces){
 			Vertex[] verts = new Vertex[face.vecs.length];
 			for(int i = 0; i < face.vecs.length; i++){
-				Vertoff.VOKey key = getVOKey(face.vecs[i]);
-				Vertoff vec = vertoffs.get(key);
+				Vertoff vec = vertoffs.get(getVOKey(face.vecs[i]));
 				verts[i] = new Vertex(vec.off.x, vec.off.y, vec.off.z).uv(face.uv[i * 2], face.uv[i * 2 + 1]);
-				vertoffs.get(key).apply(this);
 			}
 			glm.polygons.add(new net.fexcraft.lib.frl.Polygon(verts));
 		}
@@ -153,6 +158,43 @@ public class PolyObject extends Polygon {
 	@Override
 	public float[][][] newUV(boolean with_offsets, boolean exclude_detached){
 		return new float[0][][];
+	}
+
+	public void addFace(){
+		faces.add(faces.isEmpty() ? new ObjFace(true) : faces.get(faces.size() - 1).copy());
+		recompile();
+		update(new UpdateEvent.PolygonValueEvent(this, ObjPolyCom.OBJ_FACES, true));
+	}
+
+	public void removeFace(int idx){
+
+	}
+
+	public void addVertex(){
+		Vertoff.VOKey vok = getVOKey(vectors.size());
+		vectors.add(vok);
+		vertoffs.putIfAbsent(vok, new Vertoff(vertoffs.get(vectors.get(vectors.size() - 2))));
+		recompile();
+		update(new UpdateEvent.PolygonValueEvent(this, ObjPolyCom.VERTICES, true));
+	}
+
+	public void removeVertex(int idx){
+
+	}
+
+	public void toggleTriangleQuad(int idx){
+		if(idx < 0 || idx >= faces.size()) return;
+		ObjFace face = faces.get(idx);
+		if(face.tria){
+			face.tria = false;
+			face.vecs = new int[]{ face.vecs[0], face.vecs[1], face.vecs[2], face.vecs[2] };
+			face.uv = new float[]{ face.uv[0], face.uv[1], face.uv[2], face.uv[3], face.uv[4], face.uv[5], face.uv[4], face.uv[5]};
+		}
+		else{
+			face.tria = true;
+			face.vecs = new int[]{ face.vecs[0], face.vecs[1], face.vecs[2] };
+			face.uv = new float[]{ face.uv[0], face.uv[1], face.uv[2], face.uv[3], face.uv[4], face.uv[5] };
+		}
 	}
 
 	public static class ObjFace {
