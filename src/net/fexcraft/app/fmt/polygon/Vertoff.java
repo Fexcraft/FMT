@@ -31,6 +31,14 @@ public class Vertoff {
 		arr_color = new RGB(color).toFloatArray();
 	}
 
+	public Vertoff(Vertoff vert){
+		off.x = vert.off.x;
+		off.y = vert.off.y;
+		off.z = vert.off.z;
+		color = vert.color;
+		arr_color = new RGB(color).toFloatArray();
+	}
+
 	public void apply(Polygon poly, float[] v){
 		cache.x = poly.pos.x + (v[0] += off.x);
 		cache.y = poly.pos.y + (v[1] += off.y);
@@ -50,7 +58,7 @@ public class Vertoff {
 	}
 
 	public static Pair<Polygon, VOKey> getPicked(int pick){
-		VOKey key = null;
+		//VOKey key = null;
 		for(Map.Entry<Pair<Polygon, VOKey>, Integer> entry : Polygon.vertcolors.entrySet()){
 			if(entry.getValue() == pick){
 				return entry.getKey();
