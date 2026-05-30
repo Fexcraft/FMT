@@ -75,6 +75,6 @@ public class UpdateEvent {
     public static record PickMode(PickType type, PickTask task, boolean offcenter){};
     public static record PickFace(Polygon polygon, Face face){};
 
-    public static record VertexSelected(Pair<Polygon, VOKey> pair, int selected){};
+    public static record VertexSelected(Vertoff.VOSelection selected, int selection){};
 
 }
