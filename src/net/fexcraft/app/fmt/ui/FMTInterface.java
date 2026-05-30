@@ -239,7 +239,7 @@ public class FMTInterface extends Element {
 		}
 		if(FMT.MODEL.getSelectedVerts().size() > 0){
 			if(str.length() > 0) str.append(" / ");
-			if(FMT.MODEL.getSelectedVerts().size() == 1) str.append("v: ").append(FMT.MODEL.getSelectedVerts().get(0).getRight().type());
+			if(FMT.MODEL.getSelectedVerts().size() == 1) str.append("v: ").append(FMT.MODEL.getSelectedVerts().get(0).key().type());
 			else str.append("v: (").append(FMT.MODEL.getSelectedVerts().size()).append(")");
 		}
 		return str.toString();
