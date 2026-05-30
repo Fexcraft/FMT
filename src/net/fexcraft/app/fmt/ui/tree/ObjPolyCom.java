@@ -9,8 +9,8 @@ import net.fexcraft.app.fmt.update.PolyVal;
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateHandler;
+import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.lib.common.math.RGB;
-import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.util.tinyfd.TinyFileDialogs;
 
@@ -76,9 +76,10 @@ public class ObjPolyCom extends TTabCom implements GroupCom.GroupComSubElm {
 		int size = 2;
 		for(int v = 0; v < polygon.vectors.size(); v++){
 			boolean av = polygon.selvec == v;
+			Vertoff vo = polygon.vertoffs.get(polygon.vectors.get(v));
 			int vi = v;
 			container.add(new Element().pos(2, size).size(FS, FS)
-				.color(polygon.vertoffs.get(polygon.vectors.get(vi)).color).onclick(ci -> {
+				.color(vo.color).onclick(ci -> {
 					if(!polygon.selected) return;
 					int col = 0xffffff;
 					if(ci.button() == 1){
@@ -87,7 +88,7 @@ public class ObjPolyCom extends TTabCom implements GroupCom.GroupComSubElm {
 					else{
 						try(MemoryStack stack = MemoryStack.stackPush()){
 							ByteBuffer color = stack.malloc(3);
-							String result = TinyFileDialogs.tinyfd_colorChooser("Choose a Color", "#" + Integer.toHexString(polygon.vertoffs.get(polygon.vectors.get(vi)).color), null, color);
+							String result = TinyFileDialogs.tinyfd_colorChooser("Choose a Color", "#" + Integer.toHexString(vo.color), null, color);
 							if(result == null) return;
 							col = Integer.parseInt(result.replace("#", ""), 16);
 						}
@@ -96,19 +97,19 @@ public class ObjPolyCom extends TTabCom implements GroupCom.GroupComSubElm {
 						}
 					}
 					refresh();//if(polygon.selvec != vi) FMT.MODEL.updateValue(VERT_ACT, null, vi, true);
-					polygon.vertoffs.get(polygon.vectors.get(vi)).color = col;
-					polygon.vertoffs.get(polygon.vectors.get(vi)).arr_color = new RGB(col).toFloatArray();
+					vo.color = col;
+					vo.arr_color = new RGB(col).toFloatArray();
 					FMT.MODEL.updateValue(COLOR, null, col, true);
 				}));
 			container.add(new Element().pos(30, size).size(EDITOR_CONTENT - 45, FS)
 				.text("vector " + v).defTextPos()
 				.text_color(GENERIC_TEXT_0.value.packed)
-				.color(av ? POLYGON_INV_SEL.value : GENERIC_BACKGROUND_1.value)
+				.color(av ? POLYGON_SELECTED.value : vo.selected ? POLYGON_INV_SEL.value : GENERIC_BACKGROUND_1.value)
 				.onclick(ci -> {
 					if(polygon.selected){
+						if(!GGR.isAltDown()) FMT.MODEL.clearSelectedVerts();
+						FMT.MODEL.select(new Vertoff.VOSelection(polygon, polygon.vectors.get(vi)));
 						FMT.MODEL.updateValue(VERT_ACT, null, vi, true);
-						FMT.MODEL.clearSelectedVerts();
-						FMT.MODEL.select(Pair.of(polygon, polygon.vectors.get(vi)));
 					}
 				}));
 			container.lastElement().add(new HidingElm().hoverable(true)
