@@ -890,7 +890,8 @@ public class Model {
 
 	public void clearSelectedVerts(){
 		selected_verts.removeIf(sel -> {
-			sel.vertoff().selected = false;
+			Vertoff off = sel.vertoff();
+			if(off != null) off.selected = false;
 			return true;
 		});
 		UpdateHandler.update(new VertexSelected(null, 0));
