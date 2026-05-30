@@ -83,15 +83,17 @@ public class Field extends Element {
 			}
 			else if(event.selected() == 0) text(0);
 		});
-		consumer = input -> {
-			FMT.MODEL.updateValue(val, this, 0);
-		};
-		onscroll(si -> {
-			float flat = scroll(si.sy() > 0 ? EditorRoot.RATE : -EditorRoot.RATE);
-			text(type_format(flat));
-			previous = text.text();
-			FMT.MODEL.updateValue(val, this, 0);
-		});
+		if(!type.info()){
+			consumer = input -> {
+				FMT.MODEL.updateValue(val, this, 0);
+			};
+			onscroll(si -> {
+				float flat = scroll(si.sy() > 0 ? EditorRoot.RATE : -EditorRoot.RATE);
+				text(type_format(flat));
+				previous = text.text();
+				FMT.MODEL.updateValue(val, this, 0);
+			});
+		}
 	}
 
 	public Field consumer(Consumer<Field> cons){
