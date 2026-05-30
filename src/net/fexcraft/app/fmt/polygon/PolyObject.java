@@ -161,11 +161,14 @@ public class PolyObject extends Polygon {
 				break;
 			}
 			case OBJ_FACE_VERTEX:{
+				int val = (int)value;
+				if(val < 0 ) val = vectors.size() - 1;
+				if(val >= vectors.size()) val = 0;
 				if(polyval.axe() == PolyVal.ValAxe.N){
 					ObjFace face = faces.get(selfac);
-					if(!face.tria) face.vecs[3] = (int)value;
+					if(!face.tria) face.vecs[3] = val;
 				}
-				else faces.get(selfac).vecs[polyval.axe().ordinal()] = (int)value;
+				else faces.get(selfac).vecs[polyval.axe().ordinal()] = val;
 				break;
 			}
 			case OBJ_FACE_TRIANGLE:{
