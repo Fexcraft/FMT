@@ -5,7 +5,6 @@ import net.fexcraft.app.json.JsonValue;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.V3D;
 import net.fexcraft.lib.common.math.Vec3f;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Map;
 
@@ -19,6 +18,7 @@ public class Vertoff {
 	public int color = 0xffffff;
 	public V3D cache = new V3D();
 	public Vector3F off = new Vector3F();
+	public boolean selected;
 
 	public Vertoff(){}
 
@@ -56,9 +56,9 @@ public class Vertoff {
 		cache.z = poly.pos.z + off.z;
 	}
 
-	public static Pair<Polygon, VOKey> getPicked(int pick){
+	public static Vertoff.VOSelection getPicked(int pick){
 		//VOKey key = null;
-		for(Map.Entry<Pair<Polygon, VOKey>, Integer> entry : Polygon.vertcolors.entrySet()){
+		for(Map.Entry<VOSelection, Integer> entry : Polygon.vertcolors.entrySet()){
 			if(entry.getValue() == pick){
 				return entry.getKey();
 			}
@@ -101,6 +101,14 @@ public class Vertoff {
 			String[] split = key.split("/");
 			VOType type = VOType.valueOf(split[0]);
 			return new VOKey(type, Integer.parseInt(split[1]), Integer.parseInt(split[2]));
+		}
+
+	}
+
+	public static record VOSelection(Polygon polygon, VOKey key){
+
+		public Vertoff vertoff(){
+			return polygon.vertoffs.get(key);
 		}
 
 	}
