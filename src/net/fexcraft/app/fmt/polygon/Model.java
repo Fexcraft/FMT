@@ -18,6 +18,7 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import net.fexcraft.app.fmt.animation.Animation;
+import net.fexcraft.app.fmt.polygon.Vertoff.VOSelection;
 import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.Dialog.DialogButton;
@@ -33,7 +34,6 @@ import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.frl.Polyhedron;
 import net.fexcraft.lib.frl.gen.Generator;
 import net.fexcraft.lib.frl.gen.Generator.Values;
-import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -62,7 +62,7 @@ public class Model {
 	private ArrayList<Group> allgroups = new ArrayList<>();
 	private ArrayList<Pivot> pivots = new ArrayList<>();
 	private ArrayList<Polygon> selected = new ArrayList<>();
-	private ArrayList<Pair<Polygon, Vertoff.VOKey>> selected_verts = new ArrayList<Pair<Polygon, Vertoff.VOKey>>();
+	private ArrayList<VOSelection> selected_verts = new ArrayList<>();
 	public LinkedHashMap<String, String> export_values = new LinkedHashMap<>();
 	public LinkedHashMap<String, ArrayList<String>> export_listed_values = new LinkedHashMap<>();
 	public ArrayList<ArrayList<String>> export_group_presets = new ArrayList<>();
@@ -858,10 +858,11 @@ public class Model {
 		for(Pivot pivot : pivots) pivot.reroot();
 	}
 
-	public void select(Pair<Polygon, Vertoff.VOKey> off){
-		//if(!GGR.isAltDown()) selected_verts.clear();
-		selected_verts.add(off);
-		UpdateHandler.update(new VertexSelected(off, selected_verts.size()));
+	public void select(VOSelection sel){
+		//if(!GGR.isAltDown()) clearSelectedVerts();
+		selected_verts.add(sel);
+		sel.vertoff().selected = true;
+		UpdateHandler.update(new VertexSelected(sel, selected_verts.size()));
 		Logging.bar("Currently selected vertices: " + selected_verts.size());
 	}
 
@@ -883,12 +884,15 @@ public class Model {
 		}
 	}
 
-	public ArrayList<Pair<Polygon, Vertoff.VOKey>> getSelectedVerts(){
+	public ArrayList<VOSelection> getSelectedVerts(){
 		return selected_verts;
 	}
 
 	public void clearSelectedVerts(){
-		selected_verts.clear();
+		selected_verts.removeIf(sel -> {
+			sel.vertoff().selected = false;
+			return true;
+		});
 		UpdateHandler.update(new VertexSelected(null, 0));
 	}
 
