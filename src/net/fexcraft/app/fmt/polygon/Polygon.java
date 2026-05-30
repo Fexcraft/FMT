@@ -8,6 +8,7 @@ import static net.fexcraft.app.fmt.utils.JsonUtil.setVector;
 import static net.fexcraft.app.fmt.utils.Logging.log;
 
 import net.fexcraft.app.fmt.polygon.Vertoff.VOKey;
+import net.fexcraft.app.fmt.polygon.Vertoff.VOSelection;
 import net.fexcraft.app.fmt.polygon.Vertoff.VOType;
 import net.fexcraft.app.fmt.ui.UVViewer;
 import net.fexcraft.app.fmt.update.UpdateEvent.PolygonAdded;
@@ -15,7 +16,6 @@ import net.fexcraft.app.fmt.update.UpdateEvent.PolygonRenamed;
 import net.fexcraft.app.json.JsonValue;
 import net.fexcraft.lib.common.math.M4DW;
 import net.fexcraft.lib.frl.Vertex;
-import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.FMT;
@@ -43,7 +43,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class Polygon {
 
-	public static final ConcurrentHashMap<Pair<Polygon, VOKey>, Integer> vertcolors = new ConcurrentHashMap<>();
+	public static final ConcurrentHashMap<VOSelection, Integer> vertcolors = new ConcurrentHashMap<>();
 	public static final VOKey VO_0 = new VOKey(BOX_CORNER, 0, 0);
 	public static final VOKey VO_1 = new VOKey(BOX_CORNER, 1, 0);
 	public static final VOKey VO_2 = new VOKey(BOX_CORNER, 2, 0);
@@ -266,7 +266,7 @@ public abstract class Polygon {
 		for(Map.Entry<VOKey, Vertoff> entry : vertoffs.entrySet()){
 			if(entry.getValue().pick_color == null){
 				entry.getValue().pick_color = new RGB(vertIdx).toFloatArray();
-				vertcolors.put(Pair.of(this, entry.getKey()), vertIdx++);
+				vertcolors.put(new VOSelection(this, entry.getKey()), vertIdx++);
 				vo_axe.setDegrees(-rot.y, -rot.z, -rot.x);
 				entry.getValue().cache = vo_axe.rotate(entry.getValue().cache);
 			}
