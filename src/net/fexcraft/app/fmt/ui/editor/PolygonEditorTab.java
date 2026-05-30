@@ -1,6 +1,7 @@
 package net.fexcraft.app.fmt.ui.editor;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.polygon.Vertoff.VOSelection;
 import net.fexcraft.app.fmt.ui.*;
 import net.fexcraft.app.fmt.polygon.*;
 import net.fexcraft.app.fmt.ui.Field.FieldType;
@@ -11,7 +12,6 @@ import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateEvent.PolygonSelected;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.utils.CornerUtil;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 
@@ -310,17 +310,17 @@ public class PolygonEditorTab extends EditorTab {
 			reorderComponents();
 		});
 		updcom.add(UpdateEvent.VertexSelected.class, e -> {
-			vertex.visible = e.selected() > 0;
+			vertex.visible = e.selection() > 0;
 			vert_sel.text(e.selected());
-			if(e.selected() <= 0){
+			if(e.selection() <= 0){
 				vert_key.text("");
 				vert_x.text(0);
 				vert_y.text(0);
 				vert_z.text(0);
 			}
 			else{
-				Vertoff vo = e.pair().getLeft().vertoffs.get(e.pair().getRight());
-				vert_key.text(e.pair().getRight().toString());
+				Vertoff vo = e.selected().vertoff();
+				vert_key.text(e.selected().key());
 				vert_x.text(vo.off.x);
 				vert_y.text(vo.off.y);
 				vert_z.text(vo.off.z);
@@ -420,14 +420,14 @@ public class PolygonEditorTab extends EditorTab {
 
 	private void applyVertOff(float v, ValAxe a){
 		if(FMT.MODEL.getSelectedVerts().isEmpty()) return;
-		Pair<Polygon, Vertoff.VOKey> pair = FMT.MODEL.getSelectedVerts().get(0);
-		Vertoff vo = pair.getLeft().vertoffs.get(pair.getRight());
+		VOSelection sel = MODEL.getSelectedVerts().get(0);
+		Vertoff vo = sel.vertoff();
 		switch(a){
 			case X -> vo.off.x = v;
 			case Y -> vo.off.y = v;
 			case Z -> vo.off.z = v;
 		}
-		pair.getLeft().recompile();
+		sel.polygon().recompile();
 	}
 
 }
