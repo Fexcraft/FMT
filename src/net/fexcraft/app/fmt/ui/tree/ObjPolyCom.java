@@ -158,6 +158,15 @@ public class ObjPolyCom extends TTabCom implements GroupCom.GroupComSubElm {
 					}
 				})
 				.hint("tree.polygon.object.triangle_quad").hide());
+			container.lastElement().add(new HidingElm().hoverable(true)
+				.texture("icons/component/adjust").size(24, 24).pos(container.lastElement().w - 78, 1)
+				.onclick(ci -> {
+					if(polygon.selected){
+						polygon.faces.get(fi).flip();
+						FMT.MODEL.updateValue(OBJ_FACE_ACT, null, fi, true);
+					}
+				})
+				.hint("tree.polygon.object.flip_face").hide());
 			size += 28;
 		}
 		container.size(EDITOR_CONTENT - 10, size);
