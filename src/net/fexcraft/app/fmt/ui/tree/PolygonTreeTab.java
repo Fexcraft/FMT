@@ -22,7 +22,7 @@ public class PolygonTreeTab extends TreeTab {
 		CurvePolyCom.CUR_AMT_PNT, CurvePolyCom.CUR_ACT_PNT,
 		CurvePolyCom.CUR_AMT_PLN, CurvePolyCom.CUR_ACT_PLN,
 		ObjPolyCom.VERTICES, ObjPolyCom.VERT_ACT,
-		ObjPolyCom.OBJ_FACES, ObjPolyCom.OBJ_FACE_ACT
+		ObjPolyCom.OBJ_FACES, ObjPolyCom.OBJ_FACE_ACT, ObjPolyCom.OBJ_FACE_TRI
 	};
 	public static String TOTALS_FORMAT;
 	public Element totals;
