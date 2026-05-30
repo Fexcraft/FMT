@@ -28,9 +28,10 @@ public class ObjPolyCom extends TTabCom implements GroupCom.GroupComSubElm {
 
 	public static PolygonValue VERTICES = new PolygonValue(PolyVal.VERTICES);
 	public static PolygonValue OBJ_FACES = new PolygonValue(PolyVal.OBJ_FACES);
-	public static PolygonValue VERT_ACT = new PolygonValue(PolyVal.VERT_ACTIVE);
+	public static PolygonValue VERT_ACT = new PolygonValue(PolyVal.OBJ_VERT_ACTIVE);
 	public static PolygonValue OBJ_FACE_ACT = new PolygonValue(PolyVal.OBJ_FACE_ACTIVE);
 	public static PolygonValue OBJ_FACE_VRT = new PolygonValue(PolyVal.OBJ_FACE_VERTEX);
+	public static PolygonValue OBJ_FACE_TRI = new PolygonValue(PolyVal.OBJ_FACE_TRIANGLE);
 	protected PolyObject polygon;
 
 	public ObjPolyCom(Polygon poly){
@@ -52,10 +53,10 @@ public class ObjPolyCom extends TTabCom implements GroupCom.GroupComSubElm {
 			.onclick(ci -> FMT.MODEL.askAndRemove(polygon)).hint("tree.polygon.polygon.remove").hide());
 		add(new HidingElm().hoverable(true).texture("icons/component/edit").size(26, 26).pos(EDITOR_CONTENT - 34 * 4, 1)
 			.onclick(ci -> EditorRoot.setMode(EditorRoot.EditorMode.POLYGON)).hint("tree.polygon.polygon.editor").hide());
-		add(new HidingElm().hoverable(true).texture("icons/component/add").size(26, 26).pos(EDITOR_CONTENT - 34 * 5, 1)
+		/*add(new HidingElm().hoverable(true).texture("icons/component/add").size(26, 26).pos(EDITOR_CONTENT - 34 * 5, 1)
 			.onclick(ci -> polygon.addFace()).hint("tree.polygon.object.add_face").hide());
 		add(new HidingElm().hoverable(true).texture("icons/component/add").size(26, 26).pos(EDITOR_CONTENT - 34 * 6, 1)
-			.onclick(ci -> polygon.addVertex()).hint("tree.polygon.object.add_vertex").hide());
+			.onclick(ci -> polygon.addVertex()).hint("tree.polygon.object.add_vertex").hide());*/
 		updateLabelColor();
 		container.hide();
 	}
@@ -104,7 +105,7 @@ public class ObjPolyCom extends TTabCom implements GroupCom.GroupComSubElm {
 			container.add(new Element().pos(30, size).size(EDITOR_CONTENT - 45, FS)
 				.text("vector " + v).defTextPos()
 				.text_color(GENERIC_TEXT_0.value.packed)
-				.color(av ? POLYGON_SELECTED.value : vo.selected ? POLYGON_INV_SEL.value : GENERIC_BACKGROUND_1.value)
+				.color(vo.selected ? POLYGON_SELECTED.value : av ? POLYGON_INV_SEL.value : GENERIC_BACKGROUND_1.value)
 				.onclick(ci -> {
 					if(polygon.selected){
 						if(!GGR.isAltDown()) FMT.MODEL.clearSelectedVerts();
