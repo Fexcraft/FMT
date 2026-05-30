@@ -17,7 +17,6 @@ public class Vertoff {
 	public float[] pick_color;
 	public float[] arr_color = new float[]{ 1, 1, 1, 1 };
 	public int color = 0xffffff;
-	public Polygon polygon;
 	public V3D cache = new V3D();
 	public Vector3F off = new Vector3F();
 
@@ -75,6 +74,13 @@ public class Vertoff {
 
 	public boolean isNull(){
 		return off.x == 0f && off.y == 0f && off.z == 0f;
+	}
+
+	public void copy(Vertoff other){
+		off.set(other.off);
+		color = other.color;
+		arr_color = new RGB(color).toFloatArray();
+		cache.copy(other.cache);
 	}
 
 	public static record VOKey(VOType type, int vertix, int secondary){
