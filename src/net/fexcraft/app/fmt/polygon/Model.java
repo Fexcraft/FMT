@@ -634,21 +634,7 @@ public class Model {
 						}
 					}
 				}
-				for(PolyObject.ObjFace face : poly.faces){
-					if(face.tria){
-						int v = face.vecs[0];
-						face.vecs[0] = face.vecs[2];
-						face.vecs[2] = v;
-					}
-					else{
-						int v = face.vecs[0];
-						face.vecs[0] = face.vecs[1];
-						face.vecs[1] = v;
-						v = face.vecs[2];
-						face.vecs[2] = face.vecs[3];
-						face.vecs[3] = v;
-					}
-				}
+				for(PolyObject.ObjFace face : poly.faces) face.flip();
 				poly.recompile();
 			}
 		}
