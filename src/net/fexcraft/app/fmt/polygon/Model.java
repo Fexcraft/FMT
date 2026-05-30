@@ -615,6 +615,42 @@ public class Model {
 				mesh.compileAllPaths();
 				mesh.recompile();
 			}
+			if(polygon instanceof PolyObject){
+				PolyObject poly = (PolyObject)polygon;
+				for(int c = 0; c < poly.vectors.size(); c++){
+					Vertoff vo = poly.getVO(c, 0);
+					switch(axe){
+						case 0:{//z
+							vo.off.z = -vo.off.z;
+							break;
+						}
+						case 1:{//y
+							vo.off.y = -vo.off.y;
+							break;
+						}
+						case 2:{//x
+							vo.off.x = -vo.off.x;
+							break;
+						}
+					}
+				}
+				for(PolyObject.ObjFace face : poly.faces){
+					if(face.tria){
+						int v = face.vecs[0];
+						face.vecs[0] = face.vecs[2];
+						face.vecs[2] = v;
+					}
+					else{
+						int v = face.vecs[0];
+						face.vecs[0] = face.vecs[1];
+						face.vecs[1] = v;
+						v = face.vecs[2];
+						face.vecs[2] = face.vecs[3];
+						face.vecs[3] = v;
+					}
+				}
+				poly.recompile();
+			}
 		}
 		//TODO update event/s
 	}
