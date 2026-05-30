@@ -4,6 +4,7 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.uv.Face;
 import net.fexcraft.app.fmt.polygon.uv.NoFace;
 import net.fexcraft.app.fmt.ui.tree.ObjPolyCom;
+import net.fexcraft.app.fmt.update.PolyVal;
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.json.JsonArray;
@@ -115,8 +116,19 @@ public class PolyObject extends Polygon {
 	@Override
 	public float getValue(PolygonValue polyval){
 		switch(polyval.val()){
-			case VERT_ACTIVE: return selvec;
+			case VERTICES: return vectors.size();
+			case OBJ_VERT_ACTIVE: return selvec;
+			case OBJ_VERT_OFFSET: return getVectorValue(vertoffs.get(vectors.get(selvec)).off, polyval.axe());
+			case OBJ_FACES: return faces.size();
 			case OBJ_FACE_ACTIVE: return selfac;
+			case OBJ_FACE_VERTEX:{
+				if(polyval.axe() == PolyVal.ValAxe.N){
+					ObjFace face = faces.get(selfac);
+					return face.tria ? 0 : face.vecs[3];
+				}
+				return faces.get(selfac).vecs[polyval.axe().ordinal()];
+			}
+			case OBJ_FACE_TRIANGLE: return getBooleanAsIntValue(faces.get(selfac).tria);
 			default: return super.getValue(polyval);
 		}
 	}
@@ -124,14 +136,41 @@ public class PolyObject extends Polygon {
 	@Override
 	public void setValue(PolygonValue polyval, float value){
 		switch(polyval.val()){
-			case VERT_ACTIVE:{
+			case VERTICES:{
+				setVectors((int)value);
+				return;
+			}
+			case OBJ_VERT_ACTIVE:{
 				if(value < 0 || value >= vectors.size()) return;
 				selvec = (int)value;
+				break;
+			}
+			case OBJ_VERT_OFFSET:{
+				setVectorValue(vertoffs.get(vectors.get(selvec)).off, polyval.axe(), value);
+				break;
+			}
+			case OBJ_FACES:{
+				if(value < 2) return;
+				while(faces.size() > value) removeFace(faces.size() - 1);
+				while(faces.size() < value) addFace();
 				break;
 			}
 			case OBJ_FACE_ACTIVE:{
 				if(value < 0 || value >= faces.size()) return;
 				selfac = (int)value;
+				break;
+			}
+			case OBJ_FACE_VERTEX:{
+				if(polyval.axe() == PolyVal.ValAxe.N){
+					ObjFace face = faces.get(selfac);
+					if(!face.tria) face.vecs[3] = (int)value;
+				}
+				else faces.get(selfac).vecs[polyval.axe().ordinal()] = (int)value;
+				break;
+			}
+			case OBJ_FACE_TRIANGLE:{
+				boolean bool = value > 0.5f;
+				if(bool != faces.get(selfac).tria) toggleTriangleQuad(selfac);
 				break;
 			}
 			default: super.setValue(polyval, value); break;
@@ -160,6 +199,7 @@ public class PolyObject extends Polygon {
 	}
 
 	public void setVectors(int size){
+		if(size < 3) size = 3;
 		while(vectors.size() > size) vectors.remove(vectors.size() - 1);
 		while(vectors.size() < size){
 			Vertoff.VOKey vok = getVOKey(vectors.size());
@@ -217,6 +257,11 @@ public class PolyObject extends Polygon {
 			face.vecs = new int[]{ face.vecs[0], face.vecs[1], face.vecs[2] };
 			face.uv = new float[]{ face.uv[0], face.uv[1], face.uv[2], face.uv[3], face.uv[4], face.uv[5] };
 		}
+	}
+
+	public void flipFace(){
+		faces.get(selfac).flip();
+		recompile();
 	}
 
 	public static class ObjFace {
