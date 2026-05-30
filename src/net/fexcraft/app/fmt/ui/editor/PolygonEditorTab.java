@@ -5,6 +5,7 @@ import net.fexcraft.app.fmt.polygon.Vertoff.VOSelection;
 import net.fexcraft.app.fmt.ui.*;
 import net.fexcraft.app.fmt.polygon.*;
 import net.fexcraft.app.fmt.ui.Field.FieldType;
+import net.fexcraft.app.fmt.ui.tree.ObjPolyCom;
 import net.fexcraft.app.fmt.update.PolyVal;
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.update.PolyVal.ValAxe;
@@ -15,10 +16,10 @@ import net.fexcraft.app.fmt.utils.CornerUtil;
 
 import java.util.ArrayList;
 
-import static net.fexcraft.app.fmt.FMT.MODEL;
 import static net.fexcraft.app.fmt.settings.Settings.*;
 import static net.fexcraft.app.fmt.ui.Field.FieldType.*;
 import static net.fexcraft.app.fmt.ui.editor.EditorRoot.NOPOLYSEL;
+import static net.fexcraft.app.fmt.ui.tree.ObjPolyCom.OBJ_FACE_ACT;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -31,6 +32,7 @@ public class PolygonEditorTab extends EditorTab {
 	public ETabCom shapebox;
 	public ETabCom cylinder;
 	public ETabCom curve;
+	public ETabCom object;
 	public ETabCom marker;
 	public ETabCom vertex;
 	public Field name;
@@ -243,6 +245,77 @@ public class PolygonEditorTab extends EditorTab {
 				}
 			}));
  		//
+		container.add((object = new ETabCom("object")), lang_prefix + "object", 410);
+		object.add(new TextElm(0, next_y_pos(-1), FF).translate(lang_prefix + "object.vertices"));
+		object.add((new Field(INFO, F3S, updcom, ObjPolyCom.VERTICES)).min_range(0).pos(F30, next_y_pos(1)));
+		object.add((new Field(INT, F3S, updcom, ObjPolyCom.VERT_ACT)).pos(F31, next_y_pos(0)));
+		object.add((new RunElm(F32, next_y_pos(0), F3S, "editor.polygon.object.add", ci -> {
+			for(Polygon polygon : FMT.MODEL.selection_copy()){
+				if(polygon instanceof PolyObject poly) poly.addVertex();
+			}
+		})).hint("tree.polygon.object.add_vertex").text_centered(true));
+		object.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "object.vertex_offset"));
+		object.add(new Field(FLOAT, F3S, updcom, new PolygonValue(PolyVal.OBJ_VERT_OFFSET, ValAxe.X)).pos(F30, next_y_pos(1)));
+		object.add(new Field(FLOAT, F3S, updcom, new PolygonValue(PolyVal.OBJ_VERT_OFFSET, ValAxe.Y)).pos(F31, next_y_pos(0)));
+		object.add(new Field(FLOAT, F3S, updcom, new PolygonValue(PolyVal.OBJ_VERT_OFFSET, ValAxe.Z)).pos(F32, next_y_pos(0)));
+		object.add(new TextElm(0, next_y_pos(1.5f), FF).translate(lang_prefix + "object.faces"));
+		object.add((new Field(INFO, F3S, updcom, ObjPolyCom.OBJ_FACES)).min_range(0).pos(F30, next_y_pos(1)));
+		object.add((new Field(INT, F3S, updcom, OBJ_FACE_ACT)).pos(F31, next_y_pos(0)));
+		object.add((new RunElm(F32, next_y_pos(0), F3S, "editor.polygon.object.add", ci -> {
+			for(Polygon polygon : FMT.MODEL.selection_copy()){
+				if(polygon instanceof PolyObject poly) poly.addFace();
+			}
+		})).hint("tree.polygon.object.add_face").text_centered(true));
+		object.add(new TextElm(0, next_y_pos(1.5f), FF).translate(lang_prefix + "object.face_vertices"));
+		object.add(new Field(FLOAT, F4S, updcom, new PolygonValue(PolyVal.OBJ_FACE_VERTEX, ValAxe.X)).pos(F40, next_y_pos(1)));
+		object.add(new Field(FLOAT, F4S, updcom, new PolygonValue(PolyVal.OBJ_FACE_VERTEX, ValAxe.Y)).pos(F41, next_y_pos(0)));
+		object.add(new Field(FLOAT, F4S, updcom, new PolygonValue(PolyVal.OBJ_FACE_VERTEX, ValAxe.Z)).pos(F42, next_y_pos(0)));
+		object.add(new Field(FLOAT, F4S, updcom, new PolygonValue(PolyVal.OBJ_FACE_VERTEX, ValAxe.N)).pos(F43, next_y_pos(0)));
+		object.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "object.face_triangle"));
+		object.add((new BoolElm(F20, next_y_pos(1), F2S).set(ObjPolyCom.OBJ_FACE_TRI, updcom)));
+		object.add((new RunElm(F21, next_y_pos(0), F2S, "editor.polygon.object.face_flip", ci -> {
+			if(FMT.MODEL.selected().isEmpty()) return;
+			PolyObject obj = null;
+			for(Polygon polygon : FMT.MODEL.selection_copy()){
+				if(polygon instanceof PolyObject poly){
+					poly.flipFace();
+					if(obj == null) obj = poly;
+				}
+			}
+			if(obj != null){
+				FMT.MODEL.updateValue(OBJ_FACE_ACT, null, obj.selfac, true);
+			}
+		})).hint("tree.polygon.object.flip_face").text_centered(true));
+		object.add((new RunElm(FO, next_y_pos(1.5f), FF, "editor.polygon.object.face_from_selection", ci -> {
+			boolean failed = FMT.MODEL.getSelectedVerts().size() < 3;
+			if(!failed){
+				Polygon poly = FMT.MODEL.getSelectedVerts().get(0).polygon();
+				if(poly instanceof PolyObject){
+					for(int i = 1; i < FMT.MODEL.getSelectedVerts().size() && i < 4; i++){
+						if(FMT.MODEL.getSelectedVerts().get(i).polygon() != poly){
+							failed = true;
+							break;
+						}
+					}
+				}
+				else failed = true;
+			}
+			if(failed){
+				FMT.UI.createDialog(500, 80, null)
+					.addText(0, "editor.polygon.object.select_three")
+					.buttons(100, Dialog.DialogButton.OK);
+			}
+			PolyObject obj = (PolyObject)FMT.MODEL.getSelectedVerts().get(0).polygon();
+			PolyObject.ObjFace face = new PolyObject.ObjFace(FMT.MODEL.getSelectedVerts().size() == 3);
+			for(int i = 0; i < FMT.MODEL.getSelectedVerts().size() && i < 4; i++){
+				face.vecs[i] = FMT.MODEL.getSelectedVerts().get(i).key().vertix();
+			}
+			obj.selfac = obj.faces.size();
+			obj.faces.add(face);
+			obj.recompile();
+			FMT.MODEL.updateValue(OBJ_FACE_ACT, null, obj.selfac, true);
+		})).hint("tree.polygon.object.flip_face").text_centered(true));
+		//
 		container.add((marker = new ETabCom("marker")), lang_prefix + "marker", 220);
 		marker.add(new TextElm(0, next_y_pos(-1), FF).translate(lang_prefix + "marker.color"));
 		marker.add((new Field(COLOR, FF, updcom, new PolygonValue(PolyVal.COLOR))).pos(FO, next_y_pos(1)));
@@ -276,6 +349,7 @@ public class PolygonEditorTab extends EditorTab {
 			shapebox.visible = false;
 			cylinder.visible = false;
 			curve.visible = false;
+			object.visible = false;
 			marker.visible = false;
 			vertex.visible = false;
 			ArrayList<Polygon> polys = FMT.MODEL.selected();
@@ -298,6 +372,9 @@ public class PolygonEditorTab extends EditorTab {
 				}
 				if(poly.getShape().isCurve()){
 					curve.visible = true;
+				}
+				if(poly.getShape().isObject()){
+					object.visible = true;
 				}
 				if(poly.getShape().isMarker() || poly.getShape().isBoundingBox()){
 					marker.visible = true;
@@ -346,8 +423,8 @@ public class PolygonEditorTab extends EditorTab {
 		general.add(new PosCopyButton(0, next_y_pos(0), PolyVal.OFF));
 		general.add(new SideButton(1, next_y_pos(0), "icons/polygon/marker").hint("editor.polygon.general.offset.center_box")
 			.onclick(ci -> {
-				if(MODEL.selected().isEmpty()) return;
-				for(Polygon polygon : MODEL.selected()){
+				if(FMT.MODEL.selected().isEmpty()) return;
+				for(Polygon polygon : FMT.MODEL.selected()){
 					FMT.MODEL.updateValue(off_x.polyval(), null, polygon.getValue(siz_x.polyval()) * -0.5f, true);
 					FMT.MODEL.updateValue(off_y.polyval(), null, polygon.getValue(siz_y.polyval()) * -0.5f, true);
 					FMT.MODEL.updateValue(off_z.polyval(), null, polygon.getValue(siz_z.polyval()) * -0.5f, true);
@@ -420,7 +497,7 @@ public class PolygonEditorTab extends EditorTab {
 
 	private void applyVertOff(float v, ValAxe a){
 		if(FMT.MODEL.getSelectedVerts().isEmpty()) return;
-		VOSelection sel = MODEL.getSelectedVerts().get(0);
+		VOSelection sel = FMT.MODEL.getSelectedVerts().get(0);
 		Vertoff vo = sel.vertoff();
 		switch(a){
 			case X -> vo.off.x = v;
