@@ -323,6 +323,7 @@ tree.polygon.object.add_vertex=Add Vertex to PolyObject
 tree.polygon.object.remove_face=Remove Face from PolyObject
 tree.polygon.object.remove_vertex=Remove Vertex from PolyObject
 tree.polygon.object.triangle_quad=Toggle between Triangle/Quad Mode
+tree.polygon.object.flip_face=Flip Face / Vertex Order
 tree.texture.add_group=Add Texture Group
 tree.texture.auto_pos=Run Auto-UV-Pos
 tree.texture.reset_pos=Reset UV-Pos
