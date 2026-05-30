@@ -134,7 +134,7 @@ public class ObjPolyCom extends TTabCom implements GroupCom.GroupComSubElm {
 						face.vecs[v] = i;
 						polygon.recompile();
 						refresh();
-					}));
+					}).text(face.vecs[v]).text_autoscale());
 			}
 			container.add(new Element().pos(85, size).size(EDITOR_CONTENT - 100, FS)
 				.text("face " + f).defTextPos()
