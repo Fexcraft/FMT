@@ -3,16 +3,14 @@ package net.fexcraft.app.fmt.utils;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import net.fexcraft.app.fmt.polygon.Vertoff;
-import net.fexcraft.app.fmt.polygon.Vertoff.VOKey;
+import net.fexcraft.app.fmt.polygon.Vertoff.VOSelection;
 import net.fexcraft.app.fmt.polygon.uv.Face;
 import net.fexcraft.app.fmt.polygon.uv.NoFace;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateEvent.PickMode;
-import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMT;
@@ -20,8 +18,6 @@ import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.texture.TexturePainter;
-
-import static net.fexcraft.app.fmt.utils.Logging.log;
 
 public class Picker {
 	
@@ -31,7 +27,7 @@ public class Picker {
 	private static boolean offcenter;
 	private static Polygon polygon;
 	private static Consumer<Polygon> consumer;
-	private static BiConsumer<Polygon, VOKey> vert_consumer;
+	private static Consumer<VOSelection> vert_consumer;
 	public static Face selected_face = NoFace.NONE;
 
 	public static void resetBuffer(boolean resize){
@@ -157,13 +153,13 @@ public class Picker {
 			int pick = getPick();
 			Logging.bar("picked: " + pick);
 			if(pick < Polygon.startIdx) return;
-			Pair<Polygon, VOKey> off = Vertoff.getPicked(pick);
+			VOSelection off = Vertoff.getPicked(pick);
 			if(off == null) return;
 			if(TASK.select()){
 				FMT.MODEL.select(off);
 			}
 			else if(TASK.function()){
-				vert_consumer.accept(off.getLeft(), off.getRight());
+				vert_consumer.accept(off);
 				vert_consumer = null;
 			}
 			Selector.set(PickType.POLYGON);
