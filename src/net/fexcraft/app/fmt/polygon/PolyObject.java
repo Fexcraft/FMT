@@ -1,5 +1,6 @@
 package net.fexcraft.app.fmt.polygon;
 
+import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.uv.Face;
 import net.fexcraft.app.fmt.polygon.uv.NoFace;
 import net.fexcraft.app.fmt.ui.tree.ObjPolyCom;
@@ -14,6 +15,7 @@ import net.fexcraft.lib.frl.Vertex;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 
 import static net.fexcraft.app.fmt.update.UpdateHandler.update;
 
@@ -30,13 +32,7 @@ public class PolyObject extends Polygon {
 
 	public PolyObject(Model model){
 		super(model);
-		vectors.add(getVOKey(0));
-		vectors.add(getVOKey(1));
-		vectors.add(getVOKey(2));
-		vectors.add(getVOKey(3));
-		for(Vertoff.VOKey vok : vectors){
-			vertoffs.putIfAbsent(vok, new Vertoff());
-		}
+		setVectors(4);
 		vertoffs.get(vectors.get(1)).off.y = 1;
 		vertoffs.get(vectors.get(2)).off.y = 1;
 		vertoffs.get(vectors.get(2)).off.x = 1;
@@ -51,12 +47,7 @@ public class PolyObject extends Polygon {
 
 	public PolyObject(Model model, JsonMap map){
 		super(model, map);
-		vectors.clear();
-		int size = map.getInteger("vectors", 0);
-		for(int i = 0; i < size; i++) vectors.add(getVOKey(i));
-		for(Vertoff.VOKey vok : vectors){
-			vertoffs.computeIfAbsent(vok, v -> new Vertoff());
-		}
+		setVectors(map.getInteger("vectors", 0));
 		faces.clear();
 		if(map.has("faces")){
 			for(JsonValue<?> val : map.getArray("faces").value){
@@ -151,13 +142,30 @@ public class PolyObject extends Polygon {
 	@Override
 	protected Polygon copyInternal(Polygon poly){
 		if(poly instanceof PolyObject == false) return poly;
-		//
+		PolyObject obj = (PolyObject)poly;
+		obj.setVectors(vectors.size());
+		for(Map.Entry<Vertoff.VOKey, Vertoff> entry : obj.vertoffs.entrySet()){
+			entry.getValue().copy(vertoffs.get(entry.getKey()));
+		}
+		obj.faces.clear();
+		for(ObjFace face : faces){
+			obj.faces.add(face.copy());
+		}
 		return poly;
 	}
 
 	@Override
 	public float[][][] newUV(boolean with_offsets, boolean exclude_detached){
 		return new float[0][][];
+	}
+
+	public void setVectors(int size){
+		while(vectors.size() > size) vectors.remove(vectors.size() - 1);
+		while(vectors.size() < size){
+			Vertoff.VOKey vok = getVOKey(vectors.size());
+			vectors.add(vok);
+			vertoffs.computeIfAbsent(vok, v -> vectors.size() == 1 ? new Vertoff() : new Vertoff(vertoffs.get(vectors.get(vectors.size() - 2))));
+		}
 	}
 
 	public void addFace(){
@@ -167,19 +175,33 @@ public class PolyObject extends Polygon {
 	}
 
 	public void removeFace(int idx){
-
+		if(idx < 0 || idx >= faces.size() || faces.size() < 2) return;
+		faces.remove(idx);
+		FMT.MODEL.updateValue(ObjPolyCom.OBJ_FACE_ACT, null, idx == 0 ? 0 : idx - 1, true);
 	}
 
 	public void addVertex(){
-		Vertoff.VOKey vok = getVOKey(vectors.size());
-		vectors.add(vok);
-		vertoffs.putIfAbsent(vok, new Vertoff(vertoffs.get(vectors.get(vectors.size() - 2))));
+		setVectors(vectors.size() + 1);
 		recompile();
 		update(new UpdateEvent.PolygonValueEvent(this, ObjPolyCom.VERTICES, true));
 	}
 
 	public void removeVertex(int idx){
-
+		if(idx < 0 || idx >= vectors.size() || vectors.size() < 4) return;
+		Vertoff vo, vp;
+		for(int i = idx; i < vectors.size() - 1; i++){
+			vo = vertoffs.get(vectors.get(i));
+			vp = vertoffs.get(vectors.get(i + 1));
+			vo.copy(vp);
+		}
+		Vertoff.VOKey vok = vectors.remove(vectors.size() - 1);
+		vertoffs.remove(vok);
+		for(ObjFace face : faces){
+			for(int i = 0; i < face.vecs.length; i++){
+				if(face.vecs[i] >= idx) face.vecs[i] = face.vecs[i] == 0 ? 0 : face.vecs[i] - 1;
+			}
+		}
+		FMT.MODEL.updateValue(ObjPolyCom.VERT_ACT, null, idx == 0 ? 0 : idx - 1, true);
 	}
 
 	public void toggleTriangleQuad(int idx){
@@ -231,6 +253,22 @@ public class PolyObject extends Polygon {
 			face.vecs = Arrays.copyOf(vecs, vecs.length);
 			face.uv = Arrays.copyOf(uv, uv.length);
 			return face;
+		}
+
+		public void flip(){
+			if(tria){
+				int v = vecs[0];
+				vecs[0] = vecs[2];
+				vecs[2] = v;
+			}
+			else{
+				int v = vecs[0];
+				vecs[0] = vecs[1];
+				vecs[1] = v;
+				v = vecs[2];
+				vecs[2] = vecs[3];
+				vecs[3] = v;
+			}
 		}
 
 	}
