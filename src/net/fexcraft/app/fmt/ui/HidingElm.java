@@ -5,6 +5,11 @@ package net.fexcraft.app.fmt.ui;
  */
 public class HidingElm extends Element {
 
+	public HidingElm(){
+		super();
+		update_if_invisible = true;
+	}
+
 	@Override
 	public void update(){
 		if(root.hoveredx()) show();
