@@ -48,6 +48,7 @@ public class Element {
 	public float[] pickpos = new float[4];
 	public CheckMode check_mode = CheckMode.IN_WINDOW;
 	public boolean render_sub_even_if_invisible = false;
+	public boolean update_if_invisible = false;
 	private float x;
 	private float y;
 	public float zoff;
@@ -339,8 +340,10 @@ public class Element {
 	}
 
 	public void update0(){
-		update();
-		if(elements != null) for(Element elm : elements) elm.update0();
+		if(visible || update_if_invisible){
+			update();
+			if(elements != null) for(Element elm : elements) elm.update0();
+		}
 		//hovered(false);
 	}
 
