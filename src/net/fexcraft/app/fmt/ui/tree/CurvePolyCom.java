@@ -11,6 +11,7 @@ import net.fexcraft.app.fmt.update.PolyVal;
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateHandler;
+import net.fexcraft.lib.common.math.RGB;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.util.tinyfd.TinyFileDialogs;
 
@@ -100,21 +101,28 @@ public class CurvePolyCom extends TTabCom implements GroupCom.GroupComSubElm {
 				container.add(new Element().pos(2, size).size(FS, FS)
 					.color(cur.points.get(i).color).onclick(ci -> {
 						if(!polygon.selected) return;
-						try(MemoryStack stack = MemoryStack.stackPush()){
-							ByteBuffer color = stack.malloc(3);
-							String result = TinyFileDialogs.tinyfd_colorChooser("Choose a Color", "#" + Integer.toHexString(cur.points.get(pi).color.packed), null, color);
-							if(result == null) return;
-							if(polygon.act_curve() != cur){
-								FMT.MODEL.updateValue(CUR_ACTIVE, null, ic, true);
-							}
-							if(cur.active_point != pi){
-								FMT.MODEL.updateValue(CUR_ACT_PNT, null, pi, true);
-							}
-							FMT.MODEL.updateValue(COLOR, null, Integer.parseInt(result.replace("#", ""), 16), true);
+						int col = 0xffffff;
+						if(ci.button() == 1){
+							col = RGB.random().packed;
 						}
-						catch(Exception e){
-							e.printStackTrace();
+						else{
+							try(MemoryStack stack = MemoryStack.stackPush()){
+								ByteBuffer color = stack.malloc(3);
+								String result = TinyFileDialogs.tinyfd_colorChooser("Choose a Color", "#" + Integer.toHexString(cur.points.get(pi).color.packed), null, color);
+								if(result == null) return;
+								col = Integer.parseInt(result.replace("#", ""), 16);
+							}
+							catch(Exception e){
+								e.printStackTrace();
+							}
 						}
+						if(polygon.act_curve() != cur){
+							FMT.MODEL.updateValue(CUR_ACTIVE, null, ic, true);
+						}
+						if(cur.active_point != pi){
+							FMT.MODEL.updateValue(CUR_ACT_PNT, null, pi, true);
+						}
+						FMT.MODEL.updateValue(COLOR, null, col, true);
 					}));
 				container.add(new Element().pos(30, size).size(EDITOR_CONTENT - 45, FS)
 					.text("point " + pi).defTextPos()
