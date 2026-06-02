@@ -11,16 +11,12 @@ import static net.fexcraft.app.fmt.update.PolyVal.CORNER_7;
 import static net.fexcraft.app.fmt.utils.JsonUtil.getVector;
 import static net.fexcraft.app.fmt.utils.JsonUtil.setVector;
 
-import java.util.ArrayList;
-
 import net.fexcraft.app.fmt.polygon.Vertoff.VOKey;
 import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.update.PolyVal;
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.json.JsonMap;
-import net.fexcraft.lib.common.math.Vec3f;
-import net.fexcraft.lib.frl.gen.Generator;
 
 public class Shapebox extends Box {
 	
@@ -140,6 +136,11 @@ public class Shapebox extends Box {
 		if(key == VO_6) return cor6;
 		if(key == VO_7) return cor7;
 		return null;
+	}
+
+	@Override
+	public boolean alwaysShowVerts(){
+		return true;
 	}
 
 }
