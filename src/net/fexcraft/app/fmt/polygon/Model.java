@@ -177,7 +177,6 @@ public class Model {
 				if(Settings.LINES.value) group.render(DrawMode.LINES, alpha);
 			}
 		}
-		if(Settings.LINES.value && Settings.POLYMARKER.value && isLastSelectedCornerMarked() && Selector.showCorners()) CornerUtil.renderCorners();
 		PolyRenderer.setPivot(null);
 	}
 
