@@ -1,9 +1,7 @@
 package net.fexcraft.app.fmt.polygon;
 
-import java.util.ArrayList;
-
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.lib.frl.Vertex;
+import net.fexcraft.app.fmt.utils.CornerUtil;
 import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
@@ -14,7 +12,6 @@ import net.fexcraft.app.fmt.polygon.uv.UVCoords;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.RGB;
-import net.fexcraft.lib.frl.gen.Generator;
 
 public class Box extends Polygon {
 	
@@ -64,14 +61,19 @@ public class Box extends Polygon {
 	}
 
 	private void fillVertoffs(){
-		vertoffs.putIfAbsent(VO_0, new Vertoff());
-		vertoffs.putIfAbsent(VO_1, new Vertoff());
-		vertoffs.putIfAbsent(VO_2, new Vertoff());
-		vertoffs.putIfAbsent(VO_3, new Vertoff());
-		vertoffs.putIfAbsent(VO_4, new Vertoff());
-		vertoffs.putIfAbsent(VO_5, new Vertoff());
-		vertoffs.putIfAbsent(VO_6, new Vertoff());
-		vertoffs.putIfAbsent(VO_7, new Vertoff());
+		vertoffs.putIfAbsent(VO_0, new Vertoff().color(CornerUtil.CORNER_COLOURS[0].packed));
+		vertoffs.putIfAbsent(VO_1, new Vertoff().color(CornerUtil.CORNER_COLOURS[1].packed));
+		vertoffs.putIfAbsent(VO_2, new Vertoff().color(CornerUtil.CORNER_COLOURS[2].packed));
+		vertoffs.putIfAbsent(VO_3, new Vertoff().color(CornerUtil.CORNER_COLOURS[3].packed));
+		vertoffs.putIfAbsent(VO_4, new Vertoff().color(CornerUtil.CORNER_COLOURS[4].packed));
+		vertoffs.putIfAbsent(VO_5, new Vertoff().color(CornerUtil.CORNER_COLOURS[5].packed));
+		vertoffs.putIfAbsent(VO_6, new Vertoff().color(CornerUtil.CORNER_COLOURS[6].packed));
+		vertoffs.putIfAbsent(VO_7, new Vertoff().color(CornerUtil.CORNER_COLOURS[7].packed));
+	}
+
+	@Override
+	public int getVODefCol(Vertoff.VOKey key){
+		return CornerUtil.CORNER_COLOURS[key.vertix()].packed;
 	}
 
 	@Override
