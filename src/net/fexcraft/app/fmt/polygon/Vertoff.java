@@ -26,16 +26,14 @@ public class Vertoff {
 		off.x = value.asArray().get(0).float_value();
 		off.y = value.asArray().get(1).float_value();
 		off.z = value.asArray().get(2).float_value();
-		color = value.asArray().size() > 3 ? Integer.parseInt(value.asArray().get(3).string_value(), 16) : 0xffffff;
-		arr_color = new RGB(color).toFloatArray();
+		color(value.asArray().size() > 3 ? Integer.parseInt(value.asArray().get(3).string_value(), 16) : 0xffffff);
 	}
 
 	public Vertoff(Vertoff vert){
 		off.x = vert.off.x;
 		off.y = vert.off.y;
 		off.z = vert.off.z;
-		color = vert.color;
-		arr_color = new RGB(color).toFloatArray();
+		color(vert.color);
 	}
 
 	public void apply(Polygon poly, float[] v){
@@ -66,9 +64,9 @@ public class Vertoff {
 		return null;
 	}
 
-	public JsonArray save(){
+	public JsonArray save(int defcol){
 		JsonArray arr = new JsonArray.Flat(off.x, off.y, off.z);
-		if(color != 0xffffff) arr.add(Integer.toHexString(color));
+		if(color != defcol) arr.add(Integer.toHexString(color));
 		return arr;
 	}
 
@@ -78,9 +76,14 @@ public class Vertoff {
 
 	public void copy(Vertoff other){
 		off.set(other.off);
-		color = other.color;
-		arr_color = new RGB(color).toFloatArray();
+		color(other.color);
 		cache.copy(other.cache);
+	}
+
+	public Vertoff color(int col){
+		color = col;
+		arr_color = new RGB(color).toFloatArray();
+		return this;
 	}
 
 	public static record VOKey(VOType type, int vertix, int secondary){
