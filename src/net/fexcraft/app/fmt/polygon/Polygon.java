@@ -3,6 +3,7 @@ package net.fexcraft.app.fmt.polygon;
 import static net.fexcraft.app.fmt.polygon.Vertoff.VOType.BOX_CORNER;
 import static net.fexcraft.app.fmt.update.UpdateHandler.update;
 import static net.fexcraft.app.fmt.utils.CornerUtil.ROT_MARKER_NORMAL;
+import static net.fexcraft.app.fmt.utils.CornerUtil.ROT_MARKER_SMALL;
 import static net.fexcraft.app.fmt.utils.JsonUtil.getVector;
 import static net.fexcraft.app.fmt.utils.JsonUtil.setVector;
 import static net.fexcraft.app.fmt.utils.Logging.log;
@@ -13,6 +14,8 @@ import net.fexcraft.app.fmt.polygon.Vertoff.VOType;
 import net.fexcraft.app.fmt.ui.UVViewer;
 import net.fexcraft.app.fmt.update.UpdateEvent.PolygonAdded;
 import net.fexcraft.app.fmt.update.UpdateEvent.PolygonRenamed;
+import net.fexcraft.app.fmt.utils.CornerUtil;
+import net.fexcraft.app.fmt.utils.Selector;
 import net.fexcraft.app.json.JsonValue;
 import net.fexcraft.lib.common.math.M4DW;
 import net.fexcraft.lib.frl.Vertex;
@@ -142,13 +145,19 @@ public abstract class Polygon {
 		}
 		JsonMap vo = new JsonMap();
 		for(Map.Entry<VOKey, Vertoff> entry : vertoffs.entrySet()){
-			if(getShape().isObject() || !entry.getValue().isNull()) vo.add(entry.getKey().toString(), entry.getValue().save());
+			if(getShape().isObject() || !entry.getValue().isNull()){
+				vo.add(entry.getKey().toString(), entry.getValue().save(getVODefCol(entry.getKey())));
+			}
 		}
 		if(!vo.empty()) obj.add("vo", vo);
 		if(!export){
 			obj.add("visible", visible);
 		}
 		return obj;
+	}
+
+	public int getVODefCol(VOKey key){
+		return 0xffffff;
 	}
 
 	public abstract Shape getShape();
@@ -300,12 +309,20 @@ public abstract class Polygon {
 	}
 
 	public void renderVertOffs(boolean picker){
-		for(Vertoff vo : vertoffs.values()){
-			ROT_MARKER_NORMAL.glObj(GLObject.class).polycolor = picker ? vo.pick_color : vo.arr_color;
-			ROT_MARKER_NORMAL.pos(vo.cache.x, vo.cache.y, vo.cache.z);
-			ROT_MARKER_NORMAL.rot(rot.x, rot.y, rot.z);
-			ROT_MARKER_NORMAL.render();
+		ROT_MARKER_SMALL.pos(pos.x, pos.y, pos.z);
+		ROT_MARKER_SMALL.render();
+		if(alwaysShowVerts() || picker || Selector.SHOW_VERTICES){
+			for(Vertoff vo : vertoffs.values()){
+				ROT_MARKER_NORMAL.glObj(GLObject.class).polycolor = picker ? vo.pick_color : vo.arr_color;
+				ROT_MARKER_NORMAL.pos(vo.cache.x, vo.cache.y, vo.cache.z);
+				ROT_MARKER_NORMAL.rot(rot.x, rot.y, rot.z);
+				ROT_MARKER_NORMAL.render();
+			}
 		}
+	}
+
+	public boolean alwaysShowVerts(){
+		return false;
 	}
 
 	public float getValue(PolygonValue polyval){
