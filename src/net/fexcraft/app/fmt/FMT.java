@@ -372,7 +372,7 @@ public class FMT {
 			centermarker2.render();
 		}
 		MODEL.render(alpha);
-		if(Selector.TYPE == Picker.PickType.VERTEX || Selector.SHOW_VERTICES){
+		if(Settings.POLYMARKER.value || Selector.TYPE == Picker.PickType.VERTEX || Selector.SHOW_VERTICES){
 			PolyRenderer.mode(DrawMode.RGBCOLOR);
 			MODEL.renderVertices(false);
 		}
