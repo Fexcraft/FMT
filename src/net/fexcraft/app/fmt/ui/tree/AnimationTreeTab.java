@@ -44,7 +44,7 @@ public class AnimationTreeTab extends TreeTab {
 	}
 
 	private AGroupCom getGroupCom(Group group){
-		for(Element elm : container.elements){
+		for(Element elm : scrollable.elements){
 			if(elm instanceof AGroupCom com){
 				if(com.group == group) return com;
 			}
@@ -53,25 +53,25 @@ public class AnimationTreeTab extends TreeTab {
 	}
 
 	private void addGroup(Group group){
-		container.add(new AGroupCom(group));
+		scrollable.container.add(new AGroupCom(group));
 		reorderComponents();
 	}
 
 	private void remGroup(Group group){
-		container.remElmIf(e -> e instanceof AGroupCom com && com.group == group);
+		scrollable.container.remElmIf(e -> e instanceof AGroupCom com && com.group == group);
 		reorderComponents();
 	}
 
 	private void removeGroups(){
-		container.remElmIf(e -> e instanceof AGroupCom);
+		scrollable.container.remElmIf(e -> e instanceof AGroupCom);
 		reorderComponents();
 	}
 
 	@Override
 	public void reinsertComponents(){
-		container.remElmIf(e -> e instanceof AGroupCom);
+		scrollable.container.remElmIf(e -> e instanceof AGroupCom);
 		for(Group group : FMT.MODEL.allgroups()){
-			container.add(new AGroupCom(group));
+			scrollable.container.add(new AGroupCom(group));
 		}
 		reorderComponents();
 	}
