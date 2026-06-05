@@ -52,7 +52,7 @@ public class ETabCom extends Element {
 			elements.get(i).show();
 		}
 		recompile();
-		((EditorTab)root.root).reorderComponents();
+		((EditorTab)root()).reorderComponents();
 		return this;
 	}
 
