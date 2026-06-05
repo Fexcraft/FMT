@@ -2,7 +2,6 @@ package net.fexcraft.app.fmt.ui;
 
 import net.fexcraft.app.fmt.ui.editor.ETabCom;
 import net.fexcraft.app.fmt.ui.tree.TTabCom;
-import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.fmt.workspace.DirElm;
 
 import java.util.function.Consumer;
@@ -124,6 +123,11 @@ public class Scrollable extends Element {
 
 	public void clear(){
 		remElmIf(elm -> elm != bar && elm != up && elm != dw);
+	}
+
+	public void scrollTo(Element elm, float off){
+		scrolled += ((elm.y() + off) / ih);
+		updateBar();
 	}
 
 }
