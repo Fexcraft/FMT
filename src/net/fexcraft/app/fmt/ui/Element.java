@@ -545,6 +545,26 @@ public class Element {
 		return elements == null ? 0 : elements.size();
 	}
 
+	public boolean noElements(){
+		return elements == null || elements.size() == 0;
+	}
+
+	public boolean anyElements(){
+		return elements != null && elements.size() > 0;
+	}
+
+	public boolean isContainer(){
+		return false;
+	}
+
+	public Element root(){
+		return root == null ? null : root.isContainer() ? root.root() : root;
+	}
+
+	public <R extends Element> R rootC(){
+		return root == null ? null : (R)(root.isContainer() ? root.root : root);
+	}
+
 	public static record ClickInfo(int cx, int cy, int lx, int ly, int button){}
 
 	public static record ScrollInfo(int sx, int sy, int lx, int ly){}
