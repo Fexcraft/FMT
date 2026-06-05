@@ -39,21 +39,21 @@ public class PolygonTreeTab extends TreeTab {
 		updcom.add(UpdateEvent.PivotAdded.class, event -> addPivot(event.pivot()));
 		updcom.add(UpdateEvent.PivotRemoved.class, event -> remPivot(event.pivot()));
 		updcom.add(UpdateEvent.PivotRenamed.class, event -> {
-			for(Element elm : container.elements){
+			for(Element elm : scrollable.elements()){
 				if(elm instanceof PivotCom com && com.pivot == event.pivot()){
 					com.text(event.pivot().id);
 				}
 			}
 		});
 		updcom.add(UpdateEvent.PivotSelected.class, event -> {
-			for(Element elm : container.elements){
+			for(Element elm : scrollable.elements()){
 				if(elm instanceof PivotCom com){
 					com.updateTextColor();
 				}
 			}
 		});
 		updcom.add(UpdateEvent.PivotVisibility.class, event -> {
-			for(Element elm : container.elements){
+			for(Element elm : scrollable.elements()){
 				if(elm instanceof PivotCom com && com.pivot == event.pivot()){
 					com.updateTextColor();
 				}
@@ -75,7 +75,7 @@ public class PolygonTreeTab extends TreeTab {
 			if(com != null) com.text(event.group().id);
 		});
 		updcom.add(UpdateEvent.GroupSelected.class, event -> {
-			for(Element elm : container.elements){
+			for(Element elm : scrollable.elements()){
 				if(elm instanceof PivotCom com){
 					if(com.elements == null) continue;
 					for(Element ge : com.container.elements){
@@ -115,14 +115,14 @@ public class PolygonTreeTab extends TreeTab {
 	}
 
 	private PivotCom getPivotCom(Pivot pivot){
-		for(Element elm : container.elements){
+		for(Element elm : scrollable.elements()){
 			if(elm instanceof PivotCom com && com.pivot == pivot) return com;
 		}
 		return null;
 	}
 
 	private PivotCom getPivotCom(String pivot){
-		for(Element elm : container.elements){
+		for(Element elm : scrollable.elements()){
 			if(elm instanceof PivotCom com && com.pivot.id.equals(pivot)) return com;
 		}
 		return null;
@@ -145,12 +145,12 @@ public class PolygonTreeTab extends TreeTab {
 	}
 
 	private void addPivot(Pivot pivot){
-		container.add(new PivotCom(pivot));
+		scrollable.container.add(new PivotCom(pivot));
 		reorderComponents();
 	}
 
 	private void remPivot(Pivot pivot){
-		container.remElmIf(e -> e instanceof PivotCom com && com.pivot == pivot);
+		scrollable.container.remElmIf(e -> e instanceof PivotCom com && com.pivot == pivot);
 		reorderComponents();
 	}
 
@@ -163,15 +163,15 @@ public class PolygonTreeTab extends TreeTab {
 	}
 
 	private void removePivots(){
-		container.remElmIf(e -> e instanceof PivotCom);
+		scrollable.container.remElmIf(e -> e instanceof PivotCom);
 		reorderComponents();
 	}
 
 	@Override
 	public void reinsertComponents(){
-		container.remElmIf(e -> e instanceof PivotCom);
+		scrollable.container.remElmIf(e -> e instanceof PivotCom);
 		for(Pivot pivot : FMT.MODEL.pivots()){
-			container.add(new PivotCom(pivot));
+			scrollable.container.add(new PivotCom(pivot));
 		}
 		reorderComponents();
 	}
@@ -192,14 +192,14 @@ public class PolygonTreeTab extends TreeTab {
 		GroupComSubElm sub = tab.getPolyCom(poly);
 		if(sub == null) return;
 		PivotCom pivot = tab.getPivotCom(poly.group().pivot);
-		if(!pivot.visible) pivot.show();
+		if(!pivot.container.visible) pivot.show();
 		GroupCom group = tab.getGroupCom(poly.group());
-		if(!group.visible) group.show();
+		if(!group.container.visible) group.show();
 		if(sub instanceof TTabCom com){
 			com.show();
 			com.minimized_changed();
 		}
-		tab.container.scrollTo(pivot, group.y() + ((Element)sub).y());
+		tab.scrollable.scrollTo(pivot.y() + group.y() + ((Element)sub).y());
 	}
 
 }
