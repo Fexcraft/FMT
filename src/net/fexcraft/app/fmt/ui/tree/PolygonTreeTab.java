@@ -121,6 +121,13 @@ public class PolygonTreeTab extends TreeTab {
 		return null;
 	}
 
+	private PivotCom getPivotCom(String pivot){
+		for(Element elm : container.elements){
+			if(elm instanceof PivotCom com && com.pivot.id.equals(pivot)) return com;
+		}
+		return null;
+	}
+
 	private GroupCom getGroupCom(Group group){
 		PivotCom com = getPivotCom(FMT.MODEL.getP(group.pivot));
 		return com == null ? null : com.getGroupCom(group);
@@ -176,6 +183,23 @@ public class PolygonTreeTab extends TreeTab {
 			p += group.size();
 		}
 		totals.translate(TOTALS_FORMAT, p);
+	}
+
+	public static void focusSelected(){
+		Polygon poly = FMT.MODEL.first_selected();
+		if(poly == null) return;
+		PolygonTreeTab tab = (PolygonTreeTab)TreeRoot.TREES[TreeRoot.TreeMode.POLYGON.ordinal()];
+		GroupComSubElm sub = tab.getPolyCom(poly);
+		if(sub == null) return;
+		PivotCom pivot = tab.getPivotCom(poly.group().pivot);
+		if(!pivot.visible) pivot.show();
+		GroupCom group = tab.getGroupCom(poly.group());
+		if(!group.visible) group.show();
+		if(sub instanceof TTabCom com){
+			com.show();
+			com.minimized_changed();
+		}
+		tab.container.scrollTo(pivot, group.y() + ((Element)sub).y());
 	}
 
 }
