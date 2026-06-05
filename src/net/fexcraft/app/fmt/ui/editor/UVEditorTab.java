@@ -32,7 +32,7 @@ public class UVEditorTab extends EditorTab {
 	@Override
 	public void init(Object... objs){
 		super.init(objs);
-		container.add((general = new ETabCom("general")), lang_prefix + "general", 260);
+		scrollable.container.add((general = new ETabCom("general")), lang_prefix + "general", 260);
 		general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.root_uv"));
 		general.add((ru = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.TEX, PolyVal.ValAxe.X))).pos(F30, next_y_pos(1)));
 		general.add((rv = new Field(Field.FieldType.FLOAT, F3S, updcom, new PolygonValue(PolyVal.TEX, PolyVal.ValAxe.Y))).pos(F31, next_y_pos(0)));
@@ -59,17 +59,17 @@ public class UVEditorTab extends EditorTab {
 			UVType val = UVType.values()[idx];
 			String midfix = "mapping_" + val.name().toLowerCase();
 			if(val.automatic()){
-				container.add((uvtype[idx] = new ETabCom("type-" + val)), lang_prefix + midfix, 60);
+				scrollable.container.add((uvtype[idx] = new ETabCom("type-" + val)), lang_prefix + midfix, 60);
 				uvtype[idx].add(new TextElm(0, next_y_pos(-1), FF).translate(lang_prefix + midfix + "_info").text_autoscale());
 			}
 			else if(val.basic()){
-				container.add((uvtype[idx] = new ETabCom("type-" + val)), lang_prefix + midfix, 100);
+				scrollable.container.add((uvtype[idx] = new ETabCom("type-" + val)), lang_prefix + midfix, 100);
 				uvtype[idx].add(new TextElm(0, next_y_pos(-1), FF).translate(lang_prefix + midfix + ".offset").text_autoscale());
 				uvtype[idx].add((new Field(Field.FieldType.FLOAT, F2S, updcom, new PolygonValue(PolyVal.CUV, PolyVal.ValAxe.X))).pos(F20, next_y_pos(1)));
 				uvtype[idx].add((new Field(Field.FieldType.FLOAT, F2S, updcom, new PolygonValue(PolyVal.CUV, PolyVal.ValAxe.Y))).pos(F21, next_y_pos(0)));
 			}
 			else if(val.ends()){
-				container.add((uvtype[idx] = new ETabCom("type-" + val)), lang_prefix + midfix, 160);
+				scrollable.container.add((uvtype[idx] = new ETabCom("type-" + val)), lang_prefix + midfix, 160);
 				uvtype[idx].add(new TextElm(0, next_y_pos(-1), FF).translate(lang_prefix + midfix + ".start").text_autoscale());
 				uvtype[idx].add((new Field(Field.FieldType.FLOAT, F2S, updcom, new PolygonValue(PolyVal.CUV_START, PolyVal.ValAxe.X))).pos(F20, next_y_pos(1)));
 				uvtype[idx].add((new Field(Field.FieldType.FLOAT, F2S, updcom, new PolygonValue(PolyVal.CUV_START, PolyVal.ValAxe.Y))).pos(F21, next_y_pos(0)));
@@ -78,7 +78,7 @@ public class UVEditorTab extends EditorTab {
 				uvtype[idx].add((new Field(Field.FieldType.FLOAT, F2S, updcom, new PolygonValue(PolyVal.CUV_END, PolyVal.ValAxe.Y))).pos(F21, next_y_pos(0)));
 			}
 			else{
-				container.add((uvtype[idx] = new ETabCom("type-" + val)), lang_prefix + midfix, 280);
+				scrollable.container.add((uvtype[idx] = new ETabCom("type-" + val)), lang_prefix + midfix, 280);
 				uvtype[idx].add(new TextElm(0, next_y_pos(-1), FF).translate(lang_prefix + midfix + ".top_right").text_autoscale());
 				uvtype[idx].add((new Field(Field.FieldType.FLOAT, F2S, updcom, new PolygonValue(PolyVal.CUV_TR, PolyVal.ValAxe.X))).pos(F20, next_y_pos(1)));
 				uvtype[idx].add((new Field(Field.FieldType.FLOAT, F2S, updcom, new PolygonValue(PolyVal.CUV_TR, PolyVal.ValAxe.Y))).pos(F21, next_y_pos(0)));
