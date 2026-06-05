@@ -1,5 +1,6 @@
 package net.fexcraft.app.fmt.ui.tree;
 
+import net.fexcraft.app.fmt.ui.Container;
 import net.fexcraft.app.fmt.ui.Element;
 
 import static net.fexcraft.app.fmt.settings.Settings.GENERIC_BACKGROUND_2;
@@ -10,7 +11,7 @@ import static net.fexcraft.app.fmt.ui.FMTInterface.*;
  */
 public class TTabCom extends Element {
 
-	public Element container;
+	public Container container;
 	public float fullheight;
 
 	@Override
@@ -23,7 +24,7 @@ public class TTabCom extends Element {
 				if(container.visible) hide(); else show();
 				minimized_changed();
 			}));
-		add(container = new Element().size(EDITOR_CONTENT, 30).pos(0, 30).border(GENERIC_BACKGROUND_2.value));
+		add((container = new Container()).size(EDITOR_CONTENT, 30).pos(0, 30).border(GENERIC_BACKGROUND_2.value));
 		updateTextColor();
 	}
 
