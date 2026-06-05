@@ -10,6 +10,7 @@ import static org.lwjgl.glfw.GLFW.glfwSetInputMode;
 import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
 
 import net.fexcraft.app.fmt.ui.Element;
+import net.fexcraft.app.fmt.ui.tree.PolygonTreeTab;
 import net.fexcraft.app.fmt.utils.ShaderManager.Uniform;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
@@ -106,7 +107,7 @@ public class GGR {
             cursor_moved0 = false;
 			apos_x = apos_y = 0;
 		}
-		else if(scroll_down){
+		else if(middle_down){
 			pos.x += apos_x * 0.001;
 			pos.y += apos_y * 0.001;
 		}
@@ -124,7 +125,7 @@ public class GGR {
 	public static double spos_x, spos_y;//selection start pos
     public static boolean right_down;
 	public static boolean left_down;
-	public static boolean scroll_down;
+	public static boolean middle_down;
 	public static boolean grabbed;
 	public static boolean cursor_moved0;
 	//public static boolean cursor_moved1;
@@ -180,11 +181,12 @@ public class GGR {
         }
         if(button == 2){
 			if(action == GLFW_PRESS){
-				scroll_down = true;
+				middle_down = true;
 				apos_x = apos_y = 0;
 			}
 			else if(action == GLFW_RELEASE){
-				scroll_down = false;
+				middle_down = false;
+				PolygonTreeTab.focusSelected();
 			}
         }
 	}
