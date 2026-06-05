@@ -16,7 +16,7 @@ public class TreeTab extends Element {
 
 	public final TreeMode mode;
 	protected UpdateCompound updcom = new UpdateCompound();
-	protected Scrollable container;
+	protected Scrollable scrollable;
 	protected Element over;
 
 	public TreeTab(TreeMode emode){
@@ -39,19 +39,19 @@ public class TreeTab extends Element {
 	@Override
 	public void init(Object... args){
 		add(over = new Element().pos(0, TOOLBAR_HEIGHT).size(EDITOR_WIDTH, (int)args[0]).color(GENERIC_BACKGROUND_0.value).zi(100));
-		add((container = new Scrollable(false, TOOLBAR_HEIGHT + over.h)));
-		container.updateSize(w, h);
+		add((scrollable = new Scrollable(false, TOOLBAR_HEIGHT + over.h)));
+		scrollable.updateSize(w, h);
 	}
 
 	@Override
 	public void onResize(){
 		size(EDITOR_WIDTH, FMT.SCALED_HEIGHT);
-		if(container == null) return;
-		container.updateSize(w, h);
+		if(scrollable == null) return;
+		scrollable.updateSize(w, h);
 	}
 
 	public void reorderComponents(){
-		container.updateBar();
+		scrollable.updateBar();
 	}
 
 	public void updateCounter(){}
