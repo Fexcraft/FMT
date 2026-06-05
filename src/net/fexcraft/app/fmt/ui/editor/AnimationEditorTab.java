@@ -30,7 +30,7 @@ public class AnimationEditorTab extends EditorTab {
 	}
 
 	private void refill(Animation anim){
-		container.remElmIf(elm -> elm instanceof ETabCom);
+		scrollable.container.remElmIf(elm -> elm instanceof ETabCom);
 		addAnimCom(anim);
 		reorderComponents();
 	}
@@ -39,12 +39,12 @@ public class AnimationEditorTab extends EditorTab {
 		ETabCom com = new ETabCom("general");
 		next_y_elm_pos = 0;
 		if(anim == null){
-			container.add(com, "editor.animation.general", 65);
+			scrollable.container.add(com, "editor.animation.general", 65);
 			com.add(new TextElm(FO, next_y_pos(1), FF, NOANIMATIONSEL));
 			return;
 		}
 		FvtmTypes.ProgRef ref = FvtmTypes.getProgRef(anim.id());
-		container.add(com, "editor.animation.general", ref.args().length * 60 + 35);
+		scrollable.container.add(com, "editor.animation.general", ref.args().length * 60 + 35);
 		Field field;
 		for(String arg : ref.args()){
 			String[] args = arg.split(":");
