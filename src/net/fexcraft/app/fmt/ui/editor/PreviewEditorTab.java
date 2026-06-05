@@ -31,7 +31,7 @@ public class PreviewEditorTab extends EditorTab {
 	@Override
 	public void init(Object... objs){
 		super.init(objs);
-		container.add((general = new ETabCom("general")), lang_prefix + "general", 350);
+		scrollable.container.add((general = new ETabCom("general")), lang_prefix + "general", 350);
 		general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.name"));
 		general.add((name = new Field(TEXT, FF, field -> {
 			if(PreviewHandler.SELECTED == null) return;
