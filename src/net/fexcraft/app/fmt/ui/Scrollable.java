@@ -3,7 +3,6 @@ package net.fexcraft.app.fmt.ui;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.ui.editor.ETabCom;
 import net.fexcraft.app.fmt.ui.tree.TTabCom;
-import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.fmt.workspace.DirElm;
 
 import java.util.Collection;
@@ -72,9 +71,9 @@ public class Scrollable extends Element {
 
 	private void modScrolled(float dir){
 		if(ih < h) return;
-		scrolled += (h / ih) * 0.25f * dir;
+		scrolled += (h / ih) * h * dir;
 		if(scrolled < 0) scrolled = 0;
-		if(scrolled > 1) scrolled = 1;
+		if(scrolled > ih - h) scrolled = ih - h;
 		//Logging.bar(scrolled);
 		updateBar();
 	}
@@ -114,15 +113,15 @@ public class Scrollable extends Element {
 		float bh = (h / ih) * m;
 		if(bh > m) bh = m;
 		if(bh < 40) bh = 40;
-		float p = (m - bh) * scrolled;
+		float p = m * (scrolled / ih);
+		if(p + bh > m) p = m - bh;
 		bar.pos(left ? w - SCROLLBAR_WIDTH : 5, 16 + p);
 		bar.size(16, bh).recompile();
 		up.pos(left ? w - SCROLLBAR_WIDTH : 5, 0);
 		dw.pos(left ? w - SCROLLBAR_WIDTH : 5 , h - 16);
 		container.recompile();
 		bar.recompile();
-		bh = ih < h ? 0 : (h - ih) * scrolled;
-		container.pos(0, bh);
+		container.pos(0, ih < h ? 0 : -scrolled);
 		float incr = 5;
 		for(Element elm : container.elements){
 			if(elm == bar || elm == up || elm == dw) continue;
@@ -157,8 +156,8 @@ public class Scrollable extends Element {
 	}
 
 	public void scrollTo(float off){
-		scrolled = off / ih;
-		if(scrolled > 1) scrolled = 1;
+		scrolled = off;
+		if(scrolled > ih - h) scrolled = ih - h;
 		updateBar();
 	}
 
