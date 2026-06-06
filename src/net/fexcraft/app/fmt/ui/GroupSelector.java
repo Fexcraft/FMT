@@ -74,7 +74,7 @@ public class GroupSelector extends Element {
 		scroll.color(GENERIC_BACKGROUND_1.value);
 		scroll.updateSize(w - 1, h - 80);
 		for(Group group : FMT.MODEL.allgroups()){
-			scroll.add(new TextElm(5, 0, w - 30, group.id).check_mode(CheckMode.IN_ROOT)
+			scroll.container.add(new TextElm(5, 0, w - 30, group.id).check_mode(CheckMode.IN_ROOT)
 				.shape(ElmShape.RECTANGLE).color(GENERIC_BACKGROUND_0.value).hoverable(true));
 			BoolElm elm = new BoolElm(w - 70, 0, 40).set(() -> selected.contains(group), bool -> {
 				if(bool){
@@ -84,7 +84,7 @@ public class GroupSelector extends Element {
 					selected.remove(group);
 				}
 			});
-			scroll.lastElement().add(elm.check_mode(CheckMode.IN_ROOT));
+			scroll.container.lastElement().add(elm.check_mode(CheckMode.IN_ROOT));
 		}
 		scroll.updateBar();
 		//
@@ -118,7 +118,7 @@ public class GroupSelector extends Element {
 	}
 
 	private void updateMarkers(){
-		for(Element element : scroll.elements){
+		for(Element element : scroll.elements()){
 			if(element instanceof TextElm text){
 				((BoolElm)text.lastElement()).updtexcol();
 			}

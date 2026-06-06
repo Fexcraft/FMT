@@ -66,7 +66,7 @@ public class SettingsUI extends Frame {
 		add(con.pos(0, 90));
 		con.updateSize(w - 1, h - 30);
 		for(Map.Entry<String, Setting<?>> entry : Settings.SETTINGS.get(key).entrySet()){
-			con.add(new SettingBlock(), key, entry.getKey(), entry.getValue());
+			con.container.add(new SettingBlock(), key, entry.getKey(), entry.getValue());
 		}
 		con.updateBar();
 		con.hide();

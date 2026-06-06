@@ -55,7 +55,7 @@ public class TextureTreeTab extends TreeTab {
 	}
 
 	private TexGroupCom getTexGroupCom(TextureGroup group){
-		for(Element elm : container.elements){
+		for(Element elm : scrollable.elements()){
 			if(elm instanceof TexGroupCom com){
 				if(com.group == group) return com;
 			}
@@ -64,25 +64,25 @@ public class TextureTreeTab extends TreeTab {
 	}
 
 	private void addTexGroup(TextureGroup group){
-		container.add(new TexGroupCom(group));
+		scrollable.container.add(new TexGroupCom(group));
 		reorderComponents();
 	}
 
 	private void remTexGroup(TextureGroup group){
-		container.remElmIf(e -> e instanceof TexGroupCom com && com.group == group);
+		scrollable.container.remElmIf(e -> e instanceof TexGroupCom com && com.group == group);
 		reorderComponents();
 	}
 
 	private void removeGroups(){
-		container.remElmIf(e -> e instanceof TexGroupCom);
+		scrollable.container.remElmIf(e -> e instanceof TexGroupCom);
 		reorderComponents();
 	}
 
 	@Override
 	public void reinsertComponents(){
-		container.remElmIf(e -> e instanceof TexGroupCom);
+		scrollable.container.remElmIf(e -> e instanceof TexGroupCom);
 		for(TextureGroup group : TextureManager.getGroups()){
-			container.add(new TexGroupCom(group));
+			scrollable.container.add(new TexGroupCom(group));
 		}
 		reorderComponents();
 	}
@@ -90,7 +90,7 @@ public class TextureTreeTab extends TreeTab {
 	@Override
 	public void reorderComponents(){
 		super.reorderComponents();
-		for(Element elm : container.elements){
+		for(Element elm : scrollable.elements()){
 			if(elm instanceof TexGroupCom com){
 				com.updateTexSize();
 			}

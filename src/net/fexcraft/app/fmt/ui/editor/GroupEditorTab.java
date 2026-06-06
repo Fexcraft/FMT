@@ -37,7 +37,7 @@ public class GroupEditorTab extends EditorTab {
 	@Override
 	public void init(Object... objs){
 		super.init(objs);
-		container.add((general = new ETabCom("general")), lang_prefix + "general", 220);
+		scrollable.container.add((general = new ETabCom("general")), lang_prefix + "general", 220);
 		general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.name"));
 		general.add((name = new Field(TEXT, FF, field -> {
 			ArrayList<Group> groups = FMT.MODEL.selected_groups();

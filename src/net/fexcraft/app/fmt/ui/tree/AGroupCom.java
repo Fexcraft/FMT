@@ -61,7 +61,7 @@ public class AGroupCom extends TTabCom {
 		}
 		container.size(w, fullheight);
 		container.recompile();
-		((TreeTab)root.root).reorderComponents();
+		((TreeTab)root()).reorderComponents();
 	}
 
 	protected void updateTextColor(){

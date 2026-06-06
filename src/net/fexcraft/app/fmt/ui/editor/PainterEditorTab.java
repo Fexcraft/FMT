@@ -47,7 +47,7 @@ public class PainterEditorTab extends EditorTab {
 	@Override
 	public void init(Object... objs){
 		super.init(objs);
-		container.add((current = new ETabCom("current")), lang_prefix + "current", 160 + Settings.PAINTER_CHANNELS.value * 30);
+		scrollable.container.add((current = new ETabCom("current")), lang_prefix + "current", 160 + Settings.PAINTER_CHANNELS.value * 30);
 		current.add(new TextElm(FO, next_y_pos(1), FF).translate(lang_prefix + "current.channels"));
 		for(int i = 0; i < Settings.PAINTER_CHANNELS.value; i++){
 			int idx = i;
@@ -76,7 +76,7 @@ public class PainterEditorTab extends EditorTab {
 		current.add(act_tool = new Element().pos(FO, next_y_pos(1.5f)).size(FF, 30).color(GENERIC_FIELD.value)
 			.hint(lang_prefix + "current.tool_reset").onclick(ci -> TexturePainter.setTool(Tool.NONE)));
 		//
-		container.add((palette = new ETabCom("palette")), lang_prefix + "palette", 300);
+		scrollable.container.add((palette = new ETabCom("palette")), lang_prefix + "palette", 300);
 		palette.add(new TextElm(FO, next_y_pos(-1), FF).translate(lang_prefix + "palette.gradient"));
 		int yo = next_y_pos(1);
 		for(int x = 0; x < palette_columns; x++){
@@ -141,7 +141,7 @@ public class PainterEditorTab extends EditorTab {
 			}
 		}
 		//
-		container.add((tools = new ETabCom("tools")), lang_prefix + "tools", 160);
+		scrollable.container.add((tools = new ETabCom("tools")), lang_prefix + "tools", 160);
 		tools.add(new TextElm(FO, next_y_pos(-1), FF).translate(lang_prefix + "tools.selection"));
 		yo = next_y_pos(1);
 		int idx = 0;

@@ -186,7 +186,7 @@ public class GGR {
 			}
 			else if(action == GLFW_RELEASE){
 				middle_down = false;
-				PolygonTreeTab.focusSelected();
+				if(!GGR.isOverUI()) PolygonTreeTab.focusSelected();
 			}
         }
 	}

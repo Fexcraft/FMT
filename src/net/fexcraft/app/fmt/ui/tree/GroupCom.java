@@ -72,7 +72,7 @@ public class GroupCom extends TTabCom {
 		}
 		container.size(w, fullheight += 5);
 		container.recompile();
-		((TTabCom)root.root).orderComponents();
+		((TTabCom)root()).orderComponents();
 	}
 
 	protected void updateTextColor(){

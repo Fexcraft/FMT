@@ -47,7 +47,7 @@ public class EditorTab extends Element {
 	public static float FS = 26;//field height
 	//
 	protected UpdateCompound updcom = new UpdateCompound();
-	protected Scrollable container;
+	protected Scrollable scrollable;
 	protected int next_y_elm_pos = 0;
 
 	public EditorTab(EditorMode emode){
@@ -76,15 +76,15 @@ public class EditorTab extends Element {
 
 	@Override
 	public void init(Object... args){
-		add((container = new Scrollable(true, 0)));
-		container.updateSize(w, h);
+		add((scrollable = new Scrollable(true, 0)));
+		scrollable.updateSize(w, h);
 	}
 
 	@Override
 	public void onResize(){
 		size(EDITOR_WIDTH, FMT.SCALED_HEIGHT - TOOLBAR_HEIGHT);
-		if(container == null) return;
-		container.updateSize(w, h);
+		if(scrollable == null) return;
+		scrollable.updateSize(w, h);
 	}
 
 	public int next_y_pos(float inc){
@@ -93,13 +93,14 @@ public class EditorTab extends Element {
 	}
 
 	public void reorderComponents(){
-		container.updateBar();
+		scrollable.updateBar();
 	}
 
 	public void load(JsonMap map){
 		if(map.has("minimized")){
 			JsonMap min = map.getMap("minimized");
-			for(Element elm : container.elements){
+			if(scrollable.container.noElements()) return;
+			for(Element elm : scrollable.container.elements){
 				if(elm instanceof ETabCom com){
 					com.minimized = min.getBoolean(com.id, false);
 					if(com.minimized) com.hide();
@@ -112,9 +113,11 @@ public class EditorTab extends Element {
 	public JsonMap save(){
 		JsonMap map = new JsonMap();
 		JsonMap min = new JsonMap();
-		for(Element elm : container.elements){
-			if(elm instanceof ETabCom com){
-				min.add(com.id, com.minimized);
+		if(scrollable.container.anyElements()){
+			for(Element elm : scrollable.container.elements){
+				if(elm instanceof ETabCom com){
+					min.add(com.id, com.minimized);
+				}
 			}
 		}
 		if(min.not_empty()) map.add("minimized", min);

@@ -28,7 +28,7 @@ public class VariableEditorTab extends EditorTab {
 	@Override
 	public void init(Object... objs){
 		super.init(objs);
-		container.add(addattr = new ETabCom("add_new"), "editor.variable.add_new", 70);
+		scrollable.container.add(addattr = new ETabCom("add_new"), "editor.variable.add_new", 70);
 		addattr.add(new Element().pos(FO, 35).size(32, 32).texture("icons/configeditor/text")
 			.onclick(ci -> openNewAttr(() -> new VehAttr(VehAttr.Type.STRING, "empty")))
 			.hint("editor.variable.add.string"));
@@ -66,7 +66,7 @@ public class VariableEditorTab extends EditorTab {
 	}
 
 	private void refill(){
-		container.remElmIf(elm -> elm instanceof ETabCom && elm != addattr);
+		scrollable.container.remElmIf(elm -> elm instanceof ETabCom && elm != addattr);
 		addVarComs();
 		reorderComponents();
 	}
@@ -75,12 +75,12 @@ public class VariableEditorTab extends EditorTab {
 		ETabCom com = new ETabCom("general");
 		next_y_elm_pos = 0;
 		if(FMT.MODEL.vehattrs.isEmpty()){
-			container.add(com, "editor.variable.general", 65);
+			scrollable.container.add(com, "editor.variable.general", 65);
 			com.add(new TextElm(FO, next_y_pos(1), FF, NOVARIABLES));
 			return;
 		}
 		Field field;
-		container.add(com, "editor.variable.general", FMT.MODEL.vehattrs.size() * 60 + 35);
+		scrollable.container.add(com, "editor.variable.general", FMT.MODEL.vehattrs.size() * 60 + 35);
 		for(Map.Entry<String, VehAttr> entry : FMT.MODEL.vehattrs.entrySet()){
 			com.add(new TextElm(FO, next_y_pos(1), FF - 35, entry.getKey()));
 			com.add(new HidingElm().pos(FO + FF - 35, next_y_pos(0)).size(30, 30).texture("icons/component/remove")

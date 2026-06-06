@@ -54,7 +54,7 @@ public class PolygonEditorTab extends EditorTab {
 	@Override
 	public void init(Object... objs){
 		super.init(objs);
-		container.add((sorting = new ETabCom("sorting")), lang_prefix + "sorting", 220);
+		scrollable.container.add((sorting = new ETabCom("sorting")), lang_prefix + "sorting", 220);
 		sorting.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "sorting.name"));
 		sorting.add((name = new Field(TEXT, FF, field -> rename(field.get_text()))).pos(FO, next_y_pos(1)));
 		sorting.lastElement().text(NOPOLYSEL);
@@ -120,7 +120,7 @@ public class PolygonEditorTab extends EditorTab {
 				UpdateHandler.update(new PolygonSelected(polis.get(0), polis.size(), polis.size()));
 			}).hint(lang_prefix + "sorting.reset_size"));
 		//
-		container.add((vertex = new ETabCom("vertex")), lang_prefix + "vertex", 160);
+		scrollable.container.add((vertex = new ETabCom("vertex")), lang_prefix + "vertex", 160);
 		vertex.add(new TextElm(0, next_y_pos(-1), FF).translate(lang_prefix + "vertex.index"));
 		vertex.add((vert_key = new Field(INFO, F2S, field -> {})).deg_range().pos(F20, next_y_pos(1)));
 		vertex.add((vert_sel = new Field(INFO, F2S, field -> {})).deg_range().pos(F21, next_y_pos(0)));
@@ -129,13 +129,13 @@ public class PolygonEditorTab extends EditorTab {
 		vertex.add((vert_y = new Field(FLOAT, F3S, field -> applyVertOff(field.parse_float(), ValAxe.Y))).deg_range().pos(F31, next_y_pos(0)));
 		vertex.add((vert_z = new Field(FLOAT, F3S, field -> applyVertOff(field.parse_float(), ValAxe.Z))).deg_range().pos(F32, next_y_pos(0)));
 		//
-		container.add((general = new ETabCom("general")), lang_prefix + "general", 280);
+		scrollable.container.add((general = new ETabCom("general")), lang_prefix + "general", 280);
 		addGeneralElements(general, false);
-		container.add((general_box = new ETabCom("general_box")), lang_prefix + "general", 400);
+		scrollable.container.add((general_box = new ETabCom("general_box")), lang_prefix + "general", 400);
 		addGeneralElements(general_box, true);
 		general.visible = false;
 		//
-		container.add((shapebox = new ETabCom("shapebox")), lang_prefix + "shapebox", 520);
+		scrollable.container.add((shapebox = new ETabCom("shapebox")), lang_prefix + "shapebox", 520);
 		for(int i = 0; i < 8; i++){
 			shapebox.add(new Element().pos(5, next_y_pos(i == 0 ? -1 : 1) + 5).size(20, 20).border(0xffffff).color(CornerUtil.CORNER_COLOURS[i]));
 			shapebox.add(new TextElm(25, next_y_pos(0), FF - 20).translate(lang_prefix + "shapebox.corner", i));
@@ -145,7 +145,7 @@ public class PolygonEditorTab extends EditorTab {
 			shapebox.add((pos_z = new Field(FLOAT, F3S, updcom, new PolygonValue(val, ValAxe.Z))).pos(F32, next_y_pos(0)));
 		}
 		//
-		container.add((cylinder = new ETabCom("cylinder")), lang_prefix + "cylinder", 520);
+		scrollable.container.add((cylinder = new ETabCom("cylinder")), lang_prefix + "cylinder", 520);
 		cylinder.add(new TextElm(F20, next_y_pos(-1), F2S).translate(lang_prefix + "cylinder.radius_outer"));
 		cylinder.add(new TextElm(F21, next_y_pos(0), F2S).translate(lang_prefix + "cylinder.radius_inner"));
 		cylinder.add((new Field(FLOAT, F4S, updcom, new PolygonValue(PolyVal.RADIUS_O, ValAxe.X)).min_range(0.5f)).pos(F40, next_y_pos(1)));
@@ -184,7 +184,7 @@ public class PolygonEditorTab extends EditorTab {
 		cylinder.add((new Field(FLOAT, F3S, updcom, new PolygonValue(PolyVal.SEG_WIDTH))).pos(F31, next_y_pos(0)));
 		cylinder.add((new Field(FLOAT, F3S, updcom, new PolygonValue(PolyVal.SEG_HEIGHT))).pos(F32, next_y_pos(0)));
 		//
-		container.add((curve = new ETabCom("curve")), lang_prefix + "curve", 620);
+		scrollable.container.add((curve = new ETabCom("curve")), lang_prefix + "curve", 620);
 		curve.add(new TextElm(0, next_y_pos(-1), FF).translate(lang_prefix + "general.rotation"));
 		curve.add((new Field(FLOAT, F3S, updcom, new PolygonValue(PolyVal.ROT, ValAxe.X))).deg_range().pos(F30, next_y_pos(1)));
 		curve.add((new Field(FLOAT, F3S, updcom, new PolygonValue(PolyVal.ROT, ValAxe.Y))).deg_range().pos(F31, next_y_pos(0)));
@@ -245,7 +245,7 @@ public class PolygonEditorTab extends EditorTab {
 				}
 			}));
  		//
-		container.add((object = new ETabCom("object")), lang_prefix + "object", 410);
+		scrollable.container.add((object = new ETabCom("object")), lang_prefix + "object", 410);
 		object.add(new TextElm(0, next_y_pos(-1), FF).translate(lang_prefix + "object.vertices"));
 		object.add((new Field(INFO, F3S, updcom, ObjPolyCom.VERTICES)).min_range(0).pos(F30, next_y_pos(1)));
 		object.add((new Field(INT, F3S, updcom, ObjPolyCom.VERT_ACT)).pos(F31, next_y_pos(0)));
@@ -316,7 +316,7 @@ public class PolygonEditorTab extends EditorTab {
 			FMT.MODEL.updateValue(OBJ_FACE_ACT, null, obj.selfac, true);
 		})).hint("tree.polygon.object.flip_face").text_centered(true));
 		//
-		container.add((marker = new ETabCom("marker")), lang_prefix + "marker", 220);
+		scrollable.container.add((marker = new ETabCom("marker")), lang_prefix + "marker", 220);
 		marker.add(new TextElm(0, next_y_pos(-1), FF).translate(lang_prefix + "marker.color"));
 		marker.add((new Field(COLOR, FF, updcom, new PolygonValue(PolyVal.COLOR))).pos(FO, next_y_pos(1)));
 		marker.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "marker.scale"));

@@ -69,14 +69,14 @@ public class HelperTreeTab extends TreeTab {
 			if(com != null) com.updateTextColor();
 		});
 		updcom.add(UpdateEvent.HelperSelected.class, event -> {
-			for(Element elm : container.elements) if(elm instanceof HelperCom com) com.updateTextColor();
+			for(Element elm : scrollable.elements()) if(elm instanceof HelperCom com) com.updateTextColor();
 		});
 		updcom.add(UpdateEvent.ModelLoad.class, event -> reorderComponents());
 		updcom.add(UpdateEvent.ModelUnload.class, event -> removeHelpers());
 	}
 
 	private HelperCom getHelperCom(Model model){
-		for(Element elm : container.elements){
+		for(Element elm : scrollable.elements()){
 			if(elm instanceof HelperCom com){
 				if(com.model == model) return com;
 			}
@@ -85,25 +85,25 @@ public class HelperTreeTab extends TreeTab {
 	}
 
 	private void addHelper(Model model){
-		container.add(new HelperCom(model));
+		scrollable.container.add(new HelperCom(model));
 		reorderComponents();
 	}
 
 	private void remHelper(Model model){
-		container.remElmIf(e -> e instanceof HelperCom com && com.model == model);
+		scrollable.container.remElmIf(e -> e instanceof HelperCom com && com.model == model);
 		reorderComponents();
 	}
 
 	private void removeHelpers(){
-		container.remElmIf(e -> e instanceof HelperCom);
+		scrollable.container.remElmIf(e -> e instanceof HelperCom);
 		reorderComponents();
 	}
 
 	@Override
 	public void reinsertComponents(){
-		container.remElmIf(e -> e instanceof HelperCom);
+		scrollable.container.remElmIf(e -> e instanceof HelperCom);
 		for(Model model : PreviewHandler.getLoaded()){
-			container.add(new HelperCom(model));
+			scrollable.container.add(new HelperCom(model));
 		}
 		reorderComponents();
 	}
