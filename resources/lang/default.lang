@@ -50,10 +50,10 @@ toolbar.workspace=Workspace
 toolbar.prototype=<- Prototype
 toolbar.exit=Exit
 ## Selected Polygon Right-Click Menu
-toolbar.polyselmenu.hide=Hide/Show
-toolbar.polyselmenu.selgroup=Sel. Group
-toolbar.polyselmenu.copy=Copy
-toolbar.polyselmenu.delete=Delete
+toolbar.polyselmenu.visibility=Hide/Show Selection
+toolbar.polyselmenu.select_group=Select Group
+toolbar.polyselmenu.copy=Copy Selection
+toolbar.polyselmenu.delete=Delete Selection
 ## Directory Viever File Right-Click Menu
 toolbar.fileeditmenu.asjson=Open as JSON
 toolbar.fileeditmenu.rename=Rename
