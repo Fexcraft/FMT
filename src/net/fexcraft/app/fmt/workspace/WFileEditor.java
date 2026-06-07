@@ -13,7 +13,7 @@ import static net.fexcraft.app.fmt.settings.Settings.GENERIC_FIELD;
  */
 public class WFileEditor extends Element {
 
-	protected Scrollable container;
+	protected Scrollable scrollable;
 	protected File file;
 
 	public WFileEditor(File file){
@@ -23,8 +23,8 @@ public class WFileEditor extends Element {
 
 	@Override
 	public void init(Object... args){
-		add(container = new Scrollable(true, 0));
-		container.updateSize(w, h);
+		add(scrollable = new Scrollable(true, 0));
+		scrollable.updateSize(w, h);
 	}
 
 	protected String get_editor_name(){
