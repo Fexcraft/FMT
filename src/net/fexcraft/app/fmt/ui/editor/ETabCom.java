@@ -40,7 +40,7 @@ public class ETabCom extends Element {
 			elements.get(i).hide();
 		}
 		recompile();
-		((EditorTab)root.root).reorderComponents();
+		((EditorTab)root()).reorderComponents();
 		return this;
 	}
 
