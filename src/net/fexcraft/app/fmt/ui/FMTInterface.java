@@ -298,11 +298,13 @@ public class FMTInterface extends Element {
 
 	@Override
 	public void remElm(Element elm){
-		super.remElm(elm);
-		if(elm instanceof Frame){
-			FRAMES.remove(elm);
-			resortFrames();
-		}
+		FMT.queue(() -> {
+			super.remElm(elm);
+			if(elm instanceof Frame){
+				FRAMES.remove(elm);
+				resortFrames();
+			}
+		});
 	}
 
 	@Override
