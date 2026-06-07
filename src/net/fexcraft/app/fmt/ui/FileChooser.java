@@ -110,10 +110,10 @@ public class FileChooser extends Frame {
 	private void fillBookmarks(){
 		bookmarks.clear();
 		for(File bm : BOOKMARKS){
-			bookmarks.add(new Element().pos(5, 0).size(bmw - 30, FS).hoverable(true)
+			bookmarks.container.add(new Element().pos(5, 0).size(bmw - 30, FS).hoverable(true)
 				.text(bm.getName()).color(GENERIC_FIELD.value).check_mode(CheckMode.IN_ROOT)
 				.onclick(cons -> setDir(bm)).hint(bm.getAbsolutePath()));
-			bookmarks.lastElement().add(new HidingElm().size(FS - 2, FS - 2).pos(bmw - 55, 1)
+			bookmarks.container.lastElement().add(new HidingElm().size(FS - 2, FS - 2).pos(bmw - 55, 1)
 				.texture("icons/component/remove").onclick(ci -> {
 					BOOKMARKS.remove(bm);
 					fillBookmarks();
@@ -153,7 +153,7 @@ public class FileChooser extends Frame {
 			return a.getName().toLowerCase().compareTo(b.getName().toLowerCase());
 		});
 		for(File file : filtered){
-			fileview.add(new Element().pos(5, 0).size(fileview.w - 30, FS).hoverable(true)
+			fileview.container.add(new Element().pos(5, 0).size(fileview.w - 30, FS).hoverable(true)
 				.text(file.getName() + (file.isDirectory() ? "/" : "")).color(GENERIC_FIELD.value)
 				.check_mode(CheckMode.IN_ROOT).onclick(cons -> {
 					if(file.isDirectory()) setDir(file);
