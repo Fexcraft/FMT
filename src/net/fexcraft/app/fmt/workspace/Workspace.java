@@ -143,10 +143,10 @@ public class Workspace extends Frame {
 				found.add(pack);
 			}
 			FMT.queue(() -> {
-				packs.remElmIf(elm -> elm instanceof DirElm);
+				packs.container.remElmIf(elm -> elm instanceof DirElm);
 				for(FvtmPackElm pack : found){
 					FMT.queue(() -> {
-						packs.add(pack, pack);
+						packs.container.add(pack, pack);
 						fvtm_packs.add(pack);
 					});
 				}
@@ -270,7 +270,7 @@ public class Workspace extends Frame {
 		file_editors.add(edit);
 		add(edit);
 		setActive(edit, 0);
-		opened_files.add(new WFileEditor.WFileEditorEntry(edit).size(opened_files.w - 30, FS));
+		opened_files.container.add(new WFileEditor.WFileEditorEntry(edit).size(opened_files.w - 30, FS));
 		opened_files.updateBar();
 	}
 
@@ -297,7 +297,7 @@ public class Workspace extends Frame {
 			files_open.translate("workspace.file_editor.none_open");
 		}
 		else{
-			opened_files.remElmIf(elm -> elm instanceof WFileEditor.WFileEditorEntry entry && entry.editor == file_editor);
+			opened_files.container.remElmIf(elm -> elm instanceof WFileEditor.WFileEditorEntry entry && entry.editor == file_editor);
 			file_editors.remove(file_editor);
 			file_editor = file_editors.get(file_editors.size() - 1);
 			setActive(file_editor, 0);
