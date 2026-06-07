@@ -29,13 +29,13 @@ public class JsonEditor extends WFileEditor {
 	@Override
 	public void init(Object... args){
 		super.init(args);
-		container.top = 30;
-		container.updateSize(container.w, container.h);
-		je_checkmode = CheckMode.gen(container);
+		scrollable.top = 30;
+		scrollable.updateSize(scrollable.w, scrollable.h);
+		je_checkmode = CheckMode.gen(scrollable);
 		for(Map.Entry<String, JsonValue<?>> entry : map.entries()){
-			container.add(new JsonElm(entry.getKey(), entry.getValue()), je_checkmode);
+			scrollable.add(new JsonElm(entry.getKey(), entry.getValue()), je_checkmode);
 		}
-		container.updateBar();
+		scrollable.updateBar();
 		add(new RunElm(w - 110, 2, 100, "workspace.jsoneditor.insert", ci -> {
 			Field field = new Field(Field.FieldType.TEXT, 490);
 			DropList<String> list = new DropList<>(490);
@@ -47,8 +47,8 @@ public class JsonEditor extends WFileEditor {
 				.set_confirm(d -> {
 					String key = field.get_text();
 					map.add(key, fromJsonTypeDrop(list));
-					container.add(new JsonElm(key, map.get(key)), je_checkmode);
-					container.updateBar();
+					scrollable.add(new JsonElm(key, map.get(key)), je_checkmode);
+					scrollable.updateBar();
 				}).buttons(100, DialogButton.ADD);
 			fillJsonTypeDrop(list);
 		}).text_centered(true));
@@ -98,8 +98,8 @@ public class JsonEditor extends WFileEditor {
 						if(jr == null){
 							JsonEditor editor = (JsonEditor)root.root;
 							editor.map.rem(key);
-							editor.container.remElm(this);
-							editor.container.updateBar();
+							editor.scrollable.remElm(this);
+							editor.scrollable.updateBar();
 						}
 						else{
 							jr.value.asMap().rem(key);
@@ -127,12 +127,12 @@ public class JsonEditor extends WFileEditor {
 								if(jr == null){
 									JsonEditor editor = (JsonEditor)root.root;
 									JsonValue val = editor.map.rem(key);
-									editor.container.remElm(this);
+									editor.scrollable.remElm(this);
 									if(val != null){
 										editor.map.add(nkey, val);
-										editor.container.add(new JsonElm(nkey, val), check_mode);
+										editor.scrollable.add(new JsonElm(nkey, val), check_mode);
 									}
-									editor.container.updateBar();
+									editor.scrollable.updateBar();
 								}
 								else{
 									JsonValue val = jr.value.asMap().rem(key);
