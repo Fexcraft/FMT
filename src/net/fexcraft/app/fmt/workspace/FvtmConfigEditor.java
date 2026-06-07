@@ -40,9 +40,9 @@ public class FvtmConfigEditor extends WFileEditor {
 	@Override
 	public void init(Object... args){
 		super.init(args);
-		container.top = 30;
-		container.updateSize(container.w, container.h);
-		checkmode = CheckMode.gen(container);
+		scrollable.top = 30;
+		scrollable.updateSize(scrollable.w, scrollable.h);
+		checkmode = CheckMode.gen(scrollable);
 		type = FvtmType.fromFile(file);
 		map = JsonHandler.parse(file).asMap();
 		ref = getReference();
@@ -54,14 +54,14 @@ public class FvtmConfigEditor extends WFileEditor {
 	}
 
 	private void fill(){
-		container.remElmIf(EntryElm.class::isInstance);
+		scrollable.remElmIf(EntryElm.class::isInstance);
 		for(ConfigEntry entry : ref.entries){
 			JsonValue val = null;
 			if(map.has(entry.name)) val = map.get(entry.name);
 			if(val == null && map.has(entry.alt)) val = map.get(entry.alt);
-			container.add(new EntryElm(entry, entry.key(), val), this);
+			scrollable.add(new EntryElm(entry, entry.key(), val), this);
 		}
-		container.updateBar();
+		scrollable.updateBar();
 	}
 
 	private ConfigReference getReference(){
@@ -645,7 +645,7 @@ public class FvtmConfigEditor extends WFileEditor {
 				counter.text(value == null ? "n" : value.isMap() ? value.asMap().size() : value.isArray() ? value.asArray().size() : 0);
 			}
 			if(root instanceof EntryElmCon) ((EntryElm)root.root).updateSize();
-			else editor.container.updateBar();
+			else editor.scrollable.updateBar();
 		}
 
 	}
