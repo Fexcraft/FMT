@@ -73,8 +73,8 @@ public class MenuFrame extends Frame {
 
 	@Override
 	public void update(){
-		if(GGR.cpos_x < x() || GGR.cpos_x >= x() + w) close();
-		if(GGR.cpos_y < y() || GGR.cpos_y >= y() + h) close();
+		if(GGR.cpos_x < x() - 10 || GGR.cpos_x >= x() + w + 10) close();
+		if(GGR.cpos_y < y() - 10 || GGR.cpos_y >= y() + h + 10) close();
 	}
 
 	private void close(){
