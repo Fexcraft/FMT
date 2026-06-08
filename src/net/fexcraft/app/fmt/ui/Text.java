@@ -1,6 +1,7 @@
 package net.fexcraft.app.fmt.ui;
 
 import net.fexcraft.app.fmt.polygon.GLObject;
+import net.fexcraft.app.fmt.polygon.PolyRenderer;
 import net.fexcraft.app.fmt.polygon.Vector3F;
 import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.lib.common.math.RGB;
@@ -40,7 +41,7 @@ public class Text {
 		chardata.clear();
 		if(autoscale){
 			w = FontRenderer.getWidth(text, font);
-			scale = (root.w - 5 - x) < w ? (root.w - 5 - x) / w : 1;
+			scale = (root.w - x * 2) < w ? (root.w - x * 2) / w : 1;
 			w *= scale;
 			h = FontRenderer.getHeight(text, font) * scale;
 		}
@@ -55,11 +56,13 @@ public class Text {
 	public void render(){
 		TextureManager.bind("font/" + font);
 		GLObject obj;
+		PolyRenderer.SCALE1 = scale;
 		for(CharInfo info : chardata){
 			obj = info.hedron.glObj();
 			obj.polycolor = info.col;
-			info.hedron.pos(rx + info.pos.x, ry + info.pos.y, info.pos.z).render();
+			info.hedron.pos(rx + info.pos.x * scale, ry + info.pos.y, info.pos.z).render();
 		}
+		PolyRenderer.SCALE1 = 1f;
 	}
 
 	public Text text(Object ntext){
