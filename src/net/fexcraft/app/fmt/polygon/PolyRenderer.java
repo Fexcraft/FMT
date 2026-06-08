@@ -1,6 +1,5 @@
 package net.fexcraft.app.fmt.polygon;
 
-import net.fexcraft.app.fmt.polygon.GLObject;
 import net.fexcraft.app.fmt.polygon.GLObject.GPUData;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.utils.ImageHandler;
@@ -23,7 +22,8 @@ public class PolyRenderer extends Renderer {
 
     private static Pivot PIVOT = null;
 	private static Model HELPER = null;
-	public static float SCALE = 1f;
+	public static float SCALE0 = 1f;
+	public static float SCALE1 = 1f;
     private static Matrix4f matrix0 = new Matrix4f();
 	private static Matrix4f matrix1 = new Matrix4f();
 	private static DrawMode MODE = DrawMode.TEXTURED;
@@ -63,11 +63,12 @@ public class PolyRenderer extends Renderer {
 				PIVOT.matrix.get(matrix0);
 			}
 		}
-		if(SCALE != 1f) matrix0.scale(SCALE);
+		if(SCALE0 != 1f) matrix0.scale(SCALE0);
 		matrix0.translate(poly.posX, poly.posY, poly.posZ);
 		if(poly.rotY != 0f) matrix0.rotate((float)Math.toRadians(poly.rotY), axis_y);
 		if(poly.rotX != 0f) matrix0.rotate((float)Math.toRadians(poly.rotX), axis_x);
 		if(poly.rotZ != 0f) matrix0.rotate((float)Math.toRadians(poly.rotZ), axis_z);
+		if(SCALE1 != 1f) matrix0.scale(SCALE1);
 		//
 		glUniformMatrix4fv(program.getUniform(Uniform.MODEL), false, matrix0.get(new float[16]));
 		if(MODE.ui()){
