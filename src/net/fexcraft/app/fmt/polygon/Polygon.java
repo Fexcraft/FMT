@@ -87,7 +87,7 @@ public abstract class Polygon {
 		this.model = model == null ? FMT.MODEL : model;
 		name = obj.get("name", null);
 		pos = getVector(obj, "pos_%s", 0f);
-		pos.polygon = this;
+		//pos.polygon = this;
 		off = getVector(obj, "off_%s", 0f);
 		rot = getVector(obj, "rot_%s", 0f);
 		cuv = new UVMap(this);
