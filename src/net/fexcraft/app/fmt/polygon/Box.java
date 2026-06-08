@@ -63,10 +63,10 @@ public class Box extends Polygon {
 	private void fillVertoffs(){
 		vertoffs.putIfAbsent(VO_0, new Vertoff().color(CornerUtil.CORNER_COLOURS[0].packed));
 		vertoffs.putIfAbsent(VO_1, new Vertoff().color(CornerUtil.CORNER_COLOURS[1].packed));
-		vertoffs.putIfAbsent(VO_2, new Vertoff().color(CornerUtil.CORNER_COLOURS[2].packed));
-		vertoffs.putIfAbsent(VO_3, new Vertoff().color(CornerUtil.CORNER_COLOURS[3].packed));
-		vertoffs.putIfAbsent(VO_4, new Vertoff().color(CornerUtil.CORNER_COLOURS[4].packed));
-		vertoffs.putIfAbsent(VO_5, new Vertoff().color(CornerUtil.CORNER_COLOURS[5].packed));
+		vertoffs.putIfAbsent(VO_2, new Vertoff().color(CornerUtil.CORNER_COLOURS[5].packed));
+		vertoffs.putIfAbsent(VO_3, new Vertoff().color(CornerUtil.CORNER_COLOURS[4].packed));
+		vertoffs.putIfAbsent(VO_4, new Vertoff().color(CornerUtil.CORNER_COLOURS[3].packed));
+		vertoffs.putIfAbsent(VO_5, new Vertoff().color(CornerUtil.CORNER_COLOURS[2].packed));
 		vertoffs.putIfAbsent(VO_6, new Vertoff().color(CornerUtil.CORNER_COLOURS[6].packed));
 		vertoffs.putIfAbsent(VO_7, new Vertoff().color(CornerUtil.CORNER_COLOURS[7].packed));
 	}
