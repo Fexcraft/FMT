@@ -1,9 +1,11 @@
 package net.fexcraft.app.fmt.ui;
 
+import net.fexcraft.app.fmt.polygon.GLObject;
+import net.fexcraft.app.fmt.polygon.Vector3F;
 import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.utils.Logging;
-import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.frl.Polygon;
+import net.fexcraft.lib.frl.Polyhedron;
 import net.fexcraft.lib.frl.Vertex;
 
 import javax.imageio.ImageIO;
@@ -25,10 +27,8 @@ import static net.fexcraft.app.fmt.settings.Settings.FONT_SIZEN;
  */
 public class FontRenderer {
 
-	private static Map<Character, Glyph> italic_glyphs = new HashMap<>();
-	private static Map<Character, Glyph> plain_glyphs = new HashMap<>();
-	private static Map<Character, Glyph> bold_glyphs = new HashMap<>();
-	private static Map<Character, Glyph> mono_glyphs = new HashMap<>();
+	private static Map<FontType, Map<Character, Glyph>> glyphs = new HashMap<>();
+	private static Map<FontType, Map<Character, Polyhedron>> hedrons = new HashMap<>();
 	private static boolean antialiasing = true;
 	private static ArrayList<Character> CHARS = new ArrayList<>();
 	private static Font[] ALL = GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts();
@@ -63,10 +63,14 @@ public class FontRenderer {
 
 	public static void init(){
 		for(char c : DEFAULT_CHARS.toCharArray()) CHARS.add(c);
-		for(FontType type : FontType.values()) initGlyphs(type);
+		for(FontType type : FontType.values()){
+			glyphs.put(type, new HashMap<>());
+			hedrons.put(type, new HashMap<>());
+			initGlyphs(type, glyphs.get(type));
+		}
 	}
 
-	private static void initGlyphs(FontType type){
+	private static void initGlyphs(FontType type, Map<Character, Glyph> map){
 		int img_w = 0;
 		int img_h = 0;
 		for(char c : CHARS){
@@ -87,20 +91,7 @@ public class FontRenderer {
 			Glyph ch = new Glyph(char_w, char_h, x, image.getHeight() - char_h);
 			g.drawImage(char_img, x, 0, null);
 			x += ch.width;
-			switch(type.ordinal()){
-				case 0:
-					plain_glyphs.put(c, ch);
-					break;
-				case 1:
-					bold_glyphs.put(c, ch);
-					break;
-				case 2:
-					italic_glyphs.put(c, ch);
-					break;
-				case 3:
-					mono_glyphs.put(c, ch);
-					break;
-			}
+			map.put(c, ch);
 		}
 		g.dispose();
 		File file = new File("./temp/font/" + type + ".png");
@@ -160,24 +151,7 @@ public class FontRenderer {
 	}
 
 	public static Glyph getGlyph(FontType type, char c){
-		Glyph glyph = null;
-		switch(type){
-			case MONO:
-				glyph = mono_glyphs.get(c);
-				break;
-			case ITALIC:
-				glyph = italic_glyphs.get(c);
-				break;
-			case BOLD:
-				glyph = bold_glyphs.get(c);
-				break;
-			case PLAIN:
-				glyph = plain_glyphs.get(c);
-				break;
-			default:
-				glyph = Glyph.NULL;
-				break;
-		}
+		Glyph glyph = glyphs.get(type).get(c);
 		return glyph == null ? Glyph.NULL : glyph;
 	}
 
@@ -217,7 +191,7 @@ public class FontRenderer {
 		return height;
 	}
 
-	public static void compile(Text text, CharSequence str, FontType type, RGB color){
+	public static void compile(Text text, CharSequence str, FontType type, float[] color){
 		if(str.length() == 0) return;
 		float px = 0;
 		float py = 0;
@@ -232,19 +206,29 @@ public class FontRenderer {
 			if(c == '\r') continue;
 			Glyph g = getGlyph(type, c);
 			if(text.cut && px + g.width >= max) break;
+			text.chardata.add(new Text.CharInfo(getHedron(type, c, g), new Vector3F(px, py, text.root.z() + 0.5f), color));
+			px += g.width;
+		}
+	}
+
+	private static Polyhedron getHedron(FontType type, char c, Glyph g){
+		Polyhedron hedron = hedrons.get(type).get(c);
+		if(hedron == null){
 			float tw = 1f / type.width;
 			float th = 1f / type.height;
 			float tx = tw * g.x;
 			float ty = th * g.y;
-			float z = text.root.z() + 0.5f;
-			text.hedron.polygons.add(new Polygon(new Vertex[]{
-				new Vertex((px + g.width) * text.scale, py * text.scale, z).uv(tx + (g.width * tw), ty),
-				new Vertex(px * text.scale, py * text.scale, z).uv(tx, ty),
-				new Vertex(px * text.scale, (py + g.height) * text.scale, z).uv(tx, ty + (g.height * th)),
-				new Vertex((px + g.width) * text.scale, (py + g.height) * text.scale, z).uv(tx + (g.width * tw), ty + (g.height * th)),
-			}).color(color));
-			px += g.width;
+			hedron = new Polyhedron();
+			hedron.polygons.add(new Polygon(new Vertex[]{
+				new Vertex(g.width, 0, 0).uv(tx + (g.width * tw), ty),
+				new Vertex(0, 0, 0).uv(tx, ty),
+				new Vertex(0, g.height, 0).uv(tx, ty + (g.height * th)),
+				new Vertex(g.width, g.height, 0).uv(tx + (g.width * tw), ty + (g.height * th)),
+			}));
+			((GLObject)hedron.glObj).textured = true;
+			hedrons.get(type).put(c, hedron);
 		}
+		return hedron;
 	}
 
 }
