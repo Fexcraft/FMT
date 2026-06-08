@@ -269,10 +269,7 @@ public class Element {
 	}
 
 	public void postext(){
-		text.hedron.posX = hedron.posX;
-		text.hedron.posY = hedron.posY;
-		text.hedron.posX += text.centered ? (w - text.w) * 0.5f : text.x;
-		text.hedron.posY += text.centered ? (h - text.h) * 0.5f : text.y;
+		text.postext();
 	}
 
 	public void text_pos(int x, int y){
