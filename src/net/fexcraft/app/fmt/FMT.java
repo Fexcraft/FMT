@@ -340,7 +340,7 @@ public class FMT {
 			Picker.reset();
 		}
 		//
-		PolyRenderer.SCALE = Settings.UI_SCALE.value;
+		PolyRenderer.SCALE0 = Settings.UI_SCALE.value;
 		CAM.ortho(1);
 		glClearColor(background[0], background[1], background[2], 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -348,7 +348,7 @@ public class FMT {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		UI.render();
 		glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-		PolyRenderer.SCALE = 1f;
+		PolyRenderer.SCALE0 = 1f;
 		//
 		CAM.apply();
 	    PolyRenderer.mode(DrawMode.TEXTURED);
