@@ -580,7 +580,12 @@ public class Element {
 		public static CheckMode IN_WINDOW =
 			new CheckMode(elm -> elm.pickpos[0] > FMT.SCALED_WIDTH || elm.pickpos[1] > FMT.SCALED_HEIGHT || elm.pickpos[2] < 0 || elm.pickpos[3] < 0);
 		public static CheckMode IN_ROOT =
-			new CheckMode(elm -> elm.pickpos[0] < elm.root.pickpos[0] || elm.pickpos[1] < elm.root.pickpos[1] || elm.pickpos[2] > elm.root.pickpos[2] || elm.pickpos[3] > elm.root.pickpos[3]);
+			new CheckMode(elm -> {
+				if(elm.root.isContainer()){
+					return elm.pickpos[0] < elm.root.root.pickpos[0] || elm.pickpos[1] < elm.root.root.pickpos[1] || elm.pickpos[2] > elm.root.root.pickpos[2] || elm.pickpos[3] > elm.root.root.pickpos[3];
+				}
+				else return elm.pickpos[0] < elm.root.pickpos[0] || elm.pickpos[1] < elm.root.pickpos[1] || elm.pickpos[2] > elm.root.pickpos[2] || elm.pickpos[3] > elm.root.pickpos[3];
+			});
 		public static CheckMode NONE = new CheckMode(e -> false);
 
 		public boolean fail(Element elm){
