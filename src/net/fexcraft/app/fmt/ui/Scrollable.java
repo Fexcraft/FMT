@@ -81,6 +81,7 @@ public class Scrollable extends Element {
 	public void updateSize(float width, float height){
 		size(width, height - top);
 		pos(0, top);
+		recompile();
 		updateBar();
 	}
 
