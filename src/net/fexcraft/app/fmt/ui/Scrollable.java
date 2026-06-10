@@ -33,7 +33,7 @@ public class Scrollable extends Element {
 		top = topoff;
 		container = new Container();
 		container.shape(ElmShape.NONE);
-		container.check_mode(CheckMode.NONE);
+		//container.check_mode(CheckMode.NONE);
 	}
 
 	@Override
@@ -80,7 +80,6 @@ public class Scrollable extends Element {
 
 	public void updateSize(float width, float height){
 		size(width, height - top);
-		container.size(w - SCROLLBAR_WIDTH, h);
 		pos(0, top);
 		updateBar();
 	}
@@ -119,9 +118,10 @@ public class Scrollable extends Element {
 		bar.size(16, bh).recompile();
 		up.pos(left ? w - SCROLLBAR_WIDTH : 5, 0);
 		dw.pos(left ? w - SCROLLBAR_WIDTH : 5 , h - 16);
-		container.recompile();
 		bar.recompile();
 		container.pos(left ? 0 : SCROLLBAR_WIDTH, ih < h ? 0 : -scrolled);
+		container.size(w - SCROLLBAR_WIDTH, ih);
+		container.recompile();
 		float incr = 5;
 		for(Element elm : container.elements){
 			if(elm == bar || elm == up || elm == dw) continue;
