@@ -80,7 +80,7 @@ public class Scrollable extends Element {
 
 	public void updateSize(float width, float height){
 		size(width, height - top);
-		container.size(w, h);
+		container.size(w - SCROLLBAR_WIDTH, h);
 		pos(0, top);
 		updateBar();
 	}
@@ -121,7 +121,7 @@ public class Scrollable extends Element {
 		dw.pos(left ? w - SCROLLBAR_WIDTH : 5 , h - 16);
 		container.recompile();
 		bar.recompile();
-		container.pos(0, ih < h ? 0 : -scrolled);
+		container.pos(left ? 0 : SCROLLBAR_WIDTH, ih < h ? 0 : -scrolled);
 		float incr = 5;
 		for(Element elm : container.elements){
 			if(elm == bar || elm == up || elm == dw) continue;
@@ -131,7 +131,7 @@ public class Scrollable extends Element {
 				incr += elm.h + 5;
 			}
 			else if(elm instanceof TTabCom com){
-				com.pos(SCROLLBAR_WIDTH + 5, incr);
+				com.pos(5, incr);
 				if(!elm.visible) continue;
 				incr += com.h + (com.container.visible ? com.container.h : 0) + 5;
 			}
