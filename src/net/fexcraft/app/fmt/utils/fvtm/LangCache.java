@@ -32,16 +32,20 @@ public class LangCache {
 			while(scanner.hasNextLine()){
 				line = scanner.nextLine();
 				if(!line.contains("=")){
-					entries.put(line, new LangEntry(null, false));
+					entries.put(line, new LangEntry(null, LET.OTHER));
 					continue;
 				}
 				String l = line.substring(0, line.indexOf("="));
 				if(l.startsWith("item.")){
 					l = l.substring(5, l.length() - 5).replace(":", ".");
-					entries.put(l, new LangEntry(line.substring(line.indexOf("=") + 1), true));
+					entries.put(l, new LangEntry(line.substring(line.indexOf("=") + 1), LET.ITEM));
+				}
+				else if(l.startsWith("tile.")){
+					l = l.substring(5, l.length() - 5).replace(":", ".");
+					entries.put(l, new LangEntry(line.substring(line.indexOf("=") + 1), LET.BLOCK));
 				}
 				else{
-					entries.put(l, new LangEntry(line.substring(l.length() + 1), false));
+					entries.put(l, new LangEntry(line.substring(l.length() + 1), LET.OTHER));
 				}
 			}
 		}
@@ -52,29 +56,36 @@ public class LangCache {
 		JsonMap map = JsonHandler.parse(json).asMap();
 		for(Map.Entry<String, JsonValue<?>> entry : map.entries()){
 			if(entry.getKey().startsWith("item.")){
-				entries.put(entry.getKey().substring(5), new LangEntry(entry.getValue().string_value(), true));
+				entries.put(entry.getKey().substring(5), new LangEntry(entry.getValue().string_value(), LET.ITEM));
 			}
-			else entries.put(entry.getKey(), new LangEntry(entry.getValue().string_value(), false));
+			else if(entry.getKey().startsWith("block.")){
+				entries.put(entry.getKey().substring(6), new LangEntry(entry.getValue().string_value(), LET.BLOCK));
+			}
+			else entries.put(entry.getKey(), new LangEntry(entry.getValue().string_value(), LET.OTHER));
 		}
 	}
 
-	public void fill(String cid, String name){
-		entries.put(pack.id + "." + cid, new LangEntry(name, true));
+	public void fill(String cid, String name, boolean block){
+		entries.put(pack.id + "." + cid, new LangEntry(name, block ? LET.BLOCK : LET.ITEM));
 		save();
 	}
 
 	private void save(){
 		JsonMap map = new JsonMap();
 		for(Map.Entry<String, LangEntry> entry : entries.entrySet()){
-			if(entry.getValue().item) map.add("item." + entry.getKey(), entry.getValue().name);
+			if(entry.getValue().type == LET.ITEM) map.add("item." + entry.getKey(), entry.getValue().name);
+			else if(entry.getValue().type == LET.BLOCK) map.add("block." + entry.getKey(), entry.getValue().name);
 			else if(entry.getValue().name != null) map.add(entry.getKey(), entry.getValue().name);
 		}
 		JsonHandler.print(json, map, JsonHandler.PrintOption.SPACED);
 		try{
 			FileWriter writer = new FileWriter(lang);
 			for(Map.Entry<String, LangEntry> entry : entries.entrySet()){
-				if(entry.getValue().item){
+				if(entry.getValue().type == LET.ITEM){
 					writer.write("item." + entry.getKey().replace(".", ":") + ".name=" + entry.getValue().name + "\n");
+				}
+				else if(entry.getValue().type == LET.BLOCK){
+					writer.write("tile." + entry.getKey().replace(".", ":") + ".name=" + entry.getValue().name + "\n");
 				}
 				else if(entry.getValue().name == null){
 					writer.write(entry.getKey() + "\n");
@@ -114,6 +125,10 @@ public class LangCache {
 		}
 	}
 
-	public record LangEntry(String name, boolean item){}
+	public record LangEntry(String name, LET type){}
+
+	public enum LET {
+		ITEM, BLOCK, OTHER
+	}
 
 }
