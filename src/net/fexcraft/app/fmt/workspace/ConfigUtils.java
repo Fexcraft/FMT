@@ -13,7 +13,6 @@ import net.fexcraft.app.fmt.utils.fvtm.LangCache;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
-import net.fexcraft.app.json.JsonValue;
 import net.fexcraft.lib.common.utils.Formatter;
 import org.apache.commons.io.FileUtils;
 
@@ -107,13 +106,14 @@ public class ConfigUtils {
 
 	public static void genIconsInPack(){
 		FMT.WORKSPACE.selectPack(pack -> {
-			for(List<FileElm> files : pack.content.values()){
-				for(FileElm elm : files){
+			for(Map.Entry<FvtmType, List<FileElm>> entry : pack.content.entrySet()){
+				boolean blk = entry.getKey() == FvtmType.BLOCK;
+				for(FileElm elm : entry.getValue()){
 					JsonMap map = JsonHandler.parse(elm.file);
 					String cid = map.getString("ID", map.getString("RegistryName", null));
 					if(cid == null) return;
 					if(cid.contains(":")) cid = cid.split(":")[1];
-					pack.lang.fill(cid, map.getString("Name", "Unnamed Content"));
+					pack.lang.fill(cid, map.getString("Name", "Unnamed Content"), blk);
 					File file = new File(pack.file, "/assets/" + pack.id + "/models/item/" + cid + ".json");
 					if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
 					if(!file.exists()){
@@ -184,7 +184,7 @@ public class ConfigUtils {
 						map = new JsonMap();
 						map.add("parent", "item/generated");
 						map.add("textures", new JsonMap("layer0", pack.id + ":item/" + cid));
-						pack.lang.fill(cid, conam.get_text());
+						pack.lang.fill(cid, conam.get_text(), type == FvtmType.BLOCK);
 						JsonHandler.print(file, map, JsonHandler.PrintOption.DEFAULT);
 						file = new File(pack.file, "/assets/" + pack.id + "/items/" + cid + ".json");
 						if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
@@ -294,22 +294,27 @@ public class ConfigUtils {
 				while(scanner.hasNextLine()){
 					line = scanner.nextLine();
 					if(!line.contains("=")){
-						entries.put(line, new LangCache.LangEntry(null, false));
+						entries.put(line, new LangCache.LangEntry(null, LangCache.LET.OTHER));
 						continue;
 					}
 					String l = line.substring(0, line.indexOf("="));
 					if(l.startsWith("item.")){
 						l = l.substring(5, l.length() - 5).replace(":", ".");
-						entries.put(l, new LangCache.LangEntry(line.substring(line.indexOf("=") + 1), true));
+						entries.put(l, new LangCache.LangEntry(line.substring(line.indexOf("=") + 1), LangCache.LET.ITEM));
+					}
+					else if(l.startsWith("tile.")){
+						l = l.substring(5, l.length() - 5).replace(":", ".");
+						entries.put(l, new LangCache.LangEntry(line.substring(line.indexOf("=") + 1), LangCache.LET.BLOCK));
 					}
 					else{
-						entries.put(l, new LangCache.LangEntry(line.substring(l.length() + 1), false));
+						entries.put(l, new LangCache.LangEntry(line.substring(l.length() + 1), LangCache.LET.OTHER));
 					}
 				}
 				scanner.close();
 				JsonMap map = new JsonMap();
 				for(Map.Entry<String, LangCache.LangEntry> entry : entries.entrySet()){
-					if(entry.getValue().item()) map.add("item." + entry.getKey(), net.fexcraft.lib.common.utils.Formatter.format(entry.getValue().name()));
+					if(entry.getValue().type() == LangCache.LET.ITEM) map.add("item." + entry.getKey(), net.fexcraft.lib.common.utils.Formatter.format(entry.getValue().name()));
+					else if(entry.getValue().type() == LangCache.LET.BLOCK) map.add("block." + entry.getKey(), net.fexcraft.lib.common.utils.Formatter.format(entry.getValue().name()));
 					else if(entry.getValue().name() != null) map.add(entry.getKey(), Formatter.format(entry.getValue().name()));
 				}
 				File json = new File(file.getParentFile(), file.getName().substring(0, file.getName().indexOf(".")) + ".json");
