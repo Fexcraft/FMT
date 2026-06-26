@@ -48,6 +48,7 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import static net.fexcraft.app.fmt.utils.GGR.parseKeyAction;
 import static net.fexcraft.app.fmt.utils.Logging.log;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -167,6 +168,10 @@ public class FMT {
 		glfwSetKeyCallback(window, keyCallback = new GLFWKeyCallback(){
 			@Override
 			public void invoke(long window, int key, int scancode, int action, int mods){
+				if(key == GLFW_KEY_LEFT_CONTROL) FMT.CAM.left_control_down = parseKeyAction(action);
+				if(key == GLFW_KEY_RIGHT_CONTROL) FMT.CAM.right_control_down = parseKeyAction(action);
+				if(key == GLFW_KEY_LEFT_ALT) FMT.CAM.left_alt_down = parseKeyAction(action);
+				if(key == GLFW_KEY_RIGHT_ALT) FMT.CAM.right_alt_down = parseKeyAction(action);
 				if(Element.isSelectedAField()){
 					((Field)Element.SELECTED).onKeyInput(key, scancode, action, mods);
 					return;
@@ -177,6 +182,7 @@ public class FMT {
 		glfwSetCharCallback(window, charCallback = new GLFWCharCallback() {
 			@Override
 			public void invoke(long window, int codepoint){
+				if(GGR.isControlDown()) return;
 				if(Element.isSelectedAField()) ((Field)Element.SELECTED).onCharInput(codepoint);
 			}
 		});
