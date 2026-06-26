@@ -5,11 +5,17 @@ import net.fexcraft.app.fmt.ui.editor.EditorRoot;
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateHandler.UpdateCompound;
+import net.fexcraft.app.fmt.utils.GGR;
 import net.fexcraft.app.fmt.utils.Logging;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.util.tinyfd.TinyFileDialogs;
 
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
 import java.math.RoundingMode;
 import java.nio.ByteBuffer;
 import java.text.DecimalFormat;
@@ -276,6 +282,20 @@ public class Field extends Element {
 			previous = text.text();
 			return;
 		}
+		if(GGR.isControlDown()){
+			if(key == GLFW_KEY_C){
+				onCopyKey();
+				return;
+			}
+			if(key == GLFW_KEY_V){
+				onPasteKey();
+				return;
+			}
+			if(key == GLFW_KEY_X){
+				onCutKey();
+				return;
+			}
+		}
 		String txt = text.text();
 		if(key == GLFW_KEY_BACKSPACE){
 			if(!txt.isEmpty()){
@@ -322,6 +342,30 @@ public class Field extends Element {
 				}
 			}
 		}
+	}
+
+	private void onCopyKey(){
+		Clipboard cp = Toolkit.getDefaultToolkit().getSystemClipboard();
+		StringSelection sel = new StringSelection(text.text());
+		cp.setContents(sel, new StringSelection("fmt_text"));
+	}
+
+	private void onPasteKey(){
+		Clipboard cp = Toolkit.getDefaultToolkit().getSystemClipboard();
+		Transferable data = cp.getContents(null);
+		if(!data.isDataFlavorSupported(DataFlavor.stringFlavor)) return;
+		try{
+			String str = data.getTransferData(DataFlavor.stringFlavor).toString();
+			str.chars().forEach(this::onCharInput);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	private void onCutKey(){
+		onCopyKey();
+		clear_text();
 	}
 
 	protected void backspace(String txt){
