@@ -110,10 +110,10 @@ public class KeyCompound {
 		//
 		keys.add(new KeyFunction("delete", GLFW_KEY_DELETE, action -> { if(action == GLFW_RELEASE) FMT.MODEL.delsel(); }));
 		keys.add(new KeyFunction("workspace", GLFW_KEY_T, action -> { if(action == GLFW_RELEASE) FMT.WORKSPACE.show(); }));
-		keys.add(new KeyFunction("left_control", GLFW_KEY_LEFT_CONTROL, (action) -> FMT.CAM.left_control_down = parseKeyAction(action)));
-		keys.add(new KeyFunction("left_alt", GLFW_KEY_LEFT_ALT, (action) -> FMT.CAM.left_alt_down = parseKeyAction(action)));
-		keys.add(new KeyFunction("right_control", GLFW_KEY_RIGHT_CONTROL, (action) -> FMT.CAM.right_control_down = parseKeyAction(action)));
-		keys.add(new KeyFunction("right_alt", GLFW_KEY_RIGHT_ALT, (action) -> FMT.CAM.right_alt_down = parseKeyAction(action)));
+		//keys.add(new KeyFunction("left_control", GLFW_KEY_LEFT_CONTROL, (action) -> FMT.CAM.left_control_down = parseKeyAction(action)));
+		//keys.add(new KeyFunction("left_alt", GLFW_KEY_LEFT_ALT, (action) -> FMT.CAM.left_alt_down = parseKeyAction(action)));
+		//keys.add(new KeyFunction("right_control", GLFW_KEY_RIGHT_CONTROL, (action) -> FMT.CAM.right_control_down = parseKeyAction(action)));
+		//keys.add(new KeyFunction("right_alt", GLFW_KEY_RIGHT_ALT, (action) -> FMT.CAM.right_alt_down = parseKeyAction(action)));
 		keys.add(new KeyFunction("clipboard_copy", GLFW_KEY_C, (action) -> {
 			if(action == GLFW_PRESS && GGR.isControlDown()){
 				FMT.MODEL.copyToClipboard(false);
