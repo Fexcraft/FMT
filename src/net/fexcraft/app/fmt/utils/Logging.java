@@ -35,7 +35,7 @@ public class Logging {
 	}
 	
 	public static void log(String errorinfo, Throwable e){
-		LOGGER_MAIN.log(Level.INFO, "ERROR: " + e.getLocalizedMessage());
+		LOGGER_MAIN.log(Level.INFO, "ERROR: " + e.getMessage());
 		if(errorinfo != null) LOGGER_MAIN.log(Level.INFO, "INFO: " + errorinfo);
 		//LOGGER_MAIN.log(Level.INFO, "ERROR: " + e.getMessage());
 		for(StackTraceElement trace : e.getStackTrace()){
