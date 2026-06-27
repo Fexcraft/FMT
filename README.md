@@ -76,3 +76,8 @@ Otherwise try Java 15+, recently it was reported that FMT works again under Java
 
 ## Discord
 https://discord.gg/AkMAzaA
+
+## Notice
+If you are setting up this project for the first time you will run into an issue regarding missing lwgjl dependencies.
+The easiest way to resolve this is to download the latest v2 release and copy the lwgjl jars  from the libs folder
+into one called "libs-3.2.4S" in your project folder.
