@@ -102,13 +102,16 @@ dependencies {
     runtimeOnly group: 'org.lwjgl', name: 'lwjgl-tinyfd', version: lwjgl_version, changing: true, classifier: 'natives-macos'
 
     implementation files('libs/VOXtoFMT-1.jar')
-    implementation files('libs/FCL-12.105.jar')
+
+    implementation group: 'io.netty', name: 'netty-buffer', version: '4.2.15.Final'
 }
 
 sourceSets {
     main {
         java {
             srcDirs 'src'
+            srcDirs "../Json/src"
+            srcDirs "../FCL/common/src"
         }
         resources {
             srcDirs 'resources'
@@ -125,7 +128,7 @@ tasks.register('mainJar', Jar) {
                 "Class-Path": ". " + (configurations.runtimeClasspath.collect { "lib/" + it.getName() }.join(' '))
     }
     from('build/classes/java/main/') {
-        include 'net/fexcraft/app/fmt/'
+        include 'net/fexcraft/'
     }
     from('src/') {
         include 'log4j2.xml'
