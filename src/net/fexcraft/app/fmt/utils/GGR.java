@@ -88,7 +88,7 @@ public class GGR {
 	    }
         processCameraInput(delta);
         if(left_down && TextureEditor.pixelMode() && Settings.dragPainting() && isNotOverUI()){
-        	RayCoastAway.doTest(true, true, false);
+        	Picker.doTest(true, true, false);
         }
     }
 
@@ -102,7 +102,7 @@ public class GGR {
         	}
         	else if(action == GLFW_RELEASE){
         		if(isNotOverUI()){
-        			RayCoastAway.doTest(true, true, false);
+        			Picker.doTest(true, true, false);
         		}
         		left_down = false;
         	}

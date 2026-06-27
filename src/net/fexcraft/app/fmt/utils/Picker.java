@@ -17,7 +17,7 @@ import net.fexcraft.app.fmt.wrappers.GroupCompound;
 import net.fexcraft.app.fmt.wrappers.PolygonWrapper;
 import net.fexcraft.app.fmt.wrappers.TurboList;
 
-public class RayCoastAway {
+public class Picker {
 
 	public static boolean PICKING, MOUSEOFF;
 	private static ByteBuffer picker;

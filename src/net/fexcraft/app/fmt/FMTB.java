@@ -339,7 +339,7 @@ public class FMTB {
 				Trees.updateCounters();
 			}
 			render(alpha = accumulator / interval);
-			if(!RayCoastAway.PICKING){
+			if(!Picker.PICKING){
 				renderUI(ImageHelper.HASTASK);
 				if(ImageHelper.HASTASK){
 					ImageHelper.doTask();
@@ -428,7 +428,7 @@ public class FMTB {
 	}
 	
 	private void render(float alpha, boolean pixelpass){
-		if(!RayCoastAway.PICKING) context.updateGlfwWindow();
+		if(!Picker.PICKING) context.updateGlfwWindow();
         Vector2i size = context.getFramebufferSize();
         float[] color = Settings.getBackGroundColor();
         GL11.glClearColor(color[0], color[1], color[2], color[3]);
@@ -443,11 +443,11 @@ public class FMTB {
         	GL11.glRotatef((ImageHelper.getStage() - 20) * 10, 0, 1, 0);
         }
         //
-        if(RayCoastAway.PICKING){
+        if(Picker.PICKING){
             if(pixelpass){
-				TextureManager.bindTexture(MODEL.getTempTex(RayCoastAway.lastsel));
-				RayCoastAway.lastsel.render();
-				RayCoastAway.doTest(false, null, true);
+				TextureManager.bindTexture(MODEL.getTempTex(Picker.lastsel));
+				Picker.lastsel.render();
+				Picker.doTest(false, null, true);
             }
             else MODEL.render();
             GL11.glPopMatrix();

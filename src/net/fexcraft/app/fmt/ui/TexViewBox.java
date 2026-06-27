@@ -20,7 +20,7 @@ import org.liquidengine.legui.style.border.SimpleLineBorder;
 
 import net.fexcraft.app.fmt.FMTB;
 import net.fexcraft.app.fmt.ui.editor.UVEditor;
-import net.fexcraft.app.fmt.utils.RayCoastAway;
+import net.fexcraft.app.fmt.utils.Picker;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.texture.TextureGroup;
 import net.fexcraft.app.fmt.utils.texture.TextureManager;
@@ -184,7 +184,7 @@ public class TexViewBox {
 						UVEditor.uv_type.setSelected(wrapper.getUVCoords(side).type().name().toLowerCase(), true);
 						UVEditor.refreshEntries(wrapper, side);
 					}
-					RayCoastAway.select(wrapper);
+					Picker.select(wrapper);
 				}
 			});
 			this.getListenerMap().addListener(MouseDragEvent.class, listener -> {

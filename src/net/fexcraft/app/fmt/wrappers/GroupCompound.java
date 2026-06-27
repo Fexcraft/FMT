@@ -49,7 +49,7 @@ import net.fexcraft.app.fmt.ui.tree.SubTreeGroup;
 import net.fexcraft.app.fmt.ui.tree.TreeGroup;
 import net.fexcraft.app.fmt.ui.tree.Trees;
 import net.fexcraft.app.fmt.utils.Animator.ZVerHyd;
-import net.fexcraft.app.fmt.utils.RayCoastAway;
+import net.fexcraft.app.fmt.utils.Picker;
 import net.fexcraft.app.fmt.utils.SessionHandler;
 import net.fexcraft.app.fmt.utils.Settings;
 import net.fexcraft.app.fmt.utils.Translator;
@@ -117,7 +117,7 @@ public class GroupCompound {
 			GL11.glPushMatrix();
 			GL11.glScalef(scale.x, scale.y, scale.z);
 		}
-		if(RayCoastAway.PICKING){
+		if(Picker.PICKING){
 			/*if(pencil){
 				TextureManager.bindTexture(getTempTex());
 				groups.forEach(elm -> elm.render(false));
@@ -126,7 +126,7 @@ public class GroupCompound {
 			GL11.glDisable(GL11.GL_TEXTURE_2D); 
 			renderPicking();
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
-			RayCoastAway.doTest(false, null, false);//pencil);
+			Picker.doTest(false, null, false);//pencil);
 		}
 		else{
 			if(Settings.preview_colorpicker()){
@@ -146,7 +146,7 @@ public class GroupCompound {
 		if(scale != null){
 			GL11.glPopMatrix();
 		}
-		if(!detached.isEmpty() && !RayCoastAway.PICKING){
+		if(!detached.isEmpty() && !Picker.PICKING){
 			for(PolygonWrapper poly : detached){
 				if(!poly.getTurboList().visible) continue;
 				poly.getTurboList().bindApplicableTexture(this);
