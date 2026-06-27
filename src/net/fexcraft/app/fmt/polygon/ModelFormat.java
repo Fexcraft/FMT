@@ -2,7 +2,7 @@ package net.fexcraft.app.fmt.polygon;
 
 public enum ModelFormat {
 	
-	UNIVERSAL("universal", "Universal / FVTM"), MC_JSON("mc_json", "MC Vanilla Json");
+	UNIVERSAL("universal", "Universal");
 
 	public final String id, name;
 
