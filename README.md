@@ -44,15 +44,15 @@ Other features
   
 ## Some Preview Images
 ### Create detailed models and texture them.
-![IMG0](https://cdn.discordapp.com/attachments/365628561819697162/706167477960179723/javaw_2020-05-02_17-31-23.png)
+![IMG0](http://fexcraft.net/files/app_data/fmt-page/javaw_2020-05-02_17-31-23.png)
 ### Apply basic per-group animations and preview them.
-![IMG1](https://cdn.discordapp.com/attachments/365628561819697162/706167493751865364/javaw_2020-05-02_17-32-03.png)
+![IMG1](http://fexcraft.net/files/app_data/fmt-page/javaw_2020-05-02_17-32-03.png)
 ### "Unlimited" groups and polygons.
-![IMG2](https://cdn.discordapp.com/attachments/365628561819697162/706167508197179492/javaw_2020-05-02_17-32-38.png)
+![IMG2](http://fexcraft.net/files/app_data/fmt-page/javaw_2020-05-02_17-32-38.png)
 ### Load in additional "helper/preview" models, as many you may need.
-![IMG3](https://cdn.discordapp.com/attachments/365628561819697162/706167518489739314/javaw_2020-05-02_17-34-09.png)
+![IMG3](http://fexcraft.net/files/app_data/fmt-page/javaw_2020-05-02_17-34-09.png)
 ### Work with multiple textures at once, one per model or per any group.
-![IMG4](https://cdn.discordapp.com/attachments/365628561819697162/706167535476801666/javaw_2020-05-02_17-35-10.png)
+![IMG4](http://fexcraft.net/files/app_data/fmt-page/javaw_2020-05-02_17-35-10.png)
 
 
 
@@ -75,9 +75,4 @@ Please try running first under Java 8 if you have it installed.
 Otherwise try Java 15+, recently it was reported that FMT works again under Java 15+.
 
 ## Discord
-https://discord.gg/AkMAzaA
-
-## Notice
-If you are setting up this project for the first time you will run into an issue regarding missing lwgjl dependencies.
-The easiest way to resolve this is to download the latest v2 release and copy the lwgjl jars  from the libs folder
-into one called "libs-3.2.4S" in your project folder.
+[https://discord.gg/J5c2zJ7uU9](https://discord.gg/J5c2zJ7uU9)
