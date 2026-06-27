@@ -649,8 +649,8 @@ public class SaveHandler {
 			dia.addRowElm(5, format = new DropList<>(width - 10));
 			//
 			name.text("Unnamed Model");
-			for(ModelOrientation val : ModelOrientation.values()) orient.addEntry(val.name(), val);
-			for(ModelFormat val : ModelFormat.values()) format.addEntry(val.name(), val);
+			for(ModelOrientation val : ModelOrientation.values()) orient.addEntry(val.name, val);
+			for(ModelFormat val : ModelFormat.values()) format.addEntry(val.name, val);
 			orient.selectEntry(0);
 			format.selectEntry(0);
 			//
