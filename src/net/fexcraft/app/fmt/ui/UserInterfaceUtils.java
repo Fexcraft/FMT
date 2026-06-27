@@ -18,7 +18,7 @@ import org.liquidengine.legui.component.optional.align.HorizontalAlign;
 import org.liquidengine.legui.event.CursorEnterEvent;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.event.WindowSizeEvent;
-import org.liquidengine.legui.image.BufferedImage;
+import org.liquidengine.legui.image.loader.ImageLoader;
 import org.liquidengine.legui.listener.MouseClickEventListener;
 import org.liquidengine.legui.style.Style;
 import org.liquidengine.legui.style.Style.DisplayType;
@@ -209,7 +209,7 @@ public class UserInterfaceUtils {
 	public static class Icon extends ImageView {
 		
 		public Icon(int index, String adress, MouseClickEventListener listener){
-			super(new BufferedImage(adress));
+			super(ImageLoader.loadImage(adress));
 			this.setPosition(1 + (index * 31), 1);
 			this.setSize(28, 28);
 			this.getListenerMap().addListener(MouseClickEvent.class, listener);
@@ -223,7 +223,7 @@ public class UserInterfaceUtils {
 		}
 
 		public Icon(int x, int y, int index, String string, String tooltip, Runnable run){
-			super(new BufferedImage(string));
+			super(ImageLoader.loadImage(string));
 			this.setPosition(x + (index * 36), 4);
 			this.setSize(34, 34);
 			this.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)event -> {

@@ -8,7 +8,7 @@ import org.liquidengine.legui.component.ImageView;
 import org.liquidengine.legui.component.Tooltip;
 import org.liquidengine.legui.component.optional.align.HorizontalAlign;
 import org.liquidengine.legui.event.MouseClickEvent;
-import org.liquidengine.legui.image.BufferedImage;
+import org.liquidengine.legui.image.loader.ImageLoader;
 import org.liquidengine.legui.listener.MouseClickEventListener;
 
 import net.fexcraft.app.fmt.FMTB;
@@ -17,7 +17,7 @@ import net.fexcraft.app.fmt.utils.Settings;
 public class TreeIcon extends ImageView {
 
 	private TreeIcon(int x, int y, String adress, MouseClickEventListener listener){
-		super(new BufferedImage("./resources/textures/icons/" + adress + ".png"));
+		super(ImageLoader.loadImage("./resources/textures/icons/" + adress + ".png"));
 		setSize(18, 18);
 		setPosition(x + 1, y + 1);
 		this.getListenerMap().addListener(MouseClickEvent.class, listener);

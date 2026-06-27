@@ -9,7 +9,7 @@ import org.liquidengine.legui.component.ImageView;
 import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.component.PasswordInput;
 import org.liquidengine.legui.event.MouseClickEvent;
-import org.liquidengine.legui.image.BufferedImage;
+import org.liquidengine.legui.image.loader.ImageLoader;
 import org.liquidengine.legui.listener.MouseClickEventListener;
 
 import net.fexcraft.app.fmt.FMTB;
@@ -61,7 +61,7 @@ public class ProfileBox {
         }
         //
         ImageView view = new ImageView();
-        view.setImage(new BufferedImage("./resources/textures/icon.png"));
+        view.setImage(ImageLoader.loadImage("./resources/textures/icon.png"));
         view.setPosition(400 - 10 - 120, 10);
         view.setSize(120, 120);
         dialog.getContainer().add(view);

@@ -31,7 +31,7 @@ import org.liquidengine.legui.component.Frame;
 import org.liquidengine.legui.component.ImageView;
 import org.liquidengine.legui.component.Label;
 import org.liquidengine.legui.event.MouseClickEvent;
-import org.liquidengine.legui.image.BufferedImage;
+import org.liquidengine.legui.image.loader.ImageLoader;
 import org.liquidengine.legui.listener.MouseClickEventListener;
 import org.liquidengine.legui.listener.processor.EventProcessorProvider;
 import org.liquidengine.legui.style.Style.DisplayType;
@@ -228,7 +228,7 @@ public class FMTB {
 		}
 		MODEL.initButton();
 		if(Settings.internal_cursor()){
-			cursor = new ImageView(new BufferedImage("./resources/textures/cursor.png"));
+			cursor = new ImageView(ImageLoader.loadImage("./resources/textures/cursor.png"));
 			cursor.setSize(16, 16);
 			cursor.setFocusable(false);
 			cursor.setEnabled(false);

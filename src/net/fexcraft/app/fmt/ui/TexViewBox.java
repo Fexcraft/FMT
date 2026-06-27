@@ -15,7 +15,7 @@ import org.liquidengine.legui.component.Widget;
 import org.liquidengine.legui.event.MouseClickEvent;
 import org.liquidengine.legui.event.MouseClickEvent.MouseClickAction;
 import org.liquidengine.legui.event.MouseDragEvent;
-import org.liquidengine.legui.image.BufferedImage;
+import org.liquidengine.legui.image.loader.ImageLoader;
 import org.liquidengine.legui.style.border.SimpleLineBorder;
 
 import net.fexcraft.app.fmt.FMTB;
@@ -80,7 +80,7 @@ public class TexViewBox {
 		canvas.getContainer().setFocusable(false);
 		viewbox.getContainer().add(canvas);
 		//
-		view = new ImageView(new BufferedImage(group.texture.getFile().toPath().toString()));
+		view = new ImageView(ImageLoader.loadImage(group.texture.getFile().toPath().toString()));
 		view.setSize(canvas.getContainer().getSize());
 		canvas.getContainer().add(view);
 		if(!texture) hide(view);

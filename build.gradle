@@ -36,7 +36,7 @@ def commons_version = '3.4'
 def commons_collections = '4.3'
 def guava_version = '30.0-jre'
 def gson_version = '2.8.9'
-def legui_version = '3.0.2'
+def legui_version = '3.2.0'
 
 def joml_version = "1.9.25"//"-SNAPSHOT"
 def lwjgl_version = "3.2.3"//'3.2.4-SNAPSHOT'
@@ -57,11 +57,10 @@ dependencies {
     implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: log4j_version
     implementation group: "org.joml", name: "joml", version: joml_version, changing: true
     implementation group: 'com.google.code.gson', name: 'gson', version: gson_version, changing: false
-    implementation group: 'org.liquidengine', name: 'legui', version: legui_version + '-SNAPSHOT', changing: true
+    implementation group: 'org.liquidengine', name: 'legui', version: legui_version, changing: true
     implementation group: 'org.liquidengine', name: 'cbchain', version: le_cbchain, changing: true
     implementation group: 'org.liquidengine', name: 'leutil', version: le_util, changing: true
-    //@formatter:off
-    /*
+
     implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: log4j_version, changing: false
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: commons_version, changing: false
     implementation group: 'org.apache.commons', name: 'commons-collections4', version: commons_collections, changing: false
@@ -100,16 +99,10 @@ dependencies {
     implementation group: 'org.lwjgl', name: 'lwjgl-tinyfd', version: lwjgl_version, changing: true
     runtimeOnly group: 'org.lwjgl', name: 'lwjgl-tinyfd', version: lwjgl_version, changing: true, classifier: 'natives-windows'
     runtimeOnly group: 'org.lwjgl', name: 'lwjgl-tinyfd', version: lwjgl_version, changing: true, classifier: 'natives-linux'
-    runtimeOnly group: 'org.lwjgl', name: 'lwjgl-tinyfd', version: lwjgl_version, changing: true, classifier: 'natives-macos'*/
+    runtimeOnly group: 'org.lwjgl', name: 'lwjgl-tinyfd', version: lwjgl_version, changing: true, classifier: 'natives-macos'
 
-    File libs = new File("libs-3.2.4S/");
-    for(File lib : libs.listFiles()){
-        implementation files(lib.getPath())
-    }
     implementation files('libs/VOXtoFMT-1.jar')
     implementation files('libs/FCL-12.105.jar')
-    //@formatter:on
-    testImplementation group: 'junit', name: 'junit', version: '4.13.1'
 }
 
 sourceSets {
@@ -122,18 +115,6 @@ sourceSets {
         }
     }
  }
-
-configurations.all {
-    resolutionStrategy {
-        force 'org.lwjgl:lwjgl:3.2.3'
-        force 'org.lwjgl:lwjgl-glfw:3.2.3'
-        force 'org.lwjgl:lwjgl-opengl:3.2.3'
-        force 'org.lwjgl:lwjgl-stb:3.2.3'
-        force 'org.lwjgl:lwjgl-nanovg:3.2.3'
-        force 'org.lwjgl:lwjgl-yoga:3.2.3'
-        force 'org.lwjgl:lwjgl-tinyfd:3.2.3'
-    }
-}
 
 tasks.register('mainJar', Jar) {
     manifest {
