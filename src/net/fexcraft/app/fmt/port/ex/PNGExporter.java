@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import net.fexcraft.app.fmt.FMT;
 import org.apache.commons.io.FileUtils;
 
 import net.fexcraft.app.fmt.polygon.Group;
@@ -53,7 +54,7 @@ public class PNGExporter implements Exporter {
 
 	@Override
 	public void initSettings(){
-		String[] names = TextureManager.getGroupNames();
+		String[] names = FMT.MODEL.getTexGroupNames();
 		settings.get(1).value(names.length == 0 ? "none" : names[0]);
 		((StringArraySetting)settings.get(1)).setElms(names.length == 0 ? new String[]{ "none" } : names);
 	}
@@ -68,7 +69,7 @@ public class PNGExporter implements Exporter {
 		image = null;
 		boolean textured = settings.get(0).value();
 		String grid = settings.get(1).value();
-		TextureGroup group = grid.equals("none") ? null : TextureManager.getGroup("group", grid);
+		TextureGroup group = grid.equals("none") ? null : model.getTexGroup(grid);
 		if(group == null){
 			return "exporter.png.group_not_found";
 		}
