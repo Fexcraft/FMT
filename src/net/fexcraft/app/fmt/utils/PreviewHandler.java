@@ -37,7 +37,7 @@ public class PreviewHandler {
 		Model model = new Model(file, map.getString("name", file.getName()));
 		model.helper = true;
 		if(!model.name.startsWith("import/")) model.name = "import/" + model.name;
-		porter._import(model, file, model.uuid.toString());
+		porter._import(model, file);
 		add(model);
 		return model;
 	}
