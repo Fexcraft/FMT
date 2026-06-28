@@ -56,7 +56,7 @@ public class DFMImporter implements Importer {
      * @author EternalBlueFlame, FEX___96
      */
     @Override
-    public String _import(Model model, File file){
+    public String _import(Model model, File file, String texfix){
         if(!settings.get(0).bool()){
             return "importer.dfm.no_agreement";
         }
