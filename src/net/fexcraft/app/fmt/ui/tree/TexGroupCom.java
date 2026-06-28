@@ -41,10 +41,10 @@ public class TexGroupCom extends TTabCom {
 				FMT.UI.createDialog(550, 120, "tree.mode.texture")
 					.addText(0, "tree.texture.group_removal")
 					.addText(1, group.name + " (" + use + " usages)")
-					.consumer(d -> TextureManager.remGroup(group), null)
+					.consumer(d -> FMT.MODEL.remTexGroup(group), null)
 					.buttons(100, Dialog.DialogButton.CONFIRM, Dialog.DialogButton.CANCEL);
 			}
-			else TextureManager.remGroup(group);
+			else FMT.MODEL.remTexGroup(group);
 		}).hint("tree.texture.group_remove").hide());
 		int inc = -30;
 		//
@@ -84,7 +84,7 @@ public class TexGroupCom extends TTabCom {
 			.addRowElm(1, field)
 			.consumer(d -> {
 				String name = field.get_text();
-				if(TextureManager.getGroup("group", name) != null){
+				if(FMT.MODEL.getTexGroup(name) != null){
 					FMT.UI.createDialog(500, 120, "tree.texture.rename.title")
 						.addText(0, "tree.texture.rename.duplicate")
 						.addText(1, name)
