@@ -7,7 +7,6 @@ import java.util.List;
 
 import net.fexcraft.app.fmt.animation.Animation;
 import net.fexcraft.app.fmt.settings.Settings;
-import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.update.UpdateEvent.GroupRenamed;
 import net.fexcraft.app.fmt.update.UpdateEvent.PolygonRemoved;
 import org.joml.Vector3f;
@@ -25,7 +24,6 @@ public class Group extends ArrayList<Polygon> {
 	public List<Animation> animations = new ArrayList<>();
 	public RGB color = RGB.WHITE.copy();
 	public TextureGroup texgroup = null;
-	public String texhelper;
 	//public int texSizeX = 256, texSizeY = 256;
 	public Vector3f pos = new Vector3f();
 	public Vector3f rot = new Vector3f();
@@ -77,7 +75,6 @@ public class Group extends ArrayList<Polygon> {
 
 	private void bindtex(){
 		if(texgroup != null) texgroup.texture.bind();
-		else if(texhelper != null) TextureManager.bind(texhelper);
 		else model.bindtex();
 	}
 
