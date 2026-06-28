@@ -110,7 +110,7 @@ dependencies {
 
     //implementation 'com.github.JnCrMx:discord-game-sdk4j:master-SNAPSHOT'
 
-    implementation group: 'io.netty', name: 'netty-all', version: '4.2.5.Final'
+    implementation group: 'io.netty', name: 'netty-all', version: '4.2.15.Final'
 }
 
 sourceSets {
