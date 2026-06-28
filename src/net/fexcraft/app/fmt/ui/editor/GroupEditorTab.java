@@ -5,7 +5,6 @@ import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Pivot;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TextureGroup;
-import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.ui.DropList;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.Field;
@@ -127,7 +126,7 @@ public class GroupEditorTab extends EditorTab {
 	private void refreshTexGroups(Group group, boolean ck){
 		texg.clear();
 		texg.addEntry("none", null);
-		for(TextureGroup tg : TextureManager.getGroups()){
+		for(TextureGroup tg : FMT.MODEL.getTexGroups()){
 			texg.addEntry(tg.name, tg);
 		}
 		if(ck) group = FMT.MODEL.first_selected_group();
