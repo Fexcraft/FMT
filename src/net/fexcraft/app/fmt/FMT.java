@@ -14,6 +14,8 @@ import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.texture.TexturePainter;
 import net.fexcraft.app.fmt.texture.TextureUpdate;
 import net.fexcraft.app.fmt.ui.tree.TreeRoot;
+import net.fexcraft.app.fmt.update.UpdateEvent;
+import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.utils.*;
 import net.fexcraft.app.fmt.workspace.Workspace;
 import net.fexcraft.app.json.JsonHandler;
@@ -228,6 +230,7 @@ public class FMT {
 		Animation.init();
 		FMT.updateTitle();
 		if(FMT.MODEL.file != null) FMT.MODEL.load();
+		else UpdateHandler.update(new UpdateEvent.ModelLoad(MODEL));
 		Settings.checkForUpdatesAndLogin();
 		KeyCompound.init();
 		//
