@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 
 import net.fexcraft.app.fmt.animation.Animation;
 import net.fexcraft.app.fmt.polygon.Vertoff.VOSelection;
-import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.Dialog.DialogButton;
 import net.fexcraft.app.fmt.ui.Field;
@@ -60,6 +59,7 @@ public class Model {
 	//
 	private LinkedHashMap<String, Boolean> authors = new LinkedHashMap<>();
 	private ArrayList<Group> allgroups = new ArrayList<>();
+	private ArrayList<TextureGroup> texgroups = new ArrayList<>();
 	private ArrayList<Pivot> pivots = new ArrayList<>();
 	private ArrayList<Polygon> selected = new ArrayList<>();
 	private ArrayList<VOSelection> selected_verts = new ArrayList<>();
@@ -91,7 +91,7 @@ public class Model {
 		pivots.add(new Pivot("root", true));
 		update(new PivotAdded(this, pivots.get(0)));
 		uuid = UUID.randomUUID();
-		if(file == null) texgroup = TextureManager.getOrCreateDefault();
+		if(file == null) genDefTexGroup();
 	}
 
 	/** For now just for FMTB files. */
@@ -100,6 +100,12 @@ public class Model {
 		update(new ModelLoad(this));
 		if(FMT.MODEL == this) FMT.updateTitle();
 		return this;
+	}
+
+	public void genDefTexGroup(){
+		if(hasTexGroup("default")) return;
+		texgroups.add(new TextureGroup(this, "default", new File("./temp/")));
+		texgroup = texgroups.get(0);
 	}
 	
 	public final void addAuthor(String name, boolean locked){
@@ -944,6 +950,83 @@ public class Model {
 				.buttons(100, Dialog.DialogButton.CONFIRM, Dialog.DialogButton.CANCEL);
 		}
 		else polygon.group().remove(polygon);
+	}
+
+	public String tex_prefix(){
+		return this == FMT.MODEL ? "group" : uuid.toString();
+	}
+
+	public String[] getTexGroupNames(){
+		String[] arr = new String[texgroups.size()];
+		for(int i = 0; i < arr.length; i++){
+			arr[i] = texgroups.get(i).name;
+		}
+		return arr;
+	}
+
+	public TextureGroup addTexGroup(String name, boolean show){
+		if(name == null) name = "newgroup";
+		if(hasTexGroup(name)){
+			int i = 0;
+			while(hasTexGroup(name + i)) i++;
+			name += i;
+		}
+		TextureGroup group = new TextureGroup(this, name, new File("./temp/"));
+		texgroups.add(group);
+		if(!helper) UpdateHandler.update(new TexGroupAdded(group));
+		if(show){
+			FMT.UI.createDialog(300, 120, "texture.manager")
+				.addText(0, "texture.added_group")
+				.addText(1, "#" + group.name)
+				.buttons(100, Dialog.DialogButton.OK);
+		}
+		return group;
+	}
+
+	public void addTexGroup(TextureGroup group){
+		texgroups.add(group);
+		if(!helper) UpdateHandler.update(new TexGroupAdded(group));
+	}
+
+	private boolean hasTexGroup(String name){
+		for(TextureGroup tex : texgroups){
+			if(tex.name.equals(name)) return true;
+		}
+		return false;
+	}
+
+	public void remTexGroup(TextureGroup tex){
+		if(tex == null) return;
+		if(tex == texgroup){
+			FMT.UI.createDialog(400, 120, "texture.manager")
+				.addText(0, "texture.group_in_use_model")
+				.addText(1, "#texgroup: " + tex.name)
+				.buttons(100, Dialog.DialogButton.OK);
+			return;
+		}
+		for(Group group : allgroups()){
+			if(group.texgroup == tex){
+				FMT.UI.createDialog(400, 140, "texture.manager")
+					.addText(0, "texture.group_in_use_group")
+					.addText(1, "#group:" + group.id)
+					.addText(2, "#texgroup:" + tex.name)
+					.buttons(100, Dialog.DialogButton.OK);
+				return;
+			}
+		}
+		texgroups.remove(tex);
+		UpdateHandler.update(new TexGroupRemoved(tex));
+	}
+
+	public TextureGroup getTexGroup(String name){
+		for(TextureGroup tex : texgroups){
+			if(tex.name.equals(name)) return tex;
+		}
+		return null;
+	}
+
+	public List<TextureGroup> getTexGroups(){
+		return texgroups;
 	}
 
 }
