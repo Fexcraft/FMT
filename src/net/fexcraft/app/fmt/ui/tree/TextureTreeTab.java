@@ -1,7 +1,7 @@
 package net.fexcraft.app.fmt.ui.tree;
 
+import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.texture.TextureGroup;
-import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.utils.AutoUVPositioner;
@@ -28,7 +28,7 @@ public class TextureTreeTab extends TreeTab {
 		TOTALS_FORMAT = Translator.translate("tree.info.textures_groups");
 		over.add(totals = new Element().pos(20, 0).size(FF, FS).translate(TOTALS_FORMAT, "...").text_autoscale());
 		over.add(new Element().pos(FO + 20, 28).size(FF, FS).color(GENERIC_FIELD.value).hoverable(true).onclick(ci -> {
-			TextureManager.addGroup((String)null, true);
+			FMT.MODEL.addTexGroup(null, true);
 		}).translate("tree.texture.add_group").text_centered(true));
 		over.add(new Element().pos(FO + 20, 60).size(FF, FS).color(GENERIC_FIELD.value).hoverable(true).onclick(ci -> {
 			AutoUVPositioner.runAutoPos();
@@ -40,8 +40,8 @@ public class TextureTreeTab extends TreeTab {
 			AutoUVPositioner.runReset(true);
 		}).translate("tree.texture.reset_type").text_centered(true));
 		//
-		updcom.add(UpdateEvent.ModelLoad.class, event -> reorderComponents());
-		updcom.add(UpdateEvent.ModelUnload.class, event -> removeGroups());
+		updcom.add(UpdateEvent.ModelLoad.class, event -> reinsertComponents());
+		updcom.add(UpdateEvent.ModelUnload.class, event -> reinsertComponents());
 		updcom.add(UpdateEvent.TexGroupAdded.class, event -> addTexGroup(event.group()));
 		updcom.add(UpdateEvent.TexGroupRemoved.class, event -> remTexGroup(event.group()));
 		updcom.add(UpdateEvent.TexGroupSize.class, event -> {
@@ -73,15 +73,10 @@ public class TextureTreeTab extends TreeTab {
 		reorderComponents();
 	}
 
-	private void removeGroups(){
-		scrollable.container.remElmIf(e -> e instanceof TexGroupCom);
-		reorderComponents();
-	}
-
 	@Override
 	public void reinsertComponents(){
 		scrollable.container.remElmIf(e -> e instanceof TexGroupCom);
-		for(TextureGroup group : TextureManager.getGroups()){
+		for(TextureGroup group : FMT.MODEL.getTexGroups()){
 			scrollable.container.add(new TexGroupCom(group));
 		}
 		reorderComponents();
@@ -99,7 +94,7 @@ public class TextureTreeTab extends TreeTab {
 
 	@Override
 	public void updateCounter(){
-		totals.translate(TOTALS_FORMAT, TextureManager.getGroups().size());
+		totals.translate(TOTALS_FORMAT, FMT.MODEL.getTexGroups().size());
 	}
 
 }
