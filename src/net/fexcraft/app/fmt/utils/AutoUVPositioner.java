@@ -113,8 +113,8 @@ public class AutoUVPositioner {
 		save.set(() -> SAVESPACE, b -> SAVESPACE = b);
 		pall.set(() -> !ALL, b -> ALL = !b);
 		deta.set(() -> DETACH, b -> DETACH = b);
-		if(TextureManager.getGroups().isEmpty()) TextureManager.addGroup((String)null, false);
-		for(TextureGroup group : TextureManager.getGroups()){
+		if(FMT.MODEL.getTexGroups().isEmpty()) FMT.MODEL.genDefTexGroup();
+		for(TextureGroup group : FMT.MODEL.getTexGroups()){
 			tex.addEntry(group.name, group);
 		}
 		tex.selectEntry(0);
