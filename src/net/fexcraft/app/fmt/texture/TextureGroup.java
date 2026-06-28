@@ -4,43 +4,46 @@ import static net.fexcraft.app.fmt.utils.Logging.log;
 
 import java.io.File;
 
+import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.RGB;
 
+/**
+ * @author Ferdinand Calo' (FEX___96)
+ */
 public class TextureGroup {
 	
 	public Texture texture;
 	public Texture painter;
-	public boolean helper;
 	public int width = 256;
 	public int height = 256;
-	public String type;
+	public Model model;
 	public String name;
 
-	public TextureGroup(String type, String id){
-		this.type = type;
+	public TextureGroup(Model model, String id){
+		this.model = model;
 		this.name = id;
 	}
 
-	public TextureGroup(String type, String id, JsonMap map){
-		this(type, id);
+	public TextureGroup(Model model, String id, JsonMap map){
+		this(model, id);
 		width = map.getInteger("width", width);
 		height = map.getInteger("height", height);
 	}
 	
-	public TextureGroup(String type, String id, File root){
-		this(type, id);
-		loadTexture(type + "-" + id, root);
+	public TextureGroup(Model model, String id, File root){
+		this(model, id);
+		loadTexture(model.tex_prefix() + "-" + id, root);
 	}
 
 	public void reAssignTexture(){
-		texture = TextureManager.get(type + "-" + name, false);
+		texture = TextureManager.get(model.tex_prefix() + "-" + name, false);
 		genPainterTex();
 	}
 
 	public void loadTexture(String texid, File root){
 		if(!root.exists()) root.mkdirs();
-		File file = new File(root, type + "-" + name + ".png");
+		File file = new File(root, model.tex_prefix() + "-" + name + ".png");
 		if(!file.exists()){
 			Texture texture = new Texture(texid, width, height);
 			log("Generated blank texgroup texture.");
@@ -56,9 +59,9 @@ public class TextureGroup {
 	}
 
 	public void genPainterTex(){
-		painter = TextureManager.get("pt-" + type + "-" + name, true);
+		painter = TextureManager.get("pt-" + model.tex_prefix() + "-" + name, true);
 		if(painter == null){
-			painter = TextureManager.createTexture("pt-" + type + "-" + name, texture.getWidth(), texture.getHeight());
+			painter = TextureManager.createTexture("pt-" + model.tex_prefix() + "-" + name, texture.getWidth(), texture.getHeight());
 			painter.setFile(new File("./temp/" + painter.name + ".png"));
 		}
 		else{
@@ -84,11 +87,11 @@ public class TextureGroup {
 
 	@Override
 	public String toString(){
-		return type + "-" + name + "/" + width + "x" + height;
+		return model.tex_prefix() + "-" + name + "/" + width + "x" + height;
 	}
 
 	public String typeid(){
-		return type + "-" + name;
+		return model.tex_prefix() + "-" + name;
 	}
 
 }
