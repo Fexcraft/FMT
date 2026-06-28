@@ -1,14 +1,9 @@
 package net.fexcraft.app.fmt.port.im;
 
-import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.Vector3F;
-import net.fexcraft.app.fmt.update.UpdateEvent.ModelTexGroup;
-import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.polygon.Box;
 import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.polygon.Shapebox;
-import net.fexcraft.app.fmt.texture.Texture;
-import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.ui.FileChooser;
 import net.fexcraft.lib.common.utils.ZipUtil;
@@ -55,8 +50,9 @@ public class MTBImporter implements Importer {
      * @author EternalBlueFlame, FEX___96
      */
     @Override
-    public String _import(Model model, File file, String texfix){
+    public String _import(Model model, File file){
         try{
+            model.genDefTexGroup();
             boolean loadtex = ZipUtil.contains(file, "Model.png");
             ZipFile zip = new ZipFile(file);
             Enumeration<? extends ZipEntry> entries = zip.entries();
@@ -133,34 +129,10 @@ public class MTBImporter implements Importer {
                 try{
                     if(zip.getEntry("Model.png") == null){
                         log("No Texture found in MTB, skipping texture loading.");
-                        model.texgroup = null;
                     }
                     else{
-                        TextureManager.loadFromStream(zip.getInputStream(zip.getEntry("Model.png")), texfix + "-default", false, true);
-                        Texture tex = TextureManager.get(texfix + "-default", true);
-                        boolean empty = true;
-                        byte[] bts;
-                        for(int x = 0; x < tex.getWidth(); x++){
-                            if(!empty) break;
-                            for(int y = 0; y < tex.getWidth(); y++){
-                                bts = tex.get(x, y);
-                                if(bts[0] > 0 || bts[1] > 0 || bts[2] > 0){
-                                    empty = false;
-                                    break;
-                                }
-                            }
-                        }
-                        if(!empty){
-                            if(model.texgroup == null){
-                                model.texgroup = TextureManager.addGroup(texfix + "-default", false);
-                            }
-                            model.texgroup.reAssignTexture();
-                            UpdateHandler.update(new ModelTexGroup(FMT.MODEL, FMT.MODEL.texgroup));
-                        }
-                        else{
-                            log("Texture in MTB is blank, not creating a group.");
-                            TextureManager.remove(texfix + "-default");
-                        }
+                        TextureManager.loadFromStream(zip.getInputStream(zip.getEntry("Model.png")), model.tex_prefix() + "-default", false, true);
+                        model.texgroup.reAssignTexture();
                     }
                 }
                 catch(Exception e){
