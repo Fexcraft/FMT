@@ -4,7 +4,6 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.*;
 import net.fexcraft.app.fmt.port.ex.ExportManager;
 import net.fexcraft.app.fmt.texture.TextureGroup;
-import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.ui.*;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateHandler;
@@ -103,7 +102,7 @@ public class ModelEditorTab extends EditorTab {
 
 	private void refreshTexGroups(){
 		texg.clear();
-		for(TextureGroup group : TextureManager.getGroups()){
+		for(TextureGroup group : FMT.MODEL.getTexGroups()){
 			texg.addEntry(group.name, group);
 		}
 		if(FMT.MODEL == null || FMT.MODEL.texgroup == null) texg.selectEntry(0);
