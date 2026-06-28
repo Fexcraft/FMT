@@ -21,6 +21,6 @@ public interface Importer {
 	
 	public List<String> categories();
 	
-	public String _import(Model model, File file, String texfix);
+	public String _import(Model model, File file);
 
 }
