@@ -22,7 +22,7 @@ public class ObjImporter implements Importer {
 	private static final List<String> categories = Arrays.asList("model");
 
 	@Override
-	public String _import(Model model, File file, String texfix){
+	public String _import(Model model, File file){
 		try{
 			ObjModel omodel = new ObjParser(new FileInputStream(file)).readComments(false).readModel(true).parse();
 			//ArrayList<String> list = new ArrayList<>(omodel.polygons.keySet());
