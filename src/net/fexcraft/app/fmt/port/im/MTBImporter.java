@@ -55,7 +55,7 @@ public class MTBImporter implements Importer {
      * @author EternalBlueFlame, FEX___96
      */
     @Override
-    public String _import(Model model, File file){
+    public String _import(Model model, File file, String texfix){
         try{
             boolean loadtex = ZipUtil.contains(file, "Model.png");
             ZipFile zip = new ZipFile(file);
@@ -136,8 +136,8 @@ public class MTBImporter implements Importer {
                         model.texgroup = null;
                     }
                     else{
-                        TextureManager.loadFromStream(zip.getInputStream(zip.getEntry("Model.png")), "group-default", false, true);
-                        Texture tex = TextureManager.get("group-default", true);
+                        TextureManager.loadFromStream(zip.getInputStream(zip.getEntry("Model.png")), texfix + "-default", false, true);
+                        Texture tex = TextureManager.get(texfix + "-default", true);
                         boolean empty = true;
                         byte[] bts;
                         for(int x = 0; x < tex.getWidth(); x++){
@@ -151,14 +151,15 @@ public class MTBImporter implements Importer {
                             }
                         }
                         if(!empty){
-                            TextureManager.addGroup(new TextureGroup("group", "default"), false);
-                            model.texgroup = TextureManager.getGroup("group", "default");
+                            if(model.texgroup == null){
+                                model.texgroup = TextureManager.addGroup(texfix + "-default", false);
+                            }
                             model.texgroup.reAssignTexture();
                             UpdateHandler.update(new ModelTexGroup(FMT.MODEL, FMT.MODEL.texgroup));
                         }
                         else{
                             log("Texture in MTB is blank, not creating a group.");
-                            TextureManager.remove("group-default");
+                            TextureManager.remove(texfix + "-default");
                         }
                     }
                 }
