@@ -27,7 +27,6 @@ public class TextureManager {
 	public static int[] RESOLUTIONS = { 1, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768 };
 	public static Texture NULLTEX;
 	private static final TextureMap TEXTURES = new TextureMap();
-	private static final ArrayList<TextureGroup> GROUPS = new ArrayList<>();
 	private static Texture texture;
 
 	public static void load(){
@@ -40,7 +39,6 @@ public class TextureManager {
 			}
 		}
 		TEXTURES.clear();
-		GROUPS.clear();
 		String name;
 		File folder = new File("./resources/textures/");
 		for(File file : folder.listFiles()){
@@ -179,95 +177,6 @@ public class TextureManager {
 
 	public static boolean containsTexture(String texid){
 		return TEXTURES.containsKey(texid);
-	}
-	
-	// GROUPS
-
-	public static TextureGroup getGroup(String type, String id){
-		for(TextureGroup group : GROUPS) if(group.type.equals(type) && group.name.equals(id)) return group;
-		return null;
-	}
-
-	public static boolean hasGroup(String id){
-		for(TextureGroup group : GROUPS) if(group.name.equals(id)) return true;
-		return false;
-	}
-
-	public static int getGroupAmount(){
-		return GROUPS.size();
-	}
-
-	public static boolean anyGroupsLoaded(){
-		return GROUPS.size() > 0;
-	}
-
-	public static ArrayList<TextureGroup> getGroups(){
-		return GROUPS;
-	}
-
-	public static void addGroup(TextureGroup group, boolean helper){
-		GROUPS.add(group);
-		group.helper = helper;
-		if(!helper) UpdateHandler.update(new TexGroupAdded(group));
-	}
-
-	public static void clearGroups(){
-		for(TextureGroup group : GROUPS){
-			if(!group.helper) UpdateHandler.update(new TexGroupRemoved(group));
-		}
-		GROUPS.clear();
-	}
-
-	public static TextureGroup addGroup(String name, boolean show){
-		if(name == null) name = "newgroup";
-		if(hasGroup(name)){
-			int i = 0;
-			while(hasGroup(name + i)) i++;
-			name += i;
-		}
-		TextureGroup group = new TextureGroup("group", name, new File("./temp/"));
-		addGroup(group, false);
-		if(show){
-			FMT.UI.createDialog(300, 120, "texture.manager")
-				.addText(0, "texture.added_group")
-				.addText(1, "#" + group.name)
-				.buttons(100, Dialog.DialogButton.OK);
-		}
-		return group;
-	}
-
-	public static void remGroup(TextureGroup texgroup){
-		if(texgroup == null) return;
-		if(texgroup == FMT.MODEL.texgroup){
-			FMT.UI.createDialog(400, 120, "texture.manager")
-				.addText(0, "texture.group_in_use_model")
-				.addText(1, "#texgroup: " + texgroup.name)
-				.buttons(100, Dialog.DialogButton.OK);
-			return;
-		}
-		for(Group group : FMT.MODEL.allgroups()){
-			if(group.texgroup == texgroup){
-				FMT.UI.createDialog(400, 140, "texture.manager")
-					.addText(0, "texture.group_in_use_group")
-					.addText(1, "#group:" + group.id)
-					.addText(2, "#texgroup:" + texgroup.name)
-					.buttons(100, Dialog.DialogButton.OK);
-				return;
-			}
-		}
-		GROUPS.remove(texgroup);
-		UpdateHandler.update(new TexGroupRemoved(texgroup));
-	}
-
-	public static String[] getGroupNames(){
-		ArrayList<String> list = new ArrayList<>();
-		for(TextureGroup group : GROUPS) list.add(group.name);
-		return list.toArray(new String[0]);
-	}
-
-	public static TextureGroup getOrCreateDefault(){
-		if(getGroups().isEmpty()) return addGroup("default", false);
-		else return getGroups().get(0);
 	}
 
 }
