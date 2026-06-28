@@ -363,6 +363,10 @@ public class SaveHandler {
 			if(arr.length > 1){
 				for(int i = 0; i < TextureManager.getGroupAmount(); i++){
 					TextureGroup group = TextureManager.getGroups().get(i);
+					if(group.texture == null){
+						log("[SaveHandler] '" + group.typeid() + "' has to no texture file linked, skipping saving.");
+						continue;
+					}
 					try{
 						ByteArrayOutputStream os = new ByteArrayOutputStream();
 						group.texture.save();
