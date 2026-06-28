@@ -1,6 +1,7 @@
 package net.fexcraft.app.fmt.port.im;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.ui.*;
 import net.fexcraft.app.fmt.update.UpdateEvent.ModelLoad;
 import net.fexcraft.app.fmt.update.UpdateEvent.ModelUnload;
@@ -80,11 +81,12 @@ public class ImportManager {
 			Runnable run = () -> {
 				Model old = FMT.MODEL;
 				UpdateHandler.update(new ModelUnload(FMT.MODEL));
+				TextureManager.clearGroups();
 				FMT.MODEL = new Model(null, "imported model");
 				FMT.MODEL.orient = old.orient;
 				FMT.MODEL.format = old.format;
 				DiscordUtil.update(Settings.DISCORD_RESET_ON_NEW.value);
-				String res = importer._import(FMT.MODEL, file);
+				String res = importer._import(FMT.MODEL, file, "group");
 				Dialog dia = FMT.UI.createDialog(FontRenderer.getWidth(res, FontRenderer.FontType.PLAIN) * 3 + 30, 100, "import.result");
 				dia.addText(0, res);
 				dia.buttons(100, Dialog.DialogButton.OK);
