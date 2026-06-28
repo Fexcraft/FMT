@@ -25,7 +25,7 @@ public class BBMImporter implements Importer {
 	private static final List<String> categories = Arrays.asList("model");
 
 	@Override
-	public String _import(Model model, File file){
+	public String _import(Model model, File file, String texfix){
 		try{
 			JsonMap map = JsonHandler.parse(file);
 			String type = map.getMap("meta").getString("model_format", "java_block");
