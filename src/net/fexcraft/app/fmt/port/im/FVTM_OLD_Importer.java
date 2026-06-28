@@ -37,7 +37,7 @@ public class FVTM_OLD_Importer implements Importer {
     }
 
     @Override
-    public String _import(Model model, File file) {
+    public String _import(Model model, File file, String texfix) {
         if(!SessionHandler.getUserId().equals("1")) return "invalid";
         Scanner scanner = null;
         String msg = "import.complete";
