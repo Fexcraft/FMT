@@ -361,6 +361,16 @@ public class FMT {
 		//
 		CAM.apply();
 	    PolyRenderer.mode(DrawMode.TEXTURED);
+		if(Settings.LIGHTING_ON.value){
+			PolyRenderer.setLightOn(false);
+			PolyRenderer.mode(DrawMode.RGBCOLOR);
+			for(Polyhedron poly : lightmarker){
+				poly.posX = Settings.LIGHT_POSX.value;
+				poly.posY = Settings.LIGHT_POSY.value;
+				poly.posZ = Settings.LIGHT_POSZ.value;
+				poly.render();
+			}
+		}
 		PolyRenderer.updateLightState();
 		if(Settings.CUBE.value){
 			TextureManager.bind("demo");
@@ -408,11 +418,19 @@ public class FMT {
 	private static final Polyhedron centermarker1 = new Generator(null, Generator.Type.CUBOID)
 		.set(Values.OFF_X, -256f).set(Values.OFF_Y, -.125f).set(Values.OFF_Z, -.125f).set(Values.WIDTH, 512f).set(Values.HEIGHT, .25f).set(Values.DEPTH, .25f).make();
 	private static final Polyhedron centermarker2 = new Generator(null, Generator.Type.CUBOID)
-		.set(Values.OFF_X, -.125f).set(Values.OFF_Y, -.125f).set(Values.OFF_Z, -256f).set(Values.WIDTH, .25f).set(Values.HEIGHT, .25f).set(Values.DEPTH, 512f).make();
+		.set(Values.OFF_X, -.125f).set(Values.OFF_Y, -.125f).set(Values.OFF_Z, -8f).set(Values.WIDTH, .25f).set(Values.HEIGHT, .25f).set(Values.DEPTH, 512f).make();
+	private static final Polyhedron[] lightmarker = new Polyhedron[3];
 	static {
 		centermarker0.glObj(GLObject.class).polycolor = RGB.GREEN.toFloatArray();
 		centermarker1.glObj(GLObject.class).polycolor = RGB.RED.toFloatArray();
 		centermarker2.glObj(GLObject.class).polycolor = RGB.BLUE.toFloatArray();
+		lightmarker[0] = new Generator(null, Generator.Type.CUBOID)
+			.set(Values.OFF_X, -.125f).set(Values.OFF_Y, -4f).set(Values.OFF_Z, -.125f).set(Values.WIDTH, .25f).set(Values.HEIGHT, 8f).set(Values.DEPTH, .25f).make();
+		lightmarker[1] = new Generator(null, Generator.Type.CUBOID)
+			.set(Values.OFF_X, -4f).set(Values.OFF_Y, -.125f).set(Values.OFF_Z, -.125f).set(Values.WIDTH, 8f).set(Values.HEIGHT, .25f).set(Values.DEPTH, .25f).make();
+		lightmarker[2] = new Generator(null, Generator.Type.CUBOID)
+			.set(Values.OFF_X, -.125f).set(Values.OFF_Y, -.125f).set(Values.OFF_Z, -4f).set(Values.WIDTH, .25f).set(Values.HEIGHT, .25f).set(Values.DEPTH, 8f).make();
+		for(Polyhedron poly : lightmarker) poly.glObj(GLObject.class).polycolor = Settings.LIGHT_COLOR.value.toFloatArray();
 	}
 	
 	public static final String getCurrentTitle(){
