@@ -146,6 +146,10 @@ public class PolyRenderer extends Renderer {
 		if(PIVOT.rot.x != 0f) matrix.rotate((float)Math.toRadians(PIVOT.rot.x), axis_x);
 		if(PIVOT.rot.z != 0f) matrix.rotate((float)Math.toRadians(PIVOT.rot.z), axis_z);
 	}
+
+	public static void setLightOn(boolean bool){
+		glUniform1f(program.getUniform(Uniform.LIGHTING), bool ? 1 : 0);
+	}
 	
 	public static void updateLightState(){
 		glUniform1f(program.getUniform(Uniform.LIGHTING), Settings.LIGHTING_ON.value && MODE.lighting() ? 1 : 0);
@@ -189,7 +193,8 @@ public class PolyRenderer extends Renderer {
     		int[] order = poly.vertices.length == 4 ? lines && !TRIANGULATION_L.value ? orderql : orderqn : poly.vertices.length == 3 ? lines ? ordertl : ordertn : genOrder(poly.vertices.length, lines);
         	Vec3f vec0 = new Vec3f(poly.vertices[1].vector.sub(poly.vertices[0].vector));
 	        Vec3f vec1 = new Vec3f(poly.vertices[1].vector.sub(poly.vertices[2].vector));
-	        Vec3f vec2 = vec1.cross(vec0).normalize();
+	        Vec3f vec2 = vec1.cross(vec0);
+			vec2.normalize(vec2);
     		for(int o = 0; o < order.length; o++){
     			Vertex vert = poly.vertices[order[o]];
     			obj.verts[ver++] = vert.vector.x;
