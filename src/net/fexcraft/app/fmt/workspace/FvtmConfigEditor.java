@@ -113,7 +113,7 @@ public class FvtmConfigEditor extends WFileEditor {
 			editor = (FvtmConfigEditor)args[0];
 			check_mode(editor.checkmode);
 			boolean incon = root instanceof EntryElmCon;
-			size(incon ? root.w - 10 : root.w - 35, 30);
+			size(incon ? root().w - 10 : root().w - 35, 30);
 			pos(incon ? 10 : 5, 0);
 			add(new Element().size(30, 30).check_mode(check_mode)
 				.texture("icons/configeditor/" + entry.type.icon()));
