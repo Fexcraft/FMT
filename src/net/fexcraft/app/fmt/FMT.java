@@ -35,6 +35,7 @@ import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.stb.STBImage;
+import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
@@ -47,6 +48,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Timer;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -85,15 +87,7 @@ public class FMT {
 	private static boolean CLOSE;
 	public static GGR CAM;
 	//
-	private GLFWErrorCallback errorCallback;
-	private GLFWKeyCallback keyCallback;
-	private GLFWCharCallback charCallback;
-	private GLFWCursorPosCallback cursorCallback;
-	private GLFWMouseButtonCallback mouseCallback;
-	private GLFWWindowCloseCallback closeCallback;
-	private GLFWFramebufferSizeCallback framebufferCallback;
-	private GLFWScrollCallback scrollCallback;
-	private GLFWWindowIconifyCallback minimizeCallback;
+	private HashSet<Callback> glfw_callbacks = new HashSet<>();
 	public long window;
 	//
 	public static float[] background;
@@ -143,12 +137,12 @@ public class FMT {
 	public void run() throws Exception{
 		Translator.init();
 		timer.init();
-		glfwSetErrorCallback(errorCallback = new GLFWErrorCallback() {
+		glfwSetErrorCallback(callback(new GLFWErrorCallback(){
 			@Override
 			public void invoke(int error, long description){
 				log("GL ERROR: " + error + " " + getDescription(description));
 			}
-		});
+		}));
 		if(!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW.");
 		glfwWindowHint(GLFW_RESIZABLE, GL11.GL_TRUE);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -167,7 +161,7 @@ public class FMT {
 		glfwFocusWindow(window);
 		//
 		CAM = new GGR();
-		glfwSetKeyCallback(window, keyCallback = new GLFWKeyCallback(){
+		glfwSetKeyCallback(window, callback(new GLFWKeyCallback(){
 			@Override
 			public void invoke(long window, int key, int scancode, int action, int mods){
 				if(key == GLFW_KEY_LEFT_CONTROL) FMT.CAM.left_control_down = parseKeyAction(action);
@@ -180,50 +174,50 @@ public class FMT {
 				}
 				KeyCompound.process(key, scancode, action, mods);
 			}
-		});
-		glfwSetCharCallback(window, charCallback = new GLFWCharCallback() {
+		}));
+		glfwSetCharCallback(window, callback(new GLFWCharCallback() {
 			@Override
 			public void invoke(long window, int codepoint){
 				if(GGR.isControlDown()) return;
 				if(Element.isSelectedAField()) ((Field)Element.SELECTED).onCharInput(codepoint);
 			}
-		});
-		glfwSetCursorPosCallback(window, cursorCallback = new GLFWCursorPosCallback(){
+		}));
+		glfwSetCursorPosCallback(window, callback(new GLFWCursorPosCallback(){
 			@Override
 			public void invoke(long window, double xpos, double ypos){
 			CAM.cursorPosCallback(window, xpos, ypos);
 			}
-		});
-		glfwSetMouseButtonCallback(window, mouseCallback = new GLFWMouseButtonCallback(){
+		}));
+		glfwSetMouseButtonCallback(window, callback(new GLFWMouseButtonCallback(){
 			@Override
 			public void invoke(long window, int button, int action, int mods){
 			CAM.mouseCallback(window, button, action, mods);
 			}
-		});
-		glfwSetWindowCloseCallback(window, closeCallback = new GLFWWindowCloseCallback(){
+		}));
+		glfwSetWindowCloseCallback(window, callback(new GLFWWindowCloseCallback(){
 			@Override
 			public void invoke(long window){
 				//
 			}
-		});
-		glfwSetFramebufferSizeCallback(window, framebufferCallback = new GLFWFramebufferSizeCallback(){
+		}));
+		glfwSetFramebufferSizeCallback(window, callback(new GLFWFramebufferSizeCallback(){
 			@Override
 			public void invoke(long window, int width, int height){
 			resize();
 			}
-		});
-		glfwSetScrollCallback(window, scrollCallback = new GLFWScrollCallback(){
+		}));
+		glfwSetScrollCallback(window, callback(new GLFWScrollCallback(){
 			@Override
 			public void invoke(long window, double xoffset, double yoffset){
 			CAM.scrollCallback(window, xoffset, yoffset);
 			}
-		});
-		glfwSetWindowIconifyCallback(window, minimizeCallback = new GLFWWindowIconifyCallback(){
+		}));
+		glfwSetWindowIconifyCallback(window, callback(new GLFWWindowIconifyCallback(){
 			@Override
 			public void invoke(long window, boolean iconified){
 				slowDown(iconified);
 			}
-		});
+		}));
 		TextureManager.load();
 		FontRenderer.init();
 		UI = new FMTInterface();
@@ -292,6 +286,11 @@ public class FMT {
 		glfwDestroyWindow(window);
 		glfwTerminate();
 		System.exit(EXIT_CODE);
+	}
+
+	public <C extends Callback> C callback(C c){
+		glfw_callbacks.add(c);
+		return c;
 	}
 
 	private void slowDown(boolean bool){
