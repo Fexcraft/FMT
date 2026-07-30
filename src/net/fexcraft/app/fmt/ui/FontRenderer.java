@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static net.fexcraft.app.fmt.settings.Settings.FONT_SIZEN;
+import static net.fexcraft.app.fmt.settings.Settings.*;
 
 /**
  * Based on the FontRenderer in FMT v1,
@@ -36,10 +36,10 @@ public class FontRenderer {
 
 	public enum FontType {
 
-		PLAIN (new Font(Font.SANS_SERIF, Font.PLAIN, FONT_SIZEN)),
-		BOLD  (new Font(Font.SANS_SERIF, Font.BOLD, FONT_SIZEN)),
-		ITALIC(new Font(Font.SANS_SERIF, Font.ITALIC, FONT_SIZEN)),
-		MONO  (new Font(Font.MONOSPACED, Font.PLAIN, FONT_SIZEN));
+		PLAIN (new Font(FONT_PLAIN.value, Font.PLAIN, FONT_SIZE.value)),
+		BOLD  (new Font(FONT_BOLD.value, Font.BOLD, FONT_SIZE.value)),
+		ITALIC(new Font(FONT_ITALIC.value, Font.ITALIC, FONT_SIZE.value)),
+		MONO  (new Font(FONT_MONO.value, Font.PLAIN, FONT_SIZE.value));
 
 		private Font font;
 		private int width;
@@ -54,7 +54,7 @@ public class FontRenderer {
 			for(Font font : ALL){
 				if(!font.canDisplay(c)) continue;
 				Logging.log("Using Font '" + font.getFontName() + "' for char: u" + Integer.toHexString(c));
-				return font.deriveFont(FONT_SIZEN).deriveFont(this == MONO ? 0 : ordinal());
+				return font.deriveFont(FONT_SIZE.value).deriveFont(this == MONO ? 0 : ordinal());
 			}
 			return font;
 		}
