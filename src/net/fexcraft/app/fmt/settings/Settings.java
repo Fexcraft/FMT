@@ -5,6 +5,7 @@ import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
 import static org.lwjgl.glfw.GLFW.glfwGetVideoMode;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowMonitor;
 
+import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -36,8 +37,6 @@ import net.fexcraft.lib.common.math.Time;
 public class Settings {
 	
 	public static final int FORMAT = 2;
-	public static final float FONT_SIZE = 16f;
-	public static final int FONT_SIZEN = 20;
 	public static boolean FOUND_UPDATE;
 	public static long LAST_CATALOG_RELOAD;
 	public static ArrayList<File> RECENT = new ArrayList<File>();
@@ -82,6 +81,11 @@ public class Settings {
 	//public static Setting<Boolean> TESTING = new Setting<>("testing", false, GENERAL);
 	//Interface
 	public static Setting<Float> UI_SCALE = new Setting<>("scale", 1f, INTERFACE);
+	public static Setting<Integer> FONT_SIZE = new Setting<>("font_size", 20, INTERFACE);
+	public static Setting<String> FONT_PLAIN = new Setting<>("font_plain", Font.SANS_SERIF, INTERFACE);
+	public static Setting<String> FONT_BOLD = new Setting<>("font_bold", Font.SANS_SERIF, INTERFACE);
+	public static Setting<String> FONT_ITALIC = new Setting<>("font_italic", Font.SANS_SERIF, INTERFACE);
+	public static Setting<String> FONT_MONO = new Setting<>("font_mono", Font.MONOSPACED, INTERFACE);
 	public static Setting<Float> HOVER_HINT_TIME = new Setting<>("hover_hint_time", 1f, INTERFACE).minmax(0.1f, 20f);
 	public static RGBSetting INFO_TEXT_COLOR = new RGBSetting("info_text_color", new RGB(0x000000), INTERFACE);
 	public static RGBSetting GENERIC_BACKGROUND_0 = new RGBSetting("background_0", 0xcdcdcd, INTERFACE);
