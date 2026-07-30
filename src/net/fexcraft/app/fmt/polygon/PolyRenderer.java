@@ -308,6 +308,11 @@ public class PolyRenderer extends Renderer {
 	}
 
 	@Override
+	public void translate(float x, float y, float z){
+
+	}
+
+	@Override
 	public void translate(double x, double y, double z){
 
 	}
