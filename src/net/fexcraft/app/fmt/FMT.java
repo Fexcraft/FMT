@@ -20,6 +20,7 @@ import net.fexcraft.app.fmt.utils.*;
 import net.fexcraft.app.fmt.workspace.Workspace;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
+import net.fexcraft.app.pro.Testing;
 import net.fexcraft.lib.common.Static;
 import net.fexcraft.lib.common.math.M4DW;
 import net.fexcraft.lib.common.math.RGB;
@@ -258,6 +259,7 @@ public class FMT {
 			while(accumulator >= interval){
 				while(RUN_QUEUE.peek() != null) RUN_QUEUE.poll().run();
 				//TODO "logic"
+				Testing.update();
 				CAM.update();
 				if(Settings.ANIMATE.value) FMT.MODEL.updateAnimations();
 				UI.update0();
@@ -381,7 +383,7 @@ public class FMT {
 			(MODEL.orient.rect() ? floor0 : floor).render();
 		}
 		if(Settings.DEMO.value){
-			//
+			Testing.render();
 		}
 		if(Settings.CMARKER.value){
 			PolyRenderer.mode(DrawMode.RGBCOLOR);
