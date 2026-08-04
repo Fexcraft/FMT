@@ -13,6 +13,7 @@ import net.fexcraft.app.json.JsonMap;
 public class PreviewHandler {
 
 	public static final ArrayList<Model> previews = new ArrayList<>();
+	public static boolean VISIBLE = true;
 	public static Model SELECTED = null;
 
 	public static Model loadFrame(File file){
