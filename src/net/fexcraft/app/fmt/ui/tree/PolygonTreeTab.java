@@ -4,6 +4,7 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Pivot;
 import net.fexcraft.app.fmt.polygon.Polygon;
+import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.tree.GroupCom.GroupComSubElm;
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
@@ -25,6 +26,7 @@ public class PolygonTreeTab extends TreeTab {
 		ObjPolyCom.OBJ_FACES, ObjPolyCom.OBJ_FACE_ACT, ObjPolyCom.OBJ_FACE_TRI
 	};
 	public static String TOTALS_FORMAT;
+	public static String TOTALS_FORMAT_EXT;
 	public Element totals;
 
 	public PolygonTreeTab(){
@@ -35,6 +37,7 @@ public class PolygonTreeTab extends TreeTab {
 	public void init(Object... objs){
 		super.init(30);
 		TOTALS_FORMAT = Translator.translate("tree.info.polygon_count");
+		TOTALS_FORMAT_EXT = Translator.translate("tree.info.polygon_count_ext");
 		over.add(totals = new Element().pos(5, 0).size(FF, 30).translate(TOTALS_FORMAT, "...").text_autoscale());
 		updcom.add(UpdateEvent.PivotAdded.class, event -> addPivot(event.pivot()));
 		updcom.add(UpdateEvent.PivotRemoved.class, event -> remPivot(event.pivot()));
@@ -178,11 +181,26 @@ public class PolygonTreeTab extends TreeTab {
 
 	@Override
 	public void updateCounter(){
-		long p = 0;
-		for(Group group : FMT.MODEL.allgroups()){
-			p += group.size();
+		if(Settings.EXTENDED_POLYGON_COUNTER.value){
+			long p = 0;
+			long f = 0;
+			long v = 0;
+			for(Group group : FMT.MODEL.allgroups()){
+				p += group.size();
+				for(Polygon polygon : group){
+					for(net.fexcraft.lib.frl.Polygon poly : polygon.glm.polygons){
+						f++;
+						v += poly.vertices.length;
+					}
+				}
+			}
+			totals.translate(TOTALS_FORMAT_EXT, p, f, v);
 		}
-		totals.translate(TOTALS_FORMAT, p);
+		else{
+			long p = 0;
+			for(Group group : FMT.MODEL.allgroups()) p += group.size();
+			totals.translate(TOTALS_FORMAT, p);
+		}
 	}
 
 	public static void focusSelected(){
