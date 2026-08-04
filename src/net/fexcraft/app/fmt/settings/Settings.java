@@ -78,6 +78,7 @@ public class Settings {
 	public static Setting<Boolean> LOG_UPDATES = new Setting<>("log_updates", false, GENERAL);
 	public static Setting<Boolean> NUMBERFIELD_BUTTONS = new Setting<>("numberfield_buttons", false, GENERAL);
 	public static Setting<Integer> PAINTER_CHANNELS = new Setting<>("painter_channels", 2, GENERAL);
+	public static Setting<Boolean> EXTENDED_POLYGON_COUNTER = new Setting<>("extended_polygon_counter", false, GENERAL);
 	//public static Setting<Boolean> TESTING = new Setting<>("testing", false, GENERAL);
 	//Interface
 	public static Setting<Float> UI_SCALE = new Setting<>("scale", 1f, INTERFACE);
