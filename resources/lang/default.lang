@@ -308,7 +308,7 @@ editor.config.run_utils=Run Utils
 # Tree
 tree.mode.polygon=Polygon Tree
 tree.mode.texture=Texture Tree
-tree.mode.preview=Helper/Preview Tree
+tree.mode.preview=Helper/Preview Tree (right-click to toggle visibility)
 tree.mode.animation=Animation Tree
 tree.info.polygon_count=Polygons: %s
 tree.info.polygon_count_ext=P %s | F %s | V %s
