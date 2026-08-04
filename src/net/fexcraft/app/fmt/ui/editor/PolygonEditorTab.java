@@ -163,7 +163,7 @@ public class PolygonEditorTab extends EditorTab {
 		cylinder.add(new TextElm(F20, next_y_pos(1), F2S).translate(lang_prefix + "cylinder.base_scale"));
 		cylinder.add(new TextElm(F21, next_y_pos(0), F2S).translate(lang_prefix + "cylinder.top_scale"));
 		cylinder.add((new Field(FLOAT, F2S, updcom, new PolygonValue(PolyVal.BASE_SCALE)).min_range(0)).pos(F20, next_y_pos(1)));
-		cylinder.add((new Field(FieldType.INT, F2S, updcom, new PolygonValue(PolyVal.TOP_SCALE)).min_range(0)).pos(F21, next_y_pos(0)));
+		cylinder.add((new Field(FLOAT, F2S, updcom, new PolygonValue(PolyVal.TOP_SCALE)).min_range(0)).pos(F21, next_y_pos(0)));
 		cylinder.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "cylinder.top_offset"));
 		cylinder.add((new Field(FLOAT, F3S, updcom, new PolygonValue(PolyVal.TOP_OFF, ValAxe.X))).pos(F30, next_y_pos(1)));
 		cylinder.add((new Field(FLOAT, F3S, updcom, new PolygonValue(PolyVal.TOP_OFF, ValAxe.Y))).pos(F31, next_y_pos(0)));
