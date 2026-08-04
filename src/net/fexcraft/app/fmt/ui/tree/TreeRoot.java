@@ -4,6 +4,7 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.ui.Element;
 import net.fexcraft.app.fmt.ui.FMTInterface;
 import net.fexcraft.app.fmt.update.UpdateHandler;
+import net.fexcraft.app.fmt.utils.PreviewHandler;
 
 import static net.fexcraft.app.fmt.settings.Settings.GENERIC_BACKGROUND_0;
 import static net.fexcraft.app.fmt.ui.FMTInterface.*;
@@ -28,7 +29,7 @@ public class TreeRoot extends Element {
 		add(over = new Element().size(EDITOR_WIDTH, TOOLBAR_HEIGHT).color(GENERIC_BACKGROUND_0.value).zi(100));
 		for(TreeMode mode : TreeMode.values()){
 			over.add(new Element().pos(5 + mode.ordinal() * 35, 5 ).size(30, 30).texture("icons/tree/" + mode.name().toLowerCase())
-				.onclick(ci -> setMode(mode)).hint("tree.mode." + mode.name().toLowerCase()));
+				.onclick(ci -> onToolbarClick(ci, mode)).hint("tree.mode." + mode.name().toLowerCase()));
 		}
 		for(int i = 0; i < TreeMode.values().length; i++){
 			add(TREES[i] = TreeTab.create(TreeMode.values()[i]), 0);
@@ -36,6 +37,13 @@ public class TreeRoot extends Element {
 			UpdateHandler.register(TREES[i].updcom);
 		}
 		setMode(TreeMode.POLYGON);
+	}
+
+	private void onToolbarClick(ClickInfo ci, TreeMode mode){
+		if(ci.button() == 1 && mode == TreeMode.PREVIEW){
+			PreviewHandler.VISIBLE = !PreviewHandler.VISIBLE;
+		}
+		else setMode(mode);
 	}
 
 	public static void setMode(TreeMode mode){
