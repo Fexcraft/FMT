@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -22,12 +23,11 @@ import net.fexcraft.app.fmt.animation.Animation;
 import net.fexcraft.app.fmt.polygon.*;
 import net.fexcraft.app.fmt.port.im.ImportManager;
 import net.fexcraft.app.fmt.port.im.Importer;
-import net.fexcraft.app.fmt.ui.Dialog;
-import net.fexcraft.app.fmt.ui.DropList;
-import net.fexcraft.app.fmt.ui.Field;
+import net.fexcraft.app.fmt.ui.*;
 import net.fexcraft.app.fmt.update.UpdateEvent.ModelLoad;
 import net.fexcraft.app.fmt.update.UpdateEvent.ModelUnload;
 import net.fexcraft.app.fmt.utils.fvtm.VehAttr;
+import net.fexcraft.lib.common.math.Time;
 import org.apache.commons.io.IOUtils;
 import org.joml.Vector3f;
 
@@ -36,7 +36,6 @@ import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.app.fmt.texture.TextureManager;
-import net.fexcraft.app.fmt.ui.FileChooser;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonHandler.PrintOption;
@@ -666,6 +665,26 @@ public class SaveHandler {
 			shouldSaveDialog(run);
 		}
 		else run.run();
+	}
+
+	public static void openRecentBackups(){
+		File bkups = new File("./backups");
+		if(!bkups.exists() || !bkups.isDirectory() || bkups.listFiles() == null) return;
+		ArrayList<File> list = new ArrayList<>();
+		Collections.addAll(list, bkups.listFiles());
+		list.sort((o1, o2) -> Long.compare(o2.lastModified(), o1.lastModified()));
+		int width = 700;
+		Dialog dia = FMT.UI.createDialog(width, 420, "saveload.backup.recent.title");
+		dia.addText(0, "saveload.backup.recent.info0");
+		dia.addText(1, "saveload.backup.recent.info1");
+		for(int i = 0; i < 10; i++){
+			int j = i;
+			dia.addRowElm(i + 2, new RunElm(0, 0, width - 10, list.get(i).getName(), ci -> {
+				dia.close();
+				openDialog(list.get(j));
+			}).hint(Time.getAsString(list.get(i).lastModified())));
+		}
+		dia.buttons(width - 20, Dialog.DialogButton.CANCEL);
 	}
 
 }
