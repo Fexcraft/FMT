@@ -396,10 +396,12 @@ public class FMT {
 			PolyRenderer.mode(DrawMode.RGBCOLOR);
 			MODEL.renderVertices(false);
 		}
-		for(Model model : PreviewHandler.getLoaded()){
-			if(!model.visible) continue;
-			PolyRenderer.setHelper(model);
-			model.render(alpha);
+		if(PreviewHandler.VISIBLE){
+			for(Model model : PreviewHandler.getLoaded()){
+				if(!model.visible) continue;
+				PolyRenderer.setHelper(model);
+				model.render(alpha);
+			}
 		}
 		PolyRenderer.setHelper(null);
 	}
