@@ -132,6 +132,7 @@ public class FMTInterface extends Element {
 					add(menu.pos(0, 32));
 					menu.addEntry("toolbar.file.open", ci -> SaveHandler.openDialog(null));
 					recent = menu.addEntry("toolbar.file.recent", new Menu(MENU_WIDTH));
+					menu.addEntry("toolbar.file.backups", ci -> SaveHandler.openRecentBackups());
 					menu.addEntry("toolbar.file.import", ci -> ImportManager._import());
 					for(int i = 0; i < 10; i++){
 						int idx = i;
