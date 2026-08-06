@@ -54,7 +54,7 @@ public class PolyRenderer extends Renderer {
 		if(!subpoly){
 			if(PIVOT == null && HELPER == null){
 				matrix0.identity();
-				if(ImageHandler.ROT != null) matrix0.rotate(ImageHandler.ROT, GIF_AXIS);
+				if(ImageHandler.ROT != null && !MODE.ui()) matrix0.rotate(ImageHandler.ROT, GIF_AXIS);
 			}
 			else if(HELPER != null){
 				HELPER.matrix.get(matrix0).scale(HELPER.scl.x, HELPER.scl.y, HELPER.scl.z);
@@ -117,7 +117,7 @@ public class PolyRenderer extends Renderer {
 		HELPER = model;
 		if(HELPER == null) return;
 		Matrix4f matrix = HELPER.matrix = new Matrix4f().identity();
-		if(ImageHandler.ROT != null) matrix.rotate(ImageHandler.ROT, GIF_AXIS);
+		if(ImageHandler.ROT != null && !MODE.ui()) matrix.rotate(ImageHandler.ROT, GIF_AXIS);
 		matrix.translate(HELPER.pos);
 		if(HELPER.rot.y != 0f) matrix.rotate((float)Math.toRadians(HELPER.rot.y), axis_y);
 		if(HELPER.rot.x != 0f) matrix.rotate((float)Math.toRadians(HELPER.rot.x), axis_x);
@@ -128,7 +128,7 @@ public class PolyRenderer extends Renderer {
 		PIVOT = npivot;
 		if(PIVOT == null) return;
 		Matrix4f matrix = PIVOT.matrix.identity();
-		if(ImageHandler.ROT != null) matrix.rotate(ImageHandler.ROT, GIF_AXIS);
+		if(ImageHandler.ROT != null && !MODE.ui()) matrix.rotate(ImageHandler.ROT, GIF_AXIS);
 		if(PIVOT.root_rot){
 			for(Pivot pivot : PIVOT.roots){
 				matrix.translate(pivot.pos);
