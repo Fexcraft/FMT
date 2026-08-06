@@ -272,14 +272,14 @@ public class FMT {
 			}
 			alpha = accumulator / interval;
 			if(!SLOWDOWN){
-				render(vao, alpha);
 				ImageHandler.updateText();
+				render(vao, alpha);
 				timer.updateFPS();
+				ImageHandler.processTask();
 			}
 			//
 			glfwPollEvents();
 			glfwSwapBuffers(window);
-			//ImageHandler.processTask();
 			timer.update();
 		}
 		Settings.save();
