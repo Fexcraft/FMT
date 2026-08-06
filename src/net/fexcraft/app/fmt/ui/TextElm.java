@@ -32,16 +32,18 @@ public class TextElm extends Element {
 		defTextPos();
 	}
 
-	public static class BottomInfoText extends TextElm {
+	public static class InfoText extends TextElm {
 
-		public BottomInfoText(float x, float y, float w){
+		public boolean render = true;
+
+		public InfoText(float x, float y, float w){
 			super(x, y, w);
 			visible = false;
 		}
 
 		@Override
 		public void render(){
-			if(text != null) text.render();
+			if(render && text != null) text.render();
 		}
 
 	}
