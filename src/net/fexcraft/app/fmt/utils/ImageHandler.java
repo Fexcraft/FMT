@@ -18,6 +18,7 @@ import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.metadata.IIOMetadataNode;
 import javax.imageio.stream.FileImageOutputStream;
 
+import net.fexcraft.app.fmt.ui.FMTInterface;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
@@ -183,6 +184,7 @@ public class ImageHandler {
 		currgif = null;
 		CURRENT = Task.NONE;
 		pass = 0;
+		FMT.UI.setToImageMode(false);
 	}
 
 	public static enum Task {
@@ -192,33 +194,30 @@ public class ImageHandler {
 	}
 	
 	public static void processTask(){
-		if(CURRENT == Task.NONE) return;
-		else if(WAIT > 0){
-			WAIT--;
-			return;
-		}
+		if(CURRENT == Task.NONE){}
+		else if(WAIT > 0) WAIT--;
 		else if(CURRENT == Task.GIF) createGif();
 		else takeScreenshot();
-	}
-	
-	public static boolean shouldHide(){
-		return CURRENT != Task.NONE && Settings.HIDE_UI_FOR_IMAGE.value;
 	}
 
 	public static void updateText(){
 		if(CURRENT == Task.NONE) return;
-		String title = Settings.NO_RANDOM_TITLE.value ? "FMT - Fex's Modelling Toolbox " + FMT.VERSION + " - " + SessionHandler.getLicenseName() : FMT.getTitle(SessionHandler.getLicenseName());
-		/*FMT.img_line0.getTextState().setText(title);
+		if(Settings.HIDE_UI_FOR_IMAGE.value){
+			FMT.UI.setToImageMode(true);
+		}
+		String title = "FMT - Fex's Modelling Toolbox (" + FMT.VERSION + ")" /*+ SessionHandler.getLicenseName()*/;
+		FMTInterface.img_title.text(title);
+		FMTInterface.img_model.text(FMT.MODEL.name);
 		if(FMT.MODEL.getAuthors().size() == 0){
-			FMT.img_line1.getTextState().setText(FMT.MODEL.name + " - " + (SessionHandler.isLoggedIn() ? SessionHandler.getUserName() : "Guest User"));
+			FMTInterface.img_author.text((SessionHandler.isLoggedIn() ? SessionHandler.getUserName() : "Guest User"));
 		}
 		else if(FMT.MODEL.getAuthors().size() == 1){
 			String author = FMT.MODEL.getAuthors().keySet().toArray(new String[]{})[0];
 			if(author.equals(SessionHandler.getUserName())){
-				FMT.img_line1.getTextState().setText(FMT.MODEL.name + " - by " + SessionHandler.getUserName());
+				FMTInterface.img_author.text(" by " + SessionHandler.getUserName());
 			}
 			else{
-				FMT.img_line1.getTextState().setText(FMT.MODEL.name + " - by " + String.format("%s (logged:%s)", author, SessionHandler.getUserName()));
+				FMTInterface.img_author.text("by " + String.format("%s (logged:%s)", author, SessionHandler.getUserName()));
 			}
 		}
 		else{
@@ -230,12 +229,16 @@ public class ImageHandler {
 					if(i < FMT.MODEL.getAuthors().size() - 1) authors += ", ";
 					i++;
 				}
-				FMT.img_line1.getTextState().setText(FMT.MODEL.name + " - by " + authors);
+				FMTInterface.img_author.text("by " + authors);
 			}
 			else{
-				FMT.img_line1.getTextState().setText(FMT.MODEL.name + " - " + String.format("(logged:%s)", SessionHandler.getUserName()));
+				FMTInterface.img_author.text(String.format("(logged:%s)", SessionHandler.getUserName()));
 			}
-		}*/
+		}
+		FMTInterface.img_title.pos(10, 10);
+		FMTInterface.img_model.pos(10, 40);
+		FMTInterface.img_model.text_scale(2);
+		FMTInterface.img_author.pos(10, 100);
 	}
 
 }
