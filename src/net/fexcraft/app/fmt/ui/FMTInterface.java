@@ -4,7 +4,7 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.port.ex.ExportManager;
 import net.fexcraft.app.fmt.port.im.ImportManager;
 import net.fexcraft.app.fmt.settings.Settings;
-import net.fexcraft.app.fmt.ui.TextElm.BottomInfoText;
+import net.fexcraft.app.fmt.ui.TextElm.InfoText;
 import net.fexcraft.app.fmt.ui.editor.EditorRoot;
 import net.fexcraft.app.fmt.ui.tree.TreeRoot;
 import net.fexcraft.app.fmt.update.UpdateEvent;
@@ -38,11 +38,14 @@ public class FMTInterface extends Element {
 	public static EditorRoot editor;
 	public static TreeRoot tree;
 	public static Menu recent;
-	public static BottomInfoText info_fps;
-	public static BottomInfoText info_position;
-	public static BottomInfoText info_rotation;
-	public static BottomInfoText info_selected;
-	public static BottomInfoText info_field;
+	public static InfoText info_fps;
+	public static InfoText info_position;
+	public static InfoText info_rotation;
+	public static InfoText info_selected;
+	public static InfoText info_field;
+	public static InfoText img_title;
+	public static InfoText img_model;
+	public static InfoText img_author;
 	private static Long bar_timer;
 	private static String bar_text;
 	private UpdateHandler.UpdateCompound updcom = new UpdateHandler.UpdateCompound();
@@ -164,11 +167,17 @@ public class FMTInterface extends Element {
 		add((FMT.WORKSPACE = new Workspace()).hide());
 		add((editor = new EditorRoot()));
 		add((tree = new TreeRoot()));
-		add(info_fps = new BottomInfoText(0, 0, 1000));
-		add(info_position = new BottomInfoText(0, 0, 1000));
-		add(info_rotation = new BottomInfoText(0, 0, 1000));
-		add(info_selected = new BottomInfoText(0, 0, 1000));
-		add(info_field = new BottomInfoText(0, 0, 1000));
+		add(info_fps = new InfoText(0, 0, 1000));
+		add(info_position = new InfoText(0, 0, 1000));
+		add(info_rotation = new InfoText(0, 0, 1000));
+		add(info_selected = new InfoText(0, 0, 1000));
+		add(info_field = new InfoText(0, 0, 1000));
+		add(img_title = new InfoText(0, 0, 1000));
+		add(img_model = new InfoText(0, 0, 1000));
+		add(img_author = new InfoText(0, 0, 1000));
+		img_title.render = false;
+		img_model.render = false;
+		img_author.render = false;
 		positionInfoText();
 		//
 		updcom.add(UpdateEvent.PolygonSelected.class, e -> {
@@ -332,6 +341,22 @@ public class FMTInterface extends Element {
 		elements.remove(frame);
 		elements.add(0, frame);
 		resortFrames();
+	}
+
+	public void setToImageMode(boolean bool){
+		img_title.render = bool;
+		img_model.render = bool;
+		img_author.render = bool;
+		bool = !bool;
+		toolbar.visible = bool;
+		statusbar.visible = bool;
+		editor.visible = bool;
+		tree.visible = bool;
+		info_fps.render = bool;
+		info_position.render = bool;
+		info_rotation.render = bool;
+		info_selected.render = bool;
+		info_field.render = bool;
 	}
 
 }
