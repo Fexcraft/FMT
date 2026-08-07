@@ -421,7 +421,7 @@ public class FMT {
 	private static final Polyhedron centermarker1 = new Generator(null, Generator.Type.CUBOID)
 		.set(Values.OFF_X, -256f).set(Values.OFF_Y, -.125f).set(Values.OFF_Z, -.125f).set(Values.WIDTH, 512f).set(Values.HEIGHT, .25f).set(Values.DEPTH, .25f).make();
 	private static final Polyhedron centermarker2 = new Generator(null, Generator.Type.CUBOID)
-		.set(Values.OFF_X, -.125f).set(Values.OFF_Y, -.125f).set(Values.OFF_Z, -8f).set(Values.WIDTH, .25f).set(Values.HEIGHT, .25f).set(Values.DEPTH, 512f).make();
+		.set(Values.OFF_X, -.125f).set(Values.OFF_Y, -.125f).set(Values.OFF_Z, -256f).set(Values.WIDTH, .25f).set(Values.HEIGHT, .25f).set(Values.DEPTH, 512f).make();
 	private static final Polyhedron[] lightmarker = new Polyhedron[3];
 	static {
 		centermarker0.glObj(GLObject.class).polycolor = RGB.GREEN.toFloatArray();
