@@ -1,6 +1,7 @@
 package net.fexcraft.app.fmt.polygon;
 
 import net.fexcraft.app.fmt.FMT;
+import net.fexcraft.app.fmt.texture.Texture;
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.demo.ModelMark;
 import net.fexcraft.app.fmt.polygon.PolyRenderer.DrawMode;
@@ -12,6 +13,7 @@ import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.frl.Polyhedron;
 import net.fexcraft.lib.frl.gen.Generator;
 import net.fexcraft.lib.frl.gen.Generator.Values;
+import org.lwjgl.opengl.GL11;
 
 public class Marker extends Polygon {
 
@@ -84,10 +86,10 @@ public class Marker extends Polygon {
 		glm.render();
 		PolyRenderer.mode(DrawMode.TEXTURED);
 		if(biped && !PolyRenderer.mode().lines()){
-			String tex = TextureManager.getBound();
+			int tex = Texture.BOUND;
 			TextureManager.bind(FMT.MODEL.orient.rect() ? "marker" : "mark");
 			model.render();
-			TextureManager.bind(tex);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, tex);
 		}
 		PolyRenderer.mode(mode);
 		//super.render();
