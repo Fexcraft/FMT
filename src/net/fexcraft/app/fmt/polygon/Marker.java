@@ -2,6 +2,7 @@ package net.fexcraft.app.fmt.polygon;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.texture.Texture;
+import net.fexcraft.app.fmt.ui.Text;
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.demo.ModelMark;
 import net.fexcraft.app.fmt.polygon.PolyRenderer.DrawMode;
@@ -89,7 +90,7 @@ public class Marker extends Polygon {
 			int tex = Texture.BOUND;
 			TextureManager.bind(FMT.MODEL.orient.rect() ? "marker" : "mark");
 			model.render();
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, tex);
+			Texture.bind(tex);
 		}
 		PolyRenderer.mode(mode);
 		//super.render();
