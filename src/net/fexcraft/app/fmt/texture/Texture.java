@@ -14,6 +14,7 @@ import org.lwjgl.opengl.GL11;
 public class Texture {
 
 	public static final int CHANNELS = 4;
+	public static int BOUND;
 	//
 	private Integer glTexid;
 	private ByteBuffer buffer;
@@ -81,7 +82,7 @@ public class Texture {
 			glTexid = GL11.glGenTextures();
 			rebind();
 		}
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, glTexid);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, BOUND = glTexid);
 		if(rebind){
 			GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
