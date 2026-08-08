@@ -91,6 +91,10 @@ public class Texture {
 		}
 	}
 
+	public static void bind(int gti){
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, BOUND = gti);
+	}
+
 	public int getWidth(){
 		return width[0];
 	}
