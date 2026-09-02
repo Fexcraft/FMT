@@ -328,6 +328,7 @@ public class FMT {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			PolyRenderer.mode(DrawMode.PICKER);
 			MODEL.renderPicking();
+			Testing.renderPicking();
 			Picker.process();
 			if(Picker.TYPE.face()){
 				glClearColor(1, 1, 1, 1);
