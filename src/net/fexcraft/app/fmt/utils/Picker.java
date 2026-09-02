@@ -11,6 +11,7 @@ import net.fexcraft.app.fmt.polygon.uv.Face;
 import net.fexcraft.app.fmt.polygon.uv.NoFace;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateEvent.PickMode;
+import net.fexcraft.app.pro.Testing;
 import org.lwjgl.opengl.GL11;
 
 import net.fexcraft.app.fmt.FMT;
@@ -171,6 +172,7 @@ public class Picker {
 			}
 			int pick = getPick();
 			Logging.bar("picked: " + pick);
+			if(Testing.active() && Testing.pick(pick)) return;
 			/*if(pick > 0 && pick < Polygon.startIdx){
 				Arrows.SEL = pick;
 				Arrows.DIR = Arrows.MODE == Arrows.ArrowMode.SIZE ? false : pick % 2 == 0;
