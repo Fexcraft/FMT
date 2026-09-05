@@ -2,7 +2,7 @@ package net.fexcraft.app.fmt.polygon;
 
 import net.fexcraft.app.fmt.polygon.uv.BoxFace;
 import net.fexcraft.app.fmt.polygon.uv.UVCoords;
-import net.fexcraft.lib.common.math.Vec3f;
+import net.fexcraft.lib.common.math.V3F;
 import net.fexcraft.lib.frl.Polygon;
 import net.fexcraft.lib.frl.Vertex;
 
@@ -15,7 +15,7 @@ import static net.fexcraft.app.fmt.polygon.Polygon.*;
  */
 public class Generators {
 
-	public static Vec3f NULL_V3 = new Vec3f();
+	public static V3F NULL_V3 = new V3F();
 
 	public static void genBox(Box poly){
 		boolean shaped = poly.getShape().isShapebox();
@@ -45,14 +45,14 @@ public class Generators {
 		float texh = poly.glm.glObj(GLObject.class).grouptex ? poly.group().texgroup.height : poly.model().texgroup.height;
 		if(shaped){
 			Shapebox box = (Shapebox)poly;
-			Vec3f c0 = new Vec3f(box.cor0.x, box.cor0.y, box.cor0.z);
-			Vec3f c1 = new Vec3f(box.cor1.x, box.cor1.y, box.cor1.z);
-			Vec3f c2 = new Vec3f(box.cor2.x, box.cor2.y, box.cor2.z);
-			Vec3f c3 = new Vec3f(box.cor3.x, box.cor3.y, box.cor3.z);
-			Vec3f c4 = new Vec3f(box.cor4.x, box.cor4.y, box.cor4.z);
-			Vec3f c5 = new Vec3f(box.cor5.x, box.cor5.y, box.cor5.z);
-			Vec3f c6 = new Vec3f(box.cor6.x, box.cor6.y, box.cor6.z);
-			Vec3f c7 = new Vec3f(box.cor7.x, box.cor7.y, box.cor7.z);
+			V3F c0 = new V3F(box.cor0.x, box.cor0.y, box.cor0.z);
+			V3F c1 = new V3F(box.cor1.x, box.cor1.y, box.cor1.z);
+			V3F c2 = new V3F(box.cor2.x, box.cor2.y, box.cor2.z);
+			V3F c3 = new V3F(box.cor3.x, box.cor3.y, box.cor3.z);
+			V3F c4 = new V3F(box.cor4.x, box.cor4.y, box.cor4.z);
+			V3F c5 = new V3F(box.cor5.x, box.cor5.y, box.cor5.z);
+			V3F c6 = new V3F(box.cor6.x, box.cor6.y, box.cor6.z);
+			V3F c7 = new V3F(box.cor7.x, box.cor7.y, box.cor7.z);
 			float xw = x + w, yh = y + h, zd = z + d;
 			v0 = new float[]{ x  - c0.x, y  - c0.y, z  - c0.z };
 			v1 = new float[]{ xw + c1.x, y  - c1.y, z  - c1.z };
