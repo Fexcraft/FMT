@@ -18,16 +18,15 @@ import net.fexcraft.app.fmt.polygon.uv.UVCoords;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.RGB;
-import net.fexcraft.lib.common.math.Vec3f;
+import net.fexcraft.lib.common.math.V3F;
 import net.fexcraft.lib.frl.gen.AxisDir;
 import net.fexcraft.lib.frl.gen.Generator;
-import net.fexcraft.lib.tmt.ModelRendererTurbo;
 
 public class Cylinder extends Polygon {
 	
 	public float radius = 2, radius2 = 0, radius3 = 0, radius4 = 0;
 	public float length = 1, base = 1, top = 1;
-	public int segments = 8, seglimit, direction = ModelRendererTurbo.MR_TOP;
+	public int segments = 8, seglimit, direction = AxisDir.X_POSITIVE.ordinal();
 	public Vector3f topoff = new Vector3f(), toprot = new Vector3f();
 	public boolean[] bools = new boolean[6];
 	public boolean radial;
@@ -123,7 +122,7 @@ public class Cylinder extends Polygon {
 			.set(Values.TOP_SCALE, top)
 			.set(Values.SEG_OFFSET, seg_off);
 		if(topoff.x != 0f || topoff.y != 0f || topoff.z != 0f){
-			gen.set(Values.TOP_OFFSET, new Vec3f(topoff.x, topoff.y, topoff.z));
+			gen.set(Values.TOP_OFFSET, new V3F(topoff.x, topoff.y, topoff.z));
 		}
 		if(toprot.x != 0f || toprot.y != 0f || toprot.z != 0f){
 			M4DW mat = M4DW.create();
@@ -234,8 +233,8 @@ public class Cylinder extends Polygon {
 		return toprot.x != 0f || toprot.y != 0f || toprot.z != 0f;
 	}
 
-	private Vec3f getTopOff(){
-		return topoff.x == 0f && topoff.y == 0f && topoff.z == 0f ? null : new Vec3f(topoff.x, topoff.y, topoff.z);
+	private V3F getTopOff(){
+		return topoff.x == 0f && topoff.y == 0f && topoff.z == 0f ? null : new V3F(topoff.x, topoff.y, topoff.z);
 	}
 
 	@Override
