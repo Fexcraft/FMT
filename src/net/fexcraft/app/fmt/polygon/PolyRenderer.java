@@ -6,7 +6,7 @@ import net.fexcraft.app.fmt.utils.ImageHandler;
 import net.fexcraft.app.fmt.utils.ShaderManager;
 import net.fexcraft.app.fmt.utils.ShaderManager.Uniform;
 import net.fexcraft.lib.common.math.V3D;
-import net.fexcraft.lib.common.math.Vec3f;
+import net.fexcraft.lib.common.math.V3F;
 import net.fexcraft.lib.frl.*;
 import net.fexcraft.lib.frl.Polygon;
 import net.fexcraft.mod.uni.IDL;
@@ -191,9 +191,9 @@ public class PolyRenderer extends Renderer {
     	for(int i = 0; i < poli.polygons.size(); i++){
     		Polygon poly = poli.polygons.get(i);
     		int[] order = poly.vertices.length == 4 ? lines && !TRIANGULATION_L.value ? orderql : orderqn : poly.vertices.length == 3 ? lines ? ordertl : ordertn : genOrder(poly.vertices.length, lines);
-        	Vec3f vec0 = new Vec3f(poly.vertices[1].vector.sub(poly.vertices[0].vector));
-	        Vec3f vec1 = new Vec3f(poly.vertices[1].vector.sub(poly.vertices[2].vector));
-	        Vec3f vec2 = vec1.cross(vec0);
+        	V3F vec0 = new V3F(poly.vertices[1].vector.sub(poly.vertices[0].vector));
+	        V3F vec1 = new V3F(poly.vertices[1].vector.sub(poly.vertices[2].vector));
+	        V3F vec2 = vec1.cross(vec0);
 			vec2.normalize(vec2);
     		for(int o = 0; o < order.length; o++){
     			Vertex vert = poly.vertices[order[o]];
