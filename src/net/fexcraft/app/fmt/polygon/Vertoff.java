@@ -4,7 +4,7 @@ import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonValue;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.V3D;
-import net.fexcraft.lib.common.math.Vec3f;
+import net.fexcraft.lib.common.math.V3F;
 
 import java.util.Map;
 
@@ -42,7 +42,7 @@ public class Vertoff {
 		cache.z = poly.pos.z + (v[2] += off.z);
 	}
 
-	public void apply(Polygon poly, Vec3f v){
+	public void apply(Polygon poly, V3F v){
 		cache.x = poly.pos.x + (v.x += off.x);
 		cache.y = poly.pos.y + (v.y += off.y);
 		cache.z = poly.pos.z + (v.z += off.z);
