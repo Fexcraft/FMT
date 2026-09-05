@@ -2,7 +2,6 @@ package net.fexcraft.app.fmt.polygon;
 
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.V3D;
-import net.fexcraft.lib.common.math.Vec3f;
 import org.joml.Vector3f;
 
 /**
@@ -30,7 +29,7 @@ public class CurvePoint {
 		this(new Vector3f(point.vector), point.color.packed);
 	}
 
-	public V3D toVec3f(Vector3f pos){
+	public V3D toVec(Vector3f pos){
 		return new V3D(vector.x + pos.x, vector.y + pos.y, vector.z + pos.z);
 	}
 
