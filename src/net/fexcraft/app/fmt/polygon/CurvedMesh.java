@@ -8,7 +8,6 @@ import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.M4DW;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.common.math.V3D;
-import net.fexcraft.lib.common.math.Vec3f;
 import net.fexcraft.lib.frl.Polyhedron;
 import net.fexcraft.lib.frl.Vertex;
 import org.joml.Vector3f;
