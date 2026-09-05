@@ -13,7 +13,7 @@ import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.app.json.JsonValue;
-import net.fexcraft.lib.common.math.Vec3f;
+import net.fexcraft.lib.common.math.V3F;
 
 import java.io.File;
 import java.util.LinkedHashSet;
@@ -268,7 +268,7 @@ public class FvtmConfigEditor extends WFileEditor {
 											.addText(0, "workspace.configeditor.select.pivot")
 											.addRowElm(1, vlist)
 											.set_confirm(di -> {
-												Vec3f vec = new Vec3f();
+												V3F vec = new V3F();
 												Pivot pivot = vlist.getSelVal();
 												if(FMT.MODEL.orient.rect()){
 													vec.x = pivot.pos.x * .0625f;
@@ -296,7 +296,7 @@ public class FvtmConfigEditor extends WFileEditor {
 											.addText(0, "workspace.configeditor.select.marker")
 											.addRowElm(1, vlist)
 											.set_confirm(di -> {
-												Vec3f vec = new Vec3f();
+												V3F vec = new V3F();
 												Polygon poly = vlist.getSelVal();
 												if(FMT.MODEL.orient.rect()){
 													vec.x = poly.pos.x * .0625f;
