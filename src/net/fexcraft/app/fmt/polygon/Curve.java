@@ -3,8 +3,6 @@ package net.fexcraft.app.fmt.polygon;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.V3D;
-import net.fexcraft.lib.common.math.Vec3f;
-import net.fexcraft.lib.frl.Polygon;
 import net.fexcraft.lib.frl.gen.Path;
 import org.joml.Vector3f;
 
@@ -64,7 +62,7 @@ public class Curve {
 	public void compilePath(){
 		V3D[] arr = new V3D[points.size()];
 		int idx = 0;
-		for(CurvePoint point : points) arr[idx++] = point.toVec3f(polygon.pos);
+		for(CurvePoint point : points) arr[idx++] = point.toVec(polygon.pos);
 		path = new Path(arr);
 	}
 
