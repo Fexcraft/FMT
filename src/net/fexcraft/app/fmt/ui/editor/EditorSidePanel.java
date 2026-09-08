@@ -88,7 +88,7 @@ public class EditorSidePanel extends Element {
 
 		@Override
 		public void init(Object... args){
-			ew = 325;
+			ew = 360;
 			eh = 40;
 			super.init(args);
 			hint("editor.panel.add");
@@ -104,6 +104,10 @@ public class EditorSidePanel extends Element {
 			container.add(new Element().pos(buff += iinc, yo).size(32, 32)
 				.texture("icons/polygon/cylinder").hint("editor.panel.add.cylinder")
 				.onclick(ci -> FMT.MODEL.add(null, null, new Cylinder(null)))
+			);
+			container.add(new Element().pos(buff += iinc, yo).size(32, 32)
+				.texture("icons/polygon/sphere").hint("editor.panel.add.sphere")
+				.onclick(ci -> FMT.MODEL.add(null, null, new Sphere(null)))
 			);
 			container.add(new Element().pos(buff += iinc, yo).size(32, 32)
 				.texture("icons/polygon/boundingbox").hint("editor.panel.add.struct")
