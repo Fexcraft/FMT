@@ -209,8 +209,7 @@ public abstract class Polygon {
 			case MARKER: return new Marker(model, obj);
 			case OBJECT: return new PolyObject(model, obj);
 			case SHAPEBOX: return new Shapebox(model, obj);
-			case SPHERE:
-				break;
+			case SPHERE: return new Sphere(model, obj);
 			case VOXEL:
 				break;
 			case RECT_CURVE: return new RectCurve(model, obj);
@@ -228,8 +227,7 @@ public abstract class Polygon {
 			case MARKER: return new Marker(model);
 			case OBJECT: return new PolyObject(model);
 			case SHAPEBOX: return new Shapebox(model);
-			case SPHERE:
-				break;
+			case SPHERE: return new Sphere(model);
 			case VOXEL:
 				break;
 			case RECT_CURVE: return new RectCurve(model);
@@ -445,13 +443,9 @@ public abstract class Polygon {
 			case BOX: return copy(new Box(model));
 			case CYLINDER: return copy(new Cylinder(model));
 			case MARKER: return copy(new Marker(model));
-			case OBJECT:
-				//TODO
-				break;
+			case OBJECT: return copy(new PolyObject(model));
 			case SHAPEBOX: return copy(new Shapebox(model));
-			case SPHERE:
-				//TODO
-				break;
+			case SPHERE: return copy(new Sphere(model));
 			case VOXEL:
 				//TODO
 				break;
