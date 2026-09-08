@@ -39,6 +39,10 @@ public enum Shape {
 	public boolean isCylindrical(){
 		return this == CYLINDER || this == CYL_CURVE;
 	}
+
+	public boolean isSphere(){
+		return this == SPHERE;
+	}
 	
 	public boolean isMarker(){
 		return this == MARKER;
@@ -100,7 +104,7 @@ public enum Shape {
 	}
 
 	public static Shape[] getSupportedValues(){
-		return new Shape[]{ BOX, SHAPEBOX, CYLINDER, MARKER, VOXEL, BOUNDING_BOX };
+		return new Shape[]{ BOX, SHAPEBOX, CYLINDER, SPHERE, MARKER, VOXEL, BOUNDING_BOX };
 	}
 
 	public boolean isTexturable(){
