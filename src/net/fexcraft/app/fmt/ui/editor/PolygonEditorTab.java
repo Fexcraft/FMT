@@ -31,6 +31,7 @@ public class PolygonEditorTab extends EditorTab {
 	public ETabCom general;
 	public ETabCom shapebox;
 	public ETabCom cylinder;
+	public ETabCom sphere;
 	public ETabCom curve;
 	public ETabCom object;
 	public ETabCom marker;
@@ -183,6 +184,22 @@ public class PolygonEditorTab extends EditorTab {
 		cylinder.add((new BoolElm(F30, next_y_pos(1), F3S).set(new PolygonValue(PolyVal.RADIAL), updcom)));
 		cylinder.add((new Field(FLOAT, F3S, updcom, new PolygonValue(PolyVal.SEG_WIDTH))).pos(F31, next_y_pos(0)));
 		cylinder.add((new Field(FLOAT, F3S, updcom, new PolygonValue(PolyVal.SEG_HEIGHT))).pos(F32, next_y_pos(0)));
+		//
+		scrollable.container.add((sphere = new ETabCom("sphere")), lang_prefix + "sphere", 280);
+		sphere.add(new TextElm(0, next_y_pos(-1), FF).translate(lang_prefix + "sphere.radius"));
+		sphere.add((new Field(FLOAT, FF, updcom, new PolygonValue(PolyVal.RADIUS_O, ValAxe.N)).min_range(0.5f)).pos(F20, next_y_pos(1)));
+		sphere.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "sphere.segments"));
+		sphere.add((new Field(FieldType.INT, F3S, updcom, new PolygonValue(PolyVal.SEGMENTS)).range(3, 360)).pos(F30, next_y_pos(1)));
+		sphere.add((new Field(FieldType.INT, F3S, updcom, new PolygonValue(PolyVal.SEG_LIMIT)).range(0, 360)).pos(F31, next_y_pos(0)));
+		sphere.add((new Field(FLOAT, F3S, updcom, new PolygonValue(PolyVal.SEG_OFF)).deg_range()).pos(F32, next_y_pos(0)));
+		sphere.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "sphere.circles"));
+		sphere.add((new Field(FieldType.INT, F3S, updcom, new PolygonValue(PolyVal.CIRCLES)).range(3, 360)).pos(F30, next_y_pos(1)));
+		sphere.add((new Field(FieldType.INT, F3S, updcom, new PolygonValue(PolyVal.CIR_LIMIT)).range(0, 360)).pos(F31, next_y_pos(0)));
+		sphere.add((new Field(FLOAT, F3S, updcom, new PolygonValue(PolyVal.CIR_OFF)).deg_range()).pos(F32, next_y_pos(0)));
+		sphere.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "sphere.faces"));
+		sphere.add(new BoolElm(F30, next_y_pos(1), F3S).set(new PolygonValue(PolyVal.SIDES, ValAxe.X), updcom));
+		sphere.add(new BoolElm(F31, next_y_pos(0), F3S).set(new PolygonValue(PolyVal.SIDES, ValAxe.Y), updcom));
+		sphere.add(new BoolElm(F32, next_y_pos(0), F3S).set(new PolygonValue(PolyVal.SIDES, ValAxe.Z), updcom));
 		//
 		scrollable.container.add((curve = new ETabCom("curve")), lang_prefix + "curve", 620);
 		curve.add(new TextElm(0, next_y_pos(-1), FF).translate(lang_prefix + "general.rotation"));
@@ -348,6 +365,7 @@ public class PolygonEditorTab extends EditorTab {
 			general_box.visible = false;
 			shapebox.visible = false;
 			cylinder.visible = false;
+			sphere.visible = false;
 			curve.visible = false;
 			object.visible = false;
 			marker.visible = false;
@@ -369,6 +387,9 @@ public class PolygonEditorTab extends EditorTab {
 				}
 				if(poly.getShape().isCylinder()){
 					cylinder.visible = true;
+				}
+				if(poly.getShape().isSphere()){
+					sphere.visible = true;
 				}
 				if(poly.getShape().isCurve()){
 					curve.visible = true;
