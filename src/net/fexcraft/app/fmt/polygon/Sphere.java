@@ -110,12 +110,6 @@ public class Sphere extends Polygon {
 		if(idx < segs * 2){
 			return blu1;
 		}
-		if(idx < segs * 3){
-			return red1;
-		}
-		if(idx < segs * 4){
-			return red0;
-		}
 		return idx % 2 == 1 ? gre1 : gre0;
 	}
 
