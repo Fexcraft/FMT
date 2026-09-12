@@ -1,18 +1,17 @@
 package net.fexcraft.app.fmt.polygon;
 
-import java.util.ArrayList;
-
 import net.fexcraft.app.fmt.polygon.uv.Face;
 import net.fexcraft.app.fmt.polygon.uv.NoFace;
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.RGB;
-import net.fexcraft.lib.common.math.TexturedPolygon;
-import net.fexcraft.lib.frl.Vertex;
+import net.fexcraft.lib.frl.Polyhedron;
+
+import java.util.ArrayList;
 
 public class ObjView extends Polygon {
 
-	private ArrayList<TexturedPolygon> polis;
+	private ArrayList<Polyhedron> polis;
 	private RGB rgb = RGB.random();
 	public float scale = 1;
 
@@ -25,7 +24,7 @@ public class ObjView extends Polygon {
 		scale = obj.get("scale", scale);
 	}
 
-	public ObjView(Model model, ArrayList<TexturedPolygon> value){
+	public ObjView(Model model, ArrayList<Polyhedron> value){
 		super(model);
 		polis = value;
 	}
@@ -46,16 +45,7 @@ public class ObjView extends Polygon {
 
 	@Override
 	protected void generate(){
-		glm.texU = glm.texV = 1;
-		for(TexturedPolygon poli : polis){
-			net.fexcraft.lib.frl.Polygon gon = new net.fexcraft.lib.frl.Polygon(poli.getVertices().length);
-			for(int i = 0; i < gon.vertices.length; i++){
-				gon.vertices[i] = new Vertex(poli.getVertices()[i].vector);
-				gon.vertices[i].u = poli.getVertices()[i].textureX;
-				gon.vertices[i].v = poli.getVertices()[i].textureY;
-			}
-			glm.polygons.add(gon);
-		}
+		//
 	}
 
 	@Override
@@ -72,7 +62,8 @@ public class ObjView extends Polygon {
 	public void render(float alpha){
 		//DrawMode mode = PolyRenderer.mode();
 		//PolyRenderer.mode(DrawMode.RGBCOLOR);
-		glm.render();
+		//glm.render();
+		for(Polyhedron poli : polis) poli.render();
 		//PolyRenderer.mode(mode);
 	}
 	
