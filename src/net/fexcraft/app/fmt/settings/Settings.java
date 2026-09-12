@@ -31,7 +31,6 @@ import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonHandler.PrintOption;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.RGB;
-import net.fexcraft.lib.common.math.TexturedPolygon;
 import net.fexcraft.lib.common.math.Time;
 
 public class Settings {
@@ -262,7 +261,6 @@ public class Settings {
 		FMT.HEIGHT = DEF_HEIGHT.value;
 		FMT.SCALED_WIDTH = FMT.WIDTH / UI_SCALE.value;
 		FMT.SCALED_HEIGHT = FMT.HEIGHT / UI_SCALE.value;
-		TexturedPolygon.TRIANGULATED_QUADS = TRIANGULATION_Q.value;
 		refresh();
 	}
 	
