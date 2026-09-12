@@ -29,7 +29,6 @@ import net.fexcraft.lib.frl.GLO;
 import net.fexcraft.lib.frl.Polyhedron;
 import net.fexcraft.lib.frl.gen.Generator;
 import net.fexcraft.lib.frl.gen.Generator.Values;
-import net.fexcraft.lib.tmt.BoxBuilder;
 import net.fexcraft.lib.tmt.ModelRendererTurbo;
 import org.joml.Vector4f;
 import org.lwjgl.glfw.*;
@@ -55,6 +54,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static net.fexcraft.app.fmt.utils.GGR.parseKeyAction;
 import static net.fexcraft.app.fmt.utils.Logging.log;
+import static net.fexcraft.lib.frl.gen.Generator.Values.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
@@ -406,34 +406,36 @@ public class FMT {
 		}
 		PolyRenderer.setHelper(null);
 	}
-	
-	public static final Polyhedron center_cube = new Polyhedron().importMRT(new BoxBuilder(new ModelRendererTurbo(null, 0, 0, 16, 16))
-		.setSize(16, 16, 16).setOffset(-8, 0, -8).build(), false, 1f);
-	public static final Polyhedron floor = new Polyhedron().importMRT(new BoxBuilder(new ModelRendererTurbo(null, 0, 0, 512, 512))
-		.setSize(512, 0, 512).setOffset(-256, 0, -256).removePolygons(0, 1, 4, 5)
-		.setPolygonUV(2, new float[]{ 512, 0, 512, 512, 0, 512, 0, 0 })
-		.setPolygonUV(3, new float[]{ 512, 0, 512, 512, 0, 512, 0, 0 }).build(), false, 1f);
-	public static final Polyhedron floor0 = new Polyhedron().importMRT(new BoxBuilder(new ModelRendererTurbo(null, 0, 0, 512, 512))
-		.setSize(512, 0, 512).setOffset(-256, 0, -256).removePolygons(0, 1, 4, 5)
-		.setPolygonUV(2, new float[]{ 0, 512, 0, 0, 512, 0, 512, 512})
-		.setPolygonUV(3, new float[]{ 512, 512, 512, 0, 0, 0,  0, 512 }).build(), false, 1f);
+
+	public static final Polyhedron center_cube = new Generator(Generator.Type.CUBOID)
+		.set(OFF_X, -8f).set(OFF_Z, -8f).set(Values.WIDTH, 16f).set(Values.HEIGHT, 16f).set(DEPTH, 16f).make();
+	public static final Polyhedron floor = new Generator(Generator.Type.CUBOID)
+		.set(OFF_X, -256f).set(OFF_Z, -256f).set(Values.WIDTH, 512f).set(Values.HEIGHT, 0.01f).set(DEPTH, 512f)
+		.set(TEXTURE_WIDTH, 512f).set(TEXTURE_HEIGHT, 512f).initArray(UV, 6, null).removePolygon(0, 1, 4, 5)
+		.set(UV, 2, new float[]{ 512, 0, 512, 512, 0, 512, 0, 0 })
+		.set(UV, 3, new float[]{ 512, 0, 512, 512, 0, 512, 0, 0 }).make();
+	public static final Polyhedron floor0 = new Generator(Generator.Type.CUBOID)
+		.set(OFF_X, -256f).set(OFF_Z, -256f).set(Values.WIDTH, 512f).set(Values.HEIGHT, 0.01f).set(DEPTH, 512f)
+		.set(TEXTURE_WIDTH, 512f).set(TEXTURE_HEIGHT, 512f).initArray(UV, 6, null).removePolygon(0, 1, 4, 5)
+		.set(UV, 2, new float[]{ 0, 512, 0, 0, 512, 0, 512, 512 })
+		.set(UV, 3, new float[]{ 512, 512, 512, 0, 0, 0,  0, 512 }).make();
 	private static final Polyhedron centermarker0 = new Generator(null, Generator.Type.CUBOID)
-		.set(Values.OFF_X, -.125f).set(Values.OFF_Y, -256f).set(Values.OFF_Z, -.125f).set(Values.WIDTH, .25f).set(Values.HEIGHT, 512f).set(Values.DEPTH, .25f).make();
+		.set(OFF_X, -.125f).set(Values.OFF_Y, -256f).set(OFF_Z, -.125f).set(Values.WIDTH, .25f).set(Values.HEIGHT, 512f).set(Values.DEPTH, .25f).make();
 	private static final Polyhedron centermarker1 = new Generator(null, Generator.Type.CUBOID)
-		.set(Values.OFF_X, -256f).set(Values.OFF_Y, -.125f).set(Values.OFF_Z, -.125f).set(Values.WIDTH, 512f).set(Values.HEIGHT, .25f).set(Values.DEPTH, .25f).make();
+		.set(OFF_X, -256f).set(Values.OFF_Y, -.125f).set(OFF_Z, -.125f).set(Values.WIDTH, 512f).set(Values.HEIGHT, .25f).set(Values.DEPTH, .25f).make();
 	private static final Polyhedron centermarker2 = new Generator(null, Generator.Type.CUBOID)
-		.set(Values.OFF_X, -.125f).set(Values.OFF_Y, -.125f).set(Values.OFF_Z, -256f).set(Values.WIDTH, .25f).set(Values.HEIGHT, .25f).set(Values.DEPTH, 512f).make();
+		.set(OFF_X, -.125f).set(Values.OFF_Y, -.125f).set(OFF_Z, -256f).set(Values.WIDTH, .25f).set(Values.HEIGHT, .25f).set(Values.DEPTH, 512f).make();
 	private static final Polyhedron[] lightmarker = new Polyhedron[3];
 	static {
 		centermarker0.glObj(GLObject.class).polycolor = RGB.GREEN.toFloatArray();
 		centermarker1.glObj(GLObject.class).polycolor = RGB.RED.toFloatArray();
 		centermarker2.glObj(GLObject.class).polycolor = RGB.BLUE.toFloatArray();
 		lightmarker[0] = new Generator(null, Generator.Type.CUBOID)
-			.set(Values.OFF_X, -.125f).set(Values.OFF_Y, -4f).set(Values.OFF_Z, -.125f).set(Values.WIDTH, .25f).set(Values.HEIGHT, 8f).set(Values.DEPTH, .25f).make();
+			.set(OFF_X, -.125f).set(Values.OFF_Y, -4f).set(OFF_Z, -.125f).set(Values.WIDTH, .25f).set(Values.HEIGHT, 8f).set(Values.DEPTH, .25f).make();
 		lightmarker[1] = new Generator(null, Generator.Type.CUBOID)
-			.set(Values.OFF_X, -4f).set(Values.OFF_Y, -.125f).set(Values.OFF_Z, -.125f).set(Values.WIDTH, 8f).set(Values.HEIGHT, .25f).set(Values.DEPTH, .25f).make();
+			.set(OFF_X, -4f).set(Values.OFF_Y, -.125f).set(OFF_Z, -.125f).set(Values.WIDTH, 8f).set(Values.HEIGHT, .25f).set(Values.DEPTH, .25f).make();
 		lightmarker[2] = new Generator(null, Generator.Type.CUBOID)
-			.set(Values.OFF_X, -.125f).set(Values.OFF_Y, -.125f).set(Values.OFF_Z, -4f).set(Values.WIDTH, .25f).set(Values.HEIGHT, .25f).set(Values.DEPTH, 8f).make();
+			.set(OFF_X, -.125f).set(Values.OFF_Y, -.125f).set(OFF_Z, -4f).set(Values.WIDTH, .25f).set(Values.HEIGHT, .25f).set(Values.DEPTH, 8f).make();
 		for(Polyhedron poly : lightmarker) poly.glObj(GLObject.class).polycolor = Settings.LIGHT_COLOR.value.toFloatArray();
 	}
 	
