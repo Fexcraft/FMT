@@ -97,7 +97,6 @@ public class FMTInterface extends Element {
 					menu.addEntry("toolbar.utils.font_util", ci -> FontUtils.open());
 					Menu conv = menu.addEntry("toolbar.utils.converters", new Menu(MENU_WIDTH * 1.5f));
 					conv.addEntry("Item Model Texture Location", ci -> ConverterUtils.runIMTJ());
-					conv.addEntry("Extract Materials / FVTM Obj", ci -> ConverterUtils.exModelData());
 					menu.addEntry("toolbar.utils.settings", ci -> settings.show());
 					menu.addEntry("toolbar.utils.controls", ci -> {});
 					onclick(ci -> {
