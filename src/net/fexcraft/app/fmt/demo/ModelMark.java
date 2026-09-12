@@ -3,10 +3,12 @@ package net.fexcraft.app.fmt.demo;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.Marker;
 import net.fexcraft.lib.frl.Polyhedron;
-import net.fexcraft.lib.tmt.ModelRendererTurbo;
+import net.fexcraft.lib.frl.gen.Generator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import static net.fexcraft.lib.frl.gen.Generator.Values.*;
 
 public class ModelMark {
 	
@@ -26,28 +28,45 @@ public class ModelMark {
 			poly[i].pos(0, 0, 0);
 		}
 		float s = mark.biped_scale * shrink;
-		if(FMT.MODEL.orient.rect()){
-			poly[0].importMRT(new ModelRendererTurbo(null, 0, 17, 64, 64).addBox(-2, -2, -12, 4, 4, 12).setRotationPoint(2, 2, 0).setRotationAngle(-15, -15, 0), false, s);
-			poly[1].importMRT(new ModelRendererTurbo(null, 33, 22, 64, 64).addBox(-4, 0, -2, 8, 12, 4).setRotationPoint(0, 2, 0).setRotationAngle(0, 0, 0), false, s);
-			poly[2].importMRT(new ModelRendererTurbo(null, 21, 5, 64, 64).addBox(-2, -2, -12, 4, 4, 12).setRotationPoint(-2, 2, 0).setRotationAngle(-15, 15, 0), false, s);
-			poly[3].importMRT(new ModelRendererTurbo(null, 0, 0, 64, 64).addBox(-4, 0, -4, 8, 8, 8).setRotationPoint(0, 14, 0).setRotationAngle(0, 0, 0), false, s);
-			poly[4].importMRT(new ModelRendererTurbo(null, 0, 34, 64, 64).addBox(-4, -2, -2, 4, 12, 4).setRotationPoint(-4, 12, 0).setRotationAngle(-130, 0, 0), false, s);
-			poly[5].importMRT(new ModelRendererTurbo(null, 42, 0, 64, 64).addBox(0, -2, -2, 4, 12, 4).setRotationPoint(4, 12, 0).setRotationAngle(-130, 0, 0), false, s);
-		}
-		else{
-			poly[0].importMRT(new ModelRendererTurbo(null, 4, 4, 64, 64).setTextureOffset(16, 16).addBox(-4,   -12,    -2, 8, 12, 4), false, s);
-			poly[1].importMRT(new ModelRendererTurbo(null, 4, 4, 64, 64).setTextureOffset( 0,  0).addBox(-4,     0,    -4, 8,  8, 8).setRotationPoint(0, -20 * s, 0).setRotationAngle(0, 0, 0), false, s);
-			poly[2].importMRT(new ModelRendererTurbo(null, 4, 4, 64, 64).setTextureOffset(32, 48).addBox( 4, -0.4f, -0.9f, 4, 12, 4).setRotationPoint(0, -12 * s, 0).setRotationAngle(-35, 0, 0), false, s);
-			poly[3].importMRT(new ModelRendererTurbo(null, 4, 4, 64, 64).setTextureOffset(40, 16).addBox(-8, -0.4f, -0.9f, 4, 12, 4).setRotationPoint(0, -12 * s, 0).setRotationAngle(-35, 0, 0), false, s);
-			poly[4].importMRT(new ModelRendererTurbo(null, 4, 4, 64, 64).setTextureOffset( 0, 16).addBox(-4,     0,    -4, 4, 12, 4).setRotationPoint(0, 2 * s, 0).setRotationAngle(-83, 14.5f, 0), false, s);
-			poly[5].importMRT(new ModelRendererTurbo(null, 4, 4, 64, 64).setTextureOffset(16, 48).addBox( 0,     0,    -4, 4, 12, 4).setRotationPoint(0, 2 * s, 0).setRotationAngle(-83, -14.5f, 0), false, s);
-		}
+		//
+		poly[0].ruv(0, 17).newGen().set(TYPE, Generator.Type.CUBOID).set(TEXTURE_WIDTH, 64f).set(TEXTURE_HEIGHT, 64f)
+			.set(OFF_X, -2f).set(OFF_Y, -2f).set(OFF_Z, -12f)
+			.set(WIDTH, 4f).set(HEIGHT, 4f).set(DEPTH, 12f)
+			.set(SCALE, s).make()
+			.pos(2, 2, 0).rot(-15, -15, 0);
+		poly[1].ruv(33, 22).newGen().set(TYPE, Generator.Type.CUBOID).set(TEXTURE_WIDTH, 64f).set(TEXTURE_HEIGHT, 64f)
+			.set(OFF_X, -4f).set(OFF_Y, 0f).set(OFF_Z, -2f)
+			.set(WIDTH, 8f).set(HEIGHT, 12f).set(DEPTH, 4f)
+			.set(SCALE, s).make()
+			.pos(0, 2, 0).rot(0, 0, 0);
+		poly[2].ruv(21, 5).newGen().set(TYPE, Generator.Type.CUBOID).set(TEXTURE_WIDTH, 64f).set(TEXTURE_HEIGHT, 64f)
+			.set(OFF_X, -2f).set(OFF_Y, -2f).set(OFF_Z, -12f)
+			.set(WIDTH, 4f).set(HEIGHT, 4f).set(DEPTH, 12f)
+			.set(SCALE, s).make()
+			.pos(-2, 2, 0).rot(-15, 15, 0);
+		poly[3].ruv(0, 0).newGen().set(TYPE, Generator.Type.CUBOID).set(TEXTURE_WIDTH, 64f).set(TEXTURE_HEIGHT, 64f)
+			.set(OFF_X, -4f).set(OFF_Y, 0f).set(OFF_Z, -4f)
+			.set(WIDTH, 8f).set(HEIGHT, 8f).set(DEPTH, 8f)
+			.set(SCALE, s).make()
+			.pos(0, 14, 0).rot(0, 0, 0);
+		poly[4].ruv(0, 34).newGen().set(TYPE, Generator.Type.CUBOID).set(TEXTURE_WIDTH, 64f).set(TEXTURE_HEIGHT, 64f)
+			.set(OFF_X, -4f).set(OFF_Y, -2f).set(OFF_Z, -2f)
+			.set(WIDTH, 4f).set(HEIGHT, 12f).set(DEPTH, 4f)
+			.set(SCALE, s).make()
+			.pos(-4, 12, 0).rot(-130, 0, 0);
+		poly[5].ruv(42, 0).newGen().set(TYPE, Generator.Type.CUBOID).set(TEXTURE_WIDTH, 64f).set(TEXTURE_HEIGHT, 64f)
+			.set(OFF_X, 0f).set(OFF_Y, -2f).set(OFF_Z, -2f)
+			.set(WIDTH, 4f).set(HEIGHT, 12f).set(DEPTH, 4f)
+			.set(SCALE, s).make()
+			.pos(4, 12, 0).rot(-130, 0, 0);
+		//
 		mmark.sub = new ArrayList<>();
 		mmark.sub.addAll(Arrays.asList(poly));
 		mmark.posX = mark.pos.x;
 		mmark.posY = mark.pos.y;
 		mmark.posZ = mark.pos.z;
 		mmark.rotY = mark.angle;
+		mmark.rotZ = FMT.MODEL.orient.rect() ? 0 : 180;
 	}
 
 	public void render(){
