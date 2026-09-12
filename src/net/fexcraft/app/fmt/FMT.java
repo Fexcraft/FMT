@@ -29,7 +29,6 @@ import net.fexcraft.lib.frl.GLO;
 import net.fexcraft.lib.frl.Polyhedron;
 import net.fexcraft.lib.frl.gen.Generator;
 import net.fexcraft.lib.frl.gen.Generator.Values;
-import net.fexcraft.lib.tmt.ModelRendererTurbo;
 import org.joml.Vector4f;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.GL;
