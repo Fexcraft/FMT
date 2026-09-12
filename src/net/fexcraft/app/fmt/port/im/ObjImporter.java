@@ -11,9 +11,8 @@ import java.util.Map.Entry;
 import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.polygon.ObjView;
 import net.fexcraft.app.fmt.ui.FileChooser;
-import net.fexcraft.lib.common.math.TexturedPolygon;
-import net.fexcraft.lib.common.utils.ObjParser;
-import net.fexcraft.lib.common.utils.ObjParser.ObjModel;
+import net.fexcraft.lib.frl.Polyhedron;
+import net.fexcraft.lib.frl.gen.FRLObjParser;
 
 import static net.fexcraft.app.fmt.ui.FileChooser.TYPE_OBJ;
 
@@ -24,9 +23,8 @@ public class ObjImporter implements Importer {
 	@Override
 	public String _import(Model model, File file){
 		try{
-			ObjModel omodel = new ObjParser(new FileInputStream(file)).readComments(false).readModel(true).parse();
-			//ArrayList<String> list = new ArrayList<>(omodel.polygons.keySet());
-			for(Entry<String, ArrayList<TexturedPolygon>> entry : omodel.polygons.entrySet()){
+			var map = new FRLObjParser("", new FileInputStream(file)).parse();
+			for(Entry<String, ArrayList<Polyhedron>> entry : map.entrySet()){
 				model.add(null, entry.getKey(), new ObjView(model, entry.getValue()));
 			}
 		}
