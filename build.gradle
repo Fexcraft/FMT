@@ -141,9 +141,7 @@ tasks.register('mainJar', Jar) {
                 "Class-Path": ". " + (configurations.runtimeClasspath.collect { "lib/" + it.getName() }.join(' '))
     }
     from(sourceSets.main.output){
-        exclude 'net/fexcraft/app/fmt/updater/'
-        include 'net/fexcraft/app/fmt/'
-        include 'net/fexcraft/app/json/'
+        include 'net/fexcraft/app/'
         include 'net/fexcraft/lib/'
         include 'log4j2.xml'
     }
@@ -164,9 +162,7 @@ tasks.register('fullJar', Jar) {
 				'Multi-Release': true
 	}
 	from(sourceSets.main.output){
-		include 'net/fexcraft/app/fmt/launch/'
-		include 'net/fexcraft/app/fmt/'
-		include 'net/fexcraft/app/json/'
+		include 'net/fexcraft/app/'
 		include 'net/fexcraft/lib/'
 	}
 	from {
