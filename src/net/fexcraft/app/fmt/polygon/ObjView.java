@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class ObjView extends Polygon {
 
-	private ArrayList<Polyhedron> polis;
+	//private ArrayList<Polyhedron> polis;
 	private RGB rgb = RGB.random();
 	public float scale = 1;
 
@@ -26,7 +26,7 @@ public class ObjView extends Polygon {
 
 	public ObjView(Model model, ArrayList<Polyhedron> value){
 		super(model);
-		polis = value;
+		glm = value.get(0);
 	}
 
 	@Override
@@ -62,14 +62,14 @@ public class ObjView extends Polygon {
 	public void render(float alpha){
 		//DrawMode mode = PolyRenderer.mode();
 		//PolyRenderer.mode(DrawMode.RGBCOLOR);
-		//glm.render();
-		for(Polyhedron poli : polis) poli.render();
+		glm.render();
+		//for(Polyhedron poli : polis) poli.render();
 		//PolyRenderer.mode(mode);
 	}
 	
 	@Override
 	public void recompile(){
-		super.recompile();
+		//super.recompile();
 	}
 	
 	public float getValue(PolygonValue polyval){
