@@ -125,6 +125,15 @@ public class FMT {
 		M4DW.SUPPLIER = M4DImpl::new;
 		Settings.load();
 		Settings.apply(INSTANCE);
+		if(args.length > 0){
+			switch(args[0]){
+				case "jar-to-beo":{
+					ObjToBeo.run(args);
+					System.exit(0);
+				}
+				default: log("Unknown argument: " + args[0] + ", skipping.");
+			}
+		}
 		try{
 			INSTANCE.run();
 		}
