@@ -43,8 +43,6 @@ new File(projectDir, '/src/net/fexcraft/app/fmt/FMT.java').find { line ->
     }
     return false
 }
-sourceCompatibility = 17
-targetCompatibility = 17
 compileJava.options.encoding = 'UTF-8'
 
 //Make this project as a Gradle project
@@ -68,38 +66,38 @@ dependencies {
     implementation 'commons-io:commons-io:2.15.0'
 
     //@formatter:off
-    implementation group: "org.joml", name: "joml", version: joml_version, changing: true
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: log4j_version, changing: false
-    implementation group: 'org.apache.commons', name: 'commons-lang3', version: commons_version, changing: false
-    implementation group: 'org.apache.commons', name: 'commons-collections4', version: commons_collections, changing: false
-    implementation group: 'commons-io', name: 'commons-io', version: '2.18.0', changing: true
-    implementation group: 'com.google.guava', name: 'guava', version: guava_version, changing: false
-    implementation group: 'com.google.code.gson', name: 'gson', version: gson_version, changing: false
+    implementation "org.joml:joml:$joml_version"
+    implementation "org.apache.logging.log4j:log4j-core:$log4j_version"
+    implementation "org.apache.commons:commons-lang3:$commons_version"
+    implementation "org.apache.commons:commons-collections4:$commons_collections"
+    implementation "commons-io:commons-io:2.18.0"
+    implementation "com.google.guava:guava:$guava_version"
+    implementation "com.google.code.gson:gson:$gson_version"
 
-    implementation group: 'org.lwjgl', name: 'lwjgl-stb', version: lwjgl_version, changing: true
-    runtimeOnly group: 'org.lwjgl', name: 'lwjgl-stb', version: lwjgl_version, changing: true, classifier: 'natives-windows'
-    runtimeOnly group: 'org.lwjgl', name: 'lwjgl-stb', version: lwjgl_version, changing: true, classifier: 'natives-linux'
-    runtimeOnly group: 'org.lwjgl', name: 'lwjgl-stb', version: lwjgl_version, changing: true, classifier: 'natives-macos'
+    implementation "org.lwjgl:lwjgl-stb:$lwjgl_version"
+    runtimeOnly "org.lwjgl:lwjgl-stb:$lwjgl_version:natives-windows"
+    runtimeOnly "org.lwjgl:lwjgl-stb:$lwjgl_version:natives-linux"
+    runtimeOnly "org.lwjgl:lwjgl-stb:$lwjgl_version:natives-macos"
 
-    implementation group: 'org.lwjgl', name: 'lwjgl-glfw', version: lwjgl_version, changing: true
-    runtimeOnly group: 'org.lwjgl', name: 'lwjgl-glfw', version: lwjgl_version, changing: true, classifier: 'natives-windows'
-    runtimeOnly group: 'org.lwjgl', name: 'lwjgl-glfw', version: lwjgl_version, changing: true, classifier: 'natives-linux'
-    runtimeOnly group: 'org.lwjgl', name: 'lwjgl-glfw', version: lwjgl_version, changing: true, classifier: 'natives-macos'
+    implementation "org.lwjgl:lwjgl-glfw:$lwjgl_version"
+    runtimeOnly "org.lwjgl:lwjgl-glfw:$lwjgl_version:natives-windows"
+    runtimeOnly "org.lwjgl:lwjgl-glfw:$lwjgl_version:natives-linux"
+    runtimeOnly "org.lwjgl:lwjgl-glfw:$lwjgl_version:natives-macos"
 
-    implementation group: 'org.lwjgl', name: 'lwjgl-opengl', version: lwjgl_version, changing: true
-    implementation group: 'org.lwjgl', name: 'lwjgl-opengl', version: lwjgl_version, changing: true, classifier: 'natives-windows'
-    implementation group: 'org.lwjgl', name: 'lwjgl-opengl', version: lwjgl_version, changing: true, classifier: 'natives-linux'
-    implementation group: 'org.lwjgl', name: 'lwjgl-opengl', version: lwjgl_version, changing: true, classifier: 'natives-macos'
+    implementation "org.lwjgl:lwjgl-opengl:$lwjgl_version"
+    implementation "org.lwjgl:lwjgl-opengl:$lwjgl_version:natives-windows"
+    implementation "org.lwjgl:lwjgl-opengl:$lwjgl_version:natives-linux"
+    implementation "org.lwjgl:lwjgl-opengl:$lwjgl_version:natives-macos"
 
-    implementation group: 'org.lwjgl', name: 'lwjgl', version: lwjgl_version, changing: true
-    runtimeOnly group: 'org.lwjgl', name: 'lwjgl', version: lwjgl_version, changing: true, classifier: 'natives-windows'
-    runtimeOnly group: 'org.lwjgl', name: 'lwjgl', version: lwjgl_version, changing: true, classifier: 'natives-linux'
-    runtimeOnly group: 'org.lwjgl', name: 'lwjgl', version: lwjgl_version, changing: true, classifier: 'natives-macos'
+    implementation "org.lwjgl:lwjgl:$lwjgl_version"
+    runtimeOnly "org.lwjgl:lwjgl:$lwjgl_version:natives-windows"
+    runtimeOnly "org.lwjgl:lwjgl:$lwjgl_version:natives-linux"
+    runtimeOnly "org.lwjgl:lwjgl:$lwjgl_version:natives-macos"
     
-    implementation group: 'org.lwjgl', name: 'lwjgl-tinyfd', version: lwjgl_version, changing: true
-    runtimeOnly group: 'org.lwjgl', name: 'lwjgl-tinyfd', version: lwjgl_version, changing: true, classifier: 'natives-windows'
-    runtimeOnly group: 'org.lwjgl', name: 'lwjgl-tinyfd', version: lwjgl_version, changing: true, classifier: 'natives-linux'
-    runtimeOnly group: 'org.lwjgl', name: 'lwjgl-tinyfd', version: lwjgl_version, changing: true, classifier: 'natives-macos'
+    implementation "org.lwjgl:lwjgl-tinyfd:$lwjgl_version"
+    runtimeOnly "org.lwjgl:lwjgl-tinyfd:$lwjgl_version:natives-windows"
+    runtimeOnly "org.lwjgl:lwjgl-tinyfd:$lwjgl_version:natives-linux"
+    runtimeOnly "org.lwjgl:lwjgl-tinyfd:$lwjgl_version:natives-macos"
     
     //implementation group: 'org.codehaus.groovy', name: 'groovy-all', version: '3.0.7', changing: true
     //runtimeOnly group: 'org.codehaus.groovy', name: 'groovy-all', version: '3.0.7', changing: true
@@ -199,10 +197,10 @@ tasks.register('copyForUpload') {
         from "build/libs/FMT.jar"
         into "upload/"
     }
-    copy {
+    /*copy {
         from "build/libs/FMTI.jar"
         into "upload/"
-    }
+    }*/
     copy {
         from "build/libs/FMT_Updater.jar"
         into "upload/"
@@ -249,7 +247,7 @@ tasks.register('compileCatalog') {
 }
 
 build.finalizedBy(mainJar)
-build.finalizedBy(fullJar)
+//build.finalizedBy(fullJar)
 build.finalizedBy(launcherJar)
 build.finalizedBy(copyForUpload)
 build.finalizedBy(compileCatalog)
