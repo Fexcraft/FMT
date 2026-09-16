@@ -638,6 +638,7 @@ setting.discord.reset_on_new=Reset timer on new Model
 setting.exporter-fmf.modeldata=Include ModelData?
 setting.exporter-fmf.group_as_single_polygon=Group as Single Polygon
 setting.exporter-bob.group_as_single_polygon=Group as Single Polygon
+setting.exporter-bob.normal_mode=Vertex Normals Mode
 # Settings / Exporter PNG
 setting.exporter-png.textured=Export Textured?
 setting.exporter-png.group=Texture Group
