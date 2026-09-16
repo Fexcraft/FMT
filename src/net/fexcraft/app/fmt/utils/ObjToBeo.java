@@ -52,7 +52,7 @@ public class ObjToBeo {
 		ZipOutputStream zop = new ZipOutputStream(new FileOutputStream(con));
 		zip.stream().forEach(elm -> {
 			try{
-				BObjExporter.INSTANCE.setNormals(true);
+				BObjExporter.INSTANCE.setVertexNormalsOn();
 				if(elm.getName().endsWith(".obj")){
 					Logging.log("Converting: " + elm.getName());
 					Map<String, ArrayList<Polyhedron>> map = new FRLObjParser(null, zip.getInputStream(elm))
