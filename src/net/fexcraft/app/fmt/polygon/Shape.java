@@ -8,7 +8,6 @@ public enum Shape {
 	SPHERE("sphere"),
 	OBJECT("object"),
 	MARKER("marker", "rect"),
-	VOXEL("voxel"),
 	BOUNDING_BOX("rect"),
 	RECT_CURVE("rect", "curve"),
 	CYL_CURVE("cylinder"),
@@ -47,10 +46,6 @@ public enum Shape {
 	public boolean isMarker(){
 		return this == MARKER;
 	}
-	
-	public boolean isVoxel(){
-		return this == VOXEL;
-	}
 
 	public boolean isBoundingBox(){
 		return this == BOUNDING_BOX;
@@ -78,7 +73,6 @@ public enum Shape {
 			case "sphere": return SPHERE;
 			case "object": return OBJECT;
 			case "marker": return MARKER;
-			case "voxel": return VOXEL;
 			case "bb":
 			case "boundingbox": 
 			case "bounding_box": return BOUNDING_BOX;
@@ -104,7 +98,7 @@ public enum Shape {
 	}
 
 	public static Shape[] getSupportedValues(){
-		return new Shape[]{ BOX, SHAPEBOX, CYLINDER, SPHERE, MARKER, VOXEL, BOUNDING_BOX };
+		return new Shape[]{ BOX, SHAPEBOX, CYLINDER, SPHERE, MARKER, BOUNDING_BOX };
 	}
 
 	public boolean isTexturable(){
