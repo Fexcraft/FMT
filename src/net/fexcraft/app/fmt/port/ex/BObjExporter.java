@@ -31,7 +31,7 @@ public class BObjExporter implements Exporter {
 	private static final List<String> categories = Arrays.asList("model");
 	private static final ArrayList<Setting<?>> settings = new ArrayList<>();
 	//
-	public static final int FORMAT = 1;
+	public static final int FORMAT = 2;
 	private static final int END = 0;
 	private static final int NAME = 1;
 	private static final int AUTHOR = 2;
@@ -44,13 +44,14 @@ public class BObjExporter implements Exporter {
 	private static final int UV = 5;
 	private static final int NORMAL = 6;
 	private static final int FACE = 7;
+	private static final int SETTING = 8;
 	private ArrayList<V3D> vecs = new ArrayList<>();
 	private ArrayList<Vector2f> uvs = new ArrayList<>();
 	private ArrayList<V3F> nor = new ArrayList<>();
 
 	public BObjExporter(JsonMap map){
 		settings.add(new Setting<>("group_as_single_polygon", true, "exporter-bob"));
-		settings.add(new Setting<>("with_normals", false, "exporter-bob"));
+		settings.add(new Setting<>("normal_mode", 0, "exporter-bob"));
 		INSTANCE = this;
 	}
 
@@ -99,12 +100,13 @@ public class BObjExporter implements Exporter {
 
 	public String writeModel(Model model, OutputStream stream, List<Group> groups){
 		boolean sing = settings.get(0).bool();
-		boolean norm = settings.get(1).bool();
+		int nmode = settings.get(1).value();
+		nmode = nmode < 0 ? 0 : nmode > 2 ? 2 : nmode;
 		vecs.clear();
 		uvs.clear();
 		nor.clear();
 		try{
-			stream.write(new byte[]{ 6, 2, 15, norm ? (byte)2 : FORMAT });
+			stream.write(new byte[]{ 6, 2, 15, FORMAT });
 			if(model.name != null){
 				write(stream, NAME, model.name);
 			}
@@ -112,6 +114,11 @@ public class BObjExporter implements Exporter {
 				write(stream, AUTHOR, str);
 			}
 			writeIntegers(stream, TEXSIZE, model.texgroup.width, model.texgroup.height);
+			if(nmode > 0){
+				stream.write(SETTING);
+				stream.write(NORMAL);
+				stream.write(nmode);
+			}
 			for(Group group : groups){
 				if(group.stream().filter(poly -> valid(poly.getShape())).count() == 0) continue;
 				write(stream, GROUP, group.id);
@@ -126,7 +133,7 @@ public class BObjExporter implements Exporter {
 						if(!valid(polygon.getShape())) continue;
 						Polyhedron poly = polygon.glm;
 						rot.setDegrees(-polygon.rot.y, -polygon.rot.z, -polygon.rot.x);
-						fillPoly(stream, poly, rot, norm);
+						fillPoly(stream, poly, rot, nmode);
 					}
 					stream.write(END);
 				}
@@ -143,7 +150,7 @@ public class BObjExporter implements Exporter {
 						if(nn(polygon.rot)){
 							writeVector(stream, ROTATION, polygon.rot);
 						}
-						fillPoly(stream, polygon.glm, null, norm);
+						fillPoly(stream, polygon.glm, null, nmode);
 						stream.write(END);
 					}
 				}
@@ -162,13 +169,13 @@ public class BObjExporter implements Exporter {
 		return "export.complete";
 	}
 
-	private void fillPoly(OutputStream stream, Polyhedron poly, M4DW rot, boolean norm) throws IOException {
+	private void fillPoly(OutputStream stream, Polyhedron poly, M4DW rot, int nmode) throws IOException {
 		int len;
 		for(net.fexcraft.lib.frl.Polygon p : poly.polygons){
 			len = p.vertices.length;
 			if(len < 2) continue;
 			if(p.vertices[0].norm == null) p.genNorm();
-			int[] ids = new int[len + len + 1 + (norm ? len : 0)];
+			int[] ids = new int[len + len + 1 + (nmode == 0 ? 0 : nmode == 1 ? len : 1)];
 			ids[0] = len;
 			for(int v = 0; v < len; v++){
 				V3D vec = new MV3D(p.vertices[v].vector.x, p.vertices[v].vector.y, p.vertices[v].vector.z);
@@ -186,7 +193,7 @@ public class BObjExporter implements Exporter {
 					ids[v + len + 1] = uvs.size();
 					uvs.add(uv);
 				}
-				if(norm){
+				if(nmode == 1){
 					V3F nr = p.vertices[v].norm;
 					ids[v + len + len + 1] = nor.indexOf(nr);
 					if(ids[v + len + len + 1] < 0){
@@ -194,6 +201,15 @@ public class BObjExporter implements Exporter {
 						ids[v + len + len + 1] = nor.size();
 						nor.add(nr);
 					}
+				}
+			}
+			if(nmode == 2){
+				V3F nr = p.vertices[0].norm;
+				ids[ids.length - 1] = nor.indexOf(nr);
+				if(ids[ids.length - 1] < 0){
+					writeFloats(stream, NORMAL, nr.x, nr.y, nr.z);
+					ids[ids.length - 1] = nor.size();
+					nor.add(nr);
 				}
 			}
 			writeIntegers(stream, FACE, ids);
@@ -234,8 +250,8 @@ public class BObjExporter implements Exporter {
 		stream.write(buffer.array());
 	}
 
-	public void setNormals(boolean bool){
-		settings.get(1).value(bool);
+	public void setVertexNormalsOn(){
+		settings.get(1).value(1);
 	}
 
 }
