@@ -384,6 +384,7 @@ public class FMT {
 		PolyRenderer.updateLightState();
 		if(Settings.CUBE.value){
 			TextureManager.bind("demo");
+			center_cube.posY = FMT.MODEL.orient.rect() ? -16 : 0;
 			center_cube.render();
 		}
 		if(Settings.FLOOR.value){
@@ -415,7 +416,7 @@ public class FMT {
 		PolyRenderer.setHelper(null);
 	}
 
-	public static final Polyhedron center_cube = new Generator(Generator.Type.CUBOID)
+	public static final Polyhedron center_cube = new Generator(Generator.Type.CUBOID).set(TEXTURE_WIDTH, 16f).set(TEXTURE_HEIGHT, 16f)
 		.set(OFF_X, -8f).set(OFF_Z, -8f).set(Values.WIDTH, 16f).set(Values.HEIGHT, 16f).set(DEPTH, 16f).make();
 	public static final Polyhedron floor = new Generator(Generator.Type.CUBOID)
 		.set(OFF_X, -256f).set(OFF_Z, -256f).set(Values.WIDTH, 512f).set(Values.HEIGHT, 0.01f).set(DEPTH, 512f)
