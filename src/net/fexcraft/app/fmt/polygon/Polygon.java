@@ -210,13 +210,10 @@ public abstract class Polygon {
 			case OBJECT: return new PolyObject(model, obj);
 			case SHAPEBOX: return new Shapebox(model, obj);
 			case SPHERE: return new Sphere(model, obj);
-			case VOXEL:
-				break;
 			case RECT_CURVE: return new RectCurve(model, obj);
 			case MESH_CURVE: return new CurvedMesh(model, obj);
 			default: return null;
 		}
-		return null;
 	}
 
 	public static Polygon from(Model model, Shape shape){
@@ -228,13 +225,10 @@ public abstract class Polygon {
 			case OBJECT: return new PolyObject(model);
 			case SHAPEBOX: return new Shapebox(model);
 			case SPHERE: return new Sphere(model);
-			case VOXEL:
-				break;
 			case RECT_CURVE: return new RectCurve(model);
 			case MESH_CURVE: return new CurvedMesh(model);
 			default: return null;
 		}
-		return null;
 	}
 
 	public Polygon copy(Polygon poly){
@@ -446,12 +440,8 @@ public abstract class Polygon {
 			case OBJECT: return copy(new PolyObject(model));
 			case SHAPEBOX: return copy(new Shapebox(model));
 			case SPHERE: return copy(new Sphere(model));
-			case VOXEL:
-				//TODO
-				break;
 			default: return null;
 		}
-		return null;
 	}
 
 	public Face[] getUVFaces(){
