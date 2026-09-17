@@ -37,6 +37,7 @@ public class PreviewHandler {
 	public static Model load(File file, Importer porter, JsonMap map){
 		Model model = new Model(file, map.getString("name", file.getName()));
 		model.helper = true;
+		model.genDefTexGroup();
 		if(!model.name.startsWith("import/")) model.name = "import/" + model.name;
 		porter._import(model, file);
 		add(model);
