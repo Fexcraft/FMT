@@ -52,7 +52,6 @@ public class ObjToBeo {
 		ZipOutputStream zop = new ZipOutputStream(new FileOutputStream(con));
 		zip.stream().forEach(elm -> {
 			try{
-				BObjExporter.INSTANCE.setVertexNormalsOn();
 				if(elm.getName().endsWith(".obj")){
 					Logging.log("Converting: " + elm.getName());
 					Map<String, ArrayList<Polyhedron>> map = new FRLObjParser(null, zip.getInputStream(elm))
@@ -60,7 +59,9 @@ public class ObjToBeo {
 					Model temp = new Model(null, elm.getName().substring(elm.getName().lastIndexOf("/") + 1, elm.getName().length() - 4));
 					for(Map.Entry<String, ArrayList<Polyhedron>> entry : map.entrySet()){
 						temp.addGroup(null, entry.getKey());
-						temp.get(entry.getKey()).add(new ObjView(temp, entry.getValue()));
+						for(Polyhedron hedron : entry.getValue()){
+							temp.get(entry.getKey()).add(new ObjView(temp, hedron));
+						}
 					}
 					zop.putNextEntry(new ZipEntry(elm.getName().substring(0, elm.getName().length() - 3) + "beo"));
 					BObjExporter.INSTANCE.writeModel(temp, zop, temp.allgroups());
