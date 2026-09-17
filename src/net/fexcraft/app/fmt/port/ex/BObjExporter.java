@@ -45,9 +45,6 @@ public class BObjExporter implements Exporter {
 	private static final int NORMAL = 6;
 	private static final int FACE = 7;
 	private static final int SETTING = 8;
-	private ArrayList<V3D> vecs = new ArrayList<>();
-	private ArrayList<Vector2f> uvs = new ArrayList<>();
-	private ArrayList<V3F> nor = new ArrayList<>();
 
 	public BObjExporter(){
 		settings.add(new Setting<>("group_as_single_polygon", true, "exporter-bob"));
@@ -99,12 +96,10 @@ public class BObjExporter implements Exporter {
 	}
 
 	public String writeModel(Model model, OutputStream stream, List<Group> groups){
+		WriteData wdata = new WriteData();
 		boolean sing = settings.get(0).bool();
-		int nmode = settings.get(1).value();
-		nmode = nmode < 0 ? 0 : nmode > 2 ? 2 : nmode;
-		vecs.clear();
-		uvs.clear();
-		nor.clear();
+		wdata.nmode = settings.get(1).value();
+		wdata.nmode = wdata.nmode < 0 ? 0 : wdata.nmode > 2 ? 2 : wdata.nmode;
 		try{
 			stream.write(new byte[]{ 6, 2, 15, FORMAT });
 			if(model.name != null){
@@ -114,10 +109,10 @@ public class BObjExporter implements Exporter {
 				write(stream, AUTHOR, str);
 			}
 			writeIntegers(stream, TEXSIZE, model.texgroup.width, model.texgroup.height);
-			if(nmode > 0){
+			if(wdata.nmode > 0){
 				stream.write(SETTING);
 				stream.write(NORMAL);
-				stream.write(nmode);
+				stream.write(wdata.nmode);
 			}
 			for(Group group : groups){
 				if(group.stream().filter(poly -> valid(poly.getShape())).count() == 0) continue;
@@ -133,7 +128,7 @@ public class BObjExporter implements Exporter {
 						if(!valid(polygon.getShape())) continue;
 						Polyhedron poly = polygon.glm;
 						rot.setDegrees(-polygon.rot.y, -polygon.rot.z, -polygon.rot.x);
-						fillPoly(stream, poly, rot, nmode);
+						fillPoly(stream, poly, rot, wdata);
 					}
 					stream.write(END);
 				}
@@ -150,7 +145,7 @@ public class BObjExporter implements Exporter {
 						if(nn(polygon.rot)){
 							writeVector(stream, ROTATION, polygon.rot);
 						}
-						fillPoly(stream, polygon.glm, null, nmode);
+						fillPoly(stream, polygon.glm, null, wdata);
 						stream.write(END);
 					}
 				}
@@ -163,53 +158,50 @@ public class BObjExporter implements Exporter {
 			log(e);
 			return "Error:" + e.getMessage();
 		}
-		vecs.clear();
-		uvs.clear();
-		nor.clear();
 		return "export.complete";
 	}
 
-	private void fillPoly(OutputStream stream, Polyhedron poly, M4DW rot, int nmode) throws IOException {
+	private void fillPoly(OutputStream stream, Polyhedron poly, M4DW rot, WriteData wdata) throws IOException {
 		int len;
 		for(net.fexcraft.lib.frl.Polygon p : poly.polygons){
 			len = p.vertices.length;
 			if(len < 2) continue;
 			if(p.vertices[0].norm == null) p.genNorm();
-			int[] ids = new int[len + len + 1 + (nmode == 0 ? 0 : nmode == 1 ? len : 1)];
+			int[] ids = new int[len + len + 1 + (wdata.nmode == 0 ? 0 : wdata.nmode == 1 ? len : 1)];
 			ids[0] = len;
 			for(int v = 0; v < len; v++){
 				V3D vec = new MV3D(p.vertices[v].vector.x, p.vertices[v].vector.y, p.vertices[v].vector.z);
 				if(rot != null) rot.rotate(vec, vec).add(poly.posX, poly.posY, poly.posZ);
-				ids[v + 1] = vecs.indexOf(vec);
+				ids[v + 1] = wdata.vecs.indexOf(vec);
 				if(ids[v + 1] < 0){
 					writeFloats(stream, VECTOR, (float)vec.x, (float)vec.y, (float)vec.z);
-					ids[v + 1] = vecs.size();
-					vecs.add(vec);
+					ids[v + 1] = wdata.vecs.size();
+					wdata.vecs.add(vec);
 				}
 				Vector2f uv = new Vector2f(p.vertices[v].u, p.vertices[v].v);
-				ids[v + len + 1] = uvs.indexOf(uv);
+				ids[v + len + 1] = wdata.uvs.indexOf(uv);
 				if(ids[v + len + 1] < 0){
 					writeFloats(stream, UV, uv.x, uv.y);
-					ids[v + len + 1] = uvs.size();
-					uvs.add(uv);
+					ids[v + len + 1] = wdata.uvs.size();
+					wdata.uvs.add(uv);
 				}
-				if(nmode == 1){
+				if(wdata.nmode == 1){
 					V3F nr = p.vertices[v].norm;
-					ids[v + len + len + 1] = nor.indexOf(nr);
+					ids[v + len + len + 1] = wdata.nor.indexOf(nr);
 					if(ids[v + len + len + 1] < 0){
 						writeFloats(stream, NORMAL, nr.x, nr.y, nr.z);
-						ids[v + len + len + 1] = nor.size();
-						nor.add(nr);
+						ids[v + len + len + 1] = wdata.nor.size();
+						wdata.nor.add(nr);
 					}
 				}
 			}
-			if(nmode == 2){
+			if(wdata.nmode == 2){
 				V3F nr = p.vertices[0].norm;
-				ids[ids.length - 1] = nor.indexOf(nr);
+				ids[ids.length - 1] = wdata.nor.indexOf(nr);
 				if(ids[ids.length - 1] < 0){
 					writeFloats(stream, NORMAL, nr.x, nr.y, nr.z);
-					ids[ids.length - 1] = nor.size();
-					nor.add(nr);
+					ids[ids.length - 1] = wdata.nor.size();
+					wdata.nor.add(nr);
 				}
 			}
 			writeIntegers(stream, FACE, ids);
@@ -248,6 +240,15 @@ public class BObjExporter implements Exporter {
 		for(float f : flts) buffer.putFloat(f);
 		stream.write(code);
 		stream.write(buffer.array());
+	}
+
+	public static class WriteData {
+
+		protected ArrayList<V3D> vecs = new ArrayList<>();
+		protected ArrayList<Vector2f> uvs = new ArrayList<>();
+		protected ArrayList<V3F> nor = new ArrayList<>();
+		protected int nmode = 0;
+
 	}
 
 }
