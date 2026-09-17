@@ -250,8 +250,4 @@ public class BObjExporter implements Exporter {
 		stream.write(buffer.array());
 	}
 
-	public void setVertexNormalsOn(){
-		settings.get(1).value(1);
-	}
-
 }
