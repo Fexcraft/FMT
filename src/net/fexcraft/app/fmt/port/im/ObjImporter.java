@@ -25,7 +25,9 @@ public class ObjImporter implements Importer {
 		try{
 			var map = new FRLObjParser("", new FileInputStream(file)).parse();
 			for(Entry<String, ArrayList<Polyhedron>> entry : map.entrySet()){
-				model.add(null, entry.getKey(), new ObjView(model, entry.getValue()));
+				for(Polyhedron hedron : entry.getValue()){
+					model.add(null, entry.getKey(), new ObjView(model, hedron));
+				}
 			}
 		}
 		catch(FileNotFoundException e){
