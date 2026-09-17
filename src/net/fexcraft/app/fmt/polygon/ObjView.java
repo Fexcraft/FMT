@@ -1,5 +1,6 @@
 package net.fexcraft.app.fmt.polygon;
 
+import net.fexcraft.app.fmt.polygon.PolyRenderer.DrawMode;
 import net.fexcraft.app.fmt.polygon.uv.Face;
 import net.fexcraft.app.fmt.polygon.uv.NoFace;
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
@@ -24,9 +25,9 @@ public class ObjView extends Polygon {
 		scale = obj.get("scale", scale);
 	}
 
-	public ObjView(Model model, ArrayList<Polyhedron> value){
+	public ObjView(Model model, Polyhedron hed){
 		super(model);
-		glm = value.get(0);
+		glm = hed;
 	}
 
 	@Override
@@ -60,16 +61,20 @@ public class ObjView extends Polygon {
 	
 	@Override
 	public void render(float alpha){
-		//DrawMode mode = PolyRenderer.mode();
-		//PolyRenderer.mode(DrawMode.RGBCOLOR);
+		DrawMode mode = PolyRenderer.mode();
+		PolyRenderer.mode(DrawMode.RGBCOLOR);
+		glm.render();
+		PolyRenderer.mode(DrawMode.LINES);
 		glm.render();
 		//for(Polyhedron poli : polis) poli.render();
-		//PolyRenderer.mode(mode);
+		PolyRenderer.mode(mode);
 	}
 	
 	@Override
 	public void recompile(){
 		//super.recompile();
+		GLObject gl = glm.glObj();
+		gl.polycolor = RGB.random().toFloatArray();
 	}
 	
 	public float getValue(PolygonValue polyval){
