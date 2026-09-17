@@ -50,13 +50,6 @@ eclipse.project {
     natures 'org.springsource.ide.eclipse.gradle.core.nature'
 }
 
-repositories {
-    mavenCentral()
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-    maven { url "https://raw.github.com/SpinyOwl/repo/releases" }
-    maven { url 'https://jitpack.io' }
-}
-
 dependencies {
     // implementation fileTree(dir: 'libs', include: '*.jar')
 
@@ -101,7 +94,7 @@ dependencies {
 
     //@formatter:on
 
-    //implementation 'com.github.JnCrMx:discord-game-sdk4j:master-SNAPSHOT'
+    implementation 'com.github.JnCrMx:discord-game-sdk4j:v1.0.0'
 
     implementation group: 'io.netty', name: 'netty-all', version: '4.2.15.Final'
 }
