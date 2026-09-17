@@ -13,6 +13,8 @@ import net.fexcraft.mod.uni.IDL;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
+import java.util.TreeMap;
+
 import static net.fexcraft.app.fmt.settings.Settings.TRIANGULATION_L;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
@@ -28,6 +30,7 @@ public class PolyRenderer extends Renderer {
 	private static Matrix4f matrix1 = new Matrix4f();
 	private static DrawMode MODE = DrawMode.TEXTURED;
 	public static ShaderManager.ShaderProgram program;
+	public static TreeMap<Integer, int[]> VERTEX_ORDERS = new TreeMap<>();
 	public static final float[] LINECOLOR = { 0, 0, 0, 1}, EMPTY = { 0, 0, 0, 0 }, SELCOLOR = { 1, 1, 0, 1 };
 	private static final Vector3f GIF_AXIS = new Vector3f(0, 1, 0);
 	private boolean subpoly;
@@ -263,6 +266,7 @@ public class PolyRenderer extends Renderer {
 	}
 
 	private int[] genOrder(int length, boolean lines){
+		if(VERTEX_ORDERS.containsKey(lines ? -length : length)) return VERTEX_ORDERS.get(lines ? -length : length);
 		int[] order = new int[lines ? length * 2 : (length - 2) * 3];
 		int j = 0;
 		if(lines){
@@ -280,6 +284,7 @@ public class PolyRenderer extends Renderer {
 				order[j++] = i;
 			}
 		}
+		VERTEX_ORDERS.put(lines ? -length : length, order);
 		return order;
 	}
 
