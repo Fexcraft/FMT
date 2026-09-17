@@ -27,7 +27,7 @@ public class PNGExporter implements Exporter {
 	private static final ArrayList<Setting<?>> settings = new ArrayList<>();
 	private Texture image;
 
-	public PNGExporter(JsonMap map){
+	public PNGExporter(){
 		settings.add(new Setting<>("textured", false, "exporter-png"));
 		settings.add(new StringArraySetting("group", "", "exporter-png"));
 	}

@@ -39,7 +39,7 @@ public class FMFExporter implements Exporter {
 	private static M4DW axe0 = M4DW.create();
 	private static M4DW axe1 = M4DW.create();
 
-	public FMFExporter(JsonMap map){
+	public FMFExporter(){
 		settings.add(new Setting<>("modeldata", true, "exporter-fmf"));
 		settings.add(new Setting<>("group_as_single_polygon", true, "exporter-fmf"));
 		axe0.setDegrees(0, 180, 0);

@@ -237,8 +237,8 @@ public class Settings {
 			for(Setting<?> set : group.getValue().values()) set.load(gmap);
 		}
 		//
-		ExportManager.init(map);
-		ImportManager.init(map);
+		ExportManager.init();
+		ImportManager.init();
 		TexturePainter.CHANNELS = new RGB[PAINTER_CHANNELS.value];
 		for(Integer i = 0; i < PAINTER_CHANNELS.value; i++) TexturePainter.CHANNELS[i] = RGB.WHITE.copy();
 		//

@@ -49,7 +49,7 @@ public class BObjExporter implements Exporter {
 	private ArrayList<Vector2f> uvs = new ArrayList<>();
 	private ArrayList<V3F> nor = new ArrayList<>();
 
-	public BObjExporter(JsonMap map){
+	public BObjExporter(){
 		settings.add(new Setting<>("group_as_single_polygon", true, "exporter-bob"));
 		settings.add(new Setting<>("normal_mode", 0, "exporter-bob"));
 		INSTANCE = this;

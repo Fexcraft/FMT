@@ -23,7 +23,7 @@ public class ImportManager {
 	private static final ArrayList<Importer> IMPORTERS = new ArrayList<>();
 	private static final ArrayList<String> CATEGORIES = new ArrayList<>();
 
-	public static void init(JsonMap map){
+	public static void init(){
 		IMPORTERS.clear();
 		CATEGORIES.clear();
 		addImporter(new MTBImporter());

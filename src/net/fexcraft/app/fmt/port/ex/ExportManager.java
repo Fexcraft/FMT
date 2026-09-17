@@ -20,12 +20,12 @@ public class ExportManager {
 	private static final ArrayList<Exporter> EXPORTERS = new ArrayList<>();
 	private static final ArrayList<String> CATEGORIES = new ArrayList<>();
 
-	public static void init(JsonMap map){
+	public static void init(){
 		EXPORTERS.clear();
 		CATEGORIES.clear();
-		addExporter(new FMFExporter(map));
-		addExporter(new BObjExporter(map));
-		addExporter(new PNGExporter(map));
+		addExporter(new FMFExporter());
+		addExporter(new BObjExporter());
+		addExporter(new PNGExporter());
 		addExporter(new ModelDataExporter());
 		addExporter(new AABBExporter());
 		addExporter(new ObjExporter());
