@@ -34,7 +34,7 @@ public class GGR {
     public boolean zoomed;
     //
 	private static int def_view, def_proj;
-	private static Matrix4f view, projection;
+	protected static Matrix4f view, projection;
 	private float fov = 45f;
 	public float hor, ver;
 	private Vector3f dir = new Vector3f(), right = new Vector3f();
