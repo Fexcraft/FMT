@@ -52,9 +52,9 @@ public class GGR {
 
 	public void apply(){
         dir = new Vector3f(
-            (float)Math.cos(ver) * (float)Math.sin(hor),
+            /*(float)Math.cos(ver) **/ (float)Math.sin(hor),
             (float)Math.sin(ver),
-            (float)Math.cos(ver) * (float)Math.cos(hor)
+            /*(float)Math.cos(ver) **/ (float)Math.cos(hor)
         );
         right = new Vector3f(
 			(float)Math.sin(hor - 3.14f / 2.0f),
