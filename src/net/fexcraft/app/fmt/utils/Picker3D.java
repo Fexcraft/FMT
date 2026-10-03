@@ -4,6 +4,7 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Pivot;
 import net.fexcraft.app.fmt.polygon.Polygon;
+import net.fexcraft.app.fmt.texture.TextureGroup;
 import net.fexcraft.lib.common.math.V3D;
 import net.fexcraft.lib.common.math.V3F;
 import net.fexcraft.lib.frl.Vertex;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import static net.fexcraft.app.fmt.polygon.PolyRenderer.axis_x;
 import static net.fexcraft.app.fmt.polygon.PolyRenderer.axis_y;
 import static net.fexcraft.app.fmt.polygon.PolyRenderer.axis_z;
+import static net.fexcraft.app.fmt.texture.TexturePainter.getCurrentColor;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -44,7 +46,23 @@ public class Picker3D {
 			if(res == null) continue;
 			if(res.dis < rsu.dis) rsu = res;
 		}
-		if(rsu.triangle != null) FMT.MODEL.select(rsu.triangle().poly);
+		if(rsu.triangle != null){
+			//FMT.MODEL.select(rsu.triangle().poly);
+			Group group = rsu.triangle.poly.group();
+			TextureGroup tex = group.texgroup == null ? group.model.texgroup : group.texgroup;
+			if(tex == null) return;
+			V3F v0 = rsu.triangle.v0.sub(rsu.vec);
+			V3F v1 = rsu.triangle.v1.sub(rsu.vec);
+			V3F v2 = rsu.triangle.v2.sub(rsu.vec);
+			float m = rsu.triangle.v0.sub(rsu.triangle.v1).cross(rsu.triangle.v0.sub(rsu.triangle.v2)).length();
+			float x = v1.cross(v2).length() / m;
+			float y = v2.cross(v0).length() / m;
+			float z = v0.cross(v1).length() / m;
+			float u = rsu.triangle.x0.u * x + rsu.triangle.x1.u * y + rsu.triangle.x2.u * z;
+			float v = rsu.triangle.x0.v * x + rsu.triangle.x1.v * y + rsu.triangle.x2.v * z;
+			tex.texture.set((int)(u * tex.width), (int)(v * tex.height), getCurrentColor());
+			tex.texture.rebind();
+		}
 	}
 
 	/** https://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm */
@@ -92,15 +110,26 @@ public class Picker3D {
 		}
 	}
 
-	public static record Triangle(Polygon poly, V3F v0, V3F v1, V3F v2){
+	public static class Triangle {
+
+		public Polygon poly;
+		public Vertex x0, x1, x2;
+		public V3F v0, v1, v2;
+
+		public Triangle(Polygon poly, Vertex x0, Vertex x1, Vertex x2){
+			this.poly = poly;
+			this.v0 = (this.x0 = x0).vector.copy();
+			this.v1 = (this.x1 = x1).vector.copy();
+			this.v2 = (this.x2 = x2).vector.copy();
+		}
 
 		public Triangle(Polygon poly, Vertex[] verts){
-			this(poly, verts[0].vector.copy(), verts[1].vector.copy(), verts[2].vector.copy());
+			this(poly, verts[0], verts[1], verts[2]);
 			transform();
 		}
 
 		public Triangle(Polygon poly, Vertex[] verts, boolean qi){
-			this(poly, verts[qi ? 3 : 0].vector.copy(), verts[qi ? 0 : 1].vector.copy(), verts[2].vector.copy());
+			this(poly, verts[qi ? 3 : 0], verts[qi ? 0 : 1], verts[2]);
 			transform();
 		}
 
