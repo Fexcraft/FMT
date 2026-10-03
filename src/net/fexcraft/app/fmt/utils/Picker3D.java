@@ -24,7 +24,7 @@ public class Picker3D {
 	private static Pivot PIVOT = null;
 	private static Matrix4f matrix0 = new Matrix4f();
 	private static ArrayList<Triangle> triangles = new ArrayList<>();
-	private static final float E = 0.0000001f;
+	private static final float E = Math.ulp(1f);
 	private static V3F pos = new V3F(), dir;
 
 	public static void pick(){
@@ -37,7 +37,7 @@ public class Picker3D {
 		ray.w = 0f;
 		GGR.view.invert(mat);
 		ray.mul(mat);
-		dir = pos.add(new V3F(ray.x, ray.y, ray.z).norm().scale(1000));
+		dir = /*pos.add(*/new V3F(ray.x, ray.y, ray.z).norm().scale(1000)/*)*/;
 		Result res, rsu = new Result(null, Float.MAX_VALUE, null);
 		for(Triangle tri : triangles){
 			res = intersects(tri);
@@ -52,8 +52,7 @@ public class Picker3D {
 		V3F e0 = tri.v1.sub(tri.v0);
 		V3F e1 = tri.v2.sub(tri.v0);
 		V3F h = dir.cross(e1);
-		double a;
-		a = e0.dot(h);
+		double a = e0.dot(h);
 		if(a > -E && a < E) return null;
 		double f = 1f / a;
 		V3F s = pos.sub(tri.v0);
@@ -62,9 +61,9 @@ public class Picker3D {
 		V3F q = s.cross(e0);
 		double v = f * dir.dot(q);
 		if(v < 0f || u + v > 1f) return null;
-		float t = (float)(f * e1.dot(q));
+		double t = f * e1.dot(q);
 		if(t > E){
-			return new Result(dir.scale(t).add(pos), t, tri);
+			return new Result(dir.scale((float)t).add(pos), t, tri);
 		}
 		return null;
 	}
@@ -122,7 +121,7 @@ public class Picker3D {
 
 	}
 
-	public static record Result(V3F vec, float dis, Triangle triangle){
+	public static record Result(V3F vec, double dis, Triangle triangle){
 
 		@Override
 		public String toString(){
