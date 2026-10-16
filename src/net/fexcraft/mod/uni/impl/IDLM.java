@@ -16,9 +16,11 @@ public class IDLM implements IDLManager {
 
 	public static class IDLL implements IDL {
 
-		private String sp, id;
+		private String nm, sp, id;
 
 		public IDLL(String idl){
+			String[] n = idl.split(";");
+			nm = n.length > 0 ? n[0] : "unnamed";
 			String[] a = idl.split(":");
 			if(a.length < 1){
 				Logging.log("WARNING, invalid IDL: " + idl);
@@ -41,6 +43,11 @@ public class IDLM implements IDLManager {
 		@Override
 		public String id(){
 			return id;
+		}
+
+		@Override
+		public String name(){
+			return nm;
 		}
 
 	}
