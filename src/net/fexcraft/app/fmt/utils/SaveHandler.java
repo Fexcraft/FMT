@@ -3,6 +3,7 @@ package net.fexcraft.app.fmt.utils;
 import static net.fexcraft.app.fmt.update.UpdateHandler.update;
 import static net.fexcraft.app.fmt.utils.Logging.bar;
 import static net.fexcraft.app.fmt.utils.Logging.log;
+import static net.fexcraft.app.fmt.utils.fvtm.FvtmWrapper.loadFvtmSave;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -26,6 +27,7 @@ import net.fexcraft.app.fmt.port.im.Importer;
 import net.fexcraft.app.fmt.ui.*;
 import net.fexcraft.app.fmt.update.UpdateEvent.ModelLoad;
 import net.fexcraft.app.fmt.update.UpdateEvent.ModelUnload;
+import net.fexcraft.app.fmt.utils.fvtm.FvtmWrapper;
 import net.fexcraft.app.fmt.utils.fvtm.VehAttr;
 import net.fexcraft.lib.common.math.Time;
 import org.apache.commons.io.IOUtils;
@@ -62,7 +64,22 @@ public class SaveHandler {
 				if(elm.getName().equals("model.jtmt")){
 					try{
 						if(!preview) PreviewHandler.clear();
-						load(model, file, JsonHandler.parse(zip.getInputStream(elm)), preview, false);
+						JsonMap map = JsonHandler.parse(zip.getInputStream(elm));
+						model.type = ModelType.parse(map.getString("type", null));
+						if(model.type == ModelType.FVTM){
+							if(!Settings.LOAD_FVTM.value){
+								FMT.UI.createDialog(600, 120, "saveload.title")
+									.addText(0, "saveload.open.errors")
+									.addText(1, "Model marked as FVTM model, but FVTM loading is not enabled.")
+									.buttons(100, Dialog.DialogButton.OK);
+							}
+							else{
+								loadFvtmSave(model, file, map, preview, false);
+							}
+						}
+						else{
+							load(model, file, map, preview, false);
+						}
 						model.recompile();
 						if(!preview) Model.SELECTED_POLYGONS = FMT.MODEL.count(true);
 					}
@@ -184,129 +201,146 @@ public class SaveHandler {
 		model.rerootpivots();
 		JsonMap groups = map.getMap("groups");
 		groups.entries().forEach(entry -> {
-			try{
-				Group group = new Group(model, entry.getKey(), rootp.id);
-				JsonMap jsn = entry.getValue().asMap();
-				group.minimized = jsn.getBoolean("minimized", false);
-				group.selected = jsn.getBoolean("selected", false);
-				group.visible = jsn.getBoolean("visible", true);
-				if(jsn.has("color") && jsn.get("color").isNumber()){
-					group.color.packed = jsn.get("color").integer_value();
-				}
-				group.pivot = jsn.getString("pivot", rootp.id);
-				if(jsn.has("texture_group")){
-					group.texgroup = model.getTexGroup(jsn.get("texture_group").string_value());
-				}
-				if(jsn.has("offset")){
-					JsonArray array = jsn.getArray("offset");
-					group.pos.x = array.get(0).float_value();
-					group.pos.y = array.get(1).float_value();
-					group.pos.z = array.get(2).float_value();
-				}
-				if(jsn.has("polygons")){
-					jsn.getArrayElements("polygons").forEach(elm -> {
-						try{
-							group.add(Polygon.from(model, elm.asMap(), format));
-						}
-						catch(Exception e){
-							log(JsonHandler.toString(map, PrintOption.SPACED));
-							log(e);
-						}
-					});
-				}
-				if(jsn.has("animations")){
-					jsn.getArrayElements("animations").forEach(elm -> {
-						Animation ani = Animation.load(elm.asMap());
-						if(ani != null) group.animations.add(ani);
-					});
-				}
-				model.addGroup(group.pivot, group);
+			loadModelGroup(model, rootp, entry, format);
+		});
+		if(!preview) loadModelLocalData(model, map);
+		loadModelHelpers(model, from, sub, map);
+		loadModelExportValues(model, map);
+		model.recompile();
+		return model;
+	}
+
+	public static Group loadModelGroup(Model model, Pivot rootp, Entry<String, JsonValue<?>> entry, int format){
+		try{
+			Group group = new Group(model, entry.getKey(), rootp.id);
+			JsonMap jsn = entry.getValue().asMap();
+			group.minimized = jsn.getBoolean("minimized", false);
+			group.selected = jsn.getBoolean("selected", false);
+			group.visible = jsn.getBoolean("visible", true);
+			if(jsn.has("color") && jsn.get("color").isNumber()){
+				group.color.packed = jsn.get("color").integer_value();
 			}
-			catch(Throwable thr){
-				log(thr);
+			group.pivot = jsn.getString("pivot", rootp.id);
+			if(jsn.has("texture_group")){
+				group.texgroup = model.getTexGroup(jsn.get("texture_group").string_value());
+			}
+			if(jsn.has("offset")){
+				JsonArray array = jsn.getArray("offset");
+				group.pos.x = array.get(0).float_value();
+				group.pos.y = array.get(1).float_value();
+				group.pos.z = array.get(2).float_value();
+			}
+			if(format > 0 && jsn.has("polygons")){
+				jsn.getArrayElements("polygons").forEach(elm -> {
+					try{
+						group.add(Polygon.from(model, elm.asMap(), format));
+					}
+					catch(Exception e){
+						log(JsonHandler.toString(jsn, PrintOption.SPACED));
+						log(e);
+					}
+				});
+			}
+			if(jsn.has("animations")){
+				jsn.getArrayElements("animations").forEach(elm -> {
+					Animation ani = Animation.load(elm.asMap());
+					if(ani != null) group.animations.add(ani);
+				});
+			}
+			model.addGroup(group.pivot, group);
+			return group;
+		}
+		catch(Throwable thr){
+			log(thr);
+		}
+		return null;
+	}
+
+	public static void loadModelLocalData(Model model, JsonMap map){
+		if(map.has("variables")){
+			JsonMap attrs = map.getMap("variables");
+			for(Entry<String, JsonValue<?>> entry : attrs.entries()){
+				model.vehattrs.put(entry.getKey(), new VehAttr(entry.getValue().asMap()));
+			}
+		}
+		if(map.has("camera_pos")){
+			JsonArray pos = map.getArray("camera_pos");
+			FMT.CAM.pos.x = pos.get(0).float_value();
+			FMT.CAM.pos.y = pos.get(1).float_value();
+			FMT.CAM.pos.z = pos.get(2).float_value();
+		}
+		FMT.CAM.hor = map.get("camera_horizontal", FMT.CAM.hor);
+		FMT.CAM.ver = map.get("camera_vertical", FMT.CAM.ver);
+		//FMT.CAM.fov(Jsoniser.get(obj, "camera_fov", FMT.CAM.fov()));
+	}
+
+	public static void loadModelHelpers(Model model, File from, boolean sub, JsonMap map){
+		if(!map.has("helpers")) return;
+		map.getArrayElements("helpers").forEach(elm -> {
+			try{
+				JsonMap jsn = elm.asMap();
+				File file = new File(jsn.get("path").string_value());
+				if(file.equals(from)) return;
+				Model helper = null;
+				if(jsn.get("name").string_value().startsWith("frame/")){
+					helper = PreviewHandler.loadFrame(file);
+				}
+				else if(jsn.get("name").string_value().startsWith("fmtb/")){
+					helper = PreviewHandler.loadFMTB(file);
+				}
+				else{
+					Importer porter = ImportManager.getImporterFor(file);
+					if(porter == null){
+						log("ERROR: Could not find importer for helper/preview '" + file.getPath() + "'!");
+						return;
+					}
+					helper = PreviewHandler.load(file, porter, jsn);
+				}
+				if(helper == null) return;
+				helper.name = jsn.get("name", "Unnamed Helper-Preview");
+				if(jsn.has("opacity")){
+					helper.opacity = jsn.get("opacity").float_value();
+				}
+				if(jsn.has("pos_x")){
+					helper.pos = new Vector3f(jsn.get("pos_x").float_value(), jsn.get("pos_y").float_value(), jsn.get("pos_z").float_value());
+				}
+				else if(jsn.has("pos")){
+					JsonArray pos = map.getArray("pos");
+					helper.pos.x = pos.get(0).float_value();
+					helper.pos.y = pos.get(1).float_value();
+					helper.pos.z = pos.get(2).float_value();
+				}
+				if(jsn.has("rot_x")){
+					helper.rot = new Vector3f(jsn.get("rot_x").float_value(), jsn.get("rot_y").float_value(), jsn.get("rot_z").float_value());
+				}
+				else if(jsn.has("rot")){
+					JsonArray pos = map.getArray("rot");
+					helper.rot.x = pos.get(0).float_value();
+					helper.rot.y = pos.get(1).float_value();
+					helper.rot.z = pos.get(2).float_value();
+				}
+				if(jsn.has("scale_x")){
+					helper.scl = new Vector3f(jsn.get("scale_x").float_value(), jsn.get("scale_y").float_value(), jsn.get("scale_z").float_value());
+				}
+				else if(jsn.has("scale")){
+					helper.scl = new Vector3f(jsn.get("scale").float_value());
+				}
+				if(jsn.has("invisible")){
+					ArrayList<String> list = jsn.getArray("invisible").toStringList();
+					for(Group group : helper.allgroups()){
+						group.visible = !list.contains(group.id);
+					}
+				}
+				helper.visible = jsn.get("visible", true);
+				helper.subhelper = sub;
+			}
+			catch(Exception e){
+				log(e);
 			}
 		});
-		if(!preview){
-			if(map.has("variables")){
-				JsonMap attrs = map.getMap("variables");
-				for(Entry<String, JsonValue<?>> entry : attrs.entries()){
-					model.vehattrs.put(entry.getKey(), new VehAttr(entry.getValue().asMap()));
-				}
-			}
-			if(map.has("camera_pos")){
-				JsonArray pos = map.getArray("camera_pos");
-				FMT.CAM.pos.x = pos.get(0).float_value();
-				FMT.CAM.pos.y = pos.get(1).float_value();
-				FMT.CAM.pos.z = pos.get(2).float_value();
-			}
-			FMT.CAM.hor = map.get("camera_horizontal", FMT.CAM.hor);
-			FMT.CAM.ver = map.get("camera_vertical", FMT.CAM.ver);
-			//FMT.CAM.fov(Jsoniser.get(obj, "camera_fov", FMT.CAM.fov()));
-		}
-		if(map.has("helpers")){
-			map.getArrayElements("helpers").forEach(elm -> {
-				try{
-					JsonMap jsn = elm.asMap();
-					File file = new File(jsn.get("path").string_value());
-					if(file.equals(from)) return;
-					Model helper = null;
-					if(jsn.get("name").string_value().startsWith("frame/")){
-						helper = PreviewHandler.loadFrame(file);
-					}
-					else if(jsn.get("name").string_value().startsWith("fmtb/")){
-						helper = PreviewHandler.loadFMTB(file);
-					}
-					else{
-						Importer porter = ImportManager.getImporterFor(file);
-						if(porter == null){
-							log("ERROR: Could not find importer for helper/preview '" + file.getPath() + "'!");
-							return;
-						}
-						helper = PreviewHandler.load(file, porter, jsn);
-					}
-					if(helper == null) return;
-					helper.name = jsn.get("name", "Unnamed Helper-Preview");
-					if(jsn.has("opacity")){
-						helper.opacity = jsn.get("opacity").float_value();
-					}
-					if(jsn.has("pos_x")){
-						helper.pos = new Vector3f(jsn.get("pos_x").float_value(), jsn.get("pos_y").float_value(), jsn.get("pos_z").float_value());
-					}
-					else if(jsn.has("pos")){
-						JsonArray pos = map.getArray("pos");
-						helper.pos.x = pos.get(0).float_value();
-						helper.pos.y = pos.get(1).float_value();
-						helper.pos.z = pos.get(2).float_value();
-					}
-					if(jsn.has("rot_x")){
-						helper.rot = new Vector3f(jsn.get("rot_x").float_value(), jsn.get("rot_y").float_value(), jsn.get("rot_z").float_value());
-					}
-					else if(jsn.has("rot")){
-						JsonArray pos = map.getArray("rot");
-						helper.rot.x = pos.get(0).float_value();
-						helper.rot.y = pos.get(1).float_value();
-						helper.rot.z = pos.get(2).float_value();
-					}
-					if(jsn.has("scale_x")){
-						helper.scl = new Vector3f(jsn.get("scale_x").float_value(), jsn.get("scale_y").float_value(), jsn.get("scale_z").float_value());
-					}
-					else if(jsn.has("scale")){
-						helper.scl = new Vector3f(jsn.get("scale").float_value());
-					}
-					if(jsn.has("invisible")){
-						ArrayList<String> list = jsn.getArray("invisible").toStringList();
-						for(Group group : helper.allgroups()){
-							group.visible = !list.contains(group.id);
-						}
-					}
-					helper.visible = jsn.get("visible", true);
-					helper.subhelper = sub;
-				}
-				catch(Exception e){
-					log(e);
-				}
-			});
-		}
+	}
+
+	public static void loadModelExportValues(Model model, JsonMap map){
 		if(map.has("export_values")){
 			map.getMap("export_values").entries().forEach(entry -> {
 				model.export_values.put(entry.getKey(), entry.getValue().string_value());
@@ -326,8 +360,6 @@ public class SaveHandler {
 				model.export_group_presets.add(entry.getValue().asArray().toStringList());
 			});
 		}
-		model.recompile();
-		return model;
 	}
 
 	public static void save(Model model, File file, Runnable run){
@@ -352,7 +384,7 @@ public class SaveHandler {
 			zipout.closeEntry();
 			int streams = 1 + model.getTexGroups().size();
 			InputStream[] arr = new InputStream[streams];
-			arr[0] = new ByteArrayInputStream(modelToJTMT(model, false).toString().getBytes(StandardCharsets.UTF_8));
+			arr[0] = new ByteArrayInputStream(saveToJson(model).toString().getBytes(StandardCharsets.UTF_8));
 			if(arr.length > 1){
 				for(int i = 0; i < model.getTexGroups().size(); i++){
 					TextureGroup group = model.getTexGroups().get(i);
@@ -407,16 +439,21 @@ public class SaveHandler {
 		return noerror;
 	}
 	
-	public static JsonMap modelToJTMT(Model root, boolean export){
+	public static JsonMap saveToJson(Model root){
 		Model model = root == null ? FMT.MODEL : root;
 		JsonMap map = new JsonMap();
 		map.add("format", FORMAT);
+		map.add("type", model.type.name().toLowerCase());
+		if(model.type == ModelType.FVTM){
+			FvtmWrapper.saveFvtmLoad(model, map);
+			return map;
+		}
 		map.add("name", model.name);
 		//map.add("texture_size_x", model.texSizeX);
 		//map.add("texture_size_y", model.texSizeY);
 		map.add("orientation", model.orient.name().toLowerCase());
 		map.add("target_format", model.format.name().toLowerCase());
-		if(!export && model.opacity < 1f) map.add("opacity", model.opacity);
+		if(model.opacity < 1f) map.add("opacity", model.opacity);
 		if(model.scl.x != 1f || model.scl.y != 1f || model.scl.z != 1f){
 			map.add("scale", new JsonArray(model.scl.x, model.scl.y, model.scl.z));
 		}
@@ -427,12 +464,11 @@ public class SaveHandler {
 		else{
 			for(Entry<String, Boolean> entry : model.getAuthors().entrySet()){
 				String name = entry.getKey();
-				if(entry.getValue() && !export) name = "!" + name;
+				if(entry.getValue()) name = "!" + name;
 				creators.add(name);
 			}
 		}
 		map.add("creators", creators);
-		map.add("type", "jtmt");
 		if(!model.getTexGroups().isEmpty()){
 			JsonMap textures = new JsonMap();
 			for(TextureGroup group : model.getTexGroups()){
@@ -447,135 +483,145 @@ public class SaveHandler {
 			pivots.add(pivot.id, pivot.save());
 		}
 		map.add("pivots", pivots);
+		saveModelGroups(model, map, true);
+		saveModelLocalData(model, map);
+		if(!PreviewHandler.getLoaded().isEmpty()) saveModelHelpers(model, map);
+		saveModelExportValues(model, map);
+		return map;
+	}
+
+	public static void saveModelGroups(Model model, JsonMap map, boolean poly){
 		JsonMap modobj = new JsonMap();
 		for(Group group : model.allgroups()){
 			JsonMap grobj = new JsonMap();
 			JsonArray array = new JsonArray();
-			if(!export){
-				grobj.add("visible", group.visible);
-				if(group.color != null){
-					byte[] colarr = group.color.toByteArray();
-					JsonArray colar = new JsonArray();
-					colar.add(colarr[0]);
-					colar.add(colarr[1]);
-					colar.add(colarr[2]);
-					grobj.add("color", colar);
-				}
-				grobj.add("minimized", group.minimized);
-				grobj.add("selected", group.selected);
-				if(group.texgroup != null){
-					grobj.add("texture_group", group.texgroup.name);
-					//grobj.add("texture_size_x", group.texSizeX);
-					//grobj.add("texture_size_y", group.texSizeY);
-				}
-				if(group.animations.size() > 0){
-					JsonArray anim = new JsonArray();
-					for(Animation ani : group.animations){
-						JsonMap jm = ani.save();
-						if(jm != null){
-							jm.add("id", ani.id());
-							jm.add("enabled", ani.enabled);
-							anim.add(jm);
-						}
+			grobj.add("visible", group.visible);
+			if(group.color != null){
+				byte[] colarr = group.color.toByteArray();
+				JsonArray colar = new JsonArray();
+				colar.add(colarr[0]);
+				colar.add(colarr[1]);
+				colar.add(colarr[2]);
+				grobj.add("color", colar);
+			}
+			grobj.add("minimized", group.minimized);
+			grobj.add("selected", group.selected);
+			if(group.texgroup != null){
+				grobj.add("texture_group", group.texgroup.name);
+				//grobj.add("texture_size_x", group.texSizeX);
+				//grobj.add("texture_size_y", group.texSizeY);
+			}
+			if(group.animations.size() > 0){
+				JsonArray anim = new JsonArray();
+				for(Animation ani : group.animations){
+					JsonMap jm = ani.save();
+					if(jm != null){
+						jm.add("id", ani.id());
+						jm.add("enabled", ani.enabled);
+						anim.add(jm);
 					}
-					grobj.add("animations", anim);
 				}
+				grobj.add("animations", anim);
 			}
 			grobj.add("name", group.id);
 			if(group.pivot != null) grobj.add("pivot", group.pivot);
-			for(Polygon polygon : group){
-				array.add(polygon.save(export));
+			if(poly){
+				for(Polygon polygon : group){
+					array.add(polygon.save(false));
+				}
+				grobj.add("polygons", array);
 			}
-			grobj.add("polygons", array);
 			modobj.add(group.id, grobj);
 		}
 		map.add("groups", modobj);
-		if(!export){
-			JsonMap attrs = new JsonMap();
-			for(Entry<String, VehAttr> attr : model.vehattrs.entrySet()){
-				attrs.add(attr.getKey(), attr.getValue().save());
-			}
-			map.add("variables", attrs);
-			//
-			JsonArray array = new JsonArray();
-			array.add(FMT.CAM.pos.x);
-			array.add(FMT.CAM.pos.y);
-			array.add(FMT.CAM.pos.z);
-			map.add("camera_pos", array);
-			map.add("camera_horizontal", FMT.CAM.hor);
-			map.add("camera_vertical", FMT.CAM.ver);
+	}
+
+	public static void saveModelLocalData(Model model, JsonMap map){
+		JsonMap attrs = new JsonMap();
+		for(Entry<String, VehAttr> attr : model.vehattrs.entrySet()){
+			attrs.add(attr.getKey(), attr.getValue().save());
 		}
-		if(!PreviewHandler.getLoaded().isEmpty() && !export){
-			JsonArray array = new JsonArray();
-			for(Model premod : PreviewHandler.getLoaded()){
-				if(premod.subhelper) continue;
-				if(premod.file == null) continue;
-				try{
-					JsonMap jsn = new JsonMap();
-					jsn.add("name", premod.name);
-					//jsn.add("texture", premod.texgroup.name);
-					if(premod.rot != null){
-						jsn.add("rot_x", premod.rot.x);
-						jsn.add("rot_y", premod.rot.y);
-						jsn.add("rot_z", premod.rot.z);
-					}
-					if(premod.pos != null){
-						jsn.add("pos_x", premod.pos.x);
-						jsn.add("pos_y", premod.pos.y);
-						jsn.add("pos_z", premod.pos.z);
-					}
-					if(premod.scl.x != 1f || premod.scl.y != 1f || premod.scl.z != 1f){
-						jsn.add("scale_x", premod.scl.x);
-						jsn.add("scale_y", premod.scl.y);
-						jsn.add("scale_z", premod.scl.z);
-					}
-					if(premod.opacity < 1f){
-						jsn.add("opacity", premod.opacity);
-					}
-					if(premod.allgroups().size() > 1){
-						JsonArray invisible = new JsonArray();
-						for(Group list : premod.allgroups()){
-							if(!list.visible) invisible.add(list.id);
-						}
-						if(invisible.size() > 0){
-							jsn.add("invisible", invisible);
-						}
-					}
-					jsn.add("path", premod.file.toPath().toString());
-					jsn.add("visible", premod.visible);
-					array.add(jsn);
+		map.add("variables", attrs);
+		//
+		JsonArray array = new JsonArray();
+		array.add(FMT.CAM.pos.x);
+		array.add(FMT.CAM.pos.y);
+		array.add(FMT.CAM.pos.z);
+		map.add("camera_pos", array);
+		map.add("camera_horizontal", FMT.CAM.hor);
+		map.add("camera_vertical", FMT.CAM.ver);
+	}
+
+	public static void saveModelHelpers(Model model, JsonMap map){
+		JsonArray array = new JsonArray();
+		for(Model premod : PreviewHandler.getLoaded()){
+			if(premod.subhelper) continue;
+			if(premod.file == null) continue;
+			try{
+				JsonMap jsn = new JsonMap();
+				jsn.add("name", premod.name);
+				//jsn.add("texture", premod.texgroup.name);
+				if(premod.rot != null){
+					jsn.add("rot_x", premod.rot.x);
+					jsn.add("rot_y", premod.rot.y);
+					jsn.add("rot_z", premod.rot.z);
 				}
-				catch(Exception e){
-					e.printStackTrace();
+				if(premod.pos != null){
+					jsn.add("pos_x", premod.pos.x);
+					jsn.add("pos_y", premod.pos.y);
+					jsn.add("pos_z", premod.pos.z);
 				}
-			}
-			map.add("helpers", array);
-		}
-		if(!export){
-			if(model.export_values.size() > 0){
-				map.addMap("export_values");
-				model.export_values.entrySet().forEach(entry -> {
-					map.getMap("export_values").add(entry.getKey(), entry.getValue());
-				});
-			}
-			if(model.export_listed_values.size() > 0){
-				map.addMap("export_array_values");
-				model.export_listed_values.entrySet().forEach(entry -> {
-					JsonArray array = new JsonArray();
-					entry.getValue().forEach(elm -> array.add(elm));
-					map.getMap("export_array_values").add(entry.getKey(), array);
-				});
-			}
-			if(model.export_group_presets.size() > 0){
-				map.addMap("export_group_presets");
-				for(int i = 0; i < model.export_group_preset_keys.size(); i++){
-					JsonArray array = new JsonArray();
-					model.export_group_presets.get(i).forEach(str -> array.add(str));
-					map.getMap("export_group_presets").add(model.export_group_preset_keys.get(i), array);
+				if(premod.scl.x != 1f || premod.scl.y != 1f || premod.scl.z != 1f){
+					jsn.add("scale_x", premod.scl.x);
+					jsn.add("scale_y", premod.scl.y);
+					jsn.add("scale_z", premod.scl.z);
 				}
+				if(premod.opacity < 1f){
+					jsn.add("opacity", premod.opacity);
+				}
+				if(premod.allgroups().size() > 1){
+					JsonArray invisible = new JsonArray();
+					for(Group list : premod.allgroups()){
+						if(!list.visible) invisible.add(list.id);
+					}
+					if(invisible.size() > 0){
+						jsn.add("invisible", invisible);
+					}
+				}
+				jsn.add("path", premod.file.toPath().toString());
+				jsn.add("visible", premod.visible);
+				array.add(jsn);
+			}
+			catch(Exception e){
+				e.printStackTrace();
 			}
 		}
-		return map;
+		map.add("helpers", array);
+	}
+
+	public static void saveModelExportValues(Model model, JsonMap map){
+		if(model.export_values.size() > 0){
+			map.addMap("export_values");
+			model.export_values.entrySet().forEach(entry -> {
+				map.getMap("export_values").add(entry.getKey(), entry.getValue());
+			});
+		}
+		if(model.export_listed_values.size() > 0){
+			map.addMap("export_array_values");
+			model.export_listed_values.entrySet().forEach(entry -> {
+				JsonArray array = new JsonArray();
+				entry.getValue().forEach(elm -> array.add(elm));
+				map.getMap("export_array_values").add(entry.getKey(), array);
+			});
+		}
+		if(model.export_group_presets.size() > 0){
+			map.addMap("export_group_presets");
+			for(int i = 0; i < model.export_group_preset_keys.size(); i++){
+				JsonArray array = new JsonArray();
+				model.export_group_presets.get(i).forEach(str -> array.add(str));
+				map.getMap("export_group_presets").add(model.export_group_preset_keys.get(i), array);
+			}
+		}
 	}
 
 	public static void openDialog(File file){
@@ -602,7 +648,7 @@ public class SaveHandler {
 		shouldSaveDialog(run);
 	}
 
-	private static void shouldSaveDialog(Runnable run){
+	public static void shouldSaveDialog(Runnable run){
 		Dialog dia = FMT.UI.createDialog(500, 80, "saveload.title");
 		dia.addText(0, "saveload.should_save");
 		dia.consumer(d -> saveDialogByState(run), d -> run.run());
