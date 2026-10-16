@@ -43,4 +43,16 @@ public enum FvtmType {
 		return DECORATION;
 	}
 
+	public String toContentType(){
+		switch(this){
+			case VEHICLE: return "VEHICLE";
+			case PART: return "PART";
+			case BLOCK: return "BLOCK";
+			case DECORATION: return "DECORATION";
+			case WIRE: return "WIRE";
+			case WIRE_DECO: return "WIRE_COMPONENT";
+			case SIGN: return "SIGN";
+		}
+		return "VEHICLE";
+	}
 }
