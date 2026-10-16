@@ -70,6 +70,8 @@ public class Model {
 	public LinkedHashMap<String, VehAttr> vehattrs = new LinkedHashMap<>();
 	public ModelOrientation orient = ModelOrientation.FVTM4_DEFAULT;
 	public ModelFormat format = ModelFormat.UNIVERSAL;
+	public Object exdata;
+	public ModelType type = ModelType.FMT;
 	public Matrix4f matrix;
 	public Vector3f pos = new Vector3f();
 	public Vector3f rot = new Vector3f();
