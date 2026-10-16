@@ -125,6 +125,10 @@ public class Workspace extends Frame {
 		reloadPacks(run);
 	}
 
+	public void loadIfNotLoaded(){
+		if(!loaded) load(null);
+	}
+
 	public void reloadPacks(Runnable run){
 		Thread thread = new Thread(null, () -> {
 			File assets;
@@ -303,6 +307,17 @@ public class Workspace extends Frame {
 			setActive(file_editor, 0);
 		}
 		opened_files.updateBar();
+	}
+	
+	public ArrayList<FvtmPackElm> getFvtmPacks(){
+		return fvtm_packs;
+	}
+
+	public FvtmPackElm getFvtmPack(String space){
+		for(FvtmPackElm pack : fvtm_packs){
+			if(pack.id.equals(space)) return pack;
+		}
+		return null;
 	}
 
 }
