@@ -33,7 +33,7 @@ public class BackupHandler extends TimerTask {
 				FMT.UI.createDialog(500, 80, "saveload.title")
 					.addText(0, "saveload.backup.failure")
 					.buttons(100, Dialog.DialogButton.OK);
-				JsonHandler.print(new File("./backups/(" + str + ") " + FMT.MODEL.name + ".json"), SaveHandler.modelToJTMT(FMT.MODEL, false));
+				JsonHandler.print(new File("./backups/(" + str + ") " + FMT.MODEL.name + ".json"), SaveHandler.saveToJson(FMT.MODEL));
 			}
 		}
 		catch(Exception e){
