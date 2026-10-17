@@ -59,6 +59,10 @@ public enum Shape {
 	public boolean isCurve(){
 		return this == RECT_CURVE || this == CYL_CURVE || this == MESH_CURVE;
 	}
+
+	public boolean isView(){
+		return this == VIEW;
+	}
 	
 	public boolean is(Shape type){
 		return this == type;
