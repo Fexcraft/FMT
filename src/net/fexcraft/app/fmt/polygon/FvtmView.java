@@ -1,5 +1,6 @@
 package net.fexcraft.app.fmt.polygon;
 
+import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.uv.Face;
 import net.fexcraft.app.fmt.polygon.uv.NoFace;
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
@@ -44,15 +45,12 @@ public class FvtmView extends Polygon {
 		return NoFace.NONE;
 	}
 	
-	/*@Override
+	@Override
 	public void render(float alpha){
-		DrawMode mode = PolyRenderer.mode();
-		PolyRenderer.mode(DrawMode.RGBCOLOR);
-		glm.render();
-		PolyRenderer.mode(DrawMode.LINES);
-		glm.render();
-		PolyRenderer.mode(mode);
-	}*/
+		PolyRenderer.SCALE0 = FMT.MODEL.scl.x;
+		super.render(alpha);
+		PolyRenderer.SCALE0 = 1f;
+	}
 	
 	@Override
 	public void recompile(){
