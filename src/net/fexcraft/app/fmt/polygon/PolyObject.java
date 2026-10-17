@@ -94,8 +94,8 @@ public class PolyObject extends Polygon {
 	}
 
 	@Override
-	public RGB getFaceColor(int idx){
-		return gre1;
+	public int getFaceColor(int idx){
+		return c_gre1;
 	}
 
 	@Override
