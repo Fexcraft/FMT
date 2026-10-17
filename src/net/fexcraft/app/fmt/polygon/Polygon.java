@@ -14,7 +14,6 @@ import net.fexcraft.app.fmt.polygon.Vertoff.VOType;
 import net.fexcraft.app.fmt.ui.UVViewer;
 import net.fexcraft.app.fmt.update.UpdateEvent.PolygonAdded;
 import net.fexcraft.app.fmt.update.UpdateEvent.PolygonRenamed;
-import net.fexcraft.app.fmt.utils.CornerUtil;
 import net.fexcraft.app.fmt.utils.Selector;
 import net.fexcraft.app.json.JsonValue;
 import net.fexcraft.lib.common.math.M4DW;
@@ -287,7 +286,7 @@ public abstract class Polygon {
 	protected static int c_blu1 = blu1.packed, c_blu0 = blu0.packed;
 	protected static int c_gre1 = gre1.packed, c_gre0 = gre0.packed;
 
-	public abstract RGB getFaceColor(int idx);
+	public abstract int getFaceColor(int idx);
 
 	public abstract Face getFaceByColor(int color);
 
@@ -488,7 +487,7 @@ public abstract class Polygon {
 					log("error: requested single-face paint, but provided no coordinates");
 					return false;
 				}
-				byte[] color = (negative ? TexturePainter.getCurrentColor() : getFaceColor(sface).toByteArray());
+				byte[] color = (negative ? TexturePainter.getCurrentColor() : RGB.toByteArray(getFaceColor(sface)));
 				paint(tex, ends, color, detached);
 			}
 			else{
@@ -499,7 +498,7 @@ public abstract class Polygon {
 						log("paint data for face " + coord.side().id() + " not found, skipping");
 						continue;
 					}
-					byte[] color = (negative ? TexturePainter.getCurrentColor() : getFaceColor(coord.side().index()).toByteArray());
+					byte[] color = (negative ? TexturePainter.getCurrentColor() : RGB.toByteArray(getFaceColor(coord.side().index())));
 					paint(tex, ends, color, coord.detached());
 				}
 			}
