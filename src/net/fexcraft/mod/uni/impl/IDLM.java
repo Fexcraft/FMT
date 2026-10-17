@@ -21,7 +21,7 @@ public class IDLM implements IDLManager {
 		public IDLL(String idl){
 			String[] n = idl.split(";");
 			nm = n.length > 0 ? n[0] : "unnamed";
-			String[] a = idl.split(":");
+			String[] a = (n.length > 1 ? n[1] : idl).split(":");
 			if(a.length < 1){
 				Logging.log("WARNING, invalid IDL: " + idl);
 			}
