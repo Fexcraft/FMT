@@ -966,7 +966,7 @@ public class Model {
 		return arr;
 	}
 
-	public TextureGroup addTexGroup(String name, boolean show){
+	public TextureGroup addTexGroup(String name, boolean show, boolean upd){
 		if(name == null) name = "newgroup";
 		if(hasTexGroup(name)){
 			int i = 0;
@@ -975,7 +975,7 @@ public class Model {
 		}
 		TextureGroup group = new TextureGroup(this, name, new File("./temp/"));
 		texgroups.add(group);
-		if(!helper) UpdateHandler.update(new TexGroupAdded(group));
+		if(!helper && upd) UpdateHandler.update(new TexGroupAdded(group));
 		if(show){
 			FMT.UI.createDialog(300, 120, "texture.manager")
 				.addText(0, "texture.added_group")
