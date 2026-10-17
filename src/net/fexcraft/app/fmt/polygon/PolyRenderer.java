@@ -16,6 +16,7 @@ import org.joml.Vector3f;
 import java.util.TreeMap;
 
 import static net.fexcraft.app.fmt.settings.Settings.TRIANGULATION_L;
+import static net.fexcraft.lib.common.math.RGB.toFloatArray;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
@@ -224,7 +225,7 @@ public class PolyRenderer extends Renderer {
     				}
     			}
     			else{
-        			colarr = glo.polygon.getFaceColor(i).toFloatArray();
+        			colarr = toFloatArray(glo.polygon.getFaceColor(i));
         			obj.colors[col++] = colarr[0];
         			obj.colors[col++] = colarr[1];
         			obj.colors[col++] = colarr[2];
