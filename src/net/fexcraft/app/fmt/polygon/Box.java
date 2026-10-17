@@ -82,16 +82,16 @@ public class Box extends Polygon {
 	}
 
 	@Override
-	public RGB getFaceColor(int idx){
+	public int getFaceColor(int idx){
 		switch(idx){
-			case 0: return blu0;
-			case 1: return blu1;
-			case 2: return red1;
-			case 3: return red0;
-			case 4: return gre1;
-			case 5: return gre0;
+			case 0: return c_blu0;
+			case 1: return c_blu1;
+			case 2: return c_red1;
+			case 3: return c_red0;
+			case 4: return c_gre1;
+			case 5: return c_gre0;
 		}
-		return RGB.GREEN;
+		return RGB.GREEN.packed;
 	}
 
 	@Override
