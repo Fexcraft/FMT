@@ -22,7 +22,6 @@ import static net.fexcraft.app.fmt.update.PolyVal.*;
  */
 public class CurvedMesh extends CurvePolygon {
 
-	public static ArrayList<RGB> cols = new ArrayList<>();
 	public static ArrayList<VarFace> vars = new ArrayList<>();
 	public boolean flip;
 
@@ -150,9 +149,8 @@ public class CurvedMesh extends CurvePolygon {
 				vr = nr;
 				vl = nl;
 			}
-			while(glm.polygons.size() > cols.size()){
-				vars.add(new VarFace(cols.size(), gre1.packed + cols.size()));
-				cols.add(new RGB(gre1.packed + cols.size()));
+			while(glm.polygons.size() > vars.size()){
+				vars.add(new VarFace(vars.size(), gre1.packed + vars.size()));
 			}
 			faces = new Face[glm.polygons.size()];
 			for(int i = 0; i < faces.length; i++){
@@ -205,10 +203,10 @@ public class CurvedMesh extends CurvePolygon {
 	}
 
 	@Override
-	public RGB getFaceColor(int idx){
-		if(idx == 0) return cols.get(0);
-		if(idx == glm.polygons.size() - 1) return cols.get(1);
-		return cols.get(idx + 1);
+	public int getFaceColor(int idx){
+		if(idx == 0) return c_blu1;
+		if(idx == glm.polygons.size() - 1) return c_blu0;
+		return vars.get(idx + 1).color;
 	}
 
 	@Override
