@@ -150,21 +150,21 @@ public class Cylinder extends Polygon {
 	}
 
 	@Override
-	public RGB getFaceColor(int idx){
+	public int getFaceColor(int idx){
 		int segs = seglimit < segments && seglimit > 0 ? seglimit : segments;
 		if(idx < segs){
-			return blu0;
+			return c_blu0;
 		}
 		if(idx < segs * 2){
-			return blu1;
+			return c_blu1;
 		}
 		if(idx < segs * 3){
-			return red1;
+			return c_red1;
 		}
 		if(idx < segs * 4){
-			return red0;
+			return c_red0;
 		}
-		return idx % 2 == 1 ? gre1 : gre0;
+		return idx % 2 == 1 ? c_gre1 : c_gre0;
 	}
 
 	@Override
