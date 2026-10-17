@@ -118,7 +118,6 @@ public class TexGroupCom extends TTabCom {
 					group.texture.resize(x, y);
 					group.texture.save();
 					group.texture.reload();
-					group.genPainterTex();
 					log("Resized TextureGroup '" + group.name + "' to " + ox + ", " + oy + " with " + scale.getSelVal() + " times upscaling to " + x + " " + y + ".");
 				}
 				catch(Exception e){
