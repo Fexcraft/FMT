@@ -74,6 +74,8 @@ public class TexGroupCom extends TTabCom {
 			.onclick(ci -> generateGroup()).hoverable(true).color(GROUP_NORMAL.value).text_color(GENERIC_TEXT_2.value.packed));
 		container.add(new Element().size(FF, 30).pos(5, inc += 35).translate("tree.texture.group_select")
 			.onclick(ci -> selectGroup()).hoverable(true).color(GROUP_NORMAL.value).text_color(GENERIC_TEXT_2.value.packed));
+		container.add(new Element().size(FF, 30).pos(5, inc += 35).translate("tree.texture.group_duplicate")
+			.onclick(ci -> copyGroup()).hoverable(true).color(GROUP_NORMAL.value).text_color(GENERIC_TEXT_2.value.packed));
 		orderComponents();
 	}
 
@@ -156,10 +158,25 @@ public class TexGroupCom extends TTabCom {
 		});
 	}
 
+	private void copyGroup(){
+		TextureGroup tex = FMT.MODEL.addTexGroup(null, false, false);
+		tex.width = group.width;
+		tex.height = group.height;
+		tex.texture.resize(tex.width, tex.height);
+		tex.texture.save();
+		try{
+			Files.copy(group.texture.getFile(), tex.texture.getFile());
+		}
+		catch(Throwable e){
+			log(e);
+		}
+		UpdateHandler.update(new UpdateEvent.TexGroupAdded(tex));
+	}
+
 	@Override
 	protected void orderComponents(){
 		if(container.elements == null) return;
-		fullheight = 205;
+		fullheight = 240;
 		container.size(w, fullheight);
 		container.recompile();
 		((TreeTab)root()).reorderComponents();
