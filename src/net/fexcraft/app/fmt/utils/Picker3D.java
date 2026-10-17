@@ -107,7 +107,7 @@ public class Picker3D {
 				if(poly.glm.rotZ != 0f) matrix0.rotate((float)Math.toRadians(poly.glm.rotZ), axis_z);
 				for(int i = 0; i < poly.glm.polygons.size(); i++){
 					gon = poly.glm.polygons.get(i);
-					int col = poly.getFaceColor(i).packed;
+					int col = poly.getFaceColor(i);
 					if(gon.vertices.length == 3){
 						triangles.add(new Triangle(poly, col, gon.vertices));
 					}
