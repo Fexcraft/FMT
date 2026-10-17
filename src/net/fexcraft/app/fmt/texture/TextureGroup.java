@@ -6,7 +6,6 @@ import java.io.File;
 
 import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.json.JsonMap;
-import net.fexcraft.lib.common.math.RGB;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -14,7 +13,6 @@ import net.fexcraft.lib.common.math.RGB;
 public class TextureGroup {
 	
 	public Texture texture;
-	public Texture painter;
 	public int width = 256;
 	public int height = 256;
 	public Model model;
@@ -38,7 +36,6 @@ public class TextureGroup {
 
 	public void reAssignTexture(){
 		texture = TextureManager.get(model.tex_prefix() + "-" + name, false);
-		genPainterTex();
 	}
 
 	public void loadTexture(String texid, File root){
@@ -55,27 +52,6 @@ public class TextureGroup {
 			TextureManager.loadFromFile(texid, file);
 		}
 		texture = TextureManager.get(texid, false);
-		genPainterTex();
-	}
-
-	public void genPainterTex(){
-		painter = TextureManager.get("pt-" + model.tex_prefix() + "-" + name, true);
-		if(painter == null){
-			painter = TextureManager.createTexture("pt-" + model.tex_prefix() + "-" + name, texture.getWidth(), texture.getHeight());
-			painter.setFile(new File("./temp/" + painter.name + ".png"));
-		}
-		else{
-			painter.resize(texture.getWidth(), texture.getHeight());
-		}
-		int lastint = 0;
-		for(int x = 0; x < painter.getWidth(); x++){
-			for(int y = 0; y < painter.getHeight(); y++){
-				painter.set(x, y, new RGB(lastint).toByteArray());
-				lastint++;
-			}
-		}
-		painter.save();
-		painter.rebind();
 	}
 
 	public JsonMap save(){
