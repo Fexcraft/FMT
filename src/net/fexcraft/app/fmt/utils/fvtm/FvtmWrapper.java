@@ -210,21 +210,23 @@ public class FvtmWrapper extends FvtmResources {
 	}
 
 	public static void loadModelTextures(Model model, ModelExternalData data, DefaultModel mod){
+		String id0 = null;
 		for(IDL tex : ((Textureable.TextureHolder)data.content).getDefaultTextures()){
-			Logging.log("searching: " + tex.colon());
 			FvtmPackElm pack = FMT.WORKSPACE.getFvtmPack(tex.space());
 			for(FileElm com : pack.textures){
 				String path = com.file.getPath().replace("\\", "/");
 				String pid = path.substring(path.indexOf("/assets/") + 8, path.indexOf("/textures"));
 				path = path.substring(path.indexOf("/textures/") + 1);
 				if(tex.colon().equals(pid + ":" + path)){
-					model.addTexGroup(new TextureGroup(model, tex.colon()));
-					TextureManager.loadFromFile("group-" + tex.colon(), com.file);
-					model.getTexGroup(tex.colon()).reAssignTexture();
+					String id = path.substring(path.lastIndexOf("/") + 1);
+					model.addTexGroup(new TextureGroup(model, id));
+					TextureManager.loadFromFile("group-" + id, com.file);
+					model.getTexGroup(id).reAssignTexture();
+					if(id0 == null) id0 = id;
 				}
 			}
 		}
-		model.texgroup = model.getTexGroup(((Textureable.TextureHolder)data.content).getDefaultTextures().get(0).colon());
+		model.texgroup = model.getTexGroup(id0);
 		if(model.texgroup == null) model.genDefTexGroup();
 		model.texgroup.width = mod.tex_width;
 		model.texgroup.height = mod.tex_height;
