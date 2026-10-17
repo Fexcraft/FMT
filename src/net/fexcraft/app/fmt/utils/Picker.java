@@ -40,7 +40,7 @@ public class Picker {
 	
 	public static enum PickType {
 		
-		NONE("none"), VERTEX("vert"), FACE("face"), POLYGON("poly"), COLOR("col");//, UI;
+		NONE("none"), VERTEX("vert"), FACE("face"), POLYGON("poly"), COLOR("col");
 
 		public String _short;
 
@@ -72,7 +72,7 @@ public class Picker {
 	
 	public static enum PickTask {
 		
-		NONE, SELECT, RESELECT, MULTISELECT, PAINT, FUNCTION, HOVER;
+		NONE, SELECT, RESELECT, MULTISELECT, FUNCTION, HOVER;
 		
 		public boolean pick(){
 			return this != NONE;
@@ -84,10 +84,6 @@ public class Picker {
 
 		public boolean multisel(){
 			return this == MULTISELECT;
-		}
-
-		public boolean paint(){
-			return this == PAINT;
 		}
 
 		boolean function(){
@@ -122,34 +118,9 @@ public class Picker {
 		}
 		else if(TYPE.face() && polygon != null){
 			int face = getPick();
-			if(TASK.paint()){
-				TexturePainter.paint(polygon, face);
-			}
-			else{
-				selected_face = polygon.getFaceByColor(face);
-				UpdateHandler.update(new UpdateEvent.PickFace(polygon, selected_face));
-			}
+			selected_face = polygon.getFaceByColor(face);
+			UpdateHandler.update(new UpdateEvent.PickFace(polygon, selected_face));
 		}
-		/*else if(TYPE == PickType.UI){
-			int pick = getPick();
-			if(pick <= 0 || pick > Element.elmIdx){
-				LAST_HOVER = null;
-				return;
-			}
-			Element elm = getElm(FMT.UI.elements, pick);
-			if(elm == null){
-				LAST_HOVER = null;
-				if(TASK.select()) pick(PickType.POLYGON, PickTask.SELECT, offcenter);
-			}
-			else if(TASK == PickTask.HOVER){
-				elm.hovered(true);
-				LAST_HOVER = elm;
-			}
-			else if(TASK.select()){
-				elm.click(GGR.mousePosX(), GGR.mousePosY());
-			}
-			reset();
-		}*/
 		else if(TYPE.vertex()){
 			int pick = getPick();
 			Logging.bar("picked: " + pick);
@@ -173,11 +144,6 @@ public class Picker {
 			int pick = getPick();
 			Logging.bar("picked: " + pick);
 			if(Testing.active() && Testing.pick(pick)) return;
-			/*if(pick > 0 && pick < Polygon.startIdx){
-				Arrows.SEL = pick;
-				Arrows.DIR = Arrows.MODE == Arrows.ArrowMode.SIZE ? false : pick % 2 == 0;
-				return;
-			}*/
 			for(Group group : FMT.MODEL.allgroups()){
 				if(polygon != null) break;
 				for(Polygon poly : group){
@@ -191,10 +157,6 @@ public class Picker {
 			else{
 				if(TASK.select()){
 					polygon.group().model.select(polygon, TASK == PickTask.RESELECT);
-				}
-				else if(TASK.paint()){
-					if(TexturePainter.SELMODE.getPickType() == PickType.FACE) return;
-					TexturePainter.paint(polygon, -1);
 				}
 				else if(TASK.function()){
 					consumer.accept(polygon);
