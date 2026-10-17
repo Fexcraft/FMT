@@ -352,7 +352,8 @@ tree.texture.group_size=Texture Size
 tree.texture.group_rename=Rename Texture Group
 tree.texture.group_resize=Resize Texture File
 tree.texture.group_generate=Generate Template
-tree.texture.group_select=Select File to Copy from
+tree.texture.group_select=Apply/Copy From File
+tree.texture.group_duplicate=Duplicate Group
 tree.texture.rename.title=Texture Group Renaming
 tree.texture.rename.name=New Texture Group Name
 tree.texture.rename.duplicate=There is another Texture Group with this name!
@@ -464,6 +465,7 @@ workspace.configeditor.select.vector_source=Select Source Type
 workspace.configeditor.select.pivot=Select a Pivot
 workspace.configeditor.select.marker=Select a Marker
 workspace.configeditor.add=Add Entry
+workspace.configeditor.load_model=Load FVTM Model
 
 # Save/Load
 saveload.title=FMTB Save Handler

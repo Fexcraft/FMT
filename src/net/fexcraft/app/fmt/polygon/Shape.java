@@ -7,6 +7,7 @@ public enum Shape {
 	CYLINDER("cylinder"),
 	SPHERE("sphere"),
 	OBJECT("object"),
+	VIEW("view"),
 	MARKER("marker", "rect"),
 	BOUNDING_BOX("rect"),
 	RECT_CURVE("rect", "curve"),
@@ -72,6 +73,7 @@ public enum Shape {
 			case "cylinder": return CYLINDER;
 			case "sphere": return SPHERE;
 			case "object": return OBJECT;
+			case "view": return VIEW;
 			case "marker": return MARKER;
 			case "bb":
 			case "boundingbox": 

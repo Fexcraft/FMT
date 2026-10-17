@@ -105,6 +105,7 @@ sourceSets {
             srcDirs "src"
             srcDirs "../Json/src"
             srcDirs "../FCL/common/src"
+            srcDirs "../FVTM/neutral/src"
             //exclude "net/fexcraft/mod/fcl/**"
             //exclude "net/fexcraft/mod/uni/packet/**"
             //exclude "net/fexcraft/mod/uni/fcl*"

@@ -1,19 +1,25 @@
 package net.fexcraft.app.fmt.workspace;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.polygon.Group;
-import net.fexcraft.app.fmt.polygon.Pivot;
-import net.fexcraft.app.fmt.polygon.Polygon;
+import net.fexcraft.app.fmt.polygon.*;
+import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.*;
 import net.fexcraft.app.fmt.ui.Dialog.DialogButton;
 import net.fexcraft.app.fmt.ui.Field.FieldType;
+import net.fexcraft.app.fmt.update.UpdateEvent;
+import net.fexcraft.app.fmt.update.UpdateHandler;
+import net.fexcraft.app.fmt.utils.DiscordUtil;
 import net.fexcraft.app.fmt.utils.Logging;
+import net.fexcraft.app.fmt.utils.SaveHandler;
 import net.fexcraft.app.fmt.utils.fvtm.*;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonHandler;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.app.json.JsonValue;
 import net.fexcraft.lib.common.math.V3F;
+import net.fexcraft.mod.fvtm.data.ContentType;
+import net.fexcraft.mod.fvtm.model.DefaultModel;
+import org.joml.Vector3f;
 
 import java.io.File;
 import java.util.LinkedHashSet;
@@ -51,6 +57,23 @@ public class FvtmConfigEditor extends WFileEditor {
 			return;
 		}
 		fill();
+		add(new RunElm(w - 210, 2, 200, "workspace.configeditor.load_model", ci -> {
+			SaveHandler.shouldSaveDialog(() -> {
+				UpdateHandler.update(new UpdateEvent.ModelUnload(FMT.MODEL));
+				String id = map.get("ID").string_value();
+				if(!id.contains(":")) id = map.get("Addon").string_value() + ":" + id;
+				FvtmWrapper.ModelExternalData data = FvtmWrapper.getMED(type.toContentType(), id);
+				FMT.MODEL = new Model(new File("./temp/model"), data.content.getName());
+				FMT.MODEL.orient = data.type == ContentType.VEHICLE || data.type == ContentType.PART ? ModelOrientation.FVTM4_DEFAULT : ModelOrientation.FVTM4_BLOCK;
+				FMT.MODEL.format = ModelFormat.UNIVERSAL;
+				FMT.MODEL.scl = new Vector3f(16, 16, 16);
+				FvtmWrapper.loadModelTextures(FMT.MODEL, data, (DefaultModel)data.content.getModel());
+				FvtmWrapper.appendHedrons(FMT.MODEL, data);
+				FMT.updateTitle();
+				DiscordUtil.update(Settings.DISCORD_RESET_ON_NEW.value);
+				UpdateHandler.update(new UpdateEvent.ModelLoad(FMT.MODEL));
+			});
+		}).text_centered(true));
 	}
 
 	private void fill(){

@@ -21,6 +21,7 @@ import net.fexcraft.app.fmt.updater.Catalog;
 import net.fexcraft.app.fmt.polygon.Model;
 import net.fexcraft.app.fmt.port.im.ImportManager;
 import net.fexcraft.app.fmt.utils.*;
+import net.fexcraft.app.fmt.utils.fvtm.FvtmWrapper;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryUtil;
 
@@ -208,6 +209,7 @@ public class Settings {
 			return false;
 		}
 	};
+	public static Setting<Boolean> LOAD_FVTM = new Setting<>("load_fvtm", false, WORKSPACE);
 	//Discord
 	public static Setting<Boolean> DISCORD_RPC = new Setting<>("enabled", false, DISCORD);
 	public static Setting<Boolean> DISCORD_HIDE = new Setting<>("hidden_mode", false, DISCORD);
@@ -261,6 +263,7 @@ public class Settings {
 		FMT.HEIGHT = DEF_HEIGHT.value;
 		FMT.SCALED_WIDTH = FMT.WIDTH / UI_SCALE.value;
 		FMT.SCALED_HEIGHT = FMT.HEIGHT / UI_SCALE.value;
+		if(LOAD_FVTM.value) FvtmWrapper.start();
 		refresh();
 	}
 	
