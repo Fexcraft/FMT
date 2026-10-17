@@ -112,8 +112,8 @@ public class StructBox extends Box {
 	}
 
 	@Override
-	public RGB getFaceColor(int i){
-		return RGB.BLACK;
+	public int getFaceColor(int i){
+		return RGB.BLACK.packed;
 	}
 
 	@Override
