@@ -23,11 +23,8 @@ import net.fexcraft.lib.frl.Vertex;
 public class RectCurve extends CurvePolygon {
 
 	public static PolyVal[] CORNERS = { CORNER_0, CORNER_1, CORNER_2, CORNER_3 };
-	public static ArrayList<RGB> cols = new ArrayList<>();
 	public static ArrayList<VarFace> vars = new ArrayList<>();
 	static{
-		cols.add(blu1);
-		cols.add(blu0);
 		vars.add(new VarFace(0, blu1.packed));
 		vars.add(new VarFace(1, blu0.packed));
 	}
@@ -179,16 +176,12 @@ public class RectCurve extends CurvePolygon {
 				new Vertex(bl, tx + sx * tw, ry + sy * th)
 			}));
 		}
-		while(glm.polygons.size() > cols.size()){
-			int o = (cols.size() - 2) / 4;
-			vars.add(new VarFace(cols.size(), gre1.packed + o));
-			vars.add(new VarFace(cols.size() + 1, gre0.packed + o + 1));
-			vars.add(new VarFace(cols.size() + 2, red1.packed + o + 2));
-			vars.add(new VarFace(cols.size() + 3, red0.packed + o + 3));
-			cols.add(new RGB(gre1.packed + o));
-			cols.add(new RGB(gre0.packed + o + 1));
-			cols.add(new RGB(red1.packed + o + 2));
-			cols.add(new RGB(red0.packed + o + 3));
+		while(glm.polygons.size() > vars.size()){
+			int o = (vars.size() - 2) / 4;
+			vars.add(new VarFace(vars.size(), gre1.packed + o));
+			vars.add(new VarFace(vars.size(), gre0.packed + o + 1));
+			vars.add(new VarFace(vars.size(), red1.packed + o + 2));
+			vars.add(new VarFace(vars.size(), red0.packed + o + 3));
 		}
 		faces = new Face[glm.polygons.size()];
 		for(int i = 0; i < faces.length; i++){
@@ -235,10 +228,10 @@ public class RectCurve extends CurvePolygon {
 	}
 
 	@Override
-	public RGB getFaceColor(int idx){
-		if(idx == 0) return cols.get(0);
-		if(idx == glm.polygons.size() - 1) return cols.get(1);
-		return cols.get(idx + 1);
+	public int getFaceColor(int idx){
+		if(idx == 0) return c_blu1;
+		if(idx == glm.polygons.size() - 1) return c_blu0;
+		return vars.get(idx + 1).color;
 	}
 
 	@Override
