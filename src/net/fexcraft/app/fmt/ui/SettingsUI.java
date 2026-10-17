@@ -86,10 +86,16 @@ public class SettingsUI extends Frame {
 		icon.texture("icons/component/move_right");
 		category.selectValue(tidx);
 		for(Scrollable scr : containers.values()) scr.hide();
-		containers.get(tidx).show();
+		var con = containers.get(tidx);
+		for(Element elm : con.container.elements){
+			if(elm instanceof SettingBlock sb) sb.refresh();
+		}
+		con.show();
 	}
 
 	public static class SettingBlock extends Element {
+
+		private Setting setting;
 
 		public SettingBlock(){
 			super();
@@ -100,7 +106,7 @@ public class SettingsUI extends Frame {
 			size(WIDTH - 30, 30);
 			border(GENERIC_BACKGROUND_2.value);
 			check_mode(CheckMode.IN_ROOT);
-			Setting<?> setting = (Setting<?>)args[2];
+			setting = (Setting<?>)args[2];
 			add(new TextElm(0, 0, 310, "setting." + args[0] + "." + args[1])
 				.text_autoscale().hint(args[0] + " / " + args[1]));
 			if(setting.value instanceof Boolean){
@@ -151,6 +157,15 @@ public class SettingsUI extends Frame {
 				);
 				add(field.pos(315, 2));
 				field.text(setting.value.toString());
+			}
+		}
+
+		public void refresh(){
+			if(setting instanceof StringArraySetting sarr){
+				DropList<String> list = (DropList<String>)elements.get(1);
+				list.clear();
+				for(String val : sarr.vals()) list.addEntry(val, val);
+				list.selectValue(setting.value.toString());
 			}
 		}
 
