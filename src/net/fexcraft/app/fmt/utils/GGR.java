@@ -146,7 +146,7 @@ public class GGR {
 				}//TODO
 				else*/ if(!isOverUI()){
 					if(TexturePainter.TOOL.active()){
-						Picker.pick(TexturePainter.SELMODE.getPickType(), PickTask.PAINT, true);
+						//Picker.pick(TexturePainter.SELMODE.getPickType(), PickTask.PAINT, true);
 					}
 					else if(Picker.TYPE.color()) Picker.process();
 					else Picker.pick(Selector.TYPE, PickTask.SELECT, true);
@@ -236,6 +236,9 @@ public class GGR {
 				sel_panel.setPosition((float)(spos_x < cpos_x ? spos_x : cpos_x), (float)(spos_y < cpos_y ? spos_y : cpos_y));
 				sel_panel.setSize((float)(spos_x < cpos_x ? cpos_x - spos_x : spos_x - cpos_x), (float)(spos_y < cpos_y ? cpos_y - spos_y : spos_y - cpos_y));*/
 				//TODO
+			}
+			if(TexturePainter.TOOL.active()){
+				Picker3D.pick(TexturePainter.SELMODE);
 			}
 			left_timer++;
 		}
