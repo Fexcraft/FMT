@@ -96,7 +96,7 @@ public class TexturePainter {
 				tex.texture.set(x, y, getCurrentColor());*/
 				break;
 			case FACE:
-				polygon.paintTex(tex.texture, polygon.getFaceByColor(face).index());
+				polygon.paintTex(tex.texture, polygon.getShape().isView() ? face : polygon.getFaceByColor(face).index());
 				break;
 			case POLYGON:
 				for(Face f : polygon.getUVFaces()) polygon.paintTex(tex.texture, f.index());
