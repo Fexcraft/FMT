@@ -3,6 +3,7 @@ package net.fexcraft.app.fmt.polygon;
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.uv.Face;
 import net.fexcraft.app.fmt.polygon.uv.NoFace;
+import net.fexcraft.app.fmt.texture.Texture;
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.RGB;
@@ -36,8 +37,8 @@ public class FvtmView extends Polygon {
 	}
 
 	@Override
-	public RGB getFaceColor(int i){
-		return rgb;
+	public int getFaceColor(int i){
+		return i;
 	}
 
 	@Override
@@ -85,6 +86,15 @@ public class FvtmView extends Polygon {
 	@Override
 	public float[][][] newUV(boolean with_offsets, boolean exclude_detached){
 		return new float[0][][];
+	}
+
+	public boolean paintTex(Texture tex, Integer face){
+		if(face == null){
+			for(int i = 0; i < glm.polygons.size(); i++) paintTex(tex, i);
+			return true;
+		}
+		//
+		return true;
 	}
 
 }
