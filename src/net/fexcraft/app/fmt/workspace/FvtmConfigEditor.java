@@ -18,6 +18,7 @@ import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.app.json.JsonValue;
 import net.fexcraft.lib.common.math.V3F;
 import net.fexcraft.mod.fvtm.data.ContentType;
+import net.fexcraft.mod.fvtm.model.DefaultModel;
 import org.joml.Vector3f;
 
 import java.io.File;
@@ -56,16 +57,17 @@ public class FvtmConfigEditor extends WFileEditor {
 			return;
 		}
 		fill();
-		add(new RunElm(w - 160, 2, 150, "workspace.configeditor.load_model", ci -> {
+		add(new RunElm(w - 210, 2, 200, "workspace.configeditor.load_model", ci -> {
 			SaveHandler.shouldSaveDialog(() -> {
 				UpdateHandler.update(new UpdateEvent.ModelUnload(FMT.MODEL));
 				String id = map.get("ID").string_value();
 				if(!id.contains(":")) id = map.get("Addon").string_value() + ":" + id;
 				FvtmWrapper.ModelExternalData data = FvtmWrapper.getMED(type.toContentType(), id);
-				FMT.MODEL = new Model(null, data.content.getName());
+				FMT.MODEL = new Model(new File("./temp/model"), data.content.getName());
 				FMT.MODEL.orient = data.type == ContentType.VEHICLE || data.type == ContentType.PART ? ModelOrientation.FVTM4_DEFAULT : ModelOrientation.FVTM4_BLOCK;
 				FMT.MODEL.format = ModelFormat.UNIVERSAL;
 				FMT.MODEL.scl = new Vector3f(16, 16, 16);
+				FvtmWrapper.loadModelTextures(FMT.MODEL, data, (DefaultModel)data.content.getModel());
 				FvtmWrapper.appendHedrons(FMT.MODEL, data);
 				FMT.updateTitle();
 				DiscordUtil.update(Settings.DISCORD_RESET_ON_NEW.value);
