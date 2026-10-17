@@ -2,7 +2,6 @@ package net.fexcraft.app.fmt.polygon;
 
 import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.texture.Texture;
-import net.fexcraft.app.fmt.ui.Text;
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.demo.ModelMark;
 import net.fexcraft.app.fmt.polygon.PolyRenderer.DrawMode;
@@ -14,7 +13,6 @@ import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.frl.Polyhedron;
 import net.fexcraft.lib.frl.gen.Generator;
 import net.fexcraft.lib.frl.gen.Generator.Values;
-import org.lwjgl.opengl.GL11;
 
 public class Marker extends Polygon {
 
@@ -71,8 +69,8 @@ public class Marker extends Polygon {
 	}
 
 	@Override
-	public RGB getFaceColor(int i){
-		return rgb;
+	public int getFaceColor(int i){
+		return rgb.packed;
 	}
 
 	@Override
