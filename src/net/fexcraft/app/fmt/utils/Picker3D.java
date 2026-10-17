@@ -5,6 +5,7 @@ import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Pivot;
 import net.fexcraft.app.fmt.polygon.Polygon;
 import net.fexcraft.app.fmt.texture.TextureGroup;
+import net.fexcraft.app.fmt.texture.TexturePainter;
 import net.fexcraft.lib.common.math.V3D;
 import net.fexcraft.lib.common.math.V3F;
 import net.fexcraft.lib.frl.Vertex;
@@ -29,7 +30,7 @@ public class Picker3D {
 	private static final float E = Math.ulp(1f);
 	private static V3F pos = new V3F(), dir;
 
-	public static void pick(){
+	public static void pick(TexturePainter.Selection type){
 		/*if(triangles.isEmpty())*/ genTriangles();
 		pos.set(FMT.CAM.pos.x, FMT.CAM.pos.y, FMT.CAM.pos.z);
 		var ray = new Vector4f((float)GGR.cpos_x * 2 / FMT.WIDTH - 1f, 1f - (float)GGR.cpos_y * 2 / FMT.HEIGHT, -1, 1);
@@ -47,21 +48,26 @@ public class Picker3D {
 			if(res.dis < rsu.dis) rsu = res;
 		}
 		if(rsu.triangle != null){
-			//FMT.MODEL.select(rsu.triangle().poly);
 			Group group = rsu.triangle.poly.group();
 			TextureGroup tex = group.texgroup == null ? group.model.texgroup : group.texgroup;
 			if(tex == null) return;
-			V3F v0 = rsu.triangle.v0.sub(rsu.vec);
-			V3F v1 = rsu.triangle.v1.sub(rsu.vec);
-			V3F v2 = rsu.triangle.v2.sub(rsu.vec);
-			float m = rsu.triangle.v0.sub(rsu.triangle.v1).cross(rsu.triangle.v0.sub(rsu.triangle.v2)).length();
-			float x = v1.cross(v2).length() / m;
-			float y = v2.cross(v0).length() / m;
-			float z = v0.cross(v1).length() / m;
-			float u = rsu.triangle.x0.u * x + rsu.triangle.x1.u * y + rsu.triangle.x2.u * z;
-			float v = rsu.triangle.x0.v * x + rsu.triangle.x1.v * y + rsu.triangle.x2.v * z;
-			tex.texture.set((int)(u * tex.width), (int)(v * tex.height), getCurrentColor());
-			tex.texture.rebind();
+			switch(type){
+				case NONE -> {}
+				case PIXEL -> {
+					V3F v0 = rsu.triangle.v0.sub(rsu.vec);
+					V3F v1 = rsu.triangle.v1.sub(rsu.vec);
+					V3F v2 = rsu.triangle.v2.sub(rsu.vec);
+					float m = rsu.triangle.v0.sub(rsu.triangle.v1).cross(rsu.triangle.v0.sub(rsu.triangle.v2)).length();
+					float x = v1.cross(v2).length() / m;
+					float y = v2.cross(v0).length() / m;
+					float z = v0.cross(v1).length() / m;
+					float u = rsu.triangle.x0.u * x + rsu.triangle.x1.u * y + rsu.triangle.x2.u * z;
+					float v = rsu.triangle.x0.v * x + rsu.triangle.x1.v * y + rsu.triangle.x2.v * z;
+					tex.texture.set((int)(u * tex.width), (int)(v * tex.height), getCurrentColor());
+					tex.texture.rebind();
+				}
+				case FACE, POLYGON, GROUP -> TexturePainter.paint(rsu.triangle.poly, rsu.triangle.face);
+			}
 		}
 	}
 
@@ -88,22 +94,26 @@ public class Picker3D {
 
 	private static void genTriangles(){
 		triangles.clear();
+		net.fexcraft.lib.frl.Polygon gon;
 		for(Group group : FMT.MODEL.allgroups()){
 			setPivot(FMT.MODEL.getP(group.pivot));
 			if(!group.visible) continue;
 			for(Polygon poly : group){
 				PIVOT.matrix.get(matrix0);
+				if(poly.getShape().isView()) matrix0.scale(FMT.MODEL.scl.x);
 				matrix0.translate(poly.glm.posX, poly.glm.posY, poly.glm.posZ);
 				if(poly.glm.rotY != 0f) matrix0.rotate((float)Math.toRadians(poly.glm.rotY), axis_y);
 				if(poly.glm.rotX != 0f) matrix0.rotate((float)Math.toRadians(poly.glm.rotX), axis_x);
 				if(poly.glm.rotZ != 0f) matrix0.rotate((float)Math.toRadians(poly.glm.rotZ), axis_z);
-				for(net.fexcraft.lib.frl.Polygon gon : poly.glm.polygons){
+				for(int i = 0; i < poly.glm.polygons.size(); i++){
+					gon = poly.glm.polygons.get(i);
+					int col = poly.getFaceColor(i).packed;
 					if(gon.vertices.length == 3){
-						triangles.add(new Triangle(poly, gon.vertices));
+						triangles.add(new Triangle(poly, col, gon.vertices));
 					}
 					else{
-						triangles.add(new Triangle(poly, gon.vertices, false));
-						triangles.add(new Triangle(poly, gon.vertices, true));
+						triangles.add(new Triangle(poly, col, gon.vertices, false));
+						triangles.add(new Triangle(poly, col, gon.vertices, true));
 					}
 				}
 			}
@@ -115,21 +125,23 @@ public class Picker3D {
 		public Polygon poly;
 		public Vertex x0, x1, x2;
 		public V3F v0, v1, v2;
+		public int face;
 
-		public Triangle(Polygon poly, Vertex x0, Vertex x1, Vertex x2){
+		public Triangle(Polygon poly, int c, Vertex x0, Vertex x1, Vertex x2){
 			this.poly = poly;
 			this.v0 = (this.x0 = x0).vector.copy();
 			this.v1 = (this.x1 = x1).vector.copy();
 			this.v2 = (this.x2 = x2).vector.copy();
+			face = c;
 		}
 
-		public Triangle(Polygon poly, Vertex[] verts){
-			this(poly, verts[0], verts[1], verts[2]);
+		public Triangle(Polygon poly, int c, Vertex[] verts){
+			this(poly, c, verts[0], verts[1], verts[2]);
 			transform();
 		}
 
-		public Triangle(Polygon poly, Vertex[] verts, boolean qi){
-			this(poly, verts[qi ? 3 : 0], verts[qi ? 0 : 1], verts[2]);
+		public Triangle(Polygon poly, int c, Vertex[] verts, boolean qi){
+			this(poly, c, verts[qi ? 3 : 0], verts[qi ? 0 : 1], verts[2]);
 			transform();
 		}
 
