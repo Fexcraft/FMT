@@ -50,8 +50,8 @@ public class ObjView extends Polygon {
 	}
 
 	@Override
-	public RGB getFaceColor(int i){
-		return rgb;
+	public int getFaceColor(int i){
+		return rgb.packed;
 	}
 
 	@Override
