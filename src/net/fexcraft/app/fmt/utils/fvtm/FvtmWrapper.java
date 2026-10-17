@@ -4,6 +4,7 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.*;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.texture.TextureGroup;
+import net.fexcraft.app.fmt.texture.TextureManager;
 import net.fexcraft.app.fmt.utils.Logging;
 import net.fexcraft.app.fmt.utils.SaveHandler;
 import net.fexcraft.app.fmt.workspace.FileElm;
@@ -182,28 +183,12 @@ public class FvtmWrapper extends FvtmResources {
 		model.exdata = data;
 		model.name = map.get("name", data.content.getName());
 		DefaultModel mod = (DefaultModel)data.content.getModel();
-		int texSizeX = mod.tex_width;
-		int texSizeY = mod.tex_height;
 		model.scl = new Vector3f(16, 16, 16);
 		model.orient = data.type == ContentType.VEHICLE || data.type == ContentType.PART ? ModelOrientation.FVTM4_DEFAULT : ModelOrientation.FVTM4_BLOCK;
 		model.format = ModelFormat.UNIVERSAL;
 		for(String creator : mod.getCreators()) model.addAuthor(creator, true);
 		int format = map.getInteger("format", 2);
-		for(IDL tex : ((Textureable.TextureHolder)data.content).getDefaultTextures()){
-			FvtmPackElm pack = FMT.WORKSPACE.getFvtmPack(tex.space());
-			for(FileElm com : pack.textures){
-				String path = com.file.getPath().replace("\\", "/");
-				String pid = path.substring(path.indexOf("/assets/") + 8, path.indexOf("/textures"));
-				path = path.substring(path.indexOf("/textures/") + 1);
-				if(tex.colon().equals(pid + ":" + path)){
-					model.addTexGroup(new TextureGroup(model, tex.colon()));
-				}
-			}
-		}
-		model.texgroup = model.getTexGroup(((Textureable.TextureHolder)data.content).getDefaultTextures().get(0).colon());
-		if(model.texgroup == null) model.genDefTexGroup();
-		if(texSizeX > 0) model.texgroup.width = texSizeX;
-		if(texSizeY > 0) model.texgroup.height = texSizeY;
+		loadModelTextures(model, data, mod);
 		model.render_textured = map.getBoolean("render_textured", true);
 		//
 		model.pivots().clear();
@@ -222,6 +207,27 @@ public class FvtmWrapper extends FvtmResources {
 		loadModelExportValues(model, map);
 		model.recompile();
 		return model;
+	}
+
+	public static void loadModelTextures(Model model, ModelExternalData data, DefaultModel mod){
+		for(IDL tex : ((Textureable.TextureHolder)data.content).getDefaultTextures()){
+			Logging.log("searching: " + tex.colon());
+			FvtmPackElm pack = FMT.WORKSPACE.getFvtmPack(tex.space());
+			for(FileElm com : pack.textures){
+				String path = com.file.getPath().replace("\\", "/");
+				String pid = path.substring(path.indexOf("/assets/") + 8, path.indexOf("/textures"));
+				path = path.substring(path.indexOf("/textures/") + 1);
+				if(tex.colon().equals(pid + ":" + path)){
+					model.addTexGroup(new TextureGroup(model, tex.colon()));
+					TextureManager.loadFromFile("group-" + tex.colon(), com.file);
+					model.getTexGroup(tex.colon()).reAssignTexture();
+				}
+			}
+		}
+		model.texgroup = model.getTexGroup(((Textureable.TextureHolder)data.content).getDefaultTextures().get(0).colon());
+		if(model.texgroup == null) model.genDefTexGroup();
+		model.texgroup.width = mod.tex_width;
+		model.texgroup.height = mod.tex_height;
 	}
 
 	public static void appendHedrons(Model model, ModelExternalData data){
