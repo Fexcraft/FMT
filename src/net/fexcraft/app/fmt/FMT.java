@@ -338,7 +338,7 @@ public class FMT {
 			MODEL.renderPicking();
 			Testing.renderPicking();
 			Picker.process();
-			if(Picker.TYPE.face()){
+			/*if(Picker.TYPE.face()){
 				glClearColor(1, 1, 1, 1);
 			    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			    boolean tex = Picker.TASK.paint() && TexturePainter.SELMODE.pixel();
@@ -347,7 +347,7 @@ public class FMT {
 					Picker.polygon().glm.render();
 					Picker.process();
 				}
-			}
+			}*/
 		    Picker.reset();
 		}
 		if(Picker.TYPE.vertex()){
