@@ -9,8 +9,6 @@ import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateEvent.PainterColor;
 import net.fexcraft.app.fmt.update.UpdateEvent.PainterTool;
 import net.fexcraft.app.fmt.update.UpdateHandler;
-import net.fexcraft.app.fmt.utils.Picker;
-import net.fexcraft.app.fmt.utils.Picker.PickType;
 import net.fexcraft.lib.common.math.RGB;
 
 /**
@@ -41,10 +39,6 @@ public class TexturePainter {
 		
 		public String trs(){
 			return translate("texture.painter.selection." + name().toLowerCase());
-		}
-
-		public PickType getPickType(){
-			return this == FACE || this == PIXEL ? PickType.FACE : PickType.POLYGON;
 		}
 
 		public boolean face(){
@@ -91,15 +85,15 @@ public class TexturePainter {
 	}
 
 	public static void paint(Polygon polygon, int face){
-		Group group = Picker.polygon().group();
+		Group group = polygon.group();
 		TextureGroup tex = group.texgroup == null ? group.model.texgroup : group.texgroup;
 		if(tex == null) return;
 		switch(SELMODE){
 			case PIXEL:
-				int x = face / tex.painter.getHeight();
+				/*int x = face / tex.painter.getHeight();
 				int y = face % tex.painter.getHeight();
 				if(x < 0 || y < 0 || x >= tex.texture.getWidth() || y >= tex.texture.getHeight()) return;
-				tex.texture.set(x, y, getCurrentColor());
+				tex.texture.set(x, y, getCurrentColor());*/
 				break;
 			case FACE:
 				polygon.paintTex(tex.texture, polygon.getFaceByColor(face).index());
@@ -123,14 +117,6 @@ public class TexturePainter {
 		byte[] b = (TOOL == Tool.ERASER ? ERASER : CHANNELS[ACTIVE]).toByteArray();
 		float a = (TOOL == Tool.ERASER ? ERASER : CHANNELS[ACTIVE]).alpha;
 		return new byte[]{ b[0], b[1], b[2], (byte)(Math.floor(a >= 1.0f ? 255 : a * 256.0f) - 128) };
-	}
-
-	public static boolean bindTex(){
-		Group group = Picker.polygon().group();
-		TextureGroup tex = group.texgroup == null ? group.model.texgroup : group.texgroup;
-		if(tex == null) return false;
-		TextureManager.bind(tex.painter);
-		return true;
 	}
 
 	public static void swapActive(int i){
