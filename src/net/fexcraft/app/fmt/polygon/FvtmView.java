@@ -87,12 +87,17 @@ public class FvtmView extends Polygon {
 		return new float[0][][];
 	}
 
+	@Override
 	public boolean paintTex(Texture tex, Integer face){
+		return paintTex(glm, tex, face);
+	}
+
+	public static boolean paintTex(Polyhedron hed, Texture tex, Integer face){
 		if(face == null || face < 0){
-			for(int i = 0; i < glm.polygons.size(); i++) paintTex(tex, i);
+			for(int i = 0; i < hed.polygons.size(); i++) paintTex(hed, tex, i);
 			return true;
 		}
-		net.fexcraft.lib.frl.Polygon gon = glm.polygons.get(face);
+		net.fexcraft.lib.frl.Polygon gon = hed.polygons.get(face);
 		if(gon.vertices.length == 3){
 			paintTri(tex, gon.vertices[0], gon.vertices[1], gon.vertices[2]);
 		}
@@ -103,7 +108,7 @@ public class FvtmView extends Polygon {
 		return true;
 	}
 
-	private void paintTri(Texture tex, Vertex t0, Vertex t1, Vertex t2){
+	public static void paintTri(Texture tex, Vertex t0, Vertex t1, Vertex t2){
 		byte[] c = TexturePainter.getCurrentColor();
 		float u0 = t0.u * tex.getWidth();
 		float u1 = t1.u * tex.getWidth();
