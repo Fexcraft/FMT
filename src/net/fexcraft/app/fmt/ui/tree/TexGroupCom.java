@@ -150,6 +150,7 @@ public class TexGroupCom extends TTabCom {
 			if(file == null) return;
 			try{
 				Files.copy(file, group.texture.getFile());
+				group.texture.reload();
 			}
 			catch(Throwable e){
 				log(e);
