@@ -61,9 +61,11 @@ public class Picker3D {
 					float x = v1.cross(v2).length() / m;
 					float y = v2.cross(v0).length() / m;
 					float z = v0.cross(v1).length() / m;
-					float u = rsu.triangle.x0.u * x + rsu.triangle.x1.u * y + rsu.triangle.x2.u * z;
-					float v = rsu.triangle.x0.v * x + rsu.triangle.x1.v * y + rsu.triangle.x2.v * z;
-					tex.texture.set((int)(u * tex.width), (int)(v * tex.height), getCurrentColor());
+					float u = (rsu.triangle.x0.u * x + rsu.triangle.x1.u * y + rsu.triangle.x2.u * z) * tex.width;
+					float v = (rsu.triangle.x0.v * x + rsu.triangle.x1.v * y + rsu.triangle.x2.v * z) * tex.height;
+					if(u < 0) u = 0; if(u >= tex.width) u = tex.width - 1;
+					if(v < 0) v = 0; if(v >= tex.height) v = tex.height - 1;
+					tex.texture.set((int)u, (int)v, getCurrentColor());
 					tex.texture.rebind();
 				}
 				case FACE, POLYGON, GROUP -> TexturePainter.paint(rsu.triangle.poly, rsu.triangle.face);
