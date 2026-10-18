@@ -1,18 +1,17 @@
 package net.fexcraft.app.fmt.polygon;
 
+import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.PolyRenderer.DrawMode;
 import net.fexcraft.app.fmt.polygon.uv.Face;
 import net.fexcraft.app.fmt.polygon.uv.NoFace;
+import net.fexcraft.app.fmt.texture.Texture;
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.frl.Polyhedron;
 
-import java.util.ArrayList;
-
 public class ObjView extends Polygon {
 
-	//private ArrayList<Polyhedron> polis;
 	private RGB rgb = RGB.random();
 	public float scale = 1;
 
@@ -41,7 +40,7 @@ public class ObjView extends Polygon {
 
 	@Override
 	public Shape getShape(){
-		return Shape.OBJECT;
+		return Shape.VIEW;
 	}
 
 	@Override
@@ -51,7 +50,7 @@ public class ObjView extends Polygon {
 
 	@Override
 	public int getFaceColor(int i){
-		return rgb.packed;
+		return i;
 	}
 
 	@Override
@@ -61,12 +60,15 @@ public class ObjView extends Polygon {
 	
 	@Override
 	public void render(float alpha){
+		if(FMT.MODEL.render_textured){
+			super.render(alpha);
+			return;
+		}
 		DrawMode mode = PolyRenderer.mode();
 		PolyRenderer.mode(DrawMode.RGBCOLOR);
 		glm.render();
 		PolyRenderer.mode(DrawMode.LINES);
 		glm.render();
-		//for(Polyhedron poli : polis) poli.render();
 		PolyRenderer.mode(mode);
 	}
 	
@@ -106,6 +108,11 @@ public class ObjView extends Polygon {
 	@Override
 	public float[][][] newUV(boolean with_offsets, boolean exclude_detached){
 		return new float[0][][];
+	}
+
+	@Override
+	public boolean paintTex(Texture tex, Integer face){
+		return FvtmView.paintTex(glm, tex, face);
 	}
 
 }
