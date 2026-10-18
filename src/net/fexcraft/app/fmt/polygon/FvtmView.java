@@ -4,14 +4,18 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.polygon.uv.Face;
 import net.fexcraft.app.fmt.polygon.uv.NoFace;
 import net.fexcraft.app.fmt.texture.Texture;
+import net.fexcraft.app.fmt.texture.TexturePainter;
 import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.json.JsonMap;
-import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.frl.Polyhedron;
+import net.fexcraft.lib.frl.Vertex;
 
+import java.awt.*;
+
+/**
+ * @author Ferdinand Calo' (FEX___96)
+ */
 public class FvtmView extends Polygon {
-
-	private RGB rgb = RGB.random();
 
 	public FvtmView(Model model){
 		super(model);
@@ -56,20 +60,16 @@ public class FvtmView extends Polygon {
 	@Override
 	public void recompile(){
 		//super.recompile();
-		GLObject gl = glm.glObj();
-		gl.polycolor = RGB.random().toFloatArray();
 	}
 	
 	public float getValue(PolygonValue polyval){
 		switch(polyval.val()){
-			case COLOR: return rgb.packed;
 			default: return super.getValue(polyval);
 		}
 	}
 
 	public void setValue(PolygonValue polyval, float value){
 		switch(polyval.val()){
-			case COLOR: rgb.packed = (int)value; break;
 			default: super.setValue(polyval, value); break;
 		}
 		this.recompile();
@@ -78,8 +78,7 @@ public class FvtmView extends Polygon {
 	@Override
 	protected Polygon copyInternal(Polygon poly){
 		if(poly instanceof FvtmView == false) return poly;
-		FvtmView marker = (FvtmView)poly;
-		marker.rgb.packed = rgb.packed;
+		//FvtmView view = (FvtmView)poly;
 		return poly;
 	}
 
@@ -89,12 +88,51 @@ public class FvtmView extends Polygon {
 	}
 
 	public boolean paintTex(Texture tex, Integer face){
-		if(face == null){
+		if(face == null || face < 0){
 			for(int i = 0; i < glm.polygons.size(); i++) paintTex(tex, i);
 			return true;
 		}
-		//
+		net.fexcraft.lib.frl.Polygon gon = glm.polygons.get(face);
+		if(gon.vertices.length == 3){
+			paintTri(tex, gon.vertices[0], gon.vertices[1], gon.vertices[2]);
+		}
+		else if(gon.vertices.length == 4){
+			paintTri(tex, gon.vertices[0], gon.vertices[1], gon.vertices[2]);
+			paintTri(tex, gon.vertices[3], gon.vertices[0], gon.vertices[2]);
+		}
 		return true;
+	}
+
+	private void paintTri(Texture tex, Vertex t0, Vertex t1, Vertex t2){
+		byte[] c = TexturePainter.getCurrentColor();
+		float u0 = t0.u * tex.getWidth();
+		float u1 = t1.u * tex.getWidth();
+		float u2 = t2.u * tex.getWidth();
+		float v0 = t0.v * tex.getHeight();
+		float v1 = t1.v * tex.getHeight();
+		float v2 = t2.v * tex.getHeight();
+		float r0, r1, r2;
+		boolean n, p;
+		int xs = (int)Math.min(u0, Math.min(u1, u2)) - 1;
+		int xe = (int)Math.max(u0, Math.max(u1, u2)) + 1;
+		int ys = (int)Math.min(v0, Math.min(v1, v2)) - 1;
+		int ye = (int)Math.max(v0, Math.max(v1, v2)) + 1;
+		for(float x = xs < 0 ? 0 : xs; x < xe && x < tex.getWidth(); x += 0.5f){
+			for(float y = ys < 0 ? 0 : ys; y < ye && y < tex.getHeight(); y += 0.5f){
+				r0 = s(x, y, u0, v0, u1, v1);
+				r1 = s(x, y, u1, v1, u2, v2);
+				r2 = s(x, y, u2, v2, u0, v0);
+				n = r0 < 0 || r1 < 0 || r2 < 0;
+				p = r0 > 0 || r1 > 0 || r2 > 0;
+				if(n && !p){
+					tex.set((int)x, (int)y, c);
+				}
+			}
+		}
+	}
+
+	private static float s(float x, float y, float u0, float v0, float u1, float v1){
+		return (x - u1) * (v0 - v1) - (u0 - u1) * (y - v1);
 	}
 
 }
