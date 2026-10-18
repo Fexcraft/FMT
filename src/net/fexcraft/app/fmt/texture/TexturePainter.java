@@ -89,21 +89,17 @@ public class TexturePainter {
 		TextureGroup tex = group.texgroup == null ? group.model.texgroup : group.texgroup;
 		if(tex == null) return;
 		switch(SELMODE){
-			case PIXEL:
-				/*int x = face / tex.painter.getHeight();
-				int y = face % tex.painter.getHeight();
-				if(x < 0 || y < 0 || x >= tex.texture.getWidth() || y >= tex.texture.getHeight()) return;
-				tex.texture.set(x, y, getCurrentColor());*/
-				break;
 			case FACE:
 				polygon.paintTex(tex.texture, polygon.getShape().isView() ? face : polygon.getFaceByColor(face).index());
 				break;
 			case POLYGON:
-				for(Face f : polygon.getUVFaces()) polygon.paintTex(tex.texture, f.index());
+				if(polygon.getShape().isView()) polygon.paintTex(tex.texture, null);
+				else for(Face f : polygon.getUVFaces()) polygon.paintTex(tex.texture, f.index());
 				break;
 			case GROUP:
 				group.forEach(poly -> {
-					for(Face f : poly.getUVFaces()) poly.paintTex(tex.texture, f.index());
+					if(polygon.getShape().isView()) poly.paintTex(tex.texture, null);
+					else for(Face f : poly.getUVFaces()) poly.paintTex(tex.texture, f.index());
 				});
 				break;
 			case NONE:
