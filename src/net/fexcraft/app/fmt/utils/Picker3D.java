@@ -11,7 +11,10 @@ import net.fexcraft.lib.common.math.V3F;
 import net.fexcraft.lib.frl.Vertex;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
+import org.lwjgl.opengl.GL11;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.ArrayList;
 
 import static net.fexcraft.app.fmt.polygon.PolyRenderer.axis_x;
@@ -27,10 +30,18 @@ public class Picker3D {
 	private static Pivot PIVOT = null;
 	private static Matrix4f matrix0 = new Matrix4f();
 	private static ArrayList<Triangle> triangles = new ArrayList<>();
+	private static ByteBuffer rp_buffer = ByteBuffer.allocateDirect(4).order(ByteOrder.nativeOrder());
+	private static byte[] read_pixel = new byte[4];
 	private static final float E = Math.ulp(1f);
 	private static V3F pos = new V3F(), dir;
 
-	public static void pick(TexturePainter.Selection type){
+	public static void pick(){
+		if(TexturePainter.TOOL == TexturePainter.Tool.PICKER){
+			GL11.glReadPixels(GGR.xCursor(), -(GGR.yCursor() - FMT.HEIGHT), 1, 1, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, rp_buffer);
+			rp_buffer.get(0, read_pixel);
+			TexturePainter.updateColor(ByteUtils.getRGB(read_pixel), TexturePainter.ACTIVE, true);
+			return;
+		}
 		/*if(triangles.isEmpty())*/ genTriangles();
 		pos.set(FMT.CAM.pos.x, FMT.CAM.pos.y, FMT.CAM.pos.z);
 		var ray = new Vector4f((float)GGR.cpos_x * 2 / FMT.WIDTH - 1f, 1f - (float)GGR.cpos_y * 2 / FMT.HEIGHT, -1, 1);
@@ -51,7 +62,7 @@ public class Picker3D {
 			Group group = rsu.triangle.poly.group();
 			TextureGroup tex = group.texgroup == null ? group.model.texgroup : group.texgroup;
 			if(tex == null) return;
-			switch(type){
+			switch(TexturePainter.SELMODE){
 				case NONE -> {}
 				case PIXEL -> {
 					V3F v0 = rsu.triangle.v0.sub(rsu.vec);
