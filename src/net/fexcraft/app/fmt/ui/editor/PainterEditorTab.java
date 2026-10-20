@@ -10,9 +10,7 @@ import net.fexcraft.app.fmt.ui.TextElm;
 import net.fexcraft.app.fmt.update.UpdateEvent.PainterChannel;
 import net.fexcraft.app.fmt.update.UpdateEvent.PainterColor;
 import net.fexcraft.app.fmt.update.UpdateEvent.PainterTool;
-import net.fexcraft.app.fmt.update.UpdateEvent.PickMode;
 import net.fexcraft.app.fmt.update.UpdateHandler;
-import net.fexcraft.app.fmt.utils.Picker;
 import net.fexcraft.app.json.JsonArray;
 import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.RGB;
@@ -70,8 +68,7 @@ public class PainterEditorTab extends EditorTab {
 			.hint(lang_prefix + "current.save_channel").onclick(ci -> addToPalette()));
 		current.add(picker = new Element().pos(FF - 30, next_y_pos(0) - 1).size(32, 32).texture("icons/painter/picker")
 			.hint(lang_prefix + "current.color_picker").onclick(ci -> {
-				if(Picker.TYPE == Picker.PickType.COLOR) Picker.reset();
-				else Picker.pick(Picker.PickType.COLOR, Picker.PickTask.NONE, true);
+				TexturePainter.setTool(TexturePainter.TOOL == Tool.PICKER ? Tool.NONE : Tool.PICKER);
 			}));
 		current.add(act_tool = new Element().pos(FO, next_y_pos(1.5f)).size(FF, 30).color(GENERIC_FIELD.value)
 			.hint(lang_prefix + "current.tool_reset").onclick(ci -> TexturePainter.setTool(Tool.NONE)));
@@ -155,6 +152,7 @@ public class PainterEditorTab extends EditorTab {
 		yo = next_y_pos(1);
 		idx = 0;
 		for(Tool tool : Tool.values()){
+			if(tool == Tool.PICKER) continue;
 			tools.add(new Element().pos(FO + idx++ * 35, yo).size(32, 32).texture("icons/painter/" + tool.name().toLowerCase())
 				.hint(lang_prefix + "tools." + tool.name().toLowerCase())
 				.onclick(ci -> TexturePainter.setTool(tool)));
@@ -164,14 +162,12 @@ public class PainterEditorTab extends EditorTab {
 			updateActiveChannel();
 			refreshPalette(event.value(), event.upd_plt());
 		});
-		updcom.add(PickMode.class, event -> {
-			picker.texture(event.type() == Picker.PickType.COLOR ? "icons/painter/picker_active" : "icons/painter/picker");
-		});
 		updcom.add(PainterChannel.class, event -> {
 			updateActiveChannel();
 			refreshPalette(null, true);
 		});
 		updcom.add(PainterTool.class, event -> {
+			picker.texture(event.tool() == Tool.PICKER ? "icons/painter/picker_active" : "icons/painter/picker");
 			updateActiveTool();
 		});
 		updateActiveChannel();
