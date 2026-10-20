@@ -148,7 +148,6 @@ public class GGR {
 					if(TexturePainter.TOOL.active()){
 						//Picker.pick(TexturePainter.SELMODE.getPickType(), PickTask.PAINT, true);
 					}
-					else if(Picker.TYPE.color()) Picker.process();
 					else Picker.pick(Selector.TYPE, PickTask.SELECT, true);
 				}
 				else{
@@ -238,7 +237,7 @@ public class GGR {
 				//TODO
 			}
 			if(TexturePainter.TOOL.active()){
-				Picker3D.pick(TexturePainter.SELMODE);
+				Picker3D.pick();
 			}
 			left_timer++;
 		}
