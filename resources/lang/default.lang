@@ -699,6 +699,7 @@ texture.painter.tool.pencil=Pencil
 texture.painter.tool.bucket=Bucket
 texture.painter.tool.brush=Brush
 texture.painter.tool.eraser=Eraser
+texture.painter.tool.picker=Picker
 texture.painter.tool.none=none
 
 # Texture Auto-Pos Util
