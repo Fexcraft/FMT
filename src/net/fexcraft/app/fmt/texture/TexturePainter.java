@@ -53,7 +53,7 @@ public class TexturePainter {
 	
 	public static enum Tool {
 		
-		NONE, BUCKET, BRUSH, ERASER;
+		NONE, BUCKET, BRUSH, ERASER, PICKER;
 		
 		public String trs(){
 			return translate("texture.painter.tool." + name().toLowerCase());
@@ -68,6 +68,7 @@ public class TexturePainter {
 	public static String getToolName(){
 		if(SELMODE == Selection.NONE || TOOL == Tool.NONE) return Selection.NONE.trs();
 		if(SELMODE == Selection.PIXEL && TOOL == Tool.BUCKET) return SELMODE.trs() + " " + translate("texture.painter.tool.pencil");
+		if(TOOL == Tool.PICKER) return translate("texture.painter.tool.picker");
 		if(TOOL == Tool.BRUSH) return TOOL.trs();
 		return SELMODE.trs() + " " + TOOL.trs();
 	}
