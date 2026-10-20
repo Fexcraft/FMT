@@ -18,7 +18,6 @@ import net.fexcraft.app.fmt.FMT;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.fmt.polygon.Group;
 import net.fexcraft.app.fmt.polygon.Polygon;
-import net.fexcraft.app.fmt.texture.TexturePainter;
 
 public class Picker {
 	
@@ -40,7 +39,7 @@ public class Picker {
 	
 	public static enum PickType {
 		
-		NONE("none"), VERTEX("vert"), FACE("face"), POLYGON("poly"), COLOR("col");
+		NONE("none"), VERTEX("vert"), FACE("face"), POLYGON("poly");
 
 		public String _short;
 
@@ -62,10 +61,6 @@ public class Picker {
 
 		public boolean vertex(){
 			return this == VERTEX;
-		}
-
-		public boolean color(){
-			return this == COLOR;
 		}
 
 	}
@@ -113,10 +108,7 @@ public class Picker {
 
 	public static void process(){
 		fillBuffer();
-		if(TYPE.color()){
-			TexturePainter.updateColor(getPick(), TexturePainter.ACTIVE, true);
-		}
-		else if(TYPE.face() && polygon != null){
+		if(TYPE.face() && polygon != null){
 			int face = getPick();
 			selected_face = polygon.getFaceByColor(face);
 			UpdateHandler.update(new UpdateEvent.PickFace(polygon, selected_face));
