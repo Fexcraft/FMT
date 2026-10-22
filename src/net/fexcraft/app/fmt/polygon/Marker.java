@@ -14,6 +14,9 @@ import net.fexcraft.lib.frl.Polyhedron;
 import net.fexcraft.lib.frl.gen.Generator;
 import net.fexcraft.lib.frl.gen.Generator.Values;
 
+import static net.fexcraft.app.fmt.polygon.PolyRenderer.DRAW_COLOR;
+import static net.fexcraft.app.fmt.polygon.PolyRenderer.DRAW_TEXTURED;
+
 public class Marker extends Polygon {
 
 	private ModelMark model = new ModelMark();
@@ -81,10 +84,10 @@ public class Marker extends Polygon {
 	@Override
 	public void render(float alpha){
 		DrawMode mode = PolyRenderer.mode();
-		PolyRenderer.mode(DrawMode.RGBCOLOR);
+		PolyRenderer.mode(DRAW_COLOR);
 		glm.render();
-		PolyRenderer.mode(DrawMode.TEXTURED);
-		if(biped && !PolyRenderer.mode().lines()){
+		PolyRenderer.mode(DRAW_TEXTURED);
+		if(biped && !PolyRenderer.mode().lines){
 			int tex = Texture.BOUND;
 			TextureManager.bind(FMT.MODEL.orient.rect() ? "marker" : "mark");
 			model.render();
