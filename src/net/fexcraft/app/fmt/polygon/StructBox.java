@@ -123,9 +123,9 @@ public class StructBox extends Box {
 
 	@Override
 	public void render(float alpha){
-		if(PolyRenderer.mode().lines()) return;
+		if(PolyRenderer.mode().lines) return;
 		PolyRenderer.DrawMode mode = PolyRenderer.mode();
-		PolyRenderer.mode(PolyRenderer.DrawMode.RGBCOLOR);
+		PolyRenderer.mode(PolyRenderer.DRAW_COLOR);
 		glm.render();
 		PolyRenderer.mode(mode);
 		//super.render();
