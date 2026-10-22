@@ -10,6 +10,9 @@ import net.fexcraft.app.json.JsonMap;
 import net.fexcraft.lib.common.math.RGB;
 import net.fexcraft.lib.frl.Polyhedron;
 
+import static net.fexcraft.app.fmt.polygon.PolyRenderer.DRAW_COLOR;
+import static net.fexcraft.app.fmt.polygon.PolyRenderer.DRAW_LINES;
+
 public class ObjView extends Polygon {
 
 	private RGB rgb = RGB.random();
@@ -65,9 +68,9 @@ public class ObjView extends Polygon {
 			return;
 		}
 		DrawMode mode = PolyRenderer.mode();
-		PolyRenderer.mode(DrawMode.RGBCOLOR);
+		PolyRenderer.mode(DRAW_COLOR);
 		glm.render();
-		PolyRenderer.mode(DrawMode.LINES);
+		PolyRenderer.mode(DRAW_LINES);
 		glm.render();
 		PolyRenderer.mode(mode);
 	}
