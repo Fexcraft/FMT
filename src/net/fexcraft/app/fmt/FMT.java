@@ -51,6 +51,7 @@ import java.util.HashSet;
 import java.util.Timer;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import static net.fexcraft.app.fmt.polygon.PolyRenderer.*;
 import static net.fexcraft.app.fmt.utils.GGR.parseKeyAction;
 import static net.fexcraft.app.fmt.utils.Logging.log;
 import static net.fexcraft.lib.frl.gen.Generator.Values.*;
@@ -334,7 +335,7 @@ public class FMT {
 			glClearColor(1, 1, 1, 1);
 		    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			PolyRenderer.mode(DrawMode.PICKER);
+			PolyRenderer.mode(DRAW_PICKER);
 			MODEL.renderPicking();
 			Testing.renderPicking();
 			Picker.process();
@@ -353,7 +354,7 @@ public class FMT {
 		if(Picker.TYPE.vertex()){
 			glClearColor(1, 1, 1, 1);
 		    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			PolyRenderer.mode(DrawMode.RGBCOLOR);
+			PolyRenderer.mode(DRAW_COLOR);
 			MODEL.renderVertices(true);
 			Picker.process();
 			Picker.reset();
@@ -363,17 +364,17 @@ public class FMT {
 		CAM.ortho(1);
 		glClearColor(background[0], background[1], background[2], 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		PolyRenderer.mode(DrawMode.UI);
+		PolyRenderer.mode(DRAW_UI);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		UI.render();
 		glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 		PolyRenderer.SCALE0 = 1f;
 		//
 		CAM.apply();
-	    PolyRenderer.mode(DrawMode.TEXTURED);
+	    PolyRenderer.mode(DRAW_TEXTURED);
 		if(Settings.LIGHTING_ON.value){
 			PolyRenderer.setLightOn(false);
-			PolyRenderer.mode(DrawMode.RGBCOLOR);
+			PolyRenderer.mode(DRAW_COLOR);
 			for(Polyhedron poly : lightmarker){
 				poly.posX = Settings.LIGHT_POSX.value;
 				poly.posY = Settings.LIGHT_POSY.value;
@@ -396,14 +397,14 @@ public class FMT {
 			Testing.render();
 		}
 		if(Settings.CMARKER.value){
-			PolyRenderer.mode(DrawMode.RGBCOLOR);
+			PolyRenderer.mode(DRAW_COLOR);
 			centermarker0.render();
 			centermarker1.render();
 			centermarker2.render();
 		}
 		MODEL.render(alpha);
 		if(Settings.POLYMARKER.value || Selector.TYPE == Picker.PickType.VERTEX || Selector.SHOW_VERTICES){
-			PolyRenderer.mode(DrawMode.RGBCOLOR);
+			PolyRenderer.mode(DRAW_COLOR);
 			MODEL.renderVertices(false);
 		}
 		if(PreviewHandler.VISIBLE){
