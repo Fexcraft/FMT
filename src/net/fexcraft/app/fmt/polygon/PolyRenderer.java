@@ -21,35 +21,44 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 
+/**
+ * @author Ferdinand Calo' (FEX___96)
+ */
 public class PolyRenderer extends Renderer {
 
+	public static DrawMode DRAW_TEXTURED = new DrawMode().textured();
+	public static DrawMode DRAW_UNTEXTURED = new DrawMode();
+	public static DrawMode DRAW_PICKER = new DrawMode();
+	public static DrawMode DRAW_COLOR = new DrawMode().color();
+	public static DrawMode DRAW_SEL_LINES = new DrawMode().lines();
+	public static DrawMode DRAW_LINES = new DrawMode().lines();
+	public static DrawMode DRAW_UI = new DrawMode();
+	public static DrawMode DRAW_UI_LINES = new DrawMode().lines();
+	//
     private static Pivot PIVOT = null;
 	private static Model HELPER = null;
 	public static float SCALE0 = 1f;
 	public static float SCALE1 = 1f;
     private static Matrix4f matrix0 = new Matrix4f();
 	private static Matrix4f matrix1 = new Matrix4f();
-	private static DrawMode MODE = DrawMode.TEXTURED;
+	private static DrawMode MODE = DRAW_TEXTURED;
 	public static ShaderManager.ShaderProgram program;
 	public static TreeMap<Integer, int[]> VERTEX_ORDERS = new TreeMap<>();
 	public static final float[] LINECOLOR = { 0, 0, 0, 1}, EMPTY = { 0, 0, 0, 0 }, SELCOLOR = { 1, 1, 0, 1 };
 	private static final Vector3f GIF_AXIS = new Vector3f(0, 1, 0);
 	private boolean subpoly;
-	private boolean lines;
 	private GLObject glo;
 	//
 
 	@Override
 	public void render(Polyhedron poly){
 		if(!poly.visible) return;
-		int index = (lines = MODE.lines()) ? 1 : 0;
+		int index = MODE.lines ? 1 : 0;
 		glo = poly.glObj();
 		if(poly.recompile || glo.gpu[0].glid == null){
 			compile(poly, glo, glo.gpu[0], false);
 			compile(poly, glo, glo.gpu[1], true);
-			if(MODE.ui()){
-				if(MODE.ui_lines() && glo.linecolor == null) return;
-			}
+			if(MODE == DRAW_UI_LINES && glo.linecolor == null) return;
 			else if(glo.linecolor == null) glo.linecolor = LINECOLOR;
 			if(glo.polycolor == null) glo.polycolor = EMPTY;
 			if(glo.pickercolor == null) glo.pickercolor = EMPTY;
@@ -76,21 +85,21 @@ public class PolyRenderer extends Renderer {
 		//
 		glUniformMatrix4fv(program.getUniform(Uniform.MODEL), false, matrix0.get(new float[16]));
 		if(MODE.ui()){
-			glUniform4fv(program.getUniform(Uniform.LINE_COLOR), MODE.ui_lines() ? glo.linecolor : EMPTY);
+			glUniform4fv(program.getUniform(Uniform.LINE_COLOR), MODE == DRAW_UI_LINES ? glo.linecolor : EMPTY);
 			glUniform4fv(program.getUniform(Uniform.POLY_COLOR), glo.polycolor);
 			glUniform1f(program.getUniform(Uniform.TEXTURED), glo.textured ? 1 : 0);
 			//glUniform1f(program.getUniform(Uniform.TINTED), MODE.ui_tinted() ? 1 : 0);
 		}
 		else{
-			glUniform4fv(program.getUniform(Uniform.LINE_COLOR), MODE.lines() ? MODE == DrawMode.SELLINES ? SELCOLOR : glo.linecolor : EMPTY);
-			glUniform4fv(program.getUniform(Uniform.POLY_COLOR), MODE.picker() ? glo.pickercolor : MODE.color() ? glo.polycolor : EMPTY);
-			glUniform1f(program.getUniform(Uniform.TEXTURED), MODE.textured() ? 1 : 0);
+			glUniform4fv(program.getUniform(Uniform.LINE_COLOR), MODE.lines ? MODE == DRAW_SEL_LINES ? SELCOLOR : glo.linecolor : EMPTY);
+			glUniform4fv(program.getUniform(Uniform.POLY_COLOR), MODE.picker() ? glo.pickercolor : MODE.color ? glo.polycolor : EMPTY);
+			glUniform1f(program.getUniform(Uniform.TEXTURED), MODE.textured ? 1 : 0);
 		}
 		//
         glEnableVertexAttribArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, glo.gpu[index].glid);
         glVertexAttribPointer(0, 3, GL_FLOAT, false, 12, 0);
-        if(!lines){
+        if(MODE.gl_draw_mode != GL_LINES){
     		glEnableVertexAttribArray(1);
     		glBindBuffer(GL_ARRAY_BUFFER, glo.gpu[index].colorss);
     		glVertexAttribPointer(1, 4, GL_FLOAT, false, 16, 0);
@@ -104,7 +113,7 @@ public class PolyRenderer extends Renderer {
     		glBindBuffer(GL_ARRAY_BUFFER, glo.gpu[index].lightss);
     		glVertexAttribPointer(4, 1, GL_FLOAT, false, 4, 0);
         }
-		glDrawArrays(lines ? GL_LINES : GL_TRIANGLES, 0, glo.gpu[index].size);
+		glDrawArrays(MODE.gl_draw_mode, 0, glo.gpu[index].size);
 		//
         if(poly.sub != null){
 			subpoly = true;
@@ -156,7 +165,7 @@ public class PolyRenderer extends Renderer {
 	}
 	
 	public static void updateLightState(){
-		glUniform1f(program.getUniform(Uniform.LIGHTING), Settings.LIGHTING_ON.value && MODE.lighting() ? 1 : 0);
+		glUniform1f(program.getUniform(Uniform.LIGHTING), Settings.LIGHTING_ON.value && MODE.lighting ? 1 : 0);
 		glUniform3fv(program.getUniform(Uniform.LIGHTCOLOR), Settings.LIGHT_COLOR.value.toFloatArray());
 		glUniform3fv(program.getUniform(Uniform.LIGHTPOS), new float[]{ Settings.LIGHT_POSX.value, Settings.LIGHT_POSY.value, Settings.LIGHT_POSZ.value });
 		glUniform1f(program.getUniform(Uniform.AMBIENT), Settings.LIGHT_AMBIENT.value);
@@ -363,57 +372,44 @@ public class PolyRenderer extends Renderer {
 
 	}
 
-	public static enum DrawMode {
-		
-		TEXTURED,
-		UNTEXTURED,
-		RGBCOLOR,
-		PICKER,
-		PICKER_FACE,
-		SELLINES,
-		LINES,
-		UI,
-		UI_LINES,
-		;
-		
-		public boolean lines(){
-			return this == LINES || this == SELLINES || this == UI_LINES;
+	public static class DrawMode {
+
+		public boolean textured;
+		public boolean lighting = true;
+		public boolean lines;
+		public boolean color;
+		public boolean ui;
+		public int gl_draw_mode = GL_TRIANGLES;
+
+		public DrawMode(){}
+
+		public DrawMode textured(){
+			textured = true;
+			return this;
 		}
 
-		public boolean picker(){
-			return this == PICKER;
+		public DrawMode lines(){
+			lines = true;
+			lighting = false;
+			gl_draw_mode = GL_LINES;
+			return this;
 		}
 
-		public boolean face_picker(){
-			return this == PICKER_FACE;
-		}
-
-		public boolean vertex_picker(){
-			return this == PICKER_FACE;
+		public DrawMode color(){
+			color = true;
+			return this;
 		}
 
 		public boolean ui(){
-			return this == UI || this == UI_LINES;
+			return this == DRAW_UI || this == DRAW_UI_LINES;
 		}
 
-		public boolean ui_lines(){
-			return this == UI_LINES;
+		public boolean picker(){
+			return this == DRAW_PICKER;
 		}
 
-		public boolean color(){
-			return this == RGBCOLOR;
-		}
-
-		public static DrawMode textured(boolean bool){
-			return bool ? TEXTURED : UNTEXTURED;
-		}
-
-		public boolean lighting(){
-			return this != PICKER && this != PICKER_FACE && this != LINES;
-		}
-
-		public boolean textured(){
-			return this == TEXTURED && this != PICKER_FACE;
+		public static DrawMode get_textured(boolean bool){
+			return bool ? DRAW_TEXTURED : DRAW_UNTEXTURED;
 		}
 
 	}
