@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.polygon;
 
+import static net.fexcraft.app.fmt.polygon.PolyRenderer.DRAW_COLOR;
+import static net.fexcraft.app.fmt.polygon.PolyRenderer.DRAW_LINES;
 import static net.fexcraft.app.fmt.settings.Settings.GENERIC_BACKGROUND_2;
 import static net.fexcraft.app.fmt.ui.Field.round;
 import static net.fexcraft.app.fmt.update.UpdateHandler.update;
@@ -171,18 +173,18 @@ public class Model {
 
 	public void render(float alpha){
 		if(!visible) return;
-		DrawMode mode = DrawMode.textured(render_textured);
+		DrawMode mode = DrawMode.get_textured(render_textured);
 		for(Pivot pivot : pivots){
 			PolyRenderer.setPivot(pivot);
 			if(Settings.PMARKER.value && pivot.visible){
-				PolyRenderer.mode(DrawMode.RGBCOLOR);
+				PolyRenderer.mode(DRAW_COLOR);
 				centermarker0.render();
 				centermarker1.render();
 				centermarker2.render();
 			}
 			for(Group group : pivot.groups){
 				group.render(mode, alpha);
-				if(Settings.LINES.value) group.render(DrawMode.LINES, alpha);
+				if(Settings.LINES.value) group.render(DRAW_LINES, alpha);
 			}
 		}
 		PolyRenderer.setPivot(null);
