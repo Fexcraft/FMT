@@ -211,9 +211,9 @@ public abstract class CurvePolygon extends Polygon {
 
 	@Override
 	public void render(float alpha){
-		if(PolyRenderer.mode().lines()){
+		if(PolyRenderer.mode().lines){
 			PolyRenderer.DrawMode mode = PolyRenderer.mode();
-			PolyRenderer.mode(PolyRenderer.DrawMode.RGBCOLOR);
+			PolyRenderer.mode(PolyRenderer.DRAW_COLOR);
 			if(selected || group().selected) glp.render();
 			if(showline) gll.render();
 			PolyRenderer.mode(mode);
