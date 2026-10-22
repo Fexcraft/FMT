@@ -1,5 +1,7 @@
 package net.fexcraft.app.fmt.polygon;
 
+import static net.fexcraft.app.fmt.polygon.PolyRenderer.DRAW_LINES;
+import static net.fexcraft.app.fmt.polygon.PolyRenderer.DRAW_SEL_LINES;
 import static net.fexcraft.app.fmt.update.UpdateHandler.update;
 
 import java.util.ArrayList;
@@ -82,12 +84,12 @@ public class Group extends ArrayList<Polygon> {
 		if(!visible) return;
 		bindtex();
 		if(Settings.ANIMATE.value) for(Animation animation : animations) if(animation.enabled) animation.pre(this, mode, alpha);
-		if(mode == DrawMode.LINES){
-			PolyRenderer.mode(selected ? DrawMode.SELLINES : DrawMode.LINES);
+		if(mode.lines){
+			PolyRenderer.mode(selected ? DRAW_SEL_LINES : DRAW_LINES);
 			for(Polygon poly : this){
-				if(!selected && poly.selected) PolyRenderer.mode(DrawMode.SELLINES);
+				if(!selected && poly.selected) PolyRenderer.mode(DRAW_SEL_LINES);
 				poly.render(alpha);
-				if(poly.selected && !selected) PolyRenderer.mode(DrawMode.LINES);
+				if(poly.selected && !selected) PolyRenderer.mode(DRAW_LINES);
 			}
 		}
 		else{
