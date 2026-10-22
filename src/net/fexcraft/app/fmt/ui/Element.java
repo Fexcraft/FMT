@@ -18,6 +18,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import static net.fexcraft.app.fmt.polygon.PolyRenderer.DRAW_UI;
+import static net.fexcraft.app.fmt.polygon.PolyRenderer.DRAW_UI_LINES;
 import static net.fexcraft.app.fmt.settings.Settings.*;
 
 /**
@@ -317,9 +319,9 @@ public class Element {
 			return;
 		}
 		if(border != null){
-			PolyRenderer.mode(DrawMode.UI_LINES);
+			PolyRenderer.mode(DRAW_UI_LINES);
 			hedron.render();
-			PolyRenderer.mode(DrawMode.UI);
+			PolyRenderer.mode(DRAW_UI);
 		}
 		if(texture != null) TextureManager.bind(texture);
 		hedron.render();
