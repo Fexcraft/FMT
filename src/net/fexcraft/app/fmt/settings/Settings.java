@@ -123,6 +123,7 @@ public class Settings {
 	public static Setting<Boolean> TRIANGULATION_L = new Setting<>("triangulated_lines", false, GRAPHIC);
 	public static Setting<Boolean> CULL_FACE = new Setting<>("cull_face", true, GRAPHIC);
 	public static Setting<Boolean> FULLSCREEN = new Setting<>("fullscreen", false, GRAPHIC);
+	public static Setting<Boolean> GL_DEBUG = new Setting<>("gl_debug", false, GRAPHIC);
 	//Lighting
 	public static Setting<Boolean> LIGHTING_ON = new Setting<>("enabled", false, LIGHTING);
 	public static Setting<Float> LIGHT_AMBIENT = new Setting<>("ambient", 0.5f, LIGHTING).minmax(0f, 1f);
