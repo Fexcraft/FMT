@@ -106,12 +106,14 @@ public class PolyRenderer extends Renderer {
     		glEnableVertexAttribArray(2);
     		glBindBuffer(GL_ARRAY_BUFFER, glo.gpu[index].uvss);
     		glVertexAttribPointer(2, 2, GL_FLOAT, false, 8, 0);
-    		glEnableVertexAttribArray(3);
-    		glBindBuffer(GL_ARRAY_BUFFER, glo.gpu[index].normss);
-    		glVertexAttribPointer(3, 3, GL_FLOAT, false, 12, 0);
-    		glEnableVertexAttribArray(4);
-    		glBindBuffer(GL_ARRAY_BUFFER, glo.gpu[index].lightss);
-    		glVertexAttribPointer(4, 1, GL_FLOAT, false, 4, 0);
+			if(!MODE.ui()){
+				glEnableVertexAttribArray(3);
+				glBindBuffer(GL_ARRAY_BUFFER, glo.gpu[index].normss);
+				glVertexAttribPointer(3, 3, GL_FLOAT, false, 12, 0);
+				glEnableVertexAttribArray(4);
+				glBindBuffer(GL_ARRAY_BUFFER, glo.gpu[index].lightss);
+				glVertexAttribPointer(4, 1, GL_FLOAT, false, 4, 0);
+			}
         }
 		glDrawArrays(MODE.gl_draw_mode, 0, glo.gpu[index].size);
 		//
@@ -378,7 +380,6 @@ public class PolyRenderer extends Renderer {
 		public boolean lighting = true;
 		public boolean lines;
 		public boolean color;
-		public boolean ui;
 		public int gl_draw_mode = GL_TRIANGLES;
 
 		public DrawMode(){}
