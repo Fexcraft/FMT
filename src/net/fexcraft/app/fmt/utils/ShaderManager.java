@@ -2,6 +2,7 @@ package net.fexcraft.app.fmt.utils;
 
 import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL30.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,6 +34,8 @@ public class ShaderManager {
 	}
 
 	private static ShaderProgram loadProgram(String id) throws IOException {
+		int vao = glGenVertexArrays();
+		glBindVertexArray(vao);
 		int vert = ShaderManager.load("./resources/shaders/vertex_" + id + ".glsl", GL_VERTEX_SHADER); 
 		int frag = ShaderManager.load("./resources/shaders/fragment_" + id + ".glsl", GL_FRAGMENT_SHADER);
 		int prog = glCreateProgram();
@@ -42,15 +45,19 @@ public class ShaderManager {
 		glBindAttribLocation(prog, 0, "position");
 		glBindAttribLocation(prog, 1, "color_in");
 		glBindAttribLocation(prog, 2, "uv_in");
-		glBindAttribLocation(prog, 3, "normal_in");
-		glBindAttribLocation(prog, 4, "light_in");
+		if(!id.equals("ui")){
+			glBindAttribLocation(prog, 3, "normal_in");
+			glBindAttribLocation(prog, 4, "light_in");
+		}
 		glLinkProgram(prog);
-		if(glGetProgrami(vert, GL_COMPILE_STATUS) == GL_FALSE){
+		//if(glGetProgrami(vert, GL_COMPILE_STATUS) == GL_FALSE){
 			log("[VertShader/" + id + "]", glGetShaderInfoLog(vert, glGetShaderi(vert, GL_INFO_LOG_LENGTH)));
-		}
-		if(glGetProgrami(frag, GL_COMPILE_STATUS) == GL_FALSE){
+		//}
+		//if(glGetProgrami(frag, GL_COMPILE_STATUS) == GL_FALSE){
 		    log("[FragShader/" + id + "]", glGetShaderInfoLog(frag, glGetShaderi(frag, GL_INFO_LOG_LENGTH)));
-		}
+		//}
+		glBindVertexArray(0);
+		glDeleteVertexArrays(vao);
 		return new ShaderProgram(prog, vert, frag);
 	}
 
