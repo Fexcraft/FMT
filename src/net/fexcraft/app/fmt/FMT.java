@@ -33,6 +33,7 @@ import org.joml.Vector4f;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GLUtil;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
@@ -154,7 +155,7 @@ public class FMT {
 			}
 		}));
 		if(!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW.");
-		glfwWindowHint(GLFW_RESIZABLE, GL11.GL_TRUE);
+		glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
@@ -166,6 +167,10 @@ public class FMT {
 		log("GL Renderer: " + glGetString(GL_RENDERER));
 		log("GL Vendor:   " + glGetString(GL_VENDOR));
 		log("GL Version:  " + glGetString(GL_VERSION));
+		if(Settings.GL_DEBUG.value){
+			glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+			GLUtil.setupDebugMessageCallback();
+		}
 		icon(window);
 		glfwShowWindow(window);
 		glfwFocusWindow(window);
@@ -213,7 +218,7 @@ public class FMT {
 		glfwSetFramebufferSizeCallback(window, callback(new GLFWFramebufferSizeCallback(){
 			@Override
 			public void invoke(long window, int width, int height){
-			resize();
+			resize(false);
 			}
 		}));
 		glfwSetScrollCallback(window, callback(new GLFWScrollCallback(){
@@ -260,7 +265,8 @@ public class FMT {
 		if(Settings.CULL_FACE.value) glEnable(GL_CULL_FACE);
 		glEnable(GL_BLEND);
 		//
-		resize();
+		resize(true);
+		log("Starting Application Loop");
 		while(!glfwWindowShouldClose(window)){
 			CAM.pollInput(accumulator += (delta = timer.getDelta()));
 			GGR.updateHoveredElement();
@@ -291,6 +297,7 @@ public class FMT {
 			glfwSwapBuffers(window);
 			timer.update();
 		}
+		log("Stopped Application Loop");
 		Settings.save();
 		SessionHandler.save();
 		//TODO other saves
@@ -309,7 +316,7 @@ public class FMT {
 		interval = bool ? 1f : 1f / 30;
 	}
 
-	private void resize(){
+	private void resize(boolean init){
 		int[] wa = { 0 }, ha = { 0 };
 		glfwGetFramebufferSize(window, wa, ha);
 		int width = wa[0];
@@ -318,7 +325,7 @@ public class FMT {
 		HEIGHT = height;
 		SCALED_WIDTH = WIDTH / Settings.UI_SCALE.value;
 		SCALED_HEIGHT = HEIGHT / Settings.UI_SCALE.value;
-		log("Resizing Window to " + width + "/" + height + " (" + WIDTH + "/" + HEIGHT + " scaled at " + (1f / Settings.UI_SCALE.value) + ").");
+		log((init ? "Detected Window size: " : "Resizing Window to: ") + width + "/" + height + " (" + WIDTH + "/" + HEIGHT + " scaled at " + (1f / Settings.UI_SCALE.value) + ").");
 		HEIGHT = height;
 		Picker.resetBuffer(true);
 		if(UI != null) UI.resize();
@@ -517,9 +524,9 @@ public class FMT {
     }
 
 	public static void vsync(){
-		char a = Settings.FVSYNC.value ? '+' : '-';
-		char b = Settings.HVSYNC.value ? '+' : '-';
-		char c = Settings.QVSYNC.value ? '+' : '-';
+		String a = Settings.FVSYNC.value ? "+" : "-";
+		String b = Settings.HVSYNC.value ? "+" : "-";
+		String c = Settings.QVSYNC.value ? "+" : "-";
 		log(String.format("Updating Vsync State [%s]", a + b + c));
 		int in = Settings.FVSYNC.value ? 1 : 0;
 		if(in > 0 && Settings.HVSYNC.value) in = 2;
