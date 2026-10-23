@@ -65,8 +65,8 @@ public class Catalog {
 			return true;
 		}
 		else{
-			log(log, "# No missing or outdated files found.");
-			log(log, "# FMT can be launched.");
+			log(log, "> No missing or outdated files found.");
+			log(log, "> FMT can be launched.");
 			return false;
 		}
 	}
