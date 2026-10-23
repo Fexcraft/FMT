@@ -13,16 +13,16 @@ uniform bool tinted;
 out vec4 color_out;
 
 void main(){
-	if(line_color.a > 0) color_out = line_color;
+	if(line_color.a > 0.0) color_out = line_color;
 	else{
         if(textured){
             color_out = texture(tex_sampler, uv).rgba;
-            if(poly_color.a > 0) color_out *= poly_color;
+            if(poly_color.a > 0.0) color_out *= poly_color;
         }
         else{
             color_out = poly_color;
         }
-        if(color.a > 0) color_out *= color;
+        if(color.a > 0.0) color_out *= color;
 	}
 	if(color_out.a < 0.1) discard;
 }
