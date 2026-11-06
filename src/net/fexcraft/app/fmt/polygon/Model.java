@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 
 import net.fexcraft.app.fmt.animation.Animation;
 import net.fexcraft.app.fmt.polygon.Vertoff.VOSelection;
+import net.fexcraft.app.fmt.port.im.Importer;
 import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.Dialog.DialogButton;
 import net.fexcraft.app.fmt.ui.Field;
@@ -72,6 +73,7 @@ public class Model {
 	public LinkedHashMap<String, VehAttr> vehattrs = new LinkedHashMap<>();
 	public ModelOrientation orient = ModelOrientation.FVTM4_DEFAULT;
 	public ModelFormat format = ModelFormat.UNIVERSAL;
+	public Importer helper_importer;
 	public Object exdata;
 	public ModelType type = ModelType.FMT;
 	public Matrix4f matrix;
