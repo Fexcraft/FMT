@@ -12,6 +12,7 @@ import static net.fexcraft.app.fmt.utils.JsonUtil.getVector;
 import static net.fexcraft.app.fmt.utils.JsonUtil.setVector;
 
 import net.fexcraft.app.fmt.polygon.Vertoff.VOKey;
+import net.fexcraft.app.json.JsonArray;
 import org.joml.Vector3f;
 
 import net.fexcraft.app.fmt.update.PolyVal;
@@ -21,6 +22,7 @@ import net.fexcraft.app.json.JsonMap;
 public class Shapebox extends Box {
 	
 	public static PolyVal[] CORNERS = { CORNER_0, CORNER_1, CORNER_2, CORNER_3, CORNER_4, CORNER_5, CORNER_6, CORNER_7 };
+	public boolean[] flip = new boolean[6];
 	public Vector3f cor0;
 	public Vector3f cor1;
 	public Vector3f cor2;
@@ -52,6 +54,13 @@ public class Shapebox extends Box {
 		cor5 = getVector(obj, "%s5", 0);
 		cor6 = getVector(obj, "%s6", 0);
 		cor7 = getVector(obj, "%s7", 0);
+		if(obj.has("flip_tri")){
+			JsonArray array = obj.getArray("flip_tri");
+			for(int i = 0; i < flip.length; i++){
+				if(i >= array.size()) break;
+				flip[i] = array.get(i).value();
+			}
+		}
 	}
 	
 	@Override
@@ -65,6 +74,13 @@ public class Shapebox extends Box {
 		setVector(map, "%s5", cor5);
 		setVector(map, "%s6", cor6);
 		setVector(map, "%s7", cor7);
+		boolean anyflip = false;
+		for(boolean bool : flip) if(bool) anyflip = true;
+		if(anyflip){
+			JsonArray array = new JsonArray();
+			for(boolean bool : flip) array.add(bool);
+			map.add("flip_tri", array);
+		}
 		return map;
 	}
 
@@ -88,6 +104,7 @@ public class Shapebox extends Box {
 			case CORNER_5: return getVectorValue(cor5, polyval.axe());
 			case CORNER_6: return getVectorValue(cor6, polyval.axe());
 			case CORNER_7: return getVectorValue(cor7, polyval.axe());
+			case FLIP_TRI: return getIndexValue(flip, polyval.axe().ordinal());
 			default: return super.getValue(polyval);
 		}
 	}
@@ -102,6 +119,7 @@ public class Shapebox extends Box {
 			case CORNER_5: setVectorValue(cor5, polyval.axe(), value); break;
 			case CORNER_6: setVectorValue(cor6, polyval.axe(), value); break;
 			case CORNER_7: setVectorValue(cor7, polyval.axe(), value); break;
+			case FLIP_TRI: setIndexValue(flip, polyval.axe().ordinal(), value); break;
 			default: super.setValue(polyval, value);
 		}
 		this.recompile();
