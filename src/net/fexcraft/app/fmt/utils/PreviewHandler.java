@@ -10,6 +10,9 @@ import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.update.UpdateHandler;
 import net.fexcraft.app.json.JsonMap;
 
+/**
+ * @author Ferdinand Calo' (FEX___96)
+ */
 public class PreviewHandler {
 
 	public static final ArrayList<Model> previews = new ArrayList<>();
@@ -37,6 +40,7 @@ public class PreviewHandler {
 	public static Model load(File file, Importer porter, JsonMap map){
 		Model model = new Model(file, map.getString("name", file.getName()));
 		model.helper = true;
+		model.helper_importer = porter;
 		model.genDefTexGroup();
 		if(!model.name.startsWith("import/")) model.name = "import/" + model.name;
 		porter._import(model, file);
@@ -71,6 +75,16 @@ public class PreviewHandler {
 	public static void select(Model model){
 		SELECTED = SELECTED == model ? null : model;
 		UpdateHandler.update(new UpdateEvent.HelperSelected(SELECTED));
+	}
+
+	public static void duplicate(Model ref){
+		Model model;
+		if(ref.name.startsWith("frame/")) model = loadFrame(ref.file);
+		else if(ref.name.startsWith("fmtb/")) model = loadFMTB(ref.file);
+		else model = load(ref.file, ref.helper_importer, new JsonMap());
+		model.pos.set(ref.pos);
+		model.rot.set(ref.rot);
+		model.scl.set(ref.scl);
 	}
 
 }
