@@ -39,7 +39,9 @@ public class PolygonTreeTab extends TreeTab {
 		TOTALS_FORMAT = Translator.translate("tree.info.polygon_count");
 		TOTALS_FORMAT_EXT = Translator.translate("tree.info.polygon_count_ext");
 		over.add(totals = new Element().pos(5, 0).size(FF, 30).translate(TOTALS_FORMAT, "...").text_autoscale());
-		updcom.add(UpdateEvent.PivotAdded.class, event -> addPivot(event.pivot()));
+		updcom.add(UpdateEvent.PivotAdded.class, event -> {
+			if(!event.model().isHelper()) addPivot(event.pivot());
+		});
 		updcom.add(UpdateEvent.PivotRemoved.class, event -> remPivot(event.pivot()));
 		updcom.add(UpdateEvent.PivotRenamed.class, event -> {
 			for(Element elm : scrollable.elements()){
