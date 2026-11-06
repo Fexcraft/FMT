@@ -55,7 +55,7 @@ public class PosCopyButton extends Element {
 	public PosCopyButton(int idx, int y, PolyVal val, Supplier<float[]> supp){
 		pos(FF - 15 - (idx * 25), y + 5);
 		size(20, 20);
-		texture("icons/configeditor/confirm");
+		texture("icons/component/move_right");
 		if(supp == null) supp = () -> SUPPLIER.apply(val);
 		selectable = true;
 		supplier = supp;
