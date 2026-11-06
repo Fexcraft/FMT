@@ -50,6 +50,9 @@ public class HelperCom extends TTabCom {
 		add(new HidingElm().hoverable(true).texture("icons/component/edit").size(28, 28).pos(EDITOR_CONTENT - 32 * 4, 1).onclick(ci -> {
 			EditorRoot.setMode(EditorRoot.EditorMode.PREVIEW);
 		}).hint("tree.preview.editor").hide());
+		add(new HidingElm().hoverable(true).texture("icons/component/add").size(28, 28).pos(EDITOR_CONTENT - 32 * 5, 1).onclick(ci -> {
+			PreviewHandler.duplicate(model);
+		}).hint("tree.preview.copy").hide());
 		for(Group group : model.allgroups()) container.add(new HGroupCom(group));
 		orderComponents();
 	}
