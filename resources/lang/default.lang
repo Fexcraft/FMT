@@ -373,6 +373,7 @@ tree.texture.select.title=Select Texture File
 tree.preview.visible=Toggle Visibility
 tree.preview.remove=Remove Helper/Preview
 tree.preview.editor=Preview Editor
+tree.preview.copy=Copy/Duplicate
 tree.preview.removal=Are you sure you want to remove this Helper?
 tree.preview.load_fmtb=Load .fmtb
 tree.preview.load_image=Load Image
