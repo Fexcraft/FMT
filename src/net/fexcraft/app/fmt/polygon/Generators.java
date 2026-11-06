@@ -27,6 +27,8 @@ public class Generators {
 				anyrem = true;
 			}
 		}
+		boolean anyflip = false;
+		boolean[] ft = new boolean[6];
 		float[] v0, v1, v2, v3, v4, v5, v6, v7;
 		float x = poly.off.x;
 		float y = poly.off.y;
@@ -62,6 +64,13 @@ public class Generators {
 			v5 = new float[]{ xw + c2.x, y  - c2.y, zd + c2.z };
 			v6 = new float[]{ xw + c6.x, yh + c6.y, zd + c6.z };
 			v7 = new float[]{ x  - c7.x, yh + c7.y, zd + c7.z };
+			//
+			for(int i = 0; i < box.flip.length; i++){
+				if(box.flip[i]){
+					ft[i] = true;
+					anyflip = true;
+				}
+			}
 		}
 		else{
 			float x1 = x + w + (w == 0 ? 0.01f : 0);
@@ -121,6 +130,17 @@ public class Generators {
 			if(!rems[4]) polys[4] = genBoxFace(4, uv.get(4), deuv[4], texw, texh, new Vertex[] { tv1, tv0, tv3, tv2 }, tx, ty, x0, yp, w0, h0);
 			if(!rems[5]) polys[5] = genBoxFace(5, uv.get(5), deuv[5], texw, texh, new Vertex[] { tv4, tv5, tv6, tv7 }, tx, ty, x0 + x2 + x3, yp, w0, h0);
 		}
+		if(anyflip){
+			Polygon gon;
+			for(int i = 0; i < polys.length; i++){
+				if(!ft[i]) continue;
+				gon = polys[i];
+				net.fexcraft.lib.frl.Vertex v = gon.vertices[2];
+				gon.vertices[2] = gon.vertices[0];
+				gon.vertices[0] = v;
+				gon.flip();
+			}
+		}
 		if(anyrem){
 			int polis = 0, processed = 0;
 			for(int i = 0; i < polys.length; i++) if(polys[i] != null) polis++;
@@ -141,7 +161,6 @@ public class Generators {
 	private static boolean detached(boolean[] rems, boolean[] deuv, int i){
 		return rems[i] || deuv[i];
 	}
-
 
 	private static net.fexcraft.lib.frl.Polygon genBoxFace(int index, float[] uv, boolean detached, float w, float h, Vertex[] vertices, float tu, float tv, float x, float y, float ex, float ey){
 		float[] cuv = index < 0 || uv == null ? null : uv;
