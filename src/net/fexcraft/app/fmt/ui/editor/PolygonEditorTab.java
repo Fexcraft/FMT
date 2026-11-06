@@ -132,7 +132,7 @@ public class PolygonEditorTab extends EditorTab {
 		//
 		scrollable.container.add((general = new ETabCom("general")), lang_prefix + "general", 280);
 		addGeneralElements(general, false);
-		scrollable.container.add((general_box = new ETabCom("general_box")), lang_prefix + "general", 400);
+		scrollable.container.add((general_box = new ETabCom("general_box")), lang_prefix + "general", 450);
 		addGeneralElements(general_box, true);
 		general.visible = false;
 		//
@@ -477,6 +477,13 @@ public class PolygonEditorTab extends EditorTab {
 			general.add(new BoolElm(F63, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.SIDES, ValAxe.X2), updcom));
 			general.add(new BoolElm(F64, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.SIDES, ValAxe.Y2), updcom));
 			general.add(new BoolElm(F65, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.SIDES, ValAxe.Z2), updcom));
+			general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.flip_triangles"));
+			general.add(new BoolElm(F60, next_y_pos(1), F6S).set(new PolygonValue(PolyVal.FLIP_TRI, ValAxe.X), updcom));
+			general.add(new BoolElm(F61, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.FLIP_TRI, ValAxe.Y), updcom));
+			general.add(new BoolElm(F62, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.FLIP_TRI, ValAxe.Z), updcom));
+			general.add(new BoolElm(F63, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.FLIP_TRI, ValAxe.X2), updcom));
+			general.add(new BoolElm(F64, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.FLIP_TRI, ValAxe.Y2), updcom));
+			general.add(new BoolElm(F65, next_y_pos(0), F6S).set(new PolygonValue(PolyVal.FLIP_TRI, ValAxe.Z2), updcom));
 		}
 	}
 
