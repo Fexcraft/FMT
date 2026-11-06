@@ -40,7 +40,21 @@ public class PreviewEditorTab extends EditorTab {
 			UpdateHandler.update(new UpdateEvent.HelperRenamed(selected, selected.name));
 		})).pos(FO, next_y_pos(1)));
 		//
-		general.add(new TextElm(0, next_y_pos(1.5f), FF).translate(lang_prefix + "general.pos16"));
+		general.add(new TextElm(0, next_y_pos(1.5f), FF - 75).translate(lang_prefix + "general.pos16"));
+		general.add(new PosCopyButton(0, next_y_pos(0), null, () -> {
+			return new float[]{ PreviewHandler.SELECTED.pos.x, PreviewHandler.SELECTED.pos.y, PreviewHandler.SELECTED.pos.z };
+		}));
+		general.add(new PosPasteButton(1, next_y_pos(0), null, arr -> {
+			PreviewHandler.SELECTED.pos.x = arr[0];
+			PreviewHandler.SELECTED.pos.y = arr[1];
+			PreviewHandler.SELECTED.pos.z = arr[2];
+			pos16x.set(arr[0]);
+			pos16y.set(arr[1]);
+			pos16z.set(arr[2]);
+			posx.set(arr[0] * sixteenth);
+			posy.set(arr[1] * sixteenth);
+			posz.set(arr[2] * sixteenth);
+		}));
 		general.add((pos16x = new Field(FLOAT, F3S).consumer(field -> {
 			if(PreviewHandler.SELECTED == null) return;
 			PreviewHandler.SELECTED.pos.x = field.parse_float();
@@ -54,7 +68,21 @@ public class PreviewEditorTab extends EditorTab {
 			PreviewHandler.SELECTED.pos.z = field.parse_float();
 		})).pos(F32, next_y_pos(0)));
 		//
-		general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.pos"));
+		general.add(new TextElm(0, next_y_pos(1), FF - 75).translate(lang_prefix + "general.pos"));
+		general.add(new PosCopyButton(0, next_y_pos(0), null, () -> {
+			return new float[]{ PreviewHandler.SELECTED.pos.x * sixteenth, PreviewHandler.SELECTED.pos.y * sixteenth, PreviewHandler.SELECTED.pos.z * sixteenth };
+		}));
+		general.add(new PosPasteButton(1, next_y_pos(0), null, arr -> {
+			PreviewHandler.SELECTED.pos.x = arr[0] * 16;
+			PreviewHandler.SELECTED.pos.y = arr[1] * 16;
+			PreviewHandler.SELECTED.pos.z = arr[2] * 16;
+			pos16x.set(arr[0] * 16);
+			pos16y.set(arr[1] * 16);
+			pos16z.set(arr[2] * 16);
+			posx.set(arr[0]);
+			posy.set(arr[1]);
+			posz.set(arr[2]);
+		}));
 		general.add((posx = new Field(FLOAT, F3S).consumer(field -> {
 			if(PreviewHandler.SELECTED == null) return;
 			PreviewHandler.SELECTED.pos.x = field.parse_float() * 16;
@@ -68,7 +96,18 @@ public class PreviewEditorTab extends EditorTab {
 			PreviewHandler.SELECTED.pos.z = field.parse_float() * 16;
 		})).pos(F32, next_y_pos(0)));
 		//
-		general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.rot"));
+		general.add(new TextElm(0, next_y_pos(1), FF - 75).translate(lang_prefix + "general.rot"));
+		general.add(new PosCopyButton(0, next_y_pos(0), null, () -> {
+			return new float[]{ PreviewHandler.SELECTED.rot.x, PreviewHandler.SELECTED.rot.y, PreviewHandler.SELECTED.rot.z };
+		}));
+		general.add(new PosPasteButton(1, next_y_pos(0), null, arr -> {
+			PreviewHandler.SELECTED.rot.x = arr[0];
+			PreviewHandler.SELECTED.rot.y = arr[1];
+			PreviewHandler.SELECTED.rot.z = arr[2];
+			rotx.set(arr[0]);
+			roty.set(arr[1]);
+			rotz.set(arr[2]);
+		}));
 		general.add((rotx = new Field(FLOAT, F3S).deg_range().consumer(field -> {
 			if(PreviewHandler.SELECTED == null) return;
 			PreviewHandler.SELECTED.rot.x = field.parse_float();
@@ -82,7 +121,18 @@ public class PreviewEditorTab extends EditorTab {
 			PreviewHandler.SELECTED.rot.z = field.parse_float();
 		})).pos(F32, next_y_pos(0)));
 		//
-		general.add(new TextElm(0, next_y_pos(1), FF).translate(lang_prefix + "general.scale"));
+		general.add(new TextElm(0, next_y_pos(1), FF - 75).translate(lang_prefix + "general.scale"));
+		general.add(new PosCopyButton(0, next_y_pos(0), null, () -> {
+			return new float[]{ PreviewHandler.SELECTED.scl.x, PreviewHandler.SELECTED.scl.y, PreviewHandler.SELECTED.scl.z };
+		}));
+		general.add(new PosPasteButton(1, next_y_pos(0), null, arr -> {
+			PreviewHandler.SELECTED.scl.x = arr[0];
+			PreviewHandler.SELECTED.scl.y = arr[1];
+			PreviewHandler.SELECTED.scl.z = arr[2];
+			sclx.set(arr[0]);
+			scly.set(arr[1]);
+			sclz.set(arr[2]);
+		}));
 		general.add((sclx = new Field(FLOAT, F3S).deg_range().consumer(field -> {
 			if(PreviewHandler.SELECTED == null) return;
 			PreviewHandler.SELECTED.scl.x = field.parse_float();
