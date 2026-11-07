@@ -11,7 +11,8 @@ import net.fexcraft.app.fmt.update.PolyVal.PolygonValue;
 import net.fexcraft.app.fmt.update.UpdateEvent;
 import net.fexcraft.app.fmt.utils.Translator;
 
-import static net.fexcraft.app.fmt.ui.editor.EditorTab.FF;
+import static net.fexcraft.app.fmt.settings.Settings.GENERIC_FIELD;
+import static net.fexcraft.app.fmt.ui.editor.EditorTab.*;
 
 /**
  * @author Ferdinand Calo' (FEX___96)
@@ -27,6 +28,7 @@ public class PolygonTreeTab extends TreeTab {
 	};
 	public static String TOTALS_FORMAT;
 	public static String TOTALS_FORMAT_EXT;
+	public static boolean SORT_MODE;
 	public Element totals;
 
 	public PolygonTreeTab(){
@@ -35,10 +37,15 @@ public class PolygonTreeTab extends TreeTab {
 
 	@Override
 	public void init(Object... objs){
-		super.init(30);
+		super.init(60);
 		TOTALS_FORMAT = Translator.translate("tree.info.polygon_count");
 		TOTALS_FORMAT_EXT = Translator.translate("tree.info.polygon_count_ext");
 		over.add(totals = new Element().pos(5, 0).size(FF, 30).translate(TOTALS_FORMAT, "...").text_autoscale());
+		Element sort = new Element().pos(FO + 20, 28).size(FF, FS).color(GENERIC_FIELD.value).hoverable(true);
+		over.add(sort.onclick(ci -> {
+			SORT_MODE = !SORT_MODE;
+			sort.translate(SORT_MODE ? "tree.polygon.sort_on" : "tree.polygon.sort_off");
+		}).translate("tree.polygon.sort_off").text_centered(true));
 		updcom.add(UpdateEvent.PivotAdded.class, event -> {
 			if(!event.model().isHelper()) addPivot(event.pivot());
 		});
