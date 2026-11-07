@@ -1035,4 +1035,11 @@ public class Model {
 		return texgroups;
 	}
 
+	public void reinsertGroups(){
+		allgroups.clear();
+		for(Pivot pivot : pivots){
+			allgroups.addAll(pivot.groups);
+		}
+	}
+
 }
