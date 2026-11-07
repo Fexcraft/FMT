@@ -1,10 +1,7 @@
 package net.fexcraft.app.fmt.ui.tree;
 
 import net.fexcraft.app.fmt.FMT;
-import net.fexcraft.app.fmt.polygon.CurvePolygon;
-import net.fexcraft.app.fmt.polygon.Group;
-import net.fexcraft.app.fmt.polygon.PolyObject;
-import net.fexcraft.app.fmt.polygon.Polygon;
+import net.fexcraft.app.fmt.polygon.*;
 import net.fexcraft.app.fmt.settings.Settings;
 import net.fexcraft.app.fmt.ui.Dialog;
 import net.fexcraft.app.fmt.ui.Element;
@@ -33,6 +30,18 @@ public class GroupCom extends TTabCom {
 		onclick(ci -> {
 			FMT.MODEL.select(group);
 			updateTextColor();
+		});
+		onscroll(si -> {
+			if(!PolygonTreeTab.SORT_MODE || !group.selected) return;
+			Pivot piv = FMT.MODEL.getP(group.pivot);
+			int idx = FMT.MODEL.allgroups().indexOf(group) - si.sy();
+			bar(FMT.MODEL.allgroups().indexOf(group) + " " + idx, 1);
+			piv.groups.remove(group);
+			if(idx < 0) piv.groups.add(group);
+			else if(idx > piv.groups.size()) piv.groups.add(0, group);
+			else piv.groups.add(idx, group);
+			FMT.MODEL.reinsertGroups();
+			TreeRoot.TREES[TreeRoot.TreeMode.POLYGON.ordinal()].reinsertComponents();
 		});
 		add(new HidingElm().hoverable(true).texture("icons/component/visible").size(28, 28).pos(EDITOR_CONTENT - 32 * 2, 1).onclick(ci -> {
 			group.visible = !group.visible;
