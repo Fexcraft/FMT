@@ -86,7 +86,7 @@ public class SessionHandler {
 	}
 
 	private static String[] getCookieArr(){
-		return sessionid == null ? null : new String[] { "JSESSIONID=" + sessionid };
+		return sessionid == null ? null : new String[] { "fsid=" + sessionid };
 	}
 
 	public static String tryLogin(Consumer<String> cons){
@@ -97,8 +97,8 @@ public class SessionHandler {
 				log(response = "Invalid/Empty login response, aborting.");
 				return response;
 			}
-			if(map.getMap("cookies").has("JSESSIONID")){
-				sessionid = map.getMap("cookies").get("JSESSIONID").string_value();
+			if(map.getMap("cookies").has("fsid")){
+				sessionid = map.getMap("cookies").get("fsid").string_value();
 				log("Updated Session ID to: " + sessionid);
 			}
 			loggedin = map.getBoolean("success", false);
