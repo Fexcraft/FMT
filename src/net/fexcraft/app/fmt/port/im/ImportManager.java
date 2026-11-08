@@ -83,12 +83,12 @@ public class ImportManager {
 				FMT.MODEL.orient = old.orient;
 				FMT.MODEL.format = old.format;
 				DiscordUtil.update(Settings.DISCORD_RESET_ON_NEW.value);
+				UpdateHandler.update(new ModelLoad(FMT.MODEL));
 				String res = importer._import(FMT.MODEL, file);
 				Dialog dia = FMT.UI.createDialog(FontRenderer.getWidth(res, FontRenderer.FontType.PLAIN) * 3 + 30, 100, "import.result");
 				dia.addText(0, res);
 				dia.buttons(100, Dialog.DialogButton.OK);
 				FMT.updateTitle();
-				UpdateHandler.update(new ModelLoad(FMT.MODEL));
 				FMT.MODEL.recompile();
 			};
 			if(Settings.SETTINGS.containsKey("importer-" + importer.id())){
