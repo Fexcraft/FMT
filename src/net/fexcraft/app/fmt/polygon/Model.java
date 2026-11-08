@@ -177,6 +177,7 @@ public class Model {
 		if(!visible) return;
 		DrawMode mode = DrawMode.get_textured(render_textured);
 		for(Pivot pivot : pivots){
+			if(!pivot.visible) continue;
 			PolyRenderer.setPivot(pivot);
 			if(Settings.PMARKER.value && pivot.visible){
 				PolyRenderer.mode(DRAW_COLOR);
