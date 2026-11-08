@@ -27,71 +27,64 @@ import net.fexcraft.lib.common.math.RGB;
 
 public class AutoUVPositioner {
 
-	public static boolean HALT = true, ALL, SAVESPACE, DETACH;
+	public static boolean HALT = true;
+	public static boolean ALL;
+	public static boolean SAVESPACE;
+	public static boolean DETACH;
 	private static ArrayList<CoordContainer> list;
-	private static Group resetsel;
 	private static net.fexcraft.app.fmt.ui.Dialog dialog;
 	private static Texture texture;
 	private static int last;
 
 	public static void runReset(boolean cUV){
 		int width = 440;
-		resetsel = null;
 		String suffix = cUV ? "_type" : "";
-		/*Dialog dialog = new Dialog(translate("texture_autopos.reset" + suffix + ".dialog"), width + 20, 180);
-		Label label0 = new Label(translate("texture_autopos.reset" + suffix + ".info"), 10, 10, width, 20);
-		label0.getStyle().setFont("roboto-bold");
-		Label label1 = new Label(translate("texture_autopos.reset" + suffix + ".group"), 10, 40, width / 20, 20);
-		SelectBox<String> texture = new SelectBox<>(10 + width / 2, 40, width / 2, 20);
-		texture.addElement("all-groups");
-		for(Group group : FMT.MODEL.allgroups()) texture.addElement(group.id);
-		texture.addSelectBoxChangeSelectionEventListener(listener -> {
-			if(listener.getNewValue().equals("all-groups")) resetsel = null;
-			else resetsel = FMT.MODEL.get(listener.getNewValue());
-		});
-		texture.setSelected(0, true);
-		texture.setVisibleCount(12);
-		Button button = new Button(translate("dialog.button.confirm"), 10, 130, 100, 20);
-		button.getListenerMap().addListener(MouseClickEvent.class, (MouseClickEventListener)e -> {
-			if(e.getAction() != MouseClickAction.CLICK) return;
-			if(resetsel != null){
-				if(cUV){
-					resetsel.forEach(poly -> {
-						//TODO reset cuv
-						poly.recompile();
-					});
+		DropList<Group> tex = new DropList<>(width);
+		FMT.UI.createDialog(width + 20, 180, "texture_pos.reset" + suffix + ".title")
+			.addBoldText(0, "texture_pos.reset" + suffix + ".info")
+			.addText(1.5f, "texture_pos.reset" + suffix + ".group")
+			.addRowElm(2.5f, tex, width)
+			.consumer(d -> {
+				var resetsel = tex.getSelVal();
+				if(resetsel != null){
+					if(cUV){
+						resetsel.forEach(poly -> {
+							//TODO reset cuv
+							poly.recompile();
+						});
+					}
+					else{
+						resetsel.forEach(poly -> {
+							poly.textureX = -1;
+							poly.textureY = -1;
+							poly.recompile();
+						});
+					}
 				}
 				else{
-					resetsel.forEach(poly -> {
-						poly.textureX = -1;
-						poly.textureY = -1;
-						poly.recompile();
-					});
+					if(cUV){
+						FMT.MODEL.allgroups().forEach(group -> group.forEach(poly -> {
+							//TODO reset cuv
+							poly.recompile();
+						}));
+					}
+					else{
+						FMT.MODEL.allgroups().forEach(group -> group.forEach(poly -> {
+							poly.textureX = -1;
+							poly.textureY = -1;
+							poly.recompile();
+						}));
+					}
 				}
-			}
-			else{
-				if(cUV){
-					FMT.MODEL.allgroups().forEach(group -> group.forEach(poly -> {
-						//TODO reset cuv
-						poly.recompile();
-					}));
-				}
-				else{
-					FMT.MODEL.allgroups().forEach(group -> group.forEach(poly -> {
-						poly.textureX = -1;
-						poly.textureY = -1;
-						poly.recompile();
-					}));
-				}
-			}
-			dialog.close();
-			//TODO GenericDialog.showOK(null, null, null, "texture_autopos.reset" + suffix + ".done");
-		});
-		dialog.getContainer().add(label0);
-		dialog.getContainer().add(label1);
-		dialog.getContainer().add(texture);
-		dialog.getContainer().add(button);*/
-		//dialog.show(FMT.FRAME);
+				FMT.UI.createDialog(width + 20, 120, "texture_pos.reset" + suffix + ".title")
+					.addText(0, "texture_pos.reset" + suffix + ".done")
+					.buttons(100, DialogButton.OK);
+			}, null)
+			.buttons(200, DialogButton.CONTINUE, DialogButton.CANCEL);
+		for(Group group : FMT.MODEL.allgroups()){
+			tex.addEntry(group.id, group);
+		}
+		tex.selectEntry(0);
 	}
 
 	public static void runAutoPos(){
@@ -101,6 +94,9 @@ public class AutoUVPositioner {
 		BoolElm save = new BoolElm();
 		BoolElm pall = new BoolElm();
 		BoolElm deta = new BoolElm();
+		save.set(() -> SAVESPACE, b -> SAVESPACE = b);
+		pall.set(() -> !ALL, b -> ALL = !b);
+		deta.set(() -> DETACH, b -> DETACH = b);
 		FMT.UI.createDialog(width + 20, height, "texture_pos.auto.title")
 			.addBoldText(0, "texture_pos.auto.warning")
 			.addText(1.5f, "texture_pos.auto.texture_group")
@@ -110,9 +106,6 @@ public class AutoUVPositioner {
 			.addCheck(6, deta, "texture_pos.auto.detach_all")
 			.consumer(d -> startAutoPos(tex.getSelVal()), null)
 			.buttons(200, DialogButton.CONTINUE, DialogButton.CANCEL);
-		save.set(() -> SAVESPACE, b -> SAVESPACE = b);
-		pall.set(() -> !ALL, b -> ALL = !b);
-		deta.set(() -> DETACH, b -> DETACH = b);
 		if(FMT.MODEL.getTexGroups().isEmpty()) FMT.MODEL.genDefTexGroup();
 		for(TextureGroup group : FMT.MODEL.getTexGroups()){
 			tex.addEntry(group.name, group);
